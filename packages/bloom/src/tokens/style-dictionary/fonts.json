@@ -1,0 +1,82 @@
+{
+  "font": {
+    "font-weight-light": {
+      "value": {
+        "family": {
+          "type": "string",
+          "value": "Poppins"
+        },
+        "subfamily": {
+          "type": "string",
+          "value": "300"
+        }
+      },
+      "type": "font"
+    },
+    "font-weight-regular": {
+      "value": {
+        "family": {
+          "type": "string",
+          "value": "Poppins"
+        },
+        "subfamily": {
+          "type": "string",
+          "value": "regular"
+        }
+      },
+      "type": "font"
+    },
+    "font-weight-medium": {
+      "value": {
+        "family": {
+          "type": "string",
+          "value": "Poppins"
+        },
+        "subfamily": {
+          "type": "string",
+          "value": "500"
+        }
+      },
+      "type": "font"
+    },
+    "font-weight-semibold": {
+      "value": {
+        "family": {
+          "type": "string",
+          "value": "Poppins"
+        },
+        "subfamily": {
+          "type": "string",
+          "value": "600"
+        }
+      },
+      "type": "font"
+    },
+    "font-weight-bold": {
+      "value": {
+        "family": {
+          "type": "string",
+          "value": "Poppins"
+        },
+        "subfamily": {
+          "type": "string",
+          "value": "700"
+        }
+      },
+      "type": "font"
+    },
+    "token-1": {
+      "value": {
+        "family": {
+          "type": "string",
+          "value": "Inter"
+        },
+        "subfamily": {
+          "type": "string",
+          "value": "regular"
+        }
+      },
+      "type": "font"
+    }
+  }
+}

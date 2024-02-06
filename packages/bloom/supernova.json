@@ -1,0 +1,14 @@
+{
+  "workspaceId": "19398",
+  "designSystemId": "23040",
+  "designSystemVersionId": "23645",
+  "brandId": "4393398a-180c-4867-9801-85aad570d18a",
+  "themeId": null,
+  "exporterId": null,
+  "workspaceName": "Zinnia",
+  "designSystemName": "Bloom Design System",
+  "designSystemVersionName": "Shared draft",
+  "exporterName": "Don't apply theme",
+  "write_to": "tokens",
+  "description": "Note to our fellow developers: Install Supernova integration from the VSCode marketplace and then our don't apply theme exporter will synchronize design data and generate appropriate code from the  Shared draft design system every time you request it through the extension interface, fully automatically."
+}

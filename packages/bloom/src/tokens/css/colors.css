@@ -1,0 +1,645 @@
+
+:root {
+    /* #F9FDFD
+    
+    Extended palette */
+    --colorAquaColor50Aqua: #f9fdfd;    
+    /* #D6F0F1
+    
+    Extended palette */
+    --colorAquaColor100Aqua: #d6f0f1;    
+    /* #A9D8DA
+    
+    Extended palette */
+    --colorAquaColor200Aqua: #a9d8da;    
+    /* #7EC4C7
+    
+    Extended palette */
+    --colorAquaColor300Aqua: #7ec4c7;    
+    /* #37BCC2
+    
+    Extended palette */
+    --colorAquaColor400Aqua: #37bcc2;    
+    /* #489A9D
+    
+    Extended palette */
+    --colorAquaColor500Aqua: #489a9d;    
+    /* #377A7D
+    
+    Extended palette */
+    --colorAquaColor600Aqua: #377a7d;    
+    /* #2C5B5D
+    
+    Extended palette */
+    --colorAquaColor700Aqua: #2c5b5d;    
+    /* #1F3C3D
+    
+    Extended palette */
+    --colorAquaColor800Aqua: #1f3c3d;    
+    /* #152426
+    
+    Extended palette */
+    --colorAquaColor900Aqua: #152426;    
+    /* #F4FAFF
+    
+    Extended palette */
+    --colorCeruleanColor50Cerulean: #f4faff;    
+    /* #DEEDF9
+    
+    Extended palette */
+    --colorCeruleanColor100Cerulean: #deedf9;    
+    /* #ABDCFB
+    
+    Extended palette */
+    --colorCeruleanColor200Cerulean: #abdcfb;    
+    /* #6CC2F6
+    
+    Extended palette */
+    --colorCeruleanColor300Cerulean: #6cc2f6;    
+    /* #37A2D8
+    
+    Extended palette */
+    --colorCeruleanColor400Cerulean: #37a2d8;    
+    /* #0B7EAE 
+    
+    Extended palette */
+    --colorCeruleanColor500Cerulean: #0b7eae;    
+    /* #0B4D6A
+    
+    Extended palette */
+    --colorCeruleanColor700Cerulean: #0b4d6a;    
+    /* #083951
+    
+    Extended palette */
+    --colorCeruleanColor800Cerulean: #083951;    
+    /* #072838
+    
+    Extended palette */
+    --colorCeruleanColor900Cerulean: #072838;    
+    /* #00628B
+    
+    Extended palette */
+    --colorCeruleanColor600Cerulean: #00628b;    
+    /* #FFC600
+    Hover outline color for items with an orange active state. 
+    
+    This is also an accent color for badges and other small alert items. */
+    --colorAccentColorAccentOne: #ffc600;    
+    /* #FF1822
+    
+    Extended palette */
+    --colorAccentColorAccentTwo: #ff1822;    
+    /* Modal overlay
+     */
+    --colorAccentColor50PercentBlack: #00000080;    
+    /* #FFFFFF */
+    --colorGrayscaleColorWhite: #ffffff;    
+    /* #F8F8F8 */
+    --colorGrayscaleColor50Gray: #f8f8f8;    
+    /* #EDEDED
+    Backgrounds, strokes, dividers, Inactive backgrounds */
+    --colorGrayscaleColor100Gray: #ededed;    
+    /* #CCCCCC
+    
+    Default strokes */
+    --colorGrayscaleColor200Gray: #cccccc;    
+    /* #B3B3B3
+    
+    Inactive Text
+    Inactive strokes */
+    --colorGrayscaleColor300Gray: #b3b3b3;    
+    /* #949494 */
+    --colorGrayscaleColor400Gray: #949494;    
+    /* #7F7F7F */
+    --colorGrayscaleColor500Gray: #7f7f7f;    
+    /* #63666A
+    
+    Gray used in the ZINNIA logo and logotype */
+    --colorGrayscaleColorLogoGray: #63666a;    
+    /* #676767
+    
+    Use for Section Labels and 
+    Accents */
+    --colorGrayscaleColor600Gray: #676767;    
+    /* #4D4D4D */
+    --colorGrayscaleColor700Gray: #4d4d4d;    
+    /* #313131 */
+    --colorGrayscaleColor800Gray: #313131;    
+    /* #212121
+    
+    Primary Text, High Contrast Dividers */
+    --colorGrayscaleColor900Gray: #212121;    
+    /* #000000 */
+    --colorGrayscaleColorBlack: #000000;    
+    /* #FFFCF8
+    
+    Extended palette */
+    --colorYellowColor50Yellow: #fffcf8;    
+    /* #FCF0DC
+    
+    Extended palette */
+    --colorYellowColor100Yellow: #fcf0dc;    
+    /* #FFE3AB
+    
+    Extended palette */
+    --colorYellowColor200Yellow: #ffe3ab;    
+    /* #FFD576
+    
+    Extended palette */
+    --colorYellowColor300Yellow: #ffd576;    
+    /* #FCAF0E
+    
+    Extended palette */
+    --colorYellowColor500Yellow: #fcaf0e;    
+    /* #E89510
+    
+    Extended palette */
+    --colorYellowColor600Yellow: #e89510;    
+    /* #C57402
+    
+    Extended palette */
+    --colorYellowColor700Yellow: #c57402;    
+    /* #9D5400
+    
+    Extended palette */
+    --colorYellowColor800Yellow: #9d5400;    
+    /* #703800
+    
+    Extended palette */
+    --colorYellowColor900Yellow: #703800;    
+    --colorYellowColor400Yellow: #ffc600;    
+    /* #FF7500
+    
+    Primary color 400-orange is the action color used for UI Design in the Zahara Design System.
+    
+    It is reserved for important action items that need to stand out: buttons, toggles, checkboxes, radio, and other critical functional use cases. */
+    --colorPrimaryColorPrimary: #ff7500;    
+    /* #FFEAD9
+    
+    Primary button selected, and the inactive selected color for toggles radio, checkboxes and other action items.  */
+    --colorPrimaryColorPrimaryLightest: #ffead9;    
+    /* #FFC899
+    
+    Primary button pressed. Inactive tooltip icon. */
+    --colorPrimaryColorPrimaryLighter: #ffc899;    
+    /* #FFAC66
+    
+    The inactive (white) selected color for toggles and other action items.  */
+    --colorPrimaryColorPrimaryLight: #ffac66;    
+    /* #994600
+    
+    The contrast inactive selected color for toggles radio, checkboxes and other action items.  */
+    --colorPrimaryColorPrimaryDark: #994600;    
+    /* #FF7500 at 50% opacity */
+    --colorPrimaryColorPrimary50PercentOpacity: #ff750080;    
+    /* #FDFDF1
+    
+    Extended palette */
+    --colorLimeColor50Lime: #fdfdf1;    
+    /* #F6F5D2
+    
+    Extended palette */
+    --colorLimeColor100Lime: #f6f5d2;    
+    /* #E1E38D
+    
+    Extended palette */
+    --colorLimeColor200Lime: #e1e38d;    
+    /* #C0C64F
+    
+    Finance classes */
+    --colorLimeColor300Lime: #c0c64f;    
+    /* #A4AE08
+    
+    Extended palette */
+    --colorLimeColor400Lime: #a4ae08;    
+    /* #8B9403
+    
+    Extended palette */
+    --colorLimeColor500Lime: #8b9403;    
+    /* #656C02
+    
+    Extended palette */
+    --colorLimeColor600Lime: #656c02;    
+    /* #484E01
+    
+    Extended palette */
+    --colorLimeColor700Lime: #484e01;    
+    /* #3A3E01
+    
+    Extended palette */
+    --colorLimeColor800Lime: #3a3e01;    
+    /* #2C2E07
+    
+    Extended palette */
+    --colorLimeColor900Lime: #2c2e07;    
+    /* #37A2D8
+    
+    Used when a component/input/ */
+    --colorSemanticsColorSemanticFocus: #37a2d8;    
+    /* #007B5A
+    
+    Used when a required item meets the limitations set by the input */
+    --colorSemanticsColorSemanticSuccess: #007b5a;    
+    /* #008762
+    
+    50% of the success token */
+    --colorSemanticsColorSemanticSuccess50PercentOpacity: #00876280;    
+    /* 
+    
+     */
+    --colorSemanticsColorSemanticSuccessLight: #f2f9f7;    
+    /* Pending color */
+    --colorSemanticsColorSemanticPending: #ac0091;    
+    --colorSemanticsColorSemanticPending50PercentOpacity: #ac009180;    
+    --colorSemanticsColorSemanticPendingLight: #fbf2f9;    
+    /* #005FED */
+    --colorSemanticsColorSemanticInformation: #005fed;    
+    /* #005FED
+    
+    50% of the info token */
+    --colorSemanticsColorSemanticInformation50PercentOpacity: #005fed80;    
+    /* #F2F7FE
+     */
+    --colorSemanticsColorSemanticInformationLight: #f2f7fe;    
+    /* #B74D00
+    
+    Used in warning dialogues / modules */
+    --colorSemanticsColorSemanticWarning: #b74d00;    
+    /* #C35200
+    
+    50% of the warning token */
+    --colorSemanticsColorSemanticWarning50PercentOpacity: #c3520080;    
+    /* #FCF6F2 */
+    --colorSemanticsColorSemanticWarningLight: #fcf6f2;    
+    /* #DB004F
+    
+    Used in error dialogues  / modules */
+    --colorSemanticsColorSemanticError: #db004f;    
+    /* #DB004F
+    
+    50% of the error token */
+    --colorSemanticsColorSemanticError50PercentOpacity: #db004f80;    
+    /* #FDF2F6 */
+    --colorSemanticsColorSemanticErrorLight: #fdf2f6;    
+    --colorSemanticsColorSemanticTextHighlight: #ffe485;    
+    /* #FFF5FE
+    
+    Extended palette */
+    --colorFuchsiaColor50Fuchsia: #fff5fe;    
+    /* #FFE9FC
+    
+    Extended palette */
+    --colorFuchsiaColor100Fuchsia: #ffe9fc;    
+    /* #F7C9F1
+    
+    Extended palette */
+    --colorFuchsiaColor200Fuchsia: #f7c9f1;    
+    /* #E09ED9
+    
+    Extended palette */
+    --colorFuchsiaColor300Fuchsia: #e09ed9;    
+    /* #D47ACC
+    
+    Extended palette */
+    --colorFuchsiaColor400Fuchsia: #d47acc;    
+    /* #BD58B7
+    
+    Extended palette */
+    --colorFuchsiaColor500Fuchsia: #bd58b7;    
+    /* #973B93
+    
+    Extended palette */
+    --colorFuchsiaColor600Fuchsia: #973b93;    
+    /* #752671
+    
+    Extended palette */
+    --colorFuchsiaColor700Fuchsia: #752671;    
+    /* #4D124A
+    
+    Extended palette */
+    --colorFuchsiaColor800Fuchsia: #4d124a;    
+    /* #320630
+    
+    Extended palette */
+    --colorFuchsiaColor900Fuchsia: #320630;    
+    /* #FFFBF9
+    
+    Extended palette */
+    --colorOrangeColor50Orange: #fffbf9;    
+    /* #FAE7DF
+    
+    100-orange is the inactive selected color for toggles radio, checkboxes and other action items.  */
+    --colorOrangeColor100Orange: #fae7df;    
+    /* #FFCAB0
+    
+    Extended palette */
+    --colorOrangeColor200Orange: #ffcab0;    
+    /* #FFA0713
+    
+    Extended palette */
+    --colorOrangeColor300Orange: #ffa071;    
+    /* #FF7500
+    
+    Extended palette */
+    --colorOrangeColor400Orange: #ff7500;    
+    /* #F26003
+    
+    Extended palette */
+    --colorOrangeColor500Orange: #f26003;    
+    /* #DD4A07
+    
+    Extended palette */
+    --colorOrangeColor600Orange: #dd4a07;    
+    /* #BB3D05
+    
+    Extended palette */
+    --colorOrangeColor700Orange: #bb3d05;    
+    /* #992E04
+    
+    Extended palette */
+    --colorOrangeColor800Orange: #992e04;    
+    /* #7D2106
+    
+    Extended palette */
+    --colorOrangeColor900Orange: #7d2106;    
+    /* #FFFBFA
+    
+    Extended palette */
+    --colorRedColor50Red: #fffbfa;    
+    /* #FFE5E0
+    
+    Extended palette */
+    --colorRedColor100Red: #ffe5e0;    
+    /* #FEC3B6
+    
+    Extended palette */
+    --colorRedColor200Red: #fec3b6;    
+    /* #FE8F7B
+    
+    Extended palette */
+    --colorRedColor300Red: #fe8f7b;    
+    /* #FF6652
+    
+    Extended palette */
+    --colorRedColor400Red: #ff6652;    
+    /* #DA021C
+    
+    Extended palette */
+    --colorRedColor600Red: #da021c;    
+    /* #A20713
+    
+    Extended palette */
+    --colorRedColor700Red: #a20713;    
+    /* #800C0F
+    
+    Extended palette */
+    --colorRedColor800Red: #800c0f;    
+    /* #560F08
+    
+    Extended palette */
+    --colorRedColor900Red: #560f08;    
+    /* #FF1822
+    
+    Extended palette */
+    --colorRedColor500Red: #ff1822;    
+    /* Text links and action items like icons and cancel buttons. */
+    --colorSecondaryColorSecondary: #00628b;    
+    /* #D9E7EE
+    Secondary button selected fill.  */
+    --colorSecondaryColorSecondaryLightest: #d9e7ee;    
+    /* #99C0D1
+    
+    Secondary button pressed.
+    The contrast hover color for links, toggles radio, checkboxes and other action items.  */
+    --colorSecondaryColorSecondaryLighter: #99c0d1;    
+    /* #66A1BA
+    
+    The contrast color for links, links and other action items.  */
+    --colorSecondaryColorSecondaryLight: #66a1ba;    
+    /* #003B54
+    
+    Links hovered. */
+    --colorSecondaryColorSecondaryDark: #003b54;    
+    --colorPaginationPaginationBorderDefault: var(--colorSecondaryColorSecondary);    
+    --colorPaginationPaginationIndicatorDefault: var(--colorSecondaryColorSecondary);    
+    --colorPaginationPaginationBackgroundHoverFill: var(--colorSecondaryColorSecondaryLightest);    
+    --colorPaginationPaginationIndicatorHoverFill: var(--colorSecondaryColorSecondary);    
+    --colorPaginationPaginationBorderSelected: var(--colorSecondaryColorSecondary);    
+    --colorPaginationPaginationBackgroundSelectedFill: var(--colorSecondaryColorSecondaryLightest);    
+    --colorPaginationPaginationIndicatorSelectedFill: var(--colorSecondaryColorSecondary);    
+    --colorPaginationPaginationBorderInactive: var(--colorGrayscaleColor300Gray);    
+    --colorPaginationPaginationBackgroundInactiveFill: var(--colorGrayscaleColor100Gray);    
+    --colorPaginationPaginationIndicatorInactiveFill: var(--colorGrayscaleColor300Gray);    
+    --colorChipChipPrimaryFill: var(--colorGrayscaleColorWhite);    
+    --colorChipChipPrimaryBorder: var(--colorGrayscaleColor200Gray);    
+    --colorChipChipPrimaryText: var(--colorGrayscaleColor900Gray);    
+    --colorChipChipPrimaryIcon: var(--colorGrayscaleColor900Gray);    
+    --colorChipChipPrimaryHoverFill: var(--colorPrimaryColorPrimaryLightest);    
+    --colorChipChipPrimaryHoverText: var(--colorGrayscaleColor900Gray);    
+    --colorChipChipPrimaryHoverBorder: var(--colorPrimaryColorPrimary);    
+    --colorChipChipPrimarySelectedFill: var(--colorPrimaryColorPrimaryLighter);    
+    --colorChipChipPrimarySelectedText: var(--colorGrayscaleColor900Gray);    
+    --colorChipChipPrimarySelectedBorder: var(--colorPrimaryColorPrimary);    
+    --colorChipChipPrimaryInactiveFill: var(--colorGrayscaleColor100Gray);    
+    --colorChipChipPrimaryInactiveBorder: var(--colorGrayscaleColor300Gray);    
+    --colorChipChipPrimaryInactiveText: var(--colorGrayscaleColor300Gray);    
+    --colorButtonGroupButtonGroupItemPrimaryInactiveText: var(--colorGrayscaleColor300Gray);    
+    --colorButtonGroupButtonGroupItemPrimaryInactiveBorder: var(--colorGrayscaleColor300Gray);    
+    --colorButtonGroupButtonGroupItemPrimaryInactiveFill: var(--colorGrayscaleColor100Gray);    
+    --colorButtonGroupButtonGroupItemPrimarySelectedText: var(--colorGrayscaleColor900Gray);    
+    --colorButtonGroupButtonGroupItemPrimarySelectedBorder: var(--colorPrimaryColorPrimary);    
+    --colorButtonGroupButtonGroupItemPrimarySelectedFill: var(--colorPrimaryColorPrimaryLighter);    
+    --colorButtonGroupButtonGroupItemPrimaryHoverText: var(--colorGrayscaleColor900Gray);    
+    --colorButtonGroupButtonGroupItemPrimaryHoverBorder: var(--colorPrimaryColorPrimary);    
+    --colorButtonGroupButtonGroupItemPrimaryHoverFill: var(--colorPrimaryColorPrimaryLightest);    
+    --colorButtonGroupButtonGroupItemPrimaryText: var(--colorGrayscaleColor900Gray);    
+    --colorButtonGroupButtonGroupItemPrimaryBorder: var(--colorGrayscaleColor200Gray);    
+    --colorButtonGroupButtonGroupItemPrimaryFill: var(--colorGrayscaleColorWhite);    
+    --colorToggleToggleDefaultFill: var(--colorGrayscaleColor600Gray);    
+    --colorToggleToggleInactiveFill: var(--colorGrayscaleColor300Gray);    
+    --colorToggleToggleSelectedFill: var(--colorPrimaryColorPrimary);    
+    --colorToggleToggleSelectedInactiveFill: var(--colorPrimaryColorPrimaryLightest);    
+    --colorToggleToggleDefaultIndicator: var(--colorGrayscaleColorWhite);    
+    --colorToggleToggleInactiveIndicator: var(--colorGrayscaleColor100Gray);    
+    --colorToggleToggleDefaultIcon: var(--colorGrayscaleColorWhite);    
+    --colorToggleToggleInactiveIcon: var(--colorGrayscaleColor100Gray);    
+    --colorToggleToggleContrastDefaultFill: var(--colorGrayscaleColor600Gray);    
+    --colorToggleToggleContrastSelectedFill: var(--colorPrimaryColorPrimary);    
+    --colorToggleToggleContrastInactiveIndicator: var(--colorGrayscaleColor400Gray);    
+    --colorToggleToggleContrastDefaultIndicator: var(--colorGrayscaleColorWhite);    
+    --colorToggleToggleContrastSelectedInactiveIndicator: var(--colorPrimaryColorPrimaryLight);    
+    --colorToggleToggleContrastDefaultIcon: var(--colorGrayscaleColorWhite);    
+    --colorToggleToggleContrastInactiveIcon: var(--colorGrayscaleColor400Gray);    
+    --colorToggleToggleContrastSelectedInactiveIcon: var(--colorPrimaryColorPrimaryLight);    
+    --colorNavMenuMenuDefaultFill: var(--colorGrayscaleColor900Gray);    
+    --colorNavMenuMenuLinkHoverFill: var(--colorGrayscaleColor800Gray);    
+    --colorNavMenuMenuLinkSelectedFill: var(--colorGrayscaleColorWhite);    
+    --colorNavMenuMenuIconDefaultFill: var(--colorGrayscaleColorWhite);    
+    --colorNavMenuMenuIconSelectedFill: var(--colorGrayscaleColor900Gray);    
+    --colorNavMenuMenuIconSurfaceSelectedFill: var(--colorGrayscaleColorWhite);    
+    --colorNavMenuMenuButtonDefaultFill: var(--colorGrayscaleColor800Gray);    
+    --colorNavMenuMenuButtonHoverFill: var(--colorGrayscaleColor700Gray);    
+    --colorStatusSurfaceStatusHoverBorder: var(--colorAccentColorAccentOne);    
+    --colorStatusSurfaceStatusHoverContrastBorder: var(--colorAccentColorAccentOne);    
+    --colorStatusSurfaceStatusInformationBorder: var(--colorSemanticsColorSemanticInformation50PercentOpacity);    
+    --colorStatusSurfaceStatusInformationBorderAlt: var(--colorSemanticsColorSemanticInformation);    
+    --colorStatusSurfaceStatusSuccessBorder: var(--colorSemanticsColorSemanticSuccess50PercentOpacity);    
+    --colorStatusSurfaceStatusPendingBorder: var(--colorSemanticsColorSemanticPending50PercentOpacity);    
+    --colorStatusSurfaceStatusWarningBorder: var(--colorSemanticsColorSemanticWarning50PercentOpacity);    
+    --colorStatusSurfaceStatusErrorBorder: var(--colorSemanticsColorSemanticError50PercentOpacity);    
+    --colorStatusSurfaceStatusInformationLight: var(--colorSemanticsColorSemanticInformationLight);    
+    --colorStatusSurfaceStatusSuccessLight: var(--colorSemanticsColorSemanticSuccessLight);    
+    --colorStatusSurfaceStatusPendingLight: var(--colorSemanticsColorSemanticPendingLight);    
+    --colorStatusSurfaceStatusWarningLight: var(--colorSemanticsColorSemanticWarningLight);    
+    --colorStatusSurfaceStatusErrorLight: var(--colorSemanticsColorSemanticErrorLight);    
+    --colorStatusSurfaceStatusSuccessBorderAlt: var(--colorSemanticsColorSemanticSuccess);    
+    --colorStatusSurfaceStatusPendingBorderAlt: var(--colorSemanticsColorSemanticPending);    
+    --colorStatusSurfaceStatusWarningBorderAlt: var(--colorSemanticsColorSemanticWarning);    
+    --colorStatusSurfaceStatusErrorBorderAlt: var(--colorSemanticsColorSemanticError);    
+    --colorStatusIconStatusInformationIcon: var(--colorSemanticsColorSemanticInformation);    
+    --colorStatusIconStatusSuccessIcon: var(--colorSemanticsColorSemanticSuccess);    
+    --colorStatusIconStatusWarningIcon: var(--colorSemanticsColorSemanticWarning);    
+    --colorStatusIconStatusErrorIcon: var(--colorSemanticsColorSemanticError);    
+    --colorStatusIconStatusPendingIcon: var(--colorSemanticsColorSemanticPending);    
+    --colorStatusTextStatusInformationText: var(--colorSemanticsColorSemanticInformation);    
+    --colorStatusTextStatusSuccessText: var(--colorSemanticsColorSemanticSuccess);    
+    --colorStatusTextStatusWarningText: var(--colorSemanticsColorSemanticWarning);    
+    --colorStatusTextStatusErrorText: var(--colorSemanticsColorSemanticError);    
+    --colorStatusTextStatusPendingText: var(--colorSemanticsColorSemanticPending);    
+    --colorButtonSecondaryButtonSecondaryInactiveText: var(--colorGrayscaleColor300Gray);    
+    --colorButtonSecondaryButtonSecondaryInactiveBorder: var(--colorGrayscaleColor300Gray);    
+    --colorButtonSecondaryButtonSecondaryInactiveFill: var(--colorGrayscaleColor100Gray);    
+    --colorButtonSecondaryButtonSecondarySelectedText: var(--colorGrayscaleColorWhite);    
+    --colorButtonSecondaryButtonSecondarySelectedBorder: var(--colorGrayscaleColor900Gray);    
+    --colorButtonSecondaryButtonSecondarySelectedFill: var(--colorGrayscaleColor900Gray);    
+    --colorButtonSecondaryButtonSecondaryPressedText: var(--colorGrayscaleColor900Gray);    
+    --colorButtonSecondaryButtonSecondaryPressedBorder: var(--colorGrayscaleColor900Gray);    
+    --colorButtonSecondaryButtonSecondaryPressedFill: var(--colorGrayscaleColor300Gray);    
+    --colorButtonSecondaryButtonSecondaryHoverText: var(--colorGrayscaleColor900Gray);    
+    --colorButtonSecondaryButtonSecondaryHoverBorder: var(--colorGrayscaleColor900Gray);    
+    --colorButtonSecondaryButtonSecondaryHoverFill: var(--colorGrayscaleColor200Gray);    
+    --colorButtonSecondaryButttonSecondaryText: var(--colorGrayscaleColor900Gray);    
+    --colorButtonSecondaryButtonSecondaryBorder: var(--colorGrayscaleColor900Gray);    
+    --colorButtonSecondaryButtonSecondaryFill: var(--colorGrayscaleColorWhite);    
+    --colorButtonContrastButtonContrastInactiveText: var(--colorGrayscaleColor600Gray);    
+    --colorButtonContrastButtonContrastInactiveBorder: var(--colorGrayscaleColor600Gray);    
+    --colorButtonContrastButtonContrastInactiveFill: var(--colorGrayscaleColor800Gray);    
+    --colorButtonContrastButtonContrastSelectedText: var(--colorGrayscaleColor900Gray);    
+    --colorButtonContrastButtonContrastSelectedBorder: var(--colorGrayscaleColorWhite);    
+    --colorButtonContrastButtonContrastSelectedFill: var(--colorGrayscaleColorWhite);    
+    --colorButtonContrastButtonContrastPressedText: var(--colorGrayscaleColorWhite);    
+    --colorButtonContrastButtonContrastPressedBorder: var(--colorGrayscaleColorWhite);    
+    --colorButtonContrastButtonContrastPressedFill: var(--colorGrayscaleColor700Gray);    
+    --colorButtonContrastButtonContrastHoverText: var(--colorGrayscaleColorWhite);    
+    --colorButtonContrastButtonContrastHoverBorder: var(--colorGrayscaleColorWhite);    
+    --colorButtonContrastButtonContrastHoverFill: var(--colorGrayscaleColor800Gray);    
+    --colorButtonContrastButtonContrastText: var(--colorGrayscaleColorWhite);    
+    --colorButtonContrastButtonContrastBorder: var(--colorGrayscaleColorWhite);    
+    --colorButtonContrastButtonContrastFill: var(--colorGrayscaleColor900Gray);    
+    --colorButtonPrimaryButtonPrimaryInactiveText: var(--colorGrayscaleColor300Gray);    
+    --colorButtonPrimaryButtonPrimaryInactiveBorder: var(--colorGrayscaleColor300Gray);    
+    --colorButtonPrimaryButtonPrimaryInactiveFill: var(--colorGrayscaleColor100Gray);    
+    --colorButtonPrimaryButtonPrimarySelectedText: var(--colorGrayscaleColor900Gray);    
+    --colorButtonPrimaryButtonPrimarySelectedBorder: var(--colorPrimaryColorPrimary);    
+    --colorButtonPrimaryButtonPrimarySelectedFill: var(--colorPrimaryColorPrimary);    
+    --colorButtonPrimaryButtonPrimaryPressedText: var(--colorGrayscaleColor900Gray);    
+    --colorButtonPrimaryButtonPrimaryPressedBorder: var(--colorPrimaryColorPrimary);    
+    --colorButtonPrimaryButtonPrimaryPressedFill: var(--colorPrimaryColorPrimaryLighter);    
+    --colorButtonPrimaryButtonPrimaryHoverText: var(--colorGrayscaleColor900Gray);    
+    --colorButtonPrimaryButtonPrimaryHoverBorder: var(--colorPrimaryColorPrimary);    
+    --colorButtonPrimaryButtonPrimaryHoverFill: var(--colorPrimaryColorPrimaryLightest);    
+    --colorButtonPrimaryButtonPrimaryText: var(--colorGrayscaleColor900Gray);    
+    --colorButtonPrimaryButtonPrimaryBorder: var(--colorPrimaryColorPrimary);    
+    --colorButtonPrimaryButtonPrimaryFill: var(--colorGrayscaleColorWhite);    
+    --colorElementRadioCheckboxDefaultElementBackgroundDefaultFill: var(--colorGrayscaleColorWhite);    
+    --colorElementRadioCheckboxDefaultElementBackgroundHoverFill: var(--colorGrayscaleColorWhite);    
+    --colorElementRadioCheckboxDefaultElementBackgroundSelectedFill: var(--colorGrayscaleColorWhite);    
+    --colorElementRadioCheckboxDefaultElementBackgroundSelectedInactiveFill: var(--colorGrayscaleColorWhite);    
+    --colorElementRadioCheckboxDefaultElementBackgroundInactiveFill: var(--colorGrayscaleColor100Gray);    
+    --colorElementRadioCheckboxDefaultElementIndicatorSelectedFill: var(--colorPrimaryColorPrimary);    
+    --colorElementRadioCheckboxDefaultElementIndicatorSelectedInactiveFill: var(--colorPrimaryColorPrimaryLightest);    
+    --colorElementRadioCheckboxDefaultElementBorderDefault: var(--colorGrayscaleColor200Gray);    
+    --colorElementRadioCheckboxDefaultElementBorderHover: var(--colorAccentColorAccentOne);    
+    --colorElementRadioCheckboxDefaultElementBorderSelected: var(--colorPrimaryColorPrimary);    
+    --colorElementRadioCheckboxDefaultElementBorderSelectedInactive: var(--colorPrimaryColorPrimaryLightest);    
+    --colorElementRadioCheckboxDefaultElementBorderInactive: var(--colorGrayscaleColor300Gray);    
+    --colorElementRadioCheckboxContrastElementContrastBackgroundDefaultFill: var(--colorGrayscaleColor900Gray);    
+    --colorElementRadioCheckboxContrastElementContrastBackgroundHoverFill: var(--colorGrayscaleColor900Gray);    
+    --colorElementRadioCheckboxContrastElementContrastBackgroundSelectedFill: var(--colorGrayscaleColor900Gray);    
+    --colorElementRadioCheckboxContrastElementContrastBackgroundInactiveFill: var(--colorGrayscaleColor800Gray);    
+    --colorElementRadioCheckboxContrastElementContrastBackgroundSelectedInactiveFill: var(--colorGrayscaleColor900Gray);    
+    --colorElementRadioCheckboxContrastElementContrastIndicatorSelected: var(--colorPrimaryColorPrimary);    
+    --colorElementRadioCheckboxContrastElementContrastSelectedInactive-: var(--colorPrimaryColorPrimaryDark);    
+    --colorElementRadioCheckboxContrastElementContrastBorderDefault: var(--colorGrayscaleColorWhite);    
+    --colorElementRadioCheckboxContrastElementContrastBorderHover: var(--colorAccentColorAccentOne);    
+    --colorElementRadioCheckboxContrastElementContrastBorderSelected: var(--colorPrimaryColorPrimary);    
+    --colorElementRadioCheckboxContrastElementContrastBorderInactive: var(--colorGrayscaleColor600Gray);    
+    --colorElementRadioCheckboxContrastElementContrastBorderSelectedInactive: var(--colorPrimaryColorPrimaryDark);    
+    --colorBaseTextTextPrimary: var(--colorGrayscaleColor900Gray);    
+    --colorBaseTextTextSecondary: var(--colorGrayscaleColor600Gray);    
+    --colorBaseTextTextLink: var(--colorSecondaryColorSecondary);    
+    --colorBaseTextTextLinkContrast: var(--colorSecondaryColorSecondaryLight);    
+    --colorBaseTextTextLight: var(--colorGrayscaleColorWhite);    
+    --colorBaseBorderBorderPrimaryColor: var(--colorPrimaryColorPrimary);    
+    --colorBaseBorderBorderSecondaryColor: var(--colorSecondaryColorSecondary);    
+    --colorBaseBorderBorderLight: var(--colorGrayscaleColor100Gray);    
+    --colorBaseBorderBorderSubtle: var(--colorGrayscaleColor200Gray);    
+    --colorBaseBorderBorderBold: var(--colorGrayscaleColor300Gray);    
+    --colorBaseBorderBorderDark: var(--colorGrayscaleColor800Gray);    
+    --colorBaseBorderBorderBolder: var(--colorGrayscaleColor600Gray);    
+    --colorBaseBorderBorderDarker: var(--colorGrayscaleColor900Gray);    
+    --colorBaseIconIconAction: var(--colorSecondaryColorSecondary);    
+    --colorBaseIconIconActionHover: var(--colorSecondaryColorSecondaryDark);    
+    --colorBaseIconIconTooltip: var(--colorPrimaryColorPrimary);    
+    --colorBaseIconIconTooltipInactive: var(--colorPrimaryColorPrimaryLighter);    
+    --colorBaseIconIconHeader: var(--colorPrimaryColorPrimary);    
+    --colorBaseIconIconActionContrast: var(--colorGrayscaleColorWhite);    
+    --colorBaseIconIconActionContrastHover: var(--colorGrayscaleColor100Gray);    
+    --colorBaseIconIconLight: var(--colorGrayscaleColorWhite);    
+    --colorBaseIconIconDark: var(--colorGrayscaleColor900Gray);    
+    --colorBaseIconIconActionLinkContrast: var(--colorSecondaryColorSecondaryLight);    
+    --colorBaseIconIconActionLinkContrastHover: var(--colorSecondaryColorSecondaryLighter);    
+    --colorBaseSurfaceSurfacePrimary: var(--colorGrayscaleColorWhite);    
+    --colorBaseSurfaceSurfaceSecondary: var(--colorGrayscaleColor50Gray);    
+    --colorBaseSurfaceSurfaceTertiary: var(--colorGrayscaleColor100Gray);    
+    --colorBaseSurfaceSurfaceQuaternary: var(--colorGrayscaleColor200Gray);    
+    --colorBaseSurfaceSurfaceBold: var(--colorGrayscaleColor300Gray);    
+    --colorBaseSurfaceSurfaceDark: var(--colorGrayscaleColor600Gray);    
+    --colorBaseSurfaceSurfaceDarker: var(--colorGrayscaleColor900Gray);    
+    --colorBaseSurfaceSurfaceTextHighlight: var(--colorSemanticsColorSemanticTextHighlight);    
+    --colorStatesFocusFocusBorder: var(--colorSemanticsColorSemanticFocus);    
+    --colorStatesInactiveInactiveText: var(--colorGrayscaleColor300Gray);    
+    --colorStatesInactiveInactiveTextContrast: var(--colorGrayscaleColor600Gray);    
+    --colorStatesInactiveInactiveIcon: var(--colorGrayscaleColor300Gray);    
+    --colorStatesInactiveInactiveIconContrast: var(--colorGrayscaleColor600Gray);    
+    --colorStatesInactiveInactiveFill: var(--colorGrayscaleColor100Gray);    
+    --colorStatesInactiveInactiveFillContrast: var(--colorGrayscaleColor800Gray);    
+    --colorStatesInactiveInactiveTextLink: var(--colorGrayscaleColor300Gray);    
+    --colorStatesInactiveInactiveContrastTextLink: var(--colorGrayscaleColor600Gray);    
+    --colorStatesHoverHoverPrimaryBorder: var(--colorAccentColorAccentOne);    
+    --colorStatesHoverHoverPrimaryFill: var(--colorGrayscaleColorWhite);    
+    --colorStatesHoverHoverPrimaryFillAlt: var(--colorPrimaryColorPrimaryLightest);    
+    --colorStatesHoverHoverSecondaryBorder: var(--colorSecondaryColorSecondaryDark);    
+    --colorStatesHoverHoverSecondaryContrastBorder: var(--colorSecondaryColorSecondaryLighter);    
+    --colorStatesHoverHoverSecondaryFill: var(--colorGrayscaleColorWhite);    
+    --colorStatesHoverHoverTextLink: var(--colorSecondaryColorSecondaryDark);    
+    --colorStatesHoverHoverContrastTextLink: var(--colorSecondaryColorSecondaryLighter);    
+    --colorStatesHoverHoverIconAction: var(--colorSecondaryColorSecondaryDark);    
+    --colorStatesSelectedSelectedPrimaryBorder: var(--colorPrimaryColorPrimary);    
+    --colorStatesSelectedSelectedPrimaryFill: var(--colorPrimaryColorPrimaryLighter);    
+    --colorStatesSelectedSelectedPrimaryFillAlt: var(--colorPrimaryColorPrimaryLightest);    
+    --colorStatesSelectedSelectedSecondaryBorder: var(--colorSecondaryColorSecondary);    
+    --colorStatesSelectedSelectedSecondaryContrastBorder: var(--colorSecondaryColorSecondaryLight);    
+    --colorStatesSelectedSelectedSecondaryFill: var(--colorSecondaryColorSecondaryLight);    
+    --colorStatesSelectedSelectedTextLink: var(--colorSecondaryColorSecondary);    
+    --colorStatesSelectedSelectedContrastTextLink: var(--colorSecondaryColorSecondaryLight);    
+    --colorFieldsSurfaceFieldBackgroundDefaultFill: var(--colorGrayscaleColorWhite);    
+    --colorFieldsSurfaceFieldBackgroundInactiveFill: var(--colorGrayscaleColor100Gray);    
+    --colorFieldsBorderFieldBorderDefault: var(--colorGrayscaleColor200Gray);    
+    --colorFieldsBorderFieldBorderHover: var(--colorAccentColorAccentOne);    
+    --colorFieldsBorderFieldBorderActive: var(--colorPrimaryColorPrimary);    
+    --colorFieldsBorderFieldBorderSuccess: var(--colorSemanticsColorSemanticSuccess);    
+    --colorFieldsBorderFieldBorderError: var(--colorSemanticsColorSemanticError);    
+    --colorFieldsBorderFieldBorderInactive: var(--colorGrayscaleColor300Gray);    
+    --colorFieldsIconFieldIconDefaultFill: var(--colorGrayscaleColor900Gray);    
+}

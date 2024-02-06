@@ -1,0 +1,11 @@
+.label__container {
+  display: flex;
+  align-items: center;
+  line-height: 1.1rem;
+}
+
+.label__interactive-item {
+  display: flex;
+  align-items: center;
+  margin-left: var(--measureDimensionGapXs, 0.25rem);
+}
