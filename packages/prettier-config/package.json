@@ -1,5 +1,5 @@
 {
-  "name": "@repo/prettier-config",
+  "name": "@zdx/prettier-config",
   "version": "0.0.0",
   "private": true,
   "exports": {
