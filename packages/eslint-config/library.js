@@ -4,8 +4,8 @@ const project = resolve(process.cwd(), "tsconfig.json");
 
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
-  extends: ["eslint:recommended", "prettier", "eslint-config-turbo"],
-  plugins: ["only-warn"],
+  extends: ["eslint:recommended", "prettier", "plugin:react-hooks/recommended", "plugin:storybook/recommended", "eslint-config-turbo"],
+  plugins: ["only-warn", "react-refresh"],
   globals: {
     React: true,
     JSX: true,
@@ -31,4 +31,10 @@ module.exports = {
       files: ["*.js?(x)", "*.ts?(x)"],
     },
   ],
+  rules: {
+    "react-refresh/only-export-components": [
+      "warn",
+      { allowConstantExport: true },
+    ],
+  },
 };
