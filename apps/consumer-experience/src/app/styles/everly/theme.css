@@ -1,7 +1,7 @@
 @font-face {
   font-family: Poppins;
-  src: url('/styles/themes/everly/fonts/Poppins-ExtraLight.ttf');
-  format: ('ttf');
+  src: url("/styles/themes/everly/fonts/Poppins-ExtraLight.ttf");
+  format: ("ttf");
   font-display: swap;
   font-style: normal;
   font-weight: 200;
@@ -9,8 +9,8 @@
 
 @font-face {
   font-family: Poppins;
-  src: url('/styles/themes/everly/fonts/Poppins-Light.ttf');
-  format: ('ttf');
+  src: url("/styles/themes/everly/fonts/Poppins-Light.ttf");
+  format: ("ttf");
   font-display: swap;
   font-style: normal;
   font-weight: 300;
@@ -18,8 +18,8 @@
 
 @font-face {
   font-family: Poppins;
-  src: url('/styles/themes/everly/fonts/Poppins-Regular.ttf');
-  format: ('ttf');
+  src: url("/styles/themes/everly/fonts/Poppins-Regular.ttf");
+  format: ("ttf");
   font-display: swap;
   font-style: normal;
   font-weight: 400;
@@ -27,8 +27,8 @@
 
 @font-face {
   font-family: Poppins;
-  src: url('/styles/themes/everly/fonts/Poppins-Medium.ttf');
-  format: ('ttf');
+  src: url("/styles/themes/everly/fonts/Poppins-Medium.ttf");
+  format: ("ttf");
   font-display: swap;
   font-style: normal;
   font-weight: 500;
@@ -36,8 +36,8 @@
 
 @font-face {
   font-family: Poppins;
-  src: url('/styles/themes/everly/fonts/Poppins-SemiBold.ttf');
-  format: ('ttf');
+  src: url("/styles/themes/everly/fonts/Poppins-SemiBold.ttf");
+  format: ("ttf");
   font-display: swap;
   font-style: normal;
   font-weight: 600;
@@ -45,8 +45,8 @@
 
 @font-face {
   font-family: Poppins;
-  src: url('/styles/themes/everly/fonts/Poppins-Bold.ttf');
-  format: ('ttf');
+  src: url("/styles/themes/everly/fonts/Poppins-Bold.ttf");
+  format: ("ttf");
   font-display: swap;
   font-style: normal;
   font-weight: 700;
@@ -54,8 +54,8 @@
 
 @font-face {
   font-family: Lato;
-  src: url('/styles/themes/everly/fonts/Lato-Regular.ttf');
-  format: ('ttf');
+  src: url("/styles/themes/everly/fonts/Lato-Regular.ttf");
+  format: ("ttf");
   font-display: swap;
   font-style: normal;
   font-weight: 400;
@@ -63,8 +63,8 @@
 
 @font-face {
   font-family: Lato;
-  src: url('/styles/themes/everly/fonts/Lato-Bold.ttf');
-  format: ('ttf');
+  src: url("/styles/themes/everly/fonts/Lato-Bold.ttf");
+  format: ("ttf");
   font-display: swap;
   font-style: normal;
   font-weight: 500;
@@ -88,8 +88,8 @@
 
   --color-bg-accent: 228 229 245;
 
-  --font-family-primary: 'Poppins';
-  --font-family-secondary: 'Lato';
+  --font-family-primary: "Poppins";
+  --font-family-secondary: "Lato";
 
   /* Semantics */
   --color-semantic-information: 000 95 237;

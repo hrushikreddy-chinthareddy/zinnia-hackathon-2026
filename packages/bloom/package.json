@@ -63,6 +63,7 @@
   "scripts": {
     "prepare": "npm run build",
     "prepublishOnly": "npm run test",
+    "dev:vite": "vite",
     "dev": "pnpm run build:watch",
     "test": "echo \"no tests\" && exit 0",
     "build": "tsc && vite build",

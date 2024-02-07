@@ -1,6 +1,11 @@
+@import url("/node_modules/@zdx/bloom");
+@import url("/node_modules/@zdx/bloom/component-styles");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import "./styles/everly/theme.css";
 
 @layer base {
   a {

@@ -14,7 +14,7 @@ const config: Omit<Config, "content"> = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "var(--colorBaseTextTextPrimary, #212121)",
+          DEFAULT: "var(--color-base-text-text-primary, #212121)",
           light: "rgb(var(--color-primary-light) / <alpha-value>)",
           lighter: "rgb(var(--color-primary-lighter) / <alpha-value>)",
           lightest: "rgb(var(--color-primary-lightest) / <alpha-value>)",
@@ -39,7 +39,7 @@ const config: Omit<Config, "content"> = {
           300: "rgb(var(--color-300-gray) / <alpha-value>)",
           400: "rgb(var(--color-400-gray) / <alpha-value>)",
           500: "rgb(var(--color-500-gray) / <alpha-value>)",
-          600: "var(--colorBaseTextTextSecondary)",
+          600: "var(--color-base-text-text-scondary)",
           700: "rgb(var(--color-700-gray) / <alpha-value>)",
           800: "rgb(var(--color-800-gray) / <alpha-value>)",
           900: "rgb(var(--color-900-gray) / <alpha-value>)",
