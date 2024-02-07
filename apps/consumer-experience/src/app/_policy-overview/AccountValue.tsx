@@ -1,14 +1,14 @@
-import Bloom from '@zinnia/bloom/components';
+import { Label } from "@zdx/bloom/components";
 
-import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
-import { FieldData } from '@/components/field-data/FieldData';
-import { Icon, IconType } from '@/components/icon/Icon';
-import { Popover } from '@/components/popover/Popover';
-import { PopoverPlacement } from '@/components/popover/popover.helper';
-import { Ticker } from '@/components/ticker/Ticker';
-import { formatUSDollars } from '@/utils/currency';
+import { ClickableCardContainer } from "@/components/clickable-card-container/ClickableCardContainer";
+import { FieldData } from "@/components/field-data/FieldData";
+import { Icon, IconType } from "@/components/icon/Icon";
+import { Popover } from "@/components/popover/Popover";
+import { PopoverPlacement } from "@/components/popover/popover.helper";
+import { Ticker } from "@/components/ticker/Ticker";
+import { formatUSDollars } from "@/utils/currency";
 
-import styles from './policyOverviewCards.module.css';
+import styles from "./policyOverviewCards.module.css";
 
 const AccountValuePopover = () => {
   return (
@@ -46,29 +46,30 @@ const AccountValuePopover = () => {
 // TODO: remove this and the id on the label when bloom label component update has been
 // merged to not require label
 const idFromTitle = (title: string) => {
-  return title.split(' ').join();
+  return title.split(" ").join();
 };
 
-const ACCOUNT_VALUE = 'Account value';
+const ACCOUNT_VALUE = "Account value";
 
 export const AccountValue = () => {
   return (
     <ClickableCardContainer
-      linkTo={{ url: '#', isInternal: true, label: 'go to internal link' }}
+      linkTo={{ url: "#", isInternal: true, label: "go to internal link" }}
     >
       <div className={styles.content}>
         <Icon type={IconType.DOLLAR} className={styles.icon} />
         <FieldData
           large
           Label={
-            <Bloom.Label
-              text={ACCOUNT_VALUE}
+            <Label
               labelFor={idFromTitle(ACCOUNT_VALUE)}
               interactiveElements={[
                 // eslint-disable-next-line react/jsx-key
                 <AccountValuePopover />,
               ]}
-            />
+            >
+              {ACCOUNT_VALUE}
+            </Label>
           }
           fieldData={
             <p

@@ -10,11 +10,11 @@ Our components are listed in this storybook under the `COMPONENTS` section in th
 You can use our tokens in multiple ways! The easiest is to import our css stylesheet at the root of your application 
 ```jsx
 // make sure tokens are imported
-import '@zinnia/bloom/css';
+import '@zdx/bloom/css';
 // If you want to use Bloom theme make sure to import component styles also
-import '@zinnia/bloom/component-styles';
+import '@zdx/bloom/component-styles';
 // import JSX component
-import { Button } '@zinnia/bloom/components'
+import { Button } '@zdx/bloom/components'
 
 export default function App() {
   return (
@@ -30,7 +30,7 @@ If you're using NextJs, then the process will vary slightly depending on which r
 > See more in [NextJs Docs](https://nextjs.org/docs/pages/building-your-application/styling/css-modules#global-styles)
  ```jsx
  // pages/_app.js
- import '@zinnia/bloom/css'
+ import '@zdx/bloom/css'
 
 // This default export is required in a new `pages/_app.js` file.
 export default function MyApp({ Component, pageProps }) {
@@ -42,7 +42,7 @@ export default function MyApp({ Component, pageProps }) {
 > See more in [NextJs Docs](https://nextjs.org/docs/app/building-your-application/styling/css-modules#global-styles)
 ```jsx
 // `app/layout.tsx`
-import '@zinnia/bloom/css'
+import '@zdx/bloom/css'
  
 export default function RootLayout({
   children,

@@ -1,13 +1,13 @@
-import Bloom from '@zinnia/bloom/components';
+import { Label } from "@zdx/bloom/components";
 
-import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
-import { FieldData } from '@/components/field-data/FieldData';
-import { Icon, IconType } from '@/components/icon/Icon';
-import { Popover } from '@/components/popover/Popover';
-import { PopoverPlacement } from '@/components/popover/popover.helper';
-import { formatUSDollars } from '@/utils/currency';
+import { ClickableCardContainer } from "@/components/clickable-card-container/ClickableCardContainer";
+import { FieldData } from "@/components/field-data/FieldData";
+import { Icon, IconType } from "@/components/icon/Icon";
+import { Popover } from "@/components/popover/Popover";
+import { PopoverPlacement } from "@/components/popover/popover.helper";
+import { formatUSDollars } from "@/utils/currency";
 
-import styles from './policyOverviewCards.module.css';
+import styles from "./policyOverviewCards.module.css";
 
 const CoveragePopover = () => {
   return (
@@ -41,17 +41,12 @@ export const Coverage = () => {
       listItems={[
         {
           content: <p className="typographyLabelsFieldLabel">Riders</p>,
-          linkTo: { url: '#', label: 'riders' },
+          linkTo: { url: "#", label: "riders" },
         },
         {
           content: (
             <FieldData
-              Label={
-                <Bloom.Label
-                  text="Beneficiary"
-                  labelFor="policyBeneficiaries"
-                />
-              }
+              Label={<Label labelFor="policyBeneficiaries">Beneficiary</Label>}
               fieldData={
                 <p
                   id="policyBeneficiaries"
@@ -70,12 +65,13 @@ export const Coverage = () => {
         <FieldData
           large
           Label={
-            <Bloom.Label
-              text="Coverage"
+            <Label
               labelFor="Coverage"
               // eslint-disable-next-line react/jsx-key
               interactiveElements={[<CoveragePopover />]}
-            />
+            >
+              Coverage
+            </Label>
           }
           fieldData={
             <p className="typographyContentValue">{formatUSDollars(1000000)}</p>

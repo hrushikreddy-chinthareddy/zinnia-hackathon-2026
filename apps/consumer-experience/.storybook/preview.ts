@@ -1,7 +1,7 @@
 import type { Preview } from '@storybook/react';
 // TODO: change theme https://storybook.js.org/docs/configure/theming
 import '../src/app/styles/everly/theme.css';
-import '@zinnia/bloom';
+import '@zdx/bloom';
 import '../src/app/globals.css';
 
 const preview: Preview = {

@@ -7,7 +7,7 @@ import { MainNav } from '@/components/MainNav';
 
 import './globals.css';
 import './styles/everly/theme.css';
-import '@zinnia/bloom';
+import '@zdx/bloom';
 // const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
