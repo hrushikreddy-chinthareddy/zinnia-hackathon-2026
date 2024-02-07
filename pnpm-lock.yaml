@@ -14,12 +14,6 @@ importers:
       '@zdx/typescript-config':
         specifier: workspace:*
         version: link:packages/typescript-config
-      add:
-        specifier: ^2.0.6
-        version: 2.0.6
-      dotenv-cli:
-        specifier: ^7.3.0
-        version: 7.3.0
       prettier:
         specifier: ^3.1.1
         version: 3.2.5
@@ -72,6 +66,9 @@ importers:
 
   packages/bloom:
     dependencies:
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -115,6 +112,12 @@ importers:
       '@storybook/theming':
         specifier: ^7.6.4
         version: 7.6.13(react-dom@18.2.0)(react@18.2.0)
+      '@types/css-modules':
+        specifier: ^1.0.5
+        version: 1.0.5
+      '@types/lodash':
+        specifier: ^4.14.202
+        version: 4.14.202
       '@types/node':
         specifier: ^20.10.8
         version: 20.11.16
@@ -133,12 +136,6 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^4.2.0
         version: 4.2.1(vite@5.0.12)
-      '@zdx/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      '@zdx/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
       chromatic:
         specifier: ^10.3.0
         version: 10.8.0
@@ -3980,6 +3977,10 @@ packages:
       '@types/node': 20.11.16
     dev: true
 
+  /@types/css-modules@1.0.5:
+    resolution: {integrity: sha512-oeKafs/df9lwOvtfiXVliZsocFVOexK9PZtLQWuPeuVCFR7jwiqlg60lu80JTe5NFNtH3tnV6Fs/ySR8BUPHAw==}
+    dev: true
+
   /@types/debug@4.1.12:
     resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
     dependencies:
@@ -4626,10 +4627,6 @@ packages:
     resolution: {integrity: sha512-Y9rRfJG5jcKOE0CLisYbojUjIrIEE7AGMzA/Sm4BslANhbS+cDMpgBdcPT91oJ7OuJ9hYJBx59RjbhxVnrF8Xg==}
     engines: {node: '>=0.4.0'}
     hasBin: true
-    dev: true
-
-  /add@2.0.6:
-    resolution: {integrity: sha512-j5QzrmsokwWWp6kUcJQySpbG+xfOBqqKnup3OIk1pz+kB/80SLorZ9V8zHFLO92Lcd+hbvq8bT+zOGoPkmBV0Q==}
     dev: true
 
   /address@1.2.2:
@@ -5650,16 +5647,6 @@ packages:
       no-case: 3.0.4
       tslib: 2.6.2
     dev: false
-
-  /dotenv-cli@7.3.0:
-    resolution: {integrity: sha512-314CA4TyK34YEJ6ntBf80eUY+t1XaFLyem1k9P0sX1gn30qThZ5qZr/ZwE318gEnzyYP9yj9HJk6SqwE0upkfw==}
-    hasBin: true
-    dependencies:
-      cross-spawn: 7.0.3
-      dotenv: 16.4.1
-      dotenv-expand: 10.0.0
-      minimist: 1.2.8
-    dev: true
 
   /dotenv-expand@10.0.0:
     resolution: {integrity: sha512-GopVGCpVS1UKH75VKHGuQFqS1Gusej0z4FyQkPdwjil2gNIv+LNsqBlboOzpJFZKVT95GkCyWJbBSdFEFUWI2A==}
@@ -7737,7 +7724,6 @@ packages:
 
   /lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
-    dev: true
 
   /log-symbols@4.1.0:
     resolution: {integrity: sha512-8XPvpAA8uyhfteu8pIvQxpJZ7SYYdpUivZpGy6sFsBuKRY/7rQGavedeB8aK+Zkyq6upMFVL/9AW6vOYzfRyLg==}

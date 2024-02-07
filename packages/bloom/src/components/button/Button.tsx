@@ -1,17 +1,16 @@
-import classes from './Button.module.css';
-import { ButtonHTMLAttributes } from 'react';
+import classes from "./Button.module.css";
+import { ButtonHTMLAttributes } from "react";
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-
   /**
    * Is this the principal call to action on the page?
    */
-  mode?: 'primary' | 'secondary';
+  mode?: "primary" | "secondary";
 
   /**
    * How large should the button be?
    */
-  size?: 'small' | 'large';
+  size?: "small" | "large";
 
   /**
    * render selected styles
@@ -28,8 +27,8 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
  * Primary UI component for user interaction
  */
 export const Button = ({
-  mode = 'primary',
-  size = 'large',
+  mode = "primary",
+  size = "large",
   className,
   children,
   selected = false,
@@ -38,7 +37,13 @@ export const Button = ({
   <button
     {...props}
     type="button"
-    className={[classes.button, classes[mode], classes[size], selected && classes.selected, className].join(' ')}
+    className={[
+      classes.button,
+      classes[mode],
+      classes[size],
+      selected && classes.selected,
+      className,
+    ].join(" ")}
   >
     {children}
   </button>

@@ -1,5 +1,11 @@
-import { Label } from "@zdx/bloom/components";
+import { Button } from "@zdx/bloom/components";
+import "@zdx/bloom/css";
+import "@zdx/bloom/component-styles";
 
 export default function Page(): JSX.Element {
-  return <main></main>;
+  return (
+    <main>
+      <Button>Bloom Button</Button>
+    </main>
+  );
 }
