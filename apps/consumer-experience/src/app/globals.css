@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  a {
+    @apply text-primary;
+  }
+
+  /* TODO: this needs some thinking through, possibly use postcss-extend library to be able to extend
+  classes from design system to set heading values */
+  h1 {
+    font-family: Poppins;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 36px; /* 128.571% */
+  }
+
+  @media screen(sm) {
+    h1 {
+      font-family: Poppins;
+      font-size: 36px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 44px; /* 122.222% */
+    }
+  }
+
+  /* TODO: these need to be updated with correct variables */
+  button:focus-visible {
+    outline: 2px solid #0d69d4;
+    border-radius: 0.75rem;
+    outline-offset: 2px;
+  }
+}

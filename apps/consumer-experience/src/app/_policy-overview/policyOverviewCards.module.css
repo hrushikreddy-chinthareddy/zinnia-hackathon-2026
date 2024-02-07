@@ -1,0 +1,20 @@
+.icon {
+  flex-shrink: 0;
+  margin-right: 0.5rem;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+}
+
+.centerItem {
+  margin-left: 2rem;
+  margin-right: 1rem;
+}
+
+.popoverContent {
+  > *:not(:last-child) {
+    margin-bottom: var(--measureDimensionPaddingXl, 0.75rem);
+  }
+}

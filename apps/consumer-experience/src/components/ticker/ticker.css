@@ -1,0 +1,30 @@
+.ticker__container {
+  display: inline-grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  grid-column-gap: var(--measureDimensionRadiusSm, 0.25rem);
+}
+.ticker__container--positive {
+  color: var(--colorStatusTextStatusSuccessText, #007b5a);
+}
+
+.ticker__container--negative {
+  color: var(--colorStatusTextStatusErrorText, #db004f);
+}
+
+.ticker__container--no-change {
+  color: var(--colorBaseTextTextSecondary, #676767);
+}
+
+.ticker__arrow--negative {
+  transform: rotate(180deg);
+}
+
+.ticker__subtext {
+  grid-column-start: 2;
+}
+
+.ticker__subtext--no-change {
+  grid-column-start: 1;
+  grid-row-start: 2;
+}

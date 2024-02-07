@@ -1,0 +1,85 @@
+import Bloom from '@zinnia/bloom/components';
+
+import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
+import { FieldData } from '@/components/field-data/FieldData';
+import { Icon, IconType } from '@/components/icon/Icon';
+import { Popover } from '@/components/popover/Popover';
+import { PopoverPlacement } from '@/components/popover/popover.helper';
+import { formatUSDollars } from '@/utils/currency';
+
+import styles from './policyOverviewCards.module.css';
+
+const UPCOMING_PREMIUM = 'Upcoming premium';
+
+// TODO: remove this and the id on the label when bloom label component update has been
+// merged to not require label
+const idFromTitle = (title: string) => {
+  return title.split(' ').join();
+};
+
+const UpcomingPremiumPopover = () => {
+  return (
+    <Popover
+      title="Upcoming premium"
+      trigger={
+        <Icon
+          type={IconType.CIRCLE_INFO}
+          width={16}
+          height={16}
+          color="var(--colorPrimaryColorPrimary, #ff7500)"
+        />
+      }
+      placement={PopoverPlacement.BottomRight}
+    >
+      <div className={styles.popoverContent}>
+        <p>
+          Your premium is the amount you pay periodically for insurance
+          coverage. What’s shown here is your next scheduled payment.
+        </p>
+        <p>
+          In exchange for your premium payments, we’ll make sure your
+          beneficiaries can claim your coverage amount should something happen
+          to you. But the benefits don’t stop there. Since you own a [Product
+          marketing name], a portion of your premium is deposited into your
+          account value and invested. Over time, you may be able tp use the
+          account value for loans, withdrawals, or to pay the cost of your
+          insurance.
+        </p>
+      </div>
+    </Popover>
+  );
+};
+
+export const UpcomingPremium = () => {
+  return (
+    <ClickableCardContainer
+      linkTo={{ url: '#', isInternal: true, label: 'go to internal link' }}
+    >
+      <div className={styles.content}>
+        <Icon type={IconType.AUTOPAY} className={styles.icon} />
+        <FieldData
+          large
+          Label={
+            <Bloom.Label
+              text={UPCOMING_PREMIUM}
+              labelFor={idFromTitle(UPCOMING_PREMIUM)}
+              interactiveElements={
+                // eslint-disable-next-line react/jsx-key
+                [<UpcomingPremiumPopover />]
+              }
+            />
+          }
+          fieldData={
+            <p
+              className="typographyContentValue"
+              id={idFromTitle(UPCOMING_PREMIUM)}
+            >
+              {formatUSDollars(281.45)}
+            </p>
+          }
+          caption="Autopay on 11/12/2023"
+        />
+      </div>
+    </ClickableCardContainer>
+  );
+};
