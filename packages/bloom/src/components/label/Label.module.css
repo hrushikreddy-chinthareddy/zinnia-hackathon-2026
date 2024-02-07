@@ -1,0 +1,16 @@
+.container, .item {
+  display: flex;
+  align-items: center;
+}
+
+.text {
+  composes: typography-labels-field-label from "/src/tokens/css/typography.css";
+}
+
+.container {
+  line-height: var( --measure-line-height-font-line-height-medium);
+}
+
+.item {
+  margin-left: var(--measure-dimension-gap-xs, 0.25rem);
+}

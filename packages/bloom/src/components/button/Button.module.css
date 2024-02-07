@@ -1,0 +1,111 @@
+@import url(@/tokens/css/index.css);
+
+.button {
+  --font-family-buttons: 'Poppins';
+  --font-weight-semibold: 600;
+  --button-border-width: 3px;
+  --button-border-style: solid;
+  --button-border-radius: var(--measure-dimension-radius-max);
+
+  align-items: center;
+  border-radius: var(--button-border-radius);
+  color: var(--color-button-primary-button-primary-text);
+  cursor: pointer;
+  display: flex;
+  font-family: var(--font-family-buttons);
+  font-feature-settings: 'clig' off, 'liga' off;
+  gap: var(--gap-none, 0px);
+  justify-content: center;
+  padding: var(--measure-dimension-padding-lg) var(--measure-dimension-padding-xxxxxxl);
+  text-align: center;
+
+  &:focus-visible {
+    outline-style: var(--button-border-style);
+    outline-width: var(--button-border-style);
+    outline-offset: 6px;
+    outline-color: var(--color-states-focus-focus-border);
+  }
+
+  /* Primary button */
+  &.primary {
+    background-color: var(--color-button-primary-button-primary-fill, #FFF);
+    /* TODO: review border weight */
+    border: var(--button-border-width) var(--button-border-style) var(--color-button-primary-button-primary-border);
+    color: var(--color-button-primary-button-primary-text);
+
+    &:hover {
+      background-color: var(--color-button-primary-button-primary-hover-fill);
+      border-color: var(--primary-button-primary-hover-border);
+      color: var(--color-button-secondary-button-secondary-hover-text);
+    }
+
+    &:active {
+      background-color: var(--color-button-primary-button-primary-pressed-fill);
+      border-color: var(--color-button-primary-button-primary-pressed-border);
+      color: var(--color-button-primary-button-primary-pressed-text);
+    }
+
+    /* TODO: is the selected state used */
+    &.selected {
+      background-color: var(--color-button-primary-button-primary-selected-fill);
+      border-color: var(--color-button-primary-button-primary-selected-border);
+      color: var(--color-button-primary-button-primary-selected-text);
+    }
+  
+    &:disabled {
+      background-color: var(--color-button-primary-button-primary-inactive-fill);
+      /* TODO: review border weight */
+      border: var(--button-border-width) var(--button-border-style) var(--color-button-primary-button-primary-inactive-border);
+      color: var(--color-button-primary-button-primary-inactive-text);
+    }
+  }
+
+  /* Secondary button */
+  &.secondary {
+    background-color: var(--color-button-secondary-button-secondary-fill);
+    /* TODO: review border weight */
+    border: var(--button-border-width) var(--button-border-style) var(--color-button-secondary-button-secondary-border);
+    color: var(--color-button-secondary-buttton-secondary-text);
+
+    &:hover {
+      background-color: var(--color-button-secondary-button-secondary-hover-fill);
+      border-color: var(--color-button-secondary-button-secondary-hover-border);
+      color: var(--color-button-secondary-button-secondary-hover-text);
+    }
+
+    &:active {
+      background-color: var(--color-button-secondary-button-secondary-pressed-fill);
+      border-color: var(--color-button-secondary-button-secondary-pressed-border);
+      color: var(--color-button-secondary-button-secondary-pressed-text);
+    }
+  
+    /* TODO: is the selected state used */
+    &.selected {
+      background-color: var(--color-button-secondary-button-secondary-selected-fill);
+      border-color: var(--color-button-secondary-button-secondary-selected-border);
+      color: var(--color-button-secondary-button-secondary-selected-text);
+    }
+  
+    &:disabled {
+      background-color: var(--color-button-secondary-button-secondary-inactive-fill);
+      /* TODO: review border weight */
+      border: var(--button-border-width) var(--button-border-style) var(--color-button-secondary-button-secondary-inactive-border);
+      color: var(--color-button-secondary-button-secondary-inactive-text);
+    }
+  }
+
+  &.large {
+    font-size: var(--measure-font-sizing-font-size-medium);
+    font-style: normal;
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--measure-line-height-font-line-height-3x-large);
+  }
+
+  &.small {
+    font-size: var(--measure-font-sizing-font-size-x-small);
+    font-style: normal;
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--measure-line-height-font-line-height-2x-large);
+    padding: var(--measure-dimension-padding-sm) var(--measure-dimension-padding-xxl);
+  }
+}
