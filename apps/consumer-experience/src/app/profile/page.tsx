@@ -17,7 +17,10 @@ export default async function Profile() {
       <div className="flex items-center my-4 gap-2">
         <Link href="/">
           <span className="sr-only">Back to</span>
-          <ChevronIcon className="text-primary w-6" role="presentation"></ChevronIcon>
+          <ChevronIcon
+            className="text-primary w-6"
+            role="presentation"
+          ></ChevronIcon>
         </Link>
         <h1 className="text-2xl text-primary">Profile</h1>
         <div className="flex grow justify-end items-end">
@@ -28,7 +31,9 @@ export default async function Profile() {
       <div className="rounded border bg-white">
         <div className="p-6 border-b-2">
           <p className="text-2xl">{user?.name}</p>
-          <p className="font-medium text-xs text-gray-600">Insured & Policy Owner</p>
+          <p className="font-medium text-xs text-gray-600">
+            Insured & Policy Owner
+          </p>
         </div>
         <div className="p-6 border-b-2">
           <p className="text-2xl">Ryan Olsen</p>

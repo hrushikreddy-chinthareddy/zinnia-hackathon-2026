@@ -1,13 +1,13 @@
-import { Label } from "@zdx/bloom/components";
+import { Label } from '@zdx/bloom/components';
 
-import { ClickableCardContainer } from "@/components/clickable-card-container/ClickableCardContainer";
-import { FieldData } from "@/components/field-data/FieldData";
-import { Icon, IconType } from "@/components/icon/Icon";
-import { Popover } from "@/components/popover/Popover";
-import { PopoverPlacement } from "@/components/popover/popover.helper";
-import { formatUSDollars } from "@/utils/currency";
+import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
+import { FieldData } from '@/components/field-data/FieldData';
+import { Icon, IconType } from '@/components/icon/Icon';
+import { Popover } from '@/components/popover/Popover';
+import { PopoverPlacement } from '@/components/popover/popover.helper';
+import { formatUSDollars } from '@/utils/currency';
 
-import styles from "./policyOverviewCards.module.css";
+import styles from './policyOverviewCards.module.css';
 
 const CoveragePopover = () => {
   return (
@@ -41,7 +41,7 @@ export const Coverage = () => {
       listItems={[
         {
           content: <p className="typographyLabelsFieldLabel">Riders</p>,
-          linkTo: { url: "#", label: "riders" },
+          linkTo: { url: '#', label: 'riders' },
         },
         {
           content: (

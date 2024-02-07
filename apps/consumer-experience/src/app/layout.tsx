@@ -1,20 +1,20 @@
-import { UserProvider } from "@auth0/nextjs-auth0/client";
-import localFont from "next/font/local";
+import { UserProvider } from '@auth0/nextjs-auth0/client';
+import localFont from 'next/font/local';
 
-import type { Metadata } from "next";
+import type { Metadata } from 'next';
 
-import { MainNav } from "@/components/MainNav";
+import { MainNav } from '@/components/MainNav';
 
-import "./globals.css";
+import './globals.css';
 
 export const metadata: Metadata = {
-  title: "Zinnia Live",
-  description: "Open Insurance",
+  title: 'Zinnia Live',
+  description: 'Open Insurance',
 };
 
 const myFont = localFont({
-  src: "./styles/everly/fonts/Poppins-Regular.ttf", // TODO: 'everly' needs to be dynamic
-  display: "swap",
+  src: './styles/everly/fonts/Poppins-Regular.ttf', // TODO: 'everly' needs to be dynamic
+  display: 'swap',
 });
 
 export default function RootLayout({
