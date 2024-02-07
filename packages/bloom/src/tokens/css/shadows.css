@@ -1,55 +1,51 @@
 
 :root {
-    --shadowElevationElevationLight022: 0 0.15000000596046448px 0.44999998807907104px 0 rgba(0,0,0,0.11);  
-    --shadowElevationElevationLight042: 0 0.30000001192092896px 0.8999999761581421px 0 rgba(0,0,0,0.07);  
-    --shadowElevationElevationLight082: 0 0.6000000238418579px 1.7999999523162842px 0 rgba(0,0,0,0.11);  
-    --shadowElevationElevationLight162: 0 1.2000000476837158px 3.5999999046325684px 0 rgba(0,0,0,0.11);  
-    --shadowElevationElevationLight322: 0 2.4000000953674316px 7.400000095367432px 0 rgba(0,0,0,0.18);  
-    --shadowElevationElevationLight642: 0 4.800000190734863px 14.399999618530273px 0 rgba(0,0,0,0.18);  
-    --shadowElevationElevationDark022: 0 1px 2px 0 rgba(0,0,0,0.28);  
-    --shadowElevationElevationDark042: 0 2px 4px 0 rgba(0,0,0,0.28);  
-    --shadowElevationElevationDark082: 0 4px 8px 0 rgba(0,0,0,0.28);  
-    --shadowElevationElevationDark162: 0 8px 16px 0 rgba(0,0,0,0.28);  
-    --shadowElevationElevationDark322: 0 14px 28px 0 rgba(0,0,0,0.48);  
-    --shadowElevationElevationDark642: 0 32px 64px 0 rgba(0,0,0,0.48);  
-    --shadowElevationElevationLight02: 0 0.800000011920929px 1.799999952316284px 0 rgba(0,0,0,0.13);  
-    --shadowElevationElevationLight022: 0 0.1500000059604645px 0.449999988079071px 0 rgba(0,0,0,0.11);  
-    /* Use for: cards, main content, modules */
-    --shadowElevationElevationLight04: 0 1.600000023841858px 3.599999904632568px 0 rgba(0,0,0,0.11);  
-    /* Use for: cards, main content, modules */
-    --shadowElevationElevationLight042: 0 0.300000011920929px 0.8999999761581421px 0 rgba(0,0,0,0.07);  
-    /* Use for: top bar, alerts, tooltip, popovers */
-    --shadowElevationElevationLight08: 0 3.200000047683716px 7.199999809265137px 0 rgba(0,0,0,0.13);  
-    /* Use for: top bar, alerts, tooltip, popovers */
-    --shadowElevationElevationLight082: 0 0.6000000238418579px 1.799999952316284px 0 rgba(0,0,0,0.11);  
-    /* Use for: selects, contextual */
-    --shadowElevationElevationLight16: 0 6.400000095367432px 14.39999961853027px 0 rgba(0,0,0,0.13);  
-    /* Use for: selects, contextual */
-    --shadowElevationElevationLight162: 0 1.200000047683716px 3.599999904632568px 0 rgba(0,0,0,0.11);  
-    /* Use for: modals */
-    --shadowElevationElevationLight32: 0 12.80000019073486px 28.79999923706055px 0 rgba(0,0,0,0.22);  
-    /* Use for: modals */
-    --shadowElevationElevationLight322: 0 2.400000095367432px 7.400000095367432px 0 rgba(0,0,0,0.18);  
-    --shadowElevationElevationLight64: 0 25.60000038146973px 57.59999847412109px 0 rgba(0,0,0,0.22);  
-    --shadowElevationElevationLight642: 0 4.800000190734863px 14.39999961853027px 0 rgba(0,0,0,0.18);  
-    --shadowElevationElevationDark02: 0 0 2px 0 rgba(0,0,0,0.2);  
-    --shadowElevationElevationDark022: 0 1px 2px 0 rgba(0,0,0,0.28);  
-    /* Use for: cards, main content, modules */
-    --shadowElevationElevationDark04: 0 0 2px 0 rgba(0,0,0,0.2);  
-    /* Use for: cards, main content, modules */
-    --shadowElevationElevationDark042: 0 2px 4px 0 rgba(0,0,0,0.28);  
-    /* Use for: top bar, alerts, tooltip, popovers */
-    --shadowElevationElevationDark08: 0 0 2px 0 rgba(0,0,0,0.2);  
-    /* Use for: top bar, alerts, tooltip, popovers */
-    --shadowElevationElevationDark082: 0 4px 8px 0 rgba(0,0,0,0.28);  
-    /* Use for: selects, contextual */
-    --shadowElevationElevationDark16: 0 0 2px 0 rgba(0,0,0,0.2);  
-    /* Use for: selects, contextual */
-    --shadowElevationElevationDark162: 0 8px 16px 0 rgba(0,0,0,0.28);  
-    /* Use for: modals */
-    --shadowElevationElevationDark32: 0 0 8px 0 rgba(0,0,0,0.4);  
-    /* Use for: modals */
-    --shadowElevationElevationDark322: 0 14px 28px 0 rgba(0,0,0,0.48);  
-    --shadowElevationElevationDark64: 0 0 8px 0 rgba(0,0,0,0.4);  
-    --shadowElevationElevationDark642: 0 32px 64px 0 rgba(0,0,0,0.48);  
+    --shadow-elevation-elevation-light-02: 0 0.800000011920929px 1.799999952316284px 0 rgba(0,0,0,0.13);   
+
+    --shadow-elevation-elevation-light-02-2: 0 0.15000000596046448px 0.44999998807907104px 0 rgba(0,0,0,0.11);   
+
+    --shadow-elevation-elevation-light-04: 0 1.600000023841858px 3.599999904632568px 0 rgba(0,0,0,0.11); /* Use for: cards, main content, modules */  
+
+    --shadow-elevation-elevation-light-04-2: 0 0.30000001192092896px 0.8999999761581421px 0 rgba(0,0,0,0.07);   
+
+    --shadow-elevation-elevation-light-08: 0 3.200000047683716px 7.199999809265137px 0 rgba(0,0,0,0.13); /* Use for: top bar, alerts, tooltip, popovers */  
+
+    --shadow-elevation-elevation-light-08-2: 0 0.6000000238418579px 1.7999999523162842px 0 rgba(0,0,0,0.11);   
+
+    --shadow-elevation-elevation-light-16: 0 6.400000095367432px 14.39999961853027px 0 rgba(0,0,0,0.13); /* Use for: selects, contextual */  
+
+    --shadow-elevation-elevation-light-16-2: 0 1.2000000476837158px 3.5999999046325684px 0 rgba(0,0,0,0.11);   
+
+    --shadow-elevation-elevation-light-32: 0 12.80000019073486px 28.79999923706055px 0 rgba(0,0,0,0.22); /* Use for: modals */  
+
+    --shadow-elevation-elevation-light-32-2: 0 2.4000000953674316px 7.400000095367432px 0 rgba(0,0,0,0.18);   
+
+    --shadow-elevation-elevation-light-64: 0 25.60000038146973px 57.59999847412109px 0 rgba(0,0,0,0.22);   
+
+    --shadow-elevation-elevation-light-64-2: 0 4.800000190734863px 14.399999618530273px 0 rgba(0,0,0,0.18);   
+
+    --shadow-elevation-elevation-dark-02: 0 0 2px 0 rgba(0,0,0,0.2);   
+
+    --shadow-elevation-elevation-dark-02-2: 0 1px 2px 0 rgba(0,0,0,0.28);   
+
+    --shadow-elevation-elevation-dark-04: 0 0 2px 0 rgba(0,0,0,0.2); /* Use for: cards, main content, modules */  
+
+    --shadow-elevation-elevation-dark-04-2: 0 2px 4px 0 rgba(0,0,0,0.28);   
+
+    --shadow-elevation-elevation-dark-08: 0 0 2px 0 rgba(0,0,0,0.2); /* Use for: top bar, alerts, tooltip, popovers */  
+
+    --shadow-elevation-elevation-dark-08-2: 0 4px 8px 0 rgba(0,0,0,0.28);   
+
+    --shadow-elevation-elevation-dark-16: 0 0 2px 0 rgba(0,0,0,0.2); /* Use for: selects, contextual */  
+
+    --shadow-elevation-elevation-dark-16-2: 0 8px 16px 0 rgba(0,0,0,0.28);   
+
+    --shadow-elevation-elevation-dark-32: 0 0 8px 0 rgba(0,0,0,0.4); /* Use for: modals */  
+
+    --shadow-elevation-elevation-dark-32-2: 0 14px 28px 0 rgba(0,0,0,0.48);   
+
+    --shadow-elevation-elevation-dark-64: 0 0 8px 0 rgba(0,0,0,0.4);   
+
+    --shadow-elevation-elevation-dark-64-2: 0 32px 64px 0 rgba(0,0,0,0.48);   
+
 }

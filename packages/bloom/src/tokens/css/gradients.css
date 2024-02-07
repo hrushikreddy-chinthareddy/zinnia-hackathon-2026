@@ -1,27 +1,43 @@
 
 :root {
-    /* This gradient is to be used only as a fill color (bars above cards, icons, etc.) 
-    
-    Not to be used in text.
-     */
-    --gradientAccentColorGradientLinear: linear-gradient(
+    --gradient-accent-color-gradient-linear: linear-gradient(
           90deg,
           #ffc600 0%,   
           #ff7500 75.5%,   
           #ff1822 100%  
         )
-        ;    
-    /* This gradient is to be used only as a fill color (bars above cards, icons, etc.) 
-    
-    Not to be used in text. */
-    --gradientAccentColorGradientDiagonal: linear-gradient(
+        ; /* This gradient is to be used only as a fill color (bars above cards, icons, etc.) 
+          
+          Not to be used in text.
+           */    
+    --gradient-accent-color-gradient-diagonal: linear-gradient(
           135deg,
           #ffc600 0%,   
           #ff7500 75.5%,   
           #ff1822 100%  
         )
-        ;    
-    --gradientBaseBorderGradientBorderGradientLinear: var(--gradientAccentColorGradientLinear);    
-    --gradientBaseSurfaceGradientSurfaceGradientDiagonal: var(--gradientAccentColorGradientDiagonal);    
-    --gradientBaseSurfaceGradientSurfaceGradientLinear: var(--gradientAccentColorGradientLinear);    
+        ; /* This gradient is to be used only as a fill color (bars above cards, icons, etc.) 
+          
+          Not to be used in text. */    
+    --gradient-base-surface-gradient-surface-gradient-diagonal: linear-gradient(
+          135deg,
+          #ffc600 0%,   
+          #ff7500 75.5%,   
+          #ff1822 100%  
+        )
+        ;     
+    --gradient-base-surface-gradient-surface-gradient-linear: linear-gradient(
+          90deg,
+          #ffc600 0%,   
+          #ff7500 75.5%,   
+          #ff1822 100%  
+        )
+        ;     
+    --gradient-base-border-gradient-border-gradient-linear: linear-gradient(
+          90deg,
+          #ffc600 0%,   
+          #ff7500 75.5%,   
+          #ff1822 100%  
+        )
+        ;     
 }

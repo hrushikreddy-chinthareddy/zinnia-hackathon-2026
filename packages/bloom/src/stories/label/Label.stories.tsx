@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import InfoIcon from '../../tokens/svg-assets/icons/circles/circle-info.svg';
-
-import { Label, LabelProps } from './Label';
+import { Label, LabelProps } from '../../components/label/Label';
 
 export default {
   title: 'Components/Label',
@@ -9,9 +8,11 @@ export default {
   tags: ['autodocs'],
 } as Meta<typeof Label>;
 
-export const PopoverInteraction: StoryObj<LabelProps> = {
+type StoryType = StoryObj<LabelProps>
+
+export const PopoverInteraction: StoryType= {
   args: {
-    text: 'Label content',
+    children: 'Label content',
     interactiveElements: [
       <InfoIcon width={16} height={16} />,
       <span

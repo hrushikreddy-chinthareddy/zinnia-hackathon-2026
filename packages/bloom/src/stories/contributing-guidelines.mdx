@@ -7,10 +7,45 @@ import { Meta } from '@storybook/blocks';
 ## HTML Principles and Conventions
 
 ## CSS
+- gotta use css modules 
+label.module.css
+- make sure all themable elements of your styles use CSS Custom Properties with the correct alias so users can override properties at the appropriate level
+eg, changing padding only for a button instead of overriding padding-lg for the entire application
+bad:
+```css
+.button {
+
+  /*  */
+  padding: var(--padding-lg, 8px) var(--measureDimensionPaddingXxxxxxl, 48px);
+  /*  */
+
+}
+
+```
+good
+```css
+.button {
+  /* button padding is defined in the tokens file */
+  --button-padding:  var(--padding-lg, 8px) var(--measureDimensionPaddingXxxxxxl, 48px);
+  /*  */
+  padding: var(--button-padding);
+}
+```
+
 
 ### Principles
 
 ### Conventions
+- all lowercase names with hyphens
+good: bloom-button.tsx
+bad: BloomButton.tsx
+
+- components go in `src/components` folder into their own named folder. Ex: `src/components/button/button.tsx`
+- create an `index.ts` that exports components and types
+```ts
+export { Button } from './Button'
+export type { ButtonProps } from './Button'
+```
 
 ### Class prefixes
 
