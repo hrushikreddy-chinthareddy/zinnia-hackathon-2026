@@ -46,7 +46,7 @@ export const FieldData = ({
       </div>
       {caption && (
         <span
-          className="typographyContentCaption field-data__caption"
+          className="typography-content-caption field-data__caption"
           style={captionColor ? { color: captionColor } : undefined}
         >
           {caption}

@@ -31,8 +31,10 @@ export const WithList = {
       {
         content: (
           <div>
-            <div className="typographyLabelsFieldLabel">Insert title here</div>
-            <div className="typographyContentCaption">Caption text</div>
+            <div className="typography-labels-field-label">
+              Insert title here
+            </div>
+            <div className="typography-content-caption">Caption text</div>
           </div>
         ),
         linkTo: {
@@ -45,8 +47,10 @@ export const WithList = {
       {
         content: (
           <div>
-            <div className="typographyLabelsFieldLabel">Insert title here</div>
-            <div className="typographyContentCaption">Caption text</div>
+            <div className="typography-labels-field-label">
+              Insert title here
+            </div>
+            <div className="typography-content-caption">Caption text</div>
           </div>
         ),
         linkTo: {

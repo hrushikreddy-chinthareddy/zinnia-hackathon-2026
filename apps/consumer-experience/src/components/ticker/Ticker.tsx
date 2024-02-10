@@ -51,7 +51,7 @@ export const Ticker = ({ value, subtext }: Props) => {
       </p>
       {subtext && (
         <p
-          className={clsx('typographyLabelsLabelSmAlt', 'ticker__subtext', {
+          className={clsx('typography-labels-label-sd-alt', 'ticker__subtext', {
             'ticker__subtext--no-change': value === 0,
           })}
         >

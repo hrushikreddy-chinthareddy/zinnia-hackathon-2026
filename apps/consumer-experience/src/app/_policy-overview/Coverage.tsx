@@ -40,7 +40,7 @@ export const Coverage = () => {
     <ClickableCardContainer
       listItems={[
         {
-          content: <p className="typographyLabelsFieldLabel">Riders</p>,
+          content: <p className="typography-labels-field-label">Riders</p>,
           linkTo: { url: '#', label: 'riders' },
         },
         {
@@ -50,7 +50,7 @@ export const Coverage = () => {
             >
               <p
                 id="policyBeneficiaries"
-                className="typographyContentCaption field-data__caption"
+                className="typography-content-caption field-data__caption"
               >
                 2 beneficiaries
               </p>

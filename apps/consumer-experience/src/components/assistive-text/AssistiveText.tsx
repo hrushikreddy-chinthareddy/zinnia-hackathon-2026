@@ -35,7 +35,7 @@ export const AssistiveText = ({
   return (
     <div className={`${styles.assistiveText} ${variantClass}`}>
       <Icon type={AssistiveIcon[variant]} small />
-      <p className="typographyContentCaptionSelected">{text}</p>
+      <p className="typography-content-captionSelected">{text}</p>
     </div>
   );
 };

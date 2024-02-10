@@ -63,7 +63,7 @@ export const ClickableCardContainer: FC<Props> = ({
   listItems,
 }: Props) => {
   return (
-    <div className={`clickable-card-container__container ${className}`}>
+    <div className={`clickable-card-container__container ${className ?? ''}`}>
       <div
         className={`${clsx(
           'clickable-card-container__content',
