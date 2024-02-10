@@ -19,7 +19,7 @@ export default {
 
 export const Default: StoryObj<FieldDataProps> = {
   args: {
-    fieldData: <p className="typographyContentValue">$250,343.12</p>,
+    fieldData: <p className="typography-content-value">$250,343.12</p>,
     caption: 'As of 6/12/2023 5:00 pm EST',
     large: true,
     iconType: IconType.MAIL,

@@ -1,11 +1,11 @@
 .popoverContainer {
-  background-color: var(--colorBaseSurfaceSurfaceDarker, #212121);
-  border-radius: var(--measureDimensionRadiusSm, 0.25rem);
+  background-color: var(--color-base-surface-surface-darker, #212121);
+  border-radius: var(--measure-dimension-radius-sm, 0.25rem);
   box-shadow: var(
-    --shadowElevationElevationDark08,
+    --shadow-elevation-elevation-dark-08,
     0px 4px 8px 0px rgba(0, 0, 0, 0.28)
   );
-  color: var(--colorBaseTextTextLight, #fff);
+  color: var(--color-base-text-text-light, #fff);
   max-width: 320px;
   padding: var(--measure-dimension-padding-xl, 0.75rem);
   width: 320px;
@@ -15,7 +15,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--measureDimensionGapLg, 1rem);
+  margin-bottom: var(--measure-dimension-gap-lg, 1rem);
 }
 
 .popoverTrigger {

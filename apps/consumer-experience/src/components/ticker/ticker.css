@@ -2,18 +2,18 @@
   display: inline-grid;
   grid-template-columns: auto auto;
   align-items: center;
-  grid-column-gap: var(--measureDimensionRadiusSm, 0.25rem);
+  grid-column-gap: var(--measure-dimension-radius-sm, 0.25rem);
 }
 .ticker__container--positive {
-  color: var(--colorStatusTextStatusSuccessText, #007b5a);
+  color: var(--color-status-text-status-success-text, #007b5a);
 }
 
 .ticker__container--negative {
-  color: var(--colorStatusTextStatusErrorText, #db004f);
+  color: var(--color-status-text-status-error-text, #db004f);
 }
 
 .ticker__container--no-change {
-  color: var(--colorBaseTextTextSecondary, #676767);
+  color: var(--color-base-text-text-secondary, #676767);
 }
 
 .ticker__arrow--negative {

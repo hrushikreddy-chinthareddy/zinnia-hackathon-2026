@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ReactNode } from 'react';
 
-import styles from './headerBreadcrumb.module.css';
+import styles from './HeaderBreadcrumb.module.css';
 import { Icon, IconType } from '../icon/Icon';
 import { Popover } from '../popover/Popover';
 import { PopoverPlacement } from '../popover/popover.helper';
@@ -26,7 +26,7 @@ export const HeaderBreadcrumb = ({ title, popover }: HeaderBreadcrumbProps) => {
   const previousPathName = paths[previousPathIndex] || 'policy overview';
 
   if (!title) {
-    return <h1 className="typographyDesktopHeadline1D">{title}</h1>;
+    return <h1 className="typography-desktop-headline-1d">{title}</h1>;
   }
 
   return (
@@ -39,10 +39,10 @@ export const HeaderBreadcrumb = ({ title, popover }: HeaderBreadcrumbProps) => {
         <Icon
           type={IconType.CHEVRON}
           className={styles.headerBreadcrumbChevron}
-          color="var(--colorBaseIconIconAction, #1E359C)"
+          color="var(--color-base-icon-icon-action, #1E359C)"
         />
       </Link>
-      <h1 className="typographyDesktopHeadline1D">{title}</h1>
+      <h1 className="typography-desktop-headline-1d">{title}</h1>
       {popover && popover.title && popover.content && (
         <Popover
           title={popover.title}

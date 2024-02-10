@@ -74,7 +74,7 @@ export const Coverage = () => {
           }
           caption="11/4/2022–3/1/2050"
         >
-          <p className="typographyContentValue">{formatUSDollars(1000000)}</p>
+          <p className="typography-content-value">{formatUSDollars(1000000)}</p>
         </FieldData>
       </div>
     </ClickableCardContainer>

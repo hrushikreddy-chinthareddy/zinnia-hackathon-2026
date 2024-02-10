@@ -73,7 +73,10 @@ export const AccountValue = () => {
           }
           caption="As of 6/12/2023 5:00 pm EST"
         >
-          <p className="typographyContentValue" id={idFromTitle(ACCOUNT_VALUE)}>
+          <p
+            className="typography-content-value"
+            id={idFromTitle(ACCOUNT_VALUE)}
+          >
             {formatUSDollars(250343.12)}
           </p>
         </FieldData>

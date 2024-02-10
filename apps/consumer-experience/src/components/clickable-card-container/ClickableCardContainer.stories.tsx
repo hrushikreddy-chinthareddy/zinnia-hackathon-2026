@@ -15,7 +15,7 @@ export const Default: StoryObj<Props> = {
       label: 'go to link',
       isInternal: true,
     },
-    children: <div className="typographyContentValue">Card</div>,
+    children: <div className="typography-content-value">Card</div>,
   },
 };
 
@@ -26,7 +26,7 @@ export const WithList = {
       label: 'go to link',
       isInternal: true,
     },
-    children: <div className="typographyContentValue">Card With List</div>,
+    children: <div className="typography-content-value">Card With List</div>,
     listItems: [
       {
         content: (

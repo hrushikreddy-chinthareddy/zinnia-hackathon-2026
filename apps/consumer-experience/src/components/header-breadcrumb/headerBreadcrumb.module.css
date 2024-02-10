@@ -5,14 +5,14 @@
   width: fit-content;
 
   > :not(:last-child) {
-    margin-right: var(--measureDimensionGapMd, 0.5rem);
+    margin-right: var(--measure-dimension-gap-md, 0.5rem);
   }
 
   &:hover {
     h1 {
       text-decoration: underline;
       text-decoration-color: var(
-        --colorBaseBorderBorderSecondaryColor,
+        --color-base-border-border-secondary-color,
         #1e359c
       );
       text-underline-position: under;

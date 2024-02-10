@@ -73,7 +73,7 @@ export const UpcomingPremium = () => {
           caption="Autopay on 11/12/2023"
         >
           <p
-            className="typographyContentValue"
+            className="typography-content-value"
             id={idFromTitle(UPCOMING_PREMIUM)}
           >
             {formatUSDollars(281.45)}

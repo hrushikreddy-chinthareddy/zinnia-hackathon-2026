@@ -22,15 +22,15 @@ export const HeaderPolicyDetails = ({
       <p className="typography-labels-label-md-alt">
         Everly Life - Universal Life
       </p>
-      <p className="typography-labels-label-sd-alt text-gray-600">
+      <p className="typography-labels-label-sm-alt text-gray-600">
         Policy No. AU22029654
       </p>
       {expanded && (
         <>
-          <p className="typography-labels-label-sd-alt text-gray-600">
+          <p className="typography-labels-label-sm-alt text-gray-600">
             Insured: Michael Williams
           </p>
-          <p className="typography-labels-label-sd-alt text-gray-600">
+          <p className="typography-labels-label-sm-alt text-gray-600">
             Policy status: <span className="text-semantic-success">Active</span>
           </p>
         </>

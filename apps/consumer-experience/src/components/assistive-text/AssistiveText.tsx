@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import styles from './assistiveText.module.css';
+import styles from './AssistiveText.module.css';
 import { Icon, IconType } from '../icon/Icon';
 
 export enum AssistiveTextVariant {

@@ -4,18 +4,18 @@
   align-items: center;
 
   :first-child {
-    margin-right: var(--measureDimensionGapXs, 0.25rem);
+    margin-right: var(--measure-dimension-gap-xs, 0.25rem);
   }
 
   &.success {
-    color: var(--colorStatusTextStatusSuccessText, #007b5a);
+    color: var(--color-status-text-status-success-text, #007b5a);
   }
 
   &.info {
-    color: var(--colorStatusTextStatusInformationText, #005fed);
+    color: var(--color-status-text-status-information-text, #005fed);
   }
 
   &.error {
-    color: var(--colorStatusTextStatusErrorText, #db004f);
+    color: var(--color-status-text-status-error-text, #db004f);
   }
 }

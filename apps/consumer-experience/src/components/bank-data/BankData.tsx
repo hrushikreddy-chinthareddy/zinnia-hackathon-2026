@@ -33,7 +33,7 @@ export const BankData = ({
     <div>
       <h2>{title}</h2>
       <div className={styles.bankName}>
-        <div className="typographyLabelsLabelLg">{bankName}</div>
+        <div className="typography-labels-label-lg">{bankName}</div>
         {autopayEnabled && (
           <AssistiveText
             variant={AssistiveTextVariant.Success}
@@ -45,24 +45,24 @@ export const BankData = ({
         <FieldData
           Label={<Bloom.Label text="Account number" labelFor="remove this" />}
         >
-          <p className="typographyContentBodySm">{`Ending in ${accountNumber}`}</p>
+          <p className="typography-content-body-sm">{`Ending in ${accountNumber}`}</p>
         </FieldData>
         <FieldData
           Label={<Bloom.Label text="Routing number" labelFor="remove this" />}
         >
-          <p className="typographyContentBodySm">{routingNumber}</p>
+          <p className="typography-content-body-sm">{routingNumber}</p>
         </FieldData>
         {/* TODO: probably need to format this? capitalize? */}
         {/* TODO: remove the label!!!!! */}
         <FieldData
           Label={<Bloom.Label text="Account type" labelFor="remove this" />}
         >
-          <p className="typographyContentBodySm">{accountType}</p>
+          <p className="typography-content-body-sm">{accountType}</p>
         </FieldData>
         <FieldData
           Label={<Bloom.Label text="Name on account" labelFor="remove this" />}
         >
-          <p className="typographyContentBodySm">{nameOnAccount}</p>
+          <p className="typography-content-body-sm">{nameOnAccount}</p>
         </FieldData>
       </div>
     </div>

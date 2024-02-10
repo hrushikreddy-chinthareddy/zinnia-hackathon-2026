@@ -1,4 +1,4 @@
-import Bloom from '@zdx/bloom/components';
+import { Label } from '@zdx/bloom/components';
 import clsx from 'clsx';
 import {
   PropsWithChildren,
@@ -11,10 +11,10 @@ import { Icon, IconType } from '../icon/Icon';
 import './fieldData.css';
 
 export interface FieldDataProps extends PropsWithChildren {
-  Label?: ReactElement<typeof Bloom.Label>;
+  Label?: ReactElement<typeof Label>;
   caption?: ReactNode;
   /**
-   * Defaults to colorBaseTextTextSecondary
+   * Defaults to color-base-text-text-secondary
    */
   captionColor?: string;
   /**

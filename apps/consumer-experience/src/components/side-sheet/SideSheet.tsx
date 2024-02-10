@@ -5,7 +5,7 @@ import { ReactNode } from 'react';
 
 import { zIndexOrder } from '@/utils/zIndexOrder';
 
-import styles from './sideSheet.module.css';
+import styles from './SideSheet.module.css';
 import { Icon, IconType } from '../icon/Icon';
 
 export enum SideSheetLocation {
@@ -70,7 +70,7 @@ export const SideSheet = ({
               <Dialog.Close aria-label="Close">
                 <Icon
                   type={IconType.CLOSE}
-                  color={'var(--colorBaseIconIconAction)'}
+                  color={'var(--color-base-icon-icon-action)'}
                 />
               </Dialog.Close>
             </div>

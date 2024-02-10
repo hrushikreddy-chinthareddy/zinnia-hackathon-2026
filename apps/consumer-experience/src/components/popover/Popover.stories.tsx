@@ -45,7 +45,7 @@ export const DefaultPopover: StoryObj<typeof Popover> = {
         <FieldData
           caption={<p style={{ color: 'white' }}>As of 6/12 5:00pm EST</p>}
         >
-          <p className="typographyContentValue">{formatUSDollars(1234)}</p>
+          <p className="typography-content-value">{formatUSDollars(1234)}</p>
         </FieldData>
         <p
           style={{ paddingTop: 'var(--measure-dimension-padding-xl, 0.75rem)' }}

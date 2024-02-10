@@ -6,7 +6,7 @@ import { ClickableCardContainer } from '@/components/clickable-card-container/Cl
 import { FieldData } from '@/components/field-data/FieldData';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 
-import styles from './profile.module.css';
+import styles from './Profile.module.css';
 
 export default async function Profile() {
   const session = await getSession();
@@ -36,7 +36,7 @@ export default async function Profile() {
         <div>
           <h2 className={styles.itemHeader}>Name</h2>
           <FieldData Label={<Bloom.Label text="Policy owner" labelFor="" />}>
-            <p className="typographyContentBodySm">Michael Williams</p>
+            <p className="typography-content-body-sm">Michael Williams</p>
           </FieldData>
         </div>
       </ClickableCardContainer>

@@ -9,7 +9,7 @@ import { SideSheet } from '@/components/side-sheet/SideSheet';
 import { zIndexOrder } from '@/utils/zIndexOrder';
 
 import { PopoverPlacement, getPlacementProps } from './popover.helper';
-import styles from './popover.module.css';
+import styles from './Popover.module.css';
 
 // TODO: replace these
 // import { PopoverTest } from '@deps/jest/constants/test-id-constants';
@@ -36,12 +36,12 @@ export const Popover = ({
   const popoverContent = (
     <div className={clsx(popoverClassName, styles.popoverContainer)}>
       <div className={styles.popoverTitleContainer}>
-        <div className="typographyLabelsLabelLg">{title}</div>
+        <div className="typography-labels-label-lg">{title}</div>
         <ReactPopover.Close>
           <Icon type={IconType.CLOSE} color="white" />
         </ReactPopover.Close>
       </div>
-      <span className="typographyContentBodySm">{children}</span>
+      <span className="typography-content-body-sm">{children}</span>
     </div>
   );
 
