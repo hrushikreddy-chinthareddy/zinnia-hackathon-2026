@@ -1,6 +1,6 @@
-import Bloom from '@zdx/bloom/components';
+import { Label } from '@zdx/bloom/components';
 
-import styles from './bankData.module.css';
+import styles from './BankData.module.css';
 import {
   AssistiveText,
   AssistiveTextVariant,
@@ -42,25 +42,19 @@ export const BankData = ({
         )}
       </div>
       <div className={styles.detailsContainer}>
-        <FieldData
-          Label={<Bloom.Label text="Account number" labelFor="remove this" />}
-        >
+        <FieldData Label={<Label labelFor="remove this">Account number</Label>}>
           <p className="typography-content-body-sm">{`Ending in ${accountNumber}`}</p>
         </FieldData>
-        <FieldData
-          Label={<Bloom.Label text="Routing number" labelFor="remove this" />}
-        >
+        <FieldData Label={<Label labelFor="remove this">Routing number</Label>}>
           <p className="typography-content-body-sm">{routingNumber}</p>
         </FieldData>
         {/* TODO: probably need to format this? capitalize? */}
         {/* TODO: remove the label!!!!! */}
-        <FieldData
-          Label={<Bloom.Label text="Account type" labelFor="remove this" />}
-        >
+        <FieldData Label={<Label labelFor="remove this">Account type</Label>}>
           <p className="typography-content-body-sm">{accountType}</p>
         </FieldData>
         <FieldData
-          Label={<Bloom.Label text="Name on account" labelFor="remove this" />}
+          Label={<Label labelFor="remove this">Name on account</Label>}
         >
           <p className="typography-content-body-sm">{nameOnAccount}</p>
         </FieldData>

@@ -1,5 +1,5 @@
 import { getSession } from '@auth0/nextjs-auth0';
-import Bloom from '@zdx/bloom/components';
+import { Label } from '@zdx/bloom/components';
 
 import { BankData } from '@/components/bank-data/BankData';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
@@ -35,7 +35,7 @@ export default async function Profile() {
       <ClickableCardContainer listItems={[{ content: bankData }]}>
         <div>
           <h2 className={styles.itemHeader}>Name</h2>
-          <FieldData Label={<Bloom.Label text="Policy owner" labelFor="" />}>
+          <FieldData Label={<Label labelFor="">Policy owner</Label>}>
             <p className="typography-content-body-sm">Michael Williams</p>
           </FieldData>
         </div>
