@@ -64,54 +64,30 @@ const toCSSPropertyCase = (key: string) => `--${
   // join with kebab case like css custom properties should
   .join('-')}`
 
-const buttonTable = (
-  <table>
-    <thead>
-      <tr>
-        <td>name</td>
-        <td>property</td>
-        <td>value</td>
-      </tr>
-    </thead>
-    {buttonStyles.map(([key, value]) => (
-      <>
-        <tbody>
-          <td>
-            {key}
-          </td>
-          <td>
-            {toCSSPropertyCase(key)}
-          </td>
-          <td>
-          {value}
-          </td>
-        </tbody>
-      </>
-    ))}
-  </table>
-)
+
 export const Theming: StoryType = {
-  render: () => {
-    return (
-      <ul>
-        {buttonTable}
+  render: () => (
+      <table>
+        <thead>
+          <tr>
+            <td>name</td>
+            <td>property</td>
+            <td>value</td>
+          </tr>
+        </thead>
         {buttonStyles.map(([key, value]) => (
-          <li key={key}>
-            title: {key}
-            <br></br>
-            value: {value}
-            <br></br>
-            formatted: {`--${[
-              ...new Set(
-                // split on uppercase letters since we index by camelcase in react tokens
-                key.split(/(?=[A-Z])/)
-                  // return all to lowercase so new set can remove dupes
-                  .map(k => k.toLocaleLowerCase()))]
-              // join with kebab case like css custom properties should
-              .join('-')}`}
-          </li>
+            <tbody key={key}>
+              <td>
+                {key.split(/(?=[A-Z])/).join(' ')}
+              </td>
+              <td>
+                {toCSSPropertyCase(key)}
+              </td>
+              <td>
+              {value}
+              </td>
+            </tbody>
         ))}
-      </ul>
+      </table>
     )
-  }
 }

@@ -7,33 +7,32 @@ import { Meta } from '@storybook/blocks';
 ## HTML Principles and Conventions
 
 ## CSS
-- gotta use css modules 
-label.module.css
+- use CSS modules
+- CSS module name must match component name
+  - ex: BloomButton.tsx and BloomButton.module.css
 - make sure all themable elements of your styles use CSS Custom Properties with the correct alias so users can override properties at the appropriate level
-eg, changing padding only for a button instead of overriding padding-lg for the entire application
+eg. changing padding only for a button instead of overriding all implementations of `padding-lg`
+
 bad:
+
 ```css
 .button {
-
   /*  */
-  padding: var(--padding-lg, 8px) var(--measureDimensionPaddingXxxxxxl, 48px);
+  padding: var(--measure-dimension-padding-lg, 8px) var(--measure-dimension-padding-6xl, 48px);
   /*  */
 
 }
-
 ```
-good
+good:
+
 ```css
 .button {
   /* button padding is defined in the tokens file */
-  --button-padding:  var(--padding-lg, 8px) var(--measureDimensionPaddingXxxxxxl, 48px);
+  --button-padding:  var(--measure-dimension-padding-lg, 8px) var(--measure-dimension-padding-6xl, 48px);
   /*  */
   padding: var(--button-padding);
 }
 ```
-
-
-### Principles
 
 ### Conventions
 - all lowercase names with hyphens
@@ -47,27 +46,18 @@ export { Button } from './Button'
 export type { ButtonProps } from './Button'
 ```
 
-### Class prefixes
+- all lowercase names with hyphens for directories
+- PascalCase for component names
 
-### CSS Nesting
+good: `components/bloom-button/bloom-button.tsx`
+<br/>
+bad: `components/bloom-button/BloomButton.tsx`
 
-### Media Queries
+- components go in `src/components` folder into their own named folder. Ex: `src/components/button/BloomButton.tsx`
+- create an `index.ts` that exports components and types
 
-## Contribution workflow
-
-## Governance model
-
-## Versioning
-
-## Code of Conduct
-
-## Publishing
-https://docs.github.com/en/packages/managing-github-packages-using-github-actions-workflows/publishing-and-installing-a-package-with-github-actions
-
-## Testing
-https://www.chromatic.com/
-
-## CI/CD
-
-> https://main--60abd9d5d5713100398da897.chromatic.com/?path=/story/documentation-guidelines--code-guidelines
-> https://natds-rn.natura.design/?path=/docs/documentation-codequality--page
+```ts
+// components/button/index.ts
+export { Button } from './Button'
+export type { ButtonProps } from './Button'
+```

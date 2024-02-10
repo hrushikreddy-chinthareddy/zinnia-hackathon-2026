@@ -8,19 +8,20 @@ Our components are listed in this storybook under the `COMPONENTS` section in th
 
 ## Importing Components
 You can use our tokens in multiple ways! The easiest is to import our css stylesheet at the root of your application 
+
 ```jsx
 // make sure tokens are imported
-import '@zdx/bloom/css';
+import '@zinnia/bloom/css';
 // If you want to use Bloom theme make sure to import component styles also
-import '@zdx/bloom/component-styles';
+import '@zinnia/bloom/component-styles';
 // import JSX component
-import { Button } '@zdx/bloom/components'
+import { Button } '@zinnia/bloom/components'
 
 export default function App() {
   return (
-    <Button>Click BUtton</Button>
+    <Button>Click me</Button>
   );
-}
+};
 ```
 
 <Button>Click me</Button>
@@ -28,9 +29,10 @@ export default function App() {
 If you're using NextJs, then the process will vary slightly depending on which router you're using
 #### Pages router
 > See more in [NextJs Docs](https://nextjs.org/docs/pages/building-your-application/styling/css-modules#global-styles)
- ```jsx
+
+```jsx
  // pages/_app.js
- import '@zdx/bloom/css'
+ import '@zinnia/bloom/css'
 
 // This default export is required in a new `pages/_app.js` file.
 export default function MyApp({ Component, pageProps }) {
@@ -42,7 +44,7 @@ export default function MyApp({ Component, pageProps }) {
 > See more in [NextJs Docs](https://nextjs.org/docs/app/building-your-application/styling/css-modules#global-styles)
 ```jsx
 // `app/layout.tsx`
-import '@zdx/bloom/css'
+import '@zinnia/bloom/css'
  
 export default function RootLayout({
   children,
@@ -79,17 +81,5 @@ If the stylesheet was imported correctly you should be able to apply our styles 
   backgroundColor: 'var(--colorPrimaryColorPrimary)'
 }} />
 
-## More Tokens
+### More Tokens
 A full listing of all tokens can be fuond on our [Supernova documentation site](https://zinnia-design-system.supernova-docs.io/latest/ui-foundations/overview)
-
-
-## Requirements
-
-## Setup and Scripts
-
-## Debugger
-
-## Documentation
-
-> https://papanasi.js.org/?path=/docs/%F0%9F%93%97documentation-introduction--page
-> https://github.com/Shopify/polaris?tab=readme-ov-file

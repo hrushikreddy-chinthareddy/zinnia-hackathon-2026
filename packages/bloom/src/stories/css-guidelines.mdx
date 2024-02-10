@@ -1,17 +1,10 @@
 import { Meta } from '@storybook/blocks';
 import { Button } from '../components/button';
 
-<style>
-    {`
-    .border-lg-snowflake {
-        --button-border-width: 16px;
-      }
-    `}
-</style>
 <Meta title="CSS Guidelines" />
 
 # CSS Guidelines
-<span>or How I Learned to Stop Worrying and Love CSS Custom Properties</span>
+> or How I Learned to Stop Worrying and Love CSS Custom Properties
 
 ## CSS Custom Properties
 In order to keep our components consistent we do not provide access to internal classNames. This allows us to provide a convenient API leveraging CSS Custom Properties
@@ -32,47 +25,55 @@ css custom properties respect scope just like css so even if your global css loo
 
 you can add a selector to override any property without worrying about matching classnames and collisions with classNames
 
-```css 
-.border-lg-snowflake {
-  --button-border-width: 16px;
+Here's an example where the property is set as a custon style
+```jsx
+import { CSSProperties } from 'react';
+// type for adding css properties to jsx
+
+<Button style={{
+  '--color-button-primary-button-primary-fill': '#BADA55'
+} as CSSCustomProperties}>
+  CSS is rad
+</Button>
+```
+the final outcome should look like
+
+<Button style={{
+  '--color-button-primary-button-primary-fill': '#BADA55'
+}}>CSS is rad</Button>
+
+you could also use a class or whatever else css selector to override values
+
+```css
+.bada$$-button {
+  --color-button-primary-button-primary-fill: #BADA55;
 }
 ```
-then when you add your class to your button
-```jsx
-<Button className="border-lg-snowflake">CSS is rad</Button>
-```` 
-the final outcome should be like
-<Button className='border-lg-snowflake'>CSS is rad</Button>
 
 Custom properties will even be inherited from parent elements and you can use that to theme groups of buttons or even whole sections of your page
+
 ```jsx
-<div className="border-lg-snowflake">
+<div style={{
+  '--color-button-primary-button-primary-fill': '#BADA55',
+  display: "flex",
+  gap: '0.5em'
+}}>
   <Button>CSS is rad</Button>
   <Button>CSS is rad</Button>
   <Button>CSS is rad</Button>
 </div>
 ```
 
-<div className="border-lg-snowflake">
+
+<div style={{
+  '--color-button-primary-button-primary-fill': '#BADA55',
+  display: "flex",
+  gap: '0.5em'
+}}>
 <Button>CSS is rad</Button>
 <Button>CSS is rad</Button>
 <Button>CSS is rad</Button>
 </div>
 
-
-
-- css guidelines
-- make sure exports are correct
-- make storybook story explaining procedure
-
-## Questions to answer
-- how do we import css?
-- How do we override styles?
-  - set css overrides as variables
-  - enumerate variables in storybook for each component
-  - what if you need to do something with a property without css variable?
-    - we should only be able to change values defined with custom properties
-      - but what if we really really need to change it?
-- fix composes warning in label.module.css
-- how should we export clobal styles?
-- extend eslint
+### Next steps
+For more info on custom properties see [MDN Documentation](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties)
