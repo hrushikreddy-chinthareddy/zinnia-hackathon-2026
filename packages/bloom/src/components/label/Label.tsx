@@ -26,7 +26,7 @@ export const Label: React.FC<LabelProps> = ({
       {interactiveElements &&
         interactiveElements.map((elem, index) => (
           <div key={`interactive-${index}`} className={classes.item}>
-            {elem} --- BLOOOOM
+            {elem}
           </div>
         ))}
     </div>

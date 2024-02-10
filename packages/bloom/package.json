@@ -29,11 +29,9 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/bloom.js",
-      "require": "./dist/bloom.cjs",
-      "types": "./dist/bloom.d.ts"
+      "import": "./src/bloom.tsx"
     },
-    "./css": "./dist/bloom.css",
+    "./css": "./src/tokens/css/index.css",
     "./bloom-css": {
       "import": "./dist/bloom.css",
       "require": "./dist/bloom.css"
@@ -44,9 +42,7 @@
       "require": "./dist/components.css"
     },
     "./components": {
-      "import": "./dist/components.js",
-      "require": "./dist/components.cjs",
-      "types": "./dist/components.d.ts"
+      "import": "./src/components/index.ts"
     }
   },
   "typesVersions": {
