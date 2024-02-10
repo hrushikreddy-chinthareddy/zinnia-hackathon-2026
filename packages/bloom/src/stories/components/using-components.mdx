@@ -1,21 +1,23 @@
-import { Meta } from '@storybook/blocks';
-import { Button } from '../../components/button';
+import { Meta } from "@storybook/blocks";
+import { Button } from "../../components/button";
 
 <Meta title="Components/Using Components" />
 
 # Using Components
+
 Our components are listed in this storybook under the `COMPONENTS` section in the sidebar. To see all components (even those yet to be added) check out UI Base Elements on [Sueprnova](https://zinnia-design-system.supernova-docs.io/latest/ui-base-elements/overview-glB7Xu9Y)
 
 ## Importing Components
-You can use our tokens in multiple ways! The easiest is to import our css stylesheet at the root of your application 
+
+You can use our tokens in multiple ways! The easiest is to import our css stylesheet at the root of your application
 
 ```jsx
 // make sure tokens are imported
-import '@zinnia/bloom/css';
+import '@zdx/bloom/css';
 // If you want to use Bloom theme make sure to import component styles also
-import '@zinnia/bloom/component-styles';
+import '@zdx/bloom/component-styles';
 // import JSX component
-import { Button } '@zinnia/bloom/components'
+import { Button } '@zdx/bloom/components'
 
 export default function App() {
   return (
@@ -27,25 +29,29 @@ export default function App() {
 <Button>Click me</Button>
 
 If you're using NextJs, then the process will vary slightly depending on which router you're using
+
 #### Pages router
+
 > See more in [NextJs Docs](https://nextjs.org/docs/pages/building-your-application/styling/css-modules#global-styles)
 
 ```jsx
- // pages/_app.js
- import '@zinnia/bloom/css'
+// pages/_app.js
+import "@zdx/bloom/css";
 
 // This default export is required in a new `pages/_app.js` file.
 export default function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+  return <Component {...pageProps} />;
 }
 ```
 
-#### App Router 
+#### App Router
+
 > See more in [NextJs Docs](https://nextjs.org/docs/app/building-your-application/styling/css-modules#global-styles)
+
 ```jsx
 // `app/layout.tsx`
-import '@zinnia/bloom/css'
- 
+import '@zdx/bloom/css'
+
 export default function RootLayout({
   children,
 }: {
@@ -60,26 +66,36 @@ export default function RootLayout({
 ```
 
 #### CSS
+
 > if you're importing in css and using webpack you can access node_modules with a tilde `~`
+
 ```css
 /* styles/index.css */
-@import '~zinnia/bloom/css'
+@import "~zinnia/bloom/css";
 ```
 
 ### Next Steps
+
 If the stylesheet was imported correctly you should be able to apply our styles based on our custom properties
+
 ```jsx
-<div style={{
-  height: 'var(--measureDimensionZSpace12)', // 48px
-  width: 'var(--measureDimensionZSpace12)', // 48px
-  backgroundColor: 'var(--colorPrimaryColorPrimary)' // #ff7500
-}} />
+<div
+  style={{
+    height: "var(--measureDimensionZSpace12)", // 48px
+    width: "var(--measureDimensionZSpace12)", // 48px
+    backgroundColor: "var(--colorPrimaryColorPrimary)", // #ff7500
+  }}
+/>
 ```
-<div style={{
-  height: 'var(--measureDimensionZSpace12)',
-  width: 'var(--measureDimensionZSpace12)',
-  backgroundColor: 'var(--colorPrimaryColorPrimary)'
-}} />
+
+<div
+  style={{
+    height: "var(--measureDimensionZSpace12)",
+    width: "var(--measureDimensionZSpace12)",
+    backgroundColor: "var(--colorPrimaryColorPrimary)",
+  }}
+/>
 
 ### More Tokens
+
 A full listing of all tokens can be fuond on our [Supernova documentation site](https://zinnia-design-system.supernova-docs.io/latest/ui-foundations/overview)

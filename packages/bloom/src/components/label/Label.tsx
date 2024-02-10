@@ -1,6 +1,6 @@
-import React, { PropsWithChildren, ReactNode } from 'react';
+import React, { PropsWithChildren, ReactNode } from "react";
 
-import classes from './Label.module.css';
+import classes from "./Label.module.css";
 
 export type LabelProps = {
   /**
@@ -11,21 +11,22 @@ export type LabelProps = {
    * Pass id of associated element to connect label to the value or input it is describing
    */
   labelFor: string;
-} & PropsWithChildren
+} & PropsWithChildren;
 
-export const Label: React.FC<LabelProps> = ({ children, interactiveElements, labelFor }) => {
+export const Label: React.FC<LabelProps> = ({
+  children,
+  interactiveElements,
+  labelFor,
+}) => {
   return (
     <div className={classes.container}>
-      <label
-        htmlFor={labelFor}
-        className={classes.text}
-      >
+      <label htmlFor={labelFor} className={classes.text}>
         {children}
       </label>
       {interactiveElements &&
         interactiveElements.map((elem, index) => (
           <div key={`interactive-${index}`} className={classes.item}>
-            {elem}
+            {elem} --- BLOOOOM
           </div>
         ))}
     </div>

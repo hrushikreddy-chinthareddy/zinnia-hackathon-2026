@@ -1,7 +1,5 @@
-@import url(@/tokens/css/index.css);
-
 .button {
-  --font-family-buttons: 'Poppins';
+  --font-family-buttons: "Poppins";
   --font-weight-semibold: 600;
   --button-border-width: 3px;
   --button-border-style: solid;
@@ -13,10 +11,13 @@
   cursor: pointer;
   display: flex;
   font-family: var(--font-family-buttons);
-  font-feature-settings: 'clig' off, 'liga' off;
+  font-feature-settings:
+    "clig" off,
+    "liga" off;
   gap: var(--gap-none, 0px);
   justify-content: center;
-  padding: var(--measure-dimension-padding-lg) var(--measure-dimension-padding-xxxxxxl);
+  padding: var(--measure-dimension-padding-lg)
+    var(--measure-dimension-padding-xxxxxxl);
   text-align: center;
 
   &:focus-visible {
@@ -28,9 +29,10 @@
 
   /* Primary button */
   &.primary {
-    background-color: var(--color-button-primary-button-primary-fill, #FFF);
+    background-color: var(--color-button-primary-button-primary-fill, #fff);
     /* TODO: review border weight */
-    border: var(--button-border-width) var(--button-border-style) var(--color-button-primary-button-primary-border);
+    border: var(--button-border-width) var(--button-border-style)
+      var(--color-button-primary-button-primary-border);
     color: var(--color-button-primary-button-primary-text);
 
     &:hover {
@@ -47,15 +49,20 @@
 
     /* TODO: is the selected state used */
     &.selected {
-      background-color: var(--color-button-primary-button-primary-selected-fill);
+      background-color: var(
+        --color-button-primary-button-primary-selected-fill
+      );
       border-color: var(--color-button-primary-button-primary-selected-border);
       color: var(--color-button-primary-button-primary-selected-text);
     }
-  
+
     &:disabled {
-      background-color: var(--color-button-primary-button-primary-inactive-fill);
+      background-color: var(
+        --color-button-primary-button-primary-inactive-fill
+      );
       /* TODO: review border weight */
-      border: var(--button-border-width) var(--button-border-style) var(--color-button-primary-button-primary-inactive-border);
+      border: var(--button-border-width) var(--button-border-style)
+        var(--color-button-primary-button-primary-inactive-border);
       color: var(--color-button-primary-button-primary-inactive-text);
     }
   }
@@ -64,32 +71,46 @@
   &.secondary {
     background-color: var(--color-button-secondary-button-secondary-fill);
     /* TODO: review border weight */
-    border: var(--button-border-width) var(--button-border-style) var(--color-button-secondary-button-secondary-border);
+    border: var(--button-border-width) var(--button-border-style)
+      var(--color-button-secondary-button-secondary-border);
     color: var(--color-button-secondary-buttton-secondary-text);
 
     &:hover {
-      background-color: var(--color-button-secondary-button-secondary-hover-fill);
+      background-color: var(
+        --color-button-secondary-button-secondary-hover-fill
+      );
       border-color: var(--color-button-secondary-button-secondary-hover-border);
       color: var(--color-button-secondary-button-secondary-hover-text);
     }
 
     &:active {
-      background-color: var(--color-button-secondary-button-secondary-pressed-fill);
-      border-color: var(--color-button-secondary-button-secondary-pressed-border);
+      background-color: var(
+        --color-button-secondary-button-secondary-pressed-fill
+      );
+      border-color: var(
+        --color-button-secondary-button-secondary-pressed-border
+      );
       color: var(--color-button-secondary-button-secondary-pressed-text);
     }
-  
+
     /* TODO: is the selected state used */
     &.selected {
-      background-color: var(--color-button-secondary-button-secondary-selected-fill);
-      border-color: var(--color-button-secondary-button-secondary-selected-border);
+      background-color: var(
+        --color-button-secondary-button-secondary-selected-fill
+      );
+      border-color: var(
+        --color-button-secondary-button-secondary-selected-border
+      );
       color: var(--color-button-secondary-button-secondary-selected-text);
     }
-  
+
     &:disabled {
-      background-color: var(--color-button-secondary-button-secondary-inactive-fill);
+      background-color: var(
+        --color-button-secondary-button-secondary-inactive-fill
+      );
       /* TODO: review border weight */
-      border: var(--button-border-width) var(--button-border-style) var(--color-button-secondary-button-secondary-inactive-border);
+      border: var(--button-border-width) var(--button-border-style)
+        var(--color-button-secondary-button-secondary-inactive-border);
       color: var(--color-button-secondary-button-secondary-inactive-text);
     }
   }
@@ -106,6 +127,7 @@
     font-style: normal;
     font-weight: var(--font-weight-semibold);
     line-height: var(--measure-line-height-font-line-height-2x-large);
-    padding: var(--measure-dimension-padding-sm) var(--measure-dimension-padding-xxl);
+    padding: var(--measure-dimension-padding-sm)
+      var(--measure-dimension-padding-xxl);
   }
 }

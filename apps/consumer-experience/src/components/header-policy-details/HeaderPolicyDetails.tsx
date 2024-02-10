@@ -19,7 +19,9 @@ export const HeaderPolicyDetails = ({
           className="mb-2 w-24 shrink-0 self-center text-primary sm:hidden"
         />
       )}
-      <p className="typographyLabelsLabelMdAlt">Everly Life - Universal Life</p>
+      <p className="typography-labels-label-md-alt">
+        Everly Life - Universal Life
+      </p>
       <p className="typographyLabelsLabelSmAlt text-gray-600">
         Policy No. AU22029654
       </p>

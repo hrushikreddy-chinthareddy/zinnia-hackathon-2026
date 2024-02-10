@@ -1,5 +1,5 @@
 import { getSession } from '@auth0/nextjs-auth0';
-import Bloom from '@zinnia/bloom/components';
+import Bloom from '@zdx/bloom/components';
 
 import { BankData } from '@/components/bank-data/BankData';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';

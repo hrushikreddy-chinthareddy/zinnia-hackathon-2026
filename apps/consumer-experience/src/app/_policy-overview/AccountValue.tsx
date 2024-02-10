@@ -1,4 +1,4 @@
-import Bloom from '@zinnia/bloom/components';
+import { Label } from '@zdx/bloom/components';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
@@ -61,14 +61,15 @@ export const AccountValue = () => {
         <FieldData
           large
           Label={
-            <Bloom.Label
-              text={ACCOUNT_VALUE}
+            <Label
               labelFor={idFromTitle(ACCOUNT_VALUE)}
               interactiveElements={[
                 // eslint-disable-next-line react/jsx-key
                 <AccountValuePopover />,
               ]}
-            />
+            >
+              {ACCOUNT_VALUE}
+            </Label>
           }
           caption="As of 6/12/2023 5:00 pm EST"
         >

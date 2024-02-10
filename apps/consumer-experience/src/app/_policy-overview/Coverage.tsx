@@ -1,4 +1,4 @@
-import Bloom from '@zinnia/bloom/components';
+import { Label } from '@zdx/bloom/components';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
@@ -46,12 +46,7 @@ export const Coverage = () => {
         {
           content: (
             <FieldData
-              Label={
-                <Bloom.Label
-                  text="Beneficiary"
-                  labelFor="policyBeneficiaries"
-                />
-              }
+              Label={<Label labelFor="policyBeneficiaries">Beneficiary</Label>}
             >
               <p
                 id="policyBeneficiaries"
@@ -69,12 +64,13 @@ export const Coverage = () => {
         <FieldData
           large
           Label={
-            <Bloom.Label
-              text="Coverage"
+            <Label
               labelFor="Coverage"
               // eslint-disable-next-line react/jsx-key
               interactiveElements={[<CoveragePopover />]}
-            />
+            >
+              Coverage
+            </Label>
           }
           caption="11/4/2022–3/1/2050"
         >

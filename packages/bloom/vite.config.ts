@@ -24,6 +24,7 @@ export default defineConfig({
     },
   },
   build: {
+    copyPublicDir: false,
     lib: {
       entry: {
         bloom: resolve(__dirname, "src/bloom.tsx"),

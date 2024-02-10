@@ -1,4 +1,4 @@
-import Bloom from '@zinnia/bloom/components';
+import Bloom from '@zdx/bloom/components';
 import clsx from 'clsx';
 import {
   PropsWithChildren,

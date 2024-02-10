@@ -1,4 +1,4 @@
-import Bloom from '@zinnia/bloom/components';
+import Bloom from '@zdx/bloom/components';
 
 import styles from './bankData.module.css';
 import {
