@@ -43,11 +43,10 @@ export const DefaultPopover: StoryObj<typeof Popover> = {
     body: (
       <div>
         <FieldData
-          fieldData={
-            <p className="typographyContentValue">{formatUSDollars(1234)}</p>
-          }
           caption={<p style={{ color: 'white' }}>As of 6/12 5:00pm EST</p>}
-        />
+        >
+          <p className="typographyContentValue">{formatUSDollars(1234)}</p>
+        </FieldData>
         <p style={{ paddingTop: 'var(--measureDimensionPaddingXl, 0.75rem)' }}>
           Your premium is the amount you pay periodically for insurance
           coverage. What’s shown here is your next scheduled payment.

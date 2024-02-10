@@ -1,0 +1,32 @@
+.headerBreadcrumbContainer {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: fit-content;
+
+  > :not(:last-child) {
+    margin-right: var(--measureDimensionGapMd, 0.5rem);
+  }
+
+  &:hover {
+    h1 {
+      text-decoration: underline;
+      text-decoration-color: var(
+        --colorBaseBorderBorderSecondaryColor,
+        #1e359c
+      );
+      text-underline-position: under;
+    }
+  }
+}
+
+.headerBreadcrumbAction::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.headerBreadcrumbChevron {
+  transform: rotate(90deg);
+}

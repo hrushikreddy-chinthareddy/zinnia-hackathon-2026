@@ -1,7 +1,7 @@
 import { clsx } from 'clsx';
 import { NextComponentType } from 'next';
 import Link, { LinkProps } from 'next/link';
-import { ReactNode } from 'react';
+import { FC, PropsWithChildren, ReactNode } from 'react';
 
 import './clickableCardContainer.css';
 
@@ -22,10 +22,10 @@ export interface ChildCard {
   linkTo?: LinkItem;
 }
 
-export interface Props {
-  children: ReactNode;
-  linkTo?: LinkItem;
+export interface Props extends PropsWithChildren {
+  className?: string;
   disabled?: boolean;
+  linkTo?: LinkItem;
   listItems?: ChildCard[];
 }
 
@@ -55,14 +55,15 @@ const LinkArrow = ({ url, label, isInternal = true }: LinkItem) => {
   );
 };
 
-export const ClickableCardContainer = ({
+export const ClickableCardContainer: FC<Props> = ({
   children,
+  className,
   linkTo,
   disabled,
   listItems,
 }: Props) => {
   return (
-    <div className="clickable-card-container__container">
+    <div className={`clickable-card-container__container ${className}`}>
       <div
         className={`${clsx(
           'clickable-card-container__content',

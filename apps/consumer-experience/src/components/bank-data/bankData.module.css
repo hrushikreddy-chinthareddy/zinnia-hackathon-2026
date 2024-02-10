@@ -1,0 +1,21 @@
+.detailsContainer {
+  display: grid;
+  grid-template-columns: repeat(2, min-content);
+  column-gap: var(--measureDimensionGap2xl, 2rem);
+  row-gap: var(--measureDimensionGapLg, 1rem);
+
+  * {
+    /* TODO: verify this setting */
+    white-space: nowrap;
+  }
+}
+
+.bankName {
+  margin: var(--measureDimensionGapLg, 1rem) 0;
+}
+
+@media (min-width: 500px) {
+  .detailsContainer {
+    grid-template-columns: repeat(4, min-content);
+  }
+}

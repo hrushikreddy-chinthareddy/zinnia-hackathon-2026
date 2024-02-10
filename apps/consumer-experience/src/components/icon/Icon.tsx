@@ -1,15 +1,18 @@
 import { SVGProps } from 'react';
 
 import CloudFilled from '@/app/styles/icons/icons_filled/cloud.svg';
+import AlertExclamation from '@/app/styles/icons/icons_outlined/alert-exclamation.svg';
 import Autopay from '@/app/styles/icons/icons_outlined/autopay.svg';
 import Close from '@/app/styles/icons/icons_outlined/cancel.svg';
 import Payment from '@/app/styles/icons/icons_outlined/cash.svg';
 import Chevron from '@/app/styles/icons/icons_outlined/chevron-down.svg';
+import CircleCheckmark from '@/app/styles/icons/icons_outlined/circle-checkmark.svg';
 import CircleInfo from '@/app/styles/icons/icons_outlined/circle-info.svg';
 import CircleUser from '@/app/styles/icons/icons_outlined/circle-user.svg';
 import Cloud from '@/app/styles/icons/icons_outlined/cloud.svg';
 import Dollar from '@/app/styles/icons/icons_outlined/currency-dollar.svg';
 import DocumentText from '@/app/styles/icons/icons_outlined/document-text.svg';
+import HexExclamation from '@/app/styles/icons/icons_outlined/hex-exclamation.svg';
 import Mail from '@/app/styles/icons/icons_outlined/mail.svg';
 import Shield from '@/app/styles/icons/icons_outlined/shield-heart.svg';
 import Trash from '@/app/styles/icons/icons_outlined/trash.svg';
@@ -21,9 +24,11 @@ interface ExtendedSVGProps extends SVGProps<SVGElement> {
 const FILLED = 'Filled';
 
 export enum IconType {
+  ALERT_EXCLAMATION = 'AlertExclamation',
   AUTOPAY = 'Autopay',
   CANCEL = 'Cancel',
   CHEVRON = 'Chevron',
+  CIRCLE_CHECKMARK = 'CircleCheckmark',
   CIRCLE_INFO = 'CircleInfo',
   CIRCLE_USER = 'CircleUser',
   /**
@@ -33,6 +38,7 @@ export enum IconType {
   CLOUD = 'Cloud',
   DOCUMENT_TEXT = 'DocumentText',
   DOLLAR = 'Dollar',
+  HEX_EXCLAMATION = 'HexExclamation',
   MAIL = 'Mail',
   PAYMENT = 'Payment',
   SHIELD = 'Shield',
@@ -50,13 +56,16 @@ export interface IconProps {
   height?: number;
   filled?: boolean;
   className?: string;
+  small?: boolean;
 }
 
 export const Icons: {
   [key: string | IconType]: string;
 } = {
+  [IconType.ALERT_EXCLAMATION]: AlertExclamation,
   [IconType.AUTOPAY]: Autopay,
   [IconType.CHEVRON]: Chevron,
+  [IconType.CIRCLE_CHECKMARK]: CircleCheckmark,
   [IconType.CIRCLE_USER]: CircleUser,
   [IconType.CIRCLE_INFO]: CircleInfo,
   [IconType.CLOSE]: Close,
@@ -64,6 +73,7 @@ export const Icons: {
   [`${IconType.CLOUD}${FILLED}`]: CloudFilled,
   [IconType.DOCUMENT_TEXT]: DocumentText,
   [IconType.DOLLAR]: Dollar,
+  [IconType.HEX_EXCLAMATION]: HexExclamation,
   [IconType.MAIL]: Mail,
   [IconType.PAYMENT]: Payment,
   [IconType.SHIELD]: Shield,
@@ -78,9 +88,11 @@ export const Icon = ({
   filled,
   className,
   alt,
+  small,
 }: IconProps) => {
   const iconType = filled ? `${type}${FILLED}` : type;
   const Icon = Icons[iconType];
+  const defaultSize = small ? 16 : 24;
 
   // TODO: default to outlined?
   if (!Icon) {
@@ -88,8 +100,8 @@ export const Icon = ({
   }
 
   const props = {
-    width: width || 24,
-    height: height || 24,
+    width: width || defaultSize,
+    height: height || defaultSize,
     className: `inline ${className}`,
     color,
   } as ExtendedSVGProps;

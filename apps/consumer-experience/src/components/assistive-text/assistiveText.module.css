@@ -1,0 +1,21 @@
+.assistiveText {
+  display: flex;
+  line-height: 12px;
+  align-items: center;
+
+  :first-child {
+    margin-right: var(--measureDimensionGapXs, 0.25rem);
+  }
+
+  &.success {
+    color: var(--colorStatusTextStatusSuccessText, #007b5a);
+  }
+
+  &.info {
+    color: var(--colorStatusTextStatusInformationText, #005fed);
+  }
+
+  &.error {
+    color: var(--colorStatusTextStatusErrorText, #db004f);
+  }
+}

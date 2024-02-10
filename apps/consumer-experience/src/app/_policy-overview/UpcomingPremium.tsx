@@ -1,4 +1,4 @@
-import { Label } from '@zdx/bloom/components';
+import Bloom from '@zinnia/bloom/components';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
@@ -60,26 +60,24 @@ export const UpcomingPremium = () => {
         <FieldData
           large
           Label={
-            <Label
+            <Bloom.Label
+              text={UPCOMING_PREMIUM}
               labelFor={idFromTitle(UPCOMING_PREMIUM)}
               interactiveElements={
                 // eslint-disable-next-line react/jsx-key
                 [<UpcomingPremiumPopover />]
               }
-            >
-              {UPCOMING_PREMIUM}
-            </Label>
-          }
-          fieldData={
-            <p
-              className="typographyContentValue"
-              id={idFromTitle(UPCOMING_PREMIUM)}
-            >
-              {formatUSDollars(281.45)}
-            </p>
+            />
           }
           caption="Autopay on 11/12/2023"
-        />
+        >
+          <p
+            className="typographyContentValue"
+            id={idFromTitle(UPCOMING_PREMIUM)}
+          >
+            {formatUSDollars(281.45)}
+          </p>
+        </FieldData>
       </div>
     </ClickableCardContainer>
   );

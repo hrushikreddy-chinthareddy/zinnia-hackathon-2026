@@ -1,4 +1,4 @@
-import { Label } from '@zdx/bloom/components';
+import Bloom from '@zinnia/bloom/components';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
@@ -46,16 +46,20 @@ export const Coverage = () => {
         {
           content: (
             <FieldData
-              Label={<Label labelFor="policyBeneficiaries">Beneficiary</Label>}
-              fieldData={
-                <p
-                  id="policyBeneficiaries"
-                  className="typographyContentCaption field-data__caption"
-                >
-                  2 beneficiaries
-                </p>
+              Label={
+                <Bloom.Label
+                  text="Beneficiary"
+                  labelFor="policyBeneficiaries"
+                />
               }
-            ></FieldData>
+            >
+              <p
+                id="policyBeneficiaries"
+                className="typographyContentCaption field-data__caption"
+              >
+                2 beneficiaries
+              </p>
+            </FieldData>
           ),
         },
       ]}
@@ -65,19 +69,17 @@ export const Coverage = () => {
         <FieldData
           large
           Label={
-            <Label
+            <Bloom.Label
+              text="Coverage"
               labelFor="Coverage"
               // eslint-disable-next-line react/jsx-key
               interactiveElements={[<CoveragePopover />]}
-            >
-              Coverage
-            </Label>
-          }
-          fieldData={
-            <p className="typographyContentValue">{formatUSDollars(1000000)}</p>
+            />
           }
           caption="11/4/2022–3/1/2050"
-        />
+        >
+          <p className="typographyContentValue">{formatUSDollars(1000000)}</p>
+        </FieldData>
       </div>
     </ClickableCardContainer>
   );

@@ -1,11 +1,6 @@
-@import url('/node_modules/@zdx/bloom');
-@import url('/node_modules/@zdx/bloom/component-styles');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import './styles/everly/theme.css';
 
 @layer base {
   a {
@@ -22,6 +17,16 @@
     line-height: 36px; /* 128.571% */
   }
 
+  h2 {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 28px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  }
+
   @media screen(sm) {
     h1 {
       font-family: Poppins;
@@ -30,10 +35,21 @@
       font-weight: 500;
       line-height: 44px; /* 122.222% */
     }
+
+    h2 {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 500;
+      font-size: 26px;
+      line-height: 32px;
+      letter-spacing: 0em;
+      text-indent: 0px;
+    }
   }
 
   /* TODO: these need to be updated with correct variables */
-  button:focus-visible {
+  button:focus-visible,
+  a:focus-visible {
     outline: 2px solid #0d69d4;
     border-radius: 0.75rem;
     outline-offset: 2px;

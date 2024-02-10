@@ -18,6 +18,7 @@ export type PopoverProps = {
   children: ReactNode;
   placement?: PopoverPlacement;
   popoverClassName?: string;
+  // TODO: this is used as the aria label, should it only accept a string? what if it is optional?
   title: string | JSX.Element;
   trigger: ReactNode;
 };

@@ -6,6 +6,9 @@ import type { Metadata } from 'next';
 import { MainNav } from '@/components/MainNav';
 
 import './globals.css';
+import './styles/everly/theme.css';
+import '@zinnia/bloom';
+// const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Zinnia Live',
