@@ -33,7 +33,7 @@ export const Default: StoryObj<FieldDataProps> = {
             type={IconType.CIRCLE_INFO}
             width={16}
             height={16}
-            color="var(--colorPrimaryColorPrimary, #ff7500)"
+            color="var(--color-primary-color-primary, #ff7500)"
           />,
         ]}
       />

@@ -49,7 +49,7 @@ export const HeaderBreadcrumb = ({ title, popover }: HeaderBreadcrumbProps) => {
           trigger={
             <Icon
               type={IconType.CIRCLE_INFO}
-              color="var(--colorPrimaryColorPrimary, #ff7500)"
+              color="var(--color-primary-color-primary, #ff7500)"
             />
           }
           placement={PopoverPlacement.BottomRight}

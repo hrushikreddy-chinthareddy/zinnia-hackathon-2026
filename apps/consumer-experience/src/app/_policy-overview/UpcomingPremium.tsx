@@ -7,7 +7,7 @@ import { Popover } from '@/components/popover/Popover';
 import { PopoverPlacement } from '@/components/popover/popover.helper';
 import { formatUSDollars } from '@/utils/currency';
 
-import styles from './policyOverviewCards.module.css';
+import styles from './PolicyOverviewCards.module.css';
 
 const UPCOMING_PREMIUM = 'Upcoming premium';
 
@@ -26,7 +26,7 @@ const UpcomingPremiumPopover = () => {
           type={IconType.CIRCLE_INFO}
           width={16}
           height={16}
-          color="var(--colorPrimaryColorPrimary, #ff7500)"
+          color="var(--color-primary-color-primary, #ff7500)"
         />
       }
       placement={PopoverPlacement.BottomRight}
