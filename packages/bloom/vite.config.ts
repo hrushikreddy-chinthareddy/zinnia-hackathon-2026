@@ -31,7 +31,7 @@ export default defineConfig({
       },
     },
     rollupOptions: {
-      external: ["react"],
+      external: ["react", "react/jsx-runtime"],
       output: {
         globals: {
           react: "React",
