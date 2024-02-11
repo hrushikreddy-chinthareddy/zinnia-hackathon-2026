@@ -12,16 +12,16 @@ export const Footer = ({ hasBorder }: Props) => {
         'consumer-footer--border': hasBorder,
       })}
     >
-      <p className="typographyContentFooterLegal">
+      <p className="typography-content-footer-legal">
         This data is provided for informational purposes only, and is not
         intended to provide advice, nor should it be construed as an offer to
         sell, a solicitation of an offer to buy, or a recommendation for
         financial products.
       </p>
-      <p className="typographyContentFooterLegal">
+      <p className="typography-content-footer-legal">
         Copyright <span>{new Date().getFullYear()}</span>. All Rights Reserved.
       </p>
-      <p className="typographyContentFooterLegal">
+      <p className="typography-content-footer-legal">
         By using this website, you agree to the terms and conditions outlined in
         our{' '}
         <a href="#" className="consumer-footer__link">

@@ -15,7 +15,7 @@ export const Default: StoryObj<Props> = {
       label: 'go to link',
       isInternal: true,
     },
-    children: <div className="typographyContentValue">Card</div>,
+    children: <div className="typography-content-value">Card</div>,
   },
 };
 
@@ -26,13 +26,15 @@ export const WithList = {
       label: 'go to link',
       isInternal: true,
     },
-    children: <div className="typographyContentValue">Card With List</div>,
+    children: <div className="typography-content-value">Card With List</div>,
     listItems: [
       {
         content: (
           <div>
-            <div className="typographyLabelsFieldLabel">Insert title here</div>
-            <div className="typographyContentCaption">Caption text</div>
+            <div className="typography-labels-field-label">
+              Insert title here
+            </div>
+            <div className="typography-content-caption">Caption text</div>
           </div>
         ),
         linkTo: {
@@ -45,8 +47,10 @@ export const WithList = {
       {
         content: (
           <div>
-            <div className="typographyLabelsFieldLabel">Insert title here</div>
-            <div className="typographyContentCaption">Caption text</div>
+            <div className="typography-labels-field-label">
+              Insert title here
+            </div>
+            <div className="typography-content-caption">Caption text</div>
           </div>
         ),
         linkTo: {

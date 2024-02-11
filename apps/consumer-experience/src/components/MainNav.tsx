@@ -1,18 +1,17 @@
+import { Icon, IconType } from '@zdx/bloom/components';
 import Link from 'next/link';
 
 import LogoImage from '@/app/styles/everly/everly-logo.svg';
 
-import { Icon, IconType } from './icon/Icon';
-
 export function MainNav() {
   return (
     <div className="bg-white hidden sm:flex p-4 items-center">
-      <div className="justify-self-start">
+      <Link href="/" className="justify-self-start">
         <LogoImage
           alt="Company Logo"
           className="shrink-0 self-center text-primary w-24"
         ></LogoImage>
-      </div>
+      </Link>
 
       <div className="flex gap-4 grow justify-end items-center">
         <Link href="#" className="font-medium text-sm flex items-center gap-1">

@@ -1,14 +1,17 @@
-import { Label } from '@zdx/bloom/components';
+import {
+  Label,
+  Icon,
+  IconType,
+  Popover,
+  PopoverPlacement,
+} from '@zdx/bloom/components';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
-import { Icon, IconType } from '@/components/icon/Icon';
-import { Popover } from '@/components/popover/Popover';
-import { PopoverPlacement } from '@/components/popover/popover.helper';
 import { Ticker } from '@/components/ticker/Ticker';
 import { formatUSDollars } from '@/utils/currency';
 
-import styles from './policyOverviewCards.module.css';
+import styles from './PolicyOverviewCards.module.css';
 
 const AccountValuePopover = () => {
   return (
@@ -19,7 +22,7 @@ const AccountValuePopover = () => {
           type={IconType.CIRCLE_INFO}
           width={16}
           height={16}
-          color="var(--colorPrimaryColorPrimary, #ff7500)"
+          color="var(--color-primary-color-primary, #ff7500)"
         />
       }
       placement={PopoverPlacement.BottomRight}
@@ -71,16 +74,15 @@ export const AccountValue = () => {
               {ACCOUNT_VALUE}
             </Label>
           }
-          fieldData={
-            <p
-              className="typographyContentValue"
-              id={idFromTitle(ACCOUNT_VALUE)}
-            >
-              {formatUSDollars(250343.12)}
-            </p>
-          }
           caption="As of 6/12/2023 5:00 pm EST"
-        />
+        >
+          <p
+            className="typography-content-value"
+            id={idFromTitle(ACCOUNT_VALUE)}
+          >
+            {formatUSDollars(250343.12)}
+          </p>
+        </FieldData>
         <div className={styles.centerItem}>
           <Ticker value={260.45} subtext="this month" />
         </div>

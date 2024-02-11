@@ -45,13 +45,13 @@ export const Ticker = ({ value, subtext }: Props) => {
           )}
         />
       )}
-      <p className="typographyLabelsLabelMd">
+      <p className="typography-labels-label-md">
         {isPositive && <span>+</span>}
         {formattedVal()}
       </p>
       {subtext && (
         <p
-          className={clsx('typographyLabelsLabelSmAlt', 'ticker__subtext', {
+          className={clsx('typography-labels-label-sm-alt', 'ticker__subtext', {
             'ticker__subtext--no-change': value === 0,
           })}
         >

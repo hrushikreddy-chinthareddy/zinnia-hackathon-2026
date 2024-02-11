@@ -34,9 +34,7 @@ export default function Login() {
           </div>
           <div className="px-6 lg:px-8">
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-sm">
-              <h2 className="mt-10 text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                Login
-              </h2>
+              <h2 className="mt-10 text-2xl font-bold leading-9 tracking-tight text-gray-900">Login</h2>
               <div className="py-6">
                 <a
                   href="/api/auth/login"
@@ -47,10 +45,7 @@ export default function Login() {
               </div>
 
               <p className="text-center text-sm text-gray-500">
-                <a
-                  href="#"
-                  className="font-semibold leading-6 text-primary hover:text-primary-light"
-                >
+                <a href="#" className="font-semibold leading-6 text-primary hover:text-primary-light">
                   Need help signing in?
                 </a>
               </p>

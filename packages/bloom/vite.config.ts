@@ -10,7 +10,7 @@ export default defineConfig({
   plugins: [
     react(),
     libInjectCss(),
-    svgr(),
+    svgr({ include: "**/*.svg" }),
     dts({
       exclude: "src/**/*.stories.*",
       rollupTypes: true,
@@ -24,6 +24,7 @@ export default defineConfig({
     },
   },
   build: {
+    copyPublicDir: false,
     lib: {
       entry: {
         bloom: resolve(__dirname, "src/bloom.tsx"),
@@ -31,7 +32,7 @@ export default defineConfig({
       },
     },
     rollupOptions: {
-      external: ["react"],
+      external: ["react", "react/jsx-runtime"],
       output: {
         globals: {
           react: "React",

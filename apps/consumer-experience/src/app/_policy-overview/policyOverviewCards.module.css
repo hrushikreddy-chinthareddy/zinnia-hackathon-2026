@@ -15,6 +15,6 @@
 
 .popoverContent {
   > *:not(:last-child) {
-    margin-bottom: var(--measureDimensionPaddingXl, 0.75rem);
+    margin-bottom: var(--measure-dimension-padding-xl, 0.75rem);
   }
 }

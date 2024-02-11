@@ -39,7 +39,7 @@ const config: Omit<Config, "content"> = {
           300: "rgb(var(--color-300-gray) / <alpha-value>)",
           400: "rgb(var(--color-400-gray) / <alpha-value>)",
           500: "rgb(var(--color-500-gray) / <alpha-value>)",
-          600: "var(--color-base-text-text-scondary)",
+          600: "var(--color-base-text-text-secondary)",
           700: "rgb(var(--color-700-gray) / <alpha-value>)",
           800: "rgb(var(--color-800-gray) / <alpha-value>)",
           900: "rgb(var(--color-900-gray) / <alpha-value>)",

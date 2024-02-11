@@ -1,13 +1,16 @@
-import { Label } from '@zdx/bloom/components';
+import {
+  Label,
+  Icon,
+  IconType,
+  Popover,
+  PopoverPlacement,
+} from '@zdx/bloom/components';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
-import { Icon, IconType } from '@/components/icon/Icon';
-import { Popover } from '@/components/popover/Popover';
-import { PopoverPlacement } from '@/components/popover/popover.helper';
 import { formatUSDollars } from '@/utils/currency';
 
-import styles from './policyOverviewCards.module.css';
+import styles from './PolicyOverviewCards.module.css';
 
 const CoveragePopover = () => {
   return (
@@ -18,7 +21,7 @@ const CoveragePopover = () => {
           type={IconType.CIRCLE_INFO}
           width={16}
           height={16}
-          color="var(--colorPrimaryColorPrimary, #ff7500)"
+          color="var(--color-primary-color-primary, #ff7500)"
         />
       }
       placement={PopoverPlacement.BottomRight}
@@ -40,22 +43,21 @@ export const Coverage = () => {
     <ClickableCardContainer
       listItems={[
         {
-          content: <p className="typographyLabelsFieldLabel">Riders</p>,
+          content: <p className="typography-labels-field-label">Riders</p>,
           linkTo: { url: '#', label: 'riders' },
         },
         {
           content: (
             <FieldData
               Label={<Label labelFor="policyBeneficiaries">Beneficiary</Label>}
-              fieldData={
-                <p
-                  id="policyBeneficiaries"
-                  className="typographyContentCaption field-data__caption"
-                >
-                  2 beneficiaries
-                </p>
-              }
-            ></FieldData>
+            >
+              <p
+                id="policyBeneficiaries"
+                className="typography-content-caption field-data__caption"
+              >
+                2 beneficiaries
+              </p>
+            </FieldData>
           ),
         },
       ]}
@@ -73,11 +75,10 @@ export const Coverage = () => {
               Coverage
             </Label>
           }
-          fieldData={
-            <p className="typographyContentValue">{formatUSDollars(1000000)}</p>
-          }
           caption="11/4/2022–3/1/2050"
-        />
+        >
+          <p className="typography-content-value">{formatUSDollars(1000000)}</p>
+        </FieldData>
       </div>
     </ClickableCardContainer>
   );

@@ -23,28 +23,26 @@
   "module": "dist/bloom.js",
   "types": "dist/bloom.d.ts",
   "files": [
+    "src",
     "dist",
-    "README.md",
-    "./dist/components.css"
+    "README.md"
   ],
   "exports": {
     ".": {
-      "import": "./dist/bloom.js",
-      "require": "./dist/bloom.cjs",
-      "types": "./dist/bloom.d.ts"
+      "import": "./src/bloom.tsx"
     },
-    "./css": {
+    "./css": "./src/tokens/css/index.css",
+    "./bloom-css": {
       "import": "./dist/bloom.css",
       "require": "./dist/bloom.css"
     },
-    "./component-styles": {
+    "./component-styles": "./dist/components.css",
+    "./bloom-component-styles": {
       "import": "./dist/components.css",
       "require": "./dist/components.css"
     },
     "./components": {
-      "import": "./dist/components.js",
-      "require": "./dist/components.cjs",
-      "types": "./dist/components.d.ts"
+      "import": "./src/components/index.ts"
     }
   },
   "typesVersions": {
@@ -58,13 +56,12 @@
     }
   },
   "private": false,
-  "version": "0.0.50",
+  "version": "0.0.51",
   "type": "module",
   "scripts": {
     "prepare": "npm run build",
     "prepublishOnly": "npm run test",
-    "dev:vite": "vite",
-    "dev": "pnpm run build:watch",
+    "dev": "vite",
     "test": "echo \"no tests\" && exit 0",
     "build": "tsc && vite build",
     "build:watch": "tsc && vite build --watch",
@@ -75,9 +72,12 @@
     "chromatic": "npx chromatic"
   },
   "dependencies": {
-    "lodash": "^4.17.21",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-popover": "^1.0.7",
+    "clsx": "^2.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-use": "^17.5.0",
     "vite-plugin-svgr": "^4.2.0"
   },
   "devDependencies": {
@@ -105,6 +105,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.4",
     "eslint-plugin-storybook": "^0.6.15",
+    "lodash": "^4.17.21",
     "storybook": "^7.6.4",
     "typescript": "^5.2.2",
     "vite": "^5.0.12",

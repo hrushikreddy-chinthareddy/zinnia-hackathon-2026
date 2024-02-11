@@ -1,17 +1,19 @@
-import Bloom from '@zdx/bloom/components';
+import { Label, Icon, IconType } from '@zdx/bloom/components';
 import clsx from 'clsx';
-import { ReactElement, ReactNode, cloneElement } from 'react';
+import {
+  PropsWithChildren,
+  ReactElement,
+  ReactNode,
+  cloneElement,
+} from 'react';
 
-import { Icon, IconType } from '../icon/Icon';
 import './fieldData.css';
 
-export interface FieldDataProps {
-  // TODO: how to ensure uniqueness?
-  fieldData: ReactNode;
-  Label?: ReactElement<typeof Bloom.Label>;
+export interface FieldDataProps extends PropsWithChildren {
+  Label?: ReactElement<typeof Label>;
   caption?: ReactNode;
   /**
-   * Defaults to colorBaseTextTextSecondary
+   * Defaults to color-base-text-text-secondary
    */
   captionColor?: string;
   /**
@@ -24,12 +26,12 @@ export interface FieldDataProps {
 export const FieldData = ({
   caption,
   captionColor,
-  fieldData,
+  children,
   Label,
   large,
   iconType,
 }: FieldDataProps) => {
-  if (!fieldData) {
+  if (!children) {
     return null;
   }
 
@@ -38,12 +40,12 @@ export const FieldData = ({
       {/* TODO: should i add uuid to this to ensure uniqueness? */}
       {Label && cloneElement(Label)}
       <div className="field-data__value">
-        {fieldData}
+        {children}
         {iconType && <Icon type={iconType} className="field-data__icon" />}
       </div>
       {caption && (
         <span
-          className="typographyContentCaption field-data__caption"
+          className="typography-content-caption field-data__caption"
           style={captionColor ? { color: captionColor } : undefined}
         >
           {caption}

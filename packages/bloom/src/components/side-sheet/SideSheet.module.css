@@ -1,6 +1,9 @@
 .sideSheetBackgroundOverlay {
   animation: overlayShow 300ms cubic-bezier(0.16, 1, 0.3, 1);
-  background-color: var(--colorAccentColor50PercentBlack, rgba(0, 0, 0, 0.5));
+  background-color: var(
+    --color-accent-color-50-percent-black,
+    rgba(0, 0, 0, 0.5)
+  );
   inset: 0;
   position: fixed;
 }
@@ -10,13 +13,13 @@ div.sideSheetBackgroundOverlay[data-state='closed'] {
 }
 
 .sideSheetContent {
-  --sidesheet-padding: var(--measureDimensionPadding3xl, 1.5rem)
-    var(--measureDimensionPadding4xl, 2rem);
+  --sidesheet-padding: var(--measure-dimension-padding-3xl, 1.5rem)
+    var(--measure-dimension-padding-4xl, 2rem);
 
   background-color: white;
   border-image-slice: 1;
-  border-top: 10px solid var(--colorBaseBorderBorderPrimaryColor);
-  box-shadow: var(--shadowElevationElevationLight16);
+  border-top: 10px solid var(--color-base-border-border-primary-color);
+  box-shadow: var(--shadow-elevation-elevation-light-16);
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -45,7 +48,7 @@ div.sideSheetContentLeft[data-state='closed'] {
 }
 
 .sideSheetHeaderContainer {
-  box-shadow: var(--shadowElevationElevationLight08);
+  box-shadow: var(--shadow-elevation-elevation-light-08);
   position: relative;
 }
 

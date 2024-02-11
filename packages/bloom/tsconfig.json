@@ -3,7 +3,7 @@
   "compilerOptions": {
     "incremental": true,
     "paths": {
-      "@/*": ["./src"],
+      "@/*": ["./src/*"],
       "@tokens/*": ["./src/tokens/style-dictionary"]
     }
   },

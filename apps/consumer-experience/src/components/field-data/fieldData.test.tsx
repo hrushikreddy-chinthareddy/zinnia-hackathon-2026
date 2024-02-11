@@ -13,7 +13,7 @@ describe('FieldData', () => {
     const caption = 'Test Caption';
 
     // Act
-    render(<FieldData fieldData={fieldData} caption={caption} />);
+    render(<FieldData caption={caption}>{fieldData}</FieldData>);
 
     // Assert
     expect(screen.getByText(fieldData)).toBeInTheDocument();
@@ -27,7 +27,7 @@ describe('FieldData', () => {
     const caption = 'caption';
 
     // Act
-    render(<FieldData fieldData={fieldData} caption={caption} />);
+    render(<FieldData caption={caption}>{fieldData}</FieldData>);
 
     // Assert
     expect(screen.queryByText(caption)).not.toBeInTheDocument();

@@ -1,15 +1,15 @@
-'use client';
-import * as ReactPopover from '@radix-ui/react-popover';
-import clsx from 'clsx';
-import { ReactNode } from 'react';
-import { useWindowSize } from 'react-use';
+"use client";
+import { Icon, IconType } from "../icon";
+import * as ReactPopover from "@radix-ui/react-popover";
+import clsx from "clsx";
+import { ReactNode } from "react";
+import { useWindowSize } from "react-use";
 
-import { Icon, IconType } from '@/components/icon/Icon';
-import { SideSheet } from '@/components/side-sheet/SideSheet';
-import { zIndexOrder } from '@/utils/zIndexOrder';
+import { SideSheet } from "../side-sheet";
+import { zIndexOrder } from "../../utils/zIndexOrder";
 
-import { PopoverPlacement, getPlacementProps } from './popover.helper';
-import styles from './popover.module.css';
+import { PopoverPlacement, getPlacementProps } from "./popover.helper";
+import styles from "./Popover.module.css";
 
 // TODO: replace these
 // import { PopoverTest } from '@deps/jest/constants/test-id-constants';
@@ -18,6 +18,7 @@ export type PopoverProps = {
   children: ReactNode;
   placement?: PopoverPlacement;
   popoverClassName?: string;
+  // TODO: this is used as the aria label, should it only accept a string? what if it is optional?
   title: string | JSX.Element;
   trigger: ReactNode;
 };
@@ -35,12 +36,12 @@ export const Popover = ({
   const popoverContent = (
     <div className={clsx(popoverClassName, styles.popoverContainer)}>
       <div className={styles.popoverTitleContainer}>
-        <div className="typographyLabelsLabelLg">{title}</div>
+        <div className="typography-labels-label-lg">{title}</div>
         <ReactPopover.Close>
           <Icon type={IconType.CLOSE} color="white" />
         </ReactPopover.Close>
       </div>
-      <span className="typographyContentBodySm">{children}</span>
+      <span className="typography-content-body-sm">{children}</span>
     </div>
   );
 

@@ -1,11 +1,11 @@
 .field-data__container--large {
   > *:not(:last-child) {
-    margin-bottom: var(--measureDimensionGapXs, 0.25rem);
+    margin-bottom: var(--measure-dimension-gap-xs, 0.25rem);
   }
 }
 .field-data__value {
-  padding: var(--measureDimensionPaddingXs, 0.25rem) 0
-    var(--measureDimensionPaddingXs, 0.25rem);
+  padding: var(--measureDimensionPaddingXs, 0.125rem) 0;
+  margin-top: var(--measureDimensionPaddingXs, 0.25rem);
   display: flex;
 }
 
@@ -14,5 +14,5 @@
 }
 
 .field-data__caption {
-  color: var(--colorBaseTextTextSecondary, #676767);
+  color: var(--color-base-text-text-secondary, #676767);
 }

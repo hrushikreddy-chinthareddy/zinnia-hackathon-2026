@@ -19,7 +19,7 @@ export default {
 
 export const Default: StoryObj<FieldDataProps> = {
   args: {
-    fieldData: <p className="typographyContentValue">$250,343.12</p>,
+    fieldData: <p className="typography-content-value">$250,343.12</p>,
     caption: 'As of 6/12/2023 5:00 pm EST',
     large: true,
     iconType: IconType.MAIL,
@@ -33,7 +33,7 @@ export const Default: StoryObj<FieldDataProps> = {
             type={IconType.CIRCLE_INFO}
             width={16}
             height={16}
-            color="var(--colorPrimaryColorPrimary, #ff7500)"
+            color="var(--color-primary-color-primary, #ff7500)"
           />,
         ]}
       />

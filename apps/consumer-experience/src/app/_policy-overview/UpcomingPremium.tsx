@@ -1,13 +1,16 @@
-import { Label } from '@zdx/bloom/components';
+import {
+  Label,
+  Icon,
+  IconType,
+  Popover,
+  PopoverPlacement,
+} from '@zdx/bloom/components';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
-import { Icon, IconType } from '@/components/icon/Icon';
-import { Popover } from '@/components/popover/Popover';
-import { PopoverPlacement } from '@/components/popover/popover.helper';
 import { formatUSDollars } from '@/utils/currency';
 
-import styles from './policyOverviewCards.module.css';
+import styles from './PolicyOverviewCards.module.css';
 
 const UPCOMING_PREMIUM = 'Upcoming premium';
 
@@ -26,7 +29,7 @@ const UpcomingPremiumPopover = () => {
           type={IconType.CIRCLE_INFO}
           width={16}
           height={16}
-          color="var(--colorPrimaryColorPrimary, #ff7500)"
+          color="var(--color-primary-color-primary, #ff7500)"
         />
       }
       placement={PopoverPlacement.BottomRight}
@@ -70,16 +73,15 @@ export const UpcomingPremium = () => {
               {UPCOMING_PREMIUM}
             </Label>
           }
-          fieldData={
-            <p
-              className="typographyContentValue"
-              id={idFromTitle(UPCOMING_PREMIUM)}
-            >
-              {formatUSDollars(281.45)}
-            </p>
-          }
           caption="Autopay on 11/12/2023"
-        />
+        >
+          <p
+            className="typography-content-value"
+            id={idFromTitle(UPCOMING_PREMIUM)}
+          >
+            {formatUSDollars(281.45)}
+          </p>
+        </FieldData>
       </div>
     </ClickableCardContainer>
   );
