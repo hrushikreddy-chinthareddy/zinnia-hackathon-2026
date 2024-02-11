@@ -5,7 +5,7 @@
 
 .clickable-card-container__container:not(:has(ul)) {
   > div {
-    border-radius: var(--measure-dimension-radius-sm, 0.25rem);
+    border-radius: var(----measure-dimension-radius-sm, 0.25rem);
   }
 }
 
@@ -13,32 +13,35 @@
 ave top radius and last card should have bottom radius */
 .clickable-card-container__container:has(ul) {
   > div {
-    border-top-left-radius: var(--measure-dimension-radius-sm, 0.25rem);
-    border-top-right-radius: var(--measure-dimension-radius-sm, 0.25rem);
+    border-top-left-radius: var(----measure-dimension-radius-sm, 0.25rem);
+    border-top-right-radius: var(----measure-dimension-radius-sm, 0.25rem);
   }
 
   :last-child {
-    border-bottom-left-radius: var(--measure-dimension-radius-sm, 0.25rem);
-    border-bottom-right-radius: var(--measure-dimension-radius-sm, 0.25rem);
+    border-bottom-left-radius: var(----measure-dimension-radius-sm, 0.25rem);
+    border-bottom-right-radius: var(----measure-dimension-radius-sm, 0.25rem);
   }
 }
 
 .clickable-card-container__container-disabled {
-  border: 2px solid var(--colorBaseBorderBorderSubtle, #ccc);
+  border: 2px solid var(--color-base-border-border-subtle, #ccc);
   box-shadow: none;
 }
 
 .clickable-card-container__content {
   align-items: center;
-  background-color: var(--colorFieldsSurfaceFieldBackgroundDefaultFill, #fff);
+  background-color: var(
+    --color-fields-surface-field-background-default-fill,
+    #fff
+  );
   display: flex;
-  padding: var(--measureDimensionPaddingXxl, 1rem);
+  padding: var(--measure-dimensionpadding-xxl, 1rem);
   position: relative;
   justify-content: space-between;
   width: 100%;
 
   &:has(a):hover {
-    outline: 1px solid var(--colorStatesHoverHoverPrimaryBorder, #ff4f00);
+    outline: 1px solid var(--color-states-hover-hover-primary-border, #ff4f00);
   }
 }
 
