@@ -1,9 +1,13 @@
-import { Label, Icon, IconType } from '@zdx/bloom/components';
+import {
+  Label,
+  Icon,
+  IconType,
+  Popover,
+  PopoverPlacement,
+} from '@zdx/bloom/components';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
-import { Popover } from '@/components/popover/Popover';
-import { PopoverPlacement } from '@/components/popover/popover.helper';
 import { formatUSDollars } from '@/utils/currency';
 
 import styles from './PolicyOverviewCards.module.css';

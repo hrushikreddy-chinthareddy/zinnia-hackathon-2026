@@ -1,12 +1,15 @@
 'use client';
+import {
+  Icon,
+  IconType,
+  Popover,
+  PopoverPlacement,
+} from '@zdx/bloom/components';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ReactNode } from 'react';
 
 import styles from './HeaderBreadcrumb.module.css';
-import { Icon, IconType } from '../icon/Icon';
-import { Popover } from '../popover/Popover';
-import { PopoverPlacement } from '../popover/popover.helper';
 
 interface PopoverInfo {
   content: ReactNode;
