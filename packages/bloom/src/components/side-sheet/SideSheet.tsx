@@ -1,16 +1,16 @@
-'use client';
-import { Icon, IconType } from '@zdx/bloom/components';
-import * as Dialog from '@radix-ui/react-dialog';
-import clsx from 'clsx';
-import { ReactNode } from 'react';
+"use client";
+import { Icon, IconType } from "../icon";
+import * as Dialog from "@radix-ui/react-dialog";
+import clsx from "clsx";
+import { ReactNode } from "react";
 
-import { zIndexOrder } from '@/utils/zIndexOrder';
+import { zIndexOrder } from "../../utils/zIndexOrder";
 
-import styles from './SideSheet.module.css';
+import styles from "./SideSheet.module.css";
 
 export enum SideSheetLocation {
-  Left = 'left',
-  Right = 'right',
+  Left = "left",
+  Right = "right",
 }
 
 export interface SideSheetProps {
@@ -54,9 +54,10 @@ export const SideSheet = ({
             preventCloseOnOutsideClick ? preventInteraction : undefined
           }
           className={clsx(styles.sideSheetContent, {
-            [styles.sideSheetContentRight]:
+            [styles.sideSheetContentRight as string]:
               location === SideSheetLocation.Right,
-            [styles.sideSheetContentLeft]: location === SideSheetLocation.Left,
+            [styles.sideSheetContentLeft as string]:
+              location === SideSheetLocation.Left,
           })}
           style={{ zIndex: zIndexOrder.Dialog }}
           onCloseAutoFocus={closeCallback}
@@ -70,7 +71,7 @@ export const SideSheet = ({
               <Dialog.Close aria-label="Close">
                 <Icon
                   type={IconType.CLOSE}
-                  color={'var(--color-base-icon-icon-action)'}
+                  color={"var(--color-base-icon-icon-action)"}
                 />
               </Dialog.Close>
             </div>

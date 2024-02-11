@@ -2,7 +2,6 @@ import { Meta, StoryObj } from "@storybook/react";
 
 import { Popover } from "@/components/popover";
 import { PopoverPlacement } from "@/components/popover/popover.helper";
-import { Icon, IconType } from "@/components/icon";
 
 export default {
   title: "Components/Popover",
@@ -35,18 +34,19 @@ export default {
 
 export const DefaultPopover: StoryObj<typeof Popover> = {
   args: {
-    children: <Icon type={IconType.CIRCLE_INFO} />,
-    title: "popover title",
-    body: (
+    children: (
       <div>
         <p
-          style={{ paddingTop: "var(--measure-dimension-padding-xl, 0.75rem)" }}
+          style={{
+            paddingTop: "var(--measure-dimension-padding-xl, 0.75rem)",
+          }}
         >
           Your premium is the amount you pay periodically for insurance
           coverage. What’s shown here is your next scheduled payment.
         </p>
       </div>
     ),
+    title: "popover title",
     placement: PopoverPlacement.BottomRight,
   },
 };
