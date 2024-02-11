@@ -1,11 +1,11 @@
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from "@storybook/react";
 
-import { SideSheet } from './SideSheet';
+import { SideSheet } from "@/components/side-sheet";
 
 export default {
-  title: 'Components/SideSheet',
+  title: "Components/SideSheet",
   component: SideSheet,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
 } as Meta<typeof SideSheet>;
 
 export const DefaultSideSheet: StoryObj<typeof SideSheet> = {

@@ -72,8 +72,12 @@
     "chromatic": "npx chromatic"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-popover": "^1.0.7",
+    "clsx": "^2.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-use": "^17.5.0",
     "vite-plugin-svgr": "^4.2.0"
   },
   "devDependencies": {
