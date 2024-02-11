@@ -10,7 +10,7 @@ export default defineConfig({
   plugins: [
     react(),
     libInjectCss(),
-    svgr(),
+    svgr({ include: "**/*.svg" }),
     dts({
       exclude: "src/**/*.stories.*",
       rollupTypes: true,
