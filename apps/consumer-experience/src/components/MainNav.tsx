@@ -1,33 +1,34 @@
+import { Icon, IconType } from '@zdx/bloom/components';
 import Link from 'next/link';
 
 import LogoImage from '@/app/styles/everly/everly-logo.svg';
 
-import { Icon, IconType } from './icon/Icon';
-
 export function MainNav() {
   return (
-    <div className="hidden items-center bg-white p-4 sm:flex">
-      <div className="justify-self-start">
+    <div className="bg-white hidden sm:flex p-4 items-center">
+      <Link href="/" className="justify-self-start">
         <LogoImage
           alt="Company Logo"
-          className="w-24 shrink-0 self-center text-primary"
+          className="shrink-0 self-center text-primary w-24"
         ></LogoImage>
-      </div>
+      </Link>
 
-      <div className="flex grow items-center justify-end gap-4">
-        <Link href="#" className="flex items-center gap-1 text-sm font-medium">
-          <Icon type={IconType.DOCUMENT_TEXT} className="w-6 text-primary" />
+      <div className="flex gap-4 grow justify-end items-center">
+        <Link href="#" className="font-medium text-sm flex items-center gap-1">
+          {/* <DocumentIcon className="text-primary w-6" aria-hidden="true"></DocumentIcon> */}
+          <Icon type={IconType.DOCUMENT_TEXT} className="text-primary w-6" />
           Documents
         </Link>
         <Link
           href="/profile"
-          className="flex items-center gap-1 text-sm font-medium"
+          className="font-medium text-sm flex items-center gap-1"
         >
-          <Icon type={IconType.CIRCLE_USER} className="w-6 text-primary" />
+          {/* <UserIcon className="text-primary w-6" alt="User Icon" aria-hidden="true" /> */}
+          <Icon type={IconType.CIRCLE_USER} className="text-primary w-6" />
           Profile
         </Link>
         <span className="text-gray-200">|</span>
-        <a href="/api/auth/logout" className="text-sm font-medium">
+        <a href="/api/auth/logout" className="font-medium text-sm">
           Sign out
         </a>
       </div>

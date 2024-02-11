@@ -1,4 +1,5 @@
 'use client';
+import { Icon, IconType } from '@zdx/bloom/components';
 import * as Dialog from '@radix-ui/react-dialog';
 import clsx from 'clsx';
 import { ReactNode } from 'react';
@@ -6,7 +7,6 @@ import { ReactNode } from 'react';
 import { zIndexOrder } from '@/utils/zIndexOrder';
 
 import styles from './SideSheet.module.css';
-import { Icon, IconType } from '../icon/Icon';
 
 export enum SideSheetLocation {
   Left = 'left',

@@ -1,10 +1,10 @@
 'use client';
+import { Icon, IconType } from '@zdx/bloom/components';
 import * as ReactPopover from '@radix-ui/react-popover';
 import clsx from 'clsx';
 import { ReactNode } from 'react';
 import { useWindowSize } from 'react-use';
 
-import { Icon, IconType } from '@/components/icon/Icon';
 import { SideSheet } from '@/components/side-sheet/SideSheet';
 import { zIndexOrder } from '@/utils/zIndexOrder';
 

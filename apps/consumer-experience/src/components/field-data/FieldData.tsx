@@ -1,4 +1,4 @@
-import { Label } from '@zdx/bloom/components';
+import { Label, Icon, IconType } from '@zdx/bloom/components';
 import clsx from 'clsx';
 import {
   PropsWithChildren,
@@ -7,7 +7,6 @@ import {
   cloneElement,
 } from 'react';
 
-import { Icon, IconType } from '../icon/Icon';
 import './fieldData.css';
 
 export interface FieldDataProps extends PropsWithChildren {

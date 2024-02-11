@@ -1,11 +1,10 @@
+import { Icon, IconType } from '@zdx/bloom/components';
 import { clsx } from 'clsx';
 import { NextComponentType } from 'next';
 import Link, { LinkProps } from 'next/link';
 import { FC, PropsWithChildren, ReactNode } from 'react';
 
 import './clickableCardContainer.css';
-
-import { Icon, IconType } from '../icon/Icon';
 
 interface LinkItem {
   /**
