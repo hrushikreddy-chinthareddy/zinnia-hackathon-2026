@@ -14,8 +14,12 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <>
-      <h1 className="">Policy Overview</h1>
-      <HeaderPolicyDetails className="my-4 sm:my-6" includeLogo expanded />
+      <h1 className="my-dimension-gap-lg">Policy Overview</h1>
+      <HeaderPolicyDetails
+        className="my-dimension-gap-lg"
+        includeLogo
+        expanded
+      />
       <div className="[&>*]:mb-4">
         <UpcomingPremium />
         <AccountValue />
