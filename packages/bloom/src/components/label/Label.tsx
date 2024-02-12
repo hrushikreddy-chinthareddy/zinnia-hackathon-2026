@@ -1,6 +1,6 @@
-import React, { PropsWithChildren, ReactNode } from "react";
+import { PropsWithChildren, ReactNode } from 'react';
 
-import classes from "./Label.module.css";
+import classes from './Label.module.css';
 
 export type LabelProps = {
   /**
@@ -13,11 +13,11 @@ export type LabelProps = {
   labelFor: string;
 } & PropsWithChildren;
 
-export const Label: React.FC<LabelProps> = ({
+export const Label = ({
   children,
   interactiveElements,
   labelFor,
-}) => {
+}: LabelProps) => {
   return (
     <div className={classes.container}>
       <label htmlFor={labelFor} className={classes.text}>

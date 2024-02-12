@@ -24,6 +24,10 @@ export const AssistiveText = ({
   text,
   variant = AssistiveTextVariant.Default,
 }: AssistiveTextProps) => {
+  if (!text) {
+    return null;
+  }
+
   const variantClass = () => {
     switch (variant) {
       case AssistiveTextVariant.Success:

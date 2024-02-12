@@ -1,0 +1,18 @@
+.addressRowContainer {
+  display: grid;
+  grid-template-columns: repeat(minmax(0, 1fr));
+  column-gap: var(--measureDimensionGap2xl, 2rem);
+  row-gap: var(--measureDimensionGapLg, 1rem);
+}
+
+@media (min-width: 768px) {
+  .addressRowContainer {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .addressRowContainer {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

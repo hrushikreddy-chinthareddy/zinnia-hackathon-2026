@@ -1,8 +1,15 @@
-import { Label, Icon, IconType } from '@zdx/bloom/components';
+import {
+  AssistiveTextProps,
+  AssistiveText,
+  Label,
+  LabelProps,
+  Icon,
+  IconType,
+} from '@zdx/bloom/components';
 import clsx from 'clsx';
 import {
+  ComponentElement,
   PropsWithChildren,
-  ReactElement,
   ReactNode,
   cloneElement,
 } from 'react';
@@ -10,7 +17,12 @@ import {
 import './fieldData.css';
 
 export interface FieldDataProps extends PropsWithChildren {
-  Label?: ReactElement<typeof Label>;
+  /**
+   * Assistive text component
+   * typeof: "success" | "info" | "default" | "error"
+   */
+  AssistiveText?: ComponentElement<AssistiveTextProps, AssistiveText>;
+  Label?: ComponentElement<LabelProps, Label>;
   caption?: ReactNode;
   /**
    * Defaults to color-base-text-text-secondary
@@ -24,6 +36,7 @@ export interface FieldDataProps extends PropsWithChildren {
 }
 
 export const FieldData = ({
+  AssistiveText,
   caption,
   captionColor,
   children,
@@ -51,7 +64,7 @@ export const FieldData = ({
           {caption}
         </span>
       )}
-      {/* TODO: eventually assistive text component will be added here */}
+      {AssistiveText && cloneElement(AssistiveText)}
     </div>
   );
 };

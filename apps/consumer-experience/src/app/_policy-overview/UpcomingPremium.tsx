@@ -14,12 +14,6 @@ import styles from './PolicyOverviewCards.module.css';
 
 const UPCOMING_PREMIUM = 'Upcoming premium';
 
-// TODO: remove this and the id on the label when bloom label component update has been
-// merged to not require label
-const idFromTitle = (title: string) => {
-  return title.split(' ').join();
-};
-
 const UpcomingPremiumPopover = () => {
   return (
     <Popover
@@ -64,7 +58,6 @@ export const UpcomingPremium = () => {
           large
           Label={
             <Label
-              labelFor={idFromTitle(UPCOMING_PREMIUM)}
               interactiveElements={
                 // eslint-disable-next-line react/jsx-key
                 [<UpcomingPremiumPopover />]
@@ -75,12 +68,7 @@ export const UpcomingPremium = () => {
           }
           caption="Autopay on 11/12/2023"
         >
-          <p
-            className="typography-content-value"
-            id={idFromTitle(UPCOMING_PREMIUM)}
-          >
-            {formatUSDollars(281.45)}
-          </p>
+          <p className="typography-content-value">{formatUSDollars(281.45)}</p>
         </FieldData>
       </div>
     </ClickableCardContainer>

@@ -39,20 +39,17 @@ export const BankData = ({
         )}
       </div>
       <div className={styles.detailsContainer}>
-        <FieldData Label={<Label labelFor="remove this">Account number</Label>}>
+        <FieldData Label={<Label>Account number</Label>}>
           <p className="typography-content-body-sm">{`Ending in ${accountNumber}`}</p>
         </FieldData>
-        <FieldData Label={<Label labelFor="remove this">Routing number</Label>}>
+        <FieldData Label={<Label>Routing number</Label>}>
           <p className="typography-content-body-sm">{routingNumber}</p>
         </FieldData>
         {/* TODO: probably need to format this? capitalize? */}
-        {/* TODO: remove the label!!!!! */}
-        <FieldData Label={<Label labelFor="remove this">Account type</Label>}>
+        <FieldData Label={<Label>Account type</Label>}>
           <p className="typography-content-body-sm">{accountType}</p>
         </FieldData>
-        <FieldData
-          Label={<Label labelFor="remove this">Name on account</Label>}
-        >
+        <FieldData Label={<Label>Name on account</Label>}>
           <p className="typography-content-body-sm">{nameOnAccount}</p>
         </FieldData>
       </div>
