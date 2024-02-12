@@ -1,12 +1,14 @@
+import { ReactNode } from 'react';
+
 export type AddressProps = {
-  addrLine1: string;
-  addrLine2?: string;
-  addrLine3?: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  zipExt?: string;
-  addrCountry: string;
+  addrLine1: ReactNode;
+  addrLine2?: ReactNode;
+  addrLine3?: ReactNode;
+  city: ReactNode;
+  state: ReactNode;
+  zipCode: ReactNode;
+  zipExt?: ReactNode;
+  addrCountry: ReactNode;
 };
 
 export const Address = (address: AddressProps) => {
