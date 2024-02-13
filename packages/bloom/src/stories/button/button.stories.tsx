@@ -55,7 +55,7 @@ export const Disabled: StoryType = {
 };
 
 const buttonStyles = Object.entries(Tokens.Colors.Colors).filter(([k]) =>
-  k.startsWith("button")
+  k.startsWith("button"),
 );
 const toCSSPropertyCase = (key: string) =>
   `--${
@@ -106,7 +106,7 @@ export const Theming: StoryType = {
                 key
                   .split(/(?=[A-Z])/)
                   // return all to lowercase so new set can remove dupes
-                  .map((k) => k.toLocaleLowerCase())
+                  .map((k) => k.toLocaleLowerCase()),
               ),
             ]
               // join with kebab case like css custom properties should

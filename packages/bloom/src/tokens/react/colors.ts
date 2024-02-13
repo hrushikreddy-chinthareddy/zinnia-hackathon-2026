@@ -173,7 +173,8 @@ const statesInactiveInactiveTextLink = grayscaleColor300Gray;
 const statesHoverHoverSecondaryContrastBorder = secondaryColorSecondaryLighter;
 const statesSelectedSelectedSecondaryBorder = secondaryColorSecondary;
 const statesInactiveInactiveContrastTextLink = grayscaleColor600Gray;
-const statesSelectedSelectedSecondaryContrastBorder = secondaryColorSecondaryLight;
+const statesSelectedSelectedSecondaryContrastBorder =
+  secondaryColorSecondaryLight;
 const statesSelectedSelectedSecondaryFill = secondaryColorSecondaryLight;
 const statesFocusFocusBorder = semanticsColorSemanticFocus;
 const statesSelectedSelectedTextLink = secondaryColorSecondary;
@@ -183,16 +184,23 @@ const statesHoverHoverTextLink = secondaryColorSecondaryDark;
 const statesHoverHoverContrastTextLink = secondaryColorSecondaryLighter;
 const statusSurfaceStatusHoverBorder = accentColorAccentOne;
 const statusSurfaceStatusHoverContrastBorder = accentColorAccentOne;
-const statusSurfaceStatusInformationBorder = semanticsColorSemanticInformation50PercentOpacity;
-const statusSurfaceStatusInformationBorderAlt = semanticsColorSemanticInformation;
-const statusSurfaceStatusSuccessBorder = semanticsColorSemanticSuccess50PercentOpacity;
+const statusSurfaceStatusInformationBorder =
+  semanticsColorSemanticInformation50PercentOpacity;
+const statusSurfaceStatusInformationBorderAlt =
+  semanticsColorSemanticInformation;
+const statusSurfaceStatusSuccessBorder =
+  semanticsColorSemanticSuccess50PercentOpacity;
 const buttonPrimaryButtonPrimaryInactiveText = grayscaleColor300Gray;
-const statusSurfaceStatusPendingBorder = semanticsColorSemanticPending50PercentOpacity;
-const statusSurfaceStatusWarningBorder = semanticsColorSemanticWarning50PercentOpacity;
+const statusSurfaceStatusPendingBorder =
+  semanticsColorSemanticPending50PercentOpacity;
+const statusSurfaceStatusWarningBorder =
+  semanticsColorSemanticWarning50PercentOpacity;
 const buttonPrimaryButtonPrimaryInactiveBorder = grayscaleColor300Gray;
-const statusSurfaceStatusErrorBorder = semanticsColorSemanticError50PercentOpacity;
+const statusSurfaceStatusErrorBorder =
+  semanticsColorSemanticError50PercentOpacity;
 const buttonPrimaryButtonPrimaryInactiveFill = grayscaleColor100Gray;
-const statusSurfaceStatusInformationLight = semanticsColorSemanticInformationLight;
+const statusSurfaceStatusInformationLight =
+  semanticsColorSemanticInformationLight;
 const buttonPrimaryButtonPrimarySelectedText = grayscaleColor900Gray;
 const buttonPrimaryButtonPrimarySelectedBorder = primaryColorPrimary;
 const statusSurfaceStatusSuccessLight = semanticsColorSemanticSuccessLight;
@@ -258,7 +266,8 @@ const buttonGroupButtonGroupItemPrimaryInactiveBorder = grayscaleColor300Gray;
 const buttonGroupButtonGroupItemPrimaryInactiveFill = grayscaleColor100Gray;
 const buttonGroupButtonGroupItemPrimarySelectedText = grayscaleColor900Gray;
 const buttonGroupButtonGroupItemPrimarySelectedBorder = primaryColorPrimary;
-const buttonGroupButtonGroupItemPrimarySelectedFill = primaryColorPrimaryLighter;
+const buttonGroupButtonGroupItemPrimarySelectedFill =
+  primaryColorPrimaryLighter;
 const buttonGroupButtonGroupItemPrimaryHoverText = grayscaleColor900Gray;
 const buttonGroupButtonGroupItemPrimaryHoverBorder = primaryColorPrimary;
 const buttonGroupButtonGroupItemPrimaryHoverFill = primaryColorPrimaryLightest;
@@ -270,14 +279,21 @@ const navMenuMenuLinkHoverFill = grayscaleColor800Gray;
 const navMenuMenuLinkSelectedFill = grayscaleColorWhite;
 const navMenuMenuIconDefaultFill = grayscaleColorWhite;
 const navMenuMenuIconSelectedFill = grayscaleColor900Gray;
-const elementRadioCheckboxDefaultElementBackgroundDefaultFill = grayscaleColorWhite;
+const elementRadioCheckboxDefaultElementBackgroundDefaultFill =
+  grayscaleColorWhite;
 const navMenuMenuIconSurfaceSelectedFill = grayscaleColorWhite;
-const elementRadioCheckboxDefaultElementBackgroundHoverFill = grayscaleColorWhite;
-const elementRadioCheckboxDefaultElementBackgroundSelectedFill = grayscaleColorWhite;
-const elementRadioCheckboxDefaultElementBackgroundSelectedInactiveFill = grayscaleColorWhite;
-const elementRadioCheckboxDefaultElementBackgroundInactiveFill = grayscaleColor100Gray;
-const elementRadioCheckboxDefaultElementIndicatorSelectedFill = primaryColorPrimary;
-const elementRadioCheckboxDefaultElementIndicatorSelectedInactiveFill = primaryColorPrimaryLightest;
+const elementRadioCheckboxDefaultElementBackgroundHoverFill =
+  grayscaleColorWhite;
+const elementRadioCheckboxDefaultElementBackgroundSelectedFill =
+  grayscaleColorWhite;
+const elementRadioCheckboxDefaultElementBackgroundSelectedInactiveFill =
+  grayscaleColorWhite;
+const elementRadioCheckboxDefaultElementBackgroundInactiveFill =
+  grayscaleColor100Gray;
+const elementRadioCheckboxDefaultElementIndicatorSelectedFill =
+  primaryColorPrimary;
+const elementRadioCheckboxDefaultElementIndicatorSelectedInactiveFill =
+  primaryColorPrimaryLightest;
 const elementRadioCheckboxDefaultElementBorderDefault = grayscaleColor200Gray;
 const elementRadioCheckboxDefaultElementBorderHover = accentColorAccentOne;
 const fieldsSurfaceFieldBackgroundDefaultFill = grayscaleColorWhite;
@@ -290,30 +306,43 @@ const fieldsBorderFieldBorderSuccess = semanticsColorSemanticSuccess;
 const fieldsBorderFieldBorderError = semanticsColorSemanticError;
 const fieldsBorderFieldBorderInactive = grayscaleColor300Gray;
 const elementRadioCheckboxDefaultElementBorderSelected = primaryColorPrimary;
-const elementRadioCheckboxDefaultElementBorderSelectedInactive = primaryColorPrimaryLightest;
+const elementRadioCheckboxDefaultElementBorderSelectedInactive =
+  primaryColorPrimaryLightest;
 const elementRadioCheckboxDefaultElementBorderInactive = grayscaleColor300Gray;
 const toggleToggleDefaultFill = grayscaleColor600Gray;
-const elementRadioCheckboxContrastElementContrastBackgroundDefaultFill = grayscaleColor900Gray;
+const elementRadioCheckboxContrastElementContrastBackgroundDefaultFill =
+  grayscaleColor900Gray;
 const toggleToggleInactiveFill = grayscaleColor300Gray;
-const elementRadioCheckboxContrastElementContrastBackgroundHoverFill = grayscaleColor900Gray;
-const elementRadioCheckboxContrastElementContrastBackgroundSelectedFill = grayscaleColor900Gray;
+const elementRadioCheckboxContrastElementContrastBackgroundHoverFill =
+  grayscaleColor900Gray;
+const elementRadioCheckboxContrastElementContrastBackgroundSelectedFill =
+  grayscaleColor900Gray;
 const toggleToggleSelectedFill = primaryColorPrimary;
-const elementRadioCheckboxContrastElementContrastBackgroundInactiveFill = grayscaleColor800Gray;
+const elementRadioCheckboxContrastElementContrastBackgroundInactiveFill =
+  grayscaleColor800Gray;
 const toggleToggleSelectedInactiveFill = primaryColorPrimaryLightest;
 const toggleToggleDefaultIndicator = grayscaleColorWhite;
 const toggleToggleInactiveIndicator = grayscaleColor100Gray;
 const toggleToggleDefaultIcon = grayscaleColorWhite;
 const toggleToggleInactiveIcon = grayscaleColor100Gray;
 const toggleToggleContrastDefaultFill = grayscaleColor600Gray;
-const elementRadioCheckboxContrastElementContrastBackgroundSelectedInactiveFill = grayscaleColor900Gray;
-const elementRadioCheckboxContrastElementContrastIndicatorSelected = primaryColorPrimary;
+const elementRadioCheckboxContrastElementContrastBackgroundSelectedInactiveFill =
+  grayscaleColor900Gray;
+const elementRadioCheckboxContrastElementContrastIndicatorSelected =
+  primaryColorPrimary;
 const toggleToggleContrastSelectedFill = primaryColorPrimary;
-const elementRadioCheckboxContrastElementContrastSelectedInactive_ = primaryColorPrimaryDark;
-const elementRadioCheckboxContrastElementContrastBorderDefault = grayscaleColorWhite;
-const elementRadioCheckboxContrastElementContrastBorderHover = accentColorAccentOne;
-const elementRadioCheckboxContrastElementContrastBorderSelected = primaryColorPrimary;
-const elementRadioCheckboxContrastElementContrastBorderInactive = grayscaleColor600Gray;
-const elementRadioCheckboxContrastElementContrastBorderSelectedInactive = primaryColorPrimaryDark;
+const elementRadioCheckboxContrastElementContrastSelectedInactive_ =
+  primaryColorPrimaryDark;
+const elementRadioCheckboxContrastElementContrastBorderDefault =
+  grayscaleColorWhite;
+const elementRadioCheckboxContrastElementContrastBorderHover =
+  accentColorAccentOne;
+const elementRadioCheckboxContrastElementContrastBorderSelected =
+  primaryColorPrimary;
+const elementRadioCheckboxContrastElementContrastBorderInactive =
+  grayscaleColor600Gray;
+const elementRadioCheckboxContrastElementContrastBorderSelectedInactive =
+  primaryColorPrimaryDark;
 const toggleToggleContrastInactiveIndicator = grayscaleColor400Gray;
 const toggleToggleContrastDefaultIndicator = grayscaleColorWhite;
 const toggleToggleContrastSelectedInactiveIndicator = primaryColorPrimaryLight;
@@ -325,7 +354,8 @@ const paginationPaginationIndicatorDefault = secondaryColorSecondary;
 const paginationPaginationBackgroundHoverFill = secondaryColorSecondaryLightest;
 const paginationPaginationIndicatorHoverFill = secondaryColorSecondary;
 const paginationPaginationBorderSelected = secondaryColorSecondary;
-const paginationPaginationBackgroundSelectedFill = secondaryColorSecondaryLightest;
+const paginationPaginationBackgroundSelectedFill =
+  secondaryColorSecondaryLightest;
 const paginationPaginationIndicatorSelectedFill = secondaryColorSecondary;
 const paginationPaginationBorderInactive = grayscaleColor300Gray;
 const paginationPaginationBackgroundInactiveFill = grayscaleColor100Gray;
@@ -340,640 +370,640 @@ export const Colors = {
   Primary color 400-orange is the action color used for UI Design in the Zahara Design System.
   
   It is reserved for important action items that need to stand out: buttons, toggles, checkboxes, radio, and other critical functional use cases. */
-    primaryColorPrimary,
+  primaryColorPrimary,
   /** #DD4A07
   
   Extended palette */
-    orangeColor600Orange,
+  orangeColor600Orange,
   /** Text links and action items like icons and cancel buttons. */
-    secondaryColorSecondary,
+  secondaryColorSecondary,
   /** #083951
   
   Extended palette */
-    ceruleanColor800Cerulean,
+  ceruleanColor800Cerulean,
   /** #FFC600
   Hover outline color for items with an orange active state. 
   
   This is also an accent color for badges and other small alert items. */
-    accentColorAccentOne,
+  accentColorAccentOne,
   /** #FFFFFF */
-    grayscaleColorWhite,
+  grayscaleColorWhite,
   /** #F8F8F8 */
-    grayscaleColor50Gray,
+  grayscaleColor50Gray,
   /** #EDEDED
   Backgrounds, strokes, dividers, Inactive backgrounds */
-    grayscaleColor100Gray,
+  grayscaleColor100Gray,
   /** #CCCCCC
   
   Default strokes */
-    grayscaleColor200Gray,
+  grayscaleColor200Gray,
   /** #B3B3B3
   
   Inactive Text
   Inactive strokes */
-    grayscaleColor300Gray,
+  grayscaleColor300Gray,
   /** #949494 */
-    grayscaleColor400Gray,
+  grayscaleColor400Gray,
   /** #7F7F7F */
-    grayscaleColor500Gray,
+  grayscaleColor500Gray,
   /** #63666A
   
   Gray used in the ZINNIA logo and logotype */
-    grayscaleColorLogoGray,
+  grayscaleColorLogoGray,
   /** #676767
   
   Use for Section Labels and 
   Accents */
-    grayscaleColor600Gray,
+  grayscaleColor600Gray,
   /** #4D4D4D */
-    grayscaleColor700Gray,
+  grayscaleColor700Gray,
   /** #313131 */
-    grayscaleColor800Gray,
+  grayscaleColor800Gray,
   /** #212121
   
   Primary Text, High Contrast Dividers */
-    grayscaleColor900Gray,
+  grayscaleColor900Gray,
   /** #000000 */
-    grayscaleColorBlack,
+  grayscaleColorBlack,
   /** #37A2D8
   
   Used when a component/input/ */
-    semanticsColorSemanticFocus,
+  semanticsColorSemanticFocus,
   /** #005FED */
-    semanticsColorSemanticInformation,
+  semanticsColorSemanticInformation,
   /** #007B5A
   
   Used when a required item meets the limitations set by the input */
-    semanticsColorSemanticSuccess,
+  semanticsColorSemanticSuccess,
   /** #B74D00
   
   Used in warning dialogues / modules */
-    semanticsColorSemanticWarning,
+  semanticsColorSemanticWarning,
   /** #DB004F
   
   Used in error dialogues  / modules */
-    semanticsColorSemanticError,
+  semanticsColorSemanticError,
   /** #F2F7FE
    */
-    semanticsColorSemanticInformationLight,
+  semanticsColorSemanticInformationLight,
   /** 
   
    */
-    semanticsColorSemanticSuccessLight,
+  semanticsColorSemanticSuccessLight,
   /** #FCF6F2 */
-    semanticsColorSemanticWarningLight,
+  semanticsColorSemanticWarningLight,
   /** #FDF2F6 */
-    semanticsColorSemanticErrorLight,
+  semanticsColorSemanticErrorLight,
   /** #A4AE08
   
   Extended palette */
-    limeColor400Lime,
+  limeColor400Lime,
   /** #8B9403
   
   Extended palette */
-    limeColor500Lime,
+  limeColor500Lime,
   /** #BD58B7
   
   Extended palette */
-    fuchsiaColor500Fuchsia,
+  fuchsiaColor500Fuchsia,
   /** #973B93
   
   Extended palette */
-    fuchsiaColor600Fuchsia,
+  fuchsiaColor600Fuchsia,
   /** #37BCC2
   
   Extended palette */
-    aquaColor400Aqua,
+  aquaColor400Aqua,
   /** #489A9D
   
   Extended palette */
-    aquaColor500Aqua,
+  aquaColor500Aqua,
   /** #FFFBFA
   
   Extended palette */
-    redColor50Red,
+  redColor50Red,
   /** #FFE5E0
   
   Extended palette */
-    redColor100Red,
+  redColor100Red,
   /** #FEC3B6
   
   Extended palette */
-    redColor200Red,
+  redColor200Red,
   /** #FE8F7B
   
   Extended palette */
-    redColor300Red,
+  redColor300Red,
   /** #FF6652
   
   Extended palette */
-    redColor400Red,
+  redColor400Red,
   /** #FF1822
   
   Extended palette */
-    accentColorAccentTwo,
+  accentColorAccentTwo,
   /** #DA021C
   
   Extended palette */
-    redColor600Red,
+  redColor600Red,
   /** #A20713
   
   Extended palette */
-    redColor700Red,
+  redColor700Red,
   /** #800C0F
   
   Extended palette */
-    redColor800Red,
+  redColor800Red,
   /** #560F08
   
   Extended palette */
-    redColor900Red,
+  redColor900Red,
   /** #FFFBF9
   
   Extended palette */
-    orangeColor50Orange,
+  orangeColor50Orange,
   /** #FAE7DF
   
   100-orange is the inactive selected color for toggles radio, checkboxes and other action items.  */
-    orangeColor100Orange,
+  orangeColor100Orange,
   /** #FFA0713
   
   Extended palette */
-    orangeColor300Orange,
+  orangeColor300Orange,
   /** #F26003
   
   Extended palette */
-    orangeColor500Orange,
+  orangeColor500Orange,
   /** #BB3D05
   
   Extended palette */
-    orangeColor700Orange,
+  orangeColor700Orange,
   /** #992E04
   
   Extended palette */
-    orangeColor800Orange,
+  orangeColor800Orange,
   /** #7D2106
   
   Extended palette */
-    orangeColor900Orange,
+  orangeColor900Orange,
   /** #FFFCF8
   
   Extended palette */
-    yellowColor50Yellow,
+  yellowColor50Yellow,
   /** #FCF0DC
   
   Extended palette */
-    yellowColor100Yellow,
+  yellowColor100Yellow,
   /** #FFE3AB
   
   Extended palette */
-    yellowColor200Yellow,
+  yellowColor200Yellow,
   /** #FFD576
   
   Extended palette */
-    yellowColor300Yellow,
+  yellowColor300Yellow,
   /** #FCAF0E
   
   Extended palette */
-    yellowColor500Yellow,
+  yellowColor500Yellow,
   /** #E89510
   
   Extended palette */
-    yellowColor600Yellow,
+  yellowColor600Yellow,
   /** #C57402
   
   Extended palette */
-    yellowColor700Yellow,
+  yellowColor700Yellow,
   /** #9D5400
   
   Extended palette */
-    yellowColor800Yellow,
+  yellowColor800Yellow,
   /** #703800
   
   Extended palette */
-    yellowColor900Yellow,
+  yellowColor900Yellow,
   /** #FDFDF1
   
   Extended palette */
-    limeColor50Lime,
+  limeColor50Lime,
   /** #F6F5D2
   
   Extended palette */
-    limeColor100Lime,
+  limeColor100Lime,
   /** #E1E38D
   
   Extended palette */
-    limeColor200Lime,
+  limeColor200Lime,
   /** #C0C64F
   
   Finance classes */
-    limeColor300Lime,
+  limeColor300Lime,
   /** #656C02
   
   Extended palette */
-    limeColor600Lime,
+  limeColor600Lime,
   /** #484E01
   
   Extended palette */
-    limeColor700Lime,
+  limeColor700Lime,
   /** #3A3E01
   
   Extended palette */
-    limeColor800Lime,
+  limeColor800Lime,
   /** #2C2E07
   
   Extended palette */
-    limeColor900Lime,
+  limeColor900Lime,
   /** #F9FDFD
   
   Extended palette */
-    aquaColor50Aqua,
+  aquaColor50Aqua,
   /** #D6F0F1
   
   Extended palette */
-    aquaColor100Aqua,
+  aquaColor100Aqua,
   /** #A9D8DA
   
   Extended palette */
-    aquaColor200Aqua,
+  aquaColor200Aqua,
   /** #7EC4C7
   
   Extended palette */
-    aquaColor300Aqua,
+  aquaColor300Aqua,
   /** #377A7D
   
   Extended palette */
-    aquaColor600Aqua,
+  aquaColor600Aqua,
   /** #2C5B5D
   
   Extended palette */
-    aquaColor700Aqua,
+  aquaColor700Aqua,
   /** #1F3C3D
   
   Extended palette */
-    aquaColor800Aqua,
+  aquaColor800Aqua,
   /** #152426
   
   Extended palette */
-    aquaColor900Aqua,
+  aquaColor900Aqua,
   /** #0B4D6A
   
   Extended palette */
-    ceruleanColor700Cerulean,
+  ceruleanColor700Cerulean,
   /** #FFF5FE
   
   Extended palette */
-    fuchsiaColor50Fuchsia,
+  fuchsiaColor50Fuchsia,
   /** #FFE9FC
   
   Extended palette */
-    fuchsiaColor100Fuchsia,
+  fuchsiaColor100Fuchsia,
   /** #F7C9F1
   
   Extended palette */
-    fuchsiaColor200Fuchsia,
+  fuchsiaColor200Fuchsia,
   /** #E09ED9
   
   Extended palette */
-    fuchsiaColor300Fuchsia,
+  fuchsiaColor300Fuchsia,
   /** #D47ACC
   
   Extended palette */
-    fuchsiaColor400Fuchsia,
+  fuchsiaColor400Fuchsia,
   /** #752671
   
   Extended palette */
-    fuchsiaColor700Fuchsia,
+  fuchsiaColor700Fuchsia,
   /** #4D124A
   
   Extended palette */
-    fuchsiaColor800Fuchsia,
+  fuchsiaColor800Fuchsia,
   /** #320630
   
   Extended palette */
-    fuchsiaColor900Fuchsia,
+  fuchsiaColor900Fuchsia,
   /** #FFEAD9
   
   Primary button selected, and the inactive selected color for toggles radio, checkboxes and other action items.  */
-    primaryColorPrimaryLightest,
+  primaryColorPrimaryLightest,
   /** #FFC899
   
   Primary button pressed. Inactive tooltip icon. */
-    primaryColorPrimaryLighter,
+  primaryColorPrimaryLighter,
   /** #FFAC66
   
   The inactive (white) selected color for toggles and other action items.  */
-    primaryColorPrimaryLight,
+  primaryColorPrimaryLight,
   /** #994600
   
   The contrast inactive selected color for toggles radio, checkboxes and other action items.  */
-    primaryColorPrimaryDark,
+  primaryColorPrimaryDark,
   /** #FF7500 at 50% opacity */
-    primaryColorPrimary50PercentOpacity,
+  primaryColorPrimary50PercentOpacity,
   /** #D9E7EE
   Secondary button selected fill.  */
-    secondaryColorSecondaryLightest,
+  secondaryColorSecondaryLightest,
   /** #99C0D1
   
   Secondary button pressed.
   The contrast hover color for links, toggles radio, checkboxes and other action items.  */
-    secondaryColorSecondaryLighter,
+  secondaryColorSecondaryLighter,
   /** #66A1BA
   
   The contrast color for links, links and other action items.  */
-    secondaryColorSecondaryLight,
+  secondaryColorSecondaryLight,
   /** #003B54
   
   Links hovered. */
-    secondaryColorSecondaryDark,
+  secondaryColorSecondaryDark,
   /** Modal overlay
    */
-    accentColor50PercentBlack,
+  accentColor50PercentBlack,
   /** #008762
   
   50% of the success token */
-    semanticsColorSemanticSuccess50PercentOpacity,
+  semanticsColorSemanticSuccess50PercentOpacity,
   /** Pending color */
-    semanticsColorSemanticPending,
-    semanticsColorSemanticPending50PercentOpacity,
-    semanticsColorSemanticPendingLight,
+  semanticsColorSemanticPending,
+  semanticsColorSemanticPending50PercentOpacity,
+  semanticsColorSemanticPendingLight,
   /** #005FED
   
   50% of the info token */
-    semanticsColorSemanticInformation50PercentOpacity,
+  semanticsColorSemanticInformation50PercentOpacity,
   /** #C35200
   
   50% of the warning token */
-    semanticsColorSemanticWarning50PercentOpacity,
+  semanticsColorSemanticWarning50PercentOpacity,
   /** #DB004F
   
   50% of the error token */
-    semanticsColorSemanticError50PercentOpacity,
+  semanticsColorSemanticError50PercentOpacity,
   /** #F4FAFF
   
   Extended palette */
-    ceruleanColor50Cerulean,
+  ceruleanColor50Cerulean,
   /** #DEEDF9
   
   Extended palette */
-    ceruleanColor100Cerulean,
+  ceruleanColor100Cerulean,
   /** #ABDCFB
   
   Extended palette */
-    ceruleanColor200Cerulean,
+  ceruleanColor200Cerulean,
   /** #6CC2F6
   
   Extended palette */
-    ceruleanColor300Cerulean,
+  ceruleanColor300Cerulean,
   /** #37A2D8
   
   Extended palette */
-    ceruleanColor400Cerulean,
+  ceruleanColor400Cerulean,
   /** #0B7EAE 
   
   Extended palette */
-    ceruleanColor500Cerulean,
+  ceruleanColor500Cerulean,
   /** #072838
   
   Extended palette */
-    ceruleanColor900Cerulean,
+  ceruleanColor900Cerulean,
   /** #FFCAB0
   
   Extended palette */
-    orangeColor200Orange,
+  orangeColor200Orange,
   /** #FF7500
   
   Extended palette */
-    orangeColor400Orange,
+  orangeColor400Orange,
   /** #FF1822
   
   Extended palette */
-    redColor500Red,
-    semanticsColorSemanticTextHighlight,
+  redColor500Red,
+  semanticsColorSemanticTextHighlight,
   /** #00628B
   
   Extended palette */
-    ceruleanColor600Cerulean,
-    yellowColor400Yellow,
-    chipChipPrimaryFill,
-    chipChipPrimaryBorder,
-    chipChipPrimaryText,
-    chipChipPrimaryIcon,
-    chipChipPrimaryHoverFill,
-    chipChipPrimaryHoverText,
-    chipChipPrimaryHoverBorder,
-    chipChipPrimarySelectedFill,
-    chipChipPrimarySelectedText,
-    chipChipPrimarySelectedBorder,
-    chipChipPrimaryInactiveFill,
-    chipChipPrimaryInactiveBorder,
-    chipChipPrimaryInactiveText,
-    baseBorderBorderPrimaryColor,
-    baseBorderBorderSecondaryColor,
-    baseBorderBorderLight,
-    baseSurfaceSurfacePrimary,
-    baseSurfaceSurfaceSecondary,
-    baseBorderBorderSubtle,
-    baseBorderBorderBold,
-    baseSurfaceSurfaceTertiary,
-    baseSurfaceSurfaceQuaternary,
-    baseSurfaceSurfaceBold,
-    baseSurfaceSurfaceDark,
-    baseSurfaceSurfaceDarker,
-    baseBorderBorderDark,
-    baseSurfaceSurfaceTextHighlight,
-    baseBorderBorderDarker,
-    baseIconIconAction,
-    baseIconIconActionHover,
-    baseIconIconTooltip,
-    baseIconIconTooltipInactive,
-    baseIconIconHeader,
-    baseIconIconActionContrast,
-    baseIconIconActionContrastHover,
-    baseIconIconLight,
-    baseIconIconDark,
-    baseIconIconActionLinkContrast,
-    baseIconIconActionLinkContrastHover,
-    baseTextTextPrimary,
-    baseTextTextSecondary,
-    baseTextTextLink,
-    baseTextTextLinkContrast,
-    baseTextTextLight,
-    statesHoverHoverPrimaryBorder,
-    statesSelectedSelectedPrimaryBorder,
-    statesHoverHoverPrimaryFill,
-    statesHoverHoverPrimaryFillAlt,
-    statesHoverHoverSecondaryBorder,
-    statesInactiveInactiveText,
-    statesInactiveInactiveTextContrast,
-    statesInactiveInactiveIcon,
-    statesSelectedSelectedPrimaryFill,
-    statesInactiveInactiveIconContrast,
-    statesInactiveInactiveFill,
-    statesSelectedSelectedPrimaryFillAlt,
-    statesInactiveInactiveFillContrast,
-    statesInactiveInactiveTextLink,
-    statesHoverHoverSecondaryContrastBorder,
-    statesSelectedSelectedSecondaryBorder,
-    statesInactiveInactiveContrastTextLink,
-    statesSelectedSelectedSecondaryContrastBorder,
-    statesSelectedSelectedSecondaryFill,
-    statesFocusFocusBorder,
-    statesSelectedSelectedTextLink,
-    statesSelectedSelectedContrastTextLink,
-    statesHoverHoverSecondaryFill,
-    statesHoverHoverTextLink,
-    statesHoverHoverContrastTextLink,
-    statusSurfaceStatusHoverBorder,
-    statusSurfaceStatusHoverContrastBorder,
-    statusSurfaceStatusInformationBorder,
-    statusSurfaceStatusInformationBorderAlt,
-    statusSurfaceStatusSuccessBorder,
-    buttonPrimaryButtonPrimaryInactiveText,
-    statusSurfaceStatusPendingBorder,
-    statusSurfaceStatusWarningBorder,
-    buttonPrimaryButtonPrimaryInactiveBorder,
-    statusSurfaceStatusErrorBorder,
-    buttonPrimaryButtonPrimaryInactiveFill,
-    statusSurfaceStatusInformationLight,
-    buttonPrimaryButtonPrimarySelectedText,
-    buttonPrimaryButtonPrimarySelectedBorder,
-    statusSurfaceStatusSuccessLight,
-    statusSurfaceStatusPendingLight,
-    buttonPrimaryButtonPrimarySelectedFill,
-    statusSurfaceStatusWarningLight,
-    statusSurfaceStatusErrorLight,
-    buttonPrimaryButtonPrimaryPressedText,
-    statusSurfaceStatusSuccessBorderAlt,
-    statusSurfaceStatusPendingBorderAlt,
-    statusSurfaceStatusWarningBorderAlt,
-    statusSurfaceStatusErrorBorderAlt,
-    statusTextStatusInformationText,
-    buttonPrimaryButtonPrimaryPressedBorder,
-    buttonPrimaryButtonPrimaryPressedFill,
-    statusTextStatusSuccessText,
-    buttonPrimaryButtonPrimaryHoverText,
-    statusTextStatusWarningText,
-    statusTextStatusErrorText,
-    buttonPrimaryButtonPrimaryHoverBorder,
-    statusTextStatusPendingText,
-    buttonPrimaryButtonPrimaryHoverFill,
-    statusIconStatusInformationIcon,
-    statusIconStatusSuccessIcon,
-    buttonPrimaryButtonPrimaryText,
-    statusIconStatusWarningIcon,
-    buttonPrimaryButtonPrimaryBorder,
-    statusIconStatusErrorIcon,
-    buttonPrimaryButtonPrimaryFill,
-    buttonSecondaryButtonSecondaryInactiveText,
-    buttonSecondaryButtonSecondaryInactiveBorder,
-    buttonSecondaryButtonSecondaryInactiveFill,
-    buttonSecondaryButtonSecondarySelectedText,
-    buttonSecondaryButtonSecondarySelectedBorder,
-    buttonSecondaryButtonSecondarySelectedFill,
-    buttonSecondaryButtonSecondaryPressedText,
-    buttonSecondaryButtonSecondaryPressedBorder,
-    buttonSecondaryButtonSecondaryPressedFill,
-    buttonSecondaryButtonSecondaryHoverText,
-    buttonSecondaryButtonSecondaryHoverBorder,
-    buttonSecondaryButtonSecondaryHoverFill,
-    buttonSecondaryButttonSecondaryText,
-    buttonSecondaryButtonSecondaryBorder,
-    buttonSecondaryButtonSecondaryFill,
-    buttonContrastButtonContrastInactiveText,
-    statusIconStatusPendingIcon,
-    buttonContrastButtonContrastInactiveBorder,
-    buttonContrastButtonContrastInactiveFill,
-    buttonContrastButtonContrastSelectedText,
-    buttonContrastButtonContrastSelectedBorder,
-    buttonContrastButtonContrastSelectedFill,
-    buttonContrastButtonContrastPressedText,
-    buttonContrastButtonContrastPressedBorder,
-    buttonContrastButtonContrastPressedFill,
-    buttonContrastButtonContrastHoverText,
-    buttonContrastButtonContrastHoverBorder,
-    buttonContrastButtonContrastHoverFill,
-    buttonContrastButtonContrastText,
-    buttonContrastButtonContrastBorder,
-    buttonContrastButtonContrastFill,
-    buttonGroupButtonGroupItemPrimaryInactiveText,
-    buttonGroupButtonGroupItemPrimaryInactiveBorder,
-    buttonGroupButtonGroupItemPrimaryInactiveFill,
-    buttonGroupButtonGroupItemPrimarySelectedText,
-    buttonGroupButtonGroupItemPrimarySelectedBorder,
-    buttonGroupButtonGroupItemPrimarySelectedFill,
-    buttonGroupButtonGroupItemPrimaryHoverText,
-    buttonGroupButtonGroupItemPrimaryHoverBorder,
-    buttonGroupButtonGroupItemPrimaryHoverFill,
-    buttonGroupButtonGroupItemPrimaryText,
-    buttonGroupButtonGroupItemPrimaryBorder,
-    buttonGroupButtonGroupItemPrimaryFill,
-    navMenuMenuDefaultFill,
-    navMenuMenuLinkHoverFill,
-    navMenuMenuLinkSelectedFill,
-    navMenuMenuIconDefaultFill,
-    navMenuMenuIconSelectedFill,
-    elementRadioCheckboxDefaultElementBackgroundDefaultFill,
-    navMenuMenuIconSurfaceSelectedFill,
-    elementRadioCheckboxDefaultElementBackgroundHoverFill,
-    elementRadioCheckboxDefaultElementBackgroundSelectedFill,
-    elementRadioCheckboxDefaultElementBackgroundSelectedInactiveFill,
-    elementRadioCheckboxDefaultElementBackgroundInactiveFill,
-    elementRadioCheckboxDefaultElementIndicatorSelectedFill,
-    elementRadioCheckboxDefaultElementIndicatorSelectedInactiveFill,
-    elementRadioCheckboxDefaultElementBorderDefault,
-    elementRadioCheckboxDefaultElementBorderHover,
-    fieldsSurfaceFieldBackgroundDefaultFill,
-    fieldsSurfaceFieldBackgroundInactiveFill,
-    fieldsIconFieldIconDefaultFill,
-    fieldsBorderFieldBorderDefault,
-    fieldsBorderFieldBorderHover,
-    fieldsBorderFieldBorderActive,
-    fieldsBorderFieldBorderSuccess,
-    fieldsBorderFieldBorderError,
-    fieldsBorderFieldBorderInactive,
-    elementRadioCheckboxDefaultElementBorderSelected,
-    elementRadioCheckboxDefaultElementBorderSelectedInactive,
-    elementRadioCheckboxDefaultElementBorderInactive,
-    toggleToggleDefaultFill,
-    elementRadioCheckboxContrastElementContrastBackgroundDefaultFill,
-    toggleToggleInactiveFill,
-    elementRadioCheckboxContrastElementContrastBackgroundHoverFill,
-    elementRadioCheckboxContrastElementContrastBackgroundSelectedFill,
-    toggleToggleSelectedFill,
-    elementRadioCheckboxContrastElementContrastBackgroundInactiveFill,
-    toggleToggleSelectedInactiveFill,
-    toggleToggleDefaultIndicator,
-    toggleToggleInactiveIndicator,
-    toggleToggleDefaultIcon,
-    toggleToggleInactiveIcon,
-    toggleToggleContrastDefaultFill,
-    elementRadioCheckboxContrastElementContrastBackgroundSelectedInactiveFill,
-    elementRadioCheckboxContrastElementContrastIndicatorSelected,
-    toggleToggleContrastSelectedFill,
-    elementRadioCheckboxContrastElementContrastSelectedInactive_,
-    elementRadioCheckboxContrastElementContrastBorderDefault,
-    elementRadioCheckboxContrastElementContrastBorderHover,
-    elementRadioCheckboxContrastElementContrastBorderSelected,
-    elementRadioCheckboxContrastElementContrastBorderInactive,
-    elementRadioCheckboxContrastElementContrastBorderSelectedInactive,
-    toggleToggleContrastInactiveIndicator,
-    toggleToggleContrastDefaultIndicator,
-    toggleToggleContrastSelectedInactiveIndicator,
-    toggleToggleContrastDefaultIcon,
-    toggleToggleContrastInactiveIcon,
-    toggleToggleContrastSelectedInactiveIcon,
-    paginationPaginationBorderDefault,
-    paginationPaginationIndicatorDefault,
-    paginationPaginationBackgroundHoverFill,
-    paginationPaginationIndicatorHoverFill,
-    paginationPaginationBorderSelected,
-    paginationPaginationBackgroundSelectedFill,
-    paginationPaginationIndicatorSelectedFill,
-    paginationPaginationBorderInactive,
-    paginationPaginationBackgroundInactiveFill,
-    paginationPaginationIndicatorInactiveFill,
-    navMenuMenuButtonDefaultFill,
-    navMenuMenuButtonHoverFill,
-    statesHoverHoverIconAction,
-}
+  ceruleanColor600Cerulean,
+  yellowColor400Yellow,
+  chipChipPrimaryFill,
+  chipChipPrimaryBorder,
+  chipChipPrimaryText,
+  chipChipPrimaryIcon,
+  chipChipPrimaryHoverFill,
+  chipChipPrimaryHoverText,
+  chipChipPrimaryHoverBorder,
+  chipChipPrimarySelectedFill,
+  chipChipPrimarySelectedText,
+  chipChipPrimarySelectedBorder,
+  chipChipPrimaryInactiveFill,
+  chipChipPrimaryInactiveBorder,
+  chipChipPrimaryInactiveText,
+  baseBorderBorderPrimaryColor,
+  baseBorderBorderSecondaryColor,
+  baseBorderBorderLight,
+  baseSurfaceSurfacePrimary,
+  baseSurfaceSurfaceSecondary,
+  baseBorderBorderSubtle,
+  baseBorderBorderBold,
+  baseSurfaceSurfaceTertiary,
+  baseSurfaceSurfaceQuaternary,
+  baseSurfaceSurfaceBold,
+  baseSurfaceSurfaceDark,
+  baseSurfaceSurfaceDarker,
+  baseBorderBorderDark,
+  baseSurfaceSurfaceTextHighlight,
+  baseBorderBorderDarker,
+  baseIconIconAction,
+  baseIconIconActionHover,
+  baseIconIconTooltip,
+  baseIconIconTooltipInactive,
+  baseIconIconHeader,
+  baseIconIconActionContrast,
+  baseIconIconActionContrastHover,
+  baseIconIconLight,
+  baseIconIconDark,
+  baseIconIconActionLinkContrast,
+  baseIconIconActionLinkContrastHover,
+  baseTextTextPrimary,
+  baseTextTextSecondary,
+  baseTextTextLink,
+  baseTextTextLinkContrast,
+  baseTextTextLight,
+  statesHoverHoverPrimaryBorder,
+  statesSelectedSelectedPrimaryBorder,
+  statesHoverHoverPrimaryFill,
+  statesHoverHoverPrimaryFillAlt,
+  statesHoverHoverSecondaryBorder,
+  statesInactiveInactiveText,
+  statesInactiveInactiveTextContrast,
+  statesInactiveInactiveIcon,
+  statesSelectedSelectedPrimaryFill,
+  statesInactiveInactiveIconContrast,
+  statesInactiveInactiveFill,
+  statesSelectedSelectedPrimaryFillAlt,
+  statesInactiveInactiveFillContrast,
+  statesInactiveInactiveTextLink,
+  statesHoverHoverSecondaryContrastBorder,
+  statesSelectedSelectedSecondaryBorder,
+  statesInactiveInactiveContrastTextLink,
+  statesSelectedSelectedSecondaryContrastBorder,
+  statesSelectedSelectedSecondaryFill,
+  statesFocusFocusBorder,
+  statesSelectedSelectedTextLink,
+  statesSelectedSelectedContrastTextLink,
+  statesHoverHoverSecondaryFill,
+  statesHoverHoverTextLink,
+  statesHoverHoverContrastTextLink,
+  statusSurfaceStatusHoverBorder,
+  statusSurfaceStatusHoverContrastBorder,
+  statusSurfaceStatusInformationBorder,
+  statusSurfaceStatusInformationBorderAlt,
+  statusSurfaceStatusSuccessBorder,
+  buttonPrimaryButtonPrimaryInactiveText,
+  statusSurfaceStatusPendingBorder,
+  statusSurfaceStatusWarningBorder,
+  buttonPrimaryButtonPrimaryInactiveBorder,
+  statusSurfaceStatusErrorBorder,
+  buttonPrimaryButtonPrimaryInactiveFill,
+  statusSurfaceStatusInformationLight,
+  buttonPrimaryButtonPrimarySelectedText,
+  buttonPrimaryButtonPrimarySelectedBorder,
+  statusSurfaceStatusSuccessLight,
+  statusSurfaceStatusPendingLight,
+  buttonPrimaryButtonPrimarySelectedFill,
+  statusSurfaceStatusWarningLight,
+  statusSurfaceStatusErrorLight,
+  buttonPrimaryButtonPrimaryPressedText,
+  statusSurfaceStatusSuccessBorderAlt,
+  statusSurfaceStatusPendingBorderAlt,
+  statusSurfaceStatusWarningBorderAlt,
+  statusSurfaceStatusErrorBorderAlt,
+  statusTextStatusInformationText,
+  buttonPrimaryButtonPrimaryPressedBorder,
+  buttonPrimaryButtonPrimaryPressedFill,
+  statusTextStatusSuccessText,
+  buttonPrimaryButtonPrimaryHoverText,
+  statusTextStatusWarningText,
+  statusTextStatusErrorText,
+  buttonPrimaryButtonPrimaryHoverBorder,
+  statusTextStatusPendingText,
+  buttonPrimaryButtonPrimaryHoverFill,
+  statusIconStatusInformationIcon,
+  statusIconStatusSuccessIcon,
+  buttonPrimaryButtonPrimaryText,
+  statusIconStatusWarningIcon,
+  buttonPrimaryButtonPrimaryBorder,
+  statusIconStatusErrorIcon,
+  buttonPrimaryButtonPrimaryFill,
+  buttonSecondaryButtonSecondaryInactiveText,
+  buttonSecondaryButtonSecondaryInactiveBorder,
+  buttonSecondaryButtonSecondaryInactiveFill,
+  buttonSecondaryButtonSecondarySelectedText,
+  buttonSecondaryButtonSecondarySelectedBorder,
+  buttonSecondaryButtonSecondarySelectedFill,
+  buttonSecondaryButtonSecondaryPressedText,
+  buttonSecondaryButtonSecondaryPressedBorder,
+  buttonSecondaryButtonSecondaryPressedFill,
+  buttonSecondaryButtonSecondaryHoverText,
+  buttonSecondaryButtonSecondaryHoverBorder,
+  buttonSecondaryButtonSecondaryHoverFill,
+  buttonSecondaryButttonSecondaryText,
+  buttonSecondaryButtonSecondaryBorder,
+  buttonSecondaryButtonSecondaryFill,
+  buttonContrastButtonContrastInactiveText,
+  statusIconStatusPendingIcon,
+  buttonContrastButtonContrastInactiveBorder,
+  buttonContrastButtonContrastInactiveFill,
+  buttonContrastButtonContrastSelectedText,
+  buttonContrastButtonContrastSelectedBorder,
+  buttonContrastButtonContrastSelectedFill,
+  buttonContrastButtonContrastPressedText,
+  buttonContrastButtonContrastPressedBorder,
+  buttonContrastButtonContrastPressedFill,
+  buttonContrastButtonContrastHoverText,
+  buttonContrastButtonContrastHoverBorder,
+  buttonContrastButtonContrastHoverFill,
+  buttonContrastButtonContrastText,
+  buttonContrastButtonContrastBorder,
+  buttonContrastButtonContrastFill,
+  buttonGroupButtonGroupItemPrimaryInactiveText,
+  buttonGroupButtonGroupItemPrimaryInactiveBorder,
+  buttonGroupButtonGroupItemPrimaryInactiveFill,
+  buttonGroupButtonGroupItemPrimarySelectedText,
+  buttonGroupButtonGroupItemPrimarySelectedBorder,
+  buttonGroupButtonGroupItemPrimarySelectedFill,
+  buttonGroupButtonGroupItemPrimaryHoverText,
+  buttonGroupButtonGroupItemPrimaryHoverBorder,
+  buttonGroupButtonGroupItemPrimaryHoverFill,
+  buttonGroupButtonGroupItemPrimaryText,
+  buttonGroupButtonGroupItemPrimaryBorder,
+  buttonGroupButtonGroupItemPrimaryFill,
+  navMenuMenuDefaultFill,
+  navMenuMenuLinkHoverFill,
+  navMenuMenuLinkSelectedFill,
+  navMenuMenuIconDefaultFill,
+  navMenuMenuIconSelectedFill,
+  elementRadioCheckboxDefaultElementBackgroundDefaultFill,
+  navMenuMenuIconSurfaceSelectedFill,
+  elementRadioCheckboxDefaultElementBackgroundHoverFill,
+  elementRadioCheckboxDefaultElementBackgroundSelectedFill,
+  elementRadioCheckboxDefaultElementBackgroundSelectedInactiveFill,
+  elementRadioCheckboxDefaultElementBackgroundInactiveFill,
+  elementRadioCheckboxDefaultElementIndicatorSelectedFill,
+  elementRadioCheckboxDefaultElementIndicatorSelectedInactiveFill,
+  elementRadioCheckboxDefaultElementBorderDefault,
+  elementRadioCheckboxDefaultElementBorderHover,
+  fieldsSurfaceFieldBackgroundDefaultFill,
+  fieldsSurfaceFieldBackgroundInactiveFill,
+  fieldsIconFieldIconDefaultFill,
+  fieldsBorderFieldBorderDefault,
+  fieldsBorderFieldBorderHover,
+  fieldsBorderFieldBorderActive,
+  fieldsBorderFieldBorderSuccess,
+  fieldsBorderFieldBorderError,
+  fieldsBorderFieldBorderInactive,
+  elementRadioCheckboxDefaultElementBorderSelected,
+  elementRadioCheckboxDefaultElementBorderSelectedInactive,
+  elementRadioCheckboxDefaultElementBorderInactive,
+  toggleToggleDefaultFill,
+  elementRadioCheckboxContrastElementContrastBackgroundDefaultFill,
+  toggleToggleInactiveFill,
+  elementRadioCheckboxContrastElementContrastBackgroundHoverFill,
+  elementRadioCheckboxContrastElementContrastBackgroundSelectedFill,
+  toggleToggleSelectedFill,
+  elementRadioCheckboxContrastElementContrastBackgroundInactiveFill,
+  toggleToggleSelectedInactiveFill,
+  toggleToggleDefaultIndicator,
+  toggleToggleInactiveIndicator,
+  toggleToggleDefaultIcon,
+  toggleToggleInactiveIcon,
+  toggleToggleContrastDefaultFill,
+  elementRadioCheckboxContrastElementContrastBackgroundSelectedInactiveFill,
+  elementRadioCheckboxContrastElementContrastIndicatorSelected,
+  toggleToggleContrastSelectedFill,
+  elementRadioCheckboxContrastElementContrastSelectedInactive_,
+  elementRadioCheckboxContrastElementContrastBorderDefault,
+  elementRadioCheckboxContrastElementContrastBorderHover,
+  elementRadioCheckboxContrastElementContrastBorderSelected,
+  elementRadioCheckboxContrastElementContrastBorderInactive,
+  elementRadioCheckboxContrastElementContrastBorderSelectedInactive,
+  toggleToggleContrastInactiveIndicator,
+  toggleToggleContrastDefaultIndicator,
+  toggleToggleContrastSelectedInactiveIndicator,
+  toggleToggleContrastDefaultIcon,
+  toggleToggleContrastInactiveIcon,
+  toggleToggleContrastSelectedInactiveIcon,
+  paginationPaginationBorderDefault,
+  paginationPaginationIndicatorDefault,
+  paginationPaginationBackgroundHoverFill,
+  paginationPaginationIndicatorHoverFill,
+  paginationPaginationBorderSelected,
+  paginationPaginationBackgroundSelectedFill,
+  paginationPaginationIndicatorSelectedFill,
+  paginationPaginationBorderInactive,
+  paginationPaginationBackgroundInactiveFill,
+  paginationPaginationIndicatorInactiveFill,
+  navMenuMenuButtonDefaultFill,
+  navMenuMenuButtonHoverFill,
+  statesHoverHoverIconAction,
+};

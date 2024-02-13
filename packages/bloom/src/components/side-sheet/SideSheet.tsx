@@ -18,7 +18,7 @@ export const SideSheet = ({
 }: SideSheetProps) => {
   // TODO: figure out type here
   const preventInteraction = (
-    event: CustomEvent<{ originalEvent: PointerEvent }>
+    event: CustomEvent<{ originalEvent: PointerEvent }>,
   ) => {
     event.preventDefault();
   };

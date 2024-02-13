@@ -3,8 +3,8 @@ export type ColorPaletteToken = {
     value: string;
     type?: string;
     comment?: string;
-  }
-}
+  };
+};
 
 export enum SemanticPaletteKeys {
   BASE = "base",
@@ -14,18 +14,16 @@ export enum SemanticPaletteKeys {
 export enum ColorPaletteKeys {
   AQUA = "aqua",
   CERULEAN = "cerulean",
-
 }
 
 export type SemanticPaletteMap = {
-  [K in SemanticPaletteKeys]: Record<string, ColorPaletteToken>
-}
-
+  [K in SemanticPaletteKeys]: Record<string, ColorPaletteToken>;
+};
 
 export type ColorPaletteMap = {
-  [K in ColorPaletteKeys]: ColorPaletteToken
-}
+  [K in ColorPaletteKeys]: ColorPaletteToken;
+};
 
 export type ColorsSupernovaTokens = {
-  color: SemanticPaletteMap & ColorPaletteMap
-}
+  color: SemanticPaletteMap & ColorPaletteMap;
+};

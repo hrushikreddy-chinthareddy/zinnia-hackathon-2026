@@ -1,15 +1,14 @@
-import { create } from '@storybook/theming/create'
-import { Colors } from '../src/tokens/react/colors'
+import { create } from "@storybook/theming/create";
+import { Colors } from "../src/tokens/react/colors";
 
 export default create({
-  base: 'dark',
+  base: "dark",
 
   // Colors
   // actually do not know what this does
   colorPrimary: Colors.secondaryColorSecondary,
   // color for active styles
   colorSecondary: Colors.primaryColorPrimary,
-
 
   // app
   // background for sidebar
@@ -27,7 +26,7 @@ export default create({
   // base font
   fontBase: '"Open Sans", sans-serif',
   // font for code
-  fontCode: 'monospace',
+  fontCode: "monospace",
 
   // Typography
   // links, form labels
@@ -59,11 +58,11 @@ export default create({
 
   // Brand
   // title for storybook
-  brandTitle: 'Bloom',
+  brandTitle: "Bloom",
   // url when you click logo
-  brandUrl: 'https://zinnia-design-system.supernova-docs.io/',
+  brandUrl: "https://zinnia-design-system.supernova-docs.io/",
   // logo
-  brandImage: '/zinnia-logo-white.svg',
+  brandImage: "/zinnia-logo-white.svg",
   // open in same or different window
-  brandTarget: '_self',
-})
+  brandTarget: "_self",
+});
