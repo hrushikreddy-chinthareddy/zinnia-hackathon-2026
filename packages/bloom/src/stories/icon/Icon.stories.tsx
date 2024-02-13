@@ -1,19 +1,19 @@
-import { Meta } from '@storybook/react';
+import { Meta } from "@storybook/react";
 
-import { Icon, IconProps, IconType } from '../../components/icon/Icon';
+import { Icon, IconProps, IconType } from "../../components/icon";
 
 export default {
-  title: 'Components/Icon',
+  title: "Components/Icon",
   component: Icon,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   args: {
     type: IconType.CLOUD,
   },
   argTypes: {
     color: {
       control: {
-        type: 'color',
-        default: '#000',
+        type: "color",
+        default: "#000",
       },
     },
   },
