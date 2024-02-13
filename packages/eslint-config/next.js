@@ -6,7 +6,10 @@ const project = resolve(process.cwd(), "tsconfig.json");
 module.exports = {
   extends: [
     "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:import/recommended",
     "prettier",
+    "plugin:@typescript-eslint/recommended",
     require.resolve("@vercel/style-guide/eslint/next"),
     "eslint-config-turbo",
   ],
@@ -18,7 +21,7 @@ module.exports = {
     node: true,
     browser: true,
   },
-  plugins: ["only-warn"],
+  plugins: ["only-warn", "@typescript-eslint", "check-file", "react-refresh"],
   settings: {
     "import/resolver": {
       typescript: {

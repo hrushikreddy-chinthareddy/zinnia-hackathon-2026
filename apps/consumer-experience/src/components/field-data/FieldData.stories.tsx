@@ -1,12 +1,11 @@
 import { Meta, StoryObj } from '@storybook/react';
-import Bloom from '@zdx/bloom/components';
+import { Icon, IconType, Label } from '@zdx/bloom/components';
 
 import { FieldData, FieldDataProps } from './FieldData';
-import { Icon, IconType } from '../icon/Icon';
 
-export default {
-  title: 'Components/FieldData',
+const meta: Meta<typeof FieldData> = {
   component: FieldData,
+  title: 'Components/FieldData',
   tags: ['autodocs'],
   argTypes: {
     iconType: {
@@ -15,17 +14,22 @@ export default {
       options: ['none', ...Object.values(IconType)],
     },
   },
-} as Meta<typeof FieldData>;
+  render: ({ ...args }) => (
+    <FieldData {...args}>
+      <p className="typography-content-value">$250,343.12</p>
+    </FieldData>
+  ),
+};
+
+export default meta;
 
 export const Default: StoryObj<FieldDataProps> = {
   args: {
-    fieldData: <p className="typography-content-value">$250,343.12</p>,
     caption: 'As of 6/12/2023 5:00 pm EST',
     large: true,
     iconType: IconType.MAIL,
     Label: (
-      <Bloom.Label
-        text="AccountValue"
+      <Label
         labelFor="AccountValue"
         interactiveElements={[
           // eslint-disable-next-line react/jsx-key
@@ -36,7 +40,9 @@ export const Default: StoryObj<FieldDataProps> = {
             color="var(--color-primary-color-primary, #ff7500)"
           />,
         ]}
-      />
+      >
+        AccountValue
+      </Label>
     ),
   },
 };

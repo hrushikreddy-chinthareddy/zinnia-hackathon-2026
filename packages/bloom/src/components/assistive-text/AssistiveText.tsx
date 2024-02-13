@@ -1,17 +1,6 @@
-import styles from './AssistiveText.module.css';
-import { Icon, IconType } from '../icon/Icon';
-
-export enum AssistiveTextVariant {
-  Default = 'default',
-  Success = 'success',
-  Info = 'info',
-  Error = 'error',
-}
-
-export interface AssistiveTextProps {
-  text: string;
-  variant?: AssistiveTextVariant;
-}
+import styles from "./AssistiveText.module.css";
+import { Icon, IconType } from "../icon";
+import { AssistiveTextProps, AssistiveTextVariant } from "./types";
 
 const AssistiveIcon = {
   [AssistiveTextVariant.Default]: IconType.MAIL,
@@ -20,7 +9,7 @@ const AssistiveIcon = {
   [AssistiveTextVariant.Error]: IconType.HEX_EXCLAMATION,
 };
 
-export const AssistiveText = ({
+export const AssistiveText: React.FC<AssistiveTextProps> = ({
   text,
   variant = AssistiveTextVariant.Default,
 }: AssistiveTextProps) => {

@@ -1,66 +1,71 @@
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
   root: true,
-  extends: ["@zdx/eslint-config/next.js"],
+  extends: ['@zdx/eslint-config/next.js'],
   overrides: [
     {
-      files: ["**/*.stories.tsx"],
+      files: ['**/*.stories.tsx'],
       rules: {
-        "@next/next/no-html-link-for-pages": "off",
+        '@next/next/no-html-link-for-pages': 'off',
       },
     },
   ],
-  parser: "@typescript-eslint/parser",
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     project: true,
   },
   rules: {
-    "@typescript-eslint/no-unused-vars": "error",
-    "react/no-unescaped-entities": "off",
-    "no-control-regex": "off",
-    "react/no-unstable-nested-components": "error",
-    "import/order": [
-      "error",
+    'react-refresh/only-export-components': [
+      'warn',
+      { allowConstantExport: true },
+    ],
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': 'error',
+    'react/no-unescaped-entities': 'off',
+    'no-control-regex': 'off',
+    'react/no-unstable-nested-components': 'error',
+    'import/order': [
+      'error',
       {
         groups: [
-          "external",
-          "builtin",
-          ["type", "unknown"],
-          "internal",
-          ["parent", "sibling", "index"],
+          'external',
+          'builtin',
+          ['type', 'unknown'],
+          'internal',
+          ['parent', 'sibling', 'index'],
         ],
         pathGroups: [
           {
-            pattern: "@deps/**",
-            group: "internal",
+            pattern: '@deps/**',
+            group: 'internal',
           },
           {
-            pattern: "next-i18next.config",
-            group: "internal",
+            pattern: 'next-i18next.config',
+            group: 'internal',
           },
         ],
         pathGroupsExcludedImportTypes: [],
-        "newlines-between": "always",
+        'newlines-between': 'always',
         alphabetize: {
-          order: "asc",
+          order: 'asc',
           caseInsensitive: true,
         },
       },
     ],
-    "check-file/filename-naming-convention": [
-      "error",
+    'check-file/filename-naming-convention': [
+      'error',
       {
-        "src/app/*.{jsx,tsx, js, ts}": "CAMEL_CASE",
-        "src/components/*.{jsx,tsx}": "PASCAL_CASE",
+        'src/app/*.{jsx,tsx, js, ts}': 'CAMEL_CASE',
+        'src/components/*.{jsx,tsx}': 'PASCAL_CASE',
       },
       {
         ignoreMiddleExtensions: true,
       },
     ],
-    "check-file/folder-naming-convention": [
-      "error",
+    'check-file/folder-naming-convention': [
+      'error',
       {
-        "src/app/**/": "NEXT_JS_APP_ROUTER_CASE",
+        'src/app/**/': 'NEXT_JS_APP_ROUTER_CASE',
       },
     ],
   },

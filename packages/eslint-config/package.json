@@ -7,15 +7,19 @@
     "next.js"
   ],
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.17.0",
+    "@typescript-eslint/parser": "^6.17.0",
     "@vercel/style-guide": "^5.1.0",
-    "eslint-config-turbo": "^1.11.3",
+    "add": "^2.0.6",
     "eslint-config-prettier": "^9.1.0",
+    "eslint-config-turbo": "^1.11.3",
+    "eslint-plugin-check-file": "^2.6.2",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-only-warn": "^1.1.0",
+    "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.4",
-    "eslint-plugin-only-warn": "^1.1.0",
     "eslint-plugin-storybook": "^0.6.15",
-    "@typescript-eslint/parser": "^6.17.0",
-    "@typescript-eslint/eslint-plugin": "^6.17.0",
     "typescript": "^5.3.3"
   }
 }

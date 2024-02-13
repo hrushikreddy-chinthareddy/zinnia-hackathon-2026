@@ -1,13 +1,18 @@
-import ColorsJSON from '../../tokens/style-dictionary/colors.json'
-import { SemanticPaletteMap, SemanticPaletteKeys, ColorPaletteToken, ColorsSupernovaTokens } from './colors.types';
-import { get } from 'lodash'
+import ColorsJSON from "../../tokens/style-dictionary/colors.json";
+import {
+  SemanticPaletteMap,
+  SemanticPaletteKeys,
+  ColorPaletteToken,
+  ColorsSupernovaTokens,
+} from "./colors.types";
+import { get } from "lodash";
 
-const { color } = ColorsJSON as ColorsSupernovaTokens
+const { color } = ColorsJSON as ColorsSupernovaTokens;
 
 const semanticPaletteMap: SemanticPaletteMap = {
   [SemanticPaletteKeys.BASE]: color.base,
-  [SemanticPaletteKeys.BUTTON]: color.button
-}
+  [SemanticPaletteKeys.BUTTON]: color.button,
+};
 
 const resolveColor = (ref: string) => {
   if (ref.startsWith("{") && ref.endsWith("}")) {
@@ -18,21 +23,25 @@ const resolveColor = (ref: string) => {
     return value || notFound;
   }
   return `resolved to ${ref}`; // For direct color values
-}
+};
 
-
-const createsemanticPaletteProps = (semPalette: Record<string, ColorPaletteToken>) => Object.entries(semPalette).reduce((acc, [key, value]) => {
-  return {
-    ...acc,
-    [key]: Object.entries(value).reduce((acc, [key, { value: valueString }]): Record<string, string> => ({
+const createsemanticPaletteProps = (
+  semPalette: Record<string, ColorPaletteToken>,
+) =>
+  Object.entries(semPalette).reduce((acc, [key, value]) => {
+    return {
       ...acc,
-      [key]: resolveColor(valueString).slice(0, -2)
-    }), {})
-  }
-}, {})
-
+      [key]: Object.entries(value).reduce(
+        (acc, [key, { value: valueString }]): Record<string, string> => ({
+          ...acc,
+          [key]: resolveColor(valueString).slice(0, -2),
+        }),
+        {},
+      ),
+    };
+  }, {});
 
 export const semanticPaletteProps = {
   base: createsemanticPaletteProps(semanticPaletteMap.base),
-  button: createsemanticPaletteProps(semanticPaletteMap.button)
-}
+  button: createsemanticPaletteProps(semanticPaletteMap.button),
+};

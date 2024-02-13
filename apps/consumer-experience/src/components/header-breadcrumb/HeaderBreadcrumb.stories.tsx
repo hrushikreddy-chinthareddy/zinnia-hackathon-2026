@@ -1,25 +1,23 @@
 import { Meta, StoryObj } from '@storybook/react';
 
-import { HeaderBreadcrumb } from './HeaderBreadcrumb';
+import { HeaderBreadcrumb, HeaderBreadcrumbProps } from './HeaderBreadcrumb';
 
-export default {
+const meta: Meta<typeof HeaderBreadcrumb> = {
   component: HeaderBreadcrumb,
   title: 'Components/HeaderBreadcrumb',
-} as Meta<typeof HeaderBreadcrumb>;
+};
 
-export const Default: StoryObj<typeof HeaderBreadcrumb> = {
+export default meta;
+
+export const Default: StoryObj<HeaderBreadcrumbProps> = {
   args: {
     title: 'Increase coverage',
-    href: '#',
-    label: '',
   },
 };
 
 export const WithPopover = {
   args: {
     title: 'Increase coverage',
-    href: '#',
-    label: '',
     popover: {
       content: <p>Popover Content</p>,
       title: <p>Popover Title</p>,

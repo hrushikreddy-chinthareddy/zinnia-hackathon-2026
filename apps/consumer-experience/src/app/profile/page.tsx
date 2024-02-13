@@ -1,14 +1,14 @@
 import { getSession } from '@auth0/nextjs-auth0';
 import { Label } from '@zdx/bloom/components';
 
+import { Addresses } from '@/components/addresses/Addresses';
 import { BankData } from '@/components/bank-data/BankData';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
+import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 
 import styles from './Profile.module.css';
-import { Addresses } from '@/components/addresses/Addresses';
-import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 
 export default async function Profile() {
   const session = await getSession();
@@ -62,9 +62,7 @@ export default async function Profile() {
               <div className="typographyContentBodySm">
                 <h2 className={styles.itemHeader}>Email</h2>
                 <FieldData
-                  Label={
-                    <Label text="Personal email" labelFor="REMOVE"></Label>
-                  }
+                  Label={<Label labelFor="REMOVE">Personal email</Label>}
                 >
                   <div>
                     <p>example@example.com</p>

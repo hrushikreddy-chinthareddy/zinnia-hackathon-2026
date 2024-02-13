@@ -1,18 +1,6 @@
-import {
-  AssistiveTextProps,
-  AssistiveText,
-  Label,
-  LabelProps,
-  Icon,
-  IconType,
-} from '@zdx/bloom/components';
+import { Icon, IconType } from '@zdx/bloom/components';
 import clsx from 'clsx';
-import {
-  ComponentElement,
-  PropsWithChildren,
-  ReactNode,
-  cloneElement,
-} from 'react';
+import { PropsWithChildren, ReactNode, cloneElement } from 'react';
 
 import './fieldData.css';
 
@@ -21,8 +9,8 @@ export interface FieldDataProps extends PropsWithChildren {
    * Assistive text component
    * typeof: "success" | "info" | "default" | "error"
    */
-  AssistiveText?: ComponentElement<AssistiveTextProps, AssistiveText>;
-  Label?: ComponentElement<LabelProps, Label>;
+  AssistiveText?: JSX.Element;
+  Label?: JSX.Element;
   caption?: ReactNode;
   /**
    * Defaults to color-base-text-text-secondary

@@ -1,24 +1,24 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import InfoIcon from '../../tokens/svg-assets/icons/circles/circle-info.svg';
-import { Label, LabelProps } from '../../components/label/Label';
+import type { Meta, StoryObj } from "@storybook/react";
+import InfoIcon from "../../tokens/svg-assets/icons/circles/circle-info.svg";
+import { Label, LabelProps } from "../../components/label/Label";
 
 export default {
-  title: 'Components/Label',
+  title: "Components/Label",
   component: Label,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
 } as Meta<typeof Label>;
 
-type StoryType = StoryObj<LabelProps>
+type StoryType = StoryObj<LabelProps>;
 
-export const PopoverInteraction: StoryType= {
+export const PopoverInteraction: StoryType = {
   args: {
-    children: 'Label content',
+    children: "Label content",
     interactiveElements: [
       <InfoIcon width={16} height={16} />,
       <span
         className="typographyNavLinksSm"
         style={{
-          color: 'var(--colorBaseTextTextLink)',
+          color: "var(--colorBaseTextTextLink)",
         }}
       >
         +2 other

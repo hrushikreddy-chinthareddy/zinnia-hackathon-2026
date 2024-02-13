@@ -1,12 +1,15 @@
 import { Meta, StoryObj } from '@storybook/react';
 
-import { BankData } from './BankData';
+import { BankData, BankDataProps } from './BankData';
 
-export default { component: BankData, title: 'Components/BankData' } as Meta<
-  typeof BankData
->;
+const meta: Meta<typeof BankData> = {
+  component: BankData,
+  title: 'Components/BankData',
+};
 
-export const DefaultBankData: StoryObj<typeof BankData> = {
+export default meta;
+
+export const DefaultBankData: StoryObj<BankDataProps> = {
   args: {
     accountNumber: 1234,
     accountType: 'Checking',
