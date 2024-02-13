@@ -7,6 +7,7 @@ import { FieldData } from '@/components/field-data/FieldData';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 
 import styles from './Profile.module.css';
+import { Addresses } from '@/components/addresses/Addresses';
 
 export default async function Profile() {
   const session = await getSession();
@@ -22,7 +23,7 @@ export default async function Profile() {
       autopayEnabled
       routingNumber={121000358}
       bankName="Bank of America"
-      nameOnAccount="Flora Anderson"
+      nameOnAccount="Flora Anderson Anderson Anderson"
       title="Payment details"
     />
   );
@@ -32,11 +33,52 @@ export default async function Profile() {
     <div className={styles.pageContainer}>
       <h1>Profile</h1>
       <HeaderPolicyDetails />
-      <ClickableCardContainer listItems={[{ content: bankData }]}>
+      <ClickableCardContainer
+        listItems={[
+          {
+            content: (
+              <div style={{ width: '100%' }}>
+                <h2 className={styles.itemHeader}>Address</h2>
+                <Addresses />
+              </div>
+            ),
+          },
+          {
+            content: (
+              <div className="typographyContentBodySm">
+                <h2 className={styles.itemHeader}>Phone</h2>
+                <FieldData Label={<Label>Mobile phone</Label>}>
+                  <div>
+                    <p>+1 (224) 234-2000</p>
+                    <p>Call: 9am-12pm EST</p>
+                  </div>
+                </FieldData>
+              </div>
+            ),
+          },
+          {
+            content: (
+              <div className="typographyContentBodySm">
+                <h2 className={styles.itemHeader}>Email</h2>
+                <FieldData
+                  Label={
+                    <Label text="Personal email" labelFor="REMOVE"></Label>
+                  }
+                >
+                  <div>
+                    <p>example@example.com</p>
+                  </div>
+                </FieldData>
+              </div>
+            ),
+          },
+          { content: bankData },
+        ]}
+      >
         <div>
           <h2 className={styles.itemHeader}>Name</h2>
-          <FieldData Label={<Label labelFor="">Policy owner</Label>}>
-            <p className="typography-content-body-sm">Michael Williams</p>
+          <FieldData Label={<Label>Policy owner</Label>}>
+            <p className="typographyContentBodySm">Michael Williams</p>
           </FieldData>
         </div>
       </ClickableCardContainer>

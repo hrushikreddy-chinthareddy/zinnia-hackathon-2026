@@ -46,12 +46,6 @@ const AccountValuePopover = () => {
   );
 };
 
-// TODO: remove this and the id on the label when bloom label component update has been
-// merged to not require label
-const idFromTitle = (title: string) => {
-  return title.split(' ').join();
-};
-
 const ACCOUNT_VALUE = 'Account value';
 
 export const AccountValue = () => {
@@ -65,7 +59,6 @@ export const AccountValue = () => {
           large
           Label={
             <Label
-              labelFor={idFromTitle(ACCOUNT_VALUE)}
               interactiveElements={[
                 // eslint-disable-next-line react/jsx-key
                 <AccountValuePopover />,
@@ -76,10 +69,7 @@ export const AccountValue = () => {
           }
           caption="As of 6/12/2023 5:00 pm EST"
         >
-          <p
-            className="typography-content-value"
-            id={idFromTitle(ACCOUNT_VALUE)}
-          >
+          <p className="typography-content-value">
             {formatUSDollars(250343.12)}
           </p>
         </FieldData>
