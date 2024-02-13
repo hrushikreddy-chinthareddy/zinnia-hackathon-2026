@@ -10,7 +10,7 @@ import { ClickableCardContainer } from '@/components/clickable-card-container/Cl
 import { FieldData } from '@/components/field-data/FieldData';
 import { formatUSDollars } from '@/utils/currency';
 
-import styles from './PolicyOverviewCards.module.css';
+import styles from './policyOverviewCards.module.css';
 
 const UPCOMING_PREMIUM = 'Upcoming premium';
 
