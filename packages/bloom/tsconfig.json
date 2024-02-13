@@ -1,0 +1,12 @@
+{
+  "extends": "@zdx/typescript-config/react-library",
+  "compilerOptions": {
+    "incremental": true,
+    "paths": {
+      "@/*": ["./src/*"],
+      "@tokens/*": ["./src/tokens/style-dictionary"]
+    }
+  },
+  "include": ["src", "vite.config.ts"],
+  "exclude": ["node_modules"]
+}

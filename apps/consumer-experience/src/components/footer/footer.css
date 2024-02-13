@@ -1,0 +1,21 @@
+.consumer-footer {
+  margin-top: var(--measureDimensionGapXl, 1.5rem);
+  color: var(--color-base-text-text-secondary, #676767);
+
+  > * {
+    margin-top: var(--measure-dimension-gap-lg, 1rem);
+  }
+}
+
+.consumer-footer--border {
+  border-top: 2px solid var(--colorBaseBorderBorderLight, #ededed);
+}
+
+.consumer-footer__link {
+  color: var(--colorBaseTextTextLink, #1e359c);
+  text-decoration: underline;
+
+  &:hover {
+    color: var(--colorStatesHoverHoverTextLink, #003b54);
+  }
+}

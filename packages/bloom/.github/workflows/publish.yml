@@ -1,0 +1,43 @@
+name: Publish to GitHub Packages
+
+on:
+  push:
+    branches:
+      - 'dev'
+      - 'main'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.10.0
+      - run: npm ci
+      - run: npm test
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          node-version: '20.10.0'
+          registry-url: 'https://npm.pkg.github.com/'
+          scope: '@zinnia'
+      - name: Install Packages
+        run: npm ci
+      - name: Test deploy package
+        if: github.ref_name == 'dev'
+        run: npm publish --tag next --dry-run
+      - name: Deploy with `latest` tag
+        if: github.ref_name == 'main'
+        run: npm publish --tag latest
+       

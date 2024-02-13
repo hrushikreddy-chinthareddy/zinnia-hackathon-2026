@@ -1,0 +1,3 @@
+{
+  "extends": "@zdx/typescript-config/base.json"
+}

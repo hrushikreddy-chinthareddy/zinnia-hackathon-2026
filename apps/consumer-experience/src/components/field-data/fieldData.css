@@ -1,0 +1,18 @@
+.field-data__container--large {
+  > *:not(:last-child) {
+    margin-bottom: var(--measure-dimension-gap-xs, 0.25rem);
+  }
+}
+.field-data__value {
+  padding: var(--measureDimensionPaddingXs, 0.125rem) 0;
+  margin-top: var(--measureDimensionPaddingXs, 0.25rem);
+  display: flex;
+}
+
+.field-data__icon {
+  margin-left: var(--measureDimensionGapL, 1rem);
+}
+
+.field-data__caption {
+  color: var(--color-base-text-text-secondary, #676767);
+}
