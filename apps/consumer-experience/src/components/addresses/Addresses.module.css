@@ -5,11 +5,11 @@
   row-gap: var(--measureDimensionGapLg, 1rem);
 }
 
-/* @media (min-width: 768px) {
+@media (min-width: 768px) {
   .addressRowContainer {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-} */
+}
 
 @media (min-width: 1024px) {
   .addressRowContainer {
