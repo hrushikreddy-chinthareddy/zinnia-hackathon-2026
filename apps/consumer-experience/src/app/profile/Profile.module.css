@@ -1,9 +1,0 @@
-.pageContainer {
-  > *:not(:last-child) {
-    margin: var(--measure-dimension-gap-lg, 1rem) 0;
-  }
-}
-
-.itemHeader {
-  margin-bottom: var(--measure-dimension-gap-lg, 1rem);
-}
