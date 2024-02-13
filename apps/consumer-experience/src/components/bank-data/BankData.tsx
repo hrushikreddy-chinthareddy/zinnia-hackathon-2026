@@ -8,7 +8,7 @@ import styles from './BankData.module.css';
 import { FieldData } from '../field-data/FieldData';
 
 // TODO: are any of these optional?
-interface BankDataProps {
+export interface BankDataProps {
   accountNumber: number;
   accountType: string;
   autopayEnabled?: boolean;

@@ -4,6 +4,8 @@ import Image from 'next/image';
 import heroImage from '@/app/styles/everly/everly-hero-background.png'; // TODO: don't hardcode to everly
 import LogoImage from '@/app/styles/everly/everly-logo.svg'; // TODO: don't hardcode to everly
 
+// disable because NextJS needs this to be exported from this file
+// eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
   title: 'Login page',
 };
@@ -34,7 +36,9 @@ export default function Login() {
           </div>
           <div className="px-6 lg:px-8">
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-sm">
-              <h2 className="mt-10 text-2xl font-bold leading-9 tracking-tight text-gray-900">Login</h2>
+              <h2 className="mt-10 text-2xl font-bold leading-9 tracking-tight text-gray-900">
+                Login
+              </h2>
               <div className="py-6">
                 <a
                   href="/api/auth/login"
@@ -45,7 +49,10 @@ export default function Login() {
               </div>
 
               <p className="text-center text-sm text-gray-500">
-                <a href="#" className="font-semibold leading-6 text-primary hover:text-primary-light">
+                <a
+                  href="#"
+                  className="font-semibold leading-6 text-primary hover:text-primary-light"
+                >
                   Need help signing in?
                 </a>
               </p>

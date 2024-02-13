@@ -7,6 +7,8 @@ import { MainNav } from '@/components/MainNav';
 
 import './globals.css';
 
+// disable because NextJS needs this to be exported from this file
+// eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
   title: 'Consumer UI',
   description: 'Consumer UI',
