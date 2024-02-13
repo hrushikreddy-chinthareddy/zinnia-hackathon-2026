@@ -4,9 +4,10 @@ import {
   AssistiveTextVariant,
   Label,
 } from '@zdx/bloom/components';
-import styles from './Addresses.module.css';
 
 import { FieldData } from '@/components/field-data/FieldData';
+
+import styles from './Addresses.module.css';
 
 const addresses = [
   {

@@ -1,7 +1,10 @@
-import { Label } from '@zdx/bloom/components';
+import {
+  Label,
+  AssistiveText,
+  AssistiveTextVariant,
+} from '@zdx/bloom/components';
 
 import styles from './BankData.module.css';
-import { AssistiveText, AssistiveTextVariant } from '@zdx/bloom/components';
 import { FieldData } from '../field-data/FieldData';
 
 // TODO: are any of these optional?

@@ -2,11 +2,13 @@ import { Meta, StoryObj } from '@storybook/react';
 
 import { Ticker } from './Ticker';
 
-export default {
-  title: 'Components/Ticker',
+const meta: Meta<typeof Ticker> = {
   component: Ticker,
+  title: 'Components/Ticker',
   tags: ['autodocs'],
-} as Meta<typeof Ticker>;
+};
+
+export default meta;
 
 export const Default: StoryObj<typeof Ticker> = {
   args: {

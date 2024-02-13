@@ -1,5 +1,4 @@
 import LogoImage from '@/app/styles/everly/everly-logo.svg';
-import styles from './HeaderPolicyDetails.module.css';
 
 interface Props {
   className?: string;

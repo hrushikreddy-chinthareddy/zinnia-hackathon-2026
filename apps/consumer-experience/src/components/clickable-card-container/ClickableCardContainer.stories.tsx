@@ -2,11 +2,13 @@ import { Meta, StoryObj } from '@storybook/react';
 
 import { ClickableCardContainer, Props } from './ClickableCardContainer';
 
-export default {
-  title: 'Components/ClickableCardContainer',
+const meta: Meta<typeof ClickableCardContainer> = {
   component: ClickableCardContainer,
+  title: 'Components/ClickableCardContainer',
   tags: ['autodocs'],
-} as Meta<typeof ClickableCardContainer>;
+};
+
+export default meta;
 
 export const Default: StoryObj<Props> = {
   args: {

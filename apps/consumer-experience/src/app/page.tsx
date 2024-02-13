@@ -1,12 +1,12 @@
 import { Metadata } from 'next';
 
 import { Footer } from '@/components/footer/Footer';
+import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 
 import { AccountValue } from './_policy-overview/AccountValue';
 import { Coverage } from './_policy-overview/Coverage';
 import { UpcomingPremium } from './_policy-overview/UpcomingPremium';
-import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 
 export const metadata: Metadata = {
   title: 'Home page',

@@ -9,7 +9,7 @@ const AssistiveIcon = {
   [AssistiveTextVariant.Error]: IconType.HEX_EXCLAMATION,
 };
 
-export const AssistiveText = ({
+export const AssistiveText: React.FC<AssistiveTextProps> = ({
   text,
   variant = AssistiveTextVariant.Default,
 }: AssistiveTextProps) => {
