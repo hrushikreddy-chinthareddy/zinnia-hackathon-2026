@@ -10,7 +10,7 @@ import { FieldData } from '@/components/field-data/FieldData';
 
 const addresses = [
   {
-    addrLine1: 'T1234 Apple Street T1234 Apple Street',
+    addrLine1: 'T1234 Apple Street',
     addrLine2: 'Apt 2456',
     city: 'Rockford',
     state: 'MA',

@@ -8,8 +8,8 @@ import { MainNav } from '@/components/MainNav';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Cosnumer UI',
-  description: 'Cosnumer UI',
+  title: 'Consumer UI',
+  description: 'Consumer UI',
 };
 
 const myFont = localFont({

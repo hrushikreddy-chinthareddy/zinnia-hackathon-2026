@@ -22,20 +22,27 @@ export interface HeaderBreadcrumbProps {
 }
 
 export const HeaderBreadcrumb = ({ title, popover }: HeaderBreadcrumbProps) => {
-  const paths = usePathname().split('/');
-  // Get the segment before the current path segment
-  const previousPathIndex = paths.length - 2 || 0;
-  const previousPath = `/${paths[previousPathIndex]}` || '/';
-  const previousPathName = paths[previousPathIndex] || 'policy overview';
-
   if (!title) {
+    return null;
+  }
+
+  const paths = usePathname().split('/');
+  const currentPath = paths[paths.length - 1];
+
+  // If there's no current path, it means you're at a root url
+  if (!currentPath) {
     return <h1 className="typography-desktop-headline-1d">{title}</h1>;
   }
+  // Get the segment before the current path segment, if the path before is the root,
+  // paths.length - 2 will be an empty string
+  const previousPath = paths[paths.length - 2];
+  const previousPathRoute = previousPath ? `/${previousPath}` : '/';
+  const previousPathName = previousPath || 'policy overview';
 
   return (
     <div className={styles.headerBreadcrumbContainer}>
       <Link
-        href={previousPath}
+        href={previousPathRoute}
         aria-label={`go to ${previousPathName} page`}
         className={styles.headerBreadcrumbAction}
       >

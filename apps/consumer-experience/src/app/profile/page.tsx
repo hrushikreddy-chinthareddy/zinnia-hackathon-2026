@@ -8,6 +8,7 @@ import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPo
 
 import styles from './Profile.module.css';
 import { Addresses } from '@/components/addresses/Addresses';
+import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 
 export default async function Profile() {
   const session = await getSession();
@@ -31,7 +32,7 @@ export default async function Profile() {
   console.log('my user', session);
   return (
     <div className={styles.pageContainer}>
-      <h1>Profile</h1>
+      <HeaderBreadcrumb title="Profile" />
       <HeaderPolicyDetails />
       <ClickableCardContainer
         listItems={[
