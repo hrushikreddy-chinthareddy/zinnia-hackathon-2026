@@ -13,7 +13,7 @@ export const HeaderPolicyDetails = ({
   includeLogo,
 }: Props) => {
   return (
-    <div className={`${className} ${styles.container}`}>
+    <div className={className}>
       {includeLogo && (
         <LogoImage
           alt="Company Logo"

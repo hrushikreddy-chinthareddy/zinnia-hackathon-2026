@@ -1,4 +1,0 @@
-.container {
-  /* TODO: this should be padding or gap */
-  padding-left: var(--measure-dimension-margin-xs, 2rem);
-}
