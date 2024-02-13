@@ -55,7 +55,7 @@ export const Addresses = () => {
         return (
           <FieldData
             key={`key-${index}`}
-            Label={<Label text={address.addrType} labelFor="REMOVE"></Label>}
+            Label={<Label>{address.addrType}</Label>}
             AssistiveText={
               <AssistiveText
                 text={mailingAddressText}

@@ -47,9 +47,7 @@ export default async function Profile() {
             content: (
               <div className="typographyContentBodySm">
                 <h2 className={styles.itemHeader}>Phone</h2>
-                <FieldData
-                  Label={<Label text="Mobile phone" labelFor="REMOVE"></Label>}
-                >
+                <FieldData Label={<Label>Mobile phone</Label>}>
                   <div>
                     <p>+1 (224) 234-2000</p>
                     <p>Call: 9am-12pm EST</p>
@@ -79,7 +77,7 @@ export default async function Profile() {
       >
         <div>
           <h2 className={styles.itemHeader}>Name</h2>
-          <FieldData Label={<Label text="Policy owner" labelFor="" />}>
+          <FieldData Label={<Label>Policy owner</Label>}>
             <p className="typographyContentBodySm">Michael Williams</p>
           </FieldData>
         </div>

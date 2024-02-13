@@ -10,7 +10,7 @@ export type LabelProps = {
   /**
    * Pass id of associated element to connect label to the value or input it is describing
    */
-  labelFor: string;
+  labelFor?: string;
 } & PropsWithChildren;
 
 export const Label = ({
@@ -18,11 +18,17 @@ export const Label = ({
   interactiveElements,
   labelFor,
 }: LabelProps) => {
+  const labelEl = labelFor ? (
+    <label htmlFor={labelFor} className={classes.text}>
+      {children}
+    </label>
+  ) : (
+    <div className={classes.text}>{children}</div>
+  );
+
   return (
     <div className={classes.container}>
-      <label htmlFor={labelFor} className={classes.text}>
-        {children}
-      </label>
+      {labelEl}
       {interactiveElements &&
         interactiveElements.map((elem, index) => (
           <div key={`interactive-${index}`} className={classes.item}>
