@@ -2,29 +2,11 @@
 import { Icon, IconType } from "../icon";
 import * as Dialog from "@radix-ui/react-dialog";
 import clsx from "clsx";
-import { ReactNode } from "react";
+import { SideSheetLocation, SideSheetProps } from "./types";
 
 import { zIndexOrder } from "../../utils/zIndexOrder";
 
 import styles from "./SideSheet.module.css";
-
-export enum SideSheetLocation {
-  Left = "left",
-  Right = "right",
-}
-
-export interface SideSheetProps {
-  closeCallback?: () => void;
-  children: ReactNode;
-  header: ReactNode;
-  location?: SideSheetLocation;
-  /**
-   * If you want the sidesheet to close when a user clicks outside of it
-   * set this to true
-   */
-  preventCloseOnOutsideClick?: boolean;
-  trigger: ReactNode;
-}
 
 export const SideSheet = ({
   children,

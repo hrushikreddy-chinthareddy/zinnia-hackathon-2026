@@ -1,2 +1,2 @@
-export { AssistiveText, AssistiveTextVariant } from './AssistiveText';
-export type { AssistiveTextProps } from './AssistiveText';
+export { AssistiveText } from "./AssistiveText";
+export { AssistiveTextVariant, type AssistiveTextProps } from "./types";

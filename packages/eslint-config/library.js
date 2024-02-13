@@ -4,8 +4,15 @@ const project = resolve(process.cwd(), "tsconfig.json");
 
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
-  extends: ["eslint:recommended", "prettier", "plugin:react-hooks/recommended", "plugin:storybook/recommended", "eslint-config-turbo"],
-  plugins: ["only-warn", "react-refresh"],
+  extends: [
+    "eslint:recommended",
+    "prettier",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:storybook/recommended",
+    "eslint-config-turbo",
+  ],
+  plugins: ["only-warn", "react-refresh", "@typescript-eslint"],
   globals: {
     React: true,
     JSX: true,
@@ -36,5 +43,7 @@ module.exports = {
       "warn",
       { allowConstantExport: true },
     ],
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "error",
   },
 };
