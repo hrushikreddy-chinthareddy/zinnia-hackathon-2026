@@ -1,3 +1,6 @@
+@tailwind utilities;
+
+@layer utilities {
   /* H1 is used as the beginning top-level heading of the page content.
   
   The h1 element should be visible graphically and to assistive technologies. It should not be hidden using CSS techniques. */ 
@@ -197,16 +200,6 @@
     text-indent: 0px;
   } 
 
-  /* Used sometimes as a subtle option for a section header. */ 
-  .typography-labels-label-caps {
-    font-family: "Poppins";
-    font-style: normal;
-    font-weight: 600;
-    font-size: 16px;
-    letter-spacing: 0em;
-    text-indent: 0px;
-  } 
-
   /* Tablet */ 
   .typography-labels-label-lg {
     font-family: "Poppins";
@@ -267,50 +260,6 @@
     font-weight: 400;
     font-size: 16px;
     line-height: 28px;
-    letter-spacing: 0em;
-    text-indent: 0px;
-  } 
-
-   
-  .typography-content-ignore-answer-medium {
-    font-family: "Poppins";
-    font-style: normal;
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 18px;
-    letter-spacing: 0em;
-    text-indent: 0px;
-  } 
-
-   
-  .typography-content-ignore-answer-selected_ {
-    font-family: "Poppins";
-    font-style: normal;
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 18px;
-    letter-spacing: 0em;
-    text-indent: 0px;
-  } 
-
-   
-  .typography-content-ignore-answer-m {
-    font-family: "Poppins";
-    font-style: normal;
-    font-weight: 500;
-    font-size: 12px;
-    line-height: 16px;
-    letter-spacing: 0em;
-    text-indent: 0px;
-  } 
-
-   
-  .typography-content-ignore-answer-m-selected-semibold {
-    font-family: "Poppins";
-    font-style: normal;
-    font-weight: 600;
-    font-size: 12px;
-    line-height: 16px;
     letter-spacing: 0em;
     text-indent: 0px;
   } 
@@ -464,16 +413,6 @@
     text-indent: 0px;
   } 
 
-  /* Used sometimes as a subtle option for a component heading. */ 
-  .typography-labels-field-label-caps {
-    font-family: "Lato";
-    font-style: normal;
-    font-weight: 500;
-    font-size: 12px;
-    letter-spacing: 0em;
-    text-indent: 0px;
-  } 
-
    
   .typography-labels-label-lg-alt {
     font-family: "Poppins";
@@ -578,3 +517,36 @@
     letter-spacing: 0em;
     text-indent: 0px;
   } 
+
+  /* Used for inline text links. */ 
+  .typography-nav-links-inline {
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Used for small inline text links. */ 
+  .typography-nav-links-sm-inline {
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+   
+  .typography-nav-links-footer-inline {
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+
+}
