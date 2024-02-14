@@ -1,0 +1,552 @@
+@tailwind utilities;
+
+@layer utilities {
+  /* H1 is used as the beginning top-level heading of the page content.
+  
+  The h1 element should be visible graphically and to assistive technologies. It should not be hidden using CSS techniques. */ 
+  .typography-desktop-headline-1-d {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 36px;
+    line-height: 44px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Defines the second-level headings of the page content.
+  
+  H2 is used for the top-level sections of content on a page.  */ 
+  .typography-desktop-headline-2-d {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 26px;
+    line-height: 32px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Not to be used as primary H2 style. Emphasis accent for H2 only. */ 
+  .typography-desktop-headline-2-accent-d {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 32px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Used as the third-level headings of the page content.
+  
+  H3 is used for the sub-level content within the sections of content on a page.  */ 
+  .typography-desktop-headline-3-d {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 28px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Used as the fourth-level headings of the page content.
+  
+  H4 is used for the sub-level content within the sub-sections of content on a page.  */ 
+  .typography-desktop-headline-4-d {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* H1 is used as the beginning top-level heading of the page content.
+  
+  The h1 element should be visible graphically and to assistive technologies. It should not be hidden using CSS techniques. */ 
+  .typography-tablet-headline-1-t {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 40px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Defines the second-level headings of the page content.
+  
+  H2 is used for the top-level sections of content on a page.  */ 
+  .typography-tablet-headline-2-t {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 30px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Not to be used as primary H2 style. Emphasis accent for H2 only. */ 
+  .typography-tablet-headline-2-accent-t {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 30px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Used as the third-level headings of the page content.
+  
+  H3 is used for the sub-level content within the sections of content on a page.  */ 
+  .typography-tablet-headline-3-t {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 28px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Used as the fourth-level headings of the page content.
+  
+  H4 is used for the sub-level content within the sub-sections of content on a page.  */ 
+  .typography-tablet-headline-4-t {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* H1 is used as the beginning top-level heading of the page content.
+  
+  The h1 element should be visible graphically and to assistive technologies. It should not be hidden using CSS techniques. */ 
+  .typography-mobile-headline-1-m {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 36px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Defines the second-level headings of the page content.
+  
+  H2 is used for the top-level sections of content on a page.  */ 
+  .typography-mobile-headline-2-m {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 28px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Not to be used as primary H2 style. Emphasis accent for H2 only. */ 
+  .typography-mobile-headline-2-accent-m {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 28px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Used as the third-level headings of the page content.
+  
+  H3 is used for the sub-level content within the sections of content on a page.  */ 
+  .typography-mobile-headline-3-m {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 28px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Used as the fourth-level headings of the page content.
+  
+  H4 is used for the sub-level content within the sub-sections of content on a page.  */ 
+  .typography-mobile-headlne-4-m {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Use as a single line used alone or in a combination with a section or component headline. */ 
+  .typography-titles-subtitle {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Tablet */ 
+  .typography-labels-label-lg {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Mobile */ 
+  .typography-labels-label-sm {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Standard Body style for web and general product body copy. */ 
+  .typography-content-body {
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Standard Body style for emphasis of small sections of body copy. */ 
+  .typography-content-body-bold {
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Use a paragraph style for longer text sections.  */ 
+  .typography-content-body-paragraph {
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 28px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Used for quick read and article reference text. */ 
+  .typography-content-article-references {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 28px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Used generically for caption text. */ 
+  .typography-content-caption {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Used generically for selected caption text. */ 
+  .typography-content-caption-selected {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Used for footer copy. */ 
+  .typography-content-footer {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Used for footer legal copy. */ 
+  .typography-content-footer-legal {
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 18px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Used for large button text. */ 
+  .typography-buttons-button-lg {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 26px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Used for small button text. */ 
+  .typography-buttons-button-sm {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 24px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Used for text links. */ 
+  .typography-nav-links {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Used for selected text links. */ 
+  .typography-nav-links-selected {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Used for nav drawer links. */ 
+  .typography-nav-nav-drawer {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 24px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Used for selected nav drawer links. */ 
+  .typography-nav-nav-drawer-selected {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 24px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Nav Default
+  Filters & progress bars */ 
+  .typography-nav-nav-menu {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Nav Selected
+  Filters & progress bars */ 
+  .typography-nav-nav-menu-selected {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Used for things like the text inside components. Tablet. */ 
+  .typography-labels-label-md {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Used as the label for data and content fields.  */ 
+  .typography-labels-field-label {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+   
+  .typography-labels-label-lg-alt {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+   
+  .typography-labels-label-md-alt {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+   
+  .typography-labels-label-sm-alt {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Used to display data points and smaller body text. */ 
+  .typography-content-body-sm {
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Used to display bold data points or small body text. */ 
+  .typography-content-body-sm-bold {
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 22px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Used for small text links. */ 
+  .typography-nav-links-sm {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Used for selected small text links. */ 
+  .typography-nav-links-sm-selected {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Use as a single line used alone or in a combination with a section or component headline. */ 
+  .typography-titles-subtitle-alt {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Bulleted lists are used when items should be grouped together but have no inherent order. When using a bulleted list, it is recommended that the text for each bullet is not longer than two sentences.
+   */ 
+  .typography-content-list-item {
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Used to display policy number and other large values. */ 
+  .typography-content-value {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 24px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Used for inline text links. */ 
+  .typography-nav-links-inline {
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+  /* Used for small inline text links. */ 
+  .typography-nav-links-sm-inline {
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+   
+  .typography-nav-links-footer-inline {
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+  } 
+
+
+}
