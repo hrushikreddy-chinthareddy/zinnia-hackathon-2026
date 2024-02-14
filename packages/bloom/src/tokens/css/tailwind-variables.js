@@ -1,5 +1,117 @@
 module.exports = {
     'colors': {
+        'primary': {
+            'color-primary': '#ff7500', /* #FF7500
+                                        
+                                        Primary color 400-orange is the action color used for UI Design in the Zahara Design System.
+                                        
+                                        It is reserved for important action items that need to stand out: buttons, toggles, checkboxes, radio, and other critical functional use cases. */
+            'color-primary-lightest': '#ffead9', /* #FFEAD9
+                                        
+                                        Primary button selected, and the inactive selected color for toggles radio, checkboxes and other action items.  */
+            'color-primary-lighter': '#ffc899', /* #FFC899
+                                        
+                                        Primary button pressed. Inactive tooltip icon. */
+            'color-primary-light': '#ffac66', /* #FFAC66
+                                        
+                                        The inactive (white) selected color for toggles and other action items.  */
+            'color-primary-dark': '#994600', /* #994600
+                                        
+                                        The contrast inactive selected color for toggles radio, checkboxes and other action items.  */
+            'color-primary-50-percent-opacity': '#ff750080', /* #FF7500 at 50% opacity */
+        },
+        'secondary': {
+            'color-secondary': '#00628b', /* Text links and action items like icons and cancel buttons. */
+            'color-secondary-lightest': '#d9e7ee', /* #D9E7EE
+                                        Secondary button selected fill.  */
+            'color-secondary-lighter': '#99c0d1', /* #99C0D1
+                                        
+                                        Secondary button pressed.
+                                        The contrast hover color for links, toggles radio, checkboxes and other action items.  */
+            'color-secondary-light': '#66a1ba', /* #66A1BA
+                                        
+                                        The contrast color for links, links and other action items.  */
+            'color-secondary-dark': '#003b54', /* #003B54
+                                        
+                                        Links hovered. */
+        },
+        'accent': {
+            'color-accent-one': '#ffc600', /* #FFC600
+                                        Hover outline color for items with an orange active state. 
+                                        
+                                        This is also an accent color for badges and other small alert items. */
+            'color-accent-two': '#ff1822', /* #FF1822
+                                        
+                                        Extended palette */
+            'color-50-percent-black': '#00000080', /* Modal overlay
+                                         */
+        },
+        'grayscale': {
+            'color-white': '#ffffff', /* #FFFFFF */
+            'color-50-gray': '#f8f8f8', /* #F8F8F8 */
+            'color-100-gray': '#ededed', /* #EDEDED
+                                        Backgrounds, strokes, dividers, Inactive backgrounds */
+            'color-200-gray': '#cccccc', /* #CCCCCC
+                                        
+                                        Default strokes */
+            'color-300-gray': '#b3b3b3', /* #B3B3B3
+                                        
+                                        Inactive Text
+                                        Inactive strokes */
+            'color-400-gray': '#949494', /* #949494 */
+            'color-500-gray': '#7f7f7f', /* #7F7F7F */
+            'color-logo-gray': '#63666a', /* #63666A
+                                        
+                                        Gray used in the ZINNIA logo and logotype */
+            'color-600-gray': '#676767', /* #676767
+                                        
+                                        Use for Section Labels and 
+                                        Accents */
+            'color-700-gray': '#4d4d4d', /* #4D4D4D */
+            'color-800-gray': '#313131', /* #313131 */
+            'color-900-gray': '#212121', /* #212121
+                                        
+                                        Primary Text, High Contrast Dividers */
+            'color-black': '#000000', /* #000000 */
+        },
+        'semantics': {
+            'color-semantic-focus': '#37a2d8', /* #37A2D8
+                                        
+                                        Used when a component/input/ */
+            'color-semantic-success': '#007b5a', /* #007B5A
+                                        
+                                        Used when a required item meets the limitations set by the input */
+            'color-semantic-success-50-percent-opacity': '#00876280', /* #008762
+                                        
+                                        50% of the success token */
+            'color-semantic-success-light': '#f2f9f7', /* 
+                                        
+                                         */
+            'color-semantic-pending': '#ac0091', /* Pending color */
+            'color-semantic-pending-50-percent-opacity': '#ac009180', 
+            'color-semantic-pending-light': '#fbf2f9', 
+            'color-semantic-information': '#005fed', /* #005FED */
+            'color-semantic-information-50-percent-opacity': '#005fed80', /* #005FED
+                                        
+                                        50% of the info token */
+            'color-semantic-information-light': '#f2f7fe', /* #F2F7FE
+                                         */
+            'color-semantic-warning': '#b74d00', /* #B74D00
+                                        
+                                        Used in warning dialogues / modules */
+            'color-semantic-warning-50-percent-opacity': '#c3520080', /* #C35200
+                                        
+                                        50% of the warning token */
+            'color-semantic-warning-light': '#fcf6f2', /* #FCF6F2 */
+            'color-semantic-error': '#db004f', /* #DB004F
+                                        
+                                        Used in error dialogues  / modules */
+            'color-semantic-error-50-percent-opacity': '#db004f80', /* #DB004F
+                                        
+                                        50% of the error token */
+            'color-semantic-error-light': '#fdf2f6', /* #FDF2F6 */
+            'color-semantic-text-highlight': '#ffe485', 
+        },
         'aqua': {
             'color-50-aqua': '#f9fdfd', /* #F9FDFD
                                         
@@ -64,45 +176,6 @@ module.exports = {
                                         
                                         Extended palette */
         },
-        'accent': {
-            'color-accent-one': '#ffc600', /* #FFC600
-                                        Hover outline color for items with an orange active state. 
-                                        
-                                        This is also an accent color for badges and other small alert items. */
-            'color-accent-two': '#ff1822', /* #FF1822
-                                        
-                                        Extended palette */
-            'color-50-percent-black': '#00000080', /* Modal overlay
-                                         */
-        },
-        'grayscale': {
-            'color-white': '#ffffff', /* #FFFFFF */
-            'color-50-gray': '#f8f8f8', /* #F8F8F8 */
-            'color-100-gray': '#ededed', /* #EDEDED
-                                        Backgrounds, strokes, dividers, Inactive backgrounds */
-            'color-200-gray': '#cccccc', /* #CCCCCC
-                                        
-                                        Default strokes */
-            'color-300-gray': '#b3b3b3', /* #B3B3B3
-                                        
-                                        Inactive Text
-                                        Inactive strokes */
-            'color-400-gray': '#949494', /* #949494 */
-            'color-500-gray': '#7f7f7f', /* #7F7F7F */
-            'color-logo-gray': '#63666a', /* #63666A
-                                        
-                                        Gray used in the ZINNIA logo and logotype */
-            'color-600-gray': '#676767', /* #676767
-                                        
-                                        Use for Section Labels and 
-                                        Accents */
-            'color-700-gray': '#4d4d4d', /* #4D4D4D */
-            'color-800-gray': '#313131', /* #313131 */
-            'color-900-gray': '#212121', /* #212121
-                                        
-                                        Primary Text, High Contrast Dividers */
-            'color-black': '#000000', /* #000000 */
-        },
         'fuchsia': {
             'color-50-fuchsia': '#fff5fe', /* #FFF5FE
                                         
@@ -132,6 +205,38 @@ module.exports = {
                                         
                                         Extended palette */
             'color-900-fuchsia': '#320630', /* #320630
+                                        
+                                        Extended palette */
+        },
+        'lime': {
+            'color-50-lime': '#fdfdf1', /* #FDFDF1
+                                        
+                                        Extended palette */
+            'color-100-lime': '#f6f5d2', /* #F6F5D2
+                                        
+                                        Extended palette */
+            'color-200-lime': '#e1e38d', /* #E1E38D
+                                        
+                                        Extended palette */
+            'color-300-lime': '#c0c64f', /* #C0C64F
+                                        
+                                        Finance classes */
+            'color-400-lime': '#a4ae08', /* #A4AE08
+                                        
+                                        Extended palette */
+            'color-500-lime': '#8b9403', /* #8B9403
+                                        
+                                        Extended palette */
+            'color-600-lime': '#656c02', /* #656C02
+                                        
+                                        Extended palette */
+            'color-700-lime': '#484e01', /* #484E01
+                                        
+                                        Extended palette */
+            'color-800-lime': '#3a3e01', /* #3A3E01
+                                        
+                                        Extended palette */
+            'color-900-lime': '#2c2e07', /* #2C2E07
                                         
                                         Extended palette */
         },
@@ -229,111 +334,6 @@ module.exports = {
                                         Extended palette */
             'color-400-yellow': '#ffc600', 
         },
-        'primary': {
-            'color-primary': '#ff7500', /* #FF7500
-                                        
-                                        Primary color 400-orange is the action color used for UI Design in the Zahara Design System.
-                                        
-                                        It is reserved for important action items that need to stand out: buttons, toggles, checkboxes, radio, and other critical functional use cases. */
-            'color-primary-lightest': '#ffead9', /* #FFEAD9
-                                        
-                                        Primary button selected, and the inactive selected color for toggles radio, checkboxes and other action items.  */
-            'color-primary-lighter': '#ffc899', /* #FFC899
-                                        
-                                        Primary button pressed. Inactive tooltip icon. */
-            'color-primary-light': '#ffac66', /* #FFAC66
-                                        
-                                        The inactive (white) selected color for toggles and other action items.  */
-            'color-primary-dark': '#994600', /* #994600
-                                        
-                                        The contrast inactive selected color for toggles radio, checkboxes and other action items.  */
-            'color-primary-50-percent-opacity': '#ff750080', /* #FF7500 at 50% opacity */
-        },
-        'secondary': {
-            'color-secondary': '#00628b', /* Text links and action items like icons and cancel buttons. */
-            'color-secondary-lightest': '#d9e7ee', /* #D9E7EE
-                                        Secondary button selected fill.  */
-            'color-secondary-lighter': '#99c0d1', /* #99C0D1
-                                        
-                                        Secondary button pressed.
-                                        The contrast hover color for links, toggles radio, checkboxes and other action items.  */
-            'color-secondary-light': '#66a1ba', /* #66A1BA
-                                        
-                                        The contrast color for links, links and other action items.  */
-            'color-secondary-dark': '#003b54', /* #003B54
-                                        
-                                        Links hovered. */
-        },
-        'lime': {
-            'color-50-lime': '#fdfdf1', /* #FDFDF1
-                                        
-                                        Extended palette */
-            'color-100-lime': '#f6f5d2', /* #F6F5D2
-                                        
-                                        Extended palette */
-            'color-200-lime': '#e1e38d', /* #E1E38D
-                                        
-                                        Extended palette */
-            'color-300-lime': '#c0c64f', /* #C0C64F
-                                        
-                                        Finance classes */
-            'color-400-lime': '#a4ae08', /* #A4AE08
-                                        
-                                        Extended palette */
-            'color-500-lime': '#8b9403', /* #8B9403
-                                        
-                                        Extended palette */
-            'color-600-lime': '#656c02', /* #656C02
-                                        
-                                        Extended palette */
-            'color-700-lime': '#484e01', /* #484E01
-                                        
-                                        Extended palette */
-            'color-800-lime': '#3a3e01', /* #3A3E01
-                                        
-                                        Extended palette */
-            'color-900-lime': '#2c2e07', /* #2C2E07
-                                        
-                                        Extended palette */
-        },
-        'semantics': {
-            'color-semantic-focus': '#37a2d8', /* #37A2D8
-                                        
-                                        Used when a component/input/ */
-            'color-semantic-success': '#007b5a', /* #007B5A
-                                        
-                                        Used when a required item meets the limitations set by the input */
-            'color-semantic-success-50-percent-opacity': '#00876280', /* #008762
-                                        
-                                        50% of the success token */
-            'color-semantic-success-light': '#f2f9f7', /* 
-                                        
-                                         */
-            'color-semantic-pending': '#ac0091', /* Pending color */
-            'color-semantic-pending-50-percent-opacity': '#ac009180', 
-            'color-semantic-pending-light': '#fbf2f9', 
-            'color-semantic-information': '#005fed', /* #005FED */
-            'color-semantic-information-50-percent-opacity': '#005fed80', /* #005FED
-                                        
-                                        50% of the info token */
-            'color-semantic-information-light': '#f2f7fe', /* #F2F7FE
-                                         */
-            'color-semantic-warning': '#b74d00', /* #B74D00
-                                        
-                                        Used in warning dialogues / modules */
-            'color-semantic-warning-50-percent-opacity': '#c3520080', /* #C35200
-                                        
-                                        50% of the warning token */
-            'color-semantic-warning-light': '#fcf6f2', /* #FCF6F2 */
-            'color-semantic-error': '#db004f', /* #DB004F
-                                        
-                                        Used in error dialogues  / modules */
-            'color-semantic-error-50-percent-opacity': '#db004f80', /* #DB004F
-                                        
-                                        50% of the error token */
-            'color-semantic-error-light': '#fdf2f6', /* #FDF2F6 */
-            'color-semantic-text-highlight': '#ffe485', 
-        },
         'pagination': {
             'pagination-border-default': '#00628b', 
             'pagination-indicator-default': '#00628b', 
@@ -360,6 +360,31 @@ module.exports = {
             'button-group-item-primary-border': '#cccccc', 
             'button-group-item-primary-fill': '#ffffff', 
         },
+        'chip': {
+            'chip-primary-fill': '#ffffff', 
+            'chip-primary-border': '#cccccc', 
+            'chip-primary-text': '#212121', 
+            'chip-primary-icon': '#212121', 
+            'chip-primary-hover-fill': '#ffead9', 
+            'chip-primary-hover-text': '#212121', 
+            'chip-primary-hover-border': '#ff7500', 
+            'chip-primary-selected-fill': '#ffc899', 
+            'chip-primary-selected-text': '#212121', 
+            'chip-primary-selected-border': '#ff7500', 
+            'chip-primary-inactive-fill': '#ededed', 
+            'chip-primary-inactive-border': '#b3b3b3', 
+            'chip-primary-inactive-text': '#b3b3b3', 
+        },
+        'nav-menu': {
+            'menu-default-fill': '#212121', 
+            'menu-link-hover-fill': '#313131', 
+            'menu-link-selected-fill': '#ffffff', 
+            'menu-icon-default-fill': '#ffffff', 
+            'menu-icon-selected-fill': '#212121', 
+            'menu-icon-surface-selected-fill': '#ffffff', 
+            'menu-button-default-fill': '#313131', 
+            'menu-button-hover-fill': '#4d4d4d', 
+        },
         'toggle': {
             'toggle-default-fill': '#676767', 
             'toggle-inactive-fill': '#b3b3b3', 
@@ -377,31 +402,6 @@ module.exports = {
             'toggle-contrast-default-icon': '#ffffff', 
             'toggle-contrast-inactive-icon': '#949494', 
             'toggle-contrast-selected-inactive-icon': '#ffac66', 
-        },
-        'nav-menu': {
-            'menu-default-fill': '#212121', 
-            'menu-link-hover-fill': '#313131', 
-            'menu-link-selected-fill': '#ffffff', 
-            'menu-icon-default-fill': '#ffffff', 
-            'menu-icon-selected-fill': '#212121', 
-            'menu-icon-surface-selected-fill': '#ffffff', 
-            'menu-button-default-fill': '#313131', 
-            'menu-button-hover-fill': '#4d4d4d', 
-        },
-        'chip': {
-            'chip-primary-fill': '#ffffff', 
-            'chip-primary-border': '#cccccc', 
-            'chip-primary-text': '#212121', 
-            'chip-primary-icon': '#212121', 
-            'chip-primary-hover-fill': '#ffead9', 
-            'chip-primary-hover-text': '#212121', 
-            'chip-primary-hover-border': '#ff7500', 
-            'chip-primary-selected-fill': '#ffc899', 
-            'chip-primary-selected-text': '#212121', 
-            'chip-primary-selected-border': '#ff7500', 
-            'chip-primary-inactive-fill': '#ededed', 
-            'chip-primary-inactive-border': '#b3b3b3', 
-            'chip-primary-inactive-text': '#b3b3b3', 
         },
         'status-surface': {
             'status-hover-border': '#ffc600', 
@@ -515,6 +515,23 @@ module.exports = {
             'element-contrast-border-inactive': '#676767', 
             'element-contrast-border-selected-inactive': '#994600', 
         },
+        'base-border': {
+            'border-primary-color': '#ff7500', 
+            'border-secondary-color': '#00628b', 
+            'border-light': '#ededed', 
+            'border-subtle': '#cccccc', 
+            'border-bold': '#b3b3b3', 
+            'border-bolder': '#676767', 
+            'border-dark': '#313131', 
+            'border-darker': '#212121', 
+        },
+        'base-text': {
+            'text-primary': '#212121', 
+            'text-secondary': '#676767', 
+            'text-link': '#00628b', 
+            'text-link-contrast': '#66a1ba', 
+            'text-light': '#ffffff', 
+        },
         'base-icon': {
             'icon-action': '#00628b', 
             'icon-action-hover': '#003b54', 
@@ -538,22 +555,18 @@ module.exports = {
             'surface-darker': '#212121', 
             'surface-text-highlight': '#ffe485', 
         },
-        'base-text': {
-            'text-primary': '#212121', 
-            'text-secondary': '#676767', 
-            'text-link': '#00628b', 
-            'text-link-contrast': '#66a1ba', 
-            'text-light': '#ffffff', 
+        'states-focus': {
+            'focus-border': '#37a2d8', 
         },
-        'base-border': {
-            'border-primary-color': '#ff7500', 
-            'border-secondary-color': '#00628b', 
-            'border-light': '#ededed', 
-            'border-subtle': '#cccccc', 
-            'border-bold': '#b3b3b3', 
-            'border-dark': '#313131', 
-            'border-bolder': '#676767', 
-            'border-darker': '#212121', 
+        'states-inactive': {
+            'inactive-text': '#b3b3b3', 
+            'inactive-text-contrast': '#676767', 
+            'inactive-icon': '#b3b3b3', 
+            'inactive-icon-contrast': '#676767', 
+            'inactive-fill': '#ededed', 
+            'inactive-fill-contrast': '#313131', 
+            'inactive-text-link': '#b3b3b3', 
+            'inactive-contrast-text-link': '#676767', 
         },
         'states-hover': {
             'hover-primary-border': '#ffc600', 
@@ -576,19 +589,6 @@ module.exports = {
             'selected-text-link': '#00628b', 
             'selected-contrast-text-link': '#66a1ba', 
         },
-        'states-inactive': {
-            'inactive-text': '#b3b3b3', 
-            'inactive-text-contrast': '#676767', 
-            'inactive-icon': '#b3b3b3', 
-            'inactive-icon-contrast': '#676767', 
-            'inactive-fill': '#ededed', 
-            'inactive-fill-contrast': '#313131', 
-            'inactive-text-link': '#b3b3b3', 
-            'inactive-contrast-text-link': '#676767', 
-        },
-        'states-focus': {
-            'focus-border': '#37a2d8', 
-        },
         'fields-surface': {
             'field-background-default-fill': '#ffffff', 
             'field-background-inactive-fill': '#ededed', 
@@ -608,27 +608,39 @@ module.exports = {
     'boxShadow': {
         'elevation-light-02': 'var(--shadow-elevation-elevation-light-02)', 
         'elevation-light-02-2': 'var(--shadow-elevation-elevation-light-02-2)', 
+        'elevation-light-02-2': 'var(--shadow-elevation-elevation-light-02-2)', 
         'elevation-light-04': 'var(--shadow-elevation-elevation-light-04)', /* Use for: cards, main content, modules */
+        'elevation-light-04-2': 'var(--shadow-elevation-elevation-light-04-2)', /* Use for: cards, main content, modules */
         'elevation-light-04-2': 'var(--shadow-elevation-elevation-light-04-2)', 
         'elevation-light-08': 'var(--shadow-elevation-elevation-light-08)', /* Use for: top bar, alerts, tooltip, popovers */
+        'elevation-light-08-2': 'var(--shadow-elevation-elevation-light-08-2)', /* Use for: top bar, alerts, tooltip, popovers */
         'elevation-light-08-2': 'var(--shadow-elevation-elevation-light-08-2)', 
         'elevation-light-16': 'var(--shadow-elevation-elevation-light-16)', /* Use for: selects, contextual */
+        'elevation-light-16-2': 'var(--shadow-elevation-elevation-light-16-2)', /* Use for: selects, contextual */
         'elevation-light-16-2': 'var(--shadow-elevation-elevation-light-16-2)', 
         'elevation-light-32': 'var(--shadow-elevation-elevation-light-32)', /* Use for: modals */
+        'elevation-light-32-2': 'var(--shadow-elevation-elevation-light-32-2)', /* Use for: modals */
         'elevation-light-32-2': 'var(--shadow-elevation-elevation-light-32-2)', 
         'elevation-light-64': 'var(--shadow-elevation-elevation-light-64)', 
         'elevation-light-64-2': 'var(--shadow-elevation-elevation-light-64-2)', 
+        'elevation-light-64-2': 'var(--shadow-elevation-elevation-light-64-2)', 
         'elevation-dark-02': 'var(--shadow-elevation-elevation-dark-02)', 
         'elevation-dark-02-2': 'var(--shadow-elevation-elevation-dark-02-2)', 
+        'elevation-dark-02-2': 'var(--shadow-elevation-elevation-dark-02-2)', 
         'elevation-dark-04': 'var(--shadow-elevation-elevation-dark-04)', /* Use for: cards, main content, modules */
+        'elevation-dark-04-2': 'var(--shadow-elevation-elevation-dark-04-2)', /* Use for: cards, main content, modules */
         'elevation-dark-04-2': 'var(--shadow-elevation-elevation-dark-04-2)', 
         'elevation-dark-08': 'var(--shadow-elevation-elevation-dark-08)', /* Use for: top bar, alerts, tooltip, popovers */
+        'elevation-dark-08-2': 'var(--shadow-elevation-elevation-dark-08-2)', /* Use for: top bar, alerts, tooltip, popovers */
         'elevation-dark-08-2': 'var(--shadow-elevation-elevation-dark-08-2)', 
         'elevation-dark-16': 'var(--shadow-elevation-elevation-dark-16)', /* Use for: selects, contextual */
+        'elevation-dark-16-2': 'var(--shadow-elevation-elevation-dark-16-2)', /* Use for: selects, contextual */
         'elevation-dark-16-2': 'var(--shadow-elevation-elevation-dark-16-2)', 
         'elevation-dark-32': 'var(--shadow-elevation-elevation-dark-32)', /* Use for: modals */
+        'elevation-dark-32-2': 'var(--shadow-elevation-elevation-dark-32-2)', /* Use for: modals */
         'elevation-dark-32-2': 'var(--shadow-elevation-elevation-dark-32-2)', 
         'elevation-dark-64': 'var(--shadow-elevation-elevation-dark-64)', 
+        'elevation-dark-64-2': 'var(--shadow-elevation-elevation-dark-64-2)', 
         'elevation-dark-64-2': 'var(--shadow-elevation-elevation-dark-64-2)', 
     }
 }
