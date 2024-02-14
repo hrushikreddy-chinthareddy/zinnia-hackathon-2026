@@ -17,5 +17,6 @@
 
   &:hover {
     color: var(--colorStatesHoverHoverTextLink, #003b54);
+    text-decoration: none;
   }
 }

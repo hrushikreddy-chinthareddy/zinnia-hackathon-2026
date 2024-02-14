@@ -170,6 +170,21 @@ button,
 [type='reset'],
 [type='submit'] {
   -webkit-appearance: button;
+  background-color: inherit;
+}
+
+a,
+button,
+input[type='submit'],
+input[type='button'],
+input[type='radio'],
+input[type='checkbox'] {
+  cursor: pointer;
+}
+
+button[disabled],
+input[disabled] {
+  cursor: default;
 }
 
 /**

@@ -12,6 +12,21 @@ html {
   color: var(--color-base-text-text-primary, #212121);
 }
 
+a {
+  color: var(--color-base-text-text-link, #1e359c);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    text-decoration-color: var(
+      --color-base-border-border-secondary-color,
+      #1e359c
+    );
+    text-underline-position: under;
+    text-decoration-thickness: 2px;
+  }
+}
+
 /* TODO: this needs some thinking through, possibly use postcss-extend library to be able to extend
   classes from design system to set heading values */
 h1 {
