@@ -8,13 +8,14 @@
 }
 
 .content {
-  margin: 1rem 0.5rem;
+  margin: var(--measure-dimension-gap-lg, 1rem)
+    var(--measure-dimension-gap-md, 0.5rem);
   min-width: 344px;
 }
 
 @media (min-width: 768px) {
   .content {
-    margin: 2rem;
+    margin: var(--measure-dimension-gap-2xl, 2rem);
   }
 }
 
