@@ -1,0 +1,25 @@
+.body {
+  background-color: var(--color-base-surface-surface-tertiary, #ededed);
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+.content {
+  margin: 1rem 0.5rem;
+  min-width: 344px;
+}
+
+@media (min-width: 768px) {
+  .content {
+    margin: 2rem;
+  }
+}
+
+@media (min-width: 500px) {
+  .content {
+    width: 680px;
+  }
+}

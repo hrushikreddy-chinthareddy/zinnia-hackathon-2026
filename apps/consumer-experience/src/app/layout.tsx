@@ -5,7 +5,8 @@ import type { Metadata } from 'next';
 
 import { DesktopNav } from '@/components/nav-bar/DesktopNav';
 
-import './globals.css';
+import './styles/globals.css';
+import styles from './layout.module.css';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
@@ -27,12 +28,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={myFont.className}>
       <UserProvider>
-        <body className="bg-background">
+        <body className={styles.body}>
           <DesktopNav />
-          <div className="flex justify-center">
-            <div className="mx-2 my-4 min-w-[344px] sm:w-[680px] md:m-8">
-              {children}
-            </div>
+          <div className={styles.container}>
+            <div className={styles.content}>{children}</div>
           </div>
         </body>
       </UserProvider>

@@ -18,11 +18,7 @@ export default function Home() {
   return (
     <>
       <HeaderBreadcrumb title="Policy overview" />
-      <HeaderPolicyDetails
-        className="my-dimension-gap-lg"
-        includeLogo
-        expanded
-      />
+      <HeaderPolicyDetails className="my-lg" expanded />
 
       <div className="[&>*]:mb-4">
         <UpcomingPremium />
