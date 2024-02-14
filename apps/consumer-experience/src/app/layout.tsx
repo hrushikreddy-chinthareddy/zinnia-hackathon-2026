@@ -3,7 +3,7 @@ import localFont from 'next/font/local';
 
 import type { Metadata } from 'next';
 
-import { MainNav } from '@/components/MainNav';
+import { DesktopNav } from '@/components/nav-bar/DesktopNav';
 
 import './globals.css';
 
@@ -28,7 +28,7 @@ export default function RootLayout({
     <html lang="en" className={myFont.className}>
       <UserProvider>
         <body className="bg-background">
-          <MainNav></MainNav>
+          <DesktopNav />
           <div className="flex justify-center">
             <div className="mx-2 my-4 min-w-[344px] sm:w-[680px] md:m-8">
               {children}
