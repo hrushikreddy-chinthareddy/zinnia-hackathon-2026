@@ -52,7 +52,7 @@ h2 {
   text-indent: 0px;
 }
 
-@media screen(sm) {
+@media (min-width: 500px) {
   h1 {
     font-family: Poppins;
     font-size: 36px;
@@ -70,14 +70,14 @@ h2 {
     letter-spacing: 0em;
     text-indent: 0px;
   }
+}
 
-  /* TODO: these need to be updated with correct variables */
-  button:focus-visible,
-  a:focus-visible {
-    outline: 2px solid #0d69d4;
-    border-radius: 0.75rem;
-    outline-offset: 2px;
-  }
+/* TODO: these need to be updated with correct variables */
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid #0d69d4;
+  border-radius: 0.75rem;
+  outline-offset: 2px;
 }
 
 /*
