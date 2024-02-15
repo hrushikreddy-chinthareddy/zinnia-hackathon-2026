@@ -1,0 +1,26 @@
+.body {
+  background-color: var(--color-base-surface-surface-tertiary, #ededed);
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+.content {
+  margin: var(--measure-dimension-gap-lg, 1rem)
+    var(--measure-dimension-gap-md, 0.5rem);
+  min-width: 344px;
+}
+
+@media (min-width: 768px) {
+  .content {
+    margin: var(--measure-dimension-gap-2xl, 2rem);
+  }
+}
+
+@media (min-width: 500px) {
+  .content {
+    width: 680px;
+  }
+}

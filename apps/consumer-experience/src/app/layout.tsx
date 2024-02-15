@@ -1,11 +1,13 @@
+import { getSession } from '@auth0/nextjs-auth0';
 import { UserProvider } from '@auth0/nextjs-auth0/client';
 import localFont from 'next/font/local';
 
 import type { Metadata } from 'next';
 
-import { MainNav } from '@/components/MainNav';
+import { DesktopNav } from '@/components/nav-bar/DesktopNav';
 
-import './globals.css';
+import './styles/globals.css';
+import styles from './layout.module.css';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
@@ -19,20 +21,30 @@ const myFont = localFont({
   display: 'swap',
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getSession();
+
+  if (!session) {
+    return (
+      <html lang="en" className={myFont.className}>
+        <body>
+          <div>{children}</div>
+        </body>
+      </html>
+    );
+  }
+
   return (
     <html lang="en" className={myFont.className}>
       <UserProvider>
-        <body className="bg-background">
-          <MainNav></MainNav>
-          <div className="flex justify-center">
-            <div className="mx-2 my-4 min-w-[344px] sm:w-[680px] md:m-8">
-              {children}
-            </div>
+        <body className={styles.body}>
+          <DesktopNav />
+          <div className={styles.container}>
+            <div className={styles.content}>{children}</div>
           </div>
         </body>
       </UserProvider>

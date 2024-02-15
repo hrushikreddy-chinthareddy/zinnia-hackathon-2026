@@ -10,7 +10,7 @@ import { ClickableCardContainer } from '@/components/clickable-card-container/Cl
 import { FieldData } from '@/components/field-data/FieldData';
 import { formatUSDollars } from '@/utils/currency';
 
-import styles from './PolicyOverviewCards.module.css';
+import styles from './PolicyOverview.module.css';
 
 const CoveragePopover = () => {
   return (
@@ -43,20 +43,17 @@ export const Coverage = () => {
     <ClickableCardContainer
       listItems={[
         {
-          content: <p className="typography-labels-field-label">Riders</p>,
+          content: (
+            <FieldData Label={<Label>Riders</Label>}>
+              <p className="typography-content-body-sm">1 of 1 riders</p>
+            </FieldData>
+          ),
           linkTo: { url: '#', label: 'riders' },
         },
         {
           content: (
-            <FieldData
-              Label={<Label labelFor="policyBeneficiaries">Beneficiary</Label>}
-            >
-              <p
-                id="policyBeneficiaries"
-                className="typography-content-caption field-data__caption"
-              >
-                2 beneficiaries
-              </p>
+            <FieldData Label={<Label>Beneficiary</Label>}>
+              <p className="typography-content-body-sm">2 beneficiaries</p>
             </FieldData>
           ),
         },
@@ -68,7 +65,6 @@ export const Coverage = () => {
           large
           Label={
             <Label
-              labelFor="Coverage"
               // eslint-disable-next-line react/jsx-key
               interactiveElements={[<CoveragePopover />]}
             >
