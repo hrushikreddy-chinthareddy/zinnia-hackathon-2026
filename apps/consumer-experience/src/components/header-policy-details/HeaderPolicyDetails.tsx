@@ -1,13 +1,21 @@
+import clsx from 'clsx';
 import styles from './HeaderPolicyDetails.module.css';
 
-interface Props {
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
   expanded?: boolean;
 }
 
-export const HeaderPolicyDetails = ({ className, expanded = false }: Props) => {
+export const HeaderPolicyDetails = ({
+  className,
+  expanded = false,
+  style,
+}: Props) => {
   return (
-    <div className={className}>
+    <div
+      className={clsx(styles.container, { [`${className}`]: className })}
+      style={style}
+    >
       <p className="typography-labels-label-lg-alt">
         Everly Life - Universal Life
       </p>

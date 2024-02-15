@@ -1,12 +1,12 @@
 @import '~@zdx/bloom/css';
 @import '~@zdx/bloom/component-styles';
 @import './everly/theme.css';
+@import './spacing.css';
 
 /*
 * ELEMENTS
 * ========
 */
-
 /* Global font color set on html rather than using global * selector to not override color styles coming from bloom */
 html {
   color: var(--color-base-text-text-primary, #212121);
@@ -78,18 +78,6 @@ a:focus-visible {
   outline: 2px solid #0d69d4;
   border-radius: 0.75rem;
   outline-offset: 2px;
-}
-
-/*
-* SPACING
-* =======
-*/
-.my-none {
-  margin: var(--measure-dimension-gap-none, 1rem) 0;
-}
-
-.my-lg {
-  margin: var(--measure-dimension-gap-lg, 1rem) 0;
 }
 
 /*

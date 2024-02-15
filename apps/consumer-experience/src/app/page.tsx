@@ -20,7 +20,11 @@ export default function Home() {
   return (
     <>
       <HeaderBreadcrumb title="Policy overview" />
-      <HeaderPolicyDetails className="my-lg" expanded />
+      <HeaderPolicyDetails
+        className="my-lg"
+        style={{ marginLeft: 0 }}
+        expanded
+      />
       <div className={styles.cardContainer}>
         <UpcomingPremium />
         <AccountValue />
