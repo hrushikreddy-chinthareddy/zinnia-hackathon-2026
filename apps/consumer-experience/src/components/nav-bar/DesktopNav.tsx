@@ -13,12 +13,10 @@ export function DesktopNav() {
 
       <div className={`${styles.navItemsContainer} typography-nav-links-sm`}>
         <Link href="#" className={styles.navItem}>
-          {/* <DocumentIcon className="text-primary w-6" aria-hidden="true"></DocumentIcon> */}
           <Icon type={IconType.DOCUMENT_TEXT} />
           Documents
         </Link>
         <Link href="/profile" className={styles.navItem}>
-          {/* <UserIcon  alt="User Icon" aria-hidden="true" /> */}
           <Icon type={IconType.CIRCLE_USER} />
           Profile
         </Link>
