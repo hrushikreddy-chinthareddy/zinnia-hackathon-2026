@@ -1,10 +1,10 @@
-import { Icon, IconType } from "@zinnia/bloom/components";
-import { clsx } from "clsx";
-import { NextComponentType } from "next";
-import Link, { LinkProps } from "next/link";
-import { FC, PropsWithChildren, ReactNode } from "react";
+import { Icon, IconType } from '@zinnia/bloom/components';
+import { clsx } from 'clsx';
+import { NextComponentType } from 'next';
+import Link, { LinkProps } from 'next/link';
+import { FC, PropsWithChildren, ReactNode } from 'react';
 
-import "./clickableCardContainer.css";
+import './clickableCardContainer.css';
 
 interface LinkItem {
   /**
@@ -36,7 +36,7 @@ const LinkArrow = ({ url, label, isInternal = true }: LinkItem) => {
 
   const Tag = isInternal
     ? (Link as unknown as NextComponentType<LinkProps>)
-    : ("a" as keyof JSX.IntrinsicElements);
+    : ('a' as keyof JSX.IntrinsicElements);
 
   return (
     <Tag
@@ -62,11 +62,11 @@ export const ClickableCardContainer: FC<Props> = ({
   listItems,
 }: Props) => {
   return (
-    <div className={`clickable-card-container__container ${className ?? ""}`}>
+    <div className={`clickable-card-container__container ${className ?? ''}`}>
       <div
         className={`${clsx(
-          "clickable-card-container__content",
-          disabled && "clickable-card-container__container-disabled"
+          'clickable-card-container__content',
+          disabled && 'clickable-card-container__container-disabled'
         )}`}
       >
         {children}
