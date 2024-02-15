@@ -31,6 +31,7 @@ jobs:
       - uses: actions/setup-node@v4
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          branch_name: ${{ github.ref_name }}
         with:
           node-version: "20.10.0"
           registry-url: "https://npm.pkg.github.com/"
@@ -38,8 +39,8 @@ jobs:
       - name: Install Packages
         run: pnpm install --filter @zdx/bloom
       - name: Test deploy package
-        if: github.ref_name == 'dev'
-        run: pnpm publish --filter @zdx/bloom --tag next --dry-run
-      - name: Deploy with `latest` tag
         if: github.ref_name == 'add-gitaction-for-bloom'
+        run: pnpm publish --filter @zdx/bloom --tag next --dry-run --no-git-checks
+      - name: Deploy with `latest` tag
+        if: github.ref_name == 'main'
         run: pnpm publish --filter @zdx/bloom  --tag latest
