@@ -34,12 +34,12 @@ jobs:
         with:
           node-version: "20.10.0"
           registry-url: "https://npm.pkg.github.com/"
-          scope: "@zdx"
+          scope: "@zinnia"
       - name: Install Packages
-        run: pnpm install --filter @zdx/bloom
+        run: pnpm install --filter @zinnia/bloom
       - name: Test deploy package
         if: github.ref_name == 'dev'
-        run: pnpm publish --filter @zdx/bloom --tag next --dry-run --no-git-checks
+        run: pnpm publish --filter @zinnia/bloom --tag next --dry-run --no-git-checks
       - name: Deploy with `latest` tag
         if: github.ref_name == 'add-gitaction-for-bloom'
-        run: pnpm publish --filter @zdx/bloom  --tag latest --no-git-checks
+        run: pnpm publish --filter @zinnia/bloom  --tag latest --no-git-checks

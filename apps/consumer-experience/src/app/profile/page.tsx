@@ -1,5 +1,5 @@
 import { getSession } from '@auth0/nextjs-auth0';
-import { Label } from '@zdx/bloom/components';
+import { Label } from '@zinnia/bloom/components';
 
 import { Addresses } from '@/components/addresses/Addresses';
 import { BankData } from '@/components/bank-data/BankData';

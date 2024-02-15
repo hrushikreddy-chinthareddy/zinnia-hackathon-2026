@@ -1,7 +1,7 @@
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
   root: true,
-  extends: ['@zdx/eslint-config/next.js'],
+  extends: ['@zinnia/eslint-config/next.js'],
   overrides: [
     {
       files: ['**/*.stories.tsx'],

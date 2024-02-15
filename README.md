@@ -18,9 +18,9 @@ This Turborepo includes the following packages/apps:
 
 - `docs`: a [Next.js](https://nextjs.org/) app
 - `web`: another [Next.js](https://nextjs.org/) app
-- `@zdx/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@zdx/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@zdx/typescript-config`: `tsconfig.json`s used throughout the monorepo
+- `@zinnia/ui`: a stub React component library shared by both `web` and `docs` applications
+- `@zinnia/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
+- `@zinnia/typescript-config`: `tsconfig.json`s used throughout the monorepo
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 

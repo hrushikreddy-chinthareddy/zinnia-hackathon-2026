@@ -1,5 +1,5 @@
 {
-  "name": "@zdx/bloom",
+  "name": "@zinnia/bloom",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zinnia/digital-experience-monorepo.git"
@@ -116,5 +116,5 @@
     "url": "https://github.com/zinnia/digital-experience-monorepo/issues"
   },
   "readme": "ERROR: No README data found!",
-  "_id": "@zdx/bloom@0.0.23"
+  "_id": "@zinnia/bloom@0.0.23"
 }

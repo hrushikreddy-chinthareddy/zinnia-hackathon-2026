@@ -1,5 +1,5 @@
 {
-  "extends": "@zdx/typescript-config/react-library",
+  "extends": "@zinnia/typescript-config/react-library",
   "compilerOptions": {
     "incremental": true,
     "paths": {
