@@ -3,7 +3,7 @@ import {
   AssistiveText,
   AssistiveTextVariant,
   Label,
-} from '@zdx/bloom/components';
+} from '@zinnia/bloom/components';
 
 import { FieldData } from '@/components/field-data/FieldData';
 

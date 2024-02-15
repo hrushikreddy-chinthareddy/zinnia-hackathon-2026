@@ -1,5 +1,5 @@
 import { getSession } from '@auth0/nextjs-auth0';
-import { Label } from '@zdx/bloom/components';
+import { Label } from '@zinnia/bloom/components';
 
 import { Addresses } from '@/components/addresses/Addresses';
 import { BankData } from '@/components/bank-data/BankData';
@@ -61,9 +61,7 @@ export default async function Profile() {
             content: (
               <div className="typographyContentBodySm">
                 <h2 className={styles.itemHeader}>Email</h2>
-                <FieldData
-                  Label={<Label labelFor="REMOVE">Personal email</Label>}
-                >
+                <FieldData Label={<Label>Personal email</Label>}>
                   <div>
                     <p>example@example.com</p>
                   </div>

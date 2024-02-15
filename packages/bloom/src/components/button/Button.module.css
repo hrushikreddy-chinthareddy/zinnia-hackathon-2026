@@ -1,5 +1,5 @@
 .button {
-  --font-family-buttons: "Poppins";
+  --font-family-buttons: 'Poppins';
   --font-weight-semibold: 600;
   --button-border-width: 3px;
   --button-border-style: solid;
@@ -12,12 +12,12 @@
   display: flex;
   font-family: var(--font-family-buttons);
   font-feature-settings:
-    "clig" off,
-    "liga" off;
+    'clig' off,
+    'liga' off;
   gap: var(--gap-none, 0px);
   justify-content: center;
   padding: var(--measure-dimension-padding-lg)
-    var(--measure-dimension-padding-xxxxxxl);
+    var(--measure-dimension-padding-6xl);
   text-align: center;
 
   &:focus-visible {

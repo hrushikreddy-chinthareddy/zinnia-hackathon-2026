@@ -1,0 +1,20 @@
+.container {
+  height: 100svh;
+  width: 100vw;
+  background-color: white;
+  display: flex;
+}
+
+.carrierMarketingImage {
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+}
+
+.logo {
+  width: 200px;
+}

@@ -1,40 +1,39 @@
-import LogoImage from '@/app/styles/everly/everly-logo.svg';
+import clsx from 'clsx';
 
-interface Props {
+import styles from './HeaderPolicyDetails.module.css';
+
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
   expanded?: boolean;
-  includeLogo?: boolean;
 }
 
 export const HeaderPolicyDetails = ({
   className,
   expanded = false,
-  includeLogo,
+  style,
 }: Props) => {
   return (
-    <div className={className}>
-      {includeLogo && (
-        <LogoImage
-          alt="Company Logo"
-          className="mb-2 w-24 shrink-0 self-center text-primary sm:hidden"
-        />
-      )}
+    <div
+      className={clsx(styles.container, { [`${className}`]: className })}
+      style={style}
+    >
       <p className="typography-labels-label-lg-alt">
         Everly Life - Universal Life
       </p>
-      <p className="typography-labels-label-md-alt text-gray-600">
-        Policy No. AU22029654
-      </p>
-      {expanded && (
-        <>
-          <p className="typography-labels-label-md-alt text-gray-600">
-            Insured: Michael Williams
-          </p>
-          <p className="typography-labels-label-md-alt text-gray-600">
-            Policy status: <span className="text-semantic-success">Active</span>
-          </p>
-        </>
-      )}
+      <div className={styles.policyDetails}>
+        <p className="typography-labels-label-md-alt">Policy No. AU22029654</p>
+        {expanded && (
+          <>
+            <p className="typography-labels-label-md-alt">
+              Insured: Michael Williams
+            </p>
+            <p className="typography-labels-label-md-alt">
+              Policy status:{' '}
+              <span className="text-semantic-success">Active</span>
+            </p>
+          </>
+        )}
+      </div>
     </div>
   );
 };

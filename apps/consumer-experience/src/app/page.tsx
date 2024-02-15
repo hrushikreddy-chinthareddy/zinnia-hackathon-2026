@@ -6,6 +6,7 @@ import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPo
 
 import { AccountValue } from './_policy-overview/AccountValue';
 import { Coverage } from './_policy-overview/Coverage';
+import styles from './_policy-overview/PolicyOverview.module.css';
 import { UpcomingPremium } from './_policy-overview/UpcomingPremium';
 
 // disable because NextJS needs this to be exported from this file
@@ -19,12 +20,11 @@ export default function Home() {
     <>
       <HeaderBreadcrumb title="Policy overview" />
       <HeaderPolicyDetails
-        className="my-dimension-gap-lg"
-        includeLogo
+        className="my-lg"
+        style={{ marginLeft: 0 }}
         expanded
       />
-
-      <div className="[&>*]:mb-4">
+      <div className={styles.cardContainer}>
         <UpcomingPremium />
         <AccountValue />
         <Coverage />

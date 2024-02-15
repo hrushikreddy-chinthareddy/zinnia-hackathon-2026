@@ -4,14 +4,14 @@ import {
   IconType,
   Popover,
   PopoverPlacement,
-} from '@zdx/bloom/components';
+} from '@zinnia/bloom/components';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
 import { Ticker } from '@/components/ticker/Ticker';
 import { formatUSDollars } from '@/utils/currency';
 
-import styles from './PolicyOverviewCards.module.css';
+import styles from './PolicyOverview.module.css';
 
 const AccountValuePopover = () => {
   return (

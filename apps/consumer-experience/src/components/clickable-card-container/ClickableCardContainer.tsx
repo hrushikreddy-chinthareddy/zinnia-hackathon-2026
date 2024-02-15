@@ -1,4 +1,4 @@
-import { Icon, IconType } from '@zdx/bloom/components';
+import { Icon, IconType } from '@zinnia/bloom/components';
 import { clsx } from 'clsx';
 import { NextComponentType } from 'next';
 import Link, { LinkProps } from 'next/link';
