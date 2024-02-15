@@ -38,8 +38,8 @@ jobs:
       - name: Install Packages
         run: pnpm install --filter @zdx/bloom
       - name: Test deploy package
-        if: github.ref_name == 'add-gitaction-for-bloom'
+        if: github.ref_name == 'dev'
         run: pnpm publish --filter @zdx/bloom --tag next --dry-run
       - name: Deploy with `latest` tag
-        if: github.ref_name == 'main'
+        if: github.ref_name == 'add-gitaction-for-bloom'
         run: pnpm publish --filter @zdx/bloom  --tag latest
