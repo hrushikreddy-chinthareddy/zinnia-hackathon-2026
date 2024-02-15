@@ -5,7 +5,6 @@ on:
     branches:
       - "dev"
       - "main"
-      - "add-gitaction-for-bloom"
 
 jobs:
   build:
