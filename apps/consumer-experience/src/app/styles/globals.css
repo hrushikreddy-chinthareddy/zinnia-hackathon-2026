@@ -3,8 +3,8 @@
 @import './everly/theme.css';
 
 /*
-* TYPOGRAPHY
-* ==========
+* ELEMENTS
+* ========
 */
 
 /* Global font color set on html rather than using global * selector to not override color styles coming from bloom */
@@ -26,6 +26,11 @@ a {
     text-decoration-thickness: 2px;
   }
 }
+
+/*
+* TYPOGRAPHY
+* ==========
+*/
 
 /* TODO: this needs some thinking through, possibly use postcss-extend library to be able to extend
   classes from design system to set heading values */

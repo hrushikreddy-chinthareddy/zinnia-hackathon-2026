@@ -4,11 +4,9 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export async function middleware(req: NextRequest) {
-  // default withMiddlewareAuthRequired(async
   console.log('in middleware');
   const res = NextResponse.next();
   const user = await getSession(req, res);
-  // console.log('user', user);
 
   // if the user does not have a session, send them to the login page
   if (!user) {

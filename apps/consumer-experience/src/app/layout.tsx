@@ -1,4 +1,5 @@
 import { UserProvider } from '@auth0/nextjs-auth0/client';
+import { getSession } from '@auth0/nextjs-auth0';
 import localFont from 'next/font/local';
 
 import type { Metadata } from 'next';
@@ -20,11 +21,24 @@ const myFont = localFont({
   display: 'swap',
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getSession();
+  console.log('session', session);
+
+  if (!session) {
+    return (
+      <html lang="en" className={myFont.className}>
+        <body>
+          <div>{children}</div>
+        </body>
+      </html>
+    );
+  }
+
   return (
     <html lang="en" className={myFont.className}>
       <UserProvider>
