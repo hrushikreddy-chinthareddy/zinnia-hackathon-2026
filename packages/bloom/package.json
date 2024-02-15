@@ -2,7 +2,7 @@
   "name": "@zdx/bloom",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zinnia/bloom.git"
+    "url": "git+https://github.com/zinnia/digital-experience-monorepo.git"
   },
   "homepage": "https://zinnia-design-system.supernova-docs.io/",
   "author": {
@@ -113,7 +113,7 @@
     "vite-plugin-lib-inject-css": "^1.3.0"
   },
   "bugs": {
-    "url": "https://github.com/zinnia/bloom/issues"
+    "url": "https://github.com/zinnia/digital-experience-monorepo/issues"
   },
   "readme": "ERROR: No README data found!",
   "_id": "@zdx/bloom@0.0.23"

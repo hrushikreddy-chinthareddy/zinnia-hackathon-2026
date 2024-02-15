@@ -31,7 +31,6 @@ jobs:
       - uses: actions/setup-node@v4
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          branch_name: ${{ github.ref_name }}
         with:
           node-version: "20.10.0"
           registry-url: "https://npm.pkg.github.com/"
