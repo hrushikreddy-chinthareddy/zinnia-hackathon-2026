@@ -1,4 +1,4 @@
 /** @type {import("prettier").Config} */
-const config = require("@zdx/prettier-config");
+const config = require("@zinnia/prettier-config");
 
 module.exports = config;

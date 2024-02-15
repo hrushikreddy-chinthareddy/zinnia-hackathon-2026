@@ -1,0 +1,44 @@
+name: Publish to GitHub Packages
+
+on:
+  push:
+    branches:
+      - "dev"
+      - "main"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.10.0
+      - run: pnpm install
+      - run: pnpm run test
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v4
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          node-version: "20.10.0"
+          registry-url: "https://npm.pkg.github.com/"
+          scope: "@zinnia"
+      - name: Install Packages
+        run: pnpm install --filter @zinnia/bloom
+      - name: Test deploy package
+        if: github.ref_name == 'dev'
+        run: pnpm publish --filter @zinnia/bloom --tag next --dry-run --no-git-checks
+      - name: Deploy with `latest` tag
+        if: github.ref_name == 'main'
+        run: pnpm publish --filter @zinnia/bloom  --tag latest
