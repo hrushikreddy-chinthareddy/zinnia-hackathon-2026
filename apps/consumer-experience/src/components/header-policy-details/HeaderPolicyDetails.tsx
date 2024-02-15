@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+
 import styles from './HeaderPolicyDetails.module.css';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {

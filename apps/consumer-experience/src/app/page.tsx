@@ -6,9 +6,8 @@ import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPo
 
 import { AccountValue } from './_policy-overview/AccountValue';
 import { Coverage } from './_policy-overview/Coverage';
-import { UpcomingPremium } from './_policy-overview/UpcomingPremium';
-
 import styles from './_policy-overview/PolicyOverview.module.css';
+import { UpcomingPremium } from './_policy-overview/UpcomingPremium';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components

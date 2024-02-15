@@ -2,6 +2,7 @@ import { Icon, IconType } from '@zdx/bloom/components';
 import Link from 'next/link';
 
 import LogoImage from '@/app/styles/everly/everly-logo.svg';
+
 import styles from './NavBar.module.css';
 
 export function DesktopNav() {

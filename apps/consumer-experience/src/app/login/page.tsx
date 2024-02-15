@@ -1,11 +1,10 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
-import styles from './Login.module.css';
-
-import { Button } from '@zdx/bloom/components';
 
 import heroImage from '@/app/styles/everly/everly-hero-background.png'; // TODO: don't hardcode to everly
 import LogoImage from '@/app/styles/everly/everly-logo.svg'; // TODO: don't hardcode to everly
+
+import styles from './Login.module.css';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
