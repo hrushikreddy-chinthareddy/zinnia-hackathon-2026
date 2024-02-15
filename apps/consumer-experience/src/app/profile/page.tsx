@@ -61,9 +61,7 @@ export default async function Profile() {
             content: (
               <div className="typographyContentBodySm">
                 <h2 className={styles.itemHeader}>Email</h2>
-                <FieldData
-                  Label={<Label labelFor="REMOVE">Personal email</Label>}
-                >
+                <FieldData Label={<Label>Personal email</Label>}>
                   <div>
                     <p>example@example.com</p>
                   </div>

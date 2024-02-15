@@ -65,7 +65,6 @@ export const Coverage = () => {
           large
           Label={
             <Label
-              labelFor="Coverage"
               // eslint-disable-next-line react/jsx-key
               interactiveElements={[<CoveragePopover />]}
             >
