@@ -1,0 +1,29 @@
+@import url(./fonts);
+
+#storybook-docs .sbdocs > h1 {
+  background-image: var(--gradient-accent-color-gradient-linear);
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 36px;
+  line-height: 44px;
+  letter-spacing: 0em;
+  text-indent: 0px;
+  padding: 64px 32px 48px;
+  color: white;
+}
+
+.gradient-highlight {
+  position: relative;
+}
+.gradient-highlight::after {
+  position: absolute;
+  content: "";
+  /* top: 120%; */
+  height: 4px;
+  left: 0;
+  width: 100%;
+  top: 110%;
+  background-image: var(--gradient-accent-color-gradient-linear);
+
+}
