@@ -11,7 +11,7 @@ import clsx from 'clsx';
 
 const navRoutes = [
   { url: '/', displayName: 'Policy overview', icon: IconType.DASHBOARD },
-  { url: '/', displayName: 'Documents', icon: IconType.DOCUMENT_TEXT },
+  { url: '/documents', displayName: 'Documents', icon: IconType.DOCUMENT_TEXT },
   { url: '/profile', displayName: 'Profile', icon: IconType.CIRCLE_USER },
 ];
 
@@ -69,11 +69,15 @@ export const MobileNav = () => {
             <div className={styles.innerContent}>
               <ul>
                 {navRoutes.map(route => {
+                  const isCurrentPath = pathName === route.url;
                   return (
                     <li key={route.displayName} className={styles.navListItem}>
                       <Link
                         href={route.url}
-                        className={`${styles.navItem} typography-nav-nav-drawer`}
+                        className={clsx(
+                          `${styles.navItem} typography-nav-nav-drawer`,
+                          { [styles.selected]: isCurrentPath }
+                        )}
                       >
                         <span className={styles.firstItem}>
                           <Icon
