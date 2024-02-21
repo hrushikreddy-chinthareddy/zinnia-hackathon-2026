@@ -7,6 +7,7 @@ import { zIndexOrder } from '@/utils/zIndexOrder';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Icon, IconType } from '@zinnia/bloom/components';
+import clsx from 'clsx';
 
 const navRoutes = [
   { url: '/', displayName: 'Policy overview', icon: IconType.DASHBOARD },
@@ -21,16 +22,43 @@ export const MobileNav = () => {
   // THIS ONLY WORKS IF DONT WANT TO CLOSE NAV ON CLICK OF CURRENT ROUTE
   useEffect(() => {
     if (open) {
-      console.log('you in here?');
       setOpen(false);
     }
   }, [pathName]);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.navbar}>
       <Dialog.Root modal open={open} onOpenChange={setOpen}>
-        <Dialog.Trigger asChild>
-          <button>Button</button>
+        <Dialog.Trigger>
+          <button
+            style={{
+              width: '24px',
+              height: '24px',
+              marginRight: '0.5rem',
+            }}
+            className={clsx({ [styles.navOpen]: open })}
+          >
+            <svg viewBox="0 0 100 100" className={styles.hamburgerMenu}>
+              <rect
+                className={`${styles.line} ${styles.top}`}
+                x={0}
+                y={15}
+                rx="5"
+              />
+              <rect
+                className={`${styles.line} ${styles.middle}`}
+                x={0}
+                y={45}
+                rx="5"
+              />
+              <rect
+                className={`${styles.line} ${styles.bottom}`}
+                x={0}
+                y={75}
+                rx="5"
+              />
+            </svg>
+          </button>
         </Dialog.Trigger>
         <Dialog.Portal>
           <Dialog.Overlay />
@@ -42,26 +70,38 @@ export const MobileNav = () => {
               <ul>
                 {navRoutes.map(route => {
                   return (
-                    <li key={route.displayName}>
-                      <Link href={route.url} className={styles.navItem}>
-                        <Icon
-                          type={route.icon}
-                          color="var(--color-nav-menu-menu-icon-default-fill, #fff)"
-                        />
-                        {route.displayName}
+                    <li key={route.displayName} className={styles.navListItem}>
+                      <Link
+                        href={route.url}
+                        className={`${styles.navItem} typography-nav-nav-drawer`}
+                      >
+                        <span className={styles.firstItem}>
+                          <Icon
+                            type={route.icon}
+                            color="var(--color-nav-menu-menu-icon-default-fill, #fff)"
+                          />
+                        </span>
+                        <span>{route.displayName}</span>
                       </Link>
                     </li>
                   );
                 })}
               </ul>
               <div className={styles.globalNavItems}>
-                <a href="/api/auth/logout" className={styles.navItem}>
-                  <Icon
-                    type={IconType.LOGOUT}
-                    color="var(--color-nav-menu-menu-icon-default-fill, #fff)"
-                  />
-                  Sign out
-                </a>
+                <div className={styles.navListItem}>
+                  <a
+                    href="/api/auth/logout"
+                    className={`${styles.navItem} typography-nav-nav-drawer`}
+                  >
+                    <span className={styles.firstItem}>
+                      <Icon
+                        type={IconType.LOGOUT}
+                        color="var(--color-nav-menu-menu-icon-default-fill, #fff)"
+                      />
+                    </span>
+                    <span>Sign out</span>
+                  </a>
+                </div>
               </div>
             </div>
           </Dialog.Content>
