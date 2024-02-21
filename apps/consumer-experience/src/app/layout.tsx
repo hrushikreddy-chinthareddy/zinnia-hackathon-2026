@@ -4,10 +4,9 @@ import localFont from 'next/font/local';
 
 import type { Metadata } from 'next';
 
-import { DesktopNav } from '@/components/nav-bar/DesktopNav';
-
 import './styles/globals.css';
 import styles from './layout.module.css';
+import { Nav } from '@/components/Nav';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
@@ -27,7 +26,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await getSession();
-
   if (!session) {
     return (
       <html lang="en" className={myFont.className}>
@@ -42,7 +40,7 @@ export default async function RootLayout({
     <html lang="en" className={myFont.className}>
       <UserProvider>
         <body className={styles.body}>
-          <DesktopNav />
+          <Nav />
           <div className={styles.container}>
             <div className={styles.content}>{children}</div>
           </div>

@@ -4,6 +4,10 @@
   padding: 1rem;
   align-items: center;
   justify-content: space-between;
+  box-shadow: var(
+    --shadow-elevation-elevation-light-08,
+    0 3.200000047683716px 7.199999809265137px 0 rgba(0, 0, 0, 0.13)
+  );
 }
 
 .logo {
