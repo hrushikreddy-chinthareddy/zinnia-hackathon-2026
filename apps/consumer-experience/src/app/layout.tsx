@@ -10,6 +10,7 @@ import { DesktopNav } from '@/components/desktop-nav/DesktopNav';
 import { MobileNav } from '@/components/mobile-nav/MobileNav';
 
 import styles from './layout.module.css';
+import { Footer } from '@/components/footer/Footer';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
@@ -48,7 +49,12 @@ export default async function RootLayout({
           <MobileNav />
           <DesktopNav />
           <div className={styles.container}>
-            <div className={styles.content}>{children}</div>
+            <div className={styles.content}>
+              <>
+                {children}
+                <Footer />
+              </>
+            </div>
           </div>
         </body>
       </UserProvider>

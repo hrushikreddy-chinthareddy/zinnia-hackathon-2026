@@ -21,15 +21,14 @@ export const MobileNav = () => {
   const [open, setOpen] = useState(false);
   const pathName = usePathname();
 
-  // THIS ONLY WORKS IF DONT WANT TO CLOSE NAV ON CLICK OF CURRENT ROUTE
+  // This won't close the menu if user clicks the path they are currently on
   useEffect(() => {
-    if (open) {
-      setOpen(false);
-    }
-  }, [pathName]);
+    setOpen(false);
+  }, [pathName, setOpen]);
 
   return (
     <div className={styles.container}>
+      {/* TODO: add message to indicate press esc to close */}
       <Dialog.Root modal open={open} onOpenChange={setOpen}>
         <Dialog.Trigger asChild>
           <button
