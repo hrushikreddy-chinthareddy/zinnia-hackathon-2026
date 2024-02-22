@@ -28,12 +28,12 @@ export const MobileNav = () => {
 
   return (
     <div className={styles.container}>
-      {/* TODO: add message to indicate press esc to close */}
-      <Dialog.Root modal open={open} onOpenChange={setOpen}>
+      <button />
+      <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Trigger asChild>
           <button
             className={styles.menuTrigger}
-            aria-label="Opens navigation menu"
+            aria-label="Opens navigation menu. Press escape to close."
           >
             <svg viewBox="0 0 100 100" className={styles.hamburgerMenu}>
               <rect
@@ -60,6 +60,7 @@ export const MobileNav = () => {
         <Dialog.Portal>
           <Dialog.Overlay />
           <Dialog.Content
+            onPointerDownOutside={e => e.preventDefault()}
             className={styles.content}
             style={{ zIndex: zIndexOrder.Dialog }}
           >
