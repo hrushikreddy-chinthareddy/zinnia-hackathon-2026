@@ -1,7 +1,8 @@
 .container {
   background-color: white;
   display: flex;
-  padding: 1rem;
+  padding: var(--measure-dimension-padding-2xl, 1rem)
+    var(--measure-dimension-padding-4xl, 2rem);
   align-items: center;
   justify-content: space-between;
   box-shadow: var(

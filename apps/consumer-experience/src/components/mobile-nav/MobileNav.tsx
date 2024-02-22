@@ -29,7 +29,7 @@ export const MobileNav = () => {
   return (
     <div className={styles.navbar}>
       <Dialog.Root modal open={open} onOpenChange={setOpen}>
-        <Dialog.Trigger>
+        <Dialog.Trigger asChild>
           <button
             style={{
               width: '24px',
