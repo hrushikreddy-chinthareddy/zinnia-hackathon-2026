@@ -5,8 +5,11 @@ import localFont from 'next/font/local';
 import type { Metadata } from 'next';
 
 import './styles/globals.css';
+
+import { DesktopNav } from '@/components/desktop-nav/DesktopNav';
+import { MobileNav } from '@/components/mobile-nav/MobileNav';
+
 import styles from './layout.module.css';
-import { Nav } from '@/components/Nav';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
@@ -40,7 +43,10 @@ export default async function RootLayout({
     <html lang="en" className={myFont.className}>
       <UserProvider>
         <body className={styles.body}>
-          <Nav />
+          {/* To prevent hydration error by trying to render these dynamically using screen width,
+          dynamically displaying using media queries */}
+          <MobileNav />
+          <DesktopNav />
           <div className={styles.container}>
             <div className={styles.content}>{children}</div>
           </div>

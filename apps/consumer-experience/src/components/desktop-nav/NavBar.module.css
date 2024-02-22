@@ -32,3 +32,9 @@
 .separator {
   color: var(--color-base-border-border-subtle, #ccc);
 }
+
+@media (width < 500px) {
+  .container {
+    display: none;
+  }
+}

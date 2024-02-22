@@ -1,13 +1,15 @@
 'use client';
 import * as Dialog from '@radix-ui/react-dialog';
-import styles from './MobileNav.module.css';
-import Link from 'next/link';
-import LogoImage from '@/app/styles/everly/everly-logo.svg';
-import { zIndexOrder } from '@/utils/zIndexOrder';
-import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
 import { Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
+import LogoImage from '@/app/styles/everly/everly-logo.svg';
+import { zIndexOrder } from '@/utils/zIndexOrder';
+
+import styles from './MobileNav.module.css';
 
 const navRoutes = [
   { url: '/', displayName: 'Policy overview', icon: IconType.DASHBOARD },
@@ -27,17 +29,10 @@ export const MobileNav = () => {
   }, [pathName]);
 
   return (
-    <div className={styles.navbar}>
+    <div className={styles.container}>
       <Dialog.Root modal open={open} onOpenChange={setOpen}>
         <Dialog.Trigger asChild>
-          <button
-            style={{
-              width: '24px',
-              height: '24px',
-              marginRight: '0.5rem',
-            }}
-            className={styles.menuTrigger}
-          >
+          <button className={styles.menuTrigger}>
             <svg viewBox="0 0 100 100" className={styles.hamburgerMenu}>
               <rect
                 className={`${styles.line} ${styles.top}`}
