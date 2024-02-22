@@ -32,7 +32,10 @@ export const MobileNav = () => {
     <div className={styles.container}>
       <Dialog.Root modal open={open} onOpenChange={setOpen}>
         <Dialog.Trigger asChild>
-          <button className={styles.menuTrigger}>
+          <button
+            className={styles.menuTrigger}
+            aria-label="Opens navigation menu"
+          >
             <svg viewBox="0 0 100 100" className={styles.hamburgerMenu}>
               <rect
                 className={`${styles.line} ${styles.top}`}
@@ -71,7 +74,7 @@ export const MobileNav = () => {
                         href={route.url}
                         className={clsx(
                           `${styles.navItem} typography-nav-nav-drawer`,
-                          { [styles.selected]: isCurrentPath }
+                          { [styles.selected as string]: isCurrentPath }
                         )}
                       >
                         <span className={styles.firstItem}>
