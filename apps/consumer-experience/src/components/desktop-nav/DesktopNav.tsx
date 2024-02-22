@@ -7,7 +7,7 @@ import styles from './NavBar.module.css';
 
 export function DesktopNav() {
   return (
-    <div className={styles.container}>
+    <nav className={styles.container}>
       <Link href="/" className="justify-self-start">
         <LogoImage alt="Company Logo" className={styles.logo}></LogoImage>
       </Link>
@@ -26,6 +26,6 @@ export function DesktopNav() {
         </span>
         <a href="/api/auth/logout">Sign out</a>
       </div>
-    </div>
+    </nav>
   );
 }

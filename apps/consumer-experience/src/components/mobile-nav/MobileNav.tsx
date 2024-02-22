@@ -36,7 +36,7 @@ export const MobileNav = () => {
               height: '24px',
               marginRight: '0.5rem',
             }}
-            className={clsx({ [styles.navOpen]: open })}
+            className={styles.menuTrigger}
           >
             <svg viewBox="0 0 100 100" className={styles.hamburgerMenu}>
               <rect
@@ -66,7 +66,7 @@ export const MobileNav = () => {
             className={styles.content}
             style={{ zIndex: zIndexOrder.Dialog }}
           >
-            <div className={styles.innerContent}>
+            <nav className={styles.innerContent}>
               <ul>
                 {navRoutes.map(route => {
                   const isCurrentPath = pathName === route.url;
@@ -107,7 +107,7 @@ export const MobileNav = () => {
                   </a>
                 </div>
               </div>
-            </div>
+            </nav>
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>

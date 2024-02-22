@@ -20,7 +20,7 @@
   transform-origin: center;
 }
 
-.navOpen {
+.menuTrigger[data-state='open'] {
   .top {
     transform: translateY(30px);
   }
