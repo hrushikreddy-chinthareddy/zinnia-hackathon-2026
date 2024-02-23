@@ -28,7 +28,6 @@ export const MobileNav = () => {
 
   return (
     <div className={styles.container}>
-      <button />
       <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Trigger asChild>
           <button
