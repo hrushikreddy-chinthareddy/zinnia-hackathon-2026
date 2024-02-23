@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 import LogoImage from '@/app/styles/everly/everly-logo.svg';
 
-import styles from './NavBar.module.css';
+import styles from './DesktopNav.module.css';
 
 export function DesktopNav() {
   return (
@@ -21,10 +21,12 @@ export function DesktopNav() {
           <Icon type={IconType.CIRCLE_USER} />
           Profile
         </Link>
-        <span aria-hidden className={styles.separator}>
-          |
-        </span>
-        <a href="/api/auth/logout">Sign out</a>
+        <a
+          href="/api/auth/logout"
+          className={`${styles.navItem} ${styles.signOut}`}
+        >
+          Sign out
+        </a>
       </div>
     </nav>
   );
