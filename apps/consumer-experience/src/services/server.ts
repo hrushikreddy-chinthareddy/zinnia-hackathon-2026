@@ -1,7 +1,7 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { cookies } from 'next/headers';
 
-import applyMockAdapter from '@/utils/mocks';
+import applyMockAdapter from '@/services/mocks';
 
 import { axios } from './http';
 

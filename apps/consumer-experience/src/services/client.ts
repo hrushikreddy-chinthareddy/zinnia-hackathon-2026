@@ -1,4 +1,4 @@
-import applyMockAdapter from '@/utils/mocks';
+import applyMockAdapter from '@/services/mocks';
 
 import { axios } from './http';
 

@@ -19,6 +19,7 @@
     "@zinnia/bloom": "workspace:*",
     "axios": "^1.6.7",
     "clsx": "^2.1.0",
+    "dayjs": "^1.11.10",
     "next": "14.0.4",
     "npm": "^10.2.5",
     "postcss-flexbugs-fixes": "^5.0.2",
