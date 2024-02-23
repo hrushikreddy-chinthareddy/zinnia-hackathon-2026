@@ -4,7 +4,13 @@
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "env": [
+        "AUTH0_AUDIENCE",
+        "NEXT_PUBLIC_MOCK_API_REQUEST",
+        "NEXT_PUBLIC_BACKEND_URL",
+        "NEXT_PUBLIC_BASE_URL"
+      ]
     },
     "lint": {
       "dependsOn": ["^lint"]

@@ -4,7 +4,7 @@ module.exports = {
   extends: ['@zinnia/eslint-config/next.js'],
   overrides: [
     {
-      files: ['**/*.stories.tsx'],
+      files: ['**/*.stories.tsx', '*.js?(x)', '*.ts?(x)'],
       rules: {
         '@next/next/no-html-link-for-pages': 'off',
       },
