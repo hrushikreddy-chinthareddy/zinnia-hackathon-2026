@@ -15,7 +15,7 @@
 
 @media (min-width: 768px) {
   .content {
-    margin: var(--measure-dimension-gap-2xl, 2rem);
+    margin: var(--measure-dimension-margin-md, 2rem);
   }
 }
 

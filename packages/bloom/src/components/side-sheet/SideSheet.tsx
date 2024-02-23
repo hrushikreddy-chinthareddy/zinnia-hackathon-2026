@@ -1,12 +1,12 @@
-"use client";
-import { Icon, IconType } from "../icon";
-import * as Dialog from "@radix-ui/react-dialog";
-import clsx from "clsx";
-import { SideSheetLocation, SideSheetProps } from "./types";
+'use client';
+import { Icon, IconType } from '../icon';
+import * as Dialog from '@radix-ui/react-dialog';
+import clsx from 'clsx';
+import { SideSheetLocation, SideSheetProps } from './types';
 
-import { zIndexOrder } from "../../utils/zIndexOrder";
+import { zIndexOrder } from '../../utils/zIndexOrder';
 
-import styles from "./SideSheet.module.css";
+import styles from './SideSheet.module.css';
 
 export const SideSheet = ({
   children,
@@ -18,7 +18,7 @@ export const SideSheet = ({
 }: SideSheetProps) => {
   // TODO: figure out type here
   const preventInteraction = (
-    event: CustomEvent<{ originalEvent: PointerEvent }>,
+    event: CustomEvent<{ originalEvent: PointerEvent }>
   ) => {
     event.preventDefault();
   };
@@ -53,7 +53,7 @@ export const SideSheet = ({
               <Dialog.Close aria-label="Close">
                 <Icon
                   type={IconType.CLOSE}
-                  color={"var(--color-base-icon-icon-action)"}
+                  color={'var(--color-base-icon-icon-action)'}
                 />
               </Dialog.Close>
             </div>

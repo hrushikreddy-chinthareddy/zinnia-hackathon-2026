@@ -21,7 +21,13 @@ module.exports = {
     node: true,
     browser: true,
   },
-  plugins: ["only-warn", "@typescript-eslint", "check-file", "react-refresh"],
+  plugins: [
+    "only-warn",
+    "@typescript-eslint",
+    "check-file",
+    "react-refresh",
+    "react-hooks",
+  ],
   settings: {
     "import/resolver": {
       typescript: {

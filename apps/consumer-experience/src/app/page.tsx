@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
 
-import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 
@@ -19,18 +18,12 @@ export default function Home() {
   return (
     <>
       <HeaderBreadcrumb title="Policy overview" />
-      <HeaderPolicyDetails
-        className="my-lg"
-        style={{ marginLeft: 0 }}
-        expanded
-      />
+      <HeaderPolicyDetails className="my-lg" expanded />
       <div className={styles.cardContainer}>
         <UpcomingPremium />
         <AccountValue />
         <Coverage />
       </div>
-
-      <Footer />
     </>
   );
 }

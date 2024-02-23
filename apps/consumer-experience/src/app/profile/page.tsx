@@ -29,7 +29,6 @@ export default async function Profile() {
     />
   );
 
-  console.log('my user', session);
   return (
     <div className={styles.pageContainer}>
       <HeaderBreadcrumb title="Profile" />
@@ -49,7 +48,7 @@ export default async function Profile() {
               <div className="typographyContentBodySm">
                 <h2 className={styles.itemHeader}>Phone</h2>
                 <FieldData Label={<Label>Mobile phone</Label>}>
-                  <div>
+                  <div className="typography-content-body-sm">
                     <p>+1 (224) 234-2000</p>
                     <p>Call: 9am-12pm EST</p>
                   </div>
@@ -63,7 +62,9 @@ export default async function Profile() {
                 <h2 className={styles.itemHeader}>Email</h2>
                 <FieldData Label={<Label>Personal email</Label>}>
                   <div>
-                    <p>example@example.com</p>
+                    <p className="typography-content-body-sm">
+                      example@example.com
+                    </p>
                   </div>
                 </FieldData>
               </div>
@@ -75,7 +76,7 @@ export default async function Profile() {
         <div>
           <h2 className={styles.itemHeader}>Name</h2>
           <FieldData Label={<Label>Policy owner</Label>}>
-            <p className="typographyContentBodySm">Michael Williams</p>
+            <p className="typography-content-body-sm">Michael Williams</p>
           </FieldData>
         </div>
       </ClickableCardContainer>

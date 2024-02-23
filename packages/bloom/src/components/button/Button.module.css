@@ -37,7 +37,7 @@
 
     &:hover {
       background-color: var(--color-button-primary-button-primary-hover-fill);
-      border-color: var(--primary-button-primary-hover-border);
+      border-color: var(--color-button-primary-button-primary-hover-border);
       color: var(--color-button-secondary-button-secondary-hover-text);
     }
 
