@@ -1,6 +1,11 @@
 name: Publish to GitHub Packages
 
 on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to build'
+        type: environment
   push:
     branches:
       - "dev"
@@ -9,6 +14,21 @@ on:
       - "packages/bloom/**"
 
 jobs:
+  set-environment-level:
+    runs-on: ubuntu-latest
+    if: github.ref_name == 'dev'
+    steps:
+      - run: |
+          if [ -z "${inputs.environment}"]; then
+            echo: "Environment level is ${input.environment}"
+            exit 1
+          fi
+          if[-z ${github.ref_name}]; then
+            echo: "Refname is ${github.ref_name}"
+            exit 1
+          fi
+          echo "Setting environment level to "
+
   build:
     runs-on: ubuntu-latest
     steps:
@@ -40,6 +60,8 @@ jobs:
         run: pnpm install --filter @zinnia/bloom
       - name: Test deploy package
         if: github.ref_name == 'dev'
+        # Github Package Repo doesn't support tags
+        # But maybe one day we can pubish a dev version of Bloom
         run: pnpm publish --filter @zinnia/bloom --tag next --dry-run --no-git-checks
       - name: Deploy with `latest` tag
         if: github.ref_name == 'main'
