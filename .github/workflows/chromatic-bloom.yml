@@ -14,14 +14,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-            fetch-depth: 0
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Publish to Chromatic
+            fetch-depth: 1
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          run_install: |
+            - args: [--filter @zinnia/bloom]
+      - name: Publish to Bloom to Chromatic
         uses: chromaui/action@latest
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           exitZeroOnChanges: true
           skip: "dependabot/**"
+          workingDir: pacakges/bloom
