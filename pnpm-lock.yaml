@@ -235,9 +235,6 @@ importers:
       '@storybook/addon-mdx-gfm':
         specifier: ^7.6.4
         version: 7.6.13
-      '@storybook/addon-onboarding':
-        specifier: ^1.0.9
-        version: 1.0.11(react-dom@18.2.0)(react@18.2.0)
       '@storybook/blocks':
         specifier: ^7.6.4
         version: 7.6.13(@types/react-dom@18.2.18)(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
@@ -280,6 +277,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^4.2.0
         version: 4.2.1(vite@5.0.12)
+      auto-changelog:
+        specifier: ^2.4.0
+        version: 2.4.0
       chromatic:
         specifier: ^10.3.0
         version: 10.8.0
@@ -6701,6 +6701,20 @@ packages:
   /asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
 
+  /auto-changelog@2.4.0:
+    resolution: {integrity: sha512-vh17hko1c0ItsEcw6m7qPRf3m45u+XK5QyCrrBFViElZ8jnKrPC1roSznrd1fIB/0vR/zawdECCRJtTuqIXaJw==}
+    engines: {node: '>=8.3'}
+    hasBin: true
+    dependencies:
+      commander: 7.2.0
+      handlebars: 4.7.8
+      node-fetch: 2.7.0
+      parse-github-url: 1.0.2
+      semver: 7.6.0
+    transitivePeerDependencies:
+      - encoding
+    dev: true
+
   /autoprefixer@10.4.17(postcss@8.4.34):
     resolution: {integrity: sha512-/cpVNRLSfhOtcGflT13P2794gVSgmPgTR+erw5ifnMLZb0UnSlkK4tquLmkd3BhA+nLo5tX8Cu0upUsGKvKbmg==}
     engines: {node: ^10 || ^12 || >=14}
@@ -12549,6 +12563,12 @@ packages:
       evp_bytestokey: 1.0.3
       pbkdf2: 3.1.2
       safe-buffer: 5.2.1
+    dev: true
+
+  /parse-github-url@1.0.2:
+    resolution: {integrity: sha512-kgBf6avCbO3Cn6+RnzRGLkUsv4ZVqv/VfAYkRsyBcgkshNvVBkRn1FEZcW0Jb+npXQWm2vHPnnOqFteZxRRGNw==}
+    engines: {node: '>=0.10.0'}
+    hasBin: true
     dev: true
 
   /parse-json@5.2.0:

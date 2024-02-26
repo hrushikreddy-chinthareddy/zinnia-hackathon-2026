@@ -56,7 +56,7 @@
     }
   },
   "private": false,
-  "version": "0.0.51",
+  "version": "0.0.53",
   "type": "module",
   "scripts": {
     "prepare": "npm run build",
@@ -69,7 +69,8 @@
     "preview": "vite preview",
     "storybook": "storybook dev --no-open -p 6006",
     "build-storybook": "storybook build",
-    "chromatic": "npx chromatic"
+    "chromatic": "npx chromatic",
+    "changelog": "npx auto-changelog"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.0.5",
@@ -85,7 +86,6 @@
     "@storybook/addon-interactions": "^7.6.4",
     "@storybook/addon-links": "^7.6.4",
     "@storybook/addon-mdx-gfm": "^7.6.4",
-    "@storybook/addon-onboarding": "^1.0.9",
     "@storybook/blocks": "^7.6.4",
     "@storybook/manager-api": "^7.6.4",
     "@storybook/react": "^7.6.4",
@@ -100,6 +100,7 @@
     "@typescript-eslint/eslint-plugin": "^6.10.0",
     "@typescript-eslint/parser": "^6.10.0",
     "@vitejs/plugin-react": "^4.2.0",
+    "auto-changelog": "^2.4.0",
     "chromatic": "^10.3.0",
     "eslint": "^8.53.0",
     "eslint-plugin-react-hooks": "^4.6.0",
@@ -116,5 +117,13 @@
     "url": "https://github.com/zinnia/digital-experience-monorepo/issues"
   },
   "readme": "ERROR: No README data found!",
-  "_id": "@zinnia/bloom@0.0.23"
+  "_id": "@zinnia/bloom@0.0.23",
+  "auto-changelog": {
+    "output": "src/stories/CHANGELOG.md",
+    "template": "keepachangelog",
+    "unreleased": true,
+    "commitLimit": false,
+    "issuePattern": "[A-Z]+-\\d+",
+    "issueUrl": "https://zinnia.atlassian.net/browse/{id}"
+  }
 }
