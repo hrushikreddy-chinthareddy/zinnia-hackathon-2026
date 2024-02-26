@@ -3,7 +3,7 @@ import {
   AssistiveText,
   AssistiveTextVariant,
   Label,
-} from '@zinnia/bloom/components';
+} from '@zinnia/bloom/components-internal';
 import dayjs from 'dayjs';
 
 import { FieldData } from '@/components/field-data/FieldData';

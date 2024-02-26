@@ -1,4 +1,4 @@
-import { Label } from '@zinnia/bloom/components';
+import { Label } from '@zinnia/bloom/components-internal';
 
 import { FieldData } from '@/components/field-data/FieldData';
 import { isEndDated } from '@/utils/data';

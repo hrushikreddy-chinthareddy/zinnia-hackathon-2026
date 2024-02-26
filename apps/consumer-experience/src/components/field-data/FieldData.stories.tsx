@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { Icon, IconType, Label } from '@zinnia/bloom/components';
+import { Icon, IconType, Label } from '@zinnia/bloom/components-internal';
 
 import { FieldData, FieldDataProps } from './FieldData';
 
