@@ -1,4 +1,3 @@
-"use client";
 import { Icon, IconType } from "../icon";
 import * as ReactPopover from "@radix-ui/react-popover";
 import clsx from "clsx";
