@@ -16,7 +16,7 @@ import styles from './Profile.module.css';
 export default async function Profile() {
   const { data } = await serverApi.get(`${baseAppUrl}/api/profile`);
 
-  const bankDetails = data.bankDetails[0];
+  const bankDetails = data.bankDetails?.[0];
 
   const listItems = [];
 
