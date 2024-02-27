@@ -1,4 +1,4 @@
-import { Icon, IconType } from '@zinnia/bloom/components-internal';
+import { Icon, IconType } from '@zinnia/bloom/internal/components';
 import Link from 'next/link';
 
 import LogoImage from '@/app/styles/everly/everly-logo.svg';

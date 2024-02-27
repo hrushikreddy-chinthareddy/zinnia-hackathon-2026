@@ -1,4 +1,4 @@
-import { Label } from '@zinnia/bloom/components-internal';
+import { Label } from '@zinnia/bloom/internal/components';
 
 import { FieldData } from '@/components/field-data/FieldData';
 import { formatPhoneNumberWithExtension, isEndDated } from '@/utils/data';

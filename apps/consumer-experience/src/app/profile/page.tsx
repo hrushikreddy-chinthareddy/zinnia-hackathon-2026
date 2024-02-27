@@ -1,4 +1,4 @@
-import { Label } from '@zinnia/bloom/components-internal';
+import { Label } from '@zinnia/bloom/internal/components';
 
 import { BankData } from '@/components/bank-data/BankData';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';

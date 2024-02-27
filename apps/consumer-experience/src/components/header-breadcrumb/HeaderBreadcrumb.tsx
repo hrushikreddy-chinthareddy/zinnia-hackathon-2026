@@ -4,7 +4,7 @@ import {
   IconType,
   Popover,
   PopoverPlacement,
-} from '@zinnia/bloom/components-internal';
+} from '@zinnia/bloom/internal/components';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ReactNode } from 'react';

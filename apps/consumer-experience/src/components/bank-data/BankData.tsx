@@ -2,7 +2,7 @@ import {
   Label,
   AssistiveText,
   AssistiveTextVariant,
-} from '@zinnia/bloom/components-internal';
+} from '@zinnia/bloom/internal/components';
 
 import { toTitleCase } from '@/utils/strings';
 

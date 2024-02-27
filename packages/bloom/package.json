@@ -1,6 +1,6 @@
 {
   "name": "@zinnia/bloom",
-  "version": "0.0.55",
+  "version": "0.0.57",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zinnia/digital-experience-monorepo.git"
@@ -42,12 +42,12 @@
       "import": "./dist/components.css",
       "require": "./dist/components.css"
     },
-    "./components-internal": {
-      "import": "./src/components/index.ts"
-    },
     "./components": {
       "import": "./dist/components.js",
       "require": "./dist/components.cjs"
+    },
+    "./internal/components": {
+      "import": "./src/components/index.ts"
     }
   },
   "typesVersions": {
@@ -58,7 +58,7 @@
       "./components": [
         "dist/components.d.ts"
       ],
-      "./components-internal": [
+      "./internal/components": [
         "dist/components.d.ts"
       ]
     }
