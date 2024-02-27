@@ -14,7 +14,7 @@ jobs:
     with:
       project-name: Consumer Experience
       filter-path: consumer-experience
-      working-dir: app/consumer-experience
+      working-dir: apps/consumer-experience
     secrets:
       chromatic-token: ${{ secrets.CHROMATIC_PROJECT_TOKEN_CXP }}
       
