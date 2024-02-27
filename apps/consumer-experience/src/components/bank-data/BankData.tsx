@@ -6,6 +6,8 @@ import {
 
 import { toSentenceCase, toTitleCase } from '@/utils/strings';
 
+import { toTitleCase } from '@/utils/strings';
+
 import styles from './BankData.module.css';
 import { FieldData } from '../field-data/FieldData';
 
