@@ -145,8 +145,8 @@ importers:
         specifier: ^1.22.0
         version: 1.22.0(axios@1.6.7)
       chromatic:
-        specifier: ^10.3.0
-        version: 10.8.0
+        specifier: ^11.0.0
+        version: 11.0.0
       eslint:
         specifier: ^8.56.0
         version: 8.56.0
@@ -7286,6 +7286,19 @@ packages:
 
   /chromatic@10.8.0:
     resolution: {integrity: sha512-DdgUSJJ5u+Czf+KZI+1NRz4RP/PbpcytWSUtpgqEBolGDw65VYwjI489yis+jfwKMev1VWEhj1xMYGITbD6XIA==}
+    hasBin: true
+    peerDependencies:
+      '@chromatic-com/cypress': ^0.5.2 || ^1.0.0
+      '@chromatic-com/playwright': ^0.5.2 || ^1.0.0
+    peerDependenciesMeta:
+      '@chromatic-com/cypress':
+        optional: true
+      '@chromatic-com/playwright':
+        optional: true
+    dev: true
+
+  /chromatic@11.0.0:
+    resolution: {integrity: sha512-utzRVqdMrpzYwZNf7dHWU0z0/rx6SH/FUVNozQxYHDtQfYUdEj+Ro4OSch5+Wsk2FoUmznJyLkaC2J839z1N7A==}
     hasBin: true
     peerDependencies:
       '@chromatic-com/cypress': ^0.5.2 || ^1.0.0

@@ -14,7 +14,7 @@ const config: StorybookConfig = {
     name: '@storybook/nextjs',
     options: {},
   },
-  staticDirs: ['../public', '../src/app/styles/'],
+  staticDirs: ['../public', '../src/app/styles'],
   docs: {
     autodocs: 'tag',
   },
@@ -29,24 +29,23 @@ const config: StorybookConfig = {
     }
 
     if (config.module && config.module.rules) {
+      const svgRegex = /\.svg$/
       // disable whatever is already set to load SVGs
-      config.module.rules.map(
-        rule => {
-          if(rule && rule !== "..." && rule.test) {
-            const svgRegex = new RegExp(/\.svg$/)
-            if(rule.test) {
-              rule.test = svgRegex
-
-            } else {
-              rule.exclude = svgRegex
-            }
-          }
-        }
-      );
+      config.module.rules.find(rule => {
+        // make sure rule is a RuleSetRule
+        // since this type is not exported from webpack gotta eliminate other types
+        // we only want rules that have a test prop
+        if(!rule || rule === '...' || !rule.test) return
+        const { test } = rule
+        if (test instanceof RegExp && !test.test('.svg')) return
+        if (typeof test === 'string' && !(svgRegex.test(test))) return
+        if ((test instanceof Function) && (!test('.svg'))) return
+        return rule.exclude = svgRegex
+      });
 
       // add SVGR instead
       config.module.rules.push({
-        test: /\.svg$/,
+        test: svgRegex,
         enforce: 'pre',
         loader: require.resolve('@svgr/webpack'),
       });
