@@ -1,4 +1,4 @@
-name: "Chromatic CI"
+name: "Chromatic Bloom"
 
 on:
   workflow_dispatch:
@@ -10,21 +10,11 @@ on:
 
 jobs:
   chromatic:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-            fetch-depth: 0
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          run_install: |
-            - args: [--filter @zinnia/bloom]
-      - name: Publish to Bloom to Chromatic
-        uses: chromaui/action@latest
-        with:
-          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          exitZeroOnChanges: true
-          skip: "dependabot/**"
-          workingDir: packages/bloom
+    uses: './.github/workflows/build-chromatic.yml'
+    with:
+      project-name: Bloom
+      filter-path: '@zinnia/bloom'
+      working-dir: packages/bloom
+    secrets:
+      chromatic-token: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+      

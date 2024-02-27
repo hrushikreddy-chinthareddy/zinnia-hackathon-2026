@@ -44,9 +44,15 @@ importers:
       clsx:
         specifier: ^2.1.0
         version: 2.1.0
+      consumer-experience:
+        specifier: workspace:^
+        version: 'link:'
       dayjs:
         specifier: ^1.11.10
         version: 1.11.10
+      filter:
+        specifier: ^0.1.1
+        version: 0.1.1
       next:
         specifier: 14.0.4
         version: 14.0.4(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)
@@ -9385,6 +9391,10 @@ packages:
     resolution: {integrity: sha512-lO3ttPjHZRfjMcxWKb1j1eDhTFsu4meeR3lnMcnBFhk6RuLhvEiuALu2TlfL310ph4lCYYwgF/ElIjdP739tdg==}
     engines: {node: '>=8'}
     dev: true
+
+  /filter@0.1.1:
+    resolution: {integrity: sha512-fHi0Gg8j7NJHmOJITCQZBwN2dPT03KiOllxf6xkT+tr8WAAUcgYVwZXc2F13wgXHwyVwY/LpA/O9c+tHi7aSPg==}
+    dev: false
 
   /finalhandler@1.2.0:
     resolution: {integrity: sha512-5uXcUVftlQMFnWC9qu/svkWv3GTd2PfUhK/3PLkYNAe7FbqJMt3515HaxE6eRL74GdsriiwujiawdaB1BpEISg==}

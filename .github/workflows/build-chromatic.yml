@@ -1,0 +1,39 @@
+name: "Chromatic CI"
+
+on:
+  workflow_call:
+    inputs:
+      project-name:
+        type: string
+        required: true
+      filter-path:
+        type: string
+        required: true
+        description: path passed to pnpm --filter option
+      working-dir:
+        type: string
+        required: true
+    secrets:
+      chromatic-token:
+        required: true
+
+jobs:
+  chromatic:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+            fetch-depth: 0
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          run_install: |
+            - args: [--filter ${{ inputs.filter-path }}]
+      - name: Publish to ${{ inputs.project-name }} to Chromatic
+        uses: chromaui/action@latest
+        with:
+          projectToken: ${{ secrets.chromatic-token }}
+          exitZeroOnChanges: true
+          skip: "dependabot/**"
+          workingDir: ${{ inputs.working-dir }}

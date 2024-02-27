@@ -1,0 +1,20 @@
+name: "Chromatic Consumer Experience"
+
+on:
+  workflow_dispatch:
+  push:
+    branches-ignore:
+      - 'dependabot/**'
+    paths:
+      - "apps/consumer-experience/**"
+
+jobs:
+  chromatic:
+    uses: './.github/workflows/build-chromatic.yml'
+    with:
+      project-name: Consumer Experience
+      filter-path: consumer-experience
+      working-dir: app/consumer-experience
+    secrets:
+      chromatic-token: ${{ secrets.CHROMATIC_PROJECT_TOKEN_CXP }}
+      
