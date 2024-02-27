@@ -14,7 +14,7 @@ const config: StorybookConfig = {
     name: '@storybook/nextjs',
     options: {},
   },
-  staticDirs: ['../public', '../src/app/styles/icons/'],
+  staticDirs: ['../public', '../src/app/styles/'],
   docs: {
     autodocs: 'tag',
   },
@@ -30,10 +30,19 @@ const config: StorybookConfig = {
 
     if (config.module && config.module.rules) {
       // disable whatever is already set to load SVGs
-      const fileLoaderRule = config.module.rules.find(
-        rule => rule && rule.test && rule.test?.test('.svg')
+      config.module.rules.map(
+        rule => {
+          if(rule && rule !== "..." && rule.test) {
+            const svgRegex = new RegExp(/\.svg$/)
+            if(rule.test) {
+              rule.test = svgRegex
+
+            } else {
+              rule.exclude = svgRegex
+            }
+          }
+        }
       );
-      fileLoaderRule.exclude = /\.svg$/;
 
       // add SVGR instead
       config.module.rules.push({

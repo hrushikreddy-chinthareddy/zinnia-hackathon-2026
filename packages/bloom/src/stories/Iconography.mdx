@@ -1,6 +1,6 @@
 import { Meta, Title, IconGallery, IconItem } from '@storybook/blocks';
+import { Icons } from '/components'
 
-import { Icon, IconType, Icons } from '../components/icon/Icon.tsx';
 
 <Meta title="Iconography" />
 
@@ -27,17 +27,19 @@ import { Icon, IconType, Icons } from '../components/icon/Icon.tsx';
 ### Icons - Outlined
 
 <IconGallery>
-  {Object.keys(IconType).map(key => {
-    return (
-      <IconItem name={key.toLowerCase()} key={key}>
-        <Icon type={IconType[key]} />
-      </IconItem>
-    );
-  })}
+  {
+      Object.keys(IconType).map(key => {
+        return (
+          <IconItem name= { key.toLowerCase() } key = { key } >
+            <Icon type={ IconType[key] } />
+                      < /IconItem>
+              );
+            })
+          }
 </IconGallery>
 
 ### Icons - Filled
-
+```jsx
 <IconGallery>
   {Object.values(IconType).map((key) => {
     const filledKey = `${key}Filled`
@@ -55,5 +57,5 @@ import { Icon, IconType, Icons } from '../components/icon/Icon.tsx';
     );
 
 })}
-
 </IconGallery>
+```

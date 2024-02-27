@@ -89,7 +89,7 @@ importers:
         version: 7.6.13(@types/react-dom@18.2.18)(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
       '@storybook/nextjs':
         specifier: ^7.6.7
-        version: 7.6.13(@swc/core@1.4.0)(esbuild@0.18.20)(next@14.0.4)(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)(webpack@5.90.1)
+        version: 7.6.13(@swc/core@1.4.0)(@types/webpack@5.28.5)(esbuild@0.18.20)(next@14.0.4)(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)(webpack@5.90.1)
       '@storybook/react':
         specifier: ^7.6.7
         version: 7.6.13(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)
@@ -120,6 +120,9 @@ importers:
       '@types/react-dom':
         specifier: ^18
         version: 18.2.18
+      '@types/webpack':
+        specifier: ^5.28.5
+        version: 5.28.5(@swc/core@1.4.0)(esbuild@0.18.20)
       '@typescript-eslint/eslint-plugin':
         specifier: ^6.18.0
         version: 6.21.0(@typescript-eslint/parser@6.21.0)(eslint@8.56.0)(typescript@5.3.3)
@@ -141,6 +144,9 @@ importers:
       axios-mock-adapter:
         specifier: ^1.22.0
         version: 1.22.0(axios@1.6.7)
+      chromatic:
+        specifier: ^10.3.0
+        version: 10.8.0
       eslint:
         specifier: ^8.56.0
         version: 8.56.0
@@ -3153,7 +3159,7 @@ packages:
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
     dev: true
 
-  /@pmmmwh/react-refresh-webpack-plugin@0.5.11(react-refresh@0.14.0)(webpack@5.90.1):
+  /@pmmmwh/react-refresh-webpack-plugin@0.5.11(@types/webpack@5.28.5)(react-refresh@0.14.0)(webpack@5.90.1):
     resolution: {integrity: sha512-7j/6vdTym0+qZ6u4XbSAxrWBGYSdCfTzySkj7WAFgDLmSyWlOrWvpyzxlFh5jtw9dn0oL/jtW+06XfFiisN3JQ==}
     engines: {node: '>= 10.13'}
     peerDependencies:
@@ -3179,6 +3185,7 @@ packages:
       webpack-plugin-serve:
         optional: true
     dependencies:
+      '@types/webpack': 5.28.5(@swc/core@1.4.0)(esbuild@0.18.20)
       ansi-html-community: 0.0.8
       common-path-prefix: 3.0.0
       core-js-pure: 3.35.1
@@ -4761,7 +4768,7 @@ packages:
     resolution: {integrity: sha512-TXJJd5RAKakWx4BtpwvSNdgTDkKM6RkXU8GK34S/LhidQ5Pjz3wcnqb0TxEkfhK/ztbP8nKHqXFwLfa2CYkvQw==}
     dev: true
 
-  /@storybook/nextjs@7.6.13(@swc/core@1.4.0)(esbuild@0.18.20)(next@14.0.4)(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)(webpack@5.90.1):
+  /@storybook/nextjs@7.6.13(@swc/core@1.4.0)(@types/webpack@5.28.5)(esbuild@0.18.20)(next@14.0.4)(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)(webpack@5.90.1):
     resolution: {integrity: sha512-DCgr82MgUgrahd9Yjq8a9o2jQSGKcTc/GdkPYzcItqHq1w/VCnFsZnWRTD69cFcYJNU0ViK+1reG0LZqW0g+Qg==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
@@ -4797,7 +4804,7 @@ packages:
       '@storybook/core-common': 7.6.13
       '@storybook/core-events': 7.6.13
       '@storybook/node-logger': 7.6.13
-      '@storybook/preset-react-webpack': 7.6.13(@babel/core@7.23.9)(@swc/core@1.4.0)(esbuild@0.18.20)(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)
+      '@storybook/preset-react-webpack': 7.6.13(@babel/core@7.23.9)(@swc/core@1.4.0)(@types/webpack@5.28.5)(esbuild@0.18.20)(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)
       '@storybook/preview-api': 7.6.13
       '@storybook/react': 7.6.13(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)
       '@types/node': 18.19.14
@@ -4855,7 +4862,7 @@ packages:
     resolution: {integrity: sha512-6NohciDuEPWSjMrUfhFjawfFUCvR70IDtAjjYhfXlSesyt06fXqbht1VrKhSsRjvwzbhYeiza5Uh/ujvSgxeGg==}
     dev: true
 
-  /@storybook/preset-react-webpack@7.6.13(@babel/core@7.23.9)(@swc/core@1.4.0)(esbuild@0.18.20)(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3):
+  /@storybook/preset-react-webpack@7.6.13(@babel/core@7.23.9)(@swc/core@1.4.0)(@types/webpack@5.28.5)(esbuild@0.18.20)(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3):
     resolution: {integrity: sha512-ywQfwR4+uUHslbPYPkhGnp50eFL5c8QM5YE7gVd6ue58+nUXu984T5+WcRR62rqoycO2q7CdfASlb72S8PFkEA==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
@@ -4872,7 +4879,7 @@ packages:
       '@babel/core': 7.23.9
       '@babel/preset-flow': 7.23.3(@babel/core@7.23.9)
       '@babel/preset-react': 7.23.3(@babel/core@7.23.9)
-      '@pmmmwh/react-refresh-webpack-plugin': 0.5.11(react-refresh@0.14.0)(webpack@5.90.1)
+      '@pmmmwh/react-refresh-webpack-plugin': 0.5.11(@types/webpack@5.28.5)(react-refresh@0.14.0)(webpack@5.90.1)
       '@storybook/core-webpack': 7.6.13
       '@storybook/docs-tools': 7.6.13
       '@storybook/node-logger': 7.6.13
@@ -5792,6 +5799,19 @@ packages:
 
   /@types/uuid@9.0.8:
     resolution: {integrity: sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==}
+    dev: true
+
+  /@types/webpack@5.28.5(@swc/core@1.4.0)(esbuild@0.18.20):
+    resolution: {integrity: sha512-wR87cgvxj3p6D0Crt1r5avwqffqPXUkNlnQ1mjU93G7gCuFjufZR4I6j8cz5g1F1tTYpfOOFvly+cmIQwL9wvw==}
+    dependencies:
+      '@types/node': 20.11.16
+      tapable: 2.2.1
+      webpack: 5.90.1(@swc/core@1.4.0)(esbuild@0.18.20)
+    transitivePeerDependencies:
+      - '@swc/core'
+      - esbuild
+      - uglify-js
+      - webpack-cli
     dev: true
 
   /@types/yargs-parser@21.0.3:
