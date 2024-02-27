@@ -26,7 +26,7 @@ export const HeaderBreadcrumb = ({ title, popover }: HeaderBreadcrumbProps) => {
     return null;
   }
 
-  const paths = usePathname().split('/');
+  const paths = (usePathname() || "").split('/');
   const currentPath = paths[paths.length - 1];
 
   // If there's no current path, it means you're at a root url
