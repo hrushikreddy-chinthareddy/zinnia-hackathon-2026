@@ -1,0 +1,1 @@
+export { AllocationColorBar } from './AllocationColorBar';
