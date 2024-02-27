@@ -1,5 +1,5 @@
 import { Meta, Title, IconGallery, IconItem } from '@storybook/blocks';
-import { Icons } from '/components'
+import { Icons } from '../components'
 
 
 <Meta title="Iconography" />
@@ -10,7 +10,7 @@ import { Icons } from '/components'
    - if icon has a filled counterpart include it with same title + Filled e.g. `CloudIcon` & `CloudIconFilled`
 2. Add the icon name to the export enum object in alphabetical order!
 3. Add a key/value pair to the Icons object using the IconType key and the imported element as the value
-   - if there is a filled version the key should look like this "[`${IconType.CLOUD}Filled`]"
+   - if there is a filled version the key should look like this "[`${IconType.CLOUD}.Filled`]"
 4. Update the `stroke` and/or `fill` values on the `path` in the svg file to be `currentColor`
 5. remove `width` and `height` values, so they can be set dynamically from code
 
