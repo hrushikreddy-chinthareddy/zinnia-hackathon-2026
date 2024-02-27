@@ -22,7 +22,7 @@ export const contingentColorOrder = [
   'var(--color-base-surface-surface-bold, #b3b3b3)',
 ];
 
-export interface AllocationBarProps {
+export interface AllocationColorBarProps {
   type: 'beneficiary' | 'contingent';
   allocations: number[];
 }

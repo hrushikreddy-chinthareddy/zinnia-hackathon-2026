@@ -1,6 +1,6 @@
 import styles from './allocationColorBar.module.css';
 import {
-  AllocationBarProps,
+  AllocationColorBarProps,
   beneficiaryColorOrder,
   contingentColorOrder,
 } from './utils';
@@ -8,7 +8,7 @@ import {
 export const AllocationColorBar = ({
   type,
   allocations,
-}: AllocationBarProps) => {
+}: AllocationColorBarProps) => {
   if (!allocations) {
     return null;
   }
@@ -18,7 +18,7 @@ export const AllocationColorBar = ({
 
   // TODO: what should happen if the values dont equal 100? is that possible?
   return (
-    <div className={styles.container}>
+    <div className={styles.container} aria-hidden>
       {allocations?.map((allocation, index) => (
         <span
           style={{
