@@ -1,0 +1,54 @@
+import { Meta, Canvas } from '@storybook/blocks';
+
+import {
+  primaryColorOrder,
+  contingentColorOrder,
+} from '../../components/allocation-color-bar';
+
+<Meta title="Components/AllocationColorBar/Use" />
+
+## What's Available?
+
+This component includes the color bar for both primary and contingent
+beneficiaries as well as the two arrays of colors used,
+so that consumers can build legends to explain the color bar.
+
+<div>
+  <h3>Primary colors: `primaryColorOrder`</h3>
+  {primaryColorOrder.map((color) => (
+    <span
+      style={{
+        width: 16,
+        height: 16,
+        display: 'inline-block',
+        backgroundColor: color,
+        marginRight: '4px',
+      }}
+    />
+  ))}
+
+  <h3>Contingent colors: `contingentColorOrder`</h3>
+  {contingentColorOrder.map((color) => (
+
+<span
+  style={{
+    width: 16,
+    height: 16,
+    display: 'inline-block',
+    backgroundColor: color,
+    marginRight: '4px',
+  }}
+/>
+))}
+
+</div>
+
+## Accessibility
+
+### Screen Reader Treatment
+
+This component is a purely visual representation of beneficiary allocation, so it is hidden from screen readers
+
+### Color Contrast
+
+All colors have been updated to account for different levels of colorblindness.

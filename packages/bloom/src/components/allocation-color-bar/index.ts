@@ -1,6 +1,6 @@
 export { AllocationColorBar } from './AllocationColorBar';
 export {
   type AllocationColorBarProps,
-  beneficiaryColorOrder,
+  primaryColorOrder,
   contingentColorOrder,
 } from './utils';

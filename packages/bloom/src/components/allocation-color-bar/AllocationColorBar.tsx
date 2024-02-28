@@ -1,7 +1,7 @@
 import styles from './allocationColorBar.module.css';
 import {
   AllocationColorBarProps,
-  beneficiaryColorOrder,
+  primaryColorOrder,
   contingentColorOrder,
 } from './utils';
 
@@ -14,7 +14,7 @@ export const AllocationColorBar = ({
   }
 
   const colorArray =
-    type === 'contingent' ? contingentColorOrder : beneficiaryColorOrder;
+    type === 'contingent' ? contingentColorOrder : primaryColorOrder;
 
   // TODO: what should happen if the values dont equal 100? is that possible?
   return (

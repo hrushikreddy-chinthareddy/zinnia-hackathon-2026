@@ -1,4 +1,4 @@
-export const beneficiaryColorOrder = [
+export const primaryColorOrder = [
   'var(--color-fuchsia-color-600-fuchsia, #973B93)',
   'var(--color-yellow-color-300-yellow, #FFD576)',
   'var(--color-aqua-color-800-aqua, #1f3c3d)',
