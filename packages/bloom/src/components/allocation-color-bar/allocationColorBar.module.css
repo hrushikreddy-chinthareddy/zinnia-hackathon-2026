@@ -17,9 +17,3 @@
     margin-right: var(--measure-dimension-z-space-0, 0.125rem);
   }
 }
-
-.colorSection {
-  display: inline-block;
-  height: 100%;
-  vertical-align: top;
-}
