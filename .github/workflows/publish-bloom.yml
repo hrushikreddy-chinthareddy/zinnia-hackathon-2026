@@ -1,12 +1,17 @@
 name: Publish to GitHub Packages
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - "dev"
       - "main"
     paths:
       - "packages/bloom/**"
+  pull_request:
+    branches:
+      - "dev"
+      - "main"
 
 jobs:
   build:
@@ -39,8 +44,11 @@ jobs:
       - name: Install Packages
         run: pnpm install --filter @zinnia/bloom
       - name: Test deploy package
-        if: github.ref_name == 'dev'
-        run: pnpm publish --filter @zinnia/bloom --tag next --dry-run --no-git-checks
+        # Github Package Repo doesn't support tags
+        # But maybe one day we can pubish a dev version of Bloom
+        run: |
+          pnpm publish --filter @zinnia/bloom --tag ${{ github.ref_name }} --dry-run --no-git-checks
       - name: Deploy with `latest` tag
         if: github.ref_name == 'main'
-        run: pnpm publish --filter @zinnia/bloom  --tag latest
+        run: |
+          pnpm publish --filter @zinnia/bloom  --tag latest

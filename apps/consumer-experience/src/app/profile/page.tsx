@@ -1,16 +1,16 @@
-import { Label } from '@zinnia/bloom/components';
+import { Label } from '@zinnia/bloom/internal/components';
 
 import { BankData } from '@/components/bank-data/BankData';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
-import { baseAppUrl } from '@/services/api-config';
-import { serverApi } from '@/services/server';
-
 import { Addresses } from '@/components/person-data/Addresses';
 import { Emails } from '@/components/person-data/Emails';
 import { Phones } from '@/components/person-data/Phones';
+import { baseAppUrl } from '@/services/api-config';
+import { serverApi } from '@/services/server';
+
 import styles from './Profile.module.css';
 
 export default async function Profile() {

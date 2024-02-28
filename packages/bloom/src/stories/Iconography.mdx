@@ -1,6 +1,6 @@
 import { Meta, Title, IconGallery, IconItem } from '@storybook/blocks';
+import { Icons } from '../components'
 
-import { Icon, IconType, Icons } from '../components/icon/Icon.tsx';
 
 <Meta title="Iconography" />
 
@@ -10,7 +10,7 @@ import { Icon, IconType, Icons } from '../components/icon/Icon.tsx';
    - if icon has a filled counterpart include it with same title + Filled e.g. `CloudIcon` & `CloudIconFilled`
 2. Add the icon name to the export enum object in alphabetical order!
 3. Add a key/value pair to the Icons object using the IconType key and the imported element as the value
-   - if there is a filled version the key should look like this "[`${IconType.CLOUD}Filled`]"
+   - if there is a filled version the key should look like this "[`${IconType.CLOUD}.Filled`]"
 4. Update the `stroke` and/or `fill` values on the `path` in the svg file to be `currentColor`
 5. remove `width` and `height` values, so they can be set dynamically from code
 
@@ -27,17 +27,19 @@ import { Icon, IconType, Icons } from '../components/icon/Icon.tsx';
 ### Icons - Outlined
 
 <IconGallery>
-  {Object.keys(IconType).map(key => {
-    return (
-      <IconItem name={key.toLowerCase()} key={key}>
-        <Icon type={IconType[key]} />
-      </IconItem>
-    );
-  })}
+  {
+      Object.keys(IconType).map(key => {
+        return (
+          <IconItem name= { key.toLowerCase() } key = { key } >
+            <Icon type={ IconType[key] } />
+                      < /IconItem>
+              );
+            })
+          }
 </IconGallery>
 
 ### Icons - Filled
-
+```jsx
 <IconGallery>
   {Object.values(IconType).map((key) => {
     const filledKey = `${key}Filled`
@@ -55,5 +57,5 @@ import { Icon, IconType, Icons } from '../components/icon/Icon.tsx';
     );
 
 })}
-
 </IconGallery>
+```

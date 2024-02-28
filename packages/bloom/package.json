@@ -1,5 +1,6 @@
 {
   "name": "@zinnia/bloom",
+  "version": "0.0.57",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zinnia/digital-experience-monorepo.git"
@@ -42,6 +43,10 @@
       "require": "./dist/components.css"
     },
     "./components": {
+      "import": "./dist/components.js",
+      "require": "./dist/components.cjs"
+    },
+    "./internal/components": {
       "import": "./src/components/index.ts"
     }
   },
@@ -50,13 +55,15 @@
       "*": [
         "dist/bloom.d.ts"
       ],
-      "components": [
+      "./components": [
+        "dist/components.d.ts"
+      ],
+      "./internal/components": [
         "dist/components.d.ts"
       ]
     }
   },
   "private": false,
-  "version": "0.0.53",
   "type": "module",
   "scripts": {
     "prepare": "npm run build",
@@ -117,7 +124,6 @@
     "url": "https://github.com/zinnia/digital-experience-monorepo/issues"
   },
   "readme": "ERROR: No README data found!",
-  "_id": "@zinnia/bloom@0.0.23",
   "auto-changelog": {
     "output": "src/stories/CHANGELOG.md",
     "template": "keepachangelog",

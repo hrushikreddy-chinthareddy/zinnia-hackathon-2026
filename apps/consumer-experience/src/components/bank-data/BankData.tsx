@@ -2,11 +2,12 @@ import {
   Label,
   AssistiveText,
   AssistiveTextVariant,
-} from '@zinnia/bloom/components';
+} from '@zinnia/bloom/internal/components';
+
+import { toTitleCase } from '@/utils/strings';
 
 import styles from './BankData.module.css';
 import { FieldData } from '../field-data/FieldData';
-import { toTitleCase } from '@/utils/strings';
 
 export interface BankDataProps {
   accountNumber: number;

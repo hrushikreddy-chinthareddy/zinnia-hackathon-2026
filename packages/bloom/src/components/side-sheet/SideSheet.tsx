@@ -1,4 +1,3 @@
-'use client';
 import { Icon, IconType } from '../icon';
 import * as Dialog from '@radix-ui/react-dialog';
 import clsx from 'clsx';
