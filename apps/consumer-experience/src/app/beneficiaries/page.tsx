@@ -10,11 +10,11 @@ import {
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
+import { baseAppUrl } from '@/services/api-config';
+import { serverApi } from '@/services/server';
 import { formatUSDollars } from '@/utils/currency';
 
 import styles from './Beneficiaries.module.css';
-import { serverApi } from '@/services/server';
-import { baseAppUrl } from '@/services/api-config';
 
 // TODO: this should be a prop
 const policyValue = 1000000;
