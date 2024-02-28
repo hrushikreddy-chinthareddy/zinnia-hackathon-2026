@@ -14,6 +14,7 @@ export const AllocationColorBarBeneficiary: StoryObj<
     type: 'beneficiary',
     allocations: Array(11).fill(9),
   },
+  tags: ['autodocs'],
 };
 
 export const AllocationColorBarContingent: StoryObj<typeof AllocationColorBar> =
