@@ -1,0 +1,56 @@
+import { Meta, Canvas, ColorPalette, ColorItem } from '@storybook/blocks';
+
+import {
+  primaryColorOrder,
+  contingentColorOrder,
+} from '../../components/allocation-color-bar';
+
+export function primaryColors() {
+  return primaryColorOrder.reduce((colorsObj, color) => {
+    const colorParts = color.split(',');
+    const key = colorParts[0].replace('var(--', '')
+    const val = colorParts[1].replace(')', '')
+    colorsObj[key] = val
+
+    return colorsObj
+
+}, {});
+}
+
+export function contingentColors() {
+  return contingentColorOrder.reduce((colorsObj, color) => {
+    const colorParts = color.split(',');
+    const key = colorParts[0].replace('var(--', '')
+    const val = colorParts[1].replace(')', '')
+    colorsObj[key] = val
+
+    return colorsObj
+
+}, {});
+}
+
+<Meta title="Components/AllocationColorBar/Use" />
+
+## What's Available?
+
+This component includes the color bar for both primary and contingent
+beneficiaries as well as the two arrays of colors used,
+so that consumers can build legends to explain the color bar.
+
+<ColorPalette>
+  <ColorItem title="Primary" colors={primaryColors()} />
+</ColorPalette>
+
+<ColorPalette>
+  <ColorItem title="Contingent" colors={contingentColors()} />
+</ColorPalette>
+
+## Accessibility
+
+### Screen Reader Treatment
+
+This component is a purely visual representation of beneficiary allocation, so it is hidden from screen readers
+
+### Color Contrast
+
+All colors have been updated to account for different levels of colorblindness.
