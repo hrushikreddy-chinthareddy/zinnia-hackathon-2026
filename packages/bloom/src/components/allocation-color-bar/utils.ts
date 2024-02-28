@@ -22,7 +22,8 @@ export const contingentColorOrder = [
   'var(--color-base-surface-surface-bold, #b3b3b3)',
 ];
 
-export interface AllocationColorBarProps {
-  type: 'beneficiary' | 'contingent';
+export interface AllocationColorBarProps
+  extends React.HTMLAttributes<HTMLDivElement> {
+  type: 'primary' | 'contingent';
   allocations: number[];
 }
