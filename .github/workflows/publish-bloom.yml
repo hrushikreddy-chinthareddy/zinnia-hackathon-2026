@@ -41,7 +41,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          node-version: "20.10.0"
+          node-version-file: .nvmrc
           registry-url: "https://npm.pkg.github.com/"
           scope: "@zinnia"
       - name: Install Packages
