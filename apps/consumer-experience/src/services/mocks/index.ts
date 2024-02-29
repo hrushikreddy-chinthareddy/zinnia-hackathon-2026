@@ -1,6 +1,7 @@
 import MockAdapter from 'axios-mock-adapter';
 
 import { AxiosInstance } from '@/services/http';
+
 import profileData from './Profile.json';
 import { baseAppUrl } from '../api-config';
 
