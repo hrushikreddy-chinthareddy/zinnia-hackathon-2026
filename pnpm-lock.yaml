@@ -44,9 +44,6 @@ importers:
       clsx:
         specifier: ^2.1.0
         version: 2.1.0
-      consumer-experience:
-        specifier: workspace:^
-        version: 'link:'
       dayjs:
         specifier: ^1.11.10
         version: 1.11.10
