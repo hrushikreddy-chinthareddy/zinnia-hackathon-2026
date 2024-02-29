@@ -18,14 +18,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
-      - name: Read .nvmrc
-        id: node_version
-        run: echo ::set-output name=NODE_VERSION::$(cat .nvmrc)
       - uses: actions/setup-node@v4
         with:
           node-version-file: packages/bloom/.nvmrc
-      - run: pnpm install
+      - uses: pnpm/action-setup@v2
+        with:
+          run_install: |
+            - args: [--filter @zinnia/bloom]
       - run: pnpm run test
 
   publish:
