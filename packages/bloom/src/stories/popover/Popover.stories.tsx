@@ -20,7 +20,6 @@ const meta: Meta<typeof Popover> = {
       </div>
     ),
   ],
-
   argTypes: {
     placement: {
       options: [
@@ -32,13 +31,12 @@ const meta: Meta<typeof Popover> = {
       defaultValue: PopoverPlacement.BottomLeft,
     },
   },
-};
-
+}
 export default meta;
 
 export const DefaultPopover: StoryObj<typeof Popover> = {
   args: {
-    children: 
+    children: (
       <div>
         <p
           style={{
@@ -46,9 +44,10 @@ export const DefaultPopover: StoryObj<typeof Popover> = {
           }}
         >
           Your premium is the amount you pay periodically for insurance
-          coverage. What&rsquo;s shown here is your next scheduled payment.
+          coverage. What’s shown here is your next scheduled payment.
         </p>
-      </div>,
+      </div>
+    ),
     title: "popover title",
     placement: PopoverPlacement.BottomRight,
   },
