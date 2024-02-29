@@ -22,11 +22,11 @@ export interface HeaderBreadcrumbProps {
 }
 
 export const HeaderBreadcrumb = ({ title, popover }: HeaderBreadcrumbProps) => {
+  const paths = (usePathname() || "").split('/');
   if (!title) {
     return null;
   }
 
-  const paths = (usePathname() || "").split('/');
   const currentPath = paths[paths.length - 1];
 
   // If there's no current path, it means you're at a root url
