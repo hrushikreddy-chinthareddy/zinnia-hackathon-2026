@@ -1,5 +1,5 @@
 import { Meta, Title, IconGallery, IconItem } from '@storybook/blocks';
-import { Icons } from '../components'
+import { Icon, Icons, IconType } from '../components/icon'
 
 
 <Meta title="Iconography" />
@@ -25,21 +25,18 @@ import { Icons } from '../components'
 - **classname:** any additional styles
 
 ### Icons - Outlined
-
 <IconGallery>
   {
-      Object.keys(IconType).map(key => {
-        return (
-          <IconItem name= { key.toLowerCase() } key = { key } >
-            <Icon type={ IconType[key] } />
-                      < /IconItem>
-              );
-            })
-          }
+    Object.keys(IconType).map(key => (
+      <IconItem key={key} name={key.toLowerCase()}>
+        <Icon type={IconType[key]} />
+      </IconItem>
+    ))
+  }
 </IconGallery>
 
 ### Icons - Filled
-```jsx
+
 <IconGallery>
   {Object.values(IconType).map((key) => {
     const filledKey = `${key}Filled`
@@ -58,4 +55,3 @@ import { Icons } from '../components'
 
 })}
 </IconGallery>
-```
