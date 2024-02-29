@@ -18,11 +18,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
       - uses: actions/setup-node@v4
         with:
-          node-version: 20.10.0
-      - run: pnpm install
+          node-version-file: packages/bloom/.nvmrc
+      - uses: pnpm/action-setup@v2
+        with:
+          run_install: |
+            - args: [--filter @zinnia/bloom]
       - run: pnpm run test
 
   publish:
@@ -38,7 +40,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          node-version: "20.10.0"
+          node-version-file: .nvmrc
           registry-url: "https://npm.pkg.github.com/"
           scope: "@zinnia"
       - name: Install Packages

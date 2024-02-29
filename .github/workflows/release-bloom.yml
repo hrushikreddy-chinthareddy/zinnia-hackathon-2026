@@ -1,0 +1,48 @@
+name: Bloom Release
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+permissions:
+  contents: read #for checkout
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # publich a github release
+      issues: write # comment on released issues
+      pull-requests: write # to be able to comment on releaed pull requests
+      id-token: write # enable use of OIDC for npm provenance
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+  
+      - name: Setup node
+        uses: actions/setup-node@v4
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          node-version-file: ".nvmrc"
+          registry-url: "https://npm.pkg.github.com/"
+          scope: "@zinnia"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          run_install: |
+            - args: [--filter @zinnia/bloom]
+
+      - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
+        run: npm audit signatures
+      
+      - name: Publish Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: cd ./packages/bloom && npx semantic-release
