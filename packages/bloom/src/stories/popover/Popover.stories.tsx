@@ -46,7 +46,7 @@ export const DefaultPopover: StoryObj<typeof Popover> = {
           }}
         >
           Your premium is the amount you pay periodically for insurance
-          coverage. What&amp;s shown here is your next scheduled payment.
+          coverage. What&rsquo;s shown here is your next scheduled payment.
         </p>
       </div>,
     title: "popover title",
