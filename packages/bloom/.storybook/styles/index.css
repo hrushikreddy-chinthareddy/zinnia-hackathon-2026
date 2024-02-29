@@ -50,6 +50,7 @@
 .gradient-highlight {
   position: relative;
 }
+
 .gradient-highlight::after {
   position: absolute;
   content: "";
