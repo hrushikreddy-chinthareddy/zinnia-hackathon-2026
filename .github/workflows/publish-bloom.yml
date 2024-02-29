@@ -19,9 +19,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2
+      - name: Read .nvmrc
+        id: node_version
+        run: echo ::set-output name=NODE_VERSION::$(cat .nvmrc)
       - uses: actions/setup-node@v4
         with:
-          node-version: 20.10.0
+          node-version-file: packages/bloom/.nvmrc
       - run: pnpm install
       - run: pnpm run test
 
