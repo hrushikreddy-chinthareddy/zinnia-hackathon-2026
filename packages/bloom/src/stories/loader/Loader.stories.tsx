@@ -6,11 +6,13 @@ import {
 } from "../../components/loader";
 
 
-export default {
+const meta: Meta<typeof Loader> = {
   title: "Components/Loader",
   component: Loader,
   tags: ["autodocs"],
-} as Meta<typeof Loader>;
+}
+
+export default meta;
 
 export const DefaultLoader: StoryObj<typeof Loader> = {
   args: {
