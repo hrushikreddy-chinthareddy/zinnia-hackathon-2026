@@ -12,9 +12,6 @@ const meta: Meta<typeof ChipX> = {
       console.log("Deleting chip");
     },
   },
-  parameters: {
-    layout: "centered",
-  },
 };
 
 export default meta;

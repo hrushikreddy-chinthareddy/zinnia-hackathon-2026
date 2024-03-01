@@ -9,6 +9,7 @@
   gap: var(--measure-dimension-gap-md);
   padding: var(--measure-dimension-padding-sm)
     var(--measure-dimension-padding-2xl);
+  width: fit-content;
 }
 
 .button {
