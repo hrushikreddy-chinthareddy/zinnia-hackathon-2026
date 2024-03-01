@@ -1,0 +1,69 @@
+.buttonGroup {
+  background-color: var(
+    --color-button-group-button-group-item-primary-border,
+    #ccc
+  );
+
+  border-radius: var(--measure-dimension-radius-md, 0.5rem);
+
+  > * {
+    border-top: var(--measure-dimension-stroke-sm, 2px) solid
+      var(--color-button-group-button-group-item-primary-border, #ccc);
+    border-bottom: var(--measure-dimension-stroke-sm, 2px) solid
+      var(--color-button-group-button-group-item-primary-border, #ccc);
+    border-left: var(--measure-dimension-stroke-xs, 1px) solid
+      var(--color-button-group-button-group-item-primary-border, #ccc);
+    border-right: var(--measure-dimension-stroke-xs, 1px) solid
+      var(--color-button-group-button-group-item-primary-border, #ccc);
+
+    &:first-child {
+      border-left-width: 2px;
+    }
+
+    &:last-child {
+      border-right-width: 2px;
+    }
+  }
+
+  :first-child {
+    border-top-left-radius: var(--measure-dimension-radius-md, 0.5rem);
+    border-bottom-left-radius: var(--measure-dimension-radius-md, 0.5rem);
+  }
+
+  :last-child {
+    border-top-right-radius: var(--measure-dimension-radius-md, 0.5rem);
+    border-bottom-right-radius: var(--measure-dimension-radius-md, 0.5rem);
+  }
+}
+
+.buttonGroupItem {
+  background-color: var(--color-button-group-button-group-item-primary-fill);
+  padding: var(--measure-dimension-padding-lg, 1rem)
+    var(--measure-dimension-padding-3xl, 1.5rem);
+
+  &:hover {
+    background-color: var(
+      --color-button-group-button-group-item-primary-hover-fill,
+      #ff7500
+    );
+    border-color: var(
+      --color-button-group-button-group-item-primary-selected-border,
+      #ff7500
+    );
+  }
+
+  &[data-state='on'] {
+    background-color: var(
+      --color-button-group-button-group-item-primary-selected-fill,
+      #ffc899
+    );
+    border-color: var(
+      --color-button-group-button-group-item-primary-selected-border,
+      #ff7500
+    );
+
+    &:focus-visible {
+      outline-color: #37a2d8;
+    }
+  }
+}
