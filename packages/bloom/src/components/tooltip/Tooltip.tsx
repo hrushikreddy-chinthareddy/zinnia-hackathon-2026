@@ -12,7 +12,7 @@ export const Tooltip = ({ tooltipClassName, trigger, placement = TooltipPlacemen
 
   return (
     <RadixTooltip.Provider>
-      <RadixTooltip.Root open>
+      <RadixTooltip.Root>
         <RadixTooltip.Trigger className={styles.tooltipTrigger}
          style={{ zIndex: zIndexOrder.CardPopoverTrigger }}>
           {trigger}
