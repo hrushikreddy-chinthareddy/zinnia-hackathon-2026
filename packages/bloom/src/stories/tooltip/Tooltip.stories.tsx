@@ -14,7 +14,7 @@ const meta: Meta<typeof Tooltip> = {
   },
   decorators: [
     (Story) => (
-      <div style={{ marginTop: '50%', marginLeft: '50%'}}>
+      <div style={{ marginTop: '300px', marginLeft: '500px'}}>
         <Story />
       </div>
     ),
