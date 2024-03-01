@@ -1,5 +1,3 @@
-export { Checkbox } from './Checkbox';
-
 export interface CheckboxProps
   extends React.HTMLAttributes<HTMLInputElement> {
   onClick?: () => void;
