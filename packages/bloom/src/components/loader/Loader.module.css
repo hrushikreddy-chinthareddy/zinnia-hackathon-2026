@@ -12,6 +12,7 @@
   height: 40px;
   width: 40px;
   position: relative;
+  display:inline-block;
 
   &.cta{
     height: 16px;

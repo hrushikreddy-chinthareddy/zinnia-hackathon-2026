@@ -19,6 +19,6 @@ export const Loader: React.FC<LoaderProps> = ({
   };
 
   return (
-    <div className={`${styles.loader} ${variantClass()}`}></div>
+    <span className={`${styles.loader} ${variantClass()}`}></span>
   );
 };
