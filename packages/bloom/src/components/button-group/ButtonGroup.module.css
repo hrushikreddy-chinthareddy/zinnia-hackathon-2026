@@ -1,9 +1,4 @@
 .buttonGroup {
-  background-color: var(
-    --color-button-group-button-group-item-primary-border,
-    #ccc
-  );
-
   border-radius: var(--measure-dimension-radius-md, 0.5rem);
 
   > * {
@@ -52,6 +47,7 @@
     );
   }
 
+  /* SELECTED STATE */
   &[data-state='on'] {
     background-color: var(
       --color-button-group-button-group-item-primary-selected-fill,
@@ -65,5 +61,21 @@
     &:focus-visible {
       outline-color: #37a2d8;
     }
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    color: var(
+      --color-button-group-button-group-item-primary-inactive-text,
+      #b3b3b3
+    );
+    border-color: var(
+      --color-button-group-button-group-item-primary-inactive-border,
+      #b3b3b3
+    );
+    background-color: var(
+      --color-button-group-button-group-item-primary-inactive-fill,
+      #ededed
+    );
   }
 }

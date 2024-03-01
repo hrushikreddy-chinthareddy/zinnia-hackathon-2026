@@ -5,8 +5,9 @@ import styles from './ButtonGroup.module.css';
 export const ButtonGroup = ({
   ariaLabel,
   defaultValue,
-  items,
   id,
+  inactive,
+  items,
   label,
   onClick,
 }: ButtonGroupProps) => {
@@ -36,6 +37,7 @@ export const ButtonGroup = ({
             <ToggleGroup.Item
               value={item.value}
               className={styles.buttonGroupItem}
+              disabled={inactive}
             >
               {item.children}
             </ToggleGroup.Item>

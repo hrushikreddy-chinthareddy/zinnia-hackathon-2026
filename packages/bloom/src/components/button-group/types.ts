@@ -17,6 +17,7 @@ export interface CommonProps {
    * defaults to first item in array
    */
   defaultValue?: string;
+  inactive?: boolean;
   onClick: () => void;
 }
 
