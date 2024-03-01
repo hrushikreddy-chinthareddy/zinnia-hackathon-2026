@@ -28,12 +28,12 @@ type ConditionalProps =
        */
       label?: ReactElement;
       ariaLabel?: never;
-      id: string;
+      id?: string;
     }
   | {
       label?: never;
       ariaLabel?: string;
-      id: never;
+      id?: never;
     };
 
 export type ButtonGroupProps = CommonProps & ConditionalProps;
