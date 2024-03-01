@@ -1,21 +1,56 @@
 @import url(./fonts);
 
-#storybook-docs .sbdocs > h1 {
-  background-image: var(--gradient-accent-color-gradient-linear);
-  font-family: "Poppins";
-  font-style: normal;
-  font-weight: 600;
-  font-size: 36px;
-  line-height: 44px;
-  letter-spacing: 0em;
-  text-indent: 0px;
-  padding: 64px 32px 48px;
-  color: white;
+#storybook-docs {
+  .sbdocs-wrapper {
+    padding: 4rem 2rem;
+
+  }
+  .sbdocs {
+    & > h1,
+    & > h2,
+    & > h3,
+    & > h4,
+    & > div > h1,
+    & > div > h2,
+    & > div > h3,
+    & > div > h4 {
+      a:has(svg) {
+        
+        /* border: 10px solid red; */
+      }
+    }
+  
+    & > h1,
+    & > div > h1 {
+      position: relative;
+      display: inline-block;
+      &::before {
+        content: "";
+        position: absolute;
+        height: 0.125em;
+        width: 100%;
+        bottom: -0.25em;
+        left: 0;
+        background-color: red;
+        background-image: var(--gradient-accent-color-gradient-linear);
+      }
+
+      font-family: "Poppins";
+      font-style: normal;
+      font-weight: 600;
+      font-size: 36px;
+      line-height: 44px;
+      letter-spacing: 0em;
+      text-indent: 0px;
+      margin-block-end: 1em;
+    }
+  }
 }
 
 .gradient-highlight {
   position: relative;
 }
+
 .gradient-highlight::after {
   position: absolute;
   content: "";
@@ -25,5 +60,4 @@
   width: 100%;
   top: 110%;
   background-image: var(--gradient-accent-color-gradient-linear);
-
 }

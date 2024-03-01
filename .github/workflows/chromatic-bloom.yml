@@ -1,0 +1,20 @@
+name: "Chromatic Bloom"
+
+on:
+  workflow_dispatch:
+  push:
+    branches-ignore:
+      - 'dependabot/**'
+    paths:
+      - "packages/bloom/**"
+
+jobs:
+  chromatic:
+    uses: './.github/workflows/build-chromatic.yml'
+    with:
+      project-name: Bloom
+      filter-path: '@zinnia/bloom'
+      working-dir: packages/bloom
+    secrets:
+      chromatic-token: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+      

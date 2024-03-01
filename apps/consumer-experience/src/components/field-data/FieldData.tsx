@@ -1,4 +1,4 @@
-import { Icon, IconType } from '@zinnia/bloom/components';
+import { Icon, IconType } from '@zinnia/bloom/internal/components';
 import clsx from 'clsx';
 import { PropsWithChildren, ReactNode, cloneElement } from 'react';
 

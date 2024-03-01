@@ -1,6 +1,7 @@
 'use client';
+
 import * as Dialog from '@radix-ui/react-dialog';
-import { Icon, IconType } from '@zinnia/bloom/components';
+import { Icon, IconType } from '@zinnia/bloom/internal/components';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';

@@ -1,10 +1,12 @@
+"use client"
+
 import {
   Label,
   Icon,
   IconType,
   Popover,
   PopoverPlacement,
-} from '@zinnia/bloom/components';
+} from '@zinnia/bloom/internal/components';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';

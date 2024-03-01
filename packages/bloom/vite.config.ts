@@ -5,7 +5,6 @@ import { libInjectCss } from "vite-plugin-lib-inject-css";
 import svgr from "vite-plugin-svgr";
 import dts from "vite-plugin-dts";
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     react(),

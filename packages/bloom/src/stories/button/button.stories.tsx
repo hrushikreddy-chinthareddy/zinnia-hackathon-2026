@@ -59,13 +59,13 @@ const buttonStyles = Object.entries(Tokens.Colors.Colors).filter(([k]) =>
 );
 const toCSSPropertyCase = (key: string) =>
   `--${
-    // split on uppercase letters since we index by camelcase in react tokens
-    key
-      .split(/(?=[A-Z])/)
-      // return all to lowercase so new set can remove dupes
-      .map((k) => k.toLocaleLowerCase())
-      // join with kebab case like css custom properties should
-      .join("-")
+  // split on uppercase letters since we index by camelcase in react tokens
+  key
+    .split(/(?=[A-Z])/)
+    // return all to lowercase so new set can remove dupes
+    .map((k) => k.toLocaleLowerCase())
+    // join with kebab case like css custom properties should
+    .join("-")
   }`;
 
 const buttonTable = (
@@ -78,13 +78,11 @@ const buttonTable = (
       </tr>
     </thead>
     {buttonStyles.map(([key, value]) => (
-      <>
-        <tbody>
-          <td>{key}</td>
-          <td>{toCSSPropertyCase(key)}</td>
-          <td>{value}</td>
-        </tbody>
-      </>
+      <tbody key={key}>
+        <td>{key}</td>
+        <td>{toCSSPropertyCase(key)}</td>
+        <td>{value}</td>
+      </tbody>
     ))}
   </table>
 );

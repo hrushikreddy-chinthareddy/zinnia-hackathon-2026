@@ -13,7 +13,7 @@ export const DefaultBankData: StoryObj<BankDataProps> = {
   args: {
     accountNumber: 1234,
     accountType: 'Checking',
-    routingNumber: 121000358,
+    routingNumber: '1234',
     bankName: 'Bank of America',
     nameOnAccount: 'Flora Anderson',
     title: 'Banking details',

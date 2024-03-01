@@ -2,20 +2,20 @@ import {
   Label,
   AssistiveText,
   AssistiveTextVariant,
-} from '@zinnia/bloom/components';
+} from '@zinnia/bloom/internal/components';
+
+import { toTitleCase } from '@/utils/strings';
 
 import styles from './BankData.module.css';
 import { FieldData } from '../field-data/FieldData';
 
-// TODO: are any of these optional?
 export interface BankDataProps {
   accountNumber: number;
   accountType: string;
   autopayEnabled?: boolean;
   bankName: string;
   nameOnAccount: string;
-  // TODO: is this a number or a string?
-  routingNumber: number;
+  routingNumber: string;
   title: string;
 }
 
@@ -28,11 +28,11 @@ export const BankData = ({
   routingNumber,
   title,
 }: BankDataProps) => {
-  // TODO: how to manage null handling? check all data?
   return (
     <div>
       <h2>{title}</h2>
       <div className={styles.bankName}>
+        {/* TODO: Format the bank name, how to do this? */}
         <div className="typography-labels-label-lg">{bankName}</div>
         {autopayEnabled && (
           <AssistiveText
@@ -48,9 +48,10 @@ export const BankData = ({
         <FieldData Label={<Label>Routing number</Label>}>
           <p className="typography-content-body-sm">{routingNumber}</p>
         </FieldData>
-        {/* TODO: probably need to format this? capitalize? */}
         <FieldData Label={<Label>Account type</Label>}>
-          <p className="typography-content-body-sm">{accountType}</p>
+          <p className="typography-content-body-sm">
+            {toTitleCase(accountType)}
+          </p>
         </FieldData>
         <FieldData Label={<Label>Name on account</Label>}>
           <p className="typography-content-body-sm">{nameOnAccount}</p>

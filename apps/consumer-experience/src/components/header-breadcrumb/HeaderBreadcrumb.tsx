@@ -4,7 +4,7 @@ import {
   IconType,
   Popover,
   PopoverPlacement,
-} from '@zinnia/bloom/components';
+} from '@zinnia/bloom/internal/components';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ReactNode } from 'react';
@@ -22,11 +22,11 @@ export interface HeaderBreadcrumbProps {
 }
 
 export const HeaderBreadcrumb = ({ title, popover }: HeaderBreadcrumbProps) => {
+  const paths = (usePathname() || "").split('/');
   if (!title) {
     return null;
   }
 
-  const paths = usePathname().split('/');
   const currentPath = paths[paths.length - 1];
 
   // If there's no current path, it means you're at a root url
