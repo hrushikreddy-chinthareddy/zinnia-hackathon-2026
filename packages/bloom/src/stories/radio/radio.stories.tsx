@@ -1,36 +1,36 @@
-import { Meta } from '@storybook/react';
-import { useState } from 'react';
+import { Meta, StoryObj } from '@storybook/react';
 
-import Radio, { RadioItem, RadioVariant } from '../../components/radio/radio';
+import { Radio, RadioProps } from '@/components/radio';
 
+// More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta: Meta<typeof Radio> = {
-    title: 'Components/Radio',
-    component: Radio,
-    decorators: [
-        Story => (
-            <div className="container">
-                <Story />
-            </div>
-        ),
-    ],
+  title: "Components/Radio",
+  component: Radio,
+  parameters: {
+    // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/react/configure/story-layout
+    layout: "centered",
+  },
+  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/react/writing-docs/autodocs
+  tags: ["autodocs"],
+  args: {
+    isDisabled: false,
+    label: 'Radio Label',
+    ariaLabel: "click me",
+  },
+  // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
+  argTypes: {
+    // backgroundColor: { control: 'color' },
+  },
 };
 
 export default meta;
+type StoryType = StoryObj<RadioProps>;
 
-export const RadioComponent = () => {
-    const items: RadioItem[] = [
-        { label: 'Option 1', value: 'option1' },
-        { label: 'Option 2', value: 'option2' },
-        { label: 'Option 3', value: 'option3' },
-    ];
+export const Default: StoryType = {};
 
-    const [value, setValue] = useState('');
-    const handleChange = (event: any) => setValue(event.target.value);
-
-    return (
-        <div className="flex flex-col gap-5">
-            <Radio label="Group 1" items={items} required={true} value={value} onChange={handleChange} />
-            <Radio label="Group 2" items={items} variant={RadioVariant.Inactive} value={value} onChange={handleChange} />
-        </div>
-    );
+export const Disabled: StoryType = {
+  args: {
+    isDisabled: true,
+    children: "Radio text",
+  },
 };
