@@ -1,0 +1,72 @@
+.top {
+  --font-family-toggle: 'Lato';
+  --toggle-border-radius: var(--measure-dimension-radius-max);
+
+  font-family: var(--font-family-toggle);
+  font-size: var(--measure-font-sizing-font-size-x-small);
+  font-style: normal;
+  line-height: var(--measure-line-height-font-line-height-x-large);
+
+  display: flex;
+  flex-flow: row nowrap;
+  gap: var(--measure-dimension-z-space-2, 0.5rem);
+}
+
+.disabled {
+  color: var(--color-states-inactive-inactive-text, #b3b3b3);
+}
+
+.container {
+  --toggle-border-width: 3px;
+  --toggle-border-style: solid;
+
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  background-color: var(--color-toggle-toggle-default-fill, #676767);
+  border-radius: var(--toggle-border-radius);
+  border: var(--toggle-border-width) var(--toggle-border-style)
+  var(--color-toggle-primary-toggle-primary-border);
+
+  width: var(--measure-dimension-z-space-12, 3rem);
+  height: var(--measure-dimension-z-space-6, 2rem);
+
+  &:focus-visible {
+    outline-style: var(--toggle-border-style);
+    outline-width: var(--toggle-border-style);
+    outline-offset: var(--measure-dimension-z-space-0, 0.125rem);
+    outline-color: var(--color-states-focus-focus-border);
+  }
+
+  &:disabled {
+    background-color: var(--color-toggle-toggle-inactive-fill, #b3b3b3)
+  }
+
+  &[aria-pressed="true"]:not(:disabled) {
+    background-color: var(--color-toggle-toggle-selected-fill, #ff7500);
+  }
+
+  &[aria-pressed="true"]:disabled {
+    background-color: var(--color-toggle-toggle-selected-inactive-fill, #ffead9);
+  }
+
+  > div  {
+    width: var(--measure-dimension-z-space-4, 1rem);
+    height: var(--measure-dimension-z-space-4, 1rem);
+    background-color: var(--color-toggle-toggle-default-indicator, #ffffff);
+    border-radius: var(--measure-dimension-radius-max, 1000px);
+    position: absolute;
+    transition: right 300ms;
+    left: var(--measure-dimension-z-space-1-5, 0.375rem);
+  }
+
+  &[aria-pressed="true"] > div {
+    left: auto;
+    right: var(--measure-dimension-z-space-1-5, 0.375rem);
+  }
+
+  :disabled > div {
+    background-color: var(--color-toggle-toggle-inactive-indicator, #ededed);
+  }
+};
