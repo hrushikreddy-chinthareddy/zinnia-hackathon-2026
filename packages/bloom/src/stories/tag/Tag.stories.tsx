@@ -5,11 +5,13 @@ import {
   TagVariant,
 } from "../../components/tag";
 
-export default {
+const meta: Meta<typeof Tag> = {
   title: "Components/Tag",
   component: Tag,
   tags: ["autodocs"],
-} as Meta<typeof Tag>;
+};
+
+export default meta;
 
 export const DefaultTag: StoryObj<typeof Tag> = {
   args: {
