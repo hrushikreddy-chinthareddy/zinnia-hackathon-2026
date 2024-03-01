@@ -1,0 +1,17 @@
+.tooltipContainer {
+  background-color: var(--color-base-surface-surface-darker, #212121);
+  border-radius: var(--measure-dimension-radius-sm, 0.25rem);
+  box-shadow: var(
+    --shadow-elevation-elevation-dark-08,
+    0px 4px 8px 0px rgba(0, 0, 0, 0.28)
+  );
+  color: var(--color-base-text-text-light, #fff);
+  max-width: 320px;
+  padding: var(--measure-dimension-padding-xl, 0.75rem);
+  width: 320px;
+}
+
+.tooltipTrigger {
+  display: flex;
+  align-items: center;
+}
