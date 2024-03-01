@@ -1,0 +1,9 @@
+.breadcrumb {
+  color: var(--color-base-text-text-link, #00628b);
+
+  &:hover {
+    text-decoration: underline;
+    text-underline-position: under;
+    text-decoration-thickness: var(--measure-dimension-stroke-sm, 2px);
+  }
+}
