@@ -9,7 +9,7 @@
 .RadioGroupRoot {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: var(--measure-dimension-gap-lg, 1rem);
 }
 
 .RadioGroupItem {

@@ -14,6 +14,7 @@ const meta: Meta<typeof Radio> = {
   tags: ["autodocs"],
   args: {
     isDisabled: false,
+    groupLabel: 'Radio Group',
     label: 'Radio Label',
     ariaLabel: "click me",
   },

@@ -4,5 +4,6 @@ export interface RadioProps
   extends React.HTMLAttributes<HTMLInputElement> {
   isDisabled?: boolean;
   label?: string;
+  groupLabel?: string;
   ariaLabel?: string;
 }
