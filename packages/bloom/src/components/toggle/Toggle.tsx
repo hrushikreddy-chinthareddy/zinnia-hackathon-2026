@@ -13,7 +13,7 @@ export const Toggle = ({text, isDisabled, onClick, pressed}: ToggleProps) => {
       <RadixToggle.Root 
         className={styles.container}
         aria-labelledby={text ? labelId : ''}
-        aria-label={!text ?'Toggle' : ''}
+        aria-label={!text ? 'Toggle' : ''}
         disabled={isDisabled}
         pressed={pressed}
         onPressedChange={onClick}
