@@ -16,13 +16,7 @@ const meta: Meta<typeof Checkbox> = {
     isChecked: false,
     isDisabled: false,
     label: 'Label',
-    // mode: "primary",
     children: "Checkbox text",
-    "aria-label": "click me",
-  },
-  // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
-  argTypes: {
-    // backgroundColor: { control: 'color' },
   },
 };
 
