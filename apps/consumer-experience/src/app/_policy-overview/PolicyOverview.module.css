@@ -12,17 +12,27 @@
 }
 
 .content {
-  display: flex;
   align-items: center;
+  display: flex;
 }
 
-.centerItem {
-  margin-left: 2rem;
-  margin-right: 1rem;
+.rowWrapper {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.additionalInfo {
+  margin: 0 var(--measure-dimension-gap-lg, 1rem);
 }
 
 .popoverContent {
   > *:not(:last-child) {
     margin-bottom: var(--measure-dimension-padding-xl, 0.75rem);
   }
+}
+
+.error {
+  color: var(--color-status-text-status-error-text, #db004f);
 }

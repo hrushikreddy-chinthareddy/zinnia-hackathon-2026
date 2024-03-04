@@ -17,7 +17,7 @@ ave top radius and last card should have bottom radius */
     border-top-right-radius: var(----measure-dimension-radius-sm, 0.25rem);
   }
 
-  :last-child {
+  .clickable-card-container__list-item:last-child {
     border-bottom-left-radius: var(----measure-dimension-radius-sm, 0.25rem);
     border-bottom-right-radius: var(----measure-dimension-radius-sm, 0.25rem);
   }

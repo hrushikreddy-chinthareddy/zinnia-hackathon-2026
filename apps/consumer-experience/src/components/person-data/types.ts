@@ -6,6 +6,13 @@ export enum PhoneType {
   Other = 'OTHER',
 }
 
+export enum BestTimeType {
+  Morning = 'MORNING',
+  Afternoon = 'AFTERNOON',
+  Evening = 'EVENING',
+  Anytime = 'ANYTIME',
+}
+
 export enum EmailType {
   Personal = 'PERSONAL',
   Business = 'BUSINESS',
@@ -35,7 +42,7 @@ export type Phone = {
   areaCode: string;
   dialNumber: string;
   extension: string;
-  bestTime: string;
+  bestTime: BestTimeType;
 };
 
 export type Address = {
@@ -67,4 +74,36 @@ export interface EmailProps {
 export interface AddressProps {
   addressData: Address[];
   title: string;
+}
+
+export interface BankDetails {
+  appliesToPartyID: string;
+  financialInstitutionPartyID: string;
+  startDate: string;
+  endDate: string | null;
+  nameOnAccount: string;
+  accountStatus: string;
+  accountType: string;
+  accountNumber: string;
+  routingNumber: string;
+  ibaNumber: string;
+  branchName: string;
+  accountPurpose: string;
+  prefAddressInd: string;
+  branchAddress: {
+    recordID: number;
+    startDate: string;
+    endDate: string | null;
+    addressType: string;
+    addrLine1: string;
+    addrLine2: string;
+    addrLine3: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    zipExt: string;
+    addrCountry: string;
+  };
+  branchPhoneNumber: string;
+  autopayEnabled: boolean;
 }

@@ -22,10 +22,8 @@ export const AllocationColorBar = ({
       {allocations?.map((allocation, index) => (
         <span
           style={{
-            display: 'inline-block',
             // Subtract margin size from allocation, so bar remains on one line
             width: `calc(${allocation}% - var(--measure-dimension-z-space-0, 0.125rem))`,
-            height: '100%',
             backgroundColor: colorArray[index],
           }}
         ></span>

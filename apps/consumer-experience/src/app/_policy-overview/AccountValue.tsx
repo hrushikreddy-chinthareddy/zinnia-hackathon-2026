@@ -6,24 +6,25 @@ import {
   IconType,
   Popover,
   PopoverPlacement,
+  Ticker
 } from '@zinnia/bloom/internal/components';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
-import { Ticker } from '@/components/ticker/Ticker';
+import { PolicyAccountValue, PolicyStatus } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
+import { dateMonthWithTimeEST } from '@/utils/dates';
 
 import styles from './PolicyOverview.module.css';
 
 const AccountValuePopover = () => {
   return (
     <Popover
-      title="Upcoming premium"
+      title={ACCOUNT_VALUE}
       trigger={
         <Icon
           type={IconType.CIRCLE_INFO}
-          width={16}
-          height={16}
+          small
           color="var(--color-primary-color-primary, #ff7500)"
         />
       }
@@ -50,33 +51,46 @@ const AccountValuePopover = () => {
 
 const ACCOUNT_VALUE = 'Account value';
 
-export const AccountValue = () => {
+interface Props extends PolicyAccountValue {
+  policyStatus: PolicyStatus;
+}
+
+// TODO: add surrendered and locked policy states
+export const AccountValue = ({
+  totalFundValue,
+  timestamp,
+  valueChange,
+}: Props) => {
   return (
     <ClickableCardContainer
       linkTo={{ url: '#', isInternal: true, label: 'go to internal link' }}
     >
-      <div className={styles.content}>
-        <Icon type={IconType.DOLLAR} className={styles.icon} />
-        <FieldData
-          large
-          Label={
-            <Label
-              interactiveElements={[
-                // eslint-disable-next-line react/jsx-key
-                <AccountValuePopover />,
-              ]}
-            >
-              {ACCOUNT_VALUE}
-            </Label>
-          }
-          caption="As of 6/12/2023 5:00 pm EST"
-        >
-          <p className="typography-content-value">
-            {formatUSDollars(250343.12)}
-          </p>
-        </FieldData>
-        <div className={styles.centerItem}>
-          <Ticker value={260.45} subtext="this month" />
+      <div className={styles.rowWrapper}>
+        <div className={styles.content}>
+          <Icon type={IconType.DOLLAR} className={styles.icon} />
+          <FieldData
+            large
+            Label={
+              <Label
+                interactiveElements={[
+                  <AccountValuePopover key="account-value-popover" />,
+                ]}
+              >
+                {ACCOUNT_VALUE}
+              </Label>
+            }
+            caption={
+              timestamp ? `As of ${dateMonthWithTimeEST(timestamp)}` : ''
+            }
+          >
+            <p className="typography-content-value">
+              {formatUSDollars(totalFundValue)}
+            </p>
+          </FieldData>
+        </div>
+        <div className={styles.additionalInfo}>
+          {/* TODO: still need to figure out what this month comes from  */}
+          <Ticker value={valueChange} subtext="this month" />
         </div>
       </div>
     </ClickableCardContainer>

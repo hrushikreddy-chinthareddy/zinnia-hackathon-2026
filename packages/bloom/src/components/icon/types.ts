@@ -12,10 +12,12 @@ import Dashboard from '../../tokens/svg-assets/icons/navigation/dashboard.svg';
 import Dollar from '../../tokens/svg-assets/icons/currency/currency-dollars.svg';
 import DocumentText from '../../tokens/svg-assets/icons/file/document-text.svg';
 import HexExclamation from '../../tokens/svg-assets/icons/alert/hex-exclamation.svg';
+import Lightbulb from '../../tokens/svg-assets/icons/illustrations/light-bulb.svg';
 import Logout from '../../tokens/svg-assets/icons/actions/logout.svg';
 import Mail from '../../tokens/svg-assets/icons/communications/mail.svg';
 import Shield from '../../tokens/svg-assets/icons/navigation/shield-heart.svg';
 import Trash from '../../tokens/svg-assets/icons/actions/trash.svg';
+import UserGroup from '../../tokens/svg-assets/icons/actions/user-group.svg';
 
 export enum IconType {
   ALERT_EXCLAMATION = 'AlertExclamation',
@@ -34,11 +36,13 @@ export enum IconType {
   DOCUMENT_TEXT = 'DocumentText',
   DOLLAR = 'Dollar',
   HEX_EXCLAMATION = 'HexExclamation',
+  LIGHTBULB = 'Lightbulb',
   LOGOUT = 'Logout',
   MAIL = 'Mail',
   PAYMENT = 'Payment',
   SHIELD = 'Shield',
   TRASH = 'Trash',
+  USER_GROUP = 'UserGroup',
 }
 
 export interface IconProps {
@@ -75,9 +79,11 @@ export const Icons: {
   [IconType.DOCUMENT_TEXT]: DocumentText,
   [IconType.DOLLAR]: Dollar,
   [IconType.HEX_EXCLAMATION]: HexExclamation,
+  [IconType.LIGHTBULB]: Lightbulb,
   [IconType.LOGOUT]: Logout,
   [IconType.MAIL]: Mail,
   [IconType.PAYMENT]: Payment,
   [IconType.SHIELD]: Shield,
   [IconType.TRASH]: Trash,
+  [IconType.USER_GROUP]: UserGroup,
 };

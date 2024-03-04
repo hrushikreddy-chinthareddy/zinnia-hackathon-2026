@@ -1,0 +1,32 @@
+.tickerContainer {
+  display: inline-grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  grid-column-gap: var(--measure-dimension-radius-sm, 0.25rem);
+
+  &.positive {
+    color: var(--color-status-text-status-success-text, #007b5a);
+  }
+
+  &.negative {
+    color: var(--color-status-text-status-error-text, #db004f);
+  }
+
+  &.noChange {
+    color: var(--color-base-text-text-secondary, #676767);
+  }
+}
+
+.tickerArrowNegative {
+  transform: rotate(180deg);
+}
+
+.tickerSubtext {
+  grid-column-start: 2;
+  text-align: right;
+}
+
+.tickerSubtextNoChange {
+  grid-column-start: 1;
+  grid-row-start: 2;
+}

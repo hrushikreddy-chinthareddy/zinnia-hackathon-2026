@@ -1,15 +1,16 @@
 import { Label } from '@zinnia/bloom/internal/components';
 
 import { FieldData } from '@/components/field-data/FieldData';
-import { isEndDated } from '@/utils/data';
+import { isEndDatedAndEndDateUpcoming } from '@/utils/data';
 
 import styles from './PersonData.module.css';
 import { EmailProps, EmailType } from './types';
 
 export const Emails = ({ emailData, title }: EmailProps) => {
-  console.log('EMAIL DATA', emailData);
   const emails = emailData.filter(
-    email => email.emailAddress !== null && !isEndDated(email.endDate)
+    email =>
+      email.emailAddress !== null &&
+      !isEndDatedAndEndDateUpcoming(email.endDate)
   );
 
   if (!emails || emails.length === 0) {

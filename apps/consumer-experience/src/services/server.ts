@@ -13,6 +13,8 @@ serverApi.interceptors.request.use(async config => {
   const { accessToken } = await getAccessToken();
 
   config.headers.Authorization = `Bearer ${accessToken}`;
+  console.log(config);
+
   return config;
 });
 

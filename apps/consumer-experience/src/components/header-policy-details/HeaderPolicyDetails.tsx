@@ -1,38 +1,75 @@
 import clsx from 'clsx';
 
+import { PolicyDetails, PolicyStatus } from '@/types/policy';
+import { DEFAULT_ERROR_STRING, checkIfNull, toSentenceCase } from '@/utils/strings';
+
 import styles from './HeaderPolicyDetails.module.css';
 
-interface Props extends React.HTMLAttributes<HTMLDivElement> {
+interface Props extends PolicyDetails, React.HTMLAttributes<HTMLDivElement> {
   className?: string;
-  expanded?: boolean;
+  policyStatus: PolicyStatus;
 }
+
+// TODO: add surrendered and locked statuses
+const policyDisplayText: { [key in PolicyStatus]: string } = {
+  [PolicyStatus.Active]: 'active',
+  [PolicyStatus.PendingIssued]: 'active',
+  [PolicyStatus.PendingLapse]: 'pending lapse',
+  [PolicyStatus.Lapse]: 'lapsed',
+  // TODO: what is the display for this one?
+  [PolicyStatus.NotIssued]: '',
+};
 
 export const HeaderPolicyDetails = ({
   className,
-  expanded = false,
+  firstName,
+  lastName,
+  marketingName,
+  planName,
+  policyNumber,
+  policyStatus,
   style,
 }: Props) => {
+  const statusStyle = () => {
+    switch (policyStatus) {
+      // TODO: how to categorize this one?
+      // case PolicyStatus.NotIssued:
+      //   return 'status.notIssued';
+      case PolicyStatus.PendingIssued:
+      case PolicyStatus.Active:
+        return styles.success;
+      case PolicyStatus.PendingLapse:
+        return styles.warning;
+      case PolicyStatus.Lapse:
+        return styles.error;
+      default:
+        return '';
+    }
+  };
+
+  const insuredName = !firstName && !lastName ? DEFAULT_ERROR_STRING : `${firstName || ''} ${lastName || ''}`;
+
   return (
     <div
       className={clsx(styles.container, { [`${className}`]: className })}
       style={style}
     >
       <p className="typography-labels-label-lg-alt">
-        Everly Life - Universal Life
+        {`${marketingName || ''} ${marketingName && planName ? '-' : ''} ${planName || ''}`}
       </p>
       <div className={styles.policyDetails}>
-        <p className="typography-labels-label-md-alt">Policy No. AU22029654</p>
-        {expanded && (
-          <>
-            <p className="typography-labels-label-md-alt">
-              Insured: Michael Williams
-            </p>
-            <p className="typography-labels-label-md-alt">
-              Policy status:{' '}
-              <span className="text-semantic-success">Active</span>
-            </p>
-          </>
-        )}
+          <p className="typography-labels-label-md-alt">
+            Policy No. {`${checkIfNull(policyNumber)}`}
+          </p>
+          <p className="typography-labels-label-md-alt">
+            {`Insured: ${insuredName}`}
+          </p>
+          <p className="typography-labels-label-md-alt">
+            Policy status:{' '}
+            <span className={statusStyle()}>
+              {checkIfNull(toSentenceCase(policyDisplayText[policyStatus]))}
+            </span>
+          </p>
       </div>
     </div>
   );

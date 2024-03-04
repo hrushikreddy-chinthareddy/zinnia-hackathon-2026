@@ -1,3 +1,4 @@
+'use client';
 import { Icon, IconType } from '@zinnia/bloom/internal/components';
 import Link from 'next/link';
 

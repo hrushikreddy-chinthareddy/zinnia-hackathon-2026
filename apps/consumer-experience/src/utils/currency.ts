@@ -1,6 +1,12 @@
+import { DEFAULT_ERROR_STRING } from "./strings";
+
 export const formatUSDollars = (val?: number | undefined) => {
   if (val === null || val === undefined || typeof val !== 'number') {
-    return null;
+    return DEFAULT_ERROR_STRING;
+  }
+
+  if (val === 0) {
+    return '$0';
   }
 
   return new Intl.NumberFormat('en-US', {

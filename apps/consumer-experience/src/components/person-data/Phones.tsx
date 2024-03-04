@@ -1,14 +1,19 @@
 import { Label } from '@zinnia/bloom/internal/components';
 
 import { FieldData } from '@/components/field-data/FieldData';
-import { formatPhoneNumberWithExtension, isEndDated } from '@/utils/data';
+import {
+  formatPhoneNumberWithExtension,
+  isEndDatedAndEndDateUpcoming,
+} from '@/utils/data';
+import { toSentenceCase } from '@/utils/strings';
 
 import styles from './PersonData.module.css';
 import { PhoneProps, PhoneType } from './types';
 
 export const Phones = ({ phoneData, title }: PhoneProps) => {
   const phones = phoneData.filter(
-    phone => phone.dialNumber !== null && !isEndDated(phone.endDate)
+    phone =>
+      phone.dialNumber !== null && !isEndDatedAndEndDateUpcoming(phone.endDate)
   );
 
   if (!phones || phones.length === 0) {
@@ -38,7 +43,7 @@ export const Phones = ({ phoneData, title }: PhoneProps) => {
             <FieldData Label={<Label>Work phone</Label>} key="work-phone">
               <div className="typography-content-body-sm">
                 <p>{formatPhoneNumberWithExtension(phone)}</p>
-                {phone.bestTime && <p>Call: 9am-12pm EST</p>}
+                {phone.bestTime && <p>{toSentenceCase(phone.bestTime)}</p>}
               </div>
             </FieldData>
           );
@@ -49,7 +54,7 @@ export const Phones = ({ phoneData, title }: PhoneProps) => {
             <FieldData Label={<Label>Fax</Label>} key="fax-phone">
               <div className="typography-content-body-sm">
                 <p>{formatPhoneNumberWithExtension(phone)}</p>
-                {phone.bestTime && <p>Call: 9am-12pm EST</p>}
+                {phone.bestTime && <p>{toSentenceCase(phone.bestTime)}</p>}
               </div>
             </FieldData>
           );
@@ -60,7 +65,7 @@ export const Phones = ({ phoneData, title }: PhoneProps) => {
             <FieldData Label={<Label>Home phone</Label>} key="home-phone">
               <div className="typography-content-body-sm">
                 <p>{formatPhoneNumberWithExtension(phone)}</p>
-                {phone.bestTime && <p>Call: 9am-12pm EST</p>}
+                {phone.bestTime && <p>{toSentenceCase(phone.bestTime)}</p>}
               </div>
             </FieldData>
           );
@@ -71,7 +76,7 @@ export const Phones = ({ phoneData, title }: PhoneProps) => {
             <FieldData Label={<Label>Mobile phone</Label>} key="mobile-phone">
               <div className="typography-content-body-sm">
                 <p>{formatPhoneNumberWithExtension(phone)}</p>
-                {phone.bestTime && <p>Call: 9am-12pm EST</p>}
+                {phone.bestTime && <p>{toSentenceCase(phone.bestTime)}</p>}
               </div>
             </FieldData>
           );
@@ -82,7 +87,7 @@ export const Phones = ({ phoneData, title }: PhoneProps) => {
             <FieldData Label={<Label>Other</Label>} key="other-phone">
               <div className="typography-content-body-sm">
                 <p>{formatPhoneNumberWithExtension(phone)}</p>
-                {phone.bestTime && <p>Call: 9am-12pm EST</p>}
+                {phone.bestTime && <p>{toSentenceCase(phone.bestTime)}</p>}
               </div>
             </FieldData>
           );

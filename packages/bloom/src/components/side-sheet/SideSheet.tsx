@@ -1,3 +1,4 @@
+// why use use client? https://react.dev/reference/react/use-client
 'use client';
 
 import { Icon, IconType } from '../icon';
@@ -17,7 +18,6 @@ export const SideSheet = ({
   preventCloseOnOutsideClick = true,
   trigger,
 }: SideSheetProps) => {
-  // TODO: figure out type here
   const preventInteraction = (
     event: CustomEvent<{ originalEvent: PointerEvent }>
   ) => {

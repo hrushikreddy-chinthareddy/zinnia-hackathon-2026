@@ -2,8 +2,20 @@ import dayjs from 'dayjs';
 
 import { Phone } from '@/components/person-data/types';
 
-export function isEndDated(endDate: string): boolean {
-  if (!endDate || dayjs(endDate).isAfter(dayjs())) return false;
+/**
+ *
+ * @param endDate
+ * @returns Boolean -
+ * In Zahara an end date in the past is equivalent to item deletion
+ */
+export function isEndDatedAndEndDateUpcoming(endDate: string): boolean {
+  // If there's no end date (it's a forever thing)
+  // OR the end date is in the future so the value is upcoming, return false
+  // this is really more like isEndDatedAndEndDateUpcoming
+  if (!endDate || dayjs(endDate).isAfter(dayjs())) {
+    return false;
+  }
+
   return true;
 }
 

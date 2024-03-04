@@ -10,21 +10,29 @@ import {
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
+import {
+  PolicyStatus,
+  UpcomingPremium as UpcomingPremiumType,
+} from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
+import { standardDateMonthYear } from '@/utils/dates';
 
 import styles from './PolicyOverview.module.css';
+
+interface Props extends UpcomingPremiumType {
+  policyStatus: PolicyStatus;
+}
 
 const UPCOMING_PREMIUM = 'Upcoming premium';
 
 const UpcomingPremiumPopover = () => {
   return (
     <Popover
-      title="Upcoming premium"
+      title={UPCOMING_PREMIUM}
       trigger={
         <Icon
           type={IconType.CIRCLE_INFO}
-          width={16}
-          height={16}
+          small
           color="var(--color-primary-color-primary, #ff7500)"
         />
       }
@@ -49,7 +57,33 @@ const UpcomingPremiumPopover = () => {
   );
 };
 
-export const UpcomingPremium = () => {
+export const UpcomingPremium = ({
+  amount,
+  nextActivityDate,
+  policyStatus,
+}: Props) => {
+  if (amount == null) {
+    return null;
+  }
+
+  let currentAmount = amount;
+
+  // TODO: add locked status here once confirmed what that is
+  if (policyStatus === PolicyStatus.Lapse) {
+    currentAmount = 0;
+  }
+
+  // TODO: add locked status here
+  const paymentCaption = () => {
+    if (policyStatus === PolicyStatus.Lapse) {
+      return <span className={styles.error}>Payment</span>;
+    }
+
+    return nextActivityDate
+      ? `Autopay on ${standardDateMonthYear(nextActivityDate)}`
+      : '';
+  };
+
   return (
     <ClickableCardContainer
       linkTo={{ url: '#', isInternal: true, label: 'go to internal link' }}
@@ -60,17 +94,18 @@ export const UpcomingPremium = () => {
           large
           Label={
             <Label
-              interactiveElements={
-                // eslint-disable-next-line react/jsx-key
-                [<UpcomingPremiumPopover />]
-              }
+              interactiveElements={[
+                <UpcomingPremiumPopover key="upcoming-popover" />,
+              ]}
             >
               {UPCOMING_PREMIUM}
             </Label>
           }
-          caption="Autopay on 11/12/2023"
+          caption={paymentCaption()}
         >
-          <p className="typography-content-value">{formatUSDollars(281.45)}</p>
+          <p className="typography-content-value">
+            {formatUSDollars(currentAmount)}
+          </p>
         </FieldData>
       </div>
     </ClickableCardContainer>

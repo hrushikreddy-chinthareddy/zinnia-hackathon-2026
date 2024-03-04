@@ -4,11 +4,10 @@ import {
   AssistiveTextVariant,
   Label,
 } from '@zinnia/bloom/internal/components';
-import dayjs from 'dayjs';
 
 import { FieldData } from '@/components/field-data/FieldData';
-import { isEndDated } from '@/utils/data';
-import { toTitleCase } from '@/utils/strings';
+import { isEndDatedAndEndDateUpcoming } from '@/utils/data';
+import { toSentenceCase } from '@/utils/strings';
 
 import styles from './PersonData.module.css';
 import {
@@ -27,7 +26,7 @@ const AddressGroup = ({ addresses }: { addresses: AddressInterface[] }) => {
     return (
       <FieldData
         key={`key-${index}`}
-        Label={<Label>{toTitleCase(address.addressType)}</Label>}
+        Label={<Label>{toSentenceCase(address.addressType)}</Label>}
         AssistiveText={
           <AssistiveText
             text={mailingAddressText}
@@ -49,19 +48,20 @@ const AddressGroup = ({ addresses }: { addresses: AddressInterface[] }) => {
 };
 
 export const Addresses = ({ addressData, title }: AddressProps) => {
-  // TODO: is this the right logic? this filters out any seasonal addresses that
-  // have an enddate past, but it seems like you want to show all addresses?
-  // or do you only want to show seasonal addresses that are current or future?
+  // Filter out any addresses where end date is past current day. In Zahara, this is equiavlent to "deletion"
   const addresses = addressData?.filter(
-    address => !isEndDated(address.endDate)
+    address => !isEndDatedAndEndDateUpcoming(address.endDate)
   );
 
   const residentialAddresses = addresses?.filter(
     address => address.addressType === AddressType.Residence
   );
-  const seasonalAddresses = addresses?.filter(
-    address => address.addressType === AddressType.Seasonal
-  );
+
+  // TODO: this was determined to be out of scope by ops since Zahara does not have a way of adding a recurring
+  // date, and endDate indicates deletion in the db
+  // const seasonalAddresses = addresses?.filter(
+  //   address => address.addressType === AddressType.Seasonal
+  // );
 
   const boxAddresses = addresses?.filter(
     address => address.addressType === AddressType.PoBox
@@ -70,45 +70,11 @@ export const Addresses = ({ addressData, title }: AddressProps) => {
     address => address.addressType === AddressType.Business
   );
 
-  const currentAddressIsSeasonal = seasonalAddresses?.find(
-    address =>
-      dayjs().isAfter(address.startDate) && dayjs().isBefore(address.endDate)
-  );
-
-  let orderedSeasonalAddresses;
-  if (currentAddressIsSeasonal) {
-    const otherSeasonalAddresses = seasonalAddresses
-      .filter(address => address !== currentAddressIsSeasonal)
-      .sort((a, b) =>
-        dayjs(a.startDate).isAfter(dayjs(b.startDate)) ? 1 : -1
-      );
-
-    orderedSeasonalAddresses = [
-      currentAddressIsSeasonal,
-      ...otherSeasonalAddresses,
-    ];
-  } else {
-    orderedSeasonalAddresses = seasonalAddresses.sort((a, b) =>
-      dayjs(a.startDate).isAfter(dayjs(b.startDate)) ? 1 : -1
-    );
-  }
-
   return (
     <div className={styles.itemsRowContainer}>
       <h2 className={styles.itemHeader}>{title}</h2>
       <div className={styles.itemsRow}>
-        {currentAddressIsSeasonal ? (
-          <>
-            <AddressGroup addresses={orderedSeasonalAddresses} />
-            <AddressGroup addresses={residentialAddresses} />
-          </>
-        ) : (
-          <>
-            <AddressGroup addresses={residentialAddresses} />
-            <AddressGroup addresses={orderedSeasonalAddresses} />
-          </>
-        )}
-
+        <AddressGroup addresses={residentialAddresses} />
         <AddressGroup addresses={boxAddresses} />
         <AddressGroup addresses={businessAddresses} />
       </div>

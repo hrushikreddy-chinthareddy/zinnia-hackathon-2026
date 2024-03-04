@@ -7,6 +7,7 @@ import { Meta } from '@storybook/blocks';
 ## HTML Principles and Conventions
 
 ## CSS
+
 use CSS modules
 
 - CSS module name must match component name
@@ -59,7 +60,7 @@ use CSS modules
       border-color: var(--color-button-primary-button-primary-pressed-border);
       color: var(--color-button-primary-button-primary-pressed-text);
     }
-  
+
     &:disabled {
       background-color: var(--color-button-primary-button-primary-inactive-fill);
       /* TODO: review border weight */
@@ -82,57 +83,78 @@ import classes from './Button.module.css';
 //
 //
 
-  <button
-    {...props}
-    type="button"
-    className={[classes.button, classes[mode], classes[size], selected && classes.selected, className].join(' ')}
-  >
-    {children}
-  </button>
+<button
+  {...props}
+  type="button"
+  className={[
+    classes.button,
+    classes[mode],
+    classes[size],
+    selected && classes.selected,
+    className,
+  ].join(' ')}
+>
+  {children}
+</button>;
 ```
 
 ### General tips
+
 - make sure all themable elements of your styles use CSS Custom Properties with the correct alias so users can override properties at the appropriate level
-eg. changing padding only for a button instead of overriding all implementations of `padding-lg`
+  eg. changing padding only for a button instead of overriding all implementations of `padding-lg`
 
 bad:
 
 ```css
 .button {
   /*  */
-  padding: var(--measure-dimension-padding-lg, 8px) var(--measure-dimension-padding-6xl, 48px);
+  padding: var(--measure-dimension-padding-lg, 8px) var(
+      --measure-dimension-padding-6xl,
+      48px
+    );
   /*  */
-
 }
 ```
+
 good:
 
 ```css
 .button {
   /* button padding is defined in the tokens file */
-  --button-padding:  var(--measure-dimension-padding-lg, 8px) var(--measure-dimension-padding-6xl, 48px);
+  --button-padding: var(--measure-dimension-padding-lg, 8px) var(
+      --measure-dimension-padding-6xl,
+      48px
+    );
   /*  */
   padding: var(--button-padding);
 }
 ```
 
+#### Client Components
+
+- If the component includes client side interaction, add `use client` at the top of the component, so that components will compile correctly.
+  More information about React Server Components vs Client Components [here](https://react.dev/reference/react/use-client)
+
 ### Conventions
+
 - all lowercase names with hyphens
-good: bloom-button.tsx
-bad: BloomButton.tsx
+  good: bloom-button.tsx
+  bad: BloomButton.tsx
 
 - components go in `src/components` folder into their own named folder. Ex: `src/components/button/button.tsx`
 - create an `index.ts` that exports components and types
+
 ```ts
-export { Button } from './Button'
-export type { ButtonProps } from './Button'
+export { Button } from './Button';
+export type { ButtonProps } from './Button';
 ```
 
 - all lowercase names with hyphens for directories
 - PascalCase for component names
 
 good: `components/bloom-button/bloom-button.tsx`
-<br/>
+
+<br />
 bad: `components/bloom-button/BloomButton.tsx`
 
 - components go in `src/components` folder into their own named folder. Ex: `src/components/button/BloomButton.tsx`
@@ -140,6 +162,6 @@ bad: `components/bloom-button/BloomButton.tsx`
 
 ```ts
 // components/button/index.ts
-export { Button } from './Button'
-export type { ButtonProps } from './Button'
+export { Button } from './Button';
+export type { ButtonProps } from './Button';
 ```

@@ -35,6 +35,6 @@ describe('formatUSDollars', () => {
   // Returns a formatted USD currency string when given a zero value.
   it('should return a formatted USD currency string when given a zero value', () => {
     const result = formatUSDollars(0);
-    expect(result).toEqual('$0.00');
+    expect(result).toEqual('$0');
   });
 });
