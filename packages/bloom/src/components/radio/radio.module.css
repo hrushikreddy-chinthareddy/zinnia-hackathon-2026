@@ -15,9 +15,9 @@
 .RadioGroupItem {
     width: var(--measure-dimension-z-space-6, 1.5rem);
     height: var(--measure-dimension-z-space-6, 1.5rem);
-    border-radius: var(--measure-dimension-radius-max);
+    border-radius: var(--measure-dimension-radius-max, 62.5rem);
     border-color: var(--color-grayscale-color-300-gray, #b3b3b3);
-    border-width: var(--measure-dimension-stroke-sm);
+    border-width: var(--measure-dimension-stroke-sm, 0.125rem) ;
     margin-right: var(--measure-dimension-z-space-2, 0.5rem)
 }
 
@@ -66,14 +66,6 @@
 
 .RadioGroupIndicator[data-disabled][data-state="checked"]::after {
     background-color: var(--color-primary-color-primary-lightest, #ffead9);
-    width: 16px;
-    height: 16px;
-}
-
-
-
-.Label {
-    font-size: 15px;
-    line-height: 1;
-    padding-left: 15px;
+    width: var(--measure-dimension-z-space-4, 1rem);
+    height: var(--measure-dimension-z-space-4, 1rem);
 }

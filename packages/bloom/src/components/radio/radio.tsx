@@ -4,32 +4,20 @@ import styles from './radio.module.css';
 import { RadioProps } from './utils';
 import { Label } from '..';
 
-export const Radio = ({ groupLabel, isDisabled, label, ariaLabel }: RadioProps) => (
-        <RadioGroup.Root className={styles.RadioGroupRoot} defaultValue="option1" aria-label="Radio Group">
-            <Label>{groupLabel}</Label>
+export const Radio = ({ groupLabel, isDisabled, options, defaultValue }: RadioProps) => (
+    <RadioGroup.Root className={styles.RadioGroupRoot} defaultValue={defaultValue} aria-label="Radio Group">
+        <Label>{groupLabel}</Label>
+
+        {options.map((option, index) => {
+            return (
             <div style={{ display: 'flex', alignItems: 'center' }}>
-                <RadioGroup.Item className={styles.RadioGroupItem} value="option1" id="r1" disabled={isDisabled} aria-label={ariaLabel}>
+                <RadioGroup.Item className={styles.RadioGroupItem} value={option.value} id={`r${index}`} disabled={isDisabled} aria-label={option.ariaLabel}>
                     <RadioGroup.Indicator className={styles.RadioGroupIndicator}  />
                 </RadioGroup.Item>
-                <label className="typography-content-body-sm" htmlFor="r1">
-                    {label}
+                <label className="typography-content-body-sm" htmlFor={`r${index}`}>
+                    {option.label}
                 </label>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-                <RadioGroup.Item className={styles.RadioGroupItem} value="option2" id="r2" disabled={isDisabled} aria-label={ariaLabel}>
-                    <RadioGroup.Indicator className={styles.RadioGroupIndicator} />
-                </RadioGroup.Item>
-                <label className="typography-content-body-sm" htmlFor="r2">
-                    {label}
-                </label>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-                <RadioGroup.Item className={styles.RadioGroupItem} value="option3" id="r3" disabled={isDisabled} aria-label={ariaLabel}>
-                    <RadioGroup.Indicator className={styles.RadioGroupIndicator} />
-                </RadioGroup.Item>
-                <label className="typography-content-body-sm" htmlFor="r3">
-                    {label}
-                </label>
-            </div>
-        </RadioGroup.Root>
+        )})}
+    </RadioGroup.Root>
 );

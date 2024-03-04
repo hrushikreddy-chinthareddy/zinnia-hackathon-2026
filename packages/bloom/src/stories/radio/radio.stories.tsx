@@ -15,8 +15,24 @@ const meta: Meta<typeof Radio> = {
   args: {
     isDisabled: false,
     groupLabel: 'Radio Group',
-    label: 'Radio Label',
-    ariaLabel: "click me",
+    defaultValue: 'option1',
+    options: [
+      {
+        label: 'Option 1',
+        ariaLabel: 'Option 1',
+        value: 'option1'
+      },
+      {
+        label: 'Option 2',
+        ariaLabel: 'Option 2',
+        value: 'option2'
+      },
+      {
+        label: 'Option 3',
+        ariaLabel: 'Option 3',
+        value: 'option3'
+      },
+    ]
   },
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {
@@ -32,6 +48,24 @@ export const Default: StoryType = {};
 export const Disabled: StoryType = {
   args: {
     isDisabled: true,
-    children: "Radio text",
+    groupLabel: 'Ice Cream Flavors',
+    defaultValue: 'strawberry',
+    options: [
+      {
+        label: 'Vanilla',
+        ariaLabel: 'vanilla',
+        value: 'vanilla'
+      },
+      {
+        label: 'Chocolate',
+        ariaLabel: 'chocolate',
+        value: 'chocolate'
+      },
+      {
+        label: 'Strawberry',
+        ariaLabel: 'strawberry',
+        value: 'strawberry'
+      },
+    ]
   },
 };
