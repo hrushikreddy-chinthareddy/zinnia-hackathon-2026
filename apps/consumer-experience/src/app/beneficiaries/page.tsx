@@ -1,4 +1,3 @@
-'use client';
 import {
   AllocationColorBar,
   Icon,
@@ -16,6 +15,8 @@ import { serverApi } from '@/services/server';
 import { formatUSDollars } from '@/utils/currency';
 
 import styles from './Beneficiaries.module.css';
+import { serverApi } from '@/services/server';
+import { baseAppUrl } from '@/services/api-config';
 
 // TODO: this should be a prop
 const policyValue = 1000000;
