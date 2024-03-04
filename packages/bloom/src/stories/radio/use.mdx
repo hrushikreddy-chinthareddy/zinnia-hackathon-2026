@@ -8,6 +8,12 @@ The radio component is meant to be used like a radio group and can take in as ma
 
 This component is using the [Radix Radio Group component](https://www.radix-ui.com/primitives/docs/components/radio-group).
 
+## Usage
+
+When wanting to disable the radio group, you'll need to pass `true` using `isDisabled`, but this does not include disabling individual options and leaving other options available to interact.
+
+> NOTE: If this edge case is necessary, this will need to be included in the `RadioOption` type to trigger those individual options. 
+
 ## Accessibility
 
 - The component adheres to the [Radio Group WAI-ARIA design pattern](https://www.w3.org/WAI/ARIA/apg/patterns/radiobutton) and uses roving tabindex to manage focus movement among radio items.
