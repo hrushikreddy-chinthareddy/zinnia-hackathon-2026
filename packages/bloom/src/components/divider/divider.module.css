@@ -1,0 +1,11 @@
+.horizontal {
+  width: 100%;
+  height: var(--measure-dimension-stroke-sm, 2px);
+  flex-shrink: 0;
+}
+
+.vertical {
+  height: inherit;
+  width: var(--measure-dimension-stroke-sm, 2px);
+  flex-shrink: 0;
+}
