@@ -1,21 +1,13 @@
 import { Label } from '@zinnia/bloom/internal/components';
 
 import { FieldData } from '@/components/field-data/FieldData';
-import {
-  formatPhoneNumberWithExtension,
-  isEndDatedAndEndDateUpcoming,
-} from '@/utils/data';
+import { formatPhoneNumberWithExtension } from '@/utils/data';
 import { toSentenceCase } from '@/utils/strings';
 
 import styles from './PersonData.module.css';
 import { PhoneProps, PhoneType } from './types';
 
-export const Phones = ({ phoneData, title }: PhoneProps) => {
-  const phones = phoneData.filter(
-    phone =>
-      phone.dialNumber !== null && !isEndDatedAndEndDateUpcoming(phone.endDate)
-  );
-
+export const Phones = ({ phones, title }: PhoneProps) => {
   if (!phones || phones.length === 0) {
     return null;
   }
@@ -36,7 +28,7 @@ export const Phones = ({ phoneData, title }: PhoneProps) => {
 
   return (
     <div className={styles.itemsRowContainer}>
-      <h2 className={styles.itemHeader}>{title}</h2>
+      <h2 className="mb-lg">{title}</h2>
       <div className={styles.itemsRow}>
         {businessPhones.map(phone => {
           return (

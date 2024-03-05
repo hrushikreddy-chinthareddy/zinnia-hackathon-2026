@@ -1,9 +1,10 @@
 import clsx from 'clsx';
 
 import { PolicyDetails, PolicyStatus } from '@/types/policy';
-import { DEFAULT_ERROR_STRING, checkIfNull, toSentenceCase } from '@/utils/strings';
+import { toSentenceCase } from '@/utils/strings';
 
 import styles from './HeaderPolicyDetails.module.css';
+import { checkIfNull, fullName } from '@/utils/data';
 
 interface Props extends PolicyDetails, React.HTMLAttributes<HTMLDivElement> {
   className?: string;
@@ -47,7 +48,7 @@ export const HeaderPolicyDetails = ({
     }
   };
 
-  const insuredName = !firstName && !lastName ? DEFAULT_ERROR_STRING : `${firstName || ''} ${lastName || ''}`;
+  const insuredName = fullName({ firstName, lastName });
 
   return (
     <div
@@ -58,18 +59,18 @@ export const HeaderPolicyDetails = ({
         {`${marketingName || ''} ${marketingName && planName ? '-' : ''} ${planName || ''}`}
       </p>
       <div className={styles.policyDetails}>
-          <p className="typography-labels-label-md-alt">
-            Policy No. {`${checkIfNull(policyNumber)}`}
-          </p>
-          <p className="typography-labels-label-md-alt">
-            {`Insured: ${insuredName}`}
-          </p>
-          <p className="typography-labels-label-md-alt">
-            Policy status:{' '}
-            <span className={statusStyle()}>
-              {checkIfNull(toSentenceCase(policyDisplayText[policyStatus]))}
-            </span>
-          </p>
+        <p className="typography-labels-label-md-alt">
+          Policy No. {`${checkIfNull(policyNumber)}`}
+        </p>
+        <p className="typography-labels-label-md-alt">
+          {`Insured: ${insuredName}`}
+        </p>
+        <p className="typography-labels-label-md-alt">
+          Policy status:{' '}
+          <span className={statusStyle()}>
+            {checkIfNull(toSentenceCase(policyDisplayText[policyStatus]))}
+          </span>
+        </p>
       </div>
     </div>
   );

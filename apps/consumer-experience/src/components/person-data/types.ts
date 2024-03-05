@@ -28,7 +28,7 @@ export enum AddressType {
 export interface Email {
   recordID?: number;
   startDate: string;
-  endDate: string; // TODO MG: this comes back as null sometimes
+  endDate?: string | null; // TODO MG: this comes back as null sometimes
   emailType: EmailType;
   emailAddress: string;
 }
@@ -36,7 +36,7 @@ export interface Email {
 export type Phone = {
   recordID?: number;
   startDate: string;
-  endDate: string;
+  endDate?: string;
   phoneType: PhoneType;
   countryCode: string;
   areaCode: string;
@@ -48,31 +48,31 @@ export type Phone = {
 export type Address = {
   recordID?: number;
   startDate: string;
-  endDate: string;
+  endDate?: string | null;
   addressType: AddressType;
-  addrLine1: string;
-  addrLine2: string;
-  addrLine3: string;
+  addressLine1: string;
+  addressLine2: string;
+  addressLine3: string;
   city: string;
   state: string;
   zipCode: string;
-  zipExt: string;
-  addrCountry: string;
-  prefAddressInd: string;
+  zipCodeExtension: string;
+  country: string;
+  preferredAddressIndicator?: string;
 };
 
 export interface PhoneProps {
-  phoneData: Phone[];
+  phones: Phone[];
   title: string;
 }
 
 export interface EmailProps {
-  emailData: Email[];
+  emails: Email[];
   title: string;
 }
 
 export interface AddressProps {
-  addressData: Address[];
+  addresses: Address[];
   title: string;
 }
 
@@ -89,7 +89,7 @@ export interface BankDetails {
   ibaNumber: string;
   branchName: string;
   accountPurpose: string;
-  prefAddressInd: string;
+  preferredAddressIndicator: string;
   branchAddress: {
     recordID: number;
     startDate: string;

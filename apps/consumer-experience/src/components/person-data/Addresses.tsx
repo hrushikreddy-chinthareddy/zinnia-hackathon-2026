@@ -6,7 +6,6 @@ import {
 } from '@zinnia/bloom/internal/components';
 
 import { FieldData } from '@/components/field-data/FieldData';
-import { isEndDatedAndEndDateUpcoming } from '@/utils/data';
 import { toSentenceCase } from '@/utils/strings';
 
 import styles from './PersonData.module.css';
@@ -19,7 +18,7 @@ import {
 const AddressGroup = ({ addresses }: { addresses: AddressInterface[] }) => {
   return addresses?.map((address, index) => {
     const mailingAddressText =
-      address.prefAddressInd === address?.recordID?.toString()
+      address.preferredAddressIndicator === address?.recordID?.toString()
         ? 'Mailing address'
         : '';
 
@@ -35,23 +34,23 @@ const AddressGroup = ({ addresses }: { addresses: AddressInterface[] }) => {
         }
       >
         <Address
-          addrCountry={address.addrCountry}
-          addrLine1={address.addrLine1}
-          addrLine2={address.addrLine2}
+          addrCountry={address.country}
+          addrLine1={address.addressLine1}
+          addrLine2={address.addressLine2}
           city={address.city}
           state={address.state}
           zipCode={address.zipCode}
+          zipExt={address.zipCodeExtension}
         />
       </FieldData>
     );
   });
 };
 
-export const Addresses = ({ addressData, title }: AddressProps) => {
-  // Filter out any addresses where end date is past current day. In Zahara, this is equiavlent to "deletion"
-  const addresses = addressData?.filter(
-    address => !isEndDatedAndEndDateUpcoming(address.endDate)
-  );
+export const Addresses = ({ addresses, title }: AddressProps) => {
+  if (addresses.length === 0) {
+    return null;
+  }
 
   const residentialAddresses = addresses?.filter(
     address => address.addressType === AddressType.Residence
@@ -72,7 +71,7 @@ export const Addresses = ({ addressData, title }: AddressProps) => {
 
   return (
     <div className={styles.itemsRowContainer}>
-      <h2 className={styles.itemHeader}>{title}</h2>
+      <h2 className="mb-lg">{title}</h2>
       <div className={styles.itemsRow}>
         <AddressGroup addresses={residentialAddresses} />
         <AddressGroup addresses={boxAddresses} />

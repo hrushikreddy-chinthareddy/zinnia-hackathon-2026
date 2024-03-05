@@ -1,18 +1,11 @@
 import { Label } from '@zinnia/bloom/internal/components';
 
 import { FieldData } from '@/components/field-data/FieldData';
-import { isEndDatedAndEndDateUpcoming } from '@/utils/data';
 
 import styles from './PersonData.module.css';
 import { EmailProps, EmailType } from './types';
 
-export const Emails = ({ emailData, title }: EmailProps) => {
-  const emails = emailData.filter(
-    email =>
-      email.emailAddress !== null &&
-      !isEndDatedAndEndDateUpcoming(email.endDate)
-  );
-
+export const Emails = ({ emails, title }: EmailProps) => {
   if (!emails || emails.length === 0) {
     return null;
   }
@@ -29,17 +22,17 @@ export const Emails = ({ emailData, title }: EmailProps) => {
 
   return (
     <div className={styles.itemsRowContainer}>
-      <h2 className={styles.itemHeader}>{title}</h2>
+      <h2 className="mb-lg">{title}</h2>
       <div className={styles.itemsRow}>
         {personalEmails.map(email => (
-          <FieldData Label={<Label>Personal</Label>} key="personal">
+          <FieldData Label={<Label>Personal email</Label>} key="personal">
             <div>
               <p className="typography-content-body-sm">{email.emailAddress}</p>
             </div>
           </FieldData>
         ))}
         {businessEmails.map(email => (
-          <FieldData Label={<Label>Business</Label>} key="business">
+          <FieldData Label={<Label>Business email</Label>} key="business">
             <div>
               <p className="typography-content-body-sm">{email.emailAddress}</p>
             </div>

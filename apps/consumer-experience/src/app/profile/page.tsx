@@ -8,9 +8,15 @@ import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPo
 import { Addresses } from '@/components/person-data/Addresses';
 import { Emails } from '@/components/person-data/Emails';
 import { Phones } from '@/components/person-data/Phones';
-import { BankDetails } from '@/components/person-data/types';
+import {
+  Address,
+  BankDetails,
+  Email,
+  Phone,
+} from '@/components/person-data/types';
 import { baseAppUrl } from '@/services/api-config';
 import { serverApi } from '@/services/server';
+import { filterItemsWithPastEndDate, fullName } from '@/utils/data';
 
 import styles from './Profile.module.css';
 
@@ -24,55 +30,67 @@ export default async function Profile() {
   const profileResult = data?.[0];
   const policyResult = data?.[1];
 
-  // TODO: Its time to talk error handling!!!!
-  if (profileResult?.status === 'rejected') {
-    return null;
-  }
+  const profileData =
+    profileResult?.status === 'fulfilled' ? profileResult.value?.data : {};
 
-  const profileData = profileResult.value?.data;
   const policyHeaderData =
     policyResult?.status === 'fulfilled'
       ? policyResult.value?.data?.policyDetails
       : {};
 
-  const bankDetails = profileData.bankDetails[0];
-
   const listItems = [];
 
-  if (profileData.addresses && profileData.addresses.length > 0) {
-    listItems.push({
-      content: (
-        <Addresses addressData={profileData.addresses} title="Address" />
-      ),
-    });
+  if (profileData.addresses) {
+    const currentAddresses = filterItemsWithPastEndDate(profileData.addresses);
+
+    if (currentAddresses) {
+      listItems.push({
+        content: (
+          <Addresses
+            addresses={currentAddresses as Address[]}
+            title="Address"
+          />
+        ),
+      });
+    }
   }
 
-  if (profileData.phones && profileData.phones.length > 0) {
-    listItems.push({
-      content: <Phones phoneData={profileData.phones} title="Phone" />,
-    });
+  if (profileData.phones) {
+    const currentPhones = filterItemsWithPastEndDate(profileData.phones);
+
+    if (currentPhones) {
+      listItems.push({
+        content: <Phones phones={currentPhones as Phone[]} title="Phone" />,
+      });
+    }
   }
 
-  if (profileData.emails && profileData.emails.length > 0) {
-    listItems.push({
-      content: <Emails emailData={profileData.emails} title="Email" />,
-    });
+  if (profileData.emails) {
+    const currentEmails = filterItemsWithPastEndDate(profileData.emails);
+
+    if (currentEmails) {
+      listItems.push({
+        content: <Emails emails={currentEmails as Email[]} title="Email" />,
+      });
+    }
   }
 
-  if (bankDetails.length > 0) {
-    const allBankData = bankDetails.map((bankDetail: BankDetails) => {
-      return (
-        <BankData
-          key={bankDetail.accountNumber}
-          accountNumber={bankDetail.accountNumber}
-          accountType={bankDetail.accountType}
-          autopayEnabled={bankDetail.autopayEnabled}
-          routingNumber={bankDetail.routingNumber}
-          bankName={bankDetail.branchName}
-          nameOnAccount={bankDetail.nameOnAccount}
-        />
-      );
-    });
+  if (profileData?.bankDetails?.length > 0) {
+    const allBankData = profileData.bankDetails.map(
+      (bankDetail: BankDetails) => {
+        return (
+          <BankData
+            key={bankDetail.accountNumber}
+            accountNumber={bankDetail.accountNumber}
+            accountType={bankDetail.accountType}
+            autopayEnabled={bankDetail.autopayEnabled}
+            routingNumber={bankDetail.routingNumber}
+            bankName={bankDetail.branchName}
+            nameOnAccount={bankDetail.nameOnAccount}
+          />
+        );
+      }
+    );
 
     listItems.push({
       content: (
@@ -88,14 +106,27 @@ export default async function Profile() {
     <div className={styles.pageContainer}>
       <HeaderBreadcrumb title="Profile" />
       <HeaderPolicyDetails {...policyHeaderData} />
-      <ClickableCardContainer listItems={[...listItems]}>
-        <div>
-          <h2 className={styles.itemHeader}>Name</h2>
-          <FieldData Label={<Label>Policy owner</Label>}>
-            <p className="typography-content-body-sm">Michael Williams</p>
-          </FieldData>
-        </div>
-      </ClickableCardContainer>
+      {Object.keys(profileData).length === 0 && (
+        <ClickableCardContainer>
+          <div>No data available</div>
+        </ClickableCardContainer>
+      )}
+
+      {Object.keys(profileData).length > 0 && (
+        <ClickableCardContainer listItems={[...listItems]}>
+          <div>
+            <h2 className="mb-lg">Name</h2>
+            <FieldData Label={<Label>Policy owner</Label>}>
+              <p className="typography-content-body-sm">
+                {fullName({
+                  firstName: profileData?.name?.firstName,
+                  lastName: profileData?.name?.lastName,
+                })}
+              </p>
+            </FieldData>
+          </div>
+        </ClickableCardContainer>
+      )}
     </div>
   );
 }

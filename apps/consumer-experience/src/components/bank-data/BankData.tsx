@@ -4,10 +4,11 @@ import {
   AssistiveTextVariant,
 } from '@zinnia/bloom/internal/components';
 
-import { toSentenceCase, toTitleCase } from '@/utils/strings';
+import { DEFAULT_ERROR_STRING, toSentenceCase } from '@/utils/strings';
 
 import styles from './BankData.module.css';
 import { FieldData } from '../field-data/FieldData';
+import { checkIfNull } from '@/utils/data';
 
 export interface BankDataProps {
   accountNumber: string;
@@ -26,7 +27,6 @@ export const BankData = ({
   nameOnAccount,
   routingNumber,
 }: BankDataProps) => {
-  console.log(bankName);
   return (
     <div>
       <div className={styles.bankName}>
@@ -43,10 +43,16 @@ export const BankData = ({
       </div>
       <div className={styles.detailsContainer}>
         <FieldData Label={<Label>Account number</Label>}>
-          <p className="typography-content-body-sm">{`Ending in ${accountNumber}`}</p>
+          <p className="typography-content-body-sm">
+            {accountNumber
+              ? `Ending in ${accountNumber}`
+              : DEFAULT_ERROR_STRING}
+          </p>
         </FieldData>
         <FieldData Label={<Label>Routing number</Label>}>
-          <p className="typography-content-body-sm">{routingNumber}</p>
+          <p className="typography-content-body-sm">
+            {checkIfNull(routingNumber)}
+          </p>
         </FieldData>
         <FieldData Label={<Label>Account type</Label>}>
           <p className="typography-content-body-sm">
@@ -54,7 +60,9 @@ export const BankData = ({
           </p>
         </FieldData>
         <FieldData Label={<Label>Name on account</Label>}>
-          <p className="typography-content-body-sm">{nameOnAccount}</p>
+          <p className="typography-content-body-sm">
+            {checkIfNull(nameOnAccount)}
+          </p>
         </FieldData>
       </div>
     </div>

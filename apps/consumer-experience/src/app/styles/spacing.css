@@ -130,6 +130,41 @@ Margin values included in modules will override these. **/
 }
 
 /*
+* bottom
+*/
+.mb-none {
+  margin-bottom: var(--measure-dimension-gap-none, 0);
+}
+
+.mb-xs {
+  margin-bottom: var(--measure-dimension-gap-xs, 0.125rem);
+}
+
+.mb-sm {
+  margin-bottom: var(--measure-dimension-gap-sm, 0.25rem);
+}
+
+.mb-md {
+  margin-bottom: var(--measure-dimension-gap-md, 0.5rem);
+}
+
+.mb-lg {
+  margin-bottom: var(--measure-dimension-gap-lg, 1rem);
+}
+
+.mb-xl {
+  margin-bottom: var(--measure-dimension-gap-xl, 1.5rem);
+}
+
+.mb-2xl {
+  margin-bottom: var(--measure-dimension-gap-2xl, 2rem);
+}
+
+.mb-3xl {
+  margin-bottom: var(--measure-dimension-gap-3xl, 2.5rem);
+}
+
+/*
 * PADDING
 * =======
 */

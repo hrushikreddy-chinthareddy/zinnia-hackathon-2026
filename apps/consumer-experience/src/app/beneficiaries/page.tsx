@@ -98,7 +98,7 @@ export default async function Beneficiaries() {
     return {
       linkTo: {
         // TODO: how will this url be structured?
-        url: '#',
+        url: '/beneficiaries/1234',
         label: `go to primary beneficiary ${bene.firstName} ${bene.lastName} profile page`,
       },
       content: (
@@ -111,7 +111,7 @@ export default async function Beneficiaries() {
     return {
       linkTo: {
         // TODO: how will this url be structured?
-        url: '#',
+        url: '/beneficiaries/4567',
         label: `go to contingent beneficiary ${bene.firstName} ${bene.lastName} profile page`,
       },
       content: (

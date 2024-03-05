@@ -5,10 +5,10 @@ import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPo
 import { baseAppUrl } from '@/services/api-config';
 import { serverApi } from '@/services/server';
 
-import { AccountValue } from './_policy-overview/AccountValue';
-import { Coverage } from './_policy-overview/Coverage';
-import styles from './_policy-overview/PolicyOverview.module.css';
-import { UpcomingPremium } from './_policy-overview/UpcomingPremium';
+import { AccountValue } from '../components/policy-overview/AccountValue';
+import { Coverage } from '../components/policy-overview/Coverage';
+import styles from '../components/policy-overview/PolicyOverview.module.css';
+import { UpcomingPremium } from '../components/policy-overview/UpcomingPremium';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
@@ -38,7 +38,6 @@ export default async function Home() {
     <>
       <HeaderBreadcrumb title="Policy overview" />
       <HeaderPolicyDetails
-        className="my-lg"
         {...policyData.policyDetails}
         policyStatus={policyData.policyDetails.policyStatus}
       />

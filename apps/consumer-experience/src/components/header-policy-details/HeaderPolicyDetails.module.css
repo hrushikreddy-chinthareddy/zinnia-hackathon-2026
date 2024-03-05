@@ -1,5 +1,6 @@
 .container {
-  margin-left: var(--measure-dimension-padding-2xl, 1rem);
+  margin: var(--measure-dimension-gap-xl, 1.5rem) 0;
+  padding-left: var(--measure-dimension-padding-2xl, 1rem);
 }
 
 .policyDetails {

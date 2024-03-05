@@ -74,15 +74,20 @@ export const ClickableCardContainer: FC<Props> = ({
       </div>
       {listItems && listItems.length > 0 && (
         <ul>
-          {listItems.map((item, index) => (
-            <li
-              className="clickable-card-container__content clickable-card-container__list-item"
-              key={`item-${index}`}
-            >
-              {item.content}
-              {item.linkTo && !disabled && <LinkArrow {...item.linkTo} />}
-            </li>
-          ))}
+          {listItems.map((item, index) => {
+            if (!item) {
+              return null;
+            }
+            return (
+              <li
+                className="clickable-card-container__content clickable-card-container__list-item"
+                key={`item-${index}`}
+              >
+                {item.content}
+                {item.linkTo && !disabled && <LinkArrow {...item.linkTo} />}
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>
