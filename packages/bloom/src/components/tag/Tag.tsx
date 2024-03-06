@@ -1,7 +1,7 @@
 import styles from "./Tag.module.css";
 import { TagProps, TagVariant } from "./types";
 
-export const Tag: React.FC<TagProps> = ({
+export const Tag = ({
   text,
   isSelected = false,
   variant = TagVariant.Default,
