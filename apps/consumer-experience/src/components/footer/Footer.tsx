@@ -35,11 +35,17 @@ export const Footer = ({ hasBorder }: Props) => {
       <p className="typography-content-footer-legal">
         By using this website, you agree to the terms and conditions outlined in
         our{' '}
-        <a href="#" className="consumer-footer__link">
+        <a
+          href="https://zinnia.com/terms-of-use/"
+          className="consumer-footer__link"
+        >
           Terms of Use
         </a>{' '}
         and{' '}
-        <a href="#" className="consumer-footer__link">
+        <a
+          href="https://zinnia.com/privacy-policy/"
+          className="consumer-footer__link"
+        >
           Privacy Policy
         </a>
         .

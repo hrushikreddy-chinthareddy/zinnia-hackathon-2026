@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import {
   Label,
@@ -6,14 +6,16 @@ import {
   IconType,
   Popover,
   PopoverPlacement,
-  Ticker
+  Ticker,
 } from '@zinnia/bloom/internal/components';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
 import { PolicyAccountValue, PolicyStatus } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
+import { isNullEmptyOrUndefined } from '@/utils/data';
 import { dateMonthWithTimeEST } from '@/utils/dates';
+import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 import styles from './PolicyOverview.module.css';
 
@@ -37,12 +39,11 @@ const AccountValuePopover = () => {
           earn interest. This money is yours to use how you see fit. You could
           take out a loan against it or even withdraw some for income in
           retirement or to pay for college. Note, though, that withdrawals and
-          loans (until paid back) and withdrawals can reduce your death benefit.
-          You could also simply let the cash value grow, and eventually use it
-          to pay premiums. If you go this route, you’ll just want to keep an eye
-          on the account value and the cost of your insurance over time. If the
-          policy isn’t funded enough, it could lapse, leaving you without
-          coverage.
+          loans (until paid back) can reduce your death benefit. You could also
+          simply let the cash value grow, and eventually use it to pay premiums.
+          If you go this route, you’ll just want to keep an eye on the account
+          value and the cost of your insurance over time. If the policy isn’t
+          funded enough, it could lapse, leaving you without coverage.
         </p>
       </div>
     </Popover>
@@ -51,7 +52,7 @@ const AccountValuePopover = () => {
 
 const ACCOUNT_VALUE = 'Account value';
 
-interface Props extends PolicyAccountValue {
+export interface Props extends PolicyAccountValue {
   policyStatus: PolicyStatus;
 }
 
@@ -61,6 +62,14 @@ export const AccountValue = ({
   timestamp,
   valueChange,
 }: Props) => {
+  const totalFundContent = isNullEmptyOrUndefined(totalFundValue) ? (
+    <p className="typography-content-body-sm">{DEFAULT_UNAVAILABLE_STRING}</p>
+  ) : (
+    <p className="typography-content-value">
+      {formatUSDollars(totalFundValue)}
+    </p>
+  );
+
   return (
     <ClickableCardContainer
       linkTo={{ url: '#', isInternal: true, label: 'go to internal link' }}
@@ -83,9 +92,7 @@ export const AccountValue = ({
               timestamp ? `As of ${dateMonthWithTimeEST(timestamp)}` : ''
             }
           >
-            <p className="typography-content-value">
-              {formatUSDollars(totalFundValue)}
-            </p>
+            {totalFundContent}
           </FieldData>
         </div>
         <div className={styles.additionalInfo}>

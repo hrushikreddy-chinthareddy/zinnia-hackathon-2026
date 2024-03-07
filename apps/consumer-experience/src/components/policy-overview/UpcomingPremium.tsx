@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import {
   Label,
@@ -15,17 +15,20 @@ import {
   UpcomingPremium as UpcomingPremiumType,
 } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
+import { isNullEmptyOrUndefined } from '@/utils/data';
 import { standardDateMonthYear } from '@/utils/dates';
+import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 import styles from './PolicyOverview.module.css';
 
-interface Props extends UpcomingPremiumType {
+export interface Props extends UpcomingPremiumType {
   policyStatus: PolicyStatus;
+  policyName: string;
 }
 
 const UPCOMING_PREMIUM = 'Upcoming premium';
 
-const UpcomingPremiumPopover = () => {
+const UpcomingPremiumPopover = ({ policyName }: { policyName: string }) => {
   return (
     <Popover
       title={UPCOMING_PREMIUM}
@@ -44,13 +47,12 @@ const UpcomingPremiumPopover = () => {
           coverage. What’s shown here is your next scheduled payment.
         </p>
         <p>
-          In exchange for your premium payments, we’ll make sure your
+          {`In exchange for your premium payments, we’ll make sure your
           beneficiaries can claim your coverage amount should something happen
-          to you. But the benefits don’t stop there. Since you own a [Product
-          marketing name], a portion of your premium is deposited into your
-          account value and invested. Over time, you may be able tp use the
+          to you. But the benefits don’t stop there. Since you own a ${policyName}, a portion of your premium is deposited into your
+          account value and invested. Over time, you may be able to use the
           account value for loans, withdrawals, or to pay the cost of your
-          insurance.
+          insurance.`}
         </p>
       </div>
     </Popover>
@@ -61,11 +63,8 @@ export const UpcomingPremium = ({
   amount,
   nextActivityDate,
   policyStatus,
+  policyName,
 }: Props) => {
-  if (amount == null) {
-    return null;
-  }
-
   let currentAmount = amount;
 
   // TODO: add locked status here once confirmed what that is
@@ -84,6 +83,12 @@ export const UpcomingPremium = ({
       : '';
   };
 
+  const upcomingPremContent = isNullEmptyOrUndefined(currentAmount) ? (
+    <p className="typography-content-body-sm">{DEFAULT_UNAVAILABLE_STRING}</p>
+  ) : (
+    <p className="typography-content-value">{formatUSDollars(currentAmount)}</p>
+  );
+
   return (
     <ClickableCardContainer
       linkTo={{ url: '#', isInternal: true, label: 'go to internal link' }}
@@ -95,7 +100,10 @@ export const UpcomingPremium = ({
           Label={
             <Label
               interactiveElements={[
-                <UpcomingPremiumPopover key="upcoming-popover" />,
+                <UpcomingPremiumPopover
+                  key="upcoming-popover"
+                  policyName={policyName}
+                />,
               ]}
             >
               {UPCOMING_PREMIUM}
@@ -103,9 +111,7 @@ export const UpcomingPremium = ({
           }
           caption={paymentCaption()}
         >
-          <p className="typography-content-value">
-            {formatUSDollars(currentAmount)}
-          </p>
+          {upcomingPremContent}
         </FieldData>
       </div>
     </ClickableCardContainer>

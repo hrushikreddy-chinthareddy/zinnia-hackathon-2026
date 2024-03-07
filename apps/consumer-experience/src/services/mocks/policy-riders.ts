@@ -3,9 +3,9 @@
 // here on the front end
 export const policyRiders = [
   {
-    id: null,
-    policyDetailsId: null,
-    ledgerDocId: null,
+    id: 1,
+    policyDetailsId: 1,
+    ledgerDocId: 1,
     timestamp: '2024-02-27T01:10:19.380Z',
     type: 'RIDER',
     riderName: 'Chronic Illness Accelerated Death Benefit Rider',
@@ -15,7 +15,7 @@ export const policyRiders = [
     terminationDate: '2100-09-14',
     status: 'ACTIVE',
     coverageID: 'Rider_SBLCHR',
-    amount: null,
+    amount: 10,
     riderParticipant: [
       {
         insuredID: 'Party_PI_1',
@@ -23,10 +23,10 @@ export const policyRiders = [
       },
     ],
     charge: {
-      chargeID: null,
-      value: null,
-      effectiveRate: null,
-      nextEvaluationDate: null,
+      chargeID: 2,
+      value: 20,
+      effectiveRate: '2023-09-15',
+      nextEvaluationDate: '2024-04-01',
     },
     riderExerciseCharge: null,
     maxChronicIllnessBenefitPct: 50,

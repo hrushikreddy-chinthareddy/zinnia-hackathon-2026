@@ -15,8 +15,6 @@ import { serverApi } from '@/services/server';
 import { formatUSDollars } from '@/utils/currency';
 
 import styles from './Beneficiaries.module.css';
-import { serverApi } from '@/services/server';
-import { baseAppUrl } from '@/services/api-config';
 
 // TODO: this should be a prop
 const policyValue = 1000000;
@@ -29,17 +27,52 @@ interface Beneficiary {
 
 const primary = [
   {
-    allocation: 20,
+    allocation: 10,
     firstName: 'John',
     lastName: 'Williams',
   },
   {
-    allocation: 30,
+    allocation: 10,
     firstName: 'Becky',
     lastName: 'Williams',
   },
   {
-    allocation: 50,
+    allocation: 10,
+    firstName: 'Ted',
+    lastName: 'Williams',
+  },
+  {
+    allocation: 10,
+    firstName: 'Ted',
+    lastName: 'Williams',
+  },
+  {
+    allocation: 10,
+    firstName: 'Ted',
+    lastName: 'Williams',
+  },
+  {
+    allocation: 10,
+    firstName: 'Ted',
+    lastName: 'Williams',
+  },
+  {
+    allocation: 10,
+    firstName: 'Ted',
+    lastName: 'Williams',
+  },
+  {
+    allocation: 10,
+    firstName: 'Ted',
+    lastName: 'Williams',
+  },
+  {
+    allocation: 10,
+    firstName: 'Ted',
+    lastName: 'Williams',
+  },
+  {
+    allocation: 10,
     firstName: 'Ted',
     lastName: 'Williams',
   },
@@ -92,7 +125,8 @@ export default async function Beneficiaries() {
 
   const policyResult = policyOverviewData?.[0];
 
-  const policyData = policyResult.status !== 'rejected' ? policyResult?.value?.data : {};
+  const policyData =
+    policyResult.status !== 'rejected' ? policyResult?.value?.data : {};
 
   const primaryListItems = primary.map((bene, index) => {
     return {
@@ -127,7 +161,10 @@ export default async function Beneficiaries() {
   return (
     <div>
       <HeaderBreadcrumb title="Beneficiaries" />
-      <HeaderPolicyDetails className={styles.policyDetails} {...policyData.policyDetails}/>
+      <HeaderPolicyDetails
+        className={styles.policyDetails}
+        {...policyData.policyDetails}
+      />
       <div className={styles.itemsContainer}>
         <ClickableCardContainer>
           <div className={styles.infoCard}>

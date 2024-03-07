@@ -1,10 +1,10 @@
 import clsx from 'clsx';
 
 import { PolicyDetails, PolicyStatus } from '@/types/policy';
+import { checkIfNull, fullName } from '@/utils/data';
 import { toSentenceCase } from '@/utils/strings';
 
 import styles from './HeaderPolicyDetails.module.css';
-import { checkIfNull, fullName } from '@/utils/data';
 
 interface Props extends PolicyDetails, React.HTMLAttributes<HTMLDivElement> {
   className?: string;

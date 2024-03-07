@@ -26,39 +26,40 @@ export enum AddressType {
   Business = 'BUSINESS',
 }
 export interface Email {
-  recordID?: number;
-  startDate: string;
+  recordID?: number | null;
+  startDate?: string | null;
   endDate?: string | null; // TODO MG: this comes back as null sometimes
   emailType: EmailType;
-  emailAddress: string;
+  emailAddress?: string | null;
 }
 
 export type Phone = {
   recordID?: number;
-  startDate: string;
-  endDate?: string;
+  startDate?: string | null;
+  endDate?: string | null;
   phoneType: PhoneType;
-  countryCode: string;
-  areaCode: string;
-  dialNumber: string;
-  extension: string;
-  bestTime: BestTimeType;
+  countryCode?: string | null;
+  areaCode?: string | null;
+  dialNumber?: string | null;
+  extension?: string | null;
+  bestTime?: BestTimeType | null;
+  timeZone?: string | null;
 };
 
 export type Address = {
   recordID?: number;
   startDate: string;
   endDate?: string | null;
-  addressType: AddressType;
-  addressLine1: string;
-  addressLine2: string;
-  addressLine3: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  zipCodeExtension: string;
-  country: string;
-  preferredAddressIndicator?: string;
+  addressType?: AddressType;
+  addressLine1?: string | null;
+  addressLine2?: string | null;
+  addressLine3?: string | null;
+  city?: string | null;
+  state?: string | null;
+  zipCode?: string | null;
+  zipCodeExtension?: string | null;
+  country?: string | null;
+  preferredAddressIndicator?: string | null;
 };
 
 export interface PhoneProps {

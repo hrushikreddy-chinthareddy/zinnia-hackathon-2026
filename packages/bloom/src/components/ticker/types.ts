@@ -1,4 +1,4 @@
 export interface TickerProps {
-  value?: number;
+  value?: number | null;
   subtext?: string;
 }

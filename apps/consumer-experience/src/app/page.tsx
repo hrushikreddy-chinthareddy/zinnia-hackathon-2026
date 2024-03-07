@@ -25,12 +25,8 @@ export default async function Home() {
   const policyResult = policyOverviewData?.[0];
   const ridersResult = policyOverviewData?.[1];
 
-  // TODO: error handling
-  if (policyResult.status === 'rejected') {
-    return null;
-  }
-
-  const policyData = policyResult.value?.data;
+  const policyData =
+    policyResult.status !== 'rejected' ? policyResult.value?.data : {};
   const ridersData =
     ridersResult.status === 'fulfilled' ? ridersResult.value.data : [];
 
@@ -38,21 +34,22 @@ export default async function Home() {
     <>
       <HeaderBreadcrumb title="Policy overview" />
       <HeaderPolicyDetails
-        {...policyData.policyDetails}
-        policyStatus={policyData.policyDetails.policyStatus}
+        {...policyData?.policyDetails}
+        policyStatus={policyData?.policyDetails?.policyStatus}
       />
       <div className={styles.cardContainer}>
         <UpcomingPremium
-          {...policyData.upcomingPremium}
-          policyStatus={policyData.policyDetails.policyStatus}
+          {...policyData?.upcomingPremium}
+          policyName={policyData.policyDetails?.planName}
+          policyStatus={policyData?.policyDetails?.policyStatus}
         />
         <AccountValue
-          {...policyData.accountValue}
-          policyStatus={policyData.policyDetails.policyStatus}
+          {...policyData?.accountValue}
+          policyStatus={policyData?.policyDetails?.policyStatus}
         />
         <Coverage
-          {...policyData.coverage}
-          policyStatus={policyData.policyDetails.policyStatus}
+          {...policyData?.coverage}
+          policyStatus={policyData?.policyDetails?.policyStatus}
           riders={ridersData}
         />
       </div>

@@ -1,4 +1,6 @@
 export const DEFAULT_ERROR_STRING = '-';
+export const DEFAULT_UNAVAILABLE_STRING =
+  'This data is unavailable at this time. Please try again later.';
 
 export const toTitleCase = (value?: string): string => {
   if (!value) return '';

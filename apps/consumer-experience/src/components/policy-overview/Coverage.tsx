@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import {
   Label,
@@ -13,7 +13,9 @@ import { FieldData } from '@/components/field-data/FieldData';
 import { PolicyCoverage, PolicyStatus } from '@/types/policy';
 import { PolicyRiders } from '@/types/riders';
 import { formatUSDollars } from '@/utils/currency';
+import { isNullEmptyOrUndefined } from '@/utils/data';
 import { standardDateMonthYear } from '@/utils/dates';
+import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 import styles from './PolicyOverview.module.css';
 
@@ -45,7 +47,7 @@ const CoveragePopover = () => {
   );
 };
 
-interface Props extends PolicyCoverage {
+export interface Props extends PolicyCoverage {
   policyStatus: PolicyStatus;
   riders: PolicyRiders[];
 }
@@ -57,18 +59,13 @@ export const Coverage = ({
   beneficiaryCount,
   riders,
 }: Props) => {
-  // TODO: figure out the possible rider statuses!!!
-  const activeAndElectedRiders = riders?.filter(
-    rider => rider.status === 'ACTIVE' && rider.riderElected === 'ELECTED'
-  );
-
   const additionalItems = [];
 
   if (riders?.length > 0) {
     additionalItems.push({
       content: (
         <FieldData Label={<Label>Riders</Label>}>
-          <p className="typography-content-body-sm">{`${activeAndElectedRiders.length} of ${riders.length} riders`}</p>
+          <p className="typography-content-body-sm">{`${riders.length} riders`}</p>
         </FieldData>
       ),
       linkTo: { url: '/policy-riders', label: 'riders' },
@@ -82,9 +79,17 @@ export const Coverage = ({
           <p className="typography-content-body-sm">{`${beneficiaryCount} beneficiaries`}</p>
         </FieldData>
       ),
-      linkTo: {url: '/beneficiaries', label: 'go to beneficiaries page'}
+      linkTo: { url: '/beneficiaries', label: 'go to beneficiaries page' },
     });
   }
+
+  const coverageContent = isNullEmptyOrUndefined(totalCoverageAmount) ? (
+    <p className="typography-content-body-sm">{DEFAULT_UNAVAILABLE_STRING}</p>
+  ) : (
+    <p className="typography-content-value">
+      {formatUSDollars(totalCoverageAmount)}
+    </p>
+  );
 
   // TODO: add conditions for policy statuses
   return (
@@ -106,9 +111,7 @@ export const Coverage = ({
               : ''
           }
         >
-          <p className="typography-content-value">
-            {formatUSDollars(totalCoverageAmount)}
-          </p>
+          {coverageContent}
         </FieldData>
       </div>
     </ClickableCardContainer>

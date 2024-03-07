@@ -116,7 +116,7 @@ export default async function Profile() {
         <ClickableCardContainer listItems={[...listItems]}>
           <div>
             <h2 className="mb-lg">Name</h2>
-            <FieldData Label={<Label>Policy owner</Label>}>
+            <FieldData Label={<Label>Owner</Label>}>
               <p className="typography-content-body-sm">
                 {fullName({
                   firstName: profileData?.name?.firstName,

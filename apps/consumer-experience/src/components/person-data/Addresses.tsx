@@ -6,7 +6,6 @@ import {
 } from '@zinnia/bloom/internal/components';
 
 import { FieldData } from '@/components/field-data/FieldData';
-import { toSentenceCase } from '@/utils/strings';
 
 import styles from './PersonData.module.css';
 import {
@@ -14,6 +13,12 @@ import {
   AddressProps,
   AddressType,
 } from './types';
+
+const displayAddressType: { [key in AddressType]?: string } = {
+  [AddressType.PoBox]: 'PO Box',
+  [AddressType.Residence]: 'Residential',
+  [AddressType.Business]: 'Business',
+};
 
 const AddressGroup = ({ addresses }: { addresses: AddressInterface[] }) => {
   return addresses?.map((address, index) => {
@@ -25,7 +30,11 @@ const AddressGroup = ({ addresses }: { addresses: AddressInterface[] }) => {
     return (
       <FieldData
         key={`key-${index}`}
-        Label={<Label>{toSentenceCase(address.addressType)}</Label>}
+        Label={
+          <Label>
+            {displayAddressType[address.addressType || AddressType.Residence]}
+          </Label>
+        }
         AssistiveText={
           <AssistiveText
             text={mailingAddressText}

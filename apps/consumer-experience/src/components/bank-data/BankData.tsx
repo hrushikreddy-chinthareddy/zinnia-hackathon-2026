@@ -4,11 +4,11 @@ import {
   AssistiveTextVariant,
 } from '@zinnia/bloom/internal/components';
 
+import { checkIfNull } from '@/utils/data';
 import { DEFAULT_ERROR_STRING, toSentenceCase } from '@/utils/strings';
 
 import styles from './BankData.module.css';
 import { FieldData } from '../field-data/FieldData';
-import { checkIfNull } from '@/utils/data';
 
 export interface BankDataProps {
   accountNumber: string;

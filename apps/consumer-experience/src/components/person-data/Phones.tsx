@@ -5,7 +5,16 @@ import { formatPhoneNumberWithExtension } from '@/utils/data';
 import { toSentenceCase } from '@/utils/strings';
 
 import styles from './PersonData.module.css';
-import { PhoneProps, PhoneType } from './types';
+import { Phone, PhoneProps, PhoneType } from './types';
+
+const PhoneNumber = (phone: Phone) => {
+  return (
+    <div className="typography-content-body-sm">
+      <p>{formatPhoneNumberWithExtension(phone)}</p>
+      {phone.bestTime && <p>Call: {toSentenceCase(phone.bestTime)}</p>}
+    </div>
+  );
+};
 
 export const Phones = ({ phones, title }: PhoneProps) => {
   if (!phones || phones.length === 0) {
@@ -33,10 +42,7 @@ export const Phones = ({ phones, title }: PhoneProps) => {
         {businessPhones.map(phone => {
           return (
             <FieldData Label={<Label>Work phone</Label>} key="work-phone">
-              <div className="typography-content-body-sm">
-                <p>{formatPhoneNumberWithExtension(phone)}</p>
-                {phone.bestTime && <p>{toSentenceCase(phone.bestTime)}</p>}
-              </div>
+              <PhoneNumber {...phone} />
             </FieldData>
           );
         })}
@@ -44,10 +50,7 @@ export const Phones = ({ phones, title }: PhoneProps) => {
         {faxes.map(phone => {
           return (
             <FieldData Label={<Label>Fax</Label>} key="fax-phone">
-              <div className="typography-content-body-sm">
-                <p>{formatPhoneNumberWithExtension(phone)}</p>
-                {phone.bestTime && <p>{toSentenceCase(phone.bestTime)}</p>}
-              </div>
+              <PhoneNumber {...phone} />
             </FieldData>
           );
         })}
@@ -55,10 +58,7 @@ export const Phones = ({ phones, title }: PhoneProps) => {
         {homePhones.map(phone => {
           return (
             <FieldData Label={<Label>Home phone</Label>} key="home-phone">
-              <div className="typography-content-body-sm">
-                <p>{formatPhoneNumberWithExtension(phone)}</p>
-                {phone.bestTime && <p>{toSentenceCase(phone.bestTime)}</p>}
-              </div>
+              <PhoneNumber {...phone} />
             </FieldData>
           );
         })}
@@ -66,10 +66,7 @@ export const Phones = ({ phones, title }: PhoneProps) => {
         {mobilePhones.map(phone => {
           return (
             <FieldData Label={<Label>Mobile phone</Label>} key="mobile-phone">
-              <div className="typography-content-body-sm">
-                <p>{formatPhoneNumberWithExtension(phone)}</p>
-                {phone.bestTime && <p>{toSentenceCase(phone.bestTime)}</p>}
-              </div>
+              <PhoneNumber {...phone} />
             </FieldData>
           );
         })}
@@ -77,10 +74,7 @@ export const Phones = ({ phones, title }: PhoneProps) => {
         {otherPhones.map(phone => {
           return (
             <FieldData Label={<Label>Other</Label>} key="other-phone">
-              <div className="typography-content-body-sm">
-                <p>{formatPhoneNumberWithExtension(phone)}</p>
-                {phone.bestTime && <p>{toSentenceCase(phone.bestTime)}</p>}
-              </div>
+              <PhoneNumber {...phone} />
             </FieldData>
           );
         })}

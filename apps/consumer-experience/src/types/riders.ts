@@ -13,8 +13,8 @@ export interface RiderParticipant {
 export interface PolicyRiders {
   amount?: number | null;
   charge: {
-    chargeID: string;
-    value: number;
+    chargeID?: string | null;
+    value?: number | null;
     effectiveRate: number;
     nextEvaluationDate: string;
   } | null;

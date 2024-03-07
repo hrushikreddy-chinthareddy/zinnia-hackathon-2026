@@ -1,4 +1,4 @@
-import { PolicyStatus } from '@/types/policy';
+import { PolicyOverview, PolicyStatus } from '@/types/policy';
 
 export const policyOverviewData = {
   policyDetails: {
@@ -24,4 +24,4 @@ export const policyOverviewData = {
     maturityDate: '2100-09-14',
     beneficiaryCount: 2, // partyRoles.length - 1 (to exclude the insured)
   },
-};
+} as PolicyOverview;
