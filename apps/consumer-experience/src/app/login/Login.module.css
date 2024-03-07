@@ -2,19 +2,117 @@
   height: 100svh;
   width: 100vw;
   background-color: white;
-  display: flex;
 }
 
-.carrierMarketingImage {
+.contentContainer {
+  padding: 0 var(--measure-dimension-margin-xxs);
+  text-align: center;
+
+  &.hideCarrierImage {
+    height: 100svh;
+    display: flex;
+    align-items: center;
+  }
 }
 
 .content {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  flex: 1;
+  align-items: center;
 }
 
-.logo {
-  width: 200px;
+.logoContainer {
+  width: 124px;
+}
+
+.details {
+  margin-top: var(--measure-dimension-gap-3xl, 2.5rem);
+}
+
+.actionContainer {
+  width: 100%;
+  margin: var(--measure-dimension-gap-3xl, 2.5rem) 0;
+}
+
+/* TODO: update these to use variables when everly theme vars have been added */
+/* // TODO: move this to bloom, this should be button link component or linkButton component uh oh */
+.buttonLink {
+  /* background-color: var(--color-button-primary-button-primary-fill);
+  border: var(--measure-dimension-stroke-md) solid
+    var(--color-button-primary-button-primary-border); */
+  background-color: #121b6b;
+  border: var(--measure-dimension-stroke-md) solid #121b6b;
+  border-radius: var(--measure-dimension-radius-md, 8px);
+  /* color: var(--color-button-primary-button-primary-text, #fff); */
+  color: #fff;
+  display: block;
+  padding: var(--measure-dimension-padding-lg)
+    var(--measure-dimension-padding-6xl);
+  text-align: center;
+
+  /* TODO: what is the correct hover behavior here */
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.footer {
+  color: var(--color-base-text-text-secondary, #676767);
+  border-top: 2px solid var(--color-base-border-border-light, #ededed);
+  padding: var(--measure-dimension-padding-2xl) 0;
+  text-align: left;
+}
+
+@media (width < 768px) {
+  .carrierMarketingImage {
+    background-image: url('../styles/everly/everly-hero-background-mobile-layer.png');
+    background-repeat: no-repeat;
+    height: 125px;
+    background-attachment: fixed;
+  }
+}
+
+@media (width >= 768px) {
+  .container {
+    display: flex;
+  }
+
+  .carrierMarketingImage {
+    width: 435px;
+    /* TODO: update these to use variables when everly theme vars have been added */
+    /* background-color: var(--color-primary-color-primary-lightest, #d0d2ff); */
+    background-color: #d0d2ff;
+    display: flex;
+    align-items: center;
+
+    background-image: url('../styles/everly/everly-hero-background.png');
+    background-position-y: center;
+    background-repeat: no-repeat;
+  }
+
+  .contentContainer {
+    align-items: center;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    padding: 0 var(--measure-dimension-padding-6xl);
+    text-align: left;
+  }
+
+  .logoContainer {
+    width: 200px;
+  }
+
+  .content {
+    width: 425px;
+    align-items: flex-start;
+  }
+
+  .details {
+    padding-top: var(--measure-dimension-padding-2xl, 1rem);
+  }
+
+  .actionContainer {
+    padding-bottom: var(--measure-dimension-padding-2xl, 1rem);
+  }
 }

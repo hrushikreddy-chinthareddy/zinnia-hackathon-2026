@@ -95,7 +95,7 @@ export default async function Profile() {
     listItems.push({
       content: (
         <div className={styles.multipleItemsInSection}>
-          <h2>Payment details</h2>
+          <h2>Banking Details</h2>
           {allBankData}
         </div>
       ),

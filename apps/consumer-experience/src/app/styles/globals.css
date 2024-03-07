@@ -1,6 +1,5 @@
 @import '~@zinnia/bloom/css';
 @import '~@zinnia/bloom/component-styles';
-@import './everly/theme.css';
 @import './spacing.css';
 
 /*
@@ -35,7 +34,7 @@ a {
 /* TODO: this needs some thinking through, possibly use postcss-extend library to be able to extend
   classes from design system to set heading values */
 h1 {
-  font-family: Poppins;
+  font-family: var(--font-family-primary);
   font-size: 28px;
   font-style: normal;
   font-weight: 500;
@@ -43,7 +42,7 @@ h1 {
 }
 
 h2 {
-  font-family: 'Poppins';
+  font-family: var(--font-family-primary);
   font-style: normal;
   font-weight: 500;
   font-size: 22px;
@@ -54,7 +53,7 @@ h2 {
 
 @media (min-width: 500px) {
   h1 {
-    font-family: Poppins;
+    font-family: var(--font-family-primary);
     font-size: 36px;
     font-style: normal;
     font-weight: 500;
@@ -62,7 +61,7 @@ h2 {
   }
 
   h2 {
-    font-family: 'Poppins';
+    font-family: var(--font-family-primary);
     font-style: normal;
     font-weight: 500;
     font-size: 26px;

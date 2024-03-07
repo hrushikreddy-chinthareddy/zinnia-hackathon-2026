@@ -5,7 +5,7 @@
 }
 
 .text {
-  font-family: "Poppins";
+  font-family: var(--font-family-primary);
   font-style: normal;
   font-weight: 700;
   font-size: 12px;
