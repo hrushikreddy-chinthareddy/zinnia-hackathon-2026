@@ -7,9 +7,8 @@ export const beneficiary = {
   beneficiaryPercentage: 30,
   addresses: [
     {
-      addressId: '1',
       startDate: '2024-03-04',
-      endDate: '2024-03-04',
+      endDate: null,
       addressType: AddressType.Residence,
       addressLine1: '1112 Pickle Street',
       addressLine2: 'South Jersey',
@@ -19,6 +18,7 @@ export const beneficiary = {
       zipCode: '67846',
       zipCodeExtension: '23',
       country: 'US',
+      recordID: 2,
     },
   ],
   emails: [

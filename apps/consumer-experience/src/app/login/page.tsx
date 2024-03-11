@@ -35,13 +35,16 @@ export default function Login() {
             </a>
           </div>
           <div className={`typography-content-footer-legal ${styles.footer}`}>
-            <p>
+            <p className="mb-lg">
               You are receiving this message to keep you updated on your Everly
               account. Together we are committed to designing tools that give
               you more control over your account details and preferences. Learn
-              more about Zinnia at zinnia.com. We care about your privacy. Learn
-              more about the Everly privacy policy. To customize your
-              notifications, you can manage your preferences or unsubscribe.
+              more about Zinnia at zinnia.com.
+            </p>
+            <p className="mb-lg">
+              We care about your privacy. Learn more about the Everly privacy
+              policy. To customize your notifications, you can manage your
+              preferences or unsubscribe.
             </p>
             <p>© 2024 Zinnia 5801 SW Sixth Ave. Topeka, KS 66636</p>
           </div>
