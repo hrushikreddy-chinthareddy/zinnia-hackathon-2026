@@ -3,7 +3,7 @@ import { Meta, StoryObj } from "@storybook/react";
 import {
   Tag,
   TagVariant,
-} from "../../components/tag";
+} from "@/components/tag";
 
 const meta: Meta<typeof Tag> = {
   title: "Components/Tag",

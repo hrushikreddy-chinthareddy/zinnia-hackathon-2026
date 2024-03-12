@@ -1,6 +1,17 @@
 import styles from "./Tag.module.css";
 import { TagProps, TagVariant } from "./types";
 
+const variantClass = (variant: TagVariant) => {
+  switch (variant) {
+    case TagVariant.White:
+      return styles.white;
+    case TagVariant.Information:
+      return styles.information;
+    default:
+      return '';
+  }
+};
+
 export const Tag = ({
   text,
   isSelected = false,
@@ -10,19 +21,8 @@ export const Tag = ({
     return null;
   }
 
-  const variantClass = () => {
-    switch (variant) {
-      case TagVariant.White:
-        return styles.white;
-      case TagVariant.Information:
-        return styles.information;
-      default:
-        return styles.default;
-    }
-  };
-
   return (
-    <div className={`typography-labels-label-sm ${styles.tag} ${isSelected ? styles.selected : variantClass()}`}>
+    <div className={`typography-labels-label-sm ${styles.tag} ${isSelected ? styles.selected : variantClass(variant)}`}>
       <p>{text}</p>
     </div>
   );
