@@ -1,6 +1,6 @@
 .tag {
-  --border-radius-radius-sm: var(--measure-dimension-radius-sm)
-  --tag-width: min-content;
+  --border-radius-radius-sm: var(--measure-dimension-radius-sm);
+  --tag-width: max-content;
 
   width: var(--tag-width);
   border-style: solid;
