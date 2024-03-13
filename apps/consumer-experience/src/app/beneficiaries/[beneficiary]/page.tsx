@@ -1,3 +1,4 @@
+import { Address, Email } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/internal/components';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
@@ -6,9 +7,7 @@ import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrum
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 import { Addresses } from '@/components/person-data/Addresses';
 import { Emails } from '@/components/person-data/Emails';
-import { Address, Email } from '@/components/person-data/types';
 import { beneficiary as beneData } from '@/services/mocks/beneficiary';
-import { PolicyStatus } from '@/types/policy';
 import {
   isNullEmptyOrUndefined,
   filterItemsWithPastEndDate,
@@ -40,6 +39,7 @@ export default async function Beneficiary() {
           <Addresses
             addresses={currentAddresses as Address[]}
             title="Address"
+            preferredAddressIndicator="1"
           />
         ),
       });
@@ -47,7 +47,8 @@ export default async function Beneficiary() {
   }
 
   if (beneData.emails) {
-    const currentEmails = filterItemsWithPastEndDate(beneData.emails);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const currentEmails = filterItemsWithPastEndDate(beneData.emails as any);
 
     if (currentEmails.length > 0) {
       listItems.push({
@@ -59,16 +60,7 @@ export default async function Beneficiary() {
   return (
     <div>
       <HeaderBreadcrumb title="Beneficiary" />
-      <HeaderPolicyDetails
-        {...{
-          marketingName: 'Everly Life',
-          planName: 'SB UL Premium Match',
-          policyStatus: PolicyStatus.Active,
-          policyNumber: 'AK20000015',
-          firstName: 'Michael',
-          lastName: 'Williams',
-        }}
-      />
+      <HeaderPolicyDetails />
       <ClickableCardContainer listItems={listItems}>
         <div>
           <h2 className="mb-lg">Name</h2>

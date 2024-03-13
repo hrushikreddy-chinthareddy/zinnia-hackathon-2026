@@ -1,7 +1,8 @@
 import { Meta, StoryObj } from '@storybook/react';
+import { EmailType } from '@zinnia/api-types/types/sor';
 
 import { Emails } from '../Emails';
-import { EmailProps, EmailType } from '../types';
+import { EmailProps } from '../types';
 
 const meta: Meta<typeof Emails> = {
   component: Emails,
@@ -22,22 +23,22 @@ const meta: Meta<typeof Emails> = {
   args: {
     emails: [
       {
-        recordID: 1,
-        emailType: EmailType.Personal,
+        emailId: '1',
+        emailType: EmailType.PERSONAL,
         emailAddress: 'secben585+0502v1@gmail.com',
-        endDate: null,
+        // endDate: null,
       },
       {
-        recordID: 1,
-        emailType: EmailType.Business,
+        emailId: '1',
+        emailType: EmailType.BUSINESS,
         emailAddress: 'secben585+0502v1@gmail.com',
-        endDate: null,
+        // endDate: null,
       },
       {
-        recordID: 1,
-        emailType: EmailType.Other,
+        emailId: '1',
+        emailType: EmailType.OTHER,
         emailAddress: 'secben585+0502v1@gmail.com',
-        endDate: null,
+        // endDate: null,
       },
     ],
     title: 'Email',
@@ -54,10 +55,10 @@ export const Single: StoryType = {
   args: {
     emails: [
       {
-        recordID: 1,
-        emailType: EmailType.Personal,
+        emailId: '1',
+        emailType: EmailType.PERSONAL,
         emailAddress: 'secben585+0502v1@gmail.com',
-        endDate: null,
+        // endDate: null,
       },
     ],
   },

@@ -1,10 +1,17 @@
-export enum PhoneType {
-  Business = 'BUSINESS',
-  Fax = 'FAX',
-  Home = 'HOME',
-  Mobile = 'MOBILE',
-  Other = 'OTHER',
-}
+import {
+  Address,
+  BankAccount,
+  Email,
+  Phone,
+} from '@zinnia/api-types/types/sor';
+
+// export enum PhoneType {
+//   Business = 'BUSINESS',
+//   Fax = 'FAX',
+//   Home = 'HOME',
+//   Mobile = 'MOBILE',
+//   Other = 'OTHER',
+// }
 
 export enum BestTimeType {
   Morning = 'MORNING',
@@ -13,54 +20,54 @@ export enum BestTimeType {
   Anytime = 'ANYTIME',
 }
 
-export enum EmailType {
-  Personal = 'PERSONAL',
-  Business = 'BUSINESS',
-  Other = 'OTHER',
-}
+// export enum EmailType {
+//   Personal = 'PERSONAL',
+//   Business = 'BUSINESS',
+//   Other = 'OTHER',
+// }
 
-export enum AddressType {
-  Residence = 'RESIDENCE',
-  Seasonal = 'SEASONAL',
-  PoBox = 'POBOX',
-  Business = 'BUSINESS',
-}
-export interface Email {
-  recordID?: number | null;
-  startDate?: string | null;
-  endDate?: string | null; // TODO MG: this comes back as null sometimes
-  emailType: EmailType;
-  emailAddress?: string | null;
-}
+// export enum AddressType {
+//   Residence = 'RESIDENCE',
+//   Seasonal = 'SEASONAL',
+//   PoBox = 'POBOX',
+//   Business = 'BUSINESS',
+// }
+// export interface Email {
+//   recordID?: number | null;
+//   startDate?: string | null;
+//   endDate?: string | null; // TODO MG: this comes back as null sometimes
+//   emailType: EmailType;
+//   emailAddress?: string | null;
+// }
 
-export type Phone = {
-  recordID?: number;
-  startDate?: string | null;
-  endDate?: string | null;
-  phoneType: PhoneType;
-  countryCode?: string | null;
-  areaCode?: string | null;
-  dialNumber?: string | null;
-  extension?: string | null;
-  bestTime?: BestTimeType | null;
-  timeZone?: string | null;
-};
+// export type Phone = {
+//   recordID?: number;
+//   startDate?: string | null;
+//   endDate?: string | null;
+//   phoneType: PhoneType;
+//   countryCode?: string | null;
+//   areaCode?: string | null;
+//   dialNumber?: string | null;
+//   extension?: string | null;
+//   bestTime?: BestTimeType | null;
+//   timeZone?: string | null;
+// };
 
-export type Address = {
-  recordID?: number;
-  startDate: string;
-  endDate?: string | null;
-  addressType?: AddressType;
-  addressLine1?: string | null;
-  addressLine2?: string | null;
-  addressLine3?: string | null;
-  city?: string | null;
-  state?: string | null;
-  zipCode?: string | null;
-  zipCodeExtension?: string | null;
-  country?: string | null;
-  preferredAddressIndicator?: string | null;
-};
+// export type Address = {
+//   recordID?: number;
+//   startDate: string;
+//   endDate?: string | null;
+//   addressType?: AddressType;
+//   addressLine1?: string | null;
+//   addressLine2?: string | null;
+//   addressLine3?: string | null;
+//   city?: string | null;
+//   state?: string | null;
+//   zipCode?: string | null;
+//   zipCodeExtension?: string | null;
+//   country?: string | null;
+//   preferredAddressIndicator?: string | null;
+// };
 
 export interface PhoneProps {
   phones: Phone[];
@@ -75,36 +82,9 @@ export interface EmailProps {
 export interface AddressProps {
   addresses: Address[];
   title: string;
+  preferredAddressIndicator: string;
 }
 
-export interface BankDetails {
-  appliesToPartyID: string;
-  financialInstitutionPartyID: string;
-  startDate: string;
-  endDate: string | null;
-  nameOnAccount: string;
-  accountStatus: string;
-  accountType: string;
-  accountNumber: string;
-  routingNumber: string;
-  ibaNumber: string;
-  branchName: string;
-  accountPurpose: string;
-  preferredAddressIndicator: string;
-  branchAddress: {
-    recordID: number;
-    startDate: string;
-    endDate: string | null;
-    addressType: string;
-    addrLine1: string;
-    addrLine2: string;
-    addrLine3: string;
-    city: string;
-    state: string;
-    zipCode: string;
-    zipExt: string;
-    addrCountry: string;
-  };
-  branchPhoneNumber: string;
+export interface BankDetail extends BankAccount {
   autopayEnabled: boolean;
 }

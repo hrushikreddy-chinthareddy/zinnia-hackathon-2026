@@ -1,7 +1,8 @@
 import { Meta, StoryObj } from '@storybook/react';
+import { PhoneType } from '@zinnia/api-types/types/sor';
 
 import { Phones } from '../Phones';
-import { BestTimeType, PhoneProps, PhoneType } from '../types';
+import { BestTimeType, PhoneProps } from '../types';
 
 const meta: Meta<typeof Phones> = {
   component: Phones,
@@ -22,28 +23,28 @@ const meta: Meta<typeof Phones> = {
   args: {
     phones: [
       {
-        recordID: 1,
+        phoneId: '1',
         startDate: '2024-01-30',
-        endDate: null,
-        phoneType: PhoneType.Business,
-        countryCode: null,
+        // endDate: null,
+        phoneType: PhoneType.BUSINESS,
+        // countryCode: null,
         areaCode: '542',
         dialNumber: '7543111',
         extension: '1628',
-        bestTime: null,
-        timeZone: null,
+        // bestTime: null,
+        // timeZone: null,
       },
       {
-        recordID: 1,
+        phoneId: '1',
         startDate: '2024-01-30',
-        endDate: null,
-        phoneType: PhoneType.Mobile,
-        countryCode: null,
+        // endDate: null,
+        phoneType: PhoneType.MOBILE,
+        // countryCode: null,
         areaCode: '542',
         dialNumber: '7543111',
-        extension: null,
+        // extension: null,
         bestTime: BestTimeType.Morning,
-        timeZone: null,
+        // timeZone: null,
       },
     ],
     title: 'Phone',
@@ -60,16 +61,16 @@ export const Single: StoryType = {
   args: {
     phones: [
       {
-        recordID: 1,
+        phoneId: '1',
         startDate: '2024-01-30',
-        endDate: null,
-        phoneType: PhoneType.Mobile,
-        countryCode: null,
+        // endDate: null,
+        phoneType: PhoneType.MOBILE,
+        // countryCode: null,
         areaCode: '542',
         dialNumber: '7543111',
         extension: '1628',
-        bestTime: null,
-        timeZone: null,
+        // bestTime: null,
+        // timeZone: null,
       },
     ],
   },

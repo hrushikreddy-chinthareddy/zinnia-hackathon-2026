@@ -1,19 +1,40 @@
-import axios, { AxiosError } from 'axios';
+import { getAccessToken } from '@auth0/nextjs-auth0';
 
-const handleError = (error: unknown | AxiosError) => {
-  if (axios.isAxiosError(error)) {
-    const err = error as AxiosError;
+class HttpRequest {
+  request = async (
+    input: string | URL | Request,
+    init?: RequestInit | undefined
+  ): Promise<Response> => {
+    const { accessToken } = await getAccessToken();
+    const requestInit: RequestInit = init || {};
+    if (!requestInit.headers) {
+      requestInit.headers = {};
+    }
 
-    console.log('axios error => ', err);
-    return;
-  }
+    requestInit.headers = {
+      ...requestInit.headers,
+      Authorization: `Bearer ${accessToken}`,
+    };
 
-  const err = error as Error;
+    return fetch(input, requestInit);
+  };
 
-  console.log('error =>', err);
+  get = (input: string | URL | Request, init?: RequestInit | undefined) => {
+    init = init || {};
+    init.method = 'GET';
+    return this.request(input, init);
+  };
 
-  return;
-};
+  post = (
+    input: string | URL | Request,
+    data?: BodyInit | null | undefined,
+    init?: RequestInit | undefined
+  ) => {
+    init = init || {};
+    init.method = 'POST';
+    init.body = data;
+    return this.request(input, init);
+  };
+}
 
-export * from 'axios';
-export { axios, handleError };
+export const ServerApi = new HttpRequest();

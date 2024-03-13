@@ -17,3 +17,19 @@ export const toSentenceCase = (value?: string): string => {
 
   return value?.charAt(0)?.toUpperCase() + value?.slice(1)?.toLowerCase();
 };
+
+// Format SSN return 1234
+export const formatSsn = (ssn?: string): string => {
+  if (!ssn) {
+    return DEFAULT_ERROR_STRING;
+  }
+
+  // Remove any non-numeric characters
+  const cleanedSSN = ssn.replace(/\D/g, '');
+
+  // Get the last 4 digits
+  const last4Digits = cleanedSSN.slice(-4);
+
+  // Append the last 4 digits to the static string
+  return last4Digits;
+};

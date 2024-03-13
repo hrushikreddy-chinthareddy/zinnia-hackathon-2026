@@ -1,3 +1,4 @@
+import { Phone, PhoneType } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/internal/components';
 
 import { FieldData } from '@/components/field-data/FieldData';
@@ -5,7 +6,7 @@ import { formatPhoneNumberWithExtension } from '@/utils/data';
 import { toSentenceCase } from '@/utils/strings';
 
 import styles from './PersonData.module.css';
-import { Phone, PhoneProps, PhoneType } from './types';
+import { PhoneProps } from './types';
 
 const PhoneNumber = (phone: Phone) => {
   return (
@@ -22,17 +23,17 @@ export const Phones = ({ phones, title }: PhoneProps) => {
   }
 
   const businessPhones = phones?.filter(
-    phone => phone.phoneType === PhoneType.Business
+    phone => phone.phoneType === PhoneType.BUSINESS
   );
-  const faxes = phones?.filter(phone => phone.phoneType === PhoneType.Fax);
+  const faxes = phones?.filter(phone => phone.phoneType === PhoneType.FAX);
   const homePhones = phones?.filter(
-    phone => phone.phoneType === PhoneType.Home
+    phone => phone.phoneType === PhoneType.HOME
   );
   const mobilePhones = phones?.filter(
-    phone => phone.phoneType === PhoneType.Mobile
+    phone => phone.phoneType === PhoneType.MOBILE
   );
   const otherPhones = phones?.filter(
-    phone => phone.phoneType === PhoneType.Other
+    phone => phone.phoneType === PhoneType.OTHER
   );
 
   return (

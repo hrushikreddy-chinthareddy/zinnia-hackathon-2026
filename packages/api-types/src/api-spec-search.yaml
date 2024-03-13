@@ -1,0 +1,349 @@
+openapi: 3.0.0
+paths:
+  /policy/v1/policies/reference:
+    post:
+      operationId: createPolicyMetadata
+      summary: ""
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePolicyReferenceDataModel"
+      responses:
+        default:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PolicyReferenceDataModel"
+      tags:
+        - Policy Reference
+  /policy/v1/policies/reference/bulk:
+    post:
+      operationId: bulkCreatePolicyMetadata
+      summary: ""
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/CreatePolicyReferenceDataModel"
+      responses:
+        default:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BulkUploadResponse"
+      tags:
+        - Policy Reference
+  /policy/v1/policies/{id}/reference:
+    get:
+      operationId: getPolicyMetadataById
+      summary: ""
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        default:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PolicyReferenceDataModel"
+      tags:
+        - Policy Reference
+      security:
+        - Auth0:
+            - read:policy
+  /policy/v1/policies/reference/search:
+    post:
+      operationId: searchPolicies
+      summary: ""
+      parameters:
+        - name: offset
+          required: false
+          in: query
+          description: index to start page search at
+          schema:
+            type: number
+        - name: limit
+          required: false
+          in: query
+          description: number of results to limit to
+          schema:
+            type: number
+      requestBody:
+        required: true
+        description: Optional search criteria, none, some, or all criteria can be used. Values cannot be null.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PolicySearchRequest"
+      responses:
+        default:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PolicySearchResponse"
+      tags:
+        - Policy Reference
+      security:
+        - Auth0:
+            - read:policy
+info:
+  title: Zinnia Policy Reference Service
+  description: Policy ID generation service to create/retrieve/import cross reference unique identifier for policies
+  version: 0.1.0
+  contact: {}
+tags:
+  - name: Policy Reference
+    description: ""
+servers:
+  - url: https://dev.api.zinnia.io
+components:
+  securitySchemes:
+    Auth0:
+      type: openIdConnect
+      openIdConnectUrl: https://login.dev.zinnia.com/.well-known/openid-configuration
+      x-kong-security-openid-connect:
+        config:
+          run_on_preflight: true
+          scopes_claim:
+            - https://dev.api.zinnia.io/permissions
+          audience_claim:
+            - aud
+          audience_required:
+            - https://dev.api.zinnia.io
+          client_id:
+            - bGOIRPRq2ZnjCujDXC7ikwR5ez7VH5GZ
+          auth_methods:
+            - bearer
+          scopes: []
+        enabled: true
+        protocols:
+          - grpc
+          - grpcs
+          - http
+          - https
+  schemas:
+    CreatePolicyReferenceDataModel:
+      type: object
+      properties:
+        policyNumber:
+          type: string
+          description: number/subjective id of policy
+          example: "127147468264"
+        source:
+          type: string
+          description: SOR system the policy belongs to
+          example: Zahara
+        planCode:
+          type: string
+          description: plan code for policy
+          example: "11441"
+        productName:
+          type: string
+          description: product name of policy
+          example: Deluxe Universal Life
+        firstName:
+          type: string
+          description: policy owner first name
+          example: Nick
+        lastName:
+          type: string
+          description: policy owner last name
+          example: Burdell
+        policyStatus:
+          type: string
+          description: status of policy, needs to be enum
+          example: IGO
+        lineOfBusiness:
+          type: string
+          description: line of business, usually LIFE or ANNUITY
+          example: LIFE
+        carrierId:
+          type: string
+          description: 4 character id of carrier, also called clientCode or companyCode
+          example: ULPC
+        companyName:
+          type: string
+          description: Company associated with policyholder
+          example: Google
+        ssn:
+          type: string
+          description: Social security number of policy holder, masked on return
+        productType:
+          type: string
+          description: Type of the product
+          example: universal
+        lastUpdated:
+          format: date-time
+          type: string
+          description: last time policy was updated
+        partyIds:
+          description: party ids for this policy
+          example:
+            - 4fd32e7aecc24888be9c5418d6dc646a
+            - 2739e8897e7141189ccd366f7d054ff0
+          type: array
+          items:
+            type: string
+      required:
+        - policyNumber
+        - source
+    PolicyReferenceDataModel:
+      type: object
+      properties:
+        policyNumber:
+          type: string
+          description: number/subjective id of policy
+          example: "127147468264"
+        source:
+          type: string
+          description: SOR system the policy belongs to
+          example: Zahara
+        planCode:
+          type: string
+          description: plan code for policy
+          example: "11441"
+        productName:
+          type: string
+          description: product name of policy
+          example: Deluxe Universal Life
+        firstName:
+          type: string
+          description: policy owner first name
+          example: Nick
+        lastName:
+          type: string
+          description: policy owner last name
+          example: Burdell
+        policyStatus:
+          type: string
+          description: status of policy, needs to be enum
+          example: IGO
+        lineOfBusiness:
+          type: string
+          description: line of business, usually LIFE or ANNUITY
+          example: LIFE
+        carrierId:
+          type: string
+          description: 4 character id of carrier, also called clientCode or companyCode
+          example: ULPC
+        companyName:
+          type: string
+          description: Company associated with policyholder
+          example: Google
+        ssn:
+          type: string
+          description: Social security number of policy holder, masked on return
+        productType:
+          type: string
+          description: Type of the product
+          example: universal
+        lastUpdated:
+          format: date-time
+          type: string
+          description: last time policy was updated
+        partyIds:
+          description: party ids for this policy
+          example:
+            - 4fd32e7aecc24888be9c5418d6dc646a
+            - 2739e8897e7141189ccd366f7d054ff0
+          type: array
+          items:
+            type: string
+        id:
+          type: string
+          description: reference id of the policy, fully unique
+          example: 3cc99edada4f4a88be77cef53ba0b3fd
+      required:
+        - policyNumber
+        - source
+    CreatePolicyReferenceErrorModel:
+      type: object
+      properties:
+        referenceData:
+          $ref: "#/components/schemas/CreatePolicyReferenceDataModel"
+        reason:
+          type: string
+          example: "Identical policy reference already exists- reference id: 3cc99edada4f4a88be77cef53ba0b3fd"
+      required:
+        - referenceData
+        - reason
+    BulkUploadResponse:
+      type: object
+      properties:
+        inserted:
+          description: Policy reference data successfully added during upload
+          type: array
+          items:
+            $ref: "#/components/schemas/PolicyReferenceDataModel"
+        errors:
+          description: Invalid policy reference data that couldn't be inserted
+          type: array
+          items:
+            $ref: "#/components/schemas/CreatePolicyReferenceErrorModel"
+      required:
+        - inserted
+        - errors
+    PolicySearchRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: policy owner first name
+        policyNumber:
+          type: string
+          description: number/subjective id of policy
+        lastName:
+          type: string
+          description: policy owner last name
+        policyStatus:
+          type: string
+          description: status of policy, needs to be enum
+        planCode:
+          type: string
+          description: plan code for policy
+        lastUpdated:
+          format: date-time
+          type: string
+          description: last time policy was updated
+        ssn:
+          type: string
+          description: policy owner social security number
+        id:
+          type: string
+          description: reference id of the policy, fully unique
+    PolicySearchResponse:
+      type: object
+      properties:
+        count:
+          type: number
+          description: result count, if more results than limit will equal limit
+        next:
+          type: string
+          description: path for next page, includes full path and query parameters
+        previous:
+          type: string
+          description: path for previous page, includes full path and query parameters
+        results:
+          description: array of policy reference data
+          type: array
+          items:
+            $ref: "#/components/schemas/PolicyReferenceDataModel"
+      required:
+        - count
+        - next
+        - previous
+        - results
