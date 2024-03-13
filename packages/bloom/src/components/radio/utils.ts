@@ -13,4 +13,5 @@ export interface RadioProps
   groupLabel?: string;
   options: RadioOption[];
   defaultValue?: string;
+  id?: string;
 }

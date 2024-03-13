@@ -4,6 +4,12 @@
     gap: var(--measure-dimension-gap-lg, 1rem);
 }
 
+.RadioGroupContainer {
+    display: flex;
+    align-items: center;
+}
+
+
 .RadioGroupItem {
     width: var(--measure-dimension-z-space-6, 1.5rem);
     height: var(--measure-dimension-z-space-6, 1.5rem);
