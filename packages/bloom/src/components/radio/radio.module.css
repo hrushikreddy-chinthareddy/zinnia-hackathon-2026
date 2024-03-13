@@ -1,7 +1,3 @@
-.disabled {
-    color: var(--color-states-inactive-inactive-text, #b3b3b3)
-}
-
 .selected {
     border-color: var(--color-primary-color-primary, #ff7500);
 }
@@ -17,8 +13,12 @@
     height: var(--measure-dimension-z-space-6, 1.5rem);
     border-radius: var(--measure-dimension-radius-max, 62.5rem);
     border-color: var(--color-grayscale-color-300-gray, #b3b3b3);
-    border-width: var(--measure-dimension-stroke-sm, 0.125rem) ;
-    margin-right: var(--measure-dimension-z-space-2, 0.5rem)
+    border-width: var(--measure-dimension-stroke-sm, 0.125rem);
+    margin-right: var(--measure-dimension-z-space-2, 0.5rem);
+    
+    &:disabled + label {
+        color: var(--color-states-inactive-inactive-text, #b3b3b3);
+    }
 }
 
 .RadioGroupItem:hover:not([data-disabled]) {
@@ -58,6 +58,7 @@
 
 .RadioGroupItem[data-disabled][data-state="checked"] {
     border-color: var(--color-primary-color-primary-lightest, #ffead9);
+
 }
 
 .RadioGroupItem[data-disabled][data-state="unchecked"] {
