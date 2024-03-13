@@ -59,16 +59,12 @@
         background-color: var(--color-grayscale-color-300-gray, #b3b3b3);
     }
 
-    &[data-state="checked"] {
-        &::after {
-            background-color: var(--color-primary-color-primary, #ff7500);
+    &[data-state="checked"]::after {
+        background-color: var(--color-primary-color-primary, #ff7500);
+    }
 
-            &[data-disabled] {
-                background-color: var(--color-primary-color-primary-lightest, #ffead9);
-                width: var(--measure-dimension-z-space-4, 1rem);
-                height: var(--measure-dimension-z-space-4, 1rem);
-            }
-        }
+    &[data-state="checked"][data-disabled]::after {
+        background-color: var(--color-primary-color-primary-lightest, #ffead9);
     }
 
 }
