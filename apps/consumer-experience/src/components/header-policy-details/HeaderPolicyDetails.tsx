@@ -1,47 +1,67 @@
+import { PolicyStatus } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
+import { headers } from 'next/headers';
 
-import { PolicyDetails, PolicyStatus } from '@/types/policy';
+import { getPolicyForHeaderDetails } from '@/services';
 import { checkIfNull, fullName } from '@/utils/data';
 import { toSentenceCase } from '@/utils/strings';
 
 import styles from './HeaderPolicyDetails.module.css';
 
-interface Props extends PolicyDetails, React.HTMLAttributes<HTMLDivElement> {
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
-  policyStatus: PolicyStatus;
 }
 
 // TODO: add surrendered and locked statuses
 const policyDisplayText: { [key in PolicyStatus]: string } = {
-  [PolicyStatus.Active]: 'active',
-  [PolicyStatus.PendingIssued]: 'active',
-  [PolicyStatus.PendingLapse]: 'pending lapse',
-  [PolicyStatus.Lapse]: 'lapsed',
+  [PolicyStatus.ACTIVE]: 'active',
+  [PolicyStatus.PENDINGISSUED]: 'active',
+  [PolicyStatus.PENDINGLAPSE]: 'pending lapse',
+  [PolicyStatus.LAPSE]: 'lapsed',
   // TODO: what is the display for this one?
-  [PolicyStatus.NotIssued]: '',
+  [PolicyStatus.NOTISSUED]: '',
+  [PolicyStatus.CANCELEDNOPREMIUM]: '',
+  [PolicyStatus.CANCELEDFREELOOK]: '',
+  [PolicyStatus.TERMINATED]: '',
+  [PolicyStatus.MATURED]: '',
+  [PolicyStatus.SURRENDERED]: '',
+  [PolicyStatus.LIVINGCLAIMPENDING]: '',
+  [PolicyStatus.DEATHCLAIMPENDING]: '',
+  [PolicyStatus.DEATHCLAIMPAID]: '',
 };
 
-export const HeaderPolicyDetails = ({
-  className,
-  firstName,
-  lastName,
-  marketingName,
-  planName,
-  policyNumber,
-  policyStatus,
-  style,
-}: Props) => {
+export const HeaderPolicyDetails = async ({ className, style }: Props) => {
+  const headerStore = headers();
+
+  const { data, error } = await getPolicyForHeaderDetails({
+    planCode: headerStore.get('planCode') || '',
+    policyNumber: headerStore.get('policyNumber') || '',
+  });
+
+  if (error) {
+    return null;
+  }
+
+  const {
+    firstName,
+    lastName,
+    marketingName,
+    planName,
+    policyNumber,
+    policyStatus,
+  } = data!;
+
   const statusStyle = () => {
     switch (policyStatus) {
       // TODO: how to categorize this one?
       // case PolicyStatus.NotIssued:
       //   return 'status.notIssued';
-      case PolicyStatus.PendingIssued:
-      case PolicyStatus.Active:
+      case PolicyStatus.PENDINGISSUED:
+      case PolicyStatus.ACTIVE:
         return styles.success;
-      case PolicyStatus.PendingLapse:
+      case PolicyStatus.PENDINGLAPSE:
         return styles.warning;
-      case PolicyStatus.Lapse:
+      case PolicyStatus.LAPSE:
         return styles.error;
       default:
         return '';

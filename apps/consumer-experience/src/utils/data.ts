@@ -1,6 +1,7 @@
+import { Address, Email, Phone } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 
-import { Address, Email, Phone } from '@/components/person-data/types';
+// import { Address, Email, Phone } from '@/components/person-data/types';
 
 import { DEFAULT_ERROR_STRING, toSentenceCase } from './strings';
 

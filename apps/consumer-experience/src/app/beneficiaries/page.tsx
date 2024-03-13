@@ -10,8 +10,6 @@ import {
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
-import { baseAppUrl } from '@/services/api-config';
-import { serverApi } from '@/services/server';
 import { formatUSDollars } from '@/utils/currency';
 
 import styles from './Beneficiaries.module.css';
@@ -119,15 +117,6 @@ const BeneficiaryListItem = ({
 };
 
 export default async function Beneficiaries() {
-  const policyOverviewData = await Promise.allSettled([
-    serverApi.get(`${baseAppUrl}/api/policies/2345`),
-  ]);
-
-  const policyResult = policyOverviewData?.[0];
-
-  const policyData =
-    policyResult.status !== 'rejected' ? policyResult?.value?.data : {};
-
   const primaryListItems = primary.map((bene, index) => {
     return {
       linkTo: {
@@ -161,10 +150,7 @@ export default async function Beneficiaries() {
   return (
     <div>
       <HeaderBreadcrumb title="Beneficiaries" />
-      <HeaderPolicyDetails
-        className={styles.policyDetails}
-        {...policyData.policyDetails}
-      />
+      <HeaderPolicyDetails className={styles.policyDetails} />
       <div className={styles.itemsContainer}>
         <ClickableCardContainer>
           <div className={styles.infoCard}>

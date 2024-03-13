@@ -1,17 +1,10 @@
-'use client';
-
-import {
-  Label,
-  Icon,
-  IconType,
-  Popover,
-  PopoverPlacement,
-} from '@zinnia/bloom/internal/components';
+import { Label, Icon, IconType } from '@zinnia/bloom/internal/components';
+import { headers } from 'next/headers';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
-import { PolicyCoverage, PolicyStatus } from '@/types/policy';
-import { PolicyRiders } from '@/types/riders';
+import { CoveragePopover } from '@/components/policy-overview/CoveragePopover';
+import { getCoverae } from '@/services';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined } from '@/utils/data';
 import { standardDateMonthYear } from '@/utils/dates';
@@ -21,51 +14,31 @@ import styles from './PolicyOverview.module.css';
 
 const COVERAGE = 'Coverage';
 
-const CoveragePopover = () => {
-  return (
-    <Popover
-      title={COVERAGE}
-      trigger={
-        <Icon
-          type={IconType.CIRCLE_INFO}
-          width={16}
-          height={16}
-          color="var(--color-primary-color-primary, #ff7500)"
-        />
-      }
-      placement={PopoverPlacement.BottomRight}
-    >
-      <div className={styles.popoverContent}>
-        <p>
-          Rest assured, you’re insured for this amount as long as your policy is
-          active. Your coverage amount is also referred to as the policy’s
-          “death benefit.” If something happens to you, your beneficiaries can
-          claim this amount.
-        </p>
-      </div>
-    </Popover>
-  );
-};
+export const Coverage = async () => {
+  const headerStore = headers();
 
-export interface Props extends PolicyCoverage {
-  policyStatus: PolicyStatus;
-  riders: PolicyRiders[];
-}
+  const { data, error } = await getCoverae({
+    planCode: headerStore.get('planCode') || '',
+    policyNumber: headerStore.get('policyNumber') || '',
+  });
 
-export const Coverage = ({
-  totalCoverageAmount,
-  policyStartDate,
-  maturityDate,
-  beneficiaryCount,
-  riders,
-}: Props) => {
+  if (error) {
+    return null;
+  }
+  const {
+    beneficiaryCount,
+    totalCoverageAmount,
+    policyStartDate,
+    maturityDate,
+    riderCount,
+  } = data!;
   const additionalItems = [];
-
-  if (riders?.length > 0) {
+  if (riderCount > 0) {
+    const riderText = riderCount > 1 ? 'riders' : 'rider';
     additionalItems.push({
       content: (
         <FieldData Label={<Label>Riders</Label>}>
-          <p className="typography-content-body-sm">{`${riders.length} riders`}</p>
+          <p className="typography-content-body-sm">{`${riderCount} ${riderText}`}</p>
         </FieldData>
       ),
       linkTo: { url: '/policy-riders', label: 'riders' },
@@ -73,10 +46,12 @@ export const Coverage = ({
   }
 
   if (beneficiaryCount) {
+    const beneficiaryText =
+      beneficiaryCount > 1 ? 'beneficiaries' : 'beneficiary';
     additionalItems.push({
       content: (
         <FieldData Label={<Label>Beneficiary</Label>}>
-          <p className="typography-content-body-sm">{`${beneficiaryCount} beneficiaries`}</p>
+          <p className="typography-content-body-sm">{`${beneficiaryCount} ${beneficiaryText}`}</p>
         </FieldData>
       ),
       linkTo: { url: '/beneficiaries', label: 'go to beneficiaries page' },

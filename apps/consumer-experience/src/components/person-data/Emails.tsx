@@ -1,9 +1,10 @@
+import { EmailType } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/internal/components';
 
 import { FieldData } from '@/components/field-data/FieldData';
 
 import styles from './PersonData.module.css';
-import { EmailProps, EmailType } from './types';
+import { EmailProps } from './types';
 
 export const Emails = ({ emails, title }: EmailProps) => {
   if (!emails || emails.length === 0) {
@@ -11,13 +12,13 @@ export const Emails = ({ emails, title }: EmailProps) => {
   }
 
   const personalEmails = emails?.filter(
-    email => email.emailType === EmailType.Personal
+    email => email.emailType === EmailType.PERSONAL
   );
   const businessEmails = emails?.filter(
-    email => email.emailType === EmailType.Business
+    email => email.emailType === EmailType.BUSINESS
   );
   const otherEmails = emails?.filter(
-    email => email.emailType === EmailType.Other
+    email => email.emailType === EmailType.OTHER
   );
 
   return (

@@ -1,9 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 
-import { PolicyStatus } from '@/types/policy';
-
-import { policyOverviewData } from '../../../services/mocks/policy';
-import { AccountValue, Props } from '../AccountValue';
+import { AccountValue } from '../AccountValue';
 
 const meta: Meta<typeof AccountValue> = {
   component: AccountValue,
@@ -13,31 +10,18 @@ const meta: Meta<typeof AccountValue> = {
 };
 
 export default meta;
-type StoryType = StoryObj<Props>;
+type StoryType = StoryObj;
 
 export const Default: StoryType = {
-  args: {
-    totalFundValue: policyOverviewData.accountValue.totalFundValue,
-    timestamp: policyOverviewData.accountValue.timestamp,
-    valueChange: policyOverviewData.accountValue.valueChange,
-    policyStatus: PolicyStatus.Active,
-  },
+  args: {},
 };
 
 export const ZeroValues: StoryType = {
-  args: {
-    totalFundValue: 0,
-    valueChange: 0,
-  },
+  args: {},
 };
 
 export const MainValueNull: StoryType = {
-  args: {
-    totalFundValue: null,
-    timestamp: policyOverviewData.accountValue.timestamp,
-    valueChange: null,
-    policyStatus: PolicyStatus.Active,
-  },
+  args: {},
 };
 
 export const APIFailed: StoryType = {
@@ -46,10 +30,5 @@ export const APIFailed: StoryType = {
 
 // TODO: add other policy statuses here
 export const PolicyLapsed: StoryType = {
-  args: {
-    totalFundValue: policyOverviewData.accountValue.totalFundValue,
-    timestamp: policyOverviewData.accountValue.timestamp,
-    valueChange: policyOverviewData.accountValue.valueChange,
-    policyStatus: PolicyStatus.Lapse,
-  },
+  args: {},
 };

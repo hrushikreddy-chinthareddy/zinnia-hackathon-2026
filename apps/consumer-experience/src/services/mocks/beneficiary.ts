@@ -1,4 +1,4 @@
-import { AddressType, EmailType } from '@/components/person-data/types';
+import { AddressType, EmailType } from '@zinnia/api-types/types/sor';
 
 export const beneficiary = {
   firstName: 'john',
@@ -8,8 +8,8 @@ export const beneficiary = {
   addresses: [
     {
       startDate: '2024-03-04',
-      endDate: null,
-      addressType: AddressType.Residence,
+      endDate: '2024-03-04',
+      addressType: AddressType.RESIDENCE,
       addressLine1: '1112 Pickle Street',
       addressLine2: 'South Jersey',
       addressLine3: '1234 Post box',
@@ -23,8 +23,8 @@ export const beneficiary = {
   ],
   emails: [
     {
-      recordID: 1,
-      emailType: EmailType.Personal,
+      emailId: '1',
+      emailType: EmailType.PERSONAL,
       emailAddress: 'secben585+0502v1@gmail.com',
       endDate: null,
       startDate: '2022-01-01',

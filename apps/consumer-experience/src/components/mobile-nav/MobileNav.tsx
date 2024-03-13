@@ -4,7 +4,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { Icon, IconType } from '@zinnia/bloom/internal/components';
 import clsx from 'clsx';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import LogoImage from '@/app/styles/everly/everly-logo.svg';
@@ -15,12 +15,17 @@ import styles from './MobileNav.module.css';
 const navRoutes = [
   { url: '/', displayName: 'Policy overview', icon: IconType.DASHBOARD },
   { url: '/documents', displayName: 'Documents', icon: IconType.DOCUMENT_TEXT },
-  { url: '/profile', displayName: 'Profile', icon: IconType.CIRCLE_USER },
+  {
+    url: '/policies/${planCode}/policy/${policyNumber}/profile',
+    displayName: 'Profile',
+    icon: IconType.CIRCLE_USER,
+  },
 ];
 
 export const MobileNav = () => {
   const [open, setOpen] = useState(false);
   const pathName = usePathname();
+  const params = useParams<{ planCode: string; policyNumber: string }>();
 
   // This won't close the menu if user clicks the path they are currently on
   useEffect(() => {
@@ -67,11 +72,14 @@ export const MobileNav = () => {
             <nav className={styles.innerContent}>
               <ul>
                 {navRoutes.map(route => {
-                  const isCurrentPath = pathName === route.url;
+                  const url = route.url
+                    .replace('${planCode}', params.planCode)
+                    .replace('${policyNumber}', params.planCode);
+                  const isCurrentPath = pathName === url;
                   return (
                     <li key={route.displayName} className={styles.navListItem}>
                       <Link
-                        href={route.url}
+                        href={url}
                         className={clsx(
                           `${styles.navItem} typography-nav-nav-drawer`,
                           { [styles.selected as string]: isCurrentPath }

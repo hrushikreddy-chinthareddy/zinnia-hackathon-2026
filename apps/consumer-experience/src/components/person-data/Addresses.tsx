@@ -1,4 +1,8 @@
 import {
+  AddressType,
+  Address as AddressInterface,
+} from '@zinnia/api-types/types/sor';
+import {
   Address,
   AssistiveText,
   AssistiveTextVariant,
@@ -8,31 +12,31 @@ import {
 import { FieldData } from '@/components/field-data/FieldData';
 
 import styles from './PersonData.module.css';
-import {
-  Address as AddressInterface,
-  AddressProps,
-  AddressType,
-} from './types';
+import { AddressProps } from './types';
 
 const displayAddressType: { [key in AddressType]?: string } = {
-  [AddressType.PoBox]: 'PO Box',
-  [AddressType.Residence]: 'Residential',
-  [AddressType.Business]: 'Business',
+  [AddressType.POBOX]: 'PO Box',
+  [AddressType.RESIDENCE]: 'Residential',
+  [AddressType.BUSINESS]: 'Business',
 };
 
-const AddressGroup = ({ addresses }: { addresses: AddressInterface[] }) => {
+const AddressGroup = ({
+  addresses,
+  preferredAddressIndicator,
+}: {
+  addresses: AddressInterface[];
+  preferredAddressIndicator: string;
+}) => {
   return addresses?.map((address, index) => {
     const mailingAddressText =
-      address.preferredAddressIndicator === address?.recordID?.toString()
-        ? 'Mailing address'
-        : '';
+      preferredAddressIndicator === address?.addressId ? 'Mailing address' : '';
 
     return (
       <FieldData
         key={`key-${index}`}
         Label={
           <Label>
-            {displayAddressType[address.addressType || AddressType.Residence]}
+            {displayAddressType[address.addressType || AddressType.RESIDENCE]}
           </Label>
         }
         AssistiveText={
@@ -56,13 +60,17 @@ const AddressGroup = ({ addresses }: { addresses: AddressInterface[] }) => {
   });
 };
 
-export const Addresses = ({ addresses, title }: AddressProps) => {
+export const Addresses = ({
+  addresses,
+  title,
+  preferredAddressIndicator,
+}: AddressProps) => {
   if (addresses.length === 0) {
     return null;
   }
 
   const residentialAddresses = addresses?.filter(
-    address => address.addressType === AddressType.Residence
+    address => address.addressType === AddressType.RESIDENCE
   );
 
   // TODO: this was determined to be out of scope by ops since Zahara does not have a way of adding a recurring
@@ -72,19 +80,28 @@ export const Addresses = ({ addresses, title }: AddressProps) => {
   // );
 
   const boxAddresses = addresses?.filter(
-    address => address.addressType === AddressType.PoBox
+    address => address.addressType === AddressType.POBOX
   );
   const businessAddresses = addresses?.filter(
-    address => address.addressType === AddressType.Business
+    address => address.addressType === AddressType.BUSINESS
   );
 
   return (
     <div className={styles.itemsRowContainer}>
       <h2 className="mb-lg">{title}</h2>
       <div className={styles.itemsRow}>
-        <AddressGroup addresses={residentialAddresses} />
-        <AddressGroup addresses={boxAddresses} />
-        <AddressGroup addresses={businessAddresses} />
+        <AddressGroup
+          addresses={residentialAddresses}
+          preferredAddressIndicator={preferredAddressIndicator}
+        />
+        <AddressGroup
+          addresses={boxAddresses}
+          preferredAddressIndicator={preferredAddressIndicator}
+        />
+        <AddressGroup
+          addresses={businessAddresses}
+          preferredAddressIndicator={preferredAddressIndicator}
+        />
       </div>
     </div>
   );
