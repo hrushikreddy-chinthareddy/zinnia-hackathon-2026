@@ -4,11 +4,13 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
 import LogoImage from '@/app/styles/everly/everly-logo.svg';
+import useMock from '@/hooks/use-mock';
 
 import styles from './DesktopNav.module.css';
 
 export function DesktopNav() {
   const params = useParams<{ planCode: string; policyNumber: string }>();
+  const { mockHref, mockText, showMockLink } = useMock();
 
   return (
     <nav className={styles.container}>
@@ -17,6 +19,12 @@ export function DesktopNav() {
       </Link>
 
       <div className={`${styles.navItemsContainer} typography-nav-links-sm`}>
+        {showMockLink && (
+          <a href={mockHref} className={styles.navItem}>
+            <Icon type={IconType.ALERT_EXCLAMATION} />
+            {mockText}
+          </a>
+        )}
         <Link href="#" className={styles.navItem}>
           <Icon type={IconType.DOCUMENT_TEXT} />
           Documents

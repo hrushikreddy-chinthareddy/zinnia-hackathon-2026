@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
+import MockMessage from '@/components/MockMessage';
 import styles from '@/components/policy-overview/PolicyOverview.module.css';
 import { getMyPoliciesByCarrier } from '@/services';
 
@@ -22,7 +23,9 @@ export default async function Page() {
     return (
       <>
         <HeaderBreadcrumb title="My Policies" />
-        <div className={styles.cardContainer}>Error!!</div>
+        <div className={styles.cardContainer}>
+          <MockMessage />
+        </div>
       </>
     );
   }

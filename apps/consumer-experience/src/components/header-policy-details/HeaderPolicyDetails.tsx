@@ -7,6 +7,7 @@ import { checkIfNull, fullName } from '@/utils/data';
 import { toSentenceCase } from '@/utils/strings';
 
 import styles from './HeaderPolicyDetails.module.css';
+import MockMessage from '../MockMessage';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
@@ -39,7 +40,7 @@ export const HeaderPolicyDetails = async ({ className, style }: Props) => {
   });
 
   if (error) {
-    return null;
+    return <MockMessage />;
   }
 
   const {
