@@ -69,7 +69,7 @@ export const getMyPoliciesByCarrier = async (
 
   try {
     const response = await getPolicyReferencesByCarrier();
-    console.log(response);
+
     if (!response.results) {
       throw new Error('No data returned from the API.');
     }

@@ -7,6 +7,7 @@ import { ClickableCardContainer } from '@/components/clickable-card-container/Cl
 import { FieldData } from '@/components/field-data/FieldData';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
+import MockMessage from '@/components/MockMessage';
 import { Addresses } from '@/components/person-data/Addresses';
 import { Emails } from '@/components/person-data/Emails';
 import { Phones } from '@/components/person-data/Phones';
@@ -26,6 +27,7 @@ export default async function Profile() {
   if (error) {
     <div className={styles.pageContainer}>
       <HeaderBreadcrumb title="Profile" />
+      <MockMessage />
       <HeaderPolicyDetails />
       <ClickableCardContainer>
         <div>No data available</div>
