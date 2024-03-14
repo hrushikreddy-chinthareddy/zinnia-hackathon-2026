@@ -38,10 +38,11 @@ export const isMockSearchRequestEnabled = () => {
 };
 
 export const isMockPolicyOverviewRequestEnabled = () => {
+
   if (isProd()) {
     return false;
   }
-
+  
   const cookieStore = cookies();
   const mockParam = cookieStore.get('..mock..');
   return (

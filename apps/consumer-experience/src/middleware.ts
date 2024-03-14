@@ -42,6 +42,7 @@ export async function middleware(req: NextRequest) {
     res.headers.set('planCode', planCode || '');
     res.headers.set('policyNumber', policyNumber || '');
   }
+
   if (!isProd()) {
     const mockParam = req.nextUrl.searchParams.get('..mock..');
     const showMockLinkParam =
