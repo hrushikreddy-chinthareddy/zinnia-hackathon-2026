@@ -1,7 +1,6 @@
 import clsx from "clsx";
-import { DividerProps, colorVar } from "."
+import { DividerProps } from "."
 import styles from './divider.module.css'
 
-export const Divider = ({direction, color = 'default'}: DividerProps) => (
-    <div className={clsx({[styles.horizontal as string]: direction === 'horizontal', [styles.vertical as string]: direction === 'vertical'})} style={{ backgroundColor: colorVar[color]}}/>
-);
+export const Divider = ({ direction, color = 'default' }: DividerProps) =>
+    <div className={clsx(styles.divider, styles[direction], styles[color])} />

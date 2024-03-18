@@ -1,11 +1,25 @@
-.horizontal {
-  width: 100%;
-  height: var(--measure-dimension-stroke-sm, 2px);
+.divider {
+  --divider-color: var(--color-base-border-border-light, #ededed);
+  background-color: var(--divider-color);
   flex-shrink: 0;
-}
 
-.vertical {
-  height: inherit;
-  width: var(--measure-dimension-stroke-sm, 2px);
-  flex-shrink: 0;
+  &.horizontal {
+    width: 100%;
+    height: var(--measure-dimension-stroke-sm, 2px);
+  }
+  
+  &.vertical {
+    height: inherit;
+    width: var(--measure-dimension-stroke-sm, 2px);
+  }
+
+  &.subtle {
+    --divider-color: var(--color-base-border-border-subtle, #cccccc);
+  }
+  &.dark {
+    --divider-color: var(--color-base-border-border-dark, #313131);
+  }
+  &.darker {
+    --divider-color: var(--color-base-border-border-darker, #212121);
+  }
 }

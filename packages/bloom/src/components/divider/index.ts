@@ -1,6 +1,5 @@
 export { Divider } from './Divider'
 
 export {
-  type DividerProps,
-  colorVar
+  type DividerProps
 } from './utils'
