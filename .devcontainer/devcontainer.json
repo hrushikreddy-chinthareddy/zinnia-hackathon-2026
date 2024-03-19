@@ -42,7 +42,9 @@
 				"GitHub.vscode-github-actions",
 				"figma.figma-vscode-extension",
 				"github.vscode-github-actions",
-				"maattdd.gitless"
+				"maattdd.gitless",
+				"vunguyentuan.vscode-postcss",
+				"csstools.postcss"
 			]
 		}
 	},
