@@ -41,8 +41,6 @@
     background-color: var(--color-toggle-toggle-inactive-fill);
     .indicator {
       background-color: var(--color-toggle-toggle-inactive-indicator);
-      /* background-color: aqua; */
-
     }
   }
   
@@ -50,6 +48,9 @@
     background-color: var(--color-toggle-toggle-selected-fill);
     &:disabled {
       background-color: var(--color-toggle-toggle-selected-inactive-fill);
+      .indicator {
+        background-color: var(--color-toggle-toggle-default-indicator);
+      }
     }
     .indicator {
       left: auto;
