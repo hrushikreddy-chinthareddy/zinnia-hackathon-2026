@@ -4,4 +4,5 @@ export interface ToggleProps
     isDisabled?: boolean;
     onClick?: () => void;
     pressed?: boolean;
+    labelId?: string;
   }
