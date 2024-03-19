@@ -9,7 +9,8 @@ const meta: Meta<typeof Toggle> = {
   tags: ["autodocs"],
   args: {
     text: "primary",
-    isDisabled: false
+    isDisabled: false,
+    labelId: 'label-id'
   },
 } as Meta<typeof Toggle>;
 
@@ -29,4 +30,11 @@ export const Disabled: StoryType = {
     isDisabled: true,
   }
 };
+
+export const PressedDisabled: StoryType = {
+  args: {
+    isDisabled: true,
+    pressed: true
+  }
+}
 
