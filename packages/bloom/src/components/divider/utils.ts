@@ -1,4 +1,4 @@
 export interface DividerProps {
   direction: "horizontal" | "vertical";
-  color?: "default" | "subtle" | "dark" | "darker"
+  color?: "default" | "primary" | "subtle" | "dark" | "darker"
 }

@@ -23,6 +23,12 @@ type StoryType = StoryObj<DividerProps>;
 
 export const Default: StoryType = {}
 
+export const Primary: StoryType = {
+  args: {
+    color: 'primary'
+  }
+}
+
 export const Subtle: StoryType = {
   args: {
     color: 'subtle'
@@ -44,6 +50,13 @@ export const Darker: StoryType = {
 export const Vertical: StoryType = {
   args: {
     direction: 'vertical'
+  }
+}
+
+export const VerticalPrimary: StoryType = {
+  args: {
+    ...Vertical.args,
+    ...Primary.args
   }
 }
 
