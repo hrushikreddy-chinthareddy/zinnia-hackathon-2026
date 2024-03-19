@@ -45,6 +45,12 @@ export const TopRight: StoryType = {
   }
 }
 
+export const BottomLeft: StoryType = {
+  args: {
+    placement: TooltipPlacement.BottomLeft
+  }
+}
+
 export const BottomRight: StoryType = {
   args: {
     placement: TooltipPlacement.BottomRight
