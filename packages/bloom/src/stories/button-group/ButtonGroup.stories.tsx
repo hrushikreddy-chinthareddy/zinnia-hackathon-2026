@@ -19,9 +19,6 @@ const iconItems = [
 const meta: Meta<typeof ButtonGroup> = {
   title: 'Components/ButtonGroup',
   component: ButtonGroup,
-  parameters: {
-    layout: 'centered',
-  },
   tags: ['autodocs'],
   args: {
     items: itemsWithText,
