@@ -1,81 +1,57 @@
 .buttonGroup {
-  border-radius: var(--measure-dimension-radius-md, 0.5rem);
+  border-radius: var(--measure-dimension-radius-md);
 
-  > * {
-    border-top: var(--measure-dimension-stroke-sm, 2px) solid
-      var(--color-button-group-button-group-item-primary-border, #ccc);
-    border-bottom: var(--measure-dimension-stroke-sm, 2px) solid
-      var(--color-button-group-button-group-item-primary-border, #ccc);
-    border-left: var(--measure-dimension-stroke-xs, 1px) solid
-      var(--color-button-group-button-group-item-primary-border, #ccc);
-    border-right: var(--measure-dimension-stroke-xs, 1px) solid
-      var(--color-button-group-button-group-item-primary-border, #ccc);
+  --button-group-border-style: solid;
+
+  >* {
+    border-top: var(--measure-dimension-stroke-sm) var(--button-group-border-style) var(--color-button-group-button-group-item-primary-border);
+    border-bottom: var(--measure-dimension-stroke-sm) var(--button-group-border-style) var(--color-button-group-button-group-item-primary-border);
+    border-left: var(--measure-dimension-stroke-xs) var(--button-group-border-style) var(--color-button-group-button-group-item-primary-border);
+    border-right: var(--measure-dimension-stroke-xs) var(--button-group-border-style) var(--color-button-group-button-group-item-primary-border);
 
     &:first-child {
-      border-left-width: 2px;
+      border-left-width: var(--measure-dimension-stroke-sm);
     }
 
     &:last-child {
-      border-right-width: 2px;
+      border-right-width: var(--measure-dimension-stroke-sm);
     }
   }
 
   :first-child {
-    border-top-left-radius: var(--measure-dimension-radius-md, 0.5rem);
-    border-bottom-left-radius: var(--measure-dimension-radius-md, 0.5rem);
+    border-top-left-radius: var(--measure-dimension-radius-md);
+    border-bottom-left-radius: var(--measure-dimension-radius-md);
   }
 
   :last-child {
-    border-top-right-radius: var(--measure-dimension-radius-md, 0.5rem);
-    border-bottom-right-radius: var(--measure-dimension-radius-md, 0.5rem);
+    border-top-right-radius: var(--measure-dimension-radius-md);
+    border-bottom-right-radius: var(--measure-dimension-radius-md);
   }
 }
 
 .buttonGroupItem {
   background-color: var(--color-button-group-button-group-item-primary-fill);
-  padding: var(--measure-dimension-padding-lg, 1rem)
-    var(--measure-dimension-padding-3xl, 1.5rem);
+  padding: var(--measure-dimension-padding-lg) var(--measure-dimension-padding-3xl);
 
   &:hover {
-    background-color: var(
-      --color-button-group-button-group-item-primary-hover-fill,
-      #ff7500
-    );
-    border-color: var(
-      --color-button-group-button-group-item-primary-selected-border,
-      #ff7500
-    );
+    background-color: var(--color-button-group-button-group-item-primary-hover-fill);
+    border-color: var(--color-button-group-button-group-item-primary-selected-border);
   }
 
   /* SELECTED STATE */
   &[data-state='on'] {
-    background-color: var(
-      --color-button-group-button-group-item-primary-selected-fill,
-      #ffc899
-    );
-    border-color: var(
-      --color-button-group-button-group-item-primary-selected-border,
-      #ff7500
-    );
+    background-color: var(--color-button-group-button-group-item-primary-selected-fill);
+    border-color: var(--color-button-group-button-group-item-primary-selected-border);
 
     &:focus-visible {
-      outline-color: #37a2d8;
+      outline-color: var(--color-states-focus-focus-border);
     }
   }
 
   &:disabled {
     cursor: not-allowed;
-    color: var(
-      --color-button-group-button-group-item-primary-inactive-text,
-      #b3b3b3
-    );
-    border-color: var(
-      --color-button-group-button-group-item-primary-inactive-border,
-      #b3b3b3
-    );
-    background-color: var(
-      --color-button-group-button-group-item-primary-inactive-fill,
-      #ededed
-    );
+    color: var(--color-button-group-button-group-item-primary-inactive-text);
+    border-color: var(--color-button-group-button-group-item-primary-inactive-border);
+    background-color: var(--color-button-group-button-group-item-primary-inactive-fill);
   }
 }
