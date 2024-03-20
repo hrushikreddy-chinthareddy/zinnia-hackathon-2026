@@ -1,5 +1,5 @@
 import styles from "./Loader.module.css";
-import { LoaderProps, LoaderVariant } from "./types.js";
+import { LoaderProps, LoaderVariant } from "./types";
 
 export const Loader: React.FC<LoaderProps> = ({
   hide = false,
