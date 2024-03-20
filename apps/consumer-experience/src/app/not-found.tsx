@@ -1,24 +1,18 @@
-import { getSession } from '@auth0/nextjs-auth0';
+/* eslint-disable check-file/filename-naming-convention */
+import { Icon, IconType } from '@zinnia/bloom/internal/components';
 import { Metadata } from 'next';
-import { redirect } from 'next/navigation';
 
 import LogoImage from '@/app/styles/everly/everly-logo.svg'; // TODO: don't hardcode to everly
 
-import styles from './Login.module.css';
+import styles from './login/Login.module.css';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
-  title: 'Login page',
+  title: 'Not found',
 };
 
-export default async function Login() {
-  const session = await getSession();
-
-  if (session) {
-    return redirect('/policies');
-  }
-
+export default async function NotFound() {
   return (
     <div className={styles.container}>
       <div className={styles.carrierMarketingImage} />
@@ -28,18 +22,21 @@ export default async function Login() {
             <LogoImage alt="Company Logo" />
           </div>
           <div className={styles.details}>
-            <h1 className="mb-lg">Let's get you signed in.</h1>
+            <div className={styles.headerContainer}>
+              <Icon width={32} height={32} type={IconType.FROWN} />
+              <h1>Page Not Found</h1>
+            </div>
             <p className="typography-content-body">
-              Access your coverage easily and securely by signing in with a
-              verification code.
+              Hm, looks like you took a wrong turn somewhere. Let’s get you back
+              to your coverage.
             </p>
           </div>
           <div className={styles.actionContainer}>
             <a
-              href="/api/auth/login"
+              href="/policies"
               className={`${styles.buttonLink} typography-buttons-button-lg`}
             >
-              Get code
+              Back to Policy Overview
             </a>
           </div>
           <div className={`typography-content-footer-legal ${styles.footer}`}>

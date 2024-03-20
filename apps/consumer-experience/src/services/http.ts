@@ -1,23 +1,8 @@
-import { getAccessToken } from '@auth0/nextjs-auth0';
-
-class HttpRequest {
-  request = async (
+export abstract class HttpRequest {
+  abstract request: (
     input: string | URL | Request,
     init?: RequestInit | undefined
-  ): Promise<Response> => {
-    const { accessToken } = await getAccessToken();
-    const requestInit: RequestInit = init || {};
-    if (!requestInit.headers) {
-      requestInit.headers = {};
-    }
-
-    requestInit.headers = {
-      ...requestInit.headers,
-      Authorization: `Bearer ${accessToken}`,
-    };
-
-    return fetch(input, requestInit);
-  };
+  ) => Promise<Response>;
 
   get = (input: string | URL | Request, init?: RequestInit | undefined) => {
     init = init || {};
@@ -36,5 +21,3 @@ class HttpRequest {
     return this.request(input, init);
   };
 }
-
-export const ServerApi = new HttpRequest();

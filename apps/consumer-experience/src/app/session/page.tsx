@@ -1,18 +1,19 @@
 import { getSession } from '@auth0/nextjs-auth0';
+import { Icon, IconType } from '@zinnia/bloom/internal/components';
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
 import LogoImage from '@/app/styles/everly/everly-logo.svg'; // TODO: don't hardcode to everly
 
-import styles from './Login.module.css';
+import styles from '../login/Login.module.css';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
-  title: 'Login page',
+  title: 'Session timeout',
 };
 
-export default async function Login() {
+export default async function Session() {
   const session = await getSession();
 
   if (session) {
@@ -28,18 +29,20 @@ export default async function Login() {
             <LogoImage alt="Company Logo" />
           </div>
           <div className={styles.details}>
-            <h1 className="mb-lg">Let's get you signed in.</h1>
+            <div className={styles.headerContainer}>
+              <Icon width={32} height={32} type={IconType.CLOCK} />
+              <h1>Timed out</h1>
+            </div>
             <p className="typography-content-body">
-              Access your coverage easily and securely by signing in with a
-              verification code.
+              You’ve been signed out due to inactivity.
             </p>
           </div>
           <div className={styles.actionContainer}>
             <a
-              href="/api/auth/login"
+              href="/login"
               className={`${styles.buttonLink} typography-buttons-button-lg`}
             >
-              Get code
+              Back to login
             </a>
           </div>
           <div className={`typography-content-footer-legal ${styles.footer}`}>

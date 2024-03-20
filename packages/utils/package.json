@@ -17,7 +17,7 @@
     "postinstall": "pnpm run build"
   },
   "jest": {
-    "preset": "@zinnia/jest-presets/jest/node"
+    "preset": "@zinnia/jest-presets/node"
   },
   "dependencies": {
     "@zinnia/api-types": "workspace:*"

@@ -1,4 +1,4 @@
-import { getSession } from '@auth0/nextjs-auth0/edge';
+import { getSession, touchSession } from '@auth0/nextjs-auth0/edge';
 import {
   RequestCookies,
   ResponseCookies,
@@ -6,7 +6,18 @@ import {
 import { NextResponse, type NextRequest } from 'next/server';
 
 import { isProd } from '@/utils';
+import {
+  MAX_AGE_SESSION_COOKIE,
+  REDIRECT_TO_SESSION_COOKIE_KEY,
+} from '@/utils/serverClientUtils';
 
+/**
+ * NextJS doesn't foward the headers to react server components.
+ * This method creates a new header and copies the request headers over
+ * it then sets the headers on the response so the react server components have the updated cookies and headers
+ * @param req NextRequest
+ * @param res NextResponse
+ */
 function applySetCookie(req: NextRequest, res: NextResponse): void {
   // parse the outgoing Set-Cookie header
   const setCookies = new ResponseCookies(res.headers);
@@ -28,17 +39,26 @@ function applySetCookie(req: NextRequest, res: NextResponse): void {
 }
 
 export async function middleware(req: NextRequest) {
-  const res = NextResponse.next();
-  const user = await getSession(req, res);
-  // if the user does not have a session, send them to the login page
-  if (!user) {
-    return NextResponse.redirect(new URL('/login', req.url));
+  const session = await getSession();
+  if (!session) {
+    const path = req.cookies.has(REDIRECT_TO_SESSION_COOKIE_KEY)
+      ? 'session'
+      : 'login';
+    const res = NextResponse.redirect(new URL(`/${path}`, req.url));
+    return res;
   }
+  const res = NextResponse.next();
+  await touchSession(req, res);
+  res.cookies.set(REDIRECT_TO_SESSION_COOKIE_KEY, 'true', {
+    maxAge: MAX_AGE_SESSION_COOKIE,
+  });
   const pathname = req.nextUrl.pathname;
   if (pathname.includes('/policies/')) {
     const urlParts = pathname.split('/');
     const planCode = urlParts[2];
     const policyNumber = urlParts[4];
+    // This is to allow access to planCode and policyNumber inside server components
+    // allows each of those components to make the necessary data requests.
     res.headers.set('planCode', planCode || '');
     res.headers.set('policyNumber', policyNumber || '');
   }
@@ -71,10 +91,11 @@ export const config = {
      * Match all request paths except for the ones starting with:
      * - api (API routes)
      * - login
+     * - session
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      */
-    '/((?!api|login|_next/static|_next/image|favicon.ico).*)',
+    '/((?!api|login|session|_next/static|_next/image|favicon.ico).*)',
   ],
 };

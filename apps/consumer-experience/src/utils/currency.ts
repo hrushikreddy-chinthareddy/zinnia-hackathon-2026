@@ -1,6 +1,6 @@
 import { DEFAULT_ERROR_STRING } from './strings';
 
-export const formatUSDollars = (val?: number | null) => {
+export const formatUSDollars = (val?: number | null | string) => {
   if (val === null || val === undefined || typeof val !== 'number') {
     return DEFAULT_ERROR_STRING;
   }

@@ -10,7 +10,7 @@ dayjs.extend(timezone);
  * @param date
  * @returns format 2/26/2024
  */
-export const standardDateMonthYear = (date: string): string => {
+export const standardDateMonthYear = (date: string | null): string => {
   if (!date) {
     return '';
   }
@@ -23,7 +23,7 @@ export const standardDateMonthYear = (date: string): string => {
  * @param date
  *  @returns format 6/12/2023 5:00 pm EST
  */
-export const dateMonthWithTimeEST = (date: string): string => {
+export const dateMonthWithTimeEST = (date: string | null): string => {
   if (!date) {
     return '';
   }

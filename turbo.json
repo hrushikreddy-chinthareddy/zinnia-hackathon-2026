@@ -14,7 +14,8 @@
         "AUTH0_AUDIENCE",
         "NEXT_PUBLIC_MOCK_API_REQUEST",
         "NEXT_PUBLIC_BACKEND_URL",
-        "NEXT_PUBLIC_BASE_URL"
+        "NEXT_PUBLIC_BASE_URL",
+        "AUTH0_SESSION_ROLLING_DURATION"
       ]
     },
     "lint": {
@@ -24,6 +25,8 @@
       "cache": false,
       "persistent": true
     },
-    "test": {}
+    "test": {
+      "dependsOn": []
+    }
   }
 }
