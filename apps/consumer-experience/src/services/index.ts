@@ -7,7 +7,7 @@ export interface ApiResponse<T> {
   error: ApiResponseError | null;
 }
 
-export * from './http';
+export * from './server-http';
 
 export * from './api-config';
 export * from './policy';

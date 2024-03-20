@@ -21,6 +21,14 @@
   align-items: center;
 }
 
+.headerContainer {
+  display: flex;
+  gap: var(--measure-dimension-gap-xs);
+  align-items: center;
+  margin-top: var(--measure-dimension-gap-lg, 1rem);
+  margin-bottom: var(--measure-dimension-gap-lg, 1rem);
+}
+
 .logoContainer {
   width: 124px;
 }

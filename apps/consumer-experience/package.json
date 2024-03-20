@@ -17,18 +17,21 @@
     "@auth0/nextjs-auth0": "^3.5.0",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-popover": "^1.0.7",
+    "@types/js-cookie": "^3.0.6",
     "@zinnia/api-types": "workspace:*",
     "@zinnia/bloom": "workspace:*",
     "@zinnia/utils": "workspace:*",
     "clsx": "^2.1.0",
     "dayjs": "^1.11.10",
     "filter": "^0.1.1",
+    "js-cookie": "^3.0.5",
     "next": "14.0.4",
     "npm": "^10.2.5",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-preset-env": "^9.3.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-idle-timer": "^5.7.2",
     "react-use": "^17.5.0"
   },
   "devDependencies": {
@@ -53,6 +56,7 @@
     "@typescript-eslint/eslint-plugin": "^6.18.0",
     "@typescript-eslint/parser": "^6.18.0",
     "@zinnia/eslint-config": "workspace:*",
+    "@zinnia/jest-presets": "workspace:*",
     "@zinnia/prettier-config": "workspace:*",
     "@zinnia/typescript-config": "workspace:*",
     "autoprefixer": "^10.0.1",
@@ -76,5 +80,8 @@
     "ts-jest": "^29.1.1",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
     "typescript": "^5.3.3"
+  },
+  "jest": {
+    "preset": "@zinnia/jest-presets/browser"
   }
 }

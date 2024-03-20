@@ -7,10 +7,12 @@ import Chevron from '../../tokens/svg-assets/icons/chevron.svg';
 import CircleCheckmark from '../../tokens/svg-assets/icons/circles/circle-checkmark.svg';
 import CircleInfo from '../../tokens/svg-assets/icons/circles/circle-info.svg';
 import CircleUser from '../../tokens/svg-assets/icons/circles/circle-user.svg';
+import Clock from '../../tokens/svg-assets/icons//illustrations/clock.svg';
 import Cloud from '../../tokens/svg-assets/icons/media/cloud.svg';
 import Dashboard from '../../tokens/svg-assets/icons/navigation/dashboard.svg';
 import Dollar from '../../tokens/svg-assets/icons/currency/currency-dollars.svg';
 import DocumentText from '../../tokens/svg-assets/icons/file/document-text.svg';
+import Frown from '../../tokens/svg-assets/icons/brand/emoji-frown.svg';
 import HexExclamation from '../../tokens/svg-assets/icons/alert/hex-exclamation.svg';
 import Lightbulb from '../../tokens/svg-assets/icons/illustrations/light-bulb.svg';
 import Logout from '../../tokens/svg-assets/icons/actions/logout.svg';
@@ -27,6 +29,7 @@ export enum IconType {
   CIRCLE_CHECKMARK = 'CircleCheckmark',
   CIRCLE_INFO = 'CircleInfo',
   CIRCLE_USER = 'CircleUser',
+  CLOCK = 'Clock',
   /**
    * Referred to as cancel in the designs
    */
@@ -35,6 +38,7 @@ export enum IconType {
   DASHBOARD = 'Dashboard',
   DOCUMENT_TEXT = 'DocumentText',
   DOLLAR = 'Dollar',
+  FROWN = 'Frown',
   HEX_EXCLAMATION = 'HexExclamation',
   LIGHTBULB = 'Lightbulb',
   LOGOUT = 'Logout',
@@ -72,12 +76,14 @@ export const Icons: {
   [IconType.CIRCLE_CHECKMARK]: CircleCheckmark,
   [IconType.CIRCLE_USER]: CircleUser,
   [IconType.CIRCLE_INFO]: CircleInfo,
+  [IconType.CLOCK]: Clock,
   [IconType.CLOSE]: Close,
   [IconType.CLOUD]: Cloud,
   [IconType.DASHBOARD]: Dashboard,
   // [`${IconType.CLOUD}${FILLED}`]: CloudFilled,
   [IconType.DOCUMENT_TEXT]: DocumentText,
   [IconType.DOLLAR]: Dollar,
+  [IconType.FROWN]: Frown,
   [IconType.HEX_EXCLAMATION]: HexExclamation,
   [IconType.LIGHTBULB]: Lightbulb,
   [IconType.LOGOUT]: Logout,

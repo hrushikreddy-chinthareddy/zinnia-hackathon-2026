@@ -1,16 +1,8 @@
-import { getSession } from '@auth0/nextjs-auth0';
-import { UserProvider } from '@auth0/nextjs-auth0/client';
 import localFont from 'next/font/local';
 
 import type { Metadata } from 'next';
 
 import './styles/globals.css';
-
-import { DesktopNav } from '@/components/desktop-nav/DesktopNav';
-import { Footer } from '@/components/footer/Footer';
-import { MobileNav } from '@/components/mobile-nav/MobileNav';
-
-import styles from './layout.module.css';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
@@ -90,41 +82,12 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getSession();
-  if (!session) {
-    return (
-      <html
-        lang="en"
-        className={`${primaryFont.variable} ${secondaryFont.variable}`}
-      >
-        <body>
-          <div>{children}</div>
-        </body>
-      </html>
-    );
-  }
-
   return (
     <html
       lang="en"
       className={`${primaryFont.variable} ${secondaryFont.variable}`}
     >
-      <UserProvider>
-        <body className={styles.body}>
-          {/* To prevent hydration error by trying to render these dynamically using screen width,
-          dynamically displaying using media queries */}
-          <MobileNav />
-          <DesktopNav />
-          <div className={styles.container}>
-            <div className={styles.content}>
-              <>
-                {children}
-                <Footer />
-              </>
-            </div>
-          </div>
-        </body>
-      </UserProvider>
+      <body>{children}</body>
     </html>
   );
 }
