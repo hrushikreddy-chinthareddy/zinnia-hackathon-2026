@@ -1,6 +1,8 @@
 import * as ToggleGroup from '@radix-ui/react-toggle-group';
-import { ButtonGroupProps } from './types';
+import { ButtonGroupProps, ConditionalProps } from './types';
 import styles from './ButtonGroup.module.css';
+import { v4 as uuidv4 } from 'uuid'
+import clsx from 'clsx';
 
 export const ButtonGroup = ({
   ariaLabel,
@@ -15,31 +17,35 @@ export const ButtonGroup = ({
     return null;
   }
 
-  // TODO: figure out how to type this
-  const optionalProps: { [key: string]: any } = {};
+  const optionalProps: ConditionalProps = {};
   if (ariaLabel) {
-    optionalProps['aria-label'] = ariaLabel;
+    optionalProps.ariaLabel = ariaLabel;
   }
 
   return (
     <div>
       {label && label}
       <ToggleGroup.Root
-        className={styles.buttonGroup}
+        className={clsx(styles.buttonGroup, 'typography-content-body-sm')}
         id={id}
         type="single"
         defaultValue={defaultValue || items[0]?.value}
         onValueChange={onClick}
         {...optionalProps}
       >
-        {items.map((item) => {
+        {items.map(({ id, value, children }) => {
+          if (!id?.length) {
+            id = uuidv4()
+          }
           return (
             <ToggleGroup.Item
-              value={item.value}
+              id={id}
+              key={id}
+              value={value}
               className={styles.buttonGroupItem}
               disabled={inactive}
             >
-              {item.children}
+              {children}
             </ToggleGroup.Item>
           );
         })}

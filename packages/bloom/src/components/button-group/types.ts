@@ -5,9 +5,12 @@ export interface ButtonGroupItem {
    * Include this if button will only display an icon
    */
   ariaLabel?: string;
-  // TODO: this doesn't actually type check correctly and throw error if someone puts in another type
+  // This doesn't actually work as long as 
+  // [this issue](https://github.com/microsoft/TypeScript/issues/21699)
+  // remains unsolved
   children: ReactElement<HTMLSpanElement> | ReactElement<SVGElement>;
   value: string;
+  id?: string
 }
 
 export interface CommonProps {
@@ -21,8 +24,8 @@ export interface CommonProps {
   onClick: () => void;
 }
 
-type ConditionalProps =
-  | {
+export type ConditionalProps =
+  {
       /**
        * This should use the Label component
        */
