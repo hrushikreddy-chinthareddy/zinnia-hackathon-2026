@@ -7,3 +7,5 @@ export * from './icon';
 export * from './popover';
 export * from './side-sheet';
 export * from './loader'
+export * from './tag';
+export * from './divider';
