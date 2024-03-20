@@ -6,3 +6,5 @@ export * from './assistive-text';
 export * from './icon';
 export * from './popover';
 export * from './side-sheet';
+export * from './tag';
+export * from './divider';

@@ -1,0 +1,71 @@
+.top {
+  --font-family-toggle: 'Lato';
+  --toggle-border-radius: var(--measure-dimension-radius-max);
+
+  font-family: var(--font-family-toggle);
+  font-size: var(--measure-font-sizing-font-size-x-small);
+  font-style: normal;
+  line-height: var(--measure-line-height-font-line-height-x-large);
+
+  display: flex;
+  flex-flow: row nowrap;
+  gap: var(--measure-dimension-z-space-2);
+}
+
+.disabled {
+  color: var(--color-states-inactive-inactive-text);
+}
+
+.container {
+  --toggle-border-width: var(--measure-dimension-stroke-md);
+  --toggle-border-style: solid;
+
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  background-color: var(--color-toggle-toggle-default-fill);
+  border-radius: var(--toggle-border-radius);
+  
+  width: var(--measure-dimension-z-space-12);
+  height: var(--measure-dimension-z-space-6);
+  
+  &:focus-visible {
+    outline-style: var(--toggle-border-style);
+    outline-width: var(--toggle-border-width);
+    outline-offset: var(--measure-dimension-z-space-0);
+    outline-color: var(--color-states-focus-focus-border);
+  }
+
+  &:disabled {
+    background-color: var(--color-toggle-toggle-inactive-fill);
+    .indicator {
+      background-color: var(--color-toggle-toggle-inactive-indicator);
+    }
+  }
+  
+  &[aria-pressed="true"] {
+    background-color: var(--color-toggle-toggle-selected-fill);
+    &:disabled {
+      background-color: var(--color-toggle-toggle-selected-inactive-fill);
+      .indicator {
+        background-color: var(--color-toggle-toggle-default-indicator);
+      }
+    }
+    .indicator {
+      left: auto;
+      right: var(--measure-dimension-z-space-1-5);
+    }
+  }
+
+  .indicator  {
+    width: var(--measure-dimension-z-space-4);
+    height: var(--measure-dimension-z-space-4);
+    background-color: var(--color-toggle-toggle-default-indicator);
+    border-radius: var(--measure-dimension-radius-max);
+    position: absolute;
+    transition: right 300ms ease-in-out;
+    right: calc(100% - var(--measure-dimension-z-space-4) - var(--measure-dimension-z-space-1-5));
+    top: var(--measure-dimension-z-space-1);
+  }
+};
