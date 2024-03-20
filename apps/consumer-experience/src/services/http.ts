@@ -1,19 +1,23 @@
-import axios, { AxiosError } from 'axios';
+export abstract class HttpRequest {
+  abstract request: (
+    input: string | URL | Request,
+    init?: RequestInit | undefined
+  ) => Promise<Response>;
 
-const handleError = (error: unknown | AxiosError) => {
-  if (axios.isAxiosError(error)) {
-    const err = error as AxiosError;
+  get = (input: string | URL | Request, init?: RequestInit | undefined) => {
+    init = init || {};
+    init.method = 'GET';
+    return this.request(input, init);
+  };
 
-    console.log('axios error => ', err);
-    return;
-  }
-
-  const err = error as Error;
-
-  console.log('error =>', err);
-
-  return;
-};
-
-export * from 'axios';
-export { axios, handleError };
+  post = (
+    input: string | URL | Request,
+    data?: BodyInit | null | undefined,
+    init?: RequestInit | undefined
+  ) => {
+    init = init || {};
+    init.method = 'POST';
+    init.body = data;
+    return this.request(input, init);
+  };
+}

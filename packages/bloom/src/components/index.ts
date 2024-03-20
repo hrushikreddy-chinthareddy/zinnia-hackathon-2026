@@ -9,3 +9,4 @@ export * from './side-sheet';
 export * from './loader'
 export * from './tag';
 export * from './divider';
+export * from './ticker';

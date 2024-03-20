@@ -19,7 +19,7 @@ jobs:
       id-token: write # enable use of OIDC for npm provenance
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
   
@@ -33,7 +33,7 @@ jobs:
           scope: "@zinnia"
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v3
         with:
           run_install: |
             - args: [--filter @zinnia/bloom]

@@ -1,0 +1,43 @@
+.cardContainer {
+  > * {
+    margin-bottom: var(--measure-dimension-gap-lg, 1rem);
+  }
+}
+
+.container {
+  margin: var(--measure-dimension-gap-xl, 1.5rem) 0;
+  padding-left: var(--measure-dimension-padding-2xl, 1rem);
+}
+
+/** Individual Card Styles **/
+
+.icon {
+  flex-shrink: 0;
+  margin-right: 0.5rem;
+}
+
+.content {
+  align-items: center;
+  display: flex;
+}
+
+.rowWrapper {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.additionalInfo {
+  margin: 0 var(--measure-dimension-gap-lg, 1rem);
+}
+
+.popoverContent {
+  > *:not(:last-child) {
+    margin-bottom: var(--measure-dimension-padding-xl, 0.75rem);
+  }
+}
+
+.error {
+  color: var(--color-status-text-status-error-text, #db004f);
+}

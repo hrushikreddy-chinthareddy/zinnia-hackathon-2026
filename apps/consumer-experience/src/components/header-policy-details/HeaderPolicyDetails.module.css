@@ -1,7 +1,20 @@
 .container {
-  margin-left: var(--measure-dimension-padding-2xl, 1rem);
+  margin: var(--measure-dimension-gap-xl, 1.5rem) 0;
+  padding-left: var(--measure-dimension-padding-2xl, 1rem);
 }
 
 .policyDetails {
   color: var(--color-base-text-text-secondary, #676767);
+}
+
+.success {
+  color: var(--color-status-text-status-success-text, #007b5a);
+}
+
+.warning {
+  color: var(--color-status-text-status-warning-text, #b74d00);
+}
+
+.error {
+  color: var(--color-status-text-status-error-text, #db004f);
 }
