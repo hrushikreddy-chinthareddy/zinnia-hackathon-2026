@@ -1,5 +1,5 @@
 .body {
-  height: 100svh;
+  height: 100%;
   background-color: var(--color-base-surface-surface-tertiary, #ededed);
 }
 
