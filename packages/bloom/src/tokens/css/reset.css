@@ -326,6 +326,13 @@ Set the default cursor for buttons.
 button,
 [role='button'] {
   cursor: pointer;
+
+  &:focus-visible {
+    outline-color: #37a2d8;
+    outline-offset: 2px;
+    outline-style: solid;
+    outline-width: 2px;
+  }
 }
 
 /*

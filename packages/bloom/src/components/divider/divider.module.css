@@ -1,0 +1,29 @@
+.divider {
+  --divider-color: var(--color-base-border-border-light);
+  background-color: var(--divider-color);
+  flex-shrink: 0;
+
+  &.horizontal {
+    width: 100%;
+    height: var(--measure-dimension-stroke-sm);
+  }
+  
+  &.vertical {
+    height: inherit;
+    width: var(--measure-dimension-stroke-sm);
+  }
+
+  &.primary {
+    --divider-color: var(--color-base-border-border-primary-color);
+  }
+
+  &.subtle {
+    --divider-color: var(--color-base-border-border-subtle);
+  }
+  &.dark {
+    --divider-color: var(--color-base-border-border-dark);
+  }
+  &.darker {
+    --divider-color: var(--color-base-border-border-darker);
+  }
+}
