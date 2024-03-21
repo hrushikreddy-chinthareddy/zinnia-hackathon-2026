@@ -64,7 +64,6 @@ export const UpcomingPremium = async () => {
       <div className={styles.content}>
         <Icon type={IconType.AUTOPAY} className={styles.icon} />
         <FieldData
-          large
           Label={
             <Label
               interactiveElements={[

@@ -72,7 +72,6 @@ export const Coverage = async () => {
       <div className={styles.content}>
         <Icon type={IconType.SHIELD} className={styles.icon} />
         <FieldData
-          large
           Label={
             <Label
               interactiveElements={[<CoveragePopover key="coverage-popover" />]}

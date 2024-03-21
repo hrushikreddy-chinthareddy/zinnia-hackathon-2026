@@ -50,7 +50,6 @@ export const AccountValue = async () => {
         <div className={styles.content}>
           <Icon type={IconType.DOLLAR} className={styles.icon} />
           <FieldData
-            large
             Label={
               <Label
                 interactiveElements={[
