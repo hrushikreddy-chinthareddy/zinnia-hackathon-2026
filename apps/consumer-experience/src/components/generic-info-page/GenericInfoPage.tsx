@@ -4,9 +4,6 @@ import LogoImage from '@/app/styles/everly/everly-logo.svg'; // TODO: don't hard
 
 import styles from './GenericInfoPage.module.css';
 
-// TODO:
-// - add styling for no carrier image provided
-
 interface Props {
   title: ReactNode;
   description: ReactNode;
