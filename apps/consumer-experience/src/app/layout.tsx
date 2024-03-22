@@ -3,6 +3,8 @@ import localFont from 'next/font/local';
 import type { Metadata } from 'next';
 
 import './styles/globals.css';
+// TODO: THIS NEEDS TO BE DYNAMIC!!!!
+import './styles/everly/theme.css';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components

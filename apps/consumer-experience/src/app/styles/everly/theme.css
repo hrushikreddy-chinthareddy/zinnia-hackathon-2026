@@ -2,65 +2,16 @@
 .root,
 #root,
 #docs-root {
-  --color-primary: 18 27 107;
-  --color-primary-light: 21 54 162;
-  --color-primary-lighter: 255 200 153;
-  --color-primary-lightest: 255 234 217;
-
-  --color-secondary: 0 98 139;
-  --color-secondary-light: 102 161 186;
-  --color-secondary-lighter: 153 192 209;
-  --color-secondary-lightest: 217 231 238;
-
-  --color-accent-one: 255 198 0;
-
-  --color-bg-accent: 228 229 245;
-
-  /* --font-family-primary: 'Poppins';
-  --font-family-secondary: 'Lato'; */
-
-  /* Semantics */
-  --color-semantic-information: 000 95 237;
-  --color-semantic-information-light: 242 247 254;
-  --color-semantic-success: 000 123 90;
-  --color-semantic-success-light: 242 249 247;
-  --color-semantic-pending: 172 0 145;
-  --color-semantic-pending-light: 251 242 249;
-  --color-semantic-warning: 183 77 0;
-  --color-semantic-warning-light: 252 246 242;
-  --color-semantic-error: 219 000 79;
-  --color-semantic-error-light: 253 242 246;
-  --color-semantic-focus: 55 162 216;
-  --color-semantic-highlight: 255 228 133;
-
-  /* Grayscale */
-  --color-black: 000 000 000;
-  --color-white: 255 255 255;
-  --color-50-gray: 248 248 248;
-  --color-100-gray: 237 237 237;
-  --color-200-gray: 204 204 204;
-  --color-300-gray: 179 179 179;
-  --color-400-gray: 148 148 148;
-  --color-500-gray: 127 127 127;
-  --color-600-gray: 103 103 103;
-  --color-logo-gray: 99 102 106;
-  --color-700-gray: 77 77 77;
-  --color-800-gray: 49 49 49;
-  --color-900-gray: 33 33 33;
-
-  /* Bar Colors */
-  --color-400-fuchsia: 212 122 204;
-  --color-600-fuchsia: 151 59 147;
-  --color-300-yellow: 255 213 118;
-  --color-400-yellow: 255 198 0;
-  --color-800-yellow: 157 84 0;
-  --color-400-red: 255 102 82;
-  --color-600-red: 218 2 28;
-  --color-400-aqua: 55 188 194;
-  --color-800-aqua: 31 60 61;
-  --color-500-orange: 242 96 3;
-  --color-400-cerulean: 55 162 216;
-  --color-600-cerulean: 0 98 139;
-  --color-300-lime: 192 198 79;
-  --color-400-lime: 154 174 8;
+  --color-button-primary-button-primary-fill: #121b6b;
+  --color-button-primary-button-primary-border: #121b6b;
+  --color-button-primary-button-primary-text: #ffffff;
+  --color-button-primary-button-primary-hover-fill: #121b6b;
+  --color-button-primary-button-primary-hover-border: #121b6b;
+  --color-button-secondary-button-secondary-hover-text: #fff;
+  --color-button-primary-button-primary-pressed-fill: #121b6b;
+  --color-button-primary-button-primary-pressed-border: #121b6b;
+  --color-button-primary-button-primary-pressed-text: #fff;
+  --color-button-primary-button-primary-selected-fill: #121b6b;
+  --color-button-primary-button-primary-selected-border: #121b6b;
+  --color-button-primary-button-primary-selected-text: #fff;
 }
