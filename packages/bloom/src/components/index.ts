@@ -6,7 +6,8 @@ export * from './assistive-text';
 export * from './icon';
 export * from './popover';
 export * from './side-sheet';
-export * from './loader'
+export * from './loader';
 export * from './tag';
 export * from './divider';
 export * from './ticker';
+export * from './link';
