@@ -73,7 +73,7 @@
 
 @media (width < 500px) {
   .carrierMarketingImage {
-    background-image: url('../styles/everly/assets/everly-hero-background-mobile-layer.png');
+    background-image: url('../styles/everly/assets/everly-hero-background-mobile.png');
     background-repeat: no-repeat;
     height: 125px;
     background-attachment: fixed;
@@ -82,10 +82,12 @@
 
 @media (768px > width >= 500px) {
   .carrierMarketingImage {
-    background-image: url('../styles/everly/assets/everly-hero-background-mobile-stretch.png');
+    background-image: url('../styles/everly/assets/everly-hero-background-tablet.png');
     background-repeat: no-repeat;
     height: 125px;
     background-attachment: fixed;
+    /* This is to position the image at the right focus point */
+    background-position-y: -25px;
   }
 }
 

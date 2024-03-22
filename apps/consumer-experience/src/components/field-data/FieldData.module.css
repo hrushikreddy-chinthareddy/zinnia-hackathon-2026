@@ -1,0 +1,26 @@
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  height: 1.5rem;
+}
+
+.value {
+  display: flex;
+  line-height: 22px;
+  padding: var(--measure-dimension-padding-xs, 0.25rem) 0;
+
+  &.large {
+    margin: var(--measure-dimension-gap-xs, 0.25rem) 0;
+  }
+}
+
+.icon {
+  margin-left: var(--measure-dimension-gap-lg, 1rem);
+}
+
+.caption {
+  color: var(--color-base-text-text-secondary, #676767);
+}

@@ -1,3 +1,5 @@
+import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
+
 import { dateMonthWithTimeEST, standardDateMonthYear } from './dates';
 
 describe('dateMonthWithTimeEST', () => {
@@ -8,17 +10,17 @@ describe('dateMonthWithTimeEST', () => {
 
   it('should return an empty string when given an empty string', () => {
     const result = dateMonthWithTimeEST('');
-    expect(result).toBe('');
+    expect(result).toBe(DEFAULT_ERROR_STRING);
   });
 
   it('should return an empty string when given an invalid date string', () => {
     const result = dateMonthWithTimeEST('invalid');
-    expect(result).toBe('');
+    expect(result).toBe(DEFAULT_ERROR_STRING);
   });
 
   it('should return an empty string when given a null value', () => {
     const result = dateMonthWithTimeEST(null);
-    expect(result).toBe('');
+    expect(result).toBe(DEFAULT_ERROR_STRING);
   });
 });
 
@@ -31,11 +33,11 @@ describe('standardDateMonthYear', () => {
 
   it('should return an empty string when given an invalid date string', () => {
     const result = standardDateMonthYear('invalid');
-    expect(result).toBe('');
+    expect(result).toBe(DEFAULT_ERROR_STRING);
   });
 
   it('should return an empty string when given a null value', () => {
     const result = standardDateMonthYear(null);
-    expect(result).toBe('');
+    expect(result).toBe(DEFAULT_ERROR_STRING);
   });
 });
