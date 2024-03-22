@@ -103,9 +103,9 @@ describe('fullName', () => {
   });
 
   // Returns only the last name when first name is not provided
-  it('should return only the last name when first name is not provided', () => {
+  it('should return default error string with last name when first name is not provided', () => {
     const result = fullName({ firstName: '', lastName: 'Doe' });
-    expect(result).toBe('Doe');
+    expect(result).toBe('- Doe');
   });
 
   // Returns the default error string when both first name and last name are not provided

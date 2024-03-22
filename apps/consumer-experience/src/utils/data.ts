@@ -60,7 +60,7 @@ export const fullName = ({
 }) => {
   return !firstName && !lastName
     ? DEFAULT_ERROR_STRING
-    : `${toSentenceCase(firstName) || ''} ${toSentenceCase(lastName) || ''}`;
+    : `${toSentenceCase(firstName)} ${toSentenceCase(lastName)}`;
 };
 
 // TODO: should this return 0? or have a prop for displaying 0 if 0 is not null?

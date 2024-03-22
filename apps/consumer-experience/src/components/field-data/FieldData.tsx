@@ -36,7 +36,7 @@ export const FieldData = ({
   }
 
   return (
-    <div>
+    <div className={styles.container}>
       {/* TODO: should i add uuid to this to ensure uniqueness? */}
       <div className={styles.label}>{Label && cloneElement(Label)}</div>
       <div className={clsx(styles.value, { [styles.large as string]: large })}>
