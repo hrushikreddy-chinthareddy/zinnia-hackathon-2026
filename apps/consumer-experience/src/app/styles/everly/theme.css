@@ -2,6 +2,9 @@
 .root,
 #root,
 #docs-root {
+  --measure-dimension-button-button-default-radius: var(
+    --measure-dimension-radius-md
+  );
   --color-button-primary-button-primary-fill: #121b6b;
   --color-button-primary-button-primary-border: #121b6b;
   --color-button-primary-button-primary-text: #ffffff;

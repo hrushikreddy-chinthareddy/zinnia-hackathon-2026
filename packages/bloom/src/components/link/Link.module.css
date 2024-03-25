@@ -5,6 +5,8 @@
     --color-states-selected-selected-text-link,
     #00628b
   );
+  --button-border-radius: var(--measure-dimension-button-button-default-radius);
+
   display: flex;
   align-items: center;
   color: var(--color-base-text-text-link, #00628b);
@@ -38,7 +40,7 @@
   &:focus,
   &:focus-visible {
     outline: 2px solid var(--color-states-focus-focus-border, #37a2d8);
-    border-radius: var(--measure-dimension-radius-md, 0.5rem);
+    border-radius: var(--button-border-radius);
   }
 }
 
@@ -71,6 +73,6 @@
     outline-width: solid;
     outline-offset: 6px;
     outline-color: var(--color-states-focus-focus-border);
-    border-radius: var(--measure-dimension-radius-max);
+    border-radius: var(--button-border-radius);
   }
 }

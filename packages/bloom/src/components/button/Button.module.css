@@ -3,7 +3,7 @@
   --font-weight-semibold: 600;
   --button-border-width: 3px;
   --button-border-style: solid;
-  --button-border-radius: var(--measure-dimension-radius-max);
+  --button-border-radius: var(--measure-dimension-button-button-default-radius);
 
   align-items: center;
   border-radius: var(--button-border-radius);
