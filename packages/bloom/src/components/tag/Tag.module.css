@@ -1,4 +1,5 @@
 .tag {
+  composes: typography-labels-label-sm from '../../tokens/css/typography.css';
   --border-radius-radius-sm: var(--measure-dimension-radius-sm);
   --tag-width: max-content;
 
