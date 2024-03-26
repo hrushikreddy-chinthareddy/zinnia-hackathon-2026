@@ -8,16 +8,11 @@ import {
 import { NextApiRequest, NextApiResponse } from 'next';
 import { cookies } from 'next/headers';
 
-import {
-  MAX_AGE_SESSION_COOKIE,
-  REDIRECT_TO_SESSION_COOKIE_KEY,
-} from '@/utils/serverClientUtils';
+import { HAD_PREVIOUS_SESSION_COOKIE_KEY } from '@/utils/serverClientUtils';
 
 const afterCallback = (_: NextApiRequest, session: Session) => {
   const cookieStore = cookies();
-  cookieStore.set(REDIRECT_TO_SESSION_COOKIE_KEY, 'true', {
-    maxAge: MAX_AGE_SESSION_COOKIE,
-  });
+  cookieStore.set(HAD_PREVIOUS_SESSION_COOKIE_KEY, '1');
   return session;
 };
 
@@ -26,7 +21,7 @@ const handler = handleAuth({
   callback: handleCallback({ afterCallback }),
   logout: async (req: NextApiRequest, res: NextApiResponse) => {
     const cookieStore = cookies();
-    cookieStore.delete(REDIRECT_TO_SESSION_COOKIE_KEY);
+    cookieStore.delete(HAD_PREVIOUS_SESSION_COOKIE_KEY);
     return handleLogout(req, res);
   },
   async login(req: NextApiRequest, res: NextApiResponse) {

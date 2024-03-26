@@ -1,38 +1,68 @@
-import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
+import { MouseEvent, useEffect, useState } from 'react';
+
+import {
+  MOCK_COOKIE_KEY,
+  MOCK_ERROR_COOKIE_KEY,
+  SHOW_DEV_MENU_COOKIE_KEY,
+} from '@/utils/serverClientUtils';
 
 const useMock = () => {
-  const router = useRouter();
-  const pathname = usePathname();
   const [isMockOn, setIsMockOn] = useState(false);
-  const [showMockLink, setShowMockLink] = useState(false);
-  const mockText = isMockOn ? 'Mock is on' : 'Mock is off';
-  const mockHref = isMockOn
-    ? '/policies?..mock..=off'
-    : '/policies?..mock..=on';
+  const [showDevMenu, setShowDevMenu] = useState(false);
+  const [isMockErroOn, setIsMockErrorOn] = useState(false);
+  const mockText = isMockOn ? 'Turn Mocks Off' : 'Turn Mocks On';
+  const mockErrorText = isMockErroOn ? 'Turn Error Off' : 'Turn Error On';
 
   useEffect(() => {
+    setIsMockOn(Cookies.get(MOCK_COOKIE_KEY) === 'on');
+    setIsMockErrorOn(Cookies.get(MOCK_ERROR_COOKIE_KEY) === 'on');
+    setShowDevMenu(Cookies.get(SHOW_DEV_MENU_COOKIE_KEY) === 'true');
+  }, []);
+
+  const setMock = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    if (isMockOn) {
+      Cookies.remove(MOCK_COOKIE_KEY);
+    } else {
+      Cookies.set(MOCK_COOKIE_KEY, 'on');
+    }
     const queryParams = new URLSearchParams(location.search);
-    setIsMockOn(window.document.cookie.includes('..mock..=on'));
-    setShowMockLink(
-      !window.document.cookie.includes('..show_mock_link..=false')
-    );
-    if (queryParams.has('..mock..')) {
-      queryParams.delete('..mock..');
-    }
+    queryParams.delete(MOCK_COOKIE_KEY);
+    const params = queryParams.toString() ? `?${queryParams.toString()}` : '';
+    window.location.href = `${window.location.origin}/policies${params}`;
+  };
 
-    if (queryParams.has('..show_mock_link..')) {
-      queryParams.delete('..show_mock_link..');
+  const setErrorMock = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    if (isMockErroOn) {
+      Cookies.remove(MOCK_ERROR_COOKIE_KEY);
+    } else {
+      Cookies.set(MOCK_ERROR_COOKIE_KEY, 'on');
     }
+    const queryParams = new URLSearchParams(location.search);
+    queryParams.delete(MOCK_ERROR_COOKIE_KEY);
+    const params = queryParams.toString() ? `?${queryParams.toString()}` : '';
+    window.location.href = `${window.location.origin}/policies${params}`;
+  };
 
-    const path = queryParams.toString() ? `?${queryParams.toString()}` : '';
-    router.replace(`${pathname}${path}`);
-  }, [pathname, router]);
+  const removeDevMenu = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    Cookies.remove(SHOW_DEV_MENU_COOKIE_KEY);
+    const queryParams = new URLSearchParams(location.search);
+    queryParams.delete(SHOW_DEV_MENU_COOKIE_KEY);
+    const params = queryParams.toString() ? `?${queryParams.toString()}` : '';
+    window.location.href = `${window.location.origin}/policies${params}`;
+  };
 
   return {
     mockText,
-    mockHref,
-    showMockLink,
+    mockErrorText,
+    showDevMenu,
+    isMockErroOn,
+    setMock,
+    removeDevMenu,
+    setErrorMock,
   };
 };
 

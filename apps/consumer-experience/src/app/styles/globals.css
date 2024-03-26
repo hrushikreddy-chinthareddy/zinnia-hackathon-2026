@@ -9,6 +9,11 @@
 /* Global font color set on html rather than using global * selector to not override color styles coming from bloom */
 html {
   color: var(--color-base-text-text-primary, #212121);
+  height: 100%;
+}
+
+body {
+  height: 100%;
 }
 
 a {

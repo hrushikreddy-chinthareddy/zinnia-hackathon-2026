@@ -7,8 +7,10 @@ import { NextResponse, type NextRequest } from 'next/server';
 
 import { isProd } from '@/utils';
 import {
-  MAX_AGE_SESSION_COOKIE,
-  REDIRECT_TO_SESSION_COOKIE_KEY,
+  HAD_PREVIOUS_SESSION_COOKIE_KEY,
+  MOCK_COOKIE_KEY,
+  MOCK_ERROR_COOKIE_KEY,
+  SHOW_DEV_MENU_COOKIE_KEY,
 } from '@/utils/serverClientUtils';
 
 /**
@@ -38,21 +40,60 @@ function applySetCookie(req: NextRequest, res: NextResponse): void {
   });
 }
 
+const applyMockCookies = (req: NextRequest, res: NextResponse<unknown>) => {
+  if (isProd()) {
+    return;
+  }
+
+  const mockParam = req.nextUrl.searchParams.get(MOCK_COOKIE_KEY);
+  const showDevMenu = req.nextUrl.searchParams.get(SHOW_DEV_MENU_COOKIE_KEY);
+  const mkockErrorParam = req.nextUrl.searchParams.get(MOCK_ERROR_COOKIE_KEY);
+
+  if (mockParam) {
+    if (mockParam === 'off') {
+      res.cookies.delete(MOCK_COOKIE_KEY);
+    } else {
+      res.cookies.set(MOCK_COOKIE_KEY, mockParam);
+    }
+  }
+
+  if (mkockErrorParam) {
+    if (mkockErrorParam === 'off') {
+      res.cookies.delete(MOCK_ERROR_COOKIE_KEY);
+    } else {
+      res.cookies.set(MOCK_ERROR_COOKIE_KEY, mkockErrorParam);
+    }
+  }
+
+  if (showDevMenu) {
+    res.cookies.set(SHOW_DEV_MENU_COOKIE_KEY, showDevMenu);
+  }
+};
+
 export async function middleware(req: NextRequest) {
   const session = await getSession();
+  const pathname = req.nextUrl.pathname;
+
+  if (!session && pathname.includes('/session')) {
+    const res = NextResponse.next();
+    res.cookies.delete(HAD_PREVIOUS_SESSION_COOKIE_KEY);
+    return res;
+  }
+
   if (!session) {
-    const path = req.cookies.has(REDIRECT_TO_SESSION_COOKIE_KEY)
+    const path = req.cookies.has(HAD_PREVIOUS_SESSION_COOKIE_KEY)
       ? 'session'
       : 'login';
     const res = NextResponse.redirect(new URL(`/${path}`, req.url));
+    res.cookies.delete(HAD_PREVIOUS_SESSION_COOKIE_KEY);
     return res;
+  }
+
+  if (pathname.includes('/session')) {
+    return NextResponse.redirect(new URL('/policies', req.url));
   }
   const res = NextResponse.next();
   await touchSession(req, res);
-  res.cookies.set(REDIRECT_TO_SESSION_COOKIE_KEY, 'true', {
-    maxAge: MAX_AGE_SESSION_COOKIE,
-  });
-  const pathname = req.nextUrl.pathname;
   if (pathname.includes('/policies/')) {
     const urlParts = pathname.split('/');
     const planCode = urlParts[2];
@@ -63,23 +104,7 @@ export async function middleware(req: NextRequest) {
     res.headers.set('policyNumber', policyNumber || '');
   }
 
-  if (!isProd()) {
-    const mockParam = req.nextUrl.searchParams.get('..mock..');
-    const showMockLinkParam =
-      req.nextUrl.searchParams.get('..show_mock_link..');
-    if (mockParam) {
-      if (mockParam === 'off') {
-        res.cookies.delete('..mock..');
-      } else {
-        res.cookies.set('..mock..', mockParam);
-      }
-    }
-
-    if (showMockLinkParam) {
-      res.cookies.set('..show_mock_link..', showMockLinkParam);
-    }
-  }
-
+  applyMockCookies(req, res);
   applySetCookie(req, res);
 
   return res;
@@ -96,6 +121,6 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      */
-    '/((?!api|login|session|_next/static|_next/image|favicon.ico).*)',
+    '/((?!api|login|_next/static|_next/image|favicon.ico).*)',
   ],
 };
