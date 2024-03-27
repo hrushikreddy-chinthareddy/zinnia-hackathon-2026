@@ -1,4 +1,4 @@
-import { Icon, IconType } from '@zinnia/bloom/internal/components';
+import { Icon, IconType, Link } from '@zinnia/bloom/internal/components';
 import { Metadata } from 'next';
 
 import { GenericInfoPage } from '@/components/generic-info-page/GenericInfoPage';
