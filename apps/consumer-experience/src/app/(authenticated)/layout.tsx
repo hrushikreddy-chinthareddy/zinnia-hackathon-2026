@@ -24,7 +24,7 @@ export default async function RootLayout({
 }) {
   return (
     <UserProvider>
-      <main className={styles.body}>
+      <main className={`${styles.body} ${styles.main}`}>
         <SessionManager>
           {/* To prevent hydration error by trying to render these dynamically using screen width,
           dynamically displaying using media queries */}

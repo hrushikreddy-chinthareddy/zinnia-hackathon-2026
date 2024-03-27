@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import styles from "./Tag.module.css";
 import { TagProps, TagVariant } from "./types";
 
@@ -22,7 +23,7 @@ export const Tag = ({
   }
 
   return (
-    <div className={`typography-labels-label-sm ${styles.tag} ${isSelected ? styles.selected : variantClass(variant)}`}>
+    <div className={clsx(styles.tag, isSelected ? styles.selected : variantClass(variant))}>
       <p>{text}</p>
     </div>
   );

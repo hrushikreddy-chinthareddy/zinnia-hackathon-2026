@@ -45,6 +45,12 @@
   }
 }
 
+.logoContainer {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
 @media (width < 500px) {
   .container {
     display: none;

@@ -1,7 +1,5 @@
-import { getSession } from '@auth0/nextjs-auth0';
 import { Icon, IconType } from '@zinnia/bloom/internal/components';
 import { Metadata } from 'next';
-import { redirect } from 'next/navigation';
 
 import LogoImage from '@/app/styles/everly/everly-logo.svg'; // TODO: don't hardcode to everly
 
@@ -14,12 +12,6 @@ export const metadata: Metadata = {
 };
 
 export default async function Session() {
-  const session = await getSession();
-
-  if (session) {
-    return redirect('/policies');
-  }
-
   return (
     <div className={styles.container}>
       <div className={styles.carrierMarketingImage} />

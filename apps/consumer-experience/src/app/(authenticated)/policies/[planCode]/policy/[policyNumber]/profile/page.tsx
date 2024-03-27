@@ -37,10 +37,10 @@ export default async function Profile() {
 
   const listItems = [];
   const profileData = data!;
-  if (profileData.addresses) {
+  if (profileData.addresses && profileData.addresses.length) {
     const currentAddresses = filterItemsWithPastEndDate(profileData.addresses);
 
-    if (currentAddresses) {
+    if (currentAddresses && currentAddresses.length) {
       listItems.push({
         content: (
           <Addresses
@@ -53,7 +53,7 @@ export default async function Profile() {
     }
   }
 
-  if (profileData.phones) {
+  if (profileData.phones && profileData.phones.length) {
     const currentPhones = filterItemsWithPastEndDate(profileData.phones);
 
     if (currentPhones) {
@@ -63,7 +63,7 @@ export default async function Profile() {
     }
   }
 
-  if (profileData.emails) {
+  if (profileData.emails && profileData.emails.length) {
     const currentEmails = filterItemsWithPastEndDate(profileData.emails);
 
     if (currentEmails) {
@@ -73,7 +73,7 @@ export default async function Profile() {
     }
   }
 
-  if (profileData?.bankDetails?.length > 0) {
+  if (profileData.bankDetails && profileData.bankDetails.length) {
     const allBankData = profileData.bankDetails.map(bankDetail => {
       return (
         <BankData

@@ -10,6 +10,7 @@ import CircleUser from '../../tokens/svg-assets/icons/circles/circle-user.svg';
 import Clock from '../../tokens/svg-assets/icons//illustrations/clock.svg';
 import Cloud from '../../tokens/svg-assets/icons/media/cloud.svg';
 import Dashboard from '../../tokens/svg-assets/icons/navigation/dashboard.svg';
+import Database from '../../tokens/svg-assets/icons/illustrations/database.svg';
 import Dollar from '../../tokens/svg-assets/icons/currency/currency-dollars.svg';
 import DocumentText from '../../tokens/svg-assets/icons/file/document-text.svg';
 import Frown from '../../tokens/svg-assets/icons/brand/emoji-frown.svg';
@@ -17,6 +18,7 @@ import HexExclamation from '../../tokens/svg-assets/icons/alert/hex-exclamation.
 import Lightbulb from '../../tokens/svg-assets/icons/illustrations/light-bulb.svg';
 import Logout from '../../tokens/svg-assets/icons/actions/logout.svg';
 import Mail from '../../tokens/svg-assets/icons/communications/mail.svg';
+import Settings from '../../tokens/svg-assets/icons/actions/settings.svg';
 import Shield from '../../tokens/svg-assets/icons/navigation/shield-heart.svg';
 import Trash from '../../tokens/svg-assets/icons/actions/trash.svg';
 import UserGroup from '../../tokens/svg-assets/icons/actions/user-group.svg';
@@ -36,6 +38,7 @@ export enum IconType {
   CLOSE = 'Close',
   CLOUD = 'Cloud',
   DASHBOARD = 'Dashboard',
+  DATABASE = 'Database',
   DOCUMENT_TEXT = 'DocumentText',
   DOLLAR = 'Dollar',
   FROWN = 'Frown',
@@ -44,6 +47,7 @@ export enum IconType {
   LOGOUT = 'Logout',
   MAIL = 'Mail',
   PAYMENT = 'Payment',
+  SETTINGS = 'Settings',
   SHIELD = 'Shield',
   TRASH = 'Trash',
   USER_GROUP = 'UserGroup',
@@ -80,6 +84,7 @@ export const Icons: {
   [IconType.CLOSE]: Close,
   [IconType.CLOUD]: Cloud,
   [IconType.DASHBOARD]: Dashboard,
+  [IconType.DATABASE]: Database,
   // [`${IconType.CLOUD}${FILLED}`]: CloudFilled,
   [IconType.DOCUMENT_TEXT]: DocumentText,
   [IconType.DOLLAR]: Dollar,
@@ -89,6 +94,7 @@ export const Icons: {
   [IconType.LOGOUT]: Logout,
   [IconType.MAIL]: Mail,
   [IconType.PAYMENT]: Payment,
+  [IconType.SETTINGS]: Settings,
   [IconType.SHIELD]: Shield,
   [IconType.TRASH]: Trash,
   [IconType.USER_GROUP]: UserGroup,
