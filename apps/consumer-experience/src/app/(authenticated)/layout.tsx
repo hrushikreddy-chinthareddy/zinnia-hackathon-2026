@@ -32,10 +32,8 @@ export default async function RootLayout({
           <DesktopNav />
           <div className={styles.container}>
             <div className={styles.content}>
-              <>
-                {children}
-                <Footer />
-              </>
+              {children}
+              <Footer />
             </div>
           </div>
         </SessionManager>

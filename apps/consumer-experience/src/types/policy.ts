@@ -2,6 +2,8 @@ import { PolicyReferenceDataModel } from '@zinnia/api-types/types/search';
 import {
   Address,
   Email,
+  PartyRole,
+  PartyType,
   Phone,
   Policy,
   PolicyStatus,
@@ -68,4 +70,25 @@ export interface PolicyApiResponse {
 export interface PolicyRequestInputs {
   planCode: string;
   policyNumber: string;
+}
+
+export interface BeneficiaryRequestInputs extends PolicyRequestInputs {
+  partyId: string;
+}
+
+export interface BeneficiaryData {
+  totalCoverageAmount?: number | null;
+  beneficiaries: Beneficiary[] | null;
+}
+
+export interface Beneficiary {
+  firstName?: string | null;
+  lastName?: string | null;
+  partyId?: string | null;
+  partyType: PartyType;
+  partyRole: PartyRole;
+  relationshipToInsured: string;
+  beneficiaryPercentage: number;
+  addresses?: Address[];
+  emails?: Email[];
 }

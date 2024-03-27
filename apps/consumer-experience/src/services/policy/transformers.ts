@@ -1,9 +1,11 @@
 import { PolicyReferenceDataModel } from '@zinnia/api-types/types/search';
-import { Policy, PolicyStatus } from '@zinnia/api-types/types/sor';
+import { PartyRole, Policy, PolicyStatus } from '@zinnia/api-types/types/sor';
 import { policyOwner } from '@zinnia/utils';
 
 import { BankDetail } from '@/components/person-data/types';
 import {
+  Beneficiary,
+  BeneficiaryData,
   PolicyAccountValue,
   PolicyCoverage,
   PolicyDetails,
@@ -11,6 +13,40 @@ import {
   PolicyReferenceData,
   UpcomingPremium,
 } from '@/types/policy';
+
+const allBeneficiaries = (policy: Policy) => {
+  const benesWithRoles = [] as Beneficiary[];
+  const beneRoles = [
+    PartyRole.CONTINGENTBENEFICIARY,
+    PartyRole.PRIMARYBENEFICIARY,
+  ];
+
+  policy.parties?.forEach(party => {
+    const correspondingRole = policy.partyRoles?.find(
+      role => role.partyId === party.partyId
+    );
+
+    if (
+      correspondingRole &&
+      correspondingRole.partyRole &&
+      beneRoles.includes(correspondingRole.partyRole)
+    ) {
+      benesWithRoles.push({
+        firstName: party.firstName,
+        lastName: party.lastName,
+        partyType: party.partyType,
+        partyId: party.partyId,
+        beneficiaryPercentage: party.beneficiaryPercentage,
+        addresses: party.addresses,
+        emails: party.emails,
+        partyRole: correspondingRole.partyRole,
+        relationshipToInsured: correspondingRole.relationshipToInsured,
+      } as Beneficiary);
+    }
+  });
+
+  return benesWithRoles;
+};
 
 export const transformPolicyReferenceData = (
   policyReferences: PolicyReferenceDataModel[]
@@ -32,6 +68,7 @@ export const transformPolicyForAccountValue = (
   return {
     timestamp: policy.timestamp,
     totalFundValue: policy?.allocation?.funds?.[0]?.totalFundValue,
+    // TODO: update this to use real data
     valueChange: 9.638554,
   };
 };
@@ -55,6 +92,7 @@ export const transformPolicyForProfile = (policy: Policy): PolicyProfile => {
   const bankDetails: BankDetail[] = (ownerInfo?.bankDetails || []).map(b => {
     return {
       ...b,
+      // TODO: update this to use real data
       autopayEnabled: false,
     };
   });
@@ -84,10 +122,30 @@ export const transformPolicyForUpcomingPremium = (
 
 export const transformPolicyForCoverage = (policy: Policy): PolicyCoverage => {
   return {
-    beneficiaryCount: policy.parties && policy.parties?.length - 1,
+    beneficiaryCount: allBeneficiaries(policy).length,
     maturityDate: policy.policyDates?.maturityDate,
     policyStartDate: policy.policyDates?.policyStartDate,
     totalCoverageAmount: policy.coverage?.totalCoverageAmount,
     riderCount: policy.riders?.length || 0,
   };
+};
+
+export const transformPolicyForBeneficiaries = (
+  policy: Policy
+): BeneficiaryData => {
+  return {
+    totalCoverageAmount: policy.coverage?.totalCoverageAmount,
+    beneficiaries: allBeneficiaries(policy),
+  };
+};
+
+export const transformPolicyForBeneficiary = (
+  policy: Policy,
+  partyId: string
+): Beneficiary | undefined => {
+  const bene = allBeneficiaries(policy).find(
+    party => party.partyId === partyId
+  );
+
+  return bene;
 };

@@ -86,8 +86,9 @@ export default async function RootLayout({
     <html
       lang="en"
       className={`${primaryFont.variable} ${secondaryFont.variable}`}
+      style={{ height: '100%' }}
     >
-      <body>{children}</body>
+      <body style={{ height: '100%' }}>{children}</body>
     </html>
   );
 }

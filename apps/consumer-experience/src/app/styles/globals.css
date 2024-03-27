@@ -13,6 +13,12 @@ html {
 }
 
 body {
+  /* This is to prevent the layout shift when a scrollbar is present */
+  width: 100vw;
+}
+
+body,
+main {
   height: 100%;
 }
 

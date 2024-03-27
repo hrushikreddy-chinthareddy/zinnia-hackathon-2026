@@ -19,6 +19,8 @@ import {
   transformPolicyForCoverage,
   transformPolicyForHeaderDetails,
   transformPolicyForAccountValue,
+  transformPolicyForBeneficiaries,
+  transformPolicyForBeneficiary,
 } from '@/services/policy/transformers';
 import {
   PolicyApiResponse,
@@ -29,6 +31,9 @@ import {
   PolicyCoverage,
   PolicyDetails,
   PolicyAccountValue,
+  BeneficiaryData,
+  BeneficiaryRequestInputs,
+  Beneficiary,
 } from '@/types/policy';
 
 const getPolicyReferencesByCarrier = async () => {
@@ -223,7 +228,7 @@ export const getUpcomingPremium = async (
   }
 };
 
-export const getCoverae = async (
+export const getCoverage = async (
   options: PolicyRequestInputs
 ): Promise<ApiResponse<PolicyCoverage>> => {
   if (isMockPolicyOverviewRequestEnabled()) {
@@ -248,7 +253,76 @@ export const getCoverae = async (
       error: {
         message: 'Something went wrong',
         status: 400,
-        name: 'getCoverae Error',
+        name: 'getCoverage Error',
+      },
+    };
+  }
+};
+
+export const getBeneficiaries = async (
+  options: PolicyRequestInputs
+): Promise<ApiResponse<BeneficiaryData>> => {
+  if (isMockPolicyOverviewRequestEnabled()) {
+    const transformedResults =
+      transformPolicyForBeneficiaries(mockPolicyResponse);
+
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  }
+
+  try {
+    const response = await getPolicyByPlanCodeAndId(options);
+    const transformedResults = transformPolicyForBeneficiaries(response);
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  } catch (error) {
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 500,
+        name: 'getCoverage Error',
+      },
+    };
+  }
+};
+
+export const getBeneficiary = async (
+  options: BeneficiaryRequestInputs
+): Promise<ApiResponse<Beneficiary | undefined>> => {
+  if (isMockPolicyOverviewRequestEnabled()) {
+    const transformedResults = transformPolicyForBeneficiary(
+      mockPolicyResponse,
+      options.partyId
+    );
+
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  }
+
+  try {
+    const response = await getPolicyByPlanCodeAndId(options);
+    const transformedResults = transformPolicyForBeneficiary(
+      response,
+      options.partyId
+    );
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  } catch (error) {
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 500,
+        name: 'getCoverage Error',
       },
     };
   }
