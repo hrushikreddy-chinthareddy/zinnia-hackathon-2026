@@ -1,22 +1,22 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from '@storybook/react';
 
-import { Button, ButtonProps } from "../../components/button/Button";
-import Tokens from "../../tokens/react";
+import { Button, ButtonProps } from '../../components/button/Button';
+import Tokens from '../../tokens/react';
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta: Meta<typeof Button> = {
-  title: "Components/Button",
+  title: 'Components/Button',
   component: Button,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/react/configure/story-layout
-    layout: "centered",
+    layout: 'centered',
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/react/writing-docs/autodocs
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   args: {
-    mode: "primary",
-    children: "Click me",
-    "aria-label": "click me",
+    mode: 'primary',
+    children: 'Click me',
+    'aria-label': 'click me',
   },
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {
@@ -32,13 +32,13 @@ export const Primary: StoryType = {};
 
 export const Secondary: StoryType = {
   args: {
-    mode: "secondary",
+    mode: 'secondary',
   },
 };
 
 export const Small: StoryType = {
   args: {
-    size: "small",
+    size: 'small',
   },
 };
 
@@ -54,18 +54,31 @@ export const Disabled: StoryType = {
   },
 };
 
+export const AsLink: StoryType = {
+  args: {
+    mode: 'link',
+  },
+};
+
+export const AsLinkDisabled: StoryType = {
+  args: {
+    mode: 'link',
+    disabled: true,
+  },
+};
+
 const buttonStyles = Object.entries(Tokens.Colors.Colors).filter(([k]) =>
-  k.startsWith("button"),
+  k.startsWith('button')
 );
 const toCSSPropertyCase = (key: string) =>
   `--${
-  // split on uppercase letters since we index by camelcase in react tokens
-  key
-    .split(/(?=[A-Z])/)
-    // return all to lowercase so new set can remove dupes
-    .map((k) => k.toLocaleLowerCase())
-    // join with kebab case like css custom properties should
-    .join("-")
+    // split on uppercase letters since we index by camelcase in react tokens
+    key
+      .split(/(?=[A-Z])/)
+      // return all to lowercase so new set can remove dupes
+      .map(k => k.toLocaleLowerCase())
+      // join with kebab case like css custom properties should
+      .join('-')
   }`;
 
 const buttonTable = (
@@ -97,18 +110,18 @@ export const Theming: StoryType = {
             <br></br>
             value: {value}
             <br></br>
-            formatted:{" "}
+            formatted:{' '}
             {`--${[
               ...new Set(
                 // split on uppercase letters since we index by camelcase in react tokens
                 key
                   .split(/(?=[A-Z])/)
                   // return all to lowercase so new set can remove dupes
-                  .map((k) => k.toLocaleLowerCase()),
+                  .map(k => k.toLocaleLowerCase())
               ),
             ]
               // join with kebab case like css custom properties should
-              .join("-")}`}
+              .join('-')}`}
           </li>
         ))}
       </ul>
