@@ -1,6 +1,5 @@
 import { PolicyStatus } from '@zinnia/api-types/types/sor';
 import { Label, Icon, IconType } from '@zinnia/bloom/internal/components';
-import { headers } from 'next/headers';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
@@ -15,12 +14,18 @@ import styles from './PolicyOverview.module.css';
 
 const UPCOMING_PREMIUM = 'Upcoming premium';
 
-export const UpcomingPremium = async () => {
-  const headerStore = headers();
-
+export const UpcomingPremium = async ({
+  planCode,
+  policyNumber,
+  extended,
+}: {
+  planCode: string;
+  policyNumber: string;
+  extended?: boolean;
+}) => {
   const { data, error } = await getUpcomingPremium({
-    planCode: headerStore.get('planCode') || '',
-    policyNumber: headerStore.get('policyNumber') || '',
+    planCode,
+    policyNumber,
   });
 
   if (error) {
@@ -59,7 +64,34 @@ export const UpcomingPremium = async () => {
 
   return (
     <ClickableCardContainer
-      linkTo={{ url: '#', isInternal: true, label: 'go to internal link' }}
+      linkTo={{
+        url: extended
+          ? ''
+          : `/policies/${planCode}/policy/${policyNumber}/premium-payments`,
+        label: 'go to premium payments page',
+      }}
+      {...(extended && {
+        listItems: [
+          {
+            content: (
+              <span className="typography-labels-field-label my-lg">
+                Payment history
+              </span>
+            ),
+            linkTo: {
+              url: `/policies/${planCode}/policy/${policyNumber}/payment-history`,
+              label: 'go to payment history page',
+            },
+          },
+          {
+            content: (
+              <span className="typography-labels-field-label my-lg">
+                Payment details
+              </span>
+            ),
+          },
+        ],
+      })}
     >
       <div className={styles.content}>
         <Icon type={IconType.AUTOPAY} className={styles.icon} />

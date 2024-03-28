@@ -47,7 +47,7 @@ const applyMockCookies = (req: NextRequest, res: NextResponse<unknown>) => {
 
   const mockParam = req.nextUrl.searchParams.get(MOCK_COOKIE_KEY);
   const showDevMenu = req.nextUrl.searchParams.get(SHOW_DEV_MENU_COOKIE_KEY);
-  const mkockErrorParam = req.nextUrl.searchParams.get(MOCK_ERROR_COOKIE_KEY);
+  const mockErrorParam = req.nextUrl.searchParams.get(MOCK_ERROR_COOKIE_KEY);
 
   if (mockParam) {
     if (mockParam === 'off') {
@@ -57,11 +57,11 @@ const applyMockCookies = (req: NextRequest, res: NextResponse<unknown>) => {
     }
   }
 
-  if (mkockErrorParam) {
-    if (mkockErrorParam === 'off') {
+  if (mockErrorParam) {
+    if (mockErrorParam === 'off') {
       res.cookies.delete(MOCK_ERROR_COOKIE_KEY);
     } else {
-      res.cookies.set(MOCK_ERROR_COOKIE_KEY, mkockErrorParam);
+      res.cookies.set(MOCK_ERROR_COOKIE_KEY, mockErrorParam);
     }
   }
 

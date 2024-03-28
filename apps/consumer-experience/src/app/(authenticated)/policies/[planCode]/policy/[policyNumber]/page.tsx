@@ -13,13 +13,22 @@ export const metadata: Metadata = {
   title: 'Policy Overview',
 };
 
-export default async function Page() {
+export default async function Page({
+  params,
+}: {
+  params: {
+    planCode: string;
+    policyNumber: string;
+  };
+}) {
+  const { planCode, policyNumber } = params;
+
   return (
     <>
       <HeaderBreadcrumb title="Policy Overview" />
       <HeaderPolicyDetails />
       <div className={styles.cardContainer}>
-        <UpcomingPremium />
+        <UpcomingPremium planCode={planCode} policyNumber={policyNumber} />
         <AccountValue />
         <Coverage />
       </div>
