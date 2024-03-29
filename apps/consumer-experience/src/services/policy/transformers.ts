@@ -13,6 +13,7 @@ import {
   PolicyReferenceData,
   UpcomingPremium,
 } from '@/types/policy';
+import { bankAccountNumberSanitizer } from '@/utils/data';
 
 const allBeneficiaries = (policy: Policy) => {
   const benesWithRoles = [] as Beneficiary[];
@@ -92,6 +93,7 @@ export const transformPolicyForProfile = (policy: Policy): PolicyProfile => {
   const bankDetails: BankDetail[] = (ownerInfo?.bankDetails || []).map(b => {
     return {
       ...b,
+      accountNumber: bankAccountNumberSanitizer(b?.accountNumber),
       // TODO: update this to use real data
       autopayEnabled: false,
     };
@@ -148,4 +150,20 @@ export const transformPolicyForBeneficiary = (
   );
 
   return bene;
+};
+
+export const transformPolicyforPaymentDetails = (
+  policy: Policy
+): BankDetail => {
+  const ownerInfo = policyOwner(policy);
+  // TODO: this needs to be updated to use the correct data, how do we know which bankData to show here?
+  return (
+    {
+      ...ownerInfo?.bankDetails?.[0],
+      accountNumber: bankAccountNumberSanitizer(
+        ownerInfo?.bankDetails?.[0]?.accountNumber
+      ),
+      autopayEnabled: true,
+    } || {}
+  );
 };

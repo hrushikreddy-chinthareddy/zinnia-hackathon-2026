@@ -9,30 +9,22 @@ import { DEFAULT_ERROR_STRING, toSentenceCase } from '@/utils/strings';
 
 import styles from './BankData.module.css';
 import { FieldData } from '../field-data/FieldData';
-
-export interface BankDataProps {
-  accountNumber: string;
-  accountType: string;
-  autopayEnabled?: boolean;
-  bankName: string;
-  nameOnAccount: string;
-  routingNumber: string;
-}
+import { BankDetail } from '../person-data/types';
 
 export const BankData = ({
   accountNumber,
   accountType,
   autopayEnabled,
-  bankName,
+  branchName,
   nameOnAccount,
   routingNumber,
-}: BankDataProps) => {
+}: BankDetail) => {
   return (
     <div>
       <div className={styles.bankName}>
         <div className="typography-labels-label-lg">
           {/* Formatting uppercase is the best solution based on the return from zahara */}
-          {bankName?.toUpperCase()}
+          {branchName?.toUpperCase()}
         </div>
         {autopayEnabled && (
           <AssistiveText

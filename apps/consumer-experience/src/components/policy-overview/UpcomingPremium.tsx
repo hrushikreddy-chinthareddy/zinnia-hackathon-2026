@@ -89,6 +89,10 @@ export const UpcomingPremium = async ({
                 Payment details
               </span>
             ),
+            linkTo: {
+              url: `/policies/${planCode}/policy/${policyNumber}/payment-details`,
+              label: 'go to payment details page',
+            },
           },
         ],
       })}

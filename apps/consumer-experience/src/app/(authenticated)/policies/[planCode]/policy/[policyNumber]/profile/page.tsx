@@ -5,6 +5,7 @@ import { headers } from 'next/headers';
 import { BankData } from '@/components/bank-data/BankData';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
+import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 import MockMessage from '@/components/MockMessage';
@@ -75,23 +76,13 @@ export default async function Profile() {
 
   if (profileData.bankDetails && profileData.bankDetails.length) {
     const allBankData = profileData.bankDetails.map(bankDetail => {
-      return (
-        <BankData
-          key={bankDetail.accountNumber}
-          accountNumber={bankDetail.accountNumber || ''}
-          accountType={bankDetail.accountType || ''}
-          autopayEnabled={bankDetail.autopayEnabled}
-          routingNumber={bankDetail.routingNumber || ''}
-          bankName={bankDetail.branchName || ''}
-          nameOnAccount={bankDetail.nameOnAccount || ''}
-        />
-      );
+      return <BankData key={bankDetail.accountNumber} {...bankDetail} />;
     });
 
     listItems.push({
       content: (
         <div className={styles.multipleItemsInSection}>
-          <h2>Banking Details</h2>
+          <h2 className="mb-lg">Banking Details</h2>
           {allBankData}
         </div>
       ),
@@ -115,6 +106,7 @@ export default async function Profile() {
           </FieldData>
         </div>
       </ClickableCardContainer>
+      <Footer showAction />
     </div>
   );
 }

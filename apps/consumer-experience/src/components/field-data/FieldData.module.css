@@ -3,10 +3,6 @@
   flex-direction: column;
 }
 
-.label {
-  height: 1.5rem;
-}
-
 .value {
   display: flex;
   line-height: 22px;

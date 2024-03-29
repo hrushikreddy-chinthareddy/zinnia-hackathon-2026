@@ -1,3 +1,4 @@
+import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 import { UpcomingPremium } from '@/components/policy-overview/UpcomingPremium';
@@ -17,6 +18,7 @@ export default async function PremiumPayments({
         policyNumber={params.policyNumber}
         extended
       />
+      <Footer />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { AccountType, Frequency, Reason } from '@zinnia/api-types/types/sor';
 
 import { CardInsertHistory } from '@/components/card-list-history/CardInsertHistory';
 import { CardListHistory } from '@/components/card-list-history/CardListHistory';
+import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 import { toSentenceCase } from '@/utils/strings';
@@ -112,6 +113,7 @@ export default async function PaymentHistory() {
           {completedPayments()}
         </CardListHistory.ListItems>
       </CardListHistory>
+      <Footer />
     </div>
   );
 }

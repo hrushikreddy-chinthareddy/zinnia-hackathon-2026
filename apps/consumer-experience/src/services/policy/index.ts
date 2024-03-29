@@ -3,6 +3,7 @@ import {
   PolicySearchResponse,
 } from '@zinnia/api-types/types/search';
 
+import { BankDetail } from '@/components/person-data/types';
 import {
   ApiResponse,
   ServerApi,
@@ -21,6 +22,7 @@ import {
   transformPolicyForAccountValue,
   transformPolicyForBeneficiaries,
   transformPolicyForBeneficiary,
+  transformPolicyforPaymentDetails,
 } from '@/services/policy/transformers';
 import {
   PolicyApiResponse,
@@ -312,6 +314,38 @@ export const getBeneficiary = async (
       response,
       options.partyId
     );
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  } catch (error) {
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 500,
+        name: 'getCoverage Error',
+      },
+    };
+  }
+};
+
+export const getPaymentDetails = async (
+  options: PolicyRequestInputs
+): Promise<ApiResponse<BankDetail>> => {
+  if (isMockPolicyOverviewRequestEnabled()) {
+    const transformedResults =
+      transformPolicyforPaymentDetails(mockPolicyResponse);
+
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  }
+
+  try {
+    const response = await getPolicyByPlanCodeAndId(options);
+    const transformedResults = transformPolicyforPaymentDetails(response);
     return {
       data: transformedResults,
       error: null,

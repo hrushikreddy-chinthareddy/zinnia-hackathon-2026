@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 
+import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 import { AccountValue } from '@/components/policy-overview/AccountValue';
@@ -32,6 +33,7 @@ export default async function Page({
         <AccountValue />
         <Coverage />
       </div>
+      <Footer />
     </>
   );
 }
