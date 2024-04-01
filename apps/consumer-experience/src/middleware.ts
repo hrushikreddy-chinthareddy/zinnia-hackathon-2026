@@ -47,7 +47,7 @@ const applyMockCookies = (req: NextRequest, res: NextResponse<unknown>) => {
 
   const mockParam = req.nextUrl.searchParams.get(MOCK_COOKIE_KEY);
   const showDevMenu = req.nextUrl.searchParams.get(SHOW_DEV_MENU_COOKIE_KEY);
-  const mkockErrorParam = req.nextUrl.searchParams.get(MOCK_ERROR_COOKIE_KEY);
+  const mockErrorParam = req.nextUrl.searchParams.get(MOCK_ERROR_COOKIE_KEY);
 
   if (mockParam) {
     if (mockParam === 'off') {
@@ -57,11 +57,11 @@ const applyMockCookies = (req: NextRequest, res: NextResponse<unknown>) => {
     }
   }
 
-  if (mkockErrorParam) {
-    if (mkockErrorParam === 'off') {
+  if (mockErrorParam) {
+    if (mockErrorParam === 'off') {
       res.cookies.delete(MOCK_ERROR_COOKIE_KEY);
     } else {
-      res.cookies.set(MOCK_ERROR_COOKIE_KEY, mkockErrorParam);
+      res.cookies.set(MOCK_ERROR_COOKIE_KEY, mockErrorParam);
     }
   }
 
@@ -94,15 +94,6 @@ export async function middleware(req: NextRequest) {
   }
   const res = NextResponse.next();
   await touchSession(req, res);
-  if (pathname.includes('/policies/')) {
-    const urlParts = pathname.split('/');
-    const planCode = urlParts[2];
-    const policyNumber = urlParts[4];
-    // This is to allow access to planCode and policyNumber inside server components
-    // allows each of those components to make the necessary data requests.
-    res.headers.set('planCode', planCode || '');
-    res.headers.set('policyNumber', policyNumber || '');
-  }
 
   applyMockCookies(req, res);
   applySetCookie(req, res);

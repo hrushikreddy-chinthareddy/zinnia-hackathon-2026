@@ -1,21 +1,9 @@
 .detailsContainer {
-  display: grid;
-  grid-template-columns: repeat(2, min-content);
-  column-gap: var(--measureDimensionGap2xl, 2rem);
-  row-gap: var(--measure-dimension-gap-lg, 1rem);
-
-  * {
-    /* TODO: verify this setting */
-    white-space: nowrap;
-  }
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
 }
 
 .bankName {
-  margin: var(--measure-dimension-gap-lg, 1rem) 0;
-}
-
-@media (min-width: 500px) {
-  .detailsContainer {
-    grid-template-columns: repeat(4, min-content);
-  }
+  margin-bottom: var(--measure-dimension-gap-lg, 1rem);
 }

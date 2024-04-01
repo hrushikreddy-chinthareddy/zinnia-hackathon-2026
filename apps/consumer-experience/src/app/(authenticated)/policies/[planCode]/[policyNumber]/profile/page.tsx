@@ -1,38 +1,50 @@
 import { Address, Email, Phone } from '@zinnia/api-types/types/sor';
-import { Label } from '@zinnia/bloom/internal/components';
-import { headers } from 'next/headers';
+import { IconType, Label } from '@zinnia/bloom/internal/components';
 
 import { BankData } from '@/components/bank-data/BankData';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
+import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 import MockMessage from '@/components/MockMessage';
+import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { Addresses } from '@/components/person-data/Addresses';
 import { Emails } from '@/components/person-data/Emails';
 import { Phones } from '@/components/person-data/Phones';
 import { getPolicyProfileData } from '@/services';
+import { PolicyRequestInputs } from '@/types/policy';
 import { filterItemsWithPastEndDate, fullName } from '@/utils/data';
 
 import styles from './Profile.module.css';
 
-export default async function Profile() {
-  const headerStore = headers();
+interface Props {
+  params: PolicyRequestInputs;
+}
 
+export default async function Profile({ params }: Props) {
   const { data, error } = await getPolicyProfileData({
-    planCode: headerStore.get('planCode') || '',
-    policyNumber: headerStore.get('policyNumber') || '',
+    planCode: params.planCode,
+    policyNumber: params.policyNumber,
   });
 
   if (error) {
-    <div className={styles.pageContainer}>
-      <HeaderBreadcrumb title="Profile" />
-      <MockMessage />
-      <HeaderPolicyDetails />
-      <ClickableCardContainer>
-        <div>No data available</div>
-      </ClickableCardContainer>
-    </div>;
+    return (
+      <div className={styles.pageContainer}>
+        <HeaderBreadcrumb title="Profile" />
+        <HeaderPolicyDetails
+          policyNumber={params.policyNumber}
+          planCode={params.planCode}
+        />
+        <div className="space-mb-gap-lg">
+          <MockMessage />
+          <NoDataAvailable
+            iconType={IconType.CIRCLE_USER}
+            message="There is currently no profile data available."
+          />
+        </div>
+      </div>
+    );
   }
 
   const listItems = [];
@@ -75,23 +87,13 @@ export default async function Profile() {
 
   if (profileData.bankDetails && profileData.bankDetails.length) {
     const allBankData = profileData.bankDetails.map(bankDetail => {
-      return (
-        <BankData
-          key={bankDetail.accountNumber}
-          accountNumber={bankDetail.accountNumber || ''}
-          accountType={bankDetail.accountType || ''}
-          autopayEnabled={bankDetail.autopayEnabled}
-          routingNumber={bankDetail.routingNumber || ''}
-          bankName={bankDetail.branchName || ''}
-          nameOnAccount={bankDetail.nameOnAccount || ''}
-        />
-      );
+      return <BankData key={bankDetail.accountNumber} {...bankDetail} />;
     });
 
     listItems.push({
       content: (
         <div className={styles.multipleItemsInSection}>
-          <h2>Banking Details</h2>
+          <h2 className="mb-lg">Banking Details</h2>
           {allBankData}
         </div>
       ),
@@ -101,7 +103,10 @@ export default async function Profile() {
   return (
     <div className={styles.pageContainer}>
       <HeaderBreadcrumb title="Profile" />
-      <HeaderPolicyDetails />
+      <HeaderPolicyDetails
+        policyNumber={params.policyNumber}
+        planCode={params.planCode}
+      />
       <ClickableCardContainer listItems={[...listItems]}>
         <div>
           <h2 className="mb-lg">Name</h2>
@@ -115,6 +120,7 @@ export default async function Profile() {
           </FieldData>
         </div>
       </ClickableCardContainer>
+      <Footer showAction />
     </div>
   );
 }

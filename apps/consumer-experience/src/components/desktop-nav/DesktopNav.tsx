@@ -22,20 +22,34 @@ export function DesktopNav() {
       </div>
 
       <div className={`${styles.navItemsContainer} typography-nav-links-sm`}>
-        <Link href="#" className={styles.navItem}>
-          <Icon type={IconType.DOCUMENT_TEXT} />
-          Documents
-        </Link>
-        <Link
-          href={`/policies/${params.planCode}/policy/${params.policyNumber}/profile`}
-          className={styles.navItem}
-        >
-          <Icon type={IconType.CIRCLE_USER} />
-          Profile
-        </Link>
+        {params.planCode && params.policyNumber && (
+          <>
+            <Link
+              href={`/policies/${params.planCode}/${params.policyNumber}`}
+              className={styles.navItem}
+            >
+              <Icon type={IconType.SHIELD_CHECKMARK} />
+              Policy Overview
+            </Link>
+            <Link
+              href={`/policies/${params.planCode}/${params.policyNumber}/documents`}
+              className={styles.navItem}
+            >
+              <Icon type={IconType.DOCUMENT_TEXT} />
+              Documents
+            </Link>
+            <Link
+              href={`/policies/${params.planCode}/${params.policyNumber}/profile`}
+              className={styles.navItem}
+            >
+              <Icon type={IconType.CIRCLE_USER} />
+              Profile
+            </Link>
+          </>
+        )}
         <a
           href="/api/auth/logout"
-          className={`${styles.navItem} ${styles.signOut}`}
+          className={`${styles.navItem} ${styles.signOut} ${params.planCode && params.policyNumber ? styles.border : ''}`}
         >
           Sign out
         </a>

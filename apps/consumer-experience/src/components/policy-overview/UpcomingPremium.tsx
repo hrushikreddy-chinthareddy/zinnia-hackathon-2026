@@ -1,9 +1,10 @@
 import { PolicyStatus } from '@zinnia/api-types/types/sor';
 import { Label, Icon, IconType } from '@zinnia/bloom/internal/components';
-import { headers } from 'next/headers';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
+import MockMessage from '@/components/MockMessage';
+import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { UpcomingPremiumPopover } from '@/components/policy-overview/UpcomingPremiumPopover';
 import { getUpcomingPremium } from '@/services';
 import { formatUSDollars } from '@/utils/currency';
@@ -15,16 +16,30 @@ import styles from './PolicyOverview.module.css';
 
 const UPCOMING_PREMIUM = 'Upcoming premium';
 
-export const UpcomingPremium = async () => {
-  const headerStore = headers();
-
+export const UpcomingPremium = async ({
+  planCode,
+  policyNumber,
+  extended,
+}: {
+  planCode: string;
+  policyNumber: string;
+  extended?: boolean;
+}) => {
   const { data, error } = await getUpcomingPremium({
-    planCode: headerStore.get('planCode') || '',
-    policyNumber: headerStore.get('policyNumber') || '',
+    planCode,
+    policyNumber,
   });
 
   if (error) {
-    return null;
+    return (
+      <div className="space-mb-gap-lg">
+        <MockMessage />
+        <NoDataAvailable
+          iconType={IconType.AUTOPAY}
+          message="There is currently no premium payments data available."
+        />
+      </div>
+    );
   }
 
   const {
@@ -59,7 +74,38 @@ export const UpcomingPremium = async () => {
 
   return (
     <ClickableCardContainer
-      linkTo={{ url: '#', isInternal: true, label: 'go to internal link' }}
+      linkTo={{
+        url: extended
+          ? ''
+          : `/policies/${planCode}/${policyNumber}/premium-payments`,
+        label: 'go to premium payments page',
+      }}
+      {...(extended && {
+        listItems: [
+          {
+            content: (
+              <span className="typography-labels-field-label my-lg">
+                Payment history
+              </span>
+            ),
+            linkTo: {
+              url: `/policies/${planCode}/${policyNumber}/payment-history`,
+              label: 'go to payment history page',
+            },
+          },
+          {
+            content: (
+              <span className="typography-labels-field-label my-lg">
+                Payment details
+              </span>
+            ),
+            linkTo: {
+              url: `/policies/${planCode}/${policyNumber}/payment-details`,
+              label: 'go to payment details page',
+            },
+          },
+        ],
+      })}
     >
       <div className={styles.content}>
         <Icon type={IconType.AUTOPAY} className={styles.icon} />

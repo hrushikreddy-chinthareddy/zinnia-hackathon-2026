@@ -1,0 +1,120 @@
+.container {
+  height: 100svh;
+  width: 100vw;
+  background-color: white;
+}
+
+.contentContainer {
+  padding: 0 var(--measure-dimension-margin-xxs);
+  text-align: center;
+
+  &.hideCarrierImage {
+    height: 100svh;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.headerContainer {
+  display: flex;
+  gap: var(--measure-dimension-gap-xs);
+  align-items: center;
+  margin-top: var(--measure-dimension-gap-lg, 1rem);
+  margin-bottom: var(--measure-dimension-gap-lg, 1rem);
+  justify-content: center;
+}
+
+.logoContainer {
+  width: 124px;
+}
+
+.details {
+  margin-top: var(--measure-dimension-gap-3xl, 2.5rem);
+}
+
+.actionContainer {
+  width: 100%;
+  margin: var(--measure-dimension-gap-3xl, 2.5rem) 0;
+}
+
+.footer {
+  color: var(--color-base-text-text-secondary, #676767);
+  border-top: 2px solid var(--color-base-border-border-light, #ededed);
+  padding: var(--measure-dimension-padding-2xl) 0;
+  text-align: left;
+}
+
+@media (width < 500px) {
+  .carrierMarketingImage {
+    background-image: url('../../app/styles/everly/assets/everly-hero-background-mobile.png');
+    background-repeat: no-repeat;
+    height: 125px;
+    background-attachment: fixed;
+  }
+}
+
+@media (768px > width >= 500px) {
+  .carrierMarketingImage {
+    background-image: url('../../app/styles/everly/assets/everly-hero-background-tablet.png');
+    background-repeat: no-repeat;
+    height: 125px;
+    background-attachment: fixed;
+    /* This is to position the image at the right focus point */
+    background-position-y: -25px;
+  }
+}
+
+@media (width >= 768px) {
+  .container {
+    display: flex;
+  }
+
+  .carrierMarketingImage {
+    width: 435px;
+    /* TODO: update these to use variables when everly theme vars have been added */
+    /* background-color: var(--color-primary-color-primary-lightest, #d0d2ff); */
+    background-color: #d0d2ff;
+    display: flex;
+    align-items: center;
+
+    background-image: url('../../app/styles/everly/assets/everly-hero-background.png');
+    background-position-y: center;
+    background-repeat: no-repeat;
+  }
+
+  .headerContainer {
+    justify-content: flex-start;
+  }
+
+  .contentContainer {
+    align-items: center;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    padding: 0 var(--measure-dimension-padding-6xl);
+    text-align: left;
+  }
+
+  .logoContainer {
+    width: 200px;
+  }
+
+  .content {
+    width: 425px;
+    align-items: flex-start;
+  }
+
+  .details {
+    padding-top: var(--measure-dimension-padding-2xl, 1rem);
+  }
+
+  .actionContainer {
+    padding-bottom: var(--measure-dimension-padding-2xl, 1rem);
+  }
+}

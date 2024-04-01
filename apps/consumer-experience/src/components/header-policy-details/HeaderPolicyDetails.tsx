@@ -1,6 +1,5 @@
 import { PolicyStatus } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
-import { headers } from 'next/headers';
 
 import { getPolicyForHeaderDetails } from '@/services';
 import { checkIfNull, fullName } from '@/utils/data';
@@ -11,6 +10,8 @@ import MockMessage from '../MockMessage';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
+  planCode: string;
+  policyNumber: string;
 }
 
 // TODO: add surrendered and locked statuses
@@ -31,26 +32,22 @@ const policyDisplayText: { [key in PolicyStatus]: string } = {
   [PolicyStatus.DEATHCLAIMPAID]: '',
 };
 
-export const HeaderPolicyDetails = async ({ className, style }: Props) => {
-  const headerStore = headers();
-
+export const HeaderPolicyDetails = async ({
+  className,
+  style,
+  planCode,
+  policyNumber,
+}: Props) => {
   const { data, error } = await getPolicyForHeaderDetails({
-    planCode: headerStore.get('planCode') || '',
-    policyNumber: headerStore.get('policyNumber') || '',
+    planCode,
+    policyNumber,
   });
 
   if (error) {
     return <MockMessage />;
   }
 
-  const {
-    firstName,
-    lastName,
-    marketingName,
-    planName,
-    policyNumber,
-    policyStatus,
-  } = data!;
+  const { firstName, lastName, marketingName, planName, policyStatus } = data!;
 
   const statusStyle = () => {
     switch (policyStatus) {

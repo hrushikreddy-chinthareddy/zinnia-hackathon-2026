@@ -4,7 +4,6 @@ import {
   IconType,
   Ticker,
 } from '@zinnia/bloom/internal/components';
-import { headers } from 'next/headers';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
@@ -19,13 +18,16 @@ import styles from './PolicyOverview.module.css';
 
 const ACCOUNT_VALUE = 'Account value';
 
-// TODO: add surrendered and locked policy states
-export const AccountValue = async () => {
-  const headerStore = headers();
+interface Props {
+  planCode: string;
+  policyNumber: string;
+}
 
+// TODO: add surrendered and locked policy states
+export const AccountValue = async ({ planCode, policyNumber }: Props) => {
   const { data, error } = await getPolicyAccountValue({
-    planCode: headerStore.get('planCode') || '',
-    policyNumber: headerStore.get('policyNumber') || '',
+    planCode,
+    policyNumber,
   });
 
   if (error) {

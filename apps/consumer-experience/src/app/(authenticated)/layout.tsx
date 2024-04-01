@@ -6,7 +6,6 @@ import '@/app/styles/globals.css';
 
 import styles from '@/app/layout.module.css';
 import { DesktopNav } from '@/components/desktop-nav/DesktopNav';
-import { Footer } from '@/components/footer/Footer';
 import { MobileNav } from '@/components/mobile-nav/MobileNav';
 import { SessionManager } from '@/components/session/SessionManager';
 
@@ -31,12 +30,7 @@ export default async function RootLayout({
           <MobileNav />
           <DesktopNav />
           <div className={styles.container}>
-            <div className={styles.content}>
-              <>
-                {children}
-                <Footer />
-              </>
-            </div>
+            <div className={styles.content}>{children}</div>
           </div>
         </SessionManager>
       </main>

@@ -14,12 +14,23 @@ import styles from './MobileNav.module.css';
 import { DevMenu } from '../dev-menu/DevMenu';
 
 const navRoutes = [
-  { url: '/', displayName: 'Policy overview', icon: IconType.DASHBOARD },
-  { url: '/documents', displayName: 'Documents', icon: IconType.DOCUMENT_TEXT },
   {
-    url: '/policies/${planCode}/policy/${policyNumber}/profile',
+    url: '/policies/${planCode}/${policyNumber}',
+    displayName: 'Policy overview',
+    icon: IconType.SHIELD_CHECKMARK,
+    requiresPolicy: true,
+  },
+  {
+    url: '/policies/${planCode}/${policyNumber}/documents',
+    displayName: 'Documents',
+    icon: IconType.DOCUMENT_TEXT,
+    requiresPolicy: true,
+  },
+  {
+    url: '/policies/${planCode}/${policyNumber}/profile',
     displayName: 'Profile',
     icon: IconType.CIRCLE_USER,
+    requiresPolicy: true,
   },
 ];
 
@@ -74,6 +85,12 @@ export const MobileNav = () => {
             <nav className={styles.innerContent}>
               <ul>
                 {navRoutes.map(route => {
+                  if (
+                    (!params.planCode || !params.policyNumber) &&
+                    route.requiresPolicy
+                  ) {
+                    return null;
+                  }
                   const url = route.url
                     .replace('${planCode}', params.planCode)
                     .replace('${policyNumber}', params.planCode);
