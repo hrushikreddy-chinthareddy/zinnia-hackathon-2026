@@ -1,17 +1,28 @@
 import { PolicyReferenceDataModel } from '@zinnia/api-types/types/search';
-import { PartyRole, Policy, PolicyStatus } from '@zinnia/api-types/types/sor';
-import { policyOwner } from '@zinnia/utils';
+import {
+  BankAccount,
+  PartyRole,
+  Policy,
+  PolicyStatus,
+  Transaction,
+  TransactionType,
+} from '@zinnia/api-types/types/sor';
+import { DEFAULT_ERROR_STRING, policyOwner } from '@zinnia/utils';
 
 import { BankDetail } from '@/components/person-data/types';
 import {
   Beneficiary,
   BeneficiaryData,
+  MethodAndProgram,
   PolicyAccountValue,
   PolicyCoverage,
   PolicyDetails,
   PolicyProfile,
   PolicyReferenceData,
   UpcomingPremium,
+  ExtendedReason,
+  ExtendedTransactionStatus,
+  PaymentHistory,
 } from '@/types/policy';
 import { bankAccountNumberSanitizer } from '@/utils/data';
 
@@ -116,7 +127,7 @@ export const transformPolicyForUpcomingPremium = (
 ): UpcomingPremium => {
   return {
     amount: policy.systematicPrograms?.[0]?.amount || 0,
-    nextActivityDate: policy.systematicPrograms?.[0]?.startDate || '',
+    nextActivityDate: policy.systematicPrograms?.[0]?.nextProgramDate || '',
     planName: policy.product?.planName || '',
     policyStatus: policy.policyStatus || PolicyStatus.NOTISSUED,
   };
@@ -155,15 +166,123 @@ export const transformPolicyForBeneficiary = (
 export const transformPolicyforPaymentDetails = (
   policy: Policy
 ): BankDetail => {
-  const ownerInfo = policyOwner(policy);
-  // TODO: this needs to be updated to use the correct data, how do we know which bankData to show here?
-  return (
-    {
-      ...ownerInfo?.bankDetails?.[0],
-      accountNumber: bankAccountNumberSanitizer(
-        ownerInfo?.bankDetails?.[0]?.accountNumber
-      ),
-      autopayEnabled: true,
-    } || {}
+  const premiumSystematicProgram = policy.systematicPrograms?.find(
+    program => program.reason === ExtendedReason.PREMIUMREASON
   );
+
+  let bankDetails: BankAccount | undefined;
+  if (premiumSystematicProgram) {
+    const currentPayor = (premiumSystematicProgram?.party || [])[0];
+    const currentPayorParty = policy?.parties?.find(
+      party => party.partyId === currentPayor?.partyId
+    );
+    bankDetails = currentPayorParty?.bankDetails?.find(
+      bank => bank.bankId === currentPayor?.bankId
+    );
+  }
+
+  return {
+    ...bankDetails,
+    accountNumber: bankAccountNumberSanitizer(bankDetails?.accountNumber),
+    autopayEnabled: true,
+  };
+};
+export const transformPolicyToMethodAndProgram = (
+  policy: Policy
+): MethodAndProgram | undefined => {
+  const paymentProgram = policy?.systematicPrograms?.find(
+    program => program.reason === ExtendedReason.PREMIUMREASON
+  );
+  const programFirstPayor = (paymentProgram?.party || [])[0];
+  const paymentProgramFinancialInstitutionId = programFirstPayor?.bankId;
+  const payor = policy?.parties?.find(
+    party => party.partyId === programFirstPayor?.partyId
+  );
+  const paymentMethod = payor?.bankDetails?.find(bank =>
+    [bank.appliesToPartyId, bank.accountNumber, bank.bankId].includes(
+      paymentProgramFinancialInstitutionId
+    )
+  );
+
+  if (!paymentMethod) {
+    return;
+  }
+
+  return {
+    ...paymentMethod,
+    frequency: paymentProgram?.frequency,
+    amount: paymentProgram?.amount,
+  };
+};
+
+export const transformPaymentHistory = (
+  policy: Policy,
+  transaction: Transaction | undefined
+): PaymentHistory => {
+  const paymentMethod = transformPolicyToMethodAndProgram(policy);
+  const { effectiveDate, status, transactionAmounts, transactionType } =
+    transaction ?? {};
+  const { appliedAmount, requestedAmount } = transactionAmounts ?? {};
+  const accountType = paymentMethod?.accountType;
+  const accountNumber = bankAccountNumberSanitizer(
+    paymentMethod?.internationalBankAccountNumber ??
+      paymentMethod?.accountNumber
+  );
+
+  const date =
+    status === ExtendedTransactionStatus.PROCESSING
+      ? 'Processing'
+      : effectiveDate;
+
+  const paymentHistoryObject: PaymentHistory = {
+    amount: requestedAmount,
+    date,
+    frequency: paymentMethod?.frequency,
+    type: transactionType?.toString() as keyof typeof ExtendedReason,
+    bankDetails: {
+      accountType,
+      accountNumber,
+    },
+    title: DEFAULT_ERROR_STRING,
+    isPending: status === ExtendedTransactionStatus.Pending,
+  };
+
+  if (!transactionType) {
+    return paymentHistoryObject;
+  }
+
+  switch (transactionType) {
+    case TransactionType.PAYMENT_INITIAL_PREMIUM:
+    case TransactionType.INITIAL_PREMIUM:
+      paymentHistoryObject.amount =
+        transactionType === TransactionType.PAYMENT_INITIAL_PREMIUM
+          ? requestedAmount
+          : appliedAmount;
+      paymentHistoryObject.title = 'Premium payment';
+      break;
+    case TransactionType.PAYMENT_ONE_TIME_PREMIUM:
+    case TransactionType.ONE_TIME_PREMIUM:
+      paymentHistoryObject.amount =
+        transactionType === TransactionType.PAYMENT_ONE_TIME_PREMIUM
+          ? requestedAmount
+          : appliedAmount;
+      paymentHistoryObject.title = 'Premium payment';
+      break;
+    case TransactionType.SUBSEQUENT_PAYMENT:
+    case TransactionType.SUBSEQUENT_PREMIUM:
+      paymentHistoryObject.amount = paymentMethod?.amount;
+      paymentHistoryObject.title = 'Premium autopay';
+      break;
+    case 'Activation':
+      paymentHistoryObject.title = 'Policy activation';
+      break;
+    case 'Anniversary':
+      paymentHistoryObject.title = '"Policy anniversary';
+      break;
+    default:
+      paymentHistoryObject.title = transactionType ?? DEFAULT_ERROR_STRING;
+      break;
+  }
+
+  return paymentHistoryObject;
 };

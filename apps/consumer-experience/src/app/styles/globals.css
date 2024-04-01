@@ -1,6 +1,7 @@
 @import '~@zinnia/bloom/css';
 @import '~@zinnia/bloom/component-styles';
 @import './spacing.css';
+@import url('./everly/theme.css');
 
 /*
 * ELEMENTS

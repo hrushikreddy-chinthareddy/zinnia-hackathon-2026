@@ -1,0 +1,22 @@
+.nav {
+  margin: var(--measure-dimension-gap-lg);
+  display: flex;
+  gap: var(--measure-dimension-gap-xl);
+
+  a {
+    color: var(--color-base-text-text-primary);
+    font-weight: 600;
+    padding: var(--measure-dimension-padding-sm) 0;
+
+    &.active {
+      border-bottom: var(--measure-dimension-stroke-md) solid
+        var(--color-base-border-border-darker);
+    }
+
+    &:hover {
+      text-decoration: none;
+      border-bottom: var(--measure-dimension-stroke-md) solid
+        var(--color-base-border-border-darker);
+    }
+  }
+}

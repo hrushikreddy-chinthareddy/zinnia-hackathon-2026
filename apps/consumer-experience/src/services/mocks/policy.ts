@@ -630,7 +630,7 @@ export const mockPolicyResponse: Policy = {
   policyTerm: 20,
   policyYear: 2,
   monthOfYear: 8,
-  policyNumber: 'DS00000001',
+  policyNumber: 'AR49304815',
   policyStatus: 'ACTIVE' as PolicyStatus,
   // nonForfeitureOption: null,
   issueType: 'FULLUNDERWRITING' as IssueType,

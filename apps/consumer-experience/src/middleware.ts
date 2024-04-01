@@ -94,15 +94,6 @@ export async function middleware(req: NextRequest) {
   }
   const res = NextResponse.next();
   await touchSession(req, res);
-  if (pathname.includes('/policies/')) {
-    const urlParts = pathname.split('/');
-    const planCode = urlParts[2];
-    const policyNumber = urlParts[4];
-    // This is to allow access to planCode and policyNumber inside server components
-    // allows each of those components to make the necessary data requests.
-    res.headers.set('planCode', planCode || '');
-    res.headers.set('policyNumber', policyNumber || '');
-  }
 
   applyMockCookies(req, res);
   applySetCookie(req, res);

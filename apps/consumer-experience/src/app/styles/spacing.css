@@ -363,3 +363,9 @@ Margin values included in modules will override these. **/
   padding-left: var(--measure-dimension-padding-6xl, 3rem);
   padding-right: var(--measure-dimension-padding-6xl, 3rem);
 }
+
+.space-mb-gap-lg {
+  > * {
+    margin-bottom: var(--measure-dimension-gap-lg, 1rem);
+  }
+}

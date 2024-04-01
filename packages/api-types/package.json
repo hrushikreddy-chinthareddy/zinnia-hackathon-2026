@@ -12,7 +12,8 @@
       "import": "./dist/index.js"
     },
     "./types/sor": "./dist/generated-types/sor/index.js",
-    "./types/search": "./dist/generated-types/search/index.js"
+    "./types/search": "./dist/generated-types/search/index.js",
+    "./types/documents": "./dist/generated-types/documents/index.js"
   },
   "typesVersions": {
     "*": {
@@ -24,6 +25,9 @@
       ],
       "./types/search": [
         "dist/generated-types/search/index.d.ts"
+      ],
+      "./types/documents": [
+        "dist/generated-types/documents/index.d.ts"
       ]
     }
   },
@@ -31,9 +35,10 @@
     "build": "tsup",
     "typecheck": "tsc --noEmit",
     "update-spec": "node ./src/update-type-definition.mjs",
+    "generate-types:documents": "npx openapi --input ./src/api-spec-documents.json --output ./src/generated-types/documents --exportCore false --exportServices false;",
     "generate-types:sor": "npx openapi --input ./src/api-spec-sor.updated.json --output ./src/generated-types/sor --exportCore false --exportServices false;",
     "generate-types:search": "npx openapi --input ./src/api-spec-search.yaml --output ./src/generated-types/search --exportCore false --exportServices false;",
-    "generate-types:all": "rm -rf ./src/generated-types && pnpm run generate-types:sor && pnpm run generate-types:search",
+    "generate-types:all": "rm -rf ./src/generated-types && pnpm run generate-types:sor && pnpm run generate-types:search && pnpm run generate-types:documents",
     "clean": "rm -rf ./dist",
     "postinstall": "pnpm run update-spec && pnpm run generate-types:all && pnpm run build"
   },

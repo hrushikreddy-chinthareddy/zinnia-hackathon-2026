@@ -8,10 +8,10 @@ import { standardDateMonthYear } from '@/utils/dates';
 import styles from './CardInsertHistory.module.css';
 
 interface HistoryItemProps {
-  date: string;
+  date?: string;
   title: string;
   subtitle?: ReactNode;
-  amount: number;
+  amount?: number;
   isPending?: boolean;
 }
 

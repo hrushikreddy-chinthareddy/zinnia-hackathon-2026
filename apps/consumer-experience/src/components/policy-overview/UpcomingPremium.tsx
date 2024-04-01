@@ -3,6 +3,8 @@ import { Label, Icon, IconType } from '@zinnia/bloom/internal/components';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
+import MockMessage from '@/components/MockMessage';
+import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { UpcomingPremiumPopover } from '@/components/policy-overview/UpcomingPremiumPopover';
 import { getUpcomingPremium } from '@/services';
 import { formatUSDollars } from '@/utils/currency';
@@ -29,7 +31,15 @@ export const UpcomingPremium = async ({
   });
 
   if (error) {
-    return null;
+    return (
+      <div className="space-mb-gap-lg">
+        <MockMessage />
+        <NoDataAvailable
+          iconType={IconType.AUTOPAY}
+          message="There is currently no premium payments data available."
+        />
+      </div>
+    );
   }
 
   const {
@@ -67,7 +77,7 @@ export const UpcomingPremium = async ({
       linkTo={{
         url: extended
           ? ''
-          : `/policies/${planCode}/policy/${policyNumber}/premium-payments`,
+          : `/policies/${planCode}/${policyNumber}/premium-payments`,
         label: 'go to premium payments page',
       }}
       {...(extended && {
@@ -79,7 +89,7 @@ export const UpcomingPremium = async ({
               </span>
             ),
             linkTo: {
-              url: `/policies/${planCode}/policy/${policyNumber}/payment-history`,
+              url: `/policies/${planCode}/${policyNumber}/payment-history`,
               label: 'go to payment history page',
             },
           },
@@ -90,7 +100,7 @@ export const UpcomingPremium = async ({
               </span>
             ),
             linkTo: {
-              url: `/policies/${planCode}/policy/${policyNumber}/payment-details`,
+              url: `/policies/${planCode}/${policyNumber}/payment-details`,
               label: 'go to payment details page',
             },
           },

@@ -2,11 +2,19 @@ import {
   PolicySearchRequest,
   PolicySearchResponse,
 } from '@zinnia/api-types/types/search';
+import {
+  Policy,
+  Transaction,
+  TransactionErrorResponse,
+} from '@zinnia/api-types/types/sor';
 
 import { BankDetail } from '@/components/person-data/types';
 import {
   ApiResponse,
   ServerApi,
+  documentApiBaseUrl,
+  isMockDocumentRequestEnabled,
+  isMockPaymentHistoryRequestEnabled,
   isMockPolicyOverviewRequestEnabled,
   isMockSearchRequestEnabled,
   policyApiBaseUrl,
@@ -23,7 +31,13 @@ import {
   transformPolicyForBeneficiaries,
   transformPolicyForBeneficiary,
   transformPolicyforPaymentDetails,
+  transformPaymentHistory,
 } from '@/services/policy/transformers';
+import {
+  DocumentApiRequestInputs,
+  DocumentResponseError,
+  PolicyDocument,
+} from '@/types/document';
 import {
   PolicyApiResponse,
   PolicyProfile,
@@ -36,28 +50,76 @@ import {
   BeneficiaryData,
   BeneficiaryRequestInputs,
   Beneficiary,
+  TransactionRequestInputs,
+  CompletedPremiumTransactionType,
+  PendingPremiumTransactionType,
+  PaymentHistoryTransaction,
 } from '@/types/policy';
+
+import { mockDocumentsResponse } from '../mocks/documents';
+import {
+  mockCompletedTransactions,
+  mockPendingTransactions,
+} from '../mocks/transactions';
 
 const getPolicyReferencesByCarrier = async () => {
   const searchUrl = `${policyApiBaseUrl}/search?offset=0&limit=10`;
-  const searchFilter: PolicySearchRequest = {
-    firstName: 'Wanda',
-  };
-  const response = await ServerApi.post(
-    searchUrl,
-    JSON.stringify(searchFilter)
-  );
-  const data = (await response.json()) as PolicySearchResponse;
+  const searchFilter: PolicySearchRequest = {};
+  const request = await ServerApi.post(searchUrl, JSON.stringify(searchFilter));
 
-  return data;
+  if (request.status !== 200) {
+    throw new Error('Error fetching policy references');
+  }
+
+  const response = (await request.json()) as PolicySearchResponse;
+
+  return response;
 };
 
 const getPolicyByPlanCodeAndId = async (options: PolicyRequestInputs) => {
   const { planCode, policyNumber } = options;
   const url = `${policyApiBaseUrl}/${planCode}/${policyNumber}`;
-  const response = await ServerApi.get(url);
-  const { data } = (await response.json()) as PolicyApiResponse;
+  const request = await ServerApi.get(url);
+  if (request.status !== 200) {
+    throw new Error('Error fetching policy.');
+  }
+  const { data } = (await request.json()) as PolicyApiResponse<Policy>;
   return data;
+};
+
+const getPolicyTransactions = async ({
+  eventNames,
+  policyNumber,
+  limit = 10,
+  offset = 0,
+  order = 'ASC',
+  planCode,
+  status,
+  year,
+}: TransactionRequestInputs) => {
+  let query = `?offset=${offset}&limit=${limit}&order=${order}&status=${status}`;
+  // TODO: eventNames will change to transactionTypes on April 9th 2024
+  if (eventNames.length) {
+    query =
+      query +
+      `&${eventNames.map(eventName => `eventNames=${eventName}`).join('&')}`;
+  }
+
+  if (year) {
+    query = `${query}&startDate=${year}-01-01&endDate=${year}-12-31`;
+  }
+
+  const url = `${policyApiBaseUrl}/${planCode}/${policyNumber}/transactions${query}`;
+  const request = await ServerApi.get(url);
+  const response = (await request.json()) as
+    | TransactionErrorResponse
+    | PolicyApiResponse<Transaction[]>;
+
+  if (response.message !== 'SUCCESS') {
+    throw new Error(response.message);
+  }
+
+  return (response as PolicyApiResponse<Transaction[]>).data;
 };
 
 export const getMyPoliciesByCarrier = async (
@@ -356,7 +418,152 @@ export const getPaymentDetails = async (
       error: {
         message: 'Something went wrong',
         status: 500,
-        name: 'getCoverage Error',
+        name: 'fetchPolicyTransactions Error',
+      },
+    };
+  }
+};
+export const getPaymentHistory = async ({
+  planCode,
+  policyNumber,
+}: PolicyRequestInputs): Promise<ApiResponse<PaymentHistoryTransaction>> => {
+  const currentYear = new Date().getFullYear().toString();
+  const completedEventNames = Object.values(
+    CompletedPremiumTransactionType
+  ).map(String);
+  const pendingEventNames = Object.values(PendingPremiumTransactionType).map(
+    String
+  );
+
+  if (isMockPaymentHistoryRequestEnabled()) {
+    return {
+      data: {
+        completedTransactions: mockCompletedTransactions.map(t =>
+          transformPaymentHistory(mockPolicyResponse, t)
+        ),
+        pendingTransactions: mockPendingTransactions.map(t =>
+          transformPaymentHistory(mockPolicyResponse, t)
+        ),
+      },
+      error: null,
+    };
+  }
+
+  try {
+    const [policyPromise, completedPromise, pendingPromise] =
+      await Promise.allSettled([
+        getPolicyByPlanCodeAndId({ planCode, policyNumber }),
+        getPolicyTransactions({
+          eventNames: completedEventNames,
+          planCode,
+          policyNumber,
+          limit: 30,
+          status: 'Completed',
+          year: currentYear,
+        }),
+        getPolicyTransactions({
+          eventNames: pendingEventNames,
+          planCode,
+          policyNumber,
+          status: 'Pending',
+          year: currentYear,
+        }),
+      ]);
+
+    if (policyPromise.status === 'rejected') {
+      throw new Error('Policy Call failed');
+    }
+
+    if (
+      completedPromise.status === 'rejected' &&
+      pendingPromise.status === 'rejected'
+    ) {
+      throw new Error('Something went wrong');
+    }
+
+    const completedTransactions =
+      completedPromise.status === 'fulfilled' ? completedPromise.value : [];
+    const pendingTransactions =
+      pendingPromise.status === 'fulfilled' ? pendingPromise.value : [];
+
+    return {
+      data: {
+        completedTransactions: completedTransactions.map(t =>
+          transformPaymentHistory(policyPromise.value, t)
+        ),
+        pendingTransactions: pendingTransactions.map(t =>
+          transformPaymentHistory(policyPromise.value, t)
+        ),
+      },
+      error: null,
+    };
+  } catch (error) {
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 500,
+        name: 'fetchPolicyTransactions Error',
+      },
+    };
+  }
+};
+
+const getDocuments = async (inputs: Partial<DocumentApiRequestInputs>) => {
+  const { contractNumber, clientCode, source } = inputs;
+  const documentUrl = `${documentApiBaseUrl}?contractNumber=${contractNumber}&clientCode=${clientCode}&source=${source}`;
+
+  const response = await ServerApi.get(documentUrl);
+
+  if (response.status !== 200) {
+    throw new Error(`API returned an error. Status code: ${response.status}`);
+  }
+
+  const data = (await response.json()) as
+    | DocumentResponseError
+    | PolicyDocument;
+
+  console.log(data);
+  return data;
+};
+
+export const getPolicyDocuments = async (
+  policyInputs: PolicyRequestInputs,
+  inputs: Partial<DocumentApiRequestInputs>
+): Promise<ApiResponse<PolicyDocument>> => {
+  if (isMockDocumentRequestEnabled()) {
+    return {
+      data: mockDocumentsResponse,
+      error: null,
+    };
+  }
+
+  try {
+    const policy = await getPolicyByPlanCodeAndId(policyInputs);
+    inputs.clientCode = policy.carrierId;
+    inputs.source = 'Policy';
+    const response = await getDocuments(inputs);
+
+    if (!response) {
+      throw new Error('No data returned from the API.');
+    }
+
+    return {
+      data: {
+        statusCode: 200,
+        count: 0,
+        items: [],
+      },
+      error: null,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 400,
+        name: 'getPolicyOverviewData Error',
       },
     };
   }

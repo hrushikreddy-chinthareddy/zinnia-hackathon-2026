@@ -1,4 +1,10 @@
-import { Address, Email, Phone } from '@zinnia/api-types/types/sor';
+import {
+  AccountType,
+  Address,
+  Email,
+  Frequency,
+  Phone,
+} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 
 import { DEFAULT_ERROR_STRING, toSentenceCase } from './strings';
@@ -98,4 +104,48 @@ export const bankAccountNumberSanitizer = (
   }
 
   return accountNum.slice(-4);
+};
+
+export const getFrequency = (
+  frequency: Frequency | null | undefined
+): string => {
+  switch (frequency) {
+    case Frequency.ANNUAL:
+      return 'Annual';
+    case Frequency.DAILY:
+      return 'Daily';
+    case Frequency.EVERYTWOWEEKS:
+      return 'Bi-annual';
+    case Frequency.MONTHLY:
+      return 'Monthly';
+    case Frequency.SEMIANNUAL:
+      return 'Semi-annual';
+    case Frequency.SINGLEPAYMENT:
+      return 'One-time';
+    case Frequency.QUARTERLY:
+      return 'Quarterly';
+    default:
+      return DEFAULT_ERROR_STRING;
+  }
+};
+
+export const formatBankAccountTypeText = (
+  accountType: AccountType | null | undefined
+): string => {
+  switch (accountType) {
+    case AccountType.BROKERAGEACCOUNT:
+      return 'Brokerage Account';
+    case AccountType.CERTIFICATEOFDEPOSIT:
+      return 'Certificate of Deposit';
+    case AccountType.CHECKING:
+      return 'Checking';
+    case AccountType.CREDITCARD:
+      return 'Credit Card';
+    case AccountType.DEBITCARD:
+      return 'Debit Card';
+    case AccountType.SAVINGS:
+      return 'Savings';
+    default:
+      return DEFAULT_ERROR_STRING;
+  }
 };

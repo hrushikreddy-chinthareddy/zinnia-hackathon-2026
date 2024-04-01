@@ -20,7 +20,9 @@ export default async function Session() {
         </div>
       }
       description="You’ve been signed out due to inactivity."
-      action={<Link variant="button" href="/login" text="Back to login" />}
+      action={
+        <Link expand variant="button" href="/login" text="Back to login" />
+      }
       footer={
         <>
           <p className="mb-lg">

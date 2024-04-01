@@ -1,10 +1,12 @@
 import { Address, Email, PartyRole } from '@zinnia/api-types/types/sor';
-import { Label } from '@zinnia/bloom/internal/components';
+import { IconType, Label } from '@zinnia/bloom/internal/components';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
+import MockMessage from '@/components/MockMessage';
+import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { Addresses } from '@/components/person-data/Addresses';
 import { Emails } from '@/components/person-data/Emails';
 import { getBeneficiary } from '@/services/policy';
@@ -13,7 +15,7 @@ import {
   filterItemsWithPastEndDate,
   fullName,
 } from '@/utils/data';
-import { DEFAULT_UNAVAILABLE_STRING, toSentenceCase } from '@/utils/strings';
+import { toSentenceCase } from '@/utils/strings';
 
 const beneDisplayText: { [key in PartyRole]?: string } = {
   [PartyRole.CONTINGENTBENEFICIARY]: 'contingent',
@@ -43,10 +45,14 @@ export default async function Beneficiary({
     return (
       <div>
         <HeaderBreadcrumb title="Beneficiaries" />
-        <HeaderPolicyDetails />
-        <ClickableCardContainer>
-          {DEFAULT_UNAVAILABLE_STRING}
-        </ClickableCardContainer>
+        <HeaderPolicyDetails planCode={planCode} policyNumber={policyNumber} />
+        <div className="space-mb-gap-lg">
+          <MockMessage />
+          <NoDataAvailable
+            iconType={IconType.CIRCLE_USER}
+            message="There is currently no beneficiary data available."
+          />
+        </div>
       </div>
     );
   }
@@ -95,7 +101,7 @@ export default async function Beneficiary({
   return (
     <div>
       <HeaderBreadcrumb title="Beneficiary" />
-      <HeaderPolicyDetails />
+      <HeaderPolicyDetails planCode={planCode} policyNumber={policyNumber} />
 
       <ClickableCardContainer listItems={listItems}>
         <div>

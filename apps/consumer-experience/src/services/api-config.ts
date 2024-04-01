@@ -8,6 +8,7 @@ export const baseAppUrl = process.env.NEXT_PUBLIC_BASE_URL;
 export const apiServerBaseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 export const apiServerUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${apiVersion}`;
 export const policyApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/policy/${apiVersion}/policies`;
+export const documentApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/document/v2/documents`;
 export const carrierApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${apiVersion}/carriers`;
 export const integrationApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/integration/${apiVersion}`;
 
@@ -46,4 +47,22 @@ export const isMockPolicyOverviewRequestEnabled = () => {
   return (
     getMockParam()?.includes('policyOverview') || isMockAllRequestEnabled()
   );
+};
+
+export const isMockPaymentHistoryRequestEnabled = () => {
+  if (isProd()) {
+    return false;
+  }
+
+  return (
+    getMockParam()?.includes('paymentHistory') || isMockAllRequestEnabled()
+  );
+};
+
+export const isMockDocumentRequestEnabled = () => {
+  if (isProd()) {
+    return false;
+  }
+
+  return getMockParam()?.includes('documents') || isMockAllRequestEnabled();
 };

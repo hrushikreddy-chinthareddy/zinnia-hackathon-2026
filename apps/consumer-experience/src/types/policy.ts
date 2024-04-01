@@ -1,12 +1,16 @@
 import { PolicyReferenceDataModel } from '@zinnia/api-types/types/search';
 import {
+  AccountType,
   Address,
+  BankAccount,
   Email,
+  Frequency,
   PartyRole,
   PartyType,
   Phone,
-  Policy,
   PolicyStatus,
+  Reason,
+  TransactionStatus,
 } from '@zinnia/api-types/types/sor';
 
 import { BankDetail } from '@/components/person-data/types';
@@ -61,9 +65,9 @@ export type PolicyReferenceData = Pick<
   'id' | 'planCode' | 'policyNumber' | 'productName'
 >;
 
-export interface PolicyApiResponse {
+export interface PolicyApiResponse<T> {
   message: string;
-  data: Policy;
+  data: T;
   status: number;
 }
 
@@ -91,4 +95,75 @@ export interface Beneficiary {
   beneficiaryPercentage: number;
   addresses?: Address[];
   emails?: Email[];
+}
+
+export interface TransactionRequestInputs extends PolicyRequestInputs {
+  eventNames: string[];
+  limit?: number;
+  offset?: number;
+  order?: 'ASC' | 'DESC';
+  status: keyof typeof ExtendedTransactionStatus;
+  year?: string;
+}
+
+export enum CompletedPremiumTransactionType {
+  InitialPremium = 'InitialPremium',
+  SubsequentPremium = 'SubsequentPremium',
+  OneTimePremium = 'OneTimePremium',
+}
+
+export enum PendingPremiumTransactionType {
+  PaymentInitialPremium = 'PaymentInitialPremium',
+  SubsequentPayment = 'SubsequentPayment',
+  PaymentOneTimePremium = 'PaymentOneTimePremium',
+}
+
+export type MethodAndProgram = BankAccount & {
+  amount?: number;
+  frequency?: Frequency;
+};
+
+export enum PremiumReason {
+  PREMIUMREASON = 'PREMIUMREASON',
+}
+
+//export type ExtendedReason = Reason | PremiumReason;
+
+export const ExtendedReason = {
+  ...Reason,
+  PREMIUMREASON: 'PREMIUMREASON',
+};
+
+export const ExtendedTransactionStatus = {
+  ...TransactionStatus,
+  PROCESSING: 'Processing',
+  Pending: 'Pending',
+  Completed: 'Completed',
+};
+
+export interface TransactionRequestErrorResponse {
+  statusCode: number;
+  timestamp: string;
+  path: string;
+  errorDesc: string;
+  errorDetailedDesc: string;
+  message: string;
+}
+
+export interface PaymentHistory {
+  amount?: number;
+  date?: string;
+  frequency?: Frequency;
+  type?: keyof typeof ExtendedReason;
+  bankDetails?: {
+    accountType?: AccountType;
+    accountNumber?: string;
+  };
+  title: string;
+  isPending?: boolean;
+}
+
+export interface PaymentHistoryTransaction {
+  completedTransactions: PaymentHistory[];
+  pendingTransactions: PaymentHistory[];
 }

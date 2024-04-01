@@ -12,7 +12,10 @@ export default async function PremiumPayments({
   return (
     <div>
       <HeaderBreadcrumb title="Premium payments" />
-      <HeaderPolicyDetails />
+      <HeaderPolicyDetails
+        planCode={params.planCode}
+        policyNumber={params.policyNumber}
+      />
       <UpcomingPremium
         planCode={params.planCode}
         policyNumber={params.policyNumber}

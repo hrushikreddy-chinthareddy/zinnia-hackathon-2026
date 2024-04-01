@@ -16,6 +16,7 @@ export interface LinkProps extends React.HTMLAttributes<HTMLAnchorElement> {
    * For when you need a semantic link that appears like a button
    */
   variant?: 'button';
+  expand?: boolean;
 }
 
 export const Link = ({
@@ -25,6 +26,7 @@ export const Link = ({
   size = 'standard',
   variant,
   style,
+  expand = false,
 }: LinkProps) => {
   return (
     <a
@@ -32,6 +34,7 @@ export const Link = ({
         [styles.button as string]: variant === 'button',
         [buttonStyles.button as string]: variant === 'button',
         [buttonStyles.primary as string]: variant === 'button',
+        [styles.expand as string]: expand,
       })}
       href={href}
       style={style}

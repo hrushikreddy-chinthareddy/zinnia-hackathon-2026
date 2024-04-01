@@ -1,5 +1,4 @@
 import { Label, Icon, IconType } from '@zinnia/bloom/internal/components';
-import { headers } from 'next/headers';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
@@ -14,11 +13,12 @@ import styles from './PolicyOverview.module.css';
 
 const COVERAGE = 'Coverage';
 
-export const Coverage = async () => {
-  const headerStore = headers();
-  const planCode = headerStore.get('planCode') || '';
-  const policyNumber = headerStore.get('policyNumber') || '';
+interface Props {
+  planCode: string;
+  policyNumber: string;
+}
 
+export const Coverage = async ({ planCode, policyNumber }: Props) => {
   const { data, error } = await getCoverage({
     planCode,
     policyNumber,
@@ -57,7 +57,7 @@ export const Coverage = async () => {
         </FieldData>
       ),
       linkTo: {
-        url: `/policies/${planCode}/policy/${policyNumber}/beneficiaries`,
+        url: `/policies/${planCode}/${policyNumber}/beneficiaries`,
         label: 'go to beneficiaries page',
       },
     });

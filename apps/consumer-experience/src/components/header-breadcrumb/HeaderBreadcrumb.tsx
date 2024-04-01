@@ -6,7 +6,7 @@ import {
   PopoverPlacement,
 } from '@zinnia/bloom/internal/components';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import { ReactNode } from 'react';
 
 import styles from './HeaderBreadcrumb.module.css';
@@ -22,22 +22,33 @@ export interface HeaderBreadcrumbProps {
 }
 
 export const HeaderBreadcrumb = ({ title, popover }: HeaderBreadcrumbProps) => {
-  const paths = (usePathname() || "").split('/');
+  const paths = (usePathname() || '').split('/');
+  const params = useParams<{ planCode: string; policyNumber: string }>();
+
   if (!title) {
     return null;
   }
 
   const currentPath = paths[paths.length - 1];
 
-  // If there's no current path, it means you're at a root url
-  if (!currentPath) {
+  // If there's no current path or the current path is 'policies', it means you're at a root url
+  // since we always redirect / to /policies paths will always start with 2 items.
+  // if we are on /policies it means we are essentially at the root.
+  if (!currentPath || currentPath === 'policies') {
     return <h1 className="typography-desktop-headline-1d">{title}</h1>;
   }
-  // Get the segment before the current path segment, if the path before is the root,
-  // paths.length - 2 will be an empty string
-  const previousPath = paths[paths.length - 2];
-  const previousPathRoute = previousPath ? `/${previousPath}` : '/';
+
+  let previousPath: string;
+
+  if (currentPath === params.policyNumber) {
+    previousPath = 'policies';
+  } else {
+    // we need to remove the first item which is an empty string
+    // we remove the last item because we want to go back up one level
+    previousPath = paths.slice(1, -1).join('/');
+  }
   const previousPathName = previousPath || 'policy overview';
+  const previousPathRoute = previousPath ? `/${previousPath}` : '/';
 
   return (
     <div className={styles.headerBreadcrumbContainer}>

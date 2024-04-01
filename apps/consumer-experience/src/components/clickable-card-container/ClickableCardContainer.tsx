@@ -14,6 +14,7 @@ interface LinkItem {
   url: string;
   label: string;
   disabled?: boolean;
+  iconType?: IconType;
 }
 
 export interface ChildCard {
@@ -28,7 +29,12 @@ export interface Props extends PropsWithChildren {
   listItems?: ChildCard[];
 }
 
-const LinkArrow = ({ url, label, isInternal = true }: LinkItem) => {
+const LinkArrow = ({
+  url,
+  label,
+  isInternal = true,
+  iconType = IconType.CHEVRON_RIGHT,
+}: LinkItem) => {
   // TODO: add additional handling for 'open in new window or tab
   if (!url) {
     return null;
@@ -40,12 +46,7 @@ const LinkArrow = ({ url, label, isInternal = true }: LinkItem) => {
 
   return (
     <Tag href={url} aria-label={label} className={styles.primaryAction}>
-      <Icon
-        type={IconType.CHEVRON}
-        width={20}
-        height={20}
-        className={styles.linkArrow}
-      />
+      <Icon type={iconType} width={20} height={20} />
     </Tag>
   );
 };
@@ -59,8 +60,7 @@ export const ClickableCardContainer: FC<Props> = ({
 }: Props) => {
   return (
     <div
-      className={clsx(styles.clickableCardContainer, {
-        className,
+      className={clsx(styles.clickableCardContainer, className, {
         [styles.disabled as string]: disabled,
       })}
     >

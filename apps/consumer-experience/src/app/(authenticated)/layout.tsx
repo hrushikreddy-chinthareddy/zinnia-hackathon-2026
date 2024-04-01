@@ -6,7 +6,6 @@ import '@/app/styles/globals.css';
 
 import styles from '@/app/layout.module.css';
 import { DesktopNav } from '@/components/desktop-nav/DesktopNav';
-import { Footer } from '@/components/footer/Footer';
 import { MobileNav } from '@/components/mobile-nav/MobileNav';
 import { SessionManager } from '@/components/session/SessionManager';
 

@@ -7,12 +7,13 @@ import {
   contingentColorOrder,
   primaryColorOrder,
 } from '@zinnia/bloom/internal/components';
-import { DEFAULT_UNAVAILABLE_STRING } from '@zinnia/utils';
 import { Suspense } from 'react';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
+import MockMessage from '@/components/MockMessage';
+import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { getBeneficiaries } from '@/services/policy';
 import { Beneficiary } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
@@ -97,9 +98,8 @@ export default async function Beneficiaries({
     beneGroup?.map((bene: Beneficiary, index: number) => {
       return {
         linkTo: {
-          // TODO: remove '/policy/' from url
           // For now using partyId here to identify the beneficiary, but it's not the best look from a consumer standpoint
-          url: `/policies/${planCode}/policy/${policyNumber}/beneficiaries/${bene.partyId}`,
+          url: `/policies/${planCode}/${policyNumber}/beneficiaries/${bene.partyId}`,
           label: `go to primary beneficiary ${bene.firstName} ${bene.lastName} profile page`,
         },
         content: (
@@ -116,10 +116,18 @@ export default async function Beneficiaries({
     return (
       <div>
         <HeaderBreadcrumb title="Beneficiaries" />
-        <HeaderPolicyDetails className={styles.policyDetails} />
-        <ClickableCardContainer>
-          {DEFAULT_UNAVAILABLE_STRING}
-        </ClickableCardContainer>
+        <HeaderPolicyDetails
+          planCode={planCode}
+          policyNumber={policyNumber}
+          className={styles.policyDetails}
+        />
+        <div className="space-mb-gap-lg">
+          <MockMessage />
+          <NoDataAvailable
+            iconType={IconType.CIRCLE_USER}
+            message="There is currently no beneficiary data available."
+          />
+        </div>
       </div>
     );
   }
@@ -128,7 +136,11 @@ export default async function Beneficiaries({
     <div>
       <Suspense fallback={<div style={{ height: '100vh' }}>Loading...</div>}>
         <HeaderBreadcrumb title="Beneficiaries" />
-        <HeaderPolicyDetails className={styles.policyDetails} />
+        <HeaderPolicyDetails
+          planCode={planCode}
+          policyNumber={policyNumber}
+          className={styles.policyDetails}
+        />
         <div className={styles.itemsContainer}>
           <ClickableCardContainer>
             <div className={styles.infoCard}>
