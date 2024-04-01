@@ -45,7 +45,10 @@ export default async function Page() {
   return (
     <>
       <HeaderBreadcrumb title="My Policies" />
-      <div className={`${styles.cardContainer} ${styles.container}`}>
+      <div
+        className={`${styles.cardContainer} ${styles.container}`}
+        style={{ paddingLeft: 0 }}
+      >
         {policyReferenceData?.map(p => (
           <ClickableCardContainer
             key={p.id}

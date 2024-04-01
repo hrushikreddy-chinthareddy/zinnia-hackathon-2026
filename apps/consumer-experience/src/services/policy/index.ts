@@ -6,7 +6,9 @@ import {
   Policy,
   Transaction,
   TransactionErrorResponse,
+  MetricsType,
 } from '@zinnia/api-types/types/sor';
+import dayjs from 'dayjs';
 
 import { BankDetail } from '@/components/person-data/types';
 import {
@@ -15,6 +17,7 @@ import {
   documentApiBaseUrl,
   isMockDocumentRequestEnabled,
   isMockPaymentHistoryRequestEnabled,
+  isMockPolicyMetricsRequestEnabled,
   isMockPolicyOverviewRequestEnabled,
   isMockSearchRequestEnabled,
   policyApiBaseUrl,
@@ -32,6 +35,7 @@ import {
   transformPolicyForBeneficiary,
   transformPolicyforPaymentDetails,
   transformPaymentHistory,
+  transformPolicyMetricsForAccountValueChange,
 } from '@/services/policy/transformers';
 import {
   DocumentApiRequestInputs,
@@ -54,9 +58,11 @@ import {
   CompletedPremiumTransactionType,
   PendingPremiumTransactionType,
   PaymentHistoryTransaction,
+  PolicyMetricsRequestInputs,
 } from '@/types/policy';
 
 import { mockDocumentsResponse } from '../mocks/documents';
+import { MockMetricsResponse } from '../mocks/metrics';
 import {
   mockCompletedTransactions,
   mockPendingTransactions,
@@ -120,6 +126,26 @@ const getPolicyTransactions = async ({
   }
 
   return (response as PolicyApiResponse<Transaction[]>).data;
+};
+
+const getPolicyMetrics = async (
+  options: PolicyRequestInputs,
+  metrics: PolicyMetricsRequestInputs
+) => {
+  const { planCode, policyNumber } = options;
+  const url = `${policyApiBaseUrl}/${planCode}/${policyNumber}/metrics`;
+
+  const response = await ServerApi.post(url, JSON.stringify(metrics), {
+    headers: { 'Content-Type': 'application/json' },
+  });
+
+  if (!response.ok) {
+    throw new Error('something went wrong', { cause: response.status });
+  }
+
+  const responseData = await response.json();
+
+  return responseData.data;
 };
 
 export const getMyPoliciesByCarrier = async (
@@ -195,6 +221,78 @@ export const getPolicyAccountValue = async (
       },
     };
   }
+};
+
+export const get30DayAccountValueChange = async (
+  options: PolicyRequestInputs
+) => {
+  if (isMockPolicyMetricsRequestEnabled()) {
+    const transformedResults =
+      transformPolicyMetricsForAccountValueChange(MockMetricsResponse);
+
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  }
+
+  try {
+    const response = await getPolicyMetrics(options, {
+      startDate: dayjs().subtract(30, 'day').toISOString(),
+      endDate: dayjs().toISOString(),
+      metrics: [MetricsType.ACCOUNTVALUE],
+    });
+
+    const transformedResults =
+      transformPolicyMetricsForAccountValueChange(response);
+
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  } catch (error) {
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 500,
+        name: 'get30DayAccountValueChange Error',
+      },
+    };
+  }
+};
+
+export const getPolicyAccountValueWith30DayChange = async (
+  options: PolicyRequestInputs
+): Promise<ApiResponse<PolicyAccountValue>> => {
+  const data = await Promise.allSettled([
+    getPolicyAccountValue(options),
+    get30DayAccountValueChange(options),
+  ]);
+
+  if (data[0].status === 'rejected' || data[0].value.error) {
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 500,
+        name: 'getPolicyAccountValue Error',
+      },
+    };
+  }
+
+  const allData = data.reduce((successData, item) => {
+    if (item.status === 'fulfilled' && item.value.data) {
+      successData = { ...successData, ...item.value.data };
+    }
+
+    return successData;
+  }, {});
+
+  return {
+    data: allData,
+    error: null,
+  };
 };
 
 export const getPolicyForHeaderDetails = async (

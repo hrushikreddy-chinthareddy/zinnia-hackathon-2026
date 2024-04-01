@@ -58,6 +58,13 @@ export const isMockPaymentHistoryRequestEnabled = () => {
     getMockParam()?.includes('paymentHistory') || isMockAllRequestEnabled()
   );
 };
+export const isMockPolicyMetricsRequestEnabled = () => {
+  if (isProd()) {
+    return false;
+  }
+
+  return getMockParam()?.includes('policyMetrics') || isMockAllRequestEnabled();
+};
 
 export const isMockDocumentRequestEnabled = () => {
   if (isProd()) {

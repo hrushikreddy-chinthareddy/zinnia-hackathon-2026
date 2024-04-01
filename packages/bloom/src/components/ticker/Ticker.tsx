@@ -7,7 +7,7 @@ import styles from './ticker.module.css';
 import { TickerProps } from './types';
 
 export const Ticker = ({ value, subtext }: TickerProps) => {
-  if (value === null || value === undefined) {
+  if (value === null || value === undefined || isNaN(value)) {
     return null;
   }
 

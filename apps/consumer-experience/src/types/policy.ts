@@ -5,6 +5,7 @@ import {
   BankAccount,
   Email,
   Frequency,
+  MetricsType,
   PartyRole,
   PartyType,
   Phone,
@@ -74,6 +75,12 @@ export interface PolicyApiResponse<T> {
 export interface PolicyRequestInputs {
   planCode: string;
   policyNumber: string;
+}
+
+export interface PolicyMetricsRequestInputs {
+  startDate: string;
+  endDate: string;
+  metrics: Array<keyof typeof MetricsType>;
 }
 
 export interface BeneficiaryRequestInputs extends PolicyRequestInputs {
@@ -166,4 +173,15 @@ export interface PaymentHistory {
 export interface PaymentHistoryTransaction {
   completedTransactions: PaymentHistory[];
   pendingTransactions: PaymentHistory[];
+}
+
+export interface Metric {
+  metric: MetricsType;
+  begin: number;
+  minimum: number;
+  maximum: number;
+  average: number;
+  sum: number;
+  count: number;
+  end: number;
 }

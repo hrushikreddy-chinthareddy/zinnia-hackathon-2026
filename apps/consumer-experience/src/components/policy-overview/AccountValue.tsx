@@ -8,31 +8,28 @@ import {
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
 import { AccountValuePopover } from '@/components/policy-overview/AccountValuePopover';
-import { getPolicyAccountValue } from '@/services';
+import { getPolicyAccountValueWith30DayChange } from '@/services';
+import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined } from '@/utils/data';
 import { dateMonthWithTimeEST } from '@/utils/dates';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 import styles from './PolicyOverview.module.css';
+import MockMessage from '../MockMessage';
+import { NoDataAvailable } from '../no-data-available/NoDataAvailable';
 
 const ACCOUNT_VALUE = 'Account value';
 
-interface Props {
-  planCode: string;
-  policyNumber: string;
-}
-
 // TODO: add surrendered and locked policy states
-export const AccountValue = async ({ planCode, policyNumber }: Props) => {
-  const { data, error } = await getPolicyAccountValue({
+export const AccountValue = async ({
+  planCode,
+  policyNumber,
+}: PolicyRequestInputs) => {
+  const { data } = await getPolicyAccountValueWith30DayChange({
     planCode,
     policyNumber,
   });
-
-  if (error) {
-    return null;
-  }
 
   const { totalFundValue, timestamp, valueChange } = data!;
 
@@ -69,8 +66,7 @@ export const AccountValue = async ({ planCode, policyNumber }: Props) => {
           </FieldData>
         </div>
         <div className={styles.additionalInfo}>
-          {/* TODO: still need to figure out what this month comes from  */}
-          <Ticker value={valueChange} subtext="this month" />
+          <Ticker value={valueChange} subtext="Last 30 days" />
         </div>
       </div>
     </ClickableCardContainer>
