@@ -25,31 +25,37 @@ export default async function Beneficiaries({
     policyNumber: string;
   };
 }) {
-  const planCode = params.planCode || '';
-  const policyNumber = params.policyNumber || '';
+  const planCode = params.planCode;
+  const policyNumber = params.policyNumber;
 
   const { data, error } = await getCoverage({
     planCode,
     policyNumber,
   });
 
-  const {
-    totalCoverageAmount,
-    maximumCoverageIncreaseAmount,
-  } = data!;
+  const pageHeader = (
+    <>
+      <HeaderBreadcrumb title="Increase Coverage" />
+      <HeaderPolicyDetails className={styles.policyDetails} planCode={planCode} policyNumber={policyNumber} />
+    </>
+  )
 
-  if (error) {
+  if (error || data === null) {
     return (
-      <div>
-        <HeaderBreadcrumb title="Beneficiaries" />
-        <HeaderPolicyDetails className={styles.policyDetails} planCode={planCode} policyNumber={policyNumber} />
+      <>
+        {pageHeader}
         <ClickableCardContainer>
           {DEFAULT_UNAVAILABLE_STRING}
         </ClickableCardContainer>
-      </div>
+      </>
     );
   }
 
+  const {
+    totalCoverageAmount,
+    maximumCoverageIncreaseAmount,
+  } = data;
+  
   const CURRENT_COVERAGE = 'Current Coverage'
   const INCREASE_COVERAGE = 'Available coverage increase'
 
@@ -70,8 +76,7 @@ export default async function Beneficiaries({
   return (
     <>
       <Suspense fallback={<div style={{ height: '100vh' }}>Loading...</div>}>
-        <HeaderBreadcrumb title="Increase Coverage" />
-        <HeaderPolicyDetails className={styles.policyDetails} planCode={planCode} policyNumber={policyNumber} />
+        {pageHeader}
         <div className={styles.cardContainer}>
           <ClickableCardContainer>
             <div className={styles.infoCard}>
@@ -110,9 +115,9 @@ export default async function Beneficiaries({
             </div>
           </ClickableCardContainer>
         </div>
-          <p className='pt-3xl typography-content-body-bold'>
-            Do you want to increase your coverage? Call <a href='+18002322222'>1-800-232-2222</a> to begin the process.
-          </p>
+        <p className='pt-3xl typography-content-body-bold'>
+          Do you want to increase your coverage? Call <a href='+18002322222'>1-800-232-2222</a> to begin the process.
+        </p>
       </Suspense>
       <Footer />
     </>
