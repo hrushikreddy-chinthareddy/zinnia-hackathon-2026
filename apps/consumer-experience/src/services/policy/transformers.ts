@@ -139,6 +139,7 @@ export const transformPolicyForCoverage = (policy: Policy): PolicyCoverage => {
     maturityDate: policy.policyDates?.maturityDate,
     policyStartDate: policy.policyDates?.policyStartDate,
     totalCoverageAmount: policy.coverage?.totalCoverageAmount,
+    maximumCoverageIncreaseAmount: policy.coverage?.maximumCoverageIncreaseAmount,
     riderCount: policy.riders?.length || 0,
   };
 };

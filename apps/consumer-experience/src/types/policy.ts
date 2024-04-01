@@ -39,6 +39,7 @@ export interface PolicyAccountValue {
 
 export interface PolicyCoverage {
   totalCoverageAmount?: number | null;
+  maximumCoverageIncreaseAmount?: number | null;
   policyStartDate?: string | null;
   maturityDate?: string | null;
   // This one is calculated, so will either be a number or 0
