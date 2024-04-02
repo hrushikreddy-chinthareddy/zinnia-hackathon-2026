@@ -1,4 +1,5 @@
-.flexCol {
+
+.cardContainer, .coveragePage, .coverageValues {
   display: flex;
   flex-flow: column nowrap;
 }
@@ -10,8 +11,20 @@
     gap: var(--measure-dimension-gap-xl);
   }
 
+  .infoCard {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: var(--measure-dimension-gap-lg);
+    align-items: center;
+
+  }
   .cardContainer {
     gap: var(--measure-dimension-gap-md);
+
+  }
+
+  .coverageValues {
+    gap: var(--measure-dimension-gap-lg);
   }
 
   .coverageHeader,

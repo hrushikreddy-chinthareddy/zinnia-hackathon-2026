@@ -36,8 +36,15 @@ export default async function Beneficiaries({
 
   const pageHeader = (
     <>
-      <HeaderBreadcrumb className={styles.coverageHeader} title="Increase Coverage" />
-      <HeaderPolicyDetails className={styles.coverageDetails} planCode={planCode} policyNumber={policyNumber} />
+      <HeaderBreadcrumb
+        className={styles.coverageHeader}
+        title="Increase Coverage"
+      />
+      <HeaderPolicyDetails
+        className={styles.coverageDetails}
+        planCode={planCode}
+        policyNumber={policyNumber}
+      />
     </>
   )
 
@@ -56,7 +63,7 @@ export default async function Beneficiaries({
     totalCoverageAmount,
     maximumCoverageIncreaseAmount,
   } = data;
-  
+
   const CURRENT_COVERAGE = 'Current Coverage'
   const INCREASE_COVERAGE = 'Available coverage increase'
 
@@ -75,10 +82,10 @@ export default async function Beneficiaries({
   }
 
   return (
-    <div className={clsx(styles.coveragePage, styles.flexCol)}>
+    <div className={clsx(styles.coveragePage)}>
       <Suspense fallback={<div style={{ height: '100vh' }}>Loading...</div>}>
         {pageHeader}
-        <div className={clsx(styles.cardContainer, styles.flexCol)}>
+        <div className={clsx(styles.cardContainer)}>
           <ClickableCardContainer>
             <div className={styles.infoCard}>
               <div>
@@ -90,7 +97,7 @@ export default async function Beneficiaries({
             </div>
           </ClickableCardContainer>
           <ClickableCardContainer>
-            <div className={styles.coverage}>
+            <div className={styles.coverageValues}>
               <FieldData
                 Label={
                   <Label
