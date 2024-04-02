@@ -1,5 +1,4 @@
 import {
-  Icon,
   IconType,
   Label
 } from '@zinnia/bloom/internal/components';
@@ -12,7 +11,7 @@ import { FieldData } from '@/components/field-data/FieldData';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
-import { CoveragePopover } from '@/components/policy-overview/CoveragePopover';
+import { InfoCard } from '@/components/info-card/InfoCard';
 import { getCoverage } from '@/services/policy';
 import { formatUSDollars } from '@/utils/currency';
 
@@ -86,22 +85,16 @@ export default async function Beneficiaries({
       <Suspense fallback={<div style={{ height: '100vh' }}>Loading...</div>}>
         {pageHeader}
         <div className={clsx(styles.cardContainer)}>
-          <ClickableCardContainer>
-            <div className={styles.infoCard}>
-              <div>
-                <Icon type={IconType.LIGHTBULB} />
-              </div>
-              <p className="typography-content-body-sm">
-                Coverage increases may require additional underwriting and may have tax consequences. Let us walk you through your options, so you can find the right amount of coverage for you.
-              </p>
-            </div>
-          </ClickableCardContainer>
+          <InfoCard iconType={IconType.LIGHTBULB}>
+            <p className="typography-content-body-sm">
+              Coverage increases may require additional underwriting and may have tax consequences. Let us walk you through your options, so you can find the right amount of coverage for you.
+            </p>
+          </InfoCard>
           <ClickableCardContainer>
             <div className={styles.coverageValues}>
               <FieldData
                 Label={
                   <Label
-                    interactiveElements={[<CoveragePopover key="coverage-popover" />]}
                   >
                     {CURRENT_COVERAGE}
                   </Label>
@@ -112,7 +105,6 @@ export default async function Beneficiaries({
               <FieldData
                 Label={
                   <Label
-                    interactiveElements={[<CoveragePopover key="coverage-popover" />]}
                   >
                     {INCREASE_COVERAGE}
                   </Label>
