@@ -36,7 +36,7 @@ export default async function Page({
     return (
       <>
         <HeaderBreadcrumb title="Policy Overview" />
-        <div className={styles.cardContainer}>
+        <div className="space-mb-gap-md">
           <MockMessage />
           <NoDataAvailable
             iconType={IconType.SHIELD_EXCLAMATION}
@@ -51,7 +51,7 @@ export default async function Page({
     <>
       <HeaderBreadcrumb title="Policy Overview" />
       <HeaderPolicyDetails planCode={planCode} policyNumber={policyNumber} />
-      <div className={styles.cardContainer}>
+      <div className="space-mb-gap-md">
         <UpcomingPremium planCode={planCode} policyNumber={policyNumber} />
         <AccountValue planCode={planCode} policyNumber={policyNumber} />
         <Coverage planCode={planCode} policyNumber={policyNumber} />

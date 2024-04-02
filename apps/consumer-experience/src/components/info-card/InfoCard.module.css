@@ -1,0 +1,8 @@
+.infoCard {
+  display: flex;
+  align-items: center;
+
+  > div {
+    margin-right: var(--measure-dimension-gap-lg, 1rem);
+  }
+}

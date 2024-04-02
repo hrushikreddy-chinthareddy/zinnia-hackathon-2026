@@ -1,19 +1,19 @@
-.container {
+.riderContainer {
   border-radius: var(--measure-dimension-radius-sm, 0.25rem);
   box-shadow: 0px 1.6px 3.6px 0px rgba(0, 0, 0, 0.11);
-  margin-bottom: var(--measure-dimension-gap-md);
-}
-
-.content {
-  align-items: center;
   background-color: var(
     --color-fields-surface-field-background-default-fill,
     #fff
   );
-  display: flex;
-  flex-direction: column;
   padding: var(--measure-dimension-padding-2xl, 1rem);
-  position: relative;
-  justify-content: center;
-  width: 100%;
+  margin-bottom: var(--measure-dimension-gap-md, 0.5rem);
+}
+
+.riderDetails {
+  display: flex;
+  margin-top: var(--measure-dimension-gap-lg);
+
+  > * {
+    margin-right: var(--measure-dimension-gap-2xl);
+  }
 }

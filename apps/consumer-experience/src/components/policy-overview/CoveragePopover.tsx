@@ -18,7 +18,7 @@ export const CoveragePopover = () => {
           type={IconType.CIRCLE_INFO}
           width={16}
           height={16}
-          color="var(--color-primary-color-primary, #ff7500)"
+          color="var(--color-base-icon-icon-tooltip, #ff7500)"
         />
       }
       placement={PopoverPlacement.BottomRight}
