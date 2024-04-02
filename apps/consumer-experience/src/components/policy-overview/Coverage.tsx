@@ -99,7 +99,6 @@ export const Coverage = async ({ planCode, policyNumber }: Props) => {
           {coverageContent}
         </FieldData>
       </div>
-
     </ClickableCardContainer>
   );
 };
