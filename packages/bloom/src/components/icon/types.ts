@@ -1,6 +1,7 @@
 // import CloudFilled from '../tokens/svg-assets/icons/cloud_filled.svg';
 import AlertExclamation from '../../tokens/svg-assets/icons/alert/alert-exclamation.svg';
 import Autopay from '../../tokens/svg-assets/icons/currency/autopay.svg';
+import Ban from '../../tokens/svg-assets/icons/content/ban.svg';
 import Close from '../../tokens/svg-assets/icons/actions/cancel.svg';
 import Payment from '../../tokens/svg-assets/icons/currency/cash.svg';
 import Chevron from '../../tokens/svg-assets/icons/chevron.svg';
@@ -8,6 +9,7 @@ import ChevronRight from '../../tokens/svg-assets/icons/arrows/chevron-right.svg
 import CircleCheckmark from '../../tokens/svg-assets/icons/circles/circle-checkmark.svg';
 import CircleInfo from '../../tokens/svg-assets/icons/circles/circle-info.svg';
 import CircleUser from '../../tokens/svg-assets/icons/circles/circle-user.svg';
+import Checkmark from '../../tokens/svg-assets/icons/content/check-mark.svg';
 import Clock from '../../tokens/svg-assets/icons//illustrations/clock.svg';
 import Cloud from '../../tokens/svg-assets/icons/media/cloud.svg';
 import Dashboard from '../../tokens/svg-assets/icons/navigation/dashboard.svg';
@@ -30,7 +32,9 @@ import UserGroup from '../../tokens/svg-assets/icons/actions/user-group.svg';
 export enum IconType {
   ALERT_EXCLAMATION = 'AlertExclamation',
   AUTOPAY = 'Autopay',
+  BAN = 'Ban',
   CANCEL = 'Cancel',
+  CHECKMARK = 'Checkmark',
   CHEVRON = 'Chevron',
   CHEVRON_RIGHT = 'ChevronRight',
   CIRCLE_CHECKMARK = 'CircleCheckmark',
@@ -84,6 +88,8 @@ export const Icons: {
 } = {
   [IconType.ALERT_EXCLAMATION]: AlertExclamation,
   [IconType.AUTOPAY]: Autopay,
+  [IconType.BAN]: Ban,
+  [IconType.CHECKMARK]: Checkmark,
   [IconType.CHEVRON]: Chevron,
   [IconType.CHEVRON_RIGHT]: ChevronRight,
   [IconType.CIRCLE_CHECKMARK]: CircleCheckmark,

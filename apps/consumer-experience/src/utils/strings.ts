@@ -1,6 +1,7 @@
 export const DEFAULT_ERROR_STRING = '-';
 export const DEFAULT_UNAVAILABLE_STRING =
   'This data is unavailable at this time. Please try again later.';
+export const CONTACT_NUMBER = '1-800-232-2222';
 
 export const toTitleCase = (value?: string): string => {
   if (!value) return '';

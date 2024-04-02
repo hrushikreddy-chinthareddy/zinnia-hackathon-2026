@@ -4,11 +4,12 @@ import {
   IconType,
   Ticker,
 } from '@zinnia/bloom/internal/components';
+import { HTMLAttributes } from 'react';
 
-import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
 import { AccountValuePopover } from '@/components/policy-overview/AccountValuePopover';
-import { getPolicyAccountValue } from '@/services';
+import { getPolicyAccountValueWith30DayChange } from '@/services';
+import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined } from '@/utils/data';
 import { dateMonthWithTimeEST } from '@/utils/dates';
@@ -18,21 +19,25 @@ import styles from './PolicyOverview.module.css';
 
 const ACCOUNT_VALUE = 'Account value';
 
-interface Props {
-  planCode: string;
-  policyNumber: string;
+interface Props extends PolicyRequestInputs, HTMLAttributes<HTMLDivElement> {
+  hideLabel?: boolean;
+  isLink?: boolean;
+  showIcon?: boolean;
 }
 
 // TODO: add surrendered and locked policy states
-export const AccountValue = async ({ planCode, policyNumber }: Props) => {
-  const { data, error } = await getPolicyAccountValue({
+export const AccountValue = async ({
+  className,
+  hideLabel,
+  isLink,
+  planCode,
+  policyNumber,
+  showIcon,
+}: Props) => {
+  const { data } = await getPolicyAccountValueWith30DayChange({
     planCode,
     policyNumber,
   });
-
-  if (error) {
-    return null;
-  }
 
   const { totalFundValue, timestamp, valueChange } = data!;
 
@@ -45,14 +50,12 @@ export const AccountValue = async ({ planCode, policyNumber }: Props) => {
   );
 
   return (
-    <ClickableCardContainer
-      linkTo={{ url: '#', isInternal: true, label: 'go to internal link' }}
-    >
-      <div className={styles.rowWrapper}>
-        <div className={styles.content}>
-          <Icon type={IconType.DOLLAR} className={styles.icon} />
-          <FieldData
-            Label={
+    <div className={`${styles.rowWrapper} ${className}`}>
+      <div className={styles.content}>
+        {showIcon && <Icon type={IconType.DOLLAR} className={styles.icon} />}
+        <FieldData
+          {...(!hideLabel && {
+            Label: (
               <Label
                 interactiveElements={[
                   <AccountValuePopover key="account-value-popover" />,
@@ -60,19 +63,16 @@ export const AccountValue = async ({ planCode, policyNumber }: Props) => {
               >
                 {ACCOUNT_VALUE}
               </Label>
-            }
-            caption={
-              timestamp ? `As of ${dateMonthWithTimeEST(timestamp)}` : ''
-            }
-          >
-            {totalFundContent}
-          </FieldData>
-        </div>
-        <div className={styles.additionalInfo}>
-          {/* TODO: still need to figure out what this month comes from  */}
-          <Ticker value={valueChange} subtext="this month" />
-        </div>
+            ),
+          })}
+          caption={timestamp ? `As of ${dateMonthWithTimeEST(timestamp)}` : ''}
+        >
+          {totalFundContent}
+        </FieldData>
       </div>
-    </ClickableCardContainer>
+      <div className={!isLink ? 'ml-lg' : 'mx-lg'}>
+        <Ticker value={valueChange} subtext="Last 30 days" />
+      </div>
+    </div>
   );
 };

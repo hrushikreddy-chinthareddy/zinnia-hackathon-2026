@@ -22,11 +22,12 @@
       "dependsOn": ["^lint"]
     },
     "dev": {
+      "dependsOn": ["^build"],
       "cache": false,
       "persistent": true
     },
     "test": {
-      "dependsOn": []
+      "dependsOn": ["^build"]
     }
   }
 }

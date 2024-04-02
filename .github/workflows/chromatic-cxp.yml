@@ -1,12 +1,12 @@
-name: "Chromatic Consumer Experience"
+name: 'Chromatic Consumer Experience'
 
 on:
   workflow_dispatch:
-  push:
-    branches-ignore:
-      - 'dependabot/**'
-    paths:
-      - "apps/consumer-experience/**"
+  # push:
+  #   branches-ignore:
+  #     - 'dependabot/**'
+  #   paths:
+  #     - "apps/consumer-experience/**"
 
 jobs:
   chromatic:

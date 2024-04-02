@@ -43,7 +43,10 @@ export const Coverage = async ({ planCode, policyNumber }: Props) => {
           <p className="typography-content-body-sm">{`${riderCount} ${riderText}`}</p>
         </FieldData>
       ),
-      linkTo: { url: '/policy-riders', label: 'riders' },
+      linkTo: {
+        url: `/policies/${planCode}/${policyNumber}/riders`,
+        label: 'riders',
+      },
     });
   }
 

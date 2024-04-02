@@ -11,6 +11,7 @@ class ServerHttpRequest extends HttpRequest {
     init?: RequestInit | undefined
   ): Promise<Response> => {
     const { accessToken } = await getAccessToken();
+
     const requestInit: RequestInit = init || {};
     if (!requestInit.headers) {
       requestInit.headers = {};

@@ -5,21 +5,14 @@
 }
 
 .policyDetails {
-  margin: var(--measure-dimension-gap-xl, 1.5rem) var(--measure-dimension-gap-none, 0);
-}
-
-.infoCard {
-  display: flex;
-  align-items: center;
-
-  > div {
-    margin-right: var(--measure-dimension-gap-lg, 1rem);
-  }
+  margin: var(--measure-dimension-gap-xl, 1.5rem)
+    var(--measure-dimension-gap-none, 0);
 }
 
 .allocationContainer {
   width: 100%;
-  padding: var(--measure-dimension-padding-2xl, 1rem) var(--measure-dimension-padding-none, 0);
+  padding: var(--measure-dimension-padding-2xl, 1rem)
+    var(--measure-dimension-padding-none, 0);
 }
 
 .allocationHeader {
@@ -37,7 +30,8 @@
   justify-content: space-between;
   width: 100%;
   align-items: center;
-  padding: var(--measure-dimension-padding-2xl, 2rem) var(--measure-dimension-padding-none, 0);
+  padding: var(--measure-dimension-padding-2xl, 2rem)
+    var(--measure-dimension-padding-none, 0);
 }
 
 .allocationDetails {
