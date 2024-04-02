@@ -1,5 +1,5 @@
 import { Icon, IconType } from '@zinnia/bloom/internal/components';
-import { HTMLAttributes, ReactNode } from 'react';
+import { HTMLAttributes } from 'react';
 
 import styles from './InfoCard.module.css';
 import { ClickableCardContainer } from '../clickable-card-container/ClickableCardContainer';

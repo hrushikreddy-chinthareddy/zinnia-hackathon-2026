@@ -76,7 +76,10 @@ export const Coverage = async ({ planCode, policyNumber }: Props) => {
 
   // TODO: add conditions for policy statuses
   return (
-    <ClickableCardContainer listItems={additionalItems}>
+    <ClickableCardContainer listItems={additionalItems} linkTo={{
+        url: `/policies/${planCode}/${policyNumber}/coverage`,
+        label: 'go to coverage page',
+      }}>
       <div className={styles.content}>
         <Icon type={IconType.SHIELD} className={styles.icon} />
         <FieldData

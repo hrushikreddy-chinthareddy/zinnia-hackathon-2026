@@ -1,0 +1,36 @@
+
+.cardContainer, .coveragePage, .coverageValues {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.coveragePage {
+  gap: var(--measure-dimension-gap-lg);
+
+  @media (min-width: 768px) {
+    gap: var(--measure-dimension-gap-xl);
+  }
+
+  .infoCard {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: var(--measure-dimension-gap-lg);
+    align-items: center;
+
+  }
+  .cardContainer {
+    gap: var(--measure-dimension-gap-md);
+
+  }
+
+  .coverageValues {
+    gap: var(--measure-dimension-gap-lg);
+  }
+
+  .coverageHeader,
+  .coverageDetails,
+  .coverageFooter,
+  .coverageFooter p:first-child {
+    margin: 0;
+  }
+}

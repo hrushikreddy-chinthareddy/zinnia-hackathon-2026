@@ -6,13 +6,13 @@ export interface Props extends React.HTMLAttributes<HTMLDivElement> {
   showAction?: boolean;
 }
 
-export const Footer = ({ hasBorder, showAction, style }: Props) => {
+export const Footer = ({ hasBorder, showAction, style, className }: Props) => {
   const phone = 18002322222;
   return (
     <div
       className={clsx('consumer-footer', {
         'consumer-footer--border': hasBorder,
-      })}
+      }, className)}
       style={style}
     >
       {showAction && (
