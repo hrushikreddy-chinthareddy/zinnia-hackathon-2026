@@ -1,6 +1,7 @@
 import { IconType } from '@zinnia/bloom/internal/components';
 import { Metadata } from 'next';
 
+import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
@@ -53,7 +54,20 @@ export default async function Page({
       <HeaderPolicyDetails planCode={planCode} policyNumber={policyNumber} />
       <div className="space-mb-gap-md">
         <UpcomingPremium planCode={planCode} policyNumber={policyNumber} />
-        <AccountValue planCode={planCode} policyNumber={policyNumber} />
+        <ClickableCardContainer
+          linkTo={{
+            url: `/policies/${planCode}/${policyNumber}/account-value`,
+            label: 'go to account value page',
+          }}
+        >
+          <AccountValue
+            planCode={planCode}
+            policyNumber={policyNumber}
+            isLink
+            showIcon
+          />
+        </ClickableCardContainer>
+        {/* <AccountValue planCode={planCode} policyNumber={policyNumber} isLink /> */}
         <Coverage planCode={planCode} policyNumber={policyNumber} />
       </div>
       <Footer />

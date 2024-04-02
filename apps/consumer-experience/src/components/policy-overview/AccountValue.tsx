@@ -4,8 +4,8 @@ import {
   IconType,
   Ticker,
 } from '@zinnia/bloom/internal/components';
+import { HTMLAttributes } from 'react';
 
-import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
 import { AccountValuePopover } from '@/components/policy-overview/AccountValuePopover';
 import { getPolicyAccountValueWith30DayChange } from '@/services';
@@ -16,16 +16,24 @@ import { dateMonthWithTimeEST } from '@/utils/dates';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 import styles from './PolicyOverview.module.css';
-import MockMessage from '../MockMessage';
-import { NoDataAvailable } from '../no-data-available/NoDataAvailable';
 
 const ACCOUNT_VALUE = 'Account value';
 
+interface Props extends PolicyRequestInputs, HTMLAttributes<HTMLDivElement> {
+  hideLabel?: boolean;
+  isLink?: boolean;
+  showIcon?: boolean;
+}
+
 // TODO: add surrendered and locked policy states
 export const AccountValue = async ({
+  className,
+  hideLabel,
+  isLink,
   planCode,
   policyNumber,
-}: PolicyRequestInputs) => {
+  showIcon,
+}: Props) => {
   const { data } = await getPolicyAccountValueWith30DayChange({
     planCode,
     policyNumber,
@@ -42,14 +50,12 @@ export const AccountValue = async ({
   );
 
   return (
-    <ClickableCardContainer
-      linkTo={{ url: '#', isInternal: true, label: 'go to internal link' }}
-    >
-      <div className={styles.rowWrapper}>
-        <div className={styles.content}>
-          <Icon type={IconType.DOLLAR} className={styles.icon} />
-          <FieldData
-            Label={
+    <div className={`${styles.rowWrapper} ${className}`}>
+      <div className={styles.content}>
+        {showIcon && <Icon type={IconType.DOLLAR} className={styles.icon} />}
+        <FieldData
+          {...(!hideLabel && {
+            Label: (
               <Label
                 interactiveElements={[
                   <AccountValuePopover key="account-value-popover" />,
@@ -57,18 +63,16 @@ export const AccountValue = async ({
               >
                 {ACCOUNT_VALUE}
               </Label>
-            }
-            caption={
-              timestamp ? `As of ${dateMonthWithTimeEST(timestamp)}` : ''
-            }
-          >
-            {totalFundContent}
-          </FieldData>
-        </div>
-        <div className={styles.additionalInfo}>
-          <Ticker value={valueChange} subtext="Last 30 days" />
-        </div>
+            ),
+          })}
+          caption={timestamp ? `As of ${dateMonthWithTimeEST(timestamp)}` : ''}
+        >
+          {totalFundContent}
+        </FieldData>
       </div>
-    </ClickableCardContainer>
+      <div className={!isLink ? 'ml-lg' : 'mx-lg'}>
+        <Ticker value={valueChange} subtext="Last 30 days" />
+      </div>
+    </div>
   );
 };

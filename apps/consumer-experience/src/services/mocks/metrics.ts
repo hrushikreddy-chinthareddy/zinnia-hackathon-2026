@@ -9,6 +9,6 @@ export const MockMetricsResponse = [
     average: 28.44,
     sum: 8389.8,
     count: 295,
-    end: 28.44,
+    end: 38.64,
   },
 ];

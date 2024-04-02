@@ -112,3 +112,8 @@ a:focus-visible {
 * COMPONENTS
 * ==========
 */
+
+.stacked-items {
+  display: flex;
+  flex-direction: column;
+}

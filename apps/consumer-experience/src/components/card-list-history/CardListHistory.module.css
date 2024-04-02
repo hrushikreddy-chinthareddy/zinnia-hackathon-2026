@@ -4,7 +4,7 @@
 }
 
 .cardListContainer {
-  li:last-child {
+  li:not(:first-child) {
     border-top: none;
   }
 
