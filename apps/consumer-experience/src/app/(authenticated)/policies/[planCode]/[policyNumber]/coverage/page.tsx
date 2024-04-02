@@ -4,6 +4,7 @@ import {
   Label
 } from '@zinnia/bloom/internal/components';
 import { DEFAULT_UNAVAILABLE_STRING } from '@zinnia/utils';
+import clsx from 'clsx';
 import { Suspense } from 'react';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
@@ -35,8 +36,8 @@ export default async function Beneficiaries({
 
   const pageHeader = (
     <>
-      <HeaderBreadcrumb title="Increase Coverage" />
-      <HeaderPolicyDetails className={styles.policyDetails} planCode={planCode} policyNumber={policyNumber} />
+      <HeaderBreadcrumb className={styles.coverageHeader} title="Increase Coverage" />
+      <HeaderPolicyDetails className={styles.coverageDetails} planCode={planCode} policyNumber={policyNumber} />
     </>
   )
 
@@ -74,10 +75,10 @@ export default async function Beneficiaries({
   }
 
   return (
-    <>
+    <div className={clsx(styles.coveragePage, styles.flexCol)}>
       <Suspense fallback={<div style={{ height: '100vh' }}>Loading...</div>}>
         {pageHeader}
-        <div className={styles.cardContainer}>
+        <div className={clsx(styles.cardContainer, styles.flexCol)}>
           <ClickableCardContainer>
             <div className={styles.infoCard}>
               <div>
@@ -115,11 +116,11 @@ export default async function Beneficiaries({
             </div>
           </ClickableCardContainer>
         </div>
-        <p className='pt-3xl typography-content-body-bold'>
-          Do you want to increase your coverage? Call <a href='+18002322222'>1-800-232-2222</a> to begin the process.
+        <p className='typography-content-body-bold '>
+          Do you want to increase your coverage? Call <a className='typography-nav-links-inline' href='+18002322222'>1-800-232-2222</a> to begin the process.
         </p>
       </Suspense>
-      <Footer />
-    </>
+      <Footer className={styles.coverageFooter} />
+    </div>
   );
 }

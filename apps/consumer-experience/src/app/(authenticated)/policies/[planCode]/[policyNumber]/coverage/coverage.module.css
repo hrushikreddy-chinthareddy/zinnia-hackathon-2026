@@ -1,0 +1,23 @@
+.flexCol {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.coveragePage {
+  gap: var(--measure-dimension-gap-lg);
+
+  @media (min-width: 768px) {
+    gap: var(--measure-dimension-gap-xl);
+  }
+
+  .cardContainer {
+    gap: var(--measure-dimension-gap-md);
+  }
+
+  .coverageHeader,
+  .coverageDetails,
+  .coverageFooter,
+  .coverageFooter p:first-child {
+    margin: 0;
+  }
+}
