@@ -10,8 +10,10 @@ import {
 import { Suspense } from 'react';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
+import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
+import { InfoCard } from '@/components/info-card/InfoCard';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { getBeneficiaries } from '@/services/policy';
@@ -133,7 +135,7 @@ export default async function Beneficiaries({
   }
 
   return (
-    <div>
+    <div className="container">
       <Suspense fallback={<div style={{ height: '100vh' }}>Loading...</div>}>
         <HeaderBreadcrumb title="Beneficiaries" />
         <HeaderPolicyDetails
@@ -141,24 +143,19 @@ export default async function Beneficiaries({
           policyNumber={policyNumber}
           className={styles.policyDetails}
         />
-        <div className={styles.itemsContainer}>
-          <ClickableCardContainer>
-            <div className={styles.infoCard}>
-              <div>
-                <Icon type={IconType.LIGHTBULB} />
-              </div>
-              <p className="typography-content-body-sm">
-                You’re covered for{' '}
-                <span style={{ fontWeight: 600 }}>
-                  {formatUSDollars(data?.totalCoverageAmount)}
-                </span>
-                . That means if you die while your policy is active your
-                beneficiaries will receive this amount (minus outstanding loans
-                and applicable interest calculations), according to your
-                allocations.
-              </p>
-            </div>
-          </ClickableCardContainer>
+        <div className="card-container">
+          <InfoCard iconType={IconType.LIGHTBULB}>
+            <>
+              You’re covered for{' '}
+              <span style={{ fontWeight: 600 }}>
+                {formatUSDollars(data?.totalCoverageAmount)}
+              </span>
+              . That means if you die while your policy is active your
+              beneficiaries will receive this amount (minus outstanding loans
+              and applicable interest calculations), according to your
+              allocations.
+            </>
+          </InfoCard>
 
           {!groupedBenes && (
             <ClickableCardContainer>
@@ -182,7 +179,7 @@ export default async function Beneficiaries({
                         type={IconType.CIRCLE_INFO}
                         width={16}
                         height={16}
-                        color="var(--color-primary-color-primary, #ff7500)"
+                        color="var(--color-base-icon-icon-tooltip, #ff7500)"
                       />
                     }
                     title="Primary allocation"
@@ -221,7 +218,7 @@ export default async function Beneficiaries({
                         type={IconType.CIRCLE_INFO}
                         width={16}
                         height={16}
-                        color="var(--color-primary-color-primary, #ff7500)"
+                        color="var(--color-base-icon-icon-tooltip, #ff7500)"
                       />
                     }
                     title="Contingent allocation"
@@ -244,6 +241,7 @@ export default async function Beneficiaries({
             </ClickableCardContainer>
           )}
         </div>
+        <Footer showAction />
       </Suspense>
     </div>
   );

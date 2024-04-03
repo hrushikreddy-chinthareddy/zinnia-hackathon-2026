@@ -43,9 +43,9 @@ export default async function Page() {
   }
 
   return (
-    <>
+    <div className="container">
       <HeaderBreadcrumb title="My Policies" />
-      <div className={`${styles.cardContainer} ${styles.container}`}>
+      <div className="card-container" style={{ paddingLeft: 0 }}>
         {policyReferenceData?.map(p => (
           <ClickableCardContainer
             key={p.id}
@@ -66,6 +66,6 @@ export default async function Page() {
           </ClickableCardContainer>
         ))}
       </div>
-    </>
+    </div>
   );
 }

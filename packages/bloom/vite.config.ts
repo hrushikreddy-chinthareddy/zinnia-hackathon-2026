@@ -1,14 +1,12 @@
 import path, { resolve } from "path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import { libInjectCss } from "vite-plugin-lib-inject-css";
 import svgr from "vite-plugin-svgr";
 import dts from "vite-plugin-dts";
 
 export default defineConfig({
   plugins: [
     react(),
-    libInjectCss(),
     svgr({ include: "**/*.svg" }),
     dts({
       exclude: "src/**/*.stories.*",
@@ -24,6 +22,7 @@ export default defineConfig({
   },
   build: {
     copyPublicDir: false,
+    cssCodeSplit: true,
     lib: {
       entry: {
         bloom: resolve(__dirname, "src/bloom.tsx"),

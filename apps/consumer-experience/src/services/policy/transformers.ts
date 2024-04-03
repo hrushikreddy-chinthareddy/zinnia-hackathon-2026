@@ -6,6 +6,7 @@ import {
   PolicyStatus,
   Transaction,
   TransactionType,
+  MetricsType,
 } from '@zinnia/api-types/types/sor';
 import { DEFAULT_ERROR_STRING, policyOwner } from '@zinnia/utils';
 
@@ -23,6 +24,7 @@ import {
   ExtendedReason,
   ExtendedTransactionStatus,
   PaymentHistory,
+  Metric,
 } from '@/types/policy';
 import { bankAccountNumberSanitizer } from '@/utils/data';
 
@@ -80,9 +82,21 @@ export const transformPolicyForAccountValue = (
   return {
     timestamp: policy.timestamp,
     totalFundValue: policy?.allocation?.funds?.[0]?.totalFundValue,
-    // TODO: update this to use real data
-    valueChange: 9.638554,
   };
+};
+
+export const transformPolicyMetricsForAccountValueChange = (
+  metrics: Metric[]
+): { valueChange: number } | null => {
+  const accountValueData = metrics.find(
+    metric => metric.metric === MetricsType.ACCOUNTVALUE
+  );
+
+  const valueChange = accountValueData
+    ? accountValueData.begin - accountValueData.end
+    : null;
+
+  return valueChange ? { valueChange } : null;
 };
 
 export const transformPolicyForHeaderDetails = (
@@ -139,6 +153,7 @@ export const transformPolicyForCoverage = (policy: Policy): PolicyCoverage => {
     maturityDate: policy.policyDates?.maturityDate,
     policyStartDate: policy.policyDates?.policyStartDate,
     totalCoverageAmount: policy.coverage?.totalCoverageAmount,
+    maximumCoverageIncreaseAmount: policy.coverage?.maximumCoverageIncreaseAmount,
     riderCount: policy.riders?.length || 0,
   };
 };

@@ -28,21 +28,30 @@ export function DesktopNav() {
               href={`/policies/${params.planCode}/${params.policyNumber}`}
               className={styles.navItem}
             >
-              <Icon type={IconType.SHIELD_CHECKMARK} />
+              <Icon
+                type={IconType.SHIELD_CHECKMARK}
+                color="var(--color-base-icon-icon-dark)"
+              />
               Policy Overview
             </Link>
             <Link
               href={`/policies/${params.planCode}/${params.policyNumber}/documents`}
               className={styles.navItem}
             >
-              <Icon type={IconType.DOCUMENT_TEXT} />
+              <Icon
+                type={IconType.DOCUMENT_TEXT}
+                color="var(--color-base-icon-icon-dark)"
+              />
               Documents
             </Link>
             <Link
               href={`/policies/${params.planCode}/${params.policyNumber}/profile`}
               className={styles.navItem}
             >
-              <Icon type={IconType.CIRCLE_USER} />
+              <Icon
+                type={IconType.CIRCLE_USER}
+                color="var(--color-base-icon-icon-dark)"
+              />
               Profile
             </Link>
           </>

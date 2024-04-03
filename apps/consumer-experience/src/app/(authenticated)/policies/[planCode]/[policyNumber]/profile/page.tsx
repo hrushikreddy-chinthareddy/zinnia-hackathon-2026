@@ -101,7 +101,7 @@ export default async function Profile({ params }: Props) {
   }
 
   return (
-    <div className={styles.pageContainer}>
+    <div className="container">
       <HeaderBreadcrumb title="Profile" />
       <HeaderPolicyDetails
         policyNumber={params.policyNumber}

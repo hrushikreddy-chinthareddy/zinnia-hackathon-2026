@@ -89,14 +89,14 @@ export default async function PaymentHistory({ params }: Props) {
   };
 
   return (
-    <div>
+    <div className="container">
       <HeaderBreadcrumb title="Payment history" />
       <HeaderPolicyDetails
         planCode={params.planCode}
         policyNumber={params.policyNumber}
       />
       {pendingTransactions.length > 0 && (
-        <CardListHistory className="mb-xl">
+        <CardListHistory>
           <CardListHistory.Header>
             <h2 className={styles.sectionHeader}>Pending</h2>
           </CardListHistory.Header>

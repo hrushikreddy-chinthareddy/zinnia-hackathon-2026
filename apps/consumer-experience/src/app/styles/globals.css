@@ -1,7 +1,8 @@
 @import '~@zinnia/bloom/css';
 @import '~@zinnia/bloom/component-styles';
 @import './spacing.css';
-@import url('./everly/theme.css');
+/* TODO: THIS NEEDS TO BE DYNAMIC!!!! */
+@import './everly/theme.css';
 
 /*
 * ELEMENTS
@@ -111,3 +112,26 @@ a:focus-visible {
 * COMPONENTS
 * ==========
 */
+
+.stacked-items {
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-lg);
+}
+
+.card-container {
+  > *:not(:last-child) {
+    margin-bottom: 8px;
+  }
+}
+
+@media (width > 767px) {
+  .container {
+    gap: var(--measure-dimension-gap-xl);
+  }
+}

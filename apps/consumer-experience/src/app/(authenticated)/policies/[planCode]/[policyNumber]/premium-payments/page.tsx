@@ -10,7 +10,7 @@ export default async function PremiumPayments({
   params: PolicyRequestInputs;
 }) {
   return (
-    <div>
+    <div className="container">
       <HeaderBreadcrumb title="Premium payments" />
       <HeaderPolicyDetails
         planCode={params.planCode}

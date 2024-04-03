@@ -5,6 +5,7 @@ import {
   Popover,
   PopoverPlacement,
 } from '@zinnia/bloom/internal/components';
+import clsx from 'clsx';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import { ReactNode } from 'react';
@@ -19,9 +20,10 @@ interface PopoverInfo {
 export interface HeaderBreadcrumbProps {
   title: string;
   popover?: PopoverInfo;
+  className?: string;
 }
 
-export const HeaderBreadcrumb = ({ title, popover }: HeaderBreadcrumbProps) => {
+export const HeaderBreadcrumb = ({ title, popover, className }: HeaderBreadcrumbProps) => {
   const paths = (usePathname() || '').split('/');
   const params = useParams<{ planCode: string; policyNumber: string }>();
 
@@ -51,7 +53,7 @@ export const HeaderBreadcrumb = ({ title, popover }: HeaderBreadcrumbProps) => {
   const previousPathRoute = previousPath ? `/${previousPath}` : '/';
 
   return (
-    <div className={styles.headerBreadcrumbContainer}>
+    <div className={clsx(styles.headerBreadcrumbContainer, className)}>
       <Link
         href={previousPathRoute}
         aria-label={`go to ${previousPathName} page`}
@@ -70,7 +72,7 @@ export const HeaderBreadcrumb = ({ title, popover }: HeaderBreadcrumbProps) => {
           trigger={
             <Icon
               type={IconType.CIRCLE_INFO}
-              color="var(--color-primary-color-primary, #ff7500)"
+              color="var(--color-base-icon-icon-tooltip, #ff7500)"
             />
           }
           placement={PopoverPlacement.BottomRight}

@@ -1,9 +1,3 @@
-.pageContainer {
-  > * {
-    margin-bottom: var(--measure-dimension-gap-lg, 1rem);
-  }
-}
-
 .itemsRowContainer {
   width: 100%;
 }

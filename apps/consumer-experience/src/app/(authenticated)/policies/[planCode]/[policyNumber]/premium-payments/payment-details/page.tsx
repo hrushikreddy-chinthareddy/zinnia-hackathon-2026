@@ -33,7 +33,7 @@ export default async function PaymentDetails({
   }
 
   return (
-    <div>
+    <div className="container">
       <HeaderBreadcrumb title="Payment Details" />
       <HeaderPolicyDetails
         planCode={params.planCode}

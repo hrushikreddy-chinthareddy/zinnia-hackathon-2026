@@ -13,8 +13,7 @@
     "watch": "tsup --watch",
     "lint": "eslint src/",
     "typecheck": "tsc --noEmit",
-    "test": "jest",
-    "postinstall": "pnpm run build"
+    "test": "jest"
   },
   "jest": {
     "preset": "@zinnia/jest-presets/node"

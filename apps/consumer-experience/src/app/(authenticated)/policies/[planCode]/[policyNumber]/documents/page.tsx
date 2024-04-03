@@ -34,7 +34,7 @@ export default async function Documents({
   );
 
   return (
-    <div>
+    <div className="container">
       <HeaderBreadcrumb title="Documents" />
       <HeaderPolicyDetails
         policyNumber={params.policyNumber}
@@ -65,7 +65,7 @@ export default async function Documents({
         />
       )}
       {data && data.items.length > 0 && (
-        <div className={styles.cardContainer}>
+        <div className="card-container">
           {data.items.map(d => {
             return (
               <ClickableCardContainer
@@ -89,7 +89,7 @@ export default async function Documents({
           })}
         </div>
       )}
-      <Footer />
+      <Footer showAction />
     </div>
   );
 }
