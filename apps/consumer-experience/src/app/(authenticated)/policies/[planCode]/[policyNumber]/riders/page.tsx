@@ -16,7 +16,7 @@ export default async function Riders({
   params: PolicyRequestInputs;
 }) {
   return (
-    <div>
+    <div className="container">
       <HeaderBreadcrumb title="Riders" />
       <HeaderPolicyDetails
         planCode={params.planCode}
@@ -35,8 +35,8 @@ export default async function Riders({
         </>
       </InfoCard>
 
-      <div>
-        <h2 className="mb-md pt-2xl">My Riders</h2>
+      <div className="card-container">
+        <h2>My Riders</h2>
         <Rider
           title="Terminal illness accelerated death benefit rider"
           description="If you are diagnosed with a terminal illness, you can claim the lesser of: 50% of your death benefit or $500,000. "
@@ -55,23 +55,23 @@ export default async function Riders({
           status={Status.ACTIVE}
           elected
         />
-      </div>
-      <p
-        className="typography-content-body-bold mb-md"
-        style={{ color: 'var(--Base-Text-text-primary, #212121)' }}
-      >
-        Need to make a claim? Call{' '}
-        <a
-          href={`tel:+${CONTACT_NUMBER}`}
-          className="typography-nav-links-inline"
+        <p
+          className="typography-content-body-bold mb-md"
+          style={{ color: 'var(--Base-Text-text-primary, #212121)' }}
         >
-          1-800-232-2222
-        </a>{' '}
-        to begin the process
-      </p>
-      <div>
-        <h2 className="mb-md pt-2xl">Additional Riders</h2>
-        <p className="typography-content-body my-md">
+          Need to make a claim? Call{' '}
+          <a
+            href={`tel:+${CONTACT_NUMBER}`}
+            className="typography-nav-links-inline"
+          >
+            1-800-232-2222
+          </a>{' '}
+          to begin the process
+        </p>
+      </div>
+      <div className="card-container">
+        <h2>Additional Riders</h2>
+        <p className="typography-content-body">
           Looks like there are additional riders for your policy, but they're
           not covering you—yet.
         </p>
@@ -83,20 +83,20 @@ export default async function Riders({
           insured={{ firstName: 'john', lastName: 'smith' }}
           elected={false}
         />
-      </div>
-      <p
-        className="typography-content-body-bold"
-        style={{ color: 'var(--Base-Text-text-primary, #212121)' }}
-      >
-        Need to add a rider? Call{' '}
-        <a
-          href={`tel:+${CONTACT_NUMBER}`}
-          className="typography-nav-links-inline"
+        <p
+          className="typography-content-body-bold"
+          style={{ color: 'var(--Base-Text-text-primary, #212121)' }}
         >
-          1-800-232-2222
-        </a>{' '}
-        to begin the process
-      </p>
+          Need to add a rider? Call{' '}
+          <a
+            href={`tel:+${CONTACT_NUMBER}`}
+            className="typography-nav-links-inline"
+          >
+            1-800-232-2222
+          </a>{' '}
+          to begin the process
+        </p>
+      </div>
       <Footer />
     </div>
   );

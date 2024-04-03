@@ -15,7 +15,7 @@ export const InfoCard = ({ iconType, children, className }: InfoCardProps) => {
         <div>
           <Icon type={iconType} />
         </div>
-        <p className="typography-content-body-sm">{children}</p>
+        <div className="typography-content-body-sm">{children}</div>
       </div>
     </ClickableCardContainer>
   );

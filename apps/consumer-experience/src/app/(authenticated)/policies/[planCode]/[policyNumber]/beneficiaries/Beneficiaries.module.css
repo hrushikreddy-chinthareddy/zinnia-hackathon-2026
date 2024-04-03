@@ -1,14 +1,3 @@
-.itemsContainer {
-  > * {
-    margin-bottom: var(--measure-dimension-gap-md, 0.5rem);
-  }
-}
-
-.policyDetails {
-  margin: var(--measure-dimension-gap-xl, 1.5rem)
-    var(--measure-dimension-gap-none, 0);
-}
-
 .allocationContainer {
   width: 100%;
   padding: var(--measure-dimension-padding-2xl, 1rem)

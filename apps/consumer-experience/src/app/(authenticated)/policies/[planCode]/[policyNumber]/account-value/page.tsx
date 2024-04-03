@@ -13,7 +13,7 @@ export default async function AccountValuePage({
 }) {
   const { planCode, policyNumber } = params;
   return (
-    <div>
+    <div className="container">
       <HeaderBreadcrumb title="Account value" />
       <HeaderPolicyDetails planCode={planCode} policyNumber={policyNumber} />
       <ClickableCardContainer

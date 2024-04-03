@@ -1,7 +1,7 @@
 .nav {
-  margin: var(--measure-dimension-gap-lg);
   display: flex;
   gap: var(--measure-dimension-gap-xl);
+  padding-left: var(--measure-dimension-padding-2xl);
 
   a {
     color: var(--color-base-text-text-primary);

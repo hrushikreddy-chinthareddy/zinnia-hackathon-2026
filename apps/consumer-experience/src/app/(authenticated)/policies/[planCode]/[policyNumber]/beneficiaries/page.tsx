@@ -10,6 +10,7 @@ import {
 import { Suspense } from 'react';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
+import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 import { InfoCard } from '@/components/info-card/InfoCard';
@@ -134,7 +135,7 @@ export default async function Beneficiaries({
   }
 
   return (
-    <div>
+    <div className="container">
       <Suspense fallback={<div style={{ height: '100vh' }}>Loading...</div>}>
         <HeaderBreadcrumb title="Beneficiaries" />
         <HeaderPolicyDetails
@@ -142,7 +143,7 @@ export default async function Beneficiaries({
           policyNumber={policyNumber}
           className={styles.policyDetails}
         />
-        <div className={styles.itemsContainer}>
+        <div className="card-container">
           <InfoCard iconType={IconType.LIGHTBULB}>
             <>
               You’re covered for{' '}
@@ -240,6 +241,7 @@ export default async function Beneficiaries({
             </ClickableCardContainer>
           )}
         </div>
+        <Footer showAction />
       </Suspense>
     </div>
   );

@@ -49,10 +49,10 @@ export default async function Page({
   }
 
   return (
-    <>
+    <div className="container">
       <HeaderBreadcrumb title="Policy Overview" />
       <HeaderPolicyDetails planCode={planCode} policyNumber={policyNumber} />
-      <div className="space-mb-gap-md">
+      <div className="card-container">
         <UpcomingPremium planCode={planCode} policyNumber={policyNumber} />
         <ClickableCardContainer
           linkTo={{
@@ -71,6 +71,6 @@ export default async function Page({
         <Coverage planCode={planCode} policyNumber={policyNumber} />
       </div>
       <Footer />
-    </>
+    </div>
   );
 }

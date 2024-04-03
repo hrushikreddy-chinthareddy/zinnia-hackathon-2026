@@ -6,7 +6,6 @@
     #fff
   );
   padding: var(--measure-dimension-padding-2xl, 1rem);
-  margin-bottom: var(--measure-dimension-gap-md, 0.5rem);
 }
 
 .riderDetails {

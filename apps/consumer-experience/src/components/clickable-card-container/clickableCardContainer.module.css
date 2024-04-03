@@ -57,6 +57,6 @@ ave top radius and last card should have bottom radius */
   transform: rotate(-90deg);
 }
 
-.listItem {
+.listItem:not(:last-of-type) {
   margin: var(--measureDimensionZSpace0, 0.125rem) 0;
 }
