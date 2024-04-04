@@ -4,6 +4,13 @@
 }
 
 .cardListContainer {
+  border-radius: var(--measure-dimension-radius-sm, 0.25rem);
+  box-shadow: var(--shadow-elevation-elevation-light-04);
+
+  &.pending {
+    box-shadow: none;
+  }
+
   li:not(:first-child) {
     border-top: none;
   }

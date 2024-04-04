@@ -100,7 +100,7 @@ export default async function PaymentHistory({ params }: Props) {
           <CardListHistory.Header>
             <h2 className={styles.sectionHeader}>Pending</h2>
           </CardListHistory.Header>
-          <CardListHistory.ListItems>
+          <CardListHistory.ListItems isPending>
             {pendingPayments()}
           </CardListHistory.ListItems>
         </CardListHistory>

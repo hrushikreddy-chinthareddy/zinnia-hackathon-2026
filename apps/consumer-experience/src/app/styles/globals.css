@@ -130,8 +130,27 @@ a:focus-visible {
   }
 }
 
+.card {
+  padding: var(--measure-dimension-padding-2xl);
+  background-color: var(--color-base-surface-surface-primary);
+  border-radius: var(--measure-dimension-radius-sm);
+  box-shadow: var(--shadow-elevation-elevation-light-04);
+}
+
+.column-card {
+  column-gap: var(--measure-dimension-gap-2xl);
+  display: inline-grid;
+  grid-template-columns: repeat(auto-fill, 1fr);
+  row-gap: var(--measure-dimension-gap-lg);
+  white-space: nowrap;
+}
+
 @media (width > 767px) {
   .container {
     gap: var(--measure-dimension-gap-xl);
+  }
+
+  .column-card {
+    grid-template-columns: repeat(2, 1fr);
   }
 }

@@ -34,7 +34,7 @@ export default async function AccountValuePage({
     <div className="container">
       <HeaderBreadcrumb title="Funds" />
       <HeaderPolicyDetails planCode={planCode} policyNumber={policyNumber} />
-      <div className={styles.container}>
+      <div className={`${styles.container} card`}>
         <AccountValue
           planCode={planCode}
           policyNumber={policyNumber}

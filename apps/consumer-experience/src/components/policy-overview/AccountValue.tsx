@@ -21,6 +21,7 @@ const ACCOUNT_VALUE = 'Account value';
 
 interface Props extends PolicyRequestInputs, HTMLAttributes<HTMLDivElement> {
   hideLabel?: boolean;
+  hideTicker?: boolean;
   isLink?: boolean;
   showIcon?: boolean;
 }
@@ -29,6 +30,7 @@ interface Props extends PolicyRequestInputs, HTMLAttributes<HTMLDivElement> {
 export const AccountValue = async ({
   className,
   hideLabel,
+  hideTicker,
   isLink,
   planCode,
   policyNumber,
@@ -70,9 +72,11 @@ export const AccountValue = async ({
           {totalFundContent}
         </FieldData>
       </div>
-      <div className={!isLink ? 'ml-lg' : 'mx-lg'}>
-        <Ticker value={valueChange} subtext="Last 30 days" />
-      </div>
+      {!hideTicker && (
+        <div className={!isLink ? 'ml-lg' : 'mx-lg'}>
+          <Ticker value={valueChange} subtext="Last 30 days" />
+        </div>
+      )}
     </div>
   );
 };

@@ -153,7 +153,8 @@ export const transformPolicyForCoverage = (policy: Policy): PolicyCoverage => {
     maturityDate: policy.policyDates?.maturityDate,
     policyStartDate: policy.policyDates?.policyStartDate,
     totalCoverageAmount: policy.coverage?.totalCoverageAmount,
-    maximumCoverageIncreaseAmount: policy.coverage?.maximumCoverageIncreaseAmount,
+    maximumCoverageIncreaseAmount:
+      policy.coverage?.maximumCoverageIncreaseAmount,
     riderCount: policy.riders?.length || 0,
   };
 };
@@ -292,7 +293,7 @@ export const transformPaymentHistory = (
       paymentHistoryObject.title = 'Policy activation';
       break;
     case 'Anniversary':
-      paymentHistoryObject.title = '"Policy anniversary';
+      paymentHistoryObject.title = 'Policy anniversary';
       break;
     default:
       paymentHistoryObject.title = transactionType ?? DEFAULT_ERROR_STRING;

@@ -1,5 +1,8 @@
 import { Icon, IconType } from '@zinnia/bloom/internal/components';
+import clsx from 'clsx';
 import { HTMLAttributes } from 'react';
+
+import styles from './StatusIconText.module.css';
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   isEligible: boolean;
@@ -13,11 +16,14 @@ export const StatusIconText = ({ isEligible, showIcon, className }: Props) => {
     ? 'var(--color-status-text-status-success-text)'
     : 'var(--color-status-text-status-error-text)';
   const iconColor = isEligible
-    ? 'var(--color-status-text-status-success-icon)'
-    : 'var(--color-status-text-status-error-icon)';
+    ? 'var(--color-status-icon-status-success-icon)'
+    : 'var(--color-status-icon-status-error-icon)';
 
   return (
-    <span style={{ color }} className={className}>
+    <span
+      style={{ color }}
+      className={clsx(styles.statusIconText, { [`${className}`]: className })}
+    >
       {showIcon && <Icon type={iconType} color={iconColor} />}
       {text}
     </span>
