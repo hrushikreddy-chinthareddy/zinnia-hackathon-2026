@@ -101,6 +101,7 @@ export default async function Withdrawals({
                 {formatUSDollars(250439.23)}
               </p>
             </FieldData>
+            {/* TODO: ONLY show this if there is a total loan balance!!! */}
             <FieldData
               caption={
                 <span>As of ${standardDateMonthYear('2023-06-12')}</span>

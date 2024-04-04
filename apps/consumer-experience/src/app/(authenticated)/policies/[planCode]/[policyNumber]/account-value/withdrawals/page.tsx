@@ -111,6 +111,40 @@ export default async function Withdrawals({
               </p>
             </FieldData>
             <FieldData
+              Label={
+                <Label
+                  interactiveElements={[
+                    <Popover
+                      key={AVAILABLE_WITHDRAW_TAX_FREE}
+                      title={AVAILABLE_WITHDRAW_TAX_FREE}
+                      trigger={
+                        <Icon
+                          type={IconType.CIRCLE_INFO}
+                          color="var(--color-base-icon-icon-tooltip, #ff7500)"
+                          width={16}
+                          height={16}
+                        />
+                      }
+                    >
+                      <p>
+                        You can withdraw up to this amount—also known as your
+                        “cost basis”— without paying taxes. Your cost basis=how
+                        much you’ve paid in premiums so far during the life of
+                        your policy. You only need to pay taxes on interest
+                        you’ve earned.
+                      </p>
+                    </Popover>,
+                  ]}
+                >
+                  {AVAILABLE_WITHDRAW_TAX_FREE}
+                </Label>
+              }
+            >
+              <p className="typography-content-value">
+                {formatUSDollars(250439.23)}
+              </p>
+            </FieldData>
+            <FieldData
               caption={<span>2 withdrawals</span>}
               Label={
                 <Label
@@ -135,6 +169,37 @@ export default async function Withdrawals({
                   ]}
                 >
                   {ALL_TIME_WITHDRAWALS}
+                </Label>
+              }
+            >
+              <p className="typography-content-value">
+                {formatUSDollars(250439.23)}
+              </p>
+            </FieldData>
+            <FieldData
+              Label={
+                <Label
+                  interactiveElements={[
+                    <Popover
+                      key={COVERAGE_PRESERVATION_LIMIT}
+                      title={COVERAGE_PRESERVATION_LIMIT}
+                      trigger={
+                        <Icon
+                          type={IconType.CIRCLE_INFO}
+                          color="var(--color-base-icon-icon-tooltip, #ff7500)"
+                          width={16}
+                          height={16}
+                        />
+                      }
+                    >
+                      <p>
+                        You can withdraw this amount without reducing your
+                        coverage amount.
+                      </p>
+                    </Popover>,
+                  ]}
+                >
+                  {COVERAGE_PRESERVATION_LIMIT}
                 </Label>
               }
             >
@@ -177,74 +242,7 @@ export default async function Withdrawals({
                 </Label>
               }
             >
-              <p className="typography-content-value">
-                {formatUSDollars(250439.23)}
-              </p>
-            </FieldData>
-            <FieldData
-              Label={
-                <Label
-                  interactiveElements={[
-                    <Popover
-                      key={AVAILABLE_WITHDRAW_TAX_FREE}
-                      title={AVAILABLE_WITHDRAW_TAX_FREE}
-                      trigger={
-                        <Icon
-                          type={IconType.CIRCLE_INFO}
-                          color="var(--color-base-icon-icon-tooltip, #ff7500)"
-                          width={16}
-                          height={16}
-                        />
-                      }
-                    >
-                      <p>
-                        You can withdraw up to this amount—also known as your
-                        “cost basis”— without paying taxes. Your cost basis=how
-                        much you’ve paid in premiums so far during the life of
-                        your policy. You only need to pay taxes on interest
-                        you’ve earned.
-                      </p>
-                    </Popover>,
-                  ]}
-                >
-                  {AVAILABLE_WITHDRAW_TAX_FREE}
-                </Label>
-              }
-            >
-              <p className="typography-content-value">
-                {formatUSDollars(250439.23)}
-              </p>
-            </FieldData>
-            <FieldData
-              Label={
-                <Label
-                  interactiveElements={[
-                    <Popover
-                      key={COVERAGE_PRESERVATION_LIMIT}
-                      title={COVERAGE_PRESERVATION_LIMIT}
-                      trigger={
-                        <Icon
-                          type={IconType.CIRCLE_INFO}
-                          color="var(--color-base-icon-icon-tooltip, #ff7500)"
-                          width={16}
-                          height={16}
-                        />
-                      }
-                    >
-                      <p>
-                        You can withdraw this amount without reducing your
-                        coverage amount.
-                      </p>
-                    </Popover>,
-                  ]}
-                >
-                  {COVERAGE_PRESERVATION_LIMIT}
-                </Label>
-              }
-            >
-              <p className="typography-content-value">
-                {formatUSDollars(250439.23)}
-              </p>
+              <p className="typography-content-value">2 left</p>
             </FieldData>
           </div>
         </div>
