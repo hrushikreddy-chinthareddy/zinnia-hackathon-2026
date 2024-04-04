@@ -42,7 +42,8 @@ export default async function Riders({
           description="If you are diagnosed with a terminal illness, you can claim the lesser of: 50% of your death benefit or $500,000. "
           cost={11.99}
           effectiveDate="2022-04-03"
-          insured={{ firstName: 'john', lastName: 'smith' }}
+          insured={{ firstName: 'todd', lastName: 'smith' }}
+          policyOwner={{ firstName: 'john', lastName: 'smith' }}
           status={Status.ACTIVE}
           elected
         />
@@ -52,6 +53,7 @@ export default async function Riders({
           cost={11.99}
           effectiveDate="2022-04-03"
           insured={{ firstName: 'john', lastName: 'smith' }}
+          policyOwner={{ firstName: 'john', lastName: 'smith' }}
           status={Status.ACTIVE}
           elected
         />
@@ -80,7 +82,6 @@ export default async function Riders({
           description="If you are diagnosed with a terminal illness, you can claim the lesser of: 50% of your death benefit or $500,000. "
           cost={11.99}
           effectiveDate="2022-04-03"
-          insured={{ firstName: 'john', lastName: 'smith' }}
           elected={false}
         />
         <p
