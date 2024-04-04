@@ -60,6 +60,7 @@ const useMock = () => {
     mockErrorText,
     showDevMenu,
     isMockErroOn,
+    isMockOn,
     setMock,
     removeDevMenu,
     setErrorMock,
