@@ -98,7 +98,7 @@ export default async function Beneficiaries({
         </div>
         <p className="typography-content-body-bold ">
           Do you want to increase your coverage? Call{' '}
-          <wbr /><a className="typography-nav-links-inline" href="+18002322222">
+          <a className={clsx("typography-nav-links-inline", styles.phoneNumber)} href="+18002322222">
             1-800-232-2222
           </a>{' '}
           to begin the process.

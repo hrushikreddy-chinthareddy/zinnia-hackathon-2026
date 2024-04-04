@@ -3,3 +3,7 @@
   flex-flow: column nowrap;
   gap: var(--measure-dimension-gap-lg);
 }
+
+.phoneNumber {
+  white-space: nowrap;
+}
