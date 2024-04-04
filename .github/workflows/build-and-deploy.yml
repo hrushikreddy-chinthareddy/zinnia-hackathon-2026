@@ -1,0 +1,30 @@
+name: "Build and Deploy"
+
+on:
+  push:
+    # branches:
+    #   - dev # deploy to dev and to qa
+    #   - 'release/**' # deploy to UAT
+    #   - main # deploy to production
+
+jobs:
+  dev-deploy:
+    if: github.ref_name == 'dev'
+    uses: ./.github/workflows/deploy-action.yml
+    with:
+      environment-level: qa
+    secrets: inherit
+
+  uat-deploy:
+    if: startsWith(github.ref_name, 'release/')
+    uses: ./.github/workflows/deploy-action.yml
+    with:
+      environment-level: uat
+    secrets: inherit
+
+  # prod-deploy:
+  #   if: github.ref_name == 'main'
+  #   uses: ./.github/workflows/deploy-action.yml
+  #   with:
+  #     environment-level: production
+  #   secrets: inherit
