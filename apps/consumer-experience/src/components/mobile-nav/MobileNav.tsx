@@ -8,6 +8,8 @@ import { useParams, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import LogoImage from '@/app/styles/everly/everly-logo.svg';
+import useMock from '@/hooks/use-mock';
+import { isProd } from '@/utils';
 import { zIndexOrder } from '@/utils/zIndexOrder';
 
 import styles from './MobileNav.module.css';
@@ -38,6 +40,7 @@ export const MobileNav = () => {
   const [open, setOpen] = useState(false);
   const pathName = usePathname();
   const params = useParams<{ planCode: string; policyNumber: string }>();
+  const { isMockOn } = useMock();
 
   // This won't close the menu if user clicks the path they are currently on
   useEffect(() => {
@@ -47,6 +50,7 @@ export const MobileNav = () => {
   return (
     <div className={styles.container}>
       <DevMenu />
+
       <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Trigger asChild>
           <button
@@ -139,6 +143,17 @@ export const MobileNav = () => {
       <Link href="/" className="justify-self-start">
         <LogoImage alt="Company Logo" className={styles.logo}></LogoImage>
       </Link>
+      {!isProd() && isMockOn && (
+        <span
+          className={`${styles.navItem} ml-lg`}
+          style={{
+            color: 'var(--color-status-text-status-error-text',
+            fontWeight: 'bold',
+          }}
+        >
+          Mock is on
+        </span>
+      )}
     </div>
   );
 };
