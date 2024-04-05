@@ -656,6 +656,7 @@ export const getPolicyDocuments = async (
     };
   } catch (error) {
     console.log(error);
+
     return {
       data: null,
       error: {
