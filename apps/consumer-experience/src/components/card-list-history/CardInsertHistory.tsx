@@ -9,7 +9,7 @@ import styles from './CardInsertHistory.module.css';
 
 interface HistoryItemProps {
   date?: string;
-  title: string;
+  title: ReactNode;
   subtitle?: ReactNode;
   amount?: number;
   isPending?: boolean;
@@ -38,9 +38,9 @@ export const CardInsertHistory = ({
           {isPending && <span>Scheduled </span>}
           <span>{standardDateMonthYear(date)}</span>
         </p>
-        <p className={`typography-labels-label-md-alt ${styles.title}`}>
+        <div className={`typography-labels-label-md-alt ${styles.title}`}>
           {title}
-        </p>
+        </div>
         <p className="typography-content-body-sm">{subtitle}</p>
       </div>
       <div className="typography-content-body-bold">

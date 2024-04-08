@@ -2,6 +2,7 @@
   "name": "consumer-experience",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@8.9.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,7 +10,7 @@
     "check-types": "tsc --noemit",
     "lint": "eslint --max-warnings=0 && pnpm check-types",
     "lint-staged": "pnpm run lint",
-    "test": "jest",
+    "test": "pnpm --filter @zinnia/* build && jest",
     "test:watch": "jest --watch",
     "storybook": "storybook dev -p 6007 --no-open",
     "build-storybook": "storybook build",

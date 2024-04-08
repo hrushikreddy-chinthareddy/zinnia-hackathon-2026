@@ -199,6 +199,70 @@ Margin values included in modules will override these. **/
   margin-bottom: var(--measure-dimension-gap-3xl, 2.5rem);
 }
 
+.mr-none {
+  margin-right: var(--measure-dimension-gap-none, 0);
+}
+
+.mr-xs {
+  margin-right: var(--measure-dimension-gap-xs, 0.125rem);
+}
+
+.mr-sm {
+  margin-right: var(--measure-dimension-gap-sm, 0.25rem);
+}
+
+.mr-md {
+  margin-right: var(--measure-dimension-gap-md, 0.5rem);
+}
+
+.mr-lg {
+  margin-right: var(--measure-dimension-gap-lg, 1rem);
+}
+
+.mr-xl {
+  margin-right: var(--measure-dimension-gap-xl, 1.5rem);
+}
+
+.mr-2xl {
+  margin-right: var(--measure-dimension-gap-2xl, 2rem);
+}
+
+.mr-3xl {
+  margin-right: var(--measure-dimension-gap-3xl, 2.5rem);
+}
+
+.ml-none {
+  margin-left: var(--measure-dimension-gap-none, 0);
+}
+
+.ml-xs {
+  margin-left: var(--measure-dimension-gap-xs, 0.125rem);
+}
+
+.ml-sm {
+  margin-left: var(--measure-dimension-gap-sm, 0.25rem);
+}
+
+.ml-md {
+  margin-left: var(--measure-dimension-gap-md, 0.5rem);
+}
+
+.ml-lg {
+  margin-left: var(--measure-dimension-gap-lg, 1rem);
+}
+
+.ml-xl {
+  margin-left: var(--measure-dimension-gap-xl, 1.5rem);
+}
+
+.ml-2xl {
+  margin-left: var(--measure-dimension-gap-2xl, 2rem);
+}
+
+.ml-3xl {
+  margin-left: var(--measure-dimension-gap-3xl, 2.5rem);
+}
+
 /*
 * PADDING
 * =======
@@ -447,7 +511,7 @@ Margin values included in modules will override these. **/
   padding-top: var(--measure-dimension-padding-none, 0);
 }
 
-/* 
+/*
  *bottom
  */
 

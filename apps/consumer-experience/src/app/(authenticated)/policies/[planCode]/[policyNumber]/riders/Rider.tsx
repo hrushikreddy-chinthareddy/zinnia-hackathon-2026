@@ -23,18 +23,27 @@ export const Rider = ({
   insured,
   status,
   title,
+  policyOwner,
 }: {
   elected: boolean;
   cost: number;
   description: string;
   effectiveDate: string;
-  insured: {
+  insured?: {
     firstName: string;
     lastName: string;
   };
   status?: Status;
   title: string;
+  policyOwner?: {
+    firstName: string;
+    lastName: string;
+  };
 }) => {
+  const insuredSameAsPolicyOwner =
+    insured?.firstName === policyOwner?.firstName &&
+    insured?.lastName === policyOwner?.lastName;
+
   return (
     <div className={styles.riderContainer}>
       <h3 className="typography-titles-subtitle">{title}</h3>
@@ -45,14 +54,16 @@ export const Rider = ({
       <div className={styles.riderDetails}>
         {elected && (
           <>
-            <FieldData Label={<Label>Insured</Label>}>
-              <span className="typography-content-body-sm mt-sm">
-                {fullName({
-                  firstName: insured.firstName,
-                  lastName: insured.lastName,
-                })}
-              </span>
-            </FieldData>
+            {!insuredSameAsPolicyOwner && (
+              <FieldData Label={<Label>Insured</Label>}>
+                <span className="typography-content-body-sm mt-sm">
+                  {fullName({
+                    firstName: insured?.firstName || '',
+                    lastName: insured?.lastName || '',
+                  })}
+                </span>
+              </FieldData>
+            )}
             <FieldData
               Label={
                 <Label

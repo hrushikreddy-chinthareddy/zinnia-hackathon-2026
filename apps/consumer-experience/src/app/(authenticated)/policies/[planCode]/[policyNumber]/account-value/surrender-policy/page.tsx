@@ -1,0 +1,108 @@
+import {
+  Icon,
+  IconType,
+  Label,
+  Popover,
+} from '@zinnia/bloom/internal/components';
+
+import { FieldData } from '@/components/field-data/FieldData';
+import { Footer } from '@/components/footer/Footer';
+import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
+import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
+import { InfoCard } from '@/components/info-card/InfoCard';
+import { AccountValue } from '@/components/policy-overview/AccountValue';
+import { StatusIconText } from '@/components/status-icon-text/StatusIconText';
+import { PolicyRequestInputs } from '@/types/policy';
+import { formatUSDollars } from '@/utils/currency';
+import { standardDateMonthYear } from '@/utils/dates';
+
+// TODO: update with real data
+const isEligible = false;
+
+const NET_SURRENDER_VALUE = 'Net surrender value';
+
+export default async function SurrenderPolicy({
+  params,
+}: {
+  params: PolicyRequestInputs;
+}) {
+  const { planCode, policyNumber } = params;
+
+  return (
+    <div className="container">
+      <HeaderBreadcrumb title="Surrender policy" />
+      <HeaderPolicyDetails planCode={planCode} policyNumber={policyNumber} />
+      <div className="card-container">
+        <InfoCard iconType={IconType.LIGHTBULB}>
+          <p>
+            <span className="typography-content-body-sm-bold">
+              Are you sure? Surrendering a policy means ending your coverage for
+              a lump sum payment.{' '}
+            </span>
+            That could mean losing important financial protection for your
+            beneficiaries. Canceling your policy may also have tax consequences.
+          </p>
+        </InfoCard>
+        <div className="card">
+          <StatusIconText
+            isEligible={isEligible}
+            showIcon
+            className="typography-content-body-bold mb-lg"
+          />
+          <div className="column-card">
+            <AccountValue
+              planCode={planCode}
+              policyNumber={policyNumber}
+              hideTicker={true}
+            />
+            <FieldData
+              Label={
+                <Label
+                  interactiveElements={[
+                    <Popover
+                      key={NET_SURRENDER_VALUE}
+                      title={NET_SURRENDER_VALUE}
+                      trigger={
+                        <Icon
+                          type={IconType.CIRCLE_INFO}
+                          color="var(--color-base-icon-icon-tooltip, #ff7500)"
+                          width={16}
+                          height={16}
+                        />
+                      }
+                    >
+                      <p>
+                        Your net surrender value=the current account value minus
+                        surrender charges, outstanding loans, and other fees.
+                        This number tells you how much you can expect to receive
+                        if you decide to surrender your policy and cancel your
+                        coverage.
+                      </p>
+                    </Popover>,
+                  ]}
+                >
+                  {NET_SURRENDER_VALUE}
+                </Label>
+              }
+            >
+              <p className="typography-content-value">
+                {formatUSDollars(250439.23)}
+              </p>
+            </FieldData>
+          </div>
+        </div>
+      </div>
+      <p
+        className="typography-content-body-bold"
+        style={{ color: 'var(--Base-Text-text-primary, #212121)' }}
+      >
+        Call {/* TODO: create function to format this */}
+        <a href={`tel:+${18002322222}`} className="typography-nav-links-inline">
+          1-800-232-2222
+        </a>{' '}
+        to surrender your policy.
+      </p>
+      <Footer />
+    </div>
+  );
+}

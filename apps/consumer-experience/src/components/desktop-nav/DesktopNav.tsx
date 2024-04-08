@@ -5,12 +5,15 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
 import LogoImage from '@/app/styles/everly/everly-logo.svg';
+import useMock from '@/hooks/use-mock';
+import { isProd } from '@/utils';
 
 import styles from './DesktopNav.module.css';
 import { DevMenu } from '../dev-menu/DevMenu';
 
 export function DesktopNav() {
   const params = useParams<{ planCode: string; policyNumber: string }>();
+  const { isMockOn } = useMock();
 
   return (
     <nav className={styles.container}>
@@ -19,6 +22,17 @@ export function DesktopNav() {
         <Link href="/" className="justify-self-start">
           <LogoImage alt="Company Logo" className={styles.logo}></LogoImage>
         </Link>
+        {!isProd() && isMockOn && (
+          <span
+            className={styles.navItem}
+            style={{
+              color: 'var(--color-status-text-status-error-text',
+              fontWeight: 'bold',
+            }}
+          >
+            Mock is on
+          </span>
+        )}
       </div>
 
       <div className={`${styles.navItemsContainer} typography-nav-links-sm`}>
