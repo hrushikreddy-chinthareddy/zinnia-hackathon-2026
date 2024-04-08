@@ -10,7 +10,7 @@
     "check-types": "tsc --noemit",
     "lint": "eslint --max-warnings=0 && pnpm check-types",
     "lint-staged": "pnpm run lint",
-    "test": "jest",
+    "test": "pnpm --filter @zinnia/* build && jest",
     "test:watch": "jest --watch",
     "storybook": "storybook dev -p 6007 --no-open",
     "build-storybook": "storybook build",
