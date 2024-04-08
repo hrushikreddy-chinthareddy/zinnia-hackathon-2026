@@ -5,6 +5,7 @@ import {
   BankAccount,
   Email,
   Frequency,
+  LoanValues,
   MetricsType,
   PartyRole,
   PartyType,
@@ -12,6 +13,7 @@ import {
   PolicyStatus,
   Reason,
   TransactionStatus,
+  WithdrawalValues,
 } from '@zinnia/api-types/types/sor';
 
 import { BankDetail } from '@/components/person-data/types';
@@ -185,4 +187,27 @@ export interface Metric {
   sum: number;
   count: number;
   end: number;
+}
+
+export interface AccountValueSummary {
+  fundCount?: number;
+  hasWithdrawalEligibility?: boolean;
+  hasLoanEligibility?: boolean;
+}
+
+export interface PolicyFund {
+  fundName?: string | null;
+  allocationPercentage?: number | null;
+  totalFundValue?: number | null;
+  fundAccountType?: string | null;
+}
+
+export interface PolicyLoans extends LoanValues {
+  isEligible?: boolean;
+}
+
+export interface PolicyWithdrawals extends WithdrawalValues {
+  isEligibleForWithdrawals: boolean;
+  annualWithdrawalsTaken: number | null;
+  annualWithdrawalsRemaining: number;
 }

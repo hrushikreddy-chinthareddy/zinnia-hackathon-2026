@@ -15,6 +15,7 @@ import {
   ApiResponse,
   ServerApi,
   documentApiBaseUrl,
+  isMockAllRequestEnabled,
   isMockDocumentRequestEnabled,
   isMockPaymentHistoryRequestEnabled,
   isMockPolicyMetricsRequestEnabled,
@@ -36,6 +37,10 @@ import {
   transformPolicyforPaymentDetails,
   transformPaymentHistory,
   transformPolicyMetricsForAccountValueChange,
+  transformPolicyForFundDetails,
+  transformPolicyForWithdrawals,
+  transformPolicyForLoans,
+  transformPolicyForAccountValueSummary,
 } from '@/services/policy/transformers';
 import {
   DocumentApiRequestInputs,
@@ -59,6 +64,8 @@ import {
   PendingPremiumTransactionType,
   PaymentHistoryTransaction,
   PolicyMetricsRequestInputs,
+  AccountValueSummary,
+  PolicyFund,
 } from '@/types/policy';
 
 import { mockDocumentsResponse } from '../mocks/documents';
@@ -663,6 +670,85 @@ export const getPolicyDocuments = async (
         message: 'Something went wrong',
         status: 400,
         name: 'getPolicyOverviewData Error',
+      },
+    };
+  }
+};
+
+export const getPolicyFundDetails = async (
+  policyInputs: PolicyRequestInputs
+): Promise<ApiResponse<PolicyFund[]>> => {
+  if (isMockPolicyOverviewRequestEnabled()) {
+    const transformedResults =
+      transformPolicyForFundDetails(mockPolicyResponse);
+
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  }
+
+  try {
+    const policy = await getPolicyByPlanCodeAndId(policyInputs);
+    const transformedResults = transformPolicyForFundDetails(policy);
+
+    if (!transformedResults) {
+      return {
+        data: null,
+        error: {
+          message: 'Something went wrong',
+          status: 500,
+          name: 'getPolicyFundDetails Error',
+        },
+      };
+    }
+
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 500,
+        name: 'getPolicyFundDetails Error',
+      },
+    };
+  }
+};
+
+export const getPolicyAccountValueSummary = async (
+  policyInputs: PolicyRequestInputs
+): Promise<ApiResponse<AccountValueSummary>> => {
+  if (isMockPolicyOverviewRequestEnabled() || isMockAllRequestEnabled()) {
+    const transformedResults =
+      transformPolicyForAccountValueSummary(mockPolicyResponse);
+
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  }
+
+  try {
+    const policy = await getPolicyByPlanCodeAndId(policyInputs);
+    const transformedResults = transformPolicyForAccountValueSummary(policy);
+
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 500,
+        name: 'getPolicyAccountValueSummary Error',
       },
     };
   }

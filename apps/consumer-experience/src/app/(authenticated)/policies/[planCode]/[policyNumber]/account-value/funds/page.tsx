@@ -1,27 +1,17 @@
 import { Label } from '@zinnia/bloom/internal/components';
 import clsx from 'clsx';
 
+import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
+import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { AccountValue } from '@/components/policy-overview/AccountValue';
+import { getPolicyFundDetails } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 
 import styles from './Funds.module.css';
-
-const fundAllocations = [
-  {
-    name: 'Security Benefit Fixed UL Fund ',
-    amount: 250343.12,
-    allocation: 50,
-  },
-  {
-    name: 'Security Benefit Fixed UL Fund ',
-    amount: 250343.12,
-    allocation: 50,
-  },
-];
 
 export default async function AccountValuePage({
   params,
@@ -29,6 +19,33 @@ export default async function AccountValuePage({
   params: PolicyRequestInputs;
 }) {
   const { planCode, policyNumber } = params;
+  const { data, error } = await getPolicyFundDetails({
+    planCode,
+    policyNumber,
+  });
+
+  const allocationData = () => {
+    if (error || !data) {
+      return <NoDataAvailable />;
+    }
+
+    return data.map(allocation => {
+      return (
+        <div className={styles.item} key={allocation.fundName}>
+          <div className="stacked-items">
+            <Label>{allocation.fundName}</Label>
+            <p className="typography-content-body-sm">
+              {formatUSDollars(allocation.totalFundValue)}
+            </p>
+          </div>
+          <div className="stacked-items">
+            <Label>Allocation</Label>
+            <p className="typography-content-body-sm">{`${allocation.allocationPercentage}%`}</p>
+          </div>
+        </div>
+      );
+    });
+  };
 
   return (
     <div className="container">
@@ -38,24 +55,9 @@ export default async function AccountValuePage({
         <AccountValue
           planCode={planCode}
           policyNumber={policyNumber}
-          className={clsx({ 'pb-2xl': fundAllocations.length })}
+          className={clsx({ 'pb-2xl': data?.length })}
         />
-        {fundAllocations.map(allocation => {
-          return (
-            <div className={styles.item} key={allocation.name}>
-              <div className="stacked-items">
-                <Label>Security Benefit Fixed UL Fund </Label>
-                <p className="typography-content-body-sm">
-                  {formatUSDollars(allocation.amount)}
-                </p>
-              </div>
-              <div className="stacked-items">
-                <Label>Allocation</Label>
-                <p className="typography-content-body-sm">{`${allocation.allocation}%`}</p>
-              </div>
-            </div>
-          );
-        })}
+        {allocationData()}
       </div>
       <Footer />
     </div>

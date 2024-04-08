@@ -1,3 +1,5 @@
+import { isNullEmptyOrUndefined } from './data';
+
 export const DEFAULT_ERROR_STRING = '-';
 export const DEFAULT_UNAVAILABLE_STRING =
   'This data is unavailable at this time. Please try again later.';
@@ -33,4 +35,22 @@ export const formatSsn = (ssn?: string): string => {
 
   // Append the last 4 digits to the static string
   return last4Digits;
+};
+
+export const pluralize = (
+  quantity?: number | null,
+  word?: string | null,
+  wordOnly?: boolean
+): string => {
+  if (!word || isNullEmptyOrUndefined(quantity)) {
+    return DEFAULT_ERROR_STRING;
+  }
+
+  const pluralizedVal = quantity === 1 ? word : `${word}s`;
+
+  if (wordOnly) {
+    return pluralizedVal;
+  }
+
+  return `${quantity} ${pluralizedVal}`;
 };

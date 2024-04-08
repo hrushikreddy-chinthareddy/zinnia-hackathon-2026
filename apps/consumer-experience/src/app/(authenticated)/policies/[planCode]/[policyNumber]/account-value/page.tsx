@@ -9,7 +9,9 @@ import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrum
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 import { AccountValue } from '@/components/policy-overview/AccountValue';
 import { StatusIconText } from '@/components/status-icon-text/StatusIconText';
+import { getPolicyAccountValueSummary } from '@/services/policy';
 import { PolicyRequestInputs } from '@/types/policy';
+import { pluralize } from '@/utils/strings';
 
 const historyItems = [
   {
@@ -31,6 +33,12 @@ export default async function AccountValuePage({
   params: PolicyRequestInputs;
 }) {
   const { planCode, policyNumber } = params;
+
+  // TODO: figure out what should happen on error
+  const { data, error } = await getPolicyAccountValueSummary({
+    planCode,
+    policyNumber,
+  });
 
   const allHistoryItems = () => {
     return historyItems.map((item, index) => {
@@ -84,7 +92,7 @@ export default async function AccountValuePage({
                   className="typography-content-caption"
                   style={{ color: 'var(--color-base-text-text-secondary)' }}
                 >
-                  1 Fund
+                  {`${pluralize(data?.fundCount, 'fund')}`}
                 </span>
               </div>
             ),
@@ -100,7 +108,7 @@ export default async function AccountValuePage({
                   Make a withdrawal
                 </span>
                 <StatusIconText
-                  isEligible
+                  isEligible={data?.hasWithdrawalEligibility}
                   className="typography-content-caption"
                 />
               </div>
@@ -117,7 +125,7 @@ export default async function AccountValuePage({
                   Take a loan
                 </span>
                 <StatusIconText
-                  isEligible={false}
+                  isEligible={data?.hasLoanEligibility}
                   className="typography-content-caption"
                 />
               </div>
