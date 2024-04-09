@@ -20,13 +20,13 @@ const policyDisplayText: { [key in PolicyStatus]: string } = {
   [PolicyStatus.PENDINGISSUED]: 'active',
   [PolicyStatus.PENDINGLAPSE]: 'pending lapse',
   [PolicyStatus.LAPSE]: 'lapsed',
+  [PolicyStatus.SURRENDERED]: 'surrendered',
   // TODO: what is the display for this one?
   [PolicyStatus.NOTISSUED]: '',
   [PolicyStatus.CANCELEDNOPREMIUM]: '',
   [PolicyStatus.CANCELEDFREELOOK]: '',
   [PolicyStatus.TERMINATED]: '',
   [PolicyStatus.MATURED]: '',
-  [PolicyStatus.SURRENDERED]: '',
   [PolicyStatus.LIVINGCLAIMPENDING]: '',
   [PolicyStatus.DEATHCLAIMPENDING]: '',
   [PolicyStatus.DEATHCLAIMPAID]: '',
@@ -51,15 +51,13 @@ export const HeaderPolicyDetails = async ({
 
   const statusStyle = () => {
     switch (policyStatus) {
-      // TODO: how to categorize this one?
-      // case PolicyStatus.NotIssued:
-      //   return 'status.notIssued';
       case PolicyStatus.PENDINGISSUED:
       case PolicyStatus.ACTIVE:
         return styles.success;
       case PolicyStatus.PENDINGLAPSE:
         return styles.warning;
       case PolicyStatus.LAPSE:
+      case PolicyStatus.SURRENDERED:
         return styles.error;
       default:
         return '';

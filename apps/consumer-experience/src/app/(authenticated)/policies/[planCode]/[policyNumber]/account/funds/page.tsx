@@ -1,13 +1,12 @@
 import { Label } from '@zinnia/bloom/internal/components';
 import clsx from 'clsx';
 
+import { AccountValue } from '@/components/account-value/AccountValue';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
-import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
-import { AccountValue } from '@/components/policy-overview/AccountValue';
 import { getPolicyFundDetails } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';

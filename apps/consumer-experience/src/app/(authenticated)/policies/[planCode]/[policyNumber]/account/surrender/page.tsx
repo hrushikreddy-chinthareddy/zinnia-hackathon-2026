@@ -5,6 +5,7 @@ import {
   Popover,
 } from '@zinnia/bloom/internal/components';
 
+import { AccountValue } from '@/components/account-value/AccountValue';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { FieldData } from '@/components/field-data/FieldData';
 import { Footer } from '@/components/footer/Footer';
@@ -12,7 +13,6 @@ import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrum
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 import { InfoCard } from '@/components/info-card/InfoCard';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
-import { AccountValue } from '@/components/policy-overview/AccountValue';
 import { getPolicySurrenderDetails } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';

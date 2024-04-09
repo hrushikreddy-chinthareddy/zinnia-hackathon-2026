@@ -1,14 +1,13 @@
 import { Icon, IconType, Popover } from '@zinnia/bloom/internal/components';
 import { toSentenceCase } from '@zinnia/utils';
 
+import { AccountValue } from '@/components/account-value/AccountValue';
 import { CardInsertHistory } from '@/components/card-list-history/CardInsertHistory';
 import { CardListHistory } from '@/components/card-list-history/CardListHistory';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
-import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
-import { AccountValue } from '@/components/policy-overview/AccountValue';
 import { StatusIconText } from '@/components/status-icon-text/StatusIconText';
 import { getPolicyAccountValueSummary } from '@/services/policy';
 import { PolicyRequestInputs } from '@/types/policy';

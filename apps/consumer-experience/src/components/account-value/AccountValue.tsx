@@ -6,8 +6,8 @@ import {
 } from '@zinnia/bloom/internal/components';
 import { HTMLAttributes } from 'react';
 
+import { AccountValuePopover } from '@/components/account-value/AccountValuePopover';
 import { FieldData } from '@/components/field-data/FieldData';
-import { AccountValuePopover } from '@/components/policy-overview/AccountValuePopover';
 import { getPolicyAccountValueWith30DayChange } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
@@ -15,7 +15,7 @@ import { isNullEmptyOrUndefined } from '@/utils/data';
 import { dateMonthWithTimeEST } from '@/utils/dates';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
-import styles from './PolicyOverview.module.css';
+import styles from '../policy-overview/PolicyOverview.module.css';
 
 const ACCOUNT_VALUE = 'Account value';
 
