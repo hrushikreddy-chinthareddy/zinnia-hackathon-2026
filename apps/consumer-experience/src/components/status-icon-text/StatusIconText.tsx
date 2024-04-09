@@ -7,7 +7,7 @@ import { isNullEmptyOrUndefined } from '@/utils/data';
 import styles from './StatusIconText.module.css';
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
-  isEligible?: boolean;
+  isEligible?: boolean | null;
   showIcon?: boolean;
 }
 

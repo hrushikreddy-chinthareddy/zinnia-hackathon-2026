@@ -11,7 +11,7 @@ import {
   Party,
   FundAllocation,
 } from '@zinnia/api-types/types/sor';
-import { DEFAULT_ERROR_STRING, policyOwner } from '@zinnia/utils';
+import { policyOwner } from '@zinnia/utils';
 
 import { BankDetail } from '@/components/person-data/types';
 import {
@@ -34,9 +34,14 @@ import {
   PolicyWithdrawals,
 } from '@/types/policy';
 import { PolicyRider } from '@/types/riders';
-import { bankAccountNumberSanitizer, getRiderDescription } from '@/utils/data';
-
-import { determineWithdrawalsEligibility } from './utils';
+import {
+  allowedAnnualWithdrawals,
+  bankAccountNumberSanitizer,
+  isPolicyEligibleForWithdrawals,
+  policyWithdrawalsRemaining,
+  getRiderDescription,
+} from '@/utils/data';
+import { DEFAULT_ERROR_STRING } from '@/utils/strings';
 
 const allBeneficiaries = (policy: Policy) => {
   const benesWithRoles = [] as Beneficiary[];
@@ -280,9 +285,24 @@ export const transformPolicyForWithdrawals = (
     return null;
   }
 
+  const annualWithdrawalsAllowed = allowedAnnualWithdrawals(policy);
+  const withdrawalsTaken =
+    policy.withdrawalValues?.totalYearToDateWithdrawalTaken;
+
   return {
     ...policy.withdrawalValues,
-    ...determineWithdrawalsEligibility(policy),
+    isEligibleForWithdrawals: isPolicyEligibleForWithdrawals({
+      allowedWithdrawals: annualWithdrawalsAllowed,
+      withdrawalsTaken,
+    }),
+    annualWithdrawalsTaken:
+      policy.withdrawalValues?.totalYearToDateWithdrawalTaken,
+    annualWithdrawalsRemaining: policyWithdrawalsRemaining({
+      allowedWithdrawals: annualWithdrawalsAllowed,
+      withdrawalsTaken,
+    }),
+    nextMonthiversaryDate: policy.policyDates?.nextMonthiversaryDate,
+    nextAnniversaryDate: policy.policyDates?.nextAnniversaryDate,
   };
 };
 
@@ -311,7 +331,7 @@ export const transformPolicyForAccountValueSummary = (
     fundCount: fundDetails?.length,
     hasWithdrawalEligibility: withdrawalDetails
       ? withdrawalDetails.isEligibleForWithdrawals
-      : undefined,
+      : null,
     hasLoanEligibility: loanValues?.isEligible,
   };
 };

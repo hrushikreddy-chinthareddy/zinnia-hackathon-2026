@@ -191,8 +191,8 @@ export interface Metric {
 
 export interface AccountValueSummary {
   fundCount?: number;
-  hasWithdrawalEligibility?: boolean;
-  hasLoanEligibility?: boolean;
+  hasWithdrawalEligibility?: boolean | null;
+  hasLoanEligibility?: boolean | null;
 }
 
 export interface PolicyFund {
@@ -207,7 +207,9 @@ export interface PolicyLoans extends LoanValues {
 }
 
 export interface PolicyWithdrawals extends WithdrawalValues {
-  isEligibleForWithdrawals: boolean;
-  annualWithdrawalsTaken: number | null;
-  annualWithdrawalsRemaining: number;
+  isEligibleForWithdrawals?: boolean | null;
+  annualWithdrawalsTaken?: number | null;
+  annualWithdrawalsRemaining?: number | null;
+  nextMonthiversaryDate?: string;
+  nextAnniversaryDate?: string;
 }

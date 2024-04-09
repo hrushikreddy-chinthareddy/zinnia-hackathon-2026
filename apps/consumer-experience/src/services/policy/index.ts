@@ -41,6 +41,7 @@ import {
   transformPolicyForFundDetails,
   transformPolicyForAccountValueSummary,
   transformRiders,
+  transformPolicyForWithdrawals,
 } from '@/services/policy/transformers';
 import {
   DocumentApiRequestInputs,
@@ -721,10 +722,44 @@ export const getPolicyFundDetails = async (
   }
 };
 
+export const getPolicyWithdrawalDetails = async (
+  policyInputs: PolicyRequestInputs
+): Promise<ApiResponse<any>> => {
+  if (isMockPolicyOverviewRequestEnabled()) {
+    const transformedResults =
+      transformPolicyForWithdrawals(mockPolicyResponse);
+
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  }
+
+  try {
+    const policy = await getPolicyByPlanCodeAndId(policyInputs);
+    const transformedResults = transformPolicyForWithdrawals(policy);
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  } catch (error) {
+    console.log(error);
+
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 500,
+        name: 'getPolicyAccountValueSummary Error',
+      },
+    };
+  }
+};
+
 export const getPolicyAccountValueSummary = async (
   policyInputs: PolicyRequestInputs
 ): Promise<ApiResponse<AccountValueSummary>> => {
-  if (isMockPolicyOverviewRequestEnabled() || isMockAllRequestEnabled()) {
+  if (isMockPolicyOverviewRequestEnabled()) {
     const transformedResults =
       transformPolicyForAccountValueSummary(mockPolicyResponse);
 

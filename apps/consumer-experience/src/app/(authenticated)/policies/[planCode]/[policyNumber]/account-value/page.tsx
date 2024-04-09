@@ -80,7 +80,7 @@ export default async function AccountValuePage({
 
   return (
     <div className="container">
-      <HeaderBreadcrumb title="Account value" />
+      <HeaderBreadcrumb title="Account Value" />
       <HeaderPolicyDetails planCode={planCode} policyNumber={policyNumber} />
       <ClickableCardContainer
         listItems={[
