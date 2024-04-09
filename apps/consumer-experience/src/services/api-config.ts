@@ -73,3 +73,11 @@ export const isMockDocumentRequestEnabled = () => {
 
   return getMockParam()?.includes('documents') || isMockAllRequestEnabled();
 };
+
+export const isMockRidersRequestEnabled = () => {
+  if (isProd()) {
+    return false;
+  }
+
+  return getMockParam()?.includes('riders') || isMockAllRequestEnabled();
+};

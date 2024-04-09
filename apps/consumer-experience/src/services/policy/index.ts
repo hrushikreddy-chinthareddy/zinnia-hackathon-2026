@@ -20,6 +20,7 @@ import {
   isMockPaymentHistoryRequestEnabled,
   isMockPolicyMetricsRequestEnabled,
   isMockPolicyOverviewRequestEnabled,
+  isMockRidersRequestEnabled,
   isMockSearchRequestEnabled,
   policyApiBaseUrl,
 } from '@/services';
@@ -38,9 +39,8 @@ import {
   transformPaymentHistory,
   transformPolicyMetricsForAccountValueChange,
   transformPolicyForFundDetails,
-  transformPolicyForWithdrawals,
-  transformPolicyForLoans,
   transformPolicyForAccountValueSummary,
+  transformRiders,
 } from '@/services/policy/transformers';
 import {
   DocumentApiRequestInputs,
@@ -67,6 +67,7 @@ import {
   AccountValueSummary,
   PolicyFund,
 } from '@/types/policy';
+import { PolicyRider } from '@/types/riders';
 
 import { mockDocumentsResponse } from '../mocks/documents';
 import { MockMetricsResponse } from '../mocks/metrics';
@@ -749,6 +750,37 @@ export const getPolicyAccountValueSummary = async (
         message: 'Something went wrong',
         status: 500,
         name: 'getPolicyAccountValueSummary Error',
+      },
+    };
+  }
+};
+
+export const getRiders = async (
+  options: PolicyRequestInputs
+): Promise<ApiResponse<PolicyRider[]>> => {
+  if (isMockRidersRequestEnabled()) {
+    const transformedResults = transformRiders(mockPolicyResponse);
+
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  }
+
+  try {
+    const response = await getPolicyByPlanCodeAndId(options);
+    const transformedResults = transformRiders(response);
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  } catch (error) {
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 400,
+        name: 'getRiders Error',
       },
     };
   }

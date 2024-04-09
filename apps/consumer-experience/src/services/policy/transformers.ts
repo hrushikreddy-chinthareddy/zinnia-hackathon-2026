@@ -9,7 +9,6 @@ import {
   MetricsType,
   SystematicProgram,
   Party,
-  Fund,
   FundAllocation,
 } from '@zinnia/api-types/types/sor';
 import { DEFAULT_ERROR_STRING, policyOwner } from '@zinnia/utils';
@@ -34,7 +33,8 @@ import {
   AccountValueSummary,
   PolicyWithdrawals,
 } from '@/types/policy';
-import { bankAccountNumberSanitizer } from '@/utils/data';
+import { PolicyRider } from '@/types/riders';
+import { bankAccountNumberSanitizer, getRiderDescription } from '@/utils/data';
 
 import { determineWithdrawalsEligibility } from './utils';
 
@@ -386,4 +386,41 @@ export const transformPaymentHistory = (
   }
 
   return paymentHistoryObject;
+};
+
+export const transformRiders = (policy: Policy): PolicyRider[] | null => {
+  const { riders } = policy;
+
+  if (!riders || !riders.length) {
+    return null;
+  }
+
+  const ownerInfo = policyOwner(policy);
+  const insuredPartyFromRoles = policy.partyRoles?.find(
+    party => party.partyRole?.toLowerCase() === PartyRole.INSURED.toLowerCase()
+  );
+  const insuredParty = policy.parties?.find(
+    party => party.partyId === insuredPartyFromRoles?.partyId
+  );
+
+  return riders.map(rider => {
+    const riderInsured = rider.riderParticipant?.find(
+      party => party.insuredId === insuredPartyFromRoles?.partyId
+    );
+    return {
+      riderCode: rider.riderCode,
+      // TODO: DATA - {rider.terminalRiderPaymentAmount}
+      cost: rider.terminalRiderPaymentAmount,
+      description: getRiderDescription(rider.riderCode || ''),
+      effectiveDate: rider.effectiveDate,
+      isElected: rider.riderElected?.toLowerCase() === 'elected',
+      isOwner: ownerInfo?.partyId === riderInsured?.insuredId,
+      title: rider.riderName,
+      status: rider.status,
+      insured: {
+        firstName: insuredParty?.firstName,
+        lastName: insuredParty?.lastName,
+      },
+    };
+  });
 };
