@@ -64,7 +64,7 @@ export default async function Riders({
         <>
           {!!electedRiders?.length && (
             <div className="card-container">
-              <h2>My Riders</h2>
+              <h2 className="pl-2xl">My Riders</h2>
               {electedRiders?.map(rider => (
                 <Rider key={rider.riderCode} {...rider} />
               ))}
@@ -85,11 +85,13 @@ export default async function Riders({
           )}
           {!!additionalRiders?.length && (
             <div className="card-container">
-              <h2>Additional Riders</h2>
-              <p className="typography-content-body">
-                Looks like there are additional riders for your policy, but
-                they're not covering you—yet.
-              </p>
+              <div className="pl-2xl">
+                <h2>Additional Riders</h2>
+                <p className="typography-content-body">
+                  Looks like there are additional riders for your policy, but
+                  they're not covering you—yet.
+                </p>
+              </div>
               {additionalRiders?.map(rider => (
                 <Rider key={rider.riderCode} {...rider} />
               ))}
