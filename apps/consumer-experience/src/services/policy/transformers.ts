@@ -32,6 +32,7 @@ import {
   PolicyLoans,
   AccountValueSummary,
   PolicyWithdrawals,
+  PolicySurrender,
 } from '@/types/policy';
 import { PolicyRider } from '@/types/riders';
 import {
@@ -288,9 +289,16 @@ export const transformPolicyForWithdrawals = (
   const annualWithdrawalsAllowed = allowedAnnualWithdrawals(policy);
   const withdrawalsTaken =
     policy.withdrawalValues?.totalYearToDateWithdrawalTaken;
+  const withdrawalValues = policy.withdrawalValues || {};
 
   return {
     ...policy.withdrawalValues,
+    withdrawalAllowedStartDate: withdrawalValues.withdrawalAllowedStartDate,
+    maximumWithdrawalAmount: withdrawalValues.maximumWithdrawalAmount,
+    numberOfWithdrawal: withdrawalValues.numberOfWithdrawal,
+    totalWithdrawalAmount: withdrawalValues.totalWithdrawalAmount,
+    annualWithdrawalLimitNoCoverageDecrease:
+      withdrawalValues.annualWithdrawalLimitNoCoverageDecrease,
     isEligibleForWithdrawals: isPolicyEligibleForWithdrawals({
       allowedWithdrawals: annualWithdrawalsAllowed,
       withdrawalsTaken,
@@ -313,10 +321,19 @@ export const transformPolicyForLoans = (policy: Policy): PolicyLoans => {
     policy?.accountValues?.beginningAccountValue > 0;
 
   return {
-    ...(policy.loanValues || {}),
+    totalLoanBalance: policy.loanValues?.totalLoanBalance,
+    maximumLoanAmount: policy.loanValues?.maximumLoanAmount,
     // Return either the boolean OR undefined since there is a difference between
     // inelgible and data doesn't exist
     isEligible: policy && policy.accountValues ? isEligible : undefined,
+  };
+};
+
+export const transformPolicyForSurrender = (
+  policy: Policy
+): PolicySurrender => {
+  return {
+    surrenderValue: policy.accountValues?.surrenderValue,
   };
 };
 

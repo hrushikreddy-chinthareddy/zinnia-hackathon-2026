@@ -15,7 +15,6 @@ import {
   ApiResponse,
   ServerApi,
   documentApiBaseUrl,
-  isMockAllRequestEnabled,
   isMockDocumentRequestEnabled,
   isMockPaymentHistoryRequestEnabled,
   isMockPolicyMetricsRequestEnabled,
@@ -42,6 +41,8 @@ import {
   transformPolicyForAccountValueSummary,
   transformRiders,
   transformPolicyForWithdrawals,
+  transformPolicyForLoans,
+  transformPolicyForSurrender,
 } from '@/services/policy/transformers';
 import {
   DocumentApiRequestInputs,
@@ -67,6 +68,9 @@ import {
   PolicyMetricsRequestInputs,
   AccountValueSummary,
   PolicyFund,
+  PolicyWithdrawals,
+  PolicyLoans,
+  PolicySurrender,
 } from '@/types/policy';
 import { PolicyRider } from '@/types/riders';
 
@@ -722,9 +726,43 @@ export const getPolicyFundDetails = async (
   }
 };
 
+export const getPolicySurrenderDetails = async (
+  policyInputs: PolicyRequestInputs
+): Promise<ApiResponse<PolicySurrender>> => {
+  if (isMockPolicyOverviewRequestEnabled()) {
+    const transformedResults = transformPolicyForSurrender(mockPolicyResponse);
+
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  }
+
+  try {
+    const policy = await getPolicyByPlanCodeAndId(policyInputs);
+    const transformedResults = transformPolicyForSurrender(policy);
+
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  } catch (error) {
+    console.log(error);
+
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 500,
+        name: 'getPolicySurrenderDetails Error',
+      },
+    };
+  }
+};
+
 export const getPolicyWithdrawalDetails = async (
   policyInputs: PolicyRequestInputs
-): Promise<ApiResponse<any>> => {
+): Promise<ApiResponse<PolicyWithdrawals>> => {
   if (isMockPolicyOverviewRequestEnabled()) {
     const transformedResults =
       transformPolicyForWithdrawals(mockPolicyResponse);
@@ -738,6 +776,7 @@ export const getPolicyWithdrawalDetails = async (
   try {
     const policy = await getPolicyByPlanCodeAndId(policyInputs);
     const transformedResults = transformPolicyForWithdrawals(policy);
+
     return {
       data: transformedResults,
       error: null,
@@ -750,7 +789,7 @@ export const getPolicyWithdrawalDetails = async (
       error: {
         message: 'Something went wrong',
         status: 500,
-        name: 'getPolicyAccountValueSummary Error',
+        name: 'getPolicyWithdrawalDetails Error',
       },
     };
   }
@@ -772,6 +811,39 @@ export const getPolicyAccountValueSummary = async (
   try {
     const policy = await getPolicyByPlanCodeAndId(policyInputs);
     const transformedResults = transformPolicyForAccountValueSummary(policy);
+
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 500,
+        name: 'getPolicyAccountValueSummary Error',
+      },
+    };
+  }
+};
+
+export const getPolicyLoanDetails = async (
+  policyInputs: PolicyRequestInputs
+): Promise<ApiResponse<PolicyLoans>> => {
+  if (isMockPolicyOverviewRequestEnabled()) {
+    const transformedResults = transformPolicyForLoans(mockPolicyResponse);
+
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  }
+
+  try {
+    const policy = await getPolicyByPlanCodeAndId(policyInputs);
+    const transformedResults = transformPolicyForLoans(policy);
 
     return {
       data: transformedResults,

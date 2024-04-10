@@ -2,6 +2,8 @@ import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
+
+import { numberWithOrdinal } from './numbers';
 export const DEFAULT_DATE_FORMAT = 'M/D/YYYY';
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -45,4 +47,14 @@ export const convertKebabedDateString = (date: string | undefined): string => {
     return date;
   }
   return dayjs(date, 'MM-DD-YYYY').format(DEFAULT_DATE_FORMAT);
+};
+
+export const dayOfMonthWithOrdinal = (
+  date: string | undefined | null
+): string => {
+  if (date === '' || date == null || !dayjs(date).isValid()) {
+    return DEFAULT_ERROR_STRING;
+  }
+
+  return numberWithOrdinal(dayjs(date).get('date'));
 };

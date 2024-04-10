@@ -5,7 +5,6 @@ import {
   BankAccount,
   Email,
   Frequency,
-  LoanValues,
   MetricsType,
   PartyRole,
   PartyType,
@@ -13,7 +12,6 @@ import {
   PolicyStatus,
   Reason,
   TransactionStatus,
-  WithdrawalValues,
 } from '@zinnia/api-types/types/sor';
 
 import { BankDetail } from '@/components/person-data/types';
@@ -202,14 +200,25 @@ export interface PolicyFund {
   fundAccountType?: string | null;
 }
 
-export interface PolicyLoans extends LoanValues {
+export interface PolicyLoans {
   isEligible?: boolean;
+  totalLoanBalance?: number | null;
+  maximumLoanAmount?: number | null;
 }
 
-export interface PolicyWithdrawals extends WithdrawalValues {
+export interface PolicySurrender {
+  surrenderValue?: number | null;
+}
+
+export interface PolicyWithdrawals {
   isEligibleForWithdrawals?: boolean | null;
   annualWithdrawalsTaken?: number | null;
   annualWithdrawalsRemaining?: number | null;
   nextMonthiversaryDate?: string;
   nextAnniversaryDate?: string;
+  withdrawalAllowedStartDate?: string | null;
+  maximumWithdrawalAmount?: number | null;
+  numberOfWithdrawal?: number | null;
+  totalWithdrawalAmount?: number | null;
+  annualWithdrawalLimitNoCoverageDecrease?: number | null;
 }

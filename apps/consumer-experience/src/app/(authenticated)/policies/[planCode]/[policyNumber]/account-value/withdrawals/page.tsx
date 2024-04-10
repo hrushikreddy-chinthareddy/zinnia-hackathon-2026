@@ -4,7 +4,6 @@ import {
   Label,
   Popover,
 } from '@zinnia/bloom/internal/components';
-import dayjs from 'dayjs';
 
 import { FieldData } from '@/components/field-data/FieldData';
 import { Footer } from '@/components/footer/Footer';
@@ -17,9 +16,8 @@ import { getPolicyWithdrawalDetails } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined } from '@/utils/data';
-import { standardDateMonthYear } from '@/utils/dates';
-import { numberWithOrdinal } from '@/utils/numbers';
-import { pluralize } from '@/utils/strings';
+import { dayOfMonthWithOrdinal, standardDateMonthYear } from '@/utils/dates';
+import { DEFAULT_UNAVAILABLE_STRING, pluralize } from '@/utils/strings';
 
 const AVAILBLE_TO_WITHDRAW = 'Available to withdraw';
 const ALL_TIME_WITHDRAWALS = 'All-time withdrawals';
@@ -45,7 +43,7 @@ export default async function Withdrawals({
 
   const withdrawalsData = () => {
     if (error || !data) {
-      return <NoDataAvailable />;
+      return <NoDataAvailable message={DEFAULT_UNAVAILABLE_STRING} />;
     }
 
     return (
@@ -99,7 +97,7 @@ export default async function Withdrawals({
                           {`Withdrawals have consequences. Withdrawing the full
                   amount can surrender the policy, if you don’t make a
                   payment by the next monthaversary. (Your policy’s
-                  monthaversary happens every month on the ${numberWithOrdinal(dayjs(data.nextMonthiversaryDate).get('date'))}.)`}
+                  monthaversary happens every month on the ${dayOfMonthWithOrdinal(data.nextMonthiversaryDate)}.)`}
                         </p>
                         <p>
                           Depending on the amount, a partial withdrawal can
@@ -114,7 +112,7 @@ export default async function Withdrawals({
               }
             >
               <p className="typography-content-value">
-                {formatUSDollars(data.maxWithdrawalAmount)}
+                {formatUSDollars(data.maximumWithdrawalAmount)}
               </p>
             </FieldData>
 
@@ -149,10 +147,7 @@ export default async function Withdrawals({
                 </Label>
               }
             >
-              <p className="typography-content-value">
-                WHAT IS THIS VALUE??
-                {/* {formatUSDollars(data.maxWithdrawalAmount)} */}
-              </p>
+              <p className="typography-content-value">WHAT IS THIS VALUE??</p>
             </FieldData>
 
             {/* ALL TIME WITHDRAWALS */}
