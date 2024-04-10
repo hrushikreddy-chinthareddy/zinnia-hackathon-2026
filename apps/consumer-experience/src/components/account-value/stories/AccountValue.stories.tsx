@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 
-import { AccountValue } from '../AccountValue';
+import { AccountValue } from '../../account-value/AccountValue';
 
 const meta: Meta<typeof AccountValue> = {
   component: AccountValue,
