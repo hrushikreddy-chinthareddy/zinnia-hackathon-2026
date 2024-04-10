@@ -4,6 +4,7 @@ import {
   Label,
   Popover,
 } from '@zinnia/bloom/internal/components';
+import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
 
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { FieldData } from '@/components/field-data/FieldData';
@@ -148,7 +149,9 @@ export default async function Withdrawals({
                 </Label>
               }
             >
-              <p className="typography-content-value">WHAT IS THIS VALUE??</p>
+              <p className="typography-content-value">
+                {formatUSDollars(data.availableToWithdrawTaxFree)}
+              </p>
             </FieldData>
 
             {/* ALL TIME WITHDRAWALS */}
@@ -268,7 +271,11 @@ export default async function Withdrawals({
                 </Label>
               }
             >
-              <p className="typography-content-value">{`${data.annualWithdrawalsRemaining} left`}</p>
+              <p className="typography-content-value">
+                {data.annualWithdrawalsRemaining
+                  ? `${data.annualWithdrawalsRemaining} left`
+                  : DEFAULT_ERROR_STRING}
+              </p>
             </FieldData>
           </div>
         </div>

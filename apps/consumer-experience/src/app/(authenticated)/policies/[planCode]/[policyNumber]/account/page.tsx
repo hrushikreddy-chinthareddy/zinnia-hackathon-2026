@@ -7,11 +7,12 @@ import { ClickableCardContainer } from '@/components/clickable-card-container/Cl
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
+import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { AccountValue } from '@/components/policy-overview/AccountValue';
 import { StatusIconText } from '@/components/status-icon-text/StatusIconText';
 import { getPolicyAccountValueSummary } from '@/services/policy';
 import { PolicyRequestInputs } from '@/types/policy';
-import { pluralize } from '@/utils/strings';
+import { DEFAULT_UNAVAILABLE_STRING, pluralize } from '@/utils/strings';
 
 const historyItems = [
   {
@@ -39,6 +40,89 @@ export default async function AccountValuePage({
     planCode,
     policyNumber,
   });
+
+  const accountValueSummary = () => {
+    if (error || !data) {
+      return <NoDataAvailable message={DEFAULT_UNAVAILABLE_STRING} />;
+    }
+
+    return (
+      <ClickableCardContainer
+        listItems={[
+          {
+            content: (
+              <div className="stacked-items">
+                <span className="typography-labels-label-md-alt">Funds</span>
+                <span
+                  className="typography-content-caption"
+                  style={{ color: 'var(--color-base-text-text-secondary)' }}
+                >
+                  {`${pluralize(data?.fundCount, 'fund')}`}
+                </span>
+              </div>
+            ),
+            linkTo: {
+              url: `/policies/${planCode}/${policyNumber}/account/funds`,
+              label: 'go to funds page',
+            },
+          },
+          {
+            content: (
+              <div className="stacked-items">
+                <span className="typography-labels-label-md-alt">
+                  Make a withdrawal
+                </span>
+                <StatusIconText
+                  isEligible={data?.hasWithdrawalEligibility}
+                  className="typography-content-caption"
+                />
+              </div>
+            ),
+            linkTo: {
+              url: `/policies/${planCode}/${policyNumber}/account/withdrawals`,
+              label: 'go to withdrawals page',
+            },
+          },
+          {
+            content: (
+              <div className="stacked-items">
+                <span className="typography-labels-label-md-alt">
+                  Take a loan
+                </span>
+                <StatusIconText
+                  isEligible={data?.hasLoanEligibility}
+                  className="typography-content-caption"
+                />
+              </div>
+            ),
+            linkTo: {
+              url: `/policies/${planCode}/${policyNumber}/account/loans`,
+              label: 'go to loans page',
+            },
+          },
+          {
+            content: (
+              <div className="stacked-items">
+                <span className="typography-labels-label-md-alt py-lg">
+                  Surrender policy
+                </span>
+              </div>
+            ),
+            linkTo: {
+              url: `/policies/${planCode}/${policyNumber}/account/surrender`,
+              label: 'go to surrender policy page',
+            },
+          },
+        ]}
+      >
+        <AccountValue
+          planCode={planCode}
+          policyNumber={policyNumber}
+          hideLabel
+        />
+      </ClickableCardContainer>
+    );
+  };
 
   const allHistoryItems = () => {
     return historyItems.map((item, index) => {
@@ -82,80 +166,7 @@ export default async function AccountValuePage({
     <div className="container">
       <HeaderBreadcrumb title="Account Value" />
       <HeaderPolicyDetails planCode={planCode} policyNumber={policyNumber} />
-      <ClickableCardContainer
-        listItems={[
-          {
-            content: (
-              <div className="stacked-items">
-                <span className="typography-labels-label-md-alt">Funds</span>
-                <span
-                  className="typography-content-caption"
-                  style={{ color: 'var(--color-base-text-text-secondary)' }}
-                >
-                  {`${pluralize(data?.fundCount, 'fund')}`}
-                </span>
-              </div>
-            ),
-            linkTo: {
-              url: `/policies/${planCode}/${policyNumber}/account-value/funds`,
-              label: 'go to funds page',
-            },
-          },
-          {
-            content: (
-              <div className="stacked-items">
-                <span className="typography-labels-label-md-alt">
-                  Make a withdrawal
-                </span>
-                <StatusIconText
-                  isEligible={data?.hasWithdrawalEligibility}
-                  className="typography-content-caption"
-                />
-              </div>
-            ),
-            linkTo: {
-              url: `/policies/${planCode}/${policyNumber}/account-value/withdrawals`,
-              label: 'go to withdrawals page',
-            },
-          },
-          {
-            content: (
-              <div className="stacked-items">
-                <span className="typography-labels-label-md-alt">
-                  Take a loan
-                </span>
-                <StatusIconText
-                  isEligible={data?.hasLoanEligibility}
-                  className="typography-content-caption"
-                />
-              </div>
-            ),
-            linkTo: {
-              url: `/policies/${planCode}/${policyNumber}/account-value/loans`,
-              label: 'go to loans page',
-            },
-          },
-          {
-            content: (
-              <div className="stacked-items">
-                <span className="typography-labels-label-md-alt py-lg">
-                  Surrender policy
-                </span>
-              </div>
-            ),
-            linkTo: {
-              url: `/policies/${planCode}/${policyNumber}/account-value/surrender-policy`,
-              label: 'go to surrender policy page',
-            },
-          },
-        ]}
-      >
-        <AccountValue
-          planCode={planCode}
-          policyNumber={policyNumber}
-          hideLabel
-        />
-      </ClickableCardContainer>
+      {accountValueSummary()}
       <CardListHistory>
         <CardListHistory.Header>
           <h2>History</h2>

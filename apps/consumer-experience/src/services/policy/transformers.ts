@@ -297,6 +297,7 @@ export const transformPolicyForWithdrawals = (
     maximumWithdrawalAmount: withdrawalValues.maximumWithdrawalAmount,
     numberOfWithdrawal: withdrawalValues.numberOfWithdrawal,
     totalWithdrawalAmount: withdrawalValues.totalWithdrawalAmount,
+    availableToWithdrawTaxFree: policy.costBasis?.costBasis,
     annualWithdrawalLimitNoCoverageDecrease:
       withdrawalValues.annualWithdrawalLimitNoCoverageDecrease,
     isEligibleForWithdrawals: isPolicyEligibleForWithdrawals({
@@ -323,6 +324,7 @@ export const transformPolicyForLoans = (policy: Policy): PolicyLoans => {
   return {
     totalLoanBalance: policy.loanValues?.totalLoanBalance,
     maximumLoanAmount: policy.loanValues?.maximumLoanAmount,
+    timestamp: policy.timestamp,
     // Return either the boolean OR undefined since there is a difference between
     // inelgible and data doesn't exist
     isEligible: policy && policy.accountValues ? isEligible : undefined,

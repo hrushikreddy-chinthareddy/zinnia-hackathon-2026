@@ -171,6 +171,7 @@ export const allowedAnnualWithdrawals = ({
   policyStatus,
   accountValues,
   allocation,
+  withdrawalValues,
 }: Policy) => {
   // Eligibility Checks
   const eligiblePolicyStatus =
@@ -190,13 +191,11 @@ export const allowedAnnualWithdrawals = ({
     eligibleAccountValue &&
     matchVestingDate
   ) {
-    // TODO: DATA - there are values returned for this, should i just use those?
-    // maximumWithdrawalRequestAfterVestingPeriod && maximumWithdrawalRequestDuringVestingPeriod
-    return dayjs(matchVestingDate).isBefore(dayjs()) ? 12 : 1;
+    return dayjs(matchVestingDate).isBefore(dayjs())
+      ? withdrawalValues?.maximumWithdrawalRequestAfterVestingPeriod
+      : withdrawalValues?.maximumWithdrawalRequestDuringVestingPeriod;
   }
 
-  // TODO: DATA - when should this be null or 0? does 0 mean null in this case? how should it be displayed to teh end user?
-  // do 0 and null mean different things here?
   return null;
 };
 
@@ -207,8 +206,6 @@ export const isPolicyEligibleForWithdrawals = ({
   allowedWithdrawals?: number | null;
   withdrawalsTaken?: number | null;
 }) => {
-  // TODO: DATA - what if withdrawalsTaken is undefined? is it right to return null or should it be treated like null?
-  // Allow for zero value
   if (allowedWithdrawals == null || withdrawalsTaken === undefined) {
     return null;
   }

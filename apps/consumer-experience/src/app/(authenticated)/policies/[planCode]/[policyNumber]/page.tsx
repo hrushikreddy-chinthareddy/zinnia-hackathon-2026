@@ -56,7 +56,7 @@ export default async function Page({
         <UpcomingPremium planCode={planCode} policyNumber={policyNumber} />
         <ClickableCardContainer
           linkTo={{
-            url: `/policies/${planCode}/${policyNumber}/account-value`,
+            url: `/policies/${planCode}/${policyNumber}/account`,
             label: 'go to account value page',
           }}
         >

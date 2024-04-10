@@ -205,11 +205,17 @@ describe('allowedAnnualWithdrawals', () => {
           matchVestingDate: dayjs().subtract(1, 'year').toISOString(),
         },
       },
+      withdrawalValues: {
+        maximumWithdrawalRequestAfterVestingPeriod: 12,
+        maximumWithdrawalRequestDuringVestingPeriod: 1,
+      },
     };
 
     const result = allowedAnnualWithdrawals(policy);
 
-    expect(result).toBe(12);
+    expect(result).toBe(
+      policy.withdrawalValues?.maximumWithdrawalRequestAfterVestingPeriod
+    );
   });
 
   // Returns null if any of the eligibility checks fail

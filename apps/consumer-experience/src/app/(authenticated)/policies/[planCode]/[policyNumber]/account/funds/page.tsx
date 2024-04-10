@@ -1,6 +1,7 @@
 import { Label } from '@zinnia/bloom/internal/components';
 import clsx from 'clsx';
 
+import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
@@ -59,6 +60,10 @@ export default async function AccountValuePage({
         />
         {allocationData()}
       </div>
+      <CallForAssistance
+        callToAction="Questions about your fund?"
+        customInstruction="for more information."
+      />
       <Footer />
     </div>
   );
