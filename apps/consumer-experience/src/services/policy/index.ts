@@ -633,7 +633,6 @@ const getDocuments = async (inputs: Partial<DocumentApiRequestInputs>) => {
     | DocumentResponseError
     | PolicyDocument;
 
-  console.log(data);
   return data;
 };
 

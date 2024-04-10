@@ -202,6 +202,7 @@ export interface PolicyFund {
 
 export interface PolicyLoans {
   isEligible?: boolean;
+  timestamp?: string | null;
   totalLoanBalance?: number | null;
   maximumLoanAmount?: number | null;
 }
@@ -221,4 +222,5 @@ export interface PolicyWithdrawals {
   numberOfWithdrawal?: number | null;
   totalWithdrawalAmount?: number | null;
   annualWithdrawalLimitNoCoverageDecrease?: number | null;
+  availableToWithdrawTaxFree?: number | null;
 }

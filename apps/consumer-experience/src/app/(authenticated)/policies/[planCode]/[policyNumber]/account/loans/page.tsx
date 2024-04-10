@@ -16,10 +16,8 @@ import { StatusIconText } from '@/components/status-icon-text/StatusIconText';
 import { getPolicyLoanDetails } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
-import {
-  DEFAULT_ERROR_STRING,
-  DEFAULT_UNAVAILABLE_STRING,
-} from '@/utils/strings';
+import { standardDateMonthYear } from '@/utils/dates';
+import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 const AVAILABLE_TO_BORROW = 'Available to borrow';
 const TOTAL_LOAN_BALANCE = 'Total loan balance';
@@ -101,13 +99,10 @@ export default async function Withdrawals({
                 {formatUSDollars(data.maximumLoanAmount)}
               </p>
             </FieldData>
-            {/* TODO: ONLY show this if there is a total loan balance!!! */}
             {!!data.totalLoanBalance && (
               <FieldData
                 caption={
-                  // TODO: DATA - WHAT TO USE HERE?
-                  <span>{DEFAULT_ERROR_STRING}</span>
-                  // <span>{`As of ${standardDateMonthYear('2023-06-12')}`}</span>
+                  <span>{`As of ${standardDateMonthYear(data.timestamp)}`}</span>
                 }
                 Label={
                   <Label
