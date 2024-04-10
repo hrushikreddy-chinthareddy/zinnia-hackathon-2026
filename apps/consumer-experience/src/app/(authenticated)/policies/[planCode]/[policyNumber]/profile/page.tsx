@@ -2,6 +2,7 @@ import { Address, Email, Phone } from '@zinnia/api-types/types/sor';
 import { IconType, Label } from '@zinnia/bloom/internal/components';
 
 import { BankData } from '@/components/bank-data/BankData';
+import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
 import { Footer } from '@/components/footer/Footer';
@@ -120,7 +121,8 @@ export default async function Profile({ params }: Props) {
           </FieldData>
         </div>
       </ClickableCardContainer>
-      <Footer showAction />
+      <CallForAssistance />
+      <Footer />
     </div>
   );
 }

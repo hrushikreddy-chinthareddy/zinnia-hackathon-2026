@@ -4,6 +4,8 @@ import {
   Email,
   Frequency,
   Phone,
+  PolicyStatus,
+  Policy,
 } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 
@@ -148,4 +150,86 @@ export const formatBankAccountTypeText = (
     default:
       return DEFAULT_ERROR_STRING;
   }
+};
+
+export const getRiderDescription = (code: string) => {
+  switch (code) {
+    case 'SBLCHR':
+      return 'If you’re diagnosed with a qualifying chronic illness, you can claim the lesser of: 50% of your death benefit or $500,000.';
+    case 'SBLCRI':
+      return 'If you’re diagnosed with a qualifying critical illness, you can claim the lesser of: 50% of your death benefit or $500,000.';
+    case 'SBLTRM':
+      return 'If you are diagnosed with a terminal illness, you can claim the lesser of: 50% of your death benefit or $500,000.';
+    case 'SBLOPR':
+      return 'If you take a loan on your policy that eventually exceeds the account value, this rider will be activated, preventing the policy from lapsing and triggering a taxable event.';
+    default:
+      return DEFAULT_ERROR_STRING;
+  }
+};
+
+export const allowedAnnualWithdrawals = ({
+  policyStatus,
+  accountValues,
+  allocation,
+}: Policy) => {
+  // Eligibility Checks
+  const eligiblePolicyStatus =
+    policyStatus &&
+    [PolicyStatus.ACTIVE, PolicyStatus.PENDINGLAPSE].includes(policyStatus);
+  const eligibleSurrenderValue =
+    accountValues?.surrenderValue && accountValues.surrenderValue > 0;
+  const eligibleAccountValue =
+    accountValues?.beginningAccountValue &&
+    accountValues?.beginningAccountValue > 0;
+
+  const matchVestingDate = allocation?.matchSegment?.matchVestingDate;
+
+  if (
+    eligiblePolicyStatus &&
+    eligibleSurrenderValue &&
+    eligibleAccountValue &&
+    matchVestingDate
+  ) {
+    // TODO: DATA - there are values returned for this, should i just use those?
+    // maximumWithdrawalRequestAfterVestingPeriod && maximumWithdrawalRequestDuringVestingPeriod
+    return dayjs(matchVestingDate).isBefore(dayjs()) ? 12 : 1;
+  }
+
+  // TODO: DATA - when should this be null or 0? does 0 mean null in this case? how should it be displayed to teh end user?
+  // do 0 and null mean different things here?
+  return null;
+};
+
+export const isPolicyEligibleForWithdrawals = ({
+  allowedWithdrawals,
+  withdrawalsTaken,
+}: {
+  allowedWithdrawals?: number | null;
+  withdrawalsTaken?: number | null;
+}) => {
+  // TODO: DATA - what if withdrawalsTaken is undefined? is it right to return null or should it be treated like null?
+  // Allow for zero value
+  if (allowedWithdrawals == null || withdrawalsTaken === undefined) {
+    return null;
+  }
+
+  if (withdrawalsTaken === null || allowedWithdrawals > withdrawalsTaken) {
+    return true;
+  }
+
+  return false;
+};
+
+export const policyWithdrawalsRemaining = ({
+  allowedWithdrawals,
+  withdrawalsTaken,
+}: {
+  allowedWithdrawals?: number | null;
+  withdrawalsTaken?: number | null;
+}) => {
+  if (withdrawalsTaken == null || allowedWithdrawals == null) {
+    return null;
+  }
+
+  return Math.max(0, allowedWithdrawals - withdrawalsTaken);
 };

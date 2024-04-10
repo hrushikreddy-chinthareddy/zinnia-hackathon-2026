@@ -7,8 +7,11 @@ import {
   Transaction,
   TransactionType,
   MetricsType,
+  SystematicProgram,
+  Party,
+  FundAllocation,
 } from '@zinnia/api-types/types/sor';
-import { DEFAULT_ERROR_STRING, policyOwner } from '@zinnia/utils';
+import { policyOwner } from '@zinnia/utils';
 
 import { BankDetail } from '@/components/person-data/types';
 import {
@@ -25,8 +28,21 @@ import {
   ExtendedTransactionStatus,
   PaymentHistory,
   Metric,
+  PolicyFund,
+  PolicyLoans,
+  AccountValueSummary,
+  PolicyWithdrawals,
+  PolicySurrender,
 } from '@/types/policy';
-import { bankAccountNumberSanitizer } from '@/utils/data';
+import { PolicyRider } from '@/types/riders';
+import {
+  allowedAnnualWithdrawals,
+  bankAccountNumberSanitizer,
+  isPolicyEligibleForWithdrawals,
+  policyWithdrawalsRemaining,
+  getRiderDescription,
+} from '@/utils/data';
+import { DEFAULT_ERROR_STRING } from '@/utils/strings';
 
 const allBeneficiaries = (policy: Policy) => {
   const benesWithRoles = [] as Beneficiary[];
@@ -35,7 +51,7 @@ const allBeneficiaries = (policy: Policy) => {
     PartyRole.PRIMARYBENEFICIARY,
   ];
 
-  policy.parties?.forEach(party => {
+  policy.parties?.forEach((party: Party) => {
     const correspondingRole = policy.partyRoles?.find(
       role => role.partyId === party.partyId
     );
@@ -115,14 +131,16 @@ export const transformPolicyForHeaderDetails = (
 
 export const transformPolicyForProfile = (policy: Policy): PolicyProfile => {
   const ownerInfo = policyOwner(policy);
-  const bankDetails: BankDetail[] = (ownerInfo?.bankDetails || []).map(b => {
-    return {
-      ...b,
-      accountNumber: bankAccountNumberSanitizer(b?.accountNumber),
-      // TODO: update this to use real data
-      autopayEnabled: false,
-    };
-  });
+  const bankDetails: BankDetail[] = (ownerInfo?.bankDetails || []).map(
+    (b: BankAccount) => {
+      return {
+        ...b,
+        accountNumber: bankAccountNumberSanitizer(b?.accountNumber),
+        // TODO: update this to use real data
+        autopayEnabled: false,
+      };
+    }
+  );
   return {
     preferredAddressIndicator: ownerInfo?.preferredAddressIndicator || '',
     name: {
@@ -183,14 +201,15 @@ export const transformPolicyforPaymentDetails = (
   policy: Policy
 ): BankDetail => {
   const premiumSystematicProgram = policy.systematicPrograms?.find(
-    program => program.reason === ExtendedReason.PREMIUMREASON
+    (program: SystematicProgram) =>
+      program.reason === ExtendedReason.PREMIUMREASON
   );
 
   let bankDetails: BankAccount | undefined;
   if (premiumSystematicProgram) {
     const currentPayor = (premiumSystematicProgram?.party || [])[0];
     const currentPayorParty = policy?.parties?.find(
-      party => party.partyId === currentPayor?.partyId
+      (party: Party) => party.partyId === currentPayor?.partyId
     );
     bankDetails = currentPayorParty?.bankDetails?.find(
       bank => bank.bankId === currentPayor?.bankId
@@ -207,14 +226,15 @@ export const transformPolicyToMethodAndProgram = (
   policy: Policy
 ): MethodAndProgram | undefined => {
   const paymentProgram = policy?.systematicPrograms?.find(
-    program => program.reason === ExtendedReason.PREMIUMREASON
+    (program: SystematicProgram) =>
+      program.reason === ExtendedReason.PREMIUMREASON
   );
   const programFirstPayor = (paymentProgram?.party || [])[0];
   const paymentProgramFinancialInstitutionId = programFirstPayor?.bankId;
   const payor = policy?.parties?.find(
-    party => party.partyId === programFirstPayor?.partyId
+    (party: Party) => party.partyId === programFirstPayor?.partyId
   );
-  const paymentMethod = payor?.bankDetails?.find(bank =>
+  const paymentMethod = payor?.bankDetails?.find((bank: BankAccount) =>
     [bank.appliesToPartyId, bank.accountNumber, bank.bankId].includes(
       paymentProgramFinancialInstitutionId
     )
@@ -228,6 +248,108 @@ export const transformPolicyToMethodAndProgram = (
     ...paymentMethod,
     frequency: paymentProgram?.frequency,
     amount: paymentProgram?.amount,
+  };
+};
+
+export const transformPolicyForFundDetails = (
+  policy: Policy
+): PolicyFund[] | null => {
+  if (
+    !policy?.allocation ||
+    policy?.allocation?.fundAllocationsInvestments?.length === 0
+  ) {
+    return null;
+  }
+
+  const allocations = policy.allocation?.fundAllocationsInvestments?.map(
+    (fund: FundAllocation) => {
+      const fundDetails = policy.allocation?.funds?.find(
+        (detail: FundAllocation) => detail?.fundId === fund?.fundId
+      );
+
+      return {
+        fundName: fund?.fundName,
+        allocationPercentage: fund?.allocationPercentage,
+        totalFundValue: fundDetails?.totalFundValue,
+        fundAccountType: fundDetails?.fundAccountType,
+      };
+    }
+  );
+
+  return allocations || null;
+};
+
+export const transformPolicyForWithdrawals = (
+  policy: Policy
+): PolicyWithdrawals | null => {
+  if (!policy?.withdrawalValues) {
+    return null;
+  }
+
+  const annualWithdrawalsAllowed = allowedAnnualWithdrawals(policy);
+  const withdrawalsTaken =
+    policy.withdrawalValues?.totalYearToDateWithdrawalTaken;
+  const withdrawalValues = policy.withdrawalValues || {};
+
+  return {
+    ...policy.withdrawalValues,
+    withdrawalAllowedStartDate: withdrawalValues.withdrawalAllowedStartDate,
+    maximumWithdrawalAmount: withdrawalValues.maximumWithdrawalAmount,
+    numberOfWithdrawal: withdrawalValues.numberOfWithdrawal,
+    totalWithdrawalAmount: withdrawalValues.totalWithdrawalAmount,
+    annualWithdrawalLimitNoCoverageDecrease:
+      withdrawalValues.annualWithdrawalLimitNoCoverageDecrease,
+    isEligibleForWithdrawals: isPolicyEligibleForWithdrawals({
+      allowedWithdrawals: annualWithdrawalsAllowed,
+      withdrawalsTaken,
+    }),
+    annualWithdrawalsTaken:
+      policy.withdrawalValues?.totalYearToDateWithdrawalTaken,
+    annualWithdrawalsRemaining: policyWithdrawalsRemaining({
+      allowedWithdrawals: annualWithdrawalsAllowed,
+      withdrawalsTaken,
+    }),
+    nextMonthiversaryDate: policy.policyDates?.nextMonthiversaryDate,
+    nextAnniversaryDate: policy.policyDates?.nextAnniversaryDate,
+  };
+};
+
+export const transformPolicyForLoans = (policy: Policy): PolicyLoans => {
+  const isEligible =
+    policy?.policyStatus === PolicyStatus.ACTIVE &&
+    !!policy?.accountValues?.beginningAccountValue &&
+    policy?.accountValues?.beginningAccountValue > 0;
+
+  return {
+    totalLoanBalance: policy.loanValues?.totalLoanBalance,
+    maximumLoanAmount: policy.loanValues?.maximumLoanAmount,
+    // Return either the boolean OR undefined since there is a difference between
+    // inelgible and data doesn't exist
+    isEligible: policy && policy.accountValues ? isEligible : undefined,
+  };
+};
+
+export const transformPolicyForSurrender = (
+  policy: Policy
+): PolicySurrender => {
+  return {
+    surrenderValue: policy.accountValues?.surrenderValue,
+  };
+};
+
+export const transformPolicyForAccountValueSummary = (
+  policy: Policy
+): AccountValueSummary => {
+  const fundDetails = transformPolicyForFundDetails(policy);
+  const withdrawalDetails = transformPolicyForWithdrawals(policy);
+  const loanValues = transformPolicyForLoans(policy);
+
+  return {
+    fundCount: fundDetails?.length,
+    hasWithdrawalEligibility: withdrawalDetails
+      ? withdrawalDetails.isEligibleForWithdrawals
+      : null,
+    hasLoanEligibility: loanValues?.isEligible,
   };
 };
 
@@ -301,4 +423,41 @@ export const transformPaymentHistory = (
   }
 
   return paymentHistoryObject;
+};
+
+export const transformRiders = (policy: Policy): PolicyRider[] | null => {
+  const { riders } = policy;
+
+  if (!riders || !riders.length) {
+    return null;
+  }
+
+  const ownerInfo = policyOwner(policy);
+  const insuredPartyFromRoles = policy.partyRoles?.find(
+    party => party.partyRole?.toLowerCase() === PartyRole.INSURED.toLowerCase()
+  );
+  const insuredParty = policy.parties?.find(
+    party => party.partyId === insuredPartyFromRoles?.partyId
+  );
+
+  return riders.map(rider => {
+    const riderInsured = rider.riderParticipant?.find(
+      party => party.insuredId === insuredPartyFromRoles?.partyId
+    );
+    return {
+      riderCode: rider.riderCode,
+      // TODO: DATA - {rider.terminalRiderPaymentAmount}
+      cost: rider.terminalRiderPaymentAmount,
+      description: getRiderDescription(rider.riderCode || ''),
+      effectiveDate: rider.effectiveDate,
+      isElected: rider.riderElected?.toLowerCase() === 'elected',
+      isOwner: ownerInfo?.partyId === riderInsured?.insuredId,
+      title: rider.riderName,
+      status: rider.status,
+      insured: {
+        firstName: insuredParty?.firstName,
+        lastName: insuredParty?.lastName,
+      },
+    };
+  });
 };

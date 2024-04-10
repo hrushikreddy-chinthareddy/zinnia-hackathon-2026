@@ -19,6 +19,7 @@ import {
   isMockPaymentHistoryRequestEnabled,
   isMockPolicyMetricsRequestEnabled,
   isMockPolicyOverviewRequestEnabled,
+  isMockRidersRequestEnabled,
   isMockSearchRequestEnabled,
   policyApiBaseUrl,
 } from '@/services';
@@ -36,6 +37,12 @@ import {
   transformPolicyforPaymentDetails,
   transformPaymentHistory,
   transformPolicyMetricsForAccountValueChange,
+  transformPolicyForFundDetails,
+  transformPolicyForAccountValueSummary,
+  transformRiders,
+  transformPolicyForWithdrawals,
+  transformPolicyForLoans,
+  transformPolicyForSurrender,
 } from '@/services/policy/transformers';
 import {
   DocumentApiRequestInputs,
@@ -59,7 +66,13 @@ import {
   PendingPremiumTransactionType,
   PaymentHistoryTransaction,
   PolicyMetricsRequestInputs,
+  AccountValueSummary,
+  PolicyFund,
+  PolicyWithdrawals,
+  PolicyLoans,
+  PolicySurrender,
 } from '@/types/policy';
+import { PolicyRider } from '@/types/riders';
 
 import { mockDocumentsResponse } from '../mocks/documents';
 import { MockMetricsResponse } from '../mocks/metrics';
@@ -94,7 +107,7 @@ const getPolicyByPlanCodeAndId = async (options: PolicyRequestInputs) => {
 };
 
 const getPolicyTransactions = async ({
-  eventNames,
+  transactionTypes,
   policyNumber,
   limit = 10,
   offset = 0,
@@ -104,11 +117,10 @@ const getPolicyTransactions = async ({
   year,
 }: TransactionRequestInputs) => {
   let query = `?offset=${offset}&limit=${limit}&order=${order}&status=${status}`;
-  // TODO: eventNames will change to transactionTypes on April 9th 2024
-  if (eventNames.length) {
+  if (transactionTypes.length) {
     query =
       query +
-      `&${eventNames.map(eventName => `eventNames=${eventName}`).join('&')}`;
+      `&${transactionTypes.map(transactionType => `transactionTypes=${transactionType}`).join('&')}`;
   }
 
   if (year) {
@@ -526,12 +538,12 @@ export const getPaymentHistory = async ({
   policyNumber,
 }: PolicyRequestInputs): Promise<ApiResponse<PaymentHistoryTransaction>> => {
   const currentYear = new Date().getFullYear().toString();
-  const completedEventNames = Object.values(
+  const completedTransactionTypes = Object.values(
     CompletedPremiumTransactionType
   ).map(String);
-  const pendingEventNames = Object.values(PendingPremiumTransactionType).map(
-    String
-  );
+  const pendingTransactionTypes = Object.values(
+    PendingPremiumTransactionType
+  ).map(String);
 
   if (isMockPaymentHistoryRequestEnabled()) {
     return {
@@ -552,7 +564,7 @@ export const getPaymentHistory = async ({
       await Promise.allSettled([
         getPolicyByPlanCodeAndId({ planCode, policyNumber }),
         getPolicyTransactions({
-          eventNames: completedEventNames,
+          transactionTypes: completedTransactionTypes,
           planCode,
           policyNumber,
           limit: 30,
@@ -560,7 +572,7 @@ export const getPaymentHistory = async ({
           year: currentYear,
         }),
         getPolicyTransactions({
-          eventNames: pendingEventNames,
+          transactionTypes: pendingTransactionTypes,
           planCode,
           policyNumber,
           status: 'Pending',
@@ -663,6 +675,218 @@ export const getPolicyDocuments = async (
         message: 'Something went wrong',
         status: 400,
         name: 'getPolicyOverviewData Error',
+      },
+    };
+  }
+};
+
+export const getPolicyFundDetails = async (
+  policyInputs: PolicyRequestInputs
+): Promise<ApiResponse<PolicyFund[]>> => {
+  if (isMockPolicyOverviewRequestEnabled()) {
+    const transformedResults =
+      transformPolicyForFundDetails(mockPolicyResponse);
+
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  }
+
+  try {
+    const policy = await getPolicyByPlanCodeAndId(policyInputs);
+    const transformedResults = transformPolicyForFundDetails(policy);
+
+    if (!transformedResults) {
+      return {
+        data: null,
+        error: {
+          message: 'Something went wrong',
+          status: 500,
+          name: 'getPolicyFundDetails Error',
+        },
+      };
+    }
+
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 500,
+        name: 'getPolicyFundDetails Error',
+      },
+    };
+  }
+};
+
+export const getPolicySurrenderDetails = async (
+  policyInputs: PolicyRequestInputs
+): Promise<ApiResponse<PolicySurrender>> => {
+  if (isMockPolicyOverviewRequestEnabled()) {
+    const transformedResults = transformPolicyForSurrender(mockPolicyResponse);
+
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  }
+
+  try {
+    const policy = await getPolicyByPlanCodeAndId(policyInputs);
+    const transformedResults = transformPolicyForSurrender(policy);
+
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  } catch (error) {
+    console.log(error);
+
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 500,
+        name: 'getPolicySurrenderDetails Error',
+      },
+    };
+  }
+};
+
+export const getPolicyWithdrawalDetails = async (
+  policyInputs: PolicyRequestInputs
+): Promise<ApiResponse<PolicyWithdrawals>> => {
+  if (isMockPolicyOverviewRequestEnabled()) {
+    const transformedResults =
+      transformPolicyForWithdrawals(mockPolicyResponse);
+
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  }
+
+  try {
+    const policy = await getPolicyByPlanCodeAndId(policyInputs);
+    const transformedResults = transformPolicyForWithdrawals(policy);
+
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  } catch (error) {
+    console.log(error);
+
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 500,
+        name: 'getPolicyWithdrawalDetails Error',
+      },
+    };
+  }
+};
+
+export const getPolicyAccountValueSummary = async (
+  policyInputs: PolicyRequestInputs
+): Promise<ApiResponse<AccountValueSummary>> => {
+  if (isMockPolicyOverviewRequestEnabled()) {
+    const transformedResults =
+      transformPolicyForAccountValueSummary(mockPolicyResponse);
+
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  }
+
+  try {
+    const policy = await getPolicyByPlanCodeAndId(policyInputs);
+    const transformedResults = transformPolicyForAccountValueSummary(policy);
+
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 500,
+        name: 'getPolicyAccountValueSummary Error',
+      },
+    };
+  }
+};
+
+export const getPolicyLoanDetails = async (
+  policyInputs: PolicyRequestInputs
+): Promise<ApiResponse<PolicyLoans>> => {
+  if (isMockPolicyOverviewRequestEnabled()) {
+    const transformedResults = transformPolicyForLoans(mockPolicyResponse);
+
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  }
+
+  try {
+    const policy = await getPolicyByPlanCodeAndId(policyInputs);
+    const transformedResults = transformPolicyForLoans(policy);
+
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 500,
+        name: 'getPolicyAccountValueSummary Error',
+      },
+    };
+  }
+};
+
+export const getRiders = async (
+  options: PolicyRequestInputs
+): Promise<ApiResponse<PolicyRider[]>> => {
+  if (isMockRidersRequestEnabled()) {
+    const transformedResults = transformRiders(mockPolicyResponse);
+
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  }
+
+  try {
+    const response = await getPolicyByPlanCodeAndId(options);
+    const transformedResults = transformRiders(response);
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  } catch (error) {
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 400,
+        name: 'getRiders Error',
       },
     };
   }

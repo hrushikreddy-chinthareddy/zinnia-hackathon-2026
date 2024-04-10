@@ -106,7 +106,7 @@ export interface Beneficiary {
 }
 
 export interface TransactionRequestInputs extends PolicyRequestInputs {
-  eventNames: string[];
+  transactionTypes: string[];
   limit?: number;
   offset?: number;
   order?: 'ASC' | 'DESC';
@@ -185,4 +185,40 @@ export interface Metric {
   sum: number;
   count: number;
   end: number;
+}
+
+export interface AccountValueSummary {
+  fundCount?: number;
+  hasWithdrawalEligibility?: boolean | null;
+  hasLoanEligibility?: boolean | null;
+}
+
+export interface PolicyFund {
+  fundName?: string | null;
+  allocationPercentage?: number | null;
+  totalFundValue?: number | null;
+  fundAccountType?: string | null;
+}
+
+export interface PolicyLoans {
+  isEligible?: boolean;
+  totalLoanBalance?: number | null;
+  maximumLoanAmount?: number | null;
+}
+
+export interface PolicySurrender {
+  surrenderValue?: number | null;
+}
+
+export interface PolicyWithdrawals {
+  isEligibleForWithdrawals?: boolean | null;
+  annualWithdrawalsTaken?: number | null;
+  annualWithdrawalsRemaining?: number | null;
+  nextMonthiversaryDate?: string;
+  nextAnniversaryDate?: string;
+  withdrawalAllowedStartDate?: string | null;
+  maximumWithdrawalAmount?: number | null;
+  numberOfWithdrawal?: number | null;
+  totalWithdrawalAmount?: number | null;
+  annualWithdrawalLimitNoCoverageDecrease?: number | null;
 }

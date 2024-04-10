@@ -5,6 +5,7 @@ import {
   Popover,
   PopoverPlacement,
 } from '@zinnia/bloom/internal/components';
+import { toTitleCase } from '@zinnia/utils';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
@@ -23,7 +24,11 @@ export interface HeaderBreadcrumbProps {
   className?: string;
 }
 
-export const HeaderBreadcrumb = ({ title, popover, className }: HeaderBreadcrumbProps) => {
+export const HeaderBreadcrumb = ({
+  title,
+  popover,
+  className,
+}: HeaderBreadcrumbProps) => {
   const paths = (usePathname() || '').split('/');
   const params = useParams<{ planCode: string; policyNumber: string }>();
 
@@ -32,12 +37,13 @@ export const HeaderBreadcrumb = ({ title, popover, className }: HeaderBreadcrumb
   }
 
   const currentPath = paths[paths.length - 1];
+  const formatTitle = toTitleCase(title);
 
   // If there's no current path or the current path is 'policies', it means you're at a root url
   // since we always redirect / to /policies paths will always start with 2 items.
   // if we are on /policies it means we are essentially at the root.
   if (!currentPath || currentPath === 'policies') {
-    return <h1 className="typography-desktop-headline-1d">{title}</h1>;
+    return <h1 className="typography-desktop-headline-1d">{formatTitle}</h1>;
   }
 
   let previousPath: string;
@@ -65,7 +71,7 @@ export const HeaderBreadcrumb = ({ title, popover, className }: HeaderBreadcrumb
           color="var(--color-base-icon-icon-action, #1E359C)"
         />
       </Link>
-      <h1 className="typography-desktop-headline-1d">{title}</h1>
+      <h1 className="typography-desktop-headline-1d">{formatTitle}</h1>
       {popover && popover.title && popover.content && (
         <Popover
           title={popover.title}

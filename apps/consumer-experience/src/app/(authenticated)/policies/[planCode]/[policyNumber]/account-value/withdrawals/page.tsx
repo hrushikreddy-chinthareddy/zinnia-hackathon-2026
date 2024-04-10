@@ -4,24 +4,21 @@ import {
   Label,
   Popover,
 } from '@zinnia/bloom/internal/components';
-import dayjs from 'dayjs';
 
+import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { FieldData } from '@/components/field-data/FieldData';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 import { InfoCard } from '@/components/info-card/InfoCard';
+import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { StatusIconText } from '@/components/status-icon-text/StatusIconText';
+import { getPolicyWithdrawalDetails } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
-import { standardDateMonthYear } from '@/utils/dates';
-import { numberWithOrdinal } from '@/utils/numbers';
-
-// TODO: update with real data
-const montheversary = '2022-02-01';
-const isEligible = true;
-const remainingWithdrawals = 2;
-const policyAnniversaryDate = '2024-11-02';
+import { isNullEmptyOrUndefined } from '@/utils/data';
+import { dayOfMonthWithOrdinal, standardDateMonthYear } from '@/utils/dates';
+import { DEFAULT_UNAVAILABLE_STRING, pluralize } from '@/utils/strings';
 
 const AVAILBLE_TO_WITHDRAW = 'Available to withdraw';
 const ALL_TIME_WITHDRAWALS = 'All-time withdrawals';
@@ -40,16 +37,24 @@ export default async function Withdrawals({
   params: PolicyRequestInputs;
 }) {
   const { planCode, policyNumber } = params;
+  const { data, error } = await getPolicyWithdrawalDetails({
+    planCode,
+    policyNumber,
+  });
 
-  return (
-    <div className="container">
-      <HeaderBreadcrumb title="Withdrawals" />
-      <HeaderPolicyDetails planCode={planCode} policyNumber={policyNumber} />
+  const withdrawalsData = () => {
+    if (error || !data) {
+      return <NoDataAvailable message={DEFAULT_UNAVAILABLE_STRING} />;
+    }
+
+    return (
       <div className="card-container">
         <InfoCard iconType={IconType.LIGHTBULB}>
           <p>
             <span className="typography-content-body-sm-bold">
-              {isEligible ? eligibleTextHighlight : ineligibleTextHighlight}{' '}
+              {data.isEligibleForWithdrawals
+                ? eligibleTextHighlight
+                : ineligibleTextHighlight}{' '}
             </span>
             Once eligible, you may withdraw for any reason. Withdrawals are tax
             free up to a certain amount. You only pay taxes on any earned
@@ -59,14 +64,15 @@ export default async function Withdrawals({
         </InfoCard>
         <div className="card">
           <StatusIconText
-            isEligible={isEligible}
+            isEligible={data.isEligibleForWithdrawals}
             showIcon
             className="typography-content-body-bold mb-lg"
           />
           <div className="column-card">
+            {/* AVAILABLE TO WITHDRAW */}
             <FieldData
               caption={
-                <span>As of ${standardDateMonthYear('2023-06-12')}</span>
+                <span>{`As of ${standardDateMonthYear(data.withdrawalAllowedStartDate)}`}</span>
               }
               Label={
                 <Label
@@ -88,11 +94,11 @@ export default async function Withdrawals({
                           If eligible, this is the maximum amount available for
                           withdrawal.{' '}
                         </p>
-                        <p>
+                        <p className="my-lg">
                           {`Withdrawals have consequences. Withdrawing the full
-                        amount can surrender the policy, if you don’t make a
-                        payment by the next monthaversary. (Your policy’s
-                        monthaversary happens every month on the ${numberWithOrdinal(dayjs(montheversary).get('date'))}.)`}
+                  amount can surrender the policy, if you don’t make a
+                  payment by the next monthaversary. (Your policy’s
+                  monthaversary happens every month on the ${dayOfMonthWithOrdinal(data.nextMonthiversaryDate)}.)`}
                         </p>
                         <p>
                           Depending on the amount, a partial withdrawal can
@@ -107,9 +113,11 @@ export default async function Withdrawals({
               }
             >
               <p className="typography-content-value">
-                {formatUSDollars(250439.23)}
+                {formatUSDollars(data.maximumWithdrawalAmount)}
               </p>
             </FieldData>
+
+            {/* AVAILABLE WITHDRAWAL TAX FREE */}
             <FieldData
               Label={
                 <Label
@@ -140,12 +148,20 @@ export default async function Withdrawals({
                 </Label>
               }
             >
-              <p className="typography-content-value">
-                {formatUSDollars(250439.23)}
-              </p>
+              <p className="typography-content-value">WHAT IS THIS VALUE??</p>
             </FieldData>
+
+            {/* ALL TIME WITHDRAWALS */}
             <FieldData
-              caption={<span>2 withdrawals</span>}
+              caption={
+                !isNullEmptyOrUndefined(data.numberOfWithdrawal) ? (
+                  <span>
+                    {pluralize(data.numberOfWithdrawal, 'withdrawal')}
+                  </span>
+                ) : (
+                  ''
+                )
+              }
               Label={
                 <Label
                   interactiveElements={[
@@ -173,9 +189,11 @@ export default async function Withdrawals({
               }
             >
               <p className="typography-content-value">
-                {formatUSDollars(250439.23)}
+                {formatUSDollars(data.totalWithdrawalAmount)}
               </p>
             </FieldData>
+
+            {/* COVERAGE PRESERAVTION LIMIT */}
             <FieldData
               Label={
                 <Label
@@ -204,11 +222,19 @@ export default async function Withdrawals({
               }
             >
               <p className="typography-content-value">
-                {formatUSDollars(250439.23)}
+                {formatUSDollars(data.annualWithdrawalLimitNoCoverageDecrease)}
               </p>
             </FieldData>
+
+            {/* ANNUAL WITHDRAWALS REMAINING */}
             <FieldData
-              caption={<span>0 taken</span>}
+              caption={
+                !isNullEmptyOrUndefined(data.annualWithdrawalsTaken) ? (
+                  <span>{`${data.annualWithdrawalsTaken} taken`}</span>
+                ) : (
+                  ''
+                )
+              }
               Label={
                 <Label
                   interactiveElements={[
@@ -225,8 +251,8 @@ export default async function Withdrawals({
                       }
                     >
                       <div>
-                        <p>
-                          {`At this time, you could withdraw ${remainingWithdrawals} more time(s) during policy year. Your policy year ends on ${standardDateMonthYear(policyAnniversaryDate)}.`}
+                        <p className="mb-lg">
+                          {`At this time, you could withdraw ${data.annualWithdrawalsRemaining} more time(s) during policy year. Your policy year ends on ${standardDateMonthYear(data.nextAnniversaryDate)}.`}
                         </p>
                         <p>
                           During the vesting period (the first 10 years of your
@@ -242,21 +268,21 @@ export default async function Withdrawals({
                 </Label>
               }
             >
-              <p className="typography-content-value">2 left</p>
+              <p className="typography-content-value">{`${data.annualWithdrawalsRemaining} left`}</p>
             </FieldData>
           </div>
         </div>
       </div>
-      <p
-        className="typography-content-body-bold"
-        style={{ color: 'var(--Base-Text-text-primary, #212121)' }}
-      >
-        Call {/* TODO: create function to format this */}
-        <a href={`tel:+${18002322222}`} className="typography-nav-links-inline">
-          1-800-232-2222
-        </a>{' '}
-        to make a withdrawal
-      </p>
+    );
+  };
+
+  return (
+    <div className="container">
+      <HeaderBreadcrumb title="Withdrawals" />
+      <HeaderPolicyDetails planCode={planCode} policyNumber={policyNumber} />
+      {withdrawalsData()}
+      <CallForAssistance customInstruction="to make a withdrawal." />
+
       <Footer />
     </div>
   );

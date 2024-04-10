@@ -5,19 +5,21 @@ import {
   Popover,
 } from '@zinnia/bloom/internal/components';
 
+import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { FieldData } from '@/components/field-data/FieldData';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 import { InfoCard } from '@/components/info-card/InfoCard';
+import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { StatusIconText } from '@/components/status-icon-text/StatusIconText';
+import { getPolicyLoanDetails } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
-import { standardDateMonthYear } from '@/utils/dates';
-
-// TODO: update with real data
-const montheversary = '2022-02-01';
-const isEligible = false;
+import {
+  DEFAULT_ERROR_STRING,
+  DEFAULT_UNAVAILABLE_STRING,
+} from '@/utils/strings';
 
 const AVAILABLE_TO_BORROW = 'Available to borrow';
 const TOTAL_LOAN_BALANCE = 'Total loan balance';
@@ -33,16 +35,24 @@ export default async function Withdrawals({
   params: PolicyRequestInputs;
 }) {
   const { planCode, policyNumber } = params;
+  const { data, error } = await getPolicyLoanDetails({
+    planCode,
+    policyNumber,
+  });
 
-  return (
-    <div className="container">
-      <HeaderBreadcrumb title="Loans" />
-      <HeaderPolicyDetails planCode={planCode} policyNumber={policyNumber} />
+  const loansData = () => {
+    if (error || !data) {
+      return <NoDataAvailable message={DEFAULT_UNAVAILABLE_STRING} />;
+    }
+
+    return (
       <div className="card-container">
         <InfoCard iconType={IconType.LIGHTBULB}>
           <p>
             <span className="typography-content-body-sm-bold">
-              {isEligible ? eligibleTextHighlight : ineligibleTextHighlight}{' '}
+              {data.isEligible
+                ? eligibleTextHighlight
+                : ineligibleTextHighlight}{' '}
             </span>
             You can take a loan from your account value at any time, as long as
             funds are available. Keep in mind: Aside from incurring interest, a
@@ -53,7 +63,7 @@ export default async function Withdrawals({
         </InfoCard>
         <div className="card">
           <StatusIconText
-            isEligible={isEligible}
+            isEligible={data.isEligible}
             showIcon
             className="typography-content-body-bold mb-lg"
           />
@@ -74,22 +84,12 @@ export default async function Withdrawals({
                         />
                       }
                     >
-                      <div>
-                        <p>
-                          If eligible, this is the maximum amount available for
-                          withdrawal.{' '}
-                        </p>
-                        <p>
-                          {`Withdrawals have consequences. Withdrawing the full
-                        amount can surrender the policy, if you don’t make a
-                        payment by the next monthaversary. (Your policy’s
-                        monthaversary happens every month on the ${standardDateMonthYear(montheversary)}.)`}
-                        </p>
-                        <p>
-                          Depending on the amount, a partial withdrawal can
-                          reduce your coverage amount and may be taxable.
-                        </p>
-                      </div>
+                      <p>
+                        This amount is how much you may borrow from the account
+                        value of your policy. Keep in mind, loans have
+                        consequences. Aside from incurring interest, a loan may
+                        reduce your coverage amount.{' '}
+                      </p>
                     </Popover>,
                   ]}
                 >
@@ -98,69 +98,60 @@ export default async function Withdrawals({
               }
             >
               <p className="typography-content-value">
-                {formatUSDollars(250439.23)}
+                {formatUSDollars(data.maximumLoanAmount)}
               </p>
             </FieldData>
             {/* TODO: ONLY show this if there is a total loan balance!!! */}
-            <FieldData
-              caption={
-                <span>As of ${standardDateMonthYear('2023-06-12')}</span>
-              }
-              Label={
-                <Label
-                  interactiveElements={[
-                    <Popover
-                      key={TOTAL_LOAN_BALANCE}
-                      title={TOTAL_LOAN_BALANCE}
-                      trigger={
-                        <Icon
-                          type={IconType.CIRCLE_INFO}
-                          color="var(--color-base-icon-icon-tooltip, #ff7500)"
-                          width={16}
-                          height={16}
-                        />
-                      }
-                    >
-                      <div>
+            {!!data.totalLoanBalance && (
+              <FieldData
+                caption={
+                  // TODO: DATA - WHAT TO USE HERE?
+                  <span>{DEFAULT_ERROR_STRING}</span>
+                  // <span>{`As of ${standardDateMonthYear('2023-06-12')}`}</span>
+                }
+                Label={
+                  <Label
+                    interactiveElements={[
+                      <Popover
+                        key={TOTAL_LOAN_BALANCE}
+                        title={TOTAL_LOAN_BALANCE}
+                        trigger={
+                          <Icon
+                            type={IconType.CIRCLE_INFO}
+                            color="var(--color-base-icon-icon-tooltip, #ff7500)"
+                            width={16}
+                            height={16}
+                          />
+                        }
+                      >
                         <p>
-                          If eligible, this is the maximum amount available for
-                          withdrawal.{' '}
+                          This amount shows your current balance for all loans
+                          you’ve already taken.
                         </p>
-                        <p>
-                          {`Withdrawals have consequences. Withdrawing the full
-                        amount can surrender the policy, if you don’t make a
-                        payment by the next monthaversary. (Your policy’s
-                        monthaversary happens every month on the ${standardDateMonthYear(montheversary)}.)`}
-                        </p>
-                        <p>
-                          Depending on the amount, a partial withdrawal can
-                          reduce your coverage amount and may be taxable.
-                        </p>
-                      </div>
-                    </Popover>,
-                  ]}
-                >
-                  {TOTAL_LOAN_BALANCE}
-                </Label>
-              }
-            >
-              <p className="typography-content-value">
-                {formatUSDollars(250439.23)}
-              </p>
-            </FieldData>
+                      </Popover>,
+                    ]}
+                  >
+                    {TOTAL_LOAN_BALANCE}
+                  </Label>
+                }
+              >
+                <p className="typography-content-value">
+                  {formatUSDollars(data.totalLoanBalance)}
+                </p>
+              </FieldData>
+            )}
           </div>
         </div>
       </div>
-      <p
-        className="typography-content-body-bold"
-        style={{ color: 'var(--Base-Text-text-primary, #212121)' }}
-      >
-        Call {/* TODO: create function to format this */}
-        <a href={`tel:+${18002322222}`} className="typography-nav-links-inline">
-          1-800-232-2222
-        </a>{' '}
-        to being the loan process
-      </p>
+    );
+  };
+
+  return (
+    <div className="container">
+      <HeaderBreadcrumb title="Loans" />
+      <HeaderPolicyDetails planCode={planCode} policyNumber={policyNumber} />
+      {loansData()}
+      <CallForAssistance customInstruction="to begin the loan process." />
       <Footer />
     </div>
   );

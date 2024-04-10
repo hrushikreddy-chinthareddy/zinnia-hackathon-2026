@@ -9,6 +9,7 @@ import {
 } from '@zinnia/bloom/internal/components';
 
 import { FieldData } from '@/components/field-data/FieldData';
+import { PolicyRider } from '@/types/riders';
 import { formatUSDollars } from '@/utils/currency';
 import { fullName } from '@/utils/data';
 import { standardDateMonthYear } from '@/utils/dates';
@@ -16,34 +17,15 @@ import { standardDateMonthYear } from '@/utils/dates';
 import styles from './Rider.module.css';
 
 export const Rider = ({
-  elected,
+  isElected,
   cost,
   description,
   effectiveDate,
   insured,
   status,
   title,
-  policyOwner,
-}: {
-  elected: boolean;
-  cost: number;
-  description: string;
-  effectiveDate: string;
-  insured?: {
-    firstName: string;
-    lastName: string;
-  };
-  status?: Status;
-  title: string;
-  policyOwner?: {
-    firstName: string;
-    lastName: string;
-  };
-}) => {
-  const insuredSameAsPolicyOwner =
-    insured?.firstName === policyOwner?.firstName &&
-    insured?.lastName === policyOwner?.lastName;
-
+  isOwner,
+}: PolicyRider) => {
   return (
     <div className={styles.riderContainer}>
       <h3 className="typography-titles-subtitle">{title}</h3>
@@ -52,9 +34,9 @@ export const Rider = ({
         <Tag variant={TagVariant.Information} text="Active" className="mt-lg" />
       )}
       <div className={styles.riderDetails}>
-        {elected && (
+        {isElected && (
           <>
-            {!insuredSameAsPolicyOwner && (
+            {!isOwner && (
               <FieldData Label={<Label>Insured</Label>}>
                 <span className="typography-content-body-sm mt-sm">
                   {fullName({

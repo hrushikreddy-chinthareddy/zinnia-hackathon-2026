@@ -5,19 +5,18 @@ import {
   Popover,
 } from '@zinnia/bloom/internal/components';
 
+import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { FieldData } from '@/components/field-data/FieldData';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 import { InfoCard } from '@/components/info-card/InfoCard';
+import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { AccountValue } from '@/components/policy-overview/AccountValue';
-import { StatusIconText } from '@/components/status-icon-text/StatusIconText';
+import { getPolicySurrenderDetails } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
-import { standardDateMonthYear } from '@/utils/dates';
-
-// TODO: update with real data
-const isEligible = false;
+import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 const NET_SURRENDER_VALUE = 'Net surrender value';
 
@@ -27,11 +26,17 @@ export default async function SurrenderPolicy({
   params: PolicyRequestInputs;
 }) {
   const { planCode, policyNumber } = params;
+  const { data, error } = await getPolicySurrenderDetails({
+    planCode,
+    policyNumber,
+  });
 
-  return (
-    <div className="container">
-      <HeaderBreadcrumb title="Surrender policy" />
-      <HeaderPolicyDetails planCode={planCode} policyNumber={policyNumber} />
+  const surrenderData = () => {
+    if (error || !data) {
+      return <NoDataAvailable message={DEFAULT_UNAVAILABLE_STRING} />;
+    }
+
+    return (
       <div className="card-container">
         <InfoCard iconType={IconType.LIGHTBULB}>
           <p>
@@ -44,11 +49,6 @@ export default async function SurrenderPolicy({
           </p>
         </InfoCard>
         <div className="card">
-          <StatusIconText
-            isEligible={isEligible}
-            showIcon
-            className="typography-content-body-bold mb-lg"
-          />
           <div className="column-card">
             <AccountValue
               planCode={planCode}
@@ -86,22 +86,21 @@ export default async function SurrenderPolicy({
               }
             >
               <p className="typography-content-value">
-                {formatUSDollars(250439.23)}
+                {formatUSDollars(data?.surrenderValue)}
               </p>
             </FieldData>
           </div>
         </div>
       </div>
-      <p
-        className="typography-content-body-bold"
-        style={{ color: 'var(--Base-Text-text-primary, #212121)' }}
-      >
-        Call {/* TODO: create function to format this */}
-        <a href={`tel:+${18002322222}`} className="typography-nav-links-inline">
-          1-800-232-2222
-        </a>{' '}
-        to surrender your policy.
-      </p>
+    );
+  };
+
+  return (
+    <div className="container">
+      <HeaderBreadcrumb title="Surrender policy" />
+      <HeaderPolicyDetails planCode={planCode} policyNumber={policyNumber} />
+      {surrenderData()}
+      <CallForAssistance customInstruction="to surrender your policy." />
       <Footer />
     </div>
   );

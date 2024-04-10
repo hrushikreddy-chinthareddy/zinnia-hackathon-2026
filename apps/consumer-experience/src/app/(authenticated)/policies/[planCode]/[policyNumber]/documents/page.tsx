@@ -1,6 +1,7 @@
 import { IconType } from '@zinnia/bloom/internal/components';
 import Link from 'next/link';
 
+import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
 import { Footer } from '@/components/footer/Footer';
@@ -89,7 +90,8 @@ export default async function Documents({
           })}
         </div>
       )}
-      <Footer showAction />
+      <CallForAssistance />
+      <Footer />
     </div>
   );
 }
