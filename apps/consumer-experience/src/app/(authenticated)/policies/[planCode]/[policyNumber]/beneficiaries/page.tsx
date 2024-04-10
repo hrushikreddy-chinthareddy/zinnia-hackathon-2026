@@ -9,6 +9,7 @@ import {
 } from '@zinnia/bloom/internal/components';
 import { Suspense } from 'react';
 
+import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
@@ -241,7 +242,8 @@ export default async function Beneficiaries({
             </ClickableCardContainer>
           )}
         </div>
-        <Footer showAction />
+        <CallForAssistance />
+        <Footer />
       </Suspense>
     </div>
   );

@@ -5,6 +5,7 @@ import {
   Popover,
 } from '@zinnia/bloom/internal/components';
 
+import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { FieldData } from '@/components/field-data/FieldData';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
@@ -99,16 +100,7 @@ export default async function SurrenderPolicy({
       <HeaderBreadcrumb title="Surrender policy" />
       <HeaderPolicyDetails planCode={planCode} policyNumber={policyNumber} />
       {surrenderData()}
-      <p
-        className="typography-content-body-bold"
-        style={{ color: 'var(--Base-Text-text-primary, #212121)' }}
-      >
-        Call {/* TODO: create function to format this */}
-        <a href={`tel:+${18002322222}`} className="typography-nav-links-inline">
-          1-800-232-2222
-        </a>{' '}
-        to surrender your policy.
-      </p>
+      <CallForAssistance customInstruction="to surrender your policy." />
       <Footer />
     </div>
   );

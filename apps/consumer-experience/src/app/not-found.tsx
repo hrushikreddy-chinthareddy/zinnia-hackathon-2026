@@ -30,7 +30,7 @@ export default async function NotFound() {
           style={{ width: '100%' }}
         />
       }
-      footer={<Footer showAction={false} style={{ marginTop: 0 }} />}
+      footer={<Footer style={{ marginTop: 0 }} />}
     />
   );
 }

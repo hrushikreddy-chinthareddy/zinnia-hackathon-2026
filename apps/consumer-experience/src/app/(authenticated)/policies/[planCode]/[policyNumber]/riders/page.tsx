@@ -1,5 +1,6 @@
 import { IconType } from '@zinnia/bloom/internal/components';
 
+import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
@@ -68,19 +69,10 @@ export default async function Riders({
               {electedRiders?.map(rider => (
                 <Rider key={rider.riderCode} {...rider} />
               ))}
-              <p
-                className="typography-content-body-bold mb-md"
-                style={{ color: 'var(--Base-Text-text-primary, #212121)' }}
-              >
-                Need to make a claim? Call{' '}
-                <a
-                  href={`tel:+${CONTACT_NUMBER}`}
-                  className="typography-nav-links-inline"
-                >
-                  1-800-232-2222
-                </a>{' '}
-                to begin the process
-              </p>
+              <CallForAssistance
+                callToAction="Need to make a claim?"
+                customInstruction="to begin the process."
+              />
             </div>
           )}
           {!!additionalRiders?.length && (
@@ -95,19 +87,10 @@ export default async function Riders({
               {additionalRiders?.map(rider => (
                 <Rider key={rider.riderCode} {...rider} />
               ))}
-              <p
-                className="typography-content-body-bold"
-                style={{ color: 'var(--Base-Text-text-primary, #212121)' }}
-              >
-                Need to add a rider? Call{' '}
-                <a
-                  href={`tel:+${CONTACT_NUMBER}`}
-                  className="typography-nav-links-inline"
-                >
-                  1-800-232-2222
-                </a>{' '}
-                to begin the process
-              </p>
+              <CallForAssistance
+                callToAction="Need to add a rider?"
+                customInstruction="to begin the process."
+              />
             </div>
           )}
         </>

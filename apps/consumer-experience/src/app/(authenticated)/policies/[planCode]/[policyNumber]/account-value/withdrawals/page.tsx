@@ -5,6 +5,7 @@ import {
   Popover,
 } from '@zinnia/bloom/internal/components';
 
+import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { FieldData } from '@/components/field-data/FieldData';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
@@ -280,16 +281,8 @@ export default async function Withdrawals({
       <HeaderBreadcrumb title="Withdrawals" />
       <HeaderPolicyDetails planCode={planCode} policyNumber={policyNumber} />
       {withdrawalsData()}
-      <p
-        className="typography-content-body-bold"
-        style={{ color: 'var(--Base-Text-text-primary, #212121)' }}
-      >
-        Call {/* TODO: create function to format this */}
-        <a href={`tel:+${18002322222}`} className="typography-nav-links-inline">
-          1-800-232-2222
-        </a>{' '}
-        to make a withdrawal
-      </p>
+      <CallForAssistance customInstruction="to make a withdrawal." />
+
       <Footer />
     </div>
   );
