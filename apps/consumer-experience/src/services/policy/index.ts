@@ -107,7 +107,7 @@ const getPolicyByPlanCodeAndId = async (options: PolicyRequestInputs) => {
 };
 
 const getPolicyTransactions = async ({
-  eventNames,
+  transactionTypes,
   policyNumber,
   limit = 10,
   offset = 0,
@@ -117,11 +117,10 @@ const getPolicyTransactions = async ({
   year,
 }: TransactionRequestInputs) => {
   let query = `?offset=${offset}&limit=${limit}&order=${order}&status=${status}`;
-  // TODO: eventNames will change to transactionTypes on April 9th 2024
-  if (eventNames.length) {
+  if (transactionTypes.length) {
     query =
       query +
-      `&${eventNames.map(eventName => `eventNames=${eventName}`).join('&')}`;
+      `&${transactionTypes.map(transactionType => `transactionTypes=${transactionType}`).join('&')}`;
   }
 
   if (year) {
@@ -539,12 +538,12 @@ export const getPaymentHistory = async ({
   policyNumber,
 }: PolicyRequestInputs): Promise<ApiResponse<PaymentHistoryTransaction>> => {
   const currentYear = new Date().getFullYear().toString();
-  const completedEventNames = Object.values(
+  const completedTransactionTypes = Object.values(
     CompletedPremiumTransactionType
   ).map(String);
-  const pendingEventNames = Object.values(PendingPremiumTransactionType).map(
-    String
-  );
+  const pendingTransactionTypes = Object.values(
+    PendingPremiumTransactionType
+  ).map(String);
 
   if (isMockPaymentHistoryRequestEnabled()) {
     return {
@@ -565,7 +564,7 @@ export const getPaymentHistory = async ({
       await Promise.allSettled([
         getPolicyByPlanCodeAndId({ planCode, policyNumber }),
         getPolicyTransactions({
-          eventNames: completedEventNames,
+          transactionTypes: completedTransactionTypes,
           planCode,
           policyNumber,
           limit: 30,
@@ -573,7 +572,7 @@ export const getPaymentHistory = async ({
           year: currentYear,
         }),
         getPolicyTransactions({
-          eventNames: pendingEventNames,
+          transactionTypes: pendingTransactionTypes,
           planCode,
           policyNumber,
           status: 'Pending',

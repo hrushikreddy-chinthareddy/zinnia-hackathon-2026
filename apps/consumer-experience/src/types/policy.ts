@@ -106,7 +106,7 @@ export interface Beneficiary {
 }
 
 export interface TransactionRequestInputs extends PolicyRequestInputs {
-  eventNames: string[];
+  transactionTypes: string[];
   limit?: number;
   offset?: number;
   order?: 'ASC' | 'DESC';
