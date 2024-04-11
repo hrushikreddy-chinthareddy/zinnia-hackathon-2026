@@ -9,6 +9,7 @@ import { DesktopNav } from '@/components/desktop-nav/DesktopNav';
 import { MobileNav } from '@/components/mobile-nav/MobileNav';
 import { PolicyStatusAlertBanner } from '@/components/policy-status-alert-banner/PolicyStatusAlertBanner';
 import { SessionManager } from '@/components/session/SessionManager';
+import { PolicyRequestInputs } from '@/types/policy';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
@@ -17,11 +18,18 @@ export const metadata: Metadata = {
   description: 'Consumer UI',
 };
 
-export default async function RootLayout({
+export default async function AuthenticatedLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: {
+    planCode: string;
+    policyNumber: string;
+  };
 }) {
+  console.log(params.planCode);
+
   return (
     <UserProvider>
       <main className={`${styles.body} ${styles.main}`}>

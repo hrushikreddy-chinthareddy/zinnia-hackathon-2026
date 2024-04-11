@@ -10,6 +10,7 @@ import {
   SystematicProgram,
   Party,
   FundAllocation,
+  PolicyFeature,
 } from '@zinnia/api-types/types/sor';
 import { policyOwner } from '@zinnia/utils';
 
@@ -462,4 +463,48 @@ export const transformRiders = (policy: Policy): PolicyRider[] | null => {
       },
     };
   });
+};
+
+export const transformPolicyFeature = (
+  policy: Policy,
+  feature: PolicyFeature.featureType
+) => {
+  const { policyFeatures } = policy;
+
+  const requestedFeature = policyFeatures?.find(
+    (currentFeature: PolicyFeature) => currentFeature.featureType === feature
+  );
+
+  if (!requestedFeature) {
+    return null;
+  }
+
+  return {
+    featureType: requestedFeature.featureType,
+    totalRequiredAmount: requestedFeature.totalRequiredAmount,
+    totalMinimumRequiredAmount: requestedFeature.totalMinimumRequiredAmount,
+    totalPaymentAmount: requestedFeature.totalPaymentAmount,
+    startDate: requestedFeature.startDate,
+    endDate: requestedFeature.endDate,
+  };
+};
+
+export const transformPolicyStatusDetails = (policy: Policy) => {
+  const policyStatus = policy.policyStatus;
+
+  if (policyStatus === PolicyStatus.PENDINGLAPSE) {
+    const featureDetails = transformPolicyFeature(
+      policy,
+      'LAPSEASSESSMENT' as PolicyFeature.featureType
+    );
+
+    return {
+      policyStatus,
+      ...featureDetails,
+    };
+  }
+
+  return {
+    policyStatus,
+  };
 };

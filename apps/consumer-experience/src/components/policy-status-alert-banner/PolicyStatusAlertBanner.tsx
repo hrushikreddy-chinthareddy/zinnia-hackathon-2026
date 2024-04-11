@@ -1,27 +1,40 @@
-'use client';
-
 import { PolicyStatus } from '@zinnia/api-types/types/sor';
 import { BannerAlert, BannerVariant } from '@zinnia/bloom/internal/components';
-import { useParams } from 'next/navigation';
 
-export const PolicyStatusAlertBanner = () => {
-  const params = useParams<{ planCode: string; policyNumber: string }>();
-  const { planCode, policyNumber } = params;
-  // TODO: only show if policyStatus has banner
-  // get banner details
+import { getPolicyStatusDetails } from '@/services';
+import { formatUSDollars } from '@/utils/currency';
+import { standardDateMonthYear } from '@/utils/dates';
+
+export const PolicyStatusAlertBanner = async () => {
+  // TODO: just pass in params from layout
+  const { planCode, policyNumber } = {
+    planCode: 'SBFIXUL1',
+    policyNumber: 'SA10012428',
+  };
 
   if (!planCode || !policyNumber) {
     return null;
   }
 
-  const getStatus = () => {
-    return {
-      text: 'Your policy is about to lapse, leaving you uninsured. Pay at least $XXX.XX by X/X/XXXX to get back on track. Call 1-800-232-2222 to make a payment.',
-      variant: BannerVariant.Warning,
-    };
-  };
+  const { data } = await getPolicyStatusDetails({ planCode, policyNumber });
 
-  const statusContent = getStatus();
+  let statusContent;
+
+  switch (data?.policyStatus) {
+    case PolicyStatus.PENDINGLAPSE:
+      statusContent = {
+        text: `Your policy is about to lapse, leaving you uninsured. Pay at least ${formatUSDollars(data.totalMinimumRequiredAmount)} by ${standardDateMonthYear(data.endDate)} to get back on track. Call 1-800-232-2222 to make a payment.`,
+        variant: BannerVariant.Warning,
+      };
+      break;
+    default:
+      statusContent = null;
+  }
+
+  if (!statusContent) {
+    return null;
+  }
+
   return (
     <BannerAlert
       bodyText={statusContent.text}
