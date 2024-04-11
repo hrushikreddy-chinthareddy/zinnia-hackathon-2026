@@ -7,7 +7,6 @@ import {
   Transaction,
   TransactionErrorResponse,
   MetricsType,
-  PolicyFeature,
 } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 

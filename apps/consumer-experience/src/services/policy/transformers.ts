@@ -34,6 +34,8 @@ import {
   AccountValueSummary,
   PolicyWithdrawals,
   PolicySurrender,
+  PolicyStatusDetail,
+  PolicyFeatureDetail,
 } from '@/types/policy';
 import { PolicyRider } from '@/types/riders';
 import {
@@ -468,7 +470,7 @@ export const transformRiders = (policy: Policy): PolicyRider[] | null => {
 export const transformPolicyFeature = (
   policy: Policy,
   feature: PolicyFeature.featureType
-) => {
+): PolicyFeatureDetail | null => {
   const { policyFeatures } = policy;
 
   const requestedFeature = policyFeatures?.find(
@@ -495,7 +497,9 @@ export const transformPolicyFeature = (
   };
 };
 
-export const transformPolicyStatusDetails = (policy: Policy) => {
+export const transformPolicyStatusDetails = (
+  policy: Policy
+): Partial<PolicyStatusDetail> => {
   const policyStatus = policy.policyStatus;
 
   if (policyStatus === PolicyStatus.PENDINGLAPSE) {
