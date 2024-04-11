@@ -486,6 +486,12 @@ export const transformPolicyFeature = (
     totalPaymentAmount: requestedFeature.totalPaymentAmount,
     startDate: requestedFeature.startDate,
     endDate: requestedFeature.endDate,
+    status: requestedFeature.status,
+    period: requestedFeature.period,
+    effectiveDate: requestedFeature.effectiveDate,
+    paymentAmount: requestedFeature.paymentAmount,
+    underwritingDecision: requestedFeature.underwritingDecision,
+    approvalDate: requestedFeature.approvalDate,
   };
 };
 
@@ -500,7 +506,26 @@ export const transformPolicyStatusDetails = (policy: Policy) => {
 
     return {
       policyStatus,
-      ...featureDetails,
+      minimumPaymentDue: featureDetails?.totalMinimumRequiredAmount,
+      minimumPaymentDueDate: featureDetails?.endDate,
+    };
+  }
+
+  if (policyStatus === PolicyStatus.LAPSE) {
+    const lapseAssessmentDetails = transformPolicyFeature(
+      policy,
+      'LAPSEASSESSMENT' as PolicyFeature.featureType
+    );
+
+    const reinstantementDetails = transformPolicyFeature(
+      policy,
+      'REINSTATEMENT' as PolicyFeature.featureType
+    );
+
+    return {
+      policyStatus,
+      lapsedOn: lapseAssessmentDetails?.endDate,
+      reinstatmentDate: reinstantementDetails?.startDate,
     };
   }
 

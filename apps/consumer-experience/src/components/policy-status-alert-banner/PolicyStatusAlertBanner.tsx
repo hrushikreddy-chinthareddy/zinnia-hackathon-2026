@@ -23,7 +23,7 @@ export const PolicyStatusAlertBanner = async ({
   switch (data?.policyStatus) {
     case PolicyStatus.PENDINGLAPSE:
       statusContent = {
-        text: `Your policy is about to lapse, leaving you uninsured. Pay at least ${formatUSDollars(data.totalMinimumRequiredAmount)} by ${standardDateMonthYear(data.endDate)} to get back on track. Call 1-800-232-2222 to make a payment.`,
+        text: `Your policy is about to lapse, leaving you uninsured. Pay at least ${formatUSDollars(data.minimumPaymentDue)} by ${standardDateMonthYear(data.minimumPaymentDueDate)} to get back on track. Call 1-800-232-2222 to make a payment.`,
         variant: BannerVariant.Warning,
       };
       break;
