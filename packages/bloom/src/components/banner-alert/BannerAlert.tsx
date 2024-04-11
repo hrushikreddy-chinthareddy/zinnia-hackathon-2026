@@ -1,4 +1,4 @@
-import { Icon, IconType } from '..';
+import { Icon, IconType } from '../icon';
 import styles from './BannerAlert.module.css';
 import { BannerAlertProps, BannerVariant } from './types';
 

@@ -7,6 +7,7 @@ import '@/app/styles/globals.css';
 import styles from '@/app/layout.module.css';
 import { DesktopNav } from '@/components/desktop-nav/DesktopNav';
 import { MobileNav } from '@/components/mobile-nav/MobileNav';
+import { PolicyStatusAlertBanner } from '@/components/policy-status-alert-banner/PolicyStatusAlertBanner';
 import { SessionManager } from '@/components/session/SessionManager';
 
 // disable because NextJS needs this to be exported from this file
@@ -30,7 +31,12 @@ export default async function RootLayout({
           <MobileNav />
           <DesktopNav />
           <div className={styles.container}>
-            <div className={styles.content}>{children}</div>
+            <div className={styles.content}>
+              <>
+                <PolicyStatusAlertBanner />
+                {children}
+              </>
+            </div>
           </div>
         </SessionManager>
       </main>
