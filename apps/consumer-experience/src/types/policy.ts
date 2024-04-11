@@ -226,11 +226,11 @@ export interface PolicyWithdrawals {
   availableToWithdrawTaxFree?: number | null;
 }
 
-export type PolicyFeatureType = keyof PolicyFeature.featureType;
+// export type PolicyFeatureType = keyof typeof PolicyFeature.featureType;
 
 export interface PolicyFeatureDetail {
   timestamp?: string;
-  featureType?: PolicyFeatureType;
+  featureType?: PolicyFeature.featureType;
   startDate?: string;
   endDate?: string;
   status?: boolean;
