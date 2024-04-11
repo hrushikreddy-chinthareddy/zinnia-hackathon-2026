@@ -14,14 +14,13 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
   policyNumber: string;
 }
 
-// TODO: add surrendered and locked statuses
 const policyDisplayText: { [key in PolicyStatus]: string } = {
   [PolicyStatus.ACTIVE]: 'active',
   [PolicyStatus.PENDINGISSUED]: 'active',
   [PolicyStatus.PENDINGLAPSE]: 'pending lapse',
   [PolicyStatus.LAPSE]: 'lapsed',
   [PolicyStatus.SURRENDERED]: 'surrendered',
-  // TODO: what is the display for this one?
+  // These are statuses we don't display, users should not be able to log in with these statuses
   [PolicyStatus.NOTISSUED]: '',
   [PolicyStatus.CANCELEDNOPREMIUM]: '',
   [PolicyStatus.CANCELEDFREELOOK]: '',

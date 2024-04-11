@@ -34,7 +34,6 @@ export default async function Page({
     planCode,
     policyNumber,
   });
-  // TODO: how to add the error banner on every page?
 
   if (error) {
     return (
@@ -86,7 +85,6 @@ export default async function Page({
       <HeaderBreadcrumb title="Policy Overview" />
       <HeaderPolicyDetails planCode={planCode} policyNumber={policyNumber} />
       {overviewBody()}
-      {/* TODO: add CallForAssistance component here */}
       <Footer />
     </div>
   );

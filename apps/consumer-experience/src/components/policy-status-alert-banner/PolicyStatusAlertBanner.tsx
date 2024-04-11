@@ -10,8 +10,6 @@ export const PolicyStatusAlertBanner = async ({
   planCode,
   policyNumber,
 }: PolicyRequestInputs) => {
-  // TODO: just pass in params from layout
-
   if (!planCode || !policyNumber) {
     return null;
   }

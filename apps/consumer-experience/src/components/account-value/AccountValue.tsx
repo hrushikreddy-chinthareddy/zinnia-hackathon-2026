@@ -26,7 +26,6 @@ interface Props extends PolicyRequestInputs, HTMLAttributes<HTMLDivElement> {
   showIcon?: boolean;
 }
 
-// TODO: add surrendered and locked policy states
 export const AccountValue = async ({
   className,
   hideLabel,

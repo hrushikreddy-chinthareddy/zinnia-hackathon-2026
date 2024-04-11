@@ -27,8 +27,3 @@ export const MainValueNull: StoryType = {
 export const APIFailed: StoryType = {
   args: {},
 };
-
-// TODO: add other policy statuses here
-export const PolicyLapsed: StoryType = {
-  args: {},
-};
