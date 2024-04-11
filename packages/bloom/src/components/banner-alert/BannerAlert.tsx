@@ -13,6 +13,7 @@ const icons = {
 export const BannerAlert = ({
   bodyText,
   canDismiss,
+  className,
   cta,
   dismissLabel,
   onDismiss,
@@ -22,7 +23,7 @@ export const BannerAlert = ({
 
   return (
     <div
-      className={`${styles.container} ${styles[bannerVariant]}`}
+      className={`${styles.container} ${styles[bannerVariant]} ${className}`}
       data-testid="banner-alert"
     >
       <div className={styles.contentContainer}>

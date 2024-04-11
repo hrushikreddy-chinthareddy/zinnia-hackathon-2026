@@ -909,8 +909,6 @@ export const getPolicyStatusDetails = async (
     const response = await getPolicyByPlanCodeAndId(policyInputs);
     const transformedResults = transformPolicyStatusDetails(response);
 
-    console.log(response);
-
     return {
       data: transformedResults,
       error: null,

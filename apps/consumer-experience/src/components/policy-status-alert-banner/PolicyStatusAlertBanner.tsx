@@ -2,15 +2,15 @@ import { PolicyStatus } from '@zinnia/api-types/types/sor';
 import { BannerAlert, BannerVariant } from '@zinnia/bloom/internal/components';
 
 import { getPolicyStatusDetails } from '@/services';
+import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { standardDateMonthYear } from '@/utils/dates';
 
-export const PolicyStatusAlertBanner = async () => {
+export const PolicyStatusAlertBanner = async ({
+  planCode,
+  policyNumber,
+}: PolicyRequestInputs) => {
   // TODO: just pass in params from layout
-  const { planCode, policyNumber } = {
-    planCode: 'SBFIXUL1',
-    policyNumber: 'SA10012428',
-  };
 
   if (!planCode || !policyNumber) {
     return null;
@@ -37,6 +37,7 @@ export const PolicyStatusAlertBanner = async () => {
 
   return (
     <BannerAlert
+      className="mb-lg"
       bodyText={statusContent.text}
       variant={statusContent.variant}
     />

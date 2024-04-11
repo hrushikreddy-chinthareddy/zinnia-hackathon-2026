@@ -1,3 +1,5 @@
+import { HTMLAttributes } from 'react';
+
 export enum BannerVariant {
   Default = 'default',
   Error = 'error',
@@ -6,7 +8,7 @@ export enum BannerVariant {
   Warning = 'warning',
 }
 
-export interface BannerAlertProps {
+export interface BannerAlertProps extends HTMLAttributes<HTMLDivElement> {
   bodyText: string;
   cta?: {
     href: string;

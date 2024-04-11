@@ -1,5 +1,6 @@
 import { Icon, IconType, Popover } from '@zinnia/bloom/internal/components';
 import { toSentenceCase } from '@zinnia/utils';
+import clsx from 'clsx';
 
 import { AccountValue } from '@/components/account-value/AccountValue';
 import { CardInsertHistory } from '@/components/card-list-history/CardInsertHistory';
@@ -8,9 +9,11 @@ import { ClickableCardContainer } from '@/components/clickable-card-container/Cl
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
+import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { StatusIconText } from '@/components/status-icon-text/StatusIconText';
 import { getPolicyAccountValueSummary } from '@/services/policy';
 import { PolicyRequestInputs } from '@/types/policy';
+import { isNullEmptyOrUndefined } from '@/utils/data';
 import { DEFAULT_UNAVAILABLE_STRING, pluralize } from '@/utils/strings';
 
 const historyItems = [
@@ -50,7 +53,11 @@ export default async function AccountValuePage({
         listItems={[
           {
             content: (
-              <div className="stacked-items">
+              <div
+                className={clsx('stacked-items', {
+                  'py-lg': !data?.fundCount,
+                })}
+              >
                 <span className="typography-labels-label-md-alt">Funds</span>
                 <span
                   className="typography-content-caption"
@@ -67,7 +74,13 @@ export default async function AccountValuePage({
           },
           {
             content: (
-              <div className="stacked-items">
+              <div
+                className={clsx('stacked-items', {
+                  'py-lg': isNullEmptyOrUndefined(
+                    data?.hasWithdrawalEligibility
+                  ),
+                })}
+              >
                 <span className="typography-labels-label-md-alt">
                   Make a withdrawal
                 </span>
@@ -84,7 +97,11 @@ export default async function AccountValuePage({
           },
           {
             content: (
-              <div className="stacked-items">
+              <div
+                className={clsx('stacked-items', {
+                  'py-lg': isNullEmptyOrUndefined(data?.hasLoanEligibility),
+                })}
+              >
                 <span className="typography-labels-label-md-alt">
                   Take a loan
                 </span>
@@ -101,8 +118,8 @@ export default async function AccountValuePage({
           },
           {
             content: (
-              <div className="stacked-items">
-                <span className="typography-labels-label-md-alt py-lg">
+              <div className="stacked-items py-lg">
+                <span className="typography-labels-label-md-alt">
                   Surrender policy
                 </span>
               </div>
