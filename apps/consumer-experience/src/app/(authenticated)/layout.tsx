@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   description: 'Consumer UI',
 };
 
-export default async function RootLayout({
+export default async function AuthenticatedLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -30,7 +30,9 @@ export default async function RootLayout({
           <MobileNav />
           <DesktopNav />
           <div className={styles.container}>
-            <div className={styles.content}>{children}</div>
+            <div className={styles.content}>
+              <>{children}</>
+            </div>
           </div>
         </SessionManager>
       </main>

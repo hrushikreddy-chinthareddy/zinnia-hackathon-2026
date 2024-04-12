@@ -42,28 +42,6 @@
   margin: var(--measure-dimension-gap-3xl, 2.5rem) 0;
 }
 
-/* TODO: update these to use variables when everly theme vars have been added */
-/* // TODO: move this to bloom, this should be button link component or linkButton component uh oh */
-.buttonLink {
-  /* background-color: var(--color-button-primary-button-primary-fill);
-  border: var(--measure-dimension-stroke-md) solid
-    var(--color-button-primary-button-primary-border); */
-  background-color: #121b6b;
-  border: var(--measure-dimension-stroke-md) solid #121b6b;
-  border-radius: var(--measure-dimension-radius-md, 8px);
-  /* color: var(--color-button-primary-button-primary-text, #fff); */
-  color: #fff;
-  display: block;
-  padding: var(--measure-dimension-padding-lg)
-    var(--measure-dimension-padding-6xl);
-  text-align: center;
-
-  /* TODO: what is the correct hover behavior here */
-  &:hover {
-    text-decoration: none;
-  }
-}
-
 .footer {
   color: var(--color-base-text-text-secondary, #676767);
   border-top: 2px solid var(--color-base-border-border-light, #ededed);
@@ -98,9 +76,7 @@
 
   .carrierMarketingImage {
     width: 435px;
-    /* TODO: update these to use variables when everly theme vars have been added */
-    /* background-color: var(--color-primary-color-primary-lightest, #d0d2ff); */
-    background-color: #d0d2ff;
+    background-color: var(--color-primary-color-primary-lightest, #d0d2ff);
     display: flex;
     align-items: center;
 

@@ -1,15 +1,17 @@
+import { PolicyStatus } from '@zinnia/api-types/types/sor';
 import { IconType } from '@zinnia/bloom/internal/components';
 import { Metadata } from 'next';
 
+import { AccountValue } from '@/components/account-value/AccountValue';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
-import { AccountValue } from '@/components/policy-overview/AccountValue';
 import { Coverage } from '@/components/policy-overview/Coverage';
-import styles from '@/components/policy-overview/PolicyOverview.module.css';
+import { LapsedPolicy } from '@/components/policy-overview/non-active-statuses/LapsedPolicy';
+import { SurrenderedPolicy } from '@/components/policy-overview/non-active-statuses/SurrenderedPolicy';
 import { UpcomingPremium } from '@/components/policy-overview/UpcomingPremium';
 import { getPolicyForHeaderDetails } from '@/services';
 
@@ -28,7 +30,7 @@ export default async function Page({
   };
 }) {
   const { planCode, policyNumber } = params;
-  const { error } = await getPolicyForHeaderDetails({
+  const { data, error } = await getPolicyForHeaderDetails({
     planCode,
     policyNumber,
   });
@@ -48,10 +50,16 @@ export default async function Page({
     );
   }
 
-  return (
-    <div className="container">
-      <HeaderBreadcrumb title="Policy Overview" />
-      <HeaderPolicyDetails planCode={planCode} policyNumber={policyNumber} />
+  const overviewBody = () => {
+    if (data?.policyStatus === PolicyStatus.LAPSE) {
+      return <LapsedPolicy planCode={planCode} policyNumber={policyNumber} />;
+    }
+
+    if (data?.policyStatus === PolicyStatus.SURRENDERED) {
+      return <SurrenderedPolicy />;
+    }
+
+    return (
       <div className="card-container">
         <UpcomingPremium planCode={planCode} policyNumber={policyNumber} />
         <ClickableCardContainer
@@ -67,9 +75,16 @@ export default async function Page({
             showIcon
           />
         </ClickableCardContainer>
-        {/* <AccountValue planCode={planCode} policyNumber={policyNumber} isLink /> */}
         <Coverage planCode={planCode} policyNumber={policyNumber} />
       </div>
+    );
+  };
+
+  return (
+    <div className="container">
+      <HeaderBreadcrumb title="Policy Overview" />
+      <HeaderPolicyDetails planCode={planCode} policyNumber={policyNumber} />
+      {overviewBody()}
       <Footer />
     </div>
   );

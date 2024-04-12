@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 
-import { AccountValue } from '../AccountValue';
+import { AccountValue } from '../../account-value/AccountValue';
 
 const meta: Meta<typeof AccountValue> = {
   component: AccountValue,
@@ -25,10 +25,5 @@ export const MainValueNull: StoryType = {
 };
 
 export const APIFailed: StoryType = {
-  args: {},
-};
-
-// TODO: add other policy statuses here
-export const PolicyLapsed: StoryType = {
   args: {},
 };

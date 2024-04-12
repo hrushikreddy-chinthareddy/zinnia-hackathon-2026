@@ -14,19 +14,18 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
   policyNumber: string;
 }
 
-// TODO: add surrendered and locked statuses
 const policyDisplayText: { [key in PolicyStatus]: string } = {
   [PolicyStatus.ACTIVE]: 'active',
   [PolicyStatus.PENDINGISSUED]: 'active',
   [PolicyStatus.PENDINGLAPSE]: 'pending lapse',
   [PolicyStatus.LAPSE]: 'lapsed',
-  // TODO: what is the display for this one?
+  [PolicyStatus.SURRENDERED]: 'surrendered',
+  // These are statuses we don't display, users should not be able to log in with these statuses
   [PolicyStatus.NOTISSUED]: '',
   [PolicyStatus.CANCELEDNOPREMIUM]: '',
   [PolicyStatus.CANCELEDFREELOOK]: '',
   [PolicyStatus.TERMINATED]: '',
   [PolicyStatus.MATURED]: '',
-  [PolicyStatus.SURRENDERED]: '',
   [PolicyStatus.LIVINGCLAIMPENDING]: '',
   [PolicyStatus.DEATHCLAIMPENDING]: '',
   [PolicyStatus.DEATHCLAIMPAID]: '',
@@ -51,15 +50,13 @@ export const HeaderPolicyDetails = async ({
 
   const statusStyle = () => {
     switch (policyStatus) {
-      // TODO: how to categorize this one?
-      // case PolicyStatus.NotIssued:
-      //   return 'status.notIssued';
       case PolicyStatus.PENDINGISSUED:
       case PolicyStatus.ACTIVE:
         return styles.success;
       case PolicyStatus.PENDINGLAPSE:
         return styles.warning;
       case PolicyStatus.LAPSE:
+      case PolicyStatus.SURRENDERED:
         return styles.error;
       default:
         return '';

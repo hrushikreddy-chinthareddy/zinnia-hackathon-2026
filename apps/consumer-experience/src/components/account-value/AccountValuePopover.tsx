@@ -5,7 +5,7 @@ import {
   PopoverPlacement,
 } from '@zinnia/bloom/internal/components';
 
-import styles from './PolicyOverview.module.css';
+import styles from '../policy-overview/PolicyOverview.module.css';
 const ACCOUNT_VALUE = 'Account value';
 
 export const AccountValuePopover = () => {
