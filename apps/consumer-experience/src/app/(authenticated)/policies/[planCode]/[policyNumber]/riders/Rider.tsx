@@ -84,7 +84,7 @@ export const Rider = ({
         )}
         <FieldData Label={<Label>Cost</Label>}>
           <span className="typography-content-body-sm mt-sm">
-            {formatUSDollars(cost)}
+            {formatUSDollars(cost, true)}
           </span>
         </FieldData>
       </div>

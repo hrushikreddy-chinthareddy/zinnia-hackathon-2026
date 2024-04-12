@@ -28,6 +28,12 @@ describe('formatUSDollars', () => {
     expect(result).toEqual(DEFAULT_ERROR_STRING);
   });
 
+  // Returns $0 when given an undefined value and displayNullAsZero is true
+  it('should return null when given an undefined value', () => {
+    const result = formatUSDollars(undefined, true);
+    expect(result).toEqual('$0');
+  });
+
   // Returns a formatted USD currency string when given a negative number.
   it('should return a formatted USD currency string when given a negative number', () => {
     const result = formatUSDollars(-1000);
