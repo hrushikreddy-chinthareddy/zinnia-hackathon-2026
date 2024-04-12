@@ -11,6 +11,7 @@ import {
   Party,
   FundAllocation,
   PolicyFeature,
+  Status,
 } from '@zinnia/api-types/types/sor';
 import { policyOwner } from '@zinnia/utils';
 
@@ -432,6 +433,10 @@ export const transformPaymentHistory = (
 
 export const transformRiders = (policy: Policy): PolicyRider[] | null => {
   const { riders } = policy;
+  const lapsedProtection = transformPolicyFeature(
+    policy,
+    'LAPSEPROTECTION' as PolicyFeature.featureType
+  );
 
   if (!riders || !riders.length) {
     return null;
@@ -445,7 +450,7 @@ export const transformRiders = (policy: Policy): PolicyRider[] | null => {
     party => party.partyId === insuredPartyFromRoles?.partyId
   );
 
-  return riders.map(rider => {
+  const allRiders = riders.map(rider => {
     const riderInsured = rider.riderParticipant?.find(
       party => party.insuredId === insuredPartyFromRoles?.partyId
     );
@@ -465,6 +470,25 @@ export const transformRiders = (policy: Policy): PolicyRider[] | null => {
       },
     };
   });
+
+  if (lapsedProtection) {
+    allRiders.push({
+      riderCode: lapsedProtection.featureType,
+      cost: lapsedProtection.paymentAmount,
+      description: getRiderDescription(lapsedProtection.featureType || ''),
+      effectiveDate: lapsedProtection.startDate,
+      isElected: true,
+      isOwner: true,
+      title: 'Lapse protection guarantee',
+      status: !lapsedProtection.endDate ? Status.ACTIVE : Status.TERMINATED,
+      insured: {
+        firstName: insuredParty?.firstName,
+        lastName: insuredParty?.lastName,
+      },
+    });
+  }
+
+  return allRiders;
 };
 
 export const transformPolicyFeature = (
