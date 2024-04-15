@@ -99,7 +99,6 @@ export default async function SurrenderPolicy({
       <HeaderBreadcrumb title="Surrender policy" />
       {surrenderData()}
       <CallForAssistance customInstruction="to surrender your policy." />
-      <Footer />
     </div>
   );
 }

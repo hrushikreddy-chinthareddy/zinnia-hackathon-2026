@@ -112,7 +112,6 @@ export default async function PaymentHistory({ params }: Props) {
           </CardListHistory.ListItems>
         </CardListHistory>
       )}
-      <Footer />
     </div>
   );
 }

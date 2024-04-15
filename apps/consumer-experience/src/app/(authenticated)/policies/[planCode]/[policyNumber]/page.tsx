@@ -89,7 +89,6 @@ export default async function Page({
         expanded
       />
       {overviewBody()}
-      <Footer />
     </div>
   );
 }

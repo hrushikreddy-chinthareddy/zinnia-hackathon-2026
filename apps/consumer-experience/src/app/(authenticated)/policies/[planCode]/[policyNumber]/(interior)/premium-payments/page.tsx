@@ -17,8 +17,6 @@ export default async function PremiumPayments({
         policyNumber={params.policyNumber}
         extended
       />
-      <CallForAssistance customInstruction="to make a payment." />
-      <Footer />
     </div>
   );
 }

@@ -289,8 +289,6 @@ export default async function Withdrawals({
       <HeaderBreadcrumb title="Withdrawals" />
       {withdrawalsData()}
       <CallForAssistance customInstruction="to make a withdrawal." />
-
-      <Footer />
     </div>
   );
 }
