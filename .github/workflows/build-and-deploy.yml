@@ -21,10 +21,3 @@ jobs:
     with:
       environment-level: uat
     secrets: inherit
-
-  # prod-deploy:
-  #   if: github.ref_name == 'main'
-  #   uses: ./.github/workflows/deploy-action.yml
-  #   with:
-  #     environment-level: production
-  #   secrets: inherit
