@@ -73,12 +73,6 @@ export const Addresses = ({
     address => address.addressType === AddressType.RESIDENCE
   );
 
-  // TODO: this was determined to be out of scope by ops since Zahara does not have a way of adding a recurring
-  // date, and endDate indicates deletion in the db
-  // const seasonalAddresses = addresses?.filter(
-  //   address => address.addressType === AddressType.Seasonal
-  // );
-
   const boxAddresses = addresses?.filter(
     address => address.addressType === AddressType.POBOX
   );
