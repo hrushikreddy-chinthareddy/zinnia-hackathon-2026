@@ -77,9 +77,7 @@
 
   .carrierMarketingImage {
     width: 435px;
-    /* TODO: update these to use variables when everly theme vars have been added */
-    /* background-color: var(--color-primary-color-primary-lightest, #d0d2ff); */
-    background-color: #d0d2ff;
+    background-color: var(--color-primary-color-primary-lightest, #d0d2ff);
     display: flex;
     align-items: center;
 

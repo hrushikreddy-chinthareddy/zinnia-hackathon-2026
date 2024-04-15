@@ -9,7 +9,6 @@ import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { getRiders } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
-import { CONTACT_NUMBER } from '@/utils/strings';
 
 import { Rider } from './Rider';
 

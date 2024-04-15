@@ -10,6 +10,8 @@ import {
   SystematicProgram,
   Party,
   FundAllocation,
+  PolicyFeature,
+  Status,
 } from '@zinnia/api-types/types/sor';
 import { policyOwner } from '@zinnia/utils';
 
@@ -33,6 +35,8 @@ import {
   AccountValueSummary,
   PolicyWithdrawals,
   PolicySurrender,
+  PolicyStatusDetail,
+  PolicyFeatureDetail,
 } from '@/types/policy';
 import { PolicyRider } from '@/types/riders';
 import {
@@ -429,6 +433,10 @@ export const transformPaymentHistory = (
 
 export const transformRiders = (policy: Policy): PolicyRider[] | null => {
   const { riders } = policy;
+  const lapsedProtection = transformPolicyFeature(
+    policy,
+    'LAPSEPROTECTION' as PolicyFeature.featureType
+  );
 
   if (!riders || !riders.length) {
     return null;
@@ -442,7 +450,7 @@ export const transformRiders = (policy: Policy): PolicyRider[] | null => {
     party => party.partyId === insuredPartyFromRoles?.partyId
   );
 
-  return riders.map(rider => {
+  const allRiders = riders.map(rider => {
     const riderInsured = rider.riderParticipant?.find(
       party => party.insuredId === insuredPartyFromRoles?.partyId
     );
@@ -462,4 +470,94 @@ export const transformRiders = (policy: Policy): PolicyRider[] | null => {
       },
     };
   });
+
+  if (lapsedProtection) {
+    allRiders.push({
+      riderCode: lapsedProtection.featureType,
+      cost: lapsedProtection.paymentAmount,
+      description: getRiderDescription(lapsedProtection.featureType || ''),
+      effectiveDate: lapsedProtection.startDate,
+      isElected: true,
+      isOwner: true,
+      title: 'Lapse protection guarantee',
+      status: !lapsedProtection.endDate ? Status.ACTIVE : Status.TERMINATED,
+      insured: {
+        firstName: insuredParty?.firstName,
+        lastName: insuredParty?.lastName,
+      },
+    });
+  }
+
+  return allRiders;
+};
+
+export const transformPolicyFeature = (
+  policy: Policy,
+  feature: PolicyFeature.featureType
+): PolicyFeatureDetail | null => {
+  const { policyFeatures } = policy;
+
+  const requestedFeature = policyFeatures?.find(
+    (currentFeature: PolicyFeature) => currentFeature.featureType === feature
+  );
+
+  if (!requestedFeature) {
+    return null;
+  }
+
+  return {
+    featureType: requestedFeature.featureType,
+    totalRequiredAmount: requestedFeature.totalRequiredAmount,
+    totalMinimumRequiredAmount: requestedFeature.totalMinimumRequiredAmount,
+    totalPaymentAmount: requestedFeature.totalPaymentAmount,
+    startDate: requestedFeature.startDate,
+    endDate: requestedFeature.endDate,
+    status: requestedFeature.status,
+    period: requestedFeature.period,
+    effectiveDate: requestedFeature.effectiveDate,
+    paymentAmount: requestedFeature.paymentAmount,
+    underwritingDecision: requestedFeature.underwritingDecision,
+    approvalDate: requestedFeature.approvalDate,
+  };
+};
+
+export const transformPolicyStatusDetails = (
+  policy: Policy
+): Partial<PolicyStatusDetail> => {
+  const policyStatus = policy.policyStatus;
+
+  if (policyStatus === PolicyStatus.PENDINGLAPSE) {
+    const featureDetails = transformPolicyFeature(
+      policy,
+      'LAPSEASSESSMENT' as PolicyFeature.featureType
+    );
+
+    return {
+      policyStatus,
+      minimumPaymentDue: featureDetails?.totalMinimumRequiredAmount,
+      minimumPaymentDueDate: featureDetails?.endDate,
+    };
+  }
+
+  if (policyStatus === PolicyStatus.LAPSE) {
+    const lapseAssessmentDetails = transformPolicyFeature(
+      policy,
+      'LAPSEASSESSMENT' as PolicyFeature.featureType
+    );
+
+    const reinstantementDetails = transformPolicyFeature(
+      policy,
+      'REINSTATEMENT' as PolicyFeature.featureType
+    );
+
+    return {
+      policyStatus,
+      lapsedOn: lapseAssessmentDetails?.endDate,
+      reinstatmentDate: reinstantementDetails?.startDate,
+    };
+  }
+
+  return {
+    policyStatus,
+  };
 };

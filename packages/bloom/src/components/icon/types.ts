@@ -1,4 +1,5 @@
 // import CloudFilled from '../tokens/svg-assets/icons/cloud_filled.svg';
+import Alert from '../../tokens/svg-assets/icons/alert/alert.svg';
 import AlertExclamation from '../../tokens/svg-assets/icons/alert/alert-exclamation.svg';
 import Autopay from '../../tokens/svg-assets/icons/currency/autopay.svg';
 import Ban from '../../tokens/svg-assets/icons/content/ban.svg';
@@ -30,6 +31,7 @@ import Trash from '../../tokens/svg-assets/icons/actions/trash.svg';
 import UserGroup from '../../tokens/svg-assets/icons/actions/user-group.svg';
 
 export enum IconType {
+  ALERT = 'Alert',
   ALERT_EXCLAMATION = 'AlertExclamation',
   AUTOPAY = 'Autopay',
   BAN = 'Ban',
@@ -86,6 +88,7 @@ export const Icons: {
     }
   >;
 } = {
+  [IconType.ALERT]: Alert,
   [IconType.ALERT_EXCLAMATION]: AlertExclamation,
   [IconType.AUTOPAY]: Autopay,
   [IconType.BAN]: Ban,

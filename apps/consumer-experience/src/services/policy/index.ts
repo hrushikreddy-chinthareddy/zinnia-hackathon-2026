@@ -43,6 +43,7 @@ import {
   transformPolicyForWithdrawals,
   transformPolicyForLoans,
   transformPolicyForSurrender,
+  transformPolicyStatusDetails,
 } from '@/services/policy/transformers';
 import {
   DocumentApiRequestInputs,
@@ -886,6 +887,38 @@ export const getRiders = async (
         message: 'Something went wrong',
         status: 400,
         name: 'getRiders Error',
+      },
+    };
+  }
+};
+
+export const getPolicyStatusDetails = async (
+  policyInputs: PolicyRequestInputs
+) => {
+  if (isMockPolicyOverviewRequestEnabled()) {
+    const transformedResults = transformPolicyStatusDetails(mockPolicyResponse);
+
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  }
+
+  try {
+    const response = await getPolicyByPlanCodeAndId(policyInputs);
+    const transformedResults = transformPolicyStatusDetails(response);
+
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  } catch (error) {
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 400,
+        name: 'getPolicyFeatures Error',
       },
     };
   }

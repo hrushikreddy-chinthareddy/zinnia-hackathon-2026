@@ -7,6 +7,7 @@ import {
   Tag,
   TagVariant,
 } from '@zinnia/bloom/internal/components';
+import { toSentenceCase } from '@zinnia/utils';
 
 import { FieldData } from '@/components/field-data/FieldData';
 import { PolicyRider } from '@/types/riders';
@@ -28,7 +29,7 @@ export const Rider = ({
 }: PolicyRider) => {
   return (
     <div className={styles.riderContainer}>
-      <h3 className="typography-titles-subtitle">{title}</h3>
+      <h3 className="typography-titles-subtitle">{toSentenceCase(title)}</h3>
       <p className="typography-content-body">{description}</p>
       {status === Status.ACTIVE && (
         <Tag variant={TagVariant.Information} text="Active" className="mt-lg" />
@@ -84,7 +85,7 @@ export const Rider = ({
         )}
         <FieldData Label={<Label>Cost</Label>}>
           <span className="typography-content-body-sm mt-sm">
-            {formatUSDollars(cost)}
+            {formatUSDollars(cost, true)}
           </span>
         </FieldData>
       </div>

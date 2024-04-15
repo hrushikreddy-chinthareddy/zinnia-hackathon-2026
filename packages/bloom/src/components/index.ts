@@ -1,6 +1,7 @@
 export * from './address';
 export * from './allocation-color-bar';
 export * from './label';
+export * from './banner-alert';
 export * from './button';
 export * from './assistive-text';
 export * from './icon';

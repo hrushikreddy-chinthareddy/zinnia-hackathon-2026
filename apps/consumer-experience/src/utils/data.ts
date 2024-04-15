@@ -162,6 +162,8 @@ export const getRiderDescription = (code: string) => {
       return 'If you are diagnosed with a terminal illness, you can claim the lesser of: 50% of your death benefit or $500,000.';
     case 'SBLOPR':
       return 'If you take a loan on your policy that eventually exceeds the account value, this rider will be activated, preventing the policy from lapsing and triggering a taxable event.';
+    case 'LAPSEPROTECTION':
+      return 'This policy guarantees a death benefit for 20 years as long as the required minimum payments are paid.';
     default:
       return DEFAULT_ERROR_STRING;
   }
