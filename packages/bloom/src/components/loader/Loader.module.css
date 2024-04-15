@@ -10,7 +10,11 @@
 
 .loader {
   --loader-size: var(--measure-dimension-z-space-10);
-  --loader-mask: radial-gradient(farthest-side, #0000 calc(60%), var(--color-base-icon-icon-light) 0);
+  --loader-mask: radial-gradient(
+    farthest-side,
+    #0000 calc(60%),
+    var(--color-base-icon-icon-light) 0
+  );
   animation: rotate 0.5s ease-in infinite;
   background: transparent;
   mask: var(--loader-mask);
@@ -23,11 +27,25 @@
 
   &::before {
     border-radius: 50%;
-    --gradient-color-1: rgba(255, 198, 0, 0);
-    --gradient-color-2: rgba(255, 198, 0, .4);
-    --gradient-color-3: rgba(255, 117, 0, 1);
-    --gradient-color-4: rgba(255, 24, 34, 1);
-    background: conic-gradient(var(--gradient-color-1), var(--gradient-color-2), var(--gradient-color-3), var(--gradient-color-4), var(--gradient-color-1));
+    --gradient-color-1: color-mix(
+      in srgb,
+      var(--color-accent-color-accent-one) 0%,
+      transparent
+    );
+    --gradient-color-2: color-mix(
+      in srgb,
+      var(--color-accent-color-accent-one) 40%,
+      transparent
+    );
+    --gradient-color-3: var(--color-primary-color-primary);
+    --gradient-color-4: var(--color-accent-color-accent-two);
+    background: conic-gradient(
+      var(--gradient-color-1),
+      var(--gradient-color-2),
+      var(--gradient-color-3),
+      var(--gradient-color-4)
+    );
+
     top: 0;
     bottom: 0;
     left: 0;
