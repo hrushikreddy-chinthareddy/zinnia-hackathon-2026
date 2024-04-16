@@ -33,18 +33,21 @@ const useMock = () => {
     window.location.href = `${window.location.origin}/policies${params}`;
   };
 
-  const setErrorMock = (event: MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
-    if (isMockErroOn) {
-      Cookies.remove(MOCK_ERROR_COOKIE_KEY);
-    } else {
-      Cookies.set(MOCK_ERROR_COOKIE_KEY, 'on');
-    }
-    const queryParams = new URLSearchParams(location.search);
-    queryParams.delete(MOCK_ERROR_COOKIE_KEY);
-    const params = queryParams.toString() ? `?${queryParams.toString()}` : '';
-    window.location.href = `${window.location.origin}/policies${params}`;
-  };
+  const setErrorMock =
+    (errorSet: string[] | null) => (event: MouseEvent<HTMLButtonElement>) => {
+      console.log('SET ERROR', errorSet);
+
+      event.preventDefault();
+      if (isMockErroOn) {
+        Cookies.remove(MOCK_ERROR_COOKIE_KEY);
+      } else {
+        Cookies.set(MOCK_ERROR_COOKIE_KEY, 'on');
+      }
+      const queryParams = new URLSearchParams(location.search);
+      queryParams.delete(MOCK_ERROR_COOKIE_KEY);
+      const params = queryParams.toString() ? `?${queryParams.toString()}` : '';
+      window.location.href = `${window.location.origin}/policies${params}`;
+    };
 
   const removeDevMenu = (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();

@@ -10,8 +10,16 @@ import { zIndexOrder } from '@/utils/zIndexOrder';
 
 import styles from './DevMenu.module.css';
 
+enum PolicyEndpoints {
+  METRICS = 'metrics',
+  TRANSACTIONS = 'transactions',
+  POLICY = 'policy',
+  POLICY_BY_CARRIERS = 'policy_by_carriers',
+}
+
 export const DevMenu = () => {
   const [open, setOpen] = useState(false);
+  const [apiErrorSet, setApiErrorSet] = useState<string[] | null>(null);
   const {
     mockText,
     mockErrorText,
@@ -28,6 +36,19 @@ export const DevMenu = () => {
   if (!showDevMenu) {
     return null;
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const selectAPIErrorType = (e: any) => {
+    console.log(e.target.value);
+    const item = e.target.value;
+
+    if (apiErrorSet?.includes(item)) {
+      const itemRemoved = apiErrorSet.filter(apiType => apiType !== item);
+      setApiErrorSet(itemRemoved);
+    } else {
+      setApiErrorSet([...(apiErrorSet || []), item]);
+    }
+  };
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
@@ -63,7 +84,57 @@ export const DevMenu = () => {
                 </a>
               </li>
               <li className={styles.navListItem}>
-                <a
+                <div style={{ color: 'white' }}>
+                  <label style={{ display: 'block' }}>
+                    <input
+                      type="checkbox"
+                      value={PolicyEndpoints.POLICY}
+                      onChange={selectAPIErrorType}
+                    />
+                    <span className="ml-sm">Policy</span>
+                  </label>
+                  <label style={{ display: 'block' }}>
+                    <input type="checkbox" value={PolicyEndpoints.METRICS} />
+                    <span className="ml-sm">
+                      Metrics (includes account value change)
+                    </span>
+                  </label>
+                  <label style={{ display: 'block' }}>
+                    <input
+                      type="checkbox"
+                      value={PolicyEndpoints.TRANSACTIONS}
+                    />
+                    <span className="ml-sm">
+                      Transactions (Displays history of payments)
+                    </span>
+                  </label>
+                  <label style={{ display: 'block' }}>
+                    <input
+                      type="checkbox"
+                      value={PolicyEndpoints.POLICY_BY_CARRIERS}
+                    />
+                    <span className="ml-sm">Policies by carrier</span>
+                  </label>
+                </div>
+                <button
+                  onClick={setErrorMock(apiErrorSet)}
+                  style={{
+                    display: 'flex',
+                    border: '2px solid white',
+                    padding: '6px',
+                    borderRadius: '4px',
+                  }}
+                >
+                  <span className={styles.firstItem}>
+                    <Icon
+                      type={IconType.ALERT_EXCLAMATION}
+                      color="var(--color-nav-menu-menu-icon-default-fill, #fff)"
+                    />
+                  </span>
+                  <span style={{ color: 'white' }}>{mockErrorText}</span>
+                </button>
+
+                {/* <a
                   href="#"
                   onClick={setErrorMock}
                   className={`${styles.navItem} typography-nav-nav-drawer`}
@@ -75,7 +146,7 @@ export const DevMenu = () => {
                     />
                   </span>
                   <span>{mockErrorText}</span>
-                </a>
+                </a> */}
               </li>
               <li className={styles.navListItem}>
                 <a
