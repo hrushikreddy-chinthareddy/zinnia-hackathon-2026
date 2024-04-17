@@ -42,15 +42,13 @@ export default async function Beneficiary({
 
   if (error || !data) {
     return (
-      <div>
+      <div className="container">
         <HeaderBreadcrumb title="Beneficiaries" />
-        <div className="space-mb-gap-lg">
-          <MockMessage />
-          <NoDataAvailable
-            iconType={IconType.CIRCLE_USER}
-            message="There is currently no beneficiary data available."
-          />
-        </div>
+        <MockMessage />
+        <NoDataAvailable
+          iconType={IconType.CIRCLE_USER}
+          message="There is currently no beneficiary data available."
+        />
       </div>
     );
   }
@@ -97,7 +95,7 @@ export default async function Beneficiary({
   }
 
   return (
-    <div>
+    <div className="container">
       <HeaderBreadcrumb title="Beneficiary" />
 
       <ClickableCardContainer listItems={listItems}>
