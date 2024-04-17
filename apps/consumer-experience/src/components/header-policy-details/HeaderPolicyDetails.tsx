@@ -98,7 +98,12 @@ export const HeaderPolicyDetails = async ({
       style={style}
     >
       <p className="typography-labels-label-lg-alt">
-        {`${marketingName || ''} ${marketingName && planName ? '-' : ''} ${planName || ''}`}
+        {expanded && (
+          <span>
+            {`${marketingName || ''} ${marketingName && planName ? '-' : ''}`}{' '}
+          </span>
+        )}
+        <span>{planName || ''}</span>
       </p>
       <div className={styles.policyDetails}>
         {policyNumberEl()}
