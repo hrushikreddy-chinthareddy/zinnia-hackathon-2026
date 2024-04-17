@@ -4,7 +4,6 @@ import { IconType, Label } from '@zinnia/bloom/internal/components';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
-import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { Addresses } from '@/components/person-data/Addresses';
@@ -45,7 +44,6 @@ export default async function Beneficiary({
     return (
       <div>
         <HeaderBreadcrumb title="Beneficiaries" />
-        <HeaderPolicyDetails planCode={planCode} policyNumber={policyNumber} />
         <div className="space-mb-gap-lg">
           <MockMessage />
           <NoDataAvailable
@@ -101,7 +99,6 @@ export default async function Beneficiary({
   return (
     <div>
       <HeaderBreadcrumb title="Beneficiary" />
-      <HeaderPolicyDetails planCode={planCode} policyNumber={policyNumber} />
 
       <ClickableCardContainer listItems={listItems}>
         <div>

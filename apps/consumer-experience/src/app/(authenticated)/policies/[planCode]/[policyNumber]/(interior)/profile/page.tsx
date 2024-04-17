@@ -7,7 +7,6 @@ import { ClickableCardContainer } from '@/components/clickable-card-container/Cl
 import { FieldData } from '@/components/field-data/FieldData';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
-import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { Addresses } from '@/components/person-data/Addresses';
@@ -33,10 +32,6 @@ export default async function Profile({ params }: Props) {
     return (
       <div className={styles.pageContainer}>
         <HeaderBreadcrumb title="Profile" />
-        <HeaderPolicyDetails
-          policyNumber={params.policyNumber}
-          planCode={params.planCode}
-        />
         <div className="space-mb-gap-lg">
           <MockMessage />
           <NoDataAvailable
@@ -104,10 +99,7 @@ export default async function Profile({ params }: Props) {
   return (
     <div className="container">
       <HeaderBreadcrumb title="Profile" />
-      <HeaderPolicyDetails
-        policyNumber={params.policyNumber}
-        planCode={params.planCode}
-      />
+
       <ClickableCardContainer listItems={[...listItems]}>
         <div>
           <h2 className="mb-lg">Name</h2>

@@ -3,7 +3,6 @@ import { IconType } from '@zinnia/bloom/internal/components';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
-import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 import { InfoCard } from '@/components/info-card/InfoCard';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
@@ -28,10 +27,6 @@ export default async function Riders({
   return (
     <div className="container">
       <HeaderBreadcrumb title="Riders" />
-      <HeaderPolicyDetails
-        planCode={params.planCode}
-        policyNumber={params.policyNumber}
-      />
       <InfoCard iconType={IconType.LIGHTBULB} className="mb-md">
         <>
           <span className="typography-content-body-sm-bold">
@@ -47,10 +42,6 @@ export default async function Riders({
       {(error || !data) && (
         <div className="container">
           <HeaderBreadcrumb title="Riders" />
-          <HeaderPolicyDetails
-            policyNumber={params.policyNumber}
-            planCode={params.planCode}
-          />
           <div className="space-mb-gap-lg">
             <MockMessage />
             <NoDataAvailable

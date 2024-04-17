@@ -5,7 +5,6 @@ import { CallForAssistance } from '@/components/call-for-assistance/CallForAssis
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
-import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { getPaymentDetails } from '@/services/policy';
@@ -36,10 +35,6 @@ export default async function PaymentDetails({
   return (
     <div className="container">
       <HeaderBreadcrumb title="Payment Details" />
-      <HeaderPolicyDetails
-        planCode={params.planCode}
-        policyNumber={params.policyNumber}
-      />
       {data && !error && (
         <ClickableCardContainer>
           <BankData key={data.accountNumber} {...data} />

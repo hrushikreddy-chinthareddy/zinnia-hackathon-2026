@@ -8,7 +8,6 @@ import { CardListHistory } from '@/components/card-list-history/CardListHistory'
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
-import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { StatusIconText } from '@/components/status-icon-text/StatusIconText';
 import { getPolicyAccountValueSummary } from '@/services/policy';
@@ -181,7 +180,6 @@ export default async function AccountValuePage({
   return (
     <div className="container">
       <HeaderBreadcrumb title="Account Value" />
-      <HeaderPolicyDetails planCode={planCode} policyNumber={policyNumber} />
       {accountValueSummary()}
       <CardListHistory>
         <CardListHistory.Header>

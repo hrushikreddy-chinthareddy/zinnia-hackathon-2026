@@ -1,5 +1,6 @@
 import { PolicyStatus } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
+import Link from 'next/link';
 
 import { getPolicyForHeaderDetails } from '@/services';
 import { checkIfNull, fullName } from '@/utils/data';
@@ -10,8 +11,16 @@ import MockMessage from '../MockMessage';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
+  /**
+   * Includes additional data like insured and policy status
+   */
+  expanded?: boolean;
   planCode: string;
   policyNumber: string;
+  /**
+   * This will make the policy number a link to return to policy overview page
+   */
+  useAsLink?: boolean;
 }
 
 const policyDisplayText: { [key in PolicyStatus]: string } = {
@@ -33,9 +42,11 @@ const policyDisplayText: { [key in PolicyStatus]: string } = {
 
 export const HeaderPolicyDetails = async ({
   className,
+  expanded,
   style,
   planCode,
   policyNumber,
+  useAsLink,
 }: Props) => {
   const { data, error } = await getPolicyForHeaderDetails({
     planCode,
@@ -65,27 +76,51 @@ export const HeaderPolicyDetails = async ({
 
   const insuredName = fullName({ firstName, lastName });
 
+  const policyNumberEl = () => {
+    const content = `Policy No. ${checkIfNull(policyNumber)}`;
+
+    return useAsLink ? (
+      <Link
+        className="typography-labels-label-md-alt"
+        href={`/policies/${planCode}/${policyNumber}`}
+        aria-label="Return to policy overview"
+      >
+        {content}
+      </Link>
+    ) : (
+      <p className="typography-labels-label-md-alt">{content}</p>
+    );
+  };
+
   return (
     <div
       className={clsx(styles.container, { [`${className}`]: className })}
       style={style}
     >
       <p className="typography-labels-label-lg-alt">
-        {`${marketingName || ''} ${marketingName && planName ? '-' : ''} ${planName || ''}`}
+        {expanded && (
+          <span>
+            {`${marketingName || ''} ${marketingName && planName ? '-' : ''}`}{' '}
+          </span>
+        )}
+        <span>{planName || ''}</span>
       </p>
       <div className={styles.policyDetails}>
-        <p className="typography-labels-label-md-alt">
-          Policy No. {`${checkIfNull(policyNumber)}`}
-        </p>
-        <p className="typography-labels-label-md-alt">
-          {`Insured: ${insuredName}`}
-        </p>
-        <p className="typography-labels-label-md-alt">
-          Policy status:{' '}
-          <span className={statusStyle()}>
-            {checkIfNull(toSentenceCase(policyDisplayText[policyStatus]))}
-          </span>
-        </p>
+        {policyNumberEl()}
+
+        {expanded && (
+          <>
+            <p className="typography-labels-label-md-alt">
+              {`Insured: ${insuredName}`}
+            </p>
+            <p className="typography-labels-label-md-alt">
+              Policy status:{' '}
+              <span className={statusStyle()}>
+                {checkIfNull(toSentenceCase(policyDisplayText[policyStatus]))}
+              </span>
+            </p>
+          </>
+        )}
       </div>
     </div>
   );

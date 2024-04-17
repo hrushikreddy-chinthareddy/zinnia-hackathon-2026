@@ -6,7 +6,6 @@ import { ClickableCardContainer } from '@/components/clickable-card-container/Cl
 import { FieldData } from '@/components/field-data/FieldData';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
-import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import styles from '@/components/policy-overview/PolicyOverview.module.css';
 import { getPolicyDocuments } from '@/services/policy';
@@ -37,10 +36,6 @@ export default async function Documents({
   return (
     <div className="container">
       <HeaderBreadcrumb title="Documents" />
-      <HeaderPolicyDetails
-        policyNumber={params.policyNumber}
-        planCode={params.planCode}
-      />
       <ul className={documentStyles.nav}>
         <li>
           <Link

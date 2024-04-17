@@ -83,7 +83,11 @@ export default async function Page({
   return (
     <div className="container">
       <HeaderBreadcrumb title="Policy Overview" />
-      <HeaderPolicyDetails planCode={planCode} policyNumber={policyNumber} />
+      <HeaderPolicyDetails
+        planCode={planCode}
+        policyNumber={policyNumber}
+        expanded
+      />
       {overviewBody()}
       <Footer />
     </div>
