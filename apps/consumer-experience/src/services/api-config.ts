@@ -12,10 +12,85 @@ export const documentApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/docume
 export const carrierApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${apiVersion}/carriers`;
 export const integrationApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/integration/${apiVersion}`;
 
+enum PolicyEndpoints {
+  METRICS = 'metrics',
+  TRANSACTIONS = 'transactions',
+  POLICY = 'policy',
+  POLICY_BY_CARRIERS = 'policy_by_carriers',
+}
+
 const getMockParam = () => {
   const cookieStore = cookies();
   return cookieStore.get('..mock..')?.value;
 };
+
+const getMockErrorParam = () => {
+  const cookieStore = cookies();
+  return cookieStore.get('..mock_error..')?.value;
+};
+
+export const isMockPolicyErrorEnabled = () => {
+  if (isProd()) {
+    return false;
+  }
+
+  const mockErrorVals = getMockErrorParam();
+
+  if (!mockErrorVals) {
+    return false;
+  }
+  console.log(JSON.parse(mockErrorVals).includes(PolicyEndpoints.POLICY));
+
+  return JSON.parse(mockErrorVals).includes(PolicyEndpoints.POLICY);
+};
+
+export const isMockTransactionsErrorEnabled = () => {
+  if (isProd()) {
+    return false;
+  }
+
+  const mockErrorVals = getMockErrorParam();
+
+  if (!mockErrorVals) {
+    return false;
+  }
+  console.log(JSON.parse(mockErrorVals).includes(PolicyEndpoints.TRANSACTIONS));
+
+  return JSON.parse(mockErrorVals).includes(PolicyEndpoints.TRANSACTIONS);
+};
+
+export const isMockMetricsErrorEnabled = () => {
+  if (isProd()) {
+    return false;
+  }
+
+  const mockErrorVals = getMockErrorParam();
+
+  if (!mockErrorVals) {
+    return false;
+  }
+  console.log(JSON.parse(mockErrorVals).includes(PolicyEndpoints.METRICS));
+
+  return JSON.parse(mockErrorVals).includes(PolicyEndpoints.METRICS);
+};
+
+export const isMockPolicyCarriersErrorEnabled = () => {
+  if (isProd()) {
+    return false;
+  }
+
+  const mockErrorVals = getMockErrorParam();
+
+  if (!mockErrorVals) {
+    return false;
+  }
+  console.log(
+    JSON.parse(mockErrorVals).includes(PolicyEndpoints.POLICY_BY_CARRIERS)
+  );
+
+  return JSON.parse(mockErrorVals).includes(PolicyEndpoints.POLICY_BY_CARRIERS);
+};
+
 export const isMockAllRequestEnabled = (val?: boolean) => {
   if (isProd()) {
     return false;

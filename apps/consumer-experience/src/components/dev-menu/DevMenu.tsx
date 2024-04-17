@@ -94,7 +94,11 @@ export const DevMenu = () => {
                     <span className="ml-sm">Policy</span>
                   </label>
                   <label style={{ display: 'block' }}>
-                    <input type="checkbox" value={PolicyEndpoints.METRICS} />
+                    <input
+                      type="checkbox"
+                      value={PolicyEndpoints.METRICS}
+                      onChange={selectAPIErrorType}
+                    />
                     <span className="ml-sm">
                       Metrics (includes account value change)
                     </span>
@@ -103,6 +107,7 @@ export const DevMenu = () => {
                     <input
                       type="checkbox"
                       value={PolicyEndpoints.TRANSACTIONS}
+                      onChange={selectAPIErrorType}
                     />
                     <span className="ml-sm">
                       Transactions (Displays history of payments)
@@ -112,6 +117,7 @@ export const DevMenu = () => {
                     <input
                       type="checkbox"
                       value={PolicyEndpoints.POLICY_BY_CARRIERS}
+                      onChange={selectAPIErrorType}
                     />
                     <span className="ml-sm">Policies by carrier</span>
                   </label>

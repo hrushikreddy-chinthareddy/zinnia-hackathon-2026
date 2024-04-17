@@ -15,6 +15,8 @@ const useMock = () => {
   const mockErrorText = isMockErroOn ? 'Turn Error Off' : 'Turn Error On';
 
   useEffect(() => {
+    console.log('COOOOKIE', Cookies.get(MOCK_ERROR_COOKIE_KEY));
+
     setIsMockOn(Cookies.get(MOCK_COOKIE_KEY) === 'on');
     setIsMockErrorOn(Cookies.get(MOCK_ERROR_COOKIE_KEY) === 'on');
     setShowDevMenu(Cookies.get(SHOW_DEV_MENU_COOKIE_KEY) === 'true');
@@ -41,7 +43,7 @@ const useMock = () => {
       if (isMockErroOn) {
         Cookies.remove(MOCK_ERROR_COOKIE_KEY);
       } else {
-        Cookies.set(MOCK_ERROR_COOKIE_KEY, 'on');
+        Cookies.set(MOCK_ERROR_COOKIE_KEY, JSON.stringify(errorSet));
       }
       const queryParams = new URLSearchParams(location.search);
       queryParams.delete(MOCK_ERROR_COOKIE_KEY);
