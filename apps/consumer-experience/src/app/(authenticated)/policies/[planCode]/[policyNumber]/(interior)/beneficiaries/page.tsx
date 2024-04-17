@@ -13,7 +13,6 @@ import { CallForAssistance } from '@/components/call-for-assistance/CallForAssis
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
-import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 import { InfoCard } from '@/components/info-card/InfoCard';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
@@ -119,11 +118,7 @@ export default async function Beneficiaries({
     return (
       <div>
         <HeaderBreadcrumb title="Beneficiaries" />
-        <HeaderPolicyDetails
-          planCode={planCode}
-          policyNumber={policyNumber}
-          className={styles.policyDetails}
-        />
+
         <div className="space-mb-gap-lg">
           <MockMessage />
           <NoDataAvailable
@@ -139,11 +134,6 @@ export default async function Beneficiaries({
     <div className="container">
       <Suspense fallback={<div style={{ height: '100vh' }}>Loading...</div>}>
         <HeaderBreadcrumb title="Beneficiaries" />
-        <HeaderPolicyDetails
-          planCode={planCode}
-          policyNumber={policyNumber}
-          className={styles.policyDetails}
-        />
         <div className="card-container">
           <InfoCard iconType={IconType.LIGHTBULB}>
             <>

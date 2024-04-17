@@ -4,7 +4,6 @@ import { CardInsertHistory } from '@/components/card-list-history/CardInsertHist
 import { CardListHistory } from '@/components/card-list-history/CardListHistory';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
-import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { getPaymentHistory } from '@/services';
@@ -91,10 +90,7 @@ export default async function PaymentHistory({ params }: Props) {
   return (
     <div className="container">
       <HeaderBreadcrumb title="Payment history" />
-      <HeaderPolicyDetails
-        planCode={params.planCode}
-        policyNumber={params.policyNumber}
-      />
+
       {pendingTransactions.length > 0 && (
         <CardListHistory>
           <CardListHistory.Header>

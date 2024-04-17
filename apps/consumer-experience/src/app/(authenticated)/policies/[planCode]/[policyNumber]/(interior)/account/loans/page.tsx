@@ -9,7 +9,6 @@ import { CallForAssistance } from '@/components/call-for-assistance/CallForAssis
 import { FieldData } from '@/components/field-data/FieldData';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
-import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 import { InfoCard } from '@/components/info-card/InfoCard';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { StatusIconText } from '@/components/status-icon-text/StatusIconText';
@@ -144,7 +143,6 @@ export default async function Withdrawals({
   return (
     <div className="container">
       <HeaderBreadcrumb title="Loans" />
-      <HeaderPolicyDetails planCode={planCode} policyNumber={policyNumber} />
       {loansData()}
       <CallForAssistance customInstruction="to begin the loan process." />
       <Footer />
