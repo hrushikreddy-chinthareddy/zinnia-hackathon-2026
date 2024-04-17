@@ -3,7 +3,7 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { Icon, IconType } from '@zinnia/bloom/internal/components';
 import Cookies from 'js-cookie';
-import { MouseEvent, useEffect, useState } from 'react';
+import { MouseEvent, useEffect, useMemo, useState } from 'react';
 
 import useMock from '@/hooks/use-mock';
 import { isProd } from '@/utils';
@@ -23,7 +23,11 @@ export const DevMenu = () => {
   const [open, setOpen] = useState(false);
   const [apiErrorSet, setApiErrorSet] = useState<string[] | null>(null);
 
-  const { mockText, showDevMenu, setMock, removeDevMenu } = useMock();
+  const { mockText, showDevMenu, setMock, removeDevMenu, isMockOn } = useMock();
+
+  const devMenuActive = useMemo(() => {
+    return !!Cookies.get(MOCK_ERROR_COOKIE_KEY) || isMockOn;
+  }, [isMockOn]);
 
   useEffect(() => {
     if (Cookies.get(MOCK_ERROR_COOKIE_KEY)) {
@@ -71,7 +75,16 @@ export const DevMenu = () => {
           className={styles.menuTrigger}
           aria-label="Opens navigation menu. Press escape to close."
         >
-          <Icon width={32} height={32} type={IconType.SETTINGS} />
+          <Icon
+            width={32}
+            height={32}
+            type={IconType.SETTINGS}
+            color={
+              devMenuActive
+                ? 'var(--color-status-icon-status-error-icon)'
+                : 'black'
+            }
+          />
         </button>
       </Dialog.Trigger>
       <Dialog.Portal>
@@ -82,7 +95,7 @@ export const DevMenu = () => {
         >
           <nav className={styles.innerContent}>
             <ul>
-              <li className={styles.navListItem}>
+              <li>
                 <a
                   href="#"
                   onClick={setMock}
@@ -97,8 +110,19 @@ export const DevMenu = () => {
                   <span>{mockText}</span>
                 </a>
               </li>
-              <li className={styles.navListItem}>
-                <div style={{ color: 'white' }}>
+              <li
+                className="typography-nav-nav-drawer"
+                style={{ color: 'white' }}
+              >
+                <p className={`${styles.navItem} pl-lg `}>
+                  <Icon
+                    className="mr-md"
+                    type={IconType.ALERT_EXCLAMATION}
+                    color="var(--color-nav-menu-menu-icon-default-fill, #fff)"
+                  />
+                  <span className="ml-md">Mock API Errors</span>
+                </p>
+                <div className="ml-3xl mb-md pl-2xl">
                   <label style={{ display: 'block' }}>
                     <input
                       type="checkbox"
@@ -145,6 +169,7 @@ export const DevMenu = () => {
                   </label>
                 </div>
                 <button
+                  className="ml-3xl mb-md pl-3xl"
                   onClick={setAPIErrorCookie}
                   style={{
                     display: 'flex',
@@ -153,30 +178,10 @@ export const DevMenu = () => {
                     borderRadius: '4px',
                   }}
                 >
-                  <span className={styles.firstItem}>
-                    <Icon
-                      type={IconType.ALERT_EXCLAMATION}
-                      color="var(--color-nav-menu-menu-icon-default-fill, #fff)"
-                    />
-                  </span>
-                  <span style={{ color: 'white' }}>update mock error APIs</span>
+                  <span style={{ color: 'white' }}>Update mock error APIs</span>
                 </button>
-
-                {/* <a
-                  href="#"
-                  onClick={setErrorMock}
-                  className={`${styles.navItem} typography-nav-nav-drawer`}
-                >
-                  <span className={styles.firstItem}>
-                    <Icon
-                      type={IconType.ALERT_EXCLAMATION}
-                      color="var(--color-nav-menu-menu-icon-default-fill, #fff)"
-                    />
-                  </span>
-                  <span>{mockErrorText}</span>
-                </a> */}
               </li>
-              <li className={styles.navListItem}>
+              <li>
                 <a
                   href="#"
                   onClick={removeDevMenu}
