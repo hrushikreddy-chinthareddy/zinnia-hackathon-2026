@@ -14,7 +14,8 @@ generated-types
 .env.production.local
 
 # Testing
-coverage
+# commenting this out for now because we have a folder path for policy coverage
+# coverage
 
 # Turbo
 .turbo
