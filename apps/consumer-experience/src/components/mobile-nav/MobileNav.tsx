@@ -17,12 +17,6 @@ import { DevMenu } from '../dev-menu/DevMenu';
 
 const navRoutes = [
   {
-    url: '/policies/${planCode}/${policyNumber}',
-    displayName: 'Policy overview',
-    icon: IconType.SHIELD_CHECKMARK,
-    requiresPolicy: true,
-  },
-  {
     url: '/policies/${planCode}/${policyNumber}/documents',
     displayName: 'Documents',
     icon: IconType.DOCUMENT_TEXT,

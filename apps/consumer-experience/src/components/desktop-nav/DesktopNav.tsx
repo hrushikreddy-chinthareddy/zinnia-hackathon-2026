@@ -39,16 +39,6 @@ export function DesktopNav() {
         {params.planCode && params.policyNumber && (
           <>
             <Link
-              href={`/policies/${params.planCode}/${params.policyNumber}`}
-              className={styles.navItem}
-            >
-              <Icon
-                type={IconType.SHIELD_CHECKMARK}
-                color="var(--color-base-icon-icon-dark)"
-              />
-              Policy Overview
-            </Link>
-            <Link
               href={`/policies/${params.planCode}/${params.policyNumber}/documents`}
               className={styles.navItem}
             >
