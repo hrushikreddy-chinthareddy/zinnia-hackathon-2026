@@ -27,10 +27,6 @@ export default async function PaymentHistory({ params }: Props) {
     return (
       <div className="space-mb-gap-lg">
         <HeaderBreadcrumb title="Payment history" />
-        <HeaderPolicyDetails
-          planCode={params.planCode}
-          policyNumber={params.policyNumber}
-        />
         <MockMessage />
         <NoDataAvailable
           iconType={IconType.PAYMENT}

@@ -58,8 +58,6 @@ export const DevMenu = () => {
   const selectAPIErrorType = (e: any) => {
     const item = e.target.value;
 
-    console.log('apiErrorSet', apiErrorSet);
-
     if (apiErrorSet?.includes(item)) {
       const itemRemoved = apiErrorSet?.filter(apiType => apiType !== item);
       setApiErrorSet(itemRemoved);

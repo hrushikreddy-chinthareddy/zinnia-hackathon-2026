@@ -39,7 +39,6 @@ export const isMockPolicyErrorEnabled = () => {
   if (!mockErrorVals) {
     return false;
   }
-  console.log(JSON.parse(mockErrorVals).includes(PolicyEndpoints.POLICY));
 
   return JSON.parse(mockErrorVals).includes(PolicyEndpoints.POLICY);
 };
@@ -54,7 +53,6 @@ export const isMockTransactionsErrorEnabled = () => {
   if (!mockErrorVals) {
     return false;
   }
-  console.log(JSON.parse(mockErrorVals).includes(PolicyEndpoints.TRANSACTIONS));
 
   return JSON.parse(mockErrorVals).includes(PolicyEndpoints.TRANSACTIONS);
 };
@@ -69,7 +67,6 @@ export const isMockMetricsErrorEnabled = () => {
   if (!mockErrorVals) {
     return false;
   }
-  console.log(JSON.parse(mockErrorVals).includes(PolicyEndpoints.METRICS));
 
   return JSON.parse(mockErrorVals).includes(PolicyEndpoints.METRICS);
 };
@@ -84,9 +81,6 @@ export const isMockPolicyCarriersErrorEnabled = () => {
   if (!mockErrorVals) {
     return false;
   }
-  console.log(
-    JSON.parse(mockErrorVals).includes(PolicyEndpoints.POLICY_BY_CARRIERS)
-  );
 
   return JSON.parse(mockErrorVals).includes(PolicyEndpoints.POLICY_BY_CARRIERS);
 };

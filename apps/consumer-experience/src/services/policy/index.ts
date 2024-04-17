@@ -90,8 +90,6 @@ const getPolicyReferencesByCarrier = async () => {
   const searchUrl = `${policyApiBaseUrl}/search?offset=0&limit=10`;
   const searchFilter: PolicySearchRequest = {};
   if (isMockPolicyCarriersErrorEnabled()) {
-    console.log('HELLOW TRANSACTIONS?');
-
     throw new Error('Error fetching policies by carrier.');
   }
   const request = await ServerApi.post(searchUrl, JSON.stringify(searchFilter));
@@ -109,8 +107,6 @@ const getPolicyByPlanCodeAndId = async (options: PolicyRequestInputs) => {
   const { planCode, policyNumber } = options;
   const url = `${policyApiBaseUrl}/${planCode}/${policyNumber}`;
   if (isMockPolicyErrorEnabled()) {
-    console.log('HELLOW?');
-
     throw new Error('Error fetching policy.');
   }
 
@@ -146,8 +142,6 @@ const getPolicyTransactions = async ({
   const url = `${policyApiBaseUrl}/${planCode}/${policyNumber}/transactions${query}`;
 
   if (isMockTransactionsErrorEnabled()) {
-    console.log('HELLOW TRANSACTIONS?');
-
     throw new Error('Error fetching transactions.');
   }
 
@@ -171,8 +165,6 @@ const getPolicyMetrics = async (
   const url = `${policyApiBaseUrl}/${planCode}/${policyNumber}/metrics`;
 
   if (isMockMetricsErrorEnabled()) {
-    console.log('HELLOW TRANSACTIONS?');
-
     throw new Error('Error fetching metrics.');
   }
 
