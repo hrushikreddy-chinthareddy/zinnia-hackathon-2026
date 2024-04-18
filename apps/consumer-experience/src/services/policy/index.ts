@@ -14,7 +14,6 @@ import { BankDetail } from '@/components/person-data/types';
 import {
   ApiResponse,
   ServerApi,
-  documentApiBaseUrl,
   isMockDocumentRequestEnabled,
   isMockPaymentHistoryRequestEnabled,
   isMockPolicyMetricsRequestEnabled,
@@ -45,11 +44,7 @@ import {
   transformPolicyForSurrender,
   transformPolicyStatusDetails,
 } from '@/services/policy/transformers';
-import {
-  DocumentApiRequestInputs,
-  DocumentResponseError,
-  PolicyDocument,
-} from '@/types/document';
+import { DocumentApiRequestInputs, PolicyDocument } from '@/types/document';
 import {
   PolicyApiResponse,
   PolicyProfile,
@@ -81,6 +76,7 @@ import {
   mockCompletedTransactions,
   mockPendingTransactions,
 } from '../mocks/transactions';
+import { getDocuments } from '../document';
 
 const getPolicyReferencesByCarrier = async () => {
   const searchUrl = `${policyApiBaseUrl}/search?offset=0&limit=10`;
@@ -619,25 +615,7 @@ export const getPaymentHistory = async ({
     };
   }
 };
-
-const getDocuments = async (inputs: Partial<DocumentApiRequestInputs>) => {
-  const { contractNumber, clientCode, source } = inputs;
-  const documentUrl = `${documentApiBaseUrl}?contractNumber=${contractNumber}&clientCode=${clientCode}&source=${source}`;
-
-  const response = await ServerApi.get(documentUrl);
-
-  if (response.status !== 200) {
-    throw new Error(`API returned an error. Status code: ${response.status}`);
-  }
-
-  const data = (await response.json()) as
-    | DocumentResponseError
-    | PolicyDocument;
-
-  return data;
-};
-
-export const getPolicyDocuments = async (
+export const getCorrespondenceDocuments = async (
   policyInputs: PolicyRequestInputs,
   inputs: Partial<DocumentApiRequestInputs>
 ): Promise<ApiResponse<PolicyDocument>> => {
@@ -651,19 +629,15 @@ export const getPolicyDocuments = async (
   try {
     const policy = await getPolicyByPlanCodeAndId(policyInputs);
     inputs.clientCode = policy.carrierId;
-    inputs.source = 'Policy';
+    inputs.source = 'Correspondence';
     const response = await getDocuments(inputs);
 
-    if (!response) {
+    if (!response?.items) {
       throw new Error('No data returned from the API.');
     }
 
     return {
-      data: {
-        statusCode: 200,
-        count: 0,
-        items: [],
-      },
+      data: response,
       error: null,
     };
   } catch (error) {
@@ -674,7 +648,7 @@ export const getPolicyDocuments = async (
       error: {
         message: 'Something went wrong',
         status: 400,
-        name: 'getPolicyOverviewData Error',
+        name: 'getCorrespondenceDocuments Error',
       },
     };
   }

@@ -14,6 +14,7 @@ interface LinkItem {
   url: string;
   label: string;
   disabled?: boolean;
+  iconText?: string;
   iconType?: IconType;
 }
 
@@ -33,21 +34,59 @@ const LinkArrow = ({
   url,
   label,
   isInternal = true,
-  iconType = IconType.CHEVRON_RIGHT,
+  iconText,
+  iconType,
 }: LinkItem) => {
   // TODO: add additional handling for 'open in new window or tab
   if (!url) {
     return null;
   }
 
+  let iconToRender = iconType;
+
   const Tag = isInternal
     ? (Link as unknown as NextComponentType<LinkProps>)
     : ('a' as keyof JSX.IntrinsicElements);
 
+  if (!iconType && !iconText) {
+    iconToRender = IconType.CHEVRON_RIGHT;
+  }
+
   return (
-    <Tag href={url} aria-label={label} className={styles.primaryAction}>
-      <Icon type={iconType} width={20} height={20} />
+    <Tag
+      href={url}
+      aria-label={label}
+      className={`${styles.primaryAction} typography-nav-links-sm`}
+    >
+      {iconText}
+      {iconToRender && <Icon type={iconToRender} width={20} height={20} />}
     </Tag>
+  );
+};
+
+export const ClickableList: FC<{
+  disabled?: boolean;
+  listItems: ChildCard[];
+}> = ({ disabled, listItems }) => {
+  return (
+    <ul>
+      {listItems.map((item, index) => {
+        if (!item) {
+          return null;
+        }
+        return (
+          <li
+            className={`${styles.content} ${styles.listItem}`}
+            key={`item-${index}`}
+          >
+            {item.content}
+            {item.linkTo && !disabled && !item.linkTo.disabled && (
+              <LinkArrow {...item.linkTo} />
+            )}
+          </li>
+        );
+      })}
+    </ul>
   );
 };
 
@@ -69,23 +108,25 @@ export const ClickableCardContainer: FC<Props> = ({
         {linkTo && !disabled && <LinkArrow {...linkTo} />}
       </div>
       {listItems && listItems.length > 0 && (
-        <ul>
-          {listItems.map((item, index) => {
-            if (!item) {
-              return null;
-            }
-            return (
-              <li
-                className={`${styles.content} ${styles.listItem}`}
-                key={`item-${index}`}
-              >
-                {item.content}
-                {item.linkTo && !disabled && <LinkArrow {...item.linkTo} />}
-              </li>
-            );
-          })}
-        </ul>
+        <ClickableList disabled={disabled} listItems={listItems} />
       )}
+    </div>
+  );
+};
+
+export const ClickableListContainer: FC<{
+  className?: string;
+  disabled?: boolean;
+  listItems: ChildCard[];
+}> = ({ className = '', disabled, listItems }) => {
+  if (!listItems?.length) return null;
+  return (
+    <div
+      className={clsx(styles.clickableCardContainer, className, {
+        [styles.disabled as string]: disabled,
+      })}
+    >
+      <ClickableList disabled={disabled} listItems={listItems} />
     </div>
   );
 };
