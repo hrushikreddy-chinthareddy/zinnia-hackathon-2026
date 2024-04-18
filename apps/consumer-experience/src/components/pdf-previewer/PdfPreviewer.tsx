@@ -3,6 +3,7 @@
 import { saveAs } from 'file-saver';
 import React, { useState } from 'react';
 import { Button } from '@zinnia/bloom/internal/components';
+import PreviewUnsupported from './PreviewUnsupported';
 
 export default function PdfPreviewer({
   documentId,
@@ -17,24 +18,19 @@ export default function PdfPreviewer({
 }) {
   const [supportsEmbed, setSupportsEmbed] = useState(true);
 
-  const documentUrl = `/api/documents/${documentId}/download?clientCode=${clientCode}&source=${source}`;
-
-  const saveDocument = () => {
-    saveAs(documentUrl, `${fileName}.pdf`);
-  };
+  const documentUrl = `/api/documents/${documentId}/download/${fileName}.pdf?clientCode=${clientCode}&source=${source}`;
 
   return supportsEmbed ? (
-    <embed
-      src={documentUrl}
+    <object
+      data={documentUrl}
       onError={() => setSupportsEmbed(false)}
       type="application/pdf"
       width={'100%'}
       height={'100%'}
-    />
+    >
+      <PreviewUnsupported fileName={fileName} url={documentUrl} />
+    </object>
   ) : (
-    <>
-      PDF Preview doesn't seem to be supported by this browser.{' '}
-      <Button onClick={saveDocument}>Download File Instead</Button>
-    </>
+    <PreviewUnsupported fileName={fileName} url={documentUrl} />
   );
 }

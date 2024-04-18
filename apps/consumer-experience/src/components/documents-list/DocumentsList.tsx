@@ -57,7 +57,7 @@ export default function DocumentsList({
             linkTo: {
               isInternal: true,
               newTab: true,
-              url: `/policies/${planCode}/${policyNumber}/documents/${d.documentId ?? d.documentID}?clientCode=${d.clientCode}&source=${d.downloadSource}`,
+              url: `/policies/${planCode}/${policyNumber}/documents/${d.documentId ?? d.documentID}?clientCode=${d.clientCode}&source=${d.downloadSource}&fileName=${d?.displayName?.replace(/[^A-Z0-9]/gi, '') ?? d.documentId ?? d.documentID}`,
               label: `View Document - ${d.displayName}`,
               ctaText: 'View',
             },
