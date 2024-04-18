@@ -2,19 +2,15 @@ import { IconType } from '@zinnia/bloom/internal/components';
 import Link from 'next/link';
 
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
-import { ClickableListContainer } from '@/components/clickable-card-container/ClickableCardContainer';
-import { FieldData } from '@/components/field-data/FieldData';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
-import styles from '@/components/policy-overview/PolicyOverview.module.css';
 import { getCorrespondenceDocuments } from '@/services/policy';
 import { PolicyRequestInputs } from '@/types/policy';
-import { checkIfNull } from '@/utils/data';
-import { standardDateMonthYear } from '@/utils/dates';
 
 import documentStyles from './Documents.module.css';
 import { ExtendedDocumentMeta } from '@/types/document';
+import DocumentsList from '@/components/documents-list/DocumentsList';
 
 // DocumentTypes for both Old and New Correspondence APIs that map to a statement-y doctype
 // https://zinnia.atlassian.net/wiki/spaces/SISED/pages/3834871816/SED+New+Document+Types+-+Next+Gen+Correspondence
@@ -43,9 +39,10 @@ export default async function Documents({
 
   const statementsFilter = (doc: ExtendedDocumentMeta) =>
     StatementDocumentTypes.includes(doc.documentType as string);
-  const docs = data?.items?.filter(doc =>
-    isStatementsSelected ? statementsFilter(doc) : !statementsFilter(doc)
-  );
+  const docs =
+    data?.items?.filter(doc =>
+      isStatementsSelected ? statementsFilter(doc) : !statementsFilter(doc)
+    ) ?? [];
 
   return (
     <div className="container">
@@ -54,7 +51,7 @@ export default async function Documents({
         <li>
           <Link
             href={`/policies/${params.planCode}/${params.policyNumber}/documents`}
-            className={`${!searchParams.type || searchParams.type === 'documents' ? documentStyles.active : ''}`}
+            className={`${!isStatementsSelected ? documentStyles.active : ''}`}
           >
             Documents
           </Link>
@@ -73,36 +70,15 @@ export default async function Documents({
           message="No documents available."
           iconType={IconType.DOCUMENT_TEXT}
         />
-      ) : docs && docs.length > 0 ? (
-        <ClickableListContainer
-          listItems={docs.map(d => {
-            return {
-              content: (
-                <>
-                  <div className={styles.content}>
-                    <FieldData caption={standardDateMonthYear(d.documentDate)}>
-                      <p className="typography-labels-label-md-alt">
-                        {checkIfNull(d.displayName)}
-                      </p>
-                    </FieldData>
-                  </div>
-                </>
-              ),
-              linkTo: {
-                isInternal: true,
-                url: `/policies/${params.planCode}/${params.policyNumber}/documents/${d.documentId ?? d.documentID}?clientCode=${d.clientCode}&source=${d.downloadSource}`,
-                label: `Download Document - ${d.displayName}`,
-                iconText: 'View',
-              },
-            };
-          })}
-        />
       ) : (
-        <NoDataAvailable
-          message={`No ${isStatementsSelected ? 'statements' : 'documents'} available.`}
-          iconType={IconType.DOCUMENT_TEXT}
+        <DocumentsList
+          docCategory={isStatementsSelected ? 'statements' : 'documents'}
+          documents={docs}
+          planCode={params.planCode}
+          policyNumber={params.policyNumber}
         />
       )}
+
       <CallForAssistance />
       <Footer />
     </div>

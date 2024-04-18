@@ -11,10 +11,11 @@ interface LinkItem {
    * Defaults to true
    */
   isInternal?: boolean;
+  newTab?: boolean;
   url: string;
   label: string;
   disabled?: boolean;
-  iconText?: string;
+  ctaText?: string;
   iconType?: IconType;
 }
 
@@ -31,11 +32,12 @@ export interface Props extends PropsWithChildren {
 }
 
 const LinkArrow = ({
-  url,
-  label,
-  isInternal = true,
-  iconText,
+  ctaText,
   iconType,
+  isInternal = true,
+  label,
+  newTab = false,
+  url,
 }: LinkItem) => {
   // TODO: add additional handling for 'open in new window or tab
   if (!url) {
@@ -48,7 +50,7 @@ const LinkArrow = ({
     ? (Link as unknown as NextComponentType<LinkProps>)
     : ('a' as keyof JSX.IntrinsicElements);
 
-  if (!iconType && !iconText) {
+  if (!iconType && !ctaText) {
     iconToRender = IconType.CHEVRON_RIGHT;
   }
 
@@ -56,9 +58,10 @@ const LinkArrow = ({
     <Tag
       href={url}
       aria-label={label}
-      className={`${styles.primaryAction} typography-nav-links-sm`}
+      className={`${styles.primaryAction}`}
+      target={newTab ? '_blank' : '_self'}
     >
-      {iconText}
+      {ctaText && <div className="typography-nav-links-sm">{ctaText}</div>}
       {iconToRender && <Icon type={iconToRender} width={20} height={20} />}
     </Tag>
   );

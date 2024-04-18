@@ -1,6 +1,15 @@
+import { Session } from '@auth0/nextjs-auth0';
 import pino from './pino-server';
 
 type LoggingFunction = (message: string, serializableValues: any) => void;
+
+export const getUserInfoFromSession = (session: Session | null | undefined) => {
+  return {
+    sessionId: session?.user?.sid,
+    userId: session?.user?.sub,
+    userName: session?.user?.name,
+  };
+};
 
 export const logCompliance: LoggingFunction = (
   message,

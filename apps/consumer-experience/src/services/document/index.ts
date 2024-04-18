@@ -1,30 +1,9 @@
 import { DocumentApiRequestInputs, PolicyDocument } from '@/types/document';
 import { DownloadDocumentResponse } from '@zinnia/api-types/types/documents';
 import { ApiResponse, ServerApi, documentApiBaseUrl } from '..';
-import { logError, logWarn } from '@/utils/logging/server-logging';
+import { logWarn } from '@/utils/logging/server-logging';
 
-// BPB - TODO - Follow codebase format.
-export const downloadDocument = async (
-  documentNumber: string,
-  docType: string,
-  clientCode: string
-): Promise<DownloadDocumentResponse | null> => {
-  try {
-    const url = `${documentApiBaseUrl}/${documentNumber}/download?clientCode=${clientCode.toUpperCase()}&source=${docType}`;
-    const response = await ServerApi.get(url);
-    return await response.json();
-  } catch (error: any) {
-    logWarn('An error occurred while downloading document', {
-      error,
-      file: 'queries/api/documents',
-      function: 'getDocumentDownload',
-    });
-
-    return error.response;
-  }
-};
-
-export const getDocument = async (
+export const getDocumentDownload = async (
   documentNumber: string,
   source: string,
   clientCode: string
