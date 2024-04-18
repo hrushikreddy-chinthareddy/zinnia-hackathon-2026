@@ -23,7 +23,7 @@ export default function PdfPreviewer({
     saveAs(documentUrl, `${fileName}.pdf`);
   };
 
-  return !supportsEmbed ? (
+  return supportsEmbed ? (
     <embed
       src={documentUrl}
       onError={() => setSupportsEmbed(false)}
