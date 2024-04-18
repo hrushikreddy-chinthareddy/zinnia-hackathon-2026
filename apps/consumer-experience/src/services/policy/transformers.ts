@@ -12,6 +12,7 @@ import {
   FundAllocation,
   PolicyFeature,
   Status,
+  ArrangementType,
 } from '@zinnia/api-types/types/sor';
 import { policyOwner } from '@zinnia/utils';
 
@@ -135,16 +136,30 @@ export const transformPolicyForHeaderDetails = (
 
 export const transformPolicyForProfile = (policy: Policy): PolicyProfile => {
   const ownerInfo = policyOwner(policy);
+
+  // Find the systematic program that is for the premium autopay
+  const autopayProgram = policy.systematicPrograms?.find(
+    (program: SystematicProgram) =>
+      // TODO: this doesn't match the type described in generated types
+      program.arrangementType === ('PAYMENT' as ArrangementType)
+  );
+
+  // Party on the return is an arry, so ensure using bankId of
+  // payor from the systematic program
+  const autopayPayor = autopayProgram?.party?.find(
+    party => party.partyRole === PartyRole.PAYOR
+  );
+
   const bankDetails: BankDetail[] = (ownerInfo?.bankDetails || []).map(
     (b: BankAccount) => {
       return {
         ...b,
         accountNumber: bankAccountNumberSanitizer(b?.accountNumber),
-        // TODO: update this to use real data
-        autopayEnabled: false,
+        autopayEnabled: b.bankId === autopayPayor?.bankId,
       };
     }
   );
+
   return {
     preferredAddressIndicator: ownerInfo?.preferredAddressIndicator || '',
     name: {
