@@ -3,6 +3,7 @@ import { DEFAULT_UNAVAILABLE_STRING } from '@zinnia/utils';
 import clsx from 'clsx';
 import { Suspense } from 'react';
 
+import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
 import { Footer } from '@/components/footer/Footer';
@@ -90,16 +91,10 @@ export default async function Beneficiaries({
             </div>
           </ClickableCardContainer>
         </div>
-        <p className="typography-content-body-bold ">
-          Do you want to increase your coverage? Call{' '}
-          <a
-            className={clsx('typography-nav-links-inline', styles.phoneNumber)}
-            href="+18002322222"
-          >
-            1-800-232-2222
-          </a>{' '}
-          to begin the process.
-        </p>
+        <CallForAssistance
+          callToAction="Do you want to increase your coverage?"
+          customInstruction="to begin the process."
+        />
         <Footer className={styles.coverageFooter} />
       </Suspense>
     </div>
