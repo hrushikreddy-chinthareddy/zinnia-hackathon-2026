@@ -49,7 +49,7 @@ export default async function PaymentDetails({
           />
         </div>
       )}
-      <CallForAssistance customInstruction="to begin the process." />
+      <CallForAssistance />
       <Footer />
     </div>
   );
