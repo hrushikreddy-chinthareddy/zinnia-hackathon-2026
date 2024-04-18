@@ -47,6 +47,8 @@ export default async function Withdrawals({
       return <NoDataAvailable message={DEFAULT_UNAVAILABLE_STRING} />;
     }
 
+    console.log(data.vestingDetails);
+
     return (
       <div className="card-container">
         <InfoCard iconType={IconType.LIGHTBULB}>
@@ -254,13 +256,13 @@ export default async function Withdrawals({
                     >
                       <div>
                         <p className="mb-lg">
-                          {`At this time, you could withdraw ${data.annualWithdrawalsRemaining} more time(s) during policy year. Your policy year ends on ${standardDateMonthYear(data.nextAnniversaryDate)}.`}
+                          {`At this time, you could withdraw ${data.annualWithdrawalsRemaining} more time(s) during the policy year. Your policy year ends on ${standardDateMonthYear(data.nextAnniversaryDate)}.`}
                         </p>
                         <p>
-                          During the vesting period (the first 10 years of your
-                          policy), you can only withdraw one time during each
-                          policy year. After that, you may withdraw up to 12
-                          times in a policy year.
+                          {`During the vesting period (the first ${data.vestingDetails.vestingPeriod} years of your
+                          policy which end${data.vestingDetails.policyHasVested ? 'ed' : 's'} on ${standardDateMonthYear(data.vestingDetails.matchVestingDate)}), you can only withdraw ${data.vestingDetails.maximumWithdrawalRequestDuringVestingPeriod} time during each
+                          policy year. After that, you may withdraw up to ${data.vestingDetails.maximumWithdrawalRequestAfterVestingPeriod}
+                          times in a policy year.`}
                         </p>
                       </div>
                     </Popover>,

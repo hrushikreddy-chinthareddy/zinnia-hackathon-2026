@@ -46,6 +46,7 @@ import {
   isPolicyEligibleForWithdrawals,
   policyWithdrawalsRemaining,
   getRiderDescription,
+  policyHasVested,
 } from '@/utils/data';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';
 
@@ -311,7 +312,6 @@ export const transformPolicyForWithdrawals = (
   const withdrawalValues = policy.withdrawalValues || {};
 
   return {
-    ...policy.withdrawalValues,
     withdrawalAllowedStartDate: withdrawalValues.withdrawalAllowedStartDate,
     maximumWithdrawalAmount: withdrawalValues.maximumWithdrawalAmount,
     numberOfWithdrawal: withdrawalValues.numberOfWithdrawal,
@@ -331,6 +331,15 @@ export const transformPolicyForWithdrawals = (
     }),
     nextMonthiversaryDate: policy.policyDates?.nextMonthiversaryDate,
     nextAnniversaryDate: policy.policyDates?.nextAnniversaryDate,
+    vestingDetails: {
+      maximumWithdrawalRequestAfterVestingPeriod:
+        withdrawalValues?.maximumWithdrawalRequestAfterVestingPeriod,
+      maximumWithdrawalRequestDuringVestingPeriod:
+        withdrawalValues?.maximumWithdrawalRequestDuringVestingPeriod,
+      vestingPeriod: policy.allocation?.matchSegment?.vestingPeriod,
+      policyHasVested: policyHasVested(policy),
+      matchVestingDate: policy.allocation?.matchSegment?.matchVestingDate,
+    },
   };
 };
 

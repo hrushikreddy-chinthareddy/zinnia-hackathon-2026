@@ -44,6 +44,11 @@ describe('standardDateMonthYear', () => {
     const result = standardDateMonthYear(null);
     expect(result).toBe(DEFAULT_ERROR_STRING);
   });
+
+  it('should return an empty string when given an undefined value', () => {
+    const result = standardDateMonthYear(undefined);
+    expect(result).toBe(DEFAULT_ERROR_STRING);
+  });
 });
 
 describe('dayOfMonthWithOrdinal', () => {

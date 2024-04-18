@@ -212,6 +212,14 @@ export interface PolicySurrender {
   surrenderValue?: number | null;
 }
 
+interface VestingDetails {
+  maximumWithdrawalRequestAfterVestingPeriod?: number | string | null;
+  maximumWithdrawalRequestDuringVestingPeriod?: number | string | null;
+  vestingPeriod?: number | null;
+  policyHasVested?: boolean | null;
+  matchVestingDate?: string | null;
+}
+
 export interface PolicyWithdrawals {
   isEligibleForWithdrawals?: boolean | null;
   annualWithdrawalsTaken?: number | null;
@@ -224,6 +232,7 @@ export interface PolicyWithdrawals {
   totalWithdrawalAmount?: number | null;
   annualWithdrawalLimitNoCoverageDecrease?: number | null;
   availableToWithdrawTaxFree?: number | null;
+  vestingDetails: VestingDetails;
 }
 
 // export type PolicyFeatureType = keyof typeof PolicyFeature.featureType;

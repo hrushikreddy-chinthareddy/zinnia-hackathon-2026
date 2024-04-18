@@ -201,6 +201,14 @@ export const allowedAnnualWithdrawals = ({
   return null;
 };
 
+export const policyHasVested = ({ allocation }: Policy) => {
+  if (!dayjs(allocation?.matchSegment?.matchVestingDate).isValid()) {
+    return null;
+  }
+
+  return dayjs(allocation?.matchSegment?.matchVestingDate).isBefore(dayjs());
+};
+
 export const isPolicyEligibleForWithdrawals = ({
   allowedWithdrawals,
   withdrawalsTaken,
