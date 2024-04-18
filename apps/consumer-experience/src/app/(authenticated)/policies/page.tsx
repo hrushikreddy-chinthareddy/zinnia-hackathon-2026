@@ -7,7 +7,6 @@ import { FieldData } from '@/components/field-data/FieldData';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
-import styles from '@/components/policy-overview/PolicyOverview.module.css';
 import { getMyPoliciesByCarrier } from '@/services';
 
 // disable because NextJS needs this to be exported from this file
@@ -24,7 +23,7 @@ export default async function Page() {
     return (
       <>
         <HeaderBreadcrumb title="My Policies" />
-        <div className={styles.cardContainer}>
+        <div className="card-container">
           <MockMessage />
           <NoDataAvailable
             iconType={IconType.SHIELD_EXCLAMATION}
