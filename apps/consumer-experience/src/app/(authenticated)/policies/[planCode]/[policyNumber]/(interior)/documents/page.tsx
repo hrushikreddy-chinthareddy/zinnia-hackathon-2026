@@ -68,7 +68,7 @@ export default async function Documents({
       {error || data?.count === 0 ? (
         <NoDataAvailable
           message="No documents available."
-          iconType={IconType.DOCUMENT_TEXT}
+          iconType={IconType.DOCUMENT_DUPLICATE}
         />
       ) : (
         <DocumentsList

@@ -34,7 +34,7 @@ export default function DocumentsList({
     return (
       <NoDataAvailable
         message={`No ${docCategory ?? 'documents'} available.`}
-        iconType={IconType.DOCUMENT_TEXT}
+        iconType={IconType.DOCUMENT_DUPLICATE}
       />
     );
   }
