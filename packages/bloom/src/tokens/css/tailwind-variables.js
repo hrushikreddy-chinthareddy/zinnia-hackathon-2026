@@ -1,5 +1,25 @@
 module.exports = {
     'colors': {
+        'primary': {
+            'color-primary': '#ff7500', /* #FF7500
+                                        
+                                        Primary color 400-orange is the action color used for UI Design in the Zahara Design System.
+                                        
+                                        It is reserved for important action items that need to stand out: buttons, toggles, checkboxes, radio, and other critical functional use cases. */
+            'color-primary-lightest': '#ffead9', /* #FFEAD9
+                                        
+                                        Primary button selected, and the inactive selected color for toggles radio, checkboxes and other action items.  */
+            'color-primary-lighter': '#ffc899', /* #FFC899
+                                        
+                                        Primary button pressed. Inactive tooltip icon. */
+            'color-primary-light': '#ffac66', /* #FFAC66
+                                        
+                                        The inactive (white) selected color for toggles and other action items.  */
+            'color-primary-dark': '#994600', /* #994600
+                                        
+                                        The contrast inactive selected color for toggles radio, checkboxes and other action items.  */
+            'color-primary-50-percent-opacity': '#ff750080', /* #FF7500 at 50% opacity */
+        },
         'aqua': {
             'color-50-aqua': '#f9fdfd', /* #F9FDFD
                                         
@@ -79,35 +99,105 @@ module.exports = {
                                         
                                         Links hovered. */
         },
-        'orange': {
-            'color-50-orange': '#fffbf9', /* #FFFBF9
+        'lime': {
+            'color-50-lime': '#fdfdf1', /* #FDFDF1
                                         
                                         Extended palette */
-            'color-100-orange': '#fae7df', /* #FAE7DF
-                                        
-                                        100-orange is the inactive selected color for toggles radio, checkboxes and other action items.  */
-            'color-200-orange': '#ffcab0', /* #FFCAB0
+            'color-100-lime': '#f6f5d2', /* #F6F5D2
                                         
                                         Extended palette */
-            'color-300-orange': '#ffa071', /* #FFA0713
+            'color-200-lime': '#e1e38d', /* #E1E38D
                                         
                                         Extended palette */
-            'color-400-orange': '#ff7500', /* #FF7500
+            'color-300-lime': '#c0c64f', /* #C0C64F
+                                        
+                                        Finance classes */
+            'color-400-lime': '#a4ae08', /* #A4AE08
                                         
                                         Extended palette */
-            'color-500-orange': '#f26003', /* #F26003
+            'color-500-lime': '#8b9403', /* #8B9403
                                         
                                         Extended palette */
-            'color-600-orange': '#dd4a07', /* #DD4A07
+            'color-600-lime': '#656c02', /* #656C02
                                         
                                         Extended palette */
-            'color-700-orange': '#bb3d05', /* #BB3D05
+            'color-700-lime': '#484e01', /* #484E01
                                         
                                         Extended palette */
-            'color-800-orange': '#992e04', /* #992E04
+            'color-800-lime': '#3a3e01', /* #3A3E01
                                         
                                         Extended palette */
-            'color-900-orange': '#7d2106', /* #7D2106
+            'color-900-lime': '#2c2e07', /* #2C2E07
+                                        
+                                        Extended palette */
+        },
+        'semantics': {
+            'color-semantic-focus': '#37a2d8', /* #37A2D8
+                                        
+                                        Used when a component/input/ */
+            'color-semantic-success': '#007b5a', /* #007B5A
+                                        
+                                        Used when a required item meets the limitations set by the input */
+            'color-semantic-success-50-percent-opacity': '#00876280', /* #008762
+                                        
+                                        50% of the success token */
+            'color-semantic-success-light': '#f2f9f7', /* 
+                                        
+                                         */
+            'color-semantic-pending': '#ac0091', /* Pending color */
+            'color-semantic-pending-50-percent-opacity': '#ac009180', 
+            'color-semantic-pending-light': '#fbf2f9', 
+            'color-semantic-information': '#005fed', /* #005FED */
+            'color-semantic-information-50-percent-opacity': '#005fed80', /* #005FED
+                                        
+                                        50% of the info token */
+            'color-semantic-information-light': '#f2f7fe', /* #F2F7FE
+                                         */
+            'color-semantic-warning': '#b74d00', /* #B74D00
+                                        
+                                        Used in warning dialogues / modules */
+            'color-semantic-warning-50-percent-opacity': '#c3520080', /* #C35200
+                                        
+                                        50% of the warning token */
+            'color-semantic-warning-light': '#fcf6f2', /* #FCF6F2 */
+            'color-semantic-error': '#db004f', /* #DB004F
+                                        
+                                        Used in error dialogues  / modules */
+            'color-semantic-error-50-percent-opacity': '#db004f80', /* #DB004F
+                                        
+                                        50% of the error token */
+            'color-semantic-error-light': '#fdf2f6', /* #FDF2F6 */
+            'color-semantic-text-highlight': '#ffe485', 
+        },
+        'cerulean': {
+            'color-50-cerulean': '#f4faff', /* #F4FAFF
+                                        
+                                        Extended palette */
+            'color-100-cerulean': '#deedf9', /* #DEEDF9
+                                        
+                                        Extended palette */
+            'color-200-cerulean': '#abdcfb', /* #ABDCFB
+                                        
+                                        Extended palette */
+            'color-300-cerulean': '#6cc2f6', /* #6CC2F6
+                                        
+                                        Extended palette */
+            'color-400-cerulean': '#37a2d8', /* #37A2D8
+                                        
+                                        Extended palette */
+            'color-500-cerulean': '#0b7eae', /* #0B7EAE 
+                                        
+                                        Extended palette */
+            'color-700-cerulean': '#0b4d6a', /* #0B4D6A
+                                        
+                                        Extended palette */
+            'color-800-cerulean': '#083951', /* #083951
+                                        
+                                        Extended palette */
+            'color-900-cerulean': '#072838', /* #072838
+                                        
+                                        Extended palette */
+            'color-600-cerulean': '#00628b', /* #00628B
                                         
                                         Extended palette */
         },
@@ -153,6 +243,7 @@ module.exports = {
                                         Extended palette */
             'color-50-percent-black': '#00000080', /* Modal overlay
                                          */
+            'color-accent-loader-zero-percent-opacity': '#ffc60000', 
         },
         'grayscale': {
             'color-white': '#ffffff', /* #FFFFFF */
@@ -182,125 +273,35 @@ module.exports = {
                                         Primary Text, High Contrast Dividers */
             'color-black': '#000000', /* #000000 */
         },
-        'semantics': {
-            'color-semantic-focus': '#37a2d8', /* #37A2D8
-                                        
-                                        Used when a component/input/ */
-            'color-semantic-success': '#007b5a', /* #007B5A
-                                        
-                                        Used when a required item meets the limitations set by the input */
-            'color-semantic-success-50-percent-opacity': '#00876280', /* #008762
-                                        
-                                        50% of the success token */
-            'color-semantic-success-light': '#f2f9f7', /* 
-                                        
-                                         */
-            'color-semantic-pending': '#ac0091', /* Pending color */
-            'color-semantic-pending-50-percent-opacity': '#ac009180', 
-            'color-semantic-pending-light': '#fbf2f9', 
-            'color-semantic-information': '#005fed', /* #005FED */
-            'color-semantic-information-50-percent-opacity': '#005fed80', /* #005FED
-                                        
-                                        50% of the info token */
-            'color-semantic-information-light': '#f2f7fe', /* #F2F7FE
-                                         */
-            'color-semantic-warning': '#b74d00', /* #B74D00
-                                        
-                                        Used in warning dialogues / modules */
-            'color-semantic-warning-50-percent-opacity': '#c3520080', /* #C35200
-                                        
-                                        50% of the warning token */
-            'color-semantic-warning-light': '#fcf6f2', /* #FCF6F2 */
-            'color-semantic-error': '#db004f', /* #DB004F
-                                        
-                                        Used in error dialogues  / modules */
-            'color-semantic-error-50-percent-opacity': '#db004f80', /* #DB004F
-                                        
-                                        50% of the error token */
-            'color-semantic-error-light': '#fdf2f6', /* #FDF2F6 */
-            'color-semantic-text-highlight': '#ffe485', 
-        },
-        'lime': {
-            'color-50-lime': '#fdfdf1', /* #FDFDF1
+        'orange': {
+            'color-50-orange': '#fffbf9', /* #FFFBF9
                                         
                                         Extended palette */
-            'color-100-lime': '#f6f5d2', /* #F6F5D2
+            'color-100-orange': '#fae7df', /* #FAE7DF
+                                        
+                                        100-orange is the inactive selected color for toggles radio, checkboxes and other action items.  */
+            'color-200-orange': '#ffcab0', /* #FFCAB0
                                         
                                         Extended palette */
-            'color-200-lime': '#e1e38d', /* #E1E38D
+            'color-300-orange': '#ffa071', /* #FFA0713
                                         
                                         Extended palette */
-            'color-300-lime': '#c0c64f', /* #C0C64F
-                                        
-                                        Finance classes */
-            'color-400-lime': '#a4ae08', /* #A4AE08
+            'color-400-orange': '#ff7500', /* #FF7500
                                         
                                         Extended palette */
-            'color-500-lime': '#8b9403', /* #8B9403
+            'color-500-orange': '#f26003', /* #F26003
                                         
                                         Extended palette */
-            'color-600-lime': '#656c02', /* #656C02
+            'color-600-orange': '#dd4a07', /* #DD4A07
                                         
                                         Extended palette */
-            'color-700-lime': '#484e01', /* #484E01
+            'color-700-orange': '#bb3d05', /* #BB3D05
                                         
                                         Extended palette */
-            'color-800-lime': '#3a3e01', /* #3A3E01
+            'color-800-orange': '#992e04', /* #992E04
                                         
                                         Extended palette */
-            'color-900-lime': '#2c2e07', /* #2C2E07
-                                        
-                                        Extended palette */
-        },
-        'primary': {
-            'color-primary': '#ff7500', /* #FF7500
-                                        
-                                        Primary color 400-orange is the action color used for UI Design in the Zahara Design System.
-                                        
-                                        It is reserved for important action items that need to stand out: buttons, toggles, checkboxes, radio, and other critical functional use cases. */
-            'color-primary-lightest': '#ffead9', /* #FFEAD9
-                                        
-                                        Primary button selected, and the inactive selected color for toggles radio, checkboxes and other action items.  */
-            'color-primary-lighter': '#ffc899', /* #FFC899
-                                        
-                                        Primary button pressed. Inactive tooltip icon. */
-            'color-primary-light': '#ffac66', /* #FFAC66
-                                        
-                                        The inactive (white) selected color for toggles and other action items.  */
-            'color-primary-dark': '#994600', /* #994600
-                                        
-                                        The contrast inactive selected color for toggles radio, checkboxes and other action items.  */
-            'color-primary-50-percent-opacity': '#ff750080', /* #FF7500 at 50% opacity */
-        },
-        'cerulean': {
-            'color-50-cerulean': '#f4faff', /* #F4FAFF
-                                        
-                                        Extended palette */
-            'color-100-cerulean': '#deedf9', /* #DEEDF9
-                                        
-                                        Extended palette */
-            'color-200-cerulean': '#abdcfb', /* #ABDCFB
-                                        
-                                        Extended palette */
-            'color-300-cerulean': '#6cc2f6', /* #6CC2F6
-                                        
-                                        Extended palette */
-            'color-400-cerulean': '#37a2d8', /* #37A2D8
-                                        
-                                        Extended palette */
-            'color-500-cerulean': '#0b7eae', /* #0B7EAE 
-                                        
-                                        Extended palette */
-            'color-700-cerulean': '#0b4d6a', /* #0B4D6A
-                                        
-                                        Extended palette */
-            'color-800-cerulean': '#083951', /* #083951
-                                        
-                                        Extended palette */
-            'color-900-cerulean': '#072838', /* #072838
-                                        
-                                        Extended palette */
-            'color-600-cerulean': '#00628b', /* #00628B
+            'color-900-orange': '#7d2106', /* #7D2106
                                         
                                         Extended palette */
         },
@@ -334,31 +335,15 @@ module.exports = {
                                         Extended palette */
             'color-400-yellow': '#ffc600', 
         },
-        'pagination': {
-            'pagination-border-default': '#00628b', 
-            'pagination-indicator-default': '#00628b', 
-            'pagination-background-hover-fill': '#d9e7ee', 
-            'pagination-indicator-hover-fill': '#00628b', 
-            'pagination-border-selected': '#00628b', 
-            'pagination-background-selected-fill': '#d9e7ee', 
-            'pagination-indicator-selected-fill': '#00628b', 
-            'pagination-border-inactive': '#b3b3b3', 
-            'pagination-background-inactive-fill': '#ededed', 
-            'pagination-indicator-inactive-fill': '#b3b3b3', 
-        },
-        'button-group': {
-            'button-group-item-primary-inactive-text': '#b3b3b3', 
-            'button-group-item-primary-inactive-border': '#b3b3b3', 
-            'button-group-item-primary-inactive-fill': '#ededed', 
-            'button-group-item-primary-selected-text': '#212121', 
-            'button-group-item-primary-selected-border': '#ff7500', 
-            'button-group-item-primary-selected-fill': '#ffc899', 
-            'button-group-item-primary-hover-text': '#212121', 
-            'button-group-item-primary-hover-border': '#ff7500', 
-            'button-group-item-primary-hover-fill': '#ffead9', 
-            'button-group-item-primary-text': '#212121', 
-            'button-group-item-primary-border': '#cccccc', 
-            'button-group-item-primary-fill': '#ffffff', 
+        'nav-menu': {
+            'menu-default-fill': '#212121', 
+            'menu-link-hover-fill': '#313131', 
+            'menu-link-selected-fill': '#ffffff', 
+            'menu-icon-default-fill': '#ffffff', 
+            'menu-icon-selected-fill': '#212121', 
+            'menu-icon-surface-selected-fill': '#ffffff', 
+            'menu-button-default-fill': '#313131', 
+            'menu-button-hover-fill': '#4d4d4d', 
         },
         'chip': {
             'chip-primary-fill': '#ffffff', 
@@ -393,15 +378,37 @@ module.exports = {
             'toggle-contrast-inactive-icon': '#949494', 
             'toggle-contrast-selected-inactive-icon': '#ffac66', 
         },
-        'nav-menu': {
-            'menu-default-fill': '#212121', 
-            'menu-link-hover-fill': '#313131', 
-            'menu-link-selected-fill': '#ffffff', 
-            'menu-icon-default-fill': '#ffffff', 
-            'menu-icon-selected-fill': '#212121', 
-            'menu-icon-surface-selected-fill': '#ffffff', 
-            'menu-button-default-fill': '#313131', 
-            'menu-button-hover-fill': '#4d4d4d', 
+        'pagination': {
+            'pagination-border-default': '#00628b', 
+            'pagination-indicator-default': '#00628b', 
+            'pagination-background-hover-fill': '#d9e7ee', 
+            'pagination-indicator-hover-fill': '#00628b', 
+            'pagination-border-selected': '#00628b', 
+            'pagination-background-selected-fill': '#d9e7ee', 
+            'pagination-indicator-selected-fill': '#00628b', 
+            'pagination-border-inactive': '#b3b3b3', 
+            'pagination-background-inactive-fill': '#ededed', 
+            'pagination-indicator-inactive-fill': '#b3b3b3', 
+        },
+        'button-group': {
+            'button-group-item-primary-inactive-text': '#b3b3b3', 
+            'button-group-item-primary-inactive-border': '#b3b3b3', 
+            'button-group-item-primary-inactive-fill': '#ededed', 
+            'button-group-item-primary-selected-text': '#212121', 
+            'button-group-item-primary-selected-border': '#ff7500', 
+            'button-group-item-primary-selected-fill': '#ffc899', 
+            'button-group-item-primary-hover-text': '#212121', 
+            'button-group-item-primary-hover-border': '#ff7500', 
+            'button-group-item-primary-hover-fill': '#ffead9', 
+            'button-group-item-primary-text': '#212121', 
+            'button-group-item-primary-border': '#cccccc', 
+            'button-group-item-primary-fill': '#ffffff', 
+        },
+        'loader': {
+            'loader-part-one': '#ff1822', 
+            'loader-part-two': '#ff1822', 
+            'loader-part-three': '#ff7500', 
+            'loader-part-four': '#ffc60000', 
         },
         'status-surface': {
             'status-hover-border': '#ffc600', 
@@ -422,13 +429,6 @@ module.exports = {
             'status-warning-border-alt': '#b74d00', 
             'status-error-border-alt': '#db004f', 
         },
-        'status-icon': {
-            'status-information-icon': '#005fed', 
-            'status-success-icon': '#007b5a', 
-            'status-warning-icon': '#b74d00', 
-            'status-error-icon': '#db004f', 
-            'status-pending-icon': '#ac0091', 
-        },
         'status-text': {
             'status-information-text': '#005fed', 
             'status-success-text': '#007b5a', 
@@ -436,22 +436,12 @@ module.exports = {
             'status-error-text': '#db004f', 
             'status-pending-text': '#ac0091', 
         },
-        'button-secondary': {
-            'button-secondary-inactive-text': '#b3b3b3', 
-            'button-secondary-inactive-border': '#b3b3b3', 
-            'button-secondary-inactive-fill': '#ededed', 
-            'button-secondary-selected-text': '#ffffff', 
-            'button-secondary-selected-border': '#212121', 
-            'button-secondary-selected-fill': '#212121', 
-            'button-secondary-pressed-text': '#212121', 
-            'button-secondary-pressed-border': '#212121', 
-            'button-secondary-pressed-fill': '#b3b3b3', 
-            'button-secondary-hover-text': '#212121', 
-            'button-secondary-hover-border': '#212121', 
-            'button-secondary-hover-fill': '#cccccc', 
-            'buttton-secondary-text': '#212121', 
-            'button-secondary-border': '#212121', 
-            'button-secondary-fill': '#ffffff', 
+        'status-icon': {
+            'status-information-icon': '#005fed', 
+            'status-success-icon': '#007b5a', 
+            'status-warning-icon': '#b74d00', 
+            'status-error-icon': '#db004f', 
+            'status-pending-icon': '#ac0091', 
         },
         'button-contrast': {
             'button-contrast-inactive-text': '#676767', 
@@ -487,19 +477,22 @@ module.exports = {
             'button-primary-border': '#ff7500', 
             'button-primary-fill': '#ffffff', 
         },
-        'element-radio-checkbox-default': {
-            'element-background-default-fill': '#ffffff', 
-            'element-background-hover-fill': '#ffffff', 
-            'element-background-selected-fill': '#ffffff', 
-            'element-background-selected-inactive-fill': '#ffffff', 
-            'element-background-inactive-fill': '#ededed', 
-            'element-indicator-selected-fill': '#ff7500', 
-            'element-indicator-selected-inactive-fill': '#ffead9', 
-            'element-border-default': '#cccccc', 
-            'element-border-hover': '#ffc600', 
-            'element-border-selected': '#ff7500', 
-            'element-border-selected-inactive': '#ffead9', 
-            'element-border-inactive': '#b3b3b3', 
+        'button-secondary': {
+            'button-secondary-inactive-text': '#b3b3b3', 
+            'button-secondary-inactive-border': '#b3b3b3', 
+            'button-secondary-inactive-fill': '#ededed', 
+            'button-secondary-selected-text': '#ffffff', 
+            'button-secondary-selected-border': '#212121', 
+            'button-secondary-selected-fill': '#212121', 
+            'button-secondary-pressed-text': '#212121', 
+            'button-secondary-pressed-border': '#212121', 
+            'button-secondary-pressed-fill': '#b3b3b3', 
+            'button-secondary-hover-text': '#212121', 
+            'button-secondary-hover-border': '#212121', 
+            'button-secondary-hover-fill': '#cccccc', 
+            'buttton-secondary-text': '#212121', 
+            'button-secondary-border': '#212121', 
+            'button-secondary-fill': '#ffffff', 
         },
         'element-radio-checkbox-contrast': {
             'element-contrast-background-default-fill': '#212121', 
@@ -514,6 +507,44 @@ module.exports = {
             'element-contrast-border-selected': '#ff7500', 
             'element-contrast-border-inactive': '#676767', 
             'element-contrast-border-selected-inactive': '#994600', 
+        },
+        'element-radio-checkbox-default': {
+            'element-background-default-fill': '#ffffff', 
+            'element-background-hover-fill': '#ffffff', 
+            'element-background-selected-fill': '#ffffff', 
+            'element-background-selected-inactive-fill': '#ffffff', 
+            'element-background-inactive-fill': '#ededed', 
+            'element-indicator-selected-fill': '#ff7500', 
+            'element-indicator-selected-inactive-fill': '#ffead9', 
+            'element-border-default': '#cccccc', 
+            'element-border-hover': '#ffc600', 
+            'element-border-selected': '#ff7500', 
+            'element-border-selected-inactive': '#ffead9', 
+            'element-border-inactive': '#b3b3b3', 
+        },
+        'base-icon': {
+            'icon-action': '#00628b', 
+            'icon-action-hover': '#003b54', 
+            'icon-tooltip': '#ff7500', 
+            'icon-tooltip-inactive': '#ffc899', 
+            'icon-header': '#ff7500', 
+            'icon-action-contrast': '#ffffff', 
+            'icon-action-contrast-hover': '#ededed', 
+            'icon-light': '#ffffff', 
+            'icon-dark': '#212121', 
+            'icon-action-link-contrast': '#66a1ba', 
+            'icon-action-link-contrast-hover': '#99c0d1', 
+            'icon-action-unavailable': '#676767', 
+        },
+        'base-surface': {
+            'surface-primary': '#ffffff', 
+            'surface-secondary': '#f8f8f8', 
+            'surface-tertiary': '#ededed', 
+            'surface-quaternary': '#cccccc', 
+            'surface-bold': '#b3b3b3', 
+            'surface-dark': '#676767', 
+            'surface-darker': '#212121', 
+            'surface-text-highlight': '#ffe485', 
         },
         'base-border': {
             'border-primary-color': '#ff7500', 
@@ -531,29 +562,6 @@ module.exports = {
             'text-link': '#00628b', 
             'text-link-contrast': '#66a1ba', 
             'text-light': '#ffffff', 
-        },
-        'base-icon': {
-            'icon-action': '#00628b', 
-            'icon-action-hover': '#003b54', 
-            'icon-tooltip': '#ff7500', 
-            'icon-tooltip-inactive': '#ffc899', 
-            'icon-header': '#ff7500', 
-            'icon-action-contrast': '#ffffff', 
-            'icon-action-contrast-hover': '#ededed', 
-            'icon-light': '#ffffff', 
-            'icon-dark': '#212121', 
-            'icon-action-link-contrast': '#66a1ba', 
-            'icon-action-link-contrast-hover': '#99c0d1', 
-        },
-        'base-surface': {
-            'surface-primary': '#ffffff', 
-            'surface-secondary': '#f8f8f8', 
-            'surface-tertiary': '#ededed', 
-            'surface-quaternary': '#cccccc', 
-            'surface-bold': '#b3b3b3', 
-            'surface-dark': '#676767', 
-            'surface-darker': '#212121', 
-            'surface-text-highlight': '#ffe485', 
         },
         'states-focus': {
             'focus-border': '#37a2d8', 
@@ -589,6 +597,9 @@ module.exports = {
             'selected-text-link': '#00628b', 
             'selected-contrast-text-link': '#66a1ba', 
         },
+        'fields-icon': {
+            'field-icon-default-fill': '#212121', 
+        },
         'fields-surface': {
             'field-background-default-fill': '#ffffff', 
             'field-background-inactive-fill': '#ededed', 
@@ -601,46 +612,19 @@ module.exports = {
             'field-border-error': '#db004f', 
             'field-border-inactive': '#b3b3b3', 
         },
-        'fields-icon': {
-            'field-icon-default-fill': '#212121', 
-        },
     },
     'boxShadow': {
         'elevation-light-02': 'var(--shadow-elevation-elevation-light-02)', 
-        'elevation-light-02-2': 'var(--shadow-elevation-elevation-light-02-2)', 
-        'elevation-light-02-2': 'var(--shadow-elevation-elevation-light-02-2)', 
         'elevation-light-04': 'var(--shadow-elevation-elevation-light-04)', /* Use for: cards, main content, modules */
-        'elevation-light-04-2': 'var(--shadow-elevation-elevation-light-04-2)', /* Use for: cards, main content, modules */
-        'elevation-light-04-2': 'var(--shadow-elevation-elevation-light-04-2)', 
         'elevation-light-08': 'var(--shadow-elevation-elevation-light-08)', /* Use for: top bar, alerts, tooltip, popovers */
-        'elevation-light-08-2': 'var(--shadow-elevation-elevation-light-08-2)', /* Use for: top bar, alerts, tooltip, popovers */
-        'elevation-light-08-2': 'var(--shadow-elevation-elevation-light-08-2)', 
         'elevation-light-16': 'var(--shadow-elevation-elevation-light-16)', /* Use for: selects, contextual */
-        'elevation-light-16-2': 'var(--shadow-elevation-elevation-light-16-2)', /* Use for: selects, contextual */
-        'elevation-light-16-2': 'var(--shadow-elevation-elevation-light-16-2)', 
         'elevation-light-32': 'var(--shadow-elevation-elevation-light-32)', /* Use for: modals */
-        'elevation-light-32-2': 'var(--shadow-elevation-elevation-light-32-2)', /* Use for: modals */
-        'elevation-light-32-2': 'var(--shadow-elevation-elevation-light-32-2)', 
         'elevation-light-64': 'var(--shadow-elevation-elevation-light-64)', 
-        'elevation-light-64-2': 'var(--shadow-elevation-elevation-light-64-2)', 
-        'elevation-light-64-2': 'var(--shadow-elevation-elevation-light-64-2)', 
         'elevation-dark-02': 'var(--shadow-elevation-elevation-dark-02)', 
-        'elevation-dark-02-2': 'var(--shadow-elevation-elevation-dark-02-2)', 
-        'elevation-dark-02-2': 'var(--shadow-elevation-elevation-dark-02-2)', 
         'elevation-dark-04': 'var(--shadow-elevation-elevation-dark-04)', /* Use for: cards, main content, modules */
-        'elevation-dark-04-2': 'var(--shadow-elevation-elevation-dark-04-2)', /* Use for: cards, main content, modules */
-        'elevation-dark-04-2': 'var(--shadow-elevation-elevation-dark-04-2)', 
         'elevation-dark-08': 'var(--shadow-elevation-elevation-dark-08)', /* Use for: top bar, alerts, tooltip, popovers */
-        'elevation-dark-08-2': 'var(--shadow-elevation-elevation-dark-08-2)', /* Use for: top bar, alerts, tooltip, popovers */
-        'elevation-dark-08-2': 'var(--shadow-elevation-elevation-dark-08-2)', 
         'elevation-dark-16': 'var(--shadow-elevation-elevation-dark-16)', /* Use for: selects, contextual */
-        'elevation-dark-16-2': 'var(--shadow-elevation-elevation-dark-16-2)', /* Use for: selects, contextual */
-        'elevation-dark-16-2': 'var(--shadow-elevation-elevation-dark-16-2)', 
         'elevation-dark-32': 'var(--shadow-elevation-elevation-dark-32)', /* Use for: modals */
-        'elevation-dark-32-2': 'var(--shadow-elevation-elevation-dark-32-2)', /* Use for: modals */
-        'elevation-dark-32-2': 'var(--shadow-elevation-elevation-dark-32-2)', 
         'elevation-dark-64': 'var(--shadow-elevation-elevation-dark-64)', 
-        'elevation-dark-64-2': 'var(--shadow-elevation-elevation-dark-64-2)', 
-        'elevation-dark-64-2': 'var(--shadow-elevation-elevation-dark-64-2)', 
     }
 }

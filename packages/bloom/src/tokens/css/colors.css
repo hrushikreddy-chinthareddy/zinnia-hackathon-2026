@@ -310,6 +310,7 @@
           
           Extended palette */
     --color-yellow-color-400-yellow: #ffc600; 
+    --color-accent-color-accent-loader-zero-percent-opacity: #ffc60000; 
     --color-chip-chip-primary-fill: #ffffff; 
     --color-chip-chip-primary-border: #cccccc; 
     --color-chip-chip-primary-text: #212121; 
@@ -532,4 +533,9 @@
     --color-nav-menu-menu-button-hover-fill: #4d4d4d; 
     --color-states-hover-hover-icon-action: #003b54; 
     --color-base-border-border-bolder: #676767; 
+    --color-base-icon-icon-action-unavailable: #676767; 
+    --color-loader-loader-part-one: #ff1822; 
+    --color-loader-loader-part-two: #ff1822; 
+    --color-loader-loader-part-three: #ff7500; 
+    --color-loader-loader-part-four: #ffc60000; 
 }
