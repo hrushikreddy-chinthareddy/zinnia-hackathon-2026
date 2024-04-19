@@ -2,38 +2,30 @@ import {
   Label,
   AssistiveText,
   AssistiveTextVariant,
-} from '@zinnia/bloom/components';
+} from '@zinnia/bloom/internal/components';
+
+import { checkIfNull } from '@/utils/data';
+import { DEFAULT_ERROR_STRING, toSentenceCase } from '@/utils/strings';
 
 import styles from './BankData.module.css';
 import { FieldData } from '../field-data/FieldData';
-
-// TODO: are any of these optional?
-export interface BankDataProps {
-  accountNumber: number;
-  accountType: string;
-  autopayEnabled?: boolean;
-  bankName: string;
-  nameOnAccount: string;
-  // TODO: is this a number or a string?
-  routingNumber: number;
-  title: string;
-}
+import { BankDetail } from '../person-data/types';
 
 export const BankData = ({
   accountNumber,
   accountType,
   autopayEnabled,
-  bankName,
+  branchName,
   nameOnAccount,
   routingNumber,
-  title,
-}: BankDataProps) => {
-  // TODO: how to manage null handling? check all data?
+}: BankDetail) => {
   return (
     <div>
-      <h2>{title}</h2>
       <div className={styles.bankName}>
-        <div className="typography-labels-label-lg">{bankName}</div>
+        <div className="typography-labels-label-lg">
+          {/* Formatting uppercase is the best solution based on the return from zahara */}
+          {branchName?.toUpperCase()}
+        </div>
         {autopayEnabled && (
           <AssistiveText
             variant={AssistiveTextVariant.Success}
@@ -43,17 +35,26 @@ export const BankData = ({
       </div>
       <div className={styles.detailsContainer}>
         <FieldData Label={<Label>Account number</Label>}>
-          <p className="typography-content-body-sm">{`Ending in ${accountNumber}`}</p>
+          <p className="typography-content-body-sm">
+            {accountNumber
+              ? `Ending in ${accountNumber}`
+              : DEFAULT_ERROR_STRING}
+          </p>
         </FieldData>
         <FieldData Label={<Label>Routing number</Label>}>
-          <p className="typography-content-body-sm">{routingNumber}</p>
+          <p className="typography-content-body-sm">
+            {checkIfNull(routingNumber)}
+          </p>
         </FieldData>
-        {/* TODO: probably need to format this? capitalize? */}
         <FieldData Label={<Label>Account type</Label>}>
-          <p className="typography-content-body-sm">{accountType}</p>
+          <p className="typography-content-body-sm">
+            {toSentenceCase(accountType)}
+          </p>
         </FieldData>
         <FieldData Label={<Label>Name on account</Label>}>
-          <p className="typography-content-body-sm">{nameOnAccount}</p>
+          <p className="typography-content-body-sm">
+            {checkIfNull(nameOnAccount)}
+          </p>
         </FieldData>
       </div>
     </div>

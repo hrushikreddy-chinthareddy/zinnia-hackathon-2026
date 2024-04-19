@@ -1,16 +1,21 @@
 import clsx from 'clsx';
 import './footer.css';
 
-export interface Props {
+export interface Props extends React.HTMLAttributes<HTMLDivElement> {
   hasBorder?: boolean;
 }
 
-export const Footer = ({ hasBorder }: Props) => {
+export const Footer = ({ hasBorder, style, className }: Props) => {
   return (
     <div
-      className={clsx('consumer-footer', {
-        'consumer-footer--border': hasBorder,
-      })}
+      className={clsx(
+        'consumer-footer',
+        {
+          'consumer-footer--border': hasBorder,
+        },
+        className
+      )}
+      style={style}
     >
       <p className="typography-content-footer-legal">
         This data is provided for informational purposes only, and is not
@@ -24,11 +29,17 @@ export const Footer = ({ hasBorder }: Props) => {
       <p className="typography-content-footer-legal">
         By using this website, you agree to the terms and conditions outlined in
         our{' '}
-        <a href="#" className="consumer-footer__link">
+        <a
+          href="https://zinnia.com/terms-of-use/"
+          className="consumer-footer__link"
+        >
           Terms of Use
         </a>{' '}
         and{' '}
-        <a href="#" className="consumer-footer__link">
+        <a
+          href="https://zinnia.com/privacy-policy/"
+          className="consumer-footer__link"
+        >
           Privacy Policy
         </a>
         .

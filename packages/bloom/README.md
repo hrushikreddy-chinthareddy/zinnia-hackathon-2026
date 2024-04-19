@@ -4,6 +4,8 @@
 
 ## Quick Start
 
+[![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/zinnia/bloom)
+
 - Clone this repo
 - open container
 - run `npm run storybook`
@@ -17,7 +19,7 @@
 
 ## See More
 
-Please visit our [storybook](bloom-component-library-git-main-zinnia-xd.vercel.app)
+Please visit our [storybook](https://65a69f10c96546167b8e3e93-bjwkcaires.chromatic.com/?path=/docs/styles-using-bloom--docs)
 
 ## Status
 

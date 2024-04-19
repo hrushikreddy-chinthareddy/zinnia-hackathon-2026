@@ -1,0 +1,67 @@
+.container {
+  --font-family-checkbox: 'Lato';
+  --checkbox-border-width: 3px;
+  --checkbox-border-style: solid;
+
+  display: flex;
+  flex-flow: row wrap;
+
+  font-family: var(--font-family-checkbox);
+  font-style: normal;
+  font-size: var(--measure-font-sizing-font-size-x-small);
+  line-height: var(--measure-line-height-font-line-height-x-large);
+}
+
+.disabled {
+    color: var(--color-states-inactive-inactive-text, #b3b3b3)
+}
+
+.label {
+  flex-basis: 100%;
+  margin-bottom: var(--measure-dimension-padding-2xl, 0.5rem);
+}
+
+.checkbox {
+  cursor: pointer;
+  width: var(--measure-dimension-z-space-6, 1.5rem);
+  height: var(--measure-dimension-z-space-6, 1.5rem);
+  margin-right: var(--measure-dimension-padding-lg, 0.5rem);
+  padding: var(--measure-dimension-padding-xs, .125rem);
+  background-color: var(--color-element-radio-checkbox-default-element-background-default-fill, #ffffff);
+  border: var(--checkbox-border-width, 3px) var(--checkbox-border-style, 'solid')
+  var(--color-element-radio-checkbox-default-element-border-default, #cccccc);
+  border-radius: var(--measure-dimension-radius-sm, 0.25rem);
+
+  &[aria-checked="true"]:not(:disabled) {
+    border-color: var(--color-states-selected-selected-primary-border, #ff7500);
+  }
+
+  &[aria-checked="true"]:disabled {
+    border-color: var(--color-element-radio-checkbox-default-element-border-selected-inactive, #ffead9);
+  }
+
+  &:hover:not(:disabled) {
+    border-color: var(--color-states-hover-hover-primary-border, #ffc600)
+  }
+
+  &:focus-visible:not(:disabled) {
+    outline-style: var(--checkbox-border-style);
+    outline-width: var(--checkbox-border-style);
+    outline-color: var(--color-states-focus-focus-border);
+  }
+
+  &:disabled {
+    cursor: auto;
+  }
+}
+
+.indicator {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-states-selected-selected-primary-border, #ff7500);
+
+  &[data-disabled] {
+    background-color: var(--color-element-radio-checkbox-default-element-border-selected-inactive, #ffead9);
+  }
+}

@@ -4,9 +4,11 @@ import {
   IconType,
   Popover,
   PopoverPlacement,
-} from '@zinnia/bloom/components';
+} from '@zinnia/bloom/internal/components';
+import { toTitleCase } from '@zinnia/utils';
+import clsx from 'clsx';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import { ReactNode } from 'react';
 
 import styles from './HeaderBreadcrumb.module.css';
@@ -19,28 +21,45 @@ interface PopoverInfo {
 export interface HeaderBreadcrumbProps {
   title: string;
   popover?: PopoverInfo;
+  className?: string;
 }
 
-export const HeaderBreadcrumb = ({ title, popover }: HeaderBreadcrumbProps) => {
+export const HeaderBreadcrumb = ({
+  title,
+  popover,
+  className,
+}: HeaderBreadcrumbProps) => {
+  const paths = (usePathname() || '').split('/');
+  const params = useParams<{ planCode: string; policyNumber: string }>();
+
   if (!title) {
     return null;
   }
 
-  const paths = usePathname().split('/');
   const currentPath = paths[paths.length - 1];
+  const formatTitle = toTitleCase(title);
 
-  // If there's no current path, it means you're at a root url
-  if (!currentPath) {
-    return <h1 className="typography-desktop-headline-1d">{title}</h1>;
+  // If there's no current path or the current path is 'policies', it means you're at a root url
+  // since we always redirect / to /policies paths will always start with 2 items.
+  // if we are on /policies it means we are essentially at the root.
+  if (!currentPath || currentPath === 'policies') {
+    return <h1 className="typography-desktop-headline-1d">{formatTitle}</h1>;
   }
-  // Get the segment before the current path segment, if the path before is the root,
-  // paths.length - 2 will be an empty string
-  const previousPath = paths[paths.length - 2];
-  const previousPathRoute = previousPath ? `/${previousPath}` : '/';
+
+  let previousPath: string;
+
+  if (currentPath === params.policyNumber) {
+    previousPath = 'policies';
+  } else {
+    // we need to remove the first item which is an empty string
+    // we remove the last item because we want to go back up one level
+    previousPath = paths.slice(1, -1).join('/');
+  }
   const previousPathName = previousPath || 'policy overview';
+  const previousPathRoute = previousPath ? `/${previousPath}` : '/';
 
   return (
-    <div className={styles.headerBreadcrumbContainer}>
+    <div className={clsx(styles.headerBreadcrumbContainer, className)}>
       <Link
         href={previousPathRoute}
         aria-label={`go to ${previousPathName} page`}
@@ -52,14 +71,14 @@ export const HeaderBreadcrumb = ({ title, popover }: HeaderBreadcrumbProps) => {
           color="var(--color-base-icon-icon-action, #1E359C)"
         />
       </Link>
-      <h1 className="typography-desktop-headline-1d">{title}</h1>
+      <h1 className="typography-desktop-headline-1d">{formatTitle}</h1>
       {popover && popover.title && popover.content && (
         <Popover
           title={popover.title}
           trigger={
             <Icon
               type={IconType.CIRCLE_INFO}
-              color="var(--color-primary-color-primary, #ff7500)"
+              color="var(--color-base-icon-icon-tooltip, #ff7500)"
             />
           }
           placement={PopoverPlacement.BottomRight}

@@ -1,9 +1,9 @@
 .button {
-  --font-family-buttons: 'Poppins';
+  --font-family-buttons: var(--font-family-primary);
   --font-weight-semibold: 600;
   --button-border-width: 3px;
   --button-border-style: solid;
-  --button-border-radius: var(--measure-dimension-radius-max);
+  --button-border-radius: var(--measure-dimension-button-button-default-radius);
 
   align-items: center;
   border-radius: var(--button-border-radius);
@@ -37,7 +37,7 @@
 
     &:hover {
       background-color: var(--color-button-primary-button-primary-hover-fill);
-      border-color: var(--primary-button-primary-hover-border);
+      border-color: var(--color-button-primary-button-primary-hover-border);
       color: var(--color-button-secondary-button-secondary-hover-text);
     }
 
@@ -64,6 +64,7 @@
       border: var(--button-border-width) var(--button-border-style)
         var(--color-button-primary-button-primary-inactive-border);
       color: var(--color-button-primary-button-primary-inactive-text);
+      cursor: not-allowed;
     }
   }
 
@@ -112,6 +113,7 @@
       border: var(--button-border-width) var(--button-border-style)
         var(--color-button-secondary-button-secondary-inactive-border);
       color: var(--color-button-secondary-button-secondary-inactive-text);
+      cursor: not-allowed;
     }
   }
 

@@ -1,6 +1,8 @@
 import { Meta, StoryObj } from '@storybook/react';
+import { AccountType } from '@zinnia/api-types/types/sor';
 
-import { BankData, BankDataProps } from './BankData';
+import { BankData } from './BankData';
+import { BankDetail } from '../person-data/types';
 
 const meta: Meta<typeof BankData> = {
   component: BankData,
@@ -9,13 +11,12 @@ const meta: Meta<typeof BankData> = {
 
 export default meta;
 
-export const DefaultBankData: StoryObj<BankDataProps> = {
+export const DefaultBankData: StoryObj<BankDetail> = {
   args: {
-    accountNumber: 1234,
-    accountType: 'Checking',
-    routingNumber: 121000358,
-    bankName: 'Bank of America',
+    accountNumber: '1234',
+    accountType: AccountType.CHECKING,
+    routingNumber: '1234',
+    branchName: 'Bank of America',
     nameOnAccount: 'Flora Anderson',
-    title: 'Banking details',
   },
 };

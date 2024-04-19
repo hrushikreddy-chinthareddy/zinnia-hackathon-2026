@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+
+# cd into consumer experience since .git is at the root
+cd apps/consumer-experience
+
+"$(dirname -- "$0")/_/husky.sh"
+
+pnpm test

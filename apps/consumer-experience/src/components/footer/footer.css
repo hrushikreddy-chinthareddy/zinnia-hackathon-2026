@@ -1,9 +1,8 @@
 .consumer-footer {
-  margin-top: var(--measureDimensionGapXl, 1.5rem);
   color: var(--color-base-text-text-secondary, #676767);
 
   > * {
-    margin-top: var(--measure-dimension-gap-lg, 1rem);
+    margin-bottom: var(--measure-dimension-gap-lg, 1rem);
   }
 }
 

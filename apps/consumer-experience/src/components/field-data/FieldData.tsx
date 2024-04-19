@@ -1,9 +1,8 @@
-import { Icon, IconType } from '@zinnia/bloom/components';
+import { Icon, IconType } from '@zinnia/bloom/internal/components';
 import clsx from 'clsx';
 import { PropsWithChildren, ReactNode, cloneElement } from 'react';
 
-import './fieldData.css';
-
+import styles from './FieldData.module.css';
 export interface FieldDataProps extends PropsWithChildren {
   /**
    * Assistive text component
@@ -37,16 +36,16 @@ export const FieldData = ({
   }
 
   return (
-    <div className={`${clsx(large && 'field-data__container--large')}`}>
+    <div className={styles.container}>
       {/* TODO: should i add uuid to this to ensure uniqueness? */}
-      {Label && cloneElement(Label)}
-      <div className="field-data__value">
+      <div className={styles.label}>{Label && cloneElement(Label)}</div>
+      <div className={clsx(styles.value, { [styles.large as string]: large })}>
         {children}
-        {iconType && <Icon type={iconType} className="field-data__icon" />}
+        {iconType && <Icon type={iconType} className={styles.icon} />}
       </div>
       {caption && (
         <span
-          className="typography-content-caption field-data__caption"
+          className={`${styles.caption} typography-content-caption`}
           style={captionColor ? { color: captionColor } : undefined}
         >
           {caption}

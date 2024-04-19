@@ -1,0 +1,4 @@
+.statusIconText {
+  display: flex;
+  gap: var(--measure-dimension-gap-xs);
+}

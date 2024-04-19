@@ -1,8 +1,8 @@
 import { Meta } from "@storybook/react";
 
-import { Icon, IconProps, IconType } from "../../components/icon";
+import { Icon, IconProps, IconType } from "../../components";
 
-export default {
+const meta: Meta<typeof Icon> =  {
   title: "Components/Icon",
   component: Icon,
   tags: ["autodocs"],
@@ -17,6 +17,8 @@ export default {
       },
     },
   },
-} as Meta<typeof Icon>;
+};
+
+export default meta;
 
 export const IconExample = (args: IconProps) => <Icon {...args} />;

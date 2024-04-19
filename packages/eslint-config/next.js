@@ -7,6 +7,7 @@ module.exports = {
   extends: [
     "eslint:recommended",
     "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
     "plugin:import/recommended",
     "prettier",
     "plugin:@typescript-eslint/recommended",
@@ -21,7 +22,13 @@ module.exports = {
     node: true,
     browser: true,
   },
-  plugins: ["only-warn", "@typescript-eslint", "check-file", "react-refresh"],
+  plugins: [
+    "only-warn",
+    "@typescript-eslint",
+    "check-file",
+    "react-refresh",
+    "react-hooks",
+  ],
   settings: {
     "import/resolver": {
       typescript: {

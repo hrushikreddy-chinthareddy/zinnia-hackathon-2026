@@ -1,6 +1,6 @@
-import { PropsWithChildren, ReactNode } from "react";
+import { PropsWithChildren, ReactNode } from 'react';
 
-import classes from "./Label.module.css";
+import classes from './Label.module.css';
 
 export type LabelProps = {
   /**

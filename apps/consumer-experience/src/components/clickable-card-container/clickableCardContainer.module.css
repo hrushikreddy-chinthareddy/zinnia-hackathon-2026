@@ -1,0 +1,66 @@
+.clickableCardContainer {
+  border-radius: var(--measure-dimension-radius-sm, 0.25rem);
+  box-shadow: var(--shadow-elevation-elevation-light-04);
+}
+
+.clickableCardContainer:not(:has(ul)) {
+  > div {
+    border-radius: var(----measure-dimension-radius-sm, 0.25rem);
+  }
+
+  &.disabled {
+    border: 2px solid var(--color-base-border-border-subtle, #ccc);
+    box-shadow: none;
+  }
+}
+
+/* When there is a list before the main card, only top card should
+ave top radius and last card should have bottom radius */
+.clickableCardContainer:has(ul) {
+  > div {
+    border-top-left-radius: var(----measure-dimension-radius-sm, 0.25rem);
+    border-top-right-radius: var(----measure-dimension-radius-sm, 0.25rem);
+  }
+
+  .listItem:last-child {
+    border-bottom-left-radius: var(----measure-dimension-radius-sm, 0.25rem);
+    border-bottom-right-radius: var(----measure-dimension-radius-sm, 0.25rem);
+  }
+}
+
+.content {
+  align-items: center;
+  background-color: var(
+    --color-fields-surface-field-background-default-fill,
+    #fff
+  );
+  display: flex;
+  padding: var(--measure-dimension-padding-2xl, 1rem);
+  position: relative;
+  justify-content: space-between;
+  width: 100%;
+
+  &:has(a):hover {
+    outline: 1px solid var(--color-states-hover-hover-primary-border, #ff4f00);
+  }
+}
+
+.primaryAction::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* expands click area from anchor across whole card */
+.linkArrow {
+  transform: rotate(-90deg);
+}
+
+.listItem {
+  margin: var(--measureDimensionZSpace0, 0.125rem) 0;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+}

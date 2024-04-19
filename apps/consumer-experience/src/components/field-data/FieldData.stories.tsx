@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { Icon, IconType, Label } from '@zinnia/bloom/components';
+import { Icon, IconType, Label } from '@zinnia/bloom/internal/components';
 
 import { FieldData, FieldDataProps } from './FieldData';
 
@@ -37,7 +37,7 @@ export const Default: StoryObj<FieldDataProps> = {
             type={IconType.CIRCLE_INFO}
             width={16}
             height={16}
-            color="var(--color-primary-color-primary, #ff7500)"
+            color="var(--color-base-icon-icon-tooltip, #ff7500)"
           />,
         ]}
       >
