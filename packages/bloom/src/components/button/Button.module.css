@@ -1,5 +1,5 @@
 .button {
-  --font-family-buttons: 'Poppins';
+  --font-family-buttons: var(--font-family-primary);
   --font-weight-semibold: 600;
   --button-border-width: 3px;
   --button-border-style: solid;

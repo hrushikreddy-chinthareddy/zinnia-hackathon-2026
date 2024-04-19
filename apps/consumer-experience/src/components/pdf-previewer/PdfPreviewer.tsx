@@ -1,8 +1,6 @@
 'use client';
 
-import { saveAs } from 'file-saver';
 import React, { useState } from 'react';
-import { Button } from '@zinnia/bloom/internal/components';
 import PreviewUnsupported from './PreviewUnsupported';
 
 export default function PdfPreviewer({
