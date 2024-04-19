@@ -6,7 +6,7 @@ import { standardDateMonthYear } from '@/utils/dates';
 import { checkIfNull } from '@/utils/data';
 import { FieldData } from '@/components/field-data/FieldData';
 import styles from '@/components/policy-overview/PolicyOverview.module.css';
-import { NoDataAvailable } from '../no-data-available/NoDataAvailable';
+import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { IconType, Pagination } from '@zinnia/bloom/internal/components';
 import { useCallback, useState } from 'react';
 

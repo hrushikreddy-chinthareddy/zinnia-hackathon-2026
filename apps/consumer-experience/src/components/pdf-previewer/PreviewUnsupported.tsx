@@ -1,9 +1,9 @@
 import { saveAs } from 'file-saver';
 import styles from './PdfPreviewer.module.css';
 import { Button } from '@zinnia/bloom/internal/components';
-import { HeaderBreadcrumb } from '../header-breadcrumb/HeaderBreadcrumb';
-import { CallForAssistance } from '../call-for-assistance/CallForAssistance';
-import { Footer } from '../footer/Footer';
+import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
+import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
+import { Footer } from '@/components/footer/Footer';
 
 export default function PreviewUnsupported({
   fileName,
