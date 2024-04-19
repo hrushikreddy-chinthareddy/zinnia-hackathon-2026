@@ -1,7 +1,13 @@
 import { DocumentApiRequestInputs, PolicyDocument } from '@/types/document';
 import { DownloadDocumentResponse } from '@zinnia/api-types/types/documents';
-import { ApiResponse, ServerApi, documentApiBaseUrl } from '..';
+import {
+  ApiResponse,
+  ServerApi,
+  documentApiBaseUrl,
+  isMockDocumentRequestEnabled,
+} from '..';
 import { logWarn } from '@/utils/logging/server-logging';
+import { mockDocumentResponse } from '../mocks/document';
 
 export const getDocumentDownload = async (
   documentNumber: string,
@@ -9,6 +15,9 @@ export const getDocumentDownload = async (
   clientCode: string
 ): Promise<ApiResponse<DownloadDocumentResponse>> => {
   try {
+    if (isMockDocumentRequestEnabled()) {
+      return { data: mockDocumentResponse, error: null };
+    }
     const url = `${documentApiBaseUrl}/${documentNumber}/download?clientCode=${clientCode.toUpperCase()}&source=${source}`;
     const response = await ServerApi.get(url);
     if (!response.ok) {
