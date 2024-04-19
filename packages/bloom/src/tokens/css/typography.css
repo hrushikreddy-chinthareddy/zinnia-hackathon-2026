@@ -13,7 +13,7 @@
 
 /* Defines the second-level headings of the page content.
 
-  H2 is used for the top-level sections of content on a page.  */
+    H2 is used for the top-level sections of content on a page.  */
 .typography-desktop-headline-2-d {
   font-family: var(--font-family-primary);
   font-style: normal;
@@ -37,7 +37,7 @@
 
 /* Used as the third-level headings of the page content.
 
-  H3 is used for the sub-level content within the sections of content on a page.  */
+    H3 is used for the sub-level content within the sections of content on a page.  */
 .typography-desktop-headline-3-d {
   font-family: var(--font-family-primary);
   font-style: normal;
@@ -50,7 +50,7 @@
 
 /* Used as the fourth-level headings of the page content.
 
-  H4 is used for the sub-level content within the sub-sections of content on a page.  */
+    H4 is used for the sub-level content within the sub-sections of content on a page.  */
 .typography-desktop-headline-4-d {
   font-family: var(--font-family-primary);
   font-style: normal;
@@ -63,7 +63,7 @@
 
 /* H1 is used as the beginning top-level heading of the page content.
 
-  The h1 element should be visible graphically and to assistive technologies. It should not be hidden using CSS techniques. */
+    The h1 element should be visible graphically and to assistive technologies. It should not be hidden using CSS techniques. */
 .typography-tablet-headline-1-t {
   font-family: var(--font-family-primary);
   font-style: normal;
@@ -76,7 +76,7 @@
 
 /* Defines the second-level headings of the page content.
 
-  H2 is used for the top-level sections of content on a page.  */
+    H2 is used for the top-level sections of content on a page.  */
 .typography-tablet-headline-2-t {
   font-family: var(--font-family-primary);
   font-style: normal;
@@ -100,7 +100,7 @@
 
 /* Used as the third-level headings of the page content.
 
-  H3 is used for the sub-level content within the sections of content on a page.  */
+    H3 is used for the sub-level content within the sections of content on a page.  */
 .typography-tablet-headline-3-t {
   font-family: var(--font-family-primary);
   font-style: normal;
@@ -113,7 +113,7 @@
 
 /* Used as the fourth-level headings of the page content.
 
-  H4 is used for the sub-level content within the sub-sections of content on a page.  */
+    H4 is used for the sub-level content within the sub-sections of content on a page.  */
 .typography-tablet-headline-4-t {
   font-family: var(--font-family-primary);
   font-style: normal;
@@ -126,7 +126,7 @@
 
 /* H1 is used as the beginning top-level heading of the page content.
 
-  The h1 element should be visible graphically and to assistive technologies. It should not be hidden using CSS techniques. */
+    The h1 element should be visible graphically and to assistive technologies. It should not be hidden using CSS techniques. */
 .typography-mobile-headline-1-m {
   font-family: var(--font-family-primary);
   font-style: normal;
@@ -139,7 +139,7 @@
 
 /* Defines the second-level headings of the page content.
 
-  H2 is used for the top-level sections of content on a page.  */
+    H2 is used for the top-level sections of content on a page.  */
 .typography-mobile-headline-2-m {
   font-family: var(--font-family-primary);
   font-style: normal;
@@ -163,7 +163,7 @@
 
 /* Used as the third-level headings of the page content.
 
-  H3 is used for the sub-level content within the sections of content on a page.  */
+    H3 is used for the sub-level content within the sections of content on a page.  */
 .typography-mobile-headline-3-m {
   font-family: var(--font-family-primary);
   font-style: normal;
@@ -176,7 +176,7 @@
 
 /* Used as the fourth-level headings of the page content.
 
-  H4 is used for the sub-level content within the sub-sections of content on a page.  */
+    H4 is used for the sub-level content within the sub-sections of content on a page.  */
 .typography-mobile-headlne-4-m {
   font-family: var(--font-family-primary);
   font-style: normal;
@@ -369,7 +369,7 @@
 }
 
 /* Nav Default
-  Filters & progress bars */
+    Filters & progress bars */
 .typography-nav-nav-menu {
   font-family: var(--font-family-primary);
   font-style: normal;
@@ -380,7 +380,7 @@
 }
 
 /* Nav Selected
-  Filters & progress bars */
+    Filters & progress bars */
 .typography-nav-nav-menu-selected {
   font-family: var(--font-family-primary);
   font-style: normal;
@@ -490,7 +490,7 @@
 }
 
 /* Bulleted lists are used when items should be grouped together but have no inherent order. When using a bulleted list, it is recommended that the text for each bullet is not longer than two sentences.
-   */
+     */
 .typography-content-list-item {
   font-family: var(--font-family-secondary);
   font-style: normal;
