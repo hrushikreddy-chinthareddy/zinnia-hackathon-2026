@@ -13,13 +13,6 @@ export const documentApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/docume
 export const carrierApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${apiVersion}/carriers`;
 export const integrationApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/integration/${apiVersion}`;
 
-// enum ApiEndpoints {
-//   METRICS = 'metrics',
-//   TRANSACTIONS = 'transactions',
-//   POLICY = 'policy',
-//   POLICY_BY_CARRIERS = 'policy_by_carriers',
-// }
-
 const getMockParam = () => {
   const cookieStore = cookies();
   return cookieStore.get('..mock..')?.value;
