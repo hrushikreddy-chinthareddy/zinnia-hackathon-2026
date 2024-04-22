@@ -1,4 +1,5 @@
 import localFont from 'next/font/local';
+import Script from 'next/script';
 
 import type { Metadata } from 'next';
 
@@ -77,6 +78,22 @@ const secondaryFont = localFont({
   ],
 });
 
+const Mouseflow = () => {
+  return (
+      <Script id="mouseflow" type="text/javascript">
+          {`
+              window._mfq = window._mfq || [];
+              (function() {
+                  var mf = document.createElement("script");
+                  mf.type = "text/javascript"; mf.defer = true;
+                  mf.src = "//cdn.mouseflow.com/projects/c75f7bc2-4a0f-4b04-aa9e-d235631ac76c.js";
+                  document.getElementsByTagName("head")[0].appendChild(mf);
+              })();
+          `}
+      </Script>
+  );
+}
+
 export default async function RootLayout({
   children,
 }: {
@@ -89,6 +106,7 @@ export default async function RootLayout({
       style={{ height: '100%' }}
     >
       <body style={{ height: '100%' }}>{children}</body>
+      <Mouseflow />
     </html>
   );
 }
