@@ -10,21 +10,19 @@ import {
 } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 
+import { ApiEndpoints } from '@/components/dev-menu/types';
 import { BankDetail } from '@/components/person-data/types';
 import {
   ApiResponse,
   ServerApi,
   documentApiBaseUrl,
   isMockDocumentRequestEnabled,
-  isMockMetricsErrorEnabled,
+  isMockErrorEnabled,
   isMockPaymentHistoryRequestEnabled,
-  isMockPolicyCarriersErrorEnabled,
-  isMockPolicyErrorEnabled,
   isMockPolicyMetricsRequestEnabled,
   isMockPolicyOverviewRequestEnabled,
   isMockRidersRequestEnabled,
   isMockSearchRequestEnabled,
-  isMockTransactionsErrorEnabled,
   policyApiBaseUrl,
 } from '@/services';
 import { mockPolicyResponse } from '@/services/mocks/policy';
@@ -89,7 +87,7 @@ import {
 const getPolicyReferencesByCarrier = async () => {
   const searchUrl = `${policyApiBaseUrl}/search?offset=0&limit=10`;
   const searchFilter: PolicySearchRequest = {};
-  if (isMockPolicyCarriersErrorEnabled()) {
+  if (isMockErrorEnabled(ApiEndpoints.POLICY_BY_CARRIERS)) {
     throw new Error('Error fetching policies by carrier.');
   }
   const request = await ServerApi.post(searchUrl, JSON.stringify(searchFilter));
@@ -106,7 +104,7 @@ const getPolicyReferencesByCarrier = async () => {
 const getPolicyByPlanCodeAndId = async (options: PolicyRequestInputs) => {
   const { planCode, policyNumber } = options;
   const url = `${policyApiBaseUrl}/${planCode}/${policyNumber}`;
-  if (isMockPolicyErrorEnabled()) {
+  if (isMockErrorEnabled(ApiEndpoints.POLICY)) {
     throw new Error('Error fetching policy.');
   }
 
@@ -141,7 +139,7 @@ const getPolicyTransactions = async ({
 
   const url = `${policyApiBaseUrl}/${planCode}/${policyNumber}/transactions${query}`;
 
-  if (isMockTransactionsErrorEnabled()) {
+  if (isMockErrorEnabled(ApiEndpoints.TRANSACTIONS)) {
     throw new Error('Error fetching transactions.');
   }
 
@@ -164,7 +162,7 @@ const getPolicyMetrics = async (
   const { planCode, policyNumber } = options;
   const url = `${policyApiBaseUrl}/${planCode}/${policyNumber}/metrics`;
 
-  if (isMockMetricsErrorEnabled()) {
+  if (isMockErrorEnabled(ApiEndpoints.METRICS)) {
     throw new Error('Error fetching metrics.');
   }
 

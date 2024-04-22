@@ -11,13 +11,7 @@ import { MOCK_ERROR_COOKIE_KEY } from '@/utils/serverClientUtils';
 import { zIndexOrder } from '@/utils/zIndexOrder';
 
 import styles from './DevMenu.module.css';
-
-enum PolicyEndpoints {
-  METRICS = 'metrics',
-  TRANSACTIONS = 'transactions',
-  POLICY = 'policy',
-  POLICY_BY_CARRIERS = 'policy_by_carriers',
-}
+import { ApiEndpoints } from './types';
 
 export const DevMenu = () => {
   const [open, setOpen] = useState(false);
@@ -124,18 +118,18 @@ export const DevMenu = () => {
                   <label style={{ display: 'block' }}>
                     <input
                       type="checkbox"
-                      value={PolicyEndpoints.POLICY}
+                      value={ApiEndpoints.POLICY}
                       onChange={selectAPIErrorType}
-                      checked={apiErrorSet?.includes(PolicyEndpoints.POLICY)}
+                      checked={apiErrorSet?.includes(ApiEndpoints.POLICY)}
                     />
                     <span className="ml-sm">Policy</span>
                   </label>
                   <label style={{ display: 'block' }}>
                     <input
                       type="checkbox"
-                      value={PolicyEndpoints.METRICS}
+                      value={ApiEndpoints.METRICS}
                       onChange={selectAPIErrorType}
-                      checked={apiErrorSet?.includes(PolicyEndpoints.METRICS)}
+                      checked={apiErrorSet?.includes(ApiEndpoints.METRICS)}
                     />
                     <span className="ml-sm">
                       Metrics (includes account value change)
@@ -144,11 +138,9 @@ export const DevMenu = () => {
                   <label style={{ display: 'block' }}>
                     <input
                       type="checkbox"
-                      value={PolicyEndpoints.TRANSACTIONS}
+                      value={ApiEndpoints.TRANSACTIONS}
                       onChange={selectAPIErrorType}
-                      checked={apiErrorSet?.includes(
-                        PolicyEndpoints.TRANSACTIONS
-                      )}
+                      checked={apiErrorSet?.includes(ApiEndpoints.TRANSACTIONS)}
                     />
                     <span className="ml-sm">
                       Transactions (Displays history of payments)
@@ -157,10 +149,10 @@ export const DevMenu = () => {
                   <label style={{ display: 'block' }}>
                     <input
                       type="checkbox"
-                      value={PolicyEndpoints.POLICY_BY_CARRIERS}
+                      value={ApiEndpoints.POLICY_BY_CARRIERS}
                       onChange={selectAPIErrorType}
                       checked={apiErrorSet?.includes(
-                        PolicyEndpoints.POLICY_BY_CARRIERS
+                        ApiEndpoints.POLICY_BY_CARRIERS
                       )}
                     />
                     <span className="ml-sm">Policies by carrier</span>

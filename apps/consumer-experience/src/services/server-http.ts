@@ -22,12 +22,6 @@ class ServerHttpRequest extends HttpRequest {
       Authorization: `Bearer ${accessToken}`,
     };
 
-    const cookieStore = cookies();
-
-    // if (cookieStore.get(MOCK_ERROR_COOKIE_KEY)?.value === 'on') {
-    //   throw new Error('Mocking Error Service Enabled.');
-    // }
-
     return fetch(input, requestInit);
   };
 }
