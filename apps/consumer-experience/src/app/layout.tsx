@@ -1,4 +1,5 @@
 import localFont from 'next/font/local';
+import Script from 'next/script';
 
 import type { Metadata } from 'next';
 
@@ -77,6 +78,25 @@ const secondaryFont = localFont({
   ],
 });
 
+const GoogleAnalytics = () => {
+  return (
+      <>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-TZ4P6YJQ0K"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){window.dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-TZ4P6YJQ0K');
+          `}
+        </Script>
+      </>
+  );
+}
+
 export default async function RootLayout({
   children,
 }: {
@@ -88,6 +108,7 @@ export default async function RootLayout({
       className={`${primaryFont.variable} ${secondaryFont.variable}`}
       style={{ height: '100%' }}
     >
+      {process.env.NODE_ENV === "production" && GoogleAnalytics()}
       <body style={{ height: '100%' }}>{children}</body>
     </html>
   );
