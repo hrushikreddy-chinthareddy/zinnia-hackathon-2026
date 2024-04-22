@@ -114,7 +114,6 @@ export default async function Profile({ params }: Props) {
         </div>
       </ClickableCardContainer>
       <CallForAssistance />
-      <Footer />
     </div>
   );
 }

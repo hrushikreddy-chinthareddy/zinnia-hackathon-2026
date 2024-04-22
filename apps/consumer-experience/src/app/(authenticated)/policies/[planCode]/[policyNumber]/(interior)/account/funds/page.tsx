@@ -61,7 +61,6 @@ export default async function AccountValuePage({
         callToAction="Questions about your fund?"
         customInstruction="for more information."
       />
-      <Footer />
     </div>
   );
 }

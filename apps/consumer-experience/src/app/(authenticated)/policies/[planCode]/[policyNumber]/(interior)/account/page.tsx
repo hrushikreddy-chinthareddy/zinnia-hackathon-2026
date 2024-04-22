@@ -125,8 +125,6 @@ export default async function AccountValuePage({
     <div className="container">
       <HeaderBreadcrumb title="Account Value" />
       {accountValueSummary()}
-
-      <Footer />
     </div>
   );
 }
