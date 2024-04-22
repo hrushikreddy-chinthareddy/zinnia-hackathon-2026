@@ -12,3 +12,4 @@ export * from './tag';
 export * from './divider';
 export * from './ticker';
 export * from './link';
+export * from './pagination';

@@ -1,0 +1,27 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.content {
+  margin: var(--measure-dimension-gap-lg, 1rem)
+    var(--measure-dimension-gap-md, 0.5rem);
+  min-width: 344px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-xl);
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-xl);
+}
+
+@media (min-width: 768px) {
+  .content {
+    margin: var(--measure-dimension-margin-md, 2rem);
+    width: 680px;
+  }
+}

@@ -9,7 +9,9 @@ export interface DocumentErrorResponse {
 }
 
 export interface ExtendedDocumentMeta extends Partial<DocumentMetadata> {
+  clientCode?: string;
   documentId?: string; // added due to inconsistency in the Documents API when source=Policy
+  downloadSource?: string;
 }
 
 export interface PolicyDocument {
@@ -32,6 +34,7 @@ export interface DocumentApiRequestInputs {
   docStatus: string;
   caseId: string;
   documentNumber: string;
+  recipient: 'client' | 'agent'; // AS-3029 adds this functionality
 }
 
 export interface DocumentResponseError {

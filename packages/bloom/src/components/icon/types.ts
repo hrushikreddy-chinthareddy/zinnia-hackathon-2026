@@ -16,6 +16,7 @@ import Cloud from '../../tokens/svg-assets/icons/media/cloud.svg';
 import Dashboard from '../../tokens/svg-assets/icons/navigation/dashboard.svg';
 import Database from '../../tokens/svg-assets/icons/illustrations/database.svg';
 import Dollar from '../../tokens/svg-assets/icons/currency/currency-dollars.svg';
+import DocumentDuplicate from '../../tokens/svg-assets/icons/file/document-duplicate.svg';
 import DocumentText from '../../tokens/svg-assets/icons/file/document-text.svg';
 import Download from '../../tokens/svg-assets/icons/file/download.svg';
 import Frown from '../../tokens/svg-assets/icons/brand/emoji-frown.svg';
@@ -50,6 +51,7 @@ export enum IconType {
   CLOUD = 'Cloud',
   DASHBOARD = 'Dashboard',
   DATABASE = 'Database',
+  DOCUMENT_DUPLICATE = 'DocumentDuplicate',
   DOCUMENT_TEXT = 'DocumentText',
   DOLLAR = 'Dollar',
   DOWNLOAD = 'Download',
@@ -104,6 +106,7 @@ export const Icons: {
   [IconType.DASHBOARD]: Dashboard,
   [IconType.DATABASE]: Database,
   // [`${IconType.CLOUD}${FILLED}`]: CloudFilled,
+  [IconType.DOCUMENT_DUPLICATE]: DocumentDuplicate,
   [IconType.DOCUMENT_TEXT]: DocumentText,
   [IconType.DOLLAR]: Dollar,
   [IconType.DOWNLOAD]: Download,

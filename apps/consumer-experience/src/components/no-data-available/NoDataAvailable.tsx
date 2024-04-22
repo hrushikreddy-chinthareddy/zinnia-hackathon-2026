@@ -16,8 +16,22 @@ const NoDataAvailable = ({
   return (
     <div className={`${styles.container}`}>
       <div className={`${styles.content}`}>
-        {iconType && <Icon type={iconType} width={50} height={50} />}
-        {!children && <p>{message}</p>}
+        {iconType && (
+          <Icon
+            className={styles.icon}
+            type={iconType}
+            width={50}
+            height={50}
+          />
+        )}
+        {!children && (
+          <>
+            <h3 className="typography-desktop-headline-3-d">{message}</h3>
+            <p className="typography-content-body">
+              Looks like there is nothing here.
+            </p>
+          </>
+        )}
         {children}
       </div>
     </div>
