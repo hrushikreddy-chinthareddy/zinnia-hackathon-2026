@@ -54,7 +54,7 @@ export const HeaderPolicyDetails = async ({
   });
 
   if (error) {
-    return <MockMessage />;
+    return null;
   }
 
   const { firstName, lastName, marketingName, planName, policyStatus } = data!;

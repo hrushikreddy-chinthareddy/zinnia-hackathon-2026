@@ -10,11 +10,13 @@ import {
 } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 
+import { ApiEndpoints } from '@/components/dev-menu/types';
 import { BankDetail } from '@/components/person-data/types';
 import {
   ApiResponse,
   ServerApi,
   isMockDocumentRequestEnabled,
+  isMockErrorEnabled,
   isMockPaymentHistoryRequestEnabled,
   isMockPolicyMetricsRequestEnabled,
   isMockPolicyOverviewRequestEnabled,
@@ -81,6 +83,9 @@ import { getDocuments } from '../document';
 const getPolicyReferencesByCarrier = async () => {
   const searchUrl = `${policyApiBaseUrl}/search?offset=0&limit=10`;
   const searchFilter: PolicySearchRequest = {};
+  if (isMockErrorEnabled(ApiEndpoints.POLICY_BY_CARRIERS)) {
+    throw new Error('Error fetching policies by carrier.');
+  }
   const request = await ServerApi.post(searchUrl, JSON.stringify(searchFilter));
 
   if (request.status !== 200) {
@@ -95,6 +100,10 @@ const getPolicyReferencesByCarrier = async () => {
 const getPolicyByPlanCodeAndId = async (options: PolicyRequestInputs) => {
   const { planCode, policyNumber } = options;
   const url = `${policyApiBaseUrl}/${planCode}/${policyNumber}`;
+  if (isMockErrorEnabled(ApiEndpoints.POLICY)) {
+    throw new Error('Error fetching policy.');
+  }
+
   const request = await ServerApi.get(url);
   if (request.status !== 200) {
     throw new Error('Error fetching policy.');
@@ -125,6 +134,11 @@ const getPolicyTransactions = async ({
   }
 
   const url = `${policyApiBaseUrl}/${planCode}/${policyNumber}/transactions${query}`;
+
+  if (isMockErrorEnabled(ApiEndpoints.TRANSACTIONS)) {
+    throw new Error('Error fetching transactions.');
+  }
+
   const request = await ServerApi.get(url);
   const response = (await request.json()) as
     | TransactionErrorResponse
@@ -143,6 +157,10 @@ const getPolicyMetrics = async (
 ) => {
   const { planCode, policyNumber } = options;
   const url = `${policyApiBaseUrl}/${planCode}/${policyNumber}/metrics`;
+
+  if (isMockErrorEnabled(ApiEndpoints.METRICS)) {
+    throw new Error('Error fetching metrics.');
+  }
 
   const response = await ServerApi.post(url, JSON.stringify(metrics), {
     headers: { 'Content-Type': 'application/json' },

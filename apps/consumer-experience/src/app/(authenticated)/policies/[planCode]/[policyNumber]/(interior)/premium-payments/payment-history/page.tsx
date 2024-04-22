@@ -26,6 +26,7 @@ export default async function PaymentHistory({ params }: Props) {
   ) {
     return (
       <div className="space-mb-gap-lg">
+        <HeaderBreadcrumb title="Payment history" />
         <MockMessage />
         <NoDataAvailable
           iconType={IconType.PAYMENT}
