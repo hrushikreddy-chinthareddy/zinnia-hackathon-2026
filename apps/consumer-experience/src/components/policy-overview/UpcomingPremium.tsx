@@ -87,7 +87,7 @@ export const UpcomingPremium = async ({
               </span>
             ),
             linkTo: {
-              url: `/policies/${planCode}/${policyNumber}/premium/payment-history`,
+              url: `/policies/${planCode}/${policyNumber}/premium/history`,
               label: 'go to payment history page',
             },
           },
@@ -98,7 +98,7 @@ export const UpcomingPremium = async ({
               </span>
             ),
             linkTo: {
-              url: `/policies/${planCode}/${policyNumber}/premium/payment-details`,
+              url: `/policies/${planCode}/${policyNumber}/premium/details`,
               label: 'go to payment details page',
             },
           },
