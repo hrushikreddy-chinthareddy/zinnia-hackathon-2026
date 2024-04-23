@@ -13,6 +13,7 @@ import {
   PolicyFeature,
   Status,
   ArrangementType,
+  Reason,
 } from '@zinnia/api-types/types/sor';
 import { policyOwner } from '@zinnia/utils';
 
@@ -27,7 +28,6 @@ import {
   PolicyProfile,
   PolicyReferenceData,
   UpcomingPremium,
-  ExtendedReason,
   ExtendedTransactionStatus,
   PaymentHistory,
   Metric,
@@ -221,8 +221,7 @@ export const transformPolicyforPaymentDetails = (
   policy: Policy
 ): BankDetail => {
   const premiumSystematicProgram = policy.systematicPrograms?.find(
-    (program: SystematicProgram) =>
-      program.reason === ExtendedReason.PREMIUMREASON
+    (program: SystematicProgram) => program.reason === Reason.PREMIUM
   );
 
   let bankDetails: BankAccount | undefined;
@@ -246,8 +245,7 @@ export const transformPolicyToMethodAndProgram = (
   policy: Policy
 ): MethodAndProgram | undefined => {
   const paymentProgram = policy?.systematicPrograms?.find(
-    (program: SystematicProgram) =>
-      program.reason === ExtendedReason.PREMIUMREASON
+    (program: SystematicProgram) => program.reason === Reason.PREMIUM
   );
   const programFirstPayor = (paymentProgram?.party || [])[0];
   const paymentProgramFinancialInstitutionId = programFirstPayor?.bankId;
@@ -406,7 +404,7 @@ export const transformPaymentHistory = (
     amount: requestedAmount,
     date,
     frequency: paymentMethod?.frequency,
-    type: transactionType?.toString() as keyof typeof ExtendedReason,
+    type: transactionType?.toString() as keyof typeof Reason,
     bankDetails: {
       accountType,
       accountNumber,

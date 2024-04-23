@@ -132,17 +132,6 @@ export type MethodAndProgram = BankAccount & {
   frequency?: Frequency;
 };
 
-export enum PremiumReason {
-  PREMIUMREASON = 'PREMIUMREASON',
-}
-
-//export type ExtendedReason = Reason | PremiumReason;
-
-export const ExtendedReason = {
-  ...Reason,
-  PREMIUMREASON: 'PREMIUMREASON',
-};
-
 export const ExtendedTransactionStatus = {
   ...TransactionStatus,
   PROCESSING: 'Processing',
@@ -163,7 +152,7 @@ export interface PaymentHistory {
   amount?: number;
   date?: string;
   frequency?: Frequency;
-  type?: keyof typeof ExtendedReason;
+  type?: keyof typeof Reason;
   bankDetails?: {
     accountType?: AccountType;
     accountNumber?: string;
