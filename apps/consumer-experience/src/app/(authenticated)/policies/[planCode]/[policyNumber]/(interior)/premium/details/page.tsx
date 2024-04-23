@@ -3,7 +3,6 @@ import { IconType } from '@zinnia/bloom/internal/components';
 import { BankData } from '@/components/bank-data/BankData';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
-import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
