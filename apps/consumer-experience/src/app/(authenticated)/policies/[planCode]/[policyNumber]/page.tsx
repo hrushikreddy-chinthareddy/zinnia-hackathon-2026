@@ -3,6 +3,7 @@ import { IconType } from '@zinnia/bloom/internal/components';
 import { Metadata } from 'next';
 
 import { AccountValue } from '@/components/account-value/AccountValue';
+import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
@@ -52,11 +53,21 @@ export default async function Page({
 
   const overviewBody = () => {
     if (data?.policyStatus === PolicyStatus.LAPSE) {
-      return <LapsedPolicy planCode={planCode} policyNumber={policyNumber} />;
+      return (
+        <>
+          <LapsedPolicy planCode={planCode} policyNumber={policyNumber} />
+          <CallForAssistance customInstruction="for help with reinstatement." />
+        </>
+      );
     }
 
     if (data?.policyStatus === PolicyStatus.SURRENDERED) {
-      return <SurrenderedPolicy />;
+      return (
+        <>
+          <SurrenderedPolicy />
+          <CallForAssistance customInstruction="with surrender questions." />
+        </>
+      );
     }
 
     return (
