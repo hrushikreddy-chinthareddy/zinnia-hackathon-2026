@@ -75,9 +75,7 @@ export const UpcomingPremium = async ({
   return (
     <ClickableCardContainer
       linkTo={{
-        url: extended
-          ? ''
-          : `/policies/${planCode}/${policyNumber}/premium-payments`,
+        url: extended ? '' : `/policies/${planCode}/${policyNumber}/premium`,
         label: 'go to premium payments page',
       }}
       {...(extended && {
@@ -89,7 +87,7 @@ export const UpcomingPremium = async ({
               </span>
             ),
             linkTo: {
-              url: `/policies/${planCode}/${policyNumber}/premium-payments/payment-history`,
+              url: `/policies/${planCode}/${policyNumber}/premium/payment-history`,
               label: 'go to payment history page',
             },
           },
@@ -100,7 +98,7 @@ export const UpcomingPremium = async ({
               </span>
             ),
             linkTo: {
-              url: `/policies/${planCode}/${policyNumber}/premium-payments/payment-details`,
+              url: `/policies/${planCode}/${policyNumber}/premium/payment-details`,
               label: 'go to payment details page',
             },
           },
