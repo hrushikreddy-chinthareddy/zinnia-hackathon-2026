@@ -15,8 +15,11 @@ import { SurrenderedPolicy } from '@/components/policy-overview/non-active-statu
 import { UpcomingPremium } from '@/components/policy-overview/UpcomingPremium';
 import { getPolicyForHeaderDetails } from '@/services';
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
-  title: 'Policy Overview',
+  // Include the carrier name here because the template only works for the children
+  // TODO: update carrier name when we solve dynamic carrier setting
+  title: 'Policy Overview - Everly',
 };
 
 export default async function Page({

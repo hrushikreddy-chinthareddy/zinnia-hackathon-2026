@@ -13,8 +13,8 @@ import { SessionManager } from '@/components/session/SessionManager';
 export const metadata: Metadata = {
   title: {
     // TODO: eventually using whatever mechanism we decide to switch carriers, this carrier name will need to be dynamic
-    template: '%s - Everly | Zinnia Tech',
-    default: 'Policy',
+    template: '%s | Zinnia Tech',
+    default: 'Policies',
   },
 };
 
