@@ -1,7 +1,7 @@
 import { IconType } from '@zinnia/bloom/internal/components';
+import { Metadata } from 'next';
 
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
-import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { InfoCard } from '@/components/info-card/InfoCard';
 import MockMessage from '@/components/MockMessage';
@@ -10,6 +10,10 @@ import { getRiders } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
 
 import { Rider } from './Rider';
+
+export const metadata: Metadata = {
+  title: 'Riders',
+};
 
 export default async function Riders({
   params,

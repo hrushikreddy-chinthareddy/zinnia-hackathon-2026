@@ -1,15 +1,22 @@
 import { IconType } from '@zinnia/bloom/internal/components';
+import { Metadata } from 'next';
 import Link from 'next/link';
 
-import { Footer } from '@/components/footer/Footer';
+import DocumentsList from '@/components/documents-list/DocumentsList';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { getCorrespondenceDocuments } from '@/services/policy';
+import { ExtendedDocumentMeta } from '@/types/document';
 import { PolicyRequestInputs } from '@/types/policy';
 
 import documentStyles from './Documents.module.css';
-import { ExtendedDocumentMeta } from '@/types/document';
-import DocumentsList from '@/components/documents-list/DocumentsList';
+
+const pageTitle = 'Documents';
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const metadata: Metadata = {
+  title: pageTitle,
+};
 
 // DocumentTypes for both Old and New Correspondence APIs that map to a statement-y doctype
 // https://zinnia.atlassian.net/wiki/spaces/SISED/pages/3834871816/SED+New+Document+Types+-+Next+Gen+Correspondence
@@ -45,7 +52,7 @@ export default async function Documents({
 
   return (
     <div className="container">
-      <HeaderBreadcrumb title="Documents" />
+      <HeaderBreadcrumb title={pageTitle} />
       <ul className={documentStyles.nav}>
         <li>
           <Link

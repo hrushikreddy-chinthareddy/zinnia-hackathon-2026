@@ -1,8 +1,8 @@
 import clsx from 'clsx';
+import { Metadata } from 'next';
 
 import { AccountValue } from '@/components/account-value/AccountValue';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
-import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { StatusIconText } from '@/components/status-icon-text/StatusIconText';
@@ -10,6 +10,13 @@ import { getPolicyAccountValueSummary } from '@/services/policy';
 import { PolicyRequestInputs } from '@/types/policy';
 import { isNullEmptyOrUndefined } from '@/utils/data';
 import { DEFAULT_UNAVAILABLE_STRING, pluralize } from '@/utils/strings';
+
+const pageTitle = 'Account value';
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const metadata: Metadata = {
+  title: pageTitle,
+};
 
 export default async function AccountValuePage({
   params,
@@ -123,7 +130,7 @@ export default async function AccountValuePage({
 
   return (
     <div className="container">
-      <HeaderBreadcrumb title="Account Value" />
+      <HeaderBreadcrumb title={pageTitle} />
       {accountValueSummary()}
     </div>
   );

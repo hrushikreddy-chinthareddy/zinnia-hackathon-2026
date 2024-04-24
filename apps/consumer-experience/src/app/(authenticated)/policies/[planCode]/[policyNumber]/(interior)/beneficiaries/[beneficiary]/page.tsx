@@ -1,5 +1,6 @@
 import { Address, Email, PartyRole } from '@zinnia/api-types/types/sor';
 import { IconType, Label } from '@zinnia/bloom/internal/components';
+import { Metadata } from 'next';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
@@ -15,6 +16,13 @@ import {
   fullName,
 } from '@/utils/data';
 import { toSentenceCase } from '@/utils/strings';
+
+const pageTitle = 'Beneficiary';
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const metadata: Metadata = {
+  title: pageTitle,
+};
 
 const beneDisplayText: { [key in PartyRole]?: string } = {
   [PartyRole.CONTINGENTBENEFICIARY]: 'contingent',
@@ -43,7 +51,7 @@ export default async function Beneficiary({
   if (error || !data) {
     return (
       <div className="container">
-        <HeaderBreadcrumb title="Beneficiaries" />
+        <HeaderBreadcrumb title={pageTitle} />
         <MockMessage />
         <NoDataAvailable
           iconType={IconType.CIRCLE_USER}
@@ -96,7 +104,7 @@ export default async function Beneficiary({
 
   return (
     <div className="container">
-      <HeaderBreadcrumb title="Beneficiary" />
+      <HeaderBreadcrumb title={pageTitle} />
 
       <ClickableCardContainer listItems={listItems}>
         <div>

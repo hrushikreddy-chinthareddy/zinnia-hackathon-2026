@@ -1,8 +1,8 @@
 import { IconType } from '@zinnia/bloom/internal/components';
+import { Metadata } from 'next';
 
 import { CardInsertHistory } from '@/components/card-list-history/CardInsertHistory';
 import { CardListHistory } from '@/components/card-list-history/CardListHistory';
-import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
@@ -11,6 +11,13 @@ import { PolicyRequestInputs } from '@/types/policy';
 import { formatBankAccountTypeText, getFrequency } from '@/utils/data';
 
 import styles from './PaymentHistory.module.css';
+
+const pageTitle = 'Payment history';
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const metadata: Metadata = {
+  title: pageTitle,
+};
 
 interface Props {
   params: PolicyRequestInputs;
@@ -26,7 +33,7 @@ export default async function PaymentHistory({ params }: Props) {
   ) {
     return (
       <div className="space-mb-gap-lg">
-        <HeaderBreadcrumb title="Payment history" />
+        <HeaderBreadcrumb title={pageTitle} />
         <MockMessage />
         <NoDataAvailable
           iconType={IconType.PAYMENT}

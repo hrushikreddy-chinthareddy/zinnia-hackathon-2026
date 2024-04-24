@@ -1,6 +1,5 @@
-import type { Metadata } from 'next';
-
 import '@/app/styles/globals.css';
+import { Metadata } from 'next';
 
 import { Footer } from '@/components/footer/Footer';
 import { PolicyStatusAlertBanner } from '@/components/policy-status-alert-banner/PolicyStatusAlertBanner';
@@ -8,8 +7,10 @@ import { PolicyStatusAlertBanner } from '@/components/policy-status-alert-banner
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
-  title: 'Consumer UI',
-  description: 'Consumer UI',
+  title: {
+    template: '%s | Zinia Tech',
+    default: 'Zinnia Tech',
+  },
 };
 
 export default async function AuthenticatedLayout({

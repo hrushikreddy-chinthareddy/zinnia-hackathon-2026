@@ -7,6 +7,7 @@ import {
   contingentColorOrder,
   primaryColorOrder,
 } from '@zinnia/bloom/internal/components';
+import { Metadata } from 'next';
 
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
@@ -20,6 +21,13 @@ import { formatUSDollars } from '@/utils/currency';
 import { fullName } from '@/utils/data';
 
 import styles from './Beneficiaries.module.css';
+
+const pageTitle = 'Beneficiaries';
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const metadata: Metadata = {
+  title: pageTitle,
+};
 
 const BeneficiaryListItem = ({
   beneficiary,
@@ -115,7 +123,7 @@ export default async function Beneficiaries({
   if (error || data?.beneficiaries?.length === 0) {
     return (
       <div>
-        <HeaderBreadcrumb title="Beneficiaries" />
+        <HeaderBreadcrumb title={pageTitle} />
 
         <div className="space-mb-gap-lg">
           <MockMessage />

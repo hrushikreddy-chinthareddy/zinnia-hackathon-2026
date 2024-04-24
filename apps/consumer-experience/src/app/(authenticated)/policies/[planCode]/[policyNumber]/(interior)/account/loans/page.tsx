@@ -4,10 +4,10 @@ import {
   Label,
   Popover,
 } from '@zinnia/bloom/internal/components';
+import { Metadata } from 'next';
 
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { FieldData } from '@/components/field-data/FieldData';
-import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { InfoCard } from '@/components/info-card/InfoCard';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
@@ -17,6 +17,13 @@ import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { standardDateMonthYear } from '@/utils/dates';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
+
+const pageTitle = 'Loans';
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const metadata: Metadata = {
+  title: pageTitle,
+};
 
 const AVAILABLE_TO_BORROW = 'Available to borrow';
 const TOTAL_LOAN_BALANCE = 'Total loan balance';
@@ -142,7 +149,7 @@ export default async function Withdrawals({
 
   return (
     <div className="container">
-      <HeaderBreadcrumb title="Loans" />
+      <HeaderBreadcrumb title={pageTitle} />
       {loansData()}
       <CallForAssistance customInstruction="to begin the loan process." />
     </div>

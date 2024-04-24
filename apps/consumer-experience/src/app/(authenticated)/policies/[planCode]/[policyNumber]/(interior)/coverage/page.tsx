@@ -1,12 +1,10 @@
 import { IconType, Label } from '@zinnia/bloom/internal/components';
 import { DEFAULT_UNAVAILABLE_STRING } from '@zinnia/utils';
-import clsx from 'clsx';
-import { Suspense } from 'react';
+import { Metadata } from 'next';
 
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
-import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { InfoCard } from '@/components/info-card/InfoCard';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
@@ -14,6 +12,13 @@ import { getCoverage } from '@/services/policy';
 import { formatUSDollars } from '@/utils/currency';
 
 import styles from './coverage.module.css';
+
+const pageTitle = 'Increase Coverage';
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const metadata: Metadata = {
+  title: pageTitle,
+};
 
 export default async function Beneficiaries({
   params,
@@ -33,10 +38,7 @@ export default async function Beneficiaries({
 
   const pageHeader = (
     <>
-      <HeaderBreadcrumb
-        className={styles.coverageHeader}
-        title="Increase Coverage"
-      />
+      <HeaderBreadcrumb className={styles.coverageHeader} title={pageTitle} />
     </>
   );
 
