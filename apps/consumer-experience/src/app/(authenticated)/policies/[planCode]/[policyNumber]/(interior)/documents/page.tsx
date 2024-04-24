@@ -1,7 +1,6 @@
 import { IconType } from '@zinnia/bloom/internal/components';
 import Link from 'next/link';
 
-import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
@@ -78,8 +77,6 @@ export default async function Documents({
           policyNumber={params.policyNumber}
         />
       )}
-
-      <CallForAssistance />
       <Footer />
     </div>
   );
