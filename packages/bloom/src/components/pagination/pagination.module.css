@@ -1,5 +1,5 @@
 .list {
-  --font-family-pagination: 'Poppins';
+  --font-family-buttons: var(--font-family-primary);
   --pagination-border-style: solid;
   --font-weight-semibold: 500;
 
@@ -38,12 +38,16 @@
 
       &:focus-visible {
         outline-color: var(--color-states-focus-focus-border);
-        background-color: var(--color-pagination-pagination-background-selected-fill);
+        background-color: var(
+          --color-pagination-pagination-background-selected-fill
+        );
       }
     }
 
     &.selected {
-      background-color: var(--color-pagination-pagination-background-selected-fill);
+      background-color: var(
+        --color-pagination-pagination-background-selected-fill
+      );
     }
 
     &:not(.inactive) {
@@ -64,7 +68,9 @@
 
       &.selected {
         &:not(.inactive):hover {
-          background-color: var(--color-pagination-pagination-background-selected-fill);
+          background-color: var(
+            --color-pagination-pagination-background-selected-fill
+          );
           border-color: var(--color-pagination-pagination-border-default);
 
           button {
@@ -81,15 +87,18 @@
 
     &.inactive {
       border-style: solid;
-      border-color: var(--color-pagination-pagination-border-inactive, #B3B3B3);
-      background: var(--color-pagination-pagination-background-inactive-fill, #EDEDED);
+      border-color: var(--color-pagination-pagination-border-inactive, #b3b3b3);
+      background: var(
+        --color-pagination-pagination-background-inactive-fill,
+        #ededed
+      );
 
       button:hover {
         cursor: default;
       }
 
       svg {
-        color: var(--color-pagination-pagination-border-inactive, #B3B3B3);
+        color: var(--color-pagination-pagination-border-inactive, #b3b3b3);
       }
     }
 
