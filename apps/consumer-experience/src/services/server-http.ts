@@ -1,7 +1,4 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { cookies } from 'next/headers';
-
-import { MOCK_ERROR_COOKIE_KEY } from '@/utils/serverClientUtils';
 
 import { HttpRequest } from './http';
 
