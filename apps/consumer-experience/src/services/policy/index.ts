@@ -72,21 +72,30 @@ import {
 } from '@/types/policy';
 import { PolicyRider } from '@/types/riders';
 
+import { getDocuments } from '../document';
 import { mockDocumentsResponse } from '../mocks/documents';
 import { MockMetricsResponse } from '../mocks/metrics';
 import {
   mockCompletedTransactions,
   mockPendingTransactions,
 } from '../mocks/transactions';
-import { getDocuments } from '../document';
 
 const getPolicyReferencesByCarrier = async () => {
   const searchUrl = `${policyApiBaseUrl}/search?offset=0&limit=10`;
-  const searchFilter: PolicySearchRequest = {};
+  const searchFilter: PolicySearchRequest = {
+    // @ts-expect-error specs aren't updated in developer portal yet
+    carrierIds: ['SBUL'],
+  };
   if (isMockErrorEnabled(ApiEndpoints.POLICY_BY_CARRIERS)) {
     throw new Error('Error fetching policies by carrier.');
   }
-  const request = await ServerApi.post(searchUrl, JSON.stringify(searchFilter));
+  const request = await ServerApi.post(
+    searchUrl,
+    JSON.stringify(searchFilter),
+    {
+      headers: { 'Content-Type': 'application/json' },
+    }
+  );
 
   if (request.status !== 200) {
     throw new Error('Error fetching policy references');
