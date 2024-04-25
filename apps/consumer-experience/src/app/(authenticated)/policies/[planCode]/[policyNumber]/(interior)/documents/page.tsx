@@ -77,7 +77,6 @@ export default async function Documents({
           policyNumber={params.policyNumber}
         />
       )}
-      <Footer />
     </div>
   );
 }

@@ -12,8 +12,12 @@ const MockMessage = () => {
       <div className="mt-lg">
         <NoDataAvailable iconType={IconType.DATABASE}>
           <p>
-            <strong>Internal Message</strong>: The API is currently not
-            responding or no data was returned. Click{' '}
+            <strong
+              style={{ color: 'var(--color-status-icon-status-error-icon)' }}
+            >
+              Internal Message
+            </strong>
+            : The API is currently not responding or no data was returned. Click{' '}
             <a onClick={setMock} href="#">
               here
             </a>{' '}

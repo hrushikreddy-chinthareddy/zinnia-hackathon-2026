@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 
 import '@/app/styles/globals.css';
 
+import { Footer } from '@/components/footer/Footer';
 import { PolicyStatusAlertBanner } from '@/components/policy-status-alert-banner/PolicyStatusAlertBanner';
 
 // disable because NextJS needs this to be exported from this file
@@ -28,6 +29,7 @@ export default async function AuthenticatedLayout({
         policyNumber={params.policyNumber}
       />
       {children}
+      <Footer />
     </>
   );
 }

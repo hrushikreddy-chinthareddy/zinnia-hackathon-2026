@@ -1,3 +1,4 @@
+import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { UpcomingPremium } from '@/components/policy-overview/UpcomingPremium';
@@ -16,7 +17,6 @@ export default async function PremiumPayments({
         policyNumber={params.policyNumber}
         extended
       />
-      <Footer />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-name: "Chromatic CI"
+name: 'Chromatic CI'
 
 on:
   workflow_call:
@@ -24,16 +24,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-            fetch-depth: 0
+          fetch-depth: 0
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
           run_install: |
             - args: [--filter ${{ inputs.filter-path }}]
+        run: pnpm run build
       - name: Publish to ${{ inputs.project-name }} to Chromatic
         uses: chromaui/action@latest
         with:
           projectToken: ${{ secrets.chromatic-token }}
           exitZeroOnChanges: true
-          skip: "dependabot/**"
+          skip: 'dependabot/**'
           workingDir: ${{ inputs.working-dir }}

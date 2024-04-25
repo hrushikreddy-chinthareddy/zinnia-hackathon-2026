@@ -88,9 +88,9 @@ export default async function Profile({ params }: Props) {
 
     listItems.push({
       content: (
-        <div className={styles.multipleItemsInSection}>
+        <div>
           <h2 className="mb-lg">Banking Details</h2>
-          {allBankData}
+          <div className={styles.multipleItemsInSection}>{allBankData}</div>
         </div>
       ),
     });
@@ -114,7 +114,6 @@ export default async function Profile({ params }: Props) {
         </div>
       </ClickableCardContainer>
       <CallForAssistance />
-      <Footer />
     </div>
   );
 }

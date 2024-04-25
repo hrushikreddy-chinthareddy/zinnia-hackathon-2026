@@ -12,6 +12,8 @@ import {
   FundAllocation,
   PolicyFeature,
   Status,
+  ArrangementType,
+  Reason,
 } from '@zinnia/api-types/types/sor';
 import { policyOwner } from '@zinnia/utils';
 
@@ -26,7 +28,6 @@ import {
   PolicyProfile,
   PolicyReferenceData,
   UpcomingPremium,
-  ExtendedReason,
   ExtendedTransactionStatus,
   PaymentHistory,
   Metric,
@@ -45,6 +46,7 @@ import {
   isPolicyEligibleForWithdrawals,
   policyWithdrawalsRemaining,
   getRiderDescription,
+  policyHasVested,
 } from '@/utils/data';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';
 
@@ -135,16 +137,30 @@ export const transformPolicyForHeaderDetails = (
 
 export const transformPolicyForProfile = (policy: Policy): PolicyProfile => {
   const ownerInfo = policyOwner(policy);
+
+  // Find the systematic program that is for the premium autopay
+  const autopayProgram = policy.systematicPrograms?.find(
+    (program: SystematicProgram) =>
+      // TODO: this doesn't match the type described in generated types
+      program.arrangementType === ('PAYMENT' as ArrangementType)
+  );
+
+  // Party on the return is an arry, so ensure using bankId of
+  // payor from the systematic program
+  const autopayPayor = autopayProgram?.party?.find(
+    party => party.partyRole === PartyRole.PAYOR
+  );
+
   const bankDetails: BankDetail[] = (ownerInfo?.bankDetails || []).map(
     (b: BankAccount) => {
       return {
         ...b,
         accountNumber: bankAccountNumberSanitizer(b?.accountNumber),
-        // TODO: update this to use real data
-        autopayEnabled: false,
+        autopayEnabled: b.bankId === autopayPayor?.bankId,
       };
     }
   );
+
   return {
     preferredAddressIndicator: ownerInfo?.preferredAddressIndicator || '',
     name: {
@@ -205,8 +221,7 @@ export const transformPolicyforPaymentDetails = (
   policy: Policy
 ): BankDetail => {
   const premiumSystematicProgram = policy.systematicPrograms?.find(
-    (program: SystematicProgram) =>
-      program.reason === ExtendedReason.PREMIUMREASON
+    (program: SystematicProgram) => program.reason === Reason.PREMIUM
   );
 
   let bankDetails: BankAccount | undefined;
@@ -230,8 +245,7 @@ export const transformPolicyToMethodAndProgram = (
   policy: Policy
 ): MethodAndProgram | undefined => {
   const paymentProgram = policy?.systematicPrograms?.find(
-    (program: SystematicProgram) =>
-      program.reason === ExtendedReason.PREMIUMREASON
+    (program: SystematicProgram) => program.reason === Reason.PREMIUM
   );
   const programFirstPayor = (paymentProgram?.party || [])[0];
   const paymentProgramFinancialInstitutionId = programFirstPayor?.bankId;
@@ -296,7 +310,6 @@ export const transformPolicyForWithdrawals = (
   const withdrawalValues = policy.withdrawalValues || {};
 
   return {
-    ...policy.withdrawalValues,
     withdrawalAllowedStartDate: withdrawalValues.withdrawalAllowedStartDate,
     maximumWithdrawalAmount: withdrawalValues.maximumWithdrawalAmount,
     numberOfWithdrawal: withdrawalValues.numberOfWithdrawal,
@@ -316,6 +329,15 @@ export const transformPolicyForWithdrawals = (
     }),
     nextMonthiversaryDate: policy.policyDates?.nextMonthiversaryDate,
     nextAnniversaryDate: policy.policyDates?.nextAnniversaryDate,
+    vestingDetails: {
+      maximumWithdrawalRequestAfterVestingPeriod:
+        withdrawalValues?.maximumWithdrawalRequestAfterVestingPeriod,
+      maximumWithdrawalRequestDuringVestingPeriod:
+        withdrawalValues?.maximumWithdrawalRequestDuringVestingPeriod,
+      vestingPeriod: policy.allocation?.matchSegment?.vestingPeriod,
+      policyHasVested: policyHasVested(policy),
+      matchVestingDate: policy.allocation?.matchSegment?.matchVestingDate,
+    },
   };
 };
 
@@ -382,7 +404,7 @@ export const transformPaymentHistory = (
     amount: requestedAmount,
     date,
     frequency: paymentMethod?.frequency,
-    type: transactionType?.toString() as keyof typeof ExtendedReason,
+    type: transactionType?.toString() as keyof typeof Reason,
     bankDetails: {
       accountType,
       accountNumber,

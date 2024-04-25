@@ -2,32 +2,63 @@
 
 import * as Dialog from '@radix-ui/react-dialog';
 import { Icon, IconType } from '@zinnia/bloom/internal/components';
-import { useState } from 'react';
+import Cookies from 'js-cookie';
+import { MouseEvent, useEffect, useMemo, useState } from 'react';
 
 import useMock from '@/hooks/use-mock';
 import { isProd } from '@/utils';
+import { MOCK_ERROR_COOKIE_KEY } from '@/utils/serverClientUtils';
 import { zIndexOrder } from '@/utils/zIndexOrder';
 
 import styles from './DevMenu.module.css';
+import { ApiEndpoints } from './types';
 
 export const DevMenu = () => {
   const [open, setOpen] = useState(false);
-  const {
-    mockText,
-    mockErrorText,
-    showDevMenu,
-    setMock,
-    removeDevMenu,
-    setErrorMock,
-  } = useMock();
+  const [apiErrorSet, setApiErrorSet] = useState<string[] | null>(null);
 
-  if (isProd()) {
+  const { mockText, showDevMenu, setMock, removeDevMenu, isMockOn } = useMock();
+
+  const devMenuActive = useMemo(() => {
+    return !!Cookies.get(MOCK_ERROR_COOKIE_KEY) || isMockOn;
+  }, [isMockOn]);
+
+  useEffect(() => {
+    if (Cookies.get(MOCK_ERROR_COOKIE_KEY)) {
+      const mockErrors = Cookies.get(MOCK_ERROR_COOKIE_KEY) || '';
+      setApiErrorSet(JSON.parse(mockErrors));
+    }
+  }, []);
+
+  if (isProd() || !showDevMenu) {
     return null;
   }
 
-  if (!showDevMenu) {
-    return null;
-  }
+  const setAPIErrorCookie = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    if (apiErrorSet && apiErrorSet.length > 0) {
+      Cookies.set(MOCK_ERROR_COOKIE_KEY, JSON.stringify(apiErrorSet));
+    } else {
+      Cookies.remove(MOCK_ERROR_COOKIE_KEY);
+    }
+
+    const queryParams = new URLSearchParams(location.search);
+    queryParams.delete(MOCK_ERROR_COOKIE_KEY);
+    const params = queryParams.toString() ? `?${queryParams.toString()}` : '';
+    window.location.href = `${window.location.origin}/policies${params}`;
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const selectAPIErrorType = (e: any) => {
+    const item = e.target.value;
+
+    if (apiErrorSet?.includes(item)) {
+      const itemRemoved = apiErrorSet?.filter(apiType => apiType !== item);
+      setApiErrorSet(itemRemoved);
+    } else {
+      setApiErrorSet([...(apiErrorSet || []), item]);
+    }
+  };
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
@@ -36,7 +67,16 @@ export const DevMenu = () => {
           className={styles.menuTrigger}
           aria-label="Opens navigation menu. Press escape to close."
         >
-          <Icon width={32} height={32} type={IconType.SETTINGS} />
+          <Icon
+            width={32}
+            height={32}
+            type={IconType.SETTINGS}
+            color={
+              devMenuActive
+                ? 'var(--color-status-icon-status-error-icon)'
+                : 'black'
+            }
+          />
         </button>
       </Dialog.Trigger>
       <Dialog.Portal>
@@ -47,7 +87,7 @@ export const DevMenu = () => {
         >
           <nav className={styles.innerContent}>
             <ul>
-              <li className={styles.navListItem}>
+              <li>
                 <a
                   href="#"
                   onClick={setMock}
@@ -62,22 +102,76 @@ export const DevMenu = () => {
                   <span>{mockText}</span>
                 </a>
               </li>
-              <li className={styles.navListItem}>
-                <a
-                  href="#"
-                  onClick={setErrorMock}
-                  className={`${styles.navItem} typography-nav-nav-drawer`}
-                >
-                  <span className={styles.firstItem}>
-                    <Icon
-                      type={IconType.ALERT_EXCLAMATION}
-                      color="var(--color-nav-menu-menu-icon-default-fill, #fff)"
+              <li
+                className="typography-nav-nav-drawer"
+                style={{ color: 'white' }}
+              >
+                <p className={`${styles.navItem} pl-lg `}>
+                  <Icon
+                    className="mr-md"
+                    type={IconType.ALERT_EXCLAMATION}
+                    color="var(--color-nav-menu-menu-icon-default-fill, #fff)"
+                  />
+                  <span className="ml-md">Mock API Errors</span>
+                </p>
+                <div className="ml-3xl mb-md pl-2xl">
+                  <label style={{ display: 'block' }}>
+                    <input
+                      type="checkbox"
+                      value={ApiEndpoints.POLICY}
+                      onChange={selectAPIErrorType}
+                      checked={apiErrorSet?.includes(ApiEndpoints.POLICY)}
                     />
-                  </span>
-                  <span>{mockErrorText}</span>
-                </a>
+                    <span className="ml-sm">Policy</span>
+                  </label>
+                  <label style={{ display: 'block' }}>
+                    <input
+                      type="checkbox"
+                      value={ApiEndpoints.METRICS}
+                      onChange={selectAPIErrorType}
+                      checked={apiErrorSet?.includes(ApiEndpoints.METRICS)}
+                    />
+                    <span className="ml-sm">
+                      Metrics (includes account value change)
+                    </span>
+                  </label>
+                  <label style={{ display: 'block' }}>
+                    <input
+                      type="checkbox"
+                      value={ApiEndpoints.TRANSACTIONS}
+                      onChange={selectAPIErrorType}
+                      checked={apiErrorSet?.includes(ApiEndpoints.TRANSACTIONS)}
+                    />
+                    <span className="ml-sm">
+                      Transactions (Displays history of payments)
+                    </span>
+                  </label>
+                  <label style={{ display: 'block' }}>
+                    <input
+                      type="checkbox"
+                      value={ApiEndpoints.POLICY_BY_CARRIERS}
+                      onChange={selectAPIErrorType}
+                      checked={apiErrorSet?.includes(
+                        ApiEndpoints.POLICY_BY_CARRIERS
+                      )}
+                    />
+                    <span className="ml-sm">Policies by carrier</span>
+                  </label>
+                </div>
+                <button
+                  className="ml-3xl mb-md pl-3xl"
+                  onClick={setAPIErrorCookie}
+                  style={{
+                    display: 'flex',
+                    border: '2px solid white',
+                    padding: '6px',
+                    borderRadius: '4px',
+                  }}
+                >
+                  <span style={{ color: 'white' }}>Update mock error APIs</span>
+                </button>
               </li>
-              <li className={styles.navListItem}>
+              <li>
                 <a
                   href="#"
                   onClick={removeDevMenu}

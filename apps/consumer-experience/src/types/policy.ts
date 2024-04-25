@@ -132,17 +132,6 @@ export type MethodAndProgram = BankAccount & {
   frequency?: Frequency;
 };
 
-export enum PremiumReason {
-  PREMIUMREASON = 'PREMIUMREASON',
-}
-
-//export type ExtendedReason = Reason | PremiumReason;
-
-export const ExtendedReason = {
-  ...Reason,
-  PREMIUMREASON: 'PREMIUMREASON',
-};
-
 export const ExtendedTransactionStatus = {
   ...TransactionStatus,
   PROCESSING: 'Processing',
@@ -163,7 +152,7 @@ export interface PaymentHistory {
   amount?: number;
   date?: string;
   frequency?: Frequency;
-  type?: keyof typeof ExtendedReason;
+  type?: keyof typeof Reason;
   bankDetails?: {
     accountType?: AccountType;
     accountNumber?: string;
@@ -212,6 +201,14 @@ export interface PolicySurrender {
   surrenderValue?: number | null;
 }
 
+interface VestingDetails {
+  maximumWithdrawalRequestAfterVestingPeriod?: number | string | null;
+  maximumWithdrawalRequestDuringVestingPeriod?: number | string | null;
+  vestingPeriod?: number | null;
+  policyHasVested?: boolean | null;
+  matchVestingDate?: string | null;
+}
+
 export interface PolicyWithdrawals {
   isEligibleForWithdrawals?: boolean | null;
   annualWithdrawalsTaken?: number | null;
@@ -224,6 +221,7 @@ export interface PolicyWithdrawals {
   totalWithdrawalAmount?: number | null;
   annualWithdrawalLimitNoCoverageDecrease?: number | null;
   availableToWithdrawTaxFree?: number | null;
+  vestingDetails: VestingDetails;
 }
 
 // export type PolicyFeatureType = keyof typeof PolicyFeature.featureType;

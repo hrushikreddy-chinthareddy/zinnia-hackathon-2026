@@ -3,6 +3,7 @@ import { DEFAULT_UNAVAILABLE_STRING } from '@zinnia/utils';
 import clsx from 'clsx';
 import { Suspense } from 'react';
 
+import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
 import { Footer } from '@/components/footer/Footer';
@@ -69,39 +70,30 @@ export default async function Beneficiaries({
 
   return (
     <div className="container">
-      <Suspense fallback={<div style={{ height: '100vh' }}>Loading...</div>}>
-        {pageHeader}
-        <div className="card-container">
-          <InfoCard iconType={IconType.LIGHTBULB}>
-            <p className="typography-content-body-sm">
-              Coverage increases may require additional underwriting and may
-              have tax consequences. Let us walk you through your options, so
-              you can find the right amount of coverage for you.
-            </p>
-          </InfoCard>
-          <ClickableCardContainer>
-            <div className={styles.coverageValues}>
-              <FieldData Label={<Label>{CURRENT_COVERAGE}</Label>}>
-                {coverageContent(totalCoverageAmount)}
-              </FieldData>
-              <FieldData Label={<Label>{INCREASE_COVERAGE}</Label>}>
-                {coverageContent(maximumCoverageIncreaseAmount)}
-              </FieldData>
-            </div>
-          </ClickableCardContainer>
-        </div>
-        <p className="typography-content-body-bold ">
-          Do you want to increase your coverage? Call{' '}
-          <a
-            className={clsx('typography-nav-links-inline', styles.phoneNumber)}
-            href="+18002322222"
-          >
-            1-800-232-2222
-          </a>{' '}
-          to begin the process.
-        </p>
-        <Footer className={styles.coverageFooter} />
-      </Suspense>
+      {pageHeader}
+      <div className="card-container">
+        <InfoCard iconType={IconType.LIGHTBULB}>
+          <p className="typography-content-body-sm">
+            Coverage increases may require additional underwriting and may have
+            tax consequences. Let us walk you through your options, so you can
+            find the right amount of coverage for you.
+          </p>
+        </InfoCard>
+        <ClickableCardContainer>
+          <div className={styles.coverageValues}>
+            <FieldData Label={<Label>{CURRENT_COVERAGE}</Label>}>
+              {coverageContent(totalCoverageAmount)}
+            </FieldData>
+            <FieldData Label={<Label>{INCREASE_COVERAGE}</Label>}>
+              {coverageContent(maximumCoverageIncreaseAmount)}
+            </FieldData>
+          </div>
+        </ClickableCardContainer>
+      </div>
+      <CallForAssistance
+        callToAction="Do you want to increase your coverage?"
+        customInstruction="to begin the process."
+      />
     </div>
   );
 }

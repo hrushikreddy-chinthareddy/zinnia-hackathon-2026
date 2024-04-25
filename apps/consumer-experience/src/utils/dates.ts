@@ -11,12 +11,30 @@ dayjs.extend(timezone);
 /**
  *
  * @param date
+ * @returns boolean
+ * undefined is a valid dayjs date, so need to check specifically for date is null first
+ */
+const isValidDate = (date: string | null | undefined) => {
+  if (!date) {
+    return false;
+  }
+
+  if (!dayjs(date).isValid()) {
+    return false;
+  }
+
+  return true;
+};
+
+/**
+ *
+ * @param date
  * @returns format 2/26/2024
  */
 export const standardDateMonthYear = (
   date: string | null | undefined
 ): string => {
-  if (!dayjs(date).isValid()) {
+  if (!isValidDate(date)) {
     return DEFAULT_ERROR_STRING;
   }
 
@@ -29,7 +47,7 @@ export const standardDateMonthYear = (
  *  @returns format 6/12/2023 5:00 pm EST
  */
 export const dateMonthWithTimeEST = (date: string | null): string => {
-  if (!dayjs(date).isValid()) {
+  if (!isValidDate(date)) {
     return DEFAULT_ERROR_STRING;
   }
 
@@ -52,7 +70,7 @@ export const convertKebabedDateString = (date: string | undefined): string => {
 export const dayOfMonthWithOrdinal = (
   date: string | undefined | null
 ): string => {
-  if (date === '' || date == null || !dayjs(date).isValid()) {
+  if (!isValidDate(date)) {
     return DEFAULT_ERROR_STRING;
   }
 

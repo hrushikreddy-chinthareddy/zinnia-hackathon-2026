@@ -145,7 +145,6 @@ export default async function Withdrawals({
       <HeaderBreadcrumb title="Loans" />
       {loansData()}
       <CallForAssistance customInstruction="to begin the loan process." />
-      <Footer />
     </div>
   );
 }

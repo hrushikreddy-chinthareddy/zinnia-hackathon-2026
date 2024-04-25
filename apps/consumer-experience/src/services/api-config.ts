@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
 
+import { ApiEndpoints } from '@/components/dev-menu/types';
 import { isProd } from '@/utils';
 
 export const apiVersion = 'v1';
@@ -16,6 +17,26 @@ const getMockParam = () => {
   const cookieStore = cookies();
   return cookieStore.get('..mock..')?.value;
 };
+
+const getMockErrorParam = () => {
+  const cookieStore = cookies();
+  return cookieStore.get('..mock_error..')?.value;
+};
+
+export const isMockErrorEnabled = (endpoint: ApiEndpoints) => {
+  if (isProd()) {
+    return false;
+  }
+
+  const mockErrorVals = getMockErrorParam();
+
+  if (!mockErrorVals) {
+    return false;
+  }
+
+  return JSON.parse(mockErrorVals).includes(endpoint);
+};
+
 export const isMockAllRequestEnabled = (val?: boolean) => {
   if (isProd()) {
     return false;

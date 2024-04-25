@@ -267,6 +267,9 @@
   );
   --color-fields-border-field-border-active: var(--color-primary-color-primary);
 
+  --color-loader-loader-part-one: var(--color-primary-color-primary);
+  --color-loader-loader-part-two: var(--color-primary-color-primary);
+  --color-loader-loader-part-three: var(--color-primary-color-primary-lighter);
   /*
   * MEASURES
   * ========
