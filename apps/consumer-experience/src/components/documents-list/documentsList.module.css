@@ -1,0 +1,8 @@
+.content {
+  align-items: center;
+  display: flex;
+}
+
+.documentsListContainer {
+  min-height: 608px;
+}

@@ -2,7 +2,6 @@ import { saveAs } from 'file-saver';
 import styles from './PdfPreviewer.module.css';
 import { Button } from '@zinnia/bloom/internal/components';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
-import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { Footer } from '@/components/footer/Footer';
 
 export default function PreviewUnsupported({
@@ -25,7 +24,6 @@ export default function PreviewUnsupported({
             <Button onClick={saveDocument}>Download PDF</Button>
           </div>
         </div>
-        <CallForAssistance />
         <Footer />
       </div>
     </div>
