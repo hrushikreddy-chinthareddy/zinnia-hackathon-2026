@@ -139,25 +139,12 @@ export const transformPolicyForHeaderDetails = (
 export const transformPolicyForProfile = (policy: Policy): PolicyProfile => {
   const ownerInfo = policyOwner(policy);
 
-  // Find the systematic program that is for the premium autopay
-  const autopayProgram = policy.systematicPrograms?.find(
-    (program: SystematicProgram) =>
-      // TODO: this doesn't match the type described in generated types
-      program.arrangementType === ('PAYMENT' as ArrangementType)
-  );
-
-  // Party on the return is an arry, so ensure using bankId of
-  // payor from the systematic program
-  const autopayPayor = autopayProgram?.party?.find(
-    party => party.partyRole === PartyRole.PAYOR
-  );
-
   const bankDetails: BankDetail[] = (ownerInfo?.bankDetails || []).map(
     (b: BankAccount) => {
       return {
         ...b,
         accountNumber: bankAccountNumberSanitizer(b?.accountNumber),
-        autopayEnabled: b.bankId === autopayPayor?.bankId,
+        autopayEnabled: b.bankId === autopayBankId(policy),
       };
     }
   );
@@ -218,6 +205,24 @@ export const transformPolicyForBeneficiary = (
   return bene;
 };
 
+const autopayBankId = (policy: Policy) => {
+  // Find the systematic program that is for the premium autopay
+  const autopayProgram = policy.systematicPrograms?.find(
+    (program: SystematicProgram) =>
+      // TODO: this doesn't match the type described in generated types
+      program.arrangementType === ('PAYMENT' as ArrangementType)
+  );
+
+  // Party on the return is an arry, so ensure using bankId of
+  // payor from the systematic program
+  const autopayPayor = autopayProgram?.party?.find(
+    party => party.partyRole === PartyRole.PAYOR
+  );
+
+  return autopayPayor?.bankId;
+};
+
+// TODO: this method and transformPolicyToMethodAndProgram are duplicates!!!!
 export const transformPolicyforPaymentDetails = (
   policy: Policy
 ): BankDetail => {
@@ -239,7 +244,7 @@ export const transformPolicyforPaymentDetails = (
   return {
     ...bankDetails,
     accountNumber: bankAccountNumberSanitizer(bankDetails?.accountNumber),
-    autopayEnabled: true,
+    autopayEnabled: bankDetails?.bankId === autopayBankId(policy),
   };
 };
 export const transformPolicyToMethodAndProgram = (
