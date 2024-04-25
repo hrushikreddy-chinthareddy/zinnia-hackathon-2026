@@ -1,6 +1,5 @@
 import { GoogleAnalytics } from '@next/third-parties/google'
 import localFont from 'next/font/local';
-import Script from 'next/script';
 
 import type { Metadata } from 'next';
 
