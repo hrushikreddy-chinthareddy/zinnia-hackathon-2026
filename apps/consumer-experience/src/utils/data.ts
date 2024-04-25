@@ -6,7 +6,12 @@ import {
   Phone,
   PolicyStatus,
   Policy,
+  SystematicProgram,
+  ArrangementType,
+  PartyRole,
+  BankAccount,
 } from '@zinnia/api-types/types/sor';
+import { policyOwner } from '@zinnia/utils';
 import dayjs from 'dayjs';
 
 import { DEFAULT_ERROR_STRING, toSentenceCase } from './strings';
@@ -258,4 +263,33 @@ export const policyWithdrawalsRemaining = ({
   }
 
   return Math.max(0, allowedWithdrawals - withdrawalsTaken);
+};
+
+export const autopayBankId = (policy: Policy) => {
+  // Find the systematic program that is for the premium autopay
+  const autopayProgram = policy.systematicPrograms?.find(
+    (program: SystematicProgram) =>
+      // TODO: this doesn't match the type described in generated types
+      program.arrangementType === ('PAYMENT' as ArrangementType)
+  );
+
+  // Party on the return is an arry, so ensure using bankId of
+  // payor from the systematic program
+  const autopayPayor = autopayProgram?.party?.find(
+    party => party.partyRole === PartyRole.PAYOR
+  );
+
+  return autopayPayor?.bankId;
+};
+
+export const allPolicyOwnerBanks = (policy: Policy) => {
+  const ownerInfo = policyOwner(policy);
+
+  return (ownerInfo?.bankDetails || []).map((b: BankAccount) => {
+    return {
+      ...b,
+      accountNumber: bankAccountNumberSanitizer(b?.accountNumber),
+      autopayEnabled: b.bankId === autopayBankId(policy),
+    };
+  });
 };

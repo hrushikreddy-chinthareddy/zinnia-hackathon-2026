@@ -27,7 +27,7 @@ export default async function PaymentDetails({
     policyNumber: params.policyNumber,
   });
 
-  if (error) {
+  if (error || !data) {
     return (
       <div className="space-mb-gap-lg">
         <MockMessage />
@@ -39,14 +39,20 @@ export default async function PaymentDetails({
     );
   }
 
+  console.log(data);
+
   return (
     <div className="container">
       <HeaderBreadcrumb title="Payment Details" />
-      {data && !error && (
-        <ClickableCardContainer>
-          <BankData key={data.accountNumber} {...data} />
-        </ClickableCardContainer>
-      )}
+      <div className="card-container">
+        {data?.length > 0 &&
+          !error &&
+          data.map(detail => (
+            <ClickableCardContainer key={detail.accountNumber}>
+              <BankData {...detail} />
+            </ClickableCardContainer>
+          ))}
+      </div>
       {error && !data && (
         <div className="space-mb-gap-lg">
           <MockMessage />
