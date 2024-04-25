@@ -1,4 +1,5 @@
 import { IconType } from '@zinnia/bloom/internal/components';
+import { Metadata } from 'next';
 
 import { BankData } from '@/components/bank-data/BankData';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
@@ -8,6 +9,13 @@ import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { getPaymentDetails } from '@/services/policy';
 import { PolicyRequestInputs } from '@/types/policy';
+
+const pageTitle = 'Payment details';
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const metadata: Metadata = {
+  title: pageTitle,
+};
 
 export default async function PaymentDetails({
   params,

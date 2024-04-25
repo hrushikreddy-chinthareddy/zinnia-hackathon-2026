@@ -5,7 +5,6 @@ import { Metadata } from 'next';
 import { AccountValue } from '@/components/account-value/AccountValue';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
-import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 import MockMessage from '@/components/MockMessage';
@@ -16,10 +15,11 @@ import { SurrenderedPolicy } from '@/components/policy-overview/non-active-statu
 import { UpcomingPremium } from '@/components/policy-overview/UpcomingPremium';
 import { getPolicyForHeaderDetails } from '@/services';
 
-// disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
-  title: 'Policy Overview',
+  // Include the carrier name here because the template only works for the children
+  // TODO: update carrier name when we solve dynamic carrier setting
+  title: 'Policy Overview - Everly',
 };
 
 export default async function Page({

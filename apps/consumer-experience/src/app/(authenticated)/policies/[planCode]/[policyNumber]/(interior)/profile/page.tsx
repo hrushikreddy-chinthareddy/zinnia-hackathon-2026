@@ -1,11 +1,11 @@
 import { Address, Email, Phone } from '@zinnia/api-types/types/sor';
 import { IconType, Label } from '@zinnia/bloom/internal/components';
+import { Metadata } from 'next';
 
 import { BankData } from '@/components/bank-data/BankData';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
-import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
@@ -17,6 +17,13 @@ import { PolicyRequestInputs } from '@/types/policy';
 import { filterItemsWithPastEndDate, fullName } from '@/utils/data';
 
 import styles from './Profile.module.css';
+
+const pageTitle = 'Profile';
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const metadata: Metadata = {
+  title: pageTitle,
+};
 
 interface Props {
   params: PolicyRequestInputs;
@@ -31,7 +38,7 @@ export default async function Profile({ params }: Props) {
   if (error) {
     return (
       <div className={styles.pageContainer}>
-        <HeaderBreadcrumb title="Profile" />
+        <HeaderBreadcrumb title={pageTitle} />
         <div className="space-mb-gap-lg">
           <MockMessage />
           <NoDataAvailable
@@ -98,7 +105,7 @@ export default async function Profile({ params }: Props) {
 
   return (
     <div className="container">
-      <HeaderBreadcrumb title="Profile" />
+      <HeaderBreadcrumb title={pageTitle} />
 
       <ClickableCardContainer listItems={[...listItems]}>
         <div>

@@ -5,10 +5,10 @@ import {
   Popover,
 } from '@zinnia/bloom/internal/components';
 import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
+import { Metadata } from 'next';
 
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { FieldData } from '@/components/field-data/FieldData';
-import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { InfoCard } from '@/components/info-card/InfoCard';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
@@ -19,6 +19,13 @@ import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined } from '@/utils/data';
 import { dayOfMonthWithOrdinal, standardDateMonthYear } from '@/utils/dates';
 import { DEFAULT_UNAVAILABLE_STRING, pluralize } from '@/utils/strings';
+
+const pageTitle = 'Withdrawals';
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const metadata: Metadata = {
+  title: pageTitle,
+};
 
 const AVAILBLE_TO_WITHDRAW = 'Available to withdraw';
 const ALL_TIME_WITHDRAWALS = 'All-time withdrawals';
@@ -286,7 +293,7 @@ export default async function Withdrawals({
 
   return (
     <div className="container">
-      <HeaderBreadcrumb title="Withdrawals" />
+      <HeaderBreadcrumb title={pageTitle} />
       {withdrawalsData()}
       <CallForAssistance customInstruction="to make a withdrawal." />
     </div>

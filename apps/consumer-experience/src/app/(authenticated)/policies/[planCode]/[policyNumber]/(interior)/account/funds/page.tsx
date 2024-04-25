@@ -1,9 +1,9 @@
 import { Label } from '@zinnia/bloom/internal/components';
 import clsx from 'clsx';
+import { Metadata } from 'next';
 
 import { AccountValue } from '@/components/account-value/AccountValue';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
-import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { getPolicyFundDetails } from '@/services';
@@ -11,6 +11,13 @@ import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 
 import styles from './Funds.module.css';
+
+const pageTitle = 'Funds';
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const metadata: Metadata = {
+  title: pageTitle,
+};
 
 export default async function AccountValuePage({
   params,
@@ -48,7 +55,7 @@ export default async function AccountValuePage({
 
   return (
     <div className="container">
-      <HeaderBreadcrumb title="Funds" />
+      <HeaderBreadcrumb title={pageTitle} />
       <div className={`${styles.container} card`}>
         <AccountValue
           planCode={planCode}

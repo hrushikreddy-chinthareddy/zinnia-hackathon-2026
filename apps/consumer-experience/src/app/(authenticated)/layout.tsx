@@ -1,6 +1,5 @@
 import { UserProvider } from '@auth0/nextjs-auth0/client';
-
-import type { Metadata } from 'next';
+import { Metadata } from 'next';
 
 import '@/app/styles/globals.css';
 
@@ -12,8 +11,11 @@ import { SessionManager } from '@/components/session/SessionManager';
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
-  title: 'Consumer UI',
-  description: 'Consumer UI',
+  title: {
+    // TODO: eventually using whatever mechanism we decide to switch carriers, this carrier name will need to be dynamic
+    template: '%s | Zinnia Tech',
+    default: 'Policies',
+  },
 };
 
 export default async function AuthenticatedLayout({

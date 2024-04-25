@@ -4,11 +4,11 @@ import {
   Label,
   Popover,
 } from '@zinnia/bloom/internal/components';
+import { Metadata } from 'next';
 
 import { AccountValue } from '@/components/account-value/AccountValue';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { FieldData } from '@/components/field-data/FieldData';
-import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { InfoCard } from '@/components/info-card/InfoCard';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
@@ -18,6 +18,13 @@ import { formatUSDollars } from '@/utils/currency';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 const NET_SURRENDER_VALUE = 'Net surrender value';
+
+const pageTitle = 'Surrender policy';
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const metadata: Metadata = {
+  title: pageTitle,
+};
 
 export default async function SurrenderPolicy({
   params,
@@ -96,7 +103,7 @@ export default async function SurrenderPolicy({
 
   return (
     <div className="container">
-      <HeaderBreadcrumb title="Surrender policy" />
+      <HeaderBreadcrumb title={pageTitle} />
       {surrenderData()}
       <CallForAssistance customInstruction="to surrender your policy." />
     </div>
