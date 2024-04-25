@@ -82,10 +82,7 @@ import {
 
 const getPolicyReferencesByCarrier = async () => {
   const searchUrl = `${policyApiBaseUrl}/search?offset=0&limit=10`;
-  const searchFilter: PolicySearchRequest = {
-    // @ts-expect-error specs aren't updated in developer portal yet
-    carrierIds: ['SBUL'],
-  };
+  const searchFilter: PolicySearchRequest = {};
   if (isMockErrorEnabled(ApiEndpoints.POLICY_BY_CARRIERS)) {
     throw new Error('Error fetching policies by carrier.');
   }
