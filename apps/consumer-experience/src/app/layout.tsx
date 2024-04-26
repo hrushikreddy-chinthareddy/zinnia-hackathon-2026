@@ -83,6 +83,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   useEffect(() => {
+    // this is for mouseflow
     window._mfq = window._mfq || [];
 
     (function() {
