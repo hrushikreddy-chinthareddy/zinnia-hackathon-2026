@@ -80,17 +80,17 @@ const secondaryFont = localFont({
 
 const Mouseflow = () => {
   return (
-      <Script id="mouseflow" type="text/javascript">
-          {`
-              window._mfq = window._mfq || [];
-              (function() {
-                  var mf = document.createElement("script");
-                  mf.type = "text/javascript"; mf.defer = true;
-                  mf.src = "//cdn.mouseflow.com/projects/c75f7bc2-4a0f-4b04-aa9e-d235631ac76c.js";
-                  document.getElementsByTagName("head")[0].appendChild(mf);
-              })();
-          `}
-      </Script>
+      <Script type="text/javascript">
+        {`
+          window._mfq = window._mfq || [];
+          (function() {
+            var mf = document.createElement("script");
+            mf.type = "text/javascript"; mf.defer = true;
+            mf.src = "//cdn.mouseflow.com/projects/55155137-cbba-44d3-8750-8d43ae890911.js";
+            document.getElementsByTagName("head")[0].appendChild(mf);
+          })();
+        `}
+    </Script>
   );
 }
 
