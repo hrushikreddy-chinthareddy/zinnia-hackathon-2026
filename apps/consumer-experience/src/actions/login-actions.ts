@@ -18,6 +18,7 @@ import {
   setMfaCookie,
   setMfaOobCookie,
 } from '@/utils/auth';
+import { logInfo, logTrace, logWarn } from '@/utils/logging/server-logging';
 /**
  * Initiates the passwordless authentication process by sending a verification code to the provided email.
  *
@@ -29,10 +30,16 @@ export async function passwordlessStart(
   _: Auth0ErrorResponse,
   formData: FormData
 ): Promise<Auth0ErrorResponse | never> {
+  const loggingContext = {
+    file: 'login-actions.ts',
+    function: 'passwordlessStart',
+  };
+  logTrace('start', { ...loggingContext });
   const email = formData.get('email')?.toString() || '';
   let redirectToErrorPage = false;
 
   if (!email) {
+    logTrace('no-email', { ...loggingContext });
     return {
       error: 'bad.email',
       error_description: 'Please enter your email.',
@@ -44,27 +51,34 @@ export async function passwordlessStart(
     const data = await response.json();
 
     if (response.status !== 200) {
+      logTrace('Auth0 Error Response after sending verification code', {
+        ...loggingContext,
+        reqStatus: response.status,
+      });
       throw data;
     }
   } catch (e: unknown | Auth0ErrorResponse) {
     // redirect if we get an unknown error that wasn't thrown by Auth0. In this case let's start the process over
-    // TODO: LOGGING need to log to datadog
     redirectToErrorPage = true;
-    // TODO: LOGGING need to log to datadog
     // we need to check if the error thrown was in the try or if an generic error happened
     // if there was a generic error, we need to redirect to the error page
     if (!(e instanceof Error)) {
       const error = e as Auth0ErrorResponse;
+      logTrace('Auth0 Error Response', {
+        ...loggingContext,
+        error: error?.error,
+      });
       if (error.error === 'bad.email') {
         error.error = 'bad.email';
         error.error_description = 'Looks like there’s a typo in your email.';
         return error;
       } else if (error.error === 'bad.connection') {
-        // TODO: LOGGING need to log to datadog
         // redirect to challenge page as to not let the user know the email doesn't exist
         // We don't want to give them hints if it happens to be a hacker
         redirectToErrorPage = false;
       }
+    } else {
+      logWarn('unknown-error', { ...loggingContext, error: e.message });
     }
   }
 
@@ -88,9 +102,15 @@ export async function resendVerificationCode(
   _: Auth0ErrorResponse | { success: boolean },
   formData: FormData
 ): Promise<Auth0ErrorResponse | { success: boolean }> {
+  const loggingContext = {
+    file: 'login-actions.ts',
+    function: 'resendVerificationCode',
+  };
+  logTrace('start', { ...loggingContext });
   const email = formData.get('email')?.toString() || '';
 
   if (!email) {
+    logTrace('no-email', { ...loggingContext });
     return {
       error: 'bad.email',
       error_description: 'Please enter your email.',
@@ -102,6 +122,10 @@ export async function resendVerificationCode(
     const data = await response.json();
 
     if (response.status !== 200) {
+      logTrace('Auth0 Error Response after sending verification code', {
+        ...loggingContext,
+        reqStatus: response.status,
+      });
       throw data;
     }
 
@@ -109,8 +133,11 @@ export async function resendVerificationCode(
       success: true,
     };
   } catch (e: unknown | Auth0ErrorResponse) {
+    logTrace('error', {
+      ...loggingContext,
+      error: (e as Auth0ErrorResponse)?.error ?? (e as Error)?.message,
+    });
     return {
-      // TODO: LOGGING need to log to datadog
       error: 'bad.connection',
       error_description: 'Unable to send verification code. Please try again.',
     };
@@ -127,13 +154,19 @@ export async function verifyPasswordlessStartChallenge(
   _: Auth0ErrorResponse,
   formData: FormData
 ): Promise<Auth0ErrorResponse | never> {
+  const loggingContext = {
+    file: 'login-actions.ts',
+    function: 'verifyPasswordlessStartChallenge',
+  };
+  logTrace('start', { ...loggingContext });
   const email = formData.get('email')?.toString() || '';
   const code = formData.get('code')?.toString() || '';
   let data: Auth0ErrorResponse | PasswordlessCodeMfaResponse | OauthToken;
   let redirectToErrorPage = false;
   if (code.length < 6) {
+    logTrace('invalid-code-length', { ...loggingContext });
     return {
-      error: 'bad.reuqest',
+      error: 'bad.request',
       error_description: 'Code must be 6 digits.',
     };
   }
@@ -150,6 +183,10 @@ export async function verifyPasswordlessStartChallenge(
     // IF we don't get don't one of those responses, we need to redirect to the error page
     // or we got an invalid code
     if (!('mfa_token' in data && data.mfa_token) && response.status !== 200) {
+      logTrace('no-mfa-token', {
+        ...loggingContext,
+        reqStatus: response.status,
+      });
       throw data;
     }
   } catch (e: unknown | Auth0ErrorResponse) {
@@ -157,6 +194,10 @@ export async function verifyPasswordlessStartChallenge(
     // if there was a generic error, we need to redirect to the error page
     if (!(e instanceof Error)) {
       const error = e as Auth0ErrorResponse;
+      logTrace('Auth0 Error Response', {
+        ...loggingContext,
+        error: error?.error,
+      });
 
       if (error.error === 'invalid_grant') {
         const error: Auth0ErrorResponse = {
@@ -165,6 +206,11 @@ export async function verifyPasswordlessStartChallenge(
         };
         return error;
       }
+    } else {
+      logWarn('unknown-error::verifyPasswordlessStartChallenge', {
+        ...loggingContext,
+        error: e?.message,
+      });
     }
 
     redirectToErrorPage = true;
@@ -177,6 +223,7 @@ export async function verifyPasswordlessStartChallenge(
   // check if we have an MFA token. If we do we need to show the MFA process
   // data can be an MfaCodeMfaResponse or an OauthToken so we need to check which one it is so we cast it
   if ('mfa_token' in data! && data.mfa_token) {
+    logTrace('mfa-token-exists', { ...loggingContext });
     // the mfa token is needed to send the mfa challenge
     await setMfaCookie({
       value: data.mfa_token,
@@ -212,16 +259,26 @@ export async function verifyPasswordlessStartChallenge(
             });
             return redirect(`/login/mfa/mfa-challenge`);
           }
+          logWarn('unknown-error::sendMfaChallenge', {
+            ...loggingContext,
+            reqStatus: sendMfaChallengeResponse.status,
+          });
           // if we get here we have an unknown error and we need to start the process again
           // redirect to the error page where all the cookies that were set will be deleted and we will prompt the user to try again
           return redirect(`/login/error`);
         }
       }
     }
+
+    logTrace('no-active-authenticators', {
+      ...loggingContext,
+      reqStatus: authenticatorsRequest.status,
+    });
     // if we get here that means the user does not have any active authenticators and they need to enroll in MFA
     return redirect(`/login/mfa/mfa-enrollment`);
   }
 
+  logTrace('amfa-assessment-passed::no-mfa-required', { ...loggingContext });
   // if we get here that the user passed the AMFA risk assessment (done by auth0) and we can log them in without MFA
   const tokenData = data! as OauthToken;
   await setLoginCookies(tokenData);
@@ -238,6 +295,11 @@ export async function associateMfa(
   _: Auth0ErrorResponse,
   formData: FormData
 ): Promise<Auth0ErrorResponse | never> {
+  const loggingContext = {
+    file: 'login-actions.ts',
+    function: 'associateMfa',
+  };
+  logTrace('start', { ...loggingContext });
   let redirectToErrorPage = false;
   let data:
     | Auth0ErrorResponse
@@ -254,10 +316,12 @@ export async function associateMfa(
     // if somehow we get here and we do not have an MFA token we throw an error
     // the error capture will set reDirectToErrorPage to true and redirect to the error page
     if (!mfaToken) {
+      logWarn('no-mfa-token-found', { ...loggingContext });
       throw new Error('No MFA token was found.');
     }
 
     if (phoneNumber.length < 10) {
+      logTrace('bad-phone', { ...loggingContext });
       return {
         error: 'bad.request',
         error_description: 'Phone number must be 10 digits.',
@@ -271,9 +335,16 @@ export async function associateMfa(
     data = await response.json();
 
     if (response.status !== 200) {
+      logTrace('bad-response::associateMfa', {
+        ...loggingContext,
+        reqStatus: response.status,
+      });
       throw data;
     }
   } catch (error) {
+    logWarn('unknown-error::associateMfa', {
+      ...loggingContext,
+    });
     // if we get here an error was thrown we do not know how to handle
     // redirect to the error page and start the process over
     redirectToErrorPage = true;
@@ -302,6 +373,11 @@ export async function verifyMfaChallenge(
   _: Auth0ErrorResponse,
   formData: FormData
 ): Promise<Auth0ErrorResponse | never> {
+  const loggingContext = {
+    file: 'login-actions.ts',
+    function: 'verifyMfaChallenge',
+  };
+  logTrace('start', { ...loggingContext });
   let redirectToErrorPage = false;
   let data: Auth0ErrorResponse | OauthToken;
   try {
@@ -315,12 +391,18 @@ export async function verifyMfaChallenge(
     // if somehow we get here and we do not have an MFA or OOBCode token we throw an error
     // the error capture will set reDirectToErrorPage to true and redirect to the error page
     if (!mfaToken || !oobCode) {
+      logWarn('no-mfa-or-oob-token', {
+        ...loggingContext,
+        hasMfa: !!mfaToken,
+        hasOobCode: !!oobCode,
+      });
       throw new Error('No MFA or OOB Token found');
     }
 
     if (code.length < 6) {
+      logInfo('invalid-code', { ...loggingContext });
       return {
-        error: 'bad.reuqest',
+        error: 'bad.request',
         error_description: 'Code must be 6 digits.',
       };
     }
@@ -334,6 +416,10 @@ export async function verifyMfaChallenge(
 
     data = await response.json();
     if (response.status !== 200) {
+      logTrace('bad-response::verifyMfaChallenge', {
+        ...loggingContext,
+        reqStatus: response.status,
+      });
       throw data;
     }
   } catch (e) {
@@ -341,6 +427,10 @@ export async function verifyMfaChallenge(
     // if there was a generic error, we need to redirect to the error page
     if (!(e instanceof Error)) {
       const error = e as Auth0ErrorResponse;
+      logTrace('Auth0 Error Response', {
+        ...loggingContext,
+        error: error?.error,
+      });
       if (
         error.error === 'invalid_grant' &&
         !error.error_description.includes('mfa_token')
@@ -366,6 +456,11 @@ export async function resendMfaChallenge(
   _: MfaResendChallangeResponse,
   formData: FormData
 ): Promise<MfaResendChallangeResponse> {
+  const loggingContext = {
+    file: 'login-actions.ts',
+    function: 'resendMfaChallenge',
+  };
+  logTrace('start', { ...loggingContext });
   try {
     const mfaToken = (await getMfaCookie()) || '';
     const challengeType = formData.get('challengeType')?.toString() || '';
@@ -378,6 +473,7 @@ export async function resendMfaChallenge(
     const data = await response.json();
 
     if (response.status === 200) {
+      logTrace('successful-response', { ...loggingContext });
       await setMfaOobCookie({
         value: data.oob_code,
       });
@@ -385,6 +481,10 @@ export async function resendMfaChallenge(
         success: true,
       };
     }
+    logTrace('unsuccessful-response', {
+      ...loggingContext,
+      reqStatus: response.status,
+    });
     throw data;
   } catch (error) {
     return {
