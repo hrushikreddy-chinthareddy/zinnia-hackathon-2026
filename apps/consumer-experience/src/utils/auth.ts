@@ -24,6 +24,7 @@ import {
   MFA_TOKEN_COOKIE_KEY,
   SESSION_TIMEOUT_IN_MILLISECONDS,
 } from './serverClientUtils';
+import { logWarn } from './logging/server-logging';
 const notNull = <T>(value: T | null): value is T => value !== null;
 const paddedArray = new Uint8Array(32);
 const jwtSecret = new TextEncoder().encode(process.env.AUTH0_SECRET);
@@ -45,6 +46,7 @@ const encrypt = async (payload: jose.JWTPayload): Promise<string> => {
       .setIssuedAt()
       .encrypt(paddedArray);
   } catch (error) {
+    logWarn('error encrypting', { file: 'auth.ts', function: 'encrypt' });
     return '';
   }
 };
@@ -61,6 +63,7 @@ const decrypt = async (
   try {
     return await jose.jwtDecrypt(jwe, paddedArray);
   } catch (e) {
+    logWarn('error decrypting', { file: 'auth.ts', function: 'decrypt' });
     err = e;
   }
   throw err;
@@ -99,6 +102,7 @@ const getChunkSize = async (
 export const setCookie = async (options: SetCookieOptions) => {
   const { value, cookieName, res, cookieConfig } = options;
   if (value === undefined || !cookieName) {
+    logWarn('error::invalid-args', { file: 'auth.ts', function: 'setCookie' });
     throw new Error("Must supply a 'value' and 'cookieName'");
   }
   const cookieStore = cookies();
@@ -249,6 +253,7 @@ export const getSession = async (
       return session;
     }
   } catch (error) {
+    logWarn('unknown-error', { file: 'auth.ts', function: 'getSession' });
     await deleteSession(res);
     return;
   }

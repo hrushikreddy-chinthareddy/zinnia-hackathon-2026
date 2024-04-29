@@ -41,7 +41,8 @@ const logger = pino({
   // level of logs to display. trace|debug|info|warn|error|fatal
   level: process.env.PINO_LOG_LEVEL || 'trace',
 }).child({
-  service: 'consumer-ui', // TODO - BPB - sunsetter-retractable-awning?
+  app_name: 'consumer-ui',
+  service: 'consumer-ui',
   env: process.env.NEXT_PUBLIC_DATADOG_ENV || '',
   version: process.env.NEXT_PUBLIC_GIT_SHA || '',
 });
