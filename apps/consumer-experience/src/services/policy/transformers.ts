@@ -283,7 +283,7 @@ export const transformPolicyForLoans = (policy: Policy): PolicyLoans => {
     timestamp: policy.timestamp,
     // Return either the boolean OR undefined since there is a difference between
     // inelgible and data doesn't exist
-    isEligible: policy && policy.accountValues ? isEligible : undefined,
+    isEligible: policy && policy.accountValues ? isEligible : null,
   };
 };
 

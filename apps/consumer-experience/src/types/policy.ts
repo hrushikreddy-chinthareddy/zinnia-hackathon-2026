@@ -197,7 +197,7 @@ export interface PolicyFund {
 }
 
 export interface PolicyLoans {
-  isEligible?: boolean;
+  isEligible?: boolean | null;
   timestamp?: string | null;
   totalLoanBalance?: number | null;
   maximumLoanAmount?: number | null;
