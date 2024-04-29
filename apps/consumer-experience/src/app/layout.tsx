@@ -1,3 +1,4 @@
+import { GoogleAnalytics } from '@next/third-parties/google'
 import localFont from 'next/font/local';
 
 import type { Metadata } from 'next';
@@ -90,6 +91,7 @@ export default async function RootLayout({
       style={{ height: '100%' }}
     >
       <body style={{ height: '100%' }}>{children}</body>
+      {process.env.NODE_ENV === 'production' && <GoogleAnalytics gaId="G-1NY7KTG7T3" />}
     </html>
   );
 }

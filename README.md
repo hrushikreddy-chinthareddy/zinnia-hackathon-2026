@@ -69,6 +69,21 @@ Next, you can link your Turborepo to your Remote Cache by running the following 
 npx turbo link
 ```
 
+### Adding a new NPM Package
+
+This repo uses PNPM to manage packages as it supports monorepos better than NPM.
+
+To add a package, use:
+
+```
+pnpm add --filter <app> <package>
+```
+So for consumer-experience, it would be:
+```
+pnpm add --filter consumer-experience <package>
+```
+
+
 ## Useful Links
 
 Learn more about the power of Turborepo:
