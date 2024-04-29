@@ -61,7 +61,7 @@ export function DesktopNav() {
           </>
         )}
         <a
-          href="/api/auth/logout"
+          href="/api/logout"
           className={`${styles.navItem} ${styles.signOut} ${params.planCode && params.policyNumber ? styles.border : ''}`}
         >
           Sign out

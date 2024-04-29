@@ -1,5 +1,4 @@
-import { UserProvider } from '@auth0/nextjs-auth0/client';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
 import '@/app/styles/globals.css';
 
@@ -24,20 +23,18 @@ export default async function AuthenticatedLayout({
   children: React.ReactNode;
 }) {
   return (
-    <UserProvider>
-      <main className={`${styles.body} ${styles.main}`}>
-        <SessionManager>
-          {/* To prevent hydration error by trying to render these dynamically using screen width,
+    <main className={`${styles.body} ${styles.main}`}>
+      <SessionManager>
+        {/* To prevent hydration error by trying to render these dynamically using screen width,
           dynamically displaying using media queries */}
-          <MobileNav />
-          <DesktopNav />
-          <div className={styles.container}>
-            <div className={styles.content}>
-              <>{children}</>
-            </div>
+        <MobileNav />
+        <DesktopNav />
+        <div className={styles.container}>
+          <div className={styles.content}>
+            <>{children}</>
           </div>
-        </SessionManager>
-      </main>
-    </UserProvider>
+        </div>
+      </SessionManager>
+    </main>
   );
 }

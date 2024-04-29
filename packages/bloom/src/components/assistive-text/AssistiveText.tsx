@@ -1,6 +1,6 @@
-import styles from "./AssistiveText.module.css";
-import { Icon, IconType } from "../icon";
-import { AssistiveTextProps, AssistiveTextVariant } from "./types";
+import styles from './AssistiveText.module.css';
+import { Icon, IconType } from '../icon';
+import { AssistiveTextProps, AssistiveTextVariant } from './types';
 
 const AssistiveIcon = {
   [AssistiveTextVariant.Default]: IconType.MAIL,
@@ -32,7 +32,9 @@ export const AssistiveText: React.FC<AssistiveTextProps> = ({
 
   return (
     <div className={`${styles.assistiveText} ${variantClass()}`}>
-      <Icon type={AssistiveIcon[variant]} small />
+      <div>
+        <Icon type={AssistiveIcon[variant]} small />
+      </div>
       <p className="typography-content-caption-selected">{text}</p>
     </div>
   );

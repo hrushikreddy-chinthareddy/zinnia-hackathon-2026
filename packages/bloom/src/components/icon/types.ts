@@ -4,6 +4,7 @@ import AlertExclamation from '../../tokens/svg-assets/icons/alert/alert-exclamat
 import Autopay from '../../tokens/svg-assets/icons/currency/autopay.svg';
 import Ban from '../../tokens/svg-assets/icons/content/ban.svg';
 import Close from '../../tokens/svg-assets/icons/actions/cancel.svg';
+import Cog from '../../tokens/svg-assets/icons/brand/cog.svg';
 import Payment from '../../tokens/svg-assets/icons/currency/cash.svg';
 import Chevron from '../../tokens/svg-assets/icons/chevron.svg';
 import ChevronRight from '../../tokens/svg-assets/icons/arrows/chevron-right.svg';
@@ -24,6 +25,7 @@ import HexExclamation from '../../tokens/svg-assets/icons/alert/hex-exclamation.
 import Lightbulb from '../../tokens/svg-assets/icons/illustrations/light-bulb.svg';
 import Logout from '../../tokens/svg-assets/icons/actions/logout.svg';
 import Mail from '../../tokens/svg-assets/icons/communications/mail.svg';
+import Phone from '../../tokens/svg-assets/icons/communications/phone.svg';
 import Settings from '../../tokens/svg-assets/icons/actions/settings.svg';
 import Shield from '../../tokens/svg-assets/icons/navigation/shield-heart.svg';
 import ShieldCheckmark from '../../tokens/svg-assets/icons/navigation/shield-checkmark.svg';
@@ -49,6 +51,7 @@ export enum IconType {
    */
   CLOSE = 'Close',
   CLOUD = 'Cloud',
+  COG = 'Cog',
   DASHBOARD = 'Dashboard',
   DATABASE = 'Database',
   DOCUMENT_DUPLICATE = 'DocumentDuplicate',
@@ -61,6 +64,7 @@ export enum IconType {
   LOGOUT = 'Logout',
   MAIL = 'Mail',
   PAYMENT = 'Payment',
+  PHONE = 'Phone',
   SETTINGS = 'Settings',
   SHIELD = 'Shield',
   SHIELD_EXCLAMATION = 'ShieldExclamation',
@@ -103,6 +107,7 @@ export const Icons: {
   [IconType.CLOCK]: Clock,
   [IconType.CLOSE]: Close,
   [IconType.CLOUD]: Cloud,
+  [IconType.COG]: Cog,
   [IconType.DASHBOARD]: Dashboard,
   [IconType.DATABASE]: Database,
   // [`${IconType.CLOUD}${FILLED}`]: CloudFilled,
@@ -116,6 +121,7 @@ export const Icons: {
   [IconType.LOGOUT]: Logout,
   [IconType.MAIL]: Mail,
   [IconType.PAYMENT]: Payment,
+  [IconType.PHONE]: Phone,
   [IconType.SETTINGS]: Settings,
   [IconType.SHIELD]: Shield,
   [IconType.SHIELD_CHECKMARK]: ShieldCheckmark,

@@ -19,20 +19,22 @@ export const GenericInfoPage = ({
 }: Props) => {
   return (
     <div className={styles.container}>
-      <div className={styles.carrierMarketingImage} />
-      <div className={styles.contentContainer}>
+      <div className={styles.banner} />
+      <div className={styles.scrollContainer}>
         <div className={styles.content}>
           <div className={styles.logoContainer}>
             <LogoImage alt="Company Logo" />
           </div>
           <div className={styles.details}>
-            <h1 className="mb-lg">{title}</h1>
+            <h1>{title}</h1>
             <p className="typography-content-body">{description}</p>
+            <div className={styles.actionContainer}>{action}</div>
           </div>
-          <div className={styles.actionContainer}>{action}</div>
-          <div className={`typography-content-footer-legal ${styles.footer}`}>
-            {footer}
-          </div>
+          {footer && (
+            <div className={`typography-content-footer-legal ${styles.footer}`}>
+              {footer}
+            </div>
+          )}
         </div>
       </div>
     </div>

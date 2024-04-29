@@ -1,118 +1,108 @@
 .container {
-  height: 100svh;
-  width: 100vw;
-  background-color: white;
-}
-
-.contentContainer {
-  padding: 0 var(--measure-dimension-margin-xxs);
-  text-align: center;
-
-  &.hideCarrierImage {
-    height: 100svh;
+  &,
+  .content,
+  .details,
+  .footer {
     display: flex;
-    align-items: center;
+    flex-direction: column;
   }
-}
 
-.content {
-  display: flex;
-  flex-direction: column;
+  height: 100%;
+  width: 100vw;
+  max-width: 1440px;
+  background-color: var(--color-base-surface-primary);
+  justify-content: flex-start;
   align-items: center;
-}
 
-.headerContainer {
-  display: flex;
-  gap: var(--measure-dimension-gap-xs);
-  align-items: center;
-  margin-top: var(--measure-dimension-gap-lg, 1rem);
-  margin-bottom: var(--measure-dimension-gap-lg, 1rem);
-  justify-content: center;
-}
+  @media (width >=1024px) {
+    flex-direction: row;
+    align-items: stretch;
+  }
 
-.logoContainer {
-  width: 124px;
-}
-
-.details {
-  margin-top: var(--measure-dimension-gap-3xl, 2.5rem);
-}
-
-.actionContainer {
-  width: 100%;
-  margin: var(--measure-dimension-gap-3xl, 2.5rem) 0;
-}
-
-.footer {
-  color: var(--color-base-text-text-secondary, #676767);
-  border-top: 2px solid var(--color-base-border-border-light, #ededed);
-  padding: var(--measure-dimension-padding-2xl) 0;
-  text-align: left;
-}
-
-@media (width < 500px) {
-  .carrierMarketingImage {
+  .banner {
+    background-color: var(--color-primary-color-primary-lightest);
     background-image: url('../../app/styles/everly/assets/everly-hero-background-mobile.png');
     background-repeat: no-repeat;
-    height: 125px;
-    background-attachment: fixed;
-  }
-}
+    height: 93px;
+    background-size: cover;
+    background-position: bottom center;
+    width: 100%;
 
-@media (768px > width >= 500px) {
-  .carrierMarketingImage {
-    background-image: url('../../app/styles/everly/assets/everly-hero-background-tablet.png');
-    background-repeat: no-repeat;
-    height: 125px;
-    background-attachment: fixed;
-    /* This is to position the image at the right focus point */
-    background-position-y: -25px;
-  }
-}
+    @media (width >=500px) {
+      background-image: url('../../app/styles/everly/assets/everly-hero-background-tablet.png');
+      height: 210px;
+    }
 
-@media (width >= 768px) {
-  .container {
-    display: flex;
+    @media (width >=1024px) {
+      max-width: 434px;
+      background-size: 100% auto;
+      background-image: url('../../app/styles/everly/assets/everly-hero-background.png');
+      background-position-y: center;
+      height: 100%;
+    }
   }
 
-  .carrierMarketingImage {
-    width: 435px;
-    background-color: var(--color-primary-color-primary-lightest, #d0d2ff);
-    display: flex;
-    align-items: center;
-
-    background-image: url('../../app/styles/everly/assets/everly-hero-background.png');
-    background-position-y: center;
-    background-repeat: no-repeat;
-  }
-
-  .headerContainer {
-    justify-content: flex-start;
-  }
-
-  .contentContainer {
-    align-items: center;
-    display: flex;
+  .scrollContainer {
+    display: grid;
     flex: 1;
-    justify-content: center;
-    padding: 0 var(--measure-dimension-padding-6xl);
-    text-align: left;
-  }
+    overflow-y: auto;
+    padding: var(--measure-dimension-margin-md)
+      var(--measure-dimension-margin-xs);
 
-  .logoContainer {
-    width: 200px;
+    @media (width >=1024px) {
+      place-items: center;
+      padding-left: var(--measure-dimension-padding-6xl);
+    }
   }
 
   .content {
-    width: 425px;
-    align-items: flex-start;
+    text-align: center;
+    align-items: center;
+    row-gap: var(--measure-dimension-gap-3xl);
+    width: calc(424px - var(--measure-dimension-padding-6xl));
+    min-height: 532px;
+
+    @media (width >=1024px) {
+      width: 465px;
+      text-align: start;
+      align-items: baseline;
+    }
+
+    .logoContainer {
+      width: 124px;
+
+      @media (width >=1024px) {
+        width: 200px;
+      }
+    }
+
+    .details {
+      gap: var(--measure-dimension-gap-lg);
+
+      .actionContainer {
+        margin: 0 auto;
+        width: 100%;
+
+        @media (width >=1024px) {
+          & > * {
+            width: 100%;
+          }
+        }
+      }
+    }
+
+    .footer {
+      gap: var(--measure-dimension-gap-lg);
+      color: var(--color-base-text-text-secondary, #676767);
+      border-top: 2px solid var(--color-base-border-border-light, #ededed);
+      padding: var(--measure-dimension-padding-2xl) 0;
+      text-align: left;
+    }
   }
 
-  .details {
-    padding-top: var(--measure-dimension-padding-2xl, 1rem);
-  }
-
-  .actionContainer {
-    padding-bottom: var(--measure-dimension-padding-2xl, 1rem);
+  .headerContainer {
+    display: flex;
+    gap: var(--measure-dimension-gap-xs);
+    align-items: center;
   }
 }

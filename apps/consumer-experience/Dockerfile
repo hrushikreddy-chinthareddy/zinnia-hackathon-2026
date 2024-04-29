@@ -79,4 +79,4 @@ ENV PORT 3000
 #     AUTH0_ORANGANIZATION_ID=$AUTH0_ORANGANIZATION_ID
 
 
-CMD HOSTNAME="0.0.0.0" node apps/consumer-experience/server.js
+CMD HOSTNAME="0.0.0.0" NODE_OPTIONS='--max-http-header-size=32000' node apps/consumer-experience/server.js

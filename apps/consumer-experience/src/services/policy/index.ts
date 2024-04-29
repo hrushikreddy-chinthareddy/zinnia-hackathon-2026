@@ -111,6 +111,7 @@ const getPolicyByPlanCodeAndId = async (options: PolicyRequestInputs) => {
   }
 
   const request = await ServerApi.get(url);
+
   if (request.status !== 200) {
     throw new Error('Error fetching policy.');
   }

@@ -1,44 +1,22 @@
-import { getSession, touchSession } from '@auth0/nextjs-auth0/edge';
-import {
-  RequestCookies,
-  ResponseCookies,
-} from 'next/dist/server/web/spec-extension/cookies';
 import { NextResponse, type NextRequest } from 'next/server';
 
 import { isProd } from '@/utils';
 import {
   HAD_PREVIOUS_SESSION_COOKIE_KEY,
+  MFA_OOB_CODE_COOKIE_KEY,
+  MFA_TOKEN_COOKIE_KEY,
   MOCK_COOKIE_KEY,
   MOCK_ERROR_COOKIE_KEY,
   SHOW_DEV_MENU_COOKIE_KEY,
 } from '@/utils/serverClientUtils';
 
-/**
- * NextJS doesn't foward the headers to react server components.
- * This method creates a new header and copies the request headers over
- * it then sets the headers on the response so the react server components have the updated cookies and headers
- * @param req NextRequest
- * @param res NextResponse
- */
-function applySetCookie(req: NextRequest, res: NextResponse): void {
-  // parse the outgoing Set-Cookie header
-  const setCookies = new ResponseCookies(res.headers);
-  // Build a new Cookie header for the request by adding the setCookies
-  const newReqHeaders = new Headers(req.headers);
-  const newReqCookies = new RequestCookies(newReqHeaders);
-  setCookies.getAll().forEach(cookie => newReqCookies.set(cookie));
-  // set “request header overrides” on the outgoing response
-  NextResponse.next({
-    request: { headers: newReqHeaders },
-  }).headers.forEach((value, key) => {
-    if (
-      key === 'x-middleware-override-headers' ||
-      key.startsWith('x-middleware-request-')
-    ) {
-      res.headers.set(key, value);
-    }
-  });
-}
+import {
+  deleteCookie,
+  getMfaCookie,
+  getOobMfaCookie,
+  getSession,
+  touchSession,
+} from './utils/auth';
 
 const applyMockCookies = (req: NextRequest, res: NextResponse<unknown>) => {
   if (isProd()) {
@@ -71,34 +49,59 @@ const applyMockCookies = (req: NextRequest, res: NextResponse<unknown>) => {
 };
 
 export async function middleware(req: NextRequest) {
-  const session = await getSession();
+  const resNext = NextResponse.next();
+  const session = await getSession(resNext);
   const pathname = req.nextUrl.pathname;
+  const isLoginLikeOrRoot = pathname.includes('/login') || pathname === '/';
+  const isSessionPage = pathname === '/session';
 
-  if (!session && pathname.includes('/session')) {
-    const res = NextResponse.next();
-    res.cookies.delete(HAD_PREVIOUS_SESSION_COOKIE_KEY);
+  if (session) {
+    await touchSession(resNext);
+
+    if (isLoginLikeOrRoot) {
+      return NextResponse.redirect(new URL('/policies', req.url));
+    }
+
+    applyMockCookies(req, resNext);
+    return resNext;
+  }
+
+  if (req.cookies.has(HAD_PREVIOUS_SESSION_COOKIE_KEY) && isSessionPage) {
+    resNext.cookies.delete(HAD_PREVIOUS_SESSION_COOKIE_KEY);
+    return resNext;
+  }
+
+  if (req.cookies.has(HAD_PREVIOUS_SESSION_COOKIE_KEY) && !isSessionPage) {
+    const res = NextResponse.redirect(new URL(`/session`, req.url));
     return res;
   }
 
-  if (!session) {
-    const path = req.cookies.has(HAD_PREVIOUS_SESSION_COOKIE_KEY)
-      ? 'session'
-      : 'login';
-    const res = NextResponse.redirect(new URL(`/${path}`, req.url));
-    res.cookies.delete(HAD_PREVIOUS_SESSION_COOKIE_KEY);
-    return res;
+  if (pathname === '/login/mfa/mfa-enrollment') {
+    const mfaToken = (await getMfaCookie()) || '';
+    if (!mfaToken) {
+      return NextResponse.redirect(new URL('/login/error', req.url));
+    }
   }
 
-  if (pathname.includes('/session')) {
-    return NextResponse.redirect(new URL('/policies', req.url));
+  if (pathname === '/login/mfa/mfa-challenge') {
+    const oobCode = (await getOobMfaCookie()) || '';
+    if (!oobCode) {
+      return NextResponse.redirect(new URL('/login/error', req.url));
+    }
   }
-  const res = NextResponse.next();
-  await touchSession(req, res);
 
-  applyMockCookies(req, res);
-  applySetCookie(req, res);
+  if (pathname === '/login/error') {
+    await deleteCookie(MFA_OOB_CODE_COOKIE_KEY, resNext);
+    await deleteCookie(MFA_TOKEN_COOKIE_KEY, resNext);
+  }
 
-  return res;
+  if (isLoginLikeOrRoot) {
+    return resNext;
+  }
+
+  // default to the home page if the user is not authenticated
+  // We don't want users to access the policy pages without being authenticated
+  return NextResponse.redirect(new URL('/', req.url));
 }
 
 export const config = {
@@ -112,6 +115,6 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      */
-    '/((?!api|login|health|_next/static|_next/image|favicon.ico).*)',
+    '/((?!api|health|_next/static|_next/image|favicon.ico).*)',
   ],
 };

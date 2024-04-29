@@ -1,10 +1,11 @@
+import { NextRequest, NextResponse } from 'next/server';
+
 import { getDocumentDownload } from '@/services/document';
+import { getSession } from '@/utils/auth';
 import {
   getUserInfoFromSession,
   logCompliance,
 } from '@/utils/logging/server-logging';
-import { getSession } from '@auth0/nextjs-auth0';
-import { NextRequest, NextResponse } from 'next/server';
 
 // Converts the Base 64 encoded binaryData string into a blob on the client to allow for downloading.
 const b64ToBlob = (b64data: string): Blob | null => {

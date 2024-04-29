@@ -15,7 +15,8 @@
         "NEXT_PUBLIC_MOCK_API_REQUEST",
         "NEXT_PUBLIC_BACKEND_URL",
         "NEXT_PUBLIC_BASE_URL",
-        "AUTH0_SESSION_ROLLING_DURATION"
+        "AUTH0_SESSION_ROLLING_DURATION",
+        "NODE_ENV"
       ]
     },
     "lint": {

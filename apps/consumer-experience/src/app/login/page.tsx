@@ -1,50 +1,94 @@
-import { getSession } from '@auth0/nextjs-auth0';
-import { Link } from '@zinnia/bloom/internal/components';
-import { Metadata } from 'next';
-import { redirect } from 'next/navigation';
+'use client';
+import {
+  AssistiveText,
+  AssistiveTextVariant,
+  Icon,
+  IconType,
+  LoaderVariant,
+  SpinnerButton,
+} from '@zinnia/bloom/internal/components';
+import clsx from 'clsx';
+import { useFormState, useFormStatus } from 'react-dom';
 
+import { passwordlessStart } from '@/actions/login-actions';
 import { GenericInfoPage } from '@/components/generic-info-page/GenericInfoPage';
 
-// disable because NextJS needs this to be exported from this file
-// eslint-disable-next-line react-refresh/only-export-components
-export const metadata: Metadata = {
-  title: 'Login page',
+import styles from './Login.module.css';
+
+const SubmitButton = () => {
+  const { pending } = useFormStatus();
+  return (
+    <SpinnerButton
+      type="submit"
+      disabled={pending}
+      variant={LoaderVariant.CTA}
+      hide={!pending}
+      className={clsx('mt-3xl', styles.submit)}
+    >
+      Continue
+    </SpinnerButton>
+  );
 };
 
-export default async function Login() {
-  const session = await getSession();
+export default function LoginPage() {
+  const [state, formAction] = useFormState(passwordlessStart, {
+    error: '',
+    error_description: '',
+  });
 
-  if (session) {
-    return redirect('/policies');
-  }
+  const hasError = !!state.error;
+  const inputStyles = clsx(`${styles.input}`, {
+    [`${styles.inValid}`]: hasError,
+  });
 
   return (
     <GenericInfoPage
-      title="Let's get you signed in."
-      description="Access your coverage easily and securely by signing in with a verification code."
+      title="What’s your email?"
+      description="Enter the email associated with your policy, and we’ll send you a verification code."
       action={
-        <Link
-          href="/api/auth/login"
-          text="Get code"
-          variant="button"
-          style={{ width: '100%' }}
-        />
-      }
-      footer={
-        <>
-          <p className="mb-lg">
-            You are receiving this message to keep you updated on your Everly
-            account. Together we are committed to designing tools that give you
-            more control over your account details and preferences. Learn more
-            about Zinnia at zinnia.com.
+        <form
+          className={`${styles.form} typography-content-body-sm`}
+          action={formAction}
+          noValidate
+        >
+          <div>
+            <div className={styles.formGroup}>
+              <input
+                aria-label="Enter your email"
+                type="email"
+                id="email"
+                className={inputStyles}
+                placeholder="Enter your email"
+                name="email"
+              />
+              {!hasError && (
+                <Icon className={styles.icon} type={IconType.MAIL} />
+              )}
+              {hasError && (
+                <Icon
+                  className={styles.icon}
+                  type={IconType.ALERT_EXCLAMATION}
+                  color="var(--color-fields-border-field-border-error)"
+                />
+              )}
+            </div>
+            {hasError && (
+              <div className="py-lg">
+                <AssistiveText
+                  variant={AssistiveTextVariant.Error}
+                  text={state.error_description}
+                />
+              </div>
+            )}
+          </div>
+          <p className="typography-content-caption text-left">
+            By clicking Continue, you understand and agree that you are
+            responsible for the security of your devices and any tokens used for
+            passwordless login and you will take all necessary precautions to
+            safeguard your devices and tokens.
           </p>
-          <p className="mb-lg">
-            We care about your privacy. Learn more about the Everly privacy
-            policy. To customize your notifications, you can manage your
-            preferences or unsubscribe.
-          </p>
-          <p>© 2024 Zinnia 5801 SW Sixth Ave. Topeka, KS 66636</p>
-        </>
+          <SubmitButton />
+        </form>
       }
     />
   );

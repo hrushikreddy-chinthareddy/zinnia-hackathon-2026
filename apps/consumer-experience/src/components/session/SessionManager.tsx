@@ -5,7 +5,7 @@ import { useIdleTimer } from 'react-idle-timer';
 
 import { ClientApi } from '@/services/client-http';
 import {
-  SESSION_TIMEOUT,
+  SESSION_TIMEOUT_IN_MILLISECONDS,
   CHECK_SESSION_THRESHOLD,
   GetSessionResponse,
   PostSessionResponse,
@@ -37,7 +37,7 @@ const SessionManager = ({ children }: { children: React.ReactNode }) => {
   };
 
   const { getElapsedTime, reset } = useIdleTimer({
-    timeout: SESSION_TIMEOUT,
+    timeout: SESSION_TIMEOUT_IN_MILLISECONDS,
     onIdle,
     onAction,
   });

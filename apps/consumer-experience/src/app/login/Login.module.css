@@ -1,113 +1,119 @@
-.container {
-  height: 100svh;
-  width: 100vw;
-  background-color: white;
-}
-
-.contentContainer {
-  padding: 0 var(--measure-dimension-margin-xxs);
-  text-align: center;
-
-  &.hideCarrierImage {
-    height: 100svh;
-    display: flex;
-    align-items: center;
-  }
-}
-
-.content {
+.form {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  gap: var(--measure-dimension-gap-lg);
+  min-width: 358px;
 }
 
-.headerContainer {
-  display: flex;
-  gap: var(--measure-dimension-gap-xs);
-  align-items: center;
-  margin-top: var(--measure-dimension-gap-lg, 1rem);
-  margin-bottom: var(--measure-dimension-gap-lg, 1rem);
-}
-
-.logoContainer {
-  width: 124px;
-}
-
-.details {
-  margin-top: var(--measure-dimension-gap-3xl, 2.5rem);
-}
-
-.actionContainer {
+.formGroup {
+  position: relative;
   width: 100%;
-  margin: var(--measure-dimension-gap-3xl, 2.5rem) 0;
-}
 
-.footer {
-  color: var(--color-base-text-text-secondary, #676767);
-  border-top: 2px solid var(--color-base-border-border-light, #ededed);
-  padding: var(--measure-dimension-padding-2xl) 0;
-  text-align: left;
-}
-
-@media (width < 500px) {
-  .carrierMarketingImage {
-    background-image: url('../styles/everly/assets/everly-hero-background-mobile.png');
-    background-repeat: no-repeat;
-    height: 125px;
-    background-attachment: fixed;
+  &:has(:focus-visible) {
+    outline-style: solid;
+    outline-width: var(--measure-dimension-stroke-sm);
+    outline-offset: 2px;
+    outline-color: var(--color-states-focus-focus-border);
+    border-radius: var(--measure-dimension-radius-md, 8px);
   }
 }
 
-@media (768px > width >= 500px) {
-  .carrierMarketingImage {
-    background-image: url('../styles/everly/assets/everly-hero-background-tablet.png');
-    background-repeat: no-repeat;
-    height: 125px;
-    background-attachment: fixed;
-    /* This is to position the image at the right focus point */
-    background-position-y: -25px;
+.input {
+  height: 60px;
+  width: 100%;
+  padding: var(--measure-dimension-padding-2xl);
+  border-color: var(--color-base-border-border-subtle);
+  border-width: var(--measure-dimension-stroke-sm);
+  border-style: solid;
+  border-radius: var(--measure-dimension-radius-md);
+  background-color: var(
+    --color-fields-surface-field-background-default-fill,
+    #ffffff
+  );
+
+  &::placeholder {
+    color: var(--color-states-inactive-inactive-text);
+  }
+
+  &:hover {
+    border-color: var(--color-states-hover-hover-primary-border);
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:disabled {
+    background-color: var(
+      --color-fields-surface-field-background-inactive-fill
+    );
+    border-color: var(--color-fields-border-field-border-inactive);
+  }
+
+  &.inValid {
+    border-color: var(--color-fields-border-field-border-error);
+    color: var(--color-status-text-status-error-text);
+  }
+
+  &.phone {
+    padding-left: 35px;
+    padding-right: 35px;
   }
 }
 
-@media (width >= 768px) {
-  .container {
+.countryCode {
+  left: 18px;
+  position: absolute;
+  top: 19px;
+}
+
+.icon {
+  position: absolute;
+  right: 18px;
+  top: 19px;
+}
+
+.mfaOptionsContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  & > div {
     display: flex;
+    flex-direction: column;
+    gap: var(--measure-dimension-gap-lg);
+  }
+}
+
+.mfaOptions {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mfaOption {
+  display: flex;
+  gap: var(--measure-dimension-gap-md);
+  align-items: center;
+}
+
+.spinnerButton {
+  display: inline-flex;
+}
+
+.submit {
+  width: max-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (width >= 1024px) {
+  .submit {
+    margin-left: 0;
+    margin-right: 0;
   }
 
-  .carrierMarketingImage {
-    width: 435px;
-    background-color: var(--color-primary-color-primary-lightest, #d0d2ff);
-    display: flex;
-    align-items: center;
-
-    background-image: url('../styles/everly/assets/everly-hero-background.png');
-    background-position-y: center;
-    background-repeat: no-repeat;
-  }
-
-  .contentContainer {
-    align-items: center;
-    display: flex;
-    flex: 1;
-    justify-content: center;
-    padding: 0 var(--measure-dimension-padding-6xl);
-    text-align: left;
-  }
-
-  .logoContainer {
-    width: 200px;
-  }
-
-  .content {
-    width: 425px;
-    align-items: flex-start;
-  }
-
-  .details {
-    padding-top: var(--measure-dimension-padding-2xl, 1rem);
-  }
-
-  .actionContainer {
-    padding-bottom: var(--measure-dimension-padding-2xl, 1rem);
+  .mfaOptionsContainer {
+    align-self: flex-start;
   }
 }

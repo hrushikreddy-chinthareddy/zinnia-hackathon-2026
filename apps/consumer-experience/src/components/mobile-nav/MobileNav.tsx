@@ -117,7 +117,7 @@ export const MobileNav = () => {
               <div className={styles.globalNavItems}>
                 <div className={styles.navListItem}>
                   <a
-                    href="/api/auth/logout"
+                    href="/api/logout"
                     className={`${styles.navItem} typography-nav-nav-drawer`}
                   >
                     <span className={styles.firstItem}>

@@ -13,3 +13,4 @@ export * from './divider';
 export * from './ticker';
 export * from './link';
 export * from './pagination';
+export * from './spinner-button';
