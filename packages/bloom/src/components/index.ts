@@ -3,6 +3,7 @@ export * from './allocation-color-bar';
 export * from './label';
 export * from './banner-alert';
 export * from './button';
+export * from './button-group'
 export * from './assistive-text';
 export * from './icon';
 export * from './popover';
