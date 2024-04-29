@@ -18,7 +18,7 @@ import {
   setMfaCookie,
   setMfaOobCookie,
 } from '@/utils/auth';
-import { logInfo, logTrace, logWarn } from '@/utils/logging/server-logging';
+import { logTrace, logWarn } from '@/utils/logging/server-logging';
 /**
  * Initiates the passwordless authentication process by sending a verification code to the provided email.
  *
@@ -400,7 +400,7 @@ export async function verifyMfaChallenge(
     }
 
     if (code.length < 6) {
-      logInfo('invalid-code', { ...loggingContext });
+      logTrace('invalid-code', { ...loggingContext });
       return {
         error: 'bad.request',
         error_description: 'Code must be 6 digits.',
