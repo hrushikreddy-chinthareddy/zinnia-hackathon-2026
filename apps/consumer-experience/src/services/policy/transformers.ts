@@ -1,19 +1,17 @@
 import { PolicyReferenceDataModel } from '@zinnia/api-types/types/search';
 import {
-  BankAccount,
   PartyRole,
   Policy,
   PolicyStatus,
   Transaction,
   TransactionType,
   MetricsType,
-  SystematicProgram,
   Party,
   FundAllocation,
   PolicyFeature,
   Status,
-  ArrangementType,
   Reason,
+  Transaction_Payor,
 } from '@zinnia/api-types/types/sor';
 import { policyOwner } from '@zinnia/utils';
 
@@ -21,7 +19,6 @@ import { BankDetail } from '@/components/person-data/types';
 import {
   Beneficiary,
   BeneficiaryData,
-  MethodAndProgram,
   PolicyAccountValue,
   PolicyCoverage,
   PolicyDetails,
@@ -48,7 +45,6 @@ import {
   policyWithdrawalsRemaining,
   getRiderDescription,
   policyHasVested,
-  autopayBankId,
   allPolicyOwnerBanks,
 } from '@/utils/data';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';
@@ -204,34 +200,6 @@ export const transformPolicyforPaymentDetails = (
   return allPolicyOwnerBanks(policy);
 };
 
-export const transformPolicyToMethodAndProgram = (
-  policy: Policy
-): MethodAndProgram | undefined => {
-  const paymentProgram = policy?.systematicPrograms?.find(
-    (program: SystematicProgram) => program.reason === Reason.PREMIUM
-  );
-  const programFirstPayor = (paymentProgram?.party || [])[0];
-  const paymentProgramFinancialInstitutionId = programFirstPayor?.bankId;
-  const payor = policy?.parties?.find(
-    (party: Party) => party.partyId === programFirstPayor?.partyId
-  );
-  const paymentMethod = payor?.bankDetails?.find((bank: BankAccount) =>
-    [bank.appliesToPartyId, bank.accountNumber, bank.bankId].includes(
-      paymentProgramFinancialInstitutionId
-    )
-  );
-
-  if (!paymentMethod) {
-    return;
-  }
-
-  return {
-    ...paymentMethod,
-    frequency: paymentProgram?.frequency,
-    amount: paymentProgram?.amount,
-  };
-};
-
 export const transformPolicyForFundDetails = (
   policy: Policy
 ): PolicyFund[] | null => {
@@ -284,8 +252,7 @@ export const transformPolicyForWithdrawals = (
       allowedWithdrawals: annualWithdrawalsAllowed,
       withdrawalsTaken,
     }),
-    annualWithdrawalsTaken:
-      policy.withdrawalValues?.totalYearToDateWithdrawalTaken,
+    annualWithdrawalsTaken: withdrawalsTaken,
     annualWithdrawalsRemaining: policyWithdrawalsRemaining({
       allowedWithdrawals: annualWithdrawalsAllowed,
       withdrawalsTaken,
@@ -344,14 +311,37 @@ export const transformPolicyForAccountValueSummary = (
   };
 };
 
+const getTransactionBankDetails = (
+  policy: Policy,
+  transactionPayor?: Transaction_Payor
+) => {
+  if (!transactionPayor) {
+    return null;
+  }
+  // TODO: is it possible to have multiple payors? what is the ui for that if so?
+  const transactionPayorPartyId = transactionPayor.partyId;
+  const transactionBankId = transactionPayor.bankId;
+  const transactionPolicyParty = policy.parties?.find(
+    ({ partyId }) => partyId === transactionPayorPartyId
+  );
+
+  return transactionPolicyParty?.bankDetails?.find(
+    ({ bankId }) => bankId === transactionBankId
+  );
+};
+
 export const transformPaymentHistory = (
   policy: Policy,
   transaction: Transaction | undefined
 ): PaymentHistory => {
-  const paymentMethod = transformPolicyToMethodAndProgram(policy);
+  const paymentMethod = getTransactionBankDetails(
+    policy,
+    transaction?.payors?.[0]
+  );
   const { effectiveDate, status, transactionAmounts, transactionType } =
     transaction ?? {};
-  const { appliedAmount, requestedAmount } = transactionAmounts ?? {};
+  const { appliedAmount, requestedAmount, paymentAmount } =
+    transactionAmounts ?? {};
   const accountType = paymentMethod?.accountType;
   const accountNumber = bankAccountNumberSanitizer(
     paymentMethod?.internationalBankAccountNumber ??
@@ -366,7 +356,7 @@ export const transformPaymentHistory = (
   const paymentHistoryObject: PaymentHistory = {
     amount: requestedAmount,
     date,
-    frequency: paymentMethod?.frequency,
+    frequency: null,
     type: transactionType?.toString() as keyof typeof Reason,
     bankDetails: {
       accountType,
@@ -388,6 +378,7 @@ export const transformPaymentHistory = (
           ? requestedAmount
           : appliedAmount;
       paymentHistoryObject.title = 'Premium payment';
+      paymentHistoryObject.frequency = 'initial';
       break;
     case TransactionType.PAYMENT_ONE_TIME_PREMIUM:
     case TransactionType.ONE_TIME_PREMIUM:
@@ -396,10 +387,16 @@ export const transformPaymentHistory = (
           ? requestedAmount
           : appliedAmount;
       paymentHistoryObject.title = 'Premium payment';
+      paymentHistoryObject.frequency = 'one-time';
       break;
     case TransactionType.SUBSEQUENT_PAYMENT:
     case TransactionType.SUBSEQUENT_PREMIUM:
-      paymentHistoryObject.amount = paymentMethod?.amount;
+      paymentHistoryObject.amount =
+        status === ExtendedTransactionStatus.Pending
+          ? paymentAmount
+          : transactionType === TransactionType.SUBSEQUENT_PAYMENT
+            ? requestedAmount
+            : appliedAmount;
       paymentHistoryObject.title = 'Premium autopay';
       break;
     case 'Activation':

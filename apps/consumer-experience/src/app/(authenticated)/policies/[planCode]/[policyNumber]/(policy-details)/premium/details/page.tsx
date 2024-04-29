@@ -39,8 +39,6 @@ export default async function PaymentDetails({
     );
   }
 
-  console.log(data);
-
   return (
     <div className="container">
       <HeaderBreadcrumb title="Payment Details" />

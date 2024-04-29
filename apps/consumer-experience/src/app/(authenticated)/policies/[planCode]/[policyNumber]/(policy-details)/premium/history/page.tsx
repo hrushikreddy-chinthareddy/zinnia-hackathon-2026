@@ -9,6 +9,7 @@ import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable'
 import { getPaymentHistory } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatBankAccountTypeText, getFrequency } from '@/utils/data';
+import { toSentenceCase } from '@/utils/strings';
 
 import styles from './PaymentHistory.module.css';
 
@@ -47,6 +48,8 @@ export default async function PaymentHistory({ params }: Props) {
 
   const pendingPayments = () => {
     return pendingTransactions.map((item, index) => {
+      console.log('AND NOW ITS THE ITEM', item);
+
       return (
         <CardInsertHistory
           isPending
@@ -56,7 +59,7 @@ export default async function PaymentHistory({ params }: Props) {
           title={item.title}
           subtitle={
             <>
-              <span>{getFrequency(item.frequency)}</span>
+              <span>{item.frequency && toSentenceCase(item.frequency)}</span>
               {item.frequency && item.bankDetails && (
                 <span className="mx-xs" aria-hidden>
                   |
@@ -80,7 +83,7 @@ export default async function PaymentHistory({ params }: Props) {
           title={item.title}
           subtitle={
             <>
-              <span>{getFrequency(item.frequency)}</span>
+              <span>{item.frequency && toSentenceCase(item.frequency)}</span>
               {item.frequency && item.bankDetails && (
                 <span className="mx-xs" aria-hidden>
                   |

@@ -134,7 +134,7 @@ export const bankAccountNumberSanitizer = (
 
 export const getFrequency = (
   frequency: Frequency | null | undefined
-): string => {
+): string | null => {
   switch (frequency) {
     case Frequency.ANNUAL:
       return 'Annual';
@@ -151,7 +151,7 @@ export const getFrequency = (
     case Frequency.QUARTERLY:
       return 'Quarterly';
     default:
-      return DEFAULT_ERROR_STRING;
+      return null;
   }
 };
 
@@ -240,11 +240,11 @@ export const isPolicyEligibleForWithdrawals = ({
   allowedWithdrawals?: number | null;
   withdrawalsTaken?: number | null;
 }) => {
-  if (allowedWithdrawals == null || withdrawalsTaken === undefined) {
+  if (allowedWithdrawals == null || withdrawalsTaken == null) {
     return null;
   }
 
-  if (withdrawalsTaken === null || allowedWithdrawals > withdrawalsTaken) {
+  if (allowedWithdrawals > withdrawalsTaken) {
     return true;
   }
 

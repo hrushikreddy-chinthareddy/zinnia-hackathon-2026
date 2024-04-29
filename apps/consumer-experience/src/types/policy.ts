@@ -157,7 +157,7 @@ export interface TransactionRequestErrorResponse {
 export interface PaymentHistory {
   amount?: number;
   date?: string;
-  frequency?: Frequency;
+  frequency?: 'one-time' | 'initial' | null;
   type?: keyof typeof Reason;
   bankDetails?: {
     accountType?: AccountType;
