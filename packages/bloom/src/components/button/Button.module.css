@@ -130,7 +130,7 @@
     font-weight: var(--font-weight-semibold);
     line-height: var(--measure-line-height-font-line-height-2x-large);
     padding: var(--measure-dimension-padding-sm)
-      var(--measure-dimension-padding-xxl);
+      var(--measure-dimension-padding-2xl);
   }
 
   &.expand {
