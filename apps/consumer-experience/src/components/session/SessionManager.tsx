@@ -1,5 +1,5 @@
 'use client';
-import { useRouter, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import { useIdleTimer } from 'react-idle-timer';
 
@@ -11,10 +11,9 @@ import {
   PostSessionResponse,
 } from '@/utils/serverClientUtils';
 const SessionManager = ({ children }: { children: React.ReactNode }) => {
-  const router = useRouter();
   const pathname = usePathname();
   const onIdle = () => {
-    router.push(`/session`);
+    window.location.reload();
   };
 
   const onAction = async () => {
