@@ -121,11 +121,15 @@ export default function PasswordlessEmailChallengePage({
               </div>
             )}
           </div>
-          <p>
+          <p className={styles.resend}>
             Didn't receive an email?{' '}
             <SpinnerButton
               onClick={handleResendPasswordlessStartCode}
-              className={clsx('text-link-primary', styles.spinnerButton)}
+              className={clsx(
+                'text-link-primary',
+                styles.small,
+                styles.spinnerButton
+              )}
               size="small"
               mode="link"
               variant={LoaderVariant.CTA}

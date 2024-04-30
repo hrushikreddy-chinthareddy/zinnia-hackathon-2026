@@ -201,11 +201,15 @@ export default function MfaChallengePage({
             </div>
           )}
         </div>
-        <p>
+        <p className={styles.resend}>
           {getDisclaimerText(authenticator?.oob_channel || '')}{' '}
           <SpinnerButton
             onClick={handleResendCode}
-            className={clsx('text-link-primary', styles.spinnerButton)}
+            className={clsx(
+              'text-link-primary',
+              styles.small,
+              styles.spinnerButton
+            )}
             size="small"
             mode="link"
             variant={LoaderVariant.CTA}

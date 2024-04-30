@@ -97,8 +97,11 @@
   align-items: center;
 }
 
-.spinnerButton {
-  display: inline-flex;
+.resend {
+  .small.spinnerButton {
+    display: inline-flex;
+    padding: 0;
+  }
 }
 
 .submit {

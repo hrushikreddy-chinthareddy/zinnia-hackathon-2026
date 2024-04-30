@@ -1,7 +1,8 @@
+'use client';
 import * as ToggleGroup from '@radix-ui/react-toggle-group';
 import { ButtonGroupProps, ConditionalProps } from './types';
 import styles from './ButtonGroup.module.css';
-import { v4 as uuidv4 } from 'uuid'
+import { v4 as uuidv4 } from 'uuid';
 import clsx from 'clsx';
 
 export const ButtonGroup = ({
@@ -35,7 +36,7 @@ export const ButtonGroup = ({
       >
         {items.map(({ id, value, children }) => {
           if (!id?.length) {
-            id = uuidv4()
+            id = uuidv4();
           }
           return (
             <ToggleGroup.Item
