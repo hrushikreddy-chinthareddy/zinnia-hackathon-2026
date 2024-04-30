@@ -7,7 +7,10 @@ import { MouseEvent, useEffect, useMemo, useState } from 'react';
 
 import useMock from '@/hooks/use-mock';
 import { isProd } from '@/utils';
-import { MOCK_ERROR_COOKIE_KEY } from '@/utils/serverClientUtils';
+import {
+  MOCK_ERROR_COOKIE_KEY,
+  SHOW_TEST_POLICIES_COOKIE_KEY,
+} from '@/utils/serverClientUtils';
 import { zIndexOrder } from '@/utils/zIndexOrder';
 
 import styles from './DevMenu.module.css';
@@ -16,6 +19,7 @@ import { ApiEndpoints } from './types';
 export const DevMenu = () => {
   const [open, setOpen] = useState(false);
   const [apiErrorSet, setApiErrorSet] = useState<string[] | null>(null);
+  const [testPoliciesOn, setTestPoliciesOn] = useState(false);
 
   const { mockText, showDevMenu, setMock, removeDevMenu, isMockOn } = useMock();
 
@@ -27,6 +31,10 @@ export const DevMenu = () => {
     if (Cookies.get(MOCK_ERROR_COOKIE_KEY)) {
       const mockErrors = Cookies.get(MOCK_ERROR_COOKIE_KEY) || '';
       setApiErrorSet(JSON.parse(mockErrors));
+    }
+
+    if (Cookies.get(SHOW_TEST_POLICIES_COOKIE_KEY) === 'on') {
+      setTestPoliciesOn(true);
     }
   }, []);
 
@@ -58,6 +66,20 @@ export const DevMenu = () => {
     } else {
       setApiErrorSet([...(apiErrorSet || []), item]);
     }
+  };
+
+  const setTestPoliciesCookie = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    if (testPoliciesOn) {
+      Cookies.remove(SHOW_TEST_POLICIES_COOKIE_KEY);
+    } else {
+      Cookies.set(SHOW_TEST_POLICIES_COOKIE_KEY, 'on');
+    }
+
+    // const queryParams = new URLSearchParams(location.search);
+    // queryParams.delete(SHOW_TEST_POLICIES_COOKIE_KEY);
+    // const params = queryParams.toString() ? `?${queryParams.toString()}` : '';
+    window.location.href = `${window.location.origin}/policies`;
   };
 
   return (
@@ -169,6 +191,20 @@ export const DevMenu = () => {
                   }}
                 >
                   <span style={{ color: 'white' }}>Update mock error APIs</span>
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={setTestPoliciesCookie}
+                  className={`${styles.navItem} typography-nav-nav-drawer`}
+                >
+                  <span className={styles.firstItem}>
+                    <Icon
+                      type={IconType.DOCUMENT_DUPLICATE}
+                      color="var(--color-nav-menu-menu-icon-default-fill, #fff)"
+                    />
+                  </span>
+                  <span>{`${testPoliciesOn ? 'Hide' : 'Show'} Test Policies`}</span>
                 </button>
               </li>
               <li>

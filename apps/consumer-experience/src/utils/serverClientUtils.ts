@@ -15,6 +15,7 @@ export const HAD_PREVIOUS_SESSION_COOKIE_KEY = '_s';
 export const MOCK_COOKIE_KEY = '..mock..';
 export const MOCK_ERROR_COOKIE_KEY = '..mock_error..';
 export const SHOW_DEV_MENU_COOKIE_KEY = '..show_dev_menu..';
+export const SHOW_TEST_POLICIES_COOKIE_KEY = '..show_test_policies..';
 export interface GetSessionResponse {
   isActiveSession: boolean;
 }

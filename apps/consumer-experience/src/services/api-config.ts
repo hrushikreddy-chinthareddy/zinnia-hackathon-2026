@@ -2,6 +2,7 @@ import { cookies } from 'next/headers';
 
 import { ApiEndpoints } from '@/components/dev-menu/types';
 import { isProd } from '@/utils';
+import { SHOW_TEST_POLICIES_COOKIE_KEY } from '@/utils/serverClientUtils';
 
 export const apiVersion = 'v1';
 export const AUDIENCE = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -20,6 +21,7 @@ const getMockParam = () => {
 
 const getMockErrorParam = () => {
   const cookieStore = cookies();
+
   return cookieStore.get('..mock_error..')?.value;
 };
 
@@ -50,6 +52,14 @@ export const isMockAllRequestEnabled = (val?: boolean) => {
     getMockParam() === 'on' ||
     process.env.NEXT_PUBLIC_MOCK_API_REQUEST === 'true'
   );
+};
+
+export const isTestPoliciesEnabled = () => {
+  if (isProd()) {
+    return false;
+  }
+
+  return cookies().get(SHOW_TEST_POLICIES_COOKIE_KEY)?.value === 'on';
 };
 
 export const isMockSearchRequestEnabled = () => {

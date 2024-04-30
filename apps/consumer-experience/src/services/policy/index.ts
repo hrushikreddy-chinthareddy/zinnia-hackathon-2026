@@ -22,6 +22,7 @@ import {
   isMockPolicyOverviewRequestEnabled,
   isMockRidersRequestEnabled,
   isMockSearchRequestEnabled,
+  isTestPoliciesEnabled,
   policyApiBaseUrl,
 } from '@/services';
 import { mockPolicyResponse } from '@/services/mocks/policy';
@@ -83,6 +84,12 @@ import {
 const getPolicyReferencesByCarrier = async () => {
   const searchUrl = `${policyApiBaseUrl}/search?offset=0&limit=10`;
   const searchFilter: PolicySearchRequest = {};
+
+  if (isTestPoliciesEnabled()) {
+    // @ts-expect-error specs aren't updated in developer portal yet
+    searchFilter['carrierIds'] = ['SBUL'];
+  }
+
   if (isMockErrorEnabled(ApiEndpoints.POLICY_BY_CARRIERS)) {
     throw new Error('Error fetching policies by carrier.');
   }
