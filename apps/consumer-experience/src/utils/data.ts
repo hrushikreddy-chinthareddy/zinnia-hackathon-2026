@@ -14,6 +14,8 @@ import {
 import { policyOwner } from '@zinnia/utils';
 import dayjs from 'dayjs';
 
+import { BankDetail } from '@/components/person-data/types';
+
 import { DEFAULT_ERROR_STRING, toSentenceCase } from './strings';
 
 export const EVERLY_CONTACT_PHONE_NUMBER = '1-855-290-0529';
@@ -282,7 +284,7 @@ export const autopayBankId = (policy: Policy) => {
   return autopayPayor?.bankId;
 };
 
-export const allPolicyOwnerBanks = (policy: Policy) => {
+export const allPolicyOwnerBanks = (policy: Policy): BankDetail[] => {
   const ownerInfo = policyOwner(policy);
 
   return (ownerInfo?.bankDetails || []).map((b: BankAccount) => {
