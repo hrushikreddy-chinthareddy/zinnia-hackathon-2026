@@ -105,8 +105,10 @@ export default async function RootLayout({
       className={`${primaryFont.variable} ${secondaryFont.variable}`}
       style={{ height: '100%' }}
     >
-      <body style={{ height: '100%' }}>{children}</body>
-      <Mouseflow />
+      <body style={{ height: '100%' }}>
+        {children}
+        <Mouseflow />
+      </body>
     </html>
   );
 }
