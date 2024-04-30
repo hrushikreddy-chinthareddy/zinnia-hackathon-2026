@@ -4,6 +4,7 @@ import {
   Label,
   Popover,
 } from '@zinnia/bloom/internal/components';
+import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
 import { Metadata } from 'next';
 
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
@@ -15,7 +16,7 @@ import { StatusIconText } from '@/components/status-icon-text/StatusIconText';
 import { getPolicyWithdrawalDetails } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
-import { checkIfNull, isNullEmptyOrUndefined } from '@/utils/data';
+import { isNullEmptyOrUndefined } from '@/utils/data';
 import { dayOfMonthWithOrdinal, standardDateMonthYear } from '@/utils/dates';
 import { DEFAULT_UNAVAILABLE_STRING, pluralize } from '@/utils/strings';
 
@@ -277,7 +278,9 @@ export default async function Withdrawals({
               }
             >
               <p className="typography-content-value">
-                {`${checkIfNull(data.annualWithdrawalsRemaining, true)} left`}
+                {data.annualWithdrawalsRemaining
+                  ? `${data.annualWithdrawalsRemaining} left`
+                  : DEFAULT_ERROR_STRING}
               </p>
             </FieldData>
           </div>
