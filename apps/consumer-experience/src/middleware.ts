@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
-import { isProd } from '@/utils';
+import { isMockAllowed } from '@/utils';
 import {
   HAD_PREVIOUS_SESSION_COOKIE_KEY,
   MFA_OOB_CODE_COOKIE_KEY,
@@ -19,7 +19,7 @@ import {
 } from './utils/auth';
 
 const applyMockCookies = (req: NextRequest, res: NextResponse<unknown>) => {
-  if (isProd()) {
+  if (!isMockAllowed()) {
     return;
   }
 
@@ -67,7 +67,7 @@ export async function middleware(req: NextRequest) {
   }
 
   if (req.cookies.has(HAD_PREVIOUS_SESSION_COOKIE_KEY) && isSessionPage) {
-    resNext.cookies.delete(HAD_PREVIOUS_SESSION_COOKIE_KEY);
+    await deleteCookie(HAD_PREVIOUS_SESSION_COOKIE_KEY, resNext);
     return resNext;
   }
 

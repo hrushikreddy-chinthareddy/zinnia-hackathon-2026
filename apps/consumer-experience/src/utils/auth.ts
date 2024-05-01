@@ -271,7 +271,7 @@ export const deleteCookie = async (cookieName: string, res?: NextResponse) => {
   if (cookie) {
     const setCookieOptions: SetCookieOptions = {
       cookieName: cookieName,
-      value: cookie,
+      value: '',
       res,
       cookieConfig: {
         expires: new Date(0),
@@ -284,7 +284,6 @@ export const deleteCookie = async (cookieName: string, res?: NextResponse) => {
 
 export const deleteSession = async (res?: NextResponse) => {
   await deleteCookie(APP_SESSION_COOKIE_KEY, res);
-  await deleteCookie(HAD_PREVIOUS_SESSION_COOKIE_KEY, res);
 };
 /**
  * Sets a session cookie with the provided token and response object.

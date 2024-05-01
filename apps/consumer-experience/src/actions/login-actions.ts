@@ -281,6 +281,7 @@ export async function verifyPasswordlessStartChallenge(
   logTrace('amfa-assessment-passed::no-mfa-required', { ...loggingContext });
   // if we get here that the user passed the AMFA risk assessment (done by auth0) and we can log them in without MFA
   const tokenData = data! as OauthToken;
+
   await setLoginCookies(tokenData);
   return redirect(`/policies`);
 }

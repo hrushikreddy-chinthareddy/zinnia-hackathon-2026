@@ -3,11 +3,11 @@ import { IconType } from '@zinnia/bloom/internal/components';
 
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import useMock from '@/hooks/use-mock';
-import { isProd } from '@/utils';
+import { isMockAllowed } from '@/utils';
 
 const MockMessage = () => {
   const { setMock } = useMock();
-  if (!isProd()) {
+  if (isMockAllowed()) {
     return (
       <div className="mt-lg">
         <NoDataAvailable iconType={IconType.DATABASE}>

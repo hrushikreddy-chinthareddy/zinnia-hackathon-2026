@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 
 import { ApiEndpoints } from '@/components/dev-menu/types';
-import { isProd } from '@/utils';
+import { isMockAllowed } from '@/utils';
 import { SHOW_TEST_POLICIES_COOKIE_KEY } from '@/utils/serverClientUtils';
 
 export const apiVersion = 'v1';
@@ -26,7 +26,7 @@ const getMockErrorParam = () => {
 };
 
 export const isMockErrorEnabled = (endpoint: ApiEndpoints) => {
-  if (isProd()) {
+  if (!isMockAllowed()) {
     return false;
   }
 
@@ -40,7 +40,7 @@ export const isMockErrorEnabled = (endpoint: ApiEndpoints) => {
 };
 
 export const isMockAllRequestEnabled = (val?: boolean) => {
-  if (isProd()) {
+  if (!isMockAllowed()) {
     return false;
   }
 
@@ -55,7 +55,7 @@ export const isMockAllRequestEnabled = (val?: boolean) => {
 };
 
 export const isTestPoliciesEnabled = () => {
-  if (isProd()) {
+  if (!isMockAllowed()) {
     return false;
   }
 
@@ -63,7 +63,7 @@ export const isTestPoliciesEnabled = () => {
 };
 
 export const isMockSearchRequestEnabled = () => {
-  if (isProd()) {
+  if (!isMockAllowed()) {
     return false;
   }
 
@@ -71,7 +71,7 @@ export const isMockSearchRequestEnabled = () => {
 };
 
 export const isMockPolicyOverviewRequestEnabled = () => {
-  if (isProd()) {
+  if (!isMockAllowed()) {
     return false;
   }
 
@@ -81,7 +81,7 @@ export const isMockPolicyOverviewRequestEnabled = () => {
 };
 
 export const isMockPaymentHistoryRequestEnabled = () => {
-  if (isProd()) {
+  if (!isMockAllowed()) {
     return false;
   }
 
@@ -90,7 +90,7 @@ export const isMockPaymentHistoryRequestEnabled = () => {
   );
 };
 export const isMockPolicyMetricsRequestEnabled = () => {
-  if (isProd()) {
+  if (!isMockAllowed()) {
     return false;
   }
 
@@ -98,7 +98,7 @@ export const isMockPolicyMetricsRequestEnabled = () => {
 };
 
 export const isMockDocumentRequestEnabled = () => {
-  if (isProd()) {
+  if (!isMockAllowed()) {
     return false;
   }
 
@@ -106,7 +106,7 @@ export const isMockDocumentRequestEnabled = () => {
 };
 
 export const isMockRidersRequestEnabled = () => {
-  if (isProd()) {
+  if (!isMockAllowed()) {
     return false;
   }
 

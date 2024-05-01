@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 
 import LogoImage from '@/app/styles/everly/everly-logo.svg';
 import useMock from '@/hooks/use-mock';
-import { isProd } from '@/utils';
+import { isMockAllowed } from '@/utils';
 import { zIndexOrder } from '@/utils/zIndexOrder';
 
 import styles from './MobileNav.module.css';
@@ -137,7 +137,7 @@ export const MobileNav = () => {
       <Link href="/" className="justify-self-start">
         <LogoImage alt="Company Logo" className={styles.logo}></LogoImage>
       </Link>
-      {!isProd() && isMockOn && (
+      {isMockAllowed() && isMockOn && (
         <span
           className={`${styles.navItem} ml-lg`}
           style={{

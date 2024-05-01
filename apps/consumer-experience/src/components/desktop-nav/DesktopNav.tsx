@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation';
 
 import LogoImage from '@/app/styles/everly/everly-logo.svg';
 import useMock from '@/hooks/use-mock';
-import { isProd } from '@/utils';
+import { isMockAllowed } from '@/utils';
 
 import styles from './DesktopNav.module.css';
 import { DevMenu } from '../dev-menu/DevMenu';
@@ -22,7 +22,7 @@ export function DesktopNav() {
         <Link href="/" className="justify-self-start">
           <LogoImage alt="Company Logo" className={styles.logo}></LogoImage>
         </Link>
-        {!isProd() && isMockOn && (
+        {isMockAllowed() && isMockOn && (
           <span
             className={styles.navItem}
             style={{

@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 import { MouseEvent, useEffect, useMemo, useState } from 'react';
 
 import useMock from '@/hooks/use-mock';
-import { isProd } from '@/utils';
+import { isMockAllowed, isProd } from '@/utils';
 import {
   MOCK_ERROR_COOKIE_KEY,
   SHOW_TEST_POLICIES_COOKIE_KEY,
@@ -38,7 +38,7 @@ export const DevMenu = () => {
     }
   }, []);
 
-  if (isProd() || !showDevMenu) {
+  if (!isMockAllowed() || !showDevMenu) {
     return null;
   }
 
