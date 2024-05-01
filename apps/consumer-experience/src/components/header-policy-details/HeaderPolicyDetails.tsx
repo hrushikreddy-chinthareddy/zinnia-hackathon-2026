@@ -61,8 +61,7 @@ export const PolicyDetailsSummary = ({
     return null;
   }
 
-  const { firstName, lastName, marketingName, planName, policyStatus } =
-    summary;
+  const { firstName, lastName, planName, policyStatus } = summary;
   const statusStyle = () => {
     switch (policyStatus) {
       case PolicyStatus.PENDINGISSUED:
@@ -139,13 +138,15 @@ export const HeaderPolicyDetails = async ({
   }
 
   return (
-    <PolicyDetailsSummary
-      summary={data}
-      useAsLink={useAsLink}
-      expanded={expanded}
-      className={className}
-      policyNumber={policyNumber}
-      planCode={planCode}
-    />
+    <div className="pl-2xl">
+      <PolicyDetailsSummary
+        summary={data}
+        useAsLink={useAsLink}
+        expanded={expanded}
+        className={className}
+        policyNumber={policyNumber}
+        planCode={planCode}
+      />
+    </div>
   );
 };

@@ -1,0 +1,21 @@
+.policyCard {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  width: 100%;
+}
+
+.policyCardPolicyValues {
+  display: flex;
+  margin-top: var(--measure-dimension-gap-lg);
+}
+
+@media (width > 500px) {
+  .policyCard {
+    flex-direction: row;
+    align-items: center;
+  }
+  .policyCardPolicyValues {
+    margin-top: 0;
+  }
+}

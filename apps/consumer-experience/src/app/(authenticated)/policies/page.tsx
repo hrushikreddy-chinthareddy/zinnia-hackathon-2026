@@ -13,6 +13,8 @@ import { CoveragePopover } from '@/components/policy-overview/CoveragePopover';
 import { getMyPoliciesByCarrier } from '@/services';
 import { formatUSDollars } from '@/utils/currency';
 
+import styles from './policies.module.css';
+
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
@@ -58,38 +60,44 @@ export default async function Page() {
               isInternal: true,
             }}
           >
-            <PolicyDetailsSummary
-              planCode={p.planCode || ''}
-              policyNumber={p.policyNumber}
-              summary={{ ...p }}
-              expanded
-            />
-            <FieldData
-              Label={
-                <Label
-                  interactiveElements={[
-                    <AccountValuePopover key="account-value-popover" />,
-                  ]}
+            <div className={`${styles.policyCard} mr-lg`}>
+              <PolicyDetailsSummary
+                className="pl-none"
+                planCode={p.planCode || ''}
+                policyNumber={p.policyNumber}
+                summary={{ ...p }}
+                expanded
+              />
+              <div className={styles.policyCardPolicyValues}>
+                <FieldData
+                  className="mr-3xl"
+                  Label={
+                    <Label
+                      interactiveElements={[
+                        <AccountValuePopover key="account-value-popover" />,
+                      ]}
+                    >
+                      Account value
+                    </Label>
+                  }
                 >
-                  Account value
-                </Label>
-              }
-            >
-              {formatUSDollars(p.totalFundValue)}
-            </FieldData>
-            <FieldData
-              Label={
-                <Label
-                  interactiveElements={[
-                    <CoveragePopover key="coverage-popover" />,
-                  ]}
+                  {formatUSDollars(p.totalFundValue)}
+                </FieldData>
+                <FieldData
+                  Label={
+                    <Label
+                      interactiveElements={[
+                        <CoveragePopover key="coverage-popover" />,
+                      ]}
+                    >
+                      Coverage
+                    </Label>
+                  }
                 >
-                  Coverage
-                </Label>
-              }
-            >
-              {formatUSDollars(p.totalCoverageAmount)}
-            </FieldData>
+                  {formatUSDollars(p.totalCoverageAmount)}
+                </FieldData>
+              </div>
+            </div>
           </ClickableCardContainer>
         ))}
       </div>
