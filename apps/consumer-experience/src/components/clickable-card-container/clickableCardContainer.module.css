@@ -1,5 +1,7 @@
 .clickableCardContainer {
   border-radius: var(--measure-dimension-radius-sm, 0.25rem);
+  border: var(--measure-dimension-stroke-sm) solid
+    var(--color-base-border-border-light, #ededed);
   /* box-shadow: var(--shadow-elevation-elevation-light-04); */
 }
 

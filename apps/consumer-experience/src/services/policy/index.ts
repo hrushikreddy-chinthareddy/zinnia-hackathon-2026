@@ -70,6 +70,7 @@ import {
   PolicyWithdrawals,
   PolicyLoans,
   PolicySurrender,
+  CarrierPolicyDetails,
 } from '@/types/policy';
 import { PolicyRider } from '@/types/riders';
 
@@ -191,12 +192,12 @@ const getPolicyMetrics = async (
 
 export const getMyPoliciesByCarrier = async (
   carrierId: string
-): Promise<ApiResponse<PolicyReferenceData[]>> => {
+): Promise<ApiResponse<CarrierPolicyDetails[]>> => {
   if (isMockSearchRequestEnabled()) {
-    const filteredPolicies = mockPolicySearchResponse.results.filter(
-      p => p.carrierId === carrierId
-    );
-    const transformedResults = transformPolicyReferenceData(filteredPolicies);
+    const transformedResults = transformPolicyReferenceData([
+      mockPolicyResponse,
+    ]);
+
     return {
       data: transformedResults,
       error: null,
@@ -210,10 +211,18 @@ export const getMyPoliciesByCarrier = async (
       throw new Error('No data returned from the API.');
     }
 
-    const filteredPolicies = response.results.filter(
-      p => p.carrierId === carrierId
-    );
-    const transformedResults = transformPolicyReferenceData(filteredPolicies);
+    const filteredPolicies = response.results
+      .filter(p => p.carrierId === carrierId)
+      .map((carrierPolicy: PolicyReferenceData) => {
+        return getPolicyByPlanCodeAndId({
+          planCode: carrierPolicy.planCode || '',
+          policyNumber: carrierPolicy.policyNumber,
+        });
+      });
+
+    const allPolicyData = await Promise.all(filteredPolicies);
+
+    const transformedResults = transformPolicyReferenceData(allPolicyData);
 
     return {
       data: transformedResults,

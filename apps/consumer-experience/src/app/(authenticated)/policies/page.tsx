@@ -2,12 +2,16 @@ import { IconType, Label } from '@zinnia/bloom/internal/components';
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
+import { AccountValuePopover } from '@/components/account-value/AccountValuePopover';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
+import { PolicyDetailsSummary } from '@/components/header-policy-details/HeaderPolicyDetails';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
+import { CoveragePopover } from '@/components/policy-overview/CoveragePopover';
 import { getMyPoliciesByCarrier } from '@/services';
+import { formatUSDollars } from '@/utils/currency';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
@@ -47,21 +51,45 @@ export default async function Page() {
       <div className="card-container" style={{ paddingLeft: 0 }}>
         {policyReferenceData?.map(p => (
           <ClickableCardContainer
-            key={p.id}
+            key={p.policyNumber}
             linkTo={{
-              label: `Get details for Policy ${p.productName}`,
+              label: `Get details for Policy ${p.planName}`,
               url: `/policies/${p.planCode}/${p.policyNumber}`,
               isInternal: true,
             }}
           >
-            <div>
-              <h2 className="typography-desktop-headline-4-d mb-lg">
-                {p.productName}
-              </h2>
-              <FieldData Label={<Label>Policy Number</Label>}>
-                <p className="typography-content-body-sm">{p.policyNumber}</p>
-              </FieldData>
-            </div>
+            <PolicyDetailsSummary
+              planCode={p.planCode || ''}
+              policyNumber={p.policyNumber}
+              summary={{ ...p }}
+              expanded
+            />
+            <FieldData
+              Label={
+                <Label
+                  interactiveElements={[
+                    <AccountValuePopover key="account-value-popover" />,
+                  ]}
+                >
+                  Account value
+                </Label>
+              }
+            >
+              {formatUSDollars(p.totalFundValue)}
+            </FieldData>
+            <FieldData
+              Label={
+                <Label
+                  interactiveElements={[
+                    <CoveragePopover key="coverage-popover" />,
+                  ]}
+                >
+                  Coverage
+                </Label>
+              }
+            >
+              {formatUSDollars(p.totalCoverageAmount)}
+            </FieldData>
           </ClickableCardContainer>
         ))}
       </div>

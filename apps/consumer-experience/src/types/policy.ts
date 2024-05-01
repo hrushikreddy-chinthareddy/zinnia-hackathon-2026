@@ -68,6 +68,12 @@ export type PolicyReferenceData = Pick<
   'id' | 'planCode' | 'policyNumber' | 'productName'
 >;
 
+export interface CarrierPolicyDetails extends PolicyDetails {
+  planCode: string;
+  totalFundValue?: number | null;
+  totalCoverageAmount?: number | null;
+}
+
 export interface PolicyApiResponse<T> {
   message: string;
   data: T;

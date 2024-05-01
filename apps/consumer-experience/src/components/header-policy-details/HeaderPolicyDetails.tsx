@@ -7,7 +7,6 @@ import { checkIfNull, fullName } from '@/utils/data';
 import { toSentenceCase } from '@/utils/strings';
 
 import styles from './HeaderPolicyDetails.module.css';
-import MockMessage from '../MockMessage';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
@@ -21,6 +20,16 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
    * This will make the policy number a link to return to policy overview page
    */
   useAsLink?: boolean;
+}
+
+interface DetailProps extends Props {
+  summary: {
+    firstName: string;
+    lastName: string;
+    marketingName: string;
+    planName: string;
+    policyStatus: PolicyStatus;
+  };
 }
 
 const policyDisplayText: { [key in PolicyStatus]: string } = {
@@ -40,25 +49,20 @@ const policyDisplayText: { [key in PolicyStatus]: string } = {
   [PolicyStatus.DEATHCLAIMPAID]: '',
 };
 
-export const HeaderPolicyDetails = async ({
-  className,
-  expanded,
-  style,
-  planCode,
-  policyNumber,
+export const PolicyDetailsSummary = ({
+  summary,
   useAsLink,
-}: Props) => {
-  const { data, error } = await getPolicyForHeaderDetails({
-    planCode,
-    policyNumber,
-  });
-
-  if (error) {
+  expanded,
+  className,
+  policyNumber,
+  planCode,
+}: DetailProps) => {
+  if (!planCode || !policyNumber) {
     return null;
   }
 
-  const { firstName, lastName, marketingName, planName, policyStatus } = data!;
-
+  const { firstName, lastName, marketingName, planName, policyStatus } =
+    summary;
   const statusStyle = () => {
     switch (policyStatus) {
       case PolicyStatus.PENDINGISSUED:
@@ -93,16 +97,8 @@ export const HeaderPolicyDetails = async ({
   };
 
   return (
-    <div
-      className={clsx(styles.container, { [`${className}`]: className })}
-      style={style}
-    >
+    <div className={clsx(styles.container, { [`${className}`]: className })}>
       <p className="typography-labels-label-lg-alt">
-        {expanded && (
-          <span>
-            {`${marketingName || ''} ${marketingName && planName ? '-' : ''}`}{' '}
-          </span>
-        )}
         <span>{planName || ''}</span>
       </p>
       <div className={styles.policyDetails}>
@@ -123,5 +119,33 @@ export const HeaderPolicyDetails = async ({
         )}
       </div>
     </div>
+  );
+};
+
+export const HeaderPolicyDetails = async ({
+  className,
+  expanded,
+  planCode,
+  policyNumber,
+  useAsLink,
+}: Props) => {
+  const { data, error } = await getPolicyForHeaderDetails({
+    planCode,
+    policyNumber,
+  });
+
+  if (error || !data) {
+    return null;
+  }
+
+  return (
+    <PolicyDetailsSummary
+      summary={data}
+      useAsLink={useAsLink}
+      expanded={expanded}
+      className={className}
+      policyNumber={policyNumber}
+      planCode={planCode}
+    />
   );
 };
