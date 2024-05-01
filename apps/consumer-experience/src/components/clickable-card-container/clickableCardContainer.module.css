@@ -1,6 +1,6 @@
 .clickableCardContainer {
   border-radius: var(--measure-dimension-radius-sm, 0.25rem);
-  box-shadow: var(--shadow-elevation-elevation-light-04);
+  /* box-shadow: var(--shadow-elevation-elevation-light-04); */
 }
 
 .clickableCardContainer:not(:has(ul)) {
