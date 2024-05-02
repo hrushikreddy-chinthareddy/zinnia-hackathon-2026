@@ -7,8 +7,7 @@
 }
 
 .item {
-  border-top: var(--measure-dimension-stroke-sm, 2px) solid
-    var(--color-base-border-border-light);
+  border-top: var(--border-style);
   display: flex;
   justify-content: space-between;
   padding: var(--measure-dimension-padding-2xl, 1rem) 0;

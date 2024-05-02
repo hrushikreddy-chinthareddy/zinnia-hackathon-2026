@@ -1,6 +1,7 @@
 @import '~@zinnia/bloom/css';
 @import '~@zinnia/bloom/component-styles';
 @import './spacing.css';
+@import './borders.css';
 /* TODO: THIS NEEDS TO BE DYNAMIC!!!! */
 @import './everly/theme.css';
 
@@ -22,6 +23,8 @@ body {
 body,
 main {
   height: 100%;
+  --border-style: var(--measure-dimension-stroke-sm, 2px) solid
+    var(--color-base-border-border-light, #ededed);
 }
 
 a {
@@ -139,8 +142,7 @@ a:focus-visible {
   padding: var(--measure-dimension-padding-2xl);
   background-color: var(--color-base-surface-surface-primary);
   border-radius: var(--measure-dimension-radius-sm);
-  border: var(--measure-dimension-stroke-sm) solid
-    var(--color-base-border-border-light, #ededed);
+  border: var(--border-style);
 }
 
 .column-card {

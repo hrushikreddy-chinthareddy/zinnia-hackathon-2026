@@ -35,8 +35,7 @@ ave top radius and last card should have bottom radius */
   position: relative;
   justify-content: space-between;
   width: 100%;
-  border: var(--measure-dimension-stroke-sm) solid
-    var(--color-base-border-border-light, #ededed);
+  border: var(--border-style);
 
   &.listItem {
     border-top: none;
