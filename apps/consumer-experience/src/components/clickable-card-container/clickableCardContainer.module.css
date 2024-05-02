@@ -1,10 +1,3 @@
-.clickableCardContainer {
-  border-radius: var(--measure-dimension-radius-sm, 0.25rem);
-  border: var(--measure-dimension-stroke-sm) solid
-    var(--color-base-border-border-light, #ededed);
-  /* box-shadow: var(--shadow-elevation-elevation-light-04); */
-}
-
 .clickableCardContainer:not(:has(ul)) {
   > div {
     border-radius: var(----measure-dimension-radius-sm, 0.25rem);
@@ -41,9 +34,22 @@ ave top radius and last card should have bottom radius */
   position: relative;
   justify-content: space-between;
   width: 100%;
+  border: var(--measure-dimension-stroke-sm) solid
+    var(--color-base-border-border-light, #ededed);
 
-  &:has(a):hover {
-    outline: 1px solid var(--color-states-hover-hover-primary-border, #ff4f00);
+  &.listItem {
+    border-top: none;
+  }
+
+  /* This is to account for clickable cards with the ul below them, they are right against each other
+  so doing it this way prevents odd outline/border clash and any movement on hover */
+  &:has(a):hover:before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border: var(--measure-dimension-stroke-sm) solid
+      var(--color-states-hover-hover-primary-border, #ff4f00);
+    border-radius: var(--measure-dimension-radius-sm, 0.25rem);
   }
 }
 
@@ -60,8 +66,6 @@ ave top radius and last card should have bottom radius */
 }
 
 .listItem {
-  margin: var(--measureDimensionZSpace0, 0.125rem) 0;
-
   &:last-of-type {
     margin-bottom: 0;
   }
