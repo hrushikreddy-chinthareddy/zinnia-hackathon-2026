@@ -73,25 +73,23 @@ export default async function Beneficiaries({
   return (
     <div className="container">
       {pageHeader}
-      <div className="card-container">
-        <InfoCard iconType={IconType.LIGHTBULB}>
-          <p className="typography-content-body-sm">
-            Coverage increases may require additional underwriting and may have
-            tax consequences. Let us walk you through your options, so you can
-            find the right amount of coverage for you.
-          </p>
-        </InfoCard>
-        <ClickableCardContainer>
-          <div className={styles.coverageValues}>
-            <FieldData Label={<Label>{CURRENT_COVERAGE}</Label>}>
-              {coverageContent(totalCoverageAmount)}
-            </FieldData>
-            <FieldData Label={<Label>{INCREASE_COVERAGE}</Label>}>
-              {coverageContent(maximumCoverageIncreaseAmount)}
-            </FieldData>
-          </div>
-        </ClickableCardContainer>
-      </div>
+      <InfoCard iconType={IconType.LIGHTBULB}>
+        <p className="typography-content-body-sm">
+          Coverage increases may require additional underwriting and may have
+          tax consequences. Let us walk you through your options, so you can
+          find the right amount of coverage for you.
+        </p>
+      </InfoCard>
+      <ClickableCardContainer>
+        <div className={styles.coverageValues}>
+          <FieldData Label={<Label>{CURRENT_COVERAGE}</Label>}>
+            {coverageContent(totalCoverageAmount)}
+          </FieldData>
+          <FieldData Label={<Label>{INCREASE_COVERAGE}</Label>}>
+            {coverageContent(maximumCoverageIncreaseAmount)}
+          </FieldData>
+        </div>
+      </ClickableCardContainer>
       <CallForAssistance
         callToAction="Do you want to increase your coverage?"
         customInstruction="to begin the process."

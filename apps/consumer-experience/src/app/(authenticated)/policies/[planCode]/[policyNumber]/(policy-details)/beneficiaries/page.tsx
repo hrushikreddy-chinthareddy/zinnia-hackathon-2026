@@ -139,103 +139,99 @@ export default async function Beneficiaries({
   return (
     <div className="container">
       <HeaderBreadcrumb title="Beneficiaries" />
-      <div className="card-container">
-        <InfoCard iconType={IconType.LIGHTBULB}>
-          <>
-            You’re covered for{' '}
-            <span style={{ fontWeight: 600 }}>
-              {formatUSDollars(data?.totalCoverageAmount)}
-            </span>
-            . That means if you die while your policy is active your
-            beneficiaries will receive this amount (minus outstanding loans and
-            applicable interest calculations), according to your allocations.
-          </>
-        </InfoCard>
+      <InfoCard iconType={IconType.LIGHTBULB}>
+        <>
+          You’re covered for{' '}
+          <span style={{ fontWeight: 600 }}>
+            {formatUSDollars(data?.totalCoverageAmount)}
+          </span>
+          . That means if you die while your policy is active your beneficiaries
+          will receive this amount (minus outstanding loans and applicable
+          interest calculations), according to your allocations.
+        </>
+      </InfoCard>
 
-        {!groupedBenes && (
-          <ClickableCardContainer>
-            Beneficiary data unavailable at this time. Please try again later.
-          </ClickableCardContainer>
-        )}
+      {!groupedBenes && (
+        <ClickableCardContainer>
+          Beneficiary data unavailable at this time. Please try again later.
+        </ClickableCardContainer>
+      )}
 
-        {groupedBenes && groupedBenes.primary.length > 0 && (
-          <ClickableCardContainer
-            listItems={[...beneListItems(groupedBenes.primary)]}
-          >
-            <div className={styles.allocationContainer}>
-              <div className={styles.allocationHeader}>
-                <Icon type={IconType.USER_GROUP} />
-                <h2 className="typography-labels-label-md">
-                  Primary allocation
-                </h2>
-                <Popover
-                  trigger={
-                    <Icon
-                      type={IconType.CIRCLE_INFO}
-                      width={16}
-                      height={16}
-                      color="var(--color-base-icon-icon-tooltip, #ff7500)"
-                    />
-                  }
-                  title="Primary allocation"
-                >
-                  <p>
-                    Your primary allocation tells us how to split up the money
-                    between primary beneficiaries after you die. Your primary
-                    beneficiaries are first in line to receive payment from your
-                    coverage.
-                  </p>
-                </Popover>
-              </div>
-              <AllocationColorBar
-                type="primary"
-                allocations={groupedBenes?.primary?.map(
-                  primary => primary.beneficiaryPercentage
-                )}
-              />
+      {groupedBenes && groupedBenes.primary.length > 0 && (
+        <ClickableCardContainer
+          listItems={[...beneListItems(groupedBenes.primary)]}
+        >
+          <div className={styles.allocationContainer}>
+            <div className={styles.allocationHeader}>
+              <Icon type={IconType.USER_GROUP} />
+              <h2 className="typography-labels-label-md">Primary allocation</h2>
+              <Popover
+                trigger={
+                  <Icon
+                    type={IconType.CIRCLE_INFO}
+                    width={16}
+                    height={16}
+                    color="var(--color-base-icon-icon-tooltip, #ff7500)"
+                  />
+                }
+                title="Primary allocation"
+              >
+                <p>
+                  Your primary allocation tells us how to split up the money
+                  between primary beneficiaries after you die. Your primary
+                  beneficiaries are first in line to receive payment from your
+                  coverage.
+                </p>
+              </Popover>
             </div>
-          </ClickableCardContainer>
-        )}
+            <AllocationColorBar
+              type="primary"
+              allocations={groupedBenes?.primary?.map(
+                primary => primary.beneficiaryPercentage
+              )}
+            />
+          </div>
+        </ClickableCardContainer>
+      )}
 
-        {groupedBenes && groupedBenes.contingent.length > 0 && (
-          <ClickableCardContainer
-            listItems={[...beneListItems(groupedBenes.contingent)]}
-          >
-            <div className={styles.allocationContainer}>
-              <div className={styles.allocationHeader}>
-                <Icon type={IconType.USER_GROUP} />
-                <h2 className="typography-labels-label-md">
-                  Contingent allocation
-                </h2>
-                <Popover
-                  trigger={
-                    <Icon
-                      type={IconType.CIRCLE_INFO}
-                      width={16}
-                      height={16}
-                      color="var(--color-base-icon-icon-tooltip, #ff7500)"
-                    />
-                  }
-                  title="Contingent allocation"
-                >
-                  <p>
-                    Your contingent allocation tells us how to split up the
-                    money between contingent beneficiaries, if needed.
-                    Contingent beneficiaries will receive payment from your
-                    coverage only if your primary beneficiaries have died.
-                  </p>
-                </Popover>
-              </div>
-              <AllocationColorBar
-                type="contingent"
-                allocations={groupedBenes.contingent.map(
-                  contingents => contingents.beneficiaryPercentage
-                )}
-              />
+      {groupedBenes && groupedBenes.contingent.length > 0 && (
+        <ClickableCardContainer
+          listItems={[...beneListItems(groupedBenes.contingent)]}
+        >
+          <div className={styles.allocationContainer}>
+            <div className={styles.allocationHeader}>
+              <Icon type={IconType.USER_GROUP} />
+              <h2 className="typography-labels-label-md">
+                Contingent allocation
+              </h2>
+              <Popover
+                trigger={
+                  <Icon
+                    type={IconType.CIRCLE_INFO}
+                    width={16}
+                    height={16}
+                    color="var(--color-base-icon-icon-tooltip, #ff7500)"
+                  />
+                }
+                title="Contingent allocation"
+              >
+                <p>
+                  Your contingent allocation tells us how to split up the money
+                  between contingent beneficiaries, if needed. Contingent
+                  beneficiaries will receive payment from your coverage only if
+                  your primary beneficiaries have died.
+                </p>
+              </Popover>
             </div>
-          </ClickableCardContainer>
-        )}
-      </div>
+            <AllocationColorBar
+              type="contingent"
+              allocations={groupedBenes.contingent.map(
+                contingents => contingents.beneficiaryPercentage
+              )}
+            />
+          </div>
+        </ClickableCardContainer>
+      )}
       <CallForAssistance />
     </div>
   );

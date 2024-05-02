@@ -10,13 +10,10 @@ interface InfoCardProps extends HTMLAttributes<HTMLDivElement> {
 
 export const InfoCard = ({ iconType, children, className }: InfoCardProps) => {
   return (
-    <ClickableCardContainer className={className}>
+    <div className={className}>
       <div className={styles.infoCard}>
-        <div>
-          <Icon type={iconType} />
-        </div>
         <div className="typography-content-body-sm">{children}</div>
       </div>
-    </ClickableCardContainer>
+    </div>
   );
 };

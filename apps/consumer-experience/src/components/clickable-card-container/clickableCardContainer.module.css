@@ -4,7 +4,8 @@
   }
 
   &.disabled {
-    border: 2px solid var(--color-base-border-border-subtle, #ccc);
+    border: var(--measure-dimension-stroke-sm) solid
+      var(--color-base-border-border-subtle, #ccc);
     box-shadow: none;
   }
 }
@@ -13,13 +14,13 @@
 ave top radius and last card should have bottom radius */
 .clickableCardContainer:has(ul) {
   > div {
-    border-top-left-radius: var(----measure-dimension-radius-sm, 0.25rem);
-    border-top-right-radius: var(----measure-dimension-radius-sm, 0.25rem);
+    border-top-left-radius: var(--measure-dimension-radius-sm, 0.25rem);
+    border-top-right-radius: var(--measure-dimension-radius-sm, 0.25rem);
   }
 
   .listItem:last-child {
-    border-bottom-left-radius: var(----measure-dimension-radius-sm, 0.25rem);
-    border-bottom-right-radius: var(----measure-dimension-radius-sm, 0.25rem);
+    border-bottom-left-radius: var(--measure-dimension-radius-sm, 0.25rem);
+    border-bottom-right-radius: var(--measure-dimension-radius-sm, 0.25rem);
   }
 }
 

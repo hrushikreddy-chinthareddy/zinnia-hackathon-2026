@@ -50,7 +50,7 @@ export default async function Withdrawals({
     }
 
     return (
-      <div className="card-container">
+      <>
         <InfoCard iconType={IconType.LIGHTBULB}>
           <p>
             <span className="typography-content-body-sm-bold">
@@ -143,7 +143,7 @@ export default async function Withdrawals({
             )}
           </div>
         </div>
-      </div>
+      </>
     );
   };
 

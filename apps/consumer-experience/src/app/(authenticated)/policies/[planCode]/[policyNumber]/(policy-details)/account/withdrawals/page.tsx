@@ -57,7 +57,7 @@ export default async function Withdrawals({
     console.log(data.vestingDetails);
 
     return (
-      <div className="card-container">
+      <>
         <InfoCard iconType={IconType.LIGHTBULB}>
           <p>
             <span className="typography-content-body-sm-bold">
@@ -287,7 +287,7 @@ export default async function Withdrawals({
             </FieldData>
           </div>
         </div>
-      </div>
+      </>
     );
   };
 
