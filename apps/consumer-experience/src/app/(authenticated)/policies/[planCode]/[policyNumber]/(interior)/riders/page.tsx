@@ -11,6 +11,7 @@ import { PolicyRequestInputs } from '@/types/policy';
 
 import { Rider } from './Rider';
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
   title: 'Riders',
 };

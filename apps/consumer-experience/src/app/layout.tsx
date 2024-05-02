@@ -10,8 +10,11 @@ import './styles/globals.css';
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
-  title: 'Coverage View',
-  description: 'Coverage View',
+  title: {
+    // TODO: eventually using whatever mechanism we decide to switch carriers, this carrier name will need to be dynamic
+    template: '%s | Zinnia Tech',
+    default: 'Login | Zinnia Tech',
+  },
 };
 
 const primaryFont = localFont({
