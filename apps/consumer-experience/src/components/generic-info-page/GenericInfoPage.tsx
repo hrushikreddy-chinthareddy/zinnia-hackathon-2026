@@ -23,7 +23,8 @@ export const GenericInfoPage = ({
       <div className={styles.scrollContainer}>
         <div className={styles.content}>
           <div className={styles.logoContainer}>
-            <LogoImage alt="Company Logo" />
+            {/* TODO: update alt text when this logo becomes dynamic */}
+            <LogoImage alt="Everly Logo" />
           </div>
           <div className={styles.details}>
             <h1>{title}</h1>

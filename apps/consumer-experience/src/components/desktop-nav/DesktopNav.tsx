@@ -19,8 +19,8 @@ export function DesktopNav() {
     <nav className={styles.container}>
       <div className={styles.logoContainer}>
         <DevMenu />
-        <Link href="/" className="justify-self-start">
-          <LogoImage alt="Company Logo" className={styles.logo}></LogoImage>
+        <Link href="/" className="justify-self-start" aria-label="Home page">
+          <LogoImage alt="Everly Logo" className={styles.logo}></LogoImage>
         </Link>
         {isMockAllowed() && isMockOn && (
           <span

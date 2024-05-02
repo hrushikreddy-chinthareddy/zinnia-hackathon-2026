@@ -134,8 +134,9 @@ export const MobileNav = () => {
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
-      <Link href="/" className="justify-self-start">
-        <LogoImage alt="Company Logo" className={styles.logo}></LogoImage>
+      <Link href="/" className="justify-self-start" aria-label="Home page">
+        {/* TODO: update alt text when this logo becomes dynamic */}
+        <LogoImage alt="Everly Logo" className={styles.logo}></LogoImage>
       </Link>
       {isMockAllowed() && isMockOn && (
         <span

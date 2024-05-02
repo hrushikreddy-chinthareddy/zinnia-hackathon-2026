@@ -83,7 +83,7 @@ export const HeaderPolicyDetails = async ({
       <Link
         className="typography-labels-label-md-alt"
         href={`/policies/${planCode}/${policyNumber}`}
-        aria-label="Return to policy overview"
+        aria-label={`Return to ${content} overview`}
       >
         {content}
       </Link>
