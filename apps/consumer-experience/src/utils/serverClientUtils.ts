@@ -1,3 +1,4 @@
+// zt in the cookie name mean "zinnia tech"
 export const SESSION_DURATION_IN_MINUTES = 15;
 export const SESSION_TIMEOUT_IN_SECONDS = SESSION_DURATION_IN_MINUTES * 60;
 export const SESSION_TIMEOUT_IN_MILLISECONDS =

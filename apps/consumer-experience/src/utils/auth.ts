@@ -15,6 +15,7 @@ import {
   UserClaims,
 } from '@/types/auth';
 
+import { logWarn } from './logging/server-logging';
 import {
   AGREED_TO_TERMS_AND_CONDITIONS_COOKIE_KEY,
   APP_SESSION_COOKIE_KEY,
@@ -24,7 +25,6 @@ import {
   MFA_TOKEN_COOKIE_KEY,
   SESSION_TIMEOUT_IN_MILLISECONDS,
 } from './serverClientUtils';
-import { logWarn } from './logging/server-logging';
 const notNull = <T>(value: T | null): value is T => value !== null;
 const paddedArray = new Uint8Array(32);
 const jwtSecret = new TextEncoder().encode(process.env.AUTH0_SECRET);
@@ -224,7 +224,7 @@ export const getSession = async (
     const existingSessionValue = await getCookie(APP_SESSION_COOKIE_KEY);
     if (existingSessionValue) {
       const hasSignedTermsAndConditions =
-        (await getCookie(AGREED_TO_TERMS_AND_CONDITIONS_COOKIE_KEY)) === '1';
+        (await getCookie(AGREED_TO_TERMS_AND_CONDITIONS_COOKIE_KEY)) === 'true';
       const { payload } = await decrypt(existingSessionValue);
       const { oauthToken } = payload;
       const { access_token, id_token } = oauthToken;
@@ -284,6 +284,7 @@ export const deleteCookie = async (cookieName: string, res?: NextResponse) => {
 
 export const deleteSession = async (res?: NextResponse) => {
   await deleteCookie(APP_SESSION_COOKIE_KEY, res);
+  await deleteCookie(AGREED_TO_TERMS_AND_CONDITIONS_COOKIE_KEY, res);
 };
 /**
  * Sets a session cookie with the provided token and response object.
@@ -342,4 +343,15 @@ export const touchSession = async (res?: NextResponse) => {
   if (session) {
     await setSessionCookie(undefined, res);
   }
+};
+
+export const setTermsAndConditionsCookie = async (
+  val: boolean,
+  res?: NextResponse
+) => {
+  await setCookie({
+    cookieName: AGREED_TO_TERMS_AND_CONDITIONS_COOKIE_KEY,
+    value: val.toString(),
+    res,
+  });
 };

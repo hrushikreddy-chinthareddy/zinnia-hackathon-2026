@@ -1,5 +1,5 @@
 import styles from '@/app/layout.module.css';
-import { SessionManager } from '@/components/session/SessionManager';
+import { SessionManager } from '@/components/providers/SessionManager';
 
 export default async function AuthenticatedLayout({
   children,

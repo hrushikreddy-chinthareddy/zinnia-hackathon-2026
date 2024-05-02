@@ -1,3 +1,7 @@
+import {
+  RequestCookies,
+  ResponseCookies,
+} from 'next/dist/server/web/spec-extension/cookies';
 import { NextResponse, type NextRequest } from 'next/server';
 
 import { isMockAllowed } from '@/utils';
@@ -10,13 +14,44 @@ import {
   SHOW_DEV_MENU_COOKIE_KEY,
 } from '@/utils/serverClientUtils';
 
+import { consumerExperienceAPIBaseUrl } from './services/api-config';
+import { ServerApi } from './services/server-http';
+import { TermsAndConditionApiResponse } from './types/auth';
 import {
   deleteCookie,
   getMfaCookie,
   getOobMfaCookie,
   getSession,
+  setTermsAndConditionsCookie,
   touchSession,
 } from './utils/auth';
+
+/**
+ * NextJS doesn't foward the headers to react server components.
+ * This method creates a new header and copies the request headers over
+ * it then sets the headers on the response so the react server components have the updated cookies and headers
+ * @param req NextRequest
+ * @param res NextResponse
+ */
+function applySetCookie(req: NextRequest, res: NextResponse): void {
+  // parse the outgoing Set-Cookie header
+  const setCookies = new ResponseCookies(res.headers);
+  // Build a new Cookie header for the request by adding the setCookies
+  const newReqHeaders = new Headers(req.headers);
+  const newReqCookies = new RequestCookies(newReqHeaders);
+  setCookies.getAll().forEach(cookie => newReqCookies.set(cookie));
+  // set “request header overrides” on the outgoing response
+  NextResponse.next({
+    request: { headers: newReqHeaders },
+  }).headers.forEach((value, key) => {
+    if (
+      key === 'x-middleware-override-headers' ||
+      key.startsWith('x-middleware-request-')
+    ) {
+      res.headers.set(key, value);
+    }
+  });
+}
 
 const applyMockCookies = (req: NextRequest, res: NextResponse<unknown>) => {
   if (!isMockAllowed()) {
@@ -56,6 +91,23 @@ export async function middleware(req: NextRequest) {
   const isSessionPage = pathname === '/session';
 
   if (session) {
+    // since the user has a session we need to check if they signed the terms and conditions
+    // we only want to do this once per session. We will store the value on the user object
+    if (!session.user.hasSignedTermsAndConditions) {
+      // call API to check if the user has signed the terms and conditions
+      const termsAndConditionsRequest = await ServerApi.get(
+        `${consumerExperienceAPIBaseUrl}/agreementToTermsAndConditions`
+      );
+      const data = await termsAndConditionsRequest.json();
+      // set the AGREED_TO_TERMS_AND_CONDITIONS_COOKIE_KEY cookie
+      // getSession will pick this up and we can then use the user object to see if they have signed the terms and conditions
+      if (termsAndConditionsRequest.status === 200) {
+        await setTermsAndConditionsCookie(
+          (data as TermsAndConditionApiResponse).agreedToTermsAndConditions,
+          resNext
+        );
+      }
+    }
     await touchSession(resNext);
 
     if (isLoginLikeOrRoot) {
@@ -63,6 +115,7 @@ export async function middleware(req: NextRequest) {
     }
 
     applyMockCookies(req, resNext);
+    applySetCookie(req, resNext);
     return resNext;
   }
 

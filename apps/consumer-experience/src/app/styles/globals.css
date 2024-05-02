@@ -88,8 +88,12 @@ h2 {
 button:focus-visible,
 a:focus-visible {
   outline: 2px solid #0d69d4;
-  border-radius: 0.75rem;
   outline-offset: 2px;
+}
+
+button:not([role='checkbox']):focus-visible,
+a:focus-visible {
+  border-radius: var(--measure-dimension-radius-md);
 }
 
 /*

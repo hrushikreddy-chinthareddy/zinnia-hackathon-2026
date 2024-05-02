@@ -209,3 +209,15 @@ export interface AccessTokenInfo {
 export interface MfaResendChallangeResponse {
   success: boolean | null;
 }
+
+export interface UserContext {
+  user: User | undefined;
+  setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
+}
+
+export interface TermsAndConditionApiResponse {
+  partyId: string;
+  agreedToTermsAndConditions: boolean;
+  dateCreated: string;
+  id: string;
+}

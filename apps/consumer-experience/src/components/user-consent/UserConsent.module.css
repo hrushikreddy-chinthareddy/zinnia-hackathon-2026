@@ -1,0 +1,32 @@
+.overlay {
+  background: rgba(0, 0, 0, 0.55);
+  position: fixed;
+  inset: 0;
+}
+
+.modal {
+  background-color: white;
+  border-radius: var(--measure-dimension-radius-sm);
+  box-shadow: var(--shadow-elevation-elevation-light-64);
+  left: 50%;
+  padding: var(--measure-dimension-padding-3xl);
+  position: fixed;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  /* TODO: fix this */
+  z-index: 1000;
+  width: 324px;
+}
+
+.buttonContainer {
+  margin-top: var(--measure-dimension-gap-3xl);
+  display: flex;
+  justify-content: center;
+}
+
+@media (width > 767px) {
+  .modal {
+    width: fit-content;
+    padding: var(--measure-dimension-padding-4xl);
+  }
+}
