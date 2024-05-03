@@ -78,7 +78,7 @@ const secondaryFont = localFont({
   ],
 });
 
-const Mouseflow = () => {
+const MouseflowTrackingCode = () => {
   return (
       <Script type="text/javascript">
         {`
@@ -107,7 +107,7 @@ export default async function RootLayout({
     >
       <body style={{ height: '100%' }}>
         {children}
-        <Mouseflow />
+        <MouseflowTrackingCode />
       </body>
     </html>
   );
