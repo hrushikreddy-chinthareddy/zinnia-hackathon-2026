@@ -48,8 +48,6 @@ export default async function PaymentHistory({ params }: Props) {
 
   const pendingPayments = () => {
     return pendingTransactions.map((item, index) => {
-      console.log('AND NOW ITS THE ITEM', item);
-
       return (
         <CardInsertHistory
           isPending
