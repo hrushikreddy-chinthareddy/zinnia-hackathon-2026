@@ -1,4 +1,5 @@
 .buttonGroup {
+  composes: typography-content-body-sm from '../../tokens/css/typography.css';
   border-radius: var(--measure-dimension-radius-md);
 
   --button-group-border-style: solid;

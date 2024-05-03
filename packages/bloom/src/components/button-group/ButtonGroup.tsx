@@ -29,7 +29,6 @@ export const ButtonGroup = ({
       <ToggleGroup.Root
         className={clsx(
           styles.buttonGroup,
-          'typography-content-body-sm',
           className
         )}
         id={id}
