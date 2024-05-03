@@ -542,7 +542,7 @@ export const getBeneficiary = async (
 
 export const getPaymentDetails = async (
   options: PolicyRequestInputs
-): Promise<ApiResponse<BankDetail>> => {
+): Promise<ApiResponse<BankDetail[]>> => {
   if (isMockPolicyOverviewRequestEnabled()) {
     const transformedResults =
       transformPolicyforPaymentDetails(mockPolicyResponse);
