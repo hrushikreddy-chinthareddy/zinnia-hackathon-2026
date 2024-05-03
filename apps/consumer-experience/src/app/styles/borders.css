@@ -1,6 +1,7 @@
 .border {
   border: var(--border-style);
 }
+
 .border-t {
   border-top: var(--border-style);
 }

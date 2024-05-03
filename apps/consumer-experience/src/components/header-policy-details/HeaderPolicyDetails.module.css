@@ -17,6 +17,9 @@
     display: inline-block;
   }
 
+  /* Doing this the old fashioned display: none way for now because level access
+  has noted errors before with rearranging elements visually, but this could
+  potentially be done with flex-direction  */
   .mobileBadge {
     display: none;
   }
