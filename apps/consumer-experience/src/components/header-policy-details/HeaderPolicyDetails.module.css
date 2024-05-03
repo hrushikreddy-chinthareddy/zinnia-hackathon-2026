@@ -1,15 +1,23 @@
-.policyDetails {
-  color: var(--color-base-text-text-secondary, #676767);
+.container {
+  display: flex;
+  align-items: center;
 }
 
-.success {
-  color: var(--color-status-text-status-success-text, #007b5a);
+.desktopBadge {
+  display: none;
 }
 
-.warning {
-  color: var(--color-status-text-status-warning-text, #b74d00);
-}
+@media (width > 768px) {
+  .container {
+    position: absolute;
+    right: 0;
+  }
 
-.error {
-  color: var(--color-status-text-status-error-text, #db004f);
+  .desktopBadge {
+    display: inline-block;
+  }
+
+  .mobileBadge {
+    display: none;
+  }
 }

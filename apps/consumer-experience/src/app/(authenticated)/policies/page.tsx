@@ -6,9 +6,9 @@ import { AccountValuePopover } from '@/components/account-value/AccountValuePopo
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
-import { PolicyDetailsSummary } from '@/components/header-policy-details/HeaderPolicyDetails';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
+import { PolicyDetailsSummary } from '@/components/policy-details-summary/PolicyDetailsSummary';
 import { CoveragePopover } from '@/components/policy-overview/CoveragePopover';
 import { getMyPoliciesByCarrier } from '@/services';
 import { formatUSDollars } from '@/utils/currency';
@@ -66,7 +66,6 @@ export default async function Page() {
                 planCode={p.planCode || ''}
                 policyNumber={p.policyNumber}
                 summary={{ ...p }}
-                expanded
               />
               <div className={styles.policyCardPolicyValues}>
                 <FieldData

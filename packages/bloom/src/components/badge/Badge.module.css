@@ -1,0 +1,47 @@
+.badge {
+  composes: typography-content-caption-selected from '../../tokens/css/typography.css';
+  padding: var(--measure-dimension-padding-sm, 4px)
+    var(--measure-dimension-padding-lg, 8px);
+  border: var(--measure-dimension-stroke-sm, 2px);
+  border-style: solid;
+  border-radius: var(--measure-dimension-radius-max, 1000px);
+  background-color: var(--color-base-surface-surface-secondary);
+  border-color: var(--color-base-border-border-subtle);
+  color: var(--color-base-text-text-primary);
+
+  &.warning {
+    background-color: var(--color-status-surface-status-warning-light);
+    border-color: var(--color-status-surface-status-warning-border-alt);
+    color: var(--color-status-text-status-warning-text);
+  }
+
+  &.success {
+    background-color: var(--color-status-surface-status-success-light);
+    border-color: var(--color-status-surface-status-success-border-alt);
+    color: var(--color-status-text-status-success-text);
+  }
+
+  &.pending {
+    background-color: var(--color-status-surface-status-pending-light);
+    border-color: var(--color-status-surface-status-pending-border-alt);
+    color: var(--color-status-text-status-pending-text);
+  }
+
+  &.error {
+    background-color: var(--color-status-surface-status-error-light);
+    border-color: var(--color-status-surface-status-error-border-alt);
+    color: var(--color-status-text-status-error-text);
+  }
+
+  &.inactive {
+    background-color: var(--color-base-surface-surface-tertiary);
+    border-color: var(--color-base-border-border-bold);
+    color: var(--color-button-secondary-button-secondary-inactive-text);
+  }
+
+  &.info {
+    background-color: var(--color-status-surface-status-information-light);
+    border-color: var(--color-status-surface-status-information-border-alt);
+    color: var(--color-status-text-status-information-text);
+  }
+}

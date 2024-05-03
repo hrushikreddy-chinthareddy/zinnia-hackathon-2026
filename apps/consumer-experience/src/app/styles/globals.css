@@ -130,6 +130,7 @@ a:focus-visible {
   flex-direction: column;
   gap: var(--measure-dimension-gap-lg);
   margin-bottom: var(--measure-dimension-gap-lg);
+  position: relative;
 }
 
 .card-container {

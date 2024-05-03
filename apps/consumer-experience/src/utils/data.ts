@@ -13,6 +13,23 @@ import { DEFAULT_ERROR_STRING, toSentenceCase } from './strings';
 
 export const EVERLY_CONTACT_PHONE_NUMBER = '1-855-290-0529';
 
+export const policyStatusDisplayText: { [key in PolicyStatus]: string } = {
+  [PolicyStatus.ACTIVE]: 'active',
+  [PolicyStatus.PENDINGISSUED]: 'active',
+  [PolicyStatus.PENDINGLAPSE]: 'pending lapse',
+  [PolicyStatus.LAPSE]: 'lapsed',
+  [PolicyStatus.SURRENDERED]: 'surrendered',
+  // These are statuses we don't display, users should not be able to log in with these statuses
+  [PolicyStatus.NOTISSUED]: '',
+  [PolicyStatus.CANCELEDNOPREMIUM]: '',
+  [PolicyStatus.CANCELEDFREELOOK]: '',
+  [PolicyStatus.TERMINATED]: '',
+  [PolicyStatus.MATURED]: '',
+  [PolicyStatus.LIVINGCLAIMPENDING]: '',
+  [PolicyStatus.DEATHCLAIMPENDING]: '',
+  [PolicyStatus.DEATHCLAIMPAID]: '',
+};
+
 /**
  *
  * @param endDate

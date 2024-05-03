@@ -634,9 +634,6 @@ export const getPaymentHistory = async ({
     const pendingTransactions =
       pendingPromise.status === 'fulfilled' ? pendingPromise.value : [];
 
-    console.log('COMPLETED', completedTransactions);
-    console.log('PENDING', pendingTransactions);
-
     return {
       data: {
         completedTransactions: completedTransactions.map(t =>
