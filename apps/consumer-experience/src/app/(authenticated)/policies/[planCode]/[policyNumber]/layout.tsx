@@ -30,7 +30,7 @@ export default async function AuthenticatedLayout({
         planCode={params.planCode}
         policyNumber={params.policyNumber}
       />
-      {children}
+      <div className="container">{children}</div>
       <Footer />
     </>
   );
