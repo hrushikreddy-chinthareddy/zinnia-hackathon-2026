@@ -1,19 +1,21 @@
 import { ReactElement } from 'react';
 
 export interface ButtonGroupItem {
+  className?: string;
   /**
    * Include this if button will only display an icon
    */
   ariaLabel?: string;
-  // This doesn't actually work as long as 
+  // This doesn't actually work as long as
   // [this issue](https://github.com/microsoft/TypeScript/issues/21699)
   // remains unsolved
   children: ReactElement<HTMLSpanElement> | ReactElement<SVGElement>;
   value: string;
-  id?: string
+  id?: string;
 }
 
 export interface CommonProps {
+  className?: string;
   items: ButtonGroupItem[];
   /**
    * Indicates initial selected item, should match value from ButtonGroupItem
@@ -21,11 +23,11 @@ export interface CommonProps {
    */
   defaultValue?: string;
   inactive?: boolean;
-  onClick: () => void;
+  onClick: (value: unknown) => void;
 }
 
 export type ConditionalProps =
-  {
+  | {
       /**
        * This should use the Label component
        */

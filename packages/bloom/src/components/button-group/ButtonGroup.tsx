@@ -1,11 +1,12 @@
 import * as ToggleGroup from '@radix-ui/react-toggle-group';
 import { ButtonGroupProps, ConditionalProps } from './types';
 import styles from './ButtonGroup.module.css';
-import { v4 as uuidv4 } from 'uuid'
+import { v4 as uuidv4 } from 'uuid';
 import clsx from 'clsx';
 
 export const ButtonGroup = ({
   ariaLabel,
+  className,
   defaultValue,
   id,
   inactive,
@@ -26,23 +27,27 @@ export const ButtonGroup = ({
     <div>
       {label && label}
       <ToggleGroup.Root
-        className={clsx(styles.buttonGroup, 'typography-content-body-sm')}
+        className={clsx(
+          styles.buttonGroup,
+          'typography-content-body-sm',
+          className
+        )}
         id={id}
         type="single"
         defaultValue={defaultValue || items[0]?.value}
         onValueChange={onClick}
         {...optionalProps}
       >
-        {items.map(({ id, value, children }) => {
+        {items.map(({ id, value, children, className }) => {
           if (!id?.length) {
-            id = uuidv4()
+            id = uuidv4();
           }
           return (
             <ToggleGroup.Item
               id={id}
               key={id}
               value={value}
-              className={styles.buttonGroupItem}
+              className={clsx(styles.buttonGroupItem, className)}
               disabled={inactive}
             >
               {children}
