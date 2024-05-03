@@ -13,7 +13,6 @@ export default async function AuthenticatedLayout({
 }) {
   return (
     <>
-      {/* TODO: move this into flex with header....sad */}
       <HeaderPolicyDetails
         planCode={params.planCode}
         policyNumber={params.policyNumber}
