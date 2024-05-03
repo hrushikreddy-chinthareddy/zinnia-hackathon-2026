@@ -1,9 +1,15 @@
 import { Icon, IconType } from '@zinnia/bloom/internal/components';
 import clsx from 'clsx';
-import { PropsWithChildren, ReactNode, cloneElement } from 'react';
+import {
+  HTMLAttributes,
+  PropsWithChildren,
+  ReactNode,
+  cloneElement,
+} from 'react';
 
 import styles from './FieldData.module.css';
-export interface FieldDataProps extends PropsWithChildren {
+export interface FieldDataProps
+  extends PropsWithChildren<HTMLAttributes<HTMLDivElement>> {
   /**
    * Assistive text component
    * typeof: "success" | "info" | "default" | "error"
@@ -27,6 +33,7 @@ export const FieldData = ({
   caption,
   captionColor,
   children,
+  className,
   Label,
   large,
   iconType,
@@ -36,7 +43,7 @@ export const FieldData = ({
   }
 
   return (
-    <div className={styles.container}>
+    <div className={clsx(styles.container, { [`${className}`]: className })}>
       {/* TODO: should i add uuid to this to ensure uniqueness? */}
       <div className={styles.label}>{Label && cloneElement(Label)}</div>
       <div className={clsx(styles.value, { [styles.large as string]: large })}>

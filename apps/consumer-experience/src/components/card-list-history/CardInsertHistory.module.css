@@ -1,10 +1,5 @@
 .container {
-  border-bottom: var(--stroke-sm, 2px) solid
-    var(--color-base-border-border-light, #ededed);
-
-  &:last-of-type {
-    border-bottom: none;
-  }
+  border-bottom: var(--border-style);
 
   &.pending {
     border: 2px dashed var(--color-base-border-border-subtle, #ccc);

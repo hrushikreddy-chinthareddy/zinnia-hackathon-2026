@@ -16,6 +16,7 @@
         #1e359c
       );
       text-underline-position: under;
+      text-underline-offset: 2px;
     }
   }
 }

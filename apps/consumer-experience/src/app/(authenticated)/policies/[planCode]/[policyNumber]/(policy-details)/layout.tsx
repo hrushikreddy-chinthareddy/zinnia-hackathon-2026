@@ -1,5 +1,4 @@
 import '@/app/styles/globals.css';
-
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 
 export default async function AuthenticatedLayout({
@@ -17,8 +16,6 @@ export default async function AuthenticatedLayout({
       <HeaderPolicyDetails
         planCode={params.planCode}
         policyNumber={params.policyNumber}
-        className="mb-lg"
-        useAsLink
       />
       {children}
     </>

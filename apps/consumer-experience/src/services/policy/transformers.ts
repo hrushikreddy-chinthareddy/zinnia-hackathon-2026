@@ -38,6 +38,7 @@ import {
   PolicySurrender,
   PolicyStatusDetail,
   PolicyFeatureDetail,
+  CarrierPolicyDetails,
 } from '@/types/policy';
 import { PolicyRider } from '@/types/riders';
 import {
@@ -85,15 +86,15 @@ const allBeneficiaries = (policy: Policy) => {
 };
 
 export const transformPolicyReferenceData = (
-  policyReferences: PolicyReferenceDataModel[]
-): PolicyReferenceData[] => {
+  policyReferences: Policy[]
+): CarrierPolicyDetails[] => {
   return policyReferences.map(p => {
+    const policyDetails = transformPolicyForHeaderDetails(p);
     return {
-      policyNumber: p.policyNumber,
-      companyName: p.companyName,
-      id: p.id,
-      planCode: p.planCode,
-      productName: p.productName,
+      planCode: p.product?.planCode || '',
+      totalFundValue: p?.allocation?.funds?.[0]?.totalFundValue,
+      totalCoverageAmount: p.coverage?.totalCoverageAmount,
+      ...policyDetails,
     };
   });
 };

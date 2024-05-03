@@ -94,7 +94,7 @@
     .footer {
       gap: var(--measure-dimension-gap-lg);
       color: var(--color-base-text-text-secondary, #676767);
-      border-top: 2px solid var(--color-base-border-border-light, #ededed);
+      border-top: var(--border-style);
       padding: var(--measure-dimension-padding-2xl) 0;
       text-align: left;
     }
