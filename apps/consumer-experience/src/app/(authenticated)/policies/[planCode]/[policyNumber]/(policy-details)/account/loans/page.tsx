@@ -9,7 +9,6 @@ import { Metadata } from 'next';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { FieldData } from '@/components/field-data/FieldData';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
-import { InfoCard } from '@/components/info-card/InfoCard';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { StatusIconText } from '@/components/status-icon-text/StatusIconText';
 import { getPolicyLoanDetails } from '@/services';
@@ -51,20 +50,15 @@ export default async function Withdrawals({
 
     return (
       <>
-        <InfoCard iconType={IconType.LIGHTBULB}>
-          <p>
-            <span className="typography-content-body-sm-bold">
-              {data.isEligible
-                ? eligibleTextHighlight
-                : ineligibleTextHighlight}{' '}
-            </span>
-            You can take a loan from your account value at any time, as long as
-            funds are available. Keep in mind: Aside from incurring interest, a
-            loan may reduce your coverage amount. But unlike other types of
-            loans, a loan from your policy does not have to be paid back on a
-            schedule.
-          </p>
-        </InfoCard>
+        <p className="typography-content-body-sm">
+          <span className="typography-content-body-sm-bold">
+            {data.isEligible ? eligibleTextHighlight : ineligibleTextHighlight}{' '}
+          </span>
+          You can take a loan from your account value at any time, as long as
+          funds are available. Keep in mind: Aside from incurring interest, a
+          loan may reduce your coverage amount. But unlike other types of loans,
+          a loan from your policy does not have to be paid back on a schedule.
+        </p>
         <div className="card">
           <StatusIconText
             isEligible={data.isEligible}

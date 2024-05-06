@@ -133,6 +133,11 @@ a:focus-visible {
   position: relative;
 }
 
+.flex-center {
+  display: flex;
+  align-items: center;
+}
+
 .card-container {
   > *:not(:last-child) {
     margin-bottom: 8px;

@@ -60,7 +60,7 @@ const encrypt = async (payload: jose.JWTPayload): Promise<string> => {
  * @param {string} jwe - The JWE string to decrypt.
  * @return {Promise<jose.JWTDecryptResult<Auth0SessionToken>>} A promise that resolves to the decrypted JWT token.
  */
-const decrypt = async (
+export const decrypt = async (
   jwe: string
 ): Promise<jose.JWTDecryptResult<Auth0SessionToken>> => {
   let err;

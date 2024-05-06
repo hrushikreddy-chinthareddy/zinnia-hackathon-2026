@@ -12,7 +12,6 @@ import { Metadata } from 'next';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
-import { InfoCard } from '@/components/info-card/InfoCard';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { getBeneficiaries } from '@/services/policy';
@@ -139,17 +138,16 @@ export default async function Beneficiaries({
   return (
     <div className="container">
       <HeaderBreadcrumb title="Beneficiaries" />
-      <InfoCard iconType={IconType.LIGHTBULB}>
-        <>
-          You’re covered for{' '}
-          <span style={{ fontWeight: 600 }}>
-            {formatUSDollars(data?.totalCoverageAmount)}
-          </span>
-          . That means if you die while your policy is active your beneficiaries
-          will receive this amount (minus outstanding loans and applicable
-          interest calculations), according to your allocations.
-        </>
-      </InfoCard>
+
+      <p className="typography-content-body-sm">
+        You’re covered for{' '}
+        <span style={{ fontWeight: 600 }}>
+          {formatUSDollars(data?.totalCoverageAmount)}
+        </span>
+        . That means if you die while your policy is active your beneficiaries
+        will receive this amount (minus outstanding loans and applicable
+        interest calculations), according to your allocations.
+      </p>
 
       {!groupedBenes && (
         <ClickableCardContainer>

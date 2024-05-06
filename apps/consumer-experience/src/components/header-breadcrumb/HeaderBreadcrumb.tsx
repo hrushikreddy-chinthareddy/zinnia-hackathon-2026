@@ -22,12 +22,17 @@ export interface HeaderBreadcrumbProps {
   title: string;
   popover?: PopoverInfo;
   className?: string;
+  /**
+   * if the page is isolated or header should not show back arrow, set to true
+   */
+  preventGoBack?: boolean;
 }
 
 export const HeaderBreadcrumb = ({
   title,
   popover,
   className,
+  preventGoBack,
 }: HeaderBreadcrumbProps) => {
   const paths = (usePathname() || '').split('/');
   const params = useParams<{ planCode: string; policyNumber: string }>();
@@ -60,17 +65,19 @@ export const HeaderBreadcrumb = ({
 
   return (
     <div className={clsx(styles.headerBreadcrumbContainer, className)}>
-      <Link
-        href={previousPathRoute}
-        aria-label={`go to ${previousPathName} page`}
-        className={styles.headerBreadcrumbAction}
-      >
-        <Icon
-          type={IconType.CHEVRON}
-          className={styles.headerBreadcrumbChevron}
-          color="var(--color-base-icon-icon-action, #1E359C)"
-        />
-      </Link>
+      {!preventGoBack && (
+        <Link
+          href={previousPathRoute}
+          aria-label={`go to ${previousPathName} page`}
+          className={styles.headerBreadcrumbAction}
+        >
+          <Icon
+            type={IconType.CHEVRON}
+            className={styles.headerBreadcrumbChevron}
+            color="var(--color-base-icon-icon-action, #1E359C)"
+          />
+        </Link>
+      )}
       <h1 className="typography-desktop-headline-1d">{formatTitle}</h1>
       {popover && popover.title && popover.content && (
         <Popover

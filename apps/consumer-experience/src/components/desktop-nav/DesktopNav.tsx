@@ -2,7 +2,6 @@
 
 import { Icon, IconType } from '@zinnia/bloom/internal/components';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
 
 import LogoImage from '@/app/styles/everly/everly-logo.svg';
 import useMock from '@/hooks/use-mock';
@@ -12,7 +11,6 @@ import styles from './DesktopNav.module.css';
 import { DevMenu } from '../dev-menu/DevMenu';
 
 export function DesktopNav() {
-  const params = useParams<{ planCode: string; policyNumber: string }>();
   const { isMockOn } = useMock();
 
   return (
@@ -36,34 +34,23 @@ export function DesktopNav() {
       </div>
 
       <div className={`${styles.navItemsContainer} typography-nav-links-sm`}>
-        {params.planCode && params.policyNumber && (
-          <>
-            <Link
-              href={`/policies/${params.planCode}/${params.policyNumber}/documents`}
-              className={styles.navItem}
-            >
-              <Icon
-                type={IconType.DOCUMENT_TEXT}
-                color="var(--color-base-icon-icon-dark)"
-              />
-              Documents
-            </Link>
-            <Link
-              href={`/policies/${params.planCode}/${params.policyNumber}/profile`}
-              className={styles.navItem}
-            >
-              <Icon
-                type={IconType.CIRCLE_USER}
-                color="var(--color-base-icon-icon-dark)"
-              />
-              Profile
-            </Link>
-          </>
-        )}
-        <a
-          href="/api/logout"
-          className={`${styles.navItem} ${styles.signOut} ${params.planCode && params.policyNumber ? styles.border : ''}`}
-        >
+        <>
+          <Link href={`/policies`} className={styles.navItem}>
+            <Icon
+              type={IconType.MATCHES}
+              color="var(--color-base-icon-icon-dark)"
+            />
+            My Policies
+          </Link>
+        </>
+        <Link href={`/my-account`} className={styles.navItem}>
+          <Icon
+            type={IconType.CIRCLE_USER}
+            color="var(--color-base-icon-icon-dark)"
+          />
+          Account
+        </Link>
+        <a href="/api/logout" className={`${styles.navItem} ${styles.signOut}`}>
           Sign out
         </a>
       </div>

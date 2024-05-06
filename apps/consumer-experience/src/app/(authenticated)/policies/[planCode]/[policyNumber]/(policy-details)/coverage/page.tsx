@@ -1,4 +1,4 @@
-import { IconType, Label } from '@zinnia/bloom/internal/components';
+import { Label } from '@zinnia/bloom/internal/components';
 import { DEFAULT_UNAVAILABLE_STRING } from '@zinnia/utils';
 import { Metadata } from 'next';
 
@@ -6,7 +6,6 @@ import { CallForAssistance } from '@/components/call-for-assistance/CallForAssis
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
-import { InfoCard } from '@/components/info-card/InfoCard';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { getCoverage } from '@/services/policy';
 import { formatUSDollars } from '@/utils/currency';
@@ -73,13 +72,12 @@ export default async function Beneficiaries({
   return (
     <div className="container">
       {pageHeader}
-      <InfoCard iconType={IconType.LIGHTBULB}>
-        <p className="typography-content-body-sm">
-          Coverage increases may require additional underwriting and may have
-          tax consequences. Let us walk you through your options, so you can
-          find the right amount of coverage for you.
-        </p>
-      </InfoCard>
+      <p className="typography-content-body-sm">
+        Coverage increases may require additional underwriting and may have tax
+        consequences. Let us walk you through your options, so you can find the
+        right amount of coverage for you.
+      </p>
+
       <ClickableCardContainer>
         <div className={styles.coverageValues}>
           <FieldData Label={<Label>{CURRENT_COVERAGE}</Label>}>

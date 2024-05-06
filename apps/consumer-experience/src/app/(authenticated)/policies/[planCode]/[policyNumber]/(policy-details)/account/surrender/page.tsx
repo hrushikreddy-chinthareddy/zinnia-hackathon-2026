@@ -10,7 +10,6 @@ import { AccountValue } from '@/components/account-value/AccountValue';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { FieldData } from '@/components/field-data/FieldData';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
-import { InfoCard } from '@/components/info-card/InfoCard';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { getPolicySurrenderDetails } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
@@ -44,16 +43,14 @@ export default async function SurrenderPolicy({
 
     return (
       <>
-        <InfoCard iconType={IconType.LIGHTBULB}>
-          <p>
-            <span className="typography-content-body-sm-bold">
-              Are you sure? Surrendering a policy means ending your coverage for
-              a lump sum payment.{' '}
-            </span>
-            That could mean losing important financial protection for your
-            beneficiaries. Canceling your policy may also have tax consequences.
-          </p>
-        </InfoCard>
+        <p className="typography-content-body-sm">
+          <span className="typography-content-body-sm-bold">
+            Are you sure? Surrendering a policy means ending your coverage for a
+            lump sum payment.{' '}
+          </span>
+          That could mean losing important financial protection for your
+          beneficiaries. Canceling your policy may also have tax consequences.
+        </p>
         <div className="card">
           <div className="column-card">
             <AccountValue

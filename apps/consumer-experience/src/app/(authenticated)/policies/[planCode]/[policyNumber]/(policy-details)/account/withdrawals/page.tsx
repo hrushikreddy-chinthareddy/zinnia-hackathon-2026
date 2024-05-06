@@ -4,13 +4,11 @@ import {
   Label,
   Popover,
 } from '@zinnia/bloom/internal/components';
-import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
 import { Metadata } from 'next';
 
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { FieldData } from '@/components/field-data/FieldData';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
-import { InfoCard } from '@/components/info-card/InfoCard';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { StatusIconText } from '@/components/status-icon-text/StatusIconText';
 import { getPolicyWithdrawalDetails } from '@/services';
@@ -18,7 +16,11 @@ import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined } from '@/utils/data';
 import { dayOfMonthWithOrdinal, standardDateMonthYear } from '@/utils/dates';
-import { DEFAULT_UNAVAILABLE_STRING, pluralize } from '@/utils/strings';
+import {
+  DEFAULT_ERROR_STRING,
+  DEFAULT_UNAVAILABLE_STRING,
+  pluralize,
+} from '@/utils/strings';
 
 const pageTitle = 'Withdrawals';
 
@@ -56,19 +58,17 @@ export default async function Withdrawals({
 
     return (
       <>
-        <InfoCard iconType={IconType.LIGHTBULB}>
-          <p>
-            <span className="typography-content-body-sm-bold">
-              {data.isEligibleForWithdrawals
-                ? eligibleTextHighlight
-                : ineligibleTextHighlight}{' '}
-            </span>
-            Once eligible, you may withdraw for any reason. Withdrawals are tax
-            free up to a certain amount. You only pay taxes on any earned
-            interest you withdraw. Also note that withdrawing from the account
-            value may reduce your coverage amount.
-          </p>
-        </InfoCard>
+        <p className="typography-content-body-sm">
+          <span className="typography-content-body-sm-bold">
+            {data.isEligibleForWithdrawals
+              ? eligibleTextHighlight
+              : ineligibleTextHighlight}{' '}
+          </span>
+          Once eligible, you may withdraw for any reason. Withdrawals are tax
+          free up to a certain amount. You only pay taxes on any earned interest
+          you withdraw. Also note that withdrawing from the account value may
+          reduce your coverage amount.
+        </p>
         <div className="card">
           <StatusIconText
             isEligible={data.isEligibleForWithdrawals}

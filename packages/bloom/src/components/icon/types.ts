@@ -34,6 +34,7 @@ import Template from '../../tokens/svg-assets/icons/illustrations/template.svg';
 import Trash from '../../tokens/svg-assets/icons/actions/trash.svg';
 import User from '../../tokens/svg-assets/icons/actions/user.svg';
 import UserGroup from '../../tokens/svg-assets/icons/actions/user-group.svg';
+import Matches from '../../tokens/svg-assets/icons/media/matches.svg';
 
 export enum IconType {
   ALERT = 'Alert',
@@ -65,6 +66,7 @@ export enum IconType {
   LIGHTBULB = 'Lightbulb',
   LOGOUT = 'Logout',
   MAIL = 'Mail',
+  MATCHES = 'Matches',
   PAYMENT = 'Payment',
   PHONE = 'Phone',
   SETTINGS = 'Settings',
@@ -124,6 +126,7 @@ export const Icons: {
   [IconType.LIGHTBULB]: Lightbulb,
   [IconType.LOGOUT]: Logout,
   [IconType.MAIL]: Mail,
+  [IconType.MATCHES]: Matches,
   [IconType.PAYMENT]: Payment,
   [IconType.PHONE]: Phone,
   [IconType.SETTINGS]: Settings,

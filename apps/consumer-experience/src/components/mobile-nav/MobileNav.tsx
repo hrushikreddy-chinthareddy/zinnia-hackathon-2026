@@ -17,16 +17,16 @@ import { DevMenu } from '../dev-menu/DevMenu';
 
 const navRoutes = [
   {
-    url: '/policies/${planCode}/${policyNumber}/documents',
-    displayName: 'Documents',
-    icon: IconType.DOCUMENT_TEXT,
-    requiresPolicy: true,
+    url: '/policies',
+    displayName: 'My Policies',
+    icon: IconType.MATCHES,
+    requiresPolicy: false,
   },
   {
-    url: '/policies/${planCode}/${policyNumber}/profile',
-    displayName: 'Profile',
+    url: '/my-account',
+    displayName: 'Account',
     icon: IconType.CIRCLE_USER,
-    requiresPolicy: true,
+    requiresPolicy: false,
   },
 ];
 

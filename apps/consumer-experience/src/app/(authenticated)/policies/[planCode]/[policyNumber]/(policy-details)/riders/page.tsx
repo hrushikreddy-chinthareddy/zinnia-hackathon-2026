@@ -3,7 +3,6 @@ import { Metadata } from 'next';
 
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
-import { InfoCard } from '@/components/info-card/InfoCard';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { getRiders } from '@/services';
@@ -32,18 +31,14 @@ export default async function Riders({
   return (
     <div className="container">
       <HeaderBreadcrumb title="Riders" />
-      <InfoCard iconType={IconType.LIGHTBULB} className="mb-md">
-        <>
-          <span className="typography-content-body-sm-bold">
-            What's a rider?
-          </span>{' '}
-          A rider is an add-on to your insurance coverage. Riders are designed
-          to offer additional types of coverage for certain circumstances. They
-          often (but not always) cost extra. They can provide major benefits if
-          and when you need them. You can learn more about what your riders
-          cover in your policy documents.
-        </>
-      </InfoCard>
+      <p className="typography-content-body-sm">
+        <span className="typography-content-body-sm-bold">What's a rider?</span>{' '}
+        A rider is an add-on to your insurance coverage. Riders are designed to
+        offer additional types of coverage for certain circumstances. They often
+        (but not always) cost extra. They can provide major benefits if and when
+        you need them. You can learn more about what your riders cover in your
+        policy documents.
+      </p>
       {(error || !data) && (
         <div className="container">
           <HeaderBreadcrumb title="Riders" />

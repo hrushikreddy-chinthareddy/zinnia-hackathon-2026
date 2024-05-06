@@ -1,5 +1,5 @@
 import { PolicyStatus } from '@zinnia/api-types/types/sor';
-import { IconType } from '@zinnia/bloom/internal/components';
+import { Icon, IconType } from '@zinnia/bloom/internal/components';
 import { Metadata } from 'next';
 
 import { AccountValue } from '@/components/account-value/AccountValue';
@@ -87,6 +87,36 @@ export default async function Page({
           />
         </ClickableCardContainer>
         <Coverage planCode={planCode} policyNumber={policyNumber} />
+        <ClickableCardContainer
+          linkTo={{
+            url: `/policies/${planCode}/${policyNumber}/profile`,
+            label: 'go to policy profile',
+          }}
+        >
+          <div className="flex-center">
+            <Icon
+              type={IconType.CIRCLE_USER}
+              color="var(--color-base-icon-icon-dark)"
+            />
+            <span className="typography-labels-field-label ml-md">Profile</span>
+          </div>
+        </ClickableCardContainer>
+        <ClickableCardContainer
+          linkTo={{
+            url: `/policies/${planCode}/${policyNumber}/documents`,
+            label: 'go to policy documents',
+          }}
+        >
+          <div className="flex-center">
+            <Icon
+              type={IconType.DOCUMENT_TEXT}
+              color="var(--color-base-icon-icon-dark)"
+            />
+            <span className="typography-labels-field-label ml-md">
+              Documents
+            </span>
+          </div>
+        </ClickableCardContainer>
       </div>
     );
   };
