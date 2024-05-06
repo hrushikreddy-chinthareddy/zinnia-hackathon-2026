@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 
 import LogoImage from '@/app/styles/everly/everly-logo.svg';
 import useMock from '@/hooks/use-mock';
-import { isProd } from '@/utils';
+import { isMockAllowed } from '@/utils';
 import { zIndexOrder } from '@/utils/zIndexOrder';
 
 import styles from './MobileNav.module.css';
@@ -117,7 +117,7 @@ export const MobileNav = () => {
               <div className={styles.globalNavItems}>
                 <div className={styles.navListItem}>
                   <a
-                    href="/api/auth/logout"
+                    href="/api/logout"
                     className={`${styles.navItem} typography-nav-nav-drawer`}
                   >
                     <span className={styles.firstItem}>
@@ -134,10 +134,11 @@ export const MobileNav = () => {
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
-      <Link href="/" className="justify-self-start">
-        <LogoImage alt="Company Logo" className={styles.logo}></LogoImage>
+      <Link href="/" className="justify-self-start" aria-label="Home page">
+        {/* TODO: update alt text when this logo becomes dynamic */}
+        <LogoImage alt="Everly Logo" className={styles.logo}></LogoImage>
       </Link>
-      {!isProd() && isMockOn && (
+      {isMockAllowed() && isMockOn && (
         <span
           className={`${styles.navItem} ml-lg`}
           style={{

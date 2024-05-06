@@ -6,12 +6,36 @@ import {
   Phone,
   PolicyStatus,
   Policy,
+  SystematicProgram,
+  ArrangementType,
+  PartyRole,
+  BankAccount,
 } from '@zinnia/api-types/types/sor';
+import { policyOwner } from '@zinnia/utils';
 import dayjs from 'dayjs';
+
+import { BankDetail } from '@/components/person-data/types';
 
 import { DEFAULT_ERROR_STRING, toSentenceCase } from './strings';
 
 export const EVERLY_CONTACT_PHONE_NUMBER = '1-855-290-0529';
+
+export const policyStatusDisplayText: { [key in PolicyStatus]: string } = {
+  [PolicyStatus.ACTIVE]: 'active',
+  [PolicyStatus.PENDINGISSUED]: 'active',
+  [PolicyStatus.PENDINGLAPSE]: 'pending lapse',
+  [PolicyStatus.LAPSE]: 'lapsed',
+  [PolicyStatus.SURRENDERED]: 'surrendered',
+  // These are statuses we don't display, users should not be able to log in with these statuses
+  [PolicyStatus.NOTISSUED]: '',
+  [PolicyStatus.CANCELEDNOPREMIUM]: '',
+  [PolicyStatus.CANCELEDFREELOOK]: '',
+  [PolicyStatus.TERMINATED]: '',
+  [PolicyStatus.MATURED]: '',
+  [PolicyStatus.LIVINGCLAIMPENDING]: '',
+  [PolicyStatus.DEATHCLAIMPENDING]: '',
+  [PolicyStatus.DEATHCLAIMPAID]: '',
+};
 
 /**
  *
@@ -112,7 +136,7 @@ export const bankAccountNumberSanitizer = (
 
 export const getFrequency = (
   frequency: Frequency | null | undefined
-): string => {
+): string | null => {
   switch (frequency) {
     case Frequency.ANNUAL:
       return 'Annual';
@@ -129,7 +153,7 @@ export const getFrequency = (
     case Frequency.QUARTERLY:
       return 'Quarterly';
     default:
-      return DEFAULT_ERROR_STRING;
+      return null;
   }
 };
 
@@ -218,11 +242,11 @@ export const isPolicyEligibleForWithdrawals = ({
   allowedWithdrawals?: number | null;
   withdrawalsTaken?: number | null;
 }) => {
-  if (allowedWithdrawals == null || withdrawalsTaken === undefined) {
+  if (allowedWithdrawals == null || withdrawalsTaken == null) {
     return null;
   }
 
-  if (withdrawalsTaken === null || allowedWithdrawals > withdrawalsTaken) {
+  if (allowedWithdrawals > withdrawalsTaken) {
     return true;
   }
 
@@ -241,4 +265,33 @@ export const policyWithdrawalsRemaining = ({
   }
 
   return Math.max(0, allowedWithdrawals - withdrawalsTaken);
+};
+
+export const autopayBankId = (policy: Policy) => {
+  // Find the systematic program that is for the premium autopay
+  const autopayProgram = policy.systematicPrograms?.find(
+    (program: SystematicProgram) =>
+      // TODO: this doesn't match the type described in generated types
+      program.arrangementType === ('PAYMENT' as ArrangementType)
+  );
+
+  // Party on the return is an arry, so ensure using bankId of
+  // payor from the systematic program
+  const autopayPayor = autopayProgram?.party?.find(
+    party => party.partyRole === PartyRole.PAYOR
+  );
+
+  return autopayPayor?.bankId;
+};
+
+export const allPolicyOwnerBanks = (policy: Policy): BankDetail[] => {
+  const ownerInfo = policyOwner(policy);
+
+  return (ownerInfo?.bankDetails || []).map((b: BankAccount) => {
+    return {
+      ...b,
+      accountNumber: bankAccountNumberSanitizer(b?.accountNumber),
+      autopayEnabled: b.bankId === autopayBankId(policy),
+    };
+  });
 };

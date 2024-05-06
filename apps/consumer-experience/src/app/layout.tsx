@@ -1,16 +1,23 @@
+import { GoogleAnalytics } from '@next/third-parties/google';
 import localFont from 'next/font/local';
 import Script from 'next/script';
 
 import type { Metadata } from 'next';
+
+import { isProd } from '@/utils';
 
 import './styles/globals.css';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
-  title: 'Consumer UI',
-  description: 'Consumer UI',
+  title: {
+    // TODO: eventually using whatever mechanism we decide to switch carriers, this carrier name will need to be dynamic
+    template: '%s | Zinnia Tech',
+    default: 'Login | Zinnia Tech',
+  },
 };
+
 const primaryFont = localFont({
   variable: '--font-family-primary',
   display: 'swap',
@@ -108,6 +115,7 @@ export default async function RootLayout({
       <body style={{ height: '100%' }}>
         {children}
         <MouseflowTrackingCode />
+        {isProd() && <GoogleAnalytics gaId="G-TZ4P6YJQ0K" />}
       </body>
     </html>
   );

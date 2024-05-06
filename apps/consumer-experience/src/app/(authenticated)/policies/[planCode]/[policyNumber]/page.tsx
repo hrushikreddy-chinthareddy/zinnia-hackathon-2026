@@ -3,8 +3,8 @@ import { IconType } from '@zinnia/bloom/internal/components';
 import { Metadata } from 'next';
 
 import { AccountValue } from '@/components/account-value/AccountValue';
+import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
-import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 import MockMessage from '@/components/MockMessage';
@@ -15,10 +15,11 @@ import { SurrenderedPolicy } from '@/components/policy-overview/non-active-statu
 import { UpcomingPremium } from '@/components/policy-overview/UpcomingPremium';
 import { getPolicyForHeaderDetails } from '@/services';
 
-// disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
-  title: 'Policy Overview',
+  // Include the carrier name here because the template only works for the children
+  // TODO: update carrier name when we solve dynamic carrier setting
+  title: 'Policy Overview - Everly',
 };
 
 export default async function Page({
@@ -52,11 +53,21 @@ export default async function Page({
 
   const overviewBody = () => {
     if (data?.policyStatus === PolicyStatus.LAPSE) {
-      return <LapsedPolicy planCode={planCode} policyNumber={policyNumber} />;
+      return (
+        <>
+          <LapsedPolicy planCode={planCode} policyNumber={policyNumber} />
+          <CallForAssistance customInstruction="for help with reinstatement." />
+        </>
+      );
     }
 
     if (data?.policyStatus === PolicyStatus.SURRENDERED) {
-      return <SurrenderedPolicy />;
+      return (
+        <>
+          <SurrenderedPolicy />
+          <CallForAssistance customInstruction="with surrender questions." />
+        </>
+      );
     }
 
     return (
@@ -83,11 +94,7 @@ export default async function Page({
   return (
     <div className="container">
       <HeaderBreadcrumb title="Policy Overview" />
-      <HeaderPolicyDetails
-        planCode={planCode}
-        policyNumber={policyNumber}
-        expanded
-      />
+      <HeaderPolicyDetails planCode={planCode} policyNumber={policyNumber} />
       {overviewBody()}
     </div>
   );

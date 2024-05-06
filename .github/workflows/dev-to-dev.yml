@@ -1,0 +1,11 @@
+name: "Dev to Dev"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  dev-deploy:
+    uses: ./.github/workflows/deploy-action.yml
+    with:
+      environment-level: dev
+    secrets: inherit

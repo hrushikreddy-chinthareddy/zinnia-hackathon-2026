@@ -4,15 +4,15 @@ import { Checkbox, CheckboxProps } from '@/components/checkbox';
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta: Meta<typeof Checkbox> = {
-  title: "Components/Checkbox",
+  title: 'Components/Checkbox',
   component: Checkbox,
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/react/writing-docs/autodocs
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   args: {
-    isChecked: false,
+    isCheckedByDefault: false,
     isDisabled: false,
     label: 'Label',
-    children: "Checkbox text",
+    children: 'Checkbox text',
   },
 };
 
@@ -23,14 +23,14 @@ export const Default: StoryType = {};
 
 export const Checked: StoryType = {
   args: {
-    isChecked: true,
-    children: "Checkbox text",
+    isCheckedByDefault: true,
+    children: 'Checkbox text',
   },
 };
 
 export const Disabled: StoryType = {
   args: {
     isDisabled: true,
-    children: "Checkbox text",
+    children: 'Checkbox text',
   },
 };

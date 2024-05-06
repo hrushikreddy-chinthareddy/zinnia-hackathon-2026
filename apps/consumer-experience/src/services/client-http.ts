@@ -6,6 +6,7 @@ class ClientHttpRequest extends HttpRequest {
     init?: RequestInit | undefined
   ): Promise<Response> => {
     const requestInit: RequestInit = init || {};
+
     if (!requestInit.headers) {
       requestInit.headers = {} as HeadersInit;
     }

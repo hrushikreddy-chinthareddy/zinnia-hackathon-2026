@@ -1,19 +1,26 @@
 .container {
-  padding-left: var(--measure-dimension-padding-2xl, 1rem);
+  display: flex;
+  align-items: center;
 }
 
-.policyDetails {
-  color: var(--color-base-text-text-secondary, #676767);
+.desktopBadge {
+  display: none;
 }
 
-.success {
-  color: var(--color-status-text-status-success-text, #007b5a);
-}
+@media (width > 768px) {
+  .container {
+    position: absolute;
+    right: 0;
+  }
 
-.warning {
-  color: var(--color-status-text-status-warning-text, #b74d00);
-}
+  .desktopBadge {
+    display: inline-block;
+  }
 
-.error {
-  color: var(--color-status-text-status-error-text, #db004f);
+  /* Doing this the old fashioned display: none way for now because level access
+  has noted errors before with rearranging elements visually, but this could
+  potentially be done with flex-direction  */
+  .mobileBadge {
+    display: none;
+  }
 }

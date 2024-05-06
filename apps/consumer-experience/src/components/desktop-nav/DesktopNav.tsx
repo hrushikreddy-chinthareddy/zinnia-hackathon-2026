@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation';
 
 import LogoImage from '@/app/styles/everly/everly-logo.svg';
 import useMock from '@/hooks/use-mock';
-import { isProd } from '@/utils';
+import { isMockAllowed } from '@/utils';
 
 import styles from './DesktopNav.module.css';
 import { DevMenu } from '../dev-menu/DevMenu';
@@ -19,10 +19,10 @@ export function DesktopNav() {
     <nav className={styles.container}>
       <div className={styles.logoContainer}>
         <DevMenu />
-        <Link href="/" className="justify-self-start">
-          <LogoImage alt="Company Logo" className={styles.logo}></LogoImage>
+        <Link href="/" className="justify-self-start" aria-label="Home page">
+          <LogoImage alt="Everly Logo" className={styles.logo}></LogoImage>
         </Link>
-        {!isProd() && isMockOn && (
+        {isMockAllowed() && isMockOn && (
           <span
             className={styles.navItem}
             style={{
@@ -61,7 +61,7 @@ export function DesktopNav() {
           </>
         )}
         <a
-          href="/api/auth/logout"
+          href="/api/logout"
           className={`${styles.navItem} ${styles.signOut} ${params.planCode && params.policyNumber ? styles.border : ''}`}
         >
           Sign out

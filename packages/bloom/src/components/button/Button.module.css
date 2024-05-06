@@ -22,8 +22,8 @@
 
   &:focus-visible {
     outline-style: var(--button-border-style);
-    outline-width: var(--button-border-style);
-    outline-offset: 6px;
+    outline-width: var(--measure-dimension-stroke-sm);
+    outline-offset: 2px;
     outline-color: var(--color-states-focus-focus-border);
   }
 
@@ -130,6 +130,14 @@
     font-weight: var(--font-weight-semibold);
     line-height: var(--measure-line-height-font-line-height-2x-large);
     padding: var(--measure-dimension-padding-sm)
-      var(--measure-dimension-padding-xxl);
+      var(--measure-dimension-padding-2xl);
+  }
+
+  &.expand {
+    width: 100%;
+  }
+
+  &.link {
+    color: var(--color-base-text-text-link);
   }
 }

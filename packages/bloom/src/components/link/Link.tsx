@@ -27,6 +27,7 @@ export const Link = ({
   variant,
   style,
   expand = false,
+  className
 }: LinkProps) => {
   return (
     <a
@@ -34,8 +35,8 @@ export const Link = ({
         [styles.button as string]: variant === 'button',
         [buttonStyles.button as string]: variant === 'button',
         [buttonStyles.primary as string]: variant === 'button',
-        [styles.expand as string]: expand,
-      })}
+        [styles.expand as string]: expand
+      }, className)}
       href={href}
       style={style}
     >

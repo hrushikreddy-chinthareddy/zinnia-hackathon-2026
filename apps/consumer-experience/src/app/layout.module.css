@@ -13,16 +13,21 @@
     var(--measure-dimension-gap-md, 0.5rem);
   min-width: 344px;
   width: 100%;
+  background-color: white;
+  padding: var(--measure-dimension-padding-2xl);
+  box-shadow: var(--shadow-elevation-elevation-light-04);
+  border-radius: var(--measure-dimension-radius-md);
 }
 
 @media (min-width: 768px) {
   .content {
     margin: var(--measure-dimension-margin-md, 2rem);
+    padding: var(--measure-dimension-padding-4xl);
   }
 }
 
 @media (min-width: 500px) {
   .content {
-    width: 680px;
+    width: 744px;
   }
 }

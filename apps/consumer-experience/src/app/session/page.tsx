@@ -16,7 +16,7 @@ export default async function Session() {
       title={
         <div className={styles.headerContainer}>
           <Icon width={32} height={32} type={IconType.CLOCK} />
-          <h1>Timed out</h1>
+          <div>Timed out</div>
         </div>
       }
       description="You’ve been signed out due to inactivity."
@@ -36,7 +36,7 @@ export default async function Session() {
             policy. To customize your notifications, you can manage your
             preferences or unsubscribe.
           </p>
-          <p>© 2024 Zinnia 5801 SW Sixth Ave. Topeka, KS 66636</p>
+          <p>© 2024 Zinnia 600 Steamboat Road Greenwich, CT 06830</p>
         </>
       }
     />

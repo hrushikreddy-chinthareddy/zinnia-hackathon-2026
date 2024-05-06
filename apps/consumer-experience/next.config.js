@@ -12,15 +12,6 @@ module.exports = {
 
     return config;
   },
-  async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/policies',
-        permanent: true,
-      },
-    ];
-  },
   logging: {
     fetches: {
       fullUrl: true,

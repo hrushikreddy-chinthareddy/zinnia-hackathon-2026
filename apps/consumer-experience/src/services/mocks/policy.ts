@@ -474,7 +474,7 @@ export const mockPolicyResponse: Policy = {
       arrangementType: 'PAYMENT' as ArrangementType,
       arrangementId: 'Arr_1',
       allocationOptionType: 'DOLLAR' as AllocationOption,
-      reason: 'PREMIUMREASON' as Reason,
+      reason: 'PREMIUM' as Reason,
       // numberOfOccurrence: null,
       // disbursementType: null,
       status: 'ACTIVE' as Status,

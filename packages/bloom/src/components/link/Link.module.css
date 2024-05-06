@@ -75,7 +75,7 @@
   &:focus-visible {
     outline-style: solid;
     outline-width: solid;
-    outline-offset: 6px;
+    outline-offset: 2px;
     outline-color: var(--color-states-focus-focus-border);
     border-radius: var(--button-border-radius);
   }

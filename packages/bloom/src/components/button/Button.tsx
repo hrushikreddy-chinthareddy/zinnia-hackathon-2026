@@ -24,6 +24,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
    */
   onClick?: () => void;
   disabled?: boolean;
+  expand?: boolean;
 }
 
 /**
@@ -36,10 +37,14 @@ export const Button = ({
   children,
   disabled,
   selected = false,
+  type = 'button',
+  expand = false,
   ...props
 }: ButtonProps) => {
   const modeClasses =
-    mode === 'link' ? linkClasses.linkContainer : classes[mode];
+    mode === 'link'
+      ? `${linkClasses.linkContainer} ${classes.link}`
+      : classes[mode];
 
   const buttonClasses = clsx(
     classes.button,
@@ -49,13 +54,14 @@ export const Button = ({
       [classes.selected as string]: selected,
       [classes.disabled as string]: disabled,
     },
+    expand ? classes.expand : '',
     className
   );
 
   return (
     <button
       {...props}
-      type="button"
+      type={type}
       className={buttonClasses}
       disabled={disabled}
     >

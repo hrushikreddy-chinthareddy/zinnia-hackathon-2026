@@ -1,4 +1,5 @@
-import { Session } from '@auth0/nextjs-auth0';
+import { Session } from '@/types/auth';
+
 import pino from './pino-server';
 
 type LoggingFunction = (message: string, serializableValues: any) => void;

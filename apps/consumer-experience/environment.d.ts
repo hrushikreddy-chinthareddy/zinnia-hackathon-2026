@@ -10,6 +10,7 @@ declare global {
       NEXT_PUBLIC_MOCK_API_REQUEST: string;
       NEXT_PUBLIC_BACKEND_URL: string;
       NEXT_PUBLIC_BASE_URL: string;
+      AUTH0_SESSION_ROLLING_DURATION: string;
     }
   }
 }

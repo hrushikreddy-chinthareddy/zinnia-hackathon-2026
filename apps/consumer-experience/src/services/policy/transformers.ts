@@ -1,18 +1,17 @@
 import { PolicyReferenceDataModel } from '@zinnia/api-types/types/search';
 import {
-  BankAccount,
   PartyRole,
   Policy,
   PolicyStatus,
   Transaction,
   TransactionType,
   MetricsType,
-  SystematicProgram,
   Party,
   FundAllocation,
   PolicyFeature,
   Status,
-  ArrangementType,
+  Reason,
+  Transaction_Payor,
 } from '@zinnia/api-types/types/sor';
 import { policyOwner } from '@zinnia/utils';
 
@@ -20,14 +19,12 @@ import { BankDetail } from '@/components/person-data/types';
 import {
   Beneficiary,
   BeneficiaryData,
-  MethodAndProgram,
   PolicyAccountValue,
   PolicyCoverage,
   PolicyDetails,
   PolicyProfile,
   PolicyReferenceData,
   UpcomingPremium,
-  ExtendedReason,
   ExtendedTransactionStatus,
   PaymentHistory,
   Metric,
@@ -38,6 +35,7 @@ import {
   PolicySurrender,
   PolicyStatusDetail,
   PolicyFeatureDetail,
+  CarrierPolicyDetails,
 } from '@/types/policy';
 import { PolicyRider } from '@/types/riders';
 import {
@@ -47,6 +45,7 @@ import {
   policyWithdrawalsRemaining,
   getRiderDescription,
   policyHasVested,
+  allPolicyOwnerBanks,
 } from '@/utils/data';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';
 
@@ -85,15 +84,15 @@ const allBeneficiaries = (policy: Policy) => {
 };
 
 export const transformPolicyReferenceData = (
-  policyReferences: PolicyReferenceDataModel[]
-): PolicyReferenceData[] => {
+  policyReferences: Policy[]
+): CarrierPolicyDetails[] => {
   return policyReferences.map(p => {
+    const policyDetails = transformPolicyForHeaderDetails(p);
     return {
-      policyNumber: p.policyNumber,
-      companyName: p.companyName,
-      id: p.id,
-      planCode: p.planCode,
-      productName: p.productName,
+      planCode: p.product?.planCode || '',
+      totalFundValue: p?.allocation?.funds?.[0]?.totalFundValue,
+      totalCoverageAmount: p.coverage?.totalCoverageAmount,
+      ...policyDetails,
     };
   });
 };
@@ -137,29 +136,7 @@ export const transformPolicyForHeaderDetails = (
 
 export const transformPolicyForProfile = (policy: Policy): PolicyProfile => {
   const ownerInfo = policyOwner(policy);
-
-  // Find the systematic program that is for the premium autopay
-  const autopayProgram = policy.systematicPrograms?.find(
-    (program: SystematicProgram) =>
-      // TODO: this doesn't match the type described in generated types
-      program.arrangementType === ('PAYMENT' as ArrangementType)
-  );
-
-  // Party on the return is an arry, so ensure using bankId of
-  // payor from the systematic program
-  const autopayPayor = autopayProgram?.party?.find(
-    party => party.partyRole === PartyRole.PAYOR
-  );
-
-  const bankDetails: BankDetail[] = (ownerInfo?.bankDetails || []).map(
-    (b: BankAccount) => {
-      return {
-        ...b,
-        accountNumber: bankAccountNumberSanitizer(b?.accountNumber),
-        autopayEnabled: b.bankId === autopayPayor?.bankId,
-      };
-    }
-  );
+  const bankDetails = allPolicyOwnerBanks(policy);
 
   return {
     preferredAddressIndicator: ownerInfo?.preferredAddressIndicator || '',
@@ -219,56 +196,8 @@ export const transformPolicyForBeneficiary = (
 
 export const transformPolicyforPaymentDetails = (
   policy: Policy
-): BankDetail => {
-  const premiumSystematicProgram = policy.systematicPrograms?.find(
-    (program: SystematicProgram) =>
-      program.reason === ExtendedReason.PREMIUMREASON
-  );
-
-  let bankDetails: BankAccount | undefined;
-  if (premiumSystematicProgram) {
-    const currentPayor = (premiumSystematicProgram?.party || [])[0];
-    const currentPayorParty = policy?.parties?.find(
-      (party: Party) => party.partyId === currentPayor?.partyId
-    );
-    bankDetails = currentPayorParty?.bankDetails?.find(
-      bank => bank.bankId === currentPayor?.bankId
-    );
-  }
-
-  return {
-    ...bankDetails,
-    accountNumber: bankAccountNumberSanitizer(bankDetails?.accountNumber),
-    autopayEnabled: true,
-  };
-};
-export const transformPolicyToMethodAndProgram = (
-  policy: Policy
-): MethodAndProgram | undefined => {
-  const paymentProgram = policy?.systematicPrograms?.find(
-    (program: SystematicProgram) =>
-      program.reason === ExtendedReason.PREMIUMREASON
-  );
-  const programFirstPayor = (paymentProgram?.party || [])[0];
-  const paymentProgramFinancialInstitutionId = programFirstPayor?.bankId;
-  const payor = policy?.parties?.find(
-    (party: Party) => party.partyId === programFirstPayor?.partyId
-  );
-  const paymentMethod = payor?.bankDetails?.find((bank: BankAccount) =>
-    [bank.appliesToPartyId, bank.accountNumber, bank.bankId].includes(
-      paymentProgramFinancialInstitutionId
-    )
-  );
-
-  if (!paymentMethod) {
-    return;
-  }
-
-  return {
-    ...paymentMethod,
-    frequency: paymentProgram?.frequency,
-    amount: paymentProgram?.amount,
-  };
+): BankDetail[] => {
+  return allPolicyOwnerBanks(policy);
 };
 
 export const transformPolicyForFundDetails = (
@@ -323,8 +252,7 @@ export const transformPolicyForWithdrawals = (
       allowedWithdrawals: annualWithdrawalsAllowed,
       withdrawalsTaken,
     }),
-    annualWithdrawalsTaken:
-      policy.withdrawalValues?.totalYearToDateWithdrawalTaken,
+    annualWithdrawalsTaken: withdrawalsTaken,
     annualWithdrawalsRemaining: policyWithdrawalsRemaining({
       allowedWithdrawals: annualWithdrawalsAllowed,
       withdrawalsTaken,
@@ -355,7 +283,7 @@ export const transformPolicyForLoans = (policy: Policy): PolicyLoans => {
     timestamp: policy.timestamp,
     // Return either the boolean OR undefined since there is a difference between
     // inelgible and data doesn't exist
-    isEligible: policy && policy.accountValues ? isEligible : undefined,
+    isEligible: policy && policy.accountValues ? isEligible : null,
   };
 };
 
@@ -383,14 +311,37 @@ export const transformPolicyForAccountValueSummary = (
   };
 };
 
+const getTransactionBankDetails = (
+  policy: Policy,
+  transactionPayor?: Transaction_Payor
+) => {
+  if (!transactionPayor) {
+    return null;
+  }
+  // TODO: is it possible to have multiple payors? what is the ui for that if so?
+  const transactionPayorPartyId = transactionPayor.partyId;
+  const transactionBankId = transactionPayor.bankId;
+  const transactionPolicyParty = policy.parties?.find(
+    ({ partyId }) => partyId === transactionPayorPartyId
+  );
+
+  return transactionPolicyParty?.bankDetails?.find(
+    ({ bankId }) => bankId === transactionBankId
+  );
+};
+
 export const transformPaymentHistory = (
   policy: Policy,
   transaction: Transaction | undefined
 ): PaymentHistory => {
-  const paymentMethod = transformPolicyToMethodAndProgram(policy);
+  const paymentMethod = getTransactionBankDetails(
+    policy,
+    transaction?.payors?.[0]
+  );
   const { effectiveDate, status, transactionAmounts, transactionType } =
     transaction ?? {};
-  const { appliedAmount, requestedAmount } = transactionAmounts ?? {};
+  const { appliedAmount, requestedAmount, paymentAmount } =
+    transactionAmounts ?? {};
   const accountType = paymentMethod?.accountType;
   const accountNumber = bankAccountNumberSanitizer(
     paymentMethod?.internationalBankAccountNumber ??
@@ -405,8 +356,8 @@ export const transformPaymentHistory = (
   const paymentHistoryObject: PaymentHistory = {
     amount: requestedAmount,
     date,
-    frequency: paymentMethod?.frequency,
-    type: transactionType?.toString() as keyof typeof ExtendedReason,
+    frequency: null,
+    type: transactionType?.toString() as keyof typeof Reason,
     bankDetails: {
       accountType,
       accountNumber,
@@ -427,6 +378,7 @@ export const transformPaymentHistory = (
           ? requestedAmount
           : appliedAmount;
       paymentHistoryObject.title = 'Premium payment';
+      paymentHistoryObject.frequency = 'initial';
       break;
     case TransactionType.PAYMENT_ONE_TIME_PREMIUM:
     case TransactionType.ONE_TIME_PREMIUM:
@@ -435,10 +387,16 @@ export const transformPaymentHistory = (
           ? requestedAmount
           : appliedAmount;
       paymentHistoryObject.title = 'Premium payment';
+      paymentHistoryObject.frequency = 'one-time';
       break;
     case TransactionType.SUBSEQUENT_PAYMENT:
     case TransactionType.SUBSEQUENT_PREMIUM:
-      paymentHistoryObject.amount = paymentMethod?.amount;
+      paymentHistoryObject.amount =
+        status === ExtendedTransactionStatus.Pending
+          ? paymentAmount
+          : transactionType === TransactionType.SUBSEQUENT_PAYMENT
+            ? requestedAmount
+            : appliedAmount;
       paymentHistoryObject.title = 'Premium autopay';
       break;
     case 'Activation':

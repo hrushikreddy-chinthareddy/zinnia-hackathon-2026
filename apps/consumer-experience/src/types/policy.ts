@@ -68,6 +68,12 @@ export type PolicyReferenceData = Pick<
   'id' | 'planCode' | 'policyNumber' | 'productName'
 >;
 
+export interface CarrierPolicyDetails extends PolicyDetails {
+  planCode: string;
+  totalFundValue?: number | null;
+  totalCoverageAmount?: number | null;
+}
+
 export interface PolicyApiResponse<T> {
   message: string;
   data: T;
@@ -132,17 +138,6 @@ export type MethodAndProgram = BankAccount & {
   frequency?: Frequency;
 };
 
-export enum PremiumReason {
-  PREMIUMREASON = 'PREMIUMREASON',
-}
-
-//export type ExtendedReason = Reason | PremiumReason;
-
-export const ExtendedReason = {
-  ...Reason,
-  PREMIUMREASON: 'PREMIUMREASON',
-};
-
 export const ExtendedTransactionStatus = {
   ...TransactionStatus,
   PROCESSING: 'Processing',
@@ -162,8 +157,8 @@ export interface TransactionRequestErrorResponse {
 export interface PaymentHistory {
   amount?: number;
   date?: string;
-  frequency?: Frequency;
-  type?: keyof typeof ExtendedReason;
+  frequency?: 'one-time' | 'initial' | null;
+  type?: keyof typeof Reason;
   bankDetails?: {
     accountType?: AccountType;
     accountNumber?: string;
@@ -202,7 +197,7 @@ export interface PolicyFund {
 }
 
 export interface PolicyLoans {
-  isEligible?: boolean;
+  isEligible?: boolean | null;
   timestamp?: string | null;
   totalLoanBalance?: number | null;
   maximumLoanAmount?: number | null;

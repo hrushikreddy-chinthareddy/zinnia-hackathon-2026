@@ -22,6 +22,7 @@ import {
   isMockPolicyOverviewRequestEnabled,
   isMockRidersRequestEnabled,
   isMockSearchRequestEnabled,
+  isTestPoliciesEnabled,
   policyApiBaseUrl,
 } from '@/services';
 import { mockPolicyResponse } from '@/services/mocks/policy';
@@ -69,24 +70,37 @@ import {
   PolicyWithdrawals,
   PolicyLoans,
   PolicySurrender,
+  CarrierPolicyDetails,
 } from '@/types/policy';
 import { PolicyRider } from '@/types/riders';
 
+import { getDocuments } from '../document';
 import { mockDocumentsResponse } from '../mocks/documents';
 import { MockMetricsResponse } from '../mocks/metrics';
 import {
   mockCompletedTransactions,
   mockPendingTransactions,
 } from '../mocks/transactions';
-import { getDocuments } from '../document';
 
 const getPolicyReferencesByCarrier = async () => {
   const searchUrl = `${policyApiBaseUrl}/search?offset=0&limit=10`;
   const searchFilter: PolicySearchRequest = {};
+
+  if (isTestPoliciesEnabled()) {
+    // @ts-expect-error specs aren't updated in developer portal yet
+    searchFilter['carrierIds'] = ['SBUL'];
+  }
+
   if (isMockErrorEnabled(ApiEndpoints.POLICY_BY_CARRIERS)) {
     throw new Error('Error fetching policies by carrier.');
   }
-  const request = await ServerApi.post(searchUrl, JSON.stringify(searchFilter));
+  const request = await ServerApi.post(
+    searchUrl,
+    JSON.stringify(searchFilter),
+    {
+      headers: { 'Content-Type': 'application/json' },
+    }
+  );
 
   if (request.status !== 200) {
     throw new Error('Error fetching policy references');
@@ -105,6 +119,7 @@ const getPolicyByPlanCodeAndId = async (options: PolicyRequestInputs) => {
   }
 
   const request = await ServerApi.get(url);
+
   if (request.status !== 200) {
     throw new Error('Error fetching policy.');
   }
@@ -177,12 +192,12 @@ const getPolicyMetrics = async (
 
 export const getMyPoliciesByCarrier = async (
   carrierId: string
-): Promise<ApiResponse<PolicyReferenceData[]>> => {
+): Promise<ApiResponse<CarrierPolicyDetails[]>> => {
   if (isMockSearchRequestEnabled()) {
-    const filteredPolicies = mockPolicySearchResponse.results.filter(
-      p => p.carrierId === carrierId
-    );
-    const transformedResults = transformPolicyReferenceData(filteredPolicies);
+    const transformedResults = transformPolicyReferenceData([
+      mockPolicyResponse,
+    ]);
+
     return {
       data: transformedResults,
       error: null,
@@ -196,10 +211,18 @@ export const getMyPoliciesByCarrier = async (
       throw new Error('No data returned from the API.');
     }
 
-    const filteredPolicies = response.results.filter(
-      p => p.carrierId === carrierId
-    );
-    const transformedResults = transformPolicyReferenceData(filteredPolicies);
+    const filteredPolicies = response.results
+      .filter(p => p.carrierId === carrierId)
+      .map((carrierPolicy: PolicyReferenceData) => {
+        return getPolicyByPlanCodeAndId({
+          planCode: carrierPolicy.planCode || '',
+          policyNumber: carrierPolicy.policyNumber,
+        });
+      });
+
+    const allPolicyData = await Promise.all(filteredPolicies);
+
+    const transformedResults = transformPolicyReferenceData(allPolicyData);
 
     return {
       data: transformedResults,
@@ -519,7 +542,7 @@ export const getBeneficiary = async (
 
 export const getPaymentDetails = async (
   options: PolicyRequestInputs
-): Promise<ApiResponse<BankDetail>> => {
+): Promise<ApiResponse<BankDetail[]>> => {
   if (isMockPolicyOverviewRequestEnabled()) {
     const transformedResults =
       transformPolicyforPaymentDetails(mockPolicyResponse);

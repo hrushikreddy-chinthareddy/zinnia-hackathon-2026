@@ -1,6 +1,5 @@
-import type { Metadata } from 'next';
-
 import '@/app/styles/globals.css';
+import { Metadata } from 'next';
 
 import { Footer } from '@/components/footer/Footer';
 import { PolicyStatusAlertBanner } from '@/components/policy-status-alert-banner/PolicyStatusAlertBanner';
@@ -8,8 +7,11 @@ import { PolicyStatusAlertBanner } from '@/components/policy-status-alert-banner
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
-  title: 'Consumer UI',
-  description: 'Consumer UI',
+  title: {
+    // TODO: eventually using whatever mechanism we decide to switch carriers, this carrier name will need to be dynamic
+    template: '%s - Everly | Zinnia Tech',
+    default: 'Policy',
+  },
 };
 
 export default async function AuthenticatedLayout({
@@ -28,7 +30,7 @@ export default async function AuthenticatedLayout({
         planCode={params.planCode}
         policyNumber={params.policyNumber}
       />
-      {children}
+      <div className="container">{children}</div>
       <Footer />
     </>
   );
