@@ -32,7 +32,6 @@ export const metadata: Metadata = {
 const AVAILBLE_TO_WITHDRAW = 'Available to withdraw';
 const ALL_TIME_WITHDRAWALS = 'All-time withdrawals';
 const ANNUAL_WITHDRAWALS_REMAINING = 'Annual withdrawals remaining';
-const AVAILABLE_WITHDRAW_TAX_FREE = 'Available to withdraw tax-free';
 const COVERAGE_PRESERVATION_LIMIT = 'Coverage preservation limit';
 
 const eligibleTextHighlight =
@@ -56,13 +55,23 @@ export default async function Withdrawals({
       return <NoDataAvailable message={DEFAULT_UNAVAILABLE_STRING} />;
     }
 
+    console.log(
+      'annual withdrawals remaining',
+      data.annualWithdrawalsRemaining
+    );
+
+    // Eligibility is only shown as false if the value is truly false. If it is null or undefined,
+    // we want to still show "eligible" so that the user can still try to take the withdrawal
+    // and the backend system can determine true eligibility
+    const eligibilityIsFalse = data.isEligibleForWithdrawals === false;
+
     return (
       <>
         <p className="typography-content-body-sm">
           <span className="typography-content-body-sm-bold">
-            {data.isEligibleForWithdrawals
-              ? eligibleTextHighlight
-              : ineligibleTextHighlight}{' '}
+            {eligibilityIsFalse
+              ? ineligibleTextHighlight
+              : eligibleTextHighlight}{' '}
           </span>
           Once eligible, you may withdraw for any reason. Withdrawals are tax
           free up to a certain amount. You only pay taxes on any earned interest
@@ -71,7 +80,7 @@ export default async function Withdrawals({
         </p>
         <div className="card">
           <StatusIconText
-            isEligible={data.isEligibleForWithdrawals}
+            isEligible={!eligibilityIsFalse}
             showIcon
             className="typography-content-body-bold mb-lg"
           />
@@ -79,7 +88,7 @@ export default async function Withdrawals({
             {/* AVAILABLE TO WITHDRAW */}
             <FieldData
               caption={
-                <span>{`As of ${standardDateMonthYear(data.withdrawalAllowedStartDate)}`}</span>
+                <span>{`As of ${standardDateMonthYear(data.timestamp)}`}</span>
               }
               Label={
                 <Label
@@ -121,42 +130,6 @@ export default async function Withdrawals({
             >
               <p className="typography-content-value">
                 {formatUSDollars(data.maximumWithdrawalAmount)}
-              </p>
-            </FieldData>
-
-            {/* AVAILABLE WITHDRAWAL TAX FREE */}
-            <FieldData
-              Label={
-                <Label
-                  interactiveElements={[
-                    <Popover
-                      key={AVAILABLE_WITHDRAW_TAX_FREE}
-                      title={AVAILABLE_WITHDRAW_TAX_FREE}
-                      trigger={
-                        <Icon
-                          type={IconType.CIRCLE_INFO}
-                          color="var(--color-base-icon-icon-tooltip, #ff7500)"
-                          width={16}
-                          height={16}
-                        />
-                      }
-                    >
-                      <p>
-                        You can withdraw up to this amount—also known as your
-                        “cost basis”— without paying taxes. Your cost basis=how
-                        much you’ve paid in premiums so far during the life of
-                        your policy. You only need to pay taxes on interest
-                        you’ve earned.
-                      </p>
-                    </Popover>,
-                  ]}
-                >
-                  {AVAILABLE_WITHDRAW_TAX_FREE}
-                </Label>
-              }
-            >
-              <p className="typography-content-value">
-                {formatUSDollars(data.availableToWithdrawTaxFree)}
               </p>
             </FieldData>
 
@@ -261,7 +234,7 @@ export default async function Withdrawals({
                     >
                       <div>
                         <p className="mb-lg">
-                          {`At this time, you could withdraw ${data.annualWithdrawalsRemaining} more time(s) during the policy year. Your policy year ends on ${standardDateMonthYear(data.nextAnniversaryDate)}.`}
+                          {`At this time, you could withdraw ${isNullEmptyOrUndefined(data.annualWithdrawalsRemaining) ? DEFAULT_ERROR_STRING : data.annualWithdrawalsRemaining} more time(s) during the policy year. Your policy year ends on ${standardDateMonthYear(data.nextAnniversaryDate)}.`}
                         </p>
                         <p>
                           {`During the vesting period (the first ${data.vestingDetails.vestingPeriod} years of your
@@ -278,7 +251,7 @@ export default async function Withdrawals({
               }
             >
               <p className="typography-content-value">
-                {data.annualWithdrawalsRemaining
+                {!isNullEmptyOrUndefined(data.annualWithdrawalsRemaining)
                   ? `${data.annualWithdrawalsRemaining} left`
                   : DEFAULT_ERROR_STRING}
               </p>

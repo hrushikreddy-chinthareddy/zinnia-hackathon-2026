@@ -237,7 +237,7 @@ export const transformPolicyForWithdrawals = (
 
   const annualWithdrawalsAllowed = allowedAnnualWithdrawals(policy);
   const withdrawalsTaken =
-    policy.withdrawalValues?.totalYearToDateWithdrawalTaken;
+    policy.withdrawalValues?.yearToDateNumberOfWithdrawal;
   const withdrawalValues = policy.withdrawalValues || {};
 
   return {
@@ -245,7 +245,6 @@ export const transformPolicyForWithdrawals = (
     maximumWithdrawalAmount: withdrawalValues.maximumWithdrawalAmount,
     numberOfWithdrawal: withdrawalValues.numberOfWithdrawal,
     totalWithdrawalAmount: withdrawalValues.totalWithdrawalAmount,
-    availableToWithdrawTaxFree: policy.costBasis?.costBasis,
     annualWithdrawalLimitNoCoverageDecrease:
       withdrawalValues.annualWithdrawalLimitNoCoverageDecrease,
     isEligibleForWithdrawals: isPolicyEligibleForWithdrawals({
@@ -268,6 +267,7 @@ export const transformPolicyForWithdrawals = (
       policyHasVested: policyHasVested(policy),
       matchVestingDate: policy.allocation?.matchSegment?.matchVestingDate,
     },
+    timestamp: policy.timestamp,
   };
 };
 

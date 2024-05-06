@@ -115,9 +115,8 @@ export const checkIfNull = <T>(value: T, zeroIsValid?: boolean): T | string => {
   return value;
 };
 
-export const isNullEmptyOrUndefined = <T>(value: T): boolean => {
-  return value === null || value === undefined || value === '';
-};
+export const isNullEmptyOrUndefined = <T>(value: T): boolean =>
+  value === null || value === undefined || value === '';
 
 export const bankAccountNumberSanitizer = (
   accountNum?: string | null
@@ -201,16 +200,24 @@ export const allowedAnnualWithdrawals = ({
   allocation,
   withdrawalValues,
 }: Policy) => {
+  // If any of these values are null, we want to return null rather than a default number
+  // can only actually determine the number of withdrawals given values for all of these
+  if (
+    isNullEmptyOrUndefined(policyStatus) ||
+    !accountValues ||
+    isNullEmptyOrUndefined(accountValues?.surrenderValue) ||
+    isNullEmptyOrUndefined(accountValues?.beginningAccountValue) ||
+    isNullEmptyOrUndefined(allocation?.matchSegment?.matchVestingDate)
+  ) {
+    return null;
+  }
+
   // Eligibility Checks
   const eligiblePolicyStatus =
     policyStatus &&
     [PolicyStatus.ACTIVE, PolicyStatus.PENDINGLAPSE].includes(policyStatus);
-  const eligibleSurrenderValue =
-    accountValues?.surrenderValue && accountValues.surrenderValue > 0;
-  const eligibleAccountValue =
-    accountValues?.beginningAccountValue &&
-    accountValues?.beginningAccountValue > 0;
-
+  const eligibleSurrenderValue = accountValues.surrenderValue! > 0;
+  const eligibleAccountValue = accountValues.beginningAccountValue! > 0;
   const matchVestingDate = allocation?.matchSegment?.matchVestingDate;
 
   if (
@@ -242,6 +249,8 @@ export const isPolicyEligibleForWithdrawals = ({
   allowedWithdrawals?: number | null;
   withdrawalsTaken?: number | null;
 }) => {
+  // If either of these are null, it means we can't truly determine eligiblity and need
+  // to return null.
   if (allowedWithdrawals == null || withdrawalsTaken == null) {
     return null;
   }

@@ -228,6 +228,7 @@ export interface PolicyWithdrawals {
   annualWithdrawalLimitNoCoverageDecrease?: number | null;
   availableToWithdrawTaxFree?: number | null;
   vestingDetails: VestingDetails;
+  timestamp?: string;
 }
 
 // export type PolicyFeatureType = keyof typeof PolicyFeature.featureType;
