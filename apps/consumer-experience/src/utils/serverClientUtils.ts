@@ -9,6 +9,8 @@ export const MFA_TOKEN_COOKIE_KEY = '_ztm';
 export const MFA_OOB_CODE_COOKIE_KEY = '_ztoob';
 export const APP_SESSION_COOKIE_KEY = 'appSession';
 export const AGREED_TO_TERMS_AND_CONDITIONS_COOKIE_KEY = '_zttc';
+export const RETURN_TO_URL = 'returnTo';
+export const REFRESH_ROUTER = 'refreshRouter';
 // used to let middleware know the user had a previous session
 // if a user had a session and their session is no longer expired they should be redirected to the session page
 // see middlare

@@ -26,7 +26,6 @@ import {
   policyApiBaseUrl,
 } from '@/services';
 import { mockPolicyResponse } from '@/services/mocks/policy';
-import { mockPolicySearchResponse } from '@/services/mocks/search';
 import {
   transformPolicyReferenceData,
   transformPolicyForProfile,

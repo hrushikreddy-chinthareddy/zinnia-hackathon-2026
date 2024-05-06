@@ -5,6 +5,7 @@ import '@/app/styles/globals.css';
 import styles from '@/app/layout.module.css';
 import { DesktopNav } from '@/components/desktop-nav/DesktopNav';
 import { MobileNav } from '@/components/mobile-nav/MobileNav';
+import { RefreshRouterManager } from '@/components/providers/RefreshRouterManager';
 import { SessionManager } from '@/components/providers/SessionManager';
 import { UserProvider } from '@/components/providers/UserProvider';
 import { UserConsentManager } from '@/components/user-consent/UserConsentManager';
@@ -30,16 +31,18 @@ export default async function AuthenticatedLayout({
     <main className={`${styles.body} ${styles.main}`}>
       <UserProvider user={session?.user}>
         <SessionManager>
-          {/* To prevent hydration error by trying to render these dynamically using screen width,
+          <RefreshRouterManager>
+            {/* To prevent hydration error by trying to render these dynamically using screen width,
           dynamically displaying using media queries */}
-          <MobileNav />
-          <DesktopNav />
+            <MobileNav />
+            <DesktopNav />
 
-          <div className={styles.container}>
-            <div className={styles.content}>
-              <UserConsentManager>{children}</UserConsentManager>
+            <div className={styles.container}>
+              <div className={styles.content}>
+                <UserConsentManager>{children}</UserConsentManager>
+              </div>
             </div>
-          </div>
+          </RefreshRouterManager>
         </SessionManager>
       </UserProvider>
     </main>

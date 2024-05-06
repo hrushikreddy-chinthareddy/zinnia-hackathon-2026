@@ -1,8 +1,10 @@
 import { CookieSerializeOptions, serialize } from 'cookie';
 import * as jose from 'jose';
+import { NextURL } from 'next/dist/server/web/next-url';
 import { cookies, headers } from 'next/headers';
 import { NextResponse } from 'next/server';
 
+import { PartialNextUrl } from '@/types';
 import {
   AccessTokenInfo,
   Auth0SessionToken,
@@ -23,6 +25,8 @@ import {
   MAX_COOKIE_SIZE,
   MFA_OOB_CODE_COOKIE_KEY,
   MFA_TOKEN_COOKIE_KEY,
+  REFRESH_ROUTER,
+  RETURN_TO_URL,
   SESSION_TIMEOUT_IN_MILLISECONDS,
 } from './serverClientUtils';
 const notNull = <T>(value: T | null): value is T => value !== null;
@@ -114,7 +118,17 @@ export const setCookie = async (options: SetCookieOptions) => {
   // this will remove the subdomain from the host and set the domain to the parent domain
   // browsers know how to handle that and send the cookie back with the request.
   const host = headerStore.get('host');
-  const domain = `.${host?.split(':')[0]?.split('.').slice(-2).join('.')}`;
+  let domain: string;
+
+  // since we test our branches in vercel we need to explicitly set the Vercel domain to the host
+  // if we don't none of the session cookies will write to '.vercel.app'
+  // if we use Vercel in the long term will need to revisit the logic to support subdomains
+  if (host?.includes('.vercel.app')) {
+    domain = host;
+  } else {
+    domain = `.${host?.split(':')[0]?.split('.').slice(-2).join('.')}`;
+  }
+
   const cookieOptions: CookieConfig = {
     secure: process.env.NODE_ENV !== 'development',
     sameSite: 'lax',
@@ -285,6 +299,8 @@ export const deleteCookie = async (cookieName: string, res?: NextResponse) => {
 export const deleteSession = async (res?: NextResponse) => {
   await deleteCookie(APP_SESSION_COOKIE_KEY, res);
   await deleteCookie(AGREED_TO_TERMS_AND_CONDITIONS_COOKIE_KEY, res);
+  await deleteCookie(RETURN_TO_URL, res);
+  await deleteCookie(REFRESH_ROUTER, res);
 };
 /**
  * Sets a session cookie with the provided token and response object.
@@ -352,6 +368,56 @@ export const setTermsAndConditionsCookie = async (
   await setCookie({
     cookieName: AGREED_TO_TERMS_AND_CONDITIONS_COOKIE_KEY,
     value: val.toString(),
+    res,
+  });
+};
+
+export const getReturnUrlCookie = async (): Promise<
+  PartialNextUrl | undefined
+> => {
+  const cookie = await getCookie(RETURN_TO_URL);
+  if (cookie) {
+    try {
+      return JSON.parse(cookie);
+    } catch (error) {
+      return;
+    }
+  }
+
+  return;
+};
+
+export const setReturnUrlCookie = async (
+  nextUrl: NextURL,
+  res?: NextResponse
+) => {
+  const value: PartialNextUrl = {
+    hostname: nextUrl.hostname,
+    href: nextUrl.href,
+    pathname: nextUrl.pathname,
+  };
+  await setCookie({
+    cookieName: RETURN_TO_URL,
+    value: JSON.stringify(value),
+    res,
+  });
+};
+
+/**
+ * NextJS caches route information client side so they can route quicker
+ * If the user enters a friend url such as /riders and has multiple policies we send them to the policies index page first
+ * after they select a policy we redirect them to the riders page.
+ * The issue with that is NextJS stores a cache of data and routes on the client side
+ * and if the URL is redirected it maps the original URL to the new url
+ * for example if the user select /policies/SBFIXUL1/AU22006467 and we redirect them to /policies/SBFIXUL1/AU22006467/riders
+ * NextJS will also router /policies/SBFIXUL1/AU22006467 to /policies/SBFIXUL1/AU22006467/riders because it a temporary redirect.
+ * In order to correct this we set a refresh cookie that allows the frontend to clear the route cache in these scenarios
+ * see RefreshRouterManager.tsx
+ */
+export const setRefreshRouterCookie = async (res?: NextResponse) => {
+  await setCookie({
+    value: '1',
+    cookieName: REFRESH_ROUTER,
     res,
   });
 };

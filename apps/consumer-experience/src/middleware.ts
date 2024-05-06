@@ -4,6 +4,7 @@ import {
 } from 'next/dist/server/web/spec-extension/cookies';
 import { NextResponse, type NextRequest } from 'next/server';
 
+import { getRedirectUrl, redirects } from '@/redirects';
 import { isMockAllowed } from '@/utils';
 import {
   HAD_PREVIOUS_SESSION_COOKIE_KEY,
@@ -11,17 +12,23 @@ import {
   MFA_TOKEN_COOKIE_KEY,
   MOCK_COOKIE_KEY,
   MOCK_ERROR_COOKIE_KEY,
+  RETURN_TO_URL,
   SHOW_DEV_MENU_COOKIE_KEY,
 } from '@/utils/serverClientUtils';
 
+import { getMyPoliciesByCarrier } from './services';
 import { consumerExperienceAPIBaseUrl } from './services/api-config';
 import { ServerApi } from './services/server-http';
 import { TermsAndConditionApiResponse } from './types/auth';
 import {
   deleteCookie,
+  deleteSession,
   getMfaCookie,
   getOobMfaCookie,
+  getReturnUrlCookie,
   getSession,
+  setRefreshRouterCookie,
+  setReturnUrlCookie,
   setTermsAndConditionsCookie,
   touchSession,
 } from './utils/auth';
@@ -114,6 +121,68 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL('/policies', req.url));
     }
 
+    const returnUrl = await getReturnUrlCookie();
+    const redirectObj = redirects[returnUrl?.pathname || ''];
+
+    // if we have a return url and the route isn't a "friendly" path, for example /riders
+    // it means we should redirect to the fully qualified path
+    if (returnUrl && !redirectObj) {
+      const resRedirect = NextResponse.redirect(new URL(returnUrl.href));
+      await deleteCookie(RETURN_TO_URL, resRedirect);
+      return resRedirect;
+    }
+
+    // we don't want to delete the return url if the user is on the policies index page
+    // so we need to check the path name includes /policies/. This tells us we are inside a policy detail page
+    if (
+      req.nextUrl.pathname.includes('/policies/') &&
+      returnUrl &&
+      redirectObj
+    ) {
+      // there is no good way at the moment to get params in middleware like there is on the client side (useParams)
+      // so we need to grab the planCode and policyNumber from the path
+      const urlParts = pathname.split('/');
+      const planCode = urlParts[2] ?? '';
+      const policyNumber = urlParts[3] ?? '';
+      const url = getRedirectUrl(redirectObj, {
+        planCode,
+        policyNumber,
+      });
+      const resRedirect = NextResponse.redirect(new URL(url, req.url));
+      await deleteCookie(RETURN_TO_URL, resRedirect);
+      return resRedirect;
+    }
+
+    const redirect = redirects[pathname];
+    // if we get here and we have a redirect we need to determine how many policies a user has
+    // if they have multiple policies or some unknown error occurs we send them to the policies index page
+    // after the user select a policy we will redirect them to the appropiate page.
+    // For example if the user entered /riders after they select a policy we will redirect them to
+    // /policies/[planCode]/[policyNumber]/riders
+    if (redirect) {
+      const allPolicies = await getMyPoliciesByCarrier('SBUL');
+      if (
+        !allPolicies.data ||
+        allPolicies.data.length === 0 ||
+        allPolicies.data.length > 1
+      ) {
+        const resRedirect = NextResponse.redirect(
+          new URL('/policies', req.url)
+        );
+        await setReturnUrlCookie(req.nextUrl, resRedirect);
+        await setRefreshRouterCookie(resRedirect);
+        return resRedirect;
+      }
+
+      const [policy] = allPolicies.data;
+      const redirectUrl = getRedirectUrl(redirect, {
+        planCode: policy?.planCode || '',
+        policyNumber: policy?.policyNumber || '',
+      });
+
+      return NextResponse.redirect(new URL(redirectUrl, req.url));
+    }
+
     applyMockCookies(req, resNext);
     applySetCookie(req, resNext);
     return resNext;
@@ -121,6 +190,7 @@ export async function middleware(req: NextRequest) {
 
   if (req.cookies.has(HAD_PREVIOUS_SESSION_COOKIE_KEY) && isSessionPage) {
     await deleteCookie(HAD_PREVIOUS_SESSION_COOKIE_KEY, resNext);
+    await deleteSession(resNext);
     return resNext;
   }
 
@@ -148,13 +218,25 @@ export async function middleware(req: NextRequest) {
     await deleteCookie(MFA_TOKEN_COOKIE_KEY, resNext);
   }
 
-  if (isLoginLikeOrRoot) {
+  if (isLoginLikeOrRoot || isSessionPage) {
     return resNext;
   }
 
-  // default to the home page if the user is not authenticated
+  // default to the login page if the user is not authenticated
   // We don't want users to access the policy pages without being authenticated
-  return NextResponse.redirect(new URL('/', req.url));
+  const resRedirect = NextResponse.redirect(new URL('/login', req.url));
+
+  // Vercel does some route injection for their tool bar in preview environments
+  // so we want to ignore it.
+  if (pathname !== '/.well-known/vercel/flags') {
+    //if a route gets here that means the user is not authenticated and we need to store where they wanted to go
+    // after login we will send them to this page
+    // we are storing the nextUrl object so we have easy access to key variables that NextJS sets for us like pathname and href
+    await setReturnUrlCookie(req.nextUrl, resRedirect);
+    await setRefreshRouterCookie(resRedirect);
+  }
+
+  return resRedirect;
 }
 
 export const config = {
