@@ -7,6 +7,7 @@ import clsx from 'clsx';
 
 export const ButtonGroup = ({
   ariaLabel,
+  className,
   defaultValue,
   id,
   inactive,
@@ -27,14 +28,17 @@ export const ButtonGroup = ({
     <div>
       {label && label}
       <ToggleGroup.Root
-        className={clsx(styles.buttonGroup, 'typography-content-body-sm')}
+        className={clsx(
+          styles.buttonGroup,
+          className
+        )}
         id={id}
         type="single"
         defaultValue={defaultValue || items[0]?.value}
         onValueChange={onClick}
         {...optionalProps}
       >
-        {items.map(({ id, value, children }) => {
+        {items.map(({ id, value, children, className }) => {
           if (!id?.length) {
             id = uuidv4();
           }
@@ -43,7 +47,7 @@ export const ButtonGroup = ({
               id={id}
               key={id}
               value={value}
-              className={styles.buttonGroupItem}
+              className={clsx(styles.buttonGroupItem, className)}
               disabled={inactive}
             >
               {children}

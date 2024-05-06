@@ -10,6 +10,9 @@ const meta: Meta<typeof Icon> =  {
     type: IconType.CLOUD,
   },
   argTypes: {
+    type: {
+      options: Object.values(IconType)
+    },
     color: {
       control: {
         type: "color",
@@ -18,6 +21,10 @@ const meta: Meta<typeof Icon> =  {
     },
   },
 };
+
+console.log({
+  icontType: Object.values(IconType)
+})
 
 export default meta;
 

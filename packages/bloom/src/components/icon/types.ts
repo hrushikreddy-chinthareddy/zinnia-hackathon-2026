@@ -30,7 +30,9 @@ import Settings from '../../tokens/svg-assets/icons/actions/settings.svg';
 import Shield from '../../tokens/svg-assets/icons/navigation/shield-heart.svg';
 import ShieldCheckmark from '../../tokens/svg-assets/icons/navigation/shield-checkmark.svg';
 import ShieldExclamation from '../../tokens/svg-assets/icons/navigation/shield-exclamation.svg';
+import Template from '../../tokens/svg-assets/icons/illustrations/template.svg';
 import Trash from '../../tokens/svg-assets/icons/actions/trash.svg';
+import User from '../../tokens/svg-assets/icons/actions/user.svg';
 import UserGroup from '../../tokens/svg-assets/icons/actions/user-group.svg';
 
 export enum IconType {
@@ -69,7 +71,9 @@ export enum IconType {
   SHIELD = 'Shield',
   SHIELD_EXCLAMATION = 'ShieldExclamation',
   SHIELD_CHECKMARK = 'ShieldCheckmark',
+  TEMPLATE = 'Template1',
   TRASH = 'Trash',
+  USER = 'User',
   USER_GROUP = 'UserGroup',
 }
 
@@ -126,6 +130,8 @@ export const Icons: {
   [IconType.SHIELD]: Shield,
   [IconType.SHIELD_CHECKMARK]: ShieldCheckmark,
   [IconType.SHIELD_EXCLAMATION]: ShieldExclamation,
+  [IconType.TEMPLATE]: Template,
   [IconType.TRASH]: Trash,
+  [IconType.USER]: User,
   [IconType.USER_GROUP]: UserGroup,
 };
