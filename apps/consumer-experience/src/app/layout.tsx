@@ -1,5 +1,6 @@
 import { GoogleAnalytics } from '@next/third-parties/google';
 import localFont from 'next/font/local';
+import Script from 'next/script';
 
 import type { Metadata } from 'next';
 
@@ -84,6 +85,22 @@ const secondaryFont = localFont({
   ],
 });
 
+const MouseflowTrackingCode = () => {
+  return (
+      <Script type="text/javascript">
+        {`
+          window._mfq = window._mfq || [];
+          (function() {
+            var mf = document.createElement("script");
+            mf.type = "text/javascript"; mf.defer = true;
+            mf.src = "//cdn.mouseflow.com/projects/55155137-cbba-44d3-8750-8d43ae890911.js";
+            document.getElementsByTagName("head")[0].appendChild(mf);
+          })();
+        `}
+    </Script>
+  );
+}
+
 export default async function RootLayout({
   children,
 }: {
@@ -97,6 +114,7 @@ export default async function RootLayout({
     >
       <body style={{ height: '100%' }}>
         {children}
+        <MouseflowTrackingCode />
         {isProd() && <GoogleAnalytics gaId="G-TZ4P6YJQ0K" />}
       </body>
     </html>
