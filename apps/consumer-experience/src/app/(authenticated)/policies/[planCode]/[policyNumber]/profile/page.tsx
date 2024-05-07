@@ -5,7 +5,6 @@ import { Metadata } from 'next';
 import { BankData } from '@/components/bank-data/BankData';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { FieldData } from '@/components/field-data/FieldData';
-import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { Addresses } from '@/components/person-data/Addresses';
@@ -38,7 +37,6 @@ export default async function Profile({ params }: Props) {
   if (error) {
     return (
       <div className={styles.pageContainer}>
-        <HeaderBreadcrumb title={pageTitle} />
         <div className="space-mb-gap-lg">
           <MockMessage />
           <NoDataAvailable
@@ -117,8 +115,6 @@ export default async function Profile({ params }: Props) {
 
   return (
     <div className="container">
-      <HeaderBreadcrumb title={pageTitle} />
-
       <div className="info-card-container">
         <div>
           <h2 className="mb-lg">Name</h2>

@@ -3,7 +3,6 @@ import { IconType, Label } from '@zinnia/bloom/internal/components';
 import { Metadata } from 'next';
 
 import { FieldData } from '@/components/field-data/FieldData';
-import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { Addresses } from '@/components/person-data/Addresses';
@@ -51,7 +50,6 @@ export default async function Beneficiary({
   if (error || !data) {
     return (
       <div className="container">
-        <HeaderBreadcrumb title={pageTitle} />
         <MockMessage />
         <NoDataAvailable
           iconType={IconType.CIRCLE_USER}
@@ -60,8 +58,6 @@ export default async function Beneficiary({
       </div>
     );
   }
-
-  const listItems = [];
 
   // TODO: do benes show preferredAddressIndicator?
   const address = () => {
@@ -97,8 +93,6 @@ export default async function Beneficiary({
 
   return (
     <div className="container">
-      <HeaderBreadcrumb title={pageTitle} />
-
       <div className="info-card-container">
         <div>
           <h2 className="mb-lg">Name</h2>
