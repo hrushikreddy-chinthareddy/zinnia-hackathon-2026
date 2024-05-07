@@ -2,7 +2,6 @@ import { Address, Email, PartyRole } from '@zinnia/api-types/types/sor';
 import { IconType, Label } from '@zinnia/bloom/internal/components';
 import { Metadata } from 'next';
 
-import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import MockMessage from '@/components/MockMessage';
@@ -17,7 +16,7 @@ import {
 } from '@/utils/data';
 import { toSentenceCase } from '@/utils/strings';
 
-const pageTitle = 'Beneficiary';
+const pageTitle = 'Beneficiary details';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
@@ -63,50 +62,43 @@ export default async function Beneficiary({
 
   const listItems = [];
 
-  if (!isNullEmptyOrUndefined(data.beneficiaryPercentage)) {
-    listItems.push({
-      content: (
-        <div>
-          <h2 className="mb-lg">Allocation</h2>
-          <p className="typography-content-value">{`${data.beneficiaryPercentage}%`}</p>
-        </div>
-      ),
-    });
-  }
-
   // TODO: do benes show preferredAddressIndicator?
-  if (data.addresses) {
-    const currentAddresses = filterItemsWithPastEndDate(data.addresses);
+  const address = () => {
+    if (data.addresses) {
+      const currentAddresses = filterItemsWithPastEndDate(data.addresses);
 
-    if (currentAddresses.length > 0) {
-      listItems.push({
-        content: (
+      if (currentAddresses.length > 0) {
+        return (
           <Addresses
             addresses={currentAddresses as Address[]}
             title="Address"
             preferredAddressIndicator="1"
           />
-        ),
-      });
-    }
-  }
+        );
+      }
 
-  if (data.emails) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const currentEmails = filterItemsWithPastEndDate(data.emails as any);
-
-    if (currentEmails.length > 0) {
-      listItems.push({
-        content: <Emails emails={currentEmails as Email[]} title="Email" />,
-      });
+      return null;
     }
-  }
+  };
+
+  const email = () => {
+    if (data.emails) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const currentEmails = filterItemsWithPastEndDate(data.emails as any);
+
+      if (currentEmails.length > 0) {
+        return <Emails emails={currentEmails as Email[]} title="Email" />;
+      }
+    }
+
+    return null;
+  };
 
   return (
     <div className="container">
       <HeaderBreadcrumb title={pageTitle} />
 
-      <ClickableCardContainer listItems={listItems}>
+      <div className="info-card-container">
         <div>
           <h2 className="mb-lg">Name</h2>
           <FieldData
@@ -122,7 +114,15 @@ export default async function Beneficiary({
             </p>
           </FieldData>
         </div>
-      </ClickableCardContainer>
+        {!isNullEmptyOrUndefined(data.beneficiaryPercentage) && (
+          <div>
+            <h2 className="mb-lg">Allocation</h2>
+            <p className="typography-content-value">{`${data.beneficiaryPercentage}%`}</p>
+          </div>
+        )}
+        {address()}
+        {email()}
+      </div>
     </div>
   );
 }

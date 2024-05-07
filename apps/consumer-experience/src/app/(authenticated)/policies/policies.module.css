@@ -1,7 +1,4 @@
 .policyCard {
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
   width: 100%;
 }
 
@@ -12,8 +9,10 @@
 
 @media (width > 500px) {
   .policyCard {
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: center;
+    column-gap: var(--measure-dimension-gap-lg);
   }
   .policyCardPolicyValues {
     margin-top: 0;

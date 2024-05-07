@@ -4,7 +4,6 @@ import { Metadata } from 'next';
 
 import { BankData } from '@/components/bank-data/BankData';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
-import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import MockMessage from '@/components/MockMessage';
@@ -18,7 +17,7 @@ import { filterItemsWithPastEndDate, fullName } from '@/utils/data';
 
 import styles from './Profile.module.css';
 
-const pageTitle = 'Profile';
+const pageTitle = 'Policy Profile';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
@@ -50,64 +49,76 @@ export default async function Profile({ params }: Props) {
     );
   }
 
-  const listItems = [];
   const profileData = data!;
-  if (profileData.addresses && profileData.addresses.length) {
-    const currentAddresses = filterItemsWithPastEndDate(profileData.addresses);
 
-    if (currentAddresses && currentAddresses.length) {
-      listItems.push({
-        content: (
+  const addresses = () => {
+    if (profileData.addresses && profileData.addresses.length) {
+      const currentAddresses = filterItemsWithPastEndDate(
+        profileData.addresses
+      );
+
+      if (currentAddresses && currentAddresses.length) {
+        return (
           <Addresses
             addresses={currentAddresses as Address[]}
             title="Address"
             preferredAddressIndicator={profileData.preferredAddressIndicator}
           />
-        ),
-      });
+        );
+      }
     }
-  }
 
-  if (profileData.phones && profileData.phones.length) {
-    const currentPhones = filterItemsWithPastEndDate(profileData.phones);
+    return null;
+  };
 
-    if (currentPhones) {
-      listItems.push({
-        content: <Phones phones={currentPhones as Phone[]} title="Phone" />,
-      });
+  const phone = () => {
+    if (profileData.phones && profileData.phones.length) {
+      const currentPhones = filterItemsWithPastEndDate(profileData.phones);
+
+      if (currentPhones) {
+        return <Phones phones={currentPhones as Phone[]} title="Phone" />;
+      }
     }
-  }
 
-  if (profileData.emails && profileData.emails.length) {
-    const currentEmails = filterItemsWithPastEndDate(profileData.emails);
+    return null;
+  };
 
-    if (currentEmails) {
-      listItems.push({
-        content: <Emails emails={currentEmails as Email[]} title="Email" />,
-      });
+  const email = () => {
+    if (profileData.emails && profileData.emails.length) {
+      const currentEmails = filterItemsWithPastEndDate(profileData.emails);
+
+      if (currentEmails) {
+        return <Emails emails={currentEmails as Email[]} title="Email" />;
+      }
     }
-  }
 
-  if (profileData.bankDetails && profileData.bankDetails.length) {
-    const allBankData = profileData.bankDetails.map(bankDetail => {
-      return <BankData key={bankDetail.accountNumber} {...bankDetail} />;
-    });
+    return null;
+  };
 
-    listItems.push({
-      content: (
-        <div>
-          <h2 className="mb-lg">Banking Details</h2>
-          <div className={styles.multipleItemsInSection}>{allBankData}</div>
-        </div>
-      ),
-    });
-  }
+  const bank = () => {
+    if (profileData.bankDetails && profileData.bankDetails.length) {
+      const allBankData = profileData.bankDetails.map(bankDetail => {
+        return <BankData key={bankDetail.accountNumber} {...bankDetail} />;
+      });
+
+      if (allBankData) {
+        return (
+          <div>
+            <h2 className="mb-lg">Banking Details</h2>
+            <div className={styles.multipleItemsInSection}>{allBankData}</div>
+          </div>
+        );
+      }
+    }
+
+    return null;
+  };
 
   return (
     <div className="container">
       <HeaderBreadcrumb title={pageTitle} />
 
-      <ClickableCardContainer listItems={[...listItems]}>
+      <div className="info-card-container">
         <div>
           <h2 className="mb-lg">Name</h2>
           <FieldData Label={<Label>Owner</Label>}>
@@ -119,7 +130,13 @@ export default async function Profile({ params }: Props) {
             </p>
           </FieldData>
         </div>
-      </ClickableCardContainer>
+
+        {addresses()}
+        {phone()}
+        {email()}
+        {bank()}
+      </div>
+
       <CallForAssistance />
     </div>
   );

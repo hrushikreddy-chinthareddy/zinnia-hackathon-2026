@@ -23,8 +23,6 @@
 
 .tickerSubtext {
   grid-column-start: 2;
-  text-align: right;
-  white-space: nowrap;
 }
 
 .tickerSubtextNoChange {

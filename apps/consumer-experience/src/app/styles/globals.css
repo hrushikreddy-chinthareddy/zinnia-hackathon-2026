@@ -144,6 +144,15 @@ a:focus-visible {
   }
 }
 
+.info-card-container {
+  > * {
+    padding: var(--measure-dimension-padding-2xl) 0;
+  }
+  > *:not(:last-of-type) {
+    border-bottom: var(--border-style);
+  }
+}
+
 .card {
   padding: var(--measure-dimension-padding-2xl);
   background-color: var(--color-base-surface-surface-primary);
