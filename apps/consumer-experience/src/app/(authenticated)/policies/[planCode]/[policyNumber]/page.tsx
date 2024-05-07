@@ -39,7 +39,6 @@ export default async function Page({
   if (error) {
     return (
       <>
-        <HeaderBreadcrumb title="Policy Overview" />
         <div className="space-mb-gap-md">
           <MockMessage />
           <NoDataAvailable
@@ -121,11 +120,5 @@ export default async function Page({
     );
   };
 
-  return (
-    <div className="container">
-      <HeaderBreadcrumb title="Policy Overview" />
-      <HeaderPolicyDetails planCode={planCode} policyNumber={policyNumber} />
-      {overviewBody()}
-    </div>
-  );
+  return <div className="container">{overviewBody()}</div>;
 }

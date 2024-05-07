@@ -56,6 +56,7 @@ const primaryFont = localFont({
       weight: '700',
     },
   ], // TODO: 'everly' needs to be dynamic
+  preload: true,
 });
 
 const secondaryFont = localFont({
@@ -83,12 +84,13 @@ const secondaryFont = localFont({
       weight: '900',
     },
   ],
+  preload: true,
 });
 
 const MouseflowTrackingCode = () => {
   return (
-      <Script type="text/javascript">
-        {`
+    <Script id="mouse-flow-tracking" type="text/javascript">
+      {`
           window._mfq = window._mfq || [];
           (function() {
             var mf = document.createElement("script");
@@ -99,7 +101,7 @@ const MouseflowTrackingCode = () => {
         `}
     </Script>
   );
-}
+};
 
 export default async function RootLayout({
   children,

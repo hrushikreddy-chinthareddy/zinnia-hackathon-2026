@@ -9,7 +9,9 @@ import { toTitleCase } from '@zinnia/utils';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
+
+import { RouteKey, getPageTitle, routeMap } from '@/route-map';
 
 import styles from './HeaderBreadcrumb.module.css';
 
@@ -19,7 +21,7 @@ interface PopoverInfo {
 }
 
 export interface HeaderBreadcrumbProps {
-  title: string;
+  title?: string;
   popover?: PopoverInfo;
   className?: string;
   /**
@@ -34,22 +36,37 @@ export const HeaderBreadcrumb = ({
   className,
   preventGoBack,
 }: HeaderBreadcrumbProps) => {
+  const [formatTitle, setFormatTitle] = useState(toTitleCase(title));
+  const pathname = usePathname();
   const paths = (usePathname() || '').split('/');
-  const params = useParams<{ planCode: string; policyNumber: string }>();
+  const params = useParams<{
+    planCode: string;
+    policyNumber: string;
+    beneficiary: string;
+  }>();
 
-  if (!title) {
-    return null;
-  }
+  useEffect(() => {
+    // There are instances where this component is used outside of a layout and explicitly sets the title
+    // if a title is set we will use that. See my-account page
+    if (title) {
+      return;
+    }
+    const pathParts = pathname.split('/');
+    const routeKey = pathParts[pathParts.length - 1] ?? '';
+    let heading;
+    // if the policy number is the route key it means we are on a Policy Detail page
+    if (params.policyNumber === routeKey) {
+      heading = 'Policy details';
+      // if the beneficiary id is the route key it means we are on a Beneficiary Detail page
+    } else if (params.beneficiary === routeKey) {
+      heading = getPageTitle(RouteKey.BENEFICIARY);
+    } else {
+      heading = routeMap[`/${routeKey}`]?.title ?? 'Policy details';
+    }
+    setFormatTitle(toTitleCase(heading));
+  }, [params.beneficiary, params.policyNumber, pathname, title]);
 
   const currentPath = paths[paths.length - 1];
-  const formatTitle = toTitleCase(title);
-
-  // If there's no current path or the current path is 'policies', it means you're at a root url
-  // since we always redirect / to /policies paths will always start with 2 items.
-  // if we are on /policies it means we are essentially at the root.
-  if (!currentPath || currentPath === 'policies') {
-    return <h1 className="typography-desktop-headline-1d">{formatTitle}</h1>;
-  }
 
   let previousPath: string;
 

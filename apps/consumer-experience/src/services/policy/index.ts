@@ -7,6 +7,7 @@ import {
   Transaction,
   TransactionErrorResponse,
   MetricsType,
+  PolicyStatus,
 } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 
@@ -100,7 +101,6 @@ const getPolicyReferencesByCarrier = async () => {
       headers: { 'Content-Type': 'application/json' },
     }
   );
-
   if (request.status !== 200) {
     throw new Error('Error fetching policy references');
   }
@@ -120,7 +120,9 @@ const getPolicyByPlanCodeAndId = async (options: PolicyRequestInputs) => {
   const request = await ServerApi.get(url);
 
   if (request.status !== 200) {
-    throw new Error('Error fetching policy.');
+    throw new Error('Error fetching policy.', {
+      cause: policyNumber,
+    });
   }
   const { data } = (await request.json()) as PolicyApiResponse<Policy>;
   return data;
@@ -219,8 +221,32 @@ export const getMyPoliciesByCarrier = async (
         });
       });
 
-    const allPolicyData = await Promise.all(filteredPolicies);
-
+    const allPolicyDataSettledResult =
+      await Promise.allSettled(filteredPolicies);
+    const hasFulfilledPolicy = allPolicyDataSettledResult.some(
+      a => a.status === 'fulfilled'
+    );
+    if (!hasFulfilledPolicy) {
+      throw new Error('No policy data available.');
+    }
+    const allPolicyData = allPolicyDataSettledResult.map(p => {
+      if (p.status === 'fulfilled') {
+        return p.value;
+      }
+      const policyNumber = p.reason.cause;
+      const policyReference = response.results.find(
+        r => r.policyNumber === policyNumber
+      );
+      const policy: Partial<Policy> = {
+        product: {
+          planCode: policyReference?.planCode,
+          marketingName: policyReference?.productName,
+        },
+        policyNumber: policyReference?.policyNumber,
+        policyStatus: policyReference?.policyStatus as PolicyStatus | undefined,
+      };
+      return policy;
+    });
     const transformedResults = transformPolicyReferenceData(allPolicyData);
 
     return {

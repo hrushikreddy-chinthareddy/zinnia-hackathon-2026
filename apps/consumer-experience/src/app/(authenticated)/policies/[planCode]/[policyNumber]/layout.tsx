@@ -2,6 +2,8 @@ import '@/app/styles/globals.css';
 import { Metadata } from 'next';
 
 import { Footer } from '@/components/footer/Footer';
+import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
+import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 import { PolicyStatusAlertBanner } from '@/components/policy-status-alert-banner/PolicyStatusAlertBanner';
 
 // disable because NextJS needs this to be exported from this file
@@ -30,6 +32,13 @@ export default async function AuthenticatedLayout({
         planCode={params.planCode}
         policyNumber={params.policyNumber}
       />
+      <div className="container">
+        <HeaderBreadcrumb />
+        <HeaderPolicyDetails
+          planCode={params.planCode}
+          policyNumber={params.policyNumber}
+        />
+      </div>
       <div className="container">{children}</div>
       <Footer />
     </>

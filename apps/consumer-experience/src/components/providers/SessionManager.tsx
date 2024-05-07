@@ -31,6 +31,8 @@ const SessionManager = ({ children }: { children: React.ReactNode }) => {
         if (success) {
           reset();
         }
+      } else {
+        window.location.reload();
       }
     }
   };

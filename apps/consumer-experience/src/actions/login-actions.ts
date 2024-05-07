@@ -283,7 +283,7 @@ export async function verifyPasswordlessStartChallenge(
   const tokenData = data! as OauthToken;
 
   await setLoginCookies(tokenData);
-  return redirect(`/policies`);
+  return redirect(`/policies?fromLogin=true`);
 }
 /**
  * Async function to associate MFA with the provided form data.

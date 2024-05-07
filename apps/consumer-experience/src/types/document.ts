@@ -34,7 +34,7 @@ export interface DocumentApiRequestInputs {
   docStatus: string;
   caseId: string;
   documentNumber: string;
-  recipient: 'client' | 'agent'; // AS-3029 adds this functionality
+  recipient: 'Client' | 'Agent'; // AS-3029 adds this functionality
 }
 
 export interface DocumentResponseError {

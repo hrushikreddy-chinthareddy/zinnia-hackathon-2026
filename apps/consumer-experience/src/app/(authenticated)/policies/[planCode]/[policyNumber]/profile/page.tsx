@@ -1,0 +1,144 @@
+import { Address, Email, Phone } from '@zinnia/api-types/types/sor';
+import { IconType, Label } from '@zinnia/bloom/internal/components';
+import { Metadata } from 'next';
+
+import { BankData } from '@/components/bank-data/BankData';
+import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
+import { FieldData } from '@/components/field-data/FieldData';
+import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
+import MockMessage from '@/components/MockMessage';
+import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
+import { Addresses } from '@/components/person-data/Addresses';
+import { Emails } from '@/components/person-data/Emails';
+import { Phones } from '@/components/person-data/Phones';
+import { getPageTitle, RouteKey } from '@/route-map';
+import { getPolicyProfileData } from '@/services';
+import { PolicyRequestInputs } from '@/types/policy';
+import { filterItemsWithPastEndDate, fullName } from '@/utils/data';
+
+import styles from './Profile.module.css';
+
+const pageTitle = getPageTitle(RouteKey.PROFILE);
+// disable because NextJS needs this to be exported from this file
+// eslint-disable-next-line react-refresh/only-export-components
+export const metadata: Metadata = {
+  title: pageTitle,
+};
+
+interface Props {
+  params: PolicyRequestInputs;
+}
+
+export default async function Profile({ params }: Props) {
+  const { data, error } = await getPolicyProfileData({
+    planCode: params.planCode,
+    policyNumber: params.policyNumber,
+  });
+
+  if (error) {
+    return (
+      <div className={styles.pageContainer}>
+        <HeaderBreadcrumb title={pageTitle} />
+        <div className="space-mb-gap-lg">
+          <MockMessage />
+          <NoDataAvailable
+            iconType={IconType.CIRCLE_USER}
+            message="There is currently no profile data available."
+          />
+        </div>
+      </div>
+    );
+  }
+
+  const profileData = data!;
+
+  const addresses = () => {
+    if (profileData.addresses && profileData.addresses.length) {
+      const currentAddresses = filterItemsWithPastEndDate(
+        profileData.addresses
+      );
+
+      if (currentAddresses && currentAddresses.length) {
+        return (
+          <Addresses
+            addresses={currentAddresses as Address[]}
+            title="Address"
+            preferredAddressIndicator={profileData.preferredAddressIndicator}
+          />
+        );
+      }
+    }
+
+    return null;
+  };
+
+  const phone = () => {
+    if (profileData.phones && profileData.phones.length) {
+      const currentPhones = filterItemsWithPastEndDate(profileData.phones);
+
+      if (currentPhones) {
+        return <Phones phones={currentPhones as Phone[]} title="Phone" />;
+      }
+    }
+
+    return null;
+  };
+
+  const email = () => {
+    if (profileData.emails && profileData.emails.length) {
+      const currentEmails = filterItemsWithPastEndDate(profileData.emails);
+
+      if (currentEmails) {
+        return <Emails emails={currentEmails as Email[]} title="Email" />;
+      }
+    }
+
+    return null;
+  };
+
+  const bank = () => {
+    if (profileData.bankDetails && profileData.bankDetails.length) {
+      const allBankData = profileData.bankDetails.map(bankDetail => {
+        return <BankData key={bankDetail.accountNumber} {...bankDetail} />;
+      });
+
+      if (allBankData) {
+        return (
+          <div>
+            <h2 className="mb-lg">Banking Details</h2>
+            <div className={styles.multipleItemsInSection}>{allBankData}</div>
+          </div>
+        );
+      }
+    }
+
+    return null;
+  };
+
+  return (
+    <div className="container">
+      <HeaderBreadcrumb title={pageTitle} />
+
+      <div className="info-card-container">
+        <div>
+          <h2 className="mb-lg">Name</h2>
+          <FieldData Label={<Label>Owner</Label>}>
+            <p className="typography-content-body-sm">
+              {fullName({
+                firstName: profileData?.name?.firstName,
+                lastName: profileData?.name?.lastName,
+              })}
+            </p>
+          </FieldData>
+        </div>
+
+        {addresses()}
+        {phone()}
+        {email()}
+        {bank()}
+      </div>
+
+      <CallForAssistance />
+    </div>
+  );
+}

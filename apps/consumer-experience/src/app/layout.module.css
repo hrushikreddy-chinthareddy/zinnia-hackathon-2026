@@ -1,6 +1,7 @@
 .body {
   background-color: var(--color-base-surface-surface-tertiary, #ededed);
   overflow: auto;
+  scroll-behavior: smooth;
 }
 
 .container {

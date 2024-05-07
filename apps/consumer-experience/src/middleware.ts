@@ -4,7 +4,7 @@ import {
 } from 'next/dist/server/web/spec-extension/cookies';
 import { NextResponse, type NextRequest } from 'next/server';
 
-import { getRedirectUrl, redirects } from '@/redirects';
+import { RouteKey, getRedirectUrl, routeMap } from '@/route-map';
 import { isMockAllowed } from '@/utils';
 import {
   HAD_PREVIOUS_SESSION_COOKIE_KEY,
@@ -122,7 +122,7 @@ export async function middleware(req: NextRequest) {
     }
 
     const returnUrl = await getReturnUrlCookie();
-    const redirectObj = redirects[returnUrl?.pathname || ''];
+    const redirectObj = routeMap[returnUrl?.pathname || ''];
 
     // if we have a return url and the route isn't a "friendly" path, for example /riders
     // it means we should redirect to the fully qualified path
@@ -153,7 +153,7 @@ export async function middleware(req: NextRequest) {
       return resRedirect;
     }
 
-    const redirect = redirects[pathname];
+    const redirect = pathname !== RouteKey.POLICIES && routeMap[pathname];
     // if we get here and we have a redirect we need to determine how many policies a user has
     // if they have multiple policies or some unknown error occurs we send them to the policies index page
     // after the user select a policy we will redirect them to the appropiate page.

@@ -88,6 +88,7 @@ export const Pagination = ({
           const displayNum = num + 1;
           return (
             <li
+              key={displayNum}
               style={
                 {
                   '--small-order': displayNum,

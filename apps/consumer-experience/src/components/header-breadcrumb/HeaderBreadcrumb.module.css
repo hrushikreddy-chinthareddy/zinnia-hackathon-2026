@@ -8,7 +8,7 @@
     margin-right: var(--measure-dimension-gap-md, 0.5rem);
   }
 
-  &:hover {
+  &:hover:has(> a) {
     h1 {
       text-decoration: underline;
       text-decoration-color: var(

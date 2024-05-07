@@ -1,4 +1,3 @@
-import { PolicyReferenceDataModel } from '@zinnia/api-types/types/search';
 import {
   PartyRole,
   Policy,
@@ -23,7 +22,6 @@ import {
   PolicyCoverage,
   PolicyDetails,
   PolicyProfile,
-  PolicyReferenceData,
   UpcomingPremium,
   ExtendedTransactionStatus,
   PaymentHistory,
@@ -84,7 +82,7 @@ const allBeneficiaries = (policy: Policy) => {
 };
 
 export const transformPolicyReferenceData = (
-  policyReferences: Policy[]
+  policyReferences: Partial<Policy>[]
 ): CarrierPolicyDetails[] => {
   return policyReferences.map(p => {
     const policyDetails = transformPolicyForHeaderDetails(p);
@@ -124,6 +122,7 @@ export const transformPolicyForHeaderDetails = (
   policy: Policy
 ): PolicyDetails => {
   const ownerInfo = policyOwner(policy);
+
   return {
     marketingName: policy.product?.marketingName || '',
     planName: policy.product?.planName || '',

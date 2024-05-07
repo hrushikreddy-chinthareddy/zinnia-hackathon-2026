@@ -1,12 +1,14 @@
-import { DocumentApiRequestInputs, PolicyDocument } from '@/types/document';
 import { DownloadDocumentResponse } from '@zinnia/api-types/types/documents';
+
+import { DocumentApiRequestInputs, PolicyDocument } from '@/types/document';
+import { logWarn } from '@/utils/logging/server-logging';
+
 import {
   ApiResponse,
   ServerApi,
   documentApiBaseUrl,
   isMockDocumentRequestEnabled,
 } from '..';
-import { logWarn } from '@/utils/logging/server-logging';
 import { mockDocumentResponse } from '../mocks/document';
 
 export const getDocumentDownload = async (
@@ -41,7 +43,7 @@ export const getDocumentDownload = async (
 export const getDocuments = async (
   queryParams: Partial<DocumentApiRequestInputs>
 ): Promise<PolicyDocument> => {
-  const { contractNumber, clientCode, source, recipient } = queryParams;
+  const { clientCode, source } = queryParams;
   const documentQueryParams = new URLSearchParams();
   for (const key in queryParams) {
     if (queryParams[key as keyof typeof queryParams] !== undefined) {

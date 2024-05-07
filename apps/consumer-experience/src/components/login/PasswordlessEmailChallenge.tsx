@@ -84,6 +84,7 @@ export const PasswordlessEmailChallenge = ({ email }: { email: string }) => {
       <input type="hidden" name="email" value={userEmail} />
       <div className={styles.formGroup}>
         <input
+          aria-label="Enter your email"
           type="email"
           className={styles.input}
           defaultValue={decodeURIComponent(userEmail)}
