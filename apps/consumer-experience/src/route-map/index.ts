@@ -49,7 +49,7 @@ export const routeMap: Index<RouteMap> = {
   [RouteKey.COVERAGE]: {
     destination: '/policies/[planCode]/[policyNumber]/coverage',
     source: '/coverage',
-    title: 'Increase coveragte',
+    title: 'Increase coverage',
   },
   [RouteKey.ACCOUNT]: {
     destination: '/policies/[planCode]/[policyNumber]/account',
