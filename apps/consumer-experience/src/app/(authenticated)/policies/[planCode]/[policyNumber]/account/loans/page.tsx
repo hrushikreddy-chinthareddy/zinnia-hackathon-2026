@@ -31,13 +31,7 @@ const eligibleTextHighlight = 'Your policy is eligible for a loan right now.';
 const ineligibleTextHighlight =
   'Hang tight! Your account value isn’t eligible for a loan right now.';
 
-const eligibleEducationText =
-  'When you are eligible, you can take a loan from your policy at any time, as long as funds are available. Keep in mind: Aside from incurring interest, a loan may reduce your coverage amount. But unlike other types of loans, a loan from your policy does not have to be paid back on a schedule.';
-
-const ineligibleEducationText =
-  'Hang tight! Your policy isn’t eligible for a loan right now.] When you are eligible, you can take a loan from your policy at any time, as long as funds are available. Keep in mind: Aside from incurring interest, a loan may reduce your coverage amount. But unlike other types of loans, a loan from your policy does not have to be paid back on a schedule.';
-
-export default async function Withdrawals({
+export default async function Loans({
   params,
 }: {
   params: PolicyRequestInputs;
@@ -53,17 +47,26 @@ export default async function Withdrawals({
       return <NoDataAvailable message={DEFAULT_UNAVAILABLE_STRING} />;
     }
 
+    // Eligibility is only shown as false if the value is truly false. If it is null or undefined,
+    // we want to still show "eligible" so that the user can still try to take the withdrawal
+    // and the backend system can determine true eligibility
+    const eligibleIsFalse = data.isEligible === false;
+
     return (
       <>
         <p className="typography-content-body-sm">
           <span className="typography-content-body-sm-bold">
-            {data.isEligible ? eligibleTextHighlight : ineligibleTextHighlight}{' '}
+            {!eligibleIsFalse ? eligibleTextHighlight : ineligibleTextHighlight}{' '}
           </span>
-          {data.isEligible ? eligibleEducationText : ineligibleEducationText}{' '}
+          When you are eligible, you can take a loan from your policy at any
+          time, as long as funds are available. Keep in mind: Aside from
+          incurring interest, a loan may reduce your coverage amount. But unlike
+          other types of loans, a loan from your policy does not have to be paid
+          back on a schedule.
         </p>
         <div className="card">
           <StatusIconText
-            isEligible={data.isEligible}
+            isEligible={!eligibleIsFalse}
             showIcon
             className="typography-content-body-bold mb-lg"
           />

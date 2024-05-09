@@ -275,9 +275,10 @@ export const transformPolicyForWithdrawals = (
 
 export const transformPolicyForLoans = (policy: Policy): PolicyLoans => {
   const isEligible =
-    policy?.policyStatus === PolicyStatus.ACTIVE &&
-    !!policy?.accountValues?.beginningAccountValue &&
-    policy?.accountValues?.beginningAccountValue > 0;
+    !policy?.policyStatus || !policy?.accountValues
+      ? undefined
+      : policy?.policyStatus === PolicyStatus.ACTIVE &&
+        policy.accountValues.beginningAccountValue! > 0;
 
   return {
     totalLoanBalance: policy.loanValues?.totalLoanBalance,

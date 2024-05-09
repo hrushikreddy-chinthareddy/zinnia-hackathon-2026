@@ -30,31 +30,31 @@
     --color-grayscale-color-white
   );
   --color-button-primary-button-primary-hover-fill: var(
-    --color-primary-color-primary
+    --color-primary-color-primary-lighter
   );
   --color-button-primary-button-primary-hover-border: var(
-    --color-primary-color-primary
+    --color-primary-color-primary-lighter
   );
   --color-button-secondary-button-secondary-hover-text: var(
-    --color-grayscale-color-white
+    --color-grayscale-color-900-gray
   );
   --color-button-primary-button-primary-pressed-fill: var(
-    --color-primary-color-primary
+    --color-primary-color-primary-light
   );
   --color-button-primary-button-primary-pressed-border: var(
-    --color-primary-color-primary
+    --color-primary-color-primary-light
   );
   --color-button-primary-button-primary-pressed-text: var(
-    --color-grayscale-color-white
+    --color-grayscale-color-900-gray
   );
   --color-button-primary-button-primary-selected-fill: var(
-    --color-primary-color-primary
+    --color-primary-color-primary-light
   );
   --color-button-primary-button-primary-selected-border: var(
-    --color-primary-color-primary
+    --color-primary-color-primary-light
   );
   --color-button-primary-button-primary-selected-text: var(
-    --color-grayscale-color-white
+    --color-grayscale-color-900-gray
   );
 
   --color-button-secondary-button-secondary-selected-text: var(
