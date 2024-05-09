@@ -14,7 +14,7 @@ import { RouteKey, getPageTitle } from '@/route-map';
 import { getPolicyLoanDetails } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
-import { standardDateMonthYear } from '@/utils/dates';
+import { standardDateMonthDayYear } from '@/utils/dates';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 const pageTitle = getPageTitle(RouteKey.LOANS);
@@ -27,12 +27,11 @@ export const metadata: Metadata = {
 const AVAILABLE_TO_BORROW = 'Available to borrow';
 const TOTAL_LOAN_BALANCE = 'Total loan balance';
 
-const eligibleTextHighlight =
-  'Your account value is eligible for a loan right now.';
+const eligibleTextHighlight = 'Your policy is eligible for a loan right now.';
 const ineligibleTextHighlight =
   'Hang tight! Your account value isn’t eligible for a loan right now.';
 
-export default async function Withdrawals({
+export default async function Loans({
   params,
 }: {
   params: PolicyRequestInputs;
@@ -48,20 +47,26 @@ export default async function Withdrawals({
       return <NoDataAvailable message={DEFAULT_UNAVAILABLE_STRING} />;
     }
 
+    // Eligibility is only shown as false if the value is truly false. If it is null or undefined,
+    // we want to still show "eligible" so that the user can still try to take the withdrawal
+    // and the backend system can determine true eligibility
+    const eligibleIsFalse = data.isEligible === false;
+
     return (
       <>
         <p className="typography-content-body-sm">
           <span className="typography-content-body-sm-bold">
-            {data.isEligible ? eligibleTextHighlight : ineligibleTextHighlight}{' '}
+            {!eligibleIsFalse ? eligibleTextHighlight : ineligibleTextHighlight}{' '}
           </span>
-          You can take a loan from your account value at any time, as long as
-          funds are available. Keep in mind: Aside from incurring interest, a
-          loan may reduce your coverage amount. But unlike other types of loans,
-          a loan from your policy does not have to be paid back on a schedule.
+          When you are eligible, you can take a loan from your policy at any
+          time, as long as funds are available. Keep in mind: Aside from
+          incurring interest, a loan may reduce your coverage amount. But unlike
+          other types of loans, a loan from your policy does not have to be paid
+          back on a schedule.
         </p>
         <div className="card">
           <StatusIconText
-            isEligible={data.isEligible}
+            isEligible={!eligibleIsFalse}
             showIcon
             className="typography-content-body-bold mb-lg"
           />
@@ -83,10 +88,12 @@ export default async function Withdrawals({
                       }
                     >
                       <p>
-                        This amount is how much you may borrow from the account
-                        value of your policy. Keep in mind, loans have
-                        consequences. Aside from incurring interest, a loan may
-                        reduce your coverage amount.{' '}
+                        This amount is how much you may borrow from your policy.
+                        Keep in mind, loans have consequences. Aside from
+                        incurring interest, a loan may reduce your death
+                        benefit. If you surrender your policy or your policy
+                        lapses while you have an outstanding loan, there may
+                        also be tax consequences.
                       </p>
                     </Popover>,
                   ]}
@@ -102,7 +109,7 @@ export default async function Withdrawals({
             {!!data.totalLoanBalance && (
               <FieldData
                 caption={
-                  <span>{`As of ${standardDateMonthYear(data.timestamp)}`}</span>
+                  <span>{`As of ${standardDateMonthDayYear(data.timestamp)}`}</span>
                 }
                 Label={
                   <Label

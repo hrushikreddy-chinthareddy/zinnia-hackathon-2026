@@ -87,9 +87,10 @@ export const transformPolicyReferenceData = (
   return policyReferences.map(p => {
     const policyDetails = transformPolicyForHeaderDetails(p);
     return {
-      planCode: p.product?.planCode || '',
+      planCode: p?.product?.planCode || '',
       totalFundValue: p?.allocation?.funds?.[0]?.totalFundValue,
-      totalCoverageAmount: p.coverage?.totalCoverageAmount,
+      totalCoverageAmount: p?.coverage?.totalCoverageAmount,
+      policyStartDate: p?.policyDates?.policyStartDate,
       ...policyDetails,
     };
   });
@@ -101,6 +102,7 @@ export const transformPolicyForAccountValue = (
   return {
     timestamp: policy.timestamp,
     totalFundValue: policy?.allocation?.funds?.[0]?.totalFundValue,
+    policyStartDate: policy?.policyDates?.policyStartDate,
   };
 };
 
@@ -158,18 +160,19 @@ export const transformPolicyForUpcomingPremium = (
     nextActivityDate: policy.systematicPrograms?.[0]?.nextProgramDate || '',
     planName: policy.product?.planName || '',
     policyStatus: policy.policyStatus || PolicyStatus.NOTISSUED,
+    productType: policy?.product?.productType,
   };
 };
 
 export const transformPolicyForCoverage = (policy: Policy): PolicyCoverage => {
   return {
     beneficiaryCount: allBeneficiaries(policy).length,
-    maturityDate: policy.policyDates?.maturityDate,
-    policyStartDate: policy.policyDates?.policyStartDate,
-    totalCoverageAmount: policy.coverage?.totalCoverageAmount,
+    maturityDate: policy?.policyDates?.maturityDate,
+    policyStartDate: policy?.policyDates?.policyStartDate,
+    totalCoverageAmount: policy?.coverage?.totalCoverageAmount,
     maximumCoverageIncreaseAmount:
-      policy.coverage?.maximumCoverageIncreaseAmount,
-    riderCount: policy.riders?.length || 0,
+      policy?.coverage?.maximumCoverageIncreaseAmount,
+    riderCount: policy?.riders?.length || 0,
   };
 };
 
@@ -272,9 +275,10 @@ export const transformPolicyForWithdrawals = (
 
 export const transformPolicyForLoans = (policy: Policy): PolicyLoans => {
   const isEligible =
-    policy?.policyStatus === PolicyStatus.ACTIVE &&
-    !!policy?.accountValues?.beginningAccountValue &&
-    policy?.accountValues?.beginningAccountValue > 0;
+    !policy?.policyStatus || !policy?.accountValues
+      ? undefined
+      : policy?.policyStatus === PolicyStatus.ACTIVE &&
+        policy.accountValues.beginningAccountValue! > 0;
 
   return {
     totalLoanBalance: policy.loanValues?.totalLoanBalance,
@@ -535,6 +539,7 @@ export const transformPolicyStatusDetails = (
       policyStatus,
       lapsedOn: lapseAssessmentDetails?.endDate,
       reinstatmentDate: reinstantementDetails?.startDate,
+      reinstatementPeriod: reinstantementDetails?.period,
     };
   }
 

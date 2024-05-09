@@ -5,11 +5,17 @@ import {
   PopoverPlacement,
 } from '@zinnia/bloom/internal/components';
 
+import { standardDateMonthDayYear } from '@/utils/dates';
+
 import styles from './PolicyOverview.module.css';
 
 const COVERAGE = 'Coverage';
 
-export const CoveragePopover = () => {
+export const CoveragePopover = ({
+  policyStartDate,
+}: {
+  policyStartDate?: string | null;
+}) => {
   return (
     <Popover
       title={COVERAGE}
@@ -25,10 +31,13 @@ export const CoveragePopover = () => {
     >
       <div className={styles.popoverContent}>
         <p>
-          Rest assured, you’re insured for this amount as long as your policy is
-          active. Your coverage amount is also referred to as the policy’s
-          “death benefit.” If something happens to you, your beneficiaries can
-          claim this amount.
+          {`You’re insured for this amount. Your coverage amount may also be
+          referred to as the "face amount," or the amount of money stated in
+          your insurance contract. If something happens to you, your
+          beneficiaries may submit a claim for this amount (plus additional
+          account value and minus any outstanding loans or withdrawals, if
+          applicable) as of ${standardDateMonthDayYear(policyStartDate)}. The total payout after your death is
+          referred to as the "death benefit."`}
         </p>
       </div>
     </Popover>

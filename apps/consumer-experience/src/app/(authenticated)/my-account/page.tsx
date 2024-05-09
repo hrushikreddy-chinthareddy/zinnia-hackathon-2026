@@ -13,12 +13,10 @@ export default async function MyAccount() {
     <div className="container">
       <HeaderBreadcrumb title="Account" preventGoBack />
       <p className="typography-content-body-sm">
-        Your carrier relies on Zinnia Tech to manage your policies. This enables
-        you to conveniently access all your policies, even those with other
-        carriers integrated into Zinnia's system, from one centralized platform.
+        Use your policy portal account to conveniently manage all your policies.
       </p>
       <div style={{ display: 'flex', gap: 'var(--measure-dimension-gap-xl)' }}>
-        <FieldData Label={<Label>Your Zinnia Tech sign in email</Label>}>
+        <FieldData Label={<Label>Your sign-in email</Label>}>
           <p className="typography-content-body-sm">
             {checkIfNull(session?.user.email)}
           </p>

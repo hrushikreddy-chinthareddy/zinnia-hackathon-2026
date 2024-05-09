@@ -3,7 +3,7 @@ import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
 import {
   dateMonthWithTimeEST,
   dayOfMonthWithOrdinal,
-  standardDateMonthYear,
+  standardDateMonthDayYear,
 } from './dates';
 
 describe('dateMonthWithTimeEST', () => {
@@ -28,25 +28,25 @@ describe('dateMonthWithTimeEST', () => {
   });
 });
 
-describe('standardDateMonthYear', () => {
+describe('standardDateMonthDayYear', () => {
   it('should return a formatted date string when given a valid date string', () => {
     const date = '2024-02-26';
-    const result = standardDateMonthYear(date);
+    const result = standardDateMonthDayYear(date);
     expect(result).toBe('2/26/2024');
   });
 
   it('should return an empty string when given an invalid date string', () => {
-    const result = standardDateMonthYear('invalid');
+    const result = standardDateMonthDayYear('invalid');
     expect(result).toBe(DEFAULT_ERROR_STRING);
   });
 
   it('should return an empty string when given a null value', () => {
-    const result = standardDateMonthYear(null);
+    const result = standardDateMonthDayYear(null);
     expect(result).toBe(DEFAULT_ERROR_STRING);
   });
 
   it('should return an empty string when given an undefined value', () => {
-    const result = standardDateMonthYear(undefined);
+    const result = standardDateMonthDayYear(undefined);
     expect(result).toBe(DEFAULT_ERROR_STRING);
   });
 });

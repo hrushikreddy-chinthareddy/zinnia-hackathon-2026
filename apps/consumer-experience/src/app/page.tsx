@@ -22,7 +22,7 @@ export default async function WelcomePage() {
   return (
     <GenericInfoPage
       title="Welcome!"
-      description="Access your coverage easily and securely in Zinnia Tech’s policy management portal—no password needed."
+      description="Access your policies in the policy portal—no password needed."
       action={
         <Link
           href="/login"

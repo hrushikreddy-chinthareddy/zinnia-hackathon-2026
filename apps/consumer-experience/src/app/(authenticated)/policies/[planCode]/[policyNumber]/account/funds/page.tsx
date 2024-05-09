@@ -64,7 +64,7 @@ export default async function AccountValuePage({
         {allocationData()}
       </div>
       <CallForAssistance
-        callToAction="Questions about your fund?"
+        callToAction="Questions about your allocation?"
         customInstruction="for more information."
       />
     </div>

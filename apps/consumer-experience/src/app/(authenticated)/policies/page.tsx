@@ -81,7 +81,10 @@ export default async function Page({
                   Label={
                     <Label
                       interactiveElements={[
-                        <AccountValuePopover key="account-value-popover" />,
+                        <AccountValuePopover
+                          key="account-value-popover"
+                          policyStartDate={p.policyStartDate}
+                        />,
                       ]}
                     >
                       Account value
@@ -94,7 +97,10 @@ export default async function Page({
                   Label={
                     <Label
                       interactiveElements={[
-                        <CoveragePopover key="coverage-popover" />,
+                        <CoveragePopover
+                          key="coverage-popover"
+                          policyStartDate={p.policyStartDate}
+                        />,
                       ]}
                     >
                       Coverage

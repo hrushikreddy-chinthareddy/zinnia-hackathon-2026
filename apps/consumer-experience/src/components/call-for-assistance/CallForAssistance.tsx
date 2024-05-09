@@ -9,7 +9,7 @@ export const CallForAssistance = ({
   callToAction?: ReactNode;
   customInstruction?: string;
 }) => {
-  const instructionText = customInstruction || 'to add or make changes';
+  const instructionText = customInstruction || 'to add or make changes.';
 
   return (
     <p

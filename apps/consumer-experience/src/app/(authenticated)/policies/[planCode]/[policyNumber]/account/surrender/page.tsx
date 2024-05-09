@@ -46,10 +46,11 @@ export default async function SurrenderPolicy({
         <p className="typography-content-body-sm">
           <span className="typography-content-body-sm-bold">
             Are you sure? Surrendering a policy means ending your coverage for a
-            lump sum payment.{' '}
+            lump sum payment of the account surrender value.{' '}
           </span>
           That could mean losing important financial protection for your
-          beneficiaries. Canceling your policy may also have tax consequences.
+          beneficiaries. Surrendering your policy may also have tax
+          consequences.
         </p>
         <div className="card">
           <div className="column-card">
@@ -75,11 +76,11 @@ export default async function SurrenderPolicy({
                       }
                     >
                       <p>
-                        Your net surrender value=the current account value minus
-                        surrender charges, outstanding loans, and other fees.
-                        This number tells you how much you can expect to receive
-                        if you decide to surrender your policy and cancel your
-                        coverage.
+                        Your net surrender value is the current account value
+                        minus surrender charges, outstanding loans, and other
+                        fees. This number tells you how much you can expect to
+                        receive if you decide to surrender your policy and
+                        cancel your coverage.
                       </p>
                     </Popover>,
                   ]}

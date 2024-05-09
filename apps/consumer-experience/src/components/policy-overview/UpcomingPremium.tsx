@@ -9,7 +9,7 @@ import { UpcomingPremiumPopover } from '@/components/policy-overview/UpcomingPre
 import { getUpcomingPremium } from '@/services';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined } from '@/utils/data';
-import { standardDateMonthYear } from '@/utils/dates';
+import { standardDateMonthDayYear } from '@/utils/dates';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 import styles from './PolicyOverview.module.css';
@@ -42,12 +42,7 @@ export const UpcomingPremium = async ({
     );
   }
 
-  const {
-    amount,
-    nextActivityDate,
-    policyStatus,
-    planName: policyName,
-  } = data!;
+  const { amount, nextActivityDate, policyStatus, productType } = data!;
   let currentAmount = amount;
 
   // TODO: add locked status here once confirmed what that is
@@ -62,7 +57,7 @@ export const UpcomingPremium = async ({
     }
 
     return nextActivityDate
-      ? `Autopay on ${standardDateMonthYear(nextActivityDate)}`
+      ? `Autopay on ${standardDateMonthDayYear(nextActivityDate)}`
       : '';
   };
 
@@ -113,7 +108,7 @@ export const UpcomingPremium = async ({
               interactiveElements={[
                 <UpcomingPremiumPopover
                   key="upcoming-popover"
-                  policyName={policyName}
+                  productType={productType}
                 />,
               ]}
             >

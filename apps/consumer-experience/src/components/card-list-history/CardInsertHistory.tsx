@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 
 import cardStyles from '@/components/clickable-card-container/clickableCardContainer.module.css';
 import { formatUSDollars } from '@/utils/currency';
-import { standardDateMonthYear } from '@/utils/dates';
+import { standardDateMonthDayYear } from '@/utils/dates';
 
 import styles from './CardInsertHistory.module.css';
 
@@ -36,7 +36,7 @@ export const CardInsertHistory = ({
         >
           {/* Keeping this hardcoded as scheduled for now, but may need to become a prop at some point */}
           {isPending && <span>Scheduled </span>}
-          <span>{standardDateMonthYear(date)}</span>
+          <span>{standardDateMonthDayYear(date)}</span>
         </p>
         <div className={`typography-labels-label-md-alt ${styles.title}`}>
           {title}

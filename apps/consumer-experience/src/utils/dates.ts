@@ -31,7 +31,7 @@ const isValidDate = (date: string | null | undefined) => {
  * @param date
  * @returns format 2/26/2024
  */
-export const standardDateMonthYear = (
+export const standardDateMonthDayYear = (
   date: string | null | undefined
 ): string => {
   if (!isValidDate(date)) {
