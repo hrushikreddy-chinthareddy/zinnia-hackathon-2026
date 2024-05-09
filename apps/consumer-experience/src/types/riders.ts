@@ -26,3 +26,8 @@ export interface PolicyRider {
   title?: string;
   isOwner: boolean;
 }
+
+export interface RidersAndBenefits {
+  riders: PolicyRider[] | null;
+  additionalBenefits: PolicyRider[] | null;
+}

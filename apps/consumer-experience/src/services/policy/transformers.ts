@@ -35,7 +35,7 @@ import {
   PolicyFeatureDetail,
   CarrierPolicyDetails,
 } from '@/types/policy';
-import { PolicyRider } from '@/types/riders';
+import { RidersAndBenefits } from '@/types/riders';
 import {
   allowedAnnualWithdrawals,
   bankAccountNumberSanitizer,
@@ -412,17 +412,14 @@ export const transformPaymentHistory = (
   return paymentHistoryObject;
 };
 
-export const transformRiders = (policy: Policy): PolicyRider[] | null => {
+export const transformRiders = (policy: Policy): RidersAndBenefits => {
   const { riders } = policy;
   const lapsedProtection = transformPolicyFeature(
     policy,
     'LAPSEPROTECTION' as PolicyFeature.featureType
   );
 
-  if (!riders || !riders.length) {
-    return null;
-  }
-
+  const additionalBenefits = [];
   const ownerInfo = policyOwner(policy);
   const insuredPartyFromRoles = policy.partyRoles?.find(
     party => party.partyRole?.toLowerCase() === PartyRole.INSURED.toLowerCase()
@@ -431,7 +428,7 @@ export const transformRiders = (policy: Policy): PolicyRider[] | null => {
     party => party.partyId === insuredPartyFromRoles?.partyId
   );
 
-  const allRiders = riders.map(rider => {
+  const allRiders = riders?.map(rider => {
     const riderInsured = rider.riderParticipant?.find(
       party => party.insuredId === insuredPartyFromRoles?.partyId
     );
@@ -453,7 +450,7 @@ export const transformRiders = (policy: Policy): PolicyRider[] | null => {
   });
 
   if (lapsedProtection) {
-    allRiders.push({
+    additionalBenefits.push({
       riderCode: lapsedProtection.featureType,
       cost: lapsedProtection.paymentAmount,
       description: getRiderDescription(lapsedProtection.featureType || ''),
@@ -469,7 +466,10 @@ export const transformRiders = (policy: Policy): PolicyRider[] | null => {
     });
   }
 
-  return allRiders;
+  return {
+    riders: allRiders || null,
+    additionalBenefits: additionalBenefits || null,
+  };
 };
 
 export const transformPolicyFeature = (

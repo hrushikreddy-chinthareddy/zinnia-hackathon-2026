@@ -72,7 +72,7 @@ import {
   PolicySurrender,
   CarrierPolicyDetails,
 } from '@/types/policy';
-import { PolicyRider } from '@/types/riders';
+import { PolicyRider, RidersAndBenefits } from '@/types/riders';
 
 import { getDocuments } from '../document';
 import { mockDocumentsResponse } from '../mocks/documents';
@@ -903,7 +903,7 @@ export const getPolicyLoanDetails = async (
 
 export const getRiders = async (
   options: PolicyRequestInputs
-): Promise<ApiResponse<PolicyRider[]>> => {
+): Promise<ApiResponse<RidersAndBenefits>> => {
   if (isMockRidersRequestEnabled()) {
     const transformedResults = transformRiders(mockPolicyResponse);
 

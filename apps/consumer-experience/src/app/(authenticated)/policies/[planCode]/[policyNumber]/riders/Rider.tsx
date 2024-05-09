@@ -17,6 +17,10 @@ import { standardDateMonthYear } from '@/utils/dates';
 
 import styles from './Rider.module.css';
 
+interface RiderProps extends PolicyRider {
+  hidePopover?: boolean;
+}
+
 export const Rider = ({
   isElected,
   cost,
@@ -26,7 +30,8 @@ export const Rider = ({
   status,
   title,
   isOwner,
-}: PolicyRider) => {
+  hidePopover,
+}: RiderProps) => {
   return (
     <div className={styles.riderContainer}>
       <h3 className="typography-titles-subtitle">{toSentenceCase(title)}</h3>
@@ -50,28 +55,30 @@ export const Rider = ({
             <FieldData
               Label={
                 <Label
-                  interactiveElements={[
-                    <Popover
-                      key={title}
-                      title="Effective date"
-                      trigger={
-                        <Icon
-                          width={16}
-                          height={16}
-                          type={IconType.CIRCLE_INFO}
-                          color="var(--colors-base-icon-icon-tooltip, #ff4f00)"
-                        />
-                      }
-                    >
-                      <p className="typography-content-body mt-sm">
-                        Your rider covers you from this date. So if you
-                        experience a qualifying event, like diagnosis of a
-                        covered illness, after the effective date and while your
-                        policy is active you can make a claim for your rider’s
-                        benefit.
-                      </p>
-                    </Popover>,
-                  ]}
+                  {...(!hidePopover && {
+                    interactiveElements: [
+                      <Popover
+                        key={title}
+                        title="Effective date"
+                        trigger={
+                          <Icon
+                            width={16}
+                            height={16}
+                            type={IconType.CIRCLE_INFO}
+                            color="var(--colors-base-icon-icon-tooltip, #ff4f00)"
+                          />
+                        }
+                      >
+                        <p className="typography-content-body mt-sm">
+                          Your rider covers you from this date. So if you
+                          experience a qualifying event, like diagnosis of a
+                          covered illness, after the effective date and while
+                          your policy is active you can make a claim for your
+                          rider’s benefit.
+                        </p>
+                      </Popover>,
+                    ],
+                  })}
                 >
                   Effective date
                 </Label>

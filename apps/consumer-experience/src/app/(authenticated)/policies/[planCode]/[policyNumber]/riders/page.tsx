@@ -25,8 +25,8 @@ export default async function Riders({
     policyNumber: params.policyNumber,
   });
 
-  const electedRiders = data?.filter(rider => rider.isElected);
-  const additionalRiders = data?.filter(rider => !rider.isElected);
+  const electedRiders = data?.riders?.filter(rider => rider.isElected);
+  const additionalRiders = data?.riders?.filter(rider => !rider.isElected);
 
   return (
     <div className="container">
@@ -38,7 +38,9 @@ export default async function Riders({
         you need them. You can learn more about what your riders cover in your
         policy documents.
       </p>
-      {(error || !data) && (
+      {(error ||
+        !data ||
+        (!data.riders?.length && !data.additionalBenefits?.length)) && (
         <div className="container">
           <div className="space-mb-gap-lg">
             <MockMessage />
@@ -49,40 +51,49 @@ export default async function Riders({
           </div>
         </div>
       )}
-      {data && data.length && (
-        <>
-          {!!electedRiders?.length && (
-            <div className="card-container">
-              <h2 className="pb-2xl border-b">My Riders</h2>
-              {electedRiders?.map(rider => (
-                <Rider key={rider.riderCode} {...rider} />
-              ))}
-              <CallForAssistance
-                callToAction="Need to make a claim?"
-                customInstruction="to begin the process."
-              />
+      <>
+        {!!electedRiders?.length && (
+          <div>
+            <h2 className="pb-2xl border-b mt-lg">My Riders</h2>
+            {electedRiders?.map(rider => (
+              <Rider key={rider.riderCode} {...rider} />
+            ))}
+          </div>
+        )}
+        {!!additionalRiders?.length && (
+          <div>
+            <div>
+              <h2 className="pb-2xl border-b mt-lg">Additional Riders</h2>
+              <p className="typography-content-body">
+                Looks like there are additional riders for your policy, but
+                they're not covering you yet.
+              </p>
             </div>
-          )}
-          {!!additionalRiders?.length && (
-            <div className="card-container">
-              <div>
-                <h2 className="pb-2xl border-b">Additional Riders</h2>
-                <p className="typography-content-body">
-                  Looks like there are additional riders for your policy, but
-                  they're not covering you—yet.
-                </p>
-              </div>
-              {additionalRiders?.map(rider => (
-                <Rider key={rider.riderCode} {...rider} />
-              ))}
-              <CallForAssistance
-                callToAction="Need to add a rider?"
-                customInstruction="to begin the process."
+            {additionalRiders?.map(rider => (
+              <Rider key={rider.riderCode} {...rider} />
+            ))}
+          </div>
+        )}
+      </>
+      {data?.additionalBenefits?.length && (
+        <div>
+          <h2 className="pb-2xl border-b mt-lg">Additional Benefits</h2>
+          {data.additionalBenefits.map(rider => {
+            return (
+              <Rider
+                key={rider.riderCode}
+                {...rider}
+                // Hide popover for any additional features that have an effective date
+                hidePopover={!!rider.effectiveDate}
               />
-            </div>
-          )}
-        </>
+            );
+          })}
+        </div>
       )}
+      <CallForAssistance
+        callToAction="Need to make a claim?"
+        customInstruction="to begin the process."
+      />
     </div>
   );
 }
