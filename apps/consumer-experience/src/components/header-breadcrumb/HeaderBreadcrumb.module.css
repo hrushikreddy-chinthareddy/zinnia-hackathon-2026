@@ -9,6 +9,16 @@
   }
 }
 
+.headerBreadcrumbAction {
+  padding: var(--measure-dimension-padding-md, 6px);
+  border-radius: var(--measure-dimension-radius-sm);
+  &:hover {
+    background-color: var(--color-pagination-pagination-background-hover-fill);
+    padding: var(--measure-dimension-padding-md, 6px);
+    border-radius: var(--measure-dimension-radius-sm);
+  }
+}
+
 .headerBreadcrumbAction::before {
   content: '';
   position: absolute;

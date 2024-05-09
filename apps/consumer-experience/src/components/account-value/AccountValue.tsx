@@ -72,7 +72,7 @@ export const AccountValue = async ({
         </FieldData>
       </div>
       {!hideTicker && (
-        <div className={!isLink ? 'ml-lg' : 'mx-lg'}>
+        <div className={!isLink ? 'ml-lg' : 'mr-lg ml-md'}>
           <Ticker value={valueChange} subtext="Last 30 days" />
         </div>
       )}

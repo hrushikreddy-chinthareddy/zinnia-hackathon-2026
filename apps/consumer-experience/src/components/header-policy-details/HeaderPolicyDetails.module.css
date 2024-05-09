@@ -1,9 +1,6 @@
 .container {
   display: flex;
   align-items: center;
-  /* This is absolutely positioned because its on the layout page but needs to be in the same row as each page header
-  to ensure that the link is always clickable, need to set zIndex high so it is stacked correctly */
-  z-index: 900;
 }
 
 .desktopBadge {
@@ -11,11 +8,6 @@
 }
 
 @media (width > 768px) {
-  .container {
-    position: absolute;
-    right: 0;
-  }
-
   .desktopBadge {
     display: inline-block;
   }

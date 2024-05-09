@@ -10,6 +10,17 @@
   }
 }
 
+/*
+* If there is no div with content and the container only contains a list of items,
+* want to add a border top to the container because we remove all other listItem border-top
+* styling to prevent double up borders
+*/
+.clickableCardContainer:has(ul:only-child) {
+  border-top: var(--border-style);
+  border-top-left-radius: var(--measure-dimension-radius-sm, 0.25rem);
+  border-top-right-radius: var(--measure-dimension-radius-sm, 0.25rem);
+}
+
 /* When there is a list before the main card, only top card should
 ave top radius and last card should have bottom radius */
 .clickableCardContainer:has(ul) {
