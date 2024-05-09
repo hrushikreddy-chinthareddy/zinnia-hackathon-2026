@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
-import { REFRESH_ROUTER } from '@/utils/serverClientUtils';
+import { REFRESH_ROUTER_COOKIE_KEY } from '@/utils/serverClientUtils';
 
 /**
  * NextJS caches route information client side so they can route quicker
@@ -24,9 +24,9 @@ const RefreshRouterManager = ({ children }: { children: React.ReactNode }) => {
     if (pathname === '/policies') {
       return;
     }
-    const refreshRouter = Cookies.get(REFRESH_ROUTER) === '1';
+    const refreshRouter = Cookies.get(REFRESH_ROUTER_COOKIE_KEY) === '1';
     if (refreshRouter) {
-      Cookies.remove(REFRESH_ROUTER);
+      Cookies.remove(REFRESH_ROUTER_COOKIE_KEY);
       router.refresh();
     }
   }, [pathname, router]);

@@ -7,12 +7,13 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { RouteKey, getRedirectUrl, routeMap } from '@/route-map';
 import { isMockAllowed } from '@/utils';
 import {
+  CARRIER_COOKIE_KEY,
   HAD_PREVIOUS_SESSION_COOKIE_KEY,
   MFA_OOB_CODE_COOKIE_KEY,
   MFA_TOKEN_COOKIE_KEY,
   MOCK_COOKIE_KEY,
   MOCK_ERROR_COOKIE_KEY,
-  RETURN_TO_URL,
+  RETURN_TO_URL_COOKIE_KEY,
   SHOW_DEV_MENU_COOKIE_KEY,
 } from '@/utils/serverClientUtils';
 
@@ -27,11 +28,13 @@ import {
   getOobMfaCookie,
   getReturnUrlCookie,
   getSession,
+  setCookie,
   setRefreshRouterCookie,
   setReturnUrlCookie,
   setTermsAndConditionsCookie,
   touchSession,
 } from './utils/auth';
+import { appUrl } from './utils/url';
 
 /**
  * NextJS doesn't foward the headers to react server components.
@@ -96,8 +99,18 @@ export async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
   const isLoginLikeOrRoot = pathname.includes('/login') || pathname === '/';
   const isSessionPage = pathname === '/session';
-
   if (session) {
+    const cuiUrl = appUrl(`${pathname}${req.nextUrl.search}`);
+    if (cuiUrl.isCarrierRequest) {
+      const resRedirect = NextResponse.redirect(cuiUrl.href);
+      // TODO: CARRIER - setting this up for when we need to support multiple carriers
+      setCookie({
+        cookieName: CARRIER_COOKIE_KEY,
+        value: cuiUrl.carrier,
+        res: resRedirect,
+      });
+      return resRedirect;
+    }
     // since the user has a session we need to check if they signed the terms and conditions
     // we only want to do this once per session. We will store the value on the user object
     if (!session.user.hasSignedTermsAndConditions) {
@@ -128,7 +141,7 @@ export async function middleware(req: NextRequest) {
     // it means we should redirect to the fully qualified path
     if (returnUrl && !redirectObj) {
       const resRedirect = NextResponse.redirect(new URL(returnUrl.href));
-      await deleteCookie(RETURN_TO_URL, resRedirect);
+      await deleteCookie(RETURN_TO_URL_COOKIE_KEY, resRedirect);
       return resRedirect;
     }
 
@@ -149,7 +162,7 @@ export async function middleware(req: NextRequest) {
         policyNumber,
       });
       const resRedirect = NextResponse.redirect(new URL(url, req.url));
-      await deleteCookie(RETURN_TO_URL, resRedirect);
+      await deleteCookie(RETURN_TO_URL_COOKIE_KEY, resRedirect);
       return resRedirect;
     }
 

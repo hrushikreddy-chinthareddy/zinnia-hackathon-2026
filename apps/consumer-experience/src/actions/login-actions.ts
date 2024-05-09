@@ -19,6 +19,7 @@ import {
   setMfaOobCookie,
 } from '@/utils/auth';
 import { logTrace, logWarn } from '@/utils/logging/server-logging';
+import { appUrl } from '@/utils/url';
 /**
  * Initiates the passwordless authentication process by sending a verification code to the provided email.
  *
@@ -137,9 +138,9 @@ export async function resendVerificationCode(
       ...loggingContext,
       error: (e as Auth0ErrorResponse)?.error ?? (e as Error)?.message,
     });
+    // since we log the error we always want to return true as to not give away if the users email is invalid
     return {
-      error: 'bad.connection',
-      error_description: 'Unable to send verification code. Please try again.',
+      success: true,
     };
   }
 }
@@ -283,7 +284,9 @@ export async function verifyPasswordlessStartChallenge(
   const tokenData = data! as OauthToken;
 
   await setLoginCookies(tokenData);
-  return redirect(`/policies?fromLogin=true`);
+  const url = appUrl('/policies?fromLogin=true');
+
+  return redirect(url.href);
 }
 /**
  * Async function to associate MFA with the provided form data.
@@ -450,7 +453,9 @@ export async function verifyMfaChallenge(
 
   const tokenData = data! as OauthToken;
   await setLoginCookies(tokenData);
-  return redirect(`/policies`);
+  const url = appUrl('/policies?fromLogin=true');
+
+  return redirect(url.href);
 }
 
 export async function resendMfaChallenge(

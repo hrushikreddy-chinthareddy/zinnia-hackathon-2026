@@ -21,12 +21,13 @@ import { logWarn } from './logging/server-logging';
 import {
   AGREED_TO_TERMS_AND_CONDITIONS_COOKIE_KEY,
   APP_SESSION_COOKIE_KEY,
+  CARRIER_COOKIE_KEY,
   HAD_PREVIOUS_SESSION_COOKIE_KEY,
   MAX_COOKIE_SIZE,
   MFA_OOB_CODE_COOKIE_KEY,
   MFA_TOKEN_COOKIE_KEY,
-  REFRESH_ROUTER,
-  RETURN_TO_URL,
+  REFRESH_ROUTER_COOKIE_KEY,
+  RETURN_TO_URL_COOKIE_KEY,
   SESSION_TIMEOUT_IN_MILLISECONDS,
 } from './serverClientUtils';
 const notNull = <T>(value: T | null): value is T => value !== null;
@@ -299,8 +300,9 @@ export const deleteCookie = async (cookieName: string, res?: NextResponse) => {
 export const deleteSession = async (res?: NextResponse) => {
   await deleteCookie(APP_SESSION_COOKIE_KEY, res);
   await deleteCookie(AGREED_TO_TERMS_AND_CONDITIONS_COOKIE_KEY, res);
-  await deleteCookie(RETURN_TO_URL, res);
-  await deleteCookie(REFRESH_ROUTER, res);
+  await deleteCookie(RETURN_TO_URL_COOKIE_KEY, res);
+  await deleteCookie(REFRESH_ROUTER_COOKIE_KEY, res);
+  await deleteCookie(CARRIER_COOKIE_KEY, res);
 };
 /**
  * Sets a session cookie with the provided token and response object.
@@ -375,7 +377,7 @@ export const setTermsAndConditionsCookie = async (
 export const getReturnUrlCookie = async (): Promise<
   PartialNextUrl | undefined
 > => {
-  const cookie = await getCookie(RETURN_TO_URL);
+  const cookie = await getCookie(RETURN_TO_URL_COOKIE_KEY);
   if (cookie) {
     try {
       return JSON.parse(cookie);
@@ -395,9 +397,10 @@ export const setReturnUrlCookie = async (
     hostname: nextUrl.hostname,
     href: nextUrl.href,
     pathname: nextUrl.pathname,
+    search: nextUrl.search,
   };
   await setCookie({
-    cookieName: RETURN_TO_URL,
+    cookieName: RETURN_TO_URL_COOKIE_KEY,
     value: JSON.stringify(value),
     res,
   });
@@ -417,7 +420,7 @@ export const setReturnUrlCookie = async (
 export const setRefreshRouterCookie = async (res?: NextResponse) => {
   await setCookie({
     value: '1',
-    cookieName: REFRESH_ROUTER,
+    cookieName: REFRESH_ROUTER_COOKIE_KEY,
     res,
   });
 };
