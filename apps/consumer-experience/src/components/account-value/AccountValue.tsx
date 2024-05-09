@@ -40,7 +40,7 @@ export const AccountValue = async ({
     policyNumber,
   });
 
-  const { totalFundValue, timestamp, valueChange } = data!;
+  const { totalFundValue, timestamp, valueChange, policyStartDate } = data!;
 
   const totalFundContent = isNullEmptyOrUndefined(totalFundValue) ? (
     <p className="typography-content-body-sm">{DEFAULT_UNAVAILABLE_STRING}</p>
@@ -59,7 +59,10 @@ export const AccountValue = async ({
             Label: (
               <Label
                 interactiveElements={[
-                  <AccountValuePopover key="account-value-popover" />,
+                  <AccountValuePopover
+                    key="account-value-popover"
+                    policyStartDate={policyStartDate}
+                  />,
                 ]}
               >
                 {ACCOUNT_VALUE}

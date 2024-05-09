@@ -140,9 +140,10 @@ export default async function Beneficiaries({
         <span style={{ fontWeight: 600 }}>
           {formatUSDollars(data?.totalCoverageAmount)}
         </span>
-        . That means if you die while your policy is active your beneficiaries
-        will receive this amount (minus outstanding loans and applicable
-        interest calculations), according to your allocations.
+        . That means if you die while your policy is active (and you're in
+        compliance with all policy requirements) your beneficiaries will receive
+        this amount, plus any additional account value and minus outstanding
+        loans, withdrawals or other interest calculations, if applicable.
       </p>
 
       {!groupedBenes && (
@@ -174,7 +175,7 @@ export default async function Beneficiaries({
                   Your primary allocation tells us how to split up the money
                   between primary beneficiaries after you die. Your primary
                   beneficiaries are first in line to receive payment from your
-                  coverage.
+                  death benefit.
                 </p>
               </Popover>
             </div>
@@ -212,8 +213,8 @@ export default async function Beneficiaries({
                 <p>
                   Your contingent allocation tells us how to split up the money
                   between contingent beneficiaries, if needed. Contingent
-                  beneficiaries will receive payment from your coverage only if
-                  your primary beneficiaries have died.
+                  beneficiaries will receive payment from your death benefit
+                  only if your primary beneficiaries have died.
                 </p>
               </Popover>
             </div>

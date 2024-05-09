@@ -13,6 +13,7 @@ import {
   Reason,
   TransactionStatus,
   PolicyFeature,
+  ProductType,
 } from '@zinnia/api-types/types/sor';
 
 import { BankDetail } from '@/components/person-data/types';
@@ -31,12 +32,14 @@ export interface UpcomingPremium {
   nextActivityDate: string;
   planName: string;
   policyStatus: PolicyStatus;
+  productType?: ProductType;
 }
 
 export interface PolicyAccountValue {
   totalFundValue?: number | null;
   timestamp?: string; // or Date?
   valueChange?: number | null;
+  policyStartDate?: string;
 }
 
 export interface PolicyCoverage {
@@ -72,6 +75,7 @@ export interface CarrierPolicyDetails extends PolicyDetails {
   planCode: string;
   totalFundValue?: number | null;
   totalCoverageAmount?: number | null;
+  policyStartDate?: string | null;
 }
 
 export interface PolicyApiResponse<T> {
@@ -255,4 +259,5 @@ export interface PolicyStatusDetail {
   minimumPaymentDueDate: string;
   lapsedOn: string;
   reinstatmentDate: string;
+  reinstatementPeriod: number | null;
 }

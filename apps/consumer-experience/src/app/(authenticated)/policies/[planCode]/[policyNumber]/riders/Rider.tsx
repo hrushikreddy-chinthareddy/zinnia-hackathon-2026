@@ -13,7 +13,7 @@ import { FieldData } from '@/components/field-data/FieldData';
 import { PolicyRider } from '@/types/riders';
 import { formatUSDollars } from '@/utils/currency';
 import { fullName } from '@/utils/data';
-import { standardDateMonthYear } from '@/utils/dates';
+import { standardDateMonthDayYear } from '@/utils/dates';
 
 import styles from './Rider.module.css';
 
@@ -70,11 +70,7 @@ export const Rider = ({
                         }
                       >
                         <p className="typography-content-body mt-sm">
-                          Your rider covers you from this date. So if you
-                          experience a qualifying event, like diagnosis of a
-                          covered illness, after the effective date and while
-                          your policy is active you can make a claim for your
-                          rider’s benefit.
+                          Your rider or benefit is valid from this date.
                         </p>
                       </Popover>,
                     ],
@@ -85,7 +81,7 @@ export const Rider = ({
               }
             >
               <span className="typography-content-body-sm">
-                {standardDateMonthYear(effectiveDate)}
+                {standardDateMonthDayYear(effectiveDate)}
               </span>
             </FieldData>
           </>

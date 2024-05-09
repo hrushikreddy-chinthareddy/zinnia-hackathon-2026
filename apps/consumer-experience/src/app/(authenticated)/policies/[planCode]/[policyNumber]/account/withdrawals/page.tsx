@@ -15,7 +15,7 @@ import { getPolicyWithdrawalDetails } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined } from '@/utils/data';
-import { dayOfMonthWithOrdinal, standardDateMonthYear } from '@/utils/dates';
+import { dayOfMonthWithOrdinal, standardDateMonthDayYear } from '@/utils/dates';
 import {
   DEFAULT_ERROR_STRING,
   DEFAULT_UNAVAILABLE_STRING,
@@ -35,9 +35,9 @@ const ANNUAL_WITHDRAWALS_REMAINING = 'Annual withdrawals remaining';
 const COVERAGE_PRESERVATION_LIMIT = 'Coverage preservation limit';
 
 const eligibleTextHighlight =
-  'Good news! Your account value is eligible for withdrawal.';
+  'Good news! Your policy is eligible for withdrawal.';
 const ineligibleTextHighlight =
-  'Hang tight! Your account value isn’t eligible for withdrawal at the moment.';
+  'Hang tight! Your policy isn’t eligible for withdrawal at the moment.';
 
 export default async function Withdrawals({
   params,
@@ -83,7 +83,7 @@ export default async function Withdrawals({
             {/* AVAILABLE TO WITHDRAW */}
             <FieldData
               caption={
-                <span>{`As of ${standardDateMonthYear(data.timestamp)}`}</span>
+                <span>{`As of ${standardDateMonthDayYear(data.timestamp)}`}</span>
               }
               Label={
                 <Label
@@ -106,10 +106,8 @@ export default async function Withdrawals({
                           withdrawal.{' '}
                         </p>
                         <p className="my-lg">
-                          {`Withdrawals have consequences. Withdrawing the full
-                  amount can surrender the policy, if you don’t make a
-                  payment by the next monthaversary. (Your policy’s
-                  monthaversary happens every month on the ${dayOfMonthWithOrdinal(data.nextMonthiversaryDate)}.)`}
+                          {`Withdrawals have consequences. Withdrawing the maximum amount available may lead to policy lapse, if you don’t make a payment by the next monthiversary. (Your policy’s
+                  monthiversary happens every month on the ${dayOfMonthWithOrdinal(data.nextMonthiversaryDate)}.)`}
                         </p>
                         <p>
                           Depending on the amount, a partial withdrawal can
@@ -229,11 +227,11 @@ export default async function Withdrawals({
                     >
                       <div>
                         <p className="mb-lg">
-                          {`At this time, you could withdraw ${isNullEmptyOrUndefined(data.annualWithdrawalsRemaining) ? DEFAULT_ERROR_STRING : data.annualWithdrawalsRemaining} more time(s) during the policy year. Your policy year ends on ${standardDateMonthYear(data.nextAnniversaryDate)}.`}
+                          {`At this time, you could withdraw ${isNullEmptyOrUndefined(data.annualWithdrawalsRemaining) ? DEFAULT_ERROR_STRING : data.annualWithdrawalsRemaining} more time(s) during the policy year. Your policy year ends on ${standardDateMonthDayYear(data.nextAnniversaryDate)}.`}
                         </p>
                         <p>
                           {`During the vesting period (the first ${data.vestingDetails.vestingPeriod} years of your
-                          policy which end${data.vestingDetails.policyHasVested ? 'ed' : 's'} on ${standardDateMonthYear(data.vestingDetails.matchVestingDate)}), you can only withdraw ${data.vestingDetails.maximumWithdrawalRequestDuringVestingPeriod} time during each
+                          policy which end${data.vestingDetails.policyHasVested ? 'ed' : 's'} on ${standardDateMonthDayYear(data.vestingDetails.matchVestingDate)}), you can only withdraw ${data.vestingDetails.maximumWithdrawalRequestDuringVestingPeriod} time during each
                           policy year. After that, you may withdraw up to ${data.vestingDetails.maximumWithdrawalRequestAfterVestingPeriod}
                           times in a policy year.`}
                         </p>

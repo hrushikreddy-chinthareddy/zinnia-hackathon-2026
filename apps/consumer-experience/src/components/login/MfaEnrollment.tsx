@@ -108,10 +108,12 @@ export const MfaEnrollment = () => {
         </div>
       </fieldset>
       <p className="typography-content-caption text-left">
-        By inputting your number and clicking Continue, you are providing
-        express consent to Everly Life Insurance Company, Everly, LLC, and
-        Zinnia Technology Solutions, LLC to call or send text messages at the
-        number you provided for multi-factor authentication.
+        By inputting your mobile number and clicking Continue, you are providing
+        express written consent to Everly Life Insurance Company, Everly, LLC,
+        and Zinnia Tech Solutions, LLC to call via live, automated, or
+        prerecorded call or send text or SMS messages at the number you provided
+        (message and data rates may apply and message frequency varies) for
+        multi-factor authentication.
       </p>
       <SubmitButton />
     </form>

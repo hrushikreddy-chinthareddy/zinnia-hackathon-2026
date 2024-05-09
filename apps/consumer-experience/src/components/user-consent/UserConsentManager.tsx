@@ -70,10 +70,10 @@ export const UserConsentManager = ({
           <input type="hidden" name="partyId" value={user?.partyId} />
           <div>
             <p className="typography-content-body mb-3xl">
-              We ensure that we take privacy seriously. This site uses cookies
-              and other technologies to enable and improve functionality,
-              analyze site use, and generate analytics. See our Privacy Policy
-              for details. By ticking the check box, you agree to our{' '}
+              This site uses cookies and other technologies to enable and
+              improve functionality, analyze site use, and generate analytics.
+              See our Privacy Policy for details. By ticking the check box, you
+              agree to our{' '}
               <a
                 href="https://zinnia.com/terms-of-use/"
                 className="typography-content-body-bold"

@@ -6,7 +6,7 @@ import { CoveragePopover } from '@/components/policy-overview/CoveragePopover';
 import { getCoverage } from '@/services';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined } from '@/utils/data';
-import { standardDateMonthYear } from '@/utils/dates';
+import { standardDateMonthDayYear } from '@/utils/dates';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 import styles from './PolicyOverview.module.css';
@@ -76,23 +76,31 @@ export const Coverage = async ({ planCode, policyNumber }: Props) => {
 
   // TODO: add conditions for policy statuses
   return (
-    <ClickableCardContainer listItems={additionalItems} linkTo={{
+    <ClickableCardContainer
+      listItems={additionalItems}
+      linkTo={{
         url: `/policies/${planCode}/${policyNumber}/coverage`,
         label: 'go to coverage page',
-      }}>
+      }}
+    >
       <div className={styles.content}>
         <Icon type={IconType.SHIELD} className={styles.icon} />
         <FieldData
           Label={
             <Label
-              interactiveElements={[<CoveragePopover key="coverage-popover" />]}
+              interactiveElements={[
+                <CoveragePopover
+                  key="coverage-popover"
+                  policyStartDate={policyStartDate}
+                />,
+              ]}
             >
               {COVERAGE}
             </Label>
           }
           caption={
             policyStartDate && maturityDate
-              ? `${standardDateMonthYear(policyStartDate)} - ${standardDateMonthYear(maturityDate)}`
+              ? `${standardDateMonthDayYear(policyStartDate)} - ${standardDateMonthDayYear(maturityDate)}`
               : ''
           }
         >

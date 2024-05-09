@@ -8,7 +8,7 @@ import { FieldData } from '@/components/field-data/FieldData';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { ExtendedDocumentMeta } from '@/types/document';
 import { checkIfNull } from '@/utils/data';
-import { standardDateMonthYear } from '@/utils/dates';
+import { standardDateMonthDayYear } from '@/utils/dates';
 
 import styles from './documentsList.module.css';
 
@@ -49,7 +49,9 @@ export default function DocumentsList({
               content: (
                 <>
                   <div className={styles.content}>
-                    <FieldData caption={standardDateMonthYear(d.documentDate)}>
+                    <FieldData
+                      caption={standardDateMonthDayYear(d.documentDate)}
+                    >
                       <p className="typography-labels-label-md-alt">
                         {checkIfNull(d.displayName)}
                       </p>

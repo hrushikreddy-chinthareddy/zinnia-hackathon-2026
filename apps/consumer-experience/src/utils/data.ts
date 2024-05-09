@@ -10,6 +10,7 @@ import {
   ArrangementType,
   PartyRole,
   BankAccount,
+  ProductType,
 } from '@zinnia/api-types/types/sor';
 import { policyOwner } from '@zinnia/utils';
 import dayjs from 'dayjs';
@@ -180,15 +181,15 @@ export const formatBankAccountTypeText = (
 export const getRiderDescription = (code: string) => {
   switch (code) {
     case 'SBLCHR':
-      return 'If you’re diagnosed with a qualifying chronic illness, you can claim the lesser of: 50% of your death benefit or $500,000.';
+      return 'If you’re diagnosed with a qualifying chronic illness, you may claim the lesser of: 50% of your death benefit or $500,000. Please refer to your policy for more details.';
     case 'SBLCRI':
-      return 'If you’re diagnosed with a qualifying critical illness, you can claim the lesser of: 50% of your death benefit or $500,000.';
+      return 'If you’re diagnosed with a qualifying critical illness, you may claim the lesser of: 50% of your death benefit or $500,000. Please refer to your policy for more details.';
     case 'SBLTRM':
-      return 'If you are diagnosed with a terminal illness, you can claim the lesser of: 50% of your death benefit or $500,000.';
+      return 'If you are diagnosed with a terminal illness, you may claim the lesser of: 50% of your death benefit or $500,000. Please refer to your policy for more details.';
     case 'SBLOPR':
-      return 'If you take a loan on your policy that eventually exceeds the account value, this rider will be activated, preventing the policy from lapsing and triggering a taxable event.';
+      return 'If you take a loan on your policy that eventually exceeds the account value, this rider will apply, preventing the policy from lapsing and triggering a taxable event. Please refer to your policy for more details.';
     case 'LAPSEPROTECTION':
-      return 'This policy guarantees a death benefit for 20 years as long as the required minimum payments are paid.';
+      return 'If you are in compliance with all other policy terms and conditions, then this policy guarantees a death benefit for 20 years (even if the account value is insufficient to cover the monthly deductions) as long as the required minimum payments are paid. Please refer to your policy for more details.';
     default:
       return DEFAULT_ERROR_STRING;
   }
@@ -303,4 +304,23 @@ export const allPolicyOwnerBanks = (policy: Policy): BankDetail[] => {
       autopayEnabled: b.bankId === autopayBankId(policy),
     };
   });
+};
+
+export const productTypeDisplay = (
+  productType?: ProductType
+): string | null => {
+  switch (productType) {
+    case ProductType.INDEXEDUNIVERSALLIFE:
+      return 'Indexed Universal Life';
+    case 'TERMLIFE' as ProductType:
+      return 'Term Life';
+    case ProductType.UNIVERSALLIFE:
+      return 'Universal Life';
+    case ProductType.VARIABLEUNIVERSALLIFE:
+      return 'Variable Universal Life';
+    case ProductType.WHOLELIFE:
+      return 'Whole Life';
+    default:
+      return null;
+  }
 };
