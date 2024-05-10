@@ -1,7 +1,8 @@
+import hkdf from '@panva/hkdf';
 import { CookieSerializeOptions, serialize } from 'cookie';
 import * as jose from 'jose';
 import { NextURL } from 'next/dist/server/web/next-url';
-import { cookies, headers } from 'next/headers';
+import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 import { PartialNextUrl } from '@/types';
@@ -31,10 +32,19 @@ import {
   SESSION_TIMEOUT_IN_MILLISECONDS,
 } from './serverClientUtils';
 const notNull = <T>(value: T | null): value is T => value !== null;
-const paddedArray = new Uint8Array(32);
-const jwtSecret = new TextEncoder().encode(process.env.AUTH0_SECRET);
-const truncatedJwtSecret = jwtSecret.slice(0, paddedArray.length);
-paddedArray.set(truncatedJwtSecret);
+const BYTE_LENGTH = 32;
+const ENCRYPTION_INFO = 'JWE CEK';
+const digest = 'sha256';
+/**
+ *
+ * Derives appropriate sized keys from the end-user provided secret random string/passphrase using
+ * HKDF (HMAC-based Extract-and-Expand Key Derivation Function) defined in RFC 8569.
+ *
+ * @see https://tools.ietf.org/html/rfc5869
+ *
+ */
+const encryption = (secret: string): Promise<Uint8Array> =>
+  hkdf(digest, secret, '', ENCRYPTION_INFO, BYTE_LENGTH);
 const epoch = (): number => Math.floor(Date.now() / 1000);
 const alg = 'dir';
 const enc = 'A256GCM';
@@ -45,11 +55,12 @@ const enc = 'A256GCM';
  * @return {Promise<string>} A promise that resolves to the encrypted JWT token.
  */
 const encrypt = async (payload: jose.JWTPayload): Promise<string> => {
+  const key = await encryption(process.env.JWT_SECRET);
   try {
     return await new jose.EncryptJWT({ ...payload })
       .setProtectedHeader({ alg, enc })
       .setIssuedAt()
-      .encrypt(paddedArray);
+      .encrypt(key);
   } catch (error) {
     logWarn('error encrypting', { file: 'auth.ts', function: 'encrypt' });
     return '';
@@ -66,7 +77,8 @@ export const decrypt = async (
 ): Promise<jose.JWTDecryptResult<Auth0SessionToken>> => {
   let err;
   try {
-    return await jose.jwtDecrypt(jwe, paddedArray);
+    const key = await encryption(process.env.JWT_SECRET);
+    return await jose.jwtDecrypt(jwe, key);
   } catch (e) {
     logWarn('error decrypting', { file: 'auth.ts', function: 'decrypt' });
     err = e;
@@ -114,24 +126,11 @@ export const setCookie = async (options: SetCookieOptions) => {
   // in some cases, for example in middleware, we can't use the cookies object because it will set the cookie after the response has been sent
   // so we need to set the cookie on the response object.
   const cookieResponse = res?.cookies ?? cookieStore;
-  const headerStore = headers();
-  // We need to set the domain of the cookie to the host of the request to support subdomains
-  // this will remove the subdomain from the host and set the domain to the parent domain
-  // browsers know how to handle that and send the cookie back with the request.
-  const host = headerStore.get('host');
-  let domain: string;
-
-  // since we test our branches in vercel we need to explicitly set the Vercel domain to the host
-  // if we don't none of the session cookies will write to '.vercel.app'
-  // if we use Vercel in the long term will need to revisit the logic to support subdomains
-  if (host?.includes('.vercel.app')) {
-    domain = host;
-  } else {
-    domain = `.${host?.split(':')[0]?.split('.').slice(-2).join('.')}`;
-  }
+  const domain =
+    process.env.AUTH0_COOKIE_DOMAIN || process.env.NEXT_PUBLIC_AUTH0_BASE_URL;
 
   const cookieOptions: CookieConfig = {
-    secure: process.env.NODE_ENV !== 'development',
+    secure: process.env.AUTH0_COOKIE_SECURE === 'true',
     sameSite: 'lax',
     httpOnly: false,
     transient: false,

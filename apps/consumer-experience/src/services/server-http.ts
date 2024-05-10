@@ -4,6 +4,7 @@ import {
   MfaSendChallengeInputs,
 } from '@/types/auth';
 import { getAccessToken } from '@/utils/auth';
+import { AUTH0_SCOPE } from '@/utils/serverClientUtils';
 
 import { HttpRequest } from './http';
 
@@ -63,7 +64,7 @@ class ServerHttpRequest extends HttpRequest {
         client_secret: process.env.AUTH0_CLIENT_SECRET,
         audience: process.env.AUTH0_AUDIENCE,
         realm: 'email',
-        scope: 'openid profile email offline_access',
+        scope: AUTH0_SCOPE,
         username: email,
         otp: code,
       }),

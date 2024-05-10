@@ -7,7 +7,6 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { RouteKey, getRedirectUrl, routeMap } from '@/route-map';
 import { isMockAllowed } from '@/utils';
 import {
-  CARRIER_COOKIE_KEY,
   HAD_PREVIOUS_SESSION_COOKIE_KEY,
   MFA_OOB_CODE_COOKIE_KEY,
   MFA_TOKEN_COOKIE_KEY,
@@ -28,13 +27,11 @@ import {
   getOobMfaCookie,
   getReturnUrlCookie,
   getSession,
-  setCookie,
   setRefreshRouterCookie,
   setReturnUrlCookie,
   setTermsAndConditionsCookie,
   touchSession,
 } from './utils/auth';
-import { appUrl } from './utils/url';
 
 /**
  * NextJS doesn't foward the headers to react server components.
@@ -99,18 +96,8 @@ export async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
   const isLoginLikeOrRoot = pathname.includes('/login') || pathname === '/';
   const isSessionPage = pathname === '/session';
+
   if (session) {
-    const cuiUrl = appUrl(`${pathname}${req.nextUrl.search}`);
-    if (cuiUrl.isCarrierRequest) {
-      const resRedirect = NextResponse.redirect(cuiUrl.href);
-      // TODO: CARRIER - setting this up for when we need to support multiple carriers
-      setCookie({
-        cookieName: CARRIER_COOKIE_KEY,
-        value: cuiUrl.carrier,
-        res: resRedirect,
-      });
-      return resRedirect;
-    }
     // since the user has a session we need to check if they signed the terms and conditions
     // we only want to do this once per session. We will store the value on the user object
     if (!session.user.hasSignedTermsAndConditions) {

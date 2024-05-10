@@ -6,8 +6,8 @@
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"],
       "env": [
-        "AUTH0_SECRET",
-        "AUTH0_BASE_URL",
+        "JWT_SECRET",
+        "AUTH0_COOKIE_DOMAIN",
         "AUTH0_ISSUER_BASE_URL",
         "AUTH0_CLIENT_ID",
         "AUTH0_CLIENT_SECRET",
@@ -15,8 +15,13 @@
         "NEXT_PUBLIC_MOCK_API_REQUEST",
         "NEXT_PUBLIC_BACKEND_URL",
         "NEXT_PUBLIC_BASE_URL",
-        "AUTH0_SESSION_ROLLING_DURATION",
-        "NODE_ENV"
+        "NODE_ENV",
+        "SESSION_DURATION_IN_MINUTES",
+        "CHECK_SESSION_THRESHOLD_IN_MINUTES",
+        "NEXT_PUBLIC_AUTH0_BASE_URL",
+        "AUTH0_SCOPE",
+        "AUTH0_SESSION_NAME",
+        "AUTH0_COOKIE_SECURE"
       ]
     },
     "lint": {

@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@next/third-parties": "^14.2.3",
+    "@panva/hkdf": "^1.1.1",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-popover": "^1.0.7",
     "@types/file-saver": "^2.0.7",
