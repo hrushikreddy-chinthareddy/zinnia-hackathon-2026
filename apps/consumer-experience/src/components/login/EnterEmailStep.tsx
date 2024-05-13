@@ -17,6 +17,7 @@ const SubmitButton = () => {
   const { pending } = useFormStatus();
   return (
     <SpinnerButton
+      expand
       type="submit"
       disabled={pending}
       variant={LoaderVariant.CTA}

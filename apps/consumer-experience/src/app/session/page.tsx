@@ -1,6 +1,7 @@
 import { Icon, IconType, Link } from '@zinnia/bloom/internal/components';
 import { Metadata } from 'next';
 
+import { Footer } from '@/components/footer/Footer';
 import { GenericInfoPage } from '@/components/generic-info-page/GenericInfoPage';
 import styles from '@/components/generic-info-page/GenericInfoPage.module.css';
 
@@ -23,22 +24,7 @@ export default async function Session() {
       action={
         <Link expand variant="button" href="/login" text="Back to login" />
       }
-      footer={
-        <>
-          <p className="mb-lg">
-            You are receiving this message to keep you updated on your Everly
-            account. Together we are committed to designing tools that give you
-            more control over your account details and preferences. Learn more
-            about Zinnia at zinnia.com.
-          </p>
-          <p className="mb-lg">
-            We care about your privacy. Learn more about the Everly privacy
-            policy. To customize your notifications, you can manage your
-            preferences or unsubscribe.
-          </p>
-          <p>© 2024 Zinnia 600 Steamboat Road Greenwich, CT 06830</p>
-        </>
-      }
+      footer={<Footer />}
     />
   );
 }

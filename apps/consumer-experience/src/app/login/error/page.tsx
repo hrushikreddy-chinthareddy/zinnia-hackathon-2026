@@ -18,7 +18,7 @@ export default async function ErrorPage() {
       title={
         <div className={styles.headerContainer}>
           <Icon width={32} height={32} type={IconType.COG} />
-          <div>Something went wrong.</div>
+          <div>That didn't work.</div>
         </div>
       }
       description="We couldn't sign you in. Please try again."

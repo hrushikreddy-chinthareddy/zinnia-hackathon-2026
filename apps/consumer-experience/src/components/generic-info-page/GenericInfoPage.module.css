@@ -30,7 +30,6 @@
 
     @media (width >=500px) {
       background-image: url('../../app/styles/everly/assets/everly-hero-background-tablet.png');
-      height: 210px;
     }
 
     @media (width >=1024px) {
@@ -41,7 +40,6 @@
       height: 100%;
     }
   }
-
   .scrollContainer {
     display: grid;
     flex: 1;
@@ -59,8 +57,11 @@
     text-align: center;
     align-items: center;
     row-gap: var(--measure-dimension-gap-3xl);
-    width: calc(424px - var(--measure-dimension-padding-6xl));
     min-height: 532px;
+
+    @media (width >=500px) {
+      width: calc(424px - var(--measure-dimension-padding-6xl));
+    }
 
     @media (width >=1024px) {
       width: 465px;
