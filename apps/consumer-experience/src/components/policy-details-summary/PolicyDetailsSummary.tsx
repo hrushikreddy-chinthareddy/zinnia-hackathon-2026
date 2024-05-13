@@ -24,7 +24,7 @@ export const PolicyDetailsSummary = ({
   className,
   policyNumber,
 }: DetailProps) => {
-  const { firstName, lastName, planName, policyStatus } = summary;
+  const { firstName, lastName, marketingName, policyStatus } = summary;
   const statusStyle = () => {
     switch (policyStatus) {
       case PolicyStatus.PENDINGISSUED:
@@ -45,7 +45,7 @@ export const PolicyDetailsSummary = ({
   return (
     <div className={clsx(styles.container, { [`${className}`]: className })}>
       <p className="typography-labels-label-lg-alt">
-        <span>{planName || ''}</span>
+        <span>{marketingName || ''}</span>
       </p>
       <div className={styles.policyDetails}>
         <p className="typography-labels-label-md-alt">{`Policy No. ${checkIfNull(policyNumber)}`}</p>

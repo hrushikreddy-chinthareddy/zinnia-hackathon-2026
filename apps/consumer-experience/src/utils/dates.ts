@@ -38,7 +38,7 @@ export const standardDateMonthDayYear = (
     return DEFAULT_ERROR_STRING;
   }
 
-  return dayjs(date).format('M/D/YYYY');
+  return dayjs(date).format(DEFAULT_DATE_FORMAT);
 };
 
 /**
@@ -46,12 +46,14 @@ export const standardDateMonthDayYear = (
  * @param date
  *  @returns format 6/12/2023 5:00 pm EST
  */
-export const dateMonthWithTimeEST = (date: string | null): string => {
+export const standardDateWithTimeEST = (date: string | null): string => {
   if (!isValidDate(date)) {
     return DEFAULT_ERROR_STRING;
   }
 
-  return dayjs(date).tz('America/New_York').format('M/D h:mm a EST');
+  return dayjs(date)
+    .tz('America/New_York')
+    .format(`${DEFAULT_DATE_FORMAT} h:mm a EST`);
 };
 
 // Converts yyyy-mm-dd strings into m/d/yyyy

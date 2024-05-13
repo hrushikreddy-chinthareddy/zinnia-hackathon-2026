@@ -11,13 +11,13 @@ export default meta;
 
 export const Default: StoryObj<HeaderBreadcrumbProps> = {
   args: {
-    title: 'Increase coverage',
+    title: 'Coverage',
   },
 };
 
 export const WithPopover = {
   args: {
-    title: 'Increase coverage',
+    title: 'Coverage',
     popover: {
       content: <p>Popover Content</p>,
       title: <p>Popover Title</p>,

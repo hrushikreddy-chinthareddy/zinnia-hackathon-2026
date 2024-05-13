@@ -101,7 +101,7 @@ export const transformPolicyForAccountValue = (
 ): PolicyAccountValue => {
   return {
     timestamp: policy.timestamp,
-    totalFundValue: policy?.allocation?.funds?.[0]?.totalFundValue,
+    totalFundValue: policy?.accountValues?.endingAccountValue,
     policyStartDate: policy?.policyDates?.policyStartDate,
   };
 };
@@ -308,7 +308,7 @@ export const transformPolicyForAccountValueSummary = (
   return {
     fundCount: fundDetails?.length,
     hasWithdrawalEligibility: withdrawalDetails
-      ? withdrawalDetails.isEligibleForWithdrawals
+      ? withdrawalDetails.isEligibleForWithdrawals !== false
       : null,
     hasLoanEligibility: loanValues?.isEligible,
   };

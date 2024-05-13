@@ -59,7 +59,7 @@ export const HeaderPolicyDetails = async ({
         />
       </div>
       <div>
-        <p>{data.planName}</p>
+        <p>{data.marketingName}</p>
         <p>
           <span>Policy #: </span>
           <Link href={`/policies/${planCode}/${policyNumber}`}>

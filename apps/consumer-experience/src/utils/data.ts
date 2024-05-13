@@ -181,9 +181,9 @@ export const formatBankAccountTypeText = (
 export const getRiderDescription = (code: string) => {
   switch (code) {
     case 'SBLCHR':
-      return 'If you’re diagnosed with a qualifying chronic illness, you may claim the lesser of: 50% of your death benefit or $500,000. Please refer to your policy for more details.';
+      return "If you're diagnosed with a qualifying chronic illness, you may claim the lesser of: 50% of your death benefit or $500,000. Please refer to your policy for more details.";
     case 'SBLCRI':
-      return 'If you’re diagnosed with a qualifying critical illness, you may claim the lesser of: 50% of your death benefit or $500,000. Please refer to your policy for more details.';
+      return "If you're diagnosed with a qualifying critical illness, you may be eligible to claim a portion of your death benefit. Eligible amounts depend on the illness tier. For tier 1 illnesses: it's 5% of the death benefit or ($5,000.00), whichever is less. For tier 2 illnesses, it's 50% of the death benefit or ($500,000.00), whichever is less. Please refer to your policy for more details.";
     case 'SBLTRM':
       return 'If you are diagnosed with a terminal illness, you may claim the lesser of: 50% of your death benefit or $500,000. Please refer to your policy for more details.';
     case 'SBLOPR':

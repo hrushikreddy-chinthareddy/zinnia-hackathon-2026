@@ -12,7 +12,7 @@ import { getPolicyAccountValueWith30DayChange } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined } from '@/utils/data';
-import { dateMonthWithTimeEST } from '@/utils/dates';
+import { standardDateWithTimeEST } from '@/utils/dates';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 import styles from '../policy-overview/PolicyOverview.module.css';
@@ -35,10 +35,14 @@ export const AccountValue = async ({
   policyNumber,
   showIcon,
 }: Props) => {
-  const { data } = await getPolicyAccountValueWith30DayChange({
+  const { data, error } = await getPolicyAccountValueWith30DayChange({
     planCode,
     policyNumber,
   });
+
+  if (error || !data) {
+    return null;
+  }
 
   const { totalFundValue, timestamp, valueChange, policyStartDate } = data!;
 
@@ -69,7 +73,9 @@ export const AccountValue = async ({
               </Label>
             ),
           })}
-          caption={timestamp ? `As of ${dateMonthWithTimeEST(timestamp)}` : ''}
+          caption={
+            timestamp ? `As of ${standardDateWithTimeEST(timestamp)}` : ''
+          }
         >
           {totalFundContent}
         </FieldData>

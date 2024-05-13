@@ -29,6 +29,7 @@ export default async function WelcomePage() {
           text="Sign in"
           variant="button"
           className="mt-3xl mx-auto"
+          expand
         />
       }
       footer={<Footer />}

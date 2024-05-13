@@ -72,7 +72,7 @@ import {
   PolicySurrender,
   CarrierPolicyDetails,
 } from '@/types/policy';
-import { PolicyRider, RidersAndBenefits } from '@/types/riders';
+import { RidersAndBenefits } from '@/types/riders';
 
 import { getDocuments } from '../document';
 import { mockDocumentsResponse } from '../mocks/documents';
