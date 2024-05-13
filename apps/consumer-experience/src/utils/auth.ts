@@ -127,7 +127,7 @@ export const setCookie = async (options: SetCookieOptions) => {
   // so we need to set the cookie on the response object.
   const cookieResponse = res?.cookies ?? cookieStore;
   const domain =
-    process.env.AUTH0_COOKIE_DOMAIN || process.env.NEXT_PUBLIC_AUTH0_BASE_URL;
+    process.env.AUTH0_COOKIE_DOMAIN || process.env.VERCEL_BRANCH_URL;
 
   const cookieOptions: CookieConfig = {
     secure: process.env.AUTH0_COOKIE_SECURE === 'true',

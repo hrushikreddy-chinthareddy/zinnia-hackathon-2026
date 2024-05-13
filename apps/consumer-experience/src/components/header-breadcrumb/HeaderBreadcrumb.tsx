@@ -87,6 +87,7 @@ export const HeaderBreadcrumb = ({
           href={previousPathRoute}
           aria-label={`go to ${previousPathName} page`}
           className={styles.headerBreadcrumbAction}
+          prefetch
         >
           <Icon
             type={IconType.CHEVRON}

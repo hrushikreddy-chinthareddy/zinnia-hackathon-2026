@@ -60,6 +60,8 @@ const LinkArrow = ({
       aria-label={label}
       className={`${styles.primaryAction}`}
       target={newTab ? '_blank' : '_self'}
+      // @ts-expect-error prop diff
+      prefetch={isInternal ? true : undefined}
     >
       {ctaText && <div className="typography-nav-links-sm">{ctaText}</div>}
       {iconToRender && <Icon type={iconToRender} width={20} height={20} />}

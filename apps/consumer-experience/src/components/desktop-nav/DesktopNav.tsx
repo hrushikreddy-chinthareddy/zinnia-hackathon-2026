@@ -17,7 +17,12 @@ export function DesktopNav() {
     <nav className={styles.container}>
       <div className={styles.logoContainer}>
         <DevMenu />
-        <Link href="/" className="justify-self-start" aria-label="Home page">
+        <Link
+          prefetch
+          href="/"
+          className="justify-self-start"
+          aria-label="Home page"
+        >
           <LogoImage alt="Everly Logo" className={styles.logo}></LogoImage>
         </Link>
         {isMockAllowed() && isMockOn && (
@@ -35,7 +40,7 @@ export function DesktopNav() {
 
       <div className={`${styles.navItemsContainer} typography-nav-links-sm`}>
         <>
-          <Link href={`/policies`} className={styles.navItem}>
+          <Link prefetch href={`/policies`} className={styles.navItem}>
             <Icon
               type={IconType.MATCHES}
               color="var(--color-base-icon-icon-dark)"
@@ -43,7 +48,7 @@ export function DesktopNav() {
             My Policies
           </Link>
         </>
-        <Link href={`/my-account`} className={styles.navItem}>
+        <Link prefetch href={`/my-account`} className={styles.navItem}>
           <Icon
             type={IconType.CIRCLE_USER}
             color="var(--color-base-icon-icon-dark)"
