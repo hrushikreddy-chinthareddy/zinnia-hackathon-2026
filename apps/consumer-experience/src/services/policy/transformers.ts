@@ -91,6 +91,7 @@ export const transformPolicyReferenceData = (
       totalFundValue: p?.allocation?.funds?.[0]?.totalFundValue,
       totalCoverageAmount: p?.coverage?.totalCoverageAmount,
       policyStartDate: p?.policyDates?.policyStartDate,
+      timestamp: p?.timestamp,
       ...policyDetails,
     };
   });
@@ -166,6 +167,7 @@ export const transformPolicyForUpcomingPremium = (
 
 export const transformPolicyForCoverage = (policy: Policy): PolicyCoverage => {
   return {
+    timestamp: policy.timestamp,
     beneficiaryCount: allBeneficiaries(policy).length,
     maturityDate: policy?.policyDates?.maturityDate,
     policyStartDate: policy?.policyDates?.policyStartDate,

@@ -50,6 +50,7 @@ export interface PolicyCoverage {
   // This one is calculated, so will either be a number or 0
   beneficiaryCount?: number;
   riderCount: number;
+  timestamp?: string | null;
 }
 
 interface Person {
@@ -76,6 +77,7 @@ export interface CarrierPolicyDetails extends PolicyDetails {
   totalFundValue?: number | null;
   totalCoverageAmount?: number | null;
   policyStartDate?: string | null;
+  timestamp?: string | null;
 }
 
 export interface PolicyApiResponse<T> {

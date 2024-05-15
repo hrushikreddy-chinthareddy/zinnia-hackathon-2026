@@ -12,9 +12,12 @@ import styles from './PolicyOverview.module.css';
 const COVERAGE = 'Coverage';
 
 export const CoveragePopover = ({
-  policyStartDate,
+  dataTimestamp,
 }: {
-  policyStartDate?: string | null;
+  /**
+   * Timestamp returned from the API indicating data last updated
+   */
+  dataTimestamp?: string | null;
 }) => {
   return (
     <Popover
@@ -36,7 +39,7 @@ export const CoveragePopover = ({
           your insurance contract. If something happens to you, your
           beneficiaries may submit a claim for this amount (plus additional
           account value and minus any outstanding loans or withdrawals, if
-          applicable) as of ${standardDateMonthDayYear(policyStartDate)}. The total payout after your death is
+          applicable) as of ${standardDateMonthDayYear(dataTimestamp)}. The total payout after your death is
           referred to as the "death benefit."`}
         </p>
       </div>

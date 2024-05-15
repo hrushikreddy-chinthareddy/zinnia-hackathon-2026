@@ -99,7 +99,7 @@ export default async function Page({
                       interactiveElements={[
                         <CoveragePopover
                           key="coverage-popover"
-                          policyStartDate={p.policyStartDate}
+                          dataTimestamp={p.timestamp}
                         />,
                       ]}
                     >

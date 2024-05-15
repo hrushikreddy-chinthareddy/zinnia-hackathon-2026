@@ -68,10 +68,11 @@ export default async function Withdrawals({
               ? ineligibleTextHighlight
               : eligibleTextHighlight}{' '}
           </span>
-          Once eligible, you may withdraw for any reason. Withdrawals are tax
-          free up to a certain amount. You only pay taxes on any earned interest
-          you withdraw. Also note that withdrawing from the account value may
-          reduce your coverage amount.
+          Once eligible, you may withdraw for any reason. Withdrawals up to a
+          certain amount typically don't have tax consequences. Tax consequences
+          may apply to any earned interest you withdraw. (Always consult with a
+          tax professional before withdrawing.) Also note that withdrawing from
+          the account value may reduce your death benefit.
         </p>
         <div className="card">
           <StatusIconText

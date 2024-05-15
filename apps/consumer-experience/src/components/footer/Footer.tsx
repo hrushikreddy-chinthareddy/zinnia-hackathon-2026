@@ -24,7 +24,8 @@ export const Footer = ({ hasBorder, style, className }: Props) => {
         financial products.
       </p>
       <p className="typography-content-footer-legal">
-        Copyright <span>{new Date().getFullYear()}</span>. All Rights Reserved.
+        &copy; <span>{new Date().getFullYear()}</span> Zinnia Tech Solutions
+        LLC. All Rights Reserved.
       </p>
       <p className="typography-content-footer-legal">
         By using this website, you agree to the terms and conditions outlined in
