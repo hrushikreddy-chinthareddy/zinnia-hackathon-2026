@@ -1,0 +1,6 @@
+.card {
+  padding: var(--measure-dimension-padding-2xl);
+  background-color: var(--color-base-surface-surface-primary);
+  border-radius: var(--measure-dimension-radius-sm);
+  border: var(--border-style);
+}
