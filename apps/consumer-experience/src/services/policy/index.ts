@@ -74,6 +74,9 @@ import {
 } from '@/types/policy';
 import { RidersAndBenefits } from '@/types/riders';
 
+import { parseAPIResponse, userSessionForLogging } from '@/utils/api';
+import { logError, logTrace, logWarn } from '@/utils/logging/server-logging';
+
 import { getDocuments } from '../document';
 import { mockDocumentsResponse } from '../mocks/documents';
 import { MockMetricsResponse } from '../mocks/metrics';
@@ -81,6 +84,33 @@ import {
   mockCompletedTransactions,
   mockPendingTransactions,
 } from '../mocks/transactions';
+
+/**
+ * Returns error object that occur while fetching policy data from an API.
+ *
+ * @param {Response} rawResponse - The raw response object received from the API call.
+ * @param {unknown} parsedResponse - The parsed response object obtained from the API call.
+ * @return {Object} An object containing apiMessage, statusText, statusCode, url, and sessionInfo.
+ */
+const logApiNotOkDetails = async ({
+  rawResponse,
+  parsedResponse,
+}: {
+  rawResponse: Response;
+  parsedResponse: unknown;
+}) => {
+  const sessionInfo = await userSessionForLogging();
+  const { message } = parsedResponse as { message?: string };
+  const { statusText, status, url } = rawResponse;
+
+  return {
+    apiMessage: message,
+    statusText,
+    statusCode: status,
+    url,
+    ...sessionInfo,
+  };
+};
 
 const getPolicyReferencesByCarrier = async () => {
   const searchUrl = `${policyApiBaseUrl}/search?offset=0&limit=10`;
@@ -94,18 +124,25 @@ const getPolicyReferencesByCarrier = async () => {
   if (isMockErrorEnabled(ApiEndpoints.POLICY_BY_CARRIERS)) {
     throw new Error('Error fetching policies by carrier.');
   }
-  const request = await ServerApi.post(
+
+  const rawResponse = await ServerApi.post(
     searchUrl,
     JSON.stringify(searchFilter),
     {
       headers: { 'Content-Type': 'application/json' },
     }
   );
-  if (request.status !== 200) {
+
+  const response = await parseAPIResponse(rawResponse);
+
+  if (!rawResponse?.ok) {
+    logError(
+      'Error fetching policy search restults',
+      await logApiNotOkDetails({ rawResponse, parsedResponse: response })
+    );
+
     throw new Error('Error fetching policy references');
   }
-
-  const response = (await request.json()) as PolicySearchResponse;
 
   return response;
 };
@@ -117,14 +154,21 @@ const getPolicyByPlanCodeAndId = async (options: PolicyRequestInputs) => {
     throw new Error('Error fetching policy.');
   }
 
-  const request = await ServerApi.get(url);
+  const rawResponse = await ServerApi.get(url);
+  const response = await parseAPIResponse(rawResponse);
 
-  if (request.status !== 200) {
+  if (!rawResponse?.ok) {
+    logError(
+      'Error fetching policy',
+      await logApiNotOkDetails({ rawResponse, parsedResponse: response })
+    );
+
     throw new Error('Error fetching policy.', {
       cause: policyNumber,
     });
   }
-  const { data } = (await request.json()) as PolicyApiResponse<Policy>;
+
+  const { data } = response as PolicyApiResponse<Policy>;
   return data;
 };
 
@@ -155,13 +199,18 @@ const getPolicyTransactions = async ({
     throw new Error('Error fetching transactions.');
   }
 
-  const request = await ServerApi.get(url);
-  const response = (await request.json()) as
+  const rawResponse = await ServerApi.get(url);
+  const response = (await parseAPIResponse(rawResponse)) as
     | TransactionErrorResponse
     | PolicyApiResponse<Transaction[]>;
 
-  if (response.message !== 'SUCCESS') {
-    throw new Error(response.message);
+  if (!rawResponse?.ok) {
+    logWarn(
+      'Error fetching policy transactions',
+      await logApiNotOkDetails({ rawResponse, parsedResponse: response })
+    );
+
+    throw new Error('Error fetching policy transactions');
   }
 
   return (response as PolicyApiResponse<Transaction[]>).data;
@@ -178,22 +227,29 @@ const getPolicyMetrics = async (
     throw new Error('Error fetching metrics.');
   }
 
-  const response = await ServerApi.post(url, JSON.stringify(metrics), {
+  const rawResponse = await ServerApi.post(url, JSON.stringify(metrics), {
     headers: { 'Content-Type': 'application/json' },
   });
 
-  if (!response.ok) {
-    throw new Error('something went wrong', { cause: response.status });
+  const response = await parseAPIResponse(rawResponse);
+
+  if (!rawResponse?.ok) {
+    logWarn(
+      'Error fetching policy metrics',
+      await logApiNotOkDetails({ rawResponse, parsedResponse: response })
+    );
+
+    throw new Error('Error fetching metrics', { cause: response.status });
   }
 
-  const responseData = await response.json();
-
-  return responseData.data;
+  return response.data;
 };
 
 export const getMyPoliciesByCarrier = async (
   carrierId: string
 ): Promise<ApiResponse<CarrierPolicyDetails[]>> => {
+  logTrace('called getMyPoliciesByCarrier', { carrierId });
+
   if (isMockSearchRequestEnabled()) {
     const transformedResults = transformPolicyReferenceData([
       mockPolicyResponse,
@@ -209,11 +265,11 @@ export const getMyPoliciesByCarrier = async (
     const response = await getPolicyReferencesByCarrier();
 
     if (!response.results) {
-      throw new Error('No data returned from the API.');
+      throw new Error('API response results did not exist on the response.');
     }
 
     const filteredPolicies = response.results
-      .filter(p => p.carrierId === carrierId)
+      .filter((p: Policy) => p.carrierId === carrierId)
       .map((carrierPolicy: PolicyReferenceData) => {
         return getPolicyByPlanCodeAndId({
           planCode: carrierPolicy.planCode || '',
@@ -226,17 +282,21 @@ export const getMyPoliciesByCarrier = async (
     const hasFulfilledPolicy = allPolicyDataSettledResult.some(
       a => a.status === 'fulfilled'
     );
+
     if (!hasFulfilledPolicy) {
-      throw new Error('No policy data available.');
+      throw new Error('All requests to get policy data failed');
     }
+
     const allPolicyData = allPolicyDataSettledResult.map(p => {
       if (p.status === 'fulfilled') {
         return p.value;
       }
-      const policyNumber = p.reason.cause;
+
+      const policyNumber = p?.reason?.cause;
       const policyReference = response.results.find(
-        r => r.policyNumber === policyNumber
+        (r: Policy) => r?.policyNumber === policyNumber
       );
+
       const policy: Partial<Policy> = {
         product: {
           planCode: policyReference?.planCode,
@@ -247,6 +307,7 @@ export const getMyPoliciesByCarrier = async (
       };
       return policy;
     });
+
     const transformedResults = transformPolicyReferenceData(allPolicyData);
 
     return {
@@ -254,13 +315,14 @@ export const getMyPoliciesByCarrier = async (
       error: null,
     };
   } catch (error) {
-    console.log(error);
+    logWarn('error thrown in getMyPoliciesByCarrier', { error });
+
     return {
       data: null,
       error: {
         message: 'Something went wrong',
         status: 400,
-        name: 'getPolicyOverviewData Error',
+        name: 'getMyPoliciesByCarrier Error',
       },
     };
   }
@@ -269,6 +331,11 @@ export const getMyPoliciesByCarrier = async (
 export const getPolicyAccountValue = async (
   options: PolicyRequestInputs
 ): Promise<ApiResponse<PolicyAccountValue>> => {
+  logTrace('getPolicyAccountValue', {
+    planCode: options.planCode,
+    policyNumber: options.policyNumber,
+  });
+
   if (isMockPolicyOverviewRequestEnabled()) {
     const transformedResults =
       transformPolicyForAccountValue(mockPolicyResponse);
@@ -287,11 +354,13 @@ export const getPolicyAccountValue = async (
       error: null,
     };
   } catch (error) {
+    logWarn('getPolicyAccountValue error', { error });
+
     return {
       data: null,
       error: {
         message: 'Something went wrong',
-        status: 400,
+        status: 500,
         name: 'getPolicyAccountValue Error',
       },
     };
@@ -326,6 +395,8 @@ export const get30DayAccountValueChange = async (
       error: null,
     };
   } catch (error) {
+    logTrace('get30DayAccountValueChange error', { error });
+
     return {
       data: null,
       error: {
@@ -340,18 +411,44 @@ export const get30DayAccountValueChange = async (
 export const getPolicyAccountValueWith30DayChange = async (
   options: PolicyRequestInputs
 ): Promise<ApiResponse<PolicyAccountValue>> => {
+  logTrace('getPolicyAccountValueWith30DayChange', {
+    planCode: options.planCode,
+    policyNumber: options.policyNumber,
+  });
+
   const data = await Promise.allSettled([
     getPolicyAccountValue(options),
     get30DayAccountValueChange(options),
   ]);
 
-  if (data[0].status === 'rejected' || data[0].value.error) {
+  const anySuccess = data.filter(item => item.status === 'fulfilled');
+
+  if (!anySuccess) {
+    logTrace('getPolicyAccountValueWith30DayChange requests were rejected', {});
+
     return {
       data: null,
       error: {
         message: 'Something went wrong',
         status: 500,
-        name: 'getPolicyAccountValue Error',
+        name: 'getPolicyAccountValueWith30DayChange Error',
+      },
+    };
+  }
+
+  // Return error specifically if policy account value fails because the 30day change value
+  // is meaningful in conjunction with that value, but not alone
+  if (data?.[0].status === 'rejected' || data?.[0].value.error) {
+    logTrace('getPolicyAccountValue request was rejected', {
+      reason: data[0].status === 'rejected' && data[0].reason,
+    });
+
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 500,
+        name: 'getPolicyAccountValueWith30DayChange Error',
       },
     };
   }
@@ -373,6 +470,11 @@ export const getPolicyAccountValueWith30DayChange = async (
 export const getPolicyForHeaderDetails = async (
   options: PolicyRequestInputs
 ): Promise<ApiResponse<PolicyDetails>> => {
+  logTrace('getPolicyForHeaderDetails', {
+    planCode: options.planCode,
+    policyNumber: options.policyNumber,
+  });
+
   if (isMockPolicyOverviewRequestEnabled()) {
     const transformedResults =
       transformPolicyForHeaderDetails(mockPolicyResponse);
@@ -391,6 +493,8 @@ export const getPolicyForHeaderDetails = async (
       error: null,
     };
   } catch (error) {
+    logWarn('getPolicyForHeaderDetails error', { error });
+
     return {
       data: null,
       error: {
@@ -405,6 +509,11 @@ export const getPolicyForHeaderDetails = async (
 export const getPolicyProfileData = async (
   options: PolicyRequestInputs
 ): Promise<ApiResponse<PolicyProfile>> => {
+  logTrace('getPolicyProfileData', {
+    planCode: options.planCode,
+    policyNumber: options.policyNumber,
+  });
+
   if (isMockPolicyOverviewRequestEnabled()) {
     const transformedResults = transformPolicyForProfile(mockPolicyResponse);
 
@@ -422,12 +531,14 @@ export const getPolicyProfileData = async (
       error: null,
     };
   } catch (error) {
+    logWarn('getPolicyProfileData error', { error });
+
     return {
       data: null,
       error: {
         message: 'Something went wrong',
         status: 400,
-        name: 'getPolicyOverviewData Error',
+        name: 'getPolicyProfileData Error',
       },
     };
   }
@@ -436,6 +547,11 @@ export const getPolicyProfileData = async (
 export const getUpcomingPremium = async (
   options: PolicyRequestInputs
 ): Promise<ApiResponse<UpcomingPremium>> => {
+  logTrace('getUpcomingPremium', {
+    planCode: options.planCode,
+    policyNumber: options.policyNumber,
+  });
+
   if (isMockPolicyOverviewRequestEnabled()) {
     const transformedResults =
       transformPolicyForUpcomingPremium(mockPolicyResponse);
@@ -454,6 +570,8 @@ export const getUpcomingPremium = async (
       error: null,
     };
   } catch (error) {
+    logWarn('getUpcomingPremium error', { error });
+
     return {
       data: null,
       error: {
@@ -468,6 +586,11 @@ export const getUpcomingPremium = async (
 export const getCoverage = async (
   options: PolicyRequestInputs
 ): Promise<ApiResponse<PolicyCoverage>> => {
+  logTrace('getCoverage', {
+    planCode: options.planCode,
+    policyNumber: options.policyNumber,
+  });
+
   if (isMockPolicyOverviewRequestEnabled()) {
     const transformedResults = transformPolicyForCoverage(mockPolicyResponse);
 
@@ -485,6 +608,8 @@ export const getCoverage = async (
       error: null,
     };
   } catch (error) {
+    logWarn('getCoverage error', { error });
+
     return {
       data: null,
       error: {
@@ -499,6 +624,11 @@ export const getCoverage = async (
 export const getBeneficiaries = async (
   options: PolicyRequestInputs
 ): Promise<ApiResponse<BeneficiaryData>> => {
+  logTrace('getBeneficiaries', {
+    planCode: options.planCode,
+    policyNumber: options.policyNumber,
+  });
+
   if (isMockPolicyOverviewRequestEnabled()) {
     const transformedResults =
       transformPolicyForBeneficiaries(mockPolicyResponse);
@@ -517,12 +647,14 @@ export const getBeneficiaries = async (
       error: null,
     };
   } catch (error) {
+    logWarn('getBeneficiaries Error', { error });
+
     return {
       data: null,
       error: {
         message: 'Something went wrong',
         status: 500,
-        name: 'getCoverage Error',
+        name: 'getBeneficiaries Error',
       },
     };
   }
@@ -531,6 +663,12 @@ export const getBeneficiaries = async (
 export const getBeneficiary = async (
   options: BeneficiaryRequestInputs
 ): Promise<ApiResponse<Beneficiary | undefined>> => {
+  logTrace('getBeneficiary', {
+    planCode: options.planCode,
+    policyNumber: options.policyNumber,
+    partyId: options.partyId,
+  });
+
   if (isMockPolicyOverviewRequestEnabled()) {
     const transformedResults = transformPolicyForBeneficiary(
       mockPolicyResponse,
@@ -554,12 +692,14 @@ export const getBeneficiary = async (
       error: null,
     };
   } catch (error) {
+    logWarn('getBeneficiary Error', { error });
+
     return {
       data: null,
       error: {
         message: 'Something went wrong',
         status: 500,
-        name: 'getCoverage Error',
+        name: 'getBeneficiary Error',
       },
     };
   }
@@ -568,6 +708,11 @@ export const getBeneficiary = async (
 export const getPaymentDetails = async (
   options: PolicyRequestInputs
 ): Promise<ApiResponse<BankDetail[]>> => {
+  logTrace('getPaymentDetails', {
+    planCode: options.planCode,
+    policyNumber: options.policyNumber,
+  });
+
   if (isMockPolicyOverviewRequestEnabled()) {
     const transformedResults =
       transformPolicyforPaymentDetails(mockPolicyResponse);
@@ -586,20 +731,28 @@ export const getPaymentDetails = async (
       error: null,
     };
   } catch (error) {
+    logWarn('getPaymentDetails error', { error });
+
     return {
       data: null,
       error: {
         message: 'Something went wrong',
         status: 500,
-        name: 'fetchPolicyTransactions Error',
+        name: 'getPaymentDetails Error',
       },
     };
   }
 };
+
 export const getPaymentHistory = async ({
   planCode,
   policyNumber,
 }: PolicyRequestInputs): Promise<ApiResponse<PaymentHistoryTransaction>> => {
+  logTrace('getPaymentHistory', {
+    planCode,
+    policyNumber,
+  });
+
   const currentYear = new Date().getFullYear().toString();
   const completedTransactionTypes = Object.values(
     CompletedPremiumTransactionType
@@ -651,9 +804,15 @@ export const getPaymentHistory = async ({
       completedPromise.status === 'rejected' &&
       pendingPromise.status === 'rejected'
     ) {
-      throw new Error('Something went wrong');
+      logTrace('all requests for transactions were rejected', {
+        completedReason: completedPromise.reason,
+        pendingReason: pendingPromise.reason,
+      });
+
+      throw new Error('Something went wrong retrieving transactions');
     }
 
+    // TODO: do we want to handle if just completed or just pending succeeds for whatever reason?
     const completedTransactions =
       completedPromise.status === 'fulfilled' ? completedPromise.value : [];
     const pendingTransactions =
@@ -671,20 +830,28 @@ export const getPaymentHistory = async ({
       error: null,
     };
   } catch (error) {
+    logWarn('getPaymentHistory Error', { error });
+
     return {
       data: null,
       error: {
         message: 'Something went wrong',
         status: 500,
-        name: 'fetchPolicyTransactions Error',
+        name: 'getPaymentHistory Error',
       },
     };
   }
 };
+
 export const getCorrespondenceDocuments = async (
   policyInputs: PolicyRequestInputs,
   inputs: Partial<DocumentApiRequestInputs>
 ): Promise<ApiResponse<PolicyDocument>> => {
+  logTrace('getCorrespondenceDocuments', {
+    planCode: policyInputs.planCode,
+    policyNumber: policyInputs.policyNumber,
+  });
+
   if (isMockDocumentRequestEnabled()) {
     return {
       data: mockDocumentsResponse,
@@ -699,7 +866,7 @@ export const getCorrespondenceDocuments = async (
     const response = await getDocuments(inputs);
 
     if (!response?.items) {
-      throw new Error('No data returned from the API.');
+      throw new Error('No documents returned from the API');
     }
 
     return {
@@ -707,7 +874,7 @@ export const getCorrespondenceDocuments = async (
       error: null,
     };
   } catch (error) {
-    console.log(error);
+    logWarn('getCorrespondenceDocuments error', { error });
 
     return {
       data: null,
@@ -723,6 +890,11 @@ export const getCorrespondenceDocuments = async (
 export const getPolicyFundDetails = async (
   policyInputs: PolicyRequestInputs
 ): Promise<ApiResponse<PolicyFund[]>> => {
+  logTrace('getPolicyFundDetails', {
+    planCode: policyInputs.planCode,
+    policyNumber: policyInputs.policyNumber,
+  });
+
   if (isMockPolicyOverviewRequestEnabled()) {
     const transformedResults =
       transformPolicyForFundDetails(mockPolicyResponse);
@@ -738,6 +910,8 @@ export const getPolicyFundDetails = async (
     const transformedResults = transformPolicyForFundDetails(policy);
 
     if (!transformedResults) {
+      logTrace('transformedResults object was returned null', {});
+
       return {
         data: null,
         error: {
@@ -753,7 +927,8 @@ export const getPolicyFundDetails = async (
       error: null,
     };
   } catch (error) {
-    console.log(error);
+    logWarn('getPolicyFundDetails Error', { error });
+
     return {
       data: null,
       error: {
@@ -768,6 +943,11 @@ export const getPolicyFundDetails = async (
 export const getPolicySurrenderDetails = async (
   policyInputs: PolicyRequestInputs
 ): Promise<ApiResponse<PolicySurrender>> => {
+  logTrace('getPolicySurrenderDetails', {
+    planCode: policyInputs.planCode,
+    policyNumber: policyInputs.policyNumber,
+  });
+
   if (isMockPolicyOverviewRequestEnabled()) {
     const transformedResults = transformPolicyForSurrender(mockPolicyResponse);
 
@@ -786,7 +966,7 @@ export const getPolicySurrenderDetails = async (
       error: null,
     };
   } catch (error) {
-    console.log(error);
+    logWarn('getPolicySurrenderDetails Error', { error });
 
     return {
       data: null,
@@ -802,6 +982,11 @@ export const getPolicySurrenderDetails = async (
 export const getPolicyWithdrawalDetails = async (
   policyInputs: PolicyRequestInputs
 ): Promise<ApiResponse<PolicyWithdrawals>> => {
+  logTrace('getPolicyWithdrawalDetails', {
+    planCode: policyInputs.planCode,
+    policyNumber: policyInputs.policyNumber,
+  });
+
   if (isMockPolicyOverviewRequestEnabled()) {
     const transformedResults =
       transformPolicyForWithdrawals(mockPolicyResponse);
@@ -821,7 +1006,7 @@ export const getPolicyWithdrawalDetails = async (
       error: null,
     };
   } catch (error) {
-    console.log(error);
+    logWarn('getPolicyWithdrawalDetails Error', { error });
 
     return {
       data: null,
@@ -837,6 +1022,11 @@ export const getPolicyWithdrawalDetails = async (
 export const getPolicyAccountValueSummary = async (
   policyInputs: PolicyRequestInputs
 ): Promise<ApiResponse<AccountValueSummary>> => {
+  logTrace('getPolicyAccountValueSummary', {
+    planCode: policyInputs.planCode,
+    policyNumber: policyInputs.policyNumber,
+  });
+
   if (isMockPolicyOverviewRequestEnabled()) {
     const transformedResults =
       transformPolicyForAccountValueSummary(mockPolicyResponse);
@@ -856,7 +1046,8 @@ export const getPolicyAccountValueSummary = async (
       error: null,
     };
   } catch (error) {
-    console.log(error);
+    logWarn('getPolicyAccountValueSummary Error', { error });
+
     return {
       data: null,
       error: {
@@ -871,6 +1062,11 @@ export const getPolicyAccountValueSummary = async (
 export const getPolicyLoanDetails = async (
   policyInputs: PolicyRequestInputs
 ): Promise<ApiResponse<PolicyLoans>> => {
+  logTrace('getPolicyLoanDetails', {
+    planCode: policyInputs.planCode,
+    policyNumber: policyInputs.policyNumber,
+  });
+
   if (isMockPolicyOverviewRequestEnabled()) {
     const transformedResults = transformPolicyForLoans(mockPolicyResponse);
 
@@ -889,13 +1085,14 @@ export const getPolicyLoanDetails = async (
       error: null,
     };
   } catch (error) {
-    console.log(error);
+    logWarn('getPolicyLoanDetails error', { error });
+
     return {
       data: null,
       error: {
         message: 'Something went wrong',
         status: 500,
-        name: 'getPolicyAccountValueSummary Error',
+        name: 'getPolicyLoanDetails Error',
       },
     };
   }
@@ -904,6 +1101,11 @@ export const getPolicyLoanDetails = async (
 export const getRiders = async (
   options: PolicyRequestInputs
 ): Promise<ApiResponse<RidersAndBenefits>> => {
+  logTrace('getRiders', {
+    planCode: options.planCode,
+    policyNumber: options.policyNumber,
+  });
+
   if (isMockRidersRequestEnabled()) {
     const transformedResults = transformRiders(mockPolicyResponse);
 
@@ -921,6 +1123,8 @@ export const getRiders = async (
       error: null,
     };
   } catch (error) {
+    logWarn('getRiders error', { error });
+
     return {
       data: null,
       error: {
@@ -935,6 +1139,11 @@ export const getRiders = async (
 export const getPolicyStatusDetails = async (
   policyInputs: PolicyRequestInputs
 ) => {
+  logTrace('getPolicyStatusDetails', {
+    planCode: policyInputs.planCode,
+    policyNumber: policyInputs.policyNumber,
+  });
+
   if (isMockPolicyOverviewRequestEnabled()) {
     const transformedResults = transformPolicyStatusDetails(mockPolicyResponse);
 
@@ -953,12 +1162,14 @@ export const getPolicyStatusDetails = async (
       error: null,
     };
   } catch (error) {
+    logWarn('getPolicyStatusDetails Error', { error });
+
     return {
       data: null,
       error: {
         message: 'Something went wrong',
         status: 400,
-        name: 'getPolicyFeatures Error',
+        name: 'getPolicyStatusDetails Error',
       },
     };
   }

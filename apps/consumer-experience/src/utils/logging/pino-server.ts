@@ -41,8 +41,8 @@ const logger = pino({
   // level of logs to display. trace|debug|info|warn|error|fatal
   level: process.env.PINO_LOG_LEVEL || 'trace',
 }).child({
-  app_name: 'consumer-ui',
-  service: 'consumer-ui',
+  app_name: 'consumer-xd',
+  service: 'consumer-xd',
   env: process.env.NEXT_PUBLIC_DATADOG_ENV || '',
   version: process.env.NEXT_PUBLIC_GIT_SHA || '',
 });

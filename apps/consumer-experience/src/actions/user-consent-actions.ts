@@ -2,7 +2,9 @@
 
 import { ServerApi, consumerExperienceAPIBaseUrl } from '@/services';
 import { TermsAndConditionApiResponse, User } from '@/types/auth';
+import { parseAPIResponse } from '@/utils/api';
 import { getSession, setTermsAndConditionsCookie } from '@/utils/auth';
+import { logError } from '@/utils/logging/server-logging';
 
 export async function setUserConsent(
   _:
@@ -40,16 +42,26 @@ export async function setUserConsent(
       })
     );
 
-    const data = await req.json();
+    const data = await parseAPIResponse(req);
+    const session = await getSession();
 
     if (!req.ok || !('agreedToTermsAndConditions' in data)) {
+      logError('Error setting user consent', {
+        statusCode: req.status,
+        statusText: req.status,
+        url: req.url,
+        apiMessage: data.message,
+        sessionId: session?.user?.sid,
+        userId: session?.user?.sub,
+        userName: session?.user?.name,
+      });
+
       throw data;
     }
 
     const termsAndConditions = data as TermsAndConditionApiResponse;
     if (termsAndConditions.agreedToTermsAndConditions) {
       await setTermsAndConditionsCookie(true);
-      const session = await getSession();
       return { acceptedTermsAndConditions: true, user: session?.user };
     }
 
