@@ -4,6 +4,7 @@ import Script from 'next/script';
 
 import type { Metadata } from 'next';
 
+import { DataDogInit } from '@/components/DataDogInit';
 import { isProd } from '@/utils';
 
 import './styles/globals.css';
@@ -116,6 +117,7 @@ export default async function RootLayout({
     >
       <body style={{ height: '100%' }}>
         {children}
+        <DataDogInit />
         <MouseflowTrackingCode />
         {isProd() && <GoogleAnalytics gaId="G-TZ4P6YJQ0K" />}
       </body>

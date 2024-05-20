@@ -26,6 +26,9 @@ importers:
 
   apps/consumer-experience:
     dependencies:
+      '@datadog/browser-rum':
+        specifier: ^5.17.1
+        version: 5.17.1
       '@next/third-parties':
         specifier: ^14.2.3
         version: 14.2.3(next@14.2.2)(react@18.2.0)
@@ -2285,6 +2288,28 @@ packages:
       postcss-selector-parser: ^6.0.13
     dependencies:
       postcss-selector-parser: 6.0.15
+
+  /@datadog/browser-core@5.17.1:
+    resolution: {integrity: sha512-OsdjeRCCT1U9+ddygqg3PkqHOkkk7Vr2tI3U8xgZQyiqCzCuooDHebq/40UMP6mf9OVETDkqlSWQ/ouqvFKjUQ==}
+    dev: false
+
+  /@datadog/browser-rum-core@5.17.1:
+    resolution: {integrity: sha512-tb+kzIR5C5EHeCXLiTW5bQTm4T1KsuBUE+Xdf1MJJlpcPKtiqnNKS2gJ1OJQpfuOHWwWrGsH2tIO7fZUtALqAg==}
+    dependencies:
+      '@datadog/browser-core': 5.17.1
+    dev: false
+
+  /@datadog/browser-rum@5.17.1:
+    resolution: {integrity: sha512-BiXA47pBTCjifQxseEVDsrKzLByMdhcp223z8LpyJfjAjMsJad0qxJV5EC+sXANN6yXvpCiC0IjMWNpNHRqpIA==}
+    peerDependencies:
+      '@datadog/browser-logs': 5.17.1
+    peerDependenciesMeta:
+      '@datadog/browser-logs':
+        optional: true
+    dependencies:
+      '@datadog/browser-core': 5.17.1
+      '@datadog/browser-rum-core': 5.17.1
+    dev: false
 
   /@discoveryjs/json-ext@0.5.7:
     resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}

@@ -18,6 +18,7 @@
     "prepare": "cd ../.. && husky install apps/consumer-experience/.husky"
   },
   "dependencies": {
+    "@datadog/browser-rum": "^5.17.1",
     "@next/third-parties": "^14.2.3",
     "@panva/hkdf": "^1.1.1",
     "@radix-ui/react-dialog": "^1.0.5",
