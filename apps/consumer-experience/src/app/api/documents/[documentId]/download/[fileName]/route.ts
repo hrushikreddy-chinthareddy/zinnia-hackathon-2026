@@ -5,6 +5,7 @@ import { getSession } from '@/utils/auth';
 import {
   getUserInfoFromSession,
   logCompliance,
+  logWarn,
 } from '@/utils/logging/server-logging';
 
 // Converts the Base 64 encoded binaryData string into a blob on the client to allow for downloading.
@@ -45,23 +46,50 @@ export const GET = async (
     return NextResponse.error();
   }
   const searchParams = request.nextUrl.searchParams;
-  const clientCode = searchParams.get('clientCode');
-  const source = searchParams.get('source');
+  const clientCode = searchParams.get('clientCode') as string;
+  const source = searchParams.get('source') as string;
+  const policyNumber = searchParams.get('policyNumber') as string;
+  const planCode = searchParams.get('planCode') as string;
 
-  logCompliance('Document download attempt', {
-    documentNumber: params.documentId,
+  const loggingContext = {
     clientCode,
+    documentNumber: params.documentId,
+    file: 'api/documents/[documentId]/download/[fileName]/route.ts',
+    function: 'GET',
+    planCode,
+    policyNumber,
     source,
     ...getUserInfoFromSession(session),
+  };
+
+  logCompliance('Document download attempt', {
+    ...loggingContext,
   });
 
-  const data = await getDocumentDownload(
+  const download = await getDocumentDownload(
     params.documentId,
     source as string,
-    clientCode as string
+    clientCode as string,
+    policyNumber as string,
+    planCode as string
   );
 
-  const blob = b64ToBlob(data?.data?.binaryData as string);
+  if (!download?.data?.binaryData) {
+    logWarn('Could not download document', {
+      ...loggingContext,
+      error: download.error,
+    });
 
-  return new Response(blob, { headers: { 'content-type': 'application/pdf' } });
+    return NextResponse.redirect(
+      new URL(
+        `/policies/${planCode}/${policyNumber}/documents/error`,
+        request.url
+      )
+    );
+  }
+  const blob = b64ToBlob(download.data.binaryData as string);
+
+  return new Response(blob, {
+    headers: { 'content-type': 'application/pdf' },
+  });
 };

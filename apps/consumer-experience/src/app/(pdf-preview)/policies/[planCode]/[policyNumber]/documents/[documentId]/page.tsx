@@ -1,5 +1,6 @@
 import PdfPreviewer from '@/components/pdf-previewer/PdfPreviewer';
 import { PolicyRequestInputs } from '@/types/policy';
+
 import previewStyles from './Preview.module.css';
 
 export default async function DocumentPreview({
@@ -12,10 +13,12 @@ export default async function DocumentPreview({
   return (
     <div className={previewStyles.container}>
       <PdfPreviewer
-        documentId={params.documentId}
-        source={searchParams.source}
         clientCode={searchParams.clientCode}
+        documentId={params.documentId}
         fileName={searchParams.fileName ?? params.documentId}
+        planCode={params.planCode}
+        policyNumber={params.policyNumber}
+        source={searchParams.source}
       />
     </div>
   );

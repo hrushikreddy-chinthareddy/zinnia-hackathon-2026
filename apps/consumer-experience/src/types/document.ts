@@ -21,20 +21,21 @@ export interface PolicyDocument {
 }
 
 export interface DocumentApiRequestInputs {
-  source: string;
+  caseId: string;
   clientCode: string;
   contractNumber: string;
+  docStatus: string;
   documentDate: string;
-  documentStartDate: string;
   documentEndDate: string;
+  documentNumber: string;
+  documentStartDate: string;
   documentType: string;
   importEndDate: string;
   importStartDate: string;
   masterNumber: string;
-  docStatus: string;
-  caseId: string;
-  documentNumber: string;
+  planCode: string;
   recipient: 'Client' | 'Agent'; // AS-3029 adds this functionality
+  source: string;
 }
 
 export interface DocumentResponseError {

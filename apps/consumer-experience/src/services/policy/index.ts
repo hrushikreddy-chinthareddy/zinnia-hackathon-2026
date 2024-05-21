@@ -263,7 +263,6 @@ export const getMyPoliciesByCarrier = async (
 
   try {
     const response = await getPolicyReferencesByCarrier();
-
     if (!response.results) {
       throw new Error('API response results did not exist on the response.');
     }
