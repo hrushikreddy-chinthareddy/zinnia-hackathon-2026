@@ -127,10 +127,10 @@ export const transformPolicyForHeaderDetails = (
   const ownerInfo = policyOwner(policy);
 
   return {
-    marketingName: policy.product?.marketingName || '',
-    planName: policy.product?.planName || '',
-    policyStatus: policy.policyStatus || PolicyStatus.NOTISSUED,
-    policyNumber: policy.policyNumber || '',
+    marketingName: policy?.product?.marketingName || '',
+    planName: policy?.product?.planName || '',
+    policyStatus: policy?.policyStatus || PolicyStatus.NOTISSUED,
+    policyNumber: policy?.policyNumber || '',
     firstName: ownerInfo?.firstName || '',
     lastName: ownerInfo?.lastName || '',
   };

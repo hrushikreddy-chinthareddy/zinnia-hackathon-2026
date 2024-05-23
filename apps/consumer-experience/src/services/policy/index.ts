@@ -73,7 +73,6 @@ import {
   CarrierPolicyDetails,
 } from '@/types/policy';
 import { RidersAndBenefits } from '@/types/riders';
-
 import { parseAPIResponse, userSessionForLogging } from '@/utils/api';
 import { logError, logTrace, logWarn } from '@/utils/logging/server-logging';
 
@@ -169,6 +168,18 @@ const getPolicyByPlanCodeAndId = async (options: PolicyRequestInputs) => {
   }
 
   const { data } = response as PolicyApiResponse<Policy>;
+
+  if (!data) {
+    logError(
+      'Policy API response returned with no data',
+      await logApiNotOkDetails({ rawResponse, parsedResponse: response })
+    );
+
+    throw new Error('Error fetching policy.', {
+      cause: policyNumber,
+    });
+  }
+
   return data;
 };
 
@@ -277,7 +288,7 @@ export const getMyPoliciesByCarrier = async (
       });
 
     const allPolicyDataSettledResult =
-      await Promise.allSettled(filteredPolicies);
+      await Promise.allSettled<Policy>(filteredPolicies);
     const hasFulfilledPolicy = allPolicyDataSettledResult.some(
       a => a.status === 'fulfilled'
     );
@@ -315,7 +326,6 @@ export const getMyPoliciesByCarrier = async (
     };
   } catch (error) {
     logWarn('error thrown in getMyPoliciesByCarrier', { error });
-
     return {
       data: null,
       error: {
