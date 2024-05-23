@@ -3,13 +3,13 @@ import {
   Address as AddressInterface,
 } from '@zinnia/api-types/types/sor';
 import {
-  Address,
   AssistiveText,
   AssistiveTextVariant,
   Label,
 } from '@zinnia/bloom/internal/components';
 
 import { FieldData } from '@/components/field-data/FieldData';
+import { Address } from '@/components/pii/Address';
 
 import styles from './PersonData.module.css';
 import { AddressProps } from './types';

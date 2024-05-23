@@ -181,11 +181,11 @@ describe('bankAccountNumberSanitizer', () => {
   // Should return undefined when accountNum is undefined or undefined
   it('should return undefined when accountNum is undefined', () => {
     const result = bankAccountNumberSanitizer(undefined);
-    expect(result).toBeUndefined();
+    expect(result).toBe(DEFAULT_ERROR_STRING);
   });
 
   // Should return last 3 digits when accountNum length is less than or equal to 4
-  it('should return last 3 digits when accountNum length is less than or equal to 4', () => {
+  it('should return last 3 digits when accountNum length is less than 4', () => {
     const result = bankAccountNumberSanitizer('123');
     expect(result).toBe('123');
   });

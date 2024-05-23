@@ -5,6 +5,8 @@ import { CardInsertHistory } from '@/components/card-list-history/CardInsertHist
 import { CardListHistory } from '@/components/card-list-history/CardListHistory';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
+import { AccountNumber } from '@/components/pii/AccountNumber';
+import { AccountType } from '@/components/pii/AccountType';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getPaymentHistory } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
@@ -62,8 +64,17 @@ export default async function PaymentHistory({ params }: Props) {
                   |
                 </span>
               )}
-              <span>{`${formatBankAccountTypeText(item?.bankDetails?.accountType)}
-        ending in ${item.bankDetails?.accountNumber}`}</span>
+              <span>
+                <AccountType
+                  accountType={formatBankAccountTypeText(
+                    item?.bankDetails?.accountType
+                  )}
+                />
+                {' ending in '}
+                <AccountNumber
+                  accountNumber={item?.bankDetails?.accountNumber}
+                />
+              </span>
             </>
           }
         />
@@ -86,8 +97,18 @@ export default async function PaymentHistory({ params }: Props) {
                   |
                 </span>
               )}
-              <span>{`${formatBankAccountTypeText(item?.bankDetails?.accountType)}
-        ending in ${item.bankDetails?.accountNumber}`}</span>
+
+              <span>
+                <AccountType
+                  accountType={formatBankAccountTypeText(
+                    item?.bankDetails?.accountType
+                  )}
+                />
+                {' ending in '}
+                <AccountNumber
+                  accountNumber={item?.bankDetails?.accountNumber}
+                />
+              </span>
             </>
           }
         />

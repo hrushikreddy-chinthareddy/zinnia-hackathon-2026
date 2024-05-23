@@ -4,12 +4,15 @@ import {
   AssistiveTextVariant,
 } from '@zinnia/bloom/internal/components';
 
-import { checkIfNull } from '@/utils/data';
-import { DEFAULT_ERROR_STRING, toSentenceCase } from '@/utils/strings';
+import { FieldData } from '@/components/field-data/FieldData';
+import { BankDetail } from '@/components/person-data/types';
+import { AccountNumber } from '@/components/pii/AccountNumber';
+import { AccountType } from '@/components/pii/AccountType';
+import { BankName } from '@/components/pii/BankName';
+import { Name } from '@/components/pii/Name';
+import { RoutingNumber } from '@/components/pii/RoutingNumber';
 
 import styles from './BankData.module.css';
-import { FieldData } from '../field-data/FieldData';
-import { BankDetail } from '../person-data/types';
 
 export const BankData = ({
   accountNumber,
@@ -23,8 +26,7 @@ export const BankData = ({
     <div>
       <div className={styles.bankName}>
         <div className="typography-labels-label-lg">
-          {/* Formatting uppercase is the best solution based on the return from zahara */}
-          {branchName?.toUpperCase()}
+          <BankName bankName={branchName} />
         </div>
         {autopayEnabled && (
           <AssistiveText
@@ -36,24 +38,23 @@ export const BankData = ({
       <div className={styles.detailsContainer}>
         <FieldData Label={<Label>Account number</Label>}>
           <p className="typography-content-body-sm">
-            {accountNumber
-              ? `Ending in ${accountNumber}`
-              : DEFAULT_ERROR_STRING}
+            {!!accountNumber && 'Ending in '}
+            <AccountNumber accountNumber={accountNumber} />
           </p>
         </FieldData>
         <FieldData Label={<Label>Routing number</Label>}>
           <p className="typography-content-body-sm">
-            {checkIfNull(routingNumber)}
+            <RoutingNumber routingNumber={routingNumber} />
           </p>
         </FieldData>
         <FieldData Label={<Label>Account type</Label>}>
           <p className="typography-content-body-sm">
-            {toSentenceCase(accountType)}
+            <AccountType accountType={accountType} />
           </p>
         </FieldData>
         <FieldData Label={<Label>Name on account</Label>}>
           <p className="typography-content-body-sm">
-            {checkIfNull(nameOnAccount)}
+            <Name displayName={nameOnAccount} />
           </p>
         </FieldData>
       </div>

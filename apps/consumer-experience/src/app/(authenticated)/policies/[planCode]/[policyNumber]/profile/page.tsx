@@ -10,10 +10,11 @@ import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable'
 import { Addresses } from '@/components/person-data/Addresses';
 import { Emails } from '@/components/person-data/Emails';
 import { Phones } from '@/components/person-data/Phones';
+import { FullName } from '@/components/pii/FullName';
 import { getPageTitle, RouteKey } from '@/route-map';
 import { getPolicyProfileData } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
-import { filterItemsWithPastEndDate, fullName } from '@/utils/data';
+import { filterItemsWithPastEndDate } from '@/utils/data';
 
 import styles from './Profile.module.css';
 
@@ -120,10 +121,10 @@ export default async function Profile({ params }: Props) {
           <h2 className="mb-lg">Name</h2>
           <FieldData Label={<Label>Owner</Label>}>
             <p className="typography-content-body-sm">
-              {fullName({
-                firstName: profileData?.name?.firstName,
-                lastName: profileData?.name?.lastName,
-              })}
+              <FullName
+                firstName={profileData?.name?.firstName}
+                lastName={profileData?.name?.lastName}
+              />
             </p>
           </FieldData>
         </div>

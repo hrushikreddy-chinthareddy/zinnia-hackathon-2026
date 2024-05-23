@@ -38,7 +38,7 @@ export const UserConsentManager = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const { user, setUser } = useUser();
+  const { user } = useUser();
   const [state, formAction] = useFormState(setUserConsent, {
     acceptedTermsAndConditions: user?.hasSignedTermsAndConditions || false,
     user: user,
@@ -50,12 +50,19 @@ export const UserConsentManager = ({
       setConsentError(state?.errorDescription || default_error);
     }
 
-    if (state?.acceptedTermsAndConditions && state?.user) {
-      setUser(state?.user);
+    // if the user accepted the terms but our use context isn't updated reload the page to get the latest state
+    if (
+      state?.acceptedTermsAndConditions &&
+      !state?.user?.hasSignedTermsAndConditions
+    ) {
+      window.location.reload();
     }
-  }, [setUser, state]);
+  }, [state]);
 
-  if (state?.acceptedTermsAndConditions && state?.user) {
+  if (
+    state?.acceptedTermsAndConditions &&
+    state?.user?.hasSignedTermsAndConditions
+  ) {
     return <>{children}</>;
   }
 

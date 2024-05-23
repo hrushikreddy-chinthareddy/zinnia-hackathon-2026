@@ -123,11 +123,11 @@ export const bankAccountNumberSanitizer = (
   accountNum?: string | null
 ): string | undefined => {
   if (!accountNum) {
-    return undefined;
+    return DEFAULT_ERROR_STRING;
   }
 
   // This seems like an extreme edge case, but should probably add some better handling here
-  if (accountNum.length <= 4) {
+  if (accountNum.length < 4) {
     return accountNum.slice(-3);
   }
 

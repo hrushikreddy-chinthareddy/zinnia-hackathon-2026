@@ -15,7 +15,7 @@ export const toTitleCase = (value?: string): string => {
   });
 };
 
-export const toSentenceCase = (value?: string): string => {
+export const toSentenceCase = (value?: string | null): string => {
   if (!value) {
     return DEFAULT_ERROR_STRING;
   }

@@ -2,17 +2,24 @@ import { Phone, PhoneType } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/internal/components';
 
 import { FieldData } from '@/components/field-data/FieldData';
-import { formatPhoneNumberWithExtension } from '@/utils/data';
 import { toSentenceCase } from '@/utils/strings';
 
 import styles from './PersonData.module.css';
 import { PhoneProps } from './types';
+import { PhoneNumber } from '../pii/PhoneNumber';
+import { PiiWrapper } from '../pii/PiiWrapper';
 
-const PhoneNumber = (phone: Phone) => {
+const PhoneNumberInternal = (phone: Phone) => {
   return (
     <div className="typography-content-body-sm">
-      <p>{formatPhoneNumberWithExtension(phone)}</p>
-      {phone.bestTime && <p>Call: {toSentenceCase(phone.bestTime)}</p>}
+      <p>
+        <PhoneNumber phoneNumber={phone} />
+      </p>
+      {phone.bestTime && (
+        <p>
+          Call: <PiiWrapper>{toSentenceCase(phone.bestTime)}</PiiWrapper>
+        </p>
+      )}
     </div>
   );
 };
@@ -43,7 +50,7 @@ export const Phones = ({ phones, title }: PhoneProps) => {
         {businessPhones.map(phone => {
           return (
             <FieldData Label={<Label>Work phone</Label>} key="work-phone">
-              <PhoneNumber {...phone} />
+              <PhoneNumberInternal {...phone} />
             </FieldData>
           );
         })}
@@ -51,7 +58,7 @@ export const Phones = ({ phones, title }: PhoneProps) => {
         {faxes.map(phone => {
           return (
             <FieldData Label={<Label>Fax</Label>} key="fax-phone">
-              <PhoneNumber {...phone} />
+              <PhoneNumberInternal {...phone} />
             </FieldData>
           );
         })}
@@ -59,7 +66,7 @@ export const Phones = ({ phones, title }: PhoneProps) => {
         {homePhones.map(phone => {
           return (
             <FieldData Label={<Label>Home phone</Label>} key="home-phone">
-              <PhoneNumber {...phone} />
+              <PhoneNumberInternal {...phone} />
             </FieldData>
           );
         })}
@@ -67,7 +74,7 @@ export const Phones = ({ phones, title }: PhoneProps) => {
         {mobilePhones.map(phone => {
           return (
             <FieldData Label={<Label>Mobile phone</Label>} key="mobile-phone">
-              <PhoneNumber {...phone} />
+              <PhoneNumberInternal {...phone} />
             </FieldData>
           );
         })}
@@ -75,7 +82,7 @@ export const Phones = ({ phones, title }: PhoneProps) => {
         {otherPhones.map(phone => {
           return (
             <FieldData Label={<Label>Other</Label>} key="other-phone">
-              <PhoneNumber {...phone} />
+              <PhoneNumberInternal {...phone} />
             </FieldData>
           );
         })}

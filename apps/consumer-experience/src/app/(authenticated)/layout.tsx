@@ -5,6 +5,7 @@ import '@/app/styles/globals.css';
 import styles from '@/app/layout.module.css';
 import { DesktopNav } from '@/components/desktop-nav/DesktopNav';
 import { MobileNav } from '@/components/mobile-nav/MobileNav';
+import { PiiProvider } from '@/components/providers/PiiProvider';
 import { RefreshRouterManager } from '@/components/providers/RefreshRouterManager';
 import { SessionManager } from '@/components/providers/SessionManager';
 import { UserProvider } from '@/components/providers/UserProvider';
@@ -30,20 +31,28 @@ export default async function AuthenticatedLayout({
   return (
     <main className={`${styles.body} ${styles.main}`}>
       <UserProvider user={session?.user}>
-        <SessionManager>
-          <RefreshRouterManager>
-            {/* To prevent hydration error by trying to render these dynamically using screen width,
+        {/* As of May 22, 2024 we have not started phase 2 of masking PII data. This provider is setup for future use. Once we iron out the requirements around PII levels and data masking, we will populate this provider */}
+        <PiiProvider
+          pii={{
+            pii: undefined,
+            piiLevel: undefined,
+          }}
+        >
+          <SessionManager>
+            <RefreshRouterManager>
+              {/* To prevent hydration error by trying to render these dynamically using screen width,
           dynamically displaying using media queries */}
-            <MobileNav />
-            <DesktopNav />
+              <MobileNav />
+              <DesktopNav />
 
-            <div className={styles.container}>
-              <div className={styles.content}>
-                <UserConsentManager>{children}</UserConsentManager>
+              <div className={styles.container}>
+                <div className={styles.content}>
+                  <UserConsentManager>{children}</UserConsentManager>
+                </div>
               </div>
-            </div>
-          </RefreshRouterManager>
-        </SessionManager>
+            </RefreshRouterManager>
+          </SessionManager>
+        </PiiProvider>
       </UserProvider>
     </main>
   );

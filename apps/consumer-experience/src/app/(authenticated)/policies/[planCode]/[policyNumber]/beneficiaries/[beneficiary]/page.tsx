@@ -7,12 +7,13 @@ import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { Addresses } from '@/components/person-data/Addresses';
 import { Emails } from '@/components/person-data/Emails';
+import { FullName } from '@/components/pii/FullName';
+import { Name } from '@/components/pii/Name';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getBeneficiary } from '@/services/policy';
 import {
   isNullEmptyOrUndefined,
   filterItemsWithPastEndDate,
-  fullName,
 } from '@/utils/data';
 import { toSentenceCase } from '@/utils/strings';
 
@@ -91,21 +92,18 @@ export default async function Beneficiary({
     return null;
   };
 
+  const beneficiaryTitle = `${toSentenceCase(beneDisplayText[data.partyRole])} ${beneDisplayText[data.partyRole] ? 'beneficiary' : ''}`;
+
   return (
     <div className="container">
       <div className="info-card-container">
         <div>
           <h2 className="mb-lg">Name</h2>
           <FieldData
-            Label={
-              <Label>{`${toSentenceCase(beneDisplayText[data.partyRole])} ${beneDisplayText[data.partyRole] ? 'beneficiary' : ''}`}</Label>
-            }
+            Label={<Label>{<Name displayName={beneficiaryTitle} />}</Label>}
           >
             <p className="typography-content-body-sm">
-              {fullName({
-                firstName: data.firstName || '',
-                lastName: data.lastName || '',
-              })}
+              <FullName firstName={data.firstName} lastName={data.lastName} />
             </p>
           </FieldData>
         </div>

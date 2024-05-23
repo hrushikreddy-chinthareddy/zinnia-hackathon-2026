@@ -1,7 +1,8 @@
 import { PolicyStatus } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 
-import { checkIfNull, fullName, policyStatusDisplayText } from '@/utils/data';
+import { FullName } from '@/components/pii/FullName';
+import { checkIfNull, policyStatusDisplayText } from '@/utils/data';
 import { toSentenceCase } from '@/utils/strings';
 
 import styles from './PolicyDetailsSummary.module.css';
@@ -40,8 +41,6 @@ export const PolicyDetailsSummary = ({
     }
   };
 
-  const insuredName = fullName({ firstName, lastName });
-
   return (
     <div className={clsx(styles.container, { [`${className}`]: className })}>
       <p className="typography-labels-label-lg-alt">
@@ -52,7 +51,7 @@ export const PolicyDetailsSummary = ({
 
         <>
           <p className="typography-labels-label-md-alt">
-            {`Insured: ${insuredName}`}
+            Insured: <FullName firstName={firstName} lastName={lastName} />
           </p>
           <p className="typography-labels-label-md-alt">
             Policy status:{' '}

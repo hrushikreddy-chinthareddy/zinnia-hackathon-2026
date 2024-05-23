@@ -13,11 +13,11 @@ import { CallForAssistance } from '@/components/call-for-assistance/CallForAssis
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
+import { FullName } from '@/components/pii/FullName';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getBeneficiaries } from '@/services/policy';
 import { Beneficiary } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
-import { fullName } from '@/utils/data';
 
 import styles from './Beneficiaries.module.css';
 
@@ -45,10 +45,10 @@ const BeneficiaryListItem = ({
   return (
     <div className={styles.allocationItem}>
       <p className="typography-labels-label-sm">
-        {fullName({
-          firstName: beneficiary.firstName || '',
-          lastName: beneficiary.lastName || '',
-        })}
+        <FullName
+          firstName={beneficiary?.firstName}
+          lastName={beneficiary?.lastName}
+        />
       </p>
       <div className={styles.allocationDetails}>
         <span
@@ -56,7 +56,7 @@ const BeneficiaryListItem = ({
           className={styles.colorBlock}
           style={{ backgroundColor: colorArray[index] }}
         ></span>
-        <p className="typography-content-value">{`${beneficiary.beneficiaryPercentage}%`}</p>
+        <p className="typography-content-value">{`${beneficiary?.beneficiaryPercentage}%`}</p>
       </div>
     </div>
   );

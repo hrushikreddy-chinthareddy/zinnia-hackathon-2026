@@ -212,7 +212,6 @@ export interface MfaResendChallangeResponse {
 
 export interface UserContext {
   user: User | undefined;
-  setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
 }
 
 export interface TermsAndConditionApiResponse {
