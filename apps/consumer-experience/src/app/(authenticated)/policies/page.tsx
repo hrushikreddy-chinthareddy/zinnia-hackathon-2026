@@ -83,7 +83,7 @@ export default async function Page({
                       interactiveElements={[
                         <AccountValuePopover
                           key="account-value-popover"
-                          policyStartDate={p.policyStartDate}
+                          dataTimestamp={p.effectiveDate}
                         />,
                       ]}
                     >
@@ -99,7 +99,7 @@ export default async function Page({
                       interactiveElements={[
                         <CoveragePopover
                           key="coverage-popover"
-                          dataTimestamp={p.timestamp}
+                          dataTimestamp={p.effectiveDate}
                         />,
                       ]}
                     >

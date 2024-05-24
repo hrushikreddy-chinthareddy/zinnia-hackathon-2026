@@ -59,7 +59,7 @@ export default async function Loans({
             {!eligibleIsFalse ? eligibleTextHighlight : ineligibleTextHighlight}{' '}
           </span>
           When you are eligible, you can take a loan from your policy at any
-          time, as long as funds are available. Keep in mind: Aside from
+          time, as long as funds are available. Keep in mind: aside from
           incurring interest, a loan may reduce your coverage amount. But unlike
           other types of loans, a loan from your policy does not have to be paid
           back on a schedule.
@@ -109,7 +109,7 @@ export default async function Loans({
             {!!data.totalLoanBalance && (
               <FieldData
                 caption={
-                  <span>{`As of ${standardDateMonthDayYear(data.timestamp)}`}</span>
+                  <span>{`As of ${standardDateMonthDayYear(data.effectiveDate)}`}</span>
                 }
                 Label={
                   <Label
