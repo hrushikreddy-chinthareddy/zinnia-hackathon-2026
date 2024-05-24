@@ -33,7 +33,7 @@ export const Coverage = async ({ planCode, policyNumber }: Props) => {
     policyStartDate,
     maturityDate,
     riderCount,
-    timestamp,
+    effectiveDate,
   } = data!;
   const additionalItems = [];
   if (riderCount > 0) {
@@ -92,7 +92,7 @@ export const Coverage = async ({ planCode, policyNumber }: Props) => {
               interactiveElements={[
                 <CoveragePopover
                   key="coverage-popover"
-                  dataTimestamp={timestamp}
+                  dataTimestamp={effectiveDate}
                 />,
               ]}
             >

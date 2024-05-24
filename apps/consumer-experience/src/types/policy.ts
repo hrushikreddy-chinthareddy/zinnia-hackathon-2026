@@ -37,7 +37,7 @@ export interface UpcomingPremium {
 
 export interface PolicyAccountValue {
   totalFundValue?: number | null;
-  timestamp?: string; // or Date?
+  effectiveDate?: string | null;
   valueChange?: number | null;
   policyStartDate?: string;
 }
@@ -50,7 +50,7 @@ export interface PolicyCoverage {
   // This one is calculated, so will either be a number or 0
   beneficiaryCount?: number;
   riderCount: number;
-  timestamp?: string | null;
+  effectiveDate?: string | null;
 }
 
 interface Person {
@@ -77,7 +77,7 @@ export interface CarrierPolicyDetails extends PolicyDetails {
   totalFundValue?: number | null;
   totalCoverageAmount?: number | null;
   policyStartDate?: string | null;
-  timestamp?: string | null;
+  effectiveDate?: string | null;
 }
 
 export interface PolicyApiResponse<T> {
@@ -204,7 +204,7 @@ export interface PolicyFund {
 
 export interface PolicyLoans {
   isEligible?: boolean | null;
-  timestamp?: string | null;
+  effectiveDate?: string | null;
   totalLoanBalance?: number | null;
   maximumLoanAmount?: number | null;
 }
@@ -234,7 +234,7 @@ export interface PolicyWithdrawals {
   annualWithdrawalLimitNoCoverageDecrease?: number | null;
   availableToWithdrawTaxFree?: number | null;
   vestingDetails: VestingDetails;
-  timestamp?: string;
+  effectiveDate?: string;
 }
 
 // export type PolicyFeatureType = keyof typeof PolicyFeature.featureType;

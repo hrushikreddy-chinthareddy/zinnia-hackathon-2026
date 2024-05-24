@@ -84,7 +84,7 @@ export default async function Withdrawals({
             {/* AVAILABLE TO WITHDRAW */}
             <FieldData
               caption={
-                <span>{`As of ${standardDateMonthDayYear(data.timestamp)}`}</span>
+                <span>{`As of ${standardDateMonthDayYear(data.effectiveDate)}`}</span>
               }
               Label={
                 <Label

@@ -11,9 +11,9 @@ import styles from '../policy-overview/PolicyOverview.module.css';
 const ACCOUNT_VALUE = 'Account value';
 
 export const AccountValuePopover = ({
-  policyStartDate,
+  dataTimestamp,
 }: {
-  policyStartDate?: string | null;
+  dataTimestamp?: string | null;
 }) => {
   return (
     <Popover
@@ -29,7 +29,7 @@ export const AccountValuePopover = ({
     >
       <div className={styles.popoverContent}>
         <p>
-          {`This is how much money is held in your policy as of ${standardDateMonthDayYear(policyStartDate)}.
+          {`This is how much money is held in your policy as of ${standardDateMonthDayYear(dataTimestamp)}.
           Policy value may grow over time as the premium dollars allocated to
           your account value earn interest. This money is yours to use how you
           see fit. You could take out a loan against it or even withdraw some

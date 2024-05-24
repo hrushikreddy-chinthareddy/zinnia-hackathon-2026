@@ -91,7 +91,8 @@ export const transformPolicyReferenceData = (
       totalFundValue: p?.allocation?.funds?.[0]?.totalFundValue,
       totalCoverageAmount: p?.coverage?.totalCoverageAmount,
       policyStartDate: p?.policyDates?.policyStartDate,
-      timestamp: p?.timestamp,
+      // Date of last policy transaction, when policy value was last updated
+      effectiveDate: p?.effectiveDate,
       ...policyDetails,
     };
   });
@@ -101,7 +102,8 @@ export const transformPolicyForAccountValue = (
   policy: Policy
 ): PolicyAccountValue => {
   return {
-    timestamp: policy.timestamp,
+    // Date of last policy transaction, when policy value was last updated
+    effectiveDate: policy?.effectiveDate,
     totalFundValue: policy?.accountValues?.endingAccountValue,
     policyStartDate: policy?.policyDates?.policyStartDate,
   };
@@ -167,7 +169,8 @@ export const transformPolicyForUpcomingPremium = (
 
 export const transformPolicyForCoverage = (policy: Policy): PolicyCoverage => {
   return {
-    timestamp: policy.timestamp,
+    // Date of last policy transaction, when policy value was last updated
+    effectiveDate: policy.effectiveDate,
     beneficiaryCount: allBeneficiaries(policy).length,
     maturityDate: policy?.policyDates?.maturityDate,
     policyStartDate: policy?.policyDates?.policyStartDate,
@@ -271,7 +274,8 @@ export const transformPolicyForWithdrawals = (
       policyHasVested: policyHasVested(policy),
       matchVestingDate: policy.allocation?.matchSegment?.matchVestingDate,
     },
-    timestamp: policy.timestamp,
+    // Date of last policy transaction, when policy value was last updated
+    effectiveDate: policy.effectiveDate,
   };
 };
 
@@ -285,7 +289,8 @@ export const transformPolicyForLoans = (policy: Policy): PolicyLoans => {
   return {
     totalLoanBalance: policy.loanValues?.totalLoanBalance,
     maximumLoanAmount: policy.loanValues?.maximumLoanAmount,
-    timestamp: policy.timestamp,
+    // Date of last policy transaction, when policy value was last updated
+    effectiveDate: policy.effectiveDate,
     // Return either the boolean OR undefined since there is a difference between
     // inelgible and data doesn't exist
     isEligible: policy && policy.accountValues ? isEligible : null,

@@ -12,7 +12,7 @@ import { getPolicyAccountValueWith30DayChange } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined } from '@/utils/data';
-import { standardDateWithTimeEST } from '@/utils/dates';
+import { standardDateMonthDayYear } from '@/utils/dates';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 import styles from '../policy-overview/PolicyOverview.module.css';
@@ -44,7 +44,7 @@ export const AccountValue = async ({
     return null;
   }
 
-  const { totalFundValue, timestamp, valueChange, policyStartDate } = data!;
+  const { totalFundValue, effectiveDate, valueChange } = data!;
 
   const totalFundContent = isNullEmptyOrUndefined(totalFundValue) ? (
     <p className="typography-content-body-sm">{DEFAULT_UNAVAILABLE_STRING}</p>
@@ -65,7 +65,7 @@ export const AccountValue = async ({
                 interactiveElements={[
                   <AccountValuePopover
                     key="account-value-popover"
-                    policyStartDate={policyStartDate}
+                    dataTimestamp={effectiveDate}
                   />,
                 ]}
               >
@@ -74,7 +74,9 @@ export const AccountValue = async ({
             ),
           })}
           caption={
-            timestamp ? `As of ${standardDateWithTimeEST(timestamp)}` : ''
+            effectiveDate
+              ? `As of ${standardDateMonthDayYear(effectiveDate)}`
+              : ''
           }
         >
           {totalFundContent}
