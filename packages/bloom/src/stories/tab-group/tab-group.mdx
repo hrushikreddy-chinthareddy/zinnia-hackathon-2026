@@ -3,6 +3,12 @@ import * as Tabs from '@radix-ui/react-tabs';
 import { tabGroupStyles } from '../../components/tab-group';
 import { cardStyles } from '../../components/card';
 import { Icon, IconType } from '../../components/icon';
+import {
+  TabGroup,
+  TabList,
+  TabTrigger,
+  TabContent,
+} from '../../components/tab-group';
 
 <Meta title="Components/TabGroup/Tab Group" />
 
@@ -10,28 +16,28 @@ import { Icon, IconType } from '../../components/icon';
 
 {
 
-<Tabs.Root defaultValue="tab1" className={tabGroupStyles.tabGroup}>
-  <Tabs.List aria-label="tabs example" className={tabGroupStyles.tabList}>
-    <Tabs.Trigger value="tab1" className={tabGroupStyles.tabItem}>
+<TabGroup defaultValue="tab1" activationMode="manual">
+  <TabList>
+    <TabTrigger value="tab1">
       <Icon type={IconType.DOCUMENT_TEXT} /> One
-    </Tabs.Trigger>
-    <Tabs.Trigger value="tab2" className={tabGroupStyles.tabItem}>
+    </TabTrigger>
+    <TabTrigger value="tab2">
       <Icon type={IconType.DOCUMENT_TEXT} /> Two
-    </Tabs.Trigger>
-    <Tabs.Trigger value="tab3" className={tabGroupStyles.tabItem}>
+    </TabTrigger>
+    <TabTrigger value="tab3">
       <Icon type={IconType.DOCUMENT_TEXT} /> Three
-    </Tabs.Trigger>
-  </Tabs.List>
-  <Tabs.Content value="tab1" className={cardStyles.card}>
-    Tab one content
-  </Tabs.Content>
-  <Tabs.Content value="tab2" className={cardStyles.card}>
-    Tab two content
-  </Tabs.Content>
-  <Tabs.Content value="tab3" className={cardStyles.card}>
-    Tab three content
-  </Tabs.Content>
-</Tabs.Root>
+    </TabTrigger>
+  </TabList>
+  <TabContent value="tab1" className={cardStyles.card}>
+    Content for tab 1
+  </TabContent>
+  <TabContent value="tab2" className={cardStyles.card}>
+    Content for tab 2
+  </TabContent>
+  <TabContent value="tab3" className={cardStyles.card}>
+    Content for tab 3
+  </TabContent>
+</TabGroup>
 
 }
 
@@ -39,126 +45,97 @@ The Tabs component offers flexibility by allowing users to navigate sections of 
 
 > Powered by `@radix-ui/react-tabs`, this guide dives into when and how to use it for an optimal user experience.
 
-## Styling Tab Groups
+### Features
 
-The best way to leverage the design system is to import the css module then style whichever element you semantically need to use.
-There are 3 class definition that are required to style a Tab Group component:
+- Can be controlled or uncontrolled.
+- Supports automatic/manual activation.
+- Full keyboard navigation.
 
-- **tabGroup** - this waps the entire component
-- **tabList** - this wraps the group of tabItems
-- **tabItem** - this should be added to each tabbable item inside tabList
+## Installation
+
+`npm install @zinnia/bloom/TabGroup`
+
+## Anatomy
+
+The Zinnia Tabs component extends the equivalent Radix-ui components and their props. Follow the [Radix-ui docs](https://www.radix-ui.com/primitives/docs/components/tabs) for implementation details.
 
 ```jsx
-import TabGroupStyles from '@zinnia/bloom/TabGroup';
+<TabGroup>
+  <TabList>
+    <TabTrigger />
+  </TabList>
+  <TabContent />
+</TabGroup>
 ```
-
-## When To Use
-
-- When navigating sections within a single page without changing the route.
-- However, rather that forcing users into a strict pattern for the component, we abstracted the styles for usecases outside of the intended in-page navigation. So if you need to style anchor tags as a Tab Group, you can.
-
-## How To Use
-
-To ensure components are accessible, always leverage a Radix-UI primitive as your base component.
-
-**Radix-UI:** [Tabs Component](https://www.radix-ui.com/primitives/docs/components/tabs)
-
-### Implementation with Radix-ui Tabs
-
-{
-
-<Tabs.Root
-  activationMode="manual"
-  defaultValue="tab1"
-  className={tabGroupStyles.tabGroup}
->
-  <Tabs.List aria-label="tabs example" className={tabGroupStyles.tabList}>
-    <Tabs.Trigger value="tab1" className={tabGroupStyles.tabItem}>
-      <Icon type={IconType.DOCUMENT_TEXT} /> One
-    </Tabs.Trigger>
-    <Tabs.Trigger value="tab2" className={tabGroupStyles.tabItem}>
-      <Icon type={IconType.DOCUMENT_TEXT} /> Two
-    </Tabs.Trigger>
-    <Tabs.Trigger value="tab3" className={tabGroupStyles.tabItem}>
-      <Icon type={IconType.DOCUMENT_TEXT} /> Three
-    </Tabs.Trigger>
-  </Tabs.List>
-  <Tabs.Content value="tab1" className={cardStyles.card}>
-    Tab one content
-  </Tabs.Content>
-  <Tabs.Content value="tab2" className={cardStyles.card}>
-    Tab two content
-  </Tabs.Content>
-  <Tabs.Content value="tab3" className={cardStyles.card}>
-    Tab three content
-  </Tabs.Content>
-</Tabs.Root>
-}
 
 ```jsx
 import React from 'react';
-import * as Tabs from '@radix-ui/react-tabs';
-import { tabGroupStyles } from '@zinnia/bloom/TabGroup';
+import {
+  TabGroup,
+  TabList,
+  TabTrigger,
+  TabContent,
+} from '@zinnia/bloom/TabGroup';
 import { cardStyles } from '@zinnia/bloom/Card';
 import { Icon, IconType } from '@zinnia/bloom/components';
 
-<Tabs.Root defaultValue="tab1" className={tabGroupStyles.tabGroup}>
-  <Tabs.List aria-label="tabs example" className={tabGroupStyles.tabList}>
-    <Tabs.Trigger value="tab1" className={tabGroupStyles.tabItem}>
-      <Icon type={IconType.DOCUMENT_TEXT} /> One
-    </Tabs.Trigger>
-    <Tabs.Trigger value="tab2" className={tabGroupStyles.tabItem}>
-      <Icon type={IconType.DOCUMENT_TEXT} /> Two
-    </Tabs.Trigger>
-    <Tabs.Trigger value="tab3" className={tabGroupStyles.tabItem}>
-      <Icon type={IconType.DOCUMENT_TEXT} /> Three
-    </Tabs.Trigger>
-  </Tabs.List>
-  <Tabs.Content value="tab1" className={cardStyles.card}>
-    Tab one content
-  </Tabs.Content>
-  <Tabs.Content value="tab2" className={cardStyles.card}>
-    Tab two content
-  </Tabs.Content>
-  <Tabs.Content value="tab3" className={cardStyles.card}>
-    Tab three content
-  </Tabs.Content>
-</Tabs.Root>;
-```
+export const TabGroupExample = () => {
 
-### Implementation with anchor tags
+  const handleTabChange = (value: unknown) => {
+    console.log(value);
+  };
+
+  return (
+    <TabGroup defaultValue="tab1" activationMode="manual" onValueChange={handleTabChange}>
+      <TabList>
+        <TabTrigger value="tab1">
+          <Icon type={IconType.DOCUMENT_TEXT} /> One
+        </TabTrigger>
+        <TabTrigger value="tab2">
+          <Icon type={IconType.DOCUMENT_TEXT} /> Two
+        </TabTrigger>
+        <TabTrigger value="tab3">
+          <Icon type={IconType.DOCUMENT_TEXT} /> Three
+        </TabTrigger>
+      </TabList>
+      <TabContent value="tab1" className={cardStyles.card}>
+        Content for tab 1
+      </TabContent>
+      <TabContent value="tab2" className={cardStyles.card}>
+        Content for tab 2
+      </TabContent>
+      <TabContent value="tab3" className={cardStyles.card}>
+        Content for tab 3
+      </TabContent>
+    </TabGroup>
+  );
+};
+
+```
 
 {
 
-<div className={tabGroupStyles.tabGroup}>
-  <div className={tabGroupStyles.tabList}>
-    <div className={tabGroupStyles.tabItem + ' ' + tabGroupStyles.selected}>
-      <Icon type={IconType.DOCUMENT_TEXT} />
-      <a href="#">Find a Person</a>
-    </div>
-    <div className={tabGroupStyles.tabItem}>
-      <Icon type={IconType.DOCUMENT_TEXT} />
-      <a href="#">Manage roles</a>
-    </div>
-  </div>
-</div>
+<TabGroup defaultValue="tab1" activationMode="manual">
+  <TabList>
+    <TabTrigger value="tab1">
+      <Icon type={IconType.DOCUMENT_TEXT} /> One
+    </TabTrigger>
+    <TabTrigger value="tab2">
+      <Icon type={IconType.DOCUMENT_TEXT} /> Two
+    </TabTrigger>
+    <TabTrigger value="tab3">
+      <Icon type={IconType.DOCUMENT_TEXT} /> Three
+    </TabTrigger>
+  </TabList>
+  <TabContent value="tab1" className={cardStyles.card}>
+    Content for tab 1
+  </TabContent>
+  <TabContent value="tab2" className={cardStyles.card}>
+    Content for tab 2
+  </TabContent>
+  <TabContent value="tab3" className={cardStyles.card}>
+    Content for tab 3
+  </TabContent>
+</TabGroup>
+
 }
-
-```jsx
-import React from 'react';
-import { tabGroupStyles } from '@zinnia/bloom/TabGroup';
-import { Icon, IconType } from '@zinnia/bloom/components';
-
-<div className={tabGroupStyles.tabGroup}>
-  <div className={tabGroupStyles.tabList}>
-    <div className={tabGroupStyles.tabItem + ' ' + tabGroupStyles.selected}>
-      <Icon type={IconType.DOCUMENT_TEXT} />
-      <a href="#">Find a Person</a>
-    </div>
-    <div className={tabGroupStyles.tabItem}>
-      <Icon type={IconType.DOCUMENT_TEXT} />
-      <a href="#">Manage roles</a>
-    </div>
-  </div>
-</div>;
-```
