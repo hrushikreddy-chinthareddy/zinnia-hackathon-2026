@@ -321,7 +321,7 @@ importers:
         version: 8.0.3(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
       '@storybook/addon-interactions':
         specifier: ^8.0.3
-        version: 8.0.3
+        version: 8.0.3(@types/jest@29.5.12)(jest@29.7.0)
       '@storybook/addon-links':
         specifier: ^8.0.3
         version: 8.0.3(react@18.2.0)
@@ -346,9 +346,24 @@ importers:
       '@storybook/theming':
         specifier: ^8.0.3
         version: 8.0.3(react-dom@18.2.0)(react@18.2.0)
+      '@testing-library/dom':
+        specifier: ^9.0.0
+        version: 9.3.4
+      '@testing-library/jest-dom':
+        specifier: ^5.17.0
+        version: 5.17.0
+      '@testing-library/react':
+        specifier: ^14.0.0
+        version: 14.2.1(react-dom@18.2.0)(react@18.2.0)
+      '@testing-library/user-event':
+        specifier: ^14.4.3
+        version: 14.5.2(@testing-library/dom@9.3.4)
       '@types/css-modules':
         specifier: ^1.0.5
         version: 1.0.5
+      '@types/jest':
+        specifier: ^29.5.12
+        version: 29.5.12
       '@types/lodash':
         specifier: ^4.14.202
         version: 4.14.202
@@ -361,6 +376,9 @@ importers:
       '@types/react-dom':
         specifier: ^18.2.15
         version: 18.2.18
+      '@types/testing-library__jest-dom':
+        specifier: ^6.0.0
+        version: 6.0.0(@types/jest@29.5.12)(jest@29.7.0)
       '@types/uuid':
         specifier: ^9.0.8
         version: 9.0.8
@@ -394,6 +412,9 @@ importers:
       eslint-plugin-storybook:
         specifier: ^0.6.15
         version: 0.6.15(eslint@8.56.0)(typescript@5.3.3)
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@20.11.16)
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -465,7 +486,7 @@ importers:
     dependencies:
       ts-jest:
         specifier: ^29.1.2
-        version: 29.1.2(@babel/core@7.23.9)(jest@29.7.0)(typescript@5.3.3)
+        version: 29.1.2(jest@29.7.0)(typescript@5.3.3)
     devDependencies:
       jest-environment-jsdom:
         specifier: ^29.7.0
@@ -4729,12 +4750,12 @@ packages:
       ts-dedent: 2.2.0
     dev: true
 
-  /@storybook/addon-interactions@8.0.3:
+  /@storybook/addon-interactions@8.0.3(@types/jest@29.5.12)(jest@29.7.0):
     resolution: {integrity: sha512-rPAnWNNl1wIYefvmhQB4ScV6kqtYVu4T6Lw4bpqaX641yCj1pGrjBTvdqxm4GS0qkqpP/Avwvz/hCl+ImyRZbQ==}
     dependencies:
       '@storybook/global': 5.0.0
       '@storybook/instrumenter': 8.0.3
-      '@storybook/test': 8.0.3
+      '@storybook/test': 8.0.3(@types/jest@29.5.12)(jest@29.7.0)
       '@storybook/types': 8.0.3
       polished: 4.3.1
       ts-dedent: 2.2.0
@@ -6096,7 +6117,7 @@ packages:
       - vitest
     dev: true
 
-  /@storybook/test@8.0.3:
+  /@storybook/test@8.0.3(@types/jest@29.5.12)(jest@29.7.0):
     resolution: {integrity: sha512-65ZUzD421qyfsbkm35n8dx38AghGksdf/NP8yRIRHdRS3eIBmZx1n62cv5jnLsD5k5ePOtJD3rN8oXDpFi3tdw==}
     dependencies:
       '@storybook/client-logger': 8.0.3
@@ -6461,6 +6482,21 @@ packages:
       dom-accessibility-api: 0.5.16
       lz-string: 1.5.0
       pretty-format: 27.5.1
+    dev: true
+
+  /@testing-library/jest-dom@5.17.0:
+    resolution: {integrity: sha512-ynmNeT7asXyH3aSVv4vvX4Rb+0qjOhdNHnO/3vuZNqPmhDpV/+rCSGwQ7bLcmU2cJ4dvoheIO85LQj0IbJHEtg==}
+    engines: {node: '>=8', npm: '>=6', yarn: '>=1'}
+    dependencies:
+      '@adobe/css-tools': 4.3.3
+      '@babel/runtime': 7.23.9
+      '@types/testing-library__jest-dom': 5.14.9
+      aria-query: 5.3.0
+      chalk: 3.0.0
+      css.escape: 1.5.1
+      dom-accessibility-api: 0.5.16
+      lodash: 4.17.21
+      redent: 3.0.0
     dev: true
 
   /@testing-library/jest-dom@6.4.2(@types/jest@29.5.12)(jest@29.7.0):
@@ -6859,6 +6895,25 @@ packages:
 
   /@types/stack-utils@2.0.3:
     resolution: {integrity: sha512-9aEbYZ3TbYMznPdcdr3SmIrLXwC/AKZXQeCf9Pgao5CKb8CyHuEX5jzWPTkvregvhRJHcpRO6BFoGW9ycaOkYw==}
+
+  /@types/testing-library__jest-dom@5.14.9:
+    resolution: {integrity: sha512-FSYhIjFlfOpGSRyVoMBMuS3ws5ehFQODymf3vlI7U1K8c7PHwWwFY7VREfmsuzHSOnoKs/9/Y983ayOs7eRzqw==}
+    dependencies:
+      '@types/jest': 29.5.12
+    dev: true
+
+  /@types/testing-library__jest-dom@6.0.0(@types/jest@29.5.12)(jest@29.7.0):
+    resolution: {integrity: sha512-bnreXCgus6IIadyHNlN/oI5FfX4dWgvGhOPvpr7zzCYDGAPIfvyIoAozMBINmhmsVuqV0cncejF2y5KC7ScqOg==}
+    deprecated: This is a stub types definition. @testing-library/jest-dom provides its own type definitions, so you do not need this installed.
+    dependencies:
+      '@testing-library/jest-dom': 6.4.2(@types/jest@29.5.12)(jest@29.7.0)
+    transitivePeerDependencies:
+      - '@jest/globals'
+      - '@types/bun'
+      - '@types/jest'
+      - jest
+      - vitest
+    dev: true
 
   /@types/tough-cookie@4.0.5:
     resolution: {integrity: sha512-/Ad8+nIOV7Rl++6f1BdKxFSMgmoqEoYbHRpPcx3JEfv8VRsQe9Z4mCXeJBzxs7mbHY/XOZZuXlRNfhpVPbs6ZA==}
@@ -16787,7 +16842,7 @@ packages:
       yargs-parser: 21.1.1
     dev: true
 
-  /ts-jest@29.1.2(@babel/core@7.23.9)(jest@29.7.0)(typescript@5.3.3):
+  /ts-jest@29.1.2(jest@29.7.0)(typescript@5.3.3):
     resolution: {integrity: sha512-br6GJoH/WUX4pu7FbZXuWGKGNDuU7b8Uj77g/Sp7puZV6EXzuByl6JrECvm0MzVzSTkSHWTihsXt+5XYER5b+g==}
     engines: {node: ^16.10.0 || ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -16808,7 +16863,6 @@ packages:
       esbuild:
         optional: true
     dependencies:
-      '@babel/core': 7.23.9
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
       jest: 29.7.0
