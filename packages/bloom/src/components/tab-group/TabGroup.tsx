@@ -11,14 +11,14 @@ import React from 'react';
 import { Primitive } from '@radix-ui/react-primitive';
 import { cardStyles } from '../../components/card';
 
-type MyContextProps = TabsProps & {
+type TabsContextProps = TabsProps & {
   selectedTabRef: React.MutableRefObject<TabsTriggerElement | null>;
   selectedTab: string | undefined;
   setSelectedTab: React.Dispatch<React.SetStateAction<string | undefined>>;
   indicatorRef: React.MutableRefObject<null>;
 };
 
-const TabsContext = createContext<MyContextProps | undefined>(undefined);
+const TabsContext = createContext<TabsContextProps | undefined>(undefined);
 
 type TabsPropsWithChildren = TabsProps & {
   children: React.ReactNode;
@@ -50,10 +50,10 @@ const TabsContextProvider: React.FC<TabsPropsWithChildren> = ({
   );
 };
 
-const useTabs = (): MyContextProps => {
+const useTabs = (): TabsContextProps => {
   const context = useContext(TabsContext);
   if (!context) {
-    throw new Error('useTabs must be used within a MyTabsContextProvider');
+    throw new Error('useTabs must be used within a TabsContextProvider');
   }
   return context;
 };
