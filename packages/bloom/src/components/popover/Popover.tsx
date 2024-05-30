@@ -1,17 +1,17 @@
 // why use use client? https://react.dev/reference/react/use-client
-"use client";
+'use client';
 
-import { Icon, IconType } from "../icon";
-import * as ReactPopover from "@radix-ui/react-popover";
-import clsx from "clsx";
-import { ReactNode } from "react";
-import { useWindowSize } from "react-use";
+import { Icon, IconType } from '../icon';
+import * as ReactPopover from '@radix-ui/react-popover';
+import clsx from 'clsx';
+import { ReactNode } from 'react';
+import { useWindowSize } from 'react-use';
 
-import { SideSheet } from "../side-sheet";
-import { zIndexOrder } from "../../utils/zIndexOrder";
+import { SideSheet } from '../side-sheet';
+import { zIndexOrder } from '../../utils/zIndexOrder';
 
-import { PopoverPlacement, getPlacementProps } from "./popover.helper";
-import styles from "./Popover.module.css";
+import { PopoverPlacement, getPlacementProps } from './popover.helper';
+import styles from './Popover.module.css';
 
 // TODO: replace these
 // import { PopoverTest } from '@deps/jest/constants/test-id-constants';
