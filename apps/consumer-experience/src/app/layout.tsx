@@ -5,6 +5,7 @@ import Script from 'next/script';
 import type { Metadata } from 'next';
 
 import { DataDogInit } from '@/components/DataDogInit';
+import { ScrollToTop } from '@/components/ScrollToTop';
 import { isProd } from '@/utils';
 
 import './styles/globals.css';
@@ -113,9 +114,11 @@ export default async function RootLayout({
     <html
       lang="en"
       className={`${primaryFont.variable} ${secondaryFont.variable}`}
-      style={{ height: '100%' }}
     >
-      <body style={{ height: '100%' }}>
+      <body>
+        {/* Next includes scroll to top functionality with the Link component HOWEVER, it's scroll to top
+        of the current layout which is the inner component for us, not top of the page. This scrolls to the top of the page to include the nav */}
+        <ScrollToTop />
         {children}
         <DataDogInit />
         <MouseflowTrackingCode />

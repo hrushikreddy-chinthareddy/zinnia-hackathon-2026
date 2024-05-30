@@ -16,15 +16,21 @@ html {
 }
 
 body {
+  height: 100%;
   /* This is to prevent the layout shift when a scrollbar is present */
   width: 100vw;
 }
 
 body,
 main {
-  height: 100%;
   --border-style: var(--measure-dimension-stroke-sm, 2px) solid
     var(--color-base-border-border-light, #ededed);
+}
+
+main {
+  /* This is set to min-height to enable scroll to top */
+  min-height: 100svh;
+  overflow: auto;
 }
 
 a {

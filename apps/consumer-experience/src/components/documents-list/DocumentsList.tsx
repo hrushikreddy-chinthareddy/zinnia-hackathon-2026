@@ -27,6 +27,7 @@ export default function DocumentsList({
   const [offset, setOffset] = useState(0);
   const goToPage = useCallback(
     (pageNumber: number) => {
+      window.scroll(0, 0);
       setOffset((pageNumber - 1) * limit);
     },
     [setOffset]
