@@ -11,4 +11,7 @@ module.exports = {
     "<rootDir>/dist",
   ],
   preset: "ts-jest",
+  moduleNameMapper: {
+    "\\.(css|less)$": "identity-obj-proxy",
+  },
 };

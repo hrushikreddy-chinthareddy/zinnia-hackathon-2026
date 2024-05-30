@@ -1,16 +1,16 @@
-// import '@testing-library/jest-dom';
-// import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import { render, screen } from '@testing-library/react';
 
-// import { TabTrigger } from './TabGroup';
+import { TabTrigger } from './TabGroup';
 
 describe('Card Columns Component', () => {
   it('TabTrigger renders children correctly', () => {
-    // render(
-    //   <TabTrigger value="test-value">
-    //     <span>Test Children</span>
-    //   </TabTrigger>
-    // );
-    // expect(screen.getByText('Test Children')).toBeInTheDocument();
+    render(
+      <TabTrigger value="test-value">
+        <span>Test Children</span>
+      </TabTrigger>
+    );
+    expect(screen.getByText('Test Children')).toBeInTheDocument();
     expect(true);
   });
 });
