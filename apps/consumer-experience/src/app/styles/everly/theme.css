@@ -82,27 +82,27 @@
     --color-primary-color-primary
   );
 
-  /* --color-pagination-pagination-border-default: var(
-    --color-secondary-color-secondary
+  --color-pagination-pagination-border-default: var(
+    --color-primary-color-primary
   );
   --color-pagination-pagination-indicator-default: var(
-    --color-secondary-color-secondary
+    --color-primary-color-primary
   );
   --color-pagination-pagination-background-hover-fill: var(
-    --color-secondary-color-secondary-lightest
+    --color-primary-color-primary-lightest
   );
   --color-pagination-pagination-indicator-hover-fill: var(
-    --color-secondary-color-secondary
+    --color-primary-color-primary
   );
   --color-pagination-pagination-border-selected: var(
-    --color-secondary-color-secondary
+    --color-primary-color-primary
   );
   --color-pagination-pagination-background-selected-fill: var(
-    --color-secondary-color-secondary-lightest
+    --color-primary-color-primary-lightest
   );
   --color-pagination-pagination-indicator-selected-fill: var(
-    --color-secondary-color-secondary
-  ); */
+    --color-primary-color-primary
+  );
 
   --color-button-group-button-group-item-primary-selected-border: var(
     --color-primary-color-primary
