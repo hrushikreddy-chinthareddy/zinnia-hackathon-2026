@@ -30,6 +30,7 @@ jobs:
         with:
           run_install: |
             - args: [--filter ${{ inputs.filter-path }}]
+      - name: pnpm run build
         run: pnpm run build
       - name: Publish to ${{ inputs.project-name }} to Chromatic
         uses: chromaui/action@latest
