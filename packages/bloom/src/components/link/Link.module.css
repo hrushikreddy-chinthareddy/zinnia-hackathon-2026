@@ -32,6 +32,7 @@
       background-color: var(--color-states-hover-hover-text-link, #003b54);
       bottom: -2px;
       height: 2px;
+      left: 0;
       position: absolute;
       width: 100%;
     }

@@ -4,6 +4,7 @@ import {
   AssistiveTextVariant,
   Icon,
   IconType,
+  Link,
   LoaderVariant,
   SpinnerButton,
 } from '@zinnia/bloom/internal/components';
@@ -131,6 +132,16 @@ export const PasswordlessEmailChallenge = ({ email }: { email: string }) => {
           Re-send verification code.
         </SpinnerButton>
       </p>
+      <p className={styles.resend}>
+        <span>Entered the wrong email? </span>
+        <Link
+          href="/login"
+          text="Update your email."
+          size="small"
+          style={{ textDecoration: 'none', display: 'inline-flex' }}
+        />
+      </p>
+
       {resendCodeError && (
         <div className="py-lg">
           <AssistiveText
