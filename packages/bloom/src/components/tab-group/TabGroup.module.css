@@ -1,6 +1,3 @@
-.tabGroup {
-}
-
 .tabList {
   align-items: center;
   border-bottom: 2px solid var(--color-base-border-border-subtle, #ccc);
@@ -45,7 +42,6 @@
   color: var(--color-base-text-text-link, #00628b);
 }
 
-/* .tabItem[data-state='active']:after, */
 .selected:after {
   border-radius: var(--measure-dimension-radius-xs, 2px)
     var(--measure-dimension-radius-xs, 2px) 0px 0px;
