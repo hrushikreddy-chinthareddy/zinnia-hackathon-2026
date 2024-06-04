@@ -136,12 +136,14 @@ const getPolicyReferencesByCarrier = async () => {
 
   if (!rawResponse?.ok) {
     logError(
-      'Error fetching policy search restults',
+      'Error fetching policy search results',
       await logApiNotOkDetails({ rawResponse, parsedResponse: response })
     );
 
     throw new Error('Error fetching policy references');
   }
+
+  console.log(response);
 
   return response;
 };
