@@ -143,8 +143,6 @@ const getPolicyReferencesByCarrier = async () => {
     throw new Error('Error fetching policy references');
   }
 
-  console.log(response);
-
   return response;
 };
 
