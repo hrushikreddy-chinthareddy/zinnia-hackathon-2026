@@ -52,6 +52,7 @@ export async function setUserConsent(
         url: req.url,
         apiMessage: data.message,
         sessionId: session?.user?.sid,
+        userId: session?.user?.sub,
       });
 
       throw data;
