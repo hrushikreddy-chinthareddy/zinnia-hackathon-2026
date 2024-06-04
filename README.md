@@ -78,11 +78,12 @@ To add a package, use:
 ```
 pnpm add --filter <app> <package>
 ```
+
 So for consumer-experience, it would be:
+
 ```
 pnpm add --filter consumer-experience <package>
 ```
-
 
 ## Useful Links
 

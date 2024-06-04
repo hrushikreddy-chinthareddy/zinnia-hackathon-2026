@@ -13,6 +13,11 @@ export default defineConfig({
       rollupTypes: true,
     }),
   ],
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./setupTests.ts'],
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src/"),

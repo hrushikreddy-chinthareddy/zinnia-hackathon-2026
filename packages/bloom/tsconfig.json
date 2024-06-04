@@ -7,6 +7,7 @@
       "@tokens/*": ["./src/tokens/style-dictionary"]
     }
   },
+  "types": ["node", "jest", "@testing-library/jest-dom"],
   "include": ["src", "vite.config.ts"],
   "exclude": ["**/node_modules/**"]
 }
