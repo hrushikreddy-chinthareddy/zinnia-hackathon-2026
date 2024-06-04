@@ -7,7 +7,6 @@ export const userSessionForLogging = async () => {
   return {
     sessionId: session?.user?.sid,
     userId: session?.user?.sub,
-    userName: session?.user?.name,
   };
 };
 
