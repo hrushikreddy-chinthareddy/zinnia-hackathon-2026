@@ -18,7 +18,7 @@ import {
   UserClaims,
 } from '@/types/auth';
 
-import { logWarn } from './logging/server-logging';
+import { logTrace, logWarn } from './logging/server-logging';
 import {
   AGREED_TO_TERMS_AND_CONDITIONS_COOKIE_KEY,
   APP_SESSION_COOKIE_KEY,
@@ -78,6 +78,7 @@ export const decrypt = async (
   let err;
   try {
     const key = await encryption(process.env.JWT_SECRET);
+    logTrace('decrypting', { file: 'auth.ts', function: 'decrypt', key });
     return await jose.jwtDecrypt(jwe, key);
   } catch (e) {
     logWarn('error decrypting', { file: 'auth.ts', function: 'decrypt' });
@@ -235,26 +236,92 @@ export const getSession = async (
   res?: NextResponse
 ): Promise<Session | undefined> => {
   try {
+    logTrace('start getSession try', {
+      file: 'auth.ts',
+      function: 'getSession',
+    });
     const existingSessionValue = await getCookie(APP_SESSION_COOKIE_KEY);
+    logTrace('existingSessionValue', {
+      file: 'auth.ts',
+      function: 'getSession',
+      existingSessionValue,
+    });
+
     if (existingSessionValue) {
       const hasSignedTermsAndConditions =
         (await getCookie(AGREED_TO_TERMS_AND_CONDITIONS_COOKIE_KEY)) === 'true';
+
+      logTrace('hasSignedTermsAndConditions', {
+        file: 'auth.ts',
+        function: 'getSession',
+        hasSignedTermsAndConditions,
+      });
+
       const { payload } = await decrypt(existingSessionValue);
+
+      logTrace('decrypt', {
+        file: 'auth.ts',
+        function: 'getSession',
+        decryptedPayload: payload,
+      });
+
       const { oauthToken } = payload;
+
+      logTrace('get oauthToken', {
+        file: 'auth.ts',
+        function: 'getSession',
+        oauthTokenExists: oauthToken,
+      });
+
       const { access_token, id_token } = oauthToken;
+
+      logTrace('get tokens', {
+        file: 'auth.ts',
+        function: 'getSession',
+        accessTokenExists: !!access_token,
+        idTokenExists: id_token,
+      });
+
       const userClaims = jose.decodeJwt(id_token) as UserClaims;
+
+      logTrace('userClaims', {
+        file: 'auth.ts',
+        function: 'getSession',
+        userClaims: userClaims,
+      });
+
       const user: User = {
         ...userClaims,
         hasSignedTermsAndConditions,
       };
+
       const sessionValues = jose.decodeJwt(access_token) as AccessTokenInfo;
+
+      logTrace('sessionValues', {
+        file: 'auth.ts',
+        function: 'getSession',
+        sessionValues: sessionValues,
+      });
+
       const accessTokenExpiresAt = sessionValues.exp;
       const currentTime = epoch();
 
       if (currentTime > accessTokenExpiresAt) {
+        logTrace('session expired', {
+          file: 'auth.ts',
+          function: 'getSession',
+          accessTokenExpiresAt,
+          currentTime,
+        });
+
         await deleteSession(res);
         return;
       }
+
+      logTrace('session not expired', {
+        file: 'auth.ts',
+        function: 'getSession',
+      });
 
       const session: Session = {
         user,
@@ -267,8 +334,18 @@ export const getSession = async (
       return session;
     }
   } catch (error) {
-    logWarn('unknown-error', { file: 'auth.ts', function: 'getSession' });
+    logWarn('unknown-error', {
+      file: 'auth.ts',
+      function: 'getSession',
+      error,
+    });
     await deleteSession(res);
+    logTrace('session deleted', {
+      file: 'auth.ts',
+      function: 'getSession',
+      resExample: res?.status,
+    });
+
     return;
   }
 };
