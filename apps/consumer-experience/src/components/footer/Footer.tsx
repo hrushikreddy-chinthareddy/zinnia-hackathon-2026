@@ -12,7 +12,7 @@ export const Footer = ({ hasBorder, style, className }: Props) => {
     return (
       <a
         href={url}
-        className={`${styles.link} mx-xs`}
+        className={styles.link}
         target="_blank"
         rel="noreferrer"
         style={{ display: 'inline-block' }}
@@ -49,7 +49,7 @@ export const Footer = ({ hasBorder, style, className }: Props) => {
       </p>
       <p className="typography-content-footer-legal">
         By using this website, you agree to the terms and conditions outlined in
-        our{legalLink('Terms of Use', 'https://zinnia.com/terms-of-use/')}and
+        our {legalLink('Terms of Use', 'https://zinnia.com/terms-of-use/')} and{' '}
         {legalLink('Privacy Policy', 'https://zinnia.com/privacy/')}.
       </p>
     </div>
