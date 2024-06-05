@@ -1,4 +1,4 @@
-.consumer-footer {
+.consumerFooter {
   color: var(--color-base-text-text-secondary, #676767);
 
   > * {
@@ -6,11 +6,11 @@
   }
 }
 
-.consumer-footer--border {
+.border {
   border-top: 2px solid var(--colorBaseBorderBorderLight, #ededed);
 }
 
-.consumer-footer__link {
+.link {
   color: var(--colorBaseTextTextLink, #1e359c);
   text-decoration: underline;
 

@@ -20,6 +20,7 @@ import Dollar from '../../tokens/svg-assets/icons/currency/currency-dollars.svg'
 import DocumentDuplicate from '../../tokens/svg-assets/icons/file/document-duplicate.svg';
 import DocumentText from '../../tokens/svg-assets/icons/file/document-text.svg';
 import Download from '../../tokens/svg-assets/icons/file/download.svg';
+import ExternalLink from '../../tokens/svg-assets/icons/actions/external-link.svg';
 import Frown from '../../tokens/svg-assets/icons/brand/emoji-frown.svg';
 import HexExclamation from '../../tokens/svg-assets/icons/alert/hex-exclamation.svg';
 import Lightbulb from '../../tokens/svg-assets/icons/illustrations/light-bulb.svg';
@@ -61,6 +62,7 @@ export enum IconType {
   DOCUMENT_TEXT = 'DocumentText',
   DOLLAR = 'Dollar',
   DOWNLOAD = 'Download',
+  EXTERNAL_LINK = 'ExternalLink',
   FROWN = 'Frown',
   HEX_EXCLAMATION = 'HexExclamation',
   LIGHTBULB = 'Lightbulb',
@@ -121,6 +123,7 @@ export const Icons: {
   [IconType.DOCUMENT_TEXT]: DocumentText,
   [IconType.DOLLAR]: Dollar,
   [IconType.DOWNLOAD]: Download,
+  [IconType.EXTERNAL_LINK]: ExternalLink,
   [IconType.FROWN]: Frown,
   [IconType.HEX_EXCLAMATION]: HexExclamation,
   [IconType.LIGHTBULB]: Lightbulb,
