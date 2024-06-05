@@ -2,6 +2,11 @@
 
 This application is built for policy owners to view and manage their policies across different carriers.
 
+Designs are [here](https://www.figma.com/design/k5mQyI3uXge7PZWj6LKJDD/Development-Ready%3A-Consumer-UI?node-id=8-5593&m=dev)
+Component specific designs [here](https://www.figma.com/design/VDRT7fr0CytOXHDt8S6wYB/Consumer-UI-Components?node-id=0-1&t=VEj7lkjJWPrW8BgW-0)
+
+Components that are global to Zinnia products are imported from [Bloom](https://github.com/zinnia/bloom).
+
 # Getting started
 
 - To clone the repo, use [Github CLI](https://zinnia.atlassian.net/wiki/spaces/AU/pages/3749937195/Onboarding#Accessing-GitHub)
