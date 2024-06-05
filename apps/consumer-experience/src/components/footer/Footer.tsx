@@ -1,17 +1,37 @@
+import { Icon, IconType } from '@zinnia/bloom/internal/components';
 import clsx from 'clsx';
-import './footer.css';
+
+import styles from './Footer.module.css';
 
 export interface Props extends React.HTMLAttributes<HTMLDivElement> {
   hasBorder?: boolean;
 }
 
 export const Footer = ({ hasBorder, style, className }: Props) => {
+  const legalLink = (text: string, url: string) => {
+    return (
+      <a
+        href={url}
+        className={`${styles.link} mx-xs`}
+        target="_blank"
+        rel="noreferrer"
+        style={{ display: 'inline-block' }}
+      >
+        <span className="sr-only">Link will open in a new window</span>
+        <span className="flex-center" style={{ gap: '2px' }}>
+          {text}
+          <Icon type={IconType.EXTERNAL_LINK} small />
+        </span>
+      </a>
+    );
+  };
+
   return (
     <div
       className={clsx(
-        'consumer-footer',
+        styles.consumerFooter,
         {
-          'consumer-footer--border': hasBorder,
+          [styles.border as string]: hasBorder,
         },
         className
       )}
@@ -29,21 +49,8 @@ export const Footer = ({ hasBorder, style, className }: Props) => {
       </p>
       <p className="typography-content-footer-legal">
         By using this website, you agree to the terms and conditions outlined in
-        our{' '}
-        <a
-          href="https://zinnia.com/terms-of-use/"
-          className="consumer-footer__link"
-        >
-          Terms of Use
-        </a>{' '}
-        and{' '}
-        <a
-          href="https://zinnia.com/privacy-policy/"
-          className="consumer-footer__link"
-        >
-          Privacy Policy
-        </a>
-        .
+        our{legalLink('Terms of Use', 'https://zinnia.com/terms-of-use/')}and
+        {legalLink('Privacy Policy', 'https://zinnia.com/privacy/')}.
       </p>
     </div>
   );
