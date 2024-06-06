@@ -32,8 +32,8 @@ export default async function PaymentDetails({
       <div className="space-mb-gap-lg">
         <MockMessage />
         <NoDataAvailable
-          iconType={IconType.PAYMENT}
-          message="There is currently no payments detail data available."
+          iconType={IconType.BANK}
+          message="No payment details available"
         />
       </div>
     );
@@ -54,8 +54,8 @@ export default async function PaymentDetails({
         <div className="space-mb-gap-lg">
           <MockMessage />
           <NoDataAvailable
-            iconType={IconType.PAYMENT}
-            message="There is currently no payments detail data available."
+            iconType={IconType.BANK}
+            message="No payment details available"
           />
         </div>
       )}

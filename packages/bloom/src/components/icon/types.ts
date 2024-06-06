@@ -3,9 +3,11 @@ import Alert from '../../tokens/svg-assets/icons/alert/alert.svg';
 import AlertExclamation from '../../tokens/svg-assets/icons/alert/alert-exclamation.svg';
 import Autopay from '../../tokens/svg-assets/icons/currency/autopay.svg';
 import Ban from '../../tokens/svg-assets/icons/content/ban.svg';
+import Bank from '../../tokens/svg-assets/icons/currency/bank.svg';
+import Cash from '../../tokens/svg-assets/icons/currency/cash.svg';
 import Close from '../../tokens/svg-assets/icons/actions/cancel.svg';
 import Cog from '../../tokens/svg-assets/icons/brand/cog.svg';
-import Payment from '../../tokens/svg-assets/icons/currency/cash.svg';
+import Payment from '../../tokens/svg-assets/icons/currency/payment.svg';
 import Chevron from '../../tokens/svg-assets/icons/chevron.svg';
 import ChevronRight from '../../tokens/svg-assets/icons/arrows/chevron-right.svg';
 import CircleCheckmark from '../../tokens/svg-assets/icons/circles/circle-checkmark.svg';
@@ -42,6 +44,8 @@ export enum IconType {
   ALERT_EXCLAMATION = 'AlertExclamation',
   AUTOPAY = 'Autopay',
   BAN = 'Ban',
+  BANK = 'Bank',
+  CASH = 'Cash',
   CANCEL = 'Cancel',
   CHECKMARK = 'Checkmark',
   CHEVRON = 'Chevron',
@@ -105,7 +109,9 @@ export const Icons: {
   [IconType.ALERT]: Alert,
   [IconType.ALERT_EXCLAMATION]: AlertExclamation,
   [IconType.AUTOPAY]: Autopay,
+  [IconType.BANK]: Bank,
   [IconType.BAN]: Ban,
+  [IconType.CASH]: Cash,
   [IconType.CHECKMARK]: Checkmark,
   [IconType.CHEVRON]: Chevron,
   [IconType.CHEVRON_RIGHT]: ChevronRight,
