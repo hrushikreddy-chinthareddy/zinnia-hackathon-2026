@@ -27,7 +27,7 @@ export default async function PaymentDetails({
     policyNumber: params.policyNumber,
   });
 
-  if (error || !data) {
+  if (error || !data || data.length === 0) {
     return (
       <div className="space-mb-gap-lg">
         <MockMessage />
