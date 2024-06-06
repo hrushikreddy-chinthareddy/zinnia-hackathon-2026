@@ -29,7 +29,6 @@ Components that are global to Zinnia products are imported from [Bloom](https://
   - Contact Ryan to be added to license
 - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 - [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
-- [Tailwind Intellisense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
 
 **Recommended**
 
@@ -38,6 +37,24 @@ Components that are global to Zinnia products are imported from [Bloom](https://
   - this allows you to add TODOs with `TODO` syntax and they'll be clearly highlighted in your code.
 - [React/Redux/JS Snippies](https://marketplace.visualstudio.com/items?itemName=dsznajder.es7-react-js-snippets)
 - [CSS Variable Autocomplete](https://marketplace.visualstudio.com/items?itemName=vunguyentuan.vscode-css-variables)
+
+### Recommended VSCode settings
+
+Add to your settings.json
+
+```
+  // This reorders imports on save according to our eslint settings
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  },
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "prettier.singleQuote": true,
+  "editor.tabSize": 2,
+  "editor.stickyScroll.enabled": true,
+  "workbench.tree.enableStickyScroll": true,
+    "files.trimTrailingWhitespace": true,
+```
 
 ### Setup
 

@@ -19,30 +19,40 @@
 
 .navItemsContainer {
   display: flex;
-  gap: var(--measure-dimension-gap-md, 1rem);
+  gap: var(--measure-dimension-gap-lg, 1rem);
   align-items: center;
 }
 
 .navItem {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
-  padding: var(--measure-dimension-padding-sm, 0.25rem);
+  gap: var(--measure-dimension-gap-xs);
+  text-underline-position: under;
+  /* padding-right: var(--measure-dimension-padding-sm, 0.25rem); */
+
+  /* &:hover {
+    text-decoration: none;
+  } */
+
+  &:hover,
+  &.active {
+    text-decoration: underline;
+    text-decoration-color: var(--color-base-border-border-darker);
+    text-decoration-thickness: 3px;
+    /* border-bottom: 3px solid var(--color-base-border-border-darker);
+    margin-bottom: -3px; */
+  }
+}
+
+.divider {
+  width: 2px;
+  align-self: stretch;
+  background-color: var(--color-base-border-border-subtle, #ccc);
 }
 
 .signOut {
   position: relative;
   display: inline-block;
-  margin-left: 8px;
-  &::before {
-    background-color: var(--color-base-border-border-subtle, #ccc);
-    content: '';
-    height: 24px;
-    width: 2px;
-    position: absolute;
-    top: 3px;
-    left: -10px;
-  }
 }
 
 .logoContainer {
