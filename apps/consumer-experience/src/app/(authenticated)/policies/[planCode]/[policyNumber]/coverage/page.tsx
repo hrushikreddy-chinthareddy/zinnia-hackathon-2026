@@ -43,10 +43,9 @@ export default async function Beneficiaries({
     );
   }
 
-  const { totalCoverageAmount, maximumCoverageIncreaseAmount } = data;
+  const { totalCoverageAmount } = data;
 
   const CURRENT_COVERAGE = 'Current Coverage';
-  const INCREASE_COVERAGE = 'Available coverage increase';
 
   const coverageContent = (amount: number | null | undefined) => {
     if (amount && typeof amount === 'number') {
@@ -75,9 +74,12 @@ export default async function Beneficiaries({
           <FieldData Label={<Label>{CURRENT_COVERAGE}</Label>}>
             {coverageContent(totalCoverageAmount)}
           </FieldData>
-          <FieldData Label={<Label>{INCREASE_COVERAGE}</Label>}>
+
+          {/* Removing this for now because it should consider all of a users policies under one carrier
+          and right now the data value is only based on the single policy being used */}
+          {/* <FieldData Label={<Label>{INCREASE_COVERAGE}</Label>}>
             {coverageContent(maximumCoverageIncreaseAmount)}
-          </FieldData>
+          </FieldData> */}
         </div>
       </ClickableCardContainer>
       <CallForAssistance
