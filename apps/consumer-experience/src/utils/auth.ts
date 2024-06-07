@@ -267,7 +267,11 @@ export const getSession = async (
       return session;
     }
   } catch (error) {
-    logWarn('unknown-error', { file: 'auth.ts', function: 'getSession' });
+    logWarn('unknown-error', {
+      file: 'auth.ts',
+      function: 'getSession',
+      error,
+    });
     await deleteSession(res);
     return;
   }
