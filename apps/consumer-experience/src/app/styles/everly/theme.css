@@ -185,7 +185,7 @@
     --color-secondary-color-secondary
   );
 
-  --color-base-text-text-link: var(--color-primary-color-primary);
+  --color-base-text-text-link: var(--color-primary-color-primary-light);
   --color-base-text-text-link-contrast: var(
     --color-primary-color-primary-light
   );
@@ -219,7 +219,7 @@
   --color-states-hover-hover-secondary-contrast-border: var(
     --color-secondary-color-secondary-lighter
   );
-  --color-states-hover-hover-text-link: var(--color-primary-color-primary-dark);
+  --color-states-hover-hover-text-link: var(--color-primary-color-primary);
   --color-states-hover-hover-contrast-text-link: var(
     --color-primary-color-primary-lighter
   );
