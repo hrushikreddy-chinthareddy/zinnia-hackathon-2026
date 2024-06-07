@@ -20,6 +20,8 @@ import styles from '@/app/login/Login.module.css';
 import { MfaAuthenticator } from '@/types/auth';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';
 
+import { PiiWrapper } from '../pii/PiiWrapper';
+
 const SubmitButton = () => {
   const { pending } = useFormStatus();
   return (
@@ -176,7 +178,9 @@ export const MfaChallenge = ({
         )}
         <div className={styles.formGroup}>
           <div className="typography-content-value">
-            {formatPhoneNumber(authenticator?.name || '')}
+            <PiiWrapper>
+              {formatPhoneNumber(authenticator?.name || '')}
+            </PiiWrapper>
           </div>
         </div>
         <div>
