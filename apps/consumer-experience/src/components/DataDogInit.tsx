@@ -5,9 +5,9 @@
 
 import { datadogRum } from '@datadog/browser-rum';
 
-import { isDev } from '@/utils';
+import { logDataDog } from '@/utils';
 
-if (!isDev()) {
+if (logDataDog()) {
   datadogRum.init({
     applicationId: process.env.NEXT_PUBLIC_DATADOG_APPLICATION_ID || '',
     clientToken: process.env.NEXT_PUBLIC_DATADOG_CLIENT_TOKEN || '',
