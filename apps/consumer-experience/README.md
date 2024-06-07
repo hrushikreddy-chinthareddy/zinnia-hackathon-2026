@@ -73,7 +73,13 @@ TLDR
 
 ## Github actions
 
-- Variables that are used in the frontend (i.e. anything that requires `NEXT_PUBLIC` in the key) should be added to the github secrets (this is available in Github. You may not have access to this tab, so if you don't see it on your github, message `xd-engineering`)
+### Variables
+
+1. Variables that are used in the frontend (i.e. anything that requires `NEXT_PUBLIC` in the key) should be added to the github secrets (this is available in Github. You may not have access to this tab, so if you don't see it on your github, message `xd-engineering`)
+2. you will then need to add the variable to the Dockerfile. Add it as an `ARG` then set it as an `ENV` variable
+3. Also add them to `turbo.json` and `environment.d.ts` to get the intellisense.
+
+_Anything in `build-args` in the `deploy-action.yml` needs to be added to the Dockerfile_
 
 ## AWS
 

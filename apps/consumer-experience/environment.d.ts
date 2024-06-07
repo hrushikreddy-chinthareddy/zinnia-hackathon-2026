@@ -7,6 +7,9 @@ declare global {
       NEXT_PUBLIC_BACKEND_URL: string;
       NEXT_PUBLIC_MOCK_API_REQUEST: string;
       NEXT_PUBLIC_BASE_URL: string;
+      NEXT_PUBLIC_DATADOG_ENV: string;
+      NEXT_PUBLIC_DATADOG_APPLICATION_ID: string;
+      NEXT_PUBLIC_DATADOG_CLIENT_TOKEN: string;
       AUTH0_SCOPE: string;
       SESSION_DURATION_IN_MINUTES: string;
       CHECK_SESSION_THRESHOLD_IN_MINUTES: string;
