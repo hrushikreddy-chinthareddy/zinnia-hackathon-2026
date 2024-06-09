@@ -117,7 +117,7 @@ export const transformPolicyMetricsForAccountValueChange = (
   );
 
   const valueChange = accountValueData
-    ? accountValueData.begin - accountValueData.end
+    ? accountValueData.end - accountValueData.begin
     : null;
 
   return valueChange ? { valueChange } : null;
