@@ -33,7 +33,6 @@ export function DesktopNav() {
   const [activeNav, setActiveNav] = useState<string>('');
 
   useEffect(() => {
-    console.log('PATH NAME +++++++');
     setActiveNav(pathname);
   }, [pathname]);
 

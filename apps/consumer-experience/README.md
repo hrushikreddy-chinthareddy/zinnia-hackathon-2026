@@ -40,17 +40,11 @@ Components that are global to Zinnia products are imported from [Bloom](https://
 
 ### Recommended VSCode settings
 
+- Some settings have included in `.vscode/settings.json`
+
 Add to your settings.json
 
 ```
-  // This reorders imports on save according to our eslint settings
-  "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit"
-  },
-  "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "prettier.singleQuote": true,
-  "editor.tabSize": 2,
   "editor.stickyScroll.enabled": true,
   "workbench.tree.enableStickyScroll": true,
     "files.trimTrailingWhitespace": true,
@@ -62,9 +56,19 @@ Add to your settings.json
 
 # Local development
 
+## Dev Menu
+
 There is a dev menu availble for several different mocking purporses. To turn it on, add `..show_dev_menu..=true` as a query string.
 
 If you click `Show test policies` but still aren't able to see more than your account's policies, your account may not have ops level permissions, and you will only be able to view the policies assigned to your user.
+
+## Opening a PR
+
+1. Open a PR into dev (or feature branch)
+2. include details in PR with helpful screenshots and context
+3. Add link to ticket in Jira
+4. once you PR has been approved, open Vercel `Preview Link`, change the settings to `anyone with link can view`, add to the ticket and move it to `Ready for QA`
+5. Once PR has passed QA, merge changes
 
 # Styling
 
