@@ -1,6 +1,5 @@
 import { IconType, Label } from '@zinnia/bloom/internal/components';
 import { Metadata } from 'next';
-import { redirect } from 'next/navigation';
 
 import { AccountValuePopover } from '@/components/account-value/AccountValuePopover';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
@@ -23,11 +22,7 @@ export const metadata: Metadata = {
   title: pageTitle,
 };
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: { fromLogin: string };
-}) {
+export default async function Page() {
   const { data: policyReferenceData, error } =
     await getMyPoliciesByCarrier('SBUL');
 
@@ -43,15 +38,6 @@ export default async function Page({
           />
         </div>
       </>
-    );
-  }
-
-  // only when the user logs in we should redirect them to their specific policy
-  // we want users to be able to navigate to this page otherwise. For example when they click the logo or My Policies link
-  if (searchParams.fromLogin === 'true' && policyReferenceData?.length === 1) {
-    const [policyReference] = policyReferenceData;
-    return redirect(
-      `/policies/${policyReference?.planCode}/${policyReference?.policyNumber}`
     );
   }
 

@@ -98,6 +98,8 @@ export async function middleware(req: NextRequest) {
   const isSessionPage = pathname === '/session';
 
   if (session) {
+    const searchParmas = req.nextUrl.searchParams;
+    const fromLogin = searchParmas.get('fromLogin');
     // since the user has a session we need to check if they signed the terms and conditions
     // we only want to do this once per session. We will store the value on the user object
     if (!session.user.hasSignedTermsAndConditions) {
@@ -181,6 +183,23 @@ export async function middleware(req: NextRequest) {
       });
 
       return NextResponse.redirect(new URL(redirectUrl, req.url));
+    }
+
+    // if the user is on the login page and they have a session we need to redirect them to the policies index page
+    // if they have only one policy we will redirect them to the policy details page
+    // otherwise we will send them to the policy index page
+    if (fromLogin) {
+      const allPolicies = await getMyPoliciesByCarrier('SBUL');
+      if (allPolicies.data && allPolicies.data.length === 1) {
+        const [policy] = allPolicies.data;
+
+        return NextResponse.redirect(
+          new URL(
+            `/policies/${policy?.planCode}/${policy?.policyNumber}`,
+            req.url
+          )
+        );
+      }
     }
 
     applyMockCookies(req, resNext);
