@@ -14,6 +14,7 @@ export const documentApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/docume
 export const carrierApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${apiVersion}/carriers`;
 export const integrationApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/integration/${apiVersion}`;
 export const consumerExperienceAPIBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/consumer-experience/v1`;
+export const bpmApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/bpm/v1/policies`
 
 const getMockParam = () => {
   const cookieStore = cookies();

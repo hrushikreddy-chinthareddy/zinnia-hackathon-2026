@@ -13,6 +13,7 @@ import { BankDetail } from '@/components/person-data/types';
 import {
   ApiResponse,
   ServerApi,
+  bpmApiBaseUrl,
   isMockDocumentRequestEnabled,
   isMockErrorEnabled,
   isMockPaymentHistoryRequestEnabled,
@@ -178,6 +179,36 @@ const getPolicyByPlanCodeAndId = async (options: PolicyRequestInputs) => {
   }
 
   return data;
+};
+
+
+const getOneTimeWithdrawalEligibility = async (options: PolicyRequestInputs) => {
+  const { planCode, policyNumber } = options;
+  const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/partialwithdrawalonetime/validation`;
+  if (isMockErrorEnabled(ApiEndpoints.WITHDRAWAL_ELIGIBILITY)) {
+    throw new Error('Error fetching withdrawal eligibility.');
+  }
+
+  // TODO: if i pass in nothing, i get success, if i pass in a date from more than a year ago, i get an error
+  // are these errors accurate? the API spec implies the `/eligilbilitycheck` endpoint doesnt need request body
+  const rawResponse = await ServerApi.post(url, JSON.stringify({effectiveDate: '2021-01-01', caseId: ''}), {
+    headers: { 'Content-Type': 'application/json' },
+  });
+
+  const response = await parseAPIResponse(rawResponse);
+
+
+  // This endpoint returns 400 "not found" when the policy is not eligible withdrawals
+  if (rawResponse.status !== 200 && rawResponse.status !== 400) {
+    logError(
+      'Error fetching withdrawal eligibility',
+      await logApiNotOkDetails({ rawResponse, parsedResponse: response })
+    );
+  }
+
+  console.log('ELIGIBLIY CHECK',response)
+  return response
+
 };
 
 const getPolicyTransactions = async ({
@@ -994,8 +1025,9 @@ export const getPolicyWithdrawalDetails = async (
   });
 
   if (isMockPolicyOverviewRequestEnabled()) {
+    // TODO: add mocks for withdrawal eligiblity
     const transformedResults =
-      transformPolicyForWithdrawals(mockPolicyResponse);
+      transformPolicyForWithdrawals(mockPolicyResponse, {});
 
     return {
       data: transformedResults,
@@ -1005,7 +1037,8 @@ export const getPolicyWithdrawalDetails = async (
 
   try {
     const policy = await getPolicyByPlanCodeAndId(policyInputs);
-    const transformedResults = transformPolicyForWithdrawals(policy);
+    const policyWithdrawalEligibility = await getOneTimeWithdrawalEligibility(policyInputs);
+    const transformedResults = transformPolicyForWithdrawals(policy, policyWithdrawalEligibility);
 
     return {
       data: transformedResults,

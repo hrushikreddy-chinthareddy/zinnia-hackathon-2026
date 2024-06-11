@@ -236,7 +236,9 @@ export const transformPolicyForFundDetails = (
 };
 
 export const transformPolicyForWithdrawals = (
-  policy: Policy
+  policy: Policy,
+  // TODO: get types from API
+  withdrawalsEligiblity: any
 ): PolicyWithdrawals | null => {
   if (!policy?.withdrawalValues) {
     return null;
@@ -246,6 +248,8 @@ export const transformPolicyForWithdrawals = (
   const withdrawalsTaken =
     policy.withdrawalValues?.yearToDateNumberOfWithdrawal;
   const withdrawalValues = policy.withdrawalValues || {};
+  // Default to true in case eligibility check failed for whatever reason
+  const isEligibleForWithdrawals = withdrawalsEligiblity?.status === 'failure' ? false : true;
 
   return {
     withdrawalAllowedStartDate: withdrawalValues.withdrawalAllowedStartDate,
@@ -254,10 +258,7 @@ export const transformPolicyForWithdrawals = (
     totalWithdrawalAmount: withdrawalValues.totalWithdrawalAmount,
     annualWithdrawalLimitNoCoverageDecrease:
       withdrawalValues.annualWithdrawalLimitNoCoverageDecrease,
-    isEligibleForWithdrawals: isPolicyEligibleForWithdrawals({
-      allowedWithdrawals: annualWithdrawalsAllowed,
-      withdrawalsTaken,
-    }),
+    isEligibleForWithdrawals,
     annualWithdrawalsTaken: withdrawalsTaken,
     annualWithdrawalsRemaining: policyWithdrawalsRemaining({
       allowedWithdrawals: annualWithdrawalsAllowed,
@@ -309,7 +310,7 @@ export const transformPolicyForAccountValueSummary = (
   policy: Policy
 ): AccountValueSummary => {
   const fundDetails = transformPolicyForFundDetails(policy);
-  const withdrawalDetails = transformPolicyForWithdrawals(policy);
+  const withdrawalDetails = transformPolicyForWithdrawals(policy, {});
   const loanValues = transformPolicyForLoans(policy);
 
   return {
