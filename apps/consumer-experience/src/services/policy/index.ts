@@ -72,6 +72,7 @@ import {
 } from '@/types/policy';
 import { RidersAndBenefits } from '@/types/riders';
 import { parseAPIResponse, userSessionForLogging } from '@/utils/api';
+import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
 import { logError, logTrace, logWarn } from '@/utils/logging/server-logging';
 
 import { getDocuments } from '../document';
@@ -81,7 +82,6 @@ import {
   mockCompletedTransactions,
   mockPendingTransactions,
 } from '../mocks/transactions';
-import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
 
 /**
  * Returns error object that occur while fetching policy data from an API.
@@ -182,21 +182,24 @@ const getPolicyByPlanCodeAndId = async (options: PolicyRequestInputs) => {
   return data;
 };
 
-
-const getOneTimeWithdrawalEligibility = async (options: PolicyRequestInputs) => {
+const getOneTimeWithdrawalEligibility = async (
+  options: PolicyRequestInputs
+) => {
   const { planCode, policyNumber } = options;
   const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/partialwithdrawalonetime/eligibilitycheck`;
   if (isMockErrorEnabled(ApiEndpoints.WITHDRAWAL_ELIGIBILITY)) {
     throw new Error('Error fetching withdrawal eligibility.');
   }
 
-
-  const rawResponse = await ServerApi.post(url, JSON.stringify({effectiveDate: dayjs().format(ZAHARA_DATE_FORMAT)}), {
-    headers: { 'Content-Type': 'application/json' },
-  });
+  const rawResponse = await ServerApi.post(
+    url,
+    JSON.stringify({ effectiveDate: dayjs().format(ZAHARA_DATE_FORMAT) }),
+    {
+      headers: { 'Content-Type': 'application/json' },
+    }
+  );
 
   const response = await parseAPIResponse(rawResponse);
-
 
   // This endpoint returns 400 "not found" when the policy is not eligible withdrawals
   if (rawResponse.status !== 200 && rawResponse.status !== 400) {
@@ -207,11 +210,12 @@ const getOneTimeWithdrawalEligibility = async (options: PolicyRequestInputs) => 
   }
 
   if (rawResponse.status === 400) {
-    logTrace('Withdrawal ineligible reason', {results: response?.validationResult, })
+    logTrace('Withdrawal ineligible reason', {
+      results: response?.validationResult,
+    });
   }
 
-  return response
-
+  return response;
 };
 
 const getPolicyTransactions = async ({
@@ -1029,8 +1033,10 @@ export const getPolicyWithdrawalDetails = async (
 
   if (isMockPolicyOverviewRequestEnabled()) {
     // TODO: add mocks for withdrawal eligiblity
-    const transformedResults =
-      transformPolicyForWithdrawals(mockPolicyResponse, {});
+    const transformedResults = transformPolicyForWithdrawals(
+      mockPolicyResponse,
+      {}
+    );
 
     return {
       data: transformedResults,
@@ -1040,8 +1046,12 @@ export const getPolicyWithdrawalDetails = async (
 
   try {
     const policy = await getPolicyByPlanCodeAndId(policyInputs);
-    const policyWithdrawalEligibility = await getOneTimeWithdrawalEligibility(policyInputs);
-    const transformedResults = transformPolicyForWithdrawals(policy, policyWithdrawalEligibility);
+    const policyWithdrawalEligibility =
+      await getOneTimeWithdrawalEligibility(policyInputs);
+    const transformedResults = transformPolicyForWithdrawals(
+      policy,
+      policyWithdrawalEligibility
+    );
 
     return {
       data: transformedResults,
@@ -1070,8 +1080,10 @@ export const getPolicyAccountValueSummary = async (
   });
 
   if (isMockPolicyOverviewRequestEnabled()) {
-    const transformedResults =
-      transformPolicyForAccountValueSummary(mockPolicyResponse);
+    const transformedResults = transformPolicyForAccountValueSummary(
+      mockPolicyResponse,
+      {}
+    );
 
     return {
       data: transformedResults,
@@ -1081,7 +1093,12 @@ export const getPolicyAccountValueSummary = async (
 
   try {
     const policy = await getPolicyByPlanCodeAndId(policyInputs);
-    const transformedResults = transformPolicyForAccountValueSummary(policy);
+    const policyWithdrawalEligibility =
+      await getOneTimeWithdrawalEligibility(policyInputs);
+    const transformedResults = transformPolicyForAccountValueSummary(
+      policy,
+      policyWithdrawalEligibility
+    );
 
     return {
       data: transformedResults,

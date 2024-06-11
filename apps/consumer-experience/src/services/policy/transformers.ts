@@ -39,7 +39,6 @@ import { RidersAndBenefits } from '@/types/riders';
 import {
   allowedAnnualWithdrawals,
   bankAccountNumberSanitizer,
-  isPolicyEligibleForWithdrawals,
   policyWithdrawalsRemaining,
   getRiderDescription,
   policyHasVested,
@@ -249,7 +248,7 @@ export const transformPolicyForWithdrawals = (
     policy.withdrawalValues?.yearToDateNumberOfWithdrawal;
   const withdrawalValues = policy.withdrawalValues || {};
   // Default to true in case eligibility check failed for whatever reason
-  const isEligibleForWithdrawals = withdrawalsEligiblity?.status === 'failure' ? false : true;
+  const isEligibleForWithdrawals = withdrawalsEligiblity?.status === 'success';
 
   return {
     withdrawalAllowedStartDate: withdrawalValues.withdrawalAllowedStartDate,
@@ -307,17 +306,17 @@ export const transformPolicyForSurrender = (
 };
 
 export const transformPolicyForAccountValueSummary = (
-  policy: Policy
+  policy: Policy,
+  // TODO: get types from API
+  withdrawalsEligiblity: any
 ): AccountValueSummary => {
   const fundDetails = transformPolicyForFundDetails(policy);
-  const withdrawalDetails = transformPolicyForWithdrawals(policy, {});
+  // const withdrawalDetails = transformPolicyForWithdrawals(policy, {});
   const loanValues = transformPolicyForLoans(policy);
 
   return {
     fundCount: fundDetails?.length,
-    hasWithdrawalEligibility: withdrawalDetails
-      ? withdrawalDetails.isEligibleForWithdrawals !== false
-      : null,
+    hasWithdrawalEligibility: withdrawalsEligiblity.status === 'success',
     hasLoanEligibility: loanValues?.isEligible,
   };
 };
