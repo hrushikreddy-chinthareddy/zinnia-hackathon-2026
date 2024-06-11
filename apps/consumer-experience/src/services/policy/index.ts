@@ -81,6 +81,7 @@ import {
   mockCompletedTransactions,
   mockPendingTransactions,
 } from '../mocks/transactions';
+import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
 
 /**
  * Returns error object that occur while fetching policy data from an API.
@@ -184,14 +185,13 @@ const getPolicyByPlanCodeAndId = async (options: PolicyRequestInputs) => {
 
 const getOneTimeWithdrawalEligibility = async (options: PolicyRequestInputs) => {
   const { planCode, policyNumber } = options;
-  const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/partialwithdrawalonetime/validation`;
+  const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/partialwithdrawalonetime/eligibilitycheck`;
   if (isMockErrorEnabled(ApiEndpoints.WITHDRAWAL_ELIGIBILITY)) {
     throw new Error('Error fetching withdrawal eligibility.');
   }
 
-  // TODO: if i pass in nothing, i get success, if i pass in a date from more than a year ago, i get an error
-  // are these errors accurate? the API spec implies the `/eligilbilitycheck` endpoint doesnt need request body
-  const rawResponse = await ServerApi.post(url, JSON.stringify({effectiveDate: '2021-01-01', caseId: ''}), {
+
+  const rawResponse = await ServerApi.post(url, JSON.stringify({effectiveDate: dayjs().format(ZAHARA_DATE_FORMAT)}), {
     headers: { 'Content-Type': 'application/json' },
   });
 
@@ -206,7 +206,10 @@ const getOneTimeWithdrawalEligibility = async (options: PolicyRequestInputs) => 
     );
   }
 
-  console.log('ELIGIBLIY CHECK',response)
+  if (rawResponse.status === 400) {
+    logTrace('Withdrawal ineligible reason', {results: response?.validationResult, })
+  }
+
   return response
 
 };
