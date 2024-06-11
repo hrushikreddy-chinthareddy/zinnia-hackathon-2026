@@ -7,6 +7,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { RouteKey, getRedirectUrl, routeMap } from '@/route-map';
 import { isMockAllowed } from '@/utils';
 import {
+  FROM_LOGIN_QUERY_KEY,
   HAD_PREVIOUS_SESSION_COOKIE_KEY,
   MFA_OOB_CODE_COOKIE_KEY,
   MFA_TOKEN_COOKIE_KEY,
@@ -98,6 +99,8 @@ export async function middleware(req: NextRequest) {
   const isSessionPage = pathname === '/session';
 
   if (session) {
+    const searchParmas = req.nextUrl.searchParams;
+    const fromLogin = searchParmas.get(FROM_LOGIN_QUERY_KEY);
     // since the user has a session we need to check if they signed the terms and conditions
     // we only want to do this once per session. We will store the value on the user object
     if (!session.user.hasSignedTermsAndConditions) {
@@ -181,6 +184,23 @@ export async function middleware(req: NextRequest) {
       });
 
       return NextResponse.redirect(new URL(redirectUrl, req.url));
+    }
+
+    // if the user is on the login page and they have a session we need to redirect them to the policies index page
+    // if they have only one policy we will redirect them to the policy details page
+    // otherwise we will send them to the policy index page
+    if (fromLogin === 'true') {
+      const allPolicies = await getMyPoliciesByCarrier('SBUL');
+      if (allPolicies.data && allPolicies.data.length === 1) {
+        const [policy] = allPolicies.data;
+
+        return NextResponse.redirect(
+          new URL(
+            `/policies/${policy?.planCode}/${policy?.policyNumber}`,
+            req.url
+          )
+        );
+      }
     }
 
     applyMockCookies(req, resNext);

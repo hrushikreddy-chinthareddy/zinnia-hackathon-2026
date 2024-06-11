@@ -1,7 +1,4 @@
-import {
-  PolicySearchRequest,
-  PolicySearchResponse,
-} from '@zinnia/api-types/types/search';
+import { PolicySearchRequest } from '@zinnia/api-types/types/search';
 import {
   Policy,
   Transaction,
