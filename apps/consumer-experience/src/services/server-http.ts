@@ -38,7 +38,7 @@ class ServerHttpRequest extends HttpRequest {
     }
 
     requestInit.headers = {
-      ['x-correlation-id']: correlationId,
+      'x-correlation-id': correlationId,
       ...requestInit.headers,
       Authorization: `Bearer ${accessToken}`,
     };
