@@ -13,7 +13,6 @@ import { BankDetail } from '@/components/person-data/types';
 import {
   ApiResponse,
   ServerApi,
-  bpmApiBaseUrl,
   isMockDocumentRequestEnabled,
   isMockErrorEnabled,
   isMockPaymentHistoryRequestEnabled,
@@ -71,11 +70,12 @@ import {
   CarrierPolicyDetails,
 } from '@/types/policy';
 import { RidersAndBenefits } from '@/types/riders';
-import { parseAPIResponse, userSessionForLogging } from '@/utils/api';
-import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
+import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { logError, logTrace, logWarn } from '@/utils/logging/server-logging';
 
+import { getOneTimeWithdrawalEligibility } from '../bpm';
 import { getDocuments } from '../document';
+import { mockWithdrawalIneligibleResponse } from '../mocks/bpm';
 import { mockDocumentsResponse } from '../mocks/documents';
 import { MockMetricsResponse } from '../mocks/metrics';
 import {
@@ -90,25 +90,6 @@ import {
  * @param {unknown} parsedResponse - The parsed response object obtained from the API call.
  * @return {Object} An object containing apiMessage, statusText, statusCode, url, and sessionInfo.
  */
-const logApiNotOkDetails = async ({
-  rawResponse,
-  parsedResponse,
-}: {
-  rawResponse: Response;
-  parsedResponse: unknown;
-}) => {
-  const sessionInfo = await userSessionForLogging();
-  const { message } = parsedResponse as { message?: string };
-  const { statusText, status, url } = rawResponse;
-
-  return {
-    apiMessage: message,
-    statusText,
-    statusCode: status,
-    url,
-    ...sessionInfo,
-  };
-};
 
 const getPolicyReferencesByCarrier = async () => {
   const searchUrl = `${policyApiBaseUrl}/search?offset=0&limit=10`;
@@ -180,42 +161,6 @@ const getPolicyByPlanCodeAndId = async (options: PolicyRequestInputs) => {
   }
 
   return data;
-};
-
-const getOneTimeWithdrawalEligibility = async (
-  options: PolicyRequestInputs
-) => {
-  const { planCode, policyNumber } = options;
-  const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/partialwithdrawalonetime/eligibilitycheck`;
-  if (isMockErrorEnabled(ApiEndpoints.WITHDRAWAL_ELIGIBILITY)) {
-    throw new Error('Error fetching withdrawal eligibility.');
-  }
-
-  const rawResponse = await ServerApi.post(
-    url,
-    JSON.stringify({ effectiveDate: dayjs().format(ZAHARA_DATE_FORMAT) }),
-    {
-      headers: { 'Content-Type': 'application/json' },
-    }
-  );
-
-  const response = await parseAPIResponse(rawResponse);
-
-  // This endpoint returns 400 "not found" when the policy is not eligible withdrawals
-  if (rawResponse.status !== 200 && rawResponse.status !== 400) {
-    logError(
-      'Error fetching withdrawal eligibility',
-      await logApiNotOkDetails({ rawResponse, parsedResponse: response })
-    );
-  }
-
-  if (rawResponse.status === 400) {
-    logTrace('Withdrawal ineligible reason', {
-      results: response?.validationResult,
-    });
-  }
-
-  return response;
 };
 
 const getPolicyTransactions = async ({
@@ -1032,10 +977,9 @@ export const getPolicyWithdrawalDetails = async (
   });
 
   if (isMockPolicyOverviewRequestEnabled()) {
-    // TODO: add mocks for withdrawal eligiblity
     const transformedResults = transformPolicyForWithdrawals(
       mockPolicyResponse,
-      {}
+      mockWithdrawalIneligibleResponse
     );
 
     return {
@@ -1082,7 +1026,7 @@ export const getPolicyAccountValueSummary = async (
   if (isMockPolicyOverviewRequestEnabled()) {
     const transformedResults = transformPolicyForAccountValueSummary(
       mockPolicyResponse,
-      {}
+      mockWithdrawalIneligibleResponse
     );
 
     return {

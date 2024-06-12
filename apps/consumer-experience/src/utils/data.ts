@@ -1,3 +1,4 @@
+import { TransactionResponse } from '@zinnia/api-types/types/bpm';
 import {
   AccountType,
   Address,
@@ -303,4 +304,17 @@ export const productTypeDisplay = (
     default:
       return null;
   }
+};
+
+export const eligibilityStatus = (transaction: TransactionResponse) => {
+  const { status } = transaction;
+  if (!status) {
+    return null;
+  }
+
+  if (status === 'success') {
+    return true;
+  }
+
+  return false;
 };

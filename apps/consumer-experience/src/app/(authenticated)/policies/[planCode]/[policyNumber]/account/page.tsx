@@ -31,6 +31,11 @@ export default async function AccountValuePage({
     policyNumber,
   });
 
+  // Eligibility is only shown as false if the value is truly false. If it is null or undefined,
+  // we want to still show "eligible" so that the user can still try to take the withdrawal
+  // and the backend system can determine true eligibility
+  const eligibilityIsFalse = data?.hasWithdrawalEligibility === false;
+
   const accountValueSummary = () => {
     if (error || !data) {
       return <NoDataAvailable message={DEFAULT_UNAVAILABLE_STRING} />;
@@ -73,7 +78,7 @@ export default async function AccountValuePage({
                   Make a withdrawal
                 </span>
                 <StatusIconText
-                  isEligible={data?.hasWithdrawalEligibility}
+                  isEligible={!eligibilityIsFalse}
                   className="typography-content-caption"
                 />
               </div>

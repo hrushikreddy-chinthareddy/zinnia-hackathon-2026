@@ -1,14 +1,15 @@
-import { defineConfig, type Options } from "tsup";
+import { defineConfig, type Options } from 'tsup';
 
 export default defineConfig((options: Options) => ({
   entryPoints: [
-    "src/index.ts",
-    "src/generated-types/sor",
-    "src/generated-types/search",
-    "src/generated-types/documents",
+    'src/index.ts',
+    'src/generated-types/sor',
+    'src/generated-types/search',
+    'src/generated-types/documents',
+    'src/generated-types/bpm',
   ],
   clean: true,
   dts: true,
-  format: ["cjs"],
+  format: ['cjs'],
   ...options,
 }));

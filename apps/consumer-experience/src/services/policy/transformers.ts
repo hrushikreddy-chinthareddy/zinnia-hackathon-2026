@@ -1,3 +1,4 @@
+import { TransactionResponse } from '@zinnia/api-types/types/bpm';
 import {
   PartyRole,
   Policy,
@@ -43,6 +44,7 @@ import {
   getRiderDescription,
   policyHasVested,
   allPolicyOwnerBanks,
+  eligibilityStatus,
 } from '@/utils/data';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';
 
@@ -236,8 +238,7 @@ export const transformPolicyForFundDetails = (
 
 export const transformPolicyForWithdrawals = (
   policy: Policy,
-  // TODO: get types from API
-  withdrawalsEligiblity: any
+  withdrawalsEligiblity: TransactionResponse
 ): PolicyWithdrawals | null => {
   if (!policy?.withdrawalValues) {
     return null;
@@ -247,8 +248,6 @@ export const transformPolicyForWithdrawals = (
   const withdrawalsTaken =
     policy.withdrawalValues?.yearToDateNumberOfWithdrawal;
   const withdrawalValues = policy.withdrawalValues || {};
-  // Default to true in case eligibility check failed for whatever reason
-  const isEligibleForWithdrawals = withdrawalsEligiblity?.status === 'success';
 
   return {
     withdrawalAllowedStartDate: withdrawalValues.withdrawalAllowedStartDate,
@@ -257,7 +256,7 @@ export const transformPolicyForWithdrawals = (
     totalWithdrawalAmount: withdrawalValues.totalWithdrawalAmount,
     annualWithdrawalLimitNoCoverageDecrease:
       withdrawalValues.annualWithdrawalLimitNoCoverageDecrease,
-    isEligibleForWithdrawals,
+    isEligibleForWithdrawals: eligibilityStatus(withdrawalsEligiblity),
     annualWithdrawalsTaken: withdrawalsTaken,
     annualWithdrawalsRemaining: policyWithdrawalsRemaining({
       allowedWithdrawals: annualWithdrawalsAllowed,
@@ -307,8 +306,7 @@ export const transformPolicyForSurrender = (
 
 export const transformPolicyForAccountValueSummary = (
   policy: Policy,
-  // TODO: get types from API
-  withdrawalsEligiblity: any
+  withdrawalsEligiblity: TransactionResponse
 ): AccountValueSummary => {
   const fundDetails = transformPolicyForFundDetails(policy);
   // const withdrawalDetails = transformPolicyForWithdrawals(policy, {});
@@ -316,7 +314,7 @@ export const transformPolicyForAccountValueSummary = (
 
   return {
     fundCount: fundDetails?.length,
-    hasWithdrawalEligibility: withdrawalsEligiblity.status === 'success',
+    hasWithdrawalEligibility: eligibilityStatus(withdrawalsEligiblity),
     hasLoanEligibility: loanValues?.isEligible,
   };
 };
