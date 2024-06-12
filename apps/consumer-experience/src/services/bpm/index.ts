@@ -82,7 +82,6 @@ export const getPolicyLoanEligibility = async (
 
 export const getWithdrawalEligibility = async (
   policyInputs: PolicyRequestInputs
-  // TODO: fix response type
 ): Promise<ApiResponse<TransactionEligbility>> => {
   logTrace('getPolicyWithdrawalDetails::start', {
     planCode: policyInputs.planCode,
@@ -113,7 +112,6 @@ export const getWithdrawalEligibility = async (
 
 export const getLoanEligibility = async (
   policyInputs: PolicyRequestInputs
-  // TODO: fix response type
 ): Promise<ApiResponse<TransactionEligbility>> => {
   logTrace('getPolicyWithdrawalDetails::start', {
     planCode: policyInputs.planCode,
