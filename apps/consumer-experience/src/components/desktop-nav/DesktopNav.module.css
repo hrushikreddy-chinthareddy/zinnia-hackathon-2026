@@ -28,19 +28,12 @@
   align-items: center;
   gap: var(--measure-dimension-gap-xs);
   text-underline-position: under;
-  /* padding-right: var(--measure-dimension-padding-sm, 0.25rem); */
-
-  /* &:hover {
-    text-decoration: none;
-  } */
 
   &:hover,
   &.active {
     text-decoration: underline;
     text-decoration-color: var(--color-base-border-border-darker);
     text-decoration-thickness: 3px;
-    /* border-bottom: 3px solid var(--color-base-border-border-darker);
-    margin-bottom: -3px; */
   }
 }
 
