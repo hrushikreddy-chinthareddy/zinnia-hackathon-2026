@@ -3,17 +3,34 @@ import {
   MfaAssociateInputs,
   MfaSendChallengeInputs,
 } from '@/types/auth';
-import { getAccessToken } from '@/utils/auth';
+import { getAccessToken, getSession } from '@/utils/auth';
 import { AUTH0_SCOPE } from '@/utils/serverClientUtils';
 
 import { HttpRequest } from './http';
+import {
+  getUserInfoFromSession,
+  logTrace,
+} from '@/utils/logging/server-logging';
+import { v4 as uuid4 } from 'uuid';
 
 class ServerHttpRequest extends HttpRequest {
   request = async (
     input: string | URL | Request,
     init?: RequestInit | undefined
   ): Promise<Response> => {
+    const correlationId = uuid4();
+    const now = performance.now();
     const { accessToken } = await getAccessToken();
+    const session = await getSession();
+    const loggingContext = {
+      ...getUserInfoFromSession(session),
+      url: input?.toString(),
+      method: init?.method,
+      correlationId,
+      file: 'server-http.ts',
+      function: 'request',
+    };
+    logTrace('request::start', loggingContext);
 
     const requestInit: RequestInit = init || {};
     if (!requestInit.headers) {
@@ -21,11 +38,18 @@ class ServerHttpRequest extends HttpRequest {
     }
 
     requestInit.headers = {
+      ['x-correlation-id']: correlationId,
       ...requestInit.headers,
       Authorization: `Bearer ${accessToken}`,
     };
 
-    return fetch(input, requestInit);
+    const result = await fetch(input, requestInit);
+    logTrace('request::complete', {
+      ...loggingContext,
+      duration: performance.now() - now,
+      requestStatus: result.status,
+    });
+    return result;
   };
 
   sendVerificationCode = async (email: string) => {

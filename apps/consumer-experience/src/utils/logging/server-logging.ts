@@ -6,6 +6,7 @@ type LoggingFunction = (message: string, serializableValues: any) => void;
 
 export const getUserInfoFromSession = (session: Session | null | undefined) => {
   return {
+    partyId: session?.user?.partyId,
     sessionId: session?.user?.sid,
     userId: session?.user?.sub,
   };
