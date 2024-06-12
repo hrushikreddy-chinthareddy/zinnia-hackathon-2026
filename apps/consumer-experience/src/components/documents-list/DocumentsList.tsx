@@ -23,7 +23,7 @@ export default function DocumentsList({
   planCode: string;
   policyNumber: string;
 }) {
-  const limit = 8;
+  const limit = 10;
   const [offset, setOffset] = useState(0);
   const goToPage = useCallback(
     (pageNumber: number) => {
@@ -71,12 +71,14 @@ export default function DocumentsList({
           })}
         />
       </div>
-      <Pagination
-        total={documents.length}
-        offset={offset}
-        limit={limit}
-        goToPage={goToPage}
-      />
+      {documents.length > limit && (
+        <Pagination
+          total={documents.length}
+          offset={offset}
+          limit={limit}
+          goToPage={goToPage}
+        />
+      )}
     </>
   );
 }
