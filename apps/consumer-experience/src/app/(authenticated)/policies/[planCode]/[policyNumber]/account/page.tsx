@@ -31,10 +31,7 @@ export default async function AccountValuePage({
     policyNumber,
   });
 
-  // Eligibility is only shown as false if the value is truly false. If it is null or undefined,
-  // we want to still show "eligible" so that the user can still try to take the withdrawal
-  // and the backend system can determine true eligibility
-  const eligibilityIsFalse = data?.hasWithdrawalEligibility === false;
+  const withdrawalsEligibility = data?.hasWithdrawalEligibility;
 
   const accountValueSummary = () => {
     if (error || !data) {
@@ -69,16 +66,14 @@ export default async function AccountValuePage({
             content: (
               <div
                 className={clsx('stacked-items', {
-                  'py-lg': isNullEmptyOrUndefined(
-                    data?.hasWithdrawalEligibility
-                  ),
+                  'py-lg': isNullEmptyOrUndefined(withdrawalsEligibility),
                 })}
               >
                 <span className="typography-labels-label-md-alt">
                   Make a withdrawal
                 </span>
                 <StatusIconText
-                  isEligible={!eligibilityIsFalse}
+                  isEligible={withdrawalsEligibility}
                   className="typography-content-caption"
                 />
               </div>

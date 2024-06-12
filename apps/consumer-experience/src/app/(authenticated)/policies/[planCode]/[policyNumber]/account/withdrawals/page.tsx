@@ -55,16 +55,13 @@ export default async function Withdrawals({
       return <NoDataAvailable message={DEFAULT_UNAVAILABLE_STRING} />;
     }
 
-    // Eligibility is only shown as false if the value is truly false. If it is null or undefined,
-    // we want to still show "eligible" so that the user can still try to take the withdrawal
-    // and the backend system can determine true eligibility
-    const eligibilityIsFalse = data.isEligibleForWithdrawals === false;
+    const withdrawalsEligibility = data?.isEligibleForWithdrawals;
 
     return (
       <>
         <p className="typography-content-body-sm">
           <span className="typography-content-body-sm-bold">
-            {eligibilityIsFalse
+            {withdrawalsEligibility
               ? ineligibleTextHighlight
               : eligibleTextHighlight}{' '}
           </span>
@@ -76,7 +73,7 @@ export default async function Withdrawals({
         </p>
         <div className="card">
           <StatusIconText
-            isEligible={!eligibilityIsFalse}
+            isEligible={withdrawalsEligibility}
             showIcon
             className="typography-content-body-bold mb-lg"
           />
