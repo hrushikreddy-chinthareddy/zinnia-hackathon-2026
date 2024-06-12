@@ -11,8 +11,13 @@ import { FieldData } from '@/components/field-data/FieldData';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { StatusIconText } from '@/components/status-icon-text/StatusIconText';
 import { RouteKey, getPageTitle } from '@/route-map';
-import { getPolicyLoanDetails } from '@/services';
-import { PolicyRequestInputs } from '@/types/policy';
+import {
+  ApiResponse,
+  getPolicyAccountValueSummary,
+  getPolicyLoanDetails,
+} from '@/services';
+import { getLoanEligibility } from '@/services/bpm';
+import { PolicyLoans, PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { standardDateMonthDayYear } from '@/utils/dates';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
@@ -37,10 +42,27 @@ export default async function Loans({
   params: PolicyRequestInputs;
 }) {
   const { planCode, policyNumber } = params;
-  const { data, error } = await getPolicyLoanDetails({
-    planCode,
-    policyNumber,
-  });
+  const loanDetails = await Promise.allSettled([
+    getPolicyLoanDetails({
+      planCode,
+      policyNumber,
+    }),
+    getLoanEligibility({
+      planCode,
+      policyNumber,
+    }),
+  ]);
+
+  const summaryData =
+    loanDetails[0].status === 'fulfilled'
+      ? loanDetails[0]?.value
+      : ({} as ApiResponse<PolicyLoans>);
+  const loanEligibilityData =
+    loanDetails[1]?.status === 'fulfilled'
+      ? loanDetails[1].value?.data?.isEligible
+      : null;
+
+  const { data, error } = summaryData;
 
   const loansData = () => {
     if (error || !data) {
@@ -51,7 +73,9 @@ export default async function Loans({
       <>
         <p className="typography-content-body-sm">
           <span className="typography-content-body-sm-bold">
-            {data?.isEligible ? eligibleTextHighlight : ineligibleTextHighlight}{' '}
+            {loanEligibilityData
+              ? eligibleTextHighlight
+              : ineligibleTextHighlight}{' '}
           </span>
           When you are eligible, you can take a loan from your policy at any
           time, as long as funds are available. Keep in mind: aside from
@@ -61,7 +85,7 @@ export default async function Loans({
         </p>
         <div className="card">
           <StatusIconText
-            isEligible={data?.isEligible}
+            isEligible={loanEligibilityData}
             showIcon
             className="typography-content-body-bold mb-lg"
           />

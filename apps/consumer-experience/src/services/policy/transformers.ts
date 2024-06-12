@@ -237,8 +237,7 @@ export const transformPolicyForFundDetails = (
 };
 
 export const transformPolicyForWithdrawals = (
-  policy: Policy,
-  withdrawalsEligiblity: TransactionResponse
+  policy: Policy
 ): PolicyWithdrawals | null => {
   if (!policy?.withdrawalValues) {
     return null;
@@ -256,7 +255,6 @@ export const transformPolicyForWithdrawals = (
     totalWithdrawalAmount: withdrawalValues.totalWithdrawalAmount,
     annualWithdrawalLimitNoCoverageDecrease:
       withdrawalValues.annualWithdrawalLimitNoCoverageDecrease,
-    isEligibleForWithdrawals: eligibilityStatus(withdrawalsEligiblity),
     annualWithdrawalsTaken: withdrawalsTaken,
     annualWithdrawalsRemaining: policyWithdrawalsRemaining({
       allowedWithdrawals: annualWithdrawalsAllowed,
@@ -278,20 +276,12 @@ export const transformPolicyForWithdrawals = (
   };
 };
 
-export const transformPolicyForLoans = (
-  policy: Policy,
-  policyLoanEligibility: TransactionResponse
-): PolicyLoans => {
-  const isEligible = eligibilityStatus(policyLoanEligibility);
-
+export const transformPolicyForLoans = (policy: Policy): PolicyLoans => {
   return {
     totalLoanBalance: policy.loanValues?.totalLoanBalance,
     maximumLoanAmount: policy.loanValues?.maximumLoanAmount,
     // Date of last policy transaction, when policy value was last updated
     effectiveDate: policy.effectiveDate,
-    // Return either the boolean OR undefined since there is a difference between
-    // inelgible and data doesn't exist
-    isEligible,
   };
 };
 
@@ -304,16 +294,12 @@ export const transformPolicyForSurrender = (
 };
 
 export const transformPolicyForAccountValueSummary = (
-  policy: Policy,
-  withdrawalsEligiblity: TransactionResponse,
-  loanEligibility: TransactionResponse
+  policy: Policy
 ): AccountValueSummary => {
   const fundDetails = transformPolicyForFundDetails(policy);
 
   return {
     fundCount: fundDetails?.length,
-    hasWithdrawalEligibility: eligibilityStatus(withdrawalsEligiblity),
-    hasLoanEligibility: eligibilityStatus(loanEligibility),
   };
 };
 

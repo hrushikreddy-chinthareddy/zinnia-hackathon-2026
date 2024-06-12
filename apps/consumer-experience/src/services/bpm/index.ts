@@ -2,10 +2,13 @@ import dayjs from 'dayjs';
 
 import { ApiEndpoints } from '@/components/dev-menu/types';
 import { PolicyRequestInputs } from '@/types/policy';
+import { TransactionEligbility } from '@/types/transactions';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
-import { logError, logTrace } from '@/utils/logging/server-logging';
+import { logError, logTrace, logWarn } from '@/utils/logging/server-logging';
 
+import { transformEligibility } from './transformers';
+import { ApiResponse } from '..';
 import { bpmApiBaseUrl, isMockErrorEnabled } from '../api-config';
 import { ServerApi } from '../server-http';
 
@@ -45,7 +48,9 @@ export const getOneTimeWithdrawalEligibility = async (
   return response;
 };
 
-export const getLoanEligibility = async (options: PolicyRequestInputs) => {
+export const getPolicyLoanEligibility = async (
+  options: PolicyRequestInputs
+) => {
   const { planCode, policyNumber } = options;
   const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/newloan/eligibilitycheck`;
   if (isMockErrorEnabled(ApiEndpoints.WITHDRAWAL_ELIGIBILITY)) {
@@ -73,4 +78,65 @@ export const getLoanEligibility = async (options: PolicyRequestInputs) => {
   }
 
   return response;
+};
+
+export const getWithdrawalEligibility = async (
+  policyInputs: PolicyRequestInputs
+  // TODO: fix response type
+): Promise<ApiResponse<TransactionEligbility>> => {
+  logTrace('getPolicyWithdrawalDetails::start', {
+    planCode: policyInputs.planCode,
+    policyNumber: policyInputs.policyNumber,
+  });
+
+  try {
+    const policyWithdrawalEligibility =
+      await getOneTimeWithdrawalEligibility(policyInputs);
+
+    return {
+      data: transformEligibility(policyWithdrawalEligibility),
+      error: null,
+    };
+  } catch (error) {
+    logWarn('getWithdrawalEligibility::error', { error });
+
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 500,
+        name: 'getWithdrawalEligibility Error',
+      },
+    };
+  }
+};
+
+export const getLoanEligibility = async (
+  policyInputs: PolicyRequestInputs
+  // TODO: fix response type
+): Promise<ApiResponse<TransactionEligbility>> => {
+  logTrace('getPolicyWithdrawalDetails::start', {
+    planCode: policyInputs.planCode,
+    policyNumber: policyInputs.policyNumber,
+  });
+
+  try {
+    const policyLoanEligibility = await getPolicyLoanEligibility(policyInputs);
+
+    return {
+      data: transformEligibility(policyLoanEligibility),
+      error: null,
+    };
+  } catch (error) {
+    logWarn('getWithdrawalEligibility::error', { error });
+
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 500,
+        name: 'getWithdrawalEligibility Error',
+      },
+    };
+  }
 };

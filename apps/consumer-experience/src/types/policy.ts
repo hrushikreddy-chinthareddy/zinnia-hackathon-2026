@@ -203,7 +203,6 @@ export interface PolicyFund {
 }
 
 export interface PolicyLoans {
-  isEligible?: boolean | null;
   effectiveDate?: string | null;
   totalLoanBalance?: number | null;
   maximumLoanAmount?: number | null;
@@ -222,7 +221,6 @@ interface VestingDetails {
 }
 
 export interface PolicyWithdrawals {
-  isEligibleForWithdrawals?: boolean | null;
   annualWithdrawalsTaken?: number | null;
   annualWithdrawalsRemaining?: number | null;
   nextMonthiversaryDate?: string;

@@ -980,10 +980,8 @@ export const getPolicyWithdrawalDetails = async (
   });
 
   if (isMockPolicyOverviewRequestEnabled()) {
-    const transformedResults = transformPolicyForWithdrawals(
-      mockPolicyResponse,
-      mockWithdrawalIneligibleResponse
-    );
+    const transformedResults =
+      transformPolicyForWithdrawals(mockPolicyResponse);
 
     return {
       data: transformedResults,
@@ -993,12 +991,8 @@ export const getPolicyWithdrawalDetails = async (
 
   try {
     const policy = await getPolicyByPlanCodeAndId(policyInputs);
-    const policyWithdrawalEligibility =
-      await getOneTimeWithdrawalEligibility(policyInputs);
-    const transformedResults = transformPolicyForWithdrawals(
-      policy,
-      policyWithdrawalEligibility
-    );
+
+    const transformedResults = transformPolicyForWithdrawals(policy);
 
     return {
       data: transformedResults,
@@ -1027,11 +1021,8 @@ export const getPolicyAccountValueSummary = async (
   });
 
   if (isMockPolicyOverviewRequestEnabled()) {
-    const transformedResults = transformPolicyForAccountValueSummary(
-      mockPolicyResponse,
-      mockWithdrawalIneligibleResponse,
-      mockLoanEligibleResponse
-    );
+    const transformedResults =
+      transformPolicyForAccountValueSummary(mockPolicyResponse);
 
     return {
       data: transformedResults,
@@ -1041,14 +1032,8 @@ export const getPolicyAccountValueSummary = async (
 
   try {
     const policy = await getPolicyByPlanCodeAndId(policyInputs);
-    const policyWithdrawalEligibility =
-      await getOneTimeWithdrawalEligibility(policyInputs);
-    const policyLoanEligibility = await getLoanEligibility(policyInputs);
-    const transformedResults = transformPolicyForAccountValueSummary(
-      policy,
-      policyWithdrawalEligibility,
-      policyLoanEligibility
-    );
+
+    const transformedResults = transformPolicyForAccountValueSummary(policy);
 
     return {
       data: transformedResults,
@@ -1077,10 +1062,7 @@ export const getPolicyLoanDetails = async (
   });
 
   if (isMockPolicyOverviewRequestEnabled()) {
-    const transformedResults = transformPolicyForLoans(
-      mockPolicyResponse,
-      mockLoanEligibleResponse
-    );
+    const transformedResults = transformPolicyForLoans(mockPolicyResponse);
 
     return {
       data: transformedResults,
@@ -1090,11 +1072,7 @@ export const getPolicyLoanDetails = async (
 
   try {
     const policy = await getPolicyByPlanCodeAndId(policyInputs);
-    const policyLoanEligibility = await getLoanEligibility(policyInputs);
-    const transformedResults = transformPolicyForLoans(
-      policy,
-      policyLoanEligibility
-    );
+    const transformedResults = transformPolicyForLoans(policy);
 
     return {
       data: transformedResults,
