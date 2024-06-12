@@ -19,6 +19,7 @@ import {
   setMfaOobCookie,
 } from '@/utils/auth';
 import { logTrace, logWarn } from '@/utils/logging/server-logging';
+import { FROM_LOGIN_QUERY_KEY } from '@/utils/serverClientUtils';
 /**
  * Initiates the passwordless authentication process by sending a verification code to the provided email.
  *
@@ -284,7 +285,7 @@ export async function verifyPasswordlessStartChallenge(
 
   await setLoginCookies(tokenData);
 
-  return redirect('/policies?fromLogin=true');
+  return redirect(`/policies?${FROM_LOGIN_QUERY_KEY}=true`);
 }
 /**
  * Async function to associate MFA with the provided form data.
@@ -452,7 +453,7 @@ export async function verifyMfaChallenge(
   const tokenData = data! as OauthToken;
   await setLoginCookies(tokenData);
 
-  return redirect('/policies?fromLogin=true');
+  return redirect(`/policies?${FROM_LOGIN_QUERY_KEY}=true`);
 }
 
 export async function resendMfaChallenge(
