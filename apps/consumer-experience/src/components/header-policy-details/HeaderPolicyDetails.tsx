@@ -1,7 +1,6 @@
 import { PolicyStatus } from '@zinnia/api-types/types/sor';
 import { Badge, BadgeVariant } from '@zinnia/bloom/internal/components';
 import clsx from 'clsx';
-import Link from 'next/link';
 import { HTMLAttributes } from 'react';
 
 import { getPolicyForHeaderDetails } from '@/services/policy';
@@ -9,6 +8,7 @@ import { policyStatusDisplayText } from '@/utils/data';
 import { toSentenceCase } from '@/utils/strings';
 
 import styles from './HeaderPolicyDetails.module.css';
+import { PolicyNumber } from './PolicyNumber';
 
 export interface Props extends HTMLAttributes<HTMLDivElement> {
   planCode: string;
@@ -62,9 +62,7 @@ export const HeaderPolicyDetails = async ({
         <p>{data.marketingName}</p>
         <p>
           <span>Policy #: </span>
-          <Link href={`/policies/${planCode}/${policyNumber}`}>
-            {policyNumber}
-          </Link>
+          <PolicyNumber planCode={planCode} policyNumber={policyNumber} />
         </p>
       </div>
       <div className={`ml-md ${styles.desktopBadge}`}>
