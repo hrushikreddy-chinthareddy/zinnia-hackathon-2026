@@ -73,9 +73,12 @@ import { RidersAndBenefits } from '@/types/riders';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { logError, logTrace, logWarn } from '@/utils/logging/server-logging';
 
-import { getOneTimeWithdrawalEligibility } from '../bpm';
+import { getLoanEligibility, getOneTimeWithdrawalEligibility } from '../bpm';
 import { getDocuments } from '../document';
-import { mockWithdrawalIneligibleResponse } from '../mocks/bpm';
+import {
+  mockLoanEligibleResponse,
+  mockWithdrawalIneligibleResponse,
+} from '../mocks/bpm';
 import { mockDocumentsResponse } from '../mocks/documents';
 import { MockMetricsResponse } from '../mocks/metrics';
 import {
@@ -1026,7 +1029,8 @@ export const getPolicyAccountValueSummary = async (
   if (isMockPolicyOverviewRequestEnabled()) {
     const transformedResults = transformPolicyForAccountValueSummary(
       mockPolicyResponse,
-      mockWithdrawalIneligibleResponse
+      mockWithdrawalIneligibleResponse,
+      mockLoanEligibleResponse
     );
 
     return {
@@ -1039,9 +1043,11 @@ export const getPolicyAccountValueSummary = async (
     const policy = await getPolicyByPlanCodeAndId(policyInputs);
     const policyWithdrawalEligibility =
       await getOneTimeWithdrawalEligibility(policyInputs);
+    const policyLoanEligibility = await getLoanEligibility(policyInputs);
     const transformedResults = transformPolicyForAccountValueSummary(
       policy,
-      policyWithdrawalEligibility
+      policyWithdrawalEligibility,
+      policyLoanEligibility
     );
 
     return {
@@ -1071,7 +1077,10 @@ export const getPolicyLoanDetails = async (
   });
 
   if (isMockPolicyOverviewRequestEnabled()) {
-    const transformedResults = transformPolicyForLoans(mockPolicyResponse);
+    const transformedResults = transformPolicyForLoans(
+      mockPolicyResponse,
+      mockLoanEligibleResponse
+    );
 
     return {
       data: transformedResults,
@@ -1081,7 +1090,11 @@ export const getPolicyLoanDetails = async (
 
   try {
     const policy = await getPolicyByPlanCodeAndId(policyInputs);
-    const transformedResults = transformPolicyForLoans(policy);
+    const policyLoanEligibility = await getLoanEligibility(policyInputs);
+    const transformedResults = transformPolicyForLoans(
+      policy,
+      policyLoanEligibility
+    );
 
     return {
       data: transformedResults,

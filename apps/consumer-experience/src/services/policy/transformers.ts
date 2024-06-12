@@ -278,12 +278,11 @@ export const transformPolicyForWithdrawals = (
   };
 };
 
-export const transformPolicyForLoans = (policy: Policy): PolicyLoans => {
-  const isEligible =
-    !policy?.policyStatus || !policy?.accountValues
-      ? undefined
-      : policy?.policyStatus === PolicyStatus.ACTIVE &&
-        policy.accountValues.beginningAccountValue! > 0;
+export const transformPolicyForLoans = (
+  policy: Policy,
+  policyLoanEligibility: TransactionResponse
+): PolicyLoans => {
+  const isEligible = eligibilityStatus(policyLoanEligibility);
 
   return {
     totalLoanBalance: policy.loanValues?.totalLoanBalance,
@@ -292,7 +291,7 @@ export const transformPolicyForLoans = (policy: Policy): PolicyLoans => {
     effectiveDate: policy.effectiveDate,
     // Return either the boolean OR undefined since there is a difference between
     // inelgible and data doesn't exist
-    isEligible: policy && policy.accountValues ? isEligible : null,
+    isEligible,
   };
 };
 
@@ -306,16 +305,15 @@ export const transformPolicyForSurrender = (
 
 export const transformPolicyForAccountValueSummary = (
   policy: Policy,
-  withdrawalsEligiblity: TransactionResponse
+  withdrawalsEligiblity: TransactionResponse,
+  loanEligibility: TransactionResponse
 ): AccountValueSummary => {
   const fundDetails = transformPolicyForFundDetails(policy);
-  // const withdrawalDetails = transformPolicyForWithdrawals(policy, {});
-  const loanValues = transformPolicyForLoans(policy);
 
   return {
     fundCount: fundDetails?.length,
     hasWithdrawalEligibility: eligibilityStatus(withdrawalsEligiblity),
-    hasLoanEligibility: loanValues?.isEligible,
+    hasLoanEligibility: eligibilityStatus(loanEligibility),
   };
 };
 

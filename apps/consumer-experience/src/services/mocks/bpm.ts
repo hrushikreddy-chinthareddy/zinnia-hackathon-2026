@@ -13,3 +13,7 @@ export const mockWithdrawalIneligibleResponse = {
     },
   ],
 } as TransactionResponse;
+
+export const mockLoanEligibleResponse = {
+  status: 'success',
+} as TransactionResponse;
