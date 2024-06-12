@@ -13,7 +13,7 @@ export const getOneTimeWithdrawalEligibility = async (
   options: PolicyRequestInputs
 ) => {
   const { planCode, policyNumber } = options;
-  const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/partialwithdrawalonetime/eligibilitycheeck`;
+  const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/partialwithdrawalonetime/eligibilitycheck`;
   if (isMockErrorEnabled(ApiEndpoints.WITHDRAWAL_ELIGIBILITY)) {
     throw new Error('Error fetching withdrawal eligibility.');
   }
