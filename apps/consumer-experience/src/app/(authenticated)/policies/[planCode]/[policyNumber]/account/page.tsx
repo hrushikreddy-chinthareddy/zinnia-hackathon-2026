@@ -31,8 +31,6 @@ export default async function AccountValuePage({
     policyNumber,
   });
 
-  const withdrawalsEligibility = data?.hasWithdrawalEligibility;
-
   const accountValueSummary = () => {
     if (error || !data) {
       return <NoDataAvailable message={DEFAULT_UNAVAILABLE_STRING} />;
@@ -66,14 +64,16 @@ export default async function AccountValuePage({
             content: (
               <div
                 className={clsx('stacked-items', {
-                  'py-lg': isNullEmptyOrUndefined(withdrawalsEligibility),
+                  'py-lg': isNullEmptyOrUndefined(
+                    data?.hasWithdrawalEligibility
+                  ),
                 })}
               >
                 <span className="typography-labels-label-md-alt">
                   Make a withdrawal
                 </span>
                 <StatusIconText
-                  isEligible={withdrawalsEligibility}
+                  isEligible={data?.hasWithdrawalEligibility}
                   className="typography-content-caption"
                 />
               </div>
