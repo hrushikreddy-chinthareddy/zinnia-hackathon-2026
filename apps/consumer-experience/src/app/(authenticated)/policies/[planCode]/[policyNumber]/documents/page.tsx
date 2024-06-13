@@ -72,7 +72,11 @@ export default async function Documents({
       </ul>
       {error || data?.count === 0 ? (
         <NoDataAvailable
-          message="No documents available."
+          message={
+            isStatementsSelected
+              ? 'No statements available.'
+              : 'No documents available.'
+          }
           iconType={IconType.DOCUMENT_DUPLICATE}
         />
       ) : (

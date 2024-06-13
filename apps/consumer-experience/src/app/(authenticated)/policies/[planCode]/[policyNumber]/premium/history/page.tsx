@@ -39,7 +39,7 @@ export default async function PaymentHistory({ params }: Props) {
         <MockMessage />
         <NoDataAvailable
           iconType={IconType.PAYMENT}
-          message="There is currently no payments history data available."
+          message="No payment history available"
         />
       </div>
     );
