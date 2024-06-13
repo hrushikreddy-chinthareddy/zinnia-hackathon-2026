@@ -35,7 +35,7 @@ const logger = pino({
       return { status: label, level: number };
     },
     log: o => {
-      if (typeof o.duration === 'number') {
+      if (typeof o?.duration === 'number') {
         o.duration = Math.round(o.duration * 1000000); // change duration from milliseconds to nanoseconds
       }
       return o;
