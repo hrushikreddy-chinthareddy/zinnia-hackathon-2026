@@ -29,7 +29,6 @@ Components that are global to Zinnia products are imported from [Bloom](https://
   - Contact Ryan to be added to license
 - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 - [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
-- [Tailwind Intellisense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
 
 **Recommended**
 
@@ -39,15 +38,37 @@ Components that are global to Zinnia products are imported from [Bloom](https://
 - [React/Redux/JS Snippies](https://marketplace.visualstudio.com/items?itemName=dsznajder.es7-react-js-snippets)
 - [CSS Variable Autocomplete](https://marketplace.visualstudio.com/items?itemName=vunguyentuan.vscode-css-variables)
 
+### Recommended VSCode settings
+
+- Some settings have included in `.vscode/settings.json`
+
+Add to your settings.json
+
+```
+  "editor.stickyScroll.enabled": true,
+  "workbench.tree.enableStickyScroll": true,
+    "files.trimTrailingWhitespace": true,
+```
+
 ### Setup
 
 - Get the env variables from your favorite or least favorite local developer.
 
 # Local development
 
+## Dev Menu
+
 There is a dev menu availble for several different mocking purporses. To turn it on, add `..show_dev_menu..=true` as a query string.
 
 If you click `Show test policies` but still aren't able to see more than your account's policies, your account may not have ops level permissions, and you will only be able to view the policies assigned to your user.
+
+## Opening a PR
+
+1. Open a PR into dev (or feature branch)
+2. include details in PR with helpful screenshots and context
+3. Add link to ticket in Jira
+4. once you PR has been approved, open Vercel `Preview Link`, change the settings to `anyone with link can view`, add to the ticket and move it to `Ready for QA`
+5. Once PR has passed QA, merge changes
 
 # Styling
 
