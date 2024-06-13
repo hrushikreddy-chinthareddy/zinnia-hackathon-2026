@@ -34,6 +34,12 @@ const logger = pino({
     level: (label, number) => {
       return { status: label, level: number };
     },
+    log: o => {
+      if (typeof o?.duration === 'number') {
+        o.duration = Math.round(o.duration * 1000000); // change duration from milliseconds to nanoseconds
+      }
+      return o;
+    },
   },
   customLevels: {
     compliance: 99, // compliance logs should be shipped if logging is enabled.
