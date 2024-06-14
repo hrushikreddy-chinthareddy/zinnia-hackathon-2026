@@ -160,9 +160,9 @@ export async function resendVerificationCode(
  * @return {Promise<Auth0ErrorResponse | never>} If successful, redirects to the appropriate challenge page based on the verification result; otherwise, returns an error object with details.
  */
 export async function verifyPasswordlessStartChallenge(
-  _: Auth0ErrorResponse,
+  _: LoginActionErrorResponse,
   formData: FormData
-): Promise<Auth0ErrorResponse | never> {
+): Promise<LoginActionErrorResponse | never> {
   const loggingContext = {
     file: 'login-actions.ts',
     function: 'verifyPasswordlessStartChallenge',
@@ -177,6 +177,7 @@ export async function verifyPasswordlessStartChallenge(
     return {
       error: 'bad.request',
       error_description: 'Code must be 6 digits.',
+      timestamp: new Date(),
     };
   }
 
@@ -209,9 +210,10 @@ export async function verifyPasswordlessStartChallenge(
       });
 
       if (error.error === 'invalid_grant') {
-        const error: Auth0ErrorResponse = {
+        const error: LoginActionErrorResponse = {
           error: 'invalid_grant',
           error_description: 'This code’s not right. Try again.',
+          timestamp: new Date(),
         };
         return error;
       }

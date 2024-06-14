@@ -9,7 +9,7 @@ import {
   SpinnerButton,
 } from '@zinnia/bloom/internal/components';
 import clsx from 'clsx';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 
 import {
@@ -48,15 +48,30 @@ export const PasswordlessEmailChallenge = ({ email }: { email: string }) => {
   ] = useFormState(verifyPasswordlessStartChallenge, {
     error: '',
     error_description: '',
+    timestamp: new Date(),
   });
+  const [currentError, setCurrentError] = useState('');
+  const prevTimestamp = useRef(verifyPasswordlessStartChallengeState.timestamp);
 
-  const hasError = !!verifyPasswordlessStartChallengeState.error;
+  // const hasError = !!verifyPasswordlessStartChallengeState.error;
   const resendCodeError =
     'error' in resendPasswordlessStartCodeState &&
     !resendPasswordlessStartCodeState.error;
   const inputStyles = clsx(`${styles.input}`, {
-    [`${styles.inValid}`]: hasError,
+    [`${styles.inValid}`]: currentError,
   });
+
+  useEffect(() => {
+    setCurrentError(verifyPasswordlessStartChallengeState.error_description);
+
+    // Include timestamp in order to differentiate subsequent submits
+    // error message may be the same if user submits multiple times with wrong
+    // value, so this useEffect wouldn't trigger to display error styles again
+    prevTimestamp.current = verifyPasswordlessStartChallengeState.timestamp;
+  }, [
+    verifyPasswordlessStartChallengeState.error_description,
+    verifyPasswordlessStartChallengeState.timestamp,
+  ]);
 
   const handleResendPasswordlessStartCode = () => {
     setResendPasswordlessStartCode(true);
@@ -103,9 +118,12 @@ export const PasswordlessEmailChallenge = ({ email }: { email: string }) => {
             className={inputStyles}
             placeholder="Enter your code"
             name="code"
+            onChange={e => {
+              setCurrentError('');
+            }}
           />
         </div>
-        {hasError && (
+        {currentError && (
           <div className="py-lg">
             <AssistiveText
               variant={AssistiveTextVariant.Error}
