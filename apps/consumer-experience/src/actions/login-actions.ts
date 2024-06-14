@@ -20,6 +20,10 @@ import {
 } from '@/utils/auth';
 import { logTrace, logWarn } from '@/utils/logging/server-logging';
 import { FROM_LOGIN_QUERY_KEY } from '@/utils/serverClientUtils';
+
+interface LoginActionErrorResponse extends Auth0ErrorResponse {
+  timestamp: Date;
+}
 /**
  * Initiates the passwordless authentication process by sending a verification code to the provided email.
  *
@@ -28,9 +32,9 @@ import { FROM_LOGIN_QUERY_KEY } from '@/utils/serverClientUtils';
  * @return {Promise<Auth0ErrorResponse | never>} If successful, redirects to the passwordless email challenge page; otherwise, returns an error object with details.
  */
 export async function passwordlessStart(
-  _: Auth0ErrorResponse,
+  _: LoginActionErrorResponse,
   formData: FormData
-): Promise<Auth0ErrorResponse | never> {
+): Promise<LoginActionErrorResponse | never> {
   const loggingContext = {
     file: 'login-actions.ts',
     function: 'passwordlessStart',
@@ -41,9 +45,11 @@ export async function passwordlessStart(
 
   if (!email) {
     logTrace('no-email', { ...loggingContext });
+
     return {
       error: 'bad.email',
       error_description: 'Please enter your email.',
+      timestamp: new Date(),
     };
   }
 
@@ -64,14 +70,16 @@ export async function passwordlessStart(
     // we need to check if the error thrown was in the try or if an generic error happened
     // if there was a generic error, we need to redirect to the error page
     if (!(e instanceof Error)) {
-      const error = e as Auth0ErrorResponse;
+      const error = e as LoginActionErrorResponse;
       logTrace('Auth0 Error Response', {
         ...loggingContext,
         error: error?.error,
       });
+
       if (error.error === 'bad.email') {
         error.error = 'bad.email';
         error.error_description = 'Looks like there’s a typo in your email.';
+        error.timestamp = new Date();
         return error;
       } else if (error.error === 'bad.connection') {
         // redirect to challenge page as to not let the user know the email doesn't exist
