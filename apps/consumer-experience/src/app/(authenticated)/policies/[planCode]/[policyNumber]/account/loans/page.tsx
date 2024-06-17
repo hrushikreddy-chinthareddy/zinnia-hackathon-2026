@@ -72,11 +72,13 @@ export default async function Loans({
     return (
       <>
         <p className="typography-content-body-sm">
-          <span className="typography-content-body-sm-bold">
-            {loanEligibilityData
-              ? eligibleTextHighlight
-              : ineligibleTextHighlight}{' '}
-          </span>
+          {loanEligibilityData != null && (
+            <span className="typography-content-body-sm-bold">
+              {loanEligibilityData
+                ? eligibleTextHighlight
+                : ineligibleTextHighlight}{' '}
+            </span>
+          )}
           When you are eligible, you can take a loan from your policy at any
           time, as long as funds are available. Keep in mind: aside from
           incurring interest, a loan may reduce your coverage amount. But unlike

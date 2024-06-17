@@ -62,10 +62,13 @@ export default async function Withdrawals({
     withdrawalDetails[0].status === 'fulfilled'
       ? withdrawalDetails[0]?.value
       : ({} as ApiResponse<PolicyWithdrawals>);
+
   const withdrawalEligibility =
     withdrawalDetails[1]?.status === 'fulfilled'
       ? withdrawalDetails[1].value?.data?.isEligible
       : null;
+
+  console.log('withdrawalEligibility', withdrawalEligibility);
 
   const { data, error } = summaryData;
   const withdrawalsData = () => {
@@ -76,11 +79,13 @@ export default async function Withdrawals({
     return (
       <>
         <p className="typography-content-body-sm">
-          <span className="typography-content-body-sm-bold">
-            {withdrawalEligibility
-              ? ineligibleTextHighlight
-              : eligibleTextHighlight}{' '}
-          </span>
+          {withdrawalEligibility != null && (
+            <span className="typography-content-body-sm-bold">
+              {withdrawalEligibility
+                ? eligibleTextHighlight
+                : ineligibleTextHighlight}{' '}
+            </span>
+          )}
           Once eligible, you may withdraw for any reason. Withdrawals up to a
           certain amount typically don't have tax consequences. Tax consequences
           may apply to any earned interest you withdraw. (Always consult with a
