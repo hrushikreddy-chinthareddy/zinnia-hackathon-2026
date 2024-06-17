@@ -53,7 +53,6 @@ export const PasswordlessEmailChallenge = ({ email }: { email: string }) => {
   const [currentError, setCurrentError] = useState('');
   const prevTimestamp = useRef(verifyPasswordlessStartChallengeState.timestamp);
 
-  // const hasError = !!verifyPasswordlessStartChallengeState.error;
   const resendCodeError =
     'error' in resendPasswordlessStartCodeState &&
     !resendPasswordlessStartCodeState.error;
