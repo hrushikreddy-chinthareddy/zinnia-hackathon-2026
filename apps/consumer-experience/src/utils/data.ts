@@ -308,13 +308,10 @@ export const productTypeDisplay = (
 
 export const eligibilityStatus = (transaction: TransactionResponse) => {
   const { status } = transaction;
+
   if (!status) {
     return null;
   }
 
-  if (status === 'success') {
-    return true;
-  }
-
-  return false;
+  return status === 'success';
 };
