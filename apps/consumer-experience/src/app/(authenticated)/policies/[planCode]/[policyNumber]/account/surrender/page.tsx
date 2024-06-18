@@ -3,7 +3,7 @@ import {
   IconType,
   Label,
   Popover,
-} from '@zinnia/bloom/internal/components';
+} from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
 import { AccountValue } from '@/components/account-value/AccountValue';

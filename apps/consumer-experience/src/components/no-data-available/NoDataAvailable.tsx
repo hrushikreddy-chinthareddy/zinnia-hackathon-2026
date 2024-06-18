@@ -1,4 +1,4 @@
-import { IconType, Icon } from '@zinnia/bloom/internal/components';
+import { IconType, Icon } from '@zinnia/bloom/components';
 import { PropsWithChildren } from 'react';
 
 import styles from './NoDataAvailable.module.css';

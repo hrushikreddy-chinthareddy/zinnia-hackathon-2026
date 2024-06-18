@@ -1,7 +1,7 @@
 'use client';
 
 import * as Dialog from '@radix-ui/react-dialog';
-import { Icon, IconType } from '@zinnia/bloom/internal/components';
+import { Icon, IconType } from '@zinnia/bloom/components';
 import Cookies from 'js-cookie';
 import { MouseEvent, useEffect, useMemo, useState } from 'react';
 

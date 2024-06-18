@@ -1,5 +1,5 @@
 import { PolicyStatus } from '@zinnia/api-types/types/sor';
-import { BannerAlert, BannerVariant } from '@zinnia/bloom/internal/components';
+import { BannerAlert, BannerVariant } from '@zinnia/bloom/components';
 
 import { getPolicyStatusDetails } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';

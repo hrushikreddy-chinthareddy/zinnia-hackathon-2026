@@ -6,7 +6,7 @@ import {
   Popover,
   Tag,
   TagVariant,
-} from '@zinnia/bloom/internal/components';
+} from '@zinnia/bloom/components';
 import { toSentenceCase } from '@zinnia/utils';
 
 import { FieldData } from '@/components/field-data/FieldData';

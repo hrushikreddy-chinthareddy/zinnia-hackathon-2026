@@ -6,7 +6,7 @@ import {
   Checkbox,
   LoaderVariant,
   SpinnerButton,
-} from '@zinnia/bloom/internal/components';
+} from '@zinnia/bloom/components';
 import { useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 

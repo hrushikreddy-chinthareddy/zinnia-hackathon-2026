@@ -1,6 +1,6 @@
 'use client';
 
-import { Icon, IconType } from '@zinnia/bloom/internal/components';
+import { Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';

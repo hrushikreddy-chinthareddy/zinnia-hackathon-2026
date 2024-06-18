@@ -2,7 +2,7 @@ import {
   Label,
   AssistiveText,
   AssistiveTextVariant,
-} from '@zinnia/bloom/internal/components';
+} from '@zinnia/bloom/components';
 
 import { FieldData } from '@/components/field-data/FieldData';
 import { BankDetail } from '@/components/person-data/types';

@@ -3,7 +3,7 @@ import {
   IconType,
   Popover,
   PopoverPlacement,
-} from '@zinnia/bloom/internal/components';
+} from '@zinnia/bloom/components';
 
 import { standardDateMonthDayYear } from '@/utils/dates';
 

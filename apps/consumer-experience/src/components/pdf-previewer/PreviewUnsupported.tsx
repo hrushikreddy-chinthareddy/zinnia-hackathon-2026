@@ -1,4 +1,4 @@
-import { Button } from '@zinnia/bloom/internal/components';
+import { Button } from '@zinnia/bloom/components';
 import { saveAs } from 'file-saver';
 
 import { Footer } from '@/components/footer/Footer';

@@ -1,6 +1,6 @@
 'use client';
 
-import { IconType, Pagination } from '@zinnia/bloom/internal/components';
+import { IconType, Pagination } from '@zinnia/bloom/components';
 import { useCallback, useState } from 'react';
 
 import { ClickableListContainer } from '@/components/clickable-card-container/ClickableCardContainer';

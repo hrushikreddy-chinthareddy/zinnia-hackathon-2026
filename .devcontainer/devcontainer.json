@@ -17,13 +17,14 @@
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": [3000],
-	"portsAttributes": {
-		"3000": {
-			"label": "Application",
-			"onAutoForward": "notify"
-		}
-	},
+	// turned off because it keeps port open even if proj isn't running
+	// "forwardPorts": [3000],
+	// "portsAttributes": {
+		// "3000": {
+			// "label": "Application",
+			// "onAutoForward": "notify"
+		// }
+	// },
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "yarn install",
@@ -36,12 +37,10 @@
 		"vscode": {
 			"extensions": [
 				"SupernovaIO.pulsar-vsc-extension",
-				"unifiedjs.vscode-mdx",
 				"sleistner.vscode-fileutils",
 				"GitHub.vscode-pull-request-github",
 				"GitHub.vscode-github-actions",
 				"figma.figma-vscode-extension",
-				"github.vscode-github-actions",
 				"maattdd.gitless",
 				"vunguyentuan.vscode-postcss",
 				"csstools.postcss"
@@ -53,15 +52,5 @@
 		"source=${localEnv:HOME}/.npmrc,target=/home/node/.npmrc,type=bind,consistency=cached"
 	],
 	"postCreateCommand": "bash -i -c 'nvm install && nvm use && npm i -g vercel'",
-	"postAttachCommand": "bash -i -c 'nvm use'",
-	"features": {
-		"ghcr.io/dhoeric/features/act:1": {},
-		"ghcr.io/devcontainers/features/docker-in-docker:2": {
-			"moby": true,
-			"azureDnsAutoDetection": true,
-			"installDockerBuildx": true,
-			"version": "latest",
-			"dockerDashComposeVersion": "v1"
-		}
-	}
+	"postAttachCommand": "bash -i -c 'nvm use'"
 }

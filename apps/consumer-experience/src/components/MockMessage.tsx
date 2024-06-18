@@ -1,5 +1,5 @@
 'use client';
-import { IconType } from '@zinnia/bloom/internal/components';
+import { IconType } from '@zinnia/bloom/components';
 
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import useMock from '@/hooks/use-mock';

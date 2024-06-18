@@ -1,4 +1,4 @@
-import { Label } from '@zinnia/bloom/internal/components';
+import { Label } from '@zinnia/bloom/components';
 import { DEFAULT_UNAVAILABLE_STRING } from '@zinnia/utils';
 import { Metadata } from 'next';
 

@@ -5,7 +5,7 @@ import {
   IconType,
   Popover,
   PopoverPlacement,
-} from '@zinnia/bloom/internal/components';
+} from '@zinnia/bloom/components';
 
 import { productTypeDisplay } from '@/utils/data';
 

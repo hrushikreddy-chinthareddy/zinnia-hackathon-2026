@@ -1,5 +1,5 @@
 import { Address, Email, Phone } from '@zinnia/api-types/types/sor';
-import { IconType, Label } from '@zinnia/bloom/internal/components';
+import { IconType, Label } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
 import { BankData } from '@/components/bank-data/BankData';

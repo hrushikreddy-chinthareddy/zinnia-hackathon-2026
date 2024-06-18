@@ -1,4 +1,4 @@
-import { IconType } from '@zinnia/bloom/internal/components';
+import { IconType } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 import Link from 'next/link';
 

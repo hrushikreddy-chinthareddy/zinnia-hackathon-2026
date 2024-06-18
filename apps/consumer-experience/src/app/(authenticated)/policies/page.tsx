@@ -1,4 +1,4 @@
-import { IconType, Label } from '@zinnia/bloom/internal/components';
+import { IconType, Label } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
 import { AccountValuePopover } from '@/components/account-value/AccountValuePopover';

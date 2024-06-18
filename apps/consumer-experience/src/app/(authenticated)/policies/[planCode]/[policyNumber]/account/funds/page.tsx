@@ -1,4 +1,4 @@
-import { Label } from '@zinnia/bloom/internal/components';
+import { Label } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { Metadata } from 'next';
 

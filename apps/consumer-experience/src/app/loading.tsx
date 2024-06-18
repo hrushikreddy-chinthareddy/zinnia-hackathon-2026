@@ -1,4 +1,4 @@
-import { Loader } from '@zinnia/bloom/internal/components';
+import { Loader } from '@zinnia/bloom/components';
 
 import styles from './loading.module.css';
 

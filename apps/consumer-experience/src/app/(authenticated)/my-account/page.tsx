@@ -1,4 +1,4 @@
-import { Label } from '@zinnia/bloom/internal/components';
+import { Label } from '@zinnia/bloom/components';
 
 import { FieldData } from '@/components/field-data/FieldData';
 import { Footer } from '@/components/footer/Footer';

@@ -1,5 +1,5 @@
 import { PolicyStatus } from '@zinnia/api-types/types/sor';
-import { Label, Icon, IconType } from '@zinnia/bloom/internal/components';
+import { Label, Icon, IconType } from '@zinnia/bloom/components';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';

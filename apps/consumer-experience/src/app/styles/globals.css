@@ -1,5 +1,4 @@
 @import '~@zinnia/bloom/css';
-@import '~@zinnia/bloom/component-styles';
 @import './spacing.css';
 @import './borders.css';
 /* TODO: THIS NEEDS TO BE DYNAMIC!!!! */

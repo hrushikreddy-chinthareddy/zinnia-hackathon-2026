@@ -5,7 +5,7 @@ import {
   Loader,
   LoaderVariant,
   SpinnerButton,
-} from '@zinnia/bloom/internal/components';
+} from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';

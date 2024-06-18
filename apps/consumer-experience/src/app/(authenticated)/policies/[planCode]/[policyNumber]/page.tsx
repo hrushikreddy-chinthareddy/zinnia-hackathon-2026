@@ -1,5 +1,5 @@
 import { PolicyStatus } from '@zinnia/api-types/types/sor';
-import { Icon, IconType } from '@zinnia/bloom/internal/components';
+import { Icon, IconType } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
 import { AccountValue } from '@/components/account-value/AccountValue';

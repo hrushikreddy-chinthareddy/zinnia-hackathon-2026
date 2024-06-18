@@ -1,5 +1,5 @@
 import { Address, Email, PartyRole } from '@zinnia/api-types/types/sor';
-import { IconType, Label } from '@zinnia/bloom/internal/components';
+import { IconType, Label } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
 import { FieldData } from '@/components/field-data/FieldData';

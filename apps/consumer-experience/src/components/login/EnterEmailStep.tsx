@@ -6,7 +6,7 @@ import {
   IconType,
   LoaderVariant,
   SpinnerButton,
-} from '@zinnia/bloom/internal/components';
+} from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useFormState, useFormStatus } from 'react-dom';
 

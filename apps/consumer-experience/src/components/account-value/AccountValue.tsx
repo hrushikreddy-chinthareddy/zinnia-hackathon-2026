@@ -3,7 +3,7 @@ import {
   Icon,
   IconType,
   Ticker,
-} from '@zinnia/bloom/internal/components';
+} from '@zinnia/bloom/components';
 import { HTMLAttributes } from 'react';
 
 import { AccountValuePopover } from '@/components/account-value/AccountValuePopover';

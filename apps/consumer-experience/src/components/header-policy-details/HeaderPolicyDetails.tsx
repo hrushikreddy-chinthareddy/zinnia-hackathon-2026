@@ -1,5 +1,5 @@
 import { PolicyStatus } from '@zinnia/api-types/types/sor';
-import { Badge, BadgeVariant } from '@zinnia/bloom/internal/components';
+import { Badge, BadgeVariant } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { HTMLAttributes } from 'react';
 

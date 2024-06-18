@@ -6,7 +6,7 @@ import {
   AssistiveText,
   AssistiveTextVariant,
   Label,
-} from '@zinnia/bloom/internal/components';
+} from '@zinnia/bloom/components';
 
 import { FieldData } from '@/components/field-data/FieldData';
 import { Address } from '@/components/pii/Address';

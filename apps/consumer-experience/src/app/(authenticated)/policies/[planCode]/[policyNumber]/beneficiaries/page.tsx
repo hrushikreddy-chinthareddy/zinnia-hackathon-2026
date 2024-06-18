@@ -6,7 +6,7 @@ import {
   Popover,
   contingentColorOrder,
   primaryColorOrder,
-} from '@zinnia/bloom/internal/components';
+} from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';

@@ -7,7 +7,7 @@ import {
   Link,
   LoaderVariant,
   SpinnerButton,
-} from '@zinnia/bloom/internal/components';
+} from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';

@@ -8,7 +8,6 @@ generated-types
 
 # testing
 /src/jest/coverage
-/packages/bloom/coverage/
 
 # Local env files
 .env

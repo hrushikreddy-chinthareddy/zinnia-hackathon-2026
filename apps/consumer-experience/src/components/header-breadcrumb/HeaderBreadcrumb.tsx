@@ -4,7 +4,7 @@ import {
   IconType,
   Popover,
   PopoverPlacement,
-} from '@zinnia/bloom/internal/components';
+} from '@zinnia/bloom/components';
 import { toTitleCase } from '@zinnia/utils';
 import clsx from 'clsx';
 import Link from 'next/link';

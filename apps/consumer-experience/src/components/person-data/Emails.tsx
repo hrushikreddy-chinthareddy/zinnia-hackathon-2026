@@ -1,5 +1,5 @@
 import { EmailType } from '@zinnia/api-types/types/sor';
-import { Label } from '@zinnia/bloom/internal/components';
+import { Label } from '@zinnia/bloom/components';
 
 import { FieldData } from '@/components/field-data/FieldData';
 import { Email } from '@/components/pii/Email';
