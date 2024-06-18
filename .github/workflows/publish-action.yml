@@ -1,0 +1,73 @@
+name: Manually Publish Package to Github NPM Registry
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: 'If true will only dry-run a publish'
+        required: false
+        default: true
+        type: boolean
+      package-name:
+        description: 'Name of package to publish'
+        required: true
+        type: choice
+        options:
+          - api-types
+          - eslint-config
+          - prettier-config
+          - typescript-config
+          - utils
+      node-version-file:
+        type: string
+        required: false
+        default: .nvmrc
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ${{ inputs.node-version-file }}
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: |
+            - args: [--filter ${{ inputs.package-name }}]
+      - run: pnpm run test
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          node-version-file: .nvmrc
+          registry-url: "https://npm.pkg.github.com/"
+          scope: "@zinnia"
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: true
+      - name: Build Package
+        run: pnpm run build --filter ${{ inputs.package-name }}
+
+      - name: Test deploy package
+        if: github.ref_name != 'main'
+        # Github Package Repo doesn't support tags
+        # But maybe one day we can pubish a dev version of Bloom
+        run: |
+          cd packages/${{ inputs.package-name }} &&\
+          pnpm publish --filter ${{ inputs.package-name }} --tag ${{ github.ref_name }} --dry-run --no-git-checks
+      - name: Deploy with `latest` tag
+        if: github.ref_name == 'main'
+        run: |
+          cd packages/${{ inputs.package-name }} &&\
+          pnpm publish --filter ${{ inputs.package-name }}  --tag latest

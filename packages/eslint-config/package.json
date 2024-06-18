@@ -1,12 +1,22 @@
 {
   "name": "@zinnia/eslint-config",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.0.11",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zinnia/digital-experience-monorepo.git"
+  },
   "files": [
     "library.js",
     "next.js"
   ],
-  "devDependencies": {
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "scripts": {
+    "test": "echo \"no tests\" && exit 0",
+    "build": "echo \"no build\" && exit 0"
+  },
+  "dependencies": {
     "@typescript-eslint/eslint-plugin": "^6.17.0",
     "@typescript-eslint/parser": "^6.17.0",
     "@vercel/style-guide": "^5.1.0",

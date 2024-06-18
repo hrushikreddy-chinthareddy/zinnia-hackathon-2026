@@ -1,8 +1,18 @@
 {
   "name": "@zinnia/prettier-config",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zinnia/digital-experience-monorepo.git"
+  },
   "exports": {
     ".": "./prettierrc.js"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "scripts": {
+    "test": "echo \"no tests\" && exit 0",
+    "build": "echo \"no build\" && exit 0"
   }
 }
