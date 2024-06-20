@@ -29,7 +29,7 @@ export default async function Page() {
   if (error || policyReferenceData?.length === 0) {
     return (
       <>
-        <HeaderBreadcrumb title={pageTitle} preventGoBack />
+        <HeaderBreadcrumb title={pageTitle} preventReturnToPrevious />
         <div className="card-container">
           <MockMessage />
           <NoDataAvailable
@@ -43,7 +43,7 @@ export default async function Page() {
 
   return (
     <div className="container">
-      <HeaderBreadcrumb title={pageTitle} preventGoBack />
+      <HeaderBreadcrumb title={pageTitle} preventReturnToPrevious />
       <div className="card-container" style={{ paddingLeft: 0 }}>
         {policyReferenceData?.map(p => (
           <ClickableCardContainer
