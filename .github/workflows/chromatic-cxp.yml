@@ -1,6 +1,7 @@
 name: 'Chromatic Consumer Experience'
 
 on:
+  workflow_dispatch:
   push:
     branches-ignore:
       - 'dependabot/**'
