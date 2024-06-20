@@ -1,4 +1,4 @@
-import { dirname, join } from "path";
+import { dirname, join } from 'path';
 import type { StorybookConfig } from '@storybook/nextjs';
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 
@@ -6,17 +6,16 @@ const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
 
   addons: [
-    getAbsolutePath("@storybook/addon-links"),
-    getAbsolutePath("@storybook/addon-essentials"),
-    getAbsolutePath("@storybook/addon-onboarding"),
-    getAbsolutePath("@storybook/addon-interactions"),
-    getAbsolutePath("@storybook/addon-a11y"),
-    getAbsolutePath("@storybook/addon-mdx-gfm"),
-    '@chromatic-com/storybook'
+    getAbsolutePath('@storybook/addon-links'),
+    getAbsolutePath('@storybook/addon-essentials'),
+    getAbsolutePath('@storybook/addon-onboarding'),
+    getAbsolutePath('@storybook/addon-interactions'),
+    getAbsolutePath('@storybook/addon-a11y'),
+    '@chromatic-com/storybook',
   ],
 
   framework: {
-    name: getAbsolutePath("@storybook/nextjs"),
+    name: getAbsolutePath('@storybook/nextjs'),
     options: {},
   },
 
@@ -35,18 +34,18 @@ const config: StorybookConfig = {
     }
 
     if (config.module && config.module.rules) {
-      const svgRegex = /\.svg$/
+      const svgRegex = /\.svg$/;
       // disable whatever is already set to load SVGs
       config.module.rules.find(rule => {
         // make sure rule is a RuleSetRule
         // since this type is not exported from webpack gotta eliminate other types
         // we only want rules that have a test prop
-        if(!rule || rule === '...' || !rule.test) return
-        const { test } = rule
-        if (test instanceof RegExp && !test.test('.svg')) return
-        if (typeof test === 'string' && !(svgRegex.test(test))) return
-        if ((test instanceof Function) && (!test('.svg'))) return
-        return rule.exclude = svgRegex
+        if (!rule || rule === '...' || !rule.test) return;
+        const { test } = rule;
+        if (test instanceof RegExp && !test.test('.svg')) return;
+        if (typeof test === 'string' && !svgRegex.test(test)) return;
+        if (test instanceof Function && !test('.svg')) return;
+        return (rule.exclude = svgRegex);
       });
 
       // add SVGR instead
@@ -60,11 +59,11 @@ const config: StorybookConfig = {
   },
 
   typescript: {
-    reactDocgen: 'react-docgen-typescript'
-  }
+    reactDocgen: 'react-docgen-typescript',
+  },
 };
 export default config;
 
 function getAbsolutePath(value: string): any {
-  return dirname(require.resolve(join(value, "package.json")));
+  return dirname(require.resolve(join(value, 'package.json')));
 }
