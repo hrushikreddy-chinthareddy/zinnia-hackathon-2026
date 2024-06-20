@@ -1,17 +1,18 @@
+import { v4 as uuid4 } from 'uuid';
+
 import {
   MfaChallengeInputs,
   MfaAssociateInputs,
   MfaSendChallengeInputs,
 } from '@/types/auth';
 import { getAccessToken, getSession } from '@/utils/auth';
-import { AUTH0_SCOPE } from '@/utils/serverClientUtils';
-
-import { HttpRequest } from './http';
 import {
   getUserInfoFromSession,
   logTrace,
 } from '@/utils/logging/server-logging';
-import { v4 as uuid4 } from 'uuid';
+import { AUTH0_SCOPE } from '@/utils/serverClientUtils';
+
+import { HttpRequest } from './http';
 
 class ServerHttpRequest extends HttpRequest {
   request = async (
