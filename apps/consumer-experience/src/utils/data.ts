@@ -1,3 +1,4 @@
+import { TransactionResponse } from '@zinnia/api-types/types/bpm';
 import {
   AccountType,
   Address,
@@ -243,26 +244,6 @@ export const policyHasVested = ({ allocation }: Policy) => {
   return dayjs(allocation?.matchSegment?.matchVestingDate).isBefore(dayjs());
 };
 
-export const isPolicyEligibleForWithdrawals = ({
-  allowedWithdrawals,
-  withdrawalsTaken,
-}: {
-  allowedWithdrawals?: number | null;
-  withdrawalsTaken?: number | null;
-}) => {
-  // If either of these are null, it means we can't truly determine eligiblity and need
-  // to return null.
-  if (allowedWithdrawals == null || withdrawalsTaken == null) {
-    return null;
-  }
-
-  if (allowedWithdrawals > withdrawalsTaken) {
-    return true;
-  }
-
-  return false;
-};
-
 export const policyWithdrawalsRemaining = ({
   allowedWithdrawals,
   withdrawalsTaken,
@@ -323,4 +304,14 @@ export const productTypeDisplay = (
     default:
       return null;
   }
+};
+
+export const eligibilityStatus = (transaction: TransactionResponse) => {
+  const { status } = transaction;
+
+  if (!status) {
+    return null;
+  }
+
+  return status === 'success';
 };

@@ -11,8 +11,9 @@ import { FieldData } from '@/components/field-data/FieldData';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { StatusIconText } from '@/components/status-icon-text/StatusIconText';
 import { RouteKey, getPageTitle } from '@/route-map';
-import { getPolicyWithdrawalDetails } from '@/services';
-import { PolicyRequestInputs } from '@/types/policy';
+import { ApiResponse, getPolicyWithdrawalDetails } from '@/services';
+import { getWithdrawalEligibility } from '@/services/bpm';
+import { PolicyRequestInputs, PolicyWithdrawals } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined } from '@/utils/data';
 import { dayOfMonthWithOrdinal, standardDateMonthDayYear } from '@/utils/dates';
@@ -45,29 +46,46 @@ export default async function Withdrawals({
   params: PolicyRequestInputs;
 }) {
   const { planCode, policyNumber } = params;
-  const { data, error } = await getPolicyWithdrawalDetails({
-    planCode,
-    policyNumber,
-  });
 
+  const withdrawalDetails = await Promise.allSettled([
+    getPolicyWithdrawalDetails({
+      planCode,
+      policyNumber,
+    }),
+    getWithdrawalEligibility({
+      planCode,
+      policyNumber,
+    }),
+  ]);
+
+  const summaryData =
+    withdrawalDetails[0].status === 'fulfilled'
+      ? withdrawalDetails[0]?.value
+      : ({} as ApiResponse<PolicyWithdrawals>);
+
+  const withdrawalEligibility =
+    withdrawalDetails[1]?.status === 'fulfilled'
+      ? withdrawalDetails[1].value?.data?.isEligible
+      : null;
+
+  console.log('withdrawalEligibility', withdrawalEligibility);
+
+  const { data, error } = summaryData;
   const withdrawalsData = () => {
     if (error || !data) {
       return <NoDataAvailable message={DEFAULT_UNAVAILABLE_STRING} />;
     }
 
-    // Eligibility is only shown as false if the value is truly false. If it is null or undefined,
-    // we want to still show "eligible" so that the user can still try to take the withdrawal
-    // and the backend system can determine true eligibility
-    const eligibilityIsFalse = data.isEligibleForWithdrawals === false;
-
     return (
       <>
         <p className="typography-content-body-sm">
-          <span className="typography-content-body-sm-bold">
-            {eligibilityIsFalse
-              ? ineligibleTextHighlight
-              : eligibleTextHighlight}{' '}
-          </span>
+          {withdrawalEligibility != null && (
+            <span className="typography-content-body-sm-bold">
+              {withdrawalEligibility
+                ? eligibleTextHighlight
+                : ineligibleTextHighlight}{' '}
+            </span>
+          )}
           Once eligible, you may withdraw for any reason. Withdrawals up to a
           certain amount typically don't have tax consequences. Tax consequences
           may apply to any earned interest you withdraw. (Always consult with a
@@ -76,7 +94,7 @@ export default async function Withdrawals({
         </p>
         <div className="card">
           <StatusIconText
-            isEligible={!eligibilityIsFalse}
+            isEligible={withdrawalEligibility}
             showIcon
             className="typography-content-body-bold mb-lg"
           />

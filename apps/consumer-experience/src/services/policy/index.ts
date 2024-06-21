@@ -70,10 +70,15 @@ import {
   CarrierPolicyDetails,
 } from '@/types/policy';
 import { RidersAndBenefits } from '@/types/riders';
-import { parseAPIResponse, userSessionForLogging } from '@/utils/api';
+import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { logError, logTrace, logWarn } from '@/utils/logging/server-logging';
 
+import { getLoanEligibility, getOneTimeWithdrawalEligibility } from '../bpm';
 import { getDocuments } from '../document';
+import {
+  mockLoanEligibleResponse,
+  mockWithdrawalIneligibleResponse,
+} from '../mocks/bpm';
 import { mockDocumentsResponse } from '../mocks/documents';
 import { MockMetricsResponse } from '../mocks/metrics';
 import {
@@ -88,25 +93,6 @@ import {
  * @param {unknown} parsedResponse - The parsed response object obtained from the API call.
  * @return {Object} An object containing apiMessage, statusText, statusCode, url, and sessionInfo.
  */
-const logApiNotOkDetails = async ({
-  rawResponse,
-  parsedResponse,
-}: {
-  rawResponse: Response;
-  parsedResponse: unknown;
-}) => {
-  const sessionInfo = await userSessionForLogging();
-  const { message } = parsedResponse as { message?: string };
-  const { statusText, status, url } = rawResponse;
-
-  return {
-    apiMessage: message,
-    statusText,
-    statusCode: status,
-    url,
-    ...sessionInfo,
-  };
-};
 
 const getPolicyReferencesByCarrier = async () => {
   const searchUrl = `${policyApiBaseUrl}/search?offset=0&limit=10`;
@@ -1005,6 +991,7 @@ export const getPolicyWithdrawalDetails = async (
 
   try {
     const policy = await getPolicyByPlanCodeAndId(policyInputs);
+
     const transformedResults = transformPolicyForWithdrawals(policy);
 
     return {
@@ -1045,6 +1032,7 @@ export const getPolicyAccountValueSummary = async (
 
   try {
     const policy = await getPolicyByPlanCodeAndId(policyInputs);
+
     const transformedResults = transformPolicyForAccountValueSummary(policy);
 
     return {

@@ -1,3 +1,4 @@
+import { TransactionResponse } from '@zinnia/api-types/types/bpm';
 import {
   PartyRole,
   Policy,
@@ -39,11 +40,11 @@ import { RidersAndBenefits } from '@/types/riders';
 import {
   allowedAnnualWithdrawals,
   bankAccountNumberSanitizer,
-  isPolicyEligibleForWithdrawals,
   policyWithdrawalsRemaining,
   getRiderDescription,
   policyHasVested,
   allPolicyOwnerBanks,
+  eligibilityStatus,
 } from '@/utils/data';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';
 
@@ -254,10 +255,6 @@ export const transformPolicyForWithdrawals = (
     totalWithdrawalAmount: withdrawalValues.totalWithdrawalAmount,
     annualWithdrawalLimitNoCoverageDecrease:
       withdrawalValues.annualWithdrawalLimitNoCoverageDecrease,
-    isEligibleForWithdrawals: isPolicyEligibleForWithdrawals({
-      allowedWithdrawals: annualWithdrawalsAllowed,
-      withdrawalsTaken,
-    }),
     annualWithdrawalsTaken: withdrawalsTaken,
     annualWithdrawalsRemaining: policyWithdrawalsRemaining({
       allowedWithdrawals: annualWithdrawalsAllowed,
@@ -280,20 +277,11 @@ export const transformPolicyForWithdrawals = (
 };
 
 export const transformPolicyForLoans = (policy: Policy): PolicyLoans => {
-  const isEligible =
-    !policy?.policyStatus || !policy?.accountValues
-      ? undefined
-      : policy?.policyStatus === PolicyStatus.ACTIVE &&
-        policy.accountValues.beginningAccountValue! > 0;
-
   return {
     totalLoanBalance: policy.loanValues?.totalLoanBalance,
     maximumLoanAmount: policy.loanValues?.maximumLoanAmount,
     // Date of last policy transaction, when policy value was last updated
     effectiveDate: policy.effectiveDate,
-    // Return either the boolean OR undefined since there is a difference between
-    // inelgible and data doesn't exist
-    isEligible: policy && policy.accountValues ? isEligible : null,
   };
 };
 
@@ -309,15 +297,9 @@ export const transformPolicyForAccountValueSummary = (
   policy: Policy
 ): AccountValueSummary => {
   const fundDetails = transformPolicyForFundDetails(policy);
-  const withdrawalDetails = transformPolicyForWithdrawals(policy);
-  const loanValues = transformPolicyForLoans(policy);
 
   return {
     fundCount: fundDetails?.length,
-    hasWithdrawalEligibility: withdrawalDetails
-      ? withdrawalDetails.isEligibleForWithdrawals !== false
-      : null,
-    hasLoanEligibility: loanValues?.isEligible,
   };
 };
 

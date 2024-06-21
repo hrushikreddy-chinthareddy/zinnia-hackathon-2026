@@ -179,6 +179,17 @@ export const DevMenu = () => {
                     />
                     <span className="ml-sm">Policies by carrier</span>
                   </label>
+                  <label style={{ display: 'block' }}>
+                    <input
+                      type="checkbox"
+                      value={ApiEndpoints.WITHDRAWAL_ELIGIBILITY}
+                      onChange={selectAPIErrorType}
+                      checked={apiErrorSet?.includes(
+                        ApiEndpoints.WITHDRAWAL_ELIGIBILITY
+                      )}
+                    />
+                    <span className="ml-sm">Withdrawal eligibility</span>
+                  </label>
                 </div>
                 <button
                   className="ml-3xl mb-md pl-3xl"

@@ -18,3 +18,23 @@ export const parseAPIResponse = async (response: Response) => {
     return {};
   }
 };
+
+export const logApiNotOkDetails = async ({
+  rawResponse,
+  parsedResponse,
+}: {
+  rawResponse: Response;
+  parsedResponse: unknown;
+}) => {
+  const sessionInfo = await userSessionForLogging();
+  const { message } = parsedResponse as { message?: string };
+  const { statusText, status, url } = rawResponse;
+
+  return {
+    apiMessage: message,
+    statusText,
+    statusCode: status,
+    url,
+    ...sessionInfo,
+  };
+};

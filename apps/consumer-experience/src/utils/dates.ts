@@ -5,6 +5,7 @@ import utc from 'dayjs/plugin/utc';
 
 import { numberWithOrdinal } from './numbers';
 export const DEFAULT_DATE_FORMAT = 'M/D/YYYY';
+export const ZAHARA_DATE_FORMAT = 'YYYY-MM-DD';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
