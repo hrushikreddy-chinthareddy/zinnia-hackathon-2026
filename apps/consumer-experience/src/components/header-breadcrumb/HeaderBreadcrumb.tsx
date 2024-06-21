@@ -1,19 +1,11 @@
 'use client';
-import {
-  Icon,
-  IconType,
-  Popover,
-  PopoverPlacement,
-} from '@zinnia/bloom/components';
 import { toTitleCase } from '@zinnia/utils';
-import clsx from 'clsx';
-import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import { ReactNode, useEffect, useState } from 'react';
 
 import { RouteKey, getPageTitle, routeMap } from '@/route-map';
 
-import styles from './HeaderBreadcrumb.module.css';
+import { HeaderLink } from '../header-link/HeaderLink';
 
 interface PopoverInfo {
   content: ReactNode;
@@ -25,16 +17,16 @@ export interface HeaderBreadcrumbProps {
   popover?: PopoverInfo;
   className?: string;
   /**
-   * if the page is isolated or header should not show back arrow, set to true
+   * this is used on all layout pages, but some pages should not default to return to
+   * index like the all policies page, so we want to prevent returning to any page
    */
-  preventGoBack?: boolean;
+  preventReturnToPrevious?: boolean;
 }
 
 export const HeaderBreadcrumb = ({
   title,
-  popover,
   className,
-  preventGoBack,
+  preventReturnToPrevious,
 }: HeaderBreadcrumbProps) => {
   const [formatTitle, setFormatTitle] = useState(toTitleCase(title));
   const pathname = usePathname();
@@ -47,7 +39,7 @@ export const HeaderBreadcrumb = ({
 
   useEffect(() => {
     // There are instances where this component is used outside of a layout and explicitly sets the title
-    // if a title is set we will use that. See my-account page
+    // if a title is set we will use that.
     if (title) {
       return;
     }
@@ -81,36 +73,14 @@ export const HeaderBreadcrumb = ({
   const previousPathRoute = previousPath ? `/${previousPath}` : '/';
 
   return (
-    <div className={clsx(styles.headerBreadcrumbContainer, className)}>
-      {!preventGoBack && (
-        <Link
-          href={previousPathRoute}
-          aria-label={`go to ${previousPathName} page`}
-          className={styles.headerBreadcrumbAction}
-          prefetch
-        >
-          <Icon
-            type={IconType.CHEVRON}
-            className={styles.headerBreadcrumbChevron}
-            color="var(--color-base-icon-icon-action, #1E359C)"
-          />
-        </Link>
-      )}
-      <h1 className="typography-desktop-headline-1d">{formatTitle}</h1>
-      {popover && popover.title && popover.content && (
-        <Popover
-          title={popover.title}
-          trigger={
-            <Icon
-              type={IconType.CIRCLE_INFO}
-              color="var(--color-base-icon-icon-tooltip, #ff7500)"
-            />
-          }
-          placement={PopoverPlacement.BottomRight}
-        >
-          {popover.content}
-        </Popover>
-      )}
-    </div>
+    <HeaderLink
+      link={
+        preventReturnToPrevious
+          ? undefined
+          : { url: previousPathRoute, label: previousPathName }
+      }
+      title={formatTitle}
+      className={className}
+    />
   );
 };

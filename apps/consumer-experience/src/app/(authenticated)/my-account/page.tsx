@@ -2,7 +2,7 @@ import { Label } from '@zinnia/bloom/components';
 
 import { FieldData } from '@/components/field-data/FieldData';
 import { Footer } from '@/components/footer/Footer';
-import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
+import { HeaderLink } from '@/components/header-link/HeaderLink';
 import { getSession } from '@/utils/auth';
 import { checkIfNull } from '@/utils/data';
 
@@ -11,7 +11,7 @@ export default async function MyAccount() {
 
   return (
     <div className="container">
-      <HeaderBreadcrumb title="Account" preventGoBack />
+      <HeaderLink title="Account" />
       <p className="typography-content-body-sm">
         Use your policy portal account to conveniently manage all your policies.
       </p>

@@ -50,8 +50,8 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           node-version-file: .nvmrc
-          registry-url: "https://npm.pkg.github.com/"
-          scope: "@zinnia"
+          registry-url: 'https://npm.pkg.github.com/'
+          scope: '@zinnia'
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -61,8 +61,6 @@ jobs:
 
       - name: Test deploy package
         if: github.ref_name != 'main'
-        # Github Package Repo doesn't support tags
-        # But maybe one day we can pubish a dev version of Bloom
         run: |
           cd packages/${{ inputs.package-name }} &&\
           pnpm publish --filter ${{ inputs.package-name }} --tag ${{ github.ref_name }} --dry-run --no-git-checks

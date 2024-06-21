@@ -2,11 +2,11 @@ name: 'Chromatic Consumer Experience'
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches-ignore:
-  #     - 'dependabot/**'
-  #   paths:
-  #     - "apps/consumer-experience/**"
+  push:
+    branches-ignore:
+      - 'dependabot/**'
+    paths:
+      - 'apps/consumer-experience/**'
 
 jobs:
   chromatic:
@@ -17,4 +17,3 @@ jobs:
       working-dir: apps/consumer-experience
     secrets:
       chromatic-token: ${{ secrets.CHROMATIC_PROJECT_TOKEN_CXP }}
-      
