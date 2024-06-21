@@ -145,7 +145,7 @@ const getPolicyReferencesByCarrier = async () => {
 
 const getPolicyByPlanCodeAndId = async (options: PolicyRequestInputs) => {
   const { planCode, policyNumber } = options;
-  const url = `${policyApiBaseUrl}/${planCode}/${policyNumber}`;
+  const url = `${policyApiBaseUrl}/${planCode}/${policyNumber}?viewDetails=true`;
   if (isMockErrorEnabled(ApiEndpoints.POLICY)) {
     throw new Error('Error fetching policy.');
   }
