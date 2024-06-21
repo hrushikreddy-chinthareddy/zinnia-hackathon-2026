@@ -27,9 +27,7 @@ jobs:
           fetch-depth: 0
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          run_install: |
-            - args: [--filter ${{ inputs.filter-path }}]
+      - run: pnpm install
       - name: pnpm run build
         run: pnpm run build
       - name: Publish to ${{ inputs.project-name }} to Chromatic
