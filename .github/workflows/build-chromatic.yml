@@ -25,6 +25,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - uses: actions/setup-node@v4
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          node-version-file: .nvmrc
+          registry-url: 'https://npm.pkg.github.com/'
+          scope: '@zinnia'
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
       - run: pnpm install
