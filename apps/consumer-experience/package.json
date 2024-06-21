@@ -97,5 +97,8 @@
     "ts-jest": "^29.1.1",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
     "typescript": "^5.3.3"
+  },
+  "jest": {
+    "preset": "@zinnia/jest-presets/browser"
   }
 }
