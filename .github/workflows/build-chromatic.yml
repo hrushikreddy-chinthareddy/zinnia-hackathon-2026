@@ -44,3 +44,5 @@ jobs:
           exitZeroOnChanges: true
           skip: 'dependabot/**'
           workingDir: ${{ inputs.working-dir }}
+          allowConsoleErrors: true
+          exitOnceUploaded: true
