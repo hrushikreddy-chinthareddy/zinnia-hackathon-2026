@@ -1,7 +1,4 @@
-const sharedConfig = require('@zinnia/jest-presets/browser');
-
 module.exports = {
-  ...sharedConfig,
   roots: ['<rootDir>'],
   testEnvironment: 'jsdom',
   transform: {
