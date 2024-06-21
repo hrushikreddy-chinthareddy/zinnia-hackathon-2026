@@ -54,8 +54,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/api-types
       '@zinnia/bloom':
-        specifier: ^0.0.79
-        version: 0.0.79(@types/react-dom@18.2.18)(@types/react@18.2.55)(eslint@8.56.0)(typescript@5.3.3)(vite@5.0.12)
+        specifier: ^0.0.81
+        version: 0.0.81(@types/react-dom@18.2.18)(@types/react@18.2.55)(typescript@5.3.3)(vite@5.0.12)
       '@zinnia/utils':
         specifier: workspace:*
         version: link:../../packages/utils
@@ -7214,8 +7214,8 @@ packages:
       tslib: 1.14.1
     dev: true
 
-  /@zinnia/bloom@0.0.79(@types/react-dom@18.2.18)(@types/react@18.2.55)(eslint@8.56.0)(typescript@5.3.3)(vite@5.0.12):
-    resolution: {integrity: sha512-+RAR1FZmvLFc6R7Hx10s0y6F8Nv0bJpW0/jpmO9nWZPFqJHq/wy/JIoROdr4ZOTmFm357qIhCIbq+cTGtYBD8A==, tarball: https://npm.pkg.github.com/download/@zinnia/bloom/0.0.79/e399ab018d6bce223bc97ab75a8fbbb545a0cd10}
+  /@zinnia/bloom@0.0.81(@types/react-dom@18.2.18)(@types/react@18.2.55)(typescript@5.3.3)(vite@5.0.12):
+    resolution: {integrity: sha512-gDsfLffpKVdOu8jHlONYFr6E2mvLZGiHAZc7o71VCJziS6SXuRReeNVxVtdVGguGn6SLbYTzXZ2VrlrV9t444Q==, tarball: https://npm.pkg.github.com/download/@zinnia/bloom/0.0.81/69ab3c78cfef817993f43ed49e1b0593b1984058}
     dependencies:
       '@radix-ui/react-checkbox': 1.0.4(@types/react-dom@18.2.18)(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-dialog': 1.0.5(@types/react-dom@18.2.18)(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
@@ -7227,19 +7227,14 @@ packages:
       '@radix-ui/react-toggle-group': 1.0.4(@types/react-dom@18.2.18)(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-tooltip': 1.0.7(@types/react-dom@18.2.18)(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
       clsx: 2.1.0
-      eslint-config-prettier: 9.1.0(eslint@8.56.0)
-      eslint-plugin-prettier: 5.1.3(eslint-config-prettier@9.1.0)(eslint@8.56.0)(prettier@3.2.5)
-      prettier: 3.2.5
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-use: 17.5.0(react-dom@18.2.0)(react@18.2.0)
-      uuid: 9.0.1
+      uuid: 10.0.0
       vite-plugin-svgr: 4.2.0(typescript@5.3.3)(vite@5.0.12)
     transitivePeerDependencies:
-      - '@types/eslint'
       - '@types/react'
       - '@types/react-dom'
-      - eslint
       - rollup
       - supports-color
       - typescript
@@ -9773,6 +9768,7 @@ packages:
       prettier: 3.2.5
       prettier-linter-helpers: 1.0.0
       synckit: 0.8.8
+    dev: true
 
   /eslint-plugin-react-hooks@4.6.0(eslint@8.56.0):
     resolution: {integrity: sha512-oFc7Itz9Qxh2x4gNHStv3BqJq54ExXmfC+a1NjAta66IAN87Wu0R/QArgIS9qKzX3dXKPI9H5crl9QchNMY9+g==}
@@ -10125,6 +10121,7 @@ packages:
 
   /fast-diff@1.3.0:
     resolution: {integrity: sha512-VxPP4NqbUjj6MaAOafWeUn2cXWLcCtljklUtZf0Ind4XQ+QPtmA0b18zZy0jIQx+ExRVCR/ZQpBmik5lXshNsw==}
+    dev: true
 
   /fast-glob@3.3.2:
     resolution: {integrity: sha512-oX2ruAFQwf/Orj8m737Y5adxDQO0LAB7/S5MnxCdTNDd4p6BsyIVsv9JQsATbTSq8KHRpLwIHbVlUNatxd+1Ow==}
@@ -13672,6 +13669,7 @@ packages:
     engines: {node: '>=6.0.0'}
     dependencies:
       fast-diff: 1.3.0
+    dev: true
 
   /prettier-plugin-packagejson@2.4.10(prettier@3.2.5):
     resolution: {integrity: sha512-qFzOfQDHi1tzvVJRuZ2jh1j6IFV5MURh5m5WDt+qfEMOf4SSL5RpwSysiX8u0W1PJYsM0vKJGNULt43wwteKiQ==}
@@ -15132,6 +15130,7 @@ packages:
     dependencies:
       '@pkgr/core': 0.1.1
       tslib: 2.6.2
+    dev: true
 
   /synckit@0.9.0:
     resolution: {integrity: sha512-7RnqIMq572L8PeEzKeBINYEJDDxpcH8JEgLwUqBd3TkofhFRbkq4QLR0u+36avGAhCRbk2nnmjcW9SE531hPDg==}
@@ -15895,6 +15894,11 @@ packages:
     resolution: {integrity: sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==}
     engines: {node: '>= 0.4.0'}
     dev: true
+
+  /uuid@10.0.0:
+    resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
+    hasBin: true
+    dev: false
 
   /uuid@9.0.1:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}

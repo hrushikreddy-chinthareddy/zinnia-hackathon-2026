@@ -27,7 +27,7 @@
     "@types/js-cookie": "^3.0.6",
     "@types/uuid": "^9.0.8",
     "@zinnia/api-types": "workspace:*",
-    "@zinnia/bloom": "^0.0.79",
+    "@zinnia/bloom": "^0.0.81",
     "@zinnia/utils": "workspace:*",
     "clsx": "^2.1.0",
     "cookie": "^0.6.0",
