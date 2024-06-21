@@ -26,7 +26,7 @@ export const Default: StoryObj<HeaderLinkProps> = {
 
 export const AsLink = { args: { link: { url: '#', label: 'Coverage' } } };
 
-export const WithAdditionalElemnts = {
+export const WithAdditionalElements = {
   args: {
     children: (
       <>
