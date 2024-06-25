@@ -25,7 +25,8 @@
         "AUTH0_SCOPE",
         "AUTH0_SESSION_NAME",
         "AUTH0_COOKIE_SECURE",
-        "VERCEL_BRANCH_URL"
+        "VERCEL_BRANCH_URL",
+        "OPTIMIZELY_SDK_KEY"
       ]
     },
     "lint": {

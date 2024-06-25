@@ -54,6 +54,11 @@ Add to your settings.json
 
 - Get the env variables from your favorite or least favorite local developer.
 
+## Setting up a new user:
+
+1. [Create oauth token ](https://zinnia.atlassian.net/wiki/spaces/CIAMC/pages/3999793180/OAuth+M2M+Token+How-To)
+2. create a policy. See [doc](https://se2llc-global.slack.com/archives/C069ZQ0REET/p1719252268702579?thread_ts=1719248037.803579&cid=C069ZQ0REET) for steps to create one.
+
 # Local development
 
 ## Dev Menu
@@ -114,9 +119,14 @@ Find more info about Architecture [here](https://zinnia.atlassian.net/wiki/space
 - [Backend Logs](https://app.datadoghq.com/logs?query=service%3A%28xd_consumer_experience%20OR%20consumer-xd%29%20%40level%3A%3E10%20&agg_m=count&agg_m_source=base&agg_t=count&cols=host%2Cservice&fromUser=true&messageDisplay=inline&refresh_mode=sliding&saved-view-id=2691016&storage=hot&stream_sort=desc&viz=stream&from_ts=1717109319990&to_ts=1717110219990&live=true)
 - [Dashboard](https://app.datadoghq.com/dashboard/j4x-kw3-ax3/consumer-xd?fromUser=false&refresh_mode=sliding&view=spans&from_ts=1717370545740&to_ts=1717456945740&live=true)
 - [RUM a.k.a frontend logging](https://app.datadoghq.com/rum/performance-monitoring?query=%40application.id%3Ae4442d80-e7ae-459b-99b7-f720ac078f14%20%40session.type%3Auser&fromUser=false&tab=overview&from_ts=1716852161544&to_ts=1717456961544&live=true)
+- Ephemeral environment logs: Because vercel's ephemeral environments run as edge functions, these logs won't be available within Datadog, however, you can still view them in vercel
 
-# Storybook
+# Feature Flags
 
-- Storybook is currently broken for consumer.
+Feature flags are implemented using [Optimizely Javascript SDK](https://docs.developers.optimizely.com/feature-experimentation/docs/javascript-sdk). The React SDK doesn't work for server side rendering.
+
+## Access
+
+To get access, contact a lead. You will need to get a PolicyGenius email and be added to the Optimizely account to log in.
 
 # TODO Docs
