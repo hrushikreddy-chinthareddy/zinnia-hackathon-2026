@@ -121,4 +121,12 @@ Find more info about Architecture [here](https://zinnia.atlassian.net/wiki/space
 - [RUM a.k.a frontend logging](https://app.datadoghq.com/rum/performance-monitoring?query=%40application.id%3Ae4442d80-e7ae-459b-99b7-f720ac078f14%20%40session.type%3Auser&fromUser=false&tab=overview&from_ts=1716852161544&to_ts=1717456961544&live=true)
 - Ephemeral environment logs: Because vercel's ephemeral environments run as edge functions, these logs won't be available within Datadog, however, you can still view them in vercel
 
+# Feature Flags
+
+Feature flags are implemented using [Optimizely Javascript SDK](https://docs.developers.optimizely.com/feature-experimentation/docs/javascript-sdk). The React SDK doesn't work for server side rendering.
+
+## Access
+
+To get access, contact a lead. You will need to get a PolicyGenius email and be added to the Optimizely account to log in.
+
 # TODO Docs
