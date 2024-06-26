@@ -9,24 +9,27 @@ export interface ProgressBarStepsProps
   currentStep: number;
 }
 
-interface ProgressStepProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface ProgressStepProps
+  extends React.HTMLAttributes<HTMLDivElement> {
   number?: number;
   isComplete?: boolean | null;
   isFinalStep?: boolean;
 }
 
-const ProgressStep = ({
+export const ProgressStep = ({
   number,
   isComplete,
   isFinalStep,
 }: ProgressStepProps) => {
   if (isComplete === false) {
-    return <div className={styles.stepIncomplete} aria-hidden />;
+    return (
+      <div className={styles.stepIncomplete} aria-hidden role="presentation" />
+    );
   }
 
   if (isComplete) {
     return (
-      <div className={styles.step} aria-hidden>
+      <div className={styles.step} aria-hidden role="presentation">
         <span className="typography-labels-field-label">
           <Icon type={IconType.CHECKMARK} width={12} height={12} />
         </span>
@@ -36,17 +39,16 @@ const ProgressStep = ({
 
   if (isFinalStep) {
     return (
-      <div className={styles.step} aria-hidden>
+      <div className={styles.step} aria-hidden role="presentation">
         <span className="typography-labels-field-label">
-          {/* TODO: change icon once flag is merged into bloom */}
-          <Icon type={IconType.CASH} width={12} height={12} />
+          <Icon type={IconType.FLAG} width={12} height={12} />
         </span>
       </div>
     );
   }
 
   return (
-    <div className={styles.step} aria-hidden>
+    <div className={styles.step} aria-hidden role="presentation">
       <span className="typography-labels-field-label">{number}</span>
     </div>
   );
@@ -77,10 +79,8 @@ export const ProgressBarSteps = ({
               isComplete={isCurrent ? null : isComplete}
               isFinalStep={isFinalStep}
             />
-            <span className="sr-only">{`step ${currentNumber} of ${totalSteps} ${isComplete ? 'is complete' : ''}`}</span>
-            <span className="sr-only">
-              {isFinalStep ? 'all steps complete' : ''}
-            </span>
+            <span className="sr-only">{`${isCurrent ? 'currently on' : ''} step ${currentNumber} of ${totalSteps} ${isComplete ? 'is complete' : ''}`}</span>
+            {isFinalStep && <span className="sr-only">all steps complete</span>}
           </>
         );
       })}
