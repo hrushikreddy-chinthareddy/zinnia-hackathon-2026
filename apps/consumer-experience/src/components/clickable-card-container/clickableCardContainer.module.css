@@ -36,19 +36,19 @@ ave top radius and last card should have bottom radius */
 }
 
 .content {
-  align-items: center;
   background-color: var(
     --color-fields-surface-field-background-default-fill,
     #fff
   );
-  display: flex;
   padding: var(--measure-dimension-padding-2xl, 1rem);
   position: relative;
-  justify-content: space-between;
   width: 100%;
   border: var(--border-style);
 
   &.listItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     border-top: none;
   }
 
@@ -62,6 +62,12 @@ ave top radius and last card should have bottom radius */
       var(--color-states-hover-hover-primary-border, #ff4f00);
     border-radius: var(--measure-dimension-radius-sm, 0.25rem);
   }
+}
+
+.linkContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .primaryAction::before {

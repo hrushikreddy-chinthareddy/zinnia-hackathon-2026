@@ -30,3 +30,23 @@
 .error {
   color: var(--color-status-text-status-error-text, #db004f);
 }
+
+.additionalContent {
+  background-color: var(--color-base-surface-surface-secondary);
+  padding: var(--measure-dimension-padding-2xl, 1rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-lg);
+  margin-top: var(--measure-dimension-gap-lg);
+
+  a {
+    text-decoration: none;
+  }
+}
+
+@media (width > 767px) {
+  .additionalContent {
+    flex-direction: row;
+    gap: var(--measure-dimension-gap-2xl);
+  }
+}

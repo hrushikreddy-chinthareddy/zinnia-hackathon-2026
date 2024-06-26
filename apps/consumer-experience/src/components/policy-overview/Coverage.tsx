@@ -77,37 +77,38 @@ export const Coverage = async ({ planCode, policyNumber }: Props) => {
 
   // TODO: add conditions for policy statuses
   return (
-    <ClickableCardContainer
-      listItems={additionalItems}
-      linkTo={{
-        url: `/policies/${planCode}/${policyNumber}/coverage`,
-        label: 'go to coverage page',
-      }}
-    >
-      <div className={styles.content}>
-        <Icon type={IconType.SHIELD} className={styles.icon} />
-        <FieldData
-          Label={
-            <Label
-              interactiveElements={[
-                <CoveragePopover
-                  key="coverage-popover"
-                  dataTimestamp={effectiveDate}
-                />,
-              ]}
-            >
-              {COVERAGE}
-            </Label>
-          }
-          caption={
-            policyStartDate && maturityDate
-              ? `${standardDateMonthDayYear(policyStartDate)} - ${standardDateMonthDayYear(maturityDate)}`
-              : ''
-          }
-        >
-          {coverageContent}
-        </FieldData>
-      </div>
+    <ClickableCardContainer listItems={additionalItems}>
+      <ClickableCardContainer.LinkContent
+        linkTo={{
+          url: `/policies/${planCode}/${policyNumber}/coverage`,
+          label: 'go to coverage page',
+        }}
+      >
+        <div className={styles.content}>
+          <Icon type={IconType.SHIELD} className={styles.icon} />
+          <FieldData
+            Label={
+              <Label
+                interactiveElements={[
+                  <CoveragePopover
+                    key="coverage-popover"
+                    dataTimestamp={effectiveDate}
+                  />,
+                ]}
+              >
+                {COVERAGE}
+              </Label>
+            }
+            caption={
+              policyStartDate && maturityDate
+                ? `${standardDateMonthDayYear(policyStartDate)} - ${standardDateMonthDayYear(maturityDate)}`
+                : ''
+            }
+          >
+            {coverageContent}
+          </FieldData>
+        </div>
+      </ClickableCardContainer.LinkContent>
     </ClickableCardContainer>
   );
 };
