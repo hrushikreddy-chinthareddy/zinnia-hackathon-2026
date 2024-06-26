@@ -1,9 +1,4 @@
-import {
-  Icon,
-  IconType,
-  Label,
-  Popover,
-} from '@zinnia/bloom/components';
+import { Icon, IconType, Label, Popover } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
@@ -67,8 +62,6 @@ export default async function Withdrawals({
     withdrawalDetails[1]?.status === 'fulfilled'
       ? withdrawalDetails[1].value?.data?.isEligible
       : null;
-
-  console.log('withdrawalEligibility', withdrawalEligibility);
 
   const { data, error } = summaryData;
   const withdrawalsData = () => {

@@ -1,0 +1,89 @@
+import { Icon, IconType } from '@zinnia/bloom/components';
+import clsx from 'clsx';
+
+import styles from './ProgressBar.module.css';
+
+export interface ProgressBarStepsProps
+  extends React.HTMLAttributes<HTMLDivElement> {
+  totalSteps: number;
+  currentStep: number;
+}
+
+export interface ProgressStepProps
+  extends React.HTMLAttributes<HTMLDivElement> {
+  number?: number;
+  isComplete?: boolean | null;
+  isFinalStep?: boolean;
+}
+
+export const ProgressStep = ({
+  number,
+  isComplete,
+  isFinalStep,
+}: ProgressStepProps) => {
+  if (isComplete === false) {
+    return (
+      <div className={styles.stepIncomplete} aria-hidden role="presentation" />
+    );
+  }
+
+  if (isComplete) {
+    return (
+      <div className={styles.step} aria-hidden role="presentation">
+        <span className="typography-labels-field-label">
+          <Icon type={IconType.CHECKMARK} width={12} height={12} />
+        </span>
+      </div>
+    );
+  }
+
+  if (isFinalStep) {
+    return (
+      <div className={styles.step} aria-hidden role="presentation">
+        <span className="typography-labels-field-label">
+          <Icon type={IconType.FLAG} width={12} height={12} />
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.step} aria-hidden role="presentation">
+      <span className="typography-labels-field-label">{number}</span>
+    </div>
+  );
+};
+
+export const ProgressBarSteps = ({
+  className,
+  totalSteps,
+  currentStep,
+}: ProgressBarStepsProps) => {
+  if (!totalSteps) {
+    return null;
+  }
+
+  return (
+    <div className={clsx(styles.container, { className: className })}>
+      {[...Array(totalSteps)].map((_, index) => {
+        const currentNumber = index + 1;
+        const isCurrent = currentNumber === currentStep;
+        const isComplete = currentNumber < currentStep;
+        const isFinalStep = isCurrent && totalSteps === currentStep;
+
+        return (
+          <>
+            <ProgressStep
+              key={index}
+              number={currentNumber}
+              isComplete={isCurrent ? null : isComplete}
+              isFinalStep={isFinalStep}
+            />
+            <span className="sr-only">{`${isCurrent ? 'currently on' : ''} step ${currentNumber} of ${totalSteps} ${isComplete ? 'is complete' : ''}`}</span>
+            {isFinalStep && <span className="sr-only">all steps complete</span>}
+          </>
+        );
+      })}
+    </div>
+  );
+};
