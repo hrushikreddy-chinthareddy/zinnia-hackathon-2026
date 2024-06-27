@@ -13,11 +13,11 @@ on:
         required: true
         type: choice
         options:
-          - api-types
-          - eslint-config
-          - prettier-config
-          - typescript-config
-          - utils
+          - "@zinnia/api-types"
+          - "@zinnia/eslint-config"
+          - "@zinnia/prettier-config"
+          - "@zinnia/typescript-config"
+          - "@zinnia/utils"
       node-version-file:
         type: string
         required: false
