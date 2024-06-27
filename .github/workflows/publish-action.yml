@@ -34,6 +34,8 @@ jobs:
           NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           node-version-file: ${{ inputs.node-version-file }}
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@zinnia'
       - uses: pnpm/action-setup@v4
       - run: pnpm install --filter @zinnia/${{ inputs.package-name }}
       - run: pnpm run test
