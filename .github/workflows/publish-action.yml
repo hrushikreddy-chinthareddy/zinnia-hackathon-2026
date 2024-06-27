@@ -13,11 +13,11 @@ on:
         required: true
         type: choice
         options:
-          - "@zinnia/api-types"
-          - "@zinnia/eslint-config"
-          - "@zinnia/prettier-config"
-          - "@zinnia/typescript-config"
-          - "@zinnia/utils"
+          - "api-types"
+          - "eslint-config"
+          - "prettier-config"
+          - "typescript-config"
+          - "utils"
       node-version-file:
         type: string
         required: false
@@ -29,15 +29,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           node-version-file: ${{ inputs.node-version-file }}
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@zinnia'
       - uses: pnpm/action-setup@v4
-      - run: pnpm install
+        with:
+          run_install: true
       - run: pnpm run test
 
   publish:
@@ -59,17 +55,17 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
       - name: Install modules
-        run: pnpm install --filter ${{ inputs.package-name }}
+        run: pnpm install --filter @zinnia/${{ inputs.package-name }}
       - name: Build Package
-        run: pnpm run build --filter ${{ inputs.package-name }}
+        run: pnpm run build --filter @zinnia/${{ inputs.package-name }}
 
       - name: Test deploy package
-        if: github.ref_name != 'main'
+        if: inputs.dry-run == true
         run: |
           cd packages/${{ inputs.package-name }} &&\
-          pnpm publish --filter ${{ inputs.package-name }} --tag ${{ github.ref_name }} --dry-run --no-git-checks
+          npm publish --tag ${{ github.ref_name }} --dry-run --no-git-checks
       - name: Deploy with `latest` tag
-        if: github.ref_name == 'main'
+        if: inputs.dry-run == false
         run: |
           cd packages/${{ inputs.package-name }} &&\
-          pnpm publish --filter ${{ inputs.package-name }}  --tag latest
+          npm publish --tag latest
