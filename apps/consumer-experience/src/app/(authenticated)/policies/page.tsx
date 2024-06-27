@@ -11,7 +11,10 @@ import { PolicyDetailsSummary } from '@/components/policy-details-summary/Policy
 import { CoveragePopover } from '@/components/policy-overview/CoveragePopover';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getMyPoliciesByCarrier } from '@/services';
+import { getSession } from '@/utils/auth';
 import { formatUSDollars } from '@/utils/currency';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { getFeatureFlagDecisions } from '@/utils/optimizely/optimizely';
 
 import styles from './policies.module.css';
 
@@ -46,57 +49,58 @@ export default async function Page() {
       <HeaderBreadcrumb title={pageTitle} preventReturnToPrevious />
       <div className="card-container" style={{ paddingLeft: 0 }}>
         {policyReferenceData?.map(p => (
-          <ClickableCardContainer
-            key={p.policyNumber}
-            linkTo={{
-              label: `Get details for Policy ${p.marketingName}`,
-              url: `/policies/${p.planCode}/${p.policyNumber}`,
-              isInternal: true,
-            }}
-          >
-            <div className={`${styles.policyCard} mr-lg`}>
-              <PolicyDetailsSummary
-                className="pl-none"
-                planCode={p.planCode || ''}
-                policyNumber={p.policyNumber}
-                summary={{ ...p }}
-              />
-              <div className={styles.policyCardPolicyValues}>
-                <FieldData
-                  className="mr-3xl"
-                  Label={
-                    <Label
-                      interactiveElements={[
-                        <AccountValuePopover
-                          key="account-value-popover"
-                          dataTimestamp={p.effectiveDate}
-                        />,
-                      ]}
-                    >
-                      Account value
-                    </Label>
-                  }
-                >
-                  {formatUSDollars(p.totalFundValue)}
-                </FieldData>
-                <FieldData
-                  Label={
-                    <Label
-                      interactiveElements={[
-                        <CoveragePopover
-                          key="coverage-popover"
-                          dataTimestamp={p.effectiveDate}
-                        />,
-                      ]}
-                    >
-                      Coverage
-                    </Label>
-                  }
-                >
-                  {formatUSDollars(p.totalCoverageAmount)}
-                </FieldData>
+          <ClickableCardContainer key={p.policyNumber}>
+            <ClickableCardContainer.LinkContent
+              linkTo={{
+                label: `Get details for Policy ${p.marketingName}`,
+                url: `/policies/${p.planCode}/${p.policyNumber}`,
+                isInternal: true,
+              }}
+            >
+              <div className={`${styles.policyCard} mr-lg`}>
+                <PolicyDetailsSummary
+                  className="pl-none"
+                  planCode={p.planCode || ''}
+                  policyNumber={p.policyNumber}
+                  summary={{ ...p }}
+                />
+                <div className={styles.policyCardPolicyValues}>
+                  <FieldData
+                    className="mr-3xl"
+                    Label={
+                      <Label
+                        interactiveElements={[
+                          <AccountValuePopover
+                            key="account-value-popover"
+                            dataTimestamp={p.effectiveDate}
+                          />,
+                        ]}
+                      >
+                        Account value
+                      </Label>
+                    }
+                  >
+                    {formatUSDollars(p.totalFundValue)}
+                  </FieldData>
+                  <FieldData
+                    Label={
+                      <Label
+                        interactiveElements={[
+                          <CoveragePopover
+                            key="coverage-popover"
+                            dataTimestamp={p.effectiveDate}
+                          />,
+                        ]}
+                      >
+                        Coverage
+                      </Label>
+                    }
+                  >
+                    {formatUSDollars(p.totalCoverageAmount)}
+                  </FieldData>
+                </div>
               </div>
-            </div>
+            </ClickableCardContainer.LinkContent>
           </ClickableCardContainer>
         ))}
       </div>

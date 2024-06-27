@@ -95,7 +95,7 @@ export const ClickableList: FC<{
   );
 };
 
-export const ClickableCardContainer: FC<Props> = ({
+export const ClickableCardContainer = ({
   children,
   className,
   linkTo,
@@ -108,10 +108,7 @@ export const ClickableCardContainer: FC<Props> = ({
         [styles.disabled as string]: disabled,
       })}
     >
-      <div className={styles.content}>
-        {children}
-        {linkTo && !disabled && <LinkArrow {...linkTo} />}
-      </div>
+      <div className={styles.content}>{children}</div>
       {listItems && listItems.length > 0 && (
         <ClickableList disabled={disabled} listItems={listItems} />
       )}
@@ -135,3 +132,24 @@ export const ClickableListContainer: FC<{
     </div>
   );
 };
+
+interface LinkContentProps extends PropsWithChildren {
+  linkTo?: LinkItem;
+  disabled?: boolean;
+}
+
+const LinkContent = ({ children, linkTo, disabled }: LinkContentProps) => {
+  return (
+    <div className={styles.linkContent}>
+      {children}
+      {linkTo && !disabled && <LinkArrow {...linkTo} />}
+    </div>
+  );
+};
+
+const AdditionalContent: FC<PropsWithChildren> = ({ children }) => (
+  <div>{children}</div>
+);
+
+ClickableCardContainer.LinkContent = LinkContent;
+ClickableCardContainer.AdditionalContent = AdditionalContent;

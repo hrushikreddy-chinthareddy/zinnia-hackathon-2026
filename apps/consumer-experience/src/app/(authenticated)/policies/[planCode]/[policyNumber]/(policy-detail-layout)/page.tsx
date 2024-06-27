@@ -70,49 +70,57 @@ export default async function Page({
     return (
       <div className="card-container">
         <UpcomingPremium planCode={planCode} policyNumber={policyNumber} />
-        <ClickableCardContainer
-          linkTo={{
-            url: `/policies/${planCode}/${policyNumber}/account`,
-            label: 'go to account value page',
-          }}
-        >
-          <AccountValue
-            planCode={planCode}
-            policyNumber={policyNumber}
-            isLink
-            showIcon
-          />
+        <ClickableCardContainer>
+          <ClickableCardContainer.LinkContent
+            linkTo={{
+              url: `/policies/${planCode}/${policyNumber}/account`,
+              label: 'go to account value page',
+            }}
+          >
+            <AccountValue
+              planCode={planCode}
+              policyNumber={policyNumber}
+              isLink
+              showIcon
+            />
+          </ClickableCardContainer.LinkContent>
         </ClickableCardContainer>
         <Coverage planCode={planCode} policyNumber={policyNumber} />
-        <ClickableCardContainer
-          linkTo={{
-            url: `/policies/${planCode}/${policyNumber}/profile`,
-            label: 'go to policy profile',
-          }}
-        >
-          <div className="flex-center">
-            <Icon
-              type={IconType.CIRCLE_USER}
-              color="var(--color-base-icon-icon-dark)"
-            />
-            <span className="typography-labels-field-label ml-md">Profile</span>
-          </div>
+        <ClickableCardContainer>
+          <ClickableCardContainer.LinkContent
+            linkTo={{
+              url: `/policies/${planCode}/${policyNumber}/profile`,
+              label: 'go to policy profile',
+            }}
+          >
+            <div className="flex-center">
+              <Icon
+                type={IconType.CIRCLE_USER}
+                color="var(--color-base-icon-icon-dark)"
+              />
+              <span className="typography-labels-field-label ml-md">
+                Profile
+              </span>
+            </div>
+          </ClickableCardContainer.LinkContent>
         </ClickableCardContainer>
-        <ClickableCardContainer
-          linkTo={{
-            url: `/policies/${planCode}/${policyNumber}/documents`,
-            label: 'go to policy documents',
-          }}
-        >
-          <div className="flex-center">
-            <Icon
-              type={IconType.DOCUMENT_TEXT}
-              color="var(--color-base-icon-icon-dark)"
-            />
-            <span className="typography-labels-field-label ml-md">
-              Documents
-            </span>
-          </div>
+        <ClickableCardContainer>
+          <ClickableCardContainer.LinkContent
+            linkTo={{
+              url: `/policies/${planCode}/${policyNumber}/documents`,
+              label: 'go to policy documents',
+            }}
+          >
+            <div className="flex-center">
+              <Icon
+                type={IconType.DOCUMENT_TEXT}
+                color="var(--color-base-icon-icon-dark)"
+              />
+              <span className="typography-labels-field-label ml-md">
+                Documents
+              </span>
+            </div>
+          </ClickableCardContainer.LinkContent>
         </ClickableCardContainer>
       </div>
     );

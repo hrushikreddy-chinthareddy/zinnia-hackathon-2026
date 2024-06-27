@@ -1,5 +1,5 @@
 import { PolicyStatus } from '@zinnia/api-types/types/sor';
-import { Label, Icon, IconType } from '@zinnia/bloom/components';
+import { Label, Icon, IconType, Link } from '@zinnia/bloom/components';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
@@ -7,9 +7,12 @@ import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { UpcomingPremiumPopover } from '@/components/policy-overview/UpcomingPremiumPopover';
 import { getUpcomingPremium } from '@/services';
+import { getSession } from '@/utils/auth';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { getFeatureFlagDecisions } from '@/utils/optimizely/optimizely';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 import styles from './PolicyOverview.module.css';
@@ -29,6 +32,13 @@ export const UpcomingPremium = async ({
     planCode,
     policyNumber,
   });
+
+  const session = await getSession();
+  const userId = session?.user?.sub;
+
+  //TODO: only need to call this if this is extended
+  //... i feel like i should split out these components, the configuration is getting a bit out of control
+  const featureFlagDecisions = await getFeatureFlagDecisions(userId);
 
   if (error) {
     return (
@@ -50,7 +60,6 @@ export const UpcomingPremium = async ({
     currentAmount = 0;
   }
 
-  // TODO: add locked status here
   const paymentCaption = () => {
     if (policyStatus === PolicyStatus.LAPSE) {
       return <span className={styles.error}>Payment</span>;
@@ -69,10 +78,6 @@ export const UpcomingPremium = async ({
 
   return (
     <ClickableCardContainer
-      linkTo={{
-        url: extended ? '' : `/policies/${planCode}/${policyNumber}/premium`,
-        label: 'go to premium payments page',
-      }}
       {...(extended && {
         listItems: [
           {
@@ -100,26 +105,50 @@ export const UpcomingPremium = async ({
         ],
       })}
     >
-      <div className={styles.content}>
-        <Icon type={IconType.AUTOPAY} className={styles.icon} />
-        <FieldData
-          Label={
-            <Label
-              interactiveElements={[
-                <UpcomingPremiumPopover
-                  key="upcoming-popover"
-                  productType={productType}
-                />,
-              ]}
-            >
-              {UPCOMING_PREMIUM}
-            </Label>
-          }
-          caption={paymentCaption()}
+      <>
+        <ClickableCardContainer.LinkContent
+          linkTo={{
+            url: extended
+              ? ''
+              : `/policies/${planCode}/${policyNumber}/premium`,
+            label: 'go to premium payments page',
+          }}
         >
-          {upcomingPremContent}
-        </FieldData>
-      </div>
+          <div className={styles.content}>
+            <Icon type={IconType.AUTOPAY} className={styles.icon} />
+            <FieldData
+              Label={
+                <Label
+                  interactiveElements={[
+                    <UpcomingPremiumPopover
+                      key="upcoming-popover"
+                      productType={productType}
+                    />,
+                  ]}
+                >
+                  {UPCOMING_PREMIUM}
+                </Label>
+              }
+              caption={paymentCaption()}
+            >
+              {upcomingPremContent}
+            </FieldData>
+          </div>
+        </ClickableCardContainer.LinkContent>
+        {extended && (
+          <ClickableCardContainer.AdditionalContent>
+            {featureFlagDecisions?.[FEATURE_FLAGS.ONE_TIME_PREMIUM_PAYMENT] && (
+              <div className={styles.additionalContent}>
+                <Link
+                  size="small"
+                  href={`/policies/${planCode}/${policyNumber}/premium-payment`}
+                  text="Make a one-time payment"
+                />
+              </div>
+            )}
+          </ClickableCardContainer.AdditionalContent>
+        )}
+      </>
     </ClickableCardContainer>
   );
 };

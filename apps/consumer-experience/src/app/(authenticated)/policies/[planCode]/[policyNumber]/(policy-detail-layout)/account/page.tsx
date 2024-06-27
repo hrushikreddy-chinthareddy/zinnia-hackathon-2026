@@ -7,17 +7,9 @@ import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable'
 import { StatusIconText } from '@/components/status-icon-text/StatusIconText';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { ApiResponse } from '@/services';
-import {
-  getLoanEligibility,
-  getOneTimeWithdrawalEligibility,
-  getWithdrawalEligibility,
-} from '@/services/bpm';
+import { getLoanEligibility, getWithdrawalEligibility } from '@/services/bpm';
 import { getPolicyAccountValueSummary } from '@/services/policy';
-import {
-  AccountValueSummary,
-  PolicyRequestInputs,
-  PolicyWithdrawals,
-} from '@/types/policy';
+import { AccountValueSummary, PolicyRequestInputs } from '@/types/policy';
 import { isNullEmptyOrUndefined } from '@/utils/data';
 import { DEFAULT_UNAVAILABLE_STRING, pluralize } from '@/utils/strings';
 

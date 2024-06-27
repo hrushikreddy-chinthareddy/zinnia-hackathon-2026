@@ -35,7 +35,6 @@ main {
 a {
   color: var(--color-base-text-text-link, #1e359c);
   text-decoration: none;
-
   &:hover {
     color: var(--color-states-hover-hover-text-link);
     text-decoration: underline;

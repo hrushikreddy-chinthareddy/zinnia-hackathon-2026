@@ -12,7 +12,7 @@ export interface HeaderLinkProps extends PropsWithChildren {
   className?: string;
   link?: {
     url: string;
-    label: string;
+    label?: string;
   };
 }
 export const HeaderLink = ({
