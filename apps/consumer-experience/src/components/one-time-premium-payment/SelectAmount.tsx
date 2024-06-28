@@ -9,7 +9,11 @@ import {
 
 import premiumStyles from './OneTimePremiumPayment.module.css';
 
-export const SelectAmount = () => {
+export const SelectAmount = ({
+  moveToNextStep,
+}: {
+  moveToNextStep?: () => void;
+}) => {
   return (
     <>
       <div className="mb-xl">
@@ -38,9 +42,17 @@ export const SelectAmount = () => {
           Premium payment amount
         </Label>
       </div>
+      {/* // TODO: this only shows if there is a fee */}
       <p className={`${premiumStyles.note} typography-content-body-sm`}>
         Note: Premium payments may have associated fees.
       </p>
+      <div className={premiumStyles.buttonGroup}>
+        <Button mode="primary" onClick={moveToNextStep}>
+          Continue
+        </Button>
+        {/* TODO: show 'are you sure path', this should actually be a link */}
+        <Button mode="link">Cancel</Button>
+      </div>
     </>
   );
 };

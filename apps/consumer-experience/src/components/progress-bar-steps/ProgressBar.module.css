@@ -9,9 +9,9 @@
     content: '';
     background-color: var(--color-base-surface-surface-bold);
     height: 2px;
-    width: 100%;
+    /* set to smaller than container so doesn't show on right side */
+    width: 99%;
     position: absolute;
-    z-index: -1;
     border-radius: 100px;
   }
 }
