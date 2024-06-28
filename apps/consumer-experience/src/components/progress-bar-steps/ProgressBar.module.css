@@ -6,11 +6,15 @@
   position: relative;
 
   &::before {
+    /* styles for line joining all steps together */
     content: '';
     background-color: var(--color-base-surface-surface-bold);
+    background-color: var(--color-primary-color-primary);
     height: 2px;
     /* set to smaller than container so doesn't show on right side */
-    width: 99%;
+    /* 99% leads to a gap when container is wider than step circle width * 10 */
+
+    width: calc(100% - var(--measure-dimension-z-space-0));
     position: absolute;
     border-radius: 100px;
   }
@@ -25,14 +29,13 @@
 
 .step {
   border-radius: 100%;
-  border: var(--measure-dimension-stroke-sm, 2px) solid
-    var(--color-base-border-border-primary-color);
+  border: var(--measure-dimension-stroke-sm, 2px) solid var(--color-base-border-border-primary-color);
   width: 20px;
   height: 20px;
   position: relative;
   background-color: white;
 
-  > * {
+  >* {
     position: absolute;
     left: 50%;
     top: 50%;
