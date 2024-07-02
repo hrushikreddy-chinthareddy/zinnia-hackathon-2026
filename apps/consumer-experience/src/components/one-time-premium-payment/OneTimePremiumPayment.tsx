@@ -1,13 +1,14 @@
 'use client';
+import { toSentenceCase } from '@zinnia/utils';
+import { cloneElement, useState } from 'react';
+
 import { HeaderLink } from '@/components/header-link/HeaderLink';
 
 import styles from './OneTimePremiumPayment.module.css';
 import { SelectAmount } from './SelectAmount';
-import { cloneElement, useState } from 'react';
 import { SelectBank } from './SelectBank';
-import { ProgressBarSteps } from '../progress-bar-steps/ProgressBarSteps';
-import { toSentenceCase } from '@zinnia/utils';
 import { HeaderButton } from '../header-link/HeaderButton';
+import { ProgressBarSteps } from '../progress-bar-steps/ProgressBarSteps';
 
 const steps = [
   {
