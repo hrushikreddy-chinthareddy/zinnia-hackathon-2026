@@ -64,25 +64,25 @@ export const ProgressBarSteps = ({
     return null;
   }
 
-  const isFinalStepCurrent =
-    totalSteps + 1 === currentStep && totalSteps === currentStep;
-  console.log('totalSteps', totalSteps);
-  console.log('currentStep', 100 / totalSteps - 1);
+  const isFinalStepCurrent = totalSteps === currentStep;
+  // Track this because all steps besides final one will have a line in between it
+  // and the next step that will change based on whether step is complete
+  const stepsWithoutFinal = totalSteps - 1;
+
   return (
     <div
       className={clsx(styles.container, { [className as string]: className })}
     >
-      {[...Array(totalSteps - 1)].map((_, index) => {
+      {[...Array(stepsWithoutFinal)].map((_, index) => {
         const currentNumber = index + 1;
         const isCurrent = currentNumber === currentStep;
         const isComplete = currentNumber < currentStep;
-        // const isFinalStep = isCurrent && totalSteps === currentStep;
 
         return (
           <div
             key={index}
             style={{
-              width: `${100 / (totalSteps - 1)}%`,
+              width: `${100 / stepsWithoutFinal}%`,
               color: `${isComplete ? 'var(--color-base-border-border-primary-color)' : 'var(--color-base-surface-surface-bold)'}`,
             }}
             className={styles.stepContainer}
@@ -91,21 +91,12 @@ export const ProgressBarSteps = ({
               number={currentNumber}
               isComplete={isCurrent ? null : isComplete}
             />
-            {/* <div
-              style={{
-                height: '2px',
-                width: '100%',
-                backgroundColor: '#b3b3b3',
-              }}
-            ></div> */}
             <span className="sr-only">{`${isCurrent ? 'currently on' : ''} step ${currentNumber} of ${totalSteps} ${isComplete ? 'is complete' : ''}`}</span>
           </div>
         );
       })}
       <ProgressStep
-        isComplete={
-          totalSteps === currentStep ? null : totalSteps < currentStep
-        }
+        isComplete={isFinalStepCurrent ? null : totalSteps < currentStep}
         isFinalStep={true}
       />
       {isFinalStepCurrent && (
@@ -114,5 +105,3 @@ export const ProgressBarSteps = ({
     </div>
   );
 };
-
-// if currentNumber > current step
