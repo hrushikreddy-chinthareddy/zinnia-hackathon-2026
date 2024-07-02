@@ -24,6 +24,10 @@
   max-width: 375px;
   cursor: pointer;
 
+  &:hover {
+    border-color: orange;
+  }
+
   > * {
     margin-bottom: var(--measure-dimension-gap-xs);
   }
@@ -34,6 +38,10 @@
 
   &:has(input:checked) {
     border-color: var(--color-states-selected-selected-primary-border);
+
+    &:hover {
+      border-color: orange;
+    }
   }
 
   &:has(input:focus-visible) {
