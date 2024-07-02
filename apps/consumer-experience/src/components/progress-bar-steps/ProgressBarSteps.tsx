@@ -37,6 +37,7 @@ export const ProgressStep = ({
     );
   }
 
+  // The final two conditions are if it's the current step
   if (isFinalStep) {
     return (
       <div className={styles.step} aria-hidden role="presentation">
@@ -63,29 +64,55 @@ export const ProgressBarSteps = ({
     return null;
   }
 
+  const isFinalStepCurrent =
+    totalSteps + 1 === currentStep && totalSteps === currentStep;
+  console.log('totalSteps', totalSteps);
+  console.log('currentStep', 100 / totalSteps - 1);
   return (
     <div
       className={clsx(styles.container, { [className as string]: className })}
     >
-      {[...Array(totalSteps)].map((_, index) => {
+      {[...Array(totalSteps - 1)].map((_, index) => {
         const currentNumber = index + 1;
         const isCurrent = currentNumber === currentStep;
         const isComplete = currentNumber < currentStep;
-        const isFinalStep = isCurrent && totalSteps === currentStep;
+        // const isFinalStep = isCurrent && totalSteps === currentStep;
 
         return (
-          <>
+          <div
+            key={index}
+            style={{
+              width: `${100 / (totalSteps - 1)}%`,
+              color: `${isComplete ? 'var(--color-base-border-border-primary-color)' : 'var(--color-base-surface-surface-bold)'}`,
+            }}
+            className={styles.stepContainer}
+          >
             <ProgressStep
-              key={index}
               number={currentNumber}
               isComplete={isCurrent ? null : isComplete}
-              isFinalStep={isFinalStep}
             />
+            {/* <div
+              style={{
+                height: '2px',
+                width: '100%',
+                backgroundColor: '#b3b3b3',
+              }}
+            ></div> */}
             <span className="sr-only">{`${isCurrent ? 'currently on' : ''} step ${currentNumber} of ${totalSteps} ${isComplete ? 'is complete' : ''}`}</span>
-            {isFinalStep && <span className="sr-only">all steps complete</span>}
-          </>
+          </div>
         );
       })}
+      <ProgressStep
+        isComplete={
+          totalSteps === currentStep ? null : totalSteps < currentStep
+        }
+        isFinalStep={true}
+      />
+      {isFinalStepCurrent && (
+        <span className="sr-only">all steps complete</span>
+      )}
     </div>
   );
 };
+
+// if currentNumber > current step
