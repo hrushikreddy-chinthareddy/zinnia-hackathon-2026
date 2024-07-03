@@ -1,6 +1,7 @@
 .container {
   display: flex;
   align-items: center;
+  min-width: 175px;
 }
 
 .stepContainer {
@@ -33,7 +34,7 @@
   position: relative;
   background-color: white;
   z-index: 1;
-  color: black;
+  color: var(--color-base-border-border-primary-color);
 
   > * {
     position: absolute;
