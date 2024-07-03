@@ -25,7 +25,7 @@
   cursor: pointer;
 
   &:hover {
-    border-color: orange;
+    border-color: var(--color-states-hover-hover-primary-border);
   }
 
   > * {
@@ -40,7 +40,7 @@
     border-color: var(--color-states-selected-selected-primary-border);
 
     &:hover {
-      border-color: orange;
+      border-color: var(--color-states-hover-hover-primary-border);
     }
   }
 
