@@ -2,6 +2,7 @@ import { Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 
 import styles from './ProgressBar.module.css';
+import { displayAsCurrent } from './utils';
 
 export interface ProgressBarStepsProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -68,13 +69,13 @@ export const ProgressBarSteps = ({
   }
 
   const stepsWithoutFinal = totalSteps - 1;
-  const isFinalStepCurrent = currentStep === totalSteps;
+  const isFinalStepCurrent = displayAsCurrent(currentStep, totalSteps);
 
   return (
     <div className={clsx(styles.container, className)}>
       {Array.from({ length: stepsWithoutFinal }, (_, index) => {
         const currentStepIndex = index + 1;
-        const isCurrent = currentStep === currentStepIndex;
+        const isCurrent = displayAsCurrent(currentStep, currentStepIndex);
         const isStepComplete = currentStepIndex < currentStep;
 
         return (

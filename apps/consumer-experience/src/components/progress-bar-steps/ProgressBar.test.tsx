@@ -3,6 +3,7 @@
 import { render, screen } from '@testing-library/react';
 
 import { ProgressBarSteps, ProgressStep } from './ProgressBarSteps';
+import { displayAsCurrent } from './utils';
 
 describe('ProgressStep', () => {
   // renders step incomplete when isComplete is false
@@ -65,5 +66,21 @@ describe('progress bar steps', () => {
     );
     const steps = getAllByRole('presentation', { hidden: true });
     expect(steps).toHaveLength(5);
+  });
+});
+
+describe('displayAsCurrent', () => {
+  it('should return true when userCurrentStep equals currentStepIndex', () => {
+    const userCurrentStep = 3;
+    const currentStepIndex = 3;
+    const result = displayAsCurrent(userCurrentStep, currentStepIndex);
+    expect(result).toBe(true);
+  });
+
+  it('should return false when userCurrentStep is 0 and currentStepIndex is not 0', () => {
+    const userCurrentStep = 0;
+    const currentStepIndex = 1;
+    const result = displayAsCurrent(userCurrentStep, currentStepIndex);
+    expect(result).toBe(false);
   });
 });
