@@ -17,7 +17,7 @@
   background-color: white;
   padding: var(--measure-dimension-padding-2xl);
   box-shadow: var(--shadow-elevation-elevation-light-04);
-  border-radius: var(--measure-dimension-radius-md);
+  border-radius: var(--measure-dimension-radius-sm);
 }
 
 @media (min-width: 768px) {

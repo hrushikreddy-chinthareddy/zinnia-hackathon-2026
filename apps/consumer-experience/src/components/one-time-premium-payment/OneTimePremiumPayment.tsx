@@ -1,11 +1,34 @@
 'use client';
+import { toSentenceCase } from '@zinnia/utils';
+import { cloneElement, useState } from 'react';
+
 import { HeaderLink } from '@/components/header-link/HeaderLink';
-import { Button } from '@zinnia/bloom/components';
 
 import styles from './OneTimePremiumPayment.module.css';
 import { SelectAmount } from './SelectAmount';
-import { useMemo, useState } from 'react';
 import { SelectBank } from './SelectBank';
+import { HeaderButton } from '../header-link/HeaderButton';
+import { ProgressBarSteps } from '../progress-bar-steps/ProgressBarSteps';
+
+const steps = [
+  {
+    component: <SelectAmount />,
+    title: 'Make a One-Time Premium Payment',
+  },
+  {
+    component: <SelectBank />,
+    title: 'Select payment method',
+  },
+  {
+    component: <SelectAmount />,
+    title: 'summary',
+  },
+  // TODO: this is the final step ONLY if the payment was successful
+  {
+    compponent: <></>,
+    title: 'Submitted',
+  },
+];
 
 export const OneTimePremiumPayment = ({
   planCode,
@@ -14,48 +37,26 @@ export const OneTimePremiumPayment = ({
   planCode: string;
   policyNumber: string;
 }) => {
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(0);
 
-  const currentStepComponent = useMemo(() => {
-    switch (currentStep) {
-      case 1:
-        // TODO: pass in method to update data
-        return <SelectAmount />;
-      case 2:
-        return <SelectBank />;
-      // TODO: what should the default be here?
-      default:
-        return 'Select Amount';
-    }
-  }, [currentStep]);
+  const moveToNextStep = () => {
+    setCurrentStep(currentStep + 1);
+  };
 
-  const nextStepButtonText = useMemo(() => {
-    switch (currentStep) {
-      case 3:
-        return 'Submit payment';
-      // TODO: what should the default be here?
-      default:
-        return 'Continue';
-    }
-  }, [currentStep]);
-
-  const nextStepHeaderText = useMemo(() => {
-    switch (currentStep) {
-      case 1:
-        return 'One-Time Premium Payment';
-      case 2:
-        return 'Select Payment Method';
-      case 3:
-        return 'Summary';
-      // TODO: what should the default be here?
-      default:
-        return 'One-Time Premium Payment';
-    }
-  }, [currentStep]);
+  const returnToPreviousStep = () => {
+    setCurrentStep(currentStep - 1);
+  };
 
   return (
     <>
-      {currentStep === 1 ? (
+      <div className={`${styles.steps} flex-center mb-xl`}>
+        <span className="typography-labels-label-sm mr-lg">Step</span>
+        <ProgressBarSteps
+          totalSteps={steps.length}
+          currentStep={currentStep + 1}
+        />
+      </div>
+      {currentStep === 0 ? (
         <HeaderLink
           className="mb-xl"
           title="Make a One-Time Payment"
@@ -65,18 +66,17 @@ export const OneTimePremiumPayment = ({
           }}
         />
       ) : (
-        // {/* TODO: how to do this to return to previous step, should be a button not a link */}
-        <HeaderLink className="mb-xl" title={nextStepHeaderText} />
+        <HeaderButton
+          onClick={returnToPreviousStep}
+          className="mb-xl"
+          title={toSentenceCase(steps[currentStep]?.title)}
+        />
       )}
 
-      {currentStepComponent}
-      <div className={styles.buttonGroup}>
-        <Button mode="primary" onClick={() => setCurrentStep(currentStep + 1)}>
-          {nextStepButtonText}
-        </Button>
-        {/* TODO: show 'are you sure path', this should actually be a link */}
-        <Button mode="link">Cancel</Button>
-      </div>
+      {steps[currentStep]?.component &&
+        cloneElement(steps[currentStep]?.component || <></>, {
+          moveToNextStep,
+        })}
     </>
   );
 };

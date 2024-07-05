@@ -64,7 +64,9 @@ export const ProgressBarSteps = ({
   }
 
   return (
-    <div className={clsx(styles.container, { className: className })}>
+    <div
+      className={clsx(styles.container, { [className as string]: className })}
+    >
       {[...Array(totalSteps)].map((_, index) => {
         const currentNumber = index + 1;
         const isCurrent = currentNumber === currentStep;
