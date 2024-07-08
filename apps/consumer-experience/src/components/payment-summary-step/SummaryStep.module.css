@@ -1,0 +1,73 @@
+.summaryStepContainer {
+  display: flex;
+  min-width: 285px;
+  padding: var(--margin-xs, 16px);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gap-xl, 24px);
+  align-self: stretch;
+  border-radius: 4px;
+  background-color: var(--Base-Surface-surface-secondary, #f8f8f8);
+}
+
+.summaryStepContent {
+  display: flex;
+  align-items: flex-start;
+  align-content: flex-start;
+  gap: var(--gap-lg, 16px) var(--gap-2xl, 32px);
+  align-self: stretch;
+  flex-wrap: wrap;
+}
+
+.summaryStepRule {
+  height: 2px;
+  align-self: stretch;
+  color: var(--Base-Border-border-light, #ededed);
+}
+
+.summaryNumbersSection {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px var(--gap-md, 8px);
+  align-self: stretch;
+  flex-wrap: wrap;
+}
+
+.summaryTooltip {
+  display: flex;
+  flex-direction: row;
+  height: 24px;
+  align-items: center;
+  gap: var(--gap-xs, 4px);
+}
+
+.borderDotted {
+  height: 0px;
+  flex: 1 0 0;
+  border-style: dotted;
+  border-color: var(--Base-Border-border-bold, #b3b3b3);
+  border-bottom-width: 2px;
+  border-top-width: 0;
+}
+
+@media (width < 500px) {
+  .summaryStepContent {
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+
+  .summaryTotalDeposit::before {
+    content: '';
+    display: inline-flex;
+    width: 100%;
+    border-bottom: 2px dotted var(--Base-Border-border-bold, #b3b3b3);
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  .summaryTotalDeposit {
+    display: inline-flex;
+    width: 100%;
+  }
+}
