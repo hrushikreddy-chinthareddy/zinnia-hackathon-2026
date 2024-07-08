@@ -24,7 +24,6 @@ export const SummaryStep = ({
   className,
   transactionSummary,
 }: SummaryStepProps) => {
-  // Function to calculate the total deposit
   const calculateTotalDeposit = (
     transactions: Array<{ label: string; value: number }>
   ) => {
