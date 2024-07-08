@@ -1,0 +1,34 @@
+.inputGroup {
+  width: 100%;
+  border: var(--measure-dimension-stroke-sm) solid
+    var(--color-base-border-border-light);
+  border-radius: var(--measure-dimension-radius-sm);
+  padding: var(--measure-dimension-padding-lg);
+  display: flex;
+  justify-content: space-between;
+}
+
+.input {
+  width: 100%;
+}
+
+.datePickerContainer {
+  padding: var(--measure-dimension-padding-xl);
+  box-shadow: var(--shadow-elevation-elevation-light-04);
+  background-color: var(--color-base-surface-surface-primary);
+  z-index: 9;
+  margin-top: var(--measure-dimension-gap-xl);
+  border-radius: var(--measure-dimension-radius-sm);
+  /* Align to edge of the input box rather than trigger icon */
+  margin-right: calc(var(--measure-dimension-padding-lg) * -1);
+}
+
+.dateContainer {
+  position: relative;
+}
+
+@media (width > 767px) {
+  .inputGroup {
+    width: 350px;
+  }
+}

@@ -4,26 +4,38 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { isValidDate } from '@/utils/dates';
 
-import premiumStyles from '../one-time-premium-payment/OneTimePremiumPayment.module.css';
+import styles from './DateInput.module.css';
+
+// From React DayPicker types
+/** A matcher to match a day falling before and/or after two dates, where the dates are not included. */
+type DateInterval = {
+  before: Date;
+  after: Date;
+};
 
 export const DateInput = ({
   disableBeforeDate,
   disableAfterDate,
   onSelect,
   selectedDate,
+  id,
 }: {
   disableBeforeDate?: Date;
   disableAfterDate?: Date;
+  id?: string;
   onSelect: (date: Date | undefined) => void;
   selectedDate?: Date;
 }) => {
-  const [inputVal, setInputVal] = useState<string>();
+  const [inputVal, setInputVal] = useState<string>(
+    selectedDate?.toLocaleDateString() || ''
+  );
   const [currentDate, setCurrentDate] = useState<Date | undefined>(
     selectedDate
   );
+  const [calendarOpen, setCalendarOpen] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputVal(e.target.value); // keep the input value in sync
+    setInputVal(e.target.value);
     setCurrentDate(e.target.value ? new Date(e.target.value) : undefined);
   };
 
@@ -35,7 +47,17 @@ export const DateInput = ({
       setCurrentDate(date);
       setInputVal(date.toLocaleDateString());
     }
+    setCalendarOpen(false);
   };
+
+  useEffect(() => {
+    // TODO: should this validation happen here? or in the consumer of the component?
+    if (currentDate && isValidDate(currentDate.toString())) {
+      onSelect(currentDate);
+    } else {
+      onSelect(undefined);
+    }
+  }, [currentDate, onSelect]);
 
   const handleKeyPress = useCallback((e: KeyboardEvent) => {
     const regex = /^[0-9/]+$/;
@@ -47,14 +69,6 @@ export const DateInput = ({
   }, []);
 
   useEffect(() => {
-    if (currentDate && isValidDate(currentDate.toString())) {
-      onSelect(currentDate);
-    } else {
-      onSelect(undefined);
-    }
-  }, [currentDate, onSelect]);
-
-  useEffect(() => {
     document.addEventListener('keypress', handleKeyPress);
     return () => {
       document.removeEventListener('keypress', handleKeyPress);
@@ -62,17 +76,17 @@ export const DateInput = ({
   }, [handleKeyPress]);
 
   return (
-    <div className={premiumStyles.inputGroup}>
+    <div className={styles.inputGroup}>
       <input
-        className={`typography-content-body-sm ${premiumStyles.input}`}
+        className={`typography-content-body-sm ${styles.input}`}
         type="text"
         name="date"
-        id="one-time-premium-payment-date"
-        defaultValue={new Date(selectedDate || '')?.toLocaleDateString()}
+        id={id}
         value={inputVal}
         onChange={handleInputChange}
+        placeholder="Please select a date"
       />
-      <ReactPopover.Root>
+      <ReactPopover.Root open={calendarOpen} onOpenChange={setCalendarOpen}>
         <ReactPopover.Trigger>
           <Icon
             type={IconType.BANK}
@@ -81,7 +95,7 @@ export const DateInput = ({
         </ReactPopover.Trigger>
         <ReactPopover.Portal>
           <ReactPopover.Content align="end" side="bottom">
-            <div className={premiumStyles.datePickerContainer}>
+            <div className={styles.datePickerContainer}>
               <DatePicker
                 mode="single"
                 selected={selectedDate}
@@ -91,9 +105,7 @@ export const DateInput = ({
                   {
                     before: disableBeforeDate,
                     after: disableAfterDate,
-                    // TODO: need to fix this type
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  } as any
+                  } as DateInterval
                 }
               />
             </div>

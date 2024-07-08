@@ -21,18 +21,14 @@ export const SelectAmount = ({
   moveToNextStep?: () => void;
 }) => {
   const [dateInvalidError, setDateInvalidError] = useState<string | null>(null);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-    new Date()
-  );
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
 
-  const sixtyDaysInFutureDay = dayjs().add(61, 'day').format('YYYY-MM-DD');
+  const sixtyDaysInFutureDay = dayjs().add(60, 'day').format('YYYY-MM-DD');
 
   const validateAndMove = () => {
-    console.log(dayjs(selectedDate).isBefore(new Date()));
     if (selectedDate) {
       if (
-        // TODO: today is returning true so not allowing to move forward
-        dayjs(selectedDate).isBefore(new Date()) ||
+        dayjs(selectedDate).isBefore(new Date(), 'day') ||
         dayjs(selectedDate).isAfter(new Date(sixtyDaysInFutureDay))
       ) {
         setDateInvalidError(dateOutOfRangeMessage);
@@ -59,6 +55,7 @@ export const SelectAmount = ({
           selectedDate={selectedDate}
           disableAfterDate={new Date(sixtyDaysInFutureDay)}
           disableBeforeDate={new Date()}
+          id="one-time-premium-payment-date"
         />
         {dateInvalidError && (
           <AssistiveText
@@ -86,13 +83,3 @@ export const SelectAmount = ({
     </>
   );
 };
-
-// calendar input
-// verify mobile
-
-// add some text instructions since you can input as well saying
-//  --- please enter valid Date
-//  -- can only schedule payment within next 60 days
-// fix the hover color
-// when clicking into the input, open the calendar
-// add calendar icon
