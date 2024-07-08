@@ -13,28 +13,44 @@ export default meta;
 
 export const Default: StoryObj<typeof SummaryStep> = {
   args: {
-    payorName: 'Nelson Williams',
-    effectiveDate: '2022-01-01',
-    bankDetails: {
-      accountNumber: '3601234567890',
-      branchName: 'capital one, inc.',
-    },
-    submittedAmount: 10000,
-    fees: 600,
-    feesTooltipText: 'Fees included in submitted amount',
+    transactionSummary: [
+      {
+        label: 'Submitted Amount',
+        value: 10000,
+        tooltipText: '',
+      },
+      {
+        label: 'Fees',
+        value: 450,
+        tooltipText: 'Fees appended by seller',
+      },
+    ],
   },
 };
 
 export const ExtendedAmount: StoryObj<typeof SummaryStep> = {
   args: {
-    payorName: 'Nelson Williams',
-    effectiveDate: '2022-01-01',
-    bankDetails: {
-      accountNumber: '3601234567890',
-      branchName: 'capital one, inc.',
-    },
-    submittedAmount: 100000000,
-    fees: 600,
-    feesTooltipText: 'Fees included in submitted amount',
+    transactionSummary: [
+      {
+        label: 'Submitted Amount',
+        value: 10000000000,
+        tooltipText: '',
+      },
+      {
+        label: 'Fees',
+        value: 4500,
+        tooltipText: 'Fees appended by seller',
+      },
+      {
+        label: 'Taxes',
+        value: 1500,
+        tooltipText: 'Taxes applied by agents',
+      },
+      {
+        label: 'Misc',
+        value: 8150,
+        tooltipText: 'Miscellaneous fees and charges',
+      },
+    ],
   },
 };
