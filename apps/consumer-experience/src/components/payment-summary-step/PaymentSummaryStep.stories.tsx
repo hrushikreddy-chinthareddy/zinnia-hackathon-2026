@@ -1,17 +1,17 @@
 import { Meta, StoryObj } from '@storybook/react';
 
-import { SummaryStep } from './SummaryStep';
+import { PaymentSummaryStep } from './PaymentSummaryStep';
 
-const meta: Meta<typeof SummaryStep> = {
-  component: SummaryStep,
-  title: 'Components/SummaryStep',
+const meta: Meta<typeof PaymentSummaryStep> = {
+  component: PaymentSummaryStep,
+  title: 'Components/PaymentSummaryStep',
   args: {},
   tags: ['autodocs'],
 };
 
 export default meta;
 
-export const Default: StoryObj<typeof SummaryStep> = {
+export const Default: StoryObj<typeof PaymentSummaryStep> = {
   args: {
     transactionSummary: [
       {
@@ -28,7 +28,7 @@ export const Default: StoryObj<typeof SummaryStep> = {
   },
 };
 
-export const ExtendedAmount: StoryObj<typeof SummaryStep> = {
+export const ExtendedAmount: StoryObj<typeof PaymentSummaryStep> = {
   args: {
     transactionSummary: [
       {

@@ -9,9 +9,9 @@ import React from 'react';
 
 import { formatUSDollars } from '@/utils/currency';
 
-import styles from './SummaryStep.module.css';
+import styles from './PaymentSummaryStep.module.css';
 
-export interface SummaryStepProps {
+export interface PaymentSummaryStepProps {
   className?: string;
   transactionSummary: Array<{
     label: string;
@@ -20,10 +20,10 @@ export interface SummaryStepProps {
   }>;
 }
 
-export const SummaryStep = ({
+export const PaymentSummaryStep = ({
   className,
   transactionSummary,
-}: SummaryStepProps) => {
+}: PaymentSummaryStepProps) => {
   const calculateTotalDeposit = (
     transactions: Array<{ label: string; value: number }>
   ) => {
@@ -42,13 +42,13 @@ export const SummaryStep = ({
   const totalDeposit = calculateTotalDeposit(transactionSummary);
 
   return (
-    <div className={clsx(styles.summaryStepContainer, className)}>
+    <div className={clsx(styles.paymentSummaryStepContainer, className)}>
       {transactionSummary.map(({ label, value, tooltipText }, index) => (
-        <div key={index} className={clsx(styles.summaryNumbersSection)}>
+        <div key={index} className={clsx(styles.paymentSummarySection)}>
           <label
             className={clsx(
-              styles.summaryTooltip,
-              styles.summaryLabel,
+              styles.paymentSummaryTooltip,
+              styles.paymentSummaryLabel,
               'typography-labels-field-label'
             )}
           >
@@ -74,20 +74,31 @@ export const SummaryStep = ({
             )}
           </label>
           <p
-            className={clsx(styles.summaryValue, 'typography-content-body-sm')}
+            className={clsx(
+              styles.paymentSummaryValue,
+              'typography-content-body-sm'
+            )}
           >
             {formatUSDollars(value)}
           </p>
         </div>
       ))}
 
-      <div className={clsx(styles.summaryNumbersSection)}>
+      <div className={clsx(styles.paymentSummarySection)}>
         <label
-          className={clsx(styles.summaryLabel, 'typography-labels-field-label')}
+          className={clsx(
+            styles.paymentSummaryLabel,
+            'typography-labels-field-label'
+          )}
         >
           Total deposit
         </label>
-        <p className={clsx(styles.summaryValue, 'typography-content-value')}>
+        <p
+          className={clsx(
+            styles.paymentSummaryValue,
+            'typography-content-value'
+          )}
+        >
           {formatUSDollars(totalDeposit)}
         </p>
       </div>

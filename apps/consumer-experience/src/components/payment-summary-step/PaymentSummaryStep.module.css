@@ -1,4 +1,4 @@
-.summaryStepContainer {
+.paymentSummaryStepContainer {
   display: flex;
   min-width: 285px;
   padding: var(--measure-dimension-padding-2xl, 16px);
@@ -10,7 +10,7 @@
   background-color: var(--color-grayscale-color-50-gray, #f8f8f8);
 }
 
-.summaryNumbersSection {
+.paymentSummarySection {
   display: inline-flex;
   align-items: baseline;
   justify-content: space-between;
@@ -18,7 +18,7 @@
   flex-wrap: wrap;
 }
 
-.summaryTooltip {
+.paymentSummaryTooltip {
   display: flex;
   flex-direction: row;
   height: var(--measure-dimension-z-space-6, 24px);
@@ -26,14 +26,14 @@
   gap: var(--measure-dimension-gap-xs, 4px);
 }
 
-.summaryLabel {
+.paymentSummaryLabel {
   flex: 1;
   display: inline-flex;
   white-space: nowrap;
   align-items: baseline;
 }
 
-.summaryLabel:after {
+.paymentSummaryLabel:after {
   content: '';
   flex: 1;
   border-bottom: var(--measure-dimension-stroke-sm, 2px) dotted
@@ -41,7 +41,7 @@
   margin-left: var(--measure-dimension-z-space-2, 8px);
 }
 
-.summaryValue::before {
+.paymentSummaryValue::before {
   content: '';
   flex: 1;
   border-bottom: var(--measure-dimension-stroke-sm, 2px) dotted
@@ -49,7 +49,7 @@
   margin-right: var(--measure-dimension-z-space-2, 8px);
 }
 
-.summaryValue {
+.paymentSummaryValue {
   display: inline-flex;
   flex: 1;
 }
