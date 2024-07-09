@@ -6,6 +6,7 @@
   padding: var(--measure-dimension-padding-lg);
   display: flex;
   justify-content: space-between;
+  margin-top: var(--measure-dimension-gap-xs);
 }
 
 .input {
