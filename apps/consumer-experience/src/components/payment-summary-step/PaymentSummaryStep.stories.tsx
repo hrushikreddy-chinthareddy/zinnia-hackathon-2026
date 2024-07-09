@@ -5,7 +5,7 @@ import { PaymentSummaryStep } from './PaymentSummaryStep';
 const meta: Meta<typeof PaymentSummaryStep> = {
   component: PaymentSummaryStep,
   title: 'Components/PaymentSummaryStep',
-  args: {},
+  args: { sumTotalText: 'Total Deposit' },
   tags: ['autodocs'],
 };
 

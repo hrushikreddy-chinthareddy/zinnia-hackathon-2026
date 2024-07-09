@@ -1,78 +1,52 @@
-import {
-  Icon,
-  IconType,
-  Popover,
-  PopoverPlacement,
-} from '@zinnia/bloom/components';
+/* eslint-disable react/jsx-key */
+import { Label } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import React from 'react';
 
 import { formatUSDollars } from '@/utils/currency';
 
+import { PaymentSummaryPopover } from './PaymentSummaryPopover';
 import styles from './PaymentSummaryStep.module.css';
+import { calculateTotalDeposit } from './utils';
 
 export interface PaymentSummaryStepProps {
   className?: string;
   transactionSummary: Array<{
     label: string;
     value: number;
-    tooltipText: string;
+    tooltipText?: string;
   }>;
+  sumTotalText: string;
 }
 
 export const PaymentSummaryStep = ({
   className,
   transactionSummary,
 }: PaymentSummaryStepProps) => {
-  const calculateTotalDeposit = (
-    transactions: Array<{ label: string; value: number }>
-  ) => {
-    const submittedAmountObj = transactions.find(
-      transaction => transaction.label === 'Submitted Amount'
-    );
-    const submittedAmount = submittedAmountObj ? submittedAmountObj.value : 0;
-    return transactions.reduce((remainingAmount, transaction) => {
-      if (transaction.label !== 'Submitted Amount') {
-        return remainingAmount - transaction.value;
-      }
-      return remainingAmount;
-    }, submittedAmount);
-  };
-
   const totalDeposit = calculateTotalDeposit(transactionSummary);
 
   return (
     <div className={clsx(styles.paymentSummaryStepContainer, className)}>
       {transactionSummary.map(({ label, value, tooltipText }, index) => (
-        <div key={index} className={clsx(styles.paymentSummarySection)}>
-          <label
-            className={clsx(
-              styles.paymentSummaryTooltip,
-              styles.paymentSummaryLabel,
-              'typography-labels-field-label'
-            )}
-          >
-            {label}
-            {tooltipText && (
-              <Popover
-                popoverClassName="typography-labels-field-label"
-                title={label}
-                trigger={
-                  <Icon
-                    type={IconType.CIRCLE_INFO}
-                    width={16}
-                    height={16}
-                    color="var(--color-base-icon-icon-tooltip, #ff7500)"
-                  />
-                }
-                placement={PopoverPlacement.BottomRight}
+        <div key={index} className={styles.paymentSummarySection}>
+          {/* TODO: Add className to Label component and remove wrapping div */}
+          <div className={styles.paymentSummaryLabel}>
+            {tooltipText ? (
+              <Label
+                interactiveElements={[
+                  <PaymentSummaryPopover
+                    key={label}
+                    tooltipTitle={label}
+                    tooltipText={tooltipText}
+                  />,
+                ]}
               >
-                <div className={clsx(styles.popoverContent)}>
-                  <p>{tooltipText}</p>
-                </div>
-              </Popover>
+                {label}
+              </Label>
+            ) : (
+              <Label>{label}</Label>
             )}
-          </label>
+          </div>
           <p
             className={clsx(
               styles.paymentSummaryValue,
@@ -84,15 +58,11 @@ export const PaymentSummaryStep = ({
         </div>
       ))}
 
-      <div className={clsx(styles.paymentSummarySection)}>
-        <label
-          className={clsx(
-            styles.paymentSummaryLabel,
-            'typography-labels-field-label'
-          )}
-        >
-          Total deposit
-        </label>
+      {/* TODO: Add className to Label component and remove wrapping div */}
+      <div className={styles.paymentSummarySection}>
+        <div className={styles.paymentSummaryLabel}>
+          <Label>Total Deposit</Label>
+        </div>
         <p
           className={clsx(
             styles.paymentSummaryValue,

@@ -4,7 +4,8 @@
   padding: var(--measure-dimension-padding-2xl, 16px);
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--measure-dimension-gap-xl, 24px);
+  /*subtracting different from margin-top being added to the paymentSummaryItem and Label psuedo classes when items wrap  */
+  gap: calc(var(--measure-dimension-gap-xl, 24px) - 8px);
   align-self: stretch;
   border-radius: var(--measure-dimension-radius-sm, 4px);
   background-color: var(--color-grayscale-color-50-gray, #f8f8f8);
@@ -16,21 +17,16 @@
   justify-content: space-between;
   align-self: stretch;
   flex-wrap: wrap;
+  gap: 2px;
 }
 
-.paymentSummaryTooltip {
-  display: flex;
-  flex-direction: row;
-  height: var(--measure-dimension-z-space-6, 24px);
-  align-items: center;
-  gap: var(--measure-dimension-gap-xs, 4px);
-}
-
-.paymentSummaryLabel {
-  flex: 1;
+.paymentSummaryLabel,
+.paymentSummaryValue {
   display: inline-flex;
-  white-space: nowrap;
+  flex: 1;
   align-items: baseline;
+  margin-top: 8px;
+  white-space: nowrap;
 }
 
 .paymentSummaryLabel:after {
@@ -39,6 +35,7 @@
   border-bottom: var(--measure-dimension-stroke-sm, 2px) dotted
     var(--color-grayscale-color-300-gray, #b3b3b3);
   margin-left: var(--measure-dimension-z-space-2, 8px);
+  margin-top: 8px;
 }
 
 .paymentSummaryValue::before {
@@ -47,9 +44,5 @@
   border-bottom: var(--measure-dimension-stroke-sm, 2px) dotted
     var(--color-grayscale-color-300-gray, #b3b3b3);
   margin-right: var(--measure-dimension-z-space-2, 8px);
-}
-
-.paymentSummaryValue {
-  display: inline-flex;
-  flex: 1;
+  margin-top: 8px;
 }
