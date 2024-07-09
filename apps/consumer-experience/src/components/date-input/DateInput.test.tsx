@@ -7,11 +7,13 @@ import { DateInput } from './DateInput';
 describe('DateInput', () => {
   // Renders input with initial selected date
   it('should render input with initial selected date', () => {
+    const today = new Date();
     const { getByPlaceholderText } = render(
-      <DateInput selectedDate={new Date('2023-10-01')} onSelect={() => {}} />
+      <DateInput selectedDate={new Date()} onSelect={() => {}} />
     );
     const input = getByPlaceholderText('Please select a date');
-    expect(input).toHaveValue('10/1/2023');
+
+    expect(input).toHaveValue(today.toLocaleDateString());
   });
 
   // Handles empty input value gracefully

@@ -32,7 +32,6 @@ export const SelectAmount = ({
         dayjs(selectedDate).isBefore(new Date(), 'day') ||
         dayjs(selectedDate).isAfter(new Date(sixtyDaysInFutureDay))
       ) {
-        console.log('SELECTED', selectedDate);
         setDateInvalidError(dateOutOfRangeMessage);
         return;
       }
