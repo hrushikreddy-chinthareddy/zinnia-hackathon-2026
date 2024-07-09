@@ -12,8 +12,9 @@ import { useEffect, useState } from 'react';
 import premiumStyles from './OneTimePremiumPayment.module.css';
 import { DateInput } from '../date-input/DateInput';
 
-const dateInvalidMessage = 'Please enter a valid date';
-const dateOutOfRangeMessage = 'Date must between today and next 60 days';
+export const dateInvalidMessage = 'Please enter a valid date';
+export const dateOutOfRangeMessage =
+  'Date must be between today and next 60 days';
 
 export const SelectAmount = ({
   moveToNextStep,
@@ -31,6 +32,7 @@ export const SelectAmount = ({
         dayjs(selectedDate).isBefore(new Date(), 'day') ||
         dayjs(selectedDate).isAfter(new Date(sixtyDaysInFutureDay))
       ) {
+        console.log('SELECTED', selectedDate);
         setDateInvalidError(dateOutOfRangeMessage);
         return;
       }
@@ -47,9 +49,7 @@ export const SelectAmount = ({
   return (
     <>
       <div className={`mb-xl ${premiumStyles.dateContainer}`}>
-        <Label labelFor="one-time-premium-payment-date mb">
-          Effective date
-        </Label>
+        <Label labelFor="one-time-premium-payment-date">Effective date</Label>
         <DateInput
           onSelect={setSelectedDate}
           selectedDate={selectedDate}
