@@ -223,3 +223,30 @@ input[type='radio'] {
     font-size: 16px;
   }
 }
+
+/*
+* FORMS
+* =============
+*/
+
+/* Used for things like date picker where icon is visually within input, but is a trigger */
+.input-with-interaction {
+  width: 100%;
+  border: var(--measure-dimension-stroke-sm) solid
+    var(--color-base-border-border-light);
+  border-radius: var(--measure-dimension-radius-sm);
+  padding: var(--measure-dimension-padding-lg);
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--measure-dimension-gap-xs);
+}
+
+.input {
+  width: 100%;
+}
+
+@media (width > 767px) {
+  .input-with-interaction {
+    width: 350px;
+  }
+}

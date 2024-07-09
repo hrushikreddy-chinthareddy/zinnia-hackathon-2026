@@ -84,7 +84,7 @@ export const DateInput = ({
   }, [handleKeyPress]);
 
   return (
-    <div className={styles.inputGroup} ref={inputContainer}>
+    <div className="input-with-interaction" ref={inputContainer}>
       <input
         className={`typography-content-body-sm ${styles.input}`}
         type="text"
