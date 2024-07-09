@@ -193,6 +193,11 @@ a:focus-visible {
   text-align: left;
 }
 
+/*
+* FORMS & INPUTS
+* =============
+*/
+
 input[type='radio'] {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -224,11 +229,6 @@ input[type='radio'] {
   }
 }
 
-/*
-* FORMS
-* =============
-*/
-
 /* Used for things like date picker where icon is visually within input, but is a trigger */
 .input-with-interaction {
   width: 100%;
@@ -241,7 +241,7 @@ input[type='radio'] {
   margin-top: var(--measure-dimension-gap-xs);
 }
 
-.input {
+input[type='text'] {
   width: 100%;
 }
 
