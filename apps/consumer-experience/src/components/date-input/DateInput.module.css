@@ -13,6 +13,8 @@
 }
 
 .datePickerContainer {
+  display: flex;
+  justify-content: center;
   padding: var(--measure-dimension-padding-xl);
   box-shadow: var(--shadow-elevation-elevation-light-04);
   background-color: var(--color-base-surface-surface-primary);
@@ -25,6 +27,15 @@
 
 .dateContainer {
   position: relative;
+}
+
+@media (width > 390px) {
+  /* I know this is vile, but the width is calculated based on the input size on mobile otherwise its just content
+  i think this is the more efficient way of doing this rather than triggering a full rerender
+  by using a window dimensions hook  */
+  .datePickerContainer {
+    width: fit-content !important;
+  }
 }
 
 @media (width > 767px) {

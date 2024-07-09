@@ -1,6 +1,6 @@
 import * as ReactPopover from '@radix-ui/react-popover';
 import { Icon, IconType, DatePicker } from '@zinnia/bloom/components';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { isValidDate } from '@/utils/dates';
 
@@ -33,6 +33,14 @@ export const DateInput = ({
     selectedDate
   );
   const [calendarOpen, setCalendarOpen] = useState(false);
+  const inputContainer = useRef<HTMLInputElement>(null);
+  const [inputWidth, setInputWidth] = useState(0);
+
+  useEffect(() => {
+    if (inputContainer.current) {
+      setInputWidth(inputContainer.current.offsetWidth);
+    }
+  }, [inputContainer]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputVal(e.target.value);
@@ -76,7 +84,7 @@ export const DateInput = ({
   }, [handleKeyPress]);
 
   return (
-    <div className={styles.inputGroup}>
+    <div className={styles.inputGroup} ref={inputContainer}>
       <input
         className={`typography-content-body-sm ${styles.input}`}
         type="text"
@@ -95,7 +103,10 @@ export const DateInput = ({
         </ReactPopover.Trigger>
         <ReactPopover.Portal>
           <ReactPopover.Content align="end" side="bottom">
-            <div className={styles.datePickerContainer}>
+            <div
+              className={styles.datePickerContainer}
+              style={{ width: inputWidth }}
+            >
               <DatePicker
                 mode="single"
                 selected={selectedDate}
