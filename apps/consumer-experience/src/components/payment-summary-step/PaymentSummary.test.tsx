@@ -17,9 +17,9 @@ describe('calculateTotalDeposit', () => {
   // handles array with all zero values
   it('should return zero when all values are zero', () => {
     const values = [
-      { label: <Label>Submitted amount</Label>, value: 100 },
-      { label: <Label>Fees</Label>, value: 200 },
-      { label: <Label>Misc</Label>, value: 300 },
+      { label: <Label>Submitted amount</Label>, value: 0 },
+      { label: <Label>Fees</Label>, value: 0 },
+      { label: <Label>Misc</Label>, value: 0 },
     ];
     const result = calculateTotalDeposit(values);
     expect(result).toBe(0);
