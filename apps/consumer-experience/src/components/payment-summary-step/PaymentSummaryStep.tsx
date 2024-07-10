@@ -1,52 +1,35 @@
-/* eslint-disable react/jsx-key */
-import { Label } from '@zinnia/bloom/components';
+import { LabelProps } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import React from 'react';
 
 import { formatUSDollars } from '@/utils/currency';
 
-import { PaymentSummaryPopover } from './PaymentSummaryPopover';
 import styles from './PaymentSummaryStep.module.css';
 import { calculateTotalDeposit } from './utils';
 
+export interface TransactionSummaryItem {
+  label: React.ReactElement<LabelProps>;
+  value: number;
+}
+
 export interface PaymentSummaryStepProps {
   className?: string;
-  transactionSummary: Array<{
-    label: string;
-    value: number;
-    tooltipText?: string;
-  }>;
-  sumTotalText: string;
+  transactionSummary: TransactionSummaryItem[];
+  totalLabel: React.ReactElement<LabelProps>;
 }
 
 export const PaymentSummaryStep = ({
   className,
   transactionSummary,
+  totalLabel,
 }: PaymentSummaryStepProps) => {
   const totalDeposit = calculateTotalDeposit(transactionSummary);
 
   return (
     <div className={clsx(styles.paymentSummaryStepContainer, className)}>
-      {transactionSummary.map(({ label, value, tooltipText }, index) => (
+      {transactionSummary.map(({ label, value }, index) => (
         <div key={index} className={styles.paymentSummarySection}>
-          {/* TODO: Add className to Label component and remove wrapping div */}
-          <div className={styles.paymentSummaryLabel}>
-            {tooltipText ? (
-              <Label
-                interactiveElements={[
-                  <PaymentSummaryPopover
-                    key={label}
-                    tooltipTitle={label}
-                    tooltipText={tooltipText}
-                  />,
-                ]}
-              >
-                {label}
-              </Label>
-            ) : (
-              <Label>{label}</Label>
-            )}
-          </div>
+          <div className={styles.paymentSummaryLabel}>{label}</div>
           <p
             className={clsx(
               styles.paymentSummaryValue,
@@ -60,9 +43,7 @@ export const PaymentSummaryStep = ({
 
       {/* TODO: Add className to Label component and remove wrapping div */}
       <div className={styles.paymentSummarySection}>
-        <div className={styles.paymentSummaryLabel}>
-          <Label>Total Deposit</Label>
-        </div>
+        <div className={styles.paymentSummaryLabel}>{totalLabel}</div>
         <p
           className={clsx(
             styles.paymentSummaryValue,
