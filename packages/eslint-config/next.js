@@ -1,18 +1,18 @@
-const { resolve } = require("node:path");
+const { resolve } = require('node:path');
 
-const project = resolve(process.cwd(), "tsconfig.json");
+const project = resolve(process.cwd(), 'tsconfig.json');
 
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
   extends: [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:react-hooks/recommended",
-    "plugin:import/recommended",
-    "prettier",
-    "plugin:@typescript-eslint/recommended",
-    require.resolve("@vercel/style-guide/eslint/next"),
-    "eslint-config-turbo",
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+    'plugin:import/recommended',
+    'prettier',
+    'plugin:@typescript-eslint/recommended',
+    require.resolve('@vercel/style-guide/eslint/next'),
+    'turbo',
   ],
   globals: {
     React: true,
@@ -23,14 +23,14 @@ module.exports = {
     browser: true,
   },
   plugins: [
-    "only-warn",
-    "@typescript-eslint",
-    "check-file",
-    "react-refresh",
-    "react-hooks",
+    'only-warn',
+    '@typescript-eslint',
+    'check-file',
+    'react-refresh',
+    'react-hooks',
   ],
   settings: {
-    "import/resolver": {
+    'import/resolver': {
       typescript: {
         project,
       },
@@ -38,9 +38,9 @@ module.exports = {
   },
   ignorePatterns: [
     // Ignore dotfiles
-    ".*.js",
-    "node_modules/",
-    "next-env.d.ts",
+    '.*.js',
+    'node_modules/',
+    'next-env.d.ts',
   ],
-  overrides: [{ files: ["*.js?(x)", "*.ts?(x)"] }],
+  overrides: [{ files: ['*.js?(x)', '*.ts?(x)'] }],
 };

@@ -13,11 +13,11 @@ on:
         required: true
         type: choice
         options:
-          - "api-types"
-          - "eslint-config"
-          - "prettier-config"
-          - "typescript-config"
-          - "utils"
+          - 'api-types'
+          - 'eslint-config'
+          - 'prettier-config'
+          - 'typescript-config'
+          - 'utils'
       node-version-file:
         type: string
         required: false
@@ -48,6 +48,8 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
       - uses: actions/setup-node@v4
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

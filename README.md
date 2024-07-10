@@ -1,67 +1,79 @@
+# Digital Experience Monorepo
+
+This repo contains the necessary apps and packages used to build and maintain Zinnia Live.
+
 ## What's inside?
 
-This Turborepo includes the following packages/apps:
+### Apps
 
-### Apps and Packages
+These are consumer-facing end products that are deployable or deliverable in some form. Apps are typically configured to be started or deployed, like web frontends, backend services, mobile applications, desktop applications, etc. They are the final artifacts that end users interact with.
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@zinnia/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@zinnia/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@zinnia/typescript-config`: `tsconfig.json`s used throughout the monorepo
+- [Consumer Experience](apps/consumer-experience/README.md)
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+### Packages
 
-### Utilities
+These consist of shared libraries, components, utilities, or any common code that is used by multiple apps within the monorepo. Packages are not meant to be deployed independently; instead, they are included as dependencies in apps or other packages. They can, however, be published to our [NPM respository](https://github.com/orgs/zinnia/packages).
 
-This Turborepo has some additional tools already setup for you:
+> NOTE: These packages are also published to our [NPM respository](https://github.com/orgs/zinnia/packages). We want `apps` to opt into the latest version of each package. In order to do so, we publish to the `@zinnia` registry. If you need to make an update to a package you can `link` the local package to the specific `app`. Details on how to link packages can be found in the [Linking packages locally](#linking-packages-locally) section.
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+- [API Types](packages/utils/README.md)
+- [ESlint Config](packages/eslint-config/README.md)
+- [Prettier Config](packages/prettier-config/README.md)
+- [Jest Presets](packages/jest-presets/README.md)
+- [Typescript Config](packages/typescript-config/README.md)
+- [Utils](packages/utils/README.md)
 
-### Build
+## Getting Started
 
-To build all apps and packages, run the following command:
+### Pre-requisites
 
-```
-cd digital-experience-monorepo
-pnpm build
-```
+- Node.js 20+
+- [pnpm](https://pnpm.io/) - We use `pnpm` because it has better support for monorepos. It has a lot of built in tools that make it easier to filter on the app or package you want to build and deploy. You will want to install version `9.4.0`.
+- Personal Access Token
+  - GitHub packages hosts our shared packages
+  - Create a [personal access token](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-to-github-packages)
+    - Make sure it has `read:packages` permissions
+    - Make sure token is authenticated to SSO or you won't have appropriate permissions!
+  - Use your personal access token by doing one of the following:
+    - Edit per-user `~/.npmrc`
+      - Include the following line, (replacing `PERSONAL_ACCESS_TOKEN` with your token)
+        - `//npm.pkg.github.com/:_authToken=PERSONAL_ACCESS_TOKEN`
+      - dev container mounts `~/.npmrc` from host env so no further config necessary
+    - Log into npm command line
+      - run `npm run login:gh-pkg`
+      - username will be your github username (all lowercase)
+      - password is your personal access token
+  - See more at [Authenticating to Github Packages](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-with-a-personal-access-token)
 
-### Develop
+### Installing the monorepo
 
-To develop all apps and packages, run the following command:
-
-```
-cd digital-experience-monorepo
-pnpm dev
-```
-
-### Remote Caching
-
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
-
-```
-cd digital-experience-monorepo
-npx turbo login
+```bash
+git clone git@github.com:zinnia/digital-experience-monorepo.git
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+### Building the monorepo
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+Each project in the monorepo should be built with `pnpm run build`. The `build` command is also a [`task`](https://turbo.build/repo/docs/crafting-your-repository/configuring-tasks) in the monorepo. Turbo will run `pnpm run build` for each project in the monorepo. The `build` is also setup to only build projects that have changes since the last commit.
 
+To build all projects in the monorepo ensure you are at the root of the monorepo:
+
+```bash
+pnpm run build
 ```
-npx turbo link
-```
+
+### Deploying the monorepo
+
+Each `app` and `package` will have their own github workflow. This will allow us to deploy only the `apps` and `packages` that have changes since the last commit.
+
+### Adding a new local package
+
+TBD
 
 ### Adding a new NPM Package
 
 This repo uses PNPM to manage packages as it supports monorepos better than NPM.
 
-To add a package, use:
+To add a package ensure you are in the root of the monorepo, use:
 
 ```
 pnpm add --filter <app> <package>
@@ -73,7 +85,89 @@ So for consumer-experience, it would be:
 pnpm add --filter consumer-experience <package>
 ```
 
-OR you can cd into the specific project it and add it there
+OR if you prefer you can `cd` into the specific `app` and add it there:
+
+```bash
+cd apps/consumer-experience
+pnpm add <package>
+```
+
+### Linking packages locally
+
+To make changes to a local package and immediately see those changes reflected in an application, you can use the `link-package` script. The script automates the process of linking a local package to an application, allowing for real-time testing of changes in the context of that application.
+
+Here's what you need to do:
+
+1. **Run the Linking Script**: Use the `pnpm run` command to execute the `link-package` script, passing the name of the package you want to link and the name of the application where you want to see the changes. For example, if you have a local package named `@zinnia/utils` and an application named `consumer-experience`, you would run the following command from the root of your monorepo:
+
+```bash
+pnpm run link-package -- @zinnia/utils consumer-experience
+```
+
+2. **Develop and Test**: With the package linked, you can now make changes to your `@zinnia/utils` package code. Those changes will be reflected in `consumer-experience` as if you had installed an updated package from a registry. You can test your application to see the effects of your changes immediately.
+
+3. **Unlink When Done**: Once you're done with development and testing, you should unlink the package to restore the original module resolution. To unlink the package run the following command::
+
+```bash
+pnpm run unlink-package -- consumer-experience
+```
+
+#### Steps Performed by the Script
+
+This script is designed to restore a previously cached version of a package.json file for a specific app within a monorepo. Normally we would prefer to use the built in `pnpm link` and `pnpm unlink` commands, but there seems to be a bug with the `pnpm unlink` command. So instead we use the following steps:
+
+1. Check for Cached Version: The script first checks if a cached version of the package.json file exists for the specified app in the cached-package-json directory.
+2. Restore package.json: If a cached version exists, it copies this file to the app's directory, effectively restoring the package.json file to its previous state.
+3. Delete Cached File: After successful restoration, the cached file is deleted to maintain cleanliness and avoid potential conflicts.
+4. Synchronize Dependencies: It runs pnpm install within the app's directory to synchronize the node modules with the restored package.json file.
+
+### Publishing a package
+
+The publish-action.yml workflow automates the process of publishing our project's packages to the GitHub Package Registry. This workflow can be triggered manually or automatically by specific events in the repository.
+
+#### Features
+
+- Dry Run Option: Before publishing, you can perform a dry run to see potential outcomes without affecting the actual registry.
+- Version Management: Currently, the process of versioning packages requires manual intervention. Developers are responsible for updating the version number in the respective package according to semantic versioning rules before triggering the workflow.
+- Multi-Package Support: You are able to select the package to publish.
+
+#### Workflow Triggers
+
+This workflow can be triggered under the following conditions:
+
+- Manual Trigger: Through GitHub's UI, allowing for the selection of specific options such as the package to publish or whether to perform a dry run.
+
+#### Inputs
+
+The workflow accepts the following inputs:
+
+- dry-run: (Optional) If set to true, the workflow will execute a dry run of the publish process. Default: false.
+- package-name: (Required) The name of the package you wish to publish. Options include: api-types, eslint-config, prettier-config, typescript-config, utils.
+- node-version-file: (Optional) Specifies the Node.js version to use, defaulting to the version specified in .nvmrc.
+
+## Examples
+
+Below are some examples of how you would make an update to a `package` and see it reflected in an `app`.
+
+- Making an update to `@zinnia/utils`
+
+  1. At the `root` of the monorepo run `pnpm run link-package -- @zinnia/utils consumer-experience`
+  2. At the `root` of the monorepo run `pnpm run build --filter @zinnia/utils`
+  3. Next run the following command at the `root` of the monorepo:
+
+  ```bash
+    pnpm run dev --filter @zinnia/utils
+    pnpm run dev --filter consumer-experience
+  ```
+
+  4. Make the necessary changes
+  5. Update the package.json file version
+  6. Before you commit you changes ensure you do not commit the package.json file with the `@zinnia/utils` package linked.
+     - To unlink the `package` run `pnpm run unlink-package -- consumer-experience`
+  7. Commit your changes and open a PR
+  8. After your PR is merged run the [Publishing a Package](README.md#publishing-a-package) workflow
+
+  > NOTE: We don't want to run `pnpm run dev` without filtering because it will run the `dev` script for all `apps` and `packages` in the monorepo.
 
 ## Useful Links about Turborepo
 
@@ -85,7 +179,3 @@ Learn more about the power of Turborepo:
 - [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
 - [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
 - [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
-
-# More about consumer
-
-See consumer docs [here](apps/consumer-experience/README.md)

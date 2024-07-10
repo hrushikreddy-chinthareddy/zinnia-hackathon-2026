@@ -1,10 +1,11 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env.*local"],
-  "pipeline": {
+  "tasks": {
     "build": {
-      "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+    },
+    "consumer-experience#build": {
       "env": [
         "JWT_SECRET",
         "AUTH0_COOKIE_DOMAIN",
@@ -29,16 +30,11 @@
         "OPTIMIZELY_SDK_KEY"
       ]
     },
-    "lint": {
-      "dependsOn": ["^lint"]
-    },
+    "lint": {},
     "dev": {
-      "dependsOn": ["^build"],
       "cache": false,
       "persistent": true
     },
-    "test": {
-      "dependsOn": ["^build"]
-    }
+    "test": {}
   }
 }
