@@ -4,7 +4,7 @@ import { NextComponentType } from 'next';
 import Link, { LinkProps } from 'next/link';
 import { FC, PropsWithChildren, ReactNode } from 'react';
 
-import styles from './clickableCardContainer.module.css';
+import styles from './ClickableCardsContainer.module.css';
 
 interface LinkItem {
   /**
