@@ -9,6 +9,7 @@ import { SelectAmount } from './SelectAmount';
 import { SelectBank } from './SelectBank';
 import { HeaderButton } from '../header-link/HeaderButton';
 import { ProgressBarSteps } from '../progress-bar-steps/ProgressBarSteps';
+import { PaymentSummary } from './PaymentSummary';
 
 const steps = [
   {
@@ -20,7 +21,7 @@ const steps = [
     title: 'Select payment method',
   },
   {
-    component: <SelectAmount />,
+    component: <PaymentSummary />,
     title: 'summary',
   },
   // TODO: this is the final step ONLY if the payment was successful
