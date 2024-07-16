@@ -122,6 +122,11 @@ a:focus-visible {
 * ==========
 */
 
+.justify-between {
+  display: flex;
+  justify-content: space-between;
+}
+
 .stacked-items {
   display: flex;
   flex-direction: column;

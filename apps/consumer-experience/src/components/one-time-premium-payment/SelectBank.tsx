@@ -2,15 +2,20 @@ import {
   AssistiveText,
   AssistiveTextVariant,
   Button,
+  Icon,
   IconType,
+  SideSheet,
 } from '@zinnia/bloom/components';
+import { ChangeEvent, useState } from 'react';
+
+import { useFeatureFlags } from '@/hooks/use-feature-flags';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import premiumStyles from './OneTimePremiumPayment.module.css';
-import { BankName } from '../pii/BankName';
+import { NoDataAvailable } from '../no-data-available/NoDataAvailable';
 import { AccountNumber } from '../pii/AccountNumber';
 import { AccountType } from '../pii/AccountType';
-import { ChangeEvent, useMemo, useState } from 'react';
-import { NoDataAvailable } from '../no-data-available/NoDataAvailable';
+import { BankName } from '../pii/BankName';
 
 const bankDetails = [
   {
@@ -54,8 +59,9 @@ export const SelectBank = ({
     bankDetails?.findIndex(bank => bank.autopayEnabled)
   );
 
+  const { data: featureFlagData } = useFeatureFlags();
+
   const onBankSelect = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
     setSelectedBank(Number(e.target.value));
   };
 
@@ -111,6 +117,24 @@ export const SelectBank = ({
           })}
         </div>
       )}
+      {featureFlagData?.[FEATURE_FLAGS.ADD_EDIT_DELETE_BANK_ACCOUNT] && (
+        <SideSheet
+          header="Add new bank"
+          trigger={
+            <Button size="small" mode="link">
+              {/**
+               * TODO: use the new ADD icon when its available
+               */}
+              <Icon width={16} height={16} type={IconType.ALERT} /> Add another
+              bank account
+            </Button>
+          }
+        >
+          {/**TODO: swap in the real component */}
+          <div>Bank component imported here</div>
+        </SideSheet>
+      )}
+
       <div className={premiumStyles.buttonGroup}>
         <Button
           mode="primary"

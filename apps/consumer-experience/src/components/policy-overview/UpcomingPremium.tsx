@@ -7,12 +7,11 @@ import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { UpcomingPremiumPopover } from '@/components/policy-overview/UpcomingPremiumPopover';
 import { getUpcomingPremium } from '@/services';
-import { getSession } from '@/utils/auth';
+import { getFeatureFlags } from '@/services/feature-flags';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
-import { getFeatureFlagDecisions } from '@/utils/optimizely/optimizely';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 import styles from './PolicyOverview.module.css';
@@ -33,12 +32,7 @@ export const UpcomingPremium = async ({
     policyNumber,
   });
 
-  const session = await getSession();
-  const userId = session?.user?.sub;
-
-  //TODO: only need to call this if this is extended
-  //... i feel like i should split out these components, the configuration is getting a bit out of control
-  const featureFlagDecisions = await getFeatureFlagDecisions(userId);
+  const featureFlagDecisions = await getFeatureFlags();
 
   if (error) {
     return (

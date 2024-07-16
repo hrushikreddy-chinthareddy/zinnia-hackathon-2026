@@ -7,7 +7,7 @@ import { logError } from '@/utils/logging/server-logging';
 
 import { FEATURE_FLAGS } from './flags';
 
-type EnabledFeatureFlags = {
+export type EnabledFeatureFlags = {
   [key in FEATURE_FLAGS]: boolean;
 };
 

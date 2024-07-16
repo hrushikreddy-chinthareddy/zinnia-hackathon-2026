@@ -2,6 +2,10 @@ import {
   Label,
   AssistiveText,
   AssistiveTextVariant,
+  Button,
+  Icon,
+  IconType,
+  SideSheet,
 } from '@zinnia/bloom/components';
 
 import { FieldData } from '@/components/field-data/FieldData';
@@ -14,6 +18,10 @@ import { RoutingNumber } from '@/components/pii/RoutingNumber';
 
 import styles from './BankData.module.css';
 
+interface BankDetailProps extends BankDetail {
+  editBankEnabled?: boolean;
+}
+
 export const BankData = ({
   accountNumber,
   accountType,
@@ -21,12 +29,29 @@ export const BankData = ({
   branchName,
   nameOnAccount,
   routingNumber,
-}: BankDetail) => {
+  editBankEnabled,
+}: BankDetailProps) => {
   return (
     <div>
       <div className={styles.bankName}>
-        <div className="typography-labels-label-lg">
+        <div className="typography-labels-label-lg justify-between">
           <BankName bankName={branchName} />
+          {editBankEnabled && (
+            <SideSheet
+              header="Edit bank"
+              trigger={
+                <Button aria-label="Edit bank" size="small" mode="link">
+                  {/**
+                   * TODO: use the new ADD icon when its available
+                   */}
+                  <Icon width={16} height={16} type={IconType.ALERT} />
+                </Button>
+              }
+            >
+              {/**TODO: swap in the real component */}
+              <div>Bank component imported here</div>
+            </SideSheet>
+          )}
         </div>
         {autopayEnabled && (
           <AssistiveText

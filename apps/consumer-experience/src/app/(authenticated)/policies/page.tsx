@@ -11,10 +11,7 @@ import { PolicyDetailsSummary } from '@/components/policy-details-summary/Policy
 import { CoveragePopover } from '@/components/policy-overview/CoveragePopover';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getMyPoliciesByCarrier } from '@/services';
-import { getSession } from '@/utils/auth';
 import { formatUSDollars } from '@/utils/currency';
-import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
-import { getFeatureFlagDecisions } from '@/utils/optimizely/optimizely';
 
 import styles from './policies.module.css';
 

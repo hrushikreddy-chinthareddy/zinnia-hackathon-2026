@@ -1,5 +1,11 @@
 import { Address, Email, Phone } from '@zinnia/api-types/types/sor';
-import { IconType, Label } from '@zinnia/bloom/components';
+import {
+  Button,
+  Icon,
+  IconType,
+  Label,
+  SideSheet,
+} from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
 import { BankData } from '@/components/bank-data/BankData';
@@ -13,8 +19,10 @@ import { Phones } from '@/components/person-data/Phones';
 import { FullName } from '@/components/pii/FullName';
 import { getPageTitle, RouteKey } from '@/route-map';
 import { getPolicyProfileData } from '@/services';
+import { getFeatureFlags } from '@/services/feature-flags';
 import { PolicyRequestInputs } from '@/types/policy';
 import { filterItemsWithPastEndDate } from '@/utils/data';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import styles from './Profile.module.css';
 
@@ -34,6 +42,9 @@ export default async function Profile({ params }: Props) {
     planCode: params.planCode,
     policyNumber: params.policyNumber,
   });
+
+  const flags = await getFeatureFlags();
+  const showAddEditBank = flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_BANK_ACCOUNT];
 
   if (error) {
     return (
@@ -98,7 +109,13 @@ export default async function Profile({ params }: Props) {
   const bank = () => {
     if (profileData.bankDetails && profileData.bankDetails.length) {
       const allBankData = profileData.bankDetails.map(bankDetail => {
-        return <BankData key={bankDetail.accountNumber} {...bankDetail} />;
+        return (
+          <BankData
+            key={bankDetail.accountNumber}
+            editBankEnabled={showAddEditBank}
+            {...bankDetail}
+          />
+        );
       });
 
       if (allBankData) {
@@ -106,6 +123,23 @@ export default async function Profile({ params }: Props) {
           <div>
             <h2 className="mb-lg">Banking Details</h2>
             <div className={styles.multipleItemsInSection}>{allBankData}</div>
+            {showAddEditBank && (
+              <SideSheet
+                header="Add new bank"
+                trigger={
+                  <Button size="small" mode="link">
+                    {/**
+                     * TODO: use the new ADD icon when its available
+                     */}
+                    <Icon width={16} height={16} type={IconType.ALERT} /> Add
+                    another bank account
+                  </Button>
+                }
+              >
+                {/**TODO: swap in the real component */}
+                <div>Bank component imported here</div>
+              </SideSheet>
+            )}
           </div>
         );
       }
