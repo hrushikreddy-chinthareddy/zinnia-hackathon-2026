@@ -98,7 +98,6 @@ export const ClickableList: FC<{
 export const ClickableCardContainer = ({
   children,
   className,
-  linkTo,
   disabled,
   listItems,
 }: Props) => {
