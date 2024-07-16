@@ -58,7 +58,6 @@
   color: var(--color-base-text-text-secondary);
 }
 
-<<<<<<< HEAD
 .paymentSummaryContainer {
   background-color: var(--color-base-surface-surface-secondary);
   padding: var(--measure-dimension-padding-3xl);
@@ -81,8 +80,6 @@
   position: relative;
 }
 
-=======
->>>>>>> eecdaa4 (clean up styles)
 @media (width > 767px) {
   .buttonGroup {
     flex-direction: row;
