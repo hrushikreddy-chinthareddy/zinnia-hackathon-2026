@@ -1,3 +1,4 @@
+'use client';
 import * as ReactPopover from '@radix-ui/react-popover';
 import { Icon, IconType, DatePicker } from '@zinnia/bloom/components';
 import { useCallback, useEffect, useRef, useState } from 'react';
