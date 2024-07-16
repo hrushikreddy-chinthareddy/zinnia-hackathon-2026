@@ -232,6 +232,7 @@ input[type='radio'] {
 /* Used for things like date picker where icon is visually within input, but is a trigger */
 .input-with-interaction {
   width: 100%;
+  background-color: white;
   border: var(--measure-dimension-stroke-sm) solid
     var(--color-base-border-border-light);
   border-radius: var(--measure-dimension-radius-sm);

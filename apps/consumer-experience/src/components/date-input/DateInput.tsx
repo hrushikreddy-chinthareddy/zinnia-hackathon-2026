@@ -13,19 +13,21 @@ type DateInterval = {
   after: Date;
 };
 
+export interface DateInputProps {
+  disableBeforeDate?: Date;
+  disableAfterDate?: Date;
+  id?: string;
+  onSelect: (date: Date | undefined) => void;
+  selectedDate?: Date;
+}
+
 export const DateInput = ({
   disableBeforeDate,
   disableAfterDate,
   onSelect,
   selectedDate,
   id,
-}: {
-  disableBeforeDate?: Date;
-  disableAfterDate?: Date;
-  id?: string;
-  onSelect: (date: Date | undefined) => void;
-  selectedDate?: Date;
-}) => {
+}: DateInputProps) => {
   const [inputVal, setInputVal] = useState<string>(
     selectedDate?.toLocaleDateString() || ''
   );
