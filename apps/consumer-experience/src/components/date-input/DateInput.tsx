@@ -97,8 +97,7 @@ export const DateInput = ({
       <ReactPopover.Root open={calendarOpen} onOpenChange={setCalendarOpen}>
         <ReactPopover.Trigger>
           <Icon
-            // TODO: update this icon once calendar added to bloom
-            type={IconType.BANK}
+            type={IconType.CALENDAR}
             color="var(--color-base-icon-icon-action)"
           />
         </ReactPopover.Trigger>

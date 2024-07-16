@@ -107,11 +107,17 @@ importers:
         specifier: ^18
         version: 18.3.1(react@18.3.1)
 <<<<<<< HEAD
+<<<<<<< HEAD
       react-hook-form:
         specifier: ^7.52.1
         version: 7.52.1(react@18.3.1)
 =======
 >>>>>>> 19ed892 (woops merge conflit)
+=======
+      react-hook-form:
+        specifier: ^7.52.1
+        version: 7.52.1(react@18.3.1)
+>>>>>>> 6f98c15 (Update bloom and calendar icon)
       react-idle-timer:
         specifier: ^5.7.2
         version: 5.7.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -6762,14 +6768,20 @@ packages:
       react-dom: ^0.14.8 || ^15.0.1 || ^16.0.0 || ^17.0.1 || ^18.0.0
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 6f98c15 (Update bloom and calendar icon)
   react-hook-form@7.52.1:
     resolution: {integrity: sha512-uNKIhaoICJ5KQALYZ4TOaOLElyM+xipord+Ha3crEFhTntdLvWZqVY49Wqd/0GiVCA/f9NjemLeiNPjG7Hpurg==}
     engines: {node: '>=12.22.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
 
+<<<<<<< HEAD
 =======
 >>>>>>> 19ed892 (woops merge conflit)
+=======
+>>>>>>> 6f98c15 (Update bloom and calendar icon)
   react-idle-timer@5.7.2:
     resolution: {integrity: sha512-+BaPfc7XEUU5JFkwZCx6fO1bLVK+RBlFH+iY4X34urvIzZiZINP6v2orePx3E6pAztJGE7t4DzvL7if2SL/0GQ==}
     peerDependencies:
@@ -15696,12 +15708,18 @@ snapshots:
       react-is: 18.1.0
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 6f98c15 (Update bloom and calendar icon)
   react-hook-form@7.52.1(react@18.3.1):
     dependencies:
       react: 18.3.1
 
+<<<<<<< HEAD
 =======
 >>>>>>> 19ed892 (woops merge conflit)
+=======
+>>>>>>> 6f98c15 (Update bloom and calendar icon)
   react-idle-timer@5.7.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       react: 18.3.1
