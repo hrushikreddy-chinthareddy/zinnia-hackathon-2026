@@ -54,8 +54,13 @@ importers:
         specifier: 0.0.2
         version: 0.0.2
       '@zinnia/bloom':
+<<<<<<< HEAD
         specifier: 1.3.2
         version: 1.3.2(@types/react-dom@18.3.0)(@types/react@18.3.3)(date-fns@3.6.0)(rollup@4.18.1)(typescript@5.5.3)(vite@5.3.4(@types/node@20.14.10)(terser@5.31.3))
+=======
+        specifier: ^1.2.0
+        version: 1.3.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(date-fns@3.6.0)(rollup@4.18.1)(typescript@5.5.3)(vite@5.3.4(@types/node@20.14.10)(terser@5.31.3))
+>>>>>>> 19ed892 (woops merge conflit)
       '@zinnia/utils':
         specifier: 0.0.1
         version: 0.0.1
@@ -101,9 +106,12 @@ importers:
       react-dom:
         specifier: ^18
         version: 18.3.1(react@18.3.1)
+<<<<<<< HEAD
       react-hook-form:
         specifier: ^7.52.1
         version: 7.52.1(react@18.3.1)
+=======
+>>>>>>> 19ed892 (woops merge conflit)
       react-idle-timer:
         specifier: ^5.7.2
         version: 5.7.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -125,7 +133,11 @@ importers:
         version: 8.2.4(storybook@8.2.4(@babel/preset-env@7.24.8(@babel/core@7.24.9)))
       '@storybook/addon-interactions':
         specifier: ^8.1.10
+<<<<<<< HEAD
         version: 8.2.4(@jest/globals@29.7.0)(@types/jest@29.5.12)(jest@29.7.0(@types/node@20.14.10))(storybook@8.2.4(@babel/preset-env@7.24.8(@babel/core@7.24.9)))(vitest@1.6.0(@types/node@20.14.10)(terser@5.31.3))
+=======
+        version: 8.2.4(@jest/globals@29.7.0)(@types/jest@29.5.12)(jest@29.7.0(@types/node@20.14.10))(storybook@8.2.4(@babel/preset-env@7.24.8(@babel/core@7.24.9)))
+>>>>>>> 19ed892 (woops merge conflit)
       '@storybook/addon-links':
         specifier: ^8.1.10
         version: 8.2.4(react@18.3.1)(storybook@8.2.4(@babel/preset-env@7.24.8(@babel/core@7.24.9)))
@@ -137,19 +149,31 @@ importers:
         version: 8.2.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.2.4(@babel/preset-env@7.24.8(@babel/core@7.24.9)))
       '@storybook/nextjs':
         specifier: ^8.1.10
+<<<<<<< HEAD
         version: 8.2.4(@jest/globals@29.7.0)(@types/jest@29.5.12)(@types/webpack@5.28.5(esbuild@0.21.5))(esbuild@0.21.5)(jest@29.7.0(@types/node@20.14.10))(next@14.2.2(@babel/core@7.24.9)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.2.4(@babel/preset-env@7.24.8(@babel/core@7.24.9)))(type-fest@2.19.0)(typescript@5.5.3)(vitest@1.6.0(@types/node@20.14.10)(terser@5.31.3))(webpack-hot-middleware@2.26.1)(webpack@5.93.0(esbuild@0.21.5))
+=======
+        version: 8.2.4(@jest/globals@29.7.0)(@types/jest@29.5.12)(@types/webpack@5.28.5(esbuild@0.21.5))(esbuild@0.21.5)(jest@29.7.0(@types/node@20.14.10))(next@14.2.2(@babel/core@7.24.9)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.2.4(@babel/preset-env@7.24.8(@babel/core@7.24.9)))(type-fest@2.19.0)(typescript@5.5.3)(webpack-hot-middleware@2.26.1)(webpack@5.93.0(esbuild@0.21.5))
+>>>>>>> 19ed892 (woops merge conflit)
       '@storybook/react':
         specifier: ^8.1.10
         version: 8.2.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.2.4(@babel/preset-env@7.24.8(@babel/core@7.24.9)))(typescript@5.5.3)
       '@storybook/test':
         specifier: ^8.1.10
+<<<<<<< HEAD
         version: 8.2.4(@jest/globals@29.7.0)(@types/jest@29.5.12)(jest@29.7.0(@types/node@20.14.10))(storybook@8.2.4(@babel/preset-env@7.24.8(@babel/core@7.24.9)))(vitest@1.6.0(@types/node@20.14.10)(terser@5.31.3))
+=======
+        version: 8.2.4(@jest/globals@29.7.0)(@types/jest@29.5.12)(jest@29.7.0(@types/node@20.14.10))(storybook@8.2.4(@babel/preset-env@7.24.8(@babel/core@7.24.9)))
+>>>>>>> 19ed892 (woops merge conflit)
       '@svgr/webpack':
         specifier: ^8.1.0
         version: 8.1.0(typescript@5.5.3)
       '@testing-library/jest-dom':
         specifier: ^6.2.0
+<<<<<<< HEAD
         version: 6.4.6(@jest/globals@29.7.0)(@types/jest@29.5.12)(jest@29.7.0(@types/node@20.14.10))(vitest@1.6.0(@types/node@20.14.10)(terser@5.31.3))
+=======
+        version: 6.4.6(@jest/globals@29.7.0)(@types/jest@29.5.12)(jest@29.7.0(@types/node@20.14.10))
+>>>>>>> 19ed892 (woops merge conflit)
       '@testing-library/react':
         specifier: ^14.1.2
         version: 14.3.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -3177,12 +3201,15 @@ packages:
   '@vitest/expect@1.6.0':
     resolution: {integrity: sha512-ixEvFVQjycy/oNgHjqsL6AZCDduC+tflRluaHIzKIsdbzkLn2U/iBnVeJwB6HsIjQBdfMR8Z0tRxKUsvFJEeWQ==}
 
+<<<<<<< HEAD
   '@vitest/runner@1.6.0':
     resolution: {integrity: sha512-P4xgwPjwesuBiHisAVz/LSSZtDjOTPYZVmNAnpHHSR6ONrf8eCJOFRvUwdHn30F5M1fxhqtl7QZQUk2dprIXAg==}
 
   '@vitest/snapshot@1.6.0':
     resolution: {integrity: sha512-+Hx43f8Chus+DCmygqqfetcAZrDJwvTj0ymqjQq4CvmpKFSTVteEOBzCusu1x2tt4OJcvBflyHUE0DZSLgEMtQ==}
 
+=======
+>>>>>>> 19ed892 (woops merge conflit)
   '@vitest/spy@1.6.0':
     resolution: {integrity: sha512-leUTap6B/cqi/bQkXUu6bQV5TZPx7pmMBKBQiI0rJA8c3pB56ZsaTbREnF7CJfmvAS4V2cXIBAh/3rVwrrCYgw==}
 
@@ -3254,8 +3281,13 @@ packages:
   '@zinnia/api-types@0.0.2':
     resolution: {integrity: sha512-mphJsEqSRMSOSrgG804jaoRdh8e8290/1/1WsuGddGSgVqu4h0iIilMfvw8LxLTMCONpLgSBKPA1dE6bQ1a8Gg==, tarball: https://npm.pkg.github.com/download/@zinnia/api-types/0.0.2/d178c189b32c85b2fc50f48b0e2693e22d1825b2}
 
+<<<<<<< HEAD
   '@zinnia/bloom@1.3.2':
     resolution: {integrity: sha512-isFJCDM32Bof737lz/fXDlwjP3WjfNuk4z303IIXC4KAi/+1FcA15jqschhy9OBEv3Eyv+mYzaCi+sYAUR4/cg==, tarball: https://npm.pkg.github.com/download/@zinnia/bloom/1.3.2/1e5f4ec034464f9153c6994793589e19f6a2853d}
+=======
+  '@zinnia/bloom@1.3.0':
+    resolution: {integrity: sha512-WQycE9BaAQkw6Bn9Pfs08vcOIKWufkEOyglJdZOsR7XkWDoOI0h185d85cmQ4QOlrq4BIcXQBk68hEUQqfFnnA==, tarball: https://npm.pkg.github.com/download/@zinnia/bloom/1.3.0/c44f623cffb3f2798f165ce38bd5128ef16b61aa}
+>>>>>>> 19ed892 (woops merge conflit)
 
   '@zinnia/eslint-config@0.0.11':
     resolution: {integrity: sha512-zffSgGBtFF0p1LzaChM+f/jR7J/5Oi281gVAAb+HrT7SsOjQ1IK/sCh5SlLhvDZfdU272cRMSh6zSEWFYuFIHA==, tarball: https://npm.pkg.github.com/download/@zinnia/eslint-config/0.0.11/9feae27a57e6862c904ba9dc2f80476dd1830dcb}
@@ -5554,9 +5586,12 @@ packages:
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
+<<<<<<< HEAD
   js-tokens@9.0.0:
     resolution: {integrity: sha512-WriZw1luRMlmV3LGJaR6QOJjWwgLUTf89OwT2lUOyjX2dJGBwgmIkbcz+7WFZjrZM635JOIR517++e/67CP9dQ==}
 
+=======
+>>>>>>> 19ed892 (woops merge conflit)
   js-yaml@3.14.1:
     resolution: {integrity: sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g==}
     hasBin: true
@@ -5693,10 +5728,13 @@ packages:
     resolution: {integrity: sha512-FMJTLMXfCLMLfJxcX9PFqX5qD88Z5MRGaZCVzfuqeZSPsyiBzs+pahDQjbIWz2QIzPZz0NX9Zy4FX3lmK6YHIg==}
     engines: {node: '>= 12.13.0'}
 
+<<<<<<< HEAD
   local-pkg@0.5.0:
     resolution: {integrity: sha512-ok6z3qlYyCDS4ZEU27HaU6x/xZa9Whf8jD4ptH5UZTQYZVYeb9bnZ3ojVhiJNLiXK1Hfc0GNbLXcmZ5plLDDBg==}
     engines: {node: '>=14'}
 
+=======
+>>>>>>> 19ed892 (woops merge conflit)
   locate-path@3.0.0:
     resolution: {integrity: sha512-7AO748wWnIhNqAuaty2ZWHkQHRSNfPVIsPIfwEOWO22AmaoVrWavlOcMR5nzTLNYvp36X220/maaRsrec1G65A==}
     engines: {node: '>=6'}
@@ -6182,10 +6220,13 @@ packages:
     resolution: {integrity: sha512-5b0R4txpzjPWVw/cXXUResoD4hb6U/x9BH08L7nw+GN1sezDzPdxeRvpc9c433fZhBan/wusjbCsqwqm4EIBIQ==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
+<<<<<<< HEAD
   p-limit@5.0.0:
     resolution: {integrity: sha512-/Eaoq+QyLSiXQ4lyYV23f14mZRQcXnxfHrN0vCai+ak9G0pp9iEQukIIZq5NccEvwRB8PUnZT0KsOoDCINS1qQ==}
     engines: {node: '>=18'}
 
+=======
+>>>>>>> 19ed892 (woops merge conflit)
   p-locate@3.0.0:
     resolution: {integrity: sha512-x+12w/To+4GFfgJhBEpiDcLozRJGegY+Ei7/z0tSLkMmxGZNybVMSfWj9aJn8Z5Fc7dBUNJOOVgPv2H7IwulSQ==}
     engines: {node: '>=6'}
@@ -6720,12 +6761,15 @@ packages:
       react: ^0.14.8 || ^15.0.1 || ^16.0.0 || ^17.0.1 || ^18.0.0
       react-dom: ^0.14.8 || ^15.0.1 || ^16.0.0 || ^17.0.1 || ^18.0.0
 
+<<<<<<< HEAD
   react-hook-form@7.52.1:
     resolution: {integrity: sha512-uNKIhaoICJ5KQALYZ4TOaOLElyM+xipord+Ha3crEFhTntdLvWZqVY49Wqd/0GiVCA/f9NjemLeiNPjG7Hpurg==}
     engines: {node: '>=12.22.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
 
+=======
+>>>>>>> 19ed892 (woops merge conflit)
   react-idle-timer@5.7.2:
     resolution: {integrity: sha512-+BaPfc7XEUU5JFkwZCx6fO1bLVK+RBlFH+iY4X34urvIzZiZINP6v2orePx3E6pAztJGE7t4DzvL7if2SL/0GQ==}
     peerDependencies:
@@ -7098,9 +7142,12 @@ packages:
     resolution: {integrity: sha512-fDW/EZ6Q9RiO8eFG8Hj+7u/oW+XrPTIChwCOM2+th2A6OblDtYYIpve9m+KvI9Z4C9qSEXlaGR6bTEYHReuglA==}
     engines: {node: '>= 0.4'}
 
+<<<<<<< HEAD
   siginfo@2.0.0:
     resolution: {integrity: sha512-ybx0WO1/8bSBLEWXZvEd7gMW3Sn3JFlW3TvX1nREbDLRNQNaeNN8WK0meBwPdAaOI7TtRRRJn/Es1zhrrCHu7g==}
 
+=======
+>>>>>>> 19ed892 (woops merge conflit)
   signal-exit@3.0.7:
     resolution: {integrity: sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==}
 
@@ -7202,9 +7249,12 @@ packages:
     resolution: {integrity: sha512-XlkWvfIm6RmsWtNJx+uqtKLS8eqFbxUg0ZzLXqY0caEy9l7hruX8IpiDnjsLavoBgqCCR71TqWO8MaXYheJ3RQ==}
     engines: {node: '>=10'}
 
+<<<<<<< HEAD
   stackback@0.0.2:
     resolution: {integrity: sha512-1XMJE5fQo1jGH6Y/7ebnwPOBEkIEnT4QF32d5R1+VXdXveM0IBMJt8zfaxX1P3QhVwrYe+576+jkANtSS2mBbw==}
 
+=======
+>>>>>>> 19ed892 (woops merge conflit)
   stackframe@1.3.4:
     resolution: {integrity: sha512-oeVtt7eWQS+Na6F//S4kJ2K2VbRlS9D43mAlMyVpVWovy9o+jfgH8O9agzANzaiLjclA0oYzUXEM4PurhSUChw==}
 
@@ -7218,9 +7268,12 @@ packages:
     resolution: {integrity: sha512-RwNA9Z/7PrK06rYLIzFMlaF+l73iwpzsqRIFgbMLbTcLD6cOao82TaWefPXQvB2fOC4AjuYSEndS7N/mTCbkdQ==}
     engines: {node: '>= 0.8'}
 
+<<<<<<< HEAD
   std-env@3.7.0:
     resolution: {integrity: sha512-JPbdCEQLj1w5GilpiHAx3qJvFndqybBysA3qUOnznweH4QbNYUsW/ea8QzSrnh0vNsezMMw5bcVool8lM0gwzg==}
 
+=======
+>>>>>>> 19ed892 (woops merge conflit)
   stop-iteration-iterator@1.0.0:
     resolution: {integrity: sha512-iCGQj+0l0HOdZ2AEeBADlsRC+vsnDsZsbdSiH1yNSjcfKM7fdpCMfqAL/dwF5BLiw/XhRft/Wax6zQbhq2BcjQ==}
     engines: {node: '>= 0.4'}
@@ -7326,9 +7379,12 @@ packages:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
 
+<<<<<<< HEAD
   strip-literal@2.1.0:
     resolution: {integrity: sha512-Op+UycaUt/8FbN/Z2TWPBLge3jWrP3xj10f3fnYxf052bKuS3EKs1ZQcVGjnEMdsNVAM+plXRdmjrZ/KgG3Skw==}
 
+=======
+>>>>>>> 19ed892 (woops merge conflit)
   style-loader@3.3.4:
     resolution: {integrity: sha512-0WqXzrsMTyb8yjZJHDqwmnwRJvhALK9LfRtRc6B4UTWe8AijYLZYZ9thuJTZc2VfQWINADW/j+LiJnfy2RoC1w==}
     engines: {node: '>= 12.13.0'}
@@ -7466,6 +7522,7 @@ packages:
   tiny-invariant@1.3.3:
     resolution: {integrity: sha512-+FbBPE1o9QAYvviau/qC5SE3caw21q3xkvWKBtja5vgqOWIHHJ3ioaq1VPfn/Szqctz2bU/oYeKd9/z5BL+PVg==}
 
+<<<<<<< HEAD
   tinybench@2.8.0:
     resolution: {integrity: sha512-1/eK7zUnIklz4JUUlL+658n58XO2hHLQfSk1Zf2LKieUjxidN16eKFEoDEfjHc3ohofSSqK3X5yO6VGb6iW8Lw==}
 
@@ -7473,6 +7530,8 @@ packages:
     resolution: {integrity: sha512-i11VH5gS6IFeLY3gMBQ00/MmLncVP7JLXOw1vlgkytLmJK7QnEr7NXf0LBdxfmNPAeyetukOk0bOYrJrFGjYJQ==}
     engines: {node: '>=14.0.0'}
 
+=======
+>>>>>>> 19ed892 (woops merge conflit)
   tinyspy@2.2.1:
     resolution: {integrity: sha512-KYad6Vy5VDWV4GH3fjpseMQ/XU2BhIYP7Vzd0LG44qRWm/Yt2WCOTicFdvmgo6gWaqooMQCawTtILVQJupKu7A==}
     engines: {node: '>=14.0.0'}
@@ -7831,11 +7890,14 @@ packages:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
 
+<<<<<<< HEAD
   vite-node@1.6.0:
     resolution: {integrity: sha512-de6HJgzC+TFzOu0NTC4RAIsyf/DY/ibWDYQUcuEA84EMHhcefTUGkjFHKKEJhQN4A+6I0u++kr3l36ZF2d7XRw==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
 
+=======
+>>>>>>> 19ed892 (woops merge conflit)
   vite-plugin-svgr@4.2.0:
     resolution: {integrity: sha512-SC7+FfVtNQk7So0XMjrrtLAbEC8qjFPifyD7+fs/E6aaNdVde6umlVVh0QuwDLdOMu7vp5RiGFsB70nj5yo0XA==}
     peerDependencies:
@@ -7869,6 +7931,7 @@ packages:
       terser:
         optional: true
 
+<<<<<<< HEAD
   vitest@1.6.0:
     resolution: {integrity: sha512-H5r/dN06swuFnzNFhq/dnz37bPXnq8xB2xB5JOVk8K09rUtoeNN+LHWkoQ0A/i3hvbUKKcCei9KpbxqHMLhLLA==}
     engines: {node: ^18.0.0 || >=20.0.0}
@@ -7894,6 +7957,8 @@ packages:
       jsdom:
         optional: true
 
+=======
+>>>>>>> 19ed892 (woops merge conflit)
   vm-browserify@1.1.2:
     resolution: {integrity: sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==}
 
@@ -7985,11 +8050,14 @@ packages:
     engines: {node: '>= 8'}
     hasBin: true
 
+<<<<<<< HEAD
   why-is-node-running@2.3.0:
     resolution: {integrity: sha512-hUrmaWBdVDcxvYqnyh09zunKzROWjbZTiNy8dBEjkS7ehEDQibXJ7XvlmtbwuTclUiIyN+CyXQD4Vmko8fNm8w==}
     engines: {node: '>=8'}
     hasBin: true
 
+=======
+>>>>>>> 19ed892 (woops merge conflit)
   word-wrap@1.2.5:
     resolution: {integrity: sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==}
     engines: {node: '>=0.10.0'}
@@ -10437,11 +10505,19 @@ snapshots:
       '@storybook/global': 5.0.0
       storybook: 8.2.4(@babel/preset-env@7.24.8(@babel/core@7.24.9))
 
+<<<<<<< HEAD
   '@storybook/addon-interactions@8.2.4(@jest/globals@29.7.0)(@types/jest@29.5.12)(jest@29.7.0(@types/node@20.14.10))(storybook@8.2.4(@babel/preset-env@7.24.8(@babel/core@7.24.9)))(vitest@1.6.0(@types/node@20.14.10)(terser@5.31.3))':
     dependencies:
       '@storybook/global': 5.0.0
       '@storybook/instrumenter': 8.2.4(storybook@8.2.4(@babel/preset-env@7.24.8(@babel/core@7.24.9)))
       '@storybook/test': 8.2.4(@jest/globals@29.7.0)(@types/jest@29.5.12)(jest@29.7.0(@types/node@20.14.10))(storybook@8.2.4(@babel/preset-env@7.24.8(@babel/core@7.24.9)))(vitest@1.6.0(@types/node@20.14.10)(terser@5.31.3))
+=======
+  '@storybook/addon-interactions@8.2.4(@jest/globals@29.7.0)(@types/jest@29.5.12)(jest@29.7.0(@types/node@20.14.10))(storybook@8.2.4(@babel/preset-env@7.24.8(@babel/core@7.24.9)))':
+    dependencies:
+      '@storybook/global': 5.0.0
+      '@storybook/instrumenter': 8.2.4(storybook@8.2.4(@babel/preset-env@7.24.8(@babel/core@7.24.9)))
+      '@storybook/test': 8.2.4(@jest/globals@29.7.0)(@types/jest@29.5.12)(jest@29.7.0(@types/node@20.14.10))(storybook@8.2.4(@babel/preset-env@7.24.8(@babel/core@7.24.9)))
+>>>>>>> 19ed892 (woops merge conflit)
       polished: 4.3.1
       storybook: 8.2.4(@babel/preset-env@7.24.8(@babel/core@7.24.9))
       ts-dedent: 2.2.0
@@ -10629,7 +10705,11 @@ snapshots:
     dependencies:
       storybook: 8.2.4(@babel/preset-env@7.24.8(@babel/core@7.24.9))
 
+<<<<<<< HEAD
   '@storybook/nextjs@8.2.4(@jest/globals@29.7.0)(@types/jest@29.5.12)(@types/webpack@5.28.5(esbuild@0.21.5))(esbuild@0.21.5)(jest@29.7.0(@types/node@20.14.10))(next@14.2.2(@babel/core@7.24.9)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.2.4(@babel/preset-env@7.24.8(@babel/core@7.24.9)))(type-fest@2.19.0)(typescript@5.5.3)(vitest@1.6.0(@types/node@20.14.10)(terser@5.31.3))(webpack-hot-middleware@2.26.1)(webpack@5.93.0(esbuild@0.21.5))':
+=======
+  '@storybook/nextjs@8.2.4(@jest/globals@29.7.0)(@types/jest@29.5.12)(@types/webpack@5.28.5(esbuild@0.21.5))(esbuild@0.21.5)(jest@29.7.0(@types/node@20.14.10))(next@14.2.2(@babel/core@7.24.9)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.2.4(@babel/preset-env@7.24.8(@babel/core@7.24.9)))(type-fest@2.19.0)(typescript@5.5.3)(webpack-hot-middleware@2.26.1)(webpack@5.93.0(esbuild@0.21.5))':
+>>>>>>> 19ed892 (woops merge conflit)
     dependencies:
       '@babel/core': 7.24.9
       '@babel/plugin-syntax-bigint': 7.8.3(@babel/core@7.24.9)
@@ -10648,7 +10728,11 @@ snapshots:
       '@storybook/builder-webpack5': 8.2.4(esbuild@0.21.5)(storybook@8.2.4(@babel/preset-env@7.24.8(@babel/core@7.24.9)))(typescript@5.5.3)
       '@storybook/preset-react-webpack': 8.2.4(esbuild@0.21.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.2.4(@babel/preset-env@7.24.8(@babel/core@7.24.9)))(typescript@5.5.3)
       '@storybook/react': 8.2.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.2.4(@babel/preset-env@7.24.8(@babel/core@7.24.9)))(typescript@5.5.3)
+<<<<<<< HEAD
       '@storybook/test': 8.2.4(@jest/globals@29.7.0)(@types/jest@29.5.12)(jest@29.7.0(@types/node@20.14.10))(storybook@8.2.4(@babel/preset-env@7.24.8(@babel/core@7.24.9)))(vitest@1.6.0(@types/node@20.14.10)(terser@5.31.3))
+=======
+      '@storybook/test': 8.2.4(@jest/globals@29.7.0)(@types/jest@29.5.12)(jest@29.7.0(@types/node@20.14.10))(storybook@8.2.4(@babel/preset-env@7.24.8(@babel/core@7.24.9)))
+>>>>>>> 19ed892 (woops merge conflit)
       '@types/node': 18.19.39
       '@types/semver': 7.5.8
       babel-loader: 9.1.3(@babel/core@7.24.9)(webpack@5.93.0(esbuild@0.21.5))
@@ -10782,12 +10866,20 @@ snapshots:
     optionalDependencies:
       typescript: 5.5.3
 
+<<<<<<< HEAD
   '@storybook/test@8.2.4(@jest/globals@29.7.0)(@types/jest@29.5.12)(jest@29.7.0(@types/node@20.14.10))(storybook@8.2.4(@babel/preset-env@7.24.8(@babel/core@7.24.9)))(vitest@1.6.0(@types/node@20.14.10)(terser@5.31.3))':
+=======
+  '@storybook/test@8.2.4(@jest/globals@29.7.0)(@types/jest@29.5.12)(jest@29.7.0(@types/node@20.14.10))(storybook@8.2.4(@babel/preset-env@7.24.8(@babel/core@7.24.9)))':
+>>>>>>> 19ed892 (woops merge conflit)
     dependencies:
       '@storybook/csf': 0.1.11
       '@storybook/instrumenter': 8.2.4(storybook@8.2.4(@babel/preset-env@7.24.8(@babel/core@7.24.9)))
       '@testing-library/dom': 10.1.0
+<<<<<<< HEAD
       '@testing-library/jest-dom': 6.4.5(@jest/globals@29.7.0)(@types/jest@29.5.12)(jest@29.7.0(@types/node@20.14.10))(vitest@1.6.0(@types/node@20.14.10)(terser@5.31.3))
+=======
+      '@testing-library/jest-dom': 6.4.5(@jest/globals@29.7.0)(@types/jest@29.5.12)(jest@29.7.0(@types/node@20.14.10))
+>>>>>>> 19ed892 (woops merge conflit)
       '@testing-library/user-event': 14.5.2(@testing-library/dom@10.1.0)
       '@vitest/expect': 1.6.0
       '@vitest/spy': 1.6.0
@@ -10926,7 +11018,11 @@ snapshots:
       lz-string: 1.5.0
       pretty-format: 27.5.1
 
+<<<<<<< HEAD
   '@testing-library/jest-dom@6.4.5(@jest/globals@29.7.0)(@types/jest@29.5.12)(jest@29.7.0(@types/node@20.14.10))(vitest@1.6.0(@types/node@20.14.10)(terser@5.31.3))':
+=======
+  '@testing-library/jest-dom@6.4.5(@jest/globals@29.7.0)(@types/jest@29.5.12)(jest@29.7.0(@types/node@20.14.10))':
+>>>>>>> 19ed892 (woops merge conflit)
     dependencies:
       '@adobe/css-tools': 4.4.0
       '@babel/runtime': 7.24.8
@@ -10940,9 +11036,14 @@ snapshots:
       '@jest/globals': 29.7.0
       '@types/jest': 29.5.12
       jest: 29.7.0(@types/node@20.14.10)
+<<<<<<< HEAD
       vitest: 1.6.0(@types/node@20.14.10)(terser@5.31.3)
 
   '@testing-library/jest-dom@6.4.6(@jest/globals@29.7.0)(@types/jest@29.5.12)(jest@29.7.0(@types/node@20.14.10))(vitest@1.6.0(@types/node@20.14.10)(terser@5.31.3))':
+=======
+
+  '@testing-library/jest-dom@6.4.6(@jest/globals@29.7.0)(@types/jest@29.5.12)(jest@29.7.0(@types/node@20.14.10))':
+>>>>>>> 19ed892 (woops merge conflit)
     dependencies:
       '@adobe/css-tools': 4.4.0
       '@babel/runtime': 7.24.8
@@ -10956,7 +11057,10 @@ snapshots:
       '@jest/globals': 29.7.0
       '@types/jest': 29.5.12
       jest: 29.7.0(@types/node@20.14.10)
+<<<<<<< HEAD
       vitest: 1.6.0(@types/node@20.14.10)(terser@5.31.3)
+=======
+>>>>>>> 19ed892 (woops merge conflit)
 
   '@testing-library/react@14.3.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
@@ -11333,6 +11437,7 @@ snapshots:
       '@vitest/utils': 1.6.0
       chai: 4.4.1
 
+<<<<<<< HEAD
   '@vitest/runner@1.6.0':
     dependencies:
       '@vitest/utils': 1.6.0
@@ -11347,6 +11452,8 @@ snapshots:
       pretty-format: 29.7.0
     optional: true
 
+=======
+>>>>>>> 19ed892 (woops merge conflit)
   '@vitest/spy@1.6.0':
     dependencies:
       tinyspy: 2.2.1
@@ -11452,7 +11559,11 @@ snapshots:
 
   '@zinnia/api-types@0.0.2': {}
 
+<<<<<<< HEAD
   '@zinnia/bloom@1.3.2(@types/react-dom@18.3.0)(@types/react@18.3.3)(date-fns@3.6.0)(rollup@4.18.1)(typescript@5.5.3)(vite@5.3.4(@types/node@20.14.10)(terser@5.31.3))':
+=======
+  '@zinnia/bloom@1.3.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(date-fns@3.6.0)(rollup@4.18.1)(typescript@5.5.3)(vite@5.3.4(@types/node@20.14.10)(terser@5.31.3))':
+>>>>>>> 19ed892 (woops merge conflit)
     dependencies:
       '@radix-ui/react-accordion': 1.2.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-checkbox': 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -14362,9 +14473,12 @@ snapshots:
 
   js-tokens@4.0.0: {}
 
+<<<<<<< HEAD
   js-tokens@9.0.0:
     optional: true
 
+=======
+>>>>>>> 19ed892 (woops merge conflit)
   js-yaml@3.14.1:
     dependencies:
       argparse: 1.0.10
@@ -14534,12 +14648,15 @@ snapshots:
 
   loader-utils@3.3.1: {}
 
+<<<<<<< HEAD
   local-pkg@0.5.0:
     dependencies:
       mlly: 1.7.1
       pkg-types: 1.1.3
     optional: true
 
+=======
+>>>>>>> 19ed892 (woops merge conflit)
   locate-path@3.0.0:
     dependencies:
       p-locate: 3.0.0
@@ -14981,11 +15098,14 @@ snapshots:
     dependencies:
       yocto-queue: 1.1.1
 
+<<<<<<< HEAD
   p-limit@5.0.0:
     dependencies:
       yocto-queue: 1.1.1
     optional: true
 
+=======
+>>>>>>> 19ed892 (woops merge conflit)
   p-locate@3.0.0:
     dependencies:
       p-limit: 2.3.0
@@ -15575,10 +15695,13 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       react-is: 18.1.0
 
+<<<<<<< HEAD
   react-hook-form@7.52.1(react@18.3.1):
     dependencies:
       react: 18.3.1
 
+=======
+>>>>>>> 19ed892 (woops merge conflit)
   react-idle-timer@5.7.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       react: 18.3.1
@@ -16045,9 +16168,12 @@ snapshots:
       get-intrinsic: 1.2.4
       object-inspect: 1.13.2
 
+<<<<<<< HEAD
   siginfo@2.0.0:
     optional: true
 
+=======
+>>>>>>> 19ed892 (woops merge conflit)
   signal-exit@3.0.7: {}
 
   signal-exit@4.1.0: {}
@@ -16147,9 +16273,12 @@ snapshots:
     dependencies:
       escape-string-regexp: 2.0.0
 
+<<<<<<< HEAD
   stackback@0.0.2:
     optional: true
 
+=======
+>>>>>>> 19ed892 (woops merge conflit)
   stackframe@1.3.4: {}
 
   stacktrace-gps@3.1.2:
@@ -16165,9 +16294,12 @@ snapshots:
 
   statuses@2.0.1: {}
 
+<<<<<<< HEAD
   std-env@3.7.0:
     optional: true
 
+=======
+>>>>>>> 19ed892 (woops merge conflit)
   stop-iteration-iterator@1.0.0:
     dependencies:
       internal-slot: 1.0.7
@@ -16327,11 +16459,14 @@ snapshots:
 
   strip-json-comments@3.1.1: {}
 
+<<<<<<< HEAD
   strip-literal@2.1.0:
     dependencies:
       js-tokens: 9.0.0
     optional: true
 
+=======
+>>>>>>> 19ed892 (woops merge conflit)
   style-loader@3.3.4(webpack@5.93.0(esbuild@0.21.5)):
     dependencies:
       webpack: 5.93.0(esbuild@0.21.5)
@@ -16469,12 +16604,15 @@ snapshots:
 
   tiny-invariant@1.3.3: {}
 
+<<<<<<< HEAD
   tinybench@2.8.0:
     optional: true
 
   tinypool@0.8.4:
     optional: true
 
+=======
+>>>>>>> 19ed892 (woops merge conflit)
   tinyspy@2.2.1: {}
 
   tmpl@1.0.5: {}
@@ -16825,6 +16963,7 @@ snapshots:
 
   vary@1.1.2: {}
 
+<<<<<<< HEAD
   vite-node@1.6.0(@types/node@20.14.10)(terser@5.31.3):
     dependencies:
       cac: 6.7.14
@@ -16843,6 +16982,8 @@ snapshots:
       - terser
     optional: true
 
+=======
+>>>>>>> 19ed892 (woops merge conflit)
   vite-plugin-svgr@4.2.0(rollup@4.18.1)(typescript@5.5.3)(vite@5.3.4(@types/node@20.14.10)(terser@5.31.3)):
     dependencies:
       '@rollup/pluginutils': 5.1.0(rollup@4.18.1)
@@ -16864,6 +17005,7 @@ snapshots:
       fsevents: 2.3.3
       terser: 5.31.3
 
+<<<<<<< HEAD
   vitest@1.6.0(@types/node@20.14.10)(terser@5.31.3):
     dependencies:
       '@vitest/expect': 1.6.0
@@ -16898,6 +17040,8 @@ snapshots:
       - terser
     optional: true
 
+=======
+>>>>>>> 19ed892 (woops merge conflit)
   vm-browserify@1.1.2: {}
 
   w3c-xmlserializer@4.0.0:
@@ -17033,12 +17177,15 @@ snapshots:
     dependencies:
       isexe: 2.0.0
 
+<<<<<<< HEAD
   why-is-node-running@2.3.0:
     dependencies:
       siginfo: 2.0.0
       stackback: 0.0.2
     optional: true
 
+=======
+>>>>>>> 19ed892 (woops merge conflit)
   word-wrap@1.2.5: {}
 
   wordwrap@1.0.0: {}
