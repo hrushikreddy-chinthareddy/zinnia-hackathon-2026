@@ -54,7 +54,7 @@ ave top radius and last card should have bottom radius */
 
   /* This is to account for clickable cards with the ul below them, they are right against each other
   so doing it this way prevents odd outline/border clash and any movement on hover */
-  &:has(a):hover:before {
+  &:has(a.primaryAction):hover:before {
     content: '';
     position: absolute;
     inset: -2px;

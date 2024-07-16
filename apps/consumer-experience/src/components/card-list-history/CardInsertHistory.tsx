@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { ReactNode } from 'react';
 
-import cardStyles from '@/components/clickable-card-container/clickableCardContainer.module.css';
+import cardStyles from '@/components/clickable-card-container/ClickableCardContainer.module.css';
 import { formatUSDollars } from '@/utils/currency';
 import { standardDateMonthDayYear } from '@/utils/dates';
 

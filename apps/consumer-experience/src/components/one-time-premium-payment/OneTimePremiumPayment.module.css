@@ -54,6 +54,24 @@
   color: var(--color-base-text-text-secondary);
 }
 
+.paymentSummaryContainer {
+  background-color: var(--color-base-surface-surface-secondary);
+  padding: var(--measure-dimension-padding-3xl);
+  border-radius: var(--measure-dimension-radius-sm);
+}
+
+.paymentSummaryDetails {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-lg);
+  padding-bottom: var(--measure-dimension-padding-3xl);
+  border-bottom: 2px solid var(--color-base-border-border-light);
+}
+
+.paymentSummaryStepContainer {
+  padding-top: var(--measure-dimension-padding-3xl);
+}
+
 @media (width > 767px) {
   .buttonGroup {
     flex-direction: row;
@@ -66,5 +84,10 @@
 
   .steps {
     width: 350px;
+  }
+
+  .paymentSummaryDetails {
+    flex-direction: row;
+    gap: var(--measure-dimension-gap-2xl);
   }
 }
