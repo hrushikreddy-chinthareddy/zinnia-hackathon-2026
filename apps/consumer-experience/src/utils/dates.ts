@@ -15,7 +15,7 @@ dayjs.extend(timezone);
  * @returns boolean
  * undefined is a valid dayjs date, so need to check specifically for date is null first
  */
-const isValidDate = (date: string | null | undefined) => {
+export const isValidDate = (date: string | null | undefined) => {
   if (!date) {
     return false;
   }

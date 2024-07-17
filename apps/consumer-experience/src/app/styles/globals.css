@@ -193,6 +193,11 @@ a:focus-visible {
   text-align: left;
 }
 
+/*
+* FORMS & INPUTS
+* =============
+*/
+
 input[type='radio'] {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -221,5 +226,28 @@ input[type='radio'] {
       for now we can fix this by setting the font size to 16px
     */
     font-size: 16px;
+  }
+}
+
+/* Used for things like date picker where icon is visually within input, but is a trigger */
+.input-with-interaction {
+  width: 100%;
+  background-color: white;
+  border: var(--measure-dimension-stroke-sm) solid
+    var(--color-base-border-border-light);
+  border-radius: var(--measure-dimension-radius-sm);
+  padding: var(--measure-dimension-padding-lg);
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--measure-dimension-gap-xs);
+}
+
+input[type='text'] {
+  width: 100%;
+}
+
+@media (width > 767px) {
+  .input-with-interaction {
+    width: 350px;
   }
 }

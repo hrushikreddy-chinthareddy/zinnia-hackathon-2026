@@ -2,6 +2,10 @@
   color: var(--color-base-text-text-secondary);
 }
 
+.progressBar {
+  width: 100%;
+}
+
 .buttonGroup {
   display: flex;
   flex-direction: column;
@@ -70,6 +74,10 @@
 
 .paymentSummaryStepContainer {
   padding-top: var(--measure-dimension-padding-3xl);
+}
+
+.dateContainer {
+  position: relative;
 }
 
 @media (width > 767px) {

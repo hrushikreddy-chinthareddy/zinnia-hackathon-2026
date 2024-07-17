@@ -55,6 +55,7 @@ export const OneTimePremiumPayment = ({
         <ProgressBarSteps
           totalSteps={steps.length}
           currentStep={currentStep + 1}
+          className={styles.progressBar}
         />
       </div>
       {currentStep === 0 ? (

@@ -8,14 +8,13 @@ import {
 } from '@zinnia/bloom/components';
 import { ChangeEvent, useState } from 'react';
 
-import { useFeatureFlags } from '@/hooks/use-feature-flags';
-import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
-
 import premiumStyles from './OneTimePremiumPayment.module.css';
 import { NoDataAvailable } from '../no-data-available/NoDataAvailable';
 import { AccountNumber } from '../pii/AccountNumber';
 import { AccountType } from '../pii/AccountType';
 import { BankName } from '../pii/BankName';
+import { useFeatureFlags } from '@/hooks/use-feature-flags';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 const bankDetails = [
   {
