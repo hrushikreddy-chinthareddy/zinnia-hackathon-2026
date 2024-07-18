@@ -1,7 +1,6 @@
 .container {
   border-radius: var(--measure-dimension-radius-sm, 0.25rem);
   border: 2px dashed var(--color-base-border-border-bold, #b3b3b3);
-  margin-bottom: var(--measure-dimension-gap-md);
 }
 
 .content {
@@ -15,6 +14,20 @@
   width: 100%;
 }
 
-/* .icon {
-  color: var(--color-states-inactive-icon, #b3b3b3);
-} */
+.icon {
+  color: var(--color-states-inactive-inactive-text);
+}
+
+.noBankDetails {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-xl);
+}
+
+.noBankDetails p {
+  text-align: center;
+}
+
+.noBankDetailsAddButton {
+  margin-top: var(--measure-dimension-margin-sm);
+}

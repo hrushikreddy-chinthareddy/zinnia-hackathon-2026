@@ -26,7 +26,9 @@ const NoDataAvailable = ({
         )}
         {!children && (
           <>
-            <h3 className="typography-desktop-headline-3-d">{message}</h3>
+            {message && (
+              <h3 className="typography-desktop-headline-3-d">{message}</h3>
+            )}
             <p className="typography-content-body">
               Looks like there is nothing here.
             </p>

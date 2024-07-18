@@ -8,52 +8,58 @@ import {
 } from '@zinnia/bloom/components';
 import { ChangeEvent, useState } from 'react';
 
+import { useFeatureFlags } from '@/hooks/use-feature-flags';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { MOCK_EMPTY_BANK_DETAILS } from '@/utils/serverClientUtils';
+
 import premiumStyles from './OneTimePremiumPayment.module.css';
 import { NoDataAvailable } from '../no-data-available/NoDataAvailable';
+import noDataStyles from '../no-data-available/NoDataAvailable.module.css';
 import { AccountNumber } from '../pii/AccountNumber';
 import { AccountType } from '../pii/AccountType';
 import { BankName } from '../pii/BankName';
-import { useFeatureFlags } from '@/hooks/use-feature-flags';
-import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
-const bankDetails = [
-  {
-    bankId: 'Bank_1',
-    appliesToPartyId: 'Party_PI_1',
-    startDate: '2022-07-11',
-    // endDate: null,
-    nameOnAccount: 'John Smith',
-    accountStatus: 'ACTIVEBANKACCOUNT',
-    accountType: 'CHECKING',
-    accountNumber: '0854301265',
-    routingNumber: '267014589',
-    // internationalBankAccountNumber: null,
-    branchName: 'CITIZEN BANK',
-    autopayEnabled: false,
-  },
-  {
-    bankId: 'Bank_1',
-    appliesToPartyId: 'Party_PI_1',
-    startDate: '2022-07-11',
-    // endDate: null,
-    nameOnAccount: 'John Smith',
-    accountStatus: 'ACTIVEBANKACCOUNT',
-    accountType: 'CHECKING',
-    accountNumber: '0854301265',
-    routingNumber: '267014589',
-    // internationalBankAccountNumber: null,
-    branchName: 'CITI BANK',
-    autopayEnabled: true,
-  },
-];
+const getBankDetails = () => {
+  const queryParams = new URLSearchParams(window.location.search);
 
-// const bankDetails = [];
+  if (queryParams.get(MOCK_EMPTY_BANK_DETAILS)) {
+    return [];
+  }
+
+  return [
+  {
+      bankId: 'Bank_1',
+      appliesToPartyId: 'Party_PI_1',
+      startDate: '2022-07-11',
+      nameOnAccount: 'John Smith',
+      accountStatus: 'ACTIVEBANKACCOUNT',
+      accountType: 'CHECKING',
+      accountNumber: '0854301265',
+      routingNumber: '267014589',
+      branchName: 'CITIZEN BANK',
+      autopayEnabled: false,
+    },
+    {
+      bankId: 'Bank_1',
+      appliesToPartyId: 'Party_PI_1',
+      startDate: '2022-07-11',
+      nameOnAccount: 'John Smith',
+      accountStatus: 'ACTIVEBANKACCOUNT',
+      accountType: 'CHECKING',
+      accountNumber: '0854301265',
+      routingNumber: '267014589',
+      branchName: 'CITI BANK',
+      autopayEnabled: true,
+    },
+  ];
+};
 
 export const SelectBank = ({
   moveToNextStep,
 }: {
   moveToNextStep?: () => void;
 }) => {
+  const bankDetails = getBankDetails();
   const [selectedBank, setSelectedBank] = useState<number | null>(
     bankDetails?.findIndex(bank => bank.autopayEnabled)
   );
@@ -66,13 +72,13 @@ export const SelectBank = ({
 
   return (
     <div>
-      {/* TODO: fix the design on this */}
       {!bankDetails ||
         (bankDetails.length === 0 && (
-          <NoDataAvailable
-            iconType={IconType.BANK}
-            message="Add a bank account to continue"
-          />
+          <div className={noDataStyles.noBankDetails}>
+            <NoDataAvailable iconType={IconType.BANK}>
+              <p className="typography-content-body">Looks like you haven't added any banking information yet.</p>
+            </NoDataAvailable>
+          </div>
         ))}
 
       {bankDetails?.length > 0 && (
@@ -120,12 +126,12 @@ export const SelectBank = ({
         <SideSheet
           header="Add new bank"
           trigger={
-            <Button size="small" mode="link">
-              {/**
-               * TODO: use the new ADD icon when its available
-               */}
-              <Icon width={16} height={16} type={IconType.ALERT} /> Add another
-              bank account
+            <Button className={noDataStyles.noBankDetailsAddButton} mode="link" size="small">
+              <Icon
+                small
+                type={IconType.ADD}
+              />
+              <span>Add another bank account</span>
             </Button>
           }
         >

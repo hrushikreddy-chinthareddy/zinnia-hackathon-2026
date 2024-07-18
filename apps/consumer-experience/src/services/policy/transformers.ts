@@ -1,4 +1,3 @@
-import { TransactionResponse } from '@zinnia/api-types/types/bpm';
 import {
   PartyRole,
   Policy,
@@ -44,7 +43,6 @@ import {
   getRiderDescription,
   policyHasVested,
   allPolicyOwnerBanks,
-  eligibilityStatus,
 } from '@/utils/data';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';
 
