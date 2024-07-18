@@ -12,9 +12,7 @@ These are consumer-facing end products that are deployable or deliverable in som
 
 ### Packages
 
-These consist of shared libraries, components, utilities, or any common code that is used by multiple apps within the monorepo. Packages are not meant to be deployed independently; instead, they are included as dependencies in apps or other packages. They can, however, be published to our [NPM respository](https://github.com/orgs/zinnia/packages).
-
-> NOTE: These packages are also published to our [NPM respository](https://github.com/orgs/zinnia/packages). We want `apps` to opt into the latest version of each package. In order to do so, we publish to the `@zinnia` registry. If you need to make an update to a package you can `link` the local package to the specific `app`. Details on how to link packages can be found in the [Linking packages locally](#linking-packages-locally) section.
+These consist of shared libraries, components, utilities, or any common code that is used by multiple apps within the monorepo. Packages are not meant to be deployed independently; instead, they are included as dependencies in apps or other packages. They can, however, optionally be published to our [NPM respository](https://github.com/orgs/zinnia/packages).
 
 - [API Types](packages/utils/README.md)
 - [ESlint Config](packages/eslint-config/README.md)
@@ -67,7 +65,19 @@ Each `app` and `package` will have their own github workflow. This will allow us
 
 ### Adding a new local package
 
-TBD
+To add a new package to the monorepo create a new directory in the `packages` folder and add a `package.json` file. The package name should be prefixed with `@zinnia/`. The package directory name should be the name of the package without the `@zinnia` prefix.
+
+Once you have created the package update the package.json file of the `app` you want to add the package to. For example, to add the `utils` package to the `consumer-experience` app:
+
+// packages/consumer-experience/package.json
+
+```bash
+{
+  "dependencies": {
+    "@zinnia/utils": "workspace:*"
+  }
+}
+```
 
 ### Adding a new NPM Package
 
@@ -92,38 +102,9 @@ cd apps/consumer-experience
 pnpm add <package>
 ```
 
-### Linking packages locally
-
-To make changes to a local package and immediately see those changes reflected in an application, you can use the `link-package` script. The script automates the process of linking a local package to an application, allowing for real-time testing of changes in the context of that application.
-
-Here's what you need to do:
-
-1. **Run the Linking Script**: Use the `pnpm run` command to execute the `link-package` script, passing the name of the package you want to link and the name of the application where you want to see the changes. For example, if you have a local package named `@zinnia/utils` and an application named `consumer-experience`, you would run the following command from the root of your monorepo:
-
-```bash
-pnpm run link-package -- @zinnia/utils consumer-experience
-```
-
-2. **Develop and Test**: With the package linked, you can now make changes to your `@zinnia/utils` package code. Those changes will be reflected in `consumer-experience` as if you had installed an updated package from a registry. You can test your application to see the effects of your changes immediately.
-
-3. **Unlink When Done**: Once you're done with development and testing, you should unlink the package to restore the original module resolution. To unlink the package run the following command::
-
-```bash
-pnpm run unlink-package -- consumer-experience
-```
-
-#### Steps Performed by the Script
-
-This script is designed to restore a previously cached version of a package.json file for a specific app within a monorepo. Normally we would prefer to use the built in `pnpm link` and `pnpm unlink` commands, but there seems to be a bug with the `pnpm unlink` command. So instead we use the following steps:
-
-1. Check for Cached Version: The script first checks if a cached version of the package.json file exists for the specified app in the cached-package-json directory.
-2. Restore package.json: If a cached version exists, it copies this file to the app's directory, effectively restoring the package.json file to its previous state.
-3. Delete Cached File: After successful restoration, the cached file is deleted to maintain cleanliness and avoid potential conflicts.
-4. Synchronize Dependencies: It runs pnpm install within the app's directory to synchronize the node modules with the restored package.json file.
-
 ### Publishing a package
 
-The publish-action.yml workflow automates the process of publishing our project's packages to the GitHub Package Registry. This workflow can be triggered manually or automatically by specific events in the repository.
+The publish-action.yml workflow automates the process of publishing our project's packages to the GitHub Package Registry. This workflow can be triggered manually.
 
 #### Features
 

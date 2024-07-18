@@ -28,13 +28,29 @@
         "AUTH0_COOKIE_SECURE",
         "VERCEL_BRANCH_URL",
         "OPTIMIZELY_SDK_KEY"
-      ]
+      ],
+      "dependsOn": ["^build"]
+    },
+    "@zinnia/utils#build": {
+      "dependsOn": ["^build"]
     },
     "lint": {},
+    "consumer-experience#lint": {
+      "dependsOn": ["^lint"]
+    },
     "dev": {
       "cache": false,
       "persistent": true
     },
-    "test": {}
+    "consumer-experience#dev": {
+      "dependsOn": ["^build"]
+    },
+    "@zinnia/utils#dev": {
+      "dependsOn": ["^build"]
+    },
+    "test": {},
+    "consumer-experience#test": {
+      "dependsOn": ["^build"]
+    }
   }
 }

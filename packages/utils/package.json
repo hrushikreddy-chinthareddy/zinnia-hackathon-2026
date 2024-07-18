@@ -22,14 +22,14 @@
     "preset": "@zinnia/jest-presets/node"
   },
   "dependencies": {
-    "@zinnia/api-types": "0.0.2"
+    "@zinnia/api-types": "workspace:*"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.24",
-    "@zinnia/eslint-config": "0.0.11",
-    "@zinnia/jest-presets": "0.0.1",
-    "@zinnia/typescript-config": "0.0.11",
+    "@zinnia/eslint-config": "workspace:*",
+    "@zinnia/jest-presets": "workspace:*",
+    "@zinnia/typescript-config": "workspace:*",
     "jest": "^29.7.0",
     "tsup": "^8.0.2",
     "typescript": "^5.3.3"
