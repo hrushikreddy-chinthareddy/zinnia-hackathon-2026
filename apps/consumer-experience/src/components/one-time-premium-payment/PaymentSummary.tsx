@@ -5,14 +5,19 @@ import {
   Label,
   Popover,
 } from '@zinnia/bloom/components';
-import { PaymentSummaryStep } from '../payment-summary-step/PaymentSummaryStep';
+
+import styles from './OneTimePremiumPayment.module.css';
 import { FieldData } from '../field-data/FieldData';
-import { BankName } from '../pii/BankName';
+import { PaymentSummaryStep } from '../payment-summary-step/PaymentSummaryStep';
 import { AccountNumber } from '../pii/AccountNumber';
 import { AccountType } from '../pii/AccountType';
-import styles from './OneTimePremiumPayment.module.css';
+import { BankName } from '../pii/BankName';
 
-export const PaymentSummary = () => {
+export const PaymentSummary = ({
+  moveToNextStep,
+}: {
+  moveToNextStep?: () => void;
+}) => {
   return (
     <div>
       <div className={styles.paymentSummaryContainer}>
@@ -72,14 +77,16 @@ export const PaymentSummary = () => {
                   Fees
                 </Label>
               ),
-              value: 450,
+              value: -450,
             },
           ]}
           totalLabel={<Label>Total deposit</Label>}
         />
       </div>
       <div className={styles.buttonGroup}>
-        <Button mode="primary">Submit payment</Button>
+        <Button mode="primary" onClick={moveToNextStep}>
+          Submit payment
+        </Button>
         {/* TODO: show 'are you sure path', this should actually be a link */}
         <Button mode="link">Cancel</Button>
       </div>

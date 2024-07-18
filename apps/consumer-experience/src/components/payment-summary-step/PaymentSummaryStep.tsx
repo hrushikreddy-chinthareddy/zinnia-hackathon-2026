@@ -1,4 +1,4 @@
-import { LabelProps } from '@zinnia/bloom/components';
+import { type LabelProps } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import React from 'react';
 

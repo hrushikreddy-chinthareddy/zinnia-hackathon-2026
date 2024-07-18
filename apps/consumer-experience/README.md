@@ -56,8 +56,17 @@ Add to your settings.json
 
 ## Setting up a new user:
 
-1. [Create oauth token ](https://zinnia.atlassian.net/wiki/spaces/CIAMC/pages/3999793180/OAuth+M2M+Token+How-To)
-2. create a policy. See [doc](https://se2llc-global.slack.com/archives/C069ZQ0REET/p1719252268702579?thread_ts=1719248037.803579&cid=C069ZQ0REET) for steps to create one.
+1. You'll need a zinnia email adress to get extended permissions
+1. Create a policy
+  a. Using Postman
+  b. Using the UI
+  * creating a policy will create your Auth0 user as well. This will allow access to Consumer
+1. Zahara processes new users every night, so you'll need to manually move the policy from `Pending` to `Active`.
+    a. go to the policy GUI (TODO: add link)
+    b. open inspector
+    c. find the button that's hidden with css, unhide it, and press that (TODO: add more discrete details)
+1. Have the policy you just created added to seed policies (zahara slack) so it is recreated with each Zahara release
+1
 
 # Local development
 

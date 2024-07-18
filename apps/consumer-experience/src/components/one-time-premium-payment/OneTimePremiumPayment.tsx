@@ -5,11 +5,12 @@ import { cloneElement, useState } from 'react';
 import { HeaderLink } from '@/components/header-link/HeaderLink';
 
 import styles from './OneTimePremiumPayment.module.css';
+import { PaymentSubmittedSuccess } from './PaymentSubmittedSuccess';
+import { PaymentSummary } from './PaymentSummary';
 import { SelectAmount } from './SelectAmount';
 import { SelectBank } from './SelectBank';
 import { HeaderButton } from '../header-link/HeaderButton';
 import { ProgressBarSteps } from '../progress-bar-steps/ProgressBarSteps';
-import { PaymentSummary } from './PaymentSummary';
 
 const steps = [
   {
@@ -26,8 +27,8 @@ const steps = [
   },
   // TODO: this is the final step ONLY if the payment was successful
   {
-    compponent: <></>,
-    title: 'Submitted',
+    component: <PaymentSubmittedSuccess />,
+    title: 'Submitted!',
   },
 ];
 
@@ -78,6 +79,8 @@ export const OneTimePremiumPayment = ({
       {steps[currentStep]?.component &&
         cloneElement(steps[currentStep]?.component || <></>, {
           moveToNextStep,
+          policyNumber,
+          planCode,
         })}
     </>
   );
