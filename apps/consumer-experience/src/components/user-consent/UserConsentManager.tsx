@@ -28,7 +28,7 @@ const SubmitButton = () => {
       variant={LoaderVariant.CTA}
       hide={!pending}
     >
-      Continue
+      <span>Continue</span>
     </SpinnerButton>
   );
 };

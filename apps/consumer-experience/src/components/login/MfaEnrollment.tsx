@@ -25,7 +25,7 @@ const SubmitButton = () => {
       hide={!pending}
       className={clsx('mt-3xl', styles.submit)}
     >
-      Continue
+      <span>Continue</span>
     </SpinnerButton>
   );
 };

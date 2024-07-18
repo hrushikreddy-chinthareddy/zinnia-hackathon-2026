@@ -25,7 +25,7 @@ const SubmitButton = () => {
       hide={!pending}
       className={clsx('mt-3xl', styles.submit)}
     >
-      Continue
+      <span>Continue</span>
     </SpinnerButton>
   );
 };
@@ -67,7 +67,7 @@ export const EnterEmailStep = () => {
             className={inputStyles}
             placeholder="Enter your email"
             name="email"
-            onChange={e => {
+            onChange={() => {
               setCurrentError('');
             }}
           />

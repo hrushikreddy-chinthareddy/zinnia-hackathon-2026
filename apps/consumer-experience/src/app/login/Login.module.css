@@ -107,9 +107,9 @@
 }
 
 .submit {
-  width: max-content;
   margin-left: auto;
   margin-right: auto;
+  width: max-content;
 }
 
 @media (width >= 1024px) {

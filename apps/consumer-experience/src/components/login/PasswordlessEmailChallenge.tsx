@@ -29,7 +29,7 @@ const SubmitButton = () => {
       hide={!pending}
       className={clsx('mt-3xl', styles.submit)}
     >
-      Continue
+      <span>Continue</span>
     </SpinnerButton>
   );
 };
@@ -146,7 +146,7 @@ export const PasswordlessEmailChallenge = ({ email }: { email: string }) => {
           hide={!resendPasswordlessStartCode}
           disabled={resendPasswordlessStartCode}
         >
-          Re-send verification code.
+          <span>Re-send verification code.</span>
         </SpinnerButton>
       </p>
       <p className={styles.resend}>
