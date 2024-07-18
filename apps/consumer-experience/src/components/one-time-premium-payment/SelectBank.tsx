@@ -6,6 +6,7 @@ import {
   IconType,
   SideSheet,
 } from '@zinnia/bloom/components';
+import { useRouter } from 'next/navigation';
 import { ChangeEvent, useState } from 'react';
 
 import { useFeatureFlags } from '@/hooks/use-feature-flags';
@@ -18,6 +19,7 @@ import noDataStyles from '../no-data-available/NoDataAvailable.module.css';
 import { AccountNumber } from '../pii/AccountNumber';
 import { AccountType } from '../pii/AccountType';
 import { BankName } from '../pii/BankName';
+import { CancelDialogLink } from '../transactions/CancelDialogLink';
 
 const getBankDetails = () => {
   const queryParams = new URLSearchParams(window.location.search);
@@ -56,9 +58,14 @@ const getBankDetails = () => {
 
 export const SelectBank = ({
   moveToNextStep,
+  planCode,
+  policyNumber
 }: {
   moveToNextStep?: () => void;
+  planCode: string;
+  policyNumber: string;
 }) => {
+  const router = useRouter();
   const bankDetails = getBankDetails();
   const [selectedBank, setSelectedBank] = useState<number | null>(
     bankDetails?.findIndex(bank => bank.autopayEnabled)
@@ -126,12 +133,8 @@ export const SelectBank = ({
         <SideSheet
           header="Add new bank"
           trigger={
-            <Button className={noDataStyles.noBankDetailsAddButton} mode="link" size="small">
-              <Icon
-                small
-                type={IconType.ADD}
-              />
-              <span>Add another bank account</span>
+            <Button className={premiumStyles.addBank} mode="link" size="small">
+              <Icon width={16} height={16} type={IconType.ADD} /> Add another bank account
             </Button>
           }
         >
@@ -148,8 +151,7 @@ export const SelectBank = ({
         >
           Continue
         </Button>
-        {/* TODO: show 'are you sure path', this should actually be a link */}
-        <Button mode="link">Cancel</Button>
+        <CancelDialogLink planCode={planCode} policyNumber={policyNumber} router={router} />
       </div>
     </div>
   );

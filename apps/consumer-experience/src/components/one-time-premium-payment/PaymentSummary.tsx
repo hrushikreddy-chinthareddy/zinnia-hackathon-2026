@@ -5,6 +5,7 @@ import {
   Label,
   Popover,
 } from '@zinnia/bloom/components';
+import { useRouter } from 'next/navigation';
 
 import styles from './OneTimePremiumPayment.module.css';
 import { FieldData } from '../field-data/FieldData';
@@ -12,12 +13,19 @@ import { PaymentSummaryStep } from '../payment-summary-step/PaymentSummaryStep';
 import { AccountNumber } from '../pii/AccountNumber';
 import { AccountType } from '../pii/AccountType';
 import { BankName } from '../pii/BankName';
+import { CancelDialogLink } from '../transactions/CancelDialogLink';
 
 export const PaymentSummary = ({
   moveToNextStep,
+  planCode,
+  policyNumber,
 }: {
   moveToNextStep?: () => void;
+  planCode: string;
+  policyNumber: string;
 }) => {
+  const router = useRouter();
+
   return (
     <div>
       <div className={styles.paymentSummaryContainer}>
@@ -87,8 +95,7 @@ export const PaymentSummary = ({
         <Button mode="primary" onClick={moveToNextStep}>
           Submit payment
         </Button>
-        {/* TODO: show 'are you sure path', this should actually be a link */}
-        <Button mode="link">Cancel</Button>
+        <CancelDialogLink planCode={planCode} policyNumber={policyNumber} router={router} />
       </div>
     </div>
   );

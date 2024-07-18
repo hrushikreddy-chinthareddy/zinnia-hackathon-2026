@@ -5,12 +5,18 @@ import {
   Label,
   AssistiveText,
   AssistiveTextVariant,
+  Popover,
+  Icon,
+  IconType,
+  PopoverPlacement,
 } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import premiumStyles from './OneTimePremiumPayment.module.css';
 import { DateInput } from '../date-input/DateInput';
+import { CancelDialogLink } from '../transactions/CancelDialogLink';
 
 export const dateInvalidMessage = 'Please enter a valid date';
 export const dateOutOfRangeMessage =
@@ -18,9 +24,14 @@ export const dateOutOfRangeMessage =
 
 export const SelectAmount = ({
   moveToNextStep,
+  planCode,
+  policyNumber,
 }: {
   moveToNextStep?: () => void;
+  planCode: string;
+  policyNumber: string;
 }) => {
+  const router = useRouter();
   const [dateInvalidError, setDateInvalidError] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
 
@@ -66,7 +77,28 @@ export const SelectAmount = ({
         )}
       </div>
       <div className="mb-xl">
-        <Label>Premium payment amount</Label>
+        <Label
+          interactiveElements={[
+            <Popover
+              key="tooltip"
+              title="popover title"
+              trigger={
+                <Icon
+                  type={IconType.CIRCLE_INFO}
+                  small
+                  color="var(--color-base-icon-icon-tooltip, #ff7500)"
+                />
+              }
+              placement={PopoverPlacement.BottomRight}
+            >
+              <div>
+                <p>Popover content</p>
+              </div>
+            </Popover>,
+          ]}
+        >
+          Premium payment amount
+        </Label>
       </div>
       {/* // TODO: this only shows if there is a fee */}
       <p className={`${premiumStyles.note} typography-content-body-sm`}>
@@ -76,8 +108,7 @@ export const SelectAmount = ({
         <Button mode="primary" onClick={validateAndMove}>
           Continue
         </Button>
-        {/* TODO: show 'are you sure path' */}
-        <Button mode="link">Cancel</Button>
+        <CancelDialogLink planCode={planCode} policyNumber={policyNumber} router={router} />
       </div>
     </>
   );

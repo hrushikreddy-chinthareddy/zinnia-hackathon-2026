@@ -1,5 +1,7 @@
-.note {
-  color: var(--color-base-text-text-secondary);
+.addBank {
+  margin-top: var(--measure-dimension-margin-sm);
+  /* TODO MG: update bloom so we dont need !imortant */
+  padding: 0 !important;
 }
 
 .progressBar {
@@ -61,6 +63,10 @@
 }
 
 .bankDetail {
+  color: var(--color-base-text-text-secondary);
+}
+
+.note {
   color: var(--color-base-text-text-secondary);
 }
 

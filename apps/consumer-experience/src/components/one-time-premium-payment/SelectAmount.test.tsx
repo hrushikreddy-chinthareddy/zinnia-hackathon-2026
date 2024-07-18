@@ -9,12 +9,21 @@ import {
   dateOutOfRangeMessage,
 } from './SelectAmount';
 
+// Mock useRouter:
+jest.mock("next/navigation", () => ({
+  useRouter() {
+    return {
+      prefetch: () => null
+    };
+  }
+}));
+
 describe('SelectAmount', () => {
   // Date within valid range moves to next step
   it('should move to next step when date is within valid range', () => {
     const moveToNextStep = jest.fn();
     const { getByLabelText, getByText } = render(
-      <SelectAmount moveToNextStep={moveToNextStep} />
+      <SelectAmount moveToNextStep={moveToNextStep} planCode="XXXI" policyNumber="XXXI" />
     );
 
     const dateInput = getByLabelText('Effective date');
@@ -30,7 +39,9 @@ describe('SelectAmount', () => {
 
   // Date before today shows dateOutOfRangeMessage
   it('should show dateOutOfRangeMessage when date is before today', async () => {
-    const { getByLabelText, getByText, findByText } = render(<SelectAmount />);
+    const moveToNextStep = jest.fn();
+
+    const { getByLabelText, getByText, findByText } = render(<SelectAmount moveToNextStep={moveToNextStep} planCode="XXXI" policyNumber="XXXI" />);
 
     const dateInput = getByLabelText('Effective date');
     fireEvent.change(dateInput, {
@@ -47,7 +58,8 @@ describe('SelectAmount', () => {
 
   // Invalid date shows invalidDateMessage
   it('should show invalidDateMessage when date is not real', async () => {
-    const { getByLabelText, getByText, findByText } = render(<SelectAmount />);
+    const moveToNextStep = jest.fn();
+    const { getByLabelText, getByText, findByText } = render(<SelectAmount  moveToNextStep={moveToNextStep} planCode="XXXI" policyNumber="XXXI" />);
 
     const dateInput = getByLabelText('Effective date');
     fireEvent.change(dateInput, {

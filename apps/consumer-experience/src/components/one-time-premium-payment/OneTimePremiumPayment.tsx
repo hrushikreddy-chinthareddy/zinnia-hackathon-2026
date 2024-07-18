@@ -1,4 +1,5 @@
 'use client';
+
 import { toSentenceCase } from '@zinnia/utils';
 import { cloneElement, useState } from 'react';
 
@@ -12,25 +13,27 @@ import { SelectBank } from './SelectBank';
 import { HeaderButton } from '../header-link/HeaderButton';
 import { ProgressBarSteps } from '../progress-bar-steps/ProgressBarSteps';
 
-const steps = [
-  {
-    component: <SelectAmount />,
-    title: 'Make a One-Time Premium Payment',
-  },
-  {
-    component: <SelectBank />,
-    title: 'Select payment method',
-  },
-  {
-    component: <PaymentSummary />,
-    title: 'summary',
-  },
-  // TODO: this is the final step ONLY if the payment was successful
-  {
-    component: <PaymentSubmittedSuccess />,
-    title: 'Submitted!',
-  },
-];
+const getSteps = (planCode: string, policyNumber: string) => {
+  return [
+    {
+      component: <SelectAmount planCode={planCode} policyNumber={policyNumber} />,
+      title: 'Make a One-Time Premium Payment',
+    },
+    {
+      component: <SelectBank planCode={planCode} policyNumber={policyNumber} />,
+      title: 'Select payment method',
+    },
+    {
+      component: <PaymentSummary planCode={planCode} policyNumber={policyNumber} />,
+      title: 'summary',
+    },
+    // TODO: this is the final step ONLY if the payment was successful
+    {
+      component: <PaymentSubmittedSuccess />,
+      title: 'Submitted',
+    },
+  ];
+}
 
 export const OneTimePremiumPayment = ({
   planCode,
@@ -40,6 +43,7 @@ export const OneTimePremiumPayment = ({
   policyNumber: string;
 }) => {
   const [currentStep, setCurrentStep] = useState(0);
+  const steps = getSteps(planCode, policyNumber);
 
   const moveToNextStep = () => {
     setCurrentStep(currentStep + 1);
@@ -79,8 +83,8 @@ export const OneTimePremiumPayment = ({
       {steps[currentStep]?.component &&
         cloneElement(steps[currentStep]?.component || <></>, {
           moveToNextStep,
-          policyNumber,
           planCode,
+          policyNumber,
         })}
     </>
   );
