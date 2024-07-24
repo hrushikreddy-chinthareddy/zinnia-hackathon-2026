@@ -27,10 +27,6 @@ export const FieldValue = React.forwardRef<HTMLInputElement, FieldValueProps>(
     },
     forwardRef
   ) => {
-    if (!errorMessage) {
-      throw new Error('Required field: errorMessage is missing');
-    }
-
     if ((label.type as React.JSXElementConstructor<any>).name !== Label.name) {
       throw new Error('Required field: label is not of type Label');
     }
@@ -43,6 +39,7 @@ export const FieldValue = React.forwardRef<HTMLInputElement, FieldValueProps>(
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
+
       if (decimalRegex.test(value)) {
         setInputValue(value);
 
@@ -81,7 +78,8 @@ export const FieldValue = React.forwardRef<HTMLInputElement, FieldValueProps>(
             className={clsx(
               fieldStyles.input,
               fieldSize && fieldStyles[fieldSize],
-              fieldStyles[fieldStatus]
+              fieldStyles[fieldStatus],
+              'typography-content-body'
             )}
             id={inputId}
             value={inputValue}
@@ -91,7 +89,7 @@ export const FieldValue = React.forwardRef<HTMLInputElement, FieldValueProps>(
             {...props}
           />
         </div>
-        {fieldStatus === FieldStatus.ERROR && (
+        {fieldStatus === FieldStatus.ERROR && errorMessage && (
           <AssistiveText
             className={fieldStyles.assistiveMessage}
             text={errorMessage}

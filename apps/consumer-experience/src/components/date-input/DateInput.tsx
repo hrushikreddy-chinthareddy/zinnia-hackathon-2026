@@ -4,6 +4,7 @@ import { Icon, IconType, DatePicker } from '@zinnia/bloom/components';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { isValidDate } from '@/utils/dates';
+import { zIndexOrder } from '@/utils/zIndexOrder';
 
 import styles from './DateInput.module.css';
 
@@ -38,6 +39,7 @@ export const DateInput = ({
   const [calendarOpen, setCalendarOpen] = useState(false);
   const inputContainer = useRef<HTMLInputElement>(null);
   const [inputWidth, setInputWidth] = useState(0);
+  const input = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (inputContainer.current) {
@@ -80,16 +82,21 @@ export const DateInput = ({
   }, []);
 
   useEffect(() => {
-    document.addEventListener('keypress', handleKeyPress);
+    const inputRefCurrent = input.current;
+    inputRefCurrent?.addEventListener('keypress', handleKeyPress);
     return () => {
-      document.removeEventListener('keypress', handleKeyPress);
+      inputRefCurrent?.removeEventListener('keypress', handleKeyPress);
     };
   }, [handleKeyPress]);
 
   return (
-    <div className="input-with-interaction" ref={inputContainer}>
+    <div
+      className="input-with-interaction field-container"
+      ref={inputContainer}
+    >
       {/* TODO: change to use field component */}
       <input
+        ref={input}
         className={`typography-content-body-sm ${styles.input}`}
         type="text"
         name="date"
@@ -106,7 +113,11 @@ export const DateInput = ({
           />
         </ReactPopover.Trigger>
         <ReactPopover.Portal>
-          <ReactPopover.Content align="end" side="bottom">
+          <ReactPopover.Content
+            align="end"
+            side="bottom"
+            style={{ zIndex: zIndexOrder.DatePickerDialog }}
+          >
             <div
               className={styles.datePickerContainer}
               style={{ width: inputWidth }}
