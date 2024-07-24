@@ -19,6 +19,7 @@ import noDataStyles from '../no-data-available/NoDataAvailable.module.css';
 import { AccountNumber } from '../pii/AccountNumber';
 import { AccountType } from '../pii/AccountType';
 import { BankName } from '../pii/BankName';
+import { useOttp } from '../providers/one-time-premium-payment/OttpProvider';
 import { CancelDialogLink } from '../transactions/CancelDialogLink';
 
 const getBankDetails = () => {
@@ -29,7 +30,7 @@ const getBankDetails = () => {
   }
 
   return [
-  {
+    {
       bankId: 'Bank_1',
       appliesToPartyId: 'Party_PI_1',
       startDate: '2022-07-11',
@@ -59,7 +60,7 @@ const getBankDetails = () => {
 export const SelectBank = ({
   moveToNextStep,
   planCode,
-  policyNumber
+  policyNumber,
 }: {
   moveToNextStep?: () => void;
   planCode: string;
@@ -83,11 +84,12 @@ export const SelectBank = ({
         (bankDetails.length === 0 && (
           <div className={noDataStyles.noBankDetails}>
             <NoDataAvailable iconType={IconType.BANK}>
-              <p className="typography-content-body">Looks like you haven't added any banking information yet.</p>
+              <p className="typography-content-body">
+                Looks like you haven't added any banking information yet.
+              </p>
             </NoDataAvailable>
           </div>
         ))}
-
       {bankDetails?.length > 0 && (
         <div role="radiogroup" aria-label="select payment method">
           {bankDetails?.map((bankDetail, index) => {
@@ -134,7 +136,8 @@ export const SelectBank = ({
           header="Add new bank"
           trigger={
             <Button className={premiumStyles.addBank} mode="link" size="small">
-              <Icon width={16} height={16} type={IconType.ADD} /> Add another bank account
+              <Icon width={16} height={16} type={IconType.ADD} /> Add another
+              bank account
             </Button>
           }
         >
@@ -151,7 +154,11 @@ export const SelectBank = ({
         >
           Continue
         </Button>
-        <CancelDialogLink planCode={planCode} policyNumber={policyNumber} router={router} />
+        <CancelDialogLink
+          planCode={planCode}
+          policyNumber={policyNumber}
+          router={router}
+        />
       </div>
     </div>
   );

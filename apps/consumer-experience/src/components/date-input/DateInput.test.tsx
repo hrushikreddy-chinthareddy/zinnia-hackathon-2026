@@ -9,7 +9,7 @@ describe('DateInput', () => {
   it('should render input with initial selected date', () => {
     const today = new Date();
     const { getByPlaceholderText } = render(
-      <DateInput selectedDate={new Date()} onSelect={() => {}} />
+      <DateInput selectedDate={new Date()} onDateSelect={() => {}} />
     );
     const input = getByPlaceholderText('Please select a date');
 
@@ -19,7 +19,7 @@ describe('DateInput', () => {
   // Handles empty input value gracefully
   it('should handle empty input value gracefully', () => {
     const { getByPlaceholderText } = render(
-      <DateInput selectedDate={undefined} onSelect={() => {}} />
+      <DateInput selectedDate={undefined} onDateSelect={() => {}} />
     );
     const input = getByPlaceholderText('Please select a date');
     expect(input).toHaveValue('');

@@ -14,18 +14,18 @@ type DateInterval = {
   after: Date;
 };
 
-export interface DateInputProps {
+export interface DateInputProps extends React.HTMLAttributes<HTMLInputElement> {
   disableBeforeDate?: Date;
   disableAfterDate?: Date;
   id?: string;
-  onSelect: (date: Date | undefined) => void;
+  onDateSelect: (date: Date | undefined) => void;
   selectedDate?: Date;
 }
 
 export const DateInput = ({
   disableBeforeDate,
   disableAfterDate,
-  onSelect,
+  onDateSelect = () => {},
   selectedDate,
   id,
 }: DateInputProps) => {
@@ -64,11 +64,11 @@ export const DateInput = ({
   useEffect(() => {
     // TODO: should this validation happen here? or in the consumer of the component?
     if (currentDate && isValidDate(currentDate.toString())) {
-      onSelect(currentDate);
+      onDateSelect(currentDate);
     } else {
-      onSelect(undefined);
+      onDateSelect(undefined);
     }
-  }, [currentDate, onSelect]);
+  }, [currentDate, onDateSelect]);
 
   const handleKeyPress = useCallback((e: KeyboardEvent) => {
     const regex = /^[0-9/]+$/;
@@ -88,6 +88,7 @@ export const DateInput = ({
 
   return (
     <div className="input-with-interaction" ref={inputContainer}>
+      {/* TODO: change to use field component */}
       <input
         className={`typography-content-body-sm ${styles.input}`}
         type="text"

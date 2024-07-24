@@ -16,6 +16,10 @@ import { useEffect, useState } from 'react';
 
 import premiumStyles from './OneTimePremiumPayment.module.css';
 import { DateInput } from '../date-input/DateInput';
+import {
+  OttpAction,
+  useOttp,
+} from '../providers/one-time-premium-payment/OttpProvider';
 import { CancelDialogLink } from '../transactions/CancelDialogLink';
 
 export const dateInvalidMessage = 'Please enter a valid date';
@@ -32,8 +36,13 @@ export const SelectAmount = ({
   policyNumber: string;
 }) => {
   const router = useRouter();
+  const { state, dispatch } = useOttp();
+  const { effectiveDate } = state;
   const [dateInvalidError, setDateInvalidError] = useState<string | null>(null);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+  // TODO: there's a better way to do this
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    effectiveDate ? new Date(effectiveDate) : undefined
+  );
 
   const sixtyDaysInFutureDay = dayjs().add(60, 'day').format('YYYY-MM-DD');
 
@@ -46,6 +55,7 @@ export const SelectAmount = ({
         setDateInvalidError(dateOutOfRangeMessage);
         return;
       }
+      dispatch({ type: OttpAction.SET_EFFECTIVE_DATE, payload: selectedDate });
       moveToNextStep?.();
     } else {
       setDateInvalidError(dateInvalidMessage);
@@ -61,7 +71,7 @@ export const SelectAmount = ({
       <div className={`mb-xl ${premiumStyles.dateContainer}`}>
         <Label labelFor="one-time-premium-payment-date">Effective date</Label>
         <DateInput
-          onSelect={setSelectedDate}
+          onDateSelect={setSelectedDate}
           selectedDate={selectedDate}
           disableAfterDate={new Date(sixtyDaysInFutureDay)}
           disableBeforeDate={new Date()}
@@ -108,7 +118,11 @@ export const SelectAmount = ({
         <Button mode="primary" onClick={validateAndMove}>
           Continue
         </Button>
-        <CancelDialogLink planCode={planCode} policyNumber={policyNumber} router={router} />
+        <CancelDialogLink
+          planCode={planCode}
+          policyNumber={policyNumber}
+          router={router}
+        />
       </div>
     </>
   );
