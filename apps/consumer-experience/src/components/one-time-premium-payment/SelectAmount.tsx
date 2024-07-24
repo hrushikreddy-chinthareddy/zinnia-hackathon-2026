@@ -17,10 +17,8 @@ import { useEffect, useState } from 'react';
 import premiumStyles from './OneTimePremiumPayment.module.css';
 import { DateInput } from '../date-input/DateInput';
 import { FieldValue } from '../field/value/FieldValue';
-import {
-  OttpAction,
-  useOttp,
-} from '../providers/one-time-premium-payment/OttpProvider';
+import { useOttp } from '../providers/one-time-premium-payment/OttpContext';
+import { OttpAction } from '../providers/one-time-premium-payment/types';
 import { CancelDialogLink } from '../transactions/CancelDialogLink';
 
 export const dateInvalidMessage = 'Please enter a valid date';

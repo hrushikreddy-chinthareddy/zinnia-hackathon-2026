@@ -19,7 +19,6 @@ import noDataStyles from '../no-data-available/NoDataAvailable.module.css';
 import { AccountNumber } from '../pii/AccountNumber';
 import { AccountType } from '../pii/AccountType';
 import { BankName } from '../pii/BankName';
-import { useOttp } from '../providers/one-time-premium-payment/OttpProvider';
 import { CancelDialogLink } from '../transactions/CancelDialogLink';
 
 const getBankDetails = () => {
