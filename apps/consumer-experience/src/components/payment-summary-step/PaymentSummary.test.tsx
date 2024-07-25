@@ -24,4 +24,15 @@ describe('calculateTotalDeposit', () => {
     const result = calculateTotalDeposit(values);
     expect(result).toBe(0);
   });
+
+  // handles array with all zero values
+  it('should return zero when all values are undefined', () => {
+    const values = [
+      { label: <Label>Submitted amount</Label>, value: undefined },
+      { label: <Label>Fees</Label>, value: undefined },
+      { label: <Label>Misc</Label>, value: undefined },
+    ];
+    const result = calculateTotalDeposit(values);
+    expect(result).toBe(0);
+  });
 });
