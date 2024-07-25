@@ -9,7 +9,7 @@ import { calculateTotalDeposit } from './utils';
 
 export interface TransactionSummaryItem {
   label: React.ReactElement<LabelProps>;
-  value: number;
+  value?: number;
 }
 
 export interface PaymentSummaryStepProps {
@@ -23,6 +23,7 @@ export const PaymentSummaryStep = ({
   transactionSummary,
   totalLabel,
 }: PaymentSummaryStepProps) => {
+  console.log(transactionSummary);
   const totalDeposit = calculateTotalDeposit(transactionSummary);
 
   return (

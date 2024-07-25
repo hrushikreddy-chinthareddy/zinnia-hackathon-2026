@@ -64,7 +64,7 @@ export const SelectAmount = ({
     });
     dispatch({
       type: OttpAction.SET_PAYMENT_AMOUNT,
-      payload: getValues('paymentAmount'),
+      payload: Number(getValues('paymentAmount')),
     });
     moveToNextStep?.();
   };
