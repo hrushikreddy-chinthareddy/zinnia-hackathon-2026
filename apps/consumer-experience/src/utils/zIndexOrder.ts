@@ -4,6 +4,7 @@
 export enum zIndexOrder {
   CardLinkClickArea = 100,
   CardPopoverTrigger = 200,
+  DatePickerDialog = 201,
   Overlay = 300,
   Popover = 400,
   Dialog = 500,

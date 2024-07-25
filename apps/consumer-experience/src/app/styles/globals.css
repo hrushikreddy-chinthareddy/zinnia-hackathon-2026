@@ -247,7 +247,7 @@ input[type='text'] {
 }
 
 @media (width > 767px) {
-  .input-with-interaction {
+  .field-container {
     width: 350px;
   }
 }

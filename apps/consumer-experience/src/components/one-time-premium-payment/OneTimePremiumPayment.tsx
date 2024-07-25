@@ -12,11 +12,14 @@ import { SelectAmount } from './SelectAmount';
 import { SelectBank } from './SelectBank';
 import { HeaderButton } from '../header-link/HeaderButton';
 import { ProgressBarSteps } from '../progress-bar-steps/ProgressBarSteps';
+import { OttpProvider } from '../providers/one-time-premium-payment/OttpProvider';
 
 const getSteps = (planCode: string, policyNumber: string) => {
   return [
     {
-      component: <SelectAmount planCode={planCode} policyNumber={policyNumber} />,
+      component: (
+        <SelectAmount planCode={planCode} policyNumber={policyNumber} />
+      ),
       title: 'Make a One-Time Premium Payment',
     },
     {
@@ -24,7 +27,9 @@ const getSteps = (planCode: string, policyNumber: string) => {
       title: 'Select payment method',
     },
     {
-      component: <PaymentSummary planCode={planCode} policyNumber={policyNumber} />,
+      component: (
+        <PaymentSummary planCode={planCode} policyNumber={policyNumber} />
+      ),
       title: 'summary',
     },
     // TODO: this is the final step ONLY if the payment was successful
@@ -33,7 +38,7 @@ const getSteps = (planCode: string, policyNumber: string) => {
       title: 'Submitted',
     },
   ];
-}
+};
 
 export const OneTimePremiumPayment = ({
   planCode,
@@ -54,7 +59,7 @@ export const OneTimePremiumPayment = ({
   };
 
   return (
-    <>
+    <OttpProvider>
       <div className={`${styles.steps} flex-center mb-xl`}>
         <span className="typography-labels-label-sm mr-lg">Step</span>
         <ProgressBarSteps
@@ -86,11 +91,6 @@ export const OneTimePremiumPayment = ({
           planCode,
           policyNumber,
         })}
-    </>
+    </OttpProvider>
   );
 };
-
-// TODO:
-// on refresh, go back to step 1?
-// allow className bloom label
-// underline on cancel button is too spaced out

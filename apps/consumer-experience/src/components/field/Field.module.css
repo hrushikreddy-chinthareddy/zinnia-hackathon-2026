@@ -108,9 +108,30 @@
   position: absolute;
   right: 0;
   padding-right: var(--measure-dimension-padding-2xl, 8px);
-  color: var(--color-base-text-text-primary, #212121);
 }
 
 .assistiveMessage {
   padding-top: var(--measure-dimension-padding-lg, 8px);
+}
+
+.datePickerContainer {
+  display: flex;
+  justify-content: center;
+  padding: var(--measure-dimension-padding-xl);
+  box-shadow: var(--shadow-elevation-elevation-light-04);
+  background-color: var(--color-base-surface-surface-primary);
+  z-index: 9;
+  margin-top: var(--measure-dimension-gap-xl);
+  border-radius: var(--measure-dimension-radius-sm);
+  /* Align to edge of the input box rather than trigger icon */
+  margin-right: calc(var(--measure-dimension-padding-lg) * -1);
+}
+
+@media (width > 390px) {
+  /* I know this is vile, but the width is calculated based on the input size on mobile otherwise its just content
+  i think this is the more efficient way of doing this rather than triggering a full rerender
+  by using a window dimensions hook  */
+  .datePickerContainer {
+    width: fit-content !important;
+  }
 }
