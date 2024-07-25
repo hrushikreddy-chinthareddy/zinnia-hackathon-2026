@@ -13,7 +13,6 @@ import clsx from 'clsx';
 import { cloneElement, forwardRef, useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
-import { isValidDate } from '@/utils/dates';
 import { zIndexOrder } from '@/utils/zIndexOrder';
 
 import fieldStyles from '../Field.module.css';
@@ -52,12 +51,6 @@ export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
       throw new Error('Required field: label is not of type Label');
     }
 
-    const [inputVal, setInputVal] = useState<string>(
-      selectedDate?.toLocaleDateString() || ''
-    );
-    const [currentDate, setCurrentDate] = useState<Date | undefined>(
-      selectedDate
-    );
     const [calendarOpen, setCalendarOpen] = useState(false);
     const [inputWidth, setInputWidth] = useState(0);
 
@@ -85,31 +78,6 @@ export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
       };
     }, []);
 
-    useEffect(() => {
-      // TODO: should this validation happen here? or in the consumer of the component?
-      if (currentDate && isValidDate(currentDate.toString())) {
-        onDateSelect(currentDate);
-      } else {
-        onDateSelect(undefined);
-      }
-    }, [currentDate, onDateSelect]);
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setInputVal(e.target.value);
-      setCurrentDate(e.target.value ? new Date(e.target.value) : undefined);
-    };
-
-    const handleDateSelect = (date?: Date) => {
-      if (!date) {
-        setInputVal('');
-        setCurrentDate(undefined);
-      } else {
-        setCurrentDate(date);
-        setInputVal(date.toLocaleDateString());
-      }
-      setCalendarOpen(false);
-    };
-
     return (
       <div ref={inputContainer}>
         <div data-testid={FieldDataActiveTestIds.LABEL}>{clonedLabel}</div>
@@ -133,8 +101,6 @@ export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
               fieldStyles[status],
               'typography-content-body'
             )}
-            value={inputVal}
-            onChange={handleInputChange}
             {...props}
           />
           <ReactPopover.Root open={calendarOpen} onOpenChange={setCalendarOpen}>
@@ -157,7 +123,7 @@ export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
                   <DatePicker
                     mode="single"
                     selected={selectedDate}
-                    onSelect={handleDateSelect}
+                    onSelect={onDateSelect}
                     defaultMonth={new Date()}
                     disabled={
                       {

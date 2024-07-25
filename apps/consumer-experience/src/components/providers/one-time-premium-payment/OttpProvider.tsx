@@ -9,11 +9,6 @@ interface OttpProviderProps extends PropsWithChildren {}
 
 function ottpReducer(state: OttpState, action: Action): OttpState {
   switch (action.type) {
-    // TODO: these should be in their own provider probably
-    // case OttpAction.SET_POLICY_NUMBER:
-    //   return { ...state, policyNumber: action.payload };
-    // case OttpAction.SET_PLAN_CODE:
-    //   return { ...state, planCode: action.payload };
     case OttpAction.SET_EFFECTIVE_DATE:
       return { ...state, effectiveDate: action.payload };
     case OttpAction.SET_PAYMENT_AMOUNT:
@@ -27,8 +22,6 @@ function ottpReducer(state: OttpState, action: Action): OttpState {
 
 const OttpProvider: React.FC<OttpProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(ottpReducer, {
-    // policyNumber: undefined,
-    // planCode: '',
     effectiveDate: '',
     paymentAmount: 0,
     payor: {},

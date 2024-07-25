@@ -3,8 +3,9 @@
 import { Button, Label } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+
+import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
 
 import premiumStyles from './OneTimePremiumPayment.module.css';
 import { FieldDate } from '../field/date/FieldDate';
@@ -41,7 +42,10 @@ export const SelectAmount = ({
 }) => {
   const router = useRouter();
   const { state, dispatch } = useOttp();
-  const { effectiveDate, paymentAmount: statePaymentAmount } = state;
+  const {
+    effectiveDate: stateEffectiveDate,
+    paymentAmount: statePaymentAmount,
+  } = state;
   const { control, handleSubmit, formState, getValues } = useForm<{
     paymentAmount: number;
     effectiveDate: string;
@@ -52,14 +56,11 @@ export const SelectAmount = ({
     },
   });
 
-  // TODO: there's a better way to do this
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-    effectiveDate ? new Date(effectiveDate) : undefined
-  );
-
   const validateAndMove = () => {
-    // Do these need to be async?
-    dispatch({ type: OttpAction.SET_EFFECTIVE_DATE, payload: selectedDate });
+    dispatch({
+      type: OttpAction.SET_EFFECTIVE_DATE,
+      payload: getValues('effectiveDate'),
+    });
     dispatch({
       type: OttpAction.SET_PAYMENT_AMOUNT,
       payload: getValues('paymentAmount'),
@@ -78,6 +79,7 @@ export const SelectAmount = ({
             validate: {
               dateInRange: v =>
                 dateWithinSixtyDayRange(v) || dateOutOfRangeMessage,
+              dateIsValid: v => dayjs(v).isValid() || dateInvalidMessage,
             },
           }}
           render={({ field }) => (
@@ -89,10 +91,17 @@ export const SelectAmount = ({
                 </Label>
               }
               name="one-time-premium-payment"
-              // TODO: this isn't working on select, it's like the date will change if i set the value,
-              // but the value on react hook form is undefined
-              onDateSelect={setSelectedDate}
-              // selectedDate={selectedDate}
+              onDateSelect={date =>
+                field.onChange(dayjs(date).format(DEFAULT_DATE_FORMAT))
+              }
+              defaultValue={new Date(
+                stateEffectiveDate || ''
+              ).toLocaleDateString()}
+              selectedDate={
+                field.value
+                  ? new Date(field.value)
+                  : new Date(stateEffectiveDate || '')
+              }
               disableAfterDate={new Date(sixtyDaysInFutureDay)}
               disableBeforeDate={new Date()}
               fieldStatus={
