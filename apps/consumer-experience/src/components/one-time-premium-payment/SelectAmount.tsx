@@ -57,7 +57,7 @@ export const SelectAmount = ({
     },
   });
 
-  const validateAndMove = () => {
+  const saveAndMove = () => {
     dispatch({
       type: OttpAction.SET_EFFECTIVE_DATE,
       payload: getValues('effectiveDate'),
@@ -70,7 +70,7 @@ export const SelectAmount = ({
   };
 
   return (
-    <form onSubmit={handleSubmit(validateAndMove)}>
+    <form onSubmit={handleSubmit(saveAndMove)}>
       <div className="mb-xl field-container">
         <Controller
           control={control}
@@ -112,7 +112,13 @@ export const SelectAmount = ({
         <Controller
           control={control}
           name="paymentAmount"
-          rules={{ required: 'Please enter a valid payment amount' }}
+          rules={{
+            required: 'Please enter a valid payment amount',
+            min: {
+              value: 1,
+              message: 'Please enter an amount greater than zero',
+            },
+          }}
           render={({ field }) => (
             <FieldValue
               {...field}

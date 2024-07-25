@@ -89,10 +89,17 @@ export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
     });
 
     const handleDateChange = (e: ChangeEvent<HTMLInputElement>) => {
-      setInputVal(e.target.value);
-      const date = new Date(e.target.value);
-      setSelectedDate(date);
-      onDateSelect?.(date);
+      if (!e.target.value) {
+        setInputVal('');
+        setSelectedDate(undefined);
+        onDateSelect?.(undefined);
+      } else {
+        // TODO: where to format the date here?
+        setInputVal(e.target.value);
+        const date = new Date(e.target.value);
+        setSelectedDate(date);
+        onDateSelect?.(date);
+      }
     };
 
     const handleDateSelect = (date: Date | undefined) => {

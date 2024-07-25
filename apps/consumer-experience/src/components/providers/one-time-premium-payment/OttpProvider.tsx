@@ -32,6 +32,4 @@ const OttpProvider: React.FC<OttpProviderProps> = ({ children }) => {
   return <OttpContext.Provider value={value}>{children}</OttpContext.Provider>;
 };
 
-// TODO: I guess move this somewhere else because of fast refresh and also decide if need/want this
-
 export { OttpProvider };
