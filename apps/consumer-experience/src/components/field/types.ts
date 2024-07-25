@@ -36,13 +36,13 @@ export interface FieldDataActiveProps extends FieldTypes {
   icon?: React.ReactElement<IconProps>;
 }
 
-export interface FieldDateProps extends FieldTypes {
+export type FieldDateProps = FieldTypes & {
   disableBeforeDate?: Date;
   disableAfterDate?: Date;
   id?: string;
-  onDateSelect: (date: Date | undefined) => void;
-  selectedDate?: Date;
-}
+  onDateSelect?: (date: Date | undefined) => void;
+  defaultValue: Date | string;
+};
 
 export type DateInterval = {
   before: Date;

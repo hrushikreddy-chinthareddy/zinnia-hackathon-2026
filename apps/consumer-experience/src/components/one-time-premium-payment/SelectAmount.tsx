@@ -21,7 +21,6 @@ export const dateOutOfRangeMessage =
 
 const sixtyDaysInFutureDay = dayjs().add(60, 'day').format('YYYY-MM-DD');
 const dateWithinSixtyDayRange = (date: string) => {
-  console.log(dayjs(date));
   return dayjs(date).isBetween(
     dayjs().format('YYYY-MM-DD'),
     sixtyDaysInFutureDay,
@@ -52,7 +51,9 @@ export const SelectAmount = ({
   }>({
     defaultValues: {
       paymentAmount: statePaymentAmount || undefined,
-      effectiveDate: undefined,
+      effectiveDate: stateEffectiveDate
+        ? dayjs(stateEffectiveDate).format(DEFAULT_DATE_FORMAT)
+        : undefined,
     },
   });
 
@@ -94,14 +95,7 @@ export const SelectAmount = ({
               onDateSelect={date =>
                 field.onChange(dayjs(date).format(DEFAULT_DATE_FORMAT))
               }
-              defaultValue={new Date(
-                stateEffectiveDate || ''
-              ).toLocaleDateString()}
-              selectedDate={
-                field.value
-                  ? new Date(field.value)
-                  : new Date(stateEffectiveDate || '')
-              }
+              defaultValue={formState.defaultValues?.effectiveDate || ''}
               disableAfterDate={new Date(sixtyDaysInFutureDay)}
               disableBeforeDate={new Date()}
               fieldStatus={

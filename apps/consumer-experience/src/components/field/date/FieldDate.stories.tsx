@@ -13,7 +13,6 @@ export default meta;
 
 export const Default: StoryObj<any> = {
   args: {
-    onSelect: () => {},
     label: <Label>Date</Label>,
   },
 };

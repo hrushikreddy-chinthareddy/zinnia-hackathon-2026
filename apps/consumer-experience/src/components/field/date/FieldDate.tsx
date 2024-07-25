@@ -10,11 +10,20 @@ import {
   IconType,
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import { cloneElement, forwardRef, useEffect, useRef, useState } from 'react';
+import {
+  ChangeEvent,
+  cloneElement,
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import { zIndexOrder } from '@/utils/zIndexOrder';
 
+import { handleKeyPressDateCharactersOnly } from './utils';
 import fieldStyles from '../Field.module.css';
 import {
   DateInterval,
@@ -23,15 +32,6 @@ import {
   FieldStatus,
 } from '../types';
 
-const handleKeyPress = (e: KeyboardEvent) => {
-  const regex = /^[0-9/]+$/;
-
-  if (!regex.test(e.key)) {
-    e.preventDefault();
-    return;
-  }
-};
-
 export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
   (
     {
@@ -39,7 +39,6 @@ export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
       label,
       fieldStatus = FieldStatus.DEFAULT,
       fieldSize,
-      selectedDate,
       onDateSelect = () => {},
       disableBeforeDate,
       disableAfterDate,
@@ -50,18 +49,37 @@ export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
     if ((label.type as React.JSXElementConstructor<any>)?.name !== Label.name) {
       throw new Error('Required field: label is not of type Label');
     }
-
     const [calendarOpen, setCalendarOpen] = useState(false);
     const [inputWidth, setInputWidth] = useState(0);
+    const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+      new Date(props.defaultValue)
+    );
+    const [inputVal, setInputVal] = useState(props.defaultValue);
 
     const inputContainer = useRef<HTMLInputElement>(null);
-    const input = useRef<HTMLInputElement>(null);
+    const innerInputRef = useRef<HTMLInputElement>(null);
+    // Exposes the input ref to the parent
+    useImperativeHandle(ref, () => innerInputRef.current!);
 
     useEffect(() => {
       if (inputContainer.current) {
         setInputWidth(inputContainer.current.offsetWidth);
       }
     }, [inputContainer]);
+
+    useEffect(() => {
+      const inputRefCurrent = innerInputRef?.current;
+      inputRefCurrent?.addEventListener(
+        'keypress',
+        handleKeyPressDateCharactersOnly
+      );
+      return () => {
+        inputRefCurrent?.removeEventListener(
+          'keypress',
+          handleKeyPressDateCharactersOnly
+        );
+      };
+    }, []);
 
     const inputId = uuidv4();
     const status = props.disabled ? FieldStatus.INACTIVE : fieldStatus;
@@ -70,13 +88,25 @@ export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
       status,
     });
 
-    useEffect(() => {
-      const inputRefCurrent = input?.current;
-      inputRefCurrent?.addEventListener('keypress', handleKeyPress);
-      return () => {
-        inputRefCurrent?.removeEventListener('keypress', handleKeyPress);
-      };
-    }, []);
+    const handleDateChange = (e: ChangeEvent<HTMLInputElement>) => {
+      setInputVal(e.target.value);
+      const date = new Date(e.target.value);
+      setSelectedDate(date);
+      onDateSelect?.(date);
+    };
+
+    const handleDateSelect = (date: Date | undefined) => {
+      if (!date) {
+        setInputVal('');
+        setSelectedDate(undefined);
+        onDateSelect?.(undefined);
+      } else {
+        setInputVal(date?.toLocaleDateString() || '');
+        setSelectedDate(date);
+        onDateSelect?.(date);
+      }
+      setCalendarOpen(false);
+    };
 
     return (
       <div ref={inputContainer}>
@@ -90,9 +120,7 @@ export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
         >
           <input
             id={inputId}
-            // TODO: need to update this to use ref forwarded and local, possibly use
-            // useImperativeHandle https://stackoverflow.com/questions/75750807/how-to-use-react-forwardref-with-own-ref-in-the-component
-            ref={input}
+            ref={innerInputRef}
             data-testid={FieldDataActiveTestIds.INPUT}
             type="text"
             className={clsx(
@@ -101,14 +129,13 @@ export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
               fieldStyles[status],
               'typography-content-body'
             )}
+            value={inputVal}
+            onChange={handleDateChange}
             {...props}
           />
           <ReactPopover.Root open={calendarOpen} onOpenChange={setCalendarOpen}>
             <ReactPopover.Trigger className={fieldStyles.rightIconContainer}>
-              <Icon
-                type={IconType.CALENDAR}
-                color="var(--color-base-icon-icon-action)"
-              />
+              <Icon type={IconType.CALENDAR} />
             </ReactPopover.Trigger>
             <ReactPopover.Portal>
               <ReactPopover.Content
@@ -122,8 +149,8 @@ export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
                 >
                   <DatePicker
                     mode="single"
-                    selected={selectedDate}
-                    onSelect={onDateSelect}
+                    selected={selectedDate ? new Date(selectedDate) : undefined}
+                    onSelect={handleDateSelect}
                     defaultMonth={new Date()}
                     disabled={
                       {
