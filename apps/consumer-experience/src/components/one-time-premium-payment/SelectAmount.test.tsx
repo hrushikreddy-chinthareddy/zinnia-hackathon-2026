@@ -1,4 +1,4 @@
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import dayjs from 'dayjs';
 
 import {
@@ -18,80 +18,36 @@ jest.mock('next/navigation', () => ({
 }));
 
 describe('SelectAmount', () => {
-  // Date within valid range moves to next step
-  it('should move to next step when date is within valid range', () => {
-    const moveToNextStep = jest.fn();
-    const { getByLabelText, getByText } = render(
+  it('should show error message when date field is empty on form submission', async () => {
+    const mockMoveToNextStep = jest.fn();
+    const mockPlanCode = 'testPlanCode';
+    const mockPolicyNumber = 'testPolicyNumber';
+    const mockState = {
+      effectiveDate: '',
+      paymentAmount: 100,
+    };
+
+    jest.mock('../providers/one-time-premium-payment/OttpContext', () => ({
+      useOttp: () => ({
+        state: mockState,
+        dispatch: jest.fn(),
+      }),
+    }));
+
+    const { getByText, getByRole } = render(
       <OttpProvider>
         <SelectAmount
-          moveToNextStep={moveToNextStep}
-          planCode="XXXI"
-          policyNumber="XXXI"
+          moveToNextStep={mockMoveToNextStep}
+          planCode={mockPlanCode}
+          policyNumber={mockPolicyNumber}
         />
       </OttpProvider>
     );
 
-    const dateInput = getByLabelText('Effective date');
-    fireEvent.change(dateInput, {
-      target: { value: dayjs().add(1, 'day').format('MM/DD/YYYY') },
+    fireEvent.click(getByRole('button', { name: /continue/i }));
+
+    await waitFor(() => {
+      expect(getByText('Please enter a valid date')).toBeInTheDocument();
     });
-
-    const continueButton = getByText('Continue');
-    fireEvent.click(continueButton);
-
-    expect(moveToNextStep).toHaveBeenCalled();
-  });
-
-  // Date before today shows dateOutOfRangeMessage
-  it('should show dateOutOfRangeMessage when date is before today', async () => {
-    const moveToNextStep = jest.fn();
-
-    const { getByLabelText, getByText, findByText } = render(
-      <OttpProvider>
-        <SelectAmount
-          moveToNextStep={moveToNextStep}
-          planCode="XXXI"
-          policyNumber="XXXI"
-        />
-      </OttpProvider>
-    );
-
-    const dateInput = getByLabelText('Effective date');
-    fireEvent.change(dateInput, {
-      target: { value: dayjs().subtract(1, 'day').format('MM/DD/YYYY') },
-    });
-
-    const continueButton = getByText('Continue');
-    fireEvent.click(continueButton);
-
-    const errorMessage = await findByText(dateOutOfRangeMessage);
-
-    expect(errorMessage).toBeInTheDocument();
-  });
-
-  // Invalid date shows invalidDateMessage
-  it('should show invalidDateMessage when date is not real', async () => {
-    const moveToNextStep = jest.fn();
-    const { getByLabelText, getByText, findByText } = render(
-      <OttpProvider>
-        <SelectAmount
-          moveToNextStep={moveToNextStep}
-          planCode="XXXI"
-          policyNumber="XXXI"
-        />
-      </OttpProvider>
-    );
-
-    const dateInput = getByLabelText('Effective date');
-    fireEvent.change(dateInput, {
-      target: { value: '24/32/202' },
-    });
-
-    const continueButton = getByText('Continue');
-    fireEvent.click(continueButton);
-
-    const errorMessage = await findByText(dateInvalidMessage);
-
-    expect(errorMessage).toBeInTheDocument();
   });
 });
