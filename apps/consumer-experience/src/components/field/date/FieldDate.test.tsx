@@ -15,6 +15,7 @@ describe('FieldDate', () => {
         onDateSelect={() => {}}
         label={<Label>label</Label>}
         name="test-date"
+        placeholder="Please select a date"
       />
     );
     const input = getByPlaceholderText('Please select a date');
@@ -30,6 +31,7 @@ describe('FieldDate', () => {
         onDateSelect={() => {}}
         label={<Label>label</Label>}
         name="test-date"
+        placeholder="Please select a date"
       />
     );
     const input = getByPlaceholderText('Please select a date');
