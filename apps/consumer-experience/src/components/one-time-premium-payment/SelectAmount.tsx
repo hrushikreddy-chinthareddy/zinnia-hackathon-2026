@@ -85,7 +85,6 @@ export const SelectAmount = ({
           }}
           render={({ field }) => (
             <FieldDate
-              {...field}
               label={
                 <Label labelFor="one-time-premium-payment-date">
                   Effective date

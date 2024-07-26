@@ -118,59 +118,63 @@ export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
     return (
       <div ref={inputContainer}>
         <div data-testid={FieldDataActiveTestIds.LABEL}>{clonedLabel}</div>
-        <div
-          className={clsx(
-            fieldStyles.inputContainer,
-            fieldStyles[status],
-            'typography-content-body-sm'
-          )}
-        >
-          <input
-            id={inputId}
-            ref={innerInputRef}
-            data-testid={FieldDataActiveTestIds.INPUT}
-            type="text"
-            className={clsx(
-              fieldStyles.input,
-              fieldSize && fieldStyles[fieldSize],
-              fieldStyles[status],
-              'typography-content-body'
-            )}
-            value={inputVal}
-            onChange={handleDateChange}
-            {...props}
-          />
-          <ReactPopover.Root open={calendarOpen} onOpenChange={setCalendarOpen}>
-            <ReactPopover.Trigger className={fieldStyles.rightIconContainer}>
-              <Icon type={IconType.CALENDAR} />
-            </ReactPopover.Trigger>
-            <ReactPopover.Portal>
-              <ReactPopover.Content
-                align="end"
-                side="bottom"
-                style={{ zIndex: zIndexOrder.DatePickerDialog }}
+
+        <ReactPopover.Root open={calendarOpen} onOpenChange={setCalendarOpen}>
+          <ReactPopover.Trigger style={{ width: '100%' }}>
+            <div
+              className={clsx(
+                fieldStyles.inputContainer,
+                fieldStyles[status],
+                'typography-content-body-sm'
+              )}
+            >
+              <input
+                autoComplete="off"
+                id={inputId}
+                ref={innerInputRef}
+                data-testid={FieldDataActiveTestIds.INPUT}
+                type="text"
+                className={clsx(
+                  fieldStyles.input,
+                  fieldSize && fieldStyles[fieldSize],
+                  fieldStyles[status],
+                  'typography-content-body'
+                )}
+                value={inputVal}
+                onChange={handleDateChange}
+                {...props}
+              />
+              <div className={fieldStyles.rightIconContainer}>
+                <Icon type={IconType.CALENDAR} />
+              </div>
+            </div>
+          </ReactPopover.Trigger>
+          <ReactPopover.Portal>
+            <ReactPopover.Content
+              align="end"
+              side="bottom"
+              style={{ zIndex: zIndexOrder.DatePickerDialog }}
+            >
+              <div
+                className={fieldStyles.datePickerContainer}
+                style={{ width: inputWidth }}
               >
-                <div
-                  className={fieldStyles.datePickerContainer}
-                  style={{ width: inputWidth }}
-                >
-                  <DatePicker
-                    mode="single"
-                    selected={selectedDate ? new Date(selectedDate) : undefined}
-                    onSelect={handleDateSelect}
-                    defaultMonth={new Date()}
-                    disabled={
-                      {
-                        before: disableBeforeDate,
-                        after: disableAfterDate,
-                      } as DateInterval
-                    }
-                  />
-                </div>
-              </ReactPopover.Content>
-            </ReactPopover.Portal>
-          </ReactPopover.Root>
-        </div>
+                <DatePicker
+                  mode="single"
+                  selected={selectedDate ? new Date(selectedDate) : undefined}
+                  onSelect={handleDateSelect}
+                  defaultMonth={new Date()}
+                  disabled={
+                    {
+                      before: disableBeforeDate,
+                      after: disableAfterDate,
+                    } as DateInterval
+                  }
+                />
+              </div>
+            </ReactPopover.Content>
+          </ReactPopover.Portal>
+        </ReactPopover.Root>
         {fieldStatus === FieldStatus.ERROR && errorMessage && (
           <div data-testid={FieldDataActiveTestIds.ERROR_MESSAGE}>
             <AssistiveText
