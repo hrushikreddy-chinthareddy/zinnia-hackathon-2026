@@ -2,9 +2,7 @@ import {
   AssistiveText,
   AssistiveTextVariant,
   Button,
-  Icon,
   IconType,
-  SideSheet,
 } from '@zinnia/bloom/components';
 import { useRouter } from 'next/navigation';
 import { ChangeEvent, useState } from 'react';
@@ -14,6 +12,8 @@ import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import { MOCK_EMPTY_BANK_DETAILS } from '@/utils/serverClientUtils';
 
 import premiumStyles from './OneTimePremiumPayment.module.css';
+import { AddEditBankSidesheet } from '../add-edit-bank/AddEditBankSidesheet';
+import { FormMode } from '../add-edit-bank/shared-types';
 import { NoDataAvailable } from '../no-data-available/NoDataAvailable';
 import noDataStyles from '../no-data-available/NoDataAvailable.module.css';
 import { AccountNumber } from '../pii/AccountNumber';
@@ -131,18 +131,7 @@ export const SelectBank = ({
         </div>
       )}
       {featureFlagData?.[FEATURE_FLAGS.ADD_EDIT_DELETE_BANK_ACCOUNT] && (
-        <SideSheet
-          header="Add new bank"
-          trigger={
-            <Button className={premiumStyles.addBank} mode="link" size="small">
-              <Icon width={16} height={16} type={IconType.ADD} /> Add another
-              bank account
-            </Button>
-          }
-        >
-          {/**TODO: swap in the real component */}
-          <div>Bank component imported here</div>
-        </SideSheet>
+        <AddEditBankSidesheet mode={FormMode.ADD} />
       )}
 
       <div className={premiumStyles.buttonGroup}>

@@ -1,13 +1,9 @@
 import { Address, Email, Phone } from '@zinnia/api-types/types/sor';
-import {
-  Button,
-  Icon,
-  IconType,
-  Label,
-  SideSheet,
-} from '@zinnia/bloom/components';
+import { IconType, Label } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
+import { AddEditBankSidesheet } from '@/components/add-edit-bank/AddEditBankSidesheet';
+import { FormMode } from '@/components/add-edit-bank/shared-types';
 import { BankData } from '@/components/bank-data/BankData';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { FieldData } from '@/components/field-data/FieldData';
@@ -113,6 +109,7 @@ export default async function Profile({ params }: Props) {
           <BankData
             key={bankDetail.accountNumber}
             editBankEnabled={showAddEditBank}
+            numberOfAccounts={profileData.bankDetails.length}
             {...bankDetail}
           />
         );
@@ -123,23 +120,7 @@ export default async function Profile({ params }: Props) {
           <div>
             <h2 className="mb-lg">Banking Details</h2>
             <div className={styles.multipleItemsInSection}>{allBankData}</div>
-            {showAddEditBank && (
-              <SideSheet
-                header="Add new bank"
-                trigger={
-                  <Button size="small" mode="link">
-                    {/**
-                     * TODO: use the new ADD icon when its available
-                     */}
-                    <Icon width={16} height={16} type={IconType.ALERT} /> Add
-                    another bank account
-                  </Button>
-                }
-              >
-                {/**TODO: swap in the real component */}
-                <div>Bank component imported here</div>
-              </SideSheet>
-            )}
+            {showAddEditBank && <AddEditBankSidesheet mode={FormMode.ADD} />}
           </div>
         );
       }

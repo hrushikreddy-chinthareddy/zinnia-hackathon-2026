@@ -2,10 +2,6 @@ import {
   Label,
   AssistiveText,
   AssistiveTextVariant,
-  Button,
-  Icon,
-  IconType,
-  SideSheet,
 } from '@zinnia/bloom/components';
 
 import { FieldData } from '@/components/field-data/FieldData';
@@ -17,9 +13,12 @@ import { Name } from '@/components/pii/Name';
 import { RoutingNumber } from '@/components/pii/RoutingNumber';
 
 import styles from './BankData.module.css';
+import { AddEditBankSidesheet } from '../add-edit-bank/AddEditBankSidesheet';
+import { FormMode } from '../add-edit-bank/shared-types';
 
 interface BankDetailProps extends BankDetail {
   editBankEnabled?: boolean;
+  numberOfAccounts: number;
 }
 
 export const BankData = ({
@@ -30,6 +29,7 @@ export const BankData = ({
   nameOnAccount,
   routingNumber,
   editBankEnabled,
+  numberOfAccounts,
 }: BankDetailProps) => {
   return (
     <div>
@@ -37,20 +37,17 @@ export const BankData = ({
         <div className="typography-labels-label-lg justify-between">
           <BankName bankName={branchName} />
           {editBankEnabled && (
-            <SideSheet
-              header="Edit bank"
-              trigger={
-                <Button aria-label="Edit bank" size="small" mode="link">
-                  {/**
-                   * TODO: use the new ADD icon when its available
-                   */}
-                  <Icon width={16} height={16} type={IconType.ALERT} />
-                </Button>
-              }
-            >
-              {/**TODO: swap in the real component */}
-              <div>Bank component imported here</div>
-            </SideSheet>
+            <AddEditBankSidesheet
+              mode={FormMode.EDIT}
+              autopayEnabled={autopayEnabled}
+              numberOfAccounts={numberOfAccounts}
+              values={{
+                accountNumber,
+                accountType,
+                routingNumber,
+                bankNickname: branchName,
+              }}
+            />
           )}
         </div>
         {autopayEnabled && (

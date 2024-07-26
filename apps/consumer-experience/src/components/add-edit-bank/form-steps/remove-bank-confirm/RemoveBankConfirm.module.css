@@ -1,0 +1,27 @@
+.remove {
+  border-color: var(--color-status-surface-status-error-border-alt, #db004f);
+}
+
+.cancel {
+  align-self: center;
+}
+
+.buttonContainer {
+  margin-top: var(--measure-dimension-gap-3xl);
+  gap: var(--measure-dimension-gap-lg);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.wrapper {
+  gap: 4px;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.infoIcon {
+  color: var(--color-semantics-color-semantic-information, #005fed);
+}
