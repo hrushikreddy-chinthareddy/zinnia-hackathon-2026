@@ -36,7 +36,9 @@ export const AddEditBank: FC<AddEditBankProps> = ({
       accountType: values?.accountType || AccountType.CHECKING,
       bankNickname: values?.bankNickname || '',
       routingNumber: values?.routingNumber || '',
-      accountNumber: values?.accountNumber || '',
+      accountNumber: values?.accountNumber
+        ? `**********${values?.accountNumber}`
+        : '',
     },
   });
 
@@ -166,7 +168,14 @@ export const AddEditBank: FC<AddEditBankProps> = ({
             </div>
           )}
         />
+        {mode === FormMode.EDIT && (
+          <p className="typography-content-body">
+            To edit your routing or account number, you'll need to remove this
+            account and add another bank account.
+          </p>
+        )}
       </div>
+
       <div className={styles.buttonContainer}>
         <Button type="submit">{`${mode === FormMode.ADD ? 'Save' : 'Update'} account`}</Button>
         {mode === FormMode.EDIT && (
