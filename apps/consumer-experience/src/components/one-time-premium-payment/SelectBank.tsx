@@ -50,9 +50,9 @@ const getBankDetails = () => {
       nameOnAccount: 'John Smith',
       accountStatus: 'ACTIVEBANKACCOUNT',
       accountType: 'CHECKING',
-      accountNumber: '0854301265',
+      accountNumber: '0854301666',
       routingNumber: '267014589',
-      branchName: 'CITI BANK',
+      branchName: 'US BANK',
       autopayEnabled: true,
     },
   ];
