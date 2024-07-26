@@ -9,6 +9,7 @@ import {
 import { useRouter } from 'next/navigation';
 import { Controller, useForm } from 'react-hook-form';
 
+import { BankDetail } from '@/components/person-data/types';
 import { useFeatureFlags } from '@/hooks/use-feature-flags';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import { MOCK_EMPTY_BANK_DETAILS } from '@/utils/serverClientUtils';
@@ -42,7 +43,7 @@ const getBankDetails = () => {
       routingNumber: '267014589',
       branchName: 'CITIZEN BANK',
       autopayEnabled: false,
-    },
+    } as BankDetail,
     {
       bankId: 'Bank_1',
       appliesToPartyId: 'Party_PI_1',
@@ -54,7 +55,7 @@ const getBankDetails = () => {
       routingNumber: '267014589',
       branchName: 'US BANK',
       autopayEnabled: true,
-    },
+    } as BankDetail,
   ];
 };
 

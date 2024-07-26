@@ -1,3 +1,5 @@
+import { BankDetail } from '@/components/person-data/types';
+
 export enum OttpAction {
   SET_EFFECTIVE_DATE = 'setEffectiveDate',
   SET_PAYMENT_AMOUNT = 'setPaymentAmount',
@@ -9,6 +11,6 @@ export type Dispatch = (action: Action) => void;
 export interface OttpState {
   effectiveDate?: string;
   paymentAmount?: number;
-  // TODO: update to include payor type
-  payorBank: any;
+  // TODO: this might not be the right type...
+  payorBank: BankDetail;
 }
