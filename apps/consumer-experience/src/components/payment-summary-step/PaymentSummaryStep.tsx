@@ -23,7 +23,6 @@ export const PaymentSummaryStep = ({
   transactionSummary,
   totalLabel,
 }: PaymentSummaryStepProps) => {
-  console.log(transactionSummary);
   const totalDeposit = calculateTotalDeposit(transactionSummary);
 
   return (
