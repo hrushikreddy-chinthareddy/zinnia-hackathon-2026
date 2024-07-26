@@ -13,6 +13,7 @@ import { PaymentSummaryStep } from '../payment-summary-step/PaymentSummaryStep';
 import { AccountNumber } from '../pii/AccountNumber';
 import { AccountType } from '../pii/AccountType';
 import { BankName } from '../pii/BankName';
+import { useOttp } from '../providers/one-time-premium-payment/OttpContext';
 import { CancelDialogLink } from '../transactions/CancelDialogLink';
 
 export const PaymentSummary = ({
@@ -25,28 +26,30 @@ export const PaymentSummary = ({
   policyNumber: string;
 }) => {
   const router = useRouter();
+  const { state } = useOttp();
+  const { effectiveDate, paymentAmount, payorBank } = state;
 
   return (
     <div>
       <div className={styles.paymentSummaryContainer}>
         <div className={styles.paymentSummaryDetails}>
           <FieldData Label={<Label>Payor</Label>}>
-            <span className="typography-content-body-sm">Michael Williams</span>
+            <span className="typography-content-body-sm">
+              {payorBank.nameOnAccount}
+            </span>
           </FieldData>
           <FieldData Label={<Label>Effective date</Label>}>
-            <span className="typography-content-body-sm">
-              {new Date().toLocaleDateString()}
-            </span>
+            <span className="typography-content-body-sm">{effectiveDate}</span>
           </FieldData>
           <FieldData Label={<Label>Payment method</Label>}>
             <div className="typography-content-body-sm">
               <div>
-                <BankName bankName="CHARLES SCHWAB BANK" />
+                <BankName bankName={payorBank.branchName} />
               </div>
               <div>
-                <AccountType accountType="Checking" />{' '}
+                <AccountType accountType={payorBank.accountType} />{' '}
                 <span className="typography-content-body-sm">ending in</span>{' '}
-                <AccountNumber accountNumber="134233" />
+                <AccountNumber accountNumber={payorBank.accountNumber} />
               </div>
             </div>
           </FieldData>
@@ -56,7 +59,7 @@ export const PaymentSummary = ({
           transactionSummary={[
             {
               label: <Label>Submitted Amount</Label>,
-              value: 10000,
+              value: paymentAmount,
             },
             {
               label: (
@@ -85,6 +88,7 @@ export const PaymentSummary = ({
                   Fees
                 </Label>
               ),
+              // TODO: get value from API
               value: -450,
             },
           ]}
@@ -95,7 +99,11 @@ export const PaymentSummary = ({
         <Button mode="primary" onClick={moveToNextStep}>
           Submit payment
         </Button>
-        <CancelDialogLink planCode={planCode} policyNumber={policyNumber} router={router} />
+        <CancelDialogLink
+          planCode={planCode}
+          policyNumber={policyNumber}
+          router={router}
+        />
       </div>
     </div>
   );

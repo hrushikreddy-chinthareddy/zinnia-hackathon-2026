@@ -106,8 +106,7 @@
 
 .rightIconContainer {
   position: absolute;
-  right: 0;
-  padding-right: var(--measure-dimension-padding-2xl, 8px);
+  right: var(--measure-dimension-padding-2xl, 8px);
 }
 
 .assistiveMessage {
@@ -123,8 +122,6 @@
   z-index: 9;
   margin-top: var(--measure-dimension-gap-xl);
   border-radius: var(--measure-dimension-radius-sm);
-  /* Align to edge of the input box rather than trigger icon */
-  margin-right: calc(var(--measure-dimension-padding-lg) * -1);
 }
 
 @media (width > 390px) {

@@ -1,5 +1,7 @@
 import React, { PropsWithChildren, useReducer } from 'react';
 
+import { BankDetail } from '@/components/person-data/types';
+
 import { OttpContext } from './OttpContext';
 import { Action, OttpAction, OttpState } from './types';
 
@@ -13,8 +15,8 @@ function ottpReducer(state: OttpState, action: Action): OttpState {
       return { ...state, effectiveDate: action.payload };
     case OttpAction.SET_PAYMENT_AMOUNT:
       return { ...state, paymentAmount: action.payload };
-    case OttpAction.SET_PAYOR:
-      return { ...state, payor: action.payload };
+    case OttpAction.SET_PAYOR_BANK:
+      return { ...state, payorBank: action.payload };
     default:
       return state;
   }
@@ -24,7 +26,7 @@ const OttpProvider: React.FC<OttpProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(ottpReducer, {
     effectiveDate: '',
     paymentAmount: 0,
-    payor: {},
+    payorBank: {} as BankDetail,
   });
 
   const value = { state, dispatch };
