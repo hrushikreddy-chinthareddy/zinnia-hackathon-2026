@@ -5,7 +5,6 @@ import React from 'react';
 import { formatUSDollars } from '@/utils/currency';
 
 import styles from './PaymentSummaryStep.module.css';
-import { calculateTotalDeposit } from './utils';
 
 export interface TransactionSummaryItem {
   label: React.ReactElement<LabelProps>;
@@ -15,16 +14,17 @@ export interface TransactionSummaryItem {
 export interface PaymentSummaryStepProps {
   className?: string;
   transactionSummary: TransactionSummaryItem[];
-  totalLabel: React.ReactElement<LabelProps>;
+  total: {
+    deposit: number;
+    label: React.ReactElement<LabelProps>;
+  };
 }
 
 export const PaymentSummaryStep = ({
   className,
   transactionSummary,
-  totalLabel,
+  total,
 }: PaymentSummaryStepProps) => {
-  const totalDeposit = calculateTotalDeposit(transactionSummary);
-
   return (
     <div className={clsx(styles.paymentSummaryStepContainer, className)}>
       {transactionSummary.map(({ label, value }, index) => (
@@ -36,21 +36,21 @@ export const PaymentSummaryStep = ({
               'typography-content-body-sm'
             )}
           >
-            {formatUSDollars(value)}
+            {formatUSDollars(value, true)}
           </p>
         </div>
       ))}
 
       {/* TODO: Add className to Label component and remove wrapping div */}
       <div className={styles.paymentSummarySection}>
-        <div className={styles.paymentSummaryLabel}>{totalLabel}</div>
+        <div className={styles.paymentSummaryLabel}>{total.label}</div>
         <p
           className={clsx(
             styles.paymentSummaryValue,
             'typography-content-value'
           )}
         >
-          {formatUSDollars(totalDeposit)}
+          {formatUSDollars(total.deposit)}
         </p>
       </div>
     </div>

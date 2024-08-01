@@ -1,11 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import {
-  EnabledFeatureFlags,
-  getFeatureFlagDecisions,
-} from '@/utils/optimizely/optimizely';
-
-import { useUser } from './use-user';
+import { EnabledFeatureFlags } from '@/utils/optimizely/optimizely';
 
 /**
  * A hook to get feature flags from optimizely.

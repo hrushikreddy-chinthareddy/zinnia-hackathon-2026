@@ -58,15 +58,17 @@ Add to your settings.json
 
 1. You'll need a zinnia email adress to get extended permissions
 1. Create a policy
-  a. Using Postman
-  b. Using the UI
-  * creating a policy will create your Auth0 user as well. This will allow access to Consumer
+   a. Using Postman
+   b. [Using the UI](https://zinnia.atlassian.net/wiki/spaces/CIAMC/pages/4059562037/How-To+Create+a+user+for+Consumer+Experience+via+Policy+Creation)
+
+- creating a policy will create your Auth0 user as well. This will allow access to Consumer
+
 1. Zahara processes new users every night, so you'll need to manually move the policy from `Pending` to `Active`.
-    a. go to the policy GUI (TODO: add link)
-    b. open inspector
-    c. find the button that's hidden with css, unhide it, and press that (TODO: add more discrete details)
+   a. go to the policy GUI (TODO: add link)
+   b. open inspector
+   c. find the button that's hidden with css, unhide it, and press that (TODO: add more discrete details)
 1. Have the policy you just created added to seed policies (zahara slack) so it is recreated with each Zahara release
-1
+   1
 
 # Local development
 

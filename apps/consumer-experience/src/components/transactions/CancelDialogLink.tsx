@@ -1,24 +1,28 @@
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+'use client';
 
-import { ConfirmDialogLink } from "../confirm-dialog/ConfirmDialogLink";
+import { useRouter } from 'next/navigation';
+
+import { ConfirmDialogLink } from '../confirm-dialog/ConfirmDialogLink';
 
 export interface CancelDialogLinkProps {
-    planCode: string;
-    policyNumber: string;
-    router: AppRouterInstance;
+  planCode: string;
+  policyNumber: string;
 }
 
 export const CancelDialogLink: React.FC<CancelDialogLinkProps> = ({
-    planCode,
-    policyNumber,
-    router,
-  }: CancelDialogLinkProps) => {
-    return (
-        <ConfirmDialogLink
-            confirmCallback={() => router.push(`/policies/${planCode}/${policyNumber}/premium`)}
-            linkText="Cancel"
-            message="If you leave now, your payment won't be submitted and you will have to start over."
-            title="Leave payment?"
-        />
-    );
+  planCode,
+  policyNumber,
+}: CancelDialogLinkProps) => {
+  const router = useRouter();
+
+  return (
+    <ConfirmDialogLink
+      confirmCallback={() =>
+        router.push(`/policies/${planCode}/${policyNumber}/premium`)
+      }
+      linkText="Cancel"
+      message="If you leave now, your payment won't be submitted and you will have to start over."
+      title="Leave payment?"
+    />
+  );
 };

@@ -1,36 +1,122 @@
+'use client';
 import {
   Button,
   Icon,
   IconType,
   Label,
+  Link,
+  Loader,
   Popover,
 } from '@zinnia/bloom/components';
+import { toSentenceCase } from '@zinnia/utils';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useFormStatus } from 'react-dom';
+
+import { submitOneTimePaymentAction } from '@/actions/bpm-actions-too';
 
 import styles from './OneTimePremiumPayment.module.css';
+import { oneTimePremiumSteps } from './steps';
 import { FieldData } from '../field-data/FieldData';
+import { HeaderLink } from '../header-link/HeaderLink';
 import { PaymentSummaryStep } from '../payment-summary-step/PaymentSummaryStep';
 import { AccountNumber } from '../pii/AccountNumber';
 import { AccountType } from '../pii/AccountType';
 import { BankName } from '../pii/BankName';
+import { ProgressBarSteps } from '../progress-bar-steps/ProgressBarSteps';
 import { useOttp } from '../providers/one-time-premium-payment/OttpContext';
+import { OttpState } from '../providers/one-time-premium-payment/types';
 import { CancelDialogLink } from '../transactions/CancelDialogLink';
 
-export const PaymentSummary = ({
-  moveToNextStep,
+// TODO: UPDATE COPY!!!!
+const loadingStrings = [
+  'one moment please',
+  'We’re working on it...',
+  'data is updating',
+];
+
+const LoadingText = () => {
+  const [loadingText, setLoadingText] = useState(loadingStrings[0]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (loadingText === loadingStrings[loadingStrings.length - 1]) {
+        setLoadingText(loadingStrings[0]);
+      } else {
+        setLoadingText(
+          loadingText =>
+            loadingStrings[
+              loadingStrings.indexOf(loadingText || 'one moment please') + 1
+            ]
+        );
+      }
+    }, 3000);
+
+    return () => clearTimeout(timeout);
+  }, [loadingText]);
+
+  return (
+    <p className="typography-desktop-headline-3-d m-md">
+      {toSentenceCase(loadingText)}
+    </p>
+  );
+};
+
+export interface OTTPPaymentDetails {
+  effectiveDate: string;
+  paymentAmount: number;
+  payorBank: string;
+}
+
+const Summary = ({
+  ottpPaymentData,
   planCode,
   policyNumber,
 }: {
-  moveToNextStep?: () => void;
+  ottpPaymentData: OttpState;
   planCode: string;
   policyNumber: string;
 }) => {
-  const router = useRouter();
-  const { state } = useOttp();
-  const { effectiveDate, paymentAmount, payorBank } = state;
+  const { effectiveDate, paymentAmount, payorBank, paymentFee } =
+    ottpPaymentData;
+  const { pending } = useFormStatus();
+
+  if (pending) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+        className="p-3xl"
+      >
+        <Loader />
+        <LoadingText />
+      </div>
+    );
+  }
 
   return (
-    <div>
+    <>
+      <HeaderLink
+        className="mb-xl"
+        title={oneTimePremiumSteps.summary.title}
+        link={{
+          // TODO: use an object or something instead of hard coding
+          url: `/policies/${planCode}/${policyNumber}/premium-payment/select-bank`,
+          label: 'return to select bank',
+        }}
+      />
+      <ProgressBarSteps
+        totalSteps={Object.keys(oneTimePremiumSteps).length}
+        currentStep={
+          Object.keys(oneTimePremiumSteps).findIndex(
+            step => step === 'summary'
+          ) + 1
+        }
+        className="steps-progress-bar mb-xl"
+      />
       <div className={styles.paymentSummaryContainer}>
         <div className={styles.paymentSummaryDetails}>
           <FieldData Label={<Label>Payor</Label>}>
@@ -89,22 +175,81 @@ export const PaymentSummary = ({
                 </Label>
               ),
               // TODO: get value from API
-              value: -450,
+              value: paymentFee && paymentFee * -1,
             },
           ]}
-          totalLabel={<Label>Total deposit</Label>}
+          total={{
+            label: <Label>Total deposit</Label>,
+            deposit:
+              paymentFee && paymentAmount
+                ? paymentAmount * paymentFee
+                : paymentAmount || 0,
+          }}
         />
       </div>
       <div className={styles.buttonGroup}>
-        <Button mode="primary" onClick={moveToNextStep}>
+        <Button mode="primary" type="submit">
           Submit payment
         </Button>
-        <CancelDialogLink
-          planCode={planCode}
-          policyNumber={policyNumber}
-          router={router}
-        />
+        <CancelDialogLink planCode={planCode} policyNumber={policyNumber} />
       </div>
-    </div>
+    </>
+  );
+};
+
+export const PaymentSummary = ({
+  planCode,
+  policyNumber,
+}: {
+  moveToNextStep?: () => void;
+  planCode: string;
+  policyNumber: string;
+}) => {
+  const router = useRouter();
+  const { state } = useOttp();
+  const [error, setError] = useState(null);
+
+  const handleFormSubmit = async () => {
+    const response = await submitOneTimePaymentAction({
+      planCode,
+      policyNumber,
+      paymentDetails: state,
+    });
+
+    // TODO: use form setStateAction here rather than useState???
+    if (response?.data) {
+      router.push(
+        `/policies/${planCode}/${policyNumber}/premium-payment/submitted`
+      );
+    } else {
+      setError(response?.error);
+    }
+  };
+
+  if (error) {
+    return (
+      <div style={{ textAlign: 'center' }} className="p-3xl">
+        <p className="typography-desktop-headline-3-d">
+          Sorry, that didn't work
+        </p>
+        <p className="typography-content-body">
+          Services are down, so we couldn’t submit your payment. Please try
+          again later.
+        </p>
+        <div className="flex-center">
+          <Link variant="button" href="#" text="Close" />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <form action={handleFormSubmit}>
+      <Summary
+        ottpPaymentData={state}
+        planCode={planCode}
+        policyNumber={policyNumber}
+      />
+    </form>
   );
 };

@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 import { MouseEvent, useEffect, useMemo, useState } from 'react';
 
 import useMock from '@/hooks/use-mock';
-import { isMockAllowed, isProd } from '@/utils';
+import { isMockAllowed } from '@/utils';
 import {
   MOCK_ERROR_COOKIE_KEY,
   SHOW_TEST_POLICIES_COOKIE_KEY,
@@ -189,6 +189,17 @@ export const DevMenu = () => {
                       )}
                     />
                     <span className="ml-sm">Withdrawal eligibility</span>
+                  </label>
+                  <label style={{ display: 'block' }}>
+                    <input
+                      type="checkbox"
+                      value={ApiEndpoints.ONE_TIME_PREMIUM_PAYMENT}
+                      onChange={selectAPIErrorType}
+                      checked={apiErrorSet?.includes(
+                        ApiEndpoints.ONE_TIME_PREMIUM_PAYMENT
+                      )}
+                    />
+                    <span className="ml-sm">One time premium payment</span>
                   </label>
                 </div>
                 <button

@@ -4,6 +4,8 @@ export enum OttpAction {
   SET_EFFECTIVE_DATE = 'setEffectiveDate',
   SET_PAYMENT_AMOUNT = 'setPaymentAmount',
   SET_PAYOR_BANK = 'setPayorBank',
+  SET_PAYMENT_SUBMIT_STATUS = 'setPaymentSubmitStatus',
+  SET_PAYMENT_FEE = 'setPaymentFee',
 }
 
 export type Action = { type: OttpAction; payload: any };
@@ -13,4 +15,5 @@ export interface OttpState {
   paymentAmount?: number;
   // TODO: this might not be the right type...
   payorBank: BankDetail;
+  paymentFee?: number;
 }
