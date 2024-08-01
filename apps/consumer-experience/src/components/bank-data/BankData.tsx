@@ -19,6 +19,7 @@ import { FormMode } from '../add-edit-bank/shared-types';
 interface BankDetailProps extends BankDetail {
   editBankEnabled?: boolean;
   numberOfAccounts: number;
+  partyId: string;
 }
 
 export const BankData = ({
@@ -26,10 +27,12 @@ export const BankData = ({
   accountType,
   autopayEnabled,
   branchName,
+  partyId,
   nameOnAccount,
   routingNumber,
   editBankEnabled,
   numberOfAccounts,
+  bankId,
 }: BankDetailProps) => {
   return (
     <div>
@@ -39,13 +42,15 @@ export const BankData = ({
           {editBankEnabled && (
             <AddEditBankSidesheet
               mode={FormMode.EDIT}
+              partyId={partyId}
               autopayEnabled={autopayEnabled}
               numberOfAccounts={numberOfAccounts}
+              bankId={bankId}
               values={{
                 accountNumber,
                 accountType,
                 routingNumber,
-                bankNickname: branchName,
+                branchName,
               }}
             />
           )}

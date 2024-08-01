@@ -16,6 +16,7 @@ export const profileData: PolicyProfile = {
     lastName: 'Williams',
   },
   preferredAddressIndicator: '1',
+  partyId: '1',
   addresses: [
     {
       addressId: '1',

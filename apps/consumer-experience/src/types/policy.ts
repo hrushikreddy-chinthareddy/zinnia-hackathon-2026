@@ -61,6 +61,7 @@ interface Person {
 export interface PolicyProfile {
   preferredAddressIndicator: string;
   name: Person;
+  partyId: string;
   addresses: Address[];
   phones: Phone[];
   emails: Email[];

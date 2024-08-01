@@ -16,6 +16,7 @@ import {
   filterItemsWithPastEndDate,
   formatPhoneNumberWithExtension,
   fullName,
+  getBankAccountByBankId,
   isEndDatedAndEndDateUpcoming,
 } from './data';
 import { DEFAULT_ERROR_STRING } from './strings';
@@ -387,5 +388,31 @@ describe('allowedAnnualWithdrawals', () => {
     const result = allowedAnnualWithdrawals(policy);
 
     expect(result).toBeNull();
+  });
+
+  describe('getBankAccountNumberByBankId', () => {
+    it('should return the account number for a given bank ID', () => {
+      const bankId = 'Bank_0';
+      const bankAccounts = [
+        { bankId: 'Bank_0', accountNumber: '123456789' },
+        { bankId: 'Bank_1', accountNumber: '987654321' },
+      ];
+
+      const result = getBankAccountByBankId(bankId, bankAccounts);
+
+      expect(result).toBe(bankAccounts[0]);
+    });
+
+    it('should return undefined if no bank account is found for the given bank ID', () => {
+      const bankId = 'Bank_2';
+      const bankAccounts = [
+        { bankId: 'Bank_0', accountNumber: '123456789' },
+        { bankId: 'Bank_1', accountNumber: '987654321' },
+      ];
+
+      const result = getBankAccountByBankId(bankId, bankAccounts);
+
+      expect(result).toBeUndefined();
+    });
   });
 });

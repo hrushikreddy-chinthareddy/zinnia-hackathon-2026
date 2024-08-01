@@ -5,7 +5,9 @@ import {
   TransactionErrorResponse,
   MetricsType,
   PolicyStatus,
+  BankAccount,
 } from '@zinnia/api-types/types/sor';
+import { policyOwner } from '@zinnia/utils';
 import dayjs from 'dayjs';
 
 import { ApiEndpoints } from '@/components/dev-menu/types';
@@ -73,12 +75,7 @@ import { RidersAndBenefits } from '@/types/riders';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { logError, logTrace, logWarn } from '@/utils/logging/server-logging';
 
-import { getLoanEligibility, getOneTimeWithdrawalEligibility } from '../bpm';
 import { getDocuments } from '../document';
-import {
-  mockLoanEligibleResponse,
-  mockWithdrawalIneligibleResponse,
-} from '../mocks/bpm';
 import { mockDocumentsResponse } from '../mocks/documents';
 import { MockMetricsResponse } from '../mocks/metrics';
 import {
@@ -164,6 +161,26 @@ const getPolicyByPlanCodeAndId = async (options: PolicyRequestInputs) => {
   }
 
   return data;
+};
+
+/**
+ * Retrieves the bank details associated with a policy based on its plan code and policy number.
+ *
+ * @param {PolicyRequestInputs} options - The options object containing the plan code and policy number.
+ * @return {Promise<BankDetail[] | undefined>} - A promise that resolves to an array of bank details, or undefined if the policy owner has no bank details.
+ *
+ * DO NOT USE THIS ON FRONTEND. This returns the full accountNumber. There is another method that retreives sanitized bank accounts.
+ */
+export const getUnsanitizedBanksByPolicyPlanCodeAndId = async (
+  options: PolicyRequestInputs
+): Promise<BankAccount[] | undefined> => {
+  const { planCode, policyNumber } = options;
+  const policy = await getPolicyByPlanCodeAndId({
+    planCode,
+    policyNumber,
+  });
+
+  return policyOwner(policy)?.bankDetails;
 };
 
 const getPolicyTransactions = async ({

@@ -108,6 +108,7 @@ export default async function Profile({ params }: Props) {
         return (
           <BankData
             key={bankDetail.accountNumber}
+            partyId={bankDetail.appliesToPartyId || ''}
             editBankEnabled={showAddEditBank}
             numberOfAccounts={profileData.bankDetails.length}
             {...bankDetail}
@@ -120,7 +121,12 @@ export default async function Profile({ params }: Props) {
           <div>
             <h2 className="mb-lg">Banking Details</h2>
             <div className={styles.multipleItemsInSection}>{allBankData}</div>
-            {showAddEditBank && <AddEditBankSidesheet mode={FormMode.ADD} />}
+            {showAddEditBank && (
+              <AddEditBankSidesheet
+                mode={FormMode.ADD}
+                partyId={profileData.partyId}
+              />
+            )}
           </div>
         );
       }

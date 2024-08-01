@@ -9,13 +9,13 @@ import { isNumber } from '@/utils/regex';
 import styles from './AddEditBank.module.css';
 import { FieldDataActive } from '../../../field/data-active/FieldDataActive';
 import { FieldStatus } from '../../../field/types';
-import { FormFields, FormMode } from '../../shared-types';
+import { BankFormFields, FormMode } from '../../shared-types';
 
 export interface AddEditBankProps {
   mode: FormMode;
-  values?: FormFields;
+  values?: BankFormFields;
   cancelCallback?: () => void;
-  submitCallback?: () => void;
+  submitCallback?: (val: BankFormFields) => void;
   removeCallback?: () => void;
 }
 
@@ -31,10 +31,10 @@ export const AddEditBank: FC<AddEditBankProps> = ({
     handleSubmit,
     reset,
     formState: { errors, defaultValues },
-  } = useForm<FormFields>({
+  } = useForm<BankFormFields>({
     defaultValues: {
       accountType: values?.accountType || AccountType.CHECKING,
-      bankNickname: values?.bankNickname || '',
+      branchName: values?.branchName || '',
       routingNumber: values?.routingNumber || '',
       accountNumber: values?.accountNumber
         ? `**********${values?.accountNumber}`
@@ -51,9 +51,8 @@ export const AddEditBank: FC<AddEditBankProps> = ({
     cancelCallback?.();
   };
 
-  const onSubmit: SubmitHandler<FormFields> = data => {
-    submitCallback?.();
-    console.log({ data });
+  const onSubmit: SubmitHandler<BankFormFields> = data => {
+    submitCallback?.(data);
   };
 
   return (
@@ -86,15 +85,15 @@ export const AddEditBank: FC<AddEditBankProps> = ({
           )}
         />
         <Controller
-          name="bankNickname"
+          name="branchName"
           control={control}
           rules={{ required: 'Bank nickname is missing.' }}
           render={({ field }) => (
             <div>
               <FieldDataActive
-                errorMessage={errors.bankNickname?.message}
+                errorMessage={errors.branchName?.message}
                 fieldStatus={
-                  errors.bankNickname ? FieldStatus.ERROR : FieldStatus.DEFAULT
+                  errors.branchName ? FieldStatus.ERROR : FieldStatus.DEFAULT
                 }
                 label={<Label>Bank nickname</Label>}
                 {...field}
@@ -112,7 +111,11 @@ export const AddEditBank: FC<AddEditBankProps> = ({
               value: 9,
               message: 'Routing number must have 9 digits.',
             },
-            pattern: /^[0-9]+$/,
+            maxLength: {
+              value: 9,
+              message: 'Routing number must have 9 digits.',
+            },
+            pattern: mode === FormMode.EDIT ? undefined : /^[0-9]+$/,
           }}
           render={({ field }) => (
             <div>
@@ -145,7 +148,7 @@ export const AddEditBank: FC<AddEditBankProps> = ({
               value: 16,
               message: "Account number can't exceed 16 digits.",
             },
-            pattern: /^[0-9]+$/,
+            pattern: mode === FormMode.EDIT ? undefined : /^[0-9]+$/,
           }}
           render={({ field }) => (
             <div>

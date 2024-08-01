@@ -20,4 +20,15 @@ export abstract class HttpRequest {
     init.body = data;
     return this.request(input, init);
   };
+
+  put = (
+    input: string | URL | Request,
+    data?: BodyInit | null | undefined,
+    init?: RequestInit | undefined
+  ) => {
+    init = init || {};
+    init.method = 'PUT';
+    init.body = data;
+    return this.request(input, init);
+  };
 }

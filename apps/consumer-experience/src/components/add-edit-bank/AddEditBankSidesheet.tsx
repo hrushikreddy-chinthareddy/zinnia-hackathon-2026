@@ -1,10 +1,17 @@
 'use client';
 
+import { AccountStatus } from '@zinnia/api-types/types/sor';
 import { SideSheet, Button, Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
+import { useParams } from 'next/navigation';
 import { FC, ReactNode, useState } from 'react';
 
-import { bankAccountNumberSanitizer } from '@/utils/data';
+import {
+  addEditBankRequest,
+  putEndDateBankAccount,
+} from '@/actions/bpm-actions';
+import { useUser } from '@/hooks/use-user';
+import { EVERLY_CONTACT_PHONE_NUMBER } from '@/utils/data';
 
 import styles from './AddEditBankSidesheet.module.css';
 import { AddEditBank } from './form-steps/add-edit/AddEditBank';
@@ -12,11 +19,13 @@ import { Error } from './form-steps/error/Error';
 import { Loading } from './form-steps/loading/Loading';
 import { RemoveBankConfirm } from './form-steps/remove-bank-confirm/RemoveBankConfirm';
 import { Success } from './form-steps/success/Success';
-import { FormFields, FormMode, FormSteps } from './shared-types';
+import { BankFormFields, FormMode, FormSteps } from './shared-types';
 
 export interface AddEditBankSidesheetProps {
   mode: FormMode;
-  values?: FormFields;
+  partyId: string;
+  bankId?: string;
+  values?: BankFormFields;
   autopayEnabled?: boolean;
   numberOfAccounts?: number;
 }
@@ -24,10 +33,17 @@ export interface AddEditBankSidesheetProps {
 export const AddEditBankSidesheet: FC<AddEditBankSidesheetProps> = ({
   mode,
   values,
+  partyId,
+  bankId,
   autopayEnabled,
   numberOfAccounts,
 }) => {
+  const params = useParams<{
+    planCode: string;
+    policyNumber: string;
+  }>();
   const [open, setOpen] = useState(false);
+  const { user } = useUser();
   const [step, setStep] = useState<FormSteps>(FormSteps.ADD_EDIT);
   const [errorTitle, setErrorTitle] = useState('An error occurred');
   const [errorMessage, setErrorMessage] = useState<ReactNode>(
@@ -41,24 +57,33 @@ export const AddEditBankSidesheet: FC<AddEditBankSidesheetProps> = ({
   /**
    * TODO: Replace with real API request
    */
-  const handleAddEdit = () => {
+  const handleAddEdit = async (requestValues: BankFormFields) => {
     setStep(FormSteps.LOADING);
-    if (mode === FormMode.ADD) {
-      console.log('API Request to add. Throw an error to test!');
-      setTimeout(() => {
-        setErrorTitle('Could not be added');
-        setErrorMessage('The bank could not be added');
-        setStep(FormSteps.ERROR);
-      }, 3000);
-    } else {
-      console.log('API request to edit');
-      setTimeout(() => {
-        setSuccessTitle('Success!');
-        setSuccessMessage(
-          `${values?.bankNickname} ending in ${bankAccountNumberSanitizer(values?.accountNumber)} was updated.`
-        );
-        setStep(FormSteps.SUCCESS);
-      }, 3000);
+    const { data, error } = await addEditBankRequest({
+      planCode: params.planCode,
+      policyNumber: params.policyNumber,
+      partyId,
+      bankId,
+      formMode: mode,
+      bankAccountChangeRequest: {
+        bankAccount: {
+          ...requestValues,
+          accountStatus: AccountStatus.ACTIVEBANKACCOUNT,
+          nameOnAccount: user?.name,
+        },
+      },
+    });
+    if (error) {
+      setErrorTitle(error.name);
+      setErrorMessage(error.message);
+      setStep(FormSteps.ERROR);
+      return;
+    }
+    if (data) {
+      setSuccessTitle(data.messages.title);
+      setSuccessMessage(data.messages.message);
+      setStep(FormSteps.SUCCESS);
+      return;
     }
   };
 
@@ -78,7 +103,9 @@ export const AddEditBankSidesheet: FC<AddEditBankSidesheetProps> = ({
       setErrorMessage(
         <span>
           To manage your autopay details, call us at{' '}
-          <a href="">1-855-290-0529</a>
+          <a href={`tel:${EVERLY_CONTACT_PHONE_NUMBER}`}>
+            {EVERLY_CONTACT_PHONE_NUMBER}
+          </a>
         </span>
       );
       setStep(FormSteps.ERROR);
@@ -88,18 +115,34 @@ export const AddEditBankSidesheet: FC<AddEditBankSidesheetProps> = ({
     setStep(FormSteps.REMOVE_CONFIRM);
   };
 
-  /**
-   * TODO: Replace with real API request
-   */
-  const handleRemove = () => {
+  const handleRemove = async () => {
     setStep(FormSteps.LOADING);
-    setTimeout(() => {
-      setSuccessTitle('Success!');
-      setSuccessMessage(
-        `${values?.bankNickname} ending in ${bankAccountNumberSanitizer(values?.accountNumber)} was removed from your policy.`
-      );
+    const { data, error } = await putEndDateBankAccount({
+      planCode: params.planCode,
+      policyNumber: params.policyNumber,
+      partyId,
+      bankId,
+      bankAccountChangeRequest: {
+        bankAccount: {
+          ...values,
+          accountStatus: AccountStatus.ACTIVEBANKACCOUNT,
+          nameOnAccount: user?.name,
+        },
+      },
+    });
+
+    if (error) {
+      setErrorTitle(error.name);
+      setErrorMessage(error.message);
+      setStep(FormSteps.ERROR);
+      return;
+    }
+    if (data) {
+      setSuccessTitle(data.messages.title);
+      setSuccessMessage(data.messages.message);
       setStep(FormSteps.SUCCESS);
-    }, 3000);
+      return;
+    }
   };
 
   return (
@@ -137,7 +180,7 @@ export const AddEditBankSidesheet: FC<AddEditBankSidesheetProps> = ({
       {step === FormSteps.REMOVE_CONFIRM && (
         <RemoveBankConfirm
           accountNumber={values?.accountNumber}
-          bankNickname={values?.bankNickname}
+          bankNickname={values?.branchName}
           cancelCallback={() => setOpen(false)}
           confirmCallback={handleRemove}
         />

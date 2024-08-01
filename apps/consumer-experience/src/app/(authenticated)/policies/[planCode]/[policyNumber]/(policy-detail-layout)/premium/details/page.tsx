@@ -46,7 +46,11 @@ export default async function PaymentDetails({
           !error &&
           data.map(detail => (
             <ClickableCardContainer key={detail.accountNumber}>
-              <BankData {...detail} numberOfAccounts={data.length} />
+              <BankData
+                {...detail}
+                numberOfAccounts={data.length}
+                partyId={detail.appliesToPartyId || ''}
+              />
             </ClickableCardContainer>
           ))}
       </div>

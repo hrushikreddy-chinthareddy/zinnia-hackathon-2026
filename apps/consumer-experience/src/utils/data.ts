@@ -58,7 +58,7 @@ export const isEndDatedAndEndDateUpcoming = (
   return true;
 };
 
-export type ItemsWithEndDate = Address | Email | Phone;
+export type ItemsWithEndDate = Address | Email | Phone | BankDetail;
 
 export const filterItemsWithPastEndDate = (
   items?: ItemsWithEndDate[]
@@ -278,13 +278,15 @@ export const autopayBankId = (policy: Policy) => {
 export const allPolicyOwnerBanks = (policy: Policy): BankDetail[] => {
   const ownerInfo = policyOwner(policy);
 
-  return (ownerInfo?.bankDetails || []).map((b: BankAccount) => {
-    return {
-      ...b,
-      accountNumber: bankAccountNumberSanitizer(b?.accountNumber),
-      autopayEnabled: b.bankId === autopayBankId(policy),
-    };
-  });
+  return (ownerInfo?.bankDetails || [])
+    .map((b: BankAccount) => {
+      return {
+        ...b,
+        accountNumber: bankAccountNumberSanitizer(b?.accountNumber),
+        autopayEnabled: b.bankId === autopayBankId(policy),
+      };
+    })
+    .filter(bank => !isEndDatedAndEndDateUpcoming(bank.endDate));
 };
 
 export const productTypeDisplay = (
@@ -314,4 +316,11 @@ export const eligibilityStatus = (transaction: TransactionResponse) => {
   }
 
   return status === 'success';
+};
+
+export const getBankAccountByBankId = (
+  bankId: string,
+  bankAccounts: BankAccount[]
+) => {
+  return bankAccounts.find(b => b.bankId === bankId);
 };

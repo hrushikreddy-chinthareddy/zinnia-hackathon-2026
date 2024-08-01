@@ -143,6 +143,7 @@ export const transformPolicyForProfile = (policy: Policy): PolicyProfile => {
 
   return {
     preferredAddressIndicator: ownerInfo?.preferredAddressIndicator || '',
+    partyId: ownerInfo?.partyId || '',
     name: {
       firstName: ownerInfo?.firstName || '',
       lastName: ownerInfo?.lastName || '',

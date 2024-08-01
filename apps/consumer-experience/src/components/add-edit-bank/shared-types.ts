@@ -13,9 +13,9 @@ export enum FormSteps {
   SUCCESS = 'SUCCESS',
 }
 
-export interface FormFields {
+export interface BankFormFields {
   accountType?: AccountType;
-  bankNickname?: string;
+  branchName?: string;
   routingNumber?: string;
   accountNumber?: string;
   autopayEnabled?: boolean;
