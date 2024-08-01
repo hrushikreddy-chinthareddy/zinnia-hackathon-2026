@@ -1,9 +1,6 @@
 'use server';
 
-import {
-  OneTimePremiumRequest,
-  PaymentForm,
-} from '@zinnia/api-types/types/bpm';
+import { PaymentForm } from '@zinnia/api-types/types/bpm';
 import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -20,19 +17,6 @@ export async function submitOneTimePaymentAction(ottpData: {
   planCode: string;
   policyNumber: string;
 }): Promise<any> {
-  console.log('here');
-  // try {
-  //   await delay(5000);
-  //   console.log('hellow');
-  //   throw new Error('error');
-  // } catch (error) {
-  //   console.log(error);
-  //   return {
-  //     success: false,
-  //     message: 'uh oh',
-  //   };
-  // }
-
   try {
     if (isMockErrorEnabled(ApiEndpoints.WITHDRAWAL_ELIGIBILITY)) {
       throw new Error('Error fetching withdrawal eligibility.');
@@ -60,7 +44,6 @@ export async function submitOneTimePaymentAction(ottpData: {
       // reverseInitiator: false
     };
 
-    console.log('REQUEST', ottpRequest);
     const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/onetimepremium`;
 
     const rawResponse = await ServerApi.post(url, JSON.stringify(ottpRequest), {
@@ -74,13 +57,11 @@ export async function submitOneTimePaymentAction(ottpData: {
     }
 
     const response = await parseAPIResponse(rawResponse);
-    console.log(response);
     return {
-      data: true,
+      data: response,
       error: null,
     };
   } catch (e) {
-    console.log(e);
     return {
       data: null,
       // TODO: add 500 vs 400 message?

@@ -24,42 +24,6 @@ import { useOttp } from '../providers/one-time-premium-payment/OttpContext';
 import { OttpAction } from '../providers/one-time-premium-payment/types';
 import { CancelDialogLink } from '../transactions/CancelDialogLink';
 
-// const getBankDetails = (): BankDetail[] => {
-//   // TODO: this was causing error without use client...how was this even working?
-//   // const queryParams = new URLSearchParams(window.location.search);
-
-//   // if (queryParams.get(MOCK_EMPTY_BANK_DETAILS)) {
-//   //   return [];
-//   // }
-
-//   return [
-//     {
-//       bankId: 'Bank_0',
-//       appliesToPartyId: 'Party_PI_1',
-//       startDate: '2022-07-11',
-//       nameOnAccount: 'John Smith',
-//       accountStatus: 'ACTIVEBANKACCOUNT',
-//       accountType: 'CHECKING',
-//       accountNumber: '0854301265',
-//       routingNumber: '267014589',
-//       branchName: 'CITIZEN BANK',
-//       autopayEnabled: false,
-//     } as BankDetail,
-//     {
-//       bankId: 'Bank_1',
-//       appliesToPartyId: 'Party_PI_1',
-//       startDate: '2022-07-11',
-//       nameOnAccount: 'John Smith',
-//       accountStatus: 'ACTIVEBANKACCOUNT',
-//       accountType: 'CHECKING',
-//       accountNumber: '0854301666',
-//       routingNumber: '267014589',
-//       branchName: 'US BANK',
-//       autopayEnabled: true,
-//     } as BankDetail,
-//   ];
-// };
-
 export const SelectBank = ({
   planCode,
   policyNumber,
