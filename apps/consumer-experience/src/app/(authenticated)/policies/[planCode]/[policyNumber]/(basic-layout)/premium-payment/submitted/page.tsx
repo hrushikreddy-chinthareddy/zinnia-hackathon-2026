@@ -19,7 +19,6 @@ export default async function SubmittedPayment({
             step => step === 'submitted'
           ) + 1
         }
-        // TODO: fix this
         className="steps-progress-bar mb-xl"
         description="Step"
       />

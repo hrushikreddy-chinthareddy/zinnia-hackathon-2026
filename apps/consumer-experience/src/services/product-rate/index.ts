@@ -140,6 +140,9 @@ export const getCarrierProductOneTimePaymentFee = async ({
   let hasFeelValSetting = false;
 
   try {
+    // First we need to see if the carrier has the configured item since only
+    // some products have certain configured codes, if a product doesn't
+    // have the configured item we know it doesn't have a fee
     hasFeelValSetting = await carrierProductHasConfiguredItem({
       configuredItemCode,
       carrierId,
@@ -165,21 +168,15 @@ export const getCarrierProductOneTimePaymentFee = async ({
         resource: configuredItemCode,
         benefit_id: benefitId,
       });
-      // TODO: what value am i supposed to use for the value here?
-      //        carrier: 'SBUL',
-      //    product: 'ELIULV01',
-      //    benefit: 'Base_Coverage',
-      //    configuredItem: 'pInitGuarPremLoad',
-      //    units: '',
-      //    effectiveDate: { '2020-01-01': {
-      //    gender: 'All',
-      //    riskClass: 'All',
-      //    smokeClass: 'All',
-      //    coverageBandLowerBound: 'All',
-      //    ages: { All: [ 4 ] }
-      //  } }
-      //  }
-      fee = feeDetails?.units;
+      const feeKey = Object.keys(feeDetails?.effectiveDate)[0] || '';
+
+      // TODO: this feels incredibly brittle. effectiveDate comes back as an object
+      // but not sure where the key comes from (tried making call to /versions and there wasn't a match)
+      // or when it might have more than one item
+      // it's also confusing that this says 'ages' but it's to retreive a fee value
+      // i'm also not sure if we can always guarantee that it will directly represent a
+      // percentage, but this is what we have right now https://se2llc-global.slack.com/archives/C04N0DSKKNW/p1722471223768029
+      fee = feeDetails?.effectiveDate[feeKey][0].ages.All[0];
     } catch (error) {
       return {
         data: null,

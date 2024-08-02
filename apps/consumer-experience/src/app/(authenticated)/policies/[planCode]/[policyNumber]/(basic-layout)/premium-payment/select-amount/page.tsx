@@ -38,7 +38,6 @@ export default async function SelectBankPage({
             step => step === 'amount'
           ) + 1
         }
-        // TODO: fix this
         className="steps-progress-bar mb-xl"
         description="Step"
       />

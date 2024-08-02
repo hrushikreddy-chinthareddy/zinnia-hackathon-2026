@@ -82,9 +82,8 @@ export const getPolicyLoanEligibility = async (
   return response;
 };
 
-export const oneTimePremiumPayment = async (
+export const submitOneTimePremiumPayment = async (
   options: PolicyRequestInputs,
-  // TODO: fix this type
   paymentDetails: OneTimePremiumRequest
   // TODO: fix return type
 ) => {
