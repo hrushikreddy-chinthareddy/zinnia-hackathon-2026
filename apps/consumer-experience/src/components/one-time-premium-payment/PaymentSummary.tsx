@@ -207,7 +207,7 @@ export const PaymentSummary = ({
 }) => {
   const router = useRouter();
   const { state } = useOttp();
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string>();
 
   const handleFormSubmit = async () => {
     const response = await submitOneTimePaymentAction({
@@ -222,7 +222,7 @@ export const PaymentSummary = ({
         `/policies/${planCode}/${policyNumber}/premium-payment/submitted`
       );
     } else {
-      setError(response?.error);
+      setError(response?.error?.message);
     }
   };
 

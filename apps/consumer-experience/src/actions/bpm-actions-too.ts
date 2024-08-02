@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { ApiEndpoints } from '@/components/dev-menu/types';
 import { OttpState } from '@/components/providers/one-time-premium-payment/types';
-import { isMockErrorEnabled } from '@/services';
+import { ApiResponse, isMockErrorEnabled } from '@/services';
 import { submitOneTimePremiumPayment } from '@/services/bpm';
 import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
 
@@ -17,7 +17,7 @@ export async function submitOneTimePaymentAction(ottpData: {
   paymentDetails: OttpState;
   planCode: string;
   policyNumber: string;
-}): Promise<any> {
+}): Promise<ApiResponse<any>> {
   if (isMockErrorEnabled(ApiEndpoints.WITHDRAWAL_ELIGIBILITY)) {
     throw new Error('Error fetching withdrawal eligibility.');
   }
@@ -28,7 +28,6 @@ export async function submitOneTimePaymentAction(ottpData: {
     caseId: '',
     // TODO: add this to logging
     correlationId: uuidv4(),
-    // TODO: format to zahara date
     effectiveDate: dayjs(paymentDetails.effectiveDate).format(
       ZAHARA_DATE_FORMAT
     ),
@@ -59,7 +58,11 @@ export async function submitOneTimePaymentAction(ottpData: {
     return {
       data: null,
       // TODO: add 500 vs 400 message?
-      error: 'Something went wrong',
+      error: {
+        message: 'Something went wrong',
+        status: 500,
+        name: 'submitOneTimePaymentAction Error',
+      },
     };
   }
 }
