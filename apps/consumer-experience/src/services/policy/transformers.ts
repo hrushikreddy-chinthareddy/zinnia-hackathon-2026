@@ -373,7 +373,6 @@ export const transformPaymentHistory = (
       break;
     case TransactionType.PAYMENT_ONE_TIME_PREMIUM:
     case TransactionType.ONE_TIME_PREMIUM:
-      console.log('is it this one?!', paymentHistoryObject);
       paymentHistoryObject.amount =
         transactionType === TransactionType.PAYMENT_ONE_TIME_PREMIUM
           ? paymentAmount
