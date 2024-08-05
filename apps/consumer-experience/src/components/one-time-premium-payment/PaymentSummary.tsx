@@ -13,7 +13,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 
-import { submitOneTimePaymentAction } from '@/actions/bpm-actions-too';
+import { submitOneTimePaymentAction } from '@/actions/bpm-actions';
 
 import styles from './OneTimePremiumPayment.module.css';
 import { oneTimePremiumSteps } from './steps';
