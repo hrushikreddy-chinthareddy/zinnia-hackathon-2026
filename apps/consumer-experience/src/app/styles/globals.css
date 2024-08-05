@@ -175,6 +175,10 @@ a:focus-visible {
   white-space: nowrap;
 }
 
+.steps-progress-bar {
+  width: 100%;
+}
+
 @media (width > 767px) {
   .container {
     gap: var(--measure-dimension-gap-xl);
@@ -182,6 +186,10 @@ a:focus-visible {
 
   .column-card {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .steps-progress-bar {
+    width: 350px;
   }
 }
 

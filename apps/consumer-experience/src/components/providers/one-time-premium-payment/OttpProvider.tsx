@@ -1,3 +1,4 @@
+'use client';
 import React, { PropsWithChildren, useReducer } from 'react';
 
 import { BankDetail } from '@/components/person-data/types';
@@ -17,6 +18,7 @@ function ottpReducer(state: OttpState, action: Action): OttpState {
       return { ...state, paymentAmount: action.payload };
     case OttpAction.SET_PAYOR_BANK:
       return { ...state, payorBank: action.payload };
+
     default:
       return state;
   }

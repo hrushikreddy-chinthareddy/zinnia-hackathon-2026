@@ -1,3 +1,4 @@
+'use client';
 import { Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 
@@ -8,6 +9,7 @@ export interface ProgressBarStepsProps
   extends React.HTMLAttributes<HTMLDivElement> {
   totalSteps: number;
   currentStep: number;
+  description?: string;
 }
 
 export interface ProgressStepProps
@@ -63,6 +65,7 @@ export const ProgressBarSteps = ({
   className,
   totalSteps,
   currentStep,
+  description,
 }: ProgressBarStepsProps) => {
   if (!totalSteps) {
     return null;
@@ -72,43 +75,48 @@ export const ProgressBarSteps = ({
   const isFinalStepCurrent = displayAsCurrent(currentStep, totalSteps);
 
   return (
-    <div className={clsx(styles.container, className)}>
-      {Array.from({ length: stepsWithoutFinal }, (_, index) => {
-        const currentStepIndex = index + 1;
-        const isCurrent = displayAsCurrent(currentStep, currentStepIndex);
-        const isStepComplete = currentStepIndex < currentStep;
-
-        return (
-          <div
-            key={index}
-            style={{
-              width: `${100 / stepsWithoutFinal}%`,
-              color: isStepComplete
-                ? 'var(--color-base-border-border-primary-color)'
-                : 'var(--color-base-surface-surface-bold)',
-            }}
-            className={styles.stepContainer}
-          >
-            <ProgressStep
-              number={currentStepIndex}
-              isComplete={isCurrent ? null : isStepComplete}
-              isFinalStep={false}
-            />
-            <span className="sr-only">
-              {`${isCurrent ? 'currently on' : ''} step ${currentStepIndex} of ${totalSteps} ${
-                isStepComplete ? 'is complete' : ''
-              }`}
-            </span>
-          </div>
-        );
-      })}
-      <ProgressStep
-        isComplete={isFinalStepCurrent ? null : totalSteps < currentStep}
-        isFinalStep={true}
-      />
-      {isFinalStepCurrent && (
-        <span className="sr-only">All steps complete</span>
+    <div className={clsx('flex-center', className)}>
+      {description && (
+        <span className="typography-labels-label-sm mr-lg">{description}</span>
       )}
+      <div className={clsx(styles.container)}>
+        {Array.from({ length: stepsWithoutFinal }, (_, index) => {
+          const currentStepIndex = index + 1;
+          const isCurrent = displayAsCurrent(currentStep, currentStepIndex);
+          const isStepComplete = currentStepIndex < currentStep;
+
+          return (
+            <div
+              key={index}
+              style={{
+                width: `${100 / stepsWithoutFinal}%`,
+                color: isStepComplete
+                  ? 'var(--color-base-border-border-primary-color)'
+                  : 'var(--color-base-surface-surface-bold)',
+              }}
+              className={styles.stepContainer}
+            >
+              <ProgressStep
+                number={currentStepIndex}
+                isComplete={isCurrent ? null : isStepComplete}
+                isFinalStep={false}
+              />
+              <span className="sr-only">
+                {`${isCurrent ? 'currently on' : ''} step ${currentStepIndex} of ${totalSteps} ${
+                  isStepComplete ? 'is complete' : ''
+                }`}
+              </span>
+            </div>
+          );
+        })}
+        <ProgressStep
+          isComplete={isFinalStepCurrent ? null : totalSteps < currentStep}
+          isFinalStep={true}
+        />
+        {isFinalStepCurrent && (
+          <span className="sr-only">All steps complete</span>
+        )}
+      </div>
     </div>
   );
 };

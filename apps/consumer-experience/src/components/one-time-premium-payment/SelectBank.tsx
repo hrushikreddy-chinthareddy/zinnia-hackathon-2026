@@ -1,3 +1,4 @@
+'use client';
 import {
   AssistiveText,
   AssistiveTextVariant,
@@ -10,7 +11,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { BankDetail } from '@/components/person-data/types';
 import { useFeatureFlags } from '@/hooks/use-feature-flags';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
-import { MOCK_EMPTY_BANK_DETAILS } from '@/utils/serverClientUtils';
 
 import premiumStyles from './OneTimePremiumPayment.module.css';
 import { AddEditBankSidesheet } from '../add-edit-bank/AddEditBankSidesheet';
@@ -24,78 +24,47 @@ import { useOttp } from '../providers/one-time-premium-payment/OttpContext';
 import { OttpAction } from '../providers/one-time-premium-payment/types';
 import { CancelDialogLink } from '../transactions/CancelDialogLink';
 
-const getBankDetails = () => {
-  const queryParams = new URLSearchParams(window.location.search);
-
-  if (queryParams.get(MOCK_EMPTY_BANK_DETAILS)) {
-    return [];
-  }
-
-  return [
-    {
-      bankId: 'Bank_0',
-      appliesToPartyId: 'Party_PI_1',
-      startDate: '2022-07-11',
-      nameOnAccount: 'John Smith',
-      accountStatus: 'ACTIVEBANKACCOUNT',
-      accountType: 'CHECKING',
-      accountNumber: '0854301265',
-      routingNumber: '267014589',
-      branchName: 'CITIZEN BANK',
-      autopayEnabled: false,
-    } as BankDetail,
-    {
-      bankId: 'Bank_1',
-      appliesToPartyId: 'Party_PI_1',
-      startDate: '2022-07-11',
-      nameOnAccount: 'John Smith',
-      accountStatus: 'ACTIVEBANKACCOUNT',
-      accountType: 'CHECKING',
-      accountNumber: '0854301666',
-      routingNumber: '267014589',
-      branchName: 'US BANK',
-      autopayEnabled: true,
-    } as BankDetail,
-  ];
-};
-
 export const SelectBank = ({
-  moveToNextStep,
   planCode,
   policyNumber,
+  activeBanks,
 }: {
-  moveToNextStep?: () => void;
   planCode: string;
   policyNumber: string;
+  activeBanks: BankDetail[];
 }) => {
   const { state, dispatch } = useOttp();
   const { payorBank: statePayorBank } = state;
+
   const { control, handleSubmit, getValues } = useForm<{
     payorBank: string;
   }>({
     defaultValues: {
-      payorBank: statePayorBank?.bankId,
+      payorBank:
+        statePayorBank?.bankId ||
+        activeBanks.find(bank => bank.autopayEnabled)?.bankId,
     },
   });
   const router = useRouter();
-  const bankDetails = getBankDetails();
   const { data: featureFlagData } = useFeatureFlags();
 
   const handleBankSubmit = () => {
-    const selectedBank = bankDetails.find(
+    const selectedBank = activeBanks.find(
       ({ bankId }) => bankId === getValues('payorBank')
     );
     dispatch({
       type: OttpAction.SET_PAYOR_BANK,
       payload: selectedBank,
     });
-    moveToNextStep?.();
+    router.push(
+      `/policies/${planCode}/${policyNumber}/premium-payment/summary`
+    );
   };
 
   return (
     <form onSubmit={handleSubmit(handleBankSubmit)}>
-      {!bankDetails ||
-        (bankDetails.length === 0 && (
+      {!activeBanks ||
+        (activeBanks.length === 0 && (
           <div className={noDataStyles.noBankDetails}>
             <NoDataAvailable iconType={IconType.BANK}>
               <p className="typography-content-body">
@@ -104,9 +73,9 @@ export const SelectBank = ({
             </NoDataAvailable>
           </div>
         ))}
-      {bankDetails?.length > 0 && (
+      {activeBanks?.length > 0 && (
         <div role="radiogroup" aria-label="select payment method">
-          {bankDetails?.map((bankDetail, index) => {
+          {activeBanks?.map((bankDetail, index) => {
             return (
               <Controller
                 key={`${index}-${bankDetail.branchName}`}
@@ -169,15 +138,11 @@ export const SelectBank = ({
         <Button
           mode="primary"
           type="submit"
-          disabled={bankDetails.length === 0}
+          disabled={activeBanks.length === 0}
         >
           Continue
         </Button>
-        <CancelDialogLink
-          planCode={planCode}
-          policyNumber={policyNumber}
-          router={router}
-        />
+        <CancelDialogLink planCode={planCode} policyNumber={policyNumber} />
       </div>
     </form>
   );

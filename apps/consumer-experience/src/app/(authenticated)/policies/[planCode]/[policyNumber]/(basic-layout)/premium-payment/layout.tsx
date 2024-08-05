@@ -1,14 +1,15 @@
 import { redirect } from 'next/navigation';
 
-import { OneTimePremiumPayment } from '@/components/one-time-premium-payment/OneTimePremiumPayment';
+import { OttpProvider } from '@/components/providers/one-time-premium-payment/OttpProvider';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { PolicyRequestInputs } from '@/types/policy';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 export default async function PremiumPaymentPage({
-  params,
+  children,
 }: {
   params: PolicyRequestInputs;
+  children: any;
 }) {
   const featureFlagDecisions = await getFeatureFlags();
   if (!featureFlagDecisions?.[FEATURE_FLAGS.ONE_TIME_PREMIUM_PAYMENT]) {
@@ -19,7 +20,9 @@ export default async function PremiumPaymentPage({
 
   return (
     <div>
-      <OneTimePremiumPayment {...params} />
+      <OttpProvider>
+        <div>{children}</div>
+      </OttpProvider>
     </div>
   );
 }

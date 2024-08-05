@@ -3,6 +3,7 @@
 import { Button, Label } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
@@ -31,13 +32,14 @@ const dateWithinSixtyDayRange = (date: string) => {
 };
 
 export const SelectAmount = ({
-  moveToNextStep,
   planCode,
   policyNumber,
+  paymentFee,
 }: {
   moveToNextStep?: () => void;
   planCode: string;
   policyNumber: string;
+  paymentFee: number;
 }) => {
   const router = useRouter();
   const { state, dispatch } = useOttp();
@@ -57,6 +59,13 @@ export const SelectAmount = ({
     },
   });
 
+  useEffect(() => {
+    dispatch({
+      type: OttpAction.SET_PAYMENT_FEE,
+      payload: paymentFee,
+    });
+  }, [dispatch, paymentFee]);
+
   const saveAndMove = () => {
     dispatch({
       type: OttpAction.SET_EFFECTIVE_DATE,
@@ -66,7 +75,10 @@ export const SelectAmount = ({
       type: OttpAction.SET_PAYMENT_AMOUNT,
       payload: Number(getValues('paymentAmount')),
     });
-    moveToNextStep?.();
+    // moveToNextStep?.();
+    router.push(
+      `/policies/${planCode}/${policyNumber}/premium-payment/select-bank`
+    );
   };
 
   return (
@@ -135,19 +147,24 @@ export const SelectAmount = ({
           )}
         />
       </div>
-      {/* // TODO: this only shows if there is a fee */}
-      <p className={`${premiumStyles.note} typography-content-body-sm`}>
-        Note: Premium payments may have associated fees.
-      </p>
+      {paymentFee > 0 && (
+        <p className={`${premiumStyles.note} typography-content-body-sm`}>
+          {/* // TODO: will probably have to calculate what this fee percent actually is */}
+          Note: Your policy charges a {paymentFee}% fee for every premium
+          payment. See your policy documents for more details.
+        </p>
+      )}
+      {!paymentFee && (
+        <p className={`${premiumStyles.note} typography-content-body-sm`}>
+          Note: Your policy doesn’t charge fees for premium payments.
+        </p>
+      )}
+
       <div className={premiumStyles.buttonGroup}>
         <Button mode="primary" type="submit">
           Continue
         </Button>
-        <CancelDialogLink
-          planCode={planCode}
-          policyNumber={policyNumber}
-          router={router}
-        />
+        <CancelDialogLink planCode={planCode} policyNumber={policyNumber} />
       </div>
     </form>
   );

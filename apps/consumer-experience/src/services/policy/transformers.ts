@@ -375,7 +375,7 @@ export const transformPaymentHistory = (
     case TransactionType.ONE_TIME_PREMIUM:
       paymentHistoryObject.amount =
         transactionType === TransactionType.PAYMENT_ONE_TIME_PREMIUM
-          ? requestedAmount
+          ? paymentAmount
           : appliedAmount;
       paymentHistoryObject.title = 'Premium payment';
       paymentHistoryObject.frequency = 'one-time';

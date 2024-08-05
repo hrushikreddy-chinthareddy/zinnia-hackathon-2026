@@ -1,3 +1,5 @@
+'use server';
+import { OneTimePremiumRequest } from '@zinnia/api-types/types/bpm';
 import dayjs from 'dayjs';
 
 import { ApiEndpoints } from '@/components/dev-menu/types';
@@ -75,6 +77,38 @@ export const getPolicyLoanEligibility = async (
     logTrace('loan ineligible reason', {
       results: response?.validationResult,
     });
+  }
+
+  return response;
+};
+
+export const submitOneTimePremiumPayment = async (
+  options: PolicyRequestInputs,
+  paymentDetails: OneTimePremiumRequest
+  // TODO: fix return type
+) => {
+  if (isMockErrorEnabled(ApiEndpoints.ONE_TIME_PREMIUM_PAYMENT)) {
+    throw new Error('Error making one time premium payment.');
+  }
+
+  const { planCode, policyNumber } = options;
+  const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/onetimepremium`;
+
+  const rawResponse = await ServerApi.post(
+    url,
+    JSON.stringify(paymentDetails),
+    {
+      headers: { 'Content-Type': 'application/json' },
+    }
+  );
+
+  const response = await parseAPIResponse(rawResponse);
+
+  if (!rawResponse?.ok) {
+    logError(
+      'Error submitting one time premium payment',
+      await logApiNotOkDetails({ rawResponse, parsedResponse: response })
+    );
   }
 
   return response;

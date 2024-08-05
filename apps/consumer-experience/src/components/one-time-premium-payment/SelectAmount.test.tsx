@@ -1,11 +1,6 @@
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import dayjs from 'dayjs';
 
-import {
-  SelectAmount,
-  dateInvalidMessage,
-  dateOutOfRangeMessage,
-} from './SelectAmount';
+import { SelectAmount } from './SelectAmount';
 import { OttpProvider } from '../providers/one-time-premium-payment/OttpProvider';
 
 // Mock useRouter:
@@ -40,6 +35,7 @@ describe('SelectAmount', () => {
           moveToNextStep={mockMoveToNextStep}
           planCode={mockPlanCode}
           policyNumber={mockPolicyNumber}
+          paymentFee={0}
         />
       </OttpProvider>
     );
