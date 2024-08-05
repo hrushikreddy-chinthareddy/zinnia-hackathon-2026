@@ -1,3 +1,8 @@
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from '@tanstack/react-query';
 import { Address, Email, Phone } from '@zinnia/api-types/types/sor';
 import { IconType, Label } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
@@ -5,6 +10,7 @@ import { Metadata } from 'next';
 import { AddEditBankSidesheet } from '@/components/add-edit-bank/AddEditBankSidesheet';
 import { FormMode } from '@/components/add-edit-bank/shared-types';
 import { BankData } from '@/components/bank-data/BankData';
+import { BankList } from '@/components/bank-list/BankList';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { FieldData } from '@/components/field-data/FieldData';
 import MockMessage from '@/components/MockMessage';
@@ -13,10 +19,12 @@ import { Addresses } from '@/components/person-data/Addresses';
 import { Emails } from '@/components/person-data/Emails';
 import { Phones } from '@/components/person-data/Phones';
 import { FullName } from '@/components/pii/FullName';
+import { getPolicyProfile } from '@/queries/policy-queries';
 import { getPageTitle, RouteKey } from '@/route-map';
 import { getPolicyProfileData } from '@/services';
+import { ClientApi } from '@/services/client-http';
 import { getFeatureFlags } from '@/services/feature-flags';
-import { PolicyRequestInputs } from '@/types/policy';
+import { PolicyProfile, PolicyRequestInputs } from '@/types/policy';
 import { filterItemsWithPastEndDate } from '@/utils/data';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
@@ -37,6 +45,12 @@ export default async function Profile({ params }: Props) {
   const { data, error } = await getPolicyProfileData({
     planCode: params.planCode,
     policyNumber: params.policyNumber,
+  });
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: ['policyProfile'],
+    queryFn: () => getPolicyProfile(params.planCode, params.policyNumber),
   });
 
   const flags = await getFeatureFlags();
@@ -103,36 +117,15 @@ export default async function Profile({ params }: Props) {
   };
 
   const bank = () => {
-    if (profileData.bankDetails && profileData.bankDetails.length) {
-      const allBankData = profileData.bankDetails.map(bankDetail => {
-        return (
-          <BankData
-            key={bankDetail.accountNumber}
-            partyId={bankDetail.appliesToPartyId || ''}
-            editBankEnabled={showAddEditBank}
-            numberOfAccounts={profileData.bankDetails.length}
-            {...bankDetail}
-          />
-        );
-      });
-
-      if (allBankData) {
-        return (
-          <div>
-            <h2 className="mb-lg">Banking Details</h2>
-            <div className={styles.multipleItemsInSection}>{allBankData}</div>
-            {showAddEditBank && (
-              <AddEditBankSidesheet
-                mode={FormMode.ADD}
-                partyId={profileData.partyId}
-              />
-            )}
-          </div>
-        );
-      }
-    }
-
-    return null;
+    return (
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <BankList
+          planCode={params.planCode}
+          policyNumber={params.policyNumber}
+          showAddEditBank={showAddEditBank}
+        />
+      </HydrationBoundary>
+    );
   };
 
   return (

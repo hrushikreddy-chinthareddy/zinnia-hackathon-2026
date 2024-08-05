@@ -9,6 +9,7 @@ import { ScrollToTop } from '@/components/ScrollToTop';
 import { isProd } from '@/utils';
 
 import './styles/globals.css';
+import Providers from './providers';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
@@ -119,7 +120,7 @@ export default async function RootLayout({
         {/* Next includes scroll to top functionality with the Link component HOWEVER, it's scroll to top
         of the current layout which is the inner component for us, not top of the page. This scrolls to the top of the page to include the nav */}
         <ScrollToTop />
-        {children}
+        <Providers>{children}</Providers>
         <DataDogInit />
         <MouseflowTrackingCode />
         {isProd() && <GoogleAnalytics gaId="G-TZ4P6YJQ0K" />}
