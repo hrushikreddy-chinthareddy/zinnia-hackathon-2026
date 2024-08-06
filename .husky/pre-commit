@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+#!/bin/sh
+
+# Path to the directory to check
+DIR="cached-package-json"
+
+# Check if the directory exists and is not empty
+if [ "$(ls -A $DIR)" ]; then
+    echo "\033[31mError: The directory '$DIR' is not empty. Which means you are trying to commit a package json that has a packaged linked locally.\033[0m"
+    echo "\nYou need to unlink the package before committing it. Run '\033[34mpnpm run unlink-package -- <app-name>\033[0m' in the directory and try again.\n"
+    exit 1 # Exit with an error status
+fi
+
+# If the directory is empty, or the check is passed, allow the commit
+pnpm pre-commit
+exit 0
