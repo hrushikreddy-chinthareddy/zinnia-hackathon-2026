@@ -1,4 +1,4 @@
-import { oneTimePremiumSteps, Steps, stepsOrder } from './steps';
+import { getStepInfo, Steps, stepsOrder } from './steps';
 import { HeaderLink } from '../header-link/HeaderLink';
 import { ProgressBarSteps } from '../progress-bar-steps/ProgressBarSteps';
 
@@ -11,14 +11,18 @@ export const FormHeader = ({
   policyNumber?: string;
   planCode?: string;
 }) => {
-  const currentStepInfo = oneTimePremiumSteps[currentStep];
+  const currentStepInfo = getStepInfo({
+    step: currentStep,
+    planCode,
+    policyNumber,
+  });
   return (
     <>
       <HeaderLink
         className="mb-xl"
         title={currentStepInfo?.title}
         link={{
-          url: currentStepInfo?.prevUrl({ planCode, policyNumber }),
+          url: currentStepInfo?.prevStepUrl,
           // TODO: probably something better here
           label: `return to previous page`,
         }}

@@ -18,8 +18,9 @@ import { submitOneTimePaymentAction } from '@/actions/bpm-actions';
 import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
 
 import { FormHeader } from './FormHeader';
+import { FormStepWrapper } from './FormStepWrapper';
 import styles from './OneTimePremiumPayment.module.css';
-import { oneTimePremiumSteps, Steps } from './steps';
+import { getStepInfo, Steps } from './steps';
 import { FieldData } from '../field-data/FieldData';
 import { PaymentSummaryStep } from '../payment-summary-step/PaymentSummaryStep';
 import { AccountNumber } from '../pii/AccountNumber';
@@ -197,21 +198,11 @@ export const PaymentSummary = ({
   const router = useRouter();
   const { state } = useOttp();
   const [error, setError] = useState<string>();
-  const currentStepInfo = oneTimePremiumSteps[Steps.SUMMARY];
-  const [isValidating, setIsValidating] = useState(true);
-
-  useEffect(() => {
-    const prevStepUrl = currentStepInfo.prevUrl({
-      planCode,
-      policyNumber,
-    });
-    const validation = currentStepInfo.requiredData.safeParse(state);
-    if (!validation.success || Object.keys(state.payorBank).length === 0) {
-      router.push(prevStepUrl);
-    } else {
-      setIsValidating(false);
-    }
-  }, [currentStepInfo, planCode, policyNumber, router, state]);
+  const currentStepInfo = getStepInfo({
+    step: Steps.SUMMARY,
+    planCode,
+    policyNumber,
+  });
 
   const handleFormSubmit = async () => {
     const response = await submitOneTimePaymentAction({
@@ -221,12 +212,7 @@ export const PaymentSummary = ({
     });
 
     if (response?.data) {
-      router.push(
-        currentStepInfo?.nextUrl({
-          planCode,
-          policyNumber,
-        })
-      );
+      router.push(currentStepInfo?.nextStepUrl);
     } else {
       setError(response?.error?.message);
     }
@@ -249,28 +235,21 @@ export const PaymentSummary = ({
     );
   }
 
-  if (isValidating) {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          height: '550px',
-          justifyContent: 'center',
-        }}
-      >
-        <Loader />
-      </div>
-    );
-  }
-
   return (
-    <form action={handleFormSubmit}>
-      <Summary
-        ottpPaymentData={state}
-        planCode={planCode}
-        policyNumber={policyNumber}
-      />
-    </form>
+    <FormStepWrapper
+      currentStep={Steps.SUMMARY}
+      planCode={planCode}
+      policyNumber={policyNumber}
+      // TODO: remove this once using route handler
+      hideHeader
+    >
+      <form action={handleFormSubmit}>
+        <Summary
+          ottpPaymentData={state}
+          planCode={planCode}
+          policyNumber={policyNumber}
+        />
+      </form>
+    </FormStepWrapper>
   );
 };

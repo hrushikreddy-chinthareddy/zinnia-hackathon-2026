@@ -8,9 +8,9 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { DEFAULT_DATE_FORMAT, ZAHARA_DATE_FORMAT } from '@/utils/dates';
 
-import { FormHeader } from './FormHeader';
+import { FormStepWrapper } from './FormStepWrapper';
 import premiumStyles from './OneTimePremiumPayment.module.css';
-import { oneTimePremiumSteps, Steps } from './steps';
+import { getStepInfo, Steps } from './steps';
 import { FieldDate } from '../field/date/FieldDate';
 import { FieldStatus } from '../field/types';
 import { FieldValue } from '../field/value/FieldValue';
@@ -38,7 +38,6 @@ export const SelectAmount = ({
   policyNumber,
   paymentFee,
 }: {
-  moveToNextStep?: () => void;
   planCode: string;
   policyNumber: string;
   paymentFee: number;
@@ -60,7 +59,11 @@ export const SelectAmount = ({
         : undefined,
     },
   });
-  const stepInfo = oneTimePremiumSteps[Steps.AMOUNT];
+  const stepInfo = getStepInfo({
+    planCode,
+    policyNumber,
+    step: Steps.AMOUNT,
+  });
 
   useEffect(() => {
     dispatch({
@@ -70,10 +73,7 @@ export const SelectAmount = ({
   }, [dispatch, paymentFee]);
 
   const saveAndMove = () => {
-    const nextUrl = stepInfo.nextUrl({
-      planCode,
-      policyNumber,
-    });
+    const nextUrl = stepInfo.nextStepUrl;
     dispatch({
       type: OttpAction.SET_EFFECTIVE_DATE,
       payload: dayjs(getValues('effectiveDate')).format(ZAHARA_DATE_FORMAT),
@@ -86,12 +86,11 @@ export const SelectAmount = ({
   };
 
   return (
-    <div>
-      <FormHeader
-        planCode={planCode}
-        policyNumber={policyNumber}
-        currentStep={Steps.AMOUNT}
-      />
+    <FormStepWrapper
+      currentStep={Steps.AMOUNT}
+      planCode={planCode}
+      policyNumber={policyNumber}
+    >
       <form onSubmit={handleSubmit(saveAndMove)}>
         <div className="mb-xl field-container">
           <Controller
@@ -176,6 +175,6 @@ export const SelectAmount = ({
           <CancelDialogLink planCode={planCode} policyNumber={policyNumber} />
         </div>
       </form>
-    </div>
+    </FormStepWrapper>
   );
 };

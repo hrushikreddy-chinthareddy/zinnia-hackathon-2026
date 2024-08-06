@@ -4,19 +4,18 @@ import {
   AssistiveTextVariant,
   Button,
   IconType,
-  Loader,
 } from '@zinnia/bloom/components';
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { BankDetail } from '@/components/person-data/types';
 import { useFeatureFlags } from '@/hooks/use-feature-flags';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
-import { FormHeader } from './FormHeader';
+import { FormStepWrapper } from './FormStepWrapper';
 import premiumStyles from './OneTimePremiumPayment.module.css';
-import { oneTimePremiumSteps, Steps } from './steps';
+import { getStepInfo, Steps } from './steps';
 import { AddEditBankSidesheet } from '../add-edit-bank/AddEditBankSidesheet';
 import { NoDataAvailable } from '../no-data-available/NoDataAvailable';
 import noDataStyles from '../no-data-available/NoDataAvailable.module.css';
@@ -39,8 +38,11 @@ export const SelectBank = ({
   const router = useRouter();
   const { state, dispatch } = useOttp();
   const { payorBank: statePayorBank } = state;
-  const currentStepInfo = oneTimePremiumSteps[Steps.BANK];
-  const [isValidating, setIsValidating] = useState(true);
+  const currentStepInfo = getStepInfo({
+    step: Steps.BANK,
+    planCode,
+    policyNumber,
+  });
 
   const defaultSelectedBankId = useMemo(() => {
     return (
@@ -49,19 +51,6 @@ export const SelectBank = ({
       activeBanks[0]?.bankId
     );
   }, [activeBanks, statePayorBank?.bankId]);
-
-  useEffect(() => {
-    const prevStepUrl = currentStepInfo?.prevUrl({
-      planCode,
-      policyNumber,
-    });
-    const validation = currentStepInfo.requiredData.safeParse(state);
-    if (!validation.success) {
-      router.push(prevStepUrl);
-    } else {
-      setIsValidating(false);
-    }
-  }, [currentStepInfo, planCode, policyNumber, router, state]);
 
   const { control, handleSubmit, getValues } = useForm<{
     payorBank: string;
@@ -73,10 +62,7 @@ export const SelectBank = ({
   const { data: featureFlagData } = useFeatureFlags();
 
   const saveAndMove = () => {
-    const nextStepUrl = currentStepInfo?.nextUrl({
-      planCode,
-      policyNumber,
-    });
+    const nextStepUrl = currentStepInfo?.nextStepUrl;
     const selectedBank = activeBanks.find(
       ({ bankId }) => bankId === getValues('payorBank')
     );
@@ -87,29 +73,12 @@ export const SelectBank = ({
     router.push(nextStepUrl || '');
   };
 
-  if (isValidating) {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          height: '550px',
-          justifyContent: 'center',
-        }}
-      >
-        <Loader />
-      </div>
-    );
-  }
-
   return (
-    <div>
-      <FormHeader
-        currentStep={Steps.BANK}
-        planCode={planCode}
-        policyNumber={policyNumber}
-      />
-
+    <FormStepWrapper
+      currentStep={Steps.BANK}
+      planCode={planCode}
+      policyNumber={policyNumber}
+    >
       <form onSubmit={handleSubmit(saveAndMove)}>
         {!activeBanks ||
           (activeBanks.length === 0 && (
@@ -193,6 +162,6 @@ export const SelectBank = ({
           <CancelDialogLink planCode={planCode} policyNumber={policyNumber} />
         </div>
       </form>
-    </div>
+    </FormStepWrapper>
   );
 };

@@ -1,14 +1,12 @@
 'use client';
-import { Link, Loader } from '@zinnia/bloom/components';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Link } from '@zinnia/bloom/components';
 
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 
-import { FormHeader } from './FormHeader';
+import { FormStepWrapper } from './FormStepWrapper';
 import premiumStyles from './OneTimePremiumPayment.module.css';
-import { oneTimePremiumSteps, Steps } from './steps';
+import { Steps } from './steps';
 import { useOttp } from '../providers/one-time-premium-payment/OttpContext';
 
 export const PaymentSubmitted = ({
@@ -17,44 +15,13 @@ export const PaymentSubmitted = ({
 }: PolicyRequestInputs) => {
   const { state } = useOttp();
   const { paymentAmount, payorBank } = state;
-  const currentStepInfo = oneTimePremiumSteps[Steps.SUBMITTED];
-  const router = useRouter();
-  const [isValidating, setIsValidating] = useState(true);
-
-  useEffect(() => {
-    const prevStepUrl = currentStepInfo.prevUrl({
-      planCode,
-      policyNumber,
-    });
-    const validation = currentStepInfo?.requiredData?.safeParse(state);
-    if (
-      (validation && !validation.success) ||
-      Object.keys(state.payorBank).length === 0
-    ) {
-      router.push(prevStepUrl);
-    } else {
-      setIsValidating(false);
-    }
-  }, [currentStepInfo, planCode, policyNumber, router, state]);
-
-  if (isValidating) {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          height: '550px',
-          justifyContent: 'center',
-        }}
-      >
-        <Loader />
-      </div>
-    );
-  }
 
   return (
-    <>
-      <FormHeader currentStep={Steps.SUBMITTED} />
+    <FormStepWrapper
+      currentStep={Steps.SUBMITTED}
+      planCode={planCode}
+      policyNumber={policyNumber}
+    >
       <div className="typography-content-body">
         <p>
           <span className="typography-content-body-bold">
@@ -84,6 +51,6 @@ export const PaymentSubmitted = ({
           />
         </div>
       </div>
-    </>
+    </FormStepWrapper>
   );
 };

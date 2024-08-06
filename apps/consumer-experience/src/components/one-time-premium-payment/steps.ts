@@ -1,12 +1,7 @@
-import { selectBankSchema } from '../providers/one-time-premium-payment/types';
+// TODO: add tests!!!!!
+import { ZodObject } from 'zod';
 
-const paymentUrl = ({
-  planCode,
-  policyNumber,
-}: {
-  planCode: string;
-  policyNumber: string;
-}) => `/policies/${planCode}/${policyNumber}/premium`;
+import { selectBankSchema } from '../providers/one-time-premium-payment/types';
 
 export enum Steps {
   AMOUNT = 'amount',
@@ -15,27 +10,57 @@ export enum Steps {
   SUBMITTED = 'submitted',
 }
 
-export const stepsOrder = [
+interface StepProps {
+  planCode: string;
+  policyNumber: string;
+  step: Steps;
+}
+
+interface StepInfo {
+  title: string;
+  requiredData?: ZodObject<any>;
+}
+
+export const stepsOrder: Steps[] = [
   Steps.AMOUNT,
   Steps.BANK,
   Steps.SUMMARY,
   Steps.SUBMITTED,
 ];
-const defaultStep = 'premium';
 
-interface URLProps {
-  planCode: string;
-  policyNumber: string;
-  currentStep: Steps;
-}
+export const stepsInfo: Record<Steps, StepInfo> = {
+  [Steps.AMOUNT]: {
+    title: 'Make a one-time payment',
+  },
+  [Steps.BANK]: {
+    title: 'select payment method',
+    requiredData: selectBankSchema,
+  },
+  [Steps.SUMMARY]: {
+    title: 'summary',
+    requiredData: selectBankSchema,
+  },
+  [Steps.SUBMITTED]: {
+    title: 'submitted!',
+    requiredData: selectBankSchema,
+  },
+};
 
-export const getNextUrl = ({
-  currentStep,
+export const paymentUrl = ({
   planCode,
   policyNumber,
-}: URLProps) => {
-  const indexOfNext = stepsOrder.indexOf(currentStep) + 1;
-  const nextStep = stepsOrder[indexOfNext] ?? '';
+}: {
+  planCode: string;
+  policyNumber: string;
+}) => `/policies/${planCode}/${policyNumber}/premium`;
+
+export const getNextUrl = ({
+  step,
+  planCode,
+  policyNumber,
+}: StepProps): string => {
+  const indexOfNext = stepsOrder.indexOf(step) + 1;
+  const nextStep = stepsOrder[indexOfNext || 0];
   return `${paymentUrl({
     planCode,
     policyNumber,
@@ -43,129 +68,27 @@ export const getNextUrl = ({
 };
 
 export const getPrevUrl = ({
-  currentStep,
+  step,
   planCode,
   policyNumber,
-}: URLProps) => {
-  const indexOfPrev = stepsOrder.indexOf(currentStep) - 1;
-  const prevStep = stepsOrder[indexOfPrev] ?? '';
+}: StepProps): string => {
+  const indexOfPrev = stepsOrder.indexOf(step) - 1;
+  const prevStep = stepsOrder[indexOfPrev || 0];
   return `${paymentUrl({
     planCode,
     policyNumber,
   })}/${prevStep}`;
 };
 
-// TODO: i'm sure this could be refactored
-export const oneTimePremiumSteps = {
-  [Steps.AMOUNT]: {
-    title: 'Make a one-time payment',
-    nextUrl: ({
+export const getStepInfo = ({ step, planCode, policyNumber }: StepProps) => {
+  return {
+    title: stepsInfo[step].title,
+    requiredData: stepsInfo[step].requiredData,
+    stepUrl: `${paymentUrl({
       planCode,
       policyNumber,
-    }: {
-      planCode: string;
-      policyNumber: string;
-    }) =>
-      getNextUrl({
-        currentStep: Steps.AMOUNT,
-        planCode,
-        policyNumber,
-      }),
-    prevUrl: ({
-      planCode,
-      policyNumber,
-    }: {
-      planCode: string;
-      policyNumber: string;
-    }) =>
-      getPrevUrl({
-        currentStep: Steps.AMOUNT,
-        planCode,
-        policyNumber,
-      }),
-  },
-  [Steps.BANK]: {
-    title: 'select payment method',
-    nextUrl: ({
-      planCode,
-      policyNumber,
-    }: {
-      planCode: string;
-      policyNumber: string;
-    }) =>
-      getNextUrl({
-        currentStep: Steps.BANK,
-        planCode,
-        policyNumber,
-      }),
-    prevUrl: ({
-      planCode,
-      policyNumber,
-    }: {
-      planCode: string;
-      policyNumber: string;
-    }) =>
-      getPrevUrl({
-        currentStep: Steps.BANK,
-        planCode,
-        policyNumber,
-      }),
-    requiredData: selectBankSchema,
-  },
-  [Steps.SUMMARY]: {
-    title: 'summary',
-    nextUrl: ({
-      planCode,
-      policyNumber,
-    }: {
-      planCode: string;
-      policyNumber: string;
-    }) =>
-      getNextUrl({
-        currentStep: Steps.SUMMARY,
-        planCode,
-        policyNumber,
-      }),
-    prevUrl: ({
-      planCode,
-      policyNumber,
-    }: {
-      planCode: string;
-      policyNumber: string;
-    }) =>
-      getPrevUrl({
-        currentStep: Steps.SUMMARY,
-        planCode,
-        policyNumber,
-      }),
-    requiredData: selectBankSchema,
-  },
-  [Steps.SUBMITTED]: {
-    title: 'submitted!',
-    nextUrl: ({
-      planCode,
-      policyNumber,
-    }: {
-      planCode: string;
-      policyNumber: string;
-    }) =>
-      getNextUrl({
-        currentStep: Steps.SUBMITTED,
-        planCode,
-        policyNumber,
-      }),
-    prevUrl: ({
-      planCode,
-      policyNumber,
-    }: {
-      planCode: string;
-      policyNumber: string;
-    }) =>
-      getPrevUrl({
-        currentStep: Steps.SUBMITTED,
-        planCode,
-        policyNumber,
-      }),
-    requiredData: selectBankSchema,
-  },
+    })}/${step}`,
+    nextStepUrl: getNextUrl({ step, planCode, policyNumber }),
+    prevStepUrl: getPrevUrl({ step, planCode, policyNumber }),
+  };
 };
