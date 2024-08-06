@@ -55,6 +55,7 @@ export const getPrevUrl = ({
   })}/${prevStep}`;
 };
 
+// TODO: i'm sure this could be refactored
 export const oneTimePremiumSteps = {
   [Steps.AMOUNT]: {
     title: 'Make a one-time payment',

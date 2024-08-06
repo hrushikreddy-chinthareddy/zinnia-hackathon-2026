@@ -9,11 +9,13 @@ import {
   Popover,
 } from '@zinnia/bloom/components';
 import { toSentenceCase } from '@zinnia/utils';
+import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 
 import { submitOneTimePaymentAction } from '@/actions/bpm-actions';
+import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
 
 import { FormHeader } from './FormHeader';
 import styles from './OneTimePremiumPayment.module.css';
@@ -24,10 +26,7 @@ import { AccountNumber } from '../pii/AccountNumber';
 import { AccountType } from '../pii/AccountType';
 import { BankName } from '../pii/BankName';
 import { useOttp } from '../providers/one-time-premium-payment/OttpContext';
-import {
-  OttpState,
-  selectBankSchema,
-} from '../providers/one-time-premium-payment/types';
+import { OttpState } from '../providers/one-time-premium-payment/types';
 import { CancelDialogLink } from '../transactions/CancelDialogLink';
 
 // TODO: UPDATE COPY!!!!
@@ -114,7 +113,9 @@ const Summary = ({
             </span>
           </FieldData>
           <FieldData Label={<Label>Effective date</Label>}>
-            <span className="typography-content-body-sm">{effectiveDate}</span>
+            <span className="typography-content-body-sm">
+              {dayjs(effectiveDate).format(DEFAULT_DATE_FORMAT)}
+            </span>
           </FieldData>
           <FieldData Label={<Label>Payment method</Label>}>
             <div className="typography-content-body-sm">
@@ -163,7 +164,6 @@ const Summary = ({
                   Fees
                 </Label>
               ),
-              // TODO: get value from API
               value: paymentFee && paymentFee * -1,
             },
           ]}
@@ -220,7 +220,6 @@ export const PaymentSummary = ({
       paymentDetails: state,
     });
 
-    // TODO: use form setStateAction here rather than useState???
     if (response?.data) {
       router.push(
         currentStepInfo?.nextUrl({

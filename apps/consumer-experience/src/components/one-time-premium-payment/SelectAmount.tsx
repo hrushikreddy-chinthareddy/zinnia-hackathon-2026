@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
+import { DEFAULT_DATE_FORMAT, ZAHARA_DATE_FORMAT } from '@/utils/dates';
 
 import { FormHeader } from './FormHeader';
 import premiumStyles from './OneTimePremiumPayment.module.css';
@@ -76,7 +76,7 @@ export const SelectAmount = ({
     });
     dispatch({
       type: OttpAction.SET_EFFECTIVE_DATE,
-      payload: getValues('effectiveDate'),
+      payload: dayjs(getValues('effectiveDate')).format(ZAHARA_DATE_FORMAT),
     });
     dispatch({
       type: OttpAction.SET_PAYMENT_AMOUNT,

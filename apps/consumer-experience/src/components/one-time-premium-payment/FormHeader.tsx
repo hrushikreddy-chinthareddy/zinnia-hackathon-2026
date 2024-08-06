@@ -4,8 +4,8 @@ import { ProgressBarSteps } from '../progress-bar-steps/ProgressBarSteps';
 
 export const FormHeader = ({
   currentStep,
-  policyNumber,
-  planCode,
+  policyNumber = '',
+  planCode = '',
 }: {
   currentStep: Steps;
   policyNumber?: string;

@@ -11,7 +11,8 @@ export enum OttpAction {
 }
 
 export const selectBankSchema = z.object({
-  // effectiveDate: z.string().date(),
+  // This validates against `YYYY-MM-DD` from zod, which is same as ZAHARA_DATE_FORMAT
+  effectiveDate: z.string().date(),
   paymentAmount: z.number().min(1),
 });
 
