@@ -135,7 +135,8 @@ export const UpcomingPremium = async ({
               <div className={styles.additionalContent}>
                 <Link
                   size="small"
-                  href={`/policies/${planCode}/${policyNumber}/premium-payment/select-amount`}
+                  // TODO: update to use the object in steps
+                  href={`/policies/${planCode}/${policyNumber}/premium/amount`}
                   text="Make a one-time payment"
                 />
               </div>

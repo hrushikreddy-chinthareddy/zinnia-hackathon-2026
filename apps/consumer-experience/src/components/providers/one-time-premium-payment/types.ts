@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 import { BankDetail } from '@/components/person-data/types';
 
 export enum OttpAction {
@@ -8,12 +10,17 @@ export enum OttpAction {
   SET_PAYMENT_FEE = 'setPaymentFee',
 }
 
+export const selectBankSchema = z.object({
+  // effectiveDate: z.string().date(),
+  paymentAmount: z.number().min(1),
+});
+
 export type Action = { type: OttpAction; payload: any };
 export type Dispatch = (action: Action) => void;
 export interface OttpState {
-  effectiveDate?: string;
-  paymentAmount?: number;
-  // TODO: this might not be the right type...
+  // TODO: save in `YYYY-MM-DD` format to use zod validation
+  effectiveDate: string;
+  paymentAmount: number;
   payorBank: BankDetail;
   paymentFee?: number;
 }

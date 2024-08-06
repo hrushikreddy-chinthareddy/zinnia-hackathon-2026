@@ -15,17 +15,19 @@ import { useFormStatus } from 'react-dom';
 
 import { submitOneTimePaymentAction } from '@/actions/bpm-actions';
 
+import { FormHeader } from './FormHeader';
 import styles from './OneTimePremiumPayment.module.css';
-import { oneTimePremiumSteps } from './steps';
+import { oneTimePremiumSteps, Steps } from './steps';
 import { FieldData } from '../field-data/FieldData';
-import { HeaderLink } from '../header-link/HeaderLink';
 import { PaymentSummaryStep } from '../payment-summary-step/PaymentSummaryStep';
 import { AccountNumber } from '../pii/AccountNumber';
 import { AccountType } from '../pii/AccountType';
 import { BankName } from '../pii/BankName';
-import { ProgressBarSteps } from '../progress-bar-steps/ProgressBarSteps';
 import { useOttp } from '../providers/one-time-premium-payment/OttpContext';
-import { OttpState } from '../providers/one-time-premium-payment/types';
+import {
+  OttpState,
+  selectBankSchema,
+} from '../providers/one-time-premium-payment/types';
 import { CancelDialogLink } from '../transactions/CancelDialogLink';
 
 // TODO: UPDATE COPY!!!!
@@ -99,23 +101,10 @@ const Summary = ({
 
   return (
     <>
-      <HeaderLink
-        className="mb-xl"
-        title={oneTimePremiumSteps.summary.title}
-        link={{
-          // TODO: use an object or something instead of hard coding
-          url: `/policies/${planCode}/${policyNumber}/premium-payment/select-bank`,
-          label: 'return to select bank',
-        }}
-      />
-      <ProgressBarSteps
-        totalSteps={Object.keys(oneTimePremiumSteps).length}
-        currentStep={
-          Object.keys(oneTimePremiumSteps).findIndex(
-            step => step === 'summary'
-          ) + 1
-        }
-        className="steps-progress-bar mb-xl"
+      <FormHeader
+        currentStep={Steps.SUMMARY}
+        planCode={planCode}
+        policyNumber={policyNumber}
       />
       <div className={styles.paymentSummaryContainer}>
         <div className={styles.paymentSummaryDetails}>
@@ -208,6 +197,21 @@ export const PaymentSummary = ({
   const router = useRouter();
   const { state } = useOttp();
   const [error, setError] = useState<string>();
+  const currentStepInfo = oneTimePremiumSteps[Steps.SUMMARY];
+  const [isValidating, setIsValidating] = useState(true);
+
+  useEffect(() => {
+    const prevStepUrl = currentStepInfo.prevUrl({
+      planCode,
+      policyNumber,
+    });
+    const validation = currentStepInfo.requiredData.safeParse(state);
+    if (!validation.success || Object.keys(state.payorBank).length === 0) {
+      router.push(prevStepUrl);
+    } else {
+      setIsValidating(false);
+    }
+  }, [currentStepInfo, planCode, policyNumber, router, state]);
 
   const handleFormSubmit = async () => {
     const response = await submitOneTimePaymentAction({
@@ -219,7 +223,10 @@ export const PaymentSummary = ({
     // TODO: use form setStateAction here rather than useState???
     if (response?.data) {
       router.push(
-        `/policies/${planCode}/${policyNumber}/premium-payment/submitted`
+        currentStepInfo?.nextUrl({
+          planCode,
+          policyNumber,
+        })
       );
     } else {
       setError(response?.error?.message);
@@ -239,6 +246,21 @@ export const PaymentSummary = ({
         <div className="flex-center">
           <Link variant="button" href="#" text="Close" />
         </div>
+      </div>
+    );
+  }
+
+  if (isValidating) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          height: '550px',
+          justifyContent: 'center',
+        }}
+      >
+        <Loader />
       </div>
     );
   }
