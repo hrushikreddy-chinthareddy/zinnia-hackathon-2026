@@ -9,21 +9,23 @@ import {
   Popover,
 } from '@zinnia/bloom/components';
 import { toSentenceCase } from '@zinnia/utils';
+import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 
 import { submitOneTimePaymentAction } from '@/actions/bpm-actions';
+import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
 
+import { FormHeader } from './FormHeader';
+import { FormStepWrapper } from './FormStepWrapper';
 import styles from './OneTimePremiumPayment.module.css';
-import { oneTimePremiumSteps } from './steps';
+import { getStepInfo, Steps } from './steps';
 import { FieldData } from '../field-data/FieldData';
-import { HeaderLink } from '../header-link/HeaderLink';
 import { PaymentSummaryStep } from '../payment-summary-step/PaymentSummaryStep';
 import { AccountNumber } from '../pii/AccountNumber';
 import { AccountType } from '../pii/AccountType';
 import { BankName } from '../pii/BankName';
-import { ProgressBarSteps } from '../progress-bar-steps/ProgressBarSteps';
 import { useOttp } from '../providers/one-time-premium-payment/OttpContext';
 import { OttpState } from '../providers/one-time-premium-payment/types';
 import { CancelDialogLink } from '../transactions/CancelDialogLink';
@@ -99,23 +101,10 @@ const Summary = ({
 
   return (
     <>
-      <HeaderLink
-        className="mb-xl"
-        title={oneTimePremiumSteps.summary.title}
-        link={{
-          // TODO: use an object or something instead of hard coding
-          url: `/policies/${planCode}/${policyNumber}/premium-payment/select-bank`,
-          label: 'return to select bank',
-        }}
-      />
-      <ProgressBarSteps
-        totalSteps={Object.keys(oneTimePremiumSteps).length}
-        currentStep={
-          Object.keys(oneTimePremiumSteps).findIndex(
-            step => step === 'summary'
-          ) + 1
-        }
-        className="steps-progress-bar mb-xl"
+      <FormHeader
+        currentStep={Steps.SUMMARY}
+        planCode={planCode}
+        policyNumber={policyNumber}
       />
       <div className={styles.paymentSummaryContainer}>
         <div className={styles.paymentSummaryDetails}>
@@ -125,7 +114,9 @@ const Summary = ({
             </span>
           </FieldData>
           <FieldData Label={<Label>Effective date</Label>}>
-            <span className="typography-content-body-sm">{effectiveDate}</span>
+            <span className="typography-content-body-sm">
+              {dayjs(effectiveDate).format(DEFAULT_DATE_FORMAT)}
+            </span>
           </FieldData>
           <FieldData Label={<Label>Payment method</Label>}>
             <div className="typography-content-body-sm">
@@ -174,7 +165,6 @@ const Summary = ({
                   Fees
                 </Label>
               ),
-              // TODO: get value from API
               value: paymentFee && paymentFee * -1,
             },
           ]}
@@ -208,6 +198,11 @@ export const PaymentSummary = ({
   const router = useRouter();
   const { state } = useOttp();
   const [error, setError] = useState<string>();
+  const currentStepInfo = getStepInfo({
+    step: Steps.SUMMARY,
+    planCode,
+    policyNumber,
+  });
 
   const handleFormSubmit = async () => {
     const response = await submitOneTimePaymentAction({
@@ -216,11 +211,8 @@ export const PaymentSummary = ({
       paymentDetails: state,
     });
 
-    // TODO: use form setStateAction here rather than useState???
     if (response?.data) {
-      router.push(
-        `/policies/${planCode}/${policyNumber}/premium-payment/submitted`
-      );
+      router.push(currentStepInfo?.nextStepUrl);
     } else {
       setError(response?.error?.message);
     }
@@ -244,12 +236,20 @@ export const PaymentSummary = ({
   }
 
   return (
-    <form action={handleFormSubmit}>
-      <Summary
-        ottpPaymentData={state}
-        planCode={planCode}
-        policyNumber={policyNumber}
-      />
-    </form>
+    <FormStepWrapper
+      currentStep={Steps.SUMMARY}
+      planCode={planCode}
+      policyNumber={policyNumber}
+      // TODO: remove this once using route handler
+      hideHeader
+    >
+      <form action={handleFormSubmit}>
+        <Summary
+          ottpPaymentData={state}
+          planCode={planCode}
+          policyNumber={policyNumber}
+        />
+      </form>
+    </FormStepWrapper>
   );
 };

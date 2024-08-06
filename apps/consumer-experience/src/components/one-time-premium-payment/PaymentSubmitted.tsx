@@ -4,19 +4,24 @@ import { Link } from '@zinnia/bloom/components';
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 
+import { FormStepWrapper } from './FormStepWrapper';
 import premiumStyles from './OneTimePremiumPayment.module.css';
+import { Steps } from './steps';
 import { useOttp } from '../providers/one-time-premium-payment/OttpContext';
 
 export const PaymentSubmitted = ({
   policyNumber,
   planCode,
-}: Partial<PolicyRequestInputs>) => {
+}: PolicyRequestInputs) => {
   const { state } = useOttp();
   const { paymentAmount, payorBank } = state;
 
   return (
-    <>
-      <h1>Submitted!</h1>
+    <FormStepWrapper
+      currentStep={Steps.SUBMITTED}
+      planCode={planCode}
+      policyNumber={policyNumber}
+    >
       <div className="typography-content-body">
         <p>
           <span className="typography-content-body-bold">
@@ -46,6 +51,6 @@ export const PaymentSubmitted = ({
           />
         </div>
       </div>
-    </>
+    </FormStepWrapper>
   );
 };
