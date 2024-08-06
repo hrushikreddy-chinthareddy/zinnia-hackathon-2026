@@ -21,6 +21,7 @@ interface StepInfo {
   requiredData?: ZodObject<any>;
 }
 
+export const defaultStep = Steps.AMOUNT;
 export const stepsOrder: Steps[] = [
   Steps.AMOUNT,
   Steps.BANK,

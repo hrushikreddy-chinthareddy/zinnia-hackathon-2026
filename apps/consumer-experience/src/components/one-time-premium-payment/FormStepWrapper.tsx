@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { FormHeader } from './FormHeader';
-import { getStepInfo, Steps, stepsOrder } from './steps';
+import { defaultStep, getStepInfo, Steps, stepsOrder } from './steps';
 import { useOttp } from '../providers/one-time-premium-payment/OttpContext';
 
 export const FormStepWrapper = ({
@@ -35,7 +35,7 @@ export const FormStepWrapper = ({
     }
 
     const stepOneUrl = getStepInfo({
-      step: stepsOrder[0] || Steps.AMOUNT,
+      step: defaultStep,
       planCode,
       policyNumber,
     })?.stepUrl;

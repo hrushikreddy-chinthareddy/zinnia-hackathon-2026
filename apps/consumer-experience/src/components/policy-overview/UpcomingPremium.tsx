@@ -15,6 +15,7 @@ import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 import styles from './PolicyOverview.module.css';
+import { defaultStep, getStepInfo } from '../one-time-premium-payment/steps';
 
 const UPCOMING_PREMIUM = 'Upcoming premium';
 
@@ -136,7 +137,7 @@ export const UpcomingPremium = async ({
                 <Link
                   size="small"
                   // TODO: update to use the object in steps
-                  href={`/policies/${planCode}/${policyNumber}/premium/amount`}
+                  href={`${getStepInfo({ step: defaultStep, policyNumber, planCode }).stepUrl}`}
                   text="Make a one-time payment"
                 />
               </div>
