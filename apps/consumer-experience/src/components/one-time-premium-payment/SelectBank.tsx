@@ -7,7 +7,7 @@ import {
   Loader,
 } from '@zinnia/bloom/components';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { BankDetail } from '@/components/person-data/types';
@@ -42,6 +42,14 @@ export const SelectBank = ({
   const currentStepInfo = oneTimePremiumSteps[Steps.BANK];
   const [isValidating, setIsValidating] = useState(true);
 
+  const defaultSelectedBankId = useMemo(() => {
+    return (
+      statePayorBank?.bankId ||
+      activeBanks.find(bank => bank.autopayEnabled)?.bankId ||
+      activeBanks[0]?.bankId
+    );
+  }, [activeBanks, statePayorBank?.bankId]);
+
   useEffect(() => {
     const prevStepUrl = currentStepInfo?.prevUrl({
       planCode,
@@ -59,9 +67,7 @@ export const SelectBank = ({
     payorBank: string;
   }>({
     defaultValues: {
-      payorBank:
-        statePayorBank?.bankId ||
-        activeBanks.find(bank => bank.autopayEnabled)?.bankId,
+      payorBank: defaultSelectedBankId,
     },
   });
   const { data: featureFlagData } = useFeatureFlags();
@@ -158,9 +164,7 @@ export const SelectBank = ({
                         id={`${index}-${bankDetail.branchName}`}
                         value={bankDetail.bankId}
                         defaultChecked={
-                          statePayorBank?.bankId
-                            ? statePayorBank?.bankId === bankDetail.bankId
-                            : bankDetail.autopayEnabled
+                          bankDetail?.bankId === defaultSelectedBankId
                         }
                       />
                     </label>
