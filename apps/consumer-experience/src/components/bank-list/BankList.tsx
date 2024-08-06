@@ -1,12 +1,10 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
-import { FC, useEffect } from 'react';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { FC, useEffect, useState } from 'react';
 
 import { getPolicyProfile } from '@/queries/policy-queries';
-import { getPolicyProfileData } from '@/services';
-import { ClientApi } from '@/services/client-http';
-import { PolicyProfile } from '@/types/policy';
+import { QueryKeys } from '@/queries/query-keys';
 
 import styles from './BankList.module.css';
 import { AddEditBankSidesheet } from '../add-edit-bank/AddEditBankSidesheet';
@@ -23,8 +21,8 @@ export const BankList: FC<BankListProps> = ({
   policyNumber,
   showAddEditBank,
 }) => {
-  const { data, error } = useQuery({
-    queryKey: ['policyProfile'],
+  const { data, error } = useSuspenseQuery({
+    queryKey: [QueryKeys.POLICY_PROFILE],
     queryFn: () => getPolicyProfile(planCode, policyNumber),
   });
 

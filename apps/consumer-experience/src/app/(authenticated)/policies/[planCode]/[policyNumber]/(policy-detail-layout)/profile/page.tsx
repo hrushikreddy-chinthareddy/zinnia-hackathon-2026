@@ -7,9 +7,6 @@ import { Address, Email, Phone } from '@zinnia/api-types/types/sor';
 import { IconType, Label } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
-import { AddEditBankSidesheet } from '@/components/add-edit-bank/AddEditBankSidesheet';
-import { FormMode } from '@/components/add-edit-bank/shared-types';
-import { BankData } from '@/components/bank-data/BankData';
 import { BankList } from '@/components/bank-list/BankList';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { FieldData } from '@/components/field-data/FieldData';
@@ -20,11 +17,11 @@ import { Emails } from '@/components/person-data/Emails';
 import { Phones } from '@/components/person-data/Phones';
 import { FullName } from '@/components/pii/FullName';
 import { getPolicyProfile } from '@/queries/policy-queries';
+import { QueryKeys } from '@/queries/query-keys';
 import { getPageTitle, RouteKey } from '@/route-map';
 import { getPolicyProfileData } from '@/services';
-import { ClientApi } from '@/services/client-http';
 import { getFeatureFlags } from '@/services/feature-flags';
-import { PolicyProfile, PolicyRequestInputs } from '@/types/policy';
+import { PolicyRequestInputs } from '@/types/policy';
 import { filterItemsWithPastEndDate } from '@/utils/data';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
@@ -48,8 +45,8 @@ export default async function Profile({ params }: Props) {
   });
   const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery({
-    queryKey: ['policyProfile'],
+  queryClient.prefetchQuery({
+    queryKey: [QueryKeys.POLICY_PROFILE],
     queryFn: () => getPolicyProfile(params.planCode, params.policyNumber),
   });
 
