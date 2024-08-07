@@ -24,6 +24,7 @@ import {
 } from '@/utils/data';
 import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
 import { logError } from '@/utils/logging/server-logging';
+import { areAllValuesNull } from '@/utils/objects';
 
 interface AddEditBankRequestArgs {
   planCode: string;
@@ -170,6 +171,9 @@ export const putUpdateBankAccount = async (
           ...bankToUpdate,
           branchName: bankAccountChangeRequest.bankAccount?.branchName,
           accountType: bankAccountChangeRequest.bankAccount?.accountType,
+          branchAddress: areAllValuesNull(bankToUpdate?.branchAddress || {})
+            ? null
+            : bankToUpdate?.branchAddress, //We need to do this because Zahara will fail if we send the branchAddress object with all null values for some reason. https://se2llc-global.slack.com/archives/C04N0DSKKNW/p1722871751338089
         },
         correlationId: uuidv4(),
         effectiveDate: dayjs().format(ZAHARA_DATE_FORMAT),
