@@ -1,3 +1,4 @@
+import { AccountType } from '@zinnia/api-types/types/sor';
 import { z } from 'zod';
 
 import { BankDetail } from '@/components/person-data/types';
@@ -9,6 +10,17 @@ export enum OttpAction {
   SET_PAYMENT_SUBMIT_STATUS = 'setPaymentSubmitStatus',
   SET_PAYMENT_FEE = 'setPaymentFee',
 }
+
+const payorBankSchema = z.object({
+  accountNumber: z.string(),
+  accountType: z.nativeEnum(AccountType),
+  routingNumber: z.string(),
+  branchName: z.string(),
+}) satisfies z.ZodType<Partial<BankDetail>>;
+
+export const summarySchema = z.object({
+  payorBank: payorBankSchema,
+});
 
 export const selectBankSchema = z.object({
   // This validates against `YYYY-MM-DD` from zod, which is same as ZAHARA_DATE_FORMAT

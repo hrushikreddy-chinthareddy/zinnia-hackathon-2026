@@ -39,8 +39,8 @@ export const FormStepWrapper = ({
       planCode,
       policyNumber,
     })?.stepUrl;
-    // TODO: need to test payorBank check here
     const validation = currentStepInfo?.requiredData.safeParse(state);
+
     if (!validation.success) {
       router.push(stepOneUrl);
     } else {

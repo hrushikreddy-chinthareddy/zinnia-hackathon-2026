@@ -14,13 +14,13 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 
-import { submitOneTimePaymentAction } from '@/actions/bpm-actions';
+import { ClientApi } from '@/services/client-http';
 import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
 
 import { FormHeader } from './FormHeader';
 import { FormStepWrapper } from './FormStepWrapper';
 import styles from './OneTimePremiumPayment.module.css';
-import { getStepInfo, Steps } from './steps';
+import { getStepInfo, paymentUrl, Steps } from './steps';
 import { FieldData } from '../field-data/FieldData';
 import { PaymentSummaryStep } from '../payment-summary-step/PaymentSummaryStep';
 import { AccountNumber } from '../pii/AccountNumber';
@@ -204,36 +204,55 @@ export const PaymentSummary = ({
     policyNumber,
   });
 
-  const handleFormSubmit = async () => {
-    const response = await submitOneTimePaymentAction({
-      planCode,
-      policyNumber,
-      paymentDetails: state,
-    });
-
-    if (response?.data) {
-      router.push(currentStepInfo?.nextStepUrl);
-    } else {
-      setError(response?.error?.message);
-    }
-  };
-
   if (error) {
     return (
-      <div style={{ textAlign: 'center' }} className="p-3xl">
-        <p className="typography-desktop-headline-3-d">
-          Sorry, that didn't work
-        </p>
-        <p className="typography-content-body">
-          Services are down, so we couldn’t submit your payment. Please try
-          again later.
-        </p>
-        <div className="flex-center">
-          <Link variant="button" href="#" text="Close" />
+      <div style={{ maxWidth: '500px', margin: '0 auto' }}>
+        <div className={styles.errorMessageContainer}>
+          <Icon
+            width={50}
+            height={50}
+            type={IconType.COG}
+            color="var(--color-status-icon-status-error-icon)"
+          />
+          <h3 className="typography-desktop-headline-3-d">
+            Sorry, that didn't work
+          </h3>
+
+          <p className="typography-content-body">
+            Services are down, so we couldn’t submit your payment. Please try
+            again later.
+          </p>
+          <Link
+            className="mt-2xl"
+            variant="button"
+            text="Close"
+            href={paymentUrl({ planCode, policyNumber })}
+          />
         </div>
       </div>
     );
   }
+
+  const submitPayment = async () => {
+    // TODO: should i move this queries?
+    const response = await ClientApi.post(
+      `/api/bpm/${planCode}/${policyNumber}/onetimepremium`,
+      JSON.stringify(state),
+      {
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
+
+    // TODO: IF a user presses back (in browser) from here, they go back to step 2
+    // not the end of the world but should probably have something else happen
+    if (response.status === 500) {
+      setError(response.statusText);
+    }
+
+    if (response.ok) {
+      router.push(currentStepInfo?.nextStepUrl);
+    }
+  };
 
   return (
     <FormStepWrapper
@@ -243,7 +262,7 @@ export const PaymentSummary = ({
       // TODO: remove this once using route handler
       hideHeader
     >
-      <form action={handleFormSubmit}>
+      <form action={submitPayment}>
         <Summary
           ottpPaymentData={state}
           planCode={planCode}
