@@ -9,7 +9,7 @@
   padding: var(--measure-dimension-padding-xs, 0.25rem) 0;
 
   &.large {
-    margin: var(--measure-dimension-gap-xs, 0.25rem) 0;
+    margin: var(--measure-dimension-gap-sm, 0.25rem) 0;
   }
 }
 

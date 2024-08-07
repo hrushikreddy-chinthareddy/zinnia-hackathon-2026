@@ -1,14 +1,11 @@
 .container {
   background-color: white;
   display: flex;
-  padding: var(--measure-dimension-padding-2xl, 1rem)
-    var(--measure-dimension-padding-4xl, 2rem);
+  padding: var(--measure-dimension-padding-2xl, 1rem) var(--measure-dimension-padding-4xl, 2rem);
   align-items: center;
   justify-content: space-between;
-  box-shadow: var(
-    --shadow-elevation-elevation-light-08,
-    0 3.200000047683716px 7.199999809265137px 0 rgba(0, 0, 0, 0.13)
-  );
+  box-shadow: var(--shadow-elevation-elevation-light-md,
+      0 3.200000047683716px 7.199999809265137px 0 rgba(0, 0, 0, 0.13));
 }
 
 .logo {
