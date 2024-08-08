@@ -111,7 +111,7 @@ export const postAddBankAccount = async (
           parsedResponse: parsedResponse,
         })
       );
-      throw parsedResponse;
+      throw rawResponse;
     }
 
     const messages = {
@@ -125,10 +125,13 @@ export const postAddBankAccount = async (
     return {
       data: null,
       error: {
-        cause: e,
+        cause: (e as Response)?.statusText,
         status: (e as Response)?.status ?? 502,
-        name: 'An error occurred',
-        message: "We couldn't add this bank account",
+        name: "Sorry, that didn't work.",
+        message:
+          (e as Response)?.status >= 500
+            ? "Services are down, so we couldn't add your account. Please try again later."
+            : "We couldn't add your account. Please try again later.",
       },
     };
   }
@@ -184,7 +187,6 @@ export const putUpdateBankAccount = async (
     );
 
     const parsedResponse = await parseAPIResponse(rawResponse);
-    console.log({ parsedResponse });
     //TODO: If response NOT ok, OR if response OK but the result contains an exception status
     if (!rawResponse.ok) {
       logError(
@@ -194,7 +196,7 @@ export const putUpdateBankAccount = async (
           parsedResponse: parsedResponse,
         })
       );
-      throw parsedResponse;
+      throw rawResponse;
     }
 
     const messages = {
@@ -208,10 +210,13 @@ export const putUpdateBankAccount = async (
     return {
       data: null,
       error: {
-        cause: e,
+        cause: (e as Response)?.statusText,
         status: (e as Response)?.status ?? 502,
-        name: 'An error occurred',
-        message: "We couldn't update this bank account",
+        name: "Sorry, that didn't work.",
+        message:
+          (e as Response)?.status >= 500
+            ? "Services are down, so we couldn't update your account. Please try again later."
+            : "We couldn't update your account. Please try again later.",
       },
     };
   }
@@ -281,7 +286,7 @@ export const putEndDateBankAccount = async (
           parsedResponse: parsedResponse,
         })
       );
-      throw parsedResponse;
+      throw rawResponse;
     }
 
     const messages = {
@@ -291,14 +296,18 @@ export const putEndDateBankAccount = async (
 
     return { data: { ...parsedResponse, messages }, error: null };
   } catch (e) {
-    logError('Error updating bank', e);
+    logError('Error deleting bank', e);
+
     return {
       data: null,
       error: {
-        cause: e,
+        cause: (e as Response)?.statusText,
         status: (e as Response)?.status ?? 502,
-        name: 'An error occurred',
-        message: "We couldn't remove this bank account",
+        name: "Sorry, that didn't work.",
+        message:
+          (e as Response)?.status >= 500
+            ? "Services are down, so we couldn't remove your account. Please try again later."
+            : "We couldn't remove your account. Please try again later.",
       },
     };
   }

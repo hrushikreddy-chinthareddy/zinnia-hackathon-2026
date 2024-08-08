@@ -51,6 +51,7 @@ export const AddEditBankSidesheet: FC<AddEditBankSidesheetProps> = ({
   const [errorMessage, setErrorMessage] = useState<ReactNode>(
     'Some generic messaging that will get updated based on the api response'
   );
+  const [isServerError, setIsServerError] = useState(false);
   const [successTitle, setSuccessTitle] = useState('Success!');
   const [successMessage, setSuccessMessage] = useState(
     'Some generic messaging that will get updated based on the api response'
@@ -76,6 +77,7 @@ export const AddEditBankSidesheet: FC<AddEditBankSidesheetProps> = ({
       },
     });
     if (error) {
+      setIsServerError(error.status >= 500);
       setErrorTitle(error.name);
       setErrorMessage(error.message);
       setStep(FormSteps.ERROR);
@@ -155,6 +157,7 @@ export const AddEditBankSidesheet: FC<AddEditBankSidesheetProps> = ({
     });
 
     if (error) {
+      setIsServerError(error.status >= 500);
       setErrorTitle(error.name);
       setErrorMessage(error.message);
       setStep(FormSteps.ERROR);
@@ -216,6 +219,7 @@ export const AddEditBankSidesheet: FC<AddEditBankSidesheetProps> = ({
       {step === FormSteps.ERROR && (
         <Error
           errorTitle={errorTitle}
+          isServerError={isServerError}
           errorMessage={errorMessage}
           closeCallback={() => setOpen(false)}
         />
