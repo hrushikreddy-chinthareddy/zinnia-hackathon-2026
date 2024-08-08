@@ -38,7 +38,10 @@ export const BankList: FC<BankListProps> = ({
         shouldStopBankPolling(state.data, bpmAction) ||
         pollCount.current >= POLL_LIMIT
       ) {
-        removeBpmAction();
+        if (bpmAction) {
+          removeBpmAction();
+        }
+
         pollCount.current = 0;
         return false;
       }
