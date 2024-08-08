@@ -1,34 +1,53 @@
 'use client';
 
-import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
-import { FC, useEffect, useState } from 'react';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { FC, useRef } from 'react';
 
 import { getPolicyProfile } from '@/queries/policy-queries';
 import { QueryKeys } from '@/queries/query-keys';
+import { useBpmStore } from '@/store/store';
+import { shouldStopBankPolling } from '@/utils/policy';
 
 import styles from './BankList.module.css';
 import { AddEditBankSidesheet } from '../add-edit-bank/AddEditBankSidesheet';
 import { FormMode } from '../add-edit-bank/shared-types';
 import { BankData } from '../bank-data/BankData';
 
+const POLL_INTERVAL = 1000;
+const POLL_LIMIT = 5;
+
 interface BankListProps {
   planCode: string;
   policyNumber: string;
   showAddEditBank: boolean;
 }
+
 export const BankList: FC<BankListProps> = ({
   planCode,
   policyNumber,
   showAddEditBank,
 }) => {
-  const { data, error } = useSuspenseQuery({
+  const bpmAction = useBpmStore(state => state.bpmAction);
+  const pollCount = useRef(0);
+  const removeBpmAction = useBpmStore(state => state.removeBpmAction);
+
+  const { data } = useSuspenseQuery({
     queryKey: [QueryKeys.POLICY_PROFILE],
+    refetchInterval: ({ state }) => {
+      if (
+        shouldStopBankPolling(state.data, bpmAction) ||
+        pollCount.current >= POLL_LIMIT
+      ) {
+        removeBpmAction();
+        pollCount.current = 0;
+        return false;
+      }
+      pollCount.current++;
+      return POLL_INTERVAL;
+    },
     queryFn: () => getPolicyProfile(planCode, policyNumber),
   });
 
-  useEffect(() => {
-    console.log({ error });
-  }, [error]);
   if (data?.bankDetails && data.bankDetails.length) {
     const allBankData = data.bankDetails.map(bankDetail => {
       return (

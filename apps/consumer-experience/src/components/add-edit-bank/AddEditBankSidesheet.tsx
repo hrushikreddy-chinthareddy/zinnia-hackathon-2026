@@ -11,6 +11,7 @@ import {
   putEndDateBankAccount,
 } from '@/actions/bpm-actions';
 import { useUser } from '@/hooks/use-user';
+import { ActionTypes, useBpmStore } from '@/store/store';
 import { EVERLY_CONTACT_PHONE_NUMBER } from '@/utils/data';
 
 import styles from './AddEditBankSidesheet.module.css';
@@ -38,6 +39,7 @@ export const AddEditBankSidesheet: FC<AddEditBankSidesheetProps> = ({
   autopayEnabled,
   numberOfAccounts,
 }) => {
+  const updateBpmAction = useBpmStore(state => state.updateBpmAction);
   const params = useParams<{
     planCode: string;
     policyNumber: string;
@@ -83,6 +85,27 @@ export const AddEditBankSidesheet: FC<AddEditBankSidesheetProps> = ({
       setSuccessTitle(data.messages.title);
       setSuccessMessage(data.messages.message);
       setStep(FormSteps.SUCCESS);
+      if (mode === FormMode.EDIT) {
+        updateBpmAction({
+          actionType: ActionTypes.EDIT,
+          bankAccountNumber: requestValues.accountNumber,
+          changes: [
+            {
+              fieldName: 'branchName',
+              value: requestValues.branchName,
+            },
+            {
+              fieldName: 'accountType',
+              value: requestValues.accountType,
+            },
+          ],
+        });
+      } else {
+        updateBpmAction({
+          actionType: ActionTypes.ADD,
+          bankAccountNumber: requestValues.accountNumber,
+        });
+      }
       return;
     }
   };
@@ -141,6 +164,10 @@ export const AddEditBankSidesheet: FC<AddEditBankSidesheetProps> = ({
       setSuccessTitle(data.messages.title);
       setSuccessMessage(data.messages.message);
       setStep(FormSteps.SUCCESS);
+      updateBpmAction({
+        actionType: ActionTypes.REMOVE,
+        bankAccountNumber: values?.accountNumber,
+      });
       return;
     }
   };
