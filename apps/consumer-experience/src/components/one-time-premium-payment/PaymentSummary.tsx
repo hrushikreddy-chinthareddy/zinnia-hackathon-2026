@@ -1,5 +1,4 @@
 'use client';
-import { OneTimePremiumTransaction } from '@zinnia/api-types/types/bpm';
 import {
   Button,
   Icon,
@@ -14,10 +13,9 @@ import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { v4 as uuidv4 } from 'uuid';
 
 import { ClientApi } from '@/services/client-http';
-import { DEFAULT_DATE_FORMAT, ZAHARA_DATE_FORMAT } from '@/utils/dates';
+import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
 
 import { FormHeader } from './FormHeader';
 import { FormStepWrapper } from './FormStepWrapper';
