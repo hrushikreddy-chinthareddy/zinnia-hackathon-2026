@@ -65,6 +65,7 @@ export const AddEditBank: FC<AddEditBankProps> = ({
           render={({ field }) => (
             <div>
               <Radio
+                id="radio-account-type"
                 onValueChange={field.onChange}
                 groupLabel="Account type"
                 defaultValue={defaultValues?.accountType}
