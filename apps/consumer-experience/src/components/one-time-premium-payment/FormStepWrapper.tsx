@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { FormHeader } from './FormHeader';
-import { defaultStep, getStepInfo, Steps, stepsOrder } from './steps';
+import { defaultStep, getStepInfo, Steps } from './steps';
 import { useOttp } from '../providers/one-time-premium-payment/OttpContext';
 
 export const FormStepWrapper = ({
@@ -40,6 +40,7 @@ export const FormStepWrapper = ({
       policyNumber,
     })?.stepUrl;
     const validation = currentStepInfo?.requiredData.safeParse(state);
+
     if (!validation.success) {
       router.push(stepOneUrl);
     } else {

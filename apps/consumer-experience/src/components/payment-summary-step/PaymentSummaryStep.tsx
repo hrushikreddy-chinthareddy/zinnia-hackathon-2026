@@ -2,7 +2,7 @@ import { type LabelProps } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import React from 'react';
 
-import { formatUSDollars } from '@/utils/currency';
+import { formatUSDollars, formatUSDollarsAccounting } from '@/utils/currency';
 
 import styles from './PaymentSummaryStep.module.css';
 
@@ -36,7 +36,7 @@ export const PaymentSummaryStep = ({
               'typography-content-body-sm'
             )}
           >
-            {formatUSDollars(value, true)}
+            {formatUSDollarsAccounting(value, true)}
           </p>
         </div>
       ))}

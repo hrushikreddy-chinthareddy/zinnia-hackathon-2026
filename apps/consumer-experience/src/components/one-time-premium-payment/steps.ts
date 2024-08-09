@@ -1,7 +1,10 @@
 // TODO: add tests!!!!!
 import { ZodObject } from 'zod';
 
-import { selectBankSchema } from '../providers/one-time-premium-payment/types';
+import {
+  selectBankSchema,
+  summarySchema,
+} from '../providers/one-time-premium-payment/types';
 
 export enum Steps {
   AMOUNT = 'amount',
@@ -39,11 +42,11 @@ export const stepsInfo: Record<Steps, StepInfo> = {
   },
   [Steps.SUMMARY]: {
     title: 'summary',
-    requiredData: selectBankSchema,
+    requiredData: selectBankSchema.merge(summarySchema),
   },
   [Steps.SUBMITTED]: {
     title: 'submitted!',
-    requiredData: selectBankSchema,
+    requiredData: selectBankSchema.merge(summarySchema),
   },
 };
 
@@ -65,7 +68,7 @@ export const getNextUrl = ({
   return `${paymentUrl({
     planCode,
     policyNumber,
-  })}/${nextStep}`;
+  })}/${nextStep || ''}`;
 };
 
 export const getPrevUrl = ({
@@ -78,7 +81,7 @@ export const getPrevUrl = ({
   return `${paymentUrl({
     planCode,
     policyNumber,
-  })}/${prevStep}`;
+  })}/${prevStep || ''}`;
 };
 
 export const getStepInfo = ({ step, planCode, policyNumber }: StepProps) => {
