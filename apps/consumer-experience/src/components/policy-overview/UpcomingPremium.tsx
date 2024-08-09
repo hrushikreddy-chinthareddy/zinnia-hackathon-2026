@@ -136,7 +136,6 @@ export const UpcomingPremium = async ({
               <div className={styles.additionalContent}>
                 <Link
                   size="small"
-                  // TODO: update to use the object in steps
                   href={`${getStepInfo({ step: defaultStep, policyNumber, planCode }).stepUrl}`}
                   text="Make a one-time payment"
                 />

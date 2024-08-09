@@ -13,6 +13,7 @@ export async function POST(
 ) {
   const { planCode, policyNumber } = params;
   const paymentDetails = await _request.json();
+
   // TODO: should this go here or into the function that calls it?
   const ottpRequest = {
     // TODO: do we need to check for current caseId?
@@ -26,26 +27,21 @@ export async function POST(
       requestedAmount: paymentDetails.paymentAmount,
     },
     payor: {
-      partyId: paymentDetails.payorBank?.appliesToPartyId,
-      bankId: paymentDetails.payorBank?.bankId,
+      partyId: paymentDetails.partyId,
+      bankId: paymentDetails.bankId,
       paymentForm: OneTimePremiumTransaction.paymentForm.ACH,
     },
     // TODO: do we need to pass this?
     // reverseInitiator: false
   };
 
-  const { data, error } = await submitOneTimePremiumPayment(
-    { planCode, policyNumber },
-    ottpRequest
-  );
-
-  if (error) {
-    return NextResponse.json({
-      error,
-    });
+  try {
+    const response = await submitOneTimePremiumPayment(
+      { planCode, policyNumber },
+      ottpRequest
+    );
+    return NextResponse.json(response);
+  } catch (error) {
+    return NextResponse.json({ data: null, error: (error as Error).cause });
   }
-
-  return NextResponse.json({
-    data,
-  });
 }

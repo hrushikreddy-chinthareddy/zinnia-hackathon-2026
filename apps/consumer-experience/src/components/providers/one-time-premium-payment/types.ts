@@ -12,10 +12,8 @@ export enum OttpAction {
 }
 
 const payorBankSchema = z.object({
-  accountNumber: z.string(),
-  accountType: z.nativeEnum(AccountType),
-  routingNumber: z.string(),
-  branchName: z.string(),
+  bankId: z.string(),
+  appliesToPartyId: z.string(),
 }) satisfies z.ZodType<Partial<BankDetail>>;
 
 export const summarySchema = z.object({
@@ -31,7 +29,6 @@ export const selectBankSchema = z.object({
 export type Action = { type: OttpAction; payload: any };
 export type Dispatch = (action: Action) => void;
 export interface OttpState {
-  // TODO: save in `YYYY-MM-DD` format to use zod validation
   effectiveDate: string;
   paymentAmount: number;
   payorBank: BankDetail;

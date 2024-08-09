@@ -109,6 +109,14 @@ export const submitOneTimePremiumPayment = async (
       'Error submitting one time premium payment',
       await logApiNotOkDetails({ rawResponse, parsedResponse: response })
     );
+
+    throw new Error('Error fetching policy.', {
+      cause: {
+        status: rawResponse.status,
+        name: 'submitOneTimePremiumPayment Error',
+        message: response.message,
+      },
+    });
   }
 
   return response;

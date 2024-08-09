@@ -1,4 +1,5 @@
 'use client';
+import { OneTimePremiumTransaction } from '@zinnia/api-types/types/bpm';
 import {
   Button,
   Icon,
@@ -13,9 +14,10 @@ import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useFormStatus } from 'react-dom';
+import { v4 as uuidv4 } from 'uuid';
 
 import { ClientApi } from '@/services/client-http';
-import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
+import { DEFAULT_DATE_FORMAT, ZAHARA_DATE_FORMAT } from '@/utils/dates';
 
 import { FormHeader } from './FormHeader';
 import { FormStepWrapper } from './FormStepWrapper';
@@ -234,22 +236,29 @@ export const PaymentSummary = ({
   }
 
   const submitPayment = async () => {
+    const ottpRequest = {
+      paymentAmount: state.paymentAmount,
+      effectiveDate: state.effectiveDate,
+      partyId: state.payorBank?.appliesToPartyId,
+      bankId: state.payorBank?.bankId,
+    };
+
     // TODO: should i move this queries?
     const response = await ClientApi.post(
       `/api/bpm/${planCode}/${policyNumber}/onetimepremium`,
-      JSON.stringify(state),
+      JSON.stringify(ottpRequest),
       {
         headers: { 'Content-Type': 'application/json' },
       }
     );
 
+    const parsedResponse = await response.json();
+
     // TODO: IF a user presses back (in browser) from here, they go back to step 2
     // not the end of the world but should probably have something else happen
-    if (response.status === 500) {
+    if (parsedResponse.error) {
       setError(response.statusText);
-    }
-
-    if (response.ok) {
+    } else {
       router.push(currentStepInfo?.nextStepUrl);
     }
   };
