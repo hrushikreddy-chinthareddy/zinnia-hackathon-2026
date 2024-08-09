@@ -6,17 +6,15 @@ import {
   IconType,
 } from '@zinnia/bloom/components';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { BankDetail } from '@/components/person-data/types';
-import { useFeatureFlags } from '@/hooks/use-feature-flags';
-import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
+import { CancelDialogLink } from './CancelDialogLink';
 import { FormStepWrapper } from './FormStepWrapper';
 import premiumStyles from './OneTimePremiumPayment.module.css';
 import { getStepInfo, Steps } from './steps';
-import { AddEditBankSidesheet } from '../add-edit-bank/AddEditBankSidesheet';
 import { NoDataAvailable } from '../no-data-available/NoDataAvailable';
 import noDataStyles from '../no-data-available/NoDataAvailable.module.css';
 import { AccountNumber } from '../pii/AccountNumber';
@@ -24,7 +22,6 @@ import { AccountType } from '../pii/AccountType';
 import { BankName } from '../pii/BankName';
 import { useOttp } from '../providers/one-time-premium-payment/OttpContext';
 import { OttpAction } from '../providers/one-time-premium-payment/types';
-import { CancelDialogLink } from '../transactions/CancelDialogLink';
 
 export const SelectBank = ({
   planCode,
@@ -59,7 +56,6 @@ export const SelectBank = ({
       payorBank: defaultSelectedBankId,
     },
   });
-  const { data: featureFlagData } = useFeatureFlags();
 
   const saveAndMove = () => {
     const nextStepUrl = currentStepInfo?.nextStepUrl;
@@ -143,12 +139,6 @@ export const SelectBank = ({
             })}
           </div>
         )}
-        {/* TODO: Unhide this
-
-      {featureFlagData?.[FEATURE_FLAGS.ADD_EDIT_DELETE_BANK_ACCOUNT] && (
-
-        <AddEditBankSidesheet mode={FormMode.ADD} />
-      )} */}
 
         <div className={premiumStyles.buttonGroup}>
           {/* TODO: disabled if nothing selected */}

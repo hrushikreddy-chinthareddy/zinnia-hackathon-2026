@@ -16,7 +16,7 @@ import { FieldStatus } from '../field/types';
 import { FieldValue } from '../field/value/FieldValue';
 import { useOttp } from '../providers/one-time-premium-payment/OttpContext';
 import { OttpAction } from '../providers/one-time-premium-payment/types';
-import { CancelDialogLink } from '../transactions/CancelDialogLink';
+import { CancelDialogLink } from './CancelDialogLink';
 
 export const dateInvalidMessage = 'Please enter a valid date';
 export const dateOutOfRangeMessage =

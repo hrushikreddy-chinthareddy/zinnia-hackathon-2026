@@ -28,7 +28,7 @@ import { AccountType } from '../pii/AccountType';
 import { BankName } from '../pii/BankName';
 import { useOttp } from '../providers/one-time-premium-payment/OttpContext';
 import { OttpState } from '../providers/one-time-premium-payment/types';
-import { CancelDialogLink } from '../transactions/CancelDialogLink';
+import { CancelDialogLink } from './CancelDialogLink';
 
 // TODO: UPDATE COPY!!!!
 const loadingStrings = [

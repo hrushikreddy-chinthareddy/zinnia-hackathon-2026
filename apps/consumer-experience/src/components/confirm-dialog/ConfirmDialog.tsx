@@ -3,9 +3,9 @@ import { Button, Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import styles from './ConfirmDialogLink.module.css';
+import styles from './ConfirmDialog.module.css';
 
-export interface ConfirmDialogLinkProps {
+export interface ConfirmDialogProps {
   cancelText?: string;
   cancelCallback?: () => void;
   confirmCallback?: () => void;
@@ -15,8 +15,7 @@ export interface ConfirmDialogLinkProps {
   title?: string;
 }
 
-
-export const ConfirmDialogLink: React.FC<ConfirmDialogLinkProps> = ({
+export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   cancelText = 'No',
   cancelCallback,
   confirmCallback,
@@ -24,7 +23,7 @@ export const ConfirmDialogLink: React.FC<ConfirmDialogLinkProps> = ({
   linkText = 'Open',
   message,
   title = 'Are you sure?',
-}: ConfirmDialogLinkProps) => {
+}: ConfirmDialogProps) => {
   const [open, setOpen] = useState(false);
 
   const cancel = () => {
@@ -35,12 +34,14 @@ export const ConfirmDialogLink: React.FC<ConfirmDialogLinkProps> = ({
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
-        <span>
-          <Button className={styles.confirmTrigger} mode="link">{linkText}</Button>
-        </span>
+        <Button className={styles.confirmTrigger} mode="link">
+          {linkText}
+        </Button>
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay className={clsx(styles.confirmDialogOverlay, 'DialogOverlay')} />
+        <Dialog.Overlay
+          className={clsx(styles.confirmDialogOverlay, 'DialogOverlay')}
+        />
         <Dialog.Content className={styles.confirmDialog}>
           <Dialog.Title className={clsx(styles.title)}>
             {title}
@@ -50,10 +51,19 @@ export const ConfirmDialogLink: React.FC<ConfirmDialogLinkProps> = ({
               </Button>
             </Dialog.Close>
           </Dialog.Title>
-          <Dialog.Description className={clsx(styles.message, 'typography-content-body')}>{message}</Dialog.Description>
+          <Dialog.Description
+            className={clsx(styles.message, 'typography-content-body')}
+          >
+            {message}
+          </Dialog.Description>
           <div className={styles.buttons}>
             <Dialog.DialogClose asChild>
-              <Button mode="primary" onClick={() => { confirmCallback?.() }}>
+              <Button
+                mode="primary"
+                onClick={() => {
+                  confirmCallback?.();
+                }}
+              >
                 {confirmText}
               </Button>
             </Dialog.DialogClose>
