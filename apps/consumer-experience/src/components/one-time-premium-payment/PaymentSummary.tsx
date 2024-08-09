@@ -16,7 +16,9 @@ import { useFormStatus } from 'react-dom';
 
 import { ClientApi } from '@/services/client-http';
 import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
+import { logError } from '@/utils/logging/server-logging';
 
+import { CancelDialogLink } from './CancelDialogLink';
 import { FormHeader } from './FormHeader';
 import { FormStepWrapper } from './FormStepWrapper';
 import styles from './OneTimePremiumPayment.module.css';
@@ -28,7 +30,6 @@ import { AccountType } from '../pii/AccountType';
 import { BankName } from '../pii/BankName';
 import { useOttp } from '../providers/one-time-premium-payment/OttpContext';
 import { OttpState } from '../providers/one-time-premium-payment/types';
-import { CancelDialogLink } from './CancelDialogLink';
 
 // TODO: UPDATE COPY!!!!
 const loadingStrings = [
@@ -191,7 +192,6 @@ export const PaymentSummary = ({
   planCode,
   policyNumber,
 }: {
-  moveToNextStep?: () => void;
   planCode: string;
   policyNumber: string;
 }) => {
@@ -225,7 +225,7 @@ export const PaymentSummary = ({
           <Link
             className="mt-2xl"
             variant="button"
-            text="Close"
+            text="Return to premium page"
             href={paymentUrl({ planCode, policyNumber })}
           />
         </div>
@@ -241,23 +241,31 @@ export const PaymentSummary = ({
       bankId: state.payorBank?.bankId,
     };
 
-    // TODO: should i move this queries?
-    const response = await ClientApi.post(
-      `/api/bpm/${planCode}/${policyNumber}/onetimepremium`,
-      JSON.stringify(ottpRequest),
-      {
-        headers: { 'Content-Type': 'application/json' },
+    try {
+      // TODO: should i move this to queries?
+      const response = await ClientApi.post(
+        `/api/bpm/${planCode}/${policyNumber}/onetimepremium`,
+        JSON.stringify(ottpRequest),
+        {
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+      const parsedResponse = await response.json();
+
+      // TODO: IF a user presses back (in browser) from here, they go back to step 2
+      // not the end of the world but should probably have something else happen
+      if (parsedResponse.error) {
+        setError(response.statusText);
+      } else {
+        router.push(currentStepInfo?.nextStepUrl);
       }
-    );
-
-    const parsedResponse = await response.json();
-
-    // TODO: IF a user presses back (in browser) from here, they go back to step 2
-    // not the end of the world but should probably have something else happen
-    if (parsedResponse.error) {
-      setError(response.statusText);
-    } else {
-      router.push(currentStepInfo?.nextStepUrl);
+    } catch (error) {
+      logError('Error submitting one time premium payment', {
+        method: 'post',
+        file: 'PaymentSummary.tsx',
+        function: 'route handler',
+      });
+      setError('Could not submit payment');
     }
   };
 
@@ -266,7 +274,6 @@ export const PaymentSummary = ({
       currentStep={Steps.SUMMARY}
       planCode={planCode}
       policyNumber={policyNumber}
-      // TODO: remove this once using route handler
       hideHeader
     >
       <form action={submitPayment}>
