@@ -22,6 +22,7 @@ export default async function PremiumPayments({
       <UpcomingPremium
         planCode={params.planCode}
         policyNumber={params.policyNumber}
+        title="Next upcoming premium"
         extended
       />
       <CallForAssistance customInstruction="to make a payment." />

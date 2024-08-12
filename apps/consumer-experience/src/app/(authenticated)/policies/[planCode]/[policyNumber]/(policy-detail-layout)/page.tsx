@@ -99,7 +99,7 @@ export default async function Page({
                 color="var(--color-base-icon-icon-dark)"
               />
               <span className="typography-labels-field-label ml-md">
-                Profile
+                Policy Profile
               </span>
             </div>
           </ClickableCardContainer.LinkContent>

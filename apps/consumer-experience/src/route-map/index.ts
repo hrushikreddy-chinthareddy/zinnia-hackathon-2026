@@ -39,7 +39,7 @@ export const routeMap: Index<RouteMap> = {
   [RouteKey.PROFILE]: {
     destination: '/policies/[planCode]/[policyNumber]/profile',
     source: '/profile',
-    title: 'Profile',
+    title: 'Policy Profile',
   },
   [RouteKey.DOCUMENTS]: {
     destination: '/policies/[planCode]/[policyNumber]/documents',

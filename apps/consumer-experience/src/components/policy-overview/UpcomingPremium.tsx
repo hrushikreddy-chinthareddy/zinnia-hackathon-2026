@@ -17,16 +17,18 @@ import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 import styles from './PolicyOverview.module.css';
 import { defaultStep, getStepInfo } from '../one-time-premium-payment/steps';
 
-const UPCOMING_PREMIUM = 'Upcoming premium';
+const UPCOMING_PREMIUM = 'Premium';
 
 export const UpcomingPremium = async ({
   planCode,
   policyNumber,
   extended,
+  title = UPCOMING_PREMIUM,
 }: {
   planCode: string;
   policyNumber: string;
   extended?: boolean;
+  title?: string;
 }) => {
   const { data, error } = await getUpcomingPremium({
     planCode,
@@ -86,17 +88,6 @@ export const UpcomingPremium = async ({
               label: 'go to payment history page',
             },
           },
-          {
-            content: (
-              <span className="typography-labels-field-label my-lg">
-                Payment details
-              </span>
-            ),
-            linkTo: {
-              url: `/policies/${planCode}/${policyNumber}/premium/details`,
-              label: 'go to payment details page',
-            },
-          },
         ],
       })}
     >
@@ -121,7 +112,7 @@ export const UpcomingPremium = async ({
                     />,
                   ]}
                 >
-                  {UPCOMING_PREMIUM}
+                  {title}
                 </Label>
               }
               caption={paymentCaption()}
