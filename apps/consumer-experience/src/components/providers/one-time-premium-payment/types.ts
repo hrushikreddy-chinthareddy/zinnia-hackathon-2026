@@ -1,4 +1,3 @@
-import { AccountType } from '@zinnia/api-types/types/sor';
 import { z } from 'zod';
 
 import { BankDetail } from '@/components/person-data/types';
@@ -16,6 +15,21 @@ const payorBankSchema = z.object({
   appliesToPartyId: z.string(),
 }) satisfies z.ZodType<Partial<BankDetail>>;
 
+const paymentAmountSchema = z.object({
+  plain: z
+    .number()
+    .min(1)
+    .refine(amount => amount >= 1, {
+      message: 'Amount must be greater than 0',
+    }),
+  withFees: z
+    .number()
+    .min(1)
+    .refine(amount => amount >= 1, {
+      message: 'Amount must be greater than 0',
+    }),
+});
+
 export const summarySchema = z.object({
   payorBank: payorBankSchema,
 });
@@ -23,14 +37,14 @@ export const summarySchema = z.object({
 export const selectBankSchema = z.object({
   // This validates against `YYYY-MM-DD` from zod, which is same as ZAHARA_DATE_FORMAT
   effectiveDate: z.string().date(),
-  paymentAmount: z.number().min(1),
+  paymentAmount: paymentAmountSchema,
 });
 
 export type Action = { type: OttpAction; payload: any };
 export type Dispatch = (action: Action) => void;
 export interface OttpState {
   effectiveDate: string;
-  paymentAmount: number;
+  paymentAmount: z.infer<typeof paymentAmountSchema>;
   payorBank: BankDetail;
   paymentFee?: number;
 }

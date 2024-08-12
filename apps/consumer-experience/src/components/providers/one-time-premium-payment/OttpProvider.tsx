@@ -8,16 +8,23 @@ import { Action, OttpAction, OttpState } from './types';
 
 interface OttpProviderProps extends PropsWithChildren {}
 
-// TODO: fix keys to be more consistent
-
 function ottpReducer(state: OttpState, action: Action): OttpState {
   switch (action.type) {
     case OttpAction.SET_EFFECTIVE_DATE:
       return { ...state, effectiveDate: action.payload };
     case OttpAction.SET_PAYMENT_AMOUNT:
-      return { ...state, paymentAmount: action.payload };
+      const paymentWithFees =
+        state.paymentFee && action.payload
+          ? action.payload * (1 - state.paymentFee / 100)
+          : action.payload;
+      return {
+        ...state,
+        paymentAmount: { plain: action.payload, withFees: paymentWithFees },
+      };
     case OttpAction.SET_PAYOR_BANK:
       return { ...state, payorBank: action.payload };
+    case OttpAction.SET_PAYMENT_FEE:
+      return { ...state, paymentFee: action.payload };
 
     default:
       return state;
@@ -27,8 +34,12 @@ function ottpReducer(state: OttpState, action: Action): OttpState {
 const OttpProvider: React.FC<OttpProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(ottpReducer, {
     effectiveDate: '',
-    paymentAmount: 0,
+    paymentAmount: {
+      plain: 0,
+      withFees: 0,
+    },
     payorBank: {} as BankDetail,
+    paymentFee: 0,
   });
 
   const value = { state, dispatch };

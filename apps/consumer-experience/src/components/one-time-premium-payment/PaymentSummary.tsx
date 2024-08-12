@@ -137,7 +137,7 @@ const Summary = ({
           transactionSummary={[
             {
               label: <Label>Submitted Amount</Label>,
-              value: paymentAmount,
+              value: paymentAmount.plain,
             },
             {
               label: (
@@ -171,10 +171,7 @@ const Summary = ({
           ]}
           total={{
             label: <Label>Total deposit</Label>,
-            deposit:
-              paymentFee && paymentAmount
-                ? paymentAmount * paymentFee
-                : paymentAmount || 0,
+            deposit: paymentAmount.withFees,
           }}
         />
       </div>
@@ -235,7 +232,7 @@ export const PaymentSummary = ({
 
   const submitPayment = async () => {
     const ottpRequest = {
-      paymentAmount: state.paymentAmount,
+      paymentAmount: state.paymentAmount.withFees,
       effectiveDate: state.effectiveDate,
       partyId: state.payorBank?.appliesToPartyId,
       bankId: state.payorBank?.bankId,

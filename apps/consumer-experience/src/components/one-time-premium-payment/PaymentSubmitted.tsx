@@ -23,7 +23,6 @@ export const PaymentSubmitted = ({
   });
 
   return (
-    // TODO: this shouldn't have the back arrow!!!
     <FormStepWrapper
       currentStep={Steps.SUBMITTED}
       planCode={planCode}
@@ -34,8 +33,7 @@ export const PaymentSubmitted = ({
       <div className="typography-content-body">
         <p>
           <span className="typography-content-body-bold">
-            {/* TODO: amount minus the fees */}
-            {formatUSDollars(paymentAmount)}
+            {formatUSDollars(paymentAmount.withFees)}
           </span>{' '}
           one-time premium payment{' '}
           {payorBank && (

@@ -60,7 +60,7 @@ export const SelectAmount = ({
     effectiveDate: string;
   }>({
     defaultValues: {
-      paymentAmount: statePaymentAmount || undefined,
+      paymentAmount: statePaymentAmount.plain || undefined,
       effectiveDate: stateEffectiveDate
         ? dayjs(stateEffectiveDate).format(DEFAULT_DATE_FORMAT)
         : undefined,
@@ -80,7 +80,6 @@ export const SelectAmount = ({
   }, [dispatch, paymentFee]);
 
   const saveAndMove = () => {
-    const nextUrl = stepInfo.nextStepUrl;
     dispatch({
       type: OttpAction.SET_EFFECTIVE_DATE,
       payload: dayjs(getValues('effectiveDate')).format(ZAHARA_DATE_FORMAT),
@@ -89,7 +88,7 @@ export const SelectAmount = ({
       type: OttpAction.SET_PAYMENT_AMOUNT,
       payload: Number(getValues('paymentAmount')),
     });
-    router.push(nextUrl);
+    router.push(stepInfo.nextStepUrl);
   };
 
   return (
