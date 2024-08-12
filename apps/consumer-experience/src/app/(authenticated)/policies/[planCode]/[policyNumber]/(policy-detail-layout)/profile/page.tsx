@@ -1,8 +1,4 @@
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from '@tanstack/react-query';
+import { QueryClient } from '@tanstack/react-query';
 import { Address, Email, Phone } from '@zinnia/api-types/types/sor';
 import { IconType, Label } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
@@ -44,14 +40,7 @@ export default async function Profile({ params }: Props) {
   });
   const queryClient = new QueryClient();
 
-  queryClient.prefetchQuery({
-    queryKey: [QueryKeys.POLICY_PROFILE],
-    queryFn: () =>
-      getPolicyProfileData({
-        planCode: params.planCode,
-        policyNumber: params.policyNumber,
-      }),
-  });
+  queryClient.setQueryData([QueryKeys.POLICY_PROFILE], data);
 
   const flags = await getFeatureFlags();
   const showAddEditBank = flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_BANK_ACCOUNT];
@@ -118,13 +107,12 @@ export default async function Profile({ params }: Props) {
 
   const bank = () => {
     return (
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <BankList
-          planCode={params.planCode}
-          policyNumber={params.policyNumber}
-          showAddEditBank={showAddEditBank}
-        />
-      </HydrationBoundary>
+      <BankList
+        planCode={params.planCode}
+        policyNumber={params.policyNumber}
+        showAddEditBank={showAddEditBank}
+        initialProfileData={data}
+      />
     );
   };
 

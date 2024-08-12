@@ -1,11 +1,12 @@
 'use client';
 
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { FC, useRef } from 'react';
 
 import { getPolicyProfile } from '@/queries/policy-queries';
 import { QueryKeys } from '@/queries/query-keys';
 import { useBpmStore } from '@/store/store';
+import { PolicyProfile } from '@/types/policy';
 import { shouldStopBankPolling } from '@/utils/policy';
 
 import styles from './BankList.module.css';
@@ -20,18 +21,20 @@ interface BankListProps {
   planCode: string;
   policyNumber: string;
   showAddEditBank: boolean;
+  initialProfileData?: PolicyProfile | null;
 }
 
 export const BankList: FC<BankListProps> = ({
   planCode,
   policyNumber,
   showAddEditBank,
+  initialProfileData,
 }) => {
   const bpmAction = useBpmStore(state => state.bpmAction);
   const pollCount = useRef(0);
   const removeBpmAction = useBpmStore(state => state.removeBpmAction);
 
-  const { data } = useSuspenseQuery({
+  const { data } = useQuery({
     queryKey: [QueryKeys.POLICY_PROFILE],
     refetchInterval: ({ state }) => {
       if (
@@ -48,6 +51,7 @@ export const BankList: FC<BankListProps> = ({
       pollCount.current++;
       return POLL_INTERVAL;
     },
+    initialData: initialProfileData,
     queryFn: () => getPolicyProfile(planCode, policyNumber),
   });
 
