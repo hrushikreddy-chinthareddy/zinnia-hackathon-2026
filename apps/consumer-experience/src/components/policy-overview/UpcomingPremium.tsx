@@ -16,8 +16,9 @@ import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 import styles from './PolicyOverview.module.css';
 import { defaultStep, getStepInfo } from '../one-time-premium-payment/steps';
+import { toSentenceCase } from '@zinnia/utils';
 
-const UPCOMING_PREMIUM = 'Premium';
+const UPCOMING_PREMIUM = 'Premiums';
 
 export const UpcomingPremium = async ({
   planCode,
@@ -74,67 +75,55 @@ export const UpcomingPremium = async ({
   );
 
   return (
-    <ClickableCardContainer
-      {...(extended && {
-        listItems: [
-          {
-            content: (
-              <span className="typography-labels-field-label my-lg">
-                Payment history
-              </span>
-            ),
-            linkTo: {
-              url: `/policies/${planCode}/${policyNumber}/premium/history`,
-              label: 'go to payment history page',
-            },
-          },
-        ],
-      })}
-    >
-      <>
-        <ClickableCardContainer.LinkContent
-          linkTo={{
-            url: extended
-              ? ''
-              : `/policies/${planCode}/${policyNumber}/premium`,
-            label: 'go to premium payments page',
-          }}
-        >
-          <div className={styles.content}>
-            <Icon type={IconType.AUTOPAY} className={styles.icon} />
-            <FieldData
-              Label={
-                <Label
-                  interactiveElements={[
-                    <UpcomingPremiumPopover
-                      key="upcoming-popover"
-                      productType={productType}
-                    />,
-                  ]}
-                >
-                  {title}
-                </Label>
-              }
-              caption={paymentCaption()}
-            >
-              {upcomingPremContent}
-            </FieldData>
-          </div>
-        </ClickableCardContainer.LinkContent>
-        {extended && (
-          <ClickableCardContainer.AdditionalContent>
-            {featureFlagDecisions?.[FEATURE_FLAGS.ONE_TIME_PREMIUM_PAYMENT] && (
-              <div className={styles.additionalContent}>
-                <Link
-                  size="small"
-                  href={`${getStepInfo({ step: defaultStep, policyNumber, planCode }).stepUrl}`}
-                  text="Make a one-time payment"
-                />
-              </div>
-            )}
-          </ClickableCardContainer.AdditionalContent>
-        )}
-      </>
-    </ClickableCardContainer>
+    <>
+      <ClickableCardContainer>
+        <>
+          <ClickableCardContainer.LinkContent
+            linkTo={{
+              url: extended
+                ? ''
+                : `/policies/${planCode}/${policyNumber}/premium`,
+              label: 'go to premium payments page',
+            }}
+          >
+            <div className={styles.content}>
+              <Icon type={IconType.AUTOPAY} className={styles.icon} />
+              <FieldData
+                Label={
+                  <Label
+                    interactiveElements={[
+                      <UpcomingPremiumPopover
+                        key="upcoming-popover"
+                        productType={productType}
+                      />,
+                    ]}
+                  >
+                    {title}
+                  </Label>
+                }
+                caption={paymentCaption()}
+              >
+                {upcomingPremContent}
+              </FieldData>
+            </div>
+          </ClickableCardContainer.LinkContent>
+          {extended && (
+            <ClickableCardContainer.AdditionalContent>
+              {featureFlagDecisions?.[
+                FEATURE_FLAGS.ONE_TIME_PREMIUM_PAYMENT
+              ] && (
+                <div className={styles.additionalContent}>
+                  <Link
+                    size="small"
+                    href={`${getStepInfo({ step: defaultStep, policyNumber, planCode }).stepUrl}`}
+                    text="Make a one-time payment"
+                  />
+                </div>
+              )}
+            </ClickableCardContainer.AdditionalContent>
+          )}
+        </>
+      </ClickableCardContainer>
+    </>
   );
 };

@@ -12,6 +12,7 @@ import { LapsedPolicy } from '@/components/policy-overview/non-active-statuses/L
 import { SurrenderedPolicy } from '@/components/policy-overview/non-active-statuses/SurrenderedPolicy';
 import { UpcomingPremium } from '@/components/policy-overview/UpcomingPremium';
 import { getPolicyForHeaderDetails } from '@/services';
+import { toSentenceCase } from '@zinnia/utils';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
@@ -99,7 +100,7 @@ export default async function Page({
                 color="var(--color-base-icon-icon-dark)"
               />
               <span className="typography-labels-field-label ml-md">
-                Policy Profile
+                {toSentenceCase('Payment profile')}
               </span>
             </div>
           </ClickableCardContainer.LinkContent>
