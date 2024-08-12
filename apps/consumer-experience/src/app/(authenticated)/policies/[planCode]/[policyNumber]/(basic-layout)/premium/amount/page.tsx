@@ -19,12 +19,10 @@ export default async function SelectBankPage({
   });
 
   return (
-    <>
-      <SelectAmount
-        policyNumber={policyNumber}
-        planCode={planCode}
-        paymentFee={data?.fee || 0}
-      />
-    </>
+    <SelectAmount
+      policyNumber={policyNumber}
+      planCode={planCode}
+      paymentFee={data?.fee || 0}
+    />
   );
 }

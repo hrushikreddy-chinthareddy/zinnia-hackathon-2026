@@ -9,6 +9,7 @@ import { FormStepWrapper } from './FormStepWrapper';
 import premiumStyles from './OneTimePremiumPayment.module.css';
 import { getStepInfo, Steps } from './steps';
 import { useOttp } from '../providers/one-time-premium-payment/OttpContext';
+import { Name } from '../pii/Name';
 
 export const PaymentSubmitted = ({
   policyNumber,
@@ -37,9 +38,12 @@ export const PaymentSubmitted = ({
           </span>{' '}
           one-time premium payment{' '}
           {payorBank && (
-            <span className="typography-content-body-bold">
-              from {payorBank?.nameOnAccount}
-            </span>
+            <>
+              <span>from</span>{' '}
+              <span className="typography-content-body-bold">
+                <Name displayName={payorBank.nameOnAccount} />
+              </span>
+            </>
           )}{' '}
           was submitted.{' '}
         </p>
