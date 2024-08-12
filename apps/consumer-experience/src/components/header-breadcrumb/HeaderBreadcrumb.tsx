@@ -48,12 +48,12 @@ export const HeaderBreadcrumb = ({
     let heading;
     // if the policy number is the route key it means we are on a Policy Detail page
     if (params.policyNumber === routeKey) {
-      heading = 'Policy details';
+      heading = 'Policy overview';
       // if the beneficiary id is the route key it means we are on a Beneficiary Detail page
     } else if (params.beneficiary === routeKey) {
       heading = getPageTitle(RouteKey.BENEFICIARY);
     } else {
-      heading = routeMap[`/${routeKey}`]?.title ?? 'Policy details';
+      heading = routeMap[`/${routeKey}`]?.title ?? 'Policy overview';
     }
     setFormatTitle(toTitleCase(heading));
   }, [params.beneficiary, params.policyNumber, pathname, title]);
