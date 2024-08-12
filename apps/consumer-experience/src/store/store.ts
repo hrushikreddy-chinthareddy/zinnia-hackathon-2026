@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
+import { devtools, persist } from 'zustand/middleware';
 
 import { BankDetail } from '@/components/person-data/types';
 
@@ -25,11 +25,14 @@ export interface BpmBankAction {
 }
 
 export const useBpmStore = create(
-  devtools<BpmStoreTypes>(set => ({
-    bpmAction: null,
-    updateBpmAction: (values: BpmBankAction) =>
-      set({ bpmAction: values }, undefined, 'bpm/updateBpmAction'),
-    removeBpmAction: () =>
-      set({ bpmAction: null }, undefined, 'bpm/removeBpmAction'),
-  }))
+  persist(
+    devtools<BpmStoreTypes>(set => ({
+      bpmAction: null,
+      updateBpmAction: (values: BpmBankAction) =>
+        set({ bpmAction: values }, undefined, 'bpm/updateBpmAction'),
+      removeBpmAction: () =>
+        set({ bpmAction: null }, undefined, 'bpm/removeBpmAction'),
+    })),
+    { name: 'bpm' }
+  )
 );

@@ -16,7 +16,6 @@ import { Addresses } from '@/components/person-data/Addresses';
 import { Emails } from '@/components/person-data/Emails';
 import { Phones } from '@/components/person-data/Phones';
 import { FullName } from '@/components/pii/FullName';
-import { getPolicyProfile } from '@/queries/policy-queries';
 import { QueryKeys } from '@/queries/query-keys';
 import { getPageTitle, RouteKey } from '@/route-map';
 import { getPolicyProfileData } from '@/services';
@@ -47,7 +46,11 @@ export default async function Profile({ params }: Props) {
 
   queryClient.prefetchQuery({
     queryKey: [QueryKeys.POLICY_PROFILE],
-    queryFn: () => getPolicyProfile(params.planCode, params.policyNumber),
+    queryFn: () =>
+      getPolicyProfileData({
+        planCode: params.planCode,
+        policyNumber: params.policyNumber,
+      }),
   });
 
   const flags = await getFeatureFlags();

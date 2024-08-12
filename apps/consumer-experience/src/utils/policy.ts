@@ -8,7 +8,7 @@ import { PolicyProfile } from '@/types/policy';
  * @returns
  */
 export const shouldStopBankPolling = (
-  data?: PolicyProfile,
+  data?: PolicyProfile | null,
   bpmAction?: BpmBankAction | null
 ) => {
   if (!bpmAction) return true;

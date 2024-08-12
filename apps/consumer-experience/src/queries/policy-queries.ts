@@ -1,3 +1,4 @@
+import { ApiResponse } from '@/services';
 import { ClientApi } from '@/services/client-http';
 import { PolicyProfile } from '@/types/policy';
 
@@ -5,8 +6,13 @@ export const getPolicyProfile = async (
   planCode: string,
   policyNumber: string
 ) => {
-  const { data }: { data: PolicyProfile } = await (
-    await ClientApi.get(`/api/policies/${planCode}/${policyNumber}`)
+  const response: ApiResponse<PolicyProfile> = await (
+    await ClientApi.get(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/policies/${planCode}/${policyNumber}/profile`
+    )
   ).json();
-  return data;
+  if (response.error || !response) {
+    throw response.error;
+  }
+  return response.data;
 };
