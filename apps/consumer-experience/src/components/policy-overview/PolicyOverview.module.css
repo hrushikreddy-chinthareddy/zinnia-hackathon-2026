@@ -44,6 +44,11 @@
   }
 }
 
+.disabledTransaction {
+  color: var(--color-states-inactive-inactive-text-link);
+  pointer-events: none;
+}
+
 @media (width > 767px) {
   .additionalContent {
     flex-direction: row;

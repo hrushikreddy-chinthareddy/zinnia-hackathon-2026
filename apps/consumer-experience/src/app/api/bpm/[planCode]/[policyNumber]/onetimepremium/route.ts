@@ -3,7 +3,10 @@ import dayjs from 'dayjs';
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 
-import { submitOneTimePremiumPayment } from '@/services/bpm';
+import {
+  getPremiumValidation,
+  submitOneTimePremiumPayment,
+} from '@/services/bpm';
 import { PolicyRequestInputs } from '@/types/policy';
 import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
 
@@ -12,6 +15,17 @@ export async function POST(
   { params }: { params: PolicyRequestInputs }
 ) {
   const { planCode, policyNumber } = params;
+  const ottpValidation = await getPremiumValidation({ planCode, policyNumber });
+
+  if (ottpValidation.error) {
+    return NextResponse.json({ data: null, error: { status: 500 } });
+  } else if (!ottpValidation.data?.isEligible) {
+    return NextResponse.json({
+      data: null,
+      error: { status: 400, message: ottpValidation.data?.reason },
+    });
+  }
+
   const paymentDetails = await _request.json();
 
   // TODO: should this go here or into the function that calls it?

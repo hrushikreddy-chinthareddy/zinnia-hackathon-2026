@@ -1,6 +1,6 @@
 import { PolicyStatus } from '@zinnia/api-types/types/sor';
 import { Label, Icon, IconType, Link } from '@zinnia/bloom/components';
-import { toSentenceCase } from '@zinnia/utils';
+import clsx from 'clsx';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
@@ -8,10 +8,12 @@ import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { UpcomingPremiumPopover } from '@/components/policy-overview/UpcomingPremiumPopover';
 import { getUpcomingPremium } from '@/services';
+import { getPremiumEligibility } from '@/services/bpm';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
+import { logError } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
@@ -31,12 +33,43 @@ export const UpcomingPremium = async ({
   extended?: boolean;
   title?: string;
 }) => {
-  const { data, error } = await getUpcomingPremium({
-    planCode,
-    policyNumber,
-  });
-
   const featureFlagDecisions = await getFeatureFlags();
+
+  const premDataCalls = [
+    getUpcomingPremium({
+      planCode,
+      policyNumber,
+    }),
+  ] as Promise<any>[];
+
+  if (featureFlagDecisions?.[FEATURE_FLAGS.ONE_TIME_PREMIUM_PAYMENT]) {
+    premDataCalls.push(
+      getPremiumEligibility({
+        planCode,
+        policyNumber,
+      })
+    );
+  }
+
+  const [upcomingResult, ottpResult] = await Promise.allSettled(premDataCalls);
+
+  if (upcomingResult?.status === 'rejected') {
+    logError('Error fetching upcoming premium', upcomingResult.reason);
+  }
+
+  const { data, error } =
+    upcomingResult?.status === 'fulfilled'
+      ? upcomingResult.value
+      : { data: null, error: null };
+
+  if (ottpResult?.status === 'rejected') {
+    logError('Error fetching upcoming premium', ottpResult.reason);
+  }
+
+  const ottpPaymentDisabled =
+    ottpResult?.status !== 'fulfilled' ||
+    ottpResult?.value?.data?.reason ||
+    ottpResult?.value?.error;
 
   if (error) {
     return (
@@ -53,7 +86,6 @@ export const UpcomingPremium = async ({
   const { amount, nextActivityDate, policyStatus, productType } = data!;
   let currentAmount = amount;
 
-  // TODO: add locked status here once confirmed what that is
   if (policyStatus === PolicyStatus.LAPSE) {
     currentAmount = 0;
   }
@@ -107,10 +139,20 @@ export const UpcomingPremium = async ({
         <ClickableCardContainer.AdditionalContent>
           {featureFlagDecisions?.[FEATURE_FLAGS.ONE_TIME_PREMIUM_PAYMENT] && (
             <div className={styles.additionalContent}>
+              {/* TODO: once bloom link updates released, update this to use the new state prop rather than setting styles here*/}
               <Link
                 size="small"
-                href={`${getStepInfo({ step: defaultStep, policyNumber, planCode }).stepUrl}`}
+                href={
+                  ottpPaymentDisabled
+                    ? ''
+                    : `${getStepInfo({ step: defaultStep, policyNumber, planCode }).stepUrl}`
+                }
                 text="Make a one-time payment"
+                className={clsx(
+                  ottpPaymentDisabled && styles.disabledTransaction
+                )}
+                role={ottpPaymentDisabled ? 'link' : ''}
+                aria-disabled={ottpPaymentDisabled}
               />
             </div>
           )}
