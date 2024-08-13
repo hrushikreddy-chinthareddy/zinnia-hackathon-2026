@@ -34,11 +34,13 @@ export const getOneTimeWithdrawalEligibility = async (
   const response = await parseAPIResponse(rawResponse);
 
   // This endpoint returns 400 "not found" when the policy is not eligible withdrawals
-  if (rawResponse.status !== 200 && rawResponse.status !== 400) {
+  if (rawResponse.status > 400) {
     logError(
       'Error fetching withdrawal eligibility',
       await logApiNotOkDetails({ rawResponse, parsedResponse: response })
     );
+
+    throw new Error('Error fetching OneTimeWithdrawalEligibility');
   }
 
   if (rawResponse.status === 400) {
@@ -66,11 +68,13 @@ export const getPolicyLoanEligibility = async (
   const response = await parseAPIResponse(rawResponse);
 
   // This endpoint returns 400 "not found" when the policy is not eligible withdrawals
-  if (rawResponse.status !== 200 && rawResponse.status !== 400) {
+  if (rawResponse.status > 400) {
     logError(
       'Error fetching loan eligibility',
       await logApiNotOkDetails({ rawResponse, parsedResponse: response })
     );
+
+    throw new Error('Error fetching PolicyLoanEligibility');
   }
 
   if (rawResponse.status === 400) {
@@ -98,11 +102,13 @@ export const getOneTimePremiumEligibility = async (
   const response = await parseAPIResponse(rawResponse);
 
   // This endpoint returns 400 "not found" when the policy is not eligible withdrawals
-  if (rawResponse.status !== 200 && rawResponse.status !== 400) {
+  if (rawResponse.status > 400) {
     logError(
       'Error fetching one time premium eligibility',
       await logApiNotOkDetails({ rawResponse, parsedResponse: response })
     );
+
+    throw new Error('Error fetching PolicyLoanEligibility');
   }
 
   if (rawResponse.status === 400) {
@@ -130,11 +136,13 @@ export const getOneTimePremiumValidation = async (
   const response = await parseAPIResponse(rawResponse);
 
   // This endpoint returns 400 "not found" when the policy is not eligible withdrawals
-  if (rawResponse.status !== 200 && rawResponse.status !== 400) {
+  if (rawResponse.status > 400) {
     logError(
       'Error fetching one time premium validation',
       await logApiNotOkDetails({ rawResponse, parsedResponse: response })
     );
+
+    throw new Error('Error fetching PolicyLoanEligibility');
   }
 
   if (rawResponse.status === 400) {

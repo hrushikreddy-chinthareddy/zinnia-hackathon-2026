@@ -17,6 +17,7 @@ export async function POST(
   const { planCode, policyNumber } = params;
   const ottpValidation = await getPremiumValidation({ planCode, policyNumber });
 
+  // If validation call fails or validation returns as not eligible, return before trying to submit the one time premium
   if (ottpValidation.error) {
     return NextResponse.json({ data: null, error: { status: 500 } });
   } else if (!ottpValidation.data?.isEligible) {
