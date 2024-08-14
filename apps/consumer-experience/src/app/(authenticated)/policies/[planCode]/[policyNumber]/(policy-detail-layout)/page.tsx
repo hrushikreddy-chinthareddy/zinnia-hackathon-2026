@@ -1,5 +1,6 @@
 import { PolicyStatus } from '@zinnia/api-types/types/sor';
 import { Icon, IconType } from '@zinnia/bloom/components';
+import { toSentenceCase } from '@zinnia/utils';
 import { Metadata } from 'next';
 
 import { AccountValue } from '@/components/account-value/AccountValue';
@@ -12,7 +13,6 @@ import { LapsedPolicy } from '@/components/policy-overview/non-active-statuses/L
 import { SurrenderedPolicy } from '@/components/policy-overview/non-active-statuses/SurrenderedPolicy';
 import { UpcomingPremium } from '@/components/policy-overview/UpcomingPremium';
 import { getPolicyForHeaderDetails } from '@/services';
-import { toSentenceCase } from '@zinnia/utils';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
@@ -100,7 +100,7 @@ export default async function Page({
                 color="var(--color-base-icon-icon-dark)"
               />
               <span className="typography-labels-field-label ml-md">
-                {toSentenceCase('Payment profile')}
+                {toSentenceCase('policy profile')}
               </span>
             </div>
           </ClickableCardContainer.LinkContent>
