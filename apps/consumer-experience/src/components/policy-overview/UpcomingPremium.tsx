@@ -1,5 +1,6 @@
 import { PolicyStatus } from '@zinnia/api-types/types/sor';
 import { Label, Icon, IconType, Link } from '@zinnia/bloom/components';
+import { toSentenceCase } from '@zinnia/utils';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
@@ -16,7 +17,6 @@ import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 import styles from './PolicyOverview.module.css';
 import { defaultStep, getStepInfo } from '../one-time-premium-payment/steps';
-import { toSentenceCase } from '@zinnia/utils';
 
 const UPCOMING_PREMIUM = 'Premiums';
 
@@ -75,55 +75,47 @@ export const UpcomingPremium = async ({
   );
 
   return (
-    <>
-      <ClickableCardContainer>
-        <>
-          <ClickableCardContainer.LinkContent
-            linkTo={{
-              url: extended
-                ? ''
-                : `/policies/${planCode}/${policyNumber}/premium`,
-              label: 'go to premium payments page',
-            }}
-          >
-            <div className={styles.content}>
-              <Icon type={IconType.AUTOPAY} className={styles.icon} />
-              <FieldData
-                Label={
-                  <Label
-                    interactiveElements={[
-                      <UpcomingPremiumPopover
-                        key="upcoming-popover"
-                        productType={productType}
-                      />,
-                    ]}
-                  >
-                    {title}
-                  </Label>
-                }
-                caption={paymentCaption()}
+    <ClickableCardContainer>
+      <ClickableCardContainer.LinkContent
+        linkTo={{
+          url: extended ? '' : `/policies/${planCode}/${policyNumber}/premium`,
+          label: 'go to premium payments page',
+        }}
+      >
+        <div className={styles.content}>
+          <Icon type={IconType.AUTOPAY} className={styles.icon} />
+          <FieldData
+            Label={
+              <Label
+                interactiveElements={[
+                  <UpcomingPremiumPopover
+                    key="upcoming-popover"
+                    productType={productType}
+                  />,
+                ]}
               >
-                {upcomingPremContent}
-              </FieldData>
+                {title}
+              </Label>
+            }
+            caption={paymentCaption()}
+          >
+            {upcomingPremContent}
+          </FieldData>
+        </div>
+      </ClickableCardContainer.LinkContent>
+      {extended && (
+        <ClickableCardContainer.AdditionalContent>
+          {featureFlagDecisions?.[FEATURE_FLAGS.ONE_TIME_PREMIUM_PAYMENT] && (
+            <div className={styles.additionalContent}>
+              <Link
+                size="small"
+                href={`${getStepInfo({ step: defaultStep, policyNumber, planCode }).stepUrl}`}
+                text="Make a one-time payment"
+              />
             </div>
-          </ClickableCardContainer.LinkContent>
-          {extended && (
-            <ClickableCardContainer.AdditionalContent>
-              {featureFlagDecisions?.[
-                FEATURE_FLAGS.ONE_TIME_PREMIUM_PAYMENT
-              ] && (
-                <div className={styles.additionalContent}>
-                  <Link
-                    size="small"
-                    href={`${getStepInfo({ step: defaultStep, policyNumber, planCode }).stepUrl}`}
-                    text="Make a one-time payment"
-                  />
-                </div>
-              )}
-            </ClickableCardContainer.AdditionalContent>
           )}
-        </>
-      </ClickableCardContainer>
-    </>
+        </ClickableCardContainer.AdditionalContent>
+      )}
+    </ClickableCardContainer>
   );
 };
