@@ -3,6 +3,8 @@ import { Button, Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useState } from 'react';
 
+import { zIndexOrder } from '@/utils/zIndexOrder';
+
 import styles from './ConfirmDialog.module.css';
 
 export interface ConfirmDialogProps {
@@ -40,9 +42,15 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay
-          className={clsx(styles.confirmDialogOverlay, 'DialogOverlay')}
+          style={{
+            zIndex: zIndexOrder.Overlay,
+          }}
+          className={clsx(styles.confirmDialogOverlay)}
         />
-        <Dialog.Content className={styles.confirmDialog}>
+        <Dialog.Content
+          className={styles.confirmDialog}
+          style={{ zIndex: zIndexOrder.Dialog }}
+        >
           <Dialog.Title className={clsx(styles.title)}>
             {title}
             <Dialog.Close asChild>
