@@ -42,6 +42,7 @@ export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
       onDateSelect = () => {},
       disableBeforeDate,
       disableAfterDate,
+      defaultDate,
       ...props
     },
     ref
@@ -52,9 +53,9 @@ export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
     const [calendarOpen, setCalendarOpen] = useState(false);
     const [inputWidth, setInputWidth] = useState(0);
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-      new Date(props.defaultValue)
+      defaultDate ? new Date(defaultDate) : undefined
     );
-    const [inputVal, setInputVal] = useState(props.defaultValue);
+    const [inputVal, setInputVal] = useState(defaultDate);
 
     const inputContainer = useRef<HTMLInputElement>(null);
     const innerInputRef = useRef<HTMLInputElement>(null);
@@ -140,7 +141,7 @@ export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
                   fieldStyles[status],
                   'typography-content-body'
                 )}
-                value={inputVal}
+                value={inputVal?.toString()}
                 onChange={handleDateChange}
                 {...props}
               />

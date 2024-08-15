@@ -121,7 +121,7 @@ export const SelectAmount = ({
                 onDateSelect={date =>
                   field.onChange(dayjs(date).format(DEFAULT_DATE_FORMAT))
                 }
-                defaultValue={formState.defaultValues?.effectiveDate || ''}
+                defaultDate={formState.defaultValues?.effectiveDate || ''}
                 disableAfterDate={new Date(sixtyDaysInFutureDay)}
                 disableBeforeDate={new Date()}
                 fieldStatus={
