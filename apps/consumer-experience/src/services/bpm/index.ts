@@ -32,7 +32,6 @@ export const getOneTimeWithdrawalEligibility = async (
   );
 
   const response = await parseAPIResponse(rawResponse);
-
   // This endpoint returns 400 "not found" when the policy is not eligible withdrawals
   if (rawResponse.status > 400) {
     logError(
@@ -121,7 +120,8 @@ export const getOneTimePremiumEligibility = async (
 };
 
 export const getOneTimePremiumValidation = async (
-  options: PolicyRequestInputs
+  options: PolicyRequestInputs,
+  ottpRequestDetails: any
 ) => {
   const { planCode, policyNumber } = options;
   const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/onetimepremium/validation`;
@@ -129,9 +129,13 @@ export const getOneTimePremiumValidation = async (
   //   throw new Error('Error fetching loan eligibility.');
   // }
 
-  const rawResponse = await ServerApi.post(url, JSON.stringify({}), {
-    headers: { 'Content-Type': 'application/json' },
-  });
+  const rawResponse = await ServerApi.post(
+    url,
+    JSON.stringify(ottpRequestDetails),
+    {
+      headers: { 'Content-Type': 'application/json' },
+    }
+  );
 
   const response = await parseAPIResponse(rawResponse);
 
@@ -283,7 +287,8 @@ export const getPremiumEligibility = async (
 };
 
 export const getPremiumValidation = async (
-  policyInputs: PolicyRequestInputs
+  policyInputs: PolicyRequestInputs,
+  ottpRequestDetails: any
 ): Promise<ApiResponse<TransactionEligbility>> => {
   logTrace('getPremiumValidation::start', {
     planCode: policyInputs.planCode,
@@ -291,7 +296,10 @@ export const getPremiumValidation = async (
   });
 
   try {
-    const ottpValidation = await getOneTimePremiumValidation(policyInputs);
+    const ottpValidation = await getOneTimePremiumValidation(
+      policyInputs,
+      ottpRequestDetails
+    );
 
     return {
       data: transformEligibility(ottpValidation),

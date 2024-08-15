@@ -15,17 +15,6 @@ export async function POST(
   { params }: { params: PolicyRequestInputs }
 ) {
   const { planCode, policyNumber } = params;
-  const ottpValidation = await getPremiumValidation({ planCode, policyNumber });
-
-  // If validation call fails or validation returns as not eligible, return before trying to submit the one time premium
-  if (ottpValidation.error) {
-    return NextResponse.json({ data: null, error: { status: 500 } });
-  } else if (!ottpValidation.data?.isEligible) {
-    return NextResponse.json({
-      data: null,
-      error: { status: 400, message: ottpValidation.data?.reason },
-    });
-  }
 
   const paymentDetails = await _request.json();
 
@@ -49,6 +38,21 @@ export async function POST(
     // TODO: do we need to pass this?
     // reverseInitiator: false
   };
+
+  const ottpValidation = await getPremiumValidation(
+    { planCode, policyNumber },
+    ottpRequest
+  );
+
+  // If validation call fails or validation returns as not eligible, return before trying to submit the one time premium
+  if (ottpValidation.error) {
+    return NextResponse.json({ data: null, error: { status: 500 } });
+  } else if (!ottpValidation.data?.isEligible) {
+    return NextResponse.json({
+      data: null,
+      error: { status: 400, message: ottpValidation.data?.reason },
+    });
+  }
 
   try {
     const response = await submitOneTimePremiumPayment(
