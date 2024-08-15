@@ -10,7 +10,7 @@ import {
 import { productTypeDisplay } from '@/utils/data';
 
 import styles from './PolicyOverview.module.css';
-const UPCOMING_PREMIUM = 'Upcoming premium';
+const UPCOMING_PREMIUM = 'Premium';
 
 export const UpcomingPremiumPopover = ({
   productType,

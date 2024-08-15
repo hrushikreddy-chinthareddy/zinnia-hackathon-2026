@@ -1,5 +1,6 @@
 import { PolicyStatus } from '@zinnia/api-types/types/sor';
 import { Icon, IconType } from '@zinnia/bloom/components';
+import { toSentenceCase } from '@zinnia/utils';
 import { Metadata } from 'next';
 
 import { AccountValue } from '@/components/account-value/AccountValue';
@@ -99,7 +100,7 @@ export default async function Page({
                 color="var(--color-base-icon-icon-dark)"
               />
               <span className="typography-labels-field-label ml-md">
-                Profile
+                {toSentenceCase('policy profile')}
               </span>
             </div>
           </ClickableCardContainer.LinkContent>
