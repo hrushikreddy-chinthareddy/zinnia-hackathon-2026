@@ -8,18 +8,23 @@ import { Action, OttpAction, OttpState } from './types';
 
 interface OttpProviderProps extends PropsWithChildren {}
 
+const calculatePaymentWithFees = (paymentAmount: number, fees?: number) => {
+  return fees && paymentAmount
+    ? paymentAmount * (1 - fees / 100)
+    : paymentAmount;
+};
+
 function ottpReducer(state: OttpState, action: Action): OttpState {
   switch (action.type) {
     case OttpAction.SET_EFFECTIVE_DATE:
       return { ...state, effectiveDate: action.payload };
     case OttpAction.SET_PAYMENT_AMOUNT:
-      const paymentWithFees =
-        state.paymentFee && action.payload
-          ? action.payload * (1 - state.paymentFee / 100)
-          : action.payload;
       return {
         ...state,
-        paymentAmount: { plain: action.payload, withFees: paymentWithFees },
+        paymentAmount: {
+          plain: action.payload,
+          withFees: calculatePaymentWithFees(action.payload, state.paymentFee),
+        },
       };
     case OttpAction.SET_PAYOR_BANK:
       return { ...state, payorBank: action.payload };

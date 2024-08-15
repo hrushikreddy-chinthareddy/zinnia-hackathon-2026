@@ -11,7 +11,7 @@ import {
 import { toSentenceCase } from '@zinnia/utils';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 
 import { ClientApi } from '@/services/client-http';
@@ -83,6 +83,12 @@ const Summary = ({
   const { effectiveDate, paymentAmount, payorBank, paymentFee } =
     ottpPaymentData;
   const { pending } = useFormStatus();
+  const calculateFeeAmount = useMemo(() => {
+    if (!paymentFee) {
+      return 0;
+    }
+    return (paymentFee / 100) * paymentAmount.plain;
+  }, [paymentAmount.plain, paymentFee]);
 
   if (pending) {
     return (
@@ -166,7 +172,7 @@ const Summary = ({
                   Fees
                 </Label>
               ),
-              value: paymentFee && paymentFee * -1,
+              value: calculateFeeAmount * -1,
             },
           ]}
           total={{
@@ -232,7 +238,7 @@ export const PaymentSummary = ({
 
   const submitPayment = async () => {
     const ottpRequest = {
-      paymentAmount: state.paymentAmount.withFees,
+      paymentAmount: state.paymentAmount.plain,
       effectiveDate: state.effectiveDate,
       partyId: state.payorBank?.appliesToPartyId,
       bankId: state.payorBank?.bankId,

@@ -8,8 +8,8 @@ import { formatUSDollars } from '@/utils/currency';
 import { FormStepWrapper } from './FormStepWrapper';
 import premiumStyles from './OneTimePremiumPayment.module.css';
 import { getStepInfo, Steps } from './steps';
-import { useOttp } from '../providers/one-time-premium-payment/OttpContext';
 import { Name } from '../pii/Name';
+import { useOttp } from '../providers/one-time-premium-payment/OttpContext';
 
 export const PaymentSubmitted = ({
   policyNumber,
@@ -34,7 +34,7 @@ export const PaymentSubmitted = ({
       <div className="typography-content-body">
         <p>
           <span className="typography-content-body-bold">
-            {formatUSDollars(paymentAmount.withFees)}
+            {formatUSDollars(paymentAmount.plain)}
           </span>{' '}
           one-time premium payment{' '}
           {payorBank && (
