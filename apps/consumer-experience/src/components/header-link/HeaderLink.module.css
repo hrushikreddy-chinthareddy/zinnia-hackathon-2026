@@ -13,7 +13,7 @@
   padding: var(--measure-dimension-padding-md, 6px);
   border-radius: var(--measure-dimension-radius-sm);
   &:hover {
-    background-color: var(--color-pagination-pagination-background-hover-fill);
+    background-color: var(--color-pagination-pagination-hover-fill);
     padding: var(--measure-dimension-padding-md, 6px);
     border-radius: var(--measure-dimension-radius-sm);
   }
