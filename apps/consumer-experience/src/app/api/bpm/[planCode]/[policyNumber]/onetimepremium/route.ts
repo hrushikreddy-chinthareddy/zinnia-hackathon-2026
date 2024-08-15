@@ -44,6 +44,11 @@ export async function POST(
     ottpRequest
   );
 
+  // Its a little confusing that one of these calls returns data, error object and the other
+  // calls the function and does the transforming here, it's because the eligiblity function does
+  // additional transforming, but the submit premium payment call is just success/fail. The pattern
+  // is a little messy right now in the client <-> server api call transformation (8/15/24)
+
   // If validation call fails or validation returns as not eligible, return before trying to submit the one time premium
   if (ottpValidation.error) {
     return NextResponse.json({ data: null, error: { status: 500 } });
