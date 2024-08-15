@@ -194,6 +194,7 @@ export const SelectAmount = ({
                 placeholder=""
                 // TODO: what should this be?
                 name="one-time-premium-payment"
+                inputMode="numeric"
               />
             )}
           />
