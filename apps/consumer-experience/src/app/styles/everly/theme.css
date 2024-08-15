@@ -243,6 +243,24 @@
   --color-loader-loader-part-one: var(--color-primary-color-primary);
   --color-loader-loader-part-two: var(--color-primary-color-primary);
   --color-loader-loader-part-three: var(--color-primary-color-primary-lighter);
+
+  /**
+  * DATEPICKER
+  * =========
+  **/
+  --color-date-picker-item-date-picker-item-hover-border: var(
+    --color-accent-color-accent-one
+  );
+  --color-date-picker-item-date-picker-item-selected-fill: var(
+    --color-primary-color-primary-lightest
+  );
+  --color-date-picker-item-date-picker-item-range-fill: var(
+    --color-primary-color-primary-lightest
+  );
+  --color-date-picker-item-date-picker-item-selected-border: var(
+    --color-primary-color-primary
+  );
+
   /*
   * MEASURES
   * ========
