@@ -1,5 +1,7 @@
 # MOVING FORWARD FOR CONSUMER
 
+Decision made by: Rocco, Ed, Mac
+
 **Decision:** given the eventual future of building to accomodate modules that can be used across projects, we would like to gradually convert consumer to be more client side focused.
 
 **Details:**
