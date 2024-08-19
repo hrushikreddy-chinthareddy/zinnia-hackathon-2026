@@ -59,7 +59,7 @@ ave top radius and last card should have bottom radius */
     position: absolute;
     inset: -2px;
     border: var(--measure-dimension-stroke-sm) solid
-      var(--color-states-hover-hover-primary-border, #ff4f00);
+      var(--color-states-hover-hover-border, #ff4f00);
     border-radius: var(--measure-dimension-radius-sm, 0.25rem);
   }
 }

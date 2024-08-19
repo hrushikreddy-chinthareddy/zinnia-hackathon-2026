@@ -261,6 +261,19 @@
     --color-primary-color-primary
   );
 
+  /**
+  * FIELDS
+  * =========
+  **/
+  --color-fields-surface-field-default-fill: var(--color-grayscale-color-white);
+  --color-fields-border-field-default-border: var(
+    --color-grayscale-color-200-gray
+  );
+  --color-fields-border-field-hover-border: var(
+    --color-accent-color-accent-one
+  );
+  --color-fields-border-field-active-border: var(--color-primary-color-primary);
+
   /*
   * MEASURES
   * ========
