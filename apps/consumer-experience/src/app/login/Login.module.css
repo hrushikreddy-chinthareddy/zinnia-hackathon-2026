@@ -38,7 +38,7 @@
   }
 
   &:hover {
-    border-color: var(--color-states-hover-hover-primary-border);
+    border-color: var(--color-states-hover-hover-border);
   }
 
   &:focus {

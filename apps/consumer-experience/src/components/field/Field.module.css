@@ -16,7 +16,7 @@
   }
 
   &:has(.input:not(.error, .success):focus) {
-    border-color: var(--color-fields-border-field-border-active, #ff7500);
+    border-color: var(--color-fields-border-field-active-border, #ff7500);
   }
 }
 
@@ -39,11 +39,11 @@
   border-color: var(--color-status-surface-status-success-border-alt, #007b5a);
 }
 .selected {
-  border-color: var(--color-fields-border-field-border-active, #ff7500);
+  border-color: var(--color-fields-border-field-active-border, #ff7500);
 }
 
 .inputContainer:not(.inactive, .error, .success):hover {
-  border-color: var(--color-fields-border-field-border-hover, #ffc600);
+  border-color: var(--color-fields-border-field-hover-border, #ffc600);
 }
 
 .input {
