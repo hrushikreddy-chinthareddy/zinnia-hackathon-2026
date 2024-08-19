@@ -1,6 +1,6 @@
 .container {
   background-color: var(
-    --color-fields-surface-field-background-default-fill,
+    --color-fields-surface-field-default-fill,
     #fff
   );
   padding: var(--measure-dimension-padding-2xl, 1rem);
