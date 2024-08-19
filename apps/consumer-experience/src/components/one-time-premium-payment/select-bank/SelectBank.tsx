@@ -6,25 +6,23 @@ import {
   IconType,
 } from '@zinnia/bloom/components';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
+import noDataStyles from '@/components/no-data-available/NoDataAvailable.module.css';
 import { BankDetail } from '@/components/person-data/types';
-import { useFeatureFlags } from '@/hooks/use-feature-flags';
-import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { AccountNumber } from '@/components/pii/AccountNumber';
+import { AccountType } from '@/components/pii/AccountType';
+import { BankName } from '@/components/pii/BankName';
 
-import { FormStepWrapper } from './FormStepWrapper';
-import premiumStyles from './OneTimePremiumPayment.module.css';
-import { getStepInfo, Steps } from './steps';
-import { AddEditBankSidesheet } from '../add-edit-bank/AddEditBankSidesheet';
-import { NoDataAvailable } from '../no-data-available/NoDataAvailable';
-import noDataStyles from '../no-data-available/NoDataAvailable.module.css';
-import { AccountNumber } from '../pii/AccountNumber';
-import { AccountType } from '../pii/AccountType';
-import { BankName } from '../pii/BankName';
-import { useOttp } from '../providers/one-time-premium-payment/OttpContext';
-import { OttpAction } from '../providers/one-time-premium-payment/types';
-import { CancelDialogLink } from '../transactions/CancelDialogLink';
+import styles from './SelectBank.module.css';
+import { useOttp } from '../../providers/one-time-premium-payment/OttpContext';
+import { OttpAction } from '../../providers/one-time-premium-payment/types';
+import { CancelDialogLink } from '../CancelDialogLink';
+import { FormStepWrapper } from '../FormStepWrapper';
+import premiumStyles from '../OneTimePremiumPayment.module.css';
+import { getStepInfo, Steps } from '../steps';
 
 export const SelectBank = ({
   planCode,
@@ -59,7 +57,6 @@ export const SelectBank = ({
       payorBank: defaultSelectedBankId,
     },
   });
-  const { data: featureFlagData } = useFeatureFlags();
 
   const saveAndMove = () => {
     const nextStepUrl = currentStepInfo?.nextStepUrl;
@@ -91,7 +88,11 @@ export const SelectBank = ({
             </div>
           ))}
         {activeBanks?.length > 0 && (
-          <div role="radiogroup" aria-label="select payment method">
+          <div
+            role="radiogroup"
+            aria-label="select payment method"
+            className={styles.banksContainer}
+          >
             {activeBanks?.map((bankDetail, index) => {
               return (
                 <Controller
@@ -102,14 +103,14 @@ export const SelectBank = ({
                   render={({ field }) => (
                     <label
                       key={`${index}-${bankDetail.branchName}`}
-                      className={premiumStyles.bankContainer}
+                      className={styles.bankContainer}
                     >
                       <BankName
                         bankName={bankDetail.branchName}
                         className="typography-labels-label-lg"
                       />
                       <div
-                        className={`${premiumStyles.bankDetail} typography-content-caption`}
+                        className={`${styles.bankDetail} typography-content-caption`}
                       >
                         <AccountType accountType={bankDetail.accountType} />{' '}
                         <span>account ending in</span>{' '}
@@ -143,12 +144,6 @@ export const SelectBank = ({
             })}
           </div>
         )}
-        {/* TODO: Unhide this
-
-      {featureFlagData?.[FEATURE_FLAGS.ADD_EDIT_DELETE_BANK_ACCOUNT] && (
-
-        <AddEditBankSidesheet mode={FormMode.ADD} />
-      )} */}
 
         <div className={premiumStyles.buttonGroup}>
           {/* TODO: disabled if nothing selected */}

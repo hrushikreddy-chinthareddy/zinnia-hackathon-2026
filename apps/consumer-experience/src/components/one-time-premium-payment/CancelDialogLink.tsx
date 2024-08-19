@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
-import { ConfirmDialogLink } from '../confirm-dialog/ConfirmDialogLink';
+import { ConfirmDialog } from '@/components/confirm-dialog/ConfirmDialog';
 
 export interface CancelDialogLinkProps {
   planCode: string;
@@ -16,7 +16,7 @@ export const CancelDialogLink: React.FC<CancelDialogLinkProps> = ({
   const router = useRouter();
 
   return (
-    <ConfirmDialogLink
+    <ConfirmDialog
       confirmCallback={() =>
         router.push(`/policies/${planCode}/${policyNumber}/premium`)
       }

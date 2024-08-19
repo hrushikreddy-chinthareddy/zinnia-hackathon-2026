@@ -41,7 +41,7 @@ export type FieldDateProps = FieldTypes & {
   disableAfterDate?: Date;
   id?: string;
   onDateSelect?: (date: Date | undefined) => void;
-  defaultValue: Date | string;
+  defaultDate?: Date | string;
 };
 
 export type DateInterval = {

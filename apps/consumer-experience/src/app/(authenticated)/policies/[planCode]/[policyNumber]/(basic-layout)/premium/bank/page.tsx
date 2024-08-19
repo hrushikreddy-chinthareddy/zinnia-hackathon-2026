@@ -1,4 +1,4 @@
-import { SelectBank } from '@/components/one-time-premium-payment/SelectBank';
+import { SelectBank } from '@/components/one-time-premium-payment/select-bank/SelectBank';
 import { getPaymentDetails } from '@/services/policy';
 import { PolicyRequestInputs } from '@/types/policy';
 

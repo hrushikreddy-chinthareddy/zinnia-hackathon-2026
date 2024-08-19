@@ -1,5 +1,4 @@
 'use client';
-import { OneTimePremiumTransaction } from '@zinnia/api-types/types/bpm';
 import {
   Button,
   Icon,
@@ -12,13 +11,14 @@ import {
 import { toSentenceCase } from '@zinnia/utils';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { v4 as uuidv4 } from 'uuid';
 
 import { ClientApi } from '@/services/client-http';
-import { DEFAULT_DATE_FORMAT, ZAHARA_DATE_FORMAT } from '@/utils/dates';
+import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
+import { logError } from '@/utils/logging/server-logging';
 
+import { CancelDialogLink } from './CancelDialogLink';
 import { FormHeader } from './FormHeader';
 import { FormStepWrapper } from './FormStepWrapper';
 import styles from './OneTimePremiumPayment.module.css';
@@ -30,7 +30,6 @@ import { AccountType } from '../pii/AccountType';
 import { BankName } from '../pii/BankName';
 import { useOttp } from '../providers/one-time-premium-payment/OttpContext';
 import { OttpState } from '../providers/one-time-premium-payment/types';
-import { CancelDialogLink } from '../transactions/CancelDialogLink';
 
 // TODO: UPDATE COPY!!!!
 const loadingStrings = [
@@ -84,6 +83,12 @@ const Summary = ({
   const { effectiveDate, paymentAmount, payorBank, paymentFee } =
     ottpPaymentData;
   const { pending } = useFormStatus();
+  const calculateFeeAmount = useMemo(() => {
+    if (!paymentFee) {
+      return 0;
+    }
+    return (paymentFee / 100) * paymentAmount.plain;
+  }, [paymentAmount.plain, paymentFee]);
 
   if (pending) {
     return (
@@ -138,7 +143,7 @@ const Summary = ({
           transactionSummary={[
             {
               label: <Label>Submitted Amount</Label>,
-              value: paymentAmount,
+              value: paymentAmount.plain,
             },
             {
               label: (
@@ -167,15 +172,12 @@ const Summary = ({
                   Fees
                 </Label>
               ),
-              value: paymentFee && paymentFee * -1,
+              value: calculateFeeAmount * -1,
             },
           ]}
           total={{
             label: <Label>Total deposit</Label>,
-            deposit:
-              paymentFee && paymentAmount
-                ? paymentAmount * paymentFee
-                : paymentAmount || 0,
+            deposit: paymentAmount.withFees,
           }}
         />
       </div>
@@ -193,7 +195,6 @@ export const PaymentSummary = ({
   planCode,
   policyNumber,
 }: {
-  moveToNextStep?: () => void;
   planCode: string;
   policyNumber: string;
 }) => {
@@ -227,7 +228,7 @@ export const PaymentSummary = ({
           <Link
             className="mt-2xl"
             variant="button"
-            text="Close"
+            text="Return to premium page"
             href={paymentUrl({ planCode, policyNumber })}
           />
         </div>
@@ -237,29 +238,37 @@ export const PaymentSummary = ({
 
   const submitPayment = async () => {
     const ottpRequest = {
-      paymentAmount: state.paymentAmount,
+      paymentAmount: state.paymentAmount.plain,
       effectiveDate: state.effectiveDate,
       partyId: state.payorBank?.appliesToPartyId,
       bankId: state.payorBank?.bankId,
     };
 
-    // TODO: should i move this queries?
-    const response = await ClientApi.post(
-      `/api/bpm/${planCode}/${policyNumber}/onetimepremium`,
-      JSON.stringify(ottpRequest),
-      {
-        headers: { 'Content-Type': 'application/json' },
+    try {
+      // TODO: should i move this to queries?
+      const response = await ClientApi.post(
+        `/api/bpm/${planCode}/${policyNumber}/onetimepremium`,
+        JSON.stringify(ottpRequest),
+        {
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+      const parsedResponse = await response.json();
+
+      // TODO: IF a user presses back (in browser) from here, they go back to step 2
+      // not the end of the world but should probably have something else happen
+      if (parsedResponse.error) {
+        setError(response.statusText);
+      } else {
+        router.push(currentStepInfo?.nextStepUrl);
       }
-    );
-
-    const parsedResponse = await response.json();
-
-    // TODO: IF a user presses back (in browser) from here, they go back to step 2
-    // not the end of the world but should probably have something else happen
-    if (parsedResponse.error) {
-      setError(response.statusText);
-    } else {
-      router.push(currentStepInfo?.nextStepUrl);
+    } catch (error) {
+      logError('Error submitting one time premium payment', {
+        method: 'post',
+        file: 'PaymentSummary.tsx',
+        function: 'route handler',
+      });
+      setError('Could not submit payment');
     }
   };
 
@@ -268,7 +277,6 @@ export const PaymentSummary = ({
       currentStep={Steps.SUMMARY}
       planCode={planCode}
       policyNumber={policyNumber}
-      // TODO: remove this once using route handler
       hideHeader
     >
       <form action={submitPayment}>

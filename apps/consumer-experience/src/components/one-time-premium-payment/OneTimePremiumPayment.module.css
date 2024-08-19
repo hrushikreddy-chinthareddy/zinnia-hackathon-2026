@@ -21,50 +21,9 @@
     text-decoration: none;
   }
 
-  > * {
+  button {
     width: 100%;
   }
-}
-
-/* TODO: add a hover style */
-.bankContainer {
-  display: flex;
-  flex-direction: column;
-  border: var(--measure-dimension-stroke-sm) solid
-    var(--color-base-border-border-light);
-  border-radius: var(--measure-dimension-radius-sm);
-  padding: var(--measure-dimension-padding-2xl);
-  max-width: 375px;
-  cursor: pointer;
-
-  &:hover {
-    border-color: var(--color-states-hover-hover-primary-border);
-  }
-
-  > * {
-    margin-bottom: var(--measure-dimension-gap-xs);
-  }
-
-  &:not(:last-of-type) {
-    margin-bottom: var(--measure-dimension-gap-lg);
-  }
-
-  &:has(input:checked) {
-    border-color: var(--color-states-selected-selected-primary-border);
-
-    &:hover {
-      border-color: var(--color-states-hover-hover-primary-border);
-    }
-  }
-
-  &:has(input:focus-visible) {
-    outline: 2px solid #0d69d4;
-    outline-offset: 2px;
-  }
-}
-
-.bankDetail {
-  color: var(--color-base-text-text-secondary);
 }
 
 .note {
@@ -106,7 +65,7 @@
     flex-direction: row;
     gap: var(--measure-dimension-gap-2xl);
 
-    > * {
+    button {
       width: auto;
     }
   }
