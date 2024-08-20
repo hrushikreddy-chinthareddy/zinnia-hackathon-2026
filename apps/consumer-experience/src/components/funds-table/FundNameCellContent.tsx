@@ -15,18 +15,18 @@ export const FundNameCellContent = ({
     <SideSheet
       header={toTitleCase('fund details')}
       trigger={
-        <button
-          className={clsx(
-            'typography-nav-links-sm-inline',
-            styles.fundNameTrigger,
-            {
-              [styles.elected as string]: isElected,
-            }
-          )}
-        >
-          {fundName}
+        <span>
+          <span
+            className={clsx(
+              styles.fundNameTrigger,
+              'typography-nav-links-sm-inline'
+            )}
+          >
+            {isElected && <span className={styles.isElected}>&#x2022;</span>}
+            {fundName}
+          </span>
           {isElected && <span className="sr-only">is an elected fund</span>}
-        </button>
+        </span>
       }
     >
       Fund Details
