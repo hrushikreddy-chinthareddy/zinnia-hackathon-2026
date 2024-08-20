@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Label,
   Table,
@@ -7,14 +9,16 @@ import {
   TableHeaderCell,
   TableRow,
 } from '@zinnia/bloom/components';
-import { DEFAULT_ERROR_STRING, toTitleCase } from '@zinnia/utils';
+import { DEFAULT_ERROR_STRING, toSentenceCase } from '@zinnia/utils';
 import dayjs from 'dayjs';
+import { useWindowSize } from 'react-use';
 
 import { formatUSDollars } from '@/utils/currency';
 import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
 import { percentFormatify } from '@/utils/numbers';
 
 import { FundNameCellContent } from './FundNameCellContent';
+import styles from './FundsTable.module.css';
 import { LabelPopover } from '../label-popover/LabelPopover';
 
 const fundsTableData = [
@@ -54,26 +58,32 @@ const getSweepDate = (sweepDay?: number | null) => {
 };
 
 export const HoldingFunds = () => {
+  const { width } = useWindowSize();
+
+  const isDesktop = width >= 767;
+
   return (
     <Table>
       <TableHeader>
         <TableRow>
           <TableHeaderCell>
-            <Label>{toTitleCase('fund name')}</Label>
+            <Label>{toSentenceCase('fund name')}</Label>
           </TableHeaderCell>
-          <TableHeaderCell>
-            <Label
-              interactiveElements={[
-                <LabelPopover
-                  key={INTEREST_RATE_LABEL}
-                  title={INTEREST_RATE_LABEL}
-                  content="This is the amount of your account value currently invested in this specific fund."
-                />,
-              ]}
-            >
-              {toTitleCase(INTEREST_RATE_LABEL)}
-            </Label>
-          </TableHeaderCell>
+          {isDesktop && (
+            <TableHeaderCell>
+              <Label
+                interactiveElements={[
+                  <LabelPopover
+                    key={INTEREST_RATE_LABEL}
+                    title={INTEREST_RATE_LABEL}
+                    content="This is the amount of your account value currently invested in this specific fund."
+                  />,
+                ]}
+              >
+                {toSentenceCase(INTEREST_RATE_LABEL)}
+              </Label>
+            </TableHeaderCell>
+          )}
           <TableHeaderCell>
             <Label
               interactiveElements={[
@@ -84,45 +94,51 @@ export const HoldingFunds = () => {
                 />,
               ]}
             >
-              {toTitleCase(FUND_VALUE_LABEL)}
+              {toSentenceCase(FUND_VALUE_LABEL)}
             </Label>
           </TableHeaderCell>
-          <TableHeaderCell>
-            <Label
-              interactiveElements={[
-                <LabelPopover
-                  key={NEXT_SWEEP_DATE_LABEL}
-                  title={NEXT_SWEEP_DATE_LABEL}
-                  content="This is the amount of your account value currently invested in this specific fund."
-                />,
-              ]}
-            >
-              {toTitleCase(NEXT_SWEEP_DATE_LABEL)}
-            </Label>
-          </TableHeaderCell>
+          {isDesktop && (
+            <TableHeaderCell>
+              <Label
+                interactiveElements={[
+                  <LabelPopover
+                    key={NEXT_SWEEP_DATE_LABEL}
+                    title={NEXT_SWEEP_DATE_LABEL}
+                    content="This is the amount of your account value currently invested in this specific fund."
+                  />,
+                ]}
+              >
+                {toSentenceCase(NEXT_SWEEP_DATE_LABEL)}
+              </Label>
+            </TableHeaderCell>
+          )}
         </TableRow>
       </TableHeader>
       <TableBody>
         {fundsTableData.map(fund => (
-          <TableRow key={fund.fundId}>
+          <TableRow key={fund.fundId} className={styles.tableRow}>
             <TableCell className="typography-content-body-sm">
               <FundNameCellContent
                 fundName={fund.fundAccountName}
                 isElected={fund.isElected}
               />
             </TableCell>
-            <TableCell className="typography-content-body-sm">
-              {percentFormatify(fund.interestRate, {
-                isInteger: true,
-                displayNullAsZero: true,
-              })}
-            </TableCell>
+            {isDesktop && (
+              <TableCell className="typography-content-body-sm">
+                {percentFormatify(fund.interestRate, {
+                  isInteger: true,
+                  displayNullAsZero: true,
+                })}
+              </TableCell>
+            )}
             <TableCell className="typography-content-body-sm">
               {formatUSDollars(fund.totalFundValue, true, true)}
             </TableCell>
-            <TableCell className="typography-content-body-sm">
-              {getSweepDate(fund.sweepDay)}
-            </TableCell>
+            {isDesktop && (
+              <TableCell className="typography-content-body-sm">
+                {getSweepDate(fund.sweepDay)}
+              </TableCell>
+            )}
           </TableRow>
         ))}
       </TableBody>

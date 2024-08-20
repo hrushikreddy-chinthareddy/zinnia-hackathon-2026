@@ -1,4 +1,5 @@
 import { Icon, IconType, Popover } from '@zinnia/bloom/components';
+import { toSentenceCase } from '@zinnia/utils';
 import { ReactNode } from 'react';
 
 export const LabelPopover = ({
@@ -10,7 +11,7 @@ export const LabelPopover = ({
 }) => {
   return (
     <Popover
-      title={title}
+      title={toSentenceCase(title)}
       trigger={
         <Icon
           type={IconType.CIRCLE_INFO}

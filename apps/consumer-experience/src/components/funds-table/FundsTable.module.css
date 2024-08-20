@@ -7,14 +7,25 @@
   &:hover {
     text-decoration: none;
   }
+
+  /* This is nuts, but increases the size of the unicode bullet which we have to use,
+  so that the text underline extends below it. Need text underline rather than a pseudo
+  element so that when the text wraps, each line has an underline. line-height is set
+  to match the text, text-top vertical align works because magic*/
+  .isElected {
+    font-size: 25px;
+    vertical-align: text-top;
+    line-height: 14px;
+  }
 }
 
-/* This is nuts, but increases the size of the unicode bullet which we have to use,
-so that the text underline extends below it. Need text underline rather than a pseudo
-element so that when the text wraps, each line has an underline. line-height is set
-to match the text, text-top vertical align works because magic*/
-.isElected {
-  font-size: 25px;
-  vertical-align: text-top;
-  line-height: 14px;
+/* This needs to be updated in bloom. Added issue https://github.com/zinnia/bloom/issues/140 */
+.tableRow {
+  &:hover {
+    background-color: transparent;
+  }
+}
+
+.activeFund {
+  color: var(--color-base-text-text-secondary);
 }

@@ -1,5 +1,5 @@
 import { SideSheet } from '@zinnia/bloom/components';
-import { toTitleCase } from '@zinnia/utils';
+import { toSentenceCase } from '@zinnia/utils';
 import clsx from 'clsx';
 
 import styles from './FundsTable.module.css';
@@ -13,7 +13,7 @@ export const FundNameCellContent = ({
 }) => {
   return (
     <SideSheet
-      header={toTitleCase('fund details')}
+      header={toSentenceCase('fund details')}
       trigger={
         <span>
           <span

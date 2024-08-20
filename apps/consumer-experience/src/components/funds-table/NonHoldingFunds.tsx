@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Label,
   Table,
@@ -7,12 +9,16 @@ import {
   TableHeaderCell,
   TableRow,
 } from '@zinnia/bloom/components';
+import { toSentenceCase } from '@zinnia/utils';
 import clsx from 'clsx';
+import { useMemo } from 'react';
+import { useWindowSize } from 'react-use';
 
 import { formatUSDollars } from '@/utils/currency';
 import { percentFormatify } from '@/utils/numbers';
 
 import { FundNameCellContent } from './FundNameCellContent';
+import styles from './FundsTable.module.css';
 import { LabelPopover } from '../label-popover/LabelPopover';
 
 const fundsTableData = [
@@ -74,13 +80,38 @@ const fundsTableData = [
 ];
 
 export const NonHoldingFunds = () => {
+  const { width } = useWindowSize();
+
+  const headerVals = useMemo(() => {
+    if (width > 500) {
+      return {
+        fundName: 'Fund Name',
+        fundValue: 'Fund Value',
+        allocation: 'Allocation',
+      };
+    }
+
+    return {
+      fundName: 'Fund',
+      fundValue: 'Value',
+      allocation: 'Alloc.',
+    };
+  }, [width]);
+
+  const dataValueStyles = (val?: number | null) => {
+    return clsx({
+      'typography-content-body-sm-bold': !!val,
+      [styles.activeFund as string]: !val,
+    });
+  };
+
   return (
     <Table>
       <TableHeader>
         <TableRow>
           {/* TODO: update these values when mobile */}
           <TableHeaderCell>
-            <Label>Fund Name</Label>
+            <Label>{toSentenceCase(headerVals.fundName)}</Label>
           </TableHeaderCell>
           <TableHeaderCell>
             <Label
@@ -92,35 +123,30 @@ export const NonHoldingFunds = () => {
                 />,
               ]}
             >
-              Fund Value
+              {toSentenceCase(headerVals.fundValue)}
             </Label>
           </TableHeaderCell>
           <TableHeaderCell>
-            <Label>Allocation</Label>
+            <Label>{toSentenceCase(headerVals.allocation)}</Label>
           </TableHeaderCell>
         </TableRow>
       </TableHeader>
       <TableBody>
         {fundsTableData.map(fund => (
-          <TableRow key={fund.fundId} className="typography-content-body-sm">
+          <TableRow
+            key={fund.fundId}
+            className={`typography-content-body-sm ${styles.tableRow}`}
+          >
             <TableCell>
               <FundNameCellContent
                 fundName={fund.fundAccountName}
                 isElected={fund.isElected}
               />
             </TableCell>
-            <TableCell
-              className={clsx({
-                'typography-content-body-sm-bold': !!fund.totalFundValue,
-              })}
-            >
+            <TableCell className={dataValueStyles(fund.totalFundValue)}>
               {formatUSDollars(fund.totalFundValue, true, true)}
             </TableCell>
-            <TableCell
-              className={clsx({
-                'typography-content-body-sm-bold': !!fund.allocationPercentage,
-              })}
-            >
+            <TableCell className={dataValueStyles(fund.allocationPercentage)}>
               {percentFormatify(fund.allocationPercentage, {
                 isInteger: true,
                 displayNullAsZero: true,
