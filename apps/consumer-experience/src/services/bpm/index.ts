@@ -32,13 +32,14 @@ export const getOneTimeWithdrawalEligibility = async (
   );
 
   const response = await parseAPIResponse(rawResponse);
-
   // This endpoint returns 400 "not found" when the policy is not eligible withdrawals
-  if (rawResponse.status !== 200 && rawResponse.status !== 400) {
+  if (rawResponse.status > 400) {
     logError(
       'Error fetching withdrawal eligibility',
       await logApiNotOkDetails({ rawResponse, parsedResponse: response })
     );
+
+    throw new Error('Error fetching OneTimeWithdrawalEligibility');
   }
 
   if (rawResponse.status === 400) {
@@ -66,15 +67,90 @@ export const getPolicyLoanEligibility = async (
   const response = await parseAPIResponse(rawResponse);
 
   // This endpoint returns 400 "not found" when the policy is not eligible withdrawals
-  if (rawResponse.status !== 200 && rawResponse.status !== 400) {
+  if (rawResponse.status > 400) {
     logError(
       'Error fetching loan eligibility',
       await logApiNotOkDetails({ rawResponse, parsedResponse: response })
     );
+
+    throw new Error('Error fetching PolicyLoanEligibility');
   }
 
   if (rawResponse.status === 400) {
     logTrace('loan ineligible reason', {
+      results: response?.validationResult,
+    });
+  }
+
+  return response;
+};
+
+export const getOneTimePremiumEligibility = async (
+  options: PolicyRequestInputs
+) => {
+  const { planCode, policyNumber } = options;
+  const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/onetimepremium/eligibilitycheck`;
+  // if (isMockErrorEnabled(ApiEndpoints.WITHDRAWAL_ELIGIBILITY)) {
+  //   throw new Error('Error fetching loan eligibility.');
+  // }
+
+  const rawResponse = await ServerApi.post(url, JSON.stringify({}), {
+    headers: { 'Content-Type': 'application/json' },
+  });
+
+  const response = await parseAPIResponse(rawResponse);
+
+  // This endpoint returns 400 "not found" when the policy is not eligible withdrawals
+  if (rawResponse.status > 400) {
+    logError(
+      'Error fetching one time premium eligibility',
+      await logApiNotOkDetails({ rawResponse, parsedResponse: response })
+    );
+
+    throw new Error('Error fetching PolicyLoanEligibility');
+  }
+
+  if (rawResponse.status === 400) {
+    logTrace('one time premium ineligible reason', {
+      results: response?.validationResult,
+    });
+  }
+
+  return response;
+};
+
+export const getOneTimePremiumValidation = async (
+  options: PolicyRequestInputs,
+  ottpRequestDetails: OneTimePremiumRequest
+) => {
+  const { planCode, policyNumber } = options;
+  const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/onetimepremium/validation`;
+  // if (isMockErrorEnabled(ApiEndpoints.WITHDRAWAL_ELIGIBILITY)) {
+  //   throw new Error('Error fetching loan eligibility.');
+  // }
+
+  const rawResponse = await ServerApi.post(
+    url,
+    JSON.stringify(ottpRequestDetails),
+    {
+      headers: { 'Content-Type': 'application/json' },
+    }
+  );
+
+  const response = await parseAPIResponse(rawResponse);
+
+  // This endpoint returns 400 "not found" when the policy is not eligible withdrawals
+  if (rawResponse.status > 400) {
+    logError(
+      'Error fetching one time premium validation',
+      await logApiNotOkDetails({ rawResponse, parsedResponse: response })
+    );
+
+    throw new Error('Error fetching PolicyLoanEligibility');
+  }
+
+  if (rawResponse.status === 400) {
+    logTrace('one time premium ineligible reason', {
       results: response?.validationResult,
     });
   }
@@ -125,7 +201,7 @@ export const submitOneTimePremiumPayment = async (
 export const getWithdrawalEligibility = async (
   policyInputs: PolicyRequestInputs
 ): Promise<ApiResponse<TransactionEligbility>> => {
-  logTrace('getPolicyWithdrawalDetails::start', {
+  logTrace('getWithdrawalEligibility::start', {
     planCode: policyInputs.planCode,
     policyNumber: policyInputs.policyNumber,
   });
@@ -155,7 +231,7 @@ export const getWithdrawalEligibility = async (
 export const getLoanEligibility = async (
   policyInputs: PolicyRequestInputs
 ): Promise<ApiResponse<TransactionEligbility>> => {
-  logTrace('getPolicyWithdrawalDetails::start', {
+  logTrace('getLoanEligibility::start', {
     planCode: policyInputs.planCode,
     policyNumber: policyInputs.policyNumber,
   });
@@ -176,6 +252,68 @@ export const getLoanEligibility = async (
         message: 'Something went wrong',
         status: 500,
         name: 'getWithdrawalEligibility Error',
+      },
+    };
+  }
+};
+
+export const getPremiumEligibility = async (
+  policyInputs: PolicyRequestInputs
+): Promise<ApiResponse<TransactionEligbility>> => {
+  logTrace('getPremiumEligibility::start', {
+    planCode: policyInputs.planCode,
+    policyNumber: policyInputs.policyNumber,
+  });
+
+  try {
+    const ottpEligibility = await getOneTimePremiumEligibility(policyInputs);
+
+    return {
+      data: transformEligibility(ottpEligibility),
+      error: null,
+    };
+  } catch (error) {
+    logWarn('getPremiumEligibility::error', { error });
+
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 500,
+        name: 'getPremiumEligibility Error',
+      },
+    };
+  }
+};
+
+export const getPremiumValidation = async (
+  policyInputs: PolicyRequestInputs,
+  ottpRequestDetails: OneTimePremiumRequest
+): Promise<ApiResponse<TransactionEligbility>> => {
+  logTrace('getPremiumValidation::start', {
+    planCode: policyInputs.planCode,
+    policyNumber: policyInputs.policyNumber,
+  });
+
+  try {
+    const ottpValidation = await getOneTimePremiumValidation(
+      policyInputs,
+      ottpRequestDetails
+    );
+
+    return {
+      data: transformEligibility(ottpValidation),
+      error: null,
+    };
+  } catch (error) {
+    logWarn('getPremiumValidation::error', { error });
+
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 500,
+        name: 'getPremiumValidation Error',
       },
     };
   }

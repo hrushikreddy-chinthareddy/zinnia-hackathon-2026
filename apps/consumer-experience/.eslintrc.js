@@ -69,5 +69,5 @@ module.exports = {
       },
     ],
   },
-  ignorePatterns: ['postcss.config.js']
+  ignorePatterns: ['postcss.config.js'],
 };

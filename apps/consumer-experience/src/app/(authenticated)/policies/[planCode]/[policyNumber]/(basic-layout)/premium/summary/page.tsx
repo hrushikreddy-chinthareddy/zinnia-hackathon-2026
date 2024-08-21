@@ -1,4 +1,4 @@
-import { PaymentSummary } from '@/components/one-time-premium-payment/PaymentSummary';
+import { PaymentSummary } from '@/components/one-time-premium-payment/payment-summary/PaymentSummary';
 import { PolicyRequestInputs } from '@/types/policy';
 
 export default async function Summary({

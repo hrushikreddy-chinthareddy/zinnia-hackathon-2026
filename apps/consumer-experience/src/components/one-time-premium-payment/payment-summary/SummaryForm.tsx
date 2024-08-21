@@ -4,32 +4,26 @@ import {
   Icon,
   IconType,
   Label,
-  Link,
   Loader,
   Popover,
 } from '@zinnia/bloom/components';
 import { toSentenceCase } from '@zinnia/utils';
 import dayjs from 'dayjs';
-import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 
-import { ClientApi } from '@/services/client-http';
 import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
-import { logError } from '@/utils/logging/server-logging';
 
-import { CancelDialogLink } from './CancelDialogLink';
-import { FormHeader } from './FormHeader';
-import { FormStepWrapper } from './FormStepWrapper';
-import styles from './OneTimePremiumPayment.module.css';
-import { getStepInfo, paymentUrl, Steps } from './steps';
-import { FieldData } from '../field-data/FieldData';
-import { PaymentSummaryStep } from '../payment-summary-step/PaymentSummaryStep';
-import { AccountNumber } from '../pii/AccountNumber';
-import { AccountType } from '../pii/AccountType';
-import { BankName } from '../pii/BankName';
-import { useOttp } from '../providers/one-time-premium-payment/OttpContext';
-import { OttpState } from '../providers/one-time-premium-payment/types';
+import { FieldData } from '../../field-data/FieldData';
+import { PaymentSummaryStep } from '../../payment-summary-step/PaymentSummaryStep';
+import { AccountNumber } from '../../pii/AccountNumber';
+import { AccountType } from '../../pii/AccountType';
+import { BankName } from '../../pii/BankName';
+import { OttpState } from '../../providers/one-time-premium-payment/types';
+import { CancelDialogLink } from '../CancelDialogLink';
+import { FormHeader } from '../FormHeader';
+import styles from '../OneTimePremiumPayment.module.css';
+import { Steps } from '../steps';
 
 // TODO: UPDATE COPY!!!!
 const loadingStrings = [
@@ -65,13 +59,7 @@ const LoadingText = () => {
   );
 };
 
-export interface OTTPPaymentDetails {
-  effectiveDate: string;
-  paymentAmount: number;
-  payorBank: string;
-}
-
-const Summary = ({
+export const SummaryForm = ({
   ottpPaymentData,
   planCode,
   policyNumber,
@@ -188,104 +176,5 @@ const Summary = ({
         <CancelDialogLink planCode={planCode} policyNumber={policyNumber} />
       </div>
     </>
-  );
-};
-
-export const PaymentSummary = ({
-  planCode,
-  policyNumber,
-}: {
-  planCode: string;
-  policyNumber: string;
-}) => {
-  const router = useRouter();
-  const { state } = useOttp();
-  const [error, setError] = useState<string>();
-  const currentStepInfo = getStepInfo({
-    step: Steps.SUMMARY,
-    planCode,
-    policyNumber,
-  });
-
-  if (error) {
-    return (
-      <div style={{ maxWidth: '500px', margin: '0 auto' }}>
-        <div className={styles.errorMessageContainer}>
-          <Icon
-            width={50}
-            height={50}
-            type={IconType.COG}
-            color="var(--color-status-icon-status-error-icon)"
-          />
-          <h3 className="typography-desktop-headline-3-d">
-            Sorry, that didn't work
-          </h3>
-
-          <p className="typography-content-body">
-            Services are down, so we couldn’t submit your payment. Please try
-            again later.
-          </p>
-          <Link
-            className="mt-2xl"
-            variant="button"
-            text="Return to premium page"
-            href={paymentUrl({ planCode, policyNumber })}
-          />
-        </div>
-      </div>
-    );
-  }
-
-  const submitPayment = async () => {
-    const ottpRequest = {
-      paymentAmount: state.paymentAmount.plain,
-      effectiveDate: state.effectiveDate,
-      partyId: state.payorBank?.appliesToPartyId,
-      bankId: state.payorBank?.bankId,
-    };
-
-    try {
-      // TODO: should i move this to queries?
-      const response = await ClientApi.post(
-        `/api/bpm/${planCode}/${policyNumber}/onetimepremium`,
-        JSON.stringify(ottpRequest),
-        {
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
-      const parsedResponse = await response.json();
-
-      // TODO: IF a user presses back (in browser) from here, they go back to step 2
-      // not the end of the world but should probably have something else happen
-      if (parsedResponse.error) {
-        setError(response.statusText);
-      } else {
-        router.push(currentStepInfo?.nextStepUrl);
-      }
-    } catch (error) {
-      logError('Error submitting one time premium payment', {
-        method: 'post',
-        file: 'PaymentSummary.tsx',
-        function: 'route handler',
-      });
-      setError('Could not submit payment');
-    }
-  };
-
-  return (
-    <FormStepWrapper
-      currentStep={Steps.SUMMARY}
-      planCode={planCode}
-      policyNumber={policyNumber}
-      hideHeader
-    >
-      <form action={submitPayment}>
-        <Summary
-          ottpPaymentData={state}
-          planCode={planCode}
-          policyNumber={policyNumber}
-        />
-      </form>
-    </FormStepWrapper>
   );
 };
