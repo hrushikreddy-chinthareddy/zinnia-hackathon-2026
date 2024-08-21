@@ -46,7 +46,7 @@ export const PaymentSummary = ({
 
   const submitPayment = async () => {
     const ottpRequest = {
-      paymentAmount: state.paymentAmount,
+      paymentAmount: state.paymentAmount.plain,
       effectiveDate: state.effectiveDate,
       partyId: state.payorBank?.appliesToPartyId,
       bankId: state.payorBank?.bankId,

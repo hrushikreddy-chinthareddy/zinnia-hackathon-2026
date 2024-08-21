@@ -121,7 +121,7 @@ export const getOneTimePremiumEligibility = async (
 
 export const getOneTimePremiumValidation = async (
   options: PolicyRequestInputs,
-  ottpRequestDetails: any
+  ottpRequestDetails: OneTimePremiumRequest
 ) => {
   const { planCode, policyNumber } = options;
   const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/onetimepremium/validation`;
@@ -288,7 +288,7 @@ export const getPremiumEligibility = async (
 
 export const getPremiumValidation = async (
   policyInputs: PolicyRequestInputs,
-  ottpRequestDetails: any
+  ottpRequestDetails: OneTimePremiumRequest
 ): Promise<ApiResponse<TransactionEligbility>> => {
   logTrace('getPremiumValidation::start', {
     planCode: policyInputs.planCode,
