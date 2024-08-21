@@ -126,7 +126,9 @@ const getPolicyReferencesByCarrier = async () => {
   return response;
 };
 
-const getPolicyByPlanCodeAndId = async (options: PolicyRequestInputs) => {
+export const getPolicyByPlanCodeAndId = async (
+  options: PolicyRequestInputs
+) => {
   const { planCode, policyNumber } = options;
   const url = `${policyApiBaseUrl}/${planCode}/${policyNumber}?viewDetails=true`;
   if (isMockErrorEnabled(ApiEndpoints.POLICY)) {
@@ -257,7 +259,7 @@ const getPolicyMetrics = async (
 };
 
 export const getMyPoliciesByCarrier = async (
-  carrierId: string
+  carrierId: string[] | string
 ): Promise<ApiResponse<CarrierPolicyDetails[]>> => {
   logTrace('called getMyPoliciesByCarrier', { carrierId });
 
@@ -279,7 +281,7 @@ export const getMyPoliciesByCarrier = async (
     }
 
     const filteredPolicies = response.results
-      .filter((p: Policy) => p.carrierId === carrierId)
+      .filter((p: Policy) => carrierId.includes(p.carrierId || ''))
       .map((carrierPolicy: PolicyReferenceData) => {
         return getPolicyByPlanCodeAndId({
           planCode: carrierPolicy.planCode || '',

@@ -14,9 +14,16 @@ import {
   TransactionStatus,
   PolicyFeature,
   ProductType,
+  Fund,
 } from '@zinnia/api-types/types/sor';
 
 import { BankDetail } from '@/components/person-data/types';
+
+export enum CarrierId {
+  SBUL = 'SBUL',
+  SB = 'SB',
+  ELIC = 'ELIC',
+}
 
 export interface PolicyDetails {
   marketingName: string;
@@ -196,11 +203,8 @@ export interface AccountValueSummary {
   hasLoanEligibility?: boolean | null;
 }
 
-export interface PolicyFund {
-  fundName?: string | null;
+export interface PolicyFund extends Fund {
   allocationPercentage?: number | null;
-  totalFundValue?: number | null;
-  fundAccountType?: string | null;
 }
 
 export interface PolicyLoans {

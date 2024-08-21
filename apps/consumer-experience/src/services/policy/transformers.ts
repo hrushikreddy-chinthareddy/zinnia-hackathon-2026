@@ -43,6 +43,7 @@ import {
   getRiderDescription,
   policyHasVested,
   allPolicyOwnerBanks,
+  isEndDatedAndEndDateUpcoming,
 } from '@/utils/data';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';
 
@@ -207,6 +208,11 @@ export const transformPolicyforPaymentDetails = (
   return allPolicyOwnerBanks(policy);
 };
 
+/**
+ * Gets the list of funds from the policy and builds a fund object containing things like fundName, allocation percentage, and total fund value
+ * @param policy
+ * @returns
+ */
 export const transformPolicyForFundDetails = (
   policy: Policy
 ): PolicyFund[] | null => {
@@ -217,22 +223,24 @@ export const transformPolicyForFundDetails = (
     return null;
   }
 
-  const allocations = policy.allocation?.fundAllocationsInvestments?.map(
-    (fund: FundAllocation) => {
-      const fundDetails = policy.allocation?.funds?.find(
-        (detail: FundAllocation) => detail?.fundId === fund?.fundId
+  const funds = policy.allocation?.funds?.map(fundDetails => {
+    const allocationDetails =
+      policy.allocation?.fundAllocationsInvestments?.find(
+        (allocationDetail: FundAllocation) =>
+          allocationDetail.fundId === fundDetails?.fundId &&
+          !isEndDatedAndEndDateUpcoming(allocationDetail.endDate)
       );
 
-      return {
-        fundName: fund?.fundName,
-        allocationPercentage: fund?.allocationPercentage,
-        totalFundValue: fundDetails?.totalFundValue,
-        fundAccountType: fundDetails?.fundAccountType,
-      };
-    }
-  );
+    return {
+      ...fundDetails,
+      fundAccountName: fundDetails?.fundName,
+      allocationPercentage: allocationDetails?.allocationPercentage,
+      totalFundValue: fundDetails?.totalFundValue,
+      fundAccountType: fundDetails?.fundAccountType,
+    };
+  });
 
-  return allocations || null;
+  return funds || null;
 };
 
 export const transformPolicyForWithdrawals = (

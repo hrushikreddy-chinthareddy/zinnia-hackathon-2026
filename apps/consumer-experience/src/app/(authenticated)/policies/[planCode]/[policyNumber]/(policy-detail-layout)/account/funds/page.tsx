@@ -46,7 +46,7 @@ export default async function AccountValuePage({
           </div>
           <div className="stacked-items">
             <Label>Allocation</Label>
-            <p className="typography-content-body-sm">{`${allocation.allocationPercentage}%`}</p>
+            <p className="typography-content-body-sm">{`${allocation.allocationPercentage ?? 0}%`}</p>
           </div>
         </div>
       );

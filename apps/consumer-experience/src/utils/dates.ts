@@ -82,3 +82,23 @@ export const dayOfMonthWithOrdinal = (
 
   return numberWithOrdinal(dayjs(date).get('date'));
 };
+
+/**
+ * Pass in a day of a month. It returns the next instance of that day of the month.
+ *
+ * For instance, if today is 8.20.2024 and you pass in '10' it will return 9.10.2024
+ * @param dayToAdd
+ * @returns
+ */
+export const getNextOccurrenceOfDay = (dayToAdd?: number | null) => {
+  if (!dayToAdd) {
+    return DEFAULT_ERROR_STRING;
+  }
+  const today = dayjs();
+  const date =
+    today.day() > dayToAdd
+      ? today.add(1, 'month').date(dayToAdd)
+      : today.date(dayToAdd);
+
+  return date.format('MM/DD/YYYY');
+};

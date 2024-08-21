@@ -7,6 +7,7 @@ export default defineConfig((options: Options) => ({
     'src/generated-types/search',
     'src/generated-types/documents',
     'src/generated-types/bpm',
+    'src/generated-types/funds',
   ],
   clean: true,
   dts: true,

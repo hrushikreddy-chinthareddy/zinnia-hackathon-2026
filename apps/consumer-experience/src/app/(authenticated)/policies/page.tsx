@@ -11,6 +11,7 @@ import { PolicyDetailsSummary } from '@/components/policy-details-summary/Policy
 import { CoveragePopover } from '@/components/policy-overview/CoveragePopover';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getMyPoliciesByCarrier } from '@/services';
+import { CarrierId } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 
 import styles from './policies.module.css';
@@ -22,9 +23,12 @@ export const metadata: Metadata = {
   title: pageTitle,
 };
 
+//TODO: Feature flag returning the ELIC stuff?
 export default async function Page() {
-  const { data: policyReferenceData, error } =
-    await getMyPoliciesByCarrier('SBUL');
+  const { data: policyReferenceData, error } = await getMyPoliciesByCarrier([
+    CarrierId.SBUL,
+    CarrierId.ELIC,
+  ]);
 
   if (error || policyReferenceData?.length === 0) {
     return (

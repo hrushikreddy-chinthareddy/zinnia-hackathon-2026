@@ -17,7 +17,8 @@
     "./types/sor": "./dist/generated-types/sor/index.js",
     "./types/search": "./dist/generated-types/search/index.js",
     "./types/documents": "./dist/generated-types/documents/index.js",
-    "./types/bpm": "./dist/generated-types/bpm/index.js"
+    "./types/bpm": "./dist/generated-types/bpm/index.js",
+    "./types/funds": "./dist/generated-types/funds/index.js"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
@@ -38,6 +39,9 @@
       ],
       "./types/bpm": [
         "dist/generated-types/bpm/index.d.ts"
+      ],
+      "./types/funds": [
+        "dist/generated-types/funds/index.d.ts"
       ]
     }
   },
@@ -50,7 +54,8 @@
     "generate-types:sor": "npx openapi --input ./src/api-spec-sor.updated.json --output ./src/generated-types/sor --exportCore false --exportServices false;",
     "generate-types:search": "npx openapi --input ./src/api-spec-search.yaml --output ./src/generated-types/search --exportCore false --exportServices false;",
     "generate-types:bpm": "npx openapi --input ./src/api-spec-bpm.yaml --output ./src/generated-types/bpm --exportCore false --exportServices false;",
-    "generate-types:all": "rm -rf ./src/generated-types && pnpm run generate-types:sor && pnpm run generate-types:search && pnpm run generate-types:documents && pnpm run generate-types:bpm",
+    "generate-types:funds": "npx openapi --input ./src/api-spec-funds.yaml --output ./src/generated-types/funds --exportCore false --exportServices false;",
+    "generate-types:all": "rm -rf ./src/generated-types && pnpm run generate-types:sor && pnpm run generate-types:search && pnpm run generate-types:documents && pnpm run generate-types:bpm && pnpm run generate-types:funds",
     "clean": "rm -rf ./dist"
   },
   "devDependencies": {
