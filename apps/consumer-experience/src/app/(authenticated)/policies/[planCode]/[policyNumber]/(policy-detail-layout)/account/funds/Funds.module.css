@@ -1,8 +1,5 @@
 .container {
-  background-color: var(
-    --color-fields-surface-field-default-fill,
-    #fff
-  );
+  background-color: var(--color-fields-surface-field-default-fill, #fff);
   padding: var(--measure-dimension-padding-2xl, 1rem);
 }
 
@@ -15,4 +12,16 @@
   &:last-of-type {
     padding-bottom: 0;
   }
+}
+
+.sectionContainer {
+  > * {
+    margin-bottom: var(--measure-dimension-padding-lg, 0.5rem);
+  }
+}
+
+/* TODO: fix the spacing between bullet and text */
+.currentlyElectedLabel {
+  display: list-item;
+  list-style-position: inside;
 }

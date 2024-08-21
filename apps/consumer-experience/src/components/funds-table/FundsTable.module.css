@@ -13,9 +13,14 @@
   element so that when the text wraps, each line has an underline. line-height is set
   to match the text, text-top vertical align works because magic*/
   .isElected {
-    font-size: 25px;
+    font-size: 16px;
     vertical-align: text-top;
-    line-height: 14px;
+    line-height: 16px;
+
+    /* add this as spacing, using padding or margin doesn't include text underline */
+    &::after {
+      content: '     ';
+    }
   }
 }
 
