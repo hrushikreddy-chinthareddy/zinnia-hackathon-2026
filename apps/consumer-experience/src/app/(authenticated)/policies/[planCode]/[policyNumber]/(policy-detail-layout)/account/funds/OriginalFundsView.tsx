@@ -4,23 +4,23 @@ import clsx from 'clsx';
 import { AccountValue } from '@/components/account-value/AccountValue';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
-import { ApiResponseError } from '@/services';
-import { PolicyFund } from '@/types/policy';
+import { getPolicyFundDetails } from '@/services';
 import { formatUSDollars } from '@/utils/currency';
 
 import styles from './Funds.module.css';
 
-export const OriginalFundsView = ({
-  data,
-  error,
+export const OriginalFundsView = async ({
   planCode,
   policyNumber,
 }: {
-  data: PolicyFund[] | null;
-  error: ApiResponseError | null;
   planCode: string;
   policyNumber: string;
 }) => {
+  const { data, error } = await getPolicyFundDetails({
+    planCode,
+    policyNumber,
+  });
+
   const allocationData = () => {
     if (error || !data) {
       return <NoDataAvailable />;
