@@ -15,6 +15,7 @@ import { PolicyRequestInputs } from '@/types/policy';
 import styles from './Funds.module.css';
 
 export const FundsView = ({ planCode, policyNumber }: PolicyRequestInputs) => {
+  // TODO: just kidding, don't do this because PII
   const { data: policyProductType } = useQuery({
     queryKey: [QueryKeys.POLICY],
     // TODO: what should this be?
