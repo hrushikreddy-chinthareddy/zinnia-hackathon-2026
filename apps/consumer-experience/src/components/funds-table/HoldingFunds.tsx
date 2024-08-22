@@ -1,5 +1,7 @@
 'use client';
 
+import { useQuery } from '@tanstack/react-query';
+import { FundAccountTypeEnum } from '@zinnia/api-types/types/funds';
 import {
   Label,
   Table,
@@ -12,7 +14,8 @@ import {
 import { toSentenceCase } from '@zinnia/utils';
 import { useWindowSize } from 'react-use';
 
-import { Fund } from '@/services/funds';
+import { getPolicyFunds } from '@/queries/policy-queries';
+import { QueryKeys } from '@/queries/query-keys';
 import { formatUSDollars } from '@/utils/currency';
 import { percentFormatify } from '@/utils/numbers';
 
@@ -24,10 +27,27 @@ const FUND_VALUE_LABEL = 'fund value';
 const INTEREST_RATE_LABEL = 'interest rate';
 const NEXT_SWEEP_DATE_LABEL = 'next sweep date';
 
-export const HoldingFunds = ({ funds }: { funds?: Fund[] }) => {
+export const HoldingFunds = ({
+  planCode,
+  policyNumber,
+}: {
+  planCode: string;
+  policyNumber: string;
+}) => {
   const { width } = useWindowSize();
 
   const isDesktop = width >= 767;
+
+  const { data: fundsData } = useQuery({
+    queryKey: [QueryKeys.POLICY_FUNDS],
+    // TODO: what should this be?
+    // initialData: [],
+    queryFn: () => getPolicyFunds(planCode, policyNumber),
+    select: data =>
+      data?.filter(
+        fund => fund.fundAccountType === FundAccountTypeEnum.HOLDING
+      ),
+  });
 
   return (
     <Table>
@@ -82,7 +102,7 @@ export const HoldingFunds = ({ funds }: { funds?: Fund[] }) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {funds?.map(fund => (
+        {fundsData?.map(fund => (
           <TableRow key={fund.fundId} className={styles.tableRow}>
             <TableCell className="typography-content-body-sm">
               <FundNameCellContent

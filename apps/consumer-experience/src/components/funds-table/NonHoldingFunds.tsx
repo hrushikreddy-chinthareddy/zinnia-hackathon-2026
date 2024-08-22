@@ -1,5 +1,7 @@
 'use client';
 
+import { useQuery } from '@tanstack/react-query';
+import { FundAccountTypeEnum } from '@zinnia/api-types/types/funds';
 import {
   Label,
   Table,
@@ -14,6 +16,8 @@ import clsx from 'clsx';
 import { useMemo } from 'react';
 import { useWindowSize } from 'react-use';
 
+import { getPolicyFunds } from '@/queries/policy-queries';
+import { QueryKeys } from '@/queries/query-keys';
 import { Fund } from '@/services/funds';
 import { formatUSDollars } from '@/utils/currency';
 import { percentFormatify } from '@/utils/numbers';
@@ -23,8 +27,52 @@ import styles from './FundsTable.module.css';
 import { LabelPopover } from '../label-popover/LabelPopover';
 import { NoDataAvailable } from '../no-data-available/NoDataAvailable';
 
-export const NonHoldingFunds = ({ funds }: { funds?: Fund[] }) => {
+//TODO: Add testing for this function
+const sortNonHoldingFunds = (funds: Fund[] | undefined) => {
+  if (!funds) {
+    return [];
+  }
+
+  return [...funds].sort((a, b) => {
+    // elected funds first
+    if (a == null && b == null) return 0;
+    if (a == null) return 1;
+    if (b == null) return -1;
+
+    const isAElected = a.isElected;
+    const isBElected = b.isElected;
+    if (isAElected && !isBElected) return -1;
+    if (!isAElected && isBElected) return 1;
+    // elected funds sorted by allocation percentage
+    if (isAElected && isBElected) {
+      return (b.allocationPercentage ?? 0) - (a.allocationPercentage ?? 0);
+    }
+    // the rest sorted alphabetically
+    return (a.fundName || '').localeCompare(b.fundName || '');
+  });
+};
+
+export const NonHoldingFunds = ({
+  policyNumber,
+  planCode,
+}: {
+  planCode: string;
+  policyNumber: string;
+}) => {
   const { width } = useWindowSize();
+  const { data: funds } = useQuery({
+    queryKey: [QueryKeys.POLICY_FUNDS],
+    // TODO: what should this be?
+    // initialData: [],
+    queryFn: () => getPolicyFunds(planCode, policyNumber),
+    select: data => {
+      const nonHolding = data?.filter(
+        fund => fund.fundAccountType !== FundAccountTypeEnum.HOLDING
+      );
+
+      return sortNonHoldingFunds(nonHolding);
+    },
+  });
 
   const headerVals = useMemo(() => {
     if (width > 500) {
