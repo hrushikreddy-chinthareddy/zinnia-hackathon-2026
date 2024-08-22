@@ -1,16 +1,13 @@
-import { Label } from '@zinnia/bloom/components';
-import clsx from 'clsx';
 import { Metadata } from 'next';
 
-import { AccountValue } from '@/components/account-value/AccountValue';
-import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
-import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getPolicyFundDetails } from '@/services';
+import { getFeatureFlags } from '@/services/feature-flags';
 import { PolicyRequestInputs } from '@/types/policy';
-import { formatUSDollars } from '@/utils/currency';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
-import styles from './Funds.module.css';
+import { MultipleFundsView } from './MultipleFundsView';
+import { OriginalFundsView } from './OriginalFundsView';
 
 const pageTitle = getPageTitle(RouteKey.FUNDS);
 // disable because NextJS needs this to be exported from this file
@@ -25,48 +22,22 @@ export default async function AccountValuePage({
   params: PolicyRequestInputs;
 }) {
   const { planCode, policyNumber } = params;
+  // // TODO: move this into component
   const { data, error } = await getPolicyFundDetails({
     planCode,
     policyNumber,
   });
-
-  const allocationData = () => {
-    if (error || !data) {
-      return <NoDataAvailable />;
-    }
-
-    return data.map(allocation => {
-      return (
-        <div className={styles.item} key={allocation.fundName}>
-          <div className="stacked-items">
-            <Label>{allocation.fundName}</Label>
-            <p className="typography-content-body-sm">
-              {formatUSDollars(allocation.totalFundValue)}
-            </p>
-          </div>
-          <div className="stacked-items">
-            <Label>Allocation</Label>
-            <p className="typography-content-body-sm">{`${allocation.allocationPercentage ?? 0}%`}</p>
-          </div>
-        </div>
-      );
-    });
-  };
-
-  return (
-    <div className="container">
-      <div className={`${styles.container} card`}>
-        <AccountValue
-          planCode={planCode}
-          policyNumber={policyNumber}
-          className={clsx({ 'pb-2xl': data?.length })}
-        />
-        {allocationData()}
-      </div>
-      <CallForAssistance
-        callToAction="Questions about your allocation?"
-        customInstruction="for more information."
+  const featureFlagDecisions = await getFeatureFlags();
+  if (!featureFlagDecisions?.[FEATURE_FLAGS.MULTIPLE_FUNDS_VIEW]) {
+    return (
+      <OriginalFundsView
+        data={data}
+        error={error}
+        planCode={planCode}
+        policyNumber={policyNumber}
       />
-    </div>
-  );
+    );
+  }
+
+  return <MultipleFundsView planCode={planCode} policyNumber={policyNumber} />;
 }

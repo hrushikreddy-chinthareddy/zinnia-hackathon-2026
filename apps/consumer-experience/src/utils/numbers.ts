@@ -1,3 +1,4 @@
+import { isNullEmptyOrUndefined } from './data';
 import { DEFAULT_ERROR_STRING } from './strings';
 
 export const numberWithOrdinal = (value?: number) => {
@@ -16,4 +17,41 @@ export const numberWithOrdinal = (value?: number) => {
     default:
       return `${value}th`;
   }
+};
+
+export const percentFormatify = (
+  value?: number | string | null,
+  options?: { isInteger?: boolean; displayNullAsZero?: boolean }
+): string => {
+  const nullAsZeroDisplay = '0%';
+  if (isNullEmptyOrUndefined(value)) {
+    if (options?.displayNullAsZero) {
+      return nullAsZeroDisplay;
+    }
+
+    return DEFAULT_ERROR_STRING;
+  }
+
+  if (typeof value === 'string') {
+    value = parseFloat(value);
+  }
+
+  let numberValue = value as number;
+
+  if (isNaN(numberValue)) {
+    if (options?.displayNullAsZero) {
+      return nullAsZeroDisplay;
+    }
+
+    return DEFAULT_ERROR_STRING;
+  }
+
+  if (options?.isInteger) {
+    numberValue = numberValue / 100;
+  }
+
+  return new Intl.NumberFormat('en-US', {
+    style: 'percent',
+    maximumFractionDigits: 2,
+  }).format(numberValue);
 };
