@@ -1,8 +1,9 @@
-import { SideSheet } from '@zinnia/bloom/components';
+import { Button, Icon, IconType } from '@zinnia/bloom/components';
 import { toSentenceCase } from '@zinnia/utils';
 import clsx from 'clsx';
 
 import styles from './FundsTable.module.css';
+import { ControlledSidesheet } from '../controlled-sidesheet/ControlledSidesheet';
 
 export const FundNameCellContent = ({
   fundName,
@@ -12,8 +13,14 @@ export const FundNameCellContent = ({
   isElected?: boolean;
 }) => {
   return (
-    <SideSheet
+    <ControlledSidesheet
       header={toSentenceCase('fund details')}
+      closeBeforeContent={
+        <Button size="small" mode="link" className={styles.backButton}>
+          <Icon small type={IconType.CHEVRON} className={styles.chevronBack} />
+          Back to fund details
+        </Button>
+      }
       trigger={
         <span>
           <span
@@ -30,6 +37,6 @@ export const FundNameCellContent = ({
       }
     >
       Fund Details
-    </SideSheet>
+    </ControlledSidesheet>
   );
 };

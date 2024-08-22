@@ -1,0 +1,13 @@
+.unstyledButtons {
+  all: unset;
+}
+
+.unstyledButtons:focus {
+  outline: revert;
+}
+
+.closeBeforeContent {
+  composes: unstyledButtons;
+  margin-bottom: var(--measure-dimension-gap-xl);
+  display: block;
+}

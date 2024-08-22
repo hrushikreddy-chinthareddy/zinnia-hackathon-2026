@@ -34,3 +34,11 @@
 .activeFund {
   color: var(--color-base-text-text-secondary);
 }
+
+.chevronBack {
+  transform: rotate(90deg);
+}
+
+.backButton {
+  padding-left: 0;
+}
