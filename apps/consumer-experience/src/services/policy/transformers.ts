@@ -104,7 +104,7 @@ export const transformPolicyForAccountValue = (
   return {
     // Date of last policy transaction, when policy value was last updated
     effectiveDate: policy?.effectiveDate,
-    totalFundValue: policy?.accountValues?.endingAccountValue,
+    endingAccountValue: policy?.accountValues?.endingAccountValue,
     policyStartDate: policy?.policyDates?.policyStartDate,
   };
 };

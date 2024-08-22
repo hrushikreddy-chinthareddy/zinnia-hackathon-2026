@@ -43,7 +43,7 @@ export interface UpcomingPremium {
 }
 
 export interface PolicyAccountValue {
-  totalFundValue?: number | null;
+  endingAccountValue?: number | null;
   effectiveDate?: string | null;
   valueChange?: number | null;
   policyStartDate?: string;

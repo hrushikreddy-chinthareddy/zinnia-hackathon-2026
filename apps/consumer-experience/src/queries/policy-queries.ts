@@ -3,7 +3,7 @@ import { Policy } from '@zinnia/api-types/types/sor';
 import { ApiResponse } from '@/services';
 import { ClientApi } from '@/services/client-http';
 import { Fund } from '@/services/funds';
-import { PolicyProfile } from '@/types/policy';
+import { PolicyAccountValue, PolicyProfile } from '@/types/policy';
 
 export const getPolicyProfile = async (
   planCode: string,
@@ -36,7 +36,22 @@ export const getPolicy = async (planCode: string, policyNumber: string) => {
     await ClientApi.get(`/api/policies/${planCode}/${policyNumber}`)
   ).json();
 
-  console.log('route handler policy', response);
+  if (response.error || !response) {
+    throw response.error;
+  }
+  return response.data;
+};
+
+export const getPolicyAccountValue = async (
+  planCode: string,
+  policyNumber: string
+) => {
+  const response: ApiResponse<PolicyAccountValue> = await (
+    await ClientApi.get(
+      `/api/policies/${planCode}/${policyNumber}/account-value`
+    )
+  ).json();
+
   if (response.error || !response) {
     throw response.error;
   }

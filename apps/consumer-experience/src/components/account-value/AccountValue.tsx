@@ -1,20 +1,18 @@
-import {
-  Label,
-  Icon,
-  IconType,
-  Ticker,
-} from '@zinnia/bloom/components';
+'use client';
+import { useQuery } from '@tanstack/react-query';
+import { Icon, IconType, Label, Ticker } from '@zinnia/bloom/components';
+import { DEFAULT_UNAVAILABLE_STRING } from '@zinnia/utils';
 import { HTMLAttributes } from 'react';
 
-import { AccountValuePopover } from '@/components/account-value/AccountValuePopover';
-import { FieldData } from '@/components/field-data/FieldData';
-import { getPolicyAccountValueWith30DayChange } from '@/services';
+import { getPolicyAccountValue } from '@/queries/policy-queries';
+import { QueryKeys } from '@/queries/query-keys';
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
-import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
+import { AccountValuePopover } from './AccountValuePopover';
+import { FieldData } from '../field-data/FieldData';
 import styles from '../policy-overview/PolicyOverview.module.css';
 
 const ACCOUNT_VALUE = 'Account value';
@@ -26,7 +24,7 @@ interface Props extends PolicyRequestInputs, HTMLAttributes<HTMLDivElement> {
   showIcon?: boolean;
 }
 
-export const AccountValue = async ({
+export const AccountValue = ({
   className,
   hideLabel,
   hideTicker,
@@ -35,22 +33,26 @@ export const AccountValue = async ({
   policyNumber,
   showIcon,
 }: Props) => {
-  const { data, error } = await getPolicyAccountValueWith30DayChange({
-    planCode,
-    policyNumber,
+  const { data } = useQuery({
+    queryKey: [QueryKeys.POLICY_ACCOUNT_VALUE],
+    // TODO: what should this be?
+    // initialData: [],
+    queryFn: () => getPolicyAccountValue(planCode, policyNumber),
   });
 
-  if (error || !data) {
+  if (!data) {
     return null;
   }
 
-  const { totalFundValue, effectiveDate, valueChange } = data!;
+  console.log(data);
 
-  const totalFundContent = isNullEmptyOrUndefined(totalFundValue) ? (
+  const { endingAccountValue, effectiveDate, valueChange } = data!;
+
+  const totalFundContent = isNullEmptyOrUndefined(endingAccountValue) ? (
     <p className="typography-content-body-sm">{DEFAULT_UNAVAILABLE_STRING}</p>
   ) : (
     <p className="typography-content-value">
-      {formatUSDollars(totalFundValue)}
+      {formatUSDollars(endingAccountValue)}
     </p>
   );
 

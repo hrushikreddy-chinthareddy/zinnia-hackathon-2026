@@ -5,6 +5,7 @@ import { ProductType } from '@zinnia/api-types/types/sor';
 import { BannerAlert, BannerVariant } from '@zinnia/bloom/components';
 import { toTitleCase } from '@zinnia/utils';
 
+import { AccountValue } from '@/components/account-value/AccountValue';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { HoldingFunds } from '@/components/funds-table/HoldingFunds';
 import { NonHoldingFunds } from '@/components/funds-table/NonHoldingFunds';
@@ -28,11 +29,11 @@ export const FundsView = ({ planCode, policyNumber }: PolicyRequestInputs) => {
     <div className="container">
       <div className={`${styles.container} card`}>
         {/* TODO: convert to client!!! */}
-        {/* <AccountValue
+        <AccountValue
           planCode={planCode}
           policyNumber={policyNumber}
           hideTicker
-        /> */}
+        />
       </div>
       {policyProductType === ProductType.INDEXEDUNIVERSALLIFE && (
         <>
