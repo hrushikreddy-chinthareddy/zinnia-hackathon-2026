@@ -551,5 +551,9 @@ export const transformPolicyDetails = (policy: Policy): Partial<Policy> => {
       planName: policy.product?.planName,
       planCode: policy.product?.planCode,
     },
+    accountValues: {
+      loanedPortionOfAccountValue:
+        policy.accountValues?.loanedPortionOfAccountValue,
+    },
   };
 };

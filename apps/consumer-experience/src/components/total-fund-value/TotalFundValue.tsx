@@ -1,12 +1,13 @@
 import { Label, Icon, IconType } from '@zinnia/bloom/components';
 import { HTMLAttributes } from 'react';
 
-import { AccountValuePopover } from '@/components/account-value/AccountValuePopover';
 import { FieldData } from '@/components/field-data/FieldData';
+import { getPolicyDetails } from '@/services';
 import { getFundsTotalValue } from '@/services/funds';
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 
+import { LabelPopover } from '../label-popover/LabelPopover';
 import styles from '../policy-overview/PolicyOverview.module.css';
 
 const TOTAL_FUND_VALUE = 'Total fund value';
@@ -30,9 +31,10 @@ export const TotalFundValue = async ({
     policyNumber,
   });
 
-  if (error || !data) {
-    return null;
-  }
+  const { data: policyData } = await getPolicyDetails({
+    planCode,
+    policyNumber,
+  });
 
   console.log('TOTAL FUND +++++++', data);
 
@@ -45,9 +47,17 @@ export const TotalFundValue = async ({
             Label: (
               <Label
                 interactiveElements={[
-                  <AccountValuePopover
-                    key="account-value-popover"
-                    // dataTimestamp={effectiveDate}
+                  <LabelPopover
+                    title={TOTAL_FUND_VALUE}
+                    key={TOTAL_FUND_VALUE}
+                    content={
+                      <p>
+                        This is the amount of your account value currently
+                        invested in funds. It’s often the same amount as the
+                        account value, but may differ if you have any
+                        outstanding loans from the policy.
+                      </p>
+                    }
                   />,
                 ]}
               >
@@ -56,11 +66,11 @@ export const TotalFundValue = async ({
             ),
           })}
           caption={
-            <span>{`Outstanding loan: ${formatUSDollars(null, true)}`}</span>
+            <span>{`Outstanding loan: ${formatUSDollars(policyData?.accountValues?.loanedPortionOfAccountValue, true)}`}</span>
           }
         >
           <p className="typography-content-value">
-            {formatUSDollars(data.fundsTotalValue)}
+            {formatUSDollars(data?.fundsTotalValue)}
           </p>
         </FieldData>
       </div>
