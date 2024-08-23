@@ -1,18 +1,15 @@
-import { Label, Icon, IconType, Ticker } from '@zinnia/bloom/components';
+import { Label, Icon, IconType } from '@zinnia/bloom/components';
 import { HTMLAttributes } from 'react';
 
 import { AccountValuePopover } from '@/components/account-value/AccountValuePopover';
 import { FieldData } from '@/components/field-data/FieldData';
-import { getPolicyAccountValueWith30DayChange } from '@/services';
+import { getFundsTotalValue } from '@/services/funds';
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
-import { isNullEmptyOrUndefined } from '@/utils/data';
-import { standardDateMonthDayYear } from '@/utils/dates';
-import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 import styles from '../policy-overview/PolicyOverview.module.css';
 
-const ACCOUNT_VALUE = 'Account value';
+const TOTAL_FUND_VALUE = 'Total fund value';
 
 interface Props extends PolicyRequestInputs, HTMLAttributes<HTMLDivElement> {
   hideLabel?: boolean;
@@ -21,16 +18,14 @@ interface Props extends PolicyRequestInputs, HTMLAttributes<HTMLDivElement> {
   showIcon?: boolean;
 }
 
-export const AccountValue = async ({
+export const TotalFundValue = async ({
   className,
   hideLabel,
-  hideTicker,
-  isLink,
   planCode,
   policyNumber,
   showIcon,
 }: Props) => {
-  const { data, error } = await getPolicyAccountValueWith30DayChange({
+  const { data, error } = await getFundsTotalValue({
     planCode,
     policyNumber,
   });
@@ -39,15 +34,7 @@ export const AccountValue = async ({
     return null;
   }
 
-  const { endingAccountValue, effectiveDate, valueChange } = data!;
-
-  const totalFundContent = isNullEmptyOrUndefined(endingAccountValue) ? (
-    <p className="typography-content-body-sm">{DEFAULT_UNAVAILABLE_STRING}</p>
-  ) : (
-    <p className="typography-content-value">
-      {formatUSDollars(endingAccountValue)}
-    </p>
-  );
+  console.log('TOTAL FUND +++++++', data);
 
   return (
     <div className={`${styles.rowWrapper} ${className}`}>
@@ -60,28 +47,23 @@ export const AccountValue = async ({
                 interactiveElements={[
                   <AccountValuePopover
                     key="account-value-popover"
-                    dataTimestamp={effectiveDate}
+                    // dataTimestamp={effectiveDate}
                   />,
                 ]}
               >
-                {ACCOUNT_VALUE}
+                {TOTAL_FUND_VALUE}
               </Label>
             ),
           })}
           caption={
-            effectiveDate
-              ? `As of ${standardDateMonthDayYear(effectiveDate)}`
-              : ''
+            <span>{`Outstanding loan: ${formatUSDollars(null, true)}`}</span>
           }
         >
-          {totalFundContent}
+          <p className="typography-content-value">
+            {formatUSDollars(data.fundsTotalValue)}
+          </p>
         </FieldData>
       </div>
-      {!hideTicker && (
-        <div className={!isLink ? 'ml-lg' : 'mr-lg ml-md'}>
-          <Ticker value={valueChange} subtext="Last 30 days" />
-        </div>
-      )}
     </div>
   );
 };

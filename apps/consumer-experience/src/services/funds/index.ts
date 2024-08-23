@@ -5,10 +5,10 @@ import {
 } from '@zinnia/api-types/types/funds';
 import { FundSegment } from '@zinnia/api-types/types/sor';
 
-import { PolicyFund } from '@/types/policy';
-import { logTrace } from '@/utils/logging/server-logging';
+import { PolicyFund, PolicyRequestInputs } from '@/types/policy';
+import { logTrace, logWarn } from '@/utils/logging/server-logging';
 
-import { combineFundData } from './transformers';
+import { combineFundData, transformFundsTotalValue } from './transformers';
 import { ApiResponse } from '..';
 import { getPolicyByPlanCodeAndId } from '../policy';
 import { transformPolicyForFundDetails } from '../policy/transformers';
@@ -229,6 +229,46 @@ export const getFunds = async ({
         status: (e as Response)?.status ?? 502,
         name: 'getFundsInfo: error',
         message: 'error getting funds info',
+      },
+    };
+  }
+};
+
+export const getFundsTotalValue = async (policyInputs: PolicyRequestInputs) => {
+  logTrace('getFundsTotalValue', {
+    planCode: policyInputs.planCode,
+    policyNumber: policyInputs.policyNumber,
+  });
+
+  // if (isMockPolicyOverviewRequestEnabled()) {
+  //   const transformedResults =
+  //     transformPolicyProductDetails(mockPolicyResponse);
+
+  //   return {
+  //     data: transformedResults,
+  //     error: null,
+  //   };
+  // }
+
+  try {
+    const funds = await getFunds(policyInputs);
+    const fundsTotalValue = transformFundsTotalValue(funds.data);
+
+    return {
+      data: {
+        fundsTotalValue,
+      },
+      error: null,
+    };
+  } catch (error) {
+    logWarn('getFundsTotalValue Error', { error });
+
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 400,
+        name: 'getFundsTotalValue Error',
       },
     };
   }

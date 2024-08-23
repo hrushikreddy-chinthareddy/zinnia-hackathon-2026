@@ -62,3 +62,19 @@ export const combineFundData = ({
     error: null,
   };
 };
+
+export const transformFundsTotalValue = (
+  funds: Fund[] | PolicyFund[] | null
+) => {
+  if (!funds) {
+    return 0;
+  }
+
+  return funds.reduce((total, fund) => {
+    if (!fund.totalFundValue) {
+      return total;
+    }
+
+    return total + fund.totalFundValue;
+  }, 0);
+};

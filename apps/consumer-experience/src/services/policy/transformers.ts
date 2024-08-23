@@ -543,3 +543,13 @@ export const transformPolicyStatusDetails = (
     policyStatus,
   };
 };
+
+export const transformPolicyDetails = (policy: Policy): Partial<Policy> => {
+  return {
+    product: {
+      productType: policy.product?.productType,
+      planName: policy.product?.planName,
+      planCode: policy.product?.planCode,
+    },
+  };
+};

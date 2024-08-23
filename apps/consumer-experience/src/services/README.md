@@ -22,3 +22,5 @@ The intention with API development for this project is to make each return essen
     ```
 
     It may feel rendundant, but it will prevent any unsanitized PII from being returned in the frontend call.
+
+2.  Determining whether something should have its own function/route handler vs adding to the policyDetails return

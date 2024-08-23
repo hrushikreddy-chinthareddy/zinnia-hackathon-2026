@@ -1,6 +1,9 @@
-.container {
-  background-color: var(--color-fields-surface-field-default-fill, #fff);
+.detailsContainer {
   padding: var(--measure-dimension-padding-2xl, 1rem);
+
+  > * {
+    margin-bottom: var(--measure-dimension-padding-lg, 1rem);
+  }
 }
 
 .item {
@@ -24,4 +27,15 @@
 .currentlyElectedLabel {
   display: list-item;
   list-style-position: inside;
+}
+
+@media (width > 767px) {
+  .detailsContainer {
+    display: flex;
+    gap: var(--measure-dimension-gap-2xl, 2rem);
+
+    > * {
+      width: fit-content;
+    }
+  }
 }

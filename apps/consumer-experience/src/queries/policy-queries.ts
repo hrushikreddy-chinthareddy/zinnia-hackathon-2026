@@ -1,5 +1,3 @@
-import { Policy } from '@zinnia/api-types/types/sor';
-
 import { ApiResponse } from '@/services';
 import { ClientApi } from '@/services/client-http';
 import { Fund } from '@/services/funds';
@@ -31,16 +29,19 @@ export const getPolicyFunds = async (
   return response.data;
 };
 
-export const getPolicy = async (planCode: string, policyNumber: string) => {
-  const response: ApiResponse<Policy> = await (
-    await ClientApi.get(`/api/policies/${planCode}/${policyNumber}`)
-  ).json();
+// export const getPolicyProductType = async (
+//   planCode: string,
+//   policyNumber: string
+// ) => {
+//   const response: ApiResponse<Policy> = await (
+//     await ClientApi.get(`/api/policies/${planCode}/${policyNumber}`)
+//   ).json();
 
-  if (response.error || !response) {
-    throw response.error;
-  }
-  return response.data;
-};
+//   if (response.error || !response) {
+//     throw response.error;
+//   }
+//   return response.data;
+// };
 
 export const getPolicyAccountValue = async (
   planCode: string,
