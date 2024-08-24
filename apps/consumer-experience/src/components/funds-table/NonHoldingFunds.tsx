@@ -62,8 +62,6 @@ export const NonHoldingFunds = ({
   const { width } = useWindowSize();
   const { data: funds } = useQuery({
     queryKey: [QueryKeys.POLICY_FUNDS],
-    // TODO: what should this be?
-    // initialData: [],
     queryFn: () => getPolicyFunds(planCode, policyNumber),
     select: data => {
       const nonHolding = data?.filter(

@@ -40,8 +40,6 @@ export const HoldingFunds = ({
 
   const { data: fundsData } = useQuery({
     queryKey: [QueryKeys.POLICY_FUNDS],
-    // TODO: what should this be?
-    // initialData: [],
     queryFn: () => getPolicyFunds(planCode, policyNumber),
     select: data =>
       data?.filter(

@@ -26,20 +26,23 @@ export const TotalFundValue = async ({
   policyNumber,
   showIcon,
 }: Props) => {
-  const { data, error } = await getFundsTotalValue({
-    planCode,
-    policyNumber,
-  });
-
-  const { data: policyData } = await getPolicyDetails({
-    planCode,
-    policyNumber,
-  });
-
-  console.log('TOTAL FUND +++++++', data);
+  const [totalFunds, policyData] = await Promise.allSettled([
+    getFundsTotalValue({ planCode, policyNumber }),
+    getPolicyDetails({ planCode, policyNumber }),
+  ]);
+  let outstandingLoan;
+  let totalFundsVal;
+  if (totalFunds.status === 'rejected' || policyData.status === 'rejected') {
+    outstandingLoan = 0;
+    totalFundsVal = 0;
+  } else {
+    outstandingLoan =
+      policyData.value?.data?.accountValues?.loanedPortionOfAccountValue;
+    totalFundsVal = totalFunds.value?.data?.fundsTotalValue;
+  }
 
   return (
-    <div className={`${styles.rowWrapper} ${className}`}>
+    <div className={`${className}`}>
       <div className={styles.content}>
         {showIcon && <Icon type={IconType.DOLLAR} className={styles.icon} />}
         <FieldData
@@ -66,11 +69,11 @@ export const TotalFundValue = async ({
             ),
           })}
           caption={
-            <span>{`Outstanding loan: ${formatUSDollars(policyData?.accountValues?.loanedPortionOfAccountValue, true)}`}</span>
+            <span>{`Outstanding loan: ${formatUSDollars(outstandingLoan, true)}`}</span>
           }
         >
           <p className="typography-content-value">
-            {formatUSDollars(data?.fundsTotalValue)}
+            {formatUSDollars(totalFundsVal)}
           </p>
         </FieldData>
       </div>
