@@ -18,11 +18,23 @@ export interface FundDetails extends FundDescriptor {
   fundId: string;
 }
 
+/**
+ * The FundSegment type provided in SOR does not match what we get back from the
+ * funds API, but the funds API doesn't have a FundSegment type. So just doing this for now
+ */
+export interface ExtendedFundSegment extends FundSegment {
+  interestEarningAmount: number;
+  startingPrice: number;
+  startingPriceDate: string;
+  endingPrice: number;
+  endingPriceDate: string;
+}
+
 export interface Fund {
   fundId?: string;
   fundName?: string | null;
   totalFundValue?: number;
-  fundSegments?: Array<FundSegment>;
+  fundSegments?: Array<ExtendedFundSegment> | Array<FundSegment>;
   fundAccountType?: FundAccountTypeEnum;
   allocationPercentage?: number | null;
   interestRate?: number | null;

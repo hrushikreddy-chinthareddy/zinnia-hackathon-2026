@@ -1,4 +1,4 @@
-import { Label, Icon, IconType } from '@zinnia/bloom/components';
+import { Label } from '@zinnia/bloom/components';
 import { HTMLAttributes } from 'react';
 
 import { FieldData } from '@/components/field-data/FieldData';
@@ -8,7 +8,6 @@ import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 
 import { LabelPopover } from '../label-popover/LabelPopover';
-import styles from '../policy-overview/PolicyOverview.module.css';
 
 const TOTAL_FUND_VALUE = 'Total fund value';
 
@@ -20,11 +19,9 @@ interface Props extends PolicyRequestInputs, HTMLAttributes<HTMLDivElement> {
 }
 
 export const TotalFundValue = async ({
-  className,
   hideLabel,
   planCode,
   policyNumber,
-  showIcon,
 }: Props) => {
   const [totalFunds, policyData] = await Promise.allSettled([
     getFundsTotalValue({ planCode, policyNumber }),
@@ -42,41 +39,36 @@ export const TotalFundValue = async ({
   }
 
   return (
-    <div className={`${className}`}>
-      <div className={styles.content}>
-        {showIcon && <Icon type={IconType.DOLLAR} className={styles.icon} />}
-        <FieldData
-          {...(!hideLabel && {
-            Label: (
-              <Label
-                interactiveElements={[
-                  <LabelPopover
-                    title={TOTAL_FUND_VALUE}
-                    key={TOTAL_FUND_VALUE}
-                    content={
-                      <p>
-                        This is the amount of your account value currently
-                        invested in funds. It’s often the same amount as the
-                        account value, but may differ if you have any
-                        outstanding loans from the policy.
-                      </p>
-                    }
-                  />,
-                ]}
-              >
-                {TOTAL_FUND_VALUE}
-              </Label>
-            ),
-          })}
-          caption={
-            <span>{`Outstanding loan: ${formatUSDollars(outstandingLoan, true)}`}</span>
-          }
-        >
-          <p className="typography-content-value">
-            {formatUSDollars(totalFundsVal)}
-          </p>
-        </FieldData>
-      </div>
-    </div>
+    <FieldData
+      {...(!hideLabel && {
+        Label: (
+          <Label
+            interactiveElements={[
+              <LabelPopover
+                title={TOTAL_FUND_VALUE}
+                key={TOTAL_FUND_VALUE}
+                content={
+                  <p>
+                    This is the amount of your account value currently invested
+                    in funds. It’s often the same amount as the account value,
+                    but may differ if you have any outstanding loans from the
+                    policy.
+                  </p>
+                }
+              />,
+            ]}
+          >
+            {TOTAL_FUND_VALUE}
+          </Label>
+        ),
+      })}
+      caption={
+        <span>{`Outstanding loan: ${formatUSDollars(outstandingLoan, true)}`}</span>
+      }
+    >
+      <p className="typography-content-value">
+        {formatUSDollars(totalFundsVal)}
+      </p>
+    </FieldData>
   );
 };

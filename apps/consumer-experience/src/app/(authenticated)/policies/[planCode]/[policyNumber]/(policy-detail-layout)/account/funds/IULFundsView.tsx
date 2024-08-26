@@ -1,3 +1,4 @@
+'use client';
 import { BannerAlert, BannerVariant } from '@zinnia/bloom/components';
 import { toTitleCase } from '@zinnia/utils';
 
@@ -5,6 +6,11 @@ import { HoldingFunds } from '@/components/funds-table/HoldingFunds';
 import { NonHoldingFunds } from '@/components/funds-table/NonHoldingFunds';
 
 import styles from './Funds.module.css';
+import { sortNonHoldingFunds } from '@/components/funds-table/utils';
+import { getPolicyFunds } from '@/queries/policy-queries';
+import { QueryKeys } from '@/queries/query-keys';
+import { useQuery } from '@tanstack/react-query';
+import { FundAccountTypeEnum } from '@zinnia/api-types/types/funds';
 
 export const IULFundsView = ({
   planCode,
@@ -13,6 +19,21 @@ export const IULFundsView = ({
   planCode: string;
   policyNumber: string;
 }) => {
+  const { data: funds } = useQuery({
+    queryKey: [QueryKeys.POLICY_FUNDS],
+    queryFn: () => getPolicyFunds(planCode, policyNumber),
+    select: data => {
+      const nonHolding = data?.filter(
+        fund => fund.fundAccountType !== FundAccountTypeEnum.HOLDING
+      );
+      const holding = data?.filter(
+        fund => fund.fundAccountType === FundAccountTypeEnum.HOLDING
+      );
+
+      return { nonHolding: sortNonHoldingFunds(nonHolding), holding };
+    },
+  });
+
   return (
     <>
       <div className={styles.sectionContainer}>
@@ -23,7 +44,7 @@ export const IULFundsView = ({
           come out. Then, what remains is moved or “swept” into your elected
           funds on the sweep date.
         </p>
-        <HoldingFunds planCode={planCode} policyNumber={policyNumber} />
+        <HoldingFunds funds={funds?.holding} />
       </div>
 
       <div className={styles.sectionContainer}>
@@ -42,7 +63,7 @@ export const IULFundsView = ({
             Currently elected funds
           </p>
         </div>
-        <NonHoldingFunds policyNumber={policyNumber} planCode={planCode} />
+        <NonHoldingFunds funds={funds?.nonHolding} />
       </div>
     </>
   );

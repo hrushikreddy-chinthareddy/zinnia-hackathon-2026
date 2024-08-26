@@ -1,3 +1,5 @@
+import { Fund } from '../funds';
+
 export const mockULFundResponse = [
   {
     fundAccountType: 'FIXED',
@@ -194,4 +196,4 @@ export const mockIULFundResponse = [
     isElected: true,
     sweepDate: '-',
   },
-];
+] as unknown as Fund[];

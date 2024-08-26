@@ -1,7 +1,5 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
-import { FundAccountTypeEnum } from '@zinnia/api-types/types/funds';
 import {
   Label,
   Table,
@@ -16,8 +14,6 @@ import clsx from 'clsx';
 import { useMemo } from 'react';
 import { useWindowSize } from 'react-use';
 
-import { getPolicyFunds } from '@/queries/policy-queries';
-import { QueryKeys } from '@/queries/query-keys';
 import { formatUSDollars } from '@/utils/currency';
 import { percentFormatify } from '@/utils/numbers';
 
@@ -25,27 +21,10 @@ import { FundNameCellContent } from './FundNameCellContent';
 import styles from './FundsTable.module.css';
 import { LabelPopover } from '../label-popover/LabelPopover';
 import { NoDataAvailable } from '../no-data-available/NoDataAvailable';
-import { sortNonHoldingFunds } from './utils';
+import { Fund } from '@/services/funds';
 
-export const NonHoldingFunds = ({
-  policyNumber,
-  planCode,
-}: {
-  planCode: string;
-  policyNumber: string;
-}) => {
+export const NonHoldingFunds = ({ funds }: { funds?: Fund[] }) => {
   const { width } = useWindowSize();
-  const { data: funds } = useQuery({
-    queryKey: [QueryKeys.POLICY_FUNDS],
-    queryFn: () => getPolicyFunds(planCode, policyNumber),
-    select: data => {
-      const nonHolding = data?.filter(
-        fund => fund.fundAccountType !== FundAccountTypeEnum.HOLDING
-      );
-
-      return sortNonHoldingFunds(nonHolding);
-    },
-  });
 
   const headerVals = useMemo(() => {
     if (width > 500) {
