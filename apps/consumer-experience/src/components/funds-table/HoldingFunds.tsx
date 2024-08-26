@@ -22,6 +22,7 @@ import { percentFormatify } from '@/utils/numbers';
 import { FundNameCellContent } from './FundNameCellContent';
 import styles from './FundsTable.module.css';
 import { LabelPopover } from '../label-popover/LabelPopover';
+import { NoDataAvailable } from '../no-data-available/NoDataAvailable';
 
 const FUND_VALUE_LABEL = 'fund value';
 const INTEREST_RATE_LABEL = 'interest rate';
@@ -47,6 +48,10 @@ export const HoldingFunds = ({
       ),
   });
 
+  if (!fundsData || fundsData.length === 0) {
+    return <NoDataAvailable />;
+  }
+
   return (
     <Table>
       <TableHeader>
@@ -61,7 +66,7 @@ export const HoldingFunds = ({
                   <LabelPopover
                     key={INTEREST_RATE_LABEL}
                     title={INTEREST_RATE_LABEL}
-                    content="This is the amount of your account value currently invested in this specific fund."
+                    content="This is the rate of growth being earned on the amount invested within a fixed fund or holding fund."
                   />,
                 ]}
               >
@@ -89,7 +94,7 @@ export const HoldingFunds = ({
                   <LabelPopover
                     key={NEXT_SWEEP_DATE_LABEL}
                     title={NEXT_SWEEP_DATE_LABEL}
-                    content="This is the amount of your account value currently invested in this specific fund."
+                    content="On this date, all money in the holding fund will be “swept” or moved into the policy’s various funds, according to your elected fund allocations. In most cases, the sweep date happens on the same date every month."
                   />,
                 ]}
               >

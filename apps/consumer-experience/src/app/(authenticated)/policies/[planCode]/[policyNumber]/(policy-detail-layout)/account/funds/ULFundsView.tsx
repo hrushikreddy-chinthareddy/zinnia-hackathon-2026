@@ -10,13 +10,11 @@ export const ULFundsView = ({
 }: PolicyRequestInputs) => {
   return (
     <div className="container">
-      <>
-        <NonHoldingFunds policyNumber={policyNumber} planCode={planCode} />
-        <CallForAssistance
-          callToAction="Questions about your allocation?"
-          customInstruction="for more information."
-        />
-      </>
+      <NonHoldingFunds policyNumber={policyNumber} planCode={planCode} />
+      <CallForAssistance
+        callToAction="Questions about your allocation?"
+        customInstruction="for more information."
+      />
     </div>
   );
 };

@@ -95,10 +95,12 @@ export const getNextOccurrenceOfDay = (dayToAdd?: number | null) => {
     return DEFAULT_ERROR_STRING;
   }
   const today = dayjs();
+  console.log('TODAY', today.date());
+  console.log('this thing', today.add(1, 'month').date(dayToAdd));
   const date =
-    today.day() > dayToAdd
+    today.date() > dayToAdd
       ? today.add(1, 'month').date(dayToAdd)
       : today.date(dayToAdd);
 
-  return date.format('MM/DD/YYYY');
+  return date.format(DEFAULT_DATE_FORMAT);
 };

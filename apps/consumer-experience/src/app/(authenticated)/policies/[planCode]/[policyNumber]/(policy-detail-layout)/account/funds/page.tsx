@@ -13,6 +13,7 @@ import styles from './Funds.module.css';
 import { IULFundsView } from './IULFundsView';
 import { OriginalFundsView } from './OriginalFundsView';
 import { ULFundsView } from './ULFundsView';
+import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 
 const pageTitle = getPageTitle(RouteKey.FUNDS);
 // disable because NextJS needs this to be exported from this file
@@ -27,7 +28,7 @@ export default async function FundsPage({
   params: PolicyRequestInputs;
 }) {
   const { planCode, policyNumber } = params;
-  const { data } = await getPolicyDetails({
+  const { data, error } = await getPolicyDetails({
     planCode,
     policyNumber,
   });
@@ -37,6 +38,10 @@ export default async function FundsPage({
     return (
       <OriginalFundsView planCode={planCode} policyNumber={policyNumber} />
     );
+  }
+
+  if (!data || error) {
+    return <NoDataAvailable />;
   }
 
   return (
