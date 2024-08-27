@@ -1,16 +1,16 @@
 'use client';
+import { useQuery } from '@tanstack/react-query';
+import { FundAccountTypeEnum } from '@zinnia/api-types/types/funds';
 import { BannerAlert, BannerVariant } from '@zinnia/bloom/components';
 import { toTitleCase } from '@zinnia/utils';
 
 import { HoldingFunds } from '@/components/funds-table/HoldingFunds';
 import { NonHoldingFunds } from '@/components/funds-table/NonHoldingFunds';
-
-import styles from './Funds.module.css';
 import { sortNonHoldingFunds } from '@/components/funds-table/utils';
 import { getPolicyFunds } from '@/queries/policy-queries';
 import { QueryKeys } from '@/queries/query-keys';
-import { useQuery } from '@tanstack/react-query';
-import { FundAccountTypeEnum } from '@zinnia/api-types/types/funds';
+
+import styles from './Funds.module.css';
 
 export const IULFundsView = ({
   planCode,
@@ -20,7 +20,7 @@ export const IULFundsView = ({
   policyNumber: string;
 }) => {
   const { data: funds } = useQuery({
-    queryKey: [QueryKeys.POLICY_FUNDS],
+    queryKey: [QueryKeys.POLICY_FUNDS, planCode, policyNumber],
     queryFn: () => getPolicyFunds(planCode, policyNumber),
     select: data => {
       const nonHolding = data?.filter(
