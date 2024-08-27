@@ -90,32 +90,38 @@ export const HoldingFunds = ({ funds }: { funds?: Fund[] }) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {funds?.map(fund => (
-          <TableRow key={fund.fundId} className={styles.tableRow}>
-            <TableCell className="typography-content-body-sm">
-              <FundNameCellContent
-                isElected={fund.isElected}
-                fundDetails={fund}
-              />
-            </TableCell>
-            {isDesktop && (
+        {funds?.map(fund => {
+          if (!fund || !fund.fundName) {
+            return null;
+          }
+
+          return (
+            <TableRow key={fund.fundId} className={styles.tableRow}>
               <TableCell className="typography-content-body-sm">
-                {percentFormatify(fund.interestRate, {
-                  isInteger: true,
-                  displayNullAsZero: true,
-                })}
+                <FundNameCellContent
+                  isElected={fund.isElected}
+                  fundDetails={fund}
+                />
               </TableCell>
-            )}
-            <TableCell className="typography-content-body-sm">
-              {formatUSDollars(fund.totalFundValue, true, true)}
-            </TableCell>
-            {isDesktop && (
+              {isDesktop && (
+                <TableCell className="typography-content-body-sm">
+                  {percentFormatify(fund.interestRate, {
+                    isInteger: true,
+                    displayNullAsZero: true,
+                  })}
+                </TableCell>
+              )}
               <TableCell className="typography-content-body-sm">
-                {fund.sweepDate}
+                {formatUSDollars(fund.totalFundValue, true, true)}
               </TableCell>
-            )}
-          </TableRow>
-        ))}
+              {isDesktop && (
+                <TableCell className="typography-content-body-sm">
+                  {fund.sweepDate}
+                </TableCell>
+              )}
+            </TableRow>
+          );
+        })}
       </TableBody>
     </Table>
   );

@@ -79,28 +79,34 @@ export const NonHoldingFunds = ({ funds }: { funds?: Fund[] }) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {funds.map(fund => (
-          <TableRow
-            key={fund.fundId}
-            className={`typography-content-body-sm ${styles.tableRow}`}
-          >
-            <TableCell>
-              <FundNameCellContent
-                fundDetails={fund}
-                isElected={fund.isElected}
-              />
-            </TableCell>
-            <TableCell className={dataValueStyles(fund.totalFundValue)}>
-              {formatUSDollars(fund.totalFundValue, true, true)}
-            </TableCell>
-            <TableCell className={dataValueStyles(fund.allocationPercentage)}>
-              {percentFormatify(fund.allocationPercentage, {
-                isInteger: true,
-                displayNullAsZero: true,
-              })}
-            </TableCell>
-          </TableRow>
-        ))}
+        {funds?.map(fund => {
+          if (!fund || !fund.fundName) {
+            return null;
+          }
+
+          return (
+            <TableRow
+              key={fund.fundId}
+              className={`typography-content-body-sm ${styles.tableRow}`}
+            >
+              <TableCell>
+                <FundNameCellContent
+                  fundDetails={fund}
+                  isElected={fund.isElected}
+                />
+              </TableCell>
+              <TableCell className={dataValueStyles(fund.totalFundValue)}>
+                {formatUSDollars(fund.totalFundValue, true, true)}
+              </TableCell>
+              <TableCell className={dataValueStyles(fund.allocationPercentage)}>
+                {percentFormatify(fund.allocationPercentage, {
+                  isInteger: true,
+                  displayNullAsZero: true,
+                })}
+              </TableCell>
+            </TableRow>
+          );
+        })}
       </TableBody>
     </Table>
   );

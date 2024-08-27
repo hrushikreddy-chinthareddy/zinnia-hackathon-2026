@@ -118,6 +118,7 @@ export const FundDetailsSidesheet = ({
               : DEFAULT_ERROR_STRING}
           </FieldData>
         )}
+
       {'interestRate' in accountTypeSchema && (
         <FieldData
           Label={
@@ -138,6 +139,7 @@ export const FundDetailsSidesheet = ({
           })}
         </FieldData>
       )}
+
       <FieldData
         Label={
           <Label
@@ -154,6 +156,7 @@ export const FundDetailsSidesheet = ({
       >
         {formatUSDollars(fundDetails.totalFundValue)}
       </FieldData>
+
       {'allocationPercentage' in accountTypeSchema && (
         <FieldData Label={<Label>{toSentenceCase('allocation')}</Label>}>
           {percentFormatify(fundDetails.allocationPercentage, {
@@ -161,6 +164,7 @@ export const FundDetailsSidesheet = ({
           })}
         </FieldData>
       )}
+
       {'sweepDate' in accountTypeSchema && accountTypeSchema.sweepDate && (
         <FieldData
           Label={
