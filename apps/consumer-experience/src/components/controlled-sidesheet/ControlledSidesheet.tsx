@@ -3,9 +3,9 @@ import { FC, PropsWithChildren, useState } from 'react';
 
 import styles from './ControlledSidesheet.module.css';
 
-interface ControlledSidesheetProps extends SideSheetProps {
+type ControlledSidesheetProps = {
   closeBeforeContent?: React.ReactNode;
-}
+} & SideSheetProps;
 
 export const ControlledSidesheet: FC<
   PropsWithChildren<ControlledSidesheetProps>

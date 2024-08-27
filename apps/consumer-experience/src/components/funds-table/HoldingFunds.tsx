@@ -12,6 +12,7 @@ import {
 import { toSentenceCase } from '@zinnia/utils';
 import { useWindowSize } from 'react-use';
 
+import { Fund } from '@/services/funds';
 import { formatUSDollars } from '@/utils/currency';
 import { percentFormatify } from '@/utils/numbers';
 
@@ -19,16 +20,18 @@ import { FundNameCellContent } from './FundNameCellContent';
 import styles from './FundsTable.module.css';
 import { LabelPopover } from '../label-popover/LabelPopover';
 import { NoDataAvailable } from '../no-data-available/NoDataAvailable';
-import { Fund } from '@/services/funds';
 
 const FUND_VALUE_LABEL = 'fund value';
 const INTEREST_RATE_LABEL = 'interest rate';
 const NEXT_SWEEP_DATE_LABEL = 'next sweep date';
 
+// All columns are only shown at this size or higher
+const SHOW_ALL_HOLDING_FUNDS_DETAILS_WIDTH = 767;
+
 export const HoldingFunds = ({ funds }: { funds?: Fund[] }) => {
   const { width } = useWindowSize();
 
-  const isDesktop = width >= 767;
+  const isDesktop = width >= SHOW_ALL_HOLDING_FUNDS_DETAILS_WIDTH;
 
   if (!funds || funds.length === 0) {
     return <NoDataAvailable />;
@@ -91,8 +94,8 @@ export const HoldingFunds = ({ funds }: { funds?: Fund[] }) => {
           <TableRow key={fund.fundId} className={styles.tableRow}>
             <TableCell className="typography-content-body-sm">
               <FundNameCellContent
-                fundName={fund.fundName || ''}
                 isElected={fund.isElected}
+                fundDetails={fund}
               />
             </TableCell>
             {isDesktop && (

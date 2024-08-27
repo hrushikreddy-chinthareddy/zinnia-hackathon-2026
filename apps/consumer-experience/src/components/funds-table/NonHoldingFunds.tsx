@@ -14,6 +14,7 @@ import clsx from 'clsx';
 import { useMemo } from 'react';
 import { useWindowSize } from 'react-use';
 
+import { Fund } from '@/services/funds';
 import { formatUSDollars } from '@/utils/currency';
 import { percentFormatify } from '@/utils/numbers';
 
@@ -21,7 +22,6 @@ import { FundNameCellContent } from './FundNameCellContent';
 import styles from './FundsTable.module.css';
 import { LabelPopover } from '../label-popover/LabelPopover';
 import { NoDataAvailable } from '../no-data-available/NoDataAvailable';
-import { Fund } from '@/services/funds';
 
 export const NonHoldingFunds = ({ funds }: { funds?: Fund[] }) => {
   const { width } = useWindowSize();
@@ -86,7 +86,7 @@ export const NonHoldingFunds = ({ funds }: { funds?: Fund[] }) => {
           >
             <TableCell>
               <FundNameCellContent
-                fundName={fund.fundName || ''}
+                fundDetails={fund}
                 isElected={fund.isElected}
               />
             </TableCell>
