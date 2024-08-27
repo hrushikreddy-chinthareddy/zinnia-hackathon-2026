@@ -96,9 +96,9 @@ export const getNextOccurrenceOfDay = (dayToAdd?: number | null) => {
   }
   const today = dayjs();
   const date =
-    today.day() > dayToAdd
+    today.date() > dayToAdd
       ? today.add(1, 'month').date(dayToAdd)
       : today.date(dayToAdd);
 
-  return date.format('MM/DD/YYYY');
+  return date.format(DEFAULT_DATE_FORMAT);
 };

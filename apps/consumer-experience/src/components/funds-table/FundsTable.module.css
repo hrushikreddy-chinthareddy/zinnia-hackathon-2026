@@ -3,6 +3,8 @@
   text-decoration: underline;
   text-underline-position: under;
   cursor: pointer;
+  max-width: 360px;
+  display: inline-block;
 
   &:hover {
     text-decoration: none;

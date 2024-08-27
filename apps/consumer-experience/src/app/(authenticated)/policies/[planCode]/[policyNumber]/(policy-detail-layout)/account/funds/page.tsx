@@ -1,13 +1,19 @@
+import { ProductType } from '@zinnia/api-types/types/sor';
 import { Metadata } from 'next';
 
+import { AccountValue } from '@/components/account-value/AccountValue';
+import { TotalFundValue } from '@/components/total-fund-value/TotalFundValue';
 import { RouteKey, getPageTitle } from '@/route-map';
-import { getPolicyFundDetails } from '@/services';
+import { getPolicyDetails } from '@/services';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { PolicyRequestInputs } from '@/types/policy';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
-import { MultipleFundsView } from './MultipleFundsView';
+import styles from './Funds.module.css';
+import { IULFundsView } from './IULFundsView';
 import { OriginalFundsView } from './OriginalFundsView';
+import { ULFundsView } from './ULFundsView';
+import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 
 const pageTitle = getPageTitle(RouteKey.FUNDS);
 // disable because NextJS needs this to be exported from this file
@@ -16,28 +22,45 @@ export const metadata: Metadata = {
   title: pageTitle,
 };
 
-export default async function AccountValuePage({
+export default async function FundsPage({
   params,
 }: {
   params: PolicyRequestInputs;
 }) {
   const { planCode, policyNumber } = params;
-  // // TODO: move this into component
-  const { data, error } = await getPolicyFundDetails({
+  const { data, error } = await getPolicyDetails({
     planCode,
     policyNumber,
   });
+
   const featureFlagDecisions = await getFeatureFlags();
   if (!featureFlagDecisions?.[FEATURE_FLAGS.MULTIPLE_FUNDS_VIEW]) {
     return (
-      <OriginalFundsView
-        data={data}
-        error={error}
-        planCode={planCode}
-        policyNumber={policyNumber}
-      />
+      <OriginalFundsView planCode={planCode} policyNumber={policyNumber} />
     );
   }
 
-  return <MultipleFundsView planCode={planCode} policyNumber={policyNumber} />;
+  if (!data || error) {
+    return <NoDataAvailable />;
+  }
+
+  return (
+    <div className="container">
+      <div className={`${styles.detailsContainer} card`}>
+        <TotalFundValue planCode={planCode} policyNumber={policyNumber} />
+        <AccountValue
+          planCode={planCode}
+          policyNumber={policyNumber}
+          hideTicker
+        />
+      </div>
+      {data?.product?.productType === ProductType.UNIVERSALLIFE && (
+        <ULFundsView planCode={planCode} policyNumber={policyNumber} />
+      )}
+
+      {data?.product?.productType === ProductType.INDEXEDUNIVERSALLIFE && (
+        <IULFundsView planCode={planCode} policyNumber={policyNumber} />
+      )}
+    </div>
+  );
 }

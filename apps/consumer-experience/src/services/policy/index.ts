@@ -45,6 +45,7 @@ import {
   transformPolicyForLoans,
   transformPolicyForSurrender,
   transformPolicyStatusDetails,
+  transformPolicyDetails,
 } from '@/services/policy/transformers';
 import { DocumentApiRequestInputs, PolicyDocument } from '@/types/document';
 import {
@@ -1183,6 +1184,44 @@ export const getPolicyStatusDetails = async (
         message: 'Something went wrong',
         status: 400,
         name: 'getPolicyStatusDetails Error',
+      },
+    };
+  }
+};
+
+// Turn this into a larger policy return, add what we need into the transformer
+export const getPolicyDetails = async (policyInputs: PolicyRequestInputs) => {
+  logTrace('getPolicyProductDetails', {
+    planCode: policyInputs.planCode,
+    policyNumber: policyInputs.policyNumber,
+  });
+
+  // if (isMockPolicyOverviewRequestEnabled()) {
+  //   const transformedResults = transformPolicyDetails(mockPolicyResponse);
+
+  //   return {
+  //     data: transformedResults,
+  //     error: null,
+  //   };
+  // }
+
+  try {
+    const response = await getPolicyByPlanCodeAndId(policyInputs);
+    const transformedResults = transformPolicyDetails(response);
+
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  } catch (error) {
+    logWarn('getPolicyProductDetails Error', { error });
+
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 400,
+        name: 'getPolicyProductDetails Error',
       },
     };
   }

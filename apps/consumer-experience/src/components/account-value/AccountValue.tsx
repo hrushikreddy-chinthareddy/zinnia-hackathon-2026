@@ -1,9 +1,4 @@
-import {
-  Label,
-  Icon,
-  IconType,
-  Ticker,
-} from '@zinnia/bloom/components';
+import { Label, Icon, IconType, Ticker } from '@zinnia/bloom/components';
 import { HTMLAttributes } from 'react';
 
 import { AccountValuePopover } from '@/components/account-value/AccountValuePopover';
@@ -44,13 +39,13 @@ export const AccountValue = async ({
     return null;
   }
 
-  const { totalFundValue, effectiveDate, valueChange } = data!;
+  const { endingAccountValue, effectiveDate, valueChange } = data!;
 
-  const totalFundContent = isNullEmptyOrUndefined(totalFundValue) ? (
+  const totalFundContent = isNullEmptyOrUndefined(endingAccountValue) ? (
     <p className="typography-content-body-sm">{DEFAULT_UNAVAILABLE_STRING}</p>
   ) : (
     <p className="typography-content-value">
-      {formatUSDollars(totalFundValue)}
+      {formatUSDollars(endingAccountValue)}
     </p>
   );
 

@@ -5,10 +5,10 @@ import {
 } from '@zinnia/api-types/types/funds';
 import { FundSegment } from '@zinnia/api-types/types/sor';
 
-import { PolicyFund } from '@/types/policy';
-import { logTrace } from '@/utils/logging/server-logging';
+import { PolicyFund, PolicyRequestInputs } from '@/types/policy';
+import { logTrace, logWarn } from '@/utils/logging/server-logging';
 
-import { combineFundData } from './transformers';
+import { combineFundData, transformFundsTotalValue } from './transformers';
 import { ApiResponse } from '..';
 import { getPolicyByPlanCodeAndId } from '../policy';
 import { transformPolicyForFundDetails } from '../policy/transformers';
@@ -18,11 +18,23 @@ export interface FundDetails extends FundDescriptor {
   fundId: string;
 }
 
+/**
+ * The FundSegment type provided in SOR does not match what we get back from the
+ * funds API, but the funds API doesn't have a FundSegment type. So just doing this for now
+ */
+export interface ExtendedFundSegment extends FundSegment {
+  interestEarningAmount: number;
+  startingPrice: number;
+  startingPriceDate: string;
+  endingPrice: number;
+  endingPriceDate: string;
+}
+
 export interface Fund {
   fundId?: string;
   fundName?: string | null;
   totalFundValue?: number;
-  fundSegments?: Array<FundSegment>;
+  fundSegments?: Array<ExtendedFundSegment> | Array<FundSegment>;
   fundAccountType?: FundAccountTypeEnum;
   allocationPercentage?: number | null;
   interestRate?: number | null;
@@ -229,6 +241,46 @@ export const getFunds = async ({
         status: (e as Response)?.status ?? 502,
         name: 'getFundsInfo: error',
         message: 'error getting funds info',
+      },
+    };
+  }
+};
+
+export const getFundsTotalValue = async (policyInputs: PolicyRequestInputs) => {
+  logTrace('getFundsTotalValue', {
+    planCode: policyInputs.planCode,
+    policyNumber: policyInputs.policyNumber,
+  });
+
+  // if (isMockPolicyOverviewRequestEnabled()) {
+  //   const transformedResults =
+  //     transformPolicyProductDetails(mockPolicyResponse);
+
+  //   return {
+  //     data: transformedResults,
+  //     error: null,
+  //   };
+  // }
+
+  try {
+    const funds = await getFunds(policyInputs);
+    const fundsTotalValue = transformFundsTotalValue(funds.data);
+
+    return {
+      data: {
+        fundsTotalValue,
+      },
+      error: null,
+    };
+  } catch (error) {
+    logWarn('getFundsTotalValue Error', { error });
+
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 400,
+        name: 'getFundsTotalValue Error',
       },
     };
   }

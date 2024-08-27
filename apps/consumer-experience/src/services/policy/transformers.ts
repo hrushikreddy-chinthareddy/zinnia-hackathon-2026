@@ -104,7 +104,7 @@ export const transformPolicyForAccountValue = (
   return {
     // Date of last policy transaction, when policy value was last updated
     effectiveDate: policy?.effectiveDate,
-    totalFundValue: policy?.accountValues?.endingAccountValue,
+    endingAccountValue: policy?.accountValues?.endingAccountValue,
     policyStartDate: policy?.policyDates?.policyStartDate,
   };
 };
@@ -541,5 +541,19 @@ export const transformPolicyStatusDetails = (
 
   return {
     policyStatus,
+  };
+};
+
+export const transformPolicyDetails = (policy: Policy): Partial<Policy> => {
+  return {
+    product: {
+      productType: policy.product?.productType,
+      planName: policy.product?.planName,
+      planCode: policy.product?.planCode,
+    },
+    accountValues: {
+      loanedPortionOfAccountValue:
+        policy.accountValues?.loanedPortionOfAccountValue,
+    },
   };
 };
