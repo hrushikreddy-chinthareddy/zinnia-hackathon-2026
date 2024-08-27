@@ -35,7 +35,7 @@
     gap: var(--measure-dimension-gap-2xl, 2rem);
 
     > * {
-      width: fit-content;
+      margin-bottom: 0;
     }
   }
 }
