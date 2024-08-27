@@ -5,7 +5,7 @@ import clsx from 'clsx';
 
 import { Fund } from '@/services/funds';
 
-import { FundDetailsSidesheet } from './FundDetailsSidesheet';
+import { FundDetailsSidesheetInner } from './FundDetailsSidesheetInner';
 import styles from './FundsTable.module.css';
 import { ControlledSidesheet } from '../controlled-sidesheet/ControlledSidesheet';
 
@@ -86,7 +86,7 @@ export const FundNameCellContent = ({
           {descriptionText(fundDetails.fundAccountType)}
         </div>
 
-        <FundDetailsSidesheet fundDetails={fundDetails} />
+        <FundDetailsSidesheetInner fundDetails={fundDetails} />
       </div>
     </ControlledSidesheet>
   );

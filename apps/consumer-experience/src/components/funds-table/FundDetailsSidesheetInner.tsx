@@ -10,7 +10,7 @@ import { formatUSDollars } from '@/utils/currency';
 import { percentFormatify } from '@/utils/numbers';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';
 
-import styles from './FundDetailsSidesheet.module.css';
+import styles from './FundDetailsSidesheetInner.module.css';
 import { ControlledSidesheet } from '../controlled-sidesheet/ControlledSidesheet';
 import { FieldData } from '../field-data/FieldData';
 
@@ -20,23 +20,33 @@ const fundTypeDisplayMap: Partial<Record<FundAccountTypeEnum, string>> = {
   [FundAccountTypeEnum.HOLDING]: 'Holding',
 };
 
-const holdingFundSchema = z.object({
-  interestRate: z.number(),
+const fundValidator = z.object({
+  fundId: z.string(),
+  fundName: z.string().nullable(),
   totalFundValue: z.number(),
-  sweepDate: z.string(),
+  fundAccountType: z.nativeEnum(FundAccountTypeEnum),
+  allocationPercentage: z.number().nullable(),
+  interestRate: z.number().nullable(),
+  sweepDate: z.string().nullable(),
 });
 
-const indexFundSchema = z.object({
-  totalFundValue: z.number(),
-  fundAccountType: z.string(),
-  allocationPercentage: z.number(),
+const holdingFundSchema = fundValidator.pick({
+  interestRate: true,
+  totalFundValue: true,
+  sweepDate: true,
 });
 
-const fixedFundSchema = z.object({
-  totalFundValue: z.number(),
-  fundAccountType: z.string(),
-  allocationPercentage: z.number(),
-  interestRate: z.number(),
+const indexFundSchema = fundValidator.pick({
+  totalFundValue: true,
+  fundAccountType: true,
+  allocationPercentage: true,
+});
+
+const fixedFundSchema = fundValidator.pick({
+  totalFundValue: true,
+  fundAccountType: true,
+  allocationPercentage: true,
+  interestRate: true,
 });
 
 const getAccountTypeSchema = (fundDetails: Fund) => {
@@ -84,11 +94,15 @@ const ItemDescriptionSidesheet = ({
   );
 };
 
-export const FundDetailsSidesheet = ({
+export const FundDetailsSidesheetInner = ({
   fundDetails,
 }: {
-  fundDetails: Fund;
+  fundDetails?: Fund;
 }) => {
+  if (!fundDetails) {
+    return null;
+  }
+
   const accountTypeSchema = getAccountTypeSchema(fundDetails);
 
   if (!accountTypeSchema) {
@@ -165,7 +179,7 @@ export const FundDetailsSidesheet = ({
         </FieldData>
       )}
 
-      {'sweepDate' in accountTypeSchema && accountTypeSchema.sweepDate && (
+      {'sweepDate' in accountTypeSchema && (
         <FieldData
           Label={
             <Label
