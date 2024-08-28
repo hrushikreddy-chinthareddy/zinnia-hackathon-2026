@@ -53,7 +53,7 @@ const fixedFundSchema = fundValidator.pick({
 
 const getAccountTypeSchema = (fundDetails: Fund) => {
   const accountType = fundDetails.fundAccountType;
-  console.log(accountType, fundDetails);
+
   switch (accountType) {
     case FundAccountTypeEnum.HOLDING:
       return holdingFundSchema.safeParse(fundDetails)?.data;
@@ -101,7 +101,7 @@ export const FundDetailsSidesheetInner = ({
   }
 
   const accountTypeSchema = getAccountTypeSchema(fundDetails);
-  console.log('accountTypeSchema', fixedFundSchema.safeParse(fundDetails));
+
   if (!accountTypeSchema) {
     return null;
   }
