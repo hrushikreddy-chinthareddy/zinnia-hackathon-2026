@@ -259,10 +259,12 @@ export interface PolicyFeatureDetail {
 }
 
 export interface PolicyStatusDetail {
-  policyStatus: PolicyStatus;
+  policyStatus: PolicyStatus | PolicyFeature.featureType;
   minimumPaymentDue: number;
   minimumPaymentDueDate: string;
   lapsedOn: string;
   reinstatmentDate: string;
   reinstatementPeriod: number | null;
+  endDate?: string;
+  period?: number;
 }

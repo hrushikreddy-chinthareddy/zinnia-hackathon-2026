@@ -13,6 +13,7 @@ import {
   Transaction_Payor,
 } from '@zinnia/api-types/types/sor';
 import { policyOwner } from '@zinnia/utils';
+import dayjs from 'dayjs';
 
 import { BankDetail } from '@/components/person-data/types';
 import {
@@ -506,6 +507,20 @@ export const transformPolicyStatusDetails = (
   policy: Policy
 ): Partial<PolicyStatusDetail> => {
   const policyStatus = policy.policyStatus;
+
+  const freeLookFeature = transformPolicyFeature(
+    policy,
+    'FREELOOK' as PolicyFeature.featureType
+  );
+  const freeLookActive = dayjs().isBefore(dayjs(freeLookFeature?.endDate));
+
+  if (freeLookActive) {
+    return {
+      policyStatus: 'FREELOOK' as PolicyFeature.featureType,
+      endDate: freeLookFeature?.endDate,
+      period: freeLookFeature?.period,
+    };
+  }
 
   if (policyStatus === PolicyStatus.PENDINGLAPSE) {
     const featureDetails = transformPolicyFeature(
