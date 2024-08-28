@@ -9,7 +9,7 @@ const meta: Meta<typeof ControlledSidesheet> = {
     children: <div>Test content</div>,
     header: 'This is the header',
     trigger: <div>Trigger</div>,
-    closeBeforeContent: <div>Close before content</div>,
+    closeBeforeContent: 'Close before content',
   },
 };
 
@@ -20,6 +20,6 @@ export const Default: StoryObj<any> = {
     children: <div>Test content</div>,
     header: 'This is the header',
     trigger: <div>Trigger</div>,
-    closeBeforeContent: <div>Close before content</div>,
+    closeBeforeContent: 'Close before content',
   },
 };

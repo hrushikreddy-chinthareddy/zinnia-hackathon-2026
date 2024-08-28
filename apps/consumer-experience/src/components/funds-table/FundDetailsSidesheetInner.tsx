@@ -1,6 +1,6 @@
 'use client';
 import { FundAccountTypeEnum } from '@zinnia/api-types/types/funds';
-import { Label, Icon, IconType, Button } from '@zinnia/bloom/components';
+import { Label, Icon, IconType } from '@zinnia/bloom/components';
 import { toSentenceCase } from '@zinnia/utils';
 import { ReactNode } from 'react';
 import { z } from 'zod';
@@ -20,6 +20,8 @@ const fundTypeDisplayMap: Partial<Record<FundAccountTypeEnum, string>> = {
   [FundAccountTypeEnum.HOLDING]: 'Holding',
 };
 
+// If you change the values of any of these keys, you also need to update the check in the render
+// to make sure it's checking for the right property in the returned schema
 const fundValidator = z.object({
   fundId: z.string(),
   fundName: z.string().nullable(),
@@ -73,12 +75,7 @@ const ItemDescriptionSidesheet = ({
     <ControlledSidesheet
       showOverlay={false}
       key="fundType"
-      closeBeforeContent={
-        <Button size="small" mode="link" style={{ padding: 0 }}>
-          <Icon small type={IconType.CHEVRON} className={styles.chevronBack} />
-          Back to fund details
-        </Button>
-      }
+      closeBeforeContent="Back to fund details"
       header="Fund type"
       trigger={
         <Icon
