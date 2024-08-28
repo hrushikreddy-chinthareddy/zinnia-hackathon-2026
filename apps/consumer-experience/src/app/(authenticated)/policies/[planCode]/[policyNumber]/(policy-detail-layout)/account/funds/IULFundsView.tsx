@@ -19,7 +19,7 @@ export const IULFundsView = ({
   planCode: string;
   policyNumber: string;
 }) => {
-  const { data: funds } = useQuery({
+  const { data: funds, isLoading } = useQuery({
     queryKey: [QueryKeys.POLICY_FUNDS, planCode, policyNumber],
     queryFn: () => getPolicyFunds(planCode, policyNumber),
     select: data => {
@@ -44,7 +44,7 @@ export const IULFundsView = ({
           come out. Then, what remains is moved or “swept” into your elected
           funds on the sweep date.
         </p>
-        <HoldingFunds funds={funds?.holding} />
+        <HoldingFunds funds={funds?.holding} isLoading={isLoading} />
       </div>
 
       <div className={styles.sectionContainer}>
@@ -63,7 +63,7 @@ export const IULFundsView = ({
             Currently elected funds
           </p>
         </div>
-        <NonHoldingFunds funds={funds?.nonHolding} />
+        <NonHoldingFunds funds={funds?.nonHolding} isLoading={isLoading} />
       </div>
     </>
   );

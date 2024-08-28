@@ -12,14 +12,18 @@ export const ULFundsView = ({
   planCode,
   policyNumber,
 }: PolicyRequestInputs) => {
-  const { data: funds } = useQuery({
+  const { data: funds, isLoading } = useQuery({
     queryKey: [QueryKeys.POLICY_FUNDS, planCode, policyNumber],
     queryFn: () => getPolicyFunds(planCode, policyNumber),
   });
 
   return (
     <div className="container">
-      <NonHoldingFunds funds={funds || []} />
+      <NonHoldingFunds
+        funds={funds || []}
+        isLoading={isLoading}
+        numberOfLoadingRows={1}
+      />
       <CallForAssistance
         callToAction="Questions about your allocation?"
         customInstruction="for more information."
