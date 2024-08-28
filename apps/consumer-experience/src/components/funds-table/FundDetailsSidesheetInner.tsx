@@ -24,12 +24,12 @@ const fundTypeDisplayMap: Partial<Record<FundAccountTypeEnum, string>> = {
 // to make sure it's checking for the right property in the returned schema
 const fundValidator = z.object({
   fundId: z.string(),
-  fundName: z.string().nullable(),
-  totalFundValue: z.number(),
+  fundName: z.string().nullable().optional(),
+  totalFundValue: z.number().nullable().optional(),
   fundAccountType: z.nativeEnum(FundAccountTypeEnum),
-  allocationPercentage: z.number().nullable(),
-  interestRate: z.number().nullable(),
-  sweepDate: z.string().nullable(),
+  allocationPercentage: z.number().nullable().optional(),
+  interestRate: z.number().nullable().optional(),
+  sweepDate: z.string().nullable().optional(),
 });
 
 const holdingFundSchema = fundValidator.pick({
@@ -53,7 +53,7 @@ const fixedFundSchema = fundValidator.pick({
 
 const getAccountTypeSchema = (fundDetails: Fund) => {
   const accountType = fundDetails.fundAccountType;
-
+  console.log(accountType, fundDetails);
   switch (accountType) {
     case FundAccountTypeEnum.HOLDING:
       return holdingFundSchema.safeParse(fundDetails)?.data;
@@ -101,7 +101,7 @@ export const FundDetailsSidesheetInner = ({
   }
 
   const accountTypeSchema = getAccountTypeSchema(fundDetails);
-
+  console.log('accountTypeSchema', fixedFundSchema.safeParse(fundDetails));
   if (!accountTypeSchema) {
     return null;
   }
