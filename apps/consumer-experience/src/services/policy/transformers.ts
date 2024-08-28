@@ -508,6 +508,9 @@ export const transformPolicyStatusDetails = (
 ): Partial<PolicyStatusDetail> => {
   const policyStatus = policy.policyStatus;
 
+  // Free look is returned as a feature but the policy status will say active
+  // so need to check specifically against the endDate of the free look
+  // feature
   const freeLookFeature = transformPolicyFeature(
     policy,
     'FREELOOK' as PolicyFeature.featureType
