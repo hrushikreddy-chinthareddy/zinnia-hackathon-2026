@@ -98,7 +98,7 @@ export const HoldingFunds = ({
       </TableHeader>
       <TableBody>
         <>
-          {isLoading && <LoadingRow />}
+          {isLoading && <LoadingRow cellCount={isDesktop ? 4 : 2} />}
 
           {funds?.map(fund => {
             if (!fund || !fund.fundName) {

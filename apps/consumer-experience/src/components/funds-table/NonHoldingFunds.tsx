@@ -90,7 +90,7 @@ export const NonHoldingFunds = ({
       {isLoading && (
         <TableBody>
           {Array.from({ length: numberOfLoadingRows }).map((_, index) => (
-            <LoadingRow key={index} />
+            <LoadingRow key={index} cellCount={3} />
           ))}
         </TableBody>
       )}
