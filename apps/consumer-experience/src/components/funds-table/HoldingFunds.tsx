@@ -38,7 +38,7 @@ export const HoldingFunds = ({ funds }: { funds?: Fund[] }) => {
   }
 
   return (
-    <Table>
+    <Table preventBackgroundHoverInteraction>
       <TableHeader>
         <TableRow>
           <TableHeaderCell>

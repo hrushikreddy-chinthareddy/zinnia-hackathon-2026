@@ -9,6 +9,7 @@ import { NonHoldingFunds } from '@/components/funds-table/NonHoldingFunds';
 import { sortNonHoldingFunds } from '@/components/funds-table/utils';
 import { getPolicyFunds } from '@/queries/policy-queries';
 import { QueryKeys } from '@/queries/query-keys';
+import { EVERLY_CONTACT_PHONE_NUMBER } from '@/utils/data';
 
 import styles from './Funds.module.css';
 
@@ -51,7 +52,15 @@ export const IULFundsView = ({
         <h2>{toTitleCase('available funds')}</h2>
         <BannerAlert
           variant={BannerVariant.Information}
-          bodyText="Editing allocations is coming soon. For now, call 1-855-290-0529 to make changes."
+          bodyText={
+            <p>
+              Editing allocations is coming soon. For now, call{' '}
+              <a href={`tel:${EVERLY_CONTACT_PHONE_NUMBER}`}>
+                {EVERLY_CONTACT_PHONE_NUMBER}
+              </a>{' '}
+              to make changes.
+            </p>
+          }
         />
         <div>
           <p className="typography-content-body-sm">
