@@ -1,12 +1,11 @@
+import { Icon, IconType } from '@zinnia/bloom/components';
+import { toSentenceCase } from '@zinnia/utils';
 import { Metadata } from 'next';
 
-import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
+import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { UpcomingPremium } from '@/components/policy-overview/UpcomingPremium';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { PolicyRequestInputs } from '@/types/policy';
-import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
-import { Icon, IconType } from '@zinnia/bloom/components';
-import { toSentenceCase } from '@zinnia/utils';
 
 const pageTitle = getPageTitle(RouteKey.PREMIUM);
 // disable because NextJS needs this to be exported from this file
@@ -50,7 +49,6 @@ export default async function PremiumPayments({
           </ClickableCardContainer.LinkContent>
         </ClickableCardContainer>
       </div>
-      <CallForAssistance customInstruction="to make a payment." />
     </>
   );
 }

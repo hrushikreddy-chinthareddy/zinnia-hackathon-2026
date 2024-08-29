@@ -1,4 +1,4 @@
-import { IconType } from '@zinnia/bloom/components';
+import { IconType, BannerAlert, BannerVariant } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
 import { CardInsertHistory } from '@/components/card-list-history/CardInsertHistory';
@@ -10,7 +10,10 @@ import { AccountType } from '@/components/pii/AccountType';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getPaymentHistory } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
-import { formatBankAccountTypeText } from '@/utils/data';
+import {
+  EVERLY_CONTACT_PHONE_NUMBER,
+  formatBankAccountTypeText,
+} from '@/utils/data';
 import { sortByDate } from '@/utils/dates';
 import { toSentenceCase } from '@/utils/strings';
 
@@ -123,6 +126,21 @@ export default async function PaymentHistory({ params }: Props) {
 
   return (
     <div className="container">
+      {/* // TODO: once CallForAssistance is updated to use banner, remove the BannerAlert here and replace with the correct component */}
+      {/* <CallForAssistance customInstruction="for questions about a payment." /> */}
+      <BannerAlert
+        bodyText={
+          <p>
+            Call{' '}
+            <a href={`tel:+${EVERLY_CONTACT_PHONE_NUMBER}`}>
+              {EVERLY_CONTACT_PHONE_NUMBER}
+            </a>{' '}
+            for questions about a payment.
+          </p>
+        }
+        variant={BannerVariant.Information}
+      />
+
       {pendingTransactions.length > 0 && (
         <CardListHistory>
           <CardListHistory.Header>
