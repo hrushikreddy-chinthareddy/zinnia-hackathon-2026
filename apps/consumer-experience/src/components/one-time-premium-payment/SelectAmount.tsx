@@ -201,13 +201,13 @@ export const SelectAmount = ({
         </div>
         {paymentFee > 0 && (
           <p className={`${premiumStyles.note} typography-content-body-sm`}>
-            Note: Your policy charges a {paymentFee}% fee for every premium
+            Note: Your policy has a {paymentFee}% charge for every premium
             payment. See your policy documents for more details.
           </p>
         )}
         {!paymentFee && (
           <p className={`${premiumStyles.note} typography-content-body-sm`}>
-            Note: Your policy doesn’t charge fees for premium payments.
+            Note: Your policy doesn’t charge for premium payments.
           </p>
         )}
 
