@@ -1,26 +1,29 @@
-import { Button, Icon, IconType } from '@zinnia/bloom/components';
+'use client';
 import { toSentenceCase } from '@zinnia/utils';
 import clsx from 'clsx';
 
+import { Fund } from '@/services/funds';
+
+import { FundDescription } from './FundDescription';
+import { FundDetailsSidesheetInner } from './FundDetailsSidesheetInner';
 import styles from './FundsTable.module.css';
 import { ControlledSidesheet } from '../controlled-sidesheet/ControlledSidesheet';
 
 export const FundNameCellContent = ({
-  fundName,
   isElected,
+  fundDetails,
 }: {
-  fundName: string;
   isElected?: boolean;
+  fundDetails: Fund;
 }) => {
+  // TODO: what is the null handling here?
+  if (!fundDetails) {
+    return null;
+  }
+
   return (
     <ControlledSidesheet
       header={toSentenceCase('fund details')}
-      closeBeforeContent={
-        <Button size="small" mode="link" className={styles.backButton}>
-          <Icon small type={IconType.CHEVRON} className={styles.chevronBack} />
-          Back to fund details
-        </Button>
-      }
       trigger={
         <span>
           <span
@@ -30,13 +33,22 @@ export const FundNameCellContent = ({
             )}
           >
             {isElected && <span className={styles.isElected}>&#x2022;</span>}
-            {fundName}
+            {fundDetails.fundName}
           </span>
           {isElected && <span className="sr-only">is an elected fund</span>}
         </span>
       }
     >
-      Fund Details
+      <div className="typography-content-body-sm">
+        <p className="typography-desktop-headline-3-d mb-xl">
+          {fundDetails.fundName}
+        </p>
+        <div className="mb-xl">
+          <FundDescription fund={fundDetails} />
+        </div>
+
+        <FundDetailsSidesheetInner fundDetails={fundDetails} />
+      </div>
     </ControlledSidesheet>
   );
 };

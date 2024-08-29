@@ -14,6 +14,7 @@ import clsx from 'clsx';
 import { useMemo } from 'react';
 import { useWindowSize } from 'react-use';
 
+import { Fund } from '@/services/funds';
 import { formatUSDollars } from '@/utils/currency';
 import { percentFormatify } from '@/utils/numbers';
 
@@ -21,7 +22,6 @@ import { FundNameCellContent } from './FundNameCellContent';
 import styles from './FundsTable.module.css';
 import { LabelPopover } from '../label-popover/LabelPopover';
 import { NoDataAvailable } from '../no-data-available/NoDataAvailable';
-import { Fund } from '@/services/funds';
 
 export const NonHoldingFunds = ({ funds }: { funds?: Fund[] }) => {
   const { width } = useWindowSize();
@@ -79,28 +79,34 @@ export const NonHoldingFunds = ({ funds }: { funds?: Fund[] }) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {funds.map(fund => (
-          <TableRow
-            key={fund.fundId}
-            className={`typography-content-body-sm ${styles.tableRow}`}
-          >
-            <TableCell>
-              <FundNameCellContent
-                fundName={fund.fundName || ''}
-                isElected={fund.isElected}
-              />
-            </TableCell>
-            <TableCell className={dataValueStyles(fund.totalFundValue)}>
-              {formatUSDollars(fund.totalFundValue, true, true)}
-            </TableCell>
-            <TableCell className={dataValueStyles(fund.allocationPercentage)}>
-              {percentFormatify(fund.allocationPercentage, {
-                isInteger: true,
-                displayNullAsZero: true,
-              })}
-            </TableCell>
-          </TableRow>
-        ))}
+        {funds?.map(fund => {
+          if (!fund || !fund.fundName) {
+            return null;
+          }
+
+          return (
+            <TableRow
+              key={fund.fundId}
+              className={`typography-content-body-sm ${styles.tableRow}`}
+            >
+              <TableCell>
+                <FundNameCellContent
+                  fundDetails={fund}
+                  isElected={fund.isElected}
+                />
+              </TableCell>
+              <TableCell className={dataValueStyles(fund.totalFundValue)}>
+                {formatUSDollars(fund.totalFundValue, true, true)}
+              </TableCell>
+              <TableCell className={dataValueStyles(fund.allocationPercentage)}>
+                {percentFormatify(fund.allocationPercentage, {
+                  isInteger: true,
+                  displayNullAsZero: true,
+                })}
+              </TableCell>
+            </TableRow>
+          );
+        })}
       </TableBody>
     </Table>
   );

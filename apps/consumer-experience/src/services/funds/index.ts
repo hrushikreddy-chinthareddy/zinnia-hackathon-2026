@@ -4,6 +4,7 @@ import {
   ProductRules,
 } from '@zinnia/api-types/types/funds';
 import { FundSegment } from '@zinnia/api-types/types/sor';
+import { z } from 'zod';
 
 import { PolicyFund, PolicyRequestInputs } from '@/types/policy';
 import { logTrace, logWarn } from '@/utils/logging/server-logging';
@@ -29,6 +30,17 @@ export interface ExtendedFundSegment extends FundSegment {
   endingPrice: number;
   endingPriceDate: string;
 }
+
+export const fundValidator = z.object({
+  fundId: z.string(),
+  fundName: z.string().nullable(),
+  totalFundValue: z.number(),
+  fundAccountType: z.nativeEnum(FundAccountTypeEnum),
+  allocationPercentage: z.number().nullable(),
+  interestRate: z.number().nullable(),
+  isElected: z.boolean().nullable(),
+  sweepDate: z.string().nullable(),
+});
 
 export interface Fund {
   fundId?: string;

@@ -1,11 +1,17 @@
-import { SideSheet, type SideSheetProps } from '@zinnia/bloom/components';
+import {
+  SideSheet,
+  type SideSheetProps,
+  Button,
+  Icon,
+  IconType,
+} from '@zinnia/bloom/components';
 import { FC, PropsWithChildren, useState } from 'react';
 
 import styles from './ControlledSidesheet.module.css';
 
-interface ControlledSidesheetProps extends SideSheetProps {
-  closeBeforeContent?: React.ReactNode;
-}
+type ControlledSidesheetProps = {
+  closeBeforeContent?: string;
+} & SideSheetProps;
 
 export const ControlledSidesheet: FC<
   PropsWithChildren<ControlledSidesheetProps>
@@ -28,14 +34,16 @@ export const ControlledSidesheet: FC<
       }
     >
       {props.closeBeforeContent && (
-        <button
-          className={styles.closeBeforeContent}
-          type="button"
-          aria-label={`Close ${props.header}`}
+        <Button
+          className={`${styles.closeBeforeContent} mt-md mb-xl`}
+          size="small"
+          mode="link"
+          style={{ padding: 0 }}
           onClick={() => setOpen(false)}
         >
+          <Icon small type={IconType.CHEVRON} className={styles.chevronBack} />
           {props.closeBeforeContent}
-        </button>
+        </Button>
       )}
       {children}
     </SideSheet>

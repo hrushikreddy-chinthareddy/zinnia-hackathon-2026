@@ -6,8 +6,6 @@
   outline: revert;
 }
 
-.closeBeforeContent {
-  composes: unstyledButtons;
-  margin-bottom: var(--measure-dimension-gap-xl);
-  display: block;
+.chevronBack {
+  transform: rotate(90deg);
 }

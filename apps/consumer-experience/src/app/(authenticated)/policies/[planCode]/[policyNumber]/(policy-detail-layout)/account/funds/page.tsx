@@ -2,6 +2,7 @@ import { ProductType } from '@zinnia/api-types/types/sor';
 import { Metadata } from 'next';
 
 import { AccountValue } from '@/components/account-value/AccountValue';
+import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { TotalFundValue } from '@/components/total-fund-value/TotalFundValue';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getPolicyDetails } from '@/services';
@@ -13,7 +14,6 @@ import styles from './Funds.module.css';
 import { IULFundsView } from './IULFundsView';
 import { OriginalFundsView } from './OriginalFundsView';
 import { ULFundsView } from './ULFundsView';
-import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 
 const pageTitle = getPageTitle(RouteKey.FUNDS);
 // disable because NextJS needs this to be exported from this file
@@ -46,6 +46,27 @@ export default async function FundsPage({
 
   return (
     <div className="container">
+      {data?.product?.productType === ProductType.UNIVERSALLIFE && (
+        <p className="typography-content-body-sm">
+          <span className="typography-content-body-sm-bold">
+            Your policy’s value is held within a fund.
+          </span>{' '}
+          As you pay premiums, we first deduct all fees and charges, then
+          leftover premium dollars are deposited into your fund, which earns an
+          interest rate.
+        </p>
+      )}
+      {data?.product?.productType === ProductType.INDEXEDUNIVERSALLIFE && (
+        <p className="typography-content-body-sm">
+          <span className="typography-content-body-sm-bold">
+            Your policy’s value is held within investment funds.
+          </span>{' '}
+          As you pay premiums, we first deduct all fees and charges, then
+          leftover premium dollars are deposited into your funds. There may be a
+          number of funds available for you to choose from or “elect” for
+          allocation.
+        </p>
+      )}
       <div className={`${styles.detailsContainer} card`}>
         <TotalFundValue planCode={planCode} policyNumber={policyNumber} />
         <AccountValue

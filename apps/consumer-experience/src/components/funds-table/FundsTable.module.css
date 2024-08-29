@@ -4,7 +4,10 @@
   text-underline-position: under;
   cursor: pointer;
   max-width: 360px;
-  display: inline-block;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 
   &:hover {
     text-decoration: none;
@@ -37,10 +40,3 @@
   color: var(--color-base-text-text-secondary);
 }
 
-.chevronBack {
-  transform: rotate(90deg);
-}
-
-.backButton {
-  padding-left: 0;
-}
