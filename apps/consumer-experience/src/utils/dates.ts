@@ -102,3 +102,31 @@ export const getNextOccurrenceOfDay = (dayToAdd?: number | null) => {
 
   return date.format(DEFAULT_DATE_FORMAT);
 };
+
+export const sortByDate = (
+  a: string | null | undefined,
+  b: string | null | undefined,
+  options: {
+    order: 'asc' | 'desc';
+  }
+) => {
+  const order = options.order;
+
+  if (a == null && b == null) {
+    return 0;
+  }
+  if (a == null) {
+    return order === 'asc' ? -1 : 1;
+  }
+  if (b == null) {
+    return order === 'asc' ? 1 : -1;
+  }
+
+  return order === 'asc'
+    ? dayjs(a).isBefore(dayjs(b))
+      ? -1
+      : 1
+    : dayjs(a).isAfter(dayjs(b))
+      ? -1
+      : 1;
+};

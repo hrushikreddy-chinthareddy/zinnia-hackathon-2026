@@ -4,6 +4,7 @@ import {
   standardDateWithTimeEST,
   dayOfMonthWithOrdinal,
   standardDateMonthDayYear,
+  sortByDate,
 } from './dates';
 
 describe('standardDateWithTimeEST', () => {
@@ -68,5 +69,47 @@ describe('dayOfMonthWithOrdinal', () => {
   it('should return the correct ordinal for the 1st day of the month', () => {
     const result = dayOfMonthWithOrdinal('test');
     expect(result).toBe(DEFAULT_ERROR_STRING);
+  });
+});
+
+describe('sortByDate', () => {
+  // sorts dates in ascending order correctly
+  it('should sort dates in ascending order when both dates are valid', () => {
+    const date1 = '2023-01-01';
+    const date2 = '2023-01-02';
+    const result = sortByDate(date1, date2, { order: 'asc' });
+    expect(result).toBe(-1);
+  });
+
+  // handles undefined values when both dates are undefined
+  it('should return 0 when both dates are undefined', () => {
+    const date1 = undefined;
+    const date2 = undefined;
+    const result = sortByDate(date1, date2, { order: 'asc' });
+    expect(result).toBe(0);
+  });
+
+  // sorts dates in descending order correctly
+  it('should sort dates in descending order when both dates are valid', () => {
+    const date1 = '2023-01-01';
+    const date2 = '2023-01-02';
+    const result = sortByDate(date1, date2, { order: 'desc' });
+    expect(result).toBe(1);
+  });
+
+  // handles null values when one date is null and order is ascending
+  it('should handle null values when one date is null and order is ascending', () => {
+    const date1 = null;
+    const date2 = '2023-01-02';
+    const result = sortByDate(date1, date2, { order: 'asc' });
+    expect(result).toBe(1);
+  });
+
+  // handles invalid date strings
+  it('should return -1 when one date is invalid and order is asc', () => {
+    const validDate = '2023-01-01';
+    const invalidDate = null;
+    const result = sortByDate(invalidDate, validDate, { order: 'asc' });
+    expect(result).toBe(-1);
   });
 });

@@ -11,6 +11,7 @@ import { RouteKey, getPageTitle } from '@/route-map';
 import { getPaymentHistory } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatBankAccountTypeText } from '@/utils/data';
+import { sortByDate } from '@/utils/dates';
 import { toSentenceCase } from '@/utils/strings';
 
 import styles from './PaymentHistory.module.css';
@@ -47,8 +48,12 @@ export default async function PaymentHistory({ params }: Props) {
 
   const { completedTransactions, pendingTransactions } = data!;
 
+  const sortedPendingTransactions = pendingTransactions.sort((a, b) =>
+    sortByDate(a.date, b.date, { order: 'asc' })
+  );
+
   const pendingPayments = () => {
-    return pendingTransactions.map((item, index) => {
+    return sortedPendingTransactions?.map((item, index) => {
       return (
         <CardInsertHistory
           isPending
