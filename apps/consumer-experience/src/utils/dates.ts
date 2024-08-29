@@ -112,14 +112,17 @@ export const sortByDate = (
 ) => {
   const order = options.order;
 
-  if (a == null && b == null) {
+  const aIsNull = a == null;
+  const bIsNull = b == null;
+
+  if (aIsNull && bIsNull) {
     return 0;
   }
-  if (a == null) {
-    return order === 'asc' ? -1 : 1;
+  if (aIsNull) {
+    return 1;
   }
-  if (b == null) {
-    return order === 'asc' ? 1 : -1;
+  if (bIsNull) {
+    return -1;
   }
 
   return order === 'asc'

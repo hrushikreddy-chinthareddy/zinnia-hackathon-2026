@@ -104,12 +104,14 @@ describe('sortByDate', () => {
     const result = sortByDate(date1, date2, { order: 'asc' });
     expect(result).toBe(1);
   });
+  it('should sort null values at the end', () => {
+    const date1 = '2023-01-01';
+    const date2 = null;
 
-  // handles invalid date strings
-  it('should return -1 when one date is invalid and order is asc', () => {
-    const validDate = '2023-01-01';
-    const invalidDate = null;
-    const result = sortByDate(invalidDate, validDate, { order: 'asc' });
+    const result = sortByDate(date1, date2, { order: 'asc' });
     expect(result).toBe(-1);
+
+    const result2 = sortByDate(date2, date1, { order: 'asc' });
+    expect(result2).toBe(1);
   });
 });
