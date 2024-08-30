@@ -36,7 +36,10 @@ export const NonHoldingFunds = ({
   const { width } = useWindowSize();
 
   const headerVals = useMemo(() => {
-    if (width > 500) {
+    // Because Next renders on the server first, we were getting hydration error from this switch because the react-use
+    // library sets width and height to Infinity by default and if window is undefined (which it is on the server) the width
+    // and height never get updated to actual browser window size. Fun!!
+    if (width !== Infinity && width > 500) {
       return {
         fundName: 'Fund Name',
         fundValue: 'Fund Value',
