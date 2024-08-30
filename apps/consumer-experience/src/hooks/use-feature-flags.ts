@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { EnabledFeatureFlags } from '@/utils/optimizely/optimizely';
+import { FeatureFlags } from '@/utils/optimizely/optimizely';
 
 /**
  * A hook to get feature flags from optimizely.
@@ -10,7 +10,7 @@ import { EnabledFeatureFlags } from '@/utils/optimizely/optimizely';
  * @returns Feature Flags object
  */
 export const useFeatureFlags = () => {
-  const [data, setData] = useState<EnabledFeatureFlags>();
+  const [data, setData] = useState<FeatureFlags>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<unknown>();
 
