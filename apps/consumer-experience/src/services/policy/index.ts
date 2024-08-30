@@ -1160,7 +1160,6 @@ export const getPolicyStatusDetails = async (
 
   if (isMockPolicyOverviewRequestEnabled()) {
     const transformedResults = transformPolicyStatusDetails(mockPolicyResponse);
-
     return {
       data: transformedResults,
       error: null,

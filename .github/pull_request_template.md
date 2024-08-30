@@ -1,6 +1,6 @@
 ### What's this PR do?
 
-### Where should the reviewer start?
+### How should the reviewer test (include page and different test accounts if relevant)
 
 ### Any background context you want to provide?
 
@@ -10,12 +10,8 @@
 
 - [ ] checked other browsers? (chrome, firefox, edge, safari)
 - [ ] tested accessibility
-
-#### If component added or updated
-
 - [ ] added unit tests (if applicable)
 - [ ] added/updated storybook story
-- [ ] cross checked against [Bloom components](https://bloom-component-library-kohl.vercel.app)
 - [ ] using variables and classes provided by Bloom
 
 ### What are the relevant tickets?
