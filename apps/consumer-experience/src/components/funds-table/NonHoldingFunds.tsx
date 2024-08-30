@@ -20,10 +20,19 @@ import { percentFormatify } from '@/utils/numbers';
 
 import { FundNameCellContent } from './FundNameCellContent';
 import styles from './FundsTable.module.css';
+import { LoadingRow } from './LoadingRow';
 import { LabelPopover } from '../label-popover/LabelPopover';
 import { NoDataAvailable } from '../no-data-available/NoDataAvailable';
 
-export const NonHoldingFunds = ({ funds }: { funds?: Fund[] }) => {
+export const NonHoldingFunds = ({
+  funds,
+  isLoading,
+  numberOfLoadingRows = 3,
+}: {
+  funds?: Fund[];
+  isLoading?: boolean;
+  numberOfLoadingRows?: number;
+}) => {
   const { width } = useWindowSize();
 
   const headerVals = useMemo(() => {
@@ -42,7 +51,7 @@ export const NonHoldingFunds = ({ funds }: { funds?: Fund[] }) => {
     };
   }, [width]);
 
-  if (!funds || funds.length === 0) {
+  if ((!funds || funds.length === 0) && !isLoading) {
     return <NoDataAvailable />;
   }
 
@@ -78,36 +87,47 @@ export const NonHoldingFunds = ({ funds }: { funds?: Fund[] }) => {
           </TableHeaderCell>
         </TableRow>
       </TableHeader>
-      <TableBody>
-        {funds?.map(fund => {
-          if (!fund || !fund.fundName) {
-            return null;
-          }
+      {isLoading && (
+        <TableBody>
+          {Array.from({ length: numberOfLoadingRows }).map((_, index) => (
+            <LoadingRow key={index} cellCount={3} />
+          ))}
+        </TableBody>
+      )}
+      {!isLoading && (
+        <TableBody>
+          {funds?.map(fund => {
+            if (!fund || !fund.fundName) {
+              return null;
+            }
 
-          return (
-            <TableRow
-              key={fund.fundId}
-              className={`typography-content-body-sm ${styles.tableRow}`}
-            >
-              <TableCell>
-                <FundNameCellContent
-                  fundDetails={fund}
-                  isElected={fund.isElected}
-                />
-              </TableCell>
-              <TableCell className={dataValueStyles(fund.totalFundValue)}>
-                {formatUSDollars(fund.totalFundValue, true, true)}
-              </TableCell>
-              <TableCell className={dataValueStyles(fund.allocationPercentage)}>
-                {percentFormatify(fund.allocationPercentage, {
-                  isInteger: true,
-                  displayNullAsZero: true,
-                })}
-              </TableCell>
-            </TableRow>
-          );
-        })}
-      </TableBody>
+            return (
+              <TableRow
+                key={fund.fundId}
+                className={`typography-content-body-sm ${styles.tableRow}`}
+              >
+                <TableCell>
+                  <FundNameCellContent
+                    fundDetails={fund}
+                    isElected={fund.isElected}
+                  />
+                </TableCell>
+                <TableCell className={dataValueStyles(fund.totalFundValue)}>
+                  {formatUSDollars(fund.totalFundValue, true, true)}
+                </TableCell>
+                <TableCell
+                  className={dataValueStyles(fund.allocationPercentage)}
+                >
+                  {percentFormatify(fund.allocationPercentage, {
+                    isInteger: true,
+                    displayNullAsZero: true,
+                  })}
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      )}
     </Table>
   );
 };

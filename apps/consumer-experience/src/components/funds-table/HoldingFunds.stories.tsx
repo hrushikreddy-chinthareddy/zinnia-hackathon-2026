@@ -21,3 +21,7 @@ type StoryType = StoryObj<typeof HoldingFunds>;
 export const Default: StoryType = {
   args: {},
 };
+
+export const Loading: StoryType = {
+  args: { isLoading: true, funds: [] },
+};

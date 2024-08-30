@@ -18,6 +18,7 @@ import { percentFormatify } from '@/utils/numbers';
 
 import { FundNameCellContent } from './FundNameCellContent';
 import styles from './FundsTable.module.css';
+import { LoadingRow } from './LoadingRow';
 import { LabelPopover } from '../label-popover/LabelPopover';
 import { NoDataAvailable } from '../no-data-available/NoDataAvailable';
 
@@ -28,12 +29,18 @@ const NEXT_SWEEP_DATE_LABEL = 'next sweep date';
 // All columns are only shown at this size or higher
 const SHOW_ALL_HOLDING_FUNDS_DETAILS_WIDTH = 767;
 
-export const HoldingFunds = ({ funds }: { funds?: Fund[] }) => {
+export const HoldingFunds = ({
+  funds,
+  isLoading,
+}: {
+  funds?: Fund[];
+  isLoading?: boolean;
+}) => {
   const { width } = useWindowSize();
 
   const isDesktop = width >= SHOW_ALL_HOLDING_FUNDS_DETAILS_WIDTH;
 
-  if (!funds || funds.length === 0) {
+  if ((!funds || funds.length === 0) && !isLoading) {
     return <NoDataAvailable />;
   }
 
@@ -90,38 +97,41 @@ export const HoldingFunds = ({ funds }: { funds?: Fund[] }) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {funds?.map(fund => {
-          if (!fund || !fund.fundName) {
-            return null;
-          }
+        <>
+          {isLoading && <LoadingRow cellCount={isDesktop ? 4 : 2} />}
 
-          return (
-            <TableRow key={fund.fundId} className={styles.tableRow}>
-              <TableCell className="typography-content-body-sm">
-                <FundNameCellContent
-                  isElected={fund.isElected}
-                  fundDetails={fund}
-                />
-              </TableCell>
-              {isDesktop && (
+          {funds?.map(fund => {
+            if (!fund || !fund.fundName) {
+              return null;
+            }
+            return (
+              <TableRow key={fund.fundId} className={styles.tableRow}>
                 <TableCell className="typography-content-body-sm">
-                  {percentFormatify(fund.interestRate, {
-                    isInteger: true,
-                    displayNullAsZero: true,
-                  })}
+                  <FundNameCellContent
+                    isElected={fund.isElected}
+                    fundDetails={fund}
+                  />
                 </TableCell>
-              )}
-              <TableCell className="typography-content-body-sm">
-                {formatUSDollars(fund.totalFundValue, true, true)}
-              </TableCell>
-              {isDesktop && (
+                {isDesktop && (
+                  <TableCell className="typography-content-body-sm">
+                    {percentFormatify(fund.interestRate, {
+                      isInteger: true,
+                      displayNullAsZero: true,
+                    })}
+                  </TableCell>
+                )}
                 <TableCell className="typography-content-body-sm">
-                  {fund.sweepDate}
+                  {formatUSDollars(fund.totalFundValue, true, true)}
                 </TableCell>
-              )}
-            </TableRow>
-          );
-        })}
+                {isDesktop && (
+                  <TableCell className="typography-content-body-sm">
+                    {fund.sweepDate}
+                  </TableCell>
+                )}
+              </TableRow>
+            );
+          })}
+        </>
       </TableBody>
     </Table>
   );
