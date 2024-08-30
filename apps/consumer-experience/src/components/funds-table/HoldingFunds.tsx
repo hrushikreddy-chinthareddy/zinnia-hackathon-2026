@@ -38,7 +38,11 @@ export const HoldingFunds = ({
 }) => {
   const { width } = useWindowSize();
 
-  const isDesktop = width >= SHOW_ALL_HOLDING_FUNDS_DETAILS_WIDTH;
+  // Because Next renders on the server first, we were getting hydration error from this switch because the react-use
+  // library sets width and height to Infinity by default and if window is undefined (which it is on the server) the width
+  // and height never get updated to actual browser window size. Fun!!
+  const isDesktop =
+    width !== Infinity && width >= SHOW_ALL_HOLDING_FUNDS_DETAILS_WIDTH;
 
   if ((!funds || funds.length === 0) && !isLoading) {
     return <NoDataAvailable />;
