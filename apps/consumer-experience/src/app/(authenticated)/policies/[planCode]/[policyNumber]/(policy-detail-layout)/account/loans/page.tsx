@@ -1,9 +1,4 @@
-import {
-  Icon,
-  IconType,
-  Label,
-  Popover,
-} from '@zinnia/bloom/components';
+import { Icon, IconType, Label, Popover } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
@@ -11,11 +6,7 @@ import { FieldData } from '@/components/field-data/FieldData';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { StatusIconText } from '@/components/status-icon-text/StatusIconText';
 import { RouteKey, getPageTitle } from '@/route-map';
-import {
-  ApiResponse,
-  getPolicyAccountValueSummary,
-  getPolicyLoanDetails,
-} from '@/services';
+import { ApiResponse, getPolicyLoanDetails } from '@/services';
 import { getLoanEligibility } from '@/services/bpm';
 import { PolicyLoans, PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';

@@ -47,8 +47,8 @@ export default async function FundsPage({
   return (
     <div className="container">
       {data?.product?.productType === ProductType.UNIVERSALLIFE && (
-        <p className="typography-content-body-sm">
-          <span className="typography-content-body-sm-bold">
+        <p className="typography-content-body">
+          <span className="typography-content-body-bold">
             Your policy’s value is held within a fund.
           </span>{' '}
           As you pay premiums, we first deduct all fees and charges, then
@@ -57,8 +57,8 @@ export default async function FundsPage({
         </p>
       )}
       {data?.product?.productType === ProductType.INDEXEDUNIVERSALLIFE && (
-        <p className="typography-content-body-sm">
-          <span className="typography-content-body-sm-bold">
+        <p className="typography-content-body">
+          <span className="typography-content-body-bold">
             Your policy’s value is held within investment funds.
           </span>{' '}
           As you pay premiums, we first deduct all fees and charges, then

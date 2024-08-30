@@ -20,7 +20,7 @@ export const LabelPopover = ({
         />
       }
     >
-      {content}
+      <p className="typography-content-body">{content}</p>
     </Popover>
   );
 };

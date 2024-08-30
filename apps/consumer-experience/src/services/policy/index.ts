@@ -39,7 +39,6 @@ import {
   transformPaymentHistory,
   transformPolicyMetricsForAccountValueChange,
   transformPolicyForFundDetails,
-  transformPolicyForAccountValueSummary,
   transformRiders,
   transformPolicyForWithdrawals,
   transformPolicyForLoans,
@@ -65,7 +64,6 @@ import {
   PendingPremiumTransactionType,
   PaymentHistoryTransaction,
   PolicyMetricsRequestInputs,
-  AccountValueSummary,
   PolicyFund,
   PolicyWithdrawals,
   PolicyLoans,
@@ -1027,47 +1025,6 @@ export const getPolicyWithdrawalDetails = async (
         message: 'Something went wrong',
         status: 500,
         name: 'getPolicyWithdrawalDetails Error',
-      },
-    };
-  }
-};
-
-export const getPolicyAccountValueSummary = async (
-  policyInputs: PolicyRequestInputs
-): Promise<ApiResponse<AccountValueSummary>> => {
-  logTrace('getPolicyAccountValueSummary', {
-    planCode: policyInputs.planCode,
-    policyNumber: policyInputs.policyNumber,
-  });
-
-  if (isMockPolicyOverviewRequestEnabled()) {
-    const transformedResults =
-      transformPolicyForAccountValueSummary(mockPolicyResponse);
-
-    return {
-      data: transformedResults,
-      error: null,
-    };
-  }
-
-  try {
-    const policy = await getPolicyByPlanCodeAndId(policyInputs);
-
-    const transformedResults = transformPolicyForAccountValueSummary(policy);
-
-    return {
-      data: transformedResults,
-      error: null,
-    };
-  } catch (error) {
-    logWarn('getPolicyAccountValueSummary Error', { error });
-
-    return {
-      data: null,
-      error: {
-        message: 'Something went wrong',
-        status: 500,
-        name: 'getPolicyAccountValueSummary Error',
       },
     };
   }

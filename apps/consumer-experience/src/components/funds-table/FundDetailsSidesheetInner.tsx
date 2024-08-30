@@ -165,7 +165,7 @@ export const FundDetailsSidesheetInner = ({
           </Label>
         }
       >
-        {formatUSDollars(fundDetails.totalFundValue)}
+        {formatUSDollars(fundDetails.totalFundValue, true)}
       </FieldData>
 
       {'allocationPercentage' in accountTypeSchema && (

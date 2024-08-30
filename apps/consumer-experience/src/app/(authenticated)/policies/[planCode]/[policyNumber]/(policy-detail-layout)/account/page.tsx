@@ -1,17 +1,17 @@
+import { ProductType } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import { Metadata } from 'next';
 
 import { AccountValue } from '@/components/account-value/AccountValue';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
-import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { StatusIconText } from '@/components/status-icon-text/StatusIconText';
 import { RouteKey, getPageTitle } from '@/route-map';
-import { ApiResponse } from '@/services';
+import { ApiResponse, getPolicyDetails } from '@/services';
 import { getLoanEligibility, getWithdrawalEligibility } from '@/services/bpm';
-import { getPolicyAccountValueSummary } from '@/services/policy';
-import { AccountValueSummary, PolicyRequestInputs } from '@/types/policy';
+import { Fund, getFunds } from '@/services/funds';
+import { PolicyRequestInputs } from '@/types/policy';
 import { isNullEmptyOrUndefined } from '@/utils/data';
-import { DEFAULT_UNAVAILABLE_STRING, pluralize } from '@/utils/strings';
+import { pluralize } from '@/utils/strings';
 
 const pageTitle = getPageTitle(RouteKey.ACCOUNT);
 // disable because NextJS needs this to be exported from this file
@@ -27,8 +27,13 @@ export default async function AccountValuePage({
 }) {
   const { planCode, policyNumber } = params;
 
-  const summaryDataWithEligbility = await Promise.allSettled([
-    getPolicyAccountValueSummary({
+  const [
+    fundsDataRes,
+    withDrawalEligibilityRes,
+    loanEligibilityRes,
+    policyDetailsRes,
+  ] = await Promise.allSettled([
+    getFunds({
       planCode,
       policyNumber,
     }),
@@ -40,44 +45,53 @@ export default async function AccountValuePage({
       planCode,
       policyNumber,
     }),
+    getPolicyDetails({
+      planCode,
+      policyNumber,
+    }),
   ]);
 
   const summaryData =
-    summaryDataWithEligbility[0].status === 'fulfilled'
-      ? summaryDataWithEligbility[0].value
-      : ({} as ApiResponse<AccountValueSummary>);
+    fundsDataRes.status === 'fulfilled'
+      ? fundsDataRes.value
+      : ({} as ApiResponse<Fund[]>);
   const withdrawalEligibility =
-    summaryDataWithEligbility[1].status === 'fulfilled'
-      ? summaryDataWithEligbility[1].value?.data?.isEligible
+    withDrawalEligibilityRes.status === 'fulfilled'
+      ? withDrawalEligibilityRes.value?.data?.isEligible
       : null;
-  const loanEligibilityData =
-    summaryDataWithEligbility[2].status === 'fulfilled'
-      ? summaryDataWithEligbility[2].value?.data?.isEligible
+  const loanEligibility =
+    loanEligibilityRes.status === 'fulfilled'
+      ? loanEligibilityRes.value?.data?.isEligible
+      : null;
+  const policyDetails =
+    policyDetailsRes.status === 'fulfilled'
+      ? policyDetailsRes.value?.data
       : null;
 
-  const { data, error } = summaryData;
+  // UL products do not have the concept of 'electing' funds since there is a single fund option
+  const electedFunds =
+    policyDetails?.product?.productType === ProductType.UNIVERSALLIFE
+      ? summaryData?.data
+      : summaryData?.data?.filter(fund => (fund as Fund)?.isElected);
 
   const accountValueSummary = () => {
-    if (error || !data) {
-      return <NoDataAvailable message={DEFAULT_UNAVAILABLE_STRING} />;
-    }
+    // TODO: not actually sure what the right error handling is here
+    // if (error || !data) {
+    //   return <NoDataAvailable message={DEFAULT_UNAVAILABLE_STRING} />;
+    // }
 
     return (
       <ClickableCardContainer
         listItems={[
           {
             content: (
-              <div
-                className={clsx('stacked-items', {
-                  'py-lg': !data?.fundCount,
-                })}
-              >
+              <div className={clsx('stacked-items')}>
                 <span className="typography-labels-label-md-alt">Funds</span>
                 <span
                   className="typography-content-caption"
                   style={{ color: 'var(--color-base-text-text-secondary)' }}
                 >
-                  {`${pluralize(data?.fundCount, 'fund')}`}
+                  {`${pluralize(electedFunds ? electedFunds.length : 0, 'elected fund')}`}
                 </span>
               </div>
             ),
@@ -111,14 +125,14 @@ export default async function AccountValuePage({
             content: (
               <div
                 className={clsx('stacked-items', {
-                  'py-lg': isNullEmptyOrUndefined(loanEligibilityData),
+                  'py-lg': isNullEmptyOrUndefined(loanEligibility),
                 })}
               >
                 <span className="typography-labels-label-md-alt">
                   Take a loan
                 </span>
                 <StatusIconText
-                  isEligible={loanEligibilityData}
+                  isEligible={loanEligibility}
                   className="typography-content-caption"
                 />
               </div>

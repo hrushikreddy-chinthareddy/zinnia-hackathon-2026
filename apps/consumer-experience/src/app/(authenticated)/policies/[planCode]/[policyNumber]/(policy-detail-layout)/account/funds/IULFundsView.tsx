@@ -43,7 +43,7 @@ export const IULFundsView = ({
     <>
       <div className={styles.sectionContainer}>
         <h2>{toTitleCase('holding funds')}</h2>
-        <p className="typography-content-body-sm">
+        <p className="typography-content-body">
           Holding funds are where your premium dollars are first deposited.
           While there, all fees and charges (like your cost of of insurance)
           come out. Then, what remains is moved or “swept” into your elected
@@ -67,11 +67,11 @@ export const IULFundsView = ({
           }
         />
         <div>
-          <p className="typography-content-body-sm">
+          <p className="typography-content-body">
             The following funds are available for your policy.{' '}
           </p>
           <p
-            className={`typography-content-body-sm ${styles.currentlyElectedLabel}`}
+            className={`typography-content-body ${styles.currentlyElectedLabel}`}
           >
             Currently elected funds
           </p>

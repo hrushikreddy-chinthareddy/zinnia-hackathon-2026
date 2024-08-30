@@ -29,7 +29,6 @@ import {
   Metric,
   PolicyFund,
   PolicyLoans,
-  AccountValueSummary,
   PolicyWithdrawals,
   PolicySurrender,
   PolicyStatusDetail,
@@ -298,16 +297,6 @@ export const transformPolicyForSurrender = (
 ): PolicySurrender => {
   return {
     surrenderValue: policy.accountValues?.surrenderValue,
-  };
-};
-
-export const transformPolicyForAccountValueSummary = (
-  policy: Policy
-): AccountValueSummary => {
-  const fundDetails = transformPolicyForFundDetails(policy);
-
-  return {
-    fundCount: fundDetails?.length,
   };
 };
 
