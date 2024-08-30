@@ -57,13 +57,13 @@ export const IULFundsView = ({
         <BannerAlert
           variant={BannerVariant.Information}
           bodyText={
-            <p>
+            <span>
               Editing allocations is coming soon. For now, call{' '}
               <a href={`tel:${EVERLY_CONTACT_PHONE_NUMBER}`}>
                 {EVERLY_CONTACT_PHONE_NUMBER}
               </a>{' '}
               to make changes.
-            </p>
+            </span>
           }
         />
         <div>

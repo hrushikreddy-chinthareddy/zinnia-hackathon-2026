@@ -25,8 +25,21 @@
 
 /* TODO: fix the spacing between bullet and text */
 .currentlyElectedLabel {
-  display: list-item;
-  list-style-position: inside;
+  position: relative;
+  padding-left: var(--measure-dimension-padding-2xl);
+  margin: var(--measure-dimension-gap-xs, 0);
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background-color: black;
+    border-radius: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+  }
 }
 
 @media (width > 767px) {
