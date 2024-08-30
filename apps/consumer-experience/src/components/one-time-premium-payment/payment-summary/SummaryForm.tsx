@@ -94,6 +94,45 @@ export const SummaryForm = ({
     );
   }
 
+  const paymentSummaryStepDetails = [
+    {
+      label: <Label>Submitted Amount</Label>,
+      value: paymentAmount.plain,
+    },
+  ];
+
+  if (calculateFeeAmount > 0) {
+    paymentSummaryStepDetails.push({
+      label: (
+        <Label
+          interactiveElements={[
+            <Popover
+              key="TEXT"
+              title="Charges"
+              trigger={
+                <Icon
+                  type={IconType.CIRCLE_INFO}
+                  color="var(--color-base-icon-icon-tooltip, #ff7500)"
+                  width={16}
+                  height={16}
+                />
+              }
+            >
+              <p>
+                Premium payment charges cover costs related to sales expenses
+                and/or taxes. If your policy requires these charges, they will
+                be shown here.
+              </p>
+            </Popover>,
+          ]}
+        >
+          Charges
+        </Label>
+      ),
+      value: calculateFeeAmount * -1,
+    });
+  }
+
   return (
     <>
       <FormHeader
@@ -128,41 +167,7 @@ export const SummaryForm = ({
         </div>
         <PaymentSummaryStep
           className={styles.paymentSummaryStepContainer}
-          transactionSummary={[
-            {
-              label: <Label>Submitted Amount</Label>,
-              value: paymentAmount.plain,
-            },
-            {
-              label: (
-                <Label
-                  interactiveElements={[
-                    <Popover
-                      key="TEXT"
-                      title="Fees"
-                      trigger={
-                        <Icon
-                          type={IconType.CIRCLE_INFO}
-                          color="var(--color-base-icon-icon-tooltip, #ff7500)"
-                          width={16}
-                          height={16}
-                        />
-                      }
-                    >
-                      <p>
-                        Premium payment fees are charged to cover costs related
-                        to sales expenses and/or taxes. If your policy requires
-                        these fees, they will be shown here.{' '}
-                      </p>
-                    </Popover>,
-                  ]}
-                >
-                  Fees
-                </Label>
-              ),
-              value: calculateFeeAmount * -1,
-            },
-          ]}
+          transactionSummary={paymentSummaryStepDetails}
           total={{
             label: <Label>Total deposit</Label>,
             deposit: paymentAmount.withFees,
