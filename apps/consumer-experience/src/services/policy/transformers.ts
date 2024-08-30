@@ -237,7 +237,7 @@ export const transformPolicyForFundDetails = (
       fundAccountName: fundDetails?.fundName,
       allocationPercentage: allocationDetails?.allocationPercentage,
       totalFundValue: fundDetails?.totalFundValue,
-      fundAccountType: fundDetails?.fundAccountType,
+      fundAccountType: undefined, // We do not want to set the fundAccountType from this endpoint, because it is not accurate compared to the /funds API
     };
   });
 

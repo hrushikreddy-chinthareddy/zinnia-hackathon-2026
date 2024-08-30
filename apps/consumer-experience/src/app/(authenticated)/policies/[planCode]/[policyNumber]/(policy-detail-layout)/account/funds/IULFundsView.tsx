@@ -24,10 +24,14 @@ export const IULFundsView = ({
     queryFn: () => getPolicyFunds(planCode, policyNumber),
     select: data => {
       const nonHolding = data?.filter(
-        fund => fund.fundAccountType !== FundAccountTypeEnum.HOLDING
+        fund =>
+          fund.fundAccountType &&
+          fund.fundAccountType !== FundAccountTypeEnum.HOLDING
       );
       const holding = data?.filter(
-        fund => fund.fundAccountType === FundAccountTypeEnum.HOLDING
+        fund =>
+          fund.fundAccountType &&
+          fund.fundAccountType === FundAccountTypeEnum.HOLDING
       );
 
       return { nonHolding: sortNonHoldingFunds(nonHolding), holding };
