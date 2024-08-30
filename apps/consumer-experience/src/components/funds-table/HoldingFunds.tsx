@@ -45,7 +45,7 @@ export const HoldingFunds = ({
   }
 
   return (
-    <Table>
+    <Table preventBackgroundHoverInteraction>
       <TableHeader>
         <TableRow>
           <TableHeaderCell>

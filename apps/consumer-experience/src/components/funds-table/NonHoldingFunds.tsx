@@ -63,7 +63,7 @@ export const NonHoldingFunds = ({
   };
 
   return (
-    <Table>
+    <Table preventBackgroundHoverInteraction>
       <TableHeader>
         <TableRow>
           <TableHeaderCell>
