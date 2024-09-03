@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { ReactNode } from 'react';
 
-import EverlyLogo from '@/app/styles/everly/everly-logo.svg';
+import EverlyLogo from '@/app/styles/everly/assets/everly-logo-new.svg';
 import WellabeLogo from '@/app/styles/wellabe/assets/wellabe-logo.svg';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { CompanyName } from '@/types/carriers';
