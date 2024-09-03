@@ -38,6 +38,7 @@ export const HeaderPolicyDetails = async ({
         return BadgeVariant.WARNING;
       case PolicyStatus.LAPSE:
       case PolicyStatus.SURRENDERED:
+      case PolicyStatus.CANCELEDFREELOOK:
         return BadgeVariant.ERROR;
       default:
         return BadgeVariant.DEFAULT;

@@ -28,10 +28,10 @@ export const policyStatusDisplayText: { [key in PolicyStatus]: string } = {
   [PolicyStatus.PENDINGLAPSE]: 'pending lapse',
   [PolicyStatus.LAPSE]: 'lapsed',
   [PolicyStatus.SURRENDERED]: 'surrendered',
+  [PolicyStatus.CANCELEDFREELOOK]: 'canceled',
   // These are statuses we don't display, users should not be able to log in with these statuses
   [PolicyStatus.NOTISSUED]: '',
   [PolicyStatus.CANCELEDNOPREMIUM]: '',
-  [PolicyStatus.CANCELEDFREELOOK]: '',
   [PolicyStatus.TERMINATED]: '',
   [PolicyStatus.MATURED]: '',
   [PolicyStatus.LIVINGCLAIMPENDING]: '',

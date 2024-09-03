@@ -506,7 +506,7 @@ export const transformPolicyStatusDetails = (
   );
   const freeLookActive = dayjs().isBefore(dayjs(freeLookFeature?.endDate));
 
-  if (freeLookActive) {
+  if (freeLookActive && policyStatus !== PolicyStatus.CANCELEDFREELOOK) {
     return {
       policyStatus: 'FREELOOK' as PolicyFeature.featureType,
       endDate: freeLookFeature?.endDate,

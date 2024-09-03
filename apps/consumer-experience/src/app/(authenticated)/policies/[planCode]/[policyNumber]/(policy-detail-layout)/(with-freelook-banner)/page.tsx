@@ -9,6 +9,7 @@ import { ClickableCardContainer } from '@/components/clickable-card-container/Cl
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { Coverage } from '@/components/policy-overview/Coverage';
+import { CanceledFreelook } from '@/components/policy-overview/non-active-statuses/CanceledFreelook';
 import { LapsedPolicy } from '@/components/policy-overview/non-active-statuses/LapsedPolicy';
 import { SurrenderedPolicy } from '@/components/policy-overview/non-active-statuses/SurrenderedPolicy';
 import { UpcomingPremium } from '@/components/policy-overview/UpcomingPremium';
@@ -64,6 +65,15 @@ export default async function Page({
         <>
           <SurrenderedPolicy />
           <CallForAssistance customInstruction="with surrender questions." />
+        </>
+      );
+    }
+
+    if (data?.policyStatus === PolicyStatus.CANCELEDFREELOOK) {
+      return (
+        <>
+          <CanceledFreelook />
+          <CallForAssistance customInstruction="with policy questions." />
         </>
       );
     }
