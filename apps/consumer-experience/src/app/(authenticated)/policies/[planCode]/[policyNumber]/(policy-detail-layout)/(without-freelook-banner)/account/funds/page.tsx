@@ -81,7 +81,11 @@ export default async function FundsPage({
         />
       </div>
       {data?.product?.productType === ProductType.UNIVERSALLIFE && (
-        <ULFundsView planCode={planCode} policyNumber={policyNumber} />
+        <ULFundsView
+          planCode={planCode}
+          policyNumber={policyNumber}
+          initialPolicyStatus={policyStatusDetails}
+        />
       )}
 
       {data?.product?.productType === ProductType.INDEXEDUNIVERSALLIFE && (

@@ -1,3 +1,4 @@
+import { PolicyFeature } from '@zinnia/api-types/types/sor';
 import { Icon, IconType, Label, Popover } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
@@ -6,11 +7,18 @@ import { FieldData } from '@/components/field-data/FieldData';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { StatusIconText } from '@/components/status-icon-text/StatusIconText';
 import { RouteKey, getPageTitle } from '@/route-map';
-import { ApiResponse, getPolicyLoanDetails } from '@/services';
+import {
+  ApiResponse,
+  getPolicyLoanDetails,
+  getPolicyStatusDetails,
+} from '@/services';
 import { getLoanEligibility } from '@/services/bpm';
 import { PolicyLoans, PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
-import { standardDateMonthDayYear } from '@/utils/dates';
+import {
+  convertKebabedDateString,
+  standardDateMonthDayYear,
+} from '@/utils/dates';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 const pageTitle = getPageTitle(RouteKey.LOANS);
@@ -33,25 +41,37 @@ export default async function Loans({
   params: PolicyRequestInputs;
 }) {
   const { planCode, policyNumber } = params;
-  const loanDetails = await Promise.allSettled([
-    getPolicyLoanDetails({
-      planCode,
-      policyNumber,
-    }),
-    getLoanEligibility({
-      planCode,
-      policyNumber,
-    }),
-  ]);
+  const [loanDetails, loanEligibility, policyStatus] = await Promise.allSettled(
+    [
+      getPolicyLoanDetails({
+        planCode,
+        policyNumber,
+      }),
+      getLoanEligibility({
+        planCode,
+        policyNumber,
+      }),
+      getPolicyStatusDetails({
+        planCode,
+        policyNumber,
+      }),
+    ]
+  );
 
   const summaryData =
-    loanDetails[0].status === 'fulfilled'
-      ? loanDetails[0]?.value
+    loanDetails.status === 'fulfilled'
+      ? loanDetails?.value
       : ({} as ApiResponse<PolicyLoans>);
   const loanEligibilityData =
-    loanDetails[1]?.status === 'fulfilled'
-      ? loanDetails[1].value?.data?.isEligible
+    loanEligibility?.status === 'fulfilled'
+      ? loanEligibility.value?.data?.isEligible
       : null;
+
+  const policyStatusData =
+    policyStatus?.status === 'fulfilled' ? policyStatus.value.data : null;
+  const isFreelook =
+    policyStatusData?.policyStatus ===
+    ('FREELOOK' as PolicyFeature.featureType);
 
   const { data, error } = summaryData;
 
@@ -163,7 +183,15 @@ export default async function Loans({
   return (
     <div className="container">
       {loansData()}
-      <CallForAssistance customInstruction="to begin the loan process." />
+      <CallForAssistance
+        callToAction={
+          isFreelook
+            ? `You can't take a loan until your free look period ends on ${convertKebabedDateString(policyStatusData.endDate)}. Questions?`
+            : 'Taking a loan is coming soon. For now, '
+        }
+        contactPrompt={isFreelook ? undefined : 'call'}
+        customInstruction="."
+      />
     </div>
   );
 }

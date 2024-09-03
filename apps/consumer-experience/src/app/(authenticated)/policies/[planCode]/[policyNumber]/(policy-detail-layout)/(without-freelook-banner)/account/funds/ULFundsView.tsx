@@ -1,22 +1,44 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
+import { PolicyFeature } from '@zinnia/api-types/types/sor';
 
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { NonHoldingFunds } from '@/components/funds-table/NonHoldingFunds';
-import { getPolicyFunds } from '@/queries/policy-queries';
+import {
+  getPolicyFunds,
+  getPolicyStatusDetails,
+} from '@/queries/policy-queries';
 import { QueryKeys } from '@/queries/query-keys';
-import { PolicyRequestInputs } from '@/types/policy';
+import { PolicyRequestInputs, PolicyStatusDetail } from '@/types/policy';
+import { convertKebabedDateString } from '@/utils/dates';
+
+interface ULFundsViewProps extends PolicyRequestInputs {
+  initialPolicyStatus?: Partial<PolicyStatusDetail> | null;
+}
 
 export const ULFundsView = ({
   planCode,
   policyNumber,
-}: PolicyRequestInputs) => {
+  initialPolicyStatus,
+}: ULFundsViewProps) => {
   const { data: funds, isLoading } = useQuery({
     queryKey: [QueryKeys.POLICY_FUNDS, planCode, policyNumber],
     queryFn: () => getPolicyFunds(planCode, policyNumber),
   });
 
+  const { data: freelookData } = useQuery({
+    queryKey: [QueryKeys.POLICY_STATUS, planCode, policyNumber],
+    queryFn: () => getPolicyStatusDetails(planCode, policyNumber),
+    initialData: initialPolicyStatus,
+    select: data => {
+      return {
+        isFreelook:
+          data?.policyStatus === ('FREELOOK' as PolicyFeature.featureType),
+        freelookDate: data?.endDate,
+      };
+    },
+  });
   return (
     <div className="container">
       <NonHoldingFunds
@@ -25,8 +47,13 @@ export const ULFundsView = ({
         numberOfLoadingRows={1}
       />
       <CallForAssistance
-        callToAction="Questions about your allocation?"
-        customInstruction="for more information."
+        callToAction={
+          freelookData?.isFreelook
+            ? `You can't edit allocations until your free look period ends on ${convertKebabedDateString(freelookData.freelookDate)}. Questions?`
+            : 'Editing fund allocations is coming soon. For now, '
+        }
+        contactPrompt={freelookData?.isFreelook ? undefined : 'call'}
+        customInstruction="."
       />
     </div>
   );

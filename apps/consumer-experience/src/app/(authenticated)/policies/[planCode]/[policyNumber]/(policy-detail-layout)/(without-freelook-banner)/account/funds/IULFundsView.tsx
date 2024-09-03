@@ -76,7 +76,7 @@ export const IULFundsView = ({
         <CallForAssistance
           callToAction={
             freelookData?.isFreelook
-              ? `You can't take a loan until your free look period ends on ${convertKebabedDateString(freelookData.freelookDate)}. Questions?`
+              ? `You can't edit allocations until your free look period ends on ${convertKebabedDateString(freelookData.freelookDate)}. Questions?`
               : 'Editing fund allocations is coming soon. For now, '
           }
           contactPrompt={freelookData?.isFreelook ? undefined : 'call'}

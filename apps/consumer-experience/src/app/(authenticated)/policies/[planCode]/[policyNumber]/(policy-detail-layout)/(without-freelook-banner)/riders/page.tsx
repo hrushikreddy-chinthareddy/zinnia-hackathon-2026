@@ -90,8 +90,9 @@ export default async function Riders({
         </div>
       )}
       <CallForAssistance
-        callToAction="Need to make a claim?"
-        customInstruction="to begin the process."
+        callToAction="Online claims are coming soon. For now,"
+        contactPrompt="call"
+        customInstruction="to make a rider claim."
       />
     </div>
   );

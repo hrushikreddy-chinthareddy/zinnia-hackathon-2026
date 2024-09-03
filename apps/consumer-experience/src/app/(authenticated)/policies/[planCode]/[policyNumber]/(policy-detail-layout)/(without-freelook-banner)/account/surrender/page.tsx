@@ -1,9 +1,4 @@
-import {
-  Icon,
-  IconType,
-  Label,
-  Popover,
-} from '@zinnia/bloom/components';
+import { Icon, IconType, Label, Popover } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
 import { AccountValue } from '@/components/account-value/AccountValue';
@@ -102,7 +97,11 @@ export default async function SurrenderPolicy({
   return (
     <div className="container">
       {surrenderData()}
-      <CallForAssistance customInstruction="to surrender your policy." />
+      <CallForAssistance
+        callToAction="Requesting a surrender is coming soon. For now,"
+        customInstruction="to surrender your policy."
+        contactPrompt="call"
+      />
     </div>
   );
 }

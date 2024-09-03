@@ -227,7 +227,11 @@ export default async function Beneficiaries({
           </div>
         </ClickableCardContainer>
       )}
-      <CallForAssistance customInstruction=" to make changes." />
+      <CallForAssistance
+        callToAction="Updating beneficiaries is coming soon. For now,"
+        contactPrompt="call"
+        customInstruction=" to make changes."
+      />
     </div>
   );
 }

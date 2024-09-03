@@ -2,6 +2,7 @@ import { Address, Email, PartyRole } from '@zinnia/api-types/types/sor';
 import { IconType, Label } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
+import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { FieldData } from '@/components/field-data/FieldData';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
@@ -116,6 +117,11 @@ export default async function Beneficiary({
         {address()}
         {email()}
       </div>
+      <CallForAssistance
+        callToAction="Updating beneficiaries is coming soon. For now,"
+        contactPrompt="call"
+        customInstruction=" to make changes."
+      />
     </div>
   );
 }

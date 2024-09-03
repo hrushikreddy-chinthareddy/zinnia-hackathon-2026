@@ -1,3 +1,4 @@
+import { PolicyFeature } from '@zinnia/api-types/types/sor';
 import { Icon, IconType, Label, Popover } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
@@ -6,12 +7,20 @@ import { FieldData } from '@/components/field-data/FieldData';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { StatusIconText } from '@/components/status-icon-text/StatusIconText';
 import { RouteKey, getPageTitle } from '@/route-map';
-import { ApiResponse, getPolicyWithdrawalDetails } from '@/services';
+import {
+  ApiResponse,
+  getPolicyStatusDetails,
+  getPolicyWithdrawalDetails,
+} from '@/services';
 import { getWithdrawalEligibility } from '@/services/bpm';
 import { PolicyRequestInputs, PolicyWithdrawals } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined } from '@/utils/data';
-import { dayOfMonthWithOrdinal, standardDateMonthDayYear } from '@/utils/dates';
+import {
+  convertKebabedDateString,
+  dayOfMonthWithOrdinal,
+  standardDateMonthDayYear,
+} from '@/utils/dates';
 import {
   DEFAULT_ERROR_STRING,
   DEFAULT_UNAVAILABLE_STRING,
@@ -42,26 +51,37 @@ export default async function Withdrawals({
 }) {
   const { planCode, policyNumber } = params;
 
-  const withdrawalDetails = await Promise.allSettled([
-    getPolicyWithdrawalDetails({
-      planCode,
-      policyNumber,
-    }),
-    getWithdrawalEligibility({
-      planCode,
-      policyNumber,
-    }),
-  ]);
+  const [withdrawalDetails, withdrawalEligibility, policyStatus] =
+    await Promise.allSettled([
+      getPolicyWithdrawalDetails({
+        planCode,
+        policyNumber,
+      }),
+      getWithdrawalEligibility({
+        planCode,
+        policyNumber,
+      }),
+      getPolicyStatusDetails({
+        planCode,
+        policyNumber,
+      }),
+    ]);
 
   const summaryData =
-    withdrawalDetails[0].status === 'fulfilled'
-      ? withdrawalDetails[0]?.value
+    withdrawalDetails.status === 'fulfilled'
+      ? withdrawalDetails?.value
       : ({} as ApiResponse<PolicyWithdrawals>);
 
-  const withdrawalEligibility =
-    withdrawalDetails[1]?.status === 'fulfilled'
-      ? withdrawalDetails[1].value?.data?.isEligible
+  const withdrawalEligibilityData =
+    withdrawalEligibility?.status === 'fulfilled'
+      ? withdrawalEligibility.value?.data?.isEligible
       : null;
+
+  const policyStatusData =
+    policyStatus?.status === 'fulfilled' ? policyStatus.value.data : null;
+  const isFreelook =
+    policyStatusData?.policyStatus ===
+    ('FREELOOK' as PolicyFeature.featureType);
 
   const { data, error } = summaryData;
   const withdrawalsData = () => {
@@ -87,7 +107,7 @@ export default async function Withdrawals({
         </p>
         <div className="card">
           <StatusIconText
-            isEligible={withdrawalEligibility}
+            isEligible={withdrawalEligibilityData}
             showIcon
             className="typography-content-body-bold mb-lg"
           />
@@ -270,7 +290,15 @@ export default async function Withdrawals({
   return (
     <div className="container">
       {withdrawalsData()}
-      <CallForAssistance customInstruction="to make a withdrawal." />
+      <CallForAssistance
+        callToAction={
+          isFreelook
+            ? `You can't take a withdrawal until your free look period ends on ${convertKebabedDateString(policyStatusData.endDate)}. Questions?`
+            : 'Taking a withdrawal is coming soon. For now, '
+        }
+        contactPrompt={isFreelook ? undefined : 'call'}
+        customInstruction="."
+      />
     </div>
   );
 }

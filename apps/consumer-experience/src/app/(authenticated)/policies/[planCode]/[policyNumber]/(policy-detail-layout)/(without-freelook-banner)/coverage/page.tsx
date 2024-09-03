@@ -83,7 +83,8 @@ export default async function Beneficiaries({
         </div>
       </ClickableCardContainer>
       <CallForAssistance
-        callToAction="Need to change your coverage?"
+        callToAction="Requesting a coverage change is coming soon. For now,"
+        contactPrompt="call"
         customInstruction="to inquire."
       />
     </div>

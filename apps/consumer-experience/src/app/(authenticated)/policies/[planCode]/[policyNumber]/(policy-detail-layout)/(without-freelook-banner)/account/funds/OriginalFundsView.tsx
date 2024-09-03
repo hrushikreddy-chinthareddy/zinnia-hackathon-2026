@@ -1,11 +1,13 @@
+import { PolicyFeature } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 
 import { AccountValue } from '@/components/account-value/AccountValue';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
-import { getPolicyFundDetails } from '@/services';
+import { getPolicyFundDetails, getPolicyStatusDetails } from '@/services';
 import { formatUSDollars } from '@/utils/currency';
+import { convertKebabedDateString } from '@/utils/dates';
 
 import styles from './Funds.module.css';
 
@@ -20,6 +22,13 @@ export const OriginalFundsView = async ({
     planCode,
     policyNumber,
   });
+
+  const { data: statusData } = await getPolicyStatusDetails({
+    planCode,
+    policyNumber,
+  });
+  const isFreelook =
+    statusData?.policyStatus === ('FREELOOK' as PolicyFeature.featureType);
 
   const allocationData = () => {
     if (error || !data) {
@@ -55,8 +64,13 @@ export const OriginalFundsView = async ({
         {allocationData()}
       </div>
       <CallForAssistance
-        callToAction="Questions about your allocation?"
-        customInstruction="for more information."
+        callToAction={
+          isFreelook
+            ? `You can't take edit allocations until your free look period ends on ${convertKebabedDateString(statusData.endDate)}. Questions?`
+            : 'Editing fund allocations is coming soon. For now, '
+        }
+        contactPrompt={isFreelook ? undefined : 'call'}
+        customInstruction="."
       />
     </div>
   );
