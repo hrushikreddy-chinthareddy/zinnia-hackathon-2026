@@ -1,26 +1,30 @@
+import { BannerAlert, BannerVariant } from '@zinnia/bloom/components';
 import { ReactNode } from 'react';
 
 import { EVERLY_CONTACT_PHONE_NUMBER } from '@/utils/data';
 
 export const CallForAssistance = ({
   callToAction,
+  contactPrompt = 'Call',
   customInstruction,
 }: {
   callToAction?: ReactNode;
+  contactPrompt?: string;
   customInstruction?: string;
 }) => {
-  const instructionText = customInstruction || 'to add or make changes.';
-
   return (
-    <p className="typography-content-body-bold">
-      <span>{callToAction}</span> <span>Call</span>{' '}
-      <a
-        href={`tel:+${EVERLY_CONTACT_PHONE_NUMBER}`}
-        className="typography-nav-links-inline"
-      >
-        {EVERLY_CONTACT_PHONE_NUMBER}
-      </a>{' '}
-      <span>{instructionText}</span>
-    </p>
+    <BannerAlert
+      className="mb-lg"
+      bodyText={
+        <p className="typography-nav-links-sm-inline">
+          <span>{callToAction}</span> <span>{contactPrompt}</span>{' '}
+          <a href={`tel:+${EVERLY_CONTACT_PHONE_NUMBER}`}>
+            {EVERLY_CONTACT_PHONE_NUMBER}
+          </a>{' '}
+          <span>{customInstruction}</span>
+        </p>
+      }
+      variant={BannerVariant.Information}
+    />
   );
 };

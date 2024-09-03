@@ -137,7 +137,7 @@ export default async function Profile({ params }: Props) {
         {bank()}
       </div>
 
-      <CallForAssistance />
+      <CallForAssistance customInstruction=" to make changes." />
     </div>
   );
 }

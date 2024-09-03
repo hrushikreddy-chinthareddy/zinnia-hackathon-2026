@@ -227,7 +227,7 @@ export default async function Beneficiaries({
           </div>
         </ClickableCardContainer>
       )}
-      <CallForAssistance />
+      <CallForAssistance customInstruction=" to make changes." />
     </div>
   );
 }

@@ -6,7 +6,7 @@ import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrum
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 import { PolicyStatusAlertBanner } from '@/components/policy-status-alert-banner/PolicyStatusAlertBanner';
 
-import styles from './policyLayout.module.css';
+import styles from '../policyLayout.module.css';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
@@ -33,7 +33,9 @@ export default async function AuthenticatedLayout({
       <PolicyStatusAlertBanner
         planCode={params.planCode}
         policyNumber={params.policyNumber}
+        canShowFreelookBanner
       />
+
       <div className={styles.headerContainer}>
         <HeaderBreadcrumb />
         <HeaderPolicyDetails

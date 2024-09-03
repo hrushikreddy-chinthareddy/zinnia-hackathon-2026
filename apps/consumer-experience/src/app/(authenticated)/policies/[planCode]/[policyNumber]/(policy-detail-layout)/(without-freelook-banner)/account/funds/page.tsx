@@ -5,7 +5,7 @@ import { AccountValue } from '@/components/account-value/AccountValue';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { TotalFundValue } from '@/components/total-fund-value/TotalFundValue';
 import { RouteKey, getPageTitle } from '@/route-map';
-import { getPolicyDetails } from '@/services';
+import { getPolicyDetails, getPolicyStatusDetails } from '@/services';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { PolicyRequestInputs } from '@/types/policy';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
@@ -29,6 +29,11 @@ export default async function FundsPage({
 }) {
   const { planCode, policyNumber } = params;
   const { data, error } = await getPolicyDetails({
+    planCode,
+    policyNumber,
+  });
+
+  const { data: policyStatusDetails } = await getPolicyStatusDetails({
     planCode,
     policyNumber,
   });
@@ -80,7 +85,11 @@ export default async function FundsPage({
       )}
 
       {data?.product?.productType === ProductType.INDEXEDUNIVERSALLIFE && (
-        <IULFundsView planCode={planCode} policyNumber={policyNumber} />
+        <IULFundsView
+          planCode={planCode}
+          policyNumber={policyNumber}
+          initialPolicyStatus={policyStatusDetails}
+        />
       )}
     </div>
   );

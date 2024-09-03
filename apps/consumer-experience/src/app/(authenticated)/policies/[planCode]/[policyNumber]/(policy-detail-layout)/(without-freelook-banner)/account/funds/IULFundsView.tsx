@@ -1,24 +1,31 @@
 'use client';
 import { useQuery } from '@tanstack/react-query';
 import { FundAccountTypeEnum } from '@zinnia/api-types/types/funds';
-import { BannerAlert, BannerVariant } from '@zinnia/bloom/components';
+import { PolicyFeature } from '@zinnia/api-types/types/sor';
 import { toTitleCase } from '@zinnia/utils';
 
+import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { HoldingFunds } from '@/components/funds-table/HoldingFunds';
 import { NonHoldingFunds } from '@/components/funds-table/NonHoldingFunds';
 import { sortNonHoldingFunds } from '@/components/funds-table/utils';
-import { getPolicyFunds } from '@/queries/policy-queries';
+import {
+  getPolicyFunds,
+  getPolicyStatusDetails,
+} from '@/queries/policy-queries';
 import { QueryKeys } from '@/queries/query-keys';
-import { EVERLY_CONTACT_PHONE_NUMBER } from '@/utils/data';
+import { PolicyStatusDetail } from '@/types/policy';
+import { convertKebabedDateString } from '@/utils/dates';
 
 import styles from './Funds.module.css';
 
 export const IULFundsView = ({
   planCode,
   policyNumber,
+  initialPolicyStatus,
 }: {
   planCode: string;
   policyNumber: string;
+  initialPolicyStatus: Partial<PolicyStatusDetail> | null;
 }) => {
   const { data: funds, isLoading } = useQuery({
     queryKey: [QueryKeys.POLICY_FUNDS, planCode, policyNumber],
@@ -39,6 +46,18 @@ export const IULFundsView = ({
     },
   });
 
+  const { data: freelookData } = useQuery({
+    queryKey: [QueryKeys.POLICY_STATUS, planCode, policyNumber],
+    queryFn: () => getPolicyStatusDetails(planCode, policyNumber),
+    initialData: initialPolicyStatus,
+    select: data => {
+      return {
+        isFreelook:
+          data?.policyStatus === ('FREELOOK' as PolicyFeature.featureType),
+        freelookDate: data?.endDate,
+      };
+    },
+  });
   return (
     <>
       <div className={styles.sectionContainer}>
@@ -54,18 +73,16 @@ export const IULFundsView = ({
 
       <div className={styles.sectionContainer}>
         <h2>{toTitleCase('available funds')}</h2>
-        <BannerAlert
-          variant={BannerVariant.Information}
-          bodyText={
-            <span>
-              Editing allocations is coming soon. For now, call{' '}
-              <a href={`tel:${EVERLY_CONTACT_PHONE_NUMBER}`}>
-                {EVERLY_CONTACT_PHONE_NUMBER}
-              </a>{' '}
-              to make changes.
-            </span>
+        <CallForAssistance
+          callToAction={
+            freelookData?.isFreelook
+              ? `You can't take a loan until your free look period ends on ${convertKebabedDateString(freelookData.freelookDate)}. Questions?`
+              : 'Editing fund allocations is coming soon. For now, '
           }
+          contactPrompt={freelookData?.isFreelook ? undefined : 'call'}
+          customInstruction="."
         />
+
         <div>
           <p className="typography-content-body">
             The following funds are available for your policy.{' '}
