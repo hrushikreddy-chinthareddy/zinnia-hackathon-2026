@@ -85,7 +85,7 @@ export default async function Loans({
         <p className="typography-content-body-sm">
           {loanEligibilityData != null && (
             <span className="typography-content-body-sm-bold">
-              {loanEligibilityData
+              {loanEligibilityData && !isFreelook
                 ? eligibleTextHighlight
                 : ineligibleTextHighlight}{' '}
             </span>
@@ -98,7 +98,7 @@ export default async function Loans({
         </p>
         <div className="card">
           <StatusIconText
-            isEligible={loanEligibilityData}
+            isEligible={loanEligibilityData && !isFreelook}
             showIcon
             className="typography-content-body-bold mb-lg"
           />

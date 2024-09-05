@@ -1,4 +1,4 @@
-import { ProductType } from '@zinnia/api-types/types/sor';
+import { PolicyFeature, ProductType } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import { Metadata } from 'next';
 
@@ -6,7 +6,11 @@ import { AccountValue } from '@/components/account-value/AccountValue';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { StatusIconText } from '@/components/status-icon-text/StatusIconText';
 import { RouteKey, getPageTitle } from '@/route-map';
-import { ApiResponse, getPolicyDetails } from '@/services';
+import {
+  ApiResponse,
+  getPolicyDetails,
+  getPolicyStatusDetails,
+} from '@/services';
 import { getLoanEligibility, getWithdrawalEligibility } from '@/services/bpm';
 import { Fund, getFunds } from '@/services/funds';
 import { PolicyRequestInputs } from '@/types/policy';
@@ -32,6 +36,7 @@ export default async function AccountValuePage({
     withDrawalEligibilityRes,
     loanEligibilityRes,
     policyDetailsRes,
+    policyStatusRes,
   ] = await Promise.allSettled([
     getFunds({
       planCode,
@@ -46,6 +51,10 @@ export default async function AccountValuePage({
       policyNumber,
     }),
     getPolicyDetails({
+      planCode,
+      policyNumber,
+    }),
+    getPolicyStatusDetails({
       planCode,
       policyNumber,
     }),
@@ -67,6 +76,11 @@ export default async function AccountValuePage({
     policyDetailsRes.status === 'fulfilled'
       ? policyDetailsRes.value?.data
       : null;
+  const policyStatusData =
+    policyStatusRes?.status === 'fulfilled' ? policyStatusRes.value.data : null;
+  const isFreelook =
+    policyStatusData?.policyStatus ===
+    ('FREELOOK' as PolicyFeature.featureType);
 
   // UL products do not have the concept of 'electing' funds since there is a single fund option
   const electedFunds =
@@ -132,7 +146,7 @@ export default async function AccountValuePage({
                   Take a loan
                 </span>
                 <StatusIconText
-                  isEligible={loanEligibility}
+                  isEligible={loanEligibility && !isFreelook}
                   className="typography-content-caption"
                 />
               </div>

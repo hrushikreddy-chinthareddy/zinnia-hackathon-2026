@@ -36,7 +36,18 @@ export const PolicyStatusAlertBanner = async ({
   switch (data?.policyStatus) {
     case PolicyStatus.PENDINGLAPSE:
       statusContent = {
-        text: `Your policy is about to lapse, leaving you uninsured. Pay at least ${formatUSDollars(data.minimumPaymentDue)} by ${standardDateMonthDayYear(data.minimumPaymentDueDate)} to get back on track. Call ${EVERLY_CONTACT_PHONE_NUMBER} to make a payment.`,
+        text: (
+          <span>
+            Your policy is about to lapse, leaving you uninsured. Pay at least{' '}
+            {formatUSDollars(data.minimumPaymentDue)} by{' '}
+            {standardDateMonthDayYear(data.minimumPaymentDueDate)} to get back
+            on track. Call{' '}
+            <a href={`tel:+${EVERLY_CONTACT_PHONE_NUMBER}`}>
+              {EVERLY_CONTACT_PHONE_NUMBER}
+            </a>{' '}
+            to make a payment.
+          </span>
+        ),
         variant: BannerVariant.Warning,
       };
       break;
@@ -44,7 +55,18 @@ export const PolicyStatusAlertBanner = async ({
     case 'FREELOOK' as PolicyFeature.featureType:
       if (canShowFreelookBanner) {
         statusContent = {
-          text: `You're still in the free look period. That means you can cancel this policy without penalty anytime before ${convertKebabedDateString(data.endDate)}. If you'd like to cancel, call ${EVERLY_CONTACT_PHONE_NUMBER}.`,
+          text: (
+            <span>
+              You're still in the free look period. That means you can cancel
+              this policy without penalty anytime before{' '}
+              {convertKebabedDateString(data.endDate)}. If you'd like to cancel,
+              call{' '}
+              <a href={`tel:+${EVERLY_CONTACT_PHONE_NUMBER}`}>
+                {EVERLY_CONTACT_PHONE_NUMBER}
+              </a>
+              .
+            </span>
+          ),
           variant: BannerVariant.Information,
         };
       } else {

@@ -94,7 +94,7 @@ export default async function Withdrawals({
         <p className="typography-content-body-sm">
           {withdrawalEligibility != null && (
             <span className="typography-content-body-sm-bold">
-              {withdrawalEligibility
+              {withdrawalEligibility && !isFreelook
                 ? eligibleTextHighlight
                 : ineligibleTextHighlight}{' '}
             </span>
@@ -107,7 +107,7 @@ export default async function Withdrawals({
         </p>
         <div className="card">
           <StatusIconText
-            isEligible={withdrawalEligibilityData}
+            isEligible={withdrawalEligibilityData && !isFreelook}
             showIcon
             className="typography-content-body-bold mb-lg"
           />
