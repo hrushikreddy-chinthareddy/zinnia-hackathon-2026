@@ -1,4 +1,4 @@
-name: "Production Deployment"
+name: 'Production Deployment'
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
 jobs:
   prod-deploy:
     if: startsWith(github.ref_name, 'release/')
-    uses: ./.github/workflows/deploy-action.yml
+    uses: ./.github/workflows/deploy-consumer-experience-action.yml
     with:
       environment-level: production
     secrets: inherit
