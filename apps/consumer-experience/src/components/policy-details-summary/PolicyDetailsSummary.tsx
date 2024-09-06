@@ -35,6 +35,7 @@ export const PolicyDetailsSummary = ({
         return styles.warning;
       case PolicyStatus.LAPSE:
       case PolicyStatus.SURRENDERED:
+      case PolicyStatus.CANCELEDFREELOOK:
         return styles.error;
       default:
         return '';
