@@ -37,7 +37,7 @@ export const PolicyStatusAlertBanner = async ({
     case PolicyStatus.PENDINGLAPSE:
       statusContent = {
         text: (
-          <span>
+          <span className="typography-nav-links-sm-inline">
             Your policy is about to lapse, leaving you uninsured. Pay at least{' '}
             {formatUSDollars(data.minimumPaymentDue)} by{' '}
             {standardDateMonthDayYear(data.minimumPaymentDueDate)} to get back
@@ -56,7 +56,7 @@ export const PolicyStatusAlertBanner = async ({
       if (canShowFreelookBanner) {
         statusContent = {
           text: (
-            <span>
+            <span className="typography-nav-links-sm-inline">
               You're still in the free look period. That means you can cancel
               this policy without penalty anytime before{' '}
               {convertKebabedDateString(data.endDate)}. If you'd like to cancel,
