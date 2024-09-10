@@ -11,9 +11,9 @@ import { logTrace, logWarn } from '@/utils/logging/server-logging';
 
 import { combineFundData, transformFundsTotalValue } from './transformers';
 import { ApiResponse } from '..';
+import { EnterpriseTokenApi } from '../enterprise-api-token-http';
 import { getPolicyByPlanCodeAndId } from '../policy';
 import { transformPolicyForFundDetails } from '../policy/transformers';
-import { ServerApi } from '../server-http';
 
 export interface FundDetails extends FundDescriptor {
   fundId: string;
@@ -79,7 +79,7 @@ export const getFundDetails = async ({
   fundId,
 }: GetFundDetailsArgs): Promise<ApiResponse<FundDetails>> => {
   try {
-    const response = await ServerApi.get(
+    const response = await EnterpriseTokenApi.get(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/funds/v1/carriers/${carrierId}/funds/${fundId}`
     );
 
@@ -140,7 +140,7 @@ export const getProductDetails = async ({
   planCode,
 }: getProductDetailsArgs): Promise<ApiResponse<ProductRules>> => {
   try {
-    const response = await ServerApi.get(
+    const response = await EnterpriseTokenApi.get(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/funds/v1/carriers/${carrierId}/products/${planCode}`
     );
 
