@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import LogoImage from '@/app/styles/everly/everly-logo.svg'; // TODO: don't hardcode to everly
+import LogoImage from '@/app/styles/everly/assets/everly-logo-new.svg'; // TODO: don't hardcode to everly
 
 import styles from './GenericInfoPage.module.css';
 
