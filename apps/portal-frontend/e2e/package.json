@@ -1,0 +1,37 @@
+{
+  "name": "@zinnia/digital-experience",
+  "version": "0.0.1",
+  "description": "E2E Test tools and suites",
+  "main": "cypress",
+  "author": "Zinnia XD Team",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "cy:parallel": "cypress-parallel --script cy:run --threads 5 --strictMode false --verbose",
+    "test:lint": "eslint -c ./.eslintrc.js --quiet --ext .js,.ts ./"
+  },
+  "cypress-cucumber-preprocessor": {
+    "nonGlobalStepDefinitions": true,
+    "stepDefinitions": [
+      "cypress/support/step_definitions/**/*.ts"
+    ]
+  },
+  "devDependencies": {
+    "@badeball/cypress-cucumber-preprocessor": "^19.2.0",
+    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.0",
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0",
+    "axe-core": "^4.8.4",
+    "cypress": "^13.7.0",
+    "cypress-axe": "^1.5.0",
+    "cypress-parallel": "^0.14.0",
+    "dotenv": "^16.3.1",
+    "eslint": "^8.55.0",
+    "eslint-plugin-cypress": "^2.15.1"
+  },
+  "dependencies": {
+    "cypress-xpath": "^2.0.1"
+  }
+}

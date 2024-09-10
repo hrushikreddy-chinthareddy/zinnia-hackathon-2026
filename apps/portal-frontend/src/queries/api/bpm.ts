@@ -1,0 +1,321 @@
+import { AxiosResponse } from 'axios';
+import dayjs from 'dayjs';
+import { v4 as uuidV4 } from 'uuid';
+
+import {
+    FullSurrenderQuoteResponse,
+    FullSurrenderRequest,
+    OneTimePremiumRequest,
+    PartialWithdrawalOneTimeQuoteResponse,
+    PartialWithdrawalOneTimeRequest,
+    SystematicProgramUpdateRequest,
+} from '@deps/models/policy/sor-policy';
+import { baseAppUrl } from '@deps/queries/api-config';
+import { client } from '@deps/queries/api-utils/client';
+import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+
+const baseUrl = `${baseAppUrl}/api/bpm/v1`;
+
+export interface OneTimePremiumRequestQuery extends OneTimePremiumRequest {
+    caseId: string;
+}
+
+interface SystematicProgramUpdateRequestQuery extends SystematicProgramUpdateRequest {
+    caseId: string;
+}
+
+export interface FullSurrenderWithdrawalRequestQuery extends FullSurrenderRequest {
+    caseId: string;
+}
+
+export interface PartialWithdrawalOneTimeRequestQuery extends PartialWithdrawalOneTimeRequest {
+    caseId: string;
+}
+
+export interface SubmitPremiumResponse {
+    status: number;
+    data?: {
+        caseId: string;
+        caseStatus: string;
+        correlationId: string;
+    };
+}
+
+export interface CancelTransactionResponse extends SubmitPremiumResponse {}
+
+export interface TransactionResponse {
+    status: string | number;
+    quoteResponse?: FullSurrenderQuoteResponse | PartialWithdrawalOneTimeQuoteResponse;
+    validationResult?: ValidationResult[];
+}
+
+export interface TransactionRequest {
+    effectiveDate: string;
+}
+
+export interface ValidationResult {
+    attribute: string | null;
+    error: string;
+    errorCode: string;
+    resolution: string;
+}
+
+export enum TransactionResponseStatus {
+    Failure = 'failure',
+    Success = 'success',
+}
+
+export const checkEligibilityNewLoan = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined
+): Promise<TransactionResponse> => {
+    try {
+        const { data } = await client.post<TransactionResponse, AxiosResponse>(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/newloan/eligibilitycheck`,
+            {} as AxiosResponse // BPB - TODO: fix this typing!
+        );
+
+        return data;
+    } catch (error: any) {
+        console.error('checkEligibilityNewLoan::an error occurred during eligibility check', error);
+
+        return error?.data;
+    }
+};
+
+export const checkEligibilityOneTimePremium = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined
+): Promise<TransactionResponse> => {
+    try {
+        const { data } = await client.post<TransactionResponse, AxiosResponse>(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/onetimepremium/eligibilitycheck`
+        );
+
+        return data;
+    } catch (error: any) {
+        console.error('checkEligibilityOneTimePremium::an error occurred during eligibility check', error);
+
+        return error?.data;
+    }
+};
+
+export const checkEligibilityPartialWithdrawalOneTime = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined
+): Promise<TransactionResponse> => {
+    try {
+        const { data } = await client.post<TransactionRequest, AxiosResponse>(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/partialwithdrawalonetime/eligibilitycheck`,
+            {
+                effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
+            }
+        );
+
+        return data;
+    } catch (error: any) {
+        console.error('checkEligibilityPartialWithdrawalOneTime::an error occurred during eligibility check', error);
+
+        return error?.data;
+    }
+};
+
+export const checkEligibilitySystematicPrograms = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined,
+    arrangementId: string
+): Promise<TransactionResponse> => {
+    try {
+        const { data } = await client.post<TransactionResponse, AxiosResponse>(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/systematicprograms/${arrangementId}/eligibilitycheck`
+        );
+
+        return data;
+    } catch (error: any) {
+        console.error('checkEligibilitySystematicPrograms::an error occurred during eligibility check', error);
+
+        return error?.data;
+    }
+};
+
+export const validateFullSurrenderWithdrawal = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined,
+    query: FullSurrenderWithdrawalRequestQuery
+): Promise<TransactionResponse> => {
+    try {
+        const { data } = await client.post<FullSurrenderWithdrawalRequestQuery, AxiosResponse>(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/fullsurrender/validation`,
+            query
+        );
+
+        return data;
+    } catch (error: any) {
+        console.error('validateFullSurrenderWithdrawal::an error occurred during validation', error);
+
+        return error?.data as TransactionResponse;
+    }
+};
+
+export const validateOneTimePremium = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined,
+    query: OneTimePremiumRequestQuery
+): Promise<TransactionResponse> => {
+    try {
+        const { data } = await client.post<OneTimePremiumRequest, AxiosResponse>(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/onetimepremium/validation`,
+            query
+        );
+
+        return data;
+    } catch (error: any) {
+        console.error('validateOneTimePremium::an error occurred during validation', error);
+
+        return error?.data as TransactionResponse;
+    }
+};
+
+export const validatePartialWithdrawalOneTime = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined,
+    query: PartialWithdrawalOneTimeRequestQuery
+): Promise<TransactionResponse> => {
+    try {
+        const { data } = await client.post<PartialWithdrawalOneTimeRequestQuery, AxiosResponse>(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/partialwithdrawalonetime/validation`,
+            query
+        );
+
+        return data;
+    } catch (error: any) {
+        console.error('validatePartialWithdrawalOneTime::an error occurred during validation', error);
+
+        return error?.data as TransactionResponse;
+    }
+};
+
+export const validateSystematicProgramUpdate = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined,
+    arrangementId: string,
+    query: SystematicProgramUpdateRequestQuery
+): Promise<TransactionResponse> => {
+    try {
+        const { data } = await client.post<SystematicProgramUpdateRequestQuery, AxiosResponse>(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/systematicprograms/${arrangementId}/validation`,
+            query
+        );
+        return data;
+    } catch (error: any) {
+        console.error('validateSystematicProgramUpdate::an error occurred during validation', error);
+
+        return error?.data;
+    }
+};
+
+export const submitFullSurrenderWithdrawal = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined,
+    query: FullSurrenderWithdrawalRequestQuery
+): Promise<TransactionResponse> => {
+    try {
+        const response = await client.post<FullSurrenderWithdrawalRequestQuery, AxiosResponse>(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/fullsurrender`,
+            query
+        );
+        return { status: response.status };
+    } catch (error: any) {
+        console.error('submitFullSurrenderWithdrawal::an error occurred during submission', error);
+
+        return { status: error.response?.status };
+    }
+};
+
+export const submitOneTimePremium = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined,
+    query: OneTimePremiumRequestQuery
+): Promise<SubmitPremiumResponse> => {
+    try {
+        const response = await client.post<OneTimePremiumRequestQuery, AxiosResponse>(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/onetimepremium`,
+            query
+        );
+        return { status: response.status };
+    } catch (error: any) {
+        console.error('submitOneTimePremium::an error occurred during submission', error);
+
+        return { status: error.response?.status };
+    }
+};
+
+export const submitPartialWithdrawalOneTime = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined,
+    query: PartialWithdrawalOneTimeRequestQuery
+): Promise<TransactionResponse> => {
+    try {
+        const response = await client.post<PartialWithdrawalOneTimeRequestQuery, AxiosResponse>(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/partialwithdrawalonetime`,
+            query
+        );
+        return { status: response.status };
+    } catch (error: any) {
+        console.error('submitPartialWithdrawalOneTime::an error occurred during submission', error);
+
+        return { status: error.response?.status };
+    }
+};
+
+export const submitSystematicProgramUpdate = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined,
+    arrangementId: string,
+    query: SystematicProgramUpdateRequestQuery
+): Promise<SubmitPremiumResponse> => {
+    try {
+        const data = await client.post<SystematicProgramUpdateRequestQuery, AxiosResponse>(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/systematicprograms/${arrangementId}`,
+            query
+        );
+
+        return data;
+    } catch (error: any) {
+        console.error('submitSystematicProgramUpdate::an error occurred during validation', error);
+
+        return error;
+    }
+};
+
+export const cancelTransaction = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined,
+    transactionId: string,
+    reason: string = '',
+    caseId?: string,
+    correlationId?: string
+): Promise<CancelTransactionResponse> => {
+    try {
+        const corrId = correlationId ?? uuidV4();
+        const response = await client.post<any, AxiosResponse>(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/canceltransaction`,
+            {
+                correlationId: corrId,
+                transactionId,
+                reason,
+                ...(caseId ? { caseId } : {}),
+            },
+            {
+                headers: {
+                    'x-correlation-id': correlationId,
+                },
+            }
+        );
+        return { status: response.status, data: response.data };
+    } catch (e: any) {
+        console.error('cancelTransaction:: an error occurred while trying to cancel the transaction', e);
+
+        return { status: e.response?.status };
+    }
+};

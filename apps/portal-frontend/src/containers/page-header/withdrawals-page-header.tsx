@@ -1,0 +1,215 @@
+import clsx from 'clsx';
+import { useTranslation } from 'next-i18next';
+
+import BadgeWithTooltip from '@deps/components/badge/badge-with-tooltip/badge-with-tooltip';
+import { BadgeVariant } from '@deps/components/badge/badge.helper';
+import Content, { ContentVariant } from '@deps/components/content/content';
+import Label, { LabelVariant } from '@deps/components/label/label';
+import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
+import TempNavInactive, { isStillInactive } from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
+import { PageHeader } from '@deps/components/page-header/page-header';
+import { PopoverPlacement } from '@deps/components/popover/popover';
+import { WithdrawalEligibilityValues } from '@deps/containers/withdrawals-sub-page/withdrawals-sub-page';
+import { useStaticNestedNavDrawerContext } from '@deps/contexts/LayoutContexts/StaticNestedNavDrawerContext';
+import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { WithdrawalsValues } from '@deps/helpers/withdrawals.helper';
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+
+interface WithdrawalsPageHeaderContainerProps {
+    breadcrumbText?: string;
+    breadcrumbUrl?: string;
+    isNavDrawerOpen?: boolean;
+    planCode?: string;
+    policyNumber?: string;
+    withdrawalsValues?: WithdrawalsValues;
+    withdrawalEligibilityValues: WithdrawalEligibilityValues;
+}
+
+const WithdrawalsPageHeaderContainer = ({
+    breadcrumbText,
+    breadcrumbUrl,
+    withdrawalEligibilityValues,
+    planCode,
+    policyNumber,
+    withdrawalsValues,
+}: WithdrawalsPageHeaderContainerProps) => {
+    const { t } = useTranslation();
+    const { isNavDrawerOpen } = useStaticNestedNavDrawerContext();
+
+    const {
+        amountEligibleForWithdrawal,
+        netSurrenderValue,
+        annualWithdrawalsRemaining,
+        annualWithdrawalsTaken,
+        allTimeWithdrawalAmount,
+        allTimeWithdrawalCount,
+    } = withdrawalsValues ?? {};
+    const { ineligibleReason, isEligible, isLoading } = withdrawalEligibilityValues ?? {};
+
+    // https://zinnia.atlassian.net/browse/DEPU-1964
+    // const breadcrumbSiblingsClassNames = clsx('flex', { 'xs:hidden xl:flex': isNavDrawerOpen, 'xs:hidden lg:flex': !isNavDrawerOpen });
+    // const breadcrumbSiblings = (
+    //     <NavElement className={breadcrumbSiblingsClassNames} size={NavElementSize.Small} type={NavElementType.Link}>
+    //         {t('withdrawals.viewWithdrawalHistory')}
+    //     </NavElement>
+    // );
+
+    const headerRowFlexClassNames = clsx('flex-col', { 'xs:gap-4 lg:gap-0': !isNavDrawerOpen, 'xs:gap-4 xl:gap-0': isNavDrawerOpen });
+    const groupOneFlexClassNames = 'flex gap-4';
+
+    const headerTextSiblingsGroupOne = !isLoading && (
+        <BadgeWithTooltip
+            className="mb-2 mt-2 self-center"
+            label={isEligible ? t('withdrawals.eligible') : t('withdrawals.ineligible')}
+            tooltip={isEligible ? t('withdrawals.eligibleForWithdrawalTooltip') : ineligibleReason}
+            tooltipPlacement={PopoverPlacement.BottomRight}
+            variant={isEligible ? BadgeVariant.Positive : BadgeVariant.Negative}
+        />
+    );
+
+    // https://zinnia.atlassian.net/browse/DEPU-1964
+    // const headerTextSiblingsGroupTwoClassNames = clsx('self-center', {
+    //     'lg:flex xl:hidden': isNavDrawerOpen,
+    //     'md:flex lg:hidden': !isNavDrawerOpen,
+    // });
+    // const headerTextSiblingsGroupTwo = (
+    //     <NavElement className={headerTextSiblingsGroupTwoClassNames} size={NavElementSize.Small} type={NavElementType.Link}>
+    //         {t('withdrawals.viewWithdrawalHistory')}
+    //     </NavElement>
+    // );
+
+    const isPlural = allTimeWithdrawalCount !== 1;
+    const withdrawalCaption = `${allTimeWithdrawalCount} ${
+        isPlural ? t('withdrawals.withdrawals').toLowerCase() : t('withdrawals.withdrawal')
+    }`;
+
+    const belowHeaderTextChildren = (
+        <>
+            <div className="mt-4 w-fit">
+                <div className="flex flex-col gap-8 xl:flex-row">
+                    <div className="flex flex-col gap-8 md:flex-row">
+                        {isEligible && (
+                            <div className="w-[224px] xl:w-fit">
+                                <Label
+                                    label={t('withdrawals.eligibleForWithdrawal')}
+                                    tooltipTitle={t('withdrawals.eligibleForWithdrawal')}
+                                    tooltipBody={t('withdrawals.eligibleForWithdrawalTooltip')}
+                                    variant={LabelVariant.FieldLabel}
+                                />
+                                <Content
+                                    details={numberFormatify(amountEligibleForWithdrawal as number) || DEFAULT_ERROR_STRING}
+                                    variant={ContentVariant.Value}
+                                />
+                            </div>
+                        )}
+                        <div className="w-[224px] xl:w-fit">
+                            <Label
+                                label={t('withdrawals.netSurrenderValue')}
+                                tooltipTitle={t('withdrawals.netSurrenderValue')}
+                                tooltipBody={t('withdrawals.netSurrenderValueTooltip')}
+                                variant={LabelVariant.FieldLabel}
+                            />
+                            <Content
+                                details={numberFormatify(netSurrenderValue as number) || DEFAULT_ERROR_STRING}
+                                variant={ContentVariant.Value}
+                            />
+                        </div>
+                    </div>
+                    <div className="flex flex-col gap-8 md:flex-row">
+                        <div className="w-[224px] xl:w-fit">
+                            <Label
+                                label={t('withdrawals.annualWithdrawalsRemaining')}
+                                tooltipTitle={t('withdrawals.annualWithdrawalsRemaining')}
+                                tooltipBody={t('withdrawals.annualWithdrawalsRemainingTooltip')}
+                                variant={LabelVariant.FieldLabel}
+                            />
+                            <Content
+                                details={
+                                    annualWithdrawalsTaken != null
+                                        ? `${annualWithdrawalsRemaining} ${t('withdrawals.left')}`
+                                        : DEFAULT_ERROR_STRING
+                                }
+                                variant={ContentVariant.Value}
+                            />
+                            <Content
+                                className="text-gray-600"
+                                details={
+                                    annualWithdrawalsTaken != null
+                                        ? `${annualWithdrawalsTaken} ${t('withdrawals.taken')}`
+                                        : DEFAULT_ERROR_STRING
+                                }
+                                variant={ContentVariant.Caption}
+                            />
+                        </div>
+                        <div className="w-[224px] xl:w-fit">
+                            <Label
+                                label={t('withdrawals.allTimeWithdrawals')}
+                                tooltipTitle={t('withdrawals.allTimeWithdrawals')}
+                                tooltipBody={t('withdrawals.allTimeWithdrawalsTooltip')}
+                                variant={LabelVariant.FieldLabel}
+                            />
+                            <Content
+                                details={numberFormatify(allTimeWithdrawalAmount as number) || DEFAULT_ERROR_STRING}
+                                variant={ContentVariant.Value}
+                            />
+                            <Content
+                                className="text-gray-600"
+                                details={allTimeWithdrawalCount === null ? DEFAULT_ERROR_STRING : withdrawalCaption}
+                                variant={ContentVariant.Caption}
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="mt-4 flex w-full flex-row items-center gap-8 bg-gray-50 px-8 py-4 align-middle">
+                <NavElement
+                    disabled={!isEligible}
+                    href={t('site.navLinks.transactions.withdrawalStart.href', { id: policyNumber, planCode }) || ''}
+                    size={NavElementSize.Small}
+                    type={NavElementType.Link}
+                    data-testid="withdrawal-start-link"
+                >
+                    {t('site.navLinks.transactions.withdrawalStart.text')}
+                </NavElement>
+                <NavElement
+                    href={t('site.navLinks.transactions.withdrawalStart.href', { id: policyNumber, planCode }) || ''}
+                    size={NavElementSize.Small}
+                    type={NavElementType.Link}
+                    data-testid="surrender-policy-link"
+                >
+                    {t('withdrawals.surrenderPolicy')}
+                </NavElement>
+                {isStillInactive.withdrawalPageexchange1035.length ? (
+                    // https://zinnia.atlassian.net/browse/DEPU-1936
+                    <TempNavInactive tooltipBody={isStillInactive.withdrawalPageexchange1035}>
+                        {t('withdrawals.exchange1035')}
+                    </TempNavInactive>
+                ) : (
+                    <NavElement
+                        href={t('site.navLinks.transactions.exchange1035.href', { id: policyNumber, planCode }) || ''}
+                        size={NavElementSize.Small}
+                        type={NavElementType.Link}
+                    >
+                        {t('withdrawals.exchange1035')}
+                    </NavElement>
+                )}
+            </div>
+        </>
+    );
+
+    return (
+        <PageHeader
+            headerText={t('withdrawals.withdrawals') || ''}
+            breadcrumbText={breadcrumbText}
+            breadcrumbUrl={breadcrumbUrl}
+            // breadcrumbSiblings={breadcrumbSiblings} https://zinnia.atlassian.net/browse/DEPU-1964
+            headerTextSiblingsGroupOne={headerTextSiblingsGroupOne}
+            // headerTextSiblingsGroupTwo={headerTextSiblingsGroupTwo}
+            headerRowFlexClassNames={headerRowFlexClassNames}
+            groupOneFlexClassNames={groupOneFlexClassNames}
+            belowHeaderTextChildren={belowHeaderTextChildren}
+        />
+    );
+};
+
+export default WithdrawalsPageHeaderContainer;

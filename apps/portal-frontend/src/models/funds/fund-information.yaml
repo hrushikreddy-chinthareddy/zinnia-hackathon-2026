@@ -1,0 +1,461 @@
+openapi: 3.0.1
+info:
+  title: fund-information-api
+  version: 1.0.1
+servers:
+  - url: /
+    description: Default Server URL
+paths:
+  '/funds/v1/carriers/{carrierId}/funds':
+    get:
+      tags:
+        - Fund Information
+      summary: Get all known fund identifiers
+      parameters:
+        - name: carrierId
+          in: path
+          description: The Id of the carrier
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                uniqueItems: true
+                type: array
+                items:
+                  type: string
+            application/json:
+              schema:
+                uniqueItems: true
+                type: array
+                items:
+                  type: string
+            text/json:
+              schema:
+                uniqueItems: true
+                type: array
+                items:
+                  type: string
+      security:
+        - Authorization: []
+  '/funds/v1/carriers/{carrierId}/funds/{fundId}':
+    get:
+      tags:
+        - Fund Information
+      summary: Get fund information for the specified fund
+      parameters:
+        - name: carrierId
+          in: path
+          description: The Id of the carrier
+          required: true
+          schema:
+            type: string
+        - name: fundId
+          in: path
+          description: The Id of the fund for which to get a descriptor
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/FundDescriptor'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FundDescriptor'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/FundDescriptor'
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+      security:
+        - Authorization: []
+  '/funds/v1/carriers/{carrierId}/products':
+    get:
+      tags:
+        - Product Rules
+      summary: List all products for which fund configuration rules are stored
+      parameters:
+        - name: carrierId
+          in: path
+          description: The Id of the carrier
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                uniqueItems: true
+                type: array
+                items:
+                  type: string
+            application/json:
+              schema:
+                uniqueItems: true
+                type: array
+                items:
+                  type: string
+            text/json:
+              schema:
+                uniqueItems: true
+                type: array
+                items:
+                  type: string
+      security:
+        - Authorization: []
+  '/funds/v1/carriers/{carrierId}/products/{productId}':
+    get:
+      tags:
+        - Product Rules
+      summary: Retrieve the fund rules for the specified product
+      parameters:
+        - name: carrierId
+          in: path
+          description: The Id of the carrier
+          required: true
+          schema:
+            type: string
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProductRules'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductRules'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProductRules'
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+      security:
+        - Authorization: []
+components:
+  schemas:
+    CreationCriteriaEnum:
+      enum:
+        - DEPOSIT_DATE
+        - ORIGINAL_DEPOSIT_DATE
+      type: string
+      description: specifies when new segments are created
+    CreditingStrategyEnum:
+      enum:
+        - POINT_2_POINT
+        - MONTHLY_AVERAGE
+        - MONTHLY_SUM
+        - ANNUAL_AVERAGE
+        - SEMIANNUAL_AVERAGE
+        - POINT_2_POINT_13_MONTH_AVERAGE
+      type: string
+      description: specifies how interest is to be credited
+    DisbursementCriteriaEnum:
+      enum:
+        - DEPOSIT_DATE
+        - ORIGINAL_DEPOSIT_DATE
+      type: string
+      description: TBD
+    DisbursementMethodEnum:
+      enum:
+        - PRO_RATA
+        - FIFO
+        - LIFO
+        - FUND_SPECIFIC
+      type: string
+      description: specifies order in which value is removed from the fund
+    DisbursementPrioirtyInfo:
+      required:
+        - priority
+      type: object
+      properties:
+        fundLevelDisbursementMethod:
+          $ref: '#/components/schemas/FundLevelDisbursementMethodEnum'
+        priority:
+          maximum: 2147483647
+          minimum: 0
+          type: integer
+          description: specifies the order - lower numbers are hit first
+          format: int32
+      additionalProperties: false
+      description: specifies which fund has money removed from first
+    FixedFundCharacteristics:
+      required:
+        - bonusPeriodFrequency
+        - guaranteedMinimumInterestRate
+        - interestRate
+      type: object
+      properties:
+        bonusPeriodFrequency:
+          maximum: 2147483647
+          minimum: 0
+          type: integer
+          description: TBD
+          format: int32
+        interestRate:
+          type: number
+          description: effective interest rate
+          format: double
+        guaranteedMinimumInterestRate:
+          type: number
+          description: guaranteed minimum interest rate
+          format: double
+      additionalProperties: false
+      description: properties only associated with fixed funds
+    FundAccountTypeEnum:
+      enum:
+        - FIXED
+        - HOLDING
+        - LOAN
+        - MATCH
+        - INDEXED
+        - VARIABLE
+      type: string
+      description: Type of Fund
+    FundDescriptor:
+      required:
+        - fundAccountName
+        - fundAccountType
+      type: object
+      properties:
+        fundAccountType:
+          $ref: '#/components/schemas/FundAccountTypeEnum'
+        fundAccountName:
+          type: string
+          description: Market Name
+          nullable: true
+        glCode:
+          type: string
+          description: User entered GL accounting code for fund accounting
+          nullable: true
+        isin:
+          type: string
+          description: International Securities Identification Number (ISO 6166)
+          nullable: true
+        cusip:
+          type: string
+          description: Committee on Uniform Security Identification Procedures identifier
+          nullable: true
+        dailyPricingIdentifier:
+          type: string
+          description: Identifier needed to look up daily pricing information for fund (UVCloud Identifier)
+          nullable: true
+        minimumTransferAmount:
+          type: number
+          description: Minimum amount that can be moved in or out of this fund at any one instant in time
+          format: double
+          nullable: true
+        fixedFund:
+          $ref: '#/components/schemas/FixedFundCharacteristics'
+        indexedFund:
+          $ref: '#/components/schemas/IndexedFundCharacteristics'
+        variableFund:
+          $ref: '#/components/schemas/VariableFundCharacteristics'
+        fundSegmentPolicy:
+          $ref: '#/components/schemas/SegmentPolicy'
+      additionalProperties: false
+    FundLevelDisbursementMethodEnum:
+      enum:
+        - FIFO
+        - LIFO
+        - PRO_RATA
+      type: string
+      description: how to disburse money from available fund segments
+    FundUsageInfo:
+      required:
+        - isInterimAccount
+      type: object
+      properties:
+        minimumFundValue:
+          type: number
+          description: minimum allowed fund value
+          format: double
+          nullable: true
+        isInterimAccount:
+          type: boolean
+          description: is the fund used as an interim account
+        sweepDay:
+          maximum: 29
+          minimum: 0
+          type: integer
+          format: int32
+          nullable: true
+      additionalProperties: false
+      description: specifies how fund is used. note that any fund that is an interim account must specify the sweep day
+    IndexedFundCharacteristics:
+      required:
+        - creditingStrategy
+        - dailiyPriceIdentifier
+        - index
+      type: object
+      properties:
+        creditingStrategy:
+          $ref: '#/components/schemas/CreditingStrategyEnum'
+        index:
+          type: string
+          description: the associated index used to determine actual interest paid for adminstration purposes
+          nullable: true
+        dailiyPriceIdentifier:
+          type: string
+          description: identifier used for obtaining the daily price information for the related index
+          nullable: true
+        participationRate:
+          type: number
+          description: effective (current) participation rate
+          format: double
+          nullable: true
+        guaranteedMinimumParticipationRate:
+          type: number
+          description: guaranteed minimum participation rate
+          format: double
+          nullable: true
+        interestRate:
+          type: number
+          description: effective (current) interest rate for illustrations
+          format: double
+          nullable: true
+        guaranteedMinimumInterestRate:
+          type: number
+          description: guaranteed minimum interest rate for illustrations
+          format: double
+          nullable: true
+        maximumIllustrativeInterestRate:
+          type: number
+          description: maximum allowable interest rate for illustrations
+          format: double
+          nullable: true
+        capRate:
+          type: number
+          description: effective (current) cap rate
+          format: double
+          nullable: true
+        guaranteedMinimumCapRate:
+          type: number
+          description: guaranteed minimum cap rate
+          format: double
+          nullable: true
+      additionalProperties: false
+      description: properties only associated with index funds
+    ProductRules:
+      required:
+        - disbursementPriority
+        - funds
+      type: object
+      properties:
+        disbursementMethod:
+          $ref: '#/components/schemas/DisbursementMethodEnum'
+        disbursementCriteria:
+          $ref: '#/components/schemas/DisbursementCriteriaEnum'
+        planCode:
+          type: string
+          nullable: true
+        funds:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/FundUsageInfo'
+          nullable: true
+        basisPoints:
+          type: string
+          nullable: true
+        disbursementPriority:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/DisbursementPrioirtyInfo'
+          nullable: true
+        investmentModels:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: number
+              format: double
+          nullable: true
+      additionalProperties: false
+    RenewalCriteriaEnum:
+      enum:
+        - NEW_MONEY
+        - CALENDAR_ANNIVERSARY
+        - CONTRACT_ANNIVERSARY
+        - DEPOSIT_DATE
+      type: string
+      description: specifies how renwals are to be processed
+    SegmentPolicy:
+      required:
+        - creationCriteria
+        - renewalCriteria
+      type: object
+      properties:
+        renewalCriteria:
+          $ref: '#/components/schemas/RenewalCriteriaEnum'
+        creationCriteria:
+          $ref: '#/components/schemas/CreationCriteriaEnum'
+        frequency:
+          maximum: 2147483647
+          minimum: 0
+          type: integer
+          description: 'number of months between renewals, required for calendar or contract anniversary renewals'
+          format: int32
+          nullable: true
+        softCloseDate:
+          type: string
+          description: date upon which no new investment in the fund can be made
+          format: date
+          nullable: true
+        hardCloseDate:
+          type: string
+          description: date upon which all investment must be removed from the fund
+          format: date
+          nullable: true
+        hardCloseReplacementFund:
+          type: string
+          description: identifier for fund to which all remaining money will be moved on the hard close date
+          nullable: true
+      additionalProperties: false
+      description: specifies how fund segments are created
+    VariableFundCharacteristics:
+      required:
+        - variableFundType
+      type: object
+      properties:
+        variableFundType:
+          $ref: '#/components/schemas/VariableFundTypeEnum'
+        fundAccountIds:
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+          description: identifiers for funds in aggregate
+          nullable: true
+      additionalProperties: false
+      description: properties only associated with variable funds
+    VariableFundTypeEnum:
+      enum:
+        - INVESTMENT
+        - AGGREGATE
+      type: string
+      description: type of fund
+  securitySchemes:
+    Authorization:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -1,0 +1,110 @@
+@font-face {
+    font-family: Poppins;
+    src: url('/styles/themes/zinnia/fonts/Poppins-Thin.ttf');
+    format: ('ttf');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 200;
+}
+
+@font-face {
+    font-family: Poppins;
+    src: url('/styles/themes/zinnia/fonts/Poppins-Light.ttf');
+    format: ('ttf');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 300;
+}
+
+@font-face {
+    font-family: Poppins;
+    src: url('/styles/themes/zinnia/fonts/Poppins-Medium.ttf');
+    format: ('ttf');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: Poppins;
+    src: url('/styles/themes/zinnia/fonts/Poppins-SemiBold.ttf');
+    format: ('ttf');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: Poppins;
+    src: url('/styles/themes/zinnia/fonts/Poppins-Bold.ttf');
+    format: ('ttf');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: Poppins;
+    src: url('/styles/themes/zinnia/fonts/Poppins-ExtraBold.ttf');
+    format: ('ttf');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 700;
+}
+
+@font-face {
+    font-family: Lato;
+    src: url('/styles/themes/zinnia/fonts/Lato-Regular.ttf');
+    format: ('ttf');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: Lato;
+    src: url('/styles/themes/zinnia/fonts/Lato-Bold.ttf');
+    format: ('ttf');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 500;
+}
+
+:root,
+.root,
+#root,
+#docs-root {
+    --color-primary: 00 117 231;
+    --color-primary-light: 255 172 102;
+    --color-primary-lighter: 255 200 153;
+    --color-primary-lightest: 255 234 217;
+
+    --color-secondary: 0 98 139;
+    --color-secondary-light: 102 161 186;
+    --color-secondary-lighter: 153 192 209;
+    --color-secondary-lightest: 217 231 238;
+
+    --color-accent-one: 255 198 0;
+
+    --bg-color-primary: 00 00 00;
+    --bg-color-secondary: 237 237 237;
+
+    --font-family-primary: 'Poppins';
+    --font-family-secondary: 'Lato';
+
+    /* Bar Colors */
+    --color-600-fuschia: 151 59 147;
+    --color-400-fuschia: 212 122 204;
+    --color-300-yellow: 255 213 118;
+    --color-400-yellow: 255 198 0;
+    --color-800-yellow: 157 84 0;
+    --color-400-red: 255 102 82;
+    --color-600-red: 218 2 28;
+    --color-400-aqua: 55 188 194;
+    --color-800-aqua: 31 60 61;
+    --color-500-orange: 242 96 3;
+    --color-400-cerulean: 55 162 216;
+    --color-600-cerulean: 0 98 139;
+    --color-300-lime: 192 198 79;
+    --color-400-lime: 154 174 8;
+}

@@ -1,0 +1,18 @@
+{
+    "source": ["lib/tokens/*.json"],
+    "platforms": {
+        "javascript": {
+            "transformGroup": "js",
+            "files": [
+                {
+                    "format": "javascript/es6",
+                    "destination": "src/styles/tokens/tokens.ts"
+                },
+                {
+                    "format": "typescript/es6-declarations",
+                    "destination": "src/styles/tokens/tokens.d.ts"
+                }
+            ]
+        }
+    }
+}

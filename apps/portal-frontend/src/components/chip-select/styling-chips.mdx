@@ -1,0 +1,41 @@
+import { Canvas, Meta, Description, Source } from '@storybook/blocks';
+
+<Meta title="Components/Chip/Select/Styling Chips" />
+
+# Styling Chips
+
+The best way to use a chip is to style whichever element you semantically need to use. For example if you:
+
+-   want to style a label for a form element
+-   need a button to do something on click
+-   need a link to go somewhere
+-   just think chips are neat
+
+then you can use the `chip` tailwind component like this
+
+```html
+<button className="chip">Salty</button>
+<label className="chip">Sweet</label>
+<a className="chip">Spicy</a>
+<span className="chip">Vinegar-y?</span>
+<button className="chip" disabled>Soggy</button>
+```
+
+<div className="flex gap-4 border-2 border-gray-100 p-8" style={{}}>
+    <button className="chip">Salty</button>
+    <label className="chip">Sweet</label>
+    <a className="chip">Spicy</a>
+    <span className="chip">Vinegar-y?</span>
+    <button className="chip" disabled>
+        Soggy
+    </button>
+</div>
+
+<div className="p-8"></div>
+
+## Conclusion
+
+> Choosing the right HTML element enhances accessibility and user experience. Buttons, links, and labels bring their own accessibility features. Always wrap input chips in a form for full accessibility.
+
+-   use the `chip` tailwind component to style whichever element you semantically need to use
+-   if you're taking user input always wrap the chips in an enclosing form, so then you get the benefit of the form's accessibility features

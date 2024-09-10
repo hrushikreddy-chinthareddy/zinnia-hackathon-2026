@@ -14,7 +14,7 @@
     "build": "tsup",
     "dev": "pnpm run watch",
     "watch": "tsup --watch",
-    "lint": "eslint src/",
+    "lint": "eslint --no-ignore 'src/**/*.{js,ts,jsx,tsx}'",
     "typecheck": "tsc --noEmit",
     "test": "jest"
   },

@@ -1,0 +1,48 @@
+name: 'Chromatic Consumer Experience CI'
+
+on:
+  workflow_call:
+    inputs:
+      project-name:
+        type: string
+        required: true
+      filter-path:
+        type: string
+        required: true
+        description: path passed to pnpm --filter option
+      working-dir:
+        type: string
+        required: true
+    secrets:
+      chromatic-token:
+        required: true
+
+jobs:
+  chromatic:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          node-version-file: .nvmrc
+          registry-url: 'https://npm.pkg.github.com/'
+          scope: '@zinnia'
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+      - run: pnpm install
+      - name: pnpm run build
+        run: pnpm run build
+      - name: Publish to ${{ inputs.project-name }} to Chromatic
+        uses: chromaui/action@latest
+        with:
+          projectToken: ${{ secrets.chromatic-token }}
+          exitZeroOnChanges: true
+          skip: 'dependabot/**'
+          workingDir: ${{ inputs.working-dir }}
+          allowConsoleErrors: true
+          exitOnceUploaded: true

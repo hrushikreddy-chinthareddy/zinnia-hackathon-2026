@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# This script is used in .github/workflows/e2e.yml.
+# This generates the Git branch URL instead 
+# of the dynamically generated unique URL for deployments.
+# The Git branch URL is the alias for the latest deployment.
+
+GITHUB_BRANCH_DEFAULT=$BRANCH_NAME
+VERCEL_PROJECT="digital-experience"
+VERCEL_SLUG="zinnia-xd"
+
+# Convert branch name to be compliant with Vercel URLs
+# i.e., replace "/" with "-", remove "_", and remove "."
+# NOTE: There may be other conversions which are not currently known due to lack of Vercel documentation
+GITHUB_BRANCH_CONVERTED=$(
+    echo $GITHUB_BRANCH_DEFAULT | tr / - | tr -d _ |
+        tr -s "--" "-" | tr -d . | tr "[:upper:]" "[:lower:]"
+)
+
+# Create Git branch URL without the vercel.app suffix
+VERCEL_BRANCH_URL="${VERCEL_PROJECT}-git-${GITHUB_BRANCH_CONVERTED}-${VERCEL_SLUG}"
+
+# Regenerate Vercel branch URL if # of characters > 63
+# See: https://vercel.com/docs/deployments/generated-urls#truncation
+if [ ${#VERCEL_BRANCH_URL} -gt 63 ]; then
+    # Truncate URL to (56 - length of VERCEL_SLUG) characters (so size of branch URL fits 63 characters)
+    VERCEL_BRANCH_URL=$(echo "${VERCEL_PROJECT}-git-${GITHUB_BRANCH_CONVERTED}")
+    VERCEL_BRANCH_URL=${VERCEL_BRANCH_URL:0:55-${#VERCEL_SLUG}}
+
+    # Vercel edge case: if truncated URL ends with one or more "-", we remove it
+    # Otherwise, the URL will have multiple "-" before the hash
+    VERCEL_BRANCH_URL=$(echo "$VERCEL_BRANCH_URL" | sed 's/-*$//g')
+
+    # Generate a 6-character SHA256 hash from "git-" + default Github branch name + Vercel project name
+    # NOTE: There is no "-" between the branch name and project name
+    SHA_HASH=$(echo -n "git-${GITHUB_BRANCH_DEFAULT}${VERCEL_PROJECT}" | sha256sum | cut -c 1-6)
+
+    # Append hash and slug to URL
+    VERCEL_BRANCH_URL+="-${SHA_HASH}-${VERCEL_SLUG}"
+fi
+
+# Print the full URL
+echo "https://${VERCEL_BRANCH_URL}.vercel.app"

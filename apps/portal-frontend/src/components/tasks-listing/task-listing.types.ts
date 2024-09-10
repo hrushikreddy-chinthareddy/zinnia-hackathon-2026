@@ -1,0 +1,49 @@
+import { ColDef } from 'ag-grid-community';
+import { TFunction } from 'next-i18next';
+
+import { ActionCellRendererParams } from './action-cell-renderer';
+
+export interface Task {
+    id: string;
+    taskName: string;
+    status: string;
+    userId: string;
+    createdDate: string;
+    updatedDate: string;
+}
+
+export interface TaskTableRow {
+    taskId: string;
+    taskInfoLink: string;
+    taskStatus: string;
+    status: string;
+    taskName: string;
+    statusDuration: string;
+    userId: string;
+    actions: (params: ActionCellRendererParams) => JSX.Element;
+}
+
+export interface NoTaskFoundLabels {
+    createNewTask: string;
+    noTasksFoundTitle: string;
+    noTasksMessage: string;
+}
+
+export interface TaskListingConfig {
+    searchResults: string;
+    createNewTask: string;
+    taskTableColConfig: ColDef<any>[];
+    noTaskFound: NoTaskFoundLabels;
+}
+
+export interface TasksListingProps {
+    t: TFunction;
+    isHeaderHidden?: boolean;
+    isTaskCreationSupported?: boolean;
+    tasks: Task[] | undefined;
+    caseId: string;
+    caseType: string;
+    documentNumber: string;
+    clientId: string;
+    config: any;
+}

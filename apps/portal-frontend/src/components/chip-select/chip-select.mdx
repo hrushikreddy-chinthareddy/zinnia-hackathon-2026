@@ -1,0 +1,137 @@
+import { Canvas, Meta, Description, Source } from '@storybook/blocks';
+import * as ChipSelectStories from './chip-select.stories';
+
+<Meta title="Components/Chip/Select/Selecting Chips" />
+
+# Selecting Chips
+
+> Powered by `@radix-ui/react-radio-group` and `@radix-ui/react-checkbox`, this guide dives into when and how to use each for an optimal user experience.
+
+## RadioGroup: For That Exclusive Flavor (Single Select)
+
+Imagine you're at a chip buffet, but you can only choose one flavor – that's where `RadioGroup` comes in. It's perfect for mutually exclusive selections. Think of it like picking your favorite single dip: only one can be chosen at a time.
+
+### When To Use
+
+-   when you want to select one chip at a time
+-   selections **are** mutually exclusive
+
+**MDN Documentation:** [RadioGroup in HTML](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/radio)
+**Radix-UI:** [RadioGroup Component](https://www.radix-ui.com/docs/primitives/components/radio-group)
+
+### How To Use
+
+```jsx
+<RadioGroup.Root onValueChange={value => setValue(value)} defaultValue="default" aria-label={ariaLabel}>
+    {chips.map((chip, index) => (
+        <RadioGroup.Item className="chip" value={chip} key={index} id={chip}>
+            {chip}
+        </RadioGroup.Item>
+    ))}
+</RadioGroup.Root>
+```
+
+<div className="flex w-full gap-4 border-2 border-gray-100 p-8">
+    <button className="chip">Nacho Cheese</button>
+    <label className="chip">Ranch</label>
+    <a className="chip" href="#">
+        Salsa Verde
+    </a>
+    <span className="chip">Blue Cheese</span>
+</div>
+
+### Technical Details
+
+#### `RadioGroup.Root`
+
+The `RadioGroup.Root` component is the container for the radio group. It is responsible for managing the state of the radio group and passing that state down to the `RadioGroup.Item` components.
+See more at [Radix-UI/RadioGroup/Technical Details](https://www.radix-ui.com/docs/primitives/components/radio-group#technical-details)
+
+#### `RadioGroup.Item`
+
+The `RadioGroup.Item` component is the individual radio button. It is responsible for rendering the radio button and managing the state of the radio button.
+See more at [Radix-UI/RadioGroup/Technical Details](https://www.radix-ui.com/docs/primitives/components/radio-group#technical-details)
+
+#### Keyboard Navigation
+
+-   use `tab` to enter the chip group
+-   use `arrow keys` to navigate between chips
+-   use `space` to select a chip, highlighted chip is selected
+
+##### Demo
+
+<Canvas of={ChipSelectStories.Single} />
+
+###### See more at [Radix-UI/RadioGroup/Accessibility](https://www.radix-ui.com/docs/primitives/components/radio-group#accessibility)
+
+## Checkbox: For the Love of Variety (Multi Select)
+
+Checkboxes are like filling your plate with multiple chip flavors simultaneously. They're ideal for selections that aren't mutually exclusive. Like the actual chips at the buffet, you can put as many varieties on your plate as you want.
+
+### When To Use
+
+-   when you want to select multiple chips at a time
+-   selections are **not** mutually exclusive
+
+**MDN Docs:** [Checkbox in HTML](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/checkbox)
+**Radix-UI:** [Checkbox Component](https://www.radix-ui.com/docs/primitives/components/checkbox)
+
+### How To Use
+
+```jsx
+<Checkbox.Root className="chip" id={chip} key={index} value={chip}>
+    {chip}
+</Checkbox.Root>
+```
+
+<div className="flex w-full gap-4 border-2 border-gray-100 p-8">
+    <button className="chip">Flamin' Hot</button>
+    <label className="chip">BBQ</label>
+    <a className="chip" href="#">
+        Cheddar &amp; Sour Cream
+    </a>
+    <span className="chip">Salt &amp;</span>
+</div>
+
+### Technical Details
+
+#### `Checkbox.Root`
+
+The `Checkbox.Root` component is the container for the checkbox. It is responsible for managing the state of the checkbox and passing that state down to the `Checkbox.Item` components.
+See more at [Radix-UI/Checkbox/Accessibility](https://www.radix-ui.com/docs/primitives/components/checkbox#technical-details)
+
+#### `Checkbox.Item`
+
+The `Checkbox.Item` component is the individual checkbox. It is responsible for rendering the checkbox and managing the state of the checkbox.
+See more at [Radix-UI/Checkbox/Technical Details](https://www.radix-ui.com/docs/primitives/components/checkbox#technical-details)
+
+#### Keyboard Navigation
+
+-   `Space` to select a chip, highlighted chip is selected
+-   `Tab` moves focus to the next focusable element
+    -   This could be the next chip or the next element on the page
+-   `Shift + Tab` moves focus to the previous focusable element
+    -   This could be the previous chip or the previous element on the page
+
+##### Demo
+
+<Canvas of={ChipSelectStories.Multi} />
+
+###### See more at [Radix-UI/Checkbox/Accessibility](https://www.radix-ui.com/docs/primitives/components/checkbox#accessibility)
+
+## Usage Guidelines
+
+-   use the `RadioGroup` component when you want to select one chip at a time
+-   use the `Checkbox` component when you want to select multiple chips at a time
+
+## accessibility Guidelines
+
+-   use the `RadioGroup` component when you want to select one chip at a time
+-   use the `Checkbox` component when you want to select multiple chips at a time
+
+## Conclusion
+
+> The `RadioGroup` and `Checkbox` components are powerful tools for selecting chips. They're easy to use and accessible out of the box. Use them to create delightful chip selection experiences for your users.
+
+-   use the `RadioGroup` component when you want to select one chip at a time
+-   use the `Checkbox` component when you want to select multiple chips at a time

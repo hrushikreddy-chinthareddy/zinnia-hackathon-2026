@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "components/*": ["./src/components/*"],
+            "models/*": ["./src/models/*"],
+            "utils/*": ["./src/utils/*"],
+            "routing/*": ["./src/routing/*"],
+            "queries/*": ["./src/queries/*"],
+            "shared/*": ["./src/shared/*"],
+            "navigation/*": ["./src/navigation/*"],
+            "pages/*": ["./src/pages/*"],
+            "config/*": ["./src/config/*"]
+        }
+    }
+}

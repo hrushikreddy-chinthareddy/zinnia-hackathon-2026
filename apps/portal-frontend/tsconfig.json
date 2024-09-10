@@ -1,0 +1,28 @@
+{
+    "extends": "./tsconfig.paths.json",
+    "compilerOptions": {
+        "outDir": "build/dist", // where to put the compiled JS files
+        "target": "es5",
+        "lib": ["dom", "dom.iterable", "esnext"],
+        "noImplicitAny": true,
+        "allowJs": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "noEmit": true,
+        "esModuleInterop": true,
+        "module": "esnext",
+        "moduleResolution": "Bundler",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "jsx": "preserve",
+        "incremental": true,
+        "baseUrl": ".",
+        "paths": {
+            "@deps/*": ["./src/*"]
+        }
+    },
+    "types": ["node", "jest", "@testing-library/jest-dom"],
+    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "declaration.d.ts", "jest.config.js", "src/jest/coverage/**/*"],
+    "exclude": ["node_modules", "e2e"]
+}

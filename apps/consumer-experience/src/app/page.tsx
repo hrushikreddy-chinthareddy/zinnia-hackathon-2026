@@ -11,6 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function WelcomePage() {
+  // TODO: remove this comment after testing push
   return (
     <GenericInfoPage
       title="Welcome!"

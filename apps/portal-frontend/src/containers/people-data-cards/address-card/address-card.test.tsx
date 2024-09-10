@@ -1,0 +1,279 @@
+import { render, screen } from '@testing-library/react';
+import dayjs from 'dayjs';
+
+import { Address, AddressType, Party } from '@deps/models/policy/sor-policy';
+import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+
+import AddressCard from './address-card';
+import { Addresses } from './address-card.helpers';
+
+jest.mock('@deps/utils/server-logging');
+
+const onClick = jest.fn();
+
+const newDate = dayjs()
+    .year(new Date().getFullYear() + 1)
+    .month(7)
+    .date(1)
+    .toDate();
+const startDate = dayjs(newDate).format(ZAHARA_API_DATE_FORMAT);
+const endDate = dayjs(newDate).add(14, 'days').format(ZAHARA_API_DATE_FORMAT);
+
+describe('AddressCard', () => {
+    it('should render the formatted address', () => {
+        const address: Address = {
+            addressId: '1',
+            addressLine1: '123 Main Street',
+            addressLine2: 'Apt 4',
+            addressLine3: '',
+            addressType: AddressType.RESIDENCE,
+            city: 'New York',
+            country: 'US',
+            endDate: endDate,
+            startDate: startDate,
+            state: 'NY',
+            zipCode: '10001',
+            zipCodeExtension: '',
+        };
+        const party: Party = {
+            partyId: '789',
+            beneficiaryPercentage: 50,
+            partyType: 'INDIVIDUAL',
+            firstName: 'John',
+            middleName: 'Doe',
+            lastName: 'Smith',
+            fullName: 'John Doe Smith',
+            prefix: 'MR',
+            suffix: 'JR',
+            gender: 'MALE',
+            dateOfBirth: '1980-01-01',
+            attainedAge: 43,
+            birthCountry: 'US',
+            birthState: 'CA',
+            trustDate: '2010-01-01',
+            trustType: 'Living Trust',
+            entityType: 'SOLEPROPRIETORSHIP',
+            preferredCommunicationType: 'EMAIL',
+            formerName: undefined,
+            identifications: [],
+            bankDetails: [],
+            addresses: [address],
+            phones: [],
+            emails: [],
+        };
+        const { container } = render(<AddressCard party={party} partyRoles={[]} planCode="PLANCODE" policyNumber="12345" />);
+        const formattedAddressElements = container.querySelectorAll('span.line-clamp-2');
+        expect(formattedAddressElements.length).toBe(4);
+        expect(formattedAddressElements[0]).toHaveTextContent('123 Main Street');
+        expect(formattedAddressElements[1]).toHaveTextContent('Apt 4');
+        expect(formattedAddressElements[2]).toHaveTextContent('New York, NY 10001');
+        expect(formattedAddressElements[3]).toHaveTextContent('US');
+    });
+});
+
+describe('ResidentialAddress', () => {
+    it('should render the residential address', () => {
+        const addresses = [
+            {
+                addressId: '1',
+                addressLine1: '123 Main Street',
+                addressLine2: 'Apt 4',
+                addressLine3: '',
+                addressType: AddressType.RESIDENCE,
+                city: 'New York',
+                country: 'US',
+                endDate: endDate,
+                startDate: startDate,
+                state: 'NY',
+                zipCode: '10001',
+                zipCodeExtension: '',
+            } as Address,
+        ];
+        render(<Addresses addresses={addresses} onEditClick={onClick} />);
+        const residentialAddressElement = screen.getByText('123 Main Street');
+        expect(residentialAddressElement).toBeInTheDocument();
+    });
+
+    it('should not render anything if there are no addresses', () => {
+        render(<Addresses addresses={[]} onEditClick={onClick} />);
+        const residentialAddressElement = screen.queryByText('123 Main Street');
+        expect(residentialAddressElement).not.toBeInTheDocument();
+    });
+});
+
+describe('BoxAddress', () => {
+    it('should render the PO Box address', () => {
+        const addresses = [
+            {
+                addressId: '1',
+                addressLine1: 'Po Box 789',
+                addressLine2: '',
+                addressLine3: '',
+                addressType: AddressType.POBOX,
+                city: 'Denver',
+                country: 'US',
+                endDate: endDate,
+                startDate: startDate,
+                state: 'CO',
+                zipCode: '80202',
+                zipCodeExtension: '',
+            } as Address,
+        ];
+        render(<Addresses addresses={addresses} onEditClick={onClick} />);
+        const boxAddressElement = screen.getByText('Po Box 789');
+        expect(boxAddressElement).toBeInTheDocument();
+    });
+
+    it('should not render anything if there are no addresses', () => {
+        render(<Addresses addresses={[]} onEditClick={onClick} />);
+        const boxAddressElement = screen.queryByText('Po Box 789');
+        expect(boxAddressElement).not.toBeInTheDocument();
+    });
+});
+
+describe('BusinessAddress', () => {
+    it('should render the business address', () => {
+        const addresses = [
+            {
+                addressId: '1',
+                addressLine1: '789 Corporate Blvd',
+                addressLine2: 'Suite 200',
+                addressLine3: '',
+                addressType: AddressType.BUSINESS,
+                city: 'San Francisco',
+                country: 'US',
+                endDate: endDate,
+                startDate: startDate,
+                state: 'CA',
+                zipCode: '94105',
+                zipCodeExtension: '',
+            } as Address,
+        ];
+        render(<Addresses addresses={addresses} onEditClick={onClick} />);
+        const businessAddressElement = screen.getByText('789 Corporate Blvd');
+        expect(businessAddressElement).toBeInTheDocument();
+    });
+
+    it('should not render anything if there are no addresses', () => {
+        render(<Addresses addresses={[]} onEditClick={onClick} />);
+        const businessAddressElement = screen.queryByText('789 Corporate Blvd');
+        expect(businessAddressElement).not.toBeInTheDocument();
+    });
+});
+
+describe('AddressCard', () => {
+    it('should render the address card with all address types', () => {
+        const addresses: Address[] = [
+            {
+                addressId: '1',
+                addressLine1: '123 Main Street',
+                addressLine2: 'Apt 4',
+                addressLine3: '',
+                addressType: AddressType.RESIDENCE,
+                city: 'New York',
+                country: 'US',
+                endDate: endDate,
+                startDate: startDate,
+                state: 'NY',
+                zipCode: '10001',
+                zipCodeExtension: '',
+            },
+            {
+                addressId: '2',
+                addressLine1: 'Po Box 789',
+                addressLine2: '',
+                addressLine3: '',
+                addressType: AddressType.POBOX,
+                city: 'Denver',
+                country: 'US',
+                endDate: endDate,
+                startDate: startDate,
+                state: 'CO',
+                zipCode: '80202',
+                zipCodeExtension: '',
+            },
+            {
+                addressId: '3',
+                addressLine1: '789 Corporate Blvd',
+                addressLine2: 'Suite 200',
+                addressLine3: '',
+                addressType: AddressType.BUSINESS,
+                city: 'San Francisco',
+                country: 'US',
+                endDate: endDate,
+                startDate: startDate,
+                state: 'CA',
+                zipCode: '94105',
+                zipCodeExtension: '',
+            },
+        ];
+        const party: Party = {
+            partyId: '789',
+            beneficiaryPercentage: 50,
+            partyType: 'INDIVIDUAL',
+            firstName: 'John',
+            middleName: 'Doe',
+            lastName: 'Smith',
+            fullName: 'John Doe Smith',
+            prefix: 'MR',
+            suffix: 'JR',
+            gender: 'MALE',
+            dateOfBirth: '1980-01-01',
+            attainedAge: 43,
+            birthCountry: 'US',
+            birthState: 'CA',
+            trustDate: '2010-01-01',
+            trustType: 'Living Trust',
+            entityType: 'SOLEPROPRIETORSHIP',
+            preferredCommunicationType: 'EMAIL',
+            identifications: [],
+            bankDetails: [],
+            addresses: addresses,
+            phones: [],
+            emails: [],
+        };
+
+        render(<AddressCard party={party} partyRoles={[]} planCode="PLANCODE" policyNumber="12345" />);
+        const residentialAddressElement = screen.getByText('123 Main Street');
+        expect(residentialAddressElement).toBeInTheDocument();
+        const boxAddressElement = screen.getByText('Po Box 789');
+        expect(boxAddressElement).toBeInTheDocument();
+        const businessAddressElement = screen.getByText('789 Corporate Blvd');
+        expect(businessAddressElement).toBeInTheDocument();
+    });
+
+    it('should not render anything if there are no addresses', () => {
+        const party: Party = {
+            partyId: '789',
+            beneficiaryPercentage: 50,
+            partyType: 'INDIVIDUAL',
+            firstName: 'John',
+            middleName: 'Doe',
+            lastName: 'Smith',
+            fullName: 'John Doe Smith',
+            prefix: 'MR',
+            suffix: 'JR',
+            gender: 'MALE',
+            dateOfBirth: '1980-01-01',
+            attainedAge: 43,
+            birthCountry: 'US',
+            birthState: 'CA',
+            trustDate: '2010-01-01',
+            trustType: 'Living Trust',
+            entityType: 'SOLEPROPRIETORSHIP',
+            preferredCommunicationType: 'EMAIL',
+            identifications: [],
+            bankDetails: [],
+            addresses: [],
+            phones: [],
+            emails: [],
+        };
+        render(<AddressCard party={party} partyRoles={[]} planCode="PLANCODE" policyNumber="12345" />);
+        const residentialAddressElement = screen.queryByText('123 Main Street');
+        expect(residentialAddressElement).not.toBeInTheDocument();
+        const boxAddressElement = screen.queryByText('Po Box 789');
+        expect(boxAddressElement).not.toBeInTheDocument();
+        const businessAddressElement = screen.queryByText('789 Corporate Blvd');
+        expect(businessAddressElement).not.toBeInTheDocument();
+    });
+});

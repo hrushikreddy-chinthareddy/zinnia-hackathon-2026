@@ -1,0 +1,16 @@
+<svg width="10" height="100" viewBox="0 0 10 100" xmlns="http://www.w3.org/2000/svg">
+
+  <rect x="0" y="0" width="10" height="100" fill="#FFFFFF" />
+  <path d="M 0,10
+           L 0,0
+           A 9,9, 0 0 1 10,10
+           Z" fill="#CCC" />
+<path d="M 0,11
+           L 0,1
+           A 8.5,8.5, 0 0 1 9,11
+           Z" fill="#F8F8F8" />
+
+  <!-- Square -->
+  <rect x="0" y="10" width="10" height="90" fill="#CCC" />
+  <rect x="0" y="9.8" width="9" height="90" fill="#F8F8F8" />
+</svg>

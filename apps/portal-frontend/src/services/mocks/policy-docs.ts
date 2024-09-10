@@ -1,0 +1,80 @@
+import { PolicyDocuments } from "@deps/models/case/document";
+
+export const mockPolicyDocs: PolicyDocuments = {
+    count: 5,
+    items: [{
+        documentId: "18571058",
+        importDate: "2024-07-25T09:28:28-05:00",
+        documentDate: "2024-07-25T09:28:28-05:00",
+        displayName: "WFT_New Business for GLCO WOODFORD BRENT - 7/25/2024",
+        documentType: "WFT_New Business",
+        contractNumber: "8830004179",
+        docStatus: "Active",
+        caseId: "",
+        // zinniaLiveCaseId: "",
+        documentNumber: "20240725-M-571058",
+        source: "ELECTRONIC BUSINESS",
+        fileType: "HTML",
+        // docPopUrl: "https://qa-ecm.se2.com/OnBaseQA/docpop/docpop.aspx?KT19_0_0_0=18571058&keytype=&clienttype=html&chksum=d941cffcb4075382d6d78effc362d158a57a0b0226bac636d2536f94dfb9cf0d"
+    },
+    {
+        documentId: "18571057",
+        importDate: "2024-07-25T09:28:27-05:00",
+        documentDate: "2024-07-25T09:28:27-05:00",
+        displayName: "WFT_New Business for GLCO WOODFORD BRENT - 7/25/2024",
+        documentType: "WFT_New Business",
+        contractNumber: "8830004179",
+        docStatus: "Active",
+        caseId: "",
+        // zinniaLiveCaseId: "",
+        documentNumber: "20240725-M-571057",
+        source: "ELECTRONIC BUSINESS",
+        fileType: "HTML",
+        // docPopUrl: "https://qa-ecm.se2.com/OnBaseQA/docpop/docpop.aspx?KT19_0_0_0=18571057&keytype=&clienttype=html&chksum=01ed2b1f1db4d45d4730718f00bbdfb24a0a3a372d6475779a74c3127b6c1466"
+    },
+    {
+        documentId: "18571055",
+        importDate: "2024-07-25T09:28:24-05:00",
+        documentDate: "2024-07-25T09:28:24-05:00",
+        displayName: "WFT_New Business for GLCO WOODFORD BRENT - 7/25/2024",
+        documentType: "WFT_New Business",
+        contractNumber: "8830004179",
+        docStatus: "Active",
+        caseId: "",
+        // zinniaLiveCaseId: "",
+        documentNumber: "20240725-M-571055",
+        source: "ELECTRONIC BUSINESS",
+        fileType: "HTML",
+        // docPopUrl: "https://qa-ecm.se2.com/OnBaseQA/docpop/docpop.aspx?KT19_0_0_0=18571055&keytype=&clienttype=html&chksum=f827f2c2b6a65226b7c59348f781f6051b948257ae33113f77996bbfa13460b5"
+    },
+    {
+        documentId: "18571056",
+        importDate: "2024-07-25T09:28:24-05:00",
+        documentDate: "2024-07-25T09:28:24-05:00",
+        displayName: "WFT_New Business for GLCO WOODFORD BRENT - 7/25/2024",
+        documentType: "WFT_New Business",
+        contractNumber: "8830004179",
+        docStatus: "Active",
+        caseId: "",
+        // zinniaLiveCaseId: "",
+        documentNumber: "20240725-M-571056",
+        source: "ELECTRONIC BUSINESS",
+        fileType: "HTML",
+        // docPopUrl: "https://qa-ecm.se2.com/OnBaseQA/docpop/docpop.aspx?KT19_0_0_0=18571056&keytype=&clienttype=html&chksum=e6277fb9382c4de56cfbfce949c50fab7863633f1a50bc638699fb91cbdc4595"
+    },
+    {
+        documentId: "18571054",
+        importDate: "2024-07-25T09:28:10-05:00",
+        documentDate: "2024-07-25T09:27:26-05:00",
+        displayName: "Incoming Transfer for GLCO WOODFORD BRENT - 7/25/2024",
+        documentType: "Incoming Transfer",
+        contractNumber: "8830004179",
+        docStatus: "Active",
+        caseId: "10006756",
+        // zinniaLiveCaseId: "",
+        documentNumber: "20240725-M-571054",
+        source: "ETP",
+        fileType: "HTML",
+        // docPopUrl: "https://qa-ecm.se2.com/OnBaseQA/docpop/docpop.aspx?KT19_0_0_0=18571054&keytype=&clienttype=html&chksum=7a36236c5aff3cbc22b18269dd7d5bd7bf66071f087d76a2669c45ea0114857b"
+    }]
+};

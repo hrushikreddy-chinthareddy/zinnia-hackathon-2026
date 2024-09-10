@@ -1,0 +1,75 @@
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { createContext, useContext } from 'react';
+
+import { PermissionsModel, UserPermission } from '@deps/models/user-profile';
+import { getCarrierList } from '@deps/queries/api/fga';
+import { AUDIENCE } from '@deps/queries/api-config';
+
+export interface PermissionsContextProps {
+    permissions: PermissionsModel;
+    getClientIds: (permission: UserPermission) => Promise<string[]>;
+    doesUserHavePagePermission: (permission: UserPermission) => Promise<boolean>;
+    canEditPolicy: (permission: UserPermission, planCode: string | string[] | undefined, policyNumber: string | undefined) => Promise<boolean>;
+}
+
+export const PermissionContext = createContext<PermissionsContextProps>({} as PermissionsContextProps);
+
+export const usePermissionsContext = () => {
+    return useContext(PermissionContext);
+};
+
+interface PermissionsProviderProps {
+    children: React.ReactNode;
+}
+
+export const PermissionsProvider: React.FC<PermissionsProviderProps> = ({ children }) => {
+    const permissionsKey = AUDIENCE + '/permissions';
+
+    const { user } = useUser();
+    const partyId = user?.partyId as string;
+
+    const getPermissionSet = (): PermissionsModel => {
+        if (!user || !user[permissionsKey]) return {} as PermissionsModel;
+
+        const permissions: PermissionsModel = user[permissionsKey] as PermissionsModel;
+        return permissions;
+    };
+
+    const getClientIds =  async (permission: UserPermission): Promise<string[]> => {
+        if (!partyId || !permission ) return [];
+        return await getCarrierList(partyId, permission);
+    };
+
+    // Can "const { user } = useUser();" and const permissions... be safely hoisted to the top of the method and used in a closure?
+    const doesUserHavePagePermission = async (permission: UserPermission): Promise<boolean> => {
+        if (!partyId || !permission) return false;
+        const carriers = await getCarrierList(partyId, permission);
+
+        if (carriers.length > 0) {
+            return true;
+        }
+
+        return false;
+    };
+
+    const canEditPolicy = async (permission: UserPermission, planCode: string | string[] | undefined, policyNumber: string | undefined ): Promise<boolean> => {
+        if (!partyId || !permission || !planCode || !policyNumber) return false;
+
+        const carriers = await getCarrierList(partyId, permission, planCode, policyNumber);
+        if (carriers.length > 0) {
+            return true;
+        }
+
+        return false;
+    };
+
+    const permissions = getPermissionSet();
+
+    return (
+        <PermissionContext.Provider
+            value={{ permissions, getClientIds, doesUserHavePagePermission, canEditPolicy }}
+        >
+            {children}
+        </PermissionContext.Provider>
+    );
+};

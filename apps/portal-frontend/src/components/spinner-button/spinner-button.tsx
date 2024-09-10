@@ -1,0 +1,57 @@
+import clsx from 'clsx';
+import Image from 'next/image';
+import { useTranslation } from 'next-i18next';
+import { useEffect, useState } from 'react';
+
+import Button, { ButtonSize, ButtonType, ButtonVariant } from '@deps/components/button/button';
+import loaderImage from '@deps/styles/images/loader.png';
+
+export interface SpinnerButtonProps {
+    size?: ButtonSize;
+    stopLoading?: boolean;
+    text: string;
+    onClick: () => void;
+}
+
+const SpinnerButton = ({ size, stopLoading = false, text, onClick }: SpinnerButtonProps) => {
+    const { t } = useTranslation();
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [variant, setVariant] = useState(ButtonVariant.Default);
+
+    useEffect(() => {
+        if (stopLoading) {
+            setIsLoading(false);
+            setVariant(ButtonVariant.Default);
+        }
+    }, [stopLoading]);
+
+    const handleClick = () => {
+        onClick();
+
+        if (stopLoading) return;
+
+        setIsLoading(true);
+        setVariant(ButtonVariant.Inactive);
+    };
+
+    return (
+        <Button
+            className={clsx('flex items-center gap-1', { 'cursor-wait': variant === ButtonVariant.Inactive })}
+            data-testid="continue-button"
+            onClick={handleClick}
+            size={size}
+            type={ButtonType.Primary}
+            variant={variant}
+        >
+            {text}
+            {!!isLoading && (
+                <div data-testid="test-loader" className="animate-spin">
+                    <Image alt={t('site.loader')} height={16} src={loaderImage} width={16} />
+                </div>
+            )}
+        </Button>
+    );
+};
+
+export default SpinnerButton;

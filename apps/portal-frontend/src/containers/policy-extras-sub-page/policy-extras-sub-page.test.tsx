@@ -1,0 +1,194 @@
+import { render, screen, cleanup, fireEvent, waitFor } from '@testing-library/react';
+import dayjs from 'dayjs';
+import { TFunction } from 'next-i18next';
+
+import { PolicyData } from '@deps/contexts/PolicyDataContext';
+import { mockPolicy } from '@deps/jest/data/mockPolicy';
+import { PolicyFeature, Rider, Status } from '@deps/models/policy/sor-policy';
+import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+
+import PolicyExtrasContainer from './policy-extras-sub-page';
+import { calculaterFilterProps } from './policy-extras-sub-page.helper';
+
+jest.mock('next/router', () => ({
+    useRouter: jest.fn(() => ({
+        pathname: '/',
+        events: {
+            on: jest.fn(),
+            off: jest.fn(),
+        },
+    })),
+}));
+
+afterEach(() => {
+    cleanup();
+    jest.clearAllMocks();
+});
+
+describe('Policy Extras Container', () => {
+    describe('Verify the correct labels are passed', () => {
+        it('should contain the correct h1', () => {
+            render(
+                <PolicyData.Provider value={{ policy: mockPolicy, refreshPolicy: jest.fn() }}>
+                    <PolicyExtrasContainer />
+                </PolicyData.Provider>
+            );
+
+            expect(screen.getByTestId('header-text')).toBeInTheDocument();
+            expect(screen.getByTestId('header-text')).toHaveTextContent('policyExtras');
+        });
+    });
+
+    describe('filter chips', () => {
+        it('should contain the correct chips', () => {
+            render(
+                <PolicyData.Provider value={{ policy: mockPolicy, refreshPolicy: jest.fn() }}>
+                    <PolicyExtrasContainer />
+                </PolicyData.Provider>
+            );
+
+            expect(screen.getByText('filter.label')).toBeInTheDocument();
+            expect(screen.getByText('All')).toBeInTheDocument();
+            expect(screen.getByText('filter.Rider')).toBeInTheDocument();
+            expect(screen.getByText('filter.Feature')).toBeInTheDocument();
+            expect(screen.getByText('filter.active')).toBeInTheDocument();
+            expect(screen.getByText('filter.available')).toBeInTheDocument();
+            expect(screen.getByText('filter.terminated')).toBeInTheDocument();
+        });
+
+        it('should start with correct initial checked states', () => {
+            render(
+                <PolicyData.Provider value={{ policy: mockPolicy, refreshPolicy: jest.fn() }}>
+                    <PolicyExtrasContainer />
+                </PolicyData.Provider>
+            );
+
+            expect(screen.getByText('All')).toHaveAttribute('aria-checked', 'true');
+            expect(screen.getByText('filter.Rider')).toHaveAttribute('aria-checked', 'false');
+            expect(screen.getByText('filter.Feature')).toHaveAttribute('aria-checked', 'false');
+            expect(screen.getByText('filter.active')).toHaveAttribute('aria-checked', 'false');
+            expect(screen.getByText('filter.available')).toHaveAttribute('aria-checked', 'false');
+            expect(screen.getByText('filter.terminated')).toHaveAttribute('aria-checked', 'false');
+        });
+
+        it('should change chip states correctly when one is clicked', () => {
+            render(
+                <PolicyData.Provider value={{ policy: mockPolicy, refreshPolicy: jest.fn() }}>
+                    <PolicyExtrasContainer />
+                </PolicyData.Provider>
+            );
+
+            expect(screen.getByText('All')).toHaveAttribute('aria-checked', 'true');
+            expect(screen.getByText('filter.Rider')).toHaveAttribute('aria-checked', 'false');
+            fireEvent.click(screen.getByText('filter.Rider'));
+            waitFor(() => {
+                expect(screen.getByText('filter.Rider')).toHaveAttribute('aria-checked', 'true');
+            });
+        });
+    });
+});
+
+describe('Policy Extras Helpers', () => {
+    describe('calculaterFilterProps', () => {
+        it('returns the correct values for each filter type, including variant', () => {
+            const futureEndDate = dayjs().add(11, 'y').format(ZAHARA_API_DATE_FORMAT);
+            const pastDate = dayjs().subtract(11, 'y').format(ZAHARA_API_DATE_FORMAT);
+
+            const [riders, features, active, available, terminated] = calculaterFilterProps({
+                riders: [
+                    { status: Status.TERMINATED },
+                    { status: Status.PENDING },
+                    { status: Status.ACTIVE },
+                    { status: Status.ACTIVE },
+                ] as Rider[],
+                // terminated, active, available, available
+                features: [
+                    { approvalDate: pastDate, startDate: pastDate, endDate: futureEndDate },
+                    { startDate: pastDate, endDate: futureEndDate },
+                    { startDate: pastDate, endDate: pastDate },
+                ] as PolicyFeature[],
+                // active, available, terminated
+                t: ((key: any) => key) as TFunction,
+            });
+
+            expect(riders).toEqual({
+                text: 'filter.Rider',
+                value: 'Rider',
+                quantity: 4,
+                disabled: false,
+            });
+
+            expect(features).toEqual({
+                text: 'filter.Feature',
+                value: 'Feature',
+                quantity: 3,
+                disabled: false,
+            });
+
+            expect(active).toEqual({
+                text: 'filter.active',
+                value: 'active',
+                quantity: 2,
+                disabled: false,
+            });
+
+            expect(available).toEqual({
+                text: 'filter.available',
+                value: 'available',
+                quantity: 3,
+                disabled: false,
+            });
+
+            expect(terminated).toEqual({
+                text: 'filter.terminated',
+                value: 'terminated',
+                quantity: 2,
+                disabled: false,
+            });
+        });
+
+        it('returns the correct order', () => {
+            const [riders, available, terminated, features, active] = calculaterFilterProps({
+                riders: [{ status: Status.TERMINATED }, { status: Status.ACTIVE }, { status: Status.ACTIVE }] as Rider[],
+                // terminated, available, available
+                features: [] as PolicyFeature[],
+                t: ((key: any) => key) as TFunction,
+            });
+
+            expect(riders).toEqual({
+                text: 'filter.Rider',
+                value: 'Rider',
+                quantity: 3,
+                disabled: false,
+            });
+
+            expect(available).toEqual({
+                text: 'filter.available',
+                value: 'available',
+                quantity: 2,
+                disabled: false,
+            });
+
+            expect(terminated).toEqual({
+                text: 'filter.terminated',
+                value: 'terminated',
+                quantity: 1,
+                disabled: false,
+            });
+
+            expect(features).toEqual({
+                text: 'filter.Feature',
+                value: 'Feature',
+                quantity: 0,
+                disabled: true,
+            });
+
+            expect(active).toEqual({
+                text: 'filter.active',
+                value: 'active',
+                quantity: 0,
+                disabled: true,
+            });
+        });
+    });
+});

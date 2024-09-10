@@ -1,0 +1,46 @@
+export type FeatureKeyIdentifier = keyof typeof FEATURE_FLAGS;
+export enum FEATURE_FLAGS {
+    // XE-3 - Optimizely Spike
+    ALTERNATE_SIDE_NAVIGATION = 'policy-management_feature_alternate-side-navigation',
+    // Auto-Refresh Case Details for demo
+    AUTO_REFRESH_CASE_DETAILS = 'auto-refresh-case-details',
+    // DEPU-2043 - Policy Management
+    POLICY_MANAGEMENT_ENABLED = 'policy-management_feature_policy_mgmt_main_nav_link',
+    // DEPU-2137 Case Management Case Redesign
+    CASE_MANAGEMENT_CASE_REDESIGN_ENABLED = 'case-management-depu-1791_case_redesign',
+    POLICY_MANAGEMENT_ANNUITIES_ENABLED = 'policy-management_feature_policy_mgmt_annuities',
+    // CMW-14579 - Regulation 60
+    REG_60 = 'case-management-otp_feature_regulation-60',
+    SSW_MASS = 'case-management-otp_feature_mass_ssw',
+    SSW_SBGC = 'case-management-otp_feature_sbgc_ssw',
+    SSW_NASU = 'case-management-otp_feature_nasu_ssw',
+    SSW_FLIC = 'case-management-otp_feature_flic_ssw',
+    OFT_MASS = 'case-management-otp_feature_mass_oft',
+    OFT_SBGC = 'case-management-otp_feature_sbgc_oft',
+    OFT_DLIC = 'case-management-otp_feature_dlic_oft',
+    OFT_RSLN = 'case-management-otp_feature_rsln_oft',
+    NEW_EXP = 'case-management-otp_feature_new_experience',
+    DLIC_RENEWAL_PLANCODE_730 = 'case-management-otp_feature_delaware_renewal_730',
+    DLIC_RENEWAL_PLANCODE_729 = 'case-management-otp_feature_dlic_renewal_729',
+    DLIC_RENEWAL_PLANCODE_689 = 'case-management-otp_feature_dlic_renewal_689',
+    MASS_RENEWAL_PLANCODE_723 = 'case-management-otp_feature_mass_renewal_723',
+    TRANSACTION_HISTORY = 'case-management-otp_feature_transaction_history',
+    WITHDRAWAL_NASU = 'case-management-otp_feature_nasu_withdrawal',
+    WITHDRAWAL_GDMN = 'case-management-otp_feature_gdmn_withdrawal',
+    WITHDRAWAL_RSLN = 'case-management-otp_feature_rsln_withdrawal',
+    SEND_DOCUMENT = 'contact-center-send-document',
+    ADDRESS_CHANGE_SBGC = 'case-management-otp-feature-sbgc-address-change',
+    ADDRESS_CHANGE_MASS = 'case-management-otp-feature-mass-address-change',
+    ADDRESS_CHANGE_DLIC = 'case-management-otp-feature-dlic-address-change',
+    ADDRESS_CHANGE_FLIC = 'case-management-otp-feature-flic-address-change',
+    ADDRESS_CHANGE_NASU = 'case-management-otp-feature-nasu-address-change',
+    ADDRESS_CHANGE_ULPC = 'case-management-otp-feature-ulpc-address-change',
+    ADDRESS_CHANGE_GLCO = 'case-management-otp-feature-glco-address-change',
+    ADDRESS_CHANGE_PRDN = 'case-management-otp-feature-prdn-address-change',
+    ADDRESS_CHANGE_GDMN = 'case-management-otp-feature-gdmn-address-change',
+    ADDRESS_CHANGE_USAA = 'case-management-otp-feature-usaa-address-change',
+    ADDRESS_CHANGE_RSLN = 'case-management-otp-feature-rsln-address-change',
+    SEND_DOCUMENT_SHOW_CASE_BUTTON = 'contact-center-send-document-show-case',
+    SEND_DOCUMENT_SHOW_Mail_Option = 'contact-center-send-document-show-mail-option',
+    SEND_DOCUMENT_SHOW_Mail_SBGC = 'contact-center-send-document-sbgc-show-mail-option',
+}

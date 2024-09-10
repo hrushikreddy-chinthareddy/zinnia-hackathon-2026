@@ -1,0 +1,157 @@
+@font-face {
+    font-family: Poppins;
+    src: url('/styles/themes/zinnia/fonts/Poppins-ExtraLight.ttf');
+    format: ('ttf');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 200;
+}
+
+@font-face {
+    font-family: Poppins;
+    src: url('/styles/themes/zinnia/fonts/Poppins-Light.ttf');
+    format: ('ttf');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 300;
+}
+
+@font-face {
+    font-family: Poppins;
+    src: url('/styles/themes/zinnia/fonts/Poppins-Regular.ttf');
+    format: ('ttf');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: Poppins;
+    src: url('/styles/themes/zinnia/fonts/Poppins-Medium.ttf');
+    format: ('ttf');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: Poppins;
+    src: url('/styles/themes/zinnia/fonts/Poppins-SemiBold.ttf');
+    format: ('ttf');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: Poppins;
+    src: url('/styles/themes/zinnia/fonts/Poppins-Bold.ttf');
+    format: ('ttf');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 700;
+}
+
+@font-face {
+    font-family: Poppins;
+    src: url('/styles/themes/zinnia/fonts/Poppins-ExtraBold.ttf');
+    format: ('ttf');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 800;
+}
+
+@font-face {
+    font-family: Lato;
+    src: url('/styles/themes/zinnia/fonts/Lato-Regular.ttf');
+    format: ('ttf');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: Lato;
+    src: url('/styles/themes/zinnia/fonts/Lato-Bold.ttf');
+    format: ('ttf');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 700;
+}
+
+:root,
+.root,
+#root,
+#docs-root {
+    --bg-color-primary: 00 00 00;
+    --bg-color-secondary: 237 237 237;
+
+    --font-family-primary: 'Poppins';
+    --font-family-secondary: 'Lato';
+
+    /* Primary */
+    --color-primary: 255 117 000;
+    --color-primary-light: 255 172 102;
+    --color-primary-lighter: 255 200 153;
+    --color-primary-lightest: 255 234 217;
+
+    --color-secondary: 000 98 139;
+    --color-secondary-light: 102 161 186;
+    --color-secondary-lighter: 153 192 209;
+    --color-secondary-lightest: 217 231 238;
+    --color-secondary-dark: 0 59 84;
+
+    --color-accent-one: 255 198 000;
+    --color-accent-two: 255 24 34;
+
+    /* Semantics */
+    --color-semantic-information: 000 95 237;
+    --color-semantic-information-light: 242 247 254;
+    --color-semantic-success: 000 123 90;
+    --color-semantic-success-light: 242 249 247;
+    --color-semantic-pending: 172 0 145;
+    --color-semantic-pending-light: 251 242 249;
+    --color-semantic-warning: 183 77 0;
+    --color-semantic-warning-light: 252 246 242;
+    --color-semantic-error: 219 000 79;
+    --color-semantic-error-light: 253 242 246;
+    --color-semantic-focus: 0 125 188;
+    --color-semantic-highlight: 255 228 133;
+
+    /* Grayscale */
+    --color-black: 000 000 000;
+    --color-white: 255 255 255;
+    --color-50-gray: 248 248 248;
+    --color-100-gray: 237 237 237;
+    --color-200-gray: 204 204 204;
+    --color-300-gray: 179 179 179;
+    --color-400-gray: 148 148 148;
+    --color-500-gray: 127 127 127;
+    --color-600-gray: 103 103 103;
+    --color-logo-gray: 99 102 106;
+    --color-700-gray: 77 77 77;
+    --color-800-gray: 49 49 49;
+    --color-900-gray: 33 33 33;
+
+    /* Bar Colors */
+    --color-400-fuchsia: 212 122 204;
+    --color-600-fuchsia: 151 59 147;
+    --color-300-yellow: 255 213 118;
+    --color-400-yellow: 255 198 0;
+    --color-800-yellow: 157 84 0;
+    --color-400-red: 255 102 82;
+    --color-600-red: 218 2 28;
+    --color-400-aqua: 55 188 194;
+    --color-800-aqua: 31 60 61;
+    --color-500-orange: 242 96 3;
+    --color-400-cerulean: 55 162 216;
+    --color-600-cerulean: 0 98 139;
+    --color-300-lime: 192 198 79;
+    --color-400-lime: 154 174 8;
+
+    /* ---------------------------------------------- */
+
+    --color-gradient-diagonal: rgb(255, 198, 000) / rgb(255, 117, 000) / rgb(255, 24, 34);
+    --color-gradient-linear: rgb(255, 198, 000) / rgb(255, 117, 000) / rgb(255, 24, 34);
+    --color-50-percent-black-opacity: rgb(000, 000, 000, 0.5);
+}

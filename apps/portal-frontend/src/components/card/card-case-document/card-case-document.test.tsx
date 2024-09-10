@@ -1,0 +1,46 @@
+import { render, screen } from '@testing-library/react';
+
+import { PROCESS_WITHOUT_CASE_DOCUMENT } from '@deps/components/case-document-select/case-document-select';
+import { NOOP } from '@deps/types/constants';
+
+import CardCaseDocument from './card-case-document';
+
+jest.mock('@deps/utils/server-logging');
+
+const mockT = (key: string, values?: Record<string, string>) => {
+    if (values) {
+        return `${key} ${Object.values(values).join(', ')}`;
+    }
+    return key;
+};
+
+jest.mock('next-i18next', () => ({
+    useTranslation: () => ({
+        t: mockT,
+    }),
+}));
+
+describe('CardCaseDocument', () => {
+    test('renders document number and tag', () => {
+        const caseDocumentOption = {
+            documentNumber: '12345-AB-67890',
+            tag: 'Developer',
+            value: '12345-AB-67890',
+        };
+
+        render(<CardCaseDocument caseDocumentOption={caseDocumentOption} isSelected={false} onChange={NOOP} />);
+        expect(screen.getByText(caseDocumentOption.tag)).toBeInTheDocument();
+        expect(screen.getByText('workflows.start.documentNumber')).toBeInTheDocument();
+        expect(screen.getByText('12345-AB-67890')).toBeInTheDocument();
+    });
+
+    test('renders proper copy for process without document', () => {
+        const caseDocumentOption = {
+            documentNumber: 'Process without document',
+            value: PROCESS_WITHOUT_CASE_DOCUMENT,
+        };
+
+        render(<CardCaseDocument caseDocumentOption={caseDocumentOption} isSelected={false} onChange={NOOP} />);
+        expect(screen.getByText('Process without document')).toBeInTheDocument();
+    });
+});

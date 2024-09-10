@@ -1,0 +1,11 @@
+# General project
+.DS_Store
+.env
+node_modules
+
+# Cypress reports
+cypress/downloads
+cypress/screenshots
+cucumber-messages.ndjson
+cucumber-report.json
+runner-results/
