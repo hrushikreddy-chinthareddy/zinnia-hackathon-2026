@@ -397,6 +397,6 @@ export const config = {
      * - favicon.ico (favicon file)
      * - everly-logo.png (this is used for the email template. This is in place for MVP)
      */
-    '/((?!api|health|_next/static|_next/image|favicon.ico|everly-logo-new.png).*)',
+    '/((?!api|health|_next/static|_next/image|favicon.ico|everly-logo.png).*)',
   ],
 };
