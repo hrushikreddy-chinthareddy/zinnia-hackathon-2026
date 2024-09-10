@@ -506,14 +506,6 @@ export const transformPolicyStatusDetails = (
   );
   const freeLookActive = dayjs().isBefore(dayjs(freeLookFeature?.endDate));
 
-  if (freeLookActive && policyStatus !== PolicyStatus.CANCELEDFREELOOK) {
-    return {
-      policyStatus: 'FREELOOK' as PolicyFeature.featureType,
-      endDate: freeLookFeature?.endDate,
-      period: freeLookFeature?.period,
-    };
-  }
-
   if (policyStatus === PolicyStatus.PENDINGLAPSE) {
     const featureDetails = transformPolicyFeature(
       policy,
@@ -543,6 +535,14 @@ export const transformPolicyStatusDetails = (
       lapsedOn: lapseAssessmentDetails?.endDate,
       reinstatmentDate: reinstantementDetails?.startDate,
       reinstatementPeriod: reinstantementDetails?.period,
+    };
+  }
+
+  if (freeLookActive && policyStatus !== PolicyStatus.CANCELEDFREELOOK) {
+    return {
+      policyStatus: 'FREELOOK' as PolicyFeature.featureType,
+      endDate: freeLookFeature?.endDate,
+      period: freeLookFeature?.period,
     };
   }
 

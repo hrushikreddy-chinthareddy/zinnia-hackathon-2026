@@ -1,5 +1,5 @@
 import { PolicyFeature, PolicyStatus } from '@zinnia/api-types/types/sor';
-import { BannerAlert, BannerVariant } from '@zinnia/bloom/components';
+import { BannerAlert, BannerVariant, IconType } from '@zinnia/bloom/components';
 
 import { getPolicyStatusDetails } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
@@ -68,6 +68,7 @@ export const PolicyStatusAlertBanner = async ({
             </span>
           ),
           variant: BannerVariant.Information,
+          icon: IconType.ALERT,
         };
       } else {
         statusContent = null;
@@ -87,6 +88,7 @@ export const PolicyStatusAlertBanner = async ({
       className="mb-lg"
       bodyText={statusContent.text}
       variant={statusContent.variant}
+      icon={statusContent.icon}
     />
   );
 };
