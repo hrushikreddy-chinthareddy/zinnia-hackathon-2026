@@ -50,10 +50,10 @@ export const ULFundsView = ({
         callToAction={
           freelookData?.isFreelook
             ? `You can't edit allocations until your free look period ends on ${convertKebabedDateString(freelookData.freelookDate)}. Questions?`
-            : 'Editing fund allocations is coming soon. For now, '
+            : 'Questions about your allocations? '
         }
-        contactPrompt={freelookData?.isFreelook ? undefined : 'call'}
-        customInstruction="."
+        contactPrompt={freelookData?.isFreelook ? undefined : 'Call'}
+        customInstruction="for more information."
       />
     </div>
   );
