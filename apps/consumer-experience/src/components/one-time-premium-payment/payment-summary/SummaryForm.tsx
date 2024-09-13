@@ -119,9 +119,9 @@ export const SummaryForm = ({
               }
             >
               <p>
-                Premium payment charges cover costs related to sales expenses
-                and/or taxes. If your policy requires these charges, they will
-                be shown here.
+                Premium payment fees are charged to cover costs related to sales
+                expenses and/or taxes. If your policy requires these fees, they
+                will be shown here.
               </p>
             </Popover>,
           ]}

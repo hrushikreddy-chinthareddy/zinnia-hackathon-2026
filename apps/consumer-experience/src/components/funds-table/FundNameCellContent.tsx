@@ -23,7 +23,7 @@ export const FundNameCellContent = ({
 
   return (
     <ControlledSidesheet
-      header={toSentenceCase('fund details')}
+      header={toSentenceCase('details')}
       trigger={
         <span>
           <span

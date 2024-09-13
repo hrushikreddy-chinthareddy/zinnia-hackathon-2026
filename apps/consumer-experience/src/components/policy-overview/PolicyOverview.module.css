@@ -21,6 +21,11 @@
   margin: 0 var(--measure-dimension-gap-lg, 1rem);
 }
 
+.allocationsContainer {
+  display: inline-flex;
+  flex: initial;
+}
+
 .popoverContent {
   > *:not(:last-child) {
     margin-bottom: var(--measure-dimension-padding-xl, 0.75rem);

@@ -28,18 +28,8 @@ export const AccountValuePopover = ({
       placement={PopoverPlacement.BottomRight}
     >
       <div className={styles.popoverContent}>
-        <p>
-          {`This is how much money is held in your policy as of ${standardDateMonthDayYear(dataTimestamp)}.
-          Policy value may grow over time as the premium dollars allocated to
-          your account value earn interest. This money is yours to use how you
-          see fit. You could take out a loan against it or even withdraw some
-          for income in retirement or to pay for college. Note, though, that
-          withdrawals and loans (until paid back) can reduce your death benefit.
-          You could also simply let the account value grow, and eventually use
-          it to pay policy charges. If you go this route, you’ll just want to
-          keep an eye on the account value and the cost of your insurance over
-          time. If the policy isn’t funded enough, it could lapse, leaving you
-          without coverage.`}
+        <p className="typography-content-body">
+          {`This is how much money is held in your policy as of ${standardDateMonthDayYear(dataTimestamp)}. Policy value may grow over time as the premium dollars allocated to your account value earn interest. This money is yours to use hwo you see fit. You could take out a loan against it or even withdraw some for income in retirement or to pay for college. Note, though, that withdrawals and loans (until paid back) can reduce your death benefit. You could also simply let the account value grow, and eventually use it to pay policy charges. If you go this route, you'll just want to keep an eye on the account value and the cost of insurance over time. If the policy isn't funded enough, it could lapse, leaving you without coverage.`}
         </p>
       </div>
     </Popover>

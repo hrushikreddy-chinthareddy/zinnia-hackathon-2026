@@ -22,7 +22,7 @@ describe('FundDetailsSidesheetInner', () => {
     );
 
     expect(getByText('Interest rate')).toBeInTheDocument();
-    expect(getByText('Fund value')).toBeInTheDocument();
+    expect(getByText('Value')).toBeInTheDocument();
     expect(getByText('Next sweep date')).toBeInTheDocument();
   });
 
@@ -42,8 +42,8 @@ describe('FundDetailsSidesheetInner', () => {
       <FundDetailsSidesheetInner fundDetails={fundDetails} />
     );
 
-    expect(getByText('Fund type')).toBeInTheDocument();
-    expect(getByText('Fund value')).toBeInTheDocument();
+    expect(getByText('Type')).toBeInTheDocument();
+    expect(getByText('Value')).toBeInTheDocument();
     expect(getByText('Allocation')).toBeInTheDocument();
     expect(getByText('Interest rate')).toBeInTheDocument();
   });
@@ -64,8 +64,8 @@ describe('FundDetailsSidesheetInner', () => {
       <FundDetailsSidesheetInner fundDetails={fundDetails} />
     );
 
-    expect(getByText('Fund type')).toBeInTheDocument();
-    expect(getByText('Fund value')).toBeInTheDocument();
+    expect(getByText('Type')).toBeInTheDocument();
+    expect(getByText('Value')).toBeInTheDocument();
     expect(getByText('Allocation')).toBeInTheDocument();
   });
 

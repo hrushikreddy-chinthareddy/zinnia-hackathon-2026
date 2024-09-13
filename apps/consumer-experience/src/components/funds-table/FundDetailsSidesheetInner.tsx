@@ -67,16 +67,18 @@ const getAccountTypeSchema = (fundDetails: Fund) => {
 };
 
 const ItemDescriptionSidesheet = ({
+  title,
   innerContent,
 }: {
+  title: string;
   innerContent: ReactNode;
 }) => {
   return (
     <ControlledSidesheet
       showOverlay={false}
       key="fundType"
-      closeBeforeContent="Back to fund details"
-      header="Fund type"
+      closeBeforeContent="Back to details"
+      header={title}
       trigger={
         <Icon
           className={styles.sidesheetTrigger}
@@ -116,11 +118,34 @@ export const FundDetailsSidesheetInner = ({
                 interactiveElements={[
                   <ItemDescriptionSidesheet
                     key="fundType"
-                    innerContent="Funds can be either an index fund or a fixed fund. Fixed funds have a guaranteed interest rate.  Index funds have variable interest rates depending on market conditions. They track an index fund on the stock market, and often have either a participation rate or segment cap rate that is set by the carrier. The performance of the index combined with the  participating or segment cap rate determines earnings on your contirbutions. "
+                    title="Type"
+                    innerContent={
+                      <>
+                        <p className="mb-xl">
+                          Accounts can be either index or fixed.
+                        </p>
+                        <p className="mb-xl">
+                          Fixed accounts have a guaranteed interest rate for a
+                          specified period or segment. (Interest rate may be
+                          subject to change at the beginning of a new segment.)
+                        </p>
+                        <p className="mb-xl">
+                          Index accounts are credited with interest based on the
+                          performance of an underlying index and the account’s
+                          participation rate or segment cap rate (these are set
+                          by the carrier and are guaranteed for each segment but
+                          can change at the beginning of a new segment). Index
+                          accounts can offer the potential for higher interest
+                          crediting based, in part, on the performance of an
+                          underlying index, but it can also be zero in down
+                          markets.
+                        </p>
+                      </>
+                    }
                   />,
                 ]}
               >
-                {toSentenceCase('fund type')}
+                {toSentenceCase('type')}
               </Label>
             }
           >
@@ -137,7 +162,8 @@ export const FundDetailsSidesheetInner = ({
               interactiveElements={[
                 <ItemDescriptionSidesheet
                   key="interestRate"
-                  innerContent="This is the amount of your account value currently invested in this specific fund."
+                  title="Interest rate"
+                  innerContent="This is the rate of growth being earned on the amount within a fixed account or holding account."
                 />,
               ]}
             >
@@ -157,11 +183,12 @@ export const FundDetailsSidesheetInner = ({
             interactiveElements={[
               <ItemDescriptionSidesheet
                 key="totalFundValue"
-                innerContent="This is the amount of your account value currently invested in this specific fund."
+                title="Value"
+                innerContent="This is the amount of your account value currently allocated in this specific account."
               />,
             ]}
           >
-            {toSentenceCase('fund value')}
+            {toSentenceCase('value')}
           </Label>
         }
       >
@@ -183,7 +210,8 @@ export const FundDetailsSidesheetInner = ({
               interactiveElements={[
                 <ItemDescriptionSidesheet
                   key="sweepDate"
-                  innerContent="On this date, all money in the holding fund will be “swept” or moved into the policy’s various funds, according to your elected fund allocations. In most cases, the sweep date happens on the same date every month."
+                  title="Next sweep date"
+                  innerContent="On this date, all money in the holding account will be “swept” or moved into the account(s) you've elected. In most cases, the sweep date happens on the same date every month."
                 />,
               ]}
             >

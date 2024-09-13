@@ -61,18 +61,18 @@ export const IULFundsView = ({
   return (
     <>
       <div className={styles.sectionContainer}>
-        <h2>{toTitleCase('holding funds')}</h2>
+        <h2>{toTitleCase('holding accounts')}</h2>
         <p className="typography-content-body">
-          Holding funds are where your premium dollars are first deposited.
+          Holding accounts are where your premium dollars are first deposited.
           While there, all fees and charges (like your cost of of insurance)
-          come out. Then, what remains is moved or “swept” into your elected
-          funds on the sweep date.
+          come out. Then, what remains is moved or “swept” into the account(s)
+          you've selected on the sweep date.
         </p>
         <HoldingFunds funds={funds?.holding} isLoading={isLoading} />
       </div>
 
       <div className={styles.sectionContainer}>
-        <h2>{toTitleCase('available funds')}</h2>
+        <h2>{toTitleCase('Account options')}</h2>
         <CallForAssistance
           callToAction={
             freelookData?.isFreelook
@@ -85,12 +85,13 @@ export const IULFundsView = ({
 
         <div>
           <p className="typography-content-body">
-            The following funds are available for your policy.{' '}
+            The following accounts are available for your policy.{' '}
           </p>
           <p
             className={`typography-content-body ${styles.currentlyElectedLabel}`}
           >
-            Currently elected funds
+            Currently selected accounts. The percentage reflects how money from
+            the holding account is divided into selected accounts upon sweep.
           </p>
         </div>
         <NonHoldingFunds funds={funds?.nonHolding} isLoading={isLoading} />

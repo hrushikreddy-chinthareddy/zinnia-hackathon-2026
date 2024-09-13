@@ -21,7 +21,7 @@ export enum RouteKey {
   WITHDRAWALS = '/withdrawals',
   SURRENDER = '/surrender',
   LOANS = '/loans',
-  FUNDS = '/funds',
+  ALLOCATIONS = '/allocations',
   POLICIES = '/policies',
 }
 
@@ -102,10 +102,10 @@ export const routeMap: Index<RouteMap> = {
     source: '/loans',
     title: 'Loans',
   },
-  [RouteKey.FUNDS]: {
-    destination: '/policies/[planCode]/[policyNumber]/account/funds',
-    source: '/funds',
-    title: 'Funds',
+  [RouteKey.ALLOCATIONS]: {
+    destination: '/policies/[planCode]/[policyNumber]/account/allocations',
+    source: '/allocations',
+    title: 'Allocations',
   },
   [RouteKey.POLICIES]: {
     destination: '/policies',

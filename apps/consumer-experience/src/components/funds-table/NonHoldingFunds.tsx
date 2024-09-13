@@ -41,16 +41,16 @@ export const NonHoldingFunds = ({
     // and height never get updated to actual browser window size. Fun!!
     if (width !== Infinity && width > 500) {
       return {
-        fundName: 'Fund Name',
-        fundValue: 'Fund Value',
-        allocation: 'Allocation',
+        fundName: 'Name',
+        fundValue: 'Value',
+        allocation: 'Percentage',
       };
     }
 
     return {
-      fundName: 'Fund',
+      fundName: 'Name',
       fundValue: 'Value',
-      allocation: 'Alloc.',
+      allocation: '%',
     };
   }, [width]);
 
@@ -76,9 +76,9 @@ export const NonHoldingFunds = ({
             <Label
               interactiveElements={[
                 <LabelPopover
-                  key="Fund Value"
-                  title="Fund Value"
-                  content="This is the amount of your account value currently invested in this specific fund."
+                  key="Account Value"
+                  title="Account Value"
+                  content="This is the amount of your account value currently allocated in this specific account."
                 />,
               ]}
             >

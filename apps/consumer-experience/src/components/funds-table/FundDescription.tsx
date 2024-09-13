@@ -14,9 +14,9 @@ const descriptionText = (fundType?: FundAccountTypeEnum) => {
     case FundAccountTypeEnum.HOLDING:
       return (
         <p>
-          The money that will eventually be deposited into your elected funds
-          first stops here. Your holding fund value is still earning an interest
-          rate during the time it waits for the next sweep date.
+          The money that will eventually be deposited into your elected account
+          first stops here. Your holding account value is still earning an
+          interest rate during the time it waits for the next sweep date.
         </p>
       );
     // TODO: this will need to be updated to be more generic. Amelia to add after
@@ -25,16 +25,17 @@ const descriptionText = (fundType?: FundAccountTypeEnum) => {
       return (
         <div>
           <p className="mb-lg">
-            This is an indexed account with a segment cap. Your account is
-            credited with interest earnings based on how the tracked index (in
-            this case, the S&P 500®) increases between certain points of time
-            (called segments). The segment cap is a ceiling on what your account
-            can earn . For example, if the index increases 10% between the start
-            and end of a segment, and your segment cap is 5%, the account will
-            be credited with 5% interest.
+            This is an index account with a participation rate. Your account can
+            be credited with interest earnings based on how the tracked index
+            (in this case, the S&P 500®) increases between certain points of
+            time (called segments). The participation rate determines how the
+            account may be credited. For example, if the index increases 10%
+            between the start and end of a segment, and your participation rate
+            is 80%, the account will be credited with 8% interest. Full segment
+            performance details are available in your policy statements.
           </p>
           <p>
-            Segment performance details are available in your account
+            Full segment performance details are available in your policy
             statements.
           </p>
         </div>
@@ -42,7 +43,9 @@ const descriptionText = (fundType?: FundAccountTypeEnum) => {
     case FundAccountTypeEnum.FIXED:
       return (
         <p>
-          This fund earns a guaranteed interest rate for your contributions.{' '}
+          This account earns a guaranteed interest rate for your contributions.
+          The rate is set by the carrier and may be subject to change. Please
+          refer to your policy for more information.{' '}
         </p>
       );
     default:

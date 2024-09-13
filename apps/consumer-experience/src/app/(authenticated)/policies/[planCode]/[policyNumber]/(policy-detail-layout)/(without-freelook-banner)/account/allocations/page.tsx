@@ -3,7 +3,8 @@ import { Metadata } from 'next';
 
 import { AccountValue } from '@/components/account-value/AccountValue';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
-import { TotalFundValue } from '@/components/total-fund-value/TotalFundValue';
+import { OutstandingLoanValue } from '@/components/outstanding-loan-value/OutstandingLoanValue';
+import accountValueStyles from '@/components/policy-overview/PolicyOverview.module.css';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getPolicyDetails, getPolicyStatusDetails } from '@/services';
 import { getFeatureFlags } from '@/services/feature-flags';
@@ -15,7 +16,7 @@ import { IULFundsView } from './IULFundsView';
 import { OriginalFundsView } from './OriginalFundsView';
 import { ULFundsView } from './ULFundsView';
 
-const pageTitle = getPageTitle(RouteKey.FUNDS);
+const pageTitle = getPageTitle(RouteKey.ALLOCATIONS);
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
@@ -54,31 +55,30 @@ export default async function FundsPage({
       {data?.product?.productType === ProductType.UNIVERSALLIFE && (
         <p className="typography-content-body">
           <span className="typography-content-body-bold">
-            Your policy’s value is held within a fund.
+            Your policy's value is held within an account.
           </span>{' '}
           As you pay premiums, we first deduct all fees and charges, then
-          leftover premium dollars are deposited into your fund, which earns an
-          interest rate.
+          leftover premium dollars are deposited into your account, which
+          typically earns an interest rate.
         </p>
       )}
       {data?.product?.productType === ProductType.INDEXEDUNIVERSALLIFE && (
         <p className="typography-content-body">
           <span className="typography-content-body-bold">
-            Your policy’s value is held within investment funds.
+            Your policy's value is held within one or more accounts.
           </span>{' '}
           As you pay premiums, we first deduct all fees and charges, then
-          leftover premium dollars are deposited into your funds. There may be a
-          number of funds available for you to choose from or “elect” for
-          allocation.
+          leftover premium dollars are deposited into the account(s) you select.
         </p>
       )}
       <div className={`${styles.detailsContainer} card`}>
-        <TotalFundValue planCode={planCode} policyNumber={policyNumber} />
         <AccountValue
           planCode={planCode}
           policyNumber={policyNumber}
           hideTicker
+          className={accountValueStyles.allocationsContainer}
         />
+        <OutstandingLoanValue planCode={planCode} policyNumber={policyNumber} />
       </div>
       {data?.product?.productType === ProductType.UNIVERSALLIFE && (
         <ULFundsView

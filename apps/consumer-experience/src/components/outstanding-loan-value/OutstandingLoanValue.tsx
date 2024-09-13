@@ -9,7 +9,7 @@ import { formatUSDollars } from '@/utils/currency';
 
 import { LabelPopover } from '../label-popover/LabelPopover';
 
-const TOTAL_FUND_VALUE = 'Total fund value';
+const OUTSTANDING_LOAN = 'Outstanding loan';
 
 interface Props extends PolicyRequestInputs, HTMLAttributes<HTMLDivElement> {
   hideLabel?: boolean;
@@ -18,7 +18,7 @@ interface Props extends PolicyRequestInputs, HTMLAttributes<HTMLDivElement> {
   showIcon?: boolean;
 }
 
-export const TotalFundValue = async ({
+export const OutstandingLoanValue = async ({
   hideLabel,
   planCode,
   policyNumber,
@@ -28,14 +28,11 @@ export const TotalFundValue = async ({
     getPolicyDetails({ planCode, policyNumber }),
   ]);
   let outstandingLoan;
-  let totalFundsVal;
   if (totalFunds.status === 'rejected' || policyData.status === 'rejected') {
     outstandingLoan = 0;
-    totalFundsVal = 0;
   } else {
     outstandingLoan =
       policyData.value?.data?.accountValues?.loanedPortionOfAccountValue;
-    totalFundsVal = totalFunds.value?.data?.fundsTotalValue;
   }
 
   return (
@@ -45,29 +42,25 @@ export const TotalFundValue = async ({
           <Label
             interactiveElements={[
               <LabelPopover
-                title={TOTAL_FUND_VALUE}
-                key={TOTAL_FUND_VALUE}
+                title={OUTSTANDING_LOAN}
+                key={OUTSTANDING_LOAN}
                 content={
                   <p>
-                    This is the amount of your account value currently allocated
-                    in this specific fund. It's often the same amount as the
-                    account value, but may differ if you have any outstanding
-                    loans from the policy.
+                    If you have an outstanding loan, this money is still part of
+                    your policy's value but is not held within any selected
+                    accounts.
                   </p>
                 }
               />,
             ]}
           >
-            {TOTAL_FUND_VALUE}
+            {OUTSTANDING_LOAN}
           </Label>
         ),
       })}
-      caption={
-        <span>{`Outstanding loan: ${formatUSDollars(outstandingLoan, true)}`}</span>
-      }
     >
       <p className="typography-content-value">
-        {formatUSDollars(totalFundsVal)}
+        {formatUSDollars(outstandingLoan, true)}
       </p>
     </FieldData>
   );

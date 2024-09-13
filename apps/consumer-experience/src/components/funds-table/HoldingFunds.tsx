@@ -22,7 +22,7 @@ import { LoadingRow } from './LoadingRow';
 import { LabelPopover } from '../label-popover/LabelPopover';
 import { NoDataAvailable } from '../no-data-available/NoDataAvailable';
 
-const FUND_VALUE_LABEL = 'fund value';
+const FUND_VALUE_LABEL = 'value';
 const INTEREST_RATE_LABEL = 'interest rate';
 const NEXT_SWEEP_DATE_LABEL = 'next sweep date';
 
@@ -53,7 +53,7 @@ export const HoldingFunds = ({
       <TableHeader>
         <TableRow>
           <TableHeaderCell>
-            <Label>{toSentenceCase('fund name')}</Label>
+            <Label>{toSentenceCase('name')}</Label>
           </TableHeaderCell>
           {isDesktop && (
             <TableHeaderCell>
@@ -62,7 +62,7 @@ export const HoldingFunds = ({
                   <LabelPopover
                     key={INTEREST_RATE_LABEL}
                     title={INTEREST_RATE_LABEL}
-                    content="This is the rate of growth being earned on the amount invested within a fixed fund or holding fund."
+                    content="This is the rate of growth being earned on the amount within a fixed account or holding account."
                   />,
                 ]}
               >
@@ -76,7 +76,7 @@ export const HoldingFunds = ({
                 <LabelPopover
                   key={FUND_VALUE_LABEL}
                   title={FUND_VALUE_LABEL}
-                  content="This is the amount of your account value currently invested in this specific fund."
+                  content="This is the amount of your account value currently allocated in this specific account."
                 />,
               ]}
             >
@@ -90,7 +90,7 @@ export const HoldingFunds = ({
                   <LabelPopover
                     key={NEXT_SWEEP_DATE_LABEL}
                     title={NEXT_SWEEP_DATE_LABEL}
-                    content="On this date, all money in the holding fund will be “swept” or moved into the policy’s various funds, according to your elected fund allocations. In most cases, the sweep date happens on the same date every month."
+                    content="On this date, all money in the holding account will be “swept” or moved into the account(s) you've elected. In most cases, the sweep date happens on the same date every month."
                   />,
                 ]}
               >
