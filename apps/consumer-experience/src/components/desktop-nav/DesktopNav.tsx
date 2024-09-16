@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import LogoImage from '@/app/styles/everly/assets/everly-logo-new.svg';
+import LogoImage from '@/app/styles/everly/everly-logo.svg';
 import useMock from '@/hooks/use-mock';
 import { isMockAllowed } from '@/utils';
 import { toTitleCase } from '@/utils/strings';

@@ -7,13 +7,6 @@
     flex-direction: column;
   }
 
-  .headerContainer {
-    display: flex;
-    gap: var(--measure-dimension-gap-xs);
-    align-items: center;
-    justify-content: center;
-  }
-
   height: 100%;
   width: 100vw;
   max-width: 1440px;
@@ -24,13 +17,10 @@
   @media (width >=1024px) {
     flex-direction: row;
     align-items: stretch;
-
-    .headerContainer {
-      justify-content: flex-start;
-    }
   }
 
   .banner {
+    background-color: var(--color-primary-color-primary-lightest);
     background-image: url('../../app/styles/everly/assets/everly-hero-background-mobile.png');
     background-repeat: no-repeat;
     height: 93px;
@@ -44,6 +34,7 @@
 
     @media (width >=1024px) {
       max-width: 434px;
+      background-size: 100% auto;
       background-image: url('../../app/styles/everly/assets/everly-hero-background.png');
       background-position-y: center;
       height: 100%;
@@ -108,5 +99,11 @@
       padding: var(--measure-dimension-padding-2xl) 0;
       text-align: left;
     }
+  }
+
+  .headerContainer {
+    display: flex;
+    gap: var(--measure-dimension-gap-xs);
+    align-items: center;
   }
 }
