@@ -33,6 +33,7 @@ import {
   setTermsAndConditionsCookie,
   touchSession,
 } from './utils/auth';
+import { CarrierId } from './types/policy';
 
 /**
  * NextJS doesn't foward the headers to react server components.
@@ -163,7 +164,10 @@ export async function middleware(req: NextRequest) {
     // For example if the user entered /riders after they select a policy we will redirect them to
     // /policies/[planCode]/[policyNumber]/riders
     if (redirect) {
-      const allPolicies = await getMyPoliciesByCarrier('SBUL');
+      const allPolicies = await getMyPoliciesByCarrier([
+        CarrierId.SBUL,
+        CarrierId.ELIC,
+      ]);
       if (
         !allPolicies.data ||
         allPolicies.data.length === 0 ||
@@ -190,7 +194,10 @@ export async function middleware(req: NextRequest) {
     // if they have only one policy we will redirect them to the policy details page
     // otherwise we will send them to the policy index page
     if (fromLogin === 'true') {
-      const allPolicies = await getMyPoliciesByCarrier('SBUL');
+      const allPolicies = await getMyPoliciesByCarrier([
+        CarrierId.SBUL,
+        CarrierId.ELIC,
+      ]);
       if (allPolicies.data && allPolicies.data.length === 1) {
         const [policy] = allPolicies.data;
 
