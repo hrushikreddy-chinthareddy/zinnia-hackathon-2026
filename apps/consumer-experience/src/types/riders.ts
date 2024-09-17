@@ -16,7 +16,7 @@ export interface PolicyRider {
   riderCode?: string;
   isElected: boolean;
   cost?: number;
-  description?: string;
+  description?: string | null;
   effectiveDate?: string;
   insured?: {
     firstName?: string;
