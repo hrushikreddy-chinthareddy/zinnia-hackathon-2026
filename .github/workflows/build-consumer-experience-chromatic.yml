@@ -36,7 +36,7 @@ jobs:
         uses: pnpm/action-setup@v4
       - run: pnpm install
       - name: pnpm run build
-        run: pnpm run build
+        run: pnpm run build --filter ${{ inputs.filter-path }}
       - name: Publish to ${{ inputs.project-name }} to Chromatic
         uses: chromaui/action@latest
         with:
