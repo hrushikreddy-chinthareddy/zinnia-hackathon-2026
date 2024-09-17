@@ -6,7 +6,6 @@ import {
   TransactionType,
   MetricsType,
   Party,
-  FundAllocation,
   PolicyFeature,
   Status,
   Reason,
@@ -223,24 +222,41 @@ export const transformPolicyForFundDetails = (
     return null;
   }
 
-  const funds = policy.allocation?.funds?.map(fundDetails => {
-    const allocationDetails =
-      policy.allocation?.fundAllocationsInvestments?.find(
-        (allocationDetail: FundAllocation) =>
-          allocationDetail.fundId === fundDetails?.fundId &&
-          !isEndDatedAndEndDateUpcoming(allocationDetail.endDate)
-      );
+  const policyAlloc = policy.allocation?.fundAllocationsInvestments || [];
+  const policyFunds = policy.allocation?.funds || [];
 
-    return {
-      ...fundDetails,
-      fundAccountName: fundDetails?.fundName,
-      allocationPercentage: allocationDetails?.allocationPercentage,
-      totalFundValue: fundDetails?.totalFundValue,
-      fundAccountType: undefined, // We do not want to set the fundAccountType from this endpoint, because it is not accurate compared to the /funds API
-    };
-  });
+  // Merge the two funds and allocations arrays and combine the data in both.
+  // Combines data if the ID exists in both arrays
+  const map = new Map<string, PolicyFund>();
 
-  return funds || null;
+  //Loop over allocations and make sure to set percentage
+  policyAlloc.forEach(
+    item =>
+      item.fundId &&
+      !isEndDatedAndEndDateUpcoming(item.endDate) &&
+      map.set(item.fundId, {
+        ...item,
+        fundName: item?.fundName,
+        allocationPercentage: item?.allocationPercentage,
+        fundAccountType: undefined, // We do not want to set the fundAccountType from this endpoint, because it is not accurate compared to the /funds API
+      })
+  );
+
+  //Loop over the funds and make sure to set total fund value
+  policyFunds.forEach(
+    item =>
+      item.fundId &&
+      map.set(item.fundId, {
+        ...map.get(item.fundId), //get the previous mapped value if it exists and spread the object out
+        ...item,
+        fundName: item?.fundName,
+        totalFundValue: item?.totalFundValue,
+        fundAccountType: undefined, // We do not want to set the fundAccountType from this endpoint, because it is not accurate compared to the /funds API
+      })
+  );
+  const mergedArr = Array.from(map.values());
+
+  return mergedArr;
 };
 
 export const transformPolicyForWithdrawals = (
