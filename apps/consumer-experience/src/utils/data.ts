@@ -12,6 +12,7 @@ import {
   PartyRole,
   BankAccount,
   ProductType,
+  LineOfBusiness,
 } from '@zinnia/api-types/types/sor';
 import { policyOwner } from '@zinnia/utils';
 import dayjs from 'dayjs';
@@ -19,6 +20,7 @@ import dayjs from 'dayjs';
 import { BankDetail } from '@/components/person-data/types';
 
 import { DEFAULT_ERROR_STRING, toSentenceCase } from './strings';
+import { CarrierPolicyDetails } from '@/types/policy';
 
 export const EVERLY_CONTACT_PHONE_NUMBER = '1-855-290-0529';
 
@@ -323,4 +325,19 @@ export const getBankAccountByBankId = (
   bankAccounts: BankAccount[]
 ) => {
   return bankAccounts.find(b => b.bankId === bankId);
+};
+
+export const isAnnuity = (policy?: CarrierPolicyDetails) => {
+  return (
+    policy?.lineOfBusiness === LineOfBusiness.ANNUITY ||
+    policy?.lineOfBusiness === ('Annuity Product' as LineOfBusiness)
+  );
+};
+
+export const productUrlPath = (policy?: CarrierPolicyDetails) => {
+  if (isAnnuity(policy)) {
+    return 'annuities';
+  }
+
+  return 'policies';
 };

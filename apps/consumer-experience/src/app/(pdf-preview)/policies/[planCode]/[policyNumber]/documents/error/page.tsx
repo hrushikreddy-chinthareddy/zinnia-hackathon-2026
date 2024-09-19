@@ -38,7 +38,7 @@ export default async function ErrorPage({
           <Link
             expand
             variant="button"
-            href={`/policies/${params.planCode}/${params.policyNumber}/documents`}
+            href={`/coverage/${params.planCode}/${params.policyNumber}/documents`}
             text="Back to my documents"
           />
         </>

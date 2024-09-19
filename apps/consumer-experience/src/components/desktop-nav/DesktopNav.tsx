@@ -16,7 +16,7 @@ import { DevMenu } from '../dev-menu/DevMenu';
 
 const navLinks = [
   {
-    url: `/policies`,
+    url: `/coverage`,
     icon: IconType.MATCHES,
     title: 'my policies',
   },

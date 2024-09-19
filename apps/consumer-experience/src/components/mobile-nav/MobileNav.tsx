@@ -17,7 +17,7 @@ import { DevMenu } from '../dev-menu/DevMenu';
 
 const navRoutes = [
   {
-    url: '/policies',
+    url: '/coverage',
     displayName: 'My Policies',
     icon: IconType.MATCHES,
     requiresPolicy: false,

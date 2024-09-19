@@ -11,8 +11,8 @@ import { REFRESH_ROUTER_COOKIE_KEY } from '@/utils/serverClientUtils';
  * after they select a policy we redirect them to the riders page.
  * The issue with that is NextJS stores a cache of data and routes on the client side
  * and if the URL is redirected it maps the original URL to the new url
- * for example if the user select /policies/SBFIXUL1/AU22006467 and we redirect them to /policies/SBFIXUL1/AU22006467/riders
- * NextJS will also router /policies/SBFIXUL1/AU22006467 to /policies/SBFIXUL1/AU22006467/riders because it a temporary redirect.
+ * for example if the user select /coverage/SBFIXUL1/AU22006467 and we redirect them to /coverage/SBFIXUL1/AU22006467/riders
+ * NextJS will also router /coverage/SBFIXUL1/AU22006467 to /coverage/SBFIXUL1/AU22006467/riders because it a temporary redirect.
  * In order to correct this we set a refresh cookie that allows the frontend to clear the route cache in these scenarios
  * see middleware for how refresh router cookie is set
  */
@@ -21,7 +21,7 @@ const RefreshRouterManager = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (pathname === '/policies') {
+    if (pathname === '/coverage') {
       return;
     }
     const refreshRouter = Cookies.get(REFRESH_ROUTER_COOKIE_KEY) === '1';

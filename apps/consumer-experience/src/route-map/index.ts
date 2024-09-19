@@ -10,7 +10,8 @@ export enum RouteKey {
   PREMIUM = '/premium',
   PROFILE = '/profile',
   DOCUMENTS = '/documents',
-  COVERAGE = '/coverage',
+  // TODO: we'll need a new name for this one
+  COVERAGE = '/coverage/',
   ACCOUNT = '/account',
   PREMIUM_HISTORY = '/premium-history',
   HISTORY = '/history',
@@ -22,95 +23,104 @@ export enum RouteKey {
   SURRENDER = '/surrender',
   LOANS = '/loans',
   ALLOCATIONS = '/allocations',
-  POLICIES = '/policies',
+  ALL_COVERAGE = '/coverage',
 }
 
 export const routeMap: Index<RouteMap> = {
   [RouteKey.RIDERS]: {
-    destination: '/policies/[planCode]/[policyNumber]/riders',
+    destination: '/coverage/[productType]/[planCode]/[policyNumber]/riders',
     source: '/riders',
     title: 'Riders',
   },
   [RouteKey.PREMIUM]: {
-    destination: '/policies/[planCode]/[policyNumber]/premium',
+    destination: '/coverage/[productType]/[planCode]/[policyNumber]/premium',
     source: '/premium',
     title: 'Premium payments',
   },
   [RouteKey.PROFILE]: {
-    destination: '/policies/[planCode]/[policyNumber]/profile',
+    destination: '/coverage/[productType]/[planCode]/[policyNumber]/profile',
     source: '/profile',
     title: 'Policy Profile',
   },
   [RouteKey.DOCUMENTS]: {
-    destination: '/policies/[planCode]/[policyNumber]/documents',
+    destination: '/coverage/[productType]/[planCode]/[policyNumber]/documents',
     source: '/documents',
     title: 'Documents',
   },
   [RouteKey.COVERAGE]: {
-    destination: '/policies/[planCode]/[policyNumber]/coverage',
+    destination: '/coverage/[productType]/[planCode]/[policyNumber]/coverage',
     source: '/coverage',
     title: 'Coverage',
   },
   [RouteKey.ACCOUNT]: {
-    destination: '/policies/[planCode]/[policyNumber]/account',
+    destination: '/coverage/[productType]/[planCode]/[policyNumber]/account',
     source: '/account',
     title: 'Account value',
   },
   [RouteKey.PREMIUM_HISTORY]: {
-    destination: '/policies/[planCode]/[policyNumber]/premium/history',
+    destination:
+      '/coverage/[productType]/[planCode]/[policyNumber]/premium/history',
     source: '/history',
     title: 'Premium history',
   },
   [RouteKey.HISTORY]: {
-    destination: '/policies/[planCode]/[policyNumber]/premium/history',
+    destination:
+      '/coverage/[productType]/[planCode]/[policyNumber]/premium/history',
     source: '/premium/history',
     title: 'Premium history',
   },
   [RouteKey.PREMIUM_DETAILS]: {
-    destination: '/policies/[planCode]/[policyNumber]/premium/details',
+    destination:
+      '/coverage/[productType]/[planCode]/[policyNumber]/premium/details',
     source: '/premium-details',
     title: 'Payment details',
   },
   [RouteKey.DETAILS]: {
-    destination: '/policies/[planCode]/[policyNumber]/premium/details',
+    destination:
+      '/coverage/[productType]/[planCode]/[policyNumber]/premium/details',
     source: '/premium/details',
     title: 'Payment details',
   },
   [RouteKey.BENEFICIARIES]: {
-    destination: '/policies/[planCode]/[policyNumber]/beneficiaries',
+    destination:
+      '/coverage/[productType]/[planCode]/[policyNumber]/beneficiaries',
     source: '/beneficiaries',
     title: 'Beneficiaries',
   },
   [RouteKey.BENEFICIARY]: {
     destination:
-      '/policies/[planCode]/[policyNumber]/beneficiaries/[beneficiary]',
+      '/coverage/[productType]/[planCode]/[policyNumber]/beneficiaries/[beneficiary]',
     source: '/beneficiary',
     title: 'Beneficiary',
   },
   [RouteKey.WITHDRAWALS]: {
-    destination: '/policies/[planCode]/[policyNumber]/account/withdrawals',
+    destination:
+      '/coverage/[productType]/[planCode]/[policyNumber]/account/withdrawals',
     source: '/withdrawals',
     title: 'Withdrawals',
   },
   [RouteKey.SURRENDER]: {
-    destination: '/policies/[planCode]/[policyNumber]/account/surrender',
+    destination:
+      '/coverage/[productType]/[planCode]/[policyNumber]/account/surrender',
     source: '/surrender',
     title: 'Surrender Policy',
   },
   [RouteKey.LOANS]: {
-    destination: '/policies/[planCode]/[policyNumber]/account/loans',
+    destination:
+      '/coverage/[productType]/[planCode]/[policyNumber]/account/loans',
     source: '/loans',
     title: 'Loans',
   },
   [RouteKey.ALLOCATIONS]: {
-    destination: '/policies/[planCode]/[policyNumber]/account/allocations',
+    destination:
+      '/coverage/[productType]/[planCode]/[policyNumber]/account/allocations',
     source: '/allocations',
     title: 'Allocations',
   },
-  [RouteKey.POLICIES]: {
-    destination: '/policies',
-    source: '/policies',
-    title: 'My Policies',
+  [RouteKey.ALL_COVERAGE]: {
+    destination: '/coverage',
+    source: '/coverage',
+    title: 'My Coverage',
   },
 };
 

@@ -45,7 +45,8 @@ export const Coverage = async ({ planCode, policyNumber }: Props) => {
         </FieldData>
       ),
       linkTo: {
-        url: `/policies/${planCode}/${policyNumber}/riders`,
+        // TODO: annuities logic
+        url: `/coverage/policies/${planCode}/${policyNumber}/riders`,
         label: 'riders',
       },
     });
@@ -61,7 +62,8 @@ export const Coverage = async ({ planCode, policyNumber }: Props) => {
         </FieldData>
       ),
       linkTo: {
-        url: `/policies/${planCode}/${policyNumber}/beneficiaries`,
+        // TODO: annuities logic
+        url: `/coverage/policies/${planCode}/${policyNumber}/beneficiaries`,
         label: 'go to beneficiaries page',
       },
     });
@@ -75,12 +77,12 @@ export const Coverage = async ({ planCode, policyNumber }: Props) => {
     </p>
   );
 
-  // TODO: add conditions for policy statuses
   return (
     <ClickableCardContainer listItems={additionalItems}>
       <ClickableCardContainer.LinkContent
         linkTo={{
-          url: `/policies/${planCode}/${policyNumber}/coverage`,
+          // TODO: annuities logic
+          url: `/coverage/policies/${planCode}/${policyNumber}/coverage`,
           label: 'go to coverage page',
         }}
       >

@@ -1,0 +1,41 @@
+.allocationContainer {
+  width: 100%;
+  padding: var(--measure-dimension-padding-2xl, 1rem)
+    var(--measure-dimension-padding-none, 0);
+}
+
+.allocationHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--measure-dimension-gap-lg, 1rem);
+
+  > * {
+    margin-right: var(--measure-dimension-gap-md, 0.5rem);
+  }
+}
+
+.allocationItem {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+  padding: var(--measure-dimension-padding-2xl, 2rem)
+    var(--measure-dimension-padding-none, 0);
+}
+
+.allocationDetails {
+  display: flex;
+  align-items: center;
+  margin-right: var(--measure-dimension-gap-lg, 1rem);
+
+  :first-child {
+    margin-right: var(--measure-dimension-gap-sm, 0.25rem);
+  }
+}
+
+.colorBlock {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: var(--measure-dimension-radius-sm, 0.25rem);
+}

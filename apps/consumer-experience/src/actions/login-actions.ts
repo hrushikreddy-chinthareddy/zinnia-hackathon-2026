@@ -295,7 +295,7 @@ export async function verifyPasswordlessStartChallenge(
 
   await setLoginCookies(tokenData);
 
-  return redirect(`/policies?${FROM_LOGIN_QUERY_KEY}=true`);
+  return redirect(`/coverage?${FROM_LOGIN_QUERY_KEY}=true`);
 }
 /**
  * Async function to associate MFA with the provided form data.
