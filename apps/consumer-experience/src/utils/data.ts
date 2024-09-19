@@ -192,7 +192,7 @@ export const getRiderDescription = (code: string) => {
     case 'LAPSEPROTECTION':
       return 'If you are in compliance with all other policy terms and conditions, then this policy guarantees a death benefit for 20 years (even if the account value is insufficient to cover the monthly deductions) as long as the required minimum payments are paid. Please refer to your policy for more details.';
     default:
-      return DEFAULT_ERROR_STRING;
+      return null;
   }
 };
 
