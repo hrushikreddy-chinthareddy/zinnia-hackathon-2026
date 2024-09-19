@@ -7,6 +7,7 @@ import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPo
 import { PolicyStatusAlertBanner } from '@/components/policy-status-alert-banner/PolicyStatusAlertBanner';
 
 import styles from '@/app/(authenticated)/coverage/shared-styles/Layout.module.css';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
@@ -42,6 +43,7 @@ export default async function AuthenticatedLayout({
           className={styles.policyDetails}
           planCode={params.planCode}
           policyNumber={params.policyNumber}
+          lineOfBusiness={LineOfBusiness.ANNUITY}
         />
       </div>
       <div className="container">{children}</div>

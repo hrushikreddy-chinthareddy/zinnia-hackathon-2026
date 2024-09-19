@@ -1,4 +1,4 @@
-import { PolicyStatus } from '@zinnia/api-types/types/sor';
+import { LineOfBusiness, PolicyStatus } from '@zinnia/api-types/types/sor';
 import { Icon, IconType } from '@zinnia/bloom/components';
 import { toSentenceCase } from '@zinnia/utils';
 import { Metadata } from 'next';
@@ -14,6 +14,7 @@ import { LapsedPolicy } from '@/components/policy-overview/non-active-statuses/L
 import { SurrenderedPolicy } from '@/components/policy-overview/non-active-statuses/SurrenderedPolicy';
 import { UpcomingPremium } from '@/components/policy-overview/UpcomingPremium';
 import { getPolicyForHeaderDetails } from '@/services';
+import { LineOfBusinessPath } from '@/types';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
@@ -84,7 +85,7 @@ export default async function Page({
         <ClickableCardContainer>
           <ClickableCardContainer.LinkContent
             linkTo={{
-              url: `/coverage/policies/${planCode}/${policyNumber}/account`,
+              url: `/coverage/${LineOfBusinessPath.POLICIES}/${planCode}/${policyNumber}/account`,
               label: 'go to account value page',
             }}
           >
@@ -96,12 +97,16 @@ export default async function Page({
             />
           </ClickableCardContainer.LinkContent>
         </ClickableCardContainer>
-        <Coverage planCode={planCode} policyNumber={policyNumber} />
+        <Coverage
+          planCode={planCode}
+          policyNumber={policyNumber}
+          lineOfBusiness={LineOfBusiness.LIFE}
+        />
         <ClickableCardContainer>
           <ClickableCardContainer.LinkContent
             linkTo={{
-              url: `/coverage/policies/${planCode}/${policyNumber}/profile`,
-              label: 'go to policy profile',
+              url: `/coverage/${LineOfBusinessPath.POLICIES}/${planCode}/${policyNumber}/profile`,
+              label: 'go to owner profile',
             }}
           >
             <div className="flex-center">
@@ -110,7 +115,7 @@ export default async function Page({
                 color="var(--color-base-icon-icon-dark)"
               />
               <span className="typography-labels-field-label ml-md">
-                {toSentenceCase('policy profile')}
+                {toSentenceCase('owner profile')}
               </span>
             </div>
           </ClickableCardContainer.LinkContent>
@@ -118,7 +123,7 @@ export default async function Page({
         <ClickableCardContainer>
           <ClickableCardContainer.LinkContent
             linkTo={{
-              url: `/coverage/policies/${planCode}/${policyNumber}/documents`,
+              url: `/coverage/${LineOfBusinessPath.POLICIES}/${planCode}/${policyNumber}/documents`,
               label: 'go to policy documents',
             }}
           >

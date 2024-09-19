@@ -18,3 +18,8 @@ export interface AppUrl {
   port: string;
   href: string;
 }
+
+export enum LineOfBusinessPath {
+  ANNUITIES = 'annuities',
+  POLICIES = 'policies',
+}

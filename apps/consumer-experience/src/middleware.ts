@@ -193,7 +193,7 @@ export async function middleware(req: NextRequest) {
       const redirectUrl = getRedirectUrl(redirect, {
         planCode: policy?.planCode || '',
         policyNumber: policy?.policyNumber || '',
-        lineOfBusiness: lineOfBusinessUrlPath(policy),
+        lineOfBusiness: lineOfBusinessUrlPath(policy?.lineOfBusiness),
       });
 
       return NextResponse.redirect(new URL(redirectUrl, req.url));
@@ -212,7 +212,7 @@ export async function middleware(req: NextRequest) {
 
         return NextResponse.redirect(
           new URL(
-            `/coverage/${lineOfBusinessUrlPath(policy)}/${policy?.planCode}/${policy?.policyNumber}`,
+            `/coverage/${lineOfBusinessUrlPath(policy?.lineOfBusiness)}/${policy?.planCode}/${policy?.policyNumber}`,
             req.url
           )
         );

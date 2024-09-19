@@ -1,4 +1,4 @@
-import { PolicyStatus } from '@zinnia/api-types/types/sor';
+import { LineOfBusiness, PolicyStatus } from '@zinnia/api-types/types/sor';
 import { Icon, IconType } from '@zinnia/bloom/components';
 import { toSentenceCase } from '@zinnia/utils';
 import { Metadata } from 'next';
@@ -12,14 +12,14 @@ import { Coverage } from '@/components/policy-overview/Coverage';
 import { CanceledFreelook } from '@/components/policy-overview/non-active-statuses/CanceledFreelook';
 import { LapsedPolicy } from '@/components/policy-overview/non-active-statuses/LapsedPolicy';
 import { SurrenderedPolicy } from '@/components/policy-overview/non-active-statuses/SurrenderedPolicy';
-import { UpcomingPremium } from '@/components/policy-overview/UpcomingPremium';
 import { getPolicyForHeaderDetails } from '@/services';
+import { LineOfBusinessPath } from '@/types';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
   // Include the carrier name here because the template only works for the children
   // TODO: update carrier name when we solve dynamic carrier setting
-  title: 'Policy Overview - Everly',
+  title: 'Contract Overview - Everly',
 };
 
 export default async function Page({
@@ -73,18 +73,17 @@ export default async function Page({
       return (
         <>
           <CanceledFreelook />
-          <CallForAssistance customInstruction="with policy questions." />
+          <CallForAssistance customInstruction="with questions." />
         </>
       );
     }
 
     return (
       <div className="card-container">
-        <UpcomingPremium planCode={planCode} policyNumber={policyNumber} />
         <ClickableCardContainer>
           <ClickableCardContainer.LinkContent
             linkTo={{
-              url: `/coverage/${planCode}/${policyNumber}/account`,
+              url: `/coverage/${LineOfBusinessPath.ANNUITIES}/${planCode}/${policyNumber}/account`,
               label: 'go to account value page',
             }}
           >
@@ -96,12 +95,16 @@ export default async function Page({
             />
           </ClickableCardContainer.LinkContent>
         </ClickableCardContainer>
-        <Coverage planCode={planCode} policyNumber={policyNumber} />
+        <Coverage
+          planCode={planCode}
+          policyNumber={policyNumber}
+          lineOfBusiness={LineOfBusiness.ANNUITY}
+        />
         <ClickableCardContainer>
           <ClickableCardContainer.LinkContent
             linkTo={{
-              url: `/coverage/${planCode}/${policyNumber}/profile`,
-              label: 'go to policy profile',
+              url: `/coverage/${LineOfBusinessPath.ANNUITIES}/${planCode}/${policyNumber}/profile`,
+              label: 'go to owner profile',
             }}
           >
             <div className="flex-center">
@@ -110,7 +113,7 @@ export default async function Page({
                 color="var(--color-base-icon-icon-dark)"
               />
               <span className="typography-labels-field-label ml-md">
-                {toSentenceCase('policy profile')}
+                {toSentenceCase('owner profile')}
               </span>
             </div>
           </ClickableCardContainer.LinkContent>
@@ -118,7 +121,7 @@ export default async function Page({
         <ClickableCardContainer>
           <ClickableCardContainer.LinkContent
             linkTo={{
-              url: `/coverage/${planCode}/${policyNumber}/documents`,
+              url: `/coverage/${LineOfBusinessPath.ANNUITIES}/${planCode}/${policyNumber}/documents`,
               label: 'go to policy documents',
             }}
           >

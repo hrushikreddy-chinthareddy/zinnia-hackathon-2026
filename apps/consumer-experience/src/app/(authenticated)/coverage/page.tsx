@@ -55,7 +55,7 @@ export default async function Page() {
             <ClickableCardContainer.LinkContent
               linkTo={{
                 label: `Get details for Policy ${p.marketingName}`,
-                url: `/coverage/${lineOfBusinessUrlPath(p)}/${p.planCode}/${p.policyNumber}`,
+                url: `/coverage/${lineOfBusinessUrlPath(p?.lineOfBusiness)}/${p.planCode}/${p.policyNumber}`,
                 isInternal: true,
               }}
             >
