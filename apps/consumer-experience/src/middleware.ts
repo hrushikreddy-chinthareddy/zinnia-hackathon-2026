@@ -143,8 +143,7 @@ export async function middleware(req: NextRequest) {
     // if it is that means it is not the coverage index page (because it has more than '' and '/coverage' in the array)
     //
     if (
-      pathname.split('/')[2] &&
-      // req.nextUrl.pathname.includes('/coverage/') &&
+      req.nextUrl.pathname.includes('/coverage/') &&
       returnUrl &&
       redirectObj
     ) {
@@ -153,11 +152,11 @@ export async function middleware(req: NextRequest) {
       const urlParts = pathname.split('/');
       const planCode = urlParts[3] ?? '';
       const policyNumber = urlParts[4] ?? '';
-      const productType = urlParts[2] ?? '';
+      const lineOfBusiness = urlParts[2] ?? '';
       const url = getRedirectUrl(redirectObj, {
         planCode,
         policyNumber,
-        productType,
+        lineOfBusiness,
       });
       const resRedirect = NextResponse.redirect(new URL(url, req.url));
       await deleteCookie(RETURN_TO_URL_COOKIE_KEY, resRedirect);
@@ -194,7 +193,7 @@ export async function middleware(req: NextRequest) {
       const redirectUrl = getRedirectUrl(redirect, {
         planCode: policy?.planCode || '',
         policyNumber: policy?.policyNumber || '',
-        productType: lineOfBusinessUrlPath(policy),
+        lineOfBusiness: lineOfBusinessUrlPath(policy),
       });
 
       return NextResponse.redirect(new URL(redirectUrl, req.url));

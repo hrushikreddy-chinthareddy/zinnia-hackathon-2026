@@ -27,93 +27,94 @@ export enum RouteKey {
 
 export const routeMap: Index<RouteMap> = {
   [RouteKey.RIDERS]: {
-    destination: '/coverage/[productType]/[planCode]/[policyNumber]/riders',
+    destination: '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/riders',
     source: '/riders',
     title: 'Riders',
   },
   [RouteKey.PREMIUM]: {
-    destination: '/coverage/[productType]/[planCode]/[policyNumber]/premium',
+    destination: '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/premium',
     source: '/premium',
     title: 'Premium payments',
   },
   [RouteKey.PROFILE]: {
-    destination: '/coverage/[productType]/[planCode]/[policyNumber]/profile',
+    destination: '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/profile',
     source: '/profile',
     title: 'Policy Profile',
   },
   [RouteKey.DOCUMENTS]: {
-    destination: '/coverage/[productType]/[planCode]/[policyNumber]/documents',
+    destination:
+      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/documents',
     source: '/documents',
     title: 'Documents',
   },
   [RouteKey.MY_COVERAGE]: {
     destination:
-      '/coverage/[productType]/[planCode]/[policyNumber]/my-coverage',
+      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/my-coverage',
     source: '/my-coverage',
     title: 'Coverage',
   },
   [RouteKey.ACCOUNT]: {
-    destination: '/coverage/[productType]/[planCode]/[policyNumber]/account',
+    destination: '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/account',
     source: '/account',
     title: 'Account value',
   },
   [RouteKey.PREMIUM_HISTORY]: {
     destination:
-      '/coverage/[productType]/[planCode]/[policyNumber]/premium/history',
+      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/premium/history',
     source: '/history',
     title: 'Premium history',
   },
   [RouteKey.HISTORY]: {
     destination:
-      '/coverage/[productType]/[planCode]/[policyNumber]/premium/history',
+      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/premium/history',
     source: '/premium/history',
     title: 'Premium history',
   },
   [RouteKey.PREMIUM_DETAILS]: {
     destination:
-      '/coverage/[productType]/[planCode]/[policyNumber]/premium/details',
+      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/premium/details',
     source: '/premium-details',
     title: 'Payment details',
   },
   [RouteKey.DETAILS]: {
     destination:
-      '/coverage/[productType]/[planCode]/[policyNumber]/premium/details',
+      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/premium/details',
     source: '/premium/details',
     title: 'Payment details',
   },
   [RouteKey.BENEFICIARIES]: {
     destination:
-      '/coverage/[productType]/[planCode]/[policyNumber]/beneficiaries',
+      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/beneficiaries',
     source: '/beneficiaries',
     title: 'Beneficiaries',
   },
   [RouteKey.BENEFICIARY]: {
     destination:
-      '/coverage/[productType]/[planCode]/[policyNumber]/beneficiaries/[beneficiary]',
+      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/beneficiaries/[beneficiary]',
     source: '/beneficiary',
     title: 'Beneficiary',
   },
   [RouteKey.WITHDRAWALS]: {
     destination:
-      '/coverage/[productType]/[planCode]/[policyNumber]/account/withdrawals',
+      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/account/withdrawals',
     source: '/withdrawals',
     title: 'Withdrawals',
   },
   [RouteKey.SURRENDER]: {
     destination:
-      '/coverage/[productType]/[planCode]/[policyNumber]/account/surrender',
+      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/account/surrender',
     source: '/surrender',
     title: 'Surrender Policy',
   },
   [RouteKey.LOANS]: {
     destination:
-      '/coverage/[productType]/[planCode]/[policyNumber]/account/loans',
+      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/account/loans',
     source: '/loans',
     title: 'Loans',
   },
   [RouteKey.ALLOCATIONS]: {
     destination:
-      '/coverage/[productType]/[planCode]/[policyNumber]/account/allocations',
+      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/account/allocations',
     source: '/allocations',
     title: 'Allocations',
   },
