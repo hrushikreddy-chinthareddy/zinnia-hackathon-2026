@@ -17,7 +17,6 @@ import { FullName } from '@/components/pii/FullName';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getBeneficiaries } from '@/services/policy';
 import { Beneficiary } from '@/types/policy';
-import { formatUSDollars } from '@/utils/currency';
 
 import styles from '@/app/(authenticated)/coverage/shared-styles/Beneficiaries.module.css';
 
@@ -135,17 +134,6 @@ export default async function Beneficiaries({
 
   return (
     <div className="container">
-      <p className="typography-content-body-sm">
-        You’re covered for{' '}
-        <span style={{ fontWeight: 600 }}>
-          {formatUSDollars(data?.totalCoverageAmount)}
-        </span>
-        . That means if you die while your policy is active (and you're in
-        compliance with all policy requirements) your beneficiaries will receive
-        this amount, plus any additional account value and minus outstanding
-        loans, withdrawals or other interest calculations, if applicable.
-      </p>
-
       {!groupedBenes && (
         <ClickableCardContainer>
           Beneficiary data unavailable at this time. Please try again later.
