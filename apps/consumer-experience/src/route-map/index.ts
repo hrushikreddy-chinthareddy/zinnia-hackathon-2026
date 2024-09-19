@@ -10,8 +10,7 @@ export enum RouteKey {
   PREMIUM = '/premium',
   PROFILE = '/profile',
   DOCUMENTS = '/documents',
-  // TODO: we'll need a new name for this one
-  COVERAGE = '/coverage/',
+  COVERAGE = '/my-coverage',
   ACCOUNT = '/account',
   PREMIUM_HISTORY = '/premium-history',
   HISTORY = '/history',
@@ -49,7 +48,7 @@ export const routeMap: Index<RouteMap> = {
   },
   [RouteKey.COVERAGE]: {
     destination: '/coverage/[productType]/[planCode]/[policyNumber]/coverage',
-    source: '/coverage',
+    source: '/my-coverage',
     title: 'Coverage',
   },
   [RouteKey.ACCOUNT]: {

@@ -63,7 +63,7 @@ export const HeaderBreadcrumb = ({
   let previousPath: string;
 
   if (currentPath === params.policyNumber) {
-    previousPath = 'policies';
+    previousPath = 'coverage';
   } else {
     // we need to remove the first item which is an empty string
     // we remove the last item because we want to go back up one level
