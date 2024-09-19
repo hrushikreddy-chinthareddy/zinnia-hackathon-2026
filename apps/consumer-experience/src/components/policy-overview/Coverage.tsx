@@ -82,7 +82,7 @@ export const Coverage = async ({ planCode, policyNumber }: Props) => {
       <ClickableCardContainer.LinkContent
         linkTo={{
           // TODO: annuities logic
-          url: `/coverage/policies/${planCode}/${policyNumber}/coverage`,
+          url: `/coverage/policies/${planCode}/${policyNumber}/my-coverage`,
           label: 'go to coverage page',
         }}
       >

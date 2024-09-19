@@ -165,7 +165,7 @@ export async function middleware(req: NextRequest) {
     }
 
     // If the url is not the index page AND has a friendly url object
-    const redirect = pathname !== RouteKey.ALL_COVERAGE && routeMap[pathname];
+    const redirect = pathname !== RouteKey.COVERAGE && routeMap[pathname];
 
     // if we get here and we have a redirect we need to determine how many policies a user has
     // if they have multiple policies or some unknown error occurs we send them to the policies index page

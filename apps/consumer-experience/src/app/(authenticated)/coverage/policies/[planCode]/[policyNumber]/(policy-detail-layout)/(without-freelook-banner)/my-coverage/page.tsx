@@ -12,7 +12,7 @@ import { formatUSDollars } from '@/utils/currency';
 
 import styles from './coverage.module.css';
 
-const pageTitle = getPageTitle(RouteKey.COVERAGE);
+const pageTitle = getPageTitle(RouteKey.MY_COVERAGE);
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {

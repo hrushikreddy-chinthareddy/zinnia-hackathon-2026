@@ -10,7 +10,7 @@ export enum RouteKey {
   PREMIUM = '/premium',
   PROFILE = '/profile',
   DOCUMENTS = '/documents',
-  COVERAGE = '/my-coverage',
+  MY_COVERAGE = '/my-coverage',
   ACCOUNT = '/account',
   PREMIUM_HISTORY = '/premium-history',
   HISTORY = '/history',
@@ -22,7 +22,7 @@ export enum RouteKey {
   SURRENDER = '/surrender',
   LOANS = '/loans',
   ALLOCATIONS = '/allocations',
-  ALL_COVERAGE = '/coverage',
+  COVERAGE = '/coverage',
 }
 
 export const routeMap: Index<RouteMap> = {
@@ -46,8 +46,9 @@ export const routeMap: Index<RouteMap> = {
     source: '/documents',
     title: 'Documents',
   },
-  [RouteKey.COVERAGE]: {
-    destination: '/coverage/[productType]/[planCode]/[policyNumber]/coverage',
+  [RouteKey.MY_COVERAGE]: {
+    destination:
+      '/coverage/[productType]/[planCode]/[policyNumber]/my-coverage',
     source: '/my-coverage',
     title: 'Coverage',
   },
@@ -116,7 +117,7 @@ export const routeMap: Index<RouteMap> = {
     source: '/allocations',
     title: 'Allocations',
   },
-  [RouteKey.ALL_COVERAGE]: {
+  [RouteKey.COVERAGE]: {
     destination: '/coverage',
     source: '/coverage',
     title: 'My Coverage',
