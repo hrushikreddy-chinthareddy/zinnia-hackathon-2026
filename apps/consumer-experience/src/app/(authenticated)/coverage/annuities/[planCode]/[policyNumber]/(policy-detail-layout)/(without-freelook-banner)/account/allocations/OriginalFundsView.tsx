@@ -9,7 +9,7 @@ import { getPolicyFundDetails, getPolicyStatusDetails } from '@/services';
 import { formatUSDollars } from '@/utils/currency';
 import { convertKebabedDateString } from '@/utils/dates';
 
-import styles from './Funds.module.css';
+import styles from '@/app/(authenticated)/coverage/shared-styles/Funds.module.css';
 
 export const OriginalFundsView = async ({
   planCode,

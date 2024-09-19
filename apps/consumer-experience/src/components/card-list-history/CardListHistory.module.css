@@ -1,5 +1,4 @@
 .headerContainer {
-  margin-bottom: var(--measure-dimension-gap-md, 0.5rem);
   padding-left: var(--measure-dimension-padding-2xl, 1rem);
 }
 

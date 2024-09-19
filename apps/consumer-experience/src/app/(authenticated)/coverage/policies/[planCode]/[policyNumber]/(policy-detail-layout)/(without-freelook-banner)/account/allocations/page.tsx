@@ -11,7 +11,7 @@ import { getFeatureFlags } from '@/services/feature-flags';
 import { PolicyRequestInputs } from '@/types/policy';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
-import styles from './Funds.module.css';
+import styles from '@/app/(authenticated)/coverage/shared-styles/Funds.module.css';
 import { IULFundsView } from './IULFundsView';
 import { OriginalFundsView } from './OriginalFundsView';
 import { ULFundsView } from './ULFundsView';

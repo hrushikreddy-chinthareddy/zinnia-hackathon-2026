@@ -19,7 +19,7 @@ import { getBeneficiaries } from '@/services/policy';
 import { Beneficiary } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 
-import styles from './Beneficiaries.module.css';
+import styles from '@/app/(authenticated)/coverage/shared-styles/Beneficiaries.module.css';
 
 const pageTitle = getPageTitle(RouteKey.BENEFICIARIES);
 // disable because NextJS needs this to be exported from this file

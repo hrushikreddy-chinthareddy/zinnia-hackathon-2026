@@ -126,25 +126,6 @@ export default async function AccountValuePage({
           },
           {
             content: (
-              <div
-                className={clsx('stacked-items', {
-                  'py-lg': isNullEmptyOrUndefined(loanEligibility),
-                })}
-              >
-                <span className="typography-labels-label-md-alt">Loans</span>
-                <StatusIconText
-                  isEligible={loanEligibility && !isFreelook}
-                  className="typography-content-caption"
-                />
-              </div>
-            ),
-            linkTo: {
-              url: `/coverage/${planCode}/${policyNumber}/account/loans`,
-              label: 'go to loans page',
-            },
-          },
-          {
-            content: (
               <div className="stacked-items py-lg">
                 <span className="typography-labels-label-md-alt">
                   Surrender policy

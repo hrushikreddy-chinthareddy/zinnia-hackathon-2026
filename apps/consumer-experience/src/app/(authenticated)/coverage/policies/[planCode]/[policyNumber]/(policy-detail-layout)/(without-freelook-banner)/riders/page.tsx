@@ -7,7 +7,7 @@ import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable'
 import { getRiders } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
 
-import { Rider } from './Rider';
+import { Rider } from '@/components/rider/Rider';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {

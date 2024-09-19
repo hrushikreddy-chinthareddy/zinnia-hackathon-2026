@@ -9,7 +9,7 @@ import { getCorrespondenceDocuments } from '@/services/policy';
 import { ExtendedDocumentMeta } from '@/types/document';
 import { PolicyRequestInputs } from '@/types/policy';
 
-import documentStyles from './Documents.module.css';
+import documentStyles from '@/app/(authenticated)/coverage/shared-styles/Documents.module.css';
 
 const pageTitle = getPageTitle(RouteKey.DOCUMENTS);
 // disable because NextJS needs this to be exported from this file

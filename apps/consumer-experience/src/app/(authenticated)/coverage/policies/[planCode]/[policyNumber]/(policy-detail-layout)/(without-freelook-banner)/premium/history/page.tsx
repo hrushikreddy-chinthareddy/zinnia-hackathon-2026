@@ -17,8 +17,6 @@ import {
 import { sortByDate } from '@/utils/dates';
 import { toSentenceCase } from '@/utils/strings';
 
-import styles from './PaymentHistory.module.css';
-
 const pageTitle = getPageTitle(RouteKey.PREMIUM_HISTORY);
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
@@ -144,7 +142,7 @@ export default async function PaymentHistory({ params }: Props) {
       {pendingTransactions.length > 0 && (
         <CardListHistory>
           <CardListHistory.Header>
-            <h2 className={styles.sectionHeader}>Pending</h2>
+            <h2 className="typography-labels-label-sm">Pending</h2>
           </CardListHistory.Header>
           <CardListHistory.ListItems isPending>
             {pendingPayments()}
@@ -155,7 +153,7 @@ export default async function PaymentHistory({ params }: Props) {
       {completedTransactions.length > 0 && (
         <CardListHistory>
           <CardListHistory.Header>
-            <h2 className={styles.sectionHeader}>Completed</h2>
+            <h2 className="typography-labels-label-sm">Completed</h2>
           </CardListHistory.Header>
           <CardListHistory.ListItems>
             {completedPayments()}

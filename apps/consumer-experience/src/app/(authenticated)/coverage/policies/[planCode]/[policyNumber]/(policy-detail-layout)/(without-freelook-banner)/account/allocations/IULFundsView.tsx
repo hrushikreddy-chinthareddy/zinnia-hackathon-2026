@@ -16,7 +16,7 @@ import { QueryKeys } from '@/queries/query-keys';
 import { PolicyStatusDetail } from '@/types/policy';
 import { convertKebabedDateString } from '@/utils/dates';
 
-import styles from './Funds.module.css';
+import styles from '@/app/(authenticated)/coverage/shared-styles/Funds.module.css';
 
 export const IULFundsView = ({
   planCode,

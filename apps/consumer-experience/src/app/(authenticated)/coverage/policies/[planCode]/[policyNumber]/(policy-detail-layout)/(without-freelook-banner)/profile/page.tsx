@@ -20,8 +20,6 @@ import { PolicyRequestInputs } from '@/types/policy';
 import { filterItemsWithPastEndDate } from '@/utils/data';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
-import styles from './Profile.module.css';
-
 const pageTitle = getPageTitle(RouteKey.PROFILE);
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
@@ -47,14 +45,12 @@ export default async function Profile({ params }: Props) {
 
   if (error) {
     return (
-      <div className={styles.pageContainer}>
-        <div className="space-mb-gap-lg">
-          <MockMessage />
-          <NoDataAvailable
-            iconType={IconType.CIRCLE_USER}
-            message="There is currently no profile data available."
-          />
-        </div>
+      <div className="space-mb-gap-lg">
+        <MockMessage />
+        <NoDataAvailable
+          iconType={IconType.CIRCLE_USER}
+          message="There is currently no profile data available."
+        />
       </div>
     );
   }
