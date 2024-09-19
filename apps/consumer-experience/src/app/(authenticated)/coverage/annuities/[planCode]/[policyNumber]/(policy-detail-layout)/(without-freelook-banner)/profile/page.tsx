@@ -117,7 +117,7 @@ export default async function Profile({ params }: Props) {
       <div className="info-card-container">
         <div>
           <h2 className="mb-lg">Name</h2>
-          <FieldData Label={<Label>Owner</Label>}>
+          <FieldData Label={<Label>Annuitant</Label>}>
             <p className="typography-content-body-sm">
               <FullName
                 firstName={profileData?.name?.firstName}
