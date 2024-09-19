@@ -15,7 +15,7 @@ import { CarrierId } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 
 import styles from './policies.module.css';
-import { productUrlPath } from '@/utils/data';
+import { lineOfBusinessUrlPath } from '@/utils/data';
 
 const pageTitle = getPageTitle(RouteKey.ALL_COVERAGE);
 // disable because NextJS needs this to be exported from this file
@@ -56,7 +56,7 @@ export default async function Page() {
               linkTo={{
                 label: `Get details for Policy ${p.marketingName}`,
                 // TODO: need to add policy vs annuity here
-                url: `/coverage/${productUrlPath(p)}/${p.planCode}/${p.policyNumber}`,
+                url: `/coverage/${lineOfBusinessUrlPath(p)}/${p.planCode}/${p.policyNumber}`,
                 isInternal: true,
               }}
             >

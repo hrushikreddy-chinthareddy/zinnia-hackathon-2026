@@ -34,7 +34,7 @@ import {
   touchSession,
 } from './utils/auth';
 import { CarrierId } from './types/policy';
-import { productUrlPath } from './utils/data';
+import { lineOfBusinessUrlPath } from './utils/data';
 
 /**
  * NextJS doesn't foward the headers to react server components.
@@ -194,7 +194,7 @@ export async function middleware(req: NextRequest) {
       const redirectUrl = getRedirectUrl(redirect, {
         planCode: policy?.planCode || '',
         policyNumber: policy?.policyNumber || '',
-        productType: productUrlPath(policy),
+        productType: lineOfBusinessUrlPath(policy),
       });
 
       return NextResponse.redirect(new URL(redirectUrl, req.url));
@@ -213,7 +213,7 @@ export async function middleware(req: NextRequest) {
 
         return NextResponse.redirect(
           new URL(
-            `/coverage/${productUrlPath(policy)}/${policy?.planCode}/${policy?.policyNumber}`,
+            `/coverage/${lineOfBusinessUrlPath(policy)}/${policy?.planCode}/${policy?.policyNumber}`,
             req.url
           )
         );

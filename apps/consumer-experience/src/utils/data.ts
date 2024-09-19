@@ -334,7 +334,7 @@ export const isAnnuity = (policy?: CarrierPolicyDetails) => {
   );
 };
 
-export const productUrlPath = (policy?: CarrierPolicyDetails) => {
+export const lineOfBusinessUrlPath = (policy?: CarrierPolicyDetails) => {
   if (isAnnuity(policy)) {
     return 'annuities';
   }
