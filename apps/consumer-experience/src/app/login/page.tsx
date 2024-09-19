@@ -5,7 +5,7 @@ export default function LoginPage() {
   return (
     <GenericInfoPage
       title="What’s your email?"
-      description="Enter the email associated with your policy, and we’ll send you a verification code."
+      description="Enter the email associated with your policy or contract, and we'll send you a verification code."
       action={<EnterEmailStep />}
     />
   );

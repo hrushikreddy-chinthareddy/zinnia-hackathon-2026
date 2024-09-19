@@ -15,7 +15,7 @@ export default async function WelcomePage() {
   return (
     <GenericInfoPage
       title="Welcome!"
-      description="Access your policies in the policy portal—no password needed."
+      description="Access your coverage in the portal—no password needed."
       action={
         <Link
           href="/login"
