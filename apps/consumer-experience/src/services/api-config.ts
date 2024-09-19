@@ -2,7 +2,10 @@ import { cookies } from 'next/headers';
 
 import { ApiEndpoints } from '@/components/dev-menu/types';
 import { isMockAllowed } from '@/utils';
-import { SHOW_TEST_POLICIES_COOKIE_KEY } from '@/utils/serverClientUtils';
+import {
+  MOCK_ANNUITY_COOKIE_KEY,
+  SHOW_TEST_POLICIES_COOKIE_KEY,
+} from '@/utils/serverClientUtils';
 
 export const apiVersion = 'v1';
 export const AUDIENCE = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -114,4 +117,11 @@ export const isMockRidersRequestEnabled = () => {
   }
 
   return getMockParam()?.includes('riders') || isMockAllRequestEnabled();
+};
+
+export const isTestAnnuitiesEnabled = () => {
+  if (!isMockAllowed()) {
+    return false;
+  }
+  return cookies().get(MOCK_ANNUITY_COOKIE_KEY)?.value === 'on';
 };

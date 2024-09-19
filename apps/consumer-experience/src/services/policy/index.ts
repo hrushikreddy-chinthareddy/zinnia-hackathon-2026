@@ -22,6 +22,7 @@ import {
   isMockPolicyOverviewRequestEnabled,
   isMockRidersRequestEnabled,
   isMockSearchRequestEnabled,
+  isTestAnnuitiesEnabled,
   isTestPoliciesEnabled,
   policyApiBaseUrl,
 } from '@/services';
@@ -75,6 +76,7 @@ import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { logError, logTrace, logWarn } from '@/utils/logging/server-logging';
 
 import { getDocuments } from '../document';
+import { mockAnnuityResponse } from '../mocks/annuity';
 import { mockDocumentsResponse } from '../mocks/documents';
 import { MockMetricsResponse } from '../mocks/metrics';
 import {
@@ -263,9 +265,10 @@ export const getMyPoliciesByCarrier = async (
   logTrace('called getMyPoliciesByCarrier', { carrierId });
 
   if (isMockSearchRequestEnabled()) {
-    const transformedResults = transformPolicyReferenceData([
-      mockPolicyResponse,
-    ]);
+    const product = isTestAnnuitiesEnabled()
+      ? mockAnnuityResponse
+      : mockPolicyResponse;
+    const transformedResults = transformPolicyReferenceData([product]);
 
     return {
       data: transformedResults,
@@ -347,8 +350,10 @@ export const getPolicyAccountValue = async (
   });
 
   if (isMockPolicyOverviewRequestEnabled()) {
-    const transformedResults =
-      transformPolicyForAccountValue(mockPolicyResponse);
+    const product = isTestAnnuitiesEnabled()
+      ? mockAnnuityResponse
+      : mockPolicyResponse;
+    const transformedResults = transformPolicyForAccountValue(product);
 
     return {
       data: transformedResults,
@@ -486,8 +491,10 @@ export const getPolicyForHeaderDetails = async (
   });
 
   if (isMockPolicyOverviewRequestEnabled()) {
-    const transformedResults =
-      transformPolicyForHeaderDetails(mockPolicyResponse);
+    const product = isTestAnnuitiesEnabled()
+      ? mockAnnuityResponse
+      : mockPolicyResponse;
+    const transformedResults = transformPolicyForHeaderDetails(product);
 
     return {
       data: transformedResults,
@@ -525,7 +532,10 @@ export const getPolicyProfileData = async (
   });
 
   if (isMockPolicyOverviewRequestEnabled()) {
-    const transformedResults = transformPolicyForProfile(mockPolicyResponse);
+    const product = isTestAnnuitiesEnabled()
+      ? mockAnnuityResponse
+      : mockPolicyResponse;
+    const transformedResults = transformPolicyForProfile(product);
 
     return {
       data: transformedResults,
@@ -563,8 +573,10 @@ export const getUpcomingPremium = async (
   });
 
   if (isMockPolicyOverviewRequestEnabled()) {
-    const transformedResults =
-      transformPolicyForUpcomingPremium(mockPolicyResponse);
+    const product = isTestAnnuitiesEnabled()
+      ? mockAnnuityResponse
+      : mockPolicyResponse;
+    const transformedResults = transformPolicyForUpcomingPremium(product);
 
     return {
       data: transformedResults,
@@ -602,7 +614,10 @@ export const getCoverage = async (
   });
 
   if (isMockPolicyOverviewRequestEnabled()) {
-    const transformedResults = transformPolicyForCoverage(mockPolicyResponse);
+    const product = isTestAnnuitiesEnabled()
+      ? mockAnnuityResponse
+      : mockPolicyResponse;
+    const transformedResults = transformPolicyForCoverage(product);
 
     return {
       data: transformedResults,
@@ -640,8 +655,10 @@ export const getBeneficiaries = async (
   });
 
   if (isMockPolicyOverviewRequestEnabled()) {
-    const transformedResults =
-      transformPolicyForBeneficiaries(mockPolicyResponse);
+    const product = isTestAnnuitiesEnabled()
+      ? mockAnnuityResponse
+      : mockPolicyResponse;
+    const transformedResults = transformPolicyForBeneficiaries(product);
 
     return {
       data: transformedResults,
@@ -724,8 +741,10 @@ export const getPaymentDetails = async (
   });
 
   if (isMockPolicyOverviewRequestEnabled()) {
-    const transformedResults =
-      transformPolicyforPaymentDetails(mockPolicyResponse);
+    const product = isTestAnnuitiesEnabled()
+      ? mockAnnuityResponse
+      : mockPolicyResponse;
+    const transformedResults = transformPolicyforPaymentDetails(product);
 
     return {
       data: transformedResults,
@@ -772,13 +791,16 @@ export const getPaymentHistory = async ({
   ).map(String);
 
   if (isMockPaymentHistoryRequestEnabled()) {
+    const product = isTestAnnuitiesEnabled()
+      ? mockAnnuityResponse
+      : mockPolicyResponse;
     return {
       data: {
         completedTransactions: mockCompletedTransactions.map(t =>
-          transformPaymentHistory(mockPolicyResponse, t)
+          transformPaymentHistory(product, t)
         ),
         pendingTransactions: mockPendingTransactions.map(t =>
-          transformPaymentHistory(mockPolicyResponse, t)
+          transformPaymentHistory(product, t)
         ),
       },
       error: null,
@@ -906,8 +928,10 @@ export const getPolicyFundDetails = async (
   });
 
   if (isMockPolicyOverviewRequestEnabled()) {
-    const transformedResults =
-      transformPolicyForFundDetails(mockPolicyResponse);
+    const product = isTestAnnuitiesEnabled()
+      ? mockAnnuityResponse
+      : mockPolicyResponse;
+    const transformedResults = transformPolicyForFundDetails(product);
 
     return {
       data: transformedResults,
@@ -959,7 +983,10 @@ export const getPolicySurrenderDetails = async (
   });
 
   if (isMockPolicyOverviewRequestEnabled()) {
-    const transformedResults = transformPolicyForSurrender(mockPolicyResponse);
+    const product = isTestAnnuitiesEnabled()
+      ? mockAnnuityResponse
+      : mockPolicyResponse;
+    const transformedResults = transformPolicyForSurrender(product);
 
     return {
       data: transformedResults,
@@ -998,8 +1025,10 @@ export const getPolicyWithdrawalDetails = async (
   });
 
   if (isMockPolicyOverviewRequestEnabled()) {
-    const transformedResults =
-      transformPolicyForWithdrawals(mockPolicyResponse);
+    const product = isTestAnnuitiesEnabled()
+      ? mockAnnuityResponse
+      : mockPolicyResponse;
+    const transformedResults = transformPolicyForWithdrawals(product);
 
     return {
       data: transformedResults,
@@ -1039,7 +1068,10 @@ export const getPolicyLoanDetails = async (
   });
 
   if (isMockPolicyOverviewRequestEnabled()) {
-    const transformedResults = transformPolicyForLoans(mockPolicyResponse);
+    const product = isTestAnnuitiesEnabled()
+      ? mockAnnuityResponse
+      : mockPolicyResponse;
+    const transformedResults = transformPolicyForLoans(product);
 
     return {
       data: transformedResults,
@@ -1078,7 +1110,10 @@ export const getRiders = async (
   });
 
   if (isMockRidersRequestEnabled()) {
-    const transformedResults = transformRiders(mockPolicyResponse);
+    const product = isTestAnnuitiesEnabled()
+      ? mockAnnuityResponse
+      : mockPolicyResponse;
+    const transformedResults = transformRiders(product);
 
     return {
       data: transformedResults,
@@ -1116,7 +1151,10 @@ export const getPolicyStatusDetails = async (
   });
 
   if (isMockPolicyOverviewRequestEnabled()) {
-    const transformedResults = transformPolicyStatusDetails(mockPolicyResponse);
+    const product = isTestAnnuitiesEnabled()
+      ? mockAnnuityResponse
+      : mockPolicyResponse;
+    const transformedResults = transformPolicyStatusDetails(product);
     return {
       data: transformedResults,
       error: null,

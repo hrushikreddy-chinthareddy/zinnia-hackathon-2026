@@ -8,6 +8,7 @@ import { MouseEvent, useEffect, useMemo, useState } from 'react';
 import useMock from '@/hooks/use-mock';
 import { isMockAllowed } from '@/utils';
 import {
+  MOCK_ANNUITY_COOKIE_KEY,
   MOCK_ERROR_COOKIE_KEY,
   SHOW_TEST_POLICIES_COOKIE_KEY,
 } from '@/utils/serverClientUtils';
@@ -20,8 +21,16 @@ export const DevMenu = () => {
   const [open, setOpen] = useState(false);
   const [apiErrorSet, setApiErrorSet] = useState<string[] | null>(null);
   const [testPoliciesOn, setTestPoliciesOn] = useState(false);
+  const [isAnnuityOn, setIsAnnuityOn] = useState(false);
 
-  const { mockText, showDevMenu, setMock, removeDevMenu, isMockOn } = useMock();
+  const {
+    mockText,
+    showDevMenu,
+    setMock,
+    setAnnuityProducts,
+    removeDevMenu,
+    isMockOn,
+  } = useMock();
 
   const devMenuActive = useMemo(() => {
     return !!Cookies.get(MOCK_ERROR_COOKIE_KEY) || isMockOn;
@@ -35,6 +44,10 @@ export const DevMenu = () => {
 
     if (Cookies.get(SHOW_TEST_POLICIES_COOKIE_KEY) === 'on') {
       setTestPoliciesOn(true);
+    }
+
+    if (Cookies.get(MOCK_ANNUITY_COOKIE_KEY) === 'on') {
+      setIsAnnuityOn(true);
     }
   }, []);
 
@@ -123,7 +136,53 @@ export const DevMenu = () => {
                   </span>
                   <span>{mockText}</span>
                 </a>
+                {isMockOn && (
+                  <div>
+                    <div className={styles.radioItem}>
+                      <input
+                        type="radio"
+                        id="policies"
+                        name="mocks"
+                        value="policy"
+                        className={styles.radioInput}
+                        checked={isMockOn && !isAnnuityOn}
+                        onChange={() => {
+                          setIsAnnuityOn(false);
+                          setAnnuityProducts(false);
+                        }}
+                      />
+                      <label
+                        className={`${styles.navItem} typography-nav-nav-drawer`}
+                        htmlFor="policies"
+                      >
+                        Mock Policy
+                      </label>
+                    </div>
+
+                    <div className={styles.radioItem}>
+                      <input
+                        type="radio"
+                        id="annuities"
+                        name="mocks"
+                        value="annuity"
+                        className={styles.radioInput}
+                        checked={isMockOn && isAnnuityOn}
+                        onChange={() => {
+                          setIsAnnuityOn(true);
+                          setAnnuityProducts(true);
+                        }}
+                      />
+                      <label
+                        className={`${styles.navItem} typography-nav-nav-drawer`}
+                        htmlFor="annuities"
+                      >
+                        Mock Annuity
+                      </label>
+                    </div>
+                  </div>
+                )}
               </li>
+
               <li
                 className="typography-nav-nav-drawer"
                 style={{ color: 'white' }}
