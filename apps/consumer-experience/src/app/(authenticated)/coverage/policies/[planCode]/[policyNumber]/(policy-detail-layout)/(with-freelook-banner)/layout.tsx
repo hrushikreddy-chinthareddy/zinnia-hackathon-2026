@@ -6,7 +6,7 @@ import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrum
 import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
 import { PolicyStatusAlertBanner } from '@/components/policy-status-alert-banner/PolicyStatusAlertBanner';
 
-import styles from '@/app/(authenticated)/coverage/shared-styles/policyLayout.module.css';
+import styles from '@/app/(authenticated)/coverage/shared-styles/Layout.module.css';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
