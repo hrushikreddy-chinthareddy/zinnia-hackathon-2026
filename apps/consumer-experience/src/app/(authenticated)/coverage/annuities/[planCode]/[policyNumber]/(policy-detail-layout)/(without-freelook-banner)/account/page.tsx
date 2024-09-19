@@ -93,6 +93,17 @@ export default async function AccountValuePage({
           {
             content: (
               <div className="stacked-items py-lg">
+                <span className="typography-labels-label-md-alt">Premiums</span>
+              </div>
+            ),
+            linkTo: {
+              url: '#',
+              label: 'go to premiums page',
+            },
+          },
+          {
+            content: (
+              <div className="stacked-items py-lg">
                 <span className="typography-labels-label-md-alt">
                   Allocations
                 </span>
@@ -128,13 +139,13 @@ export default async function AccountValuePage({
             content: (
               <div className="stacked-items py-lg">
                 <span className="typography-labels-label-md-alt">
-                  Surrender policy
+                  Surrender contract
                 </span>
               </div>
             ),
             linkTo: {
               url: `/coverage/${planCode}/${policyNumber}/account/surrender`,
-              label: 'go to surrender policy page',
+              label: 'go to surrender contract page',
             },
           },
         ]}
