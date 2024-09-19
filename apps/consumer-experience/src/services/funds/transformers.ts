@@ -34,31 +34,53 @@ export const combineFundData = ({
       },
     };
   }
-  const funds = Object.keys(productsDetails.funds).map(fundId => {
-    const fundInfo = fundDetails.find(fund => fund?.fundId === fundId);
-    const policyFund = policyFunds?.find(fund => fund.fundId === fundId);
 
-    const sweepDay = productsDetails?.funds?.[fundId]?.sweepDay;
+  // Merges the product details, the policy funds, and the fund info arrays and combine the data in both.
+  // Combines data if the ID exists in both arrays
+  const productIds = Object.keys(productsDetails.funds) || [];
+  const map = new Map<string, Fund>();
 
-    const fund: Fund = {
-      fundId: fundId,
-      fundName: fundInfo?.fundAccountName,
-      totalFundValue: policyFund?.totalFundValue,
-      fundSegments: policyFund?.fundSegments,
-      fundAccountType: fundInfo?.fundAccountType,
-      allocationPercentage: policyFund?.allocationPercentage,
-      interestRate: findPropertyValue<FundDetails | undefined | null, number>(
-        fundInfo,
-        'interestRate'
+  // Loop over all products to gather info on any fund products associated with the carrier
+  productIds.forEach(fundId => {
+    map.set(fundId, {
+      ...productsDetails?.funds?.[fundId],
+      sweepDate: getNextOccurrenceOfDay(
+        productsDetails?.funds?.[fundId]?.sweepDay
       ),
-      isElected: !!policyFund?.allocationPercentage,
-      sweepDate: getNextOccurrenceOfDay(sweepDay),
-    };
-    return fund;
+    });
   });
 
+  //Loop over the funds and make sure to set total fund value
+  policyFunds.forEach(
+    item =>
+      item &&
+      item.fundId &&
+      map.set(item.fundId, {
+        ...map.get(item.fundId), //get the previous mapped value if it exists and spread the object out
+        ...item,
+        isElected: !!item?.allocationPercentage,
+        fundAccountType: undefined,
+      })
+  );
+
+  //Loop over allocations and make sure to set percentage
+  fundDetails.forEach(
+    item =>
+      item &&
+      item.fundId &&
+      map.set(item.fundId, {
+        ...map.get(item.fundId), //get the previous mapped value if it exists and spread the object out
+        ...item,
+        fundName: item?.fundAccountName,
+        interestRate: findPropertyValue<FundDetails | undefined | null, number>(
+          item,
+          'interestRate'
+        ),
+      })
+  );
+
   return {
-    data: funds,
+    data: Array.from(map.values()),
     error: null,
   };
 };
