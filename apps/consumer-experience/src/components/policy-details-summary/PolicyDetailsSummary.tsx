@@ -57,7 +57,7 @@ export const PolicyDetailsSummary = ({
             <FullName firstName={firstName} lastName={lastName} />
           </p>
           <p className="typography-labels-label-md-alt">
-            Policy status:{' '}
+            Status:{' '}
             <span className={statusStyle()}>
               {checkIfNull(
                 toSentenceCase(policyStatusDisplayText[policyStatus])
