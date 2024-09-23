@@ -18,7 +18,7 @@ export default async function NotFound() {
   const session = await getSession();
   const isAuthenticated = !!session;
   const route = isAuthenticated ? ROOT_URL_PATH : '/';
-  const text = isAuthenticated ? 'Back to Policy Overview' : 'Back to home';
+  const text = isAuthenticated ? 'Back to Overview' : 'Back to home';
   return (
     <GenericInfoPage
       title={
