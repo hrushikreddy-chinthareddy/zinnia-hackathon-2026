@@ -21,6 +21,7 @@ import { getMyPoliciesByCarrier } from './services';
 import { consumerExperienceAPIBaseUrl } from './services/api-config';
 import { ServerApi } from './services/server-http';
 import { TermsAndConditionApiResponse } from './types/auth';
+import { CarrierId } from './types/policy';
 import {
   deleteCookie,
   deleteSession,
@@ -33,8 +34,8 @@ import {
   setTermsAndConditionsCookie,
   touchSession,
 } from './utils/auth';
-import { CarrierId } from './types/policy';
 import { lineOfBusinessUrlPath } from './utils/data';
+import { applyThemeCookies } from './utils/theme';
 
 /**
  * NextJS doesn't foward the headers to react server components.
@@ -99,6 +100,8 @@ export async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
   const isLoginLikeOrRoot = pathname.includes('/login') || pathname === '/';
   const isSessionPage = pathname === '/session';
+
+  applyThemeCookies(req, resNext);
 
   if (session) {
     const searchParmas = req.nextUrl.searchParams;
@@ -227,6 +230,7 @@ export async function middleware(req: NextRequest) {
   if (req.cookies.has(HAD_PREVIOUS_SESSION_COOKIE_KEY) && isSessionPage) {
     await deleteCookie(HAD_PREVIOUS_SESSION_COOKIE_KEY, resNext);
     await deleteSession(resNext);
+
     return resNext;
   }
 

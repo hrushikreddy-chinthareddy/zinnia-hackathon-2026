@@ -1,0 +1,266 @@
+:root,
+.root,
+#root,
+#docs-root {
+  --color-button-primary-button-primary-default-fill: var(
+    --color-primary-color-primary
+  );
+  --color-button-primary-button-primary-border: var(
+    --color-primary-color-primary
+  );
+  --color-button-primary-button-primary-default-text: var(
+    --color-grayscale-color-white
+  );
+  --color-button-primary-button-primary-hover-fill: var(
+    --color-primary-color-primary-lighter
+  );
+  --color-button-primary-button-primary-hover-border: var(
+    --color-primary-color-primary-lighter
+  );
+  --color-button-secondary-button-secondary-hover-text: var(
+    --color-grayscale-color-900-gray
+  );
+  --color-button-primary-button-primary-pressed-fill: var(
+    --color-primary-color-primary-light
+  );
+  --color-button-primary-button-primary-pressed-border: var(
+    --color-primary-color-primary-light
+  );
+  --color-button-primary-button-primary-pressed-text: var(
+    --color-grayscale-color-white
+  );
+  --color-button-primary-button-primary-selected-fill: var(
+    --color-primary-color-primary-light
+  );
+  --color-button-primary-button-primary-selected-border: var(
+    --color-primary-color-primary-light
+  );
+  --color-button-primary-button-primary-selected-text: var(
+    --color-grayscale-color-900-gray
+  );
+
+  --color-button-secondary-button-secondary-selected-text: var(
+    --color-grayscale-color-900-gray
+  );
+  --color-button-secondary-button-secondary-selected-border: var(
+    --color-primary-color-primary
+  );
+  --color-button-secondary-button-secondary-selected-fill: var(
+    --color-primary-color-primary-light
+  );
+  --color-button-secondary-button-secondary-pressed-border: var(
+    --color-primary-color-primary
+  );
+  --color-button-secondary-button-secondary-pressed-fill: var(
+    --color-primary-color-primary-lighter
+  );
+  --color-button-secondary-button-secondary-hover-border: var(
+    --color-primary-color-primary
+  );
+  --color-button-secondary-button-secondary-hover-fill: var(
+    --color-primary-color-primary-lightest
+  );
+  --color-button-secondary-button-secondary-default-border: var(
+    --color-primary-color-primary
+  );
+
+  --color-pagination-pagination-default-border: var(
+    --color-primary-color-primary
+  );
+  --color-pagination-pagination-default-indicator: var(
+    --color-primary-color-primary
+  );
+  --color-pagination-pagination-hover-fill: var(
+    --color-primary-color-primary-lightest
+  );
+  --color-pagination-pagination-hover-indicator-fill: var(
+    --color-primary-color-primary
+  );
+  --color-pagination-pagination-selected-border: var(
+    --color-primary-color-primary
+  );
+  --color-pagination-pagination-selected-fill: var(
+    --color-primary-color-primary-lightest
+  );
+  --color-pagination-pagination-selected-indicator-fill: var(
+    --color-primary-color-primary
+  );
+
+  --color-button-group-button-group-item-selected-border: var(
+    --color-primary-color-primary
+  );
+  --color-button-group-button-group-item-selected-fill: var(
+    --color-primary-color-primary-lighter
+  );
+  --color-button-group-button-group-item-hover-border: var(
+    --color-primary-color-primary
+  );
+  --color-button-group-button-group-item-hover-fill: var(
+    --color-primary-color-primary-lightest
+  );
+
+  --color-chip-chip-hover-fill: var(--color-primary-color-primary-lightest);
+  --color-chip-chip-hover-border: var(--color-primary-color-primary);
+  --color-chip-chip-selected-fill: var(--color-primary-color-primary-lightest);
+  --color-chip-chip-selected-border: var(--color-primary-color-primary);
+
+  --color-toggle-default-toggle-selected-fill: var(
+    --color-primary-color-primary
+  );
+  --color-toggle-default-toggle-selected-inactive-fill: var(
+    --color-primary-color-primary-lightest
+  );
+
+  --color-toggle-default-toggle-contrast-selected-fill: var(
+    --color-primary-color-primary
+  );
+  --color-toggle-default-toggle-contrast-selected-inactive-indicator: var(
+    --color-primary-color-primary-light
+  );
+  --color-toggle-default-toggle-contrast-selected-inactive-icon: var(
+    --color-primary-color-primary-light
+  );
+
+  --color-element-radio-checkbox-default-element-indicator-selected-fill: var(
+    --color-primary-color-primary
+  );
+  --color-element-radio-checkbox-default-element-indicator-selected-inactive-fill: var(
+    --color-primary-color-primary-lightest
+  );
+  --color-element-radio-checkbox-default-element-hover-border: var(
+    --color-accent-color-accent-one
+  );
+  --color-element-radio-checkbox-default-element-selected-border: var(
+    --color-primary-color-primary
+  );
+  --color-element-radio-checkbox-default-element-selected-inactive-border: var(
+    --color-secondary-color-secondary-lightest
+  );
+
+  --color-element-radio-checkbox-contrast-element-contrast-indicator-selected-fill: var(
+    --color-primary-color-primary
+  );
+  --color-element-radio-checkbox-contrast-element-contrast-selected-inactive-border: var(
+    --color-primary-color-primary-dark
+  );
+  --color-element-radio-checkbox-contrast-element-contrast-hover-border: var(
+    --color-accent-color-accent-one
+  );
+  --color-element-radio-checkbox-contrast-element-contrast-selected-border: var(
+    --color-primary-color-primary
+  );
+  --color-element-radio-checkbox-contrast-element-contrast-border-selected-inactive: var(
+    --color-primary-color-primary-dark
+  );
+
+  --color-base-border-border-primary-color: var(--color-primary-color-primary);
+  --color-base-border-border-secondary-color: var(
+    --color-secondary-color-secondary
+  );
+
+  --color-base-text-text-link: var(--color-primary-color-primary-light);
+  --color-base-text-text-link-contrast: var(
+    --color-primary-color-primary-light
+  );
+  --color-base-icon-icon-action: var(--color-secondary-color-primary-light);
+  --color-base-icon-icon-tooltip: var(--color-accent-color-accent-one);
+  --color-base-icon-icon-header: var(--color-accent-color-accent-one);
+
+  --color-states-hover-hover-border: var(--color-accent-color-accent-one);
+  --color-states-selected-selected-primary-border: var(
+    --color-primary-color-primary
+  );
+  --color-states-hover-hover-fill: var(--color-primary-color-primary-lighter);
+  --color-states-hover-hover-fill-alt: var(
+    --color-primary-color-primary-lightest
+  );
+  --color-states-hover-hover-secondary-border: var(
+    --color-secondary-color-secondary-dark
+  );
+  --color-states-hover-hover-secondary-contrast-border: var(
+    --color-secondary-color-secondary-lighter
+  );
+  --color-states-hover-hover-text-link: var(--color-primary-color-primary);
+  --color-states-hover-hover-contrast-text-link: var(
+    --color-primary-color-primary-lighter
+  );
+  --color-states-hover-hover-contrast-text-link: var(
+    --color-primry-color-primry-lighter
+  );
+  --color-states-hover-hover-icon-action: var(
+    --color-primary-color-primary-dark
+  );
+
+  --color-states-selected-selected-primary-border: var(
+    --color-primary-color-primary
+  );
+  --color-states-hover-hover-fill: var(--color-primary-color-primary-lighter);
+  --color-states-hover-hover-fill-alt: var(
+    --color-primary-color-primary-lightest
+  );
+  --color-states-selected-selected-secondary-border: var(
+    --color-secondary-color-secondary
+  );
+  --color-states-selected-selected-secondary-contrast-border: var(
+    --color-secondary-color-secondary-light
+  );
+  --color-states-selected-selected-secondary-fill: var(
+    --color-secondary-color-secondary-light
+  );
+  --color-states-selected-selected-secondary-fill: var(
+    --color-secondary-color-secondary-light
+  );
+  --color-states-selected-selected-text-link: var(
+    --color-primary-color-primary
+  );
+  --color-states-selected-selected-contrast-text-link: var(
+    --color-primary-color-primary-light
+  );
+
+  --color-fields-border-field-hover-border: var(
+    --color-accent-color-accent-one
+  );
+  --color-fields-border-field-active-border: var(--color-primary-color-primary);
+
+  --color-loader-loader-part-one: var(--color-primary-color-primary);
+  --color-loader-loader-part-two: var(--color-primary-color-primary);
+  --color-loader-loader-part-three: var(--color-primary-color-primary-lighter);
+
+  /**
+  * DATEPICKER
+  * =========
+  **/
+  --color-date-picker-item-date-picker-item-hover-border: var(
+    --color-accent-color-accent-one
+  );
+  --color-date-picker-item-date-picker-item-selected-fill: var(
+    --color-primary-color-primary-lightest
+  );
+  --color-date-picker-item-date-picker-item-range-fill: var(
+    --color-primary-color-primary-lightest
+  );
+  --color-date-picker-item-date-picker-item-selected-border: var(
+    --color-primary-color-primary
+  );
+
+  /**
+  * FIELDS
+  * =========
+  **/
+  --color-fields-surface-field-default-fill: var(--color-grayscale-color-white);
+  --color-fields-border-field-default-border: var(
+    --color-grayscale-color-200-gray
+  );
+  --color-fields-border-field-hover-border: var(
+    --color-accent-color-accent-one
+  );
+  --color-fields-border-field-active-border: var(--color-primary-color-primary);
+
+  /*
+  * MEASURES
+  * ========
+  */
+  --measure-dimension-button-button-default-radius: var(
+    --measure-dimension-radius-md
+  );
+}

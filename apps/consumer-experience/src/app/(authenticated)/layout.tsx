@@ -10,7 +10,8 @@ import { RefreshRouterManager } from '@/components/providers/RefreshRouterManage
 import { SessionManager } from '@/components/providers/SessionManager';
 import { UserProvider } from '@/components/providers/UserProvider';
 import { UserConsentManager } from '@/components/user-consent/UserConsentManager';
-import { getSession } from '@/utils/auth';
+import { getCookie, getSession } from '@/utils/auth';
+import { THEME_COOKIE } from '@/utils/serverClientUtils';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
@@ -28,8 +29,10 @@ export default async function AuthenticatedLayout({
   children: React.ReactNode;
 }) {
   const session = await getSession();
+  const themeCookie = await getCookie(THEME_COOKIE);
+
   return (
-    <main className={`${styles.body} ${styles.main}`}>
+    <main className={`${styles.body} ${styles.main}`} data-theme={themeCookie}>
       <UserProvider user={session?.user}>
         {/* As of May 22, 2024 we have not started phase 2 of masking PII data. This provider is setup for future use. Once we iron out the requirements around PII levels and data masking, we will populate this provider */}
         <PiiProvider

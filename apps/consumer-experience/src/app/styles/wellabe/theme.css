@@ -1,10 +1,10 @@
-:root:has(main[data-theme='everly']) {
-  --color-primary-color-primary-50-percent-opacity: #07204180;
-  --color-primary-color-primary: #072041;
-  --color-primary-color-primary-lightest: #a9c7ff;
-  --color-primary-color-primary-lighter: #7dacfa;
-  --color-primary-color-primary-light: #00468c;
-  --color-primary-color-primary-dark: #003064;
+:root:has(main[data-theme='wellabe']) {
+  --color-primary-color-primary-50-percent-opacity: #ffc107;
+  --color-primary-color-primary: #ffc107;
+  --color-primary-color-primary-lightest: #ffc107;
+  --color-primary-color-primary-lighter: #ffc107;
+  --color-primary-color-primary-light: #ffc107;
+  --color-primary-color-primary-dark: #ffc107;
   --color-secondary-color-secondary: #4c4639;
   --color-secondary-color-secondary-lightest: #fdf7eb;
   --color-secondary-color-secondary-lighter: #7e7667;
