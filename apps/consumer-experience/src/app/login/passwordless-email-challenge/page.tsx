@@ -1,5 +1,5 @@
-import { GenericInfoPage } from '@/components/generic-info-page/GenericInfoPage';
 import { PasswordlessEmailChallenge } from '@/components/login/PasswordlessEmailChallenge';
+import { GenericLoginPage } from '../GenericLoginPage';
 
 export default function PasswordlessEmailChallengePage({
   searchParams,
@@ -7,7 +7,7 @@ export default function PasswordlessEmailChallengePage({
   searchParams: { email: string };
 }) {
   return (
-    <GenericInfoPage
+    <GenericLoginPage
       title="Enter your code."
       description="Check for an email from us with your 6-digit verification code."
       action={<PasswordlessEmailChallenge email={searchParams.email} />}

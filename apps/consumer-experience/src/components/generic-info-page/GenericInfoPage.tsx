@@ -9,6 +9,7 @@ interface Props {
   description: ReactNode;
   action: ReactNode;
   footer?: ReactNode;
+  hideBranding?: boolean;
 }
 
 export const GenericInfoPage = ({
@@ -16,16 +17,19 @@ export const GenericInfoPage = ({
   description,
   action,
   footer,
+  hideBranding,
 }: Props) => {
   return (
     <div className={styles.container}>
-      <div className={styles.banner} />
+      {!hideBranding && <div className={styles.banner} />}
       <div className={styles.scrollContainer}>
         <div className={styles.content}>
-          <div className={styles.logoContainer}>
-            {/* TODO: update alt text when this logo becomes dynamic */}
-            <LogoImage alt="Everly Logo" />
-          </div>
+          {!hideBranding && (
+            <div className={styles.logoContainer}>
+              {/* TODO: update alt text when this logo becomes dynamic */}
+              <LogoImage alt="Everly Logo" />
+            </div>
+          )}
           <div className={styles.details}>
             <h1>{title}</h1>
             <p className="typography-content-body">{description}</p>

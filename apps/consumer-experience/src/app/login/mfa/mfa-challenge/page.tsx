@@ -1,5 +1,5 @@
-import { GenericInfoPage } from '@/components/generic-info-page/GenericInfoPage';
 import { MfaChallenge } from '@/components/login/MfaChallenge';
+import { GenericLoginPage } from '../../GenericLoginPage';
 
 export default function MfaChallengePage({
   searchParams,
@@ -7,7 +7,7 @@ export default function MfaChallengePage({
   searchParams: { enrollment?: string; id?: string };
 }) {
   return (
-    <GenericInfoPage
+    <GenericLoginPage
       title="Enter your code."
       description="Enter your 6-digit verification code."
       action={
