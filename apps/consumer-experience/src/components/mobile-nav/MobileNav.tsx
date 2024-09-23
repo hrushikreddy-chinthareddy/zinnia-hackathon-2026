@@ -14,10 +14,11 @@ import { zIndexOrder } from '@/utils/zIndexOrder';
 
 import styles from './MobileNav.module.css';
 import { DevMenu } from '../dev-menu/DevMenu';
+import { ROOT_URL_PATH } from '@/types';
 
 const navRoutes = [
   {
-    url: '/coverage',
+    url: ROOT_URL_PATH,
     displayName: 'My Policies',
     icon: IconType.MATCHES,
     requiresPolicy: false,

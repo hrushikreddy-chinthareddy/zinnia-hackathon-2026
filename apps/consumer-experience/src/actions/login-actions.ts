@@ -20,6 +20,7 @@ import {
 } from '@/utils/auth';
 import { logTrace, logWarn } from '@/utils/logging/server-logging';
 import { FROM_LOGIN_QUERY_KEY } from '@/utils/serverClientUtils';
+import { ROOT_URL_PATH } from '@/types';
 
 interface LoginActionErrorResponse extends Auth0ErrorResponse {
   timestamp: Date;
@@ -463,7 +464,7 @@ export async function verifyMfaChallenge(
   const tokenData = data! as OauthToken;
   await setLoginCookies(tokenData);
 
-  return redirect(`/policies?${FROM_LOGIN_QUERY_KEY}=true`);
+  return redirect(`/${ROOT_URL_PATH}?${FROM_LOGIN_QUERY_KEY}=true`);
 }
 
 export async function resendMfaChallenge(

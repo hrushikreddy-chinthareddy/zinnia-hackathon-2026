@@ -21,8 +21,8 @@ export const GenericLoginPage = ({
         <div className={globalStyles.content}>
           <div className={styles.formContainer}>
             <div>
-              <h1>{title}</h1>
-              <p className="typography-content-body mb-lg">{description}</p>
+              <h1 className="mb-xl typography-mobile-headline-1-m">{title}</h1>
+              <p className="typography-content-body-sm mb-lg">{description}</p>
               <div>{action}</div>
             </div>
             {footer && (

@@ -1,4 +1,4 @@
-import { Index } from '@/types';
+import { Index, ROOT_URL_PATH } from '@/types';
 
 export interface RouteMap {
   source: string;
@@ -119,8 +119,8 @@ export const routeMap: Index<RouteMap> = {
     title: 'Allocations',
   },
   [RouteKey.COVERAGE]: {
-    destination: '/coverage',
-    source: '/coverage',
+    destination: ROOT_URL_PATH,
+    source: ROOT_URL_PATH,
     title: 'My Coverage',
   },
 };

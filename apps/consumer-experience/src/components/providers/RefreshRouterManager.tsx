@@ -4,6 +4,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 import { REFRESH_ROUTER_COOKIE_KEY } from '@/utils/serverClientUtils';
+import { ROOT_URL_PATH } from '@/types';
 
 /**
  * NextJS caches route information client side so they can route quicker
@@ -21,7 +22,7 @@ const RefreshRouterManager = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (pathname === '/coverage') {
+    if (pathname === ROOT_URL_PATH) {
       return;
     }
     const refreshRouter = Cookies.get(REFRESH_ROUTER_COOKIE_KEY) === '1';

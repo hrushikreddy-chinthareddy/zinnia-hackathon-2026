@@ -1,5 +1,7 @@
 import { NextURL } from 'next/dist/server/web/next-url';
 
+export const ROOT_URL_PATH = '/coverage';
+
 export type Index<T> = {
   [key: string]: T;
 };

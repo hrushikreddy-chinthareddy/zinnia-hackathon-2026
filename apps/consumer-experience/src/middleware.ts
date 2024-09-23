@@ -36,6 +36,7 @@ import {
 } from './utils/auth';
 import { lineOfBusinessUrlPath } from './utils/data';
 import { applyThemeCookies } from './utils/theme';
+import { ROOT_URL_PATH } from './types';
 
 /**
  * NextJS doesn't foward the headers to react server components.
@@ -126,7 +127,7 @@ export async function middleware(req: NextRequest) {
     await touchSession(resNext);
 
     if (isLoginLikeOrRoot) {
-      return NextResponse.redirect(new URL('/coverage', req.url));
+      return NextResponse.redirect(new URL(ROOT_URL_PATH, req.url));
     }
 
     const returnUrl = await getReturnUrlCookie();
@@ -143,7 +144,7 @@ export async function middleware(req: NextRequest) {
     // This logic is hit when a user had a friendly url + multiple policies and has clicked on their
     // selected policy. Rather than going to the policy overview page, we redirect them to the route
     // of the friendly url so we check to see if the 3 pathname url item is present,
-    // if it is that means it is not the coverage index page (because it has more than '' and '/coverage' in the array)
+    // if it is that means it is not the coverage index page (because it has more than '' and ROOT_URL_PATH in the array)
     //
     if (
       req.nextUrl.pathname.includes('/coverage/') &&
@@ -185,7 +186,7 @@ export async function middleware(req: NextRequest) {
         allPolicies.data.length > 1
       ) {
         const resRedirect = NextResponse.redirect(
-          new URL('/coverage', req.url)
+          new URL(ROOT_URL_PATH, req.url)
         );
         await setReturnUrlCookie(req.nextUrl, resRedirect);
         await setRefreshRouterCookie(resRedirect);
