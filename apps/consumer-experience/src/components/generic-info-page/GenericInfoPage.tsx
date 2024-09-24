@@ -4,7 +4,7 @@ import EverlyLogo from '@/app/styles/everly/everly-logo.svg'; // TODO: don't har
 
 import styles from './GenericInfoPage.module.css';
 import clsx from 'clsx';
-import { Brand } from '@/types/carriers';
+import { CompanyName } from '@/types/carriers';
 import { THEME_COOKIE } from '@/utils/serverClientUtils';
 import { getCookie } from '@/utils/auth';
 
@@ -15,11 +15,11 @@ interface Props {
   footer?: ReactNode;
 }
 
-const logo = (brand: Brand) => {
-  switch (brand) {
-    case Brand.EVERLY:
+const logo = (company: CompanyName) => {
+  switch (company) {
+    case CompanyName.EVERLY:
       return <EverlyLogo alt="Everly Logo" />;
-    case Brand.WELLABE:
+    case CompanyName.WELLABE:
       return null;
     default:
       return null;
@@ -32,10 +32,12 @@ export const GenericInfoPage = async ({
   action,
   footer,
 }: Props) => {
-  const themeCookie = (await getCookie(THEME_COOKIE)) as Brand | undefined;
+  const themeCookie = (await getCookie(THEME_COOKIE)) as
+    | CompanyName
+    | undefined;
   const brandingBannerClasses = clsx(styles.banner, {
-    [styles.everly as string]: themeCookie === Brand.EVERLY,
-    [styles.wellabe as string]: themeCookie === Brand.WELLABE,
+    [styles.everly as string]: themeCookie === CompanyName.EVERLY,
+    [styles.wellabe as string]: themeCookie === CompanyName.WELLABE,
   });
 
   return (

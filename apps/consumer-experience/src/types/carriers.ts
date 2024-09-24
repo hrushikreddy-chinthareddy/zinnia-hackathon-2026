@@ -1,4 +1,4 @@
-export enum Brand {
+export enum CompanyName {
   EVERLY = 'everly',
   WELLABE = 'wellabe',
 }
