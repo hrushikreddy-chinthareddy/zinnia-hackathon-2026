@@ -93,7 +93,7 @@ export const DevMenu = () => {
     // const queryParams = new URLSearchParams(location.search);
     // queryParams.delete(SHOW_TEST_POLICIES_COOKIE_KEY);
     // const params = queryParams.toString() ? `?${queryParams.toString()}` : '';
-    window.location.href = `${window.location.origin}/policies`;
+    window.location.href = `${window.location.origin}/${ROOT_URL_PATH}`;
   };
 
   return (
