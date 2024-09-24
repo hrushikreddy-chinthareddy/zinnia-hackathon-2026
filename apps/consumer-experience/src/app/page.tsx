@@ -2,7 +2,12 @@ import { Link } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
 import { Footer } from '@/components/footer/Footer';
-import { GenericInfoPage } from '@/components/generic-info-page/GenericInfoPage';
+import {
+  Brand,
+  GenericInfoPage,
+} from '@/components/generic-info-page/GenericInfoPage';
+import { THEME_COOKIE } from '@/utils/serverClientUtils';
+import { getCookie } from '@/utils/auth';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
@@ -11,7 +16,8 @@ export const metadata: Metadata = {
 };
 
 export default async function WelcomePage() {
-  // TODO: remove this comment after testing push
+  const themeCookie = await getCookie(THEME_COOKIE);
+
   return (
     <GenericInfoPage
       title="Welcome!"
@@ -26,6 +32,7 @@ export default async function WelcomePage() {
         />
       }
       footer={<Footer />}
+      branding={(themeCookie as Brand) || null}
     />
   );
 }

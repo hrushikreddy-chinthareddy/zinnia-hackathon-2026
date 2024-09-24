@@ -3,8 +3,13 @@ import { Metadata } from 'next';
 
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { Footer } from '@/components/footer/Footer';
-import { GenericInfoPage } from '@/components/generic-info-page/GenericInfoPage';
+import {
+  Brand,
+  GenericInfoPage,
+} from '@/components/generic-info-page/GenericInfoPage';
 import styles from '@/components/generic-info-page/GenericInfoPage.module.css';
+import { THEME_COOKIE } from '@/utils/serverClientUtils';
+import { getCookie } from '@/utils/auth';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
@@ -13,6 +18,8 @@ export const metadata: Metadata = {
 };
 
 export default async function ErrorPage() {
+  const themeCookie = await getCookie(THEME_COOKIE);
+
   return (
     <GenericInfoPage
       title={
@@ -34,6 +41,7 @@ export default async function ErrorPage() {
         </>
       }
       footer={<Footer />}
+      branding={themeCookie as Brand}
     />
   );
 }

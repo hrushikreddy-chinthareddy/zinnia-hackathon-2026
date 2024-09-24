@@ -3,10 +3,14 @@ import { Icon, IconType, Link } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
 import { Footer } from '@/components/footer/Footer';
-import { GenericInfoPage } from '@/components/generic-info-page/GenericInfoPage';
+import {
+  Brand,
+  GenericInfoPage,
+} from '@/components/generic-info-page/GenericInfoPage';
 import styles from '@/components/generic-info-page/GenericInfoPage.module.css';
-import { getSession } from '@/utils/auth';
+import { getCookie, getSession } from '@/utils/auth';
 import { ROOT_URL_PATH } from '@/types';
+import { THEME_COOKIE } from '@/utils/serverClientUtils';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
@@ -19,6 +23,8 @@ export default async function NotFound() {
   const isAuthenticated = !!session;
   const route = isAuthenticated ? ROOT_URL_PATH : '/';
   const text = isAuthenticated ? 'Back to Overview' : 'Back to home';
+  const themeCookie = await getCookie(THEME_COOKIE);
+
   return (
     <GenericInfoPage
       title={
@@ -37,6 +43,7 @@ export default async function NotFound() {
         />
       }
       footer={<Footer style={{ marginTop: 0 }} />}
+      branding={themeCookie as Brand}
     />
   );
 }

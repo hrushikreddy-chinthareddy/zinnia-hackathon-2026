@@ -26,35 +26,35 @@ const primaryFont = localFont({
   display: 'swap',
   src: [
     {
-      path: './styles/everly/fonts/Poppins-ExtraLight.ttf',
+      path: './styles/fonts/Poppins-ExtraLight.ttf',
       style: 'normal',
       weight: '200',
     },
     {
-      path: './styles/everly/fonts/Poppins-Light.ttf',
+      path: './styles/fonts/Poppins-Light.ttf',
       style: 'normal',
       weight: '300',
     },
 
     {
-      path: './styles/everly/fonts/Poppins-Regular.ttf',
+      path: './styles/fonts/Poppins-Regular.ttf',
       style: 'normal',
       weight: '400',
     },
 
     {
-      path: './styles/everly/fonts/Poppins-Medium.ttf',
+      path: './styles/fonts/Poppins-Medium.ttf',
       style: 'normal',
       weight: '500',
     },
 
     {
-      path: './styles/everly/fonts/Poppins-SemiBold.ttf',
+      path: './styles/fonts/Poppins-SemiBold.ttf',
       style: 'normal',
       weight: '600',
     },
     {
-      path: './styles/everly/fonts/Poppins-Bold.ttf',
+      path: './styles/fonts/Poppins-Bold.ttf',
       style: 'normal',
       weight: '700',
     },
@@ -66,23 +66,23 @@ const secondaryFont = localFont({
   variable: '--font-family-secondary',
   src: [
     {
-      path: './styles/everly/fonts/Lato-Light.ttf',
+      path: './styles/fonts/Lato-Light.ttf',
       style: 'normal',
       weight: '300',
     },
     {
-      path: './styles/everly/fonts/Lato-Regular.ttf',
+      path: './styles/fonts/Lato-Regular.ttf',
       style: 'normal',
       weight: '400',
     },
     {
-      path: './styles/everly/fonts/Lato-Bold.ttf',
+      path: './styles/fonts/Lato-Bold.ttf',
       style: 'normal',
       weight: '700',
     },
 
     {
-      path: './styles/everly/fonts/Lato-Black.ttf',
+      path: './styles/fonts/Lato-Black.ttf',
       style: 'normal',
       weight: '900',
     },

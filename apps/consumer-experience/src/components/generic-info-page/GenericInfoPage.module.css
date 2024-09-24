@@ -20,8 +20,8 @@
   }
 
   .banner {
-    background-color: var(--color-primary-color-primary-lightest);
-    background-image: url('../../app/styles/everly/assets/everly-hero-background-mobile.png');
+    /* background-color: ; */
+    /* background-image: ; */
     background-repeat: no-repeat;
     height: 93px;
     background-size: cover;
