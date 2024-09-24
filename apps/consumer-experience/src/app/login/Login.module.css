@@ -4,7 +4,6 @@
 }
 
 .formContainer {
-  padding: var(--measure-dimension-padding-4xl) 144px;
   text-align: center;
   align-items: center;
 }
@@ -123,7 +122,11 @@
   width: max-content;
 }
 
-@media (width >= 1024px) {
+@media (width >= 767px) {
+  .formContainer {
+    padding: var(--measure-dimension-padding-4xl) 144px;
+  }
+
   .submit {
     margin-left: 0;
     margin-right: 0;
