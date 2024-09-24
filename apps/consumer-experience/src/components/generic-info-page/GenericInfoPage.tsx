@@ -26,6 +26,12 @@ const logo = (company: CompanyName) => {
   }
 };
 
+// If there's a new company AND you have the branding available, add a key/value here
+const themeClasses = {
+  [CompanyName.EVERLY]: styles.everly,
+  [CompanyName.WELLABE]: styles.wellabe,
+};
+
 export const GenericInfoPage = async ({
   title,
   description,
@@ -33,12 +39,15 @@ export const GenericInfoPage = async ({
   footer,
 }: Props) => {
   const themeCookie = await getCookie(THEME_COOKIE);
+  // In most cases this won't matter since if the subdomain isn't set up, the whole site won't work
+  // but there may be a case where there is a subdomain, but we don't have the branding for it, so only want to add the classes
+  // if we have the available branding (in themeClasses above) otherwise show the generic page
   const showBranding =
     themeCookie &&
-    Object.values(CompanyName).includes(themeCookie as CompanyName);
-  const brandingBannerClasses = clsx(styles.banner, {
-    [styles.everly as string]: themeCookie === CompanyName.EVERLY,
-    [styles.wellabe as string]: themeCookie === CompanyName.WELLABE,
+    Object.keys(themeClasses).includes(themeCookie as CompanyName);
+  const brandingBannerClasses = clsx({
+    [styles.banner as string]: showBranding,
+    [themeClasses[themeCookie as CompanyName] as string]: showBranding,
   });
 
   return (
