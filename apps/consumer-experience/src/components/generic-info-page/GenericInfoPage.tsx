@@ -3,36 +3,17 @@ import { ReactNode } from 'react';
 import EverlyLogo from '@/app/styles/everly/everly-logo.svg'; // TODO: don't hardcode to everly
 
 import styles from './GenericInfoPage.module.css';
-import everlyBanner from '@/app/styles/everly/assets/everly-hero-background.png';
-
-export enum Brand {
-  EVERLY = 'everly',
-  WELLABE = 'wellabe',
-}
+import clsx from 'clsx';
+import { Brand } from '@/types/carriers';
+import { THEME_COOKIE } from '@/utils/serverClientUtils';
+import { getCookie } from '@/utils/auth';
 
 interface Props {
   title: ReactNode;
   description: ReactNode;
   action: ReactNode;
   footer?: ReactNode;
-  branding?: Brand;
 }
-
-interface Banner {
-  img?: string;
-  color?: string;
-}
-
-const brandingBanner: { [key in Brand]?: Banner } = {
-  [Brand.EVERLY]: {
-    img: `url(${everlyBanner})`,
-    color: '#a9c7ff',
-  },
-  [Brand.WELLABE]: {
-    img: undefined,
-    color: '#EFC416',
-  },
-};
 
 const logo = (brand: Brand) => {
   switch (brand) {
@@ -45,31 +26,25 @@ const logo = (brand: Brand) => {
   }
 };
 
-export const GenericInfoPage = ({
+export const GenericInfoPage = async ({
   title,
   description,
   action,
   footer,
-  branding,
 }: Props) => {
-  const brandDetails = branding && brandingBanner[branding];
-  const showBranding = branding && brandDetails?.img;
+  const themeCookie = (await getCookie(THEME_COOKIE)) as Brand | undefined;
+  const brandingBannerClasses = clsx(styles.banner, {
+    [styles.everly as string]: themeCookie === Brand.EVERLY,
+    [styles.wellabe as string]: themeCookie === Brand.WELLABE,
+  });
 
   return (
     <div className={styles.container}>
-      {showBranding && (
-        <div
-          className={styles.banner}
-          style={{
-            backgroundImage: brandingBanner[branding]?.img,
-            backgroundColor: brandingBanner[branding]?.color,
-          }}
-        />
-      )}
+      {themeCookie && <div className={brandingBannerClasses} />}
       <div className={styles.scrollContainer}>
         <div className={styles.content}>
-          {showBranding && (
-            <div className={styles.logoContainer}>{logo(branding)}</div>
+          {themeCookie && (
+            <div className={styles.logoContainer}>{logo(themeCookie)}</div>
           )}
           <div className={styles.details}>
             <h1>{title}</h1>

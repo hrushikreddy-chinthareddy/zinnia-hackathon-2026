@@ -3,10 +3,7 @@ import { Metadata } from 'next';
 
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { Footer } from '@/components/footer/Footer';
-import {
-  Brand,
-  GenericInfoPage,
-} from '@/components/generic-info-page/GenericInfoPage';
+import { GenericInfoPage } from '@/components/generic-info-page/GenericInfoPage';
 import styles from '@/components/generic-info-page/GenericInfoPage.module.css';
 import { PolicyRequestInputs } from '@/types/policy';
 import { THEME_COOKIE } from '@/utils/serverClientUtils';
@@ -51,7 +48,6 @@ export default async function ErrorPage({
         </>
       }
       footer={<Footer />}
-      branding={themeCookie as Brand}
     />
   );
 }

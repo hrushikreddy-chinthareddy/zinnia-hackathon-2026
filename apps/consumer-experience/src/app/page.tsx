@@ -2,10 +2,7 @@ import { Link } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
 import { Footer } from '@/components/footer/Footer';
-import {
-  Brand,
-  GenericInfoPage,
-} from '@/components/generic-info-page/GenericInfoPage';
+import { GenericInfoPage } from '@/components/generic-info-page/GenericInfoPage';
 import { THEME_COOKIE } from '@/utils/serverClientUtils';
 import { getCookie } from '@/utils/auth';
 
@@ -32,7 +29,6 @@ export default async function WelcomePage() {
         />
       }
       footer={<Footer />}
-      branding={(themeCookie as Brand) || null}
     />
   );
 }
