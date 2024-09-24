@@ -16,6 +16,7 @@ import { zIndexOrder } from '@/utils/zIndexOrder';
 
 import styles from './DevMenu.module.css';
 import { ApiEndpoints } from './types';
+import { ROOT_URL_PATH } from '@/types';
 
 export const DevMenu = () => {
   const [open, setOpen] = useState(false);
@@ -66,7 +67,7 @@ export const DevMenu = () => {
     const queryParams = new URLSearchParams(location.search);
     queryParams.delete(MOCK_ERROR_COOKIE_KEY);
     const params = queryParams.toString() ? `?${queryParams.toString()}` : '';
-    window.location.href = `${window.location.origin}/policies${params}`;
+    window.location.href = `${window.location.origin}/${ROOT_URL_PATH}${params}`;
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
