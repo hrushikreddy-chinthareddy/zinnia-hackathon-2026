@@ -32,9 +32,10 @@ export const GenericInfoPage = async ({
   action,
   footer,
 }: Props) => {
-  const themeCookie = (await getCookie(THEME_COOKIE)) as
-    | CompanyName
-    | undefined;
+  const themeCookie = await getCookie(THEME_COOKIE);
+  const showBranding =
+    themeCookie &&
+    Object.values(CompanyName).includes(themeCookie as CompanyName);
   const brandingBannerClasses = clsx(styles.banner, {
     [styles.everly as string]: themeCookie === CompanyName.EVERLY,
     [styles.wellabe as string]: themeCookie === CompanyName.WELLABE,
@@ -42,16 +43,17 @@ export const GenericInfoPage = async ({
 
   return (
     <div className={styles.container}>
-      {themeCookie && <div className={brandingBannerClasses} />}
+      {showBranding && <div className={brandingBannerClasses} />}
       <div className={styles.scrollContainer}>
         <div className={styles.content}>
-          {themeCookie && (
-            <div className={styles.logoContainer}>{logo(themeCookie)}</div>
+          {showBranding && (
+            <div className={styles.logoContainer}>
+              {logo(themeCookie as CompanyName)}
+            </div>
           )}
           <div className={styles.details}>
             <h1>{title}</h1>
             <p className="typography-content-body">{description}</p>
-            {/* TODO: figure out a way to make this black always */}
             <div className={styles.actionContainer}>{action}</div>
           </div>
           {footer && (
