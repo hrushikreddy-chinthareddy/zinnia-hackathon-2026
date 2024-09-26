@@ -1,11 +1,19 @@
 .container {
   background-color: white;
   display: flex;
-  padding: var(--measure-dimension-padding-2xl, 1rem) var(--measure-dimension-padding-4xl, 2rem);
+  padding: var(--measure-dimension-padding-2xl, 1rem)
+    var(--measure-dimension-padding-4xl, 2rem);
   align-items: center;
   justify-content: space-between;
-  box-shadow: var(--shadow-elevation-elevation-light-md,
-      0 3.200000047683716px 7.199999809265137px 0 rgba(0, 0, 0, 0.13));
+  box-shadow: var(
+    --shadow-elevation-elevation-light-md,
+    0 3.200000047683716px 7.199999809265137px 0 rgba(0, 0, 0, 0.13)
+  );
+}
+
+.navMenu {
+  display: 'flex';
+  justify-content: 'space-between';
 }
 
 .logo {
@@ -14,41 +22,19 @@
   flex-shrink: 0;
 }
 
-.navItemsContainer {
-  display: flex;
-  gap: var(--measure-dimension-gap-lg, 1rem);
-  align-items: center;
-}
-
-.navItem {
-  display: flex;
-  align-items: center;
-  gap: var(--measure-dimension-gap-xs);
-  text-underline-position: under;
-
-  &:hover,
-  &.active {
-    text-decoration: underline;
-    text-decoration-color: var(--color-base-border-border-darker);
-    text-decoration-thickness: 3px;
-  }
-}
-
-.divider {
-  width: 2px;
-  align-self: stretch;
-  background-color: var(--color-base-border-border-subtle, #ccc);
-}
-
-.signOut {
-  position: relative;
-  display: inline-block;
-}
-
 .logoContainer {
   display: flex;
   align-items: center;
   gap: 4px;
+}
+
+.navMenuContainer {
+  position: absolute;
+  /* This position needs to be updated if the size of the badge changes */
+  top: 5px;
+  right: -15px;
+  animation-duration: 250ms;
+  animation-timing-function: ease;
 }
 
 @media (width < 500px) {

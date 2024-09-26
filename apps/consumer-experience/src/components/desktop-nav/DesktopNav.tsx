@@ -1,18 +1,20 @@
 'use client';
 
-import { Icon, IconType } from '@zinnia/bloom/components';
-import clsx from 'clsx';
-import Link from 'next/link';
+import { IconType } from '@zinnia/bloom/components';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import LogoImage from '@/app/styles/everly/everly-logo.svg';
 import useMock from '@/hooks/use-mock';
-import { isMockAllowed } from '@/utils';
-import { toTitleCase } from '@/utils/strings';
 
+import LogoImage from '@/app/styles/everly/everly-logo.svg';
 import styles from './DesktopNav.module.css';
+import { isMockAllowed } from '@/utils';
 import { DevMenu } from '../dev-menu/DevMenu';
+import Link from 'next/link';
+import * as Popover from '@radix-ui/react-popover';
+
+import { UserBadge } from '@/components/user-badge/UserBadge';
+import { NavMenu } from '../nav-menu/NavMenu';
 
 const navLinks = [
   {
@@ -28,6 +30,7 @@ const navLinks = [
 ];
 
 export function DesktopNav() {
+  const [open, setOpen] = useState(false);
   const { isMockOn } = useMock();
   const pathname = usePathname();
   const [activeNav, setActiveNav] = useState<string>('');
@@ -40,14 +43,6 @@ export function DesktopNav() {
     <nav className={styles.container}>
       <div className={styles.logoContainer}>
         <DevMenu />
-        <Link
-          prefetch
-          href="/"
-          className="justify-self-start"
-          aria-label="Home page"
-        >
-          <LogoImage alt="Everly Logo" className={styles.logo}></LogoImage>
-        </Link>
         {isMockAllowed() && isMockOn && (
           <span
             className={styles.navItem}
@@ -59,25 +54,26 @@ export function DesktopNav() {
             Mock is on
           </span>
         )}
+        <Link
+          prefetch
+          href="/"
+          className="justify-self-start"
+          aria-label="Home page"
+        >
+          <LogoImage alt="Everly Logo" className={styles.logo}></LogoImage>
+        </Link>
       </div>
 
-      <div className={`${styles.navItemsContainer} typography-nav-links-sm`}>
-        {navLinks.map(({ url, icon, title }) => (
-          <Link
-            prefetch
-            href={url}
-            key={title}
-            className={`${styles.navItem} ${clsx({ [styles.active as string]: url === activeNav })}`}
-          >
-            <Icon type={icon} color="var(--color-base-icon-icon-dark)" />
-            {toTitleCase(title)}
-          </Link>
-        ))}
-        <div className={styles.divider} aria-hidden />
-        <a href="/api/logout" className={`${styles.navItem} ${styles.signOut}`}>
-          Sign out
-        </a>
-      </div>
+      <Popover.Root>
+        <Popover.Trigger>
+          <UserBadge firstName={'John'} lastName={'Doe'} />
+        </Popover.Trigger>
+        <Popover.Portal>
+          <Popover.Content className={styles.navMenuContainer}>
+            <NavMenu />
+          </Popover.Content>
+        </Popover.Portal>
+      </Popover.Root>
     </nav>
   );
 }

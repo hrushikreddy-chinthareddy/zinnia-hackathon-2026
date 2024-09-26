@@ -1183,6 +1183,45 @@ export const getPolicyStatusDetails = async (
   }
 };
 
+export const getPolicyOwnerDetails = async (
+  policyInputs: PolicyRequestInputs
+) => {
+  logTrace('getPolicyProductDetails', {
+    planCode: policyInputs.planCode,
+    policyNumber: policyInputs.policyNumber,
+  });
+
+  // if (isMockPolicyOverviewRequestEnabled()) {
+  //   const transformedResults = transformPolicyDetails(mockPolicyResponse);
+
+  //   return {
+  //     data: transformedResults,
+  //     error: null,
+  //   };
+  // }
+
+  try {
+    const response = await getPolicyByPlanCodeAndId(policyInputs);
+    const ownerInfo = policyOwner(response);
+
+    return {
+      data: ownerInfo,
+      error: null,
+    };
+  } catch (error) {
+    logWarn('getPolicyOwnerDetails Error', { error });
+
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 400,
+        name: 'getPolicyOwnerDetails Error',
+      },
+    };
+  }
+};
+
 // Turn this into a larger policy return, add what we need into the transformer
 export const getPolicyDetails = async (policyInputs: PolicyRequestInputs) => {
   logTrace('getPolicyProductDetails', {
