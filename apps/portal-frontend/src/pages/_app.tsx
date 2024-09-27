@@ -7,7 +7,6 @@ import { GoogleAnalytics } from '@next/third-parties/google';
 import { AppProps } from 'next/app';
 import { Lato, Poppins } from 'next/font/google';
 import Head from 'next/head';
-import Script from 'next/script';
 import { appWithTranslation } from 'next-i18next';
 import { useEffect } from 'react';
 
@@ -44,22 +43,6 @@ if (process.env.NODE_ENV === 'production') {
 
     datadogRum.startSessionReplayRecording();
 }
-
-const MouseflowTrackingCode = () => {
-    return (
-        <Script id="zmouseflowtracking" type="text/javascript">
-            {`
-                window._mfq = window._mfq || [];
-                (function() {
-                    var mf = document.createElement("script");
-                    mf.type = "text/javascript"; mf.defer = true;
-                    mf.src = "//cdn.mouseflow.com/projects/c75f7bc2-4a0f-4b04-aa9e-d235631ac76c.js";
-                    document.getElementsByTagName("head")[0].appendChild(mf);
-                })();
-            `}
-        </Script>
-    );
-};
 
 const AppHead = () => {
     // DEPU-1025 to clean up only required user fields once we start collecting data
@@ -116,7 +99,6 @@ const App = (props: AppProps) => {
                 <AppBody {...props} />
                 {process.env.NEXT_PUBLIC_GOOGLEANALYTICS_ENV === 'production' && <GoogleAnalytics gaId="G-1NY7KTG7T3" />}
             </UserProvider>
-            <MouseflowTrackingCode />
         </main>
     );
 };
