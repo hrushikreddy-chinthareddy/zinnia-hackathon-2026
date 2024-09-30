@@ -2,6 +2,10 @@
   border-radius: 100%;
   width: 30px;
   height: 30px;
-  display: block;
-  align-content: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* TODO: Might need to add some logic for these colors */
+  background-color: var(--color-primary-color-primary);
+  color: var(--color-button-primary-button-primary-default-text);
 }

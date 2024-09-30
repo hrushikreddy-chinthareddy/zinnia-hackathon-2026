@@ -15,7 +15,11 @@ import { DevMenu } from '../dev-menu/DevMenu';
 import { UserBadge } from '../user-badge/UserBadge';
 import { NavMenu } from '../nav-menu/NavMenu';
 
-export const MobileNav = () => {
+export const MobileNav = ({
+  userName,
+}: {
+  userName: { firstName?: string; lastName?: string };
+}) => {
   const [open, setOpen] = useState(false);
   const pathName = usePathname();
   const params = useParams<{ planCode: string; policyNumber: string }>();
@@ -50,7 +54,10 @@ export const MobileNav = () => {
       {/* TODO: this isn't the right element, i think it should be a popover */}
       <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Trigger>
-          <UserBadge firstName="Joe" lastName="Smith" />
+          <UserBadge
+            firstName={userName.firstName}
+            lastName={userName.lastName}
+          />
         </Dialog.Trigger>
         <Dialog.Portal>
           <Dialog.Overlay />

@@ -1,6 +1,5 @@
 'use client';
 
-import { IconType } from '@zinnia/bloom/components';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -16,21 +15,17 @@ import * as Popover from '@radix-ui/react-popover';
 import { UserBadge } from '@/components/user-badge/UserBadge';
 import { NavMenu } from '../nav-menu/NavMenu';
 
-const navLinks = [
-  {
-    url: `/coverage`,
-    icon: IconType.MATCHES,
-    title: 'my policies',
-  },
-  {
-    url: `/my-account`,
-    icon: IconType.CIRCLE_USER,
-    title: 'account',
-  },
-];
+// TODO: add the active link style
 
-export function DesktopNav() {
-  const [open, setOpen] = useState(false);
+export function DesktopNav({
+  planCode,
+  policyNumber,
+  userName,
+}: {
+  planCode: string;
+  policyNumber: string;
+  userName: { firstName?: string; lastName?: string };
+}) {
   const { isMockOn } = useMock();
   const pathname = usePathname();
   const [activeNav, setActiveNav] = useState<string>('');
@@ -66,7 +61,10 @@ export function DesktopNav() {
 
       <Popover.Root>
         <Popover.Trigger>
-          <UserBadge firstName={'John'} lastName={'Doe'} />
+          <UserBadge
+            firstName={userName?.firstName}
+            lastName={userName?.lastName}
+          />
         </Popover.Trigger>
         <Popover.Portal>
           <Popover.Content className={styles.navMenuContainer}>
