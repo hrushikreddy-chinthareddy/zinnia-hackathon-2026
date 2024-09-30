@@ -7,6 +7,8 @@ import clsx from 'clsx';
 import { CompanyName } from '@/types/carriers';
 import { THEME_COOKIE } from '@/utils/serverClientUtils';
 import { getCookie } from '@/utils/auth';
+import { getFeatureFlags } from '@/services/feature-flags';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 interface Props {
   title: ReactNode;
@@ -38,13 +40,19 @@ export const GenericInfoPage = async ({
   action,
   footer,
 }: Props) => {
-  const themeCookie = await getCookie(THEME_COOKIE);
+  const featureFlagDecisions = await getFeatureFlags();
+  let themeCookie = await getCookie(THEME_COOKIE);
+
+  if (!featureFlagDecisions[FEATURE_FLAGS.ANNUITY_MODE]) {
+    themeCookie = CompanyName.EVERLY;
+  }
   // In most cases this won't matter since if the subdomain isn't set up, the whole site won't work
   // but there may be a case where there is a subdomain, but we don't have the branding for it, so only want to add the classes
   // if we have the available branding (in themeClasses above) otherwise show the generic page
   const showBranding =
-    themeCookie &&
-    Object.keys(themeClasses).includes(themeCookie as CompanyName);
+    (themeCookie &&
+      Object.keys(themeClasses).includes(themeCookie as CompanyName)) ||
+    !featureFlagDecisions[FEATURE_FLAGS.ANNUITY_MODE];
   const brandingBannerClasses = clsx({
     [styles.banner as string]: showBranding,
     [themeClasses[themeCookie as CompanyName] as string]: showBranding,
