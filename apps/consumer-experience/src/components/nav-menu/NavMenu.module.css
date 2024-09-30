@@ -7,6 +7,7 @@
   li,
   a {
     display: flex;
+    color: white;
 
     :first-child {
       margin-right: var(--measure-dimension-gap-md);
@@ -23,9 +24,10 @@
   }
 
   a {
-    color: white;
-    &:hover {
+    &:hover,
+    &.active {
       color: white;
+      text-decoration: underline;
 
       &::after {
         background-color: white;

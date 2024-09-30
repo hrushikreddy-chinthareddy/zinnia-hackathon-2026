@@ -12,8 +12,6 @@ import { UserProvider } from '@/components/providers/UserProvider';
 import { UserConsentManager } from '@/components/user-consent/UserConsentManager';
 import { getCookie, getSession } from '@/utils/auth';
 import { THEME_COOKIE } from '@/utils/serverClientUtils';
-import { getMyPoliciesByCarrier } from '@/services';
-import { CarrierId } from '@/types/policy';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
@@ -37,14 +35,10 @@ export default async function AuthenticatedLayout({
 }) {
   const session = await getSession();
   const themeCookie = await getCookie(THEME_COOKIE);
-  // TODO: this needs to be updated to allow for multiple carriers!!!
-  // TODO: Eventually, we will hopefully be able to use the user info from the idToken rather than relying on this
-  // policies call which feels inefficient and brittle.
+  // TODO: Eventually, the idToken currently returns the name as the user's email, until that is updated we are
+  // passing in undefined and showing the user icon in the user badge
   // Requested in CIAM channel on 09/27/24 https://se2llc-global.slack.com/archives/C04QBKBJ3H7/p1727459783747249
-  const { data: policyReferenceData } = await getMyPoliciesByCarrier([
-    CarrierId.SBUL,
-    CarrierId.ELIC,
-  ]);
+  // const userName = session?.user?.name.split(' ');
 
   return (
     <main className={`${styles.body} ${styles.main}`} data-theme={themeCookie}>
@@ -62,16 +56,16 @@ export default async function AuthenticatedLayout({
           dynamically displaying using media queries */}
               <MobileNav
                 userName={{
-                  firstName: policyReferenceData?.[0]?.firstName,
-                  lastName: policyReferenceData?.[0]?.lastName,
+                  firstName: undefined,
+                  lastName: undefined,
                 }}
               />
               <DesktopNav
                 planCode={params.planCode}
                 policyNumber={params.policyNumber}
                 userName={{
-                  firstName: policyReferenceData?.[0]?.firstName,
-                  lastName: policyReferenceData?.[0]?.lastName,
+                  firstName: undefined,
+                  lastName: undefined,
                 }}
               />
 

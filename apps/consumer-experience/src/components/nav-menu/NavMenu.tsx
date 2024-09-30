@@ -1,8 +1,9 @@
 'use client';
 
-import { IconType, Link } from '@zinnia/bloom/components';
+import { Icon, IconType } from '@zinnia/bloom/components';
 
 import styles from './NavMenu.module.css';
+import Link from 'next/link';
 import { useFeatureFlags } from '@/hooks/use-feature-flags';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import { usePathname } from 'next/navigation';
@@ -18,24 +19,21 @@ export const NavMenu = () => {
     <div className={styles.navList}>
       <ul>
         <li>
-          <Link
-            iconType={IconType.CIRCLE_USER}
-            href="/my-account"
-            text="Account profile"
-          />
+          <Icon type={IconType.CIRCLE_USER} />
+          <Link href="/my-account">Account profile</Link>
         </li>
         {!showAnnuities && (
           <li>
-            <Link
-              iconType={IconType.MATCHES}
-              href="/coverage"
-              text="My policies"
-            />
+            <Icon type={IconType.MATCHES} />
+            <Link href="/coverage">My policies</Link>
           </li>
         )}
         {/* TODO: add logic to show different carriers with product counts */}
       </ul>
-      <Link iconType={IconType.LOGOUT} href="api/logout" text="Sign out" />
+      <Link href="api/logout">
+        <Icon type={IconType.LOGOUT} />
+        <span>Sign out</span>
+      </Link>
     </div>
   );
 };
