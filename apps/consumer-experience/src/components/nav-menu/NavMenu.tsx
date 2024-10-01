@@ -1,13 +1,14 @@
 'use client';
 
 import { Icon, IconType } from '@zinnia/bloom/components';
-
-import styles from './NavMenu.module.css';
+import clsx from 'clsx';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
 import { useFeatureFlags } from '@/hooks/use-feature-flags';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
-import { usePathname } from 'next/navigation';
-import clsx from 'clsx';
+
+import styles from './NavMenu.module.css';
 
 const navUrls = {
   account: '/my-account',
@@ -16,8 +17,12 @@ const navUrls = {
 
 export const NavMenu = () => {
   const { data: featureFlagData } = useFeatureFlags();
-  const showAnnuities = featureFlagData?.[FEATURE_FLAGS.ANNUITIES_MODE];
+  const showAnnuities = featureFlagData?.[FEATURE_FLAGS.ANNUITY_MODE];
   const pathname = usePathname();
+
+  if (!featureFlagData) {
+    return null;
+  }
 
   return (
     <div className={styles.navList}>

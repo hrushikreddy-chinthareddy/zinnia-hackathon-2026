@@ -1,25 +1,18 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
-
-import useMock from '@/hooks/use-mock';
+import * as Popover from '@radix-ui/react-popover';
+import Link from 'next/link';
 
 import LogoImage from '@/app/styles/everly/everly-logo.svg';
-import styles from './DesktopNav.module.css';
-import { isMockAllowed } from '@/utils';
-import { DevMenu } from '../dev-menu/DevMenu';
-import Link from 'next/link';
-import * as Popover from '@radix-ui/react-popover';
-
 import { UserBadge } from '@/components/user-badge/UserBadge';
+import useMock from '@/hooks/use-mock';
+import { isMockAllowed } from '@/utils';
+
+import styles from './DesktopNav.module.css';
+import { DevMenu } from '../dev-menu/DevMenu';
 import { NavMenu } from '../nav-menu/NavMenu';
 
-// TODO: add the active link style
-
 export function DesktopNav({
-  planCode,
-  policyNumber,
   userName,
 }: {
   planCode: string;
@@ -27,12 +20,6 @@ export function DesktopNav({
   userName: { firstName?: string; lastName?: string };
 }) {
   const { isMockOn } = useMock();
-  const pathname = usePathname();
-  const [activeNav, setActiveNav] = useState<string>('');
-
-  useEffect(() => {
-    setActiveNav(pathname);
-  }, [pathname]);
 
   return (
     <nav className={styles.container}>
