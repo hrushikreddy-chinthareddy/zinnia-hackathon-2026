@@ -3,8 +3,8 @@ import Cookies from 'js-cookie';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
-import { REFRESH_ROUTER_COOKIE_KEY } from '@/utils/serverClientUtils';
 import { ROOT_URL_PATH } from '@/types';
+import { REFRESH_ROUTER_COOKIE_KEY } from '@/utils/serverClientUtils';
 
 /**
  * NextJS caches route information client side so they can route quicker

@@ -20,6 +20,7 @@ import {
 import { getMyPoliciesByCarrier } from './services';
 import { consumerExperienceAPIBaseUrl } from './services/api-config';
 import { ServerApi } from './services/server-http';
+import { ROOT_URL_PATH } from './types';
 import { TermsAndConditionApiResponse } from './types/auth';
 import { CarrierId } from './types/policy';
 import {
@@ -36,7 +37,6 @@ import {
 } from './utils/auth';
 import { lineOfBusinessUrlPath } from './utils/data';
 import { applyThemeCookies } from './utils/theme';
-import { ROOT_URL_PATH } from './types';
 
 /**
  * NextJS doesn't foward the headers to react server components.

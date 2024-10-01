@@ -28,6 +28,11 @@ module.exports = {
         destination: '/coverage',
         permanent: true,
       },
+      {
+        source: '/policies/:policy*',
+        destination: '/coverage/policies/:policy*',
+        permanent: true,
+      },
     ];
   },
 };
