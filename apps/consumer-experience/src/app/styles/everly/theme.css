@@ -1,6 +1,6 @@
 /* // TODO: when we launch annuities AND when bloom has been updated with the correct accessibility colors, this should be removed
 IF the bloom colors have not been updated, update these colors to the correct black and white theme*/
-:root:not(:has(main[data-theme])) {
+:root:not(:has(main[data-theme='undefined'])) {
   --color-primary-color-primary-50-percent-opacity: #07204180;
   --color-primary-color-primary: #072041;
   --color-primary-color-primary-lightest: #a9c7ff;
