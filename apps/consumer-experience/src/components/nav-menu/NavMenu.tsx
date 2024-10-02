@@ -48,10 +48,10 @@ export const NavMenu = () => {
         {/* TODO: add logic to show different carriers with product counts */}
       </ul>
       <div style={{ position: 'relative' }}>
-        <Link href="/api/logout">
+        <a href="/api/logout">
           <Icon type={IconType.LOGOUT} />
           <span>Sign out</span>
-        </Link>
+        </a>
       </div>
     </div>
   );
