@@ -29,8 +29,8 @@ module.exports = {
         permanent: true,
       },
       {
-        source: '/policies/:policy*',
-        destination: '/coverage/policies/:policy*',
+        source: '/policies/:planCode*',
+        destination: '/coverage/policies/:planCode*',
         permanent: true,
       },
     ];
