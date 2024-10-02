@@ -133,6 +133,7 @@ export const transformPolicyForHeaderDetails = (
     planName: policy?.product?.planName || '',
     policyStatus: policy?.policyStatus || PolicyStatus.NOTISSUED,
     policyNumber: policy?.policyNumber || '',
+    carrierId: policy.carrierId,
     firstName: ownerInfo?.firstName || '',
     lastName: ownerInfo?.lastName || '',
   };

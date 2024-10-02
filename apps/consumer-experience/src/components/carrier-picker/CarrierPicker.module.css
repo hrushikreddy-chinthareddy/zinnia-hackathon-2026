@@ -1,0 +1,9 @@
+.pickerContainer {
+  margin-top: var(--gap-md);
+}
+
+.vercelPickerButton {
+  color: var(--color-base-text-text-primary);
+  font-weight: 400 !important;
+  font-size: 16px !important;
+}

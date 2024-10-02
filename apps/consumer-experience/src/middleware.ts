@@ -179,6 +179,7 @@ export async function middleware(req: NextRequest) {
       const allPolicies = await getMyPoliciesByCarrier([
         CarrierId.SBUL,
         CarrierId.ELIC,
+        'WELB',
       ]);
       if (
         !allPolicies.data ||
@@ -210,6 +211,7 @@ export async function middleware(req: NextRequest) {
       const allPolicies = await getMyPoliciesByCarrier([
         CarrierId.SBUL,
         CarrierId.ELIC,
+        'WELB',
       ]);
       if (allPolicies.data && allPolicies.data.length === 1) {
         const [policy] = allPolicies.data;

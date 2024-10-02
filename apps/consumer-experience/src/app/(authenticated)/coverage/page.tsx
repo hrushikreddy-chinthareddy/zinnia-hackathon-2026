@@ -2,8 +2,11 @@ import { IconType, Label } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
 import { AccountValuePopover } from '@/components/account-value/AccountValuePopover';
+import { CarrierPicker } from '@/components/carrier-picker/CarrierPicker';
+import { CarrierPickerCookieOnly } from '@/components/carrier-picker/CarrierPickerCookieOnly';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
+import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
@@ -11,11 +14,15 @@ import { PolicyDetailsSummary } from '@/components/policy-details-summary/Policy
 import { CoveragePopover } from '@/components/policy-overview/CoveragePopover';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getMyPoliciesByCarrier } from '@/services';
-import { CarrierId } from '@/types/policy';
+import { getFeatureFlags } from '@/services/feature-flags';
+import { getCarrierIdsByThemeCookie } from '@/utils/carriers';
 import { formatUSDollars } from '@/utils/currency';
+import { lineOfBusinessUrlPath } from '@/utils/data';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { getThemeCookies } from '@/utils/theme';
+import { isVercelEnvironment } from '@/utils/url';
 
 import styles from './policies.module.css';
-import { lineOfBusinessUrlPath } from '@/utils/data';
 
 const pageTitle = getPageTitle(RouteKey.COVERAGE);
 // disable because NextJS needs this to be exported from this file
@@ -24,12 +31,16 @@ export const metadata: Metadata = {
   title: pageTitle,
 };
 
-//TODO: Feature flag returning the ELIC stuff?
 export default async function Page() {
-  const { data: policyReferenceData, error } = await getMyPoliciesByCarrier([
-    CarrierId.SBUL,
-    CarrierId.ELIC,
-  ]);
+  const featureFlagDecisions = await getFeatureFlags();
+  const themeCookie = await getThemeCookies();
+  const showPicker =
+    featureFlagDecisions?.[FEATURE_FLAGS.ANNUITY_MODE] && !themeCookie;
+
+  const carrierIds = getCarrierIdsByThemeCookie(themeCookie);
+
+  const { data: policyReferenceData, error } =
+    await getMyPoliciesByCarrier(carrierIds);
 
   if (error || policyReferenceData?.length === 0) {
     return (
@@ -43,6 +54,25 @@ export default async function Page() {
           />
         </div>
       </>
+    );
+  }
+
+  if (showPicker && policyReferenceData) {
+    return (
+      <div className="container">
+        <HeaderBreadcrumb title={pageTitle} preventReturnToPrevious />
+        <div className="card-container">
+          <p className="content-body-sm">
+            Select a policy below to get started.
+          </p>
+          {isVercelEnvironment() ? (
+            <CarrierPickerCookieOnly policies={policyReferenceData} />
+          ) : (
+            <CarrierPicker policies={policyReferenceData} />
+          )}
+        </div>
+        <Footer />
+      </div>
     );
   }
 

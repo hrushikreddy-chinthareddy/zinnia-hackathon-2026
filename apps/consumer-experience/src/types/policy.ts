@@ -33,6 +33,7 @@ export interface PolicyDetails {
   policyNumber: string;
   firstName: string;
   lastName: string;
+  carrierId?: string;
 }
 
 export interface UpcomingPremium {
