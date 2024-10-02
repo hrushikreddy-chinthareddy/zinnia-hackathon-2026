@@ -21,6 +21,8 @@ module.exports = {
     // this includes files from the monorepo base two directories up
     outputFileTracingRoot: path.join(__dirname, '../../'),
   },
+  // If you change these and need to test the changes, remember to go to network tab in browser tools
+  // and check Disable cache to ensure you are seeing your updated version
   async redirects() {
     return [
       {
