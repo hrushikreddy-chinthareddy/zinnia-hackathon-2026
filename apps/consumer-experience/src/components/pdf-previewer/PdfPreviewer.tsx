@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 import Loading from '@/app/loading';
 
@@ -36,7 +36,7 @@ export default function PdfPreviewer({
     const getDocumentData = async () => {
       let shouldRedirectToError = false;
       // default to the documents error page, however, if the response is a redirect we will use that (see below)
-      let redirectHref = `/policies/${planCode}/${policyNumber}/documents/error`;
+      let redirectHref = `/coverage/${planCode}/${policyNumber}/documents/error`;
 
       try {
         const response = await fetch(

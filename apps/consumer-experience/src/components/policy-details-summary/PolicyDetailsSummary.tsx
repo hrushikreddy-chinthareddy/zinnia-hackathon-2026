@@ -2,22 +2,22 @@ import { PolicyStatus } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 
 import { FullName } from '@/components/pii/FullName';
-import { checkIfNull, policyStatusDisplayText } from '@/utils/data';
+import {
+  checkIfNull,
+  isAnnuity,
+  lineOfBusinessDisplayText,
+  policyStatusDisplayText,
+} from '@/utils/data';
 import { toSentenceCase } from '@/utils/strings';
 
 import styles from './PolicyDetailsSummary.module.css';
+import { CarrierPolicyDetails } from '@/types/policy';
 
 interface DetailProps {
   className?: string;
   planCode: string;
   policyNumber: string;
-  summary: {
-    firstName: string;
-    lastName: string;
-    marketingName: string;
-    planName: string;
-    policyStatus: PolicyStatus;
-  };
+  summary: CarrierPolicyDetails;
 }
 
 export const PolicyDetailsSummary = ({
@@ -25,7 +25,8 @@ export const PolicyDetailsSummary = ({
   className,
   policyNumber,
 }: DetailProps) => {
-  const { firstName, lastName, marketingName, policyStatus } = summary;
+  const { firstName, lastName, marketingName, policyStatus, lineOfBusiness } =
+    summary;
   const statusStyle = () => {
     switch (policyStatus) {
       case PolicyStatus.PENDINGISSUED:
@@ -48,14 +49,15 @@ export const PolicyDetailsSummary = ({
         <span>{marketingName || ''}</span>
       </p>
       <div className={styles.policyDetails}>
-        <p className="typography-labels-label-md-alt">{`Policy No. ${checkIfNull(policyNumber)}`}</p>
+        <p className="typography-labels-label-md-alt">{`${toSentenceCase(lineOfBusinessDisplayText(lineOfBusiness))} #: ${checkIfNull(policyNumber)}`}</p>
 
         <>
           <p className="typography-labels-label-md-alt">
-            Insured: <FullName firstName={firstName} lastName={lastName} />
+            <span>{isAnnuity(lineOfBusiness) ? 'Annuitant' : 'Insured'}</span>:{' '}
+            <FullName firstName={firstName} lastName={lastName} />
           </p>
           <p className="typography-labels-label-md-alt">
-            Policy status:{' '}
+            Status:{' '}
             <span className={statusStyle()}>
               {checkIfNull(
                 toSentenceCase(policyStatusDisplayText[policyStatus])

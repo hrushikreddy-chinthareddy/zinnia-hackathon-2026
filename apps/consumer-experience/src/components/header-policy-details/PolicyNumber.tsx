@@ -11,7 +11,8 @@ export const PolicyNumber = ({
   planCode: string;
 }) => {
   const pathname = usePathname();
-  const policyUrl = `/policies/${planCode}/${policyNumber}`;
+  // TODO: annuities update
+  const policyUrl = `/coverage/policies/${planCode}/${policyNumber}`;
 
   if (pathname === policyUrl) {
     return <span>{policyNumber}</span>;

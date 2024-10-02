@@ -1,5 +1,7 @@
 import { NextURL } from 'next/dist/server/web/next-url';
 
+export const ROOT_URL_PATH = '/coverage';
+
 export type Index<T> = {
   [key: string]: T;
 };
@@ -17,4 +19,9 @@ export interface AppUrl {
   protocol: string;
   port: string;
   href: string;
+}
+
+export enum LineOfBusinessPath {
+  ANNUITIES = 'annuities',
+  POLICIES = 'policies',
 }

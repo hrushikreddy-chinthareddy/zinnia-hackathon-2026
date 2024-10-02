@@ -5,20 +5,30 @@ import { FieldData } from '@/components/field-data/FieldData';
 import { CoveragePopover } from '@/components/policy-overview/CoveragePopover';
 import { getCoverage } from '@/services';
 import { formatUSDollars } from '@/utils/currency';
-import { isNullEmptyOrUndefined } from '@/utils/data';
+import {
+  isAnnuity,
+  isNullEmptyOrUndefined,
+  lineOfBusinessUrlPath,
+} from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
-import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
+import { DEFAULT_UNAVAILABLE_STRING, pluralize } from '@/utils/strings';
 
 import styles from './PolicyOverview.module.css';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 const COVERAGE = 'Coverage';
 
 interface Props {
   planCode: string;
   policyNumber: string;
+  lineOfBusiness?: LineOfBusiness;
 }
 
-export const Coverage = async ({ planCode, policyNumber }: Props) => {
+export const Coverage = async ({
+  planCode,
+  policyNumber,
+  lineOfBusiness,
+}: Props) => {
   const { data, error } = await getCoverage({
     planCode,
     policyNumber,
@@ -37,16 +47,23 @@ export const Coverage = async ({ planCode, policyNumber }: Props) => {
   } = data!;
   const additionalItems = [];
   if (riderCount > 0) {
-    const riderText = riderCount > 1 ? 'riders' : 'rider';
+    const riderText = pluralize(
+      riderCount,
+      isAnnuity(lineOfBusiness) ? 'feature' : 'rider'
+    );
     additionalItems.push({
       content: (
-        <FieldData Label={<Label>Riders</Label>}>
-          <p className="typography-content-body-sm">{`${riderCount} ${riderText}`}</p>
+        <FieldData
+          Label={
+            <Label>{isAnnuity(lineOfBusiness) ? 'Features' : 'Riders'}</Label>
+          }
+        >
+          <p className="typography-content-body-sm">{`${riderText}`}</p>
         </FieldData>
       ),
       linkTo: {
-        url: `/policies/${planCode}/${policyNumber}/riders`,
-        label: 'riders',
+        url: `/coverage/${lineOfBusinessUrlPath(lineOfBusiness)}/${planCode}/${policyNumber}/riders`,
+        label: isAnnuity(lineOfBusiness) ? 'features' : 'riders',
       },
     });
   }
@@ -61,7 +78,7 @@ export const Coverage = async ({ planCode, policyNumber }: Props) => {
         </FieldData>
       ),
       linkTo: {
-        url: `/policies/${planCode}/${policyNumber}/beneficiaries`,
+        url: `/coverage/${lineOfBusinessUrlPath(lineOfBusiness)}/${planCode}/${policyNumber}/beneficiaries`,
         label: 'go to beneficiaries page',
       },
     });
@@ -75,12 +92,11 @@ export const Coverage = async ({ planCode, policyNumber }: Props) => {
     </p>
   );
 
-  // TODO: add conditions for policy statuses
   return (
     <ClickableCardContainer listItems={additionalItems}>
       <ClickableCardContainer.LinkContent
         linkTo={{
-          url: `/policies/${planCode}/${policyNumber}/coverage`,
+          url: `/coverage/${lineOfBusinessUrlPath(lineOfBusiness)}/${planCode}/${policyNumber}/my-coverage`,
           label: 'go to coverage page',
         }}
       >

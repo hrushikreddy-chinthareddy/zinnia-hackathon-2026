@@ -6,6 +6,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { RouteKey, getPageTitle, routeMap } from '@/route-map';
 
 import { HeaderLink } from '../header-link/HeaderLink';
+import { LineOfBusinessPath } from '@/types';
 
 interface PopoverInfo {
   content: ReactNode;
@@ -31,6 +32,10 @@ export const HeaderBreadcrumb = ({
   const [formatTitle, setFormatTitle] = useState(toTitleCase(title));
   const pathname = usePathname();
   const paths = (usePathname() || '').split('/');
+  const defaultTitle =
+    paths[2] === LineOfBusinessPath.ANNUITIES
+      ? 'contract overview'
+      : 'policy overview';
   const params = useParams<{
     planCode: string;
     policyNumber: string;
@@ -44,16 +49,17 @@ export const HeaderBreadcrumb = ({
       return;
     }
     const pathParts = pathname.split('/');
+
     const routeKey = pathParts[pathParts.length - 1] ?? '';
     let heading;
     // if the policy number is the route key it means we are on a Policy Detail page
     if (params.policyNumber === routeKey) {
-      heading = 'Policy overview';
+      heading = toTitleCase(defaultTitle);
       // if the beneficiary id is the route key it means we are on a Beneficiary Detail page
     } else if (params.beneficiary === routeKey) {
       heading = getPageTitle(RouteKey.BENEFICIARY);
     } else {
-      heading = routeMap[`/${routeKey}`]?.title ?? 'Policy overview';
+      heading = routeMap[`/${routeKey}`]?.title ?? toTitleCase(defaultTitle);
     }
     setFormatTitle(toTitleCase(heading));
   }, [params.beneficiary, params.policyNumber, pathname, title]);
@@ -63,13 +69,13 @@ export const HeaderBreadcrumb = ({
   let previousPath: string;
 
   if (currentPath === params.policyNumber) {
-    previousPath = 'policies';
+    previousPath = 'coverage';
   } else {
     // we need to remove the first item which is an empty string
     // we remove the last item because we want to go back up one level
     previousPath = paths.slice(1, -1).join('/');
   }
-  const previousPathName = previousPath || 'policy overview';
+  const previousPathName = previousPath || defaultTitle;
   const previousPathRoute = previousPath ? `/${previousPath}` : '/';
 
   return (

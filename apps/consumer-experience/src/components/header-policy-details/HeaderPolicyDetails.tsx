@@ -1,10 +1,10 @@
-import { PolicyStatus } from '@zinnia/api-types/types/sor';
+import { LineOfBusiness, PolicyStatus } from '@zinnia/api-types/types/sor';
 import { Badge, BadgeVariant } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { HTMLAttributes } from 'react';
 
 import { getPolicyForHeaderDetails } from '@/services/policy';
-import { policyStatusDisplayText } from '@/utils/data';
+import { isAnnuity, policyStatusDisplayText } from '@/utils/data';
 import { toSentenceCase } from '@/utils/strings';
 
 import styles from './HeaderPolicyDetails.module.css';
@@ -13,10 +13,12 @@ import { PolicyNumber } from './PolicyNumber';
 export interface Props extends HTMLAttributes<HTMLDivElement> {
   planCode: string;
   policyNumber: string;
+  lineOfBusiness?: LineOfBusiness;
 }
 
 export const HeaderPolicyDetails = async ({
   className,
+  lineOfBusiness = LineOfBusiness.LIFE,
   planCode,
   policyNumber,
 }: Props) => {
@@ -62,7 +64,7 @@ export const HeaderPolicyDetails = async ({
       <div>
         <p>{data.marketingName}</p>
         <p>
-          <span>Policy #: </span>
+          <span>{isAnnuity(lineOfBusiness) ? 'Contract' : 'Policy'} #: </span>
           <PolicyNumber planCode={planCode} policyNumber={policyNumber} />
         </p>
       </div>

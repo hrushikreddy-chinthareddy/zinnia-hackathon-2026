@@ -54,6 +54,31 @@ Add to your settings.json
 
 - Get the env variables from your favorite or least favorite local developer.
 
+### Local subdomains
+
+We swap themes based on subdomain. You can get subdomains locally by doing the following:
+
+From your user directory:
+
+```
+sudo nano /etc/hosts
+```
+
+Add the following two lines to the bottom of your file
+
+```
+127.0.0.1 everly.zinniatech.local
+127.0.0.1 wellabe.zinniatech.local
+```
+
+Then go to `.env.local` and change this value to match:
+
+```
+AUTH0_COOKIE_DOMAIN='zinniatech.local'
+```
+
+Now you can run the project and open `http://everly.zinniatech.local:3000/` to view the subdomain locally.
+
 ## Setting up a new user:
 
 1. You'll need a zinnia email adress to get extended permissions

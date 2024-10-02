@@ -25,7 +25,12 @@ const PhoneNumberInternal = (phone: Phone) => {
 };
 
 export const Phones = ({ phones, title }: PhoneProps) => {
-  if (!phones || phones.length === 0) {
+  if (
+    !phones ||
+    phones.length === 0 ||
+    // A phone object may return but without the dialNumber it will only show the label and show blank which is useless
+    phones.filter(phone => phone.dialNumber).length === 0
+  ) {
     return null;
   }
 

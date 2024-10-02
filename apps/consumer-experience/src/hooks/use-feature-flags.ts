@@ -19,6 +19,7 @@ export const useFeatureFlags = () => {
       try {
         setLoading(true);
         const featureFlagDecisions = await fetch('/api/feature-flags');
+
         const { featureFlags } = await featureFlagDecisions.json();
 
         setData(featureFlags);

@@ -56,7 +56,8 @@ export const paymentUrl = ({
 }: {
   planCode: string;
   policyNumber: string;
-}) => `/policies/${planCode}/${policyNumber}/premium`;
+  // TODO: annuities logic
+}) => `/coverage/policies/${planCode}/${policyNumber}/premium`;
 
 export const getNextUrl = ({
   step,

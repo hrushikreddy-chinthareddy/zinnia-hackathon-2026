@@ -92,6 +92,7 @@ export const transformPolicyReferenceData = (
       policyStartDate: p?.policyDates?.policyStartDate,
       // Date of last policy transaction, when policy value was last updated
       effectiveDate: p?.effectiveDate,
+      lineOfBusiness: p?.product?.lineOfBusiness,
       ...policyDetails,
     };
   });
@@ -132,6 +133,7 @@ export const transformPolicyForHeaderDetails = (
     planName: policy?.product?.planName || '',
     policyStatus: policy?.policyStatus || PolicyStatus.NOTISSUED,
     policyNumber: policy?.policyNumber || '',
+    carrierId: policy.carrierId,
     firstName: ownerInfo?.firstName || '',
     lastName: ownerInfo?.lastName || '',
   };

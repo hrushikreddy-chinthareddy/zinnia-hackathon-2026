@@ -1,3 +1,13 @@
+.main {
+  background-color: var(--color-base-surface-surface-tertiary, #ededed);
+  height: 100svh;
+}
+
+.formContainer {
+  text-align: center;
+  align-items: center;
+}
+
 .form {
   display: flex;
   flex-direction: column;
@@ -112,13 +122,13 @@
   width: max-content;
 }
 
-@media (width >= 1024px) {
+@media (width >= 767px) {
+  .formContainer {
+    padding: var(--measure-dimension-padding-4xl) 144px;
+  }
+
   .submit {
     margin-left: 0;
     margin-right: 0;
-  }
-
-  .mfaOptionsContainer {
-    align-self: flex-start;
   }
 }

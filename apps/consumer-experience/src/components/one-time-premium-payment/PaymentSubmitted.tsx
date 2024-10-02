@@ -52,12 +52,14 @@ export const PaymentSubmitted = ({
         </p>
         <div className={premiumStyles.buttonGroup}>
           <Link
-            href={`/policies/${planCode}/${policyNumber}`}
+            // TODO: annuities logic
+            href={`/coverage/policies/${planCode}/${policyNumber}`}
             text="Back to policy overview"
             variant="button"
           />
           <Link
-            href={`/policies/${planCode}/${policyNumber}/premium/history`}
+            // TODO: annuities logic
+            href={`/coverage/policies/${planCode}/${policyNumber}/premium/history`}
             text="Go to payment history"
           />
         </div>

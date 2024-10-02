@@ -20,7 +20,9 @@ import {
 import { getMyPoliciesByCarrier } from './services';
 import { consumerExperienceAPIBaseUrl } from './services/api-config';
 import { ServerApi } from './services/server-http';
+import { ROOT_URL_PATH } from './types';
 import { TermsAndConditionApiResponse } from './types/auth';
+import { CarrierId } from './types/policy';
 import {
   deleteCookie,
   deleteSession,
@@ -33,7 +35,8 @@ import {
   setTermsAndConditionsCookie,
   touchSession,
 } from './utils/auth';
-import { CarrierId } from './types/policy';
+import { lineOfBusinessUrlPath } from './utils/data';
+import { applyThemeCookies } from './utils/theme';
 
 /**
  * NextJS doesn't foward the headers to react server components.
@@ -99,6 +102,8 @@ export async function middleware(req: NextRequest) {
   const isLoginLikeOrRoot = pathname.includes('/login') || pathname === '/';
   const isSessionPage = pathname === '/session';
 
+  applyThemeCookies(req, resNext);
+
   if (session) {
     const searchParmas = req.nextUrl.searchParams;
     const fromLogin = searchParmas.get(FROM_LOGIN_QUERY_KEY);
@@ -122,7 +127,7 @@ export async function middleware(req: NextRequest) {
     await touchSession(resNext);
 
     if (isLoginLikeOrRoot) {
-      return NextResponse.redirect(new URL('/policies', req.url));
+      return NextResponse.redirect(new URL(ROOT_URL_PATH, req.url));
     }
 
     const returnUrl = await getReturnUrlCookie();
@@ -136,37 +141,45 @@ export async function middleware(req: NextRequest) {
       return resRedirect;
     }
 
-    // we don't want to delete the return url if the user is on the policies index page
-    // so we need to check the path name includes /policies/. This tells us we are inside a policy detail page
+    // This logic is hit when a user had a friendly url + multiple policies and has clicked on their
+    // selected policy. Rather than going to the policy overview page, we redirect them to the route
+    // of the friendly url so we check to see if the 3 pathname url item is present,
+    // if it is that means it is not the coverage index page (because it has more than '' and ROOT_URL_PATH in the array)
+    //
     if (
-      req.nextUrl.pathname.includes('/policies/') &&
+      req.nextUrl.pathname.includes('/coverage/') &&
       returnUrl &&
       redirectObj
     ) {
       // there is no good way at the moment to get params in middleware like there is on the client side (useParams)
       // so we need to grab the planCode and policyNumber from the path
       const urlParts = pathname.split('/');
-      const planCode = urlParts[2] ?? '';
-      const policyNumber = urlParts[3] ?? '';
+      const planCode = urlParts[3] ?? '';
+      const policyNumber = urlParts[4] ?? '';
+      const lineOfBusiness = urlParts[2] ?? '';
       const url = getRedirectUrl(redirectObj, {
         planCode,
         policyNumber,
+        lineOfBusiness,
       });
       const resRedirect = NextResponse.redirect(new URL(url, req.url));
       await deleteCookie(RETURN_TO_URL_COOKIE_KEY, resRedirect);
       return resRedirect;
     }
 
-    const redirect = pathname !== RouteKey.POLICIES && routeMap[pathname];
+    // If the url is not the index page AND has a friendly url object
+    const redirect = pathname !== RouteKey.COVERAGE && routeMap[pathname];
+
     // if we get here and we have a redirect we need to determine how many policies a user has
     // if they have multiple policies or some unknown error occurs we send them to the policies index page
     // after the user select a policy we will redirect them to the appropiate page.
     // For example if the user entered /riders after they select a policy we will redirect them to
-    // /policies/[planCode]/[policyNumber]/riders
+    // /coverage/[planCode]/[policyNumber]/riders
     if (redirect) {
       const allPolicies = await getMyPoliciesByCarrier([
         CarrierId.SBUL,
         CarrierId.ELIC,
+        'WELB',
       ]);
       if (
         !allPolicies.data ||
@@ -174,7 +187,7 @@ export async function middleware(req: NextRequest) {
         allPolicies.data.length > 1
       ) {
         const resRedirect = NextResponse.redirect(
-          new URL('/policies', req.url)
+          new URL(ROOT_URL_PATH, req.url)
         );
         await setReturnUrlCookie(req.nextUrl, resRedirect);
         await setRefreshRouterCookie(resRedirect);
@@ -185,6 +198,7 @@ export async function middleware(req: NextRequest) {
       const redirectUrl = getRedirectUrl(redirect, {
         planCode: policy?.planCode || '',
         policyNumber: policy?.policyNumber || '',
+        lineOfBusiness: lineOfBusinessUrlPath(policy?.lineOfBusiness),
       });
 
       return NextResponse.redirect(new URL(redirectUrl, req.url));
@@ -197,13 +211,14 @@ export async function middleware(req: NextRequest) {
       const allPolicies = await getMyPoliciesByCarrier([
         CarrierId.SBUL,
         CarrierId.ELIC,
+        'WELB',
       ]);
       if (allPolicies.data && allPolicies.data.length === 1) {
         const [policy] = allPolicies.data;
 
         return NextResponse.redirect(
           new URL(
-            `/policies/${policy?.planCode}/${policy?.policyNumber}`,
+            `/coverage/${lineOfBusinessUrlPath(policy?.lineOfBusiness)}/${policy?.planCode}/${policy?.policyNumber}`,
             req.url
           )
         );
@@ -218,6 +233,7 @@ export async function middleware(req: NextRequest) {
   if (req.cookies.has(HAD_PREVIOUS_SESSION_COOKIE_KEY) && isSessionPage) {
     await deleteCookie(HAD_PREVIOUS_SESSION_COOKIE_KEY, resNext);
     await deleteSession(resNext);
+
     return resNext;
   }
 

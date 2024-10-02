@@ -12,6 +12,7 @@ import {
   PartyRole,
   BankAccount,
   ProductType,
+  LineOfBusiness,
 } from '@zinnia/api-types/types/sor';
 import { policyOwner } from '@zinnia/utils';
 import dayjs from 'dayjs';
@@ -19,6 +20,7 @@ import dayjs from 'dayjs';
 import { BankDetail } from '@/components/person-data/types';
 
 import { DEFAULT_ERROR_STRING, toSentenceCase } from './strings';
+import { LineOfBusinessPath } from '@/types';
 
 export const EVERLY_CONTACT_PHONE_NUMBER = '1-855-290-0529';
 
@@ -323,4 +325,32 @@ export const getBankAccountByBankId = (
   bankAccounts: BankAccount[]
 ) => {
   return bankAccounts.find(b => b.bankId === bankId);
+};
+
+export const isAnnuity = (lineOfBusiness?: LineOfBusiness) => {
+  return (
+    lineOfBusiness === LineOfBusiness.ANNUITY ||
+    lineOfBusiness === ('Annuity Product' as LineOfBusiness)
+  );
+};
+
+// TODO: should this default to policies or should we return null if its not one of the two expected?
+export const lineOfBusinessUrlPath = (lineOfBusiness?: LineOfBusiness) => {
+  if (!lineOfBusiness) {
+    return '';
+  }
+
+  if (isAnnuity(lineOfBusiness)) {
+    return LineOfBusinessPath.ANNUITIES;
+  }
+
+  return LineOfBusinessPath.POLICIES;
+};
+
+export const lineOfBusinessDisplayText = (lineOfBusiness?: LineOfBusiness) => {
+  if (isAnnuity(lineOfBusiness)) {
+    return 'contract';
+  }
+
+  return 'policy';
 };

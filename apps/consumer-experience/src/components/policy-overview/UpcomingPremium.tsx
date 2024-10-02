@@ -110,7 +110,9 @@ export const UpcomingPremium = async ({
     <ClickableCardContainer>
       <ClickableCardContainer.LinkContent
         linkTo={{
-          url: extended ? '' : `/policies/${planCode}/${policyNumber}/premium`,
+          url: extended
+            ? ''
+            : `/coverage/policies/${planCode}/${policyNumber}/premium`, //annuities logic
           label: 'go to premium payments page',
         }}
       >

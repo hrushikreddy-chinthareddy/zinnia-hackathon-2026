@@ -82,7 +82,7 @@ export const GET = async (
 
     return NextResponse.redirect(
       new URL(
-        `/policies/${planCode}/${policyNumber}/documents/error`,
+        `/coverage/${planCode}/${policyNumber}/documents/error`,
         request.url
       )
     );

@@ -15,6 +15,7 @@ import {
   PolicyFeature,
   ProductType,
   Fund,
+  LineOfBusiness,
 } from '@zinnia/api-types/types/sor';
 
 import { BankDetail } from '@/components/person-data/types';
@@ -32,6 +33,7 @@ export interface PolicyDetails {
   policyNumber: string;
   firstName: string;
   lastName: string;
+  carrierId?: string;
 }
 
 export interface UpcomingPremium {
@@ -86,6 +88,7 @@ export interface CarrierPolicyDetails extends PolicyDetails {
   totalCoverageAmount?: number | null;
   policyStartDate?: string | null;
   effectiveDate?: string | null;
+  lineOfBusiness?: LineOfBusiness;
 }
 
 export interface PolicyApiResponse<T> {

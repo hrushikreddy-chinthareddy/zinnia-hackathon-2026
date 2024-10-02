@@ -18,7 +18,7 @@ export const CancelDialogLink: React.FC<CancelDialogLinkProps> = ({
   return (
     <ConfirmDialog
       confirmCallback={() =>
-        router.push(`/policies/${planCode}/${policyNumber}/premium`)
+        router.push(`/coverage/${planCode}/${policyNumber}/premium`)
       }
       linkText="Cancel"
       message="If you leave now, your payment won't be submitted and you will have to start over."

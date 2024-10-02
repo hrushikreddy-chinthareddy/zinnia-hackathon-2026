@@ -1,5 +1,5 @@
 import { ActionTypes, BpmBankAction } from '@/store/store';
-import { PolicyProfile } from '@/types/policy';
+import { CarrierPolicyDetails, PolicyProfile } from '@/types/policy';
 
 /**
  * We only want to poll the endpoint if a change happened and we're tracking for it.
@@ -37,4 +37,13 @@ export const shouldStopBankPolling = (
     default:
       return true;
   }
+};
+
+export const filterPoliciesByCarrierId = (
+  policies: CarrierPolicyDetails[],
+  carrierId: string[]
+) => {
+  return policies.filter(
+    policy => policy?.carrierId && carrierId.includes(policy.carrierId)
+  );
 };

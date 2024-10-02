@@ -3,6 +3,8 @@
 @import './borders.css';
 /* TODO: THIS NEEDS TO BE DYNAMIC!!!! */
 @import './everly/theme.css';
+@import './wellabe/theme.css';
+@import './colors.css';
 
 /*
 * ELEMENTS
