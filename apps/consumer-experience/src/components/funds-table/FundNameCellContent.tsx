@@ -32,7 +32,6 @@ export const FundNameCellContent = ({
               'typography-nav-links-sm-inline'
             )}
           >
-            {isElected && <span className={styles.isElected}>&#x2022;</span>}
             {fundDetails.fundName}
           </span>
           {isElected && <span className="sr-only">is an elected fund</span>}

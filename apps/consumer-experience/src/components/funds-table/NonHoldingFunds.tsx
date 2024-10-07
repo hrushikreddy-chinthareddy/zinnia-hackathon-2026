@@ -43,14 +43,14 @@ export const NonHoldingFunds = ({
       return {
         fundName: 'Name',
         fundValue: 'Value',
-        allocation: 'Percentage',
+        allocation: 'Allocation',
       };
     }
 
     return {
       fundName: 'Name',
       fundValue: 'Value',
-      allocation: '%',
+      allocation: 'Alloc',
     };
   }, [width]);
 
@@ -99,14 +99,10 @@ export const NonHoldingFunds = ({
       )}
       {!isLoading && (
         <TableBody>
-          {funds?.map(fund => {
-            if (!fund || !fund.fundName) {
-              return null;
-            }
-
+          {funds?.map((fund, i) => {
             return (
               <TableRow
-                key={fund.fundId}
+                key={fund.fundId || `${fund}-${i}`}
                 className={`typography-content-body-sm ${styles.tableRow}`}
               >
                 <TableCell>

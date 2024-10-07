@@ -2,14 +2,13 @@ import { PolicyFeature } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 
+import styles from '@/app/(authenticated)/coverage/shared-styles/Funds.module.css';
 import { AccountValue } from '@/components/account-value/AccountValue';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { getPolicyFundDetails, getPolicyStatusDetails } from '@/services';
 import { formatUSDollars } from '@/utils/currency';
 import { convertKebabedDateString } from '@/utils/dates';
-
-import styles from '@/app/(authenticated)/coverage/shared-styles/Funds.module.css';
 
 export const OriginalFundsView = async ({
   planCode,
@@ -67,10 +66,10 @@ export const OriginalFundsView = async ({
         callToAction={
           isFreelook
             ? `You can't take edit allocations until your free look period ends on ${convertKebabedDateString(statusData.endDate)}. Questions?`
-            : 'Editing fund allocations is coming soon. For now, '
+            : 'Editing allocations is coming soon. For now, '
         }
         contactPrompt={isFreelook ? undefined : 'call'}
-        customInstruction="."
+        customInstruction="to make changes."
       />
     </div>
   );
