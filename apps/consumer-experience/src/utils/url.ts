@@ -20,3 +20,25 @@ export const isVercelEnvironment = () => {
 
   return url.includes('vercel.app');
 };
+
+/**
+ * Returns a subdomain based on x-forwarded-host.
+ * @param requestHeaders
+ * @returns
+ */
+export const getSubdomain = (requestHeaders: Headers) => {
+  return requestHeaders.get('x-forwarded-host')?.split('.')[0];
+};
+
+export const getPolicyDataFromPath = (pathname: string) => {
+  const urlParts = pathname.split('/');
+  const lineOfBusiness = urlParts[2] ?? '';
+  const planCode = urlParts[3] ?? '';
+  const policyNumber = urlParts[4] ?? '';
+
+  return {
+    lineOfBusiness,
+    planCode,
+    policyNumber,
+  };
+};

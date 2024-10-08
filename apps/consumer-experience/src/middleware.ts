@@ -1,3 +1,4 @@
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import {
   RequestCookies,
   ResponseCookies,
@@ -17,7 +18,7 @@ import {
   SHOW_DEV_MENU_COOKIE_KEY,
 } from '@/utils/serverClientUtils';
 
-import { getMyPoliciesByCarrier } from './services';
+import { getMyPoliciesByCarrier, getPolicyDetails } from './services';
 import { consumerExperienceAPIBaseUrl } from './services/api-config';
 import { ServerApi } from './services/server-http';
 import { ROOT_URL_PATH } from './types';
@@ -35,8 +36,14 @@ import {
   setTermsAndConditionsCookie,
   touchSession,
 } from './utils/auth';
+import { getCarrierSubdomainById } from './utils/carriers';
 import { lineOfBusinessUrlPath } from './utils/data';
 import { applyThemeCookies } from './utils/theme';
+import {
+  getPolicyDataFromPath,
+  getSubdomain,
+  prependSubdomain,
+} from './utils/url';
 
 /**
  * NextJS doesn't foward the headers to react server components.
@@ -153,10 +160,9 @@ export async function middleware(req: NextRequest) {
     ) {
       // there is no good way at the moment to get params in middleware like there is on the client side (useParams)
       // so we need to grab the planCode and policyNumber from the path
-      const urlParts = pathname.split('/');
-      const planCode = urlParts[3] ?? '';
-      const policyNumber = urlParts[4] ?? '';
-      const lineOfBusiness = urlParts[2] ?? '';
+      const { planCode, policyNumber, lineOfBusiness } =
+        getPolicyDataFromPath(pathname);
+
       const url = getRedirectUrl(redirectObj, {
         planCode,
         policyNumber,
@@ -220,6 +226,37 @@ export async function middleware(req: NextRequest) {
           new URL(
             `/coverage/${lineOfBusinessUrlPath(policy?.lineOfBusiness)}/${policy?.planCode}/${policy?.policyNumber}`,
             req.url
+          )
+        );
+      }
+    }
+
+    // Ensure user is on a valid subdomain for the policy theyre viewing.
+    // If not, redirect them to the correct subdomain for a policy
+    if (pathname.includes('/coverage/')) {
+      const { planCode, policyNumber, lineOfBusiness } =
+        getPolicyDataFromPath(pathname);
+
+      if (!planCode || !policyNumber || !lineOfBusiness) {
+        return resNext;
+      }
+
+      const { data: policyData } = await getPolicyDetails({
+        planCode,
+        policyNumber,
+      });
+
+      const carrierSubdomain = getCarrierSubdomainById(policyData?.carrierId);
+      const currentSubDomain = getSubdomain(req.headers);
+
+      const onWrongUrl = carrierSubdomain !== currentSubDomain;
+
+      if (onWrongUrl) {
+        const subdomainPath = prependSubdomain(carrierSubdomain);
+        return NextResponse.redirect(
+          new URL(
+            `/coverage/${lineOfBusinessUrlPath(lineOfBusiness as LineOfBusiness)}/${planCode}/${policyNumber}`,
+            subdomainPath
           )
         );
       }

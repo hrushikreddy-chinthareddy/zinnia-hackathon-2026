@@ -576,6 +576,7 @@ export const transformPolicyDetails = (policy: Policy): Partial<Policy> => {
       planName: policy.product?.planName,
       planCode: policy.product?.planCode,
     },
+    carrierId: policy.carrierId,
     accountValues: {
       loanedPortionOfAccountValue:
         policy.accountValues?.loanedPortionOfAccountValue,

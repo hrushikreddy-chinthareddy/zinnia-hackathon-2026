@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { getCookie, setCookie } from './auth';
 import { THEME_COOKIE } from './serverClientUtils';
-import { isVercelEnvironment } from './url';
+import { getSubdomain, isVercelEnvironment } from './url';
 
 export const themes = ['everly', 'wellabe'];
 
@@ -34,7 +34,7 @@ export const applyThemeCookies = (
   if (onVercel) {
     return;
   }
-  const subdomain = req.headers.get('x-forwarded-host')?.split('.')[0];
+  const subdomain = getSubdomain(req.headers);
 
   if (subdomain && isValidTheme(subdomain)) {
     res.cookies.set(THEME_COOKIE, subdomain);
