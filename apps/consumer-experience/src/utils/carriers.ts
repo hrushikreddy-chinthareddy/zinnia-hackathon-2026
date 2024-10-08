@@ -35,7 +35,7 @@ export const getCarrierSubdomainByName = (
 
 export const getCarrierNameById = (
   carrierId: string | undefined | null
-): string => {
+): CarrierNames | string => {
   switch (carrierId?.toUpperCase()) {
     case CarrierId.ELIC:
     case CarrierId.SBUL:
@@ -131,28 +131,39 @@ export interface CarrierListDetail {
     label: string;
   };
   displayText: string;
-  carrierName: CarrierNames;
+  carrierName: CarrierNames | string;
 }
 
-type PoliciesGroupedByCarrier = { [key: string]: CarrierPolicyDetails[] };
+type PoliciesGroupedByCarrier = {
+  [key in CarrierNames]: CarrierPolicyDetails[];
+};
 
-export const getCarrierListDetails = (
+const getPoliciesGroupedByCarrier = (
   policies: CarrierPolicyDetails[]
-): CarrierListDetail[] => {
-  const policiesGroupedByCarrier = policies.reduce((acc, policy) => {
+): PoliciesGroupedByCarrier => {
+  return policies.reduce((acc, policy) => {
     const policyCarrierName = getCarrierNameById(policy.carrierId);
     if (policyCarrierName) {
-      acc[policyCarrierName] = [...(acc[policyCarrierName] || []), policy];
+      acc[policyCarrierName as CarrierNames] = [
+        ...(acc[policyCarrierName as CarrierNames] || []),
+        policy,
+      ];
     }
 
     return acc;
   }, {} as PoliciesGroupedByCarrier);
+};
 
-  return Object.keys(policiesGroupedByCarrier).map(carrier => {
-    const name = carrier;
-    const subdomain = getCarrierSubdomainByName(name);
+export const getCarrierListDetails = (
+  policies: CarrierPolicyDetails[]
+): CarrierListDetail[] => {
+  const policiesGroupedByCarrier = getPoliciesGroupedByCarrier(policies);
+
+  return Object.keys(policiesGroupedByCarrier).map(carrierName => {
+    const subdomain = getCarrierSubdomainByName(carrierName);
     const subdomainPath = prependSubdomain(subdomain);
-    const policiesNumber = policiesGroupedByCarrier[name]?.length;
+    const policiesNumber =
+      policiesGroupedByCarrier[carrierName as CarrierNames]?.length;
     let displayText = '';
 
     if (policiesNumber) {
@@ -164,11 +175,11 @@ export const getCarrierListDetails = (
 
     return {
       link: {
-        label: name,
+        label: carrierName,
         href: subdomainPath,
       },
       displayText,
-      carrierName: name,
-    } as CarrierListDetail;
+      carrierName,
+    };
   });
 };

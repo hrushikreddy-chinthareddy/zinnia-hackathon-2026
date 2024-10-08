@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import EverlyIcon from '@/app/styles/everly/assets/everly-logo-icon.svg';
+import WellabeIcon from '@/app/styles/wellabe/assets/wellabe-logo-icon.svg';
 import { UserBadge } from '@/components/user-badge/UserBadge';
 import { useFeatureFlags } from '@/hooks/use-feature-flags';
 import useMock from '@/hooks/use-mock';
@@ -28,8 +29,7 @@ const carrierIcons: Record<
   > | null
 > = {
   [CarrierNames.EVERLY]: EverlyIcon,
-  // TODO: add wellabe icon when we have one
-  [CarrierNames.WELLABE]: null,
+  [CarrierNames.WELLABE]: WellabeIcon,
 };
 
 export const NavMenu = ({
@@ -95,7 +95,8 @@ export const NavMenu = ({
               {carrierPolicyDetails &&
                 carrierPolicyDetails.length &&
                 carrierPolicyDetails.map((detail: CarrierListDetail) => {
-                  const CarrierIcon = carrierIcons[detail.carrierName];
+                  const CarrierIcon =
+                    carrierIcons[detail.carrierName as CarrierNames];
 
                   return (
                     <li
