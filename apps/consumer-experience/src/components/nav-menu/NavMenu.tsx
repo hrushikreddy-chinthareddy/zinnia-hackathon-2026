@@ -71,7 +71,7 @@ export const NavMenu = ({
           sideOffset={10}
           align="end"
         >
-          <div>
+          <div className="typography-nav-nav-drawer">
             <ul>
               <li
                 className={clsx({
