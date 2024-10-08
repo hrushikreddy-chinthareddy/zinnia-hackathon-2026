@@ -1,16 +1,16 @@
 import { PolicyStatus } from '@zinnia/api-types/types/sor';
 
+import { CarrierNames, Subdomains } from '@/types/carriers';
 import { CarrierId, CarrierPolicyDetails } from '@/types/policy';
 
 import {
   getCarrierSubdomainById,
   getCarrierSubdomainByName,
   getCarrierNameById,
-  Subdomains,
-  CarrierNames,
   getCarrierIdsFromPolicies,
   getCarrierNamesFromIds,
   hasMultipleCarriers,
+  getCarrierListDetails,
 } from './carriers';
 
 describe('carriers', () => {
@@ -220,6 +220,57 @@ describe('carriers', () => {
       ];
 
       expect(hasMultipleCarriers(policies)).toBe(true);
+    });
+  });
+
+  describe('getCarrierNameById', () => {
+    // Returns correct CarrierListDetail array for valid CarrierPolicyDetails input
+    it('should return correct CarrierListDetail array when given valid CarrierPolicyDetails input', () => {
+      process.env.AUTH0_COOKIE_DOMAIN = 'zinniatech.local';
+      const mockPolicies = [
+        { carrierId: 'ELIC', planCode: 'P1' },
+        { carrierId: 'WELB', planCode: 'P2' },
+      ] as CarrierPolicyDetails[];
+      const expectedOutput = [
+        {
+          link: {
+            href: 'http://everly.zinniatech.local:3000',
+            label: CarrierNames.EVERLY,
+          },
+          displayText: '(1 policy)',
+          carrierName: CarrierNames.EVERLY,
+        },
+        {
+          link: {
+            href: 'http://wellabe.zinniatech.local:3000',
+            label: CarrierNames.WELLABE,
+          },
+          displayText: '(1 policy)',
+          carrierName: CarrierNames.WELLABE,
+        },
+      ];
+
+      jest.mock('./carriers', () => ({
+        getCarrierNameById: jest.fn(id => {
+          if (id === 'ELIC') return 'EVERLY';
+          if (id === 'WELB') return 'WELLABE';
+          return '';
+        }),
+        getCarrierSubdomainByName: jest.fn(name => {
+          if (name === 'EVERLY') return 'everly';
+          if (name === 'WELLABE') return 'wellabe';
+          return '';
+        }),
+      }));
+
+      jest.mock('./url', () => ({
+        prependSubdomain: jest.fn(
+          subdomain => `https://${subdomain}.example.com`
+        ),
+      }));
+
+      const result = getCarrierListDetails(mockPolicies);
+      expect(result).toEqual(expectedOutput);
     });
   });
 });

@@ -1,14 +1,7 @@
+import { CarrierNames, Subdomains } from '@/types/carriers';
 import { CarrierId, CarrierPolicyDetails } from '@/types/policy';
 
-export enum Subdomains {
-  EVERLY = 'everly',
-  WELLABE = 'wellabe',
-}
-
-export enum CarrierNames {
-  EVERLY = 'Everly',
-  WELLABE = 'Wellabe',
-}
+import { prependSubdomain } from './url';
 
 export const getCarrierSubdomainById = (
   carrierId: string | undefined | null
@@ -42,7 +35,7 @@ export const getCarrierSubdomainByName = (
 
 export const getCarrierNameById = (
   carrierId: string | undefined | null
-): string => {
+): CarrierNames | string => {
   switch (carrierId?.toUpperCase()) {
     case CarrierId.ELIC:
     case CarrierId.SBUL:
@@ -55,6 +48,12 @@ export const getCarrierNameById = (
   }
 };
 
+/**
+ * Returns a Set of carrier names for the given set of carrier IDs.
+ * If an ID doesn't correspond to a known carrier, it is ignored.
+ * @param ids The Set of carrier IDs to get the names for.
+ * @returns A Set of the carrier names.
+ */
 export const getCarrierNamesFromIds = (ids: Set<string>) => {
   const carrierNames = new Set<string>();
   for (const id of ids) {
@@ -66,6 +65,12 @@ export const getCarrierNamesFromIds = (ids: Set<string>) => {
   return carrierNames;
 };
 
+/**
+ * Returns a Set of unique carrier IDs from the given policies.
+ * If the policies array is empty or null, an empty Set is returned.
+ * @param policies The policies to get the carrier IDs from.
+ * @returns A Set of unique carrier IDs.
+ */
 export const getCarrierIdsFromPolicies = (
   policies: CarrierPolicyDetails[] | null
 ) => {
@@ -118,4 +123,63 @@ export const isValidCarrierSubdomain = (
   value: string | undefined
 ): value is Subdomains => {
   return Object.values(Subdomains).some(enumValue => enumValue === value);
+};
+
+export interface CarrierListDetail {
+  link: {
+    href: string;
+    label: string;
+  };
+  displayText: string;
+  carrierName: CarrierNames | string;
+}
+
+type PoliciesGroupedByCarrier = {
+  [key in CarrierNames]: CarrierPolicyDetails[];
+};
+
+const getPoliciesGroupedByCarrier = (
+  policies: CarrierPolicyDetails[]
+): PoliciesGroupedByCarrier => {
+  return policies.reduce((acc, policy) => {
+    const policyCarrierName = getCarrierNameById(policy.carrierId);
+    if (policyCarrierName) {
+      acc[policyCarrierName as CarrierNames] = [
+        ...(acc[policyCarrierName as CarrierNames] || []),
+        policy,
+      ];
+    }
+
+    return acc;
+  }, {} as PoliciesGroupedByCarrier);
+};
+
+export const getCarrierListDetails = (
+  policies: CarrierPolicyDetails[]
+): CarrierListDetail[] => {
+  const policiesGroupedByCarrier = getPoliciesGroupedByCarrier(policies);
+
+  return Object.keys(policiesGroupedByCarrier).map(carrierName => {
+    const subdomain = getCarrierSubdomainByName(carrierName);
+    const subdomainPath = prependSubdomain(subdomain);
+    const policiesNumber =
+      policiesGroupedByCarrier[carrierName as CarrierNames]?.length;
+    let displayText = '';
+
+    if (policiesNumber) {
+      displayText =
+        policiesNumber > 1
+          ? `(${policiesNumber} policies)`
+          : `(${policiesNumber} policy)`;
+    }
+
+    return {
+      link: {
+        label: carrierName,
+        href: subdomainPath,
+      },
+      displayText,
+      carrierName,
+    };
+  });
 };
