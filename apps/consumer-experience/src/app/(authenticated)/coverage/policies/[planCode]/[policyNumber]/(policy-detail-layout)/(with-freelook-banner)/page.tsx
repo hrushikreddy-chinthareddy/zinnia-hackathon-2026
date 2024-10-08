@@ -19,8 +19,7 @@ import { LineOfBusinessPath } from '@/types';
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
   // Include the carrier name here because the template only works for the children
-  // TODO: update carrier name when we solve dynamic carrier setting
-  title: 'Policy Overview - Everly',
+  title: 'Policy Overview',
 };
 
 export default async function Page({
