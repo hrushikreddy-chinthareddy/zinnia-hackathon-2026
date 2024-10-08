@@ -3,8 +3,7 @@ import type { Metadata } from 'next';
 import '@/app/styles/globals.css';
 
 import styles from '@/app/layout.module.css';
-import { DesktopNav } from '@/components/desktop-nav/DesktopNav';
-import { MobileNav } from '@/components/mobile-nav/MobileNav';
+import { Nav } from '@/components/nav/Nav';
 import { PiiProvider } from '@/components/providers/PiiProvider';
 import { RefreshRouterManager } from '@/components/providers/RefreshRouterManager';
 import { SessionManager } from '@/components/providers/SessionManager';
@@ -52,15 +51,7 @@ export default async function AuthenticatedLayout({
         >
           <SessionManager>
             <RefreshRouterManager>
-              {/* To prevent hydration error by trying to render these dynamically using screen width,
-          dynamically displaying using media queries */}
-              <MobileNav
-                userName={{
-                  firstName: undefined,
-                  lastName: undefined,
-                }}
-              />
-              <DesktopNav
+              <Nav
                 planCode={params.planCode}
                 policyNumber={params.policyNumber}
                 userName={{

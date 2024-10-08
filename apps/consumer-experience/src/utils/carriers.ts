@@ -1,14 +1,8 @@
+import { CarrierNames, Subdomains } from '@/types/carriers';
 import { CarrierId, CarrierPolicyDetails } from '@/types/policy';
 
-export enum Subdomains {
-  EVERLY = 'everly',
-  WELLABE = 'wellabe',
-}
-
-export enum CarrierNames {
-  EVERLY = 'Everly',
-  WELLABE = 'Wellabe',
-}
+import { filterPoliciesByCarrierId } from './policy';
+import { prependSubdomain } from './url';
 
 export const getCarrierSubdomainById = (
   carrierId: string | undefined | null
@@ -118,4 +112,43 @@ export const isValidCarrierSubdomain = (
   value: string | undefined
 ): value is Subdomains => {
   return Object.values(Subdomains).some(enumValue => enumValue === value);
+};
+
+export interface CarrierListDetail {
+  link: {
+    href: string;
+    label: string;
+  };
+  displayText: string;
+  carrierName: CarrierNames;
+}
+
+export const getCarrierListDetails = (
+  policies: CarrierPolicyDetails[]
+): CarrierListDetail[] => {
+  const carrierIds = getCarrierIdsFromPolicies(policies);
+
+  return Array.from(carrierIds).map(id => {
+    const name = getCarrierNameById(id);
+    const subdomain = getCarrierSubdomainByName(name);
+    const subdomainPath = prependSubdomain(subdomain);
+    const carrierIds = getCarrierIdsByName(name);
+    const policiesNumber = filterPoliciesByCarrierId(
+      policies,
+      carrierIds
+    ).length;
+    const displayText =
+      policiesNumber > 1
+        ? `(${policiesNumber} policies)`
+        : `(${policiesNumber} policy)`;
+
+    return {
+      link: {
+        label: name,
+        href: subdomainPath,
+      },
+      displayText,
+      carrierName: name,
+    } as CarrierListDetail;
+  });
 };

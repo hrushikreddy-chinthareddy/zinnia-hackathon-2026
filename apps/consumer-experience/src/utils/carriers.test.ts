@@ -1,13 +1,12 @@
 import { PolicyStatus } from '@zinnia/api-types/types/sor';
 
+import { CarrierNames, Subdomains } from '@/types/carriers';
 import { CarrierId, CarrierPolicyDetails } from '@/types/policy';
 
 import {
   getCarrierSubdomainById,
   getCarrierSubdomainByName,
   getCarrierNameById,
-  Subdomains,
-  CarrierNames,
   getCarrierIdsFromPolicies,
   getCarrierNamesFromIds,
   hasMultipleCarriers,
