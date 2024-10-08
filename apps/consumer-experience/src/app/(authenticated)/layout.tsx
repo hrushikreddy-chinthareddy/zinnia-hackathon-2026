@@ -17,7 +17,7 @@ import { THEME_COOKIE } from '@/utils/serverClientUtils';
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
   title: {
-    template: '%s | Zinnia Tech',
+    template: '%s | MyPolicyView',
     default: 'Policies',
   },
 };

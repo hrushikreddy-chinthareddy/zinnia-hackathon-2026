@@ -7,7 +7,7 @@ import { GenericInfoPage } from '@/components/generic-info-page/GenericInfoPage'
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
-  title: 'Welcome | Zinnia Tech',
+  title: 'Welcome | MyPolicyView',
 };
 
 export default async function WelcomePage() {

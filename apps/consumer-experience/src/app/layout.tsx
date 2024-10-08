@@ -16,8 +16,8 @@ import Providers from './providers';
 export const metadata: Metadata = {
   title: {
     // TODO: eventually using whatever mechanism we decide to switch carriers, this carrier name will need to be dynamic
-    template: '%s | Zinnia Tech',
-    default: 'Login | Zinnia Tech',
+    template: '%s | MyPolicyView',
+    default: 'Login | MyPolicyView',
   },
 };
 
@@ -91,9 +91,11 @@ const secondaryFont = localFont({
 });
 
 const MouseflowTrackingCode = () => {
-  let mouseflowURL = "//cdn.mouseflow.com/projects/1053425d-a13d-4dd7-abc8-9fcaabe2f38b.js";
+  let mouseflowURL =
+    '//cdn.mouseflow.com/projects/1053425d-a13d-4dd7-abc8-9fcaabe2f38b.js';
   if (isProd()) {
-    mouseflowURL = "//cdn.mouseflow.com/projects/55155137-cbba-44d3-8750-8d43ae890911.js";
+    mouseflowURL =
+      '//cdn.mouseflow.com/projects/55155137-cbba-44d3-8750-8d43ae890911.js';
   }
 
   return (
