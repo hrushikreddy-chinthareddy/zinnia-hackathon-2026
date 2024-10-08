@@ -10,6 +10,7 @@ import {
   getCarrierIdsFromPolicies,
   getCarrierNamesFromIds,
   hasMultipleCarriers,
+  getCarrierListDetails,
 } from './carriers';
 
 describe('carriers', () => {
@@ -219,6 +220,50 @@ describe('carriers', () => {
       ];
 
       expect(hasMultipleCarriers(policies)).toBe(true);
+    });
+  });
+
+  describe('getCarrierNameById', () => {
+    // Returns correct CarrierListDetail array for valid CarrierPolicyDetails input
+    it('should return correct CarrierListDetail array when given valid CarrierPolicyDetails input', () => {
+      const mockPolicies = [
+        { carrierId: 'ELIC', planCode: 'P1' },
+        { carrierId: 'WELB', planCode: 'P2' },
+      ] as CarrierPolicyDetails[];
+      const expectedOutput = [
+        {
+          link: { href: 'https://everly.example.com', label: 'EVERLY' },
+          displayText: '(1 policy)',
+          carrierName: 'EVERLY',
+        },
+        {
+          link: { href: 'https://wellabe.example.com', label: 'WELLABE' },
+          displayText: '(1 policy)',
+          carrierName: 'WELLABE',
+        },
+      ];
+
+      jest.mock('./carriers', () => ({
+        getCarrierNameById: jest.fn(id => {
+          if (id === 'ELIC') return 'EVERLY';
+          if (id === 'WELB') return 'WELLABE';
+          return '';
+        }),
+        getCarrierSubdomainByName: jest.fn(name => {
+          if (name === 'EVERLY') return 'everly';
+          if (name === 'WELLABE') return 'wellabe';
+          return '';
+        }),
+      }));
+
+      jest.mock('./url', () => ({
+        prependSubdomain: jest.fn(
+          subdomain => `https://${subdomain}.example.com`
+        ),
+      }));
+
+      const result = getCarrierListDetails(mockPolicies);
+      expect(result).toEqual(expectedOutput);
     });
   });
 });
