@@ -16,8 +16,7 @@ import { THEME_COOKIE } from '@/utils/serverClientUtils';
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
   title: {
-    // TODO: eventually using whatever mechanism we decide to switch carriers, this carrier name will need to be dynamic
-    template: '%s | Zinnia Tech',
+    template: '%s | MyPolicyView',
     default: 'Policies',
   },
 };

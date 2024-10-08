@@ -8,8 +8,7 @@ import { PolicyStatusAlertBanner } from '@/components/policy-status-alert-banner
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
   title: {
-    // TODO: eventually using whatever mechanism we decide to switch carriers, this carrier name will need to be dynamic
-    template: '%s - Everly | Zinnia Tech',
+    template: '%s | MyPolicyView',
     default: 'Policy',
   },
 };

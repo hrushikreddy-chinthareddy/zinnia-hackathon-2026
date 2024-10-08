@@ -16,8 +16,8 @@ import Providers from './providers';
 export const metadata: Metadata = {
   title: {
     // TODO: eventually using whatever mechanism we decide to switch carriers, this carrier name will need to be dynamic
-    template: '%s | Zinnia Tech',
-    default: 'Login | Zinnia Tech',
+    template: '%s | MyPolicyView',
+    default: 'Login | MyPolicyView',
   },
 };
 
