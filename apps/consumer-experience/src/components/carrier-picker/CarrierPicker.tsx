@@ -1,12 +1,5 @@
 import { CarrierPolicyDetails } from '@/types/policy';
-import {
-  getCarrierIdsByName,
-  getCarrierIdsFromPolicies,
-  getCarrierNamesFromIds,
-  getCarrierSubdomainByName,
-} from '@/utils/carriers';
-import { filterPoliciesByCarrierId } from '@/utils/policy';
-import { prependSubdomain } from '@/utils/url';
+import { getCarrierListDetails } from '@/utils/carriers';
 
 import styles from './CarrierPicker.module.css';
 import { ClickableCardContainer } from '../clickable-card-container/ClickableCardContainer';
@@ -24,33 +17,21 @@ export const CarrierPicker = async ({
 }: {
   policies: CarrierPolicyDetails[];
 }) => {
-  const carrierIds = getCarrierIdsFromPolicies(policies);
-  const carrierNames = getCarrierNamesFromIds(carrierIds);
+  const carrierListDetails = getCarrierListDetails(policies);
 
   return (
     <div className={styles.carrierPicker}>
-      {Array.from(carrierNames).map(name => {
-        const subdomain = getCarrierSubdomainByName(name);
-        const subdomainPath = prependSubdomain(subdomain);
-        const carrierIds = getCarrierIdsByName(name);
-        const policiesNumber = filterPoliciesByCarrierId(
-          policies,
-          carrierIds
-        ).length;
-
+      {carrierListDetails.map(({ carrierName, displayText, link }) => {
         return (
-          <ClickableCardContainer key={name}>
+          <ClickableCardContainer key={carrierName}>
             <ClickableCardContainer.LinkContent
               linkTo={{
-                label: name,
-                url: `${subdomainPath}`,
+                label: carrierName,
+                url: `${link.href}`,
                 isInternal: true,
               }}
             >
-              {name}{' '}
-              {policiesNumber > 1
-                ? `(${policiesNumber} policies)`
-                : `(${policiesNumber} policy)`}
+              {carrierName} {displayText}
             </ClickableCardContainer.LinkContent>
           </ClickableCardContainer>
         );

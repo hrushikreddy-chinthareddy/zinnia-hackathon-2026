@@ -37,7 +37,6 @@ export const NavMenu = ({
   carrierPolicyDetails,
 }: {
   userName: { firstName?: string; lastName?: string };
-  // TODO: fix type
   carrierPolicyDetails?: CarrierListDetail[] | null;
 }) => {
   const { data: featureFlagData } = useFeatureFlags();
@@ -102,7 +101,6 @@ export const NavMenu = ({
                     <li
                       key={detail.carrierName}
                       className={clsx({
-                        // TODO: not sure how to determine what url is "active"
                         [styles.active as string]:
                           pathname === navUrls.allPolicies &&
                           currentUrl.includes(detail.carrierName.toLowerCase()),

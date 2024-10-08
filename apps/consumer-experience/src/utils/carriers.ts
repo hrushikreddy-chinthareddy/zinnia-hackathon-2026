@@ -1,7 +1,6 @@
 import { CarrierNames, Subdomains } from '@/types/carriers';
 import { CarrierId, CarrierPolicyDetails } from '@/types/policy';
 
-import { filterPoliciesByCarrierId } from './policy';
 import { prependSubdomain } from './url';
 
 export const getCarrierSubdomainById = (
@@ -49,6 +48,12 @@ export const getCarrierNameById = (
   }
 };
 
+/**
+ * Returns a Set of carrier names for the given set of carrier IDs.
+ * If an ID doesn't correspond to a known carrier, it is ignored.
+ * @param ids The Set of carrier IDs to get the names for.
+ * @returns A Set of the carrier names.
+ */
 export const getCarrierNamesFromIds = (ids: Set<string>) => {
   const carrierNames = new Set<string>();
   for (const id of ids) {
@@ -60,6 +65,12 @@ export const getCarrierNamesFromIds = (ids: Set<string>) => {
   return carrierNames;
 };
 
+/**
+ * Returns a Set of unique carrier IDs from the given policies.
+ * If the policies array is empty or null, an empty Set is returned.
+ * @param policies The policies to get the carrier IDs from.
+ * @returns A Set of unique carrier IDs.
+ */
 export const getCarrierIdsFromPolicies = (
   policies: CarrierPolicyDetails[] | null
 ) => {
@@ -123,24 +134,33 @@ export interface CarrierListDetail {
   carrierName: CarrierNames;
 }
 
+type PoliciesGroupedByCarrier = { [key: string]: CarrierPolicyDetails[] };
+
 export const getCarrierListDetails = (
   policies: CarrierPolicyDetails[]
 ): CarrierListDetail[] => {
-  const carrierIds = getCarrierIdsFromPolicies(policies);
+  const policiesGroupedByCarrier = policies.reduce((acc, policy) => {
+    const policyCarrierName = getCarrierNameById(policy.carrierId);
+    if (policyCarrierName) {
+      acc[policyCarrierName] = [...(acc[policyCarrierName] || []), policy];
+    }
 
-  return Array.from(carrierIds).map(id => {
-    const name = getCarrierNameById(id);
+    return acc;
+  }, {} as PoliciesGroupedByCarrier);
+
+  return Object.keys(policiesGroupedByCarrier).map(carrier => {
+    const name = carrier;
     const subdomain = getCarrierSubdomainByName(name);
     const subdomainPath = prependSubdomain(subdomain);
-    const carrierIds = getCarrierIdsByName(name);
-    const policiesNumber = filterPoliciesByCarrierId(
-      policies,
-      carrierIds
-    ).length;
-    const displayText =
-      policiesNumber > 1
-        ? `(${policiesNumber} policies)`
-        : `(${policiesNumber} policy)`;
+    const policiesNumber = policiesGroupedByCarrier[name]?.length;
+    let displayText = '';
+
+    if (policiesNumber) {
+      displayText =
+        policiesNumber > 1
+          ? `(${policiesNumber} policies)`
+          : `(${policiesNumber} policy)`;
+    }
 
     return {
       link: {
