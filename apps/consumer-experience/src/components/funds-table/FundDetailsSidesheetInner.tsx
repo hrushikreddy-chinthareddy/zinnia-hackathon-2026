@@ -95,8 +95,10 @@ const ItemDescriptionSidesheet = ({
 
 export const FundDetailsSidesheetInner = ({
   fundDetails,
+  sweepDateInfo,
 }: {
   fundDetails?: Fund;
+  sweepDateInfo?: string;
 }) => {
   if (!fundDetails) {
     return null;
@@ -211,7 +213,7 @@ export const FundDetailsSidesheetInner = ({
                 <ItemDescriptionSidesheet
                   key="sweepDate"
                   title="Next sweep date"
-                  innerContent="On this date, all money in the holding account will be “swept” or moved into the account(s) you've elected. In most cases, the sweep date happens on the same date every month."
+                  innerContent={sweepDateInfo}
                 />,
               ]}
             >

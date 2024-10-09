@@ -12,9 +12,11 @@ import { ControlledSidesheet } from '../controlled-sidesheet/ControlledSidesheet
 export const FundNameCellContent = ({
   isElected,
   fundDetails,
+  sweepDateInfo,
 }: {
   isElected?: boolean;
   fundDetails: Fund;
+  sweepDateInfo?: string;
 }) => {
   // TODO: what is the null handling here?
   if (!fundDetails) {
@@ -46,7 +48,10 @@ export const FundNameCellContent = ({
           <FundDescription fund={fundDetails} />
         </div>
 
-        <FundDetailsSidesheetInner fundDetails={fundDetails} />
+        <FundDetailsSidesheetInner
+          fundDetails={fundDetails}
+          sweepDateInfo={sweepDateInfo}
+        />
       </div>
     </ControlledSidesheet>
   );

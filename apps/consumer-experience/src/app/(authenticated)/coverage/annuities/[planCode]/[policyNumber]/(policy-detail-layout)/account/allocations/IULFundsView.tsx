@@ -1,7 +1,7 @@
 'use client';
 import { useQuery } from '@tanstack/react-query';
 import { FundAccountTypeEnum } from '@zinnia/api-types/types/funds';
-import { PolicyFeature } from '@zinnia/api-types/types/sor';
+import { LineOfBusiness, PolicyFeature } from '@zinnia/api-types/types/sor';
 import { Label, Icon, IconType, Popover } from '@zinnia/bloom/components';
 import { toTitleCase } from '@zinnia/utils';
 
@@ -65,17 +65,16 @@ export const IULFundsView = ({
               trigger={
                 <Icon
                   type={IconType.CIRCLE_INFO}
-                  color="var(--color-base-icon-icon-tooltip, #ff7500)"
-                  width={16}
-                  height={16}
+                  color="var(--color-base-icon-icon-tooltip)"
+                  small
                 />
               }
             >
               <p>
                 Holding accounts are where your premium dollars are first
-                deposited. While there, all fees and charges (like your cost of
-                of insurance) come out. Then, what remains is moved or “swept”
-                into the account(s) you've selected on the sweep date.
+                deposited. While there, all fees and charges come out. Then,
+                what remains is moved or “swept” into the account(s) you've
+                selected on the sweep date.
               </p>
             </Popover>,
           ]}
@@ -83,7 +82,11 @@ export const IULFundsView = ({
           <h2>{toTitleCase('holding accounts')}</h2>
         </Label>
 
-        <HoldingFunds funds={funds?.holding} isLoading={isLoading} />
+        <HoldingFunds
+          funds={funds?.holding}
+          isLoading={isLoading}
+          lineOfBusiness={LineOfBusiness.ANNUITY}
+        />
       </div>
 
       <div className={styles.sectionContainer}>

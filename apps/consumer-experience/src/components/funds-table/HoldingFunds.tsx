@@ -1,5 +1,6 @@
 'use client';
 
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import {
   Label,
   Table,
@@ -32,21 +33,33 @@ const SHOW_ALL_HOLDING_FUNDS_DETAILS_WIDTH = 767;
 export const HoldingFunds = ({
   funds,
   isLoading,
+  lineOfBusiness,
 }: {
   funds?: Fund[];
   isLoading?: boolean;
+  lineOfBusiness?: LineOfBusiness;
 }) => {
   const { width } = useWindowSize();
 
   // Because Next renders on the server first, we were getting hydration error from this switch because the react-use
   // library sets width and height to Infinity by default and if window is undefined (which it is on the server) the width
   // and height never get updated to actual browser window size. Fun!!
+  console.log(width);
   const isDesktop =
     width !== Infinity && width >= SHOW_ALL_HOLDING_FUNDS_DETAILS_WIDTH;
 
   if ((!funds || funds.length === 0) && !isLoading) {
     return <NoDataAvailable />;
   }
+
+  const sweepDateInfo = () => {
+    switch (lineOfBusiness) {
+      case LineOfBusiness.ANNUITY:
+        return "On this date, all money in the holding account will be “swept” or moved into the account(s) or fund(s) you've elected. In most cases, the sweep date happens on the same date every month.";
+      default:
+        return "On this date, all money in the holding account will be “swept” or moved into the account(s) you've elected. In most cases, the sweep date happens on the same date every month.";
+    }
+  };
 
   return (
     <Table preventBackgroundHoverInteraction>
@@ -90,7 +103,7 @@ export const HoldingFunds = ({
                   <LabelPopover
                     key={NEXT_SWEEP_DATE_LABEL}
                     title={NEXT_SWEEP_DATE_LABEL}
-                    content="On this date, all money in the holding account will be “swept” or moved into the account(s) you've elected. In most cases, the sweep date happens on the same date every month."
+                    content={sweepDateInfo()}
                   />,
                 ]}
               >
@@ -114,6 +127,7 @@ export const HoldingFunds = ({
                   <FundNameCellContent
                     isElected={fund.isElected}
                     fundDetails={fund}
+                    sweepDateInfo={sweepDateInfo()}
                   />
                 </TableCell>
                 {isDesktop && (

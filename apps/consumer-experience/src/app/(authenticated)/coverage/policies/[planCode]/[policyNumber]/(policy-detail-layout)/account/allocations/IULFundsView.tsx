@@ -1,12 +1,13 @@
 'use client';
 import { useQuery } from '@tanstack/react-query';
 import { FundAccountTypeEnum } from '@zinnia/api-types/types/funds';
-import { PolicyFeature } from '@zinnia/api-types/types/sor';
+import { LineOfBusiness, PolicyFeature } from '@zinnia/api-types/types/sor';
 import { Label, Icon, IconType, Popover } from '@zinnia/bloom/components';
 import { toTitleCase } from '@zinnia/utils';
 
 import styles from '@/app/(authenticated)/coverage/shared-styles/Funds.module.css';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
+import { ClientOnly } from '@/components/client-only/ClientOnly';
 import { HoldingFunds } from '@/components/funds-table/HoldingFunds';
 import { NonHoldingFunds } from '@/components/funds-table/NonHoldingFunds';
 import { sortNonHoldingFunds } from '@/components/funds-table/utils';
@@ -66,8 +67,7 @@ export const IULFundsView = ({
                 <Icon
                   type={IconType.CIRCLE_INFO}
                   color="var(--color-base-icon-icon-tooltip, #ff7500)"
-                  width={16}
-                  height={16}
+                  small
                 />
               }
             >
@@ -83,7 +83,13 @@ export const IULFundsView = ({
           <h2>{toTitleCase('holding accounts')}</h2>
         </Label>
 
-        <HoldingFunds funds={funds?.holding} isLoading={isLoading} />
+        <ClientOnly>
+          <HoldingFunds
+            funds={funds?.holding}
+            isLoading={isLoading}
+            lineOfBusiness={LineOfBusiness.LIFE}
+          />
+        </ClientOnly>
       </div>
 
       <div className={styles.sectionContainer}>
@@ -103,7 +109,9 @@ export const IULFundsView = ({
             The following accounts are available for your policy.
           </p>
         </div>
-        <NonHoldingFunds funds={funds?.nonHolding} isLoading={isLoading} />
+        <ClientOnly>
+          <NonHoldingFunds funds={funds?.nonHolding} isLoading={isLoading} />
+        </ClientOnly>
       </div>
     </>
   );
