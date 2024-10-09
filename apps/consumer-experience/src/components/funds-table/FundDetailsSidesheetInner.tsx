@@ -1,5 +1,6 @@
 'use client';
 import { FundAccountTypeEnum } from '@zinnia/api-types/types/funds';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Label, Icon, IconType } from '@zinnia/bloom/components';
 import { toSentenceCase } from '@zinnia/utils';
 import { ReactNode } from 'react';
@@ -11,6 +12,7 @@ import { percentFormatify } from '@/utils/numbers';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';
 
 import styles from './FundDetailsSidesheetInner.module.css';
+import { allocationAccountInfo, sweepDateInfo } from './utils';
 import { ControlledSidesheet } from '../controlled-sidesheet/ControlledSidesheet';
 import { FieldData } from '../field-data/FieldData';
 
@@ -95,10 +97,10 @@ const ItemDescriptionSidesheet = ({
 
 export const FundDetailsSidesheetInner = ({
   fundDetails,
-  sweepDateInfo,
+  lineOfBusiness,
 }: {
   fundDetails?: Fund;
-  sweepDateInfo?: string;
+  lineOfBusiness?: LineOfBusiness;
 }) => {
   if (!fundDetails) {
     return null;
@@ -186,7 +188,7 @@ export const FundDetailsSidesheetInner = ({
               <ItemDescriptionSidesheet
                 key="totalFundValue"
                 title="Value"
-                innerContent="This is the amount of your account value currently allocated in this specific account."
+                innerContent={allocationAccountInfo(lineOfBusiness)}
               />,
             ]}
           >
@@ -213,7 +215,7 @@ export const FundDetailsSidesheetInner = ({
                 <ItemDescriptionSidesheet
                   key="sweepDate"
                   title="Next sweep date"
-                  innerContent={sweepDateInfo}
+                  innerContent={sweepDateInfo(lineOfBusiness)}
                 />,
               ]}
             >
