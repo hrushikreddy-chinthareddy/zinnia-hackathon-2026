@@ -26,8 +26,13 @@ const RefreshRouterManager = ({ children }: { children: React.ReactNode }) => {
       return;
     }
     const refreshRouter = Cookies.get(REFRESH_ROUTER_COOKIE_KEY) === '1';
+
     if (refreshRouter) {
-      Cookies.remove(REFRESH_ROUTER_COOKIE_KEY);
+      Cookies.remove(REFRESH_ROUTER_COOKIE_KEY, {
+        domain:
+          process.env.NEXT_PUBLIC_AUTH0_COOKIE_DOMAIN ||
+          process.env.VERCEL_BRANCH_URL,
+      });
       router.refresh();
     }
   }, [pathname, router]);

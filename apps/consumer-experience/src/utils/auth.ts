@@ -425,8 +425,5 @@ export const setRefreshRouterCookie = async (res?: NextResponse) => {
     value: '1',
     cookieName: REFRESH_ROUTER_COOKIE_KEY,
     res,
-    cookieConfig: {
-      domain: undefined,
-    },
   });
 };
