@@ -113,6 +113,7 @@ export const NonHoldingFunds = ({
                   <FundNameCellContent
                     fundDetails={fund}
                     isElected={fund.isElected}
+                    lineOfBusiness={lineOfBusiness}
                   />
                 </TableCell>
                 <TableCell className={dataValueStyles(fund.totalFundValue)}>
