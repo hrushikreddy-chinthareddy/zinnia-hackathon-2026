@@ -44,6 +44,7 @@ export interface UpcomingPremium {
   planName: string;
   policyStatus: PolicyStatus;
   productType?: ProductType;
+  lineOfBusiness?: LineOfBusiness;
 }
 
 export interface PolicyAccountValue {
@@ -51,6 +52,7 @@ export interface PolicyAccountValue {
   effectiveDate?: string | null;
   valueChange?: number | null;
   policyStartDate?: string;
+  lineOfBusiness?: LineOfBusiness;
 }
 
 export interface PolicyCoverage {
