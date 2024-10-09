@@ -42,6 +42,7 @@ export const NavMenu = ({
   const { data: featureFlagData } = useFeatureFlags();
   const showAnnuities = featureFlagData?.[FEATURE_FLAGS.ANNUITY_MODE];
   const [currentUrl, setCurrentUrl] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const { isMockOn } = useMock();
 
@@ -51,12 +52,27 @@ export const NavMenu = ({
     }
   }, [carrierPolicyDetails]);
 
+  useEffect(() => {
+    if (isOpen) {
+      setIsOpen(false);
+    }
+    // I know this is ignoring exhaustive deps, but this is really a true, blue
+    // side effect and if i include isOpen in the deps array, it will prevent the
+    // Popover from every opening
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
+
   if (!featureFlagData) {
     return null;
   }
 
   return (
-    <Popover.Root>
+    <Popover.Root
+      onOpenChange={() => {
+        setIsOpen(!isOpen);
+      }}
+      open={isOpen}
+    >
       <Popover.Trigger
         className={clsx({ [styles.mockOn as string]: isMockOn })}
       >
