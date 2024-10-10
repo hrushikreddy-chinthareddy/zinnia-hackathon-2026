@@ -50,7 +50,7 @@ export const NonHoldingFunds = ({
     return {
       fundName: 'Name',
       fundValue: 'Value',
-      allocation: 'Alloc',
+      allocation: 'Alloc.',
     };
   }, [width]);
 

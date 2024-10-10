@@ -1,4 +1,4 @@
-import { FundAccountType, Policy } from '@zinnia/api-types/types/sor';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import { transformPolicyForFundDetails } from './transformers';
 
@@ -135,39 +135,6 @@ describe('transformPolicyForFundDetails', () => {
         fundId: '1',
         fundName: 'Fund 1',
         totalFundValue: 1000,
-      },
-    ]);
-  });
-
-  it('should set fundAccountType to undefined', () => {
-    const policy: Policy = {
-      allocation: {
-        fundAllocationsInvestments: [
-          {
-            fundId: '1',
-            fundName: 'Fund 1',
-            allocationPercentage: 0.5,
-            fundAccountType: FundAccountType.INDEX,
-          },
-        ],
-        funds: [
-          {
-            fundId: '1',
-            fundName: 'Fund 1',
-            totalFundValue: 1000,
-            fundAccountType: FundAccountType.INDEX,
-          },
-        ],
-      },
-    };
-    const result = transformPolicyForFundDetails(policy);
-    expect(result).toEqual([
-      {
-        fundId: '1',
-        fundName: 'Fund 1',
-        allocationPercentage: 0.5,
-        totalFundValue: 1000,
-        fundAccountType: undefined,
       },
     ]);
   });

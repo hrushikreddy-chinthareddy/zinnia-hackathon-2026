@@ -240,7 +240,6 @@ export const transformPolicyForFundDetails = (
         ...item,
         fundName: item?.fundName,
         allocationPercentage: item?.allocationPercentage,
-        fundAccountType: undefined, // We do not want to set the fundAccountType from this endpoint, because it is not accurate compared to the /funds API
       })
   );
 
@@ -253,7 +252,6 @@ export const transformPolicyForFundDetails = (
         ...item,
         fundName: item?.fundName,
         totalFundValue: item?.totalFundValue,
-        fundAccountType: undefined, // We do not want to set the fundAccountType from this endpoint, because it is not accurate compared to the /funds API
       })
   );
   const mergedArr = Array.from(map.values());

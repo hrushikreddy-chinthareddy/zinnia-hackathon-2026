@@ -1,4 +1,7 @@
-import { ProductRules } from '@zinnia/api-types/types/funds';
+import {
+  FundAccountTypeEnum,
+  ProductRules,
+} from '@zinnia/api-types/types/funds';
 
 import { PolicyFund } from '@/types/policy';
 import { getNextOccurrenceOfDay } from '@/utils/dates';
@@ -59,7 +62,7 @@ export const combineFundData = ({
         ...map.get(item.fundId), //get the previous mapped value if it exists and spread the object out
         ...item,
         isElected: !!item?.allocationPercentage,
-        fundAccountType: undefined,
+        fundAccountType: item.fundAccountType as unknown as FundAccountTypeEnum,
       })
   );
 
