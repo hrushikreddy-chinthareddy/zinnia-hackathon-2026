@@ -56,31 +56,31 @@ export const routeMap: Index<RouteMap> = {
   [RouteKey.ACCOUNT]: {
     destination: '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/account',
     source: '/account',
-    title: 'Account value',
+    title: 'Account Value',
   },
   [RouteKey.PREMIUM_HISTORY]: {
     destination:
       '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/premium/history',
     source: '/history',
-    title: 'Premium history',
+    title: 'Premium History',
   },
   [RouteKey.HISTORY]: {
     destination:
       '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/premium/history',
     source: '/premium/history',
-    title: 'Premium history',
+    title: 'Premium History',
   },
   [RouteKey.PREMIUM_DETAILS]: {
     destination:
       '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/premium/details',
     source: '/premium-details',
-    title: 'Payment details',
+    title: 'Payment Details',
   },
   [RouteKey.DETAILS]: {
     destination:
       '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/premium/details',
     source: '/premium/details',
-    title: 'Payment details',
+    title: 'Payment Details',
   },
   [RouteKey.BENEFICIARIES]: {
     destination:

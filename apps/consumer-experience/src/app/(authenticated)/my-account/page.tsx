@@ -1,10 +1,17 @@
 import { Label } from '@zinnia/bloom/components';
+import { Metadata } from 'next';
 
 import { FieldData } from '@/components/field-data/FieldData';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderLink } from '@/components/header-link/HeaderLink';
 import { getSession } from '@/utils/auth';
 import { checkIfNull } from '@/utils/data';
+
+// disable because NextJS needs this to be exported from this file
+// eslint-disable-next-line react-refresh/only-export-components
+export const metadata: Metadata = {
+  title: 'My Account',
+};
 
 export default async function MyAccount() {
   const session = await getSession();
