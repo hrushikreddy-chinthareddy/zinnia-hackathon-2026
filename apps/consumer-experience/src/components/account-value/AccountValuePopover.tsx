@@ -1,14 +1,8 @@
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
-import {
-  Icon,
-  IconType,
-  Popover,
-  PopoverPlacement,
-} from '@zinnia/bloom/components';
 
 import { standardDateMonthDayYear } from '@/utils/dates';
 
-import styles from '../policy-overview/PolicyOverview.module.css';
+import { LabelPopover } from '../label-popover/LabelPopover';
 const ACCOUNT_VALUE = 'Account value';
 
 export const AccountValuePopover = ({
@@ -24,20 +18,8 @@ export const AccountValuePopover = ({
       : `This is how much money is held in your policy as of ${standardDateMonthDayYear(dataTimestamp)}. Policy value may grow over time as the premium dollars allocated to your account value earn interest.`;
 
   return (
-    <Popover
-      title={ACCOUNT_VALUE}
-      trigger={
-        <Icon
-          type={IconType.CIRCLE_INFO}
-          small
-          color="var(--color-base-icon-icon-tooltip, #ff7500)"
-        />
-      }
-      placement={PopoverPlacement.BottomRight}
-    >
-      <div className={styles.popoverContent}>
-        <p className="typography-content-body">{content}</p>
-      </div>
-    </Popover>
+    <LabelPopover title={ACCOUNT_VALUE}>
+      <p className="typography-content-body">{content}</p>
+    </LabelPopover>
   );
 };

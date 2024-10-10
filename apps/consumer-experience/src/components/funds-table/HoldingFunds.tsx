@@ -66,8 +66,12 @@ export const HoldingFunds = ({
                   <LabelPopover
                     key={INTEREST_RATE_LABEL}
                     title={INTEREST_RATE_LABEL}
-                    content="This is the rate of growth being earned on the amount within a fixed account or holding account."
-                  />,
+                  >
+                    <p>
+                      This is the rate of growth being earned on the amount
+                      within a fixed account or holding account.
+                    </p>
+                  </LabelPopover>,
                 ]}
               >
                 {toSentenceCase(INTEREST_RATE_LABEL)}
@@ -77,11 +81,9 @@ export const HoldingFunds = ({
           <TableHeaderCell>
             <Label
               interactiveElements={[
-                <LabelPopover
-                  key={FUND_VALUE_LABEL}
-                  title={FUND_VALUE_LABEL}
-                  content={allocationAccountInfo(lineOfBusiness)}
-                />,
+                <LabelPopover key={FUND_VALUE_LABEL} title={FUND_VALUE_LABEL}>
+                  {allocationAccountInfo(lineOfBusiness)}
+                </LabelPopover>,
               ]}
             >
               {toSentenceCase(FUND_VALUE_LABEL)}
@@ -94,8 +96,9 @@ export const HoldingFunds = ({
                   <LabelPopover
                     key={NEXT_SWEEP_DATE_LABEL}
                     title={NEXT_SWEEP_DATE_LABEL}
-                    content={sweepDateInfo(lineOfBusiness)}
-                  />,
+                  >
+                    {sweepDateInfo(lineOfBusiness)}
+                  </LabelPopover>,
                 ]}
               >
                 {toSentenceCase(NEXT_SWEEP_DATE_LABEL)}

@@ -3,7 +3,6 @@ import {
   AllocationColorBar,
   Icon,
   IconType,
-  Popover,
   contingentColorOrder,
   primaryColorOrder,
 } from '@zinnia/bloom/components';
@@ -12,6 +11,7 @@ import { Metadata } from 'next';
 import styles from '@/app/(authenticated)/coverage/shared-styles/Beneficiaries.module.css';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
+import { LabelPopover } from '@/components/label-popover/LabelPopover';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { FullName } from '@/components/pii/FullName';
@@ -147,24 +147,14 @@ export default async function Beneficiaries({
             <div className={styles.allocationHeader}>
               <Icon type={IconType.USER_GROUP} />
               <h2 className="typography-labels-label-md">Primary allocation</h2>
-              <Popover
-                trigger={
-                  <Icon
-                    type={IconType.CIRCLE_INFO}
-                    width={16}
-                    height={16}
-                    color="var(--color-base-icon-icon-tooltip, #ff7500)"
-                  />
-                }
-                title="Primary allocation"
-              >
+              <LabelPopover title="Primary allocation">
                 <p>
                   Your primary allocation tells us how to split up the money
                   between primary beneficiaries after you die. Your primary
                   beneficiaries are first in line to receive payment from your
                   death benefit.
                 </p>
-              </Popover>
+              </LabelPopover>
             </div>
             <AllocationColorBar
               type="primary"
@@ -186,24 +176,14 @@ export default async function Beneficiaries({
               <h2 className="typography-labels-label-md">
                 Contingent allocation
               </h2>
-              <Popover
-                trigger={
-                  <Icon
-                    type={IconType.CIRCLE_INFO}
-                    width={16}
-                    height={16}
-                    color="var(--color-base-icon-icon-tooltip, #ff7500)"
-                  />
-                }
-                title="Contingent allocation"
-              >
+              <LabelPopover title="Contingent allocation">
                 <p>
                   Your contingent allocation tells us how to split up the money
                   between contingent beneficiaries, if needed. Contingent
                   beneficiaries will receive payment according to your contract
                   terms, if your primary beneficiaries have died.
                 </p>
-              </Popover>
+              </LabelPopover>
             </div>
             <AllocationColorBar
               type="contingent"
