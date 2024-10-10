@@ -160,9 +160,14 @@ export const transformPolicyForProfile = (policy: Policy): PolicyProfile => {
 export const transformPolicyForUpcomingPremium = (
   policy: Policy
 ): UpcomingPremium => {
+  const upcomingPremium = policy.systematicPrograms?.find(
+    sp => sp.reason === Reason.PREMIUM
+  );
+
   return {
-    amount: policy.systematicPrograms?.[0]?.amount || 0,
-    nextActivityDate: policy.systematicPrograms?.[0]?.nextProgramDate || '',
+    amount: upcomingPremium?.amount || 0,
+    nextActivityDate: upcomingPremium?.nextProgramDate || '',
+    nextActivityStatus: upcomingPremium?.status,
     planName: policy.product?.planName || '',
     policyStatus: policy.policyStatus || PolicyStatus.NOTISSUED,
     productType: policy?.product?.productType,
