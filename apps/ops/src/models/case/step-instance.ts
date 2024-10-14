@@ -1,0 +1,43 @@
+import { AdditionalData } from '@deps/components/case-sub-page/case-tabs.tsx/case-tabs-helpers';
+import { Statuses } from '@deps/models/case/case';
+
+type BaseStepInstance = {
+    additionalData?: AdditionalData;
+    createdAt: string;
+    eventRef: string[];
+    id: string;
+    info?: string;
+    label: string;
+    mappedExceptions: string[];
+    mappedNotes: string[];
+    mappedTasks: string[] | null;
+    multiInstance?: boolean;
+    stepStatus: Statuses;
+    tasks?: null;
+    updatedAt: string;
+};
+
+export interface SingleStepInstance extends BaseStepInstance {
+    instanceInfo: null;
+    multiInstance: false;
+}
+
+/**  A multi-step instance will have additional information about the object it is applying the step to.
+ * In this case, the step's id will no longer be a unique identifier.  A step can be uniqulely identified
+ * by the combination of the instanceInfo identifier and the step id.
+ * The object the step is applying the step to can be grouped by the instanceInfo identifier.
+ * Example: validate agent may have multiple steps to validate multiple agents.
+ * id may be something like 'agentCanSellCheck'.  There could gbe multiple steps with the same id, but each
+ * step is validating a different agent can sell.  The instanceInfo identifier would be the agent id.
+ * Another step may be agentTrainingCheck.  You can group Agent X's training and can sell checks together
+ * using the instanceInfo identifier.
+ */
+export interface MultiStepInstance extends BaseStepInstance {
+    instanceInfo: {
+        identifier: string;
+        label: string;
+    };
+    multiInstance: true;
+}
+
+export type StepInstance = SingleStepInstance | MultiStepInstance;

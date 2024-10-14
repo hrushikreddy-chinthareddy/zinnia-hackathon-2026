@@ -1,0 +1,111 @@
+name: 'Deploy Portal Frontend to AWS East'
+
+on:
+  workflow_call:
+    inputs:
+      environment-level:
+        required: true
+        type: string
+      push-build:
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-level }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (east)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.DIGITAL_EXPERIENCE_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.DIGITAL_EXPERIENCE_AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION_EAST }}
+
+      - name: Login to Amazon ECR (east)
+        id: login-ecr-east
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Download task definition (east)
+        run: |
+          aws ecs describe-task-definition --task-definition ${{ vars.ECS_TASK_NAME_OPS }} --query taskDefinition > east-task-definition.json
+
+      - name: Build, tag, and push image to Amazon ECR with action
+        id: build_image
+        uses: docker/build-push-action@v5
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr-east.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        with:
+          context: .
+          file: 'apps/ops/Dockerfile'
+          push: ${{ inputs.push-build == true }}
+          tags: |
+            ${{ env.ECR_REGISTRY }}/${{ vars.ECR_REPOSITORY_OPS }}
+            ${{ env.ECR_REGISTRY }}/${{ vars.ECR_REPOSITORY_OPS }}:${{ env.IMAGE_TAG }}
+            ${{ env.ECR_REGISTRY }}/${{ vars.ECR_REPOSITORY_OPS }}:latest
+          build-args: |
+            NEXT_PUBLIC_BACKEND_URL=${{ vars.NEXT_PUBLIC_BACKEND_URL_OPS }}
+            NEXT_PUBLIC_BASE_URL=${{ vars.NEXT_PUBLIC_BASE_URL_OPS }}
+            NEXT_PUBLIC_SE2_BACKEND_URL=${{ vars.NEXT_PUBLIC_SE2_BACKEND_URL_OPS }}
+            NEXT_PUBLIC_THEME=${{ vars.NEXT_PUBLIC_THEME_OPS }}
+            NEXT_PUBLIC_S3_BUCKET_BASE_URL=${{ vars.NEXT_PUBLIC_S3_BUCKET_BASE_URL_OPS }}
+            NEXT_PUBLIC_DATADOG_APPLICATION_ID=${{ vars.NEXT_PUBLIC_DATADOG_APPLICATION_ID_OPS }}
+            NEXT_PUBLIC_DATADOG_CLIENT_TOKEN=${{ vars.NEXT_PUBLIC_DATADOG_CLIENT_TOKEN_OPS }}
+            NEXT_PUBLIC_DATADOG_ENV=${{ vars.NEXT_PUBLIC_DATADOG_ENV }}
+            NEXT_PUBLIC_GOOGLEANALYTICS_ENV=${{ vars.NEXT_PUBLIC_GOOGLEANALYTICS_ENV }}
+            NEXT_PUBLIC_GIT_SHA=${{ github.sha }}
+          secrets: |
+            "npmtoken=${{ secrets.GITHUB_TOKEN }}"
+            "DATADOG_API_KEY=${{ secrets.DATADOG_API_KEY }}"
+
+      - name: Fill in the new image ID in the Amazon ECS task definition (east)
+        id: task-def-east
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: east-task-definition.json
+          container-name: ${{ vars.CONTAINER_NAME }}
+          image: ${{ steps.login-ecr-east.outputs.registry }}/${{ vars.ECR_REPOSITORY_OPS }}:${{ github.sha }}
+
+      - name: Deploy Amazon ECS Task Definition (east)
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def-east.outputs.task-definition }}
+          service: ${{ secrets.ECS_CLUSTER_SERVICE_OPS }}
+          cluster: ${{ secrets.ECS_CLUSTER_OPS }}
+          wait-for-service-stability: true
+
+      - name: Configure AWS credentials (west)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.DIGITAL_EXPERIENCE_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.DIGITAL_EXPERIENCE_AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION_WEST }}
+
+      - name: Login to Amazon ECR (west)
+        id: login-ecr-west
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Download task definition (west)
+        run: |
+          aws ecs describe-task-definition --task-definition ${{ vars.ECS_TASK_NAME_OPS }} --query taskDefinition > west-task-definition.json
+
+      - name: Fill in the new image ID in the Amazon ECS task definition (west)
+        id: task-def-west
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: west-task-definition.json
+          container-name: ${{ vars.CONTAINER_NAME }}
+          image: ${{ steps.login-ecr-east.outputs.registry }}/${{ vars.ECR_REPOSITORY_OPS }}:${{ github.sha }}
+
+      - name: Deploy Amazon ECS Task Definition (west)
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def-west.outputs.task-definition }}
+          service: ${{ secrets.ECS_CLUSTER_SERVICE_OPS }}
+          cluster: ${{ secrets.ECS_CLUSTER_OPS }}
+          wait-for-service-stability: true

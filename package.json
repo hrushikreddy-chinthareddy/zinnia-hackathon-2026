@@ -3,8 +3,9 @@
   "private": true,
   "scripts": {
     "build": "turbo run build --filter=\"[HEAD^1]\"",
+    "build:all": "turbo run build",
     "dev": "dotenv -- turbo run dev",
-    "dev:portal-frontend": "pnpm run dev --filter portal-frontend",
+    "dev:ops": "pnpm run dev --filter ops",
     "dev:consumer-experience": "pnpm run dev --filter consumer-experience",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",

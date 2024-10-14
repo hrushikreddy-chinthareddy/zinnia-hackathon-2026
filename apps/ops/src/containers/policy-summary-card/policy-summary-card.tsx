@@ -1,0 +1,577 @@
+import dayjs from 'dayjs';
+import { TFunction, useTranslation } from 'next-i18next';
+import { PropsWithChildren, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
+
+import { getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/badge.helper';
+import BannerAlert, { BannerVariant } from '@deps/components/banner-alert/banner-alert';
+import Content, { ContentVariant } from '@deps/components/content/content';
+import { FieldSize } from '@deps/components/fields/field';
+import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helper';
+import PolicyInfo from '@deps/components/global-values/policy-info/policy-info';
+import GlobalPolicyInfo from '@deps/components/global-values/policy-info/policy-info';
+import Label, { LabelVariant } from '@deps/components/label/label';
+import { PopoverPlacement } from '@deps/components/popover/popover';
+import ResponsivePadding from '@deps/components/responsive-padding/responsive-padding';
+import SelectSearch from '@deps/components/select-search/select-search';
+import { TranslationFiles } from '@deps/config/translations';
+import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
+import QuickLinks, { QuickLinksProps } from '@deps/containers/quick-links/quick-links';
+import SideSheetProductDetails from '@deps/containers/side-sheet-product-details/side-sheet-product-details';
+import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { PolicyDetailsViewInfo, PolicyViewDetailsDto, toPolicyViewDetailsDto } from '@deps/data/policy-details-view';
+import { fillColDefs } from '@deps/helpers/data-transform.helper';
+import { getTotalMinRequiredAmount, policyDataToGlobalValues } from '@deps/helpers/global-values';
+import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { BasePolicyComponentArgs, PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import { formatDate, formatPhone, formatSSN, toTitleCase } from '@deps/helpers/string.helper';
+import { CardColumnsTest, CardDetailsTest } from '@deps/jest/constants/test-id-constants';
+import { Policy, PolicyFeatureFeatureType, PolicyStatus, ProductType, Reason } from '@deps/models/policy/sor-policy';
+import { DashboardContext } from '@deps/pages/policies';
+import {
+    TransactionResponseStatus,
+    checkEligibilityOneTimePremium,
+    checkEligibilityPartialWithdrawalOneTime,
+    checkEligibilitySystematicPrograms,
+} from '@deps/queries/api/bpm';
+import { DEFAULT_ERROR_STRING, DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
+import { SearchViewQuery } from '@deps/types/search';
+
+import AnnuityQuickView from './active-quick-view/annuity';
+import EverlyIul from './active-quick-view/everly-iul';
+import EverlyUl from './active-quick-view/everly-ul';
+import BaseDeathBenefit from './display-fields/base-death-benefit';
+import UpcomingPremiumDisplayField from './display-fields/upcoming-premium';
+
+interface SummaryCardProps extends PropsWithChildren {
+    policy: Policy;
+}
+
+interface KeyValuesBarProps {
+    policy: Policy;
+}
+
+const quickLinks = (t: TFunction, policy: PolicyDetails): QuickLinksProps['links'] => {
+    const { policyNumber, planCode } = policy;
+    const detailsLink = {
+        href: t('site.navLinks.policyDetails.link', { id: policyNumber, planCode }),
+        name: t(policy.isLife ? 'site.navLinks.policyDetails.altText' : 'site.navLinks.contractDetails.altText'),
+    };
+    return [
+        detailsLink,
+        {
+            href: t('site.navLinks.people.link', { id: policyNumber, planCode }),
+            name: t('site.navLinks.people.text'),
+        },
+        {
+            href: t('site.navLinks.history.link', { id: policyNumber, planCode }),
+            name: t('site.navLinks.history.text'),
+        },
+        {
+            href: t('site.navLinks.documents.link', { id: policyNumber, planCode }),
+            name: t('site.navLinks.documents.text'),
+        },
+    ];
+};
+
+const getPolicyHighlighter = ({ firstName, lastName, policyNumber, ssn }: SearchViewQuery) => {
+    if (!firstName && !lastName && !policyNumber && !ssn) return [];
+
+    const descriptionListHighlighter = [];
+
+    if (firstName) {
+        descriptionListHighlighter.push(firstName.trim());
+    }
+    if (lastName) {
+        descriptionListHighlighter.push(lastName.trim());
+    }
+    if (ssn) {
+        descriptionListHighlighter.push(`***-**-${ssn.slice(-4)}`);
+    }
+    if (policyNumber) {
+        descriptionListHighlighter.push(policyNumber);
+    }
+
+    return descriptionListHighlighter;
+};
+
+const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
+    const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
+    const { searchValue } = useContext(DashboardContext);
+    const { carrierId, marketingName, planCode, policyNumber, policyStatus, productType } = policy;
+    const totalMinRequiredAmount = getTotalMinRequiredAmount(policy);
+    const globalValuesData = useMemo(() => policyDataToGlobalValues(policy, t), [policy, t]);
+
+    const sideSheet = useSideSheetContext();
+    const openDetailsSidesheet = () => {
+        sideSheet.changeSideSheetContent(
+            <GlobalPolicyInfo tooltipPlacements={PopoverPlacement.BottomLeft} {...globalValuesData} />,
+            <SideSheetProductDetails globalValues={globalValuesData} />
+        );
+        sideSheet.handleOpen(true);
+    };
+
+    const pendingLapse = policy.features.getFirstFeatureByType('LAPSEASSESSMENT' as PolicyFeatureFeatureType);
+    const showPendingLapse = policyStatus === PolicyStatus.PENDINGLAPSE ? true : false;
+    const tooltipDate =
+        policyStatus === PolicyStatus.LAPSE || policyStatus === PolicyStatus.PENDINGLAPSE
+            ? formatDate(pendingLapse?.endDate)
+            : formatDate(policy?.issueDate);
+
+    // BPB - systematic programs work
+    const systematicProgram = policy.policy.systematicPrograms?.find(sp => sp.reason === Reason.PREMIUM);
+    const arrangementId = systematicProgram?.arrangementId || '';
+
+    const [isEligibleManageAutopay, setIsEligibleManageAutopay] = useState(false);
+    const [autopayChecked, setAutopayChecked] = useState(false);
+    const [isEligibleNewPremium, setIsEligibleNewPremium] = useState(false);
+    const [newPremiumChecked, setNewPremiumChecked] = useState(false);
+    const [isEligibleWithdrawal, setIsEligibleWithdrawal] = useState(false);
+    const [withdrawalChecked, setWithdrawalChecked] = useState(false);
+
+    const [isLoading, setIsLoading] = useState(true);
+    const [fireEligibilityChecks, setFireEligibilityChecks] = useState(false);
+
+    const [isLife] = useState(policy.isLife);
+
+    // this should only run once after fireEligibilityChecks && isLife are both true
+    useEffect(() => {
+        if (fireEligibilityChecks && isLife) {
+            const checkManageAutopayEligibility = async () => {
+                const manageAutopayEligibility = await checkEligibilitySystematicPrograms(planCode, policyNumber, arrangementId || '');
+
+                if (manageAutopayEligibility?.status === TransactionResponseStatus.Success) {
+                    setIsEligibleManageAutopay(true);
+                }
+                setAutopayChecked(true);
+            };
+
+            const checkOneTimeEligibility = async () => {
+                const oneTimeEligibility = await checkEligibilityOneTimePremium(planCode, policyNumber);
+
+                if (oneTimeEligibility?.status === TransactionResponseStatus.Success) {
+                    setIsEligibleNewPremium(true);
+                }
+                setNewPremiumChecked(true);
+            };
+
+            const checkWithdrawalEligibility = async () => {
+                const withdrawalEligibility = await checkEligibilityPartialWithdrawalOneTime(planCode, policyNumber);
+
+                if (withdrawalEligibility?.status === TransactionResponseStatus.Success) {
+                    setIsEligibleWithdrawal(true);
+                }
+                setWithdrawalChecked(true);
+            };
+
+            checkManageAutopayEligibility();
+            checkOneTimeEligibility();
+            checkWithdrawalEligibility();
+        }
+    }, [planCode, policyNumber, arrangementId, fireEligibilityChecks, isLife]);
+
+    useEffect(() => {
+        if (autopayChecked && newPremiumChecked && withdrawalChecked) {
+            setIsLoading(false);
+        }
+    }, [autopayChecked, newPremiumChecked, withdrawalChecked]);
+
+    const eligibilityCheck = {
+        eligibleAutopay: isEligibleManageAutopay,
+        eligiblePremium: isEligibleNewPremium,
+        eligibleWithdrawal: isEligibleWithdrawal,
+    };
+
+    function onOpenChange(open: boolean) {
+        if (open) {
+            setFireEligibilityChecks(true);
+        }
+    }
+
+    return (
+        <header data-testid={CardDetailsTest.HEADER}>
+            <div className="flex w-full items-end justify-between">
+                <div className="w-full flex-wrap lg:flex lg:items-end lg:justify-between">
+                    <PolicyInfo
+                        carrierId={carrierId}
+                        marketingName={marketingName}
+                        productType={productType}
+                        policyNumber={policyNumber}
+                        highlight={searchValue?.policyNumber}
+                        status={t(getBadgeStatus(policyStatus))}
+                        variant={getBadgeStatusVariant(policyStatus)}
+                        tooltip={
+                            t(getPolicyBadgeStatusTooltip(policyStatus), {
+                                tooltipDate: tooltipDate,
+                                tooltipAmount: showPendingLapse
+                                    ? numberFormatify(pendingLapse?.totalMinimumRequiredAmount)
+                                    : numberFormatify(totalMinRequiredAmount),
+                            }) ?? ''
+                        }
+                        openSideSheet={openDetailsSidesheet}
+                    />
+                    <div className="mt-8 flex flex-wrap gap-x-8 gap-y-4 lg:mt-0">
+                        {/* TODO MG: move the eligibilty checks into the quick links component */}
+                        <QuickLinks
+                            eligibilityCheck={eligibilityCheck}
+                            isLife={policy.isLife}
+                            isLoading={isLoading}
+                            links={quickLinks(t, policy)}
+                            onOpenChange={(open: boolean) => onOpenChange(open)}
+                            planCode={planCode}
+                            policyNumber={policyNumber}
+                        />
+                    </div>
+                </div>
+            </div>
+            <hr className="my-4 h-0.5 border-none bg-gray-100" />
+        </header>
+    );
+};
+
+const KeyValuesBar: React.FC<KeyValuesBarProps> = ({ policy }) => {
+    const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
+    const searchableDetailsDto = toPolicyViewDetailsDto(policy);
+    const searchableDetailsData = fillColDefs<PolicyViewDetailsDto>(
+        searchableDetailsDto,
+        PolicyDetailsViewInfo(),
+        t,
+        'colDefs:policyDetails'
+    );
+
+    return (
+        <div>
+            <hr className="mb-4 h-0.5 border-none bg-gray-100 md:mb-6 lg:mb-4" />
+            <div className="relative flex items-center">
+                <SelectSearch
+                    classNames="flex flex-col gap-1 max-w-[328px] w-full"
+                    labelClassNames="mr-4 hidden md:block"
+                    size={FieldSize.Small}
+                    label={t('dashboard.quickSearch.label') || ''}
+                    placeHolder={t('dashboard.quickSearch.placeholder') || ''}
+                    values={searchableDetailsData}
+                    errorMessageLink={`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/policy-details`}
+                    group={true}
+                    dropUp
+                />
+            </div>
+        </div>
+    );
+};
+
+interface QuickViewProp extends PropsWithChildren {
+    children: ReactNode;
+    gridColumns?: number;
+    title: string;
+}
+
+const columnNumberAtLarge: Record<number, string> = {
+    1: 'lg:grid-cols-1',
+    2: 'lg:grid-cols-2',
+};
+
+export const QuickViewRoot: React.FC<QuickViewProp> = ({ children, title, gridColumns = 2 }) => {
+    return (
+        <div
+            data-testid={`${CardColumnsTest.ITEMS}-${title}`}
+            className={`mt-8 grow first:mt-0 first:md:mt-0 lg:mt-0 lg:border-r-2 lg:border-r-gray-100 lg:px-8 lg:first:pl-0 lg:last:border-none lg:last:pr-0`}
+        >
+            <h3 className="pb-4">{title}</h3>
+            <div
+                className={`grid w-fit grid-cols-${gridColumns} items-start gap-x-8 gap-y-6 md:grid-cols-3 md:gap-y-6 ${columnNumberAtLarge[gridColumns]} lg:gap-y-8`}
+            >
+                {children}
+            </div>
+        </div>
+    );
+};
+
+const PendingLapseQuickView = ({ policy }: BasePolicyComponentArgs) => {
+    const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
+    const pendingLapse = policy.features.getFirstFeatureByType('LAPSEASSESSMENT' as PolicyFeatureFeatureType);
+    const { searchValue } = useContext(DashboardContext);
+
+    return (
+        <QuickViewRoot title={t('dashboard.search.results.policySummaryCard.header2')}>
+            <div>
+                <Label
+                    variant={LabelVariant.FieldLabel}
+                    label={t('colDefs:policySummary.gracePeriod')}
+                    tooltipTitle={t('colDefs:policySummary.gracePeriod')}
+                    tooltipBody={t('colDefs:policySummary.gracePeriodTooltip')}
+                />
+                <Content
+                    details={`${dayjs(pendingLapse?.startDate).format(DEFAULT_EXTENDED_DATE_FORMAT)} - ${dayjs(
+                        pendingLapse?.endDate
+                    ).format(DEFAULT_EXTENDED_DATE_FORMAT)}`}
+                    variant={ContentVariant.BodySm}
+                />
+            </div>
+            <div>
+                <Label
+                    variant={LabelVariant.FieldLabel}
+                    label={t('colDefs:policySummary.gracePeriodMinPayment')}
+                    tooltipTitle={t('colDefs:policySummary.gracePeriodMinPayment')}
+                    tooltipBody={t('colDefs:policySummary.gracePeriodMinPaymentTooltip')}
+                />
+                <Content
+                    details={numberFormatify(pendingLapse?.totalMinimumRequiredAmount || DEFAULT_ERROR_STRING)}
+                    variant={ContentVariant.BodySm}
+                    highlights={getPolicyHighlighter(searchValue)}
+                />
+            </div>
+            <UpcomingPremiumDisplayField policy={policy} />
+            <BaseDeathBenefit baseDeathBenefit={policy.baseDeathBenefit} />
+        </QuickViewRoot>
+    );
+};
+
+const LapseQuickView = ({ policy }: BasePolicyComponentArgs) => {
+    const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
+
+    const reinstatement = policy.features.getFirstFeatureByType('REINSTATEMENT' as PolicyFeatureFeatureType);
+    const pendingLapse = policy.features.getFirstFeatureByType('LAPSEASSESSMENT' as PolicyFeatureFeatureType);
+
+    let reinstatementPeriodText;
+
+    switch (Number(reinstatement?.period)) {
+        case 0:
+            reinstatementPeriodText = 'None';
+            break;
+        case 1:
+            reinstatementPeriodText = t('common:temporal.oneYear');
+            break;
+        default:
+            reinstatementPeriodText = t('common:temporal.nYears', { n: reinstatement?.period });
+            break;
+    }
+
+    return (
+        <QuickViewRoot title={t('dashboard.search.results.policySummaryCard.header2')}>
+            <div>
+                <Label
+                    variant={LabelVariant.FieldLabel}
+                    label={t('colDefs:policySummary.lapseEffectiveDate')}
+                    tooltipTitle={t('colDefs:policySummary.lapseEffectiveDate')}
+                    tooltipBody={t('colDefs:policySummary.lapseEffectiveDateTooltip')}
+                />
+                <Content details={dayjs(pendingLapse?.endDate).format(DEFAULT_EXTENDED_DATE_FORMAT)} variant={ContentVariant.BodySm} />
+            </div>
+            <div>
+                <Label
+                    variant={LabelVariant.FieldLabel}
+                    label={t('colDefs:policySummary.reinstatementPeriod')}
+                    tooltipTitle={t('colDefs:policySummary.reinstatementPeriod')}
+                    tooltipBody={t('colDefs:policySummary.reinstatementPeriodTooltip')}
+                />
+                <Content details={reinstatementPeriodText} variant={ContentVariant.BodySm} />
+            </div>
+            {reinstatement && (
+                <>
+                    {!!reinstatement.approvalDate && (
+                        <div>
+                            <Label
+                                variant={LabelVariant.FieldLabel}
+                                label={t('colDefs:policySummary.underwritingDecision')}
+                                tooltipTitle={t('colDefs:policySummary.underwritingDecision')}
+                                tooltipBody={t('colDefs:policySummary.underwritingDecisionTooltip')}
+                            />
+                            <Content
+                                details={
+                                    reinstatement?.approvalDate
+                                        ? String(t('common:general.approved'))
+                                        : String(t('common:general.unapproved'))
+                                }
+                                variant={ContentVariant.BodySm}
+                            />
+                        </div>
+                    )}
+
+                    {reinstatement.approvalDate && reinstatement.endDate && (
+                        <div>
+                            <Label
+                                variant={LabelVariant.FieldLabel}
+                                label={t('colDefs:policySummary.reinstatementPaymentPeriod')}
+                                tooltipTitle={t('colDefs:policySummary.reinstatementPaymentPeriod')}
+                                tooltipBody={t('colDefs:policySummary.reinstatementPaymentPeriodTooltip')}
+                            />
+                            <Content
+                                details={`${dayjs(reinstatement?.approvalDate).format(DEFAULT_EXTENDED_DATE_FORMAT)} - ${dayjs(
+                                    reinstatement?.endDate
+                                ).format(DEFAULT_EXTENDED_DATE_FORMAT)}`}
+                                variant={ContentVariant.BodySm}
+                            />
+                        </div>
+                    )}
+
+                    {!!reinstatement.paymentAmount && (
+                        <div>
+                            <Label
+                                variant={LabelVariant.FieldLabel}
+                                label={t('colDefs:policySummary.reinstatementMinPayment')}
+                                tooltipTitle={t('colDefs:policySummary.reinstatementMinPayment')}
+                                tooltipBody={t('colDefs:policySummary.reinstatementMinPaymentTooltip')}
+                            />
+                            <Content details={numberFormatify(reinstatement?.paymentAmount)} variant={ContentVariant.BodySm} />
+                        </div>
+                    )}
+                </>
+            )}
+
+            <BaseDeathBenefit baseDeathBenefit={policy.baseDeathBenefit} />
+        </QuickViewRoot>
+    );
+};
+
+const StatusBanner = ({ policy }: BasePolicyComponentArgs) => {
+    const { t } = useTranslation();
+    const policyStatus = policy.policyStatus;
+    if (policyStatus === PolicyStatus.PENDINGLAPSE) {
+        return (
+            <BannerAlert
+                variant={BannerVariant.Warning}
+                cta={{
+                    href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/new-premium/`,
+                    text: t('dashboard.search.results.policySummaryCard.pendingLapseBannerLink'),
+                }}
+            >
+                {t('dashboard.search.results.policySummaryCard.pendingLapseBannerText')}
+            </BannerAlert>
+        );
+    }
+    if (policyStatus === PolicyStatus.LAPSE) {
+        // TODO - BPB: Policy Features Helper Class
+        const reinstatementWithApproval = policy.policy.policyFeatures?.find(
+            pf => pf.featureType === ('REINSTATEMENT' as PolicyFeatureFeatureType) && pf.approvalDate
+        );
+
+        if (!reinstatementWithApproval) {
+            return null;
+        }
+
+        return (
+            <BannerAlert
+                variant={BannerVariant.Error}
+                cta={{
+                    href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/new-premium/`,
+                    text: t('dashboard.search.results.policySummaryCard.lapseBannerLink'),
+                }}
+            >
+                {t('dashboard.search.results.policySummaryCard.lapseBannerText')}
+            </BannerAlert>
+        );
+    }
+    return null;
+};
+
+const QuickViewModule = ({ policy }: BasePolicyComponentArgs) => {
+    if (policy.isLife) {
+        switch (policy.policyStatus) {
+            case PolicyStatus.PENDINGLAPSE:
+                return <PendingLapseQuickView policy={policy} />;
+            case PolicyStatus.LAPSE:
+                return <LapseQuickView policy={policy} />;
+            default:
+                return <ActiveQuickView policy={policy} />;
+        }
+    }
+    return <AnnuityQuickView policy={policy} />;
+};
+
+const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
+    const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
+    const { searchValue } = useContext(DashboardContext);
+    const { owner } = policy;
+    const bestAvailable = owner?.bestAvailablePhone;
+    const contactNumber = bestAvailable || null;
+    const contactNumberLabel = contactNumber
+        ? t(`people.card.phone.phoneOptions.${contactNumber.phoneType?.toLocaleLowerCase()}`)
+        : t('colDefs:owner.primaryPhone');
+
+    return (
+        <QuickViewRoot title={t('dashboard.search.results.policySummaryCard.header1')} gridColumns={1}>
+            <div className="grid grid-cols-2 gap-10 md:grid-cols-1 lg:grid-cols-2">
+                <div>
+                    <Label variant={LabelVariant.FieldLabel} label={t('colDefs:owner.fullName')} />
+                    <Content
+                        details={toTitleCase(owner?.fullName) || DEFAULT_ERROR_STRING}
+                        variant={ContentVariant.BodySm}
+                        highlights={getPolicyHighlighter(searchValue)}
+                        pii={true}
+                    />
+                </div>
+                <div>
+                    <Label variant={LabelVariant.FieldLabel} label={t('colDefs:owner.email')} />
+                    <Content
+                        details={owner?.bestAvailableEmail?.emailAddress || DEFAULT_ERROR_STRING}
+                        variant={ContentVariant.BodySm}
+                        pii={true}
+                    />
+                </div>
+            </div>
+            <div className="grid grid-cols-2 gap-10 md:grid-cols-1 lg:grid-cols-2">
+                <div>
+                    <Label variant={LabelVariant.FieldLabel} label={t('colDefs:owner.birthDate')} />
+                    <Content details={owner?.formattedBirthDate} variant={ContentVariant.BodySm} pii={true} />
+                </div>
+                <div>
+                    <Label variant={LabelVariant.FieldLabel} label={contactNumberLabel} />
+                    <Content
+                        details={(contactNumber && formatPhone(contactNumber)) || DEFAULT_ERROR_STRING}
+                        variant={ContentVariant.BodySm}
+                        pii={true}
+                    />
+                </div>
+            </div>
+            <div className="grid grid-cols-2 gap-10 md:grid-cols-1 lg:grid-cols-2">
+                <div>
+                    <Label variant={LabelVariant.FieldLabel} label={t('colDefs:owner.ssn')} />
+                    <Content
+                        details={formatSSN(owner?.ssn)}
+                        variant={ContentVariant.BodySm}
+                        highlights={getPolicyHighlighter(searchValue)}
+                        pii={true}
+                    />
+                </div>
+                <div>
+                    <Label variant={LabelVariant.FieldLabel} label={t('colDefs:owner.mailingAddress')} />
+                    {(owner?.bestAvailableAddress && <FormattedAddress address={owner?.bestAvailableAddress} />) || DEFAULT_ERROR_STRING}
+                </div>
+            </div>
+        </QuickViewRoot>
+    );
+};
+
+const ActiveQuickView = ({ policy }: BasePolicyComponentArgs) => {
+    const { t } = useTranslation();
+
+    return (
+        <QuickViewRoot title={t('dashboard.search.results.policySummaryCard.header2')}>
+            {/* TODO MG: confirm we need searchValue in both of these - couple display fields had them but dont think we need them */}
+            {policy?.product?.productType === ProductType.INDEXEDUNIVERSALLIFE ? (
+                <EverlyIul policy={policy} />
+            ) : (
+                <EverlyUl policy={policy} />
+            )}
+        </QuickViewRoot>
+    );
+};
+
+export const PolicyQuickView: React.FC<SummaryCardProps> = ({ policy }) => {
+    const policyDetails = new PolicyDetails(policy);
+
+    return (
+        <section data-testid={CardDetailsTest.CARD} className="mb-4 min-h-[390px] min-w-[275px] rounded bg-white !p-0 shadow-sm">
+            <ResponsivePadding>
+                <QuickViewHeader policy={policyDetails} />
+                <div data-testid={CardDetailsTest.CONTENT}>
+                    <StatusBanner policy={policyDetails} />
+                    <div data-testid={CardColumnsTest.COLUMNS} className="my-4 md:my-6 lg:my-8 lg:flex">
+                        <OwnerInformation policy={policyDetails} />
+                        <QuickViewModule policy={policyDetails} />
+                    </div>
+                </div>
+                <KeyValuesBar policy={policy} />
+            </ResponsivePadding>
+        </section>
+    );
+};

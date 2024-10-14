@@ -1,0 +1,58 @@
+import * as React from 'react';
+import { useTranslation } from 'react-i18next';
+
+import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
+import { TranslationFiles } from '@deps/config/translations';
+import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
+import { Carrier } from '@deps/models/case/withdrawal/case';
+import { Policy } from '@deps/models/policy/sor-policy';
+
+import { getConfigFlic, getConfigMass, getConfigSbgc } from './owner-info.helper';
+import OwnerInformation from './owner-information';
+import { useBeneChange } from '../../../bene-change-provider';
+
+interface OwnersInfoStepProps {
+    policy: Policy;
+}
+
+const OwnersInfoStep = ({ policy }: OwnersInfoStepProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'beneChange.ownerInfo' });
+    let formConfigs;
+    const { goToNext } = useWorkflow();
+    const { formErrors, setFormErrors } = useBeneChange();
+
+    if (policy.carrierId === Carrier.MASS) {
+        formConfigs = getConfigMass(t);
+    } else if (policy.carrierId === Carrier.SBGC) {
+        formConfigs = getConfigSbgc(t);
+    } else {
+        // if (policy.carrierId === Carrier.FLIC) {
+        formConfigs = getConfigFlic(t);
+    }
+
+    const { formPartyConfigs } = formConfigs || {};
+
+    const handleStepContinue = React.useCallback(() => {
+        goToNext();
+    }, [formErrors, setFormErrors]);
+
+    return (
+        <WorkflowCard
+            title={t('header')}
+            footerContent={
+                <TransactionNavigationButtons
+                    className="mt-10"
+                    disableContinue={false}
+                    handleContinue={handleStepContinue}
+                    parentPage={ParentPage.CreateCase}
+                    leaveTransactionLink="/create-case"
+                />
+            }
+        >
+            <OwnerInformation isFormStateReadOnly={false} configs={formPartyConfigs as any} policy={policy} />
+        </WorkflowCard>
+    );
+};
+
+export default OwnersInfoStep;

@@ -1,0 +1,64 @@
+import { CaseType } from "@deps/models/case/case";
+import { ApiVersion } from "@deps/models/case/enums";
+import { CaseApiVersionMapper } from "@deps/models/case/helpers";
+import { TaskStatus } from "@deps/models/case/task-instance";
+import { getCaseTaskInstances, getCaseTasks } from "@deps/queries/api/v1/task";
+
+interface TaskItem {
+    id: string;
+    status: string;
+    taskName: string;
+    userId: string;
+    createdDate: string;
+    updatedDate: string;
+}
+
+const fetchTasks = async (caseId: string, caseType: CaseType) => {
+    let tasks, formattedList;
+
+    if (CaseApiVersionMapper[caseType] === ApiVersion.v2) {
+        tasks = await getCaseTaskInstances({
+            caseId: caseId,
+            sortBy: 'updatedAt',
+            sortDirection: 'asc',
+            offset: '0',
+            limit: '200',
+        });
+
+        const filteredTasks = tasks?.filter((task: any) => {
+            return task.status === TaskStatus.New || task.status === TaskStatus.Completed || task.status === TaskStatus.InProgress;
+        });
+
+        formattedList = filteredTasks?.map((task: any) => {
+            return {
+                id: task.id,
+                status: task.status,
+                taskName: task.taskName,
+                userId: task.data?.userId,
+                createdDate: task.createdAt,
+                updatedDate: task.updatedAt,
+            };
+        });
+    } else {
+        tasks = await getCaseTasks({ caseId: caseId });
+        const filteredTasks = tasks?.filter((task: any) => {
+            return task.status !== 'CANCELLED';
+        });
+
+        formattedList = filteredTasks?.map((task: any) => {
+            return {
+                id: task.taskId,
+                status: task.status,
+                taskName: '',
+                userId: task.data?.userId,
+                createdDate: task.createdDate,
+                updatedDate: task.updatedDate,
+            };
+        });
+        formattedList.sort((a: TaskItem, b: TaskItem) => b.updatedDate.localeCompare(a.updatedDate));
+    }
+
+    return formattedList;
+};
+
+export default fetchTasks;

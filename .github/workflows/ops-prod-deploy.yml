@@ -1,0 +1,12 @@
+name: 'Production Portal Frontend Deployment'
+
+on:
+  workflow_dispatch:
+
+jobs:
+  prod-deploy-east:
+    if: startsWith(github.ref_name, 'release/ops/')
+    uses: ./.github/workflows/deploy-ops-east.yml
+    with:
+      environment-level: production
+    secrets: inherit

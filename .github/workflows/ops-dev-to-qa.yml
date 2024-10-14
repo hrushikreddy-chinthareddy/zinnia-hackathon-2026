@@ -1,0 +1,11 @@
+name: 'Portal Frontend to QA'
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-east:
+    uses: ./.github/workflows/deploy-ops-east.yml
+    with:
+      environment-level: qa
+    secrets: inherit

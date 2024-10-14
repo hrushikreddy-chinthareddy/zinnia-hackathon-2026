@@ -1,0 +1,71 @@
+import { CommunicationTypes, SendDocumentActions } from './send-document';
+import { Confirm } from './send-statement';
+import { Address } from '../policy/sor-policy';
+
+export enum TransactionTypes {
+    Statements = 'Statements',
+}
+
+export type ContactCenterActions = CorrespondenceAction | SendDocumentActions;
+
+export type SendCommunicationRequestBody = {
+    ctiCallNumber: string;
+    correlationId: string;
+    createdBy: string;
+    formType: string;
+    receiverDetails: {
+        deliveryType: CommunicationTypes;
+        recipientList: string[];
+        ccList?: string[];
+        mailDetails?: PaperMail;
+    };
+    policyDetails: {
+        contractNumber: string | null;
+        planCode: string;
+        carrier: string;
+        productName: string;
+        qualType: string;
+        issueState: string;
+        issueDate: string;
+        status: string;
+    };
+    attachmentDetails: AttachmentDetails[];
+};
+
+export type PaperMail = {
+    firstName: string;
+    lastName: string;
+    type: string;
+    dob: string;
+} & Address;
+
+export type Correspondence = {
+    type: string;
+    recipient: string;
+    mailDetails?: PaperMail;
+};
+
+export enum CorrespondenceAction {
+    Correspondence = 'Correspondence',
+    Confirm = 'Confirm',
+    Reset = 'Reset',
+}
+
+export type AttachmentDetails = {
+    formId: string;
+    transactionType?: string;
+    transactionSubType?: string;
+    displayName: string;
+    formName: string;
+    attachmentType: string;
+};
+
+export type CorrespondenceActions =
+    | { type: CorrespondenceAction.Correspondence; payload: Correspondence }
+    | { type: CorrespondenceAction.Confirm; payload: Confirm }
+    | { type: CorrespondenceAction.Reset };
+
+export type CorrespondenceFormParts = {
+    correspondence: Correspondence;
+    confirm: Confirm;
+};

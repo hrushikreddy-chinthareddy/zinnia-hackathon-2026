@@ -1,0 +1,73 @@
+.allocationContainer {
+    align-items: center;
+    display: flex;
+    gap: var(--measure-dimension-gap-md);
+}
+
+.allocationSquare {
+    border-radius: var(--measure-dimension-radius-xs);
+    height: 16px;
+    width: 16px;
+}
+
+.interestRateCell {
+    width: 157px;
+}
+
+.loaderContainer {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    margin-top: 30px;
+
+    .loaderRow {
+        &:hover {
+            background-color: white;
+        }
+    }
+
+    .loaderIconContainer {
+        align-items: center;
+        display: flex;
+        height: 40px;
+        justify-content: center;
+        width: 40px;
+    }
+
+    .loader {
+        --loader-size: 33px;
+    }
+}
+
+.nameCell {
+    width: 268px;
+}
+
+.noFundsContainer {
+    align-items: center;
+    border-radius: var(--radius-sm, 4px);
+    border: var(--measure-dimension-stroke-sm, 2px) dashed var(--color-base-border-border-light, #ededed);
+    background: var(--Base-Surface-surface-secondary, #f8f8f8);
+    display: flex;
+    flex-direction: row;
+    gap: var(--measure-dimension-gap-sm);
+    padding: var(--measure-dimension-padding-3xl, 24px);
+}
+
+.typeCell {
+    width: 87px;
+}
+
+.valueCell {
+    width: 149px;
+}
+
+.guaranteePeriodCell {
+    width: 165px;
+}
+
+.tableHeaderContainer {
+    display: flex;
+    gap: var(--measure-dimension-gap-md);
+}

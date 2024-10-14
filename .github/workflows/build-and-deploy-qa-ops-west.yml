@@ -1,0 +1,14 @@
+name: 'Build and Deploy Portal Frontend - West'
+
+on:
+  push:
+    paths:
+      - 'apps/ops/**'
+
+jobs:
+  dev-deploy-west:
+    if: github.ref_name == 'coming-soon-when-we-update-aws-west'
+    uses: ./.github/workflows/deploy-ops-west.yml
+    with:
+      environment-level: qa
+    secrets: inherit

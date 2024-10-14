@@ -32,7 +32,7 @@
       ],
       "dependsOn": ["^build"]
     },
-    "portal-frontend#build": {
+    "ops#build": {
       "env": [
         "AUTH0_SECRET",
         "AUTH0_BASE_URL",
@@ -46,7 +46,11 @@
         "NEXT_PUBLIC_S3_BUCKET_BASE_URL",
         "OPTIMIZELY_SDK_KEY",
         "PINO_LOG_LEVEL",
-        "AUTH0_SESSION_ROLLING_DURATION"
+        "AUTH0_SESSION_ROLLING_DURATION",
+        "NEXT_PUBLIC_MOCK_API_REQUEST",
+        "NEXT_PUBLIC_DATADOG_BROWSER_APPLICATION_ID",
+        "NEXT_PUBLIC_DATADOG_ENV",
+        "NEXT_PUBLIC_GIT_SHA"
       ]
     },
     "@zinnia/utils#build": {

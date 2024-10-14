@@ -1,0 +1,12 @@
+name: 'Build and Deploy Portal Frontend - West'
+
+on:
+  push:
+
+jobs:
+  uat-deploy-west:
+    if: github.ref_name == 'coming-soon-when-we-update-aws-west'
+    uses: ./.github/workflows/deploy-ops-west.yml
+    with:
+      environment-level: uat
+    secrets: inherit

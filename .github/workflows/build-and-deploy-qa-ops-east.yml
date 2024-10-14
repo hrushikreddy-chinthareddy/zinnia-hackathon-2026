@@ -1,0 +1,14 @@
+name: 'Build and Deploy Portal Frontend - East'
+
+on:
+  push:
+    paths:
+      - 'apps/ops/**'
+
+jobs:
+  dev-deploy-east:
+    if: github.ref_name == 'dev'
+    uses: ./.github/workflows/deploy-ops-east.yml
+    with:
+      environment-level: qa
+    secrets: inherit
