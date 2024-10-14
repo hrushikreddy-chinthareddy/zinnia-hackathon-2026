@@ -66,6 +66,9 @@
     },
     "pre-commit": {},
     "pre-push": {},
+    "consumer-experience#pre-commit": {
+      "dependsOn": ["^build"]
+    },
     "consumer-experience#dev": {
       "dependsOn": ["^build"]
     },
