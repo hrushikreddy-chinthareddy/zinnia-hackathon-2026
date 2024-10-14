@@ -108,8 +108,8 @@ export const UpcomingPremium = async ({
       // There was a bug in the back end code, where these programs couldn't be end dated at first, so they
       // were setting the end date to 2044 OR setting the date to  a way to indicate they were no longer active. That has since been
       // updated (10/2024) and we can rely on the status to indicate if the upcoming payment is active, HOWEVER,
-      // there are still some in the system that are "inactive" based on their date
-      dayjs(nextActivityDate).year() < 2044 &&
+      // there are still some in the system that are "inactive" based on their date. We are not accounting for any with
+      // 2044 dates here, but are checking if date is in the past.
       dayjs(nextActivityDate).isAfter(dayjs());
 
     return upcomingPaymentValid
