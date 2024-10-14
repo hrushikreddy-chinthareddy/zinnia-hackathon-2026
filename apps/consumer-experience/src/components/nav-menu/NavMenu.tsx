@@ -92,7 +92,7 @@ export const NavMenu = ({
                     setIsOpen(false);
                   }}
                 >
-                  Account profile
+                  Account
                 </Link>
               </li>
               {!showAnnuities && (
