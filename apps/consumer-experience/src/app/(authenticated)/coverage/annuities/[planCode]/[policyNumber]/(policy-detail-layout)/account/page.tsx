@@ -111,7 +111,7 @@ export default async function AccountValuePage({
               </div>
             ),
             linkTo: {
-              url: `/coverage/${planCode}/${policyNumber}/account/allocations`,
+              url: `/coverage/annuities/${planCode}/${policyNumber}/account/allocations`,
               label: 'go to allocations page',
             },
           },
@@ -132,7 +132,7 @@ export default async function AccountValuePage({
               </div>
             ),
             linkTo: {
-              url: `/coverage/${planCode}/${policyNumber}/account/withdrawals`,
+              url: `/coverage/annuities/${planCode}/${policyNumber}/account/withdrawals`,
               label: 'go to withdrawals page',
             },
           },
@@ -145,7 +145,7 @@ export default async function AccountValuePage({
               </div>
             ),
             linkTo: {
-              url: `/coverage/${planCode}/${policyNumber}/account/surrender`,
+              url: `/coverage/annuities/${planCode}/${policyNumber}/account/surrender`,
               label: 'go to surrender contract page',
             },
           },

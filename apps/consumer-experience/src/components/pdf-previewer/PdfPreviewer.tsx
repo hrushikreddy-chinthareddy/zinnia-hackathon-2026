@@ -36,7 +36,7 @@ export default function PdfPreviewer({
     const getDocumentData = async () => {
       let shouldRedirectToError = false;
       // default to the documents error page, however, if the response is a redirect we will use that (see below)
-      let redirectHref = `/coverage/${planCode}/${policyNumber}/documents/error`;
+      let redirectHref = `/polices/${planCode}/${policyNumber}/documents/error`;
 
       try {
         const response = await fetch(

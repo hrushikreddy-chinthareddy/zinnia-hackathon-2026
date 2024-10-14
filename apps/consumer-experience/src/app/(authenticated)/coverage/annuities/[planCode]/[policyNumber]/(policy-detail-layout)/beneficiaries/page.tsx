@@ -104,7 +104,7 @@ export default async function Beneficiaries({
       return {
         linkTo: {
           // For now using partyId here to identify the beneficiary, but it's not the best look from a consumer standpoint
-          url: `/coverage/${planCode}/${policyNumber}/beneficiaries/${bene.partyId}`,
+          url: `/coverage/annuities/${planCode}/${policyNumber}/beneficiaries/${bene.partyId}`,
           label: `go to primary beneficiary ${bene.firstName} ${bene.lastName} profile page`,
         },
         content: (

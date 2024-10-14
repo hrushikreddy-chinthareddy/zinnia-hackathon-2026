@@ -32,7 +32,7 @@ export default async function PremiumPayments({
         <ClickableCardContainer>
           <ClickableCardContainer.LinkContent
             linkTo={{
-              url: `/coverage/${planCode}/${policyNumber}/premium/history`,
+              url: `/coverage/annuities/${planCode}/${policyNumber}/premium/history`,
               label: 'go to payment history page',
             }}
           >
