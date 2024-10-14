@@ -34,6 +34,9 @@ export const OutstandingLoanValue = async ({
     outstandingLoan =
       policyData.value?.data?.accountValues?.loanedPortionOfAccountValue;
   }
+  if (outstandingLoan === 0) {
+    return null;
+  }
 
   return (
     <FieldData
