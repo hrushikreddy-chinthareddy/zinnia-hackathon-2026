@@ -42,6 +42,7 @@ export const NavMenu = ({
   const { data: featureFlagData } = useFeatureFlags();
   const showAnnuities = featureFlagData?.[FEATURE_FLAGS.ANNUITY_MODE];
   const [currentUrl, setCurrentUrl] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const { isMockOn } = useMock();
 
@@ -49,6 +50,7 @@ export const NavMenu = ({
     if (window) {
       setCurrentUrl(window.location.href);
     }
+    // I'm not positive this will reset the currentUrl when a user switches to a different subdomain
   }, [carrierPolicyDetails]);
 
   if (!featureFlagData) {
@@ -56,7 +58,12 @@ export const NavMenu = ({
   }
 
   return (
-    <Popover.Root>
+    <Popover.Root
+      onOpenChange={() => {
+        setIsOpen(!isOpen);
+      }}
+      open={isOpen}
+    >
       <Popover.Trigger
         className={clsx({ [styles.mockOn as string]: isMockOn })}
       >
@@ -79,7 +86,14 @@ export const NavMenu = ({
                 })}
               >
                 <Icon type={IconType.CIRCLE_USER} />
-                <Link href="/my-account">Account profile</Link>
+                <Link
+                  href="/my-account"
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
+                >
+                  Account profile
+                </Link>
               </li>
               {!showAnnuities && (
                 <li
@@ -88,7 +102,14 @@ export const NavMenu = ({
                   })}
                 >
                   <Icon type={IconType.MATCHES} />
-                  <Link href="/coverage">My policies</Link>
+                  <Link
+                    href="/coverage"
+                    onClick={() => {
+                      setIsOpen(false);
+                    }}
+                  >
+                    My policies
+                  </Link>
                 </li>
               )}
 
@@ -112,7 +133,13 @@ export const NavMenu = ({
                       ) : (
                         <Icon type={IconType.MATCHES} />
                       )}
-                      <Link href="/coverage">{`${detail.carrierName} ${detail.displayText}`}</Link>
+                      <Link
+                        href={detail.link.href}
+                        aria-label={detail.link.label}
+                        onClick={() => {
+                          setIsOpen(false);
+                        }}
+                      >{`${detail.carrierName} ${detail.displayText}`}</Link>
                     </li>
                   );
                 })}

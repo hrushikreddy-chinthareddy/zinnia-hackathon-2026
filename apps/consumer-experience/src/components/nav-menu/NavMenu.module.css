@@ -23,6 +23,7 @@ div:has(.navMenuContainer) {
     align-items: center;
 
     :first-child {
+      width: 24px;
       margin-right: var(--measure-dimension-gap-md);
     }
   }
