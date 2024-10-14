@@ -15,6 +15,7 @@ import { CoveragePopover } from '@/components/policy-overview/CoveragePopover';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getMyPoliciesByCarrier } from '@/services';
 import { getFeatureFlags } from '@/services/feature-flags';
+import { SearchParams } from '@/types/url';
 import { getCarrierIdsByThemeCookie } from '@/utils/carriers';
 import { formatUSDollars } from '@/utils/currency';
 import { lineOfBusinessUrlPath } from '@/utils/data';
@@ -31,7 +32,11 @@ export const metadata: Metadata = {
   title: pageTitle,
 };
 
-export default async function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}) {
   const featureFlagDecisions = await getFeatureFlags();
   const themeCookie = await getThemeCookies();
   const showPicker =
@@ -68,7 +73,10 @@ export default async function Page() {
           {isVercelEnvironment() ? (
             <CarrierPickerCookieOnly policies={policyReferenceData} />
           ) : (
-            <CarrierPicker policies={policyReferenceData} />
+            <CarrierPicker
+              policies={policyReferenceData}
+              searchParams={searchParams}
+            />
           )}
         </div>
         <Footer />

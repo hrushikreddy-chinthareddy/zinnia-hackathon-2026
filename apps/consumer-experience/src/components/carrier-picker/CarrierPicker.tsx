@@ -1,4 +1,5 @@
 import { CarrierPolicyDetails } from '@/types/policy';
+import { SearchParams } from '@/types/url';
 import { getCarrierListDetails } from '@/utils/carriers';
 
 import styles from './CarrierPicker.module.css';
@@ -14,10 +15,13 @@ import { ClickableCardContainer } from '../clickable-card-container/ClickableCar
  */
 export const CarrierPicker = async ({
   policies,
+  searchParams,
 }: {
   policies: CarrierPolicyDetails[];
+  searchParams: SearchParams;
 }) => {
   const carrierListDetails = getCarrierListDetails(policies);
+  const params = new URLSearchParams(searchParams).toString();
 
   return (
     <div className={styles.carrierPicker}>
@@ -27,7 +31,7 @@ export const CarrierPicker = async ({
             <ClickableCardContainer.LinkContent
               linkTo={{
                 label: carrierName,
-                url: `${link.href}`,
+                url: `${link.href}/coverage${params ? `?${params}` : ''}`,
                 isInternal: true,
               }}
             >

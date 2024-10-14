@@ -36,7 +36,10 @@ import {
   setTermsAndConditionsCookie,
   touchSession,
 } from './utils/auth';
-import { getCarrierSubdomainById } from './utils/carriers';
+import {
+  getCarrierSubdomainById,
+  isValidCarrierSubdomain,
+} from './utils/carriers';
 import { lineOfBusinessUrlPath } from './utils/data';
 import { applyThemeCookies } from './utils/theme';
 import {
@@ -219,15 +222,26 @@ export async function middleware(req: NextRequest) {
         CarrierId.ELIC,
         'WELB',
       ]);
-      if (allPolicies.data && allPolicies.data.length === 1) {
-        const [policy] = allPolicies.data;
 
-        return NextResponse.redirect(
-          new URL(
-            `/coverage/${lineOfBusinessUrlPath(policy?.lineOfBusiness)}/${policy?.planCode}/${policy?.policyNumber}`,
-            req.url
-          )
-        );
+      // If they are on a valid subdomain, direct them straight to the policy.
+      // Otherwise they need to go to the carrier picker and select a carrier before this applies
+      const currentSubDomain = getSubdomain(req.headers);
+      const validSubdomain = isValidCarrierSubdomain(currentSubDomain);
+
+      if (allPolicies.data && allPolicies.data.length === 1 && validSubdomain) {
+        const [policy] = allPolicies.data;
+        const carrierSubdomainById = getCarrierSubdomainById(policy?.carrierId);
+
+        // Make sure that if someone is logging into like 'every.mypolicyview' but they only have a 'wellabe' policy,
+        // we dont send them to the every policy.
+        if (carrierSubdomainById === currentSubDomain) {
+          return NextResponse.redirect(
+            new URL(
+              `/coverage/${lineOfBusinessUrlPath(policy?.lineOfBusiness)}/${policy?.planCode}/${policy?.policyNumber}`,
+              req.url
+            )
+          );
+        }
       }
     }
 
@@ -246,10 +260,16 @@ export async function middleware(req: NextRequest) {
         policyNumber,
       });
 
+      // if the user is not on a valid subdomain, redirect them to the correct subdomain based on the
+      // policy they have selected. Prevents someone from being going to like `wellabe.com/123everlyCode/456everlyPolicyNumber`
       const carrierSubdomain = getCarrierSubdomainById(policyData?.carrierId);
       const currentSubDomain = getSubdomain(req.headers);
+      const validSubdomain = isValidCarrierSubdomain(currentSubDomain);
 
-      const onWrongUrl = carrierSubdomain !== currentSubDomain;
+      const onWrongUrl =
+        carrierSubdomain &&
+        carrierSubdomain !== currentSubDomain &&
+        validSubdomain;
 
       if (onWrongUrl) {
         const subdomainPath = prependSubdomain(carrierSubdomain);
