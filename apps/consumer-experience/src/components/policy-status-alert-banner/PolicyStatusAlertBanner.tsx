@@ -1,17 +1,28 @@
-import { PolicyFeature, PolicyStatus } from '@zinnia/api-types/types/sor';
-import { BannerAlert, BannerVariant, IconType } from '@zinnia/bloom/components';
+'use client';
 
-import { getPolicyStatusDetails } from '@/services';
-import { PolicyRequestInputs } from '@/types/policy';
+import {
+  LineOfBusiness,
+  PolicyFeature,
+  PolicyStatus,
+} from '@zinnia/api-types/types/sor';
+import { BannerAlert, BannerVariant, IconType } from '@zinnia/bloom/components';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
+import { PolicyRequestInputs, PolicyStatusDetail } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
-import { EVERLY_CONTACT_PHONE_NUMBER } from '@/utils/data';
+import {
+  EVERLY_CONTACT_PHONE_NUMBER,
+  lineOfBusinessUrlPath,
+} from '@/utils/data';
 import {
   convertKebabedDateString,
   standardDateMonthDayYear,
 } from '@/utils/dates';
 
 interface PolicyStatusAlertBannerProps extends PolicyRequestInputs {
-  canShowFreelookBanner?: boolean;
+  lineOfBusiness?: LineOfBusiness;
+  policyStatusData: Partial<PolicyStatusDetail | null>;
 }
 
 /**
@@ -21,30 +32,47 @@ interface PolicyStatusAlertBannerProps extends PolicyRequestInputs {
  * @returns
  */
 export const PolicyStatusAlertBanner = async ({
+  policyStatusData,
   planCode,
   policyNumber,
-  canShowFreelookBanner,
+  lineOfBusiness = LineOfBusiness.LIFE,
 }: PolicyStatusAlertBannerProps) => {
-  if (!planCode || !policyNumber) {
+  const pathName = usePathname();
+
+  const showFreelookBannerPaths = new Set([
+    `/coverage/policies/${planCode}/${policyNumber}`,
+    `/coverage/annuities/${planCode}/${policyNumber}`,
+  ]);
+
+  const { policyStatus } = policyStatusData || {};
+  const shouldHide =
+    policyStatus === PolicyStatus.PENDINGLAPSE &&
+    pathName.includes('/premium/');
+
+  const canShowFreelookBanner = showFreelookBannerPaths.has(pathName);
+
+  if (!policyStatusData || !policyStatus || shouldHide) {
     return null;
   }
 
-  const { data } = await getPolicyStatusDetails({ planCode, policyNumber });
+  const lineOfBusinessUrl = lineOfBusinessUrlPath(lineOfBusiness);
 
   let statusContent;
 
-  switch (data?.policyStatus) {
+  switch (policyStatus) {
     case PolicyStatus.PENDINGLAPSE:
       statusContent = {
         text: (
           <span className="typography-nav-links-sm-inline">
             Your policy is about to lapse, leaving you uninsured. Pay at least{' '}
-            {formatUSDollars(data.minimumPaymentDue)} by{' '}
-            {standardDateMonthDayYear(data.minimumPaymentDueDate)} to get back
-            on track. Call{' '}
-            <a href={`tel:+${EVERLY_CONTACT_PHONE_NUMBER}`}>
-              {EVERLY_CONTACT_PHONE_NUMBER}
-            </a>{' '}
+            {formatUSDollars(policyStatusData.minimumPaymentDue)} by{' '}
+            {standardDateMonthDayYear(policyStatusData.minimumPaymentDueDate)}{' '}
+            to get back on track.{' '}
+            <Link
+              href={`/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}/premium/amount`}
+            >
+              Click here
+            </Link>{' '}
             to make a payment.
           </span>
         ),
@@ -59,8 +87,8 @@ export const PolicyStatusAlertBanner = async ({
             <span className="typography-nav-links-sm-inline">
               You're still in the free look period. That means you can cancel
               this policy without penalty anytime before{' '}
-              {convertKebabedDateString(data.endDate)}. If you'd like to cancel,
-              call{' '}
+              {convertKebabedDateString(policyStatusData.endDate)}. If you'd
+              like to cancel, call{' '}
               <a href={`tel:+${EVERLY_CONTACT_PHONE_NUMBER}`}>
                 {EVERLY_CONTACT_PHONE_NUMBER}
               </a>

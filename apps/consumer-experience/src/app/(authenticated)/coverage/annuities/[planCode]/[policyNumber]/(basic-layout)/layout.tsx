@@ -1,8 +1,10 @@
 import '@/app/styles/globals.css';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Metadata } from 'next';
 
 import { Footer } from '@/components/footer/Footer';
 import { PolicyStatusAlertBanner } from '@/components/policy-status-alert-banner/PolicyStatusAlertBanner';
+import { getPolicyStatusDetails } from '@/services';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
@@ -23,11 +25,16 @@ export default async function AuthenticatedLayout({
     policyNumber: string;
   };
 }) {
+  const { planCode, policyNumber } = params;
+  const { data } = await getPolicyStatusDetails({ planCode, policyNumber });
+
   return (
     <>
       <PolicyStatusAlertBanner
+        policyStatusData={data}
         planCode={params.planCode}
         policyNumber={params.policyNumber}
+        lineOfBusiness={LineOfBusiness.ANNUITY}
       />
       <div className="container">{children}</div>
       <Footer />
