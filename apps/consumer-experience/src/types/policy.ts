@@ -16,6 +16,7 @@ import {
   ProductType,
   Fund,
   LineOfBusiness,
+  Status,
 } from '@zinnia/api-types/types/sor';
 
 import { BankDetail } from '@/components/person-data/types';
@@ -39,6 +40,7 @@ export interface PolicyDetails {
 export interface UpcomingPremium {
   amount: number;
   nextActivityDate: string;
+  nextActivityStatus?: Status;
   planName: string;
   policyStatus: PolicyStatus;
   productType?: ProductType;
