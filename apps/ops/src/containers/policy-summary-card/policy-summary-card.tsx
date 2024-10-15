@@ -97,7 +97,7 @@ const getPolicyHighlighter = ({ firstName, lastName, policyNumber, ssn }: Search
 const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
     const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
     const { searchValue } = useContext(DashboardContext);
-    const { carrierId, marketingName, planCode, policyNumber, policyStatus, productType } = policy;
+    const { carrierId, marketingName, planCode, planName, policyNumber, policyStatus, productType } = policy;
     const totalMinRequiredAmount = getTotalMinRequiredAmount(policy);
     const globalValuesData = useMemo(() => policyDataToGlobalValues(policy, t), [policy, t]);
 
@@ -194,6 +194,7 @@ const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
                     <PolicyInfo
                         carrierId={carrierId}
                         marketingName={marketingName}
+                        planName={planName}
                         productType={productType}
                         policyNumber={policyNumber}
                         highlight={searchValue?.policyNumber}
