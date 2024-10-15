@@ -8,6 +8,7 @@ import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails'
 import { ReactComponent as Matches } from '@deps/styles/elements/icons/media/matches.svg';
 
 import { getSalesChannelCardData } from '../policy-details.helper';
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 const BASE_KEY = 'policy.detailCards.salesChannel.';
 
@@ -30,11 +31,11 @@ export default function SalesChannelCard({ policy }: BasePolicyComponentArgs) {
             <div className="mt-4 flex flex-col gap-8 sm:flex-row lg:ml-8">
                 <div>
                     <Label label={t(`${BASE_KEY}issueState`)} variant={LabelVariant.FieldLabel} />
-                    <Content pii={true} details={salesChannelCardData.issueState} variant={ContentVariant.BodySm} />
+                    <Content pii={true} details={salesChannelCardData.issueState ?? DEFAULT_ERROR_STRING} variant={ContentVariant.BodySm} />
                 </div>
                 <div>
                     <Label label={t(`${BASE_KEY}salesChannel`)} variant={LabelVariant.FieldLabel} />
-                    <Content details={salesChannelCardData.salesChannel} variant={ContentVariant.BodySm} />
+                    <Content details={salesChannelCardData.salesChannel ?? DEFAULT_ERROR_STRING} variant={ContentVariant.BodySm} />
                 </div>
             </div>
         </CardContainer>
