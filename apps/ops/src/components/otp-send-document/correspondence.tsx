@@ -16,10 +16,15 @@ import { Loader } from '../page-loader';
 import { RadioItem } from '../radio/radio';
 import WorkflowCard from '../workflows/workflow-card/workflow-card';
 
+const getDefaultCommunicationType = (communicationOptions?: RadioItem[]) => {
+    if (!communicationOptions) return '';
+    const activeOptions = communicationOptions?.filter(option => option.disabled !== true);
+    if (activeOptions?.length > 0) return activeOptions[0].value;
+    return '';
+};
 type CorrespondenceProps = {
     communicationOptions?: RadioItem[];
     policy: Policy;
-
     submitRequest: (val: CorrespondenceFormParts) => Promise<Confirm | null>;
 };
 const ContactCenterCorrespondence = ({ policy, communicationOptions, submitRequest }: CorrespondenceProps) => {
@@ -28,10 +33,11 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
     const { setCurrentStepIndex, goToNext } = useWorkflow();
     const { state, dispatch } = useCorrespondence();
+    const defaultCommunicationType = getDefaultCommunicationType(communicationOptions);
 
     const [correspondenceData, setCorrespondenceData] = useState<Correspondence>({
         ...state?.correspondence,
-        type: state?.correspondence?.type || CommunicationTypes.Email,
+        type: state?.correspondence?.type || defaultCommunicationType,
         recipient: state?.correspondence?.recipient,
     });
     const [loader, setLoader] = useState(false);

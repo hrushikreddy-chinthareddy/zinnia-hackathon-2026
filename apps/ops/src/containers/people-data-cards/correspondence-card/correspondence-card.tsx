@@ -30,7 +30,7 @@ const CorrespondenceCard = ({ policy, communicationOptions, correspondenceData, 
     const selectedCommunicationType = correspondenceData?.type;
     const recipient = correspondenceData?.recipient;
     const emailId = getPrimaryEmail(policy);
-    const [communicationType, setCommunicationType] = useState(selectedCommunicationType || CommunicationTypes.Email);
+    const [communicationType, setCommunicationType] = useState(selectedCommunicationType || '');
     const [email, setEmail] = useState(selectedCommunicationType === CommunicationTypes.Email ? recipient || emailId : '');
     const [fax, setFax] = useState(selectedCommunicationType === CommunicationTypes.Fax ? recipient || '' : '');
     const [address, setAddress] = useState(correspondenceData?.mailDetails);
