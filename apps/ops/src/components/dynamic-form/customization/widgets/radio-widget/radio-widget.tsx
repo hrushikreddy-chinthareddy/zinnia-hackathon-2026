@@ -17,7 +17,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     options,
     value,
     // required,
-    // label,
+    label,
     // hideLabel,
     // onChange,
     // onBlur,
@@ -44,6 +44,6 @@ WidgetProps<T, S, F>) {
     return (disabled as boolean) ? (
         <div>{value}</div>
     ) : (
-        <Radio defaultValue="option1" groupLabel="Radio Group" id="radio-group-default" options={newOptions} />
+        <Radio defaultValue="option1" groupLabel={label} id="radio-group-default" options={newOptions} />
     );
 }

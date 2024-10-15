@@ -1,6 +1,8 @@
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import { AxiosResponse } from 'axios';
 
+import suitabilityData from '@deps/form-schemas/carrier/sbgc/suitability/suitability.json';
+import suitabilitySchema from '@deps/form-schemas/carrier/sbgc/suitability/suitabilitySchema.json';
 import {
     Case,
     CaseReferenceResponse,
@@ -11,8 +13,6 @@ import {
     Metadata,
 } from '@deps/models/case/case';
 import { NoteInstance } from '@deps/models/case/note-instance';
-import suitabilityData from '@deps/pages/form-schemas/carrier/sbgc/suitability/suitability.json';
-import suitabilitySchema from '@deps/pages/form-schemas/carrier/sbgc/suitability/suitabilitySchema.json';
 import { CaseStatsQuery } from '@deps/queries/cases';
 import { isMockCaseDetailsRequestEnabled } from '@deps/services/api-config';
 import { mockCaseDetails } from '@deps/services/mocks/case-details';

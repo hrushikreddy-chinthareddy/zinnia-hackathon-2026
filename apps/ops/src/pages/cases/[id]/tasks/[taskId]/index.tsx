@@ -43,7 +43,7 @@ const TaskWorkflow = ({ caseId, taskId, formSchema, uiSchema, taskData }: TaskPa
         '1': {
             schema: formSchema,
             uiSchema: uiSchema,
-            tabTitle: 'Suitability',
+            tabTitle: 'Input Suitability Data',
         },
 
         '3': {
@@ -150,6 +150,7 @@ const TaskWorkflow = ({ caseId, taskId, formSchema, uiSchema, taskData }: TaskPa
             component: (
                 <WorkflowCard
                     title={task.tabTitle}
+                    subtitle={'Manually enter all suitability data. Note that canceling at any point would erase all.'}
                     footerContent={<TransactionCta className="mt-4" mainCta={mainCta} secondaryCta={secondaryCta} stopLoading={true} />}
                 >
                     <div className="flex flex-col gap-2">

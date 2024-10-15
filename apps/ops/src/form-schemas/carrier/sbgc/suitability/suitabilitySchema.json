@@ -1,7 +1,7 @@
 {
     "formSchema": {
         "$schema": "http://json-schema.org/draft-07/schema#",
-        "title": "Suitability Form",
+        "title": "",
         "definitions": {
             "partyTypeEnum": {
                 "enum": [
@@ -1501,7 +1501,10 @@
                 "ui:enumNames": [
                     "YES",
                     "NO"
-                ]
+                ],
+                "ui:options": {
+                    "label": false
+                }
             },
             "investProduct_riskTolerance": {
                 "ui:enumNames": [
@@ -1575,11 +1578,152 @@
         },
         "parties": {
             "items": {
+                "ui:TitleFieldTemplate": "TitleFieldTemplate",
+                "ui:options": {
+                    "isField": true
+                },
                 "partyType": {
-                    "$ref": "#/definitions/partyTypeEnum"
+                    "$ref": "#/definitions/partyTypeEnum",
+                    "ui:options": {
+                        "isField": true
+                    },
+                    "ui:TitleFieldTemplate": "TitleFieldTemplate",
+                    "ui:helpText": "Applicant's type"
                 },
                 "roleType": {
                     "$ref": "#/definitions/roleTypeEnum"
+                },
+                "fullName": {
+                    "ui:placeholder": "First name",
+                    "ui:helpText": "Applicant's first name",
+                    "ui:options": {
+                        "readyOnly": true
+                    }
+                },
+                "person": {
+                    "type": "object",
+                    "title": "Person Information",
+                    "properties": {
+                        "firstName": {
+                            "ui:placeholder": "First name",
+                            "ui:helpText": "Applicant's first name"
+                        },
+                        "middleName": {
+                            "ui:placeholder": "Middle name",
+                            "ui:helpText": "Applicant's Middle name"
+                        },
+                        "lastName": {
+                            "ui:placeholder": "Last name",
+                            "ui:helpText": "Applicant's Last name"
+                        },
+                        "gender": {
+                            "ui:helpText": "Applicant's gender",
+                            "$ref": "#/definitions/genderEnum"
+                        },
+                        "age": {
+                            "type": "string",
+                            "title": "Age"
+                        },
+                        "birthDate": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "Birth Date"
+                        },
+                        "martialStatus": {
+                            "type": "string",
+                            "title": "Marital Status",
+                            "$ref": "#/definitions/martialStatusEnum"
+                        },
+                        "birthCountry": {
+                            "type": "string",
+                            "title": "Birth Country",
+                            "$ref": "#/definitions/birthCountryEnum",
+                            "uniqueItems": true
+                        },
+                        "birthJurisdictionState": {
+                            "type": "string",
+                            "title": "Birth Jurisdiction State",
+                            "$ref": "#/definitions/birthJurisdictionStateEnum",
+                            "uniqueItems": true
+                        }
+                    }
+                },
+                "govtIdInfo": {
+                    "type": "array",
+                    "title": "Government ID Information",
+                    "items": {
+                        "type": "object",
+                        "title": "",
+                        "properties": {
+                            "govtId": {
+                                "type": "string",
+                                "title": "Government ID"
+                            },
+                            "govtIdType": {
+                                "type": "string",
+                                "title": "Government ID Type",
+                                "$ref": "#/definitions/govtIdTypeEnum"
+                            },
+                            "govtIdExpDate": {
+                                "type": "string",
+                                "format": "date",
+                                "title": "Government ID Expiry Date"
+                            }
+                        },
+                        "required": [
+                            "govtId",
+                            "govtIdType",
+                            "govtIdExpDate"
+                        ]
+                    }
+                },
+                "addresses": {
+                    "type": "array",
+                    "title": "Addresses",
+                    "items": {
+                        "type": "object",
+                        "title": "",
+                        "properties": {
+                            "addressType": {
+                                "type": "string",
+                                "title": "Address Type",
+                                "$ref": "#/definitions/addressTypeEnum",
+                                "uniqueItems": true
+                            },
+                            "line1": {
+                                "type": "string",
+                                "title": "Address Line 1"
+                            },
+                            "line2": {
+                                "type": "string",
+                                "title": "Address Line 2"
+                            },
+                            "city": {
+                                "type": "string",
+                                "title": "City"
+                            },
+                            "state": {
+                                "type": "string",
+                                "title": "State"
+                            },
+                            "country": {
+                                "type": "string",
+                                "title": "Country"
+                            },
+                            "zip": {
+                                "type": "string",
+                                "title": "Zip Code"
+                            }
+                        }
+                    },
+                    "required": [
+                        "addressType",
+                        "line1",
+                        "city",
+                        "state",
+                        "country",
+                        "zip"
+                    ]
                 },
                 "employment": {
                     "employmentStatus": {
