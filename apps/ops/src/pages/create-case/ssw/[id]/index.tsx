@@ -114,12 +114,14 @@ export default function SSWCase({ document, form, parties, transactionsHistory, 
         setTransactionDetail({
             contractId: document?.contract || '',
             documentNumber: document?.documentNumber || '',
+            contractStatusCode:document?.contractStatusCode || '',
             caseId: form.caseId || '',
             transactions: transactionsHistory,
             qualType,
             issueDate,
         });
     }, [qualType, document, form, transactionsHistory, clientId, issueDate]);
+
 
     useEffect(() => {
         if (!document) {
