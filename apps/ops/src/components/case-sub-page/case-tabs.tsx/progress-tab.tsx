@@ -1,4 +1,5 @@
 import { Accordion as AccordionRoot, AccordionItem, AccordionTrigger, AccordionContent, AccordionHeader } from '@radix-ui/react-accordion';
+import { Tag, TagVariant } from '@zinnia/bloom/components';
 import { TFunction, useTranslation } from 'next-i18next';
 import React, { ForwardedRef, Key, ReactNode, useMemo, useState } from 'react';
 
@@ -117,6 +118,51 @@ const getStepStatusIconTooltip = (step: StepView, t: TFunction): ReactNode => {
     }
 };
 
+const getStepResultTag = (step: StepView, t: TFunction): ReactNode => {
+    let text;
+    switch (step.id) {
+        // Underwriting
+        case 'underwritingEvalutaion.underwritingDecisionApproved':
+            text = t('caseOverview.tabs.accepted');
+            break;
+        case 'underwritingEvaluation.underwritingDecisionAdverse':
+            text = t('caseOverview.tabs.adverse');
+            break;
+        case 'underwritingEvalutaion.underwritingDecisionDeclined':
+            text = t('caseOverview.tabs.declined');
+            break;
+        // Suitability
+        case 'suitabilityReview.suitabilityReview':
+            // to do - accepted ??
+            if (step.status === 'COMPLETED') {
+                text = t('caseOverview.tabs.approved');
+                break;
+            } else {
+                text = t('caseOverview.tabs.declined');
+                break;
+            }
+        // User Decision
+        case 'userDecision.acceptedOffer':
+            text = t('caseOverview.tabs.accepted');
+            break;
+        case 'userDecision.rejectedOffer':
+            text = t('caseOverview.tabs.rejected');
+            break;
+        case 'userDecision.expireOffer':
+            text = t('caseOverview.tabs.expired');
+            break;
+        case 'userDecision.requestedOfferAmendment':
+            text = t('caseOverview.tabs.amended');
+            break;
+        default:
+            break;
+    }
+    if (text) {
+        return <Tag text={text} variant={TagVariant.White} />;
+    }
+    return;
+};
+
 const Task = ({ task }: { task: TaskView }) => {
     const { t } = useTranslation();
     const sideSheet = useSideSheetContext();
@@ -228,6 +274,7 @@ const Steps = ({ steps, stepFilter = () => true }: { steps: StepView[]; stepFilt
                             <div className="flex flex-row gap-2">
                                 {getStepStatusIconTooltip(step, t)}
                                 <Content variant={ContentVariant.BodySm} details={step.name} />
+                                {getStepResultTag(step, t)}
                             </div>
                             {Object.keys(step?.additionalData).length > 0 && (
                                 <NavElement

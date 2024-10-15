@@ -1095,7 +1095,14 @@
             "stepCount_other": "{{count}} steps",
             "steps": "Steps",
             "taskSideSheetLabel": "More information about task {{task}}",
-            "validate": "Validate {{label}}"
+            "validate": "Validate {{label}}",
+            "accepted": "Accepted",
+            "adverse": "Adverse",
+            "approved": "Approved",
+            "declined": "Declined",
+            "rejected": "Rejected",
+            "expired": "Expired",
+            "amended": "Amended offer requested"
         },
         "processDate": {
             "canceled": "Canceled on",

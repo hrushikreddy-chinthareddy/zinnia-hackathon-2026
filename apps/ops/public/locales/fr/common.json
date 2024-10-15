@@ -1089,7 +1089,14 @@
             "stepCount_other": "{{count}} étapes",
             "steps": "Étapes",
             "taskSideSheetLabel": "Plus d'informations sur la tâche {{task}}",
-            "validate": "Valider {{label}}"
+            "validate": "Valider {{label}}",
+            "accepted": "Accepté",
+            "adverse": "Négative",
+            "approved": "Approuvée",
+            "declined": "Refusé",
+            "rejected": "Rejetée",
+            "expired": "Expiré",
+            "amended": "Demande d'offre modifiée"
         },
         "processDate": {
             "cancled": "Annulé le",
