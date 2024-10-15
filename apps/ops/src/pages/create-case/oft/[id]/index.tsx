@@ -34,7 +34,7 @@ import { ProcessType } from '@deps/models/case/enums';
 import { TaskType } from '@deps/models/case/task';
 import { ActiveWithdrawalCase, Carrier, PartyRoles, QualTypes } from '@deps/models/case/withdrawal/case';
 import { UserPermission } from '@deps/models/user-profile';
-import { initializeOTPTaskSSR } from '@deps/operations/tasks/v1/initialize';
+import { initializeOTPTaskSSR } from '@deps/operations/tasks/v2/initialize';
 import { getDocumentSSR } from '@deps/queries/api/documents';
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import { SCREEN_BREAKPOINTS } from '@deps/types/constants';
