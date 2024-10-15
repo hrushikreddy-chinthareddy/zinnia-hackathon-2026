@@ -5,6 +5,7 @@ import { Metadata } from 'next';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { UpcomingPremium } from '@/components/policy-overview/UpcomingPremium';
 import { RouteKey, getPageTitle } from '@/route-map';
+import { LineOfBusinessPath } from '@/types';
 import { PolicyRequestInputs } from '@/types/policy';
 
 const pageTitle = getPageTitle(RouteKey.PREMIUM);
@@ -32,7 +33,7 @@ export default async function PremiumPayments({
         <ClickableCardContainer>
           <ClickableCardContainer.LinkContent
             linkTo={{
-              url: `/coverage/annuities/${planCode}/${policyNumber}/premium/history`,
+              url: `/coverage/${LineOfBusinessPath.ANNUITIES}/${planCode}/${policyNumber}/premium/history`,
               label: 'go to payment history page',
             }}
           >
