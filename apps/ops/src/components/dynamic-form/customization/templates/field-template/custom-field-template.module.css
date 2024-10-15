@@ -1,0 +1,7 @@
+.customFieldTemplate {
+    margin-bottom: var(--measure-dimension-gap-xl);
+}
+
+.fieldChildren {
+    margin-top: 3px;
+}

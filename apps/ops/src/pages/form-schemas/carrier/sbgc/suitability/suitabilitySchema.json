@@ -1,0 +1,1845 @@
+{
+    "formSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "Suitability Form",
+        "definitions": {
+            "partyTypeEnum": {
+                "enum": [
+                    "PERSON",
+                    "ORGANIZATION",
+                    "OTHERS"
+                ]
+            },
+            "roleTypeEnum": {
+                "enum": [
+                    "OWNER",
+                    "JOINT_OWNER",
+                    "AGENT",
+                    "PRIMARY_WRITING_AGENT",
+                    "PRIMARY_SERVICING_AGENT",
+                    "BROKER_DEALER"
+                ]
+            },
+            "genderEnum": {
+                "enum": [
+                    "MALE",
+                    "FEMALE",
+                    "TRANSGENDER",
+                    "OTHER"
+                ]
+            },
+            "martialStatusEnum": {
+                "enum": [
+                    "SINGLE",
+                    "MARRIED",
+                    "DIVORCED",
+                    "WIDOWED",
+                    "UNKNOWN",
+                    "LEGALLY_SEPARATED"
+                ]
+            },
+            "birthCountryEnum": {
+                "enum": [
+                    "AA",
+                    "AE",
+                    "AK",
+                    "AL",
+                    "AP",
+                    "AR",
+                    "AZ",
+                    "CA",
+                    "CD",
+                    "CO",
+                    "CT",
+                    "DC",
+                    "DE",
+                    "FL",
+                    "FN",
+                    "GA",
+                    "GU",
+                    "HI",
+                    "IA",
+                    "ID",
+                    "IL",
+                    "IN",
+                    "KS",
+                    "KY",
+                    "LA",
+                    "MA",
+                    "MD",
+                    "ME",
+                    "MI",
+                    "MN",
+                    "MO",
+                    "MS",
+                    "MT",
+                    "NC",
+                    "ND",
+                    "NE",
+                    "NH",
+                    "NJ",
+                    "NM",
+                    "NV",
+                    "NY",
+                    "OH",
+                    "OK",
+                    "OR",
+                    "PA",
+                    "PR",
+                    "RI",
+                    "SC",
+                    "SD",
+                    "TN",
+                    "TX",
+                    "UT",
+                    "VA",
+                    "VI",
+                    "VT",
+                    "WA",
+                    "WI",
+                    "WV",
+                    "WY"
+                ]
+            },
+            "birthJurisdictionStateEnum": {
+                "enum": [
+                    "AA",
+                    "AE",
+                    "AK",
+                    "AL",
+                    "AP",
+                    "AR",
+                    "AZ",
+                    "CA",
+                    "CD",
+                    "CO",
+                    "CT",
+                    "DC",
+                    "DE",
+                    "FL",
+                    "FN",
+                    "GA",
+                    "GU",
+                    "HI",
+                    "IA",
+                    "ID",
+                    "IL",
+                    "IN",
+                    "KS",
+                    "KY",
+                    "LA",
+                    "MA",
+                    "MD",
+                    "ME",
+                    "MI",
+                    "MN",
+                    "MO",
+                    "MS",
+                    "MT",
+                    "NC",
+                    "ND",
+                    "NE",
+                    "NH",
+                    "NJ",
+                    "NM",
+                    "NV",
+                    "NY",
+                    "OH",
+                    "OK",
+                    "OR",
+                    "PA",
+                    "PR",
+                    "RI",
+                    "SC",
+                    "SD",
+                    "TN",
+                    "TX",
+                    "UT",
+                    "VA",
+                    "VI",
+                    "VT",
+                    "WA",
+                    "WI",
+                    "WV",
+                    "WY"
+                ]
+            },
+            "govtIdTypeEnum": {
+                "enum": [
+                    "SSN",
+                    "PASSPORT",
+                    "DRIVER_LICENSE",
+                    "ARMED_FORCEID"
+                ]
+            },
+            "addressTypeEnum": {
+                "enum": [
+                    "RESIDENCE",
+                    "MAILING",
+                    "BUSINESS",
+                    "PRIMARY_ADDRESS",
+                    "VACATION",
+                    "BILLING_MAILING"
+                ]
+            },
+            "employmentStatusEnum": {
+                "enum": [
+                    "ACTIVE",
+                    "RETIRED",
+                    "DISABLED",
+                    "TERMINATED",
+                    "OTHERS"
+                ]
+            },
+            "lineOfBusinessEnum": {
+                "enum": [
+                    "ANNUITY",
+                    "LIFE"
+                ]
+            },
+            "qualPlanTypeEnum": {
+                "enum": [
+                    "NON_QUALIFIED",
+                    "QUALIFIED"
+                ]
+            },
+            "replacementIndEnum": {
+                "enum": [
+                    "YES",
+                    "NO"
+                ]
+            },
+            "replacedContractTypeEnum": {
+                "enum": [
+                    "ANNUITY",
+                    "LIFE"
+                ]
+            },
+            "soldPoliciesToApplicantEnum": {
+                "enum": [
+                    "YES",
+                    "NO"
+                ]
+            },
+            "pastReplacementEnum": {
+                "enum": [
+                    "YES",
+                    "NO"
+                ]
+            },
+            "coverageExpenseConsiderationEnum": {
+                "enum": [
+                    "YES",
+                    "NO"
+                ]
+            },
+            "sourceOfIncomeEnum": {
+                "enum": [
+                    "FIXED_ANNUITY",
+                    "LIFE_INSURENCE",
+                    "CHECKING_SAVING_ACCOUNT",
+                    "SALARY",
+                    "VARIABLE_ANNUITY",
+                    "REVERSE_MORTGAGE",
+                    "SAVING_ACCOUNT",
+                    "DEATH_BENEFIT",
+                    "INHERITED_IRA",
+                    "INHERITANCE",
+                    "401K_ROLLOVER",
+                    "RETIREMENT_PLAN",
+                    "INHERITED_IRA",
+                    "INDEXED_ANNUITY",
+                    "STOCKS_BONDS_MF",
+                    "OTHERS",
+                    "RENTALINCOME",
+                    "SOCIAL_SECURITY"
+                ]
+            },
+            "materialChangeExpEnum": {
+                "enum": [
+                    "YES",
+                    "NO"
+                ]
+            },
+            "materialChangeDetails_changeTypeEnum": {
+                "enum": [
+                    "LIVING_EXPENSE_INCREASE",
+                    "LIVING_EXPENSE_DECREASE",
+                    "LIVING_ASSET_DECREASE"
+                ]
+            },
+            "isApplicableEnum": {
+                "enum": [
+                    "YES",
+                    "NO"
+                ]
+            },
+            "sourceOfFundsEnum": {
+                "enum": [
+                    "FIXED_ANNUITY",
+                    "LIFE_INSURENCE",
+                    "CHECKING_SAVING_ACCOUNT",
+                    "CD",
+                    "VARIABLE_ANNUITY",
+                    "REVERSE_MORTGAGE",
+                    "SAVING_ACCOUNT",
+                    "DEATH_BENEFIT",
+                    "INHERITED_IRA",
+                    "INHERITANCE",
+                    "401K_ROLLOVER",
+                    "RETIREMENT_PLAN",
+                    "INDEXED_ANNUITY",
+                    "STOCKS_BONDS_MF",
+                    "OTHERS"
+                ]
+            },
+            "financialProducts_assetsDistribution_productTypeEnum": {
+                "enum": [
+                    "CHECKING_SAVING_ACCOUNT",
+                    "MONEY_MARKET",
+                    "STOCKS_BONDS",
+                    "PENSION",
+                    "LIFE_INSURENCE",
+                    "ANNUITIES",
+                    "ANNUITY_SURRENDER_FREE",
+                    "REAL_STATE",
+                    "OTHERS"
+                ]
+            },
+            "financialProducts_assetsDistribution_qualificationTypeEnum": {
+                "enum": [
+                    "QUALIFIED",
+                    "NON_QUALIFIED"
+                ]
+            },
+            "financialProducts_totalAsset_qualificationTypeEnum": {
+                "enum": [
+                    "QUALIFIED",
+                    "NON_QUALIFIED"
+                ]
+            },
+            "financialProducts_totalAsset_assetTypeEnum": {
+                "enum": [
+                    "LIQUID_ASSET",
+                    "NON_LIQUID_ASSET"
+                ]
+            },
+            "rateChangeAcknowledgmentEnum": {
+                "enum": [
+                    "YES",
+                    "NO"
+                ]
+            },
+            "investProduct_riskToleranceEnum": {
+                "enum": [
+                    "CONSERVATIVE",
+                    "MODERATE_CONSERVATIVE",
+                    "MODERATE",
+                    "MODERATE_AGGRESSIVE",
+                    "AGGRESSIVE"
+                ]
+            },
+            "investProduct_annuityFitsRiskToleranceEnum": {
+                "enum": [
+                    "YES",
+                    "NO"
+                ]
+            },
+            "financialObjectives_buyingReasonEnum": {
+                "enum": [
+                    "INCOME",
+                    "TAX_DEFERRAL",
+                    "GURANTEES",
+                    "GROWTH",
+                    "PRINCIPAL_PROTECTION",
+                    "OTHERS"
+                ]
+            },
+            "financialObjectives_annuityMeetsFinancialNeedsEnum": {
+                "enum": [
+                    "YES",
+                    "NO"
+                ]
+            },
+            "agentAcknowledgment_maApplicationQuestionnaire_soldPoliciesToApplicantEnum": {
+                "enum": [
+                    "YES",
+                    "NO"
+                ]
+            },
+            "agentAcknowledgment_maApplicationQuestionnaire_saleInLast5YearsEnum": {
+                "enum": [
+                    "YES",
+                    "NO"
+                ]
+            },
+            "agentAcknowledgment_maApplicationQuestionnaire_productDetails_productTypeEnum": {
+                "enum": [
+                    "ANNUITY",
+                    "LIFE"
+                ]
+            },
+            "signatureInfo_signatureRoleCodeEnum": {
+                "enum": [
+                    "OWNER",
+                    "AGENT"
+                ]
+            },
+            "signatureInfo_signatureStateEnum": {
+                "enum": [
+                    "US"
+                ]
+            },
+            "signatureInfo_signatoryDesignationEnum": {
+                "enum": [
+                    "TRUSTEE",
+                    "EXECUTOR",
+                    "CUSTODIAN",
+                    "GUARDIAN",
+                    "ATTORNEY_IN_FACT"
+                ]
+            }
+        },
+        "type": "object",
+        "properties": {
+            "parties": {
+                "type": "array",
+                "title": "Parties",
+                "minItems": 1,
+                "items": {
+                    "type": "object",
+                    "title": "",
+                    "properties": {
+                        "partyType": {
+                            "type": "string",
+                            "title": "Party Type",
+                            "$ref": "#/definitions/partyTypeEnum",
+                            "uniqueItems": true
+                        },
+                        "roleType": {
+                            "type": "string",
+                            "title": "Role Type",
+                            "$ref": "#/definitions/roleTypeEnum",
+                            "uniqueItems": true
+                        },
+                        "fullName": {
+                            "type": "string",
+                            "title": "Full Name"
+                        },
+                        "person": {
+                            "type": "object",
+                            "title": "Person Information",
+                            "properties": {
+                                "firstName": {
+                                    "type": "string",
+                                    "title": "First Name"
+                                },
+                                "middleName": {
+                                    "type": "string",
+                                    "title": "Middle Name"
+                                },
+                                "lastName": {
+                                    "type": "string",
+                                    "title": "Last Name"
+                                },
+                                "gender": {
+                                    "type": "string",
+                                    "title": "Gender",
+                                    "$ref": "#/definitions/genderEnum"
+                                },
+                                "age": {
+                                    "type": "string",
+                                    "title": "Age"
+                                },
+                                "birthDate": {
+                                    "type": "string",
+                                    "format": "date",
+                                    "title": "Birth Date"
+                                },
+                                "martialStatus": {
+                                    "type": "string",
+                                    "title": "Marital Status",
+                                    "$ref": "#/definitions/martialStatusEnum"
+                                },
+                                "birthCountry": {
+                                    "type": "string",
+                                    "title": "Birth Country",
+                                    "$ref": "#/definitions/birthCountryEnum",
+                                    "uniqueItems": true
+                                },
+                                "birthJurisdictionState": {
+                                    "type": "string",
+                                    "title": "Birth Jurisdiction State",
+                                    "$ref": "#/definitions/birthJurisdictionStateEnum",
+                                    "uniqueItems": true
+                                }
+                            }
+                        },
+                        "govtIdInfo": {
+                            "type": "array",
+                            "title": "Government ID Information",
+                            "items": {
+                                "type": "object",
+                                "title": "",
+                                "properties": {
+                                    "govtId": {
+                                        "type": "string",
+                                        "title": "Government ID"
+                                    },
+                                    "govtIdType": {
+                                        "type": "string",
+                                        "title": "Government ID Type",
+                                        "$ref": "#/definitions/govtIdTypeEnum"
+                                    },
+                                    "govtIdExpDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "title": "Government ID Expiry Date"
+                                    }
+                                },
+                                "required": [
+                                    "govtId",
+                                    "govtIdType",
+                                    "govtIdExpDate"
+                                ]
+                            }
+                        },
+                        "addresses": {
+                            "type": "array",
+                            "title": "Addresses",
+                            "items": {
+                                "type": "object",
+                                "title": "",
+                                "properties": {
+                                    "addressType": {
+                                        "type": "string",
+                                        "title": "Address Type",
+                                        "$ref": "#/definitions/addressTypeEnum",
+                                        "uniqueItems": true
+                                    },
+                                    "line1": {
+                                        "type": "string",
+                                        "title": "Address Line 1"
+                                    },
+                                    "line2": {
+                                        "type": "string",
+                                        "title": "Address Line 2"
+                                    },
+                                    "city": {
+                                        "type": "string",
+                                        "title": "City"
+                                    },
+                                    "state": {
+                                        "type": "string",
+                                        "title": "State"
+                                    },
+                                    "country": {
+                                        "type": "string",
+                                        "title": "Country"
+                                    },
+                                    "zip": {
+                                        "type": "string",
+                                        "title": "Zip Code"
+                                    }
+                                }
+                            },
+                            "required": [
+                                "addressType",
+                                "line1",
+                                "city",
+                                "state",
+                                "country",
+                                "zip"
+                            ]
+                        },
+                        "employment": {
+                            "type": "object",
+                            "title": "Employment Information",
+                            "properties": {
+                                "employmentStatus": {
+                                    "type": "array",
+                                    "title": "Employment Status",
+                                    "items": {
+                                        "type": "string",
+                                        "title": "",
+                                        "$ref": "#/definitions/employmentStatusEnum"
+                                    },
+                                    "uniqueItems": true
+                                },
+                                "occupation": {
+                                    "type": "string",
+                                    "title": "Occupation"
+                                }
+                            },
+                            "dependencies": {
+                                "employmentStatus": {
+                                    "oneOf": [
+                                        {
+                                            "properties": {
+                                                "employmentStatus": {
+                                                    "contains": {
+                                                        "const": "Disabled"
+                                                    }
+                                                },
+                                                "disabilityExplanation": {
+                                                    "type": "string",
+                                                    "title": "If disabled is marked, please explain",
+                                                    "minLength": 1
+                                                }
+                                            },
+                                            "required": [
+                                                "disabilityExplanation"
+                                            ]
+                                        },
+                                        {
+                                            "properties": {
+                                                "employmentStatus": {
+                                                    "not": {
+                                                        "contains": {
+                                                            "const": "Disabled"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "required": [
+                                "employmentStatus",
+                                "occupation"
+                            ]
+                        }
+                    }
+                }
+            },
+            "policyData": {
+                "type": "object",
+                "title": "Policy Data",
+                "properties": {
+                    "lineOfBusiness": {
+                        "type": "string",
+                        "title": "Line of Business",
+                        "$ref": "#/definitions/lineOfBusinessEnum"
+                    },
+                    "productCode": {
+                        "type": "string",
+                        "title": "Product Code"
+                    },
+                    "productType": {
+                        "type": "string",
+                        "title": "Product Type"
+                    },
+                    "qualPlanType": {
+                        "type": "string",
+                        "title": "Qualification Plan Type",
+                        "$ref": "#/definitions/qualPlanTypeEnum"
+                    },
+                    "annualPaymentAmt": {
+                        "type": "string",
+                        "title": "Annual Payment Amount"
+                    }
+                }
+            },
+            "applicationInfo": {
+                "type": "object",
+                "title": "Application Information",
+                "properties": {
+                    "replacementInd": {
+                        "type": "string",
+                        "title": "Replacement Indicator",
+                        "$ref": "#/definitions/replacementIndEnum"
+                    },
+                    "replacementReason": {
+                        "type": "string",
+                        "title": "Replacement Reason"
+                    },
+                    "replacedContractType": {
+                        "type": "string",
+                        "title": "Replaced Contract Type",
+                        "$ref": "#/definitions/replacedContractTypeEnum"
+                    },
+                    "additionalInformation": {
+                        "type": "object",
+                        "title": "Additional Information",
+                        "properties": {
+                            "soldPoliciesToApplicant": {
+                                "type": "string",
+                                "title": "Sold Policies to Applicant",
+                                "$ref": "#/definitions/soldPoliciesToApplicantEnum"
+                            },
+                            "pastReplacement": {
+                                "type": "string",
+                                "title": "Past Replacement",
+                                "$ref": "#/definitions/pastReplacementEnum"
+                            },
+                            "coverageExpenseConsideration": {
+                                "type": "string",
+                                "title": "Coverage Expense Consideration",
+                                "$ref": "#/definitions/coverageExpenseConsiderationEnum"
+                            }
+                        }
+                    }
+                }
+            },
+            "fiscalData": {
+                "type": "object",
+                "title": "Fiscal Data",
+                "properties": {
+                    "annualIncome": {
+                        "type": "string",
+                        "title": "Annual Income"
+                    },
+                    "netWorth": {
+                        "type": "string",
+                        "title": "Net Worth"
+                    },
+                    "liquidNetWorth": {
+                        "type": "string",
+                        "title": "Liquid Net Worth"
+                    },
+                    "sourceOfIncome": {
+                        "type": "array",
+                        "title": "Source of Income",
+                        "items": {
+                            "type": "string",
+                            "title": "",
+                            "$ref": "#/definitions/sourceOfIncomeEnum"
+                        }
+                    },
+                    "sourceOfIncomeOther": {
+                        "type": "string",
+                        "title": "Other Source of Income"
+                    },
+                    "materialChangeExp": {
+                        "type": "string",
+                        "title": "Material Change Expected",
+                        "$ref": "#/definitions/materialChangeExpEnum"
+                    },
+                    "materialChangeReason": {
+                        "type": "string",
+                        "title": "Material Change Reason"
+                    },
+                    "materialChangeDetails": {
+                        "type": "array",
+                        "title": "Material Change Details",
+                        "items": {
+                            "type": "object",
+                            "title": "",
+                            "properties": {
+                                "changeType": {
+                                    "type": "string",
+                                    "title": "Change Type",
+                                    "$ref": "#/definitions/materialChangeDetails_changeTypeEnum"
+                                },
+                                "isApplicable": {
+                                    "type": "string",
+                                    "title": "Is Applicable"
+                                },
+                                "numberOfYears": {
+                                    "type": "string",
+                                    "title": "Number of Years"
+                                },
+                                "amount": {
+                                    "type": "string",
+                                    "title": "Amount"
+                                }
+                            },
+                            "required": [
+                                "changeType",
+                                "isApplicable",
+                                "numberOfYears",
+                                "amount"
+                            ]
+                        }
+                    },
+                    "totalAssets": {
+                        "type": "string",
+                        "title": "Total Assets"
+                    },
+                    "totalDebt": {
+                        "type": "string",
+                        "title": "Total Debt"
+                    },
+                    "annualExpenses": {
+                        "type": "string",
+                        "title": "Annual Expenses"
+                    },
+                    "sourceOfFunds": {
+                        "type": "array",
+                        "title": "Source of Funds",
+                        "items": {
+                            "type": "string",
+                            "title": "",
+                            "$ref": "#/definitions/sourceOfIncomeEnum"
+                        }
+                    },
+                    "federalTaxBand": {
+                        "type": "string",
+                        "title": "Federal Tax Band"
+                    },
+                    "otherTaxBand": {
+                        "type": "string",
+                        "title": "Other Tax Band"
+                    }
+                }
+            },
+            "financialExperience": {
+                "type": "object",
+                "title": "Financial Experience",
+                "properties": {
+                    "rateChangeAcknowledgment": {
+                        "type": "string",
+                        "title": "Rate Change Acknowledgment",
+                        "$ref": "#/definitions/rateChangeAcknowledgmentEnum"
+                    },
+                    "totalAnnuityValue": {
+                        "type": "number",
+                        "title": "Total Annuity Value"
+                    },
+                    "financialProducts": {
+                        "type": "object",
+                        "title": "Financial Products",
+                        "properties": {
+                            "assetsDistribution": {
+                                "type": "array",
+                                "title": "Assets Distribution",
+                                "items": {
+                                    "type": "object",
+                                    "title": "",
+                                    "properties": {
+                                        "productType": {
+                                            "type": "string",
+                                            "title": "Product Type",
+                                            "$ref": "#/definitions/financialProducts_assetsDistribution_productTypeEnum"
+                                        },
+                                        "qualificationType": {
+                                            "type": "string",
+                                            "title": "Qualification Type",
+                                            "$ref": "#/definitions/financialProducts_assetsDistribution_qualificationTypeEnum"
+                                        },
+                                        "amount": {
+                                            "type": "number",
+                                            "title": "Amount"
+                                        }
+                                    }
+                                }
+                            },
+                            "totalAsset": {
+                                "type": "array",
+                                "title": "Total Asset",
+                                "items": {
+                                    "type": "object",
+                                    "title": "",
+                                    "properties": {
+                                        "qualificationType": {
+                                            "type": "string",
+                                            "title": "Qualification Type",
+                                            "$ref": "#/definitions/financialProducts_totalAsset_qualificationTypeEnum"
+                                        },
+                                        "assetType": {
+                                            "type": "string",
+                                            "title": "Asset Type",
+                                            "$ref": "#/definitions/financialProducts_totalAsset_assetTypeEnum"
+                                        },
+                                        "amount": {
+                                            "type": "number",
+                                            "title": "Amount"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "investmentRiskInfo": {
+                "type": "object",
+                "title": "Investment Risk Information",
+                "properties": {
+                    "riskTolerance": {
+                        "type": "string",
+                        "title": "Risk Tolerance",
+                        "$ref": "#/definitions/investProduct_riskToleranceEnum"
+                    },
+                    "riskToleranceDesc": {
+                        "type": "string",
+                        "title": "Risk Tolerance Description"
+                    },
+                    "annuityFitsRiskTolerance": {
+                        "type": "string",
+                        "title": "Annuity Fits Risk Tolerance",
+                        "$ref": "#/definitions/investProduct_annuityFitsRiskToleranceEnum"
+                    }
+                }
+            },
+            "financialObjectives": {
+                "type": "object",
+                "title": "Financial Objectives",
+                "properties": {
+                    "buyingReason": {
+                        "type": "array",
+                        "title": "Buying Reason",
+                        "items": {
+                            "type": "string",
+                            "title": "",
+                            "$ref": "#/definitions/financialObjectives_buyingReasonEnum"
+                        }
+                    },
+                    "buyingReasonDetails": {
+                        "type": "string",
+                        "title": "Buying Reason Details"
+                    },
+                    "annuityMeetsFinancialNeeds": {
+                        "type": "string",
+                        "title": "Annuity Meets Financial Needs",
+                        "$ref": "#/definitions/financialObjectives_annuityMeetsFinancialNeedsEnum"
+                    }
+                }
+            },
+            "liquidityOptions": {
+                "type": "object",
+                "title": "Liquidity Options",
+                "properties": {
+                    "fundsAccessExplanation": {
+                        "type": "string",
+                        "title": "Funds Access Explanation"
+                    },
+                    "distributionMethods": {
+                        "type": "array",
+                        "title": "Distribution Methods",
+                        "items": {
+                            "type": "string",
+                            "title": ""
+                        }
+                    },
+                    "firstPayoutOption": {
+                        "type": "string",
+                        "title": "First Payout Option"
+                    },
+                    "surrenderChargeConsent": {
+                        "type": "string",
+                        "title": "Surrender Charge Consent"
+                    },
+                    "possibleReductionInValue": {
+                        "type": "string",
+                        "title": "Possible Reduction In Value"
+                    },
+                    "planToHoldAnnuity": {
+                        "type": "string",
+                        "title": "Plan to Hold Annuity"
+                    },
+                    "explainedOtherCharges": {
+                        "type": "string",
+                        "title": "Explained Other Charges"
+                    },
+                    "benefitAnnuityQuestions": {
+                        "type": "object",
+                        "title": "Benefit Annuity Questions",
+                        "properties": {
+                            "understandIncomeAdjustmentFactor": {
+                                "type": "string",
+                                "title": "Understand Income Adjustment Factor"
+                            },
+                            "consideredFinancialNeedsAfter10Years": {
+                                "type": "string",
+                                "title": "Considered Financial Needs After 10 Years"
+                            },
+                            "planForIncomeDecreaseAfter10Years": {
+                                "type": "string",
+                                "title": "Plan for Income Decrease After 10 Years"
+                            }
+                        }
+                    }
+                }
+            },
+            "agentAcknowledgment": {
+                "type": "object",
+                "title": "Agent Acknowledgment",
+                "properties": {
+                    "maApplicationQuestionnaire": {
+                        "type": "object",
+                        "title": "MA Application Questionnaire",
+                        "properties": {
+                            "soldPoliciesToApplicant": {
+                                "type": "string",
+                                "title": "Sold Policies to Applicant",
+                                "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_soldPoliciesToApplicantEnum"
+                            },
+                            "saleInLast5Years": {
+                                "type": "string",
+                                "title": "Sale in Last 5 Years",
+                                "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_saleInLast5YearsEnum"
+                            },
+                            "saleDetails": {
+                                "type": "string",
+                                "title": "Sale Details"
+                            },
+                            "productDetails": {
+                                "type": "array",
+                                "title": "Product Details",
+                                "items": {
+                                    "type": "object",
+                                    "title": "",
+                                    "properties": {
+                                        "productType": {
+                                            "type": "string",
+                                            "title": "Product Type",
+                                            "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_productDetails_productTypeEnum"
+                                        },
+                                        "companyName": {
+                                            "type": "string",
+                                            "title": "Company Name"
+                                        },
+                                        "policyNumber": {
+                                            "type": "string",
+                                            "title": "Policy Number"
+                                        },
+                                        "issueDate": {
+                                            "type": "string",
+                                            "format": "date",
+                                            "title": "Issue Date"
+                                        }
+                                    },
+                                    "required": [
+                                        "productType",
+                                        "companyName",
+                                        "policyNumber",
+                                        "issueDate"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "financialAcknowledgement": {
+                        "type": "object",
+                        "title": "Financial Acknowledgement",
+                        "properties": {
+                            "evaluatedInformation": {
+                                "type": "string",
+                                "title": "Evaluated Information"
+                            },
+                            "informedOfFeatures": {
+                                "type": "string",
+                                "title": "Informed of Features"
+                            },
+                            "communicatedBasis": {
+                                "type": "string",
+                                "title": "Communicated Basis"
+                            },
+                            "disclosureRetention": {
+                                "type": "string",
+                                "title": "Disclosure Retention"
+                            }
+                        }
+                    },
+                    "disclosureAcknowledgement": {
+                        "type": "object",
+                        "title": "Disclosure Acknowledgement",
+                        "properties": {
+                            "scopeAndTerms": {
+                                "type": "string",
+                                "title": "Scope and Terms"
+                            },
+                            "typesOfProducts": {
+                                "type": "string",
+                                "title": "Types of Products"
+                            },
+                            "authorizedInsurers": {
+                                "type": "string",
+                                "title": "Authorized Insurers"
+                            },
+                            "compensationDescription": {
+                                "type": "string",
+                                "title": "Compensation Description"
+                            },
+                            "rightToRequestInfo": {
+                                "type": "string",
+                                "title": "Right to Request Information"
+                            },
+                            "compensationEstimate": {
+                                "type": "string",
+                                "title": "Compensation Estimate"
+                            },
+                            "conflictsOfInterest": {
+                                "type": "string",
+                                "title": "Conflicts of Interest"
+                            },
+                            "productAdvantages": {
+                                "type": "string",
+                                "title": "Product Advantages"
+                            },
+                            "productCons": {
+                                "type": "string",
+                                "title": "Product Cons"
+                            }
+                        }
+                    }
+                }
+            },
+            "additionalInfo": {
+                "type": "object",
+                "title": "Additional Information",
+                "properties": {
+                    "currentResidenceOption": {
+                        "type": "string",
+                        "title": "Current Residence Option"
+                    },
+                    "assistedLivingFacilityInd": {
+                        "type": "string",
+                        "title": "Assisted Living Facility Indicator"
+                    },
+                    "extraFundAvailable": {
+                        "type": "string",
+                        "title": "Extra Fund Available"
+                    },
+                    "existingPoliciesSoldByAgent": {
+                        "type": "string",
+                        "title": "Existing Policies Sold by Agent"
+                    },
+                    "consideredOtherInsuranceNeeds": {
+                        "type": "string",
+                        "title": "Considered Other Insurance Needs"
+                    },
+                    "resideInNursingHomeOrAssistedLiving": {
+                        "type": "string",
+                        "title": "Reside in Nursing Home or Assisted Living"
+                    },
+                    "noOfDependents": {
+                        "type": "string",
+                        "title": "Number of Dependents"
+                    },
+                    "otherDependents": {
+                        "type": "string",
+                        "title": "Other Dependents"
+                    }
+                }
+            },
+            "californiaResidentQuestions": {
+                "type": "object",
+                "title": "California Resident Questions",
+                "properties": {
+                    "applyForMeansTestedBenefits": {
+                        "type": "string",
+                        "title": "Apply for Means Tested Benefits"
+                    },
+                    "buyingForGovernmentBenefits": {
+                        "type": "string",
+                        "title": "Buying for Government Benefits"
+                    },
+                    "reverseMortgage": {
+                        "type": "string",
+                        "title": "Reverse Mortgage"
+                    }
+                }
+            },
+            "signatureInfo": {
+                "type": "array",
+                "title": "Signature Information",
+                "items": {
+                    "type": "object",
+                    "title": "",
+                    "properties": {
+                        "signatureRoleCode": {
+                            "type": "string",
+                            "title": "Signature Role Code",
+                            "$ref": "#/definitions/signatureInfo_signatureRoleCodeEnum"
+                        },
+                        "signatoryName": {
+                            "type": "string",
+                            "title": "Signatory Name"
+                        },
+                        "signatureDate": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "Signature Date"
+                        },
+                        "signatureCity": {
+                            "type": "string",
+                            "title": "Signature City"
+                        },
+                        "signatureState": {
+                            "type": "string",
+                            "title": "Signature State",
+                            "$ref": "#/definitions/signatureInfo_signatureStateEnum"
+                        },
+                        "signatoryDesignation": {
+                            "type": "string",
+                            "title": "Signatory Designation",
+                            "$ref": "#/definitions/signatureInfo_signatoryDesignationEnum"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "uiSchema": {
+        "$schema": "http: //json-schema.org/draft-07/schema#",
+        "definitions": {
+            "partyTypeEnum": {
+                "enum": [
+                    "PERSON",
+                    "ORGANIZATION",
+                    "OTHERS"
+                ]
+            },
+            "roleTypeEnum": {
+                "enum": [
+                    "OWNER",
+                    "JOINT_OWNER",
+                    "AGENT",
+                    "PRIMARY_WRITING_AGENT",
+                    "PRIMARY_SERVICING_AGENT",
+                    "BROKER_DEALER"
+                ]
+            },
+            "genderEnum": {
+                "enum": [
+                    "MALE",
+                    "FEMALE",
+                    "TRANSGENDER",
+                    "OTHER"
+                ]
+            },
+            "martialStatusEnum": {
+                "enum": [
+                    "SINGLE",
+                    "MARRIED",
+                    "DIVORCED",
+                    "WIDOWED",
+                    "UNKNOWN",
+                    "LEGALLY_SEPARATED"
+                ]
+            },
+            "birthCountryEnum": {
+                "enum": [
+                    "AA",
+                    "AE",
+                    "AK",
+                    "AL",
+                    "AP",
+                    "AR",
+                    "AZ",
+                    "CA",
+                    "CD",
+                    "CO",
+                    "CT",
+                    "DC",
+                    "DE",
+                    "FL",
+                    "FN",
+                    "GA",
+                    "GU",
+                    "HI",
+                    "IA",
+                    "ID",
+                    "IL",
+                    "IN",
+                    "KS",
+                    "KY",
+                    "LA",
+                    "MA",
+                    "MD",
+                    "ME",
+                    "MI",
+                    "MN",
+                    "MO",
+                    "MS",
+                    "MT",
+                    "NC",
+                    "ND",
+                    "NE",
+                    "NH",
+                    "NJ",
+                    "NM",
+                    "NV",
+                    "NY",
+                    "OH",
+                    "OK",
+                    "OR",
+                    "PA",
+                    "PR",
+                    "RI",
+                    "SC",
+                    "SD",
+                    "TN",
+                    "TX",
+                    "UT",
+                    "VA",
+                    "VI",
+                    "VT",
+                    "WA",
+                    "WI",
+                    "WV",
+                    "WY"
+                ]
+            },
+            "birthJurisdictionStateEnum": {
+                "enum": [
+                    "AA",
+                    "AE",
+                    "AK",
+                    "AL",
+                    "AP",
+                    "AR",
+                    "AZ",
+                    "CA",
+                    "CD",
+                    "CO",
+                    "CT",
+                    "DC",
+                    "DE",
+                    "FL",
+                    "FN",
+                    "GA",
+                    "GU",
+                    "HI",
+                    "IA",
+                    "ID",
+                    "IL",
+                    "IN",
+                    "KS",
+                    "KY",
+                    "LA",
+                    "MA",
+                    "MD",
+                    "ME",
+                    "MI",
+                    "MN",
+                    "MO",
+                    "MS",
+                    "MT",
+                    "NC",
+                    "ND",
+                    "NE",
+                    "NH",
+                    "NJ",
+                    "NM",
+                    "NV",
+                    "NY",
+                    "OH",
+                    "OK",
+                    "OR",
+                    "PA",
+                    "PR",
+                    "RI",
+                    "SC",
+                    "SD",
+                    "TN",
+                    "TX",
+                    "UT",
+                    "VA",
+                    "VI",
+                    "VT",
+                    "WA",
+                    "WI",
+                    "WV",
+                    "WY"
+                ]
+            },
+            "govtIdTypeEnum": {
+                "ui:enumNames": [
+                    "SSN",
+                    "PASSPORT",
+                    "DRIVER LICENSE",
+                    "ARMED FORCEID"
+                ]
+            },
+            "addressTypeEnum": {
+                "ui:enumNames": [
+                    "RESIDENCE",
+                    "MAILING",
+                    "BUSINESS",
+                    "PRIMARY ADDRESS",
+                    "VACATION",
+                    "BILLING MAILING"
+                ]
+            },
+            "employmentStatusEnum": {
+                "ui:enumNames": [
+                    "ACTIVE",
+                    "RETIRED",
+                    "DISABLED",
+                    "TERMINATED",
+                    "OTHERS"
+                ]
+            },
+            "lineOfBusinessEnum": {
+                "ui:enumNames": [
+                    "ANNUITY",
+                    "LIFE"
+                ]
+            },
+            "qualPlanTypeEnum": {
+                "ui:enumNames": [
+                    "NON QUALIFIED",
+                    "QUALIFIED"
+                ]
+            },
+            "replacementIndEnum": {
+                "ui:enumNames": [
+                    "YES",
+                    "NO"
+                ]
+            },
+            "replacedContractTypeEnum": {
+                "ui:enumNames": [
+                    "ANNUITY",
+                    "LIFE"
+                ]
+            },
+            "soldPoliciesToApplicant": {
+                "ui:enumNames": [
+                    "YES",
+                    "NO"
+                ]
+            },
+            "pastReplacement": {
+                "ui:enumNames": [
+                    "YES",
+                    "NO"
+                ]
+            },
+            "coverageExpenseConsideration": {
+                "ui:enumNames": [
+                    "YES",
+                    "NO"
+                ]
+            },
+            "sourceOfIncome": {
+                "ui:enumNames": [
+                    "FIXED ANNUITY",
+                    "LIFE INSURENCE",
+                    "CHECKING SAVING ACCOUNT",
+                    "SALARY",
+                    "VARIABLE ANNUITY",
+                    "REVERSE MORTGAGE",
+                    "SAVING ACCOUNT",
+                    "DEATH BENEFIT",
+                    "INHERITED IRA",
+                    "INHERITANCE",
+                    "401K ROLLOVER",
+                    "RETIREMENT PLAN",
+                    "INHERITED IRA",
+                    "INDEXED ANNUITY",
+                    "STOCKS BONDS MF",
+                    "OTHERS",
+                    "RENTALINCOME",
+                    "SOCIAL SECURITY"
+                ]
+            },
+            "materialChangeExp": {
+                "ui:enumNames": [
+                    "YES",
+                    "NO"
+                ]
+            },
+            "materialChangeDetails_changeType": {
+                "ui:enumNames": [
+                    "LIVING EXPENSE INCREASE",
+                    "LIVING EXPENSE DECREASE",
+                    "LIVING ASSET DECREASE"
+                ]
+            },
+            "isApplicable": {
+                "ui:enumNames": [
+                    "YES",
+                    "NO"
+                ]
+            },
+            "sourceOfFunds": {
+                "ui:enumNames": [
+                    "FIXED ANNUITY",
+                    "LIFE INSURENCE",
+                    "CHECKING SAVING ACCOUNT",
+                    "CD",
+                    "VARIABLE ANNUITY",
+                    "REVERSE MORTGAGE",
+                    "SAVING ACCOUNT",
+                    "DEATH BENEFIT",
+                    "INHERITED IRA",
+                    "INHERITANCE",
+                    "401K ROLLOVER",
+                    "RETIREMENT PLAN",
+                    "INDEXED ANNUITY",
+                    "STOCKS BONDS MF",
+                    "OTHERS"
+                ]
+            },
+            "financialProducts_assetsDistribution_productType": {
+                "ui:enumNames": [
+                    "CHECKING SAVING ACCOUNT",
+                    "MONEY MARKET",
+                    "STOCKS BONDS",
+                    "PENSION",
+                    "LIFE INSURENCE",
+                    "ANNUITIES",
+                    "ANNUITY SURRENDER FREE",
+                    "REAL STATE",
+                    "OTHERS"
+                ]
+            },
+            "financialProducts_assetsDistribution_qualificationType": {
+                "ui:enumNames": [
+                    "QUALIFIED",
+                    "NON QUALIFIED"
+                ]
+            },
+            "financialProducts_totalAsset_qualificationType": {
+                "ui:enumNames": [
+                    "QUALIFIED",
+                    "NON QUALIFIED"
+                ]
+            },
+            "financialProducts_totalAsset_assetType": {
+                "ui:enumNames": [
+                    "LIQUID ASSET",
+                    "NON LIQUID ASSET"
+                ]
+            },
+            "rateChangeAcknowledgment": {
+                "ui:enumNames": [
+                    "YES",
+                    "NO"
+                ]
+            },
+            "investProduct_riskTolerance": {
+                "ui:enumNames": [
+                    "CONSERVATIVE",
+                    "MODERATE CONSERVATIVE",
+                    "MODERATE",
+                    "MODERATE AGGRESSIVE",
+                    "AGGRESSIVE"
+                ]
+            },
+            "investProduct_annuityFitsRiskTolerance": {
+                "ui:enumNames": [
+                    "YES",
+                    "NO"
+                ]
+            },
+            "financialObjectives_buyingReason": {
+                "ui:enumNames": [
+                    "INCOME",
+                    "TAX DEFERRAL",
+                    "GURANTEES",
+                    "GROWTH",
+                    "PRINCIPAL PROTECTION",
+                    "OTHERS"
+                ]
+            },
+            "financialObjectives_annuityMeetsFinancialNeedsEnum": {
+                "enum": [
+                    "YES",
+                    "NO"
+                ]
+            },
+            "agentAcknowledgment_maApplicationQuestionnaire_soldPoliciesToApplicantEnum": {
+                "enum": [
+                    "YES",
+                    "NO"
+                ]
+            },
+            "agentAcknowledgment_maApplicationQuestionnaire_saleInLast5YearsEnum": {
+                "enum": [
+                    "YES",
+                    "NO"
+                ]
+            },
+            "agentAcknowledgment_maApplicationQuestionnaire_productDetails_productTypeEnum": {
+                "enum": [
+                    "ANNUITY",
+                    "LIFE"
+                ]
+            },
+            "signatureInfo_signatureRoleCodeEnum": {
+                "enum": [
+                    "OWNER",
+                    "AGENT"
+                ]
+            },
+            "signatureInfo_signatureStateEnum": {
+                "enum": [
+                    "US"
+                ]
+            },
+            "signatureInfo_signatoryDesignationEnum": {
+                "enum": [
+                    "TRUSTEE",
+                    "EXECUTOR",
+                    "CUSTODIAN",
+                    "GUARDIAN",
+                    "ATTORNEY_IN_FACT"
+                ]
+            }
+        },
+        "parties": {
+            "items": {
+                "partyType": {
+                    "$ref": "#/definitions/partyTypeEnum"
+                },
+                "roleType": {
+                    "$ref": "#/definitions/roleTypeEnum"
+                },
+                "employment": {
+                    "employmentStatus": {
+                        "$ref": "#/definitions/employmentStatusEnum",
+                        "ui:widget": "checkboxes"
+                    }
+                }
+            }
+        },
+        "policyData": {
+            "type": "object",
+            "title": "Policy Data",
+            "lineOfBusiness": {
+                "$ref": "#/definitions/lineOfBusinessEnum"
+            },
+            "productCode": {},
+            "productType": {},
+            "qualPlanType": {
+                "$ref": "#/definitions/qualPlanTypeEnum"
+            },
+            "annualPaymentAmt": {}
+        },
+        "applicationInfo": {
+            "replacementInd": {
+                "$ref": "#/definitions/replacementIndEnum",
+                "ui:widget": "radio",
+                "ui:options": {
+                    "inline": true
+                }
+            },
+            "replacementReason": {},
+            "replacedContractType": {
+                "$ref": "#/definitions/replacedContractTypeEnum"
+            },
+            "additionalInformation": {
+                "soldPoliciesToApplicant": {
+                    "$ref": "#/definitions/soldPoliciesToApplicantEnum",
+                    "ui:widget": "radio",
+                    "ui:options": {
+                        "inline": true
+                    }
+                },
+                "pastReplacement": {
+                    "$ref": "#/definitions/pastReplacementEnum",
+                    "ui:widget": "radio",
+                    "ui:options": {
+                        "inline": true
+                    }
+                },
+                "coverageExpenseConsideration": {
+                    "$ref": "#/definitions/coverageExpenseConsiderationEnum",
+                    "ui:widget": "radio",
+                    "ui:options": {
+                        "inline": true
+                    }
+                }
+            }
+        },
+        "fiscalData": {
+            "properties": {
+                "annualIncome": {},
+                "netWorth": {},
+                "liquidNetWorth": {},
+                "sourceOfIncome": {
+                    "items": {
+                        "$ref": "#/definitions/sourceOfIncomeEnum"
+                    }
+                },
+                "sourceOfIncomeOther": {},
+                "materialChangeExp": {
+                    "$ref": "#/definitions/materialChangeExpEnum",
+                    "ui:widget": "radio",
+                    "ui:options": {
+                        "inline": true
+                    }
+                },
+                "materialChangeReason": {},
+                "materialChangeDetails": {
+                    "items": {
+                        "changeType": {
+                            "$ref": "#/definitions/materialChangeDetails_changeTypeEnum"
+                        },
+                        "isApplicable": {},
+                        "numberOfYears": {},
+                        "amount": {}
+                    }
+                },
+                "totalAssets": {},
+                "totalDebt": {},
+                "annualExpenses": {},
+                "sourceOfFunds": {
+                    "items": {
+                        "$ref": "#/definitions/sourceOfIncomeEnum"
+                    }
+                },
+                "federalTaxBand": {},
+                "otherTaxBand": {}
+            }
+        },
+        "financialExperience": {
+            "rateChangeAcknowledgment": {
+                "$ref": "#/definitions/rateChangeAcknowledgmentEnum",
+                "ui:widget": "radio",
+                "ui:options": {
+                    "inline": true
+                }
+            },
+            "totalAnnuityValue": {},
+            "financialProducts": {
+                "assetsDistribution": {
+                    "items": {
+                        "productType": {
+                            "$ref": "#/definitions/financialProducts_assetsDistribution_productTypeEnum"
+                        },
+                        "qualificationType": {
+                            "$ref": "#/definitions/financialProducts_assetsDistribution_qualificationTypeEnum",
+                            "ui:widget": "radio",
+                            "ui:options": {
+                                "inline": true
+                            }
+                        },
+                        "amount": {}
+                    }
+                },
+                "totalAsset": {
+                    "items": {
+                        "qualificationType": {
+                            "$ref": "#/definitions/financialProducts_totalAsset_qualificationTypeEnum",
+                            "ui:widget": "radio",
+                            "ui:options": {
+                                "inline": true
+                            }
+                        },
+                        "assetType": {
+                            "$ref": "#/definitions/financialProducts_totalAsset_assetTypeEnum"
+                        },
+                        "amount": {}
+                    }
+                }
+            }
+        },
+        "investmentRiskInfo": {
+            "annuityFitsRiskTolerance": {
+                "ui:widget": "radio",
+                "ui:options": {
+                    "inline": true
+                }
+            }
+        },
+        "financialObjectives": {
+            "financialObjectives": {
+                "ui:widget": "checkboxes"
+            },
+            "sourceOfPremium": {
+                "ui:widget": "checkboxes"
+            },
+            "wouldMeetFinancialNeeds": {
+                "ui:widget": "radio",
+                "ui:enumNames": [
+                    "Yes",
+                    "No"
+                ]
+            },
+            "isReplacementOrlifeInsuranceContract": {
+                "ui:widget": "radio",
+                "ui:enumNames": [
+                    "Yes",
+                    "No"
+                ]
+            },
+            "contractReplacement": {
+                "ui:widget": "checkboxes"
+            },
+            "annuityMeetsFinancialNeeds": {
+                "ui:widget": "radio",
+                "ui:options": {
+                    "inline": true
+                }
+            }
+        },
+        "liquidityOptions": {
+            "fundsAccessExplanation": {},
+            "distributionMethods": {},
+            "firstPayoutOption": {},
+            "surrenderChargeConsent": {},
+            "possibleReductionInValue": {},
+            "planToHoldAnnuity": {},
+            "explainedOtherCharges": {},
+            "benefitAnnuityQuestions": {
+                "understandIncomeAdjustmentFactor": {},
+                "consideredFinancialNeedsAfter10Years": {},
+                "planForIncomeDecreaseAfter10Years": {}
+            }
+        },
+        "agentAcknowledgment": {
+            "maApplicationQuestionnaire": {
+                "soldPoliciesToApplicant": {
+                    "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_soldPoliciesToApplicantEnum",
+                    "ui:widget": "radio",
+                    "ui:options": {
+                        "inline": true
+                    }
+                },
+                "saleInLast5Years": {
+                    "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_saleInLast5YearsEnum",
+                    "ui:widget": "radio",
+                    "ui:options": {
+                        "inline": true
+                    }
+                },
+                "saleDetails": {},
+                "productDetails": {
+                    "productType": {
+                        "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_productDetails_productTypeEnum"
+                    },
+                    "companyName": {},
+                    "policyNumber": {},
+                    "issueDate": {}
+                }
+            },
+            "financialAcknowledgement": {
+                "evaluatedInformation": {},
+                "informedOfFeatures": {},
+                "communicatedBasis": {},
+                "disclosureRetention": {}
+            },
+            "disclosureAcknowledgement": {
+                "scopeAndTerms": {},
+                "typesOfProducts": {},
+                "authorizedInsurers": {},
+                "compensationDescription": {},
+                "rightToRequestInfo": {},
+                "compensationEstimate": {},
+                "conflictsOfInterest": {},
+                "productAdvantages": {},
+                "productCons": {}
+            }
+        },
+        "additionalInfo": {
+            "currentResidenceOption": {},
+            "assistedLivingFacilityInd": {},
+            "extraFundAvailable": {},
+            "existingPoliciesSoldByAgent": {},
+            "consideredOtherInsuranceNeeds": {},
+            "resideInNursingHomeOrAssistedLiving": {},
+            "noOfDependents": {},
+            "otherDependents": {}
+        },
+        "californiaResidentQuestions": {
+            "applyForMeansTestedBenefits": {},
+            "buyingForGovernmentBenefits": {},
+            "reverseMortgage": {}
+        },
+        "signatureInfo": {
+            "signatureRoleCode": {},
+            "signatoryName": {},
+            "signatureDate": {},
+            "signatureCity": {},
+            "signatureState": {},
+            "signatoryDesignation": {}
+        }
+    }
+}
