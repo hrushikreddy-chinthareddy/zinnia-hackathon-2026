@@ -1786,6 +1786,8 @@
             "openNigoExists": "An onbase case includes a NIGO. Please resolve the open NIGO issue before submitting another request through the Digital Portal."
         },
         "sidebar": {
+            "contractStatusCode":"Policy Status",
+            "abbreviatedcontractStatusCode":"Pol.",
             "abbreviatedCaseId": "Case",
             "abbreviatedContractId": "Cont.",
             "abbreviatedDocumentNumber": "Doc.",
