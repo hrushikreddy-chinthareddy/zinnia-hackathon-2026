@@ -17,6 +17,7 @@ import { getCarrierLogoByClientId, getCarrierNameByClientId } from '@deps/utils/
 import { getSideNavData } from './case-helpers';
 import { Parties, PartiesProps } from './CaseSideNavParties';
 import Transactions from './CaseSideNavTransactions';
+import CaseDetailsSideNav from './case-details-side-nav';
 
 export interface CaseSideNavProps {
     data: {
@@ -65,13 +66,13 @@ const ProcessingTimeStamp = ({ data }: CaseSideNavProps) => {
 const ContractDetails = ({ data }: CaseSideNavProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const { loadingPolicy, policy } = useCaseActivityContext();
-    const [isAnnuity, setIsAnnuity] =  useState(policy?.product?.lineOfBusiness === LineOfBusiness.LIFE);
+    const [isAnnuity, setIsAnnuity] = useState(policy?.product?.lineOfBusiness === LineOfBusiness.LIFE);
     const imageSrc = getCarrierLogoByClientId(data?.carrier);
 
     const missingDataClasses = 'flex flex-row items-center text-gray-600';
 
     useEffect(() => {
-        setIsAnnuity(policy?.product?.lineOfBusiness === LineOfBusiness.ANNUITY)
+        setIsAnnuity(policy?.product?.lineOfBusiness === LineOfBusiness.ANNUITY);
     }, [loadingPolicy, policy]);
 
     return (
@@ -86,10 +87,7 @@ const ContractDetails = ({ data }: CaseSideNavProps) => {
                     {!loadingPolicy && policy && (
                         <div className="flex flex-row">
                             <Typography className="mr-1" variant={TypographyVariant.Body}>
-                                {isAnnuity
-                                    ? t(`caseOverview.sidenav.contractNumber`)
-                                    : t(`caseOverview.sidenav.policyNumber`)
-                                }
+                                {isAnnuity ? t(`caseOverview.sidenav.contractNumber`) : t(`caseOverview.sidenav.policyNumber`)}
                             </Typography>
                             {policy.product?.planCode ? (
                                 <NavElement
@@ -112,7 +110,9 @@ const ContractDetails = ({ data }: CaseSideNavProps) => {
                     {/* There are cases where there is a policy number on the case but policy details do not exist */}
                     {!loadingPolicy && !policy && (
                         <div className="flex flex-row">
-                            <Typography className="mr-1" variant={TypographyVariant.Body}>{t(`caseOverview.sidenav.policyNumber`)}</Typography>
+                            <Typography className="mr-1" variant={TypographyVariant.Body}>
+                                {t(`caseOverview.sidenav.policyNumber`)}
+                            </Typography>
                             <Typography variant={TypographyVariant.Body}>
                                 <PiiWrapper>{data.policyNumber || DEFAULT_ERROR_STRING}</PiiWrapper>
                             </Typography>
@@ -139,16 +139,19 @@ const ContractDetails = ({ data }: CaseSideNavProps) => {
                     </div>
                 </div>
             )}
-            {!loadingPolicy && (!policy?.policyNumber && !data.policyNumber) && (data.status === Statuses.Completed || data.status === Statuses.Canceled) && (
-                <div className="mt-2">
-                    <Typography variant={TypographyVariant.BodySmBold} className={missingDataClasses}>
-                        {t(`caseOverview.sidenav.unavailablePolicyNumber`)}
-                    </Typography>
-                    <Typography variant={TypographyVariant.BodySm}>
-                        {t(`caseOverview.sidenav.unavailableDetailsSubtext`, { status: data.status })}
-                    </Typography>
-                </div>
-            )}
+            {!loadingPolicy &&
+                !policy?.policyNumber &&
+                !data.policyNumber &&
+                (data.status === Statuses.Completed || data.status === Statuses.Canceled) && (
+                    <div className="mt-2">
+                        <Typography variant={TypographyVariant.BodySmBold} className={missingDataClasses}>
+                            {t(`caseOverview.sidenav.unavailablePolicyNumber`)}
+                        </Typography>
+                        <Typography variant={TypographyVariant.BodySm}>
+                            {t(`caseOverview.sidenav.unavailableDetailsSubtext`, { status: data.status })}
+                        </Typography>
+                    </div>
+                )}
         </div>
     );
 };
@@ -166,6 +169,7 @@ const CaseSideNav = ({ caseDetails }: { caseDetails: Case }) => {
                 <ProcessingTimeStamp data={data} />
                 <div className="flex w-full flex-col rounded bg-white shadow-elevation-light-04">
                     <ContractDetails data={data} />
+                    <CaseDetailsSideNav CaseAdditionalDetails={caseDetails?.additionalData} />
                     <Transactions caseDetails={caseDetails} />
                     <Parties parties={data.parties} caseStatus={caseDetails.caseStatus} />
                 </div>

@@ -3319,7 +3319,8 @@
             "people": "Personnes",
             "transactions": "Transactions",
             "history": "Histoire",
-            "documents": "Documents"
+            "documents": "Documents",
+            "caseDetails": "Détails du Dossier"
         }
     },
     "bannerAlert": {

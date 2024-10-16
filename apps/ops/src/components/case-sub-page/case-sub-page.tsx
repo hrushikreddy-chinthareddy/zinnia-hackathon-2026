@@ -22,6 +22,7 @@ export default function CaseSubPage({
     tab?: string;
     handleTabChange: (val: string) => void;
 }) {
+    console.log('🚀 ~ caseDetails:', caseDetails);
     const { t } = useTranslation();
 
     return (

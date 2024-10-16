@@ -8,6 +8,13 @@ export enum CommunicationTypes {
     Mail = 'MAIL',
 }
 
+export enum CaseAdditionalDataKeys {
+    policyNumber = 'policyNumber',
+    transactionSubType = 'transactionSubType',
+    requestSubType = 'requestSubType',
+    formName = 'formName',
+}
+
 export const correspondenceTypes = {
     [CommunicationTypes.Email]: {
         value: CommunicationTypes.Email,

@@ -3562,7 +3562,8 @@
             "people": "People",
             "transactions": "Transactions",
             "history": "History",
-            "documents": "Documents"
+            "documents": "Documents",
+            "caseDetails": "Case Details"
         }
     },
     "bannerAlert": {
