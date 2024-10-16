@@ -15,13 +15,13 @@
   --color-button-primary-button-primary-selected-border: var(--color-primary-color-primary-light);
   --color-button-primary-button-primary-selected-text: var(--color-grayscale-color-900-gray);
 
-  --color-button-secondary-button-secondary-selected-text: var(--color-grayscale-color-900-gray);
-  --color-button-secondary-button-secondary-selected-border: var(--color-primary-color-primary);
-  --color-button-secondary-button-secondary-selected-fill: var(--color-primary-color-primary-light);
-  --color-button-secondary-button-secondary-pressed-border: var(--color-primary-color-primary);
-  --color-button-secondary-button-secondary-pressed-fill: var(--color-primary-color-primary-lighter);
-  --color-button-secondary-button-secondary-hover-border: var(--color-primary-color-primary);
-  --color-button-secondary-button-secondary-hover-fill: var(--color-primary-color-primary-lightest);
+  --color-button-secondary-text-button-secondary-selected-text: var(--color-grayscale-color-900-gray);
+  --color-button-secondary-border-button-secondary-selected-border: var(--color-primary-color-primary);
+  --color-button-secondary-surface-button-secondary-selected-fill: var(--color-primary-color-primary-light);
+  --color-button-secondary-border-button-secondary-pressed-border: var(--color-primary-color-primary);
+  --color-button-secondary-surface-button-secondary-pressed-fill: var(--color-primary-color-primary-lighter);
+  --color-button-secondary-border-button-secondary-hover-border: var(--color-primary-color-primary);
+  --color-button-secondary-surface-button-secondary-hover-fill: var(--color-primary-color-primary-lightest);
   --color-button-secondary-border-button-secondary-default-border: var(--color-primary-color-primary);
 
   --color-pagination-border-pagination-default-border: var(--color-primary-color-primary);
@@ -30,7 +30,7 @@
   --color-pagination-surface-pagination-hover-indicator-fill: var(--color-primary-color-primary);
   --color-pagination-border-pagination-selected-border: var(--color-primary-color-primary);
   --color-pagination-surface-pagination-selected-fill: var(--color-primary-color-primary-lightest);
-  --ccolor-pagination-surface-pagination-selected-indicator-fil: var(--color-primary-color-primary);
+  --color-pagination-surface-pagination-selected-indicator-fill: var(--color-primary-color-primary);
 
   --color-button-group-border-button-group-item-selected-border: var(--color-primary-color-primary);
   --color-button-group-surface-button-group-item-selected-fill: var(--color-primary-color-primary-lighter);
@@ -47,6 +47,7 @@
 
   --color-toggle-contrast-surface-toggle-contrast-selected-fill: var(--color-primary-color-primary);
   --color-toggle-contrast-surface-toggle-contrast-selected-inactive-indicator-fill: var(--color-primary-color-primary-light);
+
   /* XG: don't know what this maps to honestly */
   --color-toggle-default-toggle-contrast-selected-inactive-icon: var(--color-states-inactive-text-inactive-text);
 
