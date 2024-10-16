@@ -1,59 +1,50 @@
-import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import { Radio } from '@zinnia/bloom/components';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { createRef, useState } from 'react';
 
 import DynamicForm from '@deps/components/dynamic-form/dynamic-form';
-import NoNavLayout from '@deps/components/no-nav-layout';
-import { PageHead } from '@deps/components/page-title';
 import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
-import { TranslationFiles } from '@deps/config/translations';
-import ProgressBarSteps from '@deps/containers/progress-bar-steps/progress-bar-steps';
-import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
-import { useWorkflow, WorkflowProvider } from '@deps/contexts/WorkflowContainerContext';
-import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
-import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
-import { UserPermission } from '@deps/models/user-profile';
-import { getCaseSuitabilityTaskSSR, getFormSchemaSSR } from '@deps/queries/api/cases';
-import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
-import nextI18nextConfig from 'next-i18next.config';
+import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
+import { TaskType } from '@deps/models/case/task';
+
+import ProgressBarSteps from '../progress-bar-steps/progress-bar-steps';
+import { Step } from '../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
+
+type TaskMap = {
+    [key in TaskType]: {
+        schema?: RJSFSchema;
+        uiSchema?: UiSchema;
+        tabTitle?: string;
+    };
+};
 
 type TaskPageProps = {
     caseId: string;
     taskId: string;
+    taskType: TaskType;
     formSchema: RJSFSchema;
     uiSchema: UiSchema;
     taskData: any;
 };
 
-type TaskMap = {
-    [key: string]: {
-        schema: RJSFSchema;
-        uiSchema: UiSchema;
-        tabTitle: string;
-    };
-};
-
-const TaskWorkflow = ({ caseId, taskId, formSchema, uiSchema, taskData }: TaskPageProps) => {
+export const TaskWorkflow = ({ caseId, taskType, formSchema, uiSchema, taskData }: TaskPageProps) => {
     const taskMap: TaskMap = {
-        '1': {
+        [TaskType.Suitability]: {
             schema: formSchema,
             uiSchema: uiSchema,
             tabTitle: 'Input Suitability Data',
         },
-
-        '3': {
-            schema: formSchema,
-            uiSchema: uiSchema,
-            tabTitle: 'Suitability #2',
-        },
+        [TaskType.Withdrawal]: {},
+        [TaskType.OFT]: {},
+        [TaskType.RMD]: {},
+        [TaskType.SSW]: {},
+        [TaskType.RENEWAL]: {},
+        [TaskType.REG60]: {},
     };
 
-    const [task] = useState(taskMap[taskId ?? 1]);
+    const [task] = useState(taskMap[taskType]);
     const { currentStepIndex, setCurrentStepIndex, goToNext } = useWorkflow();
 
     const [formData, setFormData] = useState(taskData);
@@ -149,15 +140,15 @@ const TaskWorkflow = ({ caseId, taskId, formSchema, uiSchema, taskData }: TaskPa
             ariaLabel: 'Suitability form',
             component: (
                 <WorkflowCard
-                    title={task.tabTitle}
+                    title={task.tabTitle || ''}
                     subtitle={'Manually enter all suitability data. Note that canceling at any point would erase all.'}
                     footerContent={<TransactionCta className="mt-4" mainCta={mainCta} secondaryCta={secondaryCta} stopLoading={true} />}
                 >
                     <div className="flex flex-col gap-2">
                         <DynamicForm
                             formData={formData}
-                            formSchema={task.schema}
-                            uiSchema={task.uiSchema}
+                            formSchema={task.schema || {}}
+                            uiSchema={task.uiSchema || {}}
                             handleChangeCallback={handleChangeCallback}
                             handleSubmitCallback={handleSubmitCallback}
                             ref={formRef}
@@ -165,7 +156,7 @@ const TaskWorkflow = ({ caseId, taskId, formSchema, uiSchema, taskData }: TaskPa
                     </div>
                 </WorkflowCard>
             ),
-            text: task.tabTitle,
+            text: task.tabTitle || '',
             index: 1,
             screenReaderLabel: 'Suitability form',
         },
@@ -179,8 +170,8 @@ const TaskWorkflow = ({ caseId, taskId, formSchema, uiSchema, taskData }: TaskPa
                     <div className="flex flex-col gap-2">
                         <DynamicForm
                             formData={formData}
-                            formSchema={task.schema}
-                            uiSchema={task.uiSchema}
+                            formSchema={task.schema || {}}
+                            uiSchema={task.uiSchema || {}}
                             handleChangeCallback={handleChangeCallback}
                             handleSubmitCallback={handleSubmitCallback}
                             ref={formRef}
@@ -213,84 +204,3 @@ const TaskWorkflow = ({ caseId, taskId, formSchema, uiSchema, taskData }: TaskPa
         </div>
     );
 };
-export const TaskPage: React.FC<TaskPageProps> = ({ caseId, taskId, formSchema, uiSchema, taskData }) => {
-    const [isLoading] = useState(false);
-    // const { currentStepIndex, setCurrentStepIndex } = useWorkflow();
-
-    // this is not great but it's better than the current flash
-    return isLoading ? (
-        <></>
-    ) : (
-        <div>
-            <PageHead titleKey="caseOverview" />
-            <NoNavLayout fullHeight={true}>
-                <WorkflowProvider>
-                    <TaskWorkflow
-                        caseId={caseId ?? ''}
-                        taskId={taskId ?? ''}
-                        taskData={taskData ?? {}}
-                        formSchema={formSchema}
-                        uiSchema={uiSchema}
-                    />
-                </WorkflowProvider>
-            </NoNavLayout>
-        </div>
-    );
-};
-
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: async (context: any) => {
-        const user = await getUserData(context);
-        const { locale = DEFAULT_LOCALE, params, query, req, res } = context;
-
-        let accessToken;
-        try {
-            accessToken = (await getAccessToken(req, res)).accessToken;
-        } catch (e) {
-            logWarn('cases/:id::Access token expired', {
-                ...parseErrorInformation(e),
-                file: 'cases/:id/index',
-                function: 'getServerSideProps',
-            });
-            return serverSidePropsLogout();
-        }
-
-        const hasPermissionToReadCaseManagement = await doesUserHavePagePermissions(
-            accessToken,
-            user,
-            UserPermission.AllowReadCaseManagement
-        );
-        if (!hasPermissionToReadCaseManagement) {
-            return {
-                redirect: {
-                    destination: '/403',
-                    permanent: false,
-                },
-            };
-        }
-
-        const translations = await serverSideTranslations(locale, [TranslationFiles.COMMON], nextI18nextConfig);
-
-        const caseId = (params?.id as string) || '';
-        const taskId = (query?.taskId as string) || '';
-        const clientId = (query.clientId as string) || '';
-        const taskType = (query.taskType as string) || '';
-
-        const [schema, taskData] = await Promise.all([getFormSchemaSSR(clientId, taskType), getCaseSuitabilityTaskSSR(caseId, taskId)]);
-
-        const { formSchema, uiSchema } = schema ?? {};
-
-        return {
-            props: {
-                ...translations,
-                caseId,
-                taskId,
-                formSchema,
-                uiSchema,
-                taskData,
-            },
-        };
-    },
-});
-
-export default TaskPage;

@@ -1,8 +1,5 @@
-import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import { AxiosResponse } from 'axios';
 
-import suitabilityData from '@deps/form-schemas/carrier/sbgc/suitability/suitability.json';
-import suitabilitySchema from '@deps/form-schemas/carrier/sbgc/suitability/suitabilitySchema.json';
 import {
     Case,
     CaseReferenceResponse,
@@ -147,80 +144,6 @@ export const getCaseMetadataSSR = async (id: string, accessToken: string): Promi
             id,
             file: 'queries/api/cases',
             function: 'getCaseMetadataSSR',
-        });
-        return null;
-    }
-};
-
-export const getCaseSuitabilityTaskSSR = async (
-    caseId: string,
-    taskId: string
-    // accessToken?: string
-): Promise<any | null> => {
-    try {
-        const url = `${ssrCasesUrl}/${caseId}/task/${taskId}/suitability`;
-        logInfo('getCaseSuitabilityTaskSSR', {
-            file: 'queries/api/newBusiness/v1/suitability',
-            function: 'getCaseSuitabilityTaskSSR',
-            url,
-        });
-        // const { data } = await serverApi.get<null, AxiosResponse>(url, {
-        //     authorization: `Bearer ${accessToken}`,
-        //     headers: {
-        //         Accept: '*/*',
-        //         'Accept-Encoding': 'gzip, deflate, br',
-        //         Connection: 'keep-alive',
-        //         'Access-Control-Allow-Origin': '*',
-        //     },
-        // });
-        // const suitabilityData1 = require('./../../form-schemas/carrier/sbgc/suitability/data/suitabilitySchema.json');
-        return suitabilityData;
-        // return data;
-    } catch (error: any) {
-        logError('getCaseSuitabilityTaskSSR', {
-            ...parseErrorInformation(error),
-            caseId,
-            taskId,
-            file: 'queries/api/newBusiness/v1/suitability',
-            function: 'getCaseSuitabilityTaskSSR',
-        });
-        return null;
-    }
-};
-
-export const getFormSchemaSSR = async (
-    clientId: string,
-    taskType: string
-    // accessToken?: string
-): Promise<{ formSchema: RJSFSchema; uiSchema: UiSchema } | null> => {
-    try {
-        const url = `${ssrCasesUrl}/${clientId}/task/${taskType}/suitability`;
-        logInfo('getFormSchemaSSR', {
-            file: 'queries/api/newBusiness/v1/suitability',
-            function: 'getFormSchemaSSR',
-            url,
-        });
-        // const { data } = await serverApi.get<null, AxiosResponse>(url, {
-        //     authorization: `Bearer ${accessToken}`,
-        //     headers: {
-        //         Accept: '*/*',
-        //         'Accept-Encoding': 'gzip, deflate, br',
-        //         Connection: 'keep-alive',
-        //         'Access-Control-Allow-Origin': '*',
-        //     },
-        // });
-
-        // const data = suitabilitySchema;
-        // const { data } = require('./../../form-schemas/carrier/sbgc/suitability/data/suitabilitySchema.json');
-        const { formSchema, uiSchema } = suitabilitySchema as { formSchema: RJSFSchema; uiSchema: UiSchema };
-
-        return { formSchema, uiSchema };
-    } catch (error: any) {
-        logError('getFormSchemaSSR', {
-            ...parseErrorInformation(error),
-
-            file: 'queries/api/newBusiness/v1/suitability',
-            function: 'getFormSchemaSSR',
         });
         return null;
     }

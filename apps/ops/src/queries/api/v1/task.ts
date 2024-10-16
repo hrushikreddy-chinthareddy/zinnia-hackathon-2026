@@ -1,7 +1,9 @@
 import { AxiosResponse } from 'axios';
 
 import { ActiveReg60Case } from '@deps/containers/otp/reg60-forms/reg60.types';
-import { CreateTaskBody, CreateTaskResponse, TaskV1Payload } from '@deps/models/case/task';
+import suitabilitySchema from '@deps/form-schemas/carrier/sbgc/suitability/suitabilitySchema.json';
+import { ProcessType } from '@deps/models/case/enums';
+import { CreateTaskBody, CreateTaskResponse, FormMetadata, TaskType, TaskV1Payload } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { ActiveWithdrawalCase, DigitalFormWithdrawal } from '@deps/models/case/withdrawal/case';
 import { baseAppUrl, se2ApiServerUrl } from '@deps/queries/api-config';
@@ -162,9 +164,9 @@ export const getCaseTasksByIdSSR = async (caseId: string, taskId: string, access
     }
 };
 
-export const getAssignedTasks = async ()  => {
+export const getAssignedTasks = async () => {
     try {
-        const {data} = await client.get(`${baseAppUrl}/api/case/v1/tasks/assigned`);
+        const { data } = await client.get(`${baseAppUrl}/api/case/v1/tasks/assigned`);
         return data ?? [];
     } catch (error) {
         logError('getAssignedTasks::', {
@@ -173,5 +175,40 @@ export const getAssignedTasks = async ()  => {
             function: 'getAssignedTasks',
         });
         return [];
+    }
+};
+
+export const getTaskFormMetadataSSR = async (
+    clientId: string,
+    taskType?: TaskType,
+    processType?: ProcessType,
+    accessToken?: string
+): Promise<FormMetadata | null> => {
+    try {
+        const url = `${ssrCasesUrl}/v1/form/metadata?clientId=${clientId}&processType=${processType}&taskType=${taskType}`;
+        logInfo('getTaskFormMetadataSSR', {
+            file: 'queries/api/newBusiness/v1/suitability',
+            function: 'getTaskFormMetadataSSR',
+            url,
+        });
+        // const { data } = await serverApi.get<null, AxiosResponse>(url, {
+        //     authorization: `Bearer ${accessToken}`,
+        //     headers: {
+        //         Accept: '*/*',
+        //         'Accept-Encoding': 'gzip, deflate, br',
+        //         Connection: 'keep-alive',
+        //         'Access-Control-Allow-Origin': '*',
+        //     },
+        // });
+
+        return suitabilitySchema as FormMetadata;
+    } catch (error: any) {
+        logError('getFormSchemaSSR', {
+            ...parseErrorInformation(error),
+
+            file: 'queries/api/newBusiness/v1/suitability',
+            function: 'getTaskFormMetadataSSR',
+        });
+        return null;
     }
 };
