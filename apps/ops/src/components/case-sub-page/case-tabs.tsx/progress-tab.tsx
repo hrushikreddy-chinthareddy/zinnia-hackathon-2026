@@ -133,7 +133,6 @@ const getStepResultTag = (step: StepView, t: TFunction): ReactNode => {
             break;
         // Suitability
         case 'suitabilityReview.suitabilityReview':
-            // to do - accepted ??
             if (step.status === 'COMPLETED') {
                 text = t('caseOverview.tabs.approved');
                 break;
