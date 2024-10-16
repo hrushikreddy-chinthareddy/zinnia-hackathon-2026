@@ -22,10 +22,14 @@ import WorkflowCard from '../workflows/workflow-card/workflow-card';
 const toggleStatement = (val: StatementTypes, SetSelectedStatements: React.Dispatch<React.SetStateAction<StatementTypes[]>>) => {
     return (shouldHaveStatement: boolean) => {
         SetSelectedStatements(statements => {
-            const hasRestriction = statements.includes(val);
+            const hasActiveStatement = statements.includes(val);
 
-            if (!hasRestriction && shouldHaveStatement) {
+            if (!hasActiveStatement && shouldHaveStatement) {
                 return [...statements, val];
+            }
+
+            if (hasActiveStatement && !shouldHaveStatement) {
+                return statements.filter(statement => statement !== val);
             }
 
             return statements;
@@ -118,6 +122,7 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
 
     useEffect(() => {
         setdatePickerType(getDatePickerType(selectedStatementType));
+
         // clear the dates on statement type change
         if (selectedStatementType[0] !== activeStatementType[0]) {
             setStartDate('');
