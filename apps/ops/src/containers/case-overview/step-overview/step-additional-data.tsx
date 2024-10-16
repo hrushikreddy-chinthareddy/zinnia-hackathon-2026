@@ -1,24 +1,15 @@
 import { Table, TableBody, TableCell, TableRow } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { TFunction, useTranslation } from 'next-i18next';
-import React, { ReactNode } from 'react';
+import React from 'react';
 
 import AdditionalStepStatus from '@deps/components/case-overview-box/content/additional-step-status';
 import { AdditionalData } from '@deps/components/case-sub-page/case-tabs.tsx/case-tabs-helpers';
-import Content, { ContentVariant } from '@deps/components/content/content';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { formatAddressToContainer } from '@deps/containers/small-data-card/address-data/address-data';
-import {
-    AdditionalDataIds,
-    CommunicationTypes,
-    CorrespondenceStatus,
-    correspondenceTypes,
-} from '@deps/models/case/additional-data-instance';
+import { AdditionalDataIds, CommunicationTypes, correspondenceTypes } from '@deps/models/case/additional-data-instance';
 import { Statuses } from '@deps/models/case/case';
-import { ReactComponent as NotStartedIcon } from '@deps/styles/elements/icons/alert/not-started.svg';
-import { ReactComponent as CompletedIcon } from '@deps/styles/elements/icons/icons_outlined/check-circle.svg';
-import { ReactComponent as ExceptionIcon } from '@deps/styles/elements/icons/icons_outlined/hex-exclamation.svg';
 const getDataByDeliveryMethod = (data: AdditionalData, deliveryMethod: CommunicationTypes, t: TFunction) => {
     switch (deliveryMethod) {
         case CommunicationTypes.Fax:
@@ -71,34 +62,6 @@ const correspondenceStepConfig = (deliveryMethod: CommunicationTypes, t: TFuncti
         },
     },
 ];
-
-const getCorrespondenceStatusIconTooltip = (status: CorrespondenceStatus): ReactNode => {
-    let icon = null;
-
-    switch (status) {
-        case CorrespondenceStatus.INITIATED:
-            icon = <NotStartedIcon className="text-gray-300" width={24} height={24} />;
-            break;
-        case CorrespondenceStatus.DELIVERED:
-            icon = <CompletedIcon className="text-semantic-success" width={24} height={24} />;
-            break;
-
-        case CorrespondenceStatus.BOUNCE:
-        case CorrespondenceStatus.DROPPED:
-        case CorrespondenceStatus.FAILURE:
-            icon = <ExceptionIcon className="text-semantic-error" width={24} height={24} />;
-            break;
-
-        default:
-            return null;
-    }
-    return (
-        <div className="mr-4 flex w-max flex-row items-center gap-2 justify-self-start">
-            {icon}
-            <Content contentClassName="min-w-max" variant={ContentVariant.BodySm} details={status} />
-        </div>
-    );
-};
 
 type StepAdditionalDataProps = {
     additionalData: AdditionalData;
