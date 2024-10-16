@@ -26,6 +26,7 @@ export const correspondenceTypes = {
 export enum AdditionalDataIds {
     correspondenceRequest = 'requestAck.processFormRequestReceived',
     sedRequest = 'requestCompletion.deliverLetter',
+    completeRequest = 'requestCompletion.completeRequest',
 }
 
 export enum CorrespondenceStatus {

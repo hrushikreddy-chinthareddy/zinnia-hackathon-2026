@@ -904,6 +904,7 @@
             "requestAck.draftContractCreation": "Create draft contract",
             "requestAck.processFormRequestReceived": "Receive Service Form Request",
             "requestCompletion.deliverLetter": "Receive Delivery Confirmation",
+            "requestCompletion.completeRequest": "Send Requested Form",
             "agentValidation.preValidationRules": "Confirm completeness of agent details",
             "agentValidation.agentAppointmentValidation": "Validate appointment",
             "agentValidation.agentLOBValidation": "Validate line of business",

@@ -898,6 +898,7 @@
             "requestAck.draftContractCreation": "Créer un contrat provisoire",
             "requestAck.processFormRequestReceived": "Recevoir une demande de formulaire de service",
             "requestCompletion.deliverLetter": "Recevoir la confirmation de livraison",
+            "requestCompletion.completeRequest": "Envoyer le formulaire demandé",
             "agentValidation.preValidationRules": "Confirmer l'exhaustivité des informations de l'agent",
             "agentValidation.agentAppointmentValidation": "Valider la nomination de l'agent",
             "agentValidation.agentLOBValidation": "Valider la ligne de produits de l'agent",

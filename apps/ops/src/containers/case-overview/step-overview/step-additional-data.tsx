@@ -10,6 +10,7 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import { formatAddressToContainer } from '@deps/containers/small-data-card/address-data/address-data';
 import { AdditionalDataIds, CommunicationTypes, correspondenceTypes } from '@deps/models/case/additional-data-instance';
 import { Statuses } from '@deps/models/case/case';
+import { CASE_MANAGEMENT_API_FORMAT, CASE_MANAGEMENT_DISPLAY_FORMAT } from '@deps/types/constants';
 const getDataByDeliveryMethod = (data: AdditionalData, deliveryMethod: CommunicationTypes, t: TFunction) => {
     switch (deliveryMethod) {
         case CommunicationTypes.Fax:
@@ -42,7 +43,7 @@ const correspondenceStepConfig = (deliveryMethod: CommunicationTypes, t: TFuncti
         },
         getAdditionalDetails: (additionalData: AdditionalData, filterKeyBy: string) => {
             const date = additionalData[filterKeyBy].value;
-            return dayjs(date, 'YYYY-MM-DD HH:mm:ss').format('MM/DD/YYYY HH:mm a CST');
+            return dayjs(date, CASE_MANAGEMENT_API_FORMAT).format(CASE_MANAGEMENT_DISPLAY_FORMAT);
         },
     },
 
@@ -78,14 +79,31 @@ const StepAdditionalData = ({ additionalData, stepKey, status, date }: StepAddit
                 return (
                     <>
                         <AdditionalStepStatus
-                            updatedAt={dayjs(date, 'YYYY-MM-DD HH:mm:ss').format('MM/DD/YYYY HH:mm a CST')}
+                            updatedAt={dayjs(date, CASE_MANAGEMENT_API_FORMAT).format(CASE_MANAGEMENT_DISPLAY_FORMAT)}
                             status={status as Statuses}
                         />
                         <DeliveryCard additionalData={additionalData} deliveryMethod={deliveryMethod} />
                     </>
                 );
             case AdditionalDataIds.sedRequest:
-                return '';
+                return (
+                    <>
+                        <AdditionalStepStatus
+                            updatedAt={dayjs(date, CASE_MANAGEMENT_API_FORMAT).format(CASE_MANAGEMENT_DISPLAY_FORMAT)}
+                            status={status as Statuses}
+                        />
+                        <DeliveryCard additionalData={additionalData} deliveryMethod={deliveryMethod} />
+                    </>
+                );
+            case AdditionalDataIds.completeRequest:
+                return (
+                    <>
+                        <AdditionalStepStatus
+                            updatedAt={dayjs(date, CASE_MANAGEMENT_API_FORMAT).format(CASE_MANAGEMENT_DISPLAY_FORMAT)}
+                            status={status as Statuses}
+                        />
+                    </>
+                );
             default:
                 return null;
         }
@@ -135,8 +153,8 @@ const DeliveryCard = ({ additionalData, deliveryMethod }: DeliveryCardProps) => 
                         (step, index) =>
                             step?.shouldDisplay(deliveryMethod) && (
                                 <TableRow key={index}>
-                                    <TableCell className="bg-gray-50">{step?.label}</TableCell>
-                                    <TableCell className="bg-gray-50">
+                                    <TableCell className="bg-gray-50 text-md border-b-white p-0">{step?.label}</TableCell>
+                                    <TableCell className="bg-gray-50 text-md border-b-white p-0">
                                         {step?.getAdditionalDetails && step?.getAdditionalDetails(additionalData, step.key)}
                                     </TableCell>
                                 </TableRow>
