@@ -328,7 +328,11 @@ export async function middleware(req: NextRequest) {
 
   // Vercel does some route injection for their tool bar in preview environments
   // so we want to ignore it.
-  if (pathname !== '/.well-known/vercel/flags') {
+  if (
+    pathname !== '/.well-known/vercel/flags' && // If the url is not the index page AND has a friendly url object
+    pathname !== RouteKey.COVERAGE &&
+    routeMap[pathname]
+  ) {
     //if a route gets here that means the user is not authenticated and we need to store where they wanted to go
     // after login we will send them to this page
     // we are storing the nextUrl object so we have easy access to key variables that NextJS sets for us like pathname and href
