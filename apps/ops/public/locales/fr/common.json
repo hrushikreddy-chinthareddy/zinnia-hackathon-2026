@@ -1122,7 +1122,8 @@
             "dateCompleted": "Date d'achèvement",
             "deliveryMethod": "Mode de livraison",
             "address": "Adresse résidentielle",
-            "requestedRecipients": "Destinataires demandés"
+            "requestedRecipients": "Destinataires demandés",
+            "recipients": "Destinataires"
         }
     },
     "caseRenewal": {

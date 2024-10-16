@@ -71,6 +71,7 @@ type StepAdditionalDataProps = {
     date: string;
 };
 const StepAdditionalData = ({ additionalData, stepKey, status, date }: StepAdditionalDataProps) => {
+    const { t } = useTranslation(undefined, { keyPrefix: 'caseOverview.correspondenceStepDetails' });
     const deliveryMethod = additionalData['deliveryMethod']?.value as CommunicationTypes;
 
     const renderAdditionalData = (id: AdditionalDataIds) => {
@@ -82,7 +83,11 @@ const StepAdditionalData = ({ additionalData, stepKey, status, date }: StepAddit
                             updatedAt={dayjs(date, CASE_MANAGEMENT_API_FORMAT).format(CASE_MANAGEMENT_DISPLAY_FORMAT)}
                             status={status as Statuses}
                         />
-                        <DeliveryCard additionalData={additionalData} deliveryMethod={deliveryMethod} />
+                        <DeliveryCard
+                            additionalData={additionalData}
+                            deliveryMethod={deliveryMethod}
+                            title={t('requestedRecipients') as string}
+                        />
                     </>
                 );
             case AdditionalDataIds.sedRequest:
@@ -92,7 +97,6 @@ const StepAdditionalData = ({ additionalData, stepKey, status, date }: StepAddit
                             updatedAt={dayjs(date, CASE_MANAGEMENT_API_FORMAT).format(CASE_MANAGEMENT_DISPLAY_FORMAT)}
                             status={status as Statuses}
                         />
-                        <DeliveryCard additionalData={additionalData} deliveryMethod={deliveryMethod} />
                     </>
                 );
             case AdditionalDataIds.completeRequest:
@@ -102,6 +106,7 @@ const StepAdditionalData = ({ additionalData, stepKey, status, date }: StepAddit
                             updatedAt={dayjs(date, CASE_MANAGEMENT_API_FORMAT).format(CASE_MANAGEMENT_DISPLAY_FORMAT)}
                             status={status as Statuses}
                         />
+                        <DeliveryCard additionalData={additionalData} deliveryMethod={deliveryMethod} title={t('recipients') as string} />
                     </>
                 );
             default:
@@ -116,9 +121,10 @@ export default StepAdditionalData;
 type DeliveryCardProps = {
     additionalData: AdditionalData;
     deliveryMethod: CommunicationTypes;
+    title?: string;
 };
-const DeliveryCard = ({ additionalData, deliveryMethod }: DeliveryCardProps) => {
-    const { t } = useTranslation();
+const DeliveryCard = ({ additionalData, deliveryMethod, title }: DeliveryCardProps) => {
+    const { t } = useTranslation(undefined, { keyPrefix: 'caseOverview.correspondenceStepDetails' });
 
     const formattedData: { [key in string]?: string } = Object.keys(additionalData)
         .filter(key => key.includes(correspondenceTypes[deliveryMethod].key))
@@ -142,7 +148,7 @@ const DeliveryCard = ({ additionalData, deliveryMethod }: DeliveryCardProps) => 
     return (
         <>
             <div className="flex flex-row my-4">
-                <Typography variant={TypographyVariant.H2}>{t('caseOverview.correspondenceStepDetails.requestedRecipients')}</Typography>
+                <Typography variant={TypographyVariant.H2}>{title ?? t('requestedRecipients')}</Typography>
             </div>
             <Table className="my-4">
                 <TableBody>

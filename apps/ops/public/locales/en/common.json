@@ -1128,7 +1128,8 @@
             "dateCompleted": "Date completed",
             "deliveryMethod": "Delivery method",
             "address": "Residential address",
-            "requestedRecipients": "Requested Recipients"
+            "requestedRecipients": "Requested Recipients",
+            "recipients": "Recipients"
         }
     },
     "caseRenewal": {
