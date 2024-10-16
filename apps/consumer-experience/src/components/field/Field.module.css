@@ -2,10 +2,9 @@
   display: flex;
   align-items: center;
   align-self: stretch;
-  border-radius: var(--measure-dimension-radius-md, 8px);
-  border: var(--measure-dimension-stroke-sm, 2px) solid
-    var(--color-fields-border-field-border-default, #ccc);
-  color: var(--color-base-text-text-primary, #212121);
+  border-radius: var(--measure-dimension-radius-md);
+  border: var(--measure-dimension-stroke-sm) solid var(--color-fields-border-field-default-border);
+  color: var(--color-base-text-text-primary);
   /* Make children obey the border-radius.*/
   overflow: hidden;
   position: relative;
@@ -23,13 +22,14 @@
 .inactive {
   background-color: var(--color-states-inactive-inactive-fill, #ededed);
   /* TODO: Update color to var-inactive-inactive-border .It is missing  */
-  border-color: var(--color-chip-chip-primary-inactive-border);
-  color: var(--color-states-inactive-inactive-text, #b3b3b3);
+  border-color: var(--color-states-inactive-border-inactive-border);
+  color: var(--color-states-inactive-inactive-text);
 
   .symbolBox {
     background-color: var(--color-states-inactive-inactive-fill, #ededed);
   }
 }
+
 .error {
   border-color: var(--color-status-surface-status-error-border-alt, #db004f);
   color: var(--color-status-text-status-error-text, #db004f);
@@ -38,6 +38,7 @@
 .success {
   border-color: var(--color-status-surface-status-success-border-alt, #007b5a);
 }
+
 .selected {
   border-color: var(--color-fields-border-field-active-border, #ff7500);
 }
@@ -50,12 +51,12 @@
   flex: 1;
   border: none;
   outline: none;
-  padding: var(--measure-dimension-padding-lg, 8px)
-    var(--measure-dimension-padding-2xl, 16px);
+  padding: var(--measure-dimension-padding-lg, 8px) var(--measure-dimension-padding-2xl, 16px);
 
   &.large {
     padding: var(--measure-dimension-padding-2xl, 16px);
   }
+
   &::placeholder {
     color: var(--color-base-text-text-primary, #212121);
   }
@@ -63,6 +64,7 @@
   &.error::placeholder {
     color: var(--color-status-text-status-error-text, #db004f);
   }
+
   &.inactive::placeholder {
     color: var(--color-states-inactive-inactive-text, #b3b3b3);
   }
@@ -85,14 +87,14 @@
   border-bottom-right-radius: 0;
 }
 
-.input + .symbolBox {
+.input+.symbolBox {
   border-left-width: var(--measure-dimension-stroke-sm, 2px);
 }
 
 /******************************************/
 
 /* Symbol box is on the left BEFORE the input*/
-.symbolBox + .input {
+.symbolBox+.input {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   text-align: right;
@@ -102,6 +104,7 @@
 .symbolBox:has(+ .input) {
   border-right-width: var(--measure-dimension-stroke-sm, 2px);
 }
+
 /*******************************************/
 
 .rightIconContainer {
@@ -117,7 +120,7 @@
   display: flex;
   justify-content: center;
   padding: var(--measure-dimension-padding-xl);
-  box-shadow: var(--shadow-elevation-elevation-light-04);
+  box-shadow: var(--shadow-elevation-elevation-light-sm);
   background-color: var(--color-base-surface-surface-primary);
   z-index: 9;
   margin-top: var(--measure-dimension-gap-xl);
@@ -125,6 +128,7 @@
 }
 
 @media (width > 390px) {
+
   /* I know this is vile, but the width is calculated based on the input size on mobile otherwise its just content
   i think this is the more efficient way of doing this rather than triggering a full rerender
   by using a window dimensions hook  */

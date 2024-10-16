@@ -12,6 +12,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--measure-dimension-gap-lg);
+
   @media (width >=500px) {
     min-width: 358px;
   }
@@ -38,10 +39,7 @@
   border-width: var(--measure-dimension-stroke-sm);
   border-style: solid;
   border-radius: var(--measure-dimension-radius-md);
-  background-color: var(
-    --color-fields-surface-field-background-default-fill,
-    #ffffff
-  );
+  background-color: var(--color-fields-surface-field-default-fill);
 
   &::placeholder {
     color: var(--color-states-inactive-inactive-text);
@@ -56,14 +54,12 @@
   }
 
   &:disabled {
-    background-color: var(
-      --color-fields-surface-field-background-inactive-fill
-    );
-    border-color: var(--color-fields-border-field-border-inactive);
+    background-color: var(--color-states-inactive-surface-inactive-fill);
+    border-color: var(--color-states-inactive-border-inactive-border);
   }
 
   &.inValid {
-    border-color: var(--color-fields-border-field-border-error);
+    border-color: var(--color-status-border-status-error-border);
     color: var(--color-status-text-status-error-text);
   }
 
@@ -89,7 +85,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  & > div {
+
+  &>div {
     display: flex;
     flex-direction: column;
     gap: var(--measure-dimension-gap-lg);
@@ -122,7 +119,7 @@
   width: max-content;
 }
 
-@media (width >= 767px) {
+@media (width >=767px) {
   .formContainer {
     padding: var(--measure-dimension-padding-4xl) 144px;
   }
