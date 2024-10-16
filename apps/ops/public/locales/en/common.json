@@ -3568,7 +3568,10 @@
             "people": "People",
             "transactions": "Transactions",
             "history": "History",
-            "documents": "Documents"
+            "documents": "Documents",
+            "caseDetails": "Case Details",
+            "deliveryMethod": "Delivery method",
+            "correspondence": "Correspondence"
         }
     },
     "bannerAlert": {
