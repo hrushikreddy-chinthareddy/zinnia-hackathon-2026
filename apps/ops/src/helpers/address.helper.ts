@@ -73,7 +73,7 @@ export const formatAddressV2 = (address: Address): string[] => {
 
     const formatted = [
         addressLines.toUpperCase(),
-        `${address?.city?.toUpperCase()}, ${address?.state?.toUpperCase()} ${address?.zipCode}${
+        `${address?.city?.toUpperCase()}, ${address?.state?.toUpperCase()} ${address?.zipCode || ''} ${
             address?.zipCodeExtension ? `-${address?.zipCodeExtension}` : ''
         }`,
     ];

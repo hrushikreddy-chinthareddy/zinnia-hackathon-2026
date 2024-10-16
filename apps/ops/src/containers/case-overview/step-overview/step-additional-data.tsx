@@ -8,6 +8,7 @@ import { AdditionalData } from '@deps/components/case-sub-page/case-tabs.tsx/cas
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { formatAddressToContainer } from '@deps/containers/small-data-card/address-data/address-data';
+import { toTitleCase } from '@deps/helpers/string.helper';
 import { AdditionalDataIds, CommunicationTypes, correspondenceTypes } from '@deps/models/case/additional-data-instance';
 import { Statuses } from '@deps/models/case/case';
 import { CASE_MANAGEMENT_API_FORMAT, CASE_MANAGEMENT_DISPLAY_FORMAT } from '@deps/types/constants';
@@ -32,7 +33,7 @@ const correspondenceStepConfig = (deliveryMethod: CommunicationTypes, t: TFuncti
             return true;
         },
         getAdditionalDetails: () => {
-            return deliveryMethod;
+            return toTitleCase(deliveryMethod);
         },
     },
     {
@@ -124,7 +125,7 @@ type DeliveryCardProps = {
     title?: string;
 };
 const DeliveryCard = ({ additionalData, deliveryMethod, title }: DeliveryCardProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseOverview.correspondenceStepDetails' });
+    const { t } = useTranslation();
 
     const formattedData: { [key in string]?: string } = Object.keys(additionalData)
         .filter(key => key.includes(correspondenceTypes[deliveryMethod].key))
@@ -148,7 +149,9 @@ const DeliveryCard = ({ additionalData, deliveryMethod, title }: DeliveryCardPro
     return (
         <>
             <div className="flex flex-row my-4">
-                <Typography variant={TypographyVariant.H2}>{title ?? t('requestedRecipients')}</Typography>
+                <Typography variant={TypographyVariant.H2}>
+                    {title ?? t('caseOverview.correspondenceStepDetails.requestedRecipients')}
+                </Typography>
             </div>
             <Table className="my-4">
                 <TableBody>
@@ -159,8 +162,8 @@ const DeliveryCard = ({ additionalData, deliveryMethod, title }: DeliveryCardPro
                         (step, index) =>
                             step?.shouldDisplay(deliveryMethod) && (
                                 <TableRow key={index}>
-                                    <TableCell className="bg-gray-50 text-md border-b-white p-0">{step?.label}</TableCell>
-                                    <TableCell className="bg-gray-50 text-md border-b-white p-0">
+                                    <TableCell className="bg-gray-50 text-md text-gray-500 !border-b-0">{step?.label}</TableCell>
+                                    <TableCell className="bg-gray-50 text-md text-gray-700 !border-b-0">
                                         {step?.getAdditionalDetails && step?.getAdditionalDetails(additionalData, step.key)}
                                     </TableCell>
                                 </TableRow>
