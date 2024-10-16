@@ -12,8 +12,9 @@
 .headerLinkAction {
   padding: var(--measure-dimension-padding-md, 6px);
   border-radius: var(--measure-dimension-radius-sm);
+
   &:hover {
-    background-color: var(--color-pagination-pagination-hover-fill);
+    background-color: var(--color-pagination-surface-pagination-hover-fill);
     padding: var(--measure-dimension-padding-md, 6px);
     border-radius: var(--measure-dimension-radius-sm);
   }
@@ -30,5 +31,4 @@
 
 .headerLinkChevron {
   transform: rotate(90deg);
-  color: var(--color-base-text-text-link);
 }

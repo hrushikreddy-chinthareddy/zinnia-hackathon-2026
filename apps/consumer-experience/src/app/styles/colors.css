@@ -37,29 +37,29 @@
   --color-button-group-border-button-group-item-hover-border: var(--color-primary-color-primary);
   --color-button-group-surface-button-group-item-hover-fill: var(--color-primary-color-primary-lightest);
 
-  --color-chip-chip-hover-fill: var(--color-primary-color-primary-lightest);
-  --color-chip-chip-hover-border: var(--color-primary-color-primary);
-  --color-chip-chip-selected-fill: var(--color-primary-color-primary-lightest);
-  --color-chip-chip-selected-border: var(--color-primary-color-primary);
+  --color-chip-surface-chip-hover-fill: var(--color-primary-color-primary-lightest);
+  --color-chip-border-chip-hover-border: var(--color-primary-color-primary);
+  --color-chip-surface-chip-selected-fill: var(--color-primary-color-primary-lightest);
+  --color-chip-border-chip-selected-border: var(--color-primary-color-primary);
 
   --color-toggle-default-surface-toggle-selected-fill: var(--color-primary-color-primary);
-  --color-toggle-default-toggle-selected-inactive-fill: var(--color-primary-color-primary-lightest);
+  --color-toggle-default-surface-toggle-selected-inactive-fill: var(--color-primary-color-primary-lightest);
 
   --color-toggle-contrast-surface-toggle-contrast-selected-fill: var(--color-primary-color-primary);
   --color-toggle-contrast-surface-toggle-contrast-selected-inactive-indicator-fill: var(--color-primary-color-primary-light);
   /* XG: don't know what this maps to honestly */
   --color-toggle-default-toggle-contrast-selected-inactive-icon: var(--color-states-inactive-text-inactive-text);
 
-  --color-element-radio-checkbox-default-element-indicator-selected-fill: var(--color-primary-color-primary);
-  --color-element-radio-checkbox-default-element-indicator-selected-inactive-fill: var(--color-primary-color-primary-lightest);
-  --color-element-radio-checkbox-default-element-hover-border: var(--color-accent-color-accent-one);
-  --color-element-radio-checkbox-default-element-selected-border: var(--color-primary-color-primary);
-  --color-element-radio-checkbox-default-element-selected-inactive-border: var(--color-secondary-color-secondary-lightest);
+  --color-element-radio-checkbox-default-surface-element-indicator-selected-fill: var(--color-primary-color-primary);
+  --color-element-radio-checkbox-default-surface-element-indicator-selected-fill: var(--color-primary-color-primary-lightest);
+  --color-element-radio-checkbox-default-border-element-hover-border: var(--color-accent-color-accent-one);
+  --color-element-radio-checkbox-default-border-element-selected-border: var(--color-primary-color-primary);
+  --color-element-radio-checkbox-default-border-element-selected-inactive-border: var(--color-secondary-color-secondary-lightest);
 
-  --color-element-radio-checkbox-contrast-element-contrast-indicator-selected-fill: var(--color-primary-color-primary);
-  --color-element-radio-checkbox-contrast-element-contrast-selected-inactive-border: var(--color-primary-color-primary-dark);
-  --color-element-radio-checkbox-contrast-element-contrast-hover-border: var(--color-accent-color-accent-one);
-  --color-element-radio-checkbox-contrast-element-contrast-selected-border: var(--color-primary-color-primary);
+  --color-element-radio-checkbox-contrast-surface-element-contrast-indicator-selected-fill: var(--color-primary-color-primary);
+  --color-element-radio-checkbox-contrast-border-element-contrast-selected-inactive-border: var(--color-primary-color-primary-dark);
+  --color-element-radio-checkbox-contrast-border-element-contrast-hover-border: var(--color-accent-color-accent-one);
+  --color-element-radio-checkbox-contrast-border-element-contrast-selected-border: var(--color-primary-color-primary);
   --color-element-radio-checkbox-contrast-surface-element-contrast-selected-inactive-fill: var(--color-primary-color-primary-dark);
 
   --color-base-border-border-primary-color: var(--color-primary-color-primary);
@@ -72,15 +72,15 @@
   --color-base-icon-icon-tooltip: var(--color-accent-color-accent-one);
   --color-base-icon-icon-header: var(--color-accent-color-accent-one);
 
-  --color-states-hover-hover-border: var(--color-accent-color-accent-one);
+  --color-states-hover-border-hover-border: var(--color-accent-color-accent-one);
   --color-states-selected-border-selected-border: var(--color-primary-color-primary);
-  --color-states-hover-hover-fill: var(--color-primary-color-primary-lighter);
-  --color-states-hover-hover-fill-alt: var(--color-primary-color-primary-lightest);
-  --color-states-hover-hover-secondary-border: var(--color-secondary-color-secondary-dark);
-  --color-states-hover-hover-secondary-contrast-border: var(--color-secondary-color-secondary-lighter);
+  --color-states-hover-surface-hover-fill: var(--color-primary-color-primary-lighter);
+  --color-states-hover-surface-hover-fill-alt: var(--color-primary-color-primary-lightest);
+  --color-states-hover-border-hover-contrast-border: var(--color-secondary-color-secondary-dark);
+  --color-states-hover-border-hover-contrast-border: var(--color-secondary-color-secondary-lighter);
   --color-states-hover-hover-text-link: var(--color-primary-color-primary);
-  --color-states-hover-hover-contrast-text-link: var(--color-primary-color-primary-lighter);
-  --color-states-hover-hover-icon-action: var(--color-primary-color-primary-dark);
+  --color-states-hover-text-hover-text-link-contrast: var(--color-primary-color-primary-lighter);
+  --color-states-hover-icon-hover-icon-action: var(--color-primary-color-primary-dark);
 
   --color-states-selected-border-selected-contrast-border: var(--color-secondary-color-secondary-light);
   --color-states-selected-surface-selected-fill-alt: var(--color-secondary-color-secondary-light);
@@ -98,10 +98,10 @@
   * DATEPICKER
   * =========
   **/
-  --color-date-picker-item-date-picker-item-hover-border: var(--color-accent-color-accent-one);
-  --color-date-picker-item-date-picker-item-selected-fill: var(--color-primary-color-primary-lightest);
-  --color-date-picker-item-date-picker-item-range-fill: var(--color-primary-color-primary-lightest);
-  --color-date-picker-item-date-picker-item-selected-border: var(--color-primary-color-primary);
+  --color-date-picker-item-border-date-picker-item-hover-border: var(--color-accent-color-accent-one);
+  --color-date-picker-item-surface-date-picker-item-selected-fill: var(--color-primary-color-primary-lightest);
+  --color-date-picker-item-surface-date-picker-item-range-fill: var(--color-primary-color-primary-lightest);
+  --color-date-picker-item-border-date-picker-item-selected-border: var(--color-primary-color-primary);
 
   /**
   * FIELDS

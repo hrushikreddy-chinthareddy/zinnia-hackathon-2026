@@ -20,13 +20,13 @@
 }
 
 .inactive {
-  background-color: var(--color-states-inactive-inactive-fill, #ededed);
+  background-color: var(--color-states-inactive-surface-inactive-fill, #ededed);
   /* TODO: Update color to var-inactive-inactive-border .It is missing  */
   border-color: var(--color-states-inactive-border-inactive-border);
   color: var(--color-states-inactive-inactive-text);
 
   .symbolBox {
-    background-color: var(--color-states-inactive-inactive-fill, #ededed);
+    background-color: var(--color-states-inactive-surface-inactive-fill, #ededed);
   }
 }
 

@@ -46,7 +46,7 @@
   }
 
   &:hover {
-    border-color: var(--color-states-hover-hover-border);
+    border-color: var(--color-states-hover-border-hover-border);
   }
 
   &:focus {
