@@ -309,10 +309,20 @@ const Quarters = ({
                             className={`${containerClasses} ${getSelectedQuarterClasses(
                                 year,
                                 quarterItem?.value
-                            )} ${getDisabledQuarterClasses(year, index + 1)} ${disableQuarters}  flex items-center justify-center`}
+                            )} ${getDisabledQuarterClasses(
+                                year,
+                                quarterItem.month + 1,
+                                'start'
+                            )} ${disableQuarters}  flex items-center justify-center`}
                             onClick={() => handleQuarterSelection(year, quarterItem?.value)}
                         >
-                            <p className={`${primaryTextClasses} ${getDisabledQuarterClasses(year, index + 1)} ${disableQuarters} `}>
+                            <p
+                                className={`${primaryTextClasses} ${getDisabledQuarterClasses(
+                                    year,
+                                    quarterItem.month + 1,
+                                    'start'
+                                )} ${disableQuarters} `}
+                            >
                                 {quarterItem.label}
                             </p>
                         </div>
@@ -539,7 +549,7 @@ export default function DatePicker({
         const isCurrentDateAllowed = isDateAllowed(
             dayjs()
                 .year(_year)
-                .month((_quarter ?? 1 - 1) * 3 + 1)
+                .month(_quarter ?? 1)
                 .date(1)
         );
 

@@ -35,7 +35,7 @@ const toggleStatement = (val: StatementTypes, SetSelectedStatements: React.Dispa
 
 const getDayjsDate = (date: string): Dayjs => {
     const [_year, _quarter] = date.split('-');
-    const month = quarters.find(quarter => quarter.value === (_quarter as Quarter))?.month || 1;
+    const month = quarters.find(quarter => quarter.value === (_quarter as Quarter))?.month ?? 1;
 
     return dayjs().year(Number(_year)).month(month).date(1);
 };
@@ -192,12 +192,9 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
     function handleIsDateAllowed(date: Dayjs, startDate: string): boolean {
         const start = getDayjsDate(startDate);
 
-        const dateIsAllowed = Boolean(startDate && dayjs(date).isAfter(start)) ?? true;
-        if (startDate) {
-            return dateIsAllowed;
-        }
+        const dateIsAllowed = dayjs(date).isAfter(start);
 
-        return true;
+        return Boolean(dateIsAllowed);
     }
 
     return (
