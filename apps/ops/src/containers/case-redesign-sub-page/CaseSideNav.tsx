@@ -7,17 +7,17 @@ import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
-import { Case, Statuses } from '@deps/models/case/case';
+import { Case, Processes, Statuses } from '@deps/models/case/case';
 import { LineOfBusiness } from '@deps/models/policy/sor-policy';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
 import { ReactComponent as TimeIcon } from '@deps/styles/elements/icons/icons_outlined/clock.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { getCarrierLogoByClientId, getCarrierNameByClientId } from '@deps/utils/carriers';
 
+import CaseDetailsSideNav from './case-details-side-nav';
 import { getSideNavData } from './case-helpers';
 import { Parties, PartiesProps } from './CaseSideNavParties';
 import Transactions from './CaseSideNavTransactions';
-import CaseDetailsSideNav from './case-details-side-nav';
 
 export interface CaseSideNavProps {
     data: {
@@ -169,7 +169,9 @@ const CaseSideNav = ({ caseDetails }: { caseDetails: Case }) => {
                 <ProcessingTimeStamp data={data} />
                 <div className="flex w-full flex-col rounded bg-white shadow-elevation-light-04">
                     <ContractDetails data={data} />
-                    <CaseDetailsSideNav CaseAdditionalDetails={caseDetails?.additionalData} />
+                    {caseDetails.process === Processes.Correspondence && (
+                        <CaseDetailsSideNav CaseAdditionalDetails={caseDetails?.additionalData} carrier={caseDetails?.carrier} />
+                    )}
                     <Transactions caseDetails={caseDetails} />
                     <Parties parties={data.parties} caseStatus={caseDetails.caseStatus} />
                 </div>

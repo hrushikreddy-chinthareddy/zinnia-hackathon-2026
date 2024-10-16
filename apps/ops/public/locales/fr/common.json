@@ -3320,7 +3320,9 @@
             "transactions": "Transactions",
             "history": "Histoire",
             "documents": "Documents",
-            "caseDetails": "Détails du Dossier"
+            "caseDetails": "Détails du Dossier",
+            "deliveryMethod": "Méthode de livraison",
+            "correspondence": "Correspondence"
         }
     },
     "bannerAlert": {

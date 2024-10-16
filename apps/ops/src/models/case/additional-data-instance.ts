@@ -13,6 +13,10 @@ export enum CaseAdditionalDataKeys {
     transactionSubType = 'transactionSubType',
     requestSubType = 'requestSubType',
     formName = 'formName',
+    deliveryMethod = 'deliveryMethod',
+    formId = 'formId',
+    documentName = 'documentName',
+    documentId = 'documentId',
 }
 
 export const correspondenceTypes = {

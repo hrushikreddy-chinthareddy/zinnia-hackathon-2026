@@ -3563,7 +3563,9 @@
             "transactions": "Transactions",
             "history": "History",
             "documents": "Documents",
-            "caseDetails": "Case Details"
+            "caseDetails": "Case Details",
+            "deliveryMethod": "Delivery method",
+            "correspondence": "Correspondence"
         }
     },
     "bannerAlert": {
