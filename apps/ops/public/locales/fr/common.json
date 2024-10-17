@@ -36,8 +36,6 @@
             "newPremium": "Nouveau Prime",
             "updatePremium": "Gérer Paiement Automatique",
             "newWithdrawal": "Nouveau Retrait",
-
-            "caseStepsAdditionalData": "Créer et envoyer un formulaire de demande",
             "formData": "Données du formulaire",
             "annuitization": "Annuitisation"
         },
@@ -891,12 +889,16 @@
             "sswRequestProcessing": "Traiter la transaction",
             "sswRequestValidation": "Valider la transaction",
             "suitabilityReview": "Revoir l'admissibilité",
-            "toaLetter": "Créer et envoyer le paquet de transfert"
+            "toaLetter": "Créer et envoyer le paquet de transfert",
+            "viewDetails": "View details"
         },
         "steps": {
             "requestAck.nbRequestReceived": "Réception de {{subType}}",
             "requestAck.caseProcessing": "Préparer {{subType}} pour le traitement",
             "requestAck.draftContractCreation": "Créer un contrat provisoire",
+            "requestAck.processFormRequestReceived": "Recevoir une demande de formulaire de service",
+            "requestCompletion.deliverLetter": "Recevoir la confirmation de livraison",
+            "requestCompletion.completeRequest": "Envoyer le formulaire demandé",
             "agentValidation.preValidationRules": "Confirmer l'exhaustivité des informations de l'agent",
             "agentValidation.agentAppointmentValidation": "Valider la nomination de l'agent",
             "agentValidation.agentLOBValidation": "Valider la ligne de produits de l'agent",
@@ -1116,9 +1118,12 @@
         },
         "correspondenceStepDetails": {
             "status": "Statut",
-            "dateStarted": "Date de début",
+            "sentDate": "Date d'envoi",
             "dateCompleted": "Date d'achèvement",
-            "deliveryMethod": "Mode de livraison"
+            "deliveryMethod": "Mode de livraison",
+            "address": "Adresse résidentielle",
+            "requestedRecipients": "Destinataires demandés",
+            "recipients": "Destinataires"
         }
     },
     "caseRenewal": {
@@ -3357,7 +3362,10 @@
             "people": "Personnes",
             "transactions": "Transactions",
             "history": "Histoire",
-            "documents": "Documents"
+            "documents": "Documents",
+            "caseDetails": "Détails du Dossier",
+            "deliveryMethod": "Méthode de livraison",
+            "correspondence": "Correspondence"
         }
     },
     "bannerAlert": {

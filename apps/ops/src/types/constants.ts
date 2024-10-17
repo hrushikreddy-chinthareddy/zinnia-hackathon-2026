@@ -20,6 +20,8 @@ export const DEFAULT_EXTENDED_DAY_DATE_FORMAT = 'M/DD/YYYY';
 export const DEFAULT_EXTENDED_MONTH_DATE_FORMAT = 'MM/D/YYYY';
 export const ZAHARA_API_DATE_FORMAT = 'YYYY-MM-DD';
 export const DEFAULT_DATE_DISPLAY_FORMAT = 'MM/DD/YYYY';
+export const CASE_MANAGEMENT_API_FORMAT = 'YYYY-MM-DD HH:mm:ss';
+export const CASE_MANAGEMENT_DISPLAY_FORMAT = 'MM/DD/YYYY HH:mm a CST';
 
 export const NOOP = () => {
     // do nothing

@@ -36,7 +36,6 @@
             "newPremium": "New Premium",
             "updatePremium": "Update Premium Autopay",
             "newWithdrawal": "New Withdrawal",
-            "caseStepsAdditionalData": "Create & send request form",
             "formData": "Form Data",
             "annuitization": "Annuitization"
         },
@@ -896,12 +895,16 @@
             "sswRequestProcessing": "Process transaction",
             "sswRequestValidation": "Validate transaction",
             "suitabilityReview": "Review suitability",
-            "toaLetter": "Create and send transfer packet"
+            "toaLetter": "Create and send transfer packet",
+            "viewDetails": "View details"
         },
         "steps": {
             "requestAck.nbRequestReceived": "Receive {{subType}}",
             "requestAck.caseProcessing": "Set up {{subType}} for processing",
             "requestAck.draftContractCreation": "Create draft contract",
+            "requestAck.processFormRequestReceived": "Receive Service Form Request",
+            "requestCompletion.deliverLetter": "Receive Delivery Confirmation",
+            "requestCompletion.completeRequest": "Send Requested Form",
             "agentValidation.preValidationRules": "Confirm completeness of agent details",
             "agentValidation.agentAppointmentValidation": "Validate appointment",
             "agentValidation.agentLOBValidation": "Validate line of business",
@@ -1121,9 +1124,12 @@
         },
         "correspondenceStepDetails": {
             "status": "Status",
-            "dateStarted": "Date started",
+            "sentDate": "Sent date",
             "dateCompleted": "Date completed",
-            "deliveryMethod": "Delivery method"
+            "deliveryMethod": "Delivery method",
+            "address": "Residential address",
+            "requestedRecipients": "Requested Recipients",
+            "recipients": "Recipients"
         }
     },
     "caseRenewal": {
@@ -3600,7 +3606,10 @@
             "people": "People",
             "transactions": "Transactions",
             "history": "History",
-            "documents": "Documents"
+            "documents": "Documents",
+            "caseDetails": "Case Details",
+            "deliveryMethod": "Delivery method",
+            "correspondence": "Correspondence"
         }
     },
     "bannerAlert": {
