@@ -638,16 +638,6 @@ const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
                     />
                 </div>
                 <div>
-                    <Label variant={LabelVariant.FieldLabel} label={t('colDefs:owner.email')} />
-                    <Content
-                        details={owner?.bestAvailableEmail?.emailAddress || DEFAULT_ERROR_STRING}
-                        variant={ContentVariant.BodySm}
-                        pii={true}
-                    />
-                </div>
-            </div>
-            <div className="grid grid-cols-2 gap-10 md:grid-cols-1 lg:grid-cols-2">
-                <div>
                     <div className="flex gap-1">
                         <Label id="policy-owner-email" variant={LabelVariant.FieldLabel} label={t('colDefs:owner.email')} />
                         {bestAvailEmail?.isPending && <PendingTag />}
@@ -658,6 +648,12 @@ const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
                         )}
                     </div>
                     <Content details={bestAvailEmail?.emailAddress || DEFAULT_ERROR_STRING} variant={ContentVariant.BodySm} pii={true} />
+                </div>
+            </div>
+            <div className="grid grid-cols-2 gap-10 md:grid-cols-1 lg:grid-cols-2">
+                <div>
+                    <Label variant={LabelVariant.FieldLabel} label={t('colDefs:owner.birthDate')} />
+                    <Content details={owner?.formattedBirthDate} variant={ContentVariant.BodySm} pii={true} />
                 </div>
                 <div>
                     <div className="flex gap-1">
