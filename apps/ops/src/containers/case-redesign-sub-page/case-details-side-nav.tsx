@@ -58,25 +58,27 @@ const CaseDetailsSideNav = ({ CaseAdditionalDetails, carrier }: CaseDetailsSideN
                         variant={ContentVariant.BodySm}
                     />
                 </div>
-                {CaseAdditionalDetails[CaseAdditionalDataKeys.deliveryMethod] === CommunicationTypes.Mail &&
-                    CaseAdditionalDetails[CaseAdditionalDataKeys.documentId] && (
-                        <>
-                            <Typography variant={TypographyVariant.BodyBold}> {t('sidenav.navButtons.correspondence')}</Typography>
-                            <NavElement
-                                className={''}
-                                href={`/documents/${CaseAdditionalDetails[CaseAdditionalDataKeys.documentId]}`}
-                                isNewPage={true}
-                                size={NavElementSize.Small}
-                                target="_blank"
-                                title={CaseAdditionalDetails[CaseAdditionalDataKeys?.documentName] ?? ''}
-                                type={NavElementType.Link}
-                                onClick={setCookies}
-                                variant={NavElementVariant.Secondary}
-                            >
-                                {CaseAdditionalDetails[CaseAdditionalDataKeys?.documentName] ?? ''}
-                            </NavElement>
-                        </>
-                    )}
+                <div>
+                    {CaseAdditionalDetails[CaseAdditionalDataKeys.deliveryMethod] === CommunicationTypes.Mail &&
+                        CaseAdditionalDetails[CaseAdditionalDataKeys.documentId] && (
+                            <>
+                                <Typography variant={TypographyVariant.BodyBold}> {t('sidenav.navButtons.correspondence')}</Typography>
+                                <NavElement
+                                    className={''}
+                                    href={`/documents/${CaseAdditionalDetails[CaseAdditionalDataKeys.documentId]}`}
+                                    isNewPage={true}
+                                    size={NavElementSize.Small}
+                                    target="_blank"
+                                    title={CaseAdditionalDetails[CaseAdditionalDataKeys?.documentName] ?? ''}
+                                    type={NavElementType.Link}
+                                    onClick={setCookies}
+                                    variant={NavElementVariant.Secondary}
+                                >
+                                    {CaseAdditionalDetails[CaseAdditionalDataKeys?.documentName] ?? ''}
+                                </NavElement>
+                            </>
+                        )}
+                </div>
             </div>
         </div>
     );
