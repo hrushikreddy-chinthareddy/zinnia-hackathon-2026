@@ -1,12 +1,13 @@
 import dayjs, { Dayjs } from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import 'react-pdf/dist/Page/TextLayer.css';
 import { Loader } from '@deps/components/page-loader';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { PolicyDocument, PolicyDocuments } from '@deps/models/case/document';
 import { StatementStartYear, StatementTypes } from '@deps/models/case/send-statement';
+import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { getCorrespondenceDocs } from '@deps/queries/api/documents';
 
@@ -104,19 +105,15 @@ const getSortedStatements = (statements: PolicyDocument[]) => {
 function StatementSelection({ policy, applicableStatement, statements, setStatements }: StatementSelectionProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'contactCenter' });
     const { goToNext } = useWorkflow();
-    // check if only one statement is active & set that to default selection
-    const activeStatementType = useMemo(() => {
-        return applicableStatement?.length === 1 ? applicableStatement : [];
-    }, [applicableStatement]);
 
-    const [selectedStatementType, setSelectedStatementType] = useState<StatementTypes[]>(activeStatementType);
+    const [selectedStatementType, setSelectedStatementType] = useState<StatementTypes[]>(applicableStatement);
     const currentYear = dayjs().year().toString();
     const currentQuarter = `${currentYear}-Q${getQuarter(dayjs())}`;
     const defaultDate =
-        activeStatementType.length === 1 && activeStatementType[0] === StatementTypes.AnniversaryStatement ? currentYear : currentQuarter;
+        applicableStatement.length === 1 && applicableStatement[0] === StatementTypes.AnniversaryStatement ? currentYear : currentQuarter;
     const [startDate, setStartDate] = useState(defaultDate);
     const [endDate, setEndDate] = useState(defaultDate);
-    const [error, setError] = useState<string>('');
+    const [error, setError] = useState<FormValidationErrors>({});
     const [loader, setLoader] = useState(false);
     const [datePickerType, setdatePickerType] = useState(getDatePickerType(selectedStatementType));
 
@@ -124,11 +121,11 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
         setdatePickerType(getDatePickerType(selectedStatementType));
 
         // clear the dates on statement type change
-        if (selectedStatementType[0] !== activeStatementType[0]) {
+        if (selectedStatementType[0] !== applicableStatement[0]) {
             setStartDate('');
             setEndDate('');
         }
-    }, [activeStatementType, selectedStatementType]);
+    }, [applicableStatement, selectedStatementType]);
 
     function isChecked(val: string, statements: string[]): boolean {
         return !!statements.includes(val);
@@ -147,7 +144,7 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
 
     const handleContinue = async () => {
         if (!statements.length) {
-            return setError(t('errors.statements') as string);
+            return setError({ submit: t('errors.statements') as string });
         }
         goToNext();
     };
@@ -163,26 +160,31 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
             if (startDate && endDate) {
                 try {
                     setLoader(true);
-                    setError('');
+                    setError({});
                     setStatements(() => []);
-                    const selectedYearQuarters = getSelectedYearQuarters(startDate, endDate, selectedStatementType);
-                    //  adding ANNSTM & ANN to the document type filter if anniversary statement is selected
-                    const documentTypes = applicableStatement.find(statement => statement === StatementTypes.AnniversaryStatement)
-                        ? [...applicableStatement, StatementTypes.AnnualStatement]
-                        : applicableStatement;
-
-                    const optionalParams = {
-                        documentType: documentTypes.join(','),
-                        periods: encodeURIComponent(JSON.stringify(selectedYearQuarters)),
-                    };
-                    const response = await getCorrespondenceDocs(policy?.policyNumber || '', policy?.carrierId || '', optionalParams);
-
-                    if ('err' in response.data) {
-                        setError(response.data.err);
+                    if (selectedStatementType.length === 0) {
+                        setError({ statementType: t('errors.statementType') as string });
                         return;
+                    } else {
+                        const selectedYearQuarters = getSelectedYearQuarters(startDate, endDate, selectedStatementType);
+                        //  adding ANNSTM & ANN to the document type filter if anniversary statement is selected
+                        const documentTypes = applicableStatement.find(statement => statement === StatementTypes.AnniversaryStatement)
+                            ? [...applicableStatement, StatementTypes.AnnualStatement]
+                            : applicableStatement;
+
+                        const optionalParams = {
+                            documentType: documentTypes.join(','),
+                            periods: encodeURIComponent(JSON.stringify(selectedYearQuarters)),
+                        };
+                        const response = await getCorrespondenceDocs(policy?.policyNumber || '', policy?.carrierId || '', optionalParams);
+
+                        if ('err' in response.data) {
+                            setError({ submit: response.data.err });
+                            return;
+                        }
+                        const statements: PolicyDocuments = response.data;
+                        setStatements(getSortedStatements(statements.items));
                     }
-                    const statements: PolicyDocuments = response.data;
-                    setStatements(getSortedStatements(statements.items));
                 } catch (error) {
                     console.error('An error occurred while getting Contact Center statements', error);
                 } finally {
@@ -192,7 +194,7 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
         };
 
         getStatements(startDate, endDate);
-    }, [startDate, endDate]);
+    }, [startDate, endDate, selectedStatementType]);
 
     function handleIsDateAllowed(date: Dayjs, startDate: string): boolean {
         const start = getDayjsDate(startDate);
@@ -254,8 +256,21 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                     isDateAllowed={date => handleIsDateAllowed(date, startDate)}
                 />
             </div>
-            {loader ? <Loader /> : startDate && endDate && <StatementListing statements={statements} carrierId={policy?.carrierId || ''} />}
-            {error && <AssistiveText text={error} variant={AssistiveTextVariant.Error} className="mt-2" />}
+
+            {loader ? (
+                <Loader />
+            ) : (
+                startDate &&
+                endDate &&
+                !Object.keys(error).length && <StatementListing statements={statements} carrierId={policy?.carrierId || ''} />
+            )}
+            {error && (
+                <div className="flex flex-col mt-2">
+                    {error.statementType && <AssistiveText text={error.statementType} variant={AssistiveTextVariant.Error} />}
+
+                    {error.submit && <AssistiveText text={error?.submit} variant={AssistiveTextVariant.Error} />}
+                </div>
+            )}
         </WorkflowCard>
     );
 }
