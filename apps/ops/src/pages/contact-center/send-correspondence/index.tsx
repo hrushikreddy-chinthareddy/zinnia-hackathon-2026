@@ -202,8 +202,8 @@ export const getServerSideProps = withPageAuthRequired({
             }
             const applicableStatements = (await getApplicableStatementsSSR(planCode, accessToken, userInfoForLogging)) || [];
             const shouldShowEmailFaxOption = featureFlagDecisions?.[FEATURE_FLAGS.SEND_STATEMENT_SHOW_EMAIL_FAX_Option];
-            // const key = `SEND_CORRESPONDENCE_SHOW_Mail_${policy.carrierId}` as keyof typeof FEATURE_FLAGS;
-            //  const shouldShowMailOption = featureFlagDecisions?.[FEATURE_FLAGS[key]];
+            const key = `SEND_CORRESPONDENCE_SHOW_Mail_${policy.carrierId}` as keyof typeof FEATURE_FLAGS;
+            const shouldShowMailOption = featureFlagDecisions?.[FEATURE_FLAGS[key]];
 
             return {
                 props: {
@@ -211,7 +211,7 @@ export const getServerSideProps = withPageAuthRequired({
                     policy,
                     shouldShowCaseButton: shouldShowCaseButton ?? false,
                     shouldShowEmailFaxOption: shouldShowEmailFaxOption ?? false,
-                    shouldShowMailOption: true,
+                    shouldShowMailOption: shouldShowMailOption ?? false,
                     user,
                     applicableStatement: applicableStatements,
                 },
