@@ -17,27 +17,27 @@ describe('ChipStatus Component', () => {
         const chip = renderChipStatus(Statuses.InProgress);
         expect(chip).toHaveStyle('color: var(--color-semantic-information)');
         expect(chip).toHaveStyle('background-color: var(--color-semantic-information-light)');
-        expect(chip).toHaveTextContent('Status.inprogress');
+        expect(chip).toHaveTextContent('Inprogress');
     });
 
     it('should render Exception chip with correct colors', () => {
         const chip = renderChipStatus(Statuses.Exception);
         expect(chip).toHaveStyle('color: var(--color-semantic-error)');
         expect(chip).toHaveStyle('background-color: var(--color-semantic-error-light)');
-        expect(chip).toHaveTextContent('Status.exception');
+        expect(chip).toHaveTextContent('Exception');
     });
 
     it('should render Completed chip with correct colors', () => {
         const chip = renderChipStatus(Statuses.Completed);
         expect(chip).toHaveStyle('color: var(--color-semantic-success)');
         expect(chip).toHaveStyle('background-color: var(--color-semantic-success-light)');
-        expect(chip).toHaveTextContent('Status.completed');
+        expect(chip).toHaveTextContent('Completed');
     });
 
     it('should render Not Started chip with correct colors', () => {
         const chip = renderChipStatus(Statuses.NotStarted);
         expect(chip).toHaveStyle('color: var(--color-900-gray)');
         expect(chip).toHaveStyle('background-color: var(--color-50-gray)');
-        expect(chip).toHaveTextContent('Status.notstarted');
+        expect(chip).toHaveTextContent('Notstarted');
     });
 });

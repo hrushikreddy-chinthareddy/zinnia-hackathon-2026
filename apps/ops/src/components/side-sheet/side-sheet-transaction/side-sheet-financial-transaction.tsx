@@ -1,4 +1,4 @@
-import { Button } from '@zinnia/bloom/components';
+import { Button, Loader, LoaderVariant } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
@@ -10,11 +10,13 @@ import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { Statuses } from '@deps/models/case/case';
 import { TransactionStatus, TransactionType } from '@deps/models/policy/sor-policy';
+import { getPolicyTransactions } from '@deps/queries/api/policies';
 
+import SidesheetReverseRecreate from './reverse-recreate/side-sheet-reverse-recreate';
+import SideSheetReversedTransaction from './reverse-recreate/side-sheet-reversed-transaction';
 import SidesheetCancelPending from './side-sheet-cancel-pending';
 import SideSheetFinancialTransactionContent from './side-sheet-financial-content';
-import SidesheetReverseRecreate from './side-sheet-reverse-recreate';
-import { getFinancialTransactionSideSheetValues } from './side-sheet-transaction.helper';
+import { getFinancialTransactionSideSheetValues, replacesReverseInitiator } from './side-sheet-transaction.helper';
 import { SideSheetTransactionProps, TransactionSideSheetValues } from './types';
 import SideSheetWithdrawalContent from './withdrawal/side-sheet-withdrawal-content';
 
@@ -23,6 +25,8 @@ const SidesheetViews = {
     cancel: 'cancel',
     default: 'default',
     reverse: 'reverse',
+    loading: 'loading',
+    reverseInitiator: 'reverseInitiator',
 };
 
 const SideSheetFinancialTransaction = ({ policy, refreshTransactions, transaction }: SideSheetTransactionProps) => {
@@ -40,6 +44,52 @@ const SideSheetFinancialTransaction = ({ policy, refreshTransactions, transactio
     const { handleOpen, changeSideSheetContent } = useSideSheetContext();
 
     const { status, transactionType } = transaction || {};
+
+    useEffect(() => {
+        let active = true;
+        const isReversedTransaction = !!transaction.originalTransactionId;
+
+        // if the transaction is reversed
+        // and if we haven't already checked if the original transaction is reversed
+        //  check if the original transaction is reversed
+        if (isReversedTransaction && active) {
+            // we might have to change the sidesheet
+            // so we need to set the entire view to loading
+            setView(SidesheetViews.loading);
+            // call function to check 
+            // if this transaction replaces a reverseInitiator
+            getReverseInitiators();
+        }
+
+        async function getReverseInitiators() {
+            // get all reverseInitiators
+            const reverseInitiators = await getPolicyTransactions({
+                id: policy.policyNumber,
+                planCode: policy?.product?.planCode,
+                status: TransactionStatus.Reversed,
+                reverseInitiatorOnly: true,
+            });
+
+            // if there are no reverseInitiators, then we can just return
+            // there is nothing else to check
+            if (!reverseInitiators.length) return setView(SidesheetViews.default);
+
+            // if there are reverseInitiators, then we need to check if this transaction
+            // or any of its parents replaces a reverseInitiator
+            // which we will know if any of the transactions
+            // have an originalTransactionId present in the reverseInitiator array
+            const isReverseInitiator = await replacesReverseInitiator(transaction, reverseInitiators, policy);
+            
+            return setView(isReverseInitiator ? SidesheetViews.reverseInitiator : SidesheetViews.default);
+        }
+
+        return () => {
+            // set active to false on cleanup
+            // this will prevent race conditions
+            // when the component unmounts
+            active = false;
+        };
+    }, [policy, transaction]);
 
     useEffect(() => {
         const getValues = async () => {
@@ -69,6 +119,14 @@ const SideSheetFinancialTransaction = ({ policy, refreshTransactions, transactio
     }
 
     switch (view) {
+        case SidesheetViews.loading:
+            return (
+                <div className="flex h-full w-full items-center justify-center">
+                    <Loader variant={LoaderVariant.Default} />
+                </div>
+            );
+        case SidesheetViews.reverseInitiator:
+            return <SideSheetReversedTransaction transaction={transaction} policy={policy} />;
         case SidesheetViews.cancel:
             return (
                 <SidesheetCancelPending

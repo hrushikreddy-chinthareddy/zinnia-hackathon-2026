@@ -88,7 +88,6 @@ const CaseManagementDashboard = ({ authorizedCarriers }: { authorizedCarriers: s
         try {
             const response = await getCaseStats(caseStatsRequest);
 
-            // Check for error in fetch response
             if ('stats' in response) {
                 const hasSearch = !isSearchValueObjectEmpty(searchValueObject);
                 const newResult = formatCaseTotals(
@@ -101,7 +100,7 @@ const CaseManagementDashboard = ({ authorizedCarriers }: { authorizedCarriers: s
 
                 setCaseTotals(newResult);
             } else {
-                throw new Error(response.data.err ? response.data.err : 'Error fetching case stats');
+                throw new Error(response?.data?.err ? response.data.err : 'Error fetching case stats');
             }
         } catch (error) {
             console.error(error);
@@ -138,6 +137,9 @@ const CaseManagementDashboard = ({ authorizedCarriers }: { authorizedCarriers: s
 
             const response = await getCases(updatedRequest);
 
+            if (!response) {
+                throw new Error('Error fetching cases: No response');
+            }
             // Check for error in fetch response
             if ('total' in response) {
                 setCaseTableData({

@@ -52,6 +52,7 @@
 	"mounts": [
 		"source=${localEnv:HOME}/.npmrc,target=/home/node/.npmrc,type=bind,consistency=cached"
 	],
+	"onCreateCommand": "sudo apt update && sudo apt install -y libcairo2-dev libjpeg62-turbo-dev libpango1.0-dev libgif-dev build-essential g++",
 	"postCreateCommand": "bash -i -c 'nvm install && nvm use && npm i -g vercel'",
 	"postAttachCommand": "bash -i -c 'nvm use'"
 }

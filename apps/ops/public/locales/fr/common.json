@@ -1982,7 +1982,11 @@
         "lapse": "Laps",
         "new": "Nouveau",
         "canceled": "Annulé",
-        "canceledOn": "Annulé le {{date}}"
+        "canceledOn": "Annulé le {{date}}",
+        "reversed": "Reversé",
+        "reversedOn": "Reversé le {{date}}",
+        "pendingReversal": "En Attente de Reversal",
+        "pendingReversalOn": "En Attente de Reversal le {{date}}"
     },
     "placeHolder": {
         "globalSelectSearch": "par exemple. Montant du remboursement du prêt, coût de base..."
@@ -2364,6 +2368,8 @@
                 "endingIn": "Se terminant par {{ accountNumber }}",
                 "grossDisbursement": "Décaissement brut",
                 "initialPremium": "Prime initiale",
+                "newAppliedAmount": "Nouveau montant applique",
+                "newAppliedAmountTooltip": "Ceci est le montant d'argent ajouté à la valeur du compte après annulation d'une prime",
                 "newX": "Nouveau {{x}}",
                 "number": "Numéro",
                 "oneTimePremium": "Prime unique",
@@ -2378,6 +2384,7 @@
                 "processDate": "Date de traitement",
                 "processDateTooltip": "Ceci est la date à laquelle la transaction a été traitée. Cela vous indique quand la transaction a été incluse dans le cycle de lot. La date de traitement peut différer de la date d'effet (la date à laquelle la transaction est réellement appliquée à la police).",
                 "reversePayment": "Annuler le paiement",
+                "reverseRecreateSubmittedAmountTooltip": "Ceci est le montant soumis. En d'autres termes, le propriétaire a été retiré de l'argent. Cela peut entraîner le retour de certains fonds au propriétaire (appelé un « forçage »).",
                 "reverseSurrender": "Annuler la reddition",
                 "routingNumber": "Numéro de routage",
                 "setAsMailingAddress": "Définir comme adresse postale",
