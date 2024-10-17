@@ -284,7 +284,7 @@ const Steps = ({ steps, stepFilter = () => true }: { steps: StepView[]; stepFilt
                             <div className="flex flex-row gap-2">
                                 {getStepStatusIconTooltip(step, t)}
                                 <Content variant={ContentVariant.BodySm} details={step.name} />
-                                {getStepResultTag(step, t)}
+                                {stepResultTag(step, t)}
                             </div>
                             {Object.keys(step?.additionalData).length > 0 && (
                                 <NavElement
