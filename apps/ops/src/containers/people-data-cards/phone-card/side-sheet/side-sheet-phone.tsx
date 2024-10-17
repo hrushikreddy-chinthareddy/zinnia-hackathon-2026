@@ -7,8 +7,7 @@ import { v4 as uuidV4 } from 'uuid';
 
 import CaseDocumentSelect, { CaseDocumentOption, SetStateCaseId } from '@deps/components/case-document-select/case-document-select';
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
-import Field from '@deps/components/fields/field';
-import { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
 import FieldSelect from '@deps/components/fields/field-select/field-select';
 import Radio, { RadioOrientation } from '@deps/components/radio/radio';
 import SelectSimple from '@deps/components/select/select';

@@ -1095,7 +1095,13 @@
             "stepCount_other": "{{count}} steps",
             "steps": "Steps",
             "taskSideSheetLabel": "More information about task {{task}}",
-            "validate": "Validate {{label}}"
+            "validate": "Validate {{label}}",
+            "entityTypes": {
+                "agent": "Agent: {{label}}",
+                "pre-note": "Pre-Note: {{label}}",
+                "source of premium": "Source of Premium: {{label}}",
+                "transfer of assets": "Transfer of Assets: {{label}}"
+            }
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -1117,12 +1123,20 @@
             "unavailableOwnerDetails": "Owner details unavailable…",
             "unavailablePolicyNumber": "Policy number unavailable…"
         },
+        "sidesheet": {
+            "additionalData": "Additional Data",
+            "multiInstance": "Steps",
+            "documents": "Documents",
+            "view": "View",
+            "viewTask": "View task"
+        },
         "communicationSentTemplate": {
             "mail": "Mailed to: {{address}}",
             "fax": "Faxed to: {{fax}}",
             "email": "Emailed to: {{email}}"
         },
         "correspondenceStepDetails": {
+            "additionalData": "Additional Data",
             "status": "Status",
             "sentDate": "Sent date",
             "dateCompleted": "Date completed",
@@ -2863,7 +2877,11 @@
         "timeago_other": "{{count}} $t(temporal.{{unit}})s ago {{formattedDate}}",
         "nYears": "{{n}} years",
         "oneYear": "1 year",
-        "timeLeft": "{{timespan}} left"
+        "timeLeft": "{{timespan}} left",
+        "steps_one": "1 step",
+        "steps": "{{count}} steps",
+        "issues_one": "1 issue",
+        "issues": "{{count}} issues"
     },
     "sideSheet": {
         "posted": "Posted",

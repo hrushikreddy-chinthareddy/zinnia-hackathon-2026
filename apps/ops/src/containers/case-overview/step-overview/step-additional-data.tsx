@@ -1,18 +1,16 @@
 import { Table, TableBody, TableCell, TableRow } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { TFunction, useTranslation } from 'next-i18next';
-import React from 'react';
 
 import AdditionalStepStatus from '@deps/components/case-overview-box/content/additional-step-status';
-import { AdditionalData } from '@deps/components/case-sub-page/case-tabs.tsx/case-tabs-helpers';
+import { CaseAdditionalData } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-types';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import CardContainer from '@deps/containers/card-container/card-container';
 import { formatAddressToContainer } from '@deps/containers/small-data-card/address-data/address-data';
 import { toTitleCase } from '@deps/helpers/string.helper';
 import { AdditionalDataIds, CommunicationTypes, correspondenceTypes } from '@deps/models/case/additional-data-instance';
 import { Statuses } from '@deps/models/case/case';
 import { CASE_MANAGEMENT_API_FORMAT, CASE_MANAGEMENT_DISPLAY_FORMAT } from '@deps/types/constants';
-const getDataByDeliveryMethod = (data: AdditionalData, deliveryMethod: CommunicationTypes, t: TFunction) => {
+const getDataByDeliveryMethod = (data: CaseAdditionalData, deliveryMethod: CommunicationTypes, t: TFunction) => {
     switch (deliveryMethod) {
         case CommunicationTypes.Fax:
             return t('caseOverview.communicationSentTemplate.fax', { fax: data[deliveryMethod] });
@@ -42,7 +40,7 @@ const correspondenceStepConfig = (deliveryMethod: CommunicationTypes, t: TFuncti
         shouldDisplay: (): boolean => {
             return true;
         },
-        getAdditionalDetails: (additionalData: AdditionalData, filterKeyBy: string) => {
+        getAdditionalDetails: (additionalData: CaseAdditionalData, filterKeyBy: string) => {
             const date = additionalData[filterKeyBy].value;
             return dayjs(date, CASE_MANAGEMENT_API_FORMAT).format(CASE_MANAGEMENT_DISPLAY_FORMAT);
         },
@@ -55,7 +53,7 @@ const correspondenceStepConfig = (deliveryMethod: CommunicationTypes, t: TFuncti
             if (!deliveryMethod) return false;
             return correspondenceTypes[deliveryMethod].value === CommunicationTypes.Mail;
         },
-        getAdditionalDetails: (additionalData: AdditionalData, filterKeyBy: string) => {
+        getAdditionalDetails: (additionalData: CaseAdditionalData, filterKeyBy: string) => {
             const data = Object.keys(additionalData)
                 .filter(key => key.includes(filterKeyBy))
                 .reduce((acc, key) => ({ ...acc, [key.replace(filterKeyBy, '') || deliveryMethod]: additionalData[key].value }), {});
@@ -66,7 +64,7 @@ const correspondenceStepConfig = (deliveryMethod: CommunicationTypes, t: TFuncti
 ];
 
 type StepAdditionalDataProps = {
-    additionalData: AdditionalData;
+    additionalData: CaseAdditionalData;
     stepKey: AdditionalDataIds;
     status: string;
     date: string;
@@ -114,13 +112,18 @@ const StepAdditionalData = ({ additionalData, stepKey, status, date }: StepAddit
                 return null;
         }
     };
-    return <CardContainer>{renderAdditionalData(stepKey)}</CardContainer>;
+    return (
+        <>
+            <Typography variant={TypographyVariant.H3}>{t('additionalData')}</Typography>
+            {renderAdditionalData(stepKey)}
+        </>
+    );
 };
 
 export default StepAdditionalData;
 
 type DeliveryCardProps = {
-    additionalData: AdditionalData;
+    additionalData: CaseAdditionalData;
     deliveryMethod: CommunicationTypes;
     title?: string;
 };
@@ -149,7 +152,7 @@ const DeliveryCard = ({ additionalData, deliveryMethod, title }: DeliveryCardPro
     return (
         <>
             <div className="flex flex-row my-4">
-                <Typography variant={TypographyVariant.H2}>
+                <Typography variant={TypographyVariant.H3}>
                     {title ?? t('caseOverview.correspondenceStepDetails.requestedRecipients')}
                 </Typography>
             </div>

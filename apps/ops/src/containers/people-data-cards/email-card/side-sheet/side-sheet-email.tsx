@@ -5,8 +5,7 @@ import { v4 as uuidV4 } from 'uuid';
 
 import CaseDocumentSelect, { CaseDocumentOption, SetStateCaseId } from '@deps/components/case-document-select/case-document-select';
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
-import Field from '@deps/components/fields/field';
-import { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
 import Radio from '@deps/components/radio/radio';
 import {
     NonFinancialTransactionIdKeys,
@@ -21,8 +20,7 @@ import SuccessState from '@deps/components/side-sheet/non-financial-transactions
 import WarnState from '@deps/components/side-sheet/non-financial-transactions/states/warn-state';
 import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
 import { TranslationFiles } from '@deps/config/translations';
-import { Errors, getEmailTypes, getFormErrors } from '@deps/containers/people-data-cards/email-card/side-sheet/side-sheet-email.helpers';
-import { EmailDetails } from '@deps/containers/people-data-cards/email-card/side-sheet/side-sheet-email.helpers';
+import { Errors, getEmailTypes, getFormErrors , EmailDetails } from '@deps/containers/people-data-cards/email-card/side-sheet/side-sheet-email.helpers';
 import { getFirstLastName } from '@deps/helpers/party-info-helper';
 import { mapEmailTypeToTranslation } from '@deps/helpers/translation.helper';
 import { Processes } from '@deps/models/case/case';

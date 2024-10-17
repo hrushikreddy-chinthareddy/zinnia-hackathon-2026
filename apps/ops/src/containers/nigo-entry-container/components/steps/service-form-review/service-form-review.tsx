@@ -1,4 +1,3 @@
-
 import { Icon, IconType } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
@@ -10,7 +9,6 @@ import { TranslationFiles } from '@deps/config/translations';
 
 import { useGetPolicyTypeDocs } from './service-form-review.helper';
 import { useNigoEntry } from '../../nigo-entry-provider';
-
 
 interface SetFormReviewProps {
     policyNumber: string;
@@ -54,7 +52,7 @@ export const ServiceFormReview = ({ policyNumber, clientCode, docType, documentN
                 {!loading && workingDocument && (
                     <div className="my-3 flex w-[436px] justify-between rounded border border-gray-100 p-[12px]">
                         <div>
-                            <Icon width={20} height={20}  type={IconType.DOCUMENT_TEXT} />{' '}
+                            <Icon width={20} height={20} type={IconType.DOCUMENT_TEXT} />{' '}
                         </div>
                         <div>
                             <div className="text-sm font-bold">{displayName}</div>
@@ -67,7 +65,8 @@ export const ServiceFormReview = ({ policyNumber, clientCode, docType, documentN
                                 className="flex gap-1"
                                 activeDocType={activeDocType}
                                 carrier={clientCode?.toUpperCase()}
-                                document={workingDocument}
+                                documentId={workingDocument?.documentId ?? (workingDocument?.documentID as string)}
+                                displayName={displayName}
                             >
                                 <>{t('view')}</>
                             </DocumentPreviewer>

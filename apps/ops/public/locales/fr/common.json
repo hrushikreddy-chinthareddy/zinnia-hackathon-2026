@@ -1089,7 +1089,13 @@
             "stepCount_other": "{{count}} étapes",
             "steps": "Étapes",
             "taskSideSheetLabel": "Plus d'informations sur la tâche {{task}}",
-            "validate": "Valider {{label}}"
+            "validate": "Valider {{label}}",
+            "entityTypes": {
+                "agent": "Agent: {{label}}",
+                "pre-note": "Pre-Note: {{label}}",
+                "source of premium": "Source de prétium: {{label}}",
+                "transfer of assets": "Transfert d'actifs: {{label}}"
+            }
         },
         "processDate": {
             "cancled": "Annulé le",
@@ -1111,12 +1117,20 @@
             "unavailableOwnerDetails": "Détails du propriétaire indisponibles…",
             "unavailablePolicyNumber": "Numéro de police indisponible…"
         },
+        "sidesheet": {
+            "additionalData": "Données additionnelles",
+            "multiInstance": "Étapes",
+            "documents": "Documents",
+            "view": "Voir",
+            "viewTask": "Voir la tâche"
+        },
         "communicationSentTemplate": {
             "mail": "envoyé à {{address}}",
             "fax": "Télécopié à {{fax}}",
             "email": "Envoyé par courrier électronique à {{email}}"
         },
         "correspondenceStepDetails": {
+            "additionalData": "Données additionnelles",
             "status": "Statut",
             "sentDate": "Date d'envoi",
             "dateCompleted": "Date d'achèvement",
@@ -2621,7 +2635,11 @@
         "timeago_other": "Il y a {{count}} $t(temporal.{{unit}}) {{formattedDate}}",
         "nYears": "{{n}} ans",
         "oneYear": "1 an",
-        "timeLeft": "Il reste {{timespan}}"
+        "timeLeft": "Il reste {{timespan}}",
+        "steps_one": "1 étape",
+        "steps": "{{count}} pas",
+        "issues_one": "1 problème",
+        "issues": "{{count}} problèmes"
     },
     "sideSheet": {
         "posted": "Publié",

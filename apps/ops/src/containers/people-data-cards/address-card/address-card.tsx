@@ -1,9 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
-import NavElement, { NavElementType } from '@deps/components/nav-element/nav-element';
-import { NavElementVariant } from '@deps/components/nav-element/nav-element';
-import { NavElementSize } from '@deps/components/nav-element/nav-element';
+import NavElement, { NavElementType , NavElementVariant , NavElementSize } from '@deps/components/nav-element/nav-element';
 import Toggle, { ToggleSize, ToggleVariant } from '@deps/components/toggle/toggle';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';

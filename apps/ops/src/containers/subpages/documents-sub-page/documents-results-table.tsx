@@ -74,7 +74,8 @@ export const createAction = (doc: DocumentWithSource, carrierCode: string, t: TF
         <DocumentPreviewer
             className="!underline-offset-2"
             carrier={carrierCode}
-            document={doc}
+            displayName={doc.displayName}
+            documentId={doc.documentId ?? (doc.documentID as string)}
             activeDocType={doc.documentSource}
             variant={NavElementVariant.Secondary}
         >
