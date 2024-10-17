@@ -18,6 +18,7 @@ import {
   SHOW_DEV_MENU_COOKIE_KEY,
 } from '@/utils/serverClientUtils';
 
+import { getFeatureFlagQuery } from './queries/feature-flag-queries';
 import { getMyPoliciesByCarrier, getPolicyDetails } from './services';
 import { consumerExperienceAPIBaseUrl } from './services/api-config';
 import { ServerApi } from './services/server-http';
@@ -41,6 +42,7 @@ import {
   isValidCarrierSubdomain,
 } from './utils/carriers';
 import { lineOfBusinessUrlPath } from './utils/data';
+import { FEATURE_FLAGS } from './utils/optimizely/flags';
 import { applyThemeCookies } from './utils/theme';
 import {
   getPolicyDataFromPath,
@@ -111,6 +113,8 @@ export async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
   const isLoginLikeOrRoot = pathname.includes('/login') || pathname === '/';
   const isSessionPage = pathname === '/session';
+  const featureFlags = await getFeatureFlagQuery(req);
+  const annuityModeOn = featureFlags?.[FEATURE_FLAGS.ANNUITY_MODE];
 
   applyThemeCookies(req, resNext);
 
@@ -216,6 +220,7 @@ export async function middleware(req: NextRequest) {
     // if the user is on the login page and they have a session we need to redirect them to the policies index page
     // if they have only one policy we will redirect them to the policy details page
     // otherwise we will send them to the policy index page
+
     if (fromLogin === 'true') {
       const allPolicies = await getMyPoliciesByCarrier([
         CarrierId.SBUL,
@@ -223,18 +228,14 @@ export async function middleware(req: NextRequest) {
         'WELB',
       ]);
 
-      // If they are on a valid subdomain, direct them straight to the policy.
-      // Otherwise they need to go to the carrier picker and select a carrier before this applies
-      const currentSubDomain = getSubdomain(req.headers);
-      const validSubdomain = isValidCarrierSubdomain(currentSubDomain);
+      // We need to hit the feature flag route handler in middleware instead of the server function.
+      // This has something to do with how middleware runs on the Edge runtime instead of Node runtime
+      // If you try to hit the server function directly, optimizely will error out initializing.
 
-      if (allPolicies.data && allPolicies.data.length === 1 && validSubdomain) {
-        const [policy] = allPolicies.data;
-        const carrierSubdomainById = getCarrierSubdomainById(policy?.carrierId);
+      if (!annuityModeOn) {
+        if (allPolicies.data && allPolicies.data.length === 1) {
+          const [policy] = allPolicies.data;
 
-        // Make sure that if someone is logging into like 'every.mypolicyview' but they only have a 'wellabe' policy,
-        // we dont send them to the every policy.
-        if (carrierSubdomainById === currentSubDomain) {
           return NextResponse.redirect(
             new URL(
               `/coverage/${lineOfBusinessUrlPath(policy?.lineOfBusiness)}/${policy?.planCode}/${policy?.policyNumber}`,
@@ -242,43 +243,72 @@ export async function middleware(req: NextRequest) {
             )
           );
         }
+      } else {
+        // If Annuity mode is on, if they are on a valid subdomain, direct them straight to the policy.
+        // Otherwise they need to go to the carrier picker and select a carrier before this applies
+        const currentSubDomain = getSubdomain(req.headers);
+        const validSubdomain = isValidCarrierSubdomain(currentSubDomain);
+
+        if (
+          allPolicies.data &&
+          allPolicies.data.length === 1 &&
+          validSubdomain
+        ) {
+          const [policy] = allPolicies.data;
+          const carrierSubdomainById = getCarrierSubdomainById(
+            policy?.carrierId
+          );
+
+          // Make sure that if someone is logging into like 'every.mypolicyview' but they only have a 'wellabe' policy,
+          // we dont send them to the every policy.
+          if (carrierSubdomainById === currentSubDomain) {
+            return NextResponse.redirect(
+              new URL(
+                `/coverage/${lineOfBusinessUrlPath(policy?.lineOfBusiness)}/${policy?.planCode}/${policy?.policyNumber}`,
+                req.url
+              )
+            );
+          }
+        }
       }
     }
 
     // Ensure user is on a valid subdomain for the policy theyre viewing.
     // If not, redirect them to the correct subdomain for a policy
     if (pathname.includes('/coverage/')) {
-      const { planCode, policyNumber, lineOfBusiness } =
-        getPolicyDataFromPath(pathname);
+      if (annuityModeOn) {
+        const { planCode, policyNumber, lineOfBusiness } =
+          getPolicyDataFromPath(pathname);
 
-      if (!planCode || !policyNumber || !lineOfBusiness) {
-        return resNext;
-      }
+        if (!planCode || !policyNumber || !lineOfBusiness) {
+          return resNext;
+        }
 
-      const { data: policyData } = await getPolicyDetails({
-        planCode,
-        policyNumber,
-      });
+        const { data: policyData } = await getPolicyDetails({
+          planCode,
+          policyNumber,
+        });
 
-      // if the user is not on a valid subdomain, redirect them to the correct subdomain based on the
-      // policy they have selected. Prevents someone from being going to like `wellabe.com/123everlyCode/456everlyPolicyNumber`
-      const carrierSubdomain = getCarrierSubdomainById(policyData?.carrierId);
-      const currentSubDomain = getSubdomain(req.headers);
-      const validSubdomain = isValidCarrierSubdomain(currentSubDomain);
+        // if the user is not on a valid subdomain, redirect them to the correct subdomain based on the
+        // policy they have selected. Prevents someone from being going to like `wellabe.com/123everlyCode/456everlyPolicyNumber`
+        const carrierSubdomain = getCarrierSubdomainById(policyData?.carrierId);
+        const currentSubDomain = getSubdomain(req.headers);
+        const validSubdomain = isValidCarrierSubdomain(currentSubDomain);
 
-      const onWrongUrl =
-        carrierSubdomain &&
-        carrierSubdomain !== currentSubDomain &&
-        validSubdomain;
+        const onWrongUrl =
+          carrierSubdomain &&
+          carrierSubdomain !== currentSubDomain &&
+          validSubdomain;
 
-      if (onWrongUrl) {
-        const subdomainPath = prependSubdomain(carrierSubdomain);
-        return NextResponse.redirect(
-          new URL(
-            `/coverage/${lineOfBusinessUrlPath(lineOfBusiness as LineOfBusiness)}/${planCode}/${policyNumber}`,
-            subdomainPath
-          )
-        );
+        if (onWrongUrl) {
+          const subdomainPath = prependSubdomain(carrierSubdomain);
+          return NextResponse.redirect(
+            new URL(
+              `/coverage/${lineOfBusinessUrlPath(lineOfBusiness as LineOfBusiness)}/${planCode}/${policyNumber}`,
+              subdomainPath
+            )
+          );
+        }
       }
     }
 

@@ -31,7 +31,7 @@ interface PolicyStatusAlertBannerProps extends PolicyRequestInputs {
  * @param param0
  * @returns
  */
-export const PolicyStatusAlertBanner = async ({
+export const PolicyStatusAlertBanner = ({
   policyStatusData,
   planCode,
   policyNumber,
