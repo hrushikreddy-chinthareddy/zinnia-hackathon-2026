@@ -118,21 +118,32 @@ const getStepStatusIconTooltip = (step: StepView, t: TFunction): ReactNode => {
     }
 };
 
-const getStepResultTag = (step: StepView, t: TFunction): ReactNode => {
+enum StepTagIds {
+    UnderwritingAccepted = 'underwritingEvalutaion.underwritingDecisionApproved',
+    UnderwritingAdverse = 'underwritingEvaluation.underwritingDecisionAdverse',
+    UnderwritingDeclined = 'underwritingEvalutaion.underwritingDecisionDeclined',
+    SuitabilityReview = 'suitabilityReview.suitabilityReview',
+    UserAccepted = 'userDecision.acceptedOffer',
+    UserRejected = 'userDecision.rejectedOffer',
+    UserExpired = 'userDecision.expireOffer',
+    UserAmended = 'userDecision.requestedOfferAmendment',
+}
+
+const stepResultTag = (step: StepView, t: TFunction): ReactNode => {
     let text;
     switch (step.id) {
         // Underwriting
-        case 'underwritingEvalutaion.underwritingDecisionApproved':
+        case StepTagIds.UnderwritingAccepted:
             text = t('caseOverview.tabs.accepted');
             break;
-        case 'underwritingEvaluation.underwritingDecisionAdverse':
+        case StepTagIds.UnderwritingAdverse:
             text = t('caseOverview.tabs.adverse');
             break;
-        case 'underwritingEvalutaion.underwritingDecisionDeclined':
+        case StepTagIds.UnderwritingDeclined:
             text = t('caseOverview.tabs.declined');
             break;
         // Suitability
-        case 'suitabilityReview.suitabilityReview':
+        case StepTagIds.SuitabilityReview:
             if (step.status === 'COMPLETED') {
                 text = t('caseOverview.tabs.approved');
                 break;
@@ -141,16 +152,16 @@ const getStepResultTag = (step: StepView, t: TFunction): ReactNode => {
                 break;
             }
         // User Decision
-        case 'userDecision.acceptedOffer':
+        case StepTagIds.UserAccepted:
             text = t('caseOverview.tabs.accepted');
             break;
-        case 'userDecision.rejectedOffer':
+        case StepTagIds.UserRejected:
             text = t('caseOverview.tabs.rejected');
             break;
-        case 'userDecision.expireOffer':
+        case StepTagIds.UserExpired:
             text = t('caseOverview.tabs.expired');
             break;
-        case 'userDecision.requestedOfferAmendment':
+        case StepTagIds.UserAmended:
             text = t('caseOverview.tabs.amended');
             break;
         default:
