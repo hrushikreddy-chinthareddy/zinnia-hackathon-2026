@@ -9,7 +9,6 @@ interface SurrenderValueProps {
     surrenderValue?: number;
 }
 
-// TODO MG: this should be shared with the component in policy timelines
 const SurrenderValue = ({ surrenderValue }: SurrenderValueProps) => {
     const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
 

@@ -1,15 +1,22 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { createContext, useContext } from 'react';
 
+import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
 import { PermissionsModel, UserPermission } from '@deps/models/user-profile';
-import { getCarrierList } from '@deps/queries/api/fga';
+import { checkTuple, getCarrierList } from '@deps/queries/api/fga';
 import { AUDIENCE } from '@deps/queries/api-config';
+import { FgaRelation } from '@deps/types/fga';
 
 export interface PermissionsContextProps {
     permissions: PermissionsModel;
+    getIsAdvisorsExcel: () => Promise<boolean>;
     getClientIds: (permission: UserPermission) => Promise<string[]>;
     doesUserHavePagePermission: (permission: UserPermission) => Promise<boolean>;
-    canEditPolicy: (permission: UserPermission, planCode: string | string[] | undefined, policyNumber: string | undefined) => Promise<boolean>;
+    canEditPolicy: (
+        permission: UserPermission,
+        planCode: string | string[] | undefined,
+        policyNumber: string | undefined
+    ) => Promise<boolean>;
 }
 
 export const PermissionContext = createContext<PermissionsContextProps>({} as PermissionsContextProps);
@@ -28,6 +35,22 @@ export const PermissionsProvider: React.FC<PermissionsProviderProps> = ({ childr
     const { user } = useUser();
     const partyId = user?.partyId as string;
 
+    const getIsAdvisorsExcel = async (): Promise<boolean> => {
+        if (!partyId) return false;
+
+        try {
+            const isAdvisorsExcel = await checkTuple(partyId, FgaRelation.Party, AE_FGA_ROLE);
+
+            return isAdvisorsExcel;
+        } catch (error: any) {
+            console.error('getIsAdvisorsExcel::An error occurred while checking tuple', {
+                partyId,
+            });
+        }
+
+        return false;
+    };
+
     const getPermissionSet = (): PermissionsModel => {
         if (!user || !user[permissionsKey]) return {} as PermissionsModel;
 
@@ -35,14 +58,16 @@ export const PermissionsProvider: React.FC<PermissionsProviderProps> = ({ childr
         return permissions;
     };
 
-    const getClientIds =  async (permission: UserPermission): Promise<string[]> => {
-        if (!partyId || !permission ) return [];
+    const getClientIds = async (permission: UserPermission): Promise<string[]> => {
+        if (!partyId || !permission) return [];
+
         return await getCarrierList(partyId, permission);
     };
 
     // Can "const { user } = useUser();" and const permissions... be safely hoisted to the top of the method and used in a closure?
     const doesUserHavePagePermission = async (permission: UserPermission): Promise<boolean> => {
         if (!partyId || !permission) return false;
+
         const carriers = await getCarrierList(partyId, permission);
 
         if (carriers.length > 0) {
@@ -52,10 +77,15 @@ export const PermissionsProvider: React.FC<PermissionsProviderProps> = ({ childr
         return false;
     };
 
-    const canEditPolicy = async (permission: UserPermission, planCode: string | string[] | undefined, policyNumber: string | undefined ): Promise<boolean> => {
+    const canEditPolicy = async (
+        permission: UserPermission,
+        planCode: string | string[] | undefined,
+        policyNumber: string | undefined
+    ): Promise<boolean> => {
         if (!partyId || !permission || !planCode || !policyNumber) return false;
 
         const carriers = await getCarrierList(partyId, permission, planCode, policyNumber);
+
         if (carriers.length > 0) {
             return true;
         }
@@ -66,9 +96,7 @@ export const PermissionsProvider: React.FC<PermissionsProviderProps> = ({ childr
     const permissions = getPermissionSet();
 
     return (
-        <PermissionContext.Provider
-            value={{ permissions, getClientIds, doesUserHavePagePermission, canEditPolicy }}
-        >
+        <PermissionContext.Provider value={{ permissions, getIsAdvisorsExcel, getClientIds, doesUserHavePagePermission, canEditPolicy }}>
             {children}
         </PermissionContext.Provider>
     );

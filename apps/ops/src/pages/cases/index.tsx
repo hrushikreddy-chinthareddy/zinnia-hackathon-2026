@@ -17,6 +17,7 @@ import SelectSimple from '@deps/components/select/select';
 import StatusCounterTile from '@deps/components/status-counter-tile/status-counter-tile';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
+import { AE_BROKER_DEALER_NAME_PROD, AE_BROKER_DEALER_NAME_QA, AE_CARRIER_SBGC, AE_FGA_ROLE } from '@deps/constants/advisors-excel';
 import {
     CaseManagementFiltersContext,
     CaseSearchAdditionalFilters,
@@ -42,9 +43,11 @@ import { storage } from '@deps/helpers/sessionStorage.helper';
 import { Statuses } from '@deps/models/case/case';
 import { UserPermission } from '@deps/models/user-profile';
 import { getCaseStats, getCases } from '@deps/queries/api/cases';
-import { getCarrierListServerSSR } from '@deps/queries/api/fga';
+import { checkTupleSsr, getCarrierListServerSSR } from '@deps/queries/api/fga';
 import { CaseSearchQuery, CaseStatsQuery } from '@deps/queries/cases';
+import { FgaRelation } from '@deps/types/fga';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
+import { isProd } from '@deps/utils/environment.helper';
 import nextI18nextConfig from 'next-i18next.config';
 
 // Lazy Loaded Components
@@ -57,7 +60,12 @@ const SearchResultsErrorCard = dynamic(() => import('@deps/containers/search-res
 const PaginationControls = dynamic(() => import('@deps/components/pagination/pagination'));
 const PageSizeControls = dynamic(() => import('@deps/components/pagination/page-size/page-size'));
 
-const CaseManagementDashboard = ({ authorizedCarriers }: { authorizedCarriers: string[] }) => {
+type CaseManagementDashboardProps = {
+    authorizedCarriers: string[];
+    isAdvisorsExcel: boolean;
+};
+
+const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel }: CaseManagementDashboardProps) => {
     const [caseManagementFilters, setCaseManagementFilters] = useState(initialFilters);
     const [loadedStoredFilters, setLoadedStoredFilters] = useState(false);
 
@@ -79,6 +87,7 @@ const CaseManagementDashboard = ({ authorizedCarriers }: { authorizedCarriers: s
         const additionalFilters = getAdditionalFilters(caseManagementFilters.additionalFilters);
 
         const searchValueObject = getSearchValueObject(caseManagementFilters.searchValue, caseManagementFilters.toggleValue);
+
         const caseStatsRequest: CaseStatsQuery = {
             ...additionalFilters,
             ...searchValueObject,
@@ -123,7 +132,18 @@ const CaseManagementDashboard = ({ authorizedCarriers }: { authorizedCarriers: s
                 searchValueObject
             );
 
-            const additionalFilters = getAdditionalFilters(caseManagementFilters.additionalFilters);
+            let additionalFilters = getAdditionalFilters(caseManagementFilters.additionalFilters);
+
+            // DEPU-2835 - temporary work around for Advisor Excel
+            if (isAdvisorsExcel) {
+                const brokerDealerName = isProd() ? AE_BROKER_DEALER_NAME_PROD : AE_BROKER_DEALER_NAME_QA;
+
+                additionalFilters = {
+                    ...additionalFilters,
+                    brokerDealerName,
+                    carrier: [AE_CARRIER_SBGC],
+                };
+            }
 
             const updatedRequest: CaseSearchQuery = {
                 ...additionalFilters,
@@ -379,6 +399,7 @@ const CaseManagementDashboard = ({ authorizedCarriers }: { authorizedCarriers: s
             <SideSheetRefineResults
                 authorizedCarriers={authorizedCarriers}
                 filters={caseManagementFilters.additionalFilters}
+                isAdvisorsExcel={isAdvisorsExcel}
                 setCaseManagementFilters={setCaseManagementFilters}
                 closeSideSheet={() => sideSheet.handleOpen(false)}
             />
@@ -496,11 +517,14 @@ export const getServerSideProps = withPageAuthRequired({
         );
 
         const authorizedCarriers = await getCarrierListServerSSR(
-            `${auth.accessToken}`,
+            `${auth?.accessToken}`,
             user.partyId,
             UserPermission.AllowReadCaseManagement
         );
-        return { props: { authorizedCarriers, locale, ...translations } };
+
+        const isAdvisorsExcel = await checkTupleSsr(`${auth.accessToken}`, user.partyId, FgaRelation.Party, AE_FGA_ROLE);
+
+        return { props: { authorizedCarriers, isAdvisorsExcel, locale, ...translations } };
     },
 });
 
