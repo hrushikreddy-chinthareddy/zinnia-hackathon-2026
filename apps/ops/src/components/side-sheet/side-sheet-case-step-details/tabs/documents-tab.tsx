@@ -1,6 +1,5 @@
 import { Icon, IconType } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
-import { t } from 'i18next';
 import { useTranslation } from 'next-i18next';
 
 import { DocumentView, TransformedStep } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
@@ -31,10 +30,11 @@ function SideSheetDocument({ document, ...rest }: { document: DocumentView } & R
 }
 
 export default function DocumentsTab({ step, ...rest }: { step: TransformedStep } & React.HTMLAttributes<HTMLDivElement>) {
+    const { t } = useTranslation();
     return (
         <div {...rest}>
             <Typography variant={TypographyVariant.H3}>{t('caseOverview.sidesheet.documents')}</Typography>
-            <ul>
+            <ul className="mt-4">
                 {step.documents?.map(document => (
                     <SideSheetDocument key={document.id} document={document} />
                 ))}
