@@ -1,7 +1,6 @@
 import { Table, TableHeader, TableHeaderCell, TableRow, TableBody, TableCell } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import React from 'react';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
@@ -75,7 +74,7 @@ const StatementListing = ({ statements, carrierId }: StatementListingProps) => {
                                         <Content details={statement.periodQuarter || ''} variant={ContentVariant.BodySm} />
                                     </TableCell>
                                     <TableCell>
-                                        {createAction({ ...statement, documentSource: DocumentTypeView.Correspondence }, carrierId, t)}
+                                        {createAction({ ...statement, documentSource: DocumentTypeView.Correspondence }, carrierId, t,'view statement' )}
                                     </TableCell>
                                 </TableRow>
                             ))}
