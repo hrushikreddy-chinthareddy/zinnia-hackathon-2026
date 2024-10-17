@@ -38,7 +38,7 @@ describe('SideSheetProductDetails', () => {
         expect(await screen.findByText('dashboard.productDetails')).toBeInTheDocument();
 
         expect(await screen.findByText('globalPolicyInfo.carrierName')).toBeInTheDocument();
-        expect(await screen.findByText('Everly')).toBeInTheDocument();
+        expect(await screen.findByText('Security Benefit')).toBeInTheDocument();
 
         expect(await screen.findByText('globalPolicyInfo.productMarketingName')).toBeInTheDocument();
         expect(await screen.findByText('Product A')).toBeInTheDocument();

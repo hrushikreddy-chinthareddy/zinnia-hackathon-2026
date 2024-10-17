@@ -35,7 +35,7 @@ const carriers = {
     RSLN: 'Lincoln Benefit Life',
     SAAG: 'SunAmerica',
     SBGC: 'Security Benefit',
-    SBUL: 'Everly', // DEPU-2067 - used by Policy Management until we get a carrier API integration
+    SBUL: 'Security Benefit', // DEPU-2795
     SFGI: 'Sammons Financial',
     SMTR: 'Symetra',
     THRI: 'Thrivent Financial',
