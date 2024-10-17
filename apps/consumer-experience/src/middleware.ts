@@ -21,6 +21,10 @@ import {
 import { getFeatureFlagQuery } from './queries/feature-flag-queries';
 import { getMyPoliciesByCarrier, getPolicyDetails } from './services';
 import { consumerExperienceAPIBaseUrl } from './services/api-config';
+import {
+  checkResetDeliveryDateEligibility,
+  postResetDeliveryDate,
+} from './services/bpm';
 import { ServerApi } from './services/server-http';
 import { ROOT_URL_PATH } from './types';
 import { TermsAndConditionApiResponse } from './types/auth';
@@ -115,6 +119,8 @@ export async function middleware(req: NextRequest) {
   const isSessionPage = pathname === '/session';
   const featureFlags = await getFeatureFlagQuery(req);
   const annuityModeOn = featureFlags?.[FEATURE_FLAGS.ANNUITY_MODE];
+  const resetDeliveryDateActive =
+    featureFlags?.[FEATURE_FLAGS.RESET_DELIVERY_DATE_ACTIVE];
 
   applyThemeCookies(req, resNext);
 
@@ -308,6 +314,42 @@ export async function middleware(req: NextRequest) {
               subdomainPath
             )
           );
+        }
+      }
+    }
+
+    // Check if the user is eligible to reset their delivery date.
+    // We only check this a single time, then set a cookie for that policy so we skip the check the next time.
+    //TODO: Turn off feature flag when this is ready to go in prod
+    if (resetDeliveryDateActive && pathname.includes('/coverage/')) {
+      const { planCode, policyNumber } = getPolicyDataFromPath(pathname);
+
+      if (!planCode || !policyNumber) {
+        return resNext;
+      }
+
+      const deliveryDateEligibleCookie = req.cookies.get(
+        'hasCheckedDeliveryDateEligible'
+      )?.value;
+
+      const parsedCookie: { [key: string]: boolean } = JSON.parse(
+        deliveryDateEligibleCookie || '{}'
+      );
+
+      const hasCheckedPolicy = parsedCookie[policyNumber];
+      if (!hasCheckedPolicy) {
+        const { data: eligiblityData } =
+          await checkResetDeliveryDateEligibility({ planCode, policyNumber });
+
+        //Set the cookie that we're checked the eligibility
+        parsedCookie[policyNumber] = true;
+        resNext.cookies.set(
+          'hasCheckedDeliveryDateEligible',
+          JSON.stringify(parsedCookie)
+        );
+
+        if (eligiblityData.isEligible) {
+          await postResetDeliveryDate({ planCode, policyNumber });
         }
       }
     }
