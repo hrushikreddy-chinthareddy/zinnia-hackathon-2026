@@ -2,7 +2,10 @@ import { headers } from 'next/headers';
 
 export const prependSubdomain = (subdomain: string): string => {
   let protocol = 'https';
-  let domain = process.env.AUTH0_COOKIE_DOMAIN || process.env.VERCEL_BRANCH_URL;
+  let domain =
+    process.env.AUTH0_COOKIE_DOMAIN_MYPOLICYVIEW ||
+    process.env.AUTH0_COOKIE_DOMAIN ||
+    process.env.VERCEL_BRANCH_URL;
   if (domain?.includes('local')) {
     domain = `${domain}:3000`;
     protocol = 'http';

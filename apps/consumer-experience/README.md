@@ -56,6 +56,8 @@ Add to your settings.json
 
 ### Local subdomains
 
+NOTE: As of 10/15/24 there are two domains while we are in the midst of the switchover to mypolicyview domain.
+
 We swap themes based on subdomain. You can get subdomains locally by doing the following:
 
 From your user directory:
@@ -69,12 +71,15 @@ Add the following two lines to the bottom of your file
 ```
 127.0.0.1 everly.zinniatech.local
 127.0.0.1 wellabe.zinniatech.local
+127.0.0.1 everly.mypolicyview.local
+127.0.0.1 wellabe.mypolicyview.local
 ```
 
 Then go to `.env.local` and change this value to match:
 
 ```
 AUTH0_COOKIE_DOMAIN='zinniatech.local'
+AUTH0_COOKIE_DOMAIN_MYPOLICYVIEW='mypolicyview.local'
 ```
 
 Now you can run the project and open `http://everly.zinniatech.local:3000/` to view the subdomain locally.
