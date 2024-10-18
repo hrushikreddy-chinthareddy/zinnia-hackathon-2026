@@ -226,7 +226,7 @@ describe('carriers', () => {
   describe('getCarrierNameById', () => {
     // Returns correct CarrierListDetail array for valid CarrierPolicyDetails input
     it('should return correct CarrierListDetail array when given valid CarrierPolicyDetails input', () => {
-      process.env.AUTH0_COOKIE_DOMAIN = 'zinniatech.local';
+      process.env.AUTH0_COOKIE_DOMAIN_MYPOLICYVIEW = 'mypolicyview.local';
       const mockPolicies = [
         { carrierId: 'ELIC', planCode: 'P1' },
         { carrierId: 'WELB', planCode: 'P2' },
@@ -234,7 +234,7 @@ describe('carriers', () => {
       const expectedOutput = [
         {
           link: {
-            href: 'http://everly.zinniatech.local:3000',
+            href: 'http://everly.mypolicyview.local:3000',
             label: CarrierNames.EVERLY,
           },
           displayText: '(1 policy)',
@@ -242,7 +242,7 @@ describe('carriers', () => {
         },
         {
           link: {
-            href: 'http://wellabe.zinniatech.local:3000',
+            href: 'http://wellabe.mypolicyview.local:3000',
             label: CarrierNames.WELLABE,
           },
           displayText: '(1 policy)',

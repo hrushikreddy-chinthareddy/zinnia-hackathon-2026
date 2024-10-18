@@ -102,6 +102,7 @@ export const getCaseStatuses = (
 };
 
 type AdditionalFiltersResult = {
+    brokerDealerName?: string;
     createdDateStart?: string;
     createdDateEnd?: string;
     updatedDateStart?: string;
@@ -182,9 +183,12 @@ export const getAdditionalFilters = (additionalFilters: CaseSearchAdditionalFilt
         result['process'] = Array.from(additionalFilters.processTypes);
     }
 
-    
     if (additionalFilters.carriers && Object.keys(additionalFilters.carriers).length) {
-        result['carrier'] = Object.keys(additionalFilters.carriers).map(code => code.split(",")).concat().flat().map(code => code.toUpperCase());
+        result['carrier'] = Object.keys(additionalFilters.carriers)
+            .map(code => code.split(','))
+            .concat()
+            .flat()
+            .map(code => code.toUpperCase());
     }
 
     if (additionalFilters.products.size) {

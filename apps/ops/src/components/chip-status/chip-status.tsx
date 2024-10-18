@@ -1,62 +1,61 @@
+import { Badge, BadgeVariant } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
-import React from 'react';
+import { FC } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { toSentenceCase } from '@deps/helpers/string.helper';
 import { Statuses } from '@deps/models/case/case';
+import { TransactionStatus } from '@deps/models/policy/sor-policy';
+import { isObjectKey } from '@deps/utils/types';
 
+type ChipStatusText = Statuses | TransactionStatus;
 export interface ChipStatusProps {
-    status: Statuses | null;
+    status?: ChipStatusText | string;
     statusText?: string;
     classNames?: string;
 }
 
-const ChipStatus: React.FC<ChipStatusProps> = ({ status, statusText, classNames = '' }) => {
-    const { t } = useTranslation(TranslationFiles.COMMON);
+const statusMap: Partial<Record<ChipStatusText, string>> = {
+    [Statuses.InProgress]: 'inProgress',
+    [Statuses.Exception]: 'exception',
+    [Statuses.Completed]: 'completed',
+    [Statuses.Canceled]: 'canceled',
+    [Statuses.NotStarted]: 'notStarted',
+};
 
-    const getStatusText = (status: Statuses | null) => {
-        switch (status) {
-            case Statuses.New:
-                return t('status.new');
-            case Statuses.InProgress:
-                return t('status.inProgress');
-            case Statuses.Exception:
-                return t('status.exception');
-            case Statuses.Completed:
-                return t('status.completed');
-            case Statuses.Canceled:
-                return t('status.canceled');
-            case Statuses.NotStarted:
-            default:
-                return t('status.notStarted');
+const variantMap: Partial<Record<ChipStatusText, BadgeVariant>> = {
+    [Statuses.Canceled]: BadgeVariant.WARNING,
+    [Statuses.Exception]: BadgeVariant.ERROR,
+    [Statuses.InProgress]: BadgeVariant.INFO,
+    [TransactionStatus.Canceled]: BadgeVariant.ERROR,
+    [TransactionStatus.Reversed]: BadgeVariant.ERROR,
+};
+
+const ChipStatus: FC<ChipStatusProps> = ({ status, statusText, classNames }) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'status',
+    });
+
+    let dynamicText = '';
+
+    if (statusText?.length) {
+        dynamicText = statusText;
+    } else if (status?.length) {
+        if (isObjectKey(status, statusMap)) {
+            dynamicText = t(`${statusMap[status]}`);
+        } else {
+            dynamicText = status;
         }
-    };
+    }
 
-    const dynamicStatusText = getStatusText(status);
+    let variant: BadgeVariant = BadgeVariant.DEFAULT;
 
-    const classes = clsx(
-        'inline-block select-none whitespace-nowrap text-center font-primary text-sm font-semibold leading-4',
-        {
-            'w-fit rounded border-1 border-semantic-info bg-semantic-info-light px-2 text-semantic-info':
-                status === Statuses.New || statusText,
-            'w-full rounded-full border-2 border-semantic-info bg-semantic-info-light px-2 py-1 text-semantic-info':
-                status === Statuses.InProgress,
-            'w-full rounded-full border-2 border-semantic-error bg-semantic-error-light px-2 py-1 text-semantic-error':
-                status === Statuses.Exception,
-            'w-full rounded-full border-2 border-semantic-success bg-semantic-success-light px-2 py-1 text-semantic-success':
-                status === Statuses.Completed,
-            'w-full rounded-full border-2 border-gray-200 bg-gray-50 px-2 py-1 text-gray-900':
-                status === Statuses.NotStarted || status === Statuses.Canceled || status === null || !statusText,
-        },
-        classNames
-    );
+    if (status && isObjectKey(status, variantMap)) {
+        variant = variantMap[status] || BadgeVariant.DEFAULT;
+    }
 
-    return (
-        <span data-testid="chip-status" className={classes}>
-            {statusText ? statusText : toSentenceCase(dynamicStatusText)}
-        </span>
-    );
+    return <Badge className={clsx(classNames)} variant={variant} data-testid="chip-status" label={toSentenceCase(dynamicText)} />;
 };
 
 export default ChipStatus;

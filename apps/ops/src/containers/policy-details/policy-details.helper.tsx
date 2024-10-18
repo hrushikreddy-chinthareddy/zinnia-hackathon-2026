@@ -30,7 +30,7 @@ export const mapDistribution = (distribution: DistributionType | string = DEFAUL
 };
 
 export const buildTransactionCards = (policy: PolicyDetails, t: TFunction): TransactionCardProps[] => {
-    const { policyNumber, planCode, currency } = policy;
+    const { policyNumber, planCode, currency, isAnnuity } = policy;
     // BPB - TODO: add these to PolicyDetails
     const { accountValues, withdrawalValues, loanValues, allocation } = policy.policy;
     const cumulativePremiumSinceIssue = accountValues?.cumulativePremiumSinceIssue;
@@ -73,7 +73,7 @@ export const buildTransactionCards = (policy: PolicyDetails, t: TFunction): Tran
         fieldLabel: t('totalFundValue'),
         href: `/policies/${planCode}/${policyNumber}/policy/funds`,
         summary: `${t('lastDeposit')} ${numberFormatify(lastDeposit as number, currencyFormat)}`,
-        value: numberFormatify(fundValue as number, currencyFormat),
+        value: !isAnnuity ? numberFormatify(fundValue as number, currencyFormat) : '',
     };
 
     if (policy.isAnnuity) {

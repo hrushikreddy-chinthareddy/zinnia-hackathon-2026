@@ -30,7 +30,7 @@ const SideSheetProductDetails = ({ globalValues }: SideSheetProductDetailsProps)
                 />
                 <DescriptionList
                     label={t('globalPolicyInfo.productMarketingName')}
-                    text={globalValues.marketingName as string}
+                    text={globalValues.marketingName || DEFAULT_ERROR_STRING}
                     ariaLabel={t('globalPolicyInfo.productMarketingName') as string}
                     identifier="product-marketing-name-side-sheet"
                 />

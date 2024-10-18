@@ -9,7 +9,6 @@ interface AccountValueProps {
     accountValue?: number;
 }
 
-// TODO MG: this should be shared with the component in policy timelines
 const AccountValue = ({ accountValue }: AccountValueProps) => {
     const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
 

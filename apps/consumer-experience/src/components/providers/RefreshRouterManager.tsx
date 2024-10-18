@@ -1,10 +1,12 @@
 'use client';
-import Cookies from 'js-cookie';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
+import {
+  getRefreshCookie,
+  removeRefreshCookie,
+} from '@/actions/cookie-actions';
 import { ROOT_URL_PATH } from '@/types';
-import { REFRESH_ROUTER_COOKIE_KEY } from '@/utils/serverClientUtils';
 
 /**
  * NextJS caches route information client side so they can route quicker
@@ -25,16 +27,16 @@ const RefreshRouterManager = ({ children }: { children: React.ReactNode }) => {
     if (pathname === ROOT_URL_PATH) {
       return;
     }
-    const refreshRouter = Cookies.get(REFRESH_ROUTER_COOKIE_KEY) === '1';
 
-    if (refreshRouter) {
-      Cookies.remove(REFRESH_ROUTER_COOKIE_KEY, {
-        domain:
-          process.env.NEXT_PUBLIC_AUTH0_COOKIE_DOMAIN ||
-          process.env.VERCEL_BRANCH_URL,
-      });
-      router.refresh();
-    }
+    const refreshTheRouter = async () => {
+      const refreshRouter = await getRefreshCookie(); // This needs to be awaited because its a server action but its just getting a cookie value quickly.
+      if (refreshRouter === '1') {
+        await removeRefreshCookie();
+        router.refresh();
+      }
+    };
+
+    refreshTheRouter();
   }, [pathname, router]);
 
   return <>{children}</>;

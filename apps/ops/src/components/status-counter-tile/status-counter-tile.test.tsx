@@ -24,12 +24,12 @@ describe('StatusCounterTile', () => {
 
     it('renders InProgress status', () => {
         render(<StatusCounterTile count={212} status={Statuses.InProgress} />);
-        expect(screen.getByTestId('chip-status')).toHaveTextContent('Status.inprogress');
+        expect(screen.getByTestId('chip-status')).toHaveTextContent('Inprogress');
     });
 
     it('renders Exception status', () => {
         render(<StatusCounterTile count={212} status={Statuses.Exception} />);
-        expect(screen.getByTestId('chip-status')).toHaveTextContent('Status.exception');
+        expect(screen.getByTestId('chip-status')).toHaveTextContent('Exception');
     });
 
     it('renders with selected border when isSelected is true', () => {

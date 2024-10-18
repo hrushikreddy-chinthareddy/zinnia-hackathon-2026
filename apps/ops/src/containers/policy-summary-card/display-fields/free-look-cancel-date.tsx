@@ -9,7 +9,6 @@ interface FreeLookCancelDateProps {
     freeLookCancelDate?: string;
 }
 
-// TODO MG: this should be shared with the component in policy timelines
 const FreeLookCancelDate = ({ freeLookCancelDate }: FreeLookCancelDateProps) => {
     const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
 

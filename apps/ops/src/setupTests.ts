@@ -35,7 +35,7 @@ if (HIDE_ANNUITIES_TOOLTIPS_DEPU_2749) {
             push: jest.fn(),
             pathname: '',
         })),
-    }));
+    }))
 }
 
 failOnConsole();

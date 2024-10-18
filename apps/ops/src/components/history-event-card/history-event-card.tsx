@@ -1,8 +1,8 @@
+import { Tag, TagProps, TagVariant } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 
-import ChipStatus from '@deps/components/chip-status/chip-status';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import SideSheetFinancialTransaction from '@deps/components/side-sheet/side-sheet-transaction/side-sheet-financial-transaction';
 import SideSheetNonFinancialTransaction from '@deps/components/side-sheet/side-sheet-transaction/side-sheet-non-financial-transaction';
@@ -16,15 +16,22 @@ import { AccessibleFormattedAmount } from '@deps/helpers/numbers.helper';
 import { Statuses } from '@deps/models/case/case';
 import { Policy, Transaction, TransactionStatus, TransactionType } from '@deps/models/policy/sor-policy';
 import { ReactComponent as ChevronRightIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-right.svg';
+import { DEFAULT_DATE_FORMAT } from '@deps/types/constants';
 
 import { getHistoryEventCardValues } from './history-event-card.helper';
 import SideSheetNewLoanTransaction from '../side-sheet/side-sheet-transaction/side-sheet-new-loan-transaction';
+import { SideSheetTransactionProps } from '../side-sheet/side-sheet-transaction/types';
 
 export interface HistoryEventCardProps {
     refreshTransactions?: () => void;
-    policy?: Policy;
+    policy: Policy;
     transaction?: Transaction;
 }
+
+const getDate = (date?: Date | string) => {
+    if (date) return dayjs(date).format(DEFAULT_DATE_FORMAT);
+    return '';
+};
 
 const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryEventCardProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
@@ -35,6 +42,7 @@ const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryE
         policy as Policy,
         transaction as Transaction
     );
+
     const openTransactionSidesheet = () => {
         if (!transaction) {
             return;
@@ -43,36 +51,40 @@ const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryE
         const { transactionType } = transaction;
         const title = getTransactionSideSheetTitle(transaction as Transaction, t);
 
-        let content;
+        let Component: (props: SideSheetTransactionProps) => JSX.Element;
+
+        const props: SideSheetTransactionProps = {
+            policy: policy,
+            transaction: transaction,
+            refreshTransactions: refreshTransactions,
+        };
 
         if (transactionType === TransactionType.NewLoan) {
-            content = (
-                <SideSheetNewLoanTransaction
-                    policy={policy as Policy}
-                    // refreshTransactions={refreshTransactions}
-                    transaction={transaction as Transaction}
-                />
-            );
-        } else if (financialTransactionTypes.includes(transactionType as TransactionType)) {
-            content = (
-                <SideSheetFinancialTransaction
-                    policy={policy as Policy}
-                    refreshTransactions={refreshTransactions}
-                    transaction={transaction as Transaction}
-                />
-            );
+            props.refreshTransactions = undefined;
+            Component = SideSheetNewLoanTransaction;
+        } else if (transactionType && financialTransactionTypes.includes(transactionType)) {
+            Component = SideSheetFinancialTransaction;
         } else {
-            content = (
-                <SideSheetNonFinancialTransaction
-                    policy={policy as Policy}
-                    refreshTransactions={refreshTransactions}
-                    transaction={transaction as Transaction}
-                />
-            );
+            Component = SideSheetNonFinancialTransaction;
         }
 
-        sideSheet.changeSideSheetContent(title, content);
+        sideSheet.changeSideSheetContent(title, <Component {...props} />);
         sideSheet.handleOpen(true);
+    };
+
+    const statusMap: Partial<Record<TransactionStatus | Statuses, TagProps>> = {
+        [Statuses.Canceled]: {
+            variant: TagVariant.Information,
+            text: `${t('status.canceledOn', { date: getDate(processDate) })}`,
+        },
+        [TransactionStatus.Canceled]: {
+            variant: TagVariant.Information,
+            text: `${t('status.canceledOn', { date: getDate(processDate) })}`,
+        },
+        [TransactionStatus.Reversed]: {
+            variant: TagVariant.Default,
+            text: `${t('status.reversed')}`,
+        },
     };
 
     const containerClasses = clsx(
@@ -80,6 +92,14 @@ const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryE
         isPending ? 'border-dashed border-gray-300 bg-gray-100' : 'border-gray-100 bg-white',
         isClickable ? 'hover:border-yellow-400' : 'pointer-events-none'
     );
+
+    // Sidesheet Support
+
+    let tagProps: TagProps | undefined;
+
+    if (status) {
+        tagProps = statusMap[status];
+    }
 
     return (
         <li>
@@ -90,13 +110,7 @@ const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryE
 
                         <div className="flex items-center gap-2">
                             <div className="font-primary text-label-lg font-semibold">{eventTitle}</div>
-                            {status && status === TransactionStatus.Canceled && (
-                                <ChipStatus
-                                    status={status as unknown as Statuses}
-                                    statusText={t('status.canceledOn', { date: dayjs(processDate).format('M/DD/YYYY') }) as string}
-                                    classNames="border-semantic-info bg-semantic-info-light w-fit"
-                                />
-                            )}
+                            {tagProps && <Tag {...tagProps} />}
                         </div>
 
                         {eventBody && (
@@ -105,8 +119,7 @@ const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryE
                             </div>
                         )}
                     </div>
-
-                    {!!amount && (
+                    {amount !== undefined && (
                         <div className="font-bold md:text-content-value">
                             <AccessibleFormattedAmount amount={amount} />
                         </div>

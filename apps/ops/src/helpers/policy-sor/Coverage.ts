@@ -48,7 +48,7 @@ export class Coverage {
     }
 
     public get baseDeathBenefit(): number | undefined {
-        return this.getCoverageLayerByType('BASE')?.currentAmount;
+        return this.coverage.totalCoverageAmount;
     }
 
     public get faceValue(): number | undefined {

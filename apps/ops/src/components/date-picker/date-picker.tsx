@@ -77,12 +77,17 @@ interface DaysProps extends CommonDayProps {
     getSelectedClasses: (_month: number, _day: number) => string;
 }
 
+enum DatePickerDirection {
+    start = 'start',
+    end = 'end',
+}
+
 type QuartersProps = {
     setYear: Dispatch<SetStateAction<number>>;
     handleQuarterSelection: (_year: number, _quarter: Quarter) => void;
     handleYearSelection: (_year: number) => void;
     quartersOpen: boolean;
-    getDisabledQuarterClasses: (_year: number, _quarter?: number, pickerDirection?: 'start' | 'end') => string;
+    getDisabledQuarterClasses: (_year: number, _quarter?: number, pickerDirection?: DatePickerDirection) => string;
     getSelectedQuarterClasses: (_month: number, _quarter: Quarter) => string;
     year: number;
     datePickerType: DatePickerTypes;
@@ -286,7 +291,7 @@ const Quarters = ({
         <div className="flex flex-col gap-4 p-4">
             <div className="flex flex-row justify-between text-gray-900">
                 <div
-                    className={`${containerClasses} ${getDisabledQuarterClasses(year, undefined, 'start')}`}
+                    className={`${containerClasses} ${getDisabledQuarterClasses(year, undefined, DatePickerDirection.start)}`}
                     onClick={() => setYear(prev => prev - 1)}
                 >
                     <ArrowLeftMediumIcon width={21} height={21} />
@@ -295,7 +300,7 @@ const Quarters = ({
                     <p className={`${primaryTextClasses} cursor-pointer`}>{`${year}`}</p>
                 </div>
                 <div
-                    className={`${containerClasses} ${getDisabledQuarterClasses(year, undefined, 'end')}`}
+                    className={`${containerClasses} ${getDisabledQuarterClasses(year, undefined, DatePickerDirection.end)}`}
                     onClick={() => setYear(prev => prev + 1)}
                 >
                     <ArrowRightMediumIcon width={21} height={21} />
@@ -309,10 +314,20 @@ const Quarters = ({
                             className={`${containerClasses} ${getSelectedQuarterClasses(
                                 year,
                                 quarterItem?.value
-                            )} ${getDisabledQuarterClasses(year, index + 1)} ${disableQuarters}  flex items-center justify-center`}
+                            )} ${getDisabledQuarterClasses(
+                                year,
+                                quarterItem.month + 1,
+                                DatePickerDirection.start
+                            )} ${disableQuarters}  flex items-center justify-center`}
                             onClick={() => handleQuarterSelection(year, quarterItem?.value)}
                         >
-                            <p className={`${primaryTextClasses} ${getDisabledQuarterClasses(year, index + 1)} ${disableQuarters} `}>
+                            <p
+                                className={`${primaryTextClasses} ${getDisabledQuarterClasses(
+                                    year,
+                                    quarterItem.month + 1,
+                                    DatePickerDirection.start
+                                )} ${disableQuarters} `}
+                            >
                                 {quarterItem.label}
                             </p>
                         </div>
@@ -529,7 +544,7 @@ export default function DatePicker({
         return '';
     };
 
-    const getDisabledQuarterClasses = (_year: number, _quarter?: number, pickerDirection?: string) => {
+    const getDisabledQuarterClasses = (_year: number, _quarter?: number, pickerDirection?: DatePickerDirection) => {
         const today = dayjs();
         const { year, quarter } = { year: today.year(), quarter: getQuarter(today) };
 
@@ -539,16 +554,16 @@ export default function DatePicker({
         const isCurrentDateAllowed = isDateAllowed(
             dayjs()
                 .year(_year)
-                .month((_quarter ?? 1 - 1) * 3 + 1)
+                .month(_quarter ?? 1)
                 .date(1)
         );
 
         const disabledClasses = '!cursor-auto !pointer-events-none !text-gray-300';
 
-        if (!isCurrentDateAllowed && pickerDirection === 'start') {
+        if (!isCurrentDateAllowed && pickerDirection === DatePickerDirection.start) {
             return disabledClasses;
         }
-        if (pickerDirection === 'end' && disabledYear && disabledQuarter) return disabledClasses;
+        if (pickerDirection === DatePickerDirection.end && disabledYear && disabledQuarter) return disabledClasses;
 
         return '';
     };

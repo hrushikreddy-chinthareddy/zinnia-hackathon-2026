@@ -9,6 +9,7 @@ import {
     TaxWithholdingInstructions,
     Transaction,
     TransactionChargesItem,
+    TransactionStatus,
 } from '@deps/models/policy/sor-policy';
 
 export interface BaseCardViewModel {
@@ -48,6 +49,10 @@ export type NewLoanTransactionSideSheetValues = {
 
 export interface SideSheetFinancialTransactionViewModel extends BaseCardViewModel {
     values: TransactionSideSheetValues;
+}
+
+export interface SideSheetReversedTransactionViewModel extends BaseCardViewModel {
+    values: ReverseTransactionSidesheetValues;
 }
 
 export type SideSheetTransactionProps = {
@@ -99,6 +104,25 @@ export type TransactionSideSheetValues = {
     roleTags?: string[];
     getAsyncSideSheetValues?: () => Promise<Partial<TransactionSideSheetValues>>;
 };
+
+export type ReverseTransactionSidesheetOriginalTransactionValues = {
+    submittedAmount?: number;
+    appliedAmount?: number | TransactionStatus;
+    processDate?: string;
+    
+}
+
+export type ReverseTransactionSidesheetValues = {
+    effectiveDate?: string;
+    transactionType?: string;
+    newAppliedAmount?: number;
+    paymentMethod?: string;
+    status?: string;
+    transactionId?: string;
+    transactionValue?: number;
+    reversalDate?: string;
+    getAsyncSideSheetValues?: () => Promise<Partial<ReverseTransactionSidesheetOriginalTransactionValues>>;
+} & ReverseTransactionSidesheetOriginalTransactionValues;
 
 export interface TransactionDetails {
     caption?: string;

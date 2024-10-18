@@ -77,7 +77,7 @@ export const getCaseStats = async (query: CaseStatsQuery): Promise<CaseStatsResp
 
         writeToCache('getCaseStats', query, data);
 
-        return data;
+        return data ?? {};
     } catch (error: any) {
         console.error('getCaseStats::An error occurred while getting case stats results', error);
         return error.response;

@@ -36,8 +36,6 @@
             "newPremium": "Nouveau Prime",
             "updatePremium": "Gérer Paiement Automatique",
             "newWithdrawal": "Nouveau Retrait",
-
-            "caseStepsAdditionalData": "Créer et envoyer un formulaire de demande",
             "formData": "Données du formulaire",
             "annuitization": "Annuitisation"
         },
@@ -891,12 +889,16 @@
             "sswRequestProcessing": "Traiter la transaction",
             "sswRequestValidation": "Valider la transaction",
             "suitabilityReview": "Revoir l'admissibilité",
-            "toaLetter": "Créer et envoyer le paquet de transfert"
+            "toaLetter": "Créer et envoyer le paquet de transfert",
+            "viewDetails": "View details"
         },
         "steps": {
             "requestAck.nbRequestReceived": "Réception de {{subType}}",
             "requestAck.caseProcessing": "Préparer {{subType}} pour le traitement",
             "requestAck.draftContractCreation": "Créer un contrat provisoire",
+            "requestAck.processFormRequestReceived": "Recevoir une demande de formulaire de service",
+            "requestCompletion.deliverLetter": "Recevoir la confirmation de livraison",
+            "requestCompletion.completeRequest": "Envoyer le formulaire demandé",
             "agentValidation.preValidationRules": "Confirmer l'exhaustivité des informations de l'agent",
             "agentValidation.agentAppointmentValidation": "Valider la nomination de l'agent",
             "agentValidation.agentLOBValidation": "Valider la ligne de produits de l'agent",
@@ -1116,9 +1118,12 @@
         },
         "correspondenceStepDetails": {
             "status": "Statut",
-            "dateStarted": "Date de début",
+            "sentDate": "Date d'envoi",
             "dateCompleted": "Date d'achèvement",
-            "deliveryMethod": "Mode de livraison"
+            "deliveryMethod": "Mode de livraison",
+            "address": "Adresse résidentielle",
+            "requestedRecipients": "Destinataires demandés",
+            "recipients": "Destinataires"
         }
     },
     "caseRenewal": {
@@ -1873,7 +1878,8 @@
             }
         },
         "errors": {
-            "statements": "Des déclarations sont nécessaires pour continuer."
+            "statements": "Des déclarations sont nécessaires pour continuer.",
+            "statementType": "Veuillez sélectionner un type de déclaration pour continuer."
         }
     },
     "caseSSW": {
@@ -1977,7 +1983,11 @@
         "lapse": "Laps",
         "new": "Nouveau",
         "canceled": "Annulé",
-        "canceledOn": "Annulé le {{date}}"
+        "canceledOn": "Annulé le {{date}}",
+        "reversed": "Reversé",
+        "reversedOn": "Reversé le {{date}}",
+        "pendingReversal": "En Attente de Reversal",
+        "pendingReversalOn": "En Attente de Reversal le {{date}}"
     },
     "placeHolder": {
         "globalSelectSearch": "par exemple. Montant du remboursement du prêt, coût de base..."
@@ -2000,15 +2010,53 @@
     },
     "policy": {
         "productType": {
-            "termLife": "Vie Temporaire",
-            "termLifeAcronym": "VT",
-            "universalLife": "Vie Universelle",
-            "universalLifeAcronym": "VU",
-            "variableUniversalLife": "Vie Universelle Variable",
-            "variableUniversalLifeAcronym": "VUV",
-            "indexedUniversalLife": "Vie Universelle Indexée",
+            "delayedImmediateFixedVariableAnnuity": "Rente différée immédiate fixe et variable",
+            "delayedImmediateFixedVariableAnnuityAcronym": "RDIFV",
+            "delayedImmediateFixedAnnuity": "Rente différée immédiate fixe",
+            "delayedImmediateFixedAnnuityAcronym": "RDIF",
+            "delayedImmediateVariableAnnuity": "Rente différée immédiate variable",
+            "delayedImmediateVariableAnnuityAcronym": "RDIV",
+            "equityIndexAnnuity": "Rente à indice boursier",
+            "equityIndexAnnuityAcronym": "RIB",
+            "fixedAnnuity": "Rente fixe",
+            "fixedAnnuityAcronym": "RF",
+            "fixedDeferredAnnuity": "Rente différée fixe",
+            "fixedDeferredAnnuityAcronym": "RDF",
+            "fixedIndexAnnuity": "Rente à indice fixe",
+            "fixedIndexAnnuityAcronym": "RIF",
+            "fundingAgreement": "Convention de financement",
+            "fundingAgreementAcronym": "CF",
+            "immediateFixedVariableAnnuity": "Rente immédiate fixe et variable",
+            "immediateFixedVariableAnnuityAcronym": "RIFV",
+            "immediateFixedAnnuity": "Rente immédiate fixe",
+            "immediateFixedAnnuityAcronym": "RIF",
+            "immediateVariableAnnuity": "Rente immédiate variable",
+            "immediateVariableAnnuityAcronym": "RIV",
+            "indexedUniversalLife": "Vie universelle indexée",
             "indexedUniversalLifeAcronym": "VUI",
-            "wholeLife": "Vie Entière",
+            "mutualFund": "Fonds commun de placement",
+            "mutualFundAcronym": "FCP",
+            "multiYearGuaranteeAnnuity": "Rente garantie sur plusieurs années (MYGA)",
+            "multiYearGuaranteeAnnuityAcronym": "MYGA",
+            "nonRenewableTerm": "Terme non renouvelable",
+            "nonRenewableTermAcronym": "TERME",
+            "regIndexLinkedAnnuity": "Rente liée à un indice réglementé",
+            "regIndexLinkedAnnuityAcronym": "RIRA",
+            "structuredSettlement": "Règlement structuré",
+            "structuredSettlementAcronym": "RS",
+            "termLife": "Vie temporaire",
+            "termLifeAcronym": "VT",
+            "universalLife": "Vie universelle",
+            "universalLifeAcronym": "VU",
+            "variableDeferredAnnuity": "Rente différée variable",
+            "variableDeferredAnnuityAcronym": "RDV",
+            "variableUniversalLife": "Vie universelle variable",
+            "variableUniversalLifeAcronym": "VUV",
+            "variableUniversalLifeAnnuity": "Rente vie universelle variable",
+            "variableUniversalLifeAnnuityAcronym": "RVUV",
+            "variableWholeLife": "Vie entière variable",
+            "variableWholeLifeAcronym": "VEV",
+            "wholeLife": "Vie entière",
             "wholeLifeAcronym": "VE"
         },
         "distributionType": {
@@ -2321,6 +2369,8 @@
                 "endingIn": "Se terminant par {{ accountNumber }}",
                 "grossDisbursement": "Décaissement brut",
                 "initialPremium": "Prime initiale",
+                "newAppliedAmount": "Nouveau montant applique",
+                "newAppliedAmountTooltip": "Ceci est le montant d'argent ajouté à la valeur du compte après annulation d'une prime",
                 "newX": "Nouveau {{x}}",
                 "number": "Numéro",
                 "oneTimePremium": "Prime unique",
@@ -2335,6 +2385,7 @@
                 "processDate": "Date de traitement",
                 "processDateTooltip": "Ceci est la date à laquelle la transaction a été traitée. Cela vous indique quand la transaction a été incluse dans le cycle de lot. La date de traitement peut différer de la date d'effet (la date à laquelle la transaction est réellement appliquée à la police).",
                 "reversePayment": "Annuler le paiement",
+                "reverseRecreateSubmittedAmountTooltip": "Ceci est le montant soumis. En d'autres termes, le propriétaire a été retiré de l'argent. Cela peut entraîner le retour de certains fonds au propriétaire (appelé un « forçage »).",
                 "reverseSurrender": "Annuler la reddition",
                 "routingNumber": "Numéro de routage",
                 "setAsMailingAddress": "Définir comme adresse postale",
@@ -3319,7 +3370,10 @@
             "people": "Personnes",
             "transactions": "Transactions",
             "history": "Histoire",
-            "documents": "Documents"
+            "documents": "Documents",
+            "caseDetails": "Détails du Dossier",
+            "deliveryMethod": "Méthode de livraison",
+            "correspondence": "Correspondence"
         }
     },
     "bannerAlert": {
