@@ -944,7 +944,14 @@
             "premiumProcessing.contractInfoValidation": "Valider les informations du contrat",
             "requestCompletion.caseCompleted": "Réception de l'achèvement du cas dans le système de gestion des flux de travail",
             "requestCompletion.LCContractIssued": "Émettre le contrat",
-            "requestCompletion.policyPagesIssued": "Créer les pages de la police"
+            "requestCompletion.policyPagesIssued": "Créer les pages de la police",
+            "underwritingEvalutaion.underwritingDecisionApproved": "Recevoir la décision de souscription",
+            "underwritingEvalutaion.underwritingDecisionDeclined": "Recevoir la décision de souscription",
+            "underwritingEvaluation.underwritingDecisionAdverse": "Recevoir la décision de souscription",
+            "userDecision.acceptedOffer": "Recevoir la décision d'offre",
+            "userDecision.rejectedOffer": "Recevoir la décision d'offre",
+            "userDecision.expireOffer": "Recevoir la décision d'offre",
+            "userDecision.requestedOfferAmendment": "Recevoir la décision d'offre"
         },
         "stepDescriptions": {
             "requestAck.nbRequestReceived": "Lorsqu'un document {{subType}} est reçu, il est indexé et intégré dans le système.",
@@ -1090,6 +1097,13 @@
             "steps": "Étapes",
             "taskSideSheetLabel": "Plus d'informations sur la tâche {{task}}",
             "validate": "Valider {{label}}",
+            "accepted": "Accepté",
+            "adverse": "Négative",
+            "approved": "Approuvée",
+            "declined": "Refusé",
+            "rejected": "Rejetée",
+            "expired": "Expiré",
+            "amended": "Demande d'offre modifiée",
             "entityTypes": {
                 "agent": "Agent: {{label}}",
                 "pre-note": "Pre-Note: {{label}}",
