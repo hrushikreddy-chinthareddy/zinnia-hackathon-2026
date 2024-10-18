@@ -28,8 +28,9 @@ export const getMainNavItems = async (
         const isAllowReadCaseManagement = await permissionContext.doesUserHavePagePermission(UserPermission.AllowReadCaseManagement);
         const isAllowReadPolicyAdmin = await permissionContext.doesUserHavePagePermission(UserPermission.AllowReadPolicyAdmin);
         const isAllowReadOtpRenewals = await permissionContext.doesUserHavePagePermission(UserPermission.AllowReadOtpRenewals);
+        const isAdvisorsExcel = await permissionContext.getIsAdvisorsExcel();
 
-        if (isAllowReadCaseManagement) {
+        if (isAllowReadCaseManagement || isAdvisorsExcel) {
             navItems.push({ label: caseLinkText, link: caseLinkHref, icon: <DocumentIcon width={20} height={20} /> });
         }
         if (isAllowReadPolicyAdmin) {

@@ -1907,7 +1907,8 @@
             }
         },
         "errors": {
-            "statements": "Des déclarations sont nécessaires pour continuer."
+            "statements": "Des déclarations sont nécessaires pour continuer.",
+            "statementType": "Veuillez sélectionner un type de déclaration pour continuer."
         }
     },
     "caseSSW": {

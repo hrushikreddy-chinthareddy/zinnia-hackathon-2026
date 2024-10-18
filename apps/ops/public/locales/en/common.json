@@ -1924,7 +1924,8 @@
             }
         },
         "errors": {
-            "statements": "Statements are required to continue."
+            "statements": "Statements are required to continue.",
+            "statementType": "Statement type is required to fetch statements."
         }
     },
     "caseSSW": {

@@ -18,7 +18,6 @@ import {
   SHOW_DEV_MENU_COOKIE_KEY,
 } from '@/utils/serverClientUtils';
 
-import { getFeatureFlagQuery } from './queries/feature-flag-queries';
 import { getMyPoliciesByCarrier, getPolicyDetails } from './services';
 import { consumerExperienceAPIBaseUrl } from './services/api-config';
 import {
@@ -46,7 +45,6 @@ import {
   isValidCarrierSubdomain,
 } from './utils/carriers';
 import { lineOfBusinessUrlPath } from './utils/data';
-import { FEATURE_FLAGS } from './utils/optimizely/flags';
 import { applyThemeCookies } from './utils/theme';
 import {
   getPolicyDataFromPath,
@@ -117,10 +115,10 @@ export async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
   const isLoginLikeOrRoot = pathname.includes('/login') || pathname === '/';
   const isSessionPage = pathname === '/session';
-  const featureFlags = await getFeatureFlagQuery(req);
-  const annuityModeOn = featureFlags?.[FEATURE_FLAGS.ANNUITY_MODE];
-  const resetDeliveryDateActive =
-    featureFlags?.[FEATURE_FLAGS.RESET_DELIVERY_DATE_ACTIVE];
+  // const featureFlags = await getFeatureFlagQuery(req);
+  // const annuityModeOn = featureFlags?.[FEATURE_FLAGS.ANNUITY_MODE];
+  // const resetDeliveryDateActive =
+  //   featureFlags?.[FEATURE_FLAGS.RESET_DELIVERY_DATE_ACTIVE];
 
   applyThemeCookies(req, resNext);
 
@@ -238,90 +236,91 @@ export async function middleware(req: NextRequest) {
       // This has something to do with how middleware runs on the Edge runtime instead of Node runtime
       // If you try to hit the server function directly, optimizely will error out initializing.
 
-      if (!annuityModeOn) {
-        if (allPolicies.data && allPolicies.data.length === 1) {
-          const [policy] = allPolicies.data;
+      // if (!annuityModeOn) {
+      if (allPolicies.data && allPolicies.data.length === 1) {
+        const [policy] = allPolicies.data;
 
-          return NextResponse.redirect(
-            new URL(
-              `/coverage/${lineOfBusinessUrlPath(policy?.lineOfBusiness)}/${policy?.planCode}/${policy?.policyNumber}`,
-              req.url
-            )
-          );
-        }
-      } else {
-        // If Annuity mode is on, if they are on a valid subdomain, direct them straight to the policy.
-        // Otherwise they need to go to the carrier picker and select a carrier before this applies
-        const currentSubDomain = getSubdomain(req.headers);
-        const validSubdomain = isValidCarrierSubdomain(currentSubDomain);
-
-        if (
-          allPolicies.data &&
-          allPolicies.data.length === 1 &&
-          validSubdomain
-        ) {
-          const [policy] = allPolicies.data;
-          const carrierSubdomainById = getCarrierSubdomainById(
-            policy?.carrierId
-          );
-
-          // Make sure that if someone is logging into like 'every.mypolicyview' but they only have a 'wellabe' policy,
-          // we dont send them to the every policy.
-          if (carrierSubdomainById === currentSubDomain) {
-            return NextResponse.redirect(
-              new URL(
-                `/coverage/${lineOfBusinessUrlPath(policy?.lineOfBusiness)}/${policy?.planCode}/${policy?.policyNumber}`,
-                req.url
-              )
-            );
-          }
-        }
+        return NextResponse.redirect(
+          new URL(
+            `/coverage/${lineOfBusinessUrlPath(policy?.lineOfBusiness)}/${policy?.planCode}/${policy?.policyNumber}`,
+            req.url
+          )
+        );
       }
+      // } else {
+      //   // If Annuity mode is on, if they are on a valid subdomain, direct them straight to the policy.
+      //   // Otherwise they need to go to the carrier picker and select a carrier before this applies
+      //   const currentSubDomain = getSubdomain(req.headers);
+      //   const validSubdomain = isValidCarrierSubdomain(currentSubDomain);
+
+      //   if (
+      //     allPolicies.data &&
+      //     allPolicies.data.length === 1 &&
+      //     validSubdomain
+      //   ) {
+      //     const [policy] = allPolicies.data;
+      //     const carrierSubdomainById = getCarrierSubdomainById(
+      //       policy?.carrierId
+      //     );
+
+      //     // Make sure that if someone is logging into like 'every.mypolicyview' but they only have a 'wellabe' policy,
+      //     // we dont send them to the every policy.
+      //     if (carrierSubdomainById === currentSubDomain) {
+      //       return NextResponse.redirect(
+      //         new URL(
+      //           `/coverage/${lineOfBusinessUrlPath(policy?.lineOfBusiness)}/${policy?.planCode}/${policy?.policyNumber}`,
+      //           req.url
+      //         )
+      //       );
+      //     }
+      //   }
+      // }
     }
 
     // Ensure user is on a valid subdomain for the policy theyre viewing.
     // If not, redirect them to the correct subdomain for a policy
     if (pathname.includes('/coverage/')) {
-      if (annuityModeOn) {
-        const { planCode, policyNumber, lineOfBusiness } =
-          getPolicyDataFromPath(pathname);
+      // if (annuityModeOn) {
+      const { planCode, policyNumber, lineOfBusiness } =
+        getPolicyDataFromPath(pathname);
 
-        if (!planCode || !policyNumber || !lineOfBusiness) {
-          return resNext;
-        }
-
-        const { data: policyData } = await getPolicyDetails({
-          planCode,
-          policyNumber,
-        });
-
-        // if the user is not on a valid subdomain, redirect them to the correct subdomain based on the
-        // policy they have selected. Prevents someone from being going to like `wellabe.com/123everlyCode/456everlyPolicyNumber`
-        const carrierSubdomain = getCarrierSubdomainById(policyData?.carrierId);
-        const currentSubDomain = getSubdomain(req.headers);
-        const validSubdomain = isValidCarrierSubdomain(currentSubDomain);
-
-        const onWrongUrl =
-          carrierSubdomain &&
-          carrierSubdomain !== currentSubDomain &&
-          validSubdomain;
-
-        if (onWrongUrl) {
-          const subdomainPath = prependSubdomain(carrierSubdomain);
-          return NextResponse.redirect(
-            new URL(
-              `/coverage/${lineOfBusinessUrlPath(lineOfBusiness as LineOfBusiness)}/${planCode}/${policyNumber}`,
-              subdomainPath
-            )
-          );
-        }
+      if (!planCode || !policyNumber || !lineOfBusiness) {
+        return resNext;
       }
+
+      const { data: policyData } = await getPolicyDetails({
+        planCode,
+        policyNumber,
+      });
+
+      // if the user is not on a valid subdomain, redirect them to the correct subdomain based on the
+      // policy they have selected. Prevents someone from being going to like `wellabe.com/123everlyCode/456everlyPolicyNumber`
+      const carrierSubdomain = getCarrierSubdomainById(policyData?.carrierId);
+      const currentSubDomain = getSubdomain(req.headers);
+      const validSubdomain = isValidCarrierSubdomain(currentSubDomain);
+
+      const onWrongUrl =
+        carrierSubdomain &&
+        carrierSubdomain !== currentSubDomain &&
+        validSubdomain;
+
+      if (onWrongUrl) {
+        const subdomainPath = prependSubdomain(carrierSubdomain);
+        return NextResponse.redirect(
+          new URL(
+            `/coverage/${lineOfBusinessUrlPath(lineOfBusiness as LineOfBusiness)}/${planCode}/${policyNumber}`,
+            subdomainPath
+          )
+        );
+      }
+      // }
     }
 
     // Check if the user is eligible to reset their delivery date.
     // We only check this a single time, then set a cookie for that policy so we skip the check the next time.
     //TODO: Turn off feature flag when this is ready to go in prod
-    if (resetDeliveryDateActive && pathname.includes('/coverage/')) {
+    // if (resetDeliveryDateActive && pathname.includes('/coverage/')) {
+    if (pathname.includes('/coverage/')) {
       const { planCode, policyNumber } = getPolicyDataFromPath(pathname);
 
       if (!planCode || !policyNumber) {
