@@ -1850,6 +1850,7 @@
         "sendStatement": {
             "startDate": "Date de début de la période",
             "endDate": "Date de fin de période",
+            "viewStatement":"afficher l'instruction",
             "tabs": {
                 "statementSelection": "Sélection d'instructions",
                 "correspondence": "Correspondence",

@@ -251,6 +251,7 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                     datePickerType={datePickerType}
                     isDateAllowed={date => handleIsDateAllowed(date, startDate)}
                 />
+
             </div>
             {loader ? <Loader /> : startDate && endDate && <StatementListing statements={statements} carrierId={policy?.carrierId || ''} />}
             {error && <AssistiveText text={error} variant={AssistiveTextVariant.Error} className="mt-2" />}

@@ -1866,6 +1866,7 @@
         "sendStatement": {
             "startDate": "Period start date",
             "endDate": "Period end date",
+            "viewStatement": "view statement",
             "tabs": {
                 "statementSelection": "Statement Selection",
                 "correspondence": "Correspondence",
