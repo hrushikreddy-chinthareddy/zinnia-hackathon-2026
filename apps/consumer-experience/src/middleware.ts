@@ -18,7 +18,6 @@ import {
   SHOW_DEV_MENU_COOKIE_KEY,
 } from '@/utils/serverClientUtils';
 
-import { getSessionQuery } from './queries/feature-flag-queries';
 import { getMyPoliciesByCarrier, getPolicyDetails } from './services';
 import { consumerExperienceAPIBaseUrl } from './services/api-config';
 import {
@@ -117,8 +116,7 @@ export async function middleware(req: NextRequest) {
   const isLoginLikeOrRoot = pathname.includes('/login') || pathname === '/';
   const isSessionPage = pathname === '/session';
   // const featureFlags = await getFeatureFlagQuery(req);
-  const querySession = await getSessionQuery(req);
-  console.log({ querySession });
+
   const annuityModeOn = true;
   const resetDeliveryDateActive = true;
 
