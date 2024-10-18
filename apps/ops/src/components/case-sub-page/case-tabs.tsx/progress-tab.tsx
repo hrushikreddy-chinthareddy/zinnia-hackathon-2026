@@ -1,4 +1,5 @@
 import { Accordion as AccordionRoot, AccordionItem, AccordionTrigger, AccordionContent, AccordionHeader } from '@radix-ui/react-accordion';
+import { Tag, TagVariant } from '@zinnia/bloom/components';
 import { TFunction, useTranslation } from 'next-i18next';
 import React, { ForwardedRef, Key, ReactNode, useMemo, useState } from 'react';
 
@@ -117,6 +118,61 @@ const getStepStatusIconTooltip = (step: StepView, t: TFunction): ReactNode => {
     }
 };
 
+enum StepTagIds {
+    UnderwritingAccepted = 'underwritingEvalutaion.underwritingDecisionApproved',
+    UnderwritingAdverse = 'underwritingEvaluation.underwritingDecisionAdverse',
+    UnderwritingDeclined = 'underwritingEvalutaion.underwritingDecisionDeclined',
+    SuitabilityReview = 'suitabilityReview.suitabilityReview',
+    UserAccepted = 'userDecision.acceptedOffer',
+    UserRejected = 'userDecision.rejectedOffer',
+    UserExpired = 'userDecision.expireOffer',
+    UserAmended = 'userDecision.requestedOfferAmendment',
+}
+
+const stepResultTag = (step: StepView, t: TFunction): ReactNode => {
+    let text;
+    switch (step.id) {
+        // Underwriting
+        case StepTagIds.UnderwritingAccepted:
+            text = t('caseOverview.tabs.accepted');
+            break;
+        case StepTagIds.UnderwritingAdverse:
+            text = t('caseOverview.tabs.adverse');
+            break;
+        case StepTagIds.UnderwritingDeclined:
+            text = t('caseOverview.tabs.declined');
+            break;
+        // Suitability
+        case StepTagIds.SuitabilityReview:
+            if (step.status === 'COMPLETED') {
+                text = t('caseOverview.tabs.approved');
+                break;
+            } else {
+                text = t('caseOverview.tabs.declined');
+                break;
+            }
+        // User Decision
+        case StepTagIds.UserAccepted:
+            text = t('caseOverview.tabs.accepted');
+            break;
+        case StepTagIds.UserRejected:
+            text = t('caseOverview.tabs.rejected');
+            break;
+        case StepTagIds.UserExpired:
+            text = t('caseOverview.tabs.expired');
+            break;
+        case StepTagIds.UserAmended:
+            text = t('caseOverview.tabs.amended');
+            break;
+        default:
+            break;
+    }
+    if (text) {
+        return <Tag text={text} variant={TagVariant.White} />;
+    }
+    return;
+};
+
 const Task = ({ task }: { task: TaskView }) => {
     const { t } = useTranslation();
     const sideSheet = useSideSheetContext();
@@ -228,6 +284,7 @@ const Steps = ({ steps, stepFilter = () => true }: { steps: StepView[]; stepFilt
                             <div className="flex flex-row gap-2">
                                 {getStepStatusIconTooltip(step, t)}
                                 <Content variant={ContentVariant.BodySm} details={step.name} />
+                                {stepResultTag(step, t)}
                             </div>
                             {Object.keys(step?.additionalData).length > 0 && (
                                 <NavElement

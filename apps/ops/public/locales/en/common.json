@@ -950,7 +950,14 @@
             "premiumProcessing.contractInfoValidation": "Validate contract information",
             "requestCompletion.caseCompleted": "Receive workflow system case completion",
             "requestCompletion.LCContractIssued": "Issue contract",
-            "requestCompletion.policyPagesIssued": "Create policy pages"
+            "requestCompletion.policyPagesIssued": "Create policy pages",
+            "underwritingEvalutaion.underwritingDecisionApproved": "Receive underwriting decision",
+            "underwritingEvalutaion.underwritingDecisionDeclined": "Receive underwriting decision",
+            "underwritingEvaluation.underwritingDecisionAdverse": "Receive underwriting decision",
+            "userDecision.acceptedOffer": "Receive offer decision",
+            "userDecision.rejectedOffer": "Receive offer decision",
+            "userDecision.expireOffer": "Receive offer decision",
+            "userDecision.requestedOfferAmendment": "Receive offer decision"
         },
         "stepDescriptions": {
             "requestAck.nbRequestReceived": "When a {{subType}} document is received, it is indexed and ingested into the system.",
@@ -1095,7 +1102,14 @@
             "stepCount_other": "{{count}} steps",
             "steps": "Steps",
             "taskSideSheetLabel": "More information about task {{task}}",
-            "validate": "Validate {{label}}"
+            "validate": "Validate {{label}}",
+            "accepted": "Accepted",
+            "adverse": "Adverse",
+            "approved": "Approved",
+            "declined": "Declined",
+            "rejected": "Rejected",
+            "expired": "Expired",
+            "amended": "Amended offer requested"
         },
         "processDate": {
             "canceled": "Canceled on",
