@@ -1767,9 +1767,8 @@
             "ignoreWarning": "Ignorer les avertissements",
             "submitError": "Une erreur s'est produite lors de la soumission de cette tâche. Veuillez réessayer.",
             "createTaskSuccess": {
-                "withdrawalTask": "Bonne nouvelle! Nous avons lancé une tâche de retrait pour {{documentNumber}} et {{contractNumber}}",
-                "WithdrawalFormInputTask": "Excellente nouvelle ! Nous avons lancé une tâche de retrait pour {{documentNumber}} et {{contractNumber}}",
-                "rmdTask": "Bonne nouvelle! Nous avons lancé une tâche de distribution minimale requise pour {{documentNumber}} et {{contractNumber}}.",
+                "WithdrawalFormInputTask": "Bonne nouvelle!! Nous avons lancé une tâche de retrait pour {{documentNumber}} et {{contractNumber}}",
+                "RMDFormInputTask": "Bonne nouvelle! Nous avons lancé une tâche de distribution minimale requise pour {{documentNumber}} et {{contractNumber}}.",
                 "oftTask": "Bonne nouvelle! Nous avons lancé une tâche de transfert de fonds sortants pour{{documentNumber}} et {{contractNumber}}",
                 "sswTask": "Bonne nouvelle! Nous avons lancé une tâche de retrait systématique pour {{documentNumber}} et {{contractNumber}}"
             },

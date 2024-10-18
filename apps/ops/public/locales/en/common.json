@@ -1785,7 +1785,7 @@
             "submitError": "An error occurred while submitting this task. Please try again.",
             "createTaskSuccess": {
                 "WithdrawalFormInputTask": "Great news! We've initiated a withdrawal task for {{documentNumber}} and {{contractNumber}}",
-                "rmdTask": "Great news! We've initiated a Required Minimum Distribution task for {{documentNumber}} and {{contractNumber}}",
+                "RMDFormInputTask": "Great news! We've initiated a Required Minimum Distribution task for {{documentNumber}} and {{contractNumber}}",
                 "oftTask": "Great news! We've initiated a Outgoing Funds Transfer task for {{documentNumber}} and {{contractNumber}}",
                 "sswTask": "Great news! We've initiated a Systematic Withdrawal task for {{documentNumber}} and {{contractNumber}}"
             },
