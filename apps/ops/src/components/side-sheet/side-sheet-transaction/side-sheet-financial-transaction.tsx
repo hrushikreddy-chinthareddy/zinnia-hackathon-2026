@@ -11,6 +11,7 @@ import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { Statuses } from '@deps/models/case/case';
 import { TransactionStatus, TransactionType } from '@deps/models/policy/sor-policy';
 import { getPolicyTransactions } from '@deps/queries/api/policies';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import SidesheetReverseRecreate from './reverse-recreate/side-sheet-reverse-recreate';
 import SideSheetReversedTransaction from './reverse-recreate/side-sheet-reversed-transaction';
@@ -46,6 +47,8 @@ const SideSheetFinancialTransaction = ({ policy, refreshTransactions, transactio
     const { status, transactionType } = transaction || {};
 
     useEffect(() => {
+        if (featureFlags[FEATURE_FLAGS.REVERSE_RECREATE_ENABLED]) return;
+
         let active = true;
         const isReversedTransaction = !!transaction.originalTransactionId;
 
@@ -56,7 +59,7 @@ const SideSheetFinancialTransaction = ({ policy, refreshTransactions, transactio
             // we might have to change the sidesheet
             // so we need to set the entire view to loading
             setView(SidesheetViews.loading);
-            // call function to check 
+            // call function to check
             // if this transaction replaces a reverseInitiator
             getReverseInitiators();
         }
@@ -79,7 +82,7 @@ const SideSheetFinancialTransaction = ({ policy, refreshTransactions, transactio
             // which we will know if any of the transactions
             // have an originalTransactionId present in the reverseInitiator array
             const isReverseInitiator = await replacesReverseInitiator(transaction, reverseInitiators, policy);
-            
+
             return setView(isReverseInitiator ? SidesheetViews.reverseInitiator : SidesheetViews.default);
         }
 
@@ -89,7 +92,7 @@ const SideSheetFinancialTransaction = ({ policy, refreshTransactions, transactio
             // when the component unmounts
             active = false;
         };
-    }, [policy, transaction]);
+    }, [policy, transaction, featureFlags]);
 
     useEffect(() => {
         const getValues = async () => {
