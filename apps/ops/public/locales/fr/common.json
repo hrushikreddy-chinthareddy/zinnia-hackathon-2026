@@ -2635,11 +2635,7 @@
         "timeago_other": "Il y a {{count}} $t(temporal.{{unit}}) {{formattedDate}}",
         "nYears": "{{n}} ans",
         "oneYear": "1 an",
-        "timeLeft": "Il reste {{timespan}}",
-        "steps_one": "1 étape",
-        "steps": "{{count}} pas",
-        "issues_one": "1 problème",
-        "issues": "{{count}} problèmes"
+        "timeLeft": "Il reste {{timespan}}"
     },
     "sideSheet": {
         "posted": "Publié",

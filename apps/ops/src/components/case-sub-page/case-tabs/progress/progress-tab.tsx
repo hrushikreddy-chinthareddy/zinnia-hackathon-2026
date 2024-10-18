@@ -91,15 +91,11 @@ const Stage = React.forwardRef(({ stage }: { stage: TransformedStage }, forwarde
                         </div>
                         <div className="-mt-[1px] flex items-center gap-0.5 pl-6 lg:pl-0">
                             <Typography className="text-gray-600" variant={TypographyVariant.BodySm}>
-                                {stage.totalSteps === 1
-                                    ? String(t('temporal.steps_one'))
-                                    : String(t('temporal.steps', { count: stage.totalSteps }))}
+                                {t('caseOverview.tabs.stepCount', { count: stage.totalSteps })}
                             </Typography>
                             {stage.nigoSteps !== 0 && (
                                 <Typography className="text-gray-600" variant={TypographyVariant.BodySm}>
-                                    {stage.nigoSteps === 1
-                                        ? `· ${String(t('temporal.issues_one'))}`
-                                        : `· ${String(t('temporal.issues', { count: stage.nigoSteps }))}`}
+                                    {`· ${t('caseOverview.tabs.issueCount', { count: stage.nigoSteps })}`}
                                 </Typography>
                             )}
                         </div>
@@ -121,10 +117,14 @@ Stage.displayName;
 
 //#region Stages
 const Stages = ({ stages, stepFilter = () => true }: { stages: TransformedStage[]; stepFilter?: (step: TransformedStep) => boolean }) => {
+    // Default stages with exceptions to opened state.
+    const [openedStages, setOpenedStages] = useState<string[]>(
+        stages.filter(stage => stage.status === Statuses.Exception).map(stage => stage.id)
+    );
     return (
         <>
             {stages.map((stage, index) => (
-                <AccordionRoot type="multiple" key={index}>
+                <AccordionRoot type="multiple" key={index} value={openedStages} onValueChange={setOpenedStages}>
                     <AccordionItem
                         className="rounded-lg border-2 border-gray-100 [&:has(h3:hover)]:border-accent1"
                         key={stage.id}
@@ -142,18 +142,46 @@ const Stages = ({ stages, stepFilter = () => true }: { stages: TransformedStage[
 };
 
 //#region Progress Bar
-const StepProgressBar = ({ completedSteps, totalSteps }: { completedSteps: number; totalSteps: number }) => {
+const StepProgressBar = ({
+    completedSteps,
+    totalSteps,
+    caseStatus,
+    unresolvedExceptionCount,
+}: {
+    caseStatus: Statuses;
+    completedSteps: number;
+    totalSteps: number;
+    unresolvedExceptionCount: number;
+}) => {
     const { t } = useTranslation();
+    // Only show the progress bar if the case is not canceled or completed
+    if ([Statuses.Canceled, Statuses.Completed].includes(caseStatus)) {
+        return null;
+    }
+    let completionBarColor;
+    switch (caseStatus) {
+        case Statuses.Completed:
+            completionBarColor = 'bg--semantic-success';
+            break;
+        case Statuses.Exception:
+            completionBarColor = 'bg-semantic-error';
+            break;
+        case Statuses.InProgress:
+        case Statuses.NotStarted:
+        default:
+            completionBarColor = 'bg-semantic-info';
+            break;
+    }
     const percentComplete = Math.round((100 * completedSteps) / totalSteps);
     return (
-        <div className="mt-4 flex w-full flex-row items-center gap-4">
+        <div className="flex w-full flex-row items-center gap-2">
             <div
                 aria-labelledby="progressBarId"
                 aria-valuenow={percentComplete}
-                className="h-2 w-full rounded bg-gray-100"
+                className="mt-0.5 h-2  w-full max-w-[240px]  rounded bg-gray-100"
                 role="progressbar"
             >
-                <div className="h-full rounded-l rounded-r bg-secondary" style={{ width: `${percentComplete}%` }}></div>
+                <div className={`h-full rounded-l rounded-r ${completionBarColor}`} style={{ width: `${percentComplete}%` }}></div>
             </div>
             <div className="min-w-max" id="progressBarId">
                 <Content
@@ -162,6 +190,13 @@ const StepProgressBar = ({ completedSteps, totalSteps }: { completedSteps: numbe
                     variant={ContentVariant.Body}
                 />
             </div>
+            {!!unresolvedExceptionCount && (
+                <Content
+                    className="min-w-max text-semantic-error"
+                    details={t('caseOverview.tabs.issueCount', { count: unresolvedExceptionCount }) as string}
+                    variant={ContentVariant.Body}
+                />
+            )}
         </div>
     );
 };
@@ -176,12 +211,16 @@ export default function ProgressTab({ caseDetails }: { caseDetails: Case }) {
 
     return (
         <>
-            <CardContainer containerClassNames="border-b-2 border-gray-100">
-                <Typography variant={TypographyVariant.H2}>{t(`caseOverview.tabs.progress`)}</Typography>
-                <StepProgressBar completedSteps={transformedCase.completedSteps} totalSteps={transformedCase.totalSteps} />
-            </CardContainer>
             <CardContainer>
-                <Typography variant={TypographyVariant.H2}>{t(`caseOverview.tabs.steps`)}</Typography>
+                <div className="flex w-full flex-row items-center gap-4">
+                    <Typography variant={TypographyVariant.H2}>{t(`caseOverview.tabs.progress`)}</Typography>
+                    <StepProgressBar
+                        caseStatus={transformedCase.caseStatus}
+                        completedSteps={transformedCase.completedSteps}
+                        totalSteps={transformedCase.totalSteps}
+                        unresolvedExceptionCount={transformedCase.unresolvedExceptionCount}
+                    />
+                </div>
                 <div className="mt-6 flex flex-col gap-2">
                     <Stages stages={transformedCase.stages} />
                 </div>

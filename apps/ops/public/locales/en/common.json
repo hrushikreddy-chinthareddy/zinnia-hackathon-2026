@@ -2877,11 +2877,7 @@
         "timeago_other": "{{count}} $t(temporal.{{unit}})s ago {{formattedDate}}",
         "nYears": "{{n}} years",
         "oneYear": "1 year",
-        "timeLeft": "{{timespan}} left",
-        "steps_one": "1 step",
-        "steps": "{{count}} steps",
-        "issues_one": "1 issue",
-        "issues": "{{count}} issues"
+        "timeLeft": "{{timespan}} left"
     },
     "sideSheet": {
         "posted": "Posted",

@@ -302,6 +302,7 @@ export class TransformedStage {
 
 export class TransformedCase {
     caseRaw: Case;
+    caseStatus: Statuses;
     completedSteps: number;
     documentsMap: { [key: string]: DocumentView };
     exceptionMap: { [key: string]: ExceptionInstance & { usedInStep?: boolean } };
@@ -312,11 +313,14 @@ export class TransformedCase {
     totalSteps: number;
     // Exceptions that are not tied to any step
     unmappedExceptions: ExceptionView[] = [];
+    unresolvedExceptionCount: number;
     constructor(caseDetails: Case, t: TFunction) {
         this.caseRaw = caseDetails;
         this.t = t;
+        this.caseStatus = caseDetails?.caseStatus;
         this.totalSteps = 0;
         this.completedSteps = 0;
+        this.unresolvedExceptionCount = 0;
         this.documentsMap = caseDetails?.documents?.reduce((acc, document) => {
             if (document.id) {
                 acc[document.id] = {
@@ -334,6 +338,9 @@ export class TransformedCase {
         this.exceptionMap = caseDetails?.exceptions?.reduce((acc, exception) => {
             if (exception?.id) {
                 acc[exception.id] = exception;
+                if (![ExceptionStatuses.Resolved, Statuses.Completed].includes(exception.status as ExceptionStatuses | Statuses)) {
+                    this.unresolvedExceptionCount++;
+                }
             }
             return acc;
         }, {} as { [key: string]: ExceptionInstance });
@@ -380,9 +387,7 @@ export class TransformedCase {
     }
     // Builds an ExceptionView from an ExceptionInstance
     private buildException(exception: ExceptionInstance): ExceptionView {
-        const descriptionArr: string[] = [];
-        exception?.reason && descriptionArr.push(toSentenceCase(exception?.reason));
-        exception?.detailedReason && descriptionArr.push(toSentenceCase(exception?.detailedReason));
+        const exceptionReason = toSentenceCase(exception?.detailedReason ?? exception?.reason);
         const tasks: TaskView[] = (
             (exception.taskIdList || ([] as string[]))
                 .map(taskId => {
@@ -394,7 +399,7 @@ export class TransformedCase {
             [Statuses.Completed, ExceptionStatuses.Resolved].includes(exception.status)
                 ? 'caseOverview.tabs.resolved'
                 : 'caseOverview.tabs.issue',
-            { issue: descriptionArr.join('. ') }
+            { issue: exceptionReason }
         );
         return {
             createdAt: exception.createdAt,
