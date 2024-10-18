@@ -21,6 +21,8 @@ ARG NEXT_PUBLIC_BASE_URL
 ARG NEXT_PUBLIC_SE2_BACKEND_URL
 ARG NEXT_PUBLIC_THEME
 ARG NEXT_PUBLIC_S3_BUCKET_BASE_URL
+ARG NEXT_PUBLIC_SEGMENT_ANALYTICS_KEY
+
 
 # Save the public enviroment variables NEXTjs requires for the frontend.
 # THESE SHOULD NOT BE SECRETS
@@ -29,6 +31,7 @@ RUN echo "NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}" >> .env.production
 RUN echo "NEXT_PUBLIC_SE2_BACKEND_URL=${NEXT_PUBLIC_SE2_BACKEND_URL}" >> .env.production
 RUN echo "NEXT_PUBLIC_THEME=${NEXT_PUBLIC_THEME}" >> .env.production
 RUN echo "NEXT_PUBLIC_S3_BUCKET_BASE_URL=${NEXT_PUBLIC_S3_BUCKET_BASE_URL}" >> .env.production
+RUN echo "NEXT_PUBLIC_SEGMENT_ANALYTICS_KEY=${NEXT_PUBLIC_SEGMENT_ANALYTICS_KEY}" >> .env.production
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
