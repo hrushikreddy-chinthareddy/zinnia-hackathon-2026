@@ -147,7 +147,7 @@ const Step = ({ step, ...rest }: { step: TransformedStep } & React.HTMLAttribute
                     </div>
                     {hasSidesheet && (
                         <NavElement type={NavElementType.Button} size={NavElementSize.Small} onClick={openSidesheet}>
-                            View details
+                            {t('caseOverview.tabs.viewDetails')}
                         </NavElement>
                     )}
                 </div>

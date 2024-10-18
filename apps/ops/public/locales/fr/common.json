@@ -1097,6 +1097,7 @@
             "steps": "Étapes",
             "taskSideSheetLabel": "Plus d'informations sur la tâche {{task}}",
             "validate": "Valider {{label}}",
+            "viewDetails": "Voir les details",
             "accepted": "Accepté",
             "adverse": "Négative",
             "approved": "Approuvée",

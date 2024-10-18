@@ -1,5 +1,4 @@
 import { useTranslation } from 'next-i18next';
-import React from 'react';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { ExceptionStatuses } from '@deps/models/case/exception-instance';
@@ -10,7 +9,7 @@ import Tasks from './tasks';
 
 export default function Exceptions({ exceptions, unmapped = false }: { exceptions: ExceptionView[]; unmapped?: boolean }) {
     const { t } = useTranslation();
-    if (!exceptions.length) {
+    if (!exceptions?.length) {
         return null;
     }
 

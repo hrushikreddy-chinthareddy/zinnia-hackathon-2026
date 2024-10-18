@@ -6,7 +6,7 @@ export type TaskView = {
     hasParentException: boolean;
     parentExceptionStatus?: ExceptionStatuses | null;
     status: string;
-    updatedAt: string; // Zahara API date String
+    updatedAt: string;
 };
 
 export type ExceptionView = {
