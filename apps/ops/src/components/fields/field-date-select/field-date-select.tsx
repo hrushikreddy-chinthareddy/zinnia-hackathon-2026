@@ -61,6 +61,7 @@ export default function FieldDateSelect({
                 value: value,
             },
         } as unknown as ChangeEvent<HTMLInputElement>);
+        handleClose();
     };
     const handleDateSelect = (_year: number, _month: number, _day: number) => {
         onChange({
