@@ -5,13 +5,13 @@ RUN apk add --no-cache libc6-compat
 RUN apk update
 # Set working directory
 WORKDIR /app
-RUN npm install -g turbo@2.0.4
+RUN npm install -g turbo@2.1.3
 COPY . .
 RUN turbo prune ops --docker
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
-RUN apk add --no-cache libc6-compat
+RUN apk add --update --no-cache libc6-compat make gcc g++ python3 pkgconfig pixman-dev cairo-dev pango-dev libjpeg-turbo-dev
 RUN apk update
 WORKDIR /app
 
