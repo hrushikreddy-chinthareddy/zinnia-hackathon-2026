@@ -1,3 +1,4 @@
+import { Icon, IconType } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { TFunction, useTranslation } from 'next-i18next';
 import { PropsWithChildren, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
@@ -9,14 +10,22 @@ import { FieldSize } from '@deps/components/fields/field';
 import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helper';
 import PolicyInfo from '@deps/components/global-values/policy-info/policy-info';
 import GlobalPolicyInfo from '@deps/components/global-values/policy-info/policy-info';
+import IconButton from '@deps/components/icon-button/icon-button';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import ResponsivePadding from '@deps/components/responsive-padding/responsive-padding';
 import SelectSearch from '@deps/components/select-search/select-search';
+import {
+    EmailWithPending,
+    PhoneWithPending,
+    AddressWithPending,
+} from '@deps/components/side-sheet/non-financial-transactions/non-financial-transactions.helper';
+import PendingTag from '@deps/components/side-sheet/non-financial-transactions/pending-tag';
 import { TranslationFiles } from '@deps/config/translations';
-import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
+import { FormattedAddress, sortAddressesByType } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
 import QuickLinks, { QuickLinksProps } from '@deps/containers/quick-links/quick-links';
 import SideSheetProductDetails from '@deps/containers/side-sheet-product-details/side-sheet-product-details';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { PolicyDetailsViewInfo, PolicyViewDetailsDto, toPolicyViewDetailsDto } from '@deps/data/policy-details-view';
 import { fillColDefs } from '@deps/helpers/data-transform.helper';
@@ -24,8 +33,21 @@ import { getTotalMinRequiredAmount, policyDataToGlobalValues } from '@deps/helpe
 import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { BasePolicyComponentArgs, PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { formatDate, formatPhone, formatSSN, toTitleCase } from '@deps/helpers/string.helper';
+import { mapAddressTypeToTranslation } from '@deps/helpers/translation.helper';
 import { CardColumnsTest, CardDetailsTest } from '@deps/jest/constants/test-id-constants';
-import { Policy, PolicyFeatureFeatureType, PolicyStatus, ProductType, Reason } from '@deps/models/policy/sor-policy';
+import {
+    Address,
+    Email,
+    EmailType,
+    Phone,
+    PhoneType,
+    Policy,
+    PolicyFeatureFeatureType,
+    PolicyStatus,
+    ProductType,
+    Reason,
+} from '@deps/models/policy/sor-policy';
+import { UserPermission } from '@deps/models/user-profile';
 import { DashboardContext } from '@deps/pages/policies';
 import {
     TransactionResponseStatus,
@@ -33,6 +55,7 @@ import {
     checkEligibilityPartialWithdrawalOneTime,
     checkEligibilitySystematicPrograms,
 } from '@deps/queries/api/bpm';
+import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
 import { DEFAULT_ERROR_STRING, DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
 import { SearchViewQuery } from '@deps/types/search';
 
@@ -41,6 +64,12 @@ import EverlyIul from './active-quick-view/everly-iul';
 import EverlyUl from './active-quick-view/everly-ul';
 import BaseDeathBenefit from './display-fields/base-death-benefit';
 import UpcomingPremiumDisplayField from './display-fields/upcoming-premium';
+import SideSheetAddress from '../people-data-cards/address-card/side-sheet/side-sheet-address';
+import { sortEmailsByType } from '../people-data-cards/email-card/email-card.helpers';
+import SideSheetEmail from '../people-data-cards/email-card/side-sheet/side-sheet-email';
+import { sortPhonesByType } from '../people-data-cards/phone-card/phone-card.helpers';
+import { SideSheetPhone } from '../people-data-cards/phone-card/side-sheet/side-sheet-phone';
+import SideSheetPeopleHeader from '../people-data-cards/side-sheet-people-header/side-sheet-people-header';
 
 interface SummaryCardProps extends PropsWithChildren {
     policy: Policy;
@@ -478,15 +507,123 @@ const QuickViewModule = ({ policy }: BasePolicyComponentArgs) => {
     return <AnnuityQuickView policy={policy} />;
 };
 
+enum SideSheetViews {
+    PHONE = 'PHONE',
+    EMAIL = 'EMAIL',
+    ADDRESS = 'ADDRESS',
+}
+
 const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
     const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
     const { searchValue } = useContext(DashboardContext);
     const { owner } = policy;
-    const bestAvailable = owner?.bestAvailablePhone;
-    const contactNumber = bestAvailable || null;
-    const contactNumberLabel = contactNumber
-        ? t(`people.card.phone.phoneOptions.${contactNumber.phoneType?.toLocaleLowerCase()}`)
+
+    const perms = usePermissionsContext();
+    const [canEditPolicy, setCanEditPolicy] = useState(false);
+    const sideSheet = useSideSheetContext();
+
+    useEffect(() => {
+        const getCanEditPolicy = async () => {
+            if (policy) {
+                const flag = await perms.canEditPolicy(UserPermission.AllowEditPolicy, policy.planCode, policy.policyNumber);
+                setCanEditPolicy(flag);
+            }
+        };
+        getCanEditPolicy();
+    }, [perms, policy]);
+
+    const emails = owner?.bestAvailableEmail ? [owner?.bestAvailableEmail] : undefined;
+    const emailTypeKey = owner?.bestAvailableEmail?.emailType?.toLocaleLowerCase() ?? EmailType.PERSONAL.toLocaleLowerCase();
+    const [currentEmails, setCurrentEmails] = useState<Email[]>(sortEmailsByType({ emails }));
+    const bestAvailEmail = currentEmails[0] as EmailWithPending;
+
+    const phoneTypeKey = owner?.bestAvailablePhone?.phoneType?.toLocaleLowerCase() || PhoneType.HOME;
+    const phones = owner?.bestAvailablePhone ? [owner?.bestAvailablePhone] : undefined;
+    const [currentPhones, setCurrentPhones] = useState<Phone[]>(sortPhonesByType({ phones }));
+    const bestAvailPhone = currentPhones[0] as PhoneWithPending;
+    const contactNumberLabel = bestAvailPhone
+        ? t(`people.card.phone.phoneOptions.${bestAvailPhone.phoneType?.toLocaleLowerCase()}`)
         : t('colDefs:owner.primaryPhone');
+
+    const addressType = owner?.bestAvailableAddress?.addressType;
+    const addresses = owner?.bestAvailableAddress ? [owner?.bestAvailableAddress] : undefined;
+    const preferredAddressIndicator = owner?.preferredAddress?.addressId;
+    const [currentAddresses, setCurrentAddresses] = useState<Address[]>(sortAddressesByType({ addresses, preferredAddressIndicator }));
+    const bestAvailAddresss = currentAddresses[0] as AddressWithPending;
+
+    const sideSheetContent = (type: SideSheetViews) => {
+        const action = NonFinancialTransactionActions.Edit;
+        let content;
+        let header;
+        switch (type) {
+            case SideSheetViews.EMAIL:
+                header = (
+                    <SideSheetPeopleHeader
+                        action={action}
+                        transaction={NonFinancialTransactions.Email}
+                        typeTranslation={t(`people.card.email.emailOptions.${emailTypeKey}`) as string}
+                    />
+                );
+                content = (
+                    <SideSheetEmail
+                        isOnlyEmail={currentEmails.length === 1}
+                        onCancel={() => sideSheet.handleOpen(false)}
+                        party={owner?.party}
+                        planCode={policy.planCode}
+                        policyNumber={policy.policyNumber}
+                        setCurrentEmails={setCurrentEmails}
+                        updateEmail={bestAvailEmail}
+                    />
+                );
+                break;
+            case SideSheetViews.PHONE:
+                header = (
+                    <SideSheetPeopleHeader
+                        action={action}
+                        transaction={NonFinancialTransactions.Number}
+                        typeTranslation={t(`people.card.phone.phoneOptions.${phoneTypeKey}`) as string}
+                    />
+                );
+                content = (
+                    <SideSheetPhone
+                        onCancel={() => sideSheet.handleOpen(false)}
+                        party={owner?.party}
+                        planCode={policy.planCode}
+                        policyNumber={policy.policyNumber}
+                        setCurrentPhones={setCurrentPhones}
+                        updatePhone={bestAvailPhone}
+                    />
+                );
+                break;
+            case SideSheetViews.ADDRESS:
+                header = (
+                    <SideSheetPeopleHeader
+                        action={action}
+                        transaction={NonFinancialTransactions.Address}
+                        typeTranslation={t(mapAddressTypeToTranslation({ addressType, t })) as string}
+                    />
+                );
+                content = (
+                    <SideSheetAddress
+                        isCurrentMailingAddress={preferredAddressIndicator === bestAvailAddresss.addressId}
+                        isOnlyAddress={currentAddresses?.length === 1}
+                        onCancel={() => sideSheet.handleOpen(false)}
+                        party={owner?.party}
+                        planCode={policy.planCode}
+                        policyNumber={policy.policyNumber}
+                        setCurrentAddresses={setCurrentAddresses}
+                        updateAddress={bestAvailAddresss ?? undefined}
+                    />
+                );
+        }
+        return { header, content };
+    };
+
+    const openSideSheet = (type: SideSheetViews) => {
+        const { header, content } = sideSheetContent(type);
+        sideSheet.changeSideSheetContent(header, content);
+        sideSheet.handleOpen(true);
+    };
 
     return (
         <QuickViewRoot title={t('dashboard.search.results.policySummaryCard.header1')} gridColumns={1}>
@@ -501,12 +638,16 @@ const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
                     />
                 </div>
                 <div>
-                    <Label variant={LabelVariant.FieldLabel} label={t('colDefs:owner.email')} />
-                    <Content
-                        details={owner?.bestAvailableEmail?.emailAddress || DEFAULT_ERROR_STRING}
-                        variant={ContentVariant.BodySm}
-                        pii={true}
-                    />
+                    <div className="flex gap-1">
+                        <Label id="policy-owner-email" variant={LabelVariant.FieldLabel} label={t('colDefs:owner.email')} />
+                        {bestAvailEmail?.isPending && <PendingTag />}
+                        {canEditPolicy && bestAvailEmail && (
+                            <IconButton aria-describedby="policy-owner-email" onClick={() => openSideSheet(SideSheetViews.EMAIL)}>
+                                <Icon type={IconType.EDIT_ALT} height={16} width={16} />
+                            </IconButton>
+                        )}
+                    </div>
+                    <Content details={bestAvailEmail?.emailAddress || DEFAULT_ERROR_STRING} variant={ContentVariant.BodySm} pii={true} />
                 </div>
             </div>
             <div className="grid grid-cols-2 gap-10 md:grid-cols-1 lg:grid-cols-2">
@@ -515,9 +656,17 @@ const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
                     <Content details={owner?.formattedBirthDate} variant={ContentVariant.BodySm} pii={true} />
                 </div>
                 <div>
-                    <Label variant={LabelVariant.FieldLabel} label={contactNumberLabel} />
+                    <div className="flex gap-1">
+                        <Label id="policy-owner-phone" variant={LabelVariant.FieldLabel} label={contactNumberLabel} />
+                        {bestAvailPhone?.isPending && <PendingTag />}
+                        {canEditPolicy && bestAvailPhone && (
+                            <IconButton aria-describedby="policy-owner-phone" onClick={() => openSideSheet(SideSheetViews.PHONE)}>
+                                <Icon type={IconType.EDIT_ALT} height={16} width={16} />
+                            </IconButton>
+                        )}
+                    </div>
                     <Content
-                        details={(contactNumber && formatPhone(contactNumber)) || DEFAULT_ERROR_STRING}
+                        details={(bestAvailPhone && formatPhone(bestAvailPhone)) || DEFAULT_ERROR_STRING}
                         variant={ContentVariant.BodySm}
                         pii={true}
                     />
@@ -534,8 +683,16 @@ const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
                     />
                 </div>
                 <div>
-                    <Label variant={LabelVariant.FieldLabel} label={t('colDefs:owner.mailingAddress')} />
-                    {(owner?.bestAvailableAddress && <FormattedAddress address={owner?.bestAvailableAddress} />) || DEFAULT_ERROR_STRING}
+                    <div className="flex gap-1">
+                        <Label id="policy-owner-address" variant={LabelVariant.FieldLabel} label={t('colDefs:owner.mailingAddress')} />
+                        {bestAvailAddresss?.isPending && <PendingTag />}
+                        {canEditPolicy && bestAvailAddresss && (
+                            <IconButton aria-describedby="policy-owner-address" onClick={() => openSideSheet(SideSheetViews.ADDRESS)}>
+                                <Icon type={IconType.EDIT_ALT} height={16} width={16} />
+                            </IconButton>
+                        )}
+                    </div>
+                    {(bestAvailAddresss && <FormattedAddress address={bestAvailAddresss} />) || DEFAULT_ERROR_STRING}
                 </div>
             </div>
         </QuickViewRoot>
