@@ -498,7 +498,10 @@ export const getServerSideProps = withPageAuthRequired({
             user,
             UserPermission.AllowReadCaseManagement
         );
-        if (!doesUserHasPagePermissions) {
+
+        const isAdvisorsExcel = await checkTupleSsr(`${auth.accessToken}`, user.partyId, FgaRelation.Party, AE_FGA_ROLE);
+
+        if (!isAdvisorsExcel && !doesUserHasPagePermissions) {
             return {
                 redirect: {
                     destination: '/403',
@@ -506,7 +509,7 @@ export const getServerSideProps = withPageAuthRequired({
                 },
             };
         }
-
+    
         const { locale = DEFAULT_LOCALE } = context;
 
         const translations = await serverSideTranslations(
@@ -521,8 +524,6 @@ export const getServerSideProps = withPageAuthRequired({
             user.partyId,
             UserPermission.AllowReadCaseManagement
         );
-
-        const isAdvisorsExcel = await checkTupleSsr(`${auth.accessToken}`, user.partyId, FgaRelation.Party, AE_FGA_ROLE);
 
         return { props: { authorizedCarriers, isAdvisorsExcel, locale, ...translations } };
     },
