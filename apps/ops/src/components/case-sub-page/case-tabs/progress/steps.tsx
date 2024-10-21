@@ -1,6 +1,6 @@
 import { TFunction, useTranslation } from 'next-i18next';
 import React, { ReactNode } from 'react';
-import { Tag, TagVariant } from '@zinnia/bloom/components';
+import { Icon, IconType, Tag, TagVariant } from '@zinnia/bloom/components';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
@@ -31,7 +31,8 @@ enum StepTagIds {
     UserAmended = 'userDecision.requestedOfferAmendment',
 }
 
-const stepResultTag = (step: TransformedStep, t: TFunction): ReactNode => {
+const StepResultTag = ({ step }: { step: TransformedStep }) => {
+    const { t } = useTranslation();
     let text;
     switch (step.id) {
         // Underwriting
@@ -72,7 +73,7 @@ const stepResultTag = (step: TransformedStep, t: TFunction): ReactNode => {
     if (text) {
         return <Tag text={text} variant={TagVariant.White} />;
     }
-    return;
+    return null;
 };
 const getStepStatusIconTooltip = (step: TransformedStep, t: TFunction): ReactNode => {
     let icon = null;
@@ -143,7 +144,19 @@ const Step = ({ step, ...rest }: { step: TransformedStep } & React.HTMLAttribute
                     <div className="flex flex-row items-center gap-2 justify-self-start">
                         {getStepStatusIconTooltip(step, t)}
                         <Content contentClassName="min-w-max" variant={ContentVariant.BodySm} details={step.name} />
-                        {stepResultTag(step, t)}
+                        <StepResultTag step={step} />
+                        {step.documents?.length > 0 && (
+                            <div className="flex flex-row items-center gap-0.5 text-gray-600">
+                                <Icon
+                                    width={16}
+                                    height={16}
+                                    className="shrink-0"
+                                    type={IconType.DOCUMENT_TEXT}
+                                    alt={t('caseOverview.tabs.documents') as string}
+                                />
+                                <Content variant={ContentVariant.BodySm} details={`${step.documents.length}`} />
+                            </div>
+                        )}
                     </div>
                     {hasSidesheet && (
                         <NavElement type={NavElementType.Button} size={NavElementSize.Small} onClick={openSidesheet}>
