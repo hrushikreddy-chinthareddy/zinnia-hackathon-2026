@@ -1,8 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect, useMemo, useState } from 'react';
 
-import { FooterContent } from '@deps/components/card/card-section/card-section';
-import CardSection from '@deps/components/card/card-section/card-section';
+import CardSection, { FooterContent } from '@deps/components/card/card-section/card-section';
 import UpcomingPaymentCard from '@deps/components/card/card-upcoming-payment/card-upcoming-payment';
 import FieldData from '@deps/components/fields/field-data/field-data';
 import PageHeader from '@deps/components/page-header/page-header';

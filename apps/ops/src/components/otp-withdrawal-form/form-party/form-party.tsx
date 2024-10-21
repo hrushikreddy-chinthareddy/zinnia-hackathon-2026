@@ -11,8 +11,8 @@ import { Address, AddressTypes, Party, PartyRoles, Phone, PhoneTypes } from '@de
 
 import { AdditionalPartyInformation, PartyFields, SingleParty } from './party-helper';
 import PartyPhone, { DEFAULT_PHONE, PhoneFields } from './party-phone';
-import { RecommendedByAgent } from './plugins/agent-reco';
 import AddressEntry, { DEFAULT_ADDRESS } from '../address-entry';
+import { RecommendedByAgent } from './plugins/agent-reco';
 
 export interface PartyConfig {
     partyRoleType: PartyRoles;

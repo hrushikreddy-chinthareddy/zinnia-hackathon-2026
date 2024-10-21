@@ -14,8 +14,7 @@ import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getTotalMinRequiredAmount } from '@deps/helpers/global-values';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { convertKebabedDateString, isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
-import { formatDate } from '@deps/helpers/string.helper';
+import { convertKebabedDateString, isNullEmptyOrUndefined , formatDate } from '@deps/helpers/string.helper';
 import { ReactComponent as DollarsIcon } from '@deps/styles/elements/icons/currency/dollars.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 

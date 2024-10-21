@@ -1103,13 +1103,20 @@
             "steps": "Steps",
             "taskSideSheetLabel": "More information about task {{task}}",
             "validate": "Validate {{label}}",
+            "viewDetails": "View details",
             "accepted": "Accepted",
             "adverse": "Adverse",
             "approved": "Approved",
             "declined": "Declined",
             "rejected": "Rejected",
             "expired": "Expired",
-            "amended": "Amended offer requested"
+            "amended": "Amended offer requested",
+            "entityTypes": {
+                "agent": "Agent: {{label}}",
+                "pre-note": "Pre-Note: {{label}}",
+                "source of premium": "Source of Premium: {{label}}",
+                "transfer of assets": "Transfer of Assets: {{label}}"
+            }
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -1131,12 +1138,20 @@
             "unavailableOwnerDetails": "Owner details unavailable…",
             "unavailablePolicyNumber": "Policy number unavailable…"
         },
+        "sidesheet": {
+            "additionalData": "Additional Data",
+            "multiInstance": "Steps",
+            "documents": "Documents",
+            "view": "View",
+            "viewTask": "View task"
+        },
         "communicationSentTemplate": {
             "mail": "Mailed to: {{address}}",
             "fax": "Faxed to: {{fax}}",
             "email": "Emailed to: {{email}}"
         },
         "correspondenceStepDetails": {
+            "additionalData": "Additional Data",
             "status": "Status",
             "sentDate": "Sent date",
             "dateCompleted": "Date completed",

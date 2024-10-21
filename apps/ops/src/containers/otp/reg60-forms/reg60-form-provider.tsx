@@ -1,6 +1,5 @@
 import { useSearchParams } from 'next/navigation';
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import { Reg60FormContext } from '@deps/contexts/Reg60FormContext';
 import { Actions } from '@deps/models/case/case';

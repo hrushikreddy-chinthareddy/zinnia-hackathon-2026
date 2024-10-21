@@ -1,0 +1,44 @@
+import { Icon, IconType } from '@zinnia/bloom/components';
+import dayjs from 'dayjs';
+import { useTranslation } from 'next-i18next';
+
+import { DocumentView, TransformedStep } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
+import Content, { ContentVariant } from '@deps/components/content/content';
+import DocumentPreviewer from '@deps/components/document-viewer/document-previewer';
+import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import { DEFAULT_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
+
+function SideSheetDocument({ document, ...rest }: { document: DocumentView } & React.HTMLAttributes<HTMLLIElement>) {
+    const { t } = useTranslation();
+    const detailsString = [
+        document.fileType,
+        dayjs(document.updatedAt).format(DEFAULT_DATE_DISPLAY_FORMAT),
+        document.documentNumber ?? document.id,
+    ].join(' · ');
+    return (
+        <li {...rest} className="mt-2 flex w-full flex-row items-center justify-between rounded-sm border-2 border-gray-100 px-4 py-3">
+            <div className="flex flex-row items-center justify-start gap-2">
+                <Icon width={24} height={24} className="shrink-0" type={IconType.DOCUMENT_TEXT} />
+                <div className="flex flex-col">
+                    <Content variant={ContentVariant.BodySm} details={document.name} />
+                    <Content className="text-gray-600" variant={ContentVariant.BodySm} details={detailsString} />
+                </div>
+            </div>
+            <DocumentPreviewer {...document.previewDocProps}>{t('caseOverview.sidesheet.view')}</DocumentPreviewer>
+        </li>
+    );
+}
+
+export default function DocumentsTab({ step, ...rest }: { step: TransformedStep } & React.HTMLAttributes<HTMLDivElement>) {
+    const { t } = useTranslation();
+    return (
+        <div {...rest}>
+            <Typography variant={TypographyVariant.H3}>{t('caseOverview.sidesheet.documents')}</Typography>
+            <ul className="mt-4">
+                {step.documents?.map(document => (
+                    <SideSheetDocument key={document.id} document={document} />
+                ))}
+            </ul>
+        </div>
+    );
+}

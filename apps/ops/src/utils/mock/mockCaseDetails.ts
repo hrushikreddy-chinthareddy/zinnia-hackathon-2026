@@ -23,22 +23,27 @@ const instanceIds = {
     a: {
         identifier: '1',
         label: 'Abigail Stone',
+        entityType: 'Agent',
     },
     b: {
         identifier: '2',
         label: 'Biff Cotworth',
+        entityType: 'Agent',
     },
     c: {
         identifier: '3',
         label: 'Charles Threefingers',
+        entityType: 'Agent',
     },
     d: {
         identifier: '4',
         label: 'Daisy Fournette',
+        entityType: 'Agent',
     },
     e: {
         identifier: '5',
         label: 'Emily LeFive',
+        entityType: 'Agent',
     },
 };
 

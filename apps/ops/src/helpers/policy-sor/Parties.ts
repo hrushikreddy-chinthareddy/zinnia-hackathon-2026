@@ -18,11 +18,11 @@ import {
     PolicyParties,
 } from '@deps/models/policy/sor-policy';
 
+import { calculateAgeNumber } from '../age.helper';
 import { Addresses } from './party-items/Addresses';
 import { Banks } from './party-items/Banks';
 import { Emails } from './party-items/Emails';
 import { Phones } from './party-items/Phones';
-import { calculateAgeNumber } from '../age.helper';
 
 const orderedRoles = [
     PartyRole.OWNER,

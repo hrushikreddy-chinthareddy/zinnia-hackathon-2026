@@ -2,7 +2,7 @@ import { TFunction } from 'next-i18next';
 
 import { mockCaseDetails } from '@deps/services/mocks/case-details';
 
-import { mapCaseDetails, completionPercentageString, formatTimestamp } from './case-tabs-helpers';
+import { TransformedCase, completionPercentageString, formatTimestamp } from './progress-tab-helpers';
 const mockT = (key: string, values?: Record<string, string>) => {
     if (values) {
         return `${key} ${Object.values(values).join(', ')}`;
@@ -12,9 +12,9 @@ const mockT = (key: string, values?: Record<string, string>) => {
 
 const t = mockT as TFunction;
 describe('case-tabs-helpers', () => {
-    describe('mapCaseDetails', () => {
+    describe('TransformedCase', () => {
         it('should return an object with the correct properties', () => {
-            const result = mapCaseDetails(mockCaseDetails, t);
+            const result = new TransformedCase(mockCaseDetails, t);
 
             // These tests are making sure that multiInstance mapping and unmapped exceptions are doing something right
             expect(result.completedSteps).toBe(18);
@@ -25,7 +25,7 @@ describe('case-tabs-helpers', () => {
 
         // TODO: Test the property values in addition to checking existence
         it('should map stages correctly', () => {
-            const result = mapCaseDetails(mockCaseDetails, t);
+            const result = new TransformedCase(mockCaseDetails, t);
             const stages = result.stages;
 
             stages.forEach((stage, index) => {

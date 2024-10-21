@@ -15,8 +15,7 @@ import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { convertKebabedDateString, isNullEmptyOrUndefined, toSentenceCase } from '@deps/helpers/string.helper';
 import { FeaturesCardsTest, RidersCardsTest } from '@deps/jest/constants/test-id-constants';
 import { PolicyFeature, PolicyFeatureFeatureType, Rider } from '@deps/models/policy/sor-policy';
-import { DEFAULT_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_DATE_FORMAT, ZAHARA_API_DATE_FORMAT , DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { ConfiguredSettingId } from '@deps/types/product-config-settings';
 import { BenefitId, CoverageId, CoverageToBenefitId, RiderBenefit } from '@deps/types/product-rate';
 

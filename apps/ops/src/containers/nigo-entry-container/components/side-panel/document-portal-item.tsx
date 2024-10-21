@@ -30,8 +30,9 @@ const DocumentItem = ({ document, policy, documentNumber, activeDocType }: Docum
                 <DocumentPreviewer
                     className="flex gap-1"
                     activeDocType={activeDocType}
-                    carrier={policy?.carrierId}
-                    document={document || {}}
+                    carrier={policy?.carrierId || ''}
+                    documentId={document?.documentId || document?.documentID || ''}
+                    displayName={document?.displayName || ''}
                 >
                     <>{t('view')}</>
                 </DocumentPreviewer>
