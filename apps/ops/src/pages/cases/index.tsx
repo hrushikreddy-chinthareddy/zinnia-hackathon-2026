@@ -1,11 +1,13 @@
 import { Session, getSession, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow } from '@zinnia/bloom/components';
 import { GetServerSidePropsContext } from 'next';
 import dynamic from 'next/dynamic';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import CaseSearchCard from '@deps/components/card/case-search-card/case-search-card';
+import { CaseDetailField, OwnerWithOthers } from '@deps/components/card/case-search-card/case-search-card';
+import ChipStatus from '@deps/components/chip-status/chip-status';
 import { FieldSize } from '@deps/components/fields/field';
 import FilterButton from '@deps/components/filter-button/filter-button';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
@@ -36,9 +38,11 @@ import {
     toggleLabels,
 } from '@deps/helpers/case-management';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
+import { getPolicyOwners } from '@deps/helpers/parties';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { storage } from '@deps/helpers/sessionStorage.helper';
+import { formatSSN, toTitleCase } from '@deps/helpers/string.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { Statuses } from '@deps/models/case/case';
 import { UserPermission } from '@deps/models/user-profile';
@@ -352,14 +356,78 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
 
         return (
             <>
-                {cases.map(singleCase => (
+                {/* {cases.map(singleCase => (
                     <CaseSearchCard
                         key={`case-search-card-${singleCase.id}`}
                         {...singleCase}
                         {...singleCase.additionalData}
                         searchValues={caseManagementFilters.searchValue}
                     />
-                ))}
+                ))} */}
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHeaderCell>Case/ID</TableHeaderCell>
+                            <TableHeaderCell>Case Status</TableHeaderCell>
+                            <TableHeaderCell>Owner/SSN</TableHeaderCell>
+                            <TableHeaderCell>Policy</TableHeaderCell>
+                            <TableHeaderCell>Agent/SSN</TableHeaderCell>
+                            <TableHeaderCell>Created</TableHeaderCell>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {cases.map(singleCase => {
+                            const policyOwners = singleCase.parties ? getPolicyOwners(singleCase.parties) : [];
+                            const entities = policyOwners
+                                .slice(1)
+                                .map(owner => ({ name: toTitleCase(owner.fullName), ssn: formatSSN(owner.ssn) }));
+                            const ownerName = policyOwners.length
+                                ? (policyOwners?.[0]?.firstName || '') + ' ' + (policyOwners?.[0]?.lastName || '')
+                                : null;
+                            const ownerComponentProps = {
+                                label: t('caseManagementDashboard.case.owner'),
+                                text: toTitleCase(ownerName?.trim()),
+                                // highlights: [searchValues?.ownerFirstName, searchValues?.ownerLastName].filter(Boolean) as string[],
+                                entities,
+                                truncate: true,
+                            };
+
+                            const ownerComponent =
+                                policyOwners.length > 1 ? (
+                                    <OwnerWithOthers {...ownerComponentProps} />
+                                ) : (
+                                    <CaseDetailField pii={true} {...ownerComponentProps} />
+                                );
+
+                            console.log(singleCase);
+
+                            return (
+                                <TableRow key={`case-search-card-${singleCase.id}`}>
+                                    <TableCell>
+                                        <Typography variant={TypographyVariant.BodySm} className="block">
+                                            {singleCase.processSubType ? toTitleCase(singleCase.processSubType) : singleCase.process}
+                                        </Typography>
+                                        {/* to do - color isn't right */}
+                                        <Typography variant={TypographyVariant.BodySm} color="var(--Base-Text-text-secondary)">
+                                            {singleCase.id}
+                                        </Typography>
+                                    </TableCell>
+                                    <TableCell>
+                                        <ChipStatus status={singleCase.caseStatus} data-testid="chip-status" />
+                                    </TableCell>
+                                    <TableCell>{ownerComponent}</TableCell>
+                                    <TableCell>
+                                        <CaseDetailField
+                                            pii={true}
+                                            text={singleCase.policyNumber}
+                                            // highlights={searchValues?.policyNumber ? [searchValues?.policyNumber] : null}
+                                        />
+                                    </TableCell>
+                                </TableRow>
+                            );
+                        })}
+                    </TableBody>
+                </Table>
             </>
         );
     }, [caseTableData, caseManagementFilters.searchValue]);
