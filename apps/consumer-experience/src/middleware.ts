@@ -115,8 +115,21 @@ export async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
   const isLoginLikeOrRoot = pathname.includes('/login') || pathname === '/';
   const isSessionPage = pathname === '/session';
-  // const featureFlags = await getFeatureFlagQuery(req);
+  const host = req.headers.get('host') || '';
 
+  if (host.includes('zinniatech')) {
+    const url = req.nextUrl.clone();
+    const newHost = host.replace('zinniatech', 'mypolicyview');
+
+    url.host = newHost;
+
+    return NextResponse.redirect(url, 308);
+  }
+
+  // These are set to true with the feature flag query commented out becuase we were seeing a 500 error when
+  // trying to make a route handler call from within this file on mypolicyview domains. We were seeing a cert
+  // issue in the logs that is most likely related
+  // const featureFlags = await getFeatureFlagQuery(req);
   const annuityModeOn = true;
   const resetDeliveryDateActive = true;
 
