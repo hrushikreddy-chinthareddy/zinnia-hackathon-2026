@@ -27,6 +27,7 @@ const GlobalValuesBar = ({
     owner,
     jointOwner,
     planCode,
+    planName,
     policyNumber,
     productType,
     status,
@@ -38,7 +39,7 @@ const GlobalValuesBar = ({
     showJointOwner = false,
     showLink = true,
     showDocument = false,
-    documentNumber
+    documentNumber,
 }: GlobalValuesBarProps) => {
     const headerClasses = clsx('flex w-full flex-col pb-4 md:pb-6 lg:pb-8', isNavDrawerOpen ? 'lg:flex-col xl:flex-row' : 'lg:flex-row');
 
@@ -51,6 +52,7 @@ const GlobalValuesBar = ({
                     marketingName={marketingName}
                     openSideSheet={openSideSheet}
                     policyNumber={policyNumber}
+                    planName={planName}
                     productType={productType}
                     status={status}
                     tooltip={tooltip}

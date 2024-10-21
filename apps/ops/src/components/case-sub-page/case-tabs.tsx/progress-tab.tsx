@@ -1,8 +1,10 @@
 import { Accordion as AccordionRoot, AccordionItem, AccordionTrigger, AccordionContent, AccordionHeader } from '@radix-ui/react-accordion';
+import { Tag, TagVariant } from '@zinnia/bloom/components';
 import { TFunction, useTranslation } from 'next-i18next';
 import React, { ForwardedRef, Key, ReactNode, useMemo, useState } from 'react';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
+import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import Tooltip from '@deps/components/tooltip/tooltip';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
@@ -12,8 +14,7 @@ import TaskSideSheet from '@deps/containers/case-overview/tasks-table/sidesheet/
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { convertKebabedDateString } from '@deps/helpers/string.helper';
 import { AdditionalDataIds } from '@deps/models/case/additional-data-instance';
-import { Case } from '@deps/models/case/case';
-import { Statuses } from '@deps/models/case/case';
+import { Case, Statuses } from '@deps/models/case/case';
 import { ExceptionStatuses } from '@deps/models/case/exception-instance';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
 import { ReactComponent as NotStartedIcon } from '@deps/styles/elements/icons/alert/not-started.svg';
@@ -117,6 +118,61 @@ const getStepStatusIconTooltip = (step: StepView, t: TFunction): ReactNode => {
     }
 };
 
+enum StepTagIds {
+    UnderwritingAccepted = 'underwritingEvalutaion.underwritingDecisionApproved',
+    UnderwritingAdverse = 'underwritingEvaluation.underwritingDecisionAdverse',
+    UnderwritingDeclined = 'underwritingEvalutaion.underwritingDecisionDeclined',
+    SuitabilityReview = 'suitabilityReview.suitabilityReview',
+    UserAccepted = 'userDecision.acceptedOffer',
+    UserRejected = 'userDecision.rejectedOffer',
+    UserExpired = 'userDecision.expireOffer',
+    UserAmended = 'userDecision.requestedOfferAmendment',
+}
+
+const stepResultTag = (step: StepView, t: TFunction): ReactNode => {
+    let text;
+    switch (step.id) {
+        // Underwriting
+        case StepTagIds.UnderwritingAccepted:
+            text = t('caseOverview.tabs.accepted');
+            break;
+        case StepTagIds.UnderwritingAdverse:
+            text = t('caseOverview.tabs.adverse');
+            break;
+        case StepTagIds.UnderwritingDeclined:
+            text = t('caseOverview.tabs.declined');
+            break;
+        // Suitability
+        case StepTagIds.SuitabilityReview:
+            if (step.status === 'COMPLETED') {
+                text = t('caseOverview.tabs.approved');
+                break;
+            } else {
+                text = t('caseOverview.tabs.declined');
+                break;
+            }
+        // User Decision
+        case StepTagIds.UserAccepted:
+            text = t('caseOverview.tabs.accepted');
+            break;
+        case StepTagIds.UserRejected:
+            text = t('caseOverview.tabs.rejected');
+            break;
+        case StepTagIds.UserExpired:
+            text = t('caseOverview.tabs.expired');
+            break;
+        case StepTagIds.UserAmended:
+            text = t('caseOverview.tabs.amended');
+            break;
+        default:
+            break;
+    }
+    if (text) {
+        return <Tag text={text} variant={TagVariant.White} />;
+    }
+    return;
+};
+
 const Task = ({ task }: { task: TaskView }) => {
     const { t } = useTranslation();
     const sideSheet = useSideSheetContext();
@@ -205,12 +261,14 @@ const Exceptions = ({ exceptions, unmapped = false }: { exceptions: ExceptionVie
 const Steps = ({ steps, stepFilter = () => true }: { steps: StepView[]; stepFilter?: (step: StepView) => boolean }) => {
     const { t } = useTranslation();
     const sideSheet = useSideSheetContext();
-    const showStepDetails = (additionalData: AdditionalData, id: string) => {
+    const showStepDetails = (additionalData: AdditionalData, id: string, status: string, date: string) => {
         if (Object.keys(additionalData).length === 0) {
             return;
         }
-        const content = <StepAdditionalData additionalData={additionalData} stepKey={id as AdditionalDataIds} />;
-        sideSheet.changeSideSheetContent(t('site.pageTitles.caseStepsAdditionalData'), content);
+        const content = (
+            <StepAdditionalData additionalData={additionalData} stepKey={id as AdditionalDataIds} status={status} date={date} />
+        );
+        sideSheet.changeSideSheetContent(t(`caseManagementApiKeys.steps.${id}`), content);
         sideSheet.handleOpen(true);
     };
 
@@ -220,12 +278,30 @@ const Steps = ({ steps, stepFilter = () => true }: { steps: StepView[]; stepFilt
                 <li
                     key={index}
                     className="flex w-full flex-row justify-between border-b-2 border-gray-100 bg-gray-50 px-4 py-2 first:border-t-2 last:rounded-b-lg last:border-b-0"
-                    onClick={() => showStepDetails(step?.additionalData, step.id)}
                 >
                     <div className="flex w-full flex-col">
-                        <div className="mr-4 flex w-max flex-row items-center gap-2 justify-self-start">
-                            {getStepStatusIconTooltip(step, t)}
-                            <Content contentClassName="min-w-max" variant={ContentVariant.BodySm} details={step.name} />
+                        <div className="flex w-full items-center flex-row justify-between ">
+                            <div className="flex flex-row gap-2">
+                                {getStepStatusIconTooltip(step, t)}
+                                <Content variant={ContentVariant.BodySm} details={step.name} />
+                                {stepResultTag(step, t)}
+                            </div>
+                            {Object.keys(step?.additionalData).length > 0 && (
+                                <NavElement
+                                    size={NavElementSize.Small}
+                                    onClick={() => showStepDetails(step?.additionalData, step.id, step?.status, step?.updatedAt)}
+                                    onKeyDown={e => {
+                                        if (e.key === 'Enter' || e.key === ' ') {
+                                            e.preventDefault();
+                                            showStepDetails(step?.additionalData, step.id, step?.status, step?.updatedAt);
+                                        }
+                                    }}
+                                    type={NavElementType.Button}
+                                    variant={NavElementVariant.Default}
+                                >
+                                    {t('caseManagementApiKeys.stages.viewDetails')}
+                                </NavElement>
+                            )}
                         </div>
                         <div className="flex w-full flex-col pl-6">
                             <Exceptions exceptions={step.exceptions} />

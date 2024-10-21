@@ -1,4 +1,5 @@
 import { AxiosResponse } from 'axios';
+import dayjs from 'dayjs';
 
 import { PaginationParams } from '@deps/components/pagination/pagination';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
@@ -468,14 +469,15 @@ interface PolicyTransactionQuery {
     offset?: number;
     planCode?: string;
     sortOrder?: 'ASC' | 'DESC';
-    status: TransactionStatus;
-    transactionTypes: string[];
+    status?: TransactionStatus | TransactionStatus[];
+    transactionTypes?: string[];
     year?: string;
+    reverseInitiatorOnly?: boolean;
 }
 
 // Get policy transactions by transactionType
 export const getPolicyTransactions = async ({
-    id,
+    id: policyNumber,
     limit = 10,
     offset = 0,
     planCode,
@@ -483,15 +485,26 @@ export const getPolicyTransactions = async ({
     status,
     transactionTypes,
     year,
+    reverseInitiatorOnly,
 }: PolicyTransactionQuery): Promise<Transaction[]> => {
     try {
-        let query = `?offset=${offset}&limit=${limit}&sortOrder=${sortOrder}&status=${status}`;
+        const params = new URLSearchParams();
 
-        if (transactionTypes.length)
-            query = query + `&transactionTypes=${transactionTypes.map(transactionType => `${transactionType}`).join(',')}`;
-        if (year) query = `${query}&startDate=${year}-01-01&endDate=${year}-12-31`;
+        for (const [key, value] of Object.entries({
+            limit,
+            offset,
+            reverseInitiatorOnly,
+            sortOrder,
+            status,
+            transactionTypes,
+            year: year &&dayjs(year).format('YYYY-01-01'),
+        })) {
+            if (value) params.append(key, `${value}`);
+        }
 
-        const url = `${baseUrl}/${planCode}/${id}/transactions${query}`;
+        const query = params.toString();
+        const url = `${baseUrl}/${planCode}/${policyNumber}/transactions?${query}`;
+
         const response = await client.get<Transaction, AxiosResponse>(url);
 
         return response.data.data;

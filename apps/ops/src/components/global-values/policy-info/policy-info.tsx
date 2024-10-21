@@ -84,13 +84,12 @@ export const PolicyCarrierLogo = ({ carrierId, tooltipPlacements = PopoverPlacem
 export const PolicyProductType = ({ productType, tooltipPlacements = PopoverPlacement.TopRight, openSideSheet }: Partial<GlobalValues>) => {
     const { t } = useTranslation();
     const isClickable = !!openSideSheet;
-    const acronym = mapProductTypeToTranslation(productType as ProductType, t).acronym;
-    const body = mapProductTypeToTranslation(productType as ProductType, t).label;
+    const { acronym, label } = mapProductTypeToTranslation(productType as ProductType, t);
 
     return (
         <div className="mb-[4.5px] mr-2 mt-[1.5px] flex self-center">
             {acronym && (
-                <Tooltip placement={tooltipPlacements} body={body} triggerClassName="!rounded">
+                <Tooltip placement={tooltipPlacements} body={label} triggerClassName="!rounded">
                     <div>
                         <Badge variant={isClickable ? BadgeVariant.Brand : BadgeVariant.Neutral} label={acronym} />
                     </div>
@@ -122,6 +121,7 @@ export interface PolicyInfoProps {
     marketingName?: string;
     openSideSheet?: () => void;
     planCode?: string;
+    planName?: string;
     policyNumber?: string;
     productType?: ProductType;
     status: PolicyStatus;
@@ -136,6 +136,7 @@ const PolicyInfo = ({
     highlight,
     marketingName,
     openSideSheet,
+    planName,
     policyNumber,
     productType,
     status,
@@ -150,7 +151,7 @@ const PolicyInfo = ({
             <div className="flex w-max flex-col">
                 <div className="flex flex-row">
                     <PolicyProductType productType={productType} tooltipPlacements={tooltipPlacements} openSideSheet={openSideSheet} />
-                    <PolicyProductMarketingName marketingName={marketingName} openSideSheet={openSideSheet} />
+                    <PolicyProductMarketingName marketingName={marketingName || planName} openSideSheet={openSideSheet} />
                 </div>
                 <div className="flex items-center">
                     <PolicyNumber policyNumber={policyNumber} highlight={highlight} />

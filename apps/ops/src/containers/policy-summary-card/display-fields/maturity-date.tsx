@@ -9,7 +9,6 @@ interface MaturityDateProps {
     maturityDate?: string;
 }
 
-// TODO MG: this should be shared with the component in policy timelines
 const MaturityDate = ({ maturityDate }: MaturityDateProps) => {
     const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
 

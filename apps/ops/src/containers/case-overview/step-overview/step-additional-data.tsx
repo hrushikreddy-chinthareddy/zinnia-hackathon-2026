@@ -1,19 +1,17 @@
+import { Table, TableBody, TableCell, TableRow } from '@zinnia/bloom/components';
+import dayjs from 'dayjs';
 import { TFunction, useTranslation } from 'next-i18next';
-import React, { ReactNode } from 'react';
+import React from 'react';
 
-import { AdditionalData, formatTimestamp } from '@deps/components/case-sub-page/case-tabs.tsx/case-tabs-helpers';
-import Content, { ContentVariant } from '@deps/components/content/content';
+import AdditionalStepStatus from '@deps/components/case-overview-box/content/additional-step-status';
+import { AdditionalData } from '@deps/components/case-sub-page/case-tabs.tsx/case-tabs-helpers';
+import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { formatAddressToContainer } from '@deps/containers/small-data-card/address-data/address-data';
-import {
-    AdditionalDataIds,
-    CommunicationTypes,
-    CorrespondenceStatus,
-    correspondenceTypes,
-} from '@deps/models/case/additional-data-instance';
-import { ReactComponent as NotStartedIcon } from '@deps/styles/elements/icons/alert/not-started.svg';
-import { ReactComponent as CompletedIcon } from '@deps/styles/elements/icons/icons_outlined/check-circle.svg';
-import { ReactComponent as ExceptionIcon } from '@deps/styles/elements/icons/icons_outlined/hex-exclamation.svg';
+import { toTitleCase } from '@deps/helpers/string.helper';
+import { AdditionalDataIds, CommunicationTypes, correspondenceTypes } from '@deps/models/case/additional-data-instance';
+import { Statuses } from '@deps/models/case/case';
+import { CASE_MANAGEMENT_API_FORMAT, CASE_MANAGEMENT_DISPLAY_FORMAT } from '@deps/types/constants';
 const getDataByDeliveryMethod = (data: AdditionalData, deliveryMethod: CommunicationTypes, t: TFunction) => {
     switch (deliveryMethod) {
         case CommunicationTypes.Fax:
@@ -21,91 +19,97 @@ const getDataByDeliveryMethod = (data: AdditionalData, deliveryMethod: Communica
         case CommunicationTypes.Email:
             return t('caseOverview.communicationSentTemplate.email', { email: data[deliveryMethod] });
         case CommunicationTypes.Mail:
-            return t('caseOverview.communicationSentTemplate.mail', { address: formatAddressToContainer(data, true) });
+            return formatAddressToContainer(data, true);
         default:
             return '';
     }
 };
 
-const getCorrespondenceStatusIconTooltip = (status: CorrespondenceStatus): ReactNode => {
-    let icon = null;
+const correspondenceStepConfig = (deliveryMethod: CommunicationTypes, t: TFunction) => [
+    {
+        label: t('caseOverview.correspondenceStepDetails.deliveryMethod'),
+        key: correspondenceTypes[deliveryMethod].key,
+        shouldDisplay: (): boolean => {
+            return true;
+        },
+        getAdditionalDetails: () => {
+            return toTitleCase(deliveryMethod);
+        },
+    },
+    {
+        label: t('caseOverview.correspondenceStepDetails.sentDate'),
+        key: 'deliveryDate',
+        shouldDisplay: (): boolean => {
+            return true;
+        },
+        getAdditionalDetails: (additionalData: AdditionalData, filterKeyBy: string) => {
+            const date = additionalData[filterKeyBy].value;
+            return dayjs(date, CASE_MANAGEMENT_API_FORMAT).format(CASE_MANAGEMENT_DISPLAY_FORMAT);
+        },
+    },
 
-    switch (status) {
-        case CorrespondenceStatus.INITIATED:
-            icon = <NotStartedIcon className="text-gray-300" width={24} height={24} />;
-            break;
-        case CorrespondenceStatus.DELIVERED:
-            icon = <CompletedIcon className="text-semantic-success" width={24} height={24} />;
-            break;
+    {
+        label: t('caseOverview.correspondenceStepDetails.address'),
+        key: correspondenceTypes[deliveryMethod].key,
+        shouldDisplay: (deliveryMethod?: CommunicationTypes): boolean => {
+            if (!deliveryMethod) return false;
+            return correspondenceTypes[deliveryMethod].value === CommunicationTypes.Mail;
+        },
+        getAdditionalDetails: (additionalData: AdditionalData, filterKeyBy: string) => {
+            const data = Object.keys(additionalData)
+                .filter(key => key.includes(filterKeyBy))
+                .reduce((acc, key) => ({ ...acc, [key.replace(filterKeyBy, '') || deliveryMethod]: additionalData[key].value }), {});
 
-        case CorrespondenceStatus.BOUNCE:
-        case CorrespondenceStatus.DROPPED:
-        case CorrespondenceStatus.FAILURE:
-            icon = <ExceptionIcon className="text-semantic-error" width={24} height={24} />;
-            break;
-
-        default:
-            return null;
-    }
-    return (
-        <div className="mr-4 flex w-max flex-row items-center gap-2 justify-self-start">
-            {icon}
-            <Content contentClassName="min-w-max" variant={ContentVariant.BodySm} details={status} />
-        </div>
-    );
-};
+            return getDataByDeliveryMethod(data, deliveryMethod, t);
+        },
+    },
+];
 
 type StepAdditionalDataProps = {
     additionalData: AdditionalData;
     stepKey: AdditionalDataIds;
+    status: string;
+    date: string;
 };
-const StepAdditionalData = ({ additionalData, stepKey }: StepAdditionalDataProps) => {
-    const { t } = useTranslation();
+const StepAdditionalData = ({ additionalData, stepKey, status, date }: StepAdditionalDataProps) => {
+    const { t } = useTranslation(undefined, { keyPrefix: 'caseOverview.correspondenceStepDetails' });
     const deliveryMethod = additionalData['deliveryMethod']?.value as CommunicationTypes;
-
-    const correspondenceStepConfig = (deliveryMethod: CommunicationTypes) => [
-        {
-            label: t('caseOverview.correspondenceStepDetails.status'),
-            key: 'deliveryStatus',
-            getAdditionalDetails: (additionalData: AdditionalData, filterKeyBy: string) => {
-                const status = additionalData[filterKeyBy].value as CorrespondenceStatus;
-                return getCorrespondenceStatusIconTooltip(status);
-            },
-        },
-        {
-            label: t('caseOverview.correspondenceStepDetails.dateStarted'),
-            key: 'deliveryDate',
-            getAdditionalDetails: (additionalData: AdditionalData, filterKeyBy: string) => {
-                const date = additionalData[filterKeyBy].value;
-                return formatTimestamp(date, 'YYYY-MM-DD HH:mm:ss');
-            },
-        },
-        {
-            label: t('caseOverview.correspondenceStepDetails.deliveryMethod'),
-            key: correspondenceTypes[deliveryMethod].key,
-            getAdditionalDetails: (additionalData: AdditionalData, filterKeyBy: string) => {
-                const data = Object.keys(additionalData)
-                    .filter(key => key.includes(filterKeyBy))
-                    .reduce((acc, key) => ({ ...acc, [key.replace(filterKeyBy, '') || deliveryMethod]: additionalData[key].value }), {});
-
-                return getDataByDeliveryMethod(data, deliveryMethod, t);
-            },
-        },
-    ];
 
     const renderAdditionalData = (id: AdditionalDataIds) => {
         switch (id) {
             case AdditionalDataIds.correspondenceRequest:
-                return correspondenceStepConfig(deliveryMethod).map((step, index) => (
-                    <div className="my-2 grid grid-cols-3 gap-8" key={index}>
-                        <div>{step.label}</div>
-                        <div className="col-span-2">
-                            {step?.getAdditionalDetails && step?.getAdditionalDetails(additionalData, step.key)}
-                        </div>
-                    </div>
-                ));
+                return (
+                    <>
+                        <AdditionalStepStatus
+                            updatedAt={dayjs(date, CASE_MANAGEMENT_API_FORMAT).format(CASE_MANAGEMENT_DISPLAY_FORMAT)}
+                            status={status as Statuses}
+                        />
+                        <DeliveryCard
+                            additionalData={additionalData}
+                            deliveryMethod={deliveryMethod}
+                            title={t('requestedRecipients') as string}
+                        />
+                    </>
+                );
             case AdditionalDataIds.sedRequest:
-                return '';
+                return (
+                    <>
+                        <AdditionalStepStatus
+                            updatedAt={dayjs(date, CASE_MANAGEMENT_API_FORMAT).format(CASE_MANAGEMENT_DISPLAY_FORMAT)}
+                            status={status as Statuses}
+                        />
+                    </>
+                );
+            case AdditionalDataIds.completeRequest:
+                return (
+                    <>
+                        <AdditionalStepStatus
+                            updatedAt={dayjs(date, CASE_MANAGEMENT_API_FORMAT).format(CASE_MANAGEMENT_DISPLAY_FORMAT)}
+                            status={status as Statuses}
+                        />
+                        <DeliveryCard additionalData={additionalData} deliveryMethod={deliveryMethod} title={t('recipients') as string} />
+                    </>
+                );
             default:
                 return null;
         }
@@ -114,3 +118,59 @@ const StepAdditionalData = ({ additionalData, stepKey }: StepAdditionalDataProps
 };
 
 export default StepAdditionalData;
+
+type DeliveryCardProps = {
+    additionalData: AdditionalData;
+    deliveryMethod: CommunicationTypes;
+    title?: string;
+};
+const DeliveryCard = ({ additionalData, deliveryMethod, title }: DeliveryCardProps) => {
+    const { t } = useTranslation();
+
+    const formattedData: { [key in string]?: string } = Object.keys(additionalData)
+        .filter(key => key.includes(correspondenceTypes[deliveryMethod].key))
+        .reduce(
+            (acc, key) => ({
+                ...acc,
+                [key.replace(correspondenceTypes[deliveryMethod].key, '') || deliveryMethod]: additionalData[key].value,
+            }),
+            {}
+        );
+
+    const getTitle = (deliveryMethod: CommunicationTypes) => {
+        switch (deliveryMethod) {
+            case CommunicationTypes.Email:
+            case CommunicationTypes.Fax:
+                return formattedData[deliveryMethod];
+            case CommunicationTypes.Mail:
+                return `${formattedData['firstName'] || ''} ${formattedData['lastName'] || ''}`;
+        }
+    };
+    return (
+        <>
+            <div className="flex flex-row my-4">
+                <Typography variant={TypographyVariant.H2}>
+                    {title ?? t('caseOverview.correspondenceStepDetails.requestedRecipients')}
+                </Typography>
+            </div>
+            <Table className="my-4">
+                <TableBody>
+                    <TableRow>
+                        <TableCell colSpan={2}>{getTitle(deliveryMethod)}</TableCell>
+                    </TableRow>
+                    {correspondenceStepConfig(deliveryMethod, t).map(
+                        (step, index) =>
+                            step?.shouldDisplay(deliveryMethod) && (
+                                <TableRow key={index}>
+                                    <TableCell className="bg-gray-50 text-md text-gray-500 !border-b-0">{step?.label}</TableCell>
+                                    <TableCell className="bg-gray-50 text-md text-gray-700 !border-b-0">
+                                        {step?.getAdditionalDetails && step?.getAdditionalDetails(additionalData, step.key)}
+                                    </TableCell>
+                                </TableRow>
+                            )
+                    )}
+                </TableBody>
+            </Table>
+        </>
+    );
+};

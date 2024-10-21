@@ -29,7 +29,7 @@ const BaseCoverageCard = ({ policyDetails }: BaseCoverageCardProps) => {
     const { t } = useTranslation();
     const sideSheet = useSideSheetContext();
 
-    const { carrierId, currency, issueDate, policyNumber, policyStatus, productType, marketingName } = policyDetails;
+    const { carrierId, currency, issueDate, planName, policyNumber, policyStatus, productType, marketingName } = policyDetails;
     // TODO: use Brian's coverage object
     const { coverageLayers } = policyDetails.policy?.coverage ?? {};
 
@@ -60,6 +60,7 @@ const BaseCoverageCard = ({ policyDetails }: BaseCoverageCardProps) => {
         <PolicyInfo
             carrierId={carrierId}
             marketingName={marketingName}
+            planName={planName}
             productType={productType}
             policyNumber={policyNumber}
             status={t(getBadgeStatus(policyStatus))}
@@ -76,22 +77,22 @@ const BaseCoverageCard = ({ policyDetails }: BaseCoverageCardProps) => {
 
     return (
         <CardContainer containerClassNames="border-b-2 border-gray-100">
-                <div className="flex flex-wrap gap-4 sm:justify-start md:justify-between">
-                    <div className="flex gap-2 sm:basis-full md:basis-6/12">
-                        <DollarsIcon className="mt-1 text-primary" role="presentation" width={24} height={24} />
-                        <Typography variant={TypographyVariant.H2}>{t(`${BASE_KEY}.baseCoverage`)}</Typography>
-                    </div>
-                    {!policyDetails.isAnnuity &&
-                        <NavElement
-                            type={NavElementType.Button}
-                            size={NavElementSize.Small}
-                            variant={NavElementVariant.Default}
-                            onClick={openSidesheet}
-                        >
-                            {t(`${BASE_KEY}.coverageChangeRules`)}
-                        </NavElement>
-                    }
+            <div className="flex flex-wrap gap-4 sm:justify-start md:justify-between">
+                <div className="flex gap-2 sm:basis-full md:basis-6/12">
+                    <DollarsIcon className="mt-1 text-primary" role="presentation" width={24} height={24} />
+                    <Typography variant={TypographyVariant.H2}>{t(`${BASE_KEY}.baseCoverage`)}</Typography>
                 </div>
+                {!policyDetails.isAnnuity && (
+                    <NavElement
+                        type={NavElementType.Button}
+                        size={NavElementSize.Small}
+                        variant={NavElementVariant.Default}
+                        onClick={openSidesheet}
+                    >
+                        {t(`${BASE_KEY}.coverageChangeRules`)}
+                    </NavElement>
+                )}
+            </div>
 
             <div className="mt-4 flex flex-col gap-8 md:flex-row lg:ml-8">
                 <div>

@@ -36,7 +36,6 @@
             "newPremium": "New Premium",
             "updatePremium": "Update Premium Autopay",
             "newWithdrawal": "New Withdrawal",
-            "caseStepsAdditionalData": "Create & send request form",
             "formData": "Form Data",
             "annuitization": "Annuitization"
         },
@@ -896,12 +895,16 @@
             "sswRequestProcessing": "Process transaction",
             "sswRequestValidation": "Validate transaction",
             "suitabilityReview": "Review suitability",
-            "toaLetter": "Create and send transfer packet"
+            "toaLetter": "Create and send transfer packet",
+            "viewDetails": "View details"
         },
         "steps": {
             "requestAck.nbRequestReceived": "Receive {{subType}}",
             "requestAck.caseProcessing": "Set up {{subType}} for processing",
             "requestAck.draftContractCreation": "Create draft contract",
+            "requestAck.processFormRequestReceived": "Receive Service Form Request",
+            "requestCompletion.deliverLetter": "Receive Delivery Confirmation",
+            "requestCompletion.completeRequest": "Send Requested Form",
             "agentValidation.preValidationRules": "Confirm completeness of agent details",
             "agentValidation.agentAppointmentValidation": "Validate appointment",
             "agentValidation.agentLOBValidation": "Validate line of business",
@@ -947,7 +950,14 @@
             "premiumProcessing.contractInfoValidation": "Validate contract information",
             "requestCompletion.caseCompleted": "Receive workflow system case completion",
             "requestCompletion.LCContractIssued": "Issue contract",
-            "requestCompletion.policyPagesIssued": "Create policy pages"
+            "requestCompletion.policyPagesIssued": "Create policy pages",
+            "underwritingEvalutaion.underwritingDecisionApproved": "Receive underwriting decision",
+            "underwritingEvalutaion.underwritingDecisionDeclined": "Receive underwriting decision",
+            "underwritingEvaluation.underwritingDecisionAdverse": "Receive underwriting decision",
+            "userDecision.acceptedOffer": "Receive offer decision",
+            "userDecision.rejectedOffer": "Receive offer decision",
+            "userDecision.expireOffer": "Receive offer decision",
+            "userDecision.requestedOfferAmendment": "Receive offer decision"
         },
         "stepDescriptions": {
             "requestAck.nbRequestReceived": "When a {{subType}} document is received, it is indexed and ingested into the system.",
@@ -1092,7 +1102,14 @@
             "stepCount_other": "{{count}} steps",
             "steps": "Steps",
             "taskSideSheetLabel": "More information about task {{task}}",
-            "validate": "Validate {{label}}"
+            "validate": "Validate {{label}}",
+            "accepted": "Accepted",
+            "adverse": "Adverse",
+            "approved": "Approved",
+            "declined": "Declined",
+            "rejected": "Rejected",
+            "expired": "Expired",
+            "amended": "Amended offer requested"
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -1121,9 +1138,12 @@
         },
         "correspondenceStepDetails": {
             "status": "Status",
-            "dateStarted": "Date started",
+            "sentDate": "Sent date",
             "dateCompleted": "Date completed",
-            "deliveryMethod": "Delivery method"
+            "deliveryMethod": "Delivery method",
+            "address": "Residential address",
+            "requestedRecipients": "Requested Recipients",
+            "recipients": "Recipients"
         }
     },
     "caseRenewal": {
@@ -1889,7 +1909,8 @@
             }
         },
         "errors": {
-            "statements": "Statements are required to continue."
+            "statements": "Statements are required to continue.",
+            "statementType": "Statement type is required to fetch statements."
         }
     },
     "caseSSW": {
@@ -2215,7 +2236,11 @@
         "lapse": "Lapse",
         "new": "New",
         "canceled": "Canceled",
-        "canceledOn": "Canceled on {{date}}"
+        "canceledOn": "Canceled on {{date}}",
+        "reversed": "Reversed",
+        "reversedOn": "Reversed on {{date}}",
+        "pendingReversal": "Pending Reversal",
+        "pendingReversalOn": "Pending Reversal on {{date}}"
     },
     "placeHolder": {
         "globalSelectSearch": "e.g. Loan Payoff Amount, Cost Basis..."
@@ -2238,14 +2263,52 @@
     },
     "policy": {
         "productType": {
+            "delayedImmediateFixedAndVariableAnnuity": "Delayed Immediate Fixed and Variable Annuity",
+            "delayedImmediateFixedAndVariableAnnuityAcronym": "DIFVA",
+            "delayedImmediateFixedAnnuity": "Delayed Immediate Fixed Annuity",
+            "delayedImmediateFixedAnnuityAcronym": "DIFA",
+            "delayedImmediateVariableAnnuity": "Delayed Immediate Variable Annuity",
+            "delayedImmediateVariableAnnuityAcronym": "DIVA",
+            "equityIndexAnnuity": "Equity Index Annuity",
+            "equityIndexAnnuityAcronym": "EIA",
+            "fixedAnnuity": "Fixed Annuity",
+            "fixedAnnuityAcronym": "FA",
+            "fixedDeferredAnnuity": "Fixed Deferred Annuity",
+            "fixedDeferredAnnuityAcronym": "FDA",
+            "fixedIndexAnnuity": "Fixed Index Annuity",
+            "fixedIndexAnnuityAcronym": "FIA",
+            "fundingAgreement": "Funding Agreement",
+            "fundingAgreementAcronym": "FA",
+            "immediateFixedAndVariableAnnuity": "Immediate Fixed and Variable Annuity",
+            "immediateFixedAndVariableAnnuityAcronym": "IFVA",
+            "immediateFixedAnnuity": "Immediate Fixed Annuity",
+            "immediateFixedAnnuityAcronym": "IFA",
+            "immediateVariableAnnuity": "Immediate Variable Annuity",
+            "immediateVariableAnnuityAcronym": "IVA",
+            "indexedUniversalLife": "Indexed Universal Life",
+            "indexedUniversalLifeAcronym": "IUL",
+            "mutualFund": "Mutual Fund",
+            "mutualFundAcronym": "MF",
+            "multiYearGuaranteeAnnuity": "MYGA (Multi-Year Guarantee Annuity)",
+            "multiYearGuaranteeAnnuityAcronym": "MYGA",
+            "nonRenewableTerm": "Non Renewable Term",
+            "nonRenewableTermAcronym": "TERM",
+            "regIndexLinkedAnnuity": "Reg Index Linked Annuity",
+            "regIndexLinkedAnnuityAcronym": "RILA",
+            "structuredSettlement": "Structured Settlement",
+            "structuredSettlementAcronym": "SS",
             "termLife": "Term Life",
             "termLifeAcronym": "TL",
             "universalLife": "Universal Life",
             "universalLifeAcronym": "UL",
+            "variableDeferredAnnuity": "Variable Deferred Annuity",
+            "variableDeferredAnnuityAcronym": "VDA",
             "variableUniversalLife": "Variable Universal Life",
             "variableUniversalLifeAcronym": "VUL",
-            "indexedUniversalLife": "Indexed Universal Life",
-            "indexedUniversalLifeAcronym": "IUL",
+            "variableUniversalLifeAnnuity": "Variable Universal Life Annuity",
+            "variableUniversalLifeAnnuityAcronym": "VULA",
+            "variableWholeLife": "Variable Whole Life",
+            "variableWholeLifeAcronym": "VWL",
             "wholeLife": "Whole Life",
             "wholeLifeAcronym": "WL"
         },
@@ -2543,6 +2606,8 @@
                 "accountNumber": "Account number",
                 "accountType": "Account type",
                 "address": "Address",
+                "newAppliedAmount": "New applied amount",
+                "newAppliedAmountTooltip": "This is how much money was added to the account value after a reversal of a premium",
                 "appliedAmount": "Applied amount",
                 "appliedAmountTooltip": "This is how much money was added to the account value after processing. Applied amount is usually the same as the submitted amount. But it can differ if the submitted amount broke the policy test limits, which can cause some funds to be returned (called a “force out.”)",
                 "autopay": "{{frequency}} Autopay",
@@ -2579,6 +2644,7 @@
                 "setAsMailingAddress": "Set as mailing address",
                 "submittedAmount": "Submitted amount",
                 "submittedAmountTooltip": "This is how much was submitted. In other words, the owner wrote a check or initiated a funds transfer for this amount. Submitted amount may differ from the applied amount if we could only apply a lower amount due to policy test limits. These are legal limits to how much an owner can pay into the policy within a certain time period. This can cause some funds to be returned to the owner (called a “force out”).",
+                "reverseRecreateSubmittedAmountTooltip": "This is how much was sent for payment initially. The owner wrote a check or initiated a funds transfer for this amount, and the request to apply this amount was submitted in our system. Submitted amount may differ from the applied amount if we could only apply a lower amount due to policy test limits. These are legal limits to how much an owner can pay into the policy within a certain time period. This can cause some funds to be returned to the owner (called a “force out”).",
                 "surrender": "Surrender",
                 "timeZone": "Time zone",
                 "transactionStatus": "Transaction status",
@@ -3561,7 +3627,10 @@
             "people": "People",
             "transactions": "Transactions",
             "history": "History",
-            "documents": "Documents"
+            "documents": "Documents",
+            "caseDetails": "Case Details",
+            "deliveryMethod": "Delivery method",
+            "correspondence": "Correspondence"
         }
     },
     "bannerAlert": {

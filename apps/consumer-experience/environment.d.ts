@@ -2,9 +2,11 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       AUTH0_COOKIE_DOMAIN: string;
+      AUTH0_COOKIE_DOMAIN_MYPOLICYVIEW: string;
       AUTH0_ISSUER_BASE_URL: string;
       AUTH0_AUDIENCE: string;
       NEXT_PUBLIC_AUTH0_COOKIE_DOMAIN: string;
+      NEXT_PUBLIC_AUTH0_COOKIE_DOMAIN_MYPOLICYVIEW: string;
       NEXT_PUBLIC_BACKEND_URL: string;
       NEXT_PUBLIC_MOCK_API_REQUEST: string;
       NEXT_PUBLIC_BASE_URL: string;

@@ -9,7 +9,6 @@ interface IssueDateProps {
     issueDate?: string;
 }
 
-// TODO MG: this should be shared with the component in policy timelines
 const IssueDate = ({ issueDate }: IssueDateProps) => {
     const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
 

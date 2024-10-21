@@ -6,6 +6,7 @@ import massMutual from '@deps/styles/elements/icons/carriers/mass-mutual.svg';
 import placeholder from '@deps/styles/elements/icons/carriers/placeholder.svg';
 import securityBenefit from '@deps/styles/elements/icons/carriers/security-benefit.svg';
 import usaa from '@deps/styles/elements/icons/carriers/usaa.svg';
+import wellabe from '@deps/styles/elements/icons/carriers/wellabe.svg';
 
 // This is a stopgap until the carrier api is deployed
 const carriers = {
@@ -87,6 +88,7 @@ export const getSelectedCarriers = (carriers: { [key: string]: string } | undefi
 export const getCarrierLogoByClientId = (clientId: string): string => {
     switch (clientId.toUpperCase()) {
         case 'ULIC':
+        case 'ULPC':
         case 'GLCO':
             return kuvare;
         case 'EVERLY':
@@ -99,6 +101,8 @@ export const getCarrierLogoByClientId = (clientId: string): string => {
             return massMutual;
         case 'SBGC':
             return securityBenefit;
+        case 'WELB':
+            return wellabe;
         default:
             return placeholder;
     }

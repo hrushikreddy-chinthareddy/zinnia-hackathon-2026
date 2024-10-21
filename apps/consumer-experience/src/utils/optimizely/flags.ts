@@ -3,4 +3,5 @@ export enum FEATURE_FLAGS {
   ADD_EDIT_DELETE_BANK_ACCOUNT = 'add_edit_delete_bank_account',
   MULTIPLE_FUNDS_VIEW = 'multiple_funds_view',
   ANNUITY_MODE = 'annuity_mode',
+  RESET_DELIVERY_DATE_ACTIVE = 'reset_delivery_date_active',
 }

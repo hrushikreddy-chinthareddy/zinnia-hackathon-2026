@@ -1,57 +1,59 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
 {
-	"name": "Digital-Experience-Monorepo",
-	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye",
-	// Features to add to the dev container. More info: https://containers.dev/features.
-	"features": {
-		"ghcr.io/dhoeric/features/act:1": {},
-		"ghcr.io/devcontainers/features/github-cli": {},
-		"ghcr.io/devcontainers/features/docker-in-docker:2": {
-			"moby": true,
-			"azureDnsAutoDetection": true,
-			"installDockerBuildx": true,
-			"version": "latest",
-			"dockerDashComposeVersion": "v1"
-		}
-	},
+  "name": "Digital-Experience-Monorepo",
+  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye",
+  // Features to add to the dev container. More info: https://containers.dev/features.
+  "features": {
+    "ghcr.io/dhoeric/features/act:1": {},
+    "ghcr.io/devcontainers/features/github-cli": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "moby": true,
+      "azureDnsAutoDetection": true,
+      "installDockerBuildx": true,
+      "version": "latest",
+      "dockerDashComposeVersion": "v1"
+    }
+  },
 
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// turned off because it keeps port open even if proj isn't running
-	// "forwardPorts": [3000],
-	// "portsAttributes": {
-		// "3000": {
-			// "label": "Application",
-			// "onAutoForward": "notify"
-		// }
-	// },
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  // turned off because it keeps port open even if proj isn't running
+  // "forwardPorts": [3000],
+  // "portsAttributes": {
+  // "3000": {
+  // "label": "Application",
+  // "onAutoForward": "notify"
+  // }
+  // },
 
-	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "yarn install",
-	// Configure tool-specific properties.
-	// "customizations": {},
-	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "root"
+  // Use 'postCreateCommand' to run commands after the container is created.
+  // "postCreateCommand": "yarn install",
+  // Configure tool-specific properties.
+  // "customizations": {},
+  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+  // "remoteUser": "root"
 
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"SupernovaIO.pulsar-vsc-extension",
-				"sleistner.vscode-fileutils",
-				"GitHub.vscode-pull-request-github",
-				"GitHub.vscode-github-actions",
-				"figma.figma-vscode-extension",
-				"maattdd.gitless",
-				"vunguyentuan.vscode-postcss",
-				"csstools.postcss"
-			]
-		}
-	},
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "SupernovaIO.pulsar-vsc-extension",
+        "sleistner.vscode-fileutils",
+        "GitHub.vscode-pull-request-github",
+        "GitHub.vscode-github-actions",
+        "figma.figma-vscode-extension",
+        "maattdd.gitless",
+        "vunguyentuan.vscode-postcss",
+        "csstools.postcss",
+        "esbenp.prettier-vscode"
+      ]
+    }
+  },
 
-	"mounts": [
-		"source=${localEnv:HOME}/.npmrc,target=/home/node/.npmrc,type=bind,consistency=cached"
-	],
-	"postCreateCommand": "bash -i -c 'nvm install && nvm use && npm i -g vercel'",
-	"postAttachCommand": "bash -i -c 'nvm use'"
+  "mounts": [
+    "source=${localEnv:HOME}/.npmrc,target=/home/node/.npmrc,type=bind,consistency=cached"
+  ],
+  "onCreateCommand": "sudo apt update && sudo apt install -y libcairo2-dev libjpeg62-turbo-dev libpango1.0-dev libgif-dev build-essential g++",
+  "postCreateCommand": "bash -i -c 'nvm install && nvm use && npm i -g vercel'",
+  "postAttachCommand": "bash -i -c 'nvm use'"
 }
