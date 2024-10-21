@@ -255,6 +255,7 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                     datePickerType={datePickerType}
                     isDateAllowed={date => handleIsDateAllowed(date, startDate)}
                 />
+
             </div>
 
             {loader ? (
