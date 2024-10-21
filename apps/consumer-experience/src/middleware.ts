@@ -115,7 +115,7 @@ export async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
   const isLoginLikeOrRoot = pathname.includes('/login') || pathname === '/';
   const isSessionPage = pathname === '/session';
-  const host = req.headers.get('host') || '';
+  const host = req.headers.get('x-forwarded-host') || '';
 
   if (host.includes('zinniatech')) {
     const url = req.nextUrl.clone();
