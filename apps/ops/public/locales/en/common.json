@@ -1139,8 +1139,9 @@
             "unavailablePolicyNumber": "Policy number unavailable…"
         },
         "sidesheet": {
-            "additionalData": "Additional Data",
+            "additionalData": "Details",
             "multiInstance": "Steps",
+            "documentId": "Document ID: {{documentId}}",
             "documents": "Documents",
             "view": "View",
             "viewTask": "View task"
@@ -1151,7 +1152,7 @@
             "email": "Emailed to: {{email}}"
         },
         "correspondenceStepDetails": {
-            "additionalData": "Additional Data",
+            "additionalData": "Details",
             "status": "Status",
             "sentDate": "Sent date",
             "dateCompleted": "Date completed",

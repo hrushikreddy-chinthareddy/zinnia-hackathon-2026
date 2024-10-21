@@ -34,7 +34,8 @@ export const correspondenceTypes = {
     },
 };
 
-export enum AdditionalDataIds {
+// StepIds with an additionalData sidesheet
+export enum AdditionalDataStepIds {
     correspondenceRequest = 'requestAck.processFormRequestReceived',
     sedRequest = 'requestCompletion.deliverLetter',
     completeRequest = 'requestCompletion.completeRequest',

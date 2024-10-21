@@ -7,9 +7,16 @@ import { CaseAdditionalData } from '@deps/components/case-sub-page/case-tabs/pro
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { formatAddressToContainer } from '@deps/containers/small-data-card/address-data/address-data';
 import { toTitleCase } from '@deps/helpers/string.helper';
-import { AdditionalDataIds, CommunicationTypes, correspondenceTypes } from '@deps/models/case/additional-data-instance';
+import { AdditionalDataStepIds, CommunicationTypes, correspondenceTypes } from '@deps/models/case/additional-data-instance';
 import { Statuses } from '@deps/models/case/case';
 import { CASE_MANAGEMENT_API_FORMAT, CASE_MANAGEMENT_DISPLAY_FORMAT } from '@deps/types/constants';
+import { TransformedStep } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
+
+export const hasAdditionalDataSideSheet = (step: TransformedStep): boolean => {
+    if (!Object.keys(step.additionalData).length) return false;
+    return Object.values(AdditionalDataStepIds).includes(step.id as AdditionalDataStepIds);
+};
+
 const getDataByDeliveryMethod = (data: CaseAdditionalData, deliveryMethod: CommunicationTypes, t: TFunction) => {
     switch (deliveryMethod) {
         case CommunicationTypes.Fax:
@@ -65,7 +72,7 @@ const correspondenceStepConfig = (deliveryMethod: CommunicationTypes, t: TFuncti
 
 type StepAdditionalDataProps = {
     additionalData: CaseAdditionalData;
-    stepKey: AdditionalDataIds;
+    stepKey: AdditionalDataStepIds;
     status: string;
     date: string;
 };
@@ -73,9 +80,9 @@ const StepAdditionalData = ({ additionalData, stepKey, status, date }: StepAddit
     const { t } = useTranslation(undefined, { keyPrefix: 'caseOverview.correspondenceStepDetails' });
     const deliveryMethod = additionalData['deliveryMethod']?.value as CommunicationTypes;
 
-    const renderAdditionalData = (id: AdditionalDataIds) => {
+    const renderAdditionalData = (id: AdditionalDataStepIds) => {
         switch (id) {
-            case AdditionalDataIds.correspondenceRequest:
+            case AdditionalDataStepIds.correspondenceRequest:
                 return (
                     <>
                         <AdditionalStepStatus
@@ -89,7 +96,7 @@ const StepAdditionalData = ({ additionalData, stepKey, status, date }: StepAddit
                         />
                     </>
                 );
-            case AdditionalDataIds.sedRequest:
+            case AdditionalDataStepIds.sedRequest:
                 return (
                     <>
                         <AdditionalStepStatus
@@ -98,7 +105,7 @@ const StepAdditionalData = ({ additionalData, stepKey, status, date }: StepAddit
                         />
                     </>
                 );
-            case AdditionalDataIds.completeRequest:
+            case AdditionalDataStepIds.completeRequest:
                 return (
                     <>
                         <AdditionalStepStatus

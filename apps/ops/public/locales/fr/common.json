@@ -1133,8 +1133,9 @@
             "unavailablePolicyNumber": "Numéro de police indisponible…"
         },
         "sidesheet": {
-            "additionalData": "Données additionnelles",
+            "additionalData": "Détails",
             "multiInstance": "Étapes",
+            "documentId": "ID du document: {{documentId}}",
             "documents": "Documents",
             "view": "Voir",
             "viewTask": "Voir la tâche"
@@ -1145,7 +1146,7 @@
             "email": "Envoyé par courrier électronique à {{email}}"
         },
         "correspondenceStepDetails": {
-            "additionalData": "Données additionnelles",
+            "additionalData": "Détails",
             "status": "Statut",
             "sentDate": "Date d'envoi",
             "dateCompleted": "Date d'achèvement",
@@ -1884,7 +1885,7 @@
         "sendStatement": {
             "startDate": "Date de début de la période",
             "endDate": "Date de fin de période",
-            "viewStatement":"afficher l'instruction",
+            "viewStatement": "afficher l'instruction",
             "tabs": {
                 "statementSelection": "Sélection d'instructions",
                 "correspondence": "Correspondence",
