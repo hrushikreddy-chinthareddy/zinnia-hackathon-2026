@@ -115,6 +115,16 @@ export async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
   const isLoginLikeOrRoot = pathname.includes('/login') || pathname === '/';
   const isSessionPage = pathname === '/session';
+  const host = req.headers.get('host') || '';
+
+  if (host.includes('zinniatech')) {
+    const url = req.nextUrl.clone();
+    const newHost = host.replace('zinniatech', 'mypolicyview');
+
+    url.host = newHost;
+
+    return NextResponse.redirect(url, 308);
+  }
   // const featureFlags = await getFeatureFlagQuery(req);
 
   const annuityModeOn = true;
