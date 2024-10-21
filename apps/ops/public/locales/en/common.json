@@ -4150,6 +4150,7 @@
     "nigoEntry": {
         "tabs": {
             "serviceFormReview": "Service Form Review",
+            "formEntry": "Form Entry",
             "nigoDetails": "Missing Information",
             "documentSelection": "New Form(s) Selection",
             "confirm": "Confirm"
@@ -4199,6 +4200,13 @@
                 "selectForm": "Select a form to continue."
             },
             "label": "Select the appropriate form that needs to be updated."
+        },
+        "formEntry": {
+            "formTitles": {
+                "withdrawal": "{{carrier}} Withdrawal Request",
+                "oft": "{{carrier}} Outgoing Funds Transfer Request",
+                "defaultTitle": "Form Entry"
+            }
         }
     }
 }

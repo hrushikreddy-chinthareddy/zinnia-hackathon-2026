@@ -10,6 +10,7 @@ import { getTransactionSubTypes, searchForms } from '@deps/queries/api/c2web';
 
 import { useNigoEntry } from './nigo-entry-provider';
 import ConfirmStep from './steps/confirm/confirm-step';
+import FormEntryStep from './steps/form-entry/form-entry-step';
 import FormSelectionStep from './steps/form-selection.tsx/form-selection-step';
 import { NigoDetailsStep } from './steps/nigo-details/nigo-details-step';
 import { ServiceFormReviewStep } from './steps/service-form-review/service-form-review-step';
@@ -42,7 +43,7 @@ const NigoEntryContainer = ({
     prevTransactionDetails,
 }: NigoEntryContainerContainerProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry' });
-    const { setTransactionType, setTransactionSubType, setDocument } = useNigoEntry();
+    const { setTransactionType, setTransactionSubType, setDocument, isReadyForDataEntry } = useNigoEntry();
 
     const transactionOptions = useMemo(() => {
         return  transactionTypes?.map(transaction => {
@@ -96,6 +97,7 @@ const NigoEntryContainer = ({
         () => [
             {
                 ariaLabel: t('tabs.serviceFormReview'),
+                isVisible: () => true,
                 component: (
                     <ServiceFormReviewStep
                         policy={policy}
@@ -111,7 +113,16 @@ const NigoEntryContainer = ({
                 text: t('tabs.serviceFormReview'),
             },
             {
+                ariaLabel: t('tabs.formEntry'),
+                isVisible: () => isReadyForDataEntry,
+                component: <FormEntryStep document={documentData} clientCode={clientCode} docType={docType} />,
+                screenReaderLabel: t('tabs.formEntry'),
+                index: 1,
+                text: t('tabs.formEntry'),
+            },
+            {
                 ariaLabel: t('tabs.nigoDetails'),
+                isVisible: () => !isReadyForDataEntry,
                 component: <NigoDetailsStep nigoExceptions={nigoExceptions} nigoSubExceptions={nigoSubExceptions} />,
                 screenReaderLabel: t('tabs.nigoDetails'),
                 index: 1,
@@ -119,6 +130,7 @@ const NigoEntryContainer = ({
             },
             {
                 ariaLabel: t('tabs.documentSelection'),
+                isVisible: () => !isReadyForDataEntry,
                 component: <FormSelectionStep transactionTypes={transactionOptions} policy={policy} />,
                 screenReaderLabel: t('tabs.documentSelection'),
                 index: 2,
@@ -126,16 +138,22 @@ const NigoEntryContainer = ({
             },
             {
                 ariaLabel: t('tabs.confirm'),
+                isVisible: () => true,
                 component: <ConfirmStep documentNumber={documentNumber} docType={docType} clientCode={clientCode} document={documentData} />,
                 screenReaderLabel: t('tabs.confirm'),
                 index: 3,
                 text: t('tabs.confirm'),
             },
         ],
-        [t]
+        [clientCode, docType, documentData, documentNumber, isReadyForDataEntry, nigoExceptions, nigoSubExceptions, policy, t, taskInfoLink, transactionOptions]
     );
 
-    return <TabGroupContainer steps={steps} policy={policy} documentNumber={documentNumber} docType={docType}></TabGroupContainer>;
+    const filteredSteps: Step[] = useMemo(
+        () => steps.filter((item: any) => item.isVisible?.()).map((item: any, index: number) => ({ ...item, index })),
+        [steps]
+    );
+
+    return <TabGroupContainer steps={filteredSteps} policy={policy} documentNumber={documentNumber} docType={docType}></TabGroupContainer>;
 };
 
 export default NigoEntryContainer;

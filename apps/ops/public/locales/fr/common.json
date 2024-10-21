@@ -4124,6 +4124,7 @@
     "nigoEntry": {
         "tabs": {
             "serviceFormReview": "Révision du formulaire de service",
+            "formEntry": "Formulaire de saisie",
             "nigoDetails": "Informations manquantes",
             "documentSelection": "Sélection de nouveau(x) formulaire(s)",
             "confirm": "Confirmer"
@@ -4173,6 +4174,13 @@
                 "selectForm": "Sélectionnez un formulaire pour continuer."
             },
             "label": "Sélectionnez le formulaire approprié qui doit être mis à jour."
+        },
+        "formEntry": {
+            "formTitles": {
+                "withdrawal": "{{carrier}} Withdrawal Request",
+                "oft": "{{carrier}} Outgoing Funds Transfer Request",
+                "defaultTitle": "Form Entry"
+            }
         }
     }
 }

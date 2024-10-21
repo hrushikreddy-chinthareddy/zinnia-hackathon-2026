@@ -10,13 +10,16 @@ import { TranslationFiles } from '@deps/config/translations';
 import { buildFormV2 } from '@deps/containers/otp/withdrawal-forms/utils/withdrawal-form-helper';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DocumentData } from '@deps/models/case/document';
+import { ApiVersion } from '@deps/models/case/enums';
+import { TaskApiVersionMapper } from '@deps/models/case/helpers';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 
+
 interface ConfirmStepProps {
     documentNumber?: string;
-    docType?: string; 
+    docType?: string;
     clientCode?: string;
     document: DocumentData
 }
@@ -26,29 +29,33 @@ const ConfirmStep = ({ document}: ConfirmStepProps) => {
     const formState = useContext(FormDataContext);
     const [submitFailed, setSubmitFailed] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-    const [timer] = useState(performance.now());   
-    
-    const submit = useCallback(async () => {
-        const response = await updateTask(
-            formState.initialForm.caseId,
-            formState.initialForm.taskId,
-            buildFormV2(TaskStatus.Completed, document, formState),
-            timer
-        );
+    const [timer] = useState(performance.now());
 
-        if (response && response.id) {
+    const submit = useCallback(async () => {
+        let successfulCaseUpdate;
+
+        if (TaskApiVersionMapper[formState.initialForm.taskType] === ApiVersion.v2) {
+            successfulCaseUpdate = await updateTask(
+                formState.initialForm.caseId,
+                formState.initialForm?.taskId,
+                buildFormV2(TaskStatus.Completed, document, formState),
+                timer
+            );
+        }
+
+        if (successfulCaseUpdate && successfulCaseUpdate.id) {
             setSubmitFailed(false);
         } else {
             setSubmitFailed(true);
         }
-        
+
         setIsLoading(false);
     }, [document, formState, timer]);
 
     useEffect(() => {
         submit();
     }, [submit]);
-    
+
     if (isLoading) {
         return (
             <div className="responsive-padding flex h-[300px] w-full grow">
