@@ -125,8 +125,11 @@ export async function middleware(req: NextRequest) {
 
     return NextResponse.redirect(url, 308);
   }
-  // const featureFlags = await getFeatureFlagQuery(req);
 
+  // These are set to true with the feature flag query commented out becuase we were seeing a 500 error when
+  // trying to make a route handler call from within this file on mypolicyview domains. We were seeing a cert
+  // issue in the logs that is most likely related
+  // const featureFlags = await getFeatureFlagQuery(req);
   const annuityModeOn = true;
   const resetDeliveryDateActive = true;
 
