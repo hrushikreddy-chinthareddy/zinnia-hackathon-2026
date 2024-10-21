@@ -2,6 +2,7 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
+import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import { DocumentData } from '@deps/models/case/document';
 import { TransactionType } from '@deps/models/case/send-document';
 import { Policy } from '@deps/models/policy/sor-policy';

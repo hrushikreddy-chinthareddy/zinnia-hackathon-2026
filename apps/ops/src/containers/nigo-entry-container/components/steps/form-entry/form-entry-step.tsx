@@ -111,45 +111,6 @@ function FormEntryStep({document, clientCode, docType} : FormEntryStepProps) {
         setIsLoading(true);
         setTaskApiError('');
         if (validateForm() && areDiaryNotesViewed) {
-            /*let successfulCaseUpdate;
-            if (TaskApiVersionMapper[formState.initialForm.taskType] === ApiVersion.v2) {
-                successfulCaseUpdate = await updateTask(
-                    formState.initialForm.caseId,
-                    formState.initialForm?.taskId,
-                    buildFormV2(TaskStatus.Completed, document, formState),
-                    timer
-                );
-            } else {
-                successfulCaseUpdate = await putCaseTask(
-                    formState.initialForm.caseId,
-                    formState.initialForm.taskId,
-                    buildForm(CaseStatus.Submit, document, formState)
-                );
-            }
-            if (successfulCaseUpdate) {
-                if (isLocalStorageEnabled()) {
-                    const successMessage = t(
-                        `createTaskSuccess.${
-                            TaskTypeTranslation[formState?.initialForm?.data?.taskType as keyof typeof TaskTypeTranslation]
-                        }`,
-                        {
-                            contractNumber: document?.contract,
-                            documentNumber: document?.documentNumber,
-                        }
-                    );
-
-                    localStorage.setItem(
-                        FormSuccessMessageKey[formState?.initialForm?.data?.taskType as keyof typeof FormSuccessMessageKey],
-                        successMessage
-                    );
-                }
-
-                setIsLoading(false);
-                goToNext();
-            } else {
-                setTaskApiError(t('submitError') as string);
-                setIsLoading(false);
-            }*/
             setIsLoading(false);
             goToNext();
         } else {
