@@ -152,7 +152,7 @@ export const getServerSideProps = withPageAuthRequired({
                 });
                 return {
                     redirect: {
-                        destination: `nigo-entry/withdrawal/:id/error?errorCode=${ERROR_CODES.WITHDRAWAL_TASK_INITIALIZATION}`,
+                        destination: `/create-case/error?errorCode=${ERROR_CODES.WITHDRAWAL_TASK_INITIALIZATION}`,
                         permanent: false,
                     },
                 };
