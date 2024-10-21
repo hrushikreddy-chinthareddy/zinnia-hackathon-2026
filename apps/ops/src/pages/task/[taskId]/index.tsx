@@ -1,48 +1,77 @@
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useState } from 'react';
+import { createRef } from 'react';
 
 import NoNavLayout from '@deps/components/no-nav-layout';
 import { PageHead } from '@deps/components/page-title';
+import { buildTaskLink } from '@deps/components/tasks-listing/task-listing.helpers';
 import { TranslationFiles } from '@deps/config/translations';
 import TaskContainer from '@deps/containers/task-container/task-container';
+import { TaskProvider } from '@deps/containers/task-container/task-provider';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { ProcessType } from '@deps/models/case/enums';
+import { docTypes } from '@deps/models/case/helpers';
 import { TaskType } from '@deps/models/case/task';
+import { Carrier } from '@deps/models/case/withdrawal/case';
+import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
+import { ERROR_CODES } from '@deps/pages/create-case/error';
+import { getPolicyDetailsSsr, searchPolicySSR } from '@deps/queries/api/policies';
 import { getTaskFormMetadataSSR } from '@deps/queries/api/v1/task';
 import { getCaseTaskByIdSSR } from '@deps/queries/api/v2/task';
-import { logError, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
+import { getUserInfoFromUser, logError, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 type TaskPageProps = {
+    policy: Policy;
+    clientCode: string;
+    documentNumber: string;
+    docType: string;
     caseId: string;
     taskId: string;
     taskType: TaskType;
     formSchema: RJSFSchema;
     uiSchema: UiSchema;
     taskData: any;
+    taskInfoLink: string;
 };
 
-export const TaskPage: React.FC<TaskPageProps> = ({ caseId, taskId, taskType, formSchema, uiSchema, taskData }: TaskPageProps) => {
-    const [isLoading] = useState(false);
-    return isLoading ? (
-        <></>
-    ) : (
+export const TaskPage: React.FC<TaskPageProps> = ({
+    policy,
+    documentNumber,
+    docType,
+    clientCode,
+    caseId,
+    taskId,
+    taskType,
+    formSchema,
+    uiSchema,
+    taskData,
+    taskInfoLink,
+}: TaskPageProps) => {
+    const formRef = createRef<Form>();
+    taskType = TaskType.Suitability;
+    return (
         <div>
             <PageHead titleKey="caseOverview" />
             <NoNavLayout fullHeight={true}>
-                <TaskContainer
-                    caseId={caseId ?? ''}
-                    taskId={taskId ?? ''}
-                    taskType={taskType ?? ''}
-                    taskData={taskData ?? {}}
-                    formSchema={formSchema}
-                    uiSchema={uiSchema}
-                />
+                <TaskProvider taskData={taskData} formSchema={formSchema} uiSchema={uiSchema} formRef={formRef}>
+                    <TaskContainer
+                        policy={policy}
+                        docType={docType}
+                        clientCode={clientCode}
+                        documentNumber={documentNumber}
+                        caseId={caseId}
+                        taskId={taskId}
+                        taskType={taskType}
+                        taskInfoLink={taskInfoLink}
+                    />
+                </TaskProvider>
             </NoNavLayout>
         </div>
     );
@@ -51,11 +80,9 @@ export const TaskPage: React.FC<TaskPageProps> = ({ caseId, taskId, taskType, fo
 export const getServerSideProps = withPageAuthRequired({
     getServerSideProps: async (context: any) => {
         const user = await getUserData(context);
-
         const { locale = DEFAULT_LOCALE, query, req, res } = context;
-
         const taskId = (query.taskId as string) || '';
-        const processType = (query.processType as ProcessType) || '';
+        const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
 
         let accessToken;
         try {
@@ -103,18 +130,79 @@ export const getServerSideProps = withPageAuthRequired({
                 // };
             }
 
-            const { carrier, taskType, data } = task || {};
-            const taskFormSchema = await getTaskFormMetadataSSR(carrier || '', taskType as TaskType, processType);
+            const { taskType, carrier, data, caseId, process } = task || {};
+            const { documentNumber, contractNum, clientCode } = task?.data || {};
 
+            const processType = (query.processType as ProcessType) || '';
+            const taskFormSchema = await getTaskFormMetadataSSR(carrier || '', taskType as TaskType, processType);
             const { formSchema, uiSchema } = taskFormSchema ?? {};
+
+            if (!formSchema || !uiSchema) {
+                logError('task::Form schema not found', {
+                    taskId,
+                    documentNumber,
+                    clientCode,
+                    contractNum,
+                    file: 'pages/task',
+                    function: 'getServerSideProps',
+                });
+            }
+
+            const response = await searchPolicySSR(contractNum, [clientCode?.toUpperCase() as Carrier], accessToken, 1, 0);
+            const planCode = response ? response[0]?.planCode : null;
+            if (!planCode) {
+                logError('task::Policy plan code not found', {
+                    taskId,
+                    documentNumber,
+                    clientCode,
+                    contractNum,
+                    file: 'pages/task',
+                    function: 'getServerSideProps',
+                });
+                return {
+                    redirect: {
+                        destination: `/create-case/error?errorCode=${ERROR_CODES.PLAN_CODE_NOT_FOUND}`,
+                        permanent: false,
+                    },
+                };
+            }
+
+            const userInfoForLogging = getUserInfoFromUser(user);
+            const policy = await getPolicyDetailsSsr(contractNum, planCode, accessToken, userInfoForLogging);
+
+            const docType = docTypes[task?.process || ''];
+            if (!policy) {
+                logError('task::Policy not found', {
+                    taskId,
+                    documentNumber,
+                    clientCode,
+                    contractNum,
+                    file: 'pages/task',
+                    function: 'getServerSideProps',
+                });
+                return {
+                    redirect: {
+                        destination: `/create-case/error?errorCode=${ERROR_CODES.POLICY_NOT_FOUND}`,
+                        permanent: false,
+                    },
+                };
+            }
+            const taskInfoLink = buildTaskLink(taskId, caseId || '', process || '', documentNumber, clientCode);
+
             return {
                 props: {
                     ...translations,
+                    policy,
+                    docType,
+                    documentNumber,
+                    clientCode,
                     taskId,
                     taskType,
                     formSchema,
                     uiSchema,
-                    taskData: data,
+                    taskData: data.data || {},
+                    caseId,
+                    taskInfoLink,
                 },
             };
         } catch (error) {

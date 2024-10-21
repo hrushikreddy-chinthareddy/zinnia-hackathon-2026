@@ -1,29 +1,35 @@
-import { RJSFSchema, UiSchema } from '@rjsf/utils';
-
 import { WorkflowProvider } from '@deps/contexts/WorkflowContainerContext';
 import { TaskType } from '@deps/models/case/task';
+import { Policy } from '@deps/models/policy/sor-policy';
 
-import { TaskWorkflow } from './task-workflow';
+import { getSteps } from './steps.helper';
+import { TaskWorkflowContent } from './task-workflow-content';
 
 type TaskContainerProps = {
+    policy: Policy;
     caseId: string;
     taskId: string;
     taskType: TaskType;
-    formSchema: RJSFSchema;
-    uiSchema: UiSchema;
-    taskData: any;
+    docType: string;
+    documentNumber: string;
+    clientCode: string;
+    taskInfoLink: string;
 };
 
-const TaskContainer = ({ caseId, taskId, taskType, formSchema, uiSchema, taskData }: TaskContainerProps) => {
+const TaskContainer = ({ policy, docType, documentNumber, clientCode, caseId, taskId, taskType, taskInfoLink }: TaskContainerProps) => {
+    const steps = getSteps({ policyNumber: policy.id || '', docType, clientCode, documentNumber, caseId, taskId, taskType });
     return (
         <WorkflowProvider>
-            <TaskWorkflow
-                caseId={caseId ?? ''}
-                taskId={taskId ?? ''}
-                taskType={taskType ?? ''}
-                taskData={taskData ?? {}}
-                formSchema={formSchema}
-                uiSchema={uiSchema}
+            <TaskWorkflowContent
+                steps={steps}
+                policy={policy}
+                docType={docType}
+                clientCode={clientCode}
+                documentNumber={documentNumber}
+                caseId={caseId}
+                taskId={taskId}
+                taskType={taskType}
+                taskInfoLink={taskInfoLink}
             />
         </WorkflowProvider>
     );

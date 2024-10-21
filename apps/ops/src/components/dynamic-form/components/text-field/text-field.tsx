@@ -1,3 +1,4 @@
+import { ErrorSchema } from '@rjsf/utils';
 import { Label } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { InputHTMLAttributes } from 'react';
@@ -10,10 +11,11 @@ interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
     fieldSize?: 'small' | 'large';
     status?: 'success' | 'error';
     disabled: boolean;
+    onChange: (value: any, es?: ErrorSchema<any> | undefined, id?: string) => void;
 }
 
 const TextField = (props: TextFieldProps) => {
-    const { id, label, className, disabled, ...rest } = props;
+    const { id, label, className, disabled, onChange, onBlur, onFocus, ...rest } = props;
     const textFieldId = id;
     const additionalLabelId = `${textFieldId}-label`;
     const classes = clsx(
@@ -31,7 +33,7 @@ const TextField = (props: TextFieldProps) => {
                     <Label>{label}</Label>
                 </div>
             )}
-            <input className={`${classes}`} {...rest} onChange={props.onChange} defaultValue={props.value} />
+            <input className={`${classes}`} {...rest} onChange={onChange} />
         </div>
     );
 };

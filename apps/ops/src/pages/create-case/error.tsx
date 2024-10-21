@@ -33,6 +33,7 @@ export const ERROR_CODES = {
     RENEWAL_FORM_PLAN_CODE: '15',
     DATA_ENTRY_START_TASK_ERROR: '16',
     POLICY_NOT_FOUND: '17',
+    PLAN_CODE_NOT_FOUND: '18',
 };
 
 // These keys map to the createCaseError.errorMessaging translations.

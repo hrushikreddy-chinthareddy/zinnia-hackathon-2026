@@ -1,5 +1,4 @@
 import { WidgetProps } from '@rjsf/utils';
-import React from 'react';
 
 import SelectComponent from '@deps/components/select/select';
 

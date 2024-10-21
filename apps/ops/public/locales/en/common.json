@@ -2703,7 +2703,6 @@
                 "reversePayment": "Reverse payment",
                 "reversePremiumPayment": "Reverse premium payment",
                 "successTitle": "Submitted!",
-
                 "successSubtitle": "A ",
                 "successSubtitle2": " of ",
                 "successSubtitle3": " was submitted for reversal to ",
@@ -4129,6 +4128,31 @@
                 "selectForm": "Select a form to continue."
             },
             "label": "Select the appropriate form that needs to be updated."
+        }
+    },
+    "suitability": {
+        "tabs": {
+            "taskReview": "Input Suitability Data",
+            "nigoDetails": "Missing Information",
+            "documentSelection": "New Form(s) Selection",
+            "confirm": "Confirm"
+        },
+        "taskReview": {
+            "title": "Input Suitability Data",
+            "subTitle": "Is the suitability form complete?",
+            "options": {
+                "allSectionsAreComplete": "All sections are complete and ready for data entry.",
+                "missingDetails": "All sections are not complete."
+            },
+            "view": "View",
+            "documentId": "Document ID"
+        },
+        "confirmStep": {
+            "title": "Submitted!",
+            "subTitle": "Your request has been sent for processing.",
+            "cta": "Go to case management",
+            "secondaryCta": "Close",
+            "submitTask": "Submit Suitability details"
         }
     }
 }

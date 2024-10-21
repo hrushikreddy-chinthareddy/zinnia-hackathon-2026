@@ -7,7 +7,7 @@ import fields from './customization/fields/fields';
 import templates from './customization/templates/templates';
 import widgets from './customization/widgets/widgets';
 
-interface DynamicFormProps {
+type DynamicFormProps = {
     handleChangeCallback: (data: IChangeEvent<unknown, RJSFSchema, GenericObjectType>, id?: string | undefined) => void;
     handleSubmitCallback: (data: IChangeEvent<unknown, RJSFSchema, GenericObjectType>, event: FormEvent<any>) => void;
     formData: any;
@@ -18,7 +18,7 @@ interface DynamicFormProps {
     overrideCustomFields?: any;
     overrideCustomWidgets?: any;
     formButtons?: any;
-}
+};
 
 const DynamicForm = React.forwardRef(function DynamicFormComponent(
     {
