@@ -29,9 +29,9 @@ type FormEntryStepProps = {
 };
 
 function FormEntryStep({document, clientCode, docType} : FormEntryStepProps) {
-    const [timer] = useState(performance.now());
     const router = useRouter();
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.formEntry' });
+    const { t: withdrawalTxt} = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const { goToNext } = useWorkflow();
     const { qualType } = useAccountInfo(document.contract, clientCode);
     const caseType = getCaseType(docType as string);
@@ -141,7 +141,7 @@ function FormEntryStep({document, clientCode, docType} : FormEntryStepProps) {
                 <div className="my-2">
                 {!areDiaryNotesViewed && !isFormStateReadOnly && (
                     <AssistiveText
-                        text={t('formValidation.diaryNotesViewWarning')}
+                        text={withdrawalTxt('formValidation.diaryNotesViewWarning')}
                         variant={AssistiveTextVariant.Error}
                         className="mt-2"
                     />

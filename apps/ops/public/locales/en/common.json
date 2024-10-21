@@ -4170,7 +4170,8 @@
             "subTitle": "Your request has been sent for processing.",
             "cta": "Go to case management",
             "secondaryCta": "Close",
-            "submitNigo": "Submit NIGO details"
+            "submitNigo": "Submit NIGO details",
+            "submitTask": "Submit task details"
         },
         "nigoDetails": {
             "title": "Missing Information",

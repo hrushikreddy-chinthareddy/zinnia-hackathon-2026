@@ -16,6 +16,7 @@ import { TaskStatus } from '@deps/models/case/task-instance';
 import { updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 
+import { useNigoEntry } from '../../nigo-entry-provider';
 
 interface ConfirmStepProps {
     documentNumber?: string;
@@ -26,27 +27,28 @@ interface ConfirmStepProps {
 const ConfirmStep = ({ document}: ConfirmStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.confirmStep' });
     const router = useRouter();
+    const { isReadyForDataEntry } = useNigoEntry();
     const formState = useContext(FormDataContext);
     const [submitFailed, setSubmitFailed] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [timer] = useState(performance.now());
 
     const submit = useCallback(async () => {
-        let successfulCaseUpdate;
-
-        if (TaskApiVersionMapper[formState.initialForm.taskType] === ApiVersion.v2) {
-            successfulCaseUpdate = await updateTask(
+        if (TaskApiVersionMapper[formState.initialForm.taskType] === ApiVersion.v2 && formState.initialForm.status !== TaskStatus.Completed) {
+            const successfulCaseUpdate = await updateTask(
                 formState.initialForm.caseId,
-                formState.initialForm?.taskId,
+                formState.initialForm.taskId,
                 buildFormV2(TaskStatus.Completed, document, formState),
                 timer
             );
-        }
 
-        if (successfulCaseUpdate && successfulCaseUpdate.id) {
-            setSubmitFailed(false);
+            if (successfulCaseUpdate && successfulCaseUpdate.id) {
+                setSubmitFailed(false);
+            } else {
+                setSubmitFailed(true);
+            }
         } else {
-            setSubmitFailed(true);
+            setSubmitFailed(false);
         }
 
         setIsLoading(false);
@@ -70,7 +72,7 @@ const ConfirmStep = ({ document}: ConfirmStepProps) => {
                 leaveRoute={'/create-case'}
                 submit={{
                     action: submit,
-                    text: t('submitNigo'),
+                    text: isReadyForDataEntry ? t('submitTask') : t('submitNigo'),
                 }}
             />
         );
