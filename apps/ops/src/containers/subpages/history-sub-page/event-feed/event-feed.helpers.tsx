@@ -11,12 +11,13 @@ import {
     TransactionFilters,
 } from '@deps/contexts/HistoryFiltersContext';
 import {
-    allCompletedTransactionTypes,
-    allPendingTransactionTypes,
-    completedTransactionTypes,
-    pendingTransactionTypes,
+    allTransactions,
+    allTransactionTypes,
+    financialTransactions,
+    peopleTransactions,
+    policyTransactions,
 } from '@deps/helpers/transaction-types.helper';
-import { Policy, Transaction, TransactionStatus, TransactionType } from '@deps/models/policy/sor-policy';
+import { Policy, Transaction, TransactionStatus } from '@deps/models/policy/sor-policy';
 import { getPolicyTransactions } from '@deps/queries/api/policies';
 
 export interface Transactions {
@@ -34,10 +35,12 @@ interface GetTransactionsProps {
 export const getEvents = (eventFilter?: EventFilters) => {
     if (!hasFilter(eventFilter)) {
         return {
-            completedTransactionTypes: allCompletedTransactionTypes,
-            pendingTransactionTypes: allPendingTransactionTypes,
+            completedTransactionTypes: allTransactionTypes,
+            pendingTransactionTypes: allTransactionTypes,
         };
     }
+
+    const values: string[] = [];
 
     const [filterName, subfilterName] = Object.entries(eventFilter as EventFilters)[0];
 
@@ -46,33 +49,28 @@ export const getEvents = (eventFilter?: EventFilters) => {
             switch (subfilterName) {
                 case PolicyFilters.Anniversary:
                     return {
-                        completedTransactionTypes: [TransactionType.Anniversary],
-                        pendingTransactionTypes: [TransactionType.Anniversary],
+                        completedTransactionTypes: policyTransactions[PolicyFilters.Anniversary],
+                        pendingTransactionTypes: policyTransactions[PolicyFilters.Anniversary],
                     };
                 case PolicyFilters.Coverage:
                     return {
-                        completedTransactionTypes: [TransactionType.DeathClaim],
-                        pendingTransactionTypes: [TransactionType.DeathClaim],
+                        completedTransactionTypes: policyTransactions[PolicyFilters.Coverage],
+                        pendingTransactionTypes: policyTransactions[PolicyFilters.Coverage],
+                    };
+                case PolicyFilters.Fees:
+                    return {
+                        completedTransactionTypes: policyTransactions[PolicyFilters.Fees],
+                        pendingTransactionTypes: policyTransactions[PolicyFilters.Fees],
                     };
                 case PolicyFilters.KeyDates:
                     return {
-                        completedTransactionTypes: [TransactionType.Activation, TransactionType.Lapse],
-                        pendingTransactionTypes: [TransactionType.Activation, TransactionType.Lapse],
+                        completedTransactionTypes: policyTransactions[PolicyFilters.KeyDates],
+                        pendingTransactionTypes: policyTransactions[PolicyFilters.KeyDates],
                     };
                 default:
                     return {
-                        completedTransactionTypes: [
-                            TransactionType.Activation,
-                            TransactionType.Anniversary,
-                            TransactionType.DeathClaim,
-                            TransactionType.Lapse,
-                        ],
-                        pendingTransactionTypes: [
-                            TransactionType.Activation,
-                            TransactionType.Anniversary,
-                            TransactionType.DeathClaim,
-                            TransactionType.Lapse,
-                        ],
+                        completedTransactionTypes: policyTransactions.all,
+                        pendingTransactionTypes: policyTransactions.all,
                     };
             }
 
@@ -80,47 +78,28 @@ export const getEvents = (eventFilter?: EventFilters) => {
             switch (subfilterName) {
                 case TransactionFilters.Loans:
                     return {
-                        completedTransactionTypes: [
-                            'LoanRepaymentOneTime' as TransactionType,
-                            TransactionType.SystematicLoanRepayment,
-                            TransactionType.NewLoan,
-                        ],
-                        pendingTransactionTypes: [
-                            TransactionType.PaymentLoanRepaymentOneTime,
-                            TransactionType.PaymentSystematicLoanRepayment,
-                            TransactionType.NewLoan,
-                        ],
+                        completedTransactionTypes: financialTransactions[TransactionFilters.Loans],
+                        pendingTransactionTypes: financialTransactions[TransactionFilters.Loans],
                     };
                 case TransactionFilters.Premiums:
                     return {
-                        completedTransactionTypes: [
-                            TransactionType.InitialPremium,
-                            TransactionType.SubsequentPremium,
-                            TransactionType.OneTimePremium,
-                        ],
-                        pendingTransactionTypes: [
-                            TransactionType.PaymentInitialPremium,
-                            TransactionType.SubsequentPayment,
-                            TransactionType.PaymentOneTimePremium,
-                        ],
+                        completedTransactionTypes: financialTransactions[TransactionFilters.Premiums],
+                        pendingTransactionTypes: financialTransactions[TransactionFilters.Premiums],
+                    };
+                case TransactionFilters.SystematicPrograms:
+                    return {
+                        completedTransactionTypes: financialTransactions[TransactionFilters.SystematicPrograms],
+                        pendingTransactionTypes: financialTransactions[TransactionFilters.SystematicPrograms],
                     };
                 case TransactionFilters.Withdrawals:
                     return {
-                        completedTransactionTypes: [TransactionType.FullSurrender, TransactionType.PartialWithdrawalOneTime],
-                        pendingTransactionTypes: [TransactionType.FullSurrender, TransactionType.PartialWithdrawalOneTime],
+                        completedTransactionTypes: financialTransactions[TransactionFilters.Withdrawals],
+                        pendingTransactionTypes: financialTransactions[TransactionFilters.Withdrawals],
                     };
                 default:
                     return {
-                        completedTransactionTypes: [
-                            ...completedTransactionTypes,
-                            TransactionType.FullSurrender,
-                            TransactionType.PartialWithdrawalOneTime,
-                        ],
-                        pendingTransactionTypes: [
-                            ...pendingTransactionTypes,
-                            TransactionType.FullSurrender,
-                            TransactionType.PartialWithdrawalOneTime,
-                        ],
+                        completedTransactionTypes: financialTransactions.all,
+                        pendingTransactionTypes: financialTransactions.all,
                     };
             }
 
@@ -128,53 +107,60 @@ export const getEvents = (eventFilter?: EventFilters) => {
             switch (subfilterName) {
                 case PeopleFilters.Address:
                     return {
-                        completedTransactionTypes: [TransactionType.AddressChange],
-                        pendingTransactionTypes: [TransactionType.AddressChange],
+                        completedTransactionTypes: peopleTransactions[PeopleFilters.Address],
+                        pendingTransactionTypes: peopleTransactions[PeopleFilters.Address],
                     };
                 case PeopleFilters.BankAccount:
                     return {
-                        completedTransactionTypes: [TransactionType.BankAccountChange],
-                        pendingTransactionTypes: [TransactionType.BankAccountChange],
+                        completedTransactionTypes: peopleTransactions[PeopleFilters.BankAccount],
+                        pendingTransactionTypes: peopleTransactions[PeopleFilters.BankAccount],
                     };
-                // case PeopleFilters.CommunicationPreference: BPB - TODO: DEPU-2218
-                //     return {
-                //         completedTransactionTypes: [TransactionType.CommunicationPreferenceChange],
-                //         pendingTransactionTypes: [TransactionType.CommunicationPreferenceChange],
-                //         canceledTransactionTypes: [],
-                //     };
+                case PeopleFilters.Beneficiary:
+                    return {
+                        completedTransactionTypes: peopleTransactions[PeopleFilters.Beneficiary],
+                        pendingTransactionTypes: peopleTransactions[PeopleFilters.Beneficiary],
+                    };
+                case PeopleFilters.CommunicationPreference:
+                    return {
+                        completedTransactionTypes: peopleTransactions[PeopleFilters.CommunicationPreference],
+                        pendingTransactionTypes: peopleTransactions[PeopleFilters.CommunicationPreference],
+                    };
                 case PeopleFilters.Email:
                     return {
-                        completedTransactionTypes: [TransactionType.EmailChange],
-                        pendingTransactionTypes: [TransactionType.EmailChange],
+                        completedTransactionTypes: peopleTransactions[PeopleFilters.Email],
+                        pendingTransactionTypes: peopleTransactions[PeopleFilters.Email],
+                    };
+                case PeopleFilters.Name:
+                    return {
+                        completedTransactionTypes: peopleTransactions[PeopleFilters.Name],
+                        pendingTransactionTypes: peopleTransactions[PeopleFilters.Name],
                     };
                 case PeopleFilters.Phone:
                     return {
-                        completedTransactionTypes: [TransactionType.PhoneNumberChange],
-                        pendingTransactionTypes: [TransactionType.PhoneNumberChange],
+                        completedTransactionTypes: peopleTransactions[PeopleFilters.Phone],
+                        pendingTransactionTypes: peopleTransactions[PeopleFilters.Phone],
+                    };
+                case PeopleFilters.Role:
+                    return {
+                        completedTransactionTypes: peopleTransactions[PeopleFilters.Role],
+                        pendingTransactionTypes: peopleTransactions[PeopleFilters.Role],
+                    };
+                case PeopleFilters.TPD:
+                    return {
+                        completedTransactionTypes: peopleTransactions[PeopleFilters.TPD],
+                        pendingTransactionTypes: peopleTransactions[PeopleFilters.TPD],
                     };
                 default:
                     return {
-                        completedTransactionTypes: [
-                            TransactionType.AddressChange,
-                            TransactionType.BankAccountChange,
-                            // TransactionType.CommunicationPreferenceChange, BPB - TODO: DEPU-2218
-                            TransactionType.EmailChange,
-                            TransactionType.PhoneNumberChange,
-                        ],
-                        pendingTransactionTypes: [
-                            TransactionType.AddressChange,
-                            TransactionType.BankAccountChange,
-                            // TransactionType.CommunicationPreferenceChange, BPB - TODO: DEPU-2218
-                            TransactionType.EmailChange,
-                            TransactionType.PhoneNumberChange,
-                        ],
+                        completedTransactionTypes: peopleTransactions.all,
+                        pendingTransactionTypes: peopleTransactions.all,
                     };
             }
 
         default:
             return {
-                completedTransactionTypes: allCompletedTransactionTypes,
-                pendingTransactionTypes: allPendingTransactionTypes,
+                completedTransactionTypes: allTransactions.all,
+                pendingTransactionTypes: allTransactions.all,
             };
     }
 };

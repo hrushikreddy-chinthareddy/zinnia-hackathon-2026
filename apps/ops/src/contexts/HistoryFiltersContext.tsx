@@ -13,15 +13,20 @@ export enum PeopleFilters {
     All = 'all',
     Address = 'address',
     BankAccount = 'bankAccount',
-    // CommunicationPreference = 'communicationPreference', BPB - TODO: DEPU-2218
+    Beneficiary = 'beneficiary',
+    CommunicationPreference = 'communicationPreference',
     Email = 'email',
+    Name = 'name',
     Phone = 'phone',
+    Role = 'role',
+    TPD = 'tpd',
 }
 
 export enum PolicyFilters {
     All = 'all',
     Anniversary = 'anniversary',
     Coverage = 'coverage',
+    Fees = 'fees',
     KeyDates = 'keyDates',
 }
 
@@ -29,6 +34,7 @@ export enum TransactionFilters {
     All = 'all',
     Premiums = 'premiums',
     Loans = 'loans',
+    SystematicPrograms = 'systematicPrograms',
     Withdrawals = 'withdrawals',
 }
 
