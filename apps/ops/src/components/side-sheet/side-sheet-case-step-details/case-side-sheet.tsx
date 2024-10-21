@@ -3,8 +3,8 @@ import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
 import { TransformedStep } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
-import StepAdditionalData from '@deps/containers/case-overview/step-overview/step-additional-data';
-import { AdditionalDataIds } from '@deps/models/case/additional-data-instance';
+import StepAdditionalData, { hasAdditionalDataSideSheet } from '@deps/containers/case-overview/step-overview/step-additional-data';
+import { AdditionalDataStepIds } from '@deps/models/case/additional-data-instance';
 
 import DocumentsTab from './tabs/documents-tab';
 import MultiInstanceTab from './tabs/multi-instance-tab';
@@ -27,7 +27,7 @@ const getStepSidesheetViews = (step: TransformedStep): string[] => {
         sideSheetViews.push(StepSideSheetViews.Documents);
     }
 
-    if (Object.keys(step.additionalData).length > 0) {
+    if (hasAdditionalDataSideSheet(step)) {
         sideSheetViews.push(StepSideSheetViews.AdditionalData);
     }
 
@@ -62,7 +62,7 @@ export default function StepSideSheetContent({ step }: { step: TransformedStep }
                 <TabContent className="w-full p-8" value={StepSideSheetViews.AdditionalData}>
                     <StepAdditionalData
                         additionalData={step.additionalData}
-                        stepKey={step.id as AdditionalDataIds}
+                        stepKey={step.id as AdditionalDataStepIds}
                         status={step.status}
                         date={step.updatedAt}
                     />
