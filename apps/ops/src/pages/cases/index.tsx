@@ -350,10 +350,10 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
 
         return (
             <>
-                <CaseResultTable cases={cases} />
+                <CaseResultTable cases={cases} searchValues={caseManagementFilters.searchValue} />
             </>
         );
-    }, [caseTableData]);
+    }, [caseTableData, caseManagementFilters.searchValue]);
 
     // Sidesheet Support
     const sideSheet = useSideSheetContext();

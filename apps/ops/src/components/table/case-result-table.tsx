@@ -8,6 +8,7 @@ import { getAgents, getPolicyOwners } from '@deps/helpers/parties';
 import { formatDateDescriptionList, formatSSN, toTitleCase } from '@deps/helpers/string.helper';
 import { Case } from '@deps/models/case/case';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { SearchViewQuery } from '@deps/types/search';
 import { getCarrierLogoByClientId } from '@deps/utils/carriers';
 
 import styles from './case-result-table.module.css';
@@ -24,7 +25,7 @@ interface PartyWithOthersProps extends PiiProps {
     entities: { name: string; ssn: string }[];
 }
 
-export const PartyWithOthers = ({ text, entities, highlights }: PartyWithOthersProps) => {
+const PartyWithOthers = ({ text, entities, highlights }: PartyWithOthersProps) => {
     const textWithHighlights = !!text && highlights && highlights.length ? <Highlighter text={text} highlights={highlights} /> : text;
 
     const textToRender = text ? (
@@ -47,9 +48,10 @@ export const PartyWithOthers = ({ text, entities, highlights }: PartyWithOthersP
 
 interface CaseResultTableProps {
     cases: Case[];
+    searchValues?: SearchViewQuery;
 }
 
-export const CaseResultTable = ({ cases }: CaseResultTableProps) => {
+export const CaseResultTable = ({ cases, searchValues }: CaseResultTableProps) => {
     return (
         <Table>
             <TableHeader>
@@ -75,7 +77,7 @@ export const CaseResultTable = ({ cases }: CaseResultTableProps) => {
 
                     const ownerComponentProps = {
                         text: toTitleCase(ownerName?.trim()),
-                        // highlights: [searchValues?.ownerFirstName, searchValues?.ownerLastName].filter(Boolean) as string[],
+                        highlights: [searchValues?.ownerFirstName, searchValues?.ownerLastName].filter(Boolean) as string[],
                         entities,
                         truncate: true,
                     };
@@ -85,8 +87,8 @@ export const CaseResultTable = ({ cases }: CaseResultTableProps) => {
                     const otherAgents = agents.slice(1).map(owner => ({ name: toTitleCase(owner.fullName), ssn: formatSSN(owner.ssn) }));
                     const agentComponentProps = {
                         text: toTitleCase(agents?.[0]?.fullName),
-                        // to do - are highlights needed for agents?
-                        // highlights: [searchValues?.ownerFirstName, searchValues?.ownerLastName].filter(Boolean) as string[],
+                        // to do - are highlights needed for agents and are these the right values?
+                        highlights: [searchValues?.ownerFirstName, searchValues?.ownerLastName].filter(Boolean) as string[],
                         entities: otherAgents,
                         truncate: true,
                     };
@@ -120,7 +122,7 @@ export const CaseResultTable = ({ cases }: CaseResultTableProps) => {
                                         pii={true}
                                         text={formatSSN(ssn)}
                                         className={styles.detail}
-                                        // highlights={searchValues?.ssn ? [searchValues?.ssn] : null}
+                                        highlights={searchValues?.ssn ? [searchValues?.ssn] : null}
                                     />
                                 </div>
                             </TableCell>
@@ -142,7 +144,7 @@ export const CaseResultTable = ({ cases }: CaseResultTableProps) => {
                                     <CaseDetailField
                                         pii={true}
                                         text={singleCase.policyNumber}
-                                        // highlights={searchValues?.policyNumber ? [searchValues?.policyNumber] : null}
+                                        highlights={searchValues?.policyNumber ? [searchValues?.policyNumber] : null}
                                     />
                                 </div>
                             </TableCell>
