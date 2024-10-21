@@ -18,6 +18,7 @@ const SelectWidget = (props: WidgetProps) => {
     ) : (
         <SelectComponent
             id={id}
+            label={props.label}
             value={value || ''}
             required={required}
             disabled={disabled || readonly}

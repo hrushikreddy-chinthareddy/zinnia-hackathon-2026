@@ -1,0 +1,104 @@
+import {
+  AssistiveText,
+  AssistiveTextVariant,
+  Label,
+} from '@zinnia/bloom/components';
+import clsx from 'clsx';
+import React, { useState, ChangeEvent, cloneElement } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+
+import fieldStyles from '../Field.module.css';
+import { FieldValueProps, FieldStatus, FieldDataActiveTestIds } from '../types';
+
+// TODO: might have to include "," and change this to validate against a currency
+const decimalRegex = /^-?\d*(\.\d*)?$/;
+
+export const FieldValue = React.forwardRef<HTMLInputElement, FieldValueProps>(
+  (
+    {
+      label,
+      fieldStatus = FieldStatus.DEFAULT,
+      errorMessage,
+      fieldSize,
+      currencySymbol,
+      onChange,
+      placeholder = 'Replace this text',
+      ...props
+    },
+    forwardRef
+  ) => {
+    if ((label.type as React.JSXElementConstructor<any>).name !== Label.name) {
+      throw new Error('Required field: label is not of type Label');
+    }
+
+    if (props.disabled) {
+      fieldStatus = FieldStatus.INACTIVE;
+    }
+
+    const [inputValue, setInputValue] = useState('');
+
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.value;
+
+      if (decimalRegex.test(value)) {
+        setInputValue(value);
+
+        if (onChange) {
+          onChange(event);
+        }
+      }
+    };
+
+    const inputId = uuidv4();
+
+    const clonedLabel = cloneElement(label, {
+      labelFor: inputId,
+      status: fieldStatus,
+    });
+
+    return (
+      <div>
+        <div data-testid={FieldDataActiveTestIds.LABEL}>{clonedLabel}</div>
+        <div
+          className={clsx(fieldStyles.inputContainer, fieldStyles[fieldStatus])}
+        >
+          <div
+            className={clsx(
+              fieldStyles.symbolBox,
+              fieldStyles[fieldStatus],
+              'typography-content-body-sm-bold'
+            )}
+          >
+            <span className={clsx(fieldStyles[fieldStatus])}>
+              {currencySymbol || '$'}
+            </span>
+          </div>
+          <input
+            type="text"
+            className={clsx(
+              fieldStyles.input,
+              fieldSize && fieldStyles[fieldSize],
+              fieldStyles[fieldStatus],
+              'typography-content-body'
+            )}
+            id={inputId}
+            value={inputValue}
+            onChange={handleInputChange}
+            placeholder={placeholder}
+            ref={forwardRef}
+            {...props}
+          />
+        </div>
+        {fieldStatus === FieldStatus.ERROR && errorMessage && (
+          <AssistiveText
+            className={fieldStyles.assistiveMessage}
+            text={errorMessage}
+            variant={AssistiveTextVariant.Error}
+          />
+        )}
+      </div>
+    );
+  }
+);
+
+FieldValue.displayName = 'FieldValue';

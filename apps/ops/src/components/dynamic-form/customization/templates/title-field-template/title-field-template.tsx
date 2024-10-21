@@ -1,7 +1,8 @@
 import { TitleFieldProps } from '@rjsf/utils';
-import { Label } from '@zinnia/bloom/components';
+
+import TitleField from './title-field';
 
 export function TitleFieldTemplate(props: TitleFieldProps) {
-    const { title } = props;
-    return <Label>{title}</Label>;
+    const { title, schema, registry } = props;
+    return <TitleField title={title} id={props.id} schema={schema} registry={registry}></TitleField>;
 }

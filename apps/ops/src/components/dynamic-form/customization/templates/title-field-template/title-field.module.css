@@ -1,0 +1,24 @@
+.container,
+.item {
+    display: flex;
+}
+
+.text {
+    margin-bottom: 8px;
+    margin-top: 24px;
+    font-family: var(--font-family-primary);
+    font-style: normal;
+    font-size: var(--measure-font-sizing-font-size-x-large);
+}
+
+.container {
+    align-items: center;
+    vertical-align: middle;
+    flex-flow: row nowrap;
+    line-height: var(--measure-line-height-font-line-height-medium);
+    gap: var(--measure-dimension-gap-sm);
+}
+
+.disabled {
+    color: var(--color-states-inactive-inactive-text, #b3b3b3);
+}

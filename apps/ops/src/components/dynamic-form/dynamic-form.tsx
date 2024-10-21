@@ -14,42 +14,13 @@ type DynamicFormProps = {
     formSchema: RJSFSchema;
     uiSchema: UiSchema;
     disabled?: boolean;
-    overrideCustomTemplates?: any;
-    overrideCustomFields?: any;
-    overrideCustomWidgets?: any;
     formButtons?: any;
 };
 
 const DynamicForm = React.forwardRef(function DynamicFormComponent(
-    {
-        formData,
-        formSchema,
-        uiSchema,
-        disabled,
-        handleChangeCallback,
-        handleSubmitCallback,
-        overrideCustomTemplates,
-        overrideCustomFields,
-        overrideCustomWidgets,
-        formButtons,
-    }: DynamicFormProps,
+    { formData, formSchema, uiSchema, disabled, handleChangeCallback, handleSubmitCallback, formButtons }: DynamicFormProps,
     forwardedRef: ForwardedRef<Form>
 ) {
-    const customTemplates = {
-        ...templates,
-        ...overrideCustomTemplates,
-    };
-
-    const customFields = {
-        ...fields,
-        ...overrideCustomFields,
-    };
-
-    const CustomWidgets = {
-        ...widgets,
-        ...overrideCustomWidgets,
-    };
-
     return (
         <div>
             <Form
@@ -60,9 +31,9 @@ const DynamicForm = React.forwardRef(function DynamicFormComponent(
                 onSubmit={handleSubmitCallback}
                 validator={validator}
                 uiSchema={uiSchema}
-                widgets={CustomWidgets}
-                fields={customFields}
-                templates={customTemplates}
+                widgets={widgets}
+                fields={fields}
+                templates={templates}
                 disabled={disabled}
             >
                 {formButtons}
