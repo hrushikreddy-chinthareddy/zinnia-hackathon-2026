@@ -96,11 +96,12 @@ const getDatePickerType = (selectedStatements: StatementTypes[]) => {
     }
 };
 
-const getSortedStatements = (statements: PolicyDocument[]) => {
-    const ownerCopyStatements = statements.filter(statement => statement.displayCode === DocumentDisplayCode.Owner);
-    return ownerCopyStatements.sort((a, b) => {
-        return dayjs(b.documentDate).valueOf() - dayjs(a.documentDate).valueOf();
-    });
+const ownerCopyStatements = (statements: PolicyDocument[]) => {
+    return statements
+        ?.filter(statement => statement.displayCode === DocumentDisplayCode.Owner)
+        ?.sort((a, b) => {
+            return dayjs(b.documentDate).isBefore(a.documentDate) ? 1 : -1;
+        });
 };
 
 function StatementSelection({ policy, applicableStatement, statements, setStatements }: StatementSelectionProps) {
@@ -184,7 +185,7 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                             return;
                         }
                         const statements: PolicyDocuments = response.data;
-                        setStatements(getSortedStatements(statements.items));
+                        setStatements(ownerCopyStatements(statements.items));
                     }
                 } catch (error) {
                     console.error('An error occurred while getting Contact Center statements', error);
