@@ -1808,6 +1808,7 @@
         "sidebar": {
             "abbreviatedCaseId": "Cais.",
             "abbreviatedContractId": "Ctr.",
+            "abbreviatedContractValue": "Ctr Val.",
             "abbreviatedDocumentNumber": "Doc.",
             "abbreviatedQualType": "Qual.",
             "abbreviatedIssueDate": "Issue.",
@@ -1816,6 +1817,7 @@
             "qualType": "type de qualification",
             "issueDate": "Date d'émission",
             "contractId": "ID du contrat",
+            "contractValue":"valeur du contrat",
             "ownerName": "Le nom du propriétaire",
             "annuitantName": "Nom du rentier",
             "copyToClipboard": "Copier {{item}} dans le presse-papiers",
