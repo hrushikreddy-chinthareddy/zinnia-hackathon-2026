@@ -2906,6 +2906,7 @@
         "documentsEmptyTitle": "No documents yet.",
         "documentsEmptyText": "Looks like there aren’t any documents attached to this case.",
         "documentUnsupported": "Content Type {{extension}} is unsupported.",
+        "documentNotFound": "Oops! Something went wrong getting the document.",
         "notes": "Notes ({{count}})",
         "notesEmptyTitle": "No notes yet.",
         "notesEmptyText": "Looks like there aren’t any notes attached to this case.",
