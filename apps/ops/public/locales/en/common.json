@@ -4202,7 +4202,6 @@
     "suitability": {
         "tabs": {
             "taskReview": "Input Suitability Data",
-            "nigoDetails": "Missing Information",
             "documentSelection": "New Form(s) Selection",
             "confirm": "Confirm"
         },
@@ -4220,6 +4219,23 @@
             "title": "Submitted!",
             "subTitle": "Your request has been sent for processing.",
             "cta": "Go to case management",
+            "secondaryCta": "Close",
+            "submitTask": "Submit Suitability details"
+        }
+    },
+    "suitabilityreview": {
+        "tabs": {
+            "taskReview": "Review Suitability",
+            "confirm": "Confirm"
+        },
+        "taskReview": {
+            "title": "Review Suitability",
+            "subTitle": "This customer's application was flagged for review. Accept or Decline each issue before submitting a final decision."
+        },
+        "confirmStep": {
+            "title": "Submitted!",
+            "subTitle": "Review suitability was submitted.",
+            "cta": "Go to incoming transfer",
             "secondaryCta": "Close",
             "submitTask": "Submit Suitability details"
         }

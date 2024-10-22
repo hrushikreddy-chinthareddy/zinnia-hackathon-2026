@@ -55,7 +55,7 @@ export const TaskPage: React.FC<TaskPageProps> = ({
     taskInfoLink,
 }: TaskPageProps) => {
     const formRef = createRef<Form>();
-    taskType = TaskType.Suitability;
+    taskType = TaskType.SuitabilityReview;
     return (
         <div>
             <PageHead titleKey="caseOverview" />
@@ -169,8 +169,6 @@ export const getServerSideProps = withPageAuthRequired({
 
             const userInfoForLogging = getUserInfoFromUser(user);
             const policy = await getPolicyDetailsSsr(contractNum, planCode, accessToken, userInfoForLogging);
-
-            const docType = docTypes[task?.process || ''];
             if (!policy) {
                 logError('task::Policy not found', {
                     taskId,
@@ -189,6 +187,7 @@ export const getServerSideProps = withPageAuthRequired({
             }
             const taskInfoLink = buildTaskLink(taskId, caseId || '', process || '', documentNumber, clientCode);
 
+            const docType = docTypes[task?.process || ''];
             return {
                 props: {
                     ...translations,

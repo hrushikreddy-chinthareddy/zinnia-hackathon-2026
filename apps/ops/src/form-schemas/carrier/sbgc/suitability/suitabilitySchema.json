@@ -1587,14 +1587,13 @@
                     "ui:options": {
                         "isField": true
                     },
-                    "ui:TitleFieldTemplate": "TitleFieldTemplate",
                     "ui:helpText": "Applicant's type"
                 },
                 "roleType": {
                     "$ref": "#/definitions/roleTypeEnum"
                 },
                 "fullName": {
-                    "ui:placeholder": "First name",
+                    "ui:placeholder": "Full name",
                     "ui:helpText": "Applicant's first name",
                     "ui:options": {
                         "readyOnly": true
@@ -1606,7 +1605,10 @@
                     "properties": {
                         "firstName": {
                             "ui:placeholder": "First name",
-                            "ui:helpText": "Applicant's first name"
+                            "ui:helpText": "Applicant's first name",
+                            "ui:options": {
+                                "label": false
+                            }
                         },
                         "middleName": {
                             "ui:placeholder": "Middle name",
@@ -1784,7 +1786,11 @@
         },
         "fiscalData": {
             "properties": {
-                "annualIncome": {},
+                "annualIncome": {
+                    "ui:options": {
+                        "inline": true
+                    }
+                },
                 "netWorth": {},
                 "liquidNetWorth": {},
                 "sourceOfIncome": {

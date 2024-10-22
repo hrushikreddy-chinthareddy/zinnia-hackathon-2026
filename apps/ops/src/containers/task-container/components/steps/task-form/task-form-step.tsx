@@ -5,17 +5,19 @@ import TransactionNavigationButtons, { ParentPage } from '@deps/components/trans
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
+import { TaskType } from '@deps/models/case/task';
 
 import { TaskForm } from './task-form';
 
 interface TaskFormStepProps {
     isSummaryView?: boolean;
     formRef?: any;
-    taskInfoLink: string;
+    taskInfoLink?: string;
+    taskType: TaskType;
 }
 
-export const TaskFormStep = ({ isSummaryView = false, taskInfoLink }: TaskFormStepProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'suitability.taskReview' });
+export const TaskFormStep = ({ taskType, isSummaryView = false, taskInfoLink }: TaskFormStepProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${taskType.toLowerCase()}.taskReview` });
     const { goToNext } = useWorkflow();
 
     const handleStepContinue = useCallback(() => {

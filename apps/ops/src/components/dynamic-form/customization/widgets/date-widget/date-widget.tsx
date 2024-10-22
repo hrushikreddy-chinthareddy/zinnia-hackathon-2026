@@ -8,9 +8,11 @@ import {
     // TranslatableString,
     WidgetProps,
 } from '@rjsf/utils';
-import { DatePicker, Label } from '@zinnia/bloom/components';
+import { Label } from '@zinnia/bloom/components';
 // import _pick from 'lodash/pick';
 import { FocusEvent } from 'react';
+
+import { FieldDate } from '@deps/components/field/date/FieldDate';
 
 // Keys of IDropdownProps from @fluentui/react
 // const allowedProps = [
@@ -87,7 +89,7 @@ const formatDate = (date?: Date) => {
 export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
     id,
     // required,
-    // label,
+    label,
     // hideLabel,
     value,
     onChange,
@@ -111,13 +113,25 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
     // const uiProps = _pick((options.props as object) || {}, allowedProps);
 
     return (disabled as boolean) ? (
-        <Label>{value}</Label>
+        { value }
     ) : (
-        <DatePicker
-            defaultMonth={new Date('1969-12-31T18:30:00.000Z')}
-            mode="single"
-            onSelect={function ra() {}}
-            selected={new Date('1969-12-31T18:30:00.000Z')}
-        />
+        <div className="max-w-sm flex w-full flex-col">
+            <FieldDate
+                label={<Label labelFor="one-time-premium-payment-date">{label}</Label>}
+                name="one-time-premium-payment"
+                // onDateSelect={date => field.onChange(dayjs(date).format(DEFAULT_DATE_FORMAT))}
+                // defaultDate={formState.defaultValues?.effectiveDate || ''}
+                // disableAfterDate={new Date(sixtyDaysInFutureDay)}
+                // disableBeforeDate={new Date()}
+                // fieldStatus={formState.errors.effectiveDate ? FieldStatus.ERROR : FieldStatus.DEFAULT}
+                // errorMessage={formState.errors.effectiveDate?.message}
+            />
+        </div>
+        // <DatePicker
+        //     defaultMonth={new Date('1969-12-31T18:30:00.000Z')}
+        //     mode="single"
+        //     onSelect={function ra() {}}
+        //     selected={new Date('1969-12-31T18:30:00.000Z')}
+        // />
     );
 }

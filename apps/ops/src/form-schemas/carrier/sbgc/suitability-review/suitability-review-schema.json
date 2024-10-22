@@ -1,0 +1,99 @@
+{
+    "formSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "",
+        "description": "",
+        "type": "object",
+        "properties": {
+            "suitabiltyRules": {
+                "type": "array",
+                "title": "",
+                "items": {
+                    "type": "object",
+                    "title": "",
+                    "properties": {
+                        "issue": {
+                            "type": "string",
+                            "title": "Issue"
+                        },
+                        "rule": {
+                            "type": "string",
+                            "title": "Rule"
+                        },
+                        "applicationValue": {
+                            "type": "string",
+                            "title": "Additional Info"
+                        }
+                    }
+                }
+            },
+            "suitabilityStatus": {
+                "type": "string",
+                "title": "Suitability Decision",
+                "enum": [
+                    "Decline",
+                    "Accept"
+                ]
+            },
+            "declineReason": {
+                "type": "string",
+                "title": "Reason for Decline",
+                "enum": [
+                    "NOT_ELIGIBLE"
+                ]
+            },
+            "attachment": {
+                "type": "string",
+                "format": "data-url",
+                "title": "Add Attachment"
+            }
+        }
+    },
+    "uiSchema": {
+        "$schema": "http: //json-schema.org/draft-07/schema#",
+        "suitabiltyRules": {
+            "ui:options": {
+                "label": false
+            },
+            "items": {
+                "ui:ArrayFieldTemplate": "ArrayFieldTableTemplate",
+                "ui:options": {
+                    "canAdd": false
+                },
+                "issue": {
+                    "ui:placeholder": "Issue",
+                    "ui:helpText": "Issue",
+                    "ui:options": {
+                        "label": false
+                    }
+                },
+                "rule": {
+                    "ui:options": {
+                        "label": false
+                    }
+                },
+                "applicationValue": {
+                    "ui:options": {
+                        "label": false
+                    }
+                }
+            }
+        },
+        "suitabilityStatus": {
+            "ui:options": {
+                "label": false,
+                "widget": "radio"
+            }
+        },
+        "declineReason": {
+            "ui:options": {
+                "label": false
+            }
+        },
+        "attachment": {
+            "ui:options": {
+                "label": false
+            }
+        }
+    }
+}

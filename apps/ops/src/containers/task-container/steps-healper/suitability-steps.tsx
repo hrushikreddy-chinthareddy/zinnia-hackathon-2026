@@ -25,14 +25,14 @@ export const getSuitabilitySteps = ({ policyNumber, docType, clientCode, documen
         },
         {
             ariaLabel: 'Suitability form',
-            component: <TaskFormStep taskInfoLink={''}></TaskFormStep>,
+            component: <TaskFormStep taskType={taskType} taskInfoLink={''}></TaskFormStep>,
             text: 'Suitability Form',
             index: 1,
             screenReaderLabel: 'Suitability form',
         },
         {
             ariaLabel: 'Summary',
-            component: <TaskFormStep taskInfoLink={''} isSummaryView={true}></TaskFormStep>,
+            component: <TaskFormStep taskType={taskType} taskInfoLink={''} isSummaryView={true}></TaskFormStep>,
             text: 'Summary',
             index: 2,
             screenReaderLabel: 'Summary',

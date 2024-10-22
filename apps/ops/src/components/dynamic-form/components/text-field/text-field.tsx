@@ -3,8 +3,6 @@ import { Label } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { InputHTMLAttributes } from 'react';
 
-import { FieldValue } from '@deps/components/field/value/FieldValue';
-
 import styles from './text-field.module.css';
 
 interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -17,7 +15,7 @@ interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 const TextField = (props: TextFieldProps) => {
-    const { id, label, className, disabled, onChange, onBlur, onFocus } = props;
+    const { id, label, value, className, disabled, onChange, onBlur, onFocus } = props;
 
     const classes = clsx(
         // styles.error,
@@ -29,7 +27,7 @@ const TextField = (props: TextFieldProps) => {
 
     return (
         <>
-            <FieldValue
+            {/* <FieldValue
                 name={id}
                 label={<Label labelFor={id}>{label}</Label>}
                 id={id}
@@ -37,10 +35,10 @@ const TextField = (props: TextFieldProps) => {
                 onChange={onChange}
                 onBlur={onBlur}
                 onFocus={onFocus}
-            ></FieldValue>
+            ></FieldValue> */}
 
             {!!label && <Label labelFor={id}>{label}</Label>}
-            <input id={id} className={`${classes}`} onChange={onChange} placeholder={label} />
+            <input id={id} className={`${classes}`} onChange={onChange} placeholder={label} value={value} />
         </>
     );
 };

@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 
 import { ActiveReg60Case } from '@deps/containers/otp/reg60-forms/reg60.types';
-import suitabilitySchema from '@deps/form-schemas/carrier/sbgc/suitability/suitabilitySchema.json';
+import suitabilitySchema from '@deps/form-schemas/carrier/sbgc/suitability-review/suitability-review-schema.json';
 import { ProcessType } from '@deps/models/case/enums';
 import { CreateTaskBody, CreateTaskResponse, FormMetadata, TaskType, TaskV1Payload } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
