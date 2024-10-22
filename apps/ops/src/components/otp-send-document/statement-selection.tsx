@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import 'react-pdf/dist/Page/TextLayer.css';
 import { Loader } from '@deps/components/page-loader';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { PolicyDocument, PolicyDocuments } from '@deps/models/case/document';
+import { DocumentDisplayCode, PolicyDocument, PolicyDocuments } from '@deps/models/case/document';
 import { StatementStartYear, StatementTypes } from '@deps/models/case/send-statement';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
@@ -97,7 +97,8 @@ const getDatePickerType = (selectedStatements: StatementTypes[]) => {
 };
 
 const getSortedStatements = (statements: PolicyDocument[]) => {
-    return statements.sort((a, b) => {
+    const ownerCopyStatements = statements.filter(statement => statement.displayCode === DocumentDisplayCode.Owner);
+    return ownerCopyStatements.sort((a, b) => {
         return dayjs(b.documentDate).valueOf() - dayjs(a.documentDate).valueOf();
     });
 };
@@ -255,7 +256,6 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                     datePickerType={datePickerType}
                     isDateAllowed={date => handleIsDateAllowed(date, startDate)}
                 />
-
             </div>
 
             {loader ? (
