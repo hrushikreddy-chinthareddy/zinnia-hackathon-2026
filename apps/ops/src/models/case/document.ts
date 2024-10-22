@@ -50,6 +50,7 @@ export interface DocumentData {
     clientInstitution: string;
     contract: string;
     contractStatusCode: string;
+    contractValue:string;
     dateReceived: string;
     distributionChannel: string;
     documentDate: string;
