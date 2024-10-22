@@ -16,6 +16,7 @@ import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { isNonProductionEnvironment } from '@deps/helpers/environment.helper';
 import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
 import { DocumentData } from '@deps/models/case/document';
+import { TaskStatus } from '@deps/models/case/task-instance';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
@@ -127,6 +128,7 @@ function FormEntryStep({document, clientCode, docType} : FormEntryStepProps) {
                     handleContinue={handleFormSubmit}
                     parentPage={ParentPage.CreateCase}
                     leaveTransactionLink='/create-case'
+                    disableContinue={formState.initialForm?.status === TaskStatus.Completed}
                 />
             }
         >
