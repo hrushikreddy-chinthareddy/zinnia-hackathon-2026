@@ -248,6 +248,7 @@ export const getServerSideProps = withPageAuthRequired({
             serverSideTranslations(locale, [TranslationFiles.COMMON]),
             getDocumentSSR(documentNumber, DocumentType.SSW, clientId.toUpperCase(), accessToken),
         ]);
+
         if (!document?.contract) {
             logError('create-case/ssw/:id::Error getting document', { documentNumber, clientId });
             return {
