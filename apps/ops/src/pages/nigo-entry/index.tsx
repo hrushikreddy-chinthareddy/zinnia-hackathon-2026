@@ -16,6 +16,7 @@ import { DocumentData } from '@deps/models/case/document';
 import { docTypes } from '@deps/models/case/helpers';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { TransactionType } from '@deps/models/case/send-document';
+import { TaskStatus } from '@deps/models/case/task-instance';
 import { ActiveWithdrawalCase, Carrier } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
@@ -23,6 +24,7 @@ import { mapTaskToActiveWithdrawalCaseTask } from '@deps/operations/tasks/v2/hel
 import { getTransactionTypesSSR } from '@deps/queries/api/c2web';
 import { searchCasesSSR } from '@deps/queries/api/cases';
 import { getDocumentSSR } from '@deps/queries/api/documents';
+import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import { getPolicyDetailsSsr, getPolicyPartiesSSR, searchPolicySSR } from '@deps/queries/api/policies';
 import { getCaseTaskByIdSSR } from '@deps/queries/api/v2/task';
 import { FEATURE_FLAGS, FeatureKeyIdentifier } from '@deps/utils/optimizely/flags';
@@ -54,6 +56,7 @@ interface NigoEntryProps {
     document: DocumentData;
     taskInfoLink: string;
     prevTransactionDetails: TransactionDetails | null;
+    isNigoCase?: boolean;
 };
 
 const isNigoEntryEnabled = (clientId: string, process: string, featureFlagMap: FeatureFlags ) => {
@@ -76,7 +79,8 @@ const NigoEntry = ({
     featureFlagDecisions,
     document,
     taskInfoLink,
-    prevTransactionDetails
+    prevTransactionDetails,
+    isNigoCase
 }: NigoEntryProps) => {
     return (
         <div className="flex w-full flex-col overflow-auto px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10">
@@ -84,7 +88,7 @@ const NigoEntry = ({
                 form={form}
                 initialForm={form}
                 issueState={''}
-                isOpenNigo={false}
+                isOpenNigo={isNigoCase}
                 featureFlagDecisions={featureFlagDecisions}
                 parties={parties}
             >
@@ -257,6 +261,29 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
+            let isNigoCase = false;
+            const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
+            if (shouldShowNewExperience) {
+                isNigoCase = await checkNigoExistsSSR(clientCode?.toUpperCase(), document.caseId, accessToken);
+
+                if (isNigoCase && form?.status !== TaskStatus.Completed) {
+                    logInfo('nigoEntry::Nigo exists for case', {
+                        documentNumber,
+                        clientCode,
+                        caseId: document.caseId,
+                        lob: document?.lob,
+                    });
+                    return {
+                        redirect: {
+                            destination: `/create-case/error?errorCode=${ERROR_CODES.NIGO_EXISTS}`,
+                            permanent: false,
+                        },
+                    };
+                } else {
+                    logInfo('nigoEntry::Skipping NIGO check', { taskId, documentNumber, clientCode });
+                }
+            }
+
             const latestForm = searchCasesResponse?.data?.find((item) => (item?.additionalData?.requestSubType.toUpperCase() === docType.toUpperCase()));
             return {
                 props: {
@@ -274,7 +301,8 @@ export const getServerSideProps = withPageAuthRequired({
                     featureFlagDecisions,
                     document,
                     taskInfoLink,
-                    prevTransactionDetails: latestForm?.additionalData || null
+                    prevTransactionDetails: latestForm?.additionalData || null,
+                    isNigoCase,
                 },
             };
         } catch (error) {
