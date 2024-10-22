@@ -1,21 +1,10 @@
-import { TaskType } from '@deps/models/case/task';
+import { GetStepsProps } from './types';
+import { Step } from '../../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
+import ConfirmStep from '../components/steps/confirm/confirm-step';
+import { TaskFormStep } from '../components/steps/task-form/task-form-step';
+import { TaskReviewStep } from '../components/steps/task-review/task-review-step';
 
-import { Step } from '../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
-import ConfirmStep from './components/steps/confirm/confirm-step';
-import { TaskFormStep } from './components/steps/task-form/task-form-step';
-import { TaskReviewStep } from './components/steps/task-review/task-review-step';
-
-export type GetStepsProps = {
-    policyNumber: string;
-    docType: string;
-    clientCode: string;
-    documentNumber: string;
-    caseId: string;
-    taskId: string;
-    taskType: TaskType;
-};
-
-export const getSteps = ({ policyNumber, docType, clientCode, documentNumber, caseId, taskId, taskType }: GetStepsProps) => {
+export const getSuitabilitySteps = ({ policyNumber, docType, clientCode, documentNumber, caseId, taskId, taskType }: GetStepsProps) => {
     const steps: Step[] = [
         {
             ariaLabel: 'Input Suitability Data',

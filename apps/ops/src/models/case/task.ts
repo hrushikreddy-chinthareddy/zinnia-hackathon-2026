@@ -13,6 +13,7 @@ export enum TaskType {
     RENEWAL = 'RenewalTask',
     REG60 = 'NBReg60Comparision',
     Suitability = 'Suitability',
+    SuitabilityReview = 'SuitabilityReview',
 }
 export enum TaskSource {
     ZinniaTaskManagement = 'Zinnia.TaskManagement',

@@ -2,7 +2,7 @@ import { WorkflowProvider } from '@deps/contexts/WorkflowContainerContext';
 import { TaskType } from '@deps/models/case/task';
 import { Policy } from '@deps/models/policy/sor-policy';
 
-import { getSteps } from './steps.helper';
+import { stepsProvider } from './steps-healper/steps-provider';
 import { TaskWorkflowContent } from './task-workflow-content';
 
 type TaskContainerProps = {
@@ -17,7 +17,16 @@ type TaskContainerProps = {
 };
 
 const TaskContainer = ({ policy, docType, documentNumber, clientCode, caseId, taskId, taskType, taskInfoLink }: TaskContainerProps) => {
-    const steps = getSteps({ policyNumber: policy.id || '', docType, clientCode, documentNumber, caseId, taskId, taskType });
+    const steps = stepsProvider.getSteps(taskType, {
+        policyNumber: policy.id || '',
+        docType,
+        clientCode,
+        documentNumber,
+        caseId,
+        taskId,
+        taskType,
+    });
+
     return (
         <WorkflowProvider>
             <TaskWorkflowContent
