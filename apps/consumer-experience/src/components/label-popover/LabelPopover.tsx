@@ -15,7 +15,7 @@ export const LabelPopover = ({
       trigger={
         <Icon
           type={IconType.CIRCLE_INFO}
-          color="var(--color-base-icon-icon-tooltip, #ff7500)"
+          color="var(--color-base-icon-icon-tooltip)"
           small
         />
       }

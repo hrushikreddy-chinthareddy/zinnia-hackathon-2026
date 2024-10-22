@@ -1,3 +1,4 @@
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { getDocumentDownload } from '@/services/document';
@@ -39,7 +40,7 @@ const b64ToBlob = (b64data: string): Blob | null => {
 };
 export const GET = async (
   request: NextRequest,
-  { params }: { params: { documentId: string } }
+  { params }: { params: { documentId: string; lineOfBusiness: LineOfBusiness } }
 ) => {
   const session = await getSession();
   if (!session) {
@@ -82,7 +83,7 @@ export const GET = async (
 
     return NextResponse.redirect(
       new URL(
-        `/coverage/${planCode}/${policyNumber}/documents/error`,
+        `/coverage/${params.lineOfBusiness}/${planCode}/${policyNumber}/documents/error`,
         request.url
       )
     );

@@ -1,3 +1,4 @@
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Metadata } from 'next';
 
 import PdfPreviewer from '@/components/pdf-previewer/PdfPreviewer';
@@ -17,7 +18,9 @@ export default async function DocumentPreview({
   params,
   searchParams,
 }: {
-  params: PolicyRequestInputs & { documentId: string };
+  params: PolicyRequestInputs & { documentId: string } & {
+    lineOfBusiness: LineOfBusiness;
+  };
   searchParams: { source: string; clientCode: string; fileName: string };
 }) {
   return (
@@ -30,6 +33,7 @@ export default async function DocumentPreview({
           planCode={params.planCode}
           policyNumber={params.policyNumber}
           source={searchParams.source}
+          lineOfBusiness={params.lineOfBusiness}
         />
       </div>
     </div>

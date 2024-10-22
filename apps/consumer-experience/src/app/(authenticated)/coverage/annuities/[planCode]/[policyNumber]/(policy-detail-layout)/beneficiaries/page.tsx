@@ -9,6 +9,7 @@ import {
 } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
+import styles from '@/app/(authenticated)/coverage/shared-styles/Beneficiaries.module.css';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import MockMessage from '@/components/MockMessage';
@@ -17,8 +18,6 @@ import { FullName } from '@/components/pii/FullName';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getBeneficiaries } from '@/services/policy';
 import { Beneficiary } from '@/types/policy';
-
-import styles from '@/app/(authenticated)/coverage/shared-styles/Beneficiaries.module.css';
 
 const pageTitle = getPageTitle(RouteKey.BENEFICIARIES);
 // disable because NextJS needs this to be exported from this file
@@ -105,7 +104,7 @@ export default async function Beneficiaries({
       return {
         linkTo: {
           // For now using partyId here to identify the beneficiary, but it's not the best look from a consumer standpoint
-          url: `/coverage/${planCode}/${policyNumber}/beneficiaries/${bene.partyId}`,
+          url: `/coverage/annuities/${planCode}/${policyNumber}/beneficiaries/${bene.partyId}`,
           label: `go to primary beneficiary ${bene.firstName} ${bene.lastName} profile page`,
         },
         content: (
@@ -201,8 +200,8 @@ export default async function Beneficiaries({
                 <p>
                   Your contingent allocation tells us how to split up the money
                   between contingent beneficiaries, if needed. Contingent
-                  beneficiaries will receive payment from your death benefit
-                  only if your primary beneficiaries have died.
+                  beneficiaries will receive payment according to your contract
+                  terms, if your primary beneficiaries have died.
                 </p>
               </Popover>
             </div>

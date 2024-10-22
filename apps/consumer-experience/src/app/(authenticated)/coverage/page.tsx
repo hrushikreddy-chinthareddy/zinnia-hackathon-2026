@@ -106,13 +106,14 @@ export default async function Page({
                 />
                 <div className={styles.policyCardPolicyValues}>
                   <FieldData
-                    className="mr-3xl"
+                    className="mr-3xl typography-content-body-sm-bold"
                     Label={
                       <Label
                         interactiveElements={[
                           <AccountValuePopover
                             key="account-value-popover"
                             dataTimestamp={p.effectiveDate}
+                            lineOfBusiness={p.lineOfBusiness}
                           />,
                         ]}
                       >
@@ -123,13 +124,11 @@ export default async function Page({
                     {formatUSDollars(p.totalFundValue)}
                   </FieldData>
                   <FieldData
+                    className="typography-content-body-sm-bold"
                     Label={
                       <Label
                         interactiveElements={[
-                          <CoveragePopover
-                            key="coverage-popover"
-                            dataTimestamp={p.effectiveDate}
-                          />,
+                          <CoveragePopover key="coverage-popover" />,
                         ]}
                       >
                         Coverage

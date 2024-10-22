@@ -18,7 +18,6 @@ import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined } from '@/utils/data';
 import {
   convertKebabedDateString,
-  dayOfMonthWithOrdinal,
   standardDateMonthDayYear,
 } from '@/utils/dates';
 import {
@@ -94,7 +93,7 @@ export default async function Withdrawals({
         <p className="typography-content-body-sm">
           {withdrawalEligibility != null && (
             <span className="typography-content-body-sm-bold">
-              {withdrawalEligibility && !isFreelook
+              {withdrawalEligibilityData && !isFreelook
                 ? eligibleTextHighlight
                 : ineligibleTextHighlight}{' '}
             </span>
@@ -135,15 +134,7 @@ export default async function Withdrawals({
                       <div>
                         <p>
                           If eligible, this is the maximum amount available for
-                          withdrawal.{' '}
-                        </p>
-                        <p className="my-lg">
-                          {`Withdrawals have consequences. Withdrawing the maximum amount available may lead to policy lapse, if you don’t make a payment by the next monthiversary. (Your policy’s
-                  monthiversary happens every month on the ${dayOfMonthWithOrdinal(data.nextMonthiversaryDate)}.)`}
-                        </p>
-                        <p>
-                          Depending on the amount, a partial withdrawal can
-                          reduce your coverage amount and may be taxable.
+                          withdrawal.
                         </p>
                       </div>
                     </Popover>,
@@ -179,8 +170,7 @@ export default async function Withdrawals({
                         <Icon
                           type={IconType.CIRCLE_INFO}
                           color="var(--color-base-icon-icon-tooltip, #ff7500)"
-                          width={16}
-                          height={16}
+                          small
                         />
                       }
                     >
