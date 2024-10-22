@@ -97,6 +97,10 @@ const getDatePickerType = (selectedStatements: StatementTypes[]) => {
 };
 
 const ownerCopyStatements = (statements: PolicyDocument[]) => {
+    if (!statements) {
+        return [];
+    }
+
     return statements
         ?.filter(statement => statement.displayCode === DocumentDisplayCode.Owner)
         ?.sort((a, b) => {
