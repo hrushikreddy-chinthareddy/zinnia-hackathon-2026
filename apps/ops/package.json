@@ -21,7 +21,9 @@
         "check": "pnpm run lint && pnpm run typecheck && pnpm run test",
         "login:gh-pkg": "pnpm login --scope=@zinnia --registry=https://npm.pkg.github.com",
         "orval": "orval",
-        "pre-push": "pnpm check"
+        "pre-push": "pnpm check",
+        "cypress": "bash ./e2e/scripts/cypress-tests.sh",
+        "cypress:local": "bash ./e2e/scripts/cypress-tests.sh --local"
     },
     "dependencies": {
         "@ariakit/react": "^0.4.4",
