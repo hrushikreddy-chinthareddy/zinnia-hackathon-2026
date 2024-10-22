@@ -111,26 +111,6 @@ const applyMockCookies = (req: NextRequest, res: NextResponse<unknown>) => {
 
 export async function middleware(req: NextRequest) {
   const resNext = NextResponse.next();
-  const host = req.headers.get('x-forwarded-host') || '';
-
-  if (host.includes('zinniatech')) {
-    const url = req.nextUrl.clone();
-    let newHost = host.replace('zinniatech', 'mypolicyview');
-
-    // Some setup in aws was adding the port number even in qa
-    // so we're doing this to remove the port number in any environment
-    // higher than local
-    if (!host.includes('.local')) {
-      const mainUrl = newHost.split(':')[0];
-
-      if (mainUrl) {
-        newHost = mainUrl;
-      }
-    }
-
-    url.host = newHost;
-    return NextResponse.redirect(url, 308);
-  }
 
   const session = await getSession(resNext);
   const pathname = req.nextUrl.pathname;
