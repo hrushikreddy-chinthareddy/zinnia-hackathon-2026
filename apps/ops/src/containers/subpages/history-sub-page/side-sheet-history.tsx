@@ -9,6 +9,7 @@ import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav
 import SideSheet from '@deps/components/side-sheet/side-sheet';
 import { TranslationFiles } from '@deps/config/translations';
 import { HistoryFilters, useHistoryFiltersContext } from '@deps/contexts/HistoryFiltersContext';
+import TransactionStatusFilter from '@deps/components/history/filters/status-filter';
 
 interface SideSheetHistoryProps {
     isSideSheetOpen: boolean;
@@ -42,6 +43,7 @@ const SideSheetHistory = ({ isSideSheetOpen, setIsSideSheetOpen }: SideSheetHist
         <SideSheet handleClose={() => handleClose()} header="Filter Events" open={isSideSheetOpen}>
             <div className="flex flex-col gap-10 px-8 pt-8">
                 <div className="flex flex-col gap-6">
+                    <TransactionStatusFilter />
                     <YearFilter />
                     <TypeFilters />
                 </div>

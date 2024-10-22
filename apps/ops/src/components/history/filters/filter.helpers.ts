@@ -11,6 +11,7 @@ import {
 import { determineRange } from '@deps/helpers/numbers.helper';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { TransactionStatus } from '@deps/models/policy/sor-policy';
 
 export const getYearOptions = (policyIssueDate: string | undefined) => {
     const issueDate = dayjs(policyIssueDate);
@@ -32,7 +33,7 @@ export const getYearOptions = (policyIssueDate: string | undefined) => {
     return options;
 };
 
-export const hasFilter = (filter?: 'all' | EventFilters | YearFilters | null) => {
+export const hasFilter = (filter?: 'all' | EventFilters | YearFilters | TransactionStatus | null) => {
     return !isNullEmptyOrUndefined(filter) && filter !== 'all';
 };
 
@@ -51,6 +52,13 @@ export const setFilter = (setHistoryFilters: SetHistoryFilters, filter: EventFil
     }));
 };
 
+export const setStatusFilter = (setHistoryFilters: SetHistoryFilters, status: TransactionStatus) => {
+    setHistoryFilters(prevState => ({
+        ...prevState,
+        statusFilter: status,
+    }));
+};
+
 export const setYearFilter = (setHistoryFilters: SetHistoryFilters, year: YearFilters) => {
     setHistoryFilters(prevState => ({
         ...prevState,
@@ -65,6 +73,13 @@ export const removeAllFilters = (setHistoryFilters: SetHistoryFilters) => {
 export const removeEventFilter = (setHistoryFilters: SetHistoryFilters) => {
     setHistoryFilters(prevState => {
         const { eventFilter, ...updatedState } = prevState;
+        return updatedState;
+    });
+};
+
+export const removeStatusFilter = (setHistoryFilters: SetHistoryFilters) => {
+    setHistoryFilters(prevState => {
+        const { statusFilter, ...updatedState } = prevState;
         return updatedState;
     });
 };

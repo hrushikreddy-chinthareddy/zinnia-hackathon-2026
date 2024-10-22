@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { Dispatch, SetStateAction } from 'react';
 
 import { hasFilter } from '@deps/components/history/filters/filter.helpers';
@@ -17,7 +16,7 @@ import {
     peopleTransactions,
     policyTransactions,
 } from '@deps/helpers/transaction-types.helper';
-import { Policy, Transaction, TransactionStatus } from '@deps/models/policy/sor-policy';
+import { Policy, Transaction } from '@deps/models/policy/sor-policy';
 import { getPolicyTransactions } from '@deps/queries/api/policies';
 
 export interface Transactions {
@@ -29,7 +28,8 @@ interface GetTransactionsProps {
     historyFilters: HistoryFilters;
     policy: Policy;
     setIsLoading: Dispatch<SetStateAction<boolean>>;
-    setTransactions: Dispatch<SetStateAction<Transactions>>;
+    setTransactions: Dispatch<SetStateAction<Transaction[]>>;
+    sortOrder?: 'ASC' | 'DESC';
 }
 
 export const getEvents = (eventFilter?: EventFilters) => {
@@ -165,40 +165,28 @@ export const getEvents = (eventFilter?: EventFilters) => {
     }
 };
 
-export const getTransactions = async ({ historyFilters, policy, setIsLoading, setTransactions }: GetTransactionsProps) => {
+export const getTransactions = async ({
+    historyFilters,
+    policy,
+    setIsLoading,
+    setTransactions,
+    sortOrder = 'DESC',
+}: GetTransactionsProps) => {
     setIsLoading(true);
-    const { eventFilter, yearFilter } = historyFilters;
-    const { completedTransactionTypes, pendingTransactionTypes } = getEvents(eventFilter);
+    const { eventFilter, yearFilter, statusFilter } = historyFilters;
+    // BPB - todo: cleanup
+    const { completedTransactionTypes } = getEvents(eventFilter);
 
-    const [completedAndCanceledResults, pendingResults] = await Promise.all([
-        getPolicyTransactions({
-            transactionTypes: completedTransactionTypes,
-            id: policy.policyNumber,
-            limit: 30,
-            offset: 0,
-            planCode: policy.product?.planCode,
-            status: 'Completed,Canceled' as TransactionStatus,
-            ...(hasFilter(yearFilter) && { year: yearFilter }),
-        }),
-        getPolicyTransactions({
-            transactionTypes: pendingTransactionTypes,
-            id: policy.policyNumber,
-            limit: 10,
-            offset: 0,
-            planCode: policy.product?.planCode,
-            status: 'Pending' as TransactionStatus,
-            sortOrder: 'DESC',
-            ...(hasFilter(yearFilter) && { year: yearFilter }),
-        }),
-    ]);
-    const combinedResults = [...(completedAndCanceledResults ?? [])].sort(
-        (a, b) => dayjs(b.effectiveDate).unix() - dayjs(a.effectiveDate).unix()
-    );
-
-    setTransactions({
-        completed: combinedResults ?? [],
-        upcoming: pendingResults ?? [],
+    const results = await getPolicyTransactions({
+        transactionTypes: completedTransactionTypes,
+        id: policy.policyNumber,
+        planCode: policy.product?.planCode,
+        sortOrder,
+        status: statusFilter,
+        ...(hasFilter(yearFilter) && { year: yearFilter }),
     });
+
+    setTransactions(results ?? []);
 
     setIsLoading(false);
 };

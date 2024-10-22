@@ -11,6 +11,7 @@ import { HistoryFiltersProvider } from '@deps/contexts/HistoryFiltersContext';
 import { ReactComponent as FilterIcon } from '@deps/styles/elements/icons/icons_outlined/filter.svg';
 
 import HistoryEventFeed from './event-feed/event-feed';
+import TransactionStatusFilter from '@deps/components/history/filters/status-filter';
 
 const HistorySubPage = () => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'policy.history.filter' });
@@ -36,10 +37,10 @@ const HistorySubPage = () => {
                     <DismissableFilters isSideSheetOpen={isSideSheetOpen} />
 
                     <div className="hidden w-[200px] flex-shrink-0 flex-col items-start gap-6 lg:flex">
+                        <TransactionStatusFilter />
                         <YearFilter />
                         <TypeFilters />
                     </div>
-
                     <HistoryEventFeed isSideSheetOpen={isSideSheetOpen} />
                 </div>
 

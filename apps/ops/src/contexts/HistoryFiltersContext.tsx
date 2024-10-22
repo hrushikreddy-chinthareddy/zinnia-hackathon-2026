@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction, createContext, useContext, useMemo, useState } from 'react';
 
 import { NOOP } from '@deps/types/constants';
+import { TransactionStatus } from '@deps/models/policy/sor-policy';
 
 export enum EventFilterKeys {
     All = 'all',
@@ -50,6 +51,7 @@ export type AllFilters = EventFilterKeys | PolicyFilters | TransactionFilters | 
 
 export interface HistoryFilters {
     eventFilter?: EventFilters;
+    statusFilter?: TransactionStatus;
     yearFilter?: YearFilters;
 }
 

@@ -2587,7 +2587,13 @@
             }
         },
         "history": {
+            "allEvents": "All events",
+            "pendingEvents": "Upcoming events",
             "completedEvents": "Completed events",
+            "canceledEvents": "Canceled events",
+            "reversedEvents": "Reversed events",
+            "pendingreversalEvents": "Pending reversal events",
+            "failedEvents": "Failed events",
             "filter": {
                 "address": "Address",
                 "all": "All",
@@ -2598,6 +2604,7 @@
                 "byEvent": "Filter by event type:",
                 "byPeople": "Filter by change type:",
                 "byPolicyEvent": "Filter by policy event:",
+                "byStatus": "Filter by status:",
                 "byTransaction": "Filter by transaction type:",
                 "byYear": "Filter by year:",
                 "clearAllFilters": "Clear all filters",
@@ -2618,7 +2625,13 @@
                 "systematicPrograms": "Systematic programs",
                 "tpd": "Third party designee",
                 "transactions": "Transactions",
-                "withdrawals": "Withdrawals"
+                "withdrawals": "Withdrawals",
+                "pending": "Pending",
+                "completed": "Completed",
+                "canceled": "Canceled",
+                "reversed": "Reversed",
+                "failed": "Failed",
+                "pendingReversal": "Pending reversal"
             },
             "loadingEvents": "Loading events...",
             "noEventsTitle": "No events yet.",
