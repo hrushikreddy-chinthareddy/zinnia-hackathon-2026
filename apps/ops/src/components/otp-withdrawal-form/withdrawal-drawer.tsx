@@ -30,9 +30,10 @@ export interface SidebarContent {
     caseId: string;
     ownerName?: string;
     annuitantName?: string;
+    contractValue?:string;
 }
 
-const OpenStatusRow = ({ transactions, contractId, documentNumber, caseId, qualType, issueDate, ownerName, annuitantName }: SidebarContent) => {
+const OpenStatusRow = ({ transactions, contractId, documentNumber, caseId, qualType, issueDate, ownerName, annuitantName, contractValue }: SidebarContent) => {
     const { t } = useTranslation();
     const BASE_TRANSLATION_KEY = 'caseWithdrawal.sidebar.';
     const classes = clsx('text-white');
@@ -52,6 +53,22 @@ const OpenStatusRow = ({ transactions, contractId, documentNumber, caseId, qualT
                         </ClickWrapper>}
                     </div>
                 </div>
+
+                {contractValue && (
+                    <div className="my-4">
+                        <Typography variant={TypographyVariant.LabelMd}>{t(`${BASE_TRANSLATION_KEY}contractValue`)}</Typography>
+                        <div className="flex items-center gap-1">
+                            <Content details={contractValue} variant={ContentVariant.Value} />
+                            <ClickWrapper
+                                ariaLabel={t(`${BASE_TRANSLATION_KEY}copyToClipboard`, { item: t(`${BASE_TRANSLATION_KEY}contractValue`) })}
+                                classes="mb-1"
+                                onClick={() => navigator.clipboard.writeText(contractValue)}
+                            >
+                                <CopyIcon height={22} width={22} />
+                            </ClickWrapper>
+                        </div>
+                    </div>
+                )}
 
                 {qualType && (
                     <div className="my-4">
@@ -156,7 +173,7 @@ const OpenStatusRow = ({ transactions, contractId, documentNumber, caseId, qualT
     );
 };
 
-const ClosedStatusRow: React.FC<SidebarContent> = ({ contractId, documentNumber, caseId, qualType, issueDate, ownerName, annuitantName }) => {
+const ClosedStatusRow: React.FC<SidebarContent> = ({ contractId, documentNumber, caseId, qualType, issueDate, ownerName, annuitantName , contractValue}) => {
     const { t } = useTranslation();
     const BASE_TRANSLATION_KEY = 'caseWithdrawal.sidebar.';
     const classes = clsx('flex w-full flex-col items-center gap-4  p-1 text-white');
@@ -184,6 +201,18 @@ const ClosedStatusRow: React.FC<SidebarContent> = ({ contractId, documentNumber,
                     </ClickWrapper>
                 </div>
             )}
+              {contractValue && (
+                <div className="flex w-full flex-col items-center">
+                    <Typography variant={TypographyVariant.LabelMd}>{t(`${BASE_TRANSLATION_KEY}abbreviatedContractValue`)}</Typography>
+                    <ClickWrapper
+                        ariaLabel={t(`${BASE_TRANSLATION_KEY}copyToClipboard`, { item: t(`${BASE_TRANSLATION_KEY}contractValue`) })}
+                        onClick={() => navigator.clipboard.writeText(contractValue)}
+                    >
+                        <CopyIcon height={30} width={30} />
+                    </ClickWrapper>
+                </div>
+            )}
+
 
             <div className="flex w-full flex-col items-center">
                 <Typography variant={TypographyVariant.LabelMd}>{t(`${BASE_TRANSLATION_KEY}abbreviatedDocumentNumber`)}</Typography>
@@ -296,6 +325,7 @@ const WithdrawalDrawer: React.FC<WithdrawalDrawerProps> = ({ content, isNavDrawe
                         issueDate={content?.issueDate}
                         ownerName={content?.ownerName}
                         annuitantName={content?.annuitantName}
+                        contractValue={content?.contractValue}
                     />
                 ) : (
                     <ClosedStatusRow
@@ -306,6 +336,7 @@ const WithdrawalDrawer: React.FC<WithdrawalDrawerProps> = ({ content, isNavDrawe
                         issueDate={content?.issueDate}
                         ownerName={content?.ownerName}
                         annuitantName={content?.annuitantName}
+                        contractValue={content?.contractValue}
                     />
                 )}
             </div>
