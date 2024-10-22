@@ -10,8 +10,8 @@ import {
 } from '@deps/contexts/HistoryFiltersContext';
 import { determineRange } from '@deps/helpers/numbers.helper';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { TransactionStatus } from '@deps/models/policy/sor-policy';
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 export const getYearOptions = (policyIssueDate: string | undefined) => {
     const issueDate = dayjs(policyIssueDate);

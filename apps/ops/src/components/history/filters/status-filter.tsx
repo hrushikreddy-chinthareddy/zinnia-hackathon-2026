@@ -4,8 +4,8 @@ import { FieldSize, FieldType } from '@deps/components/fields/field';
 import { hasFilter, removeStatusFilter, setStatusFilter } from '@deps/components/history/filters/filter.helpers';
 import SelectSimple from '@deps/components/select/select';
 import { TranslationFiles } from '@deps/config/translations';
-import { TransactionStatus } from '@deps/models/policy/sor-policy';
 import { useHistoryFiltersContext } from '@deps/contexts/HistoryFiltersContext';
+import { TransactionStatus } from '@deps/models/policy/sor-policy';
 
 export default function TransactionStatusFilter() {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'policy.history.filter' });

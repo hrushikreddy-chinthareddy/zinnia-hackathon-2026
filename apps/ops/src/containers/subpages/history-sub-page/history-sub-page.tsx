@@ -1,6 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
+import TransactionStatusFilter from '@deps/components/history/filters/status-filter';
 import TypeFilters, { DismissableFilters } from '@deps/components/history/filters/type-filters';
 import YearFilter from '@deps/components/history/filters/year-filter';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
@@ -11,7 +12,6 @@ import { HistoryFiltersProvider } from '@deps/contexts/HistoryFiltersContext';
 import { ReactComponent as FilterIcon } from '@deps/styles/elements/icons/icons_outlined/filter.svg';
 
 import HistoryEventFeed from './event-feed/event-feed';
-import TransactionStatusFilter from '@deps/components/history/filters/status-filter';
 
 const HistorySubPage = () => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'policy.history.filter' });

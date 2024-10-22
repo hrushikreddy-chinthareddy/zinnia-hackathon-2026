@@ -3,13 +3,13 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 import Button, { ButtonSize, ButtonType } from '@deps/components/button/button';
 import { removeAllFilters } from '@deps/components/history/filters/filter.helpers';
+import TransactionStatusFilter from '@deps/components/history/filters/status-filter';
 import TypeFilters from '@deps/components/history/filters/type-filters';
 import YearFilter from '@deps/components/history/filters/year-filter';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import SideSheet from '@deps/components/side-sheet/side-sheet';
 import { TranslationFiles } from '@deps/config/translations';
 import { HistoryFilters, useHistoryFiltersContext } from '@deps/contexts/HistoryFiltersContext';
-import TransactionStatusFilter from '@deps/components/history/filters/status-filter';
 
 interface SideSheetHistoryProps {
     isSideSheetOpen: boolean;
