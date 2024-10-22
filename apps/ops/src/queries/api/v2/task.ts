@@ -168,6 +168,6 @@ export const updateTask = async (
         return data;
     } catch (error: any) {
         logError('An error occurred during update task using v2', { error, caseId, taskId, function: 'tasks.updateTask' });
-        return error?.response;
+        return null;
     }
 };
