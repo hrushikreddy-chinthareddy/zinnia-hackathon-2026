@@ -38,7 +38,7 @@ export default withAuthAndLogging(
                 duration: performance.now() - now,
                 ...loggingContext,
             });
-            res.status(500).json(null);
+            res.status((error as Response)?.status ?? 500).json(null);
         }
     },
     { file: 'documents/:documentNumber/preview', function: 'routeHandler' }

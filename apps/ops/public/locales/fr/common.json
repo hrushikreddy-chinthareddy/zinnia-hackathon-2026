@@ -2664,6 +2664,7 @@
         "documentsEmptyTitle": "Aucun document pour l'instant.",
         "documentsEmptyText": "Il semble qu’aucun document ne soit joint à cette affaire.",
         "documentUnsupported": "Le type de contenu {{extension}} n'est pas pris en charge.",
+        "documentNotFound": "Oops! Quelque chose s'est mal passé lors de la recuperation du document !",
         "notes": "Remarques",
         "notesEmptyTitle": "Aucune note pour l'instant.",
         "notesEmptyText": "On dirait qu’aucune note n’est jointe à cette affaire.",
