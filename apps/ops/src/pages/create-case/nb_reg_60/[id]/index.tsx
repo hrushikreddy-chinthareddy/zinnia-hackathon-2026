@@ -81,6 +81,7 @@ export default function Reg60({ document, form, transactionsHistory }: CreateReg
         setTransactionDetail({
             contractId: document?.contract || '',
             documentNumber: document?.documentNumber || '',
+            contractValue:document?.contractValue||'',
             caseId: form?.caseId || (id as string),
             transactions: transactionsHistory,
             qualType,

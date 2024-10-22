@@ -30,7 +30,7 @@ import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { ProcessType } from '@deps/models/case/enums';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { TaskType } from '@deps/models/case/task';
-import { ActiveWithdrawalCase, Carrier, QualTypes , Transaction, TransactionStatus } from '@deps/models/case/withdrawal/case';
+import { ActiveWithdrawalCase, Carrier, QualTypes, Transaction, TransactionStatus } from '@deps/models/case/withdrawal/case';
 import { UserPermission } from '@deps/models/user-profile';
 import { initializeOTPTaskSSR } from '@deps/operations/tasks/v2/initialize';
 import { getDocumentSSR } from '@deps/queries/api/documents';
@@ -113,6 +113,7 @@ export default function SSWCase({ document, form, parties, transactionsHistory, 
         setTransactionDetail({
             contractId: document?.contract || '',
             documentNumber: document?.documentNumber || '',
+            contractValue:document?.contractValue||'',
             caseId: form.caseId || '',
             transactions: transactionsHistory,
             qualType,

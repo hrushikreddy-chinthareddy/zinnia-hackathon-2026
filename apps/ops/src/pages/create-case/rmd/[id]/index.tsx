@@ -108,6 +108,7 @@ export default function RmdCase({ document, form, featureFlagDecisions, parties 
         setTransactionDetail({
             contractId: document?.contract || '',
             documentNumber: document?.documentNumber || '',
+            contractValue:document?.contractValue||'',
             caseId: form.caseId || '',
             issueDate,
             qualType,

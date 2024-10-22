@@ -120,6 +120,7 @@ export default function WithdrawalCase({ document, form, isNigoCase, featureFlag
         setTransactionDetail({
             contractId: document?.contract || '',
             documentNumber: document?.documentNumber || '',
+            contractValue:document?.contractValue||'',
             caseId: form.caseId || '',
             transactions: showTransactions ? transactions : [],
             qualType,

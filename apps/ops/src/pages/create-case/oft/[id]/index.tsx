@@ -107,6 +107,7 @@ export default function OftCase({ document, form, featureFlagDecisions }: OftCas
         setTransactionDetail({
             contractId: document?.contract || '',
             documentNumber: document?.documentNumber || '',
+            contractValue:document?.contractValue||'',
             caseId: form.caseId || '',
             qualType,
             ownerName: toTitleCase(ownerName).trim(),
