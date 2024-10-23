@@ -244,6 +244,7 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                     showMonths={false}
                     datePickerType={datePickerType}
                     isDateAllowed={date => handleIsDateAllowed(date, StatementStartYear)}
+                    readOnly={true}
                 />
 
                 <FieldDateSelect
@@ -260,6 +261,7 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                     showMonths={false}
                     datePickerType={datePickerType}
                     isDateAllowed={date => handleIsDateAllowed(date, startDate)}
+                    readOnly={true}
                 />
             </div>
 
