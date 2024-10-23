@@ -17,9 +17,5 @@ export const AccountValuePopover = ({
       ? `This is how much money is held in your annuity as of ${standardDateMonthDayYear(dataTimestamp)}.`
       : `This is how much money is held in your policy as of ${standardDateMonthDayYear(dataTimestamp)}. Policy value may grow over time as the premium dollars allocated to your account value earn interest.`;
 
-  return (
-    <LabelPopover title={ACCOUNT_VALUE}>
-      <p className="typography-content-body">{content}</p>
-    </LabelPopover>
-  );
+  return <LabelPopover title={ACCOUNT_VALUE}>{content}</LabelPopover>;
 };

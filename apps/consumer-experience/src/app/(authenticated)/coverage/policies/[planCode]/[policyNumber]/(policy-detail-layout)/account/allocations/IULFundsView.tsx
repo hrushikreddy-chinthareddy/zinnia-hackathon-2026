@@ -96,9 +96,7 @@ export const IULFundsView = ({
         />
 
         <div>
-          <p className="typography-content-body">
-            The following accounts are available for your policy.
-          </p>
+          <p>The following accounts are available for your policy.</p>
         </div>
         <ClientOnly>
           <NonHoldingFunds funds={funds?.nonHolding} isLoading={isLoading} />
