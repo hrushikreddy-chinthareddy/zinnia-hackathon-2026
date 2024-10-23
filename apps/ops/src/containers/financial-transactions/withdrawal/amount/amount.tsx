@@ -18,8 +18,8 @@ import { DisbursementType } from '@deps/models/policy/sor-policy';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { LabelValue } from '@deps/types/data';
 
-import PartialViewContainer from './partial-view-container/partial-view-container';
 import { WithdrawalContainerProps } from '../withdrawal-container';
+import PartialViewContainer from './partial-view-container/partial-view-container';
 
 export type AmountType = {
     amount: number;

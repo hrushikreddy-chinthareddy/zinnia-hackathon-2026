@@ -1,7 +1,6 @@
 import clsx from 'clsx';
 import dayjs from 'dayjs';
-import { TFunction } from 'next-i18next';
-import { useTranslation } from 'next-i18next';
+import { TFunction , useTranslation } from 'next-i18next';
 import { ChangeEvent, useContext } from 'react';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';

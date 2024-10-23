@@ -39,7 +39,8 @@ export const AccountValue = async ({
     return null;
   }
 
-  const { endingAccountValue, effectiveDate, valueChange } = data!;
+  const { endingAccountValue, effectiveDate, valueChange, lineOfBusiness } =
+    data!;
 
   const totalFundContent = isNullEmptyOrUndefined(endingAccountValue) ? (
     <p className="typography-content-body-sm">{DEFAULT_UNAVAILABLE_STRING}</p>
@@ -61,6 +62,7 @@ export const AccountValue = async ({
                   <AccountValuePopover
                     key="account-value-popover"
                     dataTimestamp={effectiveDate}
+                    lineOfBusiness={lineOfBusiness}
                   />,
                 ]}
               >

@@ -2,27 +2,35 @@ import { setCookie } from 'cookies-next';
 import { useTranslation } from 'next-i18next';
 
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '../nav-element/nav-element';
-import { SideSheetDocumentItemProps } from '../side-sheet/documents/document-item/document-item';
+import { DocumentTypeView } from '../side-sheet/documents/documents-content';
+
+export interface DocumentPreviewerProps {
+    activeDocType: DocumentTypeView;
+    carrier: string;
+    displayName: string;
+    documentId: string;
+    className?: string;
+    variant?: NavElementVariant;
+}
 
 export default function DocumentPreviewer({
     activeDocType,
     carrier,
-    document,
+    displayName,
+    documentId,
     children,
     className = '',
     variant,
-}: SideSheetDocumentItemProps & { children: React.ReactNode; className?: string; variant?: NavElementVariant }) {
+}: DocumentPreviewerProps & { children: React.ReactNode }) {
     const { t } = useTranslation();
-    const { displayName, documentId, documentID } = document;
     const setCookies = () => {
         setCookie('documentType', activeDocType);
         setCookie('carrierCode', carrier);
     };
-
     return (
         <NavElement
             className={className}
-            href={`/documents/${documentId ?? documentID}`}
+            href={`/documents/${documentId}`}
             isNewPage={false}
             onClick={setCookies}
             size={NavElementSize.Small}

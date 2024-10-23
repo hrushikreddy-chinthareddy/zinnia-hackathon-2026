@@ -2,8 +2,7 @@ import { getSession } from '@auth0/nextjs-auth0';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import { optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { logWarn } from '@deps/utils/server-logging';
-import { parseErrorInformation } from '@deps/utils/server-logging';
+import { logWarn , parseErrorInformation } from '@deps/utils/server-logging';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {

@@ -12,11 +12,9 @@ import { DocumentTypeView } from '@deps/components/side-sheet/documents/document
 import CardContainer from '@deps/containers/card-container/card-container';
 import { determineRange } from '@deps/helpers/numbers.helper';
 import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
-import { PolicyDocument } from '@deps/models/case/document';
-import { PolicyDocuments } from '@deps/models/case/document';
+import { PolicyDocument , PolicyDocuments } from '@deps/models/case/document';
 import { Policy } from '@deps/models/policy/sor-policy';
-import { getPolicyDocs } from '@deps/queries/api/documents';
-import { getCorrespondenceDocs } from '@deps/queries/api/documents';
+import { getPolicyDocs , getCorrespondenceDocs } from '@deps/queries/api/documents';
 import { DEFAULT_ERROR_STRING, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import DocumentResultsPagination from './documents-results-pagination';

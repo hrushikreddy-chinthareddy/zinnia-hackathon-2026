@@ -1,5 +1,4 @@
-import { Loader } from '@zinnia/bloom/components';
-import { TabGroup, TabList, TabTrigger, TabContent } from '@zinnia/bloom/components';
+import { Loader , TabGroup, TabList, TabTrigger, TabContent } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 

@@ -1,3 +1,4 @@
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Icon, IconType, Link } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
 export default async function ErrorPage({
   params,
 }: {
-  params: PolicyRequestInputs;
+  params: PolicyRequestInputs & { lineOfBusiness: LineOfBusiness };
 }) {
   return (
     <GenericInfoPage
@@ -38,7 +39,7 @@ export default async function ErrorPage({
           <Link
             expand
             variant="button"
-            href={`/coverage/${params.planCode}/${params.policyNumber}/documents`}
+            href={`/coverage/${params.lineOfBusiness}/${params.planCode}/${params.policyNumber}/documents`}
             text="Back to my documents"
           />
         </>

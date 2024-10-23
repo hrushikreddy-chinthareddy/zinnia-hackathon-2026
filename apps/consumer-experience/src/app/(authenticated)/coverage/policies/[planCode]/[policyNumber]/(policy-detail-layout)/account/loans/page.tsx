@@ -121,11 +121,6 @@ export default async function Loans({
                     >
                       <p>
                         This amount is how much you may borrow from your policy.
-                        Keep in mind, loans have consequences. Aside from
-                        incurring interest, a loan may reduce your death
-                        benefit. If you surrender your policy or your policy
-                        lapses while you have an outstanding loan, there may
-                        also be tax consequences.
                       </p>
                     </Popover>,
                   ]}

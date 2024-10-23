@@ -5,14 +5,23 @@ import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { TFunction } from 'next-i18next';
 
+import { DocumentPreviewerProps } from '@deps/components/document-viewer/document-previewer';
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
 import { percentFormatify } from '@deps/helpers/numbers.helper';
 import { toSentenceCase } from '@deps/helpers/string.helper';
 import { Case, Statuses } from '@deps/models/case/case';
+import { DocumentInstance } from '@deps/models/case/document-instance';
 import { ExceptionInstance, ExceptionStatuses } from '@deps/models/case/exception-instance';
 import { StageInstance } from '@deps/models/case/stage-instance';
 import { MultiStepInstance, SingleStepInstance, StepInstance } from '@deps/models/case/step-instance';
 import { TaskInstance, TaskStatus } from '@deps/models/case/task-instance';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+
+import { CaseAdditionalData, ExceptionView, TaskView } from './progress-tab-types';
+
+export interface DocumentView extends DocumentInstance {
+    previewDocProps: DocumentPreviewerProps;
+}
 
 // Needed to properly ingest the Zahara datetime format
 dayjs.extend(customParseFormat);
@@ -24,74 +33,18 @@ dayjs.extend(advancedFormat);
 dayjs.extend(timezone);
 
 interface MultiStepInstanceWithSteps extends MultiStepInstance {
-    steps: MultiStepInstance[];
+    steps: TransformedStep[];
 }
 
 type ConvertedStepInstance = SingleStepInstance | MultiStepInstanceWithSteps;
 
-export type TaskView = {
-    createdAt: string;
-    description: string;
-    id: string;
-    hasParentException: boolean;
-    parentExceptionStatus?: ExceptionStatuses | null;
-    status: string;
-    updatedAt: string; // Zahara API date String
-};
-
-export type ExceptionView = {
-    createdAt?: string;
-    description: string;
-    id: string;
-    tasks: TaskView[];
-    status: string;
-    updatedAt: string;
-};
-
-export type StepView = {
-    description?: string;
-    exceptions: ExceptionView[];
-    id: string;
-    name: string;
-    status: string; // Status of the step, or ranked status if it is a multi-instance step
-    substeps?: StepInstance[]; // Any steps that make up the multi-instance step
-    tasks: TaskView[]; // Mapped tasks for the step that are unrelated to an exception
-    updatedAt: string;
-    additionalData: AdditionalData;
-};
-
-export type AdditionalData = {
-    [key: string]: { label: string; value: string; type: string };
-};
-
-export type StageView = {
-    completedSteps: number;
-    id: string;
-    name: string;
-    nigoSteps: number;
-    status: string;
-    steps: StepView[];
-    totalSteps: number;
-    updatedAt: string;
-};
-
-export type CaseView = {
-    caseStatus: Statuses;
-    completedSteps: number;
-    unresolvedExceptionCount: number;
-    totalSteps: number;
-    stages: StageView[];
-    unmappedExceptions: ExceptionView[];
-};
-
-export const formatTimestamp = (timestamp: string, currentTimeStampFormat?: string): string => {
-    const time = dayjs(timestamp, currentTimeStampFormat ?? 'YYYY-MM-DDTHH:mm:ss.SSSZ');
+export const formatTimestamp = (timestamp: string): string => {
+    const time = dayjs(timestamp, 'YYYY-MM-DDTHH:mm:ss.SSSZ');
     if (!time.isValid()) {
         return DEFAULT_ERROR_STRING;
     }
     return time.tz(dayjs.tz.guess()).format('M/D/YYYY [at] h:mma z');
 };
-
 // creates a whole-number x% Complete string based on 2 numbers (complete and total)
 export const completionPercentageString = (complete: number, total: number, t: TFunction): string => {
     try {
@@ -103,7 +56,6 @@ export const completionPercentageString = (complete: number, total: number, t: T
         return DEFAULT_ERROR_STRING;
     }
 };
-
 // Take the highest value step status for multi-instance steps
 const statusHierarchy = {
     [Statuses.NotStarted as string]: 1,
@@ -112,7 +64,6 @@ const statusHierarchy = {
     [Statuses.InProgress as string]: 4,
     [Statuses.Exception as string]: 5,
 };
-
 const taskStatusHierarchy = {
     [Statuses.New as string]: 1,
     [Statuses.NotStarted as string]: 1,
@@ -126,7 +77,6 @@ const taskStatusHierarchy = {
     CLOSED: 4,
     [Statuses.Canceled as string]: 5,
 };
-
 // Resolved exceptions should be at the end of the list sorted by updatedAt.  Do not modify unresolved exceptions relative order to each other
 const exceptionSorter = (exceptionA: ExceptionView, exceptionB: ExceptionView) => {
     const isAResolved = [ExceptionStatuses.Resolved, Statuses.Completed].includes(exceptionA.status as ExceptionStatuses | Statuses);
@@ -142,7 +92,6 @@ const exceptionSorter = (exceptionA: ExceptionView, exceptionB: ExceptionView) =
     }
     return 0;
 };
-
 // Sort tasks by status hierarchy and then by createdAt dates.
 const taskSorter = (taskA: TaskView, taskB: TaskView) => {
     if (taskStatusHierarchy[taskA.status] === taskStatusHierarchy[taskB.status]) {
@@ -151,33 +100,38 @@ const taskSorter = (taskA: TaskView, taskB: TaskView) => {
     return taskStatusHierarchy[taskB.status] - taskStatusHierarchy[taskA.status];
 };
 
-class Step {
+export class TransformedStep {
+    additionalData: CaseAdditionalData = {};
     description?: string;
+    documents: DocumentView[];
     exceptions: ExceptionView[] = [];
     id: string;
     isMultiInstance: boolean = false;
     name: string = '';
-    parentStage: Stage;
+    parentStage: TransformedStage;
     status: string; // Status of the step, or ranked status if it is a multi-instance step
     stepRaw: StepInstance;
-    substeps?: StepInstance[]; // Any steps that make up the multi-instance step
+    substeps?: TransformedStep[]; // Any steps that make up the multi-instance step
     tasks: TaskView[] = []; // Mapped tasks for the step that are unrelated to an exception
     updatedAt: string;
-    additionalData: AdditionalData = {};
 
-    constructor(step: ConvertedStepInstance, parentStage: Stage) {
+    constructor(step: ConvertedStepInstance | MultiStepInstance, parentStage: TransformedStage) {
+        this.additionalData = step.additionalData ?? ({} as CaseAdditionalData);
         this.parentStage = parentStage;
         this.stepRaw = step;
         this.id = step.id;
         this.status = step.stepStatus;
         this.updatedAt = step.updatedAt;
-        this.isMultiInstance = step.multiInstance && !!step?.instanceInfo?.identifier;
-        this.additionalData = step.additionalData ?? ({} as AdditionalData);
+        this.documents =
+            step?.mappedDocuments?.map(docId => {
+                return this?.parentStage?.parentCase?.documentsMap?.[docId];
+            }) ?? [];
+        this.isMultiInstance = step.multiInstance && !!step?.instanceInfo?.identifier; // Is this step part of a multi-instance step
+        this.substeps = this.isMultiInstance ? (step as MultiStepInstanceWithSteps)?.steps ?? [] : undefined;
         this.buildNameAndDescription();
         this.buildExceptions();
         this.buildTasks();
     }
-
     private buildExceptions() {
         this.exceptions = (
             (this.stepRaw.mappedExceptions || ([] as string[]))
@@ -187,7 +141,6 @@ class Step {
                 ?.filter(Boolean) as ExceptionView[]
         ).sort(exceptionSorter);
     }
-
     private buildTasks() {
         this.tasks = (
             (this.stepRaw.mappedTasks || ([] as string[]))
@@ -198,37 +151,34 @@ class Step {
         ).sort(taskSorter);
     }
 
+    // Is this step the parent of a set of multi-instance steps
+    public get isParentMultiInstance(): boolean {
+        return this.isMultiInstance && !!this.substeps?.length;
+    }
+
     private buildNameAndDescription() {
-        if (this.isMultiInstance) {
-            this.name = this.parentStage.parentCase.t('caseOverview.tabs.validate', { label: this.stepRaw.label });
+        if (this.isParentMultiInstance) {
+            const entityType = this.stepRaw.instanceInfo?.entityType;
+            if (!entityType) {
+                this.name = this.parentStage.parentCase.t('caseOverview.tabs.validate', { label: toSentenceCase(this.stepRaw.label) });
+                return;
+            }
+            this.name = this.parentStage.parentCase.t(`caseOverview.tabs.entityTypes.${entityType.toLowerCase()}`, {
+                label: toSentenceCase(this.stepRaw?.instanceInfo?.label ?? this.stepRaw?.label),
+            });
             return;
         }
         this.name = this.parentStage.parentCase.t([`caseManagementApiKeys.steps.${this.id}`, toSentenceCase(this.stepRaw.label)], {
             subType: this.parentStage.parentCase.processSubType,
         });
-
         this.description =
             this.parentStage.parentCase.t([`caseManagementApiKeys.stepDescriptions.${this.id}`, ''], {
                 subType: this.parentStage.parentCase.processSubType,
             }) || undefined;
     }
-
-    public get viewData(): StepView {
-        return {
-            ...(this.isMultiInstance ? { substeps: this.substeps } : {}), // Only add substeps if the step is a multi-instance step,
-            id: this.id,
-            description: this.description,
-            exceptions: this.exceptions,
-            tasks: this.tasks,
-            name: this.name,
-            status: this.status,
-            updatedAt: this.updatedAt,
-            additionalData: this.additionalData,
-        };
-    }
 }
 
-class Stage {
+export class TransformedStage {
     completedSteps: number;
     id: string;
     name: string;
@@ -236,7 +186,7 @@ class Stage {
     parentCase: TransformedCase;
     stageRaw: StageInstance;
     status: string;
-    steps: Step[] = [];
+    steps: TransformedStep[] = [];
     totalSteps: number;
 
     constructor(stage: StageInstance, parentCase: TransformedCase) {
@@ -252,15 +202,12 @@ class Stage {
         });
         this.processSteps();
     }
-
     public useException(exceptionId: string) {
         return this.parentCase.useException(exceptionId);
     }
-
     public useTask(taskId: string) {
         return this.parentCase.useTask(taskId);
     }
-
     public get updatedAt(): string {
         return (
             this.stageRaw.updatedAt ??
@@ -271,23 +218,6 @@ class Stage {
                 return step.updatedAt > latestUpdatedAt ? step.updatedAt : latestUpdatedAt;
             }, '')
         );
-    }
-
-    public get viewData(): StageView {
-        return {
-            completedSteps: this.completedSteps,
-            id: this.id,
-            name: this.name,
-            nigoSteps: this.nigoSteps,
-            status: this.status,
-            steps: this.getStepsViewData(),
-            totalSteps: this.totalSteps,
-            updatedAt: this.updatedAt,
-        };
-    }
-
-    private getStepsViewData() {
-        return this.steps.map(step => step.viewData);
     }
 
     /**
@@ -329,9 +259,9 @@ class Stage {
                         additionalData: { ...acc.additionalData, ...val.additionalData },
                         createdAt: acc.createdAt < val.createdAt ? acc.createdAt : val.createdAt, // Take the earliest created at date for the multi-instance step
                         eventRef: (acc.eventRef ?? []).concat(val.eventRef ?? []),
-                        id: val.instanceInfo?.identifier as string, // a multi-instance step MUST have an identifier
-                        instanceInfo: val?.instanceInfo as { identifier: string; label: string }, // a multi-instance step MUST have instanceInfo
-                        label: val.instanceInfo?.label as string, // a multi-instance step MUST have a label
+                        id: val.instanceInfo?.identifier || acc.id,
+                        instanceInfo: val?.instanceInfo || acc.instanceInfo,
+                        label: val.instanceInfo?.label || acc.label,
                         mappedExceptions: (acc.mappedExceptions ?? []).concat(val.mappedExceptions ?? []),
                         mappedNotes: (acc.mappedNotes ?? []).concat(val.mappedNotes ?? []),
                         mappedTasks: (acc.mappedTasks ?? []).concat(val.mappedTasks ?? []),
@@ -340,25 +270,23 @@ class Stage {
                         stepStatus,
                     };
                 }, {} as MultiStepInstance);
-
                 // If there are any not started steps in the multi-instance step where the rest are completed, set the step status to in progress
                 if ([Statuses.Completed, 'RESOLVED' as Statuses].includes(consolidatedStep.stepStatus) && hasNotStartedStep) {
                     consolidatedStep.stepStatus = Statuses.InProgress;
                 }
 
-                return { ...consolidatedStep, steps: multiInstanceSteps[key] };
+                return { ...consolidatedStep, steps: multiInstanceSteps[key].map(step => new TransformedStep(step, this)) };
             })
             .sort((a, b) => a.label.localeCompare(b.label));
         return convertedSteps.concat(convertedMultiSteps);
     };
-
     private processSteps() {
         this.totalSteps = 0;
         this.nigoSteps = 0;
         this.completedSteps = 0;
         const convertedSteps = this.convertStepsToMultiInstanceSteps();
         this.steps = convertedSteps.map(step => {
-            const stepInstance = new Step(step, this);
+            const stepInstance = new TransformedStep(step, this);
             this.totalSteps++;
             this.nigoSteps += stepInstance.exceptions.reduce((count, exception) => {
                 if (exception.status === ExceptionStatuses.New) {
@@ -372,30 +300,47 @@ class Stage {
     }
 }
 
-class TransformedCase {
+export class TransformedCase {
     caseRaw: Case;
     caseStatus: Statuses;
     completedSteps: number;
+    documentsMap: { [key: string]: DocumentView };
     exceptionMap: { [key: string]: ExceptionInstance & { usedInStep?: boolean } };
-    unresolvedExceptionCount: number;
     processSubType: string;
-    stages: Stage[] = [];
+    stages: TransformedStage[] = [];
     t: TFunction;
     taskMap: { [key: string]: TaskInstance };
     totalSteps: number;
     // Exceptions that are not tied to any step
     unmappedExceptions: ExceptionView[] = [];
+    unresolvedExceptionCount: number;
     constructor(caseDetails: Case, t: TFunction) {
         this.caseRaw = caseDetails;
         this.t = t;
-        this.totalSteps = 0;
         this.caseStatus = caseDetails?.caseStatus;
+        this.totalSteps = 0;
         this.completedSteps = 0;
         this.unresolvedExceptionCount = 0;
+        this.documentsMap = caseDetails?.documents?.reduce((acc, document) => {
+            if (document.id) {
+                acc[document.id] = {
+                    ...document,
+                    previewDocProps: {
+                        carrier: caseDetails?.carrier,
+                        activeDocType: document.source as DocumentTypeView,
+                        documentId: document.id,
+                        displayName: document.name,
+                    },
+                };
+            }
+            return acc;
+        }, {} as { [key: string]: DocumentView });
         this.exceptionMap = caseDetails?.exceptions?.reduce((acc, exception) => {
-            acc[exception.id] = exception;
-            if (![ExceptionStatuses.Resolved, Statuses.Completed].includes(exception.status as ExceptionStatuses | Statuses)) {
-                this.unresolvedExceptionCount++;
+            if (exception?.id) {
+                acc[exception.id] = exception;
+                if (![ExceptionStatuses.Resolved, Statuses.Completed].includes(exception.status as ExceptionStatuses | Statuses)) {
+                    this.unresolvedExceptionCount++;
+                }
             }
             return acc;
         }, {} as { [key: string]: ExceptionInstance });
@@ -406,7 +351,6 @@ class TransformedCase {
         }, {} as { [key: string]: TaskInstance });
         this.transformCaseDetails();
     }
-
     // Looks for an exception in the map, and marks it as used in a step
     public useException(exceptionId: string) {
         if (!this.exceptionMap[exceptionId]) {
@@ -415,14 +359,12 @@ class TransformedCase {
         this.exceptionMap[exceptionId].usedInStep = true;
         return this.buildException(this.exceptionMap[exceptionId]);
     }
-
     public useTask(taskId: string) {
         if (!this.taskMap[taskId]) {
             return null;
         }
         return this.buildTaskFromTaskId(taskId, false);
     }
-
     /*
      * Maps the given taskId to a StepTask, or null if the task is not found or already completed.
      * @param {string} taskId - The id of the task to be mapped
@@ -430,7 +372,6 @@ class TransformedCase {
      */
     private buildTaskFromTaskId(taskId: string, isFromException: boolean, status?: ExceptionStatuses): TaskView | null {
         const foundTask = this.taskMap[taskId];
-
         if (!foundTask) {
             return null;
         }
@@ -444,11 +385,9 @@ class TransformedCase {
             updatedAt: foundTask.updatedAt,
         };
     }
-
     // Builds an ExceptionView from an ExceptionInstance
     private buildException(exception: ExceptionInstance): ExceptionView {
         const exceptionReason = toSentenceCase(exception?.detailedReason ?? exception?.reason);
-
         const tasks: TaskView[] = (
             (exception.taskIdList || ([] as string[]))
                 .map(taskId => {
@@ -456,7 +395,6 @@ class TransformedCase {
                 })
                 .filter(Boolean) as TaskView[]
         ).sort(taskSorter);
-
         const description = this.t(
             [Statuses.Completed, ExceptionStatuses.Resolved].includes(exception.status)
                 ? 'caseOverview.tabs.resolved'
@@ -472,13 +410,12 @@ class TransformedCase {
             updatedAt: exception.updatedAt,
         };
     }
-
     // Transforms the raw case details into a more useful format
     private transformCaseDetails() {
         this.totalSteps = 0;
         this.completedSteps = 0;
         this.stages = this.caseRaw.stages.map(stage => {
-            const stageInstance = new Stage(stage, this);
+            const stageInstance = new TransformedStage(stage, this);
             this.totalSteps += stageInstance.totalSteps;
             this.completedSteps += stageInstance.completedSteps;
             return stageInstance;
@@ -491,28 +428,4 @@ class TransformedCase {
             return acc;
         }, [] as ExceptionView[]);
     }
-
-    // Builds the stages view data
-    private getStagesViewData() {
-        return this.stages.map(stage => {
-            return stage.viewData;
-        });
-    }
-
-    // Generates the case details view data for use in the progress tab
-    public get viewData() {
-        return {
-            caseStatus: this.caseStatus,
-            completedSteps: this.completedSteps,
-            unresolvedExceptionCount: this.unresolvedExceptionCount,
-            totalSteps: this.totalSteps,
-            stages: this.getStagesViewData(),
-            unmappedExceptions: this.unmappedExceptions,
-        };
-    }
 }
-
-export const mapCaseDetails = (caseDetails: Case, t: TFunction): CaseView => {
-    const mapper = new TransformedCase(caseDetails, t);
-    return mapper.viewData;
-};

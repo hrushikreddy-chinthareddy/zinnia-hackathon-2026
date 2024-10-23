@@ -173,9 +173,8 @@ export default async function Beneficiaries({
               >
                 <p>
                   Your primary allocation tells us how to split up the money
-                  between primary beneficiaries after you die. Your primary
-                  beneficiaries are first in line to receive payment from your
-                  death benefit.
+                  between primary beneficiaries, who will receive payment
+                  according to your contract terms, should you die.
                 </p>
               </Popover>
             </div>

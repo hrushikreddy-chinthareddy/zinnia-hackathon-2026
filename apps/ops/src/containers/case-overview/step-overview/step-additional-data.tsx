@@ -1,18 +1,21 @@
 import { Table, TableBody, TableCell, TableRow } from '@zinnia/bloom/components';
-import dayjs from 'dayjs';
 import { TFunction, useTranslation } from 'next-i18next';
-import React from 'react';
 
 import AdditionalStepStatus from '@deps/components/case-overview-box/content/additional-step-status';
-import { AdditionalData } from '@deps/components/case-sub-page/case-tabs.tsx/case-tabs-helpers';
+import { formatTimestamp, TransformedStep } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
+import { CaseAdditionalData } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-types';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import CardContainer from '@deps/containers/card-container/card-container';
 import { formatAddressToContainer } from '@deps/containers/small-data-card/address-data/address-data';
 import { toTitleCase } from '@deps/helpers/string.helper';
-import { AdditionalDataIds, CommunicationTypes, correspondenceTypes } from '@deps/models/case/additional-data-instance';
+import { AdditionalDataStepIds, CommunicationTypes, correspondenceTypes } from '@deps/models/case/additional-data-instance';
 import { Statuses } from '@deps/models/case/case';
-import { CASE_MANAGEMENT_API_FORMAT, CASE_MANAGEMENT_DISPLAY_FORMAT } from '@deps/types/constants';
-const getDataByDeliveryMethod = (data: AdditionalData, deliveryMethod: CommunicationTypes, t: TFunction) => {
+
+export const hasAdditionalDataSideSheet = (step: TransformedStep): boolean => {
+    if (!Object.keys(step.additionalData).length) return false;
+    return Object.values(AdditionalDataStepIds).includes(step.id as AdditionalDataStepIds);
+};
+
+const getDataByDeliveryMethod = (data: CaseAdditionalData, deliveryMethod: CommunicationTypes, t: TFunction) => {
     switch (deliveryMethod) {
         case CommunicationTypes.Fax:
             return t('caseOverview.communicationSentTemplate.fax', { fax: data[deliveryMethod] });
@@ -42,9 +45,9 @@ const correspondenceStepConfig = (deliveryMethod: CommunicationTypes, t: TFuncti
         shouldDisplay: (): boolean => {
             return true;
         },
-        getAdditionalDetails: (additionalData: AdditionalData, filterKeyBy: string) => {
+        getAdditionalDetails: (additionalData: CaseAdditionalData, filterKeyBy: string) => {
             const date = additionalData[filterKeyBy].value;
-            return dayjs(date, CASE_MANAGEMENT_API_FORMAT).format(CASE_MANAGEMENT_DISPLAY_FORMAT);
+            return formatTimestamp(date);
         },
     },
 
@@ -55,7 +58,7 @@ const correspondenceStepConfig = (deliveryMethod: CommunicationTypes, t: TFuncti
             if (!deliveryMethod) return false;
             return correspondenceTypes[deliveryMethod].value === CommunicationTypes.Mail;
         },
-        getAdditionalDetails: (additionalData: AdditionalData, filterKeyBy: string) => {
+        getAdditionalDetails: (additionalData: CaseAdditionalData, filterKeyBy: string) => {
             const data = Object.keys(additionalData)
                 .filter(key => key.includes(filterKeyBy))
                 .reduce((acc, key) => ({ ...acc, [key.replace(filterKeyBy, '') || deliveryMethod]: additionalData[key].value }), {});
@@ -66,8 +69,8 @@ const correspondenceStepConfig = (deliveryMethod: CommunicationTypes, t: TFuncti
 ];
 
 type StepAdditionalDataProps = {
-    additionalData: AdditionalData;
-    stepKey: AdditionalDataIds;
+    additionalData: CaseAdditionalData;
+    stepKey: AdditionalDataStepIds;
     status: string;
     date: string;
 };
@@ -75,15 +78,13 @@ const StepAdditionalData = ({ additionalData, stepKey, status, date }: StepAddit
     const { t } = useTranslation(undefined, { keyPrefix: 'caseOverview.correspondenceStepDetails' });
     const deliveryMethod = additionalData['deliveryMethod']?.value as CommunicationTypes;
 
-    const renderAdditionalData = (id: AdditionalDataIds) => {
+    const renderAdditionalData = (id: AdditionalDataStepIds) => {
+        const updatedAt = formatTimestamp(date);
         switch (id) {
-            case AdditionalDataIds.correspondenceRequest:
+            case AdditionalDataStepIds.correspondenceRequest:
                 return (
                     <>
-                        <AdditionalStepStatus
-                            updatedAt={dayjs(date, CASE_MANAGEMENT_API_FORMAT).format(CASE_MANAGEMENT_DISPLAY_FORMAT)}
-                            status={status as Statuses}
-                        />
+                        <AdditionalStepStatus updatedAt={updatedAt} status={status as Statuses} />
                         <DeliveryCard
                             additionalData={additionalData}
                             deliveryMethod={deliveryMethod}
@@ -91,22 +92,16 @@ const StepAdditionalData = ({ additionalData, stepKey, status, date }: StepAddit
                         />
                     </>
                 );
-            case AdditionalDataIds.sedRequest:
+            case AdditionalDataStepIds.sedRequest:
                 return (
                     <>
-                        <AdditionalStepStatus
-                            updatedAt={dayjs(date, CASE_MANAGEMENT_API_FORMAT).format(CASE_MANAGEMENT_DISPLAY_FORMAT)}
-                            status={status as Statuses}
-                        />
+                        <AdditionalStepStatus updatedAt={updatedAt} status={status as Statuses} />
                     </>
                 );
-            case AdditionalDataIds.completeRequest:
+            case AdditionalDataStepIds.completeRequest:
                 return (
                     <>
-                        <AdditionalStepStatus
-                            updatedAt={dayjs(date, CASE_MANAGEMENT_API_FORMAT).format(CASE_MANAGEMENT_DISPLAY_FORMAT)}
-                            status={status as Statuses}
-                        />
+                        <AdditionalStepStatus updatedAt={updatedAt} status={status as Statuses} />
                         <DeliveryCard additionalData={additionalData} deliveryMethod={deliveryMethod} title={t('recipients') as string} />
                     </>
                 );
@@ -114,13 +109,18 @@ const StepAdditionalData = ({ additionalData, stepKey, status, date }: StepAddit
                 return null;
         }
     };
-    return <CardContainer>{renderAdditionalData(stepKey)}</CardContainer>;
+    return (
+        <>
+            <Typography variant={TypographyVariant.H3}>{t('additionalData')}</Typography>
+            {renderAdditionalData(stepKey)}
+        </>
+    );
 };
 
 export default StepAdditionalData;
 
 type DeliveryCardProps = {
-    additionalData: AdditionalData;
+    additionalData: CaseAdditionalData;
     deliveryMethod: CommunicationTypes;
     title?: string;
 };
@@ -149,7 +149,7 @@ const DeliveryCard = ({ additionalData, deliveryMethod, title }: DeliveryCardPro
     return (
         <>
             <div className="flex flex-row my-4">
-                <Typography variant={TypographyVariant.H2}>
+                <Typography variant={TypographyVariant.H3}>
                     {title ?? t('caseOverview.correspondenceStepDetails.requestedRecipients')}
                 </Typography>
             </div>

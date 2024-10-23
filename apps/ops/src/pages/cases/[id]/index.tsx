@@ -15,6 +15,7 @@ import { PageHead } from '@deps/components/page-title';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
 import { TranslationFiles } from '@deps/config/translations';
+import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
 import CaseOverviewGlobal from '@deps/containers/case-overview/case-overview-global/case-overview-global';
 import TasksTable from '@deps/containers/case-overview/tasks-table/tasks-table';
 import CaseOverviewRedesign from '@deps/containers/case-redesign-sub-page/index';
@@ -35,8 +36,10 @@ import { PartyInstance } from '@deps/models/case/party-instance';
 import { ManagementTask } from '@deps/models/case/task-instance';
 import { UserPermission, UserProfile } from '@deps/models/user-profile';
 import { getCaseDetailsSSR, getCaseMetadataSSR } from '@deps/queries/api/cases';
+import { checkTupleSsr } from '@deps/queries/api/fga';
 import { getCaseTaskInstances } from '@deps/queries/api/v1/task';
 import { SCREEN_BREAKPOINTS, DEFAULT_ERROR_STRING, CaseDetailsTabValues } from '@deps/types/constants';
+import { FgaRelation } from '@deps/types/fga';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
@@ -372,7 +375,9 @@ export const getServerSideProps = withPageAuthRequired({
             user,
             UserPermission.AllowReadCaseManagement
         );
-        if (!hasPermissionToReadCaseManagement) {
+        const isAdvisorsExcel = await checkTupleSsr(accessToken as string, user.partyId, FgaRelation.Party, AE_FGA_ROLE);
+
+        if (!isAdvisorsExcel && !hasPermissionToReadCaseManagement) {
             return {
                 redirect: {
                     destination: '/403',
@@ -414,7 +419,7 @@ export const getServerSideProps = withPageAuthRequired({
                 caseDetails: formattedCaseDetails,
                 id,
                 tab,
-                user
+                user,
             },
         };
     },

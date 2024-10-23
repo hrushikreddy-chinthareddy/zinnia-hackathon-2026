@@ -23,6 +23,14 @@
         }
     },
     "types": ["node", "jest", "@testing-library/jest-dom"],
-    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "declaration.d.ts", "jest.config.js", "src/jest/coverage/**/*"],
+    "include": [
+        "next-env.d.ts",
+        "**/*.ts",
+        "**/*.tsx",
+        "declaration.d.ts",
+        "jest.config.js",
+        "src/jest/coverage/**/*",
+        "src/components/case-sub-page/case-tabs"
+    ],
     "exclude": ["node_modules", "e2e"]
 }
