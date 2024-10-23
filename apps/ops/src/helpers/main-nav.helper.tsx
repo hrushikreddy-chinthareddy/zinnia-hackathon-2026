@@ -33,7 +33,7 @@ export const getMainNavItems = async (
         if (isAdvisorsExcel || isAllowReadCaseManagement) {
             navItems.push({ label: caseLinkText, link: caseLinkHref, icon: <DocumentIcon width={20} height={20} /> });
         }
-        if (isAdvisorsExcel || isAllowReadPolicyAdmin) {
+        if (isAllowReadPolicyAdmin) {
             navItems.push({
                 label: policySearchText,
                 link: policySearchHref,
