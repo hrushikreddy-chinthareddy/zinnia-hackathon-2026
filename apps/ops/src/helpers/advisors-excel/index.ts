@@ -16,6 +16,6 @@ export const getAdvisorsExcelCaseSearchParams = () => {
 export const getAdvisorsExcelCaseStatsParams = (): Partial<CaseStatsQuery> => {
     return {
         brokerDealerName: getAdvisorsExcelBrokerDealerName(),
-        carrier: `'${AE_CARRIER_SBGC}'`,
+        carrier: [AE_CARRIER_SBGC],
     };
 }
