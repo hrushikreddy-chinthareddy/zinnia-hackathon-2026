@@ -10,8 +10,8 @@ import { PolicyProfile } from '@/types/policy';
 import { shouldStopBankPolling } from '@/utils/policy';
 
 import styles from './BankList.module.css';
-import { AddEditBankSidesheet } from '../add-edit-bank/AddEditBankSidesheet';
-import { FormMode } from '../add-edit-bank/shared-types';
+import { AddBankSidesheet } from '../add-bank/AddBankSidesheet';
+import { FormMode } from '../add-bank/shared-types';
 import { BankData } from '../bank-data/BankData';
 
 const POLL_INTERVAL = 1000;
@@ -74,7 +74,7 @@ export const BankList: FC<BankListProps> = ({
           <h2 className="mb-lg">Banking Details</h2>
           <div className={styles.multipleItemsInSection}>{allBankData}</div>
           {showAddEditBank && (
-            <AddEditBankSidesheet mode={FormMode.ADD} partyId={data.partyId} />
+            <AddBankSidesheet mode={FormMode.ADD} partyId={data.partyId} />
           )}
         </div>
       );

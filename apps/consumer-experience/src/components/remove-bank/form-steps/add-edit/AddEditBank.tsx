@@ -1,10 +1,8 @@
 'use client';
 import { AccountType } from '@zinnia/api-types/types/sor';
 import { Radio, Label, Button } from '@zinnia/bloom/components';
-import { FC } from 'react';
+import React, { FC } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-
-import { isNumber } from '@/utils/regex';
 
 import styles from './AddEditBank.module.css';
 import { FieldDataActive } from '../../../field/data-active/FieldDataActive';
@@ -125,11 +123,11 @@ export const AddEditBank: FC<AddEditBankProps> = ({
                 disabled={mode === FormMode.EDIT}
                 errorMessage={errors.routingNumber?.message}
                 onChange={e => {
-                  if (!isNumber(e.target.value)) {
-                    e.preventDefault();
-                  } else {
-                    field.onChange(e.target.value);
-                  }
+                  // if (!isNumber(e.target.value)) {
+                  //   e.preventDefault();
+                  // } else {
+                  //   field.onChange(e.target.value);
+                  // }
                 }}
                 fieldStatus={
                   errors.routingNumber ? FieldStatus.ERROR : FieldStatus.DEFAULT
@@ -162,11 +160,11 @@ export const AddEditBank: FC<AddEditBankProps> = ({
                 errorMessage={errors.accountNumber?.message}
                 label={<Label>Account Number</Label>}
                 onChange={e => {
-                  if (!isNumber(e.target.value)) {
-                    e.preventDefault();
-                  } else {
-                    field.onChange(e.target.value);
-                  }
+                  // if (!isNumber(e.target.value)) {
+                  //   e.preventDefault();
+                  // } else {
+                  //   field.onChange(e.target.value);
+                  // }
                 }}
               />
             </div>

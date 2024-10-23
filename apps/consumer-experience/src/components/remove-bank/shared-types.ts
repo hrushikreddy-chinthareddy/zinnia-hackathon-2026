@@ -6,8 +6,7 @@ export enum FormMode {
 }
 
 export enum FormSteps {
-  ADD_EDIT = 'ADD_EDIT',
-  REMOVE_CONFIRM = 'REMOVE_CONFIRM',
+  ADD_EDIT = 'ADD',
   LOADING = 'LOADING',
   ERROR = 'ERROR',
   SUCCESS = 'SUCCESS',

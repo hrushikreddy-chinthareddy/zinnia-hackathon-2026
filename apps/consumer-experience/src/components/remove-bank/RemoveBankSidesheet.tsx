@@ -1,0 +1,169 @@
+'use client';
+
+import { AccountStatus } from '@zinnia/api-types/types/sor';
+import { SideSheet, Button, Icon, IconType } from '@zinnia/bloom/components';
+import { useParams } from 'next/navigation';
+import { FC, ReactNode, useState } from 'react';
+
+import { putEndDateBankAccount } from '@/actions/bpm-actions';
+import { useUser } from '@/hooks/use-user';
+import { ActionTypes, useBpmStore } from '@/store/store';
+import {
+  bankAccountNumberSanitizer,
+  EVERLY_CONTACT_PHONE_NUMBER,
+} from '@/utils/data';
+
+import { Error } from './form-steps/error/Error';
+import { Loading } from './form-steps/loading/Loading';
+import { RemoveBankConfirm } from './form-steps/remove-bank-confirm/RemoveBankConfirm';
+import { Success } from './form-steps/success/Success';
+import { BankFormFields, FormSteps } from './shared-types';
+
+export interface RemoveBankProps {
+  partyId: string;
+  bankId?: string;
+  values?: BankFormFields;
+  autopayEnabled?: boolean;
+  numberOfAccounts?: number;
+}
+
+export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
+  values,
+  partyId,
+  bankId,
+  autopayEnabled,
+  numberOfAccounts,
+}) => {
+  const updateBpmAction = useBpmStore(state => state.updateBpmAction);
+  const params = useParams<{
+    planCode: string;
+    policyNumber: string;
+  }>();
+  const [open, setOpen] = useState(false);
+  const { user } = useUser();
+  const [step, setStep] = useState<FormSteps>();
+  const [, setErrorTitle] = useState('An error occurred');
+  const [, setErrorMessage] = useState<ReactNode>(
+    'Some generic messaging that will get updated based on the api response'
+  );
+  const [isServerError, setIsServerError] = useState(false);
+  const [successTitle, setSuccessTitle] = useState('Success!');
+  const [successMessage, setSuccessMessage] = useState(
+    'Some generic messaging that will get updated based on the api response'
+  );
+
+  const handleRemove = async () => {
+    setStep(FormSteps.LOADING);
+    const { data, error } = await putEndDateBankAccount({
+      planCode: params.planCode,
+      policyNumber: params.policyNumber,
+      partyId,
+      bankId,
+      bankAccountChangeRequest: {
+        bankAccount: {
+          ...values,
+          accountStatus: AccountStatus.ACTIVEBANKACCOUNT,
+          nameOnAccount: user?.name,
+        },
+      },
+    });
+
+    if (error) {
+      setIsServerError(error.status >= 500);
+      setErrorTitle(error.name);
+      setErrorMessage(error.message);
+      setStep(FormSteps.ERROR);
+      return;
+    }
+    if (data) {
+      setSuccessTitle(data.messages.title);
+      setSuccessMessage(data.messages.message);
+      setStep(FormSteps.SUCCESS);
+      updateBpmAction({
+        actionType: ActionTypes.REMOVE,
+        bankAccountNumber: values?.accountNumber,
+      });
+      return;
+    }
+  };
+
+  const sidesheetInner = () => {
+    if (numberOfAccounts === 1) {
+      return (
+        <Error
+          errorTitle="This is the only account saved."
+          isServerError={isServerError}
+          errorMessage="You must have at least one banking account saved. To remove this one, first add another bank account."
+          closeCallback={() => setOpen(false)}
+        />
+      );
+    }
+
+    if (autopayEnabled) {
+      return (
+        <Error
+          errorTitle="We can't delete autopay account."
+          isServerError={isServerError}
+          errorMessage={
+            <span>
+              To manage your autopay details, call us at{' '}
+              <a href={`tel:${EVERLY_CONTACT_PHONE_NUMBER}`}>
+                {EVERLY_CONTACT_PHONE_NUMBER}
+              </a>
+            </span>
+          }
+          closeCallback={() => setOpen(false)}
+        />
+      );
+    }
+
+    if (step === FormSteps.LOADING) {
+      return <Loading />;
+    }
+
+    if (step === FormSteps.SUCCESS) {
+      return (
+        <Success
+          successTitle={successTitle}
+          successMessage={successMessage}
+          closeCallback={() => setOpen(false)}
+        />
+      );
+    }
+
+    return (
+      <RemoveBankConfirm
+        accountNumber={values?.accountNumber}
+        bankNickname={values?.branchName}
+        cancelCallback={() => setOpen(false)}
+        confirmCallback={handleRemove}
+      />
+    );
+  };
+
+  // TODO: i don't think this will work because need to remove for PII, but i want to associate the button with the bank
+  // to be deleted somehow
+  const bankAccessibilityLabel = () => {
+    return `Remove ${values?.branchName} account ${!!values?.accountNumber && 'ending in'} ${bankAccountNumberSanitizer(values?.accountNumber)}`;
+  };
+
+  return (
+    <SideSheet
+      header="Remove Bank Account"
+      overrideOpen={open}
+      closeCallback={() => setStep(FormSteps.ADD_EDIT)}
+      trigger={
+        <Button
+          size="small"
+          mode="link"
+          onClick={() => setOpen(true)}
+          aria-label={bankAccessibilityLabel()}
+        >
+          <Icon type={IconType.TRASH} />
+        </Button>
+      }
+    >
+      {sidesheetInner()}
+    </SideSheet>
+  );
+};
