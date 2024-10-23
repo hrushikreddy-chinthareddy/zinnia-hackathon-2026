@@ -201,9 +201,10 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
             const applicableStatements = (await getApplicableStatementsSSR(planCode, accessToken, userInfoForLogging)) || [];
-            const shouldShowEmailFaxOption = featureFlagDecisions?.[FEATURE_FLAGS.SEND_STATEMENT_SHOW_EMAIL_FAX_Option];
-            const key = `SEND_CORRESPONDENCE_SHOW_Mail_${policy.carrierId}` as keyof typeof FEATURE_FLAGS;
-            const shouldShowMailOption = featureFlagDecisions?.[FEATURE_FLAGS[key]];
+            const showEmailFaxOptionKey = `SEND_STATEMENT_EMAIL_FAX_${policy.carrierId}` as keyof typeof FEATURE_FLAGS;
+            const showMailOptionKey = `SEND_STATEMENT_Mail_${policy.carrierId}` as keyof typeof FEATURE_FLAGS;
+            const shouldShowMailOption = featureFlagDecisions?.[FEATURE_FLAGS[showMailOptionKey]];
+            const shouldShowEmailFaxOption = featureFlagDecisions?.[FEATURE_FLAGS[showEmailFaxOptionKey]];
 
             return {
                 props: {
