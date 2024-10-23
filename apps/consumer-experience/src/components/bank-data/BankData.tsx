@@ -40,7 +40,6 @@ export const BankData = ({
           <BankName bankName={branchName} />
           {editBankEnabled && (
             <RemoveBankSidesheet
-              // mode={FormMode.EDIT}
               partyId={partyId}
               autopayEnabled={autopayEnabled}
               numberOfAccounts={numberOfAccounts}

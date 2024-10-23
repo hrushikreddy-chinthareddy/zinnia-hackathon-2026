@@ -20,11 +20,9 @@ export interface AddBankProps {
 }
 
 export const AddBank: FC<AddBankProps> = ({
-  // mode,
   values,
   cancelCallback,
   submitCallback,
-  // removeCallback,
 }) => {
   const {
     control,
@@ -41,10 +39,6 @@ export const AddBank: FC<AddBankProps> = ({
         : '',
     },
   });
-
-  // const handleRemove = () => {
-  //   removeCallback?.();
-  // };
 
   const handleCancel = () => {
     reset();
