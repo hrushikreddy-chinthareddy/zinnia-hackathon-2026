@@ -1,3 +1,5 @@
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
+
 import { SelectAmount } from '@/components/one-time-premium-payment/SelectAmount';
 import {
   ConfiguredSettingId,
@@ -23,6 +25,7 @@ export default async function SelectBankPage({
       policyNumber={policyNumber}
       planCode={planCode}
       paymentFee={data?.fee || 0}
+      lineOfBusiness={LineOfBusiness.LIFE}
     />
   );
 }
