@@ -320,5 +320,5 @@ export const formatCaseTotals = (
 };
 
 export const getCaseIdentifierValue = (identifiers: IdentifierInstance[], identifierToSearch: string) => {
-    return identifiers.find(identifier => identifier.identifier === identifierToSearch)?.value || '';
+    return identifiers?.find(identifier => identifier.identifier === identifierToSearch)?.value || '';
 };
