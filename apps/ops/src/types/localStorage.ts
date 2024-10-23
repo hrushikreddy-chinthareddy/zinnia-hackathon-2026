@@ -3,5 +3,5 @@ export enum FormSuccessMessageKey {
     OFTTask = 'otp-oft-success',
     RMDTask = 'otp-rmd-success',
     Reg60MassMutualSuccess = 'reg60-massmutual-success',
-    SSWTask = 'otp-systematic-withdrawal-success',
+    SSWFormInputTask = 'otp-systematic-withdrawal-success',
 }

@@ -7,7 +7,7 @@ export enum TaskType {
     Withdrawal = 'WithdrawalFormInputTask',
     OFT = 'OFTTask',
     RMD = 'RMDTask',
-    SSW = 'SSWTask',
+    SSW = 'SSWFormInputTask',
     RENEWAL = 'RenewalTask',
     REG60 = 'NBReg60Comparision',
 }
