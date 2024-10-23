@@ -42,7 +42,7 @@ const TaskQueueTableRow = ({ task }: TaskQueueTableRowProps) => {
             return;
         }
 
-        const body = {...taskData, status: TaskStatus.New}
+        const body = {...taskData, status: TaskStatus.InProgress}
         const response = await updateTask(
             taskData.caseId,
             taskData.id,
