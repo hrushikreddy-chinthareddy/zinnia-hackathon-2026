@@ -2,7 +2,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { FundAccountTypeEnum } from '@zinnia/api-types/types/funds';
 import { LineOfBusiness, PolicyFeature } from '@zinnia/api-types/types/sor';
-import { Label, Icon, IconType, Popover } from '@zinnia/bloom/components';
+import { Label } from '@zinnia/bloom/components';
 import { toTitleCase } from '@zinnia/utils';
 
 import styles from '@/app/(authenticated)/coverage/shared-styles/Funds.module.css';
@@ -10,6 +10,7 @@ import { CallForAssistance } from '@/components/call-for-assistance/CallForAssis
 import { HoldingFunds } from '@/components/funds-table/HoldingFunds';
 import { NonHoldingFunds } from '@/components/funds-table/NonHoldingFunds';
 import { sortNonHoldingFunds } from '@/components/funds-table/utils';
+import { LabelPopover } from '@/components/label-popover/LabelPopover';
 import {
   getPolicyFunds,
   getPolicyStatusDetails,
@@ -59,24 +60,14 @@ export const IULFundsView = ({
       <div className={styles.sectionContainer}>
         <Label
           interactiveElements={[
-            <Popover
-              key={'holding-accounts'}
-              title={'Holding Accounts'}
-              trigger={
-                <Icon
-                  type={IconType.CIRCLE_INFO}
-                  color="var(--color-base-icon-icon-tooltip)"
-                  small
-                />
-              }
-            >
+            <LabelPopover key={'holding-accounts'} title={'Holding Accounts'}>
               <p>
                 Holding accounts are where your premium dollars are first
                 deposited. While there, all fees and charges come out. Then,
                 what remains is moved or “swept” into the account(s) you've
                 selected on the sweep date.
               </p>
-            </Popover>,
+            </LabelPopover>,
           ]}
         >
           <h2>{toTitleCase('holding accounts')}</h2>
