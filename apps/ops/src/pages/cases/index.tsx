@@ -28,6 +28,7 @@ import {
     CaseTableData,
 } from '@deps/contexts/CaseManagementFilters';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { getAdvisorsExcelCaseParams } from '@deps/helpers/advisors-excel';
 import {
     formatCaseTotals,
     getAdditionalFilters,
@@ -47,9 +48,7 @@ import { checkTupleSsr, getCarrierListServerSSR } from '@deps/queries/api/fga';
 import { CaseSearchQuery, CaseStatsQuery } from '@deps/queries/cases';
 import { FgaRelation } from '@deps/types/fga';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
-import { isProd } from '@deps/utils/environment.helper';
 import nextI18nextConfig from 'next-i18next.config';
-import { getAdvisorsExcelCaseParams } from '@deps/helpers/advisors-excel';
 
 // Lazy Loaded Components
 const SideSheetRefineResults = dynamic(() => import('@deps/containers/side-sheet-refine-results/side-sheet-refine-results'));
@@ -94,7 +93,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel }: CaseMa
             ...searchValueObject,
             groupBy: ['caseStatus'],
         };
-
+        console.log('isAE', isAdvisorsExcel)
         if (isAdvisorsExcel) {
             const advisorsExcelParams = getAdvisorsExcelCaseParams();
 
@@ -105,6 +104,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel }: CaseMa
         }
 
         try {
+            console.log('caseStatsRequest', caseStatsRequest)
             const response = await getCaseStats(caseStatsRequest);
 
             if ('stats' in response) {

@@ -67,15 +67,15 @@ export const getCaseNotes = async (caseId: string, includeInternal = false): Pro
 
 export const getCaseStats = async (query: CaseStatsQuery): Promise<CaseStatsResponse | CaseStatsErrorResponse> => {
     try {
-        const cachedResult = pullFromCache('getCaseStats', query);
+        // const cachedResult = pullFromCache('getCaseStats', query);
 
-        if (cachedResult) {
-            return cachedResult;
-        }
+        // if (cachedResult) {
+        //     return cachedResult;
+        // }
 
         const { data } = await client.post<CaseStatsQuery, AxiosResponse>(`${baseCasesUrl}/stats`, query);
 
-        writeToCache('getCaseStats', query, data);
+        // writeToCache('getCaseStats', query, data);
 
         return data ?? {};
     } catch (error: any) {

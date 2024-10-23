@@ -31,7 +31,7 @@ import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-da
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import usePageTracker from '@deps/hooks/usePageTracker';
 import { PolicyAllOfPartiesItem, Policy } from '@deps/models/policy/sor-policy';
-import { UserPermission, UserProfile } from '@deps/models/user-profile';
+import { UserPermission } from '@deps/models/user-profile';
 import { fetchPolicy } from '@deps/queries/api/policies';
 import { MOCK_COOKIE_KEY, PREV_POLICY_COOKIE_KEY } from '@deps/queries/api-utils/serverClientUtils';
 import { getMockPolicy } from '@deps/services/mocks/mock-policy.helper';
@@ -45,7 +45,6 @@ interface PolicyPageProps {
         [UserPermission.AllowEditPolicy]: boolean;
     };
     selectedPolicyParty?: PolicyAllOfPartiesItem;
-    user: UserProfile;
 }
 
 interface PreviousPolicy {
@@ -55,7 +54,7 @@ interface PreviousPolicy {
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
-const PolicyDetailsPage: React.FC<PolicyPageProps> = ({ user }) => {
+const PolicyDetailsPage: React.FC<PolicyPageProps> = () => {
     const router = useRouter();
     const { query } = router;
     const perms = usePermissionsContext();
