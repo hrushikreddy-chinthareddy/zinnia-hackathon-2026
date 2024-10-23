@@ -18,6 +18,7 @@ export interface CaseSearchQuery {
 }
 
 export interface CaseStatsQuery {
+    brokerDealerName?: string
     policyNumber?: string;
     ssn?: string;
     ownerFirstName?: string;

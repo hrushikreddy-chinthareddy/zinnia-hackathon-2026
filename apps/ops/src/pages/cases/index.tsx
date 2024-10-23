@@ -17,7 +17,7 @@ import SelectSimple from '@deps/components/select/select';
 import StatusCounterTile from '@deps/components/status-counter-tile/status-counter-tile';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { AE_BROKER_DEALER_NAME_PROD, AE_BROKER_DEALER_NAME_QA, AE_CARRIER_SBGC, AE_FGA_ROLE } from '@deps/constants/advisors-excel';
+import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
 import {
     CaseManagementFiltersContext,
     CaseSearchAdditionalFilters,
@@ -49,6 +49,7 @@ import { FgaRelation } from '@deps/types/fga';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 import { isProd } from '@deps/utils/environment.helper';
 import nextI18nextConfig from 'next-i18next.config';
+import { getAdvisorsExcelCaseParams } from '@deps/helpers/advisors-excel';
 
 // Lazy Loaded Components
 const SideSheetRefineResults = dynamic(() => import('@deps/containers/side-sheet-refine-results/side-sheet-refine-results'));
@@ -88,11 +89,20 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel }: CaseMa
 
         const searchValueObject = getSearchValueObject(caseManagementFilters.searchValue, caseManagementFilters.toggleValue);
 
-        const caseStatsRequest: CaseStatsQuery = {
+        let caseStatsRequest: CaseStatsQuery = {
             ...additionalFilters,
             ...searchValueObject,
             groupBy: ['caseStatus'],
         };
+
+        if (isAdvisorsExcel) {
+            const advisorsExcelParams = getAdvisorsExcelCaseParams();
+
+            caseStatsRequest = {
+                ...caseStatsRequest,
+                ...advisorsExcelParams
+            }
+        }
 
         try {
             const response = await getCaseStats(caseStatsRequest);
@@ -136,12 +146,11 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel }: CaseMa
 
             // DEPU-2835 - temporary work around for Advisor Excel
             if (isAdvisorsExcel) {
-                const brokerDealerName = isProd() ? AE_BROKER_DEALER_NAME_PROD : AE_BROKER_DEALER_NAME_QA;
+                const advisorsExcelParams = getAdvisorsExcelCaseParams();
 
                 additionalFilters = {
                     ...additionalFilters,
-                    brokerDealerName,
-                    carrier: [AE_CARRIER_SBGC],
+                    ...advisorsExcelParams,
                 };
             }
 
@@ -498,7 +507,8 @@ export const getServerSideProps = withPageAuthRequired({
             user,
             UserPermission.AllowReadCaseManagement
         );
-
+        
+    // DEPU-2835 - temporary work around for Advisor Excel
         const isAdvisorsExcel = await checkTupleSsr(`${auth.accessToken}`, user.partyId, FgaRelation.Party, AE_FGA_ROLE);
 
         if (!isAdvisorsExcel && !doesUserHasPagePermissions) {
