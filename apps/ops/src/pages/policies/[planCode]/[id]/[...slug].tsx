@@ -9,6 +9,7 @@ import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page
 import { PageHead } from '@deps/components/page-title';
 import PolicyLayout from '@deps/components/policy-layout';
 import { TranslationFiles } from '@deps/config/translations';
+import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
 import AnnuitizationSubPage from '@deps/containers/annuitization-sub-page';
 import CoverageSubPage from '@deps/containers/coverage-sub-page';
 import LoansSubPage from '@deps/containers/loans-sub-page/loans-sub-page';
@@ -30,11 +31,13 @@ import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import usePageTracker from '@deps/hooks/usePageTracker';
-import { PolicyAllOfPartiesItem , Policy } from '@deps/models/policy/sor-policy';
+import { PolicyAllOfPartiesItem, Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission, UserProfile } from '@deps/models/user-profile';
+import { checkTupleSsr } from '@deps/queries/api/fga';
 import { fetchPolicy } from '@deps/queries/api/policies';
 import { MOCK_COOKIE_KEY, PREV_POLICY_COOKIE_KEY } from '@deps/queries/api-utils/serverClientUtils';
 import { getMockPolicy } from '@deps/services/mocks/mock-policy.helper';
+import { FgaRelation } from '@deps/types/fga';
 import { logError, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
@@ -302,9 +305,10 @@ export const getServerSideProps = withPageAuthRequired({
             user,
             UserPermission.AllowReadPolicyAdmin
         );
+        const isAdvisorsExcel = await checkTupleSsr(accessToken as string, user.partyId, FgaRelation.Party, AE_FGA_ROLE);
 
         // If they can't read Policy Admin there's no point in continuing. Redirect to 403 Forbidden.
-        if (!permissions[UserPermission.AllowReadPolicyAdmin]) {
+        if (!isAdvisorsExcel && !permissions[UserPermission.AllowReadPolicyAdmin]) {
             return {
                 redirect: {
                     destination: '/403',
