@@ -1,13 +1,17 @@
-import { Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow } from '@zinnia/bloom/components';
+import { Link, Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow } from '@zinnia/bloom/components';
 import Image from 'next/image';
+import { useTranslation } from 'react-i18next';
 
 import ChipStatus from '@deps/components/chip-status/chip-status';
 import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import { TranslationFiles } from '@deps/config/translations';
+import { getStatusDetails } from '@deps/containers/case-redesign-sub-page';
+import { calculateDaysAgo } from '@deps/helpers/case-management';
 import { getAgents, getPolicyOwners } from '@deps/helpers/parties';
 import { formatDateDescriptionList, formatSSN, toTitleCase } from '@deps/helpers/string.helper';
 import { Case } from '@deps/models/case/case';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { CaseDetailsTabValues, DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { SearchViewQuery } from '@deps/types/search';
 import { getCarrierLogoByClientId } from '@deps/utils/carriers';
 
@@ -52,6 +56,7 @@ interface CaseResultTableProps {
 }
 
 export const CaseResultTable = ({ cases, searchValues }: CaseResultTableProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON);
     return (
         <Table>
             <TableHeader>
@@ -95,8 +100,24 @@ export const CaseResultTable = ({ cases, searchValues }: CaseResultTableProps) =
 
                     const imageSrc = getCarrierLogoByClientId(singleCase.carrier);
 
+                    const daysAgo = calculateDaysAgo(new Date(singleCase.createdAt));
+                    const statusTooltip = getStatusDetails({
+                        status: singleCase.caseStatus,
+                        processSubType: singleCase.processSubType?.toLowerCase(),
+                        process: singleCase.process,
+                        createdAt: singleCase.createdAt,
+                        updatedAt: singleCase.updatedAt,
+                        exceptions: singleCase.exceptions,
+                        t,
+                        daysAgo,
+                    }).statusTooltip;
+
+                    const viewCaseText = t('caseManagementDashboard.case.viewCase', {
+                        caseNumber: String(singleCase.policyNumber).split('').join(' '),
+                    });
+
                     return (
-                        <TableRow key={`case-search-card-${singleCase.id}`}>
+                        <TableRow key={`case-search-card-${singleCase.id}`} className={styles.row}>
                             <TableCell>
                                 <div className="flex flex-col">
                                     <Typography variant={TypographyVariant.BodySm} className="block">
@@ -108,9 +129,10 @@ export const CaseResultTable = ({ cases, searchValues }: CaseResultTableProps) =
                                 </div>
                             </TableCell>
                             <TableCell>
-                                <ChipStatus status={singleCase.caseStatus} data-testid="chip-status" classNames="whitespace-nowrap" />
+                                <Tooltip triggerClassName="md:mt-2" placement={PopoverPlacement.TopRight} body={statusTooltip}>
+                                    <ChipStatus status={singleCase.caseStatus} data-testid="chip-status" classNames="whitespace-nowrap" />
+                                </Tooltip>
                             </TableCell>
-                            {/* to do - add showOwnerInfo logic */}
                             <TableCell>
                                 <div className="flex flex-col">
                                     {policyOwners.length > 1 ? (
@@ -128,7 +150,6 @@ export const CaseResultTable = ({ cases, searchValues }: CaseResultTableProps) =
                             </TableCell>
                             <TableCell>
                                 <div className="flex items-center gap-2">
-                                    {/* to do - where does showLogo logic come from? */}
                                     <Tooltip placement={PopoverPlacement.TopRight} body={singleCase.carrier} isTabbable={false}>
                                         <div className="flex h-6 w-6 items-center justify-center rounded border-2 border-gray-100">
                                             <Image
@@ -158,7 +179,14 @@ export const CaseResultTable = ({ cases, searchValues }: CaseResultTableProps) =
                                     <CaseDetailField pii={true} text={formatSSN(agentSsn)} className={styles.detail} />
                                 </div>
                             </TableCell>
+                            {/* to do - change this to be the "hours ago" if it's today */}
                             <TableCell>{formatDateDescriptionList(new Date(singleCase.createdAt || ''))}</TableCell>
+                            <Link
+                                className={styles.caseLink}
+                                href={`/cases/${singleCase.id}/${CaseDetailsTabValues.progress}`}
+                                aria-label={viewCaseText}
+                                text={viewCaseText}
+                            />
                         </TableRow>
                     );
                 })}
