@@ -9,7 +9,7 @@
         "lint": "next lint",
         "lint:test": "eslint 'src/**/*.{js,ts,jsx,tsx}' --max-warnings=0 --no-ignore",
         "clean": "./scripts/clean.sh",
-        "test": "jest --verbose=true --maxWorkers=50% --coverage",
+        "test": "cd ../.. pnpm run build && cd apps/ops && jest --verbose=true --maxWorkers=50% --coverage",
         "test-watch": "pnpm run test -- --watch",
         "prettier": "prettier --check ./src",
         "lint-staged": "lint-staged",
