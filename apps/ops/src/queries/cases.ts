@@ -26,7 +26,7 @@ export interface CaseStatsQuery {
     process?: string[];
     caseIds?: string[];
     caseStatus?: Statuses[];
-    carrier?: string[];
+    carrier?: string | string[];
     groupBy: string[];
     createdDateStart?: string;
     createdDateEnd?: string;

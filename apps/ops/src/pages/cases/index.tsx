@@ -28,7 +28,7 @@ import {
     CaseTableData,
 } from '@deps/contexts/CaseManagementFilters';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { getAdvisorsExcelCaseParams } from '@deps/helpers/advisors-excel';
+import { getAdvisorsExcelCaseSearchParams, getAdvisorsExcelCaseStatsParams } from '@deps/helpers/advisors-excel';
 import {
     formatCaseTotals,
     getAdditionalFilters,
@@ -93,9 +93,9 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel }: CaseMa
             ...searchValueObject,
             groupBy: ['caseStatus'],
         };
-        console.log('isAE', isAdvisorsExcel)
+
         if (isAdvisorsExcel) {
-            const advisorsExcelParams = getAdvisorsExcelCaseParams();
+            const advisorsExcelParams = getAdvisorsExcelCaseStatsParams();
 
             caseStatsRequest = {
                 ...caseStatsRequest,
@@ -146,7 +146,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel }: CaseMa
 
             // DEPU-2835 - temporary work around for Advisor Excel
             if (isAdvisorsExcel) {
-                const advisorsExcelParams = getAdvisorsExcelCaseParams();
+                const advisorsExcelParams = getAdvisorsExcelCaseSearchParams();
 
                 additionalFilters = {
                     ...additionalFilters,

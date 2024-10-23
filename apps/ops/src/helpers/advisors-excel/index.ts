@@ -1,4 +1,5 @@
 import { AE_BROKER_DEALER_NAME_PROD, AE_BROKER_DEALER_NAME_QA, AE_CARRIER_SBGC } from "@deps/constants/advisors-excel";
+import { CaseStatsQuery } from "@deps/queries/cases";
 import { isProd } from "@deps/utils/environment.helper";
 
 const getAdvisorsExcelBrokerDealerName = () => {
@@ -12,9 +13,9 @@ export const getAdvisorsExcelCaseSearchParams = () => {
     };
 }
 
-export const getAdvisorsExcelCaseStatsParams = () => {
+export const getAdvisorsExcelCaseStatsParams = (): Partial<CaseStatsQuery> => {
     return {
         brokerDealerName: getAdvisorsExcelBrokerDealerName(),
-        carrier: AE_CARRIER_SBGC,
+        carrier: `'${AE_CARRIER_SBGC}'`,
     };
 }
