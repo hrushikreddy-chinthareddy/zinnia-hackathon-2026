@@ -35,7 +35,7 @@ const carriers = {
     RSLN: 'Lincoln Benefit Life',
     SAAG: 'SunAmerica',
     SBGC: 'Security Benefit',
-    SBUL: 'Security Benefit', // DEPU-2795
+    SBUL: 'Security Benefit Life Insurance Company', // DEPU-2795
     SFGI: 'Sammons Financial',
     SMTR: 'Symetra',
     THRI: 'Thrivent Financial',
