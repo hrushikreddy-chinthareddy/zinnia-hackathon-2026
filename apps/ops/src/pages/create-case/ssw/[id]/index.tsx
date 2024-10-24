@@ -11,6 +11,7 @@ import OtpLayout from '@deps/components/otp-layout';
 import WithdrawalDrawer, { SidebarContent } from '@deps/components/otp-withdrawal-form/withdrawal-drawer';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import SelectSimple from '@deps/components/select/select';
 import { TranslationFiles } from '@deps/config/translations';
 import { SbgcSSWForm } from '@deps/containers/otp/ssw-forms/sbgc/sbgc-ssw-form';
 import { FormControls } from '@deps/containers/otp/withdrawal-forms/components/form-controls';
@@ -30,8 +31,7 @@ import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { ProcessType } from '@deps/models/case/enums';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { TaskType } from '@deps/models/case/task';
-import { ActiveWithdrawalCase, Carrier, QualTypes } from '@deps/models/case/withdrawal/case';
-import { Transaction, TransactionStatus } from '@deps/models/case/withdrawal/case';
+import { ActiveWithdrawalCase, Carrier, QualTypes, Transaction, TransactionStatus } from '@deps/models/case/withdrawal/case';
 import { UserPermission } from '@deps/models/user-profile';
 import { initializeOTPTaskSSR } from '@deps/operations/tasks/v2/initialize';
 import { getDocumentSSR } from '@deps/queries/api/documents';
@@ -48,6 +48,7 @@ import { MassMutualSSWForm } from '@deps/containers/otp/ssw-forms/mass/mass-ssw-
 import { NassauSSWForm } from '@deps/containers/otp/ssw-forms/nasu/nasu-ssw-form';
 import { CarrierToCarrierTitleMap } from '@deps/constants/page-title';
 import { FlicSSWForm } from '@deps/containers/otp/ssw-forms/flic/flic-ssw-form';
+import { FieldSize } from '@deps/components/fields/field';
 
 interface SSWCaseProps {
     document: DocumentData;
@@ -82,6 +83,42 @@ const getFormComponentMap = (qualType: QualTypes | ''): Record<string, React.Rea
     [Carrier.FLIC]: <FlicSSWForm qualType={qualType} />,
 });
 
+export enum SswRequestOption {
+    SSW_EDIT = 'SSW Edit',
+    BANK_UPDATE = 'Bank Update',
+    RMD_EDIT = 'RMD Edit',
+    EFT_DRAW_EDIT = 'EFT Draw Edit',
+    LOAN_REPAYMENT_EDIT = 'Loan repayment Edit',
+    NEW = 'New',
+}
+
+const sswRequestOptions = [
+    {
+        label: 'New',
+        value: SswRequestOption.NEW,
+    },
+    {
+        label: 'RMD Edit',
+        value: SswRequestOption.RMD_EDIT,
+    },
+    {
+        label: 'SSW Edit',
+        value: SswRequestOption.SSW_EDIT,
+    },
+    {
+        label: 'Bank Update',
+        value: SswRequestOption.BANK_UPDATE,
+    },
+    {
+        label: 'EFT Draw Edit',
+        value: SswRequestOption.EFT_DRAW_EDIT,
+    },
+    {
+        label: 'Loan repayment Edit',
+        value: SswRequestOption.LOAN_REPAYMENT_EDIT,
+    },
+];
+
 export default function SSWCase({ document, form, parties, transactionsHistory, featureFlagDecisions }: SSWCaseProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseSSW.request' });
 
@@ -98,9 +135,28 @@ export default function SSWCase({ document, form, parties, transactionsHistory, 
     const [isOpenOverride, setIsOpenOverride] = useState<null | boolean>(null);
     const [taskApiError, setTaskApiError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [sswRequest, setSswRequest] = useState(SswRequestOption.NEW);
     const initialForm = form;
 
     const formParts = determineFormToRender(clientForFormDetermination as string, getFormComponentMap(qualType));
+    const sswEditOptions = (
+        <>
+            <div>
+                <SelectSimple
+                    disabled={false}
+                    className="max-w-lg"
+                    // label={t('sswRequest') as string}
+                    label={'SSW Request'}
+                    options={sswRequestOptions}
+                    onChange={(val: string) => setSswRequest(val as SswRequestOption)}
+                    size={FieldSize.Small}
+                    value={sswRequest}
+                    name="sswRequest"
+                />
+            </div>
+        </>
+    );
+
     if (!formParts) {
         console.error('SSWCase::No form parts', {
             documentNumber: document?.documentNumber,
@@ -110,6 +166,9 @@ export default function SSWCase({ document, form, parties, transactionsHistory, 
         router.push(`/create-case/error?errorCode=${ERROR_CODES.SSW_FORM_CREATION}`);
     }
 
+    if (sswRequest === SswRequestOption.BANK_UPDATE) {
+        router.push(`/bank-update?taskId=${form?.taskId}`);
+    }
     useEffect(() => {
         setTransactionDetail({
             contractId: document?.contract || '',
@@ -182,6 +241,7 @@ export default function SSWCase({ document, form, parties, transactionsHistory, 
                                 >
                                     {
                                         <>
+                                            {sswEditOptions}
                                             {formParts}
                                             <FormErrors t={withdrawalTx} taskApiError={taskApiError}></FormErrors>
                                             <FormControls

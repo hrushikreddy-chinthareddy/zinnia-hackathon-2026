@@ -15,3 +15,9 @@ export enum TypeOfPayment {
     Fixed = 'Fixed',
     Variable = 'Variable',
 }
+
+export enum ContributionType {
+    Contribution = 'Contribution',
+    Loan = 'Loan Repayment',
+    Disbursement = 'Disbursement',
+}

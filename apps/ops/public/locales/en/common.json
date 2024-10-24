@@ -4185,5 +4185,32 @@
             },
             "label": "Select the appropriate form that needs to be updated."
         }
+    },
+    "bankUpdate": {
+        "title": "Bank Details",
+        "channelOptions": {
+            "emailFaxMail": "Email/Fax/Mail",
+            "phone": "Phone"
+        },
+        "contributionType": {
+            "contribution": "Contribution",
+            "loan": "Loan Repayment",
+            "disbursement": "Disbursement"
+        },
+        "channel": "Channel",
+        "type": "Type",
+        "accountHolder": "Account holder",
+        "accountNumber": "Account number",
+        "reEnterAccountNumber": "Re-enter account number",
+        "acordFormReceived": "Is ACORD form received?",
+        "bankName": "Bank name",
+        "bankRoutingNumber": "Bank routing number",
+        "reEnterBankRoutingNumber": "Re-enter Bank routing number",
+        "submit": "Submit",
+        "cancel": "Cancel",
+        "back": "Back to Create Task",
+        "terminate": "Terminate",
+        "isVoidCheckAttached": "Is void check attached?",
+        "doesCheckMeetSecurityRequirements": "Does check meet security requirements?"
     }
 }
