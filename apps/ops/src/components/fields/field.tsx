@@ -69,7 +69,6 @@ export type FieldProps = {
     variant?: FieldVariant;
     labelClassNames?: string;
     preventEditing?: boolean;
-    isMultiple?: boolean;
     onChange: (event: ChangeEvent<HTMLInputElement>) => void;
     onClear?: (ref: RefObject<HTMLInputElement>) => void;
     handleEnterKey?: () => void;
@@ -79,7 +78,6 @@ export type FieldProps = {
     isReadOnly?: boolean;
     maskOnBlur?: boolean;
     disableCopyPaste?: boolean;
-    children?: React.ReactNode;
 } & Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>;
 
 export default function Field({
@@ -102,8 +100,6 @@ export default function Field({
     isClearable,
     isReadOnly,
     required,
-    isMultiple,
-    children,
     ...rest
 }: FieldProps) {
     const [focus, setFocus] = useState(false);
@@ -175,7 +171,6 @@ export default function Field({
                 isReadOnly={isReadOnly}
                 required={required}
             />
-            {children && <span className={`flex flex-wrap text-xs !p-0 gap-1`}> {children}</span>}
             <div data-testid={FieldTest.Input} className={classes}>
                 <FieldUnits variant={variant} location={FieldUnitsLocation.Start}>
                     {leading}

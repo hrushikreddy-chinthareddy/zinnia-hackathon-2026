@@ -1845,6 +1845,9 @@
             "noFormsFound": "Aucun formulaire trouvé"
         },
         "correspondence": {
+            "label": "Où le(s) document(s) doivent-ils être envoyés ? ",
+            "addAdditionalRecipient": "+ Ajouter un destinataire",
+            "maxEmails": "Maximum 5 e-mails autorisés",
             "email": "E-mail",
             "fax": "Fax",
             "mail": "Mail préféré",

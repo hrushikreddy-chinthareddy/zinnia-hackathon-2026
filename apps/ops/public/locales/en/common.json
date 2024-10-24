@@ -1862,6 +1862,8 @@
         },
         "correspondence": {
             "label": "Where should the document(s)  be sent",
+            "addAdditionalRecipient": "+ Add additional recipient",
+            "maxEmails": "Maximum 5 emails allowed",
             "email": "Email",
             "fax": "Fax",
             "mail": "Mail",

@@ -6,7 +6,7 @@ import { Policy } from '@deps/models/policy/sor-policy';
 
 export const generateCommunicationRequest = (
     policy: Policy,
-    communicationType: string,
+    communicationType: CommunicationTypes,
     state: CorrespondenceFormParts,
     user: UserProfile,
     ctiCallNumber: string,
@@ -31,9 +31,9 @@ export const generateCommunicationRequest = (
         },
         attachmentDetails,
         receiverDetails: {
-            deliveryType: communicationType as CommunicationTypes,
+            deliveryType: communicationType,
             recipientList: [state.correspondence.recipient],
-            ccList: [],
+            ccList: communicationType === CommunicationTypes.Email ? state.correspondence?.ccList : [],
             mailDetails: communicationType === CommunicationTypes.Mail ? state.correspondence?.mailDetails : undefined,
         },
     };
