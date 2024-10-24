@@ -1,11 +1,10 @@
+import { Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
 import { cloneElement, useEffect, useRef, useState } from 'react';
-
-import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
 
 export type PopoverOnTruncateProps = {
     children: JSX.Element;
     title?: string | JSX.Element;
-    placement?: PopoverPlacement;
+    placement?: TooltipPlacement;
     popoverBody?: string | JSX.Element;
     popoverClassName?: string;
 };
@@ -13,7 +12,7 @@ export type PopoverOnTruncateProps = {
 export default function PopoverOnTruncate({
     children,
     title,
-    placement = PopoverPlacement.TopRight,
+    placement = TooltipPlacement.TopRight,
     popoverClassName,
 }: PopoverOnTruncateProps) {
     const ref = useRef<HTMLElement>(null);
@@ -46,8 +45,8 @@ export default function PopoverOnTruncate({
 
     if (!isOverflown) return childrenClone;
     return (
-        <Tooltip popoverClassName={popoverClassName} body={title} placement={placement}>
-            {childrenClone}
+        <Tooltip tooltipClassName={popoverClassName} trigger={childrenClone} placement={placement} className="relative">
+            {title}
         </Tooltip>
     );
 }

@@ -1,10 +1,19 @@
-import { Link, Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow } from '@zinnia/bloom/components';
+import {
+    Link,
+    Table,
+    TableBody,
+    TableCell,
+    TableHeader,
+    TableHeaderCell,
+    TableRow,
+    Tooltip,
+    TooltipPlacement,
+} from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
 
 import ChipStatus from '@deps/components/chip-status/chip-status';
-import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { getStatusDetails } from '@deps/containers/case-redesign-sub-page';
@@ -35,9 +44,12 @@ const PartyWithOthers = ({ text, entities, highlights }: PartyWithOthersProps) =
     const textWithHighlights = !!text && highlights && highlights.length ? <Highlighter text={text} highlights={highlights} /> : text;
 
     const textToRender = text ? (
-        <PopoverOnTruncate title={text}>
-            <span className="line-clamp-1 break-all font-secondary text-md">{textWithHighlights}</span>
-        </PopoverOnTruncate>
+        // to do - remove after fixing in bloom
+        <div className="relative">
+            <PopoverOnTruncate title={text}>
+                <span className="line-clamp-1 break-all font-secondary text-md relative">{textWithHighlights}</span>
+            </PopoverOnTruncate>
+        </div>
     ) : (
         textWithHighlights
     );
@@ -76,12 +88,10 @@ export const CaseResultTable = ({ cases, searchValues }: CaseResultTableProps) =
             </TableHeader>
             <TableBody>
                 {cases.map(singleCase => {
+                    // to do - so much is being defined in this map - should it be its own component or a useCallback/useMemo?
                     const policyOwners = singleCase.parties ? getPolicyOwners(singleCase.parties) : [];
                     const entities = policyOwners.slice(1).map(owner => ({ name: toTitleCase(owner.fullName), ssn: formatSSN(owner.ssn) }));
-                    // to do - can i use full name here instead of this maddness?
-                    const ownerName = policyOwners.length
-                        ? (policyOwners?.[0]?.firstName || '') + ' ' + (policyOwners?.[0]?.lastName || '')
-                        : null;
+                    const ownerName = policyOwners.length ? policyOwners?.[0]?.fullName : null;
                     const ssn = policyOwners.length ? policyOwners[0].ssn : undefined;
 
                     const ownerComponentProps = {
@@ -145,7 +155,6 @@ export const CaseResultTable = ({ cases, searchValues }: CaseResultTableProps) =
                             <Link
                                 className={styles.caseLink}
                                 href={`/cases/${singleCase.id}/${CaseDetailsTabValues.progress}`}
-                                aria-label={viewCaseText}
                                 text={viewCaseText}
                             />
                             <TableCell>
@@ -159,9 +168,21 @@ export const CaseResultTable = ({ cases, searchValues }: CaseResultTableProps) =
                                 </div>
                             </TableCell>
                             <TableCell>
-                                <Tooltip triggerClassName="md:mt-2" placement={PopoverPlacement.TopRight} body={statusTooltip}>
-                                    <ChipStatus status={singleCase.caseStatus} data-testid="chip-status" classNames="whitespace-nowrap" />
-                                </Tooltip>
+                                {/* to do - remove after fixing in bloom */}
+                                <div className="relative">
+                                    <Tooltip
+                                        placement={TooltipPlacement.TopRight}
+                                        trigger={
+                                            <ChipStatus
+                                                status={singleCase.caseStatus}
+                                                data-testid="chip-status"
+                                                classNames="whitespace-nowrap"
+                                            />
+                                        }
+                                    >
+                                        {statusTooltip}
+                                    </Tooltip>
+                                </div>
                             </TableCell>
                             <TableCell>
                                 <div className="flex flex-col">
@@ -180,17 +201,22 @@ export const CaseResultTable = ({ cases, searchValues }: CaseResultTableProps) =
                             </TableCell>
                             <TableCell>
                                 <div className="flex items-center gap-2">
-                                    <Tooltip placement={PopoverPlacement.TopRight} body={singleCase.carrier} isTabbable={false}>
-                                        <div className="flex h-6 w-6 items-center justify-center rounded border-2 border-gray-100">
-                                            <Image
-                                                src={imageSrc}
-                                                alt={`${singleCase.carrier} icon`}
-                                                width={24}
-                                                height={24}
-                                                role="presentation"
-                                                aria-hidden="true"
-                                            />
-                                        </div>
+                                    <Tooltip
+                                        placement={TooltipPlacement.TopRight}
+                                        trigger={
+                                            <div className="flex h-6 w-6 items-center justify-center rounded border-2 border-gray-100">
+                                                <Image
+                                                    src={imageSrc}
+                                                    alt={`${singleCase.carrier} icon`}
+                                                    width={24}
+                                                    height={24}
+                                                    role="presentation"
+                                                    aria-hidden="true"
+                                                />
+                                            </div>
+                                        }
+                                    >
+                                        {singleCase.carrier}
                                     </Tooltip>
                                     <CaseDetailField
                                         pii={true}

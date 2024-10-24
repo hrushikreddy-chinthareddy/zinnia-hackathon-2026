@@ -1,9 +1,8 @@
+import { Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
-import React from 'react';
 
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
-import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
 import { TranslationFiles } from '@deps/config/translations';
 
 import Typography, { TypographyVariant } from '../typography/typography';
@@ -38,11 +37,17 @@ const PlusOthers = ({ className = '', entities }: PlusOthersProps) => {
     );
 
     return (
-        <Tooltip placement={PopoverPlacement.BottomRight} body={body} popoverClassName="px-4 py-4">
-            <div className={clsx(`ml-2 whitespace-nowrap font-primary text-md font-semibold text-secondary`, className)}>
-                <span data-testid="plus-number">+{entities.length}</span>
-                {` ${t('tooltip.other')}`}
-            </div>
+        <Tooltip
+            placement={TooltipPlacement.BottomRight}
+            tooltipClassName="px-4 py-4"
+            trigger={
+                <div className={clsx(`ml-2 whitespace-nowrap font-primary text-md font-semibold text-secondary`, className)}>
+                    <span data-testid="plus-number">+{entities.length}</span>
+                    {` ${t('tooltip.other')}`}
+                </div>
+            }
+        >
+            {body}
         </Tooltip>
     );
 };
