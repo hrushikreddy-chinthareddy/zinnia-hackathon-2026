@@ -16,7 +16,7 @@ import styles from './BankData.module.css';
 import { RemoveBankSidesheet } from '../remove-bank/RemoveBankSidesheet';
 
 interface BankDetailProps extends BankDetail {
-  editBankEnabled?: boolean;
+  removeBankEnabled?: boolean;
   numberOfAccounts: number;
   partyId: string;
 }
@@ -29,7 +29,7 @@ export const BankData = ({
   partyId,
   nameOnAccount,
   routingNumber,
-  editBankEnabled,
+  removeBankEnabled,
   numberOfAccounts,
   bankId,
 }: BankDetailProps) => {
@@ -38,7 +38,7 @@ export const BankData = ({
       <div className={styles.bankName}>
         <div className="typography-labels-label-lg justify-between">
           <BankName bankName={branchName} />
-          {editBankEnabled && (
+          {removeBankEnabled && (
             <RemoveBankSidesheet
               partyId={partyId}
               autopayEnabled={autopayEnabled}

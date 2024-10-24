@@ -4,7 +4,7 @@ import { BankAccountChangeRequest } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
 
-import { FormMode } from '@/components/add-bank/shared-types';
+import { BankDetail } from '@/components/person-data/types';
 import {
   ApiResponse,
   bpmApiBaseUrl,
@@ -15,6 +15,7 @@ import { BankRequest } from '@/types/transactions';
 import { parseAPIResponse, logApiNotOkDetails } from '@/utils/api';
 import {
   bankAccountNumberSanitizer,
+  filterItemsWithPastEndDate,
   getBankAccountByBankId,
 } from '@/utils/data';
 import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
@@ -22,7 +23,6 @@ import { logError } from '@/utils/logging/server-logging';
 
 interface AddBankRequestArgs {
   planCode: string;
-  formMode: FormMode;
   policyNumber: string;
   partyId: string;
   bankId?: string;
@@ -63,11 +63,13 @@ export const postAddBankAccount = async (
       policyNumber,
     });
 
-    if (banks && bankAccountChangeRequest?.bankAccount) {
+    const filteredBanks = filterItemsWithPastEndDate(banks);
+
+    if (filteredBanks && bankAccountChangeRequest?.bankAccount) {
       if (
-        banks?.find(
+        filteredBanks?.find(
           b =>
-            b.accountNumber ===
+            (b as BankDetail).accountNumber ===
             bankAccountChangeRequest.bankAccount?.accountNumber
         )
       ) {

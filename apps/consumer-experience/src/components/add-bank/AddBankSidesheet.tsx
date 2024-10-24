@@ -2,23 +2,21 @@
 
 import { AccountStatus } from '@zinnia/api-types/types/sor';
 import { SideSheet, Button, Icon, IconType } from '@zinnia/bloom/components';
-import clsx from 'clsx';
 import { useParams } from 'next/navigation';
 import { FC, ReactNode, useState } from 'react';
 
 import { addBankRequest } from '@/actions/bpm-actions';
 import { useUser } from '@/hooks/use-user';
 import { ActionTypes, useBpmStore } from '@/store/store';
+import { BankFormFields, FormSteps } from '@/types/bank';
 
 import styles from './AddBankSidesheet.module.css';
 import { AddBank } from './form-steps/add/AddBank';
 import { Error } from './form-steps/error/Error';
 import { Loading } from './form-steps/loading/Loading';
 import { Success } from './form-steps/success/Success';
-import { BankFormFields, FormMode, FormSteps } from './shared-types';
 
 export interface AddBankSidesheet {
-  mode: FormMode;
   partyId: string;
   bankId?: string;
   values?: BankFormFields;
@@ -27,7 +25,6 @@ export interface AddBankSidesheet {
 }
 
 export const AddBankSidesheet: FC<AddBankSidesheet> = ({
-  mode,
   values,
   partyId,
   bankId,
@@ -39,7 +36,7 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
   }>();
   const [open, setOpen] = useState(false);
   const { user } = useUser();
-  const [step, setStep] = useState<FormSteps>(FormSteps.ADD);
+  const [step, setStep] = useState<FormSteps>();
   const [errorTitle, setErrorTitle] = useState('An error occurred');
   const [errorMessage, setErrorMessage] = useState<ReactNode>(
     'Some generic messaging that will get updated based on the api response'
@@ -57,7 +54,6 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
       policyNumber: params.policyNumber,
       partyId,
       bankId,
-      formMode: mode,
       bankAccountChangeRequest: {
         bankAccount: {
           ...requestValues,
@@ -90,28 +86,22 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
     <SideSheet
       header="Add New Bank Account"
       overrideOpen={open}
-      closeCallback={() => setStep(FormSteps.ADD)}
+      closeCallback={() => setOpen(false)}
       trigger={
         <Button
-          className={clsx({
-            [styles.addBank as string]: mode === FormMode.ADD,
-          })}
+          className={styles.addBank as string}
           size="small"
           mode="link"
           onClick={() => setOpen(true)}
-          aria-label={`${mode} bank`}
+          aria-label="add new bank"
         >
-          <Icon
-            small={mode === FormMode.ADD}
-            type={mode === FormMode.ADD ? IconType.ADD : IconType.EDIT_ALT}
-          />
+          <Icon small type={IconType.ADD} />
           Add another bank account
         </Button>
       }
     >
-      {step === FormSteps.ADD && (
+      {!step && (
         <AddBank
-          mode={mode}
           values={values}
           cancelCallback={() => setOpen(false)}
           submitCallback={handleAdd}

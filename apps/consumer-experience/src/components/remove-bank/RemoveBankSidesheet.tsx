@@ -8,16 +8,13 @@ import { FC, ReactNode, useState } from 'react';
 import { putEndDateBankAccount } from '@/actions/bpm-actions';
 import { useUser } from '@/hooks/use-user';
 import { ActionTypes, useBpmStore } from '@/store/store';
-import {
-  bankAccountNumberSanitizer,
-  EVERLY_CONTACT_PHONE_NUMBER,
-} from '@/utils/data';
+import { BankFormFields, FormSteps } from '@/types/bank';
+import { EVERLY_CONTACT_PHONE_NUMBER } from '@/utils/data';
 
 import { Error } from './form-steps/error/Error';
 import { Loading } from './form-steps/loading/Loading';
 import { RemoveBankConfirm } from './form-steps/remove-bank-confirm/RemoveBankConfirm';
 import { Success } from './form-steps/success/Success';
-import { BankFormFields, FormSteps } from './shared-types';
 
 export interface RemoveBankProps {
   partyId: string;
@@ -141,17 +138,14 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
     );
   };
 
-  // TODO: i don't think this will work because need to remove for PII, but i want to associate the button with the bank
-  // to be deleted somehow
   const bankAccessibilityLabel = () => {
-    return `Remove ${values?.branchName} account ${!!values?.accountNumber && 'ending in'} ${bankAccountNumberSanitizer(values?.accountNumber)}`;
+    return `Remove bank with name ${values?.branchName}`;
   };
 
   return (
     <SideSheet
       header="Remove Bank Account"
       overrideOpen={open}
-      closeCallback={() => setStep(FormSteps.ADD_EDIT)}
       trigger={
         <Button
           size="small"

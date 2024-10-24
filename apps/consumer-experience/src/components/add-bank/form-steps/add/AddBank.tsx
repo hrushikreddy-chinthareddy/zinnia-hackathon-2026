@@ -4,15 +4,14 @@ import { Radio, Label, Button } from '@zinnia/bloom/components';
 import { FC } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
+import { BankFormFields } from '@/types/bank';
 import { isNumber } from '@/utils/regex';
 
 import styles from './AddBank.module.css';
 import { FieldDataActive } from '../../../field/data-active/FieldDataActive';
 import { FieldStatus } from '../../../field/types';
-import { BankFormFields, FormMode } from '../../shared-types';
 
 export interface AddBankProps {
-  mode: FormMode;
   values?: BankFormFields;
   cancelCallback?: () => void;
   submitCallback?: (val: BankFormFields) => void;
