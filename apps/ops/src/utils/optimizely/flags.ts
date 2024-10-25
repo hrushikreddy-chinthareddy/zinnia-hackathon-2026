@@ -52,5 +52,6 @@ export enum FEATURE_FLAGS {
     NIGO_ENTRY_FLIC_WITHDRAWAL = 'nigo-entry_flic_withdrawal',
     NIGO_ENTRY_NASU_WITHDRAWAL = 'nigo-entry_nasu_withdrawal',
     NIGO_ENTRY_DLIC_WITHDRAWAL = 'nigo-entry_dlic_withdrawal',
+    NIGO_ENTRY_MASS_WITHDRAWAL = 'nigo-entry_mass_withdrawal',
     SEND_DOCUMENT_HIDE_MAIL_OPTION_ILNA = 'contact-center-send-document-arcus-mail-option',
 }
