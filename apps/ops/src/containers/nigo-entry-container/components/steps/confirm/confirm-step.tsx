@@ -10,45 +10,54 @@ import { TranslationFiles } from '@deps/config/translations';
 import { buildFormV2 } from '@deps/containers/otp/withdrawal-forms/utils/withdrawal-form-helper';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DocumentData } from '@deps/models/case/document';
+import { ApiVersion } from '@deps/models/case/enums';
+import { TaskApiVersionMapper } from '@deps/models/case/helpers';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 
+import { useNigoEntry } from '../../nigo-entry-provider';
+
 interface ConfirmStepProps {
     documentNumber?: string;
-    docType?: string; 
+    docType?: string;
     clientCode?: string;
     document: DocumentData
 }
 const ConfirmStep = ({ document}: ConfirmStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.confirmStep' });
     const router = useRouter();
+    const { isReadyForDataEntry } = useNigoEntry();
     const formState = useContext(FormDataContext);
     const [submitFailed, setSubmitFailed] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-    const [timer] = useState(performance.now());   
-    
-    const submit = useCallback(async () => {
-        const response = await updateTask(
-            formState.initialForm.caseId,
-            formState.initialForm.taskId,
-            buildFormV2(TaskStatus.Completed, document, formState),
-            timer
-        );
+    const [timer] = useState(performance.now());
 
-        if (response && response.id) {
-            setSubmitFailed(false);
+    const submit = useCallback(async () => {
+        if (TaskApiVersionMapper[formState.initialForm.taskType] === ApiVersion.v2 && formState.initialForm.status !== TaskStatus.Completed) {
+            const successfulCaseUpdate = await updateTask(
+                formState.initialForm.caseId,
+                formState.initialForm.taskId,
+                buildFormV2(TaskStatus.Completed, document, formState),
+                timer
+            );
+
+            if (successfulCaseUpdate && successfulCaseUpdate.id) {
+                setSubmitFailed(false);
+            } else {
+                setSubmitFailed(true);
+            }
         } else {
-            setSubmitFailed(true);
+            setSubmitFailed(false);
         }
-        
+
         setIsLoading(false);
     }, [document, formState, timer]);
 
     useEffect(() => {
         submit();
     }, [submit]);
-    
+
     if (isLoading) {
         return (
             <div className="responsive-padding flex h-[300px] w-full grow">
@@ -63,7 +72,7 @@ const ConfirmStep = ({ document}: ConfirmStepProps) => {
                 leaveRoute={'/create-case'}
                 submit={{
                     action: submit,
-                    text: t('submitNigo'),
+                    text: isReadyForDataEntry ? t('submitTask') : t('submitNigo'),
                 }}
             />
         );

@@ -5,7 +5,7 @@ import { GetServerSidePropsContext } from 'next';
 import router from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import xss from 'xss';
 
 import Button, { ButtonSize, ButtonType } from '@deps/components/button/button';
@@ -280,7 +280,7 @@ const CaseCreate = ({ featureFlagDecisions }: CaseCreateProps) => {
     const renderTabContent = (
         <>
             <TabContent className="flex w-full flex-col" value={TabOptions.myTasks}>
-                <TaskManagementQueueContainer />
+                <TaskManagementQueueContainer featureFlagDecisions={featureFlagDecisions} />
             </TabContent>
             <TabContent className="flex w-full flex-col" value={TabOptions.search}>
                 <div className="my-5">
@@ -318,7 +318,6 @@ const CaseCreate = ({ featureFlagDecisions }: CaseCreateProps) => {
             </TabContent>
         </>
     );
-
 
     return (
         <NoNavLayout fullHeight={true}>
