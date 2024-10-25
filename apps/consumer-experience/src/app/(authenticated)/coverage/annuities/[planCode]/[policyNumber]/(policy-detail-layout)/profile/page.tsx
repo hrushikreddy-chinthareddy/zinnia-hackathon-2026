@@ -41,7 +41,8 @@ export default async function Profile({ params }: Props) {
   queryClient.setQueryData([QueryKeys.POLICY_PROFILE], data);
 
   const flags = await getFeatureFlags();
-  const showAddEditBank = flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_BANK_ACCOUNT];
+  const allowBankingChanges =
+    flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_BANK_ACCOUNT];
 
   if (error) {
     return (
@@ -106,7 +107,7 @@ export default async function Profile({ params }: Props) {
       <BankList
         planCode={params.planCode}
         policyNumber={params.policyNumber}
-        showAddEditBank={showAddEditBank}
+        allowBankingChanges={allowBankingChanges}
         initialProfileData={data}
       />
     );

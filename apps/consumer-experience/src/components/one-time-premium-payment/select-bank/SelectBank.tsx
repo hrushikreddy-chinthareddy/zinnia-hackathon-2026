@@ -1,4 +1,5 @@
 'use client';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import {
   AssistiveText,
   AssistiveTextVariant,
@@ -28,10 +29,12 @@ export const SelectBank = ({
   planCode,
   policyNumber,
   activeBanks,
+  lineOfBusiness,
 }: {
   planCode: string;
   policyNumber: string;
   activeBanks: BankDetail[];
+  lineOfBusiness: LineOfBusiness;
 }) => {
   const router = useRouter();
   const { state, dispatch } = useOttp();
@@ -154,7 +157,11 @@ export const SelectBank = ({
           >
             Continue
           </Button>
-          <CancelDialogLink planCode={planCode} policyNumber={policyNumber} />
+          <CancelDialogLink
+            planCode={planCode}
+            policyNumber={policyNumber}
+            lineOfBusiness={lineOfBusiness}
+          />
         </div>
       </form>
     </FormStepWrapper>

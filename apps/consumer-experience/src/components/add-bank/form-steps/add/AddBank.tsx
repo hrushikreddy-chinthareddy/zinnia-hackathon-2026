@@ -4,27 +4,24 @@ import { Radio, Label, Button } from '@zinnia/bloom/components';
 import { FC } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
+import { BankFormFields } from '@/types/bank';
 import { isNumber } from '@/utils/regex';
 
-import styles from './AddEditBank.module.css';
+import styles from './AddBank.module.css';
 import { FieldDataActive } from '../../../field/data-active/FieldDataActive';
 import { FieldStatus } from '../../../field/types';
-import { BankFormFields, FormMode } from '../../shared-types';
 
-export interface AddEditBankProps {
-  mode: FormMode;
+export interface AddBankProps {
   values?: BankFormFields;
   cancelCallback?: () => void;
   submitCallback?: (val: BankFormFields) => void;
   removeCallback?: () => void;
 }
 
-export const AddEditBank: FC<AddEditBankProps> = ({
-  mode,
+export const AddBank: FC<AddBankProps> = ({
   values,
   cancelCallback,
   submitCallback,
-  removeCallback,
 }) => {
   const {
     control,
@@ -41,10 +38,6 @@ export const AddEditBank: FC<AddEditBankProps> = ({
         : '',
     },
   });
-
-  const handleRemove = () => {
-    removeCallback?.();
-  };
 
   const handleCancel = () => {
     reset();
@@ -116,13 +109,12 @@ export const AddEditBank: FC<AddEditBankProps> = ({
               value: 9,
               message: 'Routing number must have 9 digits.',
             },
-            pattern: mode === FormMode.EDIT ? undefined : /^[0-9]+$/,
+            pattern: /^[0-9]+$/,
           }}
           render={({ field }) => (
             <div>
               <FieldDataActive
                 {...field}
-                disabled={mode === FormMode.EDIT}
                 errorMessage={errors.routingNumber?.message}
                 onChange={e => {
                   if (!isNumber(e.target.value)) {
@@ -149,13 +141,12 @@ export const AddEditBank: FC<AddEditBankProps> = ({
               value: 16,
               message: "Account number can't exceed 16 digits.",
             },
-            pattern: mode === FormMode.EDIT ? undefined : /^[0-9]+$/,
+            pattern: /^[0-9]+$/,
           }}
           render={({ field }) => (
             <div>
               <FieldDataActive
                 {...field}
-                disabled={mode === FormMode.EDIT}
                 fieldStatus={
                   errors.accountNumber ? FieldStatus.ERROR : FieldStatus.DEFAULT
                 }
@@ -172,21 +163,10 @@ export const AddEditBank: FC<AddEditBankProps> = ({
             </div>
           )}
         />
-        {mode === FormMode.EDIT && (
-          <p className="typography-content-body">
-            To edit your routing or account number, you'll need to remove this
-            account and add another bank account.
-          </p>
-        )}
       </div>
 
       <div className={styles.buttonContainer}>
-        <Button type="submit">{`${mode === FormMode.ADD ? 'Save' : 'Update'} account`}</Button>
-        {mode === FormMode.EDIT && (
-          <Button onClick={handleRemove} className={styles.remove} mode="error">
-            Remove account
-          </Button>
-        )}
+        <Button type="submit">Save account</Button>
         <Button onClick={handleCancel} className={styles.cancel} mode="link">
           Cancel
         </Button>

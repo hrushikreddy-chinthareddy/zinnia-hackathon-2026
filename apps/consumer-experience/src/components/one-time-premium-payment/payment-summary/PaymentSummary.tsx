@@ -1,4 +1,5 @@
 'use client';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -20,10 +21,12 @@ export interface OTTPPaymentDetails {
 export const PaymentSummary = ({
   planCode,
   policyNumber,
+  lineOfBusiness,
 }: {
   moveToNextStep?: () => void;
   planCode: string;
   policyNumber: string;
+  lineOfBusiness: LineOfBusiness;
 }) => {
   const router = useRouter();
   const { state } = useOttp();
@@ -84,6 +87,7 @@ export const PaymentSummary = ({
           ottpPaymentData={state}
           planCode={planCode}
           policyNumber={policyNumber}
+          lineOfBusiness={lineOfBusiness}
         />
       </form>
     </FormStepWrapper>
