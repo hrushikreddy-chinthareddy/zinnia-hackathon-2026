@@ -1,24 +1,56 @@
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import SelectSimple from '@deps/components/select/select';
+import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { ContributionType } from '@deps/models/case/enums';
 import { Channel } from '@deps/models/case/renewal/case-renewal';
+import { DEFAULT_DISBURSEMENT_UPDATE } from '@deps/models/case/withdrawal/disbursement-types';
 import { ReactComponent as ChevronLeftIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-left.svg';
 
-import { BankFieldConfigs } from './bank-update.helper';
+import { BankFieldConfigs, channelOptions, typeOptions } from './bank-update.helper';
 import Button, { ButtonSize, ButtonType } from '../button/button';
 import { FieldSize } from '../fields/field';
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '../nav-element/nav-element';
 import AccountTypes from '../otp-withdrawal-form/form-disbursement/form-disbursement-parts/account-type';
 import BankBooleanButtonGroup from '../otp-withdrawal-form/form-disbursement/form-disbursement-parts/bank-boolean-button-group';
 import BankTextField from '../otp-withdrawal-form/form-disbursement/form-disbursement-parts/bank-text-field';
+import { BankingFields } from '../otp-withdrawal-form/form-disbursement/form-disbursement.helper';
+
+// const INITIAL_BANK_UPDATE_DATA = {
+//     updateType: 'BankUpdate',
+//     contractNumber: '',
+//     bank: [
+//         {
+//             accountNumber: '',
+//             accountType: {
+//                 text: 'Checking',
+//             },
+//             bankName: 'SBI',
+//             nameOnBankAccount: 'Saurav',
+//             routingNumber: '9876543',
+//             bankType: 'Disbursement',
+//         },
+//     ],
+//     doesCheckMeetSecRequiremnt: true,
+//     voidCheck: true,
+//     programs: null,
+// };
 
 const BankUpdateForm = () => {
-    const [channel, setChannel] = useState();
-    const [contributionType, setContributionType] = useState(ContributionType.Disbursement);
-
     const { t } = useTranslation(undefined, { keyPrefix: 'bankUpdate' });
+
+    const [bankUpdateDetails, setBankUpdateDetails] = useState(DEFAULT_DISBURSEMENT_UPDATE);
+    const { initialForm, formSource, setFormSource } = useContext(FormDataContext);
+
+    useEffect(() => {
+        // setBankUpdateDetails(prevState => {
+        //     return { ...prevState, contractNumber: initialForm.data.contractNum };
+        // });
+        if (!formSource.channel.text) {
+            setFormSource(prevState => ({ ...prevState, channel: { text: Channel.Phone } }));
+        }
+    }, [initialForm]);
 
     const {
         isVoidCheckField,
@@ -32,31 +64,55 @@ const BankUpdateForm = () => {
         accountHolder,
     } = BankFieldConfigs();
 
-    const channelOptions = [
-        {
-            label: t('channelOptions.emailFaxMail'),
-            value: Channel.Form,
-        },
-        {
-            label: t('channelOptions.phone'),
-            value: Channel.Phone,
-        },
-    ];
+    const [timer] = useState(performance.now());
 
-    const typeOptions = [
-        {
-            label: t('contributionType.contribution'),
-            value: ContributionType.Contribution,
-        },
-        {
-            label: t('contributionType.loan'),
-            value: ContributionType.Loan,
-        },
-        {
-            label: t('contributionType.disbursement'),
-            value: ContributionType.Disbursement,
-        },
-    ];
+    // const handleFormSubmit = async (event: FormEvent) => {
+    //     event.preventDefault();
+    //     //  setIsLoading(true);
+    //     //  setTaskApiError('');
+    //     //  if (validateForm() && areDiaryNotesViewed) {
+    //     let successfulCaseUpdate;
+    //     if (TaskApiVersionMapper[initialForm.taskType] === ApiVersion.v2) {
+    //         successfulCaseUpdate = await updateTask(
+    //             initialForm.caseId,
+    //             initialForm?.taskId,
+    //             buildFormV2(TaskStatus.Completed, document, formState),
+    //             timer
+    //         );
+    //     } else {
+    //         successfulCaseUpdate = await putCaseTask(
+    //             initialForm.caseId,
+    //             initialForm.taskId,
+    //             buildForm(CaseStatus.Submit, document, formState)
+    //         );
+    //     }
+
+    //     if (successfulCaseUpdate) {
+    //         if (isLocalStorageEnabled()) {
+    //             const successMessage = t(
+    //                 `createTaskSuccess.${TaskTypeTranslation[formState?.initialForm?.data?.taskType as keyof typeof TaskTypeTranslation]}`,
+    //                 {
+    //                     contractNumber: document?.contract,
+    //                     documentNumber: document?.documentNumber,
+    //                 }
+    //             );
+
+    //             localStorage.setItem(
+    //                 FormSuccessMessageKey[formState?.initialForm?.data?.taskType as keyof typeof FormSuccessMessageKey],
+    //                 successMessage
+    //             );
+    //         }
+
+    //         router.push(`/create-case`);
+    //     } else {
+    //         //  setTaskApiError(t('submitError') as string);
+    //         //  setIsLoading(false);
+    //     }
+    //     //  } else {
+    //     //      setIsLoading(false);
+    //     //  }
+    // };
+    // const realTimeValidationError = validator?.(SupportedValidationOperation.Equal, value, disbursementInformation) || error;
 
     return (
         <>
@@ -89,10 +145,10 @@ const BankUpdateForm = () => {
                         disabled={false}
                         className="max-w-lg"
                         label={t('channel') || ''}
-                        options={channelOptions}
-                        onChange={val => setChannel(val as any)}
+                        options={channelOptions(t)}
+                        onChange={val => setFormSource(prevState => ({ ...prevState, channel: { text: val } }))}
                         size={FieldSize.Small}
-                        value={channel || ''}
+                        value={formSource.channel.text as Channel}
                         name="channel"
                     />
                 </div>
@@ -101,10 +157,11 @@ const BankUpdateForm = () => {
                         disabled={false}
                         className="max-w-lg"
                         label={t('type') || ''}
-                        options={typeOptions}
-                        onChange={val => setContributionType(val as ContributionType)}
+                        options={typeOptions(t)}
+                        // onChange={() => setBankUpdateDetails(prevState => ({...prevState,}
+                        onChange={val => setBankUpdateDetails(prevState => ({ ...prevState, bankType: val }))}
                         size={FieldSize.Small}
-                        value={contributionType}
+                        value={bankUpdateDetails.bankType || ContributionType.Disbursement}
                         name="sswType"
                     />
                 </div>
@@ -113,18 +170,18 @@ const BankUpdateForm = () => {
                         fieldLabel={t('isVoidCheckAttached')}
                         fieldName={isVoidCheckField.fieldName}
                         isFormStateReadOnly={false}
-                        disbursementInformation={{} as any}
+                        disbursementInformation={bankUpdateDetails as any}
                         classNames={isVoidCheckField.classNames}
-                        onDataChange={() => {}}
+                        onDataChange={setBankUpdateDetails}
                     />
 
                     <BankBooleanButtonGroup
                         fieldLabel={t('doesCheckMeetSecurityRequirements')}
                         fieldName={meetSecurityCheck.fieldName}
                         isFormStateReadOnly={false}
-                        disbursementInformation={{} as any}
+                        disbursementInformation={bankUpdateDetails as any}
                         // classNames={meetSecurityCheck.classNames}
-                        onDataChange={() => {}}
+                        onDataChange={setBankUpdateDetails}
                     />
                 </div>
                 <div className="my-4 grid w-full grid-cols-4 gap-4">
@@ -132,35 +189,47 @@ const BankUpdateForm = () => {
                         fieldLabel={t('type')}
                         fieldName={accountType.fieldName}
                         classNames={accountType.classNames}
-                        disbursementInformation={{} as any}
+                        disbursementInformation={bankUpdateDetails as any}
                         isFormStateReadOnly={false}
-                        onDataChange={() => {}}
+                        onDataChange={setBankUpdateDetails}
                         error={''}
                     />
+                    {/* <SelectSimple
+                        key={accountType.fieldName}
+                        disabled={false}
+                        className={accountType.classNames}
+                        label={t('type') as string}
+                        options={accountTypeOptions(t)}
+                        onChange={() => {}}
+                        size={FieldSize.Small}
+                        // value={bankUpdateDetails.bank[0].accountType.text as ContributionType}
+                        value={''}
+                        name="accountType"
+                    /> */}
                 </div>
                 <div className="my-4 grid w-full grid-cols-4 gap-4">
                     <BankTextField
                         fieldLabel={t('accountNumber')}
-                        fieldName={accountNumber.fieldLabel}
+                        fieldName={'accountNumber'}
                         classNames={accountNumber.className}
                         // maxLength={}
                         isFormStateReadOnly={false}
-                        disbursementInformation={{} as any}
-                        onDataChange={() => {}}
-                        maskOnBlur={accountNumber.maskOnBlur}
-                        validator={accountNumber.validator}
+                        disbursementInformation={bankUpdateDetails}
+                        onDataChange={setBankUpdateDetails}
+                        maskOnBlur={reEnterAccountNumber.maskOnBlur}
+                        validator={reEnterAccountNumber.validator}
                         error={''}
-                        disableCopyPaste={accountNumber.disableCopyPaste}
+                        disableCopyPaste={reEnterAccountNumber.disableCopyPaste}
                     />
 
                     <BankTextField
                         fieldLabel={t('reEnterAccountNumber')}
-                        fieldName={reEnterAccountNumber.fieldLabel}
+                        fieldName={BankingFields.ReEnterAccountNumber}
                         classNames={reEnterAccountNumber.className}
                         // maxLength={}
                         isFormStateReadOnly={false}
-                        disbursementInformation={{} as any}
-                        onDataChange={() => {}}
+                        disbursementInformation={bankUpdateDetails}
+                        onDataChange={setBankUpdateDetails}
                         maskOnBlur={reEnterAccountNumber.maskOnBlur}
                         validator={reEnterAccountNumber.validator}
                         error={''}
@@ -170,12 +239,12 @@ const BankUpdateForm = () => {
                 <div className="my-4 grid w-full grid-cols-4 gap-4">
                     <BankTextField
                         fieldLabel={t('bankRoutingNumber')}
-                        fieldName={bankRoutingNumber.fieldLabel}
+                        fieldName={'routingNumber'}
                         classNames={bankRoutingNumber.className}
                         // maxLength={}
                         isFormStateReadOnly={false}
-                        disbursementInformation={{} as any}
-                        onDataChange={() => {}}
+                        disbursementInformation={bankUpdateDetails}
+                        onDataChange={setBankUpdateDetails}
                         maskOnBlur={bankRoutingNumber.maskOnBlur}
                         validator={bankRoutingNumber.validator}
                         error={''}
@@ -184,12 +253,12 @@ const BankUpdateForm = () => {
 
                     <BankTextField
                         fieldLabel={t('reEnterBankRoutingNumber')}
-                        fieldName={reEnterBankRoutingNumber.fieldLabel}
+                        fieldName="routingNumber"
                         classNames={reEnterBankRoutingNumber.className}
                         // maxLength={}
                         isFormStateReadOnly={false}
-                        disbursementInformation={{} as any}
-                        onDataChange={() => {}}
+                        disbursementInformation={bankUpdateDetails}
+                        onDataChange={setBankUpdateDetails}
                         maskOnBlur={reEnterBankRoutingNumber.maskOnBlur}
                         validator={reEnterBankRoutingNumber.validator}
                         error={''}
@@ -199,12 +268,12 @@ const BankUpdateForm = () => {
                 <div className="my-4 grid w-full grid-cols-4 gap-4">
                     <BankTextField
                         fieldLabel={t('bankName')}
-                        fieldName={bankName.fieldLabel}
+                        fieldName={bankName.fieldName}
                         classNames={bankName.className}
                         // maxLength={}
                         isFormStateReadOnly={false}
-                        disbursementInformation={{} as any}
-                        onDataChange={() => {}}
+                        disbursementInformation={bankUpdateDetails}
+                        onDataChange={setBankUpdateDetails}
                         maskOnBlur={bankName.maskOnBlur}
                         validator={bankName.validator}
                         error={''}
@@ -212,12 +281,12 @@ const BankUpdateForm = () => {
                     />
                     <BankTextField
                         fieldLabel={t('accountHolder')}
-                        fieldName={accountHolder.fieldLabel}
+                        fieldName={'nameOnBankAccount'}
                         classNames={accountHolder.className}
                         // maxLength={}
                         isFormStateReadOnly={false}
-                        disbursementInformation={{} as any}
-                        onDataChange={() => {}}
+                        disbursementInformation={bankUpdateDetails}
+                        onDataChange={setBankUpdateDetails}
                         maskOnBlur={accountHolder.maskOnBlur}
                         validator={accountHolder.validator}
                         error={''}

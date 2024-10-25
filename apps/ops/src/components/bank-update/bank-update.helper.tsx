@@ -2,29 +2,32 @@ import { useTranslation } from 'next-i18next';
 
 import { BankingFields } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helper';
 import { createValidator } from '@deps/containers/otp/utils/helper-utils';
+import { ContributionType } from '@deps/models/case/enums';
+import { Channel } from '@deps/models/case/renewal/case-renewal';
+import { AccountType } from '@deps/models/case/withdrawal/case';
 
 export const BankFieldConfigs: any = () => {
     const { t } = useTranslation(undefined);
     return {
         isVoidCheckField: {
-            fieldName: BankingFields.IsVoidCheckAttached,
-            fieldLabel: t('distributionMethod.isVoidCheckAttached'),
+            fieldName: 'voidCheck',
+            // fieldLabel: t('distributionMethod.isVoidCheckAttached'),
             // component: DisbursementFields.BankBooleanButtonGroup,
             classNames: 'col-start-1',
         },
         meetSecurityCheck: {
-            fieldName: BankingFields.DoesCheckMeetSecurityRequirements,
-            fieldLabel: t('distributionMethod.doesCheckMeetSecurityRequirement'),
+            fieldName: 'doesCheckMeetSecRequiremnt',
+            // fieldLabel: t('distributionMethod.doesCheckMeetSecurityRequirement'),
         },
         accountType: {
             fieldName: BankingFields.AccountType,
-            fieldLabel: t('distributionMethod.accountType'),
+            // fieldLabel: t('distributionMethod.accountType'),
             classNames: 'col-start-1 col-span-2 w-full',
             isBankingField: true,
         },
         accountNumber: {
             fieldName: BankingFields.AccountNumber,
-            fieldLabel: t('distributionMethod.accountNumber'),
+            // fieldLabel: t('distributionMethod.accountNumber'),
             // component: DisbursementFields.BankTextField,
             classNames: 'col-start-1',
             isBankingField: true,
@@ -33,7 +36,7 @@ export const BankFieldConfigs: any = () => {
         },
         reEnterAccountNumber: {
             fieldName: BankingFields.ReEnterAccountNumber,
-            fieldLabel: t('distributionMethod.reEnterAccountNumber'),
+            // fieldLabel: t('distributionMethod.reEnterAccountNumber'),
             // component: DisbursementFields.BankTextField,
             classNames: 'col-start-2',
             isBankingField: true,
@@ -42,7 +45,7 @@ export const BankFieldConfigs: any = () => {
         },
         bankRoutingNumber: {
             fieldName: BankingFields.BankRoutingNumber,
-            fieldLabel: t('distributionMethod.bankRoutingNumber'),
+            // fieldLabel: t('distributionMethod.bankRoutingNumber'),
             // component: DisbursementFields.BankTextField,
             isBankingField: true,
             classNames: 'col-start-1',
@@ -51,7 +54,7 @@ export const BankFieldConfigs: any = () => {
         },
         reEnterBankRoutingNumber: {
             fieldName: BankingFields.ReEnterBankRoutingNumber,
-            fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+            // fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
             // component: DisbursementFields.BankTextField,
             isBankingField: true,
             disableCopyPaste: true,
@@ -59,14 +62,14 @@ export const BankFieldConfigs: any = () => {
         },
         bankName: {
             fieldName: BankingFields.BankName,
-            fieldLabel: t('distributionMethod.bankName'),
+            // fieldLabel: t('distributionMethod.bankName'),
             // component: DisbursementFields.BankTextField,
             isBankingField: true,
             classNames: 'col-start-1',
         },
         accountHolder: {
             fieldName: BankingFields.AccountHolder,
-            fieldLabel: t('distributionMethod.accountHolder'),
+            // fieldLabel: t('distributionMethod.accountHolder'),
             // component: DisbursementFields.BankTextField,
             classNames: 'col-start-2',
         },
@@ -122,3 +125,40 @@ export const BankFieldConfigs: any = () => {
         // ],
     };
 };
+
+export const channelOptions = t => [
+    {
+        label: t('channelOptions.emailFaxMail'),
+        value: Channel.Form,
+    },
+    {
+        label: t('channelOptions.phone'),
+        value: Channel.Phone,
+    },
+];
+
+export const typeOptions = t => [
+    {
+        label: t('contributionType.contribution'),
+        value: ContributionType.Contribution,
+    },
+    {
+        label: t('contributionType.loan'),
+        value: ContributionType.Loan,
+    },
+    {
+        label: t('contributionType.disbursement'),
+        value: ContributionType.Disbursement,
+    },
+];
+
+export const accountTypeOptions = t => [
+    {
+        label: t('accountType.savings'),
+        value: AccountType.Savings,
+    },
+    {
+        label: t('accountType.checking'),
+        value: AccountType.Checking,
+    },
+];
