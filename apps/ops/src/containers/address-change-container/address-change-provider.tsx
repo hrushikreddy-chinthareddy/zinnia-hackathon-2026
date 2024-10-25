@@ -2,8 +2,7 @@ import { useContext, useState } from 'react';
 
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
 import { AddressChangeContext } from '@deps/contexts/AddressChangeContext';
-import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
-import { Address } from '@deps/models/case/withdrawal/case';
+import { FormValidationErrors , Address } from '@deps/models/case/withdrawal/case';
 import { Phone, PhoneType, PolicyParties } from '@deps/models/policy/sor-policy';
 
 import { ApplyToRolesState, ContractUpdateOptions, SignatureState } from './types/address-change-types';

@@ -6,8 +6,7 @@ import { CalculateRmdBody, CalculateRmdResponse } from '@deps/models/case/withdr
 import { ProductFund, ProductFundsRequestBody } from '@deps/models/integration/product-funds';
 import { logError, logInfo, parseErrorInformation } from '@deps/utils/server-logging';
 
-import { apiServerBaseUrl } from '../api-config';
-import { baseAppUrl } from '../api-config';
+import { apiServerBaseUrl , baseAppUrl } from '../api-config';
 import { client } from '../api-utils/client';
 import { serverApi as serverHttpClient } from '../api-utils/serverApiClient';
 

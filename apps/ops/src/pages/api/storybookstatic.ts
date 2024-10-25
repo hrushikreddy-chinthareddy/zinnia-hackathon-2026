@@ -1,6 +1,5 @@
 import { withApiAuthRequired } from '@auth0/nextjs-auth0';
-import { existsSync } from 'fs';
-import fs from 'fs';
+import fs, { existsSync } from 'fs';
 import { stat } from 'fs/promises';
 import mime from 'mime';
 import { NextApiRequest, NextApiResponse } from 'next';

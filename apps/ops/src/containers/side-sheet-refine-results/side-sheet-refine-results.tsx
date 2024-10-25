@@ -10,8 +10,7 @@ import Toggle from '@deps/components/toggle/toggle';
 import { CaseSearchAdditionalFilters, CaseSearchFilters, initialAdditionalFilters } from '@deps/contexts/CaseManagementFilters';
 import { ReferenceDataQuery, getReferenceData } from '@deps/queries/api/cases';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
-import { getCarrierListItem, getCarrierNameByClientId, getClientIdsByCarrierName } from '@deps/utils/carriers';
-import { getSelectedCarriers } from '@deps/utils/carriers';
+import { getCarrierListItem, getCarrierNameByClientId, getClientIdsByCarrierName , getSelectedCarriers } from '@deps/utils/carriers';
 
 import DateRangeFields from './date-range-fields';
 import MultiselectField from './multiselect-field';

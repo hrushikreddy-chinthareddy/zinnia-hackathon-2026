@@ -1,9 +1,11 @@
 'use client';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Link } from '@zinnia/bloom/components';
 import { toTitleCase } from '@zinnia/utils';
 
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
+import { lineOfBusinessUrlPath } from '@/utils/data';
 
 import { FormStepWrapper } from './FormStepWrapper';
 import premiumStyles from './OneTimePremiumPayment.module.css';
@@ -14,7 +16,8 @@ import { useOttp } from '../providers/one-time-premium-payment/OttpContext';
 export const PaymentSubmitted = ({
   policyNumber,
   planCode,
-}: PolicyRequestInputs) => {
+  lineOfBusiness,
+}: PolicyRequestInputs & { lineOfBusiness: LineOfBusiness }) => {
   const { state } = useOttp();
   const { paymentAmount, payorBank } = state;
   const currentStep = getStepInfo({
@@ -22,6 +25,8 @@ export const PaymentSubmitted = ({
     planCode,
     policyNumber,
   });
+
+  const lineOfBusinessPath = lineOfBusinessUrlPath(lineOfBusiness);
 
   return (
     <FormStepWrapper
@@ -52,14 +57,12 @@ export const PaymentSubmitted = ({
         </p>
         <div className={premiumStyles.buttonGroup}>
           <Link
-            // TODO: annuities logic
-            href={`/coverage/policies/${planCode}/${policyNumber}`}
+            href={`/coverage/${lineOfBusinessPath}/${planCode}/${policyNumber}`}
             text="Back to policy overview"
             variant="button"
           />
           <Link
-            // TODO: annuities logic
-            href={`/coverage/policies/${planCode}/${policyNumber}/premium/history`}
+            href={`/coverage/${lineOfBusinessPath}/${planCode}/${policyNumber}/premium/history`}
             text="Go to payment history"
           />
         </div>

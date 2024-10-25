@@ -1,7 +1,6 @@
 import { Case } from '@deps/models/case/case';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
-import { Party } from '@deps/models/policy/sor-policy';
-import { Policy } from '@deps/models/policy/sor-policy';
+import { Party , Policy } from '@deps/models/policy/sor-policy';
 
 import { caseSanitizer, caseSearchSanitizer, lcPartyResponseSanitizer, policyResponseSanitizer, policySanitizer } from './sanitizers';
 

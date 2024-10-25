@@ -1,3 +1,5 @@
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
+
 import { PaymentSubmitted } from '@/components/one-time-premium-payment/PaymentSubmitted';
 import { PolicyRequestInputs } from '@/types/policy';
 
@@ -10,7 +12,11 @@ export default async function SubmittedPayment({
 
   return (
     <>
-      <PaymentSubmitted policyNumber={policyNumber} planCode={planCode} />
+      <PaymentSubmitted
+        policyNumber={policyNumber}
+        planCode={planCode}
+        lineOfBusiness={LineOfBusiness.LIFE}
+      />
     </>
   );
 }

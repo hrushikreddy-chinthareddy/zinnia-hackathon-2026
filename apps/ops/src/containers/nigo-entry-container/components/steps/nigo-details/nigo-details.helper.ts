@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 
 import { PolicyDocuments, PolicyDocument } from '@deps/models/case/document';
 import { getPolicyTypeDocs } from '@deps/queries/api/documents';
-import { searchNigoExceptions } from '@deps/queries/api/exception-refs';
+import { searchNigoExceptions, searchNigoExceptionsFilters } from '@deps/queries/api/exception-refs';
 
 import { ExceptionSubRef, SubException, NigoException, NigoSubException } from './nigo-details.types';
 
@@ -17,7 +17,6 @@ export const useGetPolicyTypeDocs = (id: string, clientCode: string, docType: st
             setLoading(true);
 
             const response = await getPolicyTypeDocs(id, clientCode, docType);
-           
             const items = (response.data as PolicyDocuments)?.items || [];
 
             if (items) {
@@ -43,8 +42,10 @@ export const getSubExceptions = (exceptionSubRefs: ExceptionSubRef[]) => {
     });
     return subExceptions;
 }
-export const getNigoExceptions = async ( categories: string[], accessToken: string | undefined) => {
-    const response = await searchNigoExceptions(categories, accessToken);
+
+export const getNigoExceptions = async ( filters: searchNigoExceptionsFilters, accessToken: string | undefined) => {
+    const response = await searchNigoExceptions(filters, accessToken);
+
     const nigoExceptions: NigoException[] = [];
     const nigoSubExceptions: NigoSubException[] = [];
     response?.map(({ detailedReason, nmId, exceptionSubRefs }) => {

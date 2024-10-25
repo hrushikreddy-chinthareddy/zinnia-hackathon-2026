@@ -12,8 +12,8 @@ import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 import { PolicyFeatureFeatureType, ProductType, Reason } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus, checkEligibilityOneTimePremium, checkEligibilitySystematicPrograms } from '@deps/queries/api/bpm';
 
-import PolicyTestsCard from './cards/policy-tests-card/policy-tests-card';
 import PremiumsPageHeaderContainer from '../page-header/premiums-page-header';
+import PolicyTestsCard from './cards/policy-tests-card/policy-tests-card';
 
 export const PremiumsSubPage = () => {
     const { breadcrumb } = useBreadcrumb();

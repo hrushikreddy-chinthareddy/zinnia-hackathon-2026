@@ -1,5 +1,4 @@
-import { getServerSideProps as gssp } from '..';
-import caseRouteHandler from '..';
+import caseRouteHandler, { getServerSideProps as gssp } from '..';
 
 export const getServerSideProps = gssp;
 

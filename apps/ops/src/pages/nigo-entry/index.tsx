@@ -223,9 +223,15 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
+            const nigoFilters = {
+                categoryIds: ['Form', 'Signature', 'Account Information'],
+                carrier: clientCode?.toUpperCase(),
+                process: activeForm?.process
+            };
+
             const [transactionTypes, nigoExceptionResponse] = await Promise.all([
                 await getTransactionTypesSSR(accessToken, userInfoForLogging),
-                await getNigoExceptions(['Form', 'Signature', 'Account Information'], accessToken)
+                await getNigoExceptions(nigoFilters, accessToken)
             ]);
 
             const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse

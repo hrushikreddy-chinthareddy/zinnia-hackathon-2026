@@ -16,7 +16,6 @@ export const useGetPolicyTypeDocs = (id: string, clientCode: string, docType: st
             setLoading(true);
 
             const response = await getPolicyTypeDocs(id, clientCode, docType);
-
             const items = (response.data as PolicyDocuments)?.items || [];
 
             if (items) {

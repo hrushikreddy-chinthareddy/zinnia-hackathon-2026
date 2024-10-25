@@ -1,6 +1,6 @@
 import CaseManagementPage from './case-management.page';
 import CoveragePage from './policy/policy/coverage.page';
-import FundsPage from './policy/policy/funds.page';
+// import FundsPage from './policy/policy/funds.page';
 import HistoryPage from './policy/history.page';
 import HomePage from './home.page';
 import LoansPage from './policy/transactions/loans.page';
@@ -17,7 +17,7 @@ import CreateCasePage from './transaction-ops/create-case.page';
 export default {
     'Case Management page': CaseManagementPage,
     'Coverage page': CoveragePage,
-    'Funds page': FundsPage,
+    // 'Funds page': FundsPage,
     'History page': HistoryPage,
     'Home page': HomePage,
     'Loans page': LoansPage,

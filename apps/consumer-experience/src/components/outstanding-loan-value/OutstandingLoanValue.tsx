@@ -44,17 +44,13 @@ export const OutstandingLoanValue = async ({
         Label: (
           <Label
             interactiveElements={[
-              <LabelPopover
-                title={OUTSTANDING_LOAN}
-                key={OUTSTANDING_LOAN}
-                content={
-                  <p>
-                    If you have an outstanding loan, this money is still part of
-                    your policy's value but is not held within any selected
-                    accounts.
-                  </p>
-                }
-              />,
+              <LabelPopover title={OUTSTANDING_LOAN} key={OUTSTANDING_LOAN}>
+                <p>
+                  If you have an outstanding loan, this money is still part of
+                  your policy's value but is not held within any selected
+                  accounts.
+                </p>
+              </LabelPopover>,
             ]}
           >
             {OUTSTANDING_LOAN}

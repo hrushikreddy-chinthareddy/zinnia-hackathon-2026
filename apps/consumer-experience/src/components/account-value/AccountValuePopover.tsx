@@ -1,37 +1,21 @@
-import {
-  Icon,
-  IconType,
-  Popover,
-  PopoverPlacement,
-} from '@zinnia/bloom/components';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { standardDateMonthDayYear } from '@/utils/dates';
 
-import styles from '../policy-overview/PolicyOverview.module.css';
+import { LabelPopover } from '../label-popover/LabelPopover';
 const ACCOUNT_VALUE = 'Account value';
 
 export const AccountValuePopover = ({
   dataTimestamp,
+  lineOfBusiness,
 }: {
   dataTimestamp?: string | null;
+  lineOfBusiness?: LineOfBusiness;
 }) => {
-  return (
-    <Popover
-      title={ACCOUNT_VALUE}
-      trigger={
-        <Icon
-          type={IconType.CIRCLE_INFO}
-          small
-          color="var(--color-base-icon-icon-tooltip, #ff7500)"
-        />
-      }
-      placement={PopoverPlacement.BottomRight}
-    >
-      <div className={styles.popoverContent}>
-        <p className="typography-content-body">
-          {`This is how much money is held in your policy as of ${standardDateMonthDayYear(dataTimestamp)}. Policy value may grow over time as the premium dollars allocated to your account value earn interest. This money is yours to use hwo you see fit. You could take out a loan against it or even withdraw some for income in retirement or to pay for college. Note, though, that withdrawals and loans (until paid back) can reduce your death benefit. You could also simply let the account value grow, and eventually use it to pay policy charges. If you go this route, you'll just want to keep an eye on the account value and the cost of insurance over time. If the policy isn't funded enough, it could lapse, leaving you without coverage.`}
-        </p>
-      </div>
-    </Popover>
-  );
+  const content =
+    lineOfBusiness === LineOfBusiness.ANNUITY
+      ? `This is how much money is held in your annuity as of ${standardDateMonthDayYear(dataTimestamp)}.`
+      : `This is how much money is held in your policy as of ${standardDateMonthDayYear(dataTimestamp)}. Policy value may grow over time as the premium dollars allocated to your account value earn interest.`;
+
+  return <LabelPopover title={ACCOUNT_VALUE}>{content}</LabelPopover>;
 };

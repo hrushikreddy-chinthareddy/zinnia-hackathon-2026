@@ -4,10 +4,9 @@ import { Metadata } from 'next';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
+import { Rider } from '@/components/rider/Rider';
 import { getRiders } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
-
-import { Rider } from '@/components/rider/Rider';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
@@ -29,7 +28,7 @@ export default async function Riders({
 
   return (
     <div className="container">
-      <p className="typography-content-body-sm">
+      <p>
         <span className="typography-content-body-sm-bold">What's a rider?</span>{' '}
         A rider is an add-on to your insurance coverage. Riders are designed to
         offer additional types of coverage for certain circumstances. They often
@@ -63,7 +62,7 @@ export default async function Riders({
           <div>
             <div>
               <h2 className="pb-2xl border-b mt-lg">Additional Riders</h2>
-              <p className="typography-content-body">
+              <p>
                 Looks like there are additional riders for your policy, but
                 they're not covering you yet.
               </p>
