@@ -1,14 +1,15 @@
+import clsx from 'clsx';
 import { ReactNode } from 'react';
 
-import EverlyLogo from '@/app/styles/everly/everly-logo.svg'; // TODO: don't hardcode to everly
+import EverlyLogo from '@/app/styles/everly/everly-logo.svg';
+import WellabeLogo from '@/app/styles/wellabe/assets/wellabe-logo.svg';
+import { getFeatureFlags } from '@/services/feature-flags';
+import { CompanyName } from '@/types/carriers';
+import { getCookie } from '@/utils/auth';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { THEME_COOKIE } from '@/utils/serverClientUtils';
 
 import styles from './GenericInfoPage.module.css';
-import clsx from 'clsx';
-import { CompanyName } from '@/types/carriers';
-import { THEME_COOKIE } from '@/utils/serverClientUtils';
-import { getCookie } from '@/utils/auth';
-import { getFeatureFlags } from '@/services/feature-flags';
-import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 interface Props {
   title: ReactNode;
@@ -22,7 +23,15 @@ const logo = (company: CompanyName) => {
     case CompanyName.EVERLY:
       return <EverlyLogo alt="Everly Logo" />;
     case CompanyName.WELLABE:
-      return null;
+      return (
+        <WellabeLogo
+          alt="Wellabe Logo"
+          width="300px"
+          height="auto"
+          color="#ffc107"
+          fill="#ffc107"
+        />
+      );
     default:
       return null;
   }
