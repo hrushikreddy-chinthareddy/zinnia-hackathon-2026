@@ -1,7 +1,7 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import * as Select from '@radix-ui/react-select';
 import clsx from 'clsx';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
 import { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
@@ -50,7 +50,7 @@ const MultiselectOptionItem = ({ options, value, onChange }: MultiselectProps) =
                 <DropdownMenu.CheckboxItem
                     key={`option-${option.value}`}
                     checked={!!value[option.value]}
-                    onCheckedChange={() => onChange(option.value, option.displayText ?? '')}
+                    onCheckedChange={isChecked => onChange(isChecked, option.value, option.displayText ?? '')}
                     onSelect={e => e.preventDefault()}
                     className={getItemClasses(option, index, options.length, false)}
                 >

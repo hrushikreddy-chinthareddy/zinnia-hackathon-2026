@@ -26,7 +26,7 @@ export type SimpleSelectProps = {
 };
 
 export type MultiselectProps = {
-    onChange: (value: string, displayText: string) => void;
+    onChange: (isSelected: boolean, value: string, displayText: string) => void;
     options: MultiselectOption[];
     isMultiselect: true;
     value: { [key: string]: string };

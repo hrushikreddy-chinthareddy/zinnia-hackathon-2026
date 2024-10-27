@@ -1,8 +1,10 @@
-import { CaseType } from "@deps/models/case/case";
-import { ApiVersion } from "@deps/models/case/enums";
-import { CaseApiVersionMapper } from "@deps/models/case/helpers";
-import { TaskStatus } from "@deps/models/case/task-instance";
-import { getCaseTaskInstances, getCaseTasks } from "@deps/queries/api/v1/task";
+import { mockService } from '@deps/mock-service/mockService';
+import { CaseType } from '@deps/models/case/case';
+import { ApiVersion, ProcessType } from '@deps/models/case/enums';
+import { CaseApiVersionMapper } from '@deps/models/case/helpers';
+import { TaskType } from '@deps/models/case/task';
+import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
+import { getCaseTaskInstances, getCaseTasks, getTaskFormMetadataSSR } from '@deps/queries/api/v1/task';
 
 interface TaskItem {
     id: string;
@@ -13,7 +15,7 @@ interface TaskItem {
     updatedDate: string;
 }
 
-const fetchTasks = async (caseId: string, caseType: CaseType) => {
+export const fetchTasks = async (caseId: string, caseType: CaseType) => {
     let tasks, formattedList;
 
     if (CaseApiVersionMapper[caseType] === ApiVersion.v2) {
@@ -61,4 +63,19 @@ const fetchTasks = async (caseId: string, caseType: CaseType) => {
     return formattedList;
 };
 
-export default fetchTasks;
+export const getTaskFormMetadata = async (clientId: string, taskType?: TaskType, processType?: ProcessType, accessToken?: string) => {
+    const isMockService = true;
+    if (isMockService) {
+        return mockService.getTaskFormMetadataSSRMock(clientId);
+    } else {
+        return getTaskFormMetadataSSR(clientId, taskType, processType, accessToken);
+    }
+};
+export const getCaseTaskByIdSSR = async (taskId: string, accessToken: string | undefined): Promise<ManagementTask<TaskStatus> | null> => {
+    const isMockService = true;
+    if (isMockService) {
+        return mockService.getCaseTaskByIdSSRMock();
+    } else {
+        return getCaseTaskByIdSSR(taskId, accessToken);
+    }
+};

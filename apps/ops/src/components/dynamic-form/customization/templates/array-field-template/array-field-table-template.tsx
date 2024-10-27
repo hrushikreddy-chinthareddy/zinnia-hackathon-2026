@@ -21,7 +21,7 @@ export function ArrayFieldTableTemplate(props: ArrayFieldTemplateProps) {
         <>
             {schema.type === 'array' && (
                 <Table>
-                    <React.Fragment key=".0">
+                    <React.Fragment>
                         <TableHeader>
                             <TableRow>
                                 {Object.values(columns).map((value, index) => (

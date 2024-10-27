@@ -5,7 +5,6 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { createRef } from 'react';
 
 import NoNavLayout from '@deps/components/no-nav-layout';
-import { PageHead } from '@deps/components/page-title';
 import { buildTaskLink } from '@deps/components/tasks-listing/task-listing.helpers';
 import { TranslationFiles } from '@deps/config/translations';
 import TaskContainer from '@deps/containers/task-container/task-container';
@@ -19,11 +18,11 @@ import { TaskType } from '@deps/models/case/task';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
+import { getCaseTaskByIdSSR, getTaskFormMetadata } from '@deps/operations/tasks/taskOperations';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { getPolicyDetailsSsr, searchPolicySSR } from '@deps/queries/api/policies';
-import { getTaskFormMetadataSSR } from '@deps/queries/api/v1/task';
-import { getCaseTaskByIdSSR } from '@deps/queries/api/v2/task';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
+import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { getUserInfoFromUser, logError, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
@@ -58,7 +57,6 @@ export const TaskPage: React.FC<TaskPageProps> = ({
     taskType = TaskType.SuitabilityReview;
     return (
         <div>
-            <PageHead titleKey="caseOverview" />
             <NoNavLayout fullHeight={true}>
                 <TaskProvider taskData={taskData} formSchema={formSchema} uiSchema={uiSchema} formRef={formRef}>
                     <TaskContainer
@@ -82,6 +80,8 @@ export const getServerSideProps = withPageAuthRequired({
         const user = await getUserData(context);
         const { locale = DEFAULT_LOCALE, query, req, res } = context;
         const taskId = (query.taskId as string) || '';
+        const clientId = (query.clientId as string) || '';
+
         const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
 
         let accessToken;
@@ -110,31 +110,41 @@ export const getServerSideProps = withPageAuthRequired({
             };
         }
 
+        // If feature flag is not enabled, redirect to error page
+        if (!isFormFeatureEnabled(ProcessType.SUITABILITY_REVIEW, clientId, featureFlagDecisions)) {
+            logWarn('task/:id::feature flag not enabled', { clientId });
+            return {
+                redirect: {
+                    destination: '/403',
+                    permanent: false,
+                },
+            };
+        }
+
         try {
             const [translations, task] = await Promise.all([
                 await serverSideTranslations(locale, [TranslationFiles.COMMON, TranslationFiles.COLDEFS], nextI18nextConfig, ALL_LOCALES),
                 await getCaseTaskByIdSSR(taskId, accessToken),
             ]);
-
             if (!task) {
                 logError('suitability::Error getting task by id', {
                     taskId,
                     file: 'pages/task',
                     function: 'getServerSideProps',
                 });
-                // return {
-                //     redirect: {
-                //         destination: `task/:id/error?errorCode=${ERROR_CODES.WITHDRAWAL_TASK_INITIALIZATION}`,
-                //         permanent: false,
-                //     },
-                // };
+                return {
+                    redirect: {
+                        destination: `task/:id/error?errorCode=${ERROR_CODES.SUITABILITY_REVIEW_TASK_INITIALIZATION}`,
+                        permanent: false,
+                    },
+                };
             }
 
             const { taskType, carrier, data, caseId, process } = task || {};
             const { documentNumber, contractNum, clientCode } = task?.data || {};
 
             const processType = (query.processType as ProcessType) || '';
-            const taskFormSchema = await getTaskFormMetadataSSR(carrier || '', taskType as TaskType, processType);
+            const taskFormSchema = await getTaskFormMetadata(carrier || '', taskType as TaskType, processType);
             const { formSchema, uiSchema } = taskFormSchema ?? {};
 
             if (!formSchema || !uiSchema) {

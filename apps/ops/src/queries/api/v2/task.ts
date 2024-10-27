@@ -2,8 +2,7 @@ import { datadogLogs } from '@datadog/browser-logs';
 import { AxiosResponse } from 'axios';
 
 import { Reg60FormData } from '@deps/containers/otp/reg60-forms/reg60.types';
-import suitabilityData from '@deps/form-schemas/carrier/sbgc/suitability-review/suitability-review.json';
-import { CreateTaskBody, TaskType, TaskV2Payload } from '@deps/models/case/task';
+import { CreateTaskBody, TaskV2Payload } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { ActiveWithdrawalCaseData } from '@deps/models/case/withdrawal/case';
 import { baseAppUrl, se2ApiServerUrl, se2ApiServerUrlV2 } from '@deps/queries/api-config';
@@ -28,23 +27,11 @@ export const getCaseTaskByIdSSR = async (taskId: string, accessToken: string | u
                 'Access-Control-Allow-Origin': '*',
             },
         });
-        data.data.data = suitabilityData;
+        console.log(data);
         return data;
     } catch (error: any) {
         logError('getCaseTaskById', { ...parseErrorInformation(error), taskId, file: 'queries/api/v2/task', function: 'getCaseTaskById' });
-        return {
-            carrier: 'SBGC',
-            caseId: 'CA0000371122',
-            createdAt: '',
-            id: 'TA000000013372',
-            status: TaskStatus.New,
-            taskType: TaskType.SuitabilityReview,
-            updatedAt: '',
-            process: '', // add process property
-            queue: null, // add queue property
-            taskName: '',
-            data: suitabilityData,
-        };
+        return null;
     }
 };
 

@@ -1578,75 +1578,95 @@
         },
         "parties": {
             "items": {
-                "ui:TitleFieldTemplate": "TitleFieldTemplate",
-                "ui:options": {
-                    "isField": true
-                },
                 "partyType": {
                     "$ref": "#/definitions/partyTypeEnum",
                     "ui:options": {
-                        "isField": true
+                        "label": false
                     },
                     "ui:helpText": "Applicant's type"
                 },
                 "roleType": {
-                    "$ref": "#/definitions/roleTypeEnum"
+                    "$ref": "#/definitions/roleTypeEnum",
+                    "ui:options": {
+                        "label": false
+                    }
                 },
                 "fullName": {
-                    "ui:placeholder": "Full name",
-                    "ui:helpText": "Applicant's first name",
                     "ui:options": {
-                        "readyOnly": true
+                        "readyOnly": true,
+                        "label": false,
+                        "placeholder": "Full name",
+                        "helpText": "Applicant's Full name"
                     }
                 },
                 "person": {
-                    "type": "object",
-                    "title": "Person Information",
-                    "properties": {
-                        "firstName": {
-                            "ui:placeholder": "First name",
-                            "ui:helpText": "Applicant's first name",
-                            "ui:options": {
-                                "label": false
-                            }
-                        },
-                        "middleName": {
-                            "ui:placeholder": "Middle name",
-                            "ui:helpText": "Applicant's Middle name"
-                        },
-                        "lastName": {
-                            "ui:placeholder": "Last name",
-                            "ui:helpText": "Applicant's Last name"
-                        },
-                        "gender": {
-                            "ui:helpText": "Applicant's gender",
-                            "$ref": "#/definitions/genderEnum"
-                        },
-                        "age": {
-                            "type": "string",
-                            "title": "Age"
-                        },
-                        "birthDate": {
-                            "type": "string",
-                            "format": "date",
-                            "title": "Birth Date"
-                        },
-                        "martialStatus": {
-                            "type": "string",
-                            "title": "Marital Status",
-                            "$ref": "#/definitions/martialStatusEnum"
-                        },
-                        "birthCountry": {
-                            "type": "string",
-                            "title": "Birth Country",
-                            "$ref": "#/definitions/birthCountryEnum",
-                            "uniqueItems": true
-                        },
-                        "birthJurisdictionState": {
-                            "type": "string",
-                            "title": "Birth Jurisdiction State",
-                            "$ref": "#/definitions/birthJurisdictionStateEnum",
-                            "uniqueItems": true
+                    "firstName": {
+                        "ui:options": {
+                            "label": false,
+                            "placeholder": "First name",
+                            "helpText": "Applicant's first name"
+                        }
+                    },
+                    "middleName": {
+                        "ui:placeholder": "Middle name",
+                        "ui:helpText": "Applicant's Middle name",
+                        "ui:options": {
+                            "label": false
+                        }
+                    },
+                    "lastName": {
+                        "ui:placeholder": "Last name",
+                        "ui:helpText": "Applicant's Last name",
+                        "ui:options": {
+                            "label": false
+                        }
+                    },
+                    "gender": {
+                        "ui:helpText": "Applicant's gender",
+                        "$ref": "#/definitions/genderEnum",
+                        "ui:options": {
+                            "label": false
+                        }
+                    },
+                    "age": {
+                        "type": "string",
+                        "title": "Age",
+                        "ui:options": {
+                            "label": false
+                        }
+                    },
+                    "birthDate": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Birth Date",
+                        "ui:options": {
+                            "label": false
+                        }
+                    },
+                    "martialStatus": {
+                        "type": "string",
+                        "title": "Marital Status",
+                        "$ref": "#/definitions/martialStatusEnum",
+                        "ui:options": {
+                            "label": false
+                        }
+                    },
+                    "birthCountry": {
+                        "type": "string",
+                        "title": "Birth Country",
+                        "$ref": "#/definitions/birthCountryEnum",
+                        "uniqueItems": true,
+                        "ui:options": {
+                            "label": false
+                        }
+                    },
+                    "birthJurisdictionState": {
+                        "type": "string",
+                        "title": "Birth Jurisdiction State",
+                        "$ref": "#/definitions/birthJurisdictionStateEnum",
+                        "uniqueItems": true,
+                        "ui:options": {
+                            "label": false
                         }
                     }
                 },
@@ -1654,22 +1674,27 @@
                     "type": "array",
                     "title": "Government ID Information",
                     "items": {
-                        "type": "object",
-                        "title": "",
-                        "properties": {
-                            "govtId": {
-                                "type": "string",
-                                "title": "Government ID"
-                            },
-                            "govtIdType": {
-                                "type": "string",
-                                "title": "Government ID Type",
-                                "$ref": "#/definitions/govtIdTypeEnum"
-                            },
-                            "govtIdExpDate": {
-                                "type": "string",
-                                "format": "date",
-                                "title": "Government ID Expiry Date"
+                        "govtId": {
+                            "type": "string",
+                            "title": "Government ID",
+                            "ui:options": {
+                                "label": false
+                            }
+                        },
+                        "govtIdType": {
+                            "type": "string",
+                            "title": "Government ID Type",
+                            "$ref": "#/definitions/govtIdTypeEnum",
+                            "ui:options": {
+                                "label": false
+                            }
+                        },
+                        "govtIdExpDate": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "Government ID Expiry Date",
+                            "ui:options": {
+                                "label": false
                             }
                         },
                         "required": [
@@ -1685,36 +1710,55 @@
                     "items": {
                         "type": "object",
                         "title": "",
-                        "properties": {
-                            "addressType": {
-                                "type": "string",
-                                "title": "Address Type",
-                                "$ref": "#/definitions/addressTypeEnum",
-                                "uniqueItems": true
-                            },
-                            "line1": {
-                                "type": "string",
-                                "title": "Address Line 1"
-                            },
-                            "line2": {
-                                "type": "string",
-                                "title": "Address Line 2"
-                            },
-                            "city": {
-                                "type": "string",
-                                "title": "City"
-                            },
-                            "state": {
-                                "type": "string",
-                                "title": "State"
-                            },
-                            "country": {
-                                "type": "string",
-                                "title": "Country"
-                            },
-                            "zip": {
-                                "type": "string",
-                                "title": "Zip Code"
+                        "addressType": {
+                            "type": "string",
+                            "title": "Address Type",
+                            "$ref": "#/definitions/addressTypeEnum",
+                            "uniqueItems": true,
+                            "ui:options": {
+                                "label": false
+                            }
+                        },
+                        "line1": {
+                            "type": "string",
+                            "title": "Address Line 1",
+                            "ui:options": {
+                                "label": false
+                            }
+                        },
+                        "line2": {
+                            "type": "string",
+                            "title": "Address Line 2",
+                            "ui:options": {
+                                "label": false
+                            }
+                        },
+                        "city": {
+                            "type": "string",
+                            "title": "City",
+                            "ui:options": {
+                                "label": false
+                            }
+                        },
+                        "state": {
+                            "type": "string",
+                            "title": "State",
+                            "ui:options": {
+                                "label": false
+                            }
+                        },
+                        "country": {
+                            "type": "string",
+                            "title": "Country",
+                            "ui:options": {
+                                "label": false
+                            }
+                        },
+                        "zip": {
+                            "type": "string",
+                            "title": "Zip Code",
+                            "ui:options": {
+                                "label": false
                             }
                         }
                     },
@@ -1730,7 +1774,10 @@
                 "employment": {
                     "employmentStatus": {
                         "$ref": "#/definitions/employmentStatusEnum",
-                        "ui:widget": "checkboxes"
+                        "ui:widget": "checkboxes",
+                        "ui:options": {
+                            "label": false
+                        }
                     }
                 }
             }
@@ -1739,94 +1786,176 @@
             "type": "object",
             "title": "Policy Data",
             "lineOfBusiness": {
-                "$ref": "#/definitions/lineOfBusinessEnum"
+                "$ref": "#/definitions/lineOfBusinessEnum",
+                "ui:options": {
+                    "label": false
+                }
             },
-            "productCode": {},
-            "productType": {},
+            "productCode": {
+                "ui:options": {
+                    "label": false
+                }
+            },
+            "productType": {
+                "ui:options": {
+                    "label": false
+                }
+            },
             "qualPlanType": {
-                "$ref": "#/definitions/qualPlanTypeEnum"
+                "$ref": "#/definitions/qualPlanTypeEnum",
+                "ui:options": {
+                    "label": false
+                }
             },
-            "annualPaymentAmt": {}
+            "annualPaymentAmt": {
+                "ui:options": {
+                    "label": false
+                }
+            }
         },
         "applicationInfo": {
             "replacementInd": {
                 "$ref": "#/definitions/replacementIndEnum",
                 "ui:widget": "radio",
                 "ui:options": {
-                    "inline": true
+                    "inline": true,
+                    "label": false
                 }
             },
             "replacementReason": {},
             "replacedContractType": {
-                "$ref": "#/definitions/replacedContractTypeEnum"
+                "$ref": "#/definitions/replacedContractTypeEnum",
+                "ui:options": {
+                    "label": false
+                }
             },
             "additionalInformation": {
                 "soldPoliciesToApplicant": {
                     "$ref": "#/definitions/soldPoliciesToApplicantEnum",
                     "ui:widget": "radio",
                     "ui:options": {
-                        "inline": true
+                        "inline": true,
+                        "label": false
                     }
                 },
                 "pastReplacement": {
                     "$ref": "#/definitions/pastReplacementEnum",
                     "ui:widget": "radio",
                     "ui:options": {
-                        "inline": true
+                        "inline": true,
+                        "label": false
                     }
                 },
                 "coverageExpenseConsideration": {
                     "$ref": "#/definitions/coverageExpenseConsiderationEnum",
                     "ui:widget": "radio",
                     "ui:options": {
-                        "inline": true
+                        "inline": true,
+                        "label": false
                     }
                 }
             }
         },
         "fiscalData": {
-            "properties": {
-                "annualIncome": {
+            "annualIncome": {
+                "ui:options": {
+                    "inline": true,
+                    "label": false
+                }
+            },
+            "netWorth": {
+                "ui:options": {
+                    "label": false
+                }
+            },
+            "liquidNetWorth": {
+                "ui:options": {
+                    "label": false
+                }
+            },
+            "sourceOfIncome": {
+                "items": {
+                    "$ref": "#/definitions/sourceOfIncomeEnum"
+                }
+            },
+            "sourceOfIncomeOther": {
+                "ui:options": {
+                    "label": false
+                }
+            },
+            "materialChangeExp": {
+                "$ref": "#/definitions/materialChangeExpEnum",
+                "ui:widget": "radio",
+                "ui:options": {
+                    "inline": true,
+                    "label": false
+                }
+            },
+            "materialChangeReason": {
+                "ui:options": {
+                    "label": false
+                }
+            },
+            "materialChangeDetails": {
+                "items": {
                     "ui:options": {
-                        "inline": true
+                        "label": false
+                    },
+                    "changeType": {
+                        "$ref": "#/definitions/materialChangeDetails_changeTypeEnum"
+                    },
+                    "isApplicable": {
+                        "ui:options": {
+                            "label": false
+                        }
+                    },
+                    "numberOfYears": {
+                        "ui:options": {
+                            "label": false
+                        }
+                    },
+                    "amount": {
+                        "ui:options": {
+                            "label": false
+                        }
                     }
+                }
+            },
+            "totalAssets": {
+                "ui:options": {
+                    "label": false
+                }
+            },
+            "totalDebt": {
+                "ui:options": {
+                    "label": false
+                }
+            },
+            "annualExpenses": {
+                "ui:options": {
+                    "label": false
+                }
+            },
+            "sourceOfFunds": {
+                "ui:options": {
+                    "label": false
                 },
-                "netWorth": {},
-                "liquidNetWorth": {},
-                "sourceOfIncome": {
-                    "items": {
-                        "$ref": "#/definitions/sourceOfIncomeEnum"
-                    }
-                },
-                "sourceOfIncomeOther": {},
-                "materialChangeExp": {
-                    "$ref": "#/definitions/materialChangeExpEnum",
-                    "ui:widget": "radio",
+                "items": {
                     "ui:options": {
-                        "inline": true
-                    }
-                },
-                "materialChangeReason": {},
-                "materialChangeDetails": {
-                    "items": {
-                        "changeType": {
-                            "$ref": "#/definitions/materialChangeDetails_changeTypeEnum"
-                        },
-                        "isApplicable": {},
-                        "numberOfYears": {},
-                        "amount": {}
-                    }
-                },
-                "totalAssets": {},
-                "totalDebt": {},
-                "annualExpenses": {},
-                "sourceOfFunds": {
-                    "items": {
-                        "$ref": "#/definitions/sourceOfIncomeEnum"
-                    }
-                },
-                "federalTaxBand": {},
-                "otherTaxBand": {}
+                        "label": false
+                    },
+                    "$ref": "#/definitions/sourceOfIncomeEnum"
+                }
+            },
+            "federalTaxBand": {
+                "ui:options": {
+                    "label": false
+                }
+            },
+            "otherTaxBand": {
+                "ui:options": {
+                    "label": false
+                }
             }
         },
         "financialExperience": {
@@ -1834,24 +1963,37 @@
                 "$ref": "#/definitions/rateChangeAcknowledgmentEnum",
                 "ui:widget": "radio",
                 "ui:options": {
-                    "inline": true
+                    "inline": true,
+                    "label": false
                 }
             },
-            "totalAnnuityValue": {},
+            "totalAnnuityValue": {
+                "ui:options": {
+                    "label": false
+                }
+            },
             "financialProducts": {
                 "assetsDistribution": {
                     "items": {
                         "productType": {
-                            "$ref": "#/definitions/financialProducts_assetsDistribution_productTypeEnum"
+                            "$ref": "#/definitions/financialProducts_assetsDistribution_productTypeEnum",
+                            "ui:options": {
+                                "label": false
+                            }
                         },
                         "qualificationType": {
                             "$ref": "#/definitions/financialProducts_assetsDistribution_qualificationTypeEnum",
                             "ui:widget": "radio",
                             "ui:options": {
-                                "inline": true
+                                "inline": true,
+                                "label": false
                             }
                         },
-                        "amount": {}
+                        "amount": {
+                            "ui:options": {
+                                "label": false
+                            }
+                        }
                     }
                 },
                 "totalAsset": {
@@ -1860,68 +2002,146 @@
                             "$ref": "#/definitions/financialProducts_totalAsset_qualificationTypeEnum",
                             "ui:widget": "radio",
                             "ui:options": {
-                                "inline": true
+                                "inline": true,
+                                "label": false
                             }
                         },
                         "assetType": {
-                            "$ref": "#/definitions/financialProducts_totalAsset_assetTypeEnum"
+                            "$ref": "#/definitions/financialProducts_totalAsset_assetTypeEnum",
+                            "ui:options": {
+                                "label": false
+                            }
                         },
-                        "amount": {}
+                        "amount": {
+                            "ui:options": {
+                                "label": false
+                            }
+                        }
                     }
                 }
             }
         },
         "investmentRiskInfo": {
+            "riskTolerance": {
+                "ui:options": {
+                    "inline": true,
+                    "label": false
+                }
+            },
+            "riskToleranceDesc": {
+                "ui:options": {
+                    "inline": true,
+                    "label": false
+                }
+            },
             "annuityFitsRiskTolerance": {
                 "ui:widget": "radio",
+                "$ref": "#/definitions/investProduct_annuityFitsRiskToleranceEnum",
                 "ui:options": {
-                    "inline": true
+                    "inline": true,
+                    "label": false
                 }
             }
         },
         "financialObjectives": {
             "financialObjectives": {
-                "ui:widget": "checkboxes"
+                "ui:options": {
+                    "widget": "checkboxes",
+                    "label": false
+                }
             },
             "sourceOfPremium": {
-                "ui:widget": "checkboxes"
+                "ui:options": {
+                    "widget": "checkboxes",
+                    "label": false
+                }
             },
             "wouldMeetFinancialNeeds": {
-                "ui:widget": "radio",
-                "ui:enumNames": [
-                    "Yes",
-                    "No"
-                ]
+                "ui:options": {
+                    "widget": "radio",
+                    "label": false,
+                    "enumNames": [
+                        "Yes",
+                        "No"
+                    ]
+                }
             },
             "isReplacementOrlifeInsuranceContract": {
-                "ui:widget": "radio",
-                "ui:enumNames": [
-                    "Yes",
-                    "No"
-                ]
+                "ui:options": {
+                    "widget": "radio",
+                    "label": false,
+                    "enumNames": [
+                        "Yes",
+                        "No"
+                    ]
+                }
             },
             "contractReplacement": {
-                "ui:widget": "checkboxes"
+                "ui:options": {
+                    "widget": "checkboxes",
+                    "label": false
+                }
             },
             "annuityMeetsFinancialNeeds": {
                 "ui:widget": "radio",
                 "ui:options": {
-                    "inline": true
+                    "inline": true,
+                    "label": false
                 }
             }
         },
         "liquidityOptions": {
-            "fundsAccessExplanation": {},
-            "distributionMethods": {},
-            "firstPayoutOption": {},
-            "surrenderChargeConsent": {},
-            "possibleReductionInValue": {},
-            "planToHoldAnnuity": {},
-            "explainedOtherCharges": {},
+            "fundsAccessExplanation": {
+                "ui:options": {
+                    "label": false
+                }
+            },
+            "distributionMethods": {
+                "ui:options": {
+                    "label": false
+                }
+            },
+            "firstPayoutOption": {
+                "ui:options": {
+                    "label": false
+                }
+            },
+            "surrenderChargeConsent": {
+                "ui:options": {
+                    "label": false
+                }
+            },
+            "possibleReductionInValue": {
+                "ui:options": {
+                    "label": false
+                }
+            },
+            "planToHoldAnnuity": {
+                "ui:options": {
+                    "label": false
+                }
+            },
+            "explainedOtherCharges": {
+                "ui:options": {
+                    "label": false
+                }
+            },
             "benefitAnnuityQuestions": {
-                "understandIncomeAdjustmentFactor": {},
-                "consideredFinancialNeedsAfter10Years": {},
-                "planForIncomeDecreaseAfter10Years": {}
+                "understandIncomeAdjustmentFactor": {
+                    "ui:options": {
+                        "label": false
+                    }
+                },
+                "consideredFinancialNeedsAfter10Years": {
+                    "ui:options": {
+                        "label": false
+                    }
+                },
+                "planForIncomeDecreaseAfter10Years": {
+                    "ui:options": {
+                        "label": false
+                    }
+                }
             }
         },
         "agentAcknowledgment": {
@@ -1930,66 +2150,209 @@
                     "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_soldPoliciesToApplicantEnum",
                     "ui:widget": "radio",
                     "ui:options": {
-                        "inline": true
+                        "inline": true,
+                        "label": false
                     }
                 },
                 "saleInLast5Years": {
                     "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_saleInLast5YearsEnum",
                     "ui:widget": "radio",
                     "ui:options": {
-                        "inline": true
+                        "inline": true,
+                        "label": false
                     }
                 },
-                "saleDetails": {},
+                "saleDetails": {
+                    "ui:options": {
+                        "label": false
+                    }
+                },
                 "productDetails": {
                     "productType": {
-                        "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_productDetails_productTypeEnum"
+                        "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_productDetails_productTypeEnum",
+                        "ui:options": {
+                            "label": false
+                        }
                     },
-                    "companyName": {},
-                    "policyNumber": {},
-                    "issueDate": {}
+                    "companyName": {
+                        "ui:options": {
+                            "label": false
+                        }
+                    },
+                    "policyNumber": {
+                        "ui:options": {
+                            "label": false
+                        }
+                    },
+                    "issueDate": {
+                        "ui:options": {
+                            "label": false
+                        }
+                    }
                 }
             },
             "financialAcknowledgement": {
-                "evaluatedInformation": {},
-                "informedOfFeatures": {},
-                "communicatedBasis": {},
-                "disclosureRetention": {}
+                "evaluatedInformation": {
+                    "ui:options": {
+                        "label": false
+                    }
+                },
+                "informedOfFeatures": {
+                    "ui:options": {
+                        "label": false
+                    }
+                },
+                "communicatedBasis": {
+                    "ui:options": {
+                        "label": false
+                    }
+                },
+                "disclosureRetention": {
+                    "ui:options": {
+                        "label": false
+                    }
+                }
             },
             "disclosureAcknowledgement": {
-                "scopeAndTerms": {},
-                "typesOfProducts": {},
-                "authorizedInsurers": {},
-                "compensationDescription": {},
-                "rightToRequestInfo": {},
-                "compensationEstimate": {},
-                "conflictsOfInterest": {},
-                "productAdvantages": {},
-                "productCons": {}
+                "scopeAndTerms": {
+                    "ui:options": {
+                        "label": false
+                    }
+                },
+                "typesOfProducts": {
+                    "ui:options": {
+                        "label": false
+                    }
+                },
+                "authorizedInsurers": {
+                    "ui:options": {
+                        "label": false
+                    }
+                },
+                "compensationDescription": {
+                    "ui:options": {
+                        "label": false
+                    }
+                },
+                "rightToRequestInfo": {
+                    "ui:options": {
+                        "label": false
+                    }
+                },
+                "compensationEstimate": {
+                    "ui:options": {
+                        "label": false
+                    }
+                },
+                "conflictsOfInterest": {
+                    "ui:options": {
+                        "label": false
+                    }
+                },
+                "productAdvantages": {
+                    "ui:options": {
+                        "label": false
+                    }
+                },
+                "productCons": {
+                    "ui:options": {
+                        "label": false
+                    }
+                }
             }
         },
         "additionalInfo": {
-            "currentResidenceOption": {},
-            "assistedLivingFacilityInd": {},
-            "extraFundAvailable": {},
-            "existingPoliciesSoldByAgent": {},
-            "consideredOtherInsuranceNeeds": {},
-            "resideInNursingHomeOrAssistedLiving": {},
-            "noOfDependents": {},
-            "otherDependents": {}
+            "currentResidenceOption": {
+                "ui:options": {
+                    "label": false
+                }
+            },
+            "assistedLivingFacilityInd": {
+                "ui:options": {
+                    "label": false
+                }
+            },
+            "extraFundAvailable": {
+                "ui:options": {
+                    "label": false
+                }
+            },
+            "existingPoliciesSoldByAgent": {
+                "ui:options": {
+                    "label": false
+                }
+            },
+            "consideredOtherInsuranceNeeds": {
+                "ui:options": {
+                    "label": false
+                }
+            },
+            "resideInNursingHomeOrAssistedLiving": {
+                "ui:options": {
+                    "label": false
+                }
+            },
+            "noOfDependents": {
+                "ui:options": {
+                    "label": false
+                }
+            },
+            "otherDependents": {
+                "ui:options": {
+                    "label": false
+                }
+            }
         },
         "californiaResidentQuestions": {
-            "applyForMeansTestedBenefits": {},
-            "buyingForGovernmentBenefits": {},
-            "reverseMortgage": {}
+            "applyForMeansTestedBenefits": {
+                "ui:options": {
+                    "label": false
+                }
+            },
+            "buyingForGovernmentBenefits": {
+                "ui:options": {
+                    "label": false
+                }
+            },
+            "reverseMortgage": {
+                "ui:options": {
+                    "label": false
+                }
+            }
         },
         "signatureInfo": {
-            "signatureRoleCode": {},
-            "signatoryName": {},
-            "signatureDate": {},
-            "signatureCity": {},
-            "signatureState": {},
-            "signatoryDesignation": {}
+            "items": {
+                "signatureRoleCode": {
+                    "ui:options": {
+                        "label": false
+                    }
+                },
+                "signatoryName": {
+                    "ui:options": {
+                        "label": false
+                    }
+                },
+                "signatureDate": {
+                    "ui:options": {
+                        "label": false
+                    }
+                },
+                "signatureCity": {
+                    "ui:options": {
+                        "label": false
+                    }
+                },
+                "signatureState": {
+                    "ui:options": {
+                        "label": false
+                    }
+                },
+                "signatoryDesignation": {
+                    "ui:options": {
+                        "label": false
+                    }
+                }
+            }
         }
     }
 }

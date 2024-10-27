@@ -3,5 +3,5 @@
 }
 
 .fieldChildren {
-    margin-top: 3px;
+    margin-top: var(--measure-dimension-z-space-4, 0.125rem);
 }

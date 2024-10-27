@@ -1,7 +1,6 @@
 import { AxiosResponse } from 'axios';
 
 import { ActiveReg60Case } from '@deps/containers/otp/reg60-forms/reg60.types';
-import suitabilitySchema from '@deps/form-schemas/carrier/sbgc/suitability-review/suitability-review-schema.json';
 import { ProcessType } from '@deps/models/case/enums';
 import { CreateTaskBody, CreateTaskResponse, FormMetadata, TaskType, TaskV1Payload } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
@@ -185,23 +184,23 @@ export const getTaskFormMetadataSSR = async (
     accessToken?: string
 ): Promise<FormMetadata | null> => {
     try {
-        const url = `${ssrCasesUrl}/v1/form/metadata?clientId=${clientId}&processType=${processType}&taskType=${taskType}`;
+        const url = `${ssrCasesUrl}/v1/form/metadata?process=${processType}&taskType=${taskType}`;
         logInfo('getTaskFormMetadataSSR', {
             file: 'queries/api/newBusiness/v1/suitability',
             function: 'getTaskFormMetadataSSR',
             url,
         });
-        // const { data } = await serverApi.get<null, AxiosResponse>(url, {
-        //     authorization: `Bearer ${accessToken}`,
-        //     headers: {
-        //         Accept: '*/*',
-        //         'Accept-Encoding': 'gzip, deflate, br',
-        //         Connection: 'keep-alive',
-        //         'Access-Control-Allow-Origin': '*',
-        //     },
-        // });
+        const { data } = await serverApi.get<null, AxiosResponse>(url, {
+            authorization: `Bearer ${accessToken}`,
+            headers: {
+                Accept: '*/*',
+                'Accept-Encoding': 'gzip, deflate, br',
+                Connection: 'keep-alive',
+                'Access-Control-Allow-Origin': '*',
+            },
+        });
 
-        return suitabilitySchema as FormMetadata;
+        return data as FormMetadata;
     } catch (error: any) {
         logError('getFormSchemaSSR', {
             ...parseErrorInformation(error),
