@@ -23,15 +23,7 @@ const logo = (company: CompanyName) => {
     case CompanyName.EVERLY:
       return <EverlyLogo alt="Everly Logo" />;
     case CompanyName.WELLABE:
-      return (
-        <WellabeLogo
-          alt="Wellabe Logo"
-          // width="100%"
-          // height="auto"
-          color="#ffc107"
-          fill="#ffc107"
-        />
-      );
+      return <WellabeLogo alt="Wellabe Logo" color="#ffc107" fill="#ffc107" />;
     default:
       return null;
   }
