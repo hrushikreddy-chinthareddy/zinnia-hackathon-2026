@@ -24,10 +24,18 @@ type CorrespondenceProps = {
     communicationOptions?: RadioItem[];
     policy: Policy;
     error: FormValidationErrors;
+    showAdditionalRecipient?: boolean;
     correspondenceData?: Correspondence;
     setCorrespondenceData: (val: Correspondence) => void;
 };
-const CorrespondenceCard = ({ policy, communicationOptions, correspondenceData, error, setCorrespondenceData }: CorrespondenceProps) => {
+const CorrespondenceCard = ({
+    policy,
+    communicationOptions,
+    correspondenceData,
+    error,
+    showAdditionalRecipient,
+    setCorrespondenceData,
+}: CorrespondenceProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
 
     const selectedCommunicationType = correspondenceData?.type;
@@ -38,7 +46,7 @@ const CorrespondenceCard = ({ policy, communicationOptions, correspondenceData, 
     const [fax, setFax] = useState(selectedCommunicationType === CommunicationTypes.Fax ? recipient || '' : '');
     const [address, setAddress] = useState(correspondenceData?.mailDetails);
     const [additionalEmails, setAdditionalEmails] = useState<string[]>([]);
-    const [showAdditionalRecipient, setShowAdditionalRecipient] = useState(false);
+    const [addAdditionalRecipient, setAdditionalRecipient] = useState(false);
 
     const communicationTypes = [
         {
@@ -65,8 +73,8 @@ const CorrespondenceCard = ({ policy, communicationOptions, correspondenceData, 
     }, [email, fax, address, additionalEmails, setCorrespondenceData, communicationType]);
 
     const removeAdditionalRecipient = () => {
-        //todo:Vijaya: remove additional recipient from payload
-        setShowAdditionalRecipient(false);
+        setAdditionalEmails([]);
+        setAdditionalRecipient(false);
     };
 
     function renderReceiptComponent(communicationType: string): React.ReactNode {
@@ -76,17 +84,19 @@ const CorrespondenceCard = ({ policy, communicationOptions, correspondenceData, 
                     <>
                         <EmailAddress email={email} setEmail={(val: string) => setEmail(val)} error={error} />
 
-                        <NavElement
-                            className={'my-2 text-left'}
-                            size={NavElementSize.Default}
-                            title={t('correspondence.addAdditionalRecipient') as string}
-                            type={NavElementType.Button}
-                            onClick={() => setShowAdditionalRecipient(!showAdditionalRecipient)}
-                            variant={NavElementVariant.Secondary}
-                        >
-                            {t('correspondence.addAdditionalRecipient') as string}
-                        </NavElement>
                         {showAdditionalRecipient && (
+                            <NavElement
+                                className={'my-2 text-left'}
+                                size={NavElementSize.Default}
+                                title={t('correspondence.addAdditionalRecipient') as string}
+                                type={NavElementType.Button}
+                                onClick={() => setAdditionalRecipient(!addAdditionalRecipient)}
+                                variant={NavElementVariant.Secondary}
+                            >
+                                {t('correspondence.addAdditionalRecipient') as string}
+                            </NavElement>
+                        )}
+                        {addAdditionalRecipient && (
                             <div className="flex flex-row max-w-sm">
                                 <AdditionalRecipient emails={additionalEmails} setEmails={setAdditionalEmails} classNames="flex-grow" />
                                 <IconButton

@@ -33,7 +33,7 @@ export const generateCommunicationRequest = (
         receiverDetails: {
             deliveryType: communicationType,
             recipientList: [state.correspondence.recipient],
-            ccList: communicationType === CommunicationTypes.Email ? state.correspondence?.ccList : [],
+            ccList: state.correspondence?.ccList,
             mailDetails: communicationType === CommunicationTypes.Mail ? state.correspondence?.mailDetails : undefined,
         },
     };

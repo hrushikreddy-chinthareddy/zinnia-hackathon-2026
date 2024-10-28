@@ -36,7 +36,7 @@ export const validateEmail = (email: string) => {
     if (!domainValidation.test(email) && isNonProductionEnvironment()) {
         return 'errors.inValidDomain';
     }
-    return '';
+    return;
 };
 type CorrespondenceProps = {
     communicationOptions?: RadioItem[];
@@ -68,12 +68,15 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
     }, [correspondenceData]);
 
     const validRequest = () => {
+        setError({});
         switch (correspondenceData.type) {
             case CommunicationTypes.Email: {
-                const emailError = validateEmail(correspondenceData.recipient[0]);
+                const emailError = validateEmail(correspondenceData.recipient);
                 if (emailError) {
                     setError({ ...error, submit: t(emailError) as string });
+                    return false;
                 }
+
                 break;
             }
             case CommunicationTypes.Mail:
@@ -81,17 +84,15 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
                     setError({ ...error, submit: t('errors.mailDetails') as string });
                     return false;
                 }
-                setError({ ...error, submit: '' });
+
                 break;
             default:
                 if (!state.correspondence.recipient) {
                     setError({ ...error, submit: t('errors.recipient') as string });
                     return false;
                 }
-                setError({ ...error, submit: '' });
         }
-
-        return true;
+        return Object.keys(error).length === 0;
     };
 
     const handleContinue = async () => {
@@ -138,6 +139,7 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
                 correspondenceData={correspondenceData}
                 error={error}
                 policy={policy}
+                showAdditionalRecipient={true}
             />
             {error?.submit && <AssistiveText text={error?.submit} variant={AssistiveTextVariant.Error} className="mt-2" />}
         </WorkflowCard>
