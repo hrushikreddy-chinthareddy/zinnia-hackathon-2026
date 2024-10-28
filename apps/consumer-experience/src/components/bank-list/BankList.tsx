@@ -82,7 +82,9 @@ export const BankList: FC<BankListProps> = ({
     if (allBankData) {
       return (
         <div>
-          <h2 className="mb-lg">Banking Details</h2>
+          <h2 id="addBankSection" className="mb-lg">
+            Banking Details
+          </h2>
           <div className={styles.multipleItemsInSection}>{allBankData}</div>
           {allowBankingChanges && <AddBankSidesheet partyId={data.partyId} />}
         </div>

@@ -38,6 +38,28 @@
   color: var(--color-base-text-text-secondary);
 }
 
+/* These are set to important because its overriding the button style to make this look like text */
+button.linkClassname {
+  font-family: var(--font-family-secondary) !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  font-size: 14px !important;
+  line-height: 22px !important;
+  letter-spacing: 0em !important;
+  text-indent: 0px !important;
+  display: inline;
+}
+
+button.linkClassname:hover {
+  color: var(--color-states-hover-hover-text-link);
+  text-decoration: underline;
+  text-decoration-color: currentcolor;
+  text-decoration-thickness: auto;
+  text-decoration-color: var(--color-states-hover-hover-text-link);
+  text-underline-position: under;
+  text-decoration-thickness: 2px;
+}
+
 @media (width > 767px) {
   .banksContainer {
     display: grid;

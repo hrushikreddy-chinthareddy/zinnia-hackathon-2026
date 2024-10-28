@@ -2,8 +2,8 @@
 
 import { AccountStatus } from '@zinnia/api-types/types/sor';
 import { SideSheet, Button, Icon, IconType } from '@zinnia/bloom/components';
-import { useParams } from 'next/navigation';
-import { FC, ReactNode, useState } from 'react';
+import { useParams, useSearchParams } from 'next/navigation';
+import { FC, ReactNode, useEffect, useState } from 'react';
 
 import { addBankRequest } from '@/actions/bpm-actions';
 import { useUser } from '@/hooks/use-user';
@@ -46,6 +46,14 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
   const [successMessage, setSuccessMessage] = useState(
     'Some generic messaging that will get updated based on the api response'
   );
+
+  const search = useSearchParams();
+
+  useEffect(() => {
+    if (search.get('addBank') === 'true') {
+      setOpen(true);
+    }
+  }, [search]);
 
   const handleAdd = async (requestValues: BankFormFields) => {
     setStep(FormSteps.LOADING);
