@@ -95,10 +95,20 @@
     }
 
     .logoContainer {
-      width: 124px;
+      &.everly {
+        width: 124px;
 
-      @media (width >=1024px) {
+        @media (width >=1024px) {
+          width: 200px;
+        }
+      }
+
+      &.wellabe {
         width: 200px;
+
+        @media (width >=1024px) {
+          width: 300px;
+        }
       }
     }
 
