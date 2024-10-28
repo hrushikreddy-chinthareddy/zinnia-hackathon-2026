@@ -6,9 +6,8 @@ import { FormEvent, useContext, useEffect, useState } from 'react';
 import SelectSimple from '@deps/components/select/select';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DocumentData } from '@deps/models/case/document';
-import { ApiVersion, ContributionType } from '@deps/models/case/enums';
+import { ApiVersion, ChannelType, ContributionType } from '@deps/models/case/enums';
 import { TaskApiVersionMapper } from '@deps/models/case/helpers';
-import { Channel } from '@deps/models/case/renewal/case-renewal';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { CaseStatus } from '@deps/models/case/withdrawal/case';
 import { DEFAULT_DISBURSEMENT_UPDATE } from '@deps/models/case/withdrawal/disbursement-types';
@@ -145,7 +144,7 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
                                 options={channelOptions(t)}
                                 onChange={val => setFormSource(prevState => ({ ...prevState, channel: { text: val } }))}
                                 size={FieldSize.Small}
-                                value={formSource.channel?.text ? formSource.channel?.text : Channel.Phone}
+                                value={formSource.channel?.text ? formSource.channel?.text : ChannelType.Phone}
                                 name="channel"
                             />
                         </div>
@@ -171,7 +170,7 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
                         </div>
                     </div>
                     <div>
-                        {formSource.channel.text === Channel.Email && formSignature && (
+                        {formSource.channel.text === ChannelType.Email && formSignature && (
                             <SignatureValidations isFormStateReadOnly={false} config={signaturesConfig} />
                         )}
 

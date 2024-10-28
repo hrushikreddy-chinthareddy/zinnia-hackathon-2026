@@ -3,7 +3,7 @@ import { TFunction } from 'next-i18next';
 import { BankingFields, DisbursementFields } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helper';
 import { createValidator } from '@deps/containers/otp/utils/helper-utils';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
-import { ContributionType } from '@deps/models/case/enums';
+import { ChannelType, ContributionType } from '@deps/models/case/enums';
 import { Channel } from '@deps/models/case/renewal/case-renewal';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import { TaskSource } from '@deps/models/case/task';
@@ -24,11 +24,11 @@ import { SignatureFields } from '../otp-withdrawal-form/signature-validation/sig
 export const channelOptions = (t: TFunction) => [
     {
         label: t('distributionMethod.channelOptions.emailFaxMail'),
-        value: Channel.Email,
+        value: ChannelType.Email,
     },
     {
         label: t('distributionMethod.channelOptions.phone'),
-        value: Channel.Phone,
+        value: ChannelType.Phone,
     },
 ];
 

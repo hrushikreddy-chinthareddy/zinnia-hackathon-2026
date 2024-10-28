@@ -21,3 +21,8 @@ export enum ContributionType {
     Loan = 'Loan Repayment',
     Disbursement = 'Disbursement',
 }
+
+export enum ChannelType {
+    Phone = 'PHONE',
+    Email = 'EMAIL',
+}
