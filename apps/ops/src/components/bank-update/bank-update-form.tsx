@@ -1,9 +1,11 @@
+import dayjs from 'dayjs';
 import router from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { FormEvent, useContext, useState } from 'react';
+import { FormEvent, useContext, useEffect, useState } from 'react';
 
 import SelectSimple from '@deps/components/select/select';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import { DocumentData } from '@deps/models/case/document';
 import { ApiVersion, ContributionType } from '@deps/models/case/enums';
 import { TaskApiVersionMapper } from '@deps/models/case/helpers';
 import { Channel } from '@deps/models/case/renewal/case-renewal';
@@ -14,6 +16,7 @@ import { putCaseTask } from '@deps/queries/api/v1/task';
 import { updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as ChevronLeftIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-left.svg';
+import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { BankUpdateFieldConfigs, bankUpdateForm, channelOptions, signaturesConfig, typeOptions } from './bank-update.helper';
 import Button, { ButtonSize, ButtonType, ButtonVariant } from '../button/button';
@@ -23,16 +26,30 @@ import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '.
 import FormDisbursementSection from '../otp-withdrawal-form/form-disbursement/form-disbursement-section';
 import SignatureValidations from '../otp-withdrawal-form/signature-validation/signature-validations';
 import PageLoader, { PageLoaderVariant } from '../page-loader/page-loader';
+import ApiErrorCard from '../workflows/api-error-card/api-error-card';
 
-const BankUpdateForm = () => {
+type BankUpdateFormProps = {
+    document: DocumentData;
+};
+const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const [bankUpdateDetails, setBankUpdateDetails] = useState(DEFAULT_DISBURSEMENT_UPDATE);
     const [isLoading, setIsLoading] = useState(false);
     const [formSubmitted, setFormSubmitted] = useState(false);
+    const [formError, setFormError] = useState(false);
     const { initialForm, formSource, setFormSource, formSignature } = useContext(FormDataContext);
 
-    const [timer] = useState(performance.now());
+    useEffect(() => {
+        setFormSource({
+            ...formSource,
+            businessKey: document.documentNumber,
+            receivedDate: dayjs(document.dateReceived, 'M/D/YYYY hh:mm:ss A').format(ZAHARA_API_DATE_FORMAT),
+            receivedDateTime: dayjs(document.dateReceived, 'M/D/YYYY hh:mm:ss A').format('YYYY-MM-DDTHH:mm:ss:Z'),
+            sourceSysId: 'ONBASE',
+        });
+    }, []);
 
+    const [timer] = useState(performance.now());
     const handleFormSubmit = async (event: FormEvent) => {
         event.preventDefault();
         setIsLoading(true);
@@ -54,6 +71,8 @@ const BankUpdateForm = () => {
         if (successfulCaseUpdate) {
             setIsLoading(false);
             setFormSubmitted(true);
+        } else {
+            setFormError(true);
         }
     };
 
@@ -65,20 +84,19 @@ const BankUpdateForm = () => {
         );
     }
 
-    // if (submitFailed) {
-    //     return (
-    //         <ApiErrorCard
-    //             leaveRoute={'/create-task'}
-    //             submit={{
-    //                 text: t('submitAddress'),
-    //             }}
-    //             // submit={{
-    //             //     action: submit,
-    //             //     text: t('submitAddress'),
-    //             // }}
-    //         />
-    //     );
-    // }
+    if (formError) {
+        return (
+            <ApiErrorCard
+                leaveRoute={'/create-case'}
+                submit={{
+                    action: () => {
+                        router.reload();
+                    },
+                    text: t('tryAgain'),
+                }}
+            />
+        );
+    }
 
     const handleBackRoute = () => {
         setIsLoading(true);
@@ -87,30 +105,33 @@ const BankUpdateForm = () => {
 
     return (
         <>
-            <NavElement
-                type={NavElementType.Link}
-                className="flex items-center my-4 no-underline relative"
-                size={NavElementSize.Small}
-                variant={NavElementVariant.Secondary}
-                startIcon={<ChevronLeftIcon width={16} height={16} />}
-                onClick={handleBackRoute}
-            >
-                {t('distributionMethod.back')}
-            </NavElement>
             {!formSubmitted && (
-                <div className="flex justify-between">
-                    <label className="font-primary text-lg font-bold">Bank Details</label>
-                    <Button
-                        className="mr-4"
-                        onClick={() => {}}
-                        size={ButtonSize.Small}
-                        variant={ButtonVariant.Default}
-                        disabled={false}
-                        type={ButtonType.Contrast}
+                <>
+                    <NavElement
+                        type={NavElementType.Link}
+                        className="flex items-center my-4 no-underline relative"
+                        size={NavElementSize.Small}
+                        variant={NavElementVariant.Secondary}
+                        startIcon={<ChevronLeftIcon width={16} height={16} />}
+                        onClick={handleBackRoute}
                     >
-                        {t('distributionMethod.terminate')}
-                    </Button>
-                </div>
+                        {t('distributionMethod.back')}
+                    </NavElement>
+
+                    <div className="flex justify-between">
+                        <label className="font-primary text-lg font-bold">Bank Details</label>
+                        <Button
+                            className="mr-4"
+                            onClick={() => {}}
+                            size={ButtonSize.Small}
+                            variant={ButtonVariant.Default}
+                            disabled={false}
+                            type={ButtonType.Contrast}
+                        >
+                            {t('distributionMethod.terminate')}
+                        </Button>
+                    </div>
+                </>
             )}
 
             {!formSubmitted ? (

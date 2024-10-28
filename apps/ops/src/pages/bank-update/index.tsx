@@ -8,9 +8,11 @@ import { FormProvider } from '@deps/containers/otp/withdrawal-forms/components/f
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { DocumentType } from '@deps/models/case/document';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
+import { getDocumentSSR } from '@deps/queries/api/documents';
 import { getPolicyDetailsSsr, searchPolicySSR } from '@deps/queries/api/policies';
 import { getCaseTaskByIdSSR } from '@deps/queries/api/v2/task';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
@@ -20,13 +22,13 @@ import nextI18nextConfig from 'next-i18next.config';
 type BankUpdateProps = {
     clientCode: string;
     policy: Policy;
-    documentNumber: string;
     featureFlagDecisions: any;
     activeForm: any;
+    document: any;
 };
 
 const BankUpdate = (props: BankUpdateProps) => {
-    const { activeForm, clientCode, policy, documentNumber, featureFlagDecisions } = props;
+    const { activeForm, clientCode, policy, featureFlagDecisions, document } = props;
 
     return (
         <div className="flex w-full flex-col overflow-auto px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10  bg-white h-screen">
@@ -38,7 +40,7 @@ const BankUpdate = (props: BankUpdateProps) => {
                 featureFlagDecisions={featureFlagDecisions}
             >
                 <div className="bg-gray-100 flex justify-center my-2">
-                    <BankUpdateContainer policy={policy} clientCode={clientCode} documentNumber={documentNumber} />
+                    <BankUpdateContainer policy={policy} clientCode={clientCode} document={document} />
                 </div>
             </FormProvider>
         </div>
@@ -125,7 +127,7 @@ export const getServerSideProps = withPageAuthRequired({
             }
 
             const policy = await getPolicyDetailsSsr(contractNum, planCode, accessToken, userInfoForLogging);
-
+            // const docType = docTypes[activeForm?.process || ''];
             if (!policy) {
                 logError('bank-update::Policy not found', {
                     taskId,
@@ -143,13 +145,17 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
+            const document = documentNumber
+                ? await getDocumentSSR(documentNumber, DocumentType.SSW, clientCode?.toUpperCase(), accessToken as string)
+                : null;
+
             return {
                 props: {
                     ...translations,
                     activeForm,
-                    documentNumber,
                     clientCode,
                     policy,
+                    document,
                     user,
                     featureFlagDecisions,
                 },

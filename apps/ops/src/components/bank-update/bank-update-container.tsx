@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { TranslationFiles } from '@deps/config/translations';
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import { DocumentData } from '@deps/models/case/document';
 import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
 
 import BankUpdateForm from './bank-update-form';
@@ -12,10 +13,10 @@ import GlobalValuesBar from '../global-values/global-values-bar/global-values-ba
 type BankUpdateContainerProps = {
     clientCode: string;
     policy: Policy;
-    documentNumber?: string;
+    document: DocumentData;
 };
 
-const BankUpdateContainer = ({ clientCode, policy }: BankUpdateContainerProps) => {
+const BankUpdateContainer = ({ clientCode, policy, document }: BankUpdateContainerProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
 
     const globalValuesData = useMemo(() => policyDataToGlobalValues(new PolicyDetails(policy), t), [policy, t]);
@@ -45,7 +46,7 @@ const BankUpdateContainer = ({ clientCode, policy }: BankUpdateContainerProps) =
             </div>
 
             <div className="my-2 flex w-full grow flex-col rounded bg-white shadow-elevation-light-04 p-4">
-                <BankUpdateForm />
+                <BankUpdateForm document={document} />
             </div>
         </div>
     );
