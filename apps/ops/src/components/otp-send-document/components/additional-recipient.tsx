@@ -46,7 +46,7 @@ const AdditionalRecipient = ({ classNames, emails, setEmails, setError }: Additi
             <Typography variant={TypographyVariant.Label} className="w-full">
                 {t(`correspondence.email`)}
             </Typography>
-            <div className={`border-2 border-gray-200 px-4 pt-2 rounded-lg`}>
+            <div className={`border-2 border-gray-200 px-2 pt-1 rounded-lg`}>
                 {emails.map(email => (
                     <ChipX label={email as string} key={email} onDelete={() => deleteEmail(email)} className="my-1" />
                 ))}

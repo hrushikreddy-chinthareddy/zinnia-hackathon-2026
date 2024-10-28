@@ -24,6 +24,7 @@ const ContactCenterAddress = ({ policy, setAddress }: ContactCenterAddressProps)
     const [selectedAddress, setSelectedAddress] = useState<number>(-1);
     const sideSheet = useSideSheetContext();
     const extractedParties = useMemo(() => policy?.parties || [], [policy]);
+    console.log('🚀 ~ ContactCenterAddress ~ extractedParties:', extractedParties);
     const checkCustodialContract = policy?.parties?.find(party => party.partyType === PartyType.ORGANIZATION);
     const roleTypes = useMemo(() => (checkCustodialContract ? [PartyRole.INSURED] : AllowedRoleTypes), [checkCustodialContract]);
 
