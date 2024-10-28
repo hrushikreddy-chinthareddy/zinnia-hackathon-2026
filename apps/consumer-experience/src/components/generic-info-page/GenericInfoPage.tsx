@@ -26,8 +26,8 @@ const logo = (company: CompanyName) => {
       return (
         <WellabeLogo
           alt="Wellabe Logo"
-          width="300px"
-          height="auto"
+          // width="100%"
+          // height="auto"
           color="#ffc107"
           fill="#ffc107"
         />
@@ -62,6 +62,7 @@ export const GenericInfoPage = async ({
     (themeCookie &&
       Object.keys(themeClasses).includes(themeCookie as CompanyName)) ||
     !featureFlagDecisions[FEATURE_FLAGS.ANNUITY_MODE];
+
   const brandingBannerClasses = clsx({
     [styles.banner as string]: showBranding,
     [themeClasses[themeCookie as CompanyName] as string]: showBranding,
@@ -73,7 +74,12 @@ export const GenericInfoPage = async ({
       <div className={styles.scrollContainer}>
         <div className={styles.content}>
           {showBranding && (
-            <div className={styles.logoContainer}>
+            <div
+              className={clsx(
+                styles.logoContainer,
+                themeClasses[themeCookie as CompanyName]
+              )}
+            >
               {logo(themeCookie as CompanyName)}
             </div>
           )}
