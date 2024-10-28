@@ -54,7 +54,7 @@ export const TaskPage: React.FC<TaskPageProps> = ({
     taskInfoLink,
 }: TaskPageProps) => {
     const formRef = createRef<Form>();
-    taskType = TaskType.SuitabilityReview;
+
     return (
         <div>
             <NoNavLayout fullHeight={true}>
@@ -203,10 +203,11 @@ export const getServerSideProps = withPageAuthRequired({
                     ...translations,
                     policy,
                     docType,
+                    clientCode: carrier,
                     documentNumber,
                     carrier,
                     taskId,
-                    taskType,
+                    taskType: TaskTypeToEnumMap[taskType],
                     formSchema,
                     uiSchema,
                     taskData: data || {},

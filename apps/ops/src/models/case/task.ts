@@ -29,6 +29,7 @@ export const TaskTypeToStringMap: Record<TaskType, string> = {
 
 export const TaskTypeToEnumMap: Record<string, TaskType> = {
     SUITABILITY_REVIEW_TASK: TaskType.SuitabilityReview,
+    SUITABILITY_TASK: TaskType.Suitability,
 };
 
 export enum TaskSource {

@@ -16,6 +16,7 @@ export const getSuitabilitySteps = ({ policyNumber, docType, clientCode, documen
                     taskInfoLink={''}
                     documentNumber={documentNumber}
                     document={undefined}
+                    taskType={taskType}
                 />
             ),
             text: 'Start',

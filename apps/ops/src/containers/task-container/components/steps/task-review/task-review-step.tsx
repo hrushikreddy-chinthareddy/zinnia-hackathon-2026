@@ -10,6 +10,8 @@ import { useNigoEntry } from '@deps/containers/nigo-entry-container/components/n
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { DocumentData } from '@deps/models/case/document';
+import { TaskType } from '@deps/models/case/task';
+import { uncapitalizeFirstLetter } from '@deps/utils/optimizely/utils';
 
 import { TaskReview } from './task-review';
 
@@ -20,10 +22,12 @@ interface TaskReviewStepProps {
     clientCode: string;
     taskInfoLink: string;
     document?: DocumentData;
+    taskType: TaskType;
 }
 
-export const TaskReviewStep = ({ policyNumber, documentNumber, docType, clientCode, taskInfoLink, document }: TaskReviewStepProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'suitability.taskReview' });
+export const TaskReviewStep = ({ policyNumber, documentNumber, docType, clientCode, taskInfoLink, taskType }: TaskReviewStepProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${uncapitalizeFirstLetter(taskType)}.taskReview` });
+
     const { goToNext } = useWorkflow();
     const { isReadyForDataEntry } = useNigoEntry();
     const router = useRouter();
