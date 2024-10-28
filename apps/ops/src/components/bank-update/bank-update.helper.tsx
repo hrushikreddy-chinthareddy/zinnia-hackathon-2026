@@ -292,7 +292,6 @@ export const bankUpdateForm = (
     formSignature: FormSignature
 ) => {
     return {
-        ...initialForm,
         source: TaskSource.ZinniaTaskManagement,
         taskType: initialForm.taskType,
         status,
