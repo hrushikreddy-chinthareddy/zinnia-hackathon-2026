@@ -150,7 +150,7 @@ const BankUpdateForm = () => {
                         </div>
                     </div>
                     <div>
-                        {formSource.channel.text === Channel.Form && formSignature && (
+                        {formSource.channel.text === Channel.Email && formSignature && (
                             <SignatureValidations isFormStateReadOnly={false} config={signaturesConfig} />
                         )}
 
