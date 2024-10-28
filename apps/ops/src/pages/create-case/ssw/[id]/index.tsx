@@ -35,7 +35,6 @@ import { ActiveWithdrawalCase, Carrier, QualTypes, Transaction, TransactionStatu
 import { UserPermission } from '@deps/models/user-profile';
 import { initializeOTPTaskSSR } from '@deps/operations/tasks/v2/initialize';
 import { getDocumentSSR } from '@deps/queries/api/documents';
-import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import { getPolicyPartiesSSR } from '@deps/queries/api/policies';
 import { SCREEN_BREAKPOINTS } from '@deps/types/constants';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
@@ -49,6 +48,7 @@ import { NassauSSWForm } from '@deps/containers/otp/ssw-forms/nasu/nasu-ssw-form
 import { CarrierToCarrierTitleMap } from '@deps/constants/page-title';
 import { FlicSSWForm } from '@deps/containers/otp/ssw-forms/flic/flic-ssw-form';
 import { FieldSize } from '@deps/components/fields/field';
+import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 
 interface SSWCaseProps {
     document: DocumentData;
@@ -166,9 +166,13 @@ export default function SSWCase({ document, form, parties, transactionsHistory, 
         router.push(`/create-case/error?errorCode=${ERROR_CODES.SSW_FORM_CREATION}`);
     }
 
-    if (sswRequest === SswRequestOption.BANK_UPDATE) {
-        router.push(`/bank-update?taskId=${form?.taskId}`);
-    }
+    useEffect(() => {
+        if (sswRequest === SswRequestOption.BANK_UPDATE) {
+            setLoading(true);
+            router.push(`/bank-update?taskId=${form?.taskId}`);
+        }
+    }, [sswRequest]);
+
     useEffect(() => {
         setTransactionDetail({
             contractId: document?.contract || '',

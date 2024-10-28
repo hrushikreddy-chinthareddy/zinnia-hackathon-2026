@@ -130,6 +130,7 @@ export interface ActiveWithdrawalCase extends DigitalFormWithdrawal {
     data: ActiveWithdrawalCaseData;
     source: string;
     taskId: string;
+    id?: string;
     updatedDate: string; // ISO Date String
 }
 
@@ -1074,9 +1075,9 @@ export enum SortOrder {
 
 export interface FormNigos {
     nigos: NigoMessages[];
-};
+}
 
 export interface NigoMessages {
     exceptionId: string;
     messages: string[];
-};
+}
