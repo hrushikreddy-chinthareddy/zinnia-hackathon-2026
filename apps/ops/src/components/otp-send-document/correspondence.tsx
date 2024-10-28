@@ -140,6 +140,7 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
                 error={error}
                 policy={policy}
                 showAdditionalRecipient={true}
+                setError={setError}
             />
             {error?.submit && <AssistiveText text={error?.submit} variant={AssistiveTextVariant.Error} className="mt-2" />}
         </WorkflowCard>

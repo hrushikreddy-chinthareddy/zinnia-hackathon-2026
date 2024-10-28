@@ -27,6 +27,7 @@ type CorrespondenceProps = {
     showAdditionalRecipient?: boolean;
     correspondenceData?: Correspondence;
     setCorrespondenceData: (val: Correspondence) => void;
+    setError: React.Dispatch<React.SetStateAction<FormValidationErrors>>;
 };
 const CorrespondenceCard = ({
     policy,
@@ -35,6 +36,7 @@ const CorrespondenceCard = ({
     error,
     showAdditionalRecipient,
     setCorrespondenceData,
+    setError,
 }: CorrespondenceProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
 
@@ -98,7 +100,12 @@ const CorrespondenceCard = ({
                         )}
                         {addAdditionalRecipient && (
                             <div className="flex flex-row max-w-sm">
-                                <AdditionalRecipient emails={additionalEmails} setEmails={setAdditionalEmails} classNames="flex-grow" />
+                                <AdditionalRecipient
+                                    emails={additionalEmails}
+                                    setEmails={setAdditionalEmails}
+                                    classNames="flex-grow"
+                                    setError={setError}
+                                />
                                 <IconButton
                                     aria-label={`${t('correspondence.removeAdditionalRecipient')}`}
                                     className="mt-10 ml-2"

@@ -1,10 +1,11 @@
-import { AssistiveText, AssistiveTextVariant, ChipX } from '@zinnia/bloom/components';
+import { ChipX } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import xss from 'xss';
 
 import Field, { FieldSize, FieldType } from '@deps/components/fields/field';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
 import { validateEmail } from '../correspondence';
 
@@ -12,31 +13,31 @@ type AdditionalRecipientProps = {
     classNames?: string;
     emails: string[];
     setEmails: React.Dispatch<React.SetStateAction<string[]>>;
+    setError: React.Dispatch<React.SetStateAction<FormValidationErrors>>;
 };
-const AdditionalRecipient = ({ classNames, emails, setEmails }: AdditionalRecipientProps) => {
+const AdditionalRecipient = ({ classNames, emails, setEmails, setError }: AdditionalRecipientProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
     const [email, setEmail] = useState('');
-    const [error, setError] = useState<string>('');
 
     const addEmail = (val: string) => {
         const emailError = validateEmail(val);
 
         if (emails.length >= 5) {
-            setError(t('correspondence.maxEmails') as string);
+            setError(error => ({ ...error, submit: t('correspondence.maxEmails') as string }));
             return;
         }
         if (emailError) {
-            setError(t(emailError) as string);
+            setError(error => ({ ...error, submit: t(emailError) as string }));
             return;
         }
 
         setEmails([...emails, val]);
-        setError('');
+        setError(error => ({ ...error, submit: '' }));
         setEmail('');
     };
 
     const deleteEmail = (val: string) => {
-        setError('');
+        setError(error => ({ ...error, submit: '' }));
         setEmails(emails.filter(email => email !== val));
     };
 
@@ -62,7 +63,6 @@ const AdditionalRecipient = ({ classNames, emails, setEmails }: AdditionalRecipi
                     className="!border-0 max-w-xs"
                 />
             </div>
-            {error && <AssistiveText text={error} variant={AssistiveTextVariant.Error} className="mt-2" />}
         </div>
     );
 };
