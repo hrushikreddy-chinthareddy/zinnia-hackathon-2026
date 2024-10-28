@@ -4,7 +4,6 @@ import { BankingFields, DisbursementFields } from '@deps/components/otp-withdraw
 import { createValidator } from '@deps/containers/otp/utils/helper-utils';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { ChannelType, ContributionType } from '@deps/models/case/enums';
-import { Channel } from '@deps/models/case/renewal/case-renewal';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import { TaskSource } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
@@ -238,14 +237,14 @@ export const getBankUpdatePayload = (
 
     let signatureV;
 
-    if (formSource.channel?.text === Channel.Email) {
+    if (formSource.channel?.text === ChannelType.Email) {
         signatureV = formSignature;
     } else {
         signatureV = null;
     }
 
     if (Object.keys(formSource.channel).length === 0) {
-        formSource.channel = { text: Channel.Phone };
+        formSource.channel = { text: ChannelType.Phone };
     }
 
     const formData = {
