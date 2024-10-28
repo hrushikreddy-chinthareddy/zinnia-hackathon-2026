@@ -25,11 +25,12 @@ export const RemoveBankConfirm: FC<RemoveBankConfirmProps> = ({
         className={styles.infoIcon}
         width={50}
         height={50}
+        color="var(--color-semantics-color-semantic-information, #005fed)"
       />
       <h3 className="typography-desktop-headline-3-d">Remove account?</h3>
-      <p className="typography-content-body">
+      <p>
         You will not longer be able to use{' '}
-        <span className="typography-content-body-bold">
+        <span className="typography-content-body-sm-bold">
           {bankNickname} ending in{' '}
           <AccountNumber accountNumber={accountNumber} />
         </span>{' '}

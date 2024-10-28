@@ -10,6 +10,8 @@ export const getFeatureFlagQuery = async (req?: NextRequest) => {
   const envValue = process.env.AUTH0_COOKIE_DOMAIN_MYPOLICYVIEW;
   const envValueNextPublic =
     process.env.NEXT_PUBLIC_AUTH0_COOKIE_DOMAIN_MYPOLICYVIEW;
+
+  // TODO: Remove this log
   logInfo('getFeatureFlagQuery', {
     headers,
     reqUrl,

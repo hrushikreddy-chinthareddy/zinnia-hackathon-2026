@@ -1,5 +1,6 @@
 'use client';
 
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import {
   Button,
   Icon,
@@ -44,10 +45,12 @@ export const SelectAmount = ({
   planCode,
   policyNumber,
   paymentFee,
+  lineOfBusiness,
 }: {
   planCode: string;
   policyNumber: string;
   paymentFee: number;
+  lineOfBusiness: LineOfBusiness;
 }) => {
   const router = useRouter();
   const { state, dispatch } = useOttp();
@@ -215,7 +218,11 @@ export const SelectAmount = ({
           <Button mode="primary" type="submit">
             Continue
           </Button>
-          <CancelDialogLink planCode={planCode} policyNumber={policyNumber} />
+          <CancelDialogLink
+            planCode={planCode}
+            policyNumber={policyNumber}
+            lineOfBusiness={lineOfBusiness}
+          />
         </div>
       </form>
     </FormStepWrapper>
