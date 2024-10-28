@@ -51,14 +51,16 @@
 
     &.wellabe {
       background-color: #efc416;
-      background-image: url('../../app/styles/wellabe/assets/mobile-temp.png');
+      background-image: url('../../app/styles/wellabe/assets/wellabe-hero-background-mobile.png');
 
       @media (width >=500px) {
-        background-image: url('../../app/styles/wellabe/assets/mobile-temp.png');
+        height: 150px;
+        background-image: url('../../app/styles/wellabe/assets/wellabe-hero-background-tablet.png');
       }
 
       @media (width >=1024px) {
-        background-image: url('../../app/styles/wellabe/assets/desktop-temp.png');
+        height: auto;
+        background-image: url('../../app/styles/wellabe/assets/wellabe-hero-background-desktop.png');
       }
     }
   }

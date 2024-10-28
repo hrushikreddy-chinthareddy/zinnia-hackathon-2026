@@ -4,8 +4,7 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
 import CaseDocumentSelect, { CaseDocumentOption, SetStateCaseId } from '@deps/components/case-document-select/case-document-select';
-import { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
-import Field from '@deps/components/fields/field';
+import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
 import Radio from '@deps/components/radio/radio';
 import {
     NonFinancialTransactionIdKeys,

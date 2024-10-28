@@ -1,41 +1,35 @@
 'use server';
 
-import { OneTimePremiumTransaction } from '@zinnia/api-types/types/bpm';
 import { BankAccountChangeRequest } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
 
-import { FormMode } from '@/components/add-edit-bank/shared-types';
-import { ApiEndpoints } from '@/components/dev-menu/types';
-import { OttpState } from '@/components/providers/one-time-premium-payment/types';
+import { BankDetail } from '@/components/person-data/types';
 import {
   ApiResponse,
   bpmApiBaseUrl,
   getUnsanitizedBanksByPolicyPlanCodeAndId,
   ServerApi,
-  isMockErrorEnabled,
 } from '@/services';
-import { submitOneTimePremiumPayment } from '@/services/bpm';
 import { BankRequest } from '@/types/transactions';
 import { parseAPIResponse, logApiNotOkDetails } from '@/utils/api';
 import {
   bankAccountNumberSanitizer,
+  filterItemsWithPastEndDate,
   getBankAccountByBankId,
 } from '@/utils/data';
 import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
 import { logError } from '@/utils/logging/server-logging';
-import { areAllValuesNull } from '@/utils/objects';
 
-interface AddEditBankRequestArgs {
+interface AddBankRequestArgs {
   planCode: string;
-  formMode: FormMode;
   policyNumber: string;
   partyId: string;
   bankId?: string;
   bankAccountChangeRequest: BankAccountChangeRequest;
 }
 
-interface AddEditBankResponse {
+interface BPMBankResponse {
   correlationId: string;
   caseId: string;
   caseStatus: string;
@@ -57,7 +51,7 @@ interface AddEditBankResponse {
  */
 export const postAddBankAccount = async (
   options: BankRequest
-): Promise<ApiResponse<AddEditBankResponse>> => {
+): Promise<ApiResponse<BPMBankResponse>> => {
   try {
     const { planCode, policyNumber, partyId, bankAccountChangeRequest } =
       options;
@@ -69,11 +63,13 @@ export const postAddBankAccount = async (
       policyNumber,
     });
 
-    if (banks && bankAccountChangeRequest?.bankAccount) {
+    const filteredBanks = filterItemsWithPastEndDate(banks);
+
+    if (filteredBanks && bankAccountChangeRequest?.bankAccount) {
       if (
-        banks?.find(
+        filteredBanks?.find(
           b =>
-            b.accountNumber ===
+            (b as BankDetail).accountNumber ===
             bankAccountChangeRequest.bankAccount?.accountNumber
         )
       ) {
@@ -137,98 +133,10 @@ export const postAddBankAccount = async (
   }
 };
 
-/**
- * Updates a bank account in the BPM API.
- *
- * @param {BankRequest} options - The options for updating a bank account.
- * @param {string} options.planCode - The plan code.
- * @param {string} options.policyNumber - The policy number.
- * @param {string} options.partyId - The party ID.
- * @param {BankAccountChangeRequest} options.bankAccountChangeRequest - The updated bank account details.
- * @param {string} options.bankId - The ID of the bank account to update.
- * @return {Promise<ApiResponse>} The API response containing the updated bank account details or an error.
- */
-export const putUpdateBankAccount = async (
-  options: BankRequest
-): Promise<ApiResponse<AddEditBankResponse>> => {
-  try {
-    const { planCode, policyNumber, partyId, bankAccountChangeRequest } =
-      options;
-    const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/parties/${partyId}/bankaccount/${options.bankId}`;
-
-    // We have to get the full bank account number serverside, because we scrub this data on the client side.
-    let bankToUpdate;
-    const banks = await getUnsanitizedBanksByPolicyPlanCodeAndId({
-      planCode,
-      policyNumber,
-    });
-
-    if (banks && options.bankId) {
-      bankToUpdate = getBankAccountByBankId(options.bankId, banks || []);
-    }
-
-    const rawResponse = await ServerApi.put(
-      url,
-      JSON.stringify({
-        bankAccount: {
-          ...bankToUpdate,
-          branchName: bankAccountChangeRequest.bankAccount?.branchName,
-          accountType: bankAccountChangeRequest.bankAccount?.accountType,
-          branchAddress: areAllValuesNull(bankToUpdate?.branchAddress || {})
-            ? null
-            : bankToUpdate?.branchAddress, //We need to do this because Zahara will fail if we send the branchAddress object with all null values for some reason. https://se2llc-global.slack.com/archives/C04N0DSKKNW/p1722871751338089
-        },
-        correlationId: uuidv4(),
-        effectiveDate: dayjs().format(ZAHARA_DATE_FORMAT),
-      }),
-      {
-        headers: { 'Content-Type': 'application/json' },
-      }
-    );
-
-    const parsedResponse = await parseAPIResponse(rawResponse);
-    //TODO: If response NOT ok, OR if response OK but the result contains an exception status
-    if (!rawResponse.ok) {
-      logError(
-        'Error updating bank',
-        await logApiNotOkDetails({
-          rawResponse,
-          parsedResponse: parsedResponse,
-        })
-      );
-      throw rawResponse;
-    }
-
-    const messages = {
-      title: `Bank Account updated`,
-      message: `${options?.bankAccountChangeRequest.bankAccount?.branchName} ending in ${bankAccountNumberSanitizer(options?.bankAccountChangeRequest?.bankAccount?.accountNumber)} was updated.`,
-    };
-
-    return { data: { ...parsedResponse, messages }, error: null };
-  } catch (e) {
-    logError('Error updating bank', e);
-    return {
-      data: null,
-      error: {
-        cause: (e as Response)?.statusText,
-        status: (e as Response)?.status ?? 502,
-        name: "Sorry, that didn't work.",
-        message:
-          (e as Response)?.status >= 500
-            ? "Services are down, so we couldn't update your account. Please try again later."
-            : "We couldn't update your account. Please try again later.",
-      },
-    };
-  }
-};
-
-export const addEditBankRequest = async (
-  options: AddEditBankRequestArgs
-): Promise<ApiResponse<AddEditBankResponse>> => {
-  if (options.formMode === FormMode.ADD) {
-    return await postAddBankAccount(options);
-  }
-  return await putUpdateBankAccount(options);
+export const addBankRequest = async (
+  options: AddBankRequestArgs
+): Promise<ApiResponse<BPMBankResponse>> => {
+  return await postAddBankAccount(options);
 };
 
 /**
@@ -245,7 +153,7 @@ export const addEditBankRequest = async (
  */
 export const putEndDateBankAccount = async (
   options: BankRequest
-): Promise<ApiResponse<AddEditBankResponse>> => {
+): Promise<ApiResponse<BPMBankResponse>> => {
   const { planCode, policyNumber, partyId, bankId } = options;
   const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/parties/${partyId}/bankaccount/${bankId}`;
 

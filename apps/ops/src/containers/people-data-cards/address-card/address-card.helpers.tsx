@@ -2,8 +2,7 @@ import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { HTMLAttributes } from 'react';
 
-import AssistiveText from '@deps/components/assistive-text/assistive-text';
-import { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
+import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
 import IconButton from '@deps/components/icon-button/icon-button';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';

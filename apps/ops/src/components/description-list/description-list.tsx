@@ -11,9 +11,7 @@ import AddressCard from '@deps/containers/people-data-cards/address-card/address
 import EmailCard from '@deps/containers/people-data-cards/email-card/email-card';
 import PhoneCard from '@deps/containers/people-data-cards/phone-card/phone-card';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
-import { Phone } from '@deps/models/policy/sor-policy';
-import { Email } from '@deps/models/policy/sor-policy';
-import { Policy, PartyRole, Address } from '@deps/models/policy/sor-policy';
+import { Phone , Email , Policy, PartyRole, Address } from '@deps/models/policy/sor-policy';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 import { SPLITTER } from '@deps/types/constants';
 

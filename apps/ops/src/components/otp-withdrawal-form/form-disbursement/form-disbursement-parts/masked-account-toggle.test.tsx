@@ -3,8 +3,7 @@ import React from 'react';
 
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 
-import BankInformationContainer from './masked-account-toggle';
-import { BankInfoType } from './masked-account-toggle';
+import BankInformationContainer, { BankInfoType } from './masked-account-toggle';
 
 jest.mock('next-i18next', () => ({
     useTranslation: () => ({

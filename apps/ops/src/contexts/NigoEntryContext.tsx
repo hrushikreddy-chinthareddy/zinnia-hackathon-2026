@@ -1,5 +1,4 @@
-import React from 'react';
-import { createContext } from 'react';
+import React, { createContext } from 'react';
 
 import { SimpleOption } from '@deps/components/autocomplete/autocomplete.types';
 import { FormDetails, CallCenterElement } from '@deps/models/case/send-document';

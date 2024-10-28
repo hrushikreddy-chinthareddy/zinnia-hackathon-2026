@@ -10,8 +10,7 @@ import { PolicyProfile } from '@/types/policy';
 import { shouldStopBankPolling } from '@/utils/policy';
 
 import styles from './BankList.module.css';
-import { AddEditBankSidesheet } from '../add-edit-bank/AddEditBankSidesheet';
-import { FormMode } from '../add-edit-bank/shared-types';
+import { AddBankSidesheet } from '../add-bank/AddBankSidesheet';
 import { BankData } from '../bank-data/BankData';
 
 const POLL_INTERVAL = 1000;
@@ -20,14 +19,14 @@ const POLL_LIMIT = 5;
 interface BankListProps {
   planCode: string;
   policyNumber: string;
-  showAddEditBank: boolean;
+  allowBankingChanges: boolean;
   initialProfileData?: PolicyProfile | null;
 }
 
 export const BankList: FC<BankListProps> = ({
   planCode,
   policyNumber,
-  showAddEditBank,
+  allowBankingChanges,
   initialProfileData,
 }) => {
   const bpmAction = useBpmStore(state => state.bpmAction);
@@ -61,7 +60,7 @@ export const BankList: FC<BankListProps> = ({
         <BankData
           key={bankDetail.accountNumber}
           partyId={bankDetail.appliesToPartyId || ''}
-          editBankEnabled={showAddEditBank}
+          removeBankEnabled={allowBankingChanges}
           numberOfAccounts={data.bankDetails.length}
           {...bankDetail}
         />
@@ -73,9 +72,7 @@ export const BankList: FC<BankListProps> = ({
         <div>
           <h2 className="mb-lg">Banking Details</h2>
           <div className={styles.multipleItemsInSection}>{allBankData}</div>
-          {showAddEditBank && (
-            <AddEditBankSidesheet mode={FormMode.ADD} partyId={data.partyId} />
-          )}
+          {allowBankingChanges && <AddBankSidesheet partyId={data.partyId} />}
         </div>
       );
     }

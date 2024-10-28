@@ -30,7 +30,7 @@ export const getMainNavItems = async (
         const isAllowReadOtpRenewals = await permissionContext.doesUserHavePagePermission(UserPermission.AllowReadOtpRenewals);
         const isAdvisorsExcel = await permissionContext.getIsAdvisorsExcel();
 
-        if (isAllowReadCaseManagement || isAdvisorsExcel) {
+        if (isAdvisorsExcel || isAllowReadCaseManagement) {
             navItems.push({ label: caseLinkText, link: caseLinkHref, icon: <DocumentIcon width={20} height={20} /> });
         }
         if (isAllowReadPolicyAdmin) {

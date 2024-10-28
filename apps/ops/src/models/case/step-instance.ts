@@ -1,13 +1,18 @@
-import { AdditionalData } from '@deps/components/case-sub-page/case-tabs.tsx/case-tabs-helpers';
+import { CaseAdditionalData } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-types';
 import { Statuses } from '@deps/models/case/case';
-
+export type InstanceInfo = {
+    entityType?: string;
+    identifier: string;
+    label: string;
+};
 type BaseStepInstance = {
-    additionalData?: AdditionalData;
+    additionalData?: CaseAdditionalData;
     createdAt: string;
     eventRef: string[];
     id: string;
     info?: string;
     label: string;
+    mappedDocuments?: string[];
     mappedExceptions: string[];
     mappedNotes: string[];
     mappedTasks: string[] | null;
@@ -19,7 +24,7 @@ type BaseStepInstance = {
 
 export interface SingleStepInstance extends BaseStepInstance {
     instanceInfo: null;
-    multiInstance: false;
+    multiInstance: boolean;
 }
 
 /**  A multi-step instance will have additional information about the object it is applying the step to.
@@ -33,10 +38,7 @@ export interface SingleStepInstance extends BaseStepInstance {
  * using the instanceInfo identifier.
  */
 export interface MultiStepInstance extends BaseStepInstance {
-    instanceInfo: {
-        identifier: string;
-        label: string;
-    };
+    instanceInfo: InstanceInfo;
     multiInstance: true;
 }
 

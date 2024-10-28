@@ -1,5 +1,4 @@
-import { TFunction } from 'next-i18next';
-import { useTranslation } from 'next-i18next';
+import { TFunction , useTranslation } from 'next-i18next';
 import * as React from 'react';
 
 import ButtonGrp from '@deps/components/button-group/button-group';

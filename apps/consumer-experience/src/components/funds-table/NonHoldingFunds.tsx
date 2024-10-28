@@ -1,5 +1,6 @@
 'use client';
 
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import {
   Label,
   Table,
@@ -21,6 +22,7 @@ import { percentFormatify } from '@/utils/numbers';
 import { FundNameCellContent } from './FundNameCellContent';
 import styles from './FundsTable.module.css';
 import { LoadingRow } from './LoadingRow';
+import { allocationAccountInfo } from './utils';
 import { LabelPopover } from '../label-popover/LabelPopover';
 import { NoDataAvailable } from '../no-data-available/NoDataAvailable';
 
@@ -28,10 +30,12 @@ export const NonHoldingFunds = ({
   funds,
   isLoading,
   numberOfLoadingRows = 3,
+  lineOfBusiness,
 }: {
   funds?: Fund[];
   isLoading?: boolean;
   numberOfLoadingRows?: number;
+  lineOfBusiness?: LineOfBusiness;
 }) => {
   const { width } = useWindowSize();
 
@@ -75,11 +79,9 @@ export const NonHoldingFunds = ({
           <TableHeaderCell>
             <Label
               interactiveElements={[
-                <LabelPopover
-                  key="Account Value"
-                  title="Account Value"
-                  content="This is the amount of your account value currently allocated in this specific account."
-                />,
+                <LabelPopover key="Account Value" title="Account Value">
+                  {allocationAccountInfo(lineOfBusiness)}
+                </LabelPopover>,
               ]}
             >
               {toSentenceCase(headerVals.fundValue)}
@@ -109,6 +111,7 @@ export const NonHoldingFunds = ({
                   <FundNameCellContent
                     fundDetails={fund}
                     isElected={fund.isElected}
+                    lineOfBusiness={lineOfBusiness}
                   />
                 </TableCell>
                 <TableCell className={dataValueStyles(fund.totalFundValue)}>

@@ -69,16 +69,17 @@ const DownloadItem = ({ doc, carrierCode }: { doc: DocumentWithSource; carrierCo
     );
 };
 
-export const createAction = (doc: DocumentWithSource, carrierCode: string, t: TFunction) => {
+export const createAction = (doc: DocumentWithSource, carrierCode: string, t: TFunction, label?:string) => {
     return isPreviewSupported(doc) ? (
         <DocumentPreviewer
             className="!underline-offset-2"
             carrier={carrierCode}
-            document={doc}
+            displayName={doc.displayName}
+            documentId={doc.documentId ?? (doc.documentID as string)}
             activeDocType={doc.documentSource}
             variant={NavElementVariant.Secondary}
         >
-            {t('view')}
+             {label ? t(label) :t('view')}
         </DocumentPreviewer>
     ) : (
         <DownloadItem doc={doc} carrierCode={carrierCode} />

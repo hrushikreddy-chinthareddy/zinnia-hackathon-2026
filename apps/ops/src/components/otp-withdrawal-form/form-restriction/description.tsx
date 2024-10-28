@@ -4,8 +4,7 @@ import xss from 'xss';
 
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { Restriction } from '@deps/models/case/withdrawal/case';
-import { EmergencyOption } from '@deps/models/case/withdrawal/case';
+import { Restriction , EmergencyOption } from '@deps/models/case/withdrawal/case';
 const getDescription = (restrictions: Restriction<EmergencyOption>[]): string => {
     const beyondControlRestriction = restrictions.find(restriction => restriction.text === EmergencyOption.BeyondControl);
     return beyondControlRestriction?.selectionOptions?.DistribUnforseenDesc?.text || '';

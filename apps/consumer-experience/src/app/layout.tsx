@@ -121,7 +121,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`${primaryFont.variable} ${secondaryFont.variable}`}
+      className={`${primaryFont.variable} ${secondaryFont.variable} typography-content-body-sm`}
     >
       <body>
         {/* Next includes scroll to top functionality with the Link component HOWEVER, it's scroll to top

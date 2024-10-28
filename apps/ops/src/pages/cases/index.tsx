@@ -17,7 +17,7 @@ import SelectSimple from '@deps/components/select/select';
 import StatusCounterTile from '@deps/components/status-counter-tile/status-counter-tile';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { AE_BROKER_DEALER_NAME_PROD, AE_BROKER_DEALER_NAME_QA, AE_CARRIER_SBGC, AE_FGA_ROLE } from '@deps/constants/advisors-excel';
+import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
 import {
     CaseManagementFiltersContext,
     CaseSearchAdditionalFilters,
@@ -28,6 +28,7 @@ import {
     CaseTableData,
 } from '@deps/contexts/CaseManagementFilters';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { getAdvisorsExcelCaseSearchParams, getAdvisorsExcelCaseStatsParams } from '@deps/helpers/advisors-excel';
 import {
     formatCaseTotals,
     getAdditionalFilters,
@@ -47,7 +48,6 @@ import { checkTupleSsr, getCarrierListServerSSR } from '@deps/queries/api/fga';
 import { CaseSearchQuery, CaseStatsQuery } from '@deps/queries/cases';
 import { FgaRelation } from '@deps/types/fga';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
-import { isProd } from '@deps/utils/environment.helper';
 import nextI18nextConfig from 'next-i18next.config';
 
 // Lazy Loaded Components
@@ -88,13 +88,23 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel }: CaseMa
 
         const searchValueObject = getSearchValueObject(caseManagementFilters.searchValue, caseManagementFilters.toggleValue);
 
-        const caseStatsRequest: CaseStatsQuery = {
+        let caseStatsRequest: CaseStatsQuery = {
             ...additionalFilters,
             ...searchValueObject,
             groupBy: ['caseStatus'],
         };
 
+        if (isAdvisorsExcel) {
+            const advisorsExcelParams = getAdvisorsExcelCaseStatsParams();
+
+            caseStatsRequest = {
+                ...caseStatsRequest,
+                ...advisorsExcelParams
+            }
+        }
+
         try {
+            console.log('caseStatsRequest', caseStatsRequest)
             const response = await getCaseStats(caseStatsRequest);
 
             if ('stats' in response) {
@@ -136,12 +146,11 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel }: CaseMa
 
             // DEPU-2835 - temporary work around for Advisor Excel
             if (isAdvisorsExcel) {
-                const brokerDealerName = isProd() ? AE_BROKER_DEALER_NAME_PROD : AE_BROKER_DEALER_NAME_QA;
+                const advisorsExcelParams = getAdvisorsExcelCaseSearchParams();
 
                 additionalFilters = {
                     ...additionalFilters,
-                    brokerDealerName,
-                    carrier: [AE_CARRIER_SBGC],
+                    ...advisorsExcelParams,
                 };
             }
 
@@ -498,7 +507,11 @@ export const getServerSideProps = withPageAuthRequired({
             user,
             UserPermission.AllowReadCaseManagement
         );
-        if (!doesUserHasPagePermissions) {
+        
+    // DEPU-2835 - temporary work around for Advisor Excel
+        const isAdvisorsExcel = await checkTupleSsr(`${auth.accessToken}`, user.partyId, FgaRelation.Party, AE_FGA_ROLE);
+
+        if (!isAdvisorsExcel && !doesUserHasPagePermissions) {
             return {
                 redirect: {
                     destination: '/403',
@@ -506,7 +519,7 @@ export const getServerSideProps = withPageAuthRequired({
                 },
             };
         }
-
+    
         const { locale = DEFAULT_LOCALE } = context;
 
         const translations = await serverSideTranslations(
@@ -521,8 +534,6 @@ export const getServerSideProps = withPageAuthRequired({
             user.partyId,
             UserPermission.AllowReadCaseManagement
         );
-
-        const isAdvisorsExcel = await checkTupleSsr(`${auth.accessToken}`, user.partyId, FgaRelation.Party, AE_FGA_ROLE);
 
         return { props: { authorizedCarriers, isAdvisorsExcel, locale, ...translations } };
     },
