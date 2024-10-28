@@ -8,6 +8,7 @@ import { ApiVersion, ContributionType } from '@deps/models/case/enums';
 import { TaskApiVersionMapper } from '@deps/models/case/helpers';
 import { Channel } from '@deps/models/case/renewal/case-renewal';
 import { TaskStatus } from '@deps/models/case/task-instance';
+import { CaseStatus } from '@deps/models/case/withdrawal/case';
 import { DEFAULT_DISBURSEMENT_UPDATE } from '@deps/models/case/withdrawal/disbursement-types';
 import { putCaseTask } from '@deps/queries/api/v1/task';
 import { updateTask } from '@deps/queries/api/v2/task';
@@ -31,7 +32,6 @@ const BankUpdateForm = () => {
     const { initialForm, formSource, setFormSource, formSignature } = useContext(FormDataContext);
 
     const [timer] = useState(performance.now());
-    console.log(initialForm, '<===initi');
 
     const handleFormSubmit = async (event: FormEvent) => {
         event.preventDefault();
@@ -48,7 +48,7 @@ const BankUpdateForm = () => {
             successfulCaseUpdate = await putCaseTask(
                 initialForm.taskType,
                 initialForm.taskId,
-                bankUpdateForm(TaskStatus.Completed, initialForm, formSource, bankUpdateDetails, formSignature) as any
+                bankUpdateForm(CaseStatus.Submit, initialForm, formSource, bankUpdateDetails, formSignature) as any
             );
         }
         if (successfulCaseUpdate) {
@@ -124,7 +124,7 @@ const BankUpdateForm = () => {
                                 options={channelOptions(t)}
                                 onChange={val => setFormSource(prevState => ({ ...prevState, channel: { text: val } }))}
                                 size={FieldSize.Small}
-                                value={formSource.channel?.text || Channel.Phone}
+                                value={formSource.channel?.text ? formSource.channel?.text : Channel.Phone}
                                 name="channel"
                             />
                         </div>
@@ -150,7 +150,7 @@ const BankUpdateForm = () => {
                         </div>
                     </div>
                     <div>
-                        {formSource.channel.text === Channel.Form && (
+                        {formSource.channel.text === Channel.Form && formSignature && (
                             <SignatureValidations isFormStateReadOnly={false} config={signaturesConfig} />
                         )}
 
@@ -168,7 +168,7 @@ const BankUpdateForm = () => {
                                 </Button>
                                 <NavElement
                                     aria-label={t('cancel') as string}
-                                    onClick={() => {}}
+                                    onClick={() => router.push('/create-case')}
                                     size={NavElementSize.Small}
                                     type={NavElementType.Button}
                                     variant={NavElementVariant.Default}
@@ -188,9 +188,10 @@ const BankUpdateForm = () => {
                             action: () => {
                                 router.push('/create-case');
                             },
-                            text: t('close'),
+                            text: t('distributionMethod.close'),
                         }}
-                        title={t('submitted')}
+                        subtitle={'Bank Change Request has been submitted.'}
+                        title={t('distributionMethod.submitted')}
                     />
                 </div>
             )}

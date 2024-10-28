@@ -7,6 +7,7 @@ import { SignatureValidation } from './signature-validation';
 export enum Channel {
     Form = 'Email/Fax/Mail',
     Phone = 'Phone',
+    Email = 'Email',
 }
 
 export enum RenewalPeriod {

@@ -29,7 +29,7 @@ const BankUpdate = (props: BankUpdateProps) => {
     const { activeForm, clientCode, policy, documentNumber, featureFlagDecisions } = props;
 
     return (
-        <div className="flex w-full flex-col overflow-auto px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10  bg-white">
+        <div className="flex w-full flex-col overflow-auto px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10  bg-white h-screen">
             <FormProvider
                 form={activeForm}
                 initialForm={activeForm}

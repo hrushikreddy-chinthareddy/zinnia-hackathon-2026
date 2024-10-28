@@ -11,6 +11,7 @@ import { TaskStatus } from '@deps/models/case/task-instance';
 import {
     AccountType,
     ActiveWithdrawalCase,
+    CaseStatus,
     FormSignature,
     FormSource,
     LifeCadPartyRoles,
@@ -23,7 +24,7 @@ import { SignatureFields } from '../otp-withdrawal-form/signature-validation/sig
 export const channelOptions = (t: TFunction) => [
     {
         label: t('distributionMethod.channelOptions.emailFaxMail'),
-        value: Channel.Form,
+        value: Channel.Email,
     },
     {
         label: t('distributionMethod.channelOptions.phone'),
@@ -237,16 +238,20 @@ export const getBankUpdatePayload = (
 
     let signatureV;
 
-    if (formSource.channel?.text === Channel.Form) {
+    if (formSource.channel?.text === Channel.Email) {
         signatureV = formSignature;
     } else {
         signatureV = null;
     }
 
+    if (Object.keys(formSource.channel).length === 0) {
+        formSource.channel = { text: Channel.Phone };
+    }
+
     const formData = {
-        formExtName: 'SBGC_UPDATE_DIGITAL_FORM',
+        formExtName: `${initialForm.carrier}_UPDATE_DIGITAL_FORM`,
         metaData: {
-            formType: 'SBGC_UPDATE_DIGITAL_FORM',
+            formType: `${initialForm.carrier}_UPDATE_DIGITAL_FORM`,
             formId: null,
             formNumber: '',
         },
@@ -280,13 +285,14 @@ export const getBankUpdatePayload = (
 };
 
 export const bankUpdateForm = (
-    status: TaskStatus,
+    status: TaskStatus | CaseStatus,
     initialForm: ActiveWithdrawalCase,
     formSource: FormSource,
     bankUpdateDetails: DisbursementParts,
     formSignature: FormSignature
 ) => {
     return {
+        ...initialForm,
         source: TaskSource.ZinniaTaskManagement,
         taskType: initialForm.taskType,
         status,
