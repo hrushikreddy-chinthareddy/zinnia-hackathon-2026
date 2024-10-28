@@ -33,6 +33,7 @@ import { deStringifyTrueFalseNull } from '@deps/helpers/string.helper';
 import { TransactionType, TypeDesc, useTransactionsHistory } from '@deps/hooks/otp-withdrawal/transaction-history';
 import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
 import { useScreenSize } from '@deps/hooks/useScreenSize';
+import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { ProcessType } from '@deps/models/case/enums';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
@@ -44,6 +45,7 @@ import { getDocumentSSR } from '@deps/queries/api/documents';
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import { getPolicyPartiesSSR } from '@deps/queries/api/policies';
 import { SCREEN_BREAKPOINTS, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { isNonProductionEnvironment } from '@deps/utils/environment.helper';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
@@ -52,7 +54,7 @@ import { logError, logInfo, logWarn, parseErrorInformation } from '@deps/utils/s
 
 import { ERROR_CODES } from '../../error';
 
-interface WithdrawalCaseProps {
+interface WithdrawalCaseProps extends SegmentTrackedPageProps {
     document: DocumentData;
     form: ActiveWithdrawalCase;
     userId: string;
@@ -79,7 +81,7 @@ const getFormComponentMap = (qualType: QualTypes | ''): Record<string, React.Rea
     [Carrier.RSLN]: <RslnWithdrawalForm />,
 });
 
-export default function WithdrawalCase({ document, form, isNigoCase, featureFlagDecisions, parties }: WithdrawalCaseProps) {
+export default function WithdrawalCase({ document, form, isNigoCase, featureFlagDecisions, parties, user }: WithdrawalCaseProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const router = useRouter();
     const { clientId, clientIdOverride, getLastSaved } = router.query;
@@ -96,6 +98,13 @@ export default function WithdrawalCase({ document, form, isNigoCase, featureFlag
         fromDate: dayjs(document.documentDate).format(ZAHARA_API_DATE_FORMAT),
         filter: { count: 5, sortBy: SortOrder.Desc, statuses: [TransactionStatus.Done, TransactionStatus.Pending] },
     });
+
+    useSegmentPageTracker(user, SegmentPageName.WithdrawalCase, {
+        documentNumber: document.documentNumber,
+        formTaskId: form.taskId,
+        transactions: JSON.stringify(transactions),
+    });
+
     const [transactionDetail, setTransactionDetail] = useState<SidebarContent>(DefaultSidebarContent);
     const [isOpenOverride, setIsOpenOverride] = useState<null | boolean>(null);
     const [taskApiError, setTaskApiError] = useState('');
@@ -341,6 +350,7 @@ export const getServerSideProps = withPageAuthRequired({
                 isNigoCase,
                 featureFlagDecisions,
                 parties: Array.isArray(parties) ? parties : [],
+                user,
             },
         };
     },

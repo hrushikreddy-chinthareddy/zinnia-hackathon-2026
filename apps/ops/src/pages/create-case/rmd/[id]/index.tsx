@@ -25,6 +25,7 @@ import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { deStringifyTrueFalseNull } from '@deps/helpers/string.helper';
 import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
 import { useScreenSize } from '@deps/hooks/useScreenSize';
+import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { ActiveWithdrawalCase, Carrier, QualTypes } from '@deps/models/case/withdrawal/case';
@@ -34,6 +35,7 @@ import { getDocumentSSR } from '@deps/queries/api/documents';
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import { getPolicyPartiesSSR } from '@deps/queries/api/policies';
 import { SCREEN_BREAKPOINTS } from '@deps/types/constants';
+import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { isNonProductionEnvironment } from '@deps/utils/environment.helper';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
@@ -41,7 +43,7 @@ import { logError, logInfo, logWarn, parseErrorInformation } from '@deps/utils/s
 
 import { ERROR_CODES } from '../../error';
 
-interface RmdCaseProps {
+interface RmdCaseProps extends SegmentTrackedPageProps {
     document: DocumentData;
     form: ActiveWithdrawalCase;
     userId: string;
@@ -72,7 +74,7 @@ const determineFormToRender = (clientId: string, qualType: QualTypes | ''): Reac
 };
 
 // The RMD Withdrawal form uses the same APIs and payloads, and many of the same components as the standard Withdrawal Form.
-export default function RmdCase({ document, form, featureFlagDecisions, parties }: RmdCaseProps) {
+export default function RmdCase({ document, form, featureFlagDecisions, parties, user }: RmdCaseProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const router = useRouter();
     const initialForm = form;
@@ -81,6 +83,17 @@ export default function RmdCase({ document, form, featureFlagDecisions, parties 
     const clientForFormDetermination = isNonProductionEnvironment() ? clientIdOverride || clientId : clientId;
     // get the contract issue type from custom hook
     const { issueState, issueDate, qualType } = useAccountInfo(document.contract, clientId as string);
+
+    useSegmentPageTracker(user, SegmentPageName.RmdCase, {
+        clientForFormDetermination,
+        clientId,
+        clientIdOverride,
+        documentNumber: document.documentNumber,
+        formTaskId: form.taskId,
+        issueState,
+        issueDate,
+        qualType,
+    });
 
     const formParts = determineFormToRender(clientForFormDetermination as string, qualType);
     if (!formParts) {
@@ -308,6 +321,7 @@ export const getServerSideProps = withPageAuthRequired({
                 locale,
                 featureFlagDecisions,
                 parties: Array.isArray(parties) ? parties : [],
+                user,
             },
         };
     },

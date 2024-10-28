@@ -8,6 +8,7 @@ import { AUDIENCE } from '@deps/queries/api-config';
 import { FgaRelation } from '@deps/types/fga';
 export interface PermissionsContextProps {
     permissions: PermissionsModel;
+    getUserPartyId: () => string;
     getIsAdvisorsExcel: () => Promise<boolean>;
     getClientIds: (permission: UserPermission) => Promise<string[]>;
     doesUserHavePagePermission: (permission: UserPermission) => Promise<boolean>;
@@ -60,6 +61,10 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         return false;
     };
 
+    const getUserPartyId = (): string => {
+        return partyId;
+    };
+
     const getPermissionSet = (): PermissionsModel => {
         if (!user || !user[permissionsKey]) return {} as PermissionsModel;
 
@@ -110,6 +115,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 permissions,
                 getIsAdvisorsExcel,
                 getClientIds,
+                getUserPartyId,
                 doesUserHavePagePermission,
                 canEditPolicy,
                 getIsSuperAdmin,

@@ -14,6 +14,9 @@ import { getCarrierListItem, getCarrierNameByClientId, getClientIdsByCarrierName
 
 import DateRangeFields from './date-range-fields';
 import MultiselectField from './multiselect-field';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { SegmentTrackedEventName } from '@deps/types/segment-analytics';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 
 const REFINE_RESULTS_BASE_KEY = 'caseManagementDashboard.refineResultsOptions.';
 
@@ -40,6 +43,8 @@ export default function SideSheetRefineResults({
     authorizedCarriers,
 }: SideSheetRefineResultsProps) {
     const { t } = useTranslation();
+    const perms = usePermissionsContext();
+
     const [additionalFilters, setAdditionalFilters] = useState(filters);
     const [productNameOptions, setProductNameOptions] = useState<string[]>([]);
     const [processListOptions, setProcessListOptions] = useState<string[]>([]);
@@ -183,6 +188,7 @@ export default function SideSheetRefineResults({
         }
     }, [authorizedCarriers, additionalFilters.carriers, additionalFilters.processTypes, filters.requestSubType]);
 
+    // TODO MG: move these to another file
     // Field Handlers
     const createdStartOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newStartValue = e.target.value;
@@ -314,17 +320,26 @@ export default function SideSheetRefineResults({
     };
 
     const handleSubmit = () => {
-        if (validateForm()) {
-            setCaseManagementFilters(prevFilters => ({
-                ...prevFilters,
-                offset: 0,
-                additionalFilters,
-                ...((additionalFilters.showOnlyCanceledCases || additionalFilters.showOnlyCompletedCases) && {
-                    statusCounterTileFilter: 'All',
-                }),
-            }));
-            closeSideSheet();
+        if (!validateForm()) {
+            return;
         }
+
+        // const filters = 
+
+        setCaseManagementFilters(prevFilters => ({
+            ...prevFilters,
+            offset: 0,
+            additionalFilters,
+            ...((additionalFilters.showOnlyCanceledCases || additionalFilters.showOnlyCompletedCases) && {
+                statusCounterTileFilter: 'All',
+            }),
+        }));
+        closeSideSheet();
+
+        segmentAnalyticsTrackEvent(SegmentTrackedEventName.CaseFilterClick, {
+            selectedItemName: 'this',
+            userId: perms.getUserPartyId(),
+        });
     };
 
     const handleReset = () => {

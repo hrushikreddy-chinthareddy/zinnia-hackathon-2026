@@ -21,6 +21,7 @@ import { DiaryNotesProvider } from '@deps/contexts/DiaryNotesContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { DocumentData } from '@deps/models/case/document';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { Carrier } from '@deps/models/case/withdrawal/case';
@@ -28,6 +29,7 @@ import { UserPermission } from '@deps/models/user-profile';
 import { getDocumentSSR } from '@deps/queries/api/documents';
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import { getPolicyAccountInfoSSR, getPolicyPartiesSSR } from '@deps/queries/api/policies';
+import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { isNonProductionEnvironment } from '@deps/utils/environment.helper';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
@@ -36,7 +38,7 @@ import nextI18nextConfig from 'next-i18next.config';
 
 import { ERROR_CODES } from '../../error';
 
-interface CreateCaseDetailsProps {
+interface CreateCaseDetailsProps extends SegmentTrackedPageProps {
     caseId: string;
     caseDocument: DocumentData;
     parties: LifeCadParty[];
@@ -72,6 +74,7 @@ const RenewalCaseDetails = ({
     userId,
     featureFlagDecisions,
     planCode,
+    user,
 }: CreateCaseDetailsProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const [isLoading, setIsLoading] = useState(false);
@@ -87,6 +90,16 @@ const RenewalCaseDetails = ({
 
     const { clientIdOverride, action } = router.query;
     const clientForFormDetermination = isNonProductionEnvironment() ? clientIdOverride || clientId : clientId;
+
+    useSegmentPageTracker(user, SegmentPageName.RenewalCaseDetails, {
+        action,
+        caseId,
+        caseDocumentNumber: caseDocument.documentNumber,
+        clientId,
+        clientForFormDetermination,
+        planCode,
+        userId,
+    });
 
     const formParts = determineFormToRender(clientForFormDetermination as string);
 
@@ -276,6 +289,7 @@ export const getServerSideProps = withPageAuthRequired({
                 clientId: clientId.toUpperCase(),
                 featureFlagDecisions,
                 planCode,
+                user,
             },
         };
     },
