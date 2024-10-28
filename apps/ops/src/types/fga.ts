@@ -1,3 +1,5 @@
+import { BulkCheckTuple, FGA_Tuple } from "@zinnia/utils";
+
 export type CheckTupleResponse = {
     allowed: boolean;
 };
@@ -13,8 +15,12 @@ export type GetCarrierListQuery = {
     policyNumber?: string | undefined;
 };
 
-export type Tuple = {
-    user: string;
-    relation: string;
-    object: string;
+export type Tuple = FGA_Tuple;
+
+export type TupleRequest = {
+    tuples: FGA_Tuple[];
+};
+
+export type TupleResponse = {
+    tuples: BulkCheckTuple[];
 };

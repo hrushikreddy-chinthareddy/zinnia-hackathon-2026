@@ -15,7 +15,6 @@ import MassMutualReg60Form from '@deps/containers/otp/reg60-forms/mass-mutual/ma
 import { FormProvider } from '@deps/containers/otp/reg60-forms/reg60-form-provider';
 import { CreateReg60CaseProps } from '@deps/containers/otp/reg60-forms/reg60.types';
 import { DefaultSidebarContent } from '@deps/containers/otp/reg60-forms/utils/reg60-constants';
-import { isNonProductionEnvironment } from '@deps/helpers/environment.helper';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { shouldNavbarOverlay } from '@deps/helpers/page-layout';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
@@ -27,6 +26,7 @@ import { UserPermission } from '@deps/models/user-profile';
 import { getDocumentSSR } from '@deps/queries/api/documents';
 import { getCaseTaskByIdSSR } from '@deps/queries/api/v2/task';
 import { SCREEN_BREAKPOINTS } from '@deps/types/constants';
+import { isNonProductionEnvironment } from '@deps/utils/environment.helper';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logError, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';

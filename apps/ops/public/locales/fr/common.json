@@ -40,6 +40,9 @@
             "annuitization": "Annuitisation"
         },
         "navLinks": {
+            "accessManagement": {
+                "text": "Gestion des accès"
+            },
             "caseManagement": {
                 "text": "Gestion des dossiers",
                 "link": "/cases"
