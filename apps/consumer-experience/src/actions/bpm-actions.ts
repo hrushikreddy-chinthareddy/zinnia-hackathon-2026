@@ -111,8 +111,8 @@ export const postAddBankAccount = async (
     }
 
     const messages = {
-      title: `Bank Account added`,
-      message: `${options?.bankAccountChangeRequest.bankAccount?.branchName} ending in ${bankAccountNumberSanitizer(options?.bankAccountChangeRequest?.bankAccount?.accountNumber)} was added.`,
+      title: `Thanks!`,
+      message: `${options?.bankAccountChangeRequest.bankAccount?.branchName} ending in ${bankAccountNumberSanitizer(options?.bankAccountChangeRequest?.bankAccount?.accountNumber)} is being added.`,
     };
 
     return { data: { ...parsedResponse, messages }, error: null };
@@ -198,8 +198,8 @@ export const putEndDateBankAccount = async (
     }
 
     const messages = {
-      title: `Bank Account deleted`,
-      message: `${options?.bankAccountChangeRequest.bankAccount?.branchName} ending in ${bankAccountNumberSanitizer(options?.bankAccountChangeRequest?.bankAccount?.accountNumber)} was removed.`,
+      title: `Thanks!`,
+      message: `${options?.bankAccountChangeRequest.bankAccount?.branchName} ending in ${bankAccountNumberSanitizer(options?.bankAccountChangeRequest?.bankAccount?.accountNumber)} is being removed.`,
     };
 
     return { data: { ...parsedResponse, messages }, error: null };
