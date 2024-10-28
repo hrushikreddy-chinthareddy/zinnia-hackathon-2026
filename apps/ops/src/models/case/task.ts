@@ -12,9 +12,25 @@ export enum TaskType {
     SSW = 'SSWTask',
     RENEWAL = 'RenewalTask',
     REG60 = 'NBReg60Comparision',
-    Suitability = 'Suitability',
-    SuitabilityReview = 'SuitabilityReview',
+    Suitability = 'SuitabilityTask',
+    SuitabilityReview = 'SuitabilityReviewTask',
 }
+
+export const TaskTypeToStringMap: Record<TaskType, string> = {
+    [TaskType.SuitabilityReview]: 'SUITABILITY_REVIEW_TASK',
+    [TaskType.Withdrawal]: '',
+    [TaskType.OFT]: '',
+    [TaskType.RMD]: '',
+    [TaskType.SSW]: '',
+    [TaskType.RENEWAL]: '',
+    [TaskType.REG60]: '',
+    [TaskType.Suitability]: '',
+};
+
+export const TaskTypeToEnumMap: Record<string, TaskType> = {
+    SUITABILITY_REVIEW_TASK: TaskType.SuitabilityReview,
+};
+
 export enum TaskSource {
     ZinniaTaskManagement = 'Zinnia.TaskManagement',
 }

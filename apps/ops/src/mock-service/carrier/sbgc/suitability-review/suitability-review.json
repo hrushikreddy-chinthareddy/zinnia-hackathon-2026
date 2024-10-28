@@ -34,8 +34,8 @@
                 "applicationValue": "78%"
             }
         ],
-        "suitabilityStatus": "Accept",
-        "declineReason": "NOT_ELIGIBLE",
+        "suitabilityStatus": "DECLINE",
+        "declineReason": "SPIF_DECLINED",
         "attachment": [
             {
                 "documentId": "12344",

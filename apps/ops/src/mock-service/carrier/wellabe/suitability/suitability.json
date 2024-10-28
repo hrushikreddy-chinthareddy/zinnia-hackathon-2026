@@ -1,5 +1,5 @@
 {
-    "_id": "TA000000013545",
+    "id": "TA000000013545",
     "correlationId": "e3a4a780-de9d-4fa9-b0aa-2dc936d8a94f",
     "caseId": "CA0000372640",
     "source": "BPM.Suitability",
@@ -12,6 +12,9 @@
     "taskDetail": "The Suitability must be reviewed for given rules",
     "status": "NEW",
     "data": {
+        "contractNum": "7700002658",
+        "clientCode": "SBGC",
+        "documentNumber": "20241008-MAN-997616",
         "applicationId": "ASEJ041120240000000001",
         "requestId": "ACAP001234567",
         "parties": [
@@ -205,5 +208,8 @@
                 "signatoryDesignation": "If Applicable"
             }
         ]
-    }
+    },
+    "queue": null,
+    "createdAt": "2024-10-14T10:21:35Z",
+    "updatedAt": "2024-10-15T19:48:30Z"
 }

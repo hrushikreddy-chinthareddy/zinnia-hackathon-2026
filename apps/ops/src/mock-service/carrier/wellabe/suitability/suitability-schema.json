@@ -414,7 +414,7 @@
                             "type": "string",
                             "title": "Party Type",
                             "$ref": "#/definitions/partyTypeEnum",
-                            "uniqueItems": true
+                            "uniqueItems": false
                         },
                         "roleType": {
                             "type": "string",
@@ -561,7 +561,6 @@
                                     "title": "Employment Status",
                                     "items": {
                                         "type": "string",
-                                        "title": "",
                                         "$ref": "#/definitions/employmentStatusEnum"
                                     },
                                     "uniqueItems": true
@@ -703,7 +702,6 @@
                         "title": "Source of Income",
                         "items": {
                             "type": "string",
-                            "title": "",
                             "$ref": "#/definitions/sourceOfIncomeEnum"
                         }
                     },
@@ -1778,6 +1776,16 @@
                         "ui:options": {
                             "label": false
                         }
+                    },
+                    "occupation": {
+                        "ui:options": {
+                            "label": false
+                        }
+                    },
+                    "disabilityExplanation": {
+                        "ui:options": {
+                            "label": false
+                        }
                     }
                 }
             }
@@ -1818,11 +1826,14 @@
                 "$ref": "#/definitions/replacementIndEnum",
                 "ui:widget": "radio",
                 "ui:options": {
-                    "inline": true,
+                    "inline": true
+                }
+            },
+            "replacementReason": {
+                "ui:options": {
                     "label": false
                 }
             },
-            "replacementReason": {},
             "replacedContractType": {
                 "$ref": "#/definitions/replacedContractTypeEnum",
                 "ui:options": {
@@ -1834,24 +1845,21 @@
                     "$ref": "#/definitions/soldPoliciesToApplicantEnum",
                     "ui:widget": "radio",
                     "ui:options": {
-                        "inline": true,
-                        "label": false
+                        "inline": true
                     }
                 },
                 "pastReplacement": {
                     "$ref": "#/definitions/pastReplacementEnum",
                     "ui:widget": "radio",
                     "ui:options": {
-                        "inline": true,
-                        "label": false
+                        "inline": true
                     }
                 },
                 "coverageExpenseConsideration": {
                     "$ref": "#/definitions/coverageExpenseConsiderationEnum",
                     "ui:widget": "radio",
                     "ui:options": {
-                        "inline": true,
-                        "label": false
+                        "inline": true
                     }
                 }
             }
@@ -1887,8 +1895,7 @@
                 "$ref": "#/definitions/materialChangeExpEnum",
                 "ui:widget": "radio",
                 "ui:options": {
-                    "inline": true,
-                    "label": false
+                    "inline": true
                 }
             },
             "materialChangeReason": {
@@ -1963,8 +1970,7 @@
                 "$ref": "#/definitions/rateChangeAcknowledgmentEnum",
                 "ui:widget": "radio",
                 "ui:options": {
-                    "inline": true,
-                    "label": false
+                    "inline": true
                 }
             },
             "totalAnnuityValue": {
@@ -1974,25 +1980,23 @@
             },
             "financialProducts": {
                 "assetsDistribution": {
-                    "items": {
-                        "productType": {
-                            "$ref": "#/definitions/financialProducts_assetsDistribution_productTypeEnum",
-                            "ui:options": {
-                                "label": false
-                            }
-                        },
-                        "qualificationType": {
-                            "$ref": "#/definitions/financialProducts_assetsDistribution_qualificationTypeEnum",
-                            "ui:widget": "radio",
-                            "ui:options": {
-                                "inline": true,
-                                "label": false
-                            }
-                        },
-                        "amount": {
-                            "ui:options": {
-                                "label": false
-                            }
+                    "productType": {
+                        "$ref": "#/definitions/financialProducts_assetsDistribution_productTypeEnum",
+                        "ui:options": {
+                            "label": false
+                        }
+                    },
+                    "qualificationType": {
+                        "$ref": "#/definitions/financialProducts_assetsDistribution_qualificationTypeEnum",
+                        "ui:widget": "radio",
+                        "ui:options": {
+                            "inline": true,
+                            "label": false
+                        }
+                    },
+                    "amount": {
+                        "ui:options": {
+                            "label": false
                         }
                     }
                 },
@@ -2002,8 +2006,7 @@
                             "$ref": "#/definitions/financialProducts_totalAsset_qualificationTypeEnum",
                             "ui:widget": "radio",
                             "ui:options": {
-                                "inline": true,
-                                "label": false
+                                "inline": true
                             }
                         },
                         "assetType": {
@@ -2038,56 +2041,30 @@
                 "ui:widget": "radio",
                 "$ref": "#/definitions/investProduct_annuityFitsRiskToleranceEnum",
                 "ui:options": {
-                    "inline": true,
-                    "label": false
+                    "inline": true
                 }
             }
         },
         "financialObjectives": {
-            "financialObjectives": {
-                "ui:options": {
-                    "widget": "checkboxes",
-                    "label": false
+            "buyingReason": {
+                "items": {
+                    "ui:options": {
+                        "widget": "checkboxes",
+                        "label": false
+                    },
+                    "$ref": "#/definitions/financialObjectives_buyingReasonEnum"
                 }
             },
-            "sourceOfPremium": {
+            "buyingReasonDetails": {
                 "ui:options": {
-                    "widget": "checkboxes",
-                    "label": false
-                }
-            },
-            "wouldMeetFinancialNeeds": {
-                "ui:options": {
-                    "widget": "radio",
-                    "label": false,
-                    "enumNames": [
-                        "Yes",
-                        "No"
-                    ]
-                }
-            },
-            "isReplacementOrlifeInsuranceContract": {
-                "ui:options": {
-                    "widget": "radio",
-                    "label": false,
-                    "enumNames": [
-                        "Yes",
-                        "No"
-                    ]
-                }
-            },
-            "contractReplacement": {
-                "ui:options": {
-                    "widget": "checkboxes",
                     "label": false
                 }
             },
             "annuityMeetsFinancialNeeds": {
-                "ui:widget": "radio",
                 "ui:options": {
-                    "inline": true,
-                    "label": false
-                }
+                    "inline": true
+                },
+                "$ref": "#/definitions/financialObjectives_annuityMeetsFinancialNeedsEnum"
             }
         },
         "liquidityOptions": {

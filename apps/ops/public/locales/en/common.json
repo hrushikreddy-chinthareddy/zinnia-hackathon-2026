@@ -4199,7 +4199,7 @@
             "label": "Select the appropriate form that needs to be updated."
         }
     },
-    "suitability": {
+    "suitabilityTask": {
         "tabs": {
             "taskReview": "Input Suitability Data",
             "documentSelection": "New Form(s) Selection",
@@ -4223,7 +4223,7 @@
             "submitTask": "Submit Suitability details"
         }
     },
-    "suitabilityreview": {
+    "suitabilityReviewTask": {
         "tabs": {
             "taskReview": "Review Suitability",
             "confirm": "Confirm"

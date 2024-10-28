@@ -14,7 +14,7 @@ import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-da
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { ProcessType } from '@deps/models/case/enums';
 import { docTypes } from '@deps/models/case/helpers';
-import { TaskType } from '@deps/models/case/task';
+import { TaskType, TaskTypeToEnumMap } from '@deps/models/case/task';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
@@ -102,23 +102,23 @@ export const getServerSideProps = withPageAuthRequired({
             UserPermission.AllowReadCaseManagement
         );
         if (!hasPermissionToReadCaseManagement) {
-            return {
-                redirect: {
-                    destination: '/403',
-                    permanent: false,
-                },
-            };
+            // return {
+            //     redirect: {
+            //         destination: '/403',
+            //         permanent: false,
+            //     },
+            // };
         }
 
         // If feature flag is not enabled, redirect to error page
-        if (!isFormFeatureEnabled(ProcessType.SUITABILITY_REVIEW, clientId, featureFlagDecisions)) {
+        if (!isFormFeatureEnabled(ProcessType.SUITABILITY, clientId, featureFlagDecisions)) {
             logWarn('task/:id::feature flag not enabled', { clientId });
-            return {
-                redirect: {
-                    destination: '/403',
-                    permanent: false,
-                },
-            };
+            // return {
+            //     redirect: {
+            //         destination: '/403',
+            //         permanent: false,
+            //     },
+            // };
         }
 
         try {
@@ -140,33 +140,33 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
-            const { taskType, carrier, data, caseId, process } = task || {};
-            const { documentNumber, contractNum, clientCode } = task?.data || {};
+            const { taskType, carrier, data, caseId, process } = task;
+            const { documentNumber, contractNum } = task.data;
 
             const processType = (query.processType as ProcessType) || '';
-            const taskFormSchema = await getTaskFormMetadata(carrier || '', taskType as TaskType, processType);
+            const taskFormSchema = await getTaskFormMetadata(carrier || '', TaskTypeToEnumMap[taskType], processType, accessToken);
             const { formSchema, uiSchema } = taskFormSchema ?? {};
 
             if (!formSchema || !uiSchema) {
                 logError('task::Form schema not found', {
                     taskId,
                     documentNumber,
-                    clientCode,
+                    carrier,
                     contractNum,
-                    file: 'pages/task',
+                    file: `pages/${taskType}`,
                     function: 'getServerSideProps',
                 });
             }
 
-            const response = await searchPolicySSR(contractNum, [clientCode?.toUpperCase() as Carrier], accessToken, 1, 0);
+            const response = await searchPolicySSR(contractNum, [carrier?.toUpperCase() as Carrier], accessToken, 1, 0);
             const planCode = response ? response[0]?.planCode : null;
             if (!planCode) {
                 logError('task::Policy plan code not found', {
                     taskId,
                     documentNumber,
-                    clientCode,
+                    carrier,
                     contractNum,
-                    file: 'pages/task',
+                    file: `pages/${taskType}`,
                     function: 'getServerSideProps',
                 });
                 return {
@@ -183,9 +183,9 @@ export const getServerSideProps = withPageAuthRequired({
                 logError('task::Policy not found', {
                     taskId,
                     documentNumber,
-                    clientCode,
+                    carrier,
                     contractNum,
-                    file: 'pages/task',
+                    file: `pages/${taskType}`,
                     function: 'getServerSideProps',
                 });
                 return {
@@ -195,21 +195,21 @@ export const getServerSideProps = withPageAuthRequired({
                     },
                 };
             }
-            const taskInfoLink = buildTaskLink(taskId, caseId || '', process || '', documentNumber, clientCode);
+            const taskInfoLink = buildTaskLink(taskId, caseId || '', process || '', documentNumber, carrier);
 
-            const docType = docTypes[task?.process || ''];
+            const docType = docTypes[task?.process || ''] || '';
             return {
                 props: {
                     ...translations,
                     policy,
                     docType,
                     documentNumber,
-                    clientCode,
+                    carrier,
                     taskId,
                     taskType,
                     formSchema,
                     uiSchema,
-                    taskData: data.data || {},
+                    taskData: data || {},
                     caseId,
                     taskInfoLink,
                 },

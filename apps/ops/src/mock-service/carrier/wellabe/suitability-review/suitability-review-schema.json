@@ -5,6 +5,12 @@
         "description": "",
         "type": "object",
         "definitions": {
+            "suitabilityStatus": {
+                "enum": [
+                    "ACCEPT",
+                    "DECLINE"
+                ]
+            },
             "declineReason": {
                 "enum": [
                     "SPIF_DECLINED",
@@ -71,10 +77,7 @@
                     "suitabilityStatus": {
                         "type": "string",
                         "title": "Suitability Decision",
-                        "enum": [
-                            "DECLINE",
-                            "ACCEPT"
-                        ],
+                        "$ref": "#/definitions/suitabilityStatus",
                         "default": "ACCEPT"
                     }
                 },
@@ -152,7 +155,11 @@
             },
             "suitabilityStatus": {
                 "ui:options": {
-                    "widget": "radio"
+                    "widget": "radio",
+                    "enumNames": [
+                        "Accept",
+                        "Decline"
+                    ]
                 }
             },
             "declineReason": {

@@ -13,6 +13,7 @@ import { logError, logInfo, parseErrorInformation } from '@deps/utils/server-log
 const baseCasesUrl = `${baseAppUrl}/api/case/v1/cases`;
 const baseTasksUrl = `${baseAppUrl}/api/case/v1/tasks`;
 const ssrCasesUrl = `${se2ApiServerUrl}/cases`;
+const ssrSchemaUrl = `${se2ApiServerUrl}`;
 
 export const getCaseTasksSSR = async (
     caseId: string,
@@ -184,7 +185,7 @@ export const getTaskFormMetadataSSR = async (
     accessToken?: string
 ): Promise<FormMetadata | null> => {
     try {
-        const url = `${ssrCasesUrl}/v1/form/metadata?process=${processType}&taskType=${taskType}`;
+        const url = `${ssrSchemaUrl}/form/metadata?process=${processType}&taskType=${taskType}`;
         logInfo('getTaskFormMetadataSSR', {
             file: 'queries/api/newBusiness/v1/suitability',
             function: 'getTaskFormMetadataSSR',

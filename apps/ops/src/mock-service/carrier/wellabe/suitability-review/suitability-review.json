@@ -1,17 +1,20 @@
 {
-    "_id": "TA000000013545",
+    "id": "TA000000013372",
     "correlationId": "e3a4a780-de9d-4fa9-b0aa-2dc936d8a94f",
-    "caseId": "CA0000372640",
+    "caseId": "CA0000371122",
     "source": "BPM.Suitability",
     "externalTaskId": "61f65203-def6-4b17-bb1c-febf1d481573",
     "templateId": "g9f78538-18b6-45f1-b365-59f75a1fc198",
-    "process": "Suitability",
+    "process": "Withdrawal",
     "carrier": "SBGC",
-    "taskType": "SUITABILITY_REVIEW_TASK",
-    "taskName": "Suitability Review Task",
+    "taskType": "WithdrawalFormInputTask",
+    "taskName": "Withdrawal form input",
     "taskDetail": "The Suitability must be reviewed for given rules",
-    "status": "NEW",
+    "status": "COMPLETED",
     "data": {
+        "contractNum": "7700002658",
+        "clientCode": "SBGC",
+        "documentNumber": "20241008-MAN-997616",
         "suitabiltyRules": [
             {
                 "issue": "Disposable Income",
@@ -34,8 +37,13 @@
                 "applicationValue": "78%"
             }
         ],
-        "suitabilityStatus": "Accept",
-        "declineReason": "NOT_ELIGIBLE",
+        "suitabilityReviewStatus": {
+            "suitabilityStatus": "DECLINE",
+            "declineReason": [
+                "SPIF_DECLINED",
+                "BENEFIT_LOSS"
+            ]
+        },
         "attachment": [
             {
                 "documentId": "12344",
@@ -44,7 +52,7 @@
             }
         ]
     },
-    "queue": "queue_suitability",
+    "queue": null,
     "assigneePartyId": "adea3f47d69740178fbd688e6e768cd1",
     "assignedAt": "2024-10-16T14:20:33.757Z",
     "assignee": "anurag.chaudhary@zinnia.com",
@@ -55,5 +63,7 @@
     "updatedByPartyId": "SYSTEM",
     "updatedDate": "2024-10-16T14:20:33.757Z",
     "taskCreatedOn": "2024-10-16T14:20:28.223Z",
-    "taskUpdatedOn": "2024-10-16T14:20:28.223Z"
+    "taskUpdatedOn": "2024-10-16T14:20:28.223Z",
+    "createdAt": "2024-10-14T10:21:35Z",
+    "updatedAt": "2024-10-15T19:48:30Z"
 }

@@ -22,7 +22,7 @@ export const TaskForm = ({ isSummaryView = false }: TaskFormProps) => {
 
     return (
         <DynamicForm
-            formData={formData.data}
+            formData={formData}
             formSchema={formSchema}
             uiSchema={uiSchema}
             onChange={handleChange}

@@ -66,7 +66,7 @@ export const fetchTasks = async (caseId: string, caseType: CaseType) => {
 export const getTaskFormMetadata = async (clientId: string, taskType?: TaskType, processType?: ProcessType, accessToken?: string) => {
     const isMockService = true;
     if (isMockService) {
-        return mockService.getTaskFormMetadataSSRMock(clientId);
+        return mockService.getTaskFormMetadataSSRMock();
     } else {
         return getTaskFormMetadataSSR(clientId, taskType, processType, accessToken);
     }
