@@ -101,7 +101,6 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
           size="small"
           mode="link"
           onClick={() => setOpen(true)}
-          aria-label="add new bank"
         >
           <Icon small type={IconType.ADD} />
           Add another bank account
