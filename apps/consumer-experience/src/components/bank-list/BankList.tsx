@@ -8,6 +8,7 @@ import { getPolicyProfile } from '@/queries/policy-queries';
 import { QueryKeys } from '@/queries/query-keys';
 import { useBpmStore } from '@/store/store';
 import { PolicyProfile } from '@/types/policy';
+import { EVERLY_CONTACT_PHONE_NUMBER } from '@/utils/data';
 import { shouldStopBankPolling } from '@/utils/policy';
 
 import styles from './BankList.module.css';
@@ -85,6 +86,13 @@ export const BankList: FC<BankListProps> = ({
           <h2 id="addBankSection" className="mb-lg">
             Banking Details
           </h2>
+          <p className="mb-lg">
+            Need help updating banking details? Give us a call at{' '}
+            <a href={`tel:+${EVERLY_CONTACT_PHONE_NUMBER}`}>
+              {EVERLY_CONTACT_PHONE_NUMBER}
+            </a>
+            .
+          </p>
           <div className={styles.multipleItemsInSection}>{allBankData}</div>
           {allowBankingChanges && <AddBankSidesheet partyId={data.partyId} />}
         </div>

@@ -115,6 +115,11 @@ export default async function Profile({ params }: Props) {
 
   return (
     <div className="container">
+      <CallForAssistance
+        callToAction="The ability to edit contact info is coming soon."
+        contactPrompt="For now, call"
+        customInstruction="to make changes."
+      />
       <div className="info-card-container">
         <div>
           <h2 className="mb-lg">Name</h2>
