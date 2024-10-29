@@ -48,7 +48,6 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     placeholder,
     label,
 }: WidgetProps<T, S, F>) {
-    multiple = true;
     const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
 
     const _onChange = (isSelected: boolean, value: string) => {
@@ -57,19 +56,26 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
                 index => index !== enumOptions?.findIndex(option => option.value.toString() === value).toString()
             );
         }
-
         const newValue = getValue(isSelected, value, enumOptions, selectedIndexes, multiple);
         onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
     };
+
+    const _onChangeSingle = (value: string) => {
+        const newValue = getValue(false, value, enumOptions, selectedIndexes, multiple);
+        onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
+    };
+
     const showPlaceholderOption = !multiple && schema.default === undefined;
     let selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
-    const selectedValues =
-        enumOptions?.reduce((acc: { [key: string]: string }, option, index) => {
-            if (selectedIndexes?.includes(index.toString())) {
-                acc[option.value] = option.label;
-            }
-            return acc;
-        }, {}) ?? {};
+
+    const selectedValues = multiple
+        ? enumOptions?.reduce((acc: { [key: string]: string }, option, index) => {
+              if (selectedIndexes?.includes(index.toString())) {
+                  acc[option.value] = option.label;
+              }
+              return acc;
+          }, {}) ?? {}
+        : enumOptions?.find(option => option.value === value)?.value ?? '';
 
     const selectOptions =
         enumOptions?.map((option: any) => ({
@@ -79,29 +85,46 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
         })) ?? [];
 
     return (
-        <SelectComponent
-            id={id}
-            isMultiselect={true}
-            label={label}
-            value={selectedValues}
-            required={required}
-            disabled={disabled || readonly}
-            onChange={_onChange}
-            options={selectOptions}
-            placeholder={placeholder}
-            className="max-w-sm"
-        >
-            {showPlaceholderOption && <option value="">{placeholder}</option>}
-            {Array.isArray(enumOptions) &&
-                enumOptions.map(({ value, label }, i) => {
-                    const disabled = enumDisabled && enumDisabled.indexOf(value) !== -1;
-                    return (
-                        <option key={i} value={String(i)} disabled={disabled}>
-                            {label}
-                        </option>
-                    );
-                })}
-        </SelectComponent>
+        <>
+            {multiple && (
+                <SelectComponent
+                    id={id}
+                    isMultiselect={true}
+                    label={label}
+                    value={selectedValues as { [key: string]: string }}
+                    required={required}
+                    disabled={disabled || readonly}
+                    onChange={_onChange}
+                    options={selectOptions}
+                    placeholder={placeholder}
+                    className="max-w-sm"
+                >
+                    {showPlaceholderOption && <option value="">{placeholder}</option>}
+                    {Array.isArray(enumOptions) &&
+                        enumOptions.map(({ value, label }, i) => {
+                            const disabled = enumDisabled && enumDisabled.indexOf(value) !== -1;
+                            return (
+                                <option key={i} value={String(i)} disabled={disabled}>
+                                    {label}
+                                </option>
+                            );
+                        })}
+                </SelectComponent>
+            )}
+            {!multiple && (
+                <SelectComponent
+                    id={id}
+                    label={label}
+                    value={selectedValues as string}
+                    required={required}
+                    disabled={disabled || readonly}
+                    onChange={_onChangeSingle}
+                    options={selectOptions}
+                    placeholder={placeholder}
+                    className="max-w-sm"
+                />
+            )}
+        </>
     );
 }
 

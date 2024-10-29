@@ -27,18 +27,17 @@ const TextField = (props: TextFieldProps) => {
 
     return (
         <>
-            {/* <FieldValue
-                name={id}
-                label={<Label labelFor={id}>{label}</Label>}
+            {!!label && <Label labelFor={id}>{label}</Label>}
+            <input
                 id={id}
+                className={`${classes}`}
                 disabled={disabled}
-                onChange={onChange}
+                onChange={e => onChange(e.target.value)}
+                placeholder={label}
+                value={value}
                 onBlur={onBlur}
                 onFocus={onFocus}
-            ></FieldValue> */}
-
-            {!!label && <Label labelFor={id}>{label}</Label>}
-            <input id={id} className={`${classes}`} onChange={onChange} placeholder={label} value={value} />
+            />
         </>
     );
 };

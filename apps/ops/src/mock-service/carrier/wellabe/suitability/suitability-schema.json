@@ -1,7 +1,7 @@
 {
     "formSchema": {
+        "type": "object",
         "$schema": "http://json-schema.org/draft-07/schema#",
-        "title": "",
         "definitions": {
             "partyTypeEnum": {
                 "enum": [
@@ -400,7 +400,6 @@
                 ]
             }
         },
-        "type": "object",
         "properties": {
             "parties": {
                 "type": "array",
@@ -408,7 +407,6 @@
                 "minItems": 1,
                 "items": {
                     "type": "object",
-                    "title": "",
                     "properties": {
                         "partyType": {
                             "type": "string",
@@ -555,6 +553,10 @@
                         "employment": {
                             "type": "object",
                             "title": "Employment Information",
+                            "required": [
+                                "employmentStatus",
+                                "occupation"
+                            ],
                             "properties": {
                                 "employmentStatus": {
                                     "type": "array",
@@ -603,11 +605,7 @@
                                         }
                                     ]
                                 }
-                            },
-                            "required": [
-                                "employmentStatus",
-                                "occupation"
-                            ]
+                            }
                         }
                     }
                 }
@@ -622,7 +620,7 @@
                         "$ref": "#/definitions/lineOfBusinessEnum"
                     },
                     "productCode": {
-                        "type": "string",
+                        "type": "number",
                         "title": "Product Code"
                     },
                     "productType": {
@@ -635,7 +633,7 @@
                         "$ref": "#/definitions/qualPlanTypeEnum"
                     },
                     "annualPaymentAmt": {
-                        "type": "string",
+                        "type": "number",
                         "title": "Annual Payment Amount"
                     }
                 }
@@ -645,7 +643,7 @@
                 "title": "Application Information",
                 "properties": {
                     "replacementInd": {
-                        "type": "string",
+                        "type": "boolean",
                         "title": "Replacement Indicator",
                         "$ref": "#/definitions/replacementIndEnum"
                     },
@@ -663,17 +661,17 @@
                         "title": "Additional Information",
                         "properties": {
                             "soldPoliciesToApplicant": {
-                                "type": "string",
+                                "type": "boolean",
                                 "title": "Sold Policies to Applicant",
                                 "$ref": "#/definitions/soldPoliciesToApplicantEnum"
                             },
                             "pastReplacement": {
-                                "type": "string",
+                                "type": "boolean",
                                 "title": "Past Replacement",
                                 "$ref": "#/definitions/pastReplacementEnum"
                             },
                             "coverageExpenseConsideration": {
-                                "type": "string",
+                                "type": "boolean",
                                 "title": "Coverage Expense Consideration",
                                 "$ref": "#/definitions/coverageExpenseConsiderationEnum"
                             }
@@ -686,15 +684,15 @@
                 "title": "Fiscal Data",
                 "properties": {
                     "annualIncome": {
-                        "type": "string",
+                        "type": "number",
                         "title": "Annual Income"
                     },
                     "netWorth": {
-                        "type": "string",
+                        "type": "number",
                         "title": "Net Worth"
                     },
                     "liquidNetWorth": {
-                        "type": "string",
+                        "type": "number",
                         "title": "Liquid Net Worth"
                     },
                     "sourceOfIncome": {
@@ -1173,12 +1171,13 @@
     },
     "uiSchema": {
         "$schema": "http: //json-schema.org/draft-07/schema#",
+        "type": "object",
         "definitions": {
-            "partyTypeEnum": {
-                "enum": [
-                    "PERSON",
-                    "ORGANIZATION",
-                    "OTHERS"
+            "partyTypeEnumNames": {
+                "enumNames": [
+                    "Person",
+                    "Orginazation",
+                    "Others"
                 ]
             },
             "roleTypeEnum": {
@@ -1576,10 +1575,13 @@
         },
         "parties": {
             "items": {
+                "ui:options": {
+                    "label": false
+                },
                 "partyType": {
-                    "$ref": "#/definitions/partyTypeEnum",
                     "ui:options": {
-                        "label": false
+                        "label": false,
+                        "$ref": "#/definitions/partyTypeEnumNames"
                     },
                     "ui:helpText": "Applicant's type"
                 },
@@ -1817,7 +1819,8 @@
             },
             "annualPaymentAmt": {
                 "ui:options": {
-                    "label": false
+                    "label": false,
+                    "widget": "ValueWidget"
                 }
             }
         },
@@ -1868,17 +1871,20 @@
             "annualIncome": {
                 "ui:options": {
                     "inline": true,
-                    "label": false
+                    "label": false,
+                    "widget": "ValueWidget"
                 }
             },
             "netWorth": {
                 "ui:options": {
-                    "label": false
+                    "label": false,
+                    "widget": "ValueWidget"
                 }
             },
             "liquidNetWorth": {
                 "ui:options": {
-                    "label": false
+                    "label": false,
+                    "widget": "ValueWidget"
                 }
             },
             "sourceOfIncome": {
@@ -1930,23 +1936,24 @@
             },
             "totalAssets": {
                 "ui:options": {
-                    "label": false
+                    "label": false,
+                    "widget": "ValueWidget"
                 }
             },
             "totalDebt": {
                 "ui:options": {
-                    "label": false
+                    "label": false,
+                    "widget": "ValueWidget"
                 }
             },
             "annualExpenses": {
                 "ui:options": {
-                    "label": false
+                    "label": false,
+                    "widget": "ValueWidget"
                 }
             },
             "sourceOfFunds": {
-                "ui:options": {
-                    "label": false
-                },
+                "ui:options": {},
                 "items": {
                     "ui:options": {
                         "label": false
@@ -1975,28 +1982,31 @@
             },
             "totalAnnuityValue": {
                 "ui:options": {
-                    "label": false
+                    "label": false,
+                    "widget": "ValueWidget"
                 }
             },
             "financialProducts": {
                 "assetsDistribution": {
-                    "productType": {
-                        "$ref": "#/definitions/financialProducts_assetsDistribution_productTypeEnum",
-                        "ui:options": {
-                            "label": false
-                        }
-                    },
-                    "qualificationType": {
-                        "$ref": "#/definitions/financialProducts_assetsDistribution_qualificationTypeEnum",
-                        "ui:widget": "radio",
-                        "ui:options": {
-                            "inline": true,
-                            "label": false
-                        }
-                    },
-                    "amount": {
-                        "ui:options": {
-                            "label": false
+                    "items": {
+                        "productType": {
+                            "$ref": "#/definitions/financialProducts_assetsDistribution_productTypeEnum",
+                            "ui:options": {
+                                "label": false
+                            }
+                        },
+                        "qualificationType": {
+                            "$ref": "#/definitions/financialProducts_assetsDistribution_qualificationTypeEnum",
+                            "ui:widget": "radio",
+                            "ui:options": {
+                                "inline": true
+                            }
+                        },
+                        "amount": {
+                            "ui:options": {
+                                "label": false,
+                                "widget": "ValueWidget"
+                            }
                         }
                     }
                 },
@@ -2017,7 +2027,8 @@
                         },
                         "amount": {
                             "ui:options": {
-                                "label": false
+                                "label": false,
+                                "widget": "ValueWidget"
                             }
                         }
                     }
