@@ -1,14 +1,14 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
-import { createContext, useContext } from 'react';
+import { createContext, ReactNode, useContext } from 'react';
 
 import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
 import { PermissionsModel, UserPermission } from '@deps/models/user-profile';
-import { checkTuple, getCarrierList } from '@deps/queries/api/fga';
+import { checkTuple, getCarrierList, checkIsSuperAdminClient } from '@deps/queries/api/fga';
 import { AUDIENCE } from '@deps/queries/api-config';
 import { FgaRelation } from '@deps/types/fga';
-
 export interface PermissionsContextProps {
     permissions: PermissionsModel;
+    getUserPartyId: () => string;
     getIsAdvisorsExcel: () => Promise<boolean>;
     getClientIds: (permission: UserPermission) => Promise<string[]>;
     doesUserHavePagePermission: (permission: UserPermission) => Promise<boolean>;
@@ -17,6 +17,7 @@ export interface PermissionsContextProps {
         planCode: string | string[] | undefined,
         policyNumber: string | undefined
     ) => Promise<boolean>;
+    getIsSuperAdmin: () => Promise<boolean>;
 }
 
 export const PermissionContext = createContext<PermissionsContextProps>({} as PermissionsContextProps);
@@ -25,15 +26,24 @@ export const usePermissionsContext = () => {
     return useContext(PermissionContext);
 };
 
-interface PermissionsProviderProps {
-    children: React.ReactNode;
-}
-
-export const PermissionsProvider: React.FC<PermissionsProviderProps> = ({ children }) => {
+export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
     const permissionsKey = AUDIENCE + '/permissions';
 
     const { user } = useUser();
     const partyId = user?.partyId as string;
+
+    const getIsSuperAdmin = async (): Promise<boolean> => {
+        try {
+            if (!partyId) return false;
+
+            const isSuperAdmin = await checkIsSuperAdminClient({
+                partyId,
+            });
+            return !!isSuperAdmin;
+        } catch {
+            return false;
+        }
+    };
 
     const getIsAdvisorsExcel = async (): Promise<boolean> => {
         if (!partyId) return false;
@@ -49,6 +59,10 @@ export const PermissionsProvider: React.FC<PermissionsProviderProps> = ({ childr
         }
 
         return false;
+    };
+
+    const getUserPartyId = (): string => {
+        return partyId;
     };
 
     const getPermissionSet = (): PermissionsModel => {
@@ -96,7 +110,17 @@ export const PermissionsProvider: React.FC<PermissionsProviderProps> = ({ childr
     const permissions = getPermissionSet();
 
     return (
-        <PermissionContext.Provider value={{ permissions, getIsAdvisorsExcel, getClientIds, doesUserHavePagePermission, canEditPolicy }}>
+        <PermissionContext.Provider
+            value={{
+                permissions,
+                getIsAdvisorsExcel,
+                getClientIds,
+                getUserPartyId,
+                doesUserHavePagePermission,
+                canEditPolicy,
+                getIsSuperAdmin,
+            }}
+        >
             {children}
         </PermissionContext.Provider>
     );

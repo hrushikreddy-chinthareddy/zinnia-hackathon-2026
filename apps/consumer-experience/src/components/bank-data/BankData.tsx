@@ -13,11 +13,10 @@ import { Name } from '@/components/pii/Name';
 import { RoutingNumber } from '@/components/pii/RoutingNumber';
 
 import styles from './BankData.module.css';
-import { AddEditBankSidesheet } from '../add-edit-bank/AddEditBankSidesheet';
-import { FormMode } from '../add-edit-bank/shared-types';
+import { RemoveBankSidesheet } from '../remove-bank/RemoveBankSidesheet';
 
 interface BankDetailProps extends BankDetail {
-  editBankEnabled?: boolean;
+  removeBankEnabled?: boolean;
   numberOfAccounts: number;
   partyId: string;
 }
@@ -30,7 +29,7 @@ export const BankData = ({
   partyId,
   nameOnAccount,
   routingNumber,
-  editBankEnabled,
+  removeBankEnabled,
   numberOfAccounts,
   bankId,
 }: BankDetailProps) => {
@@ -39,9 +38,8 @@ export const BankData = ({
       <div className={styles.bankName}>
         <div className="typography-labels-label-lg justify-between">
           <BankName bankName={branchName} />
-          {editBankEnabled && (
-            <AddEditBankSidesheet
-              mode={FormMode.EDIT}
+          {removeBankEnabled && (
+            <RemoveBankSidesheet
               partyId={partyId}
               autopayEnabled={autopayEnabled}
               numberOfAccounts={numberOfAccounts}

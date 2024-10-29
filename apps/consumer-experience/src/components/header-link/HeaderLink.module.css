@@ -30,4 +30,5 @@
 
 .headerLinkChevron {
   transform: rotate(90deg);
+  color: var(--color-base-text-text-link);
 }

@@ -13,16 +13,22 @@ export interface ConfirmDialogProps {
   confirmCallback?: () => void;
   confirmText?: string;
   linkText?: string;
+  linkClassName?: string;
   message?: string;
   title?: string;
+  cancelDescription?: string;
+  confirmDescription?: string;
 }
 
 export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   cancelText = 'No',
   cancelCallback,
+  cancelDescription,
   confirmCallback,
+  confirmDescription,
   confirmText = 'Yes',
   linkText = 'Open',
+  linkClassName,
   message,
   title = 'Are you sure?',
 }: ConfirmDialogProps) => {
@@ -36,7 +42,10 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
-        <Button className={styles.confirmTrigger} mode="link">
+        <Button
+          className={clsx([styles.confirmTrigger, linkClassName])}
+          mode="link"
+        >
           {linkText}
         </Button>
       </Dialog.Trigger>
@@ -59,9 +68,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
               </Button>
             </Dialog.Close>
           </Dialog.Title>
-          <Dialog.Description
-            className={clsx(styles.message, 'typography-content-body')}
-          >
+          <Dialog.Description className={styles.message}>
             {message}
           </Dialog.Description>
           <div className={styles.buttons}>
@@ -71,12 +78,17 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
                 onClick={() => {
                   confirmCallback?.();
                 }}
+                aria-label={confirmDescription}
               >
                 {confirmText}
               </Button>
             </Dialog.DialogClose>
             <Dialog.DialogClose asChild>
-              <Button mode="secondary" onClick={cancel}>
+              <Button
+                mode="secondary"
+                onClick={cancel}
+                aria-label={cancelDescription}
+              >
                 {cancelText}
               </Button>
             </Dialog.DialogClose>

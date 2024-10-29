@@ -1,3 +1,4 @@
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Label, Icon, IconType } from '@zinnia/bloom/components';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
@@ -14,7 +15,6 @@ import { standardDateMonthDayYear } from '@/utils/dates';
 import { DEFAULT_UNAVAILABLE_STRING, pluralize } from '@/utils/strings';
 
 import styles from './PolicyOverview.module.css';
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 const COVERAGE = 'Coverage';
 
@@ -106,10 +106,7 @@ export const Coverage = async ({
             Label={
               <Label
                 interactiveElements={[
-                  <CoveragePopover
-                    key="coverage-popover"
-                    dataTimestamp={effectiveDate}
-                  />,
+                  <CoveragePopover key="coverage-popover" />,
                 ]}
               >
                 {COVERAGE}

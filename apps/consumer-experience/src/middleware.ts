@@ -111,12 +111,16 @@ const applyMockCookies = (req: NextRequest, res: NextResponse<unknown>) => {
 
 export async function middleware(req: NextRequest) {
   const resNext = NextResponse.next();
+
   const session = await getSession(resNext);
   const pathname = req.nextUrl.pathname;
   const isLoginLikeOrRoot = pathname.includes('/login') || pathname === '/';
   const isSessionPage = pathname === '/session';
-  // const featureFlags = await getFeatureFlagQuery(req);
 
+  // These are set to true with the feature flag query commented out becuase we were seeing a 500 error when
+  // trying to make a route handler call from within this file on mypolicyview domains. We were seeing a cert
+  // issue in the logs that is most likely related
+  // const featureFlags = await getFeatureFlagQuery(req);
   const annuityModeOn = true;
   const resetDeliveryDateActive = true;
 

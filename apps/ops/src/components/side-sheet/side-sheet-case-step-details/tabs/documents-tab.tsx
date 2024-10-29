@@ -21,7 +21,11 @@ function SideSheetDocument({ document, ...rest }: { document: DocumentView } & R
                 <Icon width={24} height={24} className="shrink-0" type={IconType.DOCUMENT_TEXT} />
                 <div className="flex flex-col">
                     <Content variant={ContentVariant.BodySm} details={document.name} />
-                    <Content className="text-gray-600" variant={ContentVariant.BodySm} details={detailsString} />
+                    <Content
+                        className="text-gray-600"
+                        variant={ContentVariant.BodySm}
+                        details={t('caseOverview.sidesheet.documentId', { documentId: document.id }) as string}
+                    />
                 </div>
             </div>
             <DocumentPreviewer {...document.previewDocProps}>{t('caseOverview.sidesheet.view')}</DocumentPreviewer>

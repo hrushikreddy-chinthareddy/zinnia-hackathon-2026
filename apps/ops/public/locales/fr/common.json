@@ -40,6 +40,9 @@
             "annuitization": "Annuitisation"
         },
         "navLinks": {
+            "accessManagement": {
+                "text": "Gestion des accès"
+            },
             "caseManagement": {
                 "text": "Gestion des dossiers",
                 "link": "/cases"
@@ -1133,8 +1136,9 @@
             "unavailablePolicyNumber": "Numéro de police indisponible…"
         },
         "sidesheet": {
-            "additionalData": "Données additionnelles",
+            "additionalData": "Détails",
             "multiInstance": "Étapes",
+            "documentId": "ID du document: {{documentId}}",
             "documents": "Documents",
             "view": "Voir",
             "viewTask": "Voir la tâche"
@@ -1145,7 +1149,7 @@
             "email": "Envoyé par courrier électronique à {{email}}"
         },
         "correspondenceStepDetails": {
-            "additionalData": "Données additionnelles",
+            "additionalData": "Détails",
             "status": "Statut",
             "sentDate": "Date d'envoi",
             "dateCompleted": "Date d'achèvement",
@@ -2669,6 +2673,7 @@
         "documentsEmptyTitle": "Aucun document pour l'instant.",
         "documentsEmptyText": "Il semble qu’aucun document ne soit joint à cette affaire.",
         "documentUnsupported": "Le type de contenu {{extension}} n'est pas pris en charge.",
+        "documentNotFound": "Oops! Quelque chose s'est mal passé lors de la recuperation du document !",
         "notes": "Remarques",
         "notesEmptyTitle": "Aucune note pour l'instant.",
         "notesEmptyText": "On dirait qu’aucune note n’est jointe à cette affaire.",

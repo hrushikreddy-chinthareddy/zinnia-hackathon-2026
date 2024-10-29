@@ -44,18 +44,14 @@ export const TotalFundValue = async ({
         Label: (
           <Label
             interactiveElements={[
-              <LabelPopover
-                title={TOTAL_FUND_VALUE}
-                key={TOTAL_FUND_VALUE}
-                content={
-                  <p>
-                    This is the amount of your account value currently allocated
-                    in this specific fund. It's often the same amount as the
-                    account value, but may differ if you have any outstanding
-                    loans from the policy.
-                  </p>
-                }
-              />,
+              <LabelPopover title={TOTAL_FUND_VALUE} key={TOTAL_FUND_VALUE}>
+                <p>
+                  This is the amount of your account value currently allocated
+                  in this specific fund. It's often the same amount as the
+                  account value, but may differ if you have any outstanding
+                  loans from the policy.
+                </p>
+              </LabelPopover>,
             ]}
           >
             {TOTAL_FUND_VALUE}

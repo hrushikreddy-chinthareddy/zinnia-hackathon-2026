@@ -15,18 +15,20 @@ import MassMutualReg60Form from '@deps/containers/otp/reg60-forms/mass-mutual/ma
 import { FormProvider } from '@deps/containers/otp/reg60-forms/reg60-form-provider';
 import { CreateReg60CaseProps } from '@deps/containers/otp/reg60-forms/reg60.types';
 import { DefaultSidebarContent } from '@deps/containers/otp/reg60-forms/utils/reg60-constants';
-import { isNonProductionEnvironment } from '@deps/helpers/environment.helper';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { shouldNavbarOverlay } from '@deps/helpers/page-layout';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
+import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 import { UserPermission } from '@deps/models/user-profile';
 import { getDocumentSSR } from '@deps/queries/api/documents';
 import { getCaseTaskByIdSSR } from '@deps/queries/api/v2/task';
 import { SCREEN_BREAKPOINTS } from '@deps/types/constants';
+import { SegmentPageName } from '@deps/types/segment-analytics';
+import { isNonProductionEnvironment } from '@deps/utils/environment.helper';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logError, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
@@ -43,13 +45,22 @@ const determineFormToRender = (clientId: string, document: DocumentData): React.
     }
 };
 
-export default function Reg60({ document, form, transactionsHistory }: CreateReg60CaseProps) {
+export default function Reg60({ document, form, transactionsHistory, user }: CreateReg60CaseProps) {
     const router = useRouter();
     const { clientId, clientIdOverride, id } = router.query;
     const clientForFormDetermination = isNonProductionEnvironment() ? clientIdOverride || clientId : clientId;
 
+    useSegmentPageTracker(user, SegmentPageName.Reg60, {
+        clientId,
+        clientForFormDetermination,
+        clientIdOverride,
+        documentNumber: document.documentNumber,
+        formId: form.id,
+    });
+
     const [isLoading, setIsLoading] = useState(false);
     const [taskApiError, setTaskApiError] = useState('');
+
     const formParts = determineFormToRender(clientForFormDetermination as string, document);
     if (!formParts) {
         logError('NBReg60Case::No form parts', {
@@ -220,6 +231,7 @@ export const getServerSideProps = withPageAuthRequired({
                 form,
                 locale,
                 transactionsHistory: null,
+                user,
             },
         };
     },

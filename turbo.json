@@ -53,7 +53,8 @@
         "NEXT_PUBLIC_DATADOG_BROWSER_APPLICATION_ID",
         "NEXT_PUBLIC_DATADOG_ENV",
         "NEXT_PUBLIC_GIT_SHA"
-      ]
+      ],
+      "dependsOn": ["^build"]
     },
     "@zinnia/utils#build": {
       "dependsOn": ["^build"]
