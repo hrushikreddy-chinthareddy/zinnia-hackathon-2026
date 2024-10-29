@@ -78,6 +78,9 @@
     "@zinnia/utils#dev": {
       "dependsOn": ["^build"]
     },
+    "ops#test": {
+      "dependsOn": ["^build"]
+    },
     "test": {},
     "build-storybook": {},
     "consumer-experience#test": {
