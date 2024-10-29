@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import EverlyIcon from '@/app/styles/everly/assets/everly-logo-icon.svg';
+import EverlyIcon from '@/app/styles/everly/assets/everly-logo-icon-new.svg';
 import WellabeIcon from '@/app/styles/wellabe/assets/wellabe-logo-icon.svg';
 import { UserBadge } from '@/components/user-badge/UserBadge';
 import { useFeatureFlags } from '@/hooks/use-feature-flags';
@@ -129,7 +129,7 @@ export const NavMenu = ({
                       })}
                     >
                       {CarrierIcon ? (
-                        <CarrierIcon width={16} height={16} />
+                        <CarrierIcon width={16} height={16} color="#ffffff" />
                       ) : (
                         <Icon type={IconType.MATCHES} />
                       )}
