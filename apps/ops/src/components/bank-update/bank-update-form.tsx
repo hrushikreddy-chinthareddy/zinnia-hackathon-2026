@@ -53,18 +53,20 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
         event.preventDefault();
         setIsLoading(true);
         let successfulCaseUpdate;
+        console.log(bankUpdateForm(TaskStatus.Completed, initialForm, formSource, bankUpdateDetails, formSignature, document));
+
         if (TaskApiVersionMapper[initialForm.taskType] === ApiVersion.v2) {
             successfulCaseUpdate = await updateTask(
                 initialForm.caseId,
                 initialForm?.id || '',
-                bankUpdateForm(TaskStatus.Completed, initialForm, formSource, bankUpdateDetails, formSignature) as any,
+                bankUpdateForm(TaskStatus.Completed, initialForm, formSource, bankUpdateDetails, formSignature, document) as any,
                 timer
             );
         } else {
             successfulCaseUpdate = await putCaseTask(
                 initialForm.taskType,
                 initialForm.taskId,
-                bankUpdateForm(CaseStatus.Submit, initialForm, formSource, bankUpdateDetails, formSignature) as any
+                bankUpdateForm(CaseStatus.Submit, initialForm, formSource, bankUpdateDetails, formSignature, document) as any
             );
         }
         if (successfulCaseUpdate) {

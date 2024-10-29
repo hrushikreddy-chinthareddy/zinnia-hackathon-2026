@@ -11,6 +11,7 @@ import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { DocumentType } from '@deps/models/case/document';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
+import { mapTaskToActiveWithdrawalCaseTask } from '@deps/operations/tasks/v2/helpers';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { getDocumentSSR } from '@deps/queries/api/documents';
 import { getPolicyDetailsSsr, searchPolicySSR } from '@deps/queries/api/policies';
@@ -23,22 +24,16 @@ type BankUpdateProps = {
     clientCode: string;
     policy: Policy;
     featureFlagDecisions: any;
-    activeForm: any;
+    form: any;
     document: any;
 };
 
 const BankUpdate = (props: BankUpdateProps) => {
-    const { activeForm, clientCode, policy, featureFlagDecisions, document } = props;
+    const { form, clientCode, policy, featureFlagDecisions, document } = props;
 
     return (
         <div className="flex w-full flex-col overflow-auto px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10  bg-white h-screen">
-            <FormProvider
-                form={activeForm}
-                initialForm={activeForm}
-                issueState={''}
-                isOpenNigo={false}
-                featureFlagDecisions={featureFlagDecisions}
-            >
+            <FormProvider form={form} initialForm={form} issueState={''} isOpenNigo={false} featureFlagDecisions={featureFlagDecisions}>
                 <div className="bg-gray-100 flex justify-center my-2">
                     <BankUpdateContainer policy={policy} clientCode={clientCode} document={document} />
                 </div>
@@ -103,6 +98,8 @@ export const getServerSideProps = withPageAuthRequired({
                 function: 'getServerSideProps',
             });
 
+            const form = mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm.data, userId: user?.name });
+
             const { documentNumber, contractNum, clientCode } = activeForm?.data || {};
 
             const userInfoForLogging = getUserInfoFromUser(user);
@@ -152,7 +149,7 @@ export const getServerSideProps = withPageAuthRequired({
             return {
                 props: {
                     ...translations,
-                    activeForm,
+                    form,
                     clientCode,
                     policy,
                     document,

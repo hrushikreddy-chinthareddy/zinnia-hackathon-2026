@@ -3,6 +3,7 @@ import { TFunction } from 'next-i18next';
 import { BankingFields, DisbursementFields } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helper';
 import { createValidator } from '@deps/containers/otp/utils/helper-utils';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
+import { DocumentData } from '@deps/models/case/document';
 import { ChannelType, ContributionType } from '@deps/models/case/enums';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import { TaskSource } from '@deps/models/case/task';
@@ -212,7 +213,8 @@ export const getBankUpdatePayload = (
     initialForm: ActiveWithdrawalCase,
     formSource: FormSource,
     bankUpdateDetails: DisbursementParts,
-    formSignature: FormSignature
+    formSignature: FormSignature,
+    document: DocumentData
 ) => {
     const formUpdateData = {
         updateType: 'BankUpdate',
@@ -258,6 +260,7 @@ export const getBankUpdatePayload = (
 
     return {
         ...initialForm.data,
+        onbaseCaseId: document?.caseId,
         formRequest: {
             formData: formData,
             formSource: formSource,
@@ -288,12 +291,13 @@ export const bankUpdateForm = (
     initialForm: ActiveWithdrawalCase,
     formSource: FormSource,
     bankUpdateDetails: DisbursementParts,
-    formSignature: FormSignature
+    formSignature: FormSignature,
+    document: DocumentData
 ) => {
     return {
         source: TaskSource.ZinniaTaskManagement,
         taskType: initialForm.taskType,
         status,
-        data: getBankUpdatePayload(initialForm, formSource, bankUpdateDetails, formSignature),
+        data: getBankUpdatePayload(initialForm, formSource, bankUpdateDetails, formSignature, document),
     };
 };
