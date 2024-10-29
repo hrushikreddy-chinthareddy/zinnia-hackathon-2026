@@ -37,7 +37,7 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
     const [formSubmitted, setFormSubmitted] = useState(false);
     const [formError, setFormError] = useState(false);
     const { initialForm, formSource, setFormSource, formSignature } = useContext(FormDataContext);
-
+    console.log(initialForm, '<===initialForm');
     useEffect(() => {
         setFormSource({
             ...formSource,
@@ -58,7 +58,7 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
         if (TaskApiVersionMapper[initialForm.taskType] === ApiVersion.v2) {
             successfulCaseUpdate = await updateTask(
                 initialForm.caseId,
-                initialForm?.id || '',
+                initialForm?.taskId || '',
                 bankUpdateForm(TaskStatus.Completed, initialForm, formSource, bankUpdateDetails, formSignature, document) as any,
                 timer
             );
