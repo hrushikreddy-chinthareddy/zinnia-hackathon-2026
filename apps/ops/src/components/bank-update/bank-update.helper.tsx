@@ -1,10 +1,11 @@
+import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
 import { BankingFields, DisbursementFields } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helper';
 import { createValidator } from '@deps/containers/otp/utils/helper-utils';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DocumentData } from '@deps/models/case/document';
-import { ChannelType, ContributionType } from '@deps/models/case/enums';
+import { BankUpdateType, ChannelType, ContributionType } from '@deps/models/case/enums';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import { TaskSource } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
@@ -18,6 +19,7 @@ import {
     PartyRoles,
 } from '@deps/models/case/withdrawal/case';
 import { DisbursementParts } from '@deps/models/case/withdrawal/disbursement-types';
+import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { SignatureFields } from '../otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 
@@ -214,10 +216,11 @@ export const getBankUpdatePayload = (
     formSource: FormSource,
     bankUpdateDetails: DisbursementParts,
     formSignature: FormSignature,
-    document: DocumentData
+    document: DocumentData,
+    bankUpdateType: BankUpdateType
 ) => {
     const formUpdateData = {
-        updateType: 'BankUpdate',
+        updateType: bankUpdateType,
         contractNumber: initialForm.data.contractNum,
         bank: [
             {
@@ -231,10 +234,20 @@ export const getBankUpdatePayload = (
                 bankType: bankUpdateDetails.bankType ?? ContributionType.Disbursement,
             },
         ],
-        //validate below in payload
         doesCheckMeetSecRequiremnt: bankUpdateDetails.doesCheckMeetSecurityRequirements,
         voidCheck: bankUpdateDetails.isVoidCheckAttached,
         programs: null,
+    };
+
+    const source = {
+        ...formSource,
+        channel: {
+            text: formSource.channel.text ?? ChannelType.Phone,
+        },
+        businessKey: document.documentNumber,
+        receivedDate: dayjs(document.dateReceived, 'M/D/YYYY hh:mm:ss A').format(ZAHARA_API_DATE_FORMAT),
+        receivedDateTime: dayjs(document.dateReceived, 'M/D/YYYY hh:mm:ss A').format('YYYY-MM-DDTHH:mm:ss:Z'),
+        sourceSysId: 'ONBASE',
     };
 
     let signatureV;
@@ -243,10 +256,6 @@ export const getBankUpdatePayload = (
         signatureV = formSignature;
     } else {
         signatureV = null;
-    }
-
-    if (Object.keys(formSource.channel).length === 0) {
-        formSource.channel = { text: ChannelType.Phone };
     }
 
     const formData = {
@@ -263,7 +272,7 @@ export const getBankUpdatePayload = (
         onbaseCaseId: document?.caseId,
         formRequest: {
             formData: formData,
-            formSource: formSource,
+            formSource: source,
             formUpdateData: formUpdateData,
             formDisbursement: null,
             formDistribution: null,
@@ -286,18 +295,19 @@ export const getBankUpdatePayload = (
     };
 };
 
-export const bankUpdateForm = (
+export const bankUpdateFormData = (
     status: TaskStatus | CaseStatus,
     initialForm: ActiveWithdrawalCase,
     formSource: FormSource,
     bankUpdateDetails: DisbursementParts,
     formSignature: FormSignature,
-    document: DocumentData
+    document: DocumentData,
+    bankUpdateType: BankUpdateType
 ) => {
     return {
         source: TaskSource.ZinniaTaskManagement,
         taskType: initialForm.taskType,
         status,
-        data: getBankUpdatePayload(initialForm, formSource, bankUpdateDetails, formSignature, document),
+        data: getBankUpdatePayload(initialForm, formSource, bankUpdateDetails, formSignature, document, bankUpdateType),
     };
 };

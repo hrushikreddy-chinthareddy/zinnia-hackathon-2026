@@ -26,3 +26,8 @@ export enum ChannelType {
     Phone = 'PHONE',
     Email = 'EMAIL',
 }
+
+export enum BankUpdateType {
+    BankUpdate = 'BankUpdate',
+    BankTerminate = 'BankTerminate',
+}

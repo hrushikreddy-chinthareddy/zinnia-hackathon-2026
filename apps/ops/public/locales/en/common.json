@@ -1552,6 +1552,7 @@
             "distributionMethod": {
                 "payeeName": "Payee name",
                 "channel": "Channel",
+                "confirmTerminate": "Are you sure you want to terminate",
                 "type": "Type",
                 "participantId": "Participant id",
                 "accountHolder": "Account holder",

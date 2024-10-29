@@ -1,12 +1,11 @@
-import dayjs from 'dayjs';
 import router from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { FormEvent, useContext, useEffect, useState } from 'react';
+import { FormEvent, useContext, useState } from 'react';
 
 import SelectSimple from '@deps/components/select/select';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DocumentData } from '@deps/models/case/document';
-import { ApiVersion, ChannelType, ContributionType } from '@deps/models/case/enums';
+import { ApiVersion, BankUpdateType, ChannelType, ContributionType } from '@deps/models/case/enums';
 import { TaskApiVersionMapper } from '@deps/models/case/helpers';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { CaseStatus } from '@deps/models/case/withdrawal/case';
@@ -15,9 +14,8 @@ import { putCaseTask } from '@deps/queries/api/v1/task';
 import { updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as ChevronLeftIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-left.svg';
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
-import { BankUpdateFieldConfigs, bankUpdateForm, channelOptions, signaturesConfig, typeOptions } from './bank-update.helper';
+import { BankUpdateFieldConfigs, bankUpdateFormData, channelOptions, signaturesConfig, typeOptions } from './bank-update.helper';
 import Button, { ButtonSize, ButtonType, ButtonVariant } from '../button/button';
 import CardInfo from '../card/card-info/card-info';
 import { FieldSize } from '../fields/field';
@@ -36,38 +34,46 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
     const [isLoading, setIsLoading] = useState(false);
     const [formSubmitted, setFormSubmitted] = useState(false);
     const [formError, setFormError] = useState(false);
-    const { initialForm, formSource, setFormSource, formSignature } = useContext(FormDataContext);
-    console.log(initialForm, '<===initialForm');
-    useEffect(() => {
-        setFormSource({
-            ...formSource,
-            businessKey: document.documentNumber,
-            receivedDate: dayjs(document.dateReceived, 'M/D/YYYY hh:mm:ss A').format(ZAHARA_API_DATE_FORMAT),
-            receivedDateTime: dayjs(document.dateReceived, 'M/D/YYYY hh:mm:ss A').format('YYYY-MM-DDTHH:mm:ss:Z'),
-            sourceSysId: 'ONBASE',
-        });
-    }, []);
-
     const [timer] = useState(performance.now());
-    const handleFormSubmit = async (event: FormEvent) => {
-        event.preventDefault();
-        setIsLoading(true);
-        let successfulCaseUpdate;
-        console.log(bankUpdateForm(TaskStatus.Completed, initialForm, formSource, bankUpdateDetails, formSignature, document));
 
+    const { initialForm, formSource, setFormSource, formSignature } = useContext(FormDataContext);
+
+    const requestBankUpdate = async (bankUpdateType: BankUpdateType) => {
+        let successfulCaseUpdate;
+        setIsLoading(true);
         if (TaskApiVersionMapper[initialForm.taskType] === ApiVersion.v2) {
             successfulCaseUpdate = await updateTask(
                 initialForm.caseId,
-                initialForm?.taskId || '',
-                bankUpdateForm(TaskStatus.Completed, initialForm, formSource, bankUpdateDetails, formSignature, document) as any,
+                initialForm?.taskId,
+                bankUpdateFormData(
+                    TaskStatus.Completed,
+                    initialForm,
+                    formSource,
+                    bankUpdateDetails,
+                    formSignature,
+                    document,
+                    bankUpdateType
+                ) as any,
                 timer
             );
         } else {
             successfulCaseUpdate = await putCaseTask(
                 initialForm.taskType,
                 initialForm.taskId,
-                bankUpdateForm(CaseStatus.Submit, initialForm, formSource, bankUpdateDetails, formSignature, document) as any
+                bankUpdateFormData(
+                    CaseStatus.Submit,
+                    initialForm,
+                    formSource,
+                    bankUpdateDetails,
+                    formSignature,
+                    document,
+                    bankUpdateType
+                ) as any
             );
+        }
+        if (successfulCaseUpdate && bankUpdateType === BankUpdateType.BankTerminate) {
+            router.push('/create-case');
+            return;
         }
         if (successfulCaseUpdate) {
             setIsLoading(false);
@@ -75,6 +81,25 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
         } else {
             setFormError(true);
         }
+    };
+
+    const handleFormAction = async (event: FormEvent, bankUpdateType: BankUpdateType) => {
+        event.preventDefault();
+        let confirmCancel;
+        if (bankUpdateType === BankUpdateType.BankTerminate) {
+            confirmCancel = window.confirm(t('distributionMethod.confirmTerminate') as string);
+            if (confirmCancel) {
+                requestBankUpdate(bankUpdateType);
+            }
+        }
+        if (bankUpdateType === BankUpdateType.BankUpdate) {
+            requestBankUpdate(bankUpdateType);
+        }
+    };
+
+    const handleBackRoute = () => {
+        setIsLoading(true);
+        router.back();
     };
 
     if (isLoading) {
@@ -99,11 +124,6 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
         );
     }
 
-    const handleBackRoute = () => {
-        setIsLoading(true);
-        router.back();
-    };
-
     return (
         <>
             {!formSubmitted && (
@@ -123,7 +143,7 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
                         <label className="font-primary text-lg font-bold">Bank Details</label>
                         <Button
                             className="mr-4"
-                            onClick={() => {}}
+                            onClick={e => handleFormAction(e, BankUpdateType.BankTerminate)}
                             size={ButtonSize.Small}
                             variant={ButtonVariant.Default}
                             disabled={false}
@@ -180,7 +200,7 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
                             <div className="flex">
                                 <Button
                                     className="mr-4"
-                                    onClick={handleFormSubmit}
+                                    onClick={e => handleFormAction(e, BankUpdateType.BankUpdate)}
                                     size={ButtonSize.Small}
                                     variant={ButtonVariant.Default}
                                     disabled={isLoading}
