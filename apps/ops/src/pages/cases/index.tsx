@@ -5,14 +5,12 @@ import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { FieldSize } from '@deps/components/fields/field';
 import FilterButton from '@deps/components/filter-button/filter-button';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import NoNavLayout from '@deps/components/no-nav-layout';
 import { PageLoader, PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import { PageHead } from '@deps/components/page-title';
 import SearchBar from '@deps/components/search/search-bar';
-import SelectSimple from '@deps/components/select/select';
 import { CaseResultTable } from '@deps/components/table/case-result-table';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
@@ -69,6 +67,13 @@ interface CaseManagementDashboardProps extends SegmentTrackedPageProps {
 const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: CaseManagementDashboardProps) => {
     const [caseManagementFilters, setCaseManagementFilters] = useCaseFilterQueryStore();
     const [loadedStoredFilters, setLoadedStoredFilters] = useState(false);
+    const handleCreatedBySort = useCallback(() => {
+        setCaseManagementFilters(prevFilters => ({
+            ...prevFilters,
+            sortDirection: prevFilters.sortDirection === 'asc' ? 'desc' : 'asc',
+            offset: 0,
+        }));
+    }, []);
 
     const { t } = useTranslation();
 
@@ -350,10 +355,15 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
 
         return (
             <>
-                <CaseResultTable cases={cases} searchValues={caseManagementFilters.searchValue} />
+                <CaseResultTable
+                    cases={cases}
+                    searchValues={caseManagementFilters.searchValue}
+                    handleSort={handleCreatedBySort}
+                    sortDirection={caseManagementFilters.sortDirection}
+                />
             </>
         );
-    }, [caseTableData, caseManagementFilters.searchValue]);
+    }, [caseTableData, caseManagementFilters.searchValue, handleCreatedBySort]);
 
     // Sidesheet Support
     const sideSheet = useSideSheetContext();
@@ -404,24 +414,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                             >
                                 {t('caseManagementDashboard.refineResults')}
                             </NavElement>
-                        </div>
-
-                        <div className="w-54 sm:mt-4 md:mt-0">
-                            <SelectSimple
-                                size={FieldSize.Small}
-                                value={caseManagementFilters.sortDirection}
-                                options={[
-                                    { label: t('caseManagementDashboard.sortOptions.newest'), value: 'desc' },
-                                    { label: t('caseManagementDashboard.sortOptions.oldest'), value: 'asc' },
-                                ]}
-                                onChange={value => {
-                                    setCaseManagementFilters(prevFilters => ({
-                                        ...prevFilters,
-                                        sortDirection: value as 'asc' | 'desc',
-                                        offset: 0,
-                                    }));
-                                }}
-                            />
                         </div>
                     </div>
                     <StatusFilter
