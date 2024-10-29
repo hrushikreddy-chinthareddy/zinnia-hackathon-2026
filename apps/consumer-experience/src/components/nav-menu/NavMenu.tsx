@@ -114,7 +114,7 @@ export const NavMenu = ({
               )}
 
               {carrierPolicyDetails &&
-                carrierPolicyDetails.length &&
+                carrierPolicyDetails.length > 0 &&
                 carrierPolicyDetails.map((detail: CarrierListDetail) => {
                   const CarrierIcon =
                     carrierIcons[detail.carrierName as CarrierNames];
