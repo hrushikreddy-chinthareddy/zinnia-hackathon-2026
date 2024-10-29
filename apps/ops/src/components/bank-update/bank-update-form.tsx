@@ -71,10 +71,7 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
                 ) as any
             );
         }
-        if (successfulCaseUpdate && bankUpdateType === BankUpdateType.BankTerminate) {
-            router.push('/create-case');
-            return;
-        }
+
         if (successfulCaseUpdate) {
             setIsLoading(false);
             setFormSubmitted(true);
