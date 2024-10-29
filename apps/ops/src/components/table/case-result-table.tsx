@@ -118,7 +118,6 @@ export const CaseResultTable = ({ cases, searchValues, handleSort, sortDirection
                         entities: otherAgents,
                         truncate: true,
                     };
-                    console.log(searchValues);
 
                     const imageSrc = getCarrierLogoByClientId(singleCase.carrier);
 
