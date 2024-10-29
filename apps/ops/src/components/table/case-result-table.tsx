@@ -1,4 +1,6 @@
 import {
+    Icon,
+    IconType,
     Link,
     Table,
     TableBody,
@@ -67,9 +69,11 @@ const PartyWithOthers = ({ text, entities, highlights }: PartyWithOthersProps) =
 interface CaseResultTableProps {
     cases: Case[];
     searchValues?: SearchViewQuery;
+    handleSort: () => void;
+    sortDirection: 'asc' | 'desc';
 }
 
-export const CaseResultTable = ({ cases, searchValues }: CaseResultTableProps) => {
+export const CaseResultTable = ({ cases, searchValues, handleSort, sortDirection }: CaseResultTableProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     return (
         <Table>
@@ -82,8 +86,12 @@ export const CaseResultTable = ({ cases, searchValues }: CaseResultTableProps) =
                     <TableHeaderCell>Owner/SSN</TableHeaderCell>
                     <TableHeaderCell>Policy</TableHeaderCell>
                     <TableHeaderCell>Agent/SSN</TableHeaderCell>
-                    {/* to do - add onClick handleSort method */}
-                    <TableHeaderCell sortable>Created</TableHeaderCell>
+                    <TableHeaderCell sortable onClick={handleSort}>
+                        <div className="flex align-center gap-1">
+                            Created
+                            <Icon type={sortDirection === 'asc' ? IconType.ARROW_UP : IconType.ARROW_DOWN} color="#00628B" />
+                        </div>
+                    </TableHeaderCell>
                 </TableRow>
             </TableHeader>
             <TableBody>
@@ -172,6 +180,7 @@ export const CaseResultTable = ({ cases, searchValues }: CaseResultTableProps) =
                                 <div className="relative">
                                     <Tooltip
                                         placement={TooltipPlacement.TopRight}
+                                        triggerClassName="w-auto"
                                         trigger={
                                             <ChipStatus
                                                 status={singleCase.caseStatus}
@@ -203,6 +212,7 @@ export const CaseResultTable = ({ cases, searchValues }: CaseResultTableProps) =
                                 <div className="flex items-center gap-2">
                                     <Tooltip
                                         placement={TooltipPlacement.TopRight}
+                                        triggerClassName="w-auto"
                                         trigger={
                                             <div className="flex h-6 w-6 items-center justify-center rounded border-2 border-gray-100">
                                                 <Image
@@ -235,7 +245,21 @@ export const CaseResultTable = ({ cases, searchValues }: CaseResultTableProps) =
                                     <CaseDetailField pii={true} text={formatSSN(agentSsn)} className={styles.detail} />
                                 </div>
                             </TableCell>
-                            <TableCell>{getTimeText()}</TableCell>
+                            <TableCell className="text-right">
+                                <div className="relative flex justify-end">
+                                    <Tooltip
+                                        placement={TooltipPlacement.TopRight}
+                                        trigger={
+                                            <Typography variant={TypographyVariant.BodySm} className={styles.detail}>
+                                                {getTimeText()}
+                                            </Typography>
+                                        }
+                                        triggerClassName="w-auto"
+                                    >
+                                        {dayjs(singleCase.createdAt).format('M/D/YYYY at h:mm a z')}
+                                    </Tooltip>
+                                </div>
+                            </TableCell>
                         </TableRow>
                     );
                 })}

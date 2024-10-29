@@ -7,6 +7,7 @@ export type PopoverOnTruncateProps = {
     placement?: TooltipPlacement;
     popoverBody?: string | JSX.Element;
     popoverClassName?: string;
+    triggerClassName?: string;
 };
 
 export default function PopoverOnTruncate({
@@ -14,6 +15,7 @@ export default function PopoverOnTruncate({
     title,
     placement = TooltipPlacement.TopRight,
     popoverClassName,
+    triggerClassName,
 }: PopoverOnTruncateProps) {
     const ref = useRef<HTMLElement>(null);
     const [isOverflown, setIsOverflown] = useState(false);
@@ -45,7 +47,7 @@ export default function PopoverOnTruncate({
 
     if (!isOverflown) return childrenClone;
     return (
-        <Tooltip tooltipClassName={popoverClassName} trigger={childrenClone} placement={placement} className="relative">
+        <Tooltip tooltipClassName={popoverClassName} trigger={childrenClone} placement={placement} triggerClassName={triggerClassName}>
             {title}
         </Tooltip>
     );
