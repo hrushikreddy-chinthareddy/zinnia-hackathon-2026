@@ -40,7 +40,6 @@ import {
   getCarrierSubdomainById,
   isValidCarrierSubdomain,
 } from './utils/carriers';
-import { applySetCookie } from './utils/cookies';
 import { lineOfBusinessUrlPath } from './utils/data';
 import { applyThemeCookies } from './utils/theme';
 import {
@@ -95,7 +94,6 @@ export async function middleware(req: NextRequest) {
   const resetDeliveryDateActive = true;
 
   applyThemeCookies(req, resNext);
-  applySetCookie(req, resNext);
 
   if (session) {
     const searchParmas = req.nextUrl.searchParams;
@@ -328,7 +326,6 @@ export async function middleware(req: NextRequest) {
     }
 
     applyMockCookies(req, resNext);
-    applySetCookie(req, resNext);
     return resNext;
   }
 
