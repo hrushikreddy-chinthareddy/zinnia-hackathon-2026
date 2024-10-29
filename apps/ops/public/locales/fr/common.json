@@ -2351,7 +2351,13 @@
             }
         },
         "history": {
+            "allEvents": "Tous les événements",
+            "pendingEvents": "Événements à venir",
             "completedEvents": "Événements terminés",
+            "canceledEvents": "Événements annulés",
+            "reversedEvents": "Événements inversés",
+            "pendingreversalEvents": "Événements en attente d'annulation",
+            "failedEvents": "Événements échoués",
             "filter": {
                 "address": "Adresse",
                 "all": "Tous",
@@ -2362,6 +2368,7 @@
                 "byEvent": "Filtrer par type d'événement :",
                 "byPeople": "Filtrer par type de changement :",
                 "byPolicyEvent": "Filtrer par événement de police :",
+                "byStatus": "Filtrer par statut :",
                 "byTransaction": "Filtrer par type de transaction :",
                 "byYear": "Filtrer par année :",
                 "clearAllFilters": "Effacer tous les filtres",
@@ -2382,7 +2389,13 @@
                 "systematicPrograms": "Programmes systématiques",
                 "tpd": "Désigné par un tiers",
                 "transactions": "Transactions",
-                "withdrawals": "Retraits"
+                "withdrawals": "Retraits",
+                "pending": "En attente",
+                "completed": "Terminé",
+                "canceled": "Annulé",
+                "reversed": "Inversé",
+                "failed": "Échoué",
+                "pendingReversal": "Annulation en attente"
             },
             "loadingEvents": "Chargement des événements...",
             "noEventsTitle": "Aucun événement pour le moment.",
