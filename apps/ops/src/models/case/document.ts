@@ -95,6 +95,10 @@ export interface DocumentErrorResponse {
     message: string;
 }
 
+export enum DocumentDisplayCode {
+    Owner = 1,
+    Producer = 2,
+}
 export interface PolicyDocument {
     caseId: string;
     contractNumber: string;
@@ -110,6 +114,7 @@ export interface PolicyDocument {
     fileType: string;
     periodYear?: string;
     periodQuarter?: string;
+    displayCode?: DocumentDisplayCode;
 }
 
 export interface PolicyDocuments {

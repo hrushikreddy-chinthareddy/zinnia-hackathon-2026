@@ -1,6 +1,6 @@
 {
   "name": "@zinnia/utils",
-  "version": "0.0.1",
+  "version": "0.0.12",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zinnia/digital-experience-monorepo.git"

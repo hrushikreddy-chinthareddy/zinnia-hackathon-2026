@@ -89,7 +89,7 @@ export const UpcomingPremium = async ({
     nextActivityDate,
     nextActivityStatus,
     policyStatus,
-    productType,
+    lineOfBusiness,
   } = data!;
   let currentAmount = amount;
 
@@ -141,7 +141,7 @@ export const UpcomingPremium = async ({
                 interactiveElements={[
                   <UpcomingPremiumPopover
                     key="upcoming-popover"
-                    productType={productType}
+                    lineOfBusiness={lineOfBusiness}
                   />,
                 ]}
               >

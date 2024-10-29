@@ -6,9 +6,9 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import CardContainer from '@deps/containers/card-container/card-container';
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
 import { ReactComponent as Matches } from '@deps/styles/elements/icons/media/matches.svg';
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import { getSalesChannelCardData } from '../policy-details.helper';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 const BASE_KEY = 'policy.detailCards.salesChannel.';
 

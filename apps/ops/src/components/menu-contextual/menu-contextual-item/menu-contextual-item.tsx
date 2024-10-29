@@ -1,3 +1,5 @@
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { SegmentTrackedEventName } from '@deps/types/segment-analytics';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { useRouter } from 'next/router';
 
@@ -7,13 +9,22 @@ export interface MenuContextualItemProps {
     icon?: React.ReactNode;
     onClick?: () => void;
     disabled?: boolean;
+    userPartyId?: string;
 }
 
-const MenuContextualItem = ({ content, icon, href, onClick, disabled }: MenuContextualItemProps) => {
+const MenuContextualItem = ({ content, icon, href, onClick, disabled, userPartyId }: MenuContextualItemProps) => {
     const router = useRouter();
 
     const handleSelect = () => {
         onClick && onClick();
+
+        if (userPartyId) {
+            segmentAnalyticsTrackEvent(SegmentTrackedEventName.PolicyQuickActionsClick, {
+                selectedItemName: content,
+                userId: userPartyId,
+            });
+        }
+        
         router.push(href);
     };
 

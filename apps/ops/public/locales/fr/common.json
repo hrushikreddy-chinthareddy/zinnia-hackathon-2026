@@ -40,6 +40,9 @@
             "annuitization": "Annuitisation"
         },
         "navLinks": {
+            "accessManagement": {
+                "text": "Gestion des accès"
+            },
             "caseManagement": {
                 "text": "Gestion des dossiers",
                 "link": "/cases"
@@ -1097,13 +1100,20 @@
             "steps": "Étapes",
             "taskSideSheetLabel": "Plus d'informations sur la tâche {{task}}",
             "validate": "Valider {{label}}",
+            "viewDetails": "Voir les details",
             "accepted": "Accepté",
             "adverse": "Négative",
             "approved": "Approuvée",
             "declined": "Refusé",
             "rejected": "Rejetée",
             "expired": "Expiré",
-            "amended": "Demande d'offre modifiée"
+            "amended": "Demande d'offre modifiée",
+            "entityTypes": {
+                "agent": "Agent: {{label}}",
+                "pre-note": "Pre-Note: {{label}}",
+                "source of premium": "Source de prétium: {{label}}",
+                "transfer of assets": "Transfert d'actifs: {{label}}"
+            }
         },
         "processDate": {
             "cancled": "Annulé le",
@@ -1125,12 +1135,21 @@
             "unavailableOwnerDetails": "Détails du propriétaire indisponibles…",
             "unavailablePolicyNumber": "Numéro de police indisponible…"
         },
+        "sidesheet": {
+            "additionalData": "Détails",
+            "multiInstance": "Étapes",
+            "documentId": "ID du document: {{documentId}}",
+            "documents": "Documents",
+            "view": "Voir",
+            "viewTask": "Voir la tâche"
+        },
         "communicationSentTemplate": {
             "mail": "envoyé à {{address}}",
             "fax": "Télécopié à {{fax}}",
             "email": "Envoyé par courrier électronique à {{email}}"
         },
         "correspondenceStepDetails": {
+            "additionalData": "Détails",
             "status": "Statut",
             "sentDate": "Date d'envoi",
             "dateCompleted": "Date d'achèvement",
@@ -1869,6 +1888,7 @@
         "sendStatement": {
             "startDate": "Date de début de la période",
             "endDate": "Date de fin de période",
+            "viewStatement": "afficher l'instruction",
             "tabs": {
                 "statementSelection": "Sélection d'instructions",
                 "correspondence": "Correspondence",
@@ -2647,6 +2667,7 @@
         "documentsEmptyTitle": "Aucun document pour l'instant.",
         "documentsEmptyText": "Il semble qu’aucun document ne soit joint à cette affaire.",
         "documentUnsupported": "Le type de contenu {{extension}} n'est pas pris en charge.",
+        "documentNotFound": "Oops! Quelque chose s'est mal passé lors de la recuperation du document !",
         "notes": "Remarques",
         "notesEmptyTitle": "Aucune note pour l'instant.",
         "notesEmptyText": "On dirait qu’aucune note n’est jointe à cette affaire.",

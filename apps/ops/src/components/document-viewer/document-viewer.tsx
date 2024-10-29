@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 import PageLoader from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
@@ -60,6 +60,14 @@ const DocumentViewer = (props: DocumentViewerProps) => {
 
     if (isLoading) {
         return <PageLoader />;
+    }
+
+    if (!documentBinary) {
+        return (
+            <div className="ml-8 mt-8">
+                <Typography variant={TypographyVariant.H3}>{t('sideSheet.documentNotFound')}</Typography>{' '}
+            </div>
+        );
     }
 
     if ((fileExtension === 'htm' || fileExtension === 'html') && documentBinary) {

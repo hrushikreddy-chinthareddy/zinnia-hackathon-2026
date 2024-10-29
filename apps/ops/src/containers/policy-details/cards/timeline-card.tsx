@@ -8,9 +8,9 @@ import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails'
 import { ProductType } from '@deps/models/policy/sor-policy';
 import { ReactComponent as Calendar } from '@deps/styles/elements/icons/content/calendar.svg';
 
+import { mapPolicyTimelineValues } from '../policy-details.helper';
 import EverlyIul from './policy-timeline-details/everly-iul';
 import EverlyUl from './policy-timeline-details/everly-ul';
-import { mapPolicyTimelineValues } from '../policy-details.helper';
 
 const BASE_KEY = 'policy.detailCards.policyTimeline.';
 export interface PolicyTimelineCardData {

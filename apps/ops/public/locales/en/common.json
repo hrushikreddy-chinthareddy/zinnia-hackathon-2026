@@ -40,6 +40,9 @@
             "annuitization": "Annuitization"
         },
         "navLinks": {
+            "accessManagement": {
+                "text": "Access Management"
+            },
             "caseManagement": {
                 "text": "Case Management",
                 "link": "/cases"
@@ -1103,13 +1106,20 @@
             "steps": "Steps",
             "taskSideSheetLabel": "More information about task {{task}}",
             "validate": "Validate {{label}}",
+            "viewDetails": "View details",
             "accepted": "Accepted",
             "adverse": "Adverse",
             "approved": "Approved",
             "declined": "Declined",
             "rejected": "Rejected",
             "expired": "Expired",
-            "amended": "Amended offer requested"
+            "amended": "Amended offer requested",
+            "entityTypes": {
+                "agent": "Agent: {{label}}",
+                "pre-note": "Pre-Note: {{label}}",
+                "source of premium": "Source of Premium: {{label}}",
+                "transfer of assets": "Transfer of Assets: {{label}}"
+            }
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -1131,12 +1141,21 @@
             "unavailableOwnerDetails": "Owner details unavailable…",
             "unavailablePolicyNumber": "Policy number unavailable…"
         },
+        "sidesheet": {
+            "additionalData": "Details",
+            "multiInstance": "Steps",
+            "documentId": "Document ID: {{documentId}}",
+            "documents": "Documents",
+            "view": "View",
+            "viewTask": "View task"
+        },
         "communicationSentTemplate": {
             "mail": "Mailed to: {{address}}",
             "fax": "Faxed to: {{fax}}",
             "email": "Emailed to: {{email}}"
         },
         "correspondenceStepDetails": {
+            "additionalData": "Details",
             "status": "Status",
             "sentDate": "Sent date",
             "dateCompleted": "Date completed",
@@ -1886,6 +1905,7 @@
         "sendStatement": {
             "startDate": "Period start date",
             "endDate": "Period end date",
+            "viewStatement": "view statement",
             "tabs": {
                 "statementSelection": "Statement Selection",
                 "correspondence": "Correspondence",
@@ -2888,6 +2908,7 @@
         "documentsEmptyTitle": "No documents yet.",
         "documentsEmptyText": "Looks like there aren’t any documents attached to this case.",
         "documentUnsupported": "Content Type {{extension}} is unsupported.",
+        "documentNotFound": "Oops! Something went wrong getting the document.",
         "notes": "Notes ({{count}})",
         "notesEmptyTitle": "No notes yet.",
         "notesEmptyText": "Looks like there aren’t any notes attached to this case.",

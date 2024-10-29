@@ -5,8 +5,8 @@ import { defineConfig } from 'cypress';
 import 'dotenv/config';
 
 export default defineConfig({
-  viewportWidth: 1280,
-  viewportHeight: 800,
+  viewportWidth: 1920,
+  viewportHeight: 1080,
   video: false,
   screenshotOnRunFailure: true,
   defaultCommandTimeout: 20000,
@@ -22,8 +22,8 @@ export default defineConfig({
     specPattern: '**/*.feature',
     supportFile: false,
     chromeWebSecurity: false,
-    experimentalModifyObstructiveThirdPartyCode:true,
-    
+    experimentalModifyObstructiveThirdPartyCode: true,
+
 
     async setupNodeEvents(
       on: Cypress.PluginEvents,
