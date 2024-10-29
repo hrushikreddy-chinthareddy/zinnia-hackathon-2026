@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import getCreateCaseConfig from '@deps/containers/otp/create-case-form/create-case-form.helper';
 import { getSlug } from '@deps/helpers/string.helper';
 import { Case, CaseType, Statuses } from '@deps/models/case/case';
-import fetchTasks from '@deps/operations/tasks/taskOperations';
+import { fetchTasks } from '@deps/operations/tasks/taskOperations';
 
 import { Task } from './task-listing.types';
 import TasksListing from './tasks-listing';
