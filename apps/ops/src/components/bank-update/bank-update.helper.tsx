@@ -228,7 +228,7 @@ export const getBankUpdatePayload = (
                 bankName: bankUpdateDetails.bankName,
                 nameOnBankAccount: bankUpdateDetails.accountHolder,
                 routingNumber: bankUpdateDetails.bankRoutingNumber,
-                bankType: bankUpdateDetails.bankType,
+                bankType: bankUpdateDetails.bankType ?? ContributionType.Disbursement,
             },
         ],
         //validate below in payload
