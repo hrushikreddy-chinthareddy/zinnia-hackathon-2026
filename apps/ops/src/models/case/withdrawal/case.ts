@@ -130,7 +130,6 @@ export interface ActiveWithdrawalCase extends DigitalFormWithdrawal {
     data: ActiveWithdrawalCaseData;
     source: string;
     taskId: string;
-    id?: string;
     updatedDate: string; // ISO Date String
 }
 
