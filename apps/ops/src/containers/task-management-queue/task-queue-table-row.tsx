@@ -29,14 +29,19 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions }: TaskQueueTableRowProp
 
     const createdAt = task?.createdAt ? dayjs(task.createdAt).format('MMM DD, YYYY h:mm a') : '-';
     const taskStatus = getTaskStatus(t, task?.status);
-    const documentNumber = task?.data ?  task?.data?.documentNumber :  '-';
+    const documentNumber = task?.data ? task?.data?.documentNumber : '-';
     const carrierName = getCarrierNameByClientId(task?.carrier) || task?.carrier?.toUpperCase();
     const transactionType = task?.process || '';
 
-    const handleStartTask = async (taskData: ManagementTask<TaskStatus>, taskStatus: TaskStatus ) => {
+    const handleStartTask = async (taskData: ManagementTask<TaskStatus>, taskStatus: TaskStatus) => {
         // If feature flag is not enabled, redirect to error page
         if (!isFormFeatureEnabled(taskData?.process.toUpperCase() as ProcessType, taskData?.carrier, featureFlagDecisions)) {
-            logWarn('task-queue::feature flag not enabled', { taskId: taskData.id, documentNumber: taskData?.data?.documentNumber, clientCode: taskData?.carrier, process: taskData?.process});
+            logWarn('task-queue::feature flag not enabled', {
+                taskId: taskData.id,
+                documentNumber: taskData?.data?.documentNumber,
+                clientCode: taskData?.carrier,
+                process: taskData?.process,
+            });
             return {
                 redirect: {
                     destination: '/403',
@@ -51,19 +56,14 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions }: TaskQueueTableRowProp
         }
 
         try {
-            const body = {...taskData, status: TaskStatus.InProgress}
-            const response = await updateTask(
-                taskData.caseId,
-                taskData.id,
-                body,
-                timer
-            );
+            const body = { ...taskData, status: TaskStatus.InProgress, source: 'Zinnia.TaskManagement' };
+            const response = await updateTask(taskData.caseId, taskData.id, body, timer);
 
             if (response) {
                 router.push(`/nigo-entry?taskId=${taskData.id}`);
             }
         } catch (e) {
-            console.error('TaskQueue::Error updating task in progress', e, {taskId: taskData.id, caseId:taskData.caseId});
+            console.error('TaskQueue::Error updating task in progress', e, { taskId: taskData.id, caseId: taskData.caseId });
             router.push(`/create-case/error?errorCode=${ERROR_CODES.DATA_ENTRY_START_TASK_ERROR}`);
         }
     };
@@ -104,6 +104,6 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions }: TaskQueueTableRowProp
             </TableCell>
         </TableRow>
     );
-}
+};
 
 export default TaskQueueTableRow;
