@@ -114,11 +114,11 @@ export const CaseResultTable = ({ cases, searchValues, handleSort, sortDirection
                     const otherAgents = agents.slice(1).map(owner => ({ name: toTitleCase(owner.fullName), ssn: formatSSN(owner.ssn) }));
                     const agentComponentProps = {
                         text: toTitleCase(agents?.[0]?.fullName),
-                        // to do - are highlights needed for agents and are these the right values?
                         highlights: [searchValues?.ownerFirstName, searchValues?.ownerLastName].filter(Boolean) as string[],
                         entities: otherAgents,
                         truncate: true,
                     };
+                    console.log(searchValues);
 
                     const imageSrc = getCarrierLogoByClientId(singleCase.carrier);
 
@@ -180,7 +180,7 @@ export const CaseResultTable = ({ cases, searchValues, handleSort, sortDirection
                                 <div className="relative">
                                     <Tooltip
                                         placement={TooltipPlacement.TopRight}
-                                        triggerClassName="w-auto"
+                                        // triggerClassName="w-auto"
                                         trigger={
                                             <ChipStatus
                                                 status={singleCase.caseStatus}
@@ -212,7 +212,7 @@ export const CaseResultTable = ({ cases, searchValues, handleSort, sortDirection
                                 <div className="flex items-center gap-2">
                                     <Tooltip
                                         placement={TooltipPlacement.TopRight}
-                                        triggerClassName="w-auto"
+                                        // triggerClassName="w-auto"
                                         trigger={
                                             <div className="flex h-6 w-6 items-center justify-center rounded border-2 border-gray-100">
                                                 <Image
@@ -254,7 +254,7 @@ export const CaseResultTable = ({ cases, searchValues, handleSort, sortDirection
                                                 {getTimeText()}
                                             </Typography>
                                         }
-                                        triggerClassName="w-auto"
+                                        // triggerClassName="w-auto"
                                     >
                                         {dayjs(singleCase.createdAt).format('M/D/YYYY at h:mm a z')}
                                     </Tooltip>
