@@ -47,7 +47,12 @@ export default function PopoverOnTruncate({
 
     if (!isOverflown) return childrenClone;
     return (
-        <Tooltip tooltipClassName={popoverClassName} trigger={childrenClone} placement={placement} triggerClassName={triggerClassName}>
+        <Tooltip
+            tooltipClassName={popoverClassName}
+            trigger={childrenClone}
+            placement={placement}
+            // triggerClassName={triggerClassName}
+        >
             {title}
         </Tooltip>
     );

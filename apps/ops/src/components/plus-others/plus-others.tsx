@@ -46,7 +46,7 @@ const PlusOthers = ({ className = '', entities }: PlusOthersProps) => {
                     {` ${t('tooltip.other')}`}
                 </div>
             }
-            triggerClassName="w-auto"
+            // triggerClassName="w-auto"
         >
             {body}
         </Tooltip>

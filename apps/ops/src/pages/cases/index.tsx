@@ -363,7 +363,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                 />
             </>
         );
-    }, [caseTableData, caseManagementFilters.searchValue, handleCreatedBySort]);
+    }, [caseTableData, caseManagementFilters.searchValue, caseManagementFilters.sortDirection, handleCreatedBySort]);
 
     // Sidesheet Support
     const sideSheet = useSideSheetContext();
