@@ -3,7 +3,7 @@
 * does not work well when we are updating variables for themes. Because a variable that should be pointing to another variable ends up pointing to a hex code
 * which is not the correct color for a different theme. Ideaeeallly the only things we would ever need to update are the base colors (found in the theme files)
 * and any variables which point to a different variable than what bloom points to (e.g. the loader), so to hopefully assuage some of that frustration
-* this file maps variables to variables.
+* this file maps the variables that resolve to different hex codes from bloom to variables their appropriate variables.
 * WHEN TO UPDATE THIS FILE
 * 1. a variable name has changed
 * 2. if a variable gets mapped to a new variable, and that new variable is used on bloom and on other themes, then update where the variable is pointing here
@@ -12,8 +12,7 @@
 * WHEN TO UPDATE THE THEME FILE
 * say the designers update --color-chip-border-chip-hover-border to point to --color-status-border-status-success-border BUT only
 * only for everly everly, you'll need to update --color-chip-border-chip-hover-border to point to --color-status-border-status-success-border in the theme file
-* because it's unique to that carrier (which technically shouldn't be an option, but "that's life" as ol' baby blue eyes would say. That's a joke for the over-60-year-olds
-* over-60-year-olds love Frank Sinatra.
+* because it's unique to that carrier (which technically shouldn't be an option, but "that's life" as ol' baby blue eyes would say.
 */
 :root,
 .root,
