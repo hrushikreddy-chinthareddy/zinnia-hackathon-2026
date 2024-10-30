@@ -5,8 +5,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  /* These are not set in bloom, so custom variables to allow for updates
+  background-color: var(--color-avatar-avatar-fill);
+  /* This is not set in bloom, so custom variable to allow for updates
   depending on carrier */
-  background-color: var(--user-badge-background-color);
   color: var(--user-badge-text-color);
 }

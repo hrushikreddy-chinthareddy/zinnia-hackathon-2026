@@ -1,21 +1,3 @@
-/* // TODO: when we launch annuities AND when bloom has been updated with the correct accessibility colors, this should be removed
-IF the bloom colors have not been updated, update these colors to the correct black and white theme*/
-:root:not(:has(main[data-theme='undefined'])) {
-  --color-primary-color-primary-50-percent-opacity: #07204180;
-  --color-primary-color-primary: #072041;
-  --color-primary-color-primary-lightest: #a9c7ff;
-  --color-primary-color-primary-lighter: #7dacfa;
-  --color-primary-color-primary-light: #00468c;
-  --color-primary-color-primary-dark: #003064;
-  --color-secondary-color-secondary: #4c4639;
-  --color-secondary-color-secondary-lightest: #fdf7eb;
-  --color-secondary-color-secondary-lighter: #7e7667;
-  --color-secondary-color-secondary-light: #645e4f;
-  --color-secondary-color-secondary-dark: #353024;
-  --color-accent-color-accent-one: #ea6338;
-  --color-accent-color-accent-two: #faf0dd;
-}
-
 :root:has(main[data-theme='everly']) {
   /*
   * BLOOM
@@ -52,6 +34,5 @@ IF the bloom colors have not been updated, update these colors to the correct bl
   * NOT BLOOM
   * =========
   */
-  --user-badge-background-color: var(--color-secondary-color-secondary);
   --user-badge-text-color: var(--color-base-surface-surface-primary);
 }

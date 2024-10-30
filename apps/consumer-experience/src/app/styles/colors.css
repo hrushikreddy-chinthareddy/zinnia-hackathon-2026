@@ -427,4 +427,12 @@
   /* SIDE SHEET BAR */
 
   /* --color-side-sheet-bar-side-sheet-bar-border: #ff7500; */
+
+  /*
+  * MEASURES
+  * ========
+  */
+  --measure-dimension-button-button-default-radius: var(
+    --measure-dimension-radius-md
+  );
 }
