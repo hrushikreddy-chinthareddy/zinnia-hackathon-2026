@@ -6,12 +6,16 @@
     position: relative;
 }
 
+.tableHeader button {
+    outline-offset: -2px;
+}
+
 .caseLink {
     color: transparent;
     display: block;
     height: 100%;
     left: 0;
-    outline-offset: -1px;
+    outline-offset: -2px;
     position: absolute;
     width: 100%;
     &:focus,
