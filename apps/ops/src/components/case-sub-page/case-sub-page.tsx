@@ -8,10 +8,10 @@ import { ReactComponent as AnnotationsIcon } from '@deps/styles/elements/icons/c
 import { ReactComponent as ProgressIcon } from '@deps/styles/elements/icons/illustrations/check-progress.svg';
 import { CaseDetailsTabValues } from '@deps/types/constants';
 
-import ProgressTab from './case-tabs/progress/progress-tab';
 import CallLogsTab from './case-tabs/call-logs-tab';
 import DocumentsTab from './case-tabs/documents-tab';
 import NotesTab from './case-tabs/notes-tab';
+import ProgressTab from './case-tabs/progress/progress-tab';
 
 export default function CaseSubPage({
     caseDetails,

@@ -1,6 +1,6 @@
+import { Icon, IconType, Tag, TagVariant } from '@zinnia/bloom/components';
 import { TFunction, useTranslation } from 'next-i18next';
 import React, { ReactNode } from 'react';
-import { Icon, IconType, Tag, TagVariant } from '@zinnia/bloom/components';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
