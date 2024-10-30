@@ -1074,9 +1074,9 @@ export enum SortOrder {
 
 export interface FormNigos {
     nigos: NigoMessages[];
-};
+}
 
 export interface NigoMessages {
     exceptionId: string;
     messages: string[];
-};
+}

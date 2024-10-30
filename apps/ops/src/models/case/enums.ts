@@ -23,3 +23,18 @@ export enum SswUpdateOption {
     EFT_DRAW_UPDATE = 'EFT Draw Update',
     NEW = 'New',
 }
+export enum ContributionType {
+    Contribution = 'Contribution',
+    Loan = 'Loan Repayment',
+    Disbursement = 'Disbursement',
+}
+
+export enum ChannelType {
+    Phone = 'PHONE',
+    Email = 'EMAIL',
+}
+
+export enum BankUpdateType {
+    BankUpdate = 'BankUpdate',
+    BankTerminate = 'BankTerminate',
+}

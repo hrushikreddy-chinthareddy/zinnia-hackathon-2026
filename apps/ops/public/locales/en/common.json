@@ -1558,6 +1558,9 @@
             },
             "distributionMethod": {
                 "payeeName": "Payee name",
+                "channel": "Channel",
+                "confirmTerminate": "Are you sure you want to terminate",
+                "type": "Type",
                 "participantId": "Participant id",
                 "accountHolder": "Account holder",
                 "accountNumber": "Account number",
@@ -1619,7 +1622,24 @@
                 "consentAvailable": "Consent Available",
                 "yes": "Yes",
                 "no": "No",
-                "forethought": "Forethought"
+                "forethought": "Forethought",
+                "channelOptions": {
+                    "emailFaxMail": "Email/Fax/Mail",
+                    "phone": "Phone"
+                },
+                "contributionType": {
+                    "contribution": "Contribution",
+                    "loan": "Loan Repayment",
+                    "disbursement": "Disbursement"
+                },
+                "accountTypeO": {
+                    "savings": "Savings",
+                    "checking": "Checking"
+                },
+                "submitted": "Submitted",
+                "close": "Close",
+                "back": "back",
+                "terminate": "Terminate"
             },
             "neaBenefitsSensitivity": "NEA Benefit Sensitivity",
             "distributionInstruction": {
