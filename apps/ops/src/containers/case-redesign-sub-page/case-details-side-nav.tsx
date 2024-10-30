@@ -1,6 +1,5 @@
 import { setCookie } from 'cookies-next';
 import { useTranslation } from 'next-i18next';
-import React from 'react';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
@@ -41,13 +40,15 @@ const CaseDetailsSideNav = ({ CaseAdditionalDetails, carrier }: CaseDetailsSideN
                 isNewPage={true}
                 size={NavElementSize.Small}
                 target="_blank"
-                title={CaseAdditionalDetails[CaseAdditionalDataKeys.formName]}
+                title={CaseAdditionalDetails[CaseAdditionalDataKeys.formShortName]?CaseAdditionalDetails[CaseAdditionalDataKeys.formShortName]:
+                    CaseAdditionalDetails[CaseAdditionalDataKeys.formDisplayName]}
                 type={NavElementType.Link}
                 startIcon={<DocumentIcon width={20} height={20} />}
                 onClick={setCookies}
                 variant={NavElementVariant.Secondary}
             >
-                {CaseAdditionalDetails[CaseAdditionalDataKeys.formName]}
+               {CaseAdditionalDetails[CaseAdditionalDataKeys.formShortName]?CaseAdditionalDetails[CaseAdditionalDataKeys.formShortName]:
+                    CaseAdditionalDetails[CaseAdditionalDataKeys.formDisplayName]}
             </NavElement>
 
             <div className="grid grid-cols-2 my-4">
