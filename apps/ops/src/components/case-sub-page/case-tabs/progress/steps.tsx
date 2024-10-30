@@ -45,15 +45,6 @@ const StepResultTag = ({ step }: { step: TransformedStep }) => {
         case StepTagIds.UnderwritingDeclined:
             text = t('caseOverview.tabs.declined');
             break;
-        // Suitability
-        case StepTagIds.SuitabilityReview:
-            if (step.status === 'COMPLETED') {
-                text = t('caseOverview.tabs.approved');
-                break;
-            } else {
-                text = t('caseOverview.tabs.declined');
-                break;
-            }
         // User Decision
         case StepTagIds.UserAccepted:
             text = t('caseOverview.tabs.accepted');
