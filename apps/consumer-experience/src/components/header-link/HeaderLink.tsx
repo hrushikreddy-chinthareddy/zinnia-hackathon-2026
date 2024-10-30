@@ -35,7 +35,7 @@ export const HeaderLink = ({
           <Icon
             type={IconType.CHEVRON}
             className={styles.headerLinkChevron}
-            color="var(--color-base-icon-icon-action, #1E359C)"
+            color="var(--color-base-icon-icon-action)"
           />
         </Link>
       )}

@@ -35,12 +35,12 @@ main {
 }
 
 a {
-  color: var(--color-base-text-text-link, #1e359c);
+  color: var(--color-links-color-global-link, #1e359c);
   text-decoration: none;
   &:hover {
-    color: var(--color-states-hover-hover-text-link);
+    color: var(--color-links-color-global-link-dark);
     text-decoration: underline;
-    text-decoration-color: var(--color-states-hover-hover-text-link);
+    text-decoration-color: var(--color-links-color-global-link-dark);
     text-underline-position: under;
     text-decoration-thickness: 2px;
   }

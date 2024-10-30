@@ -153,7 +153,10 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
           onClick={() => setOpen(true)}
           aria-label={bankAccessibilityLabel()}
         >
-          <Icon type={IconType.TRASH} />
+          <Icon
+            type={IconType.TRASH}
+            color="var(--color-base-icon-icon-action)"
+          />
         </Button>
       }
     >

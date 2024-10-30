@@ -17,12 +17,16 @@ IF the bloom colors have not been updated, update these colors to the correct bl
 }
 
 :root:has(main[data-theme='everly']) {
-  --color-primary-color-primary-50-percent-opacity: #808080;
-  --color-primary-color-primary: #000000;
-  --color-primary-color-primary-lightest: #e6e6e6;
-  --color-primary-color-primary-lighter: #999999;
-  --color-primary-color-primary-light: #333333;
-  --color-primary-color-primary-dark: #1a1a1a;
+  /*
+  * BLOOM
+  * =========
+  */
+  --color-primary-color-primary-50-percent-opacity: #ff6e1e80;
+  --color-primary-color-primary: #ff6e1e;
+  --color-primary-color-primary-lightest: #feded0;
+  --color-primary-color-primary-lighter: #fdbfa5;
+  --color-primary-color-primary-light: #ff9565;
+  --color-primary-color-primary-dark: #762c00;
   --color-secondary-color-secondary: #c5006e;
   --color-secondary-color-secondary-lightest: #ffd5e3;
   --color-secondary-color-secondary-lighter: #ff9cc0;
@@ -30,4 +34,24 @@ IF the bloom colors have not been updated, update these colors to the correct bl
   --color-secondary-color-secondary-dark: #6a063a;
   --color-accent-color-accent-one: #c5006e;
   --color-accent-color-accent-two: #6a063a;
+  /* These are custom for everly */
+  --color-loader-loader-part-one: var(--color-secondary-color-secondary);
+  --color-loader-loader-part-two: var(--color-secondary-color-secondary);
+  --color-loader-loader-part-three: var(
+    --color-secondary-color-secondary-lighter
+  );
+  --color-gradient-gradient-part-one: var(--color-primary-color-primary);
+  --color-gradient-gradient-part-two: var(--color-secondary-color-secondary);
+  --color-gradient-gradient-part-three: var(--color-secondary-color-secondary);
+  --color-avatar-avatar-fill: var(--color-secondary-color-secondary);
+  --color-side-sheet-bar-side-sheet-bar-border: var(
+    --color-secondary-color-secondary
+  );
+
+  /*
+  * NOT BLOOM
+  * =========
+  */
+  --user-badge-background-color: var(--color-secondary-color-secondary);
+  --user-badge-text-color: var(--color-base-surface-surface-primary);
 }
