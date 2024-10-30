@@ -15,3 +15,11 @@ export enum TypeOfPayment {
     Fixed = 'Fixed',
     Variable = 'Variable',
 }
+
+export enum SswUpdateOption {
+    SSW_UPDATE = 'SSW Update',
+    BANK_UPDATE = 'Bank Update',
+    RMD_UPDATE = 'RMD Update',
+    EFT_DRAW_UPDATE = 'EFT Draw Update',
+    NEW = 'New',
+}

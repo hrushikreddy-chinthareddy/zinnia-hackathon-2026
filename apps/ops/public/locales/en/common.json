@@ -1245,7 +1245,14 @@
             "title": "Title",
             "trustee": "Trustee",
             "type": "Type",
-            "yes": "Yes"
+            "yes": "Yes",
+            "sswUpdateOptions": {
+                "new": "New",
+                "rmdUpdate": "RMD Update",
+                "sswUpdate": "SSW Update",
+                "bankUpdate": "Bank Update",
+                "eftDrawUpdate": "EFT Draw Update"
+            }
         }
     },
     "caseWithdrawal": {
@@ -4216,6 +4223,15 @@
                 "selectForm": "Select a form to continue."
             },
             "label": "Select the appropriate form that needs to be updated."
+        }
+    },
+    "sswUpdate": {
+        "sswUpdateOptions": {
+            "new": "New",
+            "rmdUpdate": "RMD Update",
+            "sswUpdate": "SSW Update",
+            "bankUpdate": "Bank Update",
+            "eftDrawUpdate": "EFT Draw Update"
         }
     }
 }
