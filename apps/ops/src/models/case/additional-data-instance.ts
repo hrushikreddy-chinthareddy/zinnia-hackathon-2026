@@ -17,6 +17,8 @@ export enum CaseAdditionalDataKeys {
     formId = 'formId',
     documentName = 'documentName',
     documentId = 'documentId',
+    formShortName = 'formShortName',
+    formDisplayName = 'formDisplayName',
 }
 
 export const correspondenceTypes = {
