@@ -1,19 +1,28 @@
-import FieldData from "@deps/components/fields/field-data/field-data";
-import Highlighter from "@deps/components/highlighter/highlighter";
-import { PiiProps } from "@deps/components/pii/pii";
-import { PiiWrapper } from "@deps/components/pii/PiiWrapper";
-import PopoverOnTruncate from "@deps/components/popover-on-truncate/popover-on-truncate";
-import { DEFAULT_ERROR_STRING } from "@deps/types/constants";
+import FieldData from '@deps/components/fields/field-data/field-data';
+import Highlighter from '@deps/components/highlighter/highlighter';
+import { PiiProps } from '@deps/components/pii/pii';
+import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
+import PopoverOnTruncate from '@deps/components/popover-on-truncate/popover-on-truncate';
+import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 interface CaseDetailFieldProps extends PiiProps {
-    label: string;
+    label?: string | null;
     text?: string | null;
     sentenceCase?: boolean;
     truncate?: boolean;
     highlights?: string[] | null;
 }
 
-const CaseDetailField = ({ label, text, highlights, sentenceCase = true, truncate = false, pii = false }: CaseDetailFieldProps) => {
+const CaseDetailField = ({
+    label,
+    text,
+    highlights,
+    sentenceCase = true,
+    truncate = false,
+    pii = false,
+    ...props
+}: CaseDetailFieldProps) => {
     const textWithHighlights = !!text && highlights && highlights.length ? <Highlighter text={text} highlights={highlights} /> : text;
 
     const textToRender =
@@ -25,10 +34,14 @@ const CaseDetailField = ({ label, text, highlights, sentenceCase = true, truncat
             textWithHighlights
         );
 
-    return (
+    return label ? (
         <FieldData label={label} sentenceCase={sentenceCase}>
             {pii ? <PiiWrapper>{textToRender || DEFAULT_ERROR_STRING}</PiiWrapper> : textToRender || DEFAULT_ERROR_STRING}
         </FieldData>
+    ) : (
+        <Typography variant={TypographyVariant.BodySm} {...props}>
+            {pii ? <PiiWrapper>{textToRender || DEFAULT_ERROR_STRING}</PiiWrapper> : textToRender || DEFAULT_ERROR_STRING}
+        </Typography>
     );
 };
 

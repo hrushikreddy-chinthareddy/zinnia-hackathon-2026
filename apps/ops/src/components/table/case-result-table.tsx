@@ -29,12 +29,12 @@ import { SearchViewQuery } from '@deps/types/search';
 import { getCarrierLogoByClientId } from '@deps/utils/carriers';
 
 import styles from './case-result-table.module.css';
-import { CaseDetailField } from '../card/case-search-card/case-search-card';
 import Highlighter from '../highlighter/highlighter';
 import { PiiProps } from '../pii/pii';
 import { PiiWrapper } from '../pii/PiiWrapper';
 import PlusOthers from '../plus-others/plus-others';
 import PopoverOnTruncate from '../popover-on-truncate/popover-on-truncate';
+import CaseDetailField from '../card/case-search-card/case-detail-field';
 
 interface PartyWithOthersProps extends PiiProps {
     text?: string | null;
@@ -143,7 +143,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
             <TableCell>
                 <Tooltip
                     placement={TooltipPlacement.TopRight}
-                    triggerClassName="w-auto"
+                    tooltipClassName="!w-auto"
                     trigger={<ChipStatus status={singleCase.caseStatus} data-testid="chip-status" classNames="whitespace-nowrap" />}
                 >
                     {statusTooltip}
@@ -168,7 +168,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                 <div className="flex items-center gap-2">
                     <Tooltip
                         placement={TooltipPlacement.TopRight}
-                        triggerClassName="w-auto"
+                        tooltipClassName="!w-auto"
                         trigger={
                             <div className="flex h-6 w-6 items-center justify-center rounded border-2 border-gray-100">
                                 <Image
@@ -210,7 +210,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                                 {getTimeText()}
                             </Typography>
                         }
-                        triggerClassName="w-auto"
+                        tooltipClassName="!w-auto"
                     >
                         {dayjs(singleCase.createdAt).format('M/D/YYYY at h:mm a z')}
                     </Tooltip>
