@@ -73,30 +73,29 @@ interface CaseResultTableProps {
 export const CaseResultTable = ({ cases, searchValues, handleSort, sortDirection }: CaseResultTableProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     return (
-        <Table>
+        <Table className={styles.tableContainer}>
             <TableHeader>
                 <TableRow>
                     {/* This header cell is needed so the link can come first in the Table Row, without it the table body will shift right one column too far */}
-                    {/* to do - turn these into translations */}
-                    <TableHeaderCell className="sr-only">View Case Details</TableHeaderCell>
+                    <TableHeaderCell className="sr-only">{t('caseManagementDashboard.case.viewCaseDetails')}</TableHeaderCell>
                     <TableHeaderCell>
-                        <Typography variant={TypographyVariant.BodySmBold}>Case/ID</Typography>
+                        <Typography variant={TypographyVariant.BodySmBold}>{t('caseManagementDashboard.case.case/ID')}</Typography>
                     </TableHeaderCell>
                     <TableHeaderCell>
-                        <Typography variant={TypographyVariant.BodySmBold}>Case Status</Typography>
+                        <Typography variant={TypographyVariant.BodySmBold}>{t('caseManagementDashboard.case.caseStatus')}</Typography>
                     </TableHeaderCell>
                     <TableHeaderCell>
-                        <Typography variant={TypographyVariant.BodySmBold}>Owner/SSN</Typography>
+                        <Typography variant={TypographyVariant.BodySmBold}>{t('caseManagementDashboard.case.ownerSsn')}</Typography>
                     </TableHeaderCell>
                     <TableHeaderCell>
-                        <Typography variant={TypographyVariant.BodySmBold}>Policy</Typography>
+                        <Typography variant={TypographyVariant.BodySmBold}>{t('caseManagementDashboard.case.policy')}</Typography>
                     </TableHeaderCell>
                     <TableHeaderCell>
-                        <Typography variant={TypographyVariant.BodySmBold}>Agent/SSN</Typography>
+                        <Typography variant={TypographyVariant.BodySmBold}>{t('caseManagementDashboard.case.agentSsn')}</Typography>
                     </TableHeaderCell>
                     <TableHeaderCell sortable onClick={handleSort}>
                         <Typography variant={TypographyVariant.BodySmBold} className="flex align-center gap-1">
-                            Created
+                            {t('caseManagementDashboard.case.createdAt')}
                             <Icon type={sortDirection === 'asc' ? IconType.ARROW_UP : IconType.ARROW_DOWN} color="#00628B" />
                         </Typography>
                     </TableHeaderCell>
