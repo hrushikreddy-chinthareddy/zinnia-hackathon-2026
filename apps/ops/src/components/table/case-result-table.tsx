@@ -46,12 +46,9 @@ const PartyWithOthers = ({ text, entities, highlights }: PartyWithOthersProps) =
     const textWithHighlights = !!text && highlights && highlights.length ? <Highlighter text={text} highlights={highlights} /> : text;
 
     const textToRender = text ? (
-        // to do - remove after fixing in bloom
-        <div className="relative">
-            <PopoverOnTruncate title={text}>
-                <span className="line-clamp-1 break-all font-secondary text-md relative">{textWithHighlights}</span>
-            </PopoverOnTruncate>
-        </div>
+        <PopoverOnTruncate title={text}>
+            <span className="line-clamp-1 break-all font-secondary text-md relative">{textWithHighlights}</span>
+        </PopoverOnTruncate>
     ) : (
         textWithHighlights
     );
@@ -80,17 +77,28 @@ export const CaseResultTable = ({ cases, searchValues, handleSort, sortDirection
             <TableHeader>
                 <TableRow>
                     {/* This header cell is needed so the link can come first in the Table Row, without it the table body will shift right one column too far */}
+                    {/* to do - turn these into translations */}
                     <TableHeaderCell className="sr-only">View Case Details</TableHeaderCell>
-                    <TableHeaderCell>Case/ID</TableHeaderCell>
-                    <TableHeaderCell>Case Status</TableHeaderCell>
-                    <TableHeaderCell>Owner/SSN</TableHeaderCell>
-                    <TableHeaderCell>Policy</TableHeaderCell>
-                    <TableHeaderCell>Agent/SSN</TableHeaderCell>
+                    <TableHeaderCell>
+                        <Typography variant={TypographyVariant.BodySmBold}>Case/ID</Typography>
+                    </TableHeaderCell>
+                    <TableHeaderCell>
+                        <Typography variant={TypographyVariant.BodySmBold}>Case Status</Typography>
+                    </TableHeaderCell>
+                    <TableHeaderCell>
+                        <Typography variant={TypographyVariant.BodySmBold}>Owner/SSN</Typography>
+                    </TableHeaderCell>
+                    <TableHeaderCell>
+                        <Typography variant={TypographyVariant.BodySmBold}>Policy</Typography>
+                    </TableHeaderCell>
+                    <TableHeaderCell>
+                        <Typography variant={TypographyVariant.BodySmBold}>Agent/SSN</Typography>
+                    </TableHeaderCell>
                     <TableHeaderCell sortable onClick={handleSort}>
-                        <div className="flex align-center gap-1">
+                        <Typography variant={TypographyVariant.BodySmBold} className="flex align-center gap-1">
                             Created
                             <Icon type={sortDirection === 'asc' ? IconType.ARROW_UP : IconType.ARROW_DOWN} color="#00628B" />
-                        </div>
+                        </Typography>
                     </TableHeaderCell>
                 </TableRow>
             </TableHeader>
@@ -175,22 +183,19 @@ export const CaseResultTable = ({ cases, searchValues, handleSort, sortDirection
                                 </div>
                             </TableCell>
                             <TableCell>
-                                {/* to do - remove after fixing in bloom */}
-                                <div className="relative">
-                                    <Tooltip
-                                        placement={TooltipPlacement.TopRight}
-                                        // triggerClassName="w-auto"
-                                        trigger={
-                                            <ChipStatus
-                                                status={singleCase.caseStatus}
-                                                data-testid="chip-status"
-                                                classNames="whitespace-nowrap"
-                                            />
-                                        }
-                                    >
-                                        {statusTooltip}
-                                    </Tooltip>
-                                </div>
+                                <Tooltip
+                                    placement={TooltipPlacement.TopRight}
+                                    triggerClassName="w-auto"
+                                    trigger={
+                                        <ChipStatus
+                                            status={singleCase.caseStatus}
+                                            data-testid="chip-status"
+                                            classNames="whitespace-nowrap"
+                                        />
+                                    }
+                                >
+                                    {statusTooltip}
+                                </Tooltip>
                             </TableCell>
                             <TableCell>
                                 <div className="flex flex-col">
@@ -211,7 +216,7 @@ export const CaseResultTable = ({ cases, searchValues, handleSort, sortDirection
                                 <div className="flex items-center gap-2">
                                     <Tooltip
                                         placement={TooltipPlacement.TopRight}
-                                        // triggerClassName="w-auto"
+                                        triggerClassName="w-auto"
                                         trigger={
                                             <div className="flex h-6 w-6 items-center justify-center rounded border-2 border-gray-100">
                                                 <Image
@@ -245,7 +250,7 @@ export const CaseResultTable = ({ cases, searchValues, handleSort, sortDirection
                                 </div>
                             </TableCell>
                             <TableCell className="text-right">
-                                <div className="relative flex justify-end">
+                                <div className="flex justify-end">
                                     <Tooltip
                                         placement={TooltipPlacement.TopRight}
                                         trigger={
@@ -253,7 +258,7 @@ export const CaseResultTable = ({ cases, searchValues, handleSort, sortDirection
                                                 {getTimeText()}
                                             </Typography>
                                         }
-                                        // triggerClassName="w-auto"
+                                        triggerClassName="w-auto"
                                     >
                                         {dayjs(singleCase.createdAt).format('M/D/YYYY at h:mm a z')}
                                     </Tooltip>
