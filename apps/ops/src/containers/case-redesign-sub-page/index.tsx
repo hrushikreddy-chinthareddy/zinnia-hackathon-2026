@@ -1,13 +1,10 @@
 import { BadgeVariant } from '@zinnia/bloom/components';
-import dayjs from 'dayjs';
-import { TFunction, useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
 import CaseSubPage from '@deps/components/case-sub-page/case-sub-page';
 import { TranslationFiles } from '@deps/config/translations';
-import { calculateDaysAgo } from '@deps/helpers/case-management';
-import { Case, Processes, Statuses } from '@deps/models/case/case';
-import { ExceptionInstance } from '@deps/models/case/exception-instance';
+import { Case } from '@deps/models/case/case';
 import { getCaseDetails } from '@deps/queries/api/cases';
 import { baseAppUrl } from '@deps/queries/api-config';
 import { CaseDetailsTabValues } from '@deps/types/constants';
@@ -16,76 +13,12 @@ import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
 import CasePageHeader from './CasePageHeader';
 import CaseSideNav from './CaseSideNav';
+import { getStatusDetails } from '@deps/components/case-list/components/case-status-tooltip';
 
 interface CaseRedesignProps {
     caseDetails: Case;
     featureFlags: FeatureFlags;
     tab?: string; // The subpath (if any)
-}
-
-interface GetStatusDetailsProps {
-    status: Statuses;
-    processSubType: string | undefined;
-    process: Processes;
-    createdAt: string;
-    daysAgo: number;
-    exceptions: ExceptionInstance[];
-    updatedAt: string;
-    t: TFunction;
-}
-
-export function getStatusDetails({ status, processSubType, process, createdAt, daysAgo, exceptions, updatedAt, t }: GetStatusDetailsProps) {
-    let statusTooltip = '';
-    let statusVariant = '';
-    let statusText = '';
-
-    switch (status) {
-        case Statuses.InProgress:
-            statusVariant = BadgeVariant.INFO;
-            statusTooltip = `${t('caseOverview.caseStatus.inProgress.tooltip', {
-                processSubType: processSubType ? processSubType : process,
-            })}${dayjs(createdAt).format('MM/DD/YYYY')}${t('caseOverview.caseStatus.inProgress.tooltip2', {
-                daysAgo: daysAgo,
-            })}`;
-            statusText = t('caseOverview.caseStatus.inProgress.badgeText');
-            break;
-
-        case Statuses.Exception:
-            statusVariant = BadgeVariant.ERROR;
-            if (exceptions.length !== 0) {
-                statusTooltip = `${t('caseOverview.caseStatus.exception.tooltip', {
-                    processSubType: processSubType ? processSubType : process,
-                })}${t('caseOverview.caseStatus.exception.tooltip2', { exceptions: exceptions.length })}`;
-            } else {
-                statusTooltip = t('caseOverview.caseStatus.zeroException.tooltip', {
-                    requestSubType: processSubType ? processSubType : process,
-                });
-            }
-            statusText = t('caseOverview.caseStatus.exception.badgeText');
-            break;
-
-        case Statuses.Canceled:
-            statusVariant = BadgeVariant.INACTIVE;
-            statusTooltip = `${t('caseOverview.caseStatus.canceled.tooltip')}${dayjs(updatedAt).format('MM/DD/YYYY')}.`;
-            statusText = t('caseOverview.caseStatus.canceled.badgeText');
-            break;
-
-        case Statuses.Completed:
-            statusVariant = BadgeVariant.SUCCESS;
-            statusTooltip = `${t('caseOverview.caseStatus.completed.tooltip', {
-                processSubType: processSubType ? processSubType : process,
-            })}${dayjs(updatedAt).format('MM/DD/YYYY')}.`;
-            statusText = t('caseOverview.caseStatus.completed.badgeText');
-            break;
-
-        default:
-            statusVariant = BadgeVariant.DEFAULT;
-            statusTooltip = t('caseOverview.caseStatus.unknown.tooltip');
-            statusText = t('caseOverview.caseStatus.unknown.badgeText');
-            break;
-    }
-
-    return { statusTooltip, statusVariant, statusText };
 }
 
 const CaseRedesign = ({ caseDetails, tab, featureFlags }: CaseRedesignProps) => {
@@ -116,26 +49,13 @@ const CaseRedesign = ({ caseDetails, tab, featureFlags }: CaseRedesignProps) => 
         };
     }, [caseDetails.id, featureFlags, tabVal]);
 
-    const daysAgo = calculateDaysAgo(new Date(caseDetailsModel.createdAt));
-    const processSubType = caseDetailsModel.processSubType?.toLowerCase();
-    const process = caseDetailsModel?.process;
-
     const handleTabChange = (val: string) => {
         // We do not want to send the user to a new page, just update the URL in response to a user action
         window.history.replaceState(window.history.state, '', `${baseAppUrl}/cases/${caseDetails?.id}/${val}`);
         setTabVal(val);
     };
 
-    const statusDetails = getStatusDetails({
-        status: caseDetailsModel.caseStatus,
-        processSubType,
-        process,
-        createdAt: caseDetailsModel.createdAt,
-        daysAgo,
-        updatedAt: caseDetailsModel.updatedAt,
-        exceptions: caseDetailsModel.exceptions,
-        t,
-    });
+    const statusDetails = getStatusDetails({ singleCase: caseDetailsModel, t });
 
     return (
         <div className="w-full bg-gray-50">

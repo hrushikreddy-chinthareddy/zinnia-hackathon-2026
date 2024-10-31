@@ -18,8 +18,6 @@ import { useTranslation } from 'react-i18next';
 import ChipStatus from '@deps/components/chip-status/chip-status';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { getStatusDetails } from '@deps/containers/case-redesign-sub-page';
-import { calculateDaysAgo } from '@deps/helpers/case-management';
 import { getAgents, getPolicyOwners } from '@deps/helpers/parties';
 import { formatSSN, toTitleCase } from '@deps/helpers/string.helper';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
@@ -35,6 +33,7 @@ import { PiiWrapper } from '../pii/PiiWrapper';
 import PlusOthers from '../plus-others/plus-others';
 import PopoverOnTruncate from '../popover-on-truncate/popover-on-truncate';
 import CaseDetailField from '../card/case-search-card/case-detail-field';
+import { CaseStatusTooltip } from '../case-list/components/case-status-tooltip';
 
 interface PartyWithOthersProps extends PiiProps {
     text?: string | null;
@@ -94,18 +93,6 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
 
     const imageSrc = getCarrierLogoByClientId(singleCase.carrier);
 
-    const daysAgo = calculateDaysAgo(new Date(singleCase.createdAt));
-    const statusTooltip = getStatusDetails({
-        status: singleCase.caseStatus,
-        processSubType: singleCase.processSubType?.toLowerCase(),
-        process: singleCase.process,
-        createdAt: singleCase.createdAt,
-        updatedAt: singleCase.updatedAt,
-        exceptions: singleCase.exceptions,
-        t,
-        daysAgo,
-    }).statusTooltip;
-
     const viewCaseText = t('caseManagementDashboard.case.viewCase', {
         caseNumber: String(singleCase.policyNumber).split('').join(' '),
     });
@@ -115,6 +102,10 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
         const { unit, count } = getTimeAgoUnitValue(singleCase.createdAt) || {};
         const currentYear = dayjs().year();
         const createdYear = dayjs(singleCase.createdAt).year();
+        // Yes this logic is crazy
+        // The designers decided that if a date is from today it should use "x time ago" format,
+        // If it's within this year another format,
+        // And before this year a different format. Thus the triple if statement here - hopefully we eventually change this
         if (unit === 'hour' || unit === 'minute') {
             const timeText = t('temporal.timeago', { formattedDate: '', count: count, unit: unit }).trim();
             text = timeText;
@@ -141,13 +132,10 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                 </div>
             </TableCell>
             <TableCell>
-                <Tooltip
-                    placement={TooltipPlacement.TopRight}
-                    tooltipClassName="!w-auto"
+                <CaseStatusTooltip
+                    singleCase={singleCase}
                     trigger={<ChipStatus status={singleCase.caseStatus} data-testid="chip-status" classNames="whitespace-nowrap" />}
-                >
-                    {statusTooltip}
-                </Tooltip>
+                />
             </TableCell>
             <TableCell>
                 <div className="flex flex-col">
@@ -212,7 +200,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                         }
                         tooltipClassName="!w-auto"
                     >
-                        {dayjs(singleCase.createdAt).format('M/D/YYYY at h:mm a z')}
+                        {dayjs(singleCase.createdAt).format('M/D/YYYY [at] h:mm a z')}
                     </Tooltip>
                 </div>
             </TableCell>
