@@ -51,6 +51,7 @@ import { FgaRelation } from '@deps/types/fga';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import nextI18nextConfig from 'next-i18next.config';
+import { useCaseFilterQueryStore } from './caseFilterQueryStore';
 
 // Lazy Loaded Components
 const SideSheetRefineResults = dynamic(() => import('@deps/containers/side-sheet-refine-results/side-sheet-refine-results'));
@@ -68,7 +69,8 @@ interface CaseManagementDashboardProps extends SegmentTrackedPageProps {
 }
 
 const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: CaseManagementDashboardProps) => {
-    const [caseManagementFilters, setCaseManagementFilters] = useState(initialFilters);
+    const [caseManagementFilters, setCaseManagementFilters] = useCaseFilterQueryStore();
+    console.log('BPB - caseManagementFilters', caseManagementFilters);
     const [loadedStoredFilters, setLoadedStoredFilters] = useState(false);
 
     const { t } = useTranslation();
