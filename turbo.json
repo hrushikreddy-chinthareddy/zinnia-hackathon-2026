@@ -44,6 +44,7 @@
         "NEXT_PUBLIC_BACKEND_URL",
         "NEXT_PUBLIC_SE2_BACKEND_URL",
         "NEXT_PUBLIC_BASE_URL",
+        "NEXT_PUBLIC_ACCESS_MANAGEMENT_URL",
         "NEXT_PUBLIC_THEME",
         "NEXT_PUBLIC_S3_BUCKET_BASE_URL",
         "OPTIMIZELY_SDK_KEY",
@@ -84,6 +85,9 @@
     "test": {},
     "build-storybook": {},
     "consumer-experience#test": {
+      "dependsOn": ["^build"]
+    },
+    "ops#dev": {
       "dependsOn": ["^build"]
     }
   }

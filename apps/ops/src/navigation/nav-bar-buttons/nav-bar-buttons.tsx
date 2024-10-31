@@ -1,12 +1,15 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { useTranslation } from 'next-i18next';
+import { useEffect, useState } from 'react';
 
 import MenuContextual from '@deps/components/menu-contextual/menu-contextual';
 import MenuContextualItem from '@deps/components/menu-contextual/menu-contextual-item/menu-contextual-item';
 import NavElement, { NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { TranslationFiles } from '@deps/config/translations';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { storage } from '@deps/helpers/sessionStorage.helper';
 import { firstNameAndLastInitial } from '@deps/helpers/string.helper';
+import { UserPermission } from '@deps/models/user-profile';
 import { ReactComponent as SignOutIcon } from '@deps/styles/elements/icons/actions/logout.svg';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 
@@ -16,12 +19,39 @@ interface NavBarButtonsProps {
 
 export const NavBarButtons = ({ onClick }: NavBarButtonsProps) => {
     const { user } = useUser();
+    const permissionContext = usePermissionsContext();
     const { t } = useTranslation(TranslationFiles.COMMON);
+    const [isAllowReadOtpRenewals, setIsAllowedOtpRenewals] = useState(false);
+    const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+    const isAllowAccessManagement = isSuperAdmin && isAllowReadOtpRenewals;
+    const accessManagementHref = process.env.NEXT_PUBLIC_ACCESS_MANAGEMENT_URL || '';
 
     const borderBottomOpenStateClass =
         'group-data-[state=open]:border-b-3 group-data-[state=open]:[border-image-source:linear-gradient(90deg,rgb(255,198,000),rgb(255,117,000)_75.54%,rgb(255,24,34))] group-data-[state=open]:[border-image-slice:1]';
     const borderBottomClass = `border-transparent hover:border-b-gray-900 border-b-2 pb-0 ${borderBottomOpenStateClass}`;
     const fontWeightClass = 'font-[300] group-data-[state=open]:font-medium';
+
+    useEffect(() => {
+        const checkSuperAdmin = async () => {
+            try {
+                const isSuperAdmin = await permissionContext.getIsSuperAdmin();
+                setIsSuperAdmin(isSuperAdmin);
+            } catch (error) {
+                console.error('Error checking super admin status:', error);
+            }
+        };
+        const checkAllowOtpRenewals = async () => {
+            try {
+                const isAllowReadOtpRenewals = await permissionContext.doesUserHavePagePermission(UserPermission.AllowReadOtpRenewals);
+                setIsAllowedOtpRenewals(isAllowReadOtpRenewals);
+            } catch (error) {
+                console.error('Error checking allow read otp renewals status:', error);
+            }
+        };
+
+        checkSuperAdmin();
+        checkAllowOtpRenewals();
+    }, [permissionContext]);
 
     return (
         <div className="nav-bar__buttons mr-8 md:mr-14" onClick={onClick}>
@@ -62,6 +92,13 @@ export const NavBarButtons = ({ onClick }: NavBarButtonsProps) => {
                         icon={<SignOutIcon height={20} width={20} />}
                         content={t('auth.logout.text')}
                     />
+                    {isAllowAccessManagement && (
+                        <MenuContextualItem
+                            href={accessManagementHref}
+                            icon={<SignOutIcon height={20} width={20} />}
+                            content={t('site.navLinks.accessManagement.text')}
+                        />
+                    )}
                 </MenuContextual>
             )}
         </div>
