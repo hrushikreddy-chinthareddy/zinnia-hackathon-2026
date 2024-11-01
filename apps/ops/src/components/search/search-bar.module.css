@@ -1,0 +1,6 @@
+.dropdownTrigger {
+    border-radius: var(--measure-border-radius-radius-md) 0px 0px var(--measure-border-radius-radius-md);
+    border: 2px solid var(--color-base-border-border-subtle);
+    background: var(--color-grayscale-color-white);
+    padding: var(--measure-spacing-padding-lg) var(--measure-spacing-padding-2xl);
+}

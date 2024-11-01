@@ -1,10 +1,11 @@
 import { ChangeEvent, RefObject, useContext } from 'react';
 
-import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import Field, { FieldType, FieldVariant } from '@deps/components/fields/field';
 import { PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
 import { toSentenceCase } from '@deps/helpers/string.helper';
 import { LabelValue } from '@deps/types/data';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
+import styles from './search-field-toggle.module.css';
 
 interface SearchFieldToggleProps {
     values: SearchViewQuery;
@@ -15,7 +16,6 @@ interface SearchFieldToggleProps {
 }
 
 interface SearchFieldContainerProps extends SearchFieldToggleProps {
-    columns?: number;
     autoFocus?: boolean;
 }
 
@@ -36,28 +36,25 @@ export const SearchFieldContainer = ({
     }
 
     return (
-        <div className="w-full" key={'active-labels-grid-' + label}>
-            <Field
-                value={value}
-                key={'search-field-toggle-' + policyKey}
-                autoFocus={autoFocus}
-                label={fullLabel ? fullLabel : toSentenceCase(label)}
-                type={FieldType.BaseActive}
-                variant={showFieldErrorMessage ? FieldVariant.Error : FieldVariant.Default}
-                size={FieldSize.Small}
-                formatOptions={format ? { format, mask, prefix } : undefined}
-                placeholder={placeholder}
-                onChange={e => {
-                    const text = (e.target as HTMLInputElement).value;
+        <Field
+            value={value}
+            key={'search-field-toggle-' + policyKey}
+            autoFocus={autoFocus}
+            type={FieldType.BaseActive}
+            variant={showFieldErrorMessage ? FieldVariant.Error : FieldVariant.Default}
+            formatOptions={format ? { format, mask, prefix } : undefined}
+            placeholder={fullLabel ? fullLabel : toSentenceCase(label)}
+            onChange={e => {
+                const text = (e.target as HTMLInputElement).value;
 
-                    handleChange(e, text, policyKey as PolicySearchKeys);
-                }}
-                onClear={onClear}
-                handleEnterKey={handleEnterKey}
-                isClearable
-                message={showFieldErrorMessage && errorMessage ? errorMessage : ''}
-            />
-        </div>
+                handleChange(e, text, policyKey as PolicySearchKeys);
+            }}
+            onClear={onClear}
+            handleEnterKey={handleEnterKey}
+            isClearable
+            message={showFieldErrorMessage && errorMessage ? errorMessage : ''}
+            className={`${styles.field} text-body-sm`}
+        />
     );
 };
 
@@ -70,7 +67,6 @@ const SearchFieldToggle = ({ activeLabels, handleEnterKey, ...rest }: SearchFiel
             fields = group.map((g, index) => (
                 <SearchFieldContainer
                     key={'search-field-container-key-' + g.value}
-                    columns={2}
                     activeLabels={g}
                     autoFocus={index === 0}
                     handleEnterKey={handleEnterKey}

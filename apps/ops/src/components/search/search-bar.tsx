@@ -9,6 +9,10 @@ import { LabelValue } from '@deps/types/data';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 
 import SearchFieldToggle from './search-field-toggle/search-field-toggle';
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import Typography, { TypographyVariant } from '../typography/typography';
+import styles from './search-bar.module.css';
+import clsx from 'clsx';
 
 export const SearchBarInitialValues: SearchViewQuery = {};
 
@@ -89,6 +93,8 @@ const SearchBar = ({
         [activeToggleBtn, getToggleLabel, onToggle]
     );
 
+    const dropdownLabels = toggleLabels(t);
+
     return (
         <form className="flex flex-col items-start gap-4 sm:w-[492px] xl:w-full xl:flex-row" onSubmit={handleFormSubmit}>
             <div className="leading-[18px] sm:w-[492px]">
@@ -100,7 +106,34 @@ const SearchBar = ({
                     groupLabel={t('dashboard.search.searchKeyType')}
                 />
             </div>
-            <div className="flex w-full grow items-end gap-4">
+
+            <div className="self-center xl:mt-5 xl:self-baseline">
+                <Button
+                    type={ButtonType.Primary}
+                    onClick={handleSearch}
+                    data-testid="search-btn"
+                    aria-label={t('ariaLabel.search') as string}
+                >
+                    {t('dashboard.search.btnText')}
+                </Button>
+            </div>
+
+            <div className="flex">
+                <DropdownMenu.Root>
+                    <DropdownMenu.Trigger className={clsx(styles.dropdownTrigger, 'typography-content-body-sm')}>
+                        <Typography variant={TypographyVariant.BodySm}>{activeLabels.label}</Typography>
+                    </DropdownMenu.Trigger>
+
+                    <DropdownMenu.Portal>
+                        <DropdownMenu.Content>
+                            {dropdownLabels.map(item => (
+                                <DropdownMenu.Item>
+                                    <Typography variant={TypographyVariant.BodySm}>{item.label}</Typography>
+                                </DropdownMenu.Item>
+                            ))}
+                        </DropdownMenu.Content>
+                    </DropdownMenu.Portal>
+                </DropdownMenu.Root>
                 <SearchFieldToggle
                     values={values}
                     activeLabels={activeLabels}
@@ -108,11 +141,6 @@ const SearchBar = ({
                     handleChange={handleNewValue}
                     onClear={onClear}
                 />
-            </div>
-            <div className="self-center xl:mt-5 xl:self-baseline">
-                <Button type={ButtonType.Primary} onClick={handleSearch} data-testid="search-btn" aria-label={t('ariaLabel.search') as string}>
-                    {t('dashboard.search.btnText')}
-                </Button>
             </div>
         </form>
     );
