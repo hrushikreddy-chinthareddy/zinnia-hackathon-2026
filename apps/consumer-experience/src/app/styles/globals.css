@@ -36,13 +36,12 @@ main {
 
 a {
   color: var(--color-links-color-global-link, #1e359c);
-  text-decoration: none;
+  text-decoration: underline;
+  text-underline-position: under;
+
   &:hover {
     color: var(--color-links-color-global-link-dark);
-    text-decoration: underline;
-    text-decoration-color: var(--color-links-color-global-link-dark);
-    text-underline-position: under;
-    text-decoration-thickness: 2px;
+    text-decoration: none;
   }
 }
 
