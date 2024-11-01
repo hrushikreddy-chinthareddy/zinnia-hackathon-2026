@@ -41,14 +41,14 @@ const CaseDetailsSideNav = ({ CaseAdditionalDetails, carrier }: CaseDetailsSideN
                 size={NavElementSize.Small}
                 target="_blank"
                 title={CaseAdditionalDetails[CaseAdditionalDataKeys.formShortName]?CaseAdditionalDetails[CaseAdditionalDataKeys.formShortName]:
-                    CaseAdditionalDetails[CaseAdditionalDataKeys.formDisplayName]}
+                    CaseAdditionalDetails[CaseAdditionalDataKeys.formName]}
                 type={NavElementType.Link}
                 startIcon={<DocumentIcon width={20} height={20} />}
                 onClick={setCookies}
                 variant={NavElementVariant.Secondary}
             >
                {CaseAdditionalDetails[CaseAdditionalDataKeys.formShortName]?CaseAdditionalDetails[CaseAdditionalDataKeys.formShortName]:
-                    CaseAdditionalDetails[CaseAdditionalDataKeys.formDisplayName]}
+                    CaseAdditionalDetails[CaseAdditionalDataKeys.formName]}
             </NavElement>
 
             <div className="grid grid-cols-2 my-4">

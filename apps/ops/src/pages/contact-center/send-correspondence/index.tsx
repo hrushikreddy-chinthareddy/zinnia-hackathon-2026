@@ -77,7 +77,6 @@ const SendCorrespondence = ({
         [shouldShowEmailFaxOption, shouldShowMailOption, t]
     );
     const [communicationOptions] = useState<RadioItem[]>(communicationTypes);
-
     const handleSubmitRequest = async (state: CorrespondenceFormParts) => {
         const attachments: AttachmentDetails[] = statements.map(statement => {
             return {
