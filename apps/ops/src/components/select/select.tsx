@@ -1,7 +1,7 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import * as Select from '@radix-ui/react-select';
 import clsx from 'clsx';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
 import { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
@@ -86,13 +86,22 @@ const SelectComponent = ({
     placeholder,
     size = FieldSize.Small,
     value,
+    onOpenChange,
 }: SelectProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const MainComponent = isMultiselect ? DropdownMenu : Select;
 
+    const handleOnOpenChange = (isOpen: boolean) => {
+        setIsOpen(isOpen);
+
+        if (onOpenChange) {
+            onOpenChange(isOpen);
+        }
+    };
+
     const rootProps = {
         open: isOpen,
-        onOpenChange: setIsOpen,
+        onOpenChange: handleOnOpenChange,
         ...(!isMultiselect && {
             value,
             onValueChange: onChange,

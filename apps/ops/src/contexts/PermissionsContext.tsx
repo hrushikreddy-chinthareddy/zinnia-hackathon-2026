@@ -1,5 +1,5 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
-import { BulkCheckTuple, checkIfUserIsSuperAdmin } from '@zinnia/utils';
+import { BulkCheckTuple, checkIfUserHasDashboardAccess, checkIfUserIsSuperAdmin } from '@zinnia/utils';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
@@ -21,6 +21,7 @@ export interface PermissionsContextProps {
     ) => Promise<boolean>;
     fgaRoles: BulkCheckTuple[];
     isSuperAdmin: boolean;
+    hasDashboardPermission: boolean;
 }
 
 export const PermissionContext = createContext<PermissionsContextProps>({} as PermissionsContextProps);
@@ -36,6 +37,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
     const partyId = user?.partyId as string;
     const [fgaRoles, setFgaRoles] = useState<BulkCheckTuple[]>([]);
     const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+    const [hasDashboardPermission, setHasDashboardPermission] = useState(false);
 
     useEffect(() => {
         const getRoles = async () => {
@@ -46,7 +48,9 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
 
                 setFgaRoles(roles.tuples);
                 const superAdmin = checkIfUserIsSuperAdmin(roles?.tuples);
+                const hasDashboard = checkIfUserHasDashboardAccess(roles?.tuples);
                 setIsSuperAdmin(!!superAdmin);
+                setHasDashboardPermission(!!hasDashboard);
             } catch (error: any) {
                 console.error('getRoles::An error occurred while checking tuples', {
                     file: 'contexts/permissions-context',
@@ -133,6 +137,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 canEditPolicy,
                 isSuperAdmin,
                 fgaRoles,
+                hasDashboardPermission,
             }}
         >
             {children}

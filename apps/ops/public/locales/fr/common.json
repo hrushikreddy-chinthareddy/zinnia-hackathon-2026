@@ -1,5 +1,23 @@
 {
     "default": "Aucune traduction fournie",
+    "caseStatsLoading": "Chargement des statistiques du dossier...",
+    "createdVsCompleted": "Création vs Confirmation (aujourd'hui)",
+    "caseVolume": "Volume du dossier",
+    "timeframe": "Periode",
+    "today": "Aujourd'hui",
+    "yesterday": "Hier",
+    "last7Days": "7 derniers jours",
+    "last14Days": "14 derniers jours",
+    "last30Days": "30 derniers jours",
+    "yearToDate": "Annee en cours",
+    "caseStatsDashboardTitle": "Dashboard du Carrier",
+    "customRange": "Periode personnalisée",
+    "allDistributors": "Tous les distributeurs",
+    "allCarriers": "Tous les carriers",
+    "caseStatCharHeader": "{{count}} Dossiers actifs",
+    "insights": "Aperçus",
+    "selectProcessType": "Sélectionner un type de dossier",
+    "trend": "Tendance",
     "site": {
         "name": "Zinnia",
         "home": {
@@ -37,7 +55,8 @@
             "updatePremium": "Gérer Paiement Automatique",
             "newWithdrawal": "Nouveau Retrait",
             "formData": "Données du formulaire",
-            "annuitization": "Annuitisation"
+            "annuitization": "Annuitisation",
+            "dashboard": "Statistiques du dossier"
         },
         "navLinks": {
             "accessManagement": {
@@ -182,6 +201,10 @@
             "history": {
                 "text": "Histoire",
                 "link": "/policies/{{planCode}}/{{id}}/history"
+            },
+            "dashboard": {
+                "text": "Statistiques du dossier",
+                "link": "/dashboard"
             }
         },
         "loader": "Chargement..."

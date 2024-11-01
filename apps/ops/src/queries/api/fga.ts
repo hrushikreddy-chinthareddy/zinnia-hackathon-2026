@@ -1,4 +1,4 @@
-import { checkIfUserIsSuperAdmin, createBulkCheckBodyRequest } from '@zinnia/utils';
+import { checkIfUserIsSuperAdmin, createBulkCheckBodyRequest, checkIfUserHasDashboardAccess } from '@zinnia/utils';
 import { AxiosResponse } from 'axios';
 
 import { UserPermission } from '@deps/models/user-profile';
@@ -17,6 +17,9 @@ const bulkCheckUrl = baseUrl + '/bulk-check';
 
 export const bulkCheckResponseClient = async (partyId: string) => {
     try {
+        if (!partyId) {
+            return;
+        }
         const body = createBulkCheckBodyRequest(partyId);
         const { data } = await client.post<TupleRequest, AxiosResponse<TupleResponse>>(bulkCheckUrl, body);
         return data;
@@ -38,6 +41,19 @@ export const checkIsSuperAdminClient = async ({ partyId }: { partyId: string }) 
         logError('checkIsSuperAdmin::An error occurred while checking tuples', {
             file: 'queries/api/fga',
             function: 'bulkCheckResponse',
+            url: bulkCheckUrl,
+        });
+    }
+};
+export const checkDashboardAccessClient = async ({ partyId }: { partyId: string }) => {
+    try {
+        const data = await bulkCheckResponseClient(partyId);
+        if (data === undefined) throw new Error('response is undefined');
+        return checkIfUserHasDashboardAccess(data.tuples);
+    } catch (e) {
+        logError('checkDashboardAccessClient::An error occurred while checking tuples', {
+            file: 'queries/api/fga',
+            function: 'checkDashboardAccessClient',
             url: bulkCheckUrl,
         });
     }

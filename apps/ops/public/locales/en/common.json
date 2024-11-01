@@ -1,5 +1,23 @@
 {
     "default": "No translation provided",
+    "caseStatsLoading": "Loading case stats...",
+    "createdVsCompleted": "Created vs Completed (same day)",
+    "caseVolume": "Case Volume",
+    "timeframe": "Timeframe",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "last7Days": "Last 7 days",
+    "last14Days": "Last 14 days",
+    "last30Days": "Last 30 days",
+    "yearToDate": "Year-to-date",
+    "caseStatsDashboardTitle": "Carrier Dashboard",
+    "customRange": "Custom Range",
+    "allDistributors": "All Distributors",
+    "allCarriers": "All Carriers",
+    "caseStatCharHeader": "{{count}} Active Cases",
+    "insights": "Insights",
+    "selectProcessType": "Select Process Type",
+    "trend": "Trend",
     "site": {
         "name": "Zinnia",
         "home": {
@@ -37,7 +55,8 @@
             "updatePremium": "Update Premium Autopay",
             "newWithdrawal": "New Withdrawal",
             "formData": "Form Data",
-            "annuitization": "Annuitization"
+            "annuitization": "Annuitization",
+            "dashboard": "Case Stats"
         },
         "navLinks": {
             "accessManagement": {
@@ -187,6 +206,10 @@
             "history": {
                 "text": "History",
                 "link": "/policies/{{planCode}}/{{id}}/history"
+            },
+            "dashboard": {
+                "text": "Case Stats",
+                "link": "/dashboard"
             }
         },
         "loader": "Loading..."
