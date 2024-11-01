@@ -12,78 +12,25 @@ export function createBulkCheckBodyRequest(partyId: string) {
     tuples: [
       {
         user: `party:${partyId}`,
-        relation: 'read_role',
-        object: 'entity:zinnia',
-      },
-      {
-        user: `party:${partyId}`,
-        relation: 'write_role',
-        object: 'entity:zinnia',
-      },
-      {
-        user: `party:${partyId}`,
-        relation: 'delete_role',
-        object: 'entity:zinnia',
-      },
-      {
-        user: `party:${partyId}`,
-        relation: 'read_user',
-        object: 'entity:zinnia',
-      },
-      {
-        user: `party:${partyId}`,
-        relation: 'write_user',
-        object: 'entity:zinnia',
-      },
-      {
-        user: `party:${partyId}`,
-        relation: 'delete_user',
-        object: 'entity:zinnia',
+        relation: 'party',
+        object: 'role:zinnia_super_admin',
       },
     ],
   };
 }
 
-export function checkIfUserIsSuperAdmin(bulkCheckTuples: Array<BulkCheckTuple>) {
-  const requiredTuples = [
-    {
-      object: 'entity:zinnia',
-      relation: 'delete_user',
-    },
-    {
-      object: 'entity:zinnia',
-      relation: 'read_user',
-    },
-    {
-      object: 'entity:zinnia',
-      relation: 'read_role',
-    },
-    {
-      object: 'entity:zinnia',
-      relation: 'write_role',
-    },
-    {
-      object: 'entity:zinnia',
-      relation: 'delete_role',
-    },
-    {
-      object: 'entity:zinnia',
-      relation: 'write_user',
-    },
-  ];
+export function checkIfUserIsSuperAdmin(
+  bulkCheckTuples: Array<BulkCheckTuple>
+) {
+  const superAdminVals = {
+    object: 'role:zinnia_super_admin',
+    relation: 'party',
+  };
 
-  for (const requiredTuple of requiredTuples) {
-    if (
-      !bulkCheckTuples.some(
-        bulkCheckTuple =>
-          requiredTuple.object === bulkCheckTuple.object &&
-          requiredTuple.relation === bulkCheckTuple.relation &&
-          bulkCheckTuple.allowed === true
-      )
-    ) {
-      return false;
-    }
-  }
-
-  return true;
+  return bulkCheckTuples.find(
+    (tuple) =>
+      tuple.object === superAdminVals.object &&
+      tuple.relation === superAdminVals.relation &&
+      tuple.allowed
+  );
 }
