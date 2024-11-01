@@ -3856,6 +3856,17 @@
             },
             "title": "Submitted!"
         },
+        "rmd": {
+            "title": "Required Minimum Distribution",
+            "totalRMDAmount": "Total RMD amount",
+            "totalRMDAmountTooltip": "This is the total amount of the RMD that the owner is required to distribute. It's the requested amount minus any applicable transaction fees.",
+            "remainingRMDAmount": "Remaining RMD amount",
+            "remainingRMDAmountTooltip": "This is the amount of the RMD that the owner is still required to distribute.",
+            "calculationDate": "Calculation date",
+            "calculationDateTooltip": "This is the date on which the RMD is calculated.",
+            "calculationType": "Calculation type",
+            "calculationTypeTooltip": "This is the method used to calculate the RMD."
+        },
         "rules": {
             "title": "Withdrawal Rules",
             "minWithdrawal": "Min withdrawal amount",
@@ -3869,6 +3880,14 @@
             "coverageLimit": "Coverage preservation limit",
             "coverageLimitTooltip": "Owners can withdraw this amount without impacting their coverage. In other words, they can withdraw this amount and still keep their death benefit intact."
         },
+        "upcoming": {
+            "manageAutopay": "$t(premium.upcoming.manageAutopay)",
+            "oneTimePaymentText": "$t(premium.upcoming.oneTimePaymentText)",
+            "setUpAutopay": "$t(premium.upcoming.setUpAutopay)",
+            "noAdditionalCharges": "$t(premium.upcoming.noAdditionalCharges)",
+            "withdrawalAutopay": "Upcoming Withdrawal Autopay",
+            "rmdAutopay": "Upcoming RMD Autopay"
+        },
         "exchange1035": "Start a 1035 Exchange",
         "allTimeWithdrawals": "All-time withdrawals",
         "allTimeWithdrawalsTooltip": "This is how much the owner has withdrawn from the account value since they've owned their policy.",
@@ -3877,7 +3896,9 @@
         "eligible": "Eligible",
         "eligibleForWithdrawal": "Eligible for withdrawal",
         "eligibleForWithdrawalTooltip": "Withdrawals from the account value are allowed right now. Withdrawals may reduce the death benefit.",
+        "freeWithdrawalAmount": "{{ amount }}: Free withdrawal amount",
         "ineligible": "Ineligible",
+        "maximumWithdrawalAmount": "Maximum withdrawal amount",
         "netSurrenderValue": "Net surrender value",
         "netSurrenderValueTooltip": "This is how much the owner or their payees can expect if the policy is surrendered. It's the current account value minus surrender charges, outstanding loans, and other fees.",
         "startAWithdrawal": "Start a withdrawal",

@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
+import { useContext } from 'react';
 
 import BadgeWithTooltip from '@deps/components/badge/badge-with-tooltip/badge-with-tooltip';
 import { BadgeVariant } from '@deps/components/badge/badge.helper';
@@ -11,6 +12,7 @@ import { PageHeader } from '@deps/components/page-header/page-header';
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import { WithdrawalEligibilityValues } from '@deps/containers/withdrawals-sub-page/withdrawals-sub-page';
 import { useStaticNestedNavDrawerContext } from '@deps/contexts/LayoutContexts/StaticNestedNavDrawerContext';
+import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { WithdrawalsValues } from '@deps/helpers/withdrawals.helper';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
@@ -35,14 +37,17 @@ const WithdrawalsPageHeaderContainer = ({
 }: WithdrawalsPageHeaderContainerProps) => {
     const { t } = useTranslation();
     const { isNavDrawerOpen } = useStaticNestedNavDrawerContext();
+    const { policyDetails } = useContext(PolicyData);
 
     const {
         amountEligibleForWithdrawal,
         netSurrenderValue,
+        maximumWithdrawalAmount,
         annualWithdrawalsRemaining,
         annualWithdrawalsTaken,
         allTimeWithdrawalAmount,
         allTimeWithdrawalCount,
+        freeWithdrawalAmount,
     } = withdrawalsValues ?? {};
     const { ineligibleReason, isEligible, isLoading } = withdrawalEligibilityValues ?? {};
 
@@ -117,29 +122,57 @@ const WithdrawalsPageHeaderContainer = ({
                     </div>
                     <div className="flex flex-col gap-8 md:flex-row">
                         <div className="w-[224px] xl:w-fit">
-                            <Label
-                                label={t('withdrawals.annualWithdrawalsRemaining')}
-                                tooltipTitle={t('withdrawals.annualWithdrawalsRemaining')}
-                                tooltipBody={t('withdrawals.annualWithdrawalsRemainingTooltip')}
-                                variant={LabelVariant.FieldLabel}
-                            />
-                            <Content
-                                details={
-                                    annualWithdrawalsTaken != null
-                                        ? `${annualWithdrawalsRemaining} ${t('withdrawals.left')}`
-                                        : DEFAULT_ERROR_STRING
-                                }
-                                variant={ContentVariant.Value}
-                            />
-                            <Content
-                                className="text-gray-600"
-                                details={
-                                    annualWithdrawalsTaken != null
-                                        ? `${annualWithdrawalsTaken} ${t('withdrawals.taken')}`
-                                        : DEFAULT_ERROR_STRING
-                                }
-                                variant={ContentVariant.Caption}
-                            />
+                            {policyDetails.isAnnuity ? (
+                                <>
+                                    <Label
+                                        label={t('withdrawals.maximumWithdrawalAmount')}
+                                        tooltipTitle={t('withdrawals.maximumWithdrawalAmount')}
+                                        tooltipBody={t('withdrawals.maximumWithdrawalAmountTooltip')}
+                                        variant={LabelVariant.FieldLabel}
+                                    />
+                                    <Content
+                                        details={numberFormatify(maximumWithdrawalAmount as number) || DEFAULT_ERROR_STRING}
+                                        variant={ContentVariant.Value}
+                                    />
+                                    <Content
+                                        className="text-gray-600"
+                                        details={
+                                            freeWithdrawalAmount
+                                                ? `${t('withdrawals.freeWithdrawalAmount', {
+                                                      amount: numberFormatify(freeWithdrawalAmount as number),
+                                                  })}`
+                                                : DEFAULT_ERROR_STRING
+                                        }
+                                        variant={ContentVariant.Caption}
+                                    />
+                                </>
+                            ) : (
+                                <>
+                                    <Label
+                                        label={t('withdrawals.annualWithdrawalsRemaining')}
+                                        tooltipTitle={t('withdrawals.annualWithdrawalsRemaining')}
+                                        tooltipBody={t('withdrawals.annualWithdrawalsRemainingTooltip')}
+                                        variant={LabelVariant.FieldLabel}
+                                    />
+                                    <Content
+                                        details={
+                                            annualWithdrawalsTaken != null
+                                                ? `${annualWithdrawalsRemaining} ${t('withdrawals.left')}`
+                                                : DEFAULT_ERROR_STRING
+                                        }
+                                        variant={ContentVariant.Value}
+                                    />
+                                    <Content
+                                        className="text-gray-600"
+                                        details={
+                                            annualWithdrawalsTaken != null
+                                                ? `${annualWithdrawalsTaken} ${t('withdrawals.taken')}`
+                                                : DEFAULT_ERROR_STRING
+                                        }
+                                        variant={ContentVariant.Caption}
+                                    />
+                                </>
+                            )}
                         </div>
                         <div className="w-[224px] xl:w-fit">
                             <Label
