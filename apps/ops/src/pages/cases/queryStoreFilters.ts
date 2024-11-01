@@ -35,7 +35,7 @@ export const useQueryFilters = (queryKeys: string[]) => {
             } else {
                 filtersToInsert = newFilters;
             }
-            console.log('BPB - setting!', filtersToInsert, queryKeys);
+
             setQueryParams(prevQueryParams => {
                 const paramsWithoutFilters = Object.keys(prevQueryParams).reduce((acc, qpKey) => {
                     if (!queryKeys.includes(qpKey)) {

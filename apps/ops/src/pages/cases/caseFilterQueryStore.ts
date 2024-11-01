@@ -4,6 +4,7 @@ import { SetStateAction, useState } from 'react';
 import { ParsedUrlQueryInput } from 'querystring';
 import dayjs from 'dayjs';
 import { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/field-date-select';
+import { getCarrierNameByClientId } from '@deps/utils/carriers';
 
 export enum QueryKeys {
     carrier = 'carrier',
@@ -14,8 +15,8 @@ export enum QueryKeys {
     process = 'process',
     productName = 'productName',
     requestSubType = 'requestSubType',
-    sortDirection = 'sortDirection',
     sortBy = 'sortBy',
+    sortDirection = 'sortDirection',
     status = 'status',
     updatedDateEnd = 'updatedDateEnd',
     updatedDateStart = 'updatedDateStart',
@@ -40,51 +41,66 @@ const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters =>
         searchValue: { query: '' },
         toggleValue: 'policyNumber',
     };
-    if (query[QueryKeys.createdDateStart]) {
-        const val = dayjs(query[QueryKeys.createdDateStart] as string);
-        if (val.isValid()) {
-            additionalFilters.createdDateStart = val.format(DATE_PICKER_FORMAT);
+
+    if (query[QueryKeys.carrier]) {
+        let carriersFromQuery = query[QueryKeys.carrier];
+        let carriersList: string[] = [];
+        if (Array.isArray(carriersFromQuery)) {
+            carriersList = carriersFromQuery as string[];
+        } else {
+            carriersList = [carriersFromQuery as string];
         }
+
+        const carrierNameToClientIds: { [key: string]: string } = {};
+        const carrierFilters: { [key: string]: string } = {};
+
+        carriersList.forEach(carrier => {
+            let clientId = carrier.toUpperCase();
+            let carrierName = getCarrierNameByClientId(clientId) || clientId;
+
+            // if we already have this carrier name, work magic
+            if (carrierNameToClientIds[carrierName]) {
+                const currentCarrierFilterKey = carrierNameToClientIds[carrierName];
+                const clientIds = [...currentCarrierFilterKey.split(','), clientId].sort().join(',');
+                carrierNameToClientIds[carrierName] = clientIds;
+                delete carrierFilters[currentCarrierFilterKey];
+                carrierFilters[clientIds] = carrierName;
+            } else {
+                carrierNameToClientIds[carrierName] = clientId;
+                carrierFilters[clientId] = carrierName;
+            }
+        });
+
+        additionalFilters.carriers = carrierFilters;
     }
+
     if (query[QueryKeys.createdDateEnd]) {
         const val = dayjs(query[QueryKeys.createdDateEnd] as string);
         if (val.isValid()) {
             additionalFilters.createdDateEnd = val.format(DATE_PICKER_FORMAT);
         }
     }
-    if (query[QueryKeys.updatedDateStart]) {
-        const val = dayjs(query[QueryKeys.updatedDateStart] as string);
+
+    if (query[QueryKeys.createdDateStart]) {
+        const val = dayjs(query[QueryKeys.createdDateStart] as string);
         if (val.isValid()) {
-            additionalFilters.updatedDateStart = val.format(DATE_PICKER_FORMAT);
+            additionalFilters.createdDateStart = val.format(DATE_PICKER_FORMAT);
         }
     }
-    if (query[QueryKeys.updatedDateEnd]) {
-        const val = dayjs(query[QueryKeys.updatedDateEnd] as string);
-        if (val.isValid()) {
-            additionalFilters.updatedDateEnd = val.format(DATE_PICKER_FORMAT);
-        }
+
+    if (query[QueryKeys.limit] && !isNaN(parseInt(query[QueryKeys.limit] as string))) {
+        caseFilters.limit = parseInt(query[QueryKeys.limit] as string);
     }
-    if (query[QueryKeys.carrier]) {
-        if (Array.isArray(query[QueryKeys.carrier])) {
-            // BPB - ToDo: Magic
-            // additionalFilters.carriers = new Set(query[QueryKeys.carrier]);
-        } else {
-            // BPB - ToDo: Magic
-            // additionalFilters.carriers = new Set([query[QueryKeys.carrier]]);
-        }
+
+    if (query[QueryKeys.offset] && !isNaN(parseInt(query[QueryKeys.offset] as string))) {
+        caseFilters.offset = parseInt(query[QueryKeys.offset] as string);
     }
+
     if (query[QueryKeys.process]) {
         if (Array.isArray(query[QueryKeys.process])) {
             additionalFilters.processTypes = new Set(query[QueryKeys.process]);
         } else if (typeof query[QueryKeys.process] === 'string') {
             additionalFilters.processTypes = new Set([query[QueryKeys.process]]);
-        }
-    }
-    if (query[QueryKeys.requestSubType]) {
-        if (Array.isArray(query[QueryKeys.requestSubType])) {
-            additionalFilters.requestSubType = new Set(query[QueryKeys.requestSubType]);
-        } else if (typeof query[QueryKeys.requestSubType] === 'string') {
-            additionalFilters.requestSubType = new Set([query[QueryKeys.requestSubType]]);
         }
     }
 
@@ -95,6 +111,30 @@ const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters =>
             additionalFilters.products = new Set([query[QueryKeys.productName]]);
         }
     }
+
+    if (query[QueryKeys.requestSubType]) {
+        if (Array.isArray(query[QueryKeys.requestSubType])) {
+            additionalFilters.requestSubType = new Set(query[QueryKeys.requestSubType]);
+        } else if (typeof query[QueryKeys.requestSubType] === 'string') {
+            additionalFilters.requestSubType = new Set([query[QueryKeys.requestSubType]]);
+        }
+    }
+
+    if (query[QueryKeys.sortBy]) {
+        // BPB - ToDo: Magic
+        if (typeof query[QueryKeys.sortBy] === 'string') {
+            // caseFilters.sortBy = query[QueryKeys.sortBy];
+        }
+    }
+
+    if (
+        query[QueryKeys.sortDirection] &&
+        typeof query[QueryKeys.sortDirection] === 'string' &&
+        ['asc', 'desc'].includes(query[QueryKeys.sortDirection].toLowerCase())
+    ) {
+        caseFilters.sortDirection = query[QueryKeys.sortDirection].toLowerCase() as 'asc' | 'desc';
+    }
+
     if (query[QueryKeys.status]) {
         // BPB - ToDo: Magic
         if (Array.isArray(query[QueryKeys.status])) {
@@ -103,24 +143,19 @@ const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters =>
             // additionalFilters.statuses = new Set([query[QueryKeys.status]]);
         }
     }
-    if (query[QueryKeys.sortBy]) {
-        // BPB - ToDo: Magic
-        if (typeof query[QueryKeys.sortBy] === 'string') {
-            // caseFilters.sortBy = query[QueryKeys.sortBy];
+
+    if (query[QueryKeys.updatedDateEnd]) {
+        const val = dayjs(query[QueryKeys.updatedDateEnd] as string);
+        if (val.isValid()) {
+            additionalFilters.updatedDateEnd = val.format(DATE_PICKER_FORMAT);
         }
     }
-    if (
-        query[QueryKeys.sortDirection] &&
-        typeof query[QueryKeys.sortDirection] === 'string' &&
-        ['asc', 'desc'].includes(query[QueryKeys.sortDirection].toLowerCase())
-    ) {
-        caseFilters.sortDirection = query[QueryKeys.sortDirection].toLowerCase() as 'asc' | 'desc';
-    }
-    if (query[QueryKeys.limit] && !isNaN(parseInt(query[QueryKeys.limit] as string))) {
-        caseFilters.limit = parseInt(query[QueryKeys.limit] as string);
-    }
-    if (query[QueryKeys.offset] && !isNaN(parseInt(query[QueryKeys.offset] as string))) {
-        caseFilters.offset = parseInt(query[QueryKeys.offset] as string);
+
+    if (query[QueryKeys.updatedDateStart]) {
+        const val = dayjs(query[QueryKeys.updatedDateStart] as string);
+        if (val.isValid()) {
+            additionalFilters.updatedDateStart = val.format(DATE_PICKER_FORMAT);
+        }
     }
 
     return { ...caseFilters, additionalFilters };
@@ -182,13 +217,14 @@ const convertFilterToQuery = (filters: CaseSearchFilters): ParsedUrlQueryInput =
         query[QueryKeys.productName] = Array.from(products);
     }
     if (carriers) {
-        // BPB - ToDo: Magic
+        query[QueryKeys.carrier] = Object.keys(carriers).join(',').split(',');
     }
 
     // BPB - ToDo: sortBy
 
     return query;
 };
+
 export const useCaseFilterQueryStore = () => {
     const [queryStoreFilter, setQueryStoreFilter] = useQueryFilters(Object.values(QueryKeys));
     const [caseManagementFilters, setCaseManagementFilters] = useState<CaseSearchFilters>(convertQueryToFilters(queryStoreFilter));

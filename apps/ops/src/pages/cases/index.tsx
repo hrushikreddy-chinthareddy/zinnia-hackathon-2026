@@ -70,7 +70,6 @@ interface CaseManagementDashboardProps extends SegmentTrackedPageProps {
 
 const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: CaseManagementDashboardProps) => {
     const [caseManagementFilters, setCaseManagementFilters] = useCaseFilterQueryStore();
-    console.log('BPB - caseManagementFilters', caseManagementFilters);
     const [loadedStoredFilters, setLoadedStoredFilters] = useState(false);
 
     const { t } = useTranslation();
