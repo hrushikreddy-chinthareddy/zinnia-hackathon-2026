@@ -34,6 +34,8 @@ import PlusOthers from '../plus-others/plus-others';
 import PopoverOnTruncate from '../popover-on-truncate/popover-on-truncate';
 import CaseDetailField from '../card/case-search-card/case-detail-field';
 import { CaseStatusTooltip } from '../case-list/components/case-status-tooltip';
+import timezone from 'dayjs/plugin/timezone';
+import advanced from 'dayjs/plugin/advancedFormat';
 
 interface PartyWithOthersProps extends PiiProps {
     text?: string | null;
@@ -45,7 +47,7 @@ const PartyWithOthers = ({ text, entities, highlights }: PartyWithOthersProps) =
     const textWithHighlights = !!text && highlights && highlights.length ? <Highlighter text={text} highlights={highlights} /> : text;
 
     const textToRender = text ? (
-        <PopoverOnTruncate title={text}>
+        <PopoverOnTruncate title={text} triggerClassName="!z-10">
             <span className="line-clamp-1 break-all font-secondary text-md relative">{textWithHighlights}</span>
         </PopoverOnTruncate>
     ) : (
@@ -68,6 +70,8 @@ interface CaseTableRowProps {
 }
 
 const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
+    dayjs.extend(timezone);
+    dayjs.extend(advanced);
     const { t } = useTranslation(TranslationFiles.COMMON);
     const policyOwners = singleCase.parties ? getPolicyOwners(singleCase.parties) : [];
     const entities = policyOwners.slice(1).map(owner => ({ name: toTitleCase(owner.fullName), ssn: formatSSN(owner.ssn) }));
@@ -110,7 +114,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
             const timeText = t('temporal.timeago', { formattedDate: '', count: count, unit: unit }).trim();
             text = timeText;
         } else if (createdYear === currentYear) {
-            text = dayjs(singleCase.createdAt).format('M/D/YYYY');
+            text = dayjs(singleCase.createdAt).format('MMM D');
         } else {
             text = dayjs(singleCase.createdAt).format('MMM D, YYYY');
         }
@@ -157,16 +161,10 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                     <Tooltip
                         placement={TooltipPlacement.TopRight}
                         tooltipClassName="!w-auto"
+                        triggerClassName="!z-10"
                         trigger={
                             <div className="flex h-6 w-6 items-center justify-center rounded border-2 border-gray-100">
-                                <Image
-                                    src={imageSrc}
-                                    alt={`${singleCase.carrier} icon`}
-                                    width={24}
-                                    height={24}
-                                    role="presentation"
-                                    aria-hidden="true"
-                                />
+                                <Image src={imageSrc} alt={`${singleCase.carrier} icon`} role="presentation" aria-hidden="true" fill />
                             </div>
                         }
                     >
@@ -189,7 +187,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                     <CaseDetailField pii={true} text={formatSSN(agentSsn)} className={styles.detail} />
                 </div>
             </TableCell>
-            <TableCell className="text-right">
+            <TableCell className="text-right whitespace-nowrap">
                 <div className="flex justify-end">
                     <Tooltip
                         placement={TooltipPlacement.TopRight}
@@ -199,6 +197,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                             </Typography>
                         }
                         tooltipClassName="!w-auto"
+                        triggerClassName="!z-10"
                     >
                         {dayjs(singleCase.createdAt).format('M/D/YYYY [at] h:mm a z')}
                     </Tooltip>
