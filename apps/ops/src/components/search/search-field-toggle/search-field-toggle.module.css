@@ -1,10 +1,14 @@
-.field {
-    border: 2px solid var(--color-base-border-border-subtle);
-
-    /* to do - this isn't working because there's a parent around it */
-    &:nth-of-type(1) {
+.fieldContainer {
+    & .field {
+        border-radius: 0;
+    }
+    &:last-child .field {
         border-radius: 0px var(--measure-border-radius-radius-md) var(--measure-border-radius-radius-md) 0px;
     }
+}
+
+.field {
+    border: 2px solid var(--color-base-border-border-subtle);
 
     & input {
         padding: var(--measure-spacing-padding-lg) var(--measure-spacing-padding-2xl);

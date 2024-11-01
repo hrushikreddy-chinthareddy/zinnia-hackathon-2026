@@ -53,6 +53,7 @@ export const SearchFieldContainer = ({
             handleEnterKey={handleEnterKey}
             isClearable
             message={showFieldErrorMessage && errorMessage ? errorMessage : ''}
+            containerClassName={styles.fieldContainer}
             className={`${styles.field} text-body-sm`}
         />
     );

@@ -7,6 +7,7 @@ import FieldClear from './field-clear/field-clear';
 import FieldInterior from './field-interior';
 import FieldLabel from './field-label';
 import FieldUnits, { FieldUnitsLocation } from './field-units';
+import clsx from 'clsx';
 
 export enum FieldSize {
     Small = 'small',
@@ -68,6 +69,7 @@ export type FieldProps = {
     type?: FieldType;
     variant?: FieldVariant;
     labelClassNames?: string;
+    containerClassName?: string;
     preventEditing?: boolean;
     onChange: (event: ChangeEvent<HTMLInputElement>) => void;
     onClear?: (ref: RefObject<HTMLInputElement>) => void;
@@ -88,6 +90,7 @@ export default function Field({
     message,
     className,
     labelClassNames,
+    containerClassName,
     selected,
     type,
     variant,
@@ -161,7 +164,7 @@ export default function Field({
     const classes = `${stateClass} ${variantClass} flex flex-row justify-between rounded-lg ${className}`;
 
     return (
-        <div data-testid={FieldTest.Container} className="flex flex-col" onClick={onClick} ref={containerRef}>
+        <div data-testid={FieldTest.Container} className={clsx('flex flex-col', containerClassName)} onClick={onClick} ref={containerRef}>
             <FieldLabel
                 classNames={labelClassNames}
                 label={label}

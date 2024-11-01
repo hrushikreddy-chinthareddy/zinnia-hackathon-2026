@@ -13,6 +13,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import Typography, { TypographyVariant } from '../typography/typography';
 import styles from './search-bar.module.css';
 import clsx from 'clsx';
+import { Icon, IconType } from '@zinnia/bloom/components';
 
 export const SearchBarInitialValues: SearchViewQuery = {};
 
@@ -122,12 +123,13 @@ const SearchBar = ({
                 <DropdownMenu.Root>
                     <DropdownMenu.Trigger className={clsx(styles.dropdownTrigger, 'typography-content-body-sm')}>
                         <Typography variant={TypographyVariant.BodySm}>{activeLabels.label}</Typography>
+                        <Icon type={IconType.CHEVRON} height={22} width={22} color="#00628B" />
                     </DropdownMenu.Trigger>
 
                     <DropdownMenu.Portal>
-                        <DropdownMenu.Content>
+                        <DropdownMenu.Content className={styles.dropdownMenu}>
                             {dropdownLabels.map(item => (
-                                <DropdownMenu.Item>
+                                <DropdownMenu.Item className={styles.dropdownItem}>
                                     <Typography variant={TypographyVariant.BodySm}>{item.label}</Typography>
                                 </DropdownMenu.Item>
                             ))}
