@@ -39,14 +39,14 @@ const PlusOthers = ({ className = '', entities }: PlusOthersProps) => {
     return (
         <Tooltip
             placement={TooltipPlacement.BottomRight}
-            tooltipClassName="px-4 py-4"
+            tooltipClassName="px-4 py-4 !w-auto"
             trigger={
                 <div className={clsx(`ml-2 whitespace-nowrap font-primary text-md font-semibold text-secondary`, className)}>
                     <span data-testid="plus-number">+{entities.length}</span>
                     {` ${t('tooltip.other')}`}
                 </div>
             }
-            triggerClassName="w-auto"
+            triggerClassName="!z-10"
         >
             {body}
         </Tooltip>

@@ -79,7 +79,7 @@ export const CaseStatusTooltip = ({ trigger, singleCase }: CaseStatusTooltipProp
     const statusTooltip = getStatusDetails({ singleCase, t }).statusTooltip;
 
     return (
-        <Tooltip placement={TooltipPlacement.TopRight} tooltipClassName="!w-auto" trigger={trigger}>
+        <Tooltip placement={TooltipPlacement.TopRight} tooltipClassName="!w-auto" triggerClassName="!z-10" trigger={trigger}>
             {statusTooltip}
         </Tooltip>
     );
