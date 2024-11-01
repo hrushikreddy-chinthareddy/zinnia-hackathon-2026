@@ -35,7 +35,7 @@ const CaseDetailsSideNav = ({ CaseAdditionalDetails, carrier }: CaseDetailsSideN
             </Title>
 
             <NavElement
-                className={''}
+                className={'whitespace-normal break-words'}
                 href={url}
                 isNewPage={true}
                 size={NavElementSize.Small}
