@@ -7,7 +7,7 @@ import useQueryStore from './queryStore';
 /**
  * Provides an interface to read and write query string filters.
  *
- * @param queryKeys - An array of query string keys that are considered filters.
+ * @param queryKeys - An array of query string keys that are considered filters.  These are the only keys that will be added or removed.
  * @returns An array containing:
  *  - `filters` - A map of query string key to value, where the values are parsed JSON objects.
  *  - `setFilters` - A function that sets new filter values, merging them with existing non-filter query string values.

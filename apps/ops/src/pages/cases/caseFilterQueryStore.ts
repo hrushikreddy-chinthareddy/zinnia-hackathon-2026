@@ -6,8 +6,7 @@ import { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/fi
 import { CaseSearchAdditionalFilters, CaseSearchFilters } from '@deps/contexts/CaseManagementFilters';
 import { Statuses } from '@deps/models/case/case';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
-
-import useQueryFilters from './queryStoreFilters';
+import useQueryFilters from '@deps/utils/queryStoreFilters';
 
 export enum QueryKeys {
     carrier = 'carrier',
@@ -26,7 +25,8 @@ export enum QueryKeys {
     updatedDateStart = 'updatedDateStart',
 }
 
-// Convert query strings to filters
+// Convert query strings to filters used by case management search
+// Dev Note: Once the UI is updated to be more closely integrated with the API filters, we can make this a little more manageable.
 const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters => {
     const additionalFilters: CaseSearchAdditionalFilters = {
         processTypes: new Set([]),
@@ -170,6 +170,8 @@ const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters =>
     return { ...caseFilters, additionalFilters };
 };
 
+// Convert CaseSearchFilters to values supported by the case search api
+// Dev Note: This is hopefully a short-term solution until we update the UI to be more closely integrated with the API filter values.
 const convertFilterToQuery = (filters: CaseSearchFilters): ParsedUrlQueryInput => {
     const query: ParsedUrlQueryInput = {};
     const { limit, offset, sortDirection, additionalFilters } = filters;
@@ -242,6 +244,9 @@ const convertFilterToQuery = (filters: CaseSearchFilters): ParsedUrlQueryInput =
     return query;
 };
 
+// A drop-in replacement for a useState for the CaseManagementFilters with support for query params for filters
+// Returns the current filters and search values as well as a function to update them.
+// Search Values will not be added to query params as they are potentially PII
 export const useCaseFilterQueryStore = () => {
     const [queryStoreFilter, setQueryStoreFilter] = useQueryFilters(Object.values(QueryKeys));
     const [caseManagementFilters, setCaseManagementFilters] = useState<CaseSearchFilters>(convertQueryToFilters(queryStoreFilter));
