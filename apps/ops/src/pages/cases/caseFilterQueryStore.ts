@@ -15,6 +15,7 @@ export enum QueryKeys {
     createdDateEnd = 'createdDateEnd',
     createdDateStart = 'createdDateStart',
     limit = 'limit',
+    notInCaseStatus = 'notInCaseStatus',
     offset = 'offset',
     process = 'process',
     productName = 'productName',
@@ -39,7 +40,7 @@ const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters =>
         total: 0,
         sortDirection: 'desc',
         statusCounterTileFilter: 'All',
-        searchValue: { query: '' },
+        searchValue: {},
         toggleValue: 'policyNumber',
     };
 
@@ -91,6 +92,14 @@ const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters =>
 
     if (query[QueryKeys.limit] && !isNaN(parseInt(query[QueryKeys.limit] as string))) {
         caseFilters.limit = parseInt(query[QueryKeys.limit] as string);
+    }
+
+    if (query[QueryKeys.notInCaseStatus]) {
+        if (Array.isArray(query[QueryKeys.notInCaseStatus])) {
+            additionalFilters.notInCaseStatus = query[QueryKeys.notInCaseStatus] as Statuses[];
+        } else if (typeof query[QueryKeys.notInCaseStatus] === 'string') {
+            additionalFilters.notInCaseStatus = [query[QueryKeys.notInCaseStatus] as Statuses];
+        }
     }
 
     if (query[QueryKeys.offset] && !isNaN(parseInt(query[QueryKeys.offset] as string))) {
@@ -169,6 +178,7 @@ const convertFilterToQuery = (filters: CaseSearchFilters): ParsedUrlQueryInput =
         caseStatus,
         createdDateEnd,
         createdDateStart,
+        notInCaseStatus,
         processTypes,
         products,
         requestSubType,
@@ -189,6 +199,10 @@ const convertFilterToQuery = (filters: CaseSearchFilters): ParsedUrlQueryInput =
     }
     if (limit) {
         query[QueryKeys.limit] = limit;
+    }
+
+    if (notInCaseStatus) {
+        query[QueryKeys.notInCaseStatus] = notInCaseStatus;
     }
 
     if (offset) {

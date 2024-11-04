@@ -33,6 +33,7 @@ import { getAdvisorsExcelCaseSearchParams, getAdvisorsExcelCaseStatsParams } fro
 import {
     formatCaseTotals,
     getAdditionalFilters,
+    getCaseStatuses,
     getSearchValueObject,
     isSearchValueObjectEmpty,
     statusCounterTiles,
@@ -134,8 +135,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         try {
             const searchValueObject = getSearchValueObject(caseManagementFilters.searchValue, caseManagementFilters.toggleValue);
 
-            // const caseStatusFilter = getCaseStatuses(caseManagementFilters.statusCounterTileFilter, searchValueObject);
-
             let additionalFilters = getAdditionalFilters(caseManagementFilters.additionalFilters);
 
             // DEPU-2835 - temporary work around for Advisor Excel
@@ -186,7 +185,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
     }, [
         // for caseManagementFilters.toggleValue
         caseManagementFilters.searchValue,
-        caseManagementFilters.statusCounterTileFilter,
         caseManagementFilters.additionalFilters,
         caseManagementFilters.offset,
         caseManagementFilters.limit,
@@ -299,8 +297,22 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
 
     const handleToggle = (value: PolicySearchKeys) => setCaseManagementFilters(prevFilters => ({ ...prevFilters, toggleValue: value }));
 
-    const handleStatusTileClicked = (value: CaseStatusFilter) =>
-        setCaseManagementFilters(prevFilters => ({ ...prevFilters, statusCounterTileFilter: value, offset: 0 }));
+    const handleStatusTileClicked = (value: CaseStatusFilter) => {
+        const caseStatuses = getCaseStatuses(value, caseManagementFilters.searchValue);
+        setCaseManagementFilters(prevFilters => {
+            const newAdditionalFilters = {
+                ...prevFilters.additionalFilters,
+            };
+            delete newAdditionalFilters.caseStatus;
+            delete newAdditionalFilters.notInCaseStatus;
+            return {
+                ...prevFilters,
+                statusCounterTileFilter: value,
+                offset: 0,
+                additionalFilters: { ...newAdditionalFilters, ...caseStatuses },
+            };
+        });
+    };
 
     // Memoized Component(s)
     const searchBar = useMemo(() => {

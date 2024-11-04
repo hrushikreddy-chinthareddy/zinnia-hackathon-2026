@@ -811,6 +811,7 @@
                 "Renewal": "Renouvellements"
             }
         },
+        "selectStatus": "Sélectionner le statut",
         "sortOptions": {
             "newest": "Trier: Plus récent",
             "oldest": "Trier: Plus ancien"

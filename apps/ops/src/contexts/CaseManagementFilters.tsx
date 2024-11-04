@@ -30,6 +30,7 @@ export interface CaseSearchAdditionalFilters {
     updatedDateEnd?: string;
     age?: string;
     caseStatus?: Statuses[];
+    notInCaseStatus?: Statuses[];
     processTypes: Set<string>;
     requestSubType: Set<string>;
     carriers?: { [key: string]: string };

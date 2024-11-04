@@ -77,7 +77,9 @@ export const getCaseStatuses = (
             };
         case 'All':
         default:
-            return isSearchValueObjectEmpty(searchValueObject) ? { notInCaseStatus: [Statuses.Completed, Statuses.Canceled] } : {};
+            return isSearchValueObjectEmpty(searchValueObject)
+                ? { caseStatus: [], notInCaseStatus: [Statuses.Completed, Statuses.Canceled] }
+                : {};
     }
 };
 

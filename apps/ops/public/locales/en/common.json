@@ -817,6 +817,7 @@
                 "Renewal": "Renewals"
             }
         },
+        "selectStatus": "Select status",
         "sortOptions": {
             "newest": "Sort: Newest",
             "oldest": "Sort: Oldest"
