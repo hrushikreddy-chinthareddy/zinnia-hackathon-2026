@@ -1,21 +1,18 @@
-import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
-import { createRef, useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 
 import { TaskDataContext } from './task-context';
 
 type TaskProviderProps = {
     children: React.ReactNode;
-    taskData: any;
     formSchema: RJSFSchema;
     uiSchema: UiSchema;
-    formRef: any;
+    taskData: any;
 };
 
-export const TaskProvider = ({ children, taskData, formSchema, uiSchema }: TaskProviderProps) => {
-    const [formRef] = useState(createRef<Form>());
+export const TaskProvider = ({ children, formSchema, uiSchema, taskData }: TaskProviderProps) => {
     const [formData, setFormData] = useState(taskData);
-    return <TaskDataContext.Provider value={{ formRef, formData, setFormData, formSchema, uiSchema }}>{children}</TaskDataContext.Provider>;
+    return <TaskDataContext.Provider value={{ formData, setFormData, formSchema, uiSchema }}>{children}</TaskDataContext.Provider>;
 };
 
 export const useTask = () => {

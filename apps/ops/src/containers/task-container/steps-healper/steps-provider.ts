@@ -2,9 +2,9 @@ import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-ite
 import { TaskType } from '@deps/models/case/task';
 
 import { getFormSteps } from './steps-healper';
-import { FormConfigurationProvider, GetStepsProps } from './types';
+import { FormStepsProvider, GetStepsProps } from './types';
 
-export class StepsProvider implements FormConfigurationProvider {
+export class StepsProvider implements FormStepsProvider {
     getSteps: (taskType: TaskType, props: GetStepsProps) => Step[];
 
     constructor() {

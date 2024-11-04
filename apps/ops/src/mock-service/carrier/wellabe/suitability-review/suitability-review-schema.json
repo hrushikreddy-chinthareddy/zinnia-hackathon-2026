@@ -1,8 +1,6 @@
 {
     "formSchema": {
         "$schema": "http://json-schema.org/draft-07/schema#",
-        "title": "",
-        "description": "",
         "type": "object",
         "definitions": {
             "suitabilityStatus": {
@@ -71,7 +69,8 @@
             "suitabilityReviewStatus": {
                 "type": "object",
                 "required": [
-                    "suitabilityStatus"
+                    "suitabilityStatus",
+                    "declineReason"
                 ],
                 "properties": {
                     "suitabilityStatus": {
@@ -93,9 +92,12 @@
                         "then": {
                             "properties": {
                                 "declineReason": {
-                                    "type": "string",
+                                    "type": "array",
                                     "title": "Reason for Decline",
-                                    "$ref": "#/definitions/declineReason",
+                                    "items": {
+                                        "type": "string",
+                                        "$ref": "#/definitions/declineReason"
+                                    },
                                     "uniqueItems": true
                                 }
                             },
@@ -107,9 +109,29 @@
                 ]
             },
             "attachment": {
-                "type": "string",
-                "format": "data-url",
-                "title": "Add Attachment"
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "attachmentFile": {
+                            "type": "string",
+                            "title": "Add Attachments",
+                            "format": "data-url"
+                        },
+                        "documentId": {
+                            "type": "string",
+                            "title": "Document ID"
+                        },
+                        "documentType": {
+                            "type": "string",
+                            "title": "Document Type"
+                        },
+                        "uploadedOn": {
+                            "type": "string",
+                            "title": "Uploaded On"
+                        }
+                    }
+                }
             }
         }
     },
@@ -156,6 +178,7 @@
             "suitabilityStatus": {
                 "ui:options": {
                     "widget": "radio",
+                    "help": "Select suitability review decision",
                     "enumNames": [
                         "Accept",
                         "Decline"
@@ -165,7 +188,8 @@
             "declineReason": {
                 "ui:options": {
                     "label": false,
-                    "multiple": true,
+                    "help": "Provide decline reason",
+                    "class": "mt-0",
                     "enumNames": [
                         "Declined SPIF on internal transfer",
                         "Loss of benefit base",
@@ -198,18 +222,42 @@
                         "Reverse mortgage"
                     ]
                 }
-            },
-            "allOf": {
-                "declineReason": {
-                    "ui:options": {
-                        "label": false
-                    }
-                }
             }
         },
         "attachment": {
             "ui:options": {
                 "label": false
+            },
+            "items": {
+                "ui:options": {
+                    "label": false
+                },
+                "documentId": {
+                    "ui:options": {
+                        "label": false,
+                        "widget": "hidden"
+                    }
+                },
+                "documentType": {
+                    "ui:options": {
+                        "label": false,
+                        "widget": "hidden"
+                    }
+                },
+                "uploadedOn": {
+                    "ui:options": {
+                        "label": false,
+                        "widget": "hidden"
+                    }
+                },
+                "attachmentFile": {
+                    "items": {
+                        "ui:options": {
+                            "label": false,
+                            "widget": "file"
+                        }
+                    }
+                }
             }
         }
     }

@@ -86,44 +86,47 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
 
     return (
         <>
-            {multiple && (
-                <SelectComponent
-                    id={id}
-                    isMultiselect={true}
-                    label={label}
-                    value={selectedValues as { [key: string]: string }}
-                    required={required}
-                    disabled={disabled || readonly}
-                    onChange={_onChange}
-                    options={selectOptions}
-                    placeholder={placeholder}
-                    className="max-w-sm"
-                >
-                    {showPlaceholderOption && <option value="">{placeholder}</option>}
-                    {Array.isArray(enumOptions) &&
-                        enumOptions.map(({ value, label }, i) => {
-                            const disabled = enumDisabled && enumDisabled.indexOf(value) !== -1;
-                            return (
-                                <option key={i} value={String(i)} disabled={disabled}>
-                                    {label}
-                                </option>
-                            );
-                        })}
-                </SelectComponent>
-            )}
-            {!multiple && (
-                <SelectComponent
-                    id={id}
-                    label={label}
-                    value={selectedValues as string}
-                    required={required}
-                    disabled={disabled || readonly}
-                    onChange={_onChangeSingle}
-                    options={selectOptions}
-                    placeholder={placeholder}
-                    className="max-w-sm"
-                />
-            )}
+            <label htmlFor={id}>
+                {multiple && (
+                    <SelectComponent
+                        id={id}
+                        title={label}
+                        isMultiselect={true}
+                        value={selectedValues as { [key: string]: string }}
+                        required={required}
+                        disabled={disabled || readonly}
+                        onChange={_onChange}
+                        options={selectOptions}
+                        placeholder={placeholder}
+                        className="max-w-sm"
+                    >
+                        {showPlaceholderOption && <option value="">{placeholder}</option>}
+                        {Array.isArray(enumOptions) &&
+                            enumOptions.map(({ value, label }, i) => {
+                                const disabled = enumDisabled && enumDisabled.indexOf(value) !== -1;
+                                return (
+                                    <option key={i} value={String(i)} disabled={disabled}>
+                                        {label}
+                                    </option>
+                                );
+                            })}
+                    </SelectComponent>
+                )}
+                {!multiple && (
+                    <SelectComponent
+                        id={id}
+                        title={label}
+                        label={label}
+                        value={selectedValues as string}
+                        required={required}
+                        disabled={disabled || readonly}
+                        onChange={_onChangeSingle}
+                        options={selectOptions}
+                        placeholder={placeholder}
+                        className="max-w-sm"
+                    />
+                )}
+            </label>
         </>
     );
 }

@@ -1,20 +1,31 @@
-import { useCallback, useContext } from 'react';
+import Form, { IChangeEvent } from '@rjsf/core';
+import { GenericObjectType, RJSFSchema } from '@rjsf/utils';
+import React, { ForwardedRef, useCallback, useContext } from 'react';
 
 import DynamicForm from '@deps/components/dynamic-form/dynamic-form';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
+import { processDocuments } from '@deps/containers/task-container/task.healpers';
 
 type TaskFormProps = {
     isSummaryView?: boolean;
+    onSubmit: () => void;
 };
-export const TaskForm = ({ isSummaryView = false }: TaskFormProps) => {
-    const formState = useContext(TaskDataContext);
-    const { formData, setFormData, formSchema, uiSchema, formRef } = formState;
 
-    const handleSubmit = useCallback(({ formData, errors, schema }: any) => {
-        console.log('Submitted data:', formData);
-        console.log('Errors:', errors);
-        console.log('Schema:', schema);
-    }, []);
+export const TaskForm = React.forwardRef(function TaskFormComponent(
+    { isSummaryView = false, onSubmit }: TaskFormProps,
+    forwardedRef: ForwardedRef<Form>
+) {
+    const formState = useContext(TaskDataContext);
+    const { formData, setFormData, formSchema, uiSchema } = formState;
+
+    const handleSubmit = useCallback(
+        (data: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
+            processDocuments(data.formData);
+            setFormData(data.formData);
+            onSubmit();
+        },
+        [onSubmit, setFormData]
+    );
 
     const handleChange = useCallback(() => {
         setFormData(formData);
@@ -27,8 +38,8 @@ export const TaskForm = ({ isSummaryView = false }: TaskFormProps) => {
             uiSchema={uiSchema}
             onChange={handleChange}
             onSubmit={handleSubmit}
-            ref={formRef}
+            ref={forwardedRef}
             disabled={isSummaryView}
         ></DynamicForm>
     );
-};
+});

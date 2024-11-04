@@ -32,6 +32,30 @@ export const getDocument = async (documentNumber: string, docType: string, clien
     }
 };
 
+export const uploadDocument = async (document: any): Promise<any | null> => {
+    try {
+        const url = `${baseAppUrl}/api/document/v3/documents`;
+        const config = {
+            headers: {
+                'Content-type': 'multipart/form-data',
+                accept: 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            },
+        };
+        const fileData = { file: document, fileExtension: document.name.split('.').pop() };
+        const { data } = await client.post<any, AxiosResponse>(url, fileData, config);
+        return data;
+    } catch (error: any) {
+        logWarn('An error occurred while uploading document', {
+            ...parseErrorInformation(error),
+            file: 'queries/api/documents',
+            function: 'uploadDocument',
+        });
+
+        return error.response;
+    }
+};
+
 export const downloadDocument = async (
     documentNumber: string,
     docType: string,

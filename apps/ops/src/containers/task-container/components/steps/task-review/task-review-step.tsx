@@ -15,7 +15,7 @@ import { uncapitalizeFirstLetter } from '@deps/utils/optimizely/utils';
 
 import { TaskReview } from './task-review';
 
-interface TaskReviewStepProps {
+type TaskReviewStepProps = {
     policyNumber: string;
     documentNumber: string;
     docType: string;
@@ -23,7 +23,7 @@ interface TaskReviewStepProps {
     taskInfoLink: string;
     document?: DocumentData;
     taskType: TaskType;
-}
+};
 
 export const TaskReviewStep = ({ policyNumber, documentNumber, docType, clientCode, taskInfoLink, taskType }: TaskReviewStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${uncapitalizeFirstLetter(taskType)}.taskReview` });
@@ -52,7 +52,7 @@ export const TaskReviewStep = ({ policyNumber, documentNumber, docType, clientCo
                 formNumber: '',
             },
         });
-    }, [clientCode]);
+    }, [clientCode, formData, setFormData]);
 
     return (
         <WorkflowCard

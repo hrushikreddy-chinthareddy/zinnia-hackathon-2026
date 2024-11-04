@@ -15,6 +15,6 @@ export interface GetSteps {
     (taskType: TaskType, props: GetStepsProps): Step[];
 }
 
-export interface FormConfigurationProvider {
+export interface FormStepsProvider {
     getSteps: GetSteps;
 }

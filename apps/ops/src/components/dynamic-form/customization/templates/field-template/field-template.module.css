@@ -2,6 +2,6 @@
     margin-bottom: var(--measure-dimension-gap-xl);
 }
 
-.fieldChildren {
+.children {
     margin-top: var(--measure-dimension-z-space-4, 0.125rem);
 }

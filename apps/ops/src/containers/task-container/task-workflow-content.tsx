@@ -14,13 +14,6 @@ import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icon
 import ProgressBarSteps from '../progress-bar-steps/progress-bar-steps';
 import { Step } from '../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import DocumentPortalPanel from './components/side-panel/document-portal-panel';
-// type TaskMap = {
-//     [key in TaskType]: {
-//         schema?: RJSFSchema;
-//         uiSchema?: UiSchema;
-//         tabTitle?: string;
-//     };
-// };
 
 type TaskPageProps = {
     steps: Step[];
@@ -35,73 +28,15 @@ type TaskPageProps = {
     taskInfoLink?: string;
 };
 
-export const TaskWorkflowContent = ({
-    steps,
-    policy,
-    caseId,
-    taskType,
-    documentNumber = '',
-    docType = '',
-    clientCode,
-    showJointOwner = false,
-    taskInfoLink,
-}: TaskPageProps) => {
-    // const taskMap: TaskMap = {
-    //     [TaskType.Suitability]: {
-    //         schema: formSchema,
-    //         uiSchema: uiSchema,
-    //         tabTitle: 'Input Suitability Data',
-    //     },
-    //     [TaskType.Withdrawal]: {
-    //         schema: formSchema,
-    //         uiSchema: uiSchema,
-    //         tabTitle: 'Input Suitability Data',
-    //     },
-    //     [TaskType.OFT]: {},
-    //     [TaskType.RMD]: {},
-    //     [TaskType.SSW]: {},
-    //     [TaskType.RENEWAL]: {},
-    //     [TaskType.REG60]: {},
-    // };
+export const TaskWorkflowContent = ({ steps, policy, documentNumber = '', docType = '', showJointOwner = false }: TaskPageProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
-    // const [task] = useState(taskMap[taskType]);
-    const { currentStepIndex, setCurrentStepIndex, goToNext } = useWorkflow();
+    const { currentStepIndex, setCurrentStepIndex } = useWorkflow();
     const sideSheet = useSideSheetContext();
-    // const [formData, setFormData] = useState(taskData);
-    // const formRef = createRef<Form>();
-
     const globalValuesData = useMemo(() => policyDataToGlobalValues(new PolicyDetails(policy), t), [policy, t]);
 
     const { marketingName, planCode, policyNumber, productType, status, tooltip, variant } = globalValuesData;
 
-    // const handleContinue = async () => {
-    //     if (currentStepIndex === 2 && formRef.current) {
-    //         formRef.current.submit();
-    //         // const uiSchema = formRef.current.state.uiSchema;
-    //         // const schema = formRef.current.state.schema;
-    //         const { errors } = formRef.current.validate(formRef.current.state.formData);
-    //         console.log('Form Errors:', errors);
-    //         if (errors && errors.length === 0) {
-    //             console.log('form data ->', formRef.current.state.formData);
-    //         }
-    //         goToNext();
-    //     } else {
-    //         goToNext();
-    //     }
-    // };
-
-    // const mainCta = {
-    //     text: 'Continue',
-    //     onClick: handleContinue,
-    // };
-
-    // const secondaryCta = {
-    //     text: 'Cancel',
-    //     href: `/cases/${caseId}`,
-    // };
-
     const handleProgressBarClick = (step: Step) => {
-        console.log('handleProgressBarClick clicked', step);
         if (step.isDisabled || currentStepIndex === step.index) return;
 
         setCurrentStepIndex(step.index);

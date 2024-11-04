@@ -1,5 +1,6 @@
+import Form from '@rjsf/core';
 import { useTranslation } from 'next-i18next';
-import { useCallback } from 'react';
+import { createRef, memo, useCallback } from 'react';
 
 import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
@@ -10,28 +11,37 @@ import { uncapitalizeFirstLetter } from '@deps/utils/optimizely/utils';
 
 import { TaskForm } from './task-form';
 
-interface TaskFormStepProps {
+type TaskFormStepProps = {
     isSummaryView?: boolean;
     formRef?: any;
     taskInfoLink?: string;
     taskType: TaskType;
-}
+};
 
-export const TaskFormStep = ({ taskType, isSummaryView = false, taskInfoLink }: TaskFormStepProps) => {
+const TaskFormStep = ({ taskType, isSummaryView = false, taskInfoLink }: TaskFormStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${uncapitalizeFirstLetter(taskType)}.taskReview` });
     const { goToNext } = useWorkflow();
+    const formRef = createRef<Form>();
 
     const handleStepContinue = useCallback(() => {
+        const isValid = formRef.current?.validateForm();
+        if (isValid) {
+            formRef.current?.submit();
+        }
+    }, [formRef]);
+
+    const handleSubmit = useCallback(() => {
         goToNext();
     }, [goToNext]);
 
     return (
         <WorkflowCard
+            className="!gap-0"
             title={t('title')}
             subtitle={t('subTitle') as string}
             footerContent={
                 <TransactionNavigationButtons
-                    className="mt-4"
+                    className="!gap-0"
                     handleContinue={handleStepContinue}
                     parentPage={ParentPage.CreateCase}
                     leaveTransactionLink={taskInfoLink}
@@ -40,9 +50,10 @@ export const TaskFormStep = ({ taskType, isSummaryView = false, taskInfoLink }: 
         >
             <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1">
-                    <TaskForm isSummaryView={isSummaryView} />
+                    <TaskForm isSummaryView={isSummaryView} ref={formRef} onSubmit={handleSubmit} />
                 </div>
             </div>
         </WorkflowCard>
     );
 };
+export const MemoizedTaskFormStep = memo(TaskFormStep);

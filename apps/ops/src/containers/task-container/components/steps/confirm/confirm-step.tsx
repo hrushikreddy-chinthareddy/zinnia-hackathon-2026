@@ -11,6 +11,7 @@ import { TaskDataContext } from '@deps/containers/task-container/task-context';
 import { TaskType } from '@deps/models/case/task';
 import { updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
+import { uncapitalizeFirstLetter } from '@deps/utils/optimizely/utils';
 
 interface ConfirmStepProps {
     caseId: string;
@@ -18,26 +19,29 @@ interface ConfirmStepProps {
     taskType: TaskType;
 }
 const ConfirmStep = ({ caseId, taskId, taskType }: ConfirmStepProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${taskType.toLowerCase()}.confirmStep` });
+    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${uncapitalizeFirstLetter(taskType)}.confirmStep` });
     const router = useRouter();
     const formState = useContext(TaskDataContext);
-    const { formData } = formState;
 
     const [submitFailed, setSubmitFailed] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [timer] = useState(performance.now());
+    const { formData } = formState;
 
-    const submit = useCallback(async () => {
-        const response = await updateTask(caseId, taskId, formData, timer);
-
-        if (response && response.id) {
-            setSubmitFailed(false);
-        } else {
-            setSubmitFailed(true);
-        }
-
-        setIsLoading(false);
-    }, [caseId, formData, taskId, timer]);
+    const submit = useCallback(
+        async (formRef?: any) => {
+            formRef?.current?.submit();
+            setIsLoading(false);
+            const response = await updateTask(caseId, taskId, formData, timer);
+            if (response && response.id) {
+                setSubmitFailed(false);
+            } else {
+                setSubmitFailed(true);
+            }
+            setIsLoading(false);
+        },
+        [caseId, formData, taskId, timer]
+    );
 
     useEffect(() => {
         submit();

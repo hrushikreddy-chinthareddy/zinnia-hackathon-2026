@@ -1,8 +1,6 @@
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
-import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { createRef } from 'react';
 
 import NoNavLayout from '@deps/components/no-nav-layout';
 import { buildTaskLink } from '@deps/components/tasks-listing/task-listing.helpers';
@@ -53,12 +51,10 @@ export const TaskPage: React.FC<TaskPageProps> = ({
     taskData,
     taskInfoLink,
 }: TaskPageProps) => {
-    const formRef = createRef<Form>();
-
     return (
         <div>
             <NoNavLayout fullHeight={true}>
-                <TaskProvider taskData={taskData} formSchema={formSchema} uiSchema={uiSchema} formRef={formRef}>
+                <TaskProvider taskData={taskData} formSchema={formSchema} uiSchema={uiSchema}>
                     <TaskContainer
                         policy={policy}
                         docType={docType}
