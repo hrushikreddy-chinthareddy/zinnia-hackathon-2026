@@ -1,16 +1,27 @@
 import React from 'react';
 
+import styles from './CardContainer.module.css';
+
 interface CardContainerProps {
     children: React.ReactNode;
     classNames?: string;
     containerClassNames?: string;
     fullWidth?: boolean;
+    variant?: 'primary' | 'secondary';
 }
 
-const CardContainer = ({ children, classNames = '', containerClassNames = '', fullWidth = true }: CardContainerProps) => {
+const CardContainer = ({
+    children,
+    classNames = '',
+    containerClassNames = '',
+    fullWidth = true,
+    variant = 'primary',
+}: CardContainerProps) => {
+    const variantClass = variant === 'primary' ? styles.primary : styles.secondary;
+
     return (
-        <div className={`flex w-full bg-white ${containerClassNames}`} data-testid="card-container">
-            <div className={`p-4 ${fullWidth ? 'w-full' : ''} md:p-6 lg:p-8 ${classNames}`}>{children}</div>
+        <div className={`${styles.cardContainer} ${variantClass} ${containerClassNames}`} data-testid="card-container">
+            <div className={`${styles.cardContent} ${fullWidth ? 'w-full' : ''} ${classNames}`}>{children}</div>
         </div>
     );
 };

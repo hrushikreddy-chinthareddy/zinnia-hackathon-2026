@@ -4,17 +4,11 @@ import { TFunction } from 'next-i18next';
 import { PermissionsContextProps } from '@deps/contexts/PermissionsContext';
 import { UserPermission } from '@deps/models/user-profile';
 import { NavBarLinkProps } from '@deps/navigation/nav-bar-link/nav-bar-link';
-import { ReactComponent as LockIcon } from '@deps/styles/elements/icons/actions/lock.svg';
 import { ReactComponent as CollectionIcon } from '@deps/styles/elements/icons/icons_outlined/collection.svg';
+import { ReactComponent as DashboardIcon } from '@deps/styles/elements/icons/icons_outlined/dashboard.svg';
 import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icons_outlined/document-duplicate.svg';
-import { ENVIRONMENT_NAME, getEnvironment } from '@deps/utils/environment.helper';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
-
-const accessManagementUrls: Record<string, string> = {
-    [ENVIRONMENT_NAME.DEV]: 'http://alb-dep-dev-615563491.us-east-1.elb.amazonaws.com/',
-    [ENVIRONMENT_NAME.QA]: 'http://alb-dep-qa-1124930781.us-east-1.elb.amazonaws.com/',
-};
 
 export const getMainNavItems = async (
     t: TFunction,
@@ -27,10 +21,9 @@ export const getMainNavItems = async (
     const policySearchHref = t('site.navLinks.policySearch.link') || '';
     const caseRenewalCreateHref = t('site.navLinks.caseRenewalCreate.link') || '';
     const transactionOpsSuiteHref = t('site.navLinks.transactionOpsSuite.link') || '';
-    const accessManagementText = t('site.navLinks.accessManagement.text');
-    const accessManagementHref = accessManagementUrls[getEnvironment()];
 
     const shouldShowNewExperience = featureFlags?.[FEATURE_FLAGS.NEW_EXP];
+    const shouldShowCaseStatsDashboard = featureFlags?.[FEATURE_FLAGS.CASE_STATS_DASHBOARD];
     const navItems: NavBarLinkProps[] = [];
 
     const getNavItems = async () => {
@@ -38,8 +31,7 @@ export const getMainNavItems = async (
         const isAllowReadPolicyAdmin = await permissionContext.doesUserHavePagePermission(UserPermission.AllowReadPolicyAdmin);
         const isAllowReadOtpRenewals = await permissionContext.doesUserHavePagePermission(UserPermission.AllowReadOtpRenewals);
         const isAdvisorsExcel = await permissionContext.getIsAdvisorsExcel();
-        const isSuperAdmin = await permissionContext.getIsSuperAdmin();
-        const isAllowAccessManagement = isSuperAdmin && isAllowReadOtpRenewals;
+        const hasDashboardPermission = permissionContext.hasDashboardPermission;
 
         if (isAdvisorsExcel || isAllowReadCaseManagement) {
             navItems.push({ label: caseLinkText, link: caseLinkHref, icon: <DocumentIcon width={20} height={20} /> });
@@ -67,12 +59,11 @@ export const getMainNavItems = async (
                       icon: <CollectionIcon width={20} height={20} />,
                   });
         }
-        if (isAllowAccessManagement) {
-            navItems.push({
-                label: accessManagementText,
-                link: accessManagementHref,
-                icon: <LockIcon width={20} height={20} />,
-            });
+
+        if (shouldShowCaseStatsDashboard && hasDashboardPermission) {
+            const dashboardText = t('site.navLinks.dashboard.text') || '';
+            const dashboardHref = t('site.navLinks.dashboard.link') || '';
+            navItems.push({ label: dashboardText, link: dashboardHref, icon: <DashboardIcon width={20} height={20} /> });
         }
 
         return navItems;

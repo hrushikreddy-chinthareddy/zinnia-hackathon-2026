@@ -42,6 +42,7 @@ const UpcomingPaymentCard = ({
     additionalCharges,
     footerLinks,
     className,
+    titleCase = true,
 }: UpcomingPaymentCardProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'premium.upcoming',
@@ -62,6 +63,12 @@ const UpcomingPaymentCard = ({
         sideSheet.handleOpen(true);
     };
 
+    if (title?.length) {
+        title = titleCase ? toTitleCase(title) : title;
+    } else {
+        title = `${t('upcomingAutopay')}`;
+    }
+
     return (
         <CardSection
             data-testid={UpcomingPaymentCardTest.CONTAINER}
@@ -69,7 +76,7 @@ const UpcomingPaymentCard = ({
             headerContent={
                 <>
                     <div className="w-6">{icon}</div>
-                    <h2 className="font-primary text-hl-2">{title ? toTitleCase(title) : t('upcomingAutopay')}</h2>
+                    <h2 className="font-primary text-hl-2">{title}</h2>
                 </>
             }
             footerContent={footerLinks}

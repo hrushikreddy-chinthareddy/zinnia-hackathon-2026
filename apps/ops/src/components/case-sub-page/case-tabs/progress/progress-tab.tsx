@@ -161,7 +161,7 @@ const StepProgressBar = ({
     let completionBarColor;
     switch (caseStatus) {
         case Statuses.Completed:
-            completionBarColor = 'bg--semantic-success';
+            completionBarColor = 'bg-semantic-success';
             break;
         case Statuses.Exception:
             completionBarColor = 'bg-semantic-error';

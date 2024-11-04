@@ -1,18 +1,17 @@
 .bankContainer {
   display: flex;
   flex-direction: column;
-  border: var(--measure-dimension-stroke-sm) solid
-    var(--color-base-border-border-light);
+  border: var(--measure-dimension-stroke-sm) solid var(--color-base-border-border-light);
   border-radius: var(--measure-dimension-radius-sm);
   padding: var(--measure-dimension-padding-2xl);
   max-width: 375px;
   cursor: pointer;
 
   &:hover {
-    border-color: var(--color-states-hover-hover-border);
+    border-color: var(--color-states-hover-border-hover-border);
   }
 
-  > * {
+  >* {
     margin-bottom: var(--measure-dimension-gap-xs);
   }
 
@@ -24,7 +23,7 @@
     border-color: var(--color-states-selected-selected-primary-border);
 
     &:hover {
-      border-color: var(--color-states-hover-hover-border);
+      border-color: var(--color-states-hover-border-hover-border);
     }
   }
 

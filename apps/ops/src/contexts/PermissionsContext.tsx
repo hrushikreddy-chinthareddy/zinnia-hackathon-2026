@@ -1,11 +1,13 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
-import { createContext, ReactNode, useContext } from 'react';
+import { BulkCheckTuple, checkIfUserHasDashboardAccess, checkIfUserIsSuperAdmin } from '@zinnia/utils';
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
 import { PermissionsModel, UserPermission } from '@deps/models/user-profile';
-import { checkTuple, getCarrierList, checkIsSuperAdminClient } from '@deps/queries/api/fga';
+import { checkTuple, getCarrierList, bulkCheckResponseClient } from '@deps/queries/api/fga';
 import { AUDIENCE } from '@deps/queries/api-config';
 import { FgaRelation } from '@deps/types/fga';
+
 export interface PermissionsContextProps {
     permissions: PermissionsModel;
     getUserPartyId: () => string;
@@ -17,7 +19,9 @@ export interface PermissionsContextProps {
         planCode: string | string[] | undefined,
         policyNumber: string | undefined
     ) => Promise<boolean>;
-    getIsSuperAdmin: () => Promise<boolean>;
+    fgaRoles: BulkCheckTuple[];
+    isSuperAdmin: boolean;
+    hasDashboardPermission: boolean;
 }
 
 export const PermissionContext = createContext<PermissionsContextProps>({} as PermissionsContextProps);
@@ -31,19 +35,32 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
 
     const { user } = useUser();
     const partyId = user?.partyId as string;
+    const [fgaRoles, setFgaRoles] = useState<BulkCheckTuple[]>([]);
+    const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+    const [hasDashboardPermission, setHasDashboardPermission] = useState(false);
 
-    const getIsSuperAdmin = async (): Promise<boolean> => {
-        try {
-            if (!partyId) return false;
+    useEffect(() => {
+        const getRoles = async () => {
+            try {
+                if (!partyId) return;
+                const roles = await bulkCheckResponseClient(partyId);
+                if (!roles) return;
 
-            const isSuperAdmin = await checkIsSuperAdminClient({
-                partyId,
-            });
-            return !!isSuperAdmin;
-        } catch {
-            return false;
-        }
-    };
+                setFgaRoles(roles.tuples);
+                const superAdmin = checkIfUserIsSuperAdmin(roles?.tuples);
+                const hasDashboard = checkIfUserHasDashboardAccess(roles?.tuples);
+                setIsSuperAdmin(!!superAdmin);
+                setHasDashboardPermission(!!hasDashboard);
+            } catch (error: any) {
+                console.error('getRoles::An error occurred while checking tuples', {
+                    file: 'contexts/permissions-context',
+                    function: 'getRoles',
+                });
+            }
+        };
+
+        getRoles();
+    }, [partyId]);
 
     const getIsAdvisorsExcel = async (): Promise<boolean> => {
         if (!partyId) return false;
@@ -118,7 +135,9 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 getUserPartyId,
                 doesUserHavePagePermission,
                 canEditPolicy,
-                getIsSuperAdmin,
+                isSuperAdmin,
+                fgaRoles,
+                hasDashboardPermission,
             }}
         >
             {children}

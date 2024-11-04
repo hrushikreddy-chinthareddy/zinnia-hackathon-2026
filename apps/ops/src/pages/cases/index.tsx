@@ -108,7 +108,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         }
 
         try {
-            console.log('caseStatsRequest', caseStatsRequest);
             const response = await getCaseStats(caseStatsRequest);
 
             if ('stats' in response) {

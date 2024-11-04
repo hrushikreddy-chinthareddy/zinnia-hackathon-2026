@@ -86,13 +86,22 @@ const SelectComponent = ({
     placeholder,
     size = FieldSize.Small,
     value,
+    onOpenChange,
 }: SelectProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const MainComponent = isMultiselect ? DropdownMenu : Select;
 
+    const handleOnOpenChange = (isOpen: boolean) => {
+        setIsOpen(isOpen);
+
+        if (onOpenChange) {
+            onOpenChange(isOpen);
+        }
+    };
+
     const rootProps = {
         open: isOpen,
-        onOpenChange: setIsOpen,
+        onOpenChange: handleOnOpenChange,
         ...(!isMultiselect && {
             value,
             onValueChange: onChange,

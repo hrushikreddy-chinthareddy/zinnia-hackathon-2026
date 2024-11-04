@@ -18,11 +18,14 @@ export type MultiselectOption = {
 
 type Option = SimpleOption | MultiselectOption;
 
+export type ValueType = string | { [key: string]: string } | undefined;
+
 export type SimpleSelectProps = {
     onChange: (value: string) => void;
     options: SimpleOption[];
     isMultiselect?: never;
     value?: string;
+    onOpenChange?: (isOpen: boolean) => void;
 };
 
 export type MultiselectProps = {
@@ -30,6 +33,7 @@ export type MultiselectProps = {
     options: MultiselectOption[];
     isMultiselect: true;
     value: { [key: string]: string };
+    onOpenChange?: (isOpen: boolean) => void;
 };
 
 export type SelectProps = (SimpleSelectProps | MultiselectProps) & { disabled?: boolean } & Omit<FieldProps, 'onChange' | 'value'>;
