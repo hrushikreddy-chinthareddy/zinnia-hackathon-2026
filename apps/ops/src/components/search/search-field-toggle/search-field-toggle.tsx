@@ -1,10 +1,12 @@
+import { AssistiveText, AssistiveTextVariant, Icon, IconType } from '@zinnia/bloom/components';
+import clsx from 'clsx';
 import { ChangeEvent, RefObject, useContext } from 'react';
 
-import Field, { FieldType, FieldVariant } from '@deps/components/fields/field';
 import { PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
 import { toSentenceCase } from '@deps/helpers/string.helper';
 import { LabelValue } from '@deps/types/data';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
+
 import styles from './search-field-toggle.module.css';
 
 interface SearchFieldToggleProps {
@@ -35,27 +37,48 @@ export const SearchFieldContainer = ({
         value = value.replaceAll(replaceValue, '') || '';
     }
 
-    return (
-        <Field
-            value={value}
-            key={'search-field-toggle-' + policyKey}
-            autoFocus={autoFocus}
-            type={FieldType.BaseActive}
-            variant={showFieldErrorMessage ? FieldVariant.Error : FieldVariant.Default}
-            formatOptions={format ? { format, mask, prefix } : undefined}
-            placeholder={fullLabel ? fullLabel : toSentenceCase(label)}
-            onChange={e => {
-                const text = (e.target as HTMLInputElement).value;
+    const inputType = () => {
+        switch (activeLabels.value) {
+            case 'policyNumber':
+            case 'ssn':
+                return 'number';
+            default:
+                return 'text';
+        }
+    };
 
-                handleChange(e, text, policyKey as PolicySearchKeys);
-            }}
-            onClear={onClear}
-            handleEnterKey={handleEnterKey}
-            isClearable
-            message={showFieldErrorMessage && errorMessage ? errorMessage : ''}
-            containerClassName={styles.fieldContainer}
-            className={`${styles.field} text-body-sm`}
-        />
+    return (
+        <div className={clsx(styles.inputContainer)}>
+            <Icon type={IconType.SEARCH} className={styles.icon} color="#676767" />
+            <input
+                id="case-search-input"
+                type={inputType()}
+                placeholder={placeholder ? placeholder : toSentenceCase(label)}
+                className={clsx(styles.input, 'text-body-sm', styles[inputType()])}
+                value={value}
+            />
+            {showFieldErrorMessage && errorMessage && (
+                <AssistiveText text={errorMessage} variant={AssistiveTextVariant.Error} className="mt-2" />
+            )}
+            {/* <Field
+                value={value}
+                key={'search-field-toggle-' + policyKey}
+                autoFocus={autoFocus}
+                type={FieldType.BaseActive}
+                variant={showFieldErrorMessage ? FieldVariant.Error : FieldVariant.Default}
+                formatOptions={format ? { format, mask, prefix } : undefined}
+                placeholder={fullLabel ? fullLabel : toSentenceCase(label)}
+                onChange={e => {
+                    const text = (e.target as HTMLInputElement).value;
+
+                    handleChange(e, text, policyKey as PolicySearchKeys);
+                }}
+                onClear={onClear}
+                message={showFieldErrorMessage && errorMessage ? errorMessage : ''}
+                containerClassName={styles.fieldContainer}
+                className={`${styles.field} text-body-sm`}
+            /> */}
+        </div>
     );
 };
 

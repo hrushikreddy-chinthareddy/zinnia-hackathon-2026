@@ -756,11 +756,13 @@
             "buttons": {
                 "policyNumber": "Numéro de police",
                 "ssn": "SSN",
+                "ownerSsn": "SSN du propriétaire",
                 "ssnFullLabel": "Numéro de sécurité sociale du propriétaire",
                 "ssnPlaceholder": "###-##-####",
                 "name": "Nom",
-                "firstName": "Prénom du propriétaire",
-                "lastName": "Nom de famille du propriétaire"
+                "firstName": "Prénom",
+                "lastName": "Nom de famille",
+                "ownerName": "Nom du propriétaire"
             }
         },
         "quickSearch": {

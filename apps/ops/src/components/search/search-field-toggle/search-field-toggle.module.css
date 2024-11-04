@@ -1,16 +1,38 @@
-.fieldContainer {
-    & .field {
-        border-radius: 0;
-    }
-    &:last-child .field {
+.inputContainer {
+    position: relative;
+
+    &:last-child .input {
         border-radius: 0px var(--measure-border-radius-radius-md) var(--measure-border-radius-radius-md) 0px;
     }
 }
 
-.field {
+.input {
+    --iconSize: 24px;
     border: 2px solid var(--color-base-border-border-subtle);
+    border-left-width: 0;
+    border-radius: 0;
+    padding: var(--measure-spacing-padding-lg) var(--measure-spacing-padding-2xl);
+    padding-left: calc(var(--iconSize) + var(--measure-dimension-gap-lg) + var(--measure-spacing-padding-2xl));
 
-    & input {
-        padding: var(--measure-spacing-padding-lg) var(--measure-spacing-padding-2xl);
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
     }
+
+    /* to do - variable? */
+    &.number {
+        width: 306px;
+    }
+
+    /* to do - variable? */
+    &.text {
+        width: 186px;
+    }
+}
+
+.icon {
+    position: absolute;
+    left: 16px;
+    top: 8px;
 }

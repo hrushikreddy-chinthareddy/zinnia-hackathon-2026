@@ -1,3 +1,6 @@
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { Icon, IconType } from '@zinnia/bloom/components';
+import clsx from 'clsx';
 import { TFunction, useTranslation } from 'next-i18next';
 import { ChangeEvent, RefObject, useCallback, useContext, useEffect, useState } from 'react';
 
@@ -8,12 +11,9 @@ import { PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
 import { LabelValue } from '@deps/types/data';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 
-import SearchFieldToggle from './search-field-toggle/search-field-toggle';
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import Typography, { TypographyVariant } from '../typography/typography';
 import styles from './search-bar.module.css';
-import clsx from 'clsx';
-import { Icon, IconType } from '@zinnia/bloom/components';
+import SearchFieldToggle from './search-field-toggle/search-field-toggle';
+import Typography, { TypographyVariant } from '../typography/typography';
 
 export const SearchBarInitialValues: SearchViewQuery = {};
 
@@ -122,14 +122,16 @@ const SearchBar = ({
             <div className="flex">
                 <DropdownMenu.Root>
                     <DropdownMenu.Trigger className={clsx(styles.dropdownTrigger, 'typography-content-body-sm')}>
-                        <Typography variant={TypographyVariant.BodySm}>{activeLabels.label}</Typography>
+                        <label htmlFor="case-search-input">
+                            <Typography variant={TypographyVariant.BodySm}>{activeLabels.label}</Typography>
+                        </label>
                         <Icon type={IconType.CHEVRON} height={22} width={22} color="#00628B" />
                     </DropdownMenu.Trigger>
 
                     <DropdownMenu.Portal>
                         <DropdownMenu.Content className={styles.dropdownMenu}>
-                            {dropdownLabels.map(item => (
-                                <DropdownMenu.Item className={styles.dropdownItem}>
+                            {dropdownLabels.map((item, index) => (
+                                <DropdownMenu.Item className={styles.dropdownItem} key={`dropdown-item-${index}`}>
                                     <Typography variant={TypographyVariant.BodySm}>{item.label}</Typography>
                                 </DropdownMenu.Item>
                             ))}
