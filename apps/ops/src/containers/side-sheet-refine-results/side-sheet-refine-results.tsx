@@ -241,7 +241,7 @@ export default function SideSheetRefineResults({
         });
     };
 
-    const updateProcessFilters = (clickedProcessType: string) => {
+    const updateProcessFilters = (_isSelected: boolean, clickedProcessType: string) => {
         const newProcessTypes = new Set(additionalFilters.processTypes);
 
         if (newProcessTypes.has(clickedProcessType)) {
@@ -271,7 +271,7 @@ export default function SideSheetRefineResults({
         }));
     };
 
-    const updateProductNameFilters = (clickedProductName: string) => {
+    const updateProductNameFilters = (_isSelected: boolean, clickedProductName: string) => {
         const newProductNameFilters = new Set(additionalFilters.products);
 
         if (newProductNameFilters.has(clickedProductName)) {
@@ -286,7 +286,7 @@ export default function SideSheetRefineResults({
         }));
     };
 
-    const updateRequestSubTypeFilters = (clickedSubType: string) => {
+    const updateRequestSubTypeFilters = (_isSelected: boolean, clickedSubType: string) => {
         const newRequestSubTypes = new Set(additionalFilters.requestSubType);
 
         if (newRequestSubTypes.has(clickedSubType)) {
