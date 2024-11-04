@@ -7,7 +7,7 @@ import { CaseSearchAdditionalFilters, CaseSearchFilters } from '@deps/contexts/C
 import { Statuses } from '@deps/models/case/case';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 
-import { useQueryFilters } from './queryStoreFilters';
+import useQueryFilters from './queryStoreFilters';
 
 export enum QueryKeys {
     carrier = 'carrier',
@@ -260,3 +260,5 @@ export const useCaseFilterQueryStore = () => {
 
     return [caseManagementFilters, setFilters] as [typeof caseManagementFilters, typeof setFilters];
 };
+
+export default useCaseFilterQueryStore;

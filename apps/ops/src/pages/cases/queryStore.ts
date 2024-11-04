@@ -4,7 +4,7 @@ import { Dispatch, SetStateAction, useCallback } from 'react';
 
 // Adds and retrieves query params to the URL
 // Returns the current query params and a function to update them that operates like setState (value or function)
-export const useQueryStore = () => {
+const useQueryStore = () => {
     const router = useRouter();
 
     const setParams: Dispatch<SetStateAction<ParsedUrlQueryInput>> = useCallback(
@@ -17,3 +17,5 @@ export const useQueryStore = () => {
 
     return [router.query, setParams] as [typeof router.query, typeof setParams];
 };
+
+export default useQueryStore;

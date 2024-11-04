@@ -2,7 +2,7 @@ import { ParsedUrlQueryInput } from 'querystring';
 import { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
 import xss from 'xss';
 
-import { useQueryStore } from './queryStore';
+import useQueryStore from './queryStore';
 
 /**
  * Provides an interface to read and write query string filters.
@@ -53,3 +53,5 @@ export const useQueryFilters = (queryKeys: string[]) => {
 
     return [filters, setFilters] as [typeof filters, typeof setFilters];
 };
+
+export default useQueryFilters;
