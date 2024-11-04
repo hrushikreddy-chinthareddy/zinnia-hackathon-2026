@@ -9,7 +9,6 @@ import { StatGrouping, StatGroupingOptions, StatGroupingResponse } from '@deps/h
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
 import { AgingTimeRanges, AgingTimeRangesKeys, AgingTimeRangesKeysExtended, Case } from '@deps/models/case/case';
 import { ReactComponent as LighBulb } from '@deps/styles/elements/icons/icons_outlined/light-bulb.svg';
-import { debounce } from '@deps/utils/useDebounce';
 
 import ActiveAgingBars from './active-aging-bars';
 import ActiveAgingPies from './active-aging-pies';
@@ -221,7 +220,7 @@ const ActiveAging = ({ cases, classNames }: Props) => {
         );
     };
 
-    const handleWindowResize = debounce(() => {
+    const handleWindowResize = useCallback(() => {
         if (agingChartsRef.current) {
             const highchartsPlotBackground = agingChartsRef.current.container.current?.querySelector('.highcharts-plot-background');
             if (highchartsPlotBackground) {
@@ -229,11 +228,11 @@ const ActiveAging = ({ cases, classNames }: Props) => {
                 setAgingChartWidth(width);
             }
         }
-    }, 200);
+    }, []);
 
-    const onRenderChart = () => {
+    const onRenderChart = useCallback(() => {
         handleWindowResize();
-    };
+    }, [handleWindowResize]);
 
     useEffect(() => {
         if (cases && cases.length > 0) {

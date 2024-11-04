@@ -3,7 +3,6 @@ import Highcharts, { AxisLabelsFormatterContextObject } from 'highcharts';
 import more from 'highcharts/highcharts-more';
 import HighchartsReact, { HighchartsReactRefObject } from 'highcharts-react-official';
 import { forwardRef, useCallback, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import caseChartHelpers, { ChartConfigSeriesDataSimple } from '@deps/helpers/dashboard/case-chart-helpers';
 import { StatGroupingResponse } from '@deps/helpers/dashboard/types';
@@ -16,8 +15,6 @@ interface Props {
 }
 
 const ActiveAgingBars = forwardRef<HighchartsReactRefObject, Props>(({ statGrouping, classNames, onRenderChart }, ref) => {
-    const { t } = useTranslation(undefined);
-
     const [chartConfig, setChartConfig] = useState<Highcharts.Options>({});
 
     const getSeriesData = (statGrouping: StatGroupingResponse) => {
