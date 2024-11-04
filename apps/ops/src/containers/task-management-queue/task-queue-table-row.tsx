@@ -12,6 +12,7 @@ import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as SparklesIcon } from '@deps/styles/elements/icons/icons_outlined/sparkles.svg';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
+import { TaskSource } from '@deps/models/case/task';
 
 type TaskQueueTableRowProps = {
     task: ManagementTask;
@@ -24,30 +25,25 @@ const TaskQueueTableRow = ({ task }: TaskQueueTableRowProps) => {
 
     const createdAt = task?.createdAt ? dayjs(task.createdAt).format('MMM DD, YYYY h:mm a') : '-';
     const taskStatus = getTaskStatus(t, task?.status);
-    const documentNumber = task?.data ?  task?.data?.documentNumber :  '-';
+    const documentNumber = task?.data ? task?.data?.documentNumber : '-';
     const carrierName = getCarrierNameByClientId(task?.carrier) || task?.carrier?.toUpperCase();
     const transactionType = task?.process || '';
-    
-    const handleStartTask = async (taskData:ManagementTask<TaskStatus>, taskStatus: TaskStatus ) => {
+
+    const handleStartTask = async (taskData: ManagementTask<TaskStatus>, taskStatus: TaskStatus) => {
         if (taskStatus === TaskStatus.InProgress) {
             router.push(`/nigo-entry?taskId=${taskData.id}`);
             return;
         }
 
         try {
-            const body = {...taskData, status: TaskStatus.InProgress}
-            const response = await updateTask(
-                taskData.caseId,
-                taskData.id,
-                body,
-                timer
-            );
+            const body = { ...taskData, status: TaskStatus.InProgress, source: TaskSource.ZinniaTaskManagement };
+            const response = await updateTask(taskData.caseId, taskData.id, body, timer);
 
             if (response) {
                 router.push(`/nigo-entry?taskId=${taskData.id}`);
             }
         } catch (e) {
-            console.error('TaskQueue::Error updating task in progress', e, {taskId: taskData.id, caseId:taskData.caseId});
+            console.error('TaskQueue::Error updating task in progress', e, { taskId: taskData.id, caseId: taskData.caseId });
             router.push(`/create-case/error?errorCode=${ERROR_CODES.DATA_ENTRY_START_TASK_ERROR}`);
         }
     };
@@ -88,6 +84,6 @@ const TaskQueueTableRow = ({ task }: TaskQueueTableRowProps) => {
             </TableCell>
         </TableRow>
     );
-}
+};
 
 export default TaskQueueTableRow;
