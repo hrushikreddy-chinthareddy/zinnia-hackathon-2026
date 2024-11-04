@@ -200,13 +200,7 @@ export const getSideNavData = (
     };
 };
 
-export const formatCaseTotals = (
-    count: number,
-    stats: StatCount,
-    showOnlyCompletedCases: boolean,
-    showOnlyCanceledCases: boolean,
-    hasSearch: boolean
-) => {
+export const formatCaseTotals = (count: number, stats: StatCount, hasSearch: boolean) => {
     const keyedStats = stats.counts.reduce((acc, stat) => {
         acc[stat.label] = stat.value;
         return acc;
@@ -226,20 +220,9 @@ export const formatCaseTotals = (
     }
     // all is either only the completed count, the total count when there's a search term, or the total minus completed when no search term
     // const allCount = hasSearch ? count : count - completedCount;
-    let allCount = 0;
-    let progCt = 0;
-    let excepCt = 0;
-    if (showOnlyCompletedCases && showOnlyCanceledCases) {
-        allCount = completedCount + canceledCount;
-    } else if (showOnlyCompletedCases) {
-        allCount = completedCount;
-    } else if (showOnlyCanceledCases) {
-        allCount = canceledCount;
-    } else {
-        progCt = inProgressCount;
-        excepCt = exceptionCount;
-        allCount = count - completedCount - canceledCount;
-    }
+    const progCt = inProgressCount;
+    const excepCt = exceptionCount;
+    const allCount = count - completedCount - canceledCount;
 
     return {
         All: allCount,

@@ -74,7 +74,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
     const [caseManagementFilters, setCaseManagementFilters] = useCaseFilterQueryStore();
     const [loadedStoredFilters, setLoadedStoredFilters] = useState(false);
 
-    console.log('BPB - caseManagementFIlters?!', caseManagementFilters);
     const { t } = useTranslation();
 
     useSegmentPageTracker(user, SegmentPageName.CaseManagementDashboard);
