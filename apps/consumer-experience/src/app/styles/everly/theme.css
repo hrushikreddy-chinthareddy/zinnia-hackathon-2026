@@ -35,4 +35,5 @@
   * =========
   */
   --user-badge-text-color: var(--color-base-surface-surface-primary);
+  --progress-bar-step-outline: var(--color-base-border-border-secondary-color);
 }
