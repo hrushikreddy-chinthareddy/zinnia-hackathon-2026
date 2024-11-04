@@ -7,7 +7,7 @@ import { calculateDaysAgo } from '@deps/helpers/case-management';
 import { PolicyParty } from '@deps/helpers/policy-sor/Parties';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { formatPhone, toTitleCase } from '@deps/helpers/string.helper';
-import { Case } from '@deps/models/case/case';
+import { Case, StatCount, Statuses } from '@deps/models/case/case';
 import { PartyInstance } from '@deps/models/case/party-instance';
 import { IdentificationType, PartyRole } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
@@ -136,8 +136,10 @@ export const getPartiesFromPolicy = (policyDetails: PolicyDetails, t: TFunction)
                 },
                 ssn: {
                     label: t('colDefs:owner.ssnAbbreviated'),
-                    value: owner?.identifications?.find(id => id.identificationType === IdentificationType.SSN)?.identificationValue || DEFAULT_ERROR_STRING
-                }
+                    value:
+                        owner?.identifications?.find(id => id.identificationType === IdentificationType.SSN)?.identificationValue ||
+                        DEFAULT_ERROR_STRING,
+                },
             };
             const roles = getPartyRoles(owner);
 
@@ -195,5 +197,53 @@ export const getSideNavData = (
         productName: caseDetails.productName,
         status: caseDetails.caseStatus,
         updatedDate: dayjs(caseDetails.updatedAt).format('MM/DD/YYYY'),
+    };
+};
+
+export const formatCaseTotals = (
+    count: number,
+    stats: StatCount,
+    showOnlyCompletedCases: boolean,
+    showOnlyCanceledCases: boolean,
+    hasSearch: boolean
+) => {
+    const keyedStats = stats.counts.reduce((acc, stat) => {
+        acc[stat.label] = stat.value;
+        return acc;
+    }, {} as Record<string, number>);
+    const inProgressCount = keyedStats[Statuses.InProgress] ?? 0;
+    const exceptionCount = keyedStats[Statuses.Exception] ?? 0;
+    const completedCount = keyedStats[Statuses.Completed] ?? 0;
+    const canceledCount = keyedStats[Statuses.Canceled] ?? 0;
+
+    // if there's a search, don't mess with the caseStats counts.
+    if (hasSearch) {
+        return {
+            All: count,
+            [Statuses.InProgress]: inProgressCount,
+            [Statuses.Exception]: exceptionCount,
+        };
+    }
+    // all is either only the completed count, the total count when there's a search term, or the total minus completed when no search term
+    // const allCount = hasSearch ? count : count - completedCount;
+    let allCount = 0;
+    let progCt = 0;
+    let excepCt = 0;
+    if (showOnlyCompletedCases && showOnlyCanceledCases) {
+        allCount = completedCount + canceledCount;
+    } else if (showOnlyCompletedCases) {
+        allCount = completedCount;
+    } else if (showOnlyCanceledCases) {
+        allCount = canceledCount;
+    } else {
+        progCt = inProgressCount;
+        excepCt = exceptionCount;
+        allCount = count - completedCount - canceledCount;
+    }
+
+    return {
+        All: allCount,
+        [Statuses.InProgress]: progCt,
+        [Statuses.Exception]: excepCt,
     };
 };

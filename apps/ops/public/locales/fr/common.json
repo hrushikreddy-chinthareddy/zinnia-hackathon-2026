@@ -1,5 +1,23 @@
 {
     "default": "Aucune traduction fournie",
+    "caseStatsLoading": "Chargement des statistiques du dossier...",
+    "createdVsCompleted": "Création vs Confirmation (aujourd'hui)",
+    "caseVolume": "Volume du dossier",
+    "timeframe": "Periode",
+    "today": "Aujourd'hui",
+    "yesterday": "Hier",
+    "last7Days": "7 derniers jours",
+    "last14Days": "14 derniers jours",
+    "last30Days": "30 derniers jours",
+    "yearToDate": "Annee en cours",
+    "caseStatsDashboardTitle": "Dashboard du Carrier",
+    "customRange": "Periode personnalisée",
+    "allDistributors": "Tous les distributeurs",
+    "allCarriers": "Tous les carriers",
+    "caseStatCharHeader": "{{count}} Dossiers actifs",
+    "insights": "Aperçus",
+    "selectProcessType": "Sélectionner un type de dossier",
+    "trend": "Tendance",
     "site": {
         "name": "Zinnia",
         "home": {
@@ -37,7 +55,8 @@
             "updatePremium": "Gérer Paiement Automatique",
             "newWithdrawal": "Nouveau Retrait",
             "formData": "Données du formulaire",
-            "annuitization": "Annuitisation"
+            "annuitization": "Annuitisation",
+            "dashboard": "Statistiques du dossier"
         },
         "navLinks": {
             "accessManagement": {
@@ -182,6 +201,10 @@
             "history": {
                 "text": "Histoire",
                 "link": "/policies/{{planCode}}/{{id}}/history"
+            },
+            "dashboard": {
+                "text": "Statistiques du dossier",
+                "link": "/dashboard"
             }
         },
         "loader": "Chargement..."
@@ -3611,6 +3634,17 @@
             },
             "title": "Soumis !"
         },
+        "rmd": {
+            "title": "Distribution Minimum requise",
+            "totalRMDAmount": "Montant total de distribution RMD",
+            "totalRMDAmountTooltip": "C'est le montant de distribution RMD qui est soumis. C'est le montant de la distribution qui est soumise moins les frais de transaction.",
+            "remainingRMDAmount": "Montant restant de distribution RMD",
+            "remainingRMDAmountTooltip": "C'est le montant de distribution RMD qui est soumis. C'est le montant de la distribution qui est soumise moins les frais de transaction.",
+            "calculationDate": "Date de calcul",
+            "calculationDateTooltip": "C'est la date à laquelle le montant de distribution RMD est soumis. C'est le montant de la distribution qui est soumise moins les frais de transaction.",
+            "calculationType": "Type de calcul",
+            "calculationTypeTooltip": "C'est le type de distribution RMD qui est soumise. C'est le montant de la distribution qui est soumise moins les frais de transaction."
+        },
         "rules": {
             "title": "Règles de Retrait",
             "minWithdrawal": "Montant minimal de retrait",
@@ -3624,6 +3658,15 @@
             "coverageLimit": "Limite de préservation de couverture",
             "coverageLimitTooltip": "Les propriétaires peuvent retirer ce montant sans affecter leur couverture. En d'autres termes, ils peuvent retirer ce montant et conserver intact leur capital-décès."
         },
+
+        "upcoming": {
+            "manageAutopay": "$t(premium.upcoming.manageAutopay)",
+            "oneTimePaymentText": "$t(premium.upcoming.oneTimePaymentText)",
+            "setUpAutopay": "$t(premium.upcoming.setUpAutopay)",
+            "noAdditionalCharges": "$t(premium.upcoming.noAdditionalCharges)",
+            "withdrawalAutopay": "Retrait Autopay à venir",
+            "rmdAutopay": "RMD Autopay à venir"
+        },
         "exchange1035": "Commencer un échange 1035",
         "allTimeWithdrawals": "Retraits cumulés",
         "allTimeWithdrawalsTooltip": "C'est le montant que le propriétaire a retiré de la valeur du compte depuis qu'il possède sa police.",
@@ -3632,7 +3675,9 @@
         "eligible": "Éligible",
         "eligibleForWithdrawal": "Éligible au retrait",
         "eligibleForWithdrawalTooltip": "Les retraits de la valeur du compte sont autorisés actuellement. Les retraits peuvent réduire le bénéfice décès.",
+        "freeWithdrawalAmount": "Montant de retrait gratuit",
         "ineligible": "Non éligible",
+        "maximumWithdrawal": "Montant maximal de retrait",
         "netSurrenderValue": "Valeur de rachat nette",
         "netSurrenderValueTooltip": "C'est le montant que le propriétaire ou ses bénéficiaires peuvent attendre si la police est rachetée. C'est la valeur du compte actuel moins les frais de rachat, les prêts en cours et d'autres frais.",
         "startAWithdrawal": "Commencer un retrait",
