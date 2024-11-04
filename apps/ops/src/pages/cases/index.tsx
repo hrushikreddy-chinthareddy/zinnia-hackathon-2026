@@ -74,6 +74,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
     const [caseManagementFilters, setCaseManagementFilters] = useCaseFilterQueryStore();
     const [loadedStoredFilters, setLoadedStoredFilters] = useState(false);
 
+    console.log('BPB - caseManagementFIlters?!', caseManagementFilters);
     const { t } = useTranslation();
 
     useSegmentPageTracker(user, SegmentPageName.CaseManagementDashboard);
@@ -477,10 +478,18 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                     <StatusFilter
                         values={caseManagementFilters.additionalFilters.caseStatus}
                         onChange={vals =>
-                            setCaseManagementFilters(prev => ({
-                                ...prev,
-                                additionalFilters: { ...prev.additionalFilters, caseStatus: vals },
-                            }))
+                            setCaseManagementFilters(prev => {
+                                const { caseStatus, notInCaseStatus = [] } = prev.additionalFilters;
+                                const nonConflictingNicsVals = notInCaseStatus.filter(val => !vals.includes(val)); // remove any values that are both in caseStatus and notInCaseStatus
+                                return {
+                                    ...prev,
+                                    additionalFilters: {
+                                        ...prev.additionalFilters,
+                                        caseStatus: vals,
+                                        notInCaseStatus: nonConflictingNicsVals,
+                                    },
+                                };
+                            })
                         }
                     />
                     <ActiveFilters

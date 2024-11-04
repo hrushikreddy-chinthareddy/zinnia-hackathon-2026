@@ -94,6 +94,7 @@ type AdditionalFiltersResult = {
     productName?: string[];
     requestSubType?: string[];
     caseStatus?: Statuses[];
+    notInCaseStatus?: Statuses[];
 };
 
 // Get additional filters based on the filters selected
@@ -184,6 +185,10 @@ export const getAdditionalFilters = (additionalFilters: CaseSearchAdditionalFilt
 
     if (additionalFilters.caseStatus) {
         result['caseStatus'] = Array.from(additionalFilters.caseStatus);
+    }
+
+    if (additionalFilters.notInCaseStatus) {
+        result['notInCaseStatus'] = Array.from(additionalFilters.notInCaseStatus);
     }
 
     return result;
