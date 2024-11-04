@@ -149,7 +149,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
 
             const updatedRequest: CaseSearchQuery = {
                 ...additionalFilters,
-                // ...caseStatusFilter,
                 ...searchValueObject,
                 limit: caseManagementFilters.limit,
                 offset: caseManagementFilters.offset,

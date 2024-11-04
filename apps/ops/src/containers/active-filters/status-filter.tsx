@@ -63,7 +63,7 @@ export default function StatusFilter({
     };
 
     useEffect(() => {
-        onChange(Object.keys(selected).filter(key => selected[key] && key !== 'All') as Statuses[]);
+        onChange(Object.keys(selected).filter(key => selected[key]) as Statuses[]);
     }, [selected]);
 
     return (
