@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 
 import { BadgeVariant } from '@deps/components/badge/badge.helper';
 import { PolicyStatus, ProductType } from '@deps/models/policy/sor-policy';
-
+import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import SideSheetProductDetails from './side-sheet-product-details';
 
 jest.mock('@deps/helpers/translation.helper', () => ({
@@ -38,7 +38,7 @@ describe('SideSheetProductDetails', () => {
         expect(await screen.findByText('dashboard.productDetails')).toBeInTheDocument();
 
         expect(await screen.findByText('globalPolicyInfo.carrierName')).toBeInTheDocument();
-        expect(await screen.findByText('Everly')).toBeInTheDocument();
+        expect(await screen.findByText(getCarrierNameByClientId('SBUL'))).toBeInTheDocument();
 
         expect(await screen.findByText('globalPolicyInfo.productMarketingName')).toBeInTheDocument();
         expect(await screen.findByText('Product A')).toBeInTheDocument();
