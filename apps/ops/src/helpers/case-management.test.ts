@@ -126,7 +126,7 @@ describe('case-management.ts helper functions', () => {
 
             const result = getCaseStatuses(statusCounterTileFilter, {});
 
-            expect(result).toEqual({ notInCaseStatus: [Statuses.Completed, Statuses.Canceled] });
+            expect(result).toEqual({ caseStatus: [], notInCaseStatus: [Statuses.Completed, Statuses.Canceled] });
         });
     });
 
