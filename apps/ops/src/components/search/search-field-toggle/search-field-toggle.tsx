@@ -44,10 +44,11 @@ export const SearchFieldContainer = ({ values, handleChange, activeLabels, onCle
         <div className={clsx(styles.inputContainer)}>
             <Icon type={IconType.SEARCH} className={styles.icon} color="#676767" />
             <input
-                id="case-search-input"
+                // We're using an aria attribute here because if there are multiple inputs they couldn't use one label attached to them both
+                aria-labelledby="case-search-label"
                 type={inputType()}
                 placeholder={placeholder ? placeholder : toSentenceCase(label)}
-                className={clsx(styles.input, 'text-body-sm', styles[inputType()])}
+                className={clsx(styles.input, 'text-body-sm focus:!ring-0')}
                 onChange={e => {
                     const text = (e.target as HTMLInputElement).value;
                     handleChange(e, text, policyKey as PolicySearchKeys);
@@ -66,9 +67,18 @@ const SearchFieldToggle = ({ activeLabels, ...rest }: SearchFieldToggleProps) =>
         const { group } = activeLabels;
 
         if (group?.length) {
-            fields = group.map((g, index) => (
-                <SearchFieldContainer key={'search-field-container-key-' + g.value} activeLabels={g} autoFocus={index === 0} {...rest} />
-            ));
+            fields = (
+                <fieldset className="flex">
+                    {group.map((g, index) => (
+                        <SearchFieldContainer
+                            key={'search-field-container-key-' + g.value}
+                            activeLabels={g}
+                            autoFocus={index === 0}
+                            {...rest}
+                        />
+                    ))}
+                </fieldset>
+            );
         } else {
             fields = <SearchFieldContainer activeLabels={activeLabels} autoFocus={true} {...rest} />;
         }

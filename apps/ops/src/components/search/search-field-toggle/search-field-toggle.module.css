@@ -1,7 +1,7 @@
 .inputContainer {
     position: relative;
 
-    &:last-child .input {
+    &:last-of-type input {
         border-radius: 0px var(--measure-border-radius-radius-md) var(--measure-border-radius-radius-md) 0px;
     }
 }
@@ -20,20 +20,33 @@
         margin: 0;
     }
 
-    /* to do - variable? */
-    &.number {
+    [type='number'] {
+        /* to do - variable? */
         width: 306px;
     }
 
-    /* to do - variable? */
-    &.text {
+    [type='text'] {
+        /* to do - variable? */
         width: 186px;
     }
 
     &:active,
-    &:focus {
+    &:focus,
+    &:focus-visible {
+        border-color: var(--color-base-border-border-subtle);
         outline-color: #007dbc;
         outline-offset: 2px;
+        position: relative;
+        z-index: 1;
+        /* Tailwind will be the death of me - this is to override the weird default outline it provides */
+        --tw-ring-color: #007dbc;
+        --tw-ring-offset-shadow: none;
+        --tw-ring-shadow: none;
+    }
+
+    &:hover {
+        border-color: #003b54;
+        outline: none;
     }
 }
 
@@ -41,4 +54,5 @@
     position: absolute;
     left: 16px;
     top: 8px;
+    z-index: 2;
 }

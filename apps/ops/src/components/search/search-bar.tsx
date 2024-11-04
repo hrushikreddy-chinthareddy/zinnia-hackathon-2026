@@ -99,7 +99,7 @@ const SearchBar = ({
         <form className="flex flex-col md:items-start md:flex-row items-center" onSubmit={handleFormSubmit}>
             <DropdownMenu.Root>
                 <DropdownMenu.Trigger className={clsx(styles.dropdownTrigger, 'typography-content-body-sm')}>
-                    <label htmlFor="case-search-input">
+                    <label id="case-search-label">
                         <Typography variant={TypographyVariant.BodySm}>{activeLabels.label}</Typography>
                     </label>
                     <Icon type={IconType.CHEVRON} height={22} width={22} color="#00628B" />
