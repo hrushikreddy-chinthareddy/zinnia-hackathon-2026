@@ -1,13 +1,17 @@
-import { CaseSearchAdditionalFilters, CaseSearchFilters } from '@deps/contexts/CaseManagementFilters';
-import { useQueryFilters } from './queryStoreFilters';
-import { SetStateAction, useState } from 'react';
-import { ParsedUrlQueryInput } from 'querystring';
 import dayjs from 'dayjs';
+import { ParsedUrlQueryInput } from 'querystring';
+import { SetStateAction, useState } from 'react';
+
 import { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/field-date-select';
+import { CaseSearchAdditionalFilters, CaseSearchFilters } from '@deps/contexts/CaseManagementFilters';
+import { Statuses } from '@deps/models/case/case';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
+
+import { useQueryFilters } from './queryStoreFilters';
 
 export enum QueryKeys {
     carrier = 'carrier',
+    caseStatus = 'caseStatus',
     createdDateEnd = 'createdDateEnd',
     createdDateStart = 'createdDateStart',
     limit = 'limit',
@@ -17,7 +21,6 @@ export enum QueryKeys {
     requestSubType = 'requestSubType',
     sortBy = 'sortBy',
     sortDirection = 'sortDirection',
-    status = 'status',
     updatedDateEnd = 'updatedDateEnd',
     updatedDateStart = 'updatedDateStart',
 }
@@ -25,8 +28,6 @@ export enum QueryKeys {
 // Convert query strings to filters
 const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters => {
     const additionalFilters: CaseSearchAdditionalFilters = {
-        showOnlyCanceledCases: false,
-        showOnlyCompletedCases: false,
         processTypes: new Set([]),
         requestSubType: new Set([]),
         products: new Set([]),
@@ -43,7 +44,7 @@ const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters =>
     };
 
     if (query[QueryKeys.carrier]) {
-        let carriersFromQuery = query[QueryKeys.carrier];
+        const carriersFromQuery = query[QueryKeys.carrier];
         let carriersList: string[] = [];
         if (Array.isArray(carriersFromQuery)) {
             carriersList = carriersFromQuery as string[];
@@ -55,8 +56,8 @@ const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters =>
         const carrierFilters: { [key: string]: string } = {};
 
         carriersList.forEach(carrier => {
-            let clientId = carrier.toUpperCase();
-            let carrierName = getCarrierNameByClientId(clientId) || clientId;
+            const clientId = carrier.toUpperCase();
+            const carrierName = getCarrierNameByClientId(clientId) || clientId;
 
             // if we already have this carrier name, work magic
             if (carrierNameToClientIds[carrierName]) {
@@ -135,12 +136,11 @@ const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters =>
         caseFilters.sortDirection = query[QueryKeys.sortDirection].toLowerCase() as 'asc' | 'desc';
     }
 
-    if (query[QueryKeys.status]) {
-        // BPB - ToDo: Magic
-        if (Array.isArray(query[QueryKeys.status])) {
-            // additionalFilters.statuses = new Set(query[QueryKeys.status]);
-        } else if (typeof query[QueryKeys.status] === 'string') {
-            // additionalFilters.statuses = new Set([query[QueryKeys.status]]);
+    if (query[QueryKeys.caseStatus]) {
+        if (Array.isArray(query[QueryKeys.caseStatus])) {
+            additionalFilters.caseStatus = query[QueryKeys.caseStatus] as Statuses[];
+        } else if (typeof query[QueryKeys.caseStatus] === 'string') {
+            additionalFilters.caseStatus = [query[QueryKeys.caseStatus] as Statuses];
         }
     }
 
@@ -165,59 +165,62 @@ const convertFilterToQuery = (filters: CaseSearchFilters): ParsedUrlQueryInput =
     const query: ParsedUrlQueryInput = {};
     const { limit, offset, sortDirection, additionalFilters } = filters;
     const {
-        createdDateStart,
-        createdDateEnd,
-        updatedDateStart,
-        updatedDateEnd,
-        showOnlyCanceledCases,
-        showOnlyCompletedCases,
-        processTypes,
-        requestSubType,
         carriers,
+        caseStatus,
+        createdDateEnd,
+        createdDateStart,
+        processTypes,
         products,
+        requestSubType,
+        updatedDateEnd,
+        updatedDateStart,
     } = additionalFilters;
+
+    if (carriers) {
+        query[QueryKeys.carrier] = Object.keys(carriers).join(',').split(',');
+    }
+
+    if (createdDateEnd) {
+        query[QueryKeys.createdDateEnd] = dayjs(createdDateEnd, DATE_PICKER_FORMAT).format();
+    }
 
     if (createdDateStart) {
         query[QueryKeys.createdDateStart] = dayjs(createdDateStart, DATE_PICKER_FORMAT).format();
     }
-    if (createdDateEnd) {
-        query[QueryKeys.createdDateEnd] = dayjs(createdDateEnd, DATE_PICKER_FORMAT).format();
-    }
-    if (updatedDateStart) {
-        query[QueryKeys.updatedDateStart] = dayjs(updatedDateStart, DATE_PICKER_FORMAT).format();
-    }
-    if (updatedDateEnd) {
-        query[QueryKeys.updatedDateEnd] = dayjs(updatedDateEnd, DATE_PICKER_FORMAT).format();
-    }
-    if (showOnlyCanceledCases) {
-        query[QueryKeys.status] = 'Canceled';
-    }
-    if (showOnlyCompletedCases) {
-        query[QueryKeys.status] = 'Completed';
-    }
-    if (showOnlyCanceledCases && showOnlyCanceledCases) {
-        query[QueryKeys.status] = ['Canceled', 'Completed'];
-    }
-    if (processTypes.size > 0) {
-        query[QueryKeys.process] = Array.from(processTypes);
-    }
-    if (requestSubType.size > 0) {
-        query[QueryKeys.requestSubType] = Array.from(requestSubType);
-    }
     if (limit) {
         query[QueryKeys.limit] = limit;
     }
+
     if (offset) {
         query[QueryKeys.offset] = offset;
     }
-    if (sortDirection) {
-        query[QueryKeys.sortDirection] = sortDirection;
+
+    if (processTypes.size > 0) {
+        query[QueryKeys.process] = Array.from(processTypes);
     }
+
     if (products.size > 0) {
         query[QueryKeys.productName] = Array.from(products);
     }
-    if (carriers) {
-        query[QueryKeys.carrier] = Object.keys(carriers).join(',').split(',');
+
+    if (requestSubType.size > 0) {
+        query[QueryKeys.requestSubType] = Array.from(requestSubType);
+    }
+
+    if (sortDirection) {
+        query[QueryKeys.sortDirection] = sortDirection;
+    }
+
+    if (caseStatus?.length) {
+        query[QueryKeys.caseStatus] = caseStatus;
+    }
+
+    if (updatedDateEnd) {
+        query[QueryKeys.updatedDateEnd] = dayjs(updatedDateEnd, DATE_PICKER_FORMAT).format();
+    }
+
+    if (updatedDateStart) {
+        query[QueryKeys.updatedDateStart] = dayjs(updatedDateStart, DATE_PICKER_FORMAT).format();
     }
 
     // BPB - ToDo: sortBy

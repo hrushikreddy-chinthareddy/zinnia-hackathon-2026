@@ -1,7 +1,8 @@
-import { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
-import { useQueryStore } from './queryStore';
 import { ParsedUrlQueryInput } from 'querystring';
+import { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
 import xss from 'xss';
+
+import { useQueryStore } from './queryStore';
 
 /**
  * Provides an interface to read and write query string filters.

@@ -29,25 +29,23 @@ export interface CaseSearchAdditionalFilters {
     updatedDateStart?: string;
     updatedDateEnd?: string;
     age?: string;
-    showOnlyCanceledCases: boolean;
-    showOnlyCompletedCases: boolean;
+    caseStatus?: Statuses[];
     processTypes: Set<string>;
     requestSubType: Set<string>;
     carriers?: { [key: string]: string };
     products: Set<string>;
 }
 
-export const initialAdditionalFilters = {
+export const initialAdditionalFilters: CaseSearchAdditionalFilters = {
     createdDateStart: '',
     createdDateEnd: '',
     updatedDateStart: '',
     updatedDateEnd: '',
     age: '',
-    showOnlyCanceledCases: false,
-    showOnlyCompletedCases: false,
     processTypes: new Set([]),
     requestSubType: new Set([]),
     carriers: {},
+    caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.New, Statuses.NotStarted],
     products: new Set([]),
 };
 

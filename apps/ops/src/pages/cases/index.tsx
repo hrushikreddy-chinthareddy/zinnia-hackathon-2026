@@ -18,6 +18,7 @@ import StatusCounterTile from '@deps/components/status-counter-tile/status-count
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
+import StatusFilter from '@deps/containers/active-filters/status-filter';
 import {
     CaseManagementFiltersContext,
     CaseSearchAdditionalFilters,
@@ -32,7 +33,6 @@ import { getAdvisorsExcelCaseSearchParams, getAdvisorsExcelCaseStatsParams } fro
 import {
     formatCaseTotals,
     getAdditionalFilters,
-    getCaseStatuses,
     getSearchValueObject,
     isSearchValueObjectEmpty,
     statusCounterTiles,
@@ -51,6 +51,7 @@ import { FgaRelation } from '@deps/types/fga';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import nextI18nextConfig from 'next-i18next.config';
+
 import { useCaseFilterQueryStore } from './caseFilterQueryStore';
 
 // Lazy Loaded Components
@@ -109,18 +110,11 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         }
 
         try {
-            console.log('caseStatsRequest', caseStatsRequest);
             const response = await getCaseStats(caseStatsRequest);
 
             if ('stats' in response) {
                 const hasSearch = !isSearchValueObjectEmpty(searchValueObject);
-                const newResult = formatCaseTotals(
-                    response.count,
-                    response.stats[0],
-                    caseManagementFilters.additionalFilters.showOnlyCompletedCases,
-                    caseManagementFilters.additionalFilters.showOnlyCanceledCases,
-                    hasSearch
-                );
+                const newResult = formatCaseTotals(response.count, response.stats[0], hasSearch);
 
                 setCaseTotals(newResult);
             } else {
@@ -140,12 +134,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         try {
             const searchValueObject = getSearchValueObject(caseManagementFilters.searchValue, caseManagementFilters.toggleValue);
 
-            const caseStatusFilter = getCaseStatuses(
-                caseManagementFilters.statusCounterTileFilter,
-                caseManagementFilters.additionalFilters.showOnlyCompletedCases,
-                caseManagementFilters.additionalFilters.showOnlyCanceledCases,
-                searchValueObject
-            );
+            // const caseStatusFilter = getCaseStatuses(caseManagementFilters.statusCounterTileFilter, searchValueObject);
 
             let additionalFilters = getAdditionalFilters(caseManagementFilters.additionalFilters);
 
@@ -161,7 +150,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
 
             const updatedRequest: CaseSearchQuery = {
                 ...additionalFilters,
-                ...caseStatusFilter,
+                // ...caseStatusFilter,
                 ...searchValueObject,
                 limit: caseManagementFilters.limit,
                 offset: caseManagementFilters.offset,
@@ -329,14 +318,11 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
     const statusCounterTilesRow = useMemo(() => {
         const renderStatusCounterTile = (value: CaseStatusFilter, status: Statuses | undefined, count: number) => {
             const isSelected = value === caseManagementFilters.statusCounterTileFilter;
-            const isActive =
-                caseManagementFilters.additionalFilters.showOnlyCanceledCases === false &&
-                caseManagementFilters.additionalFilters.showOnlyCompletedCases === false;
             const onClick = () => handleStatusTileClicked(value);
 
             return (
                 <div key={value}>
-                    <StatusCounterTile status={status} onClick={onClick} count={count} isSelected={isSelected} isActive={isActive} />
+                    <StatusCounterTile status={status} onClick={onClick} count={count} isSelected={isSelected} />
                 </div>
             );
         };
@@ -476,6 +462,15 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                             />
                         </div>
                     </div>
+                    <StatusFilter
+                        values={caseManagementFilters.additionalFilters.caseStatus}
+                        onChange={vals =>
+                            setCaseManagementFilters(prev => ({
+                                ...prev,
+                                additionalFilters: { ...prev.additionalFilters, caseStatus: vals },
+                            }))
+                        }
+                    />
                     <ActiveFilters
                         authorizedCarriers={authorizedCarriers}
                         filters={caseManagementFilters.additionalFilters}
