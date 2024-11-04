@@ -29,6 +29,12 @@
     &.text {
         width: 186px;
     }
+
+    &:active,
+    &:focus {
+        outline-color: #007dbc;
+        outline-offset: 2px;
+    }
 }
 
 .icon {
