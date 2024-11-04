@@ -327,10 +327,13 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         <CaseManagementFiltersContext.Provider value={[caseManagementFilters, setCaseManagementFilters]}>
             <PageHead titleKey="caseManagement" />
             <NoNavLayout fullHeight={true}>
-                <div className="flex flex-col items-center xl:items-start">
-                    <Typography variant={TypographyVariant.H1}>{t('caseManagementDashboard.h1')}</Typography>
+                <Typography variant={TypographyVariant.H1} className="mb-8">
+                    {t('caseManagementDashboard.h1')}
+                </Typography>
+                <div className={styles.container}>
                     {searchBar}
-                </div>
+                    <div className="min-h-screen">
+                        <div className="mt-8 grid grid-cols-2 gap-4 lg:auto-cols-fr lg:grid-flow-col">{statusCounterTilesRow}</div>
 
                 <div className="prose min-h-screen">
                     <div className="early-col-break my-6 flex flex-col items-start justify-start sm:flex-row sm:items-center sm:justify-between">

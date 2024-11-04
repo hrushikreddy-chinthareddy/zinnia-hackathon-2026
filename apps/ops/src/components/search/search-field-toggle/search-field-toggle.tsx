@@ -11,7 +11,6 @@ import styles from './search-field-toggle.module.css';
 
 interface SearchFieldToggleProps {
     values: SearchViewQuery;
-    handleEnterKey: () => void;
     handleChange: (e: ChangeEvent<HTMLInputElement>, value: string, key: PolicySearchKeys) => void;
     activeLabels: LabelValue<PolicySearchKeys>;
     onClear?: (ref: RefObject<HTMLInputElement>) => void;
@@ -21,18 +20,12 @@ interface SearchFieldContainerProps extends SearchFieldToggleProps {
     autoFocus?: boolean;
 }
 
-export const SearchFieldContainer = ({
-    values,
-    handleEnterKey,
-    handleChange,
-    activeLabels,
-    autoFocus = false,
-    onClear,
-}: SearchFieldContainerProps) => {
+export const SearchFieldContainer = ({ values, handleChange, activeLabels, onClear }: SearchFieldContainerProps) => {
     const { showFieldErrorMessage } = useContext(PolicySearchFiltersContext);
-    const { value: policyKey, label, format, mask, prefix, replaceValue = '', fullLabel, placeholder, errorMessage } = activeLabels;
+    const { value: policyKey, label, replaceValue = '', placeholder, errorMessage } = activeLabels;
     let value = (policyKey && values[policyKey]) || '';
 
+    // to do - i don't think i want value on the input field at all
     if (replaceValue) {
         value = value.replaceAll(replaceValue, '') || '';
     }
@@ -55,50 +48,29 @@ export const SearchFieldContainer = ({
                 type={inputType()}
                 placeholder={placeholder ? placeholder : toSentenceCase(label)}
                 className={clsx(styles.input, 'text-body-sm', styles[inputType()])}
-                value={value}
+                onChange={e => {
+                    const text = (e.target as HTMLInputElement).value;
+                    handleChange(e, text, policyKey as PolicySearchKeys);
+                }}
             />
             {showFieldErrorMessage && errorMessage && (
                 <AssistiveText text={errorMessage} variant={AssistiveTextVariant.Error} className="mt-2" />
             )}
-            {/* <Field
-                value={value}
-                key={'search-field-toggle-' + policyKey}
-                autoFocus={autoFocus}
-                type={FieldType.BaseActive}
-                variant={showFieldErrorMessage ? FieldVariant.Error : FieldVariant.Default}
-                formatOptions={format ? { format, mask, prefix } : undefined}
-                placeholder={fullLabel ? fullLabel : toSentenceCase(label)}
-                onChange={e => {
-                    const text = (e.target as HTMLInputElement).value;
-
-                    handleChange(e, text, policyKey as PolicySearchKeys);
-                }}
-                onClear={onClear}
-                message={showFieldErrorMessage && errorMessage ? errorMessage : ''}
-                containerClassName={styles.fieldContainer}
-                className={`${styles.field} text-body-sm`}
-            /> */}
         </div>
     );
 };
 
-const SearchFieldToggle = ({ activeLabels, handleEnterKey, ...rest }: SearchFieldToggleProps) => {
+const SearchFieldToggle = ({ activeLabels, ...rest }: SearchFieldToggleProps) => {
     let fields;
     if (activeLabels) {
         const { group } = activeLabels;
 
         if (group?.length) {
             fields = group.map((g, index) => (
-                <SearchFieldContainer
-                    key={'search-field-container-key-' + g.value}
-                    activeLabels={g}
-                    autoFocus={index === 0}
-                    handleEnterKey={handleEnterKey}
-                    {...rest}
-                />
+                <SearchFieldContainer key={'search-field-container-key-' + g.value} activeLabels={g} autoFocus={index === 0} {...rest} />
             ));
         } else {
-            fields = <SearchFieldContainer activeLabels={activeLabels} autoFocus={true} handleEnterKey={handleEnterKey} {...rest} />;
+            fields = <SearchFieldContainer activeLabels={activeLabels} autoFocus={true} {...rest} />;
         }
     }
 

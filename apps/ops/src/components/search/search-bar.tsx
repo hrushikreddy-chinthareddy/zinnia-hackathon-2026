@@ -5,7 +5,6 @@ import { TFunction, useTranslation } from 'next-i18next';
 import { ChangeEvent, RefObject, useCallback, useContext, useEffect, useState } from 'react';
 
 import Button, { ButtonType } from '@deps/components/button/button';
-import ButtonGroup from '@deps/components/button-group/button-group';
 import { TranslationFiles } from '@deps/config/translations';
 import { PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
 import { LabelValue } from '@deps/types/data';
@@ -97,55 +96,39 @@ const SearchBar = ({
     const dropdownLabels = toggleLabels(t);
 
     return (
-        <form className="flex flex-col items-start gap-4 sm:w-[492px] xl:w-full xl:flex-row" onSubmit={handleFormSubmit}>
-            <div className="leading-[18px] sm:w-[492px]">
-                <ButtonGroup
-                    isFullWidth
-                    activeValue={activeToggleBtn}
-                    toggle={handleToggle}
-                    labels={toggleLabels(t)}
-                    groupLabel={t('dashboard.search.searchKeyType')}
-                />
-            </div>
+        <form className="flex flex-col md:items-start md:flex-row items-center" onSubmit={handleFormSubmit}>
+            <DropdownMenu.Root>
+                <DropdownMenu.Trigger className={clsx(styles.dropdownTrigger, 'typography-content-body-sm')}>
+                    <label htmlFor="case-search-input">
+                        <Typography variant={TypographyVariant.BodySm}>{activeLabels.label}</Typography>
+                    </label>
+                    <Icon type={IconType.CHEVRON} height={22} width={22} color="#00628B" />
+                </DropdownMenu.Trigger>
 
-            <div className="self-center xl:mt-5 xl:self-baseline">
-                <Button
-                    type={ButtonType.Primary}
-                    onClick={handleSearch}
-                    data-testid="search-btn"
-                    aria-label={t('ariaLabel.search') as string}
-                >
-                    {t('dashboard.search.btnText')}
-                </Button>
-            </div>
-
-            <div className="flex">
-                <DropdownMenu.Root>
-                    <DropdownMenu.Trigger className={clsx(styles.dropdownTrigger, 'typography-content-body-sm')}>
-                        <label htmlFor="case-search-input">
-                            <Typography variant={TypographyVariant.BodySm}>{activeLabels.label}</Typography>
-                        </label>
-                        <Icon type={IconType.CHEVRON} height={22} width={22} color="#00628B" />
-                    </DropdownMenu.Trigger>
-
-                    <DropdownMenu.Portal>
-                        <DropdownMenu.Content className={styles.dropdownMenu}>
-                            {dropdownLabels.map((item, index) => (
-                                <DropdownMenu.Item className={styles.dropdownItem} key={`dropdown-item-${index}`}>
-                                    <Typography variant={TypographyVariant.BodySm}>{item.label}</Typography>
-                                </DropdownMenu.Item>
-                            ))}
-                        </DropdownMenu.Content>
-                    </DropdownMenu.Portal>
-                </DropdownMenu.Root>
-                <SearchFieldToggle
-                    values={values}
-                    activeLabels={activeLabels}
-                    handleEnterKey={handleSearch}
-                    handleChange={handleNewValue}
-                    onClear={onClear}
-                />
-            </div>
+                <DropdownMenu.Portal>
+                    <DropdownMenu.Content className={styles.dropdownMenu}>
+                        {dropdownLabels.map((item, index) => (
+                            <DropdownMenu.Item
+                                className={styles.dropdownItem}
+                                key={`dropdown-item-${index}`}
+                                onSelect={() => handleToggle(item.value || '')}
+                            >
+                                <Typography variant={TypographyVariant.BodySm}>{item.label}</Typography>
+                            </DropdownMenu.Item>
+                        ))}
+                    </DropdownMenu.Content>
+                </DropdownMenu.Portal>
+            </DropdownMenu.Root>
+            <SearchFieldToggle values={values} activeLabels={activeLabels} handleChange={handleNewValue} onClear={onClear} />
+            <Button
+                type={ButtonType.Primary}
+                onClick={handleSearch}
+                data-testid="search-btn"
+                aria-label={t('ariaLabel.search') as string}
+                className="ml-2"
+            >
+                {t('dashboard.search.btnText')}
+            </Button>
         </form>
     );
 };
