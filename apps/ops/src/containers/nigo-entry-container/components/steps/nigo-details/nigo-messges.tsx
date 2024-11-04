@@ -17,7 +17,7 @@ export const NigoMessages = ({ subExceptions, index, nmId, onSubExceptionChange,
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.nigoDetails' });
     const [selections, setSelections] = useState<{ [key: string]: string }>(messages || {});
 
-    const updateSelection = (_isSelected: boolean, value: string, displayText: string) => {
+    const updateSelection = (value: string, displayText: string) => {
         const newSelections = { ...selections };
         if (newSelections[value]) {
             delete newSelections[value];

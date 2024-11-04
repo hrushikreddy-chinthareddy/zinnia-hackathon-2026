@@ -9,7 +9,7 @@ interface MultiselectFieldProps {
     label: string;
     options: string[];
     value: Set<string>;
-    handleChange: (_isSelected: boolean, value: string) => void;
+    handleChange: (value: string) => void;
 }
 export default function MultiselectField({ isLoading, label, options, value, handleChange }: MultiselectFieldProps) {
     const displayValues = {} as { [key: string]: string };

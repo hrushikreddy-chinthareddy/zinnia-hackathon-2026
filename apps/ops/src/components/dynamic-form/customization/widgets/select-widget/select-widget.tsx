@@ -50,7 +50,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
 }: WidgetProps<T, S, F>) {
     const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
 
-    const _onChange = (isSelected: boolean, value: string) => {
+    const _onChange = (value: string, _displaytext: string, isSelected: boolean = false) => {
         if (!isSelected && Array.isArray(selectedIndexes)) {
             selectedIndexes = selectedIndexes?.filter(
                 index => index !== enumOptions?.findIndex(option => option.value.toString() === value).toString()
