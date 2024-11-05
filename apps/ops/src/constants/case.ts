@@ -12,3 +12,15 @@ export const CaseTypeToProcessesMap: Record<CaseType, Processes> = {
     [CaseType.AddressChange]: Processes.AddressChange,
     [CaseType.ReReg]: Processes.ReReg,
 };
+
+
+export const ProcessesToCaseTypeMap:  Partial<Record<Processes, CaseType>> = {
+    [Processes.OutgoingFundTransfer]: CaseType.Oft,
+    [Processes.RequiredMinimumDistribution]: CaseType.Rmd,
+    [Processes.Withdrawal]: CaseType.Withdrawal,
+    [Processes.NewBusiness]: CaseType.Reg60,
+    [Processes.Renewal]: CaseType.Renewal,
+    [Processes.SSW]: CaseType.SSW,
+    [Processes.AddressChange]: CaseType.AddressChange,
+    [Processes.ReReg]: CaseType.ReReg,
+};

@@ -13,7 +13,7 @@ import { FormErrors } from '@deps/containers/otp/reg60-forms/components/form-err
 import { DiaryNotesContext } from '@deps/contexts/DiaryNotesContext';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { isNonProductionEnvironment } from '@deps/helpers/environment.helper';
+import { isNonProductionEnvironment } from '@deps/utils/environment.helper';
 import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
 import { DocumentData } from '@deps/models/case/document';
 import { TaskStatus } from '@deps/models/case/task-instance';

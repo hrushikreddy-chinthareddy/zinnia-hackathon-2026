@@ -1826,7 +1826,7 @@
                 "withdrawalTask": "Bonne nouvelle! Nous avons lancé une tâche de retrait pour {{documentNumber}} et {{contractNumber}}",
                 "WithdrawalFormInputTask": "Excellente nouvelle ! Nous avons lancé une tâche de retrait pour {{documentNumber}} et {{contractNumber}}",
                 "rmdTask": "Bonne nouvelle! Nous avons lancé une tâche de distribution minimale requise pour {{documentNumber}} et {{contractNumber}}.",
-                "oftTask": "Bonne nouvelle! Nous avons lancé une tâche de transfert de fonds sortants pour{{documentNumber}} et {{contractNumber}}",
+                "OFTFormInputTask": "Bonne nouvelle! Nous avons lancé une tâche de transfert de fonds sortants pour{{documentNumber}} et {{contractNumber}}",
                 "sswTask": "Bonne nouvelle! Nous avons lancé une tâche de retrait systématique pour {{documentNumber}} et {{contractNumber}}"
             },
             "openNigoExists": "Un cas de base comprend un NIGO. Veuillez résoudre le problème ouvert NIGO avant de soumettre une autre demande via le portail numérique."
@@ -2018,6 +2018,18 @@
             "policyNotFound": {
                 "title": "Politique non trouvée",
                 "subtitle": "Une erreur s'est produite lors de la récupération de la politique. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
+            },
+            "taskInitialization": {
+                "title": "Erreur lors de l'initialisation du formulaire de tâche",
+                "subtitle": "Une erreur s'est produite lors de l'initialisation de la tâche. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
+            },
+            "caseTypeRetrievalError": {
+                "title": "Erreur lors de l'identification du type de cas",
+                "subtitle": "Une erreur s'est produite lors de l'identification du type de dossier. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
+            },
+            "docTypeRetrievalError": {
+                "title": "Erreur lors de l'identification du type de document",
+                "subtitle": "Une erreur s'est produite lors de l'identification du type de document. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
             }
         }
     },
