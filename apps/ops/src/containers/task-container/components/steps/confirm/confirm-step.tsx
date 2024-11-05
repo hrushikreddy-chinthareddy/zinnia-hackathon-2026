@@ -31,7 +31,6 @@ const ConfirmStep = ({ caseId, taskId, taskType }: ConfirmStepProps) => {
     const submit = useCallback(
         async (formRef?: any) => {
             formRef?.current?.submit();
-            setIsLoading(false);
             const response = await updateTask(caseId, taskId, formData, timer);
             if (response && response.id) {
                 setSubmitFailed(false);

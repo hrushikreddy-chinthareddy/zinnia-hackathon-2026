@@ -27,7 +27,7 @@ export const getCaseTaskByIdSSR = async (taskId: string, accessToken: string | u
                 'Access-Control-Allow-Origin': '*',
             },
         });
-        console.log(data);
+
         return data;
     } catch (error: any) {
         logError('getCaseTaskById', { ...parseErrorInformation(error), taskId, file: 'queries/api/v2/task', function: 'getCaseTaskById' });

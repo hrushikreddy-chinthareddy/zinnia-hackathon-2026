@@ -8,15 +8,15 @@ import NavElement, { NavElementType } from '@deps/components/nav-element/nav-ele
 import Select from '@deps/components/select/select';
 import Toggle from '@deps/components/toggle/toggle';
 import { CaseSearchAdditionalFilters, CaseSearchFilters, initialAdditionalFilters } from '@deps/contexts/CaseManagementFilters';
-import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
-import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { ReferenceDataQuery, getReferenceData } from '@deps/queries/api/cases';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
-import { getCarrierListItem, getCarrierNameByClientId, getClientIdsByCarrierName, getSelectedCarriers } from '@deps/utils/carriers';
+import { getCarrierListItem, getCarrierNameByClientId, getClientIdsByCarrierName , getSelectedCarriers } from '@deps/utils/carriers';
 
 import DateRangeFields from './date-range-fields';
 import MultiselectField from './multiselect-field';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { SegmentTrackedEventName } from '@deps/types/segment-analytics';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 
 const REFINE_RESULTS_BASE_KEY = 'caseManagementDashboard.refineResultsOptions.';
 
@@ -324,7 +324,7 @@ export default function SideSheetRefineResults({
             return;
         }
 
-        // const filters =
+        // const filters = 
 
         setCaseManagementFilters(prevFilters => ({
             ...prevFilters,

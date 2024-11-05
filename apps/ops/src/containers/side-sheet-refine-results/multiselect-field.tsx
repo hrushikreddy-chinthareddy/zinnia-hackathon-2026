@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { FieldSize } from '@deps/components/fields/field';
 import { Loader } from '@deps/components/page-loader';
 import { PageLoaderVariant } from '@deps/components/page-loader/page-loader';

@@ -65,7 +65,8 @@ export const TaskReview = ({ policyNumber, clientCode, docType, documentNumber, 
                                 className="flex gap-1"
                                 activeDocType={activeDocType}
                                 carrier={clientCode?.toUpperCase()}
-                                document={workingDocument}
+                                documentId={workingDocument?.documentId ?? (workingDocument?.documentID as string)}
+                                displayName={displayName}
                             >
                                 <>{t('view')}</>
                             </DocumentPreviewer>
