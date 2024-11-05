@@ -14,7 +14,6 @@ import dayjs from 'dayjs';
 import advanced from 'dayjs/plugin/advancedFormat';
 import timezone from 'dayjs/plugin/timezone';
 import Image from 'next/image';
-import { TFunction } from 'next-i18next';
 import { useTranslation } from 'react-i18next';
 
 import ChipStatus from '@deps/components/chip-status/chip-status';
@@ -42,10 +41,10 @@ interface PartyWithOthersProps extends PiiProps {
     highlights?: string[] | null;
     entities: { name: string; ssn: string }[];
     isOwner?: boolean;
-    t: TFunction;
 }
 
-const PartyWithOthers = ({ text, entities, highlights, isOwner, t }: PartyWithOthersProps) => {
+const PartyWithOthers = ({ text, entities, highlights, isOwner }: PartyWithOthersProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON);
     const textWithHighlights = !!text && highlights && highlights.length ? <Highlighter text={text} highlights={highlights} /> : text;
 
     const textToRender = text ? (
@@ -143,7 +142,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
             <TableCell>
                 <div className="flex flex-col">
                     {policyOwners.length > 1 ? (
-                        <PartyWithOthers {...ownerComponentProps} isOwner t={t} />
+                        <PartyWithOthers {...ownerComponentProps} isOwner />
                     ) : (
                         <CaseDetailField pii={true} {...ownerComponentProps} />
                     )}
@@ -189,7 +188,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
             <TableCell>
                 <div className="flex flex-col">
                     {agents.length > 1 ? (
-                        <PartyWithOthers {...agentComponentProps} t={t} />
+                        <PartyWithOthers {...agentComponentProps} />
                     ) : (
                         <CaseDetailField pii={true} {...agentComponentProps} />
                     )}

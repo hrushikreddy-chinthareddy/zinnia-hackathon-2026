@@ -455,7 +455,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                                 z: caseTotals[caseManagementFilters.statusCounterTileFilter],
                             })}
                         </div>
-                        {/* to do - is this okay still or do I switch to DocumentResultsPagination?*/}
                         <div className="">{paginationControls}</div>
                     </div>
                 </div>
