@@ -16,7 +16,9 @@ import { ReactComponent as SparklesIcon } from '@deps/styles/elements/icons/icon
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
-import { logWarn } from '@deps/utils/server-logging';
+import { logError, logWarn } from '@deps/utils/server-logging';
+import { ProcessesToCaseTypeMap } from '@deps/constants/case';
+import { Processes } from '@deps/models/case/case';
 
 type TaskQueueTableRowProps = {
     task: ManagementTask;
@@ -35,20 +37,28 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions }: TaskQueueTableRowProp
     const transactionType = task?.process || '';
 
     const handleStartTask = async (taskData: ManagementTask<TaskStatus>, taskStatus: TaskStatus) => {
+        const caseType = ProcessesToCaseTypeMap[taskData.process as Processes];
+        if (!caseType) {
+            logError('task-queue::Error getting case type', {
+                taskId: taskData.id,
+                documentNumber: taskData?.data?.documentNumber,
+                clientCode: taskData?.carrier,
+                process: taskData?.process,
+            });
+            router.push(`/create-case/error?errorCode=${ERROR_CODES.CASE_TYPE_RETRIEVAL_ERROR}`);
+            return;
+        }
+
         // If feature flag is not enabled, redirect to error page
-        if (!isFormFeatureEnabled(taskData?.process.toUpperCase() as ProcessType, taskData?.carrier, featureFlagDecisions)) {
+        if (!isFormFeatureEnabled(caseType.toUpperCase() as ProcessType, taskData?.carrier, featureFlagDecisions)) {
             logWarn('task-queue::feature flag not enabled', {
                 taskId: taskData.id,
                 documentNumber: taskData?.data?.documentNumber,
                 clientCode: taskData?.carrier,
                 process: taskData?.process,
             });
-            return {
-                redirect: {
-                    destination: '/403',
-                    permanent: false,
-                },
-            };
+            router.push(`/403`);
+            return;
         }
 
         if (taskStatus === TaskStatus.InProgress) {
@@ -62,10 +72,12 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions }: TaskQueueTableRowProp
 
             if (response) {
                 router.push(`/nigo-entry?taskId=${taskData.id}`);
+                return;
             }
         } catch (e) {
             console.error('TaskQueue::Error updating task in progress', e, { taskId: taskData.id, caseId: taskData.caseId });
             router.push(`/create-case/error?errorCode=${ERROR_CODES.DATA_ENTRY_START_TASK_ERROR}`);
+            return;
         }
     };
 

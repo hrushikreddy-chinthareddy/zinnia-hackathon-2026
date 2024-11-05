@@ -19,6 +19,7 @@ export enum FEATURE_FLAGS {
     OFT_SBGC = 'case-management-otp_feature_sbgc_oft',
     OFT_DLIC = 'case-management-otp_feature_dlic_oft',
     OFT_RSLN = 'case-management-otp_feature_rsln_oft',
+    OFT_FLIC = 'case-management-otp_feature_flic_oft',
     NEW_EXP = 'case-management-otp_feature_new_experience',
     TRANSACTION_HISTORY = 'case-management-otp_feature_transaction_history',
     WITHDRAWAL_DLIC = 'case-management-otp_feature_dlic_withdrawal',
