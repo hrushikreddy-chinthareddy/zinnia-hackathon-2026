@@ -55,6 +55,7 @@ export const initialFilters: CaseSearchFilters = {
     limit: 25,
     offset: 0,
     total: 0,
+    sortBy: 'createdAt',
     sortDirection: 'desc',
     searchValue: SearchBarInitialValues,
     toggleValue: 'policyNumber',
