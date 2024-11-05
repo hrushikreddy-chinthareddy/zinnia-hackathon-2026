@@ -30,14 +30,9 @@ type SswUpdateContainerProps = {
     document: DocumentData;
     program: any;
     setProgram?: any;
-    //     rmdPrograms;
-    //     eftPrograms;
-    //     setEftProgram;
-    //     setsswprograms;
-    //     setrmdPrograms;
 };
 
-const SswUpdateContainer = ({ policy, document, program, setProgram }: SswUpdateContainerProps) => {
+const SswUpdateContainer = ({ policy, document, program }: SswUpdateContainerProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const { formSource, initialForm, formSignature } = useContext(FormDataContext);
 
@@ -75,7 +70,7 @@ const SswUpdateContainer = ({ policy, document, program, setProgram }: SswUpdate
         let successfulCaseUpdate;
         const confirmCancel = window.confirm('Do you want to terminate program' as string);
 
-        buildSSWFormData(TaskStatus.Completed, initialForm, item, document, 'ProgramTerminate') as any;
+        console.log(buildSSWFormData(TaskStatus.Completed, initialForm, item, document, 'ProgramTerminate') as any);
         if (confirmCancel) {
             if (TaskApiVersionMapper[initialForm.taskType] === ApiVersion.v2) {
                 setIsLoading(true);
@@ -146,50 +141,23 @@ const SswUpdateContainer = ({ policy, document, program, setProgram }: SswUpdate
                 </div>
                 <div className="my-2 flex w-full grow flex-col rounded bg-white shadow-elevation-light-04 p-6">
                     {program.length === 0 && (
-                        <>
-                            <div className="flex justify-center items-center py-20">
-                                <CardInfo
-                                    cta={{
-                                        action: () => {
-                                            router.back();
-                                        },
-                                        text: 'back',
-                                    }}
-                                    title={'No Existing Program Found'}
-                                />
-                            </div>
-                        </>
+                        <div className="flex justify-center items-center py-20">
+                            <CardInfo
+                                cta={{
+                                    action: () => {
+                                        router.back();
+                                    },
+                                    text: 'back',
+                                }}
+                                title={'No Existing Program Found'}
+                            />
+                        </div>
                     )}
 
                     {!formSubmitted &&
-                        program?.map((item: Program, index: number) => {
-                            return <EditProgram key={index} program={item} onTerminate={handleProgramTerminate} />;
-                            // return (
-                            //     <>
-                            //         <label className="font-primary text-lg font-bold my-2">{t(`sswUpdate.${item.programType}`)}</label>
-
-                            //         <div key={item.allocationId + 'in'} className="flex">
-                            //             <div className="my-2 grid grid-cols-auto-2 gap-2">
-                            //                 <Program program={item} isFormStateReadOnly={false} />
-                            //             </div>
-                            //             <div className="mt-3 p-8 text-primary flex">
-                            //                 <EditIcon
-                            //                     height={15}
-                            //                     width={20}
-                            //                     className="mx-2 cursor-pointer"
-                            //                     onClick={() => setShowSSWEditTabs(!showSSWEditTabs)}
-                            //                 />
-                            //                 <TrashIcon
-                            //                     height={15}
-                            //                     width={20}
-                            //                     className="mx-2 cursor-pointer"
-                            //                     onClick={() => terminateSSW(item)}
-                            //                 />
-                            //             </div>
-                            //         </div>
-                            //     </>
-                            // );
-                        })}
+                        program?.map((item: Program, index: number) => (
+                            <EditProgram key={index} program={item} onTerminate={handleProgramTerminate} />
+                        ))}
                     {/* {showSSWEditTabs && (
                         <SswEditTabsContainer
                             policy={policy}

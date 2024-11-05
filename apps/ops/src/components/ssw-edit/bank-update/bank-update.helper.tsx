@@ -61,7 +61,6 @@ export const accountTypeOptions = (t: TFunction) => [
 ];
 
 export const BankUpdateFieldConfigs = (t: TFunction) => {
-    // const { t } = useTranslation(undefined);
     return [
         {
             fields: [

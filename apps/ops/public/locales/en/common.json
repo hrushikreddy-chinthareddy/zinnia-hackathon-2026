@@ -4253,8 +4253,15 @@
             "bankUpdate": "Bank Update",
             "eftDrawUpdate": "EFT Draw Update"
         },
+        "channelOptions": {
+            "emailFaxMail": "Email/Fax/Mail",
+            "phone": "Phone"
+        },
+        "channel": "Channel",
         "close": "Close",
         "submitted": "Submitted",
-        "SSW": "Existing SSW Program"
+        "SSW": "Existing SSW Program",
+        "RMD": "Existing RMD Program",
+        "EFT": "Existing EFT Program"
     }
 }

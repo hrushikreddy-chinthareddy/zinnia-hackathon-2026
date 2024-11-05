@@ -1,29 +1,66 @@
-import { useTranslation } from 'next-i18next';
+import { TFunction, useTranslation } from 'next-i18next';
+import { useContext } from 'react';
 
+import { FieldSize } from '@deps/components/fields/field';
 import { Program } from '@deps/components/otp-withdrawal-form/rmd-method/program-item';
+import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
+import SelectSimple from '@deps/components/select/select';
 import { TranslationFiles } from '@deps/config/translations';
+import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import { ChannelType } from '@deps/models/case/enums';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit.svg';
 import { ReactComponent as TrashIcon } from '@deps/styles/elements/icons/icons_outlined/trash.svg';
+
+import { signaturesConfig } from '../bank-update/bank-update.helper';
+
+const channelOptions = (t: TFunction) => [
+    {
+        label: t('sswUpdate.channelOptions.emailFaxMail'),
+        value: ChannelType.Email,
+    },
+    {
+        label: t('sswUpdate.channelOptions.phone'),
+        value: ChannelType.Phone,
+    },
+];
 const EditProgram = ({ program, onTerminate }: any) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
+    const { formSource, setFormSource, formSignature } = useContext(FormDataContext);
     return (
         <div>
-            <label className="font-primary text-lg font-bold my-2">{t(`sswUpdate.${program.programType}`)}</label>
-
-            <div key={program.allocationId + 'in'} className="flex">
-                <div className="my-2 grid grid-cols-auto-2 gap-2">
-                    <Program program={program} isFormStateReadOnly={false} />
-                </div>
-                <div className="mt-3 p-8 text-primary flex">
-                    <EditIcon
-                        height={15}
-                        width={20}
-                        className="mx-2 cursor-pointer"
-                        // onClick={() => setShowSSWEditTabs(!showSSWEditTabs)}
+            <label className="font-primary text-lg font-bold my-3">{t(`sswUpdate.${program.programType}`)}</label>
+            <div className="mx-8">
+                <div className="my-4 grid w-full grid-cols-4 gap-4">
+                    <SelectSimple
+                        disabled={false}
+                        className="max-w-lg"
+                        label={t('sswUpdate.channel') || ''}
+                        options={channelOptions(t)}
+                        onChange={val => setFormSource(prevState => ({ ...prevState, channel: { text: val } }))}
+                        size={FieldSize.Small}
+                        value={formSource.channel?.text ? formSource.channel?.text : ChannelType.Phone}
+                        name="channel"
                     />
-                    <TrashIcon height={15} width={20} className="mx-2 cursor-pointer" onClick={() => onTerminate(program)} />
+                </div>
+                <div key={program.allocationId + 'in'} className="flex">
+                    <div className="my-2 grid grid-cols-auto-2 gap-2">
+                        <Program program={program} isFormStateReadOnly={false} />
+                    </div>
+                    <div className="mt-3 p-8 text-primary flex">
+                        <EditIcon
+                            height={15}
+                            width={20}
+                            className="mx-2 cursor-pointer"
+                            // onClick={() => setShowSSWEditTabs(!showSSWEditTabs)}
+                        />
+                        <TrashIcon height={15} width={20} className="mx-2 cursor-pointer" onClick={() => onTerminate(program)} />
+                    </div>
                 </div>
             </div>
+
+            {formSource.channel.text === ChannelType.Email && formSignature && (
+                <SignatureValidations isFormStateReadOnly={false} config={signaturesConfig} />
+            )}
         </div>
     );
 };

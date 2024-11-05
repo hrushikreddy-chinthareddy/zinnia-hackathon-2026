@@ -33,12 +33,9 @@ type SswUpdateProps = {
 };
 
 const SswEdit = (props: SswUpdateProps) => {
-    //If user clicks on any update other than bank Update he would be landing here
-    const { form, policy, document, featureFlagDecisions, specialProgramdetails } = props;
-
     const router = useRouter();
+    const { form, policy, document, featureFlagDecisions, specialProgramdetails } = props;
     const { programType } = router.query;
-    console.log(programType, '<==query');
     const [program, setProgram] = useState<Program[]>([]);
 
     const ProgramType = {
