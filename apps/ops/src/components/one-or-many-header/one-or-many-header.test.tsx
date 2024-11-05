@@ -1,8 +1,19 @@
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 
+import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+
 import OneOrManyHeader from './one-or-many-header';
 
+jest.mock('next-i18next', () => ({
+    useTranslation: () => ({
+        t: (key: string) => key,
+        i18n: {
+            language: DEFAULT_LOCALE,
+        },
+    }),
+}));
+const t = jest.fn();
 describe('OneOrManyHeader', () => {
     it('should display -- when no entities are provided', () => {
         const entities = [] as { name: string; ssn: string }[];
