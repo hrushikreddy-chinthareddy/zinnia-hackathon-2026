@@ -40,14 +40,14 @@ const CaseDetailsSideNav = ({ CaseAdditionalDetails, carrier }: CaseDetailsSideN
                 isNewPage={true}
                 size={NavElementSize.Small}
                 target="_blank"
-                title={CaseAdditionalDetails[CaseAdditionalDataKeys.formShortName]?CaseAdditionalDetails[CaseAdditionalDataKeys.formShortName]:
+                title={CaseAdditionalDetails[CaseAdditionalDataKeys.formShortName]||
                     CaseAdditionalDetails[CaseAdditionalDataKeys.formName]}
                 type={NavElementType.Link}
                 startIcon={<DocumentIcon width={20} height={20} />}
                 onClick={setCookies}
                 variant={NavElementVariant.Secondary}
             >
-               {CaseAdditionalDetails[CaseAdditionalDataKeys.formShortName]?CaseAdditionalDetails[CaseAdditionalDataKeys.formShortName]:
+              { CaseAdditionalDetails[CaseAdditionalDataKeys.formShortName]||
                     CaseAdditionalDetails[CaseAdditionalDataKeys.formName]}
             </NavElement>
 
