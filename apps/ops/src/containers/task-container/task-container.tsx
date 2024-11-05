@@ -18,7 +18,7 @@ type TaskContainerProps = {
 
 const TaskContainer = ({ policy, docType, documentNumber, clientCode, caseId, taskId, taskType, taskInfoLink }: TaskContainerProps) => {
     const steps = stepsProvider.getSteps(taskType, {
-        policyNumber: policy.id || '',
+        policyNumber: policy.policyNumber || '',
         docType,
         clientCode,
         documentNumber,

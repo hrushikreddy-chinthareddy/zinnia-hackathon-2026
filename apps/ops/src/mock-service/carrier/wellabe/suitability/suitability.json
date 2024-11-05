@@ -30,7 +30,7 @@
                     "age": "50",
                     "birthDate": "1985-03-21",
                     "martialStatus": "SINGLE",
-                    "birthCountry": "AD",
+                    "birthCountry": "AA",
                     "birthJurisdictionState": "AA"
                 },
                 "govtIdInfo": [
@@ -42,7 +42,7 @@
                 ],
                 "addresses": [
                     {
-                        "addressType": "RESIDENSE",
+                        "addressType": "RESIDENCE",
                         "line1": "123 Main St",
                         "line2": "Apt 4B",
                         "city": "Los Angeles",
@@ -62,12 +62,12 @@
             "productCode": "999",
             "productType": "SecureWellTM",
             "qualPlanType": "NON_QUALIFIED",
-            "annualPaymentAmt": "109890.60"
+            "annualPaymentAmt": "109890"
         },
         "applicationInfo": {
             "replacementInd": "YES",
             "replacementReason": "Replacement Reason",
-            "replacedContractType": "Replacement contract type",
+            "replacedContractType": "ANNUITY",
             "additionalInformation": {
                 "soldPoliciesToApplicant": "YES",
                 "pastReplacement": "YES",
@@ -179,19 +179,19 @@
                 "rightToRequestInfo": "YES",
                 "compensationEstimate": "YES",
                 "conflictsOfInterest": "YES",
-                "productAdvantages": "string",
-                "productCons": "string"
+                "productAdvantages": "YES",
+                "productCons": "NO"
             }
         },
         "additionalInfo": {
-            "currentResidenceOption": "string",
-            "assistedLivingFacilityInd": "string",
-            "extraFundAvailable": "string",
-            "existingPoliciesSoldByAgent": "string",
-            "consideredOtherInsuranceNeeds": "string",
-            "resideInNursingHomeOrAssistedLiving": "string",
-            "noOfDependents": "string",
-            "otherDependents": "string"
+            "currentResidenceOption": "R1",
+            "assistedLivingFacilityInd": "YES",
+            "extraFundAvailable": "YES",
+            "existingPoliciesSoldByAgent": "YES",
+            "consideredOtherInsuranceNeeds": "YES",
+            "resideInNursingHomeOrAssistedLiving": "YES",
+            "noOfDependents": "2",
+            "otherDependents": "NO"
         },
         "californiaResidentQuestions": {
             "applyForMeansTestedBenefits": "YES",
@@ -205,7 +205,7 @@
                 "signatureDate": "2023-12-01",
                 "signatureCity": "Quincy",
                 "signatureState": "AA",
-                "signatoryDesignation": "If Applicable"
+                "signatoryDesignation": "TRUSTEE"
             }
         ]
     },

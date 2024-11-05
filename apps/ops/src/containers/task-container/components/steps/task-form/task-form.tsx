@@ -12,7 +12,7 @@ type TaskFormProps = {
 };
 
 export const TaskForm = React.forwardRef(function TaskFormComponent(
-    { isSummaryView = false, onSubmit }: TaskFormProps,
+    { isSummaryView, onSubmit }: TaskFormProps,
     forwardedRef: ForwardedRef<Form>
 ) {
     const formState = useContext(TaskDataContext);
@@ -39,7 +39,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             onChange={handleChange}
             onSubmit={handleSubmit}
             ref={forwardedRef}
-            disabled={isSummaryView}
+            isSummaryView={isSummaryView}
         ></DynamicForm>
     );
 });

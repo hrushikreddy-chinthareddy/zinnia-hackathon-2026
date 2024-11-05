@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useContext, useEffect } from 'react';
 
@@ -6,7 +5,6 @@ import { DocumentTypeView } from '@deps/components/side-sheet/documents/document
 import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
-import { useNigoEntry } from '@deps/containers/nigo-entry-container/components/nigo-entry-provider';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { DocumentData } from '@deps/models/case/document';
@@ -29,18 +27,13 @@ export const TaskReviewStep = ({ policyNumber, documentNumber, docType, clientCo
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.taskReview` });
 
     const { goToNext } = useWorkflow();
-    const { isReadyForDataEntry } = useNigoEntry();
-    const router = useRouter();
+
     const formState = useContext(FormDataContext);
     const { formData, setFormData } = formState;
 
     const handleStepContinue = useCallback(() => {
-        if (!isReadyForDataEntry) {
-            goToNext();
-        } else {
-            router.push(taskInfoLink);
-        }
-    }, [goToNext, isReadyForDataEntry, router, taskInfoLink]);
+        goToNext();
+    }, [goToNext]);
 
     useEffect(() => {
         setFormData({
@@ -64,6 +57,7 @@ export const TaskReviewStep = ({ policyNumber, documentNumber, docType, clientCo
                     handleContinue={handleStepContinue}
                     parentPage={ParentPage.CreateCase}
                     leaveTransactionLink="/create-case"
+                    cancelLabel={t('cancelLabel') as string}
                 />
             }
         >
@@ -75,6 +69,7 @@ export const TaskReviewStep = ({ policyNumber, documentNumber, docType, clientCo
                         clientCode={clientCode}
                         policyNumber={policyNumber}
                         docType={docType}
+                        taskType={taskType}
                     />
                 </div>
             </div>

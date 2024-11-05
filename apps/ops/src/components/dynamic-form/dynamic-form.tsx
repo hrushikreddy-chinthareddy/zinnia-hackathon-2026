@@ -14,12 +14,12 @@ type DynamicFormProps = {
     formData: any;
     formSchema: RJSFSchema;
     uiSchema: UiSchema;
-    disabled?: boolean;
+    isSummaryView?: boolean;
     formButtons?: any;
 };
 
 const DynamicForm = React.forwardRef(function DynamicFormComponent(
-    { formData, formSchema, uiSchema, disabled, onChange, onSubmit, formButtons }: DynamicFormProps,
+    { formData, formSchema, uiSchema, isSummaryView = false, onChange, onSubmit, formButtons }: DynamicFormProps,
     forwardedRef: ForwardedRef<Form>
 ) {
     ApplyUITemplates(uiSchema);
@@ -37,7 +37,7 @@ const DynamicForm = React.forwardRef(function DynamicFormComponent(
                 widgets={widgets}
                 fields={fields}
                 templates={templates}
-                disabled={disabled}
+                readonly={isSummaryView}
             >
                 {formButtons}
             </Form>

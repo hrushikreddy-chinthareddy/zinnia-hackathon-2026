@@ -6,7 +6,7 @@ import DocumentPreviewer from '@deps/components/document-viewer/document-preview
 import Radio from '@deps/components/radio/radio';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
 import { TranslationFiles } from '@deps/config/translations';
-import { useNigoEntry } from '@deps/containers/nigo-entry-container/components/nigo-entry-provider';
+import { convertToCamelCase } from '@deps/utils/string.utils';
 
 import { useGetPolicyTypeDocs } from './task-review.helper';
 
@@ -16,13 +16,13 @@ interface TaskReviewProps {
     docType: string;
     documentNumber: string;
     activeDocType: DocumentTypeView;
+    taskType: string;
 }
 
-export const TaskReview = ({ policyNumber, clientCode, docType, documentNumber, activeDocType }: TaskReviewProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.serviceFormReview' });
-    const { isReadyForDataEntry, setIsReadyForDataEntry } = useNigoEntry();
+export const TaskReview = ({ policyNumber, clientCode, docType, documentNumber, taskType, activeDocType }: TaskReviewProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.taskReview` });
 
-    const [sectionOption, setSectionOption] = useState(isReadyForDataEntry ? 'true' : 'false');
+    const [sectionOption, setSectionOption] = useState('true');
     const [loading, getPolicyDocs, workingDocument] = useGetPolicyTypeDocs(policyNumber, clientCode, docType, documentNumber);
     const sectionOptions = [
         {
@@ -41,7 +41,6 @@ export const TaskReview = ({ policyNumber, clientCode, docType, documentNumber, 
 
     const onOptionSelection = (value: string) => {
         setSectionOption(value);
-        setIsReadyForDataEntry(value === 'true');
     };
 
     const { displayName } = workingDocument || {};

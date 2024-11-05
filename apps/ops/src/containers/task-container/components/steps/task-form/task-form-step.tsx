@@ -42,6 +42,9 @@ const TaskFormStep = ({ taskType, isSummaryView = false, taskInfoLink }: TaskFor
             footerContent={
                 <TransactionNavigationButtons
                     className="!gap-0"
+                    submitLabel={t('submitLabel') as string}
+                    cancelLabel={t('cancelLabel') as string}
+                    isSubmit={true}
                     handleContinue={handleStepContinue}
                     parentPage={ParentPage.CreateCase}
                     leaveTransactionLink={taskInfoLink}
