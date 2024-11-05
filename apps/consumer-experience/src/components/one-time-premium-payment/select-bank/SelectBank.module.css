@@ -21,7 +21,7 @@
   }
 
   &:has(input:checked) {
-    border-color: var(--color-states-selected-selected-primary-border);
+    border-color: var(--color-states-selected-border-selected-border);
 
     &:hover {
       border-color: var(--color-states-hover-border-hover-border);
@@ -57,6 +57,7 @@ button.linkClassname {
 
     &:hover {
       text-decoration: none;
+      color: var(--color-links-color-global-link-dark);
     }
   }
 }

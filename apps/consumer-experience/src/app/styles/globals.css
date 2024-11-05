@@ -36,12 +36,24 @@ main {
 
 a {
   color: var(--color-links-color-global-link, #1e359c);
-  text-decoration: underline;
-  text-underline-position: under;
+  text-decoration: none;
 
   &:hover {
+    text-underline-position: under;
+    text-decoration: underline;
     color: var(--color-links-color-global-link-dark);
-    text-decoration: none;
+  }
+}
+
+/* inline anchor tags should be underlined by default and hidden on hover */
+p:has(a) {
+  a {
+    text-underline-position: under;
+    text-decoration: underline;
+
+    &:hover {
+      text-decoration: none;
+    }
   }
 }
 

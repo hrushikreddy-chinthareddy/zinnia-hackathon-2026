@@ -29,7 +29,7 @@
 .step {
   border-radius: 100%;
   border: var(--measure-dimension-stroke-sm, 2px) solid
-    var(--progress-bar-step-outline);
+    var(--color-progress-bar-steps-item-progress-bar-steps-item-active-border);
   width: 20px;
   height: 20px;
   position: relative;
