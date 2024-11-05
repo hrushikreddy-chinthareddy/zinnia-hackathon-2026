@@ -2823,6 +2823,7 @@
     },
     "tooltip": {
         "jointOwner": "Co-titulaire",
+        "agent": "Agent",
         "ssn": "SSN",
         "other": "autre"
     },
