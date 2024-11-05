@@ -12,7 +12,7 @@ import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-da
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { ProcessType } from '@deps/models/case/enums';
 import { docTypes } from '@deps/models/case/helpers';
-import { TaskType, TaskTypeToEnumMap } from '@deps/models/case/task';
+import { TaskType } from '@deps/models/case/task';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
@@ -84,9 +84,9 @@ export const getServerSideProps = withPageAuthRequired({
         try {
             accessToken = (await getAccessToken(req, res)).accessToken;
         } catch (e) {
-            logWarn('getServerSidePropsNigoEntryPage::Access token expired', {
+            logWarn('getServerSidePropsTaskPage::Access token expired', {
                 ...parseErrorInformation(e),
-                file: 'pages/suitability',
+                file: 'pages/task/{taskId}/index',
                 function: 'getServerSideProps',
             });
             return serverSidePropsLogout();
@@ -98,12 +98,12 @@ export const getServerSideProps = withPageAuthRequired({
             UserPermission.AllowReadCaseManagement
         );
         if (!hasPermissionToReadCaseManagement) {
-            // return {
-            //     redirect: {
-            //         destination: '/403',
-            //         permanent: false,
-            //     },
-            // };
+            return {
+                redirect: {
+                    destination: '/403',
+                    permanent: false,
+                },
+            };
         }
 
         // If feature flag is not enabled, redirect to error page
@@ -123,7 +123,7 @@ export const getServerSideProps = withPageAuthRequired({
                 await getCaseTaskByIdSSR(taskId, accessToken),
             ]);
             if (!task) {
-                logError('suitability::Error getting task by id', {
+                logError('Task::Error getting task by id', {
                     taskId,
                     file: 'pages/task',
                     function: 'getServerSideProps',
@@ -138,9 +138,9 @@ export const getServerSideProps = withPageAuthRequired({
 
             const { taskType, carrier, data, caseId, process } = task;
             const { documentNumber, contractNum } = task.data;
+            const processType = process as ProcessType;
 
-            const processType = (query.processType as ProcessType) || '';
-            const taskFormSchema = await getTaskFormMetadata(carrier || '', TaskTypeToEnumMap[taskType], processType, accessToken);
+            const taskFormSchema = await getTaskFormMetadata(carrier, taskType as TaskType, processType, accessToken);
             const { formSchema, uiSchema } = taskFormSchema ?? {};
 
             if (!formSchema || !uiSchema) {
@@ -203,7 +203,7 @@ export const getServerSideProps = withPageAuthRequired({
                     documentNumber,
                     carrier,
                     taskId,
-                    taskType: TaskTypeToEnumMap[taskType],
+                    taskType: taskType,
                     formSchema,
                     uiSchema,
                     taskData: data || {},

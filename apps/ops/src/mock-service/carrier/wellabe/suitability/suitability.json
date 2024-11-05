@@ -7,7 +7,7 @@
     "templateId": "g9f78538-18b6-45f1-b365-59f75a1fc198",
     "process": "Suitability",
     "carrier": "SBGC",
-    "taskType": "SUITABILITY_TASK",
+    "taskType": "SUITABILITY",
     "taskName": "Suitability Task",
     "taskDetail": "The Suitability must be reviewed for given rules",
     "status": "NEW",

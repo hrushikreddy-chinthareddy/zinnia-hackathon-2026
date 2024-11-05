@@ -11,7 +11,7 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { DocumentData } from '@deps/models/case/document';
 import { TaskType } from '@deps/models/case/task';
-import { uncapitalizeFirstLetter } from '@deps/utils/optimizely/utils';
+import { convertToCamelCase } from '@deps/utils/string.utils';
 
 import { TaskReview } from './task-review';
 
@@ -26,7 +26,7 @@ type TaskReviewStepProps = {
 };
 
 export const TaskReviewStep = ({ policyNumber, documentNumber, docType, clientCode, taskInfoLink, taskType }: TaskReviewStepProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${uncapitalizeFirstLetter(taskType)}.taskReview` });
+    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.taskReview` });
 
     const { goToNext } = useWorkflow();
     const { isReadyForDataEntry } = useNigoEntry();

@@ -11,7 +11,7 @@ import { TaskDataContext } from '@deps/containers/task-container/task-context';
 import { TaskType } from '@deps/models/case/task';
 import { updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
-import { uncapitalizeFirstLetter } from '@deps/utils/optimizely/utils';
+import { convertToCamelCase } from '@deps/utils/string.utils';
 
 interface ConfirmStepProps {
     caseId: string;
@@ -19,7 +19,7 @@ interface ConfirmStepProps {
     taskType: TaskType;
 }
 const ConfirmStep = ({ caseId, taskId, taskType }: ConfirmStepProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${uncapitalizeFirstLetter(taskType)}.confirmStep` });
+    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.confirmStep` });
     const router = useRouter();
     const formState = useContext(TaskDataContext);
 

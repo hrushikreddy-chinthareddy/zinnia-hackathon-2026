@@ -7,7 +7,7 @@ import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card
 import { TranslationFiles } from '@deps/config/translations';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { TaskType } from '@deps/models/case/task';
-import { uncapitalizeFirstLetter } from '@deps/utils/optimizely/utils';
+import { convertToCamelCase } from '@deps/utils/string.utils';
 
 import { TaskForm } from './task-form';
 
@@ -19,7 +19,7 @@ type TaskFormStepProps = {
 };
 
 const TaskFormStep = ({ taskType, isSummaryView = false, taskInfoLink }: TaskFormStepProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${uncapitalizeFirstLetter(taskType)}.taskReview` });
+    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.taskReview` });
     const { goToNext } = useWorkflow();
     const formRef = createRef<Form>();
 

@@ -8,7 +8,3 @@ export const isFormFeatureEnabled = (processType: ProcessType, clientId: string,
     const featureKey = FEATURE_FLAGS[identifier];
     return featureKey && featureFlagMap[featureKey] ? featureFlagMap[featureKey] : false;
 };
-
-export function uncapitalizeFirstLetter(val: string) {
-    return String(val).charAt(0).toLocaleLowerCase() + String(val).slice(1);
-}
