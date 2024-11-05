@@ -1,7 +1,6 @@
 import {
     Icon,
     IconType,
-    Link,
     Table,
     TableBody,
     TableCell,
@@ -120,10 +119,11 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
     return (
         <TableRow className={styles.row}>
             {/* This lives as a visibly hidden link instead of as a click handler on the table row for acccessibility concerns. Nested interactive elements are not allowed */}
-            {/* to do - add hover tooltip */}
-            <Link className={styles.caseLink} href={`/cases/${singleCase.id}/${CaseDetailsTabValues.progress}`} text={viewCaseText}>
-                <div title={viewCaseText}>{viewCaseText}</div>
-            </Link>
+            <a href={`/cases/${singleCase.id}/${CaseDetailsTabValues.progress}`} className={styles.caseLink} aria-label={viewCaseText}>
+                <Typography variant={TypographyVariant.BodySm} className={styles.caseLinkText}>
+                    View Case
+                </Typography>
+            </a>
             <TableCell>
                 <div className="flex flex-col">
                     <Typography variant={TypographyVariant.BodySm} className="block">
