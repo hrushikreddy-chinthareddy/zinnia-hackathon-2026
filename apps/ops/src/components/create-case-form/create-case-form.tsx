@@ -45,8 +45,8 @@ const CreateCaseForm = ({
     setSearchByOption,
 }: CreateCaseViewProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
-    const isNewLayout = caseType === CaseType.AddressChange  || caseType === CaseType.ReReg;
- 
+    const isNewLayout = caseType === CaseType.AddressChange || caseType === CaseType.ReReg;
+
     const setSearchBy = (value: string, searchKey: SearchKeys) => {
         if (searchKey === SearchKeys.PolicyNumber) {
             setPolicyNumber(value);
@@ -143,6 +143,7 @@ const CreateCaseForm = ({
                         <Button
                             aria-label={t('caseRenewal.caseCreate.createAriaLabel') as string}
                             className="mt-7"
+                            data-testid="create-case-search-button"
                             onClick={createCase}
                             size={ButtonSize.Small}
                             type={ButtonType.Primary}

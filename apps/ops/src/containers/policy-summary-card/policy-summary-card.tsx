@@ -70,6 +70,8 @@ import SideSheetEmail from '../people-data-cards/email-card/side-sheet/side-shee
 import { sortPhonesByType } from '../people-data-cards/phone-card/phone-card.helpers';
 import { SideSheetPhone } from '../people-data-cards/phone-card/side-sheet/side-sheet-phone';
 import SideSheetPeopleHeader from '../people-data-cards/side-sheet-people-header/side-sheet-people-header';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { SegmentTrackedEventName, SegmentTrackEventState } from '@deps/types/segment-analytics';
 
 interface SummaryCardProps extends PropsWithChildren {
     policy: Policy;
@@ -79,12 +81,16 @@ interface KeyValuesBarProps {
     policy: Policy;
 }
 
-const quickLinks = (t: TFunction, policy: PolicyDetails): QuickLinksProps['links'] => {
+// TODO MG: move these into different files
+const quickLinks = (t: TFunction, policy: PolicyDetails, userPartyId?: string): QuickLinksProps['links'] => {
     const { policyNumber, planCode } = policy;
     const detailsLink = {
         href: t('site.navLinks.policyDetails.link', { id: policyNumber, planCode }),
         name: t(policy.isLife ? 'site.navLinks.policyDetails.altText' : 'site.navLinks.contractDetails.altText'),
+        segmentTrackingName: 'Policy Search Card Policy Click',
+        userPartyId,
     };
+
     return [
         detailsLink,
         {
@@ -126,6 +132,9 @@ const getPolicyHighlighter = ({ firstName, lastName, policyNumber, ssn }: Search
 const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
     const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
     const { searchValue } = useContext(DashboardContext);
+    const perms = usePermissionsContext();
+
+    const userPartyId = perms.getUserPartyId();
     const { carrierId, marketingName, planCode, planName, policyNumber, policyStatus, productType } = policy;
     const totalMinRequiredAmount = getTotalMinRequiredAmount(policy);
     const globalValuesData = useMemo(() => policyDataToGlobalValues(policy, t), [policy, t]);
@@ -211,6 +220,12 @@ const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
     };
 
     function onOpenChange(open: boolean) {
+        segmentAnalyticsTrackEvent(SegmentTrackedEventName.PolicyQuickActionsDropdown, {
+            state: open ? SegmentTrackEventState.Open : SegmentTrackEventState.Close,
+            policyNumber,
+            userId: userPartyId,
+        });
+
         if (open) {
             setFireEligibilityChecks(true);
         }
@@ -245,7 +260,7 @@ const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
                             eligibilityCheck={eligibilityCheck}
                             isLife={policy.isLife}
                             isLoading={isLoading}
-                            links={quickLinks(t, policy)}
+                            links={quickLinks(t, policy, userPartyId)}
                             onOpenChange={(open: boolean) => onOpenChange(open)}
                             planCode={planCode}
                             policyNumber={policyNumber}

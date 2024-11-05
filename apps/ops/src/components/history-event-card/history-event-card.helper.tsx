@@ -1,7 +1,7 @@
 import { I18n, TFunction, i18n } from 'next-i18next';
 
 import { getFullName } from '@deps/helpers/party-info-helper';
-import { convertKebabedDateString, formatAccountNumber, toSentenceCase } from '@deps/helpers/string.helper';
+import { convertKebabedDateString, formatAccountNumber, isNullEmptyOrUndefined, toSentenceCase } from '@deps/helpers/string.helper';
 import { mapAccountTypeToTranslation } from '@deps/helpers/translation.helper';
 import {
     BankAccount,
@@ -235,7 +235,12 @@ export const getHistoryEventCardValues = (policy: Policy, transaction: Transacti
             break;
 
         default:
-            eventTitle = transactionType ?? DEFAULT_ERROR_STRING;
+            eventTitle = t(`historyEventCard.transactionTypes.${transactionType}`, transactionType ?? DEFAULT_ERROR_STRING);
+            if (!isNullEmptyOrUndefined(appliedAmount)) {
+                amount = appliedAmount;
+            } else if (!isNullEmptyOrUndefined(requestedAmount)) {
+                amount = requestedAmount;
+            }
             break;
     }
 

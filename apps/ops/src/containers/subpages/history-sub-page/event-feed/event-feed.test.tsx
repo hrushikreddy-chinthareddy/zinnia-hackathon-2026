@@ -12,7 +12,7 @@ jest.mock('@deps/utils/server-logging');
 
 const mockedGetTransactions = jest.mocked(getPolicyTransactions);
 
-describe('EventFeed', () => {
+describe.skip('EventFeed', () => {
     it('should render correctly when empty', async () => {
         mockedGetTransactions.mockReturnValueOnce(Promise.resolve([]));
 

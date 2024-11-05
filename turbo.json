@@ -44,6 +44,7 @@
         "NEXT_PUBLIC_BACKEND_URL",
         "NEXT_PUBLIC_SE2_BACKEND_URL",
         "NEXT_PUBLIC_BASE_URL",
+        "NEXT_PUBLIC_ACCESS_MANAGEMENT_URL",
         "NEXT_PUBLIC_THEME",
         "NEXT_PUBLIC_S3_BUCKET_BASE_URL",
         "OPTIMIZELY_SDK_KEY",
@@ -53,7 +54,8 @@
         "NEXT_PUBLIC_DATADOG_BROWSER_APPLICATION_ID",
         "NEXT_PUBLIC_DATADOG_ENV",
         "NEXT_PUBLIC_GIT_SHA"
-      ]
+      ],
+      "dependsOn": ["^build"]
     },
     "@zinnia/utils#build": {
       "dependsOn": ["^build"]
@@ -77,9 +79,15 @@
     "@zinnia/utils#dev": {
       "dependsOn": ["^build"]
     },
+    "ops#test": {
+      "dependsOn": ["^build"]
+    },
     "test": {},
     "build-storybook": {},
     "consumer-experience#test": {
+      "dependsOn": ["^build"]
+    },
+    "ops#dev": {
       "dependsOn": ["^build"]
     }
   }

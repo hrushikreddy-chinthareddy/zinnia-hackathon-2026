@@ -478,8 +478,8 @@ interface PolicyTransactionQuery {
 // Get policy transactions by transactionType
 export const getPolicyTransactions = async ({
     id: policyNumber,
-    limit = 10,
-    offset = 0,
+    limit,
+    offset,
     planCode,
     sortOrder = 'ASC',
     status,
@@ -497,7 +497,7 @@ export const getPolicyTransactions = async ({
             sortOrder,
             status,
             transactionTypes,
-            year: year &&dayjs(year).format('YYYY-01-01'),
+            year: year && dayjs(year).format('YYYY-01-01'),
         })) {
             if (value) params.append(key, `${value}`);
         }

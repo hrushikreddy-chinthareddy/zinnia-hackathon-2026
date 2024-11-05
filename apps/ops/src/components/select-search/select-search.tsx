@@ -14,6 +14,7 @@ import useDebounce from '@deps/utils/useDebounce';
 
 import SelectSearchGroupContainer from './select-search-group-container/select-search-group-container';
 import { getInputClasses, getLabelClasses } from './select-search.helper';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 
 interface SelectFieldProps {
     label?: string;
@@ -28,6 +29,8 @@ interface SelectFieldProps {
     group?: boolean;
     value?: any;
     dropUp?: boolean;
+    segmentTrackName?: string;
+    userPartyId?: string;
 }
 
 interface SelectFieldPopupContainerProps {
@@ -87,6 +90,8 @@ const SelectSearch = ({
     group,
     value,
     dropUp,
+    segmentTrackName,
+    userPartyId,
 }: SelectFieldProps) => {
     const [open, setOpen] = useState(false);
     const [searchValue, setSearchValue] = useState(value ? value : '');
@@ -96,9 +101,22 @@ const SelectSearch = ({
     const labelId = uuid4();
 
     const ref = useRef<HTMLInputElement>(null);
-    useOutsideClick(ref, open, setOpen);
+
+    // TODO MG: useCallback or useMemo?
+    const onOutsideClick = () => {
+        if (!segmentTrackName) {
+            return;
+        }
+        console.log('searchValue', searchValue);
+        segmentAnalyticsTrackEvent(segmentTrackName, {
+            searchText: searchValue,
+            userId: userPartyId
+        });
+    }
+    useOutsideClick(ref, open, setOpen, onOutsideClick);
 
     const debouncedSearchValue = useDebounce(searchValue, 300);
+
     useEffect(() => {
         if (debouncedSearchValue) {
             setSearchResults(filterOnSearchHandler(values, { searchValue: debouncedSearchValue }));
@@ -141,7 +159,7 @@ const SelectSearch = ({
         (select = false) => {
             setIsSelected(select);
         },
-        [isSelected]
+        [isSelected, searchValue]
     );
 
     return (
