@@ -21,7 +21,6 @@ import {
     CaseSearchAdditionalFilters,
     CaseSearchFilters,
     initialFilters,
-    caseSearchPageSizeOptions,
     CaseTableData,
 } from '@deps/contexts/CaseManagementFilters';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
@@ -52,13 +51,9 @@ import useCaseFilterQueryStore from './caseFilterQueryStore';
 
 // Lazy Loaded Components
 const SideSheetRefineResults = dynamic(() => import('@deps/containers/side-sheet-refine-results/side-sheet-refine-results'));
-const CaseSearchResultsEmptyCard = dynamic(
-    () => import('@deps/containers/search-results/search-results-empty-card/case-search-results-empty-card')
-);
 const ActiveFilters = dynamic(() => import('@deps/containers/active-filters/active-filters'));
 const SearchResultsErrorCard = dynamic(() => import('@deps/containers/search-results/search-results-error-card/search-results-error-card'));
 const PaginationControls = dynamic(() => import('@deps/components/pagination/pagination'));
-const PageSizeControls = dynamic(() => import('@deps/components/pagination/page-size/page-size'));
 
 interface CaseManagementDashboardProps extends SegmentTrackedPageProps {
     authorizedCarriers: string[];
@@ -353,7 +348,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
 
         if (loading) return <PageLoader variant={PageLoaderVariant.Center} />;
         if (error) return <SearchResultsErrorCard />;
-        if (!cases || cases.length === 0) return <CaseSearchResultsEmptyCard />;
 
         return (
             <>
@@ -450,11 +444,13 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                     <div ref={bottomDiv} className="w-full xs:overflow-x-auto xs:overflow-y-hidden xs:p-1 lg:p-0">
                         {tableContent}
                     </div>
-                    <div className="align-center mx-auto mt-4 grid grid-cols-4 lg:grid-cols-12 lg:pb-[120px]">
-                        <div className="order-2 col-span-4 mt-8 flex items-center justify-center gap-1 pb-[120px] lg:order-1 lg:col-span-2 lg:mt-0 lg:pb-0">
-                            {pageSizeDropdown}
+                    <div className="flex flex-col items-center lg:grid lg:grid-cols-3 mt-3">
+                        <div className="mb-6 lg:mb-0">
+                            {/* to do - this is incorrect if it's less than 25 */}
+                            {t('policy.documents.xToYOfZ', { x: 1, y: 25, z: caseTotals[caseManagementFilters.statusCounterTileFilter] })}
                         </div>
-                        <div className="order-1 col-span-4 lg:order-2 lg:col-span-8">{paginationControls}</div>
+                        {/* to do - is this okay still or do I switch to DocumentResultsPagination?*/}
+                        <div className="">{paginationControls}</div>
                     </div>
                 </div>
             </NoNavLayout>
