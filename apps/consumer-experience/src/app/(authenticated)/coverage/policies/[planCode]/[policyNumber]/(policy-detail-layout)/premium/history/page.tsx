@@ -1,6 +1,7 @@
-import { IconType, BannerAlert, BannerVariant } from '@zinnia/bloom/components';
+import { IconType } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
+import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { CardInsertHistory } from '@/components/card-list-history/CardInsertHistory';
 import { CardListHistory } from '@/components/card-list-history/CardListHistory';
 import MockMessage from '@/components/MockMessage';
@@ -10,10 +11,7 @@ import { AccountType } from '@/components/pii/AccountType';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getPaymentHistory } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
-import {
-  EVERLY_CONTACT_PHONE_NUMBER,
-  formatBankAccountTypeText,
-} from '@/utils/data';
+import { formatBankAccountTypeText } from '@/utils/data';
 import { sortByDate } from '@/utils/dates';
 import { toSentenceCase } from '@/utils/strings';
 
@@ -47,7 +45,7 @@ export default async function PaymentHistory({ params }: Props) {
     );
   }
 
-  const { completedTransactions, pendingTransactions } = data!;
+  const { completedTransactions, pendingTransactions, carrierId } = data!;
 
   const sortedPendingTransactions = pendingTransactions.sort((a, b) =>
     sortByDate(a.date, b.date, { order: 'asc' })
@@ -124,19 +122,9 @@ export default async function PaymentHistory({ params }: Props) {
 
   return (
     <div className="container">
-      {/* // TODO: once CallForAssistance is updated to use banner, remove the BannerAlert here and replace with the correct component */}
-      {/* <CallForAssistance customInstruction="for questions about a payment." /> */}
-      <BannerAlert
-        bodyText={
-          <p>
-            Call{' '}
-            <a href={`tel:+${EVERLY_CONTACT_PHONE_NUMBER}`}>
-              {EVERLY_CONTACT_PHONE_NUMBER}
-            </a>{' '}
-            for questions about a payment.
-          </p>
-        }
-        variant={BannerVariant.Information}
+      <CallForAssistance
+        customInstruction="for questions about a payment."
+        carrierId={carrierId}
       />
 
       {pendingTransactions.length > 0 && (

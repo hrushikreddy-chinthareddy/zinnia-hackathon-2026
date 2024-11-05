@@ -4,16 +4,16 @@ import { useQuery } from '@tanstack/react-query';
 import { FC, useRef } from 'react';
 
 import { actionLogInfo } from '@/actions/log-actions';
-import { getPolicyProfile } from '@/queries/policy-queries';
+import { getPolicyDetails, getPolicyProfile } from '@/queries/policy-queries';
 import { QueryKeys } from '@/queries/query-keys';
 import { useBpmStore } from '@/store/store';
 import { PolicyProfile } from '@/types/policy';
-import { EVERLY_CONTACT_PHONE_NUMBER } from '@/utils/data';
 import { shouldStopBankPolling } from '@/utils/policy';
 
 import styles from './BankList.module.css';
 import { AddBankSidesheet } from '../add-bank/AddBankSidesheet';
 import { BankData } from '../bank-data/BankData';
+import { CarrierPhoneNumber } from '../carrier-phone-number/CarrierPhoneNumber';
 
 const POLL_INTERVAL = 1000;
 const POLL_LIMIT = 5;
@@ -67,6 +67,13 @@ export const BankList: FC<BankListProps> = ({
     queryFn: () => getPolicyProfile(planCode, policyNumber),
   });
 
+  const { data: policyData } = useQuery({
+    queryKey: [QueryKeys.POLICY],
+    queryFn: () => getPolicyDetails(planCode, policyNumber),
+  });
+
+  console.log('POLICY DATA++++++', policyData);
+
   if (data?.bankDetails && data.bankDetails.length) {
     const allBankData = data.bankDetails.map(bankDetail => {
       return (
@@ -88,10 +95,7 @@ export const BankList: FC<BankListProps> = ({
           </h2>
           <p className="mb-lg">
             Need help updating banking details? Give us a call at{' '}
-            <a href={`tel:+${EVERLY_CONTACT_PHONE_NUMBER}`}>
-              {EVERLY_CONTACT_PHONE_NUMBER}
-            </a>
-            .
+            <CarrierPhoneNumber carrierId={policyData?.carrierId} />.
           </p>
           <div className={styles.multipleItemsInSection}>{allBankData}</div>
           {allowBankingChanges && <AddBankSidesheet partyId={data.partyId} />}
