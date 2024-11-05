@@ -1,9 +1,7 @@
 .container {
   background-color: var(--color-base-surface-surface-primary, #fff);
-  box-shadow: var(
-    --shadow-elevation-elevation-light-md,
-    0 3.200000047683716px 7.199999809265137px 0 rgba(0, 0, 0, 0.13)
-  );
+  box-shadow: var(--shadow-elevation-elevation-light-md,
+      0 3.200000047683716px 7.199999809265137px 0 rgba(0, 0, 0, 0.13));
   display: flex;
   height: 64px;
   padding: var(--measure-dimension-padding-2xl, 1rem);
@@ -16,8 +14,7 @@
   flex-direction: column;
   inset: 0;
   overflow: hidden;
-  padding: var(--measure-dimension-padding-2xl, 1rem)
-    var(--measure-dimension-padding-lg, 0.5rem);
+  padding: var(--measure-dimension-padding-2xl, 1rem) var(--measure-dimension-padding-lg, 0.5rem);
   position: absolute;
   top: 64px;
   height: 100vh;
@@ -47,9 +44,11 @@
   display: flex;
   margin-left: var(--measure-dimension-gap-xl, 1rem);
 }
+
 .radioInput {
   margin-right: var(--measure-dimension-gap-sm, 0.25rem);
 }
+
 .navItem {
   align-items: center;
   border-radius: var(--measure-dimension-radius-sm, 0.25rem);
@@ -68,12 +67,12 @@
   }
 
   &:hover {
-    background-color: var(--color-nav-menu-menu-link-hover-fill, #313131);
+    background-color: var(--color-nav-menu-surface-menu-link-hover-fill, #313131);
     text-decoration: none;
   }
 
   &.selected {
-    background-color: var(--color-nav-menu-menu-link-hover-fill, #313131);
+    background-color: var(--color-nav-menu-surface-menu-link-hover-fill, #313131);
 
     .firstItem {
       background-color: var(--color-base-surface-surface-primary, #fff);

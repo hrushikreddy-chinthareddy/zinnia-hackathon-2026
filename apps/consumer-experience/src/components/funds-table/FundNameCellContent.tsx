@@ -1,4 +1,5 @@
 'use client';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { toSentenceCase } from '@zinnia/utils';
 import clsx from 'clsx';
 
@@ -12,9 +13,11 @@ import { ControlledSidesheet } from '../controlled-sidesheet/ControlledSidesheet
 export const FundNameCellContent = ({
   isElected,
   fundDetails,
+  lineOfBusiness,
 }: {
   isElected?: boolean;
   fundDetails: Fund;
+  lineOfBusiness?: LineOfBusiness;
 }) => {
   // TODO: what is the null handling here?
   if (!fundDetails) {
@@ -42,11 +45,14 @@ export const FundNameCellContent = ({
         <p className="typography-desktop-headline-3-d mb-xl">
           {fundDetails.fundName}
         </p>
-        <div className="mb-xl typography-content-body">
+        <div className="mb-xl">
           <FundDescription fund={fundDetails} />
         </div>
 
-        <FundDetailsSidesheetInner fundDetails={fundDetails} />
+        <FundDetailsSidesheetInner
+          fundDetails={fundDetails}
+          lineOfBusiness={lineOfBusiness}
+        />
       </div>
     </ControlledSidesheet>
   );

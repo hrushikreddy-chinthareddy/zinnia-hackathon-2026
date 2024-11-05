@@ -1,6 +1,7 @@
 import { ProductType } from '@zinnia/api-types/types/sor';
 import { Metadata } from 'next';
 
+import styles from '@/app/(authenticated)/coverage/shared-styles/Funds.module.css';
 import { AccountValue } from '@/components/account-value/AccountValue';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { OutstandingLoanValue } from '@/components/outstanding-loan-value/OutstandingLoanValue';
@@ -11,7 +12,6 @@ import { getFeatureFlags } from '@/services/feature-flags';
 import { PolicyRequestInputs } from '@/types/policy';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
-import styles from '@/app/(authenticated)/coverage/shared-styles/Funds.module.css';
 import { IULFundsView } from './IULFundsView';
 import { OriginalFundsView } from './OriginalFundsView';
 import { ULFundsView } from './ULFundsView';
@@ -53,20 +53,16 @@ export default async function FundsPage({
   return (
     <div className="container">
       {data?.product?.productType === ProductType.UNIVERSALLIFE && (
-        <p className="typography-content-body">
-          <span className="typography-content-body-bold">
-            Your policy's value is held within an account.
-          </span>{' '}
-          As you pay premiums, we first deduct all fees and charges, then
-          leftover premium dollars are deposited into your account, which
-          typically earns an interest rate.
+        <p>
+          <span>Your policy's value is held within an account.</span> As you pay
+          premiums, we first deduct all fees and charges, then leftover premium
+          dollars are deposited into your account, which typically earns an
+          interest rate.
         </p>
       )}
       {data?.product?.productType === ProductType.INDEXEDUNIVERSALLIFE && (
-        <p className="typography-content-body">
-          <span className="typography-content-body-bold">
-            Your policy's value is held within one or more accounts.
-          </span>{' '}
+        <p>
+          <span>Your policy's value is held within one or more accounts.</span>{' '}
           As you pay premiums, we first deduct all fees and charges, then
           leftover premium dollars are deposited into the account(s) you select.
         </p>

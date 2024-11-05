@@ -17,7 +17,6 @@ class LoginPage extends Page {
 
   get ['Password continue button']() {
     return cy.get('button[class*="login-password"]');
-    
   }
 
   get ['Login error message']() {
@@ -32,8 +31,9 @@ class LoginPage extends Page {
     this['Email address input'].type(email);
     this['Email continue button'].click();
 
-    this['Password input'].type(password);
-    this['Password continue button'].click();
+    // this is fine because we don't have control over microsoft sso login page
+    this['Password input'].type(password, { force: true });
+    this['Password continue button'].click({ force: true });
   }
 }
 

@@ -7,47 +7,64 @@ import { useState } from 'react';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { getTaskStatus } from '@deps/components/tasks-listing/task-listing.helpers';
 import { TranslationFiles } from '@deps/config/translations';
+import { ProcessType } from '@deps/models/case/enums';
+import { TaskSource } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as SparklesIcon } from '@deps/styles/elements/icons/icons_outlined/sparkles.svg';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
+import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
+import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
+import { logWarn } from '@deps/utils/server-logging';
 
 type TaskQueueTableRowProps = {
     task: ManagementTask;
+    featureFlagDecisions: FeatureFlags;
 };
 
-const TaskQueueTableRow = ({ task }: TaskQueueTableRowProps) => {
+const TaskQueueTableRow = ({ task, featureFlagDecisions }: TaskQueueTableRowProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'taskManagementQueue' });
     const router = useRouter();
     const [timer] = useState(performance.now());
 
     const createdAt = task?.createdAt ? dayjs(task.createdAt).format('MMM DD, YYYY h:mm a') : '-';
     const taskStatus = getTaskStatus(t, task?.status);
-    const documentNumber = task?.data ?  task?.data?.documentNumber :  '-';
+    const documentNumber = task?.data ? task?.data?.documentNumber : '-';
     const carrierName = getCarrierNameByClientId(task?.carrier) || task?.carrier?.toUpperCase();
     const transactionType = task?.process || '';
-    
-    const handleStartTask = async (taskData:ManagementTask<TaskStatus>, taskStatus: TaskStatus ) => {
+
+    const handleStartTask = async (taskData: ManagementTask<TaskStatus>, taskStatus: TaskStatus) => {
+        // If feature flag is not enabled, redirect to error page
+        if (!isFormFeatureEnabled(taskData?.process.toUpperCase() as ProcessType, taskData?.carrier, featureFlagDecisions)) {
+            logWarn('task-queue::feature flag not enabled', {
+                taskId: taskData.id,
+                documentNumber: taskData?.data?.documentNumber,
+                clientCode: taskData?.carrier,
+                process: taskData?.process,
+            });
+            return {
+                redirect: {
+                    destination: '/403',
+                    permanent: false,
+                },
+            };
+        }
+
         if (taskStatus === TaskStatus.InProgress) {
             router.push(`/nigo-entry?taskId=${taskData.id}`);
             return;
         }
 
         try {
-            const body = {...taskData, status: TaskStatus.InProgress}
-            const response = await updateTask(
-                taskData.caseId,
-                taskData.id,
-                body,
-                timer
-            );
+            const body = { ...taskData, status: TaskStatus.InProgress, source: TaskSource.ZinniaTaskManagement };
+            const response = await updateTask(taskData.caseId, taskData.id, body, timer);
 
             if (response) {
                 router.push(`/nigo-entry?taskId=${taskData.id}`);
             }
         } catch (e) {
-            console.error('TaskQueue::Error updating task in progress', e, {taskId: taskData.id, caseId:taskData.caseId});
+            console.error('TaskQueue::Error updating task in progress', e, { taskId: taskData.id, caseId: taskData.caseId });
             router.push(`/create-case/error?errorCode=${ERROR_CODES.DATA_ENTRY_START_TASK_ERROR}`);
         }
     };
@@ -88,6 +105,6 @@ const TaskQueueTableRow = ({ task }: TaskQueueTableRowProps) => {
             </TableCell>
         </TableRow>
     );
-}
+};
 
 export default TaskQueueTableRow;

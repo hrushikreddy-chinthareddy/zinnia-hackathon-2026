@@ -1,5 +1,6 @@
 'use client';
 
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { IconType, Pagination } from '@zinnia/bloom/components';
 import { useCallback, useState } from 'react';
 
@@ -7,7 +8,7 @@ import { ClickableListContainer } from '@/components/clickable-card-container/Cl
 import { FieldData } from '@/components/field-data/FieldData';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { ExtendedDocumentMeta } from '@/types/document';
-import { checkIfNull } from '@/utils/data';
+import { checkIfNull, lineOfBusinessUrlPath } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
 
 import styles from './documentsList.module.css';
@@ -17,11 +18,13 @@ export default function DocumentsList({
   documents,
   planCode,
   policyNumber,
+  lineOfBusiness,
 }: {
   docCategory: string;
   documents: ExtendedDocumentMeta[];
   planCode: string;
   policyNumber: string;
+  lineOfBusiness: LineOfBusiness;
 }) {
   const limit = 10;
   const [offset, setOffset] = useState(0);
@@ -63,7 +66,7 @@ export default function DocumentsList({
               linkTo: {
                 isInternal: true,
                 newTab: true,
-                url: `/coverage/${planCode}/${policyNumber}/documents/${d.documentId ?? d.documentID}?clientCode=${d.clientCode}&source=${d.downloadSource}&fileName=${d?.displayName?.replace(/[^A-Z0-9]/gi, '') ?? d.documentId ?? d.documentID}`,
+                url: `/coverage/${lineOfBusinessUrlPath(lineOfBusiness)}/${planCode}/${policyNumber}/documents/${d.documentId ?? d.documentID}?clientCode=${d.clientCode}&source=${d.downloadSource}&fileName=${d?.displayName?.replace(/[^A-Z0-9]/gi, '') ?? d.documentId ?? d.documentID}`,
                 label: `View Document - ${d.displayName}`,
                 ctaText: 'View',
               },

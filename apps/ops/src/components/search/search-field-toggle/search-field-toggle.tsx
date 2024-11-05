@@ -1,7 +1,6 @@
 import { ChangeEvent, RefObject, useContext } from 'react';
 
-import Field from '@deps/components/fields/field';
-import { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
 import { PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
 import { toSentenceCase } from '@deps/helpers/string.helper';
 import { LabelValue } from '@deps/types/data';

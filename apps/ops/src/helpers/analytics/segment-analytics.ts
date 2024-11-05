@@ -1,10 +1,10 @@
 import { UserProfile } from "@deps/models/user-profile";
-import { SegmentPageProps } from "@deps/types/segment-alanytics";
+import { SegmentPageName, SegmentProps } from "@deps/types/segment-analytics";
 
-const segmentAnalyticsIdentifyAndPage = (
+const segmentAnalyticsIdentifyUserAndPage = (
     user: UserProfile | undefined,
-    pageName: string,
-    pageProps: SegmentPageProps
+    pageName: SegmentPageName,
+    pageProps: SegmentProps
 ) => {
     if (!window || !window.analytics) {
         console.warn('Segment Analytics.js not loaded');
@@ -35,7 +35,7 @@ const segmentAnalyticsIdentify = (user: UserProfile | undefined) => {
     });
 }
 
-const segmentAnalyticsPage = (pageName: string, pageProps: SegmentPageProps) => {
+const segmentAnalyticsPage = (pageName: SegmentPageName, pageProps?: SegmentProps) => {
     if (!window.analytics.page) {
         console.warn('window.analytics.page() not found');
 
@@ -44,4 +44,19 @@ const segmentAnalyticsPage = (pageName: string, pageProps: SegmentPageProps) => 
     window.analytics.page(pageName, { ...pageProps });
 }
 
-export default segmentAnalyticsIdentifyAndPage;
+const segmentAnalyticsTrackEvent = (eventName: string, eventProps?: SegmentProps) => {
+    if (!window.analytics.track) {
+        console.warn('window.analytics.track() not found');
+
+        return;
+    }
+
+    window.analytics.track(eventName, { ...eventProps });
+}
+
+
+export {
+    segmentAnalyticsIdentifyUserAndPage,
+    segmentAnalyticsTrackEvent,    
+};
+

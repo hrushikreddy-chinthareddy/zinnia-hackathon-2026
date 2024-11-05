@@ -7,9 +7,16 @@
     flex-direction: column;
   }
 
+  .headerContainer {
+    display: flex;
+    gap: var(--measure-dimension-gap-xs);
+    align-items: center;
+    justify-content: center;
+  }
+
   height: 100%;
   width: 100vw;
-  background-color: var(--color-base-surface-primary);
+  background-color: var(--color-base-surface-surface-primary);
   justify-content: flex-start;
   align-items: center;
 
@@ -20,9 +27,14 @@
   @media (width >=1024px) {
     flex-direction: row;
     align-items: stretch;
+
+    .headerContainer {
+      justify-content: flex-start;
+    }
   }
 
   .banner {
+    background-image: url('../../app/styles/everly/assets/everly-hero-background-mobile.png');
     background-repeat: no-repeat;
     height: 93px;
     background-size: cover;
@@ -31,7 +43,7 @@
 
     @media (width >=1024px) {
       max-width: 434px;
-      background-size: 100% auto;
+      background-image: url('../../app/styles/everly/assets/everly-hero-background.png');
       background-position-y: center;
       height: 100%;
     }
@@ -51,14 +63,16 @@
 
     &.wellabe {
       background-color: #efc416;
-      background-image: url('../../app/styles/wellabe/assets/mobile-temp.png');
+      background-image: url('../../app/styles/wellabe/assets/wellabe-hero-background-mobile.png');
 
       @media (width >=500px) {
-        background-image: url('../../app/styles/wellabe/assets/mobile-temp.png');
+        height: 150px;
+        background-image: url('../../app/styles/wellabe/assets/wellabe-hero-background-tablet.png');
       }
 
       @media (width >=1024px) {
-        background-image: url('../../app/styles/wellabe/assets/desktop-temp.png');
+        height: auto;
+        background-image: url('../../app/styles/wellabe/assets/wellabe-hero-background-desktop.png');
       }
     }
   }
@@ -93,10 +107,20 @@
     }
 
     .logoContainer {
-      width: 124px;
+      &.everly {
+        width: 124px;
 
-      @media (width >=1024px) {
+        @media (width >=1024px) {
+          width: 200px;
+        }
+      }
+
+      &.wellabe {
         width: 200px;
+
+        @media (width >=1024px) {
+          width: 300px;
+        }
       }
     }
 
@@ -122,11 +146,5 @@
       padding: var(--measure-dimension-padding-2xl) 0;
       text-align: left;
     }
-  }
-
-  .headerContainer {
-    display: flex;
-    gap: var(--measure-dimension-gap-xs);
-    align-items: center;
   }
 }

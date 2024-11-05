@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
 import TabGroupContainer from '@deps/containers/bene-change/components/tab-group-container';
@@ -8,14 +8,14 @@ import { DocumentData } from '@deps/models/case/document';
 import { Policy } from '@deps/models/policy/sor-policy';
 
 import { useBeneChange } from './bene-change-provider';
+import { Step } from '../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
+import { ReRegPeopleView } from '../re-reg/componet/re-reg-people';
 import BeneDetailsStep from './components/steps/bene-details/bene-details-step';
 import ConfirmStep from './components/steps/confirm/confirm-step';
 import DocSelectionStep from './components/steps/doc-selection/doc-selection-step';
 import OwnersInfoStep from './components/steps/owner-info/owners-info-step';
 import SignatureStep from './components/steps/signature/signature-step';
 import SummaryStep from './components/steps/summary/summary-step';
-import { Step } from '../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
-import { ReRegPeopleView } from '../re-reg/componet/re-reg-people';
 
 interface BeneChangeContainerProps {
     policy: Policy;

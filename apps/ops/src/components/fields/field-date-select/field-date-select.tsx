@@ -4,8 +4,7 @@ import localData from 'dayjs/plugin/localeData';
 import React, { ChangeEvent, useRef, useState } from 'react';
 
 import DatePicker, { DatePickerTypes, DateQuarter, Quarter } from '@deps/components/date-picker/date-picker';
-import { FieldType } from '@deps/components/fields/field';
-import Field, { FieldProps } from '@deps/components/fields/field';
+import Field, { FieldType , FieldProps } from '@deps/components/fields/field';
 import { useOutsideClick } from '@deps/hooks/useOutsideClick';
 import { FieldDateSelectTest } from '@deps/jest/constants/test-id-constants';
 import { ReactComponent as CalendarIcon } from '@deps/styles/elements/icons/icons_outlined/calendar.svg';

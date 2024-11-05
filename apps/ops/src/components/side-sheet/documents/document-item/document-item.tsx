@@ -1,7 +1,6 @@
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useTranslation } from 'next-i18next';
-import React from 'react';
 
 import DocumentDownloader from '@deps/components/document-viewer/document-downloader';
 import DocumentPreviewer from '@deps/components/document-viewer/document-previewer';
@@ -28,7 +27,13 @@ export default function SideSheetDocumentItem({ document, carrier = '', activeDo
     return (
         <div className="flex max-h-[91px] items-center justify-between overflow-hidden border-b-2 border-gray-100 py-8.5 pl-10 pr-5 last:border-b-0">
             {canPreview ? (
-                <DocumentPreviewer className="flex max-w-[234px] gap-1" activeDocType={activeDocType} carrier={carrier} document={document}>
+                <DocumentPreviewer
+                    className="flex max-w-[234px] gap-1"
+                    activeDocType={activeDocType}
+                    carrier={carrier}
+                    displayName={document.displayName}
+                    documentId={document.documentId ?? (document.documentID as string)}
+                >
                     <>
                         <DocumentIcon className="shrink-0" role="presentation" width={20} height={20} />
                         {displayName}

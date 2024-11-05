@@ -1,15 +1,21 @@
 import { useTranslation } from 'next-i18next';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 
 import GlobalValuesBar from '@deps/components/global-values/global-values-bar/global-values-bar';
+import NavElement, { NavElementType, NavElementSize } from '@deps/components/nav-element/nav-element';
+import { DiaryNotesContent } from '@deps/components/side-sheet/diary-notes/diary-notes-content';
+import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import ProgressBarSteps from '@deps/containers/progress-bar-steps/progress-bar-steps';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
+import { DiaryNotesProvider } from '@deps/contexts/DiaryNotesContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { WorkflowProvider, useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import { useDiaryNotes } from '@deps/hooks/useDiaryNotes';
 import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
+import { ReactComponent as AnnotationIcon } from '@deps/styles/elements/icons/icons_outlined/annotation.svg';
 import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icons_outlined/document-text-2.svg';
 
 import DocumentPortalPanel from './side-panel/document-portal-panel';
@@ -50,6 +56,13 @@ const TabGroupContent = ({ steps, policy, showJointOwner = false, documentNumber
         openSideSheet();
     };
 
+    const { diaryNotes } = useDiaryNotes(policy.policyNumber as string, policy.carrierId as string, 0, 10);
+    const opeDiaryNotes = () => {
+        const content = <DiaryNotesContent notesData={{ diaryNotes: diaryNotes } as any} />;
+        sideSheet.changeSideSheetContent(t('site.navLinks.diaryNotes.text'), content);
+        sideSheet.handleOpen(true);
+    };
+
     return (
         <div className="workflow-height-adjusted flex w-full max-w-[1130px] grow flex-col self-center">
             <div className="flex">
@@ -76,6 +89,28 @@ const TabGroupContent = ({ steps, policy, showJointOwner = false, documentNumber
                     </div>
                 </div>
             </div>
+
+            <div className="my-2 flex flex-row items-center justify-end space-x-3">
+                <Typography variant={TypographyVariant.FieldLabel} className="hidden md:block">
+                    {t('site.navLinks.relatedActivity.text')}
+                </Typography>
+                <NavElement
+                    type={NavElementType.Button}
+                    size={NavElementSize.Small}
+                    className="flex items-center"
+                    startIcon={<AnnotationIcon width={16} height={16} />}
+                    onClick={() => opeDiaryNotes()}
+                    onKeyDown={e => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            openSideSheet();
+                        }
+                    }}
+                >
+                    {t('site.navLinks.diaryNotes.text')}
+                </NavElement>
+            </div>
+
             <ProgressBarSteps
                 classNames={`grid-cols-${steps.length}`}
                 currentStepIndex={Number(currentStepIndex)}
@@ -91,9 +126,11 @@ const TabGroupContent = ({ steps, policy, showJointOwner = false, documentNumber
 
 const TabGroupContainer = ({ steps, policy, documentNumber, docType }: TabGroupContainerProps) => {
     return (
-        <WorkflowProvider>
-            <TabGroupContent steps={steps} policy={policy} showJointOwner={true} documentNumber={documentNumber} docType={docType} />
-        </WorkflowProvider>
+        <DiaryNotesProvider caseDetails={policy as any}>
+            <WorkflowProvider>
+                <TabGroupContent steps={steps} policy={policy} showJointOwner={true} documentNumber={documentNumber} docType={docType} />
+            </WorkflowProvider>
+        </DiaryNotesProvider>
     );
 };
 

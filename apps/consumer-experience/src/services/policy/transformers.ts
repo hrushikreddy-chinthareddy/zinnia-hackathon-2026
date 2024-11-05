@@ -106,6 +106,7 @@ export const transformPolicyForAccountValue = (
     effectiveDate: policy?.effectiveDate,
     endingAccountValue: policy?.accountValues?.endingAccountValue,
     policyStartDate: policy?.policyDates?.policyStartDate,
+    lineOfBusiness: policy?.product?.lineOfBusiness,
   };
 };
 
@@ -170,6 +171,7 @@ export const transformPolicyForUpcomingPremium = (
     nextActivityStatus: upcomingPremium?.status,
     planName: policy.product?.planName || '',
     policyStatus: policy.policyStatus || PolicyStatus.NOTISSUED,
+    lineOfBusiness: policy?.product?.lineOfBusiness,
     productType: policy?.product?.productType,
   };
 };

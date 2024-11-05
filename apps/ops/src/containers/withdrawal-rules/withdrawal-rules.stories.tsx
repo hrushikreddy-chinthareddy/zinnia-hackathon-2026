@@ -1,18 +1,25 @@
-import { Meta } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react';
 
+import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { mockPolicy } from '@deps/jest/data/mockPolicy';
 
 import WithdrawalRules from './withdrawal-rules';
 
-export default {
+const meta: Meta<typeof WithdrawalRules> = {
     title: 'Containers/WithdrawalRules',
     component: WithdrawalRules,
-} as Meta<typeof WithdrawalRules>;
-
-export const Withdrawals = () => {
-    return (
+    decorators: Story => (
         <div className="p-6">
-            <WithdrawalRules policy={mockPolicy} />
+            <Story />
         </div>
-    );
+    ),
+};
+
+export default meta;
+
+export const Withdrawals: StoryObj<typeof WithdrawalRules> = {
+    args: {
+        policy: mockPolicy,
+        policyDetails: new PolicyDetails(mockPolicy),
+    },
 };

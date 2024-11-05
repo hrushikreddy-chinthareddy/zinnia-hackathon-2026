@@ -46,7 +46,7 @@
 
 .noFundsContainer {
     align-items: center;
-    border-radius: var(--radius-sm, 4px);
+    border-radius: var(--measure-dimension-radius-sm, 4px);
     border: var(--measure-dimension-stroke-sm, 2px) dashed var(--color-base-border-border-light, #ededed);
     background: var(--Base-Surface-surface-secondary, #f8f8f8);
     display: flex;

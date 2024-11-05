@@ -1,5 +1,6 @@
 'use client';
 
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 
@@ -14,6 +15,7 @@ export default function PdfPreviewer({
   planCode,
   policyNumber,
   source,
+  lineOfBusiness,
 }: {
   clientCode: string;
   documentId: string;
@@ -21,6 +23,7 @@ export default function PdfPreviewer({
   policyNumber: string;
   fileName: string;
   source: string;
+  lineOfBusiness: LineOfBusiness;
 }) {
   const [supportsEmbed, setSupportsEmbed] = useState(true);
   const [documentData, setDocumentData] = useState<string>('');
@@ -36,11 +39,11 @@ export default function PdfPreviewer({
     const getDocumentData = async () => {
       let shouldRedirectToError = false;
       // default to the documents error page, however, if the response is a redirect we will use that (see below)
-      let redirectHref = `/coverage/${planCode}/${policyNumber}/documents/error`;
+      let redirectHref = `/coverage/${lineOfBusiness}/${planCode}/${policyNumber}/documents/error`;
 
       try {
         const response = await fetch(
-          `/api/documents/${documentId}/download/${fileName}.pdf?clientCode=${clientCode}&source=${source}&planCode=${planCode}&policyNumber=${policyNumber}`
+          `/api/documents/${documentId}/download/${fileName}.pdf?clientCode=${clientCode}&source=${source}&planCode=${planCode}&policyNumber=${policyNumber}&lineOfBusiness=${lineOfBusiness}`
         );
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -83,6 +86,7 @@ export default function PdfPreviewer({
     policyNumber,
     router,
     source,
+    lineOfBusiness,
   ]);
 
   return supportsEmbed ? (

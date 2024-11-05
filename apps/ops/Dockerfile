@@ -5,13 +5,13 @@ RUN apk add --no-cache libc6-compat
 RUN apk update
 # Set working directory
 WORKDIR /app
-RUN npm install -g turbo@2.0.4
+RUN npm install -g turbo@2.1.3
 COPY . .
 RUN turbo prune ops --docker
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
-RUN apk add --no-cache libc6-compat
+RUN apk add --update --no-cache libc6-compat make gcc g++ python3 pkgconfig pixman-dev cairo-dev pango-dev libjpeg-turbo-dev
 RUN apk update
 WORKDIR /app
 
@@ -25,6 +25,7 @@ RUN corepack enable pnpm && pnpm i
 # Build the project
 COPY --from=builder /app/out/full/ .
 
+ARG NEXT_PUBLIC_ACCESS_MANAGEMENT_URL
 ARG NEXT_PUBLIC_BACKEND_URL
 ARG NEXT_PUBLIC_BASE_URL
 ARG NEXT_PUBLIC_SE2_BACKEND_URL
@@ -34,11 +35,13 @@ ARG NEXT_PUBLIC_DATADOG_APPLICATION_ID
 ARG NEXT_PUBLIC_DATADOG_CLIENT_TOKEN
 ARG NEXT_PUBLIC_DATADOG_ENV
 ARG NEXT_PUBLIC_GOOGLEANALYTICS_ENV
+ARG NEXT_PUBLIC_SEGMENT_ANALYTICS_KEY
 ARG NEXT_PUBLIC_GIT_SHA
 ARG DATADOG_API_KEY
 
 # Save the public enviroment variables NEXTjs requires for the frontend.
 # THESE SHOULD NOT BE SECRETS
+RUN echo "NEXT_PUBLIC_ACCESS_MANAGEMENT_URL=${NEXT_PUBLIC_ACCESS_MANAGEMENT_URL}" >> .env.production
 RUN echo "NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL}" >> .env.production
 RUN echo "NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}" >> .env.production
 RUN echo "NEXT_PUBLIC_SE2_BACKEND_URL=${NEXT_PUBLIC_SE2_BACKEND_URL}" >> .env.production
@@ -48,7 +51,9 @@ RUN echo "NEXT_PUBLIC_DATADOG_APPLICATION_ID=${NEXT_PUBLIC_DATADOG_APPLICATION_I
 RUN echo "NEXT_PUBLIC_DATADOG_CLIENT_TOKEN=${NEXT_PUBLIC_DATADOG_CLIENT_TOKEN}" >> .env.production
 RUN echo "NEXT_PUBLIC_DATADOG_ENV=${NEXT_PUBLIC_DATADOG_ENV}" >> .env.production
 RUN echo "NEXT_PUBLIC_GOOGLEANALYTICS_ENV=${NEXT_PUBLIC_GOOGLEANALYTICS_ENV}" >> .env.production
+RUN echo "NEXT_PUBLIC_SEGMENT_ANALYTICS_KEY=${NEXT_PUBLIC_SEGMENT_ANALYTICS_KEY}" >> .env.production
 RUN echo "NEXT_PUBLIC_GIT_SHA=${NEXT_PUBLIC_GIT_SHA}" >> .env.production
+RUN echo "DATADOG_API_KEY=${DATADOG_API_KEY}" >> .env.production
 ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN pnpm turbo run build --filter=ops
