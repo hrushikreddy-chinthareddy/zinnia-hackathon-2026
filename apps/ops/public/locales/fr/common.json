@@ -2018,6 +2018,18 @@
             "policyNotFound": {
                 "title": "Politique non trouvée",
                 "subtitle": "Une erreur s'est produite lors de la récupération de la politique. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
+            },
+            "taskInitialization": {
+                "title": "Erreur lors de l'initialisation du formulaire de tâche",
+                "subtitle": "Une erreur s'est produite lors de l'initialisation de la tâche. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
+            },
+            "caseTypeRetrievalError": {
+                "title": "Erreur lors de l'identification du type de cas",
+                "subtitle": "Une erreur s'est produite lors de l'identification du type de dossier. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
+            },
+            "docTypeRetrievalError": {
+                "title": "Erreur lors de l'identification du type de document",
+                "subtitle": "Une erreur s'est produite lors de l'identification du type de document. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
             }
         }
     },

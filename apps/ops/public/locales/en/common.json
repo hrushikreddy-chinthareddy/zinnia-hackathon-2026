@@ -2257,6 +2257,18 @@
             "policyNotFound": {
                 "title": "Policy not found",
                 "subtitle": "An error occurred while retrieving policy. Please try again. If this problem persists, please notify operations support."
+            },
+            "taskInitialization": {
+                "title": "Error initializing task form",
+                "subtitle": "An error occurred while initializing the task. Please try again. If this problem persists, please notify operations support."
+            },
+            "caseTypeRetrievalError": {
+                "title": "Error identifying case type",
+                "subtitle": "An error occurred while identifying the case type. Please try again. If this problem persists, please notify operations support."
+            },
+            "docTypeRetrievalError": {
+                "title": "Error identifying document type",
+                "subtitle": "An error occurred while identifying the document type. Please try again. If this problem persists, please notify operations support."
             }
         }
     },

@@ -169,7 +169,7 @@ export const getServerSideProps = withPageAuthRequired({
                 });
                 return {
                     redirect: {
-                        destination: `/create-case/error?errorCode=${ERROR_CODES.WITHDRAWAL_TASK_INITIALIZATION}`,
+                        destination: `/create-case/error?errorCode=${ERROR_CODES.TASK_INITIALIZATION}`,
                         permanent: false,
                     },
                 };
@@ -184,7 +184,37 @@ export const getServerSideProps = withPageAuthRequired({
             const form = mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm.data, userId: user?.name });
             const { documentNumber, contractNum, clientCode } = activeForm?.data || {};
             const caseType = ProcessesToCaseTypeMap[activeForm.process as Processes];
-            const docType = docTypes[caseType];
+            const docType = caseType ? docTypes[caseType] : null;
+
+            if (!caseType) {
+                logError('nigo-entry::Error getting case type', {
+                    taskId,
+                    file: 'pages/nigo-entry',
+                    function: 'getServerSideProps',
+                });
+                return {
+                    redirect: {
+                        destination: `/create-case/error?errorCode=${ERROR_CODES.CASE_TYPE_RETRIEVAL_ERROR}`,
+                        permanent: false,
+                    },
+                };
+            }
+
+            if (!docType) {
+                logError('nigo-entry::Error getting doc type', {
+                    taskId,
+                    file: 'pages/nigo-entry',
+                    function: 'getServerSideProps',
+                });
+                return {
+                    redirect: {
+                        destination: `/create-case/error?errorCode=${ERROR_CODES.DOC_TYPE_RETRIEVAL_ERROR}`,
+                        permanent: false,
+                    },
+                };
+            }
+
+
             const shouldShowNigoEntry = isNigoEntryEnabled(clientCode, caseType, featureFlagDecisions);
             // If feature flag is not enabled, redirect to error page
             if (!shouldShowNigoEntry) {
