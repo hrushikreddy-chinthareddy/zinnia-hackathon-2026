@@ -7,6 +7,7 @@ import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { SendDocumentFormParts, SendDocumentFormPartsAdditionData } from '@deps/models/case/send-document';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { ReactComponent as AddDocumentIcon } from '@deps/styles/elements/icons/icons_outlined/add.svg';
+import { ReactComponent as TrashDocumentIcon } from '@deps/styles/elements/icons/icons_outlined/trash.svg';
 
 import SendDocumentNavigationButtons from './action-components/navigation-buttons';
 import AssistiveText, { AssistiveTextVariant } from '../assistive-text/assistive-text';
@@ -63,9 +64,13 @@ function FormSelection({ policy, ctiCallNumber, transactionTypes, formDetails, s
     };
 
     const addNewFilter = () => {
-        // add new filter here
-
         setForms(prevForms => [...prevForms, { ...DefaultFormDetail, id: Date.now().toString() }]);
+    };
+
+    const removeFilter = (id: string) => {
+        setForms(fs => {
+            return [...fs.filter(sig => sig.id !== id)];
+        });
     };
 
     const updateFormDetails = (value: SendDocumentFormPartsAdditionData, id: string) => {
@@ -79,15 +84,24 @@ function FormSelection({ policy, ctiCallNumber, transactionTypes, formDetails, s
             footerContent={<SendDocumentNavigationButtons handleContinue={handleContinue} handleCancel={handleCancel} />}
         >
             {forms?.map(form => (
-                <div className="my-4 bg-gray-50 p-5" key={form.id}>
-                    <TransactionDocumentSelection
-                        formDetails={form}
-                        setFormDetails={val => updateFormDetails({ ...val, id: form.id }, form.id)}
-                        policy={policy}
-                        ctiCallNumber={ctiCallNumber}
-                        transactionTypes={transactionTypes}
-                        key={form.id}
-                    />
+                <div className=" bg-gray-50 p-5 flex" key={form.id}>
+                    <div className="my-4 grow">
+                        <TransactionDocumentSelection
+                            formDetails={form}
+                            setFormDetails={val => updateFormDetails({ ...val, id: form.id }, form.id)}
+                            policy={policy}
+                            ctiCallNumber={ctiCallNumber}
+                            transactionTypes={transactionTypes}
+                            key={form.id}
+                        />
+                    </div>
+                    <NavElement
+                        size={NavElementSize.Small}
+                        type={NavElementType.Button}
+                        startIcon={<TrashDocumentIcon width={20} height={20} />}
+                        onClick={() => removeFilter(form.id)}
+                        variant={NavElementVariant.Secondary}
+                    ></NavElement>
                 </div>
             ))}
             <div>
