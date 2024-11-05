@@ -11,6 +11,7 @@ import { FormProvider } from '@deps/containers/otp/withdrawal-forms/components/f
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { Processes } from '@deps/models/case/case';
 import { DocumentData } from '@deps/models/case/document';
 import { docTypes } from '@deps/models/case/helpers';
@@ -27,6 +28,7 @@ import { getDocumentSSR } from '@deps/queries/api/documents';
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import { getPolicyDetailsSsr, getPolicyPartiesSSR, searchPolicySSR } from '@deps/queries/api/policies';
 import { getCaseTaskByIdSSR } from '@deps/queries/api/v2/task';
+import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS, FeatureKeyIdentifier } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logWarn, logError, getUserInfoFromUser, parseErrorInformation, logInfo } from '@deps/utils/server-logging';
@@ -41,7 +43,7 @@ export type TransactionDetails = {
     formName: string
 };
 
-interface NigoEntryProps {
+interface NigoEntryProps extends SegmentTrackedPageProps {
     documentNumber: string;
     policy: Policy;
     planCode: string;
@@ -80,8 +82,19 @@ const NigoEntry = ({
     document,
     taskInfoLink,
     prevTransactionDetails,
-    isNigoCase
+    isNigoCase,
+    user,
 }: NigoEntryProps) => {
+    useSegmentPageTracker(user, SegmentPageName.NigoEntry, {
+        policyNumber: policy.policyNumber,
+        planCode,
+        documentNumber,
+        docType,
+        clientCode,
+        nigoExceptions,
+        nigoSubExceptions,
+    });
+
     return (
         <div className="flex w-full flex-col overflow-auto px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10">
             <FormProvider

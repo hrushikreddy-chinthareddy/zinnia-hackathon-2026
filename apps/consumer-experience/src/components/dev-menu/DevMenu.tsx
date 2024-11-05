@@ -8,9 +8,9 @@ import { MouseEvent, useEffect, useMemo, useState } from 'react';
 import useMock from '@/hooks/use-mock';
 import { isMockAllowed } from '@/utils';
 import {
-  MOCK_ANNUITY_COOKIE_KEY,
-  MOCK_ERROR_COOKIE_KEY,
-  SHOW_TEST_POLICIES_COOKIE_KEY,
+    MOCK_ANNUITY_COOKIE_KEY,
+    MOCK_ERROR_COOKIE_KEY,
+    SHOW_TEST_POLICIES_COOKIE_KEY,
 } from '@/utils/serverClientUtils';
 import { zIndexOrder } from '@/utils/zIndexOrder';
 
@@ -132,7 +132,7 @@ export const DevMenu = () => {
                   <span className={styles.firstItem}>
                     <Icon
                       type={IconType.DATABASE}
-                      color="var(--color-nav-menu-menu-icon-default-fill, #fff)"
+                      color="var(--color-nav-menu-icon-menu-icon-default-fill, #fff)"
                     />
                   </span>
                   <span>{mockText}</span>
@@ -192,7 +192,7 @@ export const DevMenu = () => {
                   <Icon
                     className="mr-md"
                     type={IconType.ALERT_EXCLAMATION}
-                    color="var(--color-nav-menu-menu-icon-default-fill, #fff)"
+                    color="var(--color-nav-menu-icon-menu-icon-default-fill, #fff)"
                   />
                   <span className="ml-md">Mock API Errors</span>
                 </p>
@@ -283,7 +283,7 @@ export const DevMenu = () => {
                   <span className={styles.firstItem}>
                     <Icon
                       type={IconType.DOCUMENT_DUPLICATE}
-                      color="var(--color-nav-menu-menu-icon-default-fill, #fff)"
+                      color="var(--color-nav-menu-icon-menu-icon-default-fill, #fff)"
                     />
                   </span>
                   <span>{`${testPoliciesOn ? 'Hide' : 'Show'} Test Policies`}</span>
@@ -298,7 +298,7 @@ export const DevMenu = () => {
                   <span className={styles.firstItem}>
                     <Icon
                       type={IconType.TRASH}
-                      color="var(--color-nav-menu-menu-icon-default-fill, #fff)"
+                      color="var(--color-nav-menu-icon-menu-icon-default-fill, #fff)"
                     />
                   </span>
                   <span>Remove Dev Menu</span>

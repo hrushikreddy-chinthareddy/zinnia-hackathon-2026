@@ -8,6 +8,7 @@ import Content, { ContentVariant } from '@deps/components/content/content';
 import { getTaskStatus } from '@deps/components/tasks-listing/task-listing.helpers';
 import { TranslationFiles } from '@deps/config/translations';
 import { ProcessType } from '@deps/models/case/enums';
+import { TaskSource } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { updateTask } from '@deps/queries/api/v2/task';
@@ -56,7 +57,7 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions }: TaskQueueTableRowProp
         }
 
         try {
-            const body = { ...taskData, status: TaskStatus.InProgress, source: 'Zinnia.TaskManagement' };
+            const body = { ...taskData, status: TaskStatus.InProgress, source: TaskSource.ZinniaTaskManagement };
             const response = await updateTask(taskData.caseId, taskData.id, body, timer);
 
             if (response) {

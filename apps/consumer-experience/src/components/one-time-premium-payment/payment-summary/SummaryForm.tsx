@@ -1,4 +1,5 @@
 'use client';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Button, Label, Loader } from '@zinnia/bloom/components';
 import { toSentenceCase } from '@zinnia/utils';
 import dayjs from 'dayjs';
@@ -57,10 +58,12 @@ export const SummaryForm = ({
   ottpPaymentData,
   planCode,
   policyNumber,
+  lineOfBusiness,
 }: {
   ottpPaymentData: OttpState;
   planCode: string;
   policyNumber: string;
+  lineOfBusiness: LineOfBusiness;
 }) => {
   const { effectiveDate, paymentAmount, payorBank, paymentFee } =
     ottpPaymentData;
@@ -161,7 +164,11 @@ export const SummaryForm = ({
         <Button mode="primary" type="submit">
           Submit payment
         </Button>
-        <CancelDialogLink planCode={planCode} policyNumber={policyNumber} />
+        <CancelDialogLink
+          planCode={planCode}
+          policyNumber={policyNumber}
+          lineOfBusiness={lineOfBusiness}
+        />
       </div>
     </>
   );

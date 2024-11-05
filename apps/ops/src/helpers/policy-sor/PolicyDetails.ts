@@ -186,4 +186,33 @@ export class PolicyDetails {
     public get hasLoans(): boolean {
         return !!this.policy?.allocation?.loanSegments?.length;
     }
+
+    public get requiredMinimumDistribution(): {
+        // placeholder types
+        calculationOption?: string;
+        calculationDate?: Date;
+        totalAnnualAmount?: number;
+        remainingAmount?: number;
+        priorYearValue?: number;
+        actuarialPresentValue?: number;
+    } {
+        const {
+            requiredMinimumDistributionCalculationOption: calculationOption,
+            requiredMinimumDistributionCalculationDate: calculationDate,
+            totalRequiredMinimumDistributionAnnualAmount: totalAnnualAmount,
+            totalRequiredMinimumDistributionRemainingAmount: remainingAmount,
+            totalRequiredMinimumDistributionPriorYearEndAccountValue: priorYearValue,
+            actuarialPresentValue,
+            // @ts-expect-error waiting for requiredMinimumDistribution to be added to Policy
+        } = this.policy?.requiredMinimumDistribution || {};
+
+        return {
+            calculationOption,
+            calculationDate,
+            totalAnnualAmount,
+            remainingAmount,
+            priorYearValue,
+            actuarialPresentValue,
+        };
+    }
 }

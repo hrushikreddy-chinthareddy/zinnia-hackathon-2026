@@ -5,6 +5,7 @@ import MenuContextual from '@deps/components/menu-contextual/menu-contextual';
 import MenuContextualItem from '@deps/components/menu-contextual/menu-contextual-item/menu-contextual-item';
 import NavElement, { NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { TranslationFiles } from '@deps/config/translations';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { storage } from '@deps/helpers/sessionStorage.helper';
 import { firstNameAndLastInitial } from '@deps/helpers/string.helper';
 import { ReactComponent as SignOutIcon } from '@deps/styles/elements/icons/actions/logout.svg';
@@ -16,7 +17,10 @@ interface NavBarButtonsProps {
 
 export const NavBarButtons = ({ onClick }: NavBarButtonsProps) => {
     const { user } = useUser();
+    const { isSuperAdmin } = usePermissionsContext();
     const { t } = useTranslation(TranslationFiles.COMMON);
+
+    const accessManagementHref = process.env.NEXT_PUBLIC_ACCESS_MANAGEMENT_URL || '';
 
     const borderBottomOpenStateClass =
         'group-data-[state=open]:border-b-3 group-data-[state=open]:[border-image-source:linear-gradient(90deg,rgb(255,198,000),rgb(255,117,000)_75.54%,rgb(255,24,34))] group-data-[state=open]:[border-image-slice:1]';
@@ -62,6 +66,13 @@ export const NavBarButtons = ({ onClick }: NavBarButtonsProps) => {
                         icon={<SignOutIcon height={20} width={20} />}
                         content={t('auth.logout.text')}
                     />
+                    {isSuperAdmin && (
+                        <MenuContextualItem
+                            href={accessManagementHref}
+                            icon={<SignOutIcon height={20} width={20} />}
+                            content={t('site.navLinks.accessManagement.text')}
+                        />
+                    )}
                 </MenuContextual>
             )}
         </div>
