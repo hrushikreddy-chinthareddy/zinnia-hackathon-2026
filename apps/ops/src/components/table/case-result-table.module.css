@@ -24,7 +24,23 @@
         color: transparent;
         z-index: 1;
     }
-    &:hover:after {
-        content: none;
+    &:hover {
+        &:after {
+            content: none;
+        }
+        .caseLinkText {
+            display: block;
+        }
+    }
+    /* This is the styling for the tooltip the shows for the "table row" link */
+    & .caseLinkText {
+        background: #212121;
+        border-radius: 4px;
+        color: #fff;
+        display: none;
+        padding: 12px;
+        position: absolute;
+        width: auto;
+        bottom: -44px;
     }
 }

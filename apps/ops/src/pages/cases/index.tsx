@@ -84,6 +84,9 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         [Statuses.InProgress]: 0,
         [Statuses.Exception]: 0,
     });
+    const paginationStart = caseTotals[caseManagementFilters.statusCounterTileFilter] === 0 ? 0 : 1;
+    const paginationEnd =
+        caseTotals[caseManagementFilters.statusCounterTileFilter] >= 25 ? 25 : caseTotals[caseManagementFilters.statusCounterTileFilter];
 
     // Data Fetcher(s)
     const fetchCaseStats = useCallback(async () => {
@@ -441,8 +444,11 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                     </div>
                     <div className="flex flex-col items-center lg:grid lg:grid-cols-3 mt-3">
                         <div className="mb-6 lg:mb-0">
-                            {/* to do - this is incorrect if it's less than 25 */}
-                            {t('policy.documents.xToYOfZ', { x: 1, y: 25, z: caseTotals[caseManagementFilters.statusCounterTileFilter] })}
+                            {t('policy.documents.xToYOfZ', {
+                                x: paginationStart,
+                                y: paginationEnd,
+                                z: caseTotals[caseManagementFilters.statusCounterTileFilter],
+                            })}
                         </div>
                         {/* to do - is this okay still or do I switch to DocumentResultsPagination?*/}
                         <div className="">{paginationControls}</div>
