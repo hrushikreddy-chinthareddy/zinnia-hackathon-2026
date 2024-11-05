@@ -33,7 +33,7 @@ import { FEATURE_FLAGS, FeatureKeyIdentifier } from '@deps/utils/optimizely/flag
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logWarn, logError, getUserInfoFromUser, parseErrorInformation, logInfo } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
-
+import { ProcessesToCaseTypeMap } from '@deps/constants/case';
 import { ERROR_CODES } from '../create-case/error';
 
 export type TransactionDetails = {
@@ -62,7 +62,7 @@ interface NigoEntryProps extends SegmentTrackedPageProps {
 };
 
 const isNigoEntryEnabled = (clientId: string, process: string, featureFlagMap: FeatureFlags ) => {
-    const identifier = `NIGO_ENTRY_${clientId.toUpperCase()}_${process.toUpperCase()}` as FeatureKeyIdentifier;
+    const identifier = `NIGO_ENTRY_${clientId.toUpperCase()}_${process.toUpperCase().replaceAll(' ', '_')}` as FeatureKeyIdentifier;
     const featureKey = FEATURE_FLAGS[identifier];
     return featureKey && featureFlagMap[featureKey] ? featureFlagMap[featureKey] : false;
 }
@@ -86,7 +86,7 @@ const NigoEntry = ({
     user,
 }: NigoEntryProps) => {
     useSegmentPageTracker(user, SegmentPageName.NigoEntry, {
-        policyNumber: policy.policyNumber,
+        policyNumber: policy?.policyNumber,
         planCode,
         documentNumber,
         docType,
@@ -183,8 +183,9 @@ export const getServerSideProps = withPageAuthRequired({
 
             const form = mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm.data, userId: user?.name });
             const { documentNumber, contractNum, clientCode } = activeForm?.data || {};
-
-            const shouldShowNigoEntry = isNigoEntryEnabled(clientCode, activeForm?.process, featureFlagDecisions);
+            const caseType = ProcessesToCaseTypeMap[activeForm.process as Processes];
+            const docType = docTypes[caseType];
+            const shouldShowNigoEntry = isNigoEntryEnabled(clientCode, caseType, featureFlagDecisions);
             // If feature flag is not enabled, redirect to error page
             if (!shouldShowNigoEntry) {
                logWarn('nigo_entry::feature flag not enabled', { taskId, clientCode });
@@ -201,7 +202,7 @@ export const getServerSideProps = withPageAuthRequired({
             const response = await searchPolicySSR(contractNum, [clientCode?.toUpperCase() as Carrier], accessToken, 1, 0);
             const planCode = response ? response[0]?.planCode : null;
             if (!planCode) {
-                logError('nigo-entry::Policy lan code not found', {
+                logError('nigo-entry::Policy pan code not found', {
                     taskId,
                     documentNumber,
                     clientCode,
@@ -218,7 +219,6 @@ export const getServerSideProps = withPageAuthRequired({
             }
 
             const policy = await getPolicyDetailsSsr(contractNum, planCode, accessToken, userInfoForLogging);
-            const docType = docTypes[activeForm?.process || ''];
             if (!policy) {
                 logError('nigo-entry::Policy not found', {
                     taskId,
@@ -248,7 +248,7 @@ export const getServerSideProps = withPageAuthRequired({
             ]);
 
             const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse
-            const taskInfoLink = buildTaskLink(taskId, form.caseId, activeForm?.process, documentNumber, clientCode);
+            const taskInfoLink = buildTaskLink(taskId, form.caseId, caseType, documentNumber, clientCode);
             const filters = {
                 policyNumber: contractNum,
                 limit: 25,
