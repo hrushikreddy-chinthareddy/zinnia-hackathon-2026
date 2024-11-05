@@ -69,8 +69,8 @@ describe.skip('Form selection component', () => {
                         transactionTypes={transactionTypes}
                         policy={{}}
                         ctiCallNumber=""
-                        formDetails={{} as SendDocumentFormParts}
-                        setFormDetails={() => {}}
+                        formDetails={[] as SendDocumentFormParts[]}
+                        setFormDetails={() => []}
                     />
                 </WorkflowProvider>
             </SendDocumentContext.Provider>
@@ -126,8 +126,8 @@ describe.skip('Form selection component', () => {
                         transactionTypes={transactionTypes}
                         policy={{}}
                         ctiCallNumber=""
-                        formDetails={{} as SendDocumentFormParts}
-                        setFormDetails={() => {}}
+                        formDetails={[] as SendDocumentFormParts[]}
+                        setFormDetails={() => []}
                     />
                 </WorkflowProvider>
             </SendDocumentContext.Provider>
@@ -168,8 +168,8 @@ describe.skip('Form selection component', () => {
                         transactionTypes={transactionTypes}
                         policy={{}}
                         ctiCallNumber=""
-                        formDetails={{} as SendDocumentFormParts}
-                        setFormDetails={() => {}}
+                        formDetails={[] as SendDocumentFormParts[]}
+                        setFormDetails={() => []}
                     />
                 </WorkflowProvider>
             </SendDocumentContext.Provider>
@@ -204,8 +204,8 @@ describe.skip('Form selection component', () => {
                         transactionTypes={transactionTypes}
                         policy={{}}
                         ctiCallNumber=""
-                        formDetails={{} as SendDocumentFormParts}
-                        setFormDetails={() => {}}
+                        formDetails={[] as SendDocumentFormParts[]}
+                        setFormDetails={() => []}
                     />
                 </WorkflowProvider>
             </SendDocumentContext.Provider>
