@@ -51,7 +51,7 @@ const SswEdit = (props: SswUpdateProps) => {
 
     const activeProg =
         specialProgramdetails?.allocationDetails?.filter(
-            program =>
+            (program: any) =>
                 [ProgramType.PremiumDefault, ProgramType.RMD, ProgramType.SSW, ProgramType.SSWNet, ProgramType.EFTDraw].includes(
                     program.typeOfAlloc
                 ) &&
