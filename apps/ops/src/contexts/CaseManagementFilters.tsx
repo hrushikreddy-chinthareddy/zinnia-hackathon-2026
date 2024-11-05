@@ -17,8 +17,8 @@ export interface CaseSearchFilters {
     limit: number;
     offset: number;
     total: number;
+    sortBy: string;
     sortDirection: 'asc' | 'desc';
-    statusCounterTileFilter: CaseStatusFilter;
     searchValue: SearchViewQuery;
     toggleValue: PolicySearchKeys;
 }
@@ -56,7 +56,6 @@ export const initialFilters: CaseSearchFilters = {
     offset: 0,
     total: 0,
     sortDirection: 'desc',
-    statusCounterTileFilter: 'All',
     searchValue: SearchBarInitialValues,
     toggleValue: 'policyNumber',
 };

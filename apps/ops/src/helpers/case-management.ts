@@ -1,33 +1,11 @@
 import dayjs from 'dayjs';
-import { DefaultTFuncReturn } from 'i18next';
 import { TFunction } from 'next-i18next';
 
-import { CaseSearchAdditionalFilters, CaseStatusFilter } from '@deps/contexts/CaseManagementFilters';
+import { CaseSearchAdditionalFilters } from '@deps/contexts/CaseManagementFilters';
 import { Case, Metadata, StatCount, Statuses } from '@deps/models/case/case';
 import { IdentifierInstance } from '@deps/models/case/identifier-instance';
 import { LabelValue } from '@deps/types/data';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
-
-export interface StatusCounterTiles {
-    label?: DefaultTFuncReturn;
-    status?: Statuses.InProgress | Statuses.Exception;
-    value: CaseStatusFilter;
-}
-
-export const statusCounterTiles: StatusCounterTiles[] = [
-    {
-        label: 'All',
-        value: 'All',
-    },
-    {
-        status: Statuses.InProgress,
-        value: Statuses.InProgress,
-    },
-    {
-        status: Statuses.Exception,
-        value: Statuses.Exception,
-    },
-];
 
 export const isSearchValueObjectEmpty = (
     searchValueObject: Partial<Record<'policyNumber' | 'ssn' | 'ownerFirstName' | 'ownerLastName', string>> = {}
@@ -59,28 +37,6 @@ export const getSearchValueObject = (
 type CaseStatusResult = {
     caseStatus?: Statuses[];
     notInCaseStatus?: Statuses[];
-};
-
-// Get case statuses based on the filter selected
-export const getCaseStatuses = (
-    statusCounterTileFilter: CaseStatusFilter,
-    searchValueObject: Partial<Record<'policyNumber' | 'ssn' | 'ownerFirstName' | 'ownerLastName', string>> = {}
-): CaseStatusResult => {
-    switch (statusCounterTileFilter) {
-        case Statuses.InProgress:
-            return {
-                caseStatus: [Statuses.InProgress],
-            };
-        case Statuses.Exception:
-            return {
-                caseStatus: [Statuses.Exception],
-            };
-        case 'All':
-        default:
-            return isSearchValueObjectEmpty(searchValueObject)
-                ? { caseStatus: [], notInCaseStatus: [Statuses.Completed, Statuses.Canceled] }
-                : {};
-    }
 };
 
 type AdditionalFiltersResult = {

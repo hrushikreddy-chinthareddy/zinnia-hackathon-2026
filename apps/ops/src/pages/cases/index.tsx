@@ -14,7 +14,6 @@ import { PageLoader, PageLoaderVariant } from '@deps/components/page-loader/page
 import { PageHead } from '@deps/components/page-title';
 import SearchBar from '@deps/components/search/search-bar';
 import SelectSimple from '@deps/components/select/select';
-import StatusCounterTile from '@deps/components/status-counter-tile/status-counter-tile';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
@@ -23,7 +22,6 @@ import {
     CaseManagementFiltersContext,
     CaseSearchAdditionalFilters,
     CaseSearchFilters,
-    CaseStatusFilter,
     initialFilters,
     caseSearchPageSizeOptions,
     CaseTableData,
@@ -33,10 +31,8 @@ import { getAdvisorsExcelCaseSearchParams, getAdvisorsExcelCaseStatsParams } fro
 import {
     formatCaseTotals,
     getAdditionalFilters,
-    getCaseStatuses,
     getSearchValueObject,
     isSearchValueObjectEmpty,
-    statusCounterTiles,
     toggleLabels,
 } from '@deps/helpers/case-management';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
@@ -153,7 +149,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                 limit: caseManagementFilters.limit,
                 offset: caseManagementFilters.offset,
                 sortDirection: caseManagementFilters.sortDirection,
-                sortBy: 'createdAt',
+                sortBy: caseManagementFilters.sortBy || 'createdAt',
             };
 
             const response = await getCases(updatedRequest);
@@ -278,13 +274,12 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
 
     // Handler(s)
     const resetAllFilters = () => {
-        const { searchValue, toggleValue, statusCounterTileFilter } = caseManagementFilters;
+        const { searchValue, toggleValue } = caseManagementFilters;
 
         setCaseManagementFilters({
             ...initialFilters,
             searchValue,
             toggleValue,
-            statusCounterTileFilter,
         });
     };
 
@@ -295,23 +290,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         setCaseManagementFilters(prevFilters => ({ ...prevFilters, searchValue: value, offset: 0 }));
 
     const handleToggle = (value: PolicySearchKeys) => setCaseManagementFilters(prevFilters => ({ ...prevFilters, toggleValue: value }));
-
-    const handleStatusTileClicked = (value: CaseStatusFilter) => {
-        const caseStatuses = getCaseStatuses(value, caseManagementFilters.searchValue);
-        setCaseManagementFilters(prevFilters => {
-            const newAdditionalFilters = {
-                ...prevFilters.additionalFilters,
-            };
-            delete newAdditionalFilters.caseStatus;
-            delete newAdditionalFilters.notInCaseStatus;
-            return {
-                ...prevFilters,
-                statusCounterTileFilter: value,
-                offset: 0,
-                additionalFilters: { ...newAdditionalFilters, ...caseStatuses },
-            };
-        });
-    };
 
     // Memoized Component(s)
     const searchBar = useMemo(() => {
@@ -325,24 +303,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
             />
         );
     }, [caseManagementFilters.searchValue, caseManagementFilters.toggleValue]);
-
-    const statusCounterTilesRow = useMemo(() => {
-        const renderStatusCounterTile = (value: CaseStatusFilter, status: Statuses | undefined, count: number) => {
-            const isSelected = value === caseManagementFilters.statusCounterTileFilter;
-            const onClick = () => handleStatusTileClicked(value);
-
-            return (
-                <div key={value}>
-                    <StatusCounterTile status={status} onClick={onClick} count={count} isSelected={isSelected} />
-                </div>
-            );
-        };
-
-        return statusCounterTiles.map(({ value, label, status }) => {
-            const count = label ? caseTotals[value] : (status ? caseTotals[status] : 0) || 0;
-            return renderStatusCounterTile(value, status, count);
-        });
-    }, [caseTotals, caseManagementFilters.statusCounterTileFilter, caseManagementFilters.additionalFilters]);
 
     const pageSizeDropdown = useMemo(() => {
         return (
@@ -429,12 +389,10 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                 </div>
 
                 <div className="prose min-h-screen">
-                    <div className="mt-8 grid grid-cols-2 gap-4 lg:auto-cols-fr lg:grid-flow-col">{statusCounterTilesRow}</div>
-
                     <div className="early-col-break my-6 flex flex-col items-start justify-start sm:flex-row sm:items-center sm:justify-between">
                         <div className="early-break mb-4 flex flex-row items-center justify-start sm:mb-0 sm:justify-between">
                             <p className="mr-2 whitespace-nowrap font-primary text-2xl font-normal text-gray-900">
-                                {`${t('caseManagementDashboard.results')} (${caseTotals[caseManagementFilters.statusCounterTileFilter]})`}
+                                {`${t('caseManagementDashboard.results')} (${caseTotals.All})`}
                             </p>
                             <NavElement
                                 tabIndex={0}

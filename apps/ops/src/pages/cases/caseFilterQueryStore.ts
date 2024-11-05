@@ -38,8 +38,8 @@ const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters =>
         limit: 25,
         offset: 0,
         total: 0,
+        sortBy: 'createdAt',
         sortDirection: 'desc',
-        statusCounterTileFilter: 'All',
         searchValue: {},
         toggleValue: 'policyNumber',
     };
@@ -74,6 +74,14 @@ const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters =>
         });
 
         additionalFilters.carriers = carrierFilters;
+    }
+
+    if (query[QueryKeys.caseStatus]) {
+        if (Array.isArray(query[QueryKeys.caseStatus])) {
+            additionalFilters.caseStatus = query[QueryKeys.caseStatus] as Statuses[];
+        } else if (typeof query[QueryKeys.caseStatus] === 'string') {
+            additionalFilters.caseStatus = [query[QueryKeys.caseStatus] as Statuses];
+        }
     }
 
     if (query[QueryKeys.createdDateEnd]) {
@@ -131,9 +139,8 @@ const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters =>
     }
 
     if (query[QueryKeys.sortBy]) {
-        // BPB - ToDo: Magic
         if (typeof query[QueryKeys.sortBy] === 'string') {
-            // caseFilters.sortBy = query[QueryKeys.sortBy];
+            caseFilters.sortBy = query[QueryKeys.sortBy];
         }
     }
 
@@ -143,14 +150,6 @@ const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters =>
         ['asc', 'desc'].includes(query[QueryKeys.sortDirection].toLowerCase())
     ) {
         caseFilters.sortDirection = query[QueryKeys.sortDirection].toLowerCase() as 'asc' | 'desc';
-    }
-
-    if (query[QueryKeys.caseStatus]) {
-        if (Array.isArray(query[QueryKeys.caseStatus])) {
-            additionalFilters.caseStatus = query[QueryKeys.caseStatus] as Statuses[];
-        } else if (typeof query[QueryKeys.caseStatus] === 'string') {
-            additionalFilters.caseStatus = [query[QueryKeys.caseStatus] as Statuses];
-        }
     }
 
     if (query[QueryKeys.updatedDateEnd]) {
@@ -174,7 +173,7 @@ const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters =>
 // Dev Note: This is hopefully a short-term solution until we update the UI to be more closely integrated with the API filter values.
 const convertFilterToQuery = (filters: CaseSearchFilters): ParsedUrlQueryInput => {
     const query: ParsedUrlQueryInput = {};
-    const { limit, offset, sortDirection, additionalFilters } = filters;
+    const { limit, offset, sortBy, sortDirection, additionalFilters } = filters;
     const {
         carriers,
         caseStatus,
@@ -192,6 +191,10 @@ const convertFilterToQuery = (filters: CaseSearchFilters): ParsedUrlQueryInput =
         query[QueryKeys.carrier] = Object.keys(carriers).join(',').split(',');
     }
 
+    if (caseStatus?.length) {
+        query[QueryKeys.caseStatus] = caseStatus;
+    }
+
     if (createdDateEnd) {
         query[QueryKeys.createdDateEnd] = dayjs(createdDateEnd, DATE_PICKER_FORMAT).format();
     }
@@ -199,6 +202,7 @@ const convertFilterToQuery = (filters: CaseSearchFilters): ParsedUrlQueryInput =
     if (createdDateStart) {
         query[QueryKeys.createdDateStart] = dayjs(createdDateStart, DATE_PICKER_FORMAT).format();
     }
+
     if (limit) {
         query[QueryKeys.limit] = limit;
     }
@@ -223,12 +227,12 @@ const convertFilterToQuery = (filters: CaseSearchFilters): ParsedUrlQueryInput =
         query[QueryKeys.requestSubType] = Array.from(requestSubType);
     }
 
-    if (sortDirection) {
-        query[QueryKeys.sortDirection] = sortDirection;
+    if (sortBy) {
+        query[QueryKeys.sortBy] = sortBy;
     }
 
-    if (caseStatus?.length) {
-        query[QueryKeys.caseStatus] = caseStatus;
+    if (sortDirection) {
+        query[QueryKeys.sortDirection] = sortDirection;
     }
 
     if (updatedDateEnd) {
@@ -238,8 +242,6 @@ const convertFilterToQuery = (filters: CaseSearchFilters): ParsedUrlQueryInput =
     if (updatedDateStart) {
         query[QueryKeys.updatedDateStart] = dayjs(updatedDateStart, DATE_PICKER_FORMAT).format();
     }
-
-    // BPB - ToDo: sortBy
 
     return query;
 };
