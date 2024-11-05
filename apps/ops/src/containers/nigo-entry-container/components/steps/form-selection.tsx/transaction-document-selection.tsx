@@ -1,6 +1,6 @@
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import 'react-pdf/dist/Page/TextLayer.css';
 
@@ -19,7 +19,7 @@ type FormSelectionProps = {
     ctiCallNumber: string;
     transactionTypes: SimpleOption[];
     formDetails: SendDocumentFormParts;
-    setFormDetails: React.Dispatch<React.SetStateAction<SendDocumentFormParts>>;
+    setFormDetails: (val: SendDocumentFormParts) => void;
 };
 
 function TransactionDocumentSelection({ policy, ctiCallNumber, transactionTypes, formDetails, setFormDetails }: FormSelectionProps) {
@@ -28,12 +28,18 @@ function TransactionDocumentSelection({ policy, ctiCallNumber, transactionTypes,
     const [transactionSubTypeOptions, setTransactionSubTypeOptions] = useState<SimpleOption[]>(formDetails?.transactionSubType?.list || []);
     const [error, setError] = useState<string>('');
     const [loader, setLoader] = useState(false);
+    const [document, setDocument] = useState(formDetails);
+
+    useEffect(() => {
+        setFormDetails(document);
+    }, [document]);
 
     const onTransactionTypeChange = (transactionType: string) => {
-        setFormDetails(ogForomdetais => ({
-            ...ogForomdetais,
+        setDocument(ogFormDetails => ({
+            ...ogFormDetails,
             transactionType: { selected: transactionType, list: transactionTypes },
         }));
+
         // handle api call
         const getSubTypes = async (transactionType: string) => {
             if (transactionType !== '') {
@@ -60,7 +66,7 @@ function TransactionDocumentSelection({ policy, ctiCallNumber, transactionTypes,
         setError('');
         const getForms = async (tranSubType: string) => {
             setLoader(true);
-            setFormDetails(ogForomdetais => ({
+            setDocument(ogForomdetais => ({
                 ...ogForomdetais,
                 transactionSubType: { selected: transactionSubType, list: transactionSubTypeOptions },
             }));
@@ -79,7 +85,7 @@ function TransactionDocumentSelection({ policy, ctiCallNumber, transactionTypes,
                 try {
                     const response = await searchForms(formSearchRequestBody);
                     if (response) {
-                        setFormDetails(ogFormDetails => ({
+                        setDocument(ogFormDetails => ({
                             ...ogFormDetails,
                             document: { selected: response[0], list: response },
                         }));

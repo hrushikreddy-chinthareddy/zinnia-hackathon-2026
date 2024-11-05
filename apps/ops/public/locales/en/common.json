@@ -1858,7 +1858,8 @@
             "transactionSubType": "Subtype",
             "documentsTitle": "Form(s) to update",
             "view": "View",
-            "noFormsFound": "No forms found"
+            "noFormsFound": "No forms found",
+            "addNewDocument": "Send another document"
         },
         "correspondence": {
             "label": "Where should the document(s)  be sent",

@@ -1842,7 +1842,8 @@
             "transactionSubType": "Sous-type",
             "documentsTitle": "Formulaire(s) à mettre à jour",
             "view": "Afficher",
-            "noFormsFound": "Aucun formulaire trouvé"
+            "noFormsFound": "Aucun formulaire trouvé",
+            "addNewDocument": "Envoyer un autre document"
         },
         "correspondence": {
             "email": "E-mail",
