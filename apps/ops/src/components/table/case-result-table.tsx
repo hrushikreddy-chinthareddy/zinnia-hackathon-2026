@@ -12,7 +12,10 @@ import {
     TooltipPlacement,
 } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
+import advanced from 'dayjs/plugin/advancedFormat';
+import timezone from 'dayjs/plugin/timezone';
 import Image from 'next/image';
+import { TFunction } from 'next-i18next';
 import { useTranslation } from 'react-i18next';
 
 import ChipStatus from '@deps/components/chip-status/chip-status';
@@ -24,26 +27,26 @@ import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
 import { Case } from '@deps/models/case/case';
 import { CaseDetailsTabValues, DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { SearchViewQuery } from '@deps/types/search';
-import { getCarrierLogoByClientId } from '@deps/utils/carriers';
+import { getCarrierLogoByClientId, getCarrierNameByClientId } from '@deps/utils/carriers';
 
 import styles from './case-result-table.module.css';
+import CaseDetailField from '../card/case-search-card/case-detail-field';
+import { CaseStatusTooltip } from '../case-list/components/case-status-tooltip';
 import Highlighter from '../highlighter/highlighter';
 import { PiiProps } from '../pii/pii';
 import { PiiWrapper } from '../pii/PiiWrapper';
 import PlusOthers from '../plus-others/plus-others';
 import PopoverOnTruncate from '../popover-on-truncate/popover-on-truncate';
-import CaseDetailField from '../card/case-search-card/case-detail-field';
-import { CaseStatusTooltip } from '../case-list/components/case-status-tooltip';
-import timezone from 'dayjs/plugin/timezone';
-import advanced from 'dayjs/plugin/advancedFormat';
 
 interface PartyWithOthersProps extends PiiProps {
     text?: string | null;
     highlights?: string[] | null;
     entities: { name: string; ssn: string }[];
+    isOwner?: boolean;
+    t: TFunction;
 }
 
-const PartyWithOthers = ({ text, entities, highlights }: PartyWithOthersProps) => {
+const PartyWithOthers = ({ text, entities, highlights, isOwner, t }: PartyWithOthersProps) => {
     const textWithHighlights = !!text && highlights && highlights.length ? <Highlighter text={text} highlights={highlights} /> : text;
 
     const textToRender = text ? (
@@ -59,7 +62,7 @@ const PartyWithOthers = ({ text, entities, highlights }: PartyWithOthersProps) =
             <Typography variant={TypographyVariant.BodySm}>
                 <PiiWrapper>{textToRender || DEFAULT_ERROR_STRING}</PiiWrapper>
             </Typography>
-            <PlusOthers entities={entities} />
+            <PlusOthers entities={entities} tooltipTitle={isOwner ? t('tooltip.jointOwner') : t('tooltip.agent')} />
         </div>
     );
 };
@@ -96,6 +99,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
     };
 
     const imageSrc = getCarrierLogoByClientId(singleCase.carrier);
+    const carrierName = getCarrierNameByClientId(singleCase.carrier);
 
     const viewCaseText = t('caseManagementDashboard.case.viewCase', {
         caseNumber: String(singleCase.policyNumber).split('').join(' '),
@@ -104,19 +108,11 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
     const getTimeText = () => {
         let text;
         const { unit, count } = getTimeAgoUnitValue(singleCase.createdAt) || {};
-        const currentYear = dayjs().year();
-        const createdYear = dayjs(singleCase.createdAt).year();
-        // Yes this logic is crazy
-        // The designers decided that if a date is from today it should use "x time ago" format,
-        // If it's within this year another format,
-        // And before this year a different format. Thus the triple if statement here - hopefully we eventually change this
         if (unit === 'hour' || unit === 'minute') {
             const timeText = t('temporal.timeago', { formattedDate: '', count: count, unit: unit }).trim();
             text = timeText;
-        } else if (createdYear === currentYear) {
-            text = dayjs(singleCase.createdAt).format('MMM D');
         } else {
-            text = dayjs(singleCase.createdAt).format('MMM D, YYYY');
+            text = dayjs(singleCase.createdAt).format('M/D/YYYY');
         }
         return text;
     };
@@ -124,7 +120,10 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
     return (
         <TableRow className={styles.row}>
             {/* This lives as a visibly hidden link instead of as a click handler on the table row for acccessibility concerns. Nested interactive elements are not allowed */}
-            <Link className={styles.caseLink} href={`/cases/${singleCase.id}/${CaseDetailsTabValues.progress}`} text={viewCaseText} />
+            {/* to do - add hover tooltip */}
+            <Link className={styles.caseLink} href={`/cases/${singleCase.id}/${CaseDetailsTabValues.progress}`} text={viewCaseText}>
+                <div title={viewCaseText}>{viewCaseText}</div>
+            </Link>
             <TableCell>
                 <div className="flex flex-col">
                     <Typography variant={TypographyVariant.BodySm} className="block">
@@ -144,7 +143,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
             <TableCell>
                 <div className="flex flex-col">
                     {policyOwners.length > 1 ? (
-                        <PartyWithOthers {...ownerComponentProps} />
+                        <PartyWithOthers {...ownerComponentProps} isOwner t={t} />
                     ) : (
                         <CaseDetailField pii={true} {...ownerComponentProps} />
                     )}
@@ -175,7 +174,10 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                             </div>
                         }
                     >
-                        {singleCase.carrier}
+                        <div className="flex flex-col">
+                            <span>{carrierName}</span>
+                            {singleCase.productName && <span>{singleCase.productName}</span>}
+                        </div>
                     </Tooltip>
                     <CaseDetailField
                         pii={true}
@@ -187,7 +189,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
             <TableCell>
                 <div className="flex flex-col">
                     {agents.length > 1 ? (
-                        <PartyWithOthers {...agentComponentProps} />
+                        <PartyWithOthers {...agentComponentProps} t={t} />
                     ) : (
                         <CaseDetailField pii={true} {...agentComponentProps} />
                     )}
@@ -209,6 +211,20 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                         {dayjs(singleCase.createdAt).format('M/D/YYYY [at] h:mm a z')}
                     </Tooltip>
                 </div>
+            </TableCell>
+        </TableRow>
+    );
+};
+
+const NoResultsRow = () => {
+    const { t } = useTranslation(TranslationFiles.COMMON);
+
+    return (
+        // to do - there is supposed to be a second one of these for the wrong filters
+        // probably need to sync with Brian on his work for this
+        <TableRow>
+            <TableCell colSpan={7} className="text-center">
+                {t('caseManagementDashboard.search.empty.title')}
             </TableCell>
         </TableRow>
     );
@@ -253,9 +269,13 @@ export const CaseResultTable = ({ cases, searchValues, handleSort, sortDirection
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {cases.map(singleCase => (
-                    <CaseTableRow key={`case-search-card-${singleCase.id}`} singleCase={singleCase} searchValues={searchValues} />
-                ))}
+                {cases && cases.length ? (
+                    cases.map(singleCase => (
+                        <CaseTableRow key={`case-search-card-${singleCase.id}`} singleCase={singleCase} searchValues={searchValues} />
+                    ))
+                ) : (
+                    <NoResultsRow />
+                )}
             </TableBody>
         </Table>
     );
