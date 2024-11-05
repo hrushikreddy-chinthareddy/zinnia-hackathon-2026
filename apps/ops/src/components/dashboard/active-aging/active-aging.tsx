@@ -1,13 +1,16 @@
 import { HighchartsReactRefObject } from 'highcharts-react-official';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
+import { getStartAndEndDates } from '@deps/containers/case-redesign-sub-page/case-helpers';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 import { getCaseGroupingStats, sortAlphabetically } from '@deps/helpers/dashboard/dashboard-helpers';
 import { StatGrouping, StatGroupingOptions, StatGroupingResponse } from '@deps/helpers/dashboard/types';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
-import { AgingTimeRanges, AgingTimeRangesKeys, AgingTimeRangesKeysExtended, Case } from '@deps/models/case/case';
+import { convertToQueryString } from '@deps/helpers/routing.helper';
+import { AgingTimeRanges, AgingTimeRangesKeys, AgingTimeRangesKeysExtended, Case, Processes } from '@deps/models/case/case';
 import { ReactComponent as LighBulb } from '@deps/styles/elements/icons/icons_outlined/light-bulb.svg';
 
 import ActiveAgingBars from './active-aging-bars';
@@ -16,6 +19,7 @@ import ActiveAgingPies from './active-aging-pies';
 interface Props {
     cases: Case[];
     classNames?: string;
+    selectedProcess: Processes;
 }
 
 interface ActiveAgingStatGrouping {
@@ -23,7 +27,7 @@ interface ActiveAgingStatGrouping {
     label: string;
 }
 
-const ActiveAging = ({ cases, classNames }: Props) => {
+const ActiveAging = ({ cases, classNames, selectedProcess }: Props) => {
     const agingChartsRef = useRef<HighchartsReactRefObject>(null);
     const numColumns = 7;
     const [agingChartWidth, setAgingChartWidth] = useState(0);
@@ -45,6 +49,10 @@ const ActiveAging = ({ cases, classNames }: Props) => {
     const [subProcessToColorMap, setSubProcessToColorMap] = useState<{ [key: string]: string }>({});
     const [stageDreakdownToColorMap, setStageDreakdownToColorMap] = useState<{ [key: string]: string }>({});
     const [distinctAgingStatGroupingLabels, setDistinctAgingStatGroupingLabels] = useState<string[]>([]);
+    const [startAndEndDates, setStartAndEndDates] = useState<{
+        createdDateStart: string;
+        createdDateEnd: string;
+    }>(getStartAndEndDates('All'));
     const getAgingGroupingStats = useCallback(
         (groupings: StatGroupingResponse) => {
             const timeframeStats: { label: string; statGroupings: StatGrouping }[] = [];
@@ -248,6 +256,7 @@ const ActiveAging = ({ cases, classNames }: Props) => {
             setSubProcessToColorMap(createSubProcessToColorMap(subProcessStatgrouping));
             setStageDreakdownToColorMap(createAgingStageBreakDownToColorMap(distinctAgingStatGroupingLabels));
             setSelectedSubProcessStatGrouping(getSelectedSubProcessStatGrouping(subProcessStatgrouping));
+            setStartAndEndDates(getStartAndEndDates(selectedAgingRange));
         }
     }, [cases, getSelectedStageBreakdown, getSelectedSubProcessStatGrouping, selectedAgingRange]);
 
@@ -272,13 +281,20 @@ const ActiveAging = ({ cases, classNames }: Props) => {
                                     <div className="flex items-center gap-3">
                                         <div className="h-3 w-3" style={{ backgroundColor: subProcessToColorMap[stat.label] }}></div>
                                         <div className="flex items-center gap-1 w-full justify-between">
-                                            <Typography
-                                                className="flex gap-1 truncate capitalize"
-                                                variant={TypographyVariant.BodySm}
-                                                data-testid="header-text"
+                                            <NavElement
+                                                href={`/cases${convertToQueryString({
+                                                    requestSubType: stat.label,
+                                                    process: selectedProcess,
+                                                    createdDateStart: startAndEndDates.createdDateStart,
+                                                    createdDateEnd: startAndEndDates.createdDateEnd,
+                                                })}`}
+                                                size={NavElementSize.Small}
+                                                type={NavElementType.Link}
+                                                className="capitalize"
+                                                target="_blank"
                                             >
                                                 {stat.label?.toLocaleLowerCase()}
-                                            </Typography>
+                                            </NavElement>
                                             <Typography
                                                 className="flex gap-2"
                                                 variant={TypographyVariant.BodySmBold}
