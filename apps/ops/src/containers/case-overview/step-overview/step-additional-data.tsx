@@ -1,16 +1,14 @@
 import { Table, TableBody, TableCell, TableRow } from '@zinnia/bloom/components';
-import dayjs from 'dayjs';
 import { TFunction, useTranslation } from 'next-i18next';
 
 import AdditionalStepStatus from '@deps/components/case-overview-box/content/additional-step-status';
+import { formatTimestamp, TransformedStep } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
 import { CaseAdditionalData } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-types';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { formatAddressToContainer } from '@deps/containers/small-data-card/address-data/address-data';
 import { toTitleCase } from '@deps/helpers/string.helper';
 import { AdditionalDataStepIds, CommunicationTypes, correspondenceTypes } from '@deps/models/case/additional-data-instance';
 import { Statuses } from '@deps/models/case/case';
-import { CASE_MANAGEMENT_API_FORMAT, CASE_MANAGEMENT_DISPLAY_FORMAT } from '@deps/types/constants';
-import { TransformedStep } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
 
 export const hasAdditionalDataSideSheet = (step: TransformedStep): boolean => {
     if (!Object.keys(step.additionalData).length) return false;
@@ -49,7 +47,7 @@ const correspondenceStepConfig = (deliveryMethod: CommunicationTypes, t: TFuncti
         },
         getAdditionalDetails: (additionalData: CaseAdditionalData, filterKeyBy: string) => {
             const date = additionalData[filterKeyBy].value;
-            return dayjs(date, CASE_MANAGEMENT_API_FORMAT).format(CASE_MANAGEMENT_DISPLAY_FORMAT);
+            return formatTimestamp(date);
         },
     },
 
@@ -81,14 +79,12 @@ const StepAdditionalData = ({ additionalData, stepKey, status, date }: StepAddit
     const deliveryMethod = additionalData['deliveryMethod']?.value as CommunicationTypes;
 
     const renderAdditionalData = (id: AdditionalDataStepIds) => {
+        const updatedAt = formatTimestamp(date);
         switch (id) {
             case AdditionalDataStepIds.correspondenceRequest:
                 return (
                     <>
-                        <AdditionalStepStatus
-                            updatedAt={dayjs(date, CASE_MANAGEMENT_API_FORMAT).format(CASE_MANAGEMENT_DISPLAY_FORMAT)}
-                            status={status as Statuses}
-                        />
+                        <AdditionalStepStatus updatedAt={updatedAt} status={status as Statuses} />
                         <DeliveryCard
                             additionalData={additionalData}
                             deliveryMethod={deliveryMethod}
@@ -99,19 +95,13 @@ const StepAdditionalData = ({ additionalData, stepKey, status, date }: StepAddit
             case AdditionalDataStepIds.sedRequest:
                 return (
                     <>
-                        <AdditionalStepStatus
-                            updatedAt={dayjs(date, CASE_MANAGEMENT_API_FORMAT).format(CASE_MANAGEMENT_DISPLAY_FORMAT)}
-                            status={status as Statuses}
-                        />
+                        <AdditionalStepStatus updatedAt={updatedAt} status={status as Statuses} />
                     </>
                 );
             case AdditionalDataStepIds.completeRequest:
                 return (
                     <>
-                        <AdditionalStepStatus
-                            updatedAt={dayjs(date, CASE_MANAGEMENT_API_FORMAT).format(CASE_MANAGEMENT_DISPLAY_FORMAT)}
-                            status={status as Statuses}
-                        />
+                        <AdditionalStepStatus updatedAt={updatedAt} status={status as Statuses} />
                         <DeliveryCard additionalData={additionalData} deliveryMethod={deliveryMethod} title={t('recipients') as string} />
                     </>
                 );

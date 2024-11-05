@@ -18,6 +18,7 @@ export interface CaseSearchQuery {
 }
 
 export interface CaseStatsQuery {
+    brokerDealerName?: string
     policyNumber?: string;
     ssn?: string;
     ownerFirstName?: string;
@@ -25,7 +26,7 @@ export interface CaseStatsQuery {
     process?: string[];
     caseIds?: string[];
     caseStatus?: Statuses[];
-    carrier?: string[];
+    carrier?: string | string[];
     groupBy: string[];
     createdDateStart?: string;
     createdDateEnd?: string;

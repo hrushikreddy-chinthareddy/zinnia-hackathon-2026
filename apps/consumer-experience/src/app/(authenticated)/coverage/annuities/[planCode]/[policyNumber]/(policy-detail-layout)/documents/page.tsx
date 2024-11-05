@@ -1,15 +1,16 @@
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { IconType } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 import Link from 'next/link';
 
+import documentStyles from '@/app/(authenticated)/coverage/shared-styles/Documents.module.css';
 import DocumentsList from '@/components/documents-list/DocumentsList';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getCorrespondenceDocuments } from '@/services/policy';
+import { LineOfBusinessPath } from '@/types';
 import { ExtendedDocumentMeta } from '@/types/document';
 import { PolicyRequestInputs } from '@/types/policy';
-
-import documentStyles from '@/app/(authenticated)/coverage/shared-styles/Documents.module.css';
 
 const pageTitle = getPageTitle(RouteKey.DOCUMENTS);
 // disable because NextJS needs this to be exported from this file
@@ -55,7 +56,7 @@ export default async function Documents({
       <ul className={documentStyles.nav}>
         <li>
           <Link
-            href={`/coverage/${params.planCode}/${params.policyNumber}/documents`}
+            href={`/coverage/${LineOfBusinessPath.ANNUITIES}/${params.planCode}/${params.policyNumber}/documents`}
             className={`${!isStatementsSelected ? documentStyles.active : ''}`}
           >
             Documents
@@ -63,7 +64,7 @@ export default async function Documents({
         </li>
         <li>
           <Link
-            href={`/coverage/${params.planCode}/${params.policyNumber}/documents?type=statements`}
+            href={`/coverage/${LineOfBusinessPath.ANNUITIES}/${params.planCode}/${params.policyNumber}/documents?type=statements`}
             className={`${isStatementsSelected ? documentStyles.active : ''}`}
           >
             Statements
@@ -85,6 +86,7 @@ export default async function Documents({
           documents={docs}
           planCode={params.planCode}
           policyNumber={params.policyNumber}
+          lineOfBusiness={LineOfBusiness.ANNUITY}
         />
       )}
     </div>

@@ -1,11 +1,11 @@
 'use client';
 import {
-  AssistiveText,
-  AssistiveTextVariant,
-  Icon,
-  IconType,
-  LoaderVariant,
-  SpinnerButton,
+    AssistiveText,
+    AssistiveTextVariant,
+    Icon,
+    IconType,
+    LoaderVariant,
+    SpinnerButton,
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
@@ -78,7 +78,7 @@ export const EnterEmailStep = () => {
             <Icon
               className={styles.icon}
               type={IconType.ALERT_EXCLAMATION}
-              color="var(--color-fields-border-field-border-error)"
+              color="var(--color-status-border-status-error-border)"
             />
           )}
         </div>

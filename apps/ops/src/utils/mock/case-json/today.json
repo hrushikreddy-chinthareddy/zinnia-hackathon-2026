@@ -1,0 +1,110 @@
+{
+    "message": "Successfully retrieved data!",
+    "data": [
+        {
+            "id": "CA0000367833",
+            "templateId": "41849ed4-ef31-44b8-8983-19a808660c60",
+            "carrier": "ELIC",
+            "process": "New Business",
+            "parentInstanceId": null,
+            "correlationId": null,
+            "caseStatus": "IN_PROGRESS",
+            "processSubType": "LIFE APPLICATION",
+            "policyNumber": null,
+            "productName": null,
+            "primary": true,
+            "stages": [
+                {
+                    "id": "requestAck",
+                    "label": "Prepare for processing",
+                    "stageStatus": "COMPLETED"
+                },
+                {
+                    "id": "dataCollection",
+                    "label": "Data Collection",
+                    "stageStatus": "COMPLETED"
+                },
+                {
+                    "id": "policyValidation",
+                    "label": "Validate application",
+                    "stageStatus": "IN_PROGRESS"
+                },
+                {
+                    "id": "agentValidation",
+                    "label": "Validate agent",
+                    "stageStatus": "COMPLETED"
+                },
+                {
+                    "id": "underwritingEvaluation",
+                    "label": "Process underwriting",
+                    "stageStatus": "NOT_STARTED"
+                },
+                {
+                    "id": "requestCompletion",
+                    "label": "Finish processing",
+                    "stageStatus": "NOT_STARTED"
+                }
+            ],
+            "additionalData": {},
+            "identifiers": [
+                {
+                    "identifier": "eAppId",
+                    "value": "77379d57-3be6-4266-9a05-eb2ea2"
+                },
+                {
+                    "identifier": "zlCaseId",
+                    "value": "CA0000367833"
+                }
+            ],
+            "createdAt": "2024-09-15T12:38:53.000Z",
+            "updatedAt": "2024-09-15T12:57:30.000Z",
+            "parties": [
+                {
+                    "partyRole": null,
+                    "partyType": null,
+                    "firstName": "Newcase",
+                    "middleName": null,
+                    "lastName": "Newcase",
+                    "fullName": null,
+                    "prefix": null,
+                    "suffix": null,
+                    "gender": "Male",
+                    "ssn": "666911012",
+                    "percent": null
+                },
+                {
+                    "partyRole": null,
+                    "partyType": null,
+                    "firstName": "GREG",
+                    "middleName": null,
+                    "lastName": "BAGGENSTOS",
+                    "fullName": null,
+                    "prefix": null,
+                    "suffix": null,
+                    "gender": null,
+                    "ssn": null,
+                    "percent": null
+                },
+                {
+                    "partyRole": null,
+                    "partyType": null,
+                    "firstName": "Newcase",
+                    "middleName": null,
+                    "lastName": "Newcase",
+                    "fullName": null,
+                    "prefix": null,
+                    "suffix": null,
+                    "gender": "Male",
+                    "ssn": "666911012",
+                    "percent": null
+                }
+            ],
+            "exceptions": []
+        }
+    ],
+    "count": 1,
+    "offset": 0,
+    "limit": 1000,
+    "total": 1,
+    "status": 200
+}

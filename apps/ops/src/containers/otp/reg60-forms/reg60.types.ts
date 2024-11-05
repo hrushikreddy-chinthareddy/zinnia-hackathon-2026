@@ -4,6 +4,7 @@ import { Transaction } from '@deps/models/case/withdrawal/case';
 import { ContractComparison, Disclosure } from './components/create-disclosure/create-disclosure.types';
 import { DisclosureAuthorizationInformation } from './components/disclosure-authorization/disclosure-authorization.types';
 import { UserInfo } from './components/user-information/user-information.type';
+import { SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 
 export enum CurrentPage {
     INFO = 'info',
@@ -102,7 +103,7 @@ export interface ActiveReg60Case extends Reg60DigitalForm {
     updatedDate: string; // ISO Date String
 }
 
-export interface CreateReg60CaseProps {
+export interface CreateReg60CaseProps extends SegmentTrackedPageProps {
     document: DocumentData;
     form: ActiveReg60Case;
     userId: string;

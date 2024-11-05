@@ -4,13 +4,6 @@ import { useTranslation } from 'next-i18next';
 
 import ExceptionRow from '@deps/components/card/case-search-card/exception-row/exception-row';
 import ChipStatus from '@deps/components/chip-status/chip-status';
-import FieldData from '@deps/components/fields/field-data/field-data';
-import Highlighter from '@deps/components/highlighter/highlighter';
-import Label, { LabelVariant } from '@deps/components/label/label';
-import { PiiProps } from '@deps/components/pii/pii';
-import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
-import PlusOthers from '@deps/components/plus-others/plus-others';
-import PopoverOnTruncate from '@deps/components/popover-on-truncate/popover-on-truncate';
 import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { getPolicyOwners } from '@deps/helpers/parties';
@@ -19,66 +12,15 @@ import { Statuses } from '@deps/models/case/case';
 import { ExceptionInstance, ExceptionStatuses } from '@deps/models/case/exception-instance';
 import { PartyInstance } from '@deps/models/case/party-instance';
 import { ReactComponent as ChevronRightIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-right.svg';
-import { CaseDetailsTabValues, DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { CaseDetailsTabValues } from '@deps/types/constants';
 import { SearchViewQuery } from '@deps/types/search';
 import { getCarrierLogoByClientId } from '@deps/utils/carriers';
-
-interface CaseDetailFieldProps extends PiiProps {
-    label: string;
-    text?: string | null;
-    sentenceCase?: boolean;
-    truncate?: boolean;
-    highlights?: string[] | null;
-}
-const CaseDetailField = ({ label, text, highlights, sentenceCase = true, truncate = false, pii = false }: CaseDetailFieldProps) => {
-    const textWithHighlights = !!text && highlights && highlights.length ? <Highlighter text={text} highlights={highlights} /> : text;
-
-    const textToRender =
-        truncate && !!text ? (
-            <PopoverOnTruncate title={text}>
-                <span className="line-clamp-1 break-all font-secondary text-md">{textWithHighlights}</span>
-            </PopoverOnTruncate>
-        ) : (
-            textWithHighlights
-        );
-
-    return (
-        <FieldData label={label} sentenceCase={sentenceCase}>
-            {pii ? <PiiWrapper>{textToRender || DEFAULT_ERROR_STRING}</PiiWrapper> : textToRender || DEFAULT_ERROR_STRING}
-        </FieldData>
-    );
-};
-
-interface OwnerWithOthersProps extends PiiProps {
-    label: string;
-    text?: string | null;
-    highlights?: string[] | null;
-    entities: { name: string; ssn: string }[];
-}
-
-const OwnerWithOthers = ({ label, text, entities, highlights }: OwnerWithOthersProps) => {
-    const textWithHighlights = !!text && highlights && highlights.length ? <Highlighter text={text} highlights={highlights} /> : text;
-
-    const textToRender = text ? (
-        <PopoverOnTruncate title={text}>
-            <span className="line-clamp-1 break-all font-secondary text-md">{textWithHighlights}</span>
-        </PopoverOnTruncate>
-    ) : (
-        textWithHighlights
-    );
-
-    return (
-        <div>
-            <div className="flex">
-                <Label label={label} variant={LabelVariant.FieldLabel} />
-                <PlusOthers entities={entities} />
-            </div>
-            <Typography variant={TypographyVariant.BodySm}>
-                <PiiWrapper>{textToRender || DEFAULT_ERROR_STRING}</PiiWrapper>
-            </Typography>
-        </div>
-    );
-};
+import OwnerWithOthers from './owner-with-others';
+import CaseDetailField from './case-detail-field';
+import { SegmentTrackedEventName } from '@deps/types/segment-analytics';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { useRouter } from 'next/router';
 
 export interface CaseSearchCardProps {
     id: string;
@@ -122,6 +64,9 @@ export default function CaseSearchCard({
     showCaseId = false,
 }: CaseSearchCardProps) {
     const { t } = useTranslation();
+    const router = useRouter();
+    const perms = usePermissionsContext();
+
     const imageSrc = getCarrierLogoByClientId(carrier);
 
     const viewCaseText = t('caseManagementDashboard.case.viewCase', { caseNumber: String(policyNumber).split('').join(' ') });
@@ -140,10 +85,24 @@ export default function CaseSearchCard({
     };
 
     const ownerComponent =
-        policyOwners.length > 1 ? <OwnerWithOthers {...ownerComponentProps} /> : <CaseDetailField pii={true} {...ownerComponentProps} />;
+        policyOwners.length > 1
+            ? <OwnerWithOthers {...ownerComponentProps} />
+            : <CaseDetailField pii={true} {...ownerComponentProps} />;
 
     const openExceptions = exceptions?.filter(exception => exception.status !== ExceptionStatuses.Resolved);
     const isExceptionRow = caseStatus === Statuses.Exception && !!openExceptions?.length;
+
+    const loadCaseDetails = (href: string) => {
+        segmentAnalyticsTrackEvent(
+            SegmentTrackedEventName.PolicyKeyValuesItemClick,
+            {
+                caseId: id,
+                userId: perms.getUserPartyId(),
+            }
+        );
+
+        router.push(href);
+    }
 
     return (
         <div className={isCustomStyle ? 'case-search-card' : ' '} data-testid="case-search-card">
@@ -202,9 +161,10 @@ export default function CaseSearchCard({
                 )}
                 {showLogo && (
                     <Link
-                        href={`/cases/${id}/${CaseDetailsTabValues.progress}`}
                         className="default-focus rounded text-secondary hover:text-secondary-dark focus:text-secondary-dark"
                         aria-label={viewCaseText}
+                        href={`/cases/${id}/${CaseDetailsTabValues.progress}`}
+                        onClick={() => loadCaseDetails(`/cases/${id}/${CaseDetailsTabValues.progress}`)}
                     >
                         <ChevronRightIcon height={24} width={24} />
                     </Link>

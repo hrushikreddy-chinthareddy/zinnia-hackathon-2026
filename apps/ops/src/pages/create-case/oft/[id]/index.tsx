@@ -20,7 +20,6 @@ import { FormControls } from '@deps/containers/otp/withdrawal-forms/components/f
 import { FormErrors } from '@deps/containers/otp/withdrawal-forms/components/form-errors';
 import { FormProvider } from '@deps/containers/otp/withdrawal-forms/components/form-provider';
 import { DiaryNotesProvider } from '@deps/contexts/DiaryNotesContext';
-import { isNonProductionEnvironment } from '@deps/helpers/environment.helper';
 import { determineFormToRender } from '@deps/helpers/form-selector.helper';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { shouldNavbarOverlay } from '@deps/helpers/page-layout';
@@ -29,16 +28,19 @@ import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { deStringifyTrueFalseNull, toTitleCase } from '@deps/helpers/string.helper';
 import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
 import { useScreenSize } from '@deps/hooks/useScreenSize';
+import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { ProcessType } from '@deps/models/case/enums';
 import { TaskType } from '@deps/models/case/task';
 import { ActiveWithdrawalCase, Carrier, PartyRoles, QualTypes } from '@deps/models/case/withdrawal/case';
 import { UserPermission } from '@deps/models/user-profile';
-import { initializeOTPTaskSSR } from '@deps/operations/tasks/v1/initialize';
+import { initializeOTPTaskSSR } from '@deps/operations/tasks/v2/initialize';
 import { getDocumentSSR } from '@deps/queries/api/documents';
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import { SCREEN_BREAKPOINTS } from '@deps/types/constants';
+import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
+import { isNonProductionEnvironment } from '@deps/utils/environment.helper';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
@@ -46,7 +48,7 @@ import { logError, logInfo, logWarn, parseErrorInformation } from '@deps/utils/s
 
 import { ERROR_CODES } from '../../error';
 
-interface OftCaseProps {
+interface OftCaseProps extends SegmentTrackedPageProps {
     document: DocumentData;
     form: ActiveWithdrawalCase;
     userId: string;
@@ -71,7 +73,7 @@ const getFormComponentMap = (planCode: string | '', qualType: QualTypes | ''): R
     [Carrier.RSLN]: <RSLNOftWithdrawalForm qualType={qualType} />,
 });
 
-export default function OftCase({ document, form, featureFlagDecisions }: OftCaseProps) {
+export default function OftCase({ document, form, featureFlagDecisions, user }: OftCaseProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const router = useRouter();
 
@@ -79,7 +81,10 @@ export default function OftCase({ document, form, featureFlagDecisions }: OftCas
     const clientForFormDetermination = isNonProductionEnvironment() ? clientIdOverride || clientId : clientId;
     const { qualType, issueState, planCode } = useAccountInfo(document.contract, clientId as string);
 
+    useSegmentPageTracker(user, SegmentPageName.OftCase, { clientId, clientIdOverride, clientForFormDetermination, documentNumber: document.documentNumber, formTaskId: form.taskId, qualType, issueState, planCode });
+
     const formParts = determineFormToRender(clientForFormDetermination as string, getFormComponentMap(planCode, qualType));
+
     if (!formParts) {
         console.error('OFTCase::No form parts', {
             documentNumber: document?.documentNumber,
@@ -321,6 +326,7 @@ export const getServerSideProps = withPageAuthRequired({
                 form,
                 locale,
                 featureFlagDecisions,
+                user,
             },
         };
     },

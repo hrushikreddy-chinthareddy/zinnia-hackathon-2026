@@ -17,7 +17,7 @@ import SelectSimple from '@deps/components/select/select';
 import StatusCounterTile from '@deps/components/status-counter-tile/status-counter-tile';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { AE_BROKER_DEALER_NAME_PROD, AE_BROKER_DEALER_NAME_QA, AE_CARRIER_SBGC, AE_FGA_ROLE } from '@deps/constants/advisors-excel';
+import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
 import {
     CaseManagementFiltersContext,
     CaseSearchAdditionalFilters,
@@ -28,6 +28,7 @@ import {
     CaseTableData,
 } from '@deps/contexts/CaseManagementFilters';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { getAdvisorsExcelCaseSearchParams, getAdvisorsExcelCaseStatsParams } from '@deps/helpers/advisors-excel';
 import {
     formatCaseTotals,
     getAdditionalFilters,
@@ -40,6 +41,7 @@ import {
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { storage } from '@deps/helpers/sessionStorage.helper';
+import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { Statuses } from '@deps/models/case/case';
 import { UserPermission } from '@deps/models/user-profile';
 import { getCaseStats, getCases } from '@deps/queries/api/cases';
@@ -47,7 +49,7 @@ import { checkTupleSsr, getCarrierListServerSSR } from '@deps/queries/api/fga';
 import { CaseSearchQuery, CaseStatsQuery } from '@deps/queries/cases';
 import { FgaRelation } from '@deps/types/fga';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
-import { isProd } from '@deps/utils/environment.helper';
+import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import nextI18nextConfig from 'next-i18next.config';
 
 // Lazy Loaded Components
@@ -60,16 +62,18 @@ const SearchResultsErrorCard = dynamic(() => import('@deps/containers/search-res
 const PaginationControls = dynamic(() => import('@deps/components/pagination/pagination'));
 const PageSizeControls = dynamic(() => import('@deps/components/pagination/page-size/page-size'));
 
-type CaseManagementDashboardProps = {
+interface CaseManagementDashboardProps extends SegmentTrackedPageProps {
     authorizedCarriers: string[];
     isAdvisorsExcel: boolean;
-};
+}
 
-const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel }: CaseManagementDashboardProps) => {
+const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: CaseManagementDashboardProps) => {
     const [caseManagementFilters, setCaseManagementFilters] = useState(initialFilters);
     const [loadedStoredFilters, setLoadedStoredFilters] = useState(false);
 
     const { t } = useTranslation();
+
+    useSegmentPageTracker(user, SegmentPageName.CaseManagementDashboard);
 
     // Refs
     const topDiv = useRef<HTMLDivElement | null>(null);
@@ -88,11 +92,20 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel }: CaseMa
 
         const searchValueObject = getSearchValueObject(caseManagementFilters.searchValue, caseManagementFilters.toggleValue);
 
-        const caseStatsRequest: CaseStatsQuery = {
+        let caseStatsRequest: CaseStatsQuery = {
             ...additionalFilters,
             ...searchValueObject,
             groupBy: ['caseStatus'],
         };
+
+        if (isAdvisorsExcel) {
+            const advisorsExcelParams = getAdvisorsExcelCaseStatsParams();
+
+            caseStatsRequest = {
+                ...caseStatsRequest,
+                ...advisorsExcelParams,
+            };
+        }
 
         try {
             const response = await getCaseStats(caseStatsRequest);
@@ -136,12 +149,11 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel }: CaseMa
 
             // DEPU-2835 - temporary work around for Advisor Excel
             if (isAdvisorsExcel) {
-                const brokerDealerName = isProd() ? AE_BROKER_DEALER_NAME_PROD : AE_BROKER_DEALER_NAME_QA;
+                const advisorsExcelParams = getAdvisorsExcelCaseSearchParams();
 
                 additionalFilters = {
                     ...additionalFilters,
-                    brokerDealerName,
-                    carrier: [AE_CARRIER_SBGC],
+                    ...advisorsExcelParams,
                 };
             }
 
@@ -488,17 +500,16 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel }: CaseMa
 
 export const getServerSideProps = withPageAuthRequired({
     getServerSideProps: async (context: GetServerSidePropsContext) => {
-        // Get the user object from the Auth0 Session
         const user = await getUserData(context);
         const auth: Session = (await getSession(context.req, context.res)) as Session;
 
-        // If they can't read Case Management there's no point in continuing. Redirect to 403 Forbidden.
         const doesUserHasPagePermissions = await doesUserHavePagePermissions(
             auth?.accessToken,
             user,
             UserPermission.AllowReadCaseManagement
         );
 
+        // DEPU-2835 - temporary work around for Advisor Excel
         const isAdvisorsExcel = await checkTupleSsr(`${auth.accessToken}`, user.partyId, FgaRelation.Party, AE_FGA_ROLE);
 
         if (!isAdvisorsExcel && !doesUserHasPagePermissions) {
@@ -509,7 +520,7 @@ export const getServerSideProps = withPageAuthRequired({
                 },
             };
         }
-    
+
         const { locale = DEFAULT_LOCALE } = context;
 
         const translations = await serverSideTranslations(
@@ -525,7 +536,7 @@ export const getServerSideProps = withPageAuthRequired({
             UserPermission.AllowReadCaseManagement
         );
 
-        return { props: { authorizedCarriers, isAdvisorsExcel, locale, ...translations } };
+        return { props: { authorizedCarriers, isAdvisorsExcel, user, locale, ...translations } };
     },
 });
 
