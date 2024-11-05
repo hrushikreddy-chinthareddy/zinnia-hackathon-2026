@@ -3045,6 +3045,7 @@
     },
     "tooltip": {
         "jointOwner": "Joint owner",
+        "agent": "Agent",
         "ssn": "SSN",
         "other": "other"
     },

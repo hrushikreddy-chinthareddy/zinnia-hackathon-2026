@@ -10,9 +10,10 @@ import Typography, { TypographyVariant } from '../typography/typography';
 export interface PlusOthersProps {
     className?: string;
     entities: { name: string; ssn: string }[];
+    tooltipTitle: string;
 }
 
-const PlusOthers = ({ className = '', entities }: PlusOthersProps) => {
+const PlusOthers = ({ className = '', entities, tooltipTitle }: PlusOthersProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
 
     const body = (
@@ -20,7 +21,7 @@ const PlusOthers = ({ className = '', entities }: PlusOthersProps) => {
             {entities.map(entity => (
                 <div key={`other-${entity.name}`} className="nowrap flex flex-row gap-4">
                     <div className="flex flex-col">
-                        <Typography variant={TypographyVariant.FieldLabel}>{t('tooltip.jointOwner')}</Typography>
+                        <Typography variant={TypographyVariant.FieldLabel}>{tooltipTitle}</Typography>
                         <Typography variant={TypographyVariant.BodySm}>
                             <PiiWrapper>{entity.name}</PiiWrapper>
                         </Typography>
