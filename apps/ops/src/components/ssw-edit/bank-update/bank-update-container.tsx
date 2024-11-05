@@ -8,7 +8,7 @@ import { DocumentData } from '@deps/models/case/document';
 import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
 
 import BankUpdateForm from './bank-update-form';
-import GlobalValuesBar from '../global-values/global-values-bar/global-values-bar';
+import GlobalValuesBar from '../../global-values/global-values-bar/global-values-bar';
 
 type BankUpdateContainerProps = {
     clientCode: string;

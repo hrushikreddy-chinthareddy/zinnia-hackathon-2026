@@ -133,21 +133,19 @@ export default function SSWCase({ document, form, parties, transactionsHistory, 
     const formParts = determineFormToRender(clientForFormDetermination as string, getFormComponentMap(qualType));
 
     const sswEditOptions = (
-        <>
-            <div>
-                <SelectSimple
-                    disabled={false}
-                    className="max-w-lg"
-                    // label={t('sswRequest') as string}
-                    label={'SSW Request'}
-                    options={sswUpdateOptions(t)}
-                    onChange={(val: string) => setSswRequest(val as SswUpdateOption)}
-                    size={FieldSize.Small}
-                    value={sswRequest}
-                    name="sswRequest"
-                />
-            </div>
-        </>
+        <div>
+            <SelectSimple
+                disabled={false}
+                className="max-w-lg"
+                // label={t('sswRequest') as string}
+                label={'SSW Request'}
+                options={sswUpdateOptions(t)}
+                onChange={(val: string) => setSswRequest(val as SswUpdateOption)}
+                size={FieldSize.Small}
+                value={sswRequest}
+                name="sswRequest"
+            />
+        </div>
     );
     if (!formParts) {
         console.error('SSWCase::No form parts', {
@@ -162,12 +160,22 @@ export default function SSWCase({ document, form, parties, transactionsHistory, 
         switch (sswRequest) {
             case SswUpdateOption.BANK_UPDATE: {
                 setLoading(true);
-                router.push(`/bank-update?taskId=${form?.taskId}`);
+                router.push(`/ssw-edit/bank-update?taskId=${form?.taskId}`);
                 break;
             }
             case SswUpdateOption.SSW_UPDATE: {
                 setLoading(true);
-                router.push(`/ssw-update?taskId=${form?.taskId}`);
+                router.push(`/ssw-edit/ssw-update?taskId=${form?.taskId}&programType=SSW`);
+                break;
+            }
+            case SswUpdateOption.RMD_UPDATE: {
+                setLoading(true);
+                router.push(`/ssw-edit/ssw-update?taskId=${form?.taskId}&programType=RMD`);
+                break;
+            }
+            case SswUpdateOption.EFT_DRAW_UPDATE: {
+                setLoading(true);
+                router.push(`/ssw-edit/ssw-update?taskId=${form?.taskId}&programType=EFT`);
                 break;
             }
         }
@@ -327,20 +335,20 @@ export const getServerSideProps = withPageAuthRequired({
         if (shouldShowNewExperience && action !== 'readonly') {
             logInfo('create-case/ssw/:id:Checking NIGO', { taskId, action, documentNumber, id, clientId });
             const isNigoCase = await checkNigoExistsSSR(clientId.toUpperCase(), document.caseId, accessToken);
-            if (isNigoCase && !isUsedLastSaved) {
-                logInfo('create-case/ssw/:id::Nigo exists for case', {
-                    documentNumber,
-                    clientId,
-                    caseId: document.caseId,
-                    lob: document?.lob,
-                });
-                return {
-                    redirect: {
-                        destination: `/create-case/error?errorCode=${ERROR_CODES.NIGO_EXISTS}`,
-                        permanent: false,
-                    },
-                };
-            }
+            // if (isNigoCase && !isUsedLastSaved) {
+            //     logInfo('create-case/ssw/:id::Nigo exists for case', {
+            //         documentNumber,
+            //         clientId,
+            //         caseId: document.caseId,
+            //         lob: document?.lob,
+            //     });
+            //     return {
+            //         redirect: {
+            //             destination: `/create-case/error?errorCode=${ERROR_CODES.NIGO_EXISTS}`,
+            //             permanent: false,
+            //         },
+            //     };
+            // }
         } else {
             logInfo('create-case/ssw/:id:Skipping NIGO check', { taskId, action, documentNumber, id, clientId });
         }

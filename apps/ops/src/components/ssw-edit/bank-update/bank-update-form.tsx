@@ -16,14 +16,14 @@ import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/c
 import { ReactComponent as ChevronLeftIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-left.svg';
 
 import { BankUpdateFieldConfigs, bankUpdateFormData, channelOptions, signaturesConfig, typeOptions } from './bank-update.helper';
-import Button, { ButtonSize, ButtonType, ButtonVariant } from '../button/button';
-import CardInfo from '../card/card-info/card-info';
-import { FieldSize } from '../fields/field';
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '../nav-element/nav-element';
-import FormDisbursementSection from '../otp-withdrawal-form/form-disbursement/form-disbursement-section';
-import SignatureValidations from '../otp-withdrawal-form/signature-validation/signature-validations';
-import PageLoader, { PageLoaderVariant } from '../page-loader/page-loader';
-import ApiErrorCard from '../workflows/api-error-card/api-error-card';
+import Button, { ButtonSize, ButtonType, ButtonVariant } from '../../button/button';
+import CardInfo from '../../card/card-info/card-info';
+import { FieldSize } from '../../fields/field';
+import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '../../nav-element/nav-element';
+import FormDisbursementSection from '../../otp-withdrawal-form/form-disbursement/form-disbursement-section';
+import SignatureValidations from '../../otp-withdrawal-form/signature-validation/signature-validations';
+import PageLoader, { PageLoaderVariant } from '../../page-loader/page-loader';
+import ApiErrorCard from '../../workflows/api-error-card/api-error-card';
 
 type BankUpdateFormProps = {
     document: DocumentData;

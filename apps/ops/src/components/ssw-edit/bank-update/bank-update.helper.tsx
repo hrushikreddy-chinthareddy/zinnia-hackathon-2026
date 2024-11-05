@@ -21,7 +21,7 @@ import {
 import { DisbursementParts } from '@deps/models/case/withdrawal/disbursement-types';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
-import { SignatureFields } from '../otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
+import { SignatureFields } from '../../otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 
 export const channelOptions = (t: TFunction) => [
     {

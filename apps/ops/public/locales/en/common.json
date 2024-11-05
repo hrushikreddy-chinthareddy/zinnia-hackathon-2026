@@ -1245,14 +1245,7 @@
             "title": "Title",
             "trustee": "Trustee",
             "type": "Type",
-            "yes": "Yes",
-            "sswUpdateOptions": {
-                "new": "New",
-                "rmdUpdate": "RMD Update",
-                "sswUpdate": "SSW Update",
-                "bankUpdate": "Bank Update",
-                "eftDrawUpdate": "EFT Draw Update"
-            }
+            "yes": "Yes"
         }
     },
     "caseWithdrawal": {
@@ -1962,6 +1955,13 @@
             "formTitles": {
                 "sbgc": "Annuity Contract Scheduled Systematic Withdrawal",
                 "standard": "{{carrier}} Systematic Withdrawal Request"
+            },
+            "sswUpdateOptions": {
+                "new": "New",
+                "rmdUpdate": "RMD Update",
+                "sswUpdate": "SSW Update",
+                "bankUpdate": "Bank Update",
+                "eftDrawUpdate": "EFT Draw Update"
             }
         }
     },
@@ -4252,6 +4252,9 @@
             "sswUpdate": "SSW Update",
             "bankUpdate": "Bank Update",
             "eftDrawUpdate": "EFT Draw Update"
-        }
+        },
+        "close": "Close",
+        "submitted": "Submitted",
+        "SSW": "Existing SSW Program"
     }
 }

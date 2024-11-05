@@ -2,14 +2,14 @@ import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
-import BankUpdateContainer from '@deps/components/bank-update/bank-update-container';
+import BankUpdateContainer from '@deps/components/ssw-edit/bank-update/bank-update-container';
 import { TranslationFiles } from '@deps/config/translations';
 import { FormProvider } from '@deps/containers/otp/withdrawal-forms/components/form-provider';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
-import { DocumentType } from '@deps/models/case/document';
-import { Carrier } from '@deps/models/case/withdrawal/case';
+import { DocumentData, DocumentType } from '@deps/models/case/document';
+import { ActiveWithdrawalCase, Carrier } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { mapTaskToActiveWithdrawalCaseTask } from '@deps/operations/tasks/v2/helpers';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
@@ -23,9 +23,9 @@ import nextI18nextConfig from 'next-i18next.config';
 type BankUpdateProps = {
     clientCode: string;
     policy: Policy;
-    featureFlagDecisions: any;
-    form: any;
-    document: any;
+    featureFlagDecisions: FeatureFlags;
+    form: ActiveWithdrawalCase;
+    document: DocumentData;
 };
 
 const BankUpdate = (props: BankUpdateProps) => {

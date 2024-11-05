@@ -429,6 +429,39 @@ export const getPolicyTransactionHistory = async (
     }
 };
 
+export const getSpecialProgramsSSR = async (
+    policyNumber: string,
+    clientCode: string,
+    accessToken?: string
+): Promise<SpecialProgram | null> => {
+    const loggingContext = {
+        file: 'queries/api/policies',
+        function: 'getSpecialProgramsSSR',
+    };
+
+    try {
+        const url = `${apiServerBaseUrl}/policy/v1/policies/specialprogramdetails?policyNumber=${policyNumber}&clientCode=${clientCode}`;
+        const { data } = await serverApi.get<SpecialProgram | null, AxiosResponse<SpecialProgram>>(url, {
+            authorization: `Bearer ${accessToken}`,
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                Accept: 'application/json',
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+        return data;
+    } catch (error: any) {
+        logWarn('getSpecialProgramsSSR', {
+            ...parseErrorInformation(error),
+            policyNumber,
+            clientCode,
+            ...loggingContext,
+        });
+        return null;
+    }
+};
+
 // This hits a Spectrum API to get Special programs
 export const getSpecialPrograms = async (policyNumber: string, clientCode: string): Promise<SpecialProgram | null> => {
     try {
@@ -497,7 +530,7 @@ export const getPolicyTransactions = async ({
             sortOrder,
             status,
             transactionTypes,
-            year: year &&dayjs(year).format('YYYY-01-01'),
+            year: year && dayjs(year).format('YYYY-01-01'),
         })) {
             if (value) params.append(key, `${value}`);
         }
