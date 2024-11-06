@@ -33,7 +33,7 @@ import { fillColDefs } from '@deps/helpers/data-transform.helper';
 import { getTotalMinRequiredAmount, policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { BasePolicyComponentArgs, PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { formatDate, formatPhone, formatSSN, toTitleCase } from '@deps/helpers/string.helper';
+import { convertKebabedDateString, formatDate, formatPhone, formatSSN, toTitleCase } from '@deps/helpers/string.helper';
 import { mapAddressTypeToTranslation } from '@deps/helpers/translation.helper';
 import { CardColumnsTest, CardDetailsTest } from '@deps/jest/constants/test-id-constants';
 import {
@@ -470,6 +470,7 @@ const LapseQuickView = ({ policy }: BasePolicyComponentArgs) => {
 const StatusBanner = ({ policy }: BasePolicyComponentArgs) => {
     const { t } = useTranslation();
     const policyStatus = policy.policyStatus;
+
     if (policyStatus === PolicyStatus.PENDINGLAPSE) {
         return (
             <BannerAlert
@@ -505,6 +506,28 @@ const StatusBanner = ({ policy }: BasePolicyComponentArgs) => {
             </BannerAlert>
         );
     }
+
+    // TODO: should update these to use the BannerAlert from bloom?
+    // TODO: add a feature flag
+    if (policy.isInActiveFreeLookPeriod) {
+        const freeLookFeature = policy.features.getFirstFeatureByType(PolicyFeatureFeatureType.freelook);
+        console.log('is in active free look period', policy.isInActiveFreeLookPeriod);
+
+        return (
+            <BannerAlert
+                variant={BannerVariant.Warning}
+                cta={{
+                    // TODO: fix link location
+                    href: `#`,
+                    text: t('dashboard.search.results.policySummaryCard.freeLookCancelBannerLink'),
+                }}
+            >
+                {t('dashboard.search.results.policySummaryCard.freeLookCancelBannerText')}{' '}
+                {convertKebabedDateString(freeLookFeature?.endDate)}
+            </BannerAlert>
+        );
+    }
+
     return null;
 };
 

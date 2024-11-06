@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 import {
     DistributionType,
     DeathBenefitOptionType,
@@ -185,6 +187,24 @@ export class PolicyDetails {
 
     public get hasLoans(): boolean {
         return !!this.policy?.allocation?.loanSegments?.length;
+    }
+
+    /**
+     * Check if the policy is in an active free look period.
+     *
+     * To be considered in an active free look period, the policy must be active and have a free look cancellation date
+     * that has not yet passed.
+     *
+     * @returns {boolean} true if the policy is in an active free look period, false otherwise
+     */
+    public get isInActiveFreeLookPeriod(): boolean {
+        const freeLookCancellationDate = this.features.getFirstFeatureByType(PolicyFeatureFeatureType.freelook)?.endDate;
+
+        return (
+            this.policyStatus === PolicyStatus.ACTIVE &&
+            !isNullEmptyOrUndefined(freeLookCancellationDate) &&
+            dayjs().isBefore(dayjs(freeLookCancellationDate))
+        );
     }
 
     public get requiredMinimumDistribution(): {

@@ -724,7 +724,9 @@
                     "pendingLapseBannerText": "Cette police nécessite un paiement avant son expiration. Y aller maintenant?",
                     "pendingLapseBannerLink": "Effectuer un paiement de prime",
                     "lapseBannerText": "Ce contrat est agréé moyennant une prime de réintégration. Y aller maintenant ?",
-                    "lapseBannerLink": "Effectuer un paiement de prime"
+                    "lapseBannerLink": "Effectuer un paiement de prime",
+                    "freeLookCancelBannerText": "Cette police est encore dans sa période d'examen gratuit et peut être annulée sans pénalité jusqu'à cette date.",
+                    "freeLookCancelBannerLink": "Annuler la police"
                 }
             },
             "empty": {

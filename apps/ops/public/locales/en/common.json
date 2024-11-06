@@ -701,7 +701,9 @@
                     "pendingLapseBannerText": "This policy needs a payment before it lapses. Go there now?",
                     "pendingLapseBannerLink": "Make a premium payment",
                     "lapseBannerText": "This policy is approved for a reinstatement premium.  Go there now?",
-                    "lapseBannerLink": "Make a premium payment"
+                    "lapseBannerLink": "Make a premium payment",
+                    "freeLookCancelBannerText": "This policy is still in its free look period and can be canceled without penalty until",
+                    "freeLookCancelBannerLink": "Cancel policy"
                 }
             },
             "empty": {
