@@ -1,11 +1,12 @@
-import { TranslationFiles } from '@deps/config/translations';
-import { calculateDaysAgo } from '@deps/helpers/case-management';
-import { Case, Statuses } from '@deps/models/case/case';
 import { BadgeVariant, Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { TFunction } from 'i18next';
+import { useTranslation } from 'next-i18next';
 import { ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
+
+import { TranslationFiles } from '@deps/config/translations';
+import { calculateDaysAgo } from '@deps/helpers/case-management';
+import { Case, Statuses } from '@deps/models/case/case';
 
 interface GetStatusDetailsProps {
     singleCase: Case;
