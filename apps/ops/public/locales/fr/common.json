@@ -12,6 +12,7 @@
     "yearToDate": "Annee en cours",
     "caseStatsDashboardTitle": "Dashboard du Carrier",
     "customRange": "Periode personnalisée",
+    "allAgents": "Tous les agents",
     "allDistributors": "Tous les distributeurs",
     "allCarriers": "Tous les carriers",
     "caseStatCharHeader": "{{count}} Dossiers actifs",

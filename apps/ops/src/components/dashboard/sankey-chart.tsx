@@ -1,5 +1,5 @@
+import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import { FieldSize, FieldType } from '@deps/components/fields/field';
 import SelectSimple from '@deps/components/select/select';
