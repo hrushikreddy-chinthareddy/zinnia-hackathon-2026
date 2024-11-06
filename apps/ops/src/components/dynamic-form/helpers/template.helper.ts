@@ -1,7 +1,7 @@
 import { ArrayFieldTemplateProps, UiSchema } from '@rjsf/utils';
 
 import ArrayFieldTableTemplate from '../customization/templates/array-field-template/array-field-table-template';
-import ArrayFieldTemplate from '../customization/templates/array-field-template/custom-array-template';
+import ArrayFieldTemplate from '../customization/templates/array-field-template/array-field-template';
 
 export const UITempleteMap: Record<string, (props: ArrayFieldTemplateProps) => React.JSX.Element> = {
     ['ArrayFieldTemplate']: ArrayFieldTemplate,
