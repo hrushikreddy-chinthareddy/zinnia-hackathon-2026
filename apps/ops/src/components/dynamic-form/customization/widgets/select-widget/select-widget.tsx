@@ -116,7 +116,6 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
                     <SelectComponent
                         id={id}
                         title={label}
-                        label={label}
                         value={selectedValues as string}
                         required={required}
                         disabled={disabled || readonly}

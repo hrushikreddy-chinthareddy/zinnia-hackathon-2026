@@ -27,7 +27,7 @@ export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
         },
         ref
     ) => {
-        if ((label.type as React.JSXElementConstructor<any>)?.name !== Label.name) {
+        if (!!label && (label?.type as React.JSXElementConstructor<any>)?.name !== Label.name) {
             throw new Error('Required field: label is not of type Label');
         }
         const [calendarOpen, setCalendarOpen] = useState(false);
@@ -56,10 +56,12 @@ export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
 
         const inputId = uuidv4();
         const status = props.disabled ? FieldStatus.INACTIVE : fieldStatus;
-        const clonedLabel = cloneElement(label, {
-            labelFor: inputId,
-            status,
-        });
+        const clonedLabel =
+            label &&
+            cloneElement(label, {
+                labelFor: inputId,
+                status,
+            });
 
         const handleDateChange = (e: ChangeEvent<HTMLInputElement>) => {
             if (!e.target.value) {

@@ -570,40 +570,31 @@
                                     "title": "Occupation"
                                 }
                             },
-                            "dependencies": {
-                                "employmentStatus": {
-                                    "oneOf": [
-                                        {
-                                            "properties": {
-                                                "employmentStatus": {
-                                                    "contains": {
-                                                        "const": "Disabled"
-                                                    }
-                                                },
-                                                "disabilityExplanation": {
-                                                    "type": "string",
-                                                    "title": "If disabled is marked, please explain",
-                                                    "minLength": 1
-                                                }
-                                            },
-                                            "required": [
-                                                "disabilityExplanation"
-                                            ]
-                                        },
-                                        {
-                                            "properties": {
-                                                "employmentStatus": {
-                                                    "not": {
-                                                        "contains": {
-                                                            "const": "Disabled"
-                                                        }
-                                                    }
+                            "allOf": [
+                                {
+                                    "if": {
+                                        "properties": {
+                                            "employmentStatus": {
+                                                "contains": {
+                                                    "const": "DISABLED"
                                                 }
                                             }
                                         }
-                                    ]
+                                    },
+                                    "then": {
+                                        "properties": {
+                                            "disabilityExplanation": {
+                                                "type": "string",
+                                                "title": "If disabled is marked, please explain",
+                                                "minLength": 1
+                                            }
+                                        },
+                                        "required": [
+                                            "disabilityExplanation"
+                                        ]
+                                    }
                                 }
-                            }
+                            ]
                         }
                     }
                 }
@@ -1188,7 +1179,6 @@
                 },
                 "partyType": {
                     "ui:options": {
-                        "label": false,
                         "help": "Applicant's type",
                         "enumNames": [
                             "Person",
@@ -1199,7 +1189,6 @@
                 },
                 "roleType": {
                     "ui:options": {
-                        "label": false,
                         "enumNames": [
                             "Owner",
                             "Joint Owner",
@@ -1213,38 +1202,34 @@
                 "fullName": {
                     "ui:options": {
                         "help": "Applicant's Full name",
-                        "readyOnly": true,
-                        "label": false,
+                        "disabled": true,
                         "placeholder": "Full name",
                         "helpText": "Applicant's Full name"
                     }
                 },
                 "person": {
+                    "ui:options": {},
                     "firstName": {
                         "ui:options": {
-                            "label": false,
                             "placeholder": "First name",
                             "helpText": "Applicant's first name"
                         }
                     },
                     "middleName": {
-                        "ui:placeholder": "Middle name",
-                        "ui:helpText": "Applicant's Middle name",
                         "ui:options": {
-                            "label": false
+                            "placeholder": "Middle name",
+                            "helpText": "Applicant's Middle name"
                         }
                     },
                     "lastName": {
-                        "ui:placeholder": "Last name",
-                        "ui:helpText": "Applicant's Last name",
                         "ui:options": {
-                            "label": false
+                            "placeholder": "Last name",
+                            "helpText": "Applicant's Last name"
                         }
                     },
                     "gender": {
                         "ui:helpText": "Applicant's gender",
                         "ui:options": {
-                            "label": false,
                             "enumNames": [
                                 "MALE",
                                 "FEMALE",
@@ -1254,25 +1239,14 @@
                         }
                     },
                     "age": {
-                        "type": "string",
-                        "title": "Age",
-                        "ui:options": {
-                            "label": false
-                        }
+                        "ui:options": {}
                     },
                     "birthDate": {
-                        "type": "string",
                         "format": "date",
-                        "title": "Birth Date",
-                        "ui:options": {
-                            "label": false
-                        }
+                        "ui:options": {}
                     },
                     "martialStatus": {
-                        "type": "string",
-                        "title": "Marital Status",
                         "ui:options": {
-                            "label": false,
                             "enumNames": [
                                 "SINGLE",
                                 "MARRIED",
@@ -1284,11 +1258,8 @@
                         }
                     },
                     "birthCountry": {
-                        "type": "string",
-                        "title": "Birth Country",
                         "uniqueItems": true,
                         "ui:options": {
-                            "label": false,
                             "enumNames": [
                                 "AA",
                                 "AE",
@@ -1353,11 +1324,8 @@
                         }
                     },
                     "birthJurisdictionState": {
-                        "type": "string",
-                        "title": "Birth Jurisdiction State",
                         "uniqueItems": true,
                         "ui:options": {
-                            "label": false,
                             "enumNames": [
                                 "AA",
                                 "AE",
@@ -1423,18 +1391,16 @@
                     }
                 },
                 "govtIdInfo": {
+                    "ui:options": {},
                     "items": {
                         "ui:options": {
                             "label": false
                         },
                         "govtId": {
-                            "ui:options": {
-                                "label": false
-                            }
+                            "ui:options": {}
                         },
                         "govtIdType": {
                             "ui:options": {
-                                "label": false,
                                 "enumNames": [
                                     "SSN",
                                     "PASSPORT",
@@ -1445,10 +1411,7 @@
                         },
                         "govtIdExpDate": {
                             "format": "date",
-                            "title": "Government ID Expiry Date",
-                            "ui:options": {
-                                "label": false
-                            }
+                            "ui:options": {}
                         },
                         "required": [
                             "govtId",
@@ -1458,17 +1421,11 @@
                     }
                 },
                 "addresses": {
-                    "type": "array",
-                    "title": "Addresses",
+                    "ui:options": {},
                     "items": {
-                        "type": "object",
-                        "title": "",
                         "addressType": {
-                            "type": "string",
-                            "title": "Address Type",
                             "uniqueItems": true,
                             "ui:options": {
-                                "label": false,
                                 "enumNames": [
                                     "RESIDENCE",
                                     "MAILING",
@@ -1480,46 +1437,22 @@
                             }
                         },
                         "line1": {
-                            "type": "string",
-                            "title": "Address Line 1",
-                            "ui:options": {
-                                "label": false
-                            }
+                            "ui:options": {}
                         },
                         "line2": {
-                            "type": "string",
-                            "title": "Address Line 2",
-                            "ui:options": {
-                                "label": false
-                            }
+                            "ui:options": {}
                         },
                         "city": {
-                            "type": "string",
-                            "title": "City",
-                            "ui:options": {
-                                "label": false
-                            }
+                            "ui:options": {}
                         },
                         "state": {
-                            "type": "string",
-                            "title": "State",
-                            "ui:options": {
-                                "label": false
-                            }
+                            "ui:options": {}
                         },
                         "country": {
-                            "type": "string",
-                            "title": "Country",
-                            "ui:options": {
-                                "label": false
-                            }
+                            "ui:options": {}
                         },
                         "zip": {
-                            "type": "string",
-                            "title": "Zip Code",
-                            "ui:options": {
-                                "label": false
-                            }
+                            "ui:options": {}
                         }
                     },
                     "required": [
@@ -1532,10 +1465,10 @@
                     ]
                 },
                 "employment": {
+                    "ui:options": {},
                     "employmentStatus": {
                         "ui:widget": "checkboxes",
                         "ui:options": {
-                            "label": false,
                             "enumNames": [
                                 "ACTIVE",
                                 "RETIRED",
@@ -1546,24 +1479,20 @@
                         }
                     },
                     "occupation": {
-                        "ui:options": {
-                            "label": false
-                        }
+                        "ui:options": {}
                     },
                     "disabilityExplanation": {
-                        "ui:options": {
-                            "label": false
-                        }
+                        "ui:options": {}
                     }
                 }
             }
         },
         "policyData": {
-            "type": "object",
-            "title": "Policy Data",
+            "ui:options": {
+                "classNames": "divider"
+            },
             "lineOfBusiness": {
                 "ui:options": {
-                    "label": false,
                     "enumNames": [
                         "ANNUITY",
                         "LIFE"
@@ -1571,18 +1500,13 @@
                 }
             },
             "productCode": {
-                "ui:options": {
-                    "label": false
-                }
+                "ui:options": {}
             },
             "productType": {
-                "ui:options": {
-                    "label": false
-                }
+                "ui:options": {}
             },
             "qualPlanType": {
                 "ui:options": {
-                    "label": false,
                     "enumNames": [
                         "NON QUALIFIED",
                         "QUALIFIED"
@@ -1591,12 +1515,14 @@
             },
             "annualPaymentAmt": {
                 "ui:options": {
-                    "label": false,
                     "widget": "ValueWidget"
                 }
             }
         },
         "applicationInfo": {
+            "ui:options": {
+                "classNames": "divider"
+            },
             "replacementInd": {
                 "ui:widget": "radio",
                 "ui:options": {
@@ -1608,13 +1534,10 @@
                 }
             },
             "replacementReason": {
-                "ui:options": {
-                    "label": false
-                }
+                "ui:options": {}
             },
             "replacedContractType": {
                 "ui:options": {
-                    "label": false,
                     "enumNames": [
                         "ANNUITY",
                         "LIFE"
@@ -1625,7 +1548,6 @@
                 "soldPoliciesToApplicant": {
                     "ui:widget": "radio",
                     "ui:options": {
-                        "inline": true,
                         "enumNames": [
                             "YES",
                             "NO"
@@ -1655,29 +1577,28 @@
             }
         },
         "fiscalData": {
+            "ui:options": {
+                "classNames": "divider"
+            },
             "annualIncome": {
                 "ui:options": {
                     "inline": true,
-                    "label": false,
                     "widget": "ValueWidget"
                 }
             },
             "netWorth": {
                 "ui:options": {
-                    "label": false,
                     "widget": "ValueWidget"
                 }
             },
             "liquidNetWorth": {
                 "ui:options": {
-                    "label": false,
                     "widget": "ValueWidget"
                 }
             },
             "sourceOfIncome": {
                 "items": {
                     "ui:options": {
-                        "label": false,
                         "enumNames": [
                             "FIXED ANNUITY",
                             "LIFE INSURENCE",
@@ -1738,7 +1659,6 @@
                     },
                     "isApplicable": {
                         "ui:options": {
-                            "label": false,
                             "enumNames": [
                                 "YES",
                                 "NO"
@@ -1759,26 +1679,22 @@
             },
             "totalAssets": {
                 "ui:options": {
-                    "label": false,
                     "widget": "ValueWidget"
                 }
             },
             "totalDebt": {
                 "ui:options": {
-                    "label": false,
                     "widget": "ValueWidget"
                 }
             },
             "annualExpenses": {
                 "ui:options": {
-                    "label": false,
                     "widget": "ValueWidget"
                 }
             },
             "sourceOfFunds": {
                 "items": {
                     "ui:options": {
-                        "label": false,
                         "enumNames": [
                             "FIXED ANNUITY",
                             "LIFE INSURENCE",
@@ -1811,6 +1727,9 @@
             }
         },
         "financialExperience": {
+            "ui:options": {
+                "classNames": "divider"
+            },
             "rateChangeAcknowledgment": {
                 "ui:widget": "radio",
                 "ui:options": {
@@ -1823,7 +1742,6 @@
             },
             "totalAnnuityValue": {
                 "ui:options": {
-                    "label": false,
                     "widget": "ValueWidget"
                 }
             },
@@ -1835,7 +1753,6 @@
                         },
                         "productType": {
                             "ui:options": {
-                                "label": false,
                                 "enumNames": [
                                     "CHECKING SAVING ACCOUNT",
                                     "MONEY MARKET",
@@ -1862,7 +1779,6 @@
                         },
                         "amount": {
                             "ui:options": {
-                                "label": false,
                                 "widget": "ValueWidget"
                             }
                         }
@@ -1885,7 +1801,6 @@
                         },
                         "assetType": {
                             "ui:options": {
-                                "label": false,
                                 "enumNames": [
                                     "LIQUID ASSET",
                                     "NON LIQUID ASSET"
@@ -1894,7 +1809,6 @@
                         },
                         "amount": {
                             "ui:options": {
-                                "label": false,
                                 "widget": "ValueWidget"
                             }
                         }
@@ -1903,10 +1817,12 @@
             }
         },
         "investmentRiskInfo": {
+            "ui:options": {
+                "classNames": "divider"
+            },
             "riskTolerance": {
                 "ui:options": {
                     "inline": true,
-                    "label": false,
                     "enumNames": [
                         "CONSERVATIVE",
                         "MODERATE CONSERVATIVE",
@@ -1934,10 +1850,12 @@
             }
         },
         "financialObjectives": {
+            "ui:options": {
+                "classNames": "divider"
+            },
             "buyingReason": {
                 "ui:options": {
                     "widget": "checkboxes",
-                    "label": false,
                     "enumNames": [
                         "INCOME",
                         "TAX DEFERRAL",
@@ -1955,7 +1873,6 @@
             },
             "annuityMeetsFinancialNeeds": {
                 "ui:options": {
-                    "label": false,
                     "inline": true,
                     "enumNames": [
                         "YES",
@@ -1965,6 +1882,9 @@
             }
         },
         "liquidityOptions": {
+            "ui:options": {
+                "classNames": "divider"
+            },
             "fundsAccessExplanation": {
                 "ui:options": {
                     "label": false
@@ -2019,6 +1939,9 @@
             }
         },
         "agentAcknowledgment": {
+            "ui:options": {
+                "classNames": "divider"
+            },
             "maApplicationQuestionnaire": {
                 "soldPoliciesToApplicant": {
                     "ui:widget": "radio",
@@ -2044,10 +1967,12 @@
                     }
                 },
                 "productDetails": {
+                    "ui:options": {
+                        "classNames": "divider"
+                    },
                     "items": {
                         "productType": {
                             "ui:options": {
-                                "label": false,
                                 "enumNames": [
                                     "ANNUITY",
                                     "LIFE"
@@ -2073,6 +1998,9 @@
                 }
             },
             "financialAcknowledgement": {
+                "ui:options": {
+                    "classNames": "divider"
+                },
                 "evaluatedInformation": {
                     "ui:options": {
                         "label": false
@@ -2095,6 +2023,9 @@
                 }
             },
             "disclosureAcknowledgement": {
+                "ui:options": {
+                    "classNames": "divider"
+                },
                 "scopeAndTerms": {
                     "ui:options": {
                         "label": false
@@ -2143,6 +2074,9 @@
             }
         },
         "additionalInfo": {
+            "ui:options": {
+                "classNames": "divider"
+            },
             "currentResidenceOption": {
                 "ui:options": {
                     "label": false
@@ -2185,6 +2119,9 @@
             }
         },
         "californiaResidentQuestions": {
+            "ui:options": {
+                "classNames": "divider"
+            },
             "applyForMeansTestedBenefits": {
                 "ui:options": {
                     "label": false
@@ -2202,10 +2139,12 @@
             }
         },
         "signatureInfo": {
+            "ui:options": {
+                "classNames": "divider"
+            },
             "items": {
                 "signatureRoleCode": {
                     "ui:options": {
-                        "label": false,
                         "enumNames": [
                             "OWNER",
                             "AGENT"
@@ -2229,15 +2168,13 @@
                 },
                 "signatureState": {
                     "ui:options": {
-                        "label": false,
                         "enumNames": [
-                            "US"
+                            "AA"
                         ]
                     }
                 },
                 "signatoryDesignation": {
                     "ui:options": {
-                        "label": false,
                         "enumNames": [
                             "TRUSTEE",
                             "EXECUTOR",

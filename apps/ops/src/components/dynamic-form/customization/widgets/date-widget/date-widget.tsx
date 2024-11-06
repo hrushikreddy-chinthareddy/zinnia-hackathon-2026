@@ -1,14 +1,4 @@
-import {
-    // ariaDescribedByIds,
-    // labelValue,
-    pad,
-    FormContextType,
-    RJSFSchema,
-    StrictRJSFSchema,
-    // TranslatableString,
-    WidgetProps,
-} from '@rjsf/utils';
-import { Label } from '@zinnia/bloom/components';
+import { pad, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 
 import { FieldDate } from '@deps/components/field/date/FieldDate';
 
@@ -24,7 +14,6 @@ const formatDate = (date?: Date) => {
 
 export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
     id,
-    label,
     value,
     onChange,
     disabled,
@@ -40,14 +29,7 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
         <div>{value}</div>
     ) : (
         <div className="max-w-sm flex w-full flex-col">
-            <FieldDate
-                label={<Label labelFor={id}>{label}</Label>}
-                name={id}
-                id={id}
-                onDateSelect={_onSelectDate}
-                defaultDate={value}
-                disableAfterDate={new Date()}
-            />
+            <FieldDate name={id} id={id} onDateSelect={_onSelectDate} defaultDate={value} disableAfterDate={new Date()} />
         </div>
     );
 }
