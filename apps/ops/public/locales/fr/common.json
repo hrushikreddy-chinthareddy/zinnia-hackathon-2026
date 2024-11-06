@@ -4299,7 +4299,8 @@
             "view": "Voir",
             "documentTitle": "Document",
             "documents": "Documents",
-            "documentId": "ID du document"
+            "documentId": "ID du document",
+            "noFormAvailable": "Aucun formulaire disponible."
         },
         "confirmStep": {
             "title": "Soumis!",

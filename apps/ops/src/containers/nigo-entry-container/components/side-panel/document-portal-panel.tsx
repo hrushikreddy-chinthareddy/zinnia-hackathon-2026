@@ -1,7 +1,8 @@
-import { Loader , TabGroup, TabList, TabTrigger, TabContent } from '@zinnia/bloom/components';
+import { Loader, TabGroup, TabList, TabTrigger, TabContent, Icon, IconType } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
+import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
 import { TranslationFiles } from '@deps/config/translations';
 import { PolicyDocument } from '@deps/models/case/document';
@@ -61,6 +62,17 @@ const DocumentPortalPanel = ({ policy, documentNumber, docType }: DocumentViewPr
                             />
                         ))}
                     </>
+                )}
+                {relatedDocument?.length === 0 && (
+                    <div className="border-box w-full lg:px-[30px] mt-2">
+                        <div className="w-full rounded border-2 border-dashed border-gray-100 bg-gray-50 p-8">
+                            <AssistiveText
+                                text={t('noFormAvailable')}
+                                variant={AssistiveTextVariant.Default}
+                                iconOverride={<Icon width={16} height={16} type={IconType.DOCUMENT_TEXT} />}
+                            />
+                        </div>
+                    </div>
                 )}
             </TabContent>
         </>
