@@ -41,7 +41,9 @@ function TransactionDocumentSelection({
         setFormDetails(ogForomdetais => ({
             ...ogForomdetais,
             transactionType: { selected: transactionType, list: transactionTypes },
+            document: { selected: null, list: [] },
         }));
+
         // handle api call
         const getSubTypes = async (transactionType: string) => {
             if (transactionType !== '') {
