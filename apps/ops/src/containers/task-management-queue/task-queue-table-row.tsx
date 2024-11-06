@@ -7,19 +7,19 @@ import { useState } from 'react';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { getTaskStatus } from '@deps/components/tasks-listing/task-listing.helpers';
 import { TranslationFiles } from '@deps/config/translations';
+import { ProcessesToCaseTypeMap } from '@deps/constants/case';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { CaseIdentifier, Processes } from '@deps/models/case/case';
-import { AssignedTask, TaskStatus } from '@deps/models/case/task-instance';
+import { ProcessType } from '@deps/models/case/enums';
 import { TaskSource } from '@deps/models/case/task';
+import { AssignedTask, TaskStatus } from '@deps/models/case/task-instance';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { getTaskInstance, updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as SparklesIcon } from '@deps/styles/elements/icons/icons_outlined/sparkles.svg';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
-import { ProcessType } from '@deps/models/case/enums';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { logError, logWarn } from '@deps/utils/server-logging';
-import { ProcessesToCaseTypeMap } from '@deps/constants/case';
 
 type TaskQueueTableRowProps = {
     task: AssignedTask;
@@ -49,23 +49,20 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions }: TaskQueueTableRowProp
             return;
         }
 
-        // If feature flag is not enabled, redirect to error page
         const caseType = ProcessesToCaseTypeMap[taskData.process as Processes];
         if (!caseType) {
             logError('task-queue::Error getting case type', {
-                taskId,
-                file: 'pages/task-queue',
-                function: 'getServerSideProps',
+                taskId: taskData.id,
+                documentNumber: taskData?.data?.documentNumber,
+                clientCode: taskData?.carrier,
+                process: taskData?.process,
             });
-            return {
-                redirect: {
-                    destination: `/create-case/error?errorCode=${ERROR_CODES.CASE_TYPE_RETRIEVAL_ERROR}`,
-                    permanent: false,
-                },
-            };
+            router.push(`/create-case/error?errorCode=${ERROR_CODES.CASE_TYPE_RETRIEVAL_ERROR}`);
+            return;
         }
 
 
+        // If feature flag is not enabled, redirect to error page
         if (!isFormFeatureEnabled(caseType.toUpperCase() as ProcessType, taskData?.carrier, featureFlagDecisions)) {
             logWarn('task-queue::feature flag not enabled', {
                 taskId: taskData.id,
@@ -73,27 +70,22 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions }: TaskQueueTableRowProp
                 clientCode: taskData?.carrier,
                 process: taskData?.process,
             });
-            return {
-                redirect: {
-                    destination: '/403',
-                    permanent: false,
-                },
-            };
+            router.push(`/403`);
+            return;
         }
 
-        const body = {...taskData, status: TaskStatus.InProgress, source: TaskSource.ZinniaTaskManagement }
-        const response = await updateTask(
-            taskData.caseId,
-            taskData.id,
-            body,
-            timer
-        );
+        try {
+            const body = { ...taskData, status: TaskStatus.InProgress, source: TaskSource.ZinniaTaskManagement };
+            const response = await updateTask(taskData.caseId, taskData.id, body, timer);
 
-        if (response) {
-            router.push(`/nigo-entry?taskId=${taskData.id}`);
-        } else {
+            if (response) {
+                router.push(`/nigo-entry?taskId=${taskData.id}`);
+                return;
+            }
+        } catch (e) {
             logError('TaskQueue::Error updating task in progress', {taskId: taskData.id, caseId:taskData.caseId});
             router.push(`/create-case/error?errorCode=${ERROR_CODES.DATA_ENTRY_START_TASK_ERROR}`);
+            return;
         }
     };
 

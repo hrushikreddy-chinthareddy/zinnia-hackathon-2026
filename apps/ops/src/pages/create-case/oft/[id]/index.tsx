@@ -232,12 +232,8 @@ export const getServerSideProps = withPageAuthRequired({
 
         /*
             If feature flag is not enabled, redirect to error page
-            OFT FLIC is currently in PROD feature flag is not applicable for this
         */
-        if (
-            ![Carrier.FLIC, Carrier.RSLN].includes(clientId.toUpperCase() as Carrier) &&
-            !isFormFeatureEnabled(ProcessType.OFT, clientId, featureFlagDecisions)
-        ) {
+        if (!isFormFeatureEnabled(ProcessType.OFT, clientId, featureFlagDecisions)) {
             logWarn('create-case/oft/:id::feature flag not enabled', { documentNumber, clientId });
             return {
                 redirect: {
