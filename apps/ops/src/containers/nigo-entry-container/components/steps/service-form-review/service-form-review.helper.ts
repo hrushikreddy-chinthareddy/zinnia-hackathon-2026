@@ -15,18 +15,18 @@ export const useGetPolicyTypeDocs = (id: string, clientCode: string, docType: st
         try {
             setLoading(true);
 
-            const response = await getPolicyTypeDocs(id, clientCode, docType);
+            const response = await getPolicyTypeDocs(id, clientCode);
             const items = (response?.data as PolicyDocuments)?.items || [];
 
             if (items) {
-                const workingDoc = items.find(item => item.documentNumber === documentNumber);
-                const relatedDoc = items.filter(item => item.documentNumber !== documentNumber);
+                const workingDoc = items.find(item => item.documentNumber === documentNumber && item.documentType === docType);
+                const relatedDoc = items.filter(item => item.documentNumber !== documentNumber && item.documentType === docType);
                 setWorkingDocument(workingDoc);
                 setRelatedDocument(relatedDoc);
             }
             setLoading(false);
         } catch (e) {
-            console.error('useGetPolicyTypeDocs::error validating address', e);
+            console.error('useGetPolicyTypeDocs::error while fetching policy type documents', e);
             setLoading(false);
         }
     }, [loading, id, clientCode, docType, documentNumber]);
@@ -49,8 +49,8 @@ export const getWithdrawalFormData = (carrier: string, formSubtype: string | und
             break;
         case Carrier.FLIC:
         case Carrier.NASU:
-        case  Carrier.RSLN:
-        case  Carrier.GDMN:
+        case Carrier.RSLN:
+        case Carrier.GDMN:
             formData = {
                 formExtName: `${carrier}_WD_REDEMPTION_${formSubtype?.toUpperCase()}_DIGITAL_FORM`,
                 metaData: {
