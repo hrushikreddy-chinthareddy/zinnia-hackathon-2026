@@ -3,6 +3,7 @@ import { Meta } from '@storybook/react';
 import QuickLinks from './quick-links';
 
 import '@deps/styles/styles.css';
+import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 
 export default {
     title: 'Components/QuickLinks',
@@ -26,7 +27,8 @@ export const QuickLinksComponent = () => {
                 ]}
                 planCode="planCode"
                 policyNumber="123456"
-                isLife={true}
+                userPartyId="userPartyId"
+                policy={{ isLife: true, isInActiveFreeLookPeriod: true } as PolicyDetails}
             />
         </div>
     );
