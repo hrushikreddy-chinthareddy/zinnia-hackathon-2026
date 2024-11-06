@@ -45,19 +45,20 @@ function FormSelection({ policy, ctiCallNumber, transactionTypes, formDetails, s
     const [error, setError] = useState<string>('');
 
     const handleContinue = async () => {
-        // todo:vijaya: add validation for multiple selected forms
-        // if (!formDetails.document?.selected?.formId) {
-        //     return setError(t('errors.formId') as string);
-        // }
-        setFormDetails(forms.map(({ id, ...rest }) => rest));
+        const selectedForms = forms.filter(form => form.document.selected !== null).map(({ id, ...rest }) => rest);
+        if (!selectedForms.length) {
+            return setError(t('errors.formId') as string);
+        }
+        setFormDetails(selectedForms);
         goToNext();
     };
 
     useEffect(() => {
-        // if (formDetails.document?.selected?.formId) {
-        //     setError('');
-        // }
-    }, [formDetails]);
+        const selectedForms = forms.filter(form => form.document.selected !== null).map(({ id, ...rest }) => rest);
+        if (selectedForms.length > 0) {
+            setError('');
+        }
+    }, [forms]);
 
     const handleCancel = () => {
         setFormDetails([] as SendDocumentFormParts[]);
