@@ -20,7 +20,6 @@ export interface QuickLinksProps extends QuickActionsMenuProps {
         segmentTrackingName?: string;
         userPartyId?: string;
     }[];
-    isLife: boolean;
     policy: PolicyDetails;
     userPartyId: string;
 }

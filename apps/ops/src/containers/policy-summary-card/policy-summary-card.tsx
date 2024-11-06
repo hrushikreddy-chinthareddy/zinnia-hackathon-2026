@@ -1,10 +1,9 @@
-import { Icon, IconType } from '@zinnia/bloom/components';
+import { Icon, IconType, BannerAlert, BannerVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { TFunction, useTranslation } from 'next-i18next';
 import { PropsWithChildren, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
 
 import { getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/badge.helper';
-import BannerAlert, { BannerVariant } from '@deps/components/banner-alert/banner-alert';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { FieldSize } from '@deps/components/fields/field';
 import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helper';
@@ -174,11 +173,7 @@ const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
                         <QuickLinks
                             userPartyId={userPartyId}
                             policy={policy}
-                            // eligibilityCheck={eligibilityCheck}
-                            // isLife={policy.isLife}
-                            // isLoading={isLoading}
                             links={quickLinks(t, policy, userPartyId)}
-                            // onOpenChange={(open: boolean) => onOpenChange(open)}
                             planCode={planCode}
                             policyNumber={policyNumber}
                         />
@@ -396,9 +391,8 @@ const StatusBanner = ({ policy }: BasePolicyComponentArgs) => {
                     href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/new-premium/`,
                     text: t('dashboard.search.results.policySummaryCard.pendingLapseBannerLink'),
                 }}
-            >
-                {t('dashboard.search.results.policySummaryCard.pendingLapseBannerText')}
-            </BannerAlert>
+                bodyText={t('dashboard.search.results.policySummaryCard.pendingLapseBannerText')}
+            />
         );
     }
     if (policyStatus === PolicyStatus.LAPSE) {
@@ -418,13 +412,11 @@ const StatusBanner = ({ policy }: BasePolicyComponentArgs) => {
                     href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/new-premium/`,
                     text: t('dashboard.search.results.policySummaryCard.lapseBannerLink'),
                 }}
-            >
-                {t('dashboard.search.results.policySummaryCard.lapseBannerText')}
-            </BannerAlert>
+                bodyText={t('dashboard.search.results.policySummaryCard.lapseBannerText')}
+            />
         );
     }
 
-    // TODO: should update these to use the BannerAlert from bloom?
     // TODO: add a feature flag
     if (policy.isInActiveFreeLookPeriod) {
         const freeLookFeature = policy.features.getFirstFeatureByType(PolicyFeatureFeatureType.freelook);
@@ -433,15 +425,14 @@ const StatusBanner = ({ policy }: BasePolicyComponentArgs) => {
         return (
             <BannerAlert
                 variant={BannerVariant.Warning}
+                bodyText={`${t('dashboard.search.results.policySummaryCard.freeLookCancelBannerText')} ${convertKebabedDateString(
+                    freeLookFeature?.endDate
+                )}`}
                 cta={{
-                    // TODO: fix link location
                     href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/freelook/cancel-freelook/`,
                     text: t('dashboard.search.results.policySummaryCard.freeLookCancelBannerLink'),
                 }}
-            >
-                {t('dashboard.search.results.policySummaryCard.freeLookCancelBannerText')}{' '}
-                {convertKebabedDateString(freeLookFeature?.endDate)}
-            </BannerAlert>
+            />
         );
     }
 
