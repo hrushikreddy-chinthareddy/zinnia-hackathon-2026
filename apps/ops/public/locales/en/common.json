@@ -4349,7 +4349,7 @@
             "label": "Select the appropriate form that needs to be updated."
         }
     },
-    "suitabilityTask": {
+    "suitability": {
         "tabs": {
             "taskReview": "Input Suitability Data",
             "documentSelection": "New Form(s) Selection",
@@ -4363,24 +4363,28 @@
                 "missingDetails": "All sections are not complete."
             },
             "view": "View",
-            "documentId": "Document ID"
+            "documentId": "Document ID",
+            "submitLabel": "Continue",
+            "cancelLabel": "Cancel"
         },
         "confirmStep": {
             "title": "Submitted!",
-            "subTitle": "Your request has been sent for processing.",
-            "cta": "Go to case management",
+            "subTitle": "Input suitability data was submitted.",
+            "cta": "Go to incoming transfer",
             "secondaryCta": "Close",
             "submitTask": "Submit Suitability details"
         }
     },
-    "suitabilityReviewTask": {
+    "suitabilityReview": {
         "tabs": {
             "taskReview": "Review Suitability",
             "confirm": "Confirm"
         },
         "taskReview": {
             "title": "Review Suitability",
-            "subTitle": "This customer's application was flagged for review. Accept or Decline each issue before submitting a final decision."
+            "subTitle": "This customer's application was flagged for review. Accept or Decline each issue before submitting a final decision.",
+            "submitLabel": "Submit decision",
+            "cancelLabel": "Cancel"
         },
         "confirmStep": {
             "title": "Submitted!",
