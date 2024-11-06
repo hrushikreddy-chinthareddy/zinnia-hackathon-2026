@@ -14,7 +14,7 @@ import dayjs from 'dayjs';
 import advanced from 'dayjs/plugin/advancedFormat';
 import timezone from 'dayjs/plugin/timezone';
 import Image from 'next/image';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 
 import ChipStatus from '@deps/components/chip-status/chip-status';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
