@@ -56,6 +56,15 @@ const MenuContextualContent = ({ t, planCode, policyNumber, eligibilityCheck, is
                 </div>
             ) : (
                 <>
+                    {/* // TODO: add free look cancellation link, need policy here to determine if should show? or should just pass in  */}
+                    {eligibilityCheck?.eligibleFreeLookCancel && (
+                        <MenuContextualItem
+                            content={t('transactions.cancelPolicy')}
+                            href={`/policies/${planCode}/${policyNumber}/policy/freelook/cancel-freelook/`}
+                            icon={<CashIcon height={20} width={20} />}
+                            userPartyId={userPartyId}
+                        />
+                    )}
                     <MenuContextualItem
                         disabled={!eligibilityCheck?.eligibleAutopay as boolean}
                         content={t('transactions.managePremiumAutopay')}
@@ -92,6 +101,7 @@ export interface QuickActionsMenuProps {
         eligibleAutopay: boolean | null;
         eligiblePremium: boolean | null;
         eligibleWithdrawal: boolean | null;
+        eligibleFreeLookCancel: boolean;
     };
     isLoading?: boolean;
     onOpenChange?: (open: boolean) => void;

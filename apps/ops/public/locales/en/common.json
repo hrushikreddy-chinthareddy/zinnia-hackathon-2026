@@ -4087,7 +4087,8 @@
             "label": "Transactions",
             "managePremiumAutopay": "Manage premium autopay",
             "newPremium": "Start a one-time premium",
-            "startAWithdrawal": "Start a withdrawal"
+            "startAWithdrawal": "Start a withdrawal",
+            "cancelPolicy": "Cancel policy"
         }
     },
     "historyEventCard": {

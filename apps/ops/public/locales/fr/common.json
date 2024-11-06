@@ -3844,7 +3844,8 @@
             "label": "Transactions",
             "managePremiumAutopay": "Gérer le paiement automatique des primes",
             "newPremium": "Démarrez un abonnement premium unique",
-            "startAWithdrawal": "Démarrer un retrait"
+            "startAWithdrawal": "Démarrer un retrait",
+            "cancelPolicy": "Annuler la police"
         }
     },
     "historyEventCard": {

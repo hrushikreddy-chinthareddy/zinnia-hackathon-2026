@@ -28,7 +28,6 @@ import SideSheetProductDetails from '@deps/containers/side-sheet-product-details
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { PolicyDetailsViewInfo, PolicyViewDetailsDto, toPolicyViewDetailsDto } from '@deps/data/policy-details-view';
-import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { fillColDefs } from '@deps/helpers/data-transform.helper';
 import { getTotalMinRequiredAmount, policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
@@ -46,20 +45,12 @@ import {
     PolicyFeatureFeatureType,
     PolicyStatus,
     ProductType,
-    Reason,
 } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
 import { DashboardContext } from '@deps/pages/policies';
-import {
-    TransactionResponseStatus,
-    checkEligibilityOneTimePremium,
-    checkEligibilityPartialWithdrawalOneTime,
-    checkEligibilitySystematicPrograms,
-} from '@deps/queries/api/bpm';
 import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
 import { DEFAULT_ERROR_STRING, DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
 import { SearchViewQuery } from '@deps/types/search';
-import { SegmentTrackedEventName, SegmentTrackEventState } from '@deps/types/segment-analytics';
 
 import AnnuityQuickView from './active-quick-view/annuity';
 import EverlyIul from './active-quick-view/everly-iul';
@@ -155,82 +146,6 @@ const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
             ? formatDate(pendingLapse?.endDate)
             : formatDate(policy?.issueDate);
 
-    // BPB - systematic programs work
-    const systematicProgram = policy.policy.systematicPrograms?.find(sp => sp.reason === Reason.PREMIUM);
-    const arrangementId = systematicProgram?.arrangementId || '';
-
-    const [isEligibleManageAutopay, setIsEligibleManageAutopay] = useState(false);
-    const [autopayChecked, setAutopayChecked] = useState(false);
-    const [isEligibleNewPremium, setIsEligibleNewPremium] = useState(false);
-    const [newPremiumChecked, setNewPremiumChecked] = useState(false);
-    const [isEligibleWithdrawal, setIsEligibleWithdrawal] = useState(false);
-    const [withdrawalChecked, setWithdrawalChecked] = useState(false);
-
-    const [isLoading, setIsLoading] = useState(true);
-    const [fireEligibilityChecks, setFireEligibilityChecks] = useState(false);
-
-    const [isLife] = useState(policy.isLife);
-
-    // this should only run once after fireEligibilityChecks && isLife are both true
-    useEffect(() => {
-        if (fireEligibilityChecks && isLife) {
-            const checkManageAutopayEligibility = async () => {
-                const manageAutopayEligibility = await checkEligibilitySystematicPrograms(planCode, policyNumber, arrangementId || '');
-
-                if (manageAutopayEligibility?.status === TransactionResponseStatus.Success) {
-                    setIsEligibleManageAutopay(true);
-                }
-                setAutopayChecked(true);
-            };
-
-            const checkOneTimeEligibility = async () => {
-                const oneTimeEligibility = await checkEligibilityOneTimePremium(planCode, policyNumber);
-
-                if (oneTimeEligibility?.status === TransactionResponseStatus.Success) {
-                    setIsEligibleNewPremium(true);
-                }
-                setNewPremiumChecked(true);
-            };
-
-            const checkWithdrawalEligibility = async () => {
-                const withdrawalEligibility = await checkEligibilityPartialWithdrawalOneTime(planCode, policyNumber);
-
-                if (withdrawalEligibility?.status === TransactionResponseStatus.Success) {
-                    setIsEligibleWithdrawal(true);
-                }
-                setWithdrawalChecked(true);
-            };
-
-            checkManageAutopayEligibility();
-            checkOneTimeEligibility();
-            checkWithdrawalEligibility();
-        }
-    }, [planCode, policyNumber, arrangementId, fireEligibilityChecks, isLife]);
-
-    useEffect(() => {
-        if (autopayChecked && newPremiumChecked && withdrawalChecked) {
-            setIsLoading(false);
-        }
-    }, [autopayChecked, newPremiumChecked, withdrawalChecked]);
-
-    const eligibilityCheck = {
-        eligibleAutopay: isEligibleManageAutopay,
-        eligiblePremium: isEligibleNewPremium,
-        eligibleWithdrawal: isEligibleWithdrawal,
-    };
-
-    function onOpenChange(open: boolean) {
-        segmentAnalyticsTrackEvent(SegmentTrackedEventName.PolicyQuickActionsDropdown, {
-            state: open ? SegmentTrackEventState.Open : SegmentTrackEventState.Close,
-            policyNumber,
-            userId: userPartyId,
-        });
-
-        if (open) {
-            setFireEligibilityChecks(true);
-        }
-    }
-
     return (
         <header data-testid={CardDetailsTest.HEADER}>
             <div className="flex w-full items-end justify-between">
@@ -257,11 +172,13 @@ const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
                     <div className="mt-8 flex flex-wrap gap-x-8 gap-y-4 lg:mt-0">
                         {/* TODO MG: move the eligibilty checks into the quick links component */}
                         <QuickLinks
-                            eligibilityCheck={eligibilityCheck}
-                            isLife={policy.isLife}
-                            isLoading={isLoading}
+                            userPartyId={userPartyId}
+                            policy={policy}
+                            // eligibilityCheck={eligibilityCheck}
+                            // isLife={policy.isLife}
+                            // isLoading={isLoading}
                             links={quickLinks(t, policy, userPartyId)}
-                            onOpenChange={(open: boolean) => onOpenChange(open)}
+                            // onOpenChange={(open: boolean) => onOpenChange(open)}
                             planCode={planCode}
                             policyNumber={policyNumber}
                         />
@@ -511,14 +428,14 @@ const StatusBanner = ({ policy }: BasePolicyComponentArgs) => {
     // TODO: add a feature flag
     if (policy.isInActiveFreeLookPeriod) {
         const freeLookFeature = policy.features.getFirstFeatureByType(PolicyFeatureFeatureType.freelook);
-        console.log('is in active free look period', policy.isInActiveFreeLookPeriod);
+        console.log('is in active free look period', freeLookFeature);
 
         return (
             <BannerAlert
                 variant={BannerVariant.Warning}
                 cta={{
                     // TODO: fix link location
-                    href: `#`,
+                    href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/freelook/cancel-freelook/`,
                     text: t('dashboard.search.results.policySummaryCard.freeLookCancelBannerLink'),
                 }}
             >
