@@ -12,6 +12,7 @@
     "yearToDate": "Year-to-date",
     "caseStatsDashboardTitle": "Carrier Dashboard",
     "customRange": "Custom Range",
+    "allAgents": "All Agents",
     "allDistributors": "All Distributors",
     "allCarriers": "All Carriers",
     "caseStatCharHeader": "{{count}} Active Cases",
