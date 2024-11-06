@@ -72,7 +72,12 @@ const GlobalValuesBar = ({
                 {showJointOwner && carrierId === Carrier.FLIC && (
                     <PolicyJointOwner jointOwner={jointOwner} planCode={planCode} policyNumber={policyNumber} showLink={showLink} />
                 )}
-                {showDocument && <DocumentInfo documentNumber={documentNumber ?? ''} />}
+                {showDocument &&
+                    <>
+                        <div className="mx-4 flex w-0.5" />
+                        <DocumentInfo documentNumber={documentNumber ?? ''} />
+                    </>
+                }
             </div>
             {children}
         </div>
