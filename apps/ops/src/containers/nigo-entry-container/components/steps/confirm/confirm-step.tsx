@@ -9,6 +9,7 @@ import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-ca
 import { TranslationFiles } from '@deps/config/translations';
 import { buildFormV2 } from '@deps/containers/otp/withdrawal-forms/utils/withdrawal-form-helper';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import { useIsMounted } from '@deps/hooks/useIsMounted';
 import { DocumentData } from '@deps/models/case/document';
 import { ApiVersion } from '@deps/models/case/enums';
 import { TaskApiVersionMapper } from '@deps/models/case/helpers';
@@ -17,7 +18,6 @@ import { updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 
 import { useNigoEntry } from '../../nigo-entry-provider';
-
 interface ConfirmStepProps {
     documentNumber?: string;
     docType?: string;
@@ -32,6 +32,7 @@ const ConfirmStep = ({ document}: ConfirmStepProps) => {
     const [submitFailed, setSubmitFailed] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [timer] = useState(performance.now());
+    const isMounted = useIsMounted();
 
     const submit = useCallback(async () => {
         if (TaskApiVersionMapper[formState.initialForm.taskType] === ApiVersion.v2 && formState.initialForm.status !== TaskStatus.Completed) {
@@ -55,8 +56,10 @@ const ConfirmStep = ({ document}: ConfirmStepProps) => {
     }, [document, formState, timer]);
 
     useEffect(() => {
-        submit();
-    }, [submit]);
+        if (isMounted()) {
+            submit();
+        }
+    }, [isMounted, submit]);
 
     if (isLoading) {
         return (
