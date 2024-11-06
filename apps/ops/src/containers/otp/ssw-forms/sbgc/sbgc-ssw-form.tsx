@@ -58,7 +58,7 @@ export function SbgcSSWForm() {
             <FormDistribution
                 isDerivedMethodFromFunds={true}
                 isFormStateReadOnly={isFormStateReadOnly}
-                defaultMethod={FundWithdrawnMethod.Default}
+                defaultMethod={FundWithdrawnMethod.Prorata}
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
                 title={t('distributionInstruction.investmentSelectionForDistribution') as string}
             />
