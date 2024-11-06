@@ -135,6 +135,15 @@ describe('SBGC withdrawal form config', () => {
                     paymentMailType: { text: null },
                 });
             });
+            it('should generate a correct payload for an expressCheck selection', () => {
+                const expressCheckOption = disbursementOptions.find(option => option.value === PaymentMailType.ExpressCheck);
+
+                expect(expressCheckOption?.generatePayloadFromSelection(disbursementMockData)).toEqual({
+                    thisIsMocked: true,
+                    paymentMethod: { text: PaymentMailType.Check },
+                    paymentMailType: { text: PaymentMailType.ExpressCheck },
+                });
+            });
             it('should generate a correct payload for a brokerage selection', () => {
                 const brokerageOption = disbursementOptions.find(option => option.value === PaymentMethod.Brokerage);
 
