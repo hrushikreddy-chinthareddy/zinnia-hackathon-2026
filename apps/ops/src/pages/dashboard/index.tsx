@@ -19,6 +19,7 @@ import Select from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
+import { getStartAndEndDates } from '@deps/containers/case-redesign-sub-page/case-helpers';
 import { getStatusSummaryDumbText } from '@deps/helpers/dashboard/dashboard-dumb-text';
 import { getAllGroupings } from '@deps/helpers/dashboard/dashboard-helpers';
 import { StatGroupingOptions } from '@deps/helpers/dashboard/types';
@@ -63,6 +64,7 @@ const DashboardPage = ({
     const [loading, setLoading] = useState<boolean>(false);
     const [loaderLabel, setLoaderLabel] = useState<string>('Loading Cases...');
     const caseCacheRef = useRef<Case[]>([]);
+    const { createdDateStart, createdDateEnd } = getStartAndEndDates('All');
     const [brokerDealers, setBrokerDealers] = useState<BrokerDealerResponse[]>(brokerDealersSSR || []);
 
     const carrierFilterItems = useMemo(
@@ -334,7 +336,7 @@ const DashboardPage = ({
                                 />
                             </div>
                         </div>
-                        <ActiveAging cases={insightCases} />
+                        <ActiveAging cases={insightCases} selectedProcess={insightOption} />
                         <div className="flex flex-col gap-1 mt-1">
                             <div className="flex gap-1">
                                 <CaseStatBlock
@@ -344,6 +346,12 @@ const DashboardPage = ({
                                     statMeasurementLabel="case"
                                     summaryBlockFormatter={getStatusSummaryDumbText}
                                     variant="double"
+                                    showViewMore={true}
+                                    filterParams={{
+                                        createdDateEnd,
+                                        createdDateStart,
+                                        process: insightOption,
+                                    }}
                                 />
                                 <CaseStatBlock
                                     caseStats={caseGroupings[StatGroupingOptions.OpenStages]}

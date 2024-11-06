@@ -810,8 +810,6 @@
             "updatedStart": "Last updated",
             "updatedEnd": "Last updated (end range)",
             "age": "Age by days",
-            "showOnlyCanceled": "Show only canceled cases",
-            "showOnlyCompleted": "Show only completed cases",
             "applyFilters": "Apply filters",
             "clearAll": "Clear all filters",
             "selectCarrier": "Select",
@@ -843,6 +841,7 @@
                 "Renewal": "Renewals"
             }
         },
+        "selectStatus": "Select status",
         "sortOptions": {
             "newest": "Sort: Newest",
             "oldest": "Sort: Oldest"
@@ -2269,6 +2268,7 @@
         "withdrawal": "Withdrawal"
     },
     "status": {
+        "all": "All",
         "completed": "Completed",
         "exception": "Not in good order",
         "inProgress": "In progress",
@@ -3068,8 +3068,6 @@
         "policyNumber": "Policy Number {{policyNumber}}",
         "productName": "Product Name {{productName}}",
         "search": "Search",
-        "showOnlyCanceledCases": "Show only canceled cases",
-        "showOnlyCompletedCases": "Show only completed cases",
         "ssn": "Social Security Number Last 4 Digits {{ssnLastFour}}",
         "status": "Status {{status}}",
         "updatedAt": "Updated at {{date}}",

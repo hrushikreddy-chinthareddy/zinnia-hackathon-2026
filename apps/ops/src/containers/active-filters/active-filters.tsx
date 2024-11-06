@@ -6,9 +6,7 @@ import { CaseSearchAdditionalFilters } from '@deps/contexts/CaseManagementFilter
 import { Processes } from '@deps/models/case/case';
 
 import AgeRangeChip from './chips/age-range-chip';
-import ShowCanceledChip from './chips/canceled-chip';
 import CarrierChip from './chips/carrier-chip';
-import ShowCompletedChip from './chips/completed-chip';
 import CreatedDateChip from './chips/created-date-chip';
 import ProcessTypeChip from './chips/process-chip';
 import ProductChip from './chips/product-chip';
@@ -44,14 +42,11 @@ export default function ActiveFilters({ filters, removeFilter, onReset, authoriz
     const hasCarriers = filters.carriers && !!Object.keys(filters.carriers).length;
     const hasProducts = filters.products.size !== 0;
     const hasSubtypes = filters.requestSubType.size !== 0;
-    const showCompleted = filters.showOnlyCompletedCases;
-    const showCanceled = filters.showOnlyCanceledCases;
 
     useEffect(() => {
-        if (createdDateStart || updatedDateStart || ageRange || hasProcessTypeFilters || showCompleted || showCanceled || hasCarriers)
-            return setFiltersActive(true);
+        if (createdDateStart || updatedDateStart || ageRange || hasProcessTypeFilters || hasCarriers) return setFiltersActive(true);
         setFiltersActive(false);
-    }, [createdDateStart, !!updatedDateStart, ageRange, showCanceled, showCompleted, hasProcessTypeFilters, hasCarriers]);
+    }, [createdDateStart, !!updatedDateStart, ageRange, hasProcessTypeFilters, hasCarriers]);
 
     const handleRemoveFilter = (removedFilters: { [key: string]: '' | boolean | object | Set<Processes> }) =>
         removeFilter({ ...filters, ...removedFilters });
@@ -63,7 +58,7 @@ export default function ActiveFilters({ filters, removeFilter, onReset, authoriz
             {hasCarriers &&
                 Object.keys({ ...filters.carriers }).map(carrierCode => (
                     <CarrierChip
-                    authorizedCarriers={authorizedCarriers}
+                        authorizedCarriers={authorizedCarriers}
                         key={`carrier-filter-${carrierCode}`}
                         carrierCode={carrierCode}
                         carriers={{ ...filters.carriers }}
@@ -118,8 +113,6 @@ export default function ActiveFilters({ filters, removeFilter, onReset, authoriz
                 />
             )}
             {!!ageRange && <AgeRangeChip ageRange={ageRange} handleRemoveFilter={handleRemoveFilter} t={t} />}
-            {!!showCompleted && <ShowCompletedChip handleRemoveFilter={handleRemoveFilter} t={t} />}
-            {!!showCanceled && <ShowCanceledChip handleRemoveFilter={handleRemoveFilter} t={t} />}
             {!!filtersActive && <Clear onReset={onReset} />}
         </div>
     );

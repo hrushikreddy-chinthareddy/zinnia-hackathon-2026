@@ -1,7 +1,8 @@
-import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
-import { SegmentTrackedEventName } from '@deps/types/segment-analytics';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { useRouter } from 'next/router';
+
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { SegmentTrackedEventName } from '@deps/types/segment-analytics';
 
 export interface MenuContextualItemProps {
     content: string;

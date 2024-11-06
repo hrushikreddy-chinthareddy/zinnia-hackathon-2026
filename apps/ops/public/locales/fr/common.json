@@ -804,8 +804,6 @@
             "updatedStart": "Dernière mise à jour",
             "updatedEnd": "Dernière mise à jour (fin de la plage)",
             "age": "Âge",
-            "showOnlyCanceled": "Afficher uniquement les dossiers annulés",
-            "showOnlyCompleted": "Afficher uniquement les dossiers terminés",
             "applyFilters": "Appliquer les filtres",
             "clearAll": "Effacer tous les filtres",
             "selectCarrier": "Sélectionner",
@@ -837,6 +835,7 @@
                 "Renewal": "Renouvellements"
             }
         },
+        "selectStatus": "Sélectionner le statut",
         "sortOptions": {
             "newest": "Trier: Plus récent",
             "oldest": "Trier: Plus ancien"
@@ -2030,6 +2029,7 @@
         "withdrawal": "Retrait"
     },
     "status": {
+        "all": "Tous",
         "completed": "Terminé",
         "exception": "Exception",
         "inProgress": "En cours",
@@ -2824,8 +2824,6 @@
         "policyNumber": "Numéro de police {{policyNumber}}",
         "productName": "Nom du produit {{productName}}",
         "search": "Rechercher",
-        "showOnlyCanceledCases": "Afficher uniquement les dossiers annulés",
-        "showOnlyCompletedCases": "Afficher uniquement les dossiers terminés",
         "ssn": "Numéro de sécurité sociale 4 derniers chiffres {{ssnLastFour}}",
         "status": "Statut {{status}}",
         "updatedAt": "Mis à jour le {{date}}",
