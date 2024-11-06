@@ -73,10 +73,10 @@ function FormSelection({ policy, ctiCallNumber, transactionTypes, formDetails, s
         });
     };
 
-    const updateFormDetails = (value: SendDocumentFormPartsAdditionData, id: string) => {
-        setForms(fs => {
-            return [...fs.filter(sig => sig.id !== id), value];
-        });
+    const updateFormDetails = (value: SendDocumentFormPartsAdditionData) => {
+        const updatedDetails = forms.map(form => (form.id === value.id ? { ...form, ...value } : form));
+
+        setForms(updatedDetails);
     };
     return (
         <WorkflowCard
@@ -88,7 +88,7 @@ function FormSelection({ policy, ctiCallNumber, transactionTypes, formDetails, s
                     <div className="grow">
                         <TransactionDocumentSelection
                             formDetails={form}
-                            setFormDetails={val => updateFormDetails({ ...val, id: form.id }, form.id)}
+                            setFormDetails={val => updateFormDetails({ ...val, id: form.id })}
                             policy={policy}
                             ctiCallNumber={ctiCallNumber}
                             transactionTypes={transactionTypes}
