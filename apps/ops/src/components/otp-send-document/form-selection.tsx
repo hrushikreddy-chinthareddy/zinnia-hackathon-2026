@@ -83,9 +83,9 @@ function FormSelection({ policy, ctiCallNumber, transactionTypes, formDetails, s
             title={t(`tabs.formSelection`)}
             footerContent={<SendDocumentNavigationButtons handleContinue={handleContinue} handleCancel={handleCancel} />}
         >
-            {forms?.map(form => (
-                <div className=" bg-gray-50 p-5 flex" key={form.id}>
-                    <div className="my-4 grow">
+            {forms?.map((form, index) => (
+                <div className=" bg-gray-50 p-5 flex my-4" key={form.id}>
+                    <div className="grow">
                         <TransactionDocumentSelection
                             formDetails={form}
                             setFormDetails={val => updateFormDetails({ ...val, id: form.id }, form.id)}
@@ -95,13 +95,15 @@ function FormSelection({ policy, ctiCallNumber, transactionTypes, formDetails, s
                             key={form.id}
                         />
                     </div>
-                    <NavElement
-                        size={NavElementSize.Small}
-                        type={NavElementType.Button}
-                        startIcon={<TrashDocumentIcon width={20} height={20} />}
-                        onClick={() => removeFilter(form.id)}
-                        variant={NavElementVariant.Secondary}
-                    ></NavElement>
+                    {index > 0 && (
+                        <NavElement
+                            size={NavElementSize.Small}
+                            type={NavElementType.Button}
+                            startIcon={<TrashDocumentIcon width={20} height={20} />}
+                            onClick={() => removeFilter(form.id)}
+                            variant={NavElementVariant.Secondary}
+                        ></NavElement>
+                    )}
                 </div>
             ))}
             <div>
