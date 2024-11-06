@@ -85,8 +85,7 @@ const SendDocument = ({ policy, transactionTypes, shouldShowCaseButton, shouldSh
                 attachmentType: 'form',
                 displayName: formDetails?.document.selected?.formDisplayName ?? '',
                 formId: formDetails?.document.selected?.formId.toString() ?? '',
-                formName: formDetails?.document.selected?.formDisplayName ?? '',
-                formShortName: formDetails?.document.selected?.formShortName ?? '',
+                formName: formDetails?.document.selected?.formShortName ?? '',
             },
         ];
 

@@ -58,7 +58,6 @@ export type AttachmentDetails = {
     displayName: string;
     formName: string;
     attachmentType: string;
-    formShortName?:string;
 };
 
 export type CorrespondenceActions =
