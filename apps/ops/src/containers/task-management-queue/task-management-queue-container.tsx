@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 import Button, { ButtonSize, ButtonType, ButtonVariant } from '@deps/components/button/button';
 import { TranslationFiles } from '@deps/config/translations';
-import { ManagementTask } from '@deps/models/case/task-instance';
+import { AssignedTask } from '@deps/models/case/task-instance';
 import { claimNextTask } from '@deps/queries/api/v1/claim-task';
 import { getAssignedTasks } from '@deps/queries/api/v1/task';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
@@ -18,7 +18,7 @@ type TaskManagementQueueProps = {
 
 const TaskManagementQueue = ({featureFlagDecisions} : TaskManagementQueueProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'taskManagementQueue' });
-    const [taskDetails, setTaskDetails] = useState<ManagementTask[]>([]);
+    const [taskDetails, setTaskDetails] = useState<AssignedTask[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 

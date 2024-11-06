@@ -9,15 +9,15 @@ import TransactionNavigationButtons, { ParentPage } from "@deps/components/trans
 import WorkflowCard from "@deps/components/workflows/workflow-card/workflow-card";
 import { TranslationFiles } from '@deps/config/translations';
 import { CarrierToCarrierTitleMap } from '@deps/constants/page-title';
-import { FormErrors } from '@deps/containers/otp/reg60-forms/components/form-errors';
+import { FormErrors } from '@deps/containers/otp/withdrawal-forms/components/form-errors';
 import { DiaryNotesContext } from '@deps/contexts/DiaryNotesContext';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { isNonProductionEnvironment } from '@deps/utils/environment.helper';
 import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
 import { DocumentData } from '@deps/models/case/document';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
+import { isNonProductionEnvironment } from '@deps/utils/environment.helper';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { getCaseType, getFormParts } from './form-entry-step.helper';
@@ -139,7 +139,7 @@ function FormEntryStep({document, clientCode, docType} : FormEntryStepProps) {
                     </div>
                 )}
                 {formParts}
-                <FormErrors taskApiError={taskApiError}></FormErrors>
+                <FormErrors  t={withdrawalTxt} taskApiError={taskApiError}></FormErrors>
                 <div className="my-2">
                 {!areDiaryNotesViewed && !isFormStateReadOnly && (
                     <AssistiveText

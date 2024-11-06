@@ -4,6 +4,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import { buildTaskLink } from '@deps/components/tasks-listing/task-listing.helpers';
 import { TranslationFiles } from '@deps/config/translations';
+import { ProcessesToCaseTypeMap } from '@deps/constants/case';
 import NigoEntryContainer from '@deps/containers/nigo-entry-container/components/nigo-entry-container';
 import { NigoEntryProvider } from '@deps/containers/nigo-entry-container/components/nigo-entry-provider';
 import { getNigoExceptions } from '@deps/containers/nigo-entry-container/components/steps/nigo-details/nigo-details.helper';
@@ -33,7 +34,7 @@ import { FEATURE_FLAGS, FeatureKeyIdentifier } from '@deps/utils/optimizely/flag
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logWarn, logError, getUserInfoFromUser, parseErrorInformation, logInfo } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
-import { ProcessesToCaseTypeMap } from '@deps/constants/case';
+
 import { ERROR_CODES } from '../create-case/error';
 
 export type TransactionDetails = {
@@ -214,16 +215,15 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
-
             const shouldShowNigoEntry = isNigoEntryEnabled(clientCode, caseType, featureFlagDecisions);
             // If feature flag is not enabled, redirect to error page
             if (!shouldShowNigoEntry) {
                logWarn('nigo_entry::feature flag not enabled', { taskId, clientCode });
                return {
-                   redirect: {
+                    redirect: {
                        destination: '/403',
                        permanent: false,
-                   },
+                    },
                };
             }
 

@@ -1,4 +1,5 @@
 import { AdditionalDataInstance } from './additional-data-instance';
+import { IdentifierInstance } from './identifier-instance';
 
 /**
  * open, closed are statuses
@@ -52,4 +53,29 @@ export type TaskComment = {
     description?: string | null;
     noteId?: number | null;
     submissionDate?: string | null;
+};
+
+
+export type AssignedTask<T = TaskStatus> = {
+    id: string;
+    caseId: string;
+    source: string;
+    templateId: string
+    process: string;
+    carrier: string;
+    taskType: string;
+    taskName: string;
+    status: T;
+    queue: string;
+    escalated: boolean;
+    assignee: string;
+    assigneePartyId: string;
+    assignedAt: string;
+    createdBy: string;
+    createdByPartyId: string;
+    createdAt: string;
+    updatedBy: string;
+    updatedByPartyId: string;
+    updatedAt: string;
+    identifiers: IdentifierInstance[];
 };
