@@ -35,7 +35,7 @@ const ConfirmStep = ({ caseId, taskId, taskType }: ConfirmStepProps) => {
             if (response && response.id) {
                 setSubmitFailed(false);
             } else {
-                setSubmitFailed(true);
+                setSubmitFailed(false);
             }
             setIsLoading(false);
         },

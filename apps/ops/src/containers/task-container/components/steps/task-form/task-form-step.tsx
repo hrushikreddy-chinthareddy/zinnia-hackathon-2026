@@ -24,10 +24,12 @@ const TaskFormStep = ({ taskType, isSummaryView = false, taskInfoLink }: TaskFor
     const formRef = createRef<Form>();
 
     const handleStepContinue = useCallback(() => {
-        const isValid = formRef.current?.validateForm();
-        if (isValid) {
-            formRef.current?.submit();
-        }
+        // TODO: Apply Form validation and remove goToNext call
+        // const isValid = formRef.current?.validateForm();
+        // if (isValid) {
+        //     formRef.current?.submit();
+        // }
+        goToNext();
     }, [formRef]);
 
     const handleSubmit = useCallback(() => {
