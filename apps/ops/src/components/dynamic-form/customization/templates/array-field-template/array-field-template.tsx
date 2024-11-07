@@ -26,7 +26,7 @@ function ArrayFieldTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
         ButtonTemplates: { AddButton },
     } = registry.templates;
     return (
-        <Box>
+        <Box className="pl-2">
             <Card variant="classic">
                 <ArrayFieldTitleTemplate
                     idSchema={idSchema}
@@ -43,13 +43,13 @@ function ArrayFieldTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
                     uiSchema={uiSchema}
                     registry={registry}
                 />
-                <Flex direction="column" key={`array-item-list-${idSchema.$id}`} className="border-t padding-left-30">
+                <Flex direction="column" key={`array-item-list-${idSchema.$id}`} className="border-t px-30 my-4">
                     {items &&
                         items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
                             <ArrayFieldItemTemplate key={key} {...itemProps} />
                         ))}
                     {canAdd && (
-                        <Flex direction="column" align="start">
+                        <Flex direction="column" align="start" className="px-5 pt-5">
                             <AddButton
                                 className="array-item-add"
                                 title={idSchema.$id}

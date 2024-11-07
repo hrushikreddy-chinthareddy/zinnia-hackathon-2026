@@ -52,7 +52,7 @@
                     }
                 ],
                 "employment": {
-                    "employmentStatus": "ACTIVE",
+                    "employmentStatus": "DISABLED",
                     "occupation": "Software Engineer"
                 }
             }

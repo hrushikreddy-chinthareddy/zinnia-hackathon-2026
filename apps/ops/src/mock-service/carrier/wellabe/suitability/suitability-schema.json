@@ -406,6 +406,7 @@
                 "minItems": 1,
                 "items": {
                     "type": "object",
+                    "title": "Party",
                     "properties": {
                         "partyType": {
                             "type": "string",
@@ -476,6 +477,7 @@
                             "type": "array",
                             "title": "Government ID Information",
                             "items": {
+                                "title": "Government ID",
                                 "type": "object",
                                 "properties": {
                                     "govtId": {
@@ -505,7 +507,7 @@
                             "title": "Addresses",
                             "items": {
                                 "type": "object",
-                                "title": "",
+                                "title": "Address",
                                 "properties": {
                                     "addressType": {
                                         "type": "string",
@@ -893,8 +895,9 @@
                         "title": "Distribution Methods",
                         "items": {
                             "type": "string",
-                            "title": ""
-                        }
+                            "$ref": "#/definitions/financialObjectives_buyingReasonEnum"
+                        },
+                        "uniqueItems": true
                     },
                     "firstPayoutOption": {
                         "type": "string",
@@ -1173,10 +1176,9 @@
             }
         },
         "parties": {
+            "ui:options": {},
             "items": {
-                "ui:options": {
-                    "label": false
-                },
+                "ui:options": {},
                 "partyType": {
                     "ui:options": {
                         "help": "Applicant's type",
@@ -1393,9 +1395,7 @@
                 "govtIdInfo": {
                     "ui:options": {},
                     "items": {
-                        "ui:options": {
-                            "label": false
-                        },
+                        "ui:options": {},
                         "govtId": {
                             "ui:options": {}
                         },
@@ -1623,9 +1623,7 @@
                 }
             },
             "sourceOfIncomeOther": {
-                "ui:options": {
-                    "label": false
-                }
+                "ui:options": {}
             },
             "materialChangeExp": {
                 "ui:widget": "radio",
@@ -1638,9 +1636,7 @@
                 }
             },
             "materialChangeReason": {
-                "ui:options": {
-                    "label": false
-                }
+                "ui:options": {}
             },
             "materialChangeDetails": {
                 "items": {
@@ -1715,16 +1711,8 @@
                     }
                 }
             },
-            "federalTaxBand": {
-                "ui:options": {
-                    "label": false
-                }
-            },
-            "otherTaxBand": {
-                "ui:options": {
-                    "label": false
-                }
-            }
+            "federalTaxBand": {},
+            "otherTaxBand": {}
         },
         "financialExperience": {
             "ui:options": {
@@ -1785,10 +1773,10 @@
                     }
                 },
                 "totalAsset": {
-                    "ui:options": {
-                        "label": false
-                    },
                     "items": {
+                        "ui:options": {
+                            "label": false
+                        },
                         "qualificationType": {
                             "ui:widget": "radio",
                             "ui:options": {
@@ -1832,12 +1820,7 @@
                     ]
                 }
             },
-            "riskToleranceDesc": {
-                "ui:options": {
-                    "inline": true,
-                    "label": false
-                }
-            },
+            "riskToleranceDesc": {},
             "annuityFitsRiskTolerance": {
                 "ui:widget": "radio",
                 "ui:options": {
@@ -1866,11 +1849,7 @@
                     ]
                 }
             },
-            "buyingReasonDetails": {
-                "ui:options": {
-                    "label": false
-                }
-            },
+            "buyingReasonDetails": {},
             "annuityMeetsFinancialNeeds": {
                 "ui:options": {
                     "inline": true,
@@ -1885,57 +1864,21 @@
             "ui:options": {
                 "classNames": "divider"
             },
-            "fundsAccessExplanation": {
-                "ui:options": {
-                    "label": false
-                }
-            },
+            "fundsAccessExplanation": {},
             "distributionMethods": {
-                "ui:options": {
-                    "label": false
+                "items": {
+                    "ui:label": false
                 }
             },
-            "firstPayoutOption": {
-                "ui:options": {
-                    "label": false
-                }
-            },
-            "surrenderChargeConsent": {
-                "ui:options": {
-                    "label": false
-                }
-            },
-            "possibleReductionInValue": {
-                "ui:options": {
-                    "label": false
-                }
-            },
-            "planToHoldAnnuity": {
-                "ui:options": {
-                    "label": false
-                }
-            },
-            "explainedOtherCharges": {
-                "ui:options": {
-                    "label": false
-                }
-            },
+            "firstPayoutOption": {},
+            "surrenderChargeConsent": {},
+            "possibleReductionInValue": {},
+            "planToHoldAnnuity": {},
+            "explainedOtherCharges": {},
             "benefitAnnuityQuestions": {
-                "understandIncomeAdjustmentFactor": {
-                    "ui:options": {
-                        "label": false
-                    }
-                },
-                "consideredFinancialNeedsAfter10Years": {
-                    "ui:options": {
-                        "label": false
-                    }
-                },
-                "planForIncomeDecreaseAfter10Years": {
-                    "ui:options": {
-                        "label": false
-                    }
-                }
+                "understandIncomeAdjustmentFactor": {},
+                "consideredFinancialNeedsAfter10Years": {},
+                "planForIncomeDecreaseAfter10Years": {}
             }
         },
         "agentAcknowledgment": {
@@ -1961,11 +1904,7 @@
                         ]
                     }
                 },
-                "saleDetails": {
-                    "ui:options": {
-                        "label": false
-                    }
-                },
+                "saleDetails": {},
                 "productDetails": {
                     "ui:options": {
                         "classNames": "divider"
@@ -2001,142 +1940,50 @@
                 "ui:options": {
                     "classNames": "divider"
                 },
-                "evaluatedInformation": {
-                    "ui:options": {
-                        "label": false
-                    }
-                },
-                "informedOfFeatures": {
-                    "ui:options": {
-                        "label": false
-                    }
-                },
-                "communicatedBasis": {
-                    "ui:options": {
-                        "label": false
-                    }
-                },
-                "disclosureRetention": {
-                    "ui:options": {
-                        "label": false
-                    }
-                }
+                "evaluatedInformation": {},
+                "informedOfFeatures": {},
+                "communicatedBasis": {},
+                "disclosureRetention": {}
             },
             "disclosureAcknowledgement": {
                 "ui:options": {
                     "classNames": "divider"
                 },
-                "scopeAndTerms": {
-                    "ui:options": {
-                        "label": false
-                    }
-                },
-                "typesOfProducts": {
-                    "ui:options": {
-                        "label": false
-                    }
-                },
-                "authorizedInsurers": {
-                    "ui:options": {
-                        "label": false
-                    }
-                },
-                "compensationDescription": {
-                    "ui:options": {
-                        "label": false
-                    }
-                },
-                "rightToRequestInfo": {
-                    "ui:options": {
-                        "label": false
-                    }
-                },
-                "compensationEstimate": {
-                    "ui:options": {
-                        "label": false
-                    }
-                },
-                "conflictsOfInterest": {
-                    "ui:options": {
-                        "label": false
-                    }
-                },
-                "productAdvantages": {
-                    "ui:options": {
-                        "label": false
-                    }
-                },
-                "productCons": {
-                    "ui:options": {
-                        "label": false
-                    }
-                }
+                "scopeAndTerms": {},
+                "typesOfProducts": {},
+                "authorizedInsurers": {},
+                "compensationDescription": {},
+                "rightToRequestInfo": {},
+                "compensationEstimate": {},
+                "conflictsOfInterest": {},
+                "productAdvantages": {},
+                "productCons": {}
             }
         },
         "additionalInfo": {
             "ui:options": {
                 "classNames": "divider"
             },
-            "currentResidenceOption": {
-                "ui:options": {
-                    "label": false
-                }
-            },
-            "assistedLivingFacilityInd": {
-                "ui:options": {
-                    "label": false
-                }
-            },
-            "extraFundAvailable": {
-                "ui:options": {
-                    "label": false
-                }
-            },
-            "existingPoliciesSoldByAgent": {
-                "ui:options": {
-                    "label": false
-                }
-            },
+            "currentResidenceOption": {},
+            "assistedLivingFacilityInd": {},
+            "extraFundAvailable": {},
+            "existingPoliciesSoldByAgent": {},
             "consideredOtherInsuranceNeeds": {
                 "ui:options": {
                     "label": false
                 }
             },
-            "resideInNursingHomeOrAssistedLiving": {
-                "ui:options": {
-                    "label": false
-                }
-            },
-            "noOfDependents": {
-                "ui:options": {
-                    "label": false
-                }
-            },
-            "otherDependents": {
-                "ui:options": {
-                    "label": false
-                }
-            }
+            "resideInNursingHomeOrAssistedLiving": {},
+            "noOfDependents": {},
+            "otherDependents": {}
         },
         "californiaResidentQuestions": {
             "ui:options": {
                 "classNames": "divider"
             },
-            "applyForMeansTestedBenefits": {
-                "ui:options": {
-                    "label": false
-                }
-            },
-            "buyingForGovernmentBenefits": {
-                "ui:options": {
-                    "label": false
-                }
-            },
-            "reverseMortgage": {
-                "ui:options": {
-                    "label": false
-                }
-            }
+            "applyForMeansTestedBenefits": {},
+            "buyingForGovernmentBenefits": {},
+            "reverseMortgage": {}
         },
         "signatureInfo": {
             "ui:options": {
@@ -2151,21 +1998,9 @@
                         ]
                     }
                 },
-                "signatoryName": {
-                    "ui:options": {
-                        "label": false
-                    }
-                },
-                "signatureDate": {
-                    "ui:options": {
-                        "label": false
-                    }
-                },
-                "signatureCity": {
-                    "ui:options": {
-                        "label": false
-                    }
-                },
+                "signatoryName": {},
+                "signatureDate": {},
+                "signatureCity": {},
                 "signatureState": {
                     "ui:options": {
                         "enumNames": [

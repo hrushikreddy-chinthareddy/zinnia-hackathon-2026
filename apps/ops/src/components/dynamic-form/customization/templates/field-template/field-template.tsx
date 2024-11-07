@@ -15,7 +15,7 @@ export function FieldTemplate(props: FieldTemplateProps) {
     const fieldLabel = label ? `${label} ${required ? '*' : ''}` : '';
     return (
         <>
-            <div>{classNames?.indexOf('divider') !== -1 && <Divider direction="horizontal" color="subtle" />}</div>
+            <>{classNames?.indexOf('divider') !== -1 && <Divider direction="horizontal" color="subtle" />}</>
             <div className={styles.children}>
                 {displayLabel && (
                     <Label labelFor={id} interactiveElements={[helpInformation]}>

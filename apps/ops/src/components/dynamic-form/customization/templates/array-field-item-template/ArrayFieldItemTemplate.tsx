@@ -29,9 +29,9 @@ export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSche
     };
     return (
         <div>
-            <div className="mb-2  d-flex align-items-center">
-                <div>{children}</div>
-                <div className="py-4">
+            <div className="px-4 flex">
+                <div className="flex w-full">{children}</div>
+                <div className="py-5 ml-auto">
                     {hasToolbar && (
                         <div className="d-flex flex-row">
                             {(hasMoveUp || hasMoveDown) && (
@@ -69,7 +69,7 @@ export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSche
                                 </div>
                             )}
                             {hasRemove && (
-                                <div className="m-0 p-0">
+                                <div className="m-0 pr-4">
                                     <RemoveButton
                                         style={btnStyle}
                                         disabled={disabled || readonly}
