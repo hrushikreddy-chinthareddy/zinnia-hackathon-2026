@@ -338,7 +338,7 @@ export class TransformedCase {
         this.exceptionMap = caseDetails?.exceptions?.reduce((acc, exception) => {
             if (exception?.id) {
                 acc[exception.id] = exception;
-                if (![ExceptionStatuses.Resolved, Statuses.Completed].includes(exception.status as ExceptionStatuses | Statuses)) {
+                if (![ExceptionStatuses.Resolved, Statuses.Completed, Statuses.Overridden].includes(exception.status as ExceptionStatuses | Statuses)) {
                     this.unresolvedExceptionCount++;
                 }
             }
@@ -387,7 +387,7 @@ export class TransformedCase {
     }
     // Builds an ExceptionView from an ExceptionInstance
     private buildException(exception: ExceptionInstance): ExceptionView {
-        const exceptionReason = toSentenceCase(exception?.detailedReason ?? exception?.reason);
+        const exceptionReason = toSentenceCase(exception?.detailedReason ? exception?.detailedReason : exception?.reason);
         const tasks: TaskView[] = (
             (exception.taskIdList || ([] as string[]))
                 .map(taskId => {
@@ -396,7 +396,7 @@ export class TransformedCase {
                 .filter(Boolean) as TaskView[]
         ).sort(taskSorter);
         const description = this.t(
-            [Statuses.Completed, ExceptionStatuses.Resolved].includes(exception.status)
+            [Statuses.Completed, ExceptionStatuses.Resolved, ExceptionStatuses.Overridden].includes(exception.status)
                 ? 'caseOverview.tabs.resolved'
                 : 'caseOverview.tabs.issue',
             { issue: exceptionReason }
