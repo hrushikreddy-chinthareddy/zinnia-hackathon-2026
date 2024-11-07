@@ -1,17 +1,16 @@
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 
 import 'react-pdf/dist/Page/TextLayer.css';
 
-import { SimpleOption } from '@deps/components/autocomplete/autocomplete.types';
 import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { SendDocumentFormParts } from '@deps/models/case/send-document';
+import { AvailableFormsTransaction, SendDocumentFormParts } from '@deps/models/case/send-document';
 import { Policy } from '@deps/models/policy/sor-policy';
 
 import TransactionDocumentSelection from './transaction-document-selection';
@@ -19,16 +18,18 @@ import { useNigoEntry } from '../../nigo-entry-provider';
 
 type FormSelectionProps = {
     policy: Policy;
-    transactionTypes: SimpleOption[];
+    availableFormsTransactions: AvailableFormsTransaction[];
     ctiCallNumber?: string;
 };
 
-function FormSelectionStep({ transactionTypes, policy, ctiCallNumber = '' }: FormSelectionProps) {
+function FormSelectionStep({ availableFormsTransactions, policy, ctiCallNumber = '' }: FormSelectionProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.formSelection' });
     const { goToNext } = useWorkflow();
     const [error, setError] = useState<string>('');
     const { transactionType, transactionSubType, document, setTransactionType, setTransactionSubType, setDocument } = useNigoEntry();
-
+    const transactionTypes = availableFormsTransactions?.map(transaction => {
+        return { label: transaction.name, value: transaction.id };
+    });
     const [formDetails, setFormDetails] = useState<SendDocumentFormParts>({
         transactionType,
         transactionSubType,
@@ -115,7 +116,7 @@ function FormSelectionStep({ transactionTypes, policy, ctiCallNumber = '' }: For
                 ctiCallNumber={ctiCallNumber}
                 formDetails={formDetails}
                 setFormDetails={setFormDetails}
-                transactionTypes={transactionTypes}
+                availableFormsTransactions={availableFormsTransactions}
             />
             {error && <AssistiveText text={error} variant={AssistiveTextVariant.Error} className="mt-2" />}
         </WorkflowCard>
