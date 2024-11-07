@@ -4,16 +4,15 @@ import React, { useState } from 'react';
 
 import 'react-pdf/dist/Page/TextLayer.css';
 
-import Autocomplete from '@deps/components/autocomplete/autocomplete';
 import { SimpleOption } from '@deps/components/autocomplete/autocomplete.types';
 import { FieldSize } from '@deps/components/fields/field';
 import SendDocument from '@deps/components/otp-send-document/components/document';
 import { Loader } from '@deps/components/page-loader';
+import SelectSimple from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { AvailableFormsTransaction, SendDocumentFormParts } from '@deps/models/case/send-document';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { searchForms } from '@deps/queries/api/c2web';
-
 type FormSelectionProps = {
     policy: Policy;
     ctiCallNumber: string;
@@ -107,7 +106,7 @@ function TransactionDocumentSelection({
 
     return (
         <>
-            <Autocomplete
+            <SelectSimple
                 className="max-w-xs"
                 label={t(`formSelection.transactionType`) as string}
                 options={transactionTypes}
@@ -118,7 +117,7 @@ function TransactionDocumentSelection({
                 labelTooltip={t(`formSelection.transactionType`) as string}
                 labelTooltipBody={t(`formSelection.transactionType`) as string}
             />
-            <Autocomplete
+            <SelectSimple
                 className="my-4 max-w-xs"
                 label={t(`formSelection.transactionSubType`) as string}
                 options={transactionSubTypeOptions}
