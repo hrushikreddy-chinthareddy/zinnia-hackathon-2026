@@ -27,9 +27,12 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
         [onSubmit, setFormData]
     );
 
-    const handleChange = useCallback(() => {
-        setFormData(formData);
-    }, [formData, setFormData]);
+    const handleChange = useCallback(
+        (event: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
+            setFormData(event.formData);
+        },
+        [setFormData]
+    );
 
     return (
         <DynamicForm

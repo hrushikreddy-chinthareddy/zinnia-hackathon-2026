@@ -24,12 +24,10 @@ const TaskFormStep = ({ taskType, isSummaryView = false, taskInfoLink }: TaskFor
     const formRef = createRef<Form>();
 
     const handleStepContinue = useCallback(() => {
-        // TODO: Apply Form validation and remove goToNext call
-        // const isValid = formRef.current?.validateForm();
-        // if (isValid) {
-        //     formRef.current?.submit();
-        // }
-        goToNext();
+        const isValid = formRef.current?.validateForm();
+        if (isValid) {
+            formRef.current?.submit();
+        }
     }, [formRef]);
 
     const handleSubmit = useCallback(() => {
@@ -43,7 +41,7 @@ const TaskFormStep = ({ taskType, isSummaryView = false, taskInfoLink }: TaskFor
             subtitle={t('subTitle') as string}
             footerContent={
                 <TransactionNavigationButtons
-                    submitLabel={t('submitLabel') as string}
+                    submitLabel={isSummaryView ? (t('submitLabel') as string) : (t('continueLabel') as string)}
                     cancelLabel={t('cancelLabel') as string}
                     isSubmit={true}
                     handleContinue={handleStepContinue}
