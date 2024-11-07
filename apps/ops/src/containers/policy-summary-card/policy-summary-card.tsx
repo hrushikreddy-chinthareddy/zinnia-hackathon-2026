@@ -24,6 +24,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { FormattedAddress, sortAddressesByType } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
 import QuickLinks, { QuickLinksProps } from '@deps/containers/quick-links/quick-links';
 import SideSheetProductDetails from '@deps/containers/side-sheet-product-details/side-sheet-product-details';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { PolicyDetailsViewInfo, PolicyViewDetailsDto, toPolicyViewDetailsDto } from '@deps/data/policy-details-view';
@@ -50,6 +51,7 @@ import { DashboardContext } from '@deps/pages/policies';
 import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
 import { DEFAULT_ERROR_STRING, DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
 import { SearchViewQuery } from '@deps/types/search';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import AnnuityQuickView from './active-quick-view/annuity';
 import EverlyIul from './active-quick-view/everly-iul';
@@ -382,6 +384,8 @@ const LapseQuickView = ({ policy }: BasePolicyComponentArgs) => {
 const StatusBanner = ({ policy }: BasePolicyComponentArgs) => {
     const { t } = useTranslation();
     const policyStatus = policy.policyStatus;
+    const { featureFlags } = useOptimizely();
+    const freeLookEnabled = featureFlags[FEATURE_FLAGS.POLICY_FREE_LOOK_CANCELLATION];
 
     if (policyStatus === PolicyStatus.PENDINGLAPSE) {
         return (
@@ -417,16 +421,12 @@ const StatusBanner = ({ policy }: BasePolicyComponentArgs) => {
         );
     }
 
-    // TODO: add a feature flag
-    if (policy.isInActiveFreeLookPeriod) {
-        const freeLookFeature = policy.features.getFirstFeatureByType(PolicyFeatureFeatureType.freelook);
-        console.log('is in active free look period', freeLookFeature);
-
+    if (freeLookEnabled && policy.freeLookPeriodDetails.isInFreeLookPeriod) {
         return (
             <BannerAlert
                 variant={BannerVariant.Warning}
                 bodyText={`${t('dashboard.search.results.policySummaryCard.freeLookCancelBannerText')} ${convertKebabedDateString(
-                    freeLookFeature?.endDate
+                    policy.freeLookPeriodDetails?.endDate
                 )}`}
                 cta={{
                     href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/freelook/cancel-freelook/`,

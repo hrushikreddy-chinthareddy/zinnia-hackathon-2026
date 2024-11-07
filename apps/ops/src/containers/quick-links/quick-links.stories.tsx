@@ -28,7 +28,7 @@ export const QuickLinksComponent = () => {
                 planCode="planCode"
                 policyNumber="123456"
                 userPartyId="userPartyId"
-                policy={{ isLife: true, isInActiveFreeLookPeriod: true } as PolicyDetails}
+                policy={{ isLife: true, freeLookPeriodDetails: { isInFreeLookPeriod: true } } as PolicyDetails}
             />
         </div>
     );

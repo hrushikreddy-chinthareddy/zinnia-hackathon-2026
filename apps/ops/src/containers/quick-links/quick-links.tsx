@@ -107,7 +107,7 @@ const QuickLinks = ({ links, planCode, policyNumber, policy, userPartyId }: Quic
         eligibleAutopay: isEligibleManageAutopay,
         eligiblePremium: isEligibleNewPremium,
         eligibleWithdrawal: isEligibleWithdrawal,
-        eligibleFreeLookCancel: policy.isInActiveFreeLookPeriod,
+        eligibleFreeLookCancel: policy.freeLookPeriodDetails.isInFreeLookPeriod,
     };
 
     function onOpenChange(open: boolean) {
