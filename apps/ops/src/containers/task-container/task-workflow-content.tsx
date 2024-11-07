@@ -72,7 +72,7 @@ export const TaskWorkflowContent = ({ steps, policy, documentNumber = '', docTyp
                     tooltip={tooltip}
                     variant={variant}
                     showJointOwner={showJointOwner}
-                    showDocument={true}
+                    showDocument={false}
                     documentNumber={documentNumber}
                     showLink={false}
                 />
