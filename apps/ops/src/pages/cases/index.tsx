@@ -62,6 +62,7 @@ interface CaseManagementDashboardProps extends SegmentTrackedPageProps {
 
 const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: CaseManagementDashboardProps) => {
     const [caseManagementFilters, setCaseManagementFilters] = useCaseFilterQueryStore();
+    const limit = 25;
     const [loadedStoredFilters, setLoadedStoredFilters] = useState(false);
     const handleCreatedBySort = useCallback(() => {
         setCaseManagementFilters(prevFilters => ({
@@ -144,7 +145,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
             const updatedRequest: CaseSearchQuery = {
                 ...additionalFilters,
                 ...searchValueObject,
-                limit: caseManagementFilters.limit,
+                limit: limit,
                 offset: caseManagementFilters.offset,
                 sortDirection: caseManagementFilters.sortDirection,
                 sortBy: caseManagementFilters.sortBy || 'createdAt',
@@ -180,7 +181,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         caseManagementFilters.searchValue,
         caseManagementFilters.additionalFilters,
         caseManagementFilters.offset,
-        caseManagementFilters.limit,
+        limit,
         caseManagementFilters.sortDirection,
     ]);
 
@@ -288,21 +289,14 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         const goToPage = (pageNumber: number) => {
             setCaseManagementFilters(prevFilters => ({
                 ...prevFilters,
-                offset: (pageNumber - 1) * caseManagementFilters.limit,
+                offset: (pageNumber - 1) * limit,
             }));
 
             window.scrollTo(0, 0);
         };
 
-        return (
-            <PaginationControls
-                total={caseTableData.total}
-                limit={caseManagementFilters.limit}
-                offset={caseManagementFilters.offset}
-                goToPage={goToPage}
-            />
-        );
-    }, [caseTableData.total, caseManagementFilters.limit, caseManagementFilters.offset, setCaseManagementFilters]);
+        return <PaginationControls total={caseTableData.total} limit={limit} offset={caseManagementFilters.offset} goToPage={goToPage} />;
+    }, [caseTableData.total, caseManagementFilters.offset, limit, setCaseManagementFilters]);
 
     const tableContent = useMemo(() => {
         const { cases, loading, error } = caseTableData;
@@ -404,7 +398,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                         <div className="mb-6 lg:mb-0">
                             {t('policy.documents.xToYOfZ', {
                                 x: caseManagementFilters.offset + 1,
-                                y: Math.min(caseManagementFilters.offset + caseManagementFilters.limit, caseTotals.All),
+                                y: Math.min(caseManagementFilters.offset + limit, caseTotals.All),
                                 z: caseTotals.All,
                             })}
                         </div>

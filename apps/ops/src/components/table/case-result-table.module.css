@@ -19,10 +19,12 @@
     position: absolute;
     width: 100%;
     &:focus,
+    &:focus-visible,
     &:hover {
         border-radius: 0;
         color: transparent;
         z-index: 1;
+        outline-color: var(--color-semantics-color-semantic-focus);
     }
     &:hover {
         &:after {

@@ -14,6 +14,7 @@ import dayjs from 'dayjs';
 import advanced from 'dayjs/plugin/advancedFormat';
 import timezone from 'dayjs/plugin/timezone';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 
@@ -134,7 +135,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
     return (
         <TableRow className={styles.row}>
             {/* This lives as a visibly hidden link instead of as a click handler on the table row for acccessibility concerns. Nested interactive elements are not allowed */}
-            <a
+            <Link
                 onClick={() => loadCaseDetails(`/cases/${singleCase.id}/${CaseDetailsTabValues.progress}`)}
                 href={`/cases/${singleCase.id}/${CaseDetailsTabValues.progress}`}
                 className={styles.caseLink}
@@ -143,7 +144,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                 <Typography variant={TypographyVariant.BodySm} className={styles.caseLinkText}>
                     View Case
                 </Typography>
-            </a>
+            </Link>
             <TableCell>
                 <div className="flex flex-col">
                     <Typography variant={TypographyVariant.BodySm} className="block">
@@ -183,14 +184,8 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                         triggerClassName="!z-10"
                         trigger={
                             <div className="flex items-center justify-center rounded border-2 border-gray-100 bg-white">
-                                <Image
-                                    src={imageSrc}
-                                    alt={`${singleCase.carrier} icon`}
-                                    role="presentation"
-                                    aria-hidden="true"
-                                    height={24}
-                                    width={24}
-                                />
+                                <Image src={imageSrc} alt={`${singleCase.carrier} icon`} role="presentation" height={24} width={24} />
+                                <span className="sr-only">{singleCase.carrier} icon</span>
                             </div>
                         }
                     >

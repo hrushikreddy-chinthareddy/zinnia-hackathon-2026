@@ -6,15 +6,8 @@ import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 
 export type CaseStatusFilter = 'All' | Statuses.InProgress | Statuses.Exception;
 
-export const caseSearchPageSizeOptions = [
-    { value: '10', label: '10' },
-    { value: '25', label: '25' },
-    { value: '50', label: '50' },
-];
-
 export interface CaseSearchFilters {
     additionalFilters: CaseSearchAdditionalFilters;
-    limit: number;
     offset: number;
     total: number;
     sortBy: string;
@@ -52,7 +45,6 @@ export const initialAdditionalFilters: CaseSearchAdditionalFilters = {
 
 export const initialFilters: CaseSearchFilters = {
     additionalFilters: initialAdditionalFilters,
-    limit: 25,
     offset: 0,
     total: 0,
     sortBy: 'createdAt',
