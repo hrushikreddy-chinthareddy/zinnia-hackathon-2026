@@ -69,7 +69,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
             sortDirection: prevFilters.sortDirection === 'asc' ? 'desc' : 'asc',
             offset: 0,
         }));
-    }, []);
+    }, [setCaseManagementFilters]);
 
     const { t } = useTranslation();
 
@@ -81,8 +81,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         [Statuses.InProgress]: 0,
         [Statuses.Exception]: 0,
     });
-    const paginationStart = caseTotals.All === 0 ? 0 : 1;
-    const paginationEnd = caseTotals.All >= 25 ? 25 : caseTotals.All;
 
     // Data Fetcher(s)
     const fetchCaseStats = useCallback(async () => {
@@ -241,6 +239,8 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         }
 
         setLoadedStoredFilters(true);
+        // to do - this freaks out if I add the dep
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // Handler(s)
@@ -273,6 +273,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                 onToggle={handleToggle}
             />
         );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [caseManagementFilters.searchValue, caseManagementFilters.toggleValue]);
 
     const paginationControls = useMemo(() => {
@@ -293,7 +294,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                 goToPage={goToPage}
             />
         );
-    }, [caseTableData.total, caseManagementFilters.limit, caseManagementFilters.offset]);
+    }, [caseTableData.total, caseManagementFilters.limit, caseManagementFilters.offset, setCaseManagementFilters]);
 
     const tableContent = useMemo(() => {
         const { cases, loading, error } = caseTableData;
@@ -394,8 +395,8 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                     <div className="flex flex-col items-center lg:grid lg:grid-cols-3 mt-3">
                         <div className="mb-6 lg:mb-0">
                             {t('policy.documents.xToYOfZ', {
-                                x: paginationStart,
-                                y: paginationEnd,
+                                x: caseManagementFilters.offset + 1,
+                                y: Math.min(caseManagementFilters.offset + caseManagementFilters.limit, caseTotals.All),
                                 z: caseTotals.All,
                             })}
                         </div>
