@@ -17,7 +17,7 @@ export function ViewDetailsContent({ qualificationType, contractValue, policyDat
     const formattedPolicyDate = formatDate(policyDate);
     return (
         <div className="flex h-full flex-col">
-            <div className="overflow-y-scroll p-4 gap-4  ">
+            <div className="overflow-y-scroll pt-4 gap-4  ">
                 {qualificationType && <ViewDetailCard label="Qualification Type" value={qualificationType} />}
                 {contractValue && <ViewDetailCard label="Contract Value" value={`$ ${contractValue}`} />}
                 {policyDate && <ViewDetailCard label="Policy Date" value={formattedPolicyDate} />}
