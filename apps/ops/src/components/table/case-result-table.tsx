@@ -1,10 +1,6 @@
 import {
     Icon,
     IconType,
-<<<<<<< HEAD
-=======
-    Link,
->>>>>>> 556f0572c (adding the sort method for the table)
     Table,
     TableBody,
     TableCell,
