@@ -13,6 +13,7 @@ export type NigoEntryFormState = {
     transactionSubType: CallCenterElement<string, SimpleOption>;
     document: CallCenterElement<FormDetails, FormDetails>;
     formErrors: FormValidationErrors;
+    submitFailed: boolean;
     setFormData: React.Dispatch<React.SetStateAction<any>>;
     setIsReadyForDataEntry: React.Dispatch<React.SetStateAction<boolean>>;
     setExceptions: React.Dispatch<React.SetStateAction<string[]>>;
@@ -21,6 +22,8 @@ export type NigoEntryFormState = {
     setTransactionSubType: React.Dispatch<React.SetStateAction<CallCenterElement<string, SimpleOption>>>;
     setDocument:React.Dispatch<React.SetStateAction<CallCenterElement<FormDetails, FormDetails>>>;
     setFormErrors: React.Dispatch<React.SetStateAction<FormValidationErrors>>;
+    setSubmitFailed: React.Dispatch<React.SetStateAction<boolean>>;
+
 };
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -35,6 +38,7 @@ export const nigoEntryDefaultValues = {
     transactionSubType: {} as CallCenterElement<string, SimpleOption>,
     document: {} as CallCenterElement<FormDetails, FormDetails>,
     formErrors: {} as FormValidationErrors,
+    submitFailed: false,
     setIsReadyForDataEntry: noop,
     setExceptions: noop,
     setMessages: noop,
@@ -42,6 +46,7 @@ export const nigoEntryDefaultValues = {
     setTransactionSubType: noop,
     setDocument: noop,
     setFormErrors: noop,
+    setSubmitFailed: noop
 };
 
 export const NigoEntryContext = createContext<NigoEntryFormState>(nigoEntryDefaultValues);

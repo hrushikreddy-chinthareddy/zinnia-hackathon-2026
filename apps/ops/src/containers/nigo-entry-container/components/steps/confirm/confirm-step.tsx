@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
@@ -9,7 +9,7 @@ import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-ca
 import { TranslationFiles } from '@deps/config/translations';
 import { buildFormV2 } from '@deps/containers/otp/withdrawal-forms/utils/withdrawal-form-helper';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { useIsMounted } from '@deps/hooks/useIsMounted';
+//import { useIsMounted } from '@deps/hooks/useIsMounted';
 import { DocumentData } from '@deps/models/case/document';
 import { ApiVersion } from '@deps/models/case/enums';
 import { TaskApiVersionMapper } from '@deps/models/case/helpers';
@@ -24,17 +24,17 @@ interface ConfirmStepProps {
     clientCode?: string;
     document: DocumentData
 }
+
 const ConfirmStep = ({ document}: ConfirmStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.confirmStep' });
     const router = useRouter();
-    const { isReadyForDataEntry } = useNigoEntry();
+    const { isReadyForDataEntry, submitFailed, setSubmitFailed } = useNigoEntry();
     const formState = useContext(FormDataContext);
-    const [submitFailed, setSubmitFailed] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [timer] = useState(performance.now());
-    const isMounted = useIsMounted();
 
     const submit = useCallback(async () => {
+        setIsLoading(true);
         if (TaskApiVersionMapper[formState.initialForm.taskType] === ApiVersion.v2 && formState.initialForm.status !== TaskStatus.Completed) {
             const successfulCaseUpdate = await updateTask(
                 formState.initialForm.caseId,
@@ -53,13 +53,7 @@ const ConfirmStep = ({ document}: ConfirmStepProps) => {
         }
 
         setIsLoading(false);
-    }, [document, formState, timer]);
-
-    useEffect(() => {
-        if (isMounted()) {
-            submit();
-        }
-    }, [isMounted, submit]);
+    }, [document, formState, setSubmitFailed, timer]);
 
     if (isLoading) {
         return (
