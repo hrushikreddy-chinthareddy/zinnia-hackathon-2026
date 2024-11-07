@@ -14,17 +14,21 @@ import dayjs from 'dayjs';
 import advanced from 'dayjs/plugin/advancedFormat';
 import timezone from 'dayjs/plugin/timezone';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 
 import ChipStatus from '@deps/components/chip-status/chip-status';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { getAgents, getPolicyOwners } from '@deps/helpers/parties';
 import { formatSSN, toTitleCase } from '@deps/helpers/string.helper';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
 import { Case } from '@deps/models/case/case';
 import { CaseDetailsTabValues, DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { SearchViewQuery } from '@deps/types/search';
+import { SegmentTrackedEventName } from '@deps/types/segment-analytics';
 import { getCarrierLogoByClientId, getCarrierNameByClientId } from '@deps/utils/carriers';
 
 import styles from './case-result-table.module.css';
@@ -74,6 +78,9 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
     dayjs.extend(timezone);
     dayjs.extend(advanced);
     const { t } = useTranslation(TranslationFiles.COMMON);
+    const router = useRouter();
+    const perms = usePermissionsContext();
+
     const policyOwners = singleCase.parties ? getPolicyOwners(singleCase.parties) : [];
     const entities = policyOwners.slice(1).map(owner => ({ name: toTitleCase(owner.fullName), ssn: formatSSN(owner.ssn) }));
     const ownerName = policyOwners.length ? policyOwners?.[0]?.fullName : null;
@@ -115,10 +122,24 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
         return text;
     };
 
+    const loadCaseDetails = (href: string) => {
+        segmentAnalyticsTrackEvent(SegmentTrackedEventName.PolicyKeyValuesItemClick, {
+            caseId: singleCase.id,
+            userId: perms.getUserPartyId(),
+        });
+
+        router.push(href);
+    };
+
     return (
         <TableRow className={styles.row}>
             {/* This lives as a visibly hidden link instead of as a click handler on the table row for acccessibility concerns. Nested interactive elements are not allowed */}
-            <a href={`/cases/${singleCase.id}/${CaseDetailsTabValues.progress}`} className={styles.caseLink} aria-label={viewCaseText}>
+            <a
+                onClick={() => loadCaseDetails(`/cases/${singleCase.id}/${CaseDetailsTabValues.progress}`)}
+                href={`/cases/${singleCase.id}/${CaseDetailsTabValues.progress}`}
+                className={styles.caseLink}
+                aria-label={viewCaseText}
+            >
                 <Typography variant={TypographyVariant.BodySm} className={styles.caseLinkText}>
                     View Case
                 </Typography>
