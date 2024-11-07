@@ -4364,7 +4364,8 @@
             },
             "view": "View",
             "documentId": "Document ID",
-            "submitLabel": "Continue",
+            "submitLabel": "Submit",
+            "continueLabel": "Continue",
             "cancelLabel": "Cancel"
         },
         "confirmStep": {
