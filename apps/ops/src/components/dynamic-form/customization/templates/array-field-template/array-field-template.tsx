@@ -48,7 +48,7 @@ function ArrayFieldTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
                         items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
                             <ArrayFieldItemTemplate key={key} {...itemProps} />
                         ))}
-                    {canAdd && (
+                    {canAdd && !readonly && (
                         <Flex direction="column" align="start" className="px-5 pt-5">
                             <AddButton
                                 className="array-item-add"

@@ -68,7 +68,7 @@ export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSche
                                     />
                                 </div>
                             )} */}
-                            {hasRemove && (
+                            {hasRemove && !readonly && (
                                 <div className="m-0 pr-4">
                                     <RemoveButton
                                         style={btnStyle}
