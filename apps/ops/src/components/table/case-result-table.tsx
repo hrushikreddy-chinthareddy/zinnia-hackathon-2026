@@ -183,7 +183,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                         tooltipClassName="!w-auto"
                         triggerClassName="!z-10"
                         trigger={
-                            <div className="flex items-center justify-center rounded border-2 border-gray-100 bg-white">
+                            <div className="flex items-center justify-center rounded border-2 border-gray-100 bg-white h-6 w-6">
                                 <Image src={imageSrc} alt={`${singleCase.carrier} icon`} role="presentation" height={24} width={24} />
                                 <span className="sr-only">{singleCase.carrier} icon</span>
                             </div>
