@@ -12,6 +12,8 @@ interface CaseDetailFieldProps extends PiiProps {
     sentenceCase?: boolean;
     truncate?: boolean;
     highlights?: string[] | null;
+    popoverClassName?: string;
+    triggerClassName?: string;
 }
 
 const CaseDetailField = ({
@@ -21,13 +23,15 @@ const CaseDetailField = ({
     sentenceCase = true,
     truncate = false,
     pii = false,
+    popoverClassName,
+    triggerClassName,
     ...props
 }: CaseDetailFieldProps) => {
     const textWithHighlights = !!text && highlights && highlights.length ? <Highlighter text={text} highlights={highlights} /> : text;
 
     const textToRender =
         truncate && !!text ? (
-            <PopoverOnTruncate title={text}>
+            <PopoverOnTruncate title={text} triggerClassName={triggerClassName} popoverClassName={popoverClassName}>
                 <span className="line-clamp-1 break-all font-secondary text-md">{textWithHighlights}</span>
             </PopoverOnTruncate>
         ) : (

@@ -165,7 +165,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                     {policyOwners.length > 1 ? (
                         <PartyWithOthers {...ownerComponentProps} isOwner />
                     ) : (
-                        <CaseDetailField pii={true} {...ownerComponentProps} />
+                        <CaseDetailField pii={true} {...ownerComponentProps} triggerClassName="!z-10" popoverClassName="!w-auto" />
                     )}
                     <CaseDetailField
                         pii={true}
@@ -211,7 +211,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                     {agents.length > 1 ? (
                         <PartyWithOthers {...agentComponentProps} />
                     ) : (
-                        <CaseDetailField pii={true} {...agentComponentProps} />
+                        <CaseDetailField pii={true} {...agentComponentProps} triggerClassName="!z-10" popoverClassName="!w-auto" />
                     )}
                     <CaseDetailField pii={true} text={formatSSN(agentSsn)} className={styles.detail} />
                 </div>
