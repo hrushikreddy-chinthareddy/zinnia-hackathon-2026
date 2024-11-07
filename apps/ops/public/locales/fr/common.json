@@ -876,6 +876,7 @@
             },
             "empty": {
                 "title": "Nous n’avons pas trouvé de cas correspondant à votre recherche.",
+                "titleFilters": "Nous n'avons pas pu trouver de cas correspondant à vos filtres.",
                 "paragraph": "Ne vous inquiétez pas, c'est probablement juste une faute de frappe. Vérifiez votre saisie et réessayez.",
                 "action": {
                     "text": "Vous rencontrez toujours des problèmes ? ",

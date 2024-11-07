@@ -202,14 +202,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
     }, [loadedStoredFilters, fetchCaseStats, fetchCases]);
 
     useEffect(() => {
-        // to do - we've removed the # of cases per page
-        // some folks might still have 10 or 50 set as the limit in their local storage
-        // we may need to run  setCaseManagementFilters({
-        //     ...initialFilters,
-        //     searchValue,
-        //     toggleValue,
-        // });
-        // on page load or here to get the limit set to 25?
         if (loadedStoredFilters) {
             storage.setItem('CASE_MANAGEMENT_FILTERS', {
                 ...caseManagementFilters,
