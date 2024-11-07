@@ -29,6 +29,7 @@ interface NigoEntryContainerContainerProps {
     documentData: DocumentData;
     taskInfoLink: string;
     prevTransactionDetails: TransactionDetails | null;
+
 }
 
 const NigoEntryContainer = ({
@@ -154,7 +155,7 @@ const NigoEntryContainer = ({
         [steps]
     );
 
-    return <TabGroupContainer steps={filteredSteps} policy={policy} documentNumber={documentNumber} docType={docType}></TabGroupContainer>;
+    return <TabGroupContainer steps={filteredSteps} policy={policy} documentNumber={documentNumber} docType={docType} documentData={documentData}></TabGroupContainer>;
 };
 
 export default NigoEntryContainer;

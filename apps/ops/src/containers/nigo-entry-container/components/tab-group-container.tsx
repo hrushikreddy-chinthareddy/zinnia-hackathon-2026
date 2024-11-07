@@ -19,6 +19,9 @@ import { ReactComponent as AnnotationIcon } from '@deps/styles/elements/icons/ic
 import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icons_outlined/document-text-2.svg';
 
 import DocumentPortalPanel from './side-panel/document-portal-panel';
+import { ViewDetailsContent } from '@deps/components/side-sheet/view-details/view-details-content';
+import { DocumentData } from '@deps/models/case/document';
+import { Icon, IconType } from '@zinnia/bloom/components';
 
 type TabGroupContainerProps = {
     steps: Step[];
@@ -26,8 +29,9 @@ type TabGroupContainerProps = {
     showJointOwner?: boolean;
     documentNumber?: string;
     docType: string;
+    documentData: DocumentData
 };
-const TabGroupContent = ({ steps, policy, showJointOwner = false, documentNumber = '', docType = '' }: TabGroupContainerProps) => {
+const TabGroupContent = ({ steps, policy, showJointOwner = false, documentNumber = '', docType = '' , documentData}: TabGroupContainerProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const { currentStepIndex, setCurrentStepIndex } = useWorkflow();
     const sideSheet = useSideSheetContext();
@@ -62,6 +66,15 @@ const TabGroupContent = ({ steps, policy, showJointOwner = false, documentNumber
         sideSheet.changeSideSheetContent(t('site.navLinks.diaryNotes.text'), content);
         sideSheet.handleOpen(true);
     };
+    const openViewDetails = () => {
+        const content = <ViewDetailsContent
+                            qualificationType={policy.qualificationType??''}
+                            contractValue={documentData.contractValue??''}
+                            policyDate={policy.policyDates?.issueDate??''}
+                        />;
+        sideSheet.changeSideSheetContent(t('site.navLinks.viewDetails.text'), content);
+        sideSheet.handleOpen(true);
+    };
 
     return (
         <div className="workflow-height-adjusted flex w-full max-w-[1130px] grow flex-col self-center">
@@ -88,6 +101,7 @@ const TabGroupContent = ({ steps, policy, showJointOwner = false, documentNumber
                         <span>{t('nigoEntry.documentPanel.documentTitle')}</span>
                     </div>
                 </div>
+
             </div>
 
             <div className="my-2 flex flex-row items-center justify-end space-x-3">
@@ -109,6 +123,21 @@ const TabGroupContent = ({ steps, policy, showJointOwner = false, documentNumber
                 >
                     {t('site.navLinks.diaryNotes.text')}
                 </NavElement>
+                <NavElement
+                    type={NavElementType.Button}
+                    size={NavElementSize.Small}
+                    className="flex items-center"
+                    startIcon={<Icon type={IconType.CIRCLE_INFO} width={16} height={16}/>}
+                    onClick={() => openViewDetails()}
+                    onKeyDown={e => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            openSideSheet();
+                        }
+                    }}
+                >
+                    {t('site.navLinks.viewDetails.text')}
+                </NavElement>
             </div>
 
             <ProgressBarSteps
@@ -124,11 +153,12 @@ const TabGroupContent = ({ steps, policy, showJointOwner = false, documentNumber
     );
 };
 
-const TabGroupContainer = ({ steps, policy, documentNumber, docType }: TabGroupContainerProps) => {
+const TabGroupContainer = ({ steps, policy, documentNumber, docType ,documentData}: TabGroupContainerProps) => {
+
     return (
         <DiaryNotesProvider caseDetails={policy as any}>
             <WorkflowProvider>
-                <TabGroupContent steps={steps} policy={policy} showJointOwner={true} documentNumber={documentNumber} docType={docType} />
+                <TabGroupContent steps={steps} policy={policy} showJointOwner={true} documentNumber={documentNumber} docType={docType} documentData={documentData} />
             </WorkflowProvider>
         </DiaryNotesProvider>
     );
