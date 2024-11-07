@@ -1,10 +1,9 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { Icon, IconType } from '@zinnia/bloom/components';
+import { Button, Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { TFunction, useTranslation } from 'next-i18next';
 import { ChangeEvent, RefObject, useCallback, useContext, useEffect, useState } from 'react';
 
-import Button, { ButtonType } from '@deps/components/button/button';
 import { TranslationFiles } from '@deps/config/translations';
 import { PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
 import { LabelValue } from '@deps/types/data';
@@ -121,11 +120,12 @@ const SearchBar = ({
             </DropdownMenu.Root>
             <SearchFieldToggle values={values} activeLabels={activeLabels} handleChange={handleNewValue} onClear={onClear} />
             <Button
-                type={ButtonType.Primary}
+                mode="primary"
                 onClick={handleSearch}
                 data-testid="search-btn"
                 aria-label={t('ariaLabel.search') as string}
                 className="ml-2"
+                type="submit"
             >
                 {t('dashboard.search.btnText')}
             </Button>
