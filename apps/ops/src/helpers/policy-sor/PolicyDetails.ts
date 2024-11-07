@@ -1,3 +1,4 @@
+import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
 import dayjs from 'dayjs';
 
 import {
@@ -196,18 +197,17 @@ export class PolicyDetails {
      *          - `isInFreeLookPeriod`: A boolean indicating if the policy is still in the free look period.
      *          - `endDate`: The date the free look period ends.
      */
-    // TODO: update the date type, should it be formatted?
     public get freeLookPeriodDetails(): { isInFreeLookPeriod: boolean; endDate: any } {
         const freeLookCancellationDate = this.features.getFirstFeatureByType(PolicyFeatureFeatureType.freelook)?.endDate;
+        const hadEndDate = !isNullEmptyOrUndefined(freeLookCancellationDate);
 
         return {
-            isInFreeLookPeriod:
-                this.policyStatus === PolicyStatus.ACTIVE &&
-                !isNullEmptyOrUndefined(freeLookCancellationDate) &&
-                dayjs().isBefore(dayjs(freeLookCancellationDate)),
             // We add 15 days to the cancellation date in case ops needs to back date,
-            // so they still have access to the cancellation functionality. The 15 is based on... giving them two weeks.
-            endDate: dayjs(freeLookCancellationDate).add(15, 'day').format(DEFAULT_DATE_DISPLAY_FORMAT),
+            // so they still have access to the cancellation functionality. The 15 is based on... a number that was chosen.
+            // In the banner we still display the ACTUAL end date of the free look period.
+            isInFreeLookPeriod:
+                this.policyStatus === PolicyStatus.ACTIVE && hadEndDate && dayjs().isBefore(dayjs(freeLookCancellationDate).add(15, 'day')),
+            endDate: hadEndDate ? dayjs(freeLookCancellationDate).format(DEFAULT_DATE_DISPLAY_FORMAT) : DEFAULT_ERROR_STRING,
         };
     }
 
