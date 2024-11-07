@@ -3,7 +3,7 @@ import { GetServerSidePropsContext } from 'next';
 import dynamic from 'next/dynamic';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import FilterButton from '@deps/components/filter-button/filter-button';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
@@ -74,19 +74,14 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
 
     useSegmentPageTracker(user, SegmentPageName.CaseManagementDashboard);
 
-    // Refs
-    const topDiv = useRef<HTMLDivElement | null>(null);
-    const bottomDiv = useRef<HTMLDivElement | null>(null);
-
     const [caseTableData, setCaseTableData] = useState<CaseTableData>({ cases: [], total: 0, loading: true, error: false });
     const [caseTotals, setCaseTotals] = useState({
         All: 0,
         [Statuses.InProgress]: 0,
         [Statuses.Exception]: 0,
     });
-    const paginationStart = caseTotals[caseManagementFilters.statusCounterTileFilter] === 0 ? 0 : 1;
-    const paginationEnd =
-        caseTotals[caseManagementFilters.statusCounterTileFilter] >= 25 ? 25 : caseTotals[caseManagementFilters.statusCounterTileFilter];
+    const paginationStart = caseTotals.All === 0 ? 0 : 1;
+    const paginationEnd = caseTotals.All >= 25 ? 25 : caseTotals.All;
 
     // Data Fetcher(s)
     const fetchCaseStats = useCallback(async () => {
@@ -244,35 +239,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         }
 
         setLoadedStoredFilters(true);
-
-        const syncScroll = (source: React.RefObject<HTMLDivElement>, target: React.RefObject<HTMLDivElement>) => {
-            if (source.current === null || target.current === null) return;
-            target.current.scrollLeft = source.current.scrollLeft;
-        };
-
-        const handleScrollTop = () => syncScroll(topDiv, bottomDiv);
-        const handleScrollBottom = () => syncScroll(bottomDiv, topDiv);
-
-        const topCurrent = topDiv.current;
-        const bottomCurrent = bottomDiv.current;
-
-        if (topCurrent) {
-            topCurrent.addEventListener('scroll', handleScrollTop);
-        }
-
-        if (bottomCurrent) {
-            bottomCurrent.addEventListener('scroll', handleScrollBottom);
-        }
-
-        return () => {
-            if (topCurrent) {
-                topCurrent.removeEventListener('scroll', handleScrollTop);
-            }
-
-            if (bottomCurrent) {
-                bottomCurrent.removeEventListener('scroll', handleScrollBottom);
-            }
-        };
     }, []);
 
     // Handler(s)
@@ -306,23 +272,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
             />
         );
     }, [caseManagementFilters.searchValue, caseManagementFilters.toggleValue]);
-
-    const pageSizeDropdown = useMemo(() => {
-        return (
-            <PageSizeControls
-                options={caseSearchPageSizeOptions}
-                value={`${caseManagementFilters.limit}`}
-                handleChange={value => {
-                    setCaseManagementFilters(prevFilters => ({
-                        ...prevFilters,
-                        limit: Number(value),
-                        offset: 0,
-                    }));
-                    window.scrollTo(0, 0);
-                }}
-            />
-        );
-    }, [caseManagementFilters.limit]);
 
     const paginationControls = useMemo(() => {
         const goToPage = (pageNumber: number) => {
@@ -417,7 +366,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                         values={caseManagementFilters.additionalFilters.caseStatus}
                         onChange={vals =>
                             setCaseManagementFilters(prev => {
-                                const { caseStatus, notInCaseStatus = [] } = prev.additionalFilters;
+                                const { notInCaseStatus = [] } = prev.additionalFilters;
                                 const nonConflictingNicsVals = notInCaseStatus.filter(val => !vals.includes(val)); // remove any values that are both in caseStatus and notInCaseStatus
                                 return {
                                     ...prev,
@@ -436,18 +385,13 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                         removeFilter={removeAdditionalFilter}
                         onReset={resetAllFilters}
                     />
-                    <div ref={topDiv} className="w-full xs:overflow-x-auto xs:overflow-y-hidden xs:p-1 lg:mb-0 lg:p-0">
-                        <div className="w-[1130px]" />
-                    </div>
-                    <div ref={bottomDiv} className="w-full xs:overflow-x-auto xs:overflow-y-hidden xs:p-1 lg:p-0">
-                        {tableContent}
-                    </div>
+                    <div className="w-full xs:overflow-x-auto xs:overflow-y-hidden xs:p-1 lg:p-0">{tableContent}</div>
                     <div className="flex flex-col items-center lg:grid lg:grid-cols-3 mt-3">
                         <div className="mb-6 lg:mb-0">
                             {t('policy.documents.xToYOfZ', {
                                 x: paginationStart,
                                 y: paginationEnd,
-                                z: caseTotals[caseManagementFilters.statusCounterTileFilter],
+                                z: caseTotals.All,
                             })}
                         </div>
                         <div className="">{paginationControls}</div>
