@@ -10,9 +10,9 @@ export function ViewDetailsContent({ qualificationType, contractValue, policyDat
     return (
         <div className="flex h-full flex-col">
             <div className="overflow-y-scroll pt-4 gap-4  ">
-                {qualificationType && <ViewDetailCard label="Qualification Type" value={qualificationType} />}
-                {contractValue && <ViewDetailCard label="Contract Value" value={`$ ${contractValue}`} />}
-                {policyDate && <ViewDetailCard label="Policy Date" value={policyDate} />}
+                {qualificationType && <ViewDetailCard cardTitle="Qualification Type" cardValue={qualificationType} />}
+                {contractValue && <ViewDetailCard cardTitle="Contract Value" cardValue={`$ ${contractValue}`} />}
+                {policyDate && <ViewDetailCard cardTitle="Policy Date" cardValue={policyDate} />}
             </div>
             <div className="grow" />
         </div>
