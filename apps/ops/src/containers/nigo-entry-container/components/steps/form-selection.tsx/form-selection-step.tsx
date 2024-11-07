@@ -66,6 +66,7 @@ function FormSelectionStep({ transactionTypes, policy, documentData, ctiCallNumb
 
     const submit = useCallback(async () => {
         setIsLoading(true);
+
         if (TaskApiVersionMapper[formState.initialForm.taskType] === ApiVersion.v2 && formState.initialForm.status !== TaskStatus.Completed) {
             const successfulCaseUpdate = await updateTask(
                 formState.initialForm.caseId,
@@ -86,10 +87,9 @@ function FormSelectionStep({ transactionTypes, policy, documentData, ctiCallNumb
         setIsLoading(false);
     }, [documentData, formState, setSubmitFailed, timer]);
 
-    const handleStepContinue = useCallback(async() => {
-        if (!document?.selected?.formId) {
-            return setError(t('errors.selectForm') as string);
-        } else {
+
+    useEffect(() => {
+       if (document?.selected?.formId) {
             setFormProgram(prevFormProgram => {
                 return {
                     ...prevFormProgram,
@@ -113,10 +113,17 @@ function FormSelectionStep({ transactionTypes, policy, documentData, ctiCallNumb
                     },
                 };
             });
+        }
+    }, [document?.selected, setFormProgram, transactionSubType?.selected, transactionType?.selected]);
+
+    const handleStepContinue = useCallback(async() => {
+        if (!document?.selected?.formId) {
+            return setError(t('errors.selectForm') as string);
+        } else {
             await submit();
             goToNext();
         }
-    }, [document?.selected?.formDisplayName, document?.selected?.formId, document?.selected?.formNumber, document?.selected?.formShortName, goToNext, setFormProgram, submit, t, transactionSubType?.selected, transactionType?.selected]);
+    }, [document?.selected, goToNext, submit, t]);
 
     return (
         <WorkflowCard
