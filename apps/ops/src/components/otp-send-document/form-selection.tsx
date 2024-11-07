@@ -1,7 +1,8 @@
 import { useTranslation } from 'next-i18next';
 import React, { useEffect, useState } from 'react';
-
 import 'react-pdf/dist/Page/TextLayer.css';
+import { v4 as uuidv4 } from 'uuid';
+
 import TransactionDocumentSelection from '@deps/containers/nigo-entry-container/components/steps/form-selection.tsx/transaction-document-selection';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { SendDocumentFormParts, SendDocumentFormPartsAdditionData } from '@deps/models/case/send-document';
@@ -14,12 +15,11 @@ import AssistiveText, { AssistiveTextVariant } from '../assistive-text/assistive
 import { SimpleOption } from '../autocomplete/autocomplete.types';
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '../nav-element/nav-element';
 import WorkflowCard from '../workflows/workflow-card/workflow-card';
-
 const mapIdToFormDetails = (value: SendDocumentFormParts[]): SendDocumentFormPartsAdditionData[] => {
     return value.map(formDetail => {
         return {
             ...formDetail,
-            id: Date.now().toString(),
+            id: uuidv4(),
         };
     });
 };
@@ -28,7 +28,7 @@ export const DefaultFormDetail = {
     document: { list: [], selected: null },
     transactionSubType: { list: [], selected: null },
     transactionType: { list: [], selected: null },
-    id: Date.now().toString(),
+    id: uuidv4(),
 };
 type FormSelectionProps = {
     policy: Policy;
@@ -65,7 +65,7 @@ function FormSelection({ policy, ctiCallNumber, transactionTypes, formDetails, s
     };
 
     const addNewFilter = () => {
-        setForms(prevForms => [...prevForms, { ...DefaultFormDetail, id: Date.now().toString() }]);
+        setForms(prevForms => [...prevForms, { ...DefaultFormDetail, id: uuidv4() }]);
     };
 
     const removeFilter = (id: string) => {
