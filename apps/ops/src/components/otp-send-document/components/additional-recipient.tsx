@@ -31,6 +31,11 @@ const AdditionalRecipient = ({ classNames, emails, setEmails, setError }: Additi
             return;
         }
 
+        if (emails.includes(val)) {
+            setError(error => ({ ...error, submit: t('correspondence.duplicateEmail') as string }));
+            return;
+        }
+
         setEmails([...emails, val]);
         setError(error => ({ ...error, submit: '' }));
         setEmail('');

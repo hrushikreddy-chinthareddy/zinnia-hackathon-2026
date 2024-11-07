@@ -1,13 +1,12 @@
 import { Icon, IconType, Popover } from '@zinnia/bloom/components';
 import { toSentenceCase } from '@zinnia/utils';
-import { ReactNode } from 'react';
 
 export const LabelPopover = ({
   title,
-  content,
+  children,
 }: {
   title: string;
-  content: ReactNode;
+  children: React.ReactNode;
 }) => {
   return (
     <Popover
@@ -20,7 +19,7 @@ export const LabelPopover = ({
         />
       }
     >
-      <p className="typography-content-body">{content}</p>
+      <div className="typography-content-body-sm">{children}</div>
     </Popover>
   );
 };

@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import CorrespondenceCard from '@deps/containers/people-data-cards/correspondence-card/correspondence-card';
 import { useCorrespondence } from '@deps/contexts/CorrespondenceContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { isNonProductionEnvironment } from '@deps/helpers/environment.helper';
 import {
     Correspondence,
     CorrespondenceAction,
@@ -15,6 +14,7 @@ import {
 import { CommunicationTypes, Confirm } from '@deps/models/case/send-document';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
+import { isNonProductionEnvironment } from '@deps/utils/environment.helper';
 
 import SendDocumentNavigationButtons from './action-components/navigation-buttons';
 import AssistiveText, { AssistiveTextVariant } from '../assistive-text/assistive-text';

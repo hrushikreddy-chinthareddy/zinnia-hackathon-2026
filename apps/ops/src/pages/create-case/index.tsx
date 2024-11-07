@@ -26,19 +26,21 @@ import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { toTitleCase } from '@deps/helpers/string.helper';
+import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { CaseType } from '@deps/models/case/case';
 import { docTypes } from '@deps/models/case/helpers';
 import { UserPermission } from '@deps/models/user-profile';
 import createCaseFromDocumentNumber from '@deps/operations/cases/caseOperations';
 import { fetchDocument } from '@deps/operations/documents/documentOperations';
 import { ReactComponent as ProgressIcon } from '@deps/styles/elements/icons/illustrations/check-progress.svg';
+import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
-type CaseCreateProps = {
+interface CaseCreatePageProps extends SegmentTrackedPageProps {
     featureFlagDecisions: FeatureFlags;
 };
 
@@ -64,11 +66,14 @@ export enum TabOptions {
     search = 'Search',
 };
 
-const CaseCreate = ({ featureFlagDecisions }: CaseCreateProps) => {
+const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const [showLoader, setShowLoader] = useState(false);
     const [activeTab, setActiveTab] = useState(TabOptions.search);
 
+    useSegmentPageTracker(user, SegmentPageName.CreateCaseLanding);
+
+    // TODO MG: call `useSegmentPageTracker()` when tab is changed?
     const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
 
     const handleRouteChange = () => {
@@ -453,7 +458,7 @@ export const getServerSideProps = withPageAuthRequired({
             nextI18nextConfig,
             ALL_LOCALES
         );
-        return { props: { featureFlagDecisions, locale, ...translations } };
+        return { props: { featureFlagDecisions, locale, ...translations, user } };
     },
 });
 

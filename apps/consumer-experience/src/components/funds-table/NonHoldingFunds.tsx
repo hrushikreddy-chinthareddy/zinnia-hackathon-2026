@@ -79,11 +79,9 @@ export const NonHoldingFunds = ({
           <TableHeaderCell>
             <Label
               interactiveElements={[
-                <LabelPopover
-                  key="Account Value"
-                  title="Account Value"
-                  content={allocationAccountInfo(lineOfBusiness)}
-                />,
+                <LabelPopover key="Account Value" title="Account Value">
+                  {allocationAccountInfo(lineOfBusiness)}
+                </LabelPopover>,
               ]}
             >
               {toSentenceCase(headerVals.fundValue)}

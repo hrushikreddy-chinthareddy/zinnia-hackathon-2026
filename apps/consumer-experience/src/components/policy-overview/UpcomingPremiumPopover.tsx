@@ -1,13 +1,8 @@
 'use client';
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
-import {
-  Icon,
-  IconType,
-  Popover,
-  PopoverPlacement,
-} from '@zinnia/bloom/components';
 
 import styles from './PolicyOverview.module.css';
+import { LabelPopover } from '../label-popover/LabelPopover';
 const UPCOMING_PREMIUM = 'Premium';
 
 export const UpcomingPremiumPopover = ({
@@ -21,20 +16,10 @@ export const UpcomingPremiumPopover = ({
       : 'Your premium is the amount you pay periodically for insurance coverage. What’s shown here is your next scheduled payment.';
 
   return (
-    <Popover
-      title={UPCOMING_PREMIUM}
-      trigger={
-        <Icon
-          type={IconType.CIRCLE_INFO}
-          small
-          color="var(--color-base-icon-icon-tooltip)"
-        />
-      }
-      placement={PopoverPlacement.BottomRight}
-    >
+    <LabelPopover title={UPCOMING_PREMIUM}>
       <div className={styles.popoverContent}>
         <p>{content}</p>
       </div>
-    </Popover>
+    </LabelPopover>
   );
 };

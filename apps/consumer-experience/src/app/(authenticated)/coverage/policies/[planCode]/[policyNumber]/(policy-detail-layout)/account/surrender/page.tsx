@@ -1,9 +1,10 @@
-import { Icon, IconType, Label, Popover } from '@zinnia/bloom/components';
+import { Label } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
 import { AccountValue } from '@/components/account-value/AccountValue';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { FieldData } from '@/components/field-data/FieldData';
+import { LabelPopover } from '@/components/label-popover/LabelPopover';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getPolicySurrenderDetails } from '@/services';
@@ -58,17 +59,9 @@ export default async function SurrenderPolicy({
               Label={
                 <Label
                   interactiveElements={[
-                    <Popover
+                    <LabelPopover
                       key={NET_SURRENDER_VALUE}
                       title={NET_SURRENDER_VALUE}
-                      trigger={
-                        <Icon
-                          type={IconType.CIRCLE_INFO}
-                          color="var(--color-base-icon-icon-tooltip, #ff7500)"
-                          width={16}
-                          height={16}
-                        />
-                      }
                     >
                       <p>
                         Your net surrender value is the current account value
@@ -77,7 +70,7 @@ export default async function SurrenderPolicy({
                         receive if you decide to surrender your policy and
                         cancel your coverage.
                       </p>
-                    </Popover>,
+                    </LabelPopover>,
                   ]}
                 >
                   {NET_SURRENDER_VALUE}

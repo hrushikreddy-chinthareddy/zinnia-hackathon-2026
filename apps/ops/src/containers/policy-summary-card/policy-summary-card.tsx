@@ -28,6 +28,7 @@ import SideSheetProductDetails from '@deps/containers/side-sheet-product-details
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { PolicyDetailsViewInfo, PolicyViewDetailsDto, toPolicyViewDetailsDto } from '@deps/data/policy-details-view';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { fillColDefs } from '@deps/helpers/data-transform.helper';
 import { getTotalMinRequiredAmount, policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
@@ -58,6 +59,7 @@ import {
 import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
 import { DEFAULT_ERROR_STRING, DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
 import { SearchViewQuery } from '@deps/types/search';
+import { SegmentTrackedEventName, SegmentTrackEventState } from '@deps/types/segment-analytics';
 
 import AnnuityQuickView from './active-quick-view/annuity';
 import EverlyIul from './active-quick-view/everly-iul';
@@ -79,12 +81,16 @@ interface KeyValuesBarProps {
     policy: Policy;
 }
 
-const quickLinks = (t: TFunction, policy: PolicyDetails): QuickLinksProps['links'] => {
+// TODO MG: move these into different files
+const quickLinks = (t: TFunction, policy: PolicyDetails, userPartyId?: string): QuickLinksProps['links'] => {
     const { policyNumber, planCode } = policy;
     const detailsLink = {
         href: t('site.navLinks.policyDetails.link', { id: policyNumber, planCode }),
         name: t(policy.isLife ? 'site.navLinks.policyDetails.altText' : 'site.navLinks.contractDetails.altText'),
+        segmentTrackingName: 'Policy Search Card Policy Click',
+        userPartyId,
     };
+
     return [
         detailsLink,
         {
@@ -126,6 +132,9 @@ const getPolicyHighlighter = ({ firstName, lastName, policyNumber, ssn }: Search
 const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
     const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
     const { searchValue } = useContext(DashboardContext);
+    const perms = usePermissionsContext();
+
+    const userPartyId = perms.getUserPartyId();
     const { carrierId, marketingName, planCode, planName, policyNumber, policyStatus, productType } = policy;
     const totalMinRequiredAmount = getTotalMinRequiredAmount(policy);
     const globalValuesData = useMemo(() => policyDataToGlobalValues(policy, t), [policy, t]);
@@ -211,6 +220,12 @@ const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
     };
 
     function onOpenChange(open: boolean) {
+        segmentAnalyticsTrackEvent(SegmentTrackedEventName.PolicyQuickActionsDropdown, {
+            state: open ? SegmentTrackEventState.Open : SegmentTrackEventState.Close,
+            policyNumber,
+            userId: userPartyId,
+        });
+
         if (open) {
             setFireEligibilityChecks(true);
         }
@@ -245,7 +260,7 @@ const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
                             eligibilityCheck={eligibilityCheck}
                             isLife={policy.isLife}
                             isLoading={isLoading}
-                            links={quickLinks(t, policy)}
+                            links={quickLinks(t, policy, userPartyId)}
                             onOpenChange={(open: boolean) => onOpenChange(open)}
                             planCode={planCode}
                             policyNumber={policyNumber}

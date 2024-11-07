@@ -67,7 +67,7 @@ export default async function Page({
       <div className="container">
         <HeaderBreadcrumb title={pageTitle} preventReturnToPrevious />
         <div className="card-container">
-          <p className="content-body-sm">
+          <p className="typography-content-body-sm">
             Select a policy below to get started.
           </p>
           {isVercelEnvironment() ? (

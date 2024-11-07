@@ -50,4 +50,5 @@ export enum FEATURE_FLAGS {
     REVERSE_RECREATE_ENABLED = 'policy-management-reverse_recreate',
     NIGO_ENTRY_SBGC_WITHDRAWAL = 'nigo-entry_sbgc_withdrawal',
     SEND_DOCUMENT_HIDE_MAIL_OPTION_ILNA = 'contact-center-send-document-arcus-mail-option',
+    CASE_STATS_DASHBOARD = 'case-management-case_stats_dashboard',
 }
