@@ -430,7 +430,8 @@
                             "properties": {
                                 "firstName": {
                                     "type": "string",
-                                    "title": "First Name"
+                                    "title": "First Name",
+                                    "minLength": 1
                                 },
                                 "middleName": {
                                     "type": "string",
