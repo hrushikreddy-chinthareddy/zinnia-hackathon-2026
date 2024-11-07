@@ -47,6 +47,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     onChange,
     placeholder,
     label,
+    rawErrors = [],
 }: WidgetProps<T, S, F>) {
     const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
 
@@ -98,7 +99,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
                         onChange={_onChange}
                         options={selectOptions}
                         placeholder={placeholder}
-                        className="max-w-sm"
+                        className={rawErrors.length > 0 ? 'is-invalid max-w-sm' : 'max-w-sm'}
                     >
                         {showPlaceholderOption && <option value="">{placeholder}</option>}
                         {Array.isArray(enumOptions) &&

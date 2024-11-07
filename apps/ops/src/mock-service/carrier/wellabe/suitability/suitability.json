@@ -52,8 +52,11 @@
                     }
                 ],
                 "employment": {
-                    "employmentStatus": "DISABLED",
-                    "occupation": "Software Engineer"
+                    "employmentStatus": [
+                        "DISABLED"
+                    ],
+                    "occupation": "Software Engineer",
+                    "disabilityExplanation": "I am disabled"
                 }
             }
         ],
@@ -78,6 +81,8 @@
             "annualIncome": "112890.00",
             "netWorth": "500000.00",
             "liquidNetWorth": "400000.00",
+            "materialChangeExp": "NO",
+            "materialChangeReason": "change reason statement",
             "sourceOfIncome": [
                 "FIXED_ANNUITY"
             ],
@@ -131,12 +136,13 @@
                 "INCOME"
             ],
             "otherPurchaseReason": "Explain details in case of others",
+            "buyingReasonDetails": "Explain buying reason",
             "annuityMeetsFinancialNeeds": "YES"
         },
         "liquidityOptions": {
             "fundsAccessExplanation": "string",
             "distributionMethods": [
-                "string"
+                "INCOME"
             ],
             "firstPayoutOption": "string",
             "surrenderChargeConsent": "string",
@@ -146,9 +152,7 @@
             "benefitAnnuityQuestions": {
                 "understandIncomeAdjustmentFactor": "string",
                 "consideredFinancialNeedsAfter10Years": "string",
-                "planForIncomeDecreaseAfter10Years": [
-                    "string"
-                ]
+                "planForIncomeDecreaseAfter10Years": "string"
             }
         },
         "agentAcknowledgment": {
@@ -204,7 +208,7 @@
                 "signatoryName": "test b",
                 "signatureDate": "2023-12-01",
                 "signatureCity": "Quincy",
-                "signatureState": "AA",
+                "signatureState": "US",
                 "signatoryDesignation": "TRUSTEE"
             }
         ]

@@ -471,7 +471,17 @@
                                     "$ref": "#/definitions/birthJurisdictionStateEnum",
                                     "uniqueItems": true
                                 }
-                            }
+                            },
+                            "required": [
+                                "firstName",
+                                "lastName",
+                                "gender",
+                                "age",
+                                "birthDate",
+                                "martialStatus",
+                                "birthCountry",
+                                "birthJurisdictionState"
+                            ]
                         },
                         "govtIdInfo": {
                             "type": "array",
@@ -539,16 +549,16 @@
                                         "type": "string",
                                         "title": "Zip Code"
                                     }
-                                }
-                            },
-                            "required": [
-                                "addressType",
-                                "line1",
-                                "city",
-                                "state",
-                                "country",
-                                "zip"
-                            ]
+                                },
+                                "required": [
+                                    "addressType",
+                                    "line1",
+                                    "city",
+                                    "state",
+                                    "country",
+                                    "zip"
+                                ]
+                            }
                         },
                         "employment": {
                             "type": "object",
@@ -611,7 +621,7 @@
                         "$ref": "#/definitions/lineOfBusinessEnum"
                     },
                     "productCode": {
-                        "type": "number",
+                        "type": "string",
                         "title": "Product Code"
                     },
                     "productType": {
@@ -624,17 +634,24 @@
                         "$ref": "#/definitions/qualPlanTypeEnum"
                     },
                     "annualPaymentAmt": {
-                        "type": "number",
+                        "type": "string",
                         "title": "Annual Payment Amount"
                     }
-                }
+                },
+                "required": [
+                    "lineOfBusiness",
+                    "productCode",
+                    "productType",
+                    "qualPlanType",
+                    "annualPaymentAmt"
+                ]
             },
             "applicationInfo": {
                 "type": "object",
                 "title": "Application Information",
                 "properties": {
                     "replacementInd": {
-                        "type": "boolean",
+                        "type": "string",
                         "title": "Replacement Indicator",
                         "$ref": "#/definitions/replacementIndEnum"
                     },
@@ -652,38 +669,49 @@
                         "title": "Additional Information",
                         "properties": {
                             "soldPoliciesToApplicant": {
-                                "type": "boolean",
+                                "type": "string",
                                 "title": "Sold Policies to Applicant",
                                 "$ref": "#/definitions/soldPoliciesToApplicantEnum"
                             },
                             "pastReplacement": {
-                                "type": "boolean",
+                                "type": "string",
                                 "title": "Past Replacement",
                                 "$ref": "#/definitions/pastReplacementEnum"
                             },
                             "coverageExpenseConsideration": {
-                                "type": "boolean",
+                                "type": "string",
                                 "title": "Coverage Expense Consideration",
                                 "$ref": "#/definitions/coverageExpenseConsiderationEnum"
                             }
-                        }
+                        },
+                        "required": [
+                            "soldPoliciesToApplicant",
+                            "pastReplacement",
+                            "coverageExpenseConsideration"
+                        ]
                     }
-                }
+                },
+                "required": [
+                    "replacementInd",
+                    "replacementReason",
+                    "replacedContractType",
+                    "additionalInformation"
+                ]
             },
             "fiscalData": {
                 "type": "object",
                 "title": "Fiscal Data",
                 "properties": {
                     "annualIncome": {
-                        "type": "number",
+                        "type": "string",
                         "title": "Annual Income"
                     },
                     "netWorth": {
-                        "type": "number",
+                        "type": "string",
                         "title": "Net Worth"
                     },
                     "liquidNetWorth": {
-                        "type": "number",
+                        "type": "string",
                         "title": "Liquid Net Worth"
                     },
                     "sourceOfIncome": {
@@ -769,7 +797,22 @@
                         "type": "string",
                         "title": "Other Tax Band"
                     }
-                }
+                },
+                "required": [
+                    "annualIncome",
+                    "netWorth",
+                    "liquidNetWorth",
+                    "sourceOfIncome",
+                    "materialChangeExp",
+                    "materialChangeReason",
+                    "materialChangeDetails",
+                    "totalAssets",
+                    "totalDebt",
+                    "annualExpenses",
+                    "sourceOfFunds",
+                    "federalTaxBand",
+                    "otherTaxBand"
+                ]
             },
             "financialExperience": {
                 "type": "object",
@@ -781,7 +824,7 @@
                         "$ref": "#/definitions/rateChangeAcknowledgmentEnum"
                     },
                     "totalAnnuityValue": {
-                        "type": "number",
+                        "type": "string",
                         "title": "Total Annuity Value"
                     },
                     "financialProducts": {
@@ -805,10 +848,15 @@
                                             "$ref": "#/definitions/financialProducts_assetsDistribution_qualificationTypeEnum"
                                         },
                                         "amount": {
-                                            "type": "number",
+                                            "type": "string",
                                             "title": "Amount"
                                         }
-                                    }
+                                    },
+                                    "required": [
+                                        "productType",
+                                        "qualificationType",
+                                        "amount"
+                                    ]
                                 }
                             },
                             "totalAsset": {
@@ -828,15 +876,29 @@
                                             "$ref": "#/definitions/financialProducts_totalAsset_assetTypeEnum"
                                         },
                                         "amount": {
-                                            "type": "number",
+                                            "type": "string",
                                             "title": "Amount"
                                         }
-                                    }
+                                    },
+                                    "required": [
+                                        "qualificationType",
+                                        "assetType",
+                                        "amount"
+                                    ]
                                 }
                             }
-                        }
+                        },
+                        "required": [
+                            "assetsDistribution",
+                            "totalAsset"
+                        ]
                     }
-                }
+                },
+                "required": [
+                    "rateChangeAcknowledgment",
+                    "totalAnnuityValue",
+                    "financialProducts"
+                ]
             },
             "investmentRiskInfo": {
                 "type": "object",
@@ -856,7 +918,12 @@
                         "title": "Annuity Fits Risk Tolerance",
                         "$ref": "#/definitions/investProduct_annuityFitsRiskToleranceEnum"
                     }
-                }
+                },
+                "required": [
+                    "riskTolerance",
+                    "riskToleranceDesc",
+                    "annuityFitsRiskTolerance"
+                ]
             },
             "financialObjectives": {
                 "type": "object",
@@ -880,7 +947,12 @@
                         "title": "Annuity Meets Financial Needs",
                         "$ref": "#/definitions/financialObjectives_annuityMeetsFinancialNeedsEnum"
                     }
-                }
+                },
+                "required": [
+                    "buyingReason",
+                    "buyingReasonDetails",
+                    "annuityMeetsFinancialNeeds"
+                ]
             },
             "liquidityOptions": {
                 "type": "object",
@@ -935,9 +1007,24 @@
                                 "type": "string",
                                 "title": "Plan for Income Decrease After 10 Years"
                             }
-                        }
+                        },
+                        "required": [
+                            "understandIncomeAdjustmentFactor",
+                            "consideredFinancialNeedsAfter10Years",
+                            "planForIncomeDecreaseAfter10Years"
+                        ]
                     }
-                }
+                },
+                "required": [
+                    "fundsAccessExplanation",
+                    "distributionMethods",
+                    "firstPayoutOption",
+                    "surrenderChargeConsent",
+                    "possibleReductionInValue",
+                    "planToHoldAnnuity",
+                    "explainedOtherCharges",
+                    "benefitAnnuityQuestions"
+                ]
             },
             "agentAcknowledgment": {
                 "type": "object",
@@ -1017,7 +1104,13 @@
                                 "type": "string",
                                 "title": "Disclosure Retention"
                             }
-                        }
+                        },
+                        "required": [
+                            "evaluatedInformation",
+                            "informedOfFeatures",
+                            "communicatedBasis",
+                            "disclosureRetention"
+                        ]
                     },
                     "disclosureAcknowledgement": {
                         "type": "object",
@@ -1059,9 +1152,25 @@
                                 "type": "string",
                                 "title": "Product Cons"
                             }
-                        }
+                        },
+                        "required": [
+                            "scopeAndTerms",
+                            "typesOfProducts",
+                            "authorizedInsurers",
+                            "compensationDescription",
+                            "rightToRequestInfo",
+                            "compensationEstimate",
+                            "conflictsOfInterest",
+                            "productAdvantages",
+                            "productCons"
+                        ]
                     }
-                }
+                },
+                "required": [
+                    "maApplicationQuestionnaire",
+                    "financialAcknowledgement",
+                    "disclosureAcknowledgement"
+                ]
             },
             "additionalInfo": {
                 "type": "object",
@@ -1099,7 +1208,17 @@
                         "type": "string",
                         "title": "Other Dependents"
                     }
-                }
+                },
+                "required": [
+                    "currentResidenceOption",
+                    "assistedLivingFacilityInd",
+                    "extraFundAvailable",
+                    "existingPoliciesSoldByAgent",
+                    "consideredOtherInsuranceNeeds",
+                    "resideInNursingHomeOrAssistedLiving",
+                    "noOfDependents",
+                    "otherDependents"
+                ]
             },
             "californiaResidentQuestions": {
                 "type": "object",
@@ -1117,7 +1236,12 @@
                         "type": "string",
                         "title": "Reverse Mortgage"
                     }
-                }
+                },
+                "required": [
+                    "applyForMeansTestedBenefits",
+                    "buyingForGovernmentBenefits",
+                    "reverseMortgage"
+                ]
             },
             "signatureInfo": {
                 "type": "array",
@@ -1154,7 +1278,15 @@
                             "title": "Signatory Designation",
                             "$ref": "#/definitions/signatureInfo_signatoryDesignationEnum"
                         }
-                    }
+                    },
+                    "required": [
+                        "signatureRoleCode",
+                        "signatoryName",
+                        "signatureDate",
+                        "signatureCity",
+                        "signatureState",
+                        "signatoryDesignation"
+                    ]
                 }
             }
         }
