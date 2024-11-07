@@ -27,6 +27,7 @@ import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/c
 import EditProgram from './edit-program';
 import { buildSSWFormData, SswUpdateType } from '../ssw-edit-helper';
 import Amount from './steps/amount';
+import ChannelStep from './steps/channel';
 import Start from './steps/start';
 import Summary from './steps/summary';
 
@@ -39,9 +40,8 @@ type SswUpdateContainerProps = {
 
 const SswUpdateContainer = ({ policy, document, program, programType }: SswUpdateContainerProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
-    const { currentStepIndex, setCurrentStepIndex } = useWorkflow();
+    const { currentStepIndex, setCurrentStepIndex, goToNext } = useWorkflow();
     const { formSource, initialForm, formSignature } = useContext(FormDataContext);
-
     const [showSSWEditTabs, setShowSSWEditTabs] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [formSubmitted, setFormSubmitted] = useState(false);
@@ -60,9 +60,8 @@ const SswUpdateContainer = ({ policy, document, program, programType }: SswUpdat
 
     const requestProgramUpdate = async (existingProg: Program, operationType: SswUpdateType) => {
         let successfulCaseUpdate;
-        // setIsLoading(true);
-
         if (TaskApiVersionMapper[initialForm.taskType] === ApiVersion.v2) {
+            setIsLoading(true);
             successfulCaseUpdate = await updateTask(
                 initialForm.caseId,
                 initialForm?.taskId,
@@ -94,25 +93,28 @@ const SswUpdateContainer = ({ policy, document, program, programType }: SswUpdat
                 ) as any
             );
         }
-
-        if (successfulCaseUpdate) {
-            setIsLoading(false);
-            setFormSubmitted(true);
-        } else {
-            setFormError(true);
-        }
+        return successfulCaseUpdate;
     };
 
     const handleFormAction = async (item: Program, operationType: SswUpdateType) => {
         let confirmCancel;
+        let res;
         if (operationType === SswUpdateType.PROGRAM_TERMINATE) {
             confirmCancel = window.confirm('Do you want to terminate program' as string);
             if (confirmCancel) {
-                requestProgramUpdate(item, operationType);
+                res = requestProgramUpdate(item, operationType);
             }
         }
         if (operationType === SswUpdateType.PROGRAM_UPDATE) {
-            requestProgramUpdate(item, operationType);
+            res = requestProgramUpdate(item, operationType);
+        }
+
+        if (res) {
+            setIsLoading(false);
+            setFormSubmitted(true);
+            goToNext();
+        } else {
+            setFormError(true);
         }
     };
 
@@ -168,17 +170,24 @@ const SswUpdateContainer = ({ policy, document, program, programType }: SswUpdat
                 text: t('sswUpdate.tabs.amount.tabTitle'),
             },
             {
+                ariaLabel: t('sswUpdate.tabs.channel.channel'),
+                component: <ChannelStep />,
+                screenReaderLabel: t('sswUpdate.tabs.channel.channel'),
+                index: 2,
+                text: t('sswUpdate.tabs.channel.channel'),
+            },
+            {
                 ariaLabel: t('sswUpdate.tabs.summary.tabTitle'),
                 component: <Summary currentProgram={program[0]} updatedProgram={updateProgram} onContinue={handleFormAction} />,
                 screenReaderLabel: t('sswUpdate.tabs.summary.tabTitle'),
-                index: 2,
+                index: 3,
                 text: t('sswUpdate.tabs.summary.tabTitle'),
             },
             {
                 ariaLabel: t('sswUpdate.tabs.confirm.tabTitle'),
-                component: <> </>,
+                component: <>{<div></div>} </>,
                 screenReaderLabel: t('sswUpdate.tabs.confirm.tabTitle'),
-                index: 3,
+                index: 4,
                 text: t('sswUpdate.tabs.confirm.tabTitle'),
             },
         ],
@@ -187,7 +196,7 @@ const SswUpdateContainer = ({ policy, document, program, programType }: SswUpdat
 
     const handleClick = (step: Step) => {
         if (step.isDisabled || currentStepIndex === step.index) return;
-        setCurrentStepIndex(step.index);
+        if (currentStepIndex !== 4) setCurrentStepIndex(step.index);
     };
 
     return (

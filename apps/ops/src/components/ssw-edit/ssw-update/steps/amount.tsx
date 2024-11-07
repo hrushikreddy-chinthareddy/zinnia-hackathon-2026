@@ -101,7 +101,7 @@ const Amount = ({ updateProgram, onProgramUpdate, isReadOnly }: AmountProps) => 
                         options={frequencyOptions(t)}
                         onChange={(val: string) => setSSWData(val as Frequency, 'frequency')}
                         size={FieldSize.Small}
-                        value={updateProgram.frequency || ''}
+                        value={Frequency.Annually}
                         name="frequency"
                         placeholder={t('selectOption') as string}
                     />

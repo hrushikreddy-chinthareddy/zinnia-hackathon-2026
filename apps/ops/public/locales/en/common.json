@@ -4283,6 +4283,13 @@
                     "annually": "Annually"
                 }
             },
+            "channel": {
+                "channel": "Channel",
+                "channelOptions": {
+                    "emailFaxMail": "Email/Fax/Mail",
+                    "phone": "Phone"
+                }
+            },
             "summary": {
                 "tabTitle": "Summary",
                 "reviewMessage": "Looking good! Be sure to review your entries before submitting",
