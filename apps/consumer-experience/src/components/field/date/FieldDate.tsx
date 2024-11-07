@@ -145,7 +145,10 @@ export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
                 {...props}
               />
               <div className={fieldStyles.rightIconContainer}>
-                <Icon type={IconType.CALENDAR} />
+                <Icon
+                  type={IconType.CALENDAR}
+                  color="var(--color-base-icon-icon-action)"
+                />
               </div>
             </div>
           </ReactPopover.Trigger>

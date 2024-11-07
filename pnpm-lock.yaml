@@ -60,8 +60,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/api-types
       '@zinnia/bloom':
-        specifier: 4.2.0
-        version: 4.2.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(date-fns@3.6.0)(rollup@4.24.3)(typescript@5.6.3)(vite@5.4.10(@types/node@20.17.5)(less@4.2.0)(terser@5.36.0))
+        specifier: 4.5.0
+        version: 4.5.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(date-fns@3.6.0)(rollup@4.24.3)(typescript@5.6.3)(vite@5.4.10(@types/node@20.17.5)(less@4.2.0)(terser@5.36.0))
       '@zinnia/utils':
         specifier: workspace:*
         version: link:../../packages/utils
@@ -6101,8 +6101,8 @@ packages:
   '@zinnia/bloom@3.9.1':
     resolution: {integrity: sha512-NrteoS0G6ynlo7ObDnJ4sT5bb+ssRR4VtxbSy5CRSe8sNp63LqxKDLTnVp1Ep7B39HkLl/EM3VaB6PKMi7S70g==, tarball: https://npm.pkg.github.com/download/@zinnia/bloom/3.9.1/cd2022c786a39585cf63f4662fce236e31b03c40}
 
-  '@zinnia/bloom@4.2.0':
-    resolution: {integrity: sha512-3HVpoj00oQgxj1+lJSk2GOdeSGuY8YLLqQ6GxUk73e0XflaB3n4gVVqmjOhtIurvHHTbdRPTtc75ItohS3j1BQ==, tarball: https://npm.pkg.github.com/download/@zinnia/bloom/4.2.0/b2e2fd16888bf0b776225b1fc9b00b76af546fc7}
+  '@zinnia/bloom@4.5.0':
+    resolution: {integrity: sha512-BuJg4QoEhQbbjARqbQTDcrsmxtQ1HT2BE+EesCHoIbPW0n+iNEch4kzz/7E9BPNk6Ui7d/8eOPuFeg3kIRYXGQ==, tarball: https://npm.pkg.github.com/download/@zinnia/bloom/4.5.0/af37a375cbe22dc39b28ef78ffd823a86c5f06d3}
 
   abab@2.0.6:
     resolution: {integrity: sha512-j2afSsaIENvHZN2B8GOpF566vZ5WVk5opAiMTvWgaQT8DkbOqsTfvNAvHoRGU2zzP8cPoqys+xHTRDWW8L+/BA==}
@@ -20265,7 +20265,7 @@ snapshots:
       - typescript
       - vite
 
-  '@zinnia/bloom@4.2.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(date-fns@3.6.0)(rollup@4.24.3)(typescript@5.6.3)(vite@5.4.10(@types/node@20.17.5)(less@4.2.0)(terser@5.36.0))':
+  '@zinnia/bloom@4.5.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(date-fns@3.6.0)(rollup@4.24.3)(typescript@5.6.3)(vite@5.4.10(@types/node@20.17.5)(less@4.2.0)(terser@5.36.0))':
     dependencies:
       '@radix-ui/react-checkbox': 1.1.2(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-dialog': 1.1.2(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)

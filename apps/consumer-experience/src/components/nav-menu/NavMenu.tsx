@@ -44,6 +44,7 @@ export const NavMenu = ({
   const [currentUrl, setCurrentUrl] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+
   const { isMockOn } = useMock();
 
   useEffect(() => {
@@ -85,7 +86,9 @@ export const NavMenu = ({
                   [styles.active as string]: pathname === navUrls.account,
                 })}
               >
-                <Icon type={IconType.CIRCLE_USER} />
+                <span>
+                  <Icon type={IconType.CIRCLE_USER} width={20} height={20} />
+                </span>
                 <Link
                   href="/my-account"
                   onClick={() => {
@@ -101,7 +104,9 @@ export const NavMenu = ({
                     [styles.active as string]: pathname === navUrls.allPolicies,
                   })}
                 >
-                  <Icon type={IconType.MATCHES} />
+                  <span>
+                    <Icon type={IconType.MATCHES} />
+                  </span>
                   <Link
                     href="/coverage"
                     onClick={() => {
@@ -128,11 +133,13 @@ export const NavMenu = ({
                           currentUrl.includes(detail.carrierName.toLowerCase()),
                       })}
                     >
-                      {CarrierIcon ? (
-                        <CarrierIcon width={16} height={16} color="#ffffff" />
-                      ) : (
-                        <Icon type={IconType.MATCHES} />
-                      )}
+                      <span>
+                        {CarrierIcon ? (
+                          <CarrierIcon width={20} height={20} color="#ffffff" />
+                        ) : (
+                          <Icon type={IconType.MATCHES} />
+                        )}
+                      </span>
                       <Link
                         href={detail.link.href}
                         aria-label={detail.link.label}
@@ -146,8 +153,10 @@ export const NavMenu = ({
             </ul>
             <div style={{ position: 'relative' }}>
               <a href="/api/logout">
-                <Icon type={IconType.LOGOUT} />
-                <span>Sign out</span>
+                <span>
+                  <Icon type={IconType.LOGOUT} width={20} height={20} />
+                </span>
+                Sign out
               </a>
             </div>
           </div>
