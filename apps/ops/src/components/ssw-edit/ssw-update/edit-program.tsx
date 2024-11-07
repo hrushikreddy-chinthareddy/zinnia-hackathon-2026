@@ -12,6 +12,7 @@ import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_ou
 import { ReactComponent as TrashIcon } from '@deps/styles/elements/icons/icons_outlined/trash.svg';
 
 import { signaturesConfig } from '../bank-update/bank-update.helper';
+import { SswUpdateType } from '../ssw-edit-helper';
 
 const channelOptions = (t: TFunction) => [
     {
@@ -23,12 +24,11 @@ const channelOptions = (t: TFunction) => [
         value: ChannelType.Phone,
     },
 ];
-const EditProgram = ({ program, onTerminate }: any) => {
+const EditProgram = ({ program, onTerminate, onEdit }: any) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const { formSource, setFormSource, formSignature } = useContext(FormDataContext);
     return (
         <div>
-            <label className="font-primary text-lg font-bold my-3">{t(`sswUpdate.${program.programType}`)}</label>
             <div className="mx-8">
                 <div className="my-4 grid w-full grid-cols-4 gap-4">
                     <SelectSimple
@@ -47,13 +47,13 @@ const EditProgram = ({ program, onTerminate }: any) => {
                         <Program program={program} isFormStateReadOnly={false} />
                     </div>
                     <div className="mt-3 p-8 text-primary flex">
-                        <EditIcon
+                        <EditIcon height={15} width={20} className="mx-2 cursor-pointer" onClick={() => onEdit(true)} />
+                        <TrashIcon
                             height={15}
                             width={20}
                             className="mx-2 cursor-pointer"
-                            // onClick={() => setShowSSWEditTabs(!showSSWEditTabs)}
+                            onClick={() => onTerminate(program, SswUpdateType.PROGRAM_TERMINATE)}
                         />
-                        <TrashIcon height={15} width={20} className="mx-2 cursor-pointer" onClick={() => onTerminate(program)} />
                     </div>
                 </div>
             </div>

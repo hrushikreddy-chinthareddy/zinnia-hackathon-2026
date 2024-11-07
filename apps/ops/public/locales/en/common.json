@@ -4257,6 +4257,43 @@
             "emailFaxMail": "Email/Fax/Mail",
             "phone": "Phone"
         },
+
+        "tabs": {
+            "start": {
+                "tabTitle": "Start",
+                "title": "Update SSW Program",
+                "subTitle": "Make changes to the schedule amount or payment method for this policy's premium autopay. First up, let's make sure we can keep trackof this transaction in OnBase.",
+                "channel": "Channel",
+                "channelOptions": {
+                    "emailFaxMail": "Email/Fax/Mail",
+                    "phone": "Phone"
+                }
+            },
+            "amount": {
+                "tabTitle": "Amount",
+                "programAmount": "Amount",
+                "programFrequency": "Frequency",
+                "programDuration": "Duration",
+                "programNextDate": "Next Date",
+                "frequencyOptions": {
+                    "none": "None",
+                    "monthly": "Monthly",
+                    "quarterly": "Quarterly",
+                    "semiAnnually": "Semi annually",
+                    "annually": "Annually"
+                }
+            },
+            "summary": {
+                "tabTitle": "Summary",
+                "reviewMessage": "Looking good! Be sure to review your entries before submitting",
+                "updatedProgram": "Program Updates",
+                "current": "Current"
+            },
+            "confirm": {
+                "tabTitle": "Confirm"
+            }
+        },
+
         "channel": "Channel",
         "close": "Close",
         "submitted": "Submitted",

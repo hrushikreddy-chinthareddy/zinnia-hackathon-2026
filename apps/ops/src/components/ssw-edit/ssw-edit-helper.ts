@@ -3,32 +3,41 @@ import dayjs from 'dayjs';
 import { Program } from '@deps/components/otp-withdrawal-form/rmd-method/program-item';
 import { DocumentData } from '@deps/models/case/document';
 import { ChannelType } from '@deps/models/case/enums';
-import { ActiveWithdrawalCase, FormSignature, FormSource } from '@deps/models/case/withdrawal/case';
+import { TaskSource } from '@deps/models/case/task';
+import { TaskStatus } from '@deps/models/case/task-instance';
+import { ActiveWithdrawalCase, CaseStatus, FormSignature, FormSource } from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
-export const getSswEditPayload = (
+export enum SswUpdateType {
+    PROGRAM_TERMINATE = 'ProgramTerminate',
+    PROGRAM_UPDATE = 'ProgramUpdate',
+}
+
+const getSswEditPayload = (
     initialForm: ActiveWithdrawalCase,
     formSource: FormSource,
     formSignature: FormSignature,
-    specialProgram: Program,
+    existingProg: Program,
+    updateProgram: Program[] | any,
     document: DocumentData,
-    sswEditType: string
+    operationType: SswUpdateType
 ) => {
+    const isTerminate = operationType === SswUpdateType.PROGRAM_TERMINATE;
     const formUpdateData = {
-        updateType: sswEditType,
+        updateType: operationType,
         contractNumber: initialForm.data.contractNum,
         bank: null,
         doesCheckMeetSecRequiremnt: null,
         voidCheck: null,
         programs: [
             {
-                programType: specialProgram.programType,
-                allocationId: specialProgram.allocationId,
-                amount: specialProgram.amount,
-                duration: specialProgram.duration,
-                frequency: specialProgram.frequency,
+                programType: existingProg.programType,
+                allocationId: existingProg.allocationId,
+                amount: isTerminate ? existingProg.amount : updateProgram.amount ?? existingProg.amount,
+                duration: isTerminate ? existingProg.duration : updateProgram.duration ?? existingProg.duration,
+                frequency: isTerminate ? existingProg.frequency : updateProgram.frequency ?? existingProg.frequency,
                 nextDate: {
-                    text: specialProgram.nextDate,
+                    text: isTerminate ? existingProg.nextDate : updateProgram.nextDate ?? existingProg.nextDate,
                 },
             },
         ],
@@ -87,5 +96,23 @@ export const getSswEditPayload = (
             ownerAcknowledgement: null,
             formNigos: null,
         },
+    };
+};
+
+export const buildSSWFormData = (
+    status: TaskStatus | CaseStatus,
+    initialForm: ActiveWithdrawalCase,
+    formSource: FormSource,
+    formSignature: FormSignature,
+    existingProg: Program,
+    updateProgram: Program[],
+    document: DocumentData,
+    operationType: SswUpdateType
+) => {
+    return {
+        source: TaskSource.ZinniaTaskManagement,
+        taskType: initialForm.taskType,
+        status,
+        data: getSswEditPayload(initialForm, formSource, formSignature, existingProg, updateProgram, document, operationType),
     };
 };

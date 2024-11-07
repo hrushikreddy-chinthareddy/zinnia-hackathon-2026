@@ -9,6 +9,7 @@ import { Program } from '@deps/components/otp-withdrawal-form/rmd-method/program
 import SswUpdateContainer from '@deps/components/ssw-edit/ssw-update/ssw-update-container';
 import { TranslationFiles } from '@deps/config/translations';
 import { FormProvider } from '@deps/containers/otp/withdrawal-forms/components/form-provider';
+import { WorkflowProvider } from '@deps/contexts/WorkflowContainerContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
@@ -38,7 +39,7 @@ const SswEdit = (props: SswUpdateProps) => {
     const { programType } = router.query;
     const [program, setProgram] = useState<Program[]>([]);
 
-    const ProgramType = {
+    const ProgramCode = {
         PremiumDefault: 0,
         SSW: 2,
         RMD: 4,
@@ -49,7 +50,7 @@ const SswEdit = (props: SswUpdateProps) => {
     const activeProg =
         specialProgramdetails?.allocationDetails?.filter(
             (program: any) =>
-                [ProgramType.PremiumDefault, ProgramType.RMD, ProgramType.SSW, ProgramType.SSWNet, ProgramType.EFTDraw].includes(
+                [ProgramCode.PremiumDefault, ProgramCode.RMD, ProgramCode.SSW, ProgramCode.SSWNet, ProgramCode.EFTDraw].includes(
                     program.typeOfAlloc
                 ) &&
                 (program.termDate === '' || dayjs().isBefore(program.termDate))
@@ -59,7 +60,7 @@ const SswEdit = (props: SswUpdateProps) => {
         const specialProg: Program[] = [];
         activeProg?.forEach((program: any) => {
             if (programType === 'SSW') {
-                if ([ProgramType.SSW, ProgramType.SSWNet].includes(program.typeOfAlloc)) {
+                if ([ProgramCode.SSW, ProgramCode.SSWNet].includes(program.typeOfAlloc)) {
                     specialProg.push({
                         programType: 'SSW',
                         startDate: program.startDate,
@@ -72,7 +73,7 @@ const SswEdit = (props: SswUpdateProps) => {
                     });
                 }
             } else if (programType === 'RMD') {
-                if (program.typeOfAlloc === ProgramType.RMD) {
+                if (program.typeOfAlloc === ProgramCode.RMD) {
                     specialProg.push({
                         programType: 'RMD',
                         startDate: program.startDate,
@@ -85,7 +86,7 @@ const SswEdit = (props: SswUpdateProps) => {
                     });
                 }
             } else if (programType === 'EFT') {
-                if (program.typeOfAlloc === ProgramType.EFTDraw) {
+                if (program.typeOfAlloc === ProgramCode.EFTDraw) {
                     specialProg.push({
                         programType: 'EFT Draw',
                         startDate: program.startDate,
@@ -106,7 +107,9 @@ const SswEdit = (props: SswUpdateProps) => {
         <div className="flex w-full flex-col overflow-auto px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10  bg-white h-screen">
             <FormProvider form={form} initialForm={form} isOpenNigo={false} issueState="" featureFlagDecisions={featureFlagDecisions}>
                 <div className="bg-gray-100 flex justify-center my-2">
-                    <SswUpdateContainer policy={policy} document={document} program={program} setProgram={setProgram} />
+                    <WorkflowProvider>
+                        <SswUpdateContainer policy={policy} document={document} program={program} programType={programType as string} />
+                    </WorkflowProvider>
                 </div>
             </FormProvider>
         </div>
