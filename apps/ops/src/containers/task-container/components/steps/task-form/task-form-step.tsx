@@ -43,7 +43,6 @@ const TaskFormStep = ({ taskType, isSummaryView = false, taskInfoLink }: TaskFor
             subtitle={t('subTitle') as string}
             footerContent={
                 <TransactionNavigationButtons
-                    className="!gap-0"
                     submitLabel={t('submitLabel') as string}
                     cancelLabel={t('cancelLabel') as string}
                     isSubmit={true}
