@@ -5,7 +5,7 @@
 
 .text {
     margin-bottom: 8px;
-    margin-top: 24px;
+    margin-top: 0px;
     font-family: var(--font-family-primary);
     font-style: normal;
     font-size: var(--measure-font-sizing-font-size-x-large);

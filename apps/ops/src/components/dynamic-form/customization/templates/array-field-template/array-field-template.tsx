@@ -26,7 +26,7 @@ function ArrayFieldTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
         ButtonTemplates: { AddButton },
     } = registry.templates;
     return (
-        <Box className="pl-2">
+        <Box className="pl-2 mt-4">
             <Card variant="classic">
                 <ArrayFieldTitleTemplate
                     idSchema={idSchema}

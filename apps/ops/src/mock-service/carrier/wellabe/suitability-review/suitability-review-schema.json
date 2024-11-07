@@ -110,6 +110,7 @@
             },
             "attachment": {
                 "type": "array",
+                "title": "Attachments",
                 "items": {
                     "type": "object",
                     "properties": {
@@ -142,6 +143,14 @@
         },
         "ui:submitButtonOptions": {
             "norender": true
+        },
+        "ui:options": {
+            "semantic": {
+                "errorOptions": {
+                    "size": "small",
+                    "pointing": "above"
+                }
+            }
         },
         "suitabiltyRules": {
             "ui:options": {
@@ -225,9 +234,6 @@
             }
         },
         "attachment": {
-            "ui:options": {
-                "label": false
-            },
             "items": {
                 "ui:options": {
                     "label": false

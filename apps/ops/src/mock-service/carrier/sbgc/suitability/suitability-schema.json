@@ -1581,14 +1581,13 @@
                 "partyType": {
                     "$ref": "#/definitions/partyTypeEnum",
                     "ui:options": {
-                        "label": false
-                    },
-                    "ui:helpText": "Applicant's type"
+                        "help": "Applicant's type"
+                    }
                 },
                 "roleType": {
                     "$ref": "#/definitions/roleTypeEnum",
                     "ui:options": {
-                        "label": false
+                        "help": "Applicant's Role type"
                     }
                 },
                 "fullName": {
@@ -1596,7 +1595,7 @@
                         "readyOnly": true,
                         "label": false,
                         "placeholder": "Full name",
-                        "helpText": "Applicant's Full name"
+                        "help": "Applicant's Full name"
                     }
                 },
                 "person": {
@@ -1604,25 +1603,25 @@
                         "ui:options": {
                             "label": false,
                             "placeholder": "First name",
-                            "helpText": "Applicant's first name"
+                            "help": "Applicant's first name"
                         }
                     },
                     "middleName": {
                         "ui:placeholder": "Middle name",
-                        "ui:helpText": "Applicant's Middle name",
+                        "ui:help": "Applicant's Middle name",
                         "ui:options": {
                             "label": false
                         }
                     },
                     "lastName": {
                         "ui:placeholder": "Last name",
-                        "ui:helpText": "Applicant's Last name",
+                        "ui:help": "Applicant's Last name",
                         "ui:options": {
                             "label": false
                         }
                     },
                     "gender": {
-                        "ui:helpText": "Applicant's gender",
+                        "ui:help": "Applicant's gender",
                         "$ref": "#/definitions/genderEnum",
                         "ui:options": {
                             "label": false

@@ -31,10 +31,10 @@ export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSche
         <div>
             <div className="px-4 flex">
                 <div className="flex w-full">{children}</div>
-                <div className="py-5 ml-auto">
+                <div className="pt-5 ml-auto">
                     {hasToolbar && (
                         <div className="d-flex flex-row">
-                            {(hasMoveUp || hasMoveDown) && (
+                            {/* {(hasMoveUp || hasMoveDown) && (
                                 <div className="m-0 p-0">
                                     <MoveUpButton
                                         className="array-item-move-up"
@@ -67,7 +67,7 @@ export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSche
                                         registry={registry}
                                     />
                                 </div>
-                            )}
+                            )} */}
                             {hasRemove && (
                                 <div className="m-0 pr-4">
                                     <RemoveButton

@@ -1191,6 +1191,7 @@
                 },
                 "roleType": {
                     "ui:options": {
+                        "help": "Applicant's Role",
                         "enumNames": [
                             "Owner",
                             "Joint Owner",
@@ -1203,34 +1204,30 @@
                 },
                 "fullName": {
                     "ui:options": {
-                        "help": "Applicant's Full name",
                         "disabled": true,
-                        "placeholder": "Full name",
-                        "helpText": "Applicant's Full name"
+                        "placeholder": "Full name"
                     }
                 },
                 "person": {
-                    "ui:options": {},
+                    "ui:options": {
+                        "help": "Fill in personal details"
+                    },
                     "firstName": {
                         "ui:options": {
-                            "placeholder": "First name",
-                            "helpText": "Applicant's first name"
+                            "placeholder": "First name"
                         }
                     },
                     "middleName": {
                         "ui:options": {
-                            "placeholder": "Middle name",
-                            "helpText": "Applicant's Middle name"
+                            "placeholder": "Middle name"
                         }
                     },
                     "lastName": {
                         "ui:options": {
-                            "placeholder": "Last name",
-                            "helpText": "Applicant's Last name"
+                            "placeholder": "Last name"
                         }
                     },
                     "gender": {
-                        "ui:helpText": "Applicant's gender",
                         "ui:options": {
                             "enumNames": [
                                 "MALE",
