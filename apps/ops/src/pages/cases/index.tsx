@@ -333,31 +333,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                 </Typography>
                 <div className={styles.container}>
                     {searchBar}
-                    <div className="min-h-screen">
-                        <div className="early-col-break my-6 flex flex-col items-start justify-start sm:flex-row sm:items-center sm:justify-between">
-                            <div className="early-break mb-4 flex flex-row items-center justify-start sm:mb-0 sm:justify-between">
-                                <p className="mr-2 whitespace-nowrap font-primary text-2xl font-normal text-gray-900">
-                                    {`${t('caseManagementDashboard.results')} (${caseTotals.All})`}
-                                </p>
-                                <NavElement
-                                    tabIndex={0}
-                                    size={NavElementSize.Small}
-                                    type={NavElementType.Button}
-                                    startIcon={<FilterButton />}
-                                    className="ml-2 flex items-center self-center whitespace-nowrap"
-                                    aria-label={t('ariaLabel.openRefineResultsButton') as string}
-                                    onClick={openRefineResultsSidesheet}
-                                    onKeyDown={e => {
-                                        if (e.key === 'Enter' || e.key === ' ') {
-                                            e.preventDefault();
-                                            openRefineResultsSidesheet();
-                                        }
-                                    }}
-                                >
-                                    {t('caseManagementDashboard.refineResults')}
-                                </NavElement>
-                            </div>
-                        </div>
+                    <div className="mt-4">
                         <StatusFilter
                             values={caseManagementFilters.additionalFilters.caseStatus}
                             onChange={vals =>
@@ -375,23 +351,41 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                                 })
                             }
                         />
-                        <ActiveFilters
-                            authorizedCarriers={authorizedCarriers}
-                            filters={caseManagementFilters.additionalFilters}
-                            removeFilter={removeAdditionalFilter}
-                            onReset={resetAllFilters}
-                        />
-                        <div className="w-full xs:overflow-x-auto xs:overflow-y-hidden xs:p-1 lg:p-0">{tableContent}</div>
-                        <div className="flex flex-col items-center lg:grid lg:grid-cols-3 mt-3">
-                            <div className="mb-6 lg:mb-0">
-                                {t('policy.documents.xToYOfZ', {
-                                    x: caseManagementFilters.offset + 1,
-                                    y: Math.min(caseManagementFilters.offset + limit, caseTotals.All),
-                                    z: caseTotals.All,
-                                })}
-                            </div>
-                            <div className="">{paginationControls}</div>
-                        </div>
+                    </div>
+                    <ActiveFilters
+                        authorizedCarriers={authorizedCarriers}
+                        filters={caseManagementFilters.additionalFilters}
+                        removeFilter={removeAdditionalFilter}
+                        onReset={resetAllFilters}
+                    />
+                    {/* to do - does this get deleted entirely? */}
+                    <NavElement
+                        tabIndex={0}
+                        size={NavElementSize.Small}
+                        type={NavElementType.Button}
+                        startIcon={<FilterButton />}
+                        className="flex items-center whitespace-nowrap"
+                        aria-label={t('ariaLabel.openRefineResultsButton') as string}
+                        onClick={openRefineResultsSidesheet}
+                        onKeyDown={e => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                openRefineResultsSidesheet();
+                            }
+                        }}
+                    >
+                        {t('caseManagementDashboard.refineResults')}
+                    </NavElement>
+                    {tableContent}
+                    <div className="flex flex-col items-center lg:grid lg:grid-cols-3 mt-3">
+                        <Typography variant={TypographyVariant.BodySm} className="mb-6 lg:mb-0">
+                            {t('policy.documents.xToYOfZ', {
+                                x: caseManagementFilters.offset + 1,
+                                y: Math.min(caseManagementFilters.offset + limit, caseTotals.All),
+                                z: caseTotals.All,
+                            })}
+                        </Typography>
+                        {paginationControls}
                     </div>
                 </div>
             </NoNavLayout>

@@ -95,36 +95,37 @@ const SearchBar = ({
     const dropdownLabels = toggleLabels(t);
 
     return (
-        <form className="flex flex-col md:items-start md:flex-row items-center" onSubmit={handleFormSubmit}>
-            <DropdownMenu.Root>
-                <DropdownMenu.Trigger className={clsx(styles.dropdownTrigger, 'typography-content-body-sm')}>
-                    <label id="case-search-label">
-                        <Typography variant={TypographyVariant.BodySm}>{activeLabels.label}</Typography>
-                    </label>
-                    <Icon type={IconType.CHEVRON} height={22} width={22} color="#00628B" />
-                </DropdownMenu.Trigger>
+        <form className={styles.formContainer} onSubmit={handleFormSubmit}>
+            <div className={styles.searchContainer}>
+                <DropdownMenu.Root>
+                    <DropdownMenu.Trigger className={clsx(styles.dropdownTrigger, 'typography-content-body-sm whitespace-nowrap')}>
+                        <label id="case-search-label">
+                            <Typography variant={TypographyVariant.BodySm}>{activeLabels.label}</Typography>
+                        </label>
+                        <Icon type={IconType.CHEVRON} height={22} width={22} color="#00628B" />
+                    </DropdownMenu.Trigger>
 
-                <DropdownMenu.Portal>
-                    <DropdownMenu.Content className={styles.dropdownMenu}>
-                        {dropdownLabels.map((item, index) => (
-                            <DropdownMenu.Item
-                                className={styles.dropdownItem}
-                                key={`dropdown-item-${index}`}
-                                onSelect={() => handleToggle(item.value || '')}
-                            >
-                                <Typography variant={TypographyVariant.BodySm}>{item.label}</Typography>
-                            </DropdownMenu.Item>
-                        ))}
-                    </DropdownMenu.Content>
-                </DropdownMenu.Portal>
-            </DropdownMenu.Root>
-            <SearchFieldToggle values={values} activeLabels={activeLabels} handleChange={handleNewValue} onClear={onClear} />
+                    <DropdownMenu.Portal>
+                        <DropdownMenu.Content className={styles.dropdownMenu}>
+                            {dropdownLabels.map((item, index) => (
+                                <DropdownMenu.Item
+                                    className={styles.dropdownItem}
+                                    key={`dropdown-item-${index}`}
+                                    onSelect={() => handleToggle(item.value || '')}
+                                >
+                                    <Typography variant={TypographyVariant.BodySm}>{item.label}</Typography>
+                                </DropdownMenu.Item>
+                            ))}
+                        </DropdownMenu.Content>
+                    </DropdownMenu.Portal>
+                </DropdownMenu.Root>
+                <SearchFieldToggle values={values} activeLabels={activeLabels} handleChange={handleNewValue} onClear={onClear} />
+            </div>
             <Button
                 mode="primary"
                 onClick={handleSearch}
                 data-testid="search-btn"
                 aria-label={t('ariaLabel.search') as string}
-                className="ml-2"
                 type="submit"
             >
                 {t('dashboard.search.btnText')}

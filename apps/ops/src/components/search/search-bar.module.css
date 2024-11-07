@@ -1,27 +1,53 @@
+.formContainer {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: var(--measure-dimension-gap-lg);
+    @media (min-width: 500px) {
+        align-items: flex-start;
+        flex-direction: row;
+        column-gap: var(--measure-dimension-gap-md);
+        row-gap: var(--measure-dimension-gap-lg);
+    }
+}
+
+.searchContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    @media (min-width: 500px) {
+        flex-direction: row;
+    }
+}
+
 .dropdownTrigger {
     align-items: center;
-    border-radius: var(--measure-border-radius-radius-md) 0px 0px var(--measure-border-radius-radius-md);
-    border: 2px solid var(--color-base-border-border-subtle);
+    border: var(--measure-border-width-stroke-sm) solid var(--color-base-border-border-subtle);
+    border-radius: var(--measure-border-radius-radius-md) var(--measure-border-radius-radius-md) 0 0;
     background: var(--color-grayscale-color-white);
     display: flex;
     justify-content: space-between;
     padding: var(--measure-spacing-padding-lg) var(--measure-spacing-padding-2xl);
-    /* to do - make a var */
-    width: 180px;
+    width: 100%;
 
-    /* to do - should these stay or wait until bloom is updated? */
     &:focus-visible,
     &:focus,
     &:active {
         border-color: var(--color-base-border-border-subtle);
-        outline-color: #007dbc;
-        outline-offset: 2px;
+        outline-color: var(--color-semantics-color-semantic-focus);
+        outline-offset: var(--measure-border-width-stroke-sm);
         position: relative;
         z-index: 1;
     }
     &:hover {
-        border-color: #003b54;
+        border-color: var(--color-states-hover-border-hover-border);
         outline: none;
+    }
+
+    @media (min-width: 500px) {
+        border-radius: var(--measure-border-radius-radius-md) 0px 0px var(--measure-border-radius-radius-md);
+        width: 180px;
     }
 }
 

@@ -2,17 +2,20 @@
     position: relative;
 
     &:last-of-type input {
-        border-radius: 0px var(--measure-border-radius-radius-md) var(--measure-border-radius-radius-md) 0px;
+        @media (min-width: 500px) {
+            border-radius: 0px var(--measure-border-radius-radius-md) var(--measure-border-radius-radius-md) 0px;
+        }
     }
 }
 
 .input {
     --iconSize: 24px;
-    border: 2px solid var(--color-base-border-border-subtle);
-    border-left-width: 0;
-    border-radius: 0;
+    border: var(--measure-border-width-stroke-sm) solid var(--color-base-border-border-subtle);
+    border-top-width: 0;
+    border-radius: 0 0 var(--measure-border-radius-radius-md) var(--measure-border-radius-radius-md);
     padding: var(--measure-spacing-padding-lg) var(--measure-spacing-padding-2xl);
     padding-left: calc(var(--iconSize) + var(--measure-dimension-gap-lg) + var(--measure-spacing-padding-2xl));
+    width: 100%;
 
     &::-webkit-outer-spin-button,
     &::-webkit-inner-spin-button {
@@ -20,33 +23,36 @@
         margin: 0;
     }
 
-    [type='number'] {
-        /* to do - variable? */
-        width: 306px;
-    }
-
-    [type='text'] {
-        /* to do - variable? */
-        width: 186px;
-    }
-
     &:active,
     &:focus,
     &:focus-visible {
         border-color: var(--color-base-border-border-subtle);
-        outline-color: #007dbc;
+        outline-color: var(--color-semantics-color-semantic-focus);
         outline-offset: 2px;
         position: relative;
         z-index: 1;
         /* Tailwind will be the death of me - this is to override the weird default outline it provides */
-        --tw-ring-color: #007dbc;
+        --tw-ring-color: var(--color-semantics-color-semantic-focus);
         --tw-ring-offset-shadow: none;
         --tw-ring-shadow: none;
     }
 
     &:hover {
-        border-color: #003b54;
+        border-color: var(--color-states-hover-border-hover-border);
         outline: none;
+    }
+
+    @media (min-width: 500px) {
+        border-left-width: 0;
+        border-top-width: var(--measure-border-width-stroke-sm);
+
+        [type='number'] {
+            width: 306px;
+        }
+
+        [type='text'] {
+            width: 186px;
+        }
     }
 }
 
