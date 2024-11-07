@@ -38,6 +38,7 @@ const DynamicForm = React.forwardRef(function DynamicFormComponent(
                 fields={fields}
                 templates={templates}
                 readonly={isSummaryView}
+                showErrorList={false}
             >
                 {formButtons}
             </Form>

@@ -18,7 +18,6 @@ const TextField = (props: TextFieldProps) => {
     const { id, label, value, className, disabled, onChange, onBlur, onFocus } = props;
 
     const classes = clsx(
-        // styles.error,
         styles.textField,
         styles[props.fieldSize || 'small'],
         props.status && styles[props.status] ? styles[props.status] : '',
