@@ -1,7 +1,7 @@
 import { AssistiveText, AssistiveTextVariant, Loader } from '@zinnia/bloom/components';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'next-i18next';
-import { useContext, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 
 import 'react-pdf/dist/Page/TextLayer.css';
 
@@ -10,17 +10,22 @@ import WorkflowCard from "@deps/components/workflows/workflow-card/workflow-card
 import { TranslationFiles } from '@deps/config/translations';
 import { CarrierToCarrierTitleMap } from '@deps/constants/page-title';
 import { FormErrors } from '@deps/containers/otp/withdrawal-forms/components/form-errors';
+import { buildFormV2 } from '@deps/containers/otp/withdrawal-forms/utils/withdrawal-form-helper';
 import { DiaryNotesContext } from '@deps/contexts/DiaryNotesContext';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
 import { DocumentData } from '@deps/models/case/document';
+import { ApiVersion } from '@deps/models/case/enums';
+import { TaskApiVersionMapper } from '@deps/models/case/helpers';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
+import { updateTask } from '@deps/queries/api/v2/task';
 import { isNonProductionEnvironment } from '@deps/utils/environment.helper';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { getCaseType, getFormParts } from './form-entry-step.helper';
+import { useNigoEntry } from '../../nigo-entry-provider';
 
 
 type FormEntryStepProps = {
@@ -39,8 +44,9 @@ function FormEntryStep({document, clientCode, docType} : FormEntryStepProps) {
     const formState = useContext(FormDataContext);
     const shouldShowNewExperience = formState.featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
     const isFormStateReadOnly = shouldShowNewExperience ? formState.isFormStateReadOnly : false;
-
+    const [timer] = useState(performance.now());
     const { areDiaryNotesViewed } = useContext(DiaryNotesContext);
+    const { setSubmitFailed } = useNigoEntry();
 
     const formParts = getFormParts(caseType, clientCode, qualType, docType);
     const [taskApiError, setTaskApiError] = useState('');
@@ -108,11 +114,35 @@ function FormEntryStep({document, clientCode, docType} : FormEntryStepProps) {
         return Object.keys(errors).length === 0;
     };
 
+    const submit = useCallback(async () => {
+        setIsLoading(true);
+        if (TaskApiVersionMapper[formState.initialForm.taskType] === ApiVersion.v2 && formState.initialForm.status !== TaskStatus.Completed) {
+            const successfulCaseUpdate = await updateTask(
+                formState.initialForm.caseId,
+                formState.initialForm.taskId,
+                buildFormV2(TaskStatus.Completed, document, formState),
+                timer
+            );
+
+            if (successfulCaseUpdate && successfulCaseUpdate.id) {
+                setSubmitFailed(false);
+            } else {
+                setSubmitFailed(true);
+            }
+        } else {
+            setSubmitFailed(false);
+        }
+
+        setIsLoading(false);
+    }, [document, formState, setSubmitFailed, timer]);
+
+
     const handleFormSubmit = async () => {
         setIsLoading(true);
         setTaskApiError('');
         if (validateForm() && areDiaryNotesViewed) {
             setIsLoading(false);
+            await submit();
             goToNext();
         } else {
             setIsLoading(false);

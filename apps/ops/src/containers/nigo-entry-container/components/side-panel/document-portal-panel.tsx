@@ -72,7 +72,7 @@ const DocumentPortalPanel = ({ policy, documentNumber, docType }: DocumentViewPr
                 )}
                 {relatedDocument?.length === 0 && (
                     <div className="border-box w-full lg:px-[30px] mt-2">
-                        <div className="w-full rounded border-2 border-dashed border-gray-100 bg-gray-50 p-8">
+                        <div className="w-full rounded border-2 border border-gray-100 bg-gray-50 p-8">
                             <AssistiveText
                                 text={t('noFormAvailable')}
                                 variant={AssistiveTextVariant.Default}
