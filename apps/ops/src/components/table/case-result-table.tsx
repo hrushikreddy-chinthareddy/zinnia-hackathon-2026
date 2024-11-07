@@ -23,6 +23,7 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { isEmptyObject } from '@deps/helpers/objects.helper';
 import { getAgents, getPolicyOwners } from '@deps/helpers/parties';
 import { formatSSN, toTitleCase } from '@deps/helpers/string.helper';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
@@ -231,15 +232,14 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
     );
 };
 
-const NoResultsRow = () => {
+const NoResultsRow = ({ searchValues }: { searchValues: SearchViewQuery | undefined }) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
+    const hasSearchValue = !isEmptyObject(searchValues);
 
     return (
-        // to do - there is supposed to be a second one of these for the wrong filters
-        // probably need to sync with Brian on his work for this
         <TableRow>
             <TableCell colSpan={7} className="text-center">
-                {t('caseManagementDashboard.search.empty.title')}
+                {hasSearchValue ? t('caseManagementDashboard.search.empty.title') : t('caseManagementDashboard.search.empty.titleFilters')}
             </TableCell>
         </TableRow>
     );
@@ -289,7 +289,7 @@ export const CaseResultTable = ({ cases, searchValues, handleSort, sortDirection
                         <CaseTableRow key={`case-search-card-${singleCase.id}`} singleCase={singleCase} searchValues={searchValues} />
                     ))
                 ) : (
-                    <NoResultsRow />
+                    <NoResultsRow searchValues={searchValues} />
                 )}
             </TableBody>
         </Table>
