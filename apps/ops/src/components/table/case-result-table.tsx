@@ -196,7 +196,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                     >
                         <div className="flex flex-col">
                             <span>{carrierName}</span>
-                            {singleCase.productName && <span>{singleCase.productName}</span>}
+                            {singleCase.productName && <span className="capitalize">{singleCase.productName.toLowerCase()}</span>}
                         </div>
                     </Tooltip>
                     <CaseDetailField
