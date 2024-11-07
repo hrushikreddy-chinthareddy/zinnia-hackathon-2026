@@ -62,7 +62,6 @@ const QuickLinks = ({ links, planCode, policyNumber, policy, userPartyId }: Quic
 
     // this should only run once after fireEligibilityChecks && isLife are both true
     useEffect(() => {
-        console.log('run onece');
         if (fireEligibilityChecks && isLife) {
             const checkManageAutopayEligibility = async () => {
                 const manageAutopayEligibility = await checkEligibilitySystematicPrograms(planCode, policyNumber, arrangementId || '');
