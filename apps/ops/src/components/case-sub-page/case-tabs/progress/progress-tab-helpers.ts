@@ -304,6 +304,7 @@ export class TransformedCase {
     caseRaw: Case;
     caseStatus: Statuses;
     completedSteps: number;
+    resolvedExceptionStatuses: Array<ExceptionStatuses | Statuses>;
     documentsMap: { [key: string]: DocumentView };
     exceptionMap: { [key: string]: ExceptionInstance & { usedInStep?: boolean } };
     processSubType: string;
@@ -321,6 +322,7 @@ export class TransformedCase {
         this.totalSteps = 0;
         this.completedSteps = 0;
         this.unresolvedExceptionCount = 0;
+        this.resolvedExceptionStatuses = [Statuses.Completed, ExceptionStatuses.Resolved, ExceptionStatuses.Overridden];
         this.documentsMap = caseDetails?.documents?.reduce((acc, document) => {
             if (document.id) {
                 acc[document.id] = {
@@ -337,7 +339,7 @@ export class TransformedCase {
         }, {} as { [key: string]: DocumentView });
         this.exceptionMap = caseDetails?.exceptions?.reduce((acc, exception) => {
             if (exception?.id) {
-                const exceptionIsResolved = [ExceptionStatuses.Resolved, Statuses.Completed, Statuses.Overridden].includes(exception.status as ExceptionStatuses | Statuses);
+                const exceptionIsResolved = this.resolvedExceptionStatuses.includes(exception.status as ExceptionStatuses | Statuses);
                 acc[exception.id] = exception;
                 if (!exceptionIsResolved) {
                     this.unresolvedExceptionCount++;
@@ -397,7 +399,7 @@ export class TransformedCase {
                 .filter(Boolean) as TaskView[]
         ).sort(taskSorter);
         const description = this.t(
-            [Statuses.Completed, ExceptionStatuses.Resolved, ExceptionStatuses.Overridden].includes(exception.status)
+            this.resolvedExceptionStatuses.includes(exception.status)
                 ? 'caseOverview.tabs.resolved'
                 : 'caseOverview.tabs.issue',
             { issue: exceptionReason }
