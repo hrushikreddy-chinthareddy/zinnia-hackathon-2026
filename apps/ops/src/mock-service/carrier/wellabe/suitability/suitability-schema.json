@@ -1312,9 +1312,10 @@
             }
         },
         "parties": {
-            "ui:options": {},
             "items": {
-                "ui:options": {},
+                "ui:options": {
+                    "title": "Party"
+                },
                 "partyType": {
                     "ui:options": {
                         "help": "Applicant's type",
@@ -1526,9 +1527,10 @@
                     }
                 },
                 "govtIdInfo": {
-                    "ui:options": {},
                     "items": {
-                        "ui:options": {},
+                        "ui:options": {
+                            "title": "Govt Id"
+                        },
                         "govtId": {
                             "ui:options": {}
                         },
@@ -1554,8 +1556,10 @@
                     }
                 },
                 "addresses": {
-                    "ui:options": {},
                     "items": {
+                        "ui:options": {
+                            "title": "Address"
+                        },
                         "addressType": {
                             "uniqueItems": true,
                             "ui:options": {
@@ -1772,7 +1776,7 @@
             "materialChangeDetails": {
                 "items": {
                     "ui:options": {
-                        "label": false
+                        "title": "Material change detail"
                     },
                     "changeType": {
                         "ui:options": {
@@ -1867,7 +1871,7 @@
                 "assetsDistribution": {
                     "items": {
                         "ui:options": {
-                            "label": false
+                            "title": "Asset distribution"
                         },
                         "productType": {
                             "ui:options": {
@@ -1905,7 +1909,7 @@
                 "totalAsset": {
                     "items": {
                         "ui:options": {
-                            "label": false
+                            "title": "Total asset"
                         },
                         "qualificationType": {
                             "ui:widget": "radio",
@@ -1997,7 +2001,9 @@
             "fundsAccessExplanation": {},
             "distributionMethods": {
                 "items": {
-                    "ui:label": false
+                    "ui:options": {
+                        "label": false
+                    }
                 }
             },
             "firstPayoutOption": {},
@@ -2011,7 +2017,7 @@
                 "planForIncomeDecreaseAfter10Years": {
                     "items": {
                         "ui:options": {
-                            "label": false
+                            "title": "plan for Income Decrease After 10 Years"
                         }
                     }
                 }
@@ -2046,6 +2052,9 @@
                         "classNames": "divider"
                     },
                     "items": {
+                        "ui:options": {
+                            "title": "Product detail"
+                        },
                         "productType": {
                             "ui:options": {
                                 "enumNames": [
@@ -2114,6 +2123,9 @@
                 "classNames": "divider"
             },
             "items": {
+                "ui:options": {
+                    "title": "Signature information"
+                },
                 "signatureRoleCode": {
                     "ui:options": {
                         "enumNames": [
