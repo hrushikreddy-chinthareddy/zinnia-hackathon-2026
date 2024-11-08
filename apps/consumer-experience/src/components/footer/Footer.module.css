@@ -11,11 +11,11 @@
 }
 
 .link {
-  color: var(--color-base-text-text-link, #1e359c);
+  color: var(--color-links-color-global-link, #1e359c);
   text-decoration: underline;
 
   &:hover {
-    color: var(--color-states-hover-hover-text-link, #003b54);
+    color: var(--color-links-color-global-link-dark, #003b54);
     text-decoration: none;
   }
 }

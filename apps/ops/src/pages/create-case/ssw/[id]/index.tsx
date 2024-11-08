@@ -17,7 +17,7 @@ import { FormControls } from '@deps/containers/otp/withdrawal-forms/components/f
 import { FormErrors } from '@deps/containers/otp/withdrawal-forms/components/form-errors';
 import { FormProvider } from '@deps/containers/otp/withdrawal-forms/components/form-provider';
 import { DiaryNotesProvider } from '@deps/contexts/DiaryNotesContext';
-import { isNonProductionEnvironment } from '@deps/helpers/environment.helper';
+import { isNonProductionEnvironment } from '@deps/utils/environment.helper';
 import { determineFormToRender } from '@deps/helpers/form-selector.helper';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { shouldNavbarOverlay } from '@deps/helpers/page-layout';
@@ -47,14 +47,17 @@ import { MassMutualSSWForm } from '@deps/containers/otp/ssw-forms/mass/mass-ssw-
 import { NassauSSWForm } from '@deps/containers/otp/ssw-forms/nasu/nasu-ssw-form';
 import { CarrierToCarrierTitleMap } from '@deps/constants/page-title';
 import { FlicSSWForm } from '@deps/containers/otp/ssw-forms/flic/flic-ssw-form';
+import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
+import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 
-interface SSWCaseProps {
+interface SSWCaseProps extends SegmentTrackedPageProps {
     document: DocumentData;
     form: ActiveWithdrawalCase;
     userId: string;
     transactionsHistory?: Transaction[];
     formParts: React.ReactNode;
     parties: LifeCadParty[];
+    // TODO MG: put this in an interface for FeatureFlags that each page needing it can just extend
     featureFlagDecisions: FeatureFlags;
 }
 
@@ -81,7 +84,7 @@ const getFormComponentMap = (qualType: QualTypes | ''): Record<string, React.Rea
     [Carrier.FLIC]: <FlicSSWForm qualType={qualType} />,
 });
 
-export default function SSWCase({ document, form, parties, transactionsHistory, featureFlagDecisions }: SSWCaseProps) {
+export default function SSWCase({ document, form, parties, transactionsHistory, featureFlagDecisions, user }: SSWCaseProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseSSW.request' });
 
     // TODO: Need to map this from common portion whenever we will restructure i18 files
@@ -91,6 +94,13 @@ export default function SSWCase({ document, form, parties, transactionsHistory, 
     const { clientId, clientIdOverride } = router.query;
     const clientForFormDetermination = isNonProductionEnvironment() ? clientIdOverride || clientId : clientId;
 
+    useSegmentPageTracker(user, SegmentPageName.SswCase, {
+        documentNumber: document.documentNumber,
+        formTaskId: form.taskId,
+        clientId,
+        clientIdOverride,
+    });
+
     const isLargeScreen = useScreenSize(SCREEN_BREAKPOINTS.lg);
     const { issueState, qualType, issueDate } = useAccountInfo(document.contract, clientId as string);
     const [transactionDetail, setTransactionDetail] = useState<SidebarContent>(DefaultSidebarContent);
@@ -98,8 +108,8 @@ export default function SSWCase({ document, form, parties, transactionsHistory, 
     const [taskApiError, setTaskApiError] = useState('');
     const [loading, setLoading] = useState(false);
     const initialForm = form;
-
     const formParts = determineFormToRender(clientForFormDetermination as string, getFormComponentMap(qualType));
+
     if (!formParts) {
         console.error('SSWCase::No form parts', {
             documentNumber: document?.documentNumber,
@@ -113,7 +123,8 @@ export default function SSWCase({ document, form, parties, transactionsHistory, 
         setTransactionDetail({
             contractId: document?.contract || '',
             documentNumber: document?.documentNumber || '',
-            contractValue:document?.contractValue||'',
+            contractValue: document?.contractValue || '',
+            contractStatusCode: document?.contractStatusCode || '',
             caseId: form.caseId || '',
             transactions: transactionsHistory,
             qualType,
@@ -152,6 +163,7 @@ export default function SSWCase({ document, form, parties, transactionsHistory, 
     const carrierMappedText = CarrierToCarrierTitleMap[carrier];
     const carrierTitle = carrierMappedText ? carrierMappedText : carrier;
     const formTitle = carrierTitle ? t('formTitles.standard', { carrier: carrierTitle }) : t(`formTitles.defaultTitle`);
+
     return (
         <DiaryNotesProvider caseDetails={caseDetailsData}>
             <OtpLayout contractNumber={document.contract} clientId={clientId as string}>
@@ -317,6 +329,7 @@ export const getServerSideProps = withPageAuthRequired({
                 transactionsHistory: null,
                 parties: Array.isArray(parties) ? parties : [],
                 featureFlagDecisions,
+                user,
             },
         };
     },

@@ -203,7 +203,7 @@ export default function useNasuConfig(t: TFunction) {
         if (programTypeText === ProgramType.NetWithdrawal) {
             return { selectedOption: ProgramType.NetWithdrawal, amount };
         }
-    
+
         if (programTypeText === ProgramType.GrossWithdrawal) {
             return { selectedOption: ProgramType.GrossWithdrawal, amount };
 
@@ -255,20 +255,6 @@ export default function useNasuConfig(t: TFunction) {
         },
     ];
 
-    const consentAvailableConfig = [
-        {
-            component: SignatureFields.SignaturePresent,
-            key: 'consent-available-sign-present',
-        },
-        {
-            component: SignatureFields.SignatureTitle,
-            key: 'consent-available-sign-title',
-        },
-        {
-            component: SignatureFields.SignatureDate,
-            key: 'consent-available-sign-date',
-        },
-    ];
 
     const disbursementOptions: PaymentMethodOption[] = [
         {
@@ -338,7 +324,7 @@ export default function useNasuConfig(t: TFunction) {
                     component: DisbursementFields.BankBooleanButtonGroup,
                 },
             ],
-            consentAvailableConfig,
+
             getDefaultPayload({ paymentMethod, disbursmentConsent, bank }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.EFT) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
@@ -454,7 +440,7 @@ export default function useNasuConfig(t: TFunction) {
                     component: DisbursementFields.BankBooleanButtonGroup,
                 },
             ],
-            consentAvailableConfig,
+
             getDefaultPayload({ paymentMethod, disbursmentConsent, bank }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.Wire) {
                     return DEFAULT_DISBURSEMENT_UPDATE;

@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import 'react-pdf/dist/Page/TextLayer.css';
 import { Loader } from '@deps/components/page-loader';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { PolicyDocument, PolicyDocuments } from '@deps/models/case/document';
+import { DocumentDisplayCode, PolicyDocument, PolicyDocuments } from '@deps/models/case/document';
 import { StatementStartYear, StatementTypes } from '@deps/models/case/send-statement';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
@@ -96,10 +96,16 @@ const getDatePickerType = (selectedStatements: StatementTypes[]) => {
     }
 };
 
-const getSortedStatements = (statements: PolicyDocument[]) => {
-    return statements.sort((a, b) => {
-        return dayjs(b.documentDate).valueOf() - dayjs(a.documentDate).valueOf();
-    });
+const ownerCopyStatements = (statements: PolicyDocument[]) => {
+    if (!statements) {
+        return [];
+    }
+
+    return statements
+        ?.filter(statement => statement.displayCode === DocumentDisplayCode.Owner)
+        ?.sort((a, b) => {
+            return dayjs(b.documentDate).isBefore(a.documentDate) ? 1 : -1;
+        });
 };
 
 function StatementSelection({ policy, applicableStatement, statements, setStatements }: StatementSelectionProps) {
@@ -183,7 +189,7 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                             return;
                         }
                         const statements: PolicyDocuments = response.data;
-                        setStatements(getSortedStatements(statements.items));
+                        setStatements(ownerCopyStatements(statements.items));
                     }
                 } catch (error) {
                     console.error('An error occurred while getting Contact Center statements', error);
@@ -238,6 +244,7 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                     showMonths={false}
                     datePickerType={datePickerType}
                     isDateAllowed={date => handleIsDateAllowed(date, StatementStartYear)}
+                    readOnly={true}
                 />
 
                 <FieldDateSelect
@@ -254,8 +261,8 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                     showMonths={false}
                     datePickerType={datePickerType}
                     isDateAllowed={date => handleIsDateAllowed(date, startDate)}
+                    readOnly={true}
                 />
-
             </div>
 
             {loader ? (

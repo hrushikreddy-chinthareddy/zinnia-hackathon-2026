@@ -1,6 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
+import TransactionStatusFilter from '@deps/components/history/filters/status-filter';
 import TypeFilters, { DismissableFilters } from '@deps/components/history/filters/type-filters';
 import YearFilter from '@deps/components/history/filters/year-filter';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
@@ -36,10 +37,10 @@ const HistorySubPage = () => {
                     <DismissableFilters isSideSheetOpen={isSideSheetOpen} />
 
                     <div className="hidden w-[200px] flex-shrink-0 flex-col items-start gap-6 lg:flex">
+                        <TransactionStatusFilter />
                         <YearFilter />
                         <TypeFilters />
                     </div>
-
                     <HistoryEventFeed isSideSheetOpen={isSideSheetOpen} />
                 </div>
 

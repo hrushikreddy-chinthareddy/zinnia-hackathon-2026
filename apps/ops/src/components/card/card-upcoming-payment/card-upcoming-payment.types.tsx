@@ -15,6 +15,7 @@ export enum UpcomingPaymentCardTest {
 
 export type UpcomingPaymentCardProps = {
     title?: string;
+    titleCase?: boolean;
     icon?: ReactNode;
     // inactive content
     inactiveText?: string;

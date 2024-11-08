@@ -6,6 +6,8 @@
     "build:all": "turbo run build",
     "dev": "dotenv -- turbo run dev",
     "dev:ops": "pnpm run dev --filter ops",
+    "test:ops": "turbo run test --filter ops",
+    "cypress:ops": "npm --prefix apps/ops run cypress:local",
     "dev:consumer-experience": "pnpm run dev --filter consumer-experience",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",

@@ -1,5 +1,6 @@
 'use client';
 
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import {
   Label,
   Table,
@@ -19,6 +20,7 @@ import { percentFormatify } from '@/utils/numbers';
 import { FundNameCellContent } from './FundNameCellContent';
 import styles from './FundsTable.module.css';
 import { LoadingRow } from './LoadingRow';
+import { allocationAccountInfo, sweepDateInfo } from './utils';
 import { LabelPopover } from '../label-popover/LabelPopover';
 import { NoDataAvailable } from '../no-data-available/NoDataAvailable';
 
@@ -32,9 +34,11 @@ const SHOW_ALL_HOLDING_FUNDS_DETAILS_WIDTH = 767;
 export const HoldingFunds = ({
   funds,
   isLoading,
+  lineOfBusiness,
 }: {
   funds?: Fund[];
   isLoading?: boolean;
+  lineOfBusiness?: LineOfBusiness;
 }) => {
   const { width } = useWindowSize();
 
@@ -62,8 +66,12 @@ export const HoldingFunds = ({
                   <LabelPopover
                     key={INTEREST_RATE_LABEL}
                     title={INTEREST_RATE_LABEL}
-                    content="This is the rate of growth being earned on the amount within a fixed account or holding account."
-                  />,
+                  >
+                    <p>
+                      This is the rate of growth being earned on the amount
+                      within a fixed account or holding account.
+                    </p>
+                  </LabelPopover>,
                 ]}
               >
                 {toSentenceCase(INTEREST_RATE_LABEL)}
@@ -73,11 +81,9 @@ export const HoldingFunds = ({
           <TableHeaderCell>
             <Label
               interactiveElements={[
-                <LabelPopover
-                  key={FUND_VALUE_LABEL}
-                  title={FUND_VALUE_LABEL}
-                  content="This is the amount of your account value currently allocated in this specific account."
-                />,
+                <LabelPopover key={FUND_VALUE_LABEL} title={FUND_VALUE_LABEL}>
+                  {allocationAccountInfo(lineOfBusiness)}
+                </LabelPopover>,
               ]}
             >
               {toSentenceCase(FUND_VALUE_LABEL)}
@@ -90,8 +96,9 @@ export const HoldingFunds = ({
                   <LabelPopover
                     key={NEXT_SWEEP_DATE_LABEL}
                     title={NEXT_SWEEP_DATE_LABEL}
-                    content="On this date, all money in the holding account will be “swept” or moved into the account(s) you've elected. In most cases, the sweep date happens on the same date every month."
-                  />,
+                  >
+                    {sweepDateInfo(lineOfBusiness)}
+                  </LabelPopover>,
                 ]}
               >
                 {toSentenceCase(NEXT_SWEEP_DATE_LABEL)}
@@ -114,6 +121,7 @@ export const HoldingFunds = ({
                   <FundNameCellContent
                     isElected={fund.isElected}
                     fundDetails={fund}
+                    lineOfBusiness={lineOfBusiness}
                   />
                 </TableCell>
                 {isDesktop && (

@@ -44,3 +44,7 @@ pnpm run test
 # this will run all of the existing tests and watch for changes
 pnpm run test-watch
 ```
+
+### Failing Unit Tests due to Canvas
+- If you cannot run the tests due to an error with `canvas`, run the following `brew` command:
+`brew install pkg-config cairo pango libpng jpeg giflib librsvg`

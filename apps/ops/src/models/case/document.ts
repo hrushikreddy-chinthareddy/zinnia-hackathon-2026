@@ -49,6 +49,7 @@ export interface DocumentData {
     caseId: string;
     clientInstitution: string;
     contract: string;
+    contractValue?:string;
     contractStatusCode: string;
     contractValue:string;
     dateReceived: string;
@@ -96,6 +97,10 @@ export interface DocumentErrorResponse {
     message: string;
 }
 
+export enum DocumentDisplayCode {
+    Owner = 1,
+    Producer = 2,
+}
 export interface PolicyDocument {
     caseId: string;
     contractNumber: string;
@@ -111,6 +116,7 @@ export interface PolicyDocument {
     fileType: string;
     periodYear?: string;
     periodQuarter?: string;
+    displayCode?: DocumentDisplayCode;
 }
 
 export interface PolicyDocuments {

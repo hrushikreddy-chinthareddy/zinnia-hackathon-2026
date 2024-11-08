@@ -103,6 +103,28 @@ export const percentFormatify = (value?: number | string | null, options?: { isI
     return new Intl.NumberFormat('en-US', { style: 'percent', maximumFractionDigits: 2 }).format(numberValue);
 };
 
+export const wholePercentFormatify = (value?: number | string | null, options?: { isInteger?: boolean }): string => {
+    if (isNullEmptyOrUndefined(value)) {
+        return DEFAULT_ERROR_STRING;
+    }
+
+    if (typeof value === 'string') {
+        value = parseFloat(value);
+    }
+
+    let numberValue = value as number;
+
+    if (isNaN(numberValue)) {
+        return DEFAULT_ERROR_STRING;
+    }
+
+    if (options?.isInteger) {
+        numberValue = numberValue / 100;
+    }
+
+    return new Intl.NumberFormat('en-US', { style: 'percent', maximumFractionDigits: 0 }).format(numberValue);
+};
+
 export const forcePositiveNumber = (value?: number | string | null): string => {
     if (isNullEmptyOrUndefined(value)) {
         return DEFAULT_ERROR_STRING;
@@ -161,4 +183,42 @@ export const determineRange = (start: number, end: number) => {
     }
 
     return range;
+};
+
+export const formatNumberLabel = (label: string, val: number | null): string => {
+    return val && val > 1 ? `${label}s` : label;
+};
+
+export const wholeNumberFormatify = (value?: number | string | null, roundToMillion = false): string => {
+    if (isNullEmptyOrUndefined(value)) {
+        return DEFAULT_ERROR_STRING;
+    }
+
+    if (typeof value === 'string') {
+        value = parseFloat(value);
+    }
+
+    let numberValue = value as number;
+
+    if (isNaN(numberValue)) {
+        return DEFAULT_ERROR_STRING;
+    }
+
+    const options: Intl.NumberFormatOptions = {
+        style: 'decimal',
+        maximumFractionDigits: 0,
+    };
+
+    if (roundToMillion && numberValue >= 1000000) {
+        numberValue = Math.round(numberValue / 100000) / 10;
+        return (
+            new Intl.NumberFormat('en-US', {
+                style: 'decimal',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2,
+            }).format(numberValue) + 'M'
+        );
+    }
+
+    return new Intl.NumberFormat('en-US', options).format(numberValue);
 };
