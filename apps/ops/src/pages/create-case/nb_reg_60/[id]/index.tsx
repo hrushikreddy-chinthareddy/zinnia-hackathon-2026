@@ -92,6 +92,7 @@ export default function Reg60({ document, form, transactionsHistory, user }: Cre
         setTransactionDetail({
             contractId: document?.contract || '',
             documentNumber: document?.documentNumber || '',
+            contractValue: document?.contractValue || '',
             contractStatusCode: document?.contractStatusCode || '',
             caseId: form?.caseId || (id as string),
             transactions: transactionsHistory,

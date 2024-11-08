@@ -81,7 +81,16 @@ export default function OftCase({ document, form, featureFlagDecisions, user }: 
     const clientForFormDetermination = isNonProductionEnvironment() ? clientIdOverride || clientId : clientId;
     const { qualType, issueState, planCode } = useAccountInfo(document.contract, clientId as string);
 
-    useSegmentPageTracker(user, SegmentPageName.OftCase, { clientId, clientIdOverride, clientForFormDetermination, documentNumber: document.documentNumber, formTaskId: form.taskId, qualType, issueState, planCode });
+    useSegmentPageTracker(user, SegmentPageName.OftCase, {
+        clientId,
+        clientIdOverride,
+        clientForFormDetermination,
+        documentNumber: document.documentNumber,
+        formTaskId: form.taskId,
+        qualType,
+        issueState,
+        planCode,
+    });
 
     const formParts = determineFormToRender(clientForFormDetermination as string, getFormComponentMap(planCode, qualType));
 
@@ -112,7 +121,8 @@ export default function OftCase({ document, form, featureFlagDecisions, user }: 
         setTransactionDetail({
             contractId: document?.contract || '',
             documentNumber: document?.documentNumber || '',
-            contractStatusCode:document?.contractStatusCode || '',
+            contractValue: document?.contractValue || '',
+            contractStatusCode: document?.contractStatusCode || '',
             caseId: form.caseId || '',
             qualType,
             ownerName: toTitleCase(ownerName).trim(),
