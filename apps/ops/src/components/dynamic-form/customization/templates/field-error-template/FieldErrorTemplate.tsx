@@ -1,4 +1,5 @@
 import { FieldErrorProps, FormContextType, RJSFSchema, StrictRJSFSchema, errorId } from '@rjsf/utils';
+import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 
 export default function FieldErrorTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
     props: FieldErrorProps<T, S, F>
@@ -12,11 +13,7 @@ export default function FieldErrorTemplate<T = any, S extends StrictRJSFSchema =
     return (
         <ul id={id}>
             {errors.map((error, i) => {
-                return (
-                    <li key={i} className="border-0 m-0 p-0">
-                        <small className="m-0 text-red-600">*{error}</small>
-                    </li>
-                );
+                return <AssistiveText key={i} text={props.schema.title + ' ' + error.toString()} variant={AssistiveTextVariant.Error} />;
             })}
         </ul>
     );
