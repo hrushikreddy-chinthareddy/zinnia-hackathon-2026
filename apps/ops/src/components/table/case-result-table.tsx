@@ -42,6 +42,9 @@ import { PiiWrapper } from '../pii/PiiWrapper';
 import PlusOthers from '../plus-others/plus-others';
 import PopoverOnTruncate from '../popover-on-truncate/popover-on-truncate';
 
+dayjs.extend(timezone);
+dayjs.extend(advanced);
+
 interface PartyWithOthersProps extends PiiProps {
     text?: string | null;
     highlights?: string[] | null;
@@ -77,8 +80,6 @@ interface CaseTableRowProps {
 }
 
 const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
-    dayjs.extend(timezone);
-    dayjs.extend(advanced);
     const { t } = useTranslation(TranslationFiles.COMMON);
     const router = useRouter();
     const perms = usePermissionsContext();
@@ -108,7 +109,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
     const imageSrc = getCarrierLogoByClientId(singleCase.carrier);
     const carrierName = getCarrierNameByClientId(singleCase.carrier);
 
-    const viewCaseText = t('caseManagementDashboard.case.viewCase', {
+    const viewCaseText = t('caseManagementDashboard.case.viewCaseNumber', {
         caseNumber: String(singleCase.policyNumber).split('').join(' '),
     });
 
@@ -143,7 +144,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                 aria-label={viewCaseText}
             >
                 <Typography variant={TypographyVariant.BodySm} className={styles.caseLinkText}>
-                    View Case
+                    {t('caseManagementDashboard.case.viewCase')}
                 </Typography>
             </Link>
             <TableCell>
