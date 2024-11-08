@@ -387,14 +387,14 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                     />
                     <div className="w-full xs:overflow-x-auto xs:overflow-y-hidden xs:p-1 lg:p-0">{tableContent}</div>
                     <div className="flex flex-col items-center lg:grid lg:grid-cols-3 mt-3">
-                        <div className="mb-6 lg:mb-0">
+                        <Typography variant={TypographyVariant.BodySm} className="mb-6 lg:mb-0">
                             {t('policy.documents.xToYOfZ', {
                                 x: caseManagementFilters.offset + 1,
                                 y: Math.min(caseManagementFilters.offset + limit, caseTotals.All),
-                                z: caseTotals.All,
+                                z: caseTotals.All.toLocaleString(),
                             })}
-                        </div>
-                        <div className="">{paginationControls}</div>
+                        </Typography>
+                        {paginationControls}
                     </div>
                 </div>
             </NoNavLayout>

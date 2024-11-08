@@ -239,7 +239,11 @@ const NoResultsRow = ({ searchValues }: { searchValues: SearchViewQuery | undefi
     return (
         <TableRow>
             <TableCell colSpan={7} className="text-center">
-                {hasSearchValue ? t('caseManagementDashboard.search.empty.title') : t('caseManagementDashboard.search.empty.titleFilters')}
+                <Typography variant={TypographyVariant.BodySm} className="my-4">
+                    {hasSearchValue
+                        ? t('caseManagementDashboard.search.empty.title')
+                        : t('caseManagementDashboard.search.empty.titleFilters')}
+                </Typography>
             </TableCell>
         </TableRow>
     );

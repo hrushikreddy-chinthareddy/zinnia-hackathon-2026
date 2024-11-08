@@ -25,13 +25,13 @@
         color: transparent;
         z-index: 1;
         outline-color: var(--color-semantics-color-semantic-focus);
+        .caseLinkText {
+            display: block;
+        }
     }
     &:hover {
         &:after {
             content: none;
-        }
-        .caseLinkText {
-            display: block;
         }
     }
     /* This is the styling for the tooltip the shows for the "table row" link */
