@@ -1,5 +1,4 @@
 import { useTranslation } from 'next-i18next';
-import React from 'react';
 import xss from 'xss';
 
 import Field, { FieldSize, FieldType } from '@deps/components/fields/field';
@@ -20,6 +19,7 @@ const FaxNumber = ({ fax, setFax }: FaxNumberProps) => {
             size={FieldSize.Small}
             type={FieldType.BaseActive}
             className="max-w-xs"
+            formatOptions={{ format: '###############' }}
         />
     );
 };
