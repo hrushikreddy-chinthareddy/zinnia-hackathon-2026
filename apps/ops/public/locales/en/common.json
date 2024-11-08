@@ -178,10 +178,15 @@
             "diaryNotes": {
                 "text": "Diary notes"
             },
+            "viewDetails": {
+                "text": "View Details"
+            },
+
             "diaryNotesWarning": {
                 "text": "Attention: Diary notes present. Review required to submit.",
                 "clickToView": "Click to view"
             },
+
             "notes": {
                 "text": "Notes"
             },
