@@ -16,6 +16,7 @@ interface Props {
 
 const ActiveAgingBars = forwardRef<HighchartsReactRefObject, Props>(({ agingRangesByProcess, classNames, onRenderChart }, ref) => {
     const [chartConfig, setChartConfig] = useState<Highcharts.Options>({});
+    const [seriesData, setSeriesData] = useState<ChartConfigSeriesDataSimple[]>([]);
 
     const getSeriesData = (agingRangesByProcess: CaseDashboardStatsResponse) => {
         const seriesData: ChartConfigSeriesDataSimple[] = [];
@@ -153,10 +154,11 @@ const ActiveAgingBars = forwardRef<HighchartsReactRefObject, Props>(({ agingRang
     useEffect(() => {
         const seriesData = getSeriesData(agingRangesByProcess);
         const config = getChartConfig(seriesData);
+        setSeriesData(seriesData);
         setChartConfig(config);
     }, [getChartConfig, agingRangesByProcess]);
 
-    return <HighchartsReact ref={ref} className={classNames} highcharts={Highcharts} options={chartConfig} />;
+    return seriesData.length > 0 && <HighchartsReact ref={ref} className={classNames} highcharts={Highcharts} options={chartConfig} />;
 });
 
 ActiveAgingBars.displayName = 'ActiveAgingBars';

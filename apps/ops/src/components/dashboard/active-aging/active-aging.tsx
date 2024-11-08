@@ -36,7 +36,7 @@ interface Props {
 const ActiveAging = ({ classNames, createdBySubProcess, openStagesByCreated, loading = true, selectedProcess, carriers }: Props) => {
     const agingChartsRef = useRef<HighchartsReactRefObject>(null);
     const numColumns = 7;
-    const [agingChartWidth, setAgingChartWidth] = useState(0);
+    const [agingChartWidth, setAgingChartWidth] = useState(877);
     const [aiSummary, setAiSummary] = useState<string | null>(null);
 
     const [agingRangesBySubProcess, setAgingRangesBySubProcess] = useState<CaseDashboardStatsResponse>();
@@ -161,7 +161,7 @@ const ActiveAging = ({ classNames, createdBySubProcess, openStagesByCreated, loa
             const highchartsPlotBackground = agingChartsRef.current.container.current?.querySelector('.highcharts-plot-background');
             if (highchartsPlotBackground) {
                 const { width } = highchartsPlotBackground.getBoundingClientRect();
-                setAgingChartWidth(width);
+                setAgingChartWidth(Math.floor(width));
             }
         }
     }, []);
@@ -394,7 +394,7 @@ const ActiveAging = ({ classNames, createdBySubProcess, openStagesByCreated, loa
             <Typography className="capitalize mb-4" variant={TypographyVariant.H4} asTag="h3">
                 {getAgingSubtitle()}
             </Typography>
-            <div className="flex flex-col xl:flex-row justify-between gap-4">
+            <div className="flex flex-col xl:flex-row justify-between gap-4 w-full">
                 <div className="flex xl:flex-col xl:w-1/4 gap-4 mb-8 xl:mb-0">
                     {renderDummyText()}
                     <div className="flex-1 border-r-1 xl:border-r-0 xl:border-t-1 border-[#EDEDED]">
