@@ -223,10 +223,12 @@ const DashboardPage = ({
 
     useEffect(() => {
         const baseFilter: DashboardSearchFilter = {
-            caseStatus: [Statuses.InProgress, Statuses.Exception],
+            caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
+            createdDateStart,
         };
         const insightFilter: DashboardSearchFilter = {
-            caseStatus: [Statuses.InProgress, Statuses.Exception],
+            caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
+            createdDateStart,
         };
 
         const carriers = Object.keys(selectedCarriers);
@@ -248,7 +250,7 @@ const DashboardPage = ({
         setBaseDashboardQueryFilter(baseFilter);
         getProcessListOptions(baseFilter);
         setBaseInsightQueryFilter(insightFilter);
-    }, [selectedCarriers, insightOption, selectedBrokerDealers]);
+    }, [selectedCarriers, insightOption, selectedBrokerDealers, createdDateEnd, createdDateStart]);
 
     useEffect(() => {
         const getPageData = async () => {

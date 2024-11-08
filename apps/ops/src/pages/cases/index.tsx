@@ -35,6 +35,7 @@ import {
     isSearchValueObjectEmpty,
     toggleLabels,
 } from '@deps/helpers/case-management';
+import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { storage } from '@deps/helpers/sessionStorage.helper';
@@ -393,7 +394,9 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                     <div className="early-col-break my-6 flex flex-col items-start justify-start sm:flex-row sm:items-center sm:justify-between">
                         <div className="early-break mb-4 flex flex-row items-center justify-start sm:mb-0 sm:justify-between">
                             <p className="mr-2 whitespace-nowrap font-primary text-2xl font-normal text-gray-900">
-                                {`${t('caseManagementDashboard.results')} (${caseTableData.total})`}
+                                {`${t('caseManagementDashboard.results')} (${wholeNumberFormatify(caseTableData.total)}${
+                                    caseTableData.total === 10000 ? '+' : ''
+                                })`}
                             </p>
                             <NavElement
                                 tabIndex={0}

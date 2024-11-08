@@ -141,19 +141,11 @@ export const getCaseDashboardStats = async (
     query: CaseDashboardStatsQuery
 ): Promise<CaseDashboardStatsResponse | CaseDashboardStatsErrorResponse> => {
     try {
-        const cachedResult = pullFromCache('getCaseDashboardStats', query);
-
-        if (cachedResult) {
-            return cachedResult;
-        }
-
         let { data } = await client.post<CaseDashboardStatsQuery, AxiosResponse>(`${baseAppUrl}/api/case/v1/dashboard/stats`, query);
 
         if ('element' in data) {
             data = convertOldToNew(data);
         }
-
-        writeToCache('getCaseDashboardStats', query, data);
 
         return data ?? {};
     } catch (error: any) {

@@ -81,15 +81,15 @@ const ActiveAging = ({ classNames, createdBySubProcess, openStagesByCreated, loa
         const sixtyDaysAgo = new Date(now - 60 * 24 * 60 * 60 * 1000);
 
         let timeRange = '';
-        if (createdDate < sixtyDaysAgo) {
+        if (createdDate <= sixtyDaysAgo) {
             timeRange = 'SixtyPlus';
-        } else if (createdDate < fourtyFiveDaysAgo) {
+        } else if (createdDate <= fourtyFiveDaysAgo) {
             timeRange = 'FortySixToFiftyNine';
-        } else if (createdDate < thirtyDaysAgo) {
+        } else if (createdDate <= thirtyDaysAgo) {
             timeRange = 'ThirtyOneToFortyFive';
-        } else if (createdDate < fourteenDaysAgo) {
+        } else if (createdDate <= fourteenDaysAgo) {
             timeRange = 'FifteenToThirty';
-        } else if (createdDate < sevenDaysAgo) {
+        } else if (createdDate <= sevenDaysAgo) {
             timeRange = 'EightToFourteen';
         } else {
             timeRange = 'ZeroToSeven';

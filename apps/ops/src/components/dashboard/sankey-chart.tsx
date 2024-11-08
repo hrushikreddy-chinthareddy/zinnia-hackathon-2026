@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { FieldSize, FieldType } from '@deps/components/fields/field';
 import SelectSimple from '@deps/components/select/select';
+import { getStartAndEndDates } from '@deps/containers/case-redesign-sub-page/case-helpers';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
 import { CaseDashboardStatsResponse, DashboardStatsElementResponse, Statuses } from '@deps/models/case/case';
@@ -59,7 +60,7 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
         maxPathStrokeWidth,
         maxItems,
     } = mergedChartOptions;
-
+    const { createdDateStart, createdDateEnd } = getStartAndEndDates('All');
     const [caseGroupingState, setCaseGroupingState] = useState<CaseDashboardStatsResponse>();
     const [totalCases, setTotalCases] = useState<number>(0);
 
@@ -651,7 +652,8 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
     useEffect(() => {
         const getStatsFromSelection = async () => {
             const filter: DashboardSearchFilter = Object.assign({}, baseDashboardQueryFilter, {
-                caseStatus: [Statuses.InProgress, Statuses.Exception],
+                caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
+                createdDateStart,
             });
 
             const query: CaseDashboardStatsQuery = {
@@ -666,7 +668,7 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
             setCaseGroupingState(statsResponse as CaseDashboardStatsResponse);
         };
         getStatsFromSelection();
-    }, [baseDashboardQueryFilter, l1SelectValue, l2SelectValue, l3SelectValue]);
+    }, [baseDashboardQueryFilter, createdDateEnd, createdDateStart, l1SelectValue, l2SelectValue, l3SelectValue]);
 
     useEffect(() => {
         if (!caseGroupingState || !caseGroupingState.data || caseGroupingState.data.length === 0) {

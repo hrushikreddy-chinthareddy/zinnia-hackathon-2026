@@ -2,6 +2,7 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo, useState } from 'react';
 
 import Select from '@deps/components/select/select';
+import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
 import { Statuses } from '@deps/models/case/case';
 
 export default function StatusFilter({
@@ -17,17 +18,17 @@ export default function StatusFilter({
     const statusOptions = useMemo(
         () => [
             {
-                label: `${t('status.notStarted')} (${caseTotals[Statuses.NotStarted] ?? 0})`,
+                label: `${t('status.notStarted')} (${wholeNumberFormatify(caseTotals[Statuses.NotStarted] ?? 0)})`,
                 displayText: t('status.notStarted'),
                 value: Statuses.NotStarted,
             },
             {
-                label: `${t('status.inProgress')} (${caseTotals[Statuses.InProgress] ?? 0})`,
+                label: `${t('status.inProgress')} (${wholeNumberFormatify(caseTotals[Statuses.InProgress] ?? 0)})`,
                 displayText: t('status.inProgress'),
                 value: Statuses.InProgress,
             },
             {
-                label: `${t('status.exception')} (${caseTotals[Statuses.Exception] ?? 0})`,
+                label: `${t('status.exception')} (${wholeNumberFormatify(caseTotals[Statuses.Exception] ?? 0)})`,
                 displayText: t('status.exception'),
                 value: Statuses.Exception,
             },
@@ -42,7 +43,7 @@ export default function StatusFilter({
                 value: Statuses.Canceled,
             },
         ],
-        [caseTotals]
+        [caseTotals, t]
     );
 
     const [selected, setSelected] = useState<{ [key: string]: string }>(
