@@ -3,7 +3,6 @@ import clsx from 'clsx';
 import PolicyInfo, { PolicyInfoProps } from '@deps/components/global-values/policy-info/policy-info';
 import { PolicyJointOwner, PolicyJointOwnerProps } from '@deps/components/global-values/policy-joint-owner/policy-joint-owner';
 import { PolicyOwner, PolicyOwnerProps } from '@deps/components/global-values/policy-owner/policy-owner';
-import { Carrier } from '@deps/models/case/withdrawal/case';
 
 import { DocumentInfo } from '../document-info';
 
@@ -69,7 +68,7 @@ const GlobalValuesBar = ({
                     showLink={showLink}
                 />
                 <div className="mx-4 flex w-0.5" />
-                {showJointOwner && carrierId === Carrier.FLIC && (
+                {showJointOwner && (
                     <PolicyJointOwner jointOwner={jointOwner} planCode={planCode} policyNumber={policyNumber} showLink={showLink} />
                 )}
                 {showDocument &&
