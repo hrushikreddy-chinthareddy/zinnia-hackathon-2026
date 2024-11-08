@@ -1,7 +1,6 @@
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import PolicyLayout from '@deps/components/policy-layout';
@@ -38,12 +37,13 @@ interface AddressChangeProps extends SegmentTrackedPageProps {
 
 const BeneChange = ({ policy, document, clientId, planCode, user }: AddressChangeProps) => {
     const { t } = useTranslation();
+    const showJointOwner = policy?.carrierId === Carrier.FLIC;
 
     useSegmentPageTracker(user, SegmentPageName.BeneChange, { policyNumber: policy.policyNumber, documentNumber: document.documentNumber, clientId, planCode });
 
     return (
-        <PolicyLayout showJointOwner={true} showLink={false} navLinks={getReRegNavLinks(clientId, policy.policyNumber??'', t)} hideSearch={true} isFullHeight={true} policyDetails={policy}>
-            <div> 
+        <PolicyLayout showJointOwner={showJointOwner} showLink={false} navLinks={getReRegNavLinks(clientId, policy.policyNumber??'', t)} hideSearch={true} isFullHeight={true} policyDetails={policy}>
+            <div>
                 <BeneChangeProvider>
                     <BeneChangeContainer policy={policy} document={document} planCode={planCode} />
                 </BeneChangeProvider>
@@ -96,7 +96,7 @@ export const getServerSideProps = withPageAuthRequired({
 
         try {
             const translations = await serverSideTranslations(
-                locale, 
+                locale,
                 [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
                 nextI18nextConfig,
                 ALL_LOCALES

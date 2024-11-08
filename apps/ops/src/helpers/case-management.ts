@@ -250,5 +250,5 @@ export const formatCaseTotals = (count: number, stats: StatCount, hasSearch: boo
 };
 
 export const getCaseIdentifierValue = (identifiers: IdentifierInstance[], identifierToSearch: string) => {
-    return identifiers.find(identifier => identifier.identifier === identifierToSearch)?.value || '';
+    return identifiers?.find(identifier => identifier.identifier === identifierToSearch)?.value || '';
 };

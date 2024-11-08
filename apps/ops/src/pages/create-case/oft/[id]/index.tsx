@@ -34,7 +34,7 @@ import { ProcessType } from '@deps/models/case/enums';
 import { TaskType } from '@deps/models/case/task';
 import { ActiveWithdrawalCase, Carrier, PartyRoles, QualTypes } from '@deps/models/case/withdrawal/case';
 import { UserPermission } from '@deps/models/user-profile';
-import { initializeOTPTaskSSR } from '@deps/operations/tasks/v1/initialize';
+import { initializeOTPTaskSSR } from '@deps/operations/tasks/v2/initialize';
 import { getDocumentSSR } from '@deps/queries/api/documents';
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import { SCREEN_BREAKPOINTS } from '@deps/types/constants';
@@ -232,12 +232,8 @@ export const getServerSideProps = withPageAuthRequired({
 
         /*
             If feature flag is not enabled, redirect to error page
-            OFT FLIC is currently in PROD feature flag is not applicable for this
         */
-        if (
-            ![Carrier.FLIC, Carrier.RSLN].includes(clientId.toUpperCase() as Carrier) &&
-            !isFormFeatureEnabled(ProcessType.OFT, clientId, featureFlagDecisions)
-        ) {
+        if (!isFormFeatureEnabled(ProcessType.OFT, clientId, featureFlagDecisions)) {
             logWarn('create-case/oft/:id::feature flag not enabled', { documentNumber, clientId });
             return {
                 redirect: {

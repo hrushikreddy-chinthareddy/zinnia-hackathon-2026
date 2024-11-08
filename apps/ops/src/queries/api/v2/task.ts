@@ -135,7 +135,7 @@ export const createTask = async (
         return data;
     } catch (error: any) {
         logError('An error occurred during create task using v2', { error, caseId, function: 'tasks.createTask' });
-        return error?.response;
+        return null;
     }
 };
 
@@ -150,7 +150,6 @@ export const updateTask = async (
         const timeInSeconds = ((logTime % 60000) / 1000).toFixed(0);
         const url = `${baseCasesV2Url}/${caseId}/tasks/${taskId}`;
         const { data } = await client.put<CreateTaskBody<TaskStatus, TaskV2Payload>, AxiosResponse>(url, payload);
-
         logInfo('Successfully updated task using v2', { caseId, taskId, url, function: 'tasks.updateTask' });
 
         datadogLogs.logger.info('Form entry time', {
@@ -168,6 +167,6 @@ export const updateTask = async (
         return data;
     } catch (error: any) {
         logError('An error occurred during update task using v2', { error, caseId, taskId, function: 'tasks.updateTask' });
-        return error?.response;
+        return null;
     }
 };

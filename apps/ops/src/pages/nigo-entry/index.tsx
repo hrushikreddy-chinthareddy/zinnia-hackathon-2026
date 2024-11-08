@@ -4,6 +4,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import { buildTaskLink } from '@deps/components/tasks-listing/task-listing.helpers';
 import { TranslationFiles } from '@deps/config/translations';
+import { ProcessesToCaseTypeMap } from '@deps/constants/case';
 import NigoEntryContainer from '@deps/containers/nigo-entry-container/components/nigo-entry-container';
 import { NigoEntryProvider } from '@deps/containers/nigo-entry-container/components/nigo-entry-provider';
 import { getNigoExceptions } from '@deps/containers/nigo-entry-container/components/steps/nigo-details/nigo-details.helper';
@@ -17,6 +18,7 @@ import { DocumentData } from '@deps/models/case/document';
 import { docTypes } from '@deps/models/case/helpers';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { AvailableFormsTransaction, SearchTransactionRequestBody } from '@deps/models/case/send-document';
+import { TaskStatus } from '@deps/models/case/task-instance';
 import { ActiveWithdrawalCase, Carrier } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
@@ -24,6 +26,7 @@ import { mapTaskToActiveWithdrawalCaseTask } from '@deps/operations/tasks/v2/hel
 import { getSearchTransactionsSSR } from '@deps/queries/api/c2web';
 import { searchCasesSSR } from '@deps/queries/api/cases';
 import { getDocumentSSR } from '@deps/queries/api/documents';
+import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import { getPolicyDetailsSsr, getPolicyPartiesSSR, searchPolicySSR } from '@deps/queries/api/policies';
 import { getCaseTaskByIdSSR } from '@deps/queries/api/v2/task';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
@@ -56,10 +59,11 @@ interface NigoEntryProps extends SegmentTrackedPageProps {
     document: DocumentData;
     taskInfoLink: string;
     prevTransactionDetails: TransactionDetails | null;
-}
+    isNigoCase?: boolean;
+};
 
-const isNigoEntryEnabled = (clientId: string, process: string, featureFlagMap: FeatureFlags) => {
-    const identifier = `NIGO_ENTRY_${clientId.toUpperCase()}_${process.toUpperCase()}` as FeatureKeyIdentifier;
+const isNigoEntryEnabled = (clientId: string, process: string, featureFlagMap: FeatureFlags ) => {
+    const identifier = `NIGO_ENTRY_${clientId.toUpperCase()}_${process.toUpperCase().replaceAll(' ', '_')}` as FeatureKeyIdentifier;
     const featureKey = FEATURE_FLAGS[identifier];
     return featureKey && featureFlagMap[featureKey] ? featureFlagMap[featureKey] : false;
 };
@@ -79,10 +83,11 @@ const NigoEntry = ({
     document,
     taskInfoLink,
     prevTransactionDetails,
+    isNigoCase,
     user,
 }: NigoEntryProps) => {
     useSegmentPageTracker(user, SegmentPageName.NigoEntry, {
-        policyNumber: policy.policyNumber,
+        policyNumber: policy?.policyNumber,
         planCode,
         documentNumber,
         docType,
@@ -97,7 +102,7 @@ const NigoEntry = ({
                 form={form}
                 initialForm={form}
                 issueState={''}
-                isOpenNigo={false}
+                isOpenNigo={isNigoCase}
                 featureFlagDecisions={featureFlagDecisions}
                 parties={parties}
             >
@@ -165,7 +170,7 @@ export const getServerSideProps = withPageAuthRequired({
                 });
                 return {
                     redirect: {
-                        destination: `nigo-entry/withdrawal/:id/error?errorCode=${ERROR_CODES.WITHDRAWAL_TASK_INITIALIZATION}`,
+                        destination: `/create-case/error?errorCode=${ERROR_CODES.TASK_INITIALIZATION}`,
                         permanent: false,
                     },
                 };
@@ -179,17 +184,47 @@ export const getServerSideProps = withPageAuthRequired({
 
             const form = mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm.data, userId: user?.name });
             const { documentNumber, contractNum, clientCode } = activeForm?.data || {};
+            const caseType = ProcessesToCaseTypeMap[activeForm.process as Processes];
+            const docType = caseType ? docTypes[caseType] : null;
 
-            const shouldShowNigoEntry = isNigoEntryEnabled(clientCode, activeForm?.process, featureFlagDecisions);
-            // If feature flag is not enabled, redirect to error page
-            if (!shouldShowNigoEntry) {
-                logWarn('nigo_entry::feature flag not enabled', { taskId, clientCode });
+            if (!caseType) {
+                logError('nigo-entry::Error getting case type', {
+                    taskId,
+                    file: 'pages/nigo-entry',
+                    function: 'getServerSideProps',
+                });
                 return {
                     redirect: {
-                        destination: '/403',
+                        destination: `/create-case/error?errorCode=${ERROR_CODES.CASE_TYPE_RETRIEVAL_ERROR}`,
                         permanent: false,
                     },
                 };
+            }
+
+            if (!docType) {
+                logError('nigo-entry::Error getting doc type', {
+                    taskId,
+                    file: 'pages/nigo-entry',
+                    function: 'getServerSideProps',
+                });
+                return {
+                    redirect: {
+                        destination: `/create-case/error?errorCode=${ERROR_CODES.DOC_TYPE_RETRIEVAL_ERROR}`,
+                        permanent: false,
+                    },
+                };
+            }
+
+            const shouldShowNigoEntry = isNigoEntryEnabled(clientCode, caseType, featureFlagDecisions);
+            // If feature flag is not enabled, redirect to error page
+            if (!shouldShowNigoEntry) {
+               logWarn('nigo_entry::feature flag not enabled', { taskId, clientCode });
+               return {
+                    redirect: {
+                       destination: '/403',
+                       permanent: false,
+                    },
+               };
             }
 
             const userInfoForLogging = getUserInfoFromUser(user);
@@ -197,7 +232,7 @@ export const getServerSideProps = withPageAuthRequired({
             const response = await searchPolicySSR(contractNum, [clientCode?.toUpperCase() as Carrier], accessToken, 1, 0);
             const planCode = response ? response[0]?.planCode : null;
             if (!planCode) {
-                logError('nigo-entry::Policy lan code not found', {
+                logError('nigo-entry::Policy pan code not found', {
                     taskId,
                     documentNumber,
                     clientCode,
@@ -214,7 +249,6 @@ export const getServerSideProps = withPageAuthRequired({
             }
 
             const policy = await getPolicyDetailsSsr(contractNum, planCode, accessToken, userInfoForLogging);
-            const docType = docTypes[activeForm?.process || ''];
             if (!policy) {
                 logError('nigo-entry::Policy not found', {
                     taskId,
@@ -232,6 +266,12 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
+            const nigoFilters = {
+                categoryIds: ['Form', 'Signature', 'Account Information'],
+                carrier: clientCode?.toUpperCase(),
+                process: activeForm?.process
+            };
+
             const transactionRequestBody: SearchTransactionRequestBody = {
                 carrier: policy.carrierId || '',
                 issueState: policy.issueState || '',
@@ -240,11 +280,11 @@ export const getServerSideProps = withPageAuthRequired({
 
             const [availableFormsTransactions, nigoExceptionResponse] = await Promise.all([
                 await getSearchTransactionsSSR(transactionRequestBody, accessToken, userInfoForLogging),
-                await getNigoExceptions(['Form', 'Signature', 'Account Information'], accessToken),
+                await getNigoExceptions(nigoFilters, accessToken),
             ]);
 
             const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
-            const taskInfoLink = buildTaskLink(taskId, form.caseId, activeForm?.process, documentNumber, clientCode);
+            const taskInfoLink = buildTaskLink(taskId, form.caseId, caseType, documentNumber, clientCode);
             const filters = {
                 policyNumber: contractNum,
                 limit: 25,
@@ -252,7 +292,7 @@ export const getServerSideProps = withPageAuthRequired({
                 sortDirection: 'desc',
                 sortBy: 'createdAt',
                 carrier: [clientCode.toUpperCase()],
-                process: [Processes.Correspondence],
+                process: [Processes.Correspondence as string],
             };
 
             const [parties, document, searchCasesResponse] = await Promise.all([
@@ -276,9 +316,30 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
-            const latestForm = searchCasesResponse?.data?.find(
-                item => item?.additionalData?.requestSubType.toUpperCase() === docType.toUpperCase()
-            );
+            let isNigoCase = false;
+            const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
+            if (shouldShowNewExperience) {
+                isNigoCase = await checkNigoExistsSSR(clientCode?.toUpperCase(), document.caseId, accessToken);
+
+                if (isNigoCase && form?.status !== TaskStatus.Completed) {
+                    logInfo('nigoEntry::Nigo exists for case', {
+                        documentNumber,
+                        clientCode,
+                        caseId: document.caseId,
+                        lob: document?.lob,
+                    });
+                    return {
+                        redirect: {
+                            destination: `/create-case/error?errorCode=${ERROR_CODES.NIGO_EXISTS}`,
+                            permanent: false,
+                        },
+                    };
+                } else {
+                    logInfo('nigoEntry::Skipping NIGO check', { taskId, documentNumber, clientCode });
+                }
+            }
+
+            const latestForm = searchCasesResponse?.data?.find((item) => (item?.additionalData?.requestSubType.toUpperCase() === docType.toUpperCase()));
             return {
                 props: {
                     ...translations,
@@ -296,6 +357,7 @@ export const getServerSideProps = withPageAuthRequired({
                     document,
                     taskInfoLink,
                     prevTransactionDetails: latestForm?.additionalData || null,
+                    isNigoCase,
                 },
             };
         } catch (error) {
