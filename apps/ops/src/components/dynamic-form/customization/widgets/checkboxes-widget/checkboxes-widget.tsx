@@ -12,6 +12,8 @@ import { ChangeEvent } from 'react';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 
+import styles from './checkboxes.module.css';
+
 export default function CheckboxesWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
     id,
     options,
@@ -32,22 +34,24 @@ export default function CheckboxesWidget<T = any, S extends StrictRJSFSchema = R
         };
 
     return (
-        <div id={id}>
+        <div id={id} className={styles.checkboxGroupRoot} aria-label="Checkbox Group">
+            <div></div>
             {Array.isArray(enumOptions) &&
                 enumOptions?.map((option: any, index: number) => {
                     const isChecked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
                     const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
 
                     return (
-                        <CheckboxText
-                            id={optionId(id, index)}
-                            key={option.value}
-                            className="mb-3"
-                            label={option.label}
-                            onChange={checked => _onChange(index)({ target: { checked } } as ChangeEvent<HTMLInputElement>)}
-                            checked={isChecked}
-                            isDisabled={itemDisabled}
-                        />
+                        <div key={option.value}>
+                            <CheckboxText
+                                id={optionId(id, index)}
+                                key={option.value}
+                                label={option.label}
+                                onChange={checked => _onChange(index)({ target: { checked } } as ChangeEvent<HTMLInputElement>)}
+                                checked={isChecked}
+                                isDisabled={itemDisabled}
+                            />
+                        </div>
                     );
                 })}
         </div>
