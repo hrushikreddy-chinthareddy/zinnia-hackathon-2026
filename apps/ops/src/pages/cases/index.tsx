@@ -10,7 +10,7 @@ import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav
 import NoNavLayout from '@deps/components/no-nav-layout';
 import { PageLoader, PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import { PageHead } from '@deps/components/page-title';
-import SearchBar from '@deps/components/search/search-bar';
+import SearchBar, { SearchBarInitialValues } from '@deps/components/search/search-bar';
 import { CaseResultTable } from '@deps/components/table/case-result-table';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
@@ -174,14 +174,16 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                 loading: false,
                 error: true,
             });
-        } // eslint-disable-next-line react-hooks/exhaustive-deps
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
-        // for caseManagementFilters.toggleValue
+        // for caseManagementFilters.toggleValue,
         caseManagementFilters.searchValue,
         caseManagementFilters.additionalFilters,
         caseManagementFilters.offset,
-        limit,
         caseManagementFilters.sortDirection,
+        caseManagementFilters.sortBy,
+        isAdvisorsExcel,
     ]);
 
     // useEffect(s)
@@ -239,7 +241,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         }
 
         setLoadedStoredFilters(true);
-        // to do - this freaks out if I add the dep
+        // for caseManagementFilters
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -257,10 +259,18 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
     const removeAdditionalFilter = (filters: CaseSearchAdditionalFilters) =>
         setCaseManagementFilters(prevFilters => ({ ...prevFilters, additionalFilters: filters, offset: 0 }));
 
-    const handleSearch = (value: SearchViewQuery) =>
-        setCaseManagementFilters(prevFilters => ({ ...prevFilters, searchValue: value, offset: 0 }));
+    const handleSearch = useCallback(
+        (value: SearchViewQuery) => setCaseManagementFilters(prevFilters => ({ ...prevFilters, searchValue: value, offset: 0 })),
+        [setCaseManagementFilters]
+    );
+    const handleClear = useCallback(() => {
+        setCaseManagementFilters(prevFilters => ({ ...prevFilters, searchValue: SearchBarInitialValues, offset: 0 }));
+    }, [setCaseManagementFilters]);
 
-    const handleToggle = (value: PolicySearchKeys) => setCaseManagementFilters(prevFilters => ({ ...prevFilters, toggleValue: value }));
+    const handleToggle = useCallback(
+        (value: PolicySearchKeys) => setCaseManagementFilters(prevFilters => ({ ...prevFilters, toggleValue: value })),
+        [setCaseManagementFilters]
+    );
 
     // Memoized Component(s)
     const searchBar = useMemo(() => {
@@ -271,10 +281,10 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                 toggleLabels={toggleLabels}
                 initialToggleValue={caseManagementFilters.toggleValue}
                 onToggle={handleToggle}
+                onClear={handleClear}
             />
         );
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [caseManagementFilters.searchValue, caseManagementFilters.toggleValue]);
+    }, [caseManagementFilters.searchValue, caseManagementFilters.toggleValue, handleClear, handleSearch, handleToggle]);
 
     const paginationControls = useMemo(() => {
         const goToPage = (pageNumber: number) => {

@@ -1,6 +1,6 @@
-import { AssistiveText, AssistiveTextVariant, Icon, IconType } from '@zinnia/bloom/components';
+import { AssistiveText, AssistiveTextVariant, Button, Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import { ChangeEvent, RefObject, useContext } from 'react';
+import { ChangeEvent, RefObject, useContext, useRef } from 'react';
 
 import { PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
 import { toSentenceCase } from '@deps/helpers/string.helper';
@@ -21,6 +21,7 @@ interface SearchFieldContainerProps extends SearchFieldToggleProps {
 }
 
 export const SearchFieldContainer = ({ values, handleChange, activeLabels, onClear }: SearchFieldContainerProps) => {
+    const inputRef = useRef<HTMLInputElement | null>(null);
     const { showFieldErrorMessage } = useContext(PolicySearchFiltersContext);
     const { value: policyKey, label, replaceValue = '', placeholder, errorMessage } = activeLabels;
     let value = (policyKey && values[policyKey]) || '';
@@ -40,6 +41,13 @@ export const SearchFieldContainer = ({ values, handleChange, activeLabels, onCle
         }
     };
 
+    const handleClear = () => {
+        if (inputRef?.current && onClear) {
+            onClear(inputRef);
+            inputRef.current.value = '';
+        }
+    };
+
     return (
         <div className={clsx(styles.inputContainer)}>
             <Icon type={IconType.SEARCH} className={styles.icon} color="#676767" />
@@ -53,7 +61,11 @@ export const SearchFieldContainer = ({ values, handleChange, activeLabels, onCle
                     const text = (e.target as HTMLInputElement).value;
                     handleChange(e, text, policyKey as PolicySearchKeys);
                 }}
+                ref={inputRef}
             />
+            <Button className={styles.close} onClick={handleClear} mode="link">
+                <Icon type={IconType.CLOSE} />
+            </Button>
             {showFieldErrorMessage && errorMessage && (
                 <AssistiveText text={errorMessage} variant={AssistiveTextVariant.Error} className="mt-2" />
             )}
@@ -68,7 +80,7 @@ const SearchFieldToggle = ({ activeLabels, ...rest }: SearchFieldToggleProps) =>
 
         if (group?.length) {
             fields = (
-                <fieldset className="flex">
+                <fieldset className={styles.fieldSet}>
                     {group.map((g, index) => (
                         <SearchFieldContainer
                             key={'search-field-container-key-' + g.value}

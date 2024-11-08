@@ -1,11 +1,24 @@
-.inputContainer {
-    position: relative;
-
-    &:last-of-type input {
-        @media (min-width: 500px) {
-            border-radius: 0px var(--measure-border-radius-radius-md) var(--measure-border-radius-radius-md) 0px;
+.fieldSet {
+    display: flex;
+    & .inputContainer {
+        &:first-of-type input {
+            border-radius: 0 0 0 var(--measure-border-radius-radius-md);
+            @media (min-width: 500px) {
+                border-radius: 0;
+            }
+        }
+        &:last-of-type input {
+            border-radius: 0 0 var(--measure-border-radius-radius-md) 0;
+            border-left-width: 0;
+            @media (min-width: 500px) {
+                border-radius: 0 var(--measure-border-radius-radius-md) var(--measure-border-radius-radius-md) 0;
+            }
         }
     }
+}
+
+.inputContainer {
+    position: relative;
 }
 
 .input {
@@ -38,13 +51,14 @@
     }
 
     &:hover {
-        border-color: var(--color-states-hover-border-hover-border);
-        outline: none;
+        outline: 2px solid var(--color-states-hover-border-hover-border);
+        outline-offset: -1px;
     }
 
     @media (min-width: 500px) {
         border-left-width: 0;
         border-top-width: var(--measure-border-width-stroke-sm);
+        border-radius: 0 var(--measure-border-radius-radius-md) var(--measure-border-radius-radius-md) 0;
 
         [type='number'] {
             width: 306px;
@@ -61,4 +75,14 @@
     left: 16px;
     top: 8px;
     z-index: 2;
+}
+
+.close {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    z-index: 2;
+    &:hover&:after {
+        content: none;
+    }
 }
