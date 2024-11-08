@@ -1,17 +1,17 @@
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { sortAlphabetically } from '@deps/helpers/dashboard/dashboard-helpers';
-import { StatGrouping, StatGroupingOptions, StatGroupingResponse } from '@deps/helpers/dashboard/types';
+import { CaseDashboardStatsResponse, DashboardStatsElementResponse } from '@deps/models/case/case';
+import { GroupByOptions } from '@deps/models/case/enums';
 
 import DistributionPieChartSmall from '../distribution-charts/distribution-pie-chart-small';
 
 interface Props {
-    statGrouping: StatGroupingResponse;
+    dashboardStatsResponse: CaseDashboardStatsResponse;
     classNames?: string;
     width?: number;
     distinctAgingStatGroupingLabels: string[];
 }
 
-const ActiveAgingPies = ({ statGrouping, classNames, width, distinctAgingStatGroupingLabels }: Props) => {
+const ActiveAgingPies = ({ dashboardStatsResponse, classNames, width, distinctAgingStatGroupingLabels }: Props) => {
     return (
         <div className="relative flex justify-end">
             <Typography className="-rotate-90 absolute text-center -left-[20px] top-[35px]" variant={TypographyVariant.BodyBold}>
@@ -21,41 +21,38 @@ const ActiveAgingPies = ({ statGrouping, classNames, width, distinctAgingStatGro
             </Typography>
             <div className={`${classNames} border-b-1 border-[#ddd]`} style={{ width: `${width}px` }}>
                 <div className="grid grid-cols-6 gap-2 w-full justify-items-center">
-                    {statGrouping.stats.map(currentStatGrouping => {
-                        const additionalStats: StatGrouping[] = [];
+                    {dashboardStatsResponse.data.map(currentStatGrouping => {
+                        const additionalStats: DashboardStatsElementResponse[] = [];
 
                         distinctAgingStatGroupingLabels.forEach(currentLabel => {
-                            if (!currentStatGrouping.children?.stats.find(stat => stat.label === currentLabel)) {
+                            if (!currentStatGrouping.values?.find(stat => stat.name.toLowerCase() === currentLabel.toLowerCase())) {
                                 additionalStats.push({
-                                    children: null,
                                     count: 0,
-                                    label: currentLabel,
+                                    name: currentLabel,
+                                    key: GroupByOptions.OpenStages,
                                 });
                             }
                         });
 
-                        if (currentStatGrouping.children?.stats) {
-                            currentStatGrouping.children.stats = [...currentStatGrouping.children.stats, ...additionalStats];
-                            currentStatGrouping.children.stats.sort((a, b) => {
-                                return sortAlphabetically(a, b, 'label');
-                            });
+                        if (currentStatGrouping.values) {
+                            currentStatGrouping.values = [...currentStatGrouping.values, ...additionalStats];
+                            currentStatGrouping.values?.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
                         }
-
                         return (
-                            <div key={currentStatGrouping.label}>
+                            <div key={currentStatGrouping.name}>
                                 <DistributionPieChartSmall
                                     width={200}
                                     height={120}
                                     showInLegend={false}
                                     sort={false}
                                     statGrouping={
-                                        currentStatGrouping && currentStatGrouping.children
-                                            ? (currentStatGrouping.children as StatGroupingResponse)
+                                        currentStatGrouping && currentStatGrouping.values
+                                            ? currentStatGrouping
                                             : ({
-                                                  stats: [],
                                                   count: 0,
-                                                  groupBy: StatGroupingOptions.Default,
-                                              } as StatGroupingResponse)
+                                                  name: '',
+                                                  key: GroupByOptions.OpenStages,
+                                              } as DashboardStatsElementResponse)
                                     }
                                 />
                             </div>

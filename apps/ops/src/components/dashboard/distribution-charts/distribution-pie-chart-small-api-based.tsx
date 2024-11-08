@@ -5,12 +5,12 @@ import HighchartsReact from 'highcharts-react-official';
 import { useState, useEffect, useCallback } from 'react';
 
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
-import { DashboardStatsElementResponse } from '@deps/models/case/case';
+import { CaseDashboardStatsResponse } from '@deps/models/case/case';
 
 interface Props {
     className?: string;
     seriesLabel?: string;
-    statGrouping: DashboardStatsElementResponse;
+    dashboardStatsResponse: CaseDashboardStatsResponse;
     showInLegend?: boolean;
     height?: number;
     width?: number;
@@ -18,9 +18,9 @@ interface Props {
     sort?: boolean;
 }
 
-const DistributionPieChartSmall = ({
+const DistributionPieChartSmallAPIBased = ({
     className,
-    statGrouping,
+    dashboardStatsResponse,
     showInLegend = true,
     seriesLabel = 'Cases',
     width,
@@ -28,16 +28,18 @@ const DistributionPieChartSmall = ({
     sort = true,
 }: Props) => {
     const [chartConfig, setChartConfig] = useState({});
-    const getChartData = (statsGrouping: DashboardStatsElementResponse) => {
+    const getChartData = (dashboardStatsResponse: CaseDashboardStatsResponse) => {
         const chartData: { name: string; y: number; totalCount: number }[] = [];
-        if (!statsGrouping || !statsGrouping.values || statsGrouping.values.length === 0) {
+
+        if (!dashboardStatsResponse || !dashboardStatsResponse.data || dashboardStatsResponse.data.length === 0) {
             return chartData;
         }
-        statsGrouping.values.forEach(statGrouping => {
+        const totalCount = dashboardStatsResponse.data.reduce((prevValue, statElement) => prevValue + statElement.count, 0);
+        dashboardStatsResponse.data.forEach(statElement => {
             chartData.push({
-                name: statGrouping.name,
-                y: statGrouping.count / statsGrouping.count,
-                totalCount: statGrouping.count,
+                name: statElement.name,
+                y: statElement.count / totalCount,
+                totalCount: statElement.count,
             });
         });
 
@@ -88,11 +90,11 @@ const DistributionPieChartSmall = ({
     }, []);
 
     useEffect(() => {
-        const chartData = getChartData(statGrouping);
+        const chartData = getChartData(dashboardStatsResponse);
         const baseConfig = getBaseConfig(showInLegend);
         const config = getChartConfig(chartData, baseConfig);
         setChartConfig(config);
-    }, [statGrouping, getChartConfig, showInLegend, getBaseConfig]);
+    }, [dashboardStatsResponse, getChartConfig, showInLegend, getBaseConfig]);
 
     return (
         <div className={className}>
@@ -101,4 +103,4 @@ const DistributionPieChartSmall = ({
     );
 };
 
-export default DistributionPieChartSmall;
+export default DistributionPieChartSmallAPIBased;
