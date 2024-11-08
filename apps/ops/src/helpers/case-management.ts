@@ -226,26 +226,17 @@ export const formatCaseTotals = (count: number, stats: StatCount, hasSearch: boo
     }, {} as Record<string, number>);
     const inProgressCount = keyedStats[Statuses.InProgress] ?? 0;
     const exceptionCount = keyedStats[Statuses.Exception] ?? 0;
+    const notStartedCount = keyedStats[Statuses.NotStarted] ?? 0;
     const completedCount = keyedStats[Statuses.Completed] ?? 0;
     const canceledCount = keyedStats[Statuses.Canceled] ?? 0;
 
-    // if there's a search, don't mess with the caseStats counts.
-    if (hasSearch) {
-        return {
-            All: count,
-            [Statuses.InProgress]: inProgressCount,
-            [Statuses.Exception]: exceptionCount,
-        };
-    }
-
-    const progCt = inProgressCount;
-    const excepCt = exceptionCount;
-    const allCount = count - completedCount - canceledCount;
-
     return {
-        All: allCount,
-        [Statuses.InProgress]: progCt,
-        [Statuses.Exception]: excepCt,
+        All: count,
+        [Statuses.InProgress]: inProgressCount,
+        [Statuses.Exception]: exceptionCount,
+        [Statuses.NotStarted]: notStartedCount,
+        [Statuses.Completed]: completedCount,
+        [Statuses.Canceled]: canceledCount,
     };
 };
 

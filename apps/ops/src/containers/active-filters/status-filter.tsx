@@ -1,25 +1,49 @@
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import Select from '@deps/components/select/select';
 import { Statuses } from '@deps/models/case/case';
 
 export default function StatusFilter({
+    caseTotals = {},
     values = [Statuses.Exception, Statuses.InProgress, Statuses.NotStarted],
     onChange,
 }: {
+    caseTotals?: { [key: string]: number };
     values?: Statuses[];
     onChange: (values: Statuses[]) => void;
 }) {
     const { t } = useTranslation();
-    const statusOptions = [
-        { displayText: t('status.notStarted'), label: t('status.notStarted'), value: Statuses.NotStarted },
-        { displayText: t('status.inProgress'), label: t('status.inProgress'), value: Statuses.InProgress },
-        { displayText: t('status.exception'), label: t('status.exception'), value: Statuses.Exception },
-        { displayText: t('status.completed'), label: t('status.completed'), value: Statuses.Completed },
-        { displayText: t('status.canceled'), label: t('status.canceled'), value: Statuses.Canceled },
-        { displayText: t('status.new'), label: t('status.new'), value: Statuses.New },
-    ];
+    const statusOptions = useMemo(
+        () => [
+            {
+                label: `${t('status.notStarted')} (${caseTotals[Statuses.NotStarted] ?? 0})`,
+                displayText: t('status.notStarted'),
+                value: Statuses.NotStarted,
+            },
+            {
+                label: `${t('status.inProgress')} (${caseTotals[Statuses.InProgress] ?? 0})`,
+                displayText: t('status.inProgress'),
+                value: Statuses.InProgress,
+            },
+            {
+                label: `${t('status.exception')} (${caseTotals[Statuses.Exception] ?? 0})`,
+                displayText: t('status.exception'),
+                value: Statuses.Exception,
+            },
+            {
+                label: `${t('status.completed')}`,
+                displayText: t('status.completed'),
+                value: Statuses.Completed,
+            },
+            {
+                label: `${t('status.canceled')}`,
+                displayText: t('status.canceled'),
+                value: Statuses.Canceled,
+            },
+        ],
+        [caseTotals]
+    );
 
     const [selected, setSelected] = useState<{ [key: string]: string }>(
         statusOptions.reduce((acc, option) => {
