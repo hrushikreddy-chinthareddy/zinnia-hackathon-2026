@@ -25,6 +25,7 @@ export interface SidebarContent {
     transactions?: Transaction[];
     contractId: string;
     qualType?: string;
+    contractStatusCode?: string;
     issueDate?: string;
     documentNumber: string;
     caseId: string;
@@ -32,7 +33,7 @@ export interface SidebarContent {
     annuitantName?: string;
 }
 
-const OpenStatusRow = ({ transactions, contractId, documentNumber, caseId, qualType, issueDate, ownerName, annuitantName }: SidebarContent) => {
+const OpenStatusRow = ({ transactions, contractId, documentNumber, caseId, qualType, issueDate, ownerName, annuitantName ,contractStatusCode}: SidebarContent) => {
     const { t } = useTranslation();
     const BASE_TRANSLATION_KEY = 'caseWithdrawal.sidebar.';
     const classes = clsx('text-white');
@@ -52,6 +53,28 @@ const OpenStatusRow = ({ transactions, contractId, documentNumber, caseId, qualT
                         </ClickWrapper>}
                     </div>
                 </div>
+
+                {
+                    contractStatusCode && (
+                        <div className="my-4">
+                            <Typography variant={TypographyVariant.LabelMd}>
+                                {t(`${BASE_TRANSLATION_KEY}contractStatusCode`)}
+                            </Typography>
+                            <div className="flex items-center gap-1">
+                                <Content details={contractStatusCode} variant={ContentVariant.Value} />
+                                <ClickWrapper
+                                    ariaLabel={t(`${BASE_TRANSLATION_KEY}copyToClipboard`, {
+                                        item: t(`${BASE_TRANSLATION_KEY}contractStatusCode`)
+                                    })}
+                                    classes="mb-1"
+                                    onClick={() => navigator.clipboard.writeText(contractStatusCode)}
+                                >
+                                    <CopyIcon height={22} width={22} />
+                                </ClickWrapper>
+                            </div>
+                        </div>
+                    )
+                }
 
                 {qualType && (
                     <div className="my-4">
@@ -156,7 +179,7 @@ const OpenStatusRow = ({ transactions, contractId, documentNumber, caseId, qualT
     );
 };
 
-const ClosedStatusRow: React.FC<SidebarContent> = ({ contractId, documentNumber, caseId, qualType, issueDate, ownerName, annuitantName }) => {
+const ClosedStatusRow: React.FC<SidebarContent> = ({ contractId, documentNumber, caseId, qualType, issueDate, ownerName, annuitantName,contractStatusCode}) => {
     const { t } = useTranslation();
     const BASE_TRANSLATION_KEY = 'caseWithdrawal.sidebar.';
     const classes = clsx('flex w-full flex-col items-center gap-4  p-1 text-white');
@@ -172,7 +195,17 @@ const ClosedStatusRow: React.FC<SidebarContent> = ({ contractId, documentNumber,
                     <CopyIcon height={30} width={30} />
                 </ClickWrapper>
             </div>
-
+            { contractStatusCode && (
+                <div className="flex w-full flex-col items-center">
+                    <Typography variant={TypographyVariant.LabelMd}>{t(`${BASE_TRANSLATION_KEY}abbreviatedcontractStatusCode`)}</Typography>
+                    <ClickWrapper
+                        ariaLabel={t(`${BASE_TRANSLATION_KEY}copyToClipboard`, { item: t(`${BASE_TRANSLATION_KEY}contractStatusCode`) })}
+                        onClick={() => navigator.clipboard.writeText(contractStatusCode)}
+                    >
+                        <CopyIcon height={30} width={30} />
+                    </ClickWrapper>
+                </div>
+            )}
             {qualType && (
                 <div className="flex w-full flex-col items-center">
                     <Typography variant={TypographyVariant.LabelMd}>{t(`${BASE_TRANSLATION_KEY}abbreviatedQualType`)}</Typography>
@@ -296,6 +329,7 @@ const WithdrawalDrawer: React.FC<WithdrawalDrawerProps> = ({ content, isNavDrawe
                         issueDate={content?.issueDate}
                         ownerName={content?.ownerName}
                         annuitantName={content?.annuitantName}
+                        contractStatusCode={content?.contractStatusCode}
                     />
                 ) : (
                     <ClosedStatusRow
@@ -306,6 +340,7 @@ const WithdrawalDrawer: React.FC<WithdrawalDrawerProps> = ({ content, isNavDrawe
                         issueDate={content?.issueDate}
                         ownerName={content?.ownerName}
                         annuitantName={content?.annuitantName}
+                        contractStatusCode={content?.contractStatusCode}
                     />
                 )}
             </div>
