@@ -6,6 +6,7 @@ import { Program } from '@deps/components/otp-withdrawal-form/rmd-method/program
 import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
+import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 
 import { SswUpdateType } from '../../ssw-edit-helper';
 
@@ -17,9 +18,11 @@ type SummaryProps = {
 
 const Summary = ({ currentProgram, updatedProgram, onContinue }: SummaryProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'sswUpdate.tabs.summary' });
+    const { goToNext } = useWorkflow();
 
     const handleSubmitSswUpdate = () => {
         onContinue(currentProgram, SswUpdateType.PROGRAM_UPDATE);
+        goToNext();
     };
 
     return (

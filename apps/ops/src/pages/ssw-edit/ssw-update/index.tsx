@@ -5,8 +5,9 @@ import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect, useState } from 'react';
 
+import CardInfo from '@deps/components/card/card-info/card-info';
 import { Program } from '@deps/components/otp-withdrawal-form/rmd-method/program-item';
-import SswUpdateContainer from '@deps/components/ssw-edit/ssw-update/ssw-update-container';
+import SswUpdate from '@deps/components/ssw-edit/ssw-update/ssw-update';
 import { TranslationFiles } from '@deps/config/translations';
 import { FormProvider } from '@deps/containers/otp/withdrawal-forms/components/form-provider';
 import { WorkflowProvider } from '@deps/contexts/WorkflowContainerContext';
@@ -103,12 +104,30 @@ const SswEdit = (props: SswUpdateProps) => {
         setProgram(specialProg);
     }, []);
 
+    if (program?.length === 0)
+        return (
+            <div className=" w-full  overflow-auto px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10  bg-white h-screen">
+                <div className="bg-gray-100 my-2 flex justify-center align-middle h-[500px] ">
+                    <CardInfo
+                        cta={{
+                            action: () => {
+                                router.back();
+                            },
+                            text: 'back',
+                        }}
+                        title={'No Existing Program Found'}
+                        className=" justify-center"
+                    />
+                </div>
+            </div>
+        );
+
     return (
         <div className="flex w-full flex-col overflow-auto px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10  bg-white h-screen">
             <FormProvider form={form} initialForm={form} isOpenNigo={false} issueState="" featureFlagDecisions={featureFlagDecisions}>
-                <div className="bg-gray-100 flex justify-center my-2">
+                <div className="bg-gray-100 flex justify-center my-2 pb-4">
                     <WorkflowProvider>
-                        <SswUpdateContainer policy={policy} document={document} program={program} programType={programType as string} />
+                        <SswUpdate policy={policy} document={document} programs={program} programType={programType as string} />
                     </WorkflowProvider>
                 </div>
             </FormProvider>

@@ -1631,7 +1631,7 @@
                 },
                 "submitted": "Submitted",
                 "close": "Close",
-                "back": "back",
+                "back": "Back to create task",
                 "terminate": "Terminate"
             },
             "neaBenefitsSensitivity": "NEA Benefit Sensitivity",
@@ -4257,17 +4257,11 @@
             "emailFaxMail": "Email/Fax/Mail",
             "phone": "Phone"
         },
-
         "tabs": {
             "start": {
                 "tabTitle": "Start",
                 "title": "Update SSW Program",
-                "subTitle": "Make changes to the schedule amount or payment method for this policy's premium autopay. First up, let's make sure we can keep trackof this transaction in OnBase.",
-                "channel": "Channel",
-                "channelOptions": {
-                    "emailFaxMail": "Email/Fax/Mail",
-                    "phone": "Phone"
-                }
+                "subTitle": "Make changes to the schedule amount or payment method for this policy's premium autopay. First up, let's make sure we can keep trackof this transaction in OnBase."
             },
             "amount": {
                 "tabTitle": "Amount",
@@ -4283,12 +4277,8 @@
                     "annually": "Annually"
                 }
             },
-            "channel": {
-                "channel": "Channel",
-                "channelOptions": {
-                    "emailFaxMail": "Email/Fax/Mail",
-                    "phone": "Phone"
-                }
+            "signature": {
+                "tabTitle": "Signature"
             },
             "summary": {
                 "tabTitle": "Summary",
@@ -4300,7 +4290,8 @@
                 "tabTitle": "Confirm"
             }
         },
-
+        "success": "SSW Request has been submitted.",
+        "back": "Back to create task",
         "channel": "Channel",
         "close": "Close",
         "submitted": "Submitted",

@@ -136,8 +136,7 @@ export default function SSWCase({ document, form, parties, transactionsHistory, 
         <div>
             <SelectSimple
                 disabled={false}
-                className="max-w-lg"
-                // label={t('sswRequest') as string}
+                className="max-w-lg my-3"
                 label={'SSW Request'}
                 options={sswUpdateOptions(t)}
                 onChange={(val: string) => setSswRequest(val as SswUpdateOption)}
@@ -165,17 +164,17 @@ export default function SSWCase({ document, form, parties, transactionsHistory, 
             }
             case SswUpdateOption.SSW_UPDATE: {
                 setLoading(true);
-                router.push(`/ssw-edit/ssw-update?taskId=${form?.taskId}&programType=SSW`);
+                router.push(`/ssw-edit/ssw-update?taskId=${form?.taskId}&programType=SSW&doc=${document?.documentNumber}`);
                 break;
             }
             case SswUpdateOption.RMD_UPDATE: {
                 setLoading(true);
-                router.push(`/ssw-edit/ssw-update?taskId=${form?.taskId}&programType=RMD`);
+                router.push(`/ssw-edit/ssw-update?taskId=${form?.taskId}&programType=RMD&doc=${document?.documentNumber}`);
                 break;
             }
             case SswUpdateOption.EFT_DRAW_UPDATE: {
                 setLoading(true);
-                router.push(`/ssw-edit/ssw-update?taskId=${form?.taskId}&programType=EFT`);
+                router.push(`/ssw-edit/ssw-update?taskId=${form?.taskId}&programType=EFT&doc=${document?.documentNumber}`);
                 break;
             }
         }

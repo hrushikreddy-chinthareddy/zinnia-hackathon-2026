@@ -1,15 +1,15 @@
+import { Icon, IconType } from '@zinnia/bloom/components';
 import { TFunction, useTranslation } from 'next-i18next';
 import { useContext } from 'react';
 
 import { FieldSize } from '@deps/components/fields/field';
+import IconButton from '@deps/components/icon-button/icon-button';
 import { Program } from '@deps/components/otp-withdrawal-form/rmd-method/program-item';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import SelectSimple from '@deps/components/select/select';
 import { TranslationFiles } from '@deps/config/translations';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { ChannelType } from '@deps/models/case/enums';
-import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit.svg';
-import { ReactComponent as TrashIcon } from '@deps/styles/elements/icons/icons_outlined/trash.svg';
 
 import { signaturesConfig } from '../bank-update/bank-update.helper';
 import { SswUpdateType } from '../ssw-edit-helper';
@@ -46,14 +46,17 @@ const EditProgram = ({ program, onTerminate, onEdit }: any) => {
                     <div className="my-2 grid grid-cols-auto-2 gap-2">
                         <Program program={program} isFormStateReadOnly={false} />
                     </div>
-                    <div className="mt-3 p-8 text-primary flex">
-                        <EditIcon height={15} width={20} className="mx-2 cursor-pointer" onClick={() => onEdit(true)} />
-                        <TrashIcon
-                            height={15}
-                            width={20}
-                            className="mx-2 cursor-pointer"
+                    <div className="mt-2 p-8 text-primary flex">
+                        <IconButton className="mx-2 " aria-describedby="edit-program" onClick={() => onEdit(true)}>
+                            <Icon type={IconType.EDIT_ALT} height={20} width={20} />
+                        </IconButton>
+                        <IconButton
+                            className="mx-2"
+                            aria-describedby="delete-program"
                             onClick={() => onTerminate(program, SswUpdateType.PROGRAM_TERMINATE)}
-                        />
+                        >
+                            <Icon type={IconType.TRASH} height={20} width={20} />
+                        </IconButton>
                     </div>
                 </div>
             </div>
