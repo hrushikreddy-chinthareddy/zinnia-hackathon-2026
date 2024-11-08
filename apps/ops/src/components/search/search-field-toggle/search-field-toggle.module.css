@@ -35,10 +35,14 @@
     padding-left: calc(var(--iconSize) + var(--measure-dimension-gap-lg) + var(--measure-spacing-padding-2xl));
     width: 100%;
 
+    /* Browser resets */
     &::-webkit-outer-spin-button,
     &::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
+    }
+    &[type='number'] {
+        -moz-appearance: textfield;
     }
 
     &:active,
