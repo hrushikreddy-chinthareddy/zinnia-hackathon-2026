@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 import Button, { ButtonSize, ButtonType } from '@deps/components/button/button';
 import { removeAllFilters } from '@deps/components/history/filters/filter.helpers';
+import TransactionStatusFilter from '@deps/components/history/filters/status-filter';
 import TypeFilters from '@deps/components/history/filters/type-filters';
 import YearFilter from '@deps/components/history/filters/year-filter';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
@@ -42,6 +43,7 @@ const SideSheetHistory = ({ isSideSheetOpen, setIsSideSheetOpen }: SideSheetHist
         <SideSheet handleClose={() => handleClose()} header="Filter Events" open={isSideSheetOpen}>
             <div className="flex flex-col gap-10 px-8 pt-8">
                 <div className="flex flex-col gap-6">
+                    <TransactionStatusFilter />
                     <YearFilter />
                     <TypeFilters />
                 </div>

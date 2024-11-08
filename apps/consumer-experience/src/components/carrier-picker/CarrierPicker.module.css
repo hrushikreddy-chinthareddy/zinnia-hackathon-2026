@@ -1,5 +1,5 @@
 .pickerContainer {
-  margin-top: var(--gap-md);
+  margin-top: var(--measure-dimension-gap-md);
 }
 
 .vercelPickerButton {

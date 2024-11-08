@@ -63,7 +63,7 @@ export enum CaseType {
     SSW = 'SSW',
     Reg60 = 'NB REG 60',
     AddressChange = 'Address Change',
-    ReReg = 'ReReg'
+    ReReg = 'ReReg',
 }
 
 export enum Processes {
@@ -192,3 +192,24 @@ export interface OnbaseCase {
     attachmentCount: number;
     nigos: Nigo[];
 }
+
+export enum AgingTimeframes {
+    ThreeDays = 'threeDays',
+    FiveDays = 'fiveDays',
+    SevenDays = 'sevenDays',
+    FourteenDays = 'fourteenDays',
+    ThirtyDays = 'thirtyDays',
+    SixtyDays = 'sixtyDays',
+    NinetyDays = 'ninetyDays',
+}
+export enum AgingTimeRanges {
+    ZeroToSeven = '0-7',
+    EightToFourteen = '8-14',
+    FifteenToThirty = '15-30',
+    ThirtyOneToFortyFive = '31-45',
+    FortySixToFiftyNine = '46-59',
+    SixtyPlus = '60+',
+}
+
+export type AgingTimeRangesKeys = keyof typeof AgingTimeRanges;
+export type AgingTimeRangesKeysExtended = keyof typeof AgingTimeRanges | 'All';

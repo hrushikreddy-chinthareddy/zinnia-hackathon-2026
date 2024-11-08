@@ -6,6 +6,7 @@ import { FieldSize, FieldVariant } from '@deps/components/fields/field';
 import NavElement, { NavElementType } from '@deps/components/nav-element/nav-element';
 import SelectSearchItem from '@deps/components/select-search/select-search-item/select-search-item';
 import { TranslationFiles } from '@deps/config/translations';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { filterOnSearchHandler } from '@deps/helpers/search.helper';
 import { useOutsideClick } from '@deps/hooks/useOutsideClick';
 import { ReactComponent as ChevronIcon } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
@@ -28,6 +29,8 @@ interface SelectFieldProps {
     group?: boolean;
     value?: any;
     dropUp?: boolean;
+    segmentTrackName?: string;
+    userPartyId?: string;
 }
 
 interface SelectFieldPopupContainerProps {
@@ -87,6 +90,8 @@ const SelectSearch = ({
     group,
     value,
     dropUp,
+    segmentTrackName,
+    userPartyId,
 }: SelectFieldProps) => {
     const [open, setOpen] = useState(false);
     const [searchValue, setSearchValue] = useState(value ? value : '');
@@ -96,9 +101,22 @@ const SelectSearch = ({
     const labelId = uuid4();
 
     const ref = useRef<HTMLInputElement>(null);
-    useOutsideClick(ref, open, setOpen);
+
+    // TODO MG: useCallback or useMemo?
+    const onOutsideClick = () => {
+        if (!segmentTrackName) {
+            return;
+        }
+        console.log('searchValue', searchValue);
+        segmentAnalyticsTrackEvent(segmentTrackName, {
+            searchText: searchValue,
+            userId: userPartyId
+        });
+    }
+    useOutsideClick(ref, open, setOpen, onOutsideClick);
 
     const debouncedSearchValue = useDebounce(searchValue, 300);
+
     useEffect(() => {
         if (debouncedSearchValue) {
             setSearchResults(filterOnSearchHandler(values, { searchValue: debouncedSearchValue }));
@@ -141,7 +159,7 @@ const SelectSearch = ({
         (select = false) => {
             setIsSelected(select);
         },
-        [isSelected]
+        [isSelected, searchValue]
     );
 
     return (

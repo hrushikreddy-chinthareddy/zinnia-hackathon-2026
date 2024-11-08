@@ -18,33 +18,36 @@ import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { AttachmentDetails, CorrespondenceFormParts } from '@deps/models/case/correspondence';
-import { CommunicationTypes, SendDocumentFormParts, SendDocumentFormType, TransactionType } from '@deps/models/case/send-document';
+import { AvailableFormsTransaction, CommunicationTypes, SearchTransactionRequestBody, SendDocumentFormParts, SendDocumentFormType } from '@deps/models/case/send-document';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission, UserProfile } from '@deps/models/user-profile';
-import { getTransactionTypesSSR, sendCommunication } from '@deps/queries/api/c2web';
+import { getSearchTransactionsSSR, sendCommunication } from '@deps/queries/api/c2web';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
+import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logWarn, logError, getUserInfoFromUser, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
-type SendDocumentProps = {
+interface SendDocumentProps extends SegmentTrackedPageProps {
     policy: Policy;
-    transactionTypes: TransactionType[];
+    availableFormsTransactions: AvailableFormsTransaction[];
     shouldShowCaseButton: FeatureFlags;
     shouldShowMailOption: FeatureFlags;
     user: UserProfile;
 };
 
-const SendDocument = ({ policy, transactionTypes, shouldShowCaseButton, shouldShowMailOption, user }: SendDocumentProps) => {
+const SendDocument = ({ policy, availableFormsTransactions, shouldShowCaseButton, shouldShowMailOption, user }: SendDocumentProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
-    const transactionOptions = transactionTypes?.map(transaction => {
-        return { label: transaction.name, value: transaction.id };
-    });
+
 
     const [formDetails, setFormDetails] = useState<SendDocumentFormParts>({} as SendDocumentFormParts);
     const { ctiCallNumber, correlationId } = router.query;
+
+    useSegmentPageTracker(user, SegmentPageName.SendDocument, { ctiCallNumber, correlationId, policyNumber: policy.policyNumber });
+
     const formSelectionLabel = t('tabs.formSelection');
     const CorrespondenceLabel = t('tabs.correspondence');
     const confirmLabel = t('tabs.confirm');
@@ -120,7 +123,7 @@ const SendDocument = ({ policy, transactionTypes, shouldShowCaseButton, shouldSh
                     ctiCallNumber={ctiCallNumber as string}
                     formDetails={formDetails}
                     setFormDetails={setFormDetails}
-                    transactionTypes={transactionOptions}
+                    availableFormsTransactions={availableFormsTransactions}
                 />
             ),
             screenReaderLabel: formSelectionLabel,
@@ -207,7 +210,13 @@ export const getServerSideProps = withPageAuthRequired({
                     },
                 };
             }
-            const transactionTypes = await getTransactionTypesSSR(accessToken, userInfoForLogging);
+            const transactionRequestBody: SearchTransactionRequestBody = {
+                carrier: policy.carrierId || '',
+                issueState: policy.issueState || '',
+                planCode: policy.product?.planCode || '',
+            };
+
+            const transactionTypeSubTypes = await getSearchTransactionsSSR(transactionRequestBody, accessToken, userInfoForLogging);
             const hideMailOptionForSpecifiedCarrier = `SEND_DOCUMENT_HIDE_MAIL_OPTION_${policy.carrierId}` as keyof typeof FEATURE_FLAGS;
 
             const shouldShowMailOption =
@@ -218,7 +227,7 @@ export const getServerSideProps = withPageAuthRequired({
                 props: {
                     ...translations,
                     policy,
-                    transactionTypes: transactionTypes || [],
+                    availableFormsTransactions: transactionTypeSubTypes || [],
                     shouldShowCaseButton: shouldShowCaseButton ?? false,
                     shouldShowMailOption: shouldShowMailOption ?? false,
                     user,

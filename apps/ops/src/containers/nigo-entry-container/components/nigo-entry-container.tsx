@@ -2,14 +2,16 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
+import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import { DocumentData } from '@deps/models/case/document';
-import { TransactionType } from '@deps/models/case/send-document';
+import { AvailableFormsTransaction } from '@deps/models/case/send-document';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { TransactionDetails } from '@deps/pages/nigo-entry';
 import { getTransactionSubTypes, searchForms } from '@deps/queries/api/c2web';
 
 import { useNigoEntry } from './nigo-entry-provider';
 import ConfirmStep from './steps/confirm/confirm-step';
+import FormEntryStep from './steps/form-entry/form-entry-step';
 import FormSelectionStep from './steps/form-selection.tsx/form-selection-step';
 import { NigoDetailsStep } from './steps/nigo-details/nigo-details-step';
 import { ServiceFormReviewStep } from './steps/service-form-review/service-form-review-step';
@@ -17,7 +19,7 @@ import TabGroupContainer from './tab-group-container';
 
 interface NigoEntryContainerContainerProps {
     policy: Policy;
-    transactionTypes: TransactionType[];
+    availableFormsTransactions: AvailableFormsTransaction[];
     planCode: string;
     documentNumber: string;
     docType: string;
@@ -27,13 +29,14 @@ interface NigoEntryContainerContainerProps {
     documentData: DocumentData;
     taskInfoLink: string;
     prevTransactionDetails: TransactionDetails | null;
+
 }
 
 const NigoEntryContainer = ({
     documentData,
     documentNumber,
     policy,
-    transactionTypes,
+    availableFormsTransactions,
     docType,
     clientCode,
     nigoExceptions,
@@ -42,13 +45,13 @@ const NigoEntryContainer = ({
     prevTransactionDetails,
 }: NigoEntryContainerContainerProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry' });
-    const { setTransactionType, setTransactionSubType, setDocument } = useNigoEntry();
+    const { setTransactionType, setTransactionSubType, setDocument, isReadyForDataEntry } = useNigoEntry();
 
     const transactionOptions = useMemo(() => {
-        return  transactionTypes?.map(transaction => {
+        return availableFormsTransactions?.map(transaction => {
             return { label: transaction.name, value: transaction.id };
         });
-    }, [transactionTypes]);
+    }, [availableFormsTransactions]);
 
     useEffect(() => {
         const initialize = async () => {
@@ -58,13 +61,14 @@ const NigoEntryContainer = ({
                 setTransactionType({ selected: transType, list: transactionOptions });
                 try {
                     const response = await getTransactionSubTypes(transType);
-                    const transSubType = response?.find(transaction => transaction.name === prevTransactionDetails?.transactionSubType || '')?.id || '';
+                    const transSubType =
+                        response?.find(transaction => transaction.name === prevTransactionDetails?.transactionSubType || '')?.id || '';
 
                     if (response) {
                         const options = response.map(transaction => {
                             return { label: transaction.name, value: transaction.id };
                         });
-                        setTransactionSubType({selected: transSubType, list: options });
+                        setTransactionSubType({ selected: transSubType, list: options });
 
                         const formSearchRequestBody = {
                             contractNumber: policy.policyNumber ?? '',
@@ -78,24 +82,35 @@ const NigoEntryContainer = ({
                         const searchResponse = await searchForms(formSearchRequestBody);
                         const selectedForm = searchResponse?.find(form => form.formDisplayName === formName);
                         if (searchResponse) {
-                            setDocument({list: searchResponse, selected: selectedForm || null });
+                            setDocument({ list: searchResponse, selected: selectedForm || null });
                         }
                     }
                 } catch (e: any) {
                     console.error('GetTransactionSubTypes::Error retrieving transaction sub types', e);
                 }
             }
-        }
+        };
         if (prevTransactionDetails) {
             initialize();
         }
-    }, [policy?.carrierId, policy.issueState, policy.policyNumber, policy.product?.planCode, prevTransactionDetails, setDocument, setTransactionSubType, setTransactionType, transactionOptions]);
-
+    }, [
+        policy?.carrierId,
+        policy.issueState,
+        policy.policyNumber,
+        policy.product?.planCode,
+        prevTransactionDetails,
+        setDocument,
+        setTransactionSubType,
+        setTransactionType,
+        availableFormsTransactions,
+        transactionOptions,
+    ]);
 
     const steps = useMemo(
         () => [
             {
                 ariaLabel: t('tabs.serviceFormReview'),
+                isVisible: () => true,
                 component: (
                     <ServiceFormReviewStep
                         policy={policy}
@@ -111,7 +126,16 @@ const NigoEntryContainer = ({
                 text: t('tabs.serviceFormReview'),
             },
             {
+                ariaLabel: t('tabs.formEntry'),
+                isVisible: () => isReadyForDataEntry,
+                component: <FormEntryStep document={documentData} clientCode={clientCode} docType={docType} />,
+                screenReaderLabel: t('tabs.formEntry'),
+                index: 1,
+                text: t('tabs.formEntry'),
+            },
+            {
                 ariaLabel: t('tabs.nigoDetails'),
+                isVisible: () => !isReadyForDataEntry,
                 component: <NigoDetailsStep nigoExceptions={nigoExceptions} nigoSubExceptions={nigoSubExceptions} />,
                 screenReaderLabel: t('tabs.nigoDetails'),
                 index: 1,
@@ -119,23 +143,30 @@ const NigoEntryContainer = ({
             },
             {
                 ariaLabel: t('tabs.documentSelection'),
-                component: <FormSelectionStep transactionTypes={transactionOptions} policy={policy} />,
+                isVisible: () => !isReadyForDataEntry,
+                component: <FormSelectionStep availableFormsTransactions={availableFormsTransactions} policy={policy} documentData={documentData}/>,
                 screenReaderLabel: t('tabs.documentSelection'),
                 index: 2,
                 text: t('tabs.documentSelection'),
             },
             {
                 ariaLabel: t('tabs.confirm'),
+                isVisible: () => true,
                 component: <ConfirmStep documentNumber={documentNumber} docType={docType} clientCode={clientCode} document={documentData} />,
                 screenReaderLabel: t('tabs.confirm'),
                 index: 3,
                 text: t('tabs.confirm'),
             },
         ],
-        [t]
+        [availableFormsTransactions, clientCode, docType, documentData, documentNumber, isReadyForDataEntry, nigoExceptions, nigoSubExceptions, policy, t, taskInfoLink]
     );
 
-    return <TabGroupContainer steps={steps} policy={policy} documentNumber={documentNumber} docType={docType}></TabGroupContainer>;
+    const filteredSteps: Step[] = useMemo(
+        () => steps.filter((item: any) => item.isVisible?.()).map((item: any, index: number) => ({ ...item, index })),
+        [steps]
+    );
+
+    return <TabGroupContainer steps={filteredSteps} policy={policy} documentNumber={documentNumber} docType={docType} documentData={documentData}></TabGroupContainer>;
 };
 
 export default NigoEntryContainer;

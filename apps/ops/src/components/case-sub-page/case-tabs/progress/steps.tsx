@@ -1,6 +1,6 @@
+import { Icon, IconType, Tag, TagVariant } from '@zinnia/bloom/components';
 import { TFunction, useTranslation } from 'next-i18next';
 import React, { ReactNode } from 'react';
-import { Icon, IconType, Tag, TagVariant } from '@zinnia/bloom/components';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
@@ -45,15 +45,6 @@ const StepResultTag = ({ step }: { step: TransformedStep }) => {
         case StepTagIds.UnderwritingDeclined:
             text = t('caseOverview.tabs.declined');
             break;
-        // Suitability
-        case StepTagIds.SuitabilityReview:
-            if (step.status === 'COMPLETED') {
-                text = t('caseOverview.tabs.approved');
-                break;
-            } else {
-                text = t('caseOverview.tabs.declined');
-                break;
-            }
         // User Decision
         case StepTagIds.UserAccepted:
             text = t('caseOverview.tabs.accepted');

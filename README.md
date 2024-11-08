@@ -25,6 +25,7 @@ These consist of shared libraries, components, utilities, or any common code tha
 
 ### Pre-requisites
 
+- For MacOS: XCode developer tools
 - Node.js 20+
 - [pnpm](https://pnpm.io/) - We use `pnpm` because it has better support for monorepos. It has a lot of built in tools that make it easier to filter on the app or package you want to build and deploy. You will want to install version `9.4.0`.
 - Mac users will need to run the following command to use the canvas package that is required by `pnpm`
@@ -71,17 +72,23 @@ To build all projects in the monorepo that have changes since the last commit:
 pnpm run build
 ```
 
-### Helper Scripts
+### Running the projects
 
 To simplify the development process, we have created two helper scripts to run either Ops or Consumer Experience.
 
-### Running Ops
+#### Setting up env variables
+
+Mae sure to copy `.env` to `.env.development.local` into each project and fill in the values
+
+#### Running Ops
 
 To run Ops, use the following command:
 
 ```bash
 pnpm run dev:ops
 ```
+
+#### Running Consumer Experience
 
 To run Consumer Experience, use the following command:
 
