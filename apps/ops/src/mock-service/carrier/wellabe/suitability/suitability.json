@@ -152,7 +152,9 @@
             "benefitAnnuityQuestions": {
                 "understandIncomeAdjustmentFactor": "string",
                 "consideredFinancialNeedsAfter10Years": "string",
-                "planForIncomeDecreaseAfter10Years": "string"
+                "planForIncomeDecreaseAfter10Years": [
+                    "string"
+                ]
             }
         },
         "agentAcknowledgment": {

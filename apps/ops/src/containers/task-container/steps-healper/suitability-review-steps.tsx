@@ -7,7 +7,7 @@ export const getSuitabilityReviewSteps = ({ caseId, taskId, taskType }: GetSteps
     const steps: Step[] = [
         {
             ariaLabel: 'Review Suitability',
-            component: <TaskFormStep taskType={taskType}></TaskFormStep>,
+            component: <TaskFormStep taskType={taskType} isSubmit={true}></TaskFormStep>,
             text: 'Review Suitability',
             index: 0,
             isCompleted: true,

@@ -76,7 +76,6 @@ export const getServerSideProps = withPageAuthRequired({
         const user = await getUserData(context);
         const { locale = DEFAULT_LOCALE, query, req, res } = context;
         const taskId = (query.taskId as string) || '';
-        const clientId = (query.clientId as string) || '';
 
         const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
 
@@ -106,17 +105,6 @@ export const getServerSideProps = withPageAuthRequired({
             };
         }
 
-        // If feature flag is not enabled, redirect to error page
-        if (!isFormFeatureEnabled(ProcessType.SUITABILITY, clientId, featureFlagDecisions)) {
-            logWarn('task/:id::feature flag not enabled', { clientId });
-            // return {
-            //     redirect: {
-            //         destination: '/403',
-            //         permanent: false,
-            //     },
-            // };
-        }
-
         try {
             const [translations, task] = await Promise.all([
                 await serverSideTranslations(locale, [TranslationFiles.COMMON, TranslationFiles.COLDEFS], nextI18nextConfig, ALL_LOCALES),
@@ -139,6 +127,17 @@ export const getServerSideProps = withPageAuthRequired({
             const { taskType, carrier, data, caseId, process } = task;
             const { documentNumber, contractNum } = task.data;
             const processType = process as ProcessType;
+
+            // If feature flag is not enabled, redirect to error page
+            if (!isFormFeatureEnabled(process as ProcessType, carrier, featureFlagDecisions)) {
+                logWarn('task/:id::feature flag not enabled', { carrier });
+                // return {
+                //     redirect: {
+                //         destination: '/403',
+                //         permanent: false,
+                //     },
+                // };
+            }
 
             const taskFormSchema = await getTaskFormMetadata(carrier, taskType as TaskType, processType, accessToken);
             const { formSchema, uiSchema } = taskFormSchema ?? {};

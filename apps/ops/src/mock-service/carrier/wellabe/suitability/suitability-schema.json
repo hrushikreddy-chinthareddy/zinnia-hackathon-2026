@@ -1005,8 +1005,11 @@
                                 "title": "Considered Financial Needs After 10 Years"
                             },
                             "planForIncomeDecreaseAfter10Years": {
-                                "type": "string",
-                                "title": "Plan for Income Decrease After 10 Years"
+                                "type": "array",
+                                "title": "Plan for Income Decrease After 10 Years",
+                                "items": {
+                                    "type": "string"
+                                }
                             }
                         },
                         "required": [
@@ -2005,7 +2008,13 @@
             "benefitAnnuityQuestions": {
                 "understandIncomeAdjustmentFactor": {},
                 "consideredFinancialNeedsAfter10Years": {},
-                "planForIncomeDecreaseAfter10Years": {}
+                "planForIncomeDecreaseAfter10Years": {
+                    "items": {
+                        "ui:options": {
+                            "label": false
+                        }
+                    }
+                }
             }
         },
         "agentAcknowledgment": {
@@ -2045,21 +2054,9 @@
                                 ]
                             }
                         },
-                        "companyName": {
-                            "ui:options": {
-                                "label": false
-                            }
-                        },
-                        "policyNumber": {
-                            "ui:options": {
-                                "label": false
-                            }
-                        },
-                        "issueDate": {
-                            "ui:options": {
-                                "label": false
-                            }
-                        }
+                        "companyName": {},
+                        "policyNumber": {},
+                        "issueDate": {}
                     }
                 }
             },

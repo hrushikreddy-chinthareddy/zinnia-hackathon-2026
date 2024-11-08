@@ -16,9 +16,10 @@ type TaskFormStepProps = {
     formRef?: any;
     taskInfoLink?: string;
     taskType: TaskType;
+    isSubmit?: boolean;
 };
 
-const TaskFormStep = ({ taskType, isSummaryView = false, taskInfoLink }: TaskFormStepProps) => {
+const TaskFormStep = ({ taskType, isSummaryView = false, taskInfoLink, isSubmit }: TaskFormStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.taskReview` });
     const { goToNext } = useWorkflow();
     const formRef = createRef<Form>();
@@ -41,7 +42,7 @@ const TaskFormStep = ({ taskType, isSummaryView = false, taskInfoLink }: TaskFor
             subtitle={t('subTitle') as string}
             footerContent={
                 <TransactionNavigationButtons
-                    submitLabel={isSummaryView ? (t('submitLabel') as string) : (t('continueLabel') as string)}
+                    submitLabel={isSubmit ? (t('submitLabel') as string) : (t('continueLabel') as string)}
                     cancelLabel={t('cancelLabel') as string}
                     isSubmit={true}
                     handleContinue={handleStepContinue}
