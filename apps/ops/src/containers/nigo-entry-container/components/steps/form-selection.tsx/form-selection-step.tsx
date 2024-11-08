@@ -4,7 +4,6 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 
 import 'react-pdf/dist/Page/TextLayer.css';
 
-import { SimpleOption } from '@deps/components/autocomplete/autocomplete.types';
 import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
@@ -15,7 +14,7 @@ import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { DocumentData } from '@deps/models/case/document';
 import { ApiVersion } from '@deps/models/case/enums';
 import { TaskApiVersionMapper } from '@deps/models/case/helpers';
-import { SendDocumentFormParts } from '@deps/models/case/send-document';
+import { AvailableFormsTransaction, SendDocumentFormParts } from '@deps/models/case/send-document';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { updateTask } from '@deps/queries/api/v2/task';
@@ -25,17 +24,19 @@ import { useNigoEntry } from '../../nigo-entry-provider';
 
 type FormSelectionProps = {
     policy: Policy;
-    transactionTypes: SimpleOption[];
+    availableFormsTransactions: AvailableFormsTransaction[];
     ctiCallNumber?: string;
     documentData: DocumentData;
 };
 
-function FormSelectionStep({ transactionTypes, policy, documentData, ctiCallNumber = '' }: FormSelectionProps) {
+function FormSelectionStep({ availableFormsTransactions, policy, documentData, ctiCallNumber = '' }: FormSelectionProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.formSelection' });
     const { goToNext } = useWorkflow();
     const [error, setError] = useState<string>('');
     const { transactionType, transactionSubType, document, setTransactionType, setTransactionSubType, setDocument } = useNigoEntry();
-
+    const transactionTypes = availableFormsTransactions?.map(transaction => {
+        return { label: transaction.name, value: transaction.id };
+    });
     const [formDetails, setFormDetails] = useState<SendDocumentFormParts>({
         transactionType,
         transactionSubType,
@@ -150,7 +151,7 @@ function FormSelectionStep({ transactionTypes, policy, documentData, ctiCallNumb
                 ctiCallNumber={ctiCallNumber}
                 formDetails={formDetails}
                 setFormDetails={setFormDetails}
-                transactionTypes={transactionTypes}
+                availableFormsTransactions={availableFormsTransactions}
             />
             {error && <AssistiveText text={error} variant={AssistiveTextVariant.Error} className="mt-2" />}
         </WorkflowCard>

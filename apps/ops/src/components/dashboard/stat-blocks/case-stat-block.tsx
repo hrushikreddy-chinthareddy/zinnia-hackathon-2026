@@ -1,13 +1,15 @@
 import clsx from 'clsx';
-import { useTranslation } from 'react-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import DistributionPieChartSmall from '@deps/components/dashboard/distribution-charts/distribution-pie-chart-small';
 import Label, { LabelVariant } from '@deps/components/label/label';
+import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { StatGroupingResponse } from '@deps/helpers/dashboard/types';
 import { formatNumberLabel, wholeNumberFormatify } from '@deps/helpers/numbers.helper';
+import { convertToQueryString } from '@deps/helpers/routing.helper';
+import { ReactComponent as ChartSquare } from '@deps/styles/elements/icons/icons_outlined/chart-square-bar.svg';
 import { ReactComponent as LighBulb } from '@deps/styles/elements/icons/icons_outlined/light-bulb.svg';
 
 interface Props {
@@ -18,6 +20,8 @@ interface Props {
     statMeasurementLabel: string;
     summaryBlockFormatter: (caseStats: StatGroupingResponse) => string;
     variant?: 'single' | 'double' | 'full';
+    showViewMore?: boolean;
+    filterParams?: { [key: string]: string | number | boolean };
 }
 
 const CaseStatBlock = ({
@@ -28,9 +32,9 @@ const CaseStatBlock = ({
     statMeasurementLabel,
     summaryBlockFormatter,
     variant = 'single',
+    showViewMore = false,
+    filterParams = {},
 }: Props) => {
-    const { t } = useTranslation(undefined);
-
     const renderLabel = () => {
         return (
             <div className="flex gap-1">
@@ -61,6 +65,19 @@ const CaseStatBlock = ({
                     <span>Insight</span>
                 </Typography>
                 <Typography variant={TypographyVariant.BodySm}>{summaryBlockFormatter(caseStats)}</Typography>
+                {showViewMore && (
+                    <div className="mt-4 flex items-center gap-1">
+                        <ChartSquare height={18} width={18} />
+                        <NavElement
+                            href={`/cases${convertToQueryString(filterParams)}`}
+                            size={NavElementSize.Small}
+                            type={NavElementType.Link}
+                            target="_blank"
+                        >
+                            View apps
+                        </NavElement>
+                    </div>
+                )}
             </>
         );
     };

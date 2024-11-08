@@ -17,13 +17,13 @@ import { Processes } from '@deps/models/case/case';
 import { DocumentData } from '@deps/models/case/document';
 import { docTypes } from '@deps/models/case/helpers';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
-import { TransactionType } from '@deps/models/case/send-document';
+import { AvailableFormsTransaction, SearchTransactionRequestBody } from '@deps/models/case/send-document';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { ActiveWithdrawalCase, Carrier } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
 import { mapTaskToActiveWithdrawalCaseTask } from '@deps/operations/tasks/v2/helpers';
-import { getTransactionTypesSSR } from '@deps/queries/api/c2web';
+import { getSearchTransactionsSSR } from '@deps/queries/api/c2web';
 import { searchCasesSSR } from '@deps/queries/api/cases';
 import { getDocumentSSR } from '@deps/queries/api/documents';
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
@@ -48,7 +48,7 @@ interface NigoEntryProps extends SegmentTrackedPageProps {
     documentNumber: string;
     policy: Policy;
     planCode: string;
-    transactionTypes: TransactionType[];
+    availableFormsTransactions: AvailableFormsTransaction[];
     docType: string;
     clientCode: string;
     nigoExceptions: any;
@@ -66,12 +66,12 @@ const isNigoEntryEnabled = (clientId: string, process: string, featureFlagMap: F
     const identifier = `NIGO_ENTRY_${clientId.toUpperCase()}_${process.toUpperCase().replaceAll(' ', '_')}` as FeatureKeyIdentifier;
     const featureKey = FEATURE_FLAGS[identifier];
     return featureKey && featureFlagMap[featureKey] ? featureFlagMap[featureKey] : false;
-}
+};
 
 const NigoEntry = ({
     policy,
     planCode,
-    transactionTypes,
+    availableFormsTransactions,
     documentNumber,
     docType,
     clientCode,
@@ -111,7 +111,7 @@ const NigoEntry = ({
                         documentNumber={documentNumber}
                         policy={policy}
                         planCode={planCode}
-                        transactionTypes={transactionTypes}
+                        availableFormsTransactions={availableFormsTransactions}
                         docType={docType}
                         clientCode={clientCode}
                         nigoExceptions={nigoExceptions}
@@ -158,8 +158,8 @@ export const getServerSideProps = withPageAuthRequired({
 
         try {
             const [translations, activeForm] = await Promise.all([
-                await serverSideTranslations(locale,[TranslationFiles.COMMON, TranslationFiles.COLDEFS], nextI18nextConfig, ALL_LOCALES),
-                await getCaseTaskByIdSSR(taskId, accessToken)
+                await serverSideTranslations(locale, [TranslationFiles.COMMON, TranslationFiles.COLDEFS], nextI18nextConfig, ALL_LOCALES),
+                await getCaseTaskByIdSSR(taskId, accessToken),
             ]);
 
             if (!activeForm) {
@@ -179,7 +179,7 @@ export const getServerSideProps = withPageAuthRequired({
             logInfo('nigo-entry::getCaseTaskByIdSSR task active form found', {
                 taskId,
                 file: 'pages/nigo-entry',
-                function: 'getServerSideProps'
+                function: 'getServerSideProps',
             });
 
             const form = mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm.data, userId: user?.name });
@@ -238,7 +238,7 @@ export const getServerSideProps = withPageAuthRequired({
                     clientCode,
                     contractNum,
                     file: 'pages/nigo-entry',
-                    function: 'getServerSideProps'
+                    function: 'getServerSideProps',
                 });
                 return {
                     redirect: {
@@ -256,7 +256,7 @@ export const getServerSideProps = withPageAuthRequired({
                     clientCode,
                     contractNum,
                     file: 'pages/nigo-entry',
-                    function: 'getServerSideProps'
+                    function: 'getServerSideProps',
                 });
                 return {
                     redirect: {
@@ -272,12 +272,18 @@ export const getServerSideProps = withPageAuthRequired({
                 process: activeForm?.process
             };
 
-            const [transactionTypes, nigoExceptionResponse] = await Promise.all([
-                await getTransactionTypesSSR(accessToken, userInfoForLogging),
-                await getNigoExceptions(nigoFilters, accessToken)
+            const transactionRequestBody: SearchTransactionRequestBody = {
+                carrier: policy.carrierId || '',
+                issueState: policy.issueState || '',
+                planCode: policy.product?.planCode || '',
+            };
+
+            const [availableFormsTransactions, nigoExceptionResponse] = await Promise.all([
+                await getSearchTransactionsSSR(transactionRequestBody, accessToken, userInfoForLogging),
+                await getNigoExceptions(nigoFilters, accessToken),
             ]);
 
-            const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse
+            const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
             const taskInfoLink = buildTaskLink(taskId, form.caseId, caseType, documentNumber, clientCode);
             const filters = {
                 policyNumber: contractNum,
@@ -286,13 +292,13 @@ export const getServerSideProps = withPageAuthRequired({
                 sortDirection: 'desc',
                 sortBy: 'createdAt',
                 carrier: [clientCode.toUpperCase()],
-                process: [Processes.Correspondence]
+                process: [Processes.Correspondence as string],
             };
 
             const [parties, document, searchCasesResponse] = await Promise.all([
                 await getPolicyPartiesSSR(contractNum, clientCode, accessToken as string),
                 await getDocumentSSR(documentNumber, docType, clientCode?.toUpperCase(), accessToken),
-                await searchCasesSSR(filters, accessToken)
+                await searchCasesSSR(filters, accessToken),
             ]);
 
             if (!document) {
@@ -300,7 +306,7 @@ export const getServerSideProps = withPageAuthRequired({
                     documentNumber,
                     clientCode,
                     contractNum,
-                    taskId
+                    taskId,
                 });
                 return {
                     redirect: {
@@ -343,7 +349,7 @@ export const getServerSideProps = withPageAuthRequired({
                     clientCode,
                     docType: docType,
                     policy,
-                    transactionTypes,
+                    availableFormsTransactions,
                     nigoExceptions,
                     nigoSubExceptions,
                     user,

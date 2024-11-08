@@ -5,8 +5,6 @@ import { Processes } from '@deps/models/case/case';
 import ActiveFilters from './active-filters';
 
 const baseFilters = {
-    showOnlyCompletedCases: false,
-    showOnlyCanceledCases: false,
     processTypes: new Set([]),
     requestSubType: new Set([]),
     products: new Set([]),
@@ -34,36 +32,6 @@ describe('ActiveFilters', () => {
             expect(screen.getByText('ageRange : 14')).toBeInTheDocument();
             expect(screen.getByText('caseManagementDashboard.refineResultsOptions.clearAll')).toBeInTheDocument();
             expect(screen.getByText('ageRange : 14').parentElement?.parentElement).toHaveClass('bds-chip-x');
-        });
-
-        it('renders completed chip', () => {
-            render(
-                <ActiveFilters
-                    filters={{ ...baseFilters, showOnlyCompletedCases: true, processTypes: new Set([]) }}
-                    onReset={() => null}
-                    removeFilter={() => null}
-                    authorizedCarriers={[]}
-                />
-            );
-
-            expect(screen.getByText('completed')).toBeInTheDocument();
-            expect(screen.getByText('caseManagementDashboard.refineResultsOptions.clearAll')).toBeInTheDocument();
-            expect(screen.getByText('completed').parentElement?.parentElement).toHaveClass('bds-chip-x');
-        });
-
-        it('renders canceled chip', () => {
-            render(
-                <ActiveFilters
-                    authorizedCarriers={[]}
-                    filters={{ ...baseFilters, showOnlyCanceledCases: true, processTypes: new Set([]) }}
-                    onReset={() => null}
-                    removeFilter={() => null}
-                />
-            );
-
-            expect(screen.getByText('canceled')).toBeInTheDocument();
-            expect(screen.getByText('caseManagementDashboard.refineResultsOptions.clearAll')).toBeInTheDocument();
-            expect(screen.getByText('canceled').parentElement?.parentElement).toHaveClass('bds-chip-x');
         });
 
         it('renders updated start chip', () => {
@@ -186,40 +154,6 @@ describe('ActiveFilters', () => {
             expect(mockRemoveFilter).toHaveBeenCalledTimes(1);
             expect(mockRemoveFilter).toHaveBeenCalledWith(expect.objectContaining({ age: '' }));
             waitFor(() => expect(screen.getAllByText('ageRange : 14')).not.toBeInTheDocument());
-        });
-
-        it('removes filters with correct arguments for completed chip', () => {
-            render(
-                <ActiveFilters
-                    authorizedCarriers={[]}
-                    filters={{ ...baseFilters, showOnlyCompletedCases: true }}
-                    onReset={() => null}
-                    removeFilter={mockRemoveFilter}
-                />
-            );
-
-            expect(screen.getByText('completed')).toBeInTheDocument();
-            fireEvent.click(screen.getByTestId('bds-chip-x-button'));
-            expect(mockRemoveFilter).toHaveBeenCalledTimes(1);
-            expect(mockRemoveFilter).toHaveBeenCalledWith(expect.objectContaining({ showOnlyCompletedCases: false }));
-            waitFor(() => expect(screen.getAllByText('completed')).not.toBeInTheDocument());
-        });
-
-        it('removes filters with correct arguments for canceled chip', () => {
-            render(
-                <ActiveFilters
-                    authorizedCarriers={[]}
-                    filters={{ ...baseFilters, showOnlyCanceledCases: true }}
-                    onReset={() => null}
-                    removeFilter={mockRemoveFilter}
-                />
-            );
-
-            expect(screen.getByText('canceled')).toBeInTheDocument();
-            fireEvent.click(screen.getByTestId('bds-chip-x-button'));
-            expect(mockRemoveFilter).toHaveBeenCalledTimes(1);
-            expect(mockRemoveFilter).toHaveBeenCalledWith(expect.objectContaining({ showOnlyCanceledCases: false }));
-            waitFor(() => expect(screen.getAllByText('canceled')).not.toBeInTheDocument());
         });
 
         it('removes filters with correct arguments for updated start chip', () => {
