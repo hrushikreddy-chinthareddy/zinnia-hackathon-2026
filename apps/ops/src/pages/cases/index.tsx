@@ -333,7 +333,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                 </Typography>
                 <div className={styles.container}>
                     {searchBar}
-                    <div className="mt-4">
+                    <div className="mt-4 flex flex-col gap-2 sm:flex-row">
                         <StatusFilter
                             values={caseManagementFilters.additionalFilters.caseStatus}
                             onChange={vals =>
@@ -351,31 +351,30 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                                 })
                             }
                         />
+                        <ActiveFilters
+                            authorizedCarriers={authorizedCarriers}
+                            filters={caseManagementFilters.additionalFilters}
+                            removeFilter={removeAdditionalFilter}
+                            onReset={resetAllFilters}
+                        />
+                        <NavElement
+                            tabIndex={0}
+                            size={NavElementSize.Small}
+                            type={NavElementType.Button}
+                            startIcon={<FilterButton />}
+                            className="flex items-center whitespace-nowrap"
+                            aria-label={t('ariaLabel.openRefineResultsButton') as string}
+                            onClick={openRefineResultsSidesheet}
+                            onKeyDown={e => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    openRefineResultsSidesheet();
+                                }
+                            }}
+                        >
+                            {t('caseManagementDashboard.refineResults')}
+                        </NavElement>
                     </div>
-                    <ActiveFilters
-                        authorizedCarriers={authorizedCarriers}
-                        filters={caseManagementFilters.additionalFilters}
-                        removeFilter={removeAdditionalFilter}
-                        onReset={resetAllFilters}
-                    />
-                    {/* to do - does this get deleted entirely? */}
-                    <NavElement
-                        tabIndex={0}
-                        size={NavElementSize.Small}
-                        type={NavElementType.Button}
-                        startIcon={<FilterButton />}
-                        className="flex items-center whitespace-nowrap"
-                        aria-label={t('ariaLabel.openRefineResultsButton') as string}
-                        onClick={openRefineResultsSidesheet}
-                        onKeyDown={e => {
-                            if (e.key === 'Enter' || e.key === ' ') {
-                                e.preventDefault();
-                                openRefineResultsSidesheet();
-                            }
-                        }}
-                    >
-                        {t('caseManagementDashboard.refineResults')}
-                    </NavElement>
                     {tableContent}
                     <div className="flex flex-col items-center lg:grid lg:grid-cols-3 mt-3">
                         <Typography variant={TypographyVariant.BodySm} className="mb-6 lg:mb-0">
