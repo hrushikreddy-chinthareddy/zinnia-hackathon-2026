@@ -29,12 +29,12 @@ export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSche
     };
     return (
         <div>
-            <div className="px-4 flex">
+            <div className="flex">
                 <div className="flex w-full">{children}</div>
                 <div className="pt-5 ml-auto">
                     {hasToolbar && (
                         <div className="d-flex flex-row">
-                            {/* {(hasMoveUp || hasMoveDown) && (
+                            {(hasMoveUp || hasMoveDown) && (
                                 <div className="m-0 p-0">
                                     <MoveUpButton
                                         className="array-item-move-up"
@@ -67,9 +67,9 @@ export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSche
                                         registry={registry}
                                     />
                                 </div>
-                            )} */}
+                            )}
                             {hasRemove && !readonly && (
-                                <div className="m-0 pr-4">
+                                <div className="pr-4">
                                     <RemoveButton
                                         style={btnStyle}
                                         disabled={disabled || readonly}

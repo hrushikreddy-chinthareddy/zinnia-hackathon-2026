@@ -1,8 +1,7 @@
 import { TitleFieldProps } from '@rjsf/utils';
 
-import TitleField from './title-field';
-
+import classes from './title-field.module.css';
 export function TitleFieldTemplate(props: TitleFieldProps) {
-    const { title, schema, registry } = props;
-    return <TitleField title={title} id={props.id} schema={schema} registry={registry}></TitleField>;
+    const { title } = props;
+    return <div className={classes.text}>{title}</div>;
 }

@@ -1727,29 +1727,27 @@
                 }
             },
             "sourceOfIncome": {
-                "items": {
-                    "ui:options": {
-                        "enumNames": [
-                            "FIXED ANNUITY",
-                            "LIFE INSURENCE",
-                            "CHECKING SAVING ACCOUNT",
-                            "SALARY",
-                            "VARIABLE ANNUITY",
-                            "REVERSE MORTGAGE",
-                            "SAVING ACCOUNT",
-                            "DEATH BENEFIT",
-                            "INHERITED IRA",
-                            "INHERITANCE",
-                            "401K ROLLOVER",
-                            "RETIREMENT PLAN",
-                            "INHERITED IRA",
-                            "INDEXED ANNUITY",
-                            "STOCKS BONDS MF",
-                            "OTHERS",
-                            "RENTALINCOME",
-                            "SOCIAL SECURITY"
-                        ]
-                    }
+                "ui:widget": "checkboxes",
+                "ui:options": {
+                    "enumNames": [
+                        "Fixed Annuity",
+                        "Life Insurance",
+                        "Checking Saving Account",
+                        "Salary",
+                        "Variable Annuity",
+                        "Reverse Mortgage",
+                        "Saving Account",
+                        "Death Benefit",
+                        "Inherited IRA",
+                        "Inheritance",
+                        "401K Rollover",
+                        "Retirememt Plan",
+                        "Indexed Aannuity",
+                        "Stocks Bonds MF",
+                        "Others",
+                        "Rental Income",
+                        "Social Security"
+                    ]
                 }
             },
             "sourceOfIncomeOther": {
@@ -1819,26 +1817,25 @@
                 }
             },
             "sourceOfFunds": {
-                "items": {
-                    "ui:options": {
-                        "enumNames": [
-                            "FIXED ANNUITY",
-                            "LIFE INSURENCE",
-                            "CHECKING SAVING ACCOUNT",
-                            "CD",
-                            "VARIABLE ANNUITY",
-                            "REVERSE MORTGAGE",
-                            "SAVING ACCOUNT",
-                            "DEATH BENEFIT",
-                            "INHERITED IRA",
-                            "INHERITANCE",
-                            "401K ROLLOVER",
-                            "RETIREMENT PLAN",
-                            "INDEXED ANNUITY",
-                            "STOCKS BONDS MF",
-                            "OTHERS"
-                        ]
-                    }
+                "ui:widget": "checkboxes",
+                "ui:options": {
+                    "enumNames": [
+                        "Fixed Annuity",
+                        "Life Insurance",
+                        "Checking Saving Account",
+                        "CD",
+                        "Variable Annuity",
+                        "Reverse Mortgage",
+                        "Saving Account",
+                        "Death Benefit",
+                        "Inherited IRA",
+                        "Inheritance",
+                        "401K Rollover",
+                        "Retirement Plan",
+                        "Indexed Annuity",
+                        "Stocks Bonds MF",
+                        "Others"
+                    ]
                 }
             },
             "federalTaxBand": {},

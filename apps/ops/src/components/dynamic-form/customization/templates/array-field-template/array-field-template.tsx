@@ -1,4 +1,4 @@
-import { Box, Card, Flex } from '@radix-ui/themes';
+import { Card } from '@radix-ui/themes';
 import {
     ArrayFieldTemplateItemType,
     ArrayFieldTemplateProps,
@@ -8,6 +8,8 @@ import {
     RJSFSchema,
     StrictRJSFSchema,
 } from '@rjsf/utils';
+
+import style from './array-field.module.css';
 
 function ArrayFieldTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
     props: ArrayFieldTemplateProps<T, S, F>
@@ -26,7 +28,7 @@ function ArrayFieldTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
         ButtonTemplates: { AddButton },
     } = registry.templates;
     return (
-        <Box className="pl-2 mt-4">
+        <div className="mt-4">
             <Card variant="classic">
                 <ArrayFieldTitleTemplate
                     idSchema={idSchema}
@@ -43,13 +45,13 @@ function ArrayFieldTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
                     uiSchema={uiSchema}
                     registry={registry}
                 />
-                <Flex direction="column" key={`array-item-list-${idSchema.$id}`} className="border-t px-30 my-4">
+                <div key={`array-item-list-${idSchema.$id}`} className={style.arrayFieldList}>
                     {items &&
                         items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
                             <ArrayFieldItemTemplate key={key} {...itemProps} />
                         ))}
                     {canAdd && !readonly && (
-                        <Flex direction="column" align="start" className="px-5 pt-5">
+                        <div className="flex">
                             <AddButton
                                 className="array-item-add"
                                 title={idSchema.$id}
@@ -58,11 +60,11 @@ function ArrayFieldTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
                                 uiSchema={uiSchema}
                                 registry={registry}
                             />
-                        </Flex>
+                        </div>
                     )}
-                </Flex>
+                </div>
             </Card>
-        </Box>
+        </div>
     );
 }
 

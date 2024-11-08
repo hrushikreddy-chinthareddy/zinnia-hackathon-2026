@@ -42,6 +42,7 @@ export default function CheckboxesWidget<T = any, S extends StrictRJSFSchema = R
                         <CheckboxText
                             id={optionId(id, index)}
                             key={option.value}
+                            className="mb-3"
                             label={option.label}
                             onChange={checked => _onChange(index)({ target: { checked } } as ChangeEvent<HTMLInputElement>)}
                             checked={isChecked}
