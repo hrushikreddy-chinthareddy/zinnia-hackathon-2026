@@ -337,8 +337,9 @@ export class TransformedCase {
         }, {} as { [key: string]: DocumentView });
         this.exceptionMap = caseDetails?.exceptions?.reduce((acc, exception) => {
             if (exception?.id) {
+                const exceptionIsResolved = [ExceptionStatuses.Resolved, Statuses.Completed, Statuses.Overridden].includes(exception.status as ExceptionStatuses | Statuses);
                 acc[exception.id] = exception;
-                if (![ExceptionStatuses.Resolved, Statuses.Completed, Statuses.Overridden].includes(exception.status as ExceptionStatuses | Statuses)) {
+                if (!exceptionIsResolved) {
                     this.unresolvedExceptionCount++;
                 }
             }
