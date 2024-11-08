@@ -19,7 +19,7 @@ const FaxNumber = ({ fax, setFax }: FaxNumberProps) => {
             size={FieldSize.Small}
             type={FieldType.BaseActive}
             className="max-w-xs"
-            formatOptions={{ format: '###############' }}
+            formatOptions={{ format: '(###) ###-####' }}
         />
     );
 };
