@@ -23,7 +23,6 @@ import { caseSanitizer } from '@deps/utils/sanitizers';
 import { logError, logInfo, parseErrorInformation } from '@deps/utils/server-logging';
 
 import { baseAppUrl, se2ApiServerUrl } from '../api-config';
-import { AxiosAuthRequestConfig } from '../api-utils/baseAPIClient';
 import { client } from '../api-utils/client';
 import { serverApi } from '../api-utils/serverApiClient';
 
@@ -139,8 +138,7 @@ const convertOldToNew = (oldJson: CaseDashboardStatsResponseOld) => {
 };
 
 export const getCaseDashboardStats = async (
-    query: CaseDashboardStatsQuery,
-    config?: AxiosAuthRequestConfig
+    query: CaseDashboardStatsQuery
 ): Promise<CaseDashboardStatsResponse | CaseDashboardStatsErrorResponse> => {
     try {
         const cachedResult = pullFromCache('getCaseDashboardStats', query);
@@ -149,7 +147,7 @@ export const getCaseDashboardStats = async (
             return cachedResult;
         }
 
-        let { data } = await client.post<CaseDashboardStatsQuery, AxiosResponse>(`${baseAppUrl}/api/case/v1/dashboard/stats`, query, config);
+        let { data } = await client.post<CaseDashboardStatsQuery, AxiosResponse>(`${baseAppUrl}/api/case/v1/dashboard/stats`, query);
 
         if ('element' in data) {
             data = convertOldToNew(data);
@@ -159,12 +157,6 @@ export const getCaseDashboardStats = async (
 
         return data ?? {};
     } catch (error: any) {
-        if (config?.signal?.aborted) {
-            return {
-                data: [],
-                totalElements: 0,
-            };
-        }
         console.error('getCaseDashboardStats::An error occurred while getting case dashboard stats results', error);
         return error.response;
     }

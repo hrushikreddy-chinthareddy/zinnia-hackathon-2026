@@ -32,7 +32,6 @@ import { UserPermission } from '@deps/models/user-profile';
 import { getCaseDashboardStats } from '@deps/queries/api/cases';
 import { BrokerDealerResponse, getBrokerDealerAgentsSSR } from '@deps/queries/api/dashboard';
 import { checkTupleSsr, getCarrierListServerSSR } from '@deps/queries/api/fga';
-import { AxiosAuthRequestConfig } from '@deps/queries/api-utils/baseAPIClient';
 import { CaseDashboardStatsQuery, DashboardSearchFilter } from '@deps/queries/cases';
 import { FgaRelation } from '@deps/types/fga';
 import { getCarrierListItem, getCarrierNameByClientId, getClientIdsByCarrierName } from '@deps/utils/carriers';
@@ -190,36 +189,36 @@ const DashboardPage = ({
         setInsightOption(processType);
     };
 
-    const getCountByCarrierInsightStats = async (baseInsightQueryFilter: DashboardSearchFilter, config?: AxiosAuthRequestConfig) => {
+    const getCountByCarrierInsightStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
         const query: CaseDashboardStatsQuery = {
             filter: baseInsightQueryFilter,
             groupBy: [GroupByOptions.Carrier],
         };
-        return getCaseDashboardStats(query, config);
+        return getCaseDashboardStats(query);
     };
 
-    const getCountBySubProcessInsightStats = async (baseInsightQueryFilter: DashboardSearchFilter, config?: AxiosAuthRequestConfig) => {
+    const getCountBySubProcessInsightStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
         const query: CaseDashboardStatsQuery = {
             filter: baseInsightQueryFilter,
             groupBy: [GroupByOptions.ProcessSubType],
         };
-        return getCaseDashboardStats(query, config);
+        return getCaseDashboardStats(query);
     };
 
-    const getCreatedBySubProcessInsightStats = async (baseInsightQueryFilter: DashboardSearchFilter, config?: AxiosAuthRequestConfig) => {
+    const getCreatedBySubProcessInsightStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
         const query: CaseDashboardStatsQuery = {
             filter: baseInsightQueryFilter,
             groupBy: [GroupByOptions.ProcessSubType, GroupByOptions.CreatedAt],
         };
-        return getCaseDashboardStats(query, config);
+        return getCaseDashboardStats(query);
     };
 
-    const getOpenStagesByCreatedInsightStats = async (baseInsightQueryFilter: DashboardSearchFilter, config?: AxiosAuthRequestConfig) => {
+    const getOpenStagesByCreatedInsightStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
         const query: CaseDashboardStatsQuery = {
             filter: baseInsightQueryFilter,
             groupBy: [GroupByOptions.CreatedAt, GroupByOptions.OpenStages],
         };
-        return getCaseDashboardStats(query, config);
+        return getCaseDashboardStats(query);
     };
 
     useEffect(() => {
@@ -255,13 +254,12 @@ const DashboardPage = ({
         const getPageData = async () => {
             setLoading(true);
             try {
-                const config: AxiosAuthRequestConfig = {};
                 const [insightCountByCarrierStats, insightCountBySubProcessStats, insightCreatedBySubProcess, insightOpenStagesByCreated] =
                     await Promise.all([
-                        getCountByCarrierInsightStats(baseInsightQueryFilter, config),
-                        getCountBySubProcessInsightStats(baseInsightQueryFilter, config),
-                        getCreatedBySubProcessInsightStats(baseInsightQueryFilter, config),
-                        getOpenStagesByCreatedInsightStats(baseInsightQueryFilter, config),
+                        getCountByCarrierInsightStats(baseInsightQueryFilter),
+                        getCountBySubProcessInsightStats(baseInsightQueryFilter),
+                        getCreatedBySubProcessInsightStats(baseInsightQueryFilter),
+                        getOpenStagesByCreatedInsightStats(baseInsightQueryFilter),
                     ]);
                 if (!insightCountByCarrierStats || 'status' in insightCountByCarrierStats) {
                     console.error('getCountByCarrierInsightStats::Failed to fetch carrier count insight stats');
