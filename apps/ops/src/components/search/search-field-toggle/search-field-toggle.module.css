@@ -1,10 +1,15 @@
 .fieldSet {
     display: flex;
     & .inputContainer {
-        &:first-of-type input {
-            border-radius: 0 0 0 var(--measure-border-radius-radius-md);
-            @media (min-width: 500px) {
-                border-radius: 0;
+        &:first-of-type {
+            /* & .close { */
+            /* display: none; */
+            /* } */
+            & input {
+                border-radius: 0 0 0 var(--measure-border-radius-radius-md);
+                @media (min-width: 500px) {
+                    border-radius: 0;
+                }
             }
         }
         &:last-of-type input {

@@ -119,7 +119,7 @@ const SearchBar = ({
                         </DropdownMenu.Content>
                     </DropdownMenu.Portal>
                 </DropdownMenu.Root>
-                <SearchFieldToggle values={values} activeLabels={activeLabels} handleChange={handleNewValue} onClear={onClear} />
+                <SearchFieldToggle activeLabels={activeLabels} handleChange={handleNewValue} onClear={onClear} />
             </div>
             <Button
                 mode="primary"

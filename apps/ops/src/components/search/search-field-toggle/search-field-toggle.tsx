@@ -5,31 +5,20 @@ import { ChangeEvent, RefObject, useContext, useRef } from 'react';
 import { PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
 import { toSentenceCase } from '@deps/helpers/string.helper';
 import { LabelValue } from '@deps/types/data';
-import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
+import { PolicySearchKeys } from '@deps/types/search';
 
 import styles from './search-field-toggle.module.css';
 
 interface SearchFieldToggleProps {
-    values: SearchViewQuery;
     handleChange: (e: ChangeEvent<HTMLInputElement>, value: string, key: PolicySearchKeys) => void;
     activeLabels: LabelValue<PolicySearchKeys>;
     onClear?: (ref: RefObject<HTMLInputElement>) => void;
 }
 
-interface SearchFieldContainerProps extends SearchFieldToggleProps {
-    autoFocus?: boolean;
-}
-
-export const SearchFieldContainer = ({ values, handleChange, activeLabels, onClear }: SearchFieldContainerProps) => {
+export const SearchFieldContainer = ({ handleChange, activeLabels, onClear }: SearchFieldToggleProps) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
     const { showFieldErrorMessage } = useContext(PolicySearchFiltersContext);
-    const { value: policyKey, label, replaceValue = '', placeholder, errorMessage } = activeLabels;
-    let value = (policyKey && values[policyKey]) || '';
-
-    // to do - i don't think i want value on the input field at all
-    if (replaceValue) {
-        value = value.replaceAll(replaceValue, '') || '';
-    }
+    const { value: policyKey, label = '', placeholder, errorMessage } = activeLabels;
 
     const inputType = () => {
         switch (activeLabels.value) {
@@ -41,6 +30,7 @@ export const SearchFieldContainer = ({ values, handleChange, activeLabels, onCle
         }
     };
 
+    // to do - the entire search will clear but only one input (when there are two) clears
     const handleClear = () => {
         if (inputRef?.current && onClear) {
             onClear(inputRef);
@@ -82,17 +72,12 @@ const SearchFieldToggle = ({ activeLabels, ...rest }: SearchFieldToggleProps) =>
             fields = (
                 <fieldset className={styles.fieldSet}>
                     {group.map((g, index) => (
-                        <SearchFieldContainer
-                            key={'search-field-container-key-' + g.value}
-                            activeLabels={g}
-                            autoFocus={index === 0}
-                            {...rest}
-                        />
+                        <SearchFieldContainer key={'search-field-container-key-' + index} activeLabels={g} {...rest} />
                     ))}
                 </fieldset>
             );
         } else {
-            fields = <SearchFieldContainer activeLabels={activeLabels} autoFocus={true} {...rest} />;
+            fields = <SearchFieldContainer activeLabels={activeLabels} {...rest} />;
         }
     }
 
