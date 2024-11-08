@@ -12,7 +12,7 @@ export const ValueWidget = function (props: WidgetProps) {
                 name={id}
                 id={id}
                 disabled={disabled}
-                onChange={onChange}
+                onChange={e => onChange(e.target.value)}
                 required={required}
                 readOnly={readonly}
                 value={value}
