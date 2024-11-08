@@ -44,7 +44,7 @@ const LoansPageHeaderContainer = ({ policy, breadcrumbText, breadcrumbUrl, loanC
                 getBorrowingInterestRate(policyDetails),
             ]);
             setAvailableLoanCreditRate(percentFormatify(loanCreditRate, { isInteger: true }));
-            setAvailableLoanInterestRate(percentFormatify(loanInterestRate, { isInteger: true }));
+            setAvailableLoanInterestRate(`${loanInterestRate}%`);
         };
 
         getLoanRates();
