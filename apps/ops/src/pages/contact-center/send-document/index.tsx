@@ -20,7 +20,13 @@ import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-da
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { AttachmentDetails, CorrespondenceFormParts } from '@deps/models/case/correspondence';
-import { AvailableFormsTransaction, CommunicationTypes, SearchTransactionRequestBody, SendDocumentFormParts, SendDocumentFormType } from '@deps/models/case/send-document';
+import {
+    AvailableFormsTransaction,
+    CommunicationTypes,
+    SearchTransactionRequestBody,
+    SendDocumentFormParts,
+    SendDocumentFormType,
+} from '@deps/models/case/send-document';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission, UserProfile } from '@deps/models/user-profile';
 import { getSearchTransactionsSSR, sendCommunication } from '@deps/queries/api/c2web';
@@ -37,11 +43,10 @@ interface SendDocumentProps extends SegmentTrackedPageProps {
     shouldShowCaseButton: FeatureFlags;
     shouldShowMailOption: FeatureFlags;
     user: UserProfile;
-};
+}
 
 const SendDocument = ({ policy, availableFormsTransactions, shouldShowCaseButton, shouldShowMailOption, user }: SendDocumentProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
-
 
     const [formDetails, setFormDetails] = useState<SendDocumentFormParts[]>([DefaultFormDetail]);
     const { ctiCallNumber, correlationId } = router.query;
@@ -142,8 +147,7 @@ const SendDocument = ({ policy, availableFormsTransactions, shouldShowCaseButton
             component: (
                 <ConfirmComponent
                     shouldShowCaseButton={shouldShowCaseButton}
-                    // todo:vijaya: handle for multiple document
-                    formNames={['']}
+                    formNames={formDetails.map(formDetail => formDetail.document.selected?.formDisplayName || '')}
                 />
             ),
             screenReaderLabel: confirmLabel,
