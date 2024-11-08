@@ -22,7 +22,8 @@ import DocumentPortalPanel from './side-panel/document-portal-panel';
 import { ViewDetailsContent } from '@deps/components/side-sheet/view-details/view-details-content';
 import { DocumentData } from '@deps/models/case/document';
 import { Icon, IconType } from '@zinnia/bloom/components';
-import { formatDate } from '@deps/utils/formateDate';
+import dayjs from 'dayjs';
+import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
 
 type TabGroupContainerProps = {
     steps: Step[];
@@ -74,7 +75,8 @@ const TabGroupContent = ({
         sideSheet.changeSideSheetContent(t('site.navLinks.diaryNotes.text'), content);
         sideSheet.handleOpen(true);
     };
-    const formattedIssueDate = formatDate(policy.policyDates?.issueDate ?? '');
+
+    const formattedIssueDate = dayjs(policy.policyDates?.issueDate).format(DEFAULT_EXTENDED_DATE_FORMAT);
     const openViewDetails = () => {
         const content = (
             <ViewDetailsContent
