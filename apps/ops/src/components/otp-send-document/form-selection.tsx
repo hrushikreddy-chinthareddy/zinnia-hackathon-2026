@@ -5,14 +5,13 @@ import { v4 as uuidv4 } from 'uuid';
 
 import TransactionDocumentSelection from '@deps/containers/nigo-entry-container/components/steps/form-selection.tsx/transaction-document-selection';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { SendDocumentFormParts, SendDocumentFormPartsAdditionData } from '@deps/models/case/send-document';
+import { AvailableFormsTransaction, SendDocumentFormParts, SendDocumentFormPartsAdditionData } from '@deps/models/case/send-document';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { ReactComponent as AddDocumentIcon } from '@deps/styles/elements/icons/icons_outlined/add.svg';
 import { ReactComponent as TrashDocumentIcon } from '@deps/styles/elements/icons/icons_outlined/trash.svg';
 
 import SendDocumentNavigationButtons from './action-components/navigation-buttons';
 import AssistiveText, { AssistiveTextVariant } from '../assistive-text/assistive-text';
-import { SimpleOption } from '../autocomplete/autocomplete.types';
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '../nav-element/nav-element';
 import WorkflowCard from '../workflows/workflow-card/workflow-card';
 const mapIdToFormDetails = (value: SendDocumentFormParts[]): SendDocumentFormPartsAdditionData[] => {
@@ -33,12 +32,12 @@ export const DefaultFormDetail = {
 type FormSelectionProps = {
     policy: Policy;
     ctiCallNumber: string;
-    transactionTypes: SimpleOption[];
+    availableFormsTransactions: AvailableFormsTransaction[];
     formDetails: SendDocumentFormParts[];
     setFormDetails: React.Dispatch<React.SetStateAction<SendDocumentFormParts[]>>;
 };
 
-function FormSelection({ policy, ctiCallNumber, transactionTypes, formDetails, setFormDetails }: FormSelectionProps) {
+function FormSelection({ policy, ctiCallNumber, availableFormsTransactions, formDetails, setFormDetails }: FormSelectionProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
     const [forms, setForms] = useState(mapIdToFormDetails(formDetails));
     const { goToNext } = useWorkflow();
@@ -92,7 +91,7 @@ function FormSelection({ policy, ctiCallNumber, transactionTypes, formDetails, s
                             setFormDetails={val => updateFormDetails({ ...val, id: form.id })}
                             policy={policy}
                             ctiCallNumber={ctiCallNumber}
-                            transactionTypes={transactionTypes}
+                            availableFormsTransactions={availableFormsTransactions}
                             key={form.id}
                         />
                     </div>

@@ -28,6 +28,7 @@ import SideSheetProductDetails from '@deps/containers/side-sheet-product-details
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { PolicyDetailsViewInfo, PolicyViewDetailsDto, toPolicyViewDetailsDto } from '@deps/data/policy-details-view';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { fillColDefs } from '@deps/helpers/data-transform.helper';
 import { getTotalMinRequiredAmount, policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
@@ -58,6 +59,7 @@ import {
 import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
 import { DEFAULT_ERROR_STRING, DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
 import { SearchViewQuery } from '@deps/types/search';
+import { SegmentTrackedEventName, SegmentTrackEventState } from '@deps/types/segment-analytics';
 
 import AnnuityQuickView from './active-quick-view/annuity';
 import EverlyIul from './active-quick-view/everly-iul';
@@ -70,8 +72,6 @@ import SideSheetEmail from '../people-data-cards/email-card/side-sheet/side-shee
 import { sortPhonesByType } from '../people-data-cards/phone-card/phone-card.helpers';
 import { SideSheetPhone } from '../people-data-cards/phone-card/side-sheet/side-sheet-phone';
 import SideSheetPeopleHeader from '../people-data-cards/side-sheet-people-header/side-sheet-people-header';
-import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
-import { SegmentTrackedEventName, SegmentTrackEventState } from '@deps/types/segment-analytics';
 
 interface SummaryCardProps extends PropsWithChildren {
     policy: Policy;

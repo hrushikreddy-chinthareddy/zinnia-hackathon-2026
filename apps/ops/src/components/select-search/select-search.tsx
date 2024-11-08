@@ -6,6 +6,7 @@ import { FieldSize, FieldVariant } from '@deps/components/fields/field';
 import NavElement, { NavElementType } from '@deps/components/nav-element/nav-element';
 import SelectSearchItem from '@deps/components/select-search/select-search-item/select-search-item';
 import { TranslationFiles } from '@deps/config/translations';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { filterOnSearchHandler } from '@deps/helpers/search.helper';
 import { useOutsideClick } from '@deps/hooks/useOutsideClick';
 import { ReactComponent as ChevronIcon } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
@@ -14,7 +15,6 @@ import useDebounce from '@deps/utils/useDebounce';
 
 import SelectSearchGroupContainer from './select-search-group-container/select-search-group-container';
 import { getInputClasses, getLabelClasses } from './select-search.helper';
-import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 
 interface SelectFieldProps {
     label?: string;

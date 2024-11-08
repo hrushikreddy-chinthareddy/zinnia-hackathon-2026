@@ -1,33 +1,11 @@
 import dayjs from 'dayjs';
-import { DefaultTFuncReturn } from 'i18next';
 import { TFunction } from 'next-i18next';
 
-import { CaseSearchAdditionalFilters, CaseStatusFilter } from '@deps/contexts/CaseManagementFilters';
+import { CaseSearchAdditionalFilters } from '@deps/contexts/CaseManagementFilters';
 import { Case, Metadata, StatCount, Statuses } from '@deps/models/case/case';
 import { IdentifierInstance } from '@deps/models/case/identifier-instance';
 import { LabelValue } from '@deps/types/data';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
-
-export interface StatusCounterTiles {
-    label?: DefaultTFuncReturn;
-    status?: Statuses.InProgress | Statuses.Exception;
-    value: CaseStatusFilter;
-}
-
-export const statusCounterTiles: StatusCounterTiles[] = [
-    {
-        label: 'All',
-        value: 'All',
-    },
-    {
-        status: Statuses.InProgress,
-        value: Statuses.InProgress,
-    },
-    {
-        status: Statuses.Exception,
-        value: Statuses.Exception,
-    },
-];
 
 export const isSearchValueObjectEmpty = (
     searchValueObject: Partial<Record<'policyNumber' | 'ssn' | 'ownerFirstName' | 'ownerLastName', string>> = {}
@@ -61,46 +39,6 @@ type CaseStatusResult = {
     notInCaseStatus?: Statuses[];
 };
 
-// Get case statuses based on the filter selected
-export const getCaseStatuses = (
-    statusCounterTileFilter: CaseStatusFilter,
-    showOnlyCompletedCases: boolean,
-    showOnlyCanceledCases: boolean,
-    searchValueObject: Partial<Record<'policyNumber' | 'ssn' | 'ownerFirstName' | 'ownerLastName', string>> = {}
-): CaseStatusResult => {
-    if (showOnlyCompletedCases && showOnlyCanceledCases) {
-        return {
-            caseStatus: [Statuses.Completed, Statuses.Canceled],
-        };
-    }
-
-    if (showOnlyCompletedCases) {
-        return {
-            caseStatus: [Statuses.Completed],
-        };
-    }
-
-    if (showOnlyCanceledCases) {
-        return {
-            caseStatus: [Statuses.Canceled],
-        };
-    }
-
-    switch (statusCounterTileFilter) {
-        case Statuses.InProgress:
-            return {
-                caseStatus: [Statuses.InProgress],
-            };
-        case Statuses.Exception:
-            return {
-                caseStatus: [Statuses.Exception],
-            };
-        case 'All':
-        default:
-            return isSearchValueObjectEmpty(searchValueObject) ? { notInCaseStatus: [Statuses.Completed, Statuses.Canceled] } : {};
-    }
-};
-
 type AdditionalFiltersResult = {
     brokerDealerName?: string;
     createdDateStart?: string;
@@ -111,6 +49,8 @@ type AdditionalFiltersResult = {
     carrier?: string[];
     productName?: string[];
     requestSubType?: string[];
+    caseStatus?: Statuses[];
+    notInCaseStatus?: Statuses[];
 };
 
 // Get additional filters based on the filters selected
@@ -199,6 +139,14 @@ export const getAdditionalFilters = (additionalFilters: CaseSearchAdditionalFilt
         result['requestSubType'] = Array.from(additionalFilters.requestSubType);
     }
 
+    if (additionalFilters.caseStatus) {
+        result['caseStatus'] = Array.from(additionalFilters.caseStatus);
+    }
+
+    if (additionalFilters.notInCaseStatus) {
+        result['notInCaseStatus'] = Array.from(additionalFilters.notInCaseStatus);
+    }
+
     return result;
 };
 
@@ -271,13 +219,7 @@ export const insertStepDetails = (caseDetails: Case, metadata: Metadata) => {
     return caseDetails;
 };
 
-export const formatCaseTotals = (
-    count: number,
-    stats: StatCount,
-    showOnlyCompletedCases: boolean,
-    showOnlyCanceledCases: boolean,
-    hasSearch: boolean
-) => {
+export const formatCaseTotals = (count: number, stats: StatCount, hasSearch: boolean) => {
     const keyedStats = stats.counts.reduce((acc, stat) => {
         acc[stat.label] = stat.value;
         return acc;
@@ -295,22 +237,10 @@ export const formatCaseTotals = (
             [Statuses.Exception]: exceptionCount,
         };
     }
-    // all is either only the completed count, the total count when there's a search term, or the total minus completed when no search term
-    // const allCount = hasSearch ? count : count - completedCount;
-    let allCount = 0;
-    let progCt = 0;
-    let excepCt = 0;
-    if (showOnlyCompletedCases && showOnlyCanceledCases) {
-        allCount = completedCount + canceledCount;
-    } else if (showOnlyCompletedCases) {
-        allCount = completedCount;
-    } else if (showOnlyCanceledCases) {
-        allCount = canceledCount;
-    } else {
-        progCt = inProgressCount;
-        excepCt = exceptionCount;
-        allCount = count - completedCount - canceledCount;
-    }
+
+    const progCt = inProgressCount;
+    const excepCt = exceptionCount;
+    const allCount = count - completedCount - canceledCount;
 
     return {
         All: allCount,

@@ -4,9 +4,9 @@ import { useTranslation } from 'next-i18next';
 import { FieldSize } from '@deps/components/fields/field';
 import SelectSearch from '@deps/components/select-search/select-search';
 import { TranslationFiles } from '@deps/config/translations';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { SegmentTrackedEventName } from '@deps/types/segment-analytics';
-import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 
 interface FindKeyValueSearchProps {
     isNavDrawerOpen?: boolean;

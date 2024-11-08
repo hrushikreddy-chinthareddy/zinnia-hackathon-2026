@@ -1,11 +1,14 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 
 import ExceptionRow from '@deps/components/card/case-search-card/exception-row/exception-row';
 import ChipStatus from '@deps/components/chip-status/chip-status';
 import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { getPolicyOwners } from '@deps/helpers/parties';
 import { formatDateDescriptionList, formatSSN, toTitleCase } from '@deps/helpers/string.helper';
 import { Statuses } from '@deps/models/case/case';
@@ -14,13 +17,11 @@ import { PartyInstance } from '@deps/models/case/party-instance';
 import { ReactComponent as ChevronRightIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-right.svg';
 import { CaseDetailsTabValues } from '@deps/types/constants';
 import { SearchViewQuery } from '@deps/types/search';
-import { getCarrierLogoByClientId } from '@deps/utils/carriers';
-import OwnerWithOthers from './owner-with-others';
-import CaseDetailField from './case-detail-field';
 import { SegmentTrackedEventName } from '@deps/types/segment-analytics';
-import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
-import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
-import { useRouter } from 'next/router';
+import { getCarrierLogoByClientId } from '@deps/utils/carriers';
+
+import CaseDetailField from './case-detail-field';
+import OwnerWithOthers from './owner-with-others';
 
 export interface CaseSearchCardProps {
     id: string;
