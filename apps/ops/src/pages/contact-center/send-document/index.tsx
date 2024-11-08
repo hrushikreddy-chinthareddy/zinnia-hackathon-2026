@@ -83,9 +83,9 @@ const SendDocument = ({ policy, transactionTypes, shouldShowCaseButton, shouldSh
                     formDetails?.transactionSubType?.list?.find(item => item.value === formDetails?.transactionSubType?.selected)?.label ||
                     '',
                 attachmentType: 'form',
-                displayName: formDetails?.document.selected?.formDisplayName ?? '',
+                displayName: formDetails?.document.selected?.formShortName ?? '',
                 formId: formDetails?.document.selected?.formId.toString() ?? '',
-                formName: formDetails?.document.selected?.formShortName ?? '',
+                formName: formDetails?.document.selected?.formDisplayName ?? '',
             },
         ];
 
