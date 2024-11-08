@@ -139,7 +139,9 @@
     "uiSchema": {
         "$schema": "http: //json-schema.org/draft-07/schema#",
         "ui:globalOptions": {
-            "duplicateKeySuffixSeparator": "_"
+            "duplicateKeySuffixSeparator": "_",
+            "orderable": false,
+            "copyable": false
         },
         "ui:submitButtonOptions": {
             "norender": true

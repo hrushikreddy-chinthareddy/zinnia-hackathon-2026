@@ -31,7 +31,7 @@ export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSche
         <div>
             <div className="flex">
                 <div className="flex w-full">{children}</div>
-                <div className="ml-auto">
+                <div className="ml-auto mt-2">
                     {hasToolbar && (
                         <div className="d-flex flex-row">
                             {(hasMoveUp || hasMoveDown) && (
