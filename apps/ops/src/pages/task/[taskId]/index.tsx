@@ -1,5 +1,4 @@
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
-import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import NoNavLayout from '@deps/components/no-nav-layout';
@@ -12,7 +11,8 @@ import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-da
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { ProcessType } from '@deps/models/case/enums';
 import { docTypes } from '@deps/models/case/helpers';
-import { TaskType } from '@deps/models/case/task';
+import { FormMetadata, TaskType } from '@deps/models/case/task';
+import { ManagementTask } from '@deps/models/case/task-instance';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
@@ -31,40 +31,18 @@ type TaskPageProps = {
     docType: string;
     caseId: string;
     taskId: string;
-    taskType: TaskType;
-    formSchema: RJSFSchema;
-    uiSchema: UiSchema;
+    task: ManagementTask;
+    taskMetadata: FormMetadata;
     taskData: any;
     taskInfoLink: string;
 };
 
-export const TaskPage: React.FC<TaskPageProps> = ({
-    policy,
-    documentNumber,
-    docType,
-    clientCode,
-    caseId,
-    taskId,
-    taskType,
-    formSchema,
-    uiSchema,
-    taskData,
-    taskInfoLink,
-}: TaskPageProps) => {
+export const TaskPage: React.FC<TaskPageProps> = ({ policy, documentNumber, docType, task, taskMetadata, taskInfoLink }: TaskPageProps) => {
     return (
         <div>
             <NoNavLayout fullHeight={true}>
-                <TaskProvider taskData={taskData} formSchema={formSchema} uiSchema={uiSchema}>
-                    <TaskContainer
-                        policy={policy}
-                        docType={docType}
-                        clientCode={clientCode}
-                        documentNumber={documentNumber}
-                        caseId={caseId}
-                        taskId={taskId}
-                        taskType={taskType}
-                        taskInfoLink={taskInfoLink}
-                    />
+                <TaskProvider taskMetadata={taskMetadata} initialTask={task}>
+                    <TaskContainer policy={policy} docType={docType} documentNumber={documentNumber} taskInfoLink={taskInfoLink} />
                 </TaskProvider>
             </NoNavLayout>
         </div>
@@ -124,9 +102,8 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
-            const { taskType, carrier, data, caseId, process } = task;
+            const { taskType, carrier, caseId, process } = task;
             const { documentNumber, contractNum } = task.data;
-            const processType = process as ProcessType;
 
             // If feature flag is not enabled, redirect to error page
             if (!isFormFeatureEnabled(process as ProcessType, carrier, featureFlagDecisions)) {
@@ -139,16 +116,14 @@ export const getServerSideProps = withPageAuthRequired({
                 // };
             }
 
-            const taskFormSchema = await getTaskFormMetadata(carrier, taskType as TaskType, processType, accessToken);
-            const { formSchema, uiSchema } = taskFormSchema ?? {};
-
-            if (!formSchema || !uiSchema) {
+            const taskMetadata = await getTaskFormMetadata(carrier, taskType as TaskType, process as ProcessType, accessToken);
+            if (!taskMetadata?.formSchema || !taskMetadata?.uiSchema) {
                 logError('task::Form schema not found', {
                     taskId,
                     documentNumber,
                     carrier,
                     contractNum,
-                    file: `pages/${taskType}`,
+                    file: `pages/task/${taskId}/${taskType}`,
                     function: 'getServerSideProps',
                 });
             }
@@ -191,27 +166,20 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
             const taskInfoLink = buildTaskLink(taskId, caseId || '', process || '', documentNumber, carrier);
-
-            const docType = docTypes[task?.process || ''] || '';
+            const docType = docTypes[task?.process];
             return {
                 props: {
                     ...translations,
                     policy,
+                    taskMetadata,
+                    task,
                     docType,
-                    clientCode: carrier,
                     documentNumber,
-                    carrier,
-                    taskId,
-                    taskType: taskType,
-                    formSchema,
-                    uiSchema,
-                    taskData: data || {},
-                    caseId,
                     taskInfoLink,
                 },
             };
         } catch (error) {
-            logError('getServerSidePropsNigoEntryPage', { ...parseErrorInformation(error) });
+            logError('getServerSidePropsTask', { ...parseErrorInformation(error) });
             return {
                 props: {},
             };

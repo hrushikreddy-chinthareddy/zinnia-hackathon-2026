@@ -1,18 +1,19 @@
-import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import { createContext } from 'react';
 
+import { FormMetadata } from '@deps/models/case/task';
+import { ManagementTask } from '@deps/models/case/task-instance';
+
 export type TaskState = {
-    formSchema: RJSFSchema;
-    uiSchema: UiSchema;
-    formData: any;
-    setFormData: any;
+    taskMetadata: FormMetadata;
+    task: ManagementTask;
+    setTask: React.Dispatch<React.SetStateAction<ManagementTask>>;
 };
 
+const noop = (() => {}) as React.Dispatch<React.SetStateAction<any>>;
 export const taskDefaultValues = {
-    setFormData: () => {},
-    formSchema: {},
-    uiSchema: {},
-    formData: {},
+    taskMetadata: {} as FormMetadata,
+    task: {} as ManagementTask,
+    setTask: noop,
 };
 
 export const TaskDataContext = createContext<TaskState>(taskDefaultValues);

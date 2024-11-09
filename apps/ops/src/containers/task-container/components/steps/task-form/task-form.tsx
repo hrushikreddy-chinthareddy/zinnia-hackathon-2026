@@ -7,7 +7,7 @@ import { TaskDataContext } from '@deps/containers/task-container/task-context';
 import { processDocuments } from '@deps/containers/task-container/task.healpers';
 
 type TaskFormProps = {
-    readonly?: boolean;
+    readonly: boolean;
     onSubmit: () => void;
     isSubmit?: boolean;
 };
@@ -17,30 +17,33 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     forwardedRef: ForwardedRef<Form>
 ) {
     const formState = useContext(TaskDataContext);
-    const { formData, setFormData, formSchema, uiSchema } = formState;
+    const { task, setTask, taskMetadata } = formState;
 
     const handleSubmit = useCallback(
-        (data: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        (_data: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
             if (isSubmit) {
-                processDocuments(data.formData);
+                processDocuments(task);
             }
             onSubmit();
         },
-        [isSubmit, onSubmit]
+        [isSubmit, onSubmit, task]
     );
 
     const handleChange = useCallback(
         (event: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
-            setFormData(event.formData);
+            setTask({
+                ...task,
+                data: event.formData,
+            });
         },
-        [setFormData]
+        [setTask, task]
     );
 
     return (
         <DynamicForm
-            formData={formData}
-            formSchema={formSchema}
-            uiSchema={uiSchema}
+            formData={task.data}
+            taskMetadata={taskMetadata}
             onChange={handleChange}
             onSubmit={handleSubmit}
             ref={forwardedRef}

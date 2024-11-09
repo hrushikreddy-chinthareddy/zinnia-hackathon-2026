@@ -7,7 +7,6 @@ import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { TaskType } from '@deps/models/case/task';
 import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
 import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icons_outlined/document-text-2.svg';
 
@@ -18,12 +17,8 @@ import DocumentPortalPanel from './components/side-panel/document-portal-panel';
 type TaskPageProps = {
     steps: Step[];
     policy: Policy;
-    caseId: string;
-    taskId: string;
-    taskType: TaskType;
     documentNumber?: string;
     docType: string;
-    clientCode: string;
     showJointOwner?: boolean;
     taskInfoLink?: string;
 };

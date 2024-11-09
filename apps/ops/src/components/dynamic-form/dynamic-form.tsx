@@ -1,7 +1,9 @@
 import Form, { IChangeEvent } from '@rjsf/core';
-import { GenericObjectType, RJSFSchema, UiSchema } from '@rjsf/utils';
+import { GenericObjectType, RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import React, { FormEvent, ForwardedRef } from 'react';
+
+import { FormMetadata } from '@deps/models/case/task';
 
 import fields from './customization/fields/fields';
 import templates from './customization/templates/templates';
@@ -12,28 +14,27 @@ type DynamicFormProps = {
     onChange: (data: IChangeEvent<unknown, RJSFSchema, GenericObjectType>, id?: string) => void;
     onSubmit: (data: IChangeEvent<unknown, RJSFSchema, GenericObjectType>, event: FormEvent<any>) => void;
     formData: any;
-    formSchema: RJSFSchema;
-    uiSchema: UiSchema;
+    taskMetadata: FormMetadata;
     readonly?: boolean;
     formButtons?: any;
 };
 
 const DynamicForm = React.forwardRef(function DynamicFormComponent(
-    { formData, formSchema, uiSchema, readonly = false, onChange, onSubmit, formButtons }: DynamicFormProps,
+    { formData, taskMetadata, readonly = false, onChange, onSubmit, formButtons }: DynamicFormProps,
     forwardedRef: ForwardedRef<Form>
 ) {
-    ApplyUITemplates(uiSchema);
+    ApplyUITemplates(taskMetadata.uiSchema);
 
     return (
         <div>
             <Form
                 ref={forwardedRef}
-                schema={formSchema}
+                schema={taskMetadata.formSchema}
+                uiSchema={taskMetadata.uiSchema}
                 formData={formData}
                 onChange={onChange}
                 onSubmit={onSubmit}
                 validator={validator}
-                uiSchema={uiSchema}
                 widgets={widgets}
                 fields={fields}
                 templates={templates}

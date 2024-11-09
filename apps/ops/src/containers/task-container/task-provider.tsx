@@ -1,18 +1,19 @@
-import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import { useContext, useState } from 'react';
+
+import { FormMetadata } from '@deps/models/case/task';
+import { ManagementTask } from '@deps/models/case/task-instance';
 
 import { TaskDataContext } from './task-context';
 
 type TaskProviderProps = {
     children: React.ReactNode;
-    formSchema: RJSFSchema;
-    uiSchema: UiSchema;
-    taskData: any;
+    taskMetadata: FormMetadata;
+    initialTask: ManagementTask;
 };
 
-export const TaskProvider = ({ children, formSchema, uiSchema, taskData }: TaskProviderProps) => {
-    const [formData, setFormData] = useState(taskData);
-    return <TaskDataContext.Provider value={{ formData, setFormData, formSchema, uiSchema }}>{children}</TaskDataContext.Provider>;
+export const TaskProvider = ({ children, initialTask, taskMetadata }: TaskProviderProps) => {
+    const [task, setTask] = useState<ManagementTask>(initialTask);
+    return <TaskDataContext.Provider value={{ task, setTask, taskMetadata }}>{children}</TaskDataContext.Provider>;
 };
 
 export const useTask = () => {

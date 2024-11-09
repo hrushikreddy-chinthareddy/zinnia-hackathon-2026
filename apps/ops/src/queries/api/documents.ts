@@ -6,7 +6,9 @@ import {
     DocumentErrorResponse,
     DocumentDownload,
     DocumentDownloadWithMime,
+    EDSDocumentResponse,
 } from '@deps/models/case/document';
+import { ManagementTask } from '@deps/models/case/task-instance';
 import { isMockPolicyDocsRequestEnabled } from '@deps/services/api-config';
 import { mockPolicyDocs } from '@deps/services/mocks/policy-docs';
 import { pullFromCache, writeToCache } from '@deps/utils/cache';
@@ -32,7 +34,7 @@ export const getDocument = async (documentNumber: string, docType: string, clien
     }
 };
 
-export const uploadDocument = async (document: any): Promise<any | null> => {
+export const uploadDocument = async (task: ManagementTask, document: any): Promise<EDSDocumentResponse | null> => {
     try {
         const url = `${baseAppUrl}/api/document/v3/documents`;
         const config = {

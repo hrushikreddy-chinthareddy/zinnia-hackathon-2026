@@ -64,6 +64,8 @@ export enum CaseType {
     Reg60 = 'NB REG 60',
     AddressChange = 'Address Change',
     ReReg = 'ReReg',
+    Suitability = 'Suitability',
+    SuitabilityReview = 'SuitabilityReview',
 }
 
 export enum Processes {

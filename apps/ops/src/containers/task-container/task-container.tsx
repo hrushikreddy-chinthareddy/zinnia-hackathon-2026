@@ -1,30 +1,33 @@
+import { useContext } from 'react';
+
 import { WorkflowProvider } from '@deps/contexts/WorkflowContainerContext';
 import { TaskType } from '@deps/models/case/task';
 import { Policy } from '@deps/models/policy/sor-policy';
 
 import { stepsProvider } from './steps-healper/steps-provider';
+import { TaskDataContext } from './task-context';
 import { TaskWorkflowContent } from './task-workflow-content';
 
 type TaskContainerProps = {
     policy: Policy;
-    caseId: string;
-    taskId: string;
-    taskType: TaskType;
+
     docType: string;
     documentNumber: string;
-    clientCode: string;
     taskInfoLink: string;
 };
 
-const TaskContainer = ({ policy, docType, documentNumber, clientCode, caseId, taskId, taskType, taskInfoLink }: TaskContainerProps) => {
-    const steps = stepsProvider.getSteps(taskType, {
+const TaskContainer = ({ policy, docType, documentNumber, taskInfoLink }: TaskContainerProps) => {
+    const { task } = useContext(TaskDataContext);
+    const { carrier, caseId, id, taskType } = task;
+
+    const steps = stepsProvider.getSteps(taskType as TaskType, {
         policyNumber: policy.policyNumber || '',
         docType,
-        clientCode,
+        clientCode: carrier,
         documentNumber,
         caseId,
-        taskId,
-        taskType,
+        taskId: id,
+        taskType: taskType as TaskType,
     });
 
     return (
@@ -33,11 +36,7 @@ const TaskContainer = ({ policy, docType, documentNumber, clientCode, caseId, ta
                 steps={steps}
                 policy={policy}
                 docType={docType}
-                clientCode={clientCode}
                 documentNumber={documentNumber}
-                caseId={caseId}
-                taskId={taskId}
-                taskType={taskType}
                 taskInfoLink={taskInfoLink}
             />
         </WorkflowProvider>

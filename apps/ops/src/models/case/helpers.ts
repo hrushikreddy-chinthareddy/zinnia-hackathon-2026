@@ -15,6 +15,8 @@ export const docTypes: {
     [CaseType.Reg60]: DocumentType.Reg60,
     [CaseType.AddressChange]: DocumentType.AddressChange,
     [CaseType.ReReg]: DocumentType.ReReg,
+    [CaseType.Suitability]: DocumentType.Suitability,
+    [CaseType.SuitabilityReview]: DocumentType.SuitabilityReview,
 };
 
 export const caseTypes: {
@@ -39,6 +41,8 @@ export const CaseApiVersionMapper: Record<CaseType, ApiVersion> = {
     [CaseType.SSW]: ApiVersion.v2,
     [CaseType.AddressChange]: ApiVersion.v2,
     [CaseType.ReReg]: ApiVersion.v2,
+    [CaseType.Suitability]: ApiVersion.v2,
+    [CaseType.SuitabilityReview]: ApiVersion.v2,
 };
 
 export const TaskApiVersionMapper: Record<TaskType, ApiVersion> = {
