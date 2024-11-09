@@ -256,6 +256,9 @@ const DashboardPage = ({
         const getPageData = async () => {
             setLoading(true);
             try {
+                if (Object.keys(baseDashboardQueryFilter).length === 0 || Object.keys(baseInsightQueryFilter).length === 0) {
+                    return;
+                }
                 const [insightCountByCarrierStats, insightCountBySubProcessStats, insightCreatedBySubProcess, insightOpenStagesByCreated] =
                     await Promise.all([
                         getCountByCarrierInsightStats(baseInsightQueryFilter),
