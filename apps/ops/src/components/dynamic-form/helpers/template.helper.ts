@@ -1,4 +1,4 @@
-import { ArrayFieldTemplateProps, UiSchema } from '@rjsf/utils';
+import { ArrayFieldTemplateProps, isObject, UiSchema } from '@rjsf/utils';
 
 import ArrayFieldTableTemplate from '../customization/templates/array-field-template/array-field-table-template';
 import ArrayFieldTemplate from '../customization/templates/array-field-template/array-field-template';
@@ -9,10 +9,17 @@ export const UITempleteMap: Record<string, (props: ArrayFieldTemplateProps) => R
 };
 
 export const ApplyUITemplates = (uiSchema: UiSchema) => {
-    Object.keys(uiSchema).forEach((key: string) => {
-        if (uiSchema[key] && key !== '$schema' && uiSchema[key]['ui:ArrayFieldTemplate']) {
-            if (typeof uiSchema[key]['ui:ArrayFieldTemplate'] === 'string')
-                uiSchema[key]['ui:ArrayFieldTemplate'] = UITempleteMap[uiSchema[key]['ui:ArrayFieldTemplate']];
+    Object.keys(uiSchema).forEach(key => {
+        if (isObject(uiSchema[key])) {
+            if (key.indexOf('ui:options') !== -1) {
+                Object.keys(uiSchema[key]).forEach(optionKey => {
+                    if (UITempleteMap[uiSchema[key][optionKey]] !== undefined) {
+                        uiSchema[key][optionKey] = UITempleteMap[uiSchema[key][optionKey]];
+                    }
+                });
+            } else if (key.indexOf('ui:') === -1) {
+                ApplyUITemplates(uiSchema[key]);
+            }
         }
     });
 };

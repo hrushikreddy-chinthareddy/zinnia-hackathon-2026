@@ -7,12 +7,13 @@ import { TaskDataContext } from '@deps/containers/task-container/task-context';
 import { processDocuments } from '@deps/containers/task-container/task.healpers';
 
 type TaskFormProps = {
-    isSummaryView?: boolean;
+    readonly?: boolean;
     onSubmit: () => void;
+    isSubmit?: boolean;
 };
 
 export const TaskForm = React.forwardRef(function TaskFormComponent(
-    { isSummaryView, onSubmit }: TaskFormProps,
+    { readonly, onSubmit, isSubmit }: TaskFormProps,
     forwardedRef: ForwardedRef<Form>
 ) {
     const formState = useContext(TaskDataContext);
@@ -20,11 +21,12 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
 
     const handleSubmit = useCallback(
         (data: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
-            processDocuments(data.formData);
-            setFormData(data.formData);
+            if (isSubmit) {
+                processDocuments(data.formData);
+            }
             onSubmit();
         },
-        [onSubmit, setFormData]
+        [isSubmit, onSubmit]
     );
 
     const handleChange = useCallback(
@@ -42,7 +44,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             onChange={handleChange}
             onSubmit={handleSubmit}
             ref={forwardedRef}
-            isSummaryView={isSummaryView}
+            readonly={readonly}
         ></DynamicForm>
     );
 });

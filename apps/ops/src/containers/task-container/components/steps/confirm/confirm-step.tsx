@@ -28,19 +28,15 @@ const ConfirmStep = ({ caseId, taskId, taskType }: ConfirmStepProps) => {
     const [timer] = useState(performance.now());
     const { formData } = formState;
 
-    const submit = useCallback(
-        async (formRef?: any) => {
-            formRef?.current?.submit();
-            const response = await updateTask(caseId, taskId, formData, timer);
-            if (response && response.id) {
-                setSubmitFailed(false);
-            } else {
-                setSubmitFailed(false);
-            }
-            setIsLoading(false);
-        },
-        [caseId, formData, taskId, timer]
-    );
+    const submit = useCallback(async () => {
+        const response = await updateTask(caseId, taskId, formData, timer);
+        if (response && response.id) {
+            setSubmitFailed(false);
+        } else {
+            setSubmitFailed(false);
+        }
+        setIsLoading(false);
+    }, [caseId, formData, taskId, timer]);
 
     useEffect(() => {
         submit();

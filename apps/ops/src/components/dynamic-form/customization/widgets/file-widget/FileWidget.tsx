@@ -114,10 +114,6 @@ function extractFileInfo(dataURLs: string[]): FileInfoType[] {
     }, [] as FileInfoType[]);
 }
 
-/**
- *  The `FileWidget` is a widget for rendering file upload fields.
- *  It is typically used with a string property with data-url format.
- */
 function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(props: WidgetProps<T, S, F>) {
     const { disabled, readonly, required, multiple, onChange, value, options, registry } = props;
     const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>('BaseInputTemplate', registry, options);

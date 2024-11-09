@@ -12,14 +12,14 @@ import { convertToCamelCase } from '@deps/utils/string.utils';
 import { TaskForm } from './task-form';
 
 type TaskFormStepProps = {
-    isSummaryView?: boolean;
+    readonly?: boolean;
     formRef?: any;
     taskInfoLink?: string;
     taskType: TaskType;
     isSubmit?: boolean;
 };
 
-const TaskFormStep = ({ taskType, isSummaryView = false, taskInfoLink, isSubmit }: TaskFormStepProps) => {
+const TaskFormStep = ({ taskType, readonly = false, taskInfoLink, isSubmit }: TaskFormStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.taskReview` });
     const { goToNext } = useWorkflow();
     const formRef = createRef<Form>();
@@ -53,7 +53,7 @@ const TaskFormStep = ({ taskType, isSummaryView = false, taskInfoLink, isSubmit 
         >
             <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1">
-                    <TaskForm isSummaryView={isSummaryView} ref={formRef} onSubmit={handleSubmit} />
+                    <TaskForm readonly={readonly} ref={formRef} onSubmit={handleSubmit} isSubmit={isSubmit} />
                 </div>
             </div>
         </WorkflowCard>

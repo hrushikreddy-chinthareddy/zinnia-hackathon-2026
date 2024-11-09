@@ -156,9 +156,9 @@
         },
         "suitabiltyRules": {
             "ui:options": {
-                "label": false
+                "label": false,
+                "ArrayFieldTemplate": "ArrayFieldTableTemplate"
             },
-            "ui:ArrayFieldTemplate": "ArrayFieldTableTemplate",
             "items": {
                 "ui:options": {
                     "canAdd": false

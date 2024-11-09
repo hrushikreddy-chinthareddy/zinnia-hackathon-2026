@@ -9,17 +9,17 @@ import widgets from './customization/widgets/widgets';
 import { ApplyUITemplates } from './helpers/template.helper';
 
 type DynamicFormProps = {
-    onChange: (data: IChangeEvent<unknown, RJSFSchema, GenericObjectType>, id?: string | undefined) => void;
+    onChange: (data: IChangeEvent<unknown, RJSFSchema, GenericObjectType>, id?: string) => void;
     onSubmit: (data: IChangeEvent<unknown, RJSFSchema, GenericObjectType>, event: FormEvent<any>) => void;
     formData: any;
     formSchema: RJSFSchema;
     uiSchema: UiSchema;
-    isSummaryView?: boolean;
+    readonly?: boolean;
     formButtons?: any;
 };
 
 const DynamicForm = React.forwardRef(function DynamicFormComponent(
-    { formData, formSchema, uiSchema, isSummaryView = false, onChange, onSubmit, formButtons }: DynamicFormProps,
+    { formData, formSchema, uiSchema, readonly = false, onChange, onSubmit, formButtons }: DynamicFormProps,
     forwardedRef: ForwardedRef<Form>
 ) {
     ApplyUITemplates(uiSchema);
@@ -37,7 +37,7 @@ const DynamicForm = React.forwardRef(function DynamicFormComponent(
                 widgets={widgets}
                 fields={fields}
                 templates={templates}
-                readonly={isSummaryView}
+                readonly={readonly}
                 showErrorList={false}
             >
                 {formButtons}

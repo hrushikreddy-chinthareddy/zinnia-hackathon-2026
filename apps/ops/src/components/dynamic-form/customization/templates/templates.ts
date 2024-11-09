@@ -1,4 +1,5 @@
 import ArrayFieldItemTemplate from './array-field-item-template/ArrayFieldItemTemplate';
+import ArrayFieldTableTemplate from './array-field-template/array-field-table-template';
 import ArrayFieldTemplate from './array-field-template/array-field-template';
 import AddButton from './button-templates/add-button/AddButton';
 import RemoveButton from './button-templates/remove-button/RemoveButton';
@@ -15,6 +16,7 @@ export function generateTemplates() {
         ArrayFieldItemTemplate,
         ObjectFieldTemplate,
         FieldErrorTemplate,
+        ArrayFieldTableTemplate,
         ButtonTemplates: { AddButton, RemoveButton },
     };
 }
