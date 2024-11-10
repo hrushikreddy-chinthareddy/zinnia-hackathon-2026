@@ -33,9 +33,12 @@ export const ERROR_CODES = {
     RENEWAL_FORM_PLAN_CODE: '15',
     DATA_ENTRY_START_TASK_ERROR: '16',
     POLICY_NOT_FOUND: '17',
-    PLAN_CODE_NOT_FOUND: '18',
-    SUITABILITY_FORM_TASK_INITIALIZATION: '19',
-    SUITABILITY_REVIEW_TASK_INITIALIZATION: '20',
+    TASK_INITIALIZATION: '18',
+    CASE_TYPE_RETRIEVAL_ERROR: '19',
+    DOC_TYPE_RETRIEVAL_ERROR: '20',
+    PLAN_CODE_NOT_FOUND: '21',
+    SUITABILITY_FORM_TASK_INITIALIZATION: '22',
+    SUITABILITY_REVIEW_TASK_INITIALIZATION: '23',
 };
 
 // These keys map to the createCaseError.errorMessaging translations.
@@ -54,6 +57,9 @@ export const ERROR_KEYS: { [key: (typeof ERROR_CODES)[keyof typeof ERROR_CODES] 
     [ERROR_CODES.RENEWAL_FORM_PLAN_CODE]: 'renewalFormPlanCode',
     [ERROR_CODES.DATA_ENTRY_START_TASK_ERROR]: 'dataEntryStartTaskError',
     [ERROR_CODES.POLICY_NOT_FOUND]: 'policyNotFound',
+    [ERROR_CODES.TASK_INITIALIZATION]: 'taskInitialization',
+    [ERROR_CODES.CASE_TYPE_RETRIEVAL_ERROR]: 'caseTypeRetrievalError',
+    [ERROR_CODES.DOC_TYPE_RETRIEVAL_ERROR]: 'docTypeRetrievalError',
 };
 
 export default function CreateCaseErrorPage() {

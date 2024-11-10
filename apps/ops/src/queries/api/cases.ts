@@ -2,15 +2,19 @@ import { AxiosResponse } from 'axios';
 
 import {
     Case,
+    CaseDashboardStatsErrorResponse,
+    CaseDashboardStatsResponse,
+    CaseDashboardStatsResponseOld,
     CaseReferenceResponse,
     CaseStatsErrorResponse,
     CaseStatsResponse,
     CreateCaseBody,
     CreateCaseResponse,
+    DashboardStatsElementResponse,
     Metadata,
 } from '@deps/models/case/case';
 import { NoteInstance } from '@deps/models/case/note-instance';
-import { CaseStatsQuery } from '@deps/queries/cases';
+import { CaseDashboardStatsQuery, CaseStatsQuery } from '@deps/queries/cases';
 import { isMockCaseDetailsRequestEnabled } from '@deps/services/api-config';
 import { mockCaseDetails } from '@deps/services/mocks/case-details';
 import { CaseSearchBody, CaseSearchErrorResponse, CaseSearchResponse } from '@deps/types/search';
@@ -80,6 +84,72 @@ export const getCaseStats = async (query: CaseStatsQuery): Promise<CaseStatsResp
         return data ?? {};
     } catch (error: any) {
         console.error('getCaseStats::An error occurred while getting case stats results', error);
+        return error.response;
+    }
+};
+
+/**
+ * Converts a CaseDashboardStatsResponseOld to a CaseDashboardStatsResponse
+ * The main difference between the two is that the former has a nested values
+ * structure, while the latter has a flat values structure.
+ * This will be inplace until the new API is ready which should 11/15/2024
+ * @param oldJson the CaseDashboardStatsResponseOld to convert
+ * @returns a CaseDashboardStatsResponse
+ */
+const convertOldToNew = (oldJson: CaseDashboardStatsResponseOld) => {
+    const output: CaseDashboardStatsResponse = {
+        data: [],
+        totalElements: 0,
+    };
+    oldJson.element.forEach(element => {
+        const newElement: DashboardStatsElementResponse = {
+            key: element.key,
+            name: element.name,
+            count: element.count,
+            values: [],
+        };
+        if (element.values && element.values.element) {
+            element.values.element.forEach(subElement => {
+                const newSubElement: DashboardStatsElementResponse = {
+                    key: subElement.key,
+                    name: subElement.name,
+                    count: subElement.count,
+                    values: [],
+                };
+                if (subElement.values && subElement.values.element) {
+                    subElement.values.element.forEach(subSubElement => {
+                        const newSubSubElement: DashboardStatsElementResponse = {
+                            key: subSubElement.key,
+                            name: subSubElement.name,
+                            count: subSubElement.count,
+                            values: [],
+                        };
+                        newSubElement.values?.push(newSubSubElement);
+                    });
+                }
+                newElement.values?.push(newSubElement);
+            });
+        }
+        output.totalElements += element.count;
+        output.data.push(newElement);
+    });
+
+    return output;
+};
+
+export const getCaseDashboardStats = async (
+    query: CaseDashboardStatsQuery
+): Promise<CaseDashboardStatsResponse | CaseDashboardStatsErrorResponse> => {
+    try {
+        let { data } = await client.post<CaseDashboardStatsQuery, AxiosResponse>(`${baseAppUrl}/api/case/v1/dashboard/stats`, query);
+
+        if ('element' in data) {
+            data = convertOldToNew(data);
+        }
+
+        return data ?? {};
+    } catch (error: any) {
+        console.error('getCaseDashboardStats::An error occurred while getting case dashboard stats results', error);
         return error.response;
     }
 };

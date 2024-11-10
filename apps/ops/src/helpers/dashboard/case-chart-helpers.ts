@@ -1,7 +1,5 @@
 import { SeriesOptionsType } from 'highcharts';
 
-import { Case } from '@deps/models/case/case';
-
 export interface ChartSeriesData {
     x: string | Date | number;
     y: string | Date | number;
@@ -20,10 +18,6 @@ export type ChartConfigSeriesDataSimple = SeriesOptionsType & {
     name: string;
     data: number[];
 };
-
-export interface CaseGrouping {
-    [key: string]: Case[];
-}
 
 const caseChartHelpers = {
     agingLabel: 'In Progress (aging)',

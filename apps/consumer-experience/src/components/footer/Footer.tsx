@@ -59,6 +59,7 @@ export const Footer = ({ hasBorder, style, className }: Props) => {
           rel="noreferrer"
         >
           <svg
+            aria-label="Level Access logo"
             width="62"
             height="24"
             viewBox="0 0 62 24"

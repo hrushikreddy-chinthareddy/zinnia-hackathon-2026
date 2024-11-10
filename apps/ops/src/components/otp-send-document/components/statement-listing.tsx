@@ -7,6 +7,7 @@ import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
 import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
 import { PolicyDocument } from '@deps/models/case/document';
+import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
 
 type StatementListingProps = {
     statements: PolicyDocument[];
@@ -63,7 +64,7 @@ const StatementListing = ({ statements, carrierId }: StatementListingProps) => {
 
                                     <TableCell>
                                         <Content
-                                            details={dayjs(statement.importDate).format('DD/MM/YYYY')}
+                                            details={dayjs(statement.importDate).format(DEFAULT_EXTENDED_DATE_FORMAT)}
                                             variant={ContentVariant.BodySm}
                                         />
                                     </TableCell>
@@ -74,7 +75,12 @@ const StatementListing = ({ statements, carrierId }: StatementListingProps) => {
                                         <Content details={statement.periodQuarter || ''} variant={ContentVariant.BodySm} />
                                     </TableCell>
                                     <TableCell>
-                                        {createAction({ ...statement, documentSource: DocumentTypeView.Correspondence }, carrierId, t, 'contactCenter.sendStatement.viewStatement' )}
+                                        {createAction(
+                                            { ...statement, documentSource: DocumentTypeView.Correspondence },
+                                            carrierId,
+                                            t,
+                                            'contactCenter.sendStatement.viewStatement'
+                                        )}
                                     </TableCell>
                                 </TableRow>
                             ))}

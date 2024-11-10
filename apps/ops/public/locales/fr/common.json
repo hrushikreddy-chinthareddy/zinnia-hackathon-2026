@@ -12,6 +12,7 @@
     "yearToDate": "Annee en cours",
     "caseStatsDashboardTitle": "Dashboard du Carrier",
     "customRange": "Periode personnalisée",
+    "allAgents": "Tous les agents",
     "allDistributors": "Tous les distributeurs",
     "allCarriers": "Tous les carriers",
     "caseStatCharHeader": "{{count}} Dossiers actifs",
@@ -194,9 +195,13 @@
             "diaryNotes": {
                 "text": "Notes de journal"
             },
+
             "diaryNotesWarning": {
                 "text": "Attention: Notes d'agenda présentes. Examen requis pour soumettre",
                 "clickToView": "Clique pour voir"
+            },
+            "viewDetails": {
+                "text":"voir les détails"
             },
             "history": {
                 "text": "Histoire",
@@ -803,8 +808,6 @@
             "updatedStart": "Dernière mise à jour",
             "updatedEnd": "Dernière mise à jour (fin de la plage)",
             "age": "Âge",
-            "showOnlyCanceled": "Afficher uniquement les dossiers annulés",
-            "showOnlyCompleted": "Afficher uniquement les dossiers terminés",
             "applyFilters": "Appliquer les filtres",
             "clearAll": "Effacer tous les filtres",
             "selectCarrier": "Sélectionner",
@@ -836,6 +839,7 @@
                 "Renewal": "Renouvellements"
             }
         },
+        "selectStatus": "Sélectionner le statut",
         "sortOptions": {
             "newest": "Trier: Plus récent",
             "oldest": "Trier: Plus ancien"
@@ -1826,14 +1830,17 @@
                 "withdrawalTask": "Bonne nouvelle! Nous avons lancé une tâche de retrait pour {{documentNumber}} et {{contractNumber}}",
                 "WithdrawalFormInputTask": "Excellente nouvelle ! Nous avons lancé une tâche de retrait pour {{documentNumber}} et {{contractNumber}}",
                 "rmdTask": "Bonne nouvelle! Nous avons lancé une tâche de distribution minimale requise pour {{documentNumber}} et {{contractNumber}}.",
-                "oftTask": "Bonne nouvelle! Nous avons lancé une tâche de transfert de fonds sortants pour{{documentNumber}} et {{contractNumber}}",
+                "OFTFormInputTask": "Bonne nouvelle! Nous avons lancé une tâche de transfert de fonds sortants pour{{documentNumber}} et {{contractNumber}}",
                 "sswTask": "Bonne nouvelle! Nous avons lancé une tâche de retrait systématique pour {{documentNumber}} et {{contractNumber}}"
             },
             "openNigoExists": "Un cas de base comprend un NIGO. Veuillez résoudre le problème ouvert NIGO avant de soumettre une autre demande via le portail numérique."
         },
         "sidebar": {
+            "contractStatusCode":"Statut de la politique",
+             "abbreviatedcontractStatusCode":"Pol.",
             "abbreviatedCaseId": "Cais.",
             "abbreviatedContractId": "Ctr.",
+            "abbreviatedContractValue": "Ctr Val.",
             "abbreviatedDocumentNumber": "Doc.",
             "abbreviatedQualType": "Qual.",
             "abbreviatedIssueDate": "Issue.",
@@ -1842,6 +1849,7 @@
             "qualType": "type de qualification",
             "issueDate": "Date d'émission",
             "contractId": "ID du contrat",
+            "contractValue":"valeur du contrat",
             "ownerName": "Le nom du propriétaire",
             "annuitantName": "Nom du rentier",
             "copyToClipboard": "Copier {{item}} dans le presse-papiers",
@@ -2018,6 +2026,18 @@
             "policyNotFound": {
                 "title": "Politique non trouvée",
                 "subtitle": "Une erreur s'est produite lors de la récupération de la politique. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
+            },
+            "taskInitialization": {
+                "title": "Erreur lors de l'initialisation du formulaire de tâche",
+                "subtitle": "Une erreur s'est produite lors de l'initialisation de la tâche. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
+            },
+            "caseTypeRetrievalError": {
+                "title": "Erreur lors de l'identification du type de cas",
+                "subtitle": "Une erreur s'est produite lors de l'identification du type de dossier. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
+            },
+            "docTypeRetrievalError": {
+                "title": "Erreur lors de l'identification du type de document",
+                "subtitle": "Une erreur s'est produite lors de l'identification du type de document. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
             }
         }
     },
@@ -2029,6 +2049,7 @@
         "withdrawal": "Retrait"
     },
     "status": {
+        "all": "Tous",
         "completed": "Terminé",
         "exception": "Exception",
         "inProgress": "En cours",
@@ -2823,8 +2844,6 @@
         "policyNumber": "Numéro de police {{policyNumber}}",
         "productName": "Nom du produit {{productName}}",
         "search": "Rechercher",
-        "showOnlyCanceledCases": "Afficher uniquement les dossiers annulés",
-        "showOnlyCompletedCases": "Afficher uniquement les dossiers terminés",
         "ssn": "Numéro de sécurité sociale 4 derniers chiffres {{ssnLastFour}}",
         "status": "Statut {{status}}",
         "updatedAt": "Mis à jour le {{date}}",
@@ -4274,6 +4293,7 @@
     "nigoEntry": {
         "tabs": {
             "serviceFormReview": "Révision du formulaire de service",
+            "formEntry": "Formulaire de saisie",
             "nigoDetails": "Informations manquantes",
             "documentSelection": "Sélection de nouveau(x) formulaire(s)",
             "confirm": "Confirmer"
@@ -4286,7 +4306,8 @@
             "view": "Voir",
             "documentTitle": "Document",
             "documents": "Documents",
-            "documentId": "ID du document"
+            "documentId": "ID du document",
+            "noFormAvailable": "Aucun formulaire disponible."
         },
         "confirmStep": {
             "title": "Soumis!",
@@ -4323,6 +4344,13 @@
                 "selectForm": "Sélectionnez un formulaire pour continuer."
             },
             "label": "Sélectionnez le formulaire approprié qui doit être mis à jour."
+        },
+        "formEntry": {
+            "formTitles": {
+                "withdrawal": "{{carrier}} Withdrawal Request",
+                "oft": "{{carrier}} Outgoing Funds Transfer Request",
+                "defaultTitle": "Form Entry"
+            }
         }
     }
 }

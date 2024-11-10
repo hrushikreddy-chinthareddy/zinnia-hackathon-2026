@@ -1,35 +1,60 @@
 import clsx from 'clsx';
-import { useTranslation } from 'react-i18next';
+import { useEffect, useState } from 'react';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
-import DistributionPieChartSmall from '@deps/components/dashboard/distribution-charts/distribution-pie-chart-small';
 import Label, { LabelVariant } from '@deps/components/label/label';
+import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { StatGroupingResponse } from '@deps/helpers/dashboard/types';
 import { formatNumberLabel, wholeNumberFormatify } from '@deps/helpers/numbers.helper';
+import { convertToQueryString } from '@deps/helpers/routing.helper';
+import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
+import { CaseDashboardStatsResponse } from '@deps/models/case/case';
+import { getCaseInsights } from '@deps/queries/api/openai';
+import { ReactComponent as ChartSquare } from '@deps/styles/elements/icons/icons_outlined/chart-square-bar.svg';
 import { ReactComponent as LighBulb } from '@deps/styles/elements/icons/icons_outlined/light-bulb.svg';
 
+import DistributionPieChartSmallAPIBased from '../distribution-charts/distribution-pie-chart-small-api-based';
+
 interface Props {
-    caseStats: StatGroupingResponse;
+    dashboardStatsResponse: CaseDashboardStatsResponse;
     blockLabel: string;
     timeFrameLabel: string;
     classNames?: string;
     statMeasurementLabel: string;
-    summaryBlockFormatter: (caseStats: StatGroupingResponse) => string;
     variant?: 'single' | 'double' | 'full';
+    showViewMore?: boolean;
+    filterParams?: { [key: string]: string | string[] | number | boolean };
+    loading?: boolean;
 }
 
 const CaseStatBlock = ({
-    caseStats,
+    dashboardStatsResponse,
     classNames,
     blockLabel,
     timeFrameLabel,
     statMeasurementLabel,
-    summaryBlockFormatter,
     variant = 'single',
+    showViewMore = false,
+    filterParams = {},
+    loading = true,
 }: Props) => {
-    const { t } = useTranslation(undefined);
+    const [aiSummary, setAiSummary] = useState<string | null>(null);
+    const shouldShowCaseInsights = useCaseInsightsPermission();
+
+    const getOpenAiSummary = async (caseStats: CaseDashboardStatsResponse) => {
+        try {
+            const summary = await getCaseInsights({
+                content: JSON.stringify(caseStats),
+                prompt: `You are an expert in all things case data. Your job is to summarize the data for business and executive users.
+                          They want simple and insightful information about the data provided to you. The cases provided to you here are open cases delineated by insurance carrier. Avoid using phrases such as "the data".
+                          Your responses should be insightful and will be displayed on a UI as a summary for a module related to a pie chart. Use percentages and real data where it makes sense. Keep it conscise and to the point. Format number values to U.S.`,
+            });
+            return summary;
+        } catch (error) {
+            return '';
+        }
+    };
 
     const renderLabel = () => {
         return (
@@ -40,28 +65,56 @@ const CaseStatBlock = ({
         );
     };
 
+    const getTotalStatValue = () => {
+        const value = dashboardStatsResponse?.data.reduce((prevValue, statElement) => prevValue + statElement.count, 0);
+        return value;
+    };
+
     const renderStatValue = () => {
         return (
             <div className="flex gap-1">
-                <Content details={wholeNumberFormatify(caseStats?.count || 0)} variant={ContentVariant.Value} />
-                <Content details={formatNumberLabel(statMeasurementLabel, caseStats?.count || 0)} variant={ContentVariant.Value} />
+                <Content details={wholeNumberFormatify(getTotalStatValue() || 0)} variant={ContentVariant.Value} />
+                <Content details={formatNumberLabel(statMeasurementLabel, getTotalStatValue() || 0)} variant={ContentVariant.Value} />
             </div>
         );
     };
 
     const renderChart = () => {
-        return <DistributionPieChartSmall statGrouping={caseStats} showInLegend={true} />;
+        return <DistributionPieChartSmallAPIBased dashboardStatsResponse={dashboardStatsResponse} showInLegend={true} />;
     };
 
-    const renderDummyText = () => {
+    const renderAISummary = () => {
+        if (!shouldShowCaseInsights) {
+            return null;
+        }
         return (
             <>
                 <Typography className="flex gap-2 items-center mb-2" variant={TypographyVariant.BodyBold}>
                     <LighBulb height={24} width={24} />
                     <span>Insight</span>
                 </Typography>
-                <Typography variant={TypographyVariant.BodySm}>{summaryBlockFormatter(caseStats)}</Typography>
+                <Typography variant={TypographyVariant.BodySm}>{aiSummary ?? 'Generating AI Summary...'}</Typography>
             </>
+        );
+    };
+
+    const renderShowMore = () => {
+        if (!showViewMore) {
+            return null;
+        }
+
+        return (
+            <div className="mt-4 flex items-center gap-1">
+                <ChartSquare height={18} width={18} />
+                <NavElement
+                    href={`/cases${convertToQueryString(filterParams)}`}
+                    size={NavElementSize.Small}
+                    type={NavElementType.Link}
+                    target="_blank"
+                >
+                    View apps
+                </NavElement>
+            </div>
         );
     };
 
@@ -71,7 +124,8 @@ const CaseStatBlock = ({
                 {renderLabel()}
                 {renderStatValue()}
                 {renderChart()}
-                {renderDummyText()}
+                {renderAISummary()}
+                {renderShowMore()}
             </>
         );
     };
@@ -84,7 +138,8 @@ const CaseStatBlock = ({
                         {renderLabel()}
                         {renderStatValue()}
                     </div>
-                    {renderDummyText()}
+                    {renderAISummary()}
+                    {renderShowMore()}
                 </div>
                 <div className="w-1/2">{renderChart()}</div>
             </div>
@@ -103,6 +158,19 @@ const CaseStatBlock = ({
                 return '';
         }
     };
+
+    useEffect(() => {
+        if (!shouldShowCaseInsights) {
+            return;
+        }
+        if (!loading && dashboardStatsResponse && dashboardStatsResponse.data && dashboardStatsResponse.data.length > 0) {
+            getOpenAiSummary(dashboardStatsResponse).then(summary => {
+                if (summary) {
+                    setAiSummary(summary);
+                }
+            });
+        }
+    }, [dashboardStatsResponse, loading, shouldShowCaseInsights]);
 
     return (
         <CardContainer fullWidth={false} containerClassNames={clsx(classNames, getWidthClassName())}>

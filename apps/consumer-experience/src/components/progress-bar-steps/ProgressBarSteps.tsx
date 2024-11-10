@@ -91,7 +91,7 @@ export const ProgressBarSteps = ({
               style={{
                 width: `${100 / stepsWithoutFinal}%`,
                 color: isStepComplete
-                  ? 'var(--color-base-border-border-primary-color)'
+                  ? 'var(--color-progress-bar-steps-item-progress-bar-steps-item-active-border)'
                   : 'var(--color-base-surface-surface-bold)',
               }}
               className={styles.stepContainer}

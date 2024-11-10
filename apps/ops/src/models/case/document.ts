@@ -51,6 +51,7 @@ export interface DocumentData {
     caseId: string;
     clientInstitution: string;
     contract: string;
+    contractValue?: string;
     contractStatusCode: string;
     dateReceived: string;
     distributionChannel: string;

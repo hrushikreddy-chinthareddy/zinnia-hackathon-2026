@@ -1,22 +1,25 @@
+import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import { FieldSize, FieldType } from '@deps/components/fields/field';
 import SelectSimple from '@deps/components/select/select';
+import { getStartAndEndDates } from '@deps/containers/case-redesign-sub-page/case-helpers';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
-import { getCaseGroupingStats } from '@deps/helpers/dashboard/dashboard-helpers';
-import { StatGrouping, StatGroupingOptions, StatGroupingResponse } from '@deps/helpers/dashboard/types';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
-import { Case } from '@deps/models/case/case';
+import { CaseDashboardStatsResponse, DashboardStatsElementResponse, Statuses } from '@deps/models/case/case';
+import { GroupByOptions } from '@deps/models/case/enums';
+import { getCaseDashboardStats } from '@deps/queries/api/cases';
+import { CaseDashboardStatsQuery, DashboardSearchFilter } from '@deps/queries/cases';
 import { debounce } from '@deps/utils/useDebounce';
 
+import { getLabelSubString, sankeyTitleFormat } from './dashboard.helper';
 import Typography, { TypographyVariant } from '../typography/typography';
 
 interface Props {
-    cases: Case[];
     height?: number;
     width?: number;
     chartOptions?: SankeyChartOptions;
+    baseDashboardQueryFilter?: DashboardSearchFilter;
 }
 
 interface SankeyChartOptions {
@@ -43,7 +46,7 @@ const defaultChartOptions = {
     maxItems: 10,
 };
 
-const SankeyChart = ({ cases, height = 570, width = 1536, chartOptions = defaultChartOptions }: Props) => {
+const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOptions, baseDashboardQueryFilter }: Props) => {
     const { t } = useTranslation();
     const mergedChartOptions = { ...defaultChartOptions, ...chartOptions };
     const {
@@ -57,38 +60,39 @@ const SankeyChart = ({ cases, height = 570, width = 1536, chartOptions = default
         maxPathStrokeWidth,
         maxItems,
     } = mergedChartOptions;
+    const { createdDateStart, createdDateEnd } = getStartAndEndDates('All');
+    const [caseGroupingState, setCaseGroupingState] = useState<CaseDashboardStatsResponse>();
+    const [totalCases, setTotalCases] = useState<number>(0);
 
-    const [caseGroupingState, setCaseGroupingState] = useState<StatGroupingResponse>();
-
-    const [level1ObjectGrouping, setLevel1ObjectGrouping] = useState<StatGrouping[]>([]);
-    const [level2ObjectGrouping, setLevel2ObjectGrouping] = useState<StatGrouping[]>([]);
-    const [level3ObjectGrouping, setLevel3ObjectGrouping] = useState<StatGrouping[]>([]);
+    const [level1ObjectGrouping, setLevel1ObjectGrouping] = useState<DashboardStatsElementResponse[]>([]);
+    const [level2ObjectGrouping, setLevel2ObjectGrouping] = useState<DashboardStatsElementResponse[]>([]);
+    const [level3ObjectGrouping, setLevel3ObjectGrouping] = useState<DashboardStatsElementResponse[]>([]);
     const [l1SelectedIndex, setL1SelectedIndex] = useState<number>(-100);
 
-    const [l1SelectValue, setL1SelectValue] = useState<string>(StatGroupingOptions.Carrier.toString());
-    const [l2SelectValue, setL2SelectValue] = useState<string>(StatGroupingOptions.Process.toString());
-    const [l3SelectValue, setL3SelectValue] = useState<string>(StatGroupingOptions.CaseStatus.toString());
+    const [l1SelectValue, setL1SelectValue] = useState<string>(GroupByOptions.Carrier.toString());
+    const [l2SelectValue, setL2SelectValue] = useState<string>(GroupByOptions.Process.toString());
+    const [l3SelectValue, setL3SelectValue] = useState<string>(GroupByOptions.CaseStatus.toString());
 
     const [parentSize, setParentSize] = useState({ width: 0, height: 0 });
     const svgParentRef = useRef<HTMLDivElement>(null);
 
-    const getGroupingsFromL1 = (l1ObjectGrouping: StatGrouping[]) => {
-        const l2Grouping: StatGrouping[] = [];
-        const l3Grouping: StatGrouping[] = [];
-        const tempL2Grouping: StatGrouping[] = [];
-        const tempL3Grouping: StatGrouping[] = [];
+    const getGroupingsFromL1 = (l1ObjectGrouping: DashboardStatsElementResponse[]) => {
+        const l2Grouping: DashboardStatsElementResponse[] = [];
+        const l3Grouping: DashboardStatsElementResponse[] = [];
+        const tempL2Grouping: DashboardStatsElementResponse[] = [];
+        const tempL3Grouping: DashboardStatsElementResponse[] = [];
 
         const l2CountByKeyMap: { [key: string]: number } = {};
         const l3CountByKeyMap: { [key: string]: number } = {};
 
         // Loop through and build the temp arrays to later squash and add counts up
         l1ObjectGrouping.forEach(l1Grouping => {
-            if (l1Grouping && l1Grouping.children && l1Grouping.children.stats.length > 0) {
-                l1Grouping.children.stats.forEach(l2ChildGrouping => {
-                    const clonedL2ChildGrouping: StatGrouping = JSON.parse(JSON.stringify(l2ChildGrouping));
+            if (l1Grouping && l1Grouping.values && l1Grouping.values && l1Grouping.values.length > 0) {
+                l1Grouping.values.forEach(l2ChildGrouping => {
+                    const clonedL2ChildGrouping: DashboardStatsElementResponse = JSON.parse(JSON.stringify(l2ChildGrouping));
                     tempL2Grouping.push(clonedL2ChildGrouping);
 
-                    clonedL2ChildGrouping?.children?.stats.forEach(l3ChildGrouping => {
+                    clonedL2ChildGrouping?.values?.forEach(l3ChildGrouping => {
                         const clonedL3ChildGrouping = JSON.parse(JSON.stringify(l3ChildGrouping));
                         tempL3Grouping.push(clonedL3ChildGrouping);
                     });
@@ -100,39 +104,39 @@ const SankeyChart = ({ cases, height = 570, width = 1536, chartOptions = default
         tempL2Grouping.forEach(grouping => {
             if (grouping) {
                 // Squash the array to only 1 instance of each grouping label
-                if (!l2Grouping.find(l2Group => l2Group.label === grouping.label)) {
+                if (!l2Grouping.find(l2Group => l2Group.name === grouping.name)) {
                     l2Grouping.push(grouping);
                 }
-                if (l2CountByKeyMap[grouping.label]) {
-                    l2CountByKeyMap[grouping.label] += grouping.count;
+                if (l2CountByKeyMap[grouping.name]) {
+                    l2CountByKeyMap[grouping.name] += grouping.count;
                 } else {
-                    l2CountByKeyMap[grouping.label] = grouping.count;
+                    l2CountByKeyMap[grouping.name] = grouping.count;
                 }
             }
         });
         tempL3Grouping.forEach(grouping => {
             if (grouping) {
-                if (!l3Grouping.find(l3Group => l3Group.label === grouping.label)) {
+                if (!l3Grouping.find(l3Group => l3Group.name === grouping.name)) {
                     l3Grouping.push(grouping);
                 }
-                if (l3CountByKeyMap[grouping.label]) {
-                    l3CountByKeyMap[grouping.label] += grouping.count;
+                if (l3CountByKeyMap[grouping.name]) {
+                    l3CountByKeyMap[grouping.name] += grouping.count;
                 } else {
-                    l3CountByKeyMap[grouping.label] = grouping.count;
+                    l3CountByKeyMap[grouping.name] = grouping.count;
                 }
             }
         });
 
         // now that we have the counts, we need to go through and update each grouping
         Object.keys(l2CountByKeyMap).forEach(key => {
-            const currentl2Grouping = l2Grouping.find(l2Group => l2Group.label === key);
+            const currentl2Grouping = l2Grouping.find(l2Group => l2Group.name === key);
 
             if (currentl2Grouping) {
                 currentl2Grouping.count = l2CountByKeyMap[key];
             }
         });
         Object.keys(l3CountByKeyMap).forEach(key => {
-            const currentL3Grouping = l3Grouping.find(l2Group => l2Group.label === key);
+            const currentL3Grouping = l3Grouping.find(l2Group => l2Group.name === key);
 
             if (currentL3Grouping) {
                 currentL3Grouping.count = l3CountByKeyMap[key];
@@ -216,7 +220,7 @@ const SankeyChart = ({ cases, height = 570, width = 1536, chartOptions = default
         return colors[index];
     };
 
-    const calculateLevel1PathCoordinates = (level1Index: number, level2Index: number, pathIndex: number) => {
+    const calculateLevel1PathCoordinates = (level1Index: number, level2Index: number) => {
         const level1BlockVPosition = calculateVerticalBlockPosition(level1Index, level1ObjectGrouping.length);
         const level2BlockVPosition = calculateVerticalBlockPosition(level2Index, level2ObjectGrouping.length);
 
@@ -246,8 +250,12 @@ const SankeyChart = ({ cases, height = 570, width = 1536, chartOptions = default
         return `M ${xStart},${yStart} C ${xEnd},${yStart} ${xStart},${yEnd} ${xEnd},${yEnd}`;
     };
 
-    const renderL1Path = (l1StatGrouping: StatGrouping, l2StatGrouping: StatGrouping, level1Index: number, pathIndex: number) => {
-        const level2Index = level2ObjectGrouping.findIndex(grouping => grouping.label === l2StatGrouping.label);
+    const renderL1Path = (
+        l1StatGrouping: DashboardStatsElementResponse,
+        l2StatGrouping: DashboardStatsElementResponse,
+        level1Index: number
+    ) => {
+        const level2Index = level2ObjectGrouping.findIndex(grouping => grouping.name === l2StatGrouping.name);
         if (level2Index < 0) {
             return null;
         }
@@ -258,9 +266,9 @@ const SankeyChart = ({ cases, height = 570, width = 1536, chartOptions = default
 
         return (
             <path
-                key={`level-1-path-${l2StatGrouping.label}-${level2Index}`}
-                data-name={`level-1-path-${l2StatGrouping.label}-${level2Index}`}
-                d={calculateLevel1PathCoordinates(level1Index, level2Index, pathIndex)}
+                key={`level-1-path-${l2StatGrouping.name}-${level2Index}`}
+                data-name={`level-1-path-${l2StatGrouping.name}-${level2Index}`}
+                d={calculateLevel1PathCoordinates(level1Index, level2Index)}
                 fill="none"
                 strokeOpacity={pathStrokeOpacity}
                 stroke={isL1Selected() && !isMatchForL1SelectedStatGrouping(level1Index) ? '#eee' : getLevel1PathColor(level1Index)}
@@ -271,24 +279,25 @@ const SankeyChart = ({ cases, height = 570, width = 1536, chartOptions = default
         );
     };
 
-    const renderL2HoverPath = (l2StatGrouping: StatGrouping, l3StatGrouping: StatGrouping, level2Index: number, pathIndex: number) => {
+    const renderL2HoverPath = (
+        l2StatGrouping: DashboardStatsElementResponse,
+        l3StatGrouping: DashboardStatsElementResponse,
+        level2Index: number,
+        pathIndex: number
+    ) => {
         // quick sanity check to make sure the L3 Stat Grouping is currently shown. Due to height constraints we
         // will trim down the list to fit the chart. If we don't find it in the visible L3 objects we don't draw
         // the path
-        const level3Index = level3ObjectGrouping.findIndex(grouping => grouping.label === l3StatGrouping.label);
-        if (level3Index < 0 || !l3StatGrouping || !l2StatGrouping || !l2StatGrouping.children || !l2StatGrouping.children.stats) {
+        const level3Index = level3ObjectGrouping.findIndex(grouping => grouping.name === l3StatGrouping.name);
+        if (level3Index < 0 || !l3StatGrouping || !l2StatGrouping || !l2StatGrouping.values || !l2StatGrouping.values) {
             return null;
         }
 
         // if we are in hover/selected state we need to grab the corresponding l1, l2, and l3 items
         // we'll use these later to determine wether or not the L2 item and path needs to be highlighted
         const currentHoveredL1Item = getSelectedL1StatGrouping();
-        const l2MatchedItem = currentHoveredL1Item?.children?.stats.find(
-            l2ChildStatGrouping => l2ChildStatGrouping.label === l2StatGrouping.label
-        );
-        const l3MatchingItem = l2MatchedItem?.children?.stats.find(
-            l3ChildStatGrouping => l3ChildStatGrouping.label === l3StatGrouping.label
-        );
+        const l2MatchedItem = currentHoveredL1Item?.values?.find(l2ChildStatGrouping => l2ChildStatGrouping.name === l2StatGrouping.name);
+        const l3MatchingItem = l2MatchedItem?.values?.find(l3ChildStatGrouping => l3ChildStatGrouping.name === l3StatGrouping.name);
 
         if (!l2MatchedItem || !l3MatchingItem) {
             return null;
@@ -312,8 +321,8 @@ const SankeyChart = ({ cases, height = 570, width = 1536, chartOptions = default
 
         return (
             <path
-                key={`level-2-path-${l3StatGrouping.label}-${level3Index}`}
-                data-name={`level-2-path-${l3StatGrouping.label}-${level3Index}`}
+                key={`level-2-path-${l3StatGrouping.name}-${level3Index}`}
+                data-name={`level-2-path-${l3StatGrouping.name}-${level3Index}`}
                 d={calculateLevel2PathCoordinates(level2Index, level3Index, pathIndex)}
                 fill="none"
                 strokeOpacity={pathStrokeOpacity}
@@ -328,12 +337,17 @@ const SankeyChart = ({ cases, height = 570, width = 1536, chartOptions = default
         );
     };
 
-    const renderL2Path = (l2StatGrouping: StatGrouping, l3StatGrouping: StatGrouping, level2Index: number, pathIndex: number) => {
+    const renderL2Path = (
+        l2StatGrouping: DashboardStatsElementResponse,
+        l3StatGrouping: DashboardStatsElementResponse,
+        level2Index: number,
+        pathIndex: number
+    ) => {
         // quick sanity check to make sure the L3 Stat Grouping is currently shown. Due to height constraints we
         // will trim down the list to fit the chart. If we don't find it in the visible L3 objects we don't draw
         // the path
-        const level3Index = level3ObjectGrouping.findIndex(grouping => grouping.label === l3StatGrouping.label);
-        if (level3Index < 0 || !l3StatGrouping || !l2StatGrouping || !l2StatGrouping.children || !l2StatGrouping.children.stats) {
+        const level3Index = level3ObjectGrouping.findIndex(grouping => grouping.name === l3StatGrouping.name);
+        if (level3Index < 0 || !l3StatGrouping || !l2StatGrouping || !l2StatGrouping.values || !l2StatGrouping.values) {
             return null;
         }
 
@@ -348,8 +362,8 @@ const SankeyChart = ({ cases, height = 570, width = 1536, chartOptions = default
 
         return (
             <path
-                key={`level-2-path-${l3StatGrouping.label}-${level3Index}`}
-                data-name={`level-2-path-${l3StatGrouping.label}-${level3Index}`}
+                key={`level-2-path-${l3StatGrouping.name}-${level3Index}`}
+                data-name={`level-2-path-${l3StatGrouping.name}-${level3Index}`}
                 d={calculateLevel2PathCoordinates(level2Index, level3Index, pathIndex)}
                 fill="none"
                 strokeOpacity={pathStrokeOpacity}
@@ -361,21 +375,14 @@ const SankeyChart = ({ cases, height = 570, width = 1536, chartOptions = default
         );
     };
 
-    const getLabelSubString = (label: string) => {
-        if (!label) {
-            return '';
-        }
-        return label.length > 25 ? `${label.substring(0, 25)}...` : label;
-    };
-
-    const renderL1Group = (l1StatGrouping: StatGrouping | null, index: number, alwaysVisible?: boolean) => {
+    const renderL1Group = (l1StatGrouping: DashboardStatsElementResponse | null, index: number, alwaysVisible?: boolean) => {
         if (!l1StatGrouping) {
             return null;
         }
 
         return (
             <g key={`level-1-${index}`} data-name={`level-1-${index}`} transform="translate(0.5,0.5)">
-                <a href="#!" title={l1StatGrouping.label} onClick={event => handleL1Click(event, index)}>
+                <a href="#!" title={l1StatGrouping.name} onClick={event => handleL1Click(event, index)}>
                     <rect
                         x={svgleftAndRightPadding}
                         y={calculateVerticalBlockPosition(index, level1ObjectGrouping.length)}
@@ -401,8 +408,8 @@ const SankeyChart = ({ cases, height = 570, width = 1536, chartOptions = default
                         <tspan className="tracking-normal no-underline font-primary text-xl font-medium">
                             {wholeNumberFormatify(l1StatGrouping.count)}
                         </tspan>
-                        <tspan className="font-primary text-sm font-medium"> {getLabelSubString(l1StatGrouping.label)}</tspan>
-                        <title>{l1StatGrouping.label}</title>
+                        <tspan className="font-primary text-sm font-medium"> {getLabelSubString(l1StatGrouping.name)}</tspan>
+                        <title>{l1StatGrouping.name}</title>
                     </text>
                 </a>
                 <g
@@ -410,21 +417,18 @@ const SankeyChart = ({ cases, height = 570, width = 1536, chartOptions = default
                     style={{ visibility: alwaysVisible || !isMatchForL1SelectedStatGrouping(index) ? 'visible' : 'hidden' }}
                 >
                     {l1StatGrouping &&
-                        l1StatGrouping.children &&
-                        l1StatGrouping.children.stats.length > 0 &&
-                        l1StatGrouping.children.stats.map((childStatGrouping, innerIndex) =>
-                            renderL1Path(l1StatGrouping, childStatGrouping, index, innerIndex)
-                        )}
+                        l1StatGrouping.values &&
+                        l1StatGrouping.values &&
+                        l1StatGrouping.values.length > 0 &&
+                        l1StatGrouping.values.map(childStatGrouping => renderL1Path(l1StatGrouping, childStatGrouping, index))}
                 </g>
             </g>
         );
     };
 
-    const renderL2Group = (l2StatGrouping: StatGrouping, index: number, selectedItem: boolean = false) => {
+    const renderL2Group = (l2StatGrouping: DashboardStatsElementResponse, index: number, selectedItem: boolean = false) => {
         const l1MatchedItem = getSelectedL1StatGrouping();
-        const l2MatchedItem = l1MatchedItem?.children?.stats.find(
-            l2ChildStatGrouping => l2ChildStatGrouping.label === l2StatGrouping.label
-        );
+        const l2MatchedItem = l1MatchedItem?.values?.find(l2ChildStatGrouping => l2ChildStatGrouping.name === l2StatGrouping.name);
         let isSelected = false;
 
         if (selectedItem && l2MatchedItem) {
@@ -443,7 +447,8 @@ const SankeyChart = ({ cases, height = 570, width = 1536, chartOptions = default
                     visibility: !selectedItem || isSelected ? 'visible' : 'hidden',
                 }}
             >
-                <a href="#!" title={l2StatGrouping.label} onClick={event => handleL2Click(event, index)}>
+                {/* <a href="#!" title={l2StatGrouping.name} onClick={event => handleL2Click(event)}> */}
+                <g>
                     <rect
                         x={parentSize.width / 2 - blockWidths / 2}
                         y={calculateVerticalBlockPosition(index, level2ObjectGrouping.length)}
@@ -455,7 +460,7 @@ const SankeyChart = ({ cases, height = 570, width = 1536, chartOptions = default
                             fill: getL2ObjectColor(l2StatGrouping, index),
                             visibility: !selectedItem || isSelected ? 'visible' : 'hidden',
                         }}
-                        pointerEvents="all"
+                        pointerEvents="none"
                     ></rect>
                     <text
                         transform={`translate(${parentSize.width / 2 - blockWidths / 2 + 10} ${
@@ -472,10 +477,11 @@ const SankeyChart = ({ cases, height = 570, width = 1536, chartOptions = default
                         <tspan className="tracking-normal no-underline font-primary text-xl font-medium">
                             {wholeNumberFormatify(getL2ObjectCount(l2StatGrouping))}
                         </tspan>
-                        <tspan className="font-primary text-sm font-medium">&nbsp;{getLabelSubString(l2StatGrouping.label)}</tspan>
-                        <title>{l2StatGrouping.label}</title>
+                        <tspan className="font-primary text-sm font-medium">&nbsp;{sankeyTitleFormat(l2StatGrouping.name, 15)}</tspan>
+                        <title>{sankeyTitleFormat(l2StatGrouping.name, false)}</title>
                     </text>
-                </a>
+                </g>
+                {/* </a> */}
                 {/* Rendering the overall to the leve3 object grouping. We put these last so they can sit on top of rectangles */}
                 {level3ObjectGrouping &&
                     !selectedItem &&
@@ -483,14 +489,12 @@ const SankeyChart = ({ cases, height = 570, width = 1536, chartOptions = default
                     level3ObjectGrouping.map((l3Item, innerIndex) => renderL2Path(l2StatGrouping, l3Item, index, innerIndex))}
                 {l2MatchedItem &&
                     selectedItem &&
-                    l2MatchedItem?.children?.stats.map((l3Item, innerIndex) =>
-                        renderL2HoverPath(l2StatGrouping, l3Item, index, innerIndex)
-                    )}
+                    l2MatchedItem?.values?.map((l3Item, innerIndex) => renderL2HoverPath(l2StatGrouping, l3Item, index, innerIndex))}
             </g>
         );
     };
 
-    const renderL3Group = (l3StatGrouping: StatGrouping, index: number) => {
+    const renderL3Group = (l3StatGrouping: DashboardStatsElementResponse, index: number) => {
         return (
             <g key={`level-3-${index}`} transform="translate(0.5,0.5)" style={{ visibility: 'visible' }}>
                 <rect
@@ -516,15 +520,15 @@ const SankeyChart = ({ cases, height = 570, width = 1536, chartOptions = default
                     <tspan className="tracking-normal no-underline font-primary text-xl font-medium">
                         {wholeNumberFormatify(getL3ObjectCount(l3StatGrouping))}
                     </tspan>
-                    <tspan className="font-primary text-sm font-medium"> {getLabelSubString(l3StatGrouping.label)}</tspan>
-                    <title>{l3StatGrouping.label}</title>
+                    <tspan className="font-primary text-sm font-medium"> {sankeyTitleFormat(l3StatGrouping.name)}</tspan>
+                    <title>{sankeyTitleFormat(l3StatGrouping.name, false)}</title>
                 </text>
             </g>
         );
     };
 
-    const getL2ObjectColor = (item: StatGrouping, index: number) => {
-        const matchingStatGrouping = getSelectedL1StatGrouping()?.children?.stats.find(statGrouping => statGrouping.label === item.label);
+    const getL2ObjectColor = (item: DashboardStatsElementResponse, index: number) => {
+        const matchingStatGrouping = getSelectedL1StatGrouping()?.values?.find(statGrouping => statGrouping.name === item.name);
 
         if (!isL1Selected()) {
             return getLevel1PathColor(index, true);
@@ -535,8 +539,8 @@ const SankeyChart = ({ cases, height = 570, width = 1536, chartOptions = default
         }
     };
 
-    const getL2TextColor = (item: StatGrouping) => {
-        const matchingStatGrouping = getSelectedL1StatGrouping()?.children?.stats.find(statGrouping => statGrouping.label === item.label);
+    const getL2TextColor = (item: DashboardStatsElementResponse) => {
+        const matchingStatGrouping = getSelectedL1StatGrouping()?.values?.find(statGrouping => statGrouping.name === item.name);
 
         if (!isL1Selected()) {
             return 'inherit';
@@ -547,12 +551,12 @@ const SankeyChart = ({ cases, height = 570, width = 1536, chartOptions = default
         }
     };
 
-    const getL2ObjectCount = (item: StatGrouping) => {
+    const getL2ObjectCount = (item: DashboardStatsElementResponse) => {
         if (!isL1Selected()) {
             return item.count;
         }
 
-        const matchingStatGrouping = getSelectedL1StatGrouping()?.children?.stats.find(statGrouping => statGrouping.label === item.label);
+        const matchingStatGrouping = getSelectedL1StatGrouping()?.values?.find(statGrouping => statGrouping.name === item.name);
 
         if (isL1Selected() && matchingStatGrouping) {
             return matchingStatGrouping.count;
@@ -561,19 +565,21 @@ const SankeyChart = ({ cases, height = 570, width = 1536, chartOptions = default
         }
     };
 
-    const getL3ObjectCount = (l3Grouping: StatGrouping) => {
+    const getL3ObjectCount = (l3Grouping: DashboardStatsElementResponse) => {
         if (!isL1Selected()) {
             return l3Grouping.count;
         }
 
         let l3MatchingCount = 0;
 
-        getSelectedL1StatGrouping()?.children?.stats.forEach(l2StatGroupings => {
-            l2StatGroupings.children?.stats.forEach(l3StatGrouping => {
-                if (l3Grouping.label === l3StatGrouping.label) {
-                    l3MatchingCount += l3StatGrouping.count;
-                }
-            });
+        getSelectedL1StatGrouping()?.values?.forEach(l2StatGroupings => {
+            if (l2StatGroupings.values) {
+                l2StatGroupings.values.forEach(l3StatGrouping => {
+                    if (l3Grouping.name === l3StatGrouping.name) {
+                        l3MatchingCount += l3StatGrouping.count;
+                    }
+                });
+            }
         });
 
         return l3MatchingCount;
@@ -589,15 +595,10 @@ const SankeyChart = ({ cases, height = 570, width = 1536, chartOptions = default
         }
     };
 
-    const handleL2Click = (event: React.MouseEvent<HTMLAnchorElement>, index: number) => {
-        event.preventDefault();
-        // TODO implement second level click
-    };
-
-    const handleL3Click = (event: React.MouseEvent<HTMLAnchorElement>, index: number) => {
-        event.preventDefault();
-        // TODO implement second level click
-    };
+    // const handleL2Click = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    // event.preventDefault();
+    // TODO implement second level click
+    // };
 
     const handleL1SelectChange = (value: string) => {
         setL1SelectValue(value);
@@ -630,14 +631,14 @@ const SankeyChart = ({ cases, height = 570, width = 1536, chartOptions = default
         }, 200);
 
         const observer = new ResizeObserver(handleWindowResize);
-
-        if (svgParentRef.current) {
-            observer.observe(svgParentRef.current);
+        const currentSvgParentRef = svgParentRef.current;
+        if (currentSvgParentRef) {
+            observer.observe(currentSvgParentRef);
         }
 
         return () => {
-            if (svgParentRef.current) {
-                observer.unobserve(svgParentRef.current);
+            if (currentSvgParentRef) {
+                observer.unobserve(currentSvgParentRef);
             }
         };
     }, []);
@@ -649,32 +650,49 @@ const SankeyChart = ({ cases, height = 570, width = 1536, chartOptions = default
     }, [height, width]);
 
     useEffect(() => {
-        const groupingsResponse = getCaseGroupingStats(cases, [
-            l1SelectValue as StatGroupingOptions,
-            l2SelectValue as StatGroupingOptions,
-            l3SelectValue as StatGroupingOptions,
-        ]);
-        setCaseGroupingState(groupingsResponse);
-    }, [cases, l1SelectValue, l2SelectValue, l3SelectValue]);
+        const getStatsFromSelection = async () => {
+            const filter: DashboardSearchFilter = Object.assign({}, baseDashboardQueryFilter, {
+                caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
+                createdDateStart,
+            });
+
+            const query: CaseDashboardStatsQuery = {
+                filter,
+                groupBy: [l1SelectValue as GroupByOptions, l2SelectValue as GroupByOptions, l3SelectValue as GroupByOptions],
+            };
+
+            const statsResponse = await getCaseDashboardStats(query);
+            if (!statsResponse || 'status' in statsResponse) {
+                console.error('getStatsFromSelection::Failed to fetch stats');
+            }
+            setCaseGroupingState(statsResponse as CaseDashboardStatsResponse);
+        };
+        getStatsFromSelection();
+    }, [baseDashboardQueryFilter, createdDateEnd, createdDateStart, l1SelectValue, l2SelectValue, l3SelectValue]);
 
     useEffect(() => {
-        if (!caseGroupingState || !caseGroupingState.stats || caseGroupingState.stats.length === 0) {
+        if (!caseGroupingState || !caseGroupingState.data || caseGroupingState.data.length === 0) {
             setLevel1ObjectGrouping([]);
             setLevel2ObjectGrouping([]);
             setLevel3ObjectGrouping([]);
             return;
         }
 
+        let l1Grouping: DashboardStatsElementResponse[] = [];
         // L1: sort the groupings by count
-        caseGroupingState?.stats.sort((a, b) => b.count - a.count);
+        caseGroupingState?.data.sort((a, b) => b.count - a.count);
         // TODO: should use the container height / blockHeight+blockStroke to determine how many we can show
-        if (caseGroupingState?.stats?.length > maxItems) {
-            setLevel1ObjectGrouping(caseGroupingState?.stats.slice(0, maxItems));
+        if (caseGroupingState?.data?.length > maxItems) {
+            l1Grouping = caseGroupingState?.data.slice(0, maxItems);
         } else {
-            setLevel1ObjectGrouping(caseGroupingState?.stats);
+            l1Grouping = caseGroupingState?.data;
         }
+        const totalCaseCount = l1Grouping.reduce((prevValue, statElement) => (prevValue += statElement.count), 0);
 
-        const { l2Grouping, l3Grouping } = getGroupingsFromL1(caseGroupingState?.stats);
+        setTotalCases(totalCaseCount);
+        setLevel1ObjectGrouping(l1Grouping);
+
+        const { l2Grouping, l3Grouping } = getGroupingsFromL1(l1Grouping);
 
         // sort the groupings before slicing and setting in state
         // sort and set L2 Grouping
@@ -693,17 +711,18 @@ const SankeyChart = ({ cases, height = 570, width = 1536, chartOptions = default
         } else {
             setLevel3ObjectGrouping(l3Grouping);
         }
+
+        setTotalCases(totalCaseCount);
         // TODO : Do a single loop through all children across all l1, l2, and l3 groupings to create a map of flat arrays
         // to reduce the overall looping of the chart
-    }, [caseGroupingState]);
+    }, [caseGroupingState, maxItems]);
 
-    const formattedCasesNumber = wholeNumberFormatify(cases?.length || 0) as never;
-    const title = t('caseStatCharHeader', { count: formattedCasesNumber });
+    const formattedCasesNumber = wholeNumberFormatify(totalCases || 0) as never;
 
     return (
         <div>
             <Typography className="flex items-center mt-7 mb-7" variant={TypographyVariant.H4} asTag="h2" data-testid="header-text">
-                {title}
+                {t('caseStatCharHeader', { count: formattedCasesNumber })}
             </Typography>
             <div className="relative pb-6">
                 <div
@@ -730,17 +749,24 @@ const SankeyChart = ({ cases, height = 570, width = 1536, chartOptions = default
                         <SelectSimple
                             options={[
                                 {
-                                    value: StatGroupingOptions.Carrier.toString(),
+                                    value: GroupByOptions.Carrier.toString(),
                                     label: 'Carrier',
                                 },
                                 {
-                                    value: StatGroupingOptions.Process.toString(),
+                                    value: GroupByOptions.Process.toString(),
                                     label: 'Case Type',
                                 },
-
                                 {
-                                    value: StatGroupingOptions.ProductName.toString(),
-                                    label: 'Product Name',
+                                    value: GroupByOptions.OpenStages.toString(),
+                                    label: 'Open Stages',
+                                },
+                                {
+                                    value: GroupByOptions.ProcessSubType.toString(),
+                                    label: 'Sub Case Type',
+                                },
+                                {
+                                    value: GroupByOptions.ExpectionCategory.toString(),
+                                    label: 'Exceptions Category',
                                 },
                             ]}
                             onChange={handleL1SelectChange}
@@ -753,24 +779,23 @@ const SankeyChart = ({ cases, height = 570, width = 1536, chartOptions = default
                         <SelectSimple
                             options={[
                                 {
-                                    value: StatGroupingOptions.Carrier.toString(),
+                                    value: GroupByOptions.Carrier.toString(),
                                     label: 'Carrier',
                                 },
                                 {
-                                    value: StatGroupingOptions.Process.toString(),
+                                    value: GroupByOptions.Process.toString(),
                                     label: 'Case Type',
                                 },
                                 {
-                                    value: StatGroupingOptions.OpenStages.toString(),
+                                    value: GroupByOptions.OpenStages.toString(),
                                     label: 'Open Stages',
                                 },
                                 {
-                                    value: StatGroupingOptions.ProcessSubType.toString(),
+                                    value: GroupByOptions.ProcessSubType.toString(),
                                     label: 'Sub Case Type',
                                 },
-
                                 {
-                                    value: StatGroupingOptions.ExceptionsCategory.toString(),
+                                    value: GroupByOptions.ExpectionCategory.toString(),
                                     label: 'Exceptions Category',
                                 },
                             ]}
@@ -784,16 +809,15 @@ const SankeyChart = ({ cases, height = 570, width = 1536, chartOptions = default
                         <SelectSimple
                             options={[
                                 {
-                                    value: StatGroupingOptions.CaseStatus.toString(),
+                                    value: GroupByOptions.CaseStatus.toString(),
                                     label: 'Case Status',
                                 },
                                 {
-                                    value: StatGroupingOptions.Process.toString(),
+                                    value: GroupByOptions.Process.toString(),
                                     label: 'Case Type',
                                 },
-
                                 {
-                                    value: StatGroupingOptions.ProductName.toString(),
+                                    value: GroupByOptions.ProductName.toString(),
                                     label: 'Product Name',
                                 },
                             ]}

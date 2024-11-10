@@ -5,7 +5,7 @@ import { GetServerSidePropsContext } from 'next';
 import router from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import xss from 'xss';
 
 import Button, { ButtonSize, ButtonType } from '@deps/components/button/button';
@@ -57,7 +57,8 @@ const shouldShowCaseTaskList = (featureFlagDecisions: FeatureFlags, caseType: Ca
     return (
         (featureFlagDecisions?.[FEATURE_FLAGS.REG_60] && caseType == CaseType.Reg60) ||
         (featureFlagDecisions?.[FEATURE_FLAGS.SSW_SBGC] && caseType == CaseType.SSW) ||
-        (caseType == CaseType.Withdrawal)
+        (caseType == CaseType.Withdrawal) ||
+        (caseType == CaseType.Oft)
     );
 };
 
@@ -285,7 +286,7 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
     const renderTabContent = (
         <>
             <TabContent className="flex w-full flex-col" value={TabOptions.myTasks}>
-                <TaskManagementQueueContainer />
+                <TaskManagementQueueContainer featureFlagDecisions={featureFlagDecisions} />
             </TabContent>
             <TabContent className="flex w-full flex-col" value={TabOptions.search}>
                 <div className="my-5">
@@ -323,7 +324,6 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
             </TabContent>
         </>
     );
-
 
     return (
         <NoNavLayout fullHeight={true}>

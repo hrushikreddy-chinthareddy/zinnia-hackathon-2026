@@ -1,10 +1,10 @@
 import { DocumentData } from '@deps/models/case/document';
 import { Transaction } from '@deps/models/case/withdrawal/case';
+import { SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 
 import { ContractComparison, Disclosure } from './components/create-disclosure/create-disclosure.types';
 import { DisclosureAuthorizationInformation } from './components/disclosure-authorization/disclosure-authorization.types';
 import { UserInfo } from './components/user-information/user-information.type';
-import { SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 
 export enum CurrentPage {
     INFO = 'info',

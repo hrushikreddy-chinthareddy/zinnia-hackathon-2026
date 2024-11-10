@@ -7,7 +7,7 @@ import { ActiveWithdrawalCase, ActiveWithdrawalCaseData } from './withdrawal/cas
 
 export enum TaskType {
     Withdrawal = 'WithdrawalFormInputTask',
-    OFT = 'OFTTask',
+    OFT = 'OFTFormInputTask',
     RMD = 'RMDTask',
     SSW = 'SSWTask',
     RENEWAL = 'RenewalTask',
