@@ -4,13 +4,13 @@ import ConfirmStep from '../components/steps/confirm/confirm-step';
 import { MemoizedTaskFormStep as TaskFormStep } from '../components/steps/task-form/task-form-step';
 import { TaskReviewStep } from '../components/steps/task-review/task-review-step';
 
-export const getSuitabilitySteps = ({ policyNumber, docType, clientCode, documentNumber, caseId, taskId, taskType }: GetStepsProps) => {
+export const getSuitabilitySteps = ({ policy, docType, clientCode, documentNumber, caseId, taskId, taskType }: GetStepsProps) => {
     const steps: Step[] = [
         {
             ariaLabel: 'Input Suitability Data',
             component: (
                 <TaskReviewStep
-                    policyNumber={policyNumber || ''}
+                    policyNumber={policy.policyNumber || ''}
                     docType={docType}
                     clientCode={clientCode}
                     taskInfoLink={''}
@@ -26,14 +26,14 @@ export const getSuitabilitySteps = ({ policyNumber, docType, clientCode, documen
         },
         {
             ariaLabel: 'Suitability form',
-            component: <TaskFormStep taskType={taskType} taskInfoLink={''} isSubmit={false}></TaskFormStep>,
+            component: <TaskFormStep taskType={taskType} policy={policy} taskInfoLink={''} isSubmit={false}></TaskFormStep>,
             text: 'Suitability Form',
             index: 1,
             screenReaderLabel: 'Suitability form',
         },
         {
             ariaLabel: 'Summary',
-            component: <TaskFormStep taskType={taskType} taskInfoLink={''} readonly={true} isSubmit={true}></TaskFormStep>,
+            component: <TaskFormStep taskType={taskType} policy={policy} taskInfoLink={''} readonly={true} isSubmit={true}></TaskFormStep>,
             text: 'Summary',
             index: 2,
             screenReaderLabel: 'Summary',

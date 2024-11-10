@@ -11,4 +11,6 @@ export const CaseTypeToProcessesMap: Record<CaseType, Processes> = {
     [CaseType.SSW]: Processes.SSW,
     [CaseType.AddressChange]: Processes.AddressChange,
     [CaseType.ReReg]: Processes.ReReg,
+    [CaseType.Suitability]: Processes.Suitability,
+    [CaseType.SuitabilityReview]: Processes.SuitabilityReview,
 };

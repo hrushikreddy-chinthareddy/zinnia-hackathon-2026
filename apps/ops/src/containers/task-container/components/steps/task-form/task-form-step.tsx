@@ -7,6 +7,7 @@ import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card
 import { TranslationFiles } from '@deps/config/translations';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { TaskType } from '@deps/models/case/task';
+import { Policy } from '@deps/models/policy/sor-policy';
 import { convertToCamelCase } from '@deps/utils/string.utils';
 
 import { TaskForm } from './task-form';
@@ -17,9 +18,10 @@ type TaskFormStepProps = {
     taskInfoLink?: string;
     taskType: TaskType;
     isSubmit?: boolean;
+    policy: Policy;
 };
 
-const TaskFormStep = ({ taskType, readonly = false, taskInfoLink, isSubmit }: TaskFormStepProps) => {
+const TaskFormStep = ({ policy, taskType, readonly = false, taskInfoLink, isSubmit }: TaskFormStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.taskReview` });
     const { goToNext } = useWorkflow();
     const formRef = createRef<Form>();
@@ -53,7 +55,7 @@ const TaskFormStep = ({ taskType, readonly = false, taskInfoLink, isSubmit }: Ta
         >
             <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1">
-                    <TaskForm readonly={readonly} ref={formRef} onSubmit={handleSubmit} isSubmit={isSubmit} />
+                    <TaskForm policy={policy} readonly={readonly} ref={formRef} onSubmit={handleSubmit} isSubmit={isSubmit} />
                 </div>
             </div>
         </WorkflowCard>

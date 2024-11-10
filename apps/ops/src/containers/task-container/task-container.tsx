@@ -10,7 +10,6 @@ import { TaskWorkflowContent } from './task-workflow-content';
 
 type TaskContainerProps = {
     policy: Policy;
-
     docType: string;
     documentNumber: string;
     taskInfoLink: string;
@@ -21,7 +20,7 @@ const TaskContainer = ({ policy, docType, documentNumber, taskInfoLink }: TaskCo
     const { carrier, caseId, id, taskType } = task;
 
     const steps = stepsProvider.getSteps(taskType as TaskType, {
-        policyNumber: policy.policyNumber || '',
+        policy,
         docType,
         clientCode: carrier,
         documentNumber,

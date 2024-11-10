@@ -84,6 +84,8 @@ export enum Processes {
     OneTimePremium = 'One Time Premium',
     Loan = 'Loan',
     LoanRepaymentOneTime = 'Loan Repayment One Time',
+    Suitability = 'Suitability',
+    SuitabilityReview = 'Suitability Review',
 }
 
 export enum Actions {

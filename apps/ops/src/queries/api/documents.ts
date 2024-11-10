@@ -9,6 +9,7 @@ import {
     EDSDocumentResponse,
 } from '@deps/models/case/document';
 import { ManagementTask } from '@deps/models/case/task-instance';
+import { Policy } from '@deps/models/policy/sor-policy';
 import { isMockPolicyDocsRequestEnabled } from '@deps/services/api-config';
 import { mockPolicyDocs } from '@deps/services/mocks/policy-docs';
 import { pullFromCache, writeToCache } from '@deps/utils/cache';
@@ -34,7 +35,7 @@ export const getDocument = async (documentNumber: string, docType: string, clien
     }
 };
 
-export const uploadDocument = async (task: ManagementTask, document: any): Promise<EDSDocumentResponse | null> => {
+export const uploadDocument = async (task: ManagementTask, policy: Policy, document: any): Promise<EDSDocumentResponse | null> => {
     try {
         const url = `${baseAppUrl}/api/document/v3/documents`;
         const config = {
@@ -44,7 +45,20 @@ export const uploadDocument = async (task: ManagementTask, document: any): Promi
                 'Access-Control-Allow-Origin': '*',
             },
         };
-        const fileData = { file: document, fileExtension: document.name.split('.').pop() };
+        const fileData = {
+            file: document,
+            metadata: {
+                sourceFileName: document.name,
+                documentNumber: '',
+                caseId: task.caseId,
+                planCode: '',
+                masterNumber: policy,
+                fileType: '',
+                clientCode: task.carrier,
+                caseNumber: task.caseId,
+                fileExtension: document.name.split('.').pop(),
+            },
+        };
         const { data } = await client.post<any, AxiosResponse>(url, fileData, config);
         return data;
     } catch (error: any) {
