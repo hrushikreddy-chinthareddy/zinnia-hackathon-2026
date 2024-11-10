@@ -2,7 +2,7 @@ import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import NoNavLayout from '@deps/components/no-nav-layout';
-import { buildTaskLink } from '@deps/components/tasks-listing/task-listing.helpers';
+import { buildCaseLink } from '@deps/components/tasks-listing/task-listing.helpers';
 import { TranslationFiles } from '@deps/config/translations';
 import TaskContainer from '@deps/containers/task-container/task-container';
 import { TaskProvider } from '@deps/containers/task-container/task-provider';
@@ -165,7 +165,7 @@ export const getServerSideProps = withPageAuthRequired({
                     },
                 };
             }
-            const taskInfoLink = buildTaskLink(taskId, caseId || '', process || '', documentNumber, carrier);
+            const taskInfoLink = buildCaseLink(taskId, caseId, process, documentNumber, carrier);
             const docType = docTypes[task?.process];
             return {
                 props: {
