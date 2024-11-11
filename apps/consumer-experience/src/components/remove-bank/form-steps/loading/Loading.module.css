@@ -1,0 +1,7 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: var(--measure-dimension-gap-3xl);
+  gap: var(--measure-dimension-gap-xs);
+}

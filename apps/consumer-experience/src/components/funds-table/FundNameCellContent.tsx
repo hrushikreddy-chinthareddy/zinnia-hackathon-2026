@@ -45,7 +45,7 @@ export const FundNameCellContent = ({
         <p className="typography-desktop-headline-3-d mb-xl">
           {fundDetails.fundName}
         </p>
-        <div className="mb-xl typography-content-body">
+        <div className="mb-xl">
           <FundDescription fund={fundDetails} />
         </div>
 

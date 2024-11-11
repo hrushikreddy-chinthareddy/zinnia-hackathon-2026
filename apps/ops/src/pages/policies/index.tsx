@@ -11,23 +11,23 @@ import PaginationControls from '@deps/components/pagination/pagination';
 import SearchBar, { SearchBarInitialValues } from '@deps/components/search/search-bar';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
 import { PolicyQuickView } from '@deps/containers/policy-summary-card/policy-summary-card';
 import SearchResults from '@deps/containers/search-results/search-results';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicySearchFilters, PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
+import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
-import { checkTupleSsr } from '@deps/queries/api/fga';
 import { searchPolicy } from '@deps/queries/api/policies';
 import { isResetQueryParam } from '@deps/types/constants';
 import { LabelValue } from '@deps/types/data';
-import { FgaRelation } from '@deps/types/fga';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
+import { SegmentPageName, SegmentTrackedEventName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
@@ -82,14 +82,20 @@ interface PolicySearchResultsProps {
     total: number;
 }
 
+// TODO MG: put in a provider file
 export interface DashboardContextProps {
     searchValue: SearchViewQuery;
 }
 
 export const DashboardContext = createContext<DashboardContextProps>({ searchValue: SearchBarInitialValues });
 
-const Dashboard = () => {
+interface PolicyManagementDashboardProps extends SegmentTrackedPageProps { };
+
+const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => {
     const { t } = useTranslation();
+
+    useSegmentPageTracker(user, SegmentPageName.PolicyManagementDashboard);
+
     const { policySearchFilters, setPolicySearchFilters, clearPolicySearchFilters, setShowFieldErrorMessage } =
         useContext(PolicySearchFiltersContext);
     const [policySearchResults, setPolicySearchResults] = useState<PolicySearchResultsProps>(initialResults);
@@ -167,6 +173,16 @@ const Dashboard = () => {
         // we don't want to search on initial load so we wait until a user clicks Search to allow fetching of results
         setLoadSearchResults(true);
         setIsIdle(false);
+
+        segmentAnalyticsTrackEvent(SegmentTrackedEventName.PolicySearch, {	
+            policyNumber: value?.policyNumber,
+            ssnUsed: value?.ssn,
+            firstNameUsed: value?.firstName,
+            lastNameUsed: value?.lastName,
+            // TODO MG: we shouldnt have to pass this in
+            // timestamp,
+            userId: user.partyId,
+        });
 
         // The api treats an empty string as a valid search value. Searching with an empty string in firstName and a correct
         // value in lastName will return 0 results.
@@ -269,9 +285,8 @@ export const getServerSideProps = withPageAuthRequired({
         }
         // If they can't read Policy Admin there's no point in continuing. Redirect to 403 Forbidden.
         const doesUserHasPagePermissions = await doesUserHavePagePermissions(accessToken, user, UserPermission.AllowReadPolicyAdmin);
-        const isAdvisorsExcel = await checkTupleSsr(accessToken as string, user.partyId, FgaRelation.Party, AE_FGA_ROLE);
 
-        if (!isAdvisorsExcel && !doesUserHasPagePermissions) {
+        if (!doesUserHasPagePermissions) {
             return {
                 redirect: {
                     destination: '/403',
@@ -290,10 +305,11 @@ export const getServerSideProps = withPageAuthRequired({
         return {
             props: {
                 locale,
+                user,
                 ...translations,
             },
         };
     },
 });
 
-export default Dashboard;
+export default PolicyManagementDashboard;

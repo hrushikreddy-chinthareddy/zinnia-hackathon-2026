@@ -1,6 +1,5 @@
 
 import dayjs from 'dayjs';
-import {  useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useContext, useEffect } from 'react';
 
@@ -15,7 +14,9 @@ import { Policy } from '@deps/models/policy/sor-policy';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { ServiceFormReview } from './service-form-review';
+import { getFormData } from './service-form-review.helper';
 import { useNigoEntry } from '../../nigo-entry-provider';
+import { getCaseType } from '../form-entry/form-entry-step.helper';
 
 interface ServiceFormReviewStepProps {
     documentNumber: string;
@@ -26,22 +27,24 @@ interface ServiceFormReviewStepProps {
     document: DocumentData;
 };
 
-export const ServiceFormReviewStep = ({documentNumber, policy, docType, clientCode, taskInfoLink, document} : ServiceFormReviewStepProps ) => {
+export const ServiceFormReviewStep = ({documentNumber, policy, docType, clientCode, document} : ServiceFormReviewStepProps ) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.serviceFormReview' });
     const { goToNext } = useWorkflow();
     const { policyNumber } = policy || {};
-    const { isReadyForDataEntry } = useNigoEntry();    
-    const router = useRouter();
+    const { isReadyForDataEntry } = useNigoEntry();
     const formState = useContext(FormDataContext);
-    const { formSource, setFormSource, formData, setFormData } = formState;
+
+    const { formSource, setFormSource, setFormData, formSubtype } = formState;
+    const caseType = getCaseType(docType as string);
+    const carrier = clientCode.toUpperCase();
 
     const handleStepContinue = useCallback(() => {
         if (!isReadyForDataEntry) {
             goToNext();
         } else {
-            router.push(taskInfoLink);
+            goToNext();
         }
-    }, [goToNext, isReadyForDataEntry, router, taskInfoLink]);
+    }, [goToNext, isReadyForDataEntry]);
 
     useEffect(() => {
         setFormSource({
@@ -57,16 +60,18 @@ export const ServiceFormReviewStep = ({documentNumber, policy, docType, clientCo
     }, [document]);
 
     useEffect(() => {
-        setFormData({
-            ...formData,
-            formExtName: `${clientCode.toUpperCase()}_WD_REDEMPTION_DIGITAL_FORM`, 
-            metaData: {
-                formType: `${clientCode.toUpperCase()}_WD_REDEMPTION_DIGITAL_FORM`,
-                formId: null,
-                formNumber: '',
-            },
-        });
-    }, [clientCode])
+        if (carrier && caseType) {
+            const data = getFormData(caseType, carrier, formSubtype);
+            if (data) {
+                setFormData(prevFormData => {
+                    return{
+                        ...prevFormData,
+                        ...data
+                    };
+                });
+            }
+        }
+    }, [carrier, caseType, formSubtype]);
 
     return (
         <WorkflowCard
@@ -83,7 +88,7 @@ export const ServiceFormReviewStep = ({documentNumber, policy, docType, clientCo
         >
             <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1">
-                    <ServiceFormReview 
+                    <ServiceFormReview
                         activeDocType={DocumentTypeView.Policy}
                         documentNumber={documentNumber}
                         clientCode={clientCode}

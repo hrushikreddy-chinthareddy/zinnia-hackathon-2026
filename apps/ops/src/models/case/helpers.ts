@@ -31,7 +31,7 @@ export const caseTypes:{
 };
 
 export const CaseApiVersionMapper: Record<CaseType, ApiVersion> = {
-    [CaseType.Oft]: ApiVersion.v1,
+    [CaseType.Oft]: ApiVersion.v2,
     [CaseType.Renewal]: ApiVersion.v1,
     [CaseType.Rmd]: ApiVersion.v1,
     [CaseType.Withdrawal]: ApiVersion.v2,
@@ -42,7 +42,7 @@ export const CaseApiVersionMapper: Record<CaseType, ApiVersion> = {
 };
 
 export const TaskApiVersionMapper: Record<TaskType, ApiVersion> = {
-    [TaskType.OFT]: ApiVersion.v1,
+    [TaskType.OFT]: ApiVersion.v2,
     [TaskType.RENEWAL]: ApiVersion.v1,
     [TaskType.RMD]: ApiVersion.v1,
     [TaskType.Withdrawal]: ApiVersion.v2,

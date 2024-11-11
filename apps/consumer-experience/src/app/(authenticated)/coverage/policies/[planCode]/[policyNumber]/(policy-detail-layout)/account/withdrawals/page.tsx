@@ -1,9 +1,10 @@
 import { PolicyFeature } from '@zinnia/api-types/types/sor';
-import { Icon, IconType, Label, Popover } from '@zinnia/bloom/components';
+import { Label } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { FieldData } from '@/components/field-data/FieldData';
+import { LabelPopover } from '@/components/label-popover/LabelPopover';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { StatusIconText } from '@/components/status-icon-text/StatusIconText';
 import { RouteKey, getPageTitle } from '@/route-map';
@@ -119,17 +120,9 @@ export default async function Withdrawals({
               Label={
                 <Label
                   interactiveElements={[
-                    <Popover
+                    <LabelPopover
                       key={AVAILBLE_TO_WITHDRAW}
                       title={AVAILBLE_TO_WITHDRAW}
-                      trigger={
-                        <Icon
-                          type={IconType.CIRCLE_INFO}
-                          color="var(--color-base-icon-icon-tooltip, #ff7500)"
-                          width={16}
-                          height={16}
-                        />
-                      }
                     >
                       <div>
                         <p>
@@ -137,7 +130,7 @@ export default async function Withdrawals({
                           withdrawal.
                         </p>
                       </div>
-                    </Popover>,
+                    </LabelPopover>,
                   ]}
                 >
                   {AVAILBLE_TO_WITHDRAW}
@@ -163,22 +156,15 @@ export default async function Withdrawals({
               Label={
                 <Label
                   interactiveElements={[
-                    <Popover
+                    <LabelPopover
                       key={ALL_TIME_WITHDRAWALS}
                       title={ALL_TIME_WITHDRAWALS}
-                      trigger={
-                        <Icon
-                          type={IconType.CIRCLE_INFO}
-                          color="var(--color-base-icon-icon-tooltip, #ff7500)"
-                          small
-                        />
-                      }
                     >
                       <p>
                         This is the total amount you’ve withdrawn over the life
                         of your policy.
                       </p>
-                    </Popover>,
+                    </LabelPopover>,
                   ]}
                 >
                   {ALL_TIME_WITHDRAWALS}
@@ -195,23 +181,15 @@ export default async function Withdrawals({
               Label={
                 <Label
                   interactiveElements={[
-                    <Popover
+                    <LabelPopover
                       key={COVERAGE_PRESERVATION_LIMIT}
                       title={COVERAGE_PRESERVATION_LIMIT}
-                      trigger={
-                        <Icon
-                          type={IconType.CIRCLE_INFO}
-                          color="var(--color-base-icon-icon-tooltip, #ff7500)"
-                          width={16}
-                          height={16}
-                        />
-                      }
                     >
                       <p>
                         You can withdraw this amount without reducing your
                         coverage amount.
                       </p>
-                    </Popover>,
+                    </LabelPopover>,
                   ]}
                 >
                   {COVERAGE_PRESERVATION_LIMIT}
@@ -235,17 +213,9 @@ export default async function Withdrawals({
               Label={
                 <Label
                   interactiveElements={[
-                    <Popover
+                    <LabelPopover
                       key={ANNUAL_WITHDRAWALS_REMAINING}
                       title={ANNUAL_WITHDRAWALS_REMAINING}
-                      trigger={
-                        <Icon
-                          type={IconType.CIRCLE_INFO}
-                          color="var(--color-base-icon-icon-tooltip, #ff7500)"
-                          width={16}
-                          height={16}
-                        />
-                      }
                     >
                       <div>
                         <p className="mb-lg">
@@ -258,7 +228,7 @@ export default async function Withdrawals({
                           times in a policy year.`}
                         </p>
                       </div>
-                    </Popover>,
+                    </LabelPopover>,
                   ]}
                 >
                   {ANNUAL_WITHDRAWALS_REMAINING}

@@ -8,7 +8,7 @@ import { TFunction } from 'next-i18next';
 import { DocumentPreviewerProps } from '@deps/components/document-viewer/document-previewer';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
 import { percentFormatify } from '@deps/helpers/numbers.helper';
-import { toSentenceCase } from '@deps/helpers/string.helper';
+import { toSentenceCase, toTitleCase } from '@deps/helpers/string.helper';
 import { Case, Statuses } from '@deps/models/case/case';
 import { DocumentInstance } from '@deps/models/case/document-instance';
 import { ExceptionInstance, ExceptionStatuses } from '@deps/models/case/exception-instance';
@@ -160,11 +160,11 @@ export class TransformedStep {
         if (this.isParentMultiInstance) {
             const entityType = this.stepRaw.instanceInfo?.entityType;
             if (!entityType) {
-                this.name = this.parentStage.parentCase.t('caseOverview.tabs.validate', { label: toSentenceCase(this.stepRaw.label) });
+                this.name = this.parentStage.parentCase.t('caseOverview.tabs.validate', { label: toTitleCase(this.stepRaw.label) });
                 return;
             }
             this.name = this.parentStage.parentCase.t(`caseOverview.tabs.entityTypes.${entityType.toLowerCase()}`, {
-                label: toSentenceCase(this.stepRaw?.instanceInfo?.label ?? this.stepRaw?.label),
+                label: toTitleCase(this.stepRaw?.instanceInfo?.label ?? this.stepRaw?.label),
             });
             return;
         }

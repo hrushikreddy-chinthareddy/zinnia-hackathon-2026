@@ -1,0 +1,528 @@
+{
+    "message": "Successfully retrieved data!",
+    "data": [
+        {
+            "id": "CA0000367809",
+            "templateId": "41849ed4-ef31-44b8-8983-19a808660c60",
+            "carrier": "ELIC",
+            "process": "New Business",
+            "parentInstanceId": null,
+            "correlationId": null,
+            "caseStatus": "IN_PROGRESS",
+            "processSubType": "LIFE APPLICATION",
+            "policyNumber": null,
+            "productName": null,
+            "primary": true,
+            "stages": [
+                {
+                    "id": "requestAck",
+                    "label": "Prepare for processing",
+                    "stageStatus": "IN_PROGRESS"
+                },
+                {
+                    "id": "dataCollection",
+                    "label": "Data Collection",
+                    "stageStatus": "NOT_STARTED"
+                },
+                {
+                    "id": "policyValidation",
+                    "label": "Validate application",
+                    "stageStatus": "NOT_STARTED"
+                },
+                {
+                    "id": "agentValidation",
+                    "label": "Validate agent",
+                    "stageStatus": "NOT_STARTED"
+                },
+                {
+                    "id": "underwritingEvaluation",
+                    "label": "Process underwriting",
+                    "stageStatus": "NOT_STARTED"
+                },
+                {
+                    "id": "requestCompletion",
+                    "label": "Finish processing",
+                    "stageStatus": "NOT_STARTED"
+                }
+            ],
+            "additionalData": {
+                "productName": "ELIULV01"
+            },
+            "identifiers": [
+                {
+                    "identifier": "eAppId",
+                    "value": "609fec55-cc74-4fb0-89f7-d816c1126315"
+                }
+            ],
+            "createdAt": "2024-09-14T07:45:34.000Z",
+            "updatedAt": "2024-09-14T07:45:34.000Z",
+            "parties": [],
+            "exceptions": []
+        },
+        {
+            "id": "CA0000367810",
+            "templateId": "41849ed4-ef31-44b8-8983-19a808660c60",
+            "carrier": "ELIC",
+            "process": "New Business",
+            "parentInstanceId": null,
+            "correlationId": null,
+            "caseStatus": "IN_PROGRESS",
+            "processSubType": "LIFE APPLICATION",
+            "policyNumber": null,
+            "productName": null,
+            "primary": true,
+            "stages": [
+                {
+                    "id": "requestAck",
+                    "label": "Prepare for processing",
+                    "stageStatus": "COMPLETED"
+                },
+                {
+                    "id": "dataCollection",
+                    "label": "Data Collection",
+                    "stageStatus": "NOT_STARTED"
+                },
+                {
+                    "id": "policyValidation",
+                    "label": "Validate application",
+                    "stageStatus": "IN_PROGRESS"
+                },
+                {
+                    "id": "agentValidation",
+                    "label": "Validate agent",
+                    "stageStatus": "COMPLETED"
+                },
+                {
+                    "id": "underwritingEvaluation",
+                    "label": "Process underwriting",
+                    "stageStatus": "NOT_STARTED"
+                },
+                {
+                    "id": "requestCompletion",
+                    "label": "Finish processing",
+                    "stageStatus": "NOT_STARTED"
+                }
+            ],
+            "additionalData": {
+                "productName": "ELIULV01"
+            },
+            "identifiers": [
+                {
+                    "identifier": "eAppId",
+                    "value": "609fec55-cc74-4fb0-89f7-d816c1126316"
+                },
+                {
+                    "identifier": "zlCaseId",
+                    "value": "CA0000367810"
+                }
+            ],
+            "createdAt": "2024-09-14T08:00:03.000Z",
+            "updatedAt": "2024-09-14T08:10:52.000Z",
+            "parties": [
+                {
+                    "partyRole": null,
+                    "partyType": null,
+                    "firstName": "MALCOLM",
+                    "middleName": "R",
+                    "lastName": "ATI",
+                    "fullName": null,
+                    "prefix": "Dr",
+                    "suffix": "Sr",
+                    "gender": "Male",
+                    "ssn": "666298380",
+                    "percent": null
+                },
+                {
+                    "partyRole": null,
+                    "partyType": null,
+                    "firstName": "ANTHONY",
+                    "middleName": null,
+                    "lastName": "PETER",
+                    "fullName": null,
+                    "prefix": null,
+                    "suffix": null,
+                    "gender": null,
+                    "ssn": null,
+                    "percent": null
+                },
+                {
+                    "partyRole": null,
+                    "partyType": null,
+                    "firstName": "MALCOLM",
+                    "middleName": "R",
+                    "lastName": "ATI",
+                    "fullName": null,
+                    "prefix": "Dr",
+                    "suffix": "Sr",
+                    "gender": "Male",
+                    "ssn": "666298380",
+                    "percent": null
+                }
+            ],
+            "exceptions": []
+        },
+        {
+            "id": "CA0000367811",
+            "templateId": "41849ed4-ef31-44b8-8983-19a808660c60",
+            "carrier": "ELIC",
+            "process": "New Business",
+            "parentInstanceId": null,
+            "correlationId": null,
+            "caseStatus": "IN_PROGRESS",
+            "processSubType": "LIFE APPLICATION",
+            "policyNumber": null,
+            "productName": null,
+            "primary": true,
+            "stages": [
+                {
+                    "id": "requestAck",
+                    "label": "Prepare for processing",
+                    "stageStatus": "COMPLETED"
+                },
+                {
+                    "id": "dataCollection",
+                    "label": "Data Collection",
+                    "stageStatus": "NOT_STARTED"
+                },
+                {
+                    "id": "policyValidation",
+                    "label": "Validate application",
+                    "stageStatus": "IN_PROGRESS"
+                },
+                {
+                    "id": "agentValidation",
+                    "label": "Validate agent",
+                    "stageStatus": "COMPLETED"
+                },
+                {
+                    "id": "underwritingEvaluation",
+                    "label": "Process underwriting",
+                    "stageStatus": "NOT_STARTED"
+                },
+                {
+                    "id": "requestCompletion",
+                    "label": "Finish processing",
+                    "stageStatus": "NOT_STARTED"
+                }
+            ],
+            "additionalData": {
+                "productName": "ELIULV01"
+            },
+            "identifiers": [
+                {
+                    "identifier": "eAppId",
+                    "value": "609fec55-cc74-4fb0-89f7-d816c1126317"
+                },
+                {
+                    "identifier": "zlCaseId",
+                    "value": "CA0000367811"
+                }
+            ],
+            "createdAt": "2024-09-14T08:05:02.000Z",
+            "updatedAt": "2024-09-14T15:46:06.000Z",
+            "parties": [
+                {
+                    "partyRole": null,
+                    "partyType": null,
+                    "firstName": "MALCOLM",
+                    "middleName": "R",
+                    "lastName": "ATI",
+                    "fullName": null,
+                    "prefix": "Dr",
+                    "suffix": "Sr",
+                    "gender": "Male",
+                    "ssn": "666298380",
+                    "percent": null
+                },
+                {
+                    "partyRole": null,
+                    "partyType": null,
+                    "firstName": "ANTHONY",
+                    "middleName": null,
+                    "lastName": "PETER",
+                    "fullName": null,
+                    "prefix": null,
+                    "suffix": null,
+                    "gender": null,
+                    "ssn": null,
+                    "percent": null
+                },
+                {
+                    "partyRole": null,
+                    "partyType": null,
+                    "firstName": "MALCOLM",
+                    "middleName": "R",
+                    "lastName": "ATI",
+                    "fullName": null,
+                    "prefix": "Dr",
+                    "suffix": "Sr",
+                    "gender": "Male",
+                    "ssn": "666298380",
+                    "percent": null
+                }
+            ],
+            "exceptions": []
+        },
+        {
+            "id": "CA0000367818",
+            "templateId": "41849ed4-ef31-44b8-8983-19a808660c60",
+            "carrier": "ELIC",
+            "process": "New Business",
+            "parentInstanceId": null,
+            "correlationId": null,
+            "caseStatus": "IN_PROGRESS",
+            "processSubType": "LIFE APPLICATION",
+            "policyNumber": null,
+            "productName": null,
+            "primary": true,
+            "stages": [
+                {
+                    "id": "requestAck",
+                    "label": "Prepare for processing",
+                    "stageStatus": "COMPLETED"
+                },
+                {
+                    "id": "dataCollection",
+                    "label": "Data Collection",
+                    "stageStatus": "COMPLETED"
+                },
+                {
+                    "id": "policyValidation",
+                    "label": "Validate application",
+                    "stageStatus": "IN_PROGRESS"
+                },
+                {
+                    "id": "agentValidation",
+                    "label": "Validate agent",
+                    "stageStatus": "COMPLETED"
+                },
+                {
+                    "id": "underwritingEvaluation",
+                    "label": "Process underwriting",
+                    "stageStatus": "NOT_STARTED"
+                },
+                {
+                    "id": "requestCompletion",
+                    "label": "Finish processing",
+                    "stageStatus": "NOT_STARTED"
+                }
+            ],
+            "additionalData": {},
+            "identifiers": [
+                {
+                    "identifier": "eAppId",
+                    "value": "64625b61-18e8-44c9-8afa-77eaea"
+                },
+                {
+                    "identifier": "zlCaseId",
+                    "value": "CA0000367818"
+                }
+            ],
+            "createdAt": "2024-09-14T12:42:43.000Z",
+            "updatedAt": "2024-09-14T16:57:55.000Z",
+            "parties": [
+                {
+                    "partyRole": null,
+                    "partyType": null,
+                    "firstName": "Medical",
+                    "middleName": null,
+                    "lastName": "Medical",
+                    "fullName": null,
+                    "prefix": null,
+                    "suffix": null,
+                    "gender": "Male",
+                    "ssn": "666911014",
+                    "percent": null
+                },
+                {
+                    "partyRole": null,
+                    "partyType": null,
+                    "firstName": "GREG",
+                    "middleName": null,
+                    "lastName": "BAGGENSTOS",
+                    "fullName": null,
+                    "prefix": null,
+                    "suffix": null,
+                    "gender": null,
+                    "ssn": null,
+                    "percent": null
+                },
+                {
+                    "partyRole": null,
+                    "partyType": null,
+                    "firstName": "Medical",
+                    "middleName": null,
+                    "lastName": "Medical",
+                    "fullName": null,
+                    "prefix": null,
+                    "suffix": null,
+                    "gender": "Male",
+                    "ssn": "666911014",
+                    "percent": null
+                }
+            ],
+            "exceptions": []
+        },
+        {
+            "id": "CA0000367827",
+            "templateId": "41849ed4-ef31-44b8-8983-19a808660c60",
+            "carrier": "ELIC",
+            "process": "New Business",
+            "parentInstanceId": null,
+            "correlationId": null,
+            "caseStatus": "IN_PROGRESS",
+            "processSubType": "LIFE APPLICATION",
+            "policyNumber": null,
+            "productName": null,
+            "primary": true,
+            "stages": [
+                {
+                    "id": "requestAck",
+                    "label": "Prepare for processing",
+                    "stageStatus": "IN_PROGRESS"
+                },
+                {
+                    "id": "dataCollection",
+                    "label": "Data Collection",
+                    "stageStatus": "NOT_STARTED"
+                },
+                {
+                    "id": "policyValidation",
+                    "label": "Validate application",
+                    "stageStatus": "NOT_STARTED"
+                },
+                {
+                    "id": "agentValidation",
+                    "label": "Validate agent",
+                    "stageStatus": "NOT_STARTED"
+                },
+                {
+                    "id": "underwritingEvaluation",
+                    "label": "Process underwriting",
+                    "stageStatus": "NOT_STARTED"
+                },
+                {
+                    "id": "requestCompletion",
+                    "label": "Finish processing",
+                    "stageStatus": "NOT_STARTED"
+                }
+            ],
+            "additionalData": {},
+            "identifiers": [
+                {
+                    "identifier": "eAppId",
+                    "value": "4cfba0fb-c4fd-4e87-a4e5-e85db3ef9a84"
+                }
+            ],
+            "createdAt": "2024-09-14T17:34:38.000Z",
+            "updatedAt": "2024-09-14T17:34:38.000Z",
+            "parties": [],
+            "exceptions": []
+        },
+        {
+            "id": "CA0000367829",
+            "templateId": "41849ed4-ef31-44b8-8983-19a808660c60",
+            "carrier": "ELIC",
+            "process": "New Business",
+            "parentInstanceId": null,
+            "correlationId": null,
+            "caseStatus": "IN_PROGRESS",
+            "processSubType": "LIFE APPLICATION",
+            "policyNumber": null,
+            "productName": null,
+            "primary": true,
+            "stages": [
+                {
+                    "id": "requestAck",
+                    "label": "Prepare for processing",
+                    "stageStatus": "COMPLETED"
+                },
+                {
+                    "id": "dataCollection",
+                    "label": "Data Collection",
+                    "stageStatus": "COMPLETED"
+                },
+                {
+                    "id": "policyValidation",
+                    "label": "Validate application",
+                    "stageStatus": "IN_PROGRESS"
+                },
+                {
+                    "id": "agentValidation",
+                    "label": "Validate agent",
+                    "stageStatus": "COMPLETED"
+                },
+                {
+                    "id": "underwritingEvaluation",
+                    "label": "Process underwriting",
+                    "stageStatus": "NOT_STARTED"
+                },
+                {
+                    "id": "requestCompletion",
+                    "label": "Finish processing",
+                    "stageStatus": "NOT_STARTED"
+                }
+            ],
+            "additionalData": {},
+            "identifiers": [
+                {
+                    "identifier": "eAppId",
+                    "value": "78f117ba-e11a-493a-885f-68574a"
+                },
+                {
+                    "identifier": "zlCaseId",
+                    "value": "CA0000367829"
+                }
+            ],
+            "createdAt": "2024-09-14T18:32:11.000Z",
+            "updatedAt": "2024-09-14T19:30:09.000Z",
+            "parties": [
+                {
+                    "partyRole": null,
+                    "partyType": null,
+                    "firstName": "New Case",
+                    "middleName": null,
+                    "lastName": "First",
+                    "fullName": null,
+                    "prefix": null,
+                    "suffix": null,
+                    "gender": "Male",
+                    "ssn": "666911016",
+                    "percent": null
+                },
+                {
+                    "partyRole": null,
+                    "partyType": null,
+                    "firstName": "GREG",
+                    "middleName": null,
+                    "lastName": "BAGGENSTOS",
+                    "fullName": null,
+                    "prefix": null,
+                    "suffix": null,
+                    "gender": null,
+                    "ssn": null,
+                    "percent": null
+                },
+                {
+                    "partyRole": null,
+                    "partyType": null,
+                    "firstName": "New Case",
+                    "middleName": null,
+                    "lastName": "First",
+                    "fullName": null,
+                    "prefix": null,
+                    "suffix": null,
+                    "gender": "Male",
+                    "ssn": "666911016",
+                    "percent": null
+                }
+            ],
+            "exceptions": []
+        }
+    ],
+    "count": 6,
+    "offset": 0,
+    "limit": 1000,
+    "total": 6,
+    "status": 200
+}

@@ -90,7 +90,7 @@ const ItemDescriptionSidesheet = ({
         />
       }
     >
-      <p className="typography-content-body">{innerContent}</p>
+      <p>{innerContent}</p>
     </ControlledSidesheet>
   );
 };

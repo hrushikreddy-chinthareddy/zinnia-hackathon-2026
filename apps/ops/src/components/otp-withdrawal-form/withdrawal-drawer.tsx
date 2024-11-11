@@ -25,14 +25,27 @@ export interface SidebarContent {
     transactions?: Transaction[];
     contractId: string;
     qualType?: string;
+    contractStatusCode?: string;
     issueDate?: string;
     documentNumber: string;
     caseId: string;
     ownerName?: string;
     annuitantName?: string;
+    contractValue?: string;
 }
 
-const OpenStatusRow = ({ transactions, contractId, documentNumber, caseId, qualType, issueDate, ownerName, annuitantName }: SidebarContent) => {
+const OpenStatusRow = ({
+    transactions,
+    contractId,
+    documentNumber,
+    caseId,
+    qualType,
+    issueDate,
+    ownerName,
+    annuitantName,
+    contractStatusCode,
+    contractValue,
+}: SidebarContent) => {
     const { t } = useTranslation();
     const BASE_TRANSLATION_KEY = 'caseWithdrawal.sidebar.';
     const classes = clsx('text-white');
@@ -43,15 +56,50 @@ const OpenStatusRow = ({ transactions, contractId, documentNumber, caseId, qualT
                     <Typography variant={TypographyVariant.LabelMd}>{t(`${BASE_TRANSLATION_KEY}contractId`)}</Typography>
                     <div className="flex items-center gap-1">
                         <Content details={contractId || 'N/A'} variant={ContentVariant.Value} />
-                        {contractId && <ClickWrapper
-                            ariaLabel={t(`${BASE_TRANSLATION_KEY}copyToClipboard`, { item: t(`${BASE_TRANSLATION_KEY}contractId`) })}
-                            classes="mb-1"
-                            onClick={() => navigator.clipboard.writeText(contractId)}
-                        >
-                            <CopyIcon height={22} width={22} />
-                        </ClickWrapper>}
+                        {contractId && (
+                            <ClickWrapper
+                                ariaLabel={t(`${BASE_TRANSLATION_KEY}copyToClipboard`, { item: t(`${BASE_TRANSLATION_KEY}contractId`) })}
+                                classes="mb-1"
+                                onClick={() => navigator.clipboard.writeText(contractId)}
+                            >
+                                <CopyIcon height={22} width={22} />
+                            </ClickWrapper>
+                        )}
                     </div>
                 </div>
+
+                {contractValue && (
+                    <div className="my-4">
+                        <Typography variant={TypographyVariant.LabelMd}>{t(`${BASE_TRANSLATION_KEY}contractValue`)}</Typography>
+                        <div className="flex items-center gap-1">
+                            <Content details={contractValue} variant={ContentVariant.Value} />
+                            <ClickWrapper
+                                ariaLabel={t(`${BASE_TRANSLATION_KEY}copyToClipboard`, { item: t(`${BASE_TRANSLATION_KEY}contractValue`) })}
+                                classes="mb-1"
+                                onClick={() => navigator.clipboard.writeText(contractValue)}
+                            >
+                                <CopyIcon height={22} width={22} />
+                            </ClickWrapper>
+                        </div>
+                    </div>
+                )}
+                {contractStatusCode && (
+                    <div className="my-4">
+                        <Typography variant={TypographyVariant.LabelMd}>{t(`${BASE_TRANSLATION_KEY}contractStatusCode`)}</Typography>
+                        <div className="flex items-center gap-1">
+                            <Content details={contractStatusCode} variant={ContentVariant.Value} />
+                            <ClickWrapper
+                                ariaLabel={t(`${BASE_TRANSLATION_KEY}copyToClipboard`, {
+                                    item: t(`${BASE_TRANSLATION_KEY}contractStatusCode`),
+                                })}
+                                classes="mb-1"
+                                onClick={() => navigator.clipboard.writeText(contractStatusCode)}
+                            >
+                                <CopyIcon height={22} width={22} />
+                            </ClickWrapper>
+                        </div>
+                    </div>
+                )}
 
                 {qualType && (
                     <div className="my-4">
@@ -149,14 +197,23 @@ const OpenStatusRow = ({ transactions, contractId, documentNumber, caseId, qualT
                     </div>
                 )}
 
-
                 {transactions && transactions.length > 0 && <TransactionHistoryComponent transactions={transactions} />}
             </div>
         </div>
     );
 };
 
-const ClosedStatusRow: React.FC<SidebarContent> = ({ contractId, documentNumber, caseId, qualType, issueDate, ownerName, annuitantName }) => {
+const ClosedStatusRow: React.FC<SidebarContent> = ({
+    contractId,
+    documentNumber,
+    caseId,
+    qualType,
+    issueDate,
+    ownerName,
+    annuitantName,
+    contractStatusCode,
+    contractValue,
+}) => {
     const { t } = useTranslation();
     const BASE_TRANSLATION_KEY = 'caseWithdrawal.sidebar.';
     const classes = clsx('flex w-full flex-col items-center gap-4  p-1 text-white');
@@ -172,13 +229,34 @@ const ClosedStatusRow: React.FC<SidebarContent> = ({ contractId, documentNumber,
                     <CopyIcon height={30} width={30} />
                 </ClickWrapper>
             </div>
-
+            {contractStatusCode && (
+                <div className="flex w-full flex-col items-center">
+                    <Typography variant={TypographyVariant.LabelMd}>{t(`${BASE_TRANSLATION_KEY}abbreviatedcontractStatusCode`)}</Typography>
+                    <ClickWrapper
+                        ariaLabel={t(`${BASE_TRANSLATION_KEY}copyToClipboard`, { item: t(`${BASE_TRANSLATION_KEY}contractStatusCode`) })}
+                        onClick={() => navigator.clipboard.writeText(contractStatusCode)}
+                    >
+                        <CopyIcon height={30} width={30} />
+                    </ClickWrapper>
+                </div>
+            )}
             {qualType && (
                 <div className="flex w-full flex-col items-center">
                     <Typography variant={TypographyVariant.LabelMd}>{t(`${BASE_TRANSLATION_KEY}abbreviatedQualType`)}</Typography>
                     <ClickWrapper
                         ariaLabel={t(`${BASE_TRANSLATION_KEY}copyToClipboard`, { item: t(`${BASE_TRANSLATION_KEY}qualType`) })}
                         onClick={() => navigator.clipboard.writeText(qualType)}
+                    >
+                        <CopyIcon height={30} width={30} />
+                    </ClickWrapper>
+                </div>
+            )}
+            {contractValue && (
+                <div className="flex w-full flex-col items-center">
+                    <Typography variant={TypographyVariant.LabelMd}>{t(`${BASE_TRANSLATION_KEY}abbreviatedContractValue`)}</Typography>
+                    <ClickWrapper
+                        ariaLabel={t(`${BASE_TRANSLATION_KEY}copyToClipboard`, { item: t(`${BASE_TRANSLATION_KEY}contractValue`) })}
+                        onClick={() => navigator.clipboard.writeText(contractValue)}
                     >
                         <CopyIcon height={30} width={30} />
                     </ClickWrapper>
@@ -296,6 +374,8 @@ const WithdrawalDrawer: React.FC<WithdrawalDrawerProps> = ({ content, isNavDrawe
                         issueDate={content?.issueDate}
                         ownerName={content?.ownerName}
                         annuitantName={content?.annuitantName}
+                        contractValue={content?.contractValue}
+                        contractStatusCode={content?.contractStatusCode}
                     />
                 ) : (
                     <ClosedStatusRow
@@ -306,6 +386,8 @@ const WithdrawalDrawer: React.FC<WithdrawalDrawerProps> = ({ content, isNavDrawe
                         issueDate={content?.issueDate}
                         ownerName={content?.ownerName}
                         annuitantName={content?.annuitantName}
+                        contractValue={content?.contractValue}
+                        contractStatusCode={content?.contractStatusCode}
                     />
                 )}
             </div>

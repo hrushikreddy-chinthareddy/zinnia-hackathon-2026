@@ -7,7 +7,7 @@
 .modal {
   background-color: white;
   border-radius: var(--measure-dimension-radius-sm);
-  box-shadow: var(--shadow-elevation-elevation-light-64);
+  box-shadow: var(--shadow-elevation-elevation-light-2xl);
   left: 50%;
   padding: var(--measure-dimension-padding-3xl);
   position: fixed;
