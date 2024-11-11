@@ -385,7 +385,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                             })
                         }
                     />
-                    <div className="w-full xs:overflow-x-auto xs:overflow-y-hidden xs:p-1 lg:p-0">{tableContent}</div>
+                    {tableContent}
                     <div className="flex flex-col items-center lg:grid lg:grid-cols-3 mt-3">
                         <Typography variant={TypographyVariant.BodySm} className="mb-6 lg:mb-0">
                             {t('policy.documents.xToYOfZ', {
