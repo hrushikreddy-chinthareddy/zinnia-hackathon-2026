@@ -94,7 +94,6 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
     const [clientIds, setClientIds] = useState([] as string[]);
     const [documentNumber, setDocumentNumber] = useState<string>('');
     const [policyNumber, setPolicyNumber] = useState<string>('');
-    const [caseId, setCaseId] = useState('');
     const [document, setDocument] = useState<DocumentData | null>(null);
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState<string | undefined>(undefined);
@@ -323,10 +322,10 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
                         policyNumber={policyNumber}
                         caseType={caseType}
                         clientId={clientId}
-                        caseId={caseId}
                         document={document}
                         setShowLoader={setShowLoader}
                         setErrorMessage={setErrorMessage}
+                        setPolicyNumber={setPolicyNumber}
                     ></CaseListContainer>
                 ) : null}
             </TabContent>

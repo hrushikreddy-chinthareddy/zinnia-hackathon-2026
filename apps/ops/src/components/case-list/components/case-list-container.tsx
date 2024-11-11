@@ -22,12 +22,12 @@ export interface CaseListContainerProps {
     caseType: CaseType;
     clientId: string;
     policyNumber: string;
-    caseId: string;
     document: DocumentData | null;
     setShowLoader: Dispatch<SetStateAction<any>>;
     setErrorMessage: Dispatch<SetStateAction<any>>;
+    setPolicyNumber: Dispatch<SetStateAction<any>>;
 }
-export const CaseListContainer = ({ t, caseType, policyNumber, clientId, caseId, document, setShowLoader, setErrorMessage }: CaseListContainerProps) => {
+export const CaseListContainer = ({ t, caseType, policyNumber, clientId, document, setShowLoader, setErrorMessage, setPolicyNumber }: CaseListContainerProps) => {
     const { cases, total, loading, error, fetchCases, filters, setFilters } = useFetchCases();
     const [selectedCaseData, setSelectedCaseData] = useState<Case | null>(null);
     const [showCreateCase, setShowCreateCase] = useState<boolean>(false);
@@ -42,16 +42,8 @@ export const CaseListContainer = ({ t, caseType, policyNumber, clientId, caseId,
                     process: [CaseTypeToProcessesMap[caseType]],
                 });
             }
-            if (!policyNumber && caseId) {
-                setFilters({
-                    ...initialCaseSearchCriteria,
-                    caseIds: [caseId],
-                    carrier: [clientId.toUpperCase()],
-                    process: [CaseTypeToProcessesMap[caseType]],
-                });
-            }
         }
-    }, [policyNumber, clientId, caseType, setFilters, caseId]);
+    }, [policyNumber, clientId, caseType, setFilters]);
 
     useEffect(() => {
         if (!isEmptyObject(filters)) {
@@ -78,6 +70,7 @@ export const CaseListContainer = ({ t, caseType, policyNumber, clientId, caseId,
 
     const onCreateCase = async () => {
         if(!document) return;
+        setPolicyNumber('');
         setShowLoader(true)
         const caseResult = await createCaseFromDocumentNumber(
             document.documentNumber,
@@ -96,23 +89,9 @@ export const CaseListContainer = ({ t, caseType, policyNumber, clientId, caseId,
             setErrorMessage(t('caseRenewal.caseCreate.createError', { documentNumber: document.documentNumber }) as string);
             setShowLoader(false);
         }
+        setPolicyNumber(document.contract);
         setShowLoader(false);
     };
-
-
-    const handleCreateCase = () => {
-        onCreateCase();
-        if (clientId && caseType) {
-            if (policyNumber) {
-                setFilters({
-                    ...initialCaseSearchCriteria,
-                    policyNumber: policyNumber,
-                    carrier: [clientId.toUpperCase()],
-                    process: [CaseTypeToProcessesMap[caseType]],
-                });
-            }
-        }
-    }
 
     if (error) return <SearchResultsErrorCard />;
     if (total === 0) return <CaseListEmptyState />;
@@ -126,7 +105,7 @@ export const CaseListContainer = ({ t, caseType, policyNumber, clientId, caseId,
                         <div className="my-3 flex justify-end">
                             <div className="self-center xl:mt-5 xl:self-baseline">
                                 <Button
-                                    onClick={handleCreateCase}
+                                    onClick={onCreateCase}
                                     data-testid="create-case-button"
                                     aria-label={t('caseRenewal.caseCreate.createCase') as string}
                                     size={ButtonSize.Small}
