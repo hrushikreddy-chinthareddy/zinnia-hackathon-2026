@@ -7,14 +7,13 @@ import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
-import { getChannel } from '@deps/containers/address-change-container/utils/address-change-helper';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DocumentData } from '@deps/models/case/document';
-import { ApiVersion } from '@deps/models/case/enums';
+import { ApiVersion, ChannelType } from '@deps/models/case/enums';
 import { TaskApiVersionMapper } from '@deps/models/case/helpers';
-import { Channel } from '@deps/models/case/renewal/case-renewal';
 import { TaskStatus } from '@deps/models/case/task-instance';
+import { FormSignature } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { putCaseTask } from '@deps/queries/api/v1/task';
 import { updateTask } from '@deps/queries/api/v2/task';
@@ -36,64 +35,44 @@ type SswUpdateContainerProps = {
 const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContainerProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const router = useRouter();
-    const { doc } = router.query;
-    const channel = doc ? getChannel(doc as string) : null;
     const [updateProgram, setUpdateProgram] = useState<Program>(programs[0]);
-    const { formSource, initialForm, formSignature } = useContext(FormDataContext);
+    const { initialForm } = useContext(FormDataContext);
     const [isLoading, setIsLoading] = useState(false);
     const [isFormSubmitted, setIsFormSubmitted] = useState(false);
     const [formError, setFormError] = useState(false);
     const [timer] = useState(performance.now());
 
-    const requestProgramUpdate = async (existingProg: Program, operationType: SswUpdateType) => {
+    const requestProgramUpdate = async (existingProg: Program, operationType: SswUpdateType, formSign: FormSignature) => {
         let successfulCaseUpdate;
         if (TaskApiVersionMapper[initialForm.taskType] === ApiVersion.v2) {
             successfulCaseUpdate = await updateTask(
                 initialForm.caseId,
                 initialForm?.taskId,
-                buildSSWFormData(
-                    TaskStatus.Completed,
-                    initialForm,
-                    formSource,
-                    formSignature,
-                    existingProg,
-                    updateProgram,
-                    document,
-                    operationType
-                ) as any,
+                buildSSWFormData(TaskStatus.Completed, initialForm, formSign, existingProg, updateProgram, document, operationType) as any,
                 timer
             );
         } else {
             successfulCaseUpdate = await putCaseTask(
                 initialForm.taskType,
                 initialForm.taskId,
-                buildSSWFormData(
-                    TaskStatus.Completed,
-                    initialForm,
-                    formSource,
-                    formSignature,
-                    existingProg,
-                    updateProgram,
-                    document,
-                    operationType
-                ) as any
+                buildSSWFormData(TaskStatus.Completed, initialForm, formSign, existingProg, updateProgram, document, operationType) as any
             );
         }
         return successfulCaseUpdate;
     };
 
-    const handleFormAction = async (item: Program, operationType: SswUpdateType) => {
+    const handleFormAction = async (item: Program, operationType: SswUpdateType, formSign: FormSignature) => {
         setIsLoading(true);
         let confirmCancel;
         let res;
         if (operationType === SswUpdateType.PROGRAM_TERMINATE) {
             confirmCancel = window.confirm('Do you want to terminate program' as string);
             if (confirmCancel) {
-                res = requestProgramUpdate(item, operationType);
+                res = requestProgramUpdate(item, operationType, formSign);
             }
         }
         if (operationType === SswUpdateType.PROGRAM_UPDATE) {
-            res = requestProgramUpdate(item, operationType);
+            res = requestProgramUpdate(item, operationType, formSign);
         }
         if (res) {
             setIsLoading(false);
@@ -126,7 +105,7 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
                 ariaLabel: t('sswUpdate.tabs.signature.tabTitle'),
                 component: <Signature />,
                 screenReaderLabel: t('sswUpdate.tabs.signature.tabTitle'),
-                isVisible: () => !!doc && channel !== Channel.Phone,
+                isVisible: () => document?.source === ChannelType.Email,
                 text: t('sswUpdate.tabs.signature.tabTitle'),
             },
             {
@@ -180,6 +159,7 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
         <TabGroupContainer
             steps={filteredSteps}
             policy={policy}
+            document={document}
             programType={programType}
             programs={programs}
             onSswUpdate={handleFormAction}

@@ -5,7 +5,7 @@ import { DocumentData } from '@deps/models/case/document';
 import { ChannelType } from '@deps/models/case/enums';
 import { TaskSource } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
-import { ActiveWithdrawalCase, CaseStatus, FormSignature, FormSource } from '@deps/models/case/withdrawal/case';
+import { ActiveWithdrawalCase, CaseStatus, FormSignature } from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 export enum SswUpdateType {
@@ -15,8 +15,7 @@ export enum SswUpdateType {
 
 const getSswEditPayload = (
     initialForm: ActiveWithdrawalCase,
-    formSource: FormSource,
-    formSignature: FormSignature,
+    formSign: FormSignature,
     existingProg: Program,
     updateProgram: Program | any,
     document: DocumentData,
@@ -53,23 +52,14 @@ const getSswEditPayload = (
     };
 
     const source = {
-        ...formSource,
         channel: {
-            text: formSource.channel.text ?? ChannelType.Phone,
+            text: document.source,
         },
         businessKey: document.documentNumber,
         receivedDate: dayjs(document.dateReceived, 'M/D/YYYY hh:mm:ss A').format(ZAHARA_API_DATE_FORMAT),
         receivedDateTime: dayjs(document.dateReceived, 'M/D/YYYY hh:mm:ss A').format('YYYY-MM-DDTHH:mm:ss:Z'),
         sourceSysId: 'ONBASE',
     };
-
-    let signatureV;
-
-    if (formSource.channel?.text === ChannelType.Email) {
-        signatureV = formSignature;
-    } else {
-        signatureV = null;
-    }
 
     return {
         ...initialForm.data,
@@ -87,7 +77,7 @@ const getSswEditPayload = (
             formParty: null,
             formProgram: null,
             formRestriction: null,
-            formSignature: signatureV,
+            formSignature: document.source === ChannelType.Email ? structuredClone(formSign) : null,
             formTaxWithholding: null,
             formTpaAuthorization: null,
             formSurrenderingCompany: null,
@@ -102,7 +92,6 @@ const getSswEditPayload = (
 export const buildSSWFormData = (
     status: TaskStatus | CaseStatus,
     initialForm: ActiveWithdrawalCase,
-    formSource: FormSource,
     formSignature: FormSignature,
     existingProg: Program,
     updateProgram: Program,
@@ -113,6 +102,6 @@ export const buildSSWFormData = (
         source: TaskSource.ZinniaTaskManagement,
         taskType: initialForm.taskType,
         status,
-        data: getSswEditPayload(initialForm, formSource, formSignature, existingProg, updateProgram, document, operationType),
+        data: getSswEditPayload(initialForm, formSignature, existingProg, updateProgram, document, operationType),
     };
 };

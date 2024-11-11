@@ -11,6 +11,8 @@ import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-ite
 import { WorkflowProvider, useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import { DocumentData } from '@deps/models/case/document';
+import { FormSignature } from '@deps/models/case/withdrawal/case';
 import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as ChevronLeftIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-left.svg';
@@ -21,13 +23,23 @@ import { SswUpdateType } from '../ssw-edit-helper';
 type TabGroupContainerProps = {
     steps: Step[];
     policy: Policy;
+    document: DocumentData;
     programType: string;
     programs: Program[];
-    onSswUpdate: (item: Program, type: SswUpdateType) => {};
+    onSswUpdate: (item: Program, type: SswUpdateType, sign: FormSignature) => {};
     isFormSubmitted: boolean;
     setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
-const TabGroupContent = ({ steps, policy, programType, programs, onSswUpdate, isFormSubmitted, setIsLoading }: TabGroupContainerProps) => {
+const TabGroupContent = ({
+    steps,
+    policy,
+    document,
+    programType,
+    programs,
+    onSswUpdate,
+    isFormSubmitted,
+    setIsLoading,
+}: TabGroupContainerProps) => {
     const { t } = useTranslation();
     const [isSswUpdateView, setSswUpdateView] = useState(false);
     const { currentStepIndex, setCurrentStepIndex } = useWorkflow();
@@ -35,7 +47,7 @@ const TabGroupContent = ({ steps, policy, programType, programs, onSswUpdate, is
     const { marketingName, planCode, policyNumber, productType, status, tooltip, variant } = globalValuesData;
     const handleClick = (step: Step) => {
         if (step.isDisabled || currentStepIndex === step.index) return;
-        if (step.text === 'Confirm') setCurrentStepIndex(step.index);
+        if (step.text !== 'Confirm') setCurrentStepIndex(step.index);
     };
     const policyOwnerId = policy?.partyRoles?.find(pr => pr.partyRole === PartyRole.OWNER)?.partyId;
     const policyOwner = policy?.parties?.find(party => party.partyId === policyOwnerId);
@@ -82,6 +94,7 @@ const TabGroupContent = ({ steps, policy, programType, programs, onSswUpdate, is
                     ? steps[currentStepIndex].component
                     : !isFormSubmitted && (
                           <SswOperations
+                              document={document}
                               setSswUpdateView={setSswUpdateView}
                               programType={programType}
                               programs={programs}
@@ -111,6 +124,7 @@ const TabGroupContent = ({ steps, policy, programType, programs, onSswUpdate, is
 const TabGroupContainer = ({
     steps,
     policy,
+    document,
     programType,
     programs,
     onSswUpdate,
@@ -122,6 +136,7 @@ const TabGroupContainer = ({
             <TabGroupContent
                 steps={steps}
                 policy={policy}
+                document={document}
                 programType={programType}
                 programs={programs}
                 onSswUpdate={onSswUpdate}

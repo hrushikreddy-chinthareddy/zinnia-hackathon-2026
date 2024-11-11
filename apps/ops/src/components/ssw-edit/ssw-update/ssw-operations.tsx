@@ -5,14 +5,14 @@ import { TranslationFiles } from '@deps/config/translations';
 
 import EditProgram from './edit-program';
 
-const SswOperations = ({ programs, setSswUpdateView, programType, onProgramUpdate }: any) => {
+const SswOperations = ({ document, programs, setSswUpdateView, programType, onProgramUpdate }: any) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
 
     return (
         <div className="p-8">
             <label className="font-primary text-lg font-bold mb-5 ml-8">{t(`sswUpdate.${programType}`)}</label>
             {programs?.map((item: Program, index: number) => (
-                <EditProgram key={index} program={item} onTerminate={onProgramUpdate} onEdit={setSswUpdateView} />
+                <EditProgram key={index} program={item} onTerminate={onProgramUpdate} onEdit={setSswUpdateView} document={document} />
             ))}
         </div>
     );

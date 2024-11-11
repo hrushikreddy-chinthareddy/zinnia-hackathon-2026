@@ -1,11 +1,13 @@
 import { Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
+import { useContext } from 'react';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { Program } from '@deps/components/otp-withdrawal-form/rmd-method/program-item';
 import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
+import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 
 import { SswUpdateType } from '../../ssw-edit-helper';
@@ -20,8 +22,12 @@ const Summary = ({ currentProgram, updatedProgram, onContinue }: SummaryProps) =
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'sswUpdate.tabs.summary' });
     const { goToNext } = useWorkflow();
 
+    const { formSignature } = useContext(FormDataContext);
+
+    const signObj = structuredClone(formSignature);
+
     const handleSubmitSswUpdate = () => {
-        onContinue(currentProgram, SswUpdateType.PROGRAM_UPDATE);
+        onContinue(currentProgram, SswUpdateType.PROGRAM_UPDATE, signObj);
         goToNext();
     };
 
