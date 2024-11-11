@@ -20,8 +20,8 @@ import {
 import { Address as PolicyAddress, Policy, Transaction, TransactionType, PolicyFeatureFeatureType } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING, DEFAULT_EXTENDED_DAY_DATE_FORMAT } from '@deps/types/constants';
 
-import { getNonFinancialTransactionSideSheetValues } from './side-sheet-transaction.helper';
-import { SideSheetTransactionProps } from './types';
+import { getNonFinancialTransactionSideSheetValues } from '../side-sheet-transaction.helper';
+import { SideSheetTransactionProps } from '../types';
 
 // TODO MG: move these?
 const changeTable = (vals: { updated: ReactNode; original: ReactNode; label: string }[], t: TFunction) => {
@@ -62,6 +62,7 @@ const changeTable = (vals: { updated: ReactNode; original: ReactNode; label: str
     );
 };
 
+// TODO MG: move this somewhere party related
 const getAddressChanges = (policy: Policy, transaction: Transaction, t: TFunction): ReactNode => {
     if (!policy || !transaction) {
         return null;

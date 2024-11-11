@@ -15,7 +15,7 @@ import { ACH, useWithdrawal } from '@deps/contexts/WithdrawalContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { toTitleCase } from '@deps/helpers/string.helper';
-import { getRequestedWithheldTaxesDisplay, getReturnedWithheldTaxesDisplay } from '@deps/helpers/transaction-options.helper';
+import { getRequestedWithheldTaxesDisplay, getReturnedWithheldTaxesDisplay } from '@deps/helpers/tax-withholdings.helper';
 import { DisbursementType, Policy, TaxWithholdingType } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { ReactComponent as UserIcon } from '@deps/styles/elements/icons/actions/user.svg';

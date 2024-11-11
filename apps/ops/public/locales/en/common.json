@@ -2736,6 +2736,7 @@
                 "reverseSurrender": "Reverse surrender",
                 "routingNumber": "Routing number",
                 "setAsMailingAddress": "Set as mailing address",
+                "stateNotFound": "State not found",
                 "submittedAmount": "Submitted amount",
                 "submittedAmountTooltip": "This is how much was submitted. In other words, the owner wrote a check or initiated a funds transfer for this amount. Submitted amount may differ from the applied amount if we could only apply a lower amount due to policy test limits. These are legal limits to how much an owner can pay into the policy within a certain time period. This can cause some funds to be returned to the owner (called a “force out”).",
                 "reverseRecreateSubmittedAmountTooltip": "This is how much was sent for payment initially. The owner wrote a check or initiated a funds transfer for this amount, and the request to apply this amount was submitted in our system. Submitted amount may differ from the applied amount if we could only apply a lower amount due to policy test limits. These are legal limits to how much an owner can pay into the policy within a certain time period. This can cause some funds to be returned to the owner (called a “force out”).",

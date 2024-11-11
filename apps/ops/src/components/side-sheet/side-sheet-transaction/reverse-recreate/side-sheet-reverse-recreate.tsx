@@ -15,13 +15,12 @@ import { reverseRecreateTransaction } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as HexExclamationIcon } from '@deps/styles/elements/icons/icons_outlined/hex-exclamation.svg';
-
-import { HELP_DESK_LINK } from '../../non-financial-transactions/states/api-error-state';
-import LoadingState from '../../non-financial-transactions/states/loading-state';
-import { ViewState } from '../../non-financial-transactions/states/states.helpers';
+import { ViewState } from '../non-financial-transactions/states/states.helpers';
+import { HELP_DESK_LINK } from '../non-financial-transactions/states/api-error-state';
+import LoadingState from '../non-financial-transactions/states/loading-state';
 
 type SidesheetReverseRecreateProps = {
-    amount: string;
+    amount?: number;
     effectiveDate: string | undefined;
     exitTransaction: () => void;
     closeSidesheet: () => void;
@@ -57,6 +56,7 @@ export default function SidesheetReverseRecreate({
 
     const reverseRecreate = async () => {
         setViewState(ViewState.Loading);
+
         const result = await reverseRecreateTransaction(planCode, policyNumber, undefined, reversalTransactionId, caseId);
 
         if (result.status === StatusCode.Accepted || result.status === StatusCode.Okay) {
