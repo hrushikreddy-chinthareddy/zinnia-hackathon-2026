@@ -25,13 +25,7 @@ import {
 } from '@deps/contexts/CaseManagementFilters';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getAdvisorsExcelCaseSearchParams, getAdvisorsExcelCaseStatsParams } from '@deps/helpers/advisors-excel';
-import {
-    formatCaseTotals,
-    getAdditionalFilters,
-    getSearchValueObject,
-    isSearchValueObjectEmpty,
-    toggleLabels,
-} from '@deps/helpers/case-management';
+import { formatCaseTotals, getAdditionalFilters, getSearchValueObject, toggleLabels } from '@deps/helpers/case-management';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { storage } from '@deps/helpers/sessionStorage.helper';
@@ -109,8 +103,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
             const response = await getCaseStats(caseStatsRequest);
 
             if ('stats' in response) {
-                const hasSearch = !isSearchValueObjectEmpty(searchValueObject);
-                const newResult = formatCaseTotals(response.count, response.stats[0], hasSearch);
+                const newResult = formatCaseTotals(response.count, response.stats[0]);
 
                 setCaseTotals(newResult);
             } else {

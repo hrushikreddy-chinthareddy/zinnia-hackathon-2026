@@ -34,11 +34,6 @@ export const getSearchValueObject = (
     }
 };
 
-type CaseStatusResult = {
-    caseStatus?: Statuses[];
-    notInCaseStatus?: Statuses[];
-};
-
 type AdditionalFiltersResult = {
     brokerDealerName?: string;
     createdDateStart?: string;
@@ -219,7 +214,7 @@ export const insertStepDetails = (caseDetails: Case, metadata: Metadata) => {
     return caseDetails;
 };
 
-export const formatCaseTotals = (count: number, stats: StatCount, hasSearch: boolean) => {
+export const formatCaseTotals = (count: number, stats: StatCount) => {
     const keyedStats = stats.counts.reduce((acc, stat) => {
         acc[stat.label] = stat.value;
         return acc;

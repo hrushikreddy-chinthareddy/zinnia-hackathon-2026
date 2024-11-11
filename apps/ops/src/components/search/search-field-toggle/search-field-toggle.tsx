@@ -1,6 +1,6 @@
 import { AssistiveText, AssistiveTextVariant, Button, Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import { ChangeEvent, RefObject, useContext, useRef } from 'react';
+import { ChangeEvent, forwardRef, MutableRefObject, useContext, useRef } from 'react';
 
 import { PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
 import { toSentenceCase } from '@deps/helpers/string.helper';
@@ -12,11 +12,11 @@ import styles from './search-field-toggle.module.css';
 interface SearchFieldToggleProps {
     handleChange: (e: ChangeEvent<HTMLInputElement>, value: string, key: PolicySearchKeys) => void;
     activeLabels: LabelValue<PolicySearchKeys>;
-    onClear?: (ref: RefObject<HTMLInputElement>) => void;
+    onClear?: () => void;
+    ref?: MutableRefObject<HTMLInputElement | null>;
 }
 
-export const SearchFieldContainer = ({ handleChange, activeLabels, onClear }: SearchFieldToggleProps) => {
-    const inputRef = useRef<HTMLInputElement | null>(null);
+export const SearchFieldContainer = forwardRef<HTMLInputElement, SearchFieldToggleProps>(({ handleChange, activeLabels, onClear }, ref) => {
     const { showFieldErrorMessage } = useContext(PolicySearchFiltersContext);
     const { value: policyKey, label = '', placeholder, errorMessage } = activeLabels;
 
@@ -27,14 +27,6 @@ export const SearchFieldContainer = ({ handleChange, activeLabels, onClear }: Se
                 return 'number';
             default:
                 return 'text';
-        }
-    };
-
-    // to do - the entire search will clear but only one input (when there are two) clears
-    const handleClear = () => {
-        if (inputRef?.current && onClear) {
-            onClear(inputRef);
-            inputRef.current.value = '';
         }
     };
 
@@ -51,9 +43,9 @@ export const SearchFieldContainer = ({ handleChange, activeLabels, onClear }: Se
                     const text = (e.target as HTMLInputElement).value;
                     handleChange(e, text, policyKey as PolicySearchKeys);
                 }}
-                ref={inputRef}
+                ref={ref}
             />
-            <Button className={styles.close} onClick={handleClear} mode="link">
+            <Button className={styles.close} onClick={onClear} mode="link">
                 <Icon type={IconType.CLOSE} />
             </Button>
             {showFieldErrorMessage && errorMessage && (
@@ -61,23 +53,38 @@ export const SearchFieldContainer = ({ handleChange, activeLabels, onClear }: Se
             )}
         </div>
     );
-};
+});
+SearchFieldContainer.displayName = 'SearchFieldContainer';
 
-const SearchFieldToggle = ({ activeLabels, ...rest }: SearchFieldToggleProps) => {
+const SearchFieldToggle = ({ activeLabels, onClear, ...rest }: SearchFieldToggleProps) => {
     let fields;
+    const firstInputRef = useRef<HTMLInputElement | null>(null);
+    const secondInputRef = useRef<HTMLInputElement | null>(null);
     if (activeLabels) {
         const { group } = activeLabels;
 
+        const handleClear = () => {
+            if (firstInputRef?.current && onClear) {
+                onClear();
+                firstInputRef.current.value = '';
+            }
+            if (secondInputRef.current) {
+                secondInputRef.current.value = '';
+            }
+        };
+
         if (group?.length) {
+            const firstInput = group[0];
+            const secondInput = group[1];
+
             fields = (
                 <fieldset className={styles.fieldSet}>
-                    {group.map((g, index) => (
-                        <SearchFieldContainer key={'search-field-container-key-' + index} activeLabels={g} {...rest} />
-                    ))}
+                    <SearchFieldContainer activeLabels={firstInput} ref={firstInputRef} {...rest} onClear={handleClear} />
+                    <SearchFieldContainer activeLabels={secondInput} ref={secondInputRef} {...rest} onClear={handleClear} />
                 </fieldset>
             );
         } else {
-            fields = <SearchFieldContainer activeLabels={activeLabels} {...rest} />;
+            fields = <SearchFieldContainer activeLabels={activeLabels} onClear={handleClear} {...rest} />;
         }
     }
 
