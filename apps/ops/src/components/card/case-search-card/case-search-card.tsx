@@ -86,24 +86,19 @@ export default function CaseSearchCard({
     };
 
     const ownerComponent =
-        policyOwners.length > 1
-            ? <OwnerWithOthers {...ownerComponentProps} />
-            : <CaseDetailField pii={true} {...ownerComponentProps} />;
+        policyOwners.length > 1 ? <OwnerWithOthers {...ownerComponentProps} /> : <CaseDetailField pii={true} {...ownerComponentProps} />;
 
     const openExceptions = exceptions?.filter(exception => exception.status !== ExceptionStatuses.Resolved);
     const isExceptionRow = caseStatus === Statuses.Exception && !!openExceptions?.length;
 
     const loadCaseDetails = (href: string) => {
-        segmentAnalyticsTrackEvent(
-            SegmentTrackedEventName.PolicyKeyValuesItemClick,
-            {
-                caseId: id,
-                userId: perms.getUserPartyId(),
-            }
-        );
+        segmentAnalyticsTrackEvent(SegmentTrackedEventName.PolicyKeyValuesItemClick, {
+            caseId: id,
+            userId: perms.getUserPartyId(),
+        });
 
         router.push(href);
-    }
+    };
 
     return (
         <div className={isCustomStyle ? 'case-search-card' : ' '} data-testid="case-search-card">

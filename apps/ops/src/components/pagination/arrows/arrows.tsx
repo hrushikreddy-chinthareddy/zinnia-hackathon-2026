@@ -46,7 +46,7 @@ function Arrow({ direction, disabled, selected, onClick }: ArrowProps) {
             data-testid={`arrow-${direction}`}
             id={`pagination-arrow-${direction}`}
             aria-label="Pagination"
-            role="pagination"
+            role="navigation"
             tabIndex={disabled ? -1 : 0}
             onKeyDown={e => handleKeyDown(e, onClick)}
         >

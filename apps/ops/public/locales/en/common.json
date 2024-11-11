@@ -795,13 +795,20 @@
             "owner": "Owner",
             "ssn": "SSN",
             "policyNumber": "Policy number",
+            "policy": "Policy",
             "currentStage": "Current stage",
             "contractNumber": "Contract #",
             "productName": "Product name",
             "agent": "Agent",
             "caseId": "Case ID",
+            "case/ID": "Case/ID",
             "documentNumber": "Document number",
-            "viewCase": "View case details for case number {{caseNumber}}"
+            "viewCase": "View case",
+            "viewCaseNumber": "View case details for case number {{caseNumber}}",
+            "viewCaseDetails": "View case details",
+            "caseStatus": "Case Status",
+            "ownerSsn": "Owner/SSN",
+            "agentSsn": "Agent/SSN"
         },
         "pageSize": "Rows per page",
         "results": "Results",
@@ -877,6 +884,7 @@
             },
             "empty": {
                 "title": "We couldn't find a case that matches your search.",
+                "titleFilters": "We couldn't find a case that matches your filters.",
                 "paragraph": "Don't worry, it's probably just a typo. Check your input and try again.",
                 "action": {
                     "text": "Still having issues?",
@@ -3062,6 +3070,7 @@
     },
     "tooltip": {
         "jointOwner": "Joint owner",
+        "agent": "Agent",
         "ssn": "SSN",
         "other": "other"
     },

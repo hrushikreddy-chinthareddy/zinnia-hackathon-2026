@@ -788,13 +788,20 @@
             "owner": "Propriétaire",
             "ssn": "SSN",
             "policyNumber": "Numéro de police",
+            "policy": "Politique",
             "currentStage": "Étape actuelle",
             "contractNumber": "Contrat #",
             "productName": "Nom du produit",
             "agent": "Agent",
             "caseId": "ID du dossier",
+            "case/ID": "Dossier/ID",
             "documentNumber": "Numéro de document",
-            "viewCase": "Afficher les détails du cas numéro {{caseNumber}}"
+            "viewCase": "Afficher le cas",
+            "viewCaseNumber": "Afficher les détails du cas numéro {{caseNumber}}",
+            "viewCaseDetails": "Afficher les détails du cas",
+            "caseStatus": "Statut du dossier",
+            "ownerSsn": "Propriétaire/SSN",
+            "agentSsn": "Agente/SSN"
         },
         "pageSize": "Lignes par page",
         "results": "Résultats",
@@ -870,6 +877,7 @@
             },
             "empty": {
                 "title": "Nous n’avons pas trouvé de cas correspondant à votre recherche.",
+                "titleFilters": "Nous n'avons pas pu trouver de cas correspondant à vos filtres.",
                 "paragraph": "Ne vous inquiétez pas, c'est probablement juste une faute de frappe. Vérifiez votre saisie et réessayez.",
                 "action": {
                     "text": "Vous rencontrez toujours des problèmes ? ",
@@ -2817,6 +2825,7 @@
     },
     "tooltip": {
         "jointOwner": "Co-titulaire",
+        "agent": "Agent",
         "ssn": "SSN",
         "other": "autre"
     },
