@@ -1825,6 +1825,9 @@
                 "fullWithdrawal": "Surrender/Full withdrawal form",
                 "partialWithdrawal": "Partial withdrawal form"
             },
+            "bankUpdate": {
+                "title": "Bank Details"
+            },
             "cancel": "Cancel",
             "cancelConfirm": "Returning to create case will delete your draft. OK to return to create case?",
             "cancelError": "An error occurred while cancelling this task. Please try again.",

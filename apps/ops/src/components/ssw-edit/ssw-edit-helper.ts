@@ -5,7 +5,7 @@ import { DocumentData } from '@deps/models/case/document';
 import { ChannelType } from '@deps/models/case/enums';
 import { TaskSource } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
-import { ActiveWithdrawalCase, CaseStatus, FormSignature } from '@deps/models/case/withdrawal/case';
+import { ActiveWithdrawalCase, CaseStatus, FormSignature, Frequency } from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 export enum SswUpdateType {
@@ -104,4 +104,12 @@ export const buildSSWFormData = (
         status,
         data: getSswEditPayload(initialForm, formSignature, existingProg, updateProgram, document, operationType),
     };
+};
+
+export const getFullFrequency = (mode: string) => {
+    if (mode === 'A') return Frequency.Annually;
+    if (mode === 'M') return Frequency.Monthly;
+    if (mode === 'S') return Frequency.SemiAnnually;
+    if (mode === 'Q') return Frequency.Quarterly;
+    return '';
 };

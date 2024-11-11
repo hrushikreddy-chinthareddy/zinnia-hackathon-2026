@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
 import { Program } from '@deps/components/otp-withdrawal-form/rmd-method/program-item';
+import { getFullFrequency } from '@deps/components/ssw-edit/ssw-edit-helper';
 import SswUpdate from '@deps/components/ssw-edit/ssw-update/ssw-update';
 import { TranslationFiles } from '@deps/config/translations';
 import { FormProvider } from '@deps/containers/otp/withdrawal-forms/components/form-provider';
@@ -47,6 +48,7 @@ const SswEdit = (props: SswUpdateProps) => {
         SSWNet: 6,
         EFTDraw: 5,
     };
+    console.log(specialProgramdetails, '<====Special Program');
 
     const activeProg =
         specialProgramdetails?.allocationDetails?.filter(
@@ -60,6 +62,7 @@ const SswEdit = (props: SswUpdateProps) => {
     useEffect(() => {
         const specialProg: Program[] = [];
         activeProg?.forEach((program: any) => {
+            const freqencyMapping = getFullFrequency(program.mode);
             if (programType === 'SSW') {
                 if ([ProgramCode.SSW, ProgramCode.SSWNet].includes(program.typeOfAlloc)) {
                     specialProg.push({
@@ -67,7 +70,7 @@ const SswEdit = (props: SswUpdateProps) => {
                         startDate: program.startDate,
                         nextDate: program.nextDate,
                         amount: program.dbAmount.toString(),
-                        frequency: program.mode,
+                        frequency: freqencyMapping,
                         duration: program.duration.toString(),
                         status: RMDProgramType.Active,
                         allocationId: program.allocationId,
@@ -80,7 +83,7 @@ const SswEdit = (props: SswUpdateProps) => {
                         startDate: program.startDate,
                         nextDate: program.nextDate,
                         amount: program.dbAmount.toString(),
-                        frequency: program.mode,
+                        frequency: freqencyMapping,
                         duration: program.duration.toString(),
                         status: RMDProgramType.Active,
                         allocationId: program.allocationId,
@@ -106,7 +109,7 @@ const SswEdit = (props: SswUpdateProps) => {
 
     if (program?.length === 0)
         return (
-            <div className=" w-full  overflow-auto px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10  bg-white h-screen">
+            <div className=" w-full overflow-auto px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10  bg-white h-screen">
                 <div className="bg-gray-100 my-2 flex justify-center align-middle h-[500px] ">
                     <CardInfo
                         cta={{
