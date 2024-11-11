@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios';
 
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import {
     PolicyDocumentApiRequest,
     DocumentData,
@@ -179,10 +180,14 @@ export const getCorrespondenceDocs = async (
 export const getPolicyTypeDocs = async (
     id: string,
     clientCode: string,
-    docType: string
+    docType?: string
 ): Promise<PolicyDocumentApiRequest | DocumentErrorResponse> => {
     try {
-        const queryParams = `?source=Policy&contractNumber=${id}&clientCode=${clientCode?.toUpperCase()}&documentType=${docType}`;
+        let queryParams = `?source=Policy&contractNumber=${id}&clientCode=${clientCode?.toUpperCase()}`;
+
+        if(!isNullEmptyOrUndefined(docType)) {
+            queryParams += `&documentType=${docType}`;
+        }
         const cachedResult = pullFromCache('getPolicyTypeDocs', queryParams);
         if (cachedResult) return cachedResult;
 

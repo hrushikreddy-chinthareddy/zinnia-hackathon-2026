@@ -1,14 +1,13 @@
-import { Loader } from '@zinnia/bloom/components';
-import { TabGroup, TabList, TabTrigger, TabContent } from '@zinnia/bloom/components';
+import { Loader, TabGroup, TabList, TabTrigger, TabContent, Icon, IconType } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
-import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
+import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
 import { TranslationFiles } from '@deps/config/translations';
+import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
 import { PolicyDocument } from '@deps/models/case/document';
 import { Policy } from '@deps/models/policy/sor-policy';
 
-import DocumentItem from './document-portal-item';
 import { useGetPolicyTypeDocs } from '../steps/service-form-review/service-form-review.helper';
 
 export enum TabOptions {
@@ -25,7 +24,7 @@ type DocumentViewProps = {
 const DocumentPortalPanel = ({ policy, documentNumber, docType }: DocumentViewProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.documentPanel' });
     const [activeTab, setActiveTab] = useState(TabOptions.Working);
-
+    const clientCode =   policy?.carrierId || '';
     const [loading, getPolicyDocs, workingDocument, relatedDocument] = useGetPolicyTypeDocs(
         policy?.policyNumber || '',
         policy?.carrierId || '',
@@ -39,29 +38,48 @@ const DocumentPortalPanel = ({ policy, documentNumber, docType }: DocumentViewPr
 
     const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
 
+    const renderDocumentSection = (document: any, displayName: string, clientCode: string) => {
+        return (
+            <div className="my-3 flex w-[436px] justify-between rounded border border-gray-100 p-[12px]" key={document.documentId}>
+                <div>
+                    <Icon width={20} height={20} type={IconType.DOCUMENT_TEXT} />{' '}
+                </div>
+                <div>
+                    <div className="text-sm font-bold">{displayName}</div>
+                    <div className="flex items-center text-sm font-normal text-gray-300">
+                        {t('documentId') + ': ' + document.documentNumber}
+                    </div>
+                </div>
+                <div className="flex items-center">
+                    {createAction(document, clientCode.toUpperCase(), t)}
+                </div>
+            </div>
+        );
+    };
+
     const renderTabContent = (
         <>
             <TabContent className="flex w-full flex-col items-center" value={TabOptions.Working}>
-                <DocumentItem
-                    document={workingDocument}
-                    documentNumber={documentNumber}
-                    policy={policy}
-                    activeDocType={DocumentTypeView.Policy}
-                />
+                {workingDocument && renderDocumentSection(workingDocument, workingDocument?.displayName || '', clientCode)}
             </TabContent>
             <TabContent className="flex w-full flex-col items-center" value={TabOptions.Related}>
                 {relatedDocument?.length !== 0 && (
                     <>
                         {relatedDocument?.map((item: PolicyDocument) => (
-                            <DocumentItem
-                                key={item?.documentNumber}
-                                document={item}
-                                documentNumber={item?.documentNumber}
-                                policy={policy}
-                                activeDocType={DocumentTypeView.Policy}
-                            />
+                            renderDocumentSection(item, item?.displayName || '', clientCode)
                         ))}
                     </>
+                )}
+                {relatedDocument?.length === 0 && (
+                    <div className="border-box w-full lg:px-[30px] mt-2">
+                        <div className="w-full rounded border-2 border border-gray-100 bg-gray-50 p-8">
+                            <AssistiveText
+                                text={t('noFormAvailable')}
+                                variant={AssistiveTextVariant.Default}
+                                iconOverride={<Icon width={16} height={16} type={IconType.DOCUMENT_TEXT} />}
+                            />
+                        </div>
+                    </div>
                 )}
             </TabContent>
         </>

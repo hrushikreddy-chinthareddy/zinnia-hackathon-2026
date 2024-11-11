@@ -4,27 +4,34 @@ import React, { useState } from 'react';
 
 import 'react-pdf/dist/Page/TextLayer.css';
 
-import Autocomplete from '@deps/components/autocomplete/autocomplete';
 import { SimpleOption } from '@deps/components/autocomplete/autocomplete.types';
 import { FieldSize } from '@deps/components/fields/field';
 import SendDocument from '@deps/components/otp-send-document/components/document';
 import { Loader } from '@deps/components/page-loader';
+import SelectSimple from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { SendDocumentFormParts } from '@deps/models/case/send-document';
+import { AvailableFormsTransaction, SendDocumentFormParts } from '@deps/models/case/send-document';
 import { Policy } from '@deps/models/policy/sor-policy';
-import { getTransactionSubTypes, searchForms } from '@deps/queries/api/c2web';
-
+import { searchForms } from '@deps/queries/api/c2web';
 type FormSelectionProps = {
     policy: Policy;
     ctiCallNumber: string;
-    transactionTypes: SimpleOption[];
+    availableFormsTransactions: AvailableFormsTransaction[];
     formDetails: SendDocumentFormParts;
     setFormDetails: React.Dispatch<React.SetStateAction<SendDocumentFormParts>>;
 };
 
-function TransactionDocumentSelection({ policy, ctiCallNumber, transactionTypes, formDetails, setFormDetails }: FormSelectionProps) {
+function TransactionDocumentSelection({
+    policy,
+    ctiCallNumber,
+    availableFormsTransactions,
+    formDetails,
+    setFormDetails,
+}: FormSelectionProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
-
+    const transactionTypes = availableFormsTransactions?.map(transaction => {
+        return { label: transaction.name, value: transaction.id };
+    });
     const [transactionSubTypeOptions, setTransactionSubTypeOptions] = useState<SimpleOption[]>(formDetails?.transactionSubType?.list || []);
     const [error, setError] = useState<string>('');
     const [loader, setLoader] = useState(false);
@@ -33,20 +40,21 @@ function TransactionDocumentSelection({ policy, ctiCallNumber, transactionTypes,
         setFormDetails(ogForomdetais => ({
             ...ogForomdetais,
             transactionType: { selected: transactionType, list: transactionTypes },
+            document: { selected: null, list: [] },
         }));
+
         // handle api call
         const getSubTypes = async (transactionType: string) => {
             if (transactionType !== '') {
                 try {
-                    const response = await getTransactionSubTypes(transactionType);
+                    const options =
+                        availableFormsTransactions
+                            .find(option => option.id === transactionType)
+                            ?.transactionSubType.map(transaction => {
+                                return { label: transaction.name, value: transaction.id };
+                            }) || [];
 
-                    if (response) {
-                        const options = response.map(transaction => {
-                            return { label: transaction.name, value: transaction.id };
-                        });
-
-                        setTransactionSubTypeOptions(options);
-                    }
+                    setTransactionSubTypeOptions(options);
                 } catch (e: any) {
                     console.error('GetTransactionSubTypes::Error retrieving transaction sub types', e);
                 }
@@ -98,7 +106,7 @@ function TransactionDocumentSelection({ policy, ctiCallNumber, transactionTypes,
 
     return (
         <>
-            <Autocomplete
+            <SelectSimple
                 className="max-w-xs"
                 label={t(`formSelection.transactionType`) as string}
                 options={transactionTypes}
@@ -109,7 +117,7 @@ function TransactionDocumentSelection({ policy, ctiCallNumber, transactionTypes,
                 labelTooltip={t(`formSelection.transactionType`) as string}
                 labelTooltipBody={t(`formSelection.transactionType`) as string}
             />
-            <Autocomplete
+            <SelectSimple
                 className="my-4 max-w-xs"
                 label={t(`formSelection.transactionSubType`) as string}
                 options={transactionSubTypeOptions}

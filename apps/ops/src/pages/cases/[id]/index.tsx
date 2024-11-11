@@ -15,6 +15,7 @@ import { PageHead } from '@deps/components/page-title';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
 import { TranslationFiles } from '@deps/config/translations';
+import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
 import CaseOverviewGlobal from '@deps/containers/case-overview/case-overview-global/case-overview-global';
 import TasksTable from '@deps/containers/case-overview/tasks-table/tasks-table';
 import CaseOverviewRedesign from '@deps/containers/case-redesign-sub-page/index';
@@ -29,25 +30,31 @@ import { getAgents, getPolicyOwners } from '@deps/helpers/parties';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { formatDateDescriptionList, formatDateForAriaLabel, formatSSN, toTitleCase } from '@deps/helpers/string.helper';
-import usePageTracker from '@deps/hooks/usePageTracker';
+import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { Case, CaseIdentifier } from '@deps/models/case/case';
 import { PartyInstance } from '@deps/models/case/party-instance';
 import { ManagementTask } from '@deps/models/case/task-instance';
-import { UserPermission, UserProfile } from '@deps/models/user-profile';
+import { UserPermission } from '@deps/models/user-profile';
 import { getCaseDetailsSSR, getCaseMetadataSSR } from '@deps/queries/api/cases';
+import { checkTupleSsr } from '@deps/queries/api/fga';
 import { getCaseTaskInstances } from '@deps/queries/api/v1/task';
 import { SCREEN_BREAKPOINTS, DEFAULT_ERROR_STRING, CaseDetailsTabValues } from '@deps/types/constants';
+import { FgaRelation } from '@deps/types/fga';
+import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
-interface CaseDetailsPageProps {
+interface BaseCaseDetailsPageProps {
     caseDetails: Case;
     isNavDrawerOpen?: boolean;
     isLargeScreen?: boolean;
     id?: string;
     tab?: string;
-    user?: UserProfile;
 }
+
+type CaseDetailsPageProps = BaseCaseDetailsPageProps & SegmentTrackedPageProps;
+
+type CaseDetailsHeaderProps = BaseCaseDetailsPageProps;
 
 const PopoverBody = ({ agents }: { agents: PartyInstance[] }) => (
     <div className="flex min-w-max flex-col items-start bg-inherit">
@@ -64,7 +71,7 @@ const PopoverBody = ({ agents }: { agents: PartyInstance[] }) => (
     </div>
 );
 
-const CaseDetailsHeader = ({ caseDetails, isNavDrawerOpen, isLargeScreen }: CaseDetailsPageProps) => {
+const CaseDetailsHeader = ({ caseDetails, isNavDrawerOpen, isLargeScreen }: CaseDetailsHeaderProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
 
     const policyOwners = getPolicyOwners(caseDetails?.parties || []);
@@ -223,14 +230,14 @@ const CaseDetailsHeader = ({ caseDetails, isNavDrawerOpen, isLargeScreen }: Case
     );
 };
 
-export const CaseDetailsPage: React.FC<CaseDetailsPageProps> = ({ caseDetails, id, tab, user }) => {
+const CaseDetailsPage = ({ caseDetails, id, tab, user }: CaseDetailsPageProps) => {
     const [isLargeScreen, setIsLargeScreen] = useState(false); // isLargeScreen true means screen width is >= 1025
     const [isOpenOverride, setIsOpenOverride] = useState<null | boolean>(null);
     const [tasks, setTasks] = useState<ManagementTask[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const { featureFlags, areFlagsLoading } = useOptimizely();
 
-    usePageTracker(user as UserProfile, 'Case Details', { caseId: id });
+    useSegmentPageTracker(user, SegmentPageName.CaseDetails, { caseId: id });
 
     const handleResize = () => {
         if (window.innerWidth >= SCREEN_BREAKPOINTS.lg) {
@@ -372,7 +379,9 @@ export const getServerSideProps = withPageAuthRequired({
             user,
             UserPermission.AllowReadCaseManagement
         );
-        if (!hasPermissionToReadCaseManagement) {
+        const isAdvisorsExcel = await checkTupleSsr(accessToken as string, user.partyId, FgaRelation.Party, AE_FGA_ROLE);
+
+        if (!isAdvisorsExcel && !hasPermissionToReadCaseManagement) {
             return {
                 redirect: {
                     destination: '/403',
@@ -414,7 +423,7 @@ export const getServerSideProps = withPageAuthRequired({
                 caseDetails: formattedCaseDetails,
                 id,
                 tab,
-                user
+                user,
             },
         };
     },

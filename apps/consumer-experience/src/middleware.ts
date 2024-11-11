@@ -1,8 +1,4 @@
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
-import {
-  RequestCookies,
-  ResponseCookies,
-} from 'next/dist/server/web/spec-extension/cookies';
 import { NextResponse, type NextRequest } from 'next/server';
 
 import { RouteKey, getRedirectUrl, routeMap } from '@/route-map';
@@ -18,7 +14,6 @@ import {
   SHOW_DEV_MENU_COOKIE_KEY,
 } from '@/utils/serverClientUtils';
 
-import { getFeatureFlagQuery } from './queries/feature-flag-queries';
 import { getMyPoliciesByCarrier, getPolicyDetails } from './services';
 import { consumerExperienceAPIBaseUrl } from './services/api-config';
 import {
@@ -46,40 +41,12 @@ import {
   isValidCarrierSubdomain,
 } from './utils/carriers';
 import { lineOfBusinessUrlPath } from './utils/data';
-import { FEATURE_FLAGS } from './utils/optimizely/flags';
 import { applyThemeCookies } from './utils/theme';
 import {
   getPolicyDataFromPath,
   getSubdomain,
   prependSubdomain,
 } from './utils/url';
-
-/**
- * NextJS doesn't foward the headers to react server components.
- * This method creates a new header and copies the request headers over
- * it then sets the headers on the response so the react server components have the updated cookies and headers
- * @param req NextRequest
- * @param res NextResponse
- */
-function applySetCookie(req: NextRequest, res: NextResponse): void {
-  // parse the outgoing Set-Cookie header
-  const setCookies = new ResponseCookies(res.headers);
-  // Build a new Cookie header for the request by adding the setCookies
-  const newReqHeaders = new Headers(req.headers);
-  const newReqCookies = new RequestCookies(newReqHeaders);
-  setCookies.getAll().forEach(cookie => newReqCookies.set(cookie));
-  // set “request header overrides” on the outgoing response
-  NextResponse.next({
-    request: { headers: newReqHeaders },
-  }).headers.forEach((value, key) => {
-    if (
-      key === 'x-middleware-override-headers' ||
-      key.startsWith('x-middleware-request-')
-    ) {
-      res.headers.set(key, value);
-    }
-  });
-}
 
 const applyMockCookies = (req: NextRequest, res: NextResponse<unknown>) => {
   if (!isMockAllowed()) {
@@ -113,14 +80,18 @@ const applyMockCookies = (req: NextRequest, res: NextResponse<unknown>) => {
 
 export async function middleware(req: NextRequest) {
   const resNext = NextResponse.next();
+
   const session = await getSession(resNext);
   const pathname = req.nextUrl.pathname;
   const isLoginLikeOrRoot = pathname.includes('/login') || pathname === '/';
   const isSessionPage = pathname === '/session';
-  const featureFlags = await getFeatureFlagQuery(req);
-  const annuityModeOn = featureFlags?.[FEATURE_FLAGS.ANNUITY_MODE];
-  const resetDeliveryDateActive =
-    featureFlags?.[FEATURE_FLAGS.RESET_DELIVERY_DATE_ACTIVE];
+
+  // These are set to true with the feature flag query commented out becuase we were seeing a 500 error when
+  // trying to make a route handler call from within this file on mypolicyview domains. We were seeing a cert
+  // issue in the logs that is most likely related
+  // const featureFlags = await getFeatureFlagQuery(req);
+  const annuityModeOn = true;
+  const resetDeliveryDateActive = true;
 
   applyThemeCookies(req, resNext);
 
@@ -355,7 +326,6 @@ export async function middleware(req: NextRequest) {
     }
 
     applyMockCookies(req, resNext);
-    applySetCookie(req, resNext);
     return resNext;
   }
 

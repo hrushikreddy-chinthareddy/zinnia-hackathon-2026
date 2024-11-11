@@ -1,0 +1,80 @@
+name: Cypress E2E Tests
+
+on:
+  deployment_status:
+  workflow_dispatch:
+
+  # Enable this if you want hourly test runs
+  # Run E2E tests once every hour from `dev` (default) branch
+  #schedule:
+  #- cron: "0 * * * *"
+
+jobs:
+  e2e-test:
+    # This will not run for Vercel production deploys
+    if: contains(github.event.deployment.environment, 'Preview') && github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          cache: 'pnpm'
+          node-version-file: '.nvmrc'
+          registry-url: 'https://npm.pkg.github.com/'
+          scope: '@zinnia'
+
+      # This is needed since the source branch name is unavailable to the deployment_status event
+      - name: Get deployment source branch name
+        run: |
+          git fetch --all
+          git branch -a --contains ${{ github.event.deployment.ref }}
+          source_branches="$(git branch -a --contains ${{ github.event.deployment.ref }})"
+          # A commit can exist in multiple branches, particularly for origin/dev
+          # We only care about origin/dev when generating the Vercel URL for releases
+          if [[ "$source_branches" == *"remotes/origin/dev"* ]]; then
+            source_branches="remotes/origin/dev"
+          fi
+          result=$(echo "$source_branches" | tail -n1 | sed 's/[ \t]*//')
+          echo "Remote source of deployment: ${result}"
+          echo "Local git ref of deployment: ${result#remotes/origin/*}"
+          echo "BRANCH_NAME=${result#remotes/origin/*}" >> $GITHUB_ENV
+
+      - name: Install dependencies
+        run: |
+          pnpm install --filter ops &&\
+          cd apps/ops/e2e &&\
+          npm ci
+
+      - name: Generate Vercel Git branch URL
+        run: |
+          cd apps/ops/e2e
+          echo "DEPLOYMENT_URL=$(bash bin/generate_url)" >> $GITHUB_ENV
+        env:
+          BRANCH_NAME: ${{ env.BRANCH_NAME }}
+
+      - name: Run E2E tests
+        run: |
+          cd apps/ops/e2e
+          npx cypress-parallel --script cy:run --threads 5 --args '\"--config baseUrl=${{ env.DEPLOYMENT_URL}}\"' --strictMode false --verbose
+        env:
+          BRANCH_NAME: ${{ env.BRANCH_NAME }}
+          OPS_USER_EMAIL: ${{ secrets.OPS_USER_EMAIL }}
+          OPS_USER_PASSWORD: ${{ secrets.OPS_USER_PASSWORD }}
+
+      - name: Generate date for artifact name
+        if: failure()
+        run: echo "CURRENT_DATE=$(date --rfc-3339=date)" >> $GITHUB_ENV
+
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-screenshots-${{ env.CURRENT_DATE }}-${{ github.run_number }}
+          path: apps/ops/e2e/cypress/screenshots
+          retention-days: 30

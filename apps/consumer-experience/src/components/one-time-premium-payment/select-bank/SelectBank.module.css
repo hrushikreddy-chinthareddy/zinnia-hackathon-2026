@@ -9,7 +9,7 @@
   cursor: pointer;
 
   &:hover {
-    border-color: var(--color-states-hover-hover-border);
+    border-color: var(--color-states-hover-border-hover-border);
   }
 
   > * {
@@ -21,10 +21,10 @@
   }
 
   &:has(input:checked) {
-    border-color: var(--color-states-selected-selected-primary-border);
+    border-color: var(--color-states-selected-border-selected-border);
 
     &:hover {
-      border-color: var(--color-states-hover-hover-border);
+      border-color: var(--color-states-hover-border-hover-border);
     }
   }
 
@@ -36,6 +36,30 @@
 
 .bankDetail {
   color: var(--color-base-text-text-secondary);
+}
+
+/* These are set to important because its overriding the button style to make this look like text */
+button.linkClassname {
+  font-family: var(--font-family-secondary) !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  font-size: 14px !important;
+  line-height: 22px !important;
+  letter-spacing: 0em !important;
+  text-indent: 0px !important;
+  display: inline;
+}
+
+.disclaimer {
+  button {
+    text-decoration: underline;
+    text-underline-position: under;
+
+    &:hover {
+      text-decoration: none;
+      color: var(--color-links-color-global-link-dark);
+    }
+  }
 }
 
 @media (width > 767px) {

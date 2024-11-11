@@ -24,14 +24,15 @@ const DocumentItem = ({ document, policy, documentNumber, activeDocType }: Docum
             </div>
             <div>
                 <div className="text-sm font-bold ">{document?.displayName}</div>
-                <div className="flex items-center text-sm font-normal text-gray-300">{t('documentId') + ' ' + documentNumber}</div>
+                <div className="flex items-center text-sm font-normal text-gray-300">{t('documentId') + ': ' + documentNumber}</div>
             </div>
             <div className="flex items-center">
                 <DocumentPreviewer
                     className="flex gap-1"
                     activeDocType={activeDocType}
-                    carrier={policy?.carrierId}
-                    document={document || {}}
+                    carrier={policy?.carrierId || ''}
+                    documentId={document?.documentId || document?.documentID || ''}
+                    displayName={document?.displayName || ''}
                 >
                     <>{t('view')}</>
                 </DocumentPreviewer>

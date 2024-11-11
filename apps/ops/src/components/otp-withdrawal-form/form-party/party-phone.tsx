@@ -1,6 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Field, { FieldSize, FieldType } from '@deps/components/fields/field';
 import { FormValidationErrors, Phone } from '@deps/models/case/withdrawal/case';

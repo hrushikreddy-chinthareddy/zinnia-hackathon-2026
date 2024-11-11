@@ -51,7 +51,14 @@ const sample = {
 describe.skip('HistoryEventCard Component', () => {
     it('should render all props properly', () => {
         render(
-            <SideSheetContext.Provider value={{ changeSideSheetContent: () => {}, handleLocation: () => {}, handleOpen: () => {} }}>
+            <SideSheetContext.Provider
+                value={{
+                    changeSideSheetContent: () => {},
+                    handleLocation: () => {},
+                    handleOpen: () => {},
+                    openSecondarySideSheet: () => {},
+                }}
+            >
                 <HistoryEventCard policy={mockPolicy} refreshTransactions={() => {}} transaction={sample} />
             </SideSheetContext.Provider>
         );

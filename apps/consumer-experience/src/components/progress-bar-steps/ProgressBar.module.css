@@ -29,13 +29,13 @@
 .step {
   border-radius: 100%;
   border: var(--measure-dimension-stroke-sm, 2px) solid
-    var(--color-base-border-border-primary-color);
+    var(--color-progress-bar-steps-item-progress-bar-steps-item-active-border);
   width: 20px;
   height: 20px;
   position: relative;
   background-color: white;
   z-index: 1;
-  color: var(--color-base-border-border-primary-color);
+  color: var(--color-base-text-text-primary);
 
   > * {
     position: absolute;

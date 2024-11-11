@@ -213,20 +213,7 @@ export default function useNassauConfig(t: TFunction) {
     const defaultValues = {
         disbursementOption: FormDisbursementSelections.Check,
     };
-    const consentAvailableConfig = [
-        {
-            component: SignatureFields.SignaturePresent,
-            key: 'consent-available-sign-present',
-        },
-        {
-            component: SignatureFields.SignatureTitle,
-            key: 'consent-available-sign-title',
-        },
-        {
-            component: SignatureFields.SignatureDate,
-            key: 'consent-available-sign-date',
-        },
-    ];
+
     const disbursementOptions: PaymentMethodOption[] = [
         {
             label: t('distributionMethod.eft'),
@@ -319,7 +306,7 @@ export default function useNassauConfig(t: TFunction) {
                     classNames: 'col-start-1',
                 },
             ],
-            consentAvailableConfig,
+
             getDefaultPayload({ paymentMethod, disbursmentConsent, bank }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.EFT) {
                     return DEFAULT_DISBURSEMENT_UPDATE;

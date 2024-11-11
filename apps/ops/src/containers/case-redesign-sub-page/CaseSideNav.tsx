@@ -4,13 +4,17 @@ import { useEffect, useState } from 'react';
 
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
+import Title, { TitleVariant } from '@deps/components/title/title';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
+import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
 import { Case, Processes, Statuses } from '@deps/models/case/case';
 import { LineOfBusiness } from '@deps/models/policy/sor-policy';
+import { getCaseInsights } from '@deps/queries/api/openai';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
 import { ReactComponent as TimeIcon } from '@deps/styles/elements/icons/icons_outlined/clock.svg';
+import { ReactComponent as LighBulb } from '@deps/styles/elements/icons/icons_outlined/light-bulb.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { getCarrierLogoByClientId, getCarrierNameByClientId } from '@deps/utils/carriers';
 
@@ -161,7 +165,41 @@ const ContractDetails = ({ data }: CaseSideNavProps) => {
 const CaseSideNav = ({ caseDetails }: { caseDetails: Case }) => {
     const { t } = useTranslation();
     const caseActivityContext = useCaseActivityContext();
+    const [aiSummary, setAiSummary] = useState<string | null>(null);
     const data = getSideNavData(caseDetails, caseActivityContext, t);
+    const shouldShowCaseInsights = useCaseInsightsPermission();
+
+    const getOpenAiSummary = async (caseDetails: Case) => {
+        if (!caseDetails) {
+            return '';
+        }
+        try {
+            const summary = await getCaseInsights({
+                content: JSON.stringify(caseDetails),
+                prompt: `You are an expert in all things case data. Your job is to summarize the data for business and executive users.
+                          They want simple and insightful information about the data provided to you. The cases provided to you here are open cases delineated by insurance carrier. Avoid using phrases such as "the data".
+                          Your responses should be insightful and will be displayed on a UI as a summary for a module related to a pie chart. Use percentages and real data where it makes sense. Keep it conscise and to the point. Format number values to U.S.`,
+            });
+            return summary;
+        } catch (error) {
+            return '';
+        }
+    };
+
+    useEffect(() => {
+        if (!shouldShowCaseInsights) {
+            return;
+        }
+        if (caseDetails && !aiSummary) {
+            getOpenAiSummary(caseDetails).then(summary => {
+                if (summary) {
+                    setAiSummary(summary);
+                }
+            });
+        }
+    }, [caseDetails, aiSummary, shouldShowCaseInsights]);
+
+    const loadingClasses = 'transform-origin-center duration-5000 animate-spin ease-linear';
 
     return (
         <div className="flex-column flex w-full gap-2 lg:w-[354px]">
@@ -169,6 +207,26 @@ const CaseSideNav = ({ caseDetails }: { caseDetails: Case }) => {
                 <ProcessingTimeStamp data={data} />
                 <div className="flex w-full flex-col rounded bg-white shadow-elevation-light-04">
                     <ContractDetails data={data} />
+                    {shouldShowCaseInsights && (
+                        <div className="flex w-full flex-col p-4 md:px-8 border-b-2 border-gray-100">
+                            <Title className="mb-2 flex items-center gap-2" variant={TitleVariant.SubTitle}>
+                                <LighBulb height={24} width={24} />
+                                Insight
+                            </Title>
+                            <div className="flex flex-row gap-2">
+                                {!aiSummary && (
+                                    <InProgressIcon
+                                        height={18}
+                                        width={18}
+                                        role="presentation"
+                                        aria-hidden="true"
+                                        className={`shrink-0 fill-gray-600 ${loadingClasses}`}
+                                    />
+                                )}
+                                <Typography variant={TypographyVariant.BodySm}>{aiSummary ?? 'Generating AI Summary...'}</Typography>
+                            </div>
+                        </div>
+                    )}
                     {caseDetails.process === Processes.Correspondence && (
                         <CaseDetailsSideNav CaseAdditionalDetails={caseDetails?.additionalData} carrier={caseDetails?.carrier} />
                     )}

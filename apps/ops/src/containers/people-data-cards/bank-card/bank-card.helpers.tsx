@@ -7,8 +7,7 @@ import PendingTag from '@deps/components/side-sheet/non-financial-transactions/p
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { getBankAccountType } from '@deps/helpers/party-info-helper';
-import { formatCardExpirationDate } from '@deps/helpers/string.helper';
-import { formatAccountNumber, toTitleCase } from '@deps/helpers/string.helper';
+import { formatCardExpirationDate , formatAccountNumber, toTitleCase } from '@deps/helpers/string.helper';
 import { AccountType, BankAccount } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 

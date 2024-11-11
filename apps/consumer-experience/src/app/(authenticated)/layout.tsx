@@ -9,6 +9,7 @@ import { RefreshRouterManager } from '@/components/providers/RefreshRouterManage
 import { SessionManager } from '@/components/providers/SessionManager';
 import { UserProvider } from '@/components/providers/UserProvider';
 import { UserConsentManager } from '@/components/user-consent/UserConsentManager';
+import { CompanyName } from '@/types/carriers';
 import { getCookie, getSession } from '@/utils/auth';
 import { THEME_COOKIE } from '@/utils/serverClientUtils';
 
@@ -57,6 +58,7 @@ export default async function AuthenticatedLayout({
                   firstName: undefined,
                   lastName: undefined,
                 }}
+                themeCookie={themeCookie as CompanyName}
               />
 
               <div className={styles.container}>

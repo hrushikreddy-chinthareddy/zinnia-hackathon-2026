@@ -1,4 +1,5 @@
 'use client';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import {
   AssistiveText,
   AssistiveTextVariant,
@@ -9,12 +10,19 @@ import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { ConfirmDialog } from '@/components/confirm-dialog/ConfirmDialog';
+import { FeatureFlagComponent } from '@/components/FeatureFlagComponent';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import noDataStyles from '@/components/no-data-available/NoDataAvailable.module.css';
 import { BankDetail } from '@/components/person-data/types';
 import { AccountNumber } from '@/components/pii/AccountNumber';
 import { AccountType } from '@/components/pii/AccountType';
 import { BankName } from '@/components/pii/BankName';
+import {
+  EVERLY_CONTACT_PHONE_NUMBER,
+  lineOfBusinessUrlPath,
+} from '@/utils/data';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import styles from './SelectBank.module.css';
 import { useOttp } from '../../providers/one-time-premium-payment/OttpContext';
@@ -28,10 +36,12 @@ export const SelectBank = ({
   planCode,
   policyNumber,
   activeBanks,
+  lineOfBusiness,
 }: {
   planCode: string;
   policyNumber: string;
   activeBanks: BankDetail[];
+  lineOfBusiness: LineOfBusiness;
 }) => {
   const router = useRouter();
   const { state, dispatch } = useOttp();
@@ -144,6 +154,35 @@ export const SelectBank = ({
             })}
           </div>
         )}
+        <FeatureFlagComponent
+          flagKey={FEATURE_FLAGS.ADD_EDIT_DELETE_BANK_ACCOUNT}
+          enabledComponent={
+            <div className={`my-lg mb-none ${styles.disclaimer}`}>
+              <p className="typography-content-body-sm">
+                Want to pay with another bank account? Go to{' '}
+                <ConfirmDialog
+                  confirmCallback={() =>
+                    router.push(
+                      `/coverage/${lineOfBusinessUrlPath(lineOfBusiness)}/${planCode}/${policyNumber}/profile?addBank=true#addBankSection`
+                    )
+                  }
+                  linkText="banking details"
+                  linkClassName={styles.linkClassname}
+                  confirmDescription="Navigate to the profile page and open the add bank sidesheet"
+                  message="If you leave now, your payment won't be submitted and you will have to start over."
+                  cancelDescription="Stay on the premium payment page"
+                  title="Leave payment?"
+                />{' '}
+                to add. If you're not seeing the account you want to pay with,
+                give us a call at{' '}
+                <a href={`tel:+${EVERLY_CONTACT_PHONE_NUMBER}`}>
+                  {EVERLY_CONTACT_PHONE_NUMBER}
+                </a>
+                .
+              </p>
+            </div>
+          }
+        />
 
         <div className={premiumStyles.buttonGroup}>
           {/* TODO: disabled if nothing selected */}
@@ -154,7 +193,11 @@ export const SelectBank = ({
           >
             Continue
           </Button>
-          <CancelDialogLink planCode={planCode} policyNumber={policyNumber} />
+          <CancelDialogLink
+            planCode={planCode}
+            policyNumber={policyNumber}
+            lineOfBusiness={lineOfBusiness}
+          />
         </div>
       </form>
     </FormStepWrapper>

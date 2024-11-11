@@ -1,0 +1,22 @@
+{
+    "count": 1116,
+    "stats": [
+        {
+            "attribute": "caseStatus",
+            "counts": [
+                {
+                    "label": "IN_PROGRESS",
+                    "value": 641
+                },
+                {
+                    "label": "COMPLETED",
+                    "value": 168
+                },
+                {
+                    "label": "EXCEPTION",
+                    "value": 307
+                }
+            ]
+        }
+    ]
+}

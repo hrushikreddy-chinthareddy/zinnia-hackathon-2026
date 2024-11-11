@@ -1,6 +1,6 @@
 export enum TaskTypeTranslation {
     WithdrawalFormInputTask = 'WithdrawalFormInputTask',
-    OFTTask = 'oftTask',
+    OFTFormInputTask = 'OFTFormInputTask',
     RMDFormInputTask = 'RMDFormInputTask',
     SSWTask = 'sswTask'
 }

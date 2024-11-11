@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 
 import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
@@ -15,6 +15,12 @@ jest.mock('next-i18next', () => ({
         i18n: {
             language: DEFAULT_LOCALE,
         },
+    }),
+}));
+
+jest.mock('@deps/queries/api/policies', () => ({
+    getSpecialPrograms: jest.fn(() => {
+        return Promise.resolve(null);
     }),
 }));
 
@@ -44,7 +50,7 @@ describe('FlicSSWForm', () => {
     const formTpaAuthorization = data.formTpaAuthorization;
 
     describe('form sub types', () => {
-        it('should set the form type and formExtName correctly', () => {
+        it('should set the form type and formExtName correctly', async () => {
             const setMockData = jest.fn();
 
             render(
@@ -89,6 +95,9 @@ describe('FlicSSWForm', () => {
                 </FormDataContext.Provider>
             );
 
+            const el = await waitFor(() => screen.getByTestId('data-testid-form-party-title'));
+            expect(el).toBeInTheDocument();
+
             expect(setMockData).toHaveBeenCalledWith({
                 formExtName: `FLIC_SSW_DIGITAL_FORM`,
                 metaData: {
@@ -101,7 +110,7 @@ describe('FlicSSWForm', () => {
     });
 
     describe('form party', () => {
-        it('should render personal information if configs is passed', () => {
+        it('should render personal information if configs is passed', async () => {
             render(
                 <FormDataContext.Provider
                     value={{
@@ -142,7 +151,8 @@ describe('FlicSSWForm', () => {
                 </FormDataContext.Provider>
             );
 
-            expect(screen.getByTestId('data-testid-form-party-title')).toBeInTheDocument();
+            const el = await waitFor(() => screen.getByTestId('data-testid-form-party-title'));
+            expect(el).toBeInTheDocument();
         });
     });
 });

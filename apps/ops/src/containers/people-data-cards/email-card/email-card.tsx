@@ -17,8 +17,8 @@ import { ReactComponent as MailIcon } from '@deps/styles/elements/icons/communic
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
 
 import { Emails, sortEmailsByType } from './email-card.helpers';
-import SideSheetEmail from './side-sheet/side-sheet-email';
 import { PersonCardProps } from '../people-data-card-props';
+import SideSheetEmail from './side-sheet/side-sheet-email';
 
 interface OpenSideSheet {
     email?: Email;
