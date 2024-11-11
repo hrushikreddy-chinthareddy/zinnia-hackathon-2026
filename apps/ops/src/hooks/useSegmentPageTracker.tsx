@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
+import { segmentAnalyticsIdentifyUserAndPage } from "@deps/helpers/analytics/segment-analytics";
 import { UserProfile } from "@deps/models/user-profile";
 import { SegmentPageName, SegmentProps } from "@deps/types/segment-analytics";
-import { segmentAnalyticsIdentifyUserAndPage } from "@deps/helpers/analytics/segment-analytics";
 
 export const useSegmentPageTracker = (user: UserProfile, pageName: SegmentPageName, pageProps?: SegmentProps) => {
     const [segmentAnalyticsCalled, setSegmentAnalyticsCalled] = useState(false);

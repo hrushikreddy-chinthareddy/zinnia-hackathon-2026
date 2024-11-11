@@ -1,7 +1,15 @@
 import { AxiosResponse } from 'axios';
 
 import { SendCommunicationRequestBody } from '@deps/models/case/correspondence';
-import { Confirm, FormDetails, SearchFormRequestBody, TransactionSubType, TransactionType } from '@deps/models/case/send-document';
+import {
+    Confirm,
+    FormDetails,
+    SearchFormRequestBody,
+    SearchTransactionResponseBody,
+    SearchTransactionRequestBody,
+    TransactionSubType,
+    TransactionType,
+} from '@deps/models/case/send-document';
 import { StatementTypes, StatementTypesResponse } from '@deps/models/case/send-statement';
 import { client } from '@deps/queries/api-utils/client';
 import { logError, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
@@ -47,6 +55,39 @@ export const getTransactionSubTypes = async (transactionType: string): Promise<T
         return data;
     } catch (e) {
         console.error('c2web::getTransactionSubTypes::error', e);
+        return null;
+    }
+};
+
+export const getSearchTransactionsSSR = async (
+    requestBody: SearchTransactionRequestBody,
+    accessToken: string | undefined,
+    userInfo: object = {}
+): Promise<SearchTransactionResponseBody | null> => {
+    const loggingContext = { file: 'queries/api/c2web', function: 'getSearchTransactionsSSR', ...userInfo };
+
+    if (!accessToken) {
+        logWarn('getSearchTransactionsSSR::No accessToken to fetch transaction types', loggingContext);
+        return null;
+    }
+
+    try {
+        const config = {
+            authorization: `Bearer ${accessToken}`,
+            headers: {
+                'Content-type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            },
+        };
+
+        const { data } = await client.post<SearchTransactionRequestBody, AxiosResponse<SearchTransactionResponseBody>>(
+            `${contactCenterBaseUrlV2}/referencedata/transactions/search`,
+            requestBody,
+            config
+        );
+        return data;
+    } catch (error: any) {
+        logError('c2web: getSearchTransactionsSSR', { ...parseErrorInformation(error), ...loggingContext });
         return null;
     }
 };

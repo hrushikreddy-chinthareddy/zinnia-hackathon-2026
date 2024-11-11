@@ -12,4 +12,19 @@
   --color-secondary-color-secondary-dark: #353024;
   --color-accent-color-accent-one: #ea6338;
   --color-accent-color-accent-two: #faf0dd;
+
+  --color-gradient-gradient-part-one: var(--color-primary-color-primary);
+  --color-gradient-gradient-part-two: var(--color-primary-color-primary-light);
+  --color-gradient-gradient-part-three: var(
+    --color-primary-color-primary-light
+  );
+
+  /*
+  * NOT BLOOM
+  * =========
+  */
+  --user-badge-background-color: var(--color-primary-color-primary);
+  --user-badge-text-color: var(
+    --color-button-primary-button-primary-default-text
+  );
 }

@@ -7,8 +7,6 @@ import SideSheetRefineResults from './side-sheet-refine-results';
 
 const permissionsObject: { [key: string]: string[] } = { testing: ['policy:read'] };
 const baseFilters = {
-    showOnlyCompletedCases: false,
-    showOnlyCanceledCases: false,
     processTypes: new Set([]),
     requestSubType: new Set([]),
     products: new Set([]),
@@ -48,8 +46,6 @@ describe.skip('Refine Results Sidesheet', () => {
         expect(screen.getByText('caseManagementDashboard.refineResultsOptions.updatedStart')).toBeInTheDocument();
         expect(screen.getByText('caseManagementDashboard.refineResultsOptions.updatedEnd')).toBeInTheDocument();
         expect(screen.getByText('caseManagementDashboard.refineResultsOptions.selectDayRange')).toBeInTheDocument();
-        expect(screen.getByText('caseManagementDashboard.refineResultsOptions.showOnlyCompleted')).toBeInTheDocument();
-        expect(screen.getByText('caseManagementDashboard.refineResultsOptions.showOnlyCanceled')).toBeInTheDocument();
         expect(screen.getByText('caseManagementDashboard.refineResultsOptions.clearAll')).toBeInTheDocument();
     });
     it('disables the pre-populated carrier dropdown with only one carrier', () => {

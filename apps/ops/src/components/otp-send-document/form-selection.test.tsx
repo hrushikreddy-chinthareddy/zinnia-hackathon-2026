@@ -31,7 +31,33 @@ afterEach(() => {
 
 describe.skip('Form selection component', () => {
     const mockDispatch = jest.fn();
+    const mockAvailableFormsTransactions = [
+        {
+            "id": "AUTHORIZATION",
+            "name": "Authorization",
+            "transactionSubType": [
+                {
+                    "id": "ELECTRONIC_PHONE_AUTHORIZATION",
+                    "name": "Electronic Phone Authorization"
+                },
+                {
+                    "id": "GLWB_RENEWAL",
+                    "name": "GLWB Renewal"
+                }
+            ]
+        },
+        {
+            "id": "DEATH_CLAIM",
+            "name": "Death Claim",
+            "transactionSubType": [
+                {
+                    "id": "CLAIM_PROOF_OF_DEATH",
+                    "name": "Claim/Proof of Death"
+                }
+            ]
+        }
 
+    ];
     jest.mock('@deps/contexts/SendDocumentContext', () => ({
         useSendDocument: () => ({ state: {}, dispatch: mockDispatch }),
     }));
@@ -55,18 +81,15 @@ describe.skip('Form selection component', () => {
 
     it('should fetch sub types on transaction type change', async () => {
         const setMockDispatch = jest.fn();
-        const mockTransactionSubTypes = [
-            { name: 'Subtype1', id: '1' },
-            { name: 'Subtype2', id: '2' },
-        ];
 
-        mockedTransactionSubTypesApi.mockResolvedValue(Promise.resolve(mockTransactionSubTypes));
+
+        mockedTransactionSubTypesApi.mockResolvedValue(Promise.resolve(mockAvailableFormsTransactions));
 
         render(
             <SendDocumentContext.Provider value={{ ...defaultSendDocumentState, dispatch: setMockDispatch }}>
                 <WorkflowProvider>
                     <FormSelection
-                        transactionTypes={transactionTypes}
+                        availableFormsTransactions={mockAvailableFormsTransactions}
                         policy={{}}
                         ctiCallNumber=""
                         formDetails={{} as SendDocumentFormParts}
@@ -123,7 +146,7 @@ describe.skip('Form selection component', () => {
             >
                 <WorkflowProvider>
                     <FormSelection
-                        transactionTypes={transactionTypes}
+                        availableFormsTransactions={mockAvailableFormsTransactions}
                         policy={{}}
                         ctiCallNumber=""
                         formDetails={{} as SendDocumentFormParts}
@@ -165,7 +188,7 @@ describe.skip('Form selection component', () => {
             >
                 <WorkflowProvider>
                     <FormSelection
-                        transactionTypes={transactionTypes}
+                           availableFormsTransactions={mockAvailableFormsTransactions}
                         policy={{}}
                         ctiCallNumber=""
                         formDetails={{} as SendDocumentFormParts}
@@ -201,7 +224,7 @@ describe.skip('Form selection component', () => {
             >
                 <WorkflowProvider>
                     <FormSelection
-                        transactionTypes={transactionTypes}
+                       availableFormsTransactions={mockAvailableFormsTransactions}
                         policy={{}}
                         ctiCallNumber=""
                         formDetails={{} as SendDocumentFormParts}

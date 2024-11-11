@@ -178,10 +178,15 @@
             "diaryNotes": {
                 "text": "Diary notes"
             },
+            "viewDetails": {
+                "text": "View Details"
+            },
+
             "diaryNotesWarning": {
                 "text": "Attention: Diary notes present. Review required to submit.",
                 "clickToView": "Click to view"
             },
+
             "notes": {
                 "text": "Notes"
             },
@@ -810,8 +815,6 @@
             "updatedStart": "Last updated",
             "updatedEnd": "Last updated (end range)",
             "age": "Age by days",
-            "showOnlyCanceled": "Show only canceled cases",
-            "showOnlyCompleted": "Show only completed cases",
             "applyFilters": "Apply filters",
             "clearAll": "Clear all filters",
             "selectCarrier": "Select",
@@ -843,6 +846,7 @@
                 "Renewal": "Renewals"
             }
         },
+        "selectStatus": "Select status",
         "sortOptions": {
             "newest": "Sort: Newest",
             "oldest": "Sort: Oldest"
@@ -1843,12 +1847,14 @@
             "createTaskSuccess": {
                 "WithdrawalFormInputTask": "Great news! We've initiated a withdrawal task for {{documentNumber}} and {{contractNumber}}",
                 "rmdTask": "Great news! We've initiated a Required Minimum Distribution task for {{documentNumber}} and {{contractNumber}}",
-                "oftTask": "Great news! We've initiated a Outgoing Funds Transfer task for {{documentNumber}} and {{contractNumber}}",
+                "OFTFormInputTask": "Great news! We've initiated a Outgoing Funds Transfer task for {{documentNumber}} and {{contractNumber}}",
                 "sswTask": "Great news! We've initiated a Systematic Withdrawal task for {{documentNumber}} and {{contractNumber}}"
             },
             "openNigoExists": "An onbase case includes a NIGO. Please resolve the open NIGO issue before submitting another request through the Digital Portal."
         },
         "sidebar": {
+            "contractStatusCode":"Policy Status",
+            "abbreviatedcontractStatusCode":"Pol.",
             "abbreviatedCaseId": "Case",
             "abbreviatedContractId": "Cont.",
             "abbreviatedDocumentNumber": "Doc.",
@@ -1856,7 +1862,9 @@
             "abbreviatedIssueDate": "Issue.",
             "abbreviatedOwnerName": "Own.",
             "abbreviatedAnnuitantName": "Ann.",
+            "abbreviatedContractValue": "Ctr Val.",
             "qualType": "Qualification type",
+            "contractValue":"Contract Value",
             "issueDate": "Issue date",
             "contractId": "Contract id",
             "ownerName": "Owner Name",
@@ -2258,6 +2266,18 @@
             "policyNotFound": {
                 "title": "Policy not found",
                 "subtitle": "An error occurred while retrieving policy. Please try again. If this problem persists, please notify operations support."
+            },
+            "taskInitialization": {
+                "title": "Error initializing task form",
+                "subtitle": "An error occurred while initializing the task. Please try again. If this problem persists, please notify operations support."
+            },
+            "caseTypeRetrievalError": {
+                "title": "Error identifying case type",
+                "subtitle": "An error occurred while identifying the case type. Please try again. If this problem persists, please notify operations support."
+            },
+            "docTypeRetrievalError": {
+                "title": "Error identifying document type",
+                "subtitle": "An error occurred while identifying the document type. Please try again. If this problem persists, please notify operations support."
             }
         }
     },
@@ -2269,6 +2289,7 @@
         "withdrawal": "Withdrawal"
     },
     "status": {
+        "all": "All",
         "completed": "Completed",
         "exception": "Not in good order",
         "inProgress": "In progress",
@@ -3068,8 +3089,6 @@
         "policyNumber": "Policy Number {{policyNumber}}",
         "productName": "Product Name {{productName}}",
         "search": "Search",
-        "showOnlyCanceledCases": "Show only canceled cases",
-        "showOnlyCompletedCases": "Show only completed cases",
         "ssn": "Social Security Number Last 4 Digits {{ssnLastFour}}",
         "status": "Status {{status}}",
         "updatedAt": "Updated at {{date}}",
@@ -4300,6 +4319,7 @@
     "nigoEntry": {
         "tabs": {
             "serviceFormReview": "Service Form Review",
+            "formEntry": "Form Entry",
             "nigoDetails": "Missing Information",
             "documentSelection": "New Form(s) Selection",
             "confirm": "Confirm"
@@ -4312,14 +4332,16 @@
             "view": "View",
             "documentTitle": "Document",
             "documents": "Documents",
-            "documentId": "Document ID"
+            "documentId": "Document ID",
+            "noFormAvailable": "No form available."
         },
         "confirmStep": {
             "title": "Submitted!",
             "subTitle": "Your request has been sent for processing.",
             "cta": "Go to case management",
             "secondaryCta": "Close",
-            "submitNigo": "Submit NIGO details"
+            "submitNigo": "Submit NIGO details",
+            "submitTask": "Submit task details"
         },
         "nigoDetails": {
             "title": "Missing Information",
@@ -4349,6 +4371,13 @@
                 "selectForm": "Select a form to continue."
             },
             "label": "Select the appropriate form that needs to be updated."
+        },
+        "formEntry": {
+            "formTitles": {
+                "withdrawal": "{{carrier}} Withdrawal Request",
+                "oft": "{{carrier}} Outgoing Funds Transfer Request",
+                "defaultTitle": "Form Entry"
+            }
         }
     }
 }

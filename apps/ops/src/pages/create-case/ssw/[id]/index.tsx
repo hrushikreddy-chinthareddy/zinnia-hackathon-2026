@@ -94,7 +94,12 @@ export default function SSWCase({ document, form, parties, transactionsHistory, 
     const { clientId, clientIdOverride } = router.query;
     const clientForFormDetermination = isNonProductionEnvironment() ? clientIdOverride || clientId : clientId;
 
-    useSegmentPageTracker(user, SegmentPageName.SswCase, { documentNumber: document.documentNumber, formTaskId: form.taskId, clientId, clientIdOverride });
+    useSegmentPageTracker(user, SegmentPageName.SswCase, {
+        documentNumber: document.documentNumber,
+        formTaskId: form.taskId,
+        clientId,
+        clientIdOverride,
+    });
 
     const isLargeScreen = useScreenSize(SCREEN_BREAKPOINTS.lg);
     const { issueState, qualType, issueDate } = useAccountInfo(document.contract, clientId as string);
@@ -118,6 +123,8 @@ export default function SSWCase({ document, form, parties, transactionsHistory, 
         setTransactionDetail({
             contractId: document?.contract || '',
             documentNumber: document?.documentNumber || '',
+            contractValue: document?.contractValue || '',
+            contractStatusCode: document?.contractStatusCode || '',
             caseId: form.caseId || '',
             transactions: transactionsHistory,
             qualType,

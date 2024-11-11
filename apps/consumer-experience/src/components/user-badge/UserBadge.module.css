@@ -5,7 +5,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  /* TODO: Might need to add some logic for these colors */
-  background-color: var(--color-primary-color-primary);
-  color: var(--color-button-primary-button-primary-default-text);
+  background-color: var(--color-avatar-avatar-fill);
+  /* This is not set in bloom, so custom variable to allow for updates
+  depending on carrier */
+  color: var(--user-badge-text-color);
 }

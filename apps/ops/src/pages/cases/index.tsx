@@ -14,15 +14,14 @@ import { PageLoader, PageLoaderVariant } from '@deps/components/page-loader/page
 import { PageHead } from '@deps/components/page-title';
 import SearchBar from '@deps/components/search/search-bar';
 import SelectSimple from '@deps/components/select/select';
-import StatusCounterTile from '@deps/components/status-counter-tile/status-counter-tile';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
+import StatusFilter from '@deps/containers/active-filters/status-filter';
 import {
     CaseManagementFiltersContext,
     CaseSearchAdditionalFilters,
     CaseSearchFilters,
-    CaseStatusFilter,
     initialFilters,
     caseSearchPageSizeOptions,
     CaseTableData,
@@ -32,12 +31,11 @@ import { getAdvisorsExcelCaseSearchParams, getAdvisorsExcelCaseStatsParams } fro
 import {
     formatCaseTotals,
     getAdditionalFilters,
-    getCaseStatuses,
     getSearchValueObject,
     isSearchValueObjectEmpty,
-    statusCounterTiles,
     toggleLabels,
 } from '@deps/helpers/case-management';
+import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { storage } from '@deps/helpers/sessionStorage.helper';
@@ -51,6 +49,8 @@ import { FgaRelation } from '@deps/types/fga';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import nextI18nextConfig from 'next-i18next.config';
+
+import useCaseFilterQueryStore from './caseFilterQueryStore';
 
 // Lazy Loaded Components
 const SideSheetRefineResults = dynamic(() => import('@deps/containers/side-sheet-refine-results/side-sheet-refine-results'));
@@ -68,7 +68,7 @@ interface CaseManagementDashboardProps extends SegmentTrackedPageProps {
 }
 
 const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: CaseManagementDashboardProps) => {
-    const [caseManagementFilters, setCaseManagementFilters] = useState(initialFilters);
+    const [caseManagementFilters, setCaseManagementFilters] = useCaseFilterQueryStore();
     const [loadedStoredFilters, setLoadedStoredFilters] = useState(false);
 
     const { t } = useTranslation();
@@ -88,7 +88,8 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
 
     // Data Fetcher(s)
     const fetchCaseStats = useCallback(async () => {
-        const additionalFilters = getAdditionalFilters(caseManagementFilters.additionalFilters);
+        // We don't want to use the status filters when getting counts for the search results
+        const { caseStatus, notInCaseStatus, ...additionalFilters } = getAdditionalFilters(caseManagementFilters.additionalFilters);
 
         const searchValueObject = getSearchValueObject(caseManagementFilters.searchValue, caseManagementFilters.toggleValue);
 
@@ -112,13 +113,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
 
             if ('stats' in response) {
                 const hasSearch = !isSearchValueObjectEmpty(searchValueObject);
-                const newResult = formatCaseTotals(
-                    response.count,
-                    response.stats[0],
-                    caseManagementFilters.additionalFilters.showOnlyCompletedCases,
-                    caseManagementFilters.additionalFilters.showOnlyCanceledCases,
-                    hasSearch
-                );
+                const newResult = formatCaseTotals(response.count, response.stats[0], hasSearch);
 
                 setCaseTotals(newResult);
             } else {
@@ -138,13 +133,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         try {
             const searchValueObject = getSearchValueObject(caseManagementFilters.searchValue, caseManagementFilters.toggleValue);
 
-            const caseStatusFilter = getCaseStatuses(
-                caseManagementFilters.statusCounterTileFilter,
-                caseManagementFilters.additionalFilters.showOnlyCompletedCases,
-                caseManagementFilters.additionalFilters.showOnlyCanceledCases,
-                searchValueObject
-            );
-
             let additionalFilters = getAdditionalFilters(caseManagementFilters.additionalFilters);
 
             // DEPU-2835 - temporary work around for Advisor Excel
@@ -159,12 +147,11 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
 
             const updatedRequest: CaseSearchQuery = {
                 ...additionalFilters,
-                ...caseStatusFilter,
                 ...searchValueObject,
                 limit: caseManagementFilters.limit,
                 offset: caseManagementFilters.offset,
                 sortDirection: caseManagementFilters.sortDirection,
-                sortBy: 'createdAt',
+                sortBy: caseManagementFilters.sortBy || 'createdAt',
             };
 
             const response = await getCases(updatedRequest);
@@ -195,7 +182,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
     }, [
         // for caseManagementFilters.toggleValue
         caseManagementFilters.searchValue,
-        caseManagementFilters.statusCounterTileFilter,
         caseManagementFilters.additionalFilters,
         caseManagementFilters.offset,
         caseManagementFilters.limit,
@@ -290,13 +276,12 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
 
     // Handler(s)
     const resetAllFilters = () => {
-        const { searchValue, toggleValue, statusCounterTileFilter } = caseManagementFilters;
+        const { searchValue, toggleValue } = caseManagementFilters;
 
         setCaseManagementFilters({
             ...initialFilters,
             searchValue,
             toggleValue,
-            statusCounterTileFilter,
         });
     };
 
@@ -307,9 +292,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         setCaseManagementFilters(prevFilters => ({ ...prevFilters, searchValue: value, offset: 0 }));
 
     const handleToggle = (value: PolicySearchKeys) => setCaseManagementFilters(prevFilters => ({ ...prevFilters, toggleValue: value }));
-
-    const handleStatusTileClicked = (value: CaseStatusFilter) =>
-        setCaseManagementFilters(prevFilters => ({ ...prevFilters, statusCounterTileFilter: value, offset: 0 }));
 
     // Memoized Component(s)
     const searchBar = useMemo(() => {
@@ -323,27 +305,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
             />
         );
     }, [caseManagementFilters.searchValue, caseManagementFilters.toggleValue]);
-
-    const statusCounterTilesRow = useMemo(() => {
-        const renderStatusCounterTile = (value: CaseStatusFilter, status: Statuses | undefined, count: number) => {
-            const isSelected = value === caseManagementFilters.statusCounterTileFilter;
-            const isActive =
-                caseManagementFilters.additionalFilters.showOnlyCanceledCases === false &&
-                caseManagementFilters.additionalFilters.showOnlyCompletedCases === false;
-            const onClick = () => handleStatusTileClicked(value);
-
-            return (
-                <div key={value}>
-                    <StatusCounterTile status={status} onClick={onClick} count={count} isSelected={isSelected} isActive={isActive} />
-                </div>
-            );
-        };
-
-        return statusCounterTiles.map(({ value, label, status }) => {
-            const count = label ? caseTotals[value] : (status ? caseTotals[status] : 0) || 0;
-            return renderStatusCounterTile(value, status, count);
-        });
-    }, [caseTotals, caseManagementFilters.statusCounterTileFilter, caseManagementFilters.additionalFilters]);
 
     const pageSizeDropdown = useMemo(() => {
         return (
@@ -430,12 +391,12 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                 </div>
 
                 <div className="prose min-h-screen">
-                    <div className="mt-8 grid grid-cols-2 gap-4 lg:auto-cols-fr lg:grid-flow-col">{statusCounterTilesRow}</div>
-
                     <div className="early-col-break my-6 flex flex-col items-start justify-start sm:flex-row sm:items-center sm:justify-between">
                         <div className="early-break mb-4 flex flex-row items-center justify-start sm:mb-0 sm:justify-between">
                             <p className="mr-2 whitespace-nowrap font-primary text-2xl font-normal text-gray-900">
-                                {`${t('caseManagementDashboard.results')} (${caseTotals[caseManagementFilters.statusCounterTileFilter]})`}
+                                {`${t('caseManagementDashboard.results')} (${wholeNumberFormatify(caseTableData.total)}${
+                                    caseTableData.total === 10000 ? '+' : ''
+                                })`}
                             </p>
                             <NavElement
                                 tabIndex={0}
@@ -479,6 +440,24 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                         filters={caseManagementFilters.additionalFilters}
                         removeFilter={removeAdditionalFilter}
                         onReset={resetAllFilters}
+                    />
+                    <StatusFilter
+                        caseTotals={caseTotals}
+                        values={caseManagementFilters.additionalFilters.caseStatus}
+                        onChange={vals =>
+                            setCaseManagementFilters(prev => {
+                                const { caseStatus, notInCaseStatus = [] } = prev.additionalFilters;
+                                const nonConflictingNicsVals = notInCaseStatus.filter(val => !vals.includes(val)); // remove any values that are both in caseStatus and notInCaseStatus
+                                return {
+                                    ...prev,
+                                    additionalFilters: {
+                                        ...prev.additionalFilters,
+                                        caseStatus: vals,
+                                        notInCaseStatus: nonConflictingNicsVals,
+                                    },
+                                };
+                            })
+                        }
                     />
                     <div ref={topDiv} className="w-full xs:overflow-x-auto xs:overflow-y-hidden xs:p-1 lg:mb-0 lg:p-0">
                         <div className="w-[1130px]" />

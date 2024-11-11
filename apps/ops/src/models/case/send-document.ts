@@ -25,6 +25,20 @@ export enum SendDocumentAction {
     Reset = 'Reset',
 }
 
+export type SearchTransactionRequestBody = {
+    carrier: string;
+    issueState: string;
+    planCode: string;
+};
+
+export type SearchTransactionResponseBody = AvailableFormsTransaction[];
+
+export type AvailableFormsTransaction = {
+    id: string;
+    name: string;
+    transactionSubType: TransactionSubType[];
+};
+
 export type SendDocumentActions =
     | { type: SendDocumentAction.TransactionType; payload: CallCenterElement<string, SimpleOption> }
     | { type: SendDocumentAction.TransactionSubType; payload: CallCenterElement<string, SimpleOption> }

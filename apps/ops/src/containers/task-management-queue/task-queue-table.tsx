@@ -5,18 +5,20 @@ import { Loader } from '@deps/components/page-loader';
 import { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { ManagementTask } from '@deps/models/case/task-instance';
+import { AssignedTask } from '@deps/models/case/task-instance';
+import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 import styles from '@deps/utils/styles';
 
 import TaskQueueTableHeader from './task-queue-table-header';
 import TaskQueueTableRow from './task-queue-table-row';
 
 type TaskQueueTableProps = {
-    tasks: ManagementTask[];
+    tasks: AssignedTask[];
+    featureFlagDecisions: FeatureFlags;
     isLoading?: boolean;
 };
 
-const TaskQueueTable = ({ tasks, isLoading }: TaskQueueTableProps) => {
+const TaskQueueTable = ({ tasks, featureFlagDecisions, isLoading }: TaskQueueTableProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'taskManagementQueue' });
 
     return (
@@ -34,7 +36,7 @@ const TaskQueueTable = ({ tasks, isLoading }: TaskQueueTableProps) => {
                         </TableRow>
                     )}
                     {tasks?.map(task => {
-                        return <TaskQueueTableRow task={task} key={`task_queue_${task.id}`}/>
+                        return task && <TaskQueueTableRow task={task} key={`task_queue_${task.id}`} featureFlagDecisions={featureFlagDecisions}/>
                     })}
                     {!tasks.length && (
                         <TableRow className="disabled-tr w-full">
@@ -47,7 +49,7 @@ const TaskQueueTable = ({ tasks, isLoading }: TaskQueueTableProps) => {
                         </TableRow>
                     )}
                 </TableBody>
-            </Table>  
+            </Table>
         </div>
     );
 };
