@@ -53,6 +53,7 @@
             "history": "Histoire",
             "documents": "Documents",
             "newPremium": "Nouveau Prime",
+            "cancelFreelook": "Annuler Freelook",
             "updatePremium": "Gérer Paiement Automatique",
             "newWithdrawal": "Nouveau Retrait",
             "formData": "Données du formulaire",
@@ -201,7 +202,7 @@
                 "clickToView": "Clique pour voir"
             },
             "viewDetails": {
-                "text":"voir les détails"
+                "text": "voir les détails"
             },
             "history": {
                 "text": "Histoire",
@@ -1836,8 +1837,8 @@
             "openNigoExists": "Un cas de base comprend un NIGO. Veuillez résoudre le problème ouvert NIGO avant de soumettre une autre demande via le portail numérique."
         },
         "sidebar": {
-            "contractStatusCode":"Statut de la politique",
-             "abbreviatedcontractStatusCode":"Pol.",
+            "contractStatusCode": "Statut de la politique",
+            "abbreviatedcontractStatusCode": "Pol.",
             "abbreviatedCaseId": "Cais.",
             "abbreviatedContractId": "Ctr.",
             "abbreviatedContractValue": "Ctr Val.",
@@ -1849,7 +1850,7 @@
             "qualType": "type de qualification",
             "issueDate": "Date d'émission",
             "contractId": "ID du contrat",
-            "contractValue":"valeur du contrat",
+            "contractValue": "valeur du contrat",
             "ownerName": "Le nom du propriétaire",
             "annuitantName": "Nom du rentier",
             "copyToClipboard": "Copier {{item}} dans le presse-papiers",
@@ -3534,6 +3535,34 @@
             "check": "Chèque"
         },
         "checkingEndingIn": "Compte-chèques se terminant par {{ accountNumber }}"
+    },
+    "cancelFreelook": {
+        "confirm": {
+            "cta": "Accéder à l'historique des transactions",
+            "label": "Confirmer",
+            "secondaryCta": "Fermer",
+            "subtitle": "Une demande d'annulation a été soumise. Une fois traitée, un remboursement pour {{name}} sera envoyé.",
+            "title": "Soumis !"
+        },
+        "date": {
+            "label": "Date",
+            "title": "Date",
+            "effectiveDate": "$t(withdrawals.amount.effectiveDate)",
+            "effectiveDateTooltip": "$t(withdrawals.amount.effectiveDateTooltip)",
+            "effectiveDateError": "$t(withdrawals.amount.effectiveDateError)"
+        },
+        "start": {
+            "label": "Démarrer",
+            "title": "Annuler la police"
+        },
+        "summary": {
+            "effectiveDate": "Date d'effet",
+            "effectiveDateTooltip": "Ceci est la date utilisée pour calculer toutes les valeurs de compte disponibles pour ce retrait. Comme les fonds dans la valeur du compte sont investis, cette valeur peut changer de jour en jour. Le traitement peut se produire à tout moment, il est donc nécessaire de savoir à quel moment retirer effectivement les fonds, même si nous traitons la transaction quelques jours avant ou après.",
+            "label": "Résumé",
+            "payee": "Bénéficiaire",
+            "status200subtitle": "Parfait ! Veuillez vérifier vos entrées avant de soumettre.",
+            "submitPayment": "Soumettre le paiement"
+        }
     },
     "withdrawals": {
         "requestedWithdrawal": {

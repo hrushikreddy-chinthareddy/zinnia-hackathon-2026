@@ -101,9 +101,9 @@ const getPaymentMethod = (policy: Policy, payors: TransactionPayor[], t: TFuncti
 
     return paymentMethod
         ? t('historyEventCard.bankingBody', {
-            accountType: t(`historyEventCard.bankAccountTypes.${paymentMethod.accountType?.toLowerCase()}`),
-            lastFour: formatAccountNumber(paymentMethod.internationalBankAccountNumber ?? paymentMethod.accountNumber, true),
-        })
+              accountType: t(`historyEventCard.bankAccountTypes.${paymentMethod.accountType?.toLowerCase()}`),
+              lastFour: formatAccountNumber(paymentMethod.internationalBankAccountNumber ?? paymentMethod.accountNumber, true),
+          })
         : DEFAULT_ERROR_STRING;
 };
 
@@ -111,9 +111,9 @@ const getTransactionType = async (policy: Policy, transaction: Transaction, t: T
     const { parentId, version } = transaction;
     const [policyForFrequency, parentTransaction] = version
         ? await Promise.all([
-            fetchVersionedPolicy(policy.policyNumber as string, policy.product?.planCode as string, version),
-            getPolicyTransaction(policy.product?.planCode as string, policy.policyNumber as string, parentId as string),
-        ])
+              fetchVersionedPolicy(policy.policyNumber as string, policy.product?.planCode as string, version),
+              getPolicyTransaction(policy.product?.planCode as string, policy.policyNumber as string, parentId as string),
+          ])
         : [policy, transaction];
 
     const frequency =
@@ -323,15 +323,15 @@ const callWithdrawalValidate = async (policy: Policy, transaction: Transaction, 
 
     return transactionType === TransactionType.FullSurrender
         ? await validateFullSurrenderWithdrawal(
-            policy.product?.planCode,
-            policy.policyNumber,
-            requestBody as FullSurrenderWithdrawalRequestQuery
-        )
+              policy.product?.planCode,
+              policy.policyNumber,
+              requestBody as FullSurrenderWithdrawalRequestQuery
+          )
         : await validatePartialWithdrawalOneTime(
-            policy.product?.planCode,
-            policy.policyNumber,
-            requestBody as PartialWithdrawalOneTimeRequestQuery
-        );
+              policy.product?.planCode,
+              policy.policyNumber,
+              requestBody as PartialWithdrawalOneTimeRequestQuery
+          );
 };
 
 const getWithdrawalTotalPayment = (
@@ -351,9 +351,9 @@ const getWithdrawalTotalPayment = (
 
     const totalChargesWithoutTaxes = charges
         ? charges.reduce((acc, charge) => {
-            const amount = charge.chargeAmount;
-            return acc + (typeof amount === 'number' ? amount : 0);
-        }, 0)
+              const amount = charge.chargeAmount;
+              return acc + (typeof amount === 'number' ? amount : 0);
+          }, 0)
         : 0;
     const netActualWithdrawalAmount = Number(requestedAmount) + federalTaxDollar + stateTaxDollar + totalChargesWithoutTaxes;
 
@@ -366,25 +366,25 @@ const getWithdrawalTotalPayment = (
         totalPayment =
             disbursementType === DisbursementType.NET
                 ? netActualWithdrawalAmount -
-                (totalChargesWithoutTaxes || 0) -
-                // @ts-expect-error API is returning withholdAmount instead of withheldAmount
-                Number(quoteFederalTaxAmounts?.[0].withholdAmount || federalTaxDollar) -
-                // @ts-expect-error API is returning withholdAmount instead of withheldAmount
-                Number(quoteStateTaxAmounts?.[0].withholdAmount || stateTaxDollar)
+                  (totalChargesWithoutTaxes || 0) -
+                  // @ts-expect-error API is returning withholdAmount instead of withheldAmount
+                  Number(quoteFederalTaxAmounts?.[0].withholdAmount || federalTaxDollar) -
+                  // @ts-expect-error API is returning withholdAmount instead of withheldAmount
+                  Number(quoteStateTaxAmounts?.[0].withholdAmount || stateTaxDollar)
                 : Number(forcePositiveNumber(quote?.transactionAmounts?.appliedAmount || requestedAmount)) -
-                (totalChargesWithoutTaxes || 0) -
-                // @ts-expect-error API is returning withholdAmount instead of withheldAmount
-                Number(quoteFederalTaxAmounts?.[0].withholdAmount || federalTaxDollar) -
-                // @ts-expect-error API is returning withholdAmount instead of withheldAmount
-                Number(quoteStateTaxAmounts?.[0].withholdAmount || stateTaxDollar);
+                  (totalChargesWithoutTaxes || 0) -
+                  // @ts-expect-error API is returning withholdAmount instead of withheldAmount
+                  Number(quoteFederalTaxAmounts?.[0].withholdAmount || federalTaxDollar) -
+                  // @ts-expect-error API is returning withholdAmount instead of withheldAmount
+                  Number(quoteStateTaxAmounts?.[0].withholdAmount || stateTaxDollar);
     } else if (status === TransactionStatus.Completed) {
         totalPayment =
             disbursementType === DisbursementType.NET
                 ? netActualWithdrawalAmount - (totalChargesWithoutTaxes || 0) - Number(federalTaxDollar || 0) - Number(stateTaxDollar || 0)
                 : Number(requestedAmount || forcePositiveNumber(appliedAmount)) -
-                Number(totalChargesWithoutTaxes || 0) -
-                Number(federalTaxDollar || 0) -
-                Number(stateTaxDollar || 0);
+                  Number(totalChargesWithoutTaxes || 0) -
+                  Number(federalTaxDollar || 0) -
+                  Number(stateTaxDollar || 0);
     }
 
     return numberFormatify(totalPayment);
@@ -418,9 +418,9 @@ const getWithdrawalSideSheetValues = (policy: Policy, transaction: Transaction, 
 
     const totalChargesWithoutTaxes = charges
         ? charges.reduce((acc, charge) => {
-            const amount = charge.chargeAmount;
-            return acc + (typeof amount === 'number' ? amount : 0);
-        }, 0)
+              const amount = charge.chargeAmount;
+              return acc + (typeof amount === 'number' ? amount : 0);
+          }, 0)
         : 0;
     // TODO MG: dont hardcode party id
     const policyOwner = payeeParties?.find(payee => payee.partyId === 'Party_PI_1');
@@ -506,7 +506,6 @@ export const getReverseRecreateTransactionSideSheetValues = (
         const { policyNumber, product } = policy;
         const originalTransactionValues = await getPolicyTransaction(`${product?.planCode}`, `${policyNumber}`, `${originalTransactionId}`);
 
-
         if (!originalTransactionValues) {
             return {};
         }
@@ -538,7 +537,9 @@ export const getReverseRecreateTransactionSideSheetValues = (
         effectiveDate: convertKebabedDateString(effectiveDate),
         status,
         transactionId: transactionId + '-reverse',
-        transactionType: `${isPending ? t('policy.history.sidesheet.paymentOneTimePremium') : t('policy.history.sidesheet.oneTimePremium')}`,
+        transactionType: `${
+            isPending ? t('policy.history.sidesheet.paymentOneTimePremium') : t('policy.history.sidesheet.oneTimePremium')
+        }`,
         newAppliedAmount: amount || requestedAmount,
         paymentMethod: paymentMethod,
         getAsyncSideSheetValues: getOriginalTransactionValues,
@@ -603,9 +604,11 @@ export const getNonFinancialTransactionSideSheetValues = (
     };
 };
 
-
-export const replacesReverseInitiator = async (transaction: Transaction, reverseInitiators: Transaction[], policy: Policy): Promise<boolean> => {
-
+export const replacesReverseInitiator = async (
+    transaction: Transaction,
+    reverseInitiators: Transaction[],
+    policy: Policy
+): Promise<boolean> => {
     // if the originalTransactionId of this transaction is matches any transaction in reverseInitiator array
     // then it is the original reversed transaction
     // and we need to display the reversed transaction sidesheet
@@ -618,7 +621,7 @@ export const replacesReverseInitiator = async (transaction: Transaction, reverse
     // check if this transaction replaces any reverseInitiator
     // and save it in checkedIds
     if (reverseInitiatorIds.includes(originalTransactionId)) return true;
-    
+
     const parentId = transaction.parentId;
     // check if parentId
     // if there is no parentId, we went to the original transaction

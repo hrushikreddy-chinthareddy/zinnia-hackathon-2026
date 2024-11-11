@@ -11,17 +11,17 @@ import { Processes } from '@deps/models/case/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { validateFullSurrenderWithdrawal, validatePartialWithdrawalOneTime } from '@deps/queries/api/bpm';
 
-// BPB - fix these!
-import Confirm from '../withdrawal/confirm/confirm';
-import Summary from '../withdrawal/summary/summary';
+import Confirm from './confirm/confirm';
+import Summary from './summary/summary';
 import { buildFreelookCancelRequestBody } from './freelook-cancel.helpers';
+import EffectiveDate from '@deps/components/workflows/effective-date-step/effective-date-step';
 
-const WithdrawalContainer = ({ policy }: { policy: Policy }) => {
+const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
     const { t } = useTranslation();
     const { withdrawal, setWithdrawal } = useWithdrawal();
 
-    const startLabel = t('withdrawals.start.label');
-    const dateLabel = t('withdrawals.date.label');
+    const startLabel = t('cancelFreelook.start.label');
+    const dateLabel = t('cancelFreelook.date.label');
     const payeeLabel = t('withdrawals.payee.label');
     const paymentLabel = t('withdrawals.payment.label');
     const summaryLabel = t('withdrawals.summary.label');
@@ -42,11 +42,11 @@ const WithdrawalContainer = ({ policy }: { policy: Policy }) => {
                 <StartStep
                     parentPage={ParentPage.Withdrawals}
                     policy={policy}
-                    processType={Processes.Withdrawal}
+                    processType={Processes.NewBusiness}
                     setState={setWithdrawal as StartStepSetState}
                     state={withdrawal}
-                    title={t('withdrawals.start.title') as string}
-                    subtitle={t('withdrawals.start.subtitle') as string}
+                    title={t('cancelFreelook.start.title') as string}
+                    subtitle={''}
                 />
             ),
             screenReaderLabel: startLabel,
@@ -55,7 +55,13 @@ const WithdrawalContainer = ({ policy }: { policy: Policy }) => {
         },
         {
             ariaLabel: dateLabel,
-            component: <>DATE COMPONENT</>,
+            component: (
+                <EffectiveDate
+                    effectiveDate={withdrawal.effectiveDate}
+                    policy={policy}
+                    setEffectiveDate={date => setWithdrawal({ ...withdrawal, effectiveDate: date })}
+                />
+            ),
             screenReaderLabel: dateLabel,
             index: 1,
             text: dateLabel,
@@ -83,7 +89,6 @@ const WithdrawalContainer = ({ policy }: { policy: Policy }) => {
                     setState={setWithdrawal as PaymentStepSetState}
                     state={withdrawal}
                     subtitle={t('withdrawals.payment.title') as string}
-                    validateTransaction={validateCall}
                 />
             ),
             screenReaderLabel: paymentLabel,
@@ -109,4 +114,4 @@ const WithdrawalContainer = ({ policy }: { policy: Policy }) => {
     return <WorkflowContainer policy={policy} steps={steps} />;
 };
 
-export default WithdrawalContainer;
+export default FreeLookCancelContainer;
