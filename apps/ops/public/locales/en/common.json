@@ -1898,6 +1898,8 @@
         "correspondence": {
             "label": "Where should the document(s)  be sent",
             "addAdditionalRecipient": "+ Add additional recipient",
+            "additionalRecipientTooltipTitle": "Additional Recipient Emails",
+            "additionalRecipientTooltipBody": "If you'd like to send a copy of this email to other recipients, please add their email addresses in this field.",
             "maxEmails": "Maximum 5 emails allowed",
             "duplicateEmail": "Email already exist in the list",
             "email": "Email",

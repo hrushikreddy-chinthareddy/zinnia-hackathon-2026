@@ -1881,6 +1881,9 @@
         "correspondence": {
             "label": "Où le(s) document(s) doivent-ils être envoyés ? ",
             "addAdditionalRecipient": "+ Ajouter un destinataire",
+            "additionalRecipientTooltipTitle": "Destinataire supplémentaire",
+            "additionalRecipientTooltipBody": "Si vous voulez envoyer une copie de cet e-mail à d'autres destinataires, veuillez ajouter leurs adresses e-mail dans ce champ.",
+
             "maxEmails": "Maximum 5 e-mails autorisés",
             "duplicateEmail": "L'e-mail existe déjà dans la liste",
             "email": "E-mail",
