@@ -85,6 +85,8 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
             displayText: option.label,
         })) ?? [];
 
+    if (readonly) return <>{Object.values(selectedValues).join(', ')}</>;
+
     return (
         <>
             <label htmlFor={id}>

@@ -181,12 +181,10 @@
             "viewDetails": {
                 "text": "View Details"
             },
-
             "diaryNotesWarning": {
                 "text": "Attention: Diary notes present. Review required to submit.",
                 "clickToView": "Click to view"
             },
-
             "notes": {
                 "text": "Notes"
             },
@@ -1853,8 +1851,8 @@
             "openNigoExists": "An onbase case includes a NIGO. Please resolve the open NIGO issue before submitting another request through the Digital Portal."
         },
         "sidebar": {
-            "contractStatusCode":"Policy Status",
-            "abbreviatedcontractStatusCode":"Pol.",
+            "contractStatusCode": "Policy Status",
+            "abbreviatedcontractStatusCode": "Pol.",
             "abbreviatedCaseId": "Case",
             "abbreviatedContractId": "Cont.",
             "abbreviatedDocumentNumber": "Doc.",
@@ -1864,7 +1862,7 @@
             "abbreviatedAnnuitantName": "Ann.",
             "abbreviatedContractValue": "Ctr Val.",
             "qualType": "Qualification type",
-            "contractValue":"Contract Value",
+            "contractValue": "Contract Value",
             "issueDate": "Issue date",
             "contractId": "Contract id",
             "ownerName": "Owner Name",
@@ -4382,8 +4380,10 @@
     "suitability": {
         "tabs": {
             "taskReview": "Input Suitability Data",
-            "documentSelection": "New Form(s) Selection",
-            "confirm": "Confirm"
+            "confirm": "Confirm",
+            "start": "Start",
+            "suitabilityForm": "Suitability form",
+            "summary": "Summary"
         },
         "taskReview": {
             "title": "Input Suitability Data",

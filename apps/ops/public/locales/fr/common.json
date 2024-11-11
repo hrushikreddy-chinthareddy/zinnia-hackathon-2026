@@ -195,13 +195,12 @@
             "diaryNotes": {
                 "text": "Notes de journal"
             },
-
             "diaryNotesWarning": {
                 "text": "Attention: Notes d'agenda présentes. Examen requis pour soumettre",
                 "clickToView": "Clique pour voir"
             },
             "viewDetails": {
-                "text":"voir les détails"
+                "text": "voir les détails"
             },
             "history": {
                 "text": "Histoire",
@@ -501,7 +500,6 @@
                 "addressDetails": "Veuillez vous assurer que les détails de l'adresse sont correctement renseignés lors de l'ajout/mise à jour du bénéficiaire"
             }
         },
-
         "signature": {
             "header": "Validation de la signature",
             "isIrrevocableBene": "Y a-t-il un bénéficiaire irrévocable ?",
@@ -1836,8 +1834,8 @@
             "openNigoExists": "Un cas de base comprend un NIGO. Veuillez résoudre le problème ouvert NIGO avant de soumettre une autre demande via le portail numérique."
         },
         "sidebar": {
-            "contractStatusCode":"Statut de la politique",
-             "abbreviatedcontractStatusCode":"Pol.",
+            "contractStatusCode": "Statut de la politique",
+            "abbreviatedcontractStatusCode": "Pol.",
             "abbreviatedCaseId": "Cais.",
             "abbreviatedContractId": "Ctr.",
             "abbreviatedContractValue": "Ctr Val.",
@@ -1849,7 +1847,7 @@
             "qualType": "type de qualification",
             "issueDate": "Date d'émission",
             "contractId": "ID du contrat",
-            "contractValue":"valeur du contrat",
+            "contractValue": "valeur du contrat",
             "ownerName": "Le nom du propriétaire",
             "annuitantName": "Nom du rentier",
             "copyToClipboard": "Copier {{item}} dans le presse-papiers",
@@ -3257,7 +3255,6 @@
                 "trustee": "Fiduciaire",
                 "yes": "Oui",
                 "no": "Non",
-
                 "options": {
                     "driversLicense": "Le permis de conduire",
                     "entityType": "Type d'entité",
@@ -3679,7 +3676,6 @@
             "coverageLimit": "Limite de préservation de couverture",
             "coverageLimitTooltip": "Les propriétaires peuvent retirer ce montant sans affecter leur couverture. En d'autres termes, ils peuvent retirer ce montant et conserver intact leur capital-décès."
         },
-
         "upcoming": {
             "manageAutopay": "$t(premium.upcoming.manageAutopay)",
             "oneTimePaymentText": "$t(premium.upcoming.oneTimePaymentText)",
@@ -4351,6 +4347,54 @@
                 "oft": "{{carrier}} Outgoing Funds Transfer Request",
                 "defaultTitle": "Form Entry"
             }
+        }
+    },
+    "suitability": {
+        "tabs": {
+            "taskReview": "Données d’adéquation des entrées",
+            "confirm": "Confirmer",
+            "start": "Commencer",
+            "suitabilityForm": "Formulaire d'aptitude",
+            "summary": "Résumé"
+        },
+        "taskReview": {
+            "title": "Données d’adéquation des entrées",
+            "subTitle": "Le formulaire d'adéquation est-il complet?",
+            "options": {
+                "allSectionsAreComplete": "Toutes les sections sont complètes et prêtes pour la saisie des données.",
+                "missingDetails": "Toutes les sections ne sont pas complètes."
+            },
+            "view": "Voir",
+            "documentId": "ID du document",
+            "submitLabel": "Soumettre",
+            "continueLabel": "Continuer",
+            "cancelLabel": "Annuler"
+        },
+        "confirmStep": {
+            "title": "Soumise!",
+            "subTitle": "Les données d'adéquation des entrées ont été soumises.",
+            "cta": "Aller au virement entrant",
+            "secondaryCta": "Fermer",
+            "submitTask": "Soumettre les détails de l'adéquation"
+        }
+    },
+    "suitabilityReview": {
+        "tabs": {
+            "taskReview": "Évaluation de la pertinence",
+            "confirm": "Confirmer"
+        },
+        "taskReview": {
+            "title": "Évaluation de la pertinence",
+            "subTitle": "La candidature de ce client a été marquée pour examen. Acceptez ou refusez chaque problème avant de soumettre une décision finale.",
+            "submitLabel": "Soumettre la décision",
+            "cancelLabel": "Annuler"
+        },
+        "confirmStep": {
+            "title": "Soumise!",
+            "subTitle": "La pertinence de l'avis a été soumise.",
+            "cta": "Aller au virement entrant",
+            "secondaryCta": "Fermer",
+            "submitTask": "Soumettre les détails de l'adéquation"
         }
     }
 }

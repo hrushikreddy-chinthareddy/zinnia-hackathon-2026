@@ -53,7 +53,8 @@
                 ],
                 "employment": {
                     "employmentStatus": [
-                        "DISABLED"
+                        "DISABLED",
+                        "RETIRED"
                     ],
                     "occupation": "Software Engineer",
                     "disabilityExplanation": "I am disabled"
@@ -84,7 +85,8 @@
             "materialChangeExp": "NO",
             "materialChangeReason": "change reason statement",
             "sourceOfIncome": [
-                "FIXED_ANNUITY"
+                "FIXED_ANNUITY",
+                "LIFE_INSURENCE"
             ],
             "sourceOfIncomeOther": "Other income of source details",
             "surrPeriodMaterialChangeExp": "YES",

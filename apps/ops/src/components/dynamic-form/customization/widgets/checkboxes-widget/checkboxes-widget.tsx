@@ -19,6 +19,7 @@ export default function CheckboxesWidget<T = any, S extends StrictRJSFSchema = R
     options,
     value,
     onChange,
+    readonly,
 }: WidgetProps<T, S, F>) {
     const { enumOptions, enumDisabled } = options;
     const checkboxesValues = Array.isArray(value) ? value : [value];
@@ -32,6 +33,8 @@ export default function CheckboxesWidget<T = any, S extends StrictRJSFSchema = R
                 onChange(enumOptionsDeselectValue<S>(index, checkboxesValues, enumOptions));
             }
         };
+
+    if (readonly) return <>{checkboxesValues.join(', ')}</>;
 
     return (
         <div id={id} className={styles.checkboxGroupRoot} aria-label="Checkbox Group">

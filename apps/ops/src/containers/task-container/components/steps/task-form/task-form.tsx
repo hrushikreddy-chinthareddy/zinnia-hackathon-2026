@@ -24,12 +24,11 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     const handleSubmit = useCallback(() => {
         if (isSubmit) {
             const success = processDocuments(task, policy);
-            if (success) {
-                onSubmit();
-            } else {
-                return;
+            if (!success) {
+                console.log('Error occured during EDS files upload');
             }
         }
+        onSubmit();
     }, [isSubmit, onSubmit, policy, task]);
 
     const handleChange = useCallback(
