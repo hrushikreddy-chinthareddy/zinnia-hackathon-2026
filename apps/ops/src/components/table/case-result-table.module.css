@@ -10,14 +10,20 @@
     outline-offset: -2px;
 }
 
+.caseLinkContainer {
+    left: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+}
+
 .caseLink {
     color: transparent;
     display: block;
     height: 100%;
-    left: 0;
-    outline-offset: -2px;
-    position: absolute;
     width: 100%;
+    outline-offset: -2px;
     &:focus,
     &:focus-visible,
     &:hover {
@@ -45,5 +51,6 @@
         position: absolute;
         width: auto;
         bottom: -48px;
+        z-index: 1;
     }
 }
