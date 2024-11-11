@@ -64,7 +64,14 @@ const LinkArrow = ({
       prefetch={isInternal ? true : undefined}
     >
       {ctaText && <div className="typography-nav-links-sm">{ctaText}</div>}
-      {iconToRender && <Icon type={iconToRender} width={20} height={20} />}
+      {iconToRender && (
+        <Icon
+          type={iconToRender}
+          width={20}
+          height={20}
+          color="var(--color-base-icon-icon-action)"
+        />
+      )}
     </Tag>
   );
 };

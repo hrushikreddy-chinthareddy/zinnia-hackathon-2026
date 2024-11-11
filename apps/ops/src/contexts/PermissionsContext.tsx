@@ -1,5 +1,11 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
-import { BulkCheckTuple, checkIfUserHasDashboardAccess, checkIfUserIsSuperAdmin } from '@zinnia/utils';
+import {
+    BulkCheckTuple,
+    checkIfUserHasCaseInsightsAccess,
+    checkIfUserHasDashboardAccess,
+    checkIfUserIsSuperAdmin,
+    FgaRoles,
+} from '@zinnia/utils';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
@@ -14,6 +20,7 @@ export interface PermissionsContextProps {
     getIsAdvisorsExcel: () => Promise<boolean>;
     getClientIds: (permission: UserPermission) => Promise<string[]>;
     doesUserHavePagePermission: (permission: UserPermission) => Promise<boolean>;
+    doesUserHaveDashboardPermission: () => Promise<boolean>;
     canEditPolicy: (
         permission: UserPermission,
         planCode: string | string[] | undefined,
@@ -22,6 +29,7 @@ export interface PermissionsContextProps {
     fgaRoles: BulkCheckTuple[];
     isSuperAdmin: boolean;
     hasDashboardPermission: boolean;
+    hasCaseInsightPermission: boolean;
 }
 
 export const PermissionContext = createContext<PermissionsContextProps>({} as PermissionsContextProps);
@@ -38,6 +46,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
     const [fgaRoles, setFgaRoles] = useState<BulkCheckTuple[]>([]);
     const [isSuperAdmin, setIsSuperAdmin] = useState(false);
     const [hasDashboardPermission, setHasDashboardPermission] = useState(false);
+    const [hasCaseInsightPermission, setHasCaseInsightPermission] = useState(false);
 
     useEffect(() => {
         const getRoles = async () => {
@@ -49,8 +58,10 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 setFgaRoles(roles.tuples);
                 const superAdmin = checkIfUserIsSuperAdmin(roles?.tuples);
                 const hasDashboard = checkIfUserHasDashboardAccess(roles?.tuples);
+                const hasCaseInsight = checkIfUserHasCaseInsightsAccess(roles?.tuples);
                 setIsSuperAdmin(!!superAdmin);
                 setHasDashboardPermission(!!hasDashboard);
+                setHasCaseInsightPermission(!!hasCaseInsight);
             } catch (error: any) {
                 console.error('getRoles::An error occurred while checking tuples', {
                     file: 'contexts/permissions-context',
@@ -71,6 +82,23 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
             return isAdvisorsExcel;
         } catch (error: any) {
             console.error('getIsAdvisorsExcel::An error occurred while checking tuple', {
+                partyId,
+            });
+        }
+
+        return false;
+    };
+    const doesUserHaveDashboardPermission = async (): Promise<boolean> => {
+        if (!partyId) {
+            return false;
+        }
+
+        try {
+            const hasPermissions = await checkTuple(partyId, FgaRelation.Party, FgaRoles.CASE_STATS_DASHBOARD_ROLE);
+
+            return hasPermissions;
+        } catch (error: any) {
+            console.error('doesUserHaveDashboardPermission::An error occurred while checking tuple', {
                 partyId,
             });
         }
@@ -134,10 +162,12 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 getClientIds,
                 getUserPartyId,
                 doesUserHavePagePermission,
+                doesUserHaveDashboardPermission,
                 canEditPolicy,
                 isSuperAdmin,
                 fgaRoles,
                 hasDashboardPermission,
+                hasCaseInsightPermission,
             }}
         >
             {children}

@@ -2,7 +2,7 @@ import { AxiosResponse } from 'axios';
 
 import { ActiveReg60Case } from '@deps/containers/otp/reg60-forms/reg60.types';
 import { CreateTaskBody, CreateTaskResponse, TaskV1Payload } from '@deps/models/case/task';
-import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
+import { AssignedTask, ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { ActiveWithdrawalCase, DigitalFormWithdrawal } from '@deps/models/case/withdrawal/case';
 import { baseAppUrl, se2ApiServerUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
@@ -162,7 +162,7 @@ export const getCaseTasksByIdSSR = async (caseId: string, taskId: string, access
     }
 };
 
-export const getAssignedTasks = async ()  => {
+export const getAssignedTasks = async (): Promise<AssignedTask[] | []>  => {
     try {
         const {data} = await client.get(`${baseAppUrl}/api/case/v1/tasks/assigned`);
         return data ?? [];

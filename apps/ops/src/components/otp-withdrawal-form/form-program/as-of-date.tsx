@@ -25,7 +25,7 @@ const AsOfDateComponent = () => {
     );
     const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
     const isFormStateReadOnly = shouldShowNewExperience
-        ? (searchParams.get('action') === 'readonly' || ((currentFormState !== CaseStatus.Pending && currentFormState !== TaskStatus.New) && searchParams.get('action') !== 'duplicate'))
+        ? (searchParams.get('action') === 'readonly' || ((currentFormState !== CaseStatus.Pending && currentFormState !== TaskStatus.New && currentFormState !== TaskStatus.InProgress) && searchParams.get('action') !== 'duplicate'))
         : false;
 
     useEffect(() => {

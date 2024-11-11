@@ -1,7 +1,8 @@
 .bankContainer {
   display: flex;
   flex-direction: column;
-  border: var(--measure-dimension-stroke-sm) solid var(--color-base-border-border-light);
+  border: var(--measure-dimension-stroke-sm) solid
+    var(--color-base-border-border-light);
   border-radius: var(--measure-dimension-radius-sm);
   padding: var(--measure-dimension-padding-2xl);
   max-width: 375px;
@@ -11,7 +12,7 @@
     border-color: var(--color-states-hover-border-hover-border);
   }
 
-  >* {
+  > * {
     margin-bottom: var(--measure-dimension-gap-xs);
   }
 
@@ -20,7 +21,7 @@
   }
 
   &:has(input:checked) {
-    border-color: var(--color-states-selected-selected-primary-border);
+    border-color: var(--color-states-selected-border-selected-border);
 
     &:hover {
       border-color: var(--color-states-hover-border-hover-border);
@@ -49,14 +50,16 @@ button.linkClassname {
   display: inline;
 }
 
-button.linkClassname:hover {
-  color: var(--color-states-hover-hover-text-link);
-  text-decoration: underline;
-  text-decoration-color: currentcolor;
-  text-decoration-thickness: auto;
-  text-decoration-color: var(--color-states-hover-hover-text-link);
-  text-underline-position: under;
-  text-decoration-thickness: 2px;
+.disclaimer {
+  button {
+    text-decoration: underline;
+    text-underline-position: under;
+
+    &:hover {
+      text-decoration: none;
+      color: var(--color-links-color-global-link-dark);
+    }
+  }
 }
 
 @media (width > 767px) {

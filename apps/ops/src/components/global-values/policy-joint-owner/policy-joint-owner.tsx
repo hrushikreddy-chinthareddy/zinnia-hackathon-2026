@@ -27,7 +27,7 @@ export const PolicyJointOwner = ({ jointOwner, planCode, policyNumber, showLink 
         <div className="mt-4 flex shrink-0 items-center sm:ml-14 md:ml-0 md:mt-0">
             <div className="flex flex-col">
                 <label className="font-primary text-[12px] font-bold text-gray-900">
-                    {t('policyDetails.groups.owner')}
+                    {t('policyDetails.groups.jointOwner')}
                 </label>
                 {showLink
                     ?

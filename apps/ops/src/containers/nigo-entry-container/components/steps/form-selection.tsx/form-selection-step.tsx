@@ -1,34 +1,42 @@
-import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
+import { AssistiveText, AssistiveTextVariant, Loader } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 
 import 'react-pdf/dist/Page/TextLayer.css';
 
-import { SimpleOption } from '@deps/components/autocomplete/autocomplete.types';
 import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
+import { buildFormV2 } from '@deps/containers/otp/withdrawal-forms/utils/withdrawal-form-helper';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { SendDocumentFormParts } from '@deps/models/case/send-document';
+import { DocumentData } from '@deps/models/case/document';
+import { ApiVersion } from '@deps/models/case/enums';
+import { TaskApiVersionMapper } from '@deps/models/case/helpers';
+import { AvailableFormsTransaction, SendDocumentFormParts } from '@deps/models/case/send-document';
+import { TaskStatus } from '@deps/models/case/task-instance';
 import { Policy } from '@deps/models/policy/sor-policy';
+import { updateTask } from '@deps/queries/api/v2/task';
 
 import TransactionDocumentSelection from './transaction-document-selection';
 import { useNigoEntry } from '../../nigo-entry-provider';
 
 type FormSelectionProps = {
     policy: Policy;
-    transactionTypes: SimpleOption[];
+    availableFormsTransactions: AvailableFormsTransaction[];
     ctiCallNumber?: string;
+    documentData: DocumentData;
 };
 
-function FormSelectionStep({ transactionTypes, policy, ctiCallNumber = '' }: FormSelectionProps) {
+function FormSelectionStep({ availableFormsTransactions, policy, documentData, ctiCallNumber = '' }: FormSelectionProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.formSelection' });
     const { goToNext } = useWorkflow();
     const [error, setError] = useState<string>('');
     const { transactionType, transactionSubType, document, setTransactionType, setTransactionSubType, setDocument } = useNigoEntry();
-
+    const transactionTypes = availableFormsTransactions?.map(transaction => {
+        return { label: transaction.name, value: transaction.id };
+    });
     const [formDetails, setFormDetails] = useState<SendDocumentFormParts>({
         transactionType,
         transactionSubType,
@@ -37,6 +45,9 @@ function FormSelectionStep({ transactionTypes, policy, ctiCallNumber = '' }: For
 
     const formState = useContext(FormDataContext);
     const { setFormProgram } = formState;
+    const [isLoading, setIsLoading] = useState(false);
+    const { setSubmitFailed } = useNigoEntry();
+    const [timer] = useState(performance.now());
 
     useEffect(() => {
         setTransactionType(ogData => ({
@@ -54,10 +65,32 @@ function FormSelectionStep({ transactionTypes, policy, ctiCallNumber = '' }: For
         setDocument(ogData => ({ ...ogData, selected: formDetails?.document?.selected, list: formDetails?.document?.list }));
     }, [formDetails]);
 
-    const handleStepContinue = useCallback(() => {
-        if (!document?.selected?.formId) {
-            return setError(t('errors.selectForm') as string);
+    const submit = useCallback(async () => {
+        setIsLoading(true);
+
+        if (TaskApiVersionMapper[formState.initialForm.taskType] === ApiVersion.v2 && formState.initialForm.status !== TaskStatus.Completed) {
+            const successfulCaseUpdate = await updateTask(
+                formState.initialForm.caseId,
+                formState.initialForm.taskId,
+                buildFormV2(TaskStatus.Completed, documentData, formState),
+                timer
+            );
+
+            if (successfulCaseUpdate && successfulCaseUpdate.id) {
+                setSubmitFailed(false);
+            } else {
+                setSubmitFailed(true);
+            }
         } else {
+            setSubmitFailed(false);
+        }
+
+        setIsLoading(false);
+    }, [documentData, formState, setSubmitFailed, timer]);
+
+
+    useEffect(() => {
+       if (document?.selected?.formId) {
             setFormProgram(prevFormProgram => {
                 return {
                     ...prevFormProgram,
@@ -81,19 +114,17 @@ function FormSelectionStep({ transactionTypes, policy, ctiCallNumber = '' }: For
                     },
                 };
             });
+        }
+    }, [document?.selected, setFormProgram, transactionSubType?.selected, transactionType?.selected]);
+
+    const handleStepContinue = useCallback(async() => {
+        if (!document?.selected?.formId) {
+            return setError(t('errors.selectForm') as string);
+        } else {
+            await submit();
             goToNext();
         }
-    }, [
-        document?.selected?.formDisplayName,
-        document?.selected?.formId,
-        document?.selected?.formNumber,
-        document?.selected?.formShortName,
-        goToNext,
-        setFormProgram,
-        t,
-        transactionSubType?.selected,
-        transactionType?.selected,
-    ]);
+    }, [document?.selected, goToNext, submit, t]);
 
     return (
         <WorkflowCard
@@ -110,12 +141,17 @@ function FormSelectionStep({ transactionTypes, policy, ctiCallNumber = '' }: For
             <div className="mb-5 grid auto-rows-fr grid-cols-1 gap-2">
                 <Typography variant={TypographyVariant.LabelMd}>{t('label')}</Typography>
             </div>
+            {isLoading && (
+                <div className="fixed left-0 top-0 z-10 flex h-screen w-screen justify-center bg-gray-800 opacity-80">
+                    <Loader />
+                </div>
+            )}
             <TransactionDocumentSelection
                 policy={policy}
                 ctiCallNumber={ctiCallNumber}
                 formDetails={formDetails}
                 setFormDetails={setFormDetails}
-                transactionTypes={transactionTypes}
+                availableFormsTransactions={availableFormsTransactions}
             />
             {error && <AssistiveText text={error} variant={AssistiveTextVariant.Error} className="mt-2" />}
         </WorkflowCard>

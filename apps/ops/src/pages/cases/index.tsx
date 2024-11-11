@@ -35,6 +35,7 @@ import {
     isSearchValueObjectEmpty,
     toggleLabels,
 } from '@deps/helpers/case-management';
+import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { storage } from '@deps/helpers/sessionStorage.helper';
@@ -87,7 +88,8 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
 
     // Data Fetcher(s)
     const fetchCaseStats = useCallback(async () => {
-        const additionalFilters = getAdditionalFilters(caseManagementFilters.additionalFilters);
+        // We don't want to use the status filters when getting counts for the search results
+        const { caseStatus, notInCaseStatus, ...additionalFilters } = getAdditionalFilters(caseManagementFilters.additionalFilters);
 
         const searchValueObject = getSearchValueObject(caseManagementFilters.searchValue, caseManagementFilters.toggleValue);
 
@@ -392,7 +394,9 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                     <div className="early-col-break my-6 flex flex-col items-start justify-start sm:flex-row sm:items-center sm:justify-between">
                         <div className="early-break mb-4 flex flex-row items-center justify-start sm:mb-0 sm:justify-between">
                             <p className="mr-2 whitespace-nowrap font-primary text-2xl font-normal text-gray-900">
-                                {`${t('caseManagementDashboard.results')} (${caseTotals.All})`}
+                                {`${t('caseManagementDashboard.results')} (${wholeNumberFormatify(caseTableData.total)}${
+                                    caseTableData.total === 10000 ? '+' : ''
+                                })`}
                             </p>
                             <NavElement
                                 tabIndex={0}
@@ -431,7 +435,14 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                             />
                         </div>
                     </div>
+                    <ActiveFilters
+                        authorizedCarriers={authorizedCarriers}
+                        filters={caseManagementFilters.additionalFilters}
+                        removeFilter={removeAdditionalFilter}
+                        onReset={resetAllFilters}
+                    />
                     <StatusFilter
+                        caseTotals={caseTotals}
                         values={caseManagementFilters.additionalFilters.caseStatus}
                         onChange={vals =>
                             setCaseManagementFilters(prev => {
@@ -447,12 +458,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                                 };
                             })
                         }
-                    />
-                    <ActiveFilters
-                        authorizedCarriers={authorizedCarriers}
-                        filters={caseManagementFilters.additionalFilters}
-                        removeFilter={removeAdditionalFilter}
-                        onReset={resetAllFilters}
                     />
                     <div ref={topDiv} className="w-full xs:overflow-x-auto xs:overflow-y-hidden xs:p-1 lg:mb-0 lg:p-0">
                         <div className="w-[1130px]" />

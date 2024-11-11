@@ -157,7 +157,7 @@ export const SelectBank = ({
         <FeatureFlagComponent
           flagKey={FEATURE_FLAGS.ADD_EDIT_DELETE_BANK_ACCOUNT}
           enabledComponent={
-            <div className="my-lg mb-none">
+            <div className={`my-lg mb-none ${styles.disclaimer}`}>
               <p className="typography-content-body-sm">
                 Want to pay with another bank account? Go to{' '}
                 <ConfirmDialog
