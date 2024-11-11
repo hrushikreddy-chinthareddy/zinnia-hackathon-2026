@@ -71,7 +71,7 @@ const Summary = ({ policy }: SummaryProps) => {
                     parentPage={ParentPage.Withdrawals}
                     planCode={product?.planCode}
                     policyNumber={policyNumber}
-                    submitLabel={t('submitPayment') as string}
+                    submitLabel={t('submitCancellation') as string}
                 />
             </CardContainer>
         </div>

@@ -57,7 +57,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
                 leaveRoute={`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/withdrawals`}
                 submit={{
                     action: submit,
-                    text: defaultT('cancelFreelook.summary.submitPayment'),
+                    text: defaultT('cancelFreelook.summary.submitCancellation'),
                 }}
             />
         );

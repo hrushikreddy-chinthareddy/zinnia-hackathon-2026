@@ -3573,7 +3573,7 @@
             "label": "Résumé",
             "payee": "Bénéficiaire",
             "status200subtitle": "Parfait ! Veuillez vérifier vos entrées avant de soumettre.",
-            "submitPayment": "Soumettre le paiement"
+            "submitCancellation": "Soumettre l'annulation"
         }
     },
     "withdrawals": {

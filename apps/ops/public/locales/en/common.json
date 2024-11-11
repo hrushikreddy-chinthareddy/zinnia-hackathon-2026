@@ -3816,7 +3816,7 @@
             "label": "Summary",
             "payee": "Payee",
             "status200subtitle": "Looking good! Be sure to review your entries before submitting.",
-            "submitPayment": "Submit payment"
+            "submitCancellation": "Submit cancellation"
         }
     },
     "withdrawals": {
