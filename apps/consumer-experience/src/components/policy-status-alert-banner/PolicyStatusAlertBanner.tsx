@@ -85,10 +85,10 @@ export const PolicyStatusAlertBanner = ({
         statusContent = {
           text: (
             <span className="typography-nav-links-sm-inline">
-              You're still in the free look period. That means you can cancel
-              this policy without penalty anytime before{' '}
-              {convertKebabedDateString(policyStatusData.endDate)}. If you'd
-              like to cancel, call{' '}
+              You’re still in the free look period, a{' '}
+              {convertKebabedDateString(policyStatusData.endDate)}-day window
+              after policy issuance when you can cancel without penalty. If
+              you'd like to cancel, call{' '}
               <a href={`tel:+${EVERLY_CONTACT_PHONE_NUMBER}`}>
                 {EVERLY_CONTACT_PHONE_NUMBER}
               </a>
