@@ -1,7 +1,11 @@
 import { getUiOptions, ObjectFieldTemplateProps } from '@rjsf/utils';
 import { Tooltip } from '@zinnia/bloom/components';
+import clsx from 'clsx';
 
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
+
+import style from './object-field.module.css';
+
 export function ObjectFieldTemplate(props: ObjectFieldTemplateProps) {
     const uiOptions = getUiOptions(props.uiSchema);
     const helpText = uiOptions.help;
@@ -13,7 +17,7 @@ export function ObjectFieldTemplate(props: ObjectFieldTemplateProps) {
     return (
         <div className="mt-2">
             {props.title && (
-                <div className="my-4 typography-titles-subtitle flex">
+                <div className={clsx('my-4 typography-titles-subtitle flex', style.container)}>
                     {props.title}
                     {helpInformation}
                 </div>

@@ -1,0 +1,12 @@
+.container,
+.item {
+    display: flex;
+}
+
+.container {
+    align-items: center;
+    vertical-align: middle;
+    flex-flow: row nowrap;
+    line-height: var(--measure-line-height-font-line-height-medium);
+    gap: var(--measure-dimension-gap-sm);
+}
