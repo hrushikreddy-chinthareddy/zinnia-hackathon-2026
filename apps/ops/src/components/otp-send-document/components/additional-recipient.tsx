@@ -52,6 +52,7 @@ const AdditionalRecipient = ({ classNames, emails, setEmails, setError }: Additi
         <div className={classNames}>
             <Typography variant={TypographyVariant.Label} className="w-full">
                 {t(`correspondence.email`)}
+                {'  '}
                 <Popover
                     placement={PopoverPlacement.TopRight}
                     title={t('correspondence.additionalRecipientTooltipTitle') as string}
