@@ -11,7 +11,6 @@ import {
 } from '@/queries/policy-queries';
 import { QueryKeys } from '@/queries/query-keys';
 import { PolicyRequestInputs, PolicyStatusDetail } from '@/types/policy';
-import { convertKebabedDateString } from '@/utils/dates';
 
 interface ULFundsViewProps extends PolicyRequestInputs {
   initialPolicyStatus?: Partial<PolicyStatusDetail> | null;
@@ -49,7 +48,7 @@ export const ULFundsView = ({
       <CallForAssistance
         callToAction={
           freelookData?.isFreelook
-            ? `You can't edit allocations until your free look period ends on ${convertKebabedDateString(freelookData.freelookDate)}. Questions?`
+            ? `You can't edit allocations until your free look period ends. Questions?`
             : 'Questions about your allocations? '
         }
         contactPrompt={freelookData?.isFreelook ? undefined : 'Call'}
