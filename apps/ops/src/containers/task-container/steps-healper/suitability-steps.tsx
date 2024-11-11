@@ -4,10 +4,10 @@ import ConfirmStep from '../components/steps/confirm/confirm-step';
 import { MemoizedTaskFormStep as TaskFormStep } from '../components/steps/task-form/task-form-step';
 import { TaskReviewStep } from '../components/steps/task-review/task-review-step';
 
-export const getSuitabilitySteps = ({ policy, docType, clientCode, documentNumber, caseId, taskId, taskType }: GetStepsProps) => {
+export const getSuitabilitySteps = ({ policy, docType, clientCode, documentNumber, caseId, taskId, taskType, t }: GetStepsProps) => {
     const steps: Step[] = [
         {
-            ariaLabel: 'Input Suitability Data',
+            ariaLabel: t('tabs.taskReview'),
             component: (
                 <TaskReviewStep
                     policyNumber={policy.policyNumber || ''}
@@ -19,31 +19,31 @@ export const getSuitabilitySteps = ({ policy, docType, clientCode, documentNumbe
                     taskType={taskType}
                 />
             ),
-            text: 'Start',
+            text: t('tabs.start'),
             index: 0,
             isCompleted: true,
-            screenReaderLabel: 'Input Suitability Data',
+            screenReaderLabel: t('tabs.taskReview'),
         },
         {
-            ariaLabel: 'Suitability form',
+            ariaLabel: t('tabs.suitabilityForm'),
             component: <TaskFormStep taskType={taskType} policy={policy} taskInfoLink={''} isSubmit={false}></TaskFormStep>,
-            text: 'Suitability Form',
+            text: t('tabs.suitabilityForm'),
             index: 1,
-            screenReaderLabel: 'Suitability form',
+            screenReaderLabel: t('tabs.suitabilityForm'),
         },
         {
-            ariaLabel: 'Summary',
+            ariaLabel: t('tabs.summary'),
             component: <TaskFormStep taskType={taskType} policy={policy} taskInfoLink={''} readonly={true} isSubmit={true}></TaskFormStep>,
-            text: 'Summary',
+            text: t('tabs.summary'),
             index: 2,
-            screenReaderLabel: 'Summary',
+            screenReaderLabel: t('tabs.summary'),
         },
         {
-            ariaLabel: 'Confirm',
+            ariaLabel: t('tabs.confirm'),
             component: <ConfirmStep caseId={caseId} taskId={taskId} taskType={taskType}></ConfirmStep>,
-            text: 'Confirm',
+            text: t('tabs.confirm'),
             index: 3,
-            screenReaderLabel: 'Confirm',
+            screenReaderLabel: t('tabs.confirm'),
         },
     ];
     return steps;
