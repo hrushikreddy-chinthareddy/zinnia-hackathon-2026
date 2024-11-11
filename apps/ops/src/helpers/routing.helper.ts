@@ -49,9 +49,18 @@ export const goTo = (path: string, router: NextRouter, params?: RouteParams, opt
     }
 };
 
-export const convertToQueryString = (params: { [key: string]: string | number | boolean }): string => {
+export const convertToQueryString = (params: { [key: string]: string | number | boolean | string[] }): string => {
     const queryString = Object.keys(params)
-        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+        .map(key => {
+            const value = params[key];
+
+            if (Array.isArray(value)) {
+                return value.map(v => `${encodeURIComponent(key)}=${encodeURIComponent(v)}`).join('&');
+            }
+
+            return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+        })
+        .filter(Boolean)
         .join('&');
 
     return '?' + queryString;

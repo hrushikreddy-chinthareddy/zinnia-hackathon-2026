@@ -8,7 +8,6 @@ import { CallForAssistance } from '@/components/call-for-assistance/CallForAssis
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { getPolicyFundDetails, getPolicyStatusDetails } from '@/services';
 import { formatUSDollars } from '@/utils/currency';
-import { convertKebabedDateString } from '@/utils/dates';
 
 export const OriginalFundsView = async ({
   planCode,
@@ -65,7 +64,7 @@ export const OriginalFundsView = async ({
       <CallForAssistance
         callToAction={
           isFreelook
-            ? `You can't take edit allocations until your free look period ends on ${convertKebabedDateString(statusData.endDate)}. Questions?`
+            ? `You can't take edit allocations until your free look period ends. Questions?`
             : 'Editing allocations is coming soon. For now, '
         }
         contactPrompt={isFreelook ? undefined : 'call'}

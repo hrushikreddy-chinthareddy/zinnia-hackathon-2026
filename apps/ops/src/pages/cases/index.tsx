@@ -85,7 +85,8 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
 
     // Data Fetcher(s)
     const fetchCaseStats = useCallback(async () => {
-        const additionalFilters = getAdditionalFilters(caseManagementFilters.additionalFilters);
+        // We don't want to use the status filters when getting counts for the search results
+        const { caseStatus, notInCaseStatus, ...additionalFilters } = getAdditionalFilters(caseManagementFilters.additionalFilters);
 
         const searchValueObject = getSearchValueObject(caseManagementFilters.searchValue, caseManagementFilters.toggleValue);
 
@@ -181,6 +182,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         caseManagementFilters.searchValue,
         caseManagementFilters.additionalFilters,
         caseManagementFilters.offset,
+        limit,
         caseManagementFilters.sortDirection,
         caseManagementFilters.sortBy,
         isAdvisorsExcel,
@@ -344,7 +346,14 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                 <div className={styles.container}>
                     {searchBar}
                     <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+                        <ActiveFilters
+                            authorizedCarriers={authorizedCarriers}
+                            filters={caseManagementFilters.additionalFilters}
+                            removeFilter={removeAdditionalFilter}
+                            onReset={resetAllFilters}
+                        />
                         <StatusFilter
+                            caseTotals={caseTotals}
                             values={caseManagementFilters.additionalFilters.caseStatus}
                             onChange={vals =>
                                 setCaseManagementFilters(prev => {
@@ -360,12 +369,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                                     };
                                 })
                             }
-                        />
-                        <ActiveFilters
-                            authorizedCarriers={authorizedCarriers}
-                            filters={caseManagementFilters.additionalFilters}
-                            removeFilter={removeAdditionalFilter}
-                            onReset={resetAllFilters}
                         />
                         <NavElement
                             tabIndex={0}
@@ -391,7 +394,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                             {t('policy.documents.xToYOfZ', {
                                 x: caseManagementFilters.offset + 1,
                                 y: Math.min(caseManagementFilters.offset + limit, caseTotals.All),
-                                z: caseTotals.All,
+                                z: caseTotals.All.toLocaleString(),
                             })}
                         </Typography>
                         {paginationControls}

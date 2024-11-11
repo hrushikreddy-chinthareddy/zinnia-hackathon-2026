@@ -1,4 +1,7 @@
-export const CASE_STATS_DASHBOARD_ROLE = 'role:zinnia_read_stats_dashboard';
+export enum FgaRoles {
+  CASE_STATS_DASHBOARD_ROLE = 'role:zinnia_read_stats_dashboard',
+  CASE_INSIGHTS_ROLE = 'role:zinnia_case_insights',
+}
 
 export interface FGA_Tuple {
   user: string;
@@ -20,7 +23,12 @@ export function createBulkCheckBodyRequest(partyId: string) {
       {
         user: `party:${partyId}`,
         relation: 'party',
-        object: CASE_STATS_DASHBOARD_ROLE,
+        object: FgaRoles.CASE_STATS_DASHBOARD_ROLE,
+      },
+      {
+        user: `party:${partyId}`,
+        relation: 'party',
+        object: FgaRoles.CASE_INSIGHTS_ROLE,
       },
     ],
   };
@@ -46,7 +54,23 @@ export function checkIfUserHasDashboardAccess(
   bulkCheckTuples: Array<BulkCheckTuple>
 ) {
   const superAdminVals = {
-    object: 'role:zinnia_read_stats_dashboard',
+    object: FgaRoles.CASE_STATS_DASHBOARD_ROLE,
+    relation: 'party',
+  };
+
+  return bulkCheckTuples.find(
+    (tuple) =>
+      tuple.object === superAdminVals.object &&
+      tuple.relation === superAdminVals.relation &&
+      tuple.allowed
+  );
+}
+
+export function checkIfUserHasCaseInsightsAccess(
+  bulkCheckTuples: Array<BulkCheckTuple>
+) {
+  const superAdminVals = {
+    object: FgaRoles.CASE_INSIGHTS_ROLE,
     relation: 'party',
   };
 

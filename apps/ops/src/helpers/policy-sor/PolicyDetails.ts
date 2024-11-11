@@ -1,3 +1,6 @@
+import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
+import dayjs from 'dayjs';
+
 import {
     DistributionType,
     DeathBenefitOptionType,
@@ -12,6 +15,7 @@ import {
     ProductType,
     Rider,
 } from '@deps/models/policy/sor-policy';
+import { DEFAULT_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
 import { getCarrierLogoByClientId, getCarrierNameByClientId } from '@deps/utils/carriers';
 
 import { Coverage } from './Coverage';
@@ -185,6 +189,26 @@ export class PolicyDetails {
 
     public get hasLoans(): boolean {
         return !!this.policy?.allocation?.loanSegments?.length;
+    }
+
+    /**
+     * Checks if the policy is still in the free look period and returns the end date.
+     * @returns An object with two properties:
+     *          - `isInFreeLookPeriod`: A boolean indicating if the policy is still in the free look period.
+     *          - `endDate`: The date the free look period ends.
+     */
+    public get freeLookPeriodDetails(): { isInFreeLookPeriod: boolean; endDate: any } {
+        const freeLookCancellationDate = this.features.getFirstFeatureByType(PolicyFeatureFeatureType.freelook)?.endDate;
+        const hadEndDate = !isNullEmptyOrUndefined(freeLookCancellationDate);
+
+        return {
+            // We add 15 days to the cancellation date in case ops needs to back date,
+            // so they still have access to the cancellation functionality. The 15 is based on... a number that was chosen.
+            // In the banner we still display the ACTUAL end date of the free look period.
+            isInFreeLookPeriod:
+                this.policyStatus === PolicyStatus.ACTIVE && hadEndDate && dayjs().isBefore(dayjs(freeLookCancellationDate).add(15, 'day')),
+            endDate: hadEndDate ? dayjs(freeLookCancellationDate).format(DEFAULT_DATE_DISPLAY_FORMAT) : DEFAULT_ERROR_STRING,
+        };
     }
 
     public get requiredMinimumDistribution(): {
