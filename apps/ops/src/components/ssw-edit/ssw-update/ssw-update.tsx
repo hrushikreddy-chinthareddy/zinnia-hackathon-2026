@@ -38,7 +38,7 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
     const router = useRouter();
     const { doc } = router.query;
     const channel = doc ? getChannel(doc as string) : null;
-    const [updateProgram, setUpdateProgram] = useState<Program[]>([]);
+    const [updateProgram, setUpdateProgram] = useState<Program>(programs[0]);
     const { formSource, initialForm, formSignature } = useContext(FormDataContext);
     const [isLoading, setIsLoading] = useState(false);
     const [isFormSubmitted, setIsFormSubmitted] = useState(false);
@@ -115,7 +115,7 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
             },
             {
                 ariaLabel: t('sswUpdate.tabs.amount.tabTitle'),
-                component: <Amount updateProgram={programs[0]} onProgramUpdate={setUpdateProgram} isReadOnly={false} />,
+                component: <Amount updateProgram={updateProgram} onProgramUpdate={setUpdateProgram} isReadOnly={false} />,
                 screenReaderLabel: t('sswUpdate.tabs.amount.tabTitle'),
                 index: 1,
                 text: t('sswUpdate.tabs.amount.tabTitle'),

@@ -18,7 +18,7 @@ const getSswEditPayload = (
     formSource: FormSource,
     formSignature: FormSignature,
     existingProg: Program,
-    updateProgram: Program[] | any,
+    updateProgram: Program | any,
     document: DocumentData,
     operationType: SswUpdateType
 ) => {
@@ -105,7 +105,7 @@ export const buildSSWFormData = (
     formSource: FormSource,
     formSignature: FormSignature,
     existingProg: Program,
-    updateProgram: Program[],
+    updateProgram: Program,
     document: DocumentData,
     operationType: SswUpdateType
 ) => {
