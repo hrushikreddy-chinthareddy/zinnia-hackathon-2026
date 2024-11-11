@@ -11,9 +11,10 @@ import { Processes } from '@deps/models/case/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { validateFullSurrenderWithdrawal, validatePartialWithdrawalOneTime } from '@deps/queries/api/bpm';
 
-import Confirm from './confirm/confirm';
-import Summary from './summary/summary';
-import { buildWithdrawalsRequestBody } from './withdrawals.helpers';
+// BPB - fix these!
+import Confirm from '../withdrawal/confirm/confirm';
+import Summary from '../withdrawal/summary/summary';
+import { buildFreelookCancelRequestBody } from './freelook-cancel.helpers';
 
 const WithdrawalContainer = ({ policy }: { policy: Policy }) => {
     const { t } = useTranslation();
@@ -27,7 +28,7 @@ const WithdrawalContainer = ({ policy }: { policy: Policy }) => {
     const confirmLabel = t('withdrawals.confirm.label');
 
     const validateCall = () => {
-        const query = buildWithdrawalsRequestBody(withdrawal);
+        const query = buildFreelookCancelRequestBody(withdrawal);
 
         return withdrawal.type === WithdrawalType.Surrender
             ? validateFullSurrenderWithdrawal(policy.product?.planCode, policy.policyNumber, query)
