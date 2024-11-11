@@ -35,7 +35,6 @@ const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters =>
     };
     const caseFilters: CaseSearchFilters = {
         additionalFilters,
-        limit: 25,
         offset: 0,
         total: 0,
         sortBy: 'createdAt',
@@ -96,10 +95,6 @@ const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters =>
         if (val.isValid()) {
             additionalFilters.createdDateStart = val.format(DATE_PICKER_FORMAT);
         }
-    }
-
-    if (query[QueryKeys.limit] && !isNaN(parseInt(query[QueryKeys.limit] as string))) {
-        caseFilters.limit = parseInt(query[QueryKeys.limit] as string);
     }
 
     if (query[QueryKeys.notInCaseStatus]) {
@@ -173,7 +168,7 @@ const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters =>
 // Dev Note: This is hopefully a short-term solution until we update the UI to be more closely integrated with the API filter values.
 const convertFilterToQuery = (filters: CaseSearchFilters): ParsedUrlQueryInput => {
     const query: ParsedUrlQueryInput = {};
-    const { limit, offset, sortBy, sortDirection, additionalFilters } = filters;
+    const { offset, sortBy, sortDirection, additionalFilters } = filters;
     const {
         carriers,
         caseStatus,
@@ -201,10 +196,6 @@ const convertFilterToQuery = (filters: CaseSearchFilters): ParsedUrlQueryInput =
 
     if (createdDateStart) {
         query[QueryKeys.createdDateStart] = dayjs(createdDateStart, DATE_PICKER_FORMAT).format();
-    }
-
-    if (limit) {
-        query[QueryKeys.limit] = limit;
     }
 
     if (notInCaseStatus) {

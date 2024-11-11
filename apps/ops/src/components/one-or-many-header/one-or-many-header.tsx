@@ -1,7 +1,8 @@
 import clsx from 'clsx';
-import React from 'react';
+import { useTranslation } from 'next-i18next';
 
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
+import { TranslationFiles } from '@deps/config/translations';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import PlusOthers from '../plus-others/plus-others';
@@ -12,6 +13,7 @@ export interface OneOrManyHeaderProps {
 }
 
 const OneOrManyHeader = ({ entities, className }: OneOrManyHeaderProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON);
     const defaultClassName = 'text-gray-900 headline-1-d';
     const ownerNameClassName = clsx(className, defaultClassName);
 
@@ -34,7 +36,7 @@ const OneOrManyHeader = ({ entities, className }: OneOrManyHeaderProps) => {
     return (
         <div className="flex items-center" data-testid="one-or-many-container">
             <div className={defaultClassName}>{entities[0].name}</div>
-            <PlusOthers entities={entities.slice(1)} />
+            <PlusOthers entities={entities.slice(1)} tooltipTitle={t('tooltip.jointOwner')} />
         </div>
     );
 };

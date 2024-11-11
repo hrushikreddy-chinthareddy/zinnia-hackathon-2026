@@ -9,6 +9,7 @@ import MenuContextualItem from '@deps/components/menu-contextual/menu-contextual
 import MenuContextualLabel from '@deps/components/menu-contextual/menu-contextual-label/menu-contextual-label';
 import { commonPopoverClasses, commonTriggerClasses } from '@deps/components/popover/popover.helper';
 import { TranslationFiles } from '@deps/config/translations';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 import { ReactComponent as PaymentIcon } from '@deps/styles/elements/icons/content/payment.svg';
@@ -16,6 +17,7 @@ import { ReactComponent as AutopayIcon } from '@deps/styles/elements/icons/curre
 import { ReactComponent as CashIcon } from '@deps/styles/elements/icons/icons_outlined/cash.svg';
 import { ReactComponent as MenuHorizontal } from '@deps/styles/elements/icons/icons_outlined/menu-horizontal.svg';
 import loaderImage from '@deps/styles/images/loader-contrast.png';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 interface TranslateProps {
     t: TFunction;
@@ -47,6 +49,8 @@ const IconButton = React.forwardRef<HTMLButtonElement, TranslateProps>(function 
 const MenuContextualContent = ({ t, planCode, policyNumber, eligibilityCheck, isLoading }: TranslateProps & QuickActionsMenuProps) => {
     const permissions = usePermissionsContext();
     const userPartyId = permissions.getUserPartyId();
+    const { featureFlags } = useOptimizely();
+    const freeLookEnabled = featureFlags[FEATURE_FLAGS.POLICY_FREE_LOOK_CANCELLATION];
 
     return (
         <MenuContextualLabel label={t('transactions.label')}>
@@ -56,6 +60,14 @@ const MenuContextualContent = ({ t, planCode, policyNumber, eligibilityCheck, is
                 </div>
             ) : (
                 <>
+                    {eligibilityCheck?.eligibleFreeLookCancel && freeLookEnabled && (
+                        <MenuContextualItem
+                            content={t('transactions.cancelPolicy')}
+                            href={`/policies/${planCode}/${policyNumber}/policy/freelook/cancel-freelook/`}
+                            icon={<CashIcon height={20} width={20} />}
+                            userPartyId={userPartyId}
+                        />
+                    )}
                     <MenuContextualItem
                         disabled={!eligibilityCheck?.eligibleAutopay as boolean}
                         content={t('transactions.managePremiumAutopay')}
@@ -92,6 +104,7 @@ export interface QuickActionsMenuProps {
         eligibleAutopay: boolean | null;
         eligiblePremium: boolean | null;
         eligibleWithdrawal: boolean | null;
+        eligibleFreeLookCancel: boolean;
     };
     isLoading?: boolean;
     onOpenChange?: (open: boolean) => void;

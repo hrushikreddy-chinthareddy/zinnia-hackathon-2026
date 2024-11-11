@@ -3,17 +3,15 @@ import { GetServerSidePropsContext } from 'next';
 import dynamic from 'next/dynamic';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import CaseSearchCard from '@deps/components/card/case-search-card/case-search-card';
-import { FieldSize } from '@deps/components/fields/field';
 import FilterButton from '@deps/components/filter-button/filter-button';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import NoNavLayout from '@deps/components/no-nav-layout';
 import { PageLoader, PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import { PageHead } from '@deps/components/page-title';
 import SearchBar from '@deps/components/search/search-bar';
-import SelectSimple from '@deps/components/select/select';
+import { CaseResultTable } from '@deps/components/table/case-result-table';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
@@ -23,7 +21,6 @@ import {
     CaseSearchAdditionalFilters,
     CaseSearchFilters,
     initialFilters,
-    caseSearchPageSizeOptions,
     CaseTableData,
 } from '@deps/contexts/CaseManagementFilters';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
@@ -54,13 +51,9 @@ import useCaseFilterQueryStore from './caseFilterQueryStore';
 
 // Lazy Loaded Components
 const SideSheetRefineResults = dynamic(() => import('@deps/containers/side-sheet-refine-results/side-sheet-refine-results'));
-const CaseSearchResultsEmptyCard = dynamic(
-    () => import('@deps/containers/search-results/search-results-empty-card/case-search-results-empty-card')
-);
 const ActiveFilters = dynamic(() => import('@deps/containers/active-filters/active-filters'));
 const SearchResultsErrorCard = dynamic(() => import('@deps/containers/search-results/search-results-error-card/search-results-error-card'));
 const PaginationControls = dynamic(() => import('@deps/components/pagination/pagination'));
-const PageSizeControls = dynamic(() => import('@deps/components/pagination/page-size/page-size'));
 
 interface CaseManagementDashboardProps extends SegmentTrackedPageProps {
     authorizedCarriers: string[];
@@ -69,15 +62,19 @@ interface CaseManagementDashboardProps extends SegmentTrackedPageProps {
 
 const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: CaseManagementDashboardProps) => {
     const [caseManagementFilters, setCaseManagementFilters] = useCaseFilterQueryStore();
+    const limit = 25;
     const [loadedStoredFilters, setLoadedStoredFilters] = useState(false);
+    const handleCreatedBySort = useCallback(() => {
+        setCaseManagementFilters(prevFilters => ({
+            ...prevFilters,
+            sortDirection: prevFilters.sortDirection === 'asc' ? 'desc' : 'asc',
+            offset: 0,
+        }));
+    }, [setCaseManagementFilters]);
 
     const { t } = useTranslation();
 
     useSegmentPageTracker(user, SegmentPageName.CaseManagementDashboard);
-
-    // Refs
-    const topDiv = useRef<HTMLDivElement | null>(null);
-    const bottomDiv = useRef<HTMLDivElement | null>(null);
 
     const [caseTableData, setCaseTableData] = useState<CaseTableData>({ cases: [], total: 0, loading: true, error: false });
     const [caseTotals, setCaseTotals] = useState({
@@ -148,7 +145,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
             const updatedRequest: CaseSearchQuery = {
                 ...additionalFilters,
                 ...searchValueObject,
-                limit: caseManagementFilters.limit,
+                limit: limit,
                 offset: caseManagementFilters.offset,
                 sortDirection: caseManagementFilters.sortDirection,
                 sortBy: caseManagementFilters.sortBy || 'createdAt',
@@ -184,7 +181,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         caseManagementFilters.searchValue,
         caseManagementFilters.additionalFilters,
         caseManagementFilters.offset,
-        caseManagementFilters.limit,
+        limit,
         caseManagementFilters.sortDirection,
     ]);
 
@@ -243,35 +240,8 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         }
 
         setLoadedStoredFilters(true);
-
-        const syncScroll = (source: React.RefObject<HTMLDivElement>, target: React.RefObject<HTMLDivElement>) => {
-            if (source.current === null || target.current === null) return;
-            target.current.scrollLeft = source.current.scrollLeft;
-        };
-
-        const handleScrollTop = () => syncScroll(topDiv, bottomDiv);
-        const handleScrollBottom = () => syncScroll(bottomDiv, topDiv);
-
-        const topCurrent = topDiv.current;
-        const bottomCurrent = bottomDiv.current;
-
-        if (topCurrent) {
-            topCurrent.addEventListener('scroll', handleScrollTop);
-        }
-
-        if (bottomCurrent) {
-            bottomCurrent.addEventListener('scroll', handleScrollBottom);
-        }
-
-        return () => {
-            if (topCurrent) {
-                topCurrent.removeEventListener('scroll', handleScrollTop);
-            }
-
-            if (bottomCurrent) {
-                bottomCurrent.removeEventListener('scroll', handleScrollBottom);
-            }
-        };
+        // to do - this freaks out if I add the dep
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // Handler(s)
@@ -304,65 +274,39 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                 onToggle={handleToggle}
             />
         );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [caseManagementFilters.searchValue, caseManagementFilters.toggleValue]);
-
-    const pageSizeDropdown = useMemo(() => {
-        return (
-            <PageSizeControls
-                options={caseSearchPageSizeOptions}
-                value={`${caseManagementFilters.limit}`}
-                handleChange={value => {
-                    setCaseManagementFilters(prevFilters => ({
-                        ...prevFilters,
-                        limit: Number(value),
-                        offset: 0,
-                    }));
-                    window.scrollTo(0, 0);
-                }}
-            />
-        );
-    }, [caseManagementFilters.limit]);
 
     const paginationControls = useMemo(() => {
         const goToPage = (pageNumber: number) => {
             setCaseManagementFilters(prevFilters => ({
                 ...prevFilters,
-                offset: (pageNumber - 1) * caseManagementFilters.limit,
+                offset: (pageNumber - 1) * limit,
             }));
 
             window.scrollTo(0, 0);
         };
 
-        return (
-            <PaginationControls
-                total={caseTableData.total}
-                limit={caseManagementFilters.limit}
-                offset={caseManagementFilters.offset}
-                goToPage={goToPage}
-            />
-        );
-    }, [caseTableData.total, caseManagementFilters.limit, caseManagementFilters.offset]);
+        return <PaginationControls total={caseTableData.total} limit={limit} offset={caseManagementFilters.offset} goToPage={goToPage} />;
+    }, [caseTableData.total, caseManagementFilters.offset, limit, setCaseManagementFilters]);
 
     const tableContent = useMemo(() => {
         const { cases, loading, error } = caseTableData;
 
         if (loading) return <PageLoader variant={PageLoaderVariant.Center} />;
         if (error) return <SearchResultsErrorCard />;
-        if (!cases || cases.length === 0) return <CaseSearchResultsEmptyCard />;
 
         return (
             <>
-                {cases.map(singleCase => (
-                    <CaseSearchCard
-                        key={`case-search-card-${singleCase.id}`}
-                        {...singleCase}
-                        {...singleCase.additionalData}
-                        searchValues={caseManagementFilters.searchValue}
-                    />
-                ))}
+                <CaseResultTable
+                    cases={cases}
+                    searchValues={caseManagementFilters.searchValue}
+                    handleSort={handleCreatedBySort}
+                    sortDirection={caseManagementFilters.sortDirection}
+                />
             </>
         );
-    }, [caseTableData, caseManagementFilters.searchValue]);
+    }, [caseTableData, caseManagementFilters.searchValue, caseManagementFilters.sortDirection, handleCreatedBySort]);
 
     // Sidesheet Support
     const sideSheet = useSideSheetContext();
@@ -416,24 +360,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                                 {t('caseManagementDashboard.refineResults')}
                             </NavElement>
                         </div>
-
-                        <div className="w-54 sm:mt-4 md:mt-0">
-                            <SelectSimple
-                                size={FieldSize.Small}
-                                value={caseManagementFilters.sortDirection}
-                                options={[
-                                    { label: t('caseManagementDashboard.sortOptions.newest'), value: 'desc' },
-                                    { label: t('caseManagementDashboard.sortOptions.oldest'), value: 'asc' },
-                                ]}
-                                onChange={value => {
-                                    setCaseManagementFilters(prevFilters => ({
-                                        ...prevFilters,
-                                        sortDirection: value as 'asc' | 'desc',
-                                        offset: 0,
-                                    }));
-                                }}
-                            />
-                        </div>
                     </div>
                     <ActiveFilters
                         authorizedCarriers={authorizedCarriers}
@@ -446,7 +372,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                         values={caseManagementFilters.additionalFilters.caseStatus}
                         onChange={vals =>
                             setCaseManagementFilters(prev => {
-                                const { caseStatus, notInCaseStatus = [] } = prev.additionalFilters;
+                                const { notInCaseStatus = [] } = prev.additionalFilters;
                                 const nonConflictingNicsVals = notInCaseStatus.filter(val => !vals.includes(val)); // remove any values that are both in caseStatus and notInCaseStatus
                                 return {
                                     ...prev,
@@ -459,17 +385,16 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                             })
                         }
                     />
-                    <div ref={topDiv} className="w-full xs:overflow-x-auto xs:overflow-y-hidden xs:p-1 lg:mb-0 lg:p-0">
-                        <div className="w-[1130px]" />
-                    </div>
-                    <div ref={bottomDiv} className="w-full xs:overflow-x-auto xs:overflow-y-hidden xs:p-1 lg:p-0">
-                        {tableContent}
-                    </div>
-                    <div className="align-center mx-auto mt-4 grid grid-cols-4 lg:grid-cols-12 lg:pb-[120px]">
-                        <div className="order-2 col-span-4 mt-8 flex items-center justify-center gap-1 pb-[120px] lg:order-1 lg:col-span-2 lg:mt-0 lg:pb-0">
-                            {pageSizeDropdown}
-                        </div>
-                        <div className="order-1 col-span-4 lg:order-2 lg:col-span-8">{paginationControls}</div>
+                    {tableContent}
+                    <div className="flex flex-col items-center lg:grid lg:grid-cols-3 mt-3">
+                        <Typography variant={TypographyVariant.BodySm} className="mb-6 lg:mb-0">
+                            {t('policy.documents.xToYOfZ', {
+                                x: caseManagementFilters.offset + 1,
+                                y: Math.min(caseManagementFilters.offset + limit, caseTotals.All),
+                                z: caseTotals.All.toLocaleString(),
+                            })}
+                        </Typography>
+                        {paginationControls}
                     </div>
                 </div>
             </NoNavLayout>

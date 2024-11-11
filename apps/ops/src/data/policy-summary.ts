@@ -81,8 +81,6 @@ export const toPolicySummaryColDto = (policy: Policy, t?: TFunction): PolicySumm
     return result;
 };
 
-// TODO MG: add fixed cost period to this?
-// is this where the highlighting comes in?
 export const getPolicySummaryColDefs = (t: TFunction): DataDefinition<PolicySummaryColDto>[] => [
     {
         key: 'upcomingMonthlyPremium',

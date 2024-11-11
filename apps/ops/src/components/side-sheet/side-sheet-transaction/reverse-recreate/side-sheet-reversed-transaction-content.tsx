@@ -6,9 +6,9 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { numberFormatify } from '@deps/helpers/numbers.helper';
 import loadingImage from '@deps/styles/images/loader.png';
 
-import { SideSheetReversedTransactionViewModel } from '../types';
+import { SideSheetReversedTransactionModel } from './types';
 
-const SideSheetReversedTransactionContent = ({ t, loading, values }: SideSheetReversedTransactionViewModel) => {
+const SideSheetReversedTransactionContent = ({ t, loading, values }: SideSheetReversedTransactionModel) => {
     const transactionFields: Record<string, FieldDataProps> = {
         transactionType: {
             label: t('policy.history.sidesheet.transactionType'),

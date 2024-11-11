@@ -725,7 +725,9 @@
                     "pendingLapseBannerText": "Cette police nécessite un paiement avant son expiration. Y aller maintenant?",
                     "pendingLapseBannerLink": "Effectuer un paiement de prime",
                     "lapseBannerText": "Ce contrat est agréé moyennant une prime de réintégration. Y aller maintenant ?",
-                    "lapseBannerLink": "Effectuer un paiement de prime"
+                    "lapseBannerLink": "Effectuer un paiement de prime",
+                    "freeLookCancelBannerText": "Cette police est encore dans sa période d'examen gratuit et peut être annulée sans pénalité jusqu'à cette date.",
+                    "freeLookCancelBannerLink": "Annuler la police"
                 }
             },
             "empty": {
@@ -787,13 +789,20 @@
             "owner": "Propriétaire",
             "ssn": "SSN",
             "policyNumber": "Numéro de police",
+            "policy": "Politique",
             "currentStage": "Étape actuelle",
             "contractNumber": "Contrat #",
             "productName": "Nom du produit",
             "agent": "Agent",
             "caseId": "ID du dossier",
+            "case/ID": "Dossier/ID",
             "documentNumber": "Numéro de document",
-            "viewCase": "Afficher les détails du cas numéro {{caseNumber}}"
+            "viewCase": "Afficher le cas",
+            "viewCaseNumber": "Afficher les détails du cas numéro {{caseNumber}}",
+            "viewCaseDetails": "Afficher les détails du cas",
+            "caseStatus": "Statut du dossier",
+            "ownerSsn": "Propriétaire/SSN",
+            "agentSsn": "Agente/SSN"
         },
         "pageSize": "Lignes par page",
         "results": "Résultats",
@@ -869,6 +878,7 @@
             },
             "empty": {
                 "title": "Nous n’avons pas trouvé de cas correspondant à votre recherche.",
+                "titleFilters": "Nous n'avons pas pu trouver de cas correspondant à vos filtres.",
                 "paragraph": "Ne vous inquiétez pas, c'est probablement juste une faute de frappe. Vérifiez votre saisie et réessayez.",
                 "action": {
                     "text": "Vous rencontrez toujours des problèmes ? ",
@@ -2487,6 +2497,7 @@
                 "reverseSurrender": "Annuler la reddition",
                 "routingNumber": "Numéro de routage",
                 "setAsMailingAddress": "Définir comme adresse postale",
+                "stateNotFound": "État non trouvé",
                 "submittedAmount": "Montant soumis",
                 "submittedAmountTooltip": "Ceci est le montant soumis. En d'autres termes, le propriétaire a écrit un chèque ou initié un virement de fonds pour ce montant. Le montant soumis peut différer du montant appliqué si nous ne pouvions appliquer qu'un montant inférieur en raison des limites de test de la politique. Ce sont des limites légales quant à la somme qu'un propriétaire peut verser dans la police sur une certaine période de temps. Cela peut entraîner le retour de certains fonds au propriétaire (appelé un « forçage »).",
                 "surrender": "Reddition",
@@ -2816,6 +2827,7 @@
     },
     "tooltip": {
         "jointOwner": "Co-titulaire",
+        "agent": "Agent",
         "ssn": "SSN",
         "other": "autre"
     },
@@ -3871,7 +3883,8 @@
             "label": "Transactions",
             "managePremiumAutopay": "Gérer le paiement automatique des primes",
             "newPremium": "Démarrez un abonnement premium unique",
-            "startAWithdrawal": "Démarrer un retrait"
+            "startAWithdrawal": "Démarrer un retrait",
+            "cancelPolicy": "Annuler la police"
         }
     },
     "historyEventCard": {
