@@ -9,8 +9,8 @@ import TransactionNavigationButtons, { ParentPage } from '@deps/components/trans
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { Policy } from '@deps/models/policy/sor-policy';
+import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 
 const EffectiveDate = ({
     policy,

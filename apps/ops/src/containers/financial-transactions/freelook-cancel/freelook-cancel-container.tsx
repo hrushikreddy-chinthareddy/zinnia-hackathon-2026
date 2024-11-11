@@ -1,20 +1,18 @@
 import { useTranslation } from 'next-i18next';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import EffectiveDate from '@deps/components/workflows/effective-date-step/effective-date-step';
 import PayeesStep, { PayeesStepSetState } from '@deps/components/workflows/payees-step/payees-step';
 import PaymentStep, { PaymentStepSetState } from '@deps/components/workflows/payment-step/payment-step';
 import StartStep, { StartStepSetState } from '@deps/components/workflows/start-step/start-step';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import WorkflowContainer from '@deps/containers/workflow-container/workflow-container';
-import { WithdrawalType, useWithdrawal } from '@deps/contexts/WithdrawalContext';
+import { useWithdrawal } from '@deps/contexts/WithdrawalContext';
 import { Processes } from '@deps/models/case/case';
 import { Policy } from '@deps/models/policy/sor-policy';
-import { validateFullSurrenderWithdrawal, validatePartialWithdrawalOneTime } from '@deps/queries/api/bpm';
 
 import Confirm from './confirm/confirm';
 import Summary from './summary/summary';
-import { buildFreelookCancelRequestBody } from './freelook-cancel.helpers';
-import EffectiveDate from '@deps/components/workflows/effective-date-step/effective-date-step';
 
 const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
     const { t } = useTranslation();
@@ -26,14 +24,6 @@ const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
     const paymentLabel = t('withdrawals.payment.label');
     const summaryLabel = t('withdrawals.summary.label');
     const confirmLabel = t('withdrawals.confirm.label');
-
-    const validateCall = () => {
-        const query = buildFreelookCancelRequestBody(withdrawal);
-
-        return withdrawal.type === WithdrawalType.Surrender
-            ? validateFullSurrenderWithdrawal(policy.product?.planCode, policy.policyNumber, query)
-            : validatePartialWithdrawalOneTime(policy.product?.planCode, policy.policyNumber, query);
-    };
 
     const steps: Step[] = [
         {
