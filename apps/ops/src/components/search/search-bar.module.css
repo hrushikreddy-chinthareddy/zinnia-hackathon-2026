@@ -63,4 +63,9 @@
 .dropdownItem {
     padding: var(--measure-spacing-padding-md) var(--measure-spacing-padding-2xl);
     cursor: pointer;
+    border: var(--measure-border-width-stroke-sm) solid transparent;
+
+    &:hover {
+        border-color: var(--color-states-hover-border-hover-border);
+    }
 }

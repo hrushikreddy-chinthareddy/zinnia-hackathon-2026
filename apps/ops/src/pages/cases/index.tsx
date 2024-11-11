@@ -345,7 +345,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                 </Typography>
                 <div className={styles.container}>
                     {searchBar}
-                    <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+                    <div className="sm:my-4 mt-4 mb-6 flex flex-col gap-2 sm:flex-row sm:items-center">
                         <ActiveFilters
                             authorizedCarriers={authorizedCarriers}
                             filters={caseManagementFilters.additionalFilters}
