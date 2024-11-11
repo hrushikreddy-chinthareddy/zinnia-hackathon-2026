@@ -84,7 +84,7 @@ const SearchFieldToggle = ({ activeLabels, onClear, ...rest }: SearchFieldToggle
                 </fieldset>
             );
         } else {
-            fields = <SearchFieldContainer activeLabels={activeLabels} onClear={handleClear} {...rest} />;
+            fields = <SearchFieldContainer activeLabels={activeLabels} onClear={handleClear} ref={firstInputRef} {...rest} />;
         }
     }
 
