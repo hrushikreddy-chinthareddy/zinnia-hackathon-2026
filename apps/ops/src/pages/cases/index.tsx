@@ -255,10 +255,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         setCaseManagementFilters(prevFilters => ({ ...prevFilters, additionalFilters: filters, offset: 0 }));
 
     const handleSearch = useCallback(
-        (value: SearchViewQuery) => {
-            console.log(value);
-            setCaseManagementFilters(prevFilters => ({ ...prevFilters, searchValue: value, offset: 0 }));
-        },
+        (value: SearchViewQuery) => setCaseManagementFilters(prevFilters => ({ ...prevFilters, searchValue: value, offset: 0 })),
         [setCaseManagementFilters]
     );
     const handleClear = useCallback(
