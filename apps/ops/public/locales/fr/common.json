@@ -4348,6 +4348,7 @@
             "formTitles": {
                 "withdrawal": "{{carrier}} Withdrawal Request",
                 "oft": "{{carrier}} Outgoing Funds Transfer Request",
+                "ssw": "{{carrier}} Demande de retrait systématique",
                 "defaultTitle": "Form Entry"
             }
         }
