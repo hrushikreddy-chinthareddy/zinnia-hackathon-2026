@@ -25,6 +25,8 @@ const EmailAddress = ({ email, setEmail, error }: EmailAddressProps) => {
                 className="max-w-xs "
                 message={error?.email}
                 variant={error?.email ? FieldVariant.Error : FieldVariant.Default}
+                labelTooltip={t('correspondence.email') as string}
+                labelTooltipBody={t('correspondence.emailTooltip') as string}
             />
         </div>
     );

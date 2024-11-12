@@ -1853,8 +1853,8 @@
             "openNigoExists": "An onbase case includes a NIGO. Please resolve the open NIGO issue before submitting another request through the Digital Portal."
         },
         "sidebar": {
-            "contractStatusCode":"Policy Status",
-            "abbreviatedcontractStatusCode":"Pol.",
+            "contractStatusCode": "Policy Status",
+            "abbreviatedcontractStatusCode": "Pol.",
             "abbreviatedCaseId": "Case",
             "abbreviatedContractId": "Cont.",
             "abbreviatedDocumentNumber": "Doc.",
@@ -1864,7 +1864,7 @@
             "abbreviatedAnnuitantName": "Ann.",
             "abbreviatedContractValue": "Ctr Val.",
             "qualType": "Qualification type",
-            "contractValue":"Contract Value",
+            "contractValue": "Contract Value",
             "issueDate": "Issue date",
             "contractId": "Contract id",
             "ownerName": "Owner Name",
@@ -1898,9 +1898,12 @@
         "correspondence": {
             "label": "Where should the document(s)  be sent",
             "addAdditionalRecipient": "+ Add additional recipient",
+            "emailTooltip": "Please enter a valid email address. Only one email address is allowed in this field.",
+            "additionalRecipientTooltip": "You can add up to 5 email addresses in the CC field. Use a comma(,), semicolon(;), or Enter to separate them",
             "maxEmails": "Maximum 5 emails allowed",
             "duplicateEmail": "Email already exist in the list",
             "email": "Email",
+            "ccEmail": "CC Emails",
             "fax": "Fax",
             "mail": "Mail",
             "emailAddress": "Email Address",
@@ -1916,8 +1919,13 @@
             "cta": "Go to case",
             "secondaryCta": "Close",
             "subtitle": {
-                "0": "The document ",
-                "1": "has been sent to"
+                "0": "The documents ",
+                "1": "and cc'd"
+            },
+            "channel": {
+                "paper_mail": "mailed to",
+                "fax": "faxed to",
+                "email": "emailed to"
             },
             "title": "Submitted!"
         },

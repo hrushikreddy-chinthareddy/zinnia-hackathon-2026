@@ -1,11 +1,11 @@
-import { ChipX } from '@zinnia/bloom/components';
+import { ChipX, Label, Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import xss from 'xss';
 
 import Field, { FieldSize, FieldType } from '@deps/components/fields/field';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
+import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 
 import { validateEmail } from '../correspondence';
 
@@ -20,6 +20,9 @@ const AdditionalRecipient = ({ classNames, emails, setEmails, setError }: Additi
     const [email, setEmail] = useState('');
 
     const addEmail = (val: string) => {
+        if (!val) {
+            return;
+        }
         const emailError = validateEmail(val);
 
         if (emails.length >= 5) {
@@ -46,20 +49,39 @@ const AdditionalRecipient = ({ classNames, emails, setEmails, setError }: Additi
         setEmails(emails.filter(email => email !== val));
     };
 
+    const helpInformation = (
+        <Tooltip
+            placement={TooltipPlacement.TopRight}
+            trigger={<CircleInfoIcon onClick={e => e.preventDefault()} height={'16px'} width={'16px'} className="text-primary" />}
+        >
+            {t('correspondence.additionalRecipientTooltip') as string}
+        </Tooltip>
+    );
     return (
         <div className={classNames}>
-            <Typography variant={TypographyVariant.Label} className="w-full">
-                {t(`correspondence.email`)}
-            </Typography>
-            <div className={`border-2 border-gray-200 px-2 pt-1 rounded-lg`}>
+            <Label labelFor={'additional-recipient'} interactiveElements={[helpInformation]}>
+                {t(`correspondence.ccEmail`)}
+            </Label>
+
+            <div className={`border-2 border-gray-200 px-2 pt-2 mt-1 rounded-lg`}>
                 {emails.map(email => (
                     <ChipX label={email as string} key={email} onDelete={() => deleteEmail(email)} className="my-1" />
                 ))}
                 <Field
                     onChange={e => {
-                        setEmail(xss(e?.target?.value));
+                        setEmail(xss(e?.target?.value.trim()));
                     }}
                     handleEnterKey={() => {
+                        addEmail(email);
+                    }}
+                    onKeyPress={e => {
+                        if (e.key === ',' || e.key === ';') {
+                            e.preventDefault();
+                            addEmail(email);
+                        }
+                    }}
+                    onBlur={e => {
+                        e.preventDefault();
                         addEmail(email);
                     }}
                     value={email as string}

@@ -201,7 +201,7 @@
                 "clickToView": "Clique pour voir"
             },
             "viewDetails": {
-                "text":"voir les détails"
+                "text": "voir les détails"
             },
             "history": {
                 "text": "Histoire",
@@ -1836,8 +1836,8 @@
             "openNigoExists": "Un cas de base comprend un NIGO. Veuillez résoudre le problème ouvert NIGO avant de soumettre une autre demande via le portail numérique."
         },
         "sidebar": {
-            "contractStatusCode":"Statut de la politique",
-             "abbreviatedcontractStatusCode":"Pol.",
+            "contractStatusCode": "Statut de la politique",
+            "abbreviatedcontractStatusCode": "Pol.",
             "abbreviatedCaseId": "Cais.",
             "abbreviatedContractId": "Ctr.",
             "abbreviatedContractValue": "Ctr Val.",
@@ -1849,7 +1849,7 @@
             "qualType": "type de qualification",
             "issueDate": "Date d'émission",
             "contractId": "ID du contrat",
-            "contractValue":"valeur du contrat",
+            "contractValue": "valeur du contrat",
             "ownerName": "Le nom du propriétaire",
             "annuitantName": "Nom du rentier",
             "copyToClipboard": "Copier {{item}} dans le presse-papiers",
@@ -1881,9 +1881,12 @@
         "correspondence": {
             "label": "Où le(s) document(s) doivent-ils être envoyés ? ",
             "addAdditionalRecipient": "+ Ajouter un destinataire",
+            "emailTooltip": "Veuillez entrer une adresse e-mail valide. Un seul e-mail est autorisé dans ce champ.",
+            "additionalRecipientTooltip": "Vous pouvez ajouter jusqu'a 5 adresses e-mail dans le champ CC. Utilisez une virgule (,), point-virgule (;) ou Enter pour les séparer",
             "maxEmails": "Maximum 5 e-mails autorisés",
             "duplicateEmail": "L'e-mail existe déjà dans la liste",
             "email": "E-mail",
+            "ccEmail": "Destinataires en copie carbone",
             "fax": "Fax",
             "mail": "Mail préféré",
             "emailAddress": "Adresse e-mail",
@@ -1899,8 +1902,8 @@
             "cta": "Accéder au cas",
             "secondaryCta": "Fermer",
             "subtitle": {
-                "0": "Le document ",
-                "1": "a été envoyé à "
+                "0": "Les documents ",
+                "1": "et en copie"
             },
             "title": "Soumise!"
         },
