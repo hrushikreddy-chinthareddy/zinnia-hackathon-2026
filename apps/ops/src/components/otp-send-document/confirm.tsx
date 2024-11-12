@@ -17,7 +17,7 @@ const Confirm = ({ shouldShowCaseButton, formNames }: ConfirmProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
     const { state } = useCorrespondence();
     const source = state?.correspondence?.recipient;
-    const ccList = state?.correspondence?.ccList;
+    const ccList = state?.correspondence?.ccList || [];
     const communicationType = state?.correspondence?.type;
 
     const address = state?.correspondence?.mailDetails;
@@ -47,7 +47,7 @@ const Confirm = ({ shouldShowCaseButton, formNames }: ConfirmProps) => {
                             </PiiWrapper>
                         )}
 
-                        {communicationType === CommunicationTypes.Email && (
+                        {communicationType === CommunicationTypes.Email && ccList?.length > 0 && (
                             <PiiWrapper>
                                 <span> {t('confirm.subtitle.1')} </span>
                                 <span className="font-bold"> {ccList?.map(cc => (cc ? cc : '')).join(', ')}</span>
