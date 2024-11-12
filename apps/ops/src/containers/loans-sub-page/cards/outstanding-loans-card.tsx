@@ -42,7 +42,7 @@ export const loanInterestRateFormatted = (loanInterestRate?: number) => {
         return DEFAULT_ERROR_STRING;
     }
 
-    return loanInterestRate > 1 ? percentFormatify(loanInterestRate, { isInteger: true }) : percentFormatify(loanInterestRate);
+    return percentFormatify(loanInterestRate, { isInteger: loanInterestRate > 1 });
 };
 
 const ActiveCard = ({ currency, lastLoanInterestDueDate, loanNumber, loanSegment, t, totalActiveLoans }: ActiveCardProps) => {
