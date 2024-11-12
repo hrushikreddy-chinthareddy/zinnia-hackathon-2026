@@ -693,6 +693,7 @@
         "search": {
             "btnText": "Search",
             "searchKeyType": "Search by",
+            "clear": "Clear search",
             "results": {
                 "policySummaryCard": {
                     "header1": "Owner Information",

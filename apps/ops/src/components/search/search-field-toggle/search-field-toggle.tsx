@@ -1,7 +1,9 @@
 import { AssistiveText, AssistiveTextVariant, Button, Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { ChangeEvent, useContext, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
+import { TranslationFiles } from '@deps/config/translations';
 import { PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
 import { toSentenceCase } from '@deps/helpers/string.helper';
 import { LabelValue } from '@deps/types/data';
@@ -19,6 +21,7 @@ export const SearchFieldContainer = ({ handleChange, activeLabels, onClear }: Se
     const inputRef = useRef<HTMLInputElement | null>(null);
     const { showFieldErrorMessage } = useContext(PolicySearchFiltersContext);
     const { value: policyKey, label = '', placeholder, errorMessage } = activeLabels;
+    const { t } = useTranslation(TranslationFiles.COMMON);
 
     const inputType = () => {
         switch (activeLabels.value) {
@@ -36,6 +39,7 @@ export const SearchFieldContainer = ({ handleChange, activeLabels, onClear }: Se
             inputRef.current.value = '';
         }
     };
+    const hasValue = !!inputRef.current?.value;
 
     return (
         <div className={clsx(styles.inputContainer)}>
@@ -53,9 +57,12 @@ export const SearchFieldContainer = ({ handleChange, activeLabels, onClear }: Se
                 key={activeLabels.value}
                 ref={inputRef}
             />
-            <Button className={styles.close} onClick={handleClear} mode="link">
-                <Icon type={IconType.CLOSE} />
-            </Button>
+            {hasValue && (
+                <Button className={styles.close} onClick={handleClear} mode="link">
+                    <span className="sr-only">{t('dashboard.search.clear')}</span>
+                    <Icon type={IconType.CLOSE} />
+                </Button>
+            )}
             {showFieldErrorMessage && errorMessage && (
                 <AssistiveText text={errorMessage} variant={AssistiveTextVariant.Error} className="mt-2" />
             )}

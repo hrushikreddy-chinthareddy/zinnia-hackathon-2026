@@ -716,6 +716,7 @@
         "search": {
             "btnText": "Rechercher",
             "searchKeyType": "Type de recherche",
+            "clear": "Recherche claire",
             "results": {
                 "policySummaryCard": {
                     "header1": "Information du propriétaire",
