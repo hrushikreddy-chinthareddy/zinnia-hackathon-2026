@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { PopoverTest } from '@deps/jest/constants/test-id-constants';
 import { LoanSegment } from '@deps/models/policy/sor-policy';
 
-import OutstandingLoansCard from './outstanding-loans-card';
+import OutstandingLoansCard, { loanInterestRateFormatted } from './outstanding-loans-card';
 
 const currency = 'USD';
 const loanSegment = {
@@ -123,5 +123,15 @@ describe('OutstandingLoansCard', () => {
 
         const tooltipBody = await screen.findByText('interestRateTooltip');
         expect(tooltipBody).toBeInTheDocument();
+    });
+});
+
+describe('loanInterestRateFormatted', () => {
+    it('formats loan interest rate correctly if interest rate is percent as decimal', () => {
+        expect(loanInterestRateFormatted(0.0375)).toBe('3.75%');
+    });
+
+    it('formats loan interest rate correctly if interest rate exact percent', () => {
+        expect(loanInterestRateFormatted(3.75)).toBe('3.75%');
     });
 });
