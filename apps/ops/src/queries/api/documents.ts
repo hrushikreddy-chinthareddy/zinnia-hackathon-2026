@@ -1,3 +1,4 @@
+import { dataURItoBlob } from '@rjsf/utils';
 import { AxiosResponse } from 'axios';
 
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
@@ -39,28 +40,32 @@ export const getDocument = async (documentNumber: string, docType: string, clien
 export const uploadDocument = async (task: ManagementTask, policy: Policy, document: any): Promise<EDSDocumentResponse | null> => {
     try {
         const url = `${baseAppUrl}/api/document/v3/documents`;
-        const config = {
-            headers: {
-                'Content-type': 'multipart/form-data',
-                accept: 'application/json',
-                'Access-Control-Allow-Origin': '*',
-            },
-        };
+        const { blob, name } = dataURItoBlob(document);
+
+        // TODO: Update metadata
         const fileData = {
             file: document,
             metadata: {
-                sourceFileName: document.name,
-                documentNumber: '',
-                caseId: task.caseId,
-                planCode: '',
-                masterNumber: policy,
-                fileType: '',
-                clientCode: task.carrier,
-                caseNumber: task.caseId,
-                fileExtension: document.name.split('.').pop(),
+                sourceFileName: 'Q100720JHLILFGRC1LETTER.pdf',
+                docAccessLevel: 'ALL_ACCESS',
+                documentDate: '2024-11-12T10:21:33.690Z',
+                docCategory: 'NEW_BUSINESS',
+                fileType: 'PDF',
+                parentCarrierCode: 'NASU',
+                formType: 'NB Application',
+                docClassification: 'INBOUND',
             },
         };
-        const { data } = await client.post<any, AxiosResponse>(url, fileData, config);
+
+        const formData = new FormData();
+        formData.append('file', blob, name);
+        formData.append('metadata', JSON.stringify(fileData.metadata));
+
+        const { data } = await client.post<any, AxiosResponse>(url, formData, {
+            headers: {
+                'content-type': 'multipart/form-data',
+            },
+        });
         return data;
     } catch (error: any) {
         logWarn('An error occurred while uploading document', {
@@ -225,7 +230,7 @@ export const getPolicyTypeDocs = async (
     try {
         let queryParams = `?source=Policy&contractNumber=${id}&clientCode=${clientCode?.toUpperCase()}`;
 
-        if(!isNullEmptyOrUndefined(docType)) {
+        if (!isNullEmptyOrUndefined(docType)) {
             queryParams += `&documentType=${docType}`;
         }
         const cachedResult = pullFromCache('getPolicyTypeDocs', queryParams);
@@ -239,3 +244,6 @@ export const getPolicyTypeDocs = async (
         return error.response;
     }
 };
+function uuidV4(): any | import('axios').AxiosHeaderValue | undefined {
+    throw new Error('Function not implemented.');
+}
