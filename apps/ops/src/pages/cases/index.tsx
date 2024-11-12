@@ -262,14 +262,16 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         [setCaseManagementFilters]
     );
     const handleClear = useCallback(
-        (searchField: PolicySearchKeys) => {
-            const prevSearch = caseManagementFilters.searchValue;
-            delete prevSearch?.[searchField];
-            setCaseManagementFilters(prevFilters => ({
-                ...prevFilters,
-                searchValue: { ...prevSearch },
-                offset: 0,
-            }));
+        (searchField: PolicySearchKeys | undefined) => {
+            if (searchField) {
+                const prevSearch = caseManagementFilters.searchValue;
+                delete prevSearch?.[searchField];
+                setCaseManagementFilters(prevFilters => ({
+                    ...prevFilters,
+                    searchValue: { ...prevSearch },
+                    offset: 0,
+                }));
+            }
         },
         [caseManagementFilters.searchValue, setCaseManagementFilters]
     );

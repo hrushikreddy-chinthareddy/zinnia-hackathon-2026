@@ -12,7 +12,7 @@ import styles from './search-field-toggle.module.css';
 interface SearchFieldToggleProps {
     handleChange: (e: ChangeEvent<HTMLInputElement>, value: string, key: PolicySearchKeys) => void;
     activeLabels: LabelValue<PolicySearchKeys>;
-    onClear?: (searchField: string | undefined) => void;
+    onClear?: (searchField: PolicySearchKeys | undefined) => void;
 }
 
 export const SearchFieldContainer = ({ handleChange, activeLabels, onClear }: SearchFieldToggleProps) => {
