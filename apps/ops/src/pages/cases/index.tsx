@@ -10,7 +10,7 @@ import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav
 import NoNavLayout from '@deps/components/no-nav-layout';
 import { PageLoader, PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import { PageHead } from '@deps/components/page-title';
-import SearchBar, { SearchBarInitialValues } from '@deps/components/search/search-bar';
+import SearchBar from '@deps/components/search/search-bar';
 import { CaseResultTable } from '@deps/components/table/case-result-table';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
@@ -255,12 +255,24 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         setCaseManagementFilters(prevFilters => ({ ...prevFilters, additionalFilters: filters, offset: 0 }));
 
     const handleSearch = useCallback(
-        (value: SearchViewQuery) => setCaseManagementFilters(prevFilters => ({ ...prevFilters, searchValue: value, offset: 0 })),
+        (value: SearchViewQuery) => {
+            console.log(value);
+            setCaseManagementFilters(prevFilters => ({ ...prevFilters, searchValue: value, offset: 0 }));
+        },
         [setCaseManagementFilters]
     );
-    const handleClear = useCallback(() => {
-        setCaseManagementFilters(prevFilters => ({ ...prevFilters, searchValue: SearchBarInitialValues, offset: 0 }));
-    }, [setCaseManagementFilters]);
+    const handleClear = useCallback(
+        (searchField: PolicySearchKeys) => {
+            const prevSearch = caseManagementFilters.searchValue;
+            delete prevSearch?.[searchField];
+            setCaseManagementFilters(prevFilters => ({
+                ...prevFilters,
+                searchValue: { ...prevSearch },
+                offset: 0,
+            }));
+        },
+        [caseManagementFilters.searchValue, setCaseManagementFilters]
+    );
 
     const handleToggle = useCallback(
         (value: PolicySearchKeys) => setCaseManagementFilters(prevFilters => ({ ...prevFilters, toggleValue: value })),

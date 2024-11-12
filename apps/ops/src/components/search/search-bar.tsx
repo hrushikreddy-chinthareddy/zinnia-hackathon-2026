@@ -2,7 +2,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Button, Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { TFunction, useTranslation } from 'next-i18next';
-import { ChangeEvent, useCallback, useContext, useEffect, useState } from 'react';
+import { ChangeEvent, RefObject, useCallback, useContext, useEffect, useState } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
@@ -21,7 +21,7 @@ interface SearchBarProps {
     initialToggleValue: PolicySearchKeys;
     toggleLabels: (t: TFunction) => LabelValue<PolicySearchKeys>[];
     onToggle?: (value: PolicySearchKeys) => void;
-    onClear?: () => void;
+    onClear?: (ref: RefObject<HTMLInputElement>) => void;
 }
 
 const SearchBar = ({

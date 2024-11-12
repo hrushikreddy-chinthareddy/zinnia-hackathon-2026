@@ -2,9 +2,6 @@
     display: flex;
     & .inputContainer {
         &:first-of-type {
-            & .close {
-                display: none;
-            }
             & input {
                 border-radius: 0 0 0 var(--measure-border-radius-radius-md);
                 @media (min-width: 500px) {

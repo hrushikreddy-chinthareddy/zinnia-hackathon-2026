@@ -1,6 +1,6 @@
 import { AssistiveText, AssistiveTextVariant, Button, Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import { ChangeEvent, forwardRef, MutableRefObject, useContext, useRef } from 'react';
+import { ChangeEvent, useContext, useRef } from 'react';
 
 import { PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
 import { toSentenceCase } from '@deps/helpers/string.helper';
@@ -12,11 +12,11 @@ import styles from './search-field-toggle.module.css';
 interface SearchFieldToggleProps {
     handleChange: (e: ChangeEvent<HTMLInputElement>, value: string, key: PolicySearchKeys) => void;
     activeLabels: LabelValue<PolicySearchKeys>;
-    onClear?: () => void;
-    ref?: MutableRefObject<HTMLInputElement | null>;
+    onClear?: (searchField: string | undefined) => void;
 }
 
-export const SearchFieldContainer = forwardRef<HTMLInputElement, SearchFieldToggleProps>(({ handleChange, activeLabels, onClear }, ref) => {
+export const SearchFieldContainer = ({ handleChange, activeLabels, onClear }: SearchFieldToggleProps) => {
+    const inputRef = useRef<HTMLInputElement | null>(null);
     const { showFieldErrorMessage } = useContext(PolicySearchFiltersContext);
     const { value: policyKey, label = '', placeholder, errorMessage } = activeLabels;
 
@@ -27,6 +27,13 @@ export const SearchFieldContainer = forwardRef<HTMLInputElement, SearchFieldTogg
                 return 'number';
             default:
                 return 'text';
+        }
+    };
+
+    const handleClear = () => {
+        if (inputRef?.current && onClear) {
+            onClear(activeLabels.value);
+            inputRef.current.value = '';
         }
     };
 
@@ -43,9 +50,10 @@ export const SearchFieldContainer = forwardRef<HTMLInputElement, SearchFieldTogg
                     const text = (e.target as HTMLInputElement).value;
                     handleChange(e, text, policyKey as PolicySearchKeys);
                 }}
-                ref={ref}
+                key={activeLabels.value}
+                ref={inputRef}
             />
-            <Button className={styles.close} onClick={onClear} mode="link">
+            <Button className={styles.close} onClick={handleClear} mode="link">
                 <Icon type={IconType.CLOSE} />
             </Button>
             {showFieldErrorMessage && errorMessage && (
@@ -53,38 +61,23 @@ export const SearchFieldContainer = forwardRef<HTMLInputElement, SearchFieldTogg
             )}
         </div>
     );
-});
-SearchFieldContainer.displayName = 'SearchFieldContainer';
+};
 
-const SearchFieldToggle = ({ activeLabels, onClear, ...rest }: SearchFieldToggleProps) => {
+const SearchFieldToggle = ({ activeLabels, ...rest }: SearchFieldToggleProps) => {
     let fields;
-    const firstInputRef = useRef<HTMLInputElement | null>(null);
-    const secondInputRef = useRef<HTMLInputElement | null>(null);
     if (activeLabels) {
         const { group } = activeLabels;
 
-        const handleClear = () => {
-            if (firstInputRef?.current && onClear) {
-                onClear();
-                firstInputRef.current.value = '';
-            }
-            if (secondInputRef.current) {
-                secondInputRef.current.value = '';
-            }
-        };
-
         if (group?.length) {
-            const firstInput = group[0];
-            const secondInput = group[1];
-
             fields = (
                 <fieldset className={styles.fieldSet}>
-                    <SearchFieldContainer activeLabels={firstInput} ref={firstInputRef} {...rest} onClear={handleClear} />
-                    <SearchFieldContainer activeLabels={secondInput} ref={secondInputRef} {...rest} onClear={handleClear} />
+                    {group.map((g, index) => (
+                        <SearchFieldContainer key={'search-field-container-key-' + index} activeLabels={g} {...rest} />
+                    ))}
                 </fieldset>
             );
         } else {
-            fields = <SearchFieldContainer activeLabels={activeLabels} onClear={handleClear} ref={firstInputRef} {...rest} />;
+            fields = <SearchFieldContainer activeLabels={activeLabels} {...rest} />;
         }
     }
 
