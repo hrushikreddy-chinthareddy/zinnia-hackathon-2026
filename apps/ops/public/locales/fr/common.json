@@ -1837,9 +1837,8 @@
             "ignoreWarning": "Ignorer les avertissements",
             "submitError": "Une erreur s'est produite lors de la soumission de cette tâche. Veuillez réessayer.",
             "createTaskSuccess": {
-                "withdrawalTask": "Bonne nouvelle! Nous avons lancé une tâche de retrait pour {{documentNumber}} et {{contractNumber}}",
-                "WithdrawalFormInputTask": "Excellente nouvelle ! Nous avons lancé une tâche de retrait pour {{documentNumber}} et {{contractNumber}}",
-                "rmdTask": "Bonne nouvelle! Nous avons lancé une tâche de distribution minimale requise pour {{documentNumber}} et {{contractNumber}}.",
+                "WithdrawalFormInputTask": "Bonne nouvelle!! Nous avons lancé une tâche de retrait pour {{documentNumber}} et {{contractNumber}}",
+                "RMDFormInputTask": "Bonne nouvelle! Nous avons lancé une tâche de distribution minimale requise pour {{documentNumber}} et {{contractNumber}}.",
                 "OFTFormInputTask": "Bonne nouvelle! Nous avons lancé une tâche de transfert de fonds sortants pour{{documentNumber}} et {{contractNumber}}",
                 "sswTask": "Bonne nouvelle! Nous avons lancé une tâche de retrait systématique pour {{documentNumber}} et {{contractNumber}}"
             },
@@ -4360,9 +4359,10 @@
         },
         "formEntry": {
             "formTitles": {
-                "withdrawal": "{{carrier}} Withdrawal Request",
-                "oft": "{{carrier}} Outgoing Funds Transfer Request",
-                "defaultTitle": "Form Entry"
+                "withdrawal": "{{carrier}} Demande de retrait",
+                "oft": "{{carrier}} Demande de transfert de fonds sortants",
+                "rmd": "{{carrier}} Demande de distribution minimale requise",
+                "defaultTitle": "Formulaire de saisie"
             }
         }
     }

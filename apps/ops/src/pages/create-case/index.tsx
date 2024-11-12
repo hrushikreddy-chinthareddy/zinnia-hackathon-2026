@@ -58,6 +58,7 @@ const shouldShowCaseTaskList = (featureFlagDecisions: FeatureFlags, caseType: Ca
         (featureFlagDecisions?.[FEATURE_FLAGS.REG_60] && caseType == CaseType.Reg60) ||
         (featureFlagDecisions?.[FEATURE_FLAGS.SSW_SBGC] && caseType == CaseType.SSW) ||
         (caseType == CaseType.Withdrawal) ||
+        (caseType == CaseType.Rmd) ||
         (caseType == CaseType.Oft)
     );
 };
