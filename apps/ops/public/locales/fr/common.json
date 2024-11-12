@@ -4346,9 +4346,10 @@
         },
         "formEntry": {
             "formTitles": {
-                "withdrawal": "{{carrier}} Withdrawal Request",
-                "oft": "{{carrier}} Outgoing Funds Transfer Request",
-                "defaultTitle": "Form Entry"
+                "withdrawal": "{{carrier}} Demande de retrait",
+                "oft": "{{carrier}} Demande de transfert de fonds sortants",
+                "rmd": "{{carrier}} Demande de distribution minimale requise",
+                "defaultTitle": "Formulaire de saisie"
             }
         }
     }

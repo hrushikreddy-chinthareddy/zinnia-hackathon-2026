@@ -4376,6 +4376,7 @@
             "formTitles": {
                 "withdrawal": "{{carrier}} Withdrawal Request",
                 "oft": "{{carrier}} Outgoing Funds Transfer Request",
+                "rmd": "{{carrier}} Required Minimum Distribution Request",
                 "defaultTitle": "Form Entry"
             }
         }
