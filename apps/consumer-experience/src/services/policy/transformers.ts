@@ -588,3 +588,9 @@ export const transformPolicyDetails = (policy: Policy): Partial<Policy> => {
     },
   };
 };
+
+export const sortPoliciesByIssuedDate = (policies: CarrierPolicyDetails[]) => {
+  return policies.sort((a, b) => {
+    return dayjs(a.policyStartDate).isBefore(dayjs(b.policyStartDate)) ? 1 : -1;
+  });
+};

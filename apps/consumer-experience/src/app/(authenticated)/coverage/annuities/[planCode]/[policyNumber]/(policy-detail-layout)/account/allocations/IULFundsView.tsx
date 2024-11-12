@@ -17,7 +17,6 @@ import {
 } from '@/queries/policy-queries';
 import { QueryKeys } from '@/queries/query-keys';
 import { PolicyStatusDetail } from '@/types/policy';
-import { convertKebabedDateString } from '@/utils/dates';
 
 export const IULFundsView = ({
   planCode,
@@ -85,7 +84,7 @@ export const IULFundsView = ({
         <CallForAssistance
           callToAction={
             freelookData?.isFreelook
-              ? `You can't edit allocations until your free look period ends on ${convertKebabedDateString(freelookData.freelookDate)}. Questions?`
+              ? `You can't edit allocations until your free look period ends. Questions?`
               : 'Editing allocations is coming soon. For now, '
           }
           contactPrompt={freelookData?.isFreelook ? undefined : 'call'}

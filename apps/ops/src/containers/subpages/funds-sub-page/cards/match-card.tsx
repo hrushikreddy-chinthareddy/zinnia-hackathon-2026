@@ -31,7 +31,6 @@ const MatchCard = ({ policy }: MatchCardProps) => {
 
     useEffect(() => {
         const getRate = async () => {
-            // TODO MG: this should be more dynamic so its not SBUL specific
             const match = await getSbulMatchRate(policy);
             setMatchRate(percentFormatify(match));
         };

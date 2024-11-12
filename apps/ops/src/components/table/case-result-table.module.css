@@ -22,8 +22,8 @@
     color: transparent;
     display: block;
     height: 100%;
-    width: 100%;
     outline-offset: -2px;
+    width: 100%;
     &:focus,
     &:focus-visible,
     &:hover {
@@ -31,26 +31,10 @@
         color: transparent;
         z-index: 1;
         outline-color: var(--color-semantics-color-semantic-focus);
-        .caseLinkText {
-            display: block;
-        }
     }
     &:hover {
         &:after {
             content: none;
         }
-    }
-    /* This is the styling for the tooltip the shows for the "table row" link */
-    & .caseLinkText {
-        background: var(--color-base-surface-surface-darker);
-        border-radius: var(--measure-border-radius-radius-sm);
-        box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.28), 0px 0px 2px 0px rgba(0, 0, 0, 0.2);
-        color: var(--color-base-text-text-light);
-        display: none;
-        padding: var(--measure-dimension-padding-xl);
-        position: absolute;
-        width: auto;
-        bottom: -48px;
-        z-index: 1;
     }
 }

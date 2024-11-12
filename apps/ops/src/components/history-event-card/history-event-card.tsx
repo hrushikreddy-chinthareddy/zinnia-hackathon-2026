@@ -4,10 +4,9 @@ import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
-import SideSheetFinancialTransaction from '@deps/components/side-sheet/side-sheet-transaction/side-sheet-financial-transaction';
-import SideSheetNonFinancialTransaction from '@deps/components/side-sheet/side-sheet-transaction/side-sheet-non-financial-transaction';
+import SideSheetFinancialTransaction from '@deps/components/side-sheet/side-sheet-transaction/financial/side-sheet-financial-transaction';
+import SideSheetNonFinancialTransaction from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/side-sheet-non-financial-transaction';
 import {
-    financialTransactionTypes,
     getTransactionSideSheetTitle,
 } from '@deps/components/side-sheet/side-sheet-transaction/side-sheet-transaction.helper';
 import { TranslationFiles } from '@deps/config/translations';
@@ -19,8 +18,8 @@ import { ReactComponent as ChevronRightIcon } from '@deps/styles/elements/icons/
 import { DEFAULT_DATE_FORMAT } from '@deps/types/constants';
 
 import { getHistoryEventCardValues } from './history-event-card.helper';
-import SideSheetNewLoanTransaction from '../side-sheet/side-sheet-transaction/side-sheet-new-loan-transaction';
-import { SideSheetTransactionProps } from '../side-sheet/side-sheet-transaction/types';
+import SideSheetNewLoanTransaction from '../side-sheet/side-sheet-transaction/loan/side-sheet-new-loan-transaction';
+import { FinancialTransactionTypes, SideSheetTransactionProps } from '../side-sheet/side-sheet-transaction/types';
 
 export interface HistoryEventCardProps {
     refreshTransactions?: () => void;
@@ -36,8 +35,8 @@ const getDate = (date?: Date | string) => {
 const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryEventCardProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const sideSheet = useSideSheetContext();
-    const { processDate, status } = transaction || {};
 
+    const { processDate, status } = transaction || {};
     const { amount, caption, eventBody, eventTitle, isClickable, isPending } = getHistoryEventCardValues(
         policy as Policy,
         transaction as Transaction
@@ -62,7 +61,7 @@ const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryE
         if (transactionType === TransactionType.NewLoan) {
             props.refreshTransactions = undefined;
             Component = SideSheetNewLoanTransaction;
-        } else if (transactionType && financialTransactionTypes.includes(transactionType)) {
+        } else if (transactionType && FinancialTransactionTypes.includes(transactionType)) {
             Component = SideSheetFinancialTransaction;
         } else {
             Component = SideSheetNonFinancialTransaction;

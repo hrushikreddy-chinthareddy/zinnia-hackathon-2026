@@ -142,11 +142,8 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                     onClick={() => loadCaseDetails(`/cases/${singleCase.id}/${CaseDetailsTabValues.progress}`)}
                     href={`/cases/${singleCase.id}/${CaseDetailsTabValues.progress}`}
                     className={styles.caseLink}
-                    aria-label={viewCaseText}
                 >
-                    <Typography variant={TypographyVariant.BodySm} className={styles.caseLinkText}>
-                        {t('caseManagementDashboard.case.viewCase')}
-                    </Typography>
+                    {viewCaseText}
                 </Link>
             </TableCell>
             <TableCell>

@@ -7,19 +7,17 @@ import { getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/ba
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { FieldSize } from '@deps/components/fields/field';
 import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helper';
-import PolicyInfo from '@deps/components/global-values/policy-info/policy-info';
+// import PolicyInfo from '@deps/components/global-values/policy-info/policy-info';
+// import GlobalPolicyInfo from '@deps/components/global-values/policy-info/policy-info';
 import GlobalPolicyInfo from '@deps/components/global-values/policy-info/policy-info';
+import PolicyInfo from '@deps/components/global-values/policy-info/policy-info';
 import IconButton from '@deps/components/icon-button/icon-button';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import ResponsivePadding from '@deps/components/responsive-padding/responsive-padding';
 import SelectSearch from '@deps/components/select-search/select-search';
-import {
-    EmailWithPending,
-    PhoneWithPending,
-    AddressWithPending,
-} from '@deps/components/side-sheet/non-financial-transactions/non-financial-transactions.helper';
-import PendingTag from '@deps/components/side-sheet/non-financial-transactions/pending-tag';
+import { AddressWithPending, EmailWithPending, PhoneWithPending } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/non-financial-transactions.helper';
+import PendingTag from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/pending-tag';
 import { TranslationFiles } from '@deps/config/translations';
 import { FormattedAddress, sortAddressesByType } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
 import QuickLinks, { QuickLinksProps } from '@deps/containers/quick-links/quick-links';
@@ -171,7 +169,6 @@ const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
                         openSideSheet={openDetailsSidesheet}
                     />
                     <div className="mt-8 flex flex-wrap gap-x-8 gap-y-4 lg:mt-0">
-                        {/* TODO MG: move the eligibilty checks into the quick links component */}
                         <QuickLinks
                             userPartyId={userPartyId}
                             policy={policy}
@@ -650,7 +647,6 @@ const ActiveQuickView = ({ policy }: BasePolicyComponentArgs) => {
 
     return (
         <QuickViewRoot title={t('dashboard.search.results.policySummaryCard.header2')}>
-            {/* TODO MG: confirm we need searchValue in both of these - couple display fields had them but dont think we need them */}
             {policy?.product?.productType === ProductType.INDEXEDUNIVERSALLIFE ? (
                 <EverlyIul policy={policy} />
             ) : (

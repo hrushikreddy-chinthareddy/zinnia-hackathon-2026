@@ -2498,6 +2498,7 @@
                 "reverseSurrender": "Annuler la reddition",
                 "routingNumber": "Numéro de routage",
                 "setAsMailingAddress": "Définir comme adresse postale",
+                "stateNotFound": "État non trouvé",
                 "submittedAmount": "Montant soumis",
                 "submittedAmountTooltip": "Ceci est le montant soumis. En d'autres termes, le propriétaire a écrit un chèque ou initié un virement de fonds pour ce montant. Le montant soumis peut différer du montant appliqué si nous ne pouvions appliquer qu'un montant inférieur en raison des limites de test de la politique. Ce sont des limites légales quant à la somme qu'un propriétaire peut verser dans la police sur une certaine période de temps. Cela peut entraîner le retour de certains fonds au propriétaire (appelé un « forçage »).",
                 "surrender": "Reddition",
