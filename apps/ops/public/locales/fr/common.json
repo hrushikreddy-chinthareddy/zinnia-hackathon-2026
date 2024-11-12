@@ -1902,9 +1902,8 @@
             "cta": "Accéder au cas",
             "secondaryCta": "Fermer",
             "subtitle": {
-                "0": "Le document ",
-                "1": "a été envoyé à ",
-                "2": "& Destinataires en copie carbone"
+                "0": "Les documents ",
+                "1": "et en copie"
             },
             "title": "Soumise!"
         },

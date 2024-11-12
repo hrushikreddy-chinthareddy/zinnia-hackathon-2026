@@ -42,20 +42,21 @@ const Confirm = ({ shouldShowCaseButton, formNames }: ConfirmProps) => {
                         <span className="font-bold"> {formNames?.map(formName => (formName ? formName : '')).join(', ')} </span>
                         {[CommunicationTypes.Email, CommunicationTypes.Fax].includes(communicationType as CommunicationTypes) && (
                             <PiiWrapper>
-                                <span>{t('confirm.subtitle.1')}</span> <span className="font-bold">{source}</span>
+                                <span>{t(`confirm.channel.${communicationType.toLowerCase()}`)}</span>
+                                <span className="font-bold"> {source}</span>
                             </PiiWrapper>
                         )}
 
                         {communicationType === CommunicationTypes.Email && (
                             <PiiWrapper>
-                                <span> {t('confirm.subtitle.2')} </span>
+                                <span> {t('confirm.subtitle.1')} </span>
                                 <span className="font-bold"> {ccList?.map(cc => (cc ? cc : '')).join(', ')}</span>
                             </PiiWrapper>
                         )}
                         {communicationType === CommunicationTypes.Mail && address && (
                             <>
                                 <PiiWrapper>
-                                    <span>{t('confirm.subtitle.1')} </span>
+                                    <span>{t(`confirm.channel.${communicationType.toLowerCase()}`)}</span>{' '}
                                     <span className="font-bold">
                                         {address?.addressLine1} {address?.addressLine2} {address?.addressLine3} {address?.city}{' '}
                                         {address?.zipCode?.substring(0, 5)}-{address?.zipCode?.substring(5, 9)}

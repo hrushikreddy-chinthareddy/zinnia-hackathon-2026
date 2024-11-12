@@ -1919,9 +1919,13 @@
             "cta": "Go to case",
             "secondaryCta": "Close",
             "subtitle": {
-                "0": "The document ",
-                "1": "has been sent to",
-                "2": "& CC recipients"
+                "0": "The documents ",
+                "1": "and cc'd"
+            },
+            "channel": {
+                "paper_mail": "mailed to",
+                "fax": "faxed to",
+                "email": "emailed to"
             },
             "title": "Submitted!"
         },
