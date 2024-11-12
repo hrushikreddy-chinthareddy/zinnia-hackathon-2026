@@ -28,9 +28,10 @@ import { useScreenSize } from '@deps/hooks/useScreenSize';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
+import { TaskType } from '@deps/models/case/task';
 import { ActiveWithdrawalCase, Carrier, QualTypes } from '@deps/models/case/withdrawal/case';
 import { UserPermission } from '@deps/models/user-profile';
-import { initializeOTPTaskSSR } from '@deps/operations/tasks/v1/initialize';
+import { initializeOTPTaskSSR } from '@deps/operations/tasks/v2/initialize';
 import { getDocumentSSR } from '@deps/queries/api/documents';
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import { getPolicyPartiesSSR } from '@deps/queries/api/policies';
@@ -292,7 +293,7 @@ export const getServerSideProps = withPageAuthRequired({
             clientId,
             contractNumber: document.contract,
             documentNumber,
-            taskType: 'RMDTask',
+            taskType: TaskType.RMD,
             userId: user.name,
             getLastSaved,
             taskId: taskId,

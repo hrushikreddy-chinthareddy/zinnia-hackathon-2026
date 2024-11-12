@@ -10,19 +10,19 @@ import { getBankAccountType } from '@deps/helpers/party-info-helper';
 import { toSentenceCase } from '@deps/helpers/string.helper';
 import loadingImage from '@deps/styles/images/loader.png';
 
-import { getNewLoanSideSheetValues } from './side-sheet-transaction.helper';
-import { NewLoanTransactionSideSheetValues, SideSheetTransactionProps } from './types';
+import { getNewLoanSideSheetValues } from './side-sheet-loan.helper';
+import { NewLoanTransactionSideSheetValues } from './types';
+import { SideSheetTransactionProps } from '../types';
 
 const SideSheetNewLoanTransaction = ({ 
     policy,
-    // refreshTransactions,
     transaction
  }: SideSheetTransactionProps) => {
     const { t } = useTranslation();
-    const [sidesheetValues, setSidesheetValues] = useState<NewLoanTransactionSideSheetValues>(
-        getNewLoanSideSheetValues(policy, transaction, t)
+    const [sideSheetValues, setSideSheetValues] = useState<NewLoanTransactionSideSheetValues>(
+        getNewLoanSideSheetValues(policy || {}, transaction || {}, t)
     );
-    const { getAsyncSideSheetValues } = sidesheetValues;
+    const { getAsyncSideSheetValues } = sideSheetValues;
     const [loading, setLoading] = useState(false);
     const [asyncValues, setAsyncValues] = useState<any | null>(null);
 
@@ -34,7 +34,7 @@ const SideSheetNewLoanTransaction = ({
                 ? await getAsyncSideSheetValues()
                 : {};
             setAsyncValues(asyncValues);
-            setSidesheetValues(vals => {
+            setSideSheetValues(vals => {
                 return { ...vals, ...asyncValues };
             });
             setLoading(false);
@@ -42,7 +42,7 @@ const SideSheetNewLoanTransaction = ({
 
         !loading && !asyncValues && getAsyncSideSheetValues && getValues();
 
-    }, [getAsyncSideSheetValues, asyncValues, setAsyncValues, loading, setLoading, setSidesheetValues]);
+    }, [getAsyncSideSheetValues, asyncValues, setAsyncValues, loading, setLoading, setSideSheetValues]);
 
     return (
         <div className="p-8">
@@ -54,14 +54,14 @@ const SideSheetNewLoanTransaction = ({
                     label={t('policy.history.newLoanSideSheet.loanAmount')}
                     tooltipTitle={t('policy.history.newLoanSideSheet.loanAmount')}
                 >
-                    {numberFormatify(sidesheetValues?.loanAmount)}
+                    {numberFormatify(sideSheetValues?.loanAmount)}
                 </FieldData>
                 <FieldData
                     label={t('policy.history.newLoanSideSheet.processedAmount')}
                     tooltipBody={t('policy.history.newLoanSideSheet.processedAmountTooltip')}
                     tooltipTitle={t('policy.history.newLoanSideSheet.processedAmount')}
                 >
-                    {numberFormatify(sidesheetValues?.processedAmount)}
+                    {numberFormatify(sideSheetValues?.processedAmount)}
                 </FieldData>
                 <FieldData
                     label={t('policy.history.newLoanSideSheet.loanInterestRate')}
@@ -77,7 +77,7 @@ const SideSheetNewLoanTransaction = ({
                             width={20}
                         />
                     ) : (
-                        percentFormatify(sidesheetValues?.interestRate, { isInteger: true })
+                        percentFormatify(sideSheetValues?.interestRate, { isInteger: true })
                     )}
                 </FieldData>
                 <FieldData
@@ -85,32 +85,32 @@ const SideSheetNewLoanTransaction = ({
                     tooltipBody={t('policy.history.newLoanSideSheet.loanInterestRateTypeTooltip')}
                     tooltipTitle={t('policy.history.newLoanSideSheet.loanInterestRateType')}
                 >
-                    {toSentenceCase(sidesheetValues?.loanInterestType)}
+                    {toSentenceCase(sideSheetValues?.loanInterestType)}
                 </FieldData>
                 <FieldData
                     label={t('policy.history.newLoanSideSheet.effectiveDate')}
                     tooltipBody={t('policy.history.newLoanSideSheet.effectiveDateTooltip')}
                     tooltipTitle={t('policy.history.newLoanSideSheet.effectiveDate')}
                 >
-                    {sidesheetValues?.effectiveDate}
+                    {sideSheetValues?.effectiveDate}
                 </FieldData>
                 <FieldData
                     label={t('policy.history.newLoanSideSheet.processDate')}
                     tooltipBody={t('policy.history.newLoanSideSheet.processDateTooltip')}
                     tooltipTitle={t('policy.history.newLoanSideSheet.processDate')}
                 >
-                    {sidesheetValues?.processDate}
+                    {sideSheetValues?.processDate}
                 </FieldData>
                 <FieldData
                     label={t('policy.history.newLoanSideSheet.fundDisbursementType')}
                     tooltipBody={t('policy.history.newLoanSideSheet.fundDisbursementTypeTooltip')}
                     tooltipTitle={t('policy.history.newLoanSideSheet.fundDisbursementType')}
                 >
-                    {sidesheetValues?.fundDisbursementType}
+                    {sideSheetValues?.fundDisbursementType}
                 </FieldData>
             </div>
 
-            {!!sidesheetValues?.payees.length && (
+            {!!sideSheetValues?.payeePaymentDetails.length && (
                 <>
                     <hr className="my-6 h-0.5 bg-gray-200" />
                     <section>
@@ -156,18 +156,18 @@ const SideSheetNewLoanTransaction = ({
                                 </thead>
 
                                 <tbody>
-                                    {sidesheetValues.payees?.map((payee, index: Key) => (
+                                    {sideSheetValues.payeePaymentDetails?.map((payee, index: Key) => (
                                         <tr
                                             role="row"
                                             key={index}
                                             className={`flex ${
-                                                index === sidesheetValues.payees.length - 1 ? 'rounded-bl-lg rounded-br-lg' : ''
+                                                index === sideSheetValues.payeePaymentDetails.length - 1 ? 'rounded-bl-lg rounded-br-lg' : ''
                                             }`}
                                         >
                                             <td
                                                 role="cell"
                                                 className={`flex w-[60%] flex-col border-b-1 border-l-1 border-gray-200 px-3 py-2 text-left ${
-                                                    index === sidesheetValues.payees.length - 1 ? 'rounded-bl-lg' : ''
+                                                    index === sideSheetValues.payeePaymentDetails.length - 1 ? 'rounded-bl-lg' : ''
                                                 }`}
                                             >
                                                 <Typography variant={TypographyVariant.BodySmBold}>
@@ -199,7 +199,7 @@ const SideSheetNewLoanTransaction = ({
                                             <td
                                                 role="cell"
                                                 className={`w-[30%] content-center border-b-1 border-r-1 border-gray-200 px-3 py-2 text-right ${
-                                                    index === sidesheetValues.payees.length - 1 ? 'rounded-br-lg' : ''
+                                                    index === sideSheetValues.payeePaymentDetails.length - 1 ? 'rounded-br-lg' : ''
                                                 }`}
                                             >
                                                 <Typography variant={TypographyVariant.BodySm}>

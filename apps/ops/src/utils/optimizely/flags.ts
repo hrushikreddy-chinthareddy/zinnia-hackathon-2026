@@ -63,7 +63,11 @@ export enum FEATURE_FLAGS {
     NIGO_ENTRY_FLIC_SSW = 'nigo-entry_flic_ssw',
     NIGO_ENTRY_MASS_SSW = 'nigo-entry_mass_ssw',
     NIGO_ENTRY_nasu_SSW = 'nigo-entry_nasu_ssw',
+    NIGO_ENTRY_SBGC_RMD = 'nigo-entry_sbgc_rmd',
+    NIGO_ENTRY_FLIC_RMD = 'nigo-entry_flic_rmd',
+    NIGO_ENTRY_MASS_RMD = 'nigo-entry_mass_rmd',
     SEND_DOCUMENT_HIDE_MAIL_OPTION_ILNA = 'contact-center-send-document-arcus-mail-option',
     CASE_STATS_DASHBOARD = 'case-management-case_stats_dashboard',
     CASE_INSIGHTS = 'case_insights',
+    POLICY_FREE_LOOK_CANCELLATION = 'policy-management_feature_free-look-cancellation',
 }

@@ -583,7 +583,6 @@ export interface Transaction {
     TransactionAmount: number;
 }
 
-// TODO MG: this should be using TransactionStatus from sor-policy
 export enum TransactionStatus {
     Complete = 'Complete',
     Pending = 'Pending',
@@ -1074,9 +1073,9 @@ export enum SortOrder {
 
 export interface FormNigos {
     nigos: NigoMessages[];
-};
+}
 
 export interface NigoMessages {
     exceptionId: string;
     messages: string[];
-};
+}
