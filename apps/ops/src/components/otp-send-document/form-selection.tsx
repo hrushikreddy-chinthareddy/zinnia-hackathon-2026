@@ -24,7 +24,7 @@ const mapIdToFormDetails = (value: SendDocumentFormParts[]): SendDocumentFormPar
 };
 
 export const DefaultFormDetail = {
-    document: { list: [], selected: null },
+    document: { list: null, selected: null },
     transactionSubType: { list: [], selected: null },
     transactionType: { list: [], selected: null },
     id: uuidv4(),
@@ -96,13 +96,16 @@ function FormSelection({ policy, ctiCallNumber, availableFormsTransactions, form
                         />
                     </div>
                     {index > 0 && (
-                        <NavElement
-                            size={NavElementSize.Small}
-                            type={NavElementType.Button}
-                            startIcon={<TrashDocumentIcon width={20} height={20} />}
-                            onClick={() => removeFilter(form.id)}
-                            variant={NavElementVariant.Secondary}
-                        ></NavElement>
+                        <div>
+                            {' '}
+                            <NavElement
+                                size={NavElementSize.Small}
+                                type={NavElementType.Button}
+                                startIcon={<TrashDocumentIcon width={20} height={20} />}
+                                onClick={() => removeFilter(form.id)}
+                                variant={NavElementVariant.Secondary}
+                            ></NavElement>
+                        </div>
                     )}
                 </div>
             ))}

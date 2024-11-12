@@ -94,5 +94,5 @@ export type Confirm = {
 
 export type CallCenterElement<Selected, ListType> = {
     selected: Selected | null;
-    list: ListType[];
+    list: ListType[] | null;
 };
