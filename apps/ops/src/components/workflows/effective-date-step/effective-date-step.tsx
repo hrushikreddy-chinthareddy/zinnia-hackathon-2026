@@ -50,7 +50,6 @@ const EffectiveDate = ({
             title={t('label')}
             footerContent={
                 <TransactionNavigationButtons
-                    className="mt-4"
                     handleContinue={handleContinue}
                     parentPage={ParentPage.Withdrawals}
                     planCode={policy.product?.planCode}
