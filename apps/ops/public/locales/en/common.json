@@ -1858,7 +1858,7 @@
                 "WithdrawalFormInputTask": "Great news! We've initiated a withdrawal task for {{documentNumber}} and {{contractNumber}}",
                 "RMDFormInputTask": "Great news! We've initiated a Required Minimum Distribution task for {{documentNumber}} and {{contractNumber}}",
                 "OFTFormInputTask": "Great news! We've initiated a Outgoing Funds Transfer task for {{documentNumber}} and {{contractNumber}}",
-                "sswTask": "Great news! We've initiated a Systematic Withdrawal task for {{documentNumber}} and {{contractNumber}}"
+                "SSWFormInputTask": "Great news! We've initiated a Systematic Withdrawal task for {{documentNumber}} and {{contractNumber}}"
             },
             "openNigoExists": "An onbase case includes a NIGO. Please resolve the open NIGO issue before submitting another request through the Digital Portal."
         },
@@ -4389,6 +4389,7 @@
             "formTitles": {
                 "withdrawal": "{{carrier}} Withdrawal Request",
                 "oft": "{{carrier}} Outgoing Funds Transfer Request",
+                "ssw": "{{carrier}} Systematic Withdrawal Request",
                 "rmd": "{{carrier}} Required Minimum Distribution Request",
                 "defaultTitle": "Form Entry"
             }
