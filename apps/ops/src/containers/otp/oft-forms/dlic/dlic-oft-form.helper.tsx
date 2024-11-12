@@ -409,7 +409,6 @@ export default function getOftDlicConfig(t: TFunction) {
                     component: DisbursementFields.BankTextField,
                     classNames: 'col-start-1',
                 },
-
                 {
                     fieldName: BankingFields.AccountHolder,
                     fieldLabel: t('distributionMethod.accountHolder'),
@@ -539,7 +538,6 @@ export default function getOftDlicConfig(t: TFunction) {
                     classNames: 'col-start-1',
                     disableCopyPaste: true,
                 },
-
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
                     fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
@@ -549,10 +547,15 @@ export default function getOftDlicConfig(t: TFunction) {
                     validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
                 },
                 {
-                    fieldName: BankingFields.BankName,
-                    fieldLabel: t('distributionMethod.bankName'),
+                    fieldName: BankingFields.AccountHolder,
+                    fieldLabel: t('distributionMethod.accountName'),
                     component: DisbursementFields.BankTextField,
                     classNames: 'col-start-1',
+                },
+                {
+                    fieldName: BankingFields.BankName,
+                    fieldLabel: t('distributionMethod.bankName'),
+                    component: DisbursementFields.BankTextField
                 },
                 {
                     fieldName: BankingFields.BankFurtherCreditName,
@@ -569,6 +572,7 @@ export default function getOftDlicConfig(t: TFunction) {
                     fieldLabel: t('distributionMethod.fboDetails'),
                     component: DisbursementFields.BankTextField,
                     maxLength: 35,
+                    classNames: 'col-start-1',
                 },
                 {
                     fieldName: BankingFields.ContractNumber,
