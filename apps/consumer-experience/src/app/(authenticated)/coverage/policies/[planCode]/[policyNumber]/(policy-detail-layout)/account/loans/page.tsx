@@ -16,10 +16,7 @@ import {
 import { getLoanEligibility } from '@/services/bpm';
 import { PolicyLoans, PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
-import {
-  convertKebabedDateString,
-  standardDateMonthDayYear,
-} from '@/utils/dates';
+import { standardDateMonthDayYear } from '@/utils/dates';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 const pageTitle = getPageTitle(RouteKey.LOANS);
@@ -166,7 +163,7 @@ export default async function Loans({
       <CallForAssistance
         callToAction={
           isFreelook
-            ? `You can't take a loan until your free look period ends on ${convertKebabedDateString(policyStatusData.endDate)}. Questions?`
+            ? `You can't take a loan until your free look period ends. Questions?`
             : 'Taking a loan is coming soon. For now, '
         }
         contactPrompt={isFreelook ? undefined : 'call'}

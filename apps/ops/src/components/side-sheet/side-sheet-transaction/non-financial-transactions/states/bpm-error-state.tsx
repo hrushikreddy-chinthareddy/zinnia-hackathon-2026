@@ -6,7 +6,7 @@ import BannerAlert, { BannerVariant } from '@deps/components/banner-alert/banner
 import CardInfo from '@deps/components/card/card-info/card-info';
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
-import { ViewState } from '@deps/components/side-sheet/non-financial-transactions/states/states.helpers';
+import { ViewState } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/states.helpers';
 import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
 import { TranslationFiles } from '@deps/config/translations';
 import { ValidationResult } from '@deps/queries/api/bpm';

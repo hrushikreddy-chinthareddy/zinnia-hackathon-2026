@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { TFunction } from 'next-i18next';
 
 import FieldData from "@deps/components/fields/field-data/field-data";
 import { PiiWrapper } from "@deps/components/pii/PiiWrapper";
@@ -7,15 +8,21 @@ import { numberFormatify } from "@deps/helpers/numbers.helper";
 import { TransactionStatus } from "@deps/models/policy/sor-policy";
 import loadingImage from '@deps/styles/images/loader.png';
 
-import { SideSheetFinancialTransactionViewModel } from './types';
+import { TransactionSideSheetValues } from '../types';
+
+export interface SideSheetFinancialTransactionContentProps {
+    loading?: boolean;
+    values: TransactionSideSheetValues;
+    t: TFunction;
+}
 
 const SideSheetFinancialTransactionContent = ({
-    t,
     loading,
-    values
-}: SideSheetFinancialTransactionViewModel) => {
+    values,
+    t,
+}: SideSheetFinancialTransactionContentProps) => {
     // TODO MG: closing side sheet hits this
-    const { appliedAmount, paymentMethod, processDate, submittedAmount, status, transactionType } = values || {};
+    const { appliedAmount, paymentMethod, processDate, submittedAmount, status, transactionType } = values;
 
     return (
         <div className="mt-8 border-t-2 border-gray-200 pt-8">

@@ -21,6 +21,8 @@ export const NigoEntryProvider = ({ children }: NigoEntryProviderProps) => {
     const [transactionSubType, setTransactionSubType] = useState<CallCenterElement<string, SimpleOption>>({} as CallCenterElement<string, SimpleOption>);
     const [document, setDocument] = useState<CallCenterElement<FormDetails, FormDetails>>({} as CallCenterElement<FormDetails, FormDetails>);
     const [formErrors, setFormErrors] = useState<FormValidationErrors>({});
+    const [submitFailed, setSubmitFailed] = useState(false);
+
     return (
         <NigoEntryContext.Provider
             value={{
@@ -32,6 +34,7 @@ export const NigoEntryProvider = ({ children }: NigoEntryProviderProps) => {
                 transactionSubType,
                 document,
                 formErrors,
+                submitFailed,
                 setFormData,
                 setIsReadyForDataEntry,
                 setExceptions,
@@ -39,7 +42,8 @@ export const NigoEntryProvider = ({ children }: NigoEntryProviderProps) => {
                 setTransactionType,
                 setTransactionSubType,
                 setDocument,
-                setFormErrors
+                setFormErrors,
+                setSubmitFailed,
             }}
         >
             {children}

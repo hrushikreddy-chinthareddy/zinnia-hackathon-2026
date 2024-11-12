@@ -6,6 +6,11 @@
 @import './wellabe/theme.css';
 @import './colors.css';
 
+/* TODO: this should be a token, right now setting it here prior to theme setting it */
+:root {
+  --user-badge-text-color: #fff;
+}
+
 /*
 * ELEMENTS
 * ========

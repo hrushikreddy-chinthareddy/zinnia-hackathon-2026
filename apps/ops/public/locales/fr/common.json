@@ -195,9 +195,13 @@
             "diaryNotes": {
                 "text": "Notes de journal"
             },
+
             "diaryNotesWarning": {
                 "text": "Attention: Notes d'agenda présentes. Examen requis pour soumettre",
                 "clickToView": "Clique pour voir"
+            },
+            "viewDetails": {
+                "text":"voir les détails"
             },
             "history": {
                 "text": "Histoire",
@@ -720,7 +724,9 @@
                     "pendingLapseBannerText": "Cette police nécessite un paiement avant son expiration. Y aller maintenant?",
                     "pendingLapseBannerLink": "Effectuer un paiement de prime",
                     "lapseBannerText": "Ce contrat est agréé moyennant une prime de réintégration. Y aller maintenant ?",
-                    "lapseBannerLink": "Effectuer un paiement de prime"
+                    "lapseBannerLink": "Effectuer un paiement de prime",
+                    "freeLookCancelBannerText": "Cette police est encore dans sa période d'examen gratuit et peut être annulée sans pénalité jusqu'à cette date.",
+                    "freeLookCancelBannerLink": "Annuler la police"
                 }
             },
             "empty": {
@@ -782,13 +788,20 @@
             "owner": "Propriétaire",
             "ssn": "SSN",
             "policyNumber": "Numéro de police",
+            "policy": "Politique",
             "currentStage": "Étape actuelle",
             "contractNumber": "Contrat #",
             "productName": "Nom du produit",
             "agent": "Agent",
             "caseId": "ID du dossier",
+            "case/ID": "Dossier/ID",
             "documentNumber": "Numéro de document",
-            "viewCase": "Afficher les détails du cas numéro {{caseNumber}}"
+            "viewCase": "Afficher le cas",
+            "viewCaseNumber": "Afficher les détails du cas numéro {{caseNumber}}",
+            "viewCaseDetails": "Afficher les détails du cas",
+            "caseStatus": "Statut du dossier",
+            "ownerSsn": "Propriétaire/SSN",
+            "agentSsn": "Agente/SSN"
         },
         "pageSize": "Lignes par page",
         "results": "Résultats",
@@ -864,6 +877,7 @@
             },
             "empty": {
                 "title": "Nous n’avons pas trouvé de cas correspondant à votre recherche.",
+                "titleFilters": "Nous n'avons pas pu trouver de cas correspondant à vos filtres.",
                 "paragraph": "Ne vous inquiétez pas, c'est probablement juste une faute de frappe. Vérifiez votre saisie et réessayez.",
                 "action": {
                     "text": "Vous rencontrez toujours des problèmes ? ",
@@ -1826,14 +1840,17 @@
                 "withdrawalTask": "Bonne nouvelle! Nous avons lancé une tâche de retrait pour {{documentNumber}} et {{contractNumber}}",
                 "WithdrawalFormInputTask": "Excellente nouvelle ! Nous avons lancé une tâche de retrait pour {{documentNumber}} et {{contractNumber}}",
                 "rmdTask": "Bonne nouvelle! Nous avons lancé une tâche de distribution minimale requise pour {{documentNumber}} et {{contractNumber}}.",
-                "oftTask": "Bonne nouvelle! Nous avons lancé une tâche de transfert de fonds sortants pour{{documentNumber}} et {{contractNumber}}",
+                "OFTFormInputTask": "Bonne nouvelle! Nous avons lancé une tâche de transfert de fonds sortants pour{{documentNumber}} et {{contractNumber}}",
                 "sswTask": "Bonne nouvelle! Nous avons lancé une tâche de retrait systématique pour {{documentNumber}} et {{contractNumber}}"
             },
             "openNigoExists": "Un cas de base comprend un NIGO. Veuillez résoudre le problème ouvert NIGO avant de soumettre une autre demande via le portail numérique."
         },
         "sidebar": {
+            "contractStatusCode":"Statut de la politique",
+             "abbreviatedcontractStatusCode":"Pol.",
             "abbreviatedCaseId": "Cais.",
             "abbreviatedContractId": "Ctr.",
+            "abbreviatedContractValue": "Ctr Val.",
             "abbreviatedDocumentNumber": "Doc.",
             "abbreviatedQualType": "Qual.",
             "abbreviatedIssueDate": "Issue.",
@@ -1842,6 +1859,7 @@
             "qualType": "type de qualification",
             "issueDate": "Date d'émission",
             "contractId": "ID du contrat",
+            "contractValue":"valeur du contrat",
             "ownerName": "Le nom du propriétaire",
             "annuitantName": "Nom du rentier",
             "copyToClipboard": "Copier {{item}} dans le presse-papiers",
@@ -2019,6 +2037,18 @@
             "policyNotFound": {
                 "title": "Politique non trouvée",
                 "subtitle": "Une erreur s'est produite lors de la récupération de la politique. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
+            },
+            "taskInitialization": {
+                "title": "Erreur lors de l'initialisation du formulaire de tâche",
+                "subtitle": "Une erreur s'est produite lors de l'initialisation de la tâche. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
+            },
+            "caseTypeRetrievalError": {
+                "title": "Erreur lors de l'identification du type de cas",
+                "subtitle": "Une erreur s'est produite lors de l'identification du type de dossier. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
+            },
+            "docTypeRetrievalError": {
+                "title": "Erreur lors de l'identification du type de document",
+                "subtitle": "Une erreur s'est produite lors de l'identification du type de document. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
             }
         }
     },
@@ -2467,6 +2497,7 @@
                 "reverseSurrender": "Annuler la reddition",
                 "routingNumber": "Numéro de routage",
                 "setAsMailingAddress": "Définir comme adresse postale",
+                "stateNotFound": "État non trouvé",
                 "submittedAmount": "Montant soumis",
                 "submittedAmountTooltip": "Ceci est le montant soumis. En d'autres termes, le propriétaire a écrit un chèque ou initié un virement de fonds pour ce montant. Le montant soumis peut différer du montant appliqué si nous ne pouvions appliquer qu'un montant inférieur en raison des limites de test de la politique. Ce sont des limites légales quant à la somme qu'un propriétaire peut verser dans la police sur une certaine période de temps. Cela peut entraîner le retour de certains fonds au propriétaire (appelé un « forçage »).",
                 "surrender": "Reddition",
@@ -2796,6 +2827,7 @@
     },
     "tooltip": {
         "jointOwner": "Co-titulaire",
+        "agent": "Agent",
         "ssn": "SSN",
         "other": "autre"
     },
@@ -3823,7 +3855,8 @@
             "label": "Transactions",
             "managePremiumAutopay": "Gérer le paiement automatique des primes",
             "newPremium": "Démarrez un abonnement premium unique",
-            "startAWithdrawal": "Démarrer un retrait"
+            "startAWithdrawal": "Démarrer un retrait",
+            "cancelPolicy": "Annuler la police"
         }
     },
     "historyEventCard": {
@@ -4274,6 +4307,7 @@
     "nigoEntry": {
         "tabs": {
             "serviceFormReview": "Révision du formulaire de service",
+            "formEntry": "Formulaire de saisie",
             "nigoDetails": "Informations manquantes",
             "documentSelection": "Sélection de nouveau(x) formulaire(s)",
             "confirm": "Confirmer"
@@ -4286,7 +4320,8 @@
             "view": "Voir",
             "documentTitle": "Document",
             "documents": "Documents",
-            "documentId": "ID du document"
+            "documentId": "ID du document",
+            "noFormAvailable": "Aucun formulaire disponible."
         },
         "confirmStep": {
             "title": "Soumis!",
@@ -4323,6 +4358,13 @@
                 "selectForm": "Sélectionnez un formulaire pour continuer."
             },
             "label": "Sélectionnez le formulaire approprié qui doit être mis à jour."
+        },
+        "formEntry": {
+            "formTitles": {
+                "withdrawal": "{{carrier}} Withdrawal Request",
+                "oft": "{{carrier}} Outgoing Funds Transfer Request",
+                "defaultTitle": "Form Entry"
+            }
         }
     }
 }
