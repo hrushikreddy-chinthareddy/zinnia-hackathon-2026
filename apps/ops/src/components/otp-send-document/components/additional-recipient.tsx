@@ -20,6 +20,9 @@ const AdditionalRecipient = ({ classNames, emails, setEmails, setError }: Additi
     const [email, setEmail] = useState('');
 
     const addEmail = (val: string) => {
+        if (!val) {
+            return;
+        }
         const emailError = validateEmail(val);
 
         if (emails.length >= 5) {
@@ -51,13 +54,13 @@ const AdditionalRecipient = ({ classNames, emails, setEmails, setError }: Additi
             placement={TooltipPlacement.TopRight}
             trigger={<CircleInfoIcon onClick={e => e.preventDefault()} height={'16px'} width={'16px'} className="text-primary" />}
         >
-            {t('correspondence.additionalRecipientTooltipBody') as string}
+            {t('correspondence.additionalRecipientTooltip') as string}
         </Tooltip>
     );
     return (
         <div className={classNames}>
             <Label labelFor={'additional-recipient'} interactiveElements={[helpInformation]}>
-                {t(`correspondence.email`)}
+                {t(`correspondence.ccEmail`)}
             </Label>
 
             <div className={`border-2 border-gray-200 px-2 pt-2 mt-1 rounded-lg`}>
