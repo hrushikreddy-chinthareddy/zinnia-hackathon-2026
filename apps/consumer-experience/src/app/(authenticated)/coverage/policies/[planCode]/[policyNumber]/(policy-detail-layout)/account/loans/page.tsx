@@ -1,9 +1,10 @@
 import { PolicyFeature } from '@zinnia/api-types/types/sor';
-import { Icon, IconType, Label, Popover } from '@zinnia/bloom/components';
+import { Label } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { FieldData } from '@/components/field-data/FieldData';
+import { LabelPopover } from '@/components/label-popover/LabelPopover';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { StatusIconText } from '@/components/status-icon-text/StatusIconText';
 import { RouteKey, getPageTitle } from '@/route-map';
@@ -15,10 +16,7 @@ import {
 import { getLoanEligibility } from '@/services/bpm';
 import { PolicyLoans, PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
-import {
-  convertKebabedDateString,
-  standardDateMonthDayYear,
-} from '@/utils/dates';
+import { standardDateMonthDayYear } from '@/utils/dates';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 const pageTitle = getPageTitle(RouteKey.LOANS);
@@ -107,22 +105,14 @@ export default async function Loans({
               Label={
                 <Label
                   interactiveElements={[
-                    <Popover
+                    <LabelPopover
                       key={AVAILABLE_TO_BORROW}
                       title={AVAILABLE_TO_BORROW}
-                      trigger={
-                        <Icon
-                          type={IconType.CIRCLE_INFO}
-                          color="var(--color-base-icon-icon-tooltip, #ff7500)"
-                          width={16}
-                          height={16}
-                        />
-                      }
                     >
                       <p>
                         This amount is how much you may borrow from your policy.
                       </p>
-                    </Popover>,
+                    </LabelPopover>,
                   ]}
                 >
                   {AVAILABLE_TO_BORROW}
@@ -141,23 +131,15 @@ export default async function Loans({
                 Label={
                   <Label
                     interactiveElements={[
-                      <Popover
+                      <LabelPopover
                         key={TOTAL_LOAN_BALANCE}
                         title={TOTAL_LOAN_BALANCE}
-                        trigger={
-                          <Icon
-                            type={IconType.CIRCLE_INFO}
-                            color="var(--color-base-icon-icon-tooltip, #ff7500)"
-                            width={16}
-                            height={16}
-                          />
-                        }
                       >
                         <p>
                           This amount shows your current balance for all loans
                           you’ve already taken.
                         </p>
-                      </Popover>,
+                      </LabelPopover>,
                     ]}
                   >
                     {TOTAL_LOAN_BALANCE}
@@ -181,7 +163,7 @@ export default async function Loans({
       <CallForAssistance
         callToAction={
           isFreelook
-            ? `You can't take a loan until your free look period ends on ${convertKebabedDateString(policyStatusData.endDate)}. Questions?`
+            ? `You can't take a loan until your free look period ends. Questions?`
             : 'Taking a loan is coming soon. For now, '
         }
         contactPrompt={isFreelook ? undefined : 'call'}

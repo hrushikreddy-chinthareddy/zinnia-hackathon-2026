@@ -1,17 +1,12 @@
 'use client';
-import {
-  Button,
-  Icon,
-  IconType,
-  Label,
-  Loader,
-  Popover,
-} from '@zinnia/bloom/components';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
+import { Button, Label, Loader } from '@zinnia/bloom/components';
 import { toSentenceCase } from '@zinnia/utils';
 import dayjs from 'dayjs';
 import { useEffect, useMemo, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 
+import { LabelPopover } from '@/components/label-popover/LabelPopover';
 import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
 
 import { FieldData } from '../../field-data/FieldData';
@@ -63,10 +58,12 @@ export const SummaryForm = ({
   ottpPaymentData,
   planCode,
   policyNumber,
+  lineOfBusiness,
 }: {
   ottpPaymentData: OttpState;
   planCode: string;
   policyNumber: string;
+  lineOfBusiness: LineOfBusiness;
 }) => {
   const { effectiveDate, paymentAmount, payorBank, paymentFee } =
     ottpPaymentData;
@@ -106,24 +103,13 @@ export const SummaryForm = ({
       label: (
         <Label
           interactiveElements={[
-            <Popover
-              key="TEXT"
-              title="Charges"
-              trigger={
-                <Icon
-                  type={IconType.CIRCLE_INFO}
-                  color="var(--color-base-icon-icon-tooltip, #ff7500)"
-                  width={16}
-                  height={16}
-                />
-              }
-            >
+            <LabelPopover key="TEXT" title="Charges">
               <p>
                 Premium payment fees are charged to cover costs related to sales
                 expenses and/or taxes. If your policy requires these fees, they
                 will be shown here.
               </p>
-            </Popover>,
+            </LabelPopover>,
           ]}
         >
           Charges
@@ -178,7 +164,11 @@ export const SummaryForm = ({
         <Button mode="primary" type="submit">
           Submit payment
         </Button>
-        <CancelDialogLink planCode={planCode} policyNumber={policyNumber} />
+        <CancelDialogLink
+          planCode={planCode}
+          policyNumber={policyNumber}
+          lineOfBusiness={lineOfBusiness}
+        />
       </div>
     </>
   );

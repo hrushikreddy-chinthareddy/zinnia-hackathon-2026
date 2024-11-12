@@ -8,15 +8,21 @@ import PdfPreview from '@deps/containers/documents-page/pdf-preview';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { UserPermission } from '@deps/models/user-profile';
 import { downloadFormById } from '@deps/queries/api/c2web';
+import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
-type FormViewerProps = {
+
+interface FormViewerProps extends SegmentTrackedPageProps {
     formId: number;
 };
-const FormViewer = ({ formId }: FormViewerProps) => {
+
+const FormViewer = ({ formId, user }: FormViewerProps) => {
     const [pdf, setPdf] = useState<string | null>(null);
+
+    useSegmentPageTracker(user, SegmentPageName.FormViewer, { formId });
 
     useEffect(() => {
         const getForms = async () => {

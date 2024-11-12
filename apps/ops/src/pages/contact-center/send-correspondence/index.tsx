@@ -1,5 +1,4 @@
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
-import { UserProfile } from '@auth0/nextjs-auth0/client';
 import { GetServerSidePropsContext } from 'next';
 import router from 'next/router';
 import { useTranslation } from 'next-i18next';
@@ -20,6 +19,7 @@ import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { AttachmentDetails, CorrespondenceFormParts, TransactionTypes } from '@deps/models/case/correspondence';
 import { PolicyDocument } from '@deps/models/case/document';
 import { CommunicationTypes, SendDocumentFormType } from '@deps/models/case/send-document';
@@ -28,23 +28,30 @@ import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
 import { getApplicableStatementsSSR, sendCommunication } from '@deps/queries/api/c2web';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
+import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logWarn, logError, getUserInfoFromUser, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
-type SendCorrespondenceProps = {
+interface SendCorrespondenceProps extends SegmentTrackedPageProps {
     policy: Policy;
     shouldShowCaseButton: FeatureFlags;
-    shouldShowEmailFaxOption: FeatureFlags;
+    shouldShowEmailOption: FeatureFlags;
+    shouldShowFaxOption: FeatureFlags;
     shouldShowMailOption: FeatureFlags;
-    user: UserProfile;
     applicableStatement: StatementTypes[];
+}
+
+const getFeatureFlagKey = (carrierId: string, type: 'EMAIL' | 'FAX' | 'MAIL') => {
+    return `SEND_STATEMENT_${type}_${carrierId}` as keyof typeof FEATURE_FLAGS;
 };
+
 const SendCorrespondence = ({
     policy,
     shouldShowCaseButton,
-    shouldShowEmailFaxOption,
+    shouldShowEmailOption,
+    shouldShowFaxOption,
     shouldShowMailOption,
     user,
     applicableStatement,
@@ -52,6 +59,9 @@ const SendCorrespondence = ({
     const { t } = useTranslation(undefined, { keyPrefix: '' });
     const [statements, setStatements] = useState<PolicyDocument[]>([]);
     const { ctiCallNumber, correlationId } = router.query;
+
+    useSegmentPageTracker(user, SegmentPageName.SendCorrespondence, { ctiCallNumber, correlationId, policyNumber: policy.policyNumber });
+
     const formSelectionLabel = t('contactCenter.sendStatement.tabs.statementSelection');
     const correspondenceLabel = t('contactCenter.sendStatement.tabs.correspondence');
     const confirmLabel = t('contactCenter.sendStatement.tabs.confirm');
@@ -61,12 +71,12 @@ const SendCorrespondence = ({
             {
                 label: t('sendDocument.correspondence.email'),
                 value: CommunicationTypes.Email,
-                disabled: !shouldShowEmailFaxOption,
+                disabled: !shouldShowEmailOption,
             },
             {
                 label: t('sendDocument.correspondence.fax'),
                 value: CommunicationTypes.Fax,
-                disabled: !shouldShowEmailFaxOption,
+                disabled: !shouldShowFaxOption,
             },
             {
                 label: t('sendDocument.correspondence.mail'),
@@ -74,7 +84,7 @@ const SendCorrespondence = ({
                 disabled: !shouldShowMailOption,
             },
         ],
-        [shouldShowEmailFaxOption, shouldShowMailOption, t]
+        [shouldShowEmailOption, shouldShowFaxOption, shouldShowMailOption, t]
     );
     const [communicationOptions] = useState<RadioItem[]>(communicationTypes);
 
@@ -192,7 +202,7 @@ export const getServerSideProps = withPageAuthRequired({
         try {
             const userInfoForLogging = getUserInfoFromUser(user);
             const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging);
-            if (!policy) {
+            if (!policy || !policy.carrierId) {
                 return {
                     redirect: {
                         destination: '/404',
@@ -201,17 +211,18 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
             const applicableStatements = (await getApplicableStatementsSSR(planCode, accessToken, userInfoForLogging)) || [];
-            const showEmailFaxOptionKey = `SEND_STATEMENT_EMAIL_FAX_${policy.carrierId}` as keyof typeof FEATURE_FLAGS;
-            const showMailOptionKey = `SEND_STATEMENT_Mail_${policy.carrierId}` as keyof typeof FEATURE_FLAGS;
-            const shouldShowMailOption = featureFlagDecisions?.[FEATURE_FLAGS[showMailOptionKey]];
-            const shouldShowEmailFaxOption = featureFlagDecisions?.[FEATURE_FLAGS[showEmailFaxOptionKey]];
+
+            const shouldShowEmailOption = featureFlagDecisions?.[FEATURE_FLAGS[getFeatureFlagKey(policy.carrierId, 'EMAIL')]];
+            const shouldShowFaxOption = featureFlagDecisions?.[FEATURE_FLAGS[getFeatureFlagKey(policy.carrierId, 'FAX')]];
+            const shouldShowMailOption = featureFlagDecisions?.[FEATURE_FLAGS[getFeatureFlagKey(policy.carrierId, 'MAIL')]];
 
             return {
                 props: {
                     ...translations,
                     policy,
                     shouldShowCaseButton: shouldShowCaseButton ?? false,
-                    shouldShowEmailFaxOption: shouldShowEmailFaxOption ?? false,
+                    shouldShowEmailOption: shouldShowEmailOption ?? false,
+                    shouldShowFaxOption: shouldShowFaxOption ?? false,
                     shouldShowMailOption: shouldShowMailOption ?? false,
                     user,
                     applicableStatement: applicableStatements,

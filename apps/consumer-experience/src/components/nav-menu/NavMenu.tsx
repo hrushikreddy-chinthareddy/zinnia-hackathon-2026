@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import EverlyIcon from '@/app/styles/everly/assets/everly-logo-icon.svg';
+import EverlyIcon from '@/app/styles/everly/assets/everly-logo-icon-new.svg';
 import WellabeIcon from '@/app/styles/wellabe/assets/wellabe-logo-icon.svg';
 import { UserBadge } from '@/components/user-badge/UserBadge';
 import { useFeatureFlags } from '@/hooks/use-feature-flags';
@@ -44,6 +44,7 @@ export const NavMenu = ({
   const [currentUrl, setCurrentUrl] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+
   const { isMockOn } = useMock();
 
   useEffect(() => {
@@ -85,7 +86,9 @@ export const NavMenu = ({
                   [styles.active as string]: pathname === navUrls.account,
                 })}
               >
-                <Icon type={IconType.CIRCLE_USER} />
+                <span>
+                  <Icon type={IconType.CIRCLE_USER} width={20} height={20} />
+                </span>
                 <Link
                   href="/my-account"
                   onClick={() => {
@@ -101,7 +104,9 @@ export const NavMenu = ({
                     [styles.active as string]: pathname === navUrls.allPolicies,
                   })}
                 >
-                  <Icon type={IconType.MATCHES} />
+                  <span>
+                    <Icon type={IconType.MATCHES} />
+                  </span>
                   <Link
                     href="/coverage"
                     onClick={() => {
@@ -114,7 +119,7 @@ export const NavMenu = ({
               )}
 
               {carrierPolicyDetails &&
-                carrierPolicyDetails.length &&
+                carrierPolicyDetails.length > 0 &&
                 carrierPolicyDetails.map((detail: CarrierListDetail) => {
                   const CarrierIcon =
                     carrierIcons[detail.carrierName as CarrierNames];
@@ -128,11 +133,13 @@ export const NavMenu = ({
                           currentUrl.includes(detail.carrierName.toLowerCase()),
                       })}
                     >
-                      {CarrierIcon ? (
-                        <CarrierIcon width={16} height={16} />
-                      ) : (
-                        <Icon type={IconType.MATCHES} />
-                      )}
+                      <span>
+                        {CarrierIcon ? (
+                          <CarrierIcon width={20} height={20} color="#ffffff" />
+                        ) : (
+                          <Icon type={IconType.MATCHES} />
+                        )}
+                      </span>
                       <Link
                         href={detail.link.href}
                         aria-label={detail.link.label}
@@ -146,8 +153,10 @@ export const NavMenu = ({
             </ul>
             <div style={{ position: 'relative' }}>
               <a href="/api/logout">
-                <Icon type={IconType.LOGOUT} />
-                <span>Sign out</span>
+                <span>
+                  <Icon type={IconType.LOGOUT} width={20} height={20} />
+                </span>
+                Sign out
               </a>
             </div>
           </div>

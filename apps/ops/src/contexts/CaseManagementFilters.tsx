@@ -6,19 +6,12 @@ import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 
 export type CaseStatusFilter = 'All' | Statuses.InProgress | Statuses.Exception;
 
-export const caseSearchPageSizeOptions = [
-    { value: '10', label: '10' },
-    { value: '25', label: '25' },
-    { value: '50', label: '50' },
-];
-
 export interface CaseSearchFilters {
     additionalFilters: CaseSearchAdditionalFilters;
-    limit: number;
     offset: number;
     total: number;
+    sortBy: string;
     sortDirection: 'asc' | 'desc';
-    statusCounterTileFilter: CaseStatusFilter;
     searchValue: SearchViewQuery;
     toggleValue: PolicySearchKeys;
 }
@@ -29,35 +22,33 @@ export interface CaseSearchAdditionalFilters {
     updatedDateStart?: string;
     updatedDateEnd?: string;
     age?: string;
-    showOnlyCanceledCases: boolean;
-    showOnlyCompletedCases: boolean;
+    caseStatus?: Statuses[];
+    notInCaseStatus?: Statuses[];
     processTypes: Set<string>;
     requestSubType: Set<string>;
     carriers?: { [key: string]: string };
     products: Set<string>;
 }
 
-export const initialAdditionalFilters = {
+export const initialAdditionalFilters: CaseSearchAdditionalFilters = {
     createdDateStart: '',
     createdDateEnd: '',
     updatedDateStart: '',
     updatedDateEnd: '',
     age: '',
-    showOnlyCanceledCases: false,
-    showOnlyCompletedCases: false,
     processTypes: new Set([]),
     requestSubType: new Set([]),
     carriers: {},
+    caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.New, Statuses.NotStarted],
     products: new Set([]),
 };
 
 export const initialFilters: CaseSearchFilters = {
     additionalFilters: initialAdditionalFilters,
-    limit: 25,
     offset: 0,
     total: 0,
+    sortBy: 'createdAt',
     sortDirection: 'desc',
-    statusCounterTileFilter: 'All',
     searchValue: SearchBarInitialValues,
     toggleValue: 'policyNumber',
 };

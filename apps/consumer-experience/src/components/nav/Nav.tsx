@@ -1,8 +1,10 @@
 import Link from 'next/link';
 
-import LogoImage from '@/app/styles/everly/everly-logo.svg';
+import EverlyLogoImage from '@/app/styles/everly/assets/everly-logo-new.svg';
+import WellabeLogoImage from '@/app/styles/wellabe/assets/wellabe-logo.svg';
 import { getMyPoliciesByCarrier } from '@/services';
 import { getFeatureFlags } from '@/services/feature-flags';
+import { CompanyName } from '@/types/carriers';
 import { CarrierId } from '@/types/policy';
 import { getCarrierListDetails } from '@/utils/carriers';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
@@ -13,10 +15,12 @@ import { NavMenu } from '../nav-menu/NavMenu';
 
 export async function Nav({
   userName,
+  themeCookie,
 }: {
   planCode: string;
   policyNumber: string;
   userName: { firstName?: string; lastName?: string };
+  themeCookie: CompanyName;
 }) {
   const featureFlagDecisions = await getFeatureFlags();
   let carrierDetails;
@@ -32,6 +36,32 @@ export async function Nav({
     }
   }
 
+  const carrierNavLogo = () => {
+    if (themeCookie === CompanyName.EVERLY) {
+      return (
+        <EverlyLogoImage
+          alt="Everly Logo"
+          width="200px"
+          height="32px"
+          className={styles.logoEverly}
+        />
+      );
+    }
+    if (themeCookie === CompanyName.WELLABE) {
+      return (
+        <WellabeLogoImage
+          alt="Everly Logo"
+          width="auto"
+          height="32px"
+          color="var(--color-primary-color-primary)"
+          fill="var(--color-primary-color-primary)"
+        />
+      );
+    }
+
+    return null;
+  };
+
   return (
     <nav className={styles.container}>
       <div className={styles.logoContainer}>
@@ -43,7 +73,7 @@ export async function Nav({
           className="justify-self-start"
           aria-label="Home page"
         >
-          <LogoImage alt="Everly Logo" className={styles.logo}></LogoImage>
+          {carrierNavLogo()}
         </Link>
       </div>
       <NavMenu userName={userName} carrierPolicyDetails={carrierDetails} />

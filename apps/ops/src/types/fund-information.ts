@@ -1,5 +1,5 @@
-import { DisbursementCriteriaEnum, FundUsageInfo } from "@deps/models/funds/fund-information";
-import { FundAccountType } from "@deps/models/policy/sor-policy";
+import { DisbursementCriteriaEnum, FundUsageInfo } from '@deps/models/funds/fund-information';
+import { FundAccountType } from '@deps/models/policy/sor-policy';
 
 export interface CarrierFundsResponse {
     data: string[];
@@ -54,7 +54,6 @@ interface FixedFund {
 
 interface IndexedFund {
     capRate?: number;
-    // TODO MG: should this be an enum?
     creditingStrategy?: string;
     dailyPriceIdentifier?: number;
     guaranteedMinimumCapRate?: number;
@@ -83,5 +82,5 @@ export interface FundInformationByPlanCode {
     disbursementPriority?: DisbursementPriority;
     funds?: Funds;
     planCode?: string;
-    investmentModels?: InvestmentModels
+    investmentModels?: InvestmentModels;
 }

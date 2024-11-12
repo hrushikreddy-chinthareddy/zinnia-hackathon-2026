@@ -20,8 +20,8 @@ type DocumentDownloaderProps = DownloadProps & {
 
 export default function DocumentDownloader({ documentId, documentType, carrierCode, documentName }: DocumentDownloaderProps) {
     const { t } = useTranslation();
-
     const [loading, download] = useDocumentDownload(documentId, documentType, carrierCode, documentName);
+
     return (
         <NavElement
             className="flex max-w-[234px] gap-1 text-left"

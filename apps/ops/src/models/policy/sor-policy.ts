@@ -5126,6 +5126,7 @@ export const ArrangementType = {
     PAYMENT: 'PAYMENT',
     WITHDRAWAL: 'WITHDRAWAL',
     LOANREPAYMENT: 'LOANREPAYMENT',
+    REQUIREDMINIMUMDISTRIBUTION: 'REQUIREDMINIMUMDISTRIBUTION',
 } as const;
 
 /**
@@ -5534,12 +5535,11 @@ export type FundAccountType = (typeof FundAccountType)[keyof typeof FundAccountT
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const FundAccountType = {
-  FIXED: 'FIXED',
-  INDEXED: 'INDEXED',
-  VARIABLE: 'VARIABLE',
-  INTERIM: 'INTERIM',
-  // TODO MG: adding manually
-  HOLDING: 'HOLDING',
+    FIXED: 'FIXED',
+    INDEXED: 'INDEXED',
+    VARIABLE: 'VARIABLE',
+    INTERIM: 'INTERIM',
+    HOLDING: 'HOLDING',
 } as const;
 
 /**

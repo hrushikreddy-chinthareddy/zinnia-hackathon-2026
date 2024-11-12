@@ -4,23 +4,22 @@ import React, { useEffect, useState } from 'react';
 import 'react-pdf/dist/Page/TextLayer.css';
 import TransactionDocumentSelection from '@deps/containers/nigo-entry-container/components/steps/form-selection.tsx/transaction-document-selection';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { SendDocumentFormParts } from '@deps/models/case/send-document';
+import { AvailableFormsTransaction, SendDocumentFormParts } from '@deps/models/case/send-document';
 import { Policy } from '@deps/models/policy/sor-policy';
 
 import SendDocumentNavigationButtons from './action-components/navigation-buttons';
 import AssistiveText, { AssistiveTextVariant } from '../assistive-text/assistive-text';
-import { SimpleOption } from '../autocomplete/autocomplete.types';
 import WorkflowCard from '../workflows/workflow-card/workflow-card';
 
 type FormSelectionProps = {
     policy: Policy;
     ctiCallNumber: string;
-    transactionTypes: SimpleOption[];
+    availableFormsTransactions: AvailableFormsTransaction[];
     formDetails: SendDocumentFormParts;
     setFormDetails: React.Dispatch<React.SetStateAction<SendDocumentFormParts>>;
 };
 
-function FormSelection({ policy, ctiCallNumber, transactionTypes, formDetails, setFormDetails }: FormSelectionProps) {
+function FormSelection({ policy, ctiCallNumber, availableFormsTransactions, formDetails, setFormDetails }: FormSelectionProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
     const { goToNext } = useWorkflow();
     const [error, setError] = useState<string>('');
@@ -51,7 +50,7 @@ function FormSelection({ policy, ctiCallNumber, transactionTypes, formDetails, s
                 setFormDetails={setFormDetails}
                 policy={policy}
                 ctiCallNumber={ctiCallNumber}
-                transactionTypes={transactionTypes}
+                availableFormsTransactions={availableFormsTransactions}
             />
             {error && <AssistiveText text={error} variant={AssistiveTextVariant.Error} className="mt-2" />}
         </WorkflowCard>

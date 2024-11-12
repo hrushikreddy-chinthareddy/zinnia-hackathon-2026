@@ -10,7 +10,9 @@ import { TranslationFiles } from '@deps/config/translations';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { UserPermission } from '@deps/models/user-profile';
+import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
@@ -18,7 +20,15 @@ const DocumentViewer = dynamic(() => import('@deps/components/document-viewer/do
     ssr: false,
 });
 
-const DocumentViewerPage = (props: DocumentViewerProps) => {
+interface DocumentViewerPageProps extends DocumentViewerProps,SegmentTrackedPageProps { }
+
+const DocumentViewerPage = (props: DocumentViewerPageProps) => {
+    useSegmentPageTracker(props.user, SegmentPageName.DocumentViewer, {
+        id: props.id,
+        documentType: props.documentType,
+        carrierCode: props.carrierCode
+    });
+
     return (
         <>
             <PageHead titleKey="formData" />
@@ -82,6 +92,7 @@ export const getServerSideProps = withPageAuthRequired({
                 id,
                 documentType,
                 carrierCode,
+                user,
             },
         };
     },

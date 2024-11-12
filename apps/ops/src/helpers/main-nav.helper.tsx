@@ -1,11 +1,12 @@
+import { Icon, IconType } from '@zinnia/bloom/components';
 import { TFunction } from 'next-i18next';
 
 import { PermissionsContextProps } from '@deps/contexts/PermissionsContext';
 import { UserPermission } from '@deps/models/user-profile';
 import { NavBarLinkProps } from '@deps/navigation/nav-bar-link/nav-bar-link';
 import { ReactComponent as CollectionIcon } from '@deps/styles/elements/icons/icons_outlined/collection.svg';
+import { ReactComponent as DashboardIcon } from '@deps/styles/elements/icons/icons_outlined/dashboard.svg';
 import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icons_outlined/document-duplicate.svg';
-import { ReactComponent as ShieldCheckIcon } from '@deps/styles/elements/icons/icons_outlined/shield-check.svg';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
@@ -22,6 +23,7 @@ export const getMainNavItems = async (
     const transactionOpsSuiteHref = t('site.navLinks.transactionOpsSuite.link') || '';
 
     const shouldShowNewExperience = featureFlags?.[FEATURE_FLAGS.NEW_EXP];
+    const shouldShowCaseStatsDashboard = featureFlags?.[FEATURE_FLAGS.CASE_STATS_DASHBOARD];
     const navItems: NavBarLinkProps[] = [];
 
     const getNavItems = async () => {
@@ -29,18 +31,19 @@ export const getMainNavItems = async (
         const isAllowReadPolicyAdmin = await permissionContext.doesUserHavePagePermission(UserPermission.AllowReadPolicyAdmin);
         const isAllowReadOtpRenewals = await permissionContext.doesUserHavePagePermission(UserPermission.AllowReadOtpRenewals);
         const isAdvisorsExcel = await permissionContext.getIsAdvisorsExcel();
+        const hasDashboardPermission = await permissionContext.doesUserHaveDashboardPermission();
 
         if (isAdvisorsExcel || isAllowReadCaseManagement) {
             navItems.push({ label: caseLinkText, link: caseLinkHref, icon: <DocumentIcon width={20} height={20} /> });
         }
-        if (isAdvisorsExcel || isAllowReadPolicyAdmin) {
+        if (isAllowReadPolicyAdmin) {
             navItems.push({
                 label: policySearchText,
                 link: policySearchHref,
                 queryParams: {
                     isReset: true,
                 },
-                icon: <ShieldCheckIcon width={20} height={20} />,
+                icon: <Icon type={IconType.SHIELD_CHECKMARK} />,
             });
         }
         if (isAllowReadOtpRenewals) {
@@ -57,6 +60,11 @@ export const getMainNavItems = async (
                   });
         }
 
+        if (shouldShowCaseStatsDashboard && hasDashboardPermission) {
+            const dashboardText = t('site.navLinks.dashboard.text') || '';
+            const dashboardHref = t('site.navLinks.dashboard.link') || '';
+            navItems.push({ label: dashboardText, link: dashboardHref, icon: <DashboardIcon width={20} height={20} /> });
+        }
         return navItems;
     };
     return await getNavItems();

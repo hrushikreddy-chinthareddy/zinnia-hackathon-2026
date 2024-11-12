@@ -1,260 +1,432 @@
+/*
+* What's up with this file? Wellllll, as of 10/30/24, the way we export variables from supernova resolves all of the variables to the hex code, which
+* does not work well when we are updating variables for themes. Because a variable that should be pointing to another variable ends up pointing to a hex code
+* which is not the correct color for a different theme. Ideaeeallly the only things we would ever need to update are the base colors (found in the theme files)
+* and any variables which point to a different variable than what bloom points to (e.g. the loader), so to hopefully assuage some of that frustration
+* this file maps the variables that resolve to different hex codes from bloom to variables their appropriate variables.
+* WHEN TO UPDATE THIS FILE
+* 1. a variable name has changed
+* 2. if a variable gets mapped to a new variable, and that new variable is used on bloom and on other themes, then update where the variable is pointing here
+* NOTE: nothing in this file should point directly to a hex code. (except for the commented out things) everything here should be pointing to a variable, which if you
+* follow the trail will eventually point to a base color found in the theme file
+* WHEN TO UPDATE THE THEME FILE
+* say the designers update --color-chip-border-chip-hover-border to point to --color-status-border-status-success-border BUT only
+* only for everly everly, you'll need to update --color-chip-border-chip-hover-border to point to --color-status-border-status-success-border in the theme file
+* because it's unique to that carrier (which technically shouldn't be an option, but "that's life" as ol' baby blue eyes would say.
+*/
 :root,
 .root,
 #root,
 #docs-root {
-  --color-button-primary-button-primary-default-fill: var(
-    --color-primary-color-primary
+  /* BASE */
+  --color-base-text-text-carrier: var(--color-secondary-color-secondary);
+  --color-base-icon-icon-action: var(--color-secondary-color-secondary);
+  /* --color-base-icon-icon-action-contrast: #ffffff; */
+  /* --color-base-icon-icon-default: #676767; */
+  --color-base-icon-icon-action-text-link: var(--color-links-color-global-link);
+  --color-base-icon-icon-action-text-link-contrast: var(
+    --color-links-color-global-link-light
   );
-  --color-button-primary-button-primary-border: var(
-    --color-primary-color-primary
-  );
-  --color-button-primary-button-primary-default-text: var(
-    --color-grayscale-color-white
-  );
-  --color-button-primary-button-primary-hover-fill: var(
-    --color-primary-color-primary-lighter
-  );
-  --color-button-primary-button-primary-hover-border: var(
-    --color-primary-color-primary-lighter
-  );
-  --color-button-secondary-button-secondary-hover-text: var(
-    --color-grayscale-color-900-gray
-  );
-  --color-button-primary-button-primary-pressed-fill: var(
-    --color-primary-color-primary-light
-  );
-  --color-button-primary-button-primary-pressed-border: var(
-    --color-primary-color-primary-light
-  );
-  --color-button-primary-button-primary-pressed-text: var(
-    --color-grayscale-color-white
-  );
-  --color-button-primary-button-primary-selected-fill: var(
-    --color-primary-color-primary-light
-  );
-  --color-button-primary-button-primary-selected-border: var(
-    --color-primary-color-primary-light
-  );
-  --color-button-primary-button-primary-selected-text: var(
-    --color-grayscale-color-900-gray
-  );
-
-  --color-button-secondary-button-secondary-selected-text: var(
-    --color-grayscale-color-900-gray
-  );
-  --color-button-secondary-button-secondary-selected-border: var(
-    --color-primary-color-primary
-  );
-  --color-button-secondary-button-secondary-selected-fill: var(
-    --color-primary-color-primary-light
-  );
-  --color-button-secondary-button-secondary-pressed-border: var(
-    --color-primary-color-primary
-  );
-  --color-button-secondary-button-secondary-pressed-fill: var(
-    --color-primary-color-primary-lighter
-  );
-  --color-button-secondary-button-secondary-hover-border: var(
-    --color-primary-color-primary
-  );
-  --color-button-secondary-button-secondary-hover-fill: var(
-    --color-primary-color-primary-lightest
-  );
-  --color-button-secondary-button-secondary-default-border: var(
-    --color-primary-color-primary
-  );
-
-  --color-pagination-pagination-default-border: var(
-    --color-primary-color-primary
-  );
-  --color-pagination-pagination-default-indicator: var(
-    --color-primary-color-primary
-  );
-  --color-pagination-pagination-hover-fill: var(
-    --color-primary-color-primary-lightest
-  );
-  --color-pagination-pagination-hover-indicator-fill: var(
-    --color-primary-color-primary
-  );
-  --color-pagination-pagination-selected-border: var(
-    --color-primary-color-primary
-  );
-  --color-pagination-pagination-selected-fill: var(
-    --color-primary-color-primary-lightest
-  );
-  --color-pagination-pagination-selected-indicator-fill: var(
-    --color-primary-color-primary
-  );
-
-  --color-button-group-button-group-item-selected-border: var(
-    --color-primary-color-primary
-  );
-  --color-button-group-button-group-item-selected-fill: var(
-    --color-primary-color-primary-lighter
-  );
-  --color-button-group-button-group-item-hover-border: var(
-    --color-primary-color-primary
-  );
-  --color-button-group-button-group-item-hover-fill: var(
-    --color-primary-color-primary-lightest
-  );
-
-  --color-chip-chip-hover-fill: var(--color-primary-color-primary-lightest);
-  --color-chip-chip-hover-border: var(--color-primary-color-primary);
-  --color-chip-chip-selected-fill: var(--color-primary-color-primary-lightest);
-  --color-chip-chip-selected-border: var(--color-primary-color-primary);
-
-  --color-toggle-default-toggle-selected-fill: var(
-    --color-primary-color-primary
-  );
-  --color-toggle-default-toggle-selected-inactive-fill: var(
-    --color-primary-color-primary-lightest
-  );
-
-  --color-toggle-default-toggle-contrast-selected-fill: var(
-    --color-primary-color-primary
-  );
-  --color-toggle-default-toggle-contrast-selected-inactive-indicator: var(
-    --color-primary-color-primary-light
-  );
-  --color-toggle-default-toggle-contrast-selected-inactive-icon: var(
-    --color-primary-color-primary-light
-  );
-
-  --color-element-radio-checkbox-default-element-indicator-selected-fill: var(
-    --color-primary-color-primary
-  );
-  --color-element-radio-checkbox-default-element-indicator-selected-inactive-fill: var(
-    --color-primary-color-primary-lightest
-  );
-  --color-element-radio-checkbox-default-element-hover-border: var(
-    --color-accent-color-accent-one
-  );
-  --color-element-radio-checkbox-default-element-selected-border: var(
-    --color-primary-color-primary
-  );
-  --color-element-radio-checkbox-default-element-selected-inactive-border: var(
-    --color-secondary-color-secondary-lightest
-  );
-
-  --color-element-radio-checkbox-contrast-element-contrast-indicator-selected-fill: var(
-    --color-primary-color-primary
-  );
-  --color-element-radio-checkbox-contrast-element-contrast-selected-inactive-border: var(
-    --color-primary-color-primary-dark
-  );
-  --color-element-radio-checkbox-contrast-element-contrast-hover-border: var(
-    --color-accent-color-accent-one
-  );
-  --color-element-radio-checkbox-contrast-element-contrast-selected-border: var(
-    --color-primary-color-primary
-  );
-  --color-element-radio-checkbox-contrast-element-contrast-border-selected-inactive: var(
-    --color-primary-color-primary-dark
-  );
+  /* --color-base-icon-icon-action-unavailable: #676767; */
+  /* --color-base-icon-icon-header: #212121; */
+  --color-base-icon-icon-tooltip: var(--color-accent-color-accent-one);
+  /* --color-base-icon-icon-light: #ffffff; */
+  /* --color-base-icon-icon-dark: #212121; */
 
   --color-base-border-border-primary-color: var(--color-primary-color-primary);
   --color-base-border-border-secondary-color: var(
     --color-secondary-color-secondary
   );
+  /* --color-base-border-border-lightest: #ffffff; */
+  /* --color-base-border-border-light: #ededed;
+--color-base-border-border-subtle: #cccccc;
+--color-base-border-border-bold: #b3b3b3;
+--color-base-border-border-bolder: #676767;
+--color-base-border-border-dark: #313131;
+--color-base-border-border-darker: #212121; */
 
-  --color-base-text-text-link: var(--color-primary-color-primary-light);
-  --color-base-text-text-link-contrast: var(
-    --color-primary-color-primary-light
-  );
-  --color-base-icon-icon-action: var(--color-secondary-color-primary-light);
-  --color-base-icon-icon-tooltip: var(--color-accent-color-accent-one);
-  --color-base-icon-icon-header: var(--color-accent-color-accent-one);
+  /* --color-base-surface-surface-primary: #ffffff;
+--color-base-surface-surface-secondary: #f8f8f8;
+--color-base-surface-surface-tertiary: #ededed;
+--color-base-surface-surface-quaternary: #cccccc;
+--color-base-surface-surface-bold: #b3b3b3;
+--color-base-surface-surface-dark: #676767;
+--color-base-surface-surface-darker: #212121;
+--color-base-surface-surface-text-highlight: #ffe485; */
 
-  --color-states-hover-hover-border: var(--color-accent-color-accent-one);
-  --color-states-selected-selected-primary-border: var(
-    --color-primary-color-primary
+  /* I'm not sure what these are supposed to be */
+  /* --color-accent-color-accent-loader-zero-percent-opacity: #ffc60000;
+--color-accent-color-accent-loader-contrast-zero-percent-opacity: #ffffff00; */
+
+  /* STATUS */
+
+  /* --color-status-text-status-information-text: #005fed; */
+  /* --color-status-icon-status-information-icon: #005fed;
+--color-status-border-status-information-border: #005fed80;
+--color-status-border-status-information-border-alt: #005fed;
+--color-status-surface-status-information-light: #f2f7fe;
+
+--color-status-text-status-pending-text: #ac0091;
+--color-status-icon-status-pending-icon: #ac0091;
+--color-status-border-status-pending-border: #ac009180;
+--color-status-border-status-pending-border-alt: #ac0091;
+--color-status-surface-status-pending-light: #fbf2f9;
+
+--color-status-text-status-warning-text: #b74d00;
+--color-status-icon-status-warning-icon: #b74d00;
+--color-status-border-status-warning-border: #c3520080;
+--color-status-border-status-warning-border-alt: #b74d00;
+--color-status-surface-status-warning-light: #fcf6f2;
+
+--color-status-icon-status-success-icon: #007b5a;
+--color-status-text-status-success-text: #007b5a;
+--color-status-border-status-success-border: #00876280;
+--color-status-border-status-success-border-alt: #007b5a;
+--color-status-surface-status-success-light: #f2f9f7;
+
+--color-status-text-status-error-text: #db004f;
+--color-status-icon-status-error-icon: #db004f;
+--color-status-border-status-error-border: #db004f80;
+--color-status-border-status-error-border-alt: #db004f;
+--color-status-surface-status-error-light: #fdf2f6; */
+
+  /* STATES */
+
+  --color-states-hover-surface-hover-fill: var(
+    --color-secondary-color-secondary-lightest
   );
-  --color-states-hover-hover-fill: var(--color-primary-color-primary-lighter);
-  --color-states-hover-hover-fill-alt: var(
-    --color-primary-color-primary-lightest
+  /* --color-states-hover-surface-hover-fill-alt: #f8f8f8; */
+  /* --color-states-hover-text-hover-text-link: #003b54; */
+  /* --color-states-hover-text-hover-text-link-contrast: #99c0d1; */
+
+  --color-states-hover-border-hover-border: var(
+    --color-accent-color-accent-two
+  ); /* Different than bloom*/
+  --color-states-hover-border-hover-contrast-border: var(
+    --color-secondary-color-secondary-lightest
   );
-  --color-states-hover-hover-secondary-border: var(
+  /* --color-states-hover-border-hover-text-link-border: #003b54; */
+  /* --color-states-hover-border-hover-text-link-contrast-border: #99c0d1; */
+  --color-states-hover-icon-hover-icon-action: var(
     --color-secondary-color-secondary-dark
   );
-  --color-states-hover-hover-secondary-contrast-border: var(
-    --color-secondary-color-secondary-lighter
-  );
-  --color-states-hover-hover-text-link: var(--color-primary-color-primary);
-  --color-states-hover-hover-contrast-text-link: var(
-    --color-primary-color-primary-lighter
-  );
-  --color-states-hover-hover-contrast-text-link: var(
-    --color-primry-color-primry-lighter
-  );
-  --color-states-hover-hover-icon-action: var(
-    --color-primary-color-primary-dark
-  );
+  /* --color-states-hover-icon-hover-icon-action-contrast: #ededed; */
+  /* --color-states-hover-icon-hover-text-link-icon: #003b54; */
+  /* --color-states-hover-icon-hover-text-link-icon-contrast: #99c0d1; */
 
-  --color-states-selected-selected-primary-border: var(
-    --color-primary-color-primary
+  --color-states-selected-surface-selected-fill: var(
+    --color-secondary-color-secondary-lightest
   );
-  --color-states-hover-hover-fill: var(--color-primary-color-primary-lighter);
-  --color-states-hover-hover-fill-alt: var(
-    --color-primary-color-primary-lightest
-  );
-  --color-states-selected-selected-secondary-border: var(
+  --color-states-selected-surface-selected-fill-alt: var(
     --color-secondary-color-secondary
   );
-  --color-states-selected-selected-secondary-contrast-border: var(
+  --color-states-selected-surface-selected-contrast-fill: var(
     --color-secondary-color-secondary-light
   );
-  --color-states-selected-selected-secondary-fill: var(
+  /* --color-states-selected-text-selected-text-link: #00628b; */
+  /* --color-states-selected-text-selected-text-link-contrast: #66a1ba; */
+  --color-states-selected-border-selected-border: var(
+    --color-secondary-color-secondary
+  );
+  --color-states-selected-border-selected-contrast-border: var(
     --color-secondary-color-secondary-light
   );
-  --color-states-selected-selected-secondary-fill: var(
-    --color-secondary-color-secondary-light
+  /* --color-states-selected-border-selected-text-link-border: #00628b; */
+  /* --color-states-selected-border-selected-text-link-contrast-border: #66a1ba; */
+  /* --color-states-selected-icon-selected-text-link-icon: #00628b;
+--color-states-selected-icon-selected-text-link-icon-contrast: #66a1ba; */
+
+  /* --color-states-inactive-surface-inactive-fill: #ededed;
+--color-states-inactive-surface-inactive-fill-contrast: #313131;
+--color-states-inactive-text-inactive-text: #b3b3b3;
+--color-states-inactive-text-inactive-text-contrast: #676767;
+--color-states-inactive-text-inactive-text-link: #b3b3b3;
+--color-states-inactive-text-inactive-text-link-contrast: #676767;
+--color-states-inactive-border-inactive-border: #b3b3b3;
+--color-states-inactive-border-inactive-border-contrast: #676767;
+--color-states-inactive-icon-inactive-icon: #b3b3b3;
+--color-states-inactive-icon-inactive-icon-contrast: #676767; */
+
+  /* --color-states-focus-focus-border: #007dbc; */
+
+  /* GRADIENT */
+  /* Set in theme files */
+
+  /*BUTTON PRIMARY */
+
+  /* --color-button-primary-surface-button-primary-default-fill: #212121;
+--color-button-primary-text-button-primary-default-text: #ffffff;
+--color-button-primary-border-button-primary-default-border: #212121;
+
+--color-button-primary-surface-button-primary-hover-fill: #ffffff;
+--color-button-primary-text-button-primary-hover-text: #212121;
+--color-button-primary-border-button-primary-hover-border: #212121;
+
+--color-button-primary-surface-button-primary-selected-fill: #ededed;
+--color-button-primary-text-button-primary-selected-text: #212121;
+--color-button-primary-border-button-primary-selected-border: #212121;
+
+--color-button-primary-surface-button-primary-pressed-fill: #cccccc;
+--color-button-primary-text-button-primary-pressed-text: #212121;
+--color-button-primary-border-button-primary-pressed-border: #212121; */
+
+  /* BUTTON SECONDARY */
+
+  /* --color-button-secondary-surface-button-secondary-default-fill: #ffffff;
+--color-button-secondary-text-buttton-secondary-default-text: #212121;
+--color-button-secondary-border-button-secondary-default-border: #212121;
+
+--color-button-secondary-surface-button-secondary-hover-fill: #cccccc;
+--color-button-secondary-text-button-secondary-hover-text: #212121;
+--color-button-secondary-border-button-secondary-hover-border: #212121;
+
+--color-button-secondary-surface-button-secondary-pressed-fill: #b3b3b3;
+--color-button-secondary-text-button-secondary-pressed-text: #212121;
+--color-button-secondary-border-button-secondary-pressed-border: #212121;
+
+--color-button-secondary-surface-button-secondary-selected-fill: #212121;
+--color-button-secondary-text-button-secondary-selected-text: #ffffff;
+--color-button-secondary-border-button-secondary-selected-border: #212121; */
+
+  /* BUTTON CONTRAST */
+
+  /* --color-button-contrast-surface-button-contrast-default-fill: #212121;
+--color-button-contrast-text-button-contrast-default-text: #ffffff;
+--color-button-contrast-border-button-contrast-default-border: #ffffff;
+
+--color-button-contrast-surface-button-contrast-hover-fill: #313131;
+--color-button-contrast-text-button-contrast-hover-text: #ffffff;
+--color-button-contrast-border-button-contrast-hover-border: #ffffff;
+
+--color-button-contrast-surface-button-contrast-pressed-fill: #4d4d4d;
+--color-button-contrast-text-button-contrast-pressed-text: #ffffff;
+--color-button-contrast-border-button-contrast-pressed-border: #ffffff;
+
+--color-button-contrast-surface-button-contrast-selected-fill: #ffffff;
+--color-button-contrast-text-button-contrast-selected-text: #212121;
+--color-button-contrast-border-button-contrast-selected-border: #ffffff; */
+
+  /* BUTTON GROUP */
+
+  /* --color-button-group-surface-button-group-item-default-fill: #ffffff; */
+  /* --color-button-group-border-button-group-item-default-border: #cccccc; */
+
+  --color-button-group-surface-button-group-item-hover-fill: var(
+    --color-states-hover-surface-hover-fill
   );
-  --color-states-selected-selected-text-link: var(
-    --color-primary-color-primary
-  );
-  --color-states-selected-selected-contrast-text-link: var(
-    --color-primary-color-primary-light
+  --color-button-group-border-button-group-item-hover-border: var(
+    --color-states-hover-border-hover-border
   );
 
+  --color-button-group-surface-button-group-item-selected-fill: var(
+    --color-states-selected-surface-selected-fill-alt
+  );
+  --color-button-group-border-button-group-item-selected-border: var(
+    --color-states-selected-border-selected-border
+  );
+
+  /* TOGGLE */
+
+  /* --color-toggle-default-surface-toggle-default-fill: #ededed; */
+  /* --color-toggle-default-border-toggle-default-border: #676767; */
+  /* --color-toggle-default-surface-toggle-default-indicator-fill: #676767; */
+
+  /* --color-toggle-default-surface-toggle-selected-indicator-fill: #ffffff; */
+  --color-toggle-default-surface-toggle-selected-fill: var(
+    --color-states-selected-surface-selected-fill-alt
+  );
+
+  --color-toggle-default-surface-toggle-selected-inactive-fill: var(
+    --color-secondary-color-secondary-light
+  );
+  /* --color-toggle-default-surface-toggle-selected-inactive-indicator-fill: #ffffff; */
+
+  /* --color-toggle-default-surface-toggle-inactive-fill: #ededed; */
+  /* --color-toggle-default-surface-toggle-inactive-indicator-fill: #b3b3b3; */
+
+  /* --color-toggle-contrast-surface-toggle-contrast-default-fill: #676767; */
+  /* --color-toggle-contrast-border-toggle-contrast-default-border: #ffffff; */
+  /* --color-toggle-contrast-surface-toggle-contrast-default-indicator-fill: #ffffff; */
+
+  --color-toggle-contrast-surface-toggle-contrast-selected-fill: var(
+    --color-states-selected-surface-selected-contrast-fill
+  );
+  /* --color-toggle-contrast-surface-toggle-contrast-selected-indicator-fill: #ffffff; */
+
+  --color-toggle-contrast-surface-toggle-contrast-selected-inactive-fill: var(
+    --color-secondary-color-secondary-dark
+  );
+  --color-toggle-contrast-surface-toggle-contrast-selected-inactive-indicator-fill: var(
+    --color-secondary-color-secondary
+  );
+
+  /* --color-toggle-contrast-surface-toggle-contrast-inactive-fill: #313131; */
+  /* --color-toggle-contrast-surface-toggle-contrast-inactive-indicator-fill: #676767; */
+
+  /* RADIO AND CHECKBOX */
+
+  /* --color-element-radio-checkbox-default-border-element-default-border: #cccccc; */
+
+  --color-element-radio-checkbox-default-border-element-hover-border: var(
+    --color-states-hover-border-hover-border
+  );
+
+  --color-element-radio-checkbox-default-surface-element-indicator-selected-fill: var(
+    --color-states-selected-surface-selected-fill-alt
+  );
+  --color-element-radio-checkbox-default-border-element-selected-border: var(
+    --color-states-selected-border-selected-border
+  );
+
+  --color-element-radio-checkbox-default-surface-element-indicator-selected-inactive-fill: var(
+    --color-secondary-color-secondary-lightest
+  );
+  --color-element-radio-checkbox-default-border-element-selected-inactive-border: var(
+    --color-secondary-color-secondary-lightest
+  );
+
+  /* --color-element-radio-checkbox-contrast-border-element-contrast-default-border: #ffffff; */
+
+  --color-element-radio-checkbox-contrast-border-element-contrast-hover-border: var(
+    --color-states-hover-border-hover-contrast-border
+  );
+
+  --color-element-radio-checkbox-contrast-border-element-contrast-selected-border: var(
+    --color-states-selected-border-selected-contrast-border
+  );
+  --color-element-radio-checkbox-contrast-surface-element-contrast-indicator-selected-fill: var(
+    --color-secondary-color-secondary-light
+  );
+
+  --color-element-radio-checkbox-contrast-surface-element-contrast-selected-inactive-fill: var(
+    --color-secondary-color-secondary-dark
+  );
+  --color-element-radio-checkbox-contrast-border-element-contrast-selected-inactive-border: var(
+    --color-secondary-color-secondary-dark
+  );
+
+  /* CHIP */
+
+  /* --color-chip-border-chip-default-border: #cccccc; */
+  --color-chip-border-chip-hover-border: var(
+    --color-states-hover-border-hover-border
+  );
+  --color-chip-border-chip-selected-border: var(
+    --color-states-selected-border-selected-border
+  );
+
+  /* --color-chip-surface-chip-default-fill: #ffffff; */
+  --color-chip-surface-chip-hover-fill: var(
+    --color-states-hover-surface-hover-fill
+  );
+  --color-chip-surface-chip-selected-fill: var(
+    --color-states-selected-surface-selected-fill
+  );
+
+  /* FIELDS */
+
+  /* --color-fields-surface-field-default-fill: #ffffff; */
+  /* --color-fields-border-field-default-border: #cccccc; */
   --color-fields-border-field-hover-border: var(
-    --color-accent-color-accent-one
+    --color-states-hover-border-hover-border
   );
-  --color-fields-border-field-active-border: var(--color-primary-color-primary);
-
-  --color-loader-loader-part-one: var(--color-primary-color-primary);
-  --color-loader-loader-part-two: var(--color-primary-color-primary);
-  --color-loader-loader-part-three: var(--color-primary-color-primary-lighter);
-
-  /**
-  * DATEPICKER
-  * =========
-  **/
-  --color-date-picker-item-date-picker-item-hover-border: var(
-    --color-accent-color-accent-one
+  --color-fields-border-field-active-border: var(
+    --color-states-selected-border-selected-border
   );
-  --color-date-picker-item-date-picker-item-selected-fill: var(
-    --color-primary-color-primary-lightest
-  );
-  --color-date-picker-item-date-picker-item-range-fill: var(
-    --color-primary-color-primary-lightest
-  );
-  --color-date-picker-item-date-picker-item-selected-border: var(
-    --color-primary-color-primary
+  --color-fields-border-field-masked-border: var(
+    --color-base-border-border-secondary-color
   );
 
-  /**
-  * FIELDS
-  * =========
-  **/
-  --color-fields-surface-field-default-fill: var(--color-grayscale-color-white);
-  --color-fields-border-field-default-border: var(
-    --color-grayscale-color-200-gray
+  /* LOADER */
+  /* Set in theme files */
+
+  /* NAV MENU */
+
+  /* --color-nav-menu-surface-menu-default-fill: #212121;
+--color-nav-menu-icon-menu-icon-default-fill: #ffffff;
+--color-nav-menu-surface-menu-button-default-fill: #313131;
+
+--color-nav-menu-surface-menu-button-hover-fill: #4d4d4d;
+--color-nav-menu-surface-menu-link-hover-fill: #313131;
+
+--color-nav-menu-surface-menu-link-selected-fill: #ffffff;
+--color-nav-menu-icon-menu-icon-surface-selected-fill: #ffffff;
+--color-nav-menu-icon-menu-icon-selected-fill: #212121; */
+
+  /* DATE PICKER */
+
+  --color-date-picker-item-surface-date-picker-item-range-fill: var(
+    --color-states-selected-surface-selected-fill
   );
-  --color-fields-border-field-hover-border: var(
-    --color-accent-color-accent-one
+  --color-date-picker-item-surface-date-picker-item-selected-fill: var(
+    --color-states-selected-surface-selected-fill-alt
   );
-  --color-fields-border-field-active-border: var(--color-primary-color-primary);
+  --color-date-picker-item-border-date-picker-item-hover-border: var(
+    --color-states-hover-border-hover-border
+  );
+  --color-date-picker-item-border-date-picker-item-selected-border: var(
+    --color-states-selected-border-selected-border
+  );
+
+  /* BADGE LABEL */
+
+  --color-badge-label-text-badge-label-text: var(
+    --color-secondary-color-secondary
+  );
+  --color-badge-label-border-badge-label-border: var(
+    --color-base-border-border-secondary-color
+  );
+  --color-badge-label-icon-badge-label-icon: var(
+    --color-secondary-color-secondary
+  );
+
+  /* PAGINATION */
+
+  --color-pagination-text-pagination-text: var(--color-base-text-text-carrier);
+
+  --color-pagination-surface-pagination-default-indicator: var(
+    --color-secondary-color-secondary
+  );
+  --color-pagination-border-pagination-default-border: var(
+    --color-base-border-border-secondary-color
+  );
+
+  --color-pagination-surface-pagination-hover-fill: var(
+    --color-states-hover-surface-hover-fill
+  );
+  --color-pagination-surface-pagination-hover-indicator-fill: var(
+    --color-secondary-color-secondary
+  );
+
+  --color-pagination-surface-pagination-selected-fill: var(
+    --color-states-selected-surface-selected-fill
+  );
+  --color-pagination-surface-pagination-selected-indicator-fill: var(
+    --color-secondary-color-secondary
+  );
+  --color-pagination-border-pagination-selected-border: var(
+    --color-states-selected-border-selected-border
+  );
+
+  /* PROGRESS BAR */
+
+  --color-progress-bar-progress-bar-fill: var(
+    --color-secondary-color-secondary
+  );
+
+  /* PROGRESS BAR STEPS */
+
+  --color-progress-bar-steps-item-progress-bar-steps-item-active-border: var(
+    --color-base-border-border-secondary-color
+  );
+
+  /* AVATAR */
+
+  /* --color-avatar-avatar-fill: #212121; */
+
+  /* SIDE SHEET BAR */
+
+  /* --color-side-sheet-bar-side-sheet-bar-border: #ff7500; */
 
   /*
   * MEASURES

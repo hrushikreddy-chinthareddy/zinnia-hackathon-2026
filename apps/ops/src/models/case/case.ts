@@ -63,7 +63,7 @@ export enum CaseType {
     SSW = 'SSW',
     Reg60 = 'NB REG 60',
     AddressChange = 'Address Change',
-    ReReg = 'ReReg'
+    ReReg = 'ReReg',
 }
 
 export enum Processes {
@@ -115,6 +115,80 @@ export interface CaseStatsResponse {
 }
 
 export interface CaseStatsErrorResponse {
+    data: {
+        err: string;
+    };
+    status: number;
+}
+
+/**
+ * The response object returned by the {@link getCaseDashboardStats} endpoint.
+ */
+export interface CaseDashboardStatsResponse {
+    /**
+     * Array of elements that contain the stats, example:
+     * see {@link DashboardSearchRequest} for more details.
+     *
+     */
+    data: DashboardStatsElementResponse[];
+    totalElements: number;
+}
+
+export interface DashboardStatsElementResponse {
+    /**
+     * The count of occurences that match the filter
+     */
+    count: number;
+    /**
+     * The @see {@link GroupByOptions} passed from the request
+     */
+    key: string;
+    /**
+     * The name of the label that matches the value of the GroupBy parameter
+     * @see {@link Case} for field names
+     */
+    name: string;
+    /**
+     * Array of elements that contain the stats, example:
+     * see {@link DashboardStatsElementResponse} for more details.
+     */
+    values?: DashboardStatsElementResponse[];
+}
+
+/**
+ * The response object returned by the {@link getCaseDashboardStats} endpoint.
+ */
+export interface CaseDashboardStatsResponseOld {
+    /**
+     * Array of elements that contain the stats, example:
+     * see {@link DashboardSearchRequest} for more details.
+     *
+     */
+    element: DashboardStatsElementResponseOld[];
+}
+
+export interface DashboardStatsElementResponseOld {
+    /**
+     * The count of occurences that match the filter
+     */
+    count: number;
+    /**
+     * The @see {@link GroupByOptions} passed from the request
+     */
+    key: string;
+    /**
+     * The name of the label that matches the value of the GroupBy parameter
+     * @see {@link Case} for field names
+     */
+    name: string;
+    /**
+     * Array of elements that contain the stats, example:
+     * see {@link DashboardStatsElementResponse} for more details.
+     */
+    values?: CaseDashboardStatsResponseOld;
+}
+
+export interface CaseDashboardStatsErrorResponse {
     data: {
         err: string;
     };
@@ -192,3 +266,24 @@ export interface OnbaseCase {
     attachmentCount: number;
     nigos: Nigo[];
 }
+
+export enum AgingTimeframes {
+    ThreeDays = 'threeDays',
+    FiveDays = 'fiveDays',
+    SevenDays = 'sevenDays',
+    FourteenDays = 'fourteenDays',
+    ThirtyDays = 'thirtyDays',
+    SixtyDays = 'sixtyDays',
+    NinetyDays = 'ninetyDays',
+}
+export enum AgingTimeRanges {
+    ZeroToSeven = '0-7',
+    EightToFourteen = '8-14',
+    FifteenToThirty = '15-30',
+    ThirtyOneToFortyFive = '31-45',
+    FortySixToFiftyNine = '46-59',
+    SixtyPlus = '60+',
+}
+
+export type AgingTimeRangesKeys = keyof typeof AgingTimeRanges;
+export type AgingTimeRangesKeysExtended = keyof typeof AgingTimeRanges | 'All';

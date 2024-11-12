@@ -6,14 +6,16 @@ import Button, { ButtonType } from '@deps/components/button/button';
 import { FieldSize } from '@deps/components/fields/field';
 import NavElement, { NavElementType } from '@deps/components/nav-element/nav-element';
 import Select from '@deps/components/select/select';
-import Toggle from '@deps/components/toggle/toggle';
 import { CaseSearchAdditionalFilters, CaseSearchFilters, initialAdditionalFilters } from '@deps/contexts/CaseManagementFilters';
 import { ReferenceDataQuery, getReferenceData } from '@deps/queries/api/cases';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
-import { getCarrierListItem, getCarrierNameByClientId, getClientIdsByCarrierName , getSelectedCarriers } from '@deps/utils/carriers';
+import { getCarrierListItem, getCarrierNameByClientId, getClientIdsByCarrierName, getSelectedCarriers } from '@deps/utils/carriers';
 
 import DateRangeFields from './date-range-fields';
 import MultiselectField from './multiselect-field';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { SegmentTrackedEventName } from '@deps/types/segment-analytics';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 
 const REFINE_RESULTS_BASE_KEY = 'caseManagementDashboard.refineResultsOptions.';
 
@@ -40,6 +42,8 @@ export default function SideSheetRefineResults({
     authorizedCarriers,
 }: SideSheetRefineResultsProps) {
     const { t } = useTranslation();
+    const perms = usePermissionsContext();
+
     const [additionalFilters, setAdditionalFilters] = useState(filters);
     const [productNameOptions, setProductNameOptions] = useState<string[]>([]);
     const [processListOptions, setProcessListOptions] = useState<string[]>([]);
@@ -183,6 +187,7 @@ export default function SideSheetRefineResults({
         }
     }, [authorizedCarriers, additionalFilters.carriers, additionalFilters.processTypes, filters.requestSubType]);
 
+    // TODO MG: move these to another file
     // Field Handlers
     const createdStartOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newStartValue = e.target.value;
@@ -314,17 +319,21 @@ export default function SideSheetRefineResults({
     };
 
     const handleSubmit = () => {
-        if (validateForm()) {
-            setCaseManagementFilters(prevFilters => ({
-                ...prevFilters,
-                offset: 0,
-                additionalFilters,
-                ...((additionalFilters.showOnlyCanceledCases || additionalFilters.showOnlyCompletedCases) && {
-                    statusCounterTileFilter: 'All',
-                }),
-            }));
-            closeSideSheet();
+        if (!validateForm()) {
+            return;
         }
+
+        setCaseManagementFilters(prevFilters => ({
+            ...prevFilters,
+            offset: 0,
+            additionalFilters,
+        }));
+        closeSideSheet();
+
+        segmentAnalyticsTrackEvent(SegmentTrackedEventName.CaseFilterClick, {
+            selectedItemName: 'this',
+            userId: perms.getUserPartyId(),
+        });
     };
 
     const handleReset = () => {
@@ -397,28 +406,6 @@ export default function SideSheetRefineResults({
                     label={t(`${REFINE_RESULTS_BASE_KEY}age`) as string}
                     placeholder={t(`${REFINE_RESULTS_BASE_KEY}selectDayRange`) as string}
                     className="!w-[198px]"
-                />
-                <Toggle
-                    text={t(`${REFINE_RESULTS_BASE_KEY}showOnlyCompleted`) as string}
-                    value={additionalFilters.showOnlyCompletedCases}
-                    ariaLabel={t('ariaLabel.showOnlyCompletedCases') as string}
-                    handleToggle={() =>
-                        setAdditionalFilters(prevFilters => ({
-                            ...prevFilters,
-                            showOnlyCompletedCases: !additionalFilters.showOnlyCompletedCases,
-                        }))
-                    }
-                />
-                <Toggle
-                    text={t(`${REFINE_RESULTS_BASE_KEY}showOnlyCanceled`) as string}
-                    value={additionalFilters.showOnlyCanceledCases}
-                    ariaLabel={t('ariaLabel.showOnlyCanceledCases') as string}
-                    handleToggle={() =>
-                        setAdditionalFilters(prevFilters => ({
-                            ...prevFilters,
-                            showOnlyCanceledCases: !additionalFilters.showOnlyCanceledCases,
-                        }))
-                    }
                 />
                 <div className="flex flex-row">
                     <Button

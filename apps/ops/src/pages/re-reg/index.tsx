@@ -1,7 +1,6 @@
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import PolicyLayout from '@deps/components/policy-layout';
@@ -12,6 +11,7 @@ import { BeneChangeProvider } from '@deps/containers/bene-change/bene-change-pro
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { ProcessType } from '@deps/models/case/enums';
 import { Carrier } from '@deps/models/case/withdrawal/case';
@@ -19,6 +19,7 @@ import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
 import { getDocumentSSR } from '@deps/queries/api/documents';
 import { getPolicyDetailsSsr, searchPolicySSR } from '@deps/queries/api/policies';
+import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { getUserInfoFromUser, logError, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
@@ -26,7 +27,7 @@ import nextI18nextConfig from 'next-i18next.config';
 
 import { ERROR_CODES } from '../create-case/error';
 
-interface AddressChangeProps {
+interface AddressChangeProps extends SegmentTrackedPageProps {
     policy: Policy;
     document: DocumentData;
     clientId: string;
@@ -34,11 +35,15 @@ interface AddressChangeProps {
     featureFlagDecisions: FeatureFlags;
 }
 
-const BeneChange = ({ policy, document, clientId, planCode }: AddressChangeProps) => {
+const BeneChange = ({ policy, document, clientId, planCode, user }: AddressChangeProps) => {
     const { t } = useTranslation();
+    const showJointOwner = policy?.carrierId === Carrier.FLIC;
+
+    useSegmentPageTracker(user, SegmentPageName.BeneChange, { policyNumber: policy.policyNumber, documentNumber: document.documentNumber, clientId, planCode });
+
     return (
-        <PolicyLayout showJointOwner={true} showLink={false} navLinks={getReRegNavLinks(clientId, policy.policyNumber??'', t)} hideSearch={true} isFullHeight={true} policyDetails={policy}>
-            <div> 
+        <PolicyLayout showJointOwner={showJointOwner} showLink={false} navLinks={getReRegNavLinks(clientId, policy.policyNumber??'', t)} hideSearch={true} isFullHeight={true} policyDetails={policy}>
+            <div>
                 <BeneChangeProvider>
                     <BeneChangeContainer policy={policy} document={document} planCode={planCode} />
                 </BeneChangeProvider>
@@ -91,7 +96,7 @@ export const getServerSideProps = withPageAuthRequired({
 
         try {
             const translations = await serverSideTranslations(
-                locale, 
+                locale,
                 [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
                 nextI18nextConfig,
                 ALL_LOCALES
@@ -134,6 +139,7 @@ export const getServerSideProps = withPageAuthRequired({
                     document,
                     planCode,
                     clientId,
+                    user,
                 },
             };
         } catch (error) {

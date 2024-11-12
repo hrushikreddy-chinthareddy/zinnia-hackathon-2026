@@ -9,12 +9,15 @@ import MenuContextualItem from '@deps/components/menu-contextual/menu-contextual
 import MenuContextualLabel from '@deps/components/menu-contextual/menu-contextual-label/menu-contextual-label';
 import { commonPopoverClasses, commonTriggerClasses } from '@deps/components/popover/popover.helper';
 import { TranslationFiles } from '@deps/config/translations';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 import { ReactComponent as PaymentIcon } from '@deps/styles/elements/icons/content/payment.svg';
 import { ReactComponent as AutopayIcon } from '@deps/styles/elements/icons/currency/autopay.svg';
 import { ReactComponent as CashIcon } from '@deps/styles/elements/icons/icons_outlined/cash.svg';
 import { ReactComponent as MenuHorizontal } from '@deps/styles/elements/icons/icons_outlined/menu-horizontal.svg';
 import loaderImage from '@deps/styles/images/loader-contrast.png';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 interface TranslateProps {
     t: TFunction;
@@ -43,38 +46,56 @@ const IconButton = React.forwardRef<HTMLButtonElement, TranslateProps>(function 
     );
 });
 
-const MenuContextualContent = ({ t, planCode, policyNumber, eligibilityCheck, isLoading }: TranslateProps & QuickActionsMenuProps) => (
-    <MenuContextualLabel label={t('transactions.label')}>
-        {isLoading ? (
-            <div className="h-[104px] w-[248px] content-center">
-                <Image alt={t('site.loader')} height={30} src={loaderImage} width={30} className="mx-auto my-[0px] animate-spin" />
-            </div>
-        ) : (
-            <>
-                <MenuContextualItem
-                    disabled={!eligibilityCheck?.eligibleAutopay as boolean}
-                    content={t('transactions.managePremiumAutopay')}
-                    href={`/policies/${planCode}/${policyNumber}/policy/premiums/update-premium-autopay/`}
-                    icon={<AutopayIcon height={20} width={20} />}
-                />
+const MenuContextualContent = ({ t, planCode, policyNumber, eligibilityCheck, isLoading }: TranslateProps & QuickActionsMenuProps) => {
+    const permissions = usePermissionsContext();
+    const userPartyId = permissions.getUserPartyId();
+    const { featureFlags } = useOptimizely();
+    const freeLookEnabled = featureFlags[FEATURE_FLAGS.POLICY_FREE_LOOK_CANCELLATION];
 
-                <MenuContextualItem
-                    disabled={!eligibilityCheck?.eligiblePremium as boolean}
-                    content={t('transactions.newPremium')}
-                    href={`/policies/${planCode}/${policyNumber}/policy/premiums/new-premium/`}
-                    icon={<PaymentIcon height={20} width={20} />}
-                />
+    return (
+        <MenuContextualLabel label={t('transactions.label')}>
+            {isLoading ? (
+                <div className="h-[104px] w-[248px] content-center">
+                    <Image alt={t('site.loader')} height={30} src={loaderImage} width={30} className="mx-auto my-[0px] animate-spin" />
+                </div>
+            ) : (
+                <>
+                    {eligibilityCheck?.eligibleFreeLookCancel && freeLookEnabled && (
+                        <MenuContextualItem
+                            content={t('transactions.cancelPolicy')}
+                            href={`/policies/${planCode}/${policyNumber}/policy/freelook/cancel-freelook/`}
+                            icon={<CashIcon height={20} width={20} />}
+                            userPartyId={userPartyId}
+                        />
+                    )}
+                    <MenuContextualItem
+                        disabled={!eligibilityCheck?.eligibleAutopay as boolean}
+                        content={t('transactions.managePremiumAutopay')}
+                        href={`/policies/${planCode}/${policyNumber}/policy/premiums/update-premium-autopay/`}
+                        icon={<AutopayIcon height={20} width={20} />}
+                        userPartyId={userPartyId}
+                    />
 
-                <MenuContextualItem
-                    disabled={!eligibilityCheck?.eligibleWithdrawal as boolean}
-                    content={t('transactions.startAWithdrawal')}
-                    href={`/policies/${planCode}/${policyNumber}/policy/withdrawals/new-withdrawal/`}
-                    icon={<CashIcon height={20} width={20} />}
-                />
-            </>
-        )}
-    </MenuContextualLabel>
-);
+                    <MenuContextualItem
+                        disabled={!eligibilityCheck?.eligiblePremium as boolean}
+                        content={t('transactions.newPremium')}
+                        href={`/policies/${planCode}/${policyNumber}/policy/premiums/new-premium/`}
+                        icon={<PaymentIcon height={20} width={20} />}
+                        userPartyId={userPartyId}
+                    />
+
+                    <MenuContextualItem
+                        disabled={!eligibilityCheck?.eligibleWithdrawal as boolean}
+                        content={t('transactions.startAWithdrawal')}
+                        href={`/policies/${planCode}/${policyNumber}/policy/withdrawals/new-withdrawal/`}
+                        icon={<CashIcon height={20} width={20} />}
+                        userPartyId={userPartyId}
+                    />
+                </>
+            )}
+        </MenuContextualLabel>
+    );
+};
 
 export interface QuickActionsMenuProps {
     planCode?: string;
@@ -83,6 +104,7 @@ export interface QuickActionsMenuProps {
         eligibleAutopay: boolean | null;
         eligiblePremium: boolean | null;
         eligibleWithdrawal: boolean | null;
+        eligibleFreeLookCancel: boolean;
     };
     isLoading?: boolean;
     onOpenChange?: (open: boolean) => void;
