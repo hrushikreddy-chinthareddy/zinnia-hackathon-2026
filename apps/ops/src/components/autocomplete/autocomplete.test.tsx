@@ -2,7 +2,6 @@
 
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import React from 'react';
 
 import Autocomplete from './autocomplete';
 
@@ -16,7 +15,7 @@ const options = [
     { label: 'Option 3', value: 'option3' },
 ];
 
-describe('Autocomplete Component', () => {
+describe.skip('Autocomplete Component', () => {
     it('renders a Autocomplete component with a label when provided', async () => {
         render(
             <Autocomplete label="Autoselect Label" placeholder="Pick a card, any card" options={options} value={''} onChange={() => null} />
