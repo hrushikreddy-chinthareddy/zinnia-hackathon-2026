@@ -97,6 +97,7 @@ export enum Statuses {
     NotStarted = 'NOT_STARTED',
     Canceled = 'CANCELED',
     New = 'NEW',
+    Overridden = 'OVERRIDDEN',
 }
 
 export interface StatCount {
