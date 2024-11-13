@@ -156,39 +156,6 @@ export interface DashboardStatsElementResponse {
     values?: DashboardStatsElementResponse[];
 }
 
-/**
- * The response object returned by the {@link getCaseDashboardStats} endpoint.
- */
-export interface CaseDashboardStatsResponseOld {
-    /**
-     * Array of elements that contain the stats, example:
-     * see {@link DashboardSearchRequest} for more details.
-     *
-     */
-    element: DashboardStatsElementResponseOld[];
-}
-
-export interface DashboardStatsElementResponseOld {
-    /**
-     * The count of occurences that match the filter
-     */
-    count: number;
-    /**
-     * The @see {@link GroupByOptions} passed from the request
-     */
-    key: string;
-    /**
-     * The name of the label that matches the value of the GroupBy parameter
-     * @see {@link Case} for field names
-     */
-    name: string;
-    /**
-     * Array of elements that contain the stats, example:
-     * see {@link DashboardStatsElementResponse} for more details.
-     */
-    values?: CaseDashboardStatsResponseOld;
-}
-
 export interface CaseDashboardStatsErrorResponse {
     data: {
         err: string;
