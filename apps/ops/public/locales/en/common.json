@@ -746,7 +746,9 @@
                 "name": "Name",
                 "firstName": "First name",
                 "lastName": "Last name",
-                "ownerName": "Owner name"
+                "ownerName": "Owner name",
+                "agentName": "Agent name",
+                "firmName": "Firm name"
             }
         },
         "quickSearch": {

@@ -15,7 +15,16 @@ export const isSearchValueObjectEmpty = (searchValueObject: Partial<Record<Polic
 
 // Combine all sources or just fetch one? API is currently just fetching the toggled view.
 export const getSearchValueObject = (
-    { ownerFirstName = '', ownerLastName = '', policyNumber = '', ssn = '', caseId = '' }: SearchViewQuery,
+    {
+        ownerFirstName = '',
+        ownerLastName = '',
+        policyNumber = '',
+        ssn = '',
+        caseId = '',
+        agentFirstName = '',
+        agentLastName = '',
+        firmName = '',
+    }: SearchViewQuery,
     toggleValue: PolicySearchKeys
 ): SearchViewQuery => {
     switch (toggleValue) {
@@ -31,6 +40,14 @@ export const getSearchValueObject = (
             };
         case 'caseId':
             return caseId ? { caseIds: [caseId] } : {};
+        case 'agentFirstName':
+        case 'agentLastName':
+            return {
+                ...(agentFirstName ? { agentFirstName } : {}),
+                ...(agentLastName ? { agentLastName } : {}),
+            };
+        case 'firmName':
+            return firmName ? { firmName } : {};
         default:
             return {};
     }
@@ -185,9 +202,29 @@ export const toggleLabels = (t: TFunction, featureFlagDecisions?: FeatureFlags):
             placeholder: t('caseManagementDashboard.case.caseId') ?? '',
         },
     ];
-    // to do - need a diff feature flag for the other two
+    // to do - need a diff feature flag?
     if (shouldShowCaseIdSearchField) {
-        labels.push();
+        labels.push({
+            label: t('dashboard.search.buttons.agentName'),
+            value: 'agentName',
+            group: [
+                {
+                    label: t('dashboard.search.buttons.firstName'),
+                    value: 'agentFirstName',
+                    placeholder: '',
+                },
+                {
+                    label: t('dashboard.search.buttons.lastName'),
+                    value: 'agentLastName',
+                    placeholder: '',
+                },
+            ],
+        });
+        labels.push({
+            label: t('dashboard.search.buttons.firmName'),
+            value: 'firmName',
+            placeholder: t('dashboard.search.buttons.firmName') ?? '',
+        });
     }
     return labels;
 };

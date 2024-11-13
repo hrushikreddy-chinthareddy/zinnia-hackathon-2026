@@ -134,6 +134,8 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
         router.push(href);
     };
 
+    console.log(searchValues);
+
     return (
         <TableRow className={styles.row}>
             <TableCell className={styles.caseLinkContainer}>

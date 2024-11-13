@@ -769,7 +769,9 @@
                 "name": "Nom",
                 "firstName": "Prénom",
                 "lastName": "Nom de famille",
-                "ownerName": "Nom du propriétaire"
+                "ownerName": "Nom du propriétaire",
+                "agentName": "Nom de l'agent",
+                "firmName": "Nom de l'entreprise"
             }
         },
         "quickSearch": {
