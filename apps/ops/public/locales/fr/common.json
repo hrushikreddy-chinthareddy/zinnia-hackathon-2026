@@ -4354,7 +4354,8 @@
         "formSelection": {
             "title": "Sélection de nouveau formulaire",
             "errors": {
-                "selectForm": "Sélectionnez un formulaire pour continuer."
+                "selectForm": "Sélectionnez un formulaire pour continuer.",
+                "selectOptions": "Sélectionnez un type et un sous-type de transaction pour continuer."
             },
             "label": "Sélectionnez le formulaire approprié qui doit être mis à jour."
         },

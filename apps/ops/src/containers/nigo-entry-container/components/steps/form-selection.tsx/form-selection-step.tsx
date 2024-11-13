@@ -11,11 +11,13 @@ import { TranslationFiles } from '@deps/config/translations';
 import { buildFormV2 } from '@deps/containers/otp/withdrawal-forms/utils/withdrawal-form-helper';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { DocumentData } from '@deps/models/case/document';
 import { ApiVersion } from '@deps/models/case/enums';
 import { TaskApiVersionMapper } from '@deps/models/case/helpers';
 import { AvailableFormsTransaction, SendDocumentFormParts } from '@deps/models/case/send-document';
 import { TaskStatus } from '@deps/models/case/task-instance';
+import { Carrier } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { updateTask } from '@deps/queries/api/v2/task';
 
@@ -27,9 +29,10 @@ type FormSelectionProps = {
     availableFormsTransactions: AvailableFormsTransaction[];
     ctiCallNumber?: string;
     documentData: DocumentData;
+    clientCode: string;
 };
 
-function FormSelectionStep({ availableFormsTransactions, policy, documentData, ctiCallNumber = '' }: FormSelectionProps) {
+function FormSelectionStep({ availableFormsTransactions, policy, documentData, clientCode, ctiCallNumber = '' }: FormSelectionProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.formSelection' });
     const { goToNext } = useWorkflow();
     const [error, setError] = useState<string>('');
@@ -90,7 +93,8 @@ function FormSelectionStep({ availableFormsTransactions, policy, documentData, c
 
 
     useEffect(() => {
-       if (document?.selected?.formId) {
+       if ((clientCode !== Carrier.MASS && !isNullEmptyOrUndefined(document?.selected?.formId))
+            ||(clientCode === Carrier.MASS && !isNullEmptyOrUndefined(transactionType.selected) && !isNullEmptyOrUndefined(transactionSubType.selected))) {
             setFormProgram(prevFormProgram => {
                 return {
                     ...prevFormProgram,
@@ -115,16 +119,18 @@ function FormSelectionStep({ availableFormsTransactions, policy, documentData, c
                 };
             });
         }
-    }, [document?.selected, setFormProgram, transactionSubType?.selected, transactionType?.selected]);
+    }, [clientCode, document?.selected, setFormProgram, transactionSubType?.selected, transactionType?.selected]);
 
     const handleStepContinue = useCallback(async() => {
-        if (!document?.selected?.formId) {
+        if (clientCode !== Carrier.MASS && isNullEmptyOrUndefined(document?.selected?.formId)) {
             return setError(t('errors.selectForm') as string);
+        } else if (clientCode === Carrier.MASS && (isNullEmptyOrUndefined(transactionType.selected) || isNullEmptyOrUndefined(transactionSubType.selected))) {
+            return setError(t('errors.selectOptions') as string);
         } else {
             await submit();
             goToNext();
         }
-    }, [document?.selected, goToNext, submit, t]);
+    }, [clientCode, document?.selected?.formId, goToNext, submit, t, transactionSubType.selected, transactionType.selected]);
 
     return (
         <WorkflowCard
@@ -153,7 +159,7 @@ function FormSelectionStep({ availableFormsTransactions, policy, documentData, c
                 setFormDetails={setFormDetails}
                 availableFormsTransactions={availableFormsTransactions}
             />
-            {error && <AssistiveText text={error} variant={AssistiveTextVariant.Error} className="mt-2" />}
+            {error && <AssistiveText text={error} variant={AssistiveTextVariant.Error} className="mt-4" />}
         </WorkflowCard>
     );
 }
