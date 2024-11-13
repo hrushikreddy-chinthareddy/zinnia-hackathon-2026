@@ -469,6 +469,7 @@ const getWithdrawalTotalPayment = (
     const { appliedAmount, disbursementType } = transactionAmounts ?? {};
 
     const taxWithheldAmounts = quote ? quote?.taxWithheldAmounts : transaction?.taxWithheldAmounts;
+    // have to have prettier ignore here because ts-expect-error cant be bothered to read the wrapped liness
     // prettier-ignore
     // TODO MG: helper function since this is the same logic in getActualWithdrawalAmount()
     // @ts-expect-error API is returning withholdAmount instead of withheldAmount
