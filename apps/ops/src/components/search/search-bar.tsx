@@ -5,9 +5,11 @@ import { TFunction, useTranslation } from 'next-i18next';
 import { ChangeEvent, useCallback, useContext, useEffect, useState } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
 import { LabelValue } from '@deps/types/data';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
+import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
 import styles from './search-bar.module.css';
 import SearchFieldToggle from './search-field-toggle/search-field-toggle';
@@ -19,7 +21,7 @@ interface SearchBarProps {
     searchValue: SearchViewQuery;
     onSearch: (value: SearchViewQuery) => void;
     initialToggleValue: PolicySearchKeys;
-    toggleLabels: (t: TFunction) => LabelValue<PolicySearchKeys>[];
+    toggleLabels: (t: TFunction, featureFlagDecisions?: FeatureFlags) => LabelValue<PolicySearchKeys>[];
     onToggle?: (value: PolicySearchKeys) => void;
     onClear?: (searchField: PolicySearchKeys | undefined) => void;
 }
@@ -34,11 +36,12 @@ const SearchBar = ({
 }: SearchBarProps) => {
     const { setShowFieldErrorMessage } = useContext(PolicySearchFiltersContext);
     const { t } = useTranslation(TranslationFiles.COMMON);
+    const { featureFlags } = useOptimizely();
     const getToggleLabel = useCallback(
         (targetVal: string) => {
-            return toggleLabels(t).find(a => a.value === targetVal) as LabelValue<PolicySearchKeys>;
+            return toggleLabels(t, featureFlags).find(a => a.value === targetVal) as LabelValue<PolicySearchKeys>;
         },
-        [t, toggleLabels]
+        [featureFlags, t, toggleLabels]
     );
 
     const [values, setValues] = useState<SearchViewQuery>({});
@@ -92,7 +95,7 @@ const SearchBar = ({
         [activeToggleBtn, getToggleLabel, onToggle]
     );
 
-    const dropdownLabels = toggleLabels(t);
+    const dropdownLabels = toggleLabels(t, featureFlags);
 
     return (
         <form className={styles.formContainer} onSubmit={handleFormSubmit}>

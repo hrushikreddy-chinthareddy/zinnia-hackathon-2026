@@ -6,18 +6,18 @@ import { Case, Metadata, StatCount, Statuses } from '@deps/models/case/case';
 import { IdentifierInstance } from '@deps/models/case/identifier-instance';
 import { LabelValue } from '@deps/types/data';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
-export const isSearchValueObjectEmpty = (
-    searchValueObject: Partial<Record<'policyNumber' | 'ssn' | 'ownerFirstName' | 'ownerLastName', string>> = {}
-): boolean => {
+export const isSearchValueObjectEmpty = (searchValueObject: Partial<Record<PolicySearchKeys, string>> = {}): boolean => {
     return Object.keys(searchValueObject).length === 0;
 };
 
 // Combine all sources or just fetch one? API is currently just fetching the toggled view.
 export const getSearchValueObject = (
-    { ownerFirstName = '', ownerLastName = '', policyNumber = '', ssn = '' }: SearchViewQuery,
+    { ownerFirstName = '', ownerLastName = '', policyNumber = '', ssn = '', caseId }: SearchViewQuery,
     toggleValue: PolicySearchKeys
-): Partial<Record<'policyNumber' | 'ssn' | 'ownerFirstName' | 'ownerLastName', string>> => {
+): Partial<Record<PolicySearchKeys, string>> => {
     switch (toggleValue) {
         case 'policyNumber':
             return policyNumber ? { policyNumber } : {};
@@ -29,6 +29,8 @@ export const getSearchValueObject = (
                 ...(ownerFirstName ? { ownerFirstName } : {}),
                 ...(ownerLastName ? { ownerLastName } : {}),
             };
+        case 'caseId':
+            return caseId ? { caseId } : {};
         default:
             return {};
     }
@@ -145,37 +147,50 @@ export const getAdditionalFilters = (additionalFilters: CaseSearchAdditionalFilt
     return result;
 };
 
-export const toggleLabels = (t: TFunction): LabelValue<PolicySearchKeys>[] => [
-    {
-        label: t('dashboard.search.buttons.policyNumber'),
-        value: 'policyNumber',
-        placeholder: '',
-    },
-    {
-        label: t('dashboard.search.buttons.ownerSsn'),
-        value: 'ssn',
-        fullLabel: t('dashboard.search.buttons.ssnFullLabel') ?? '',
-        placeholder: t('dashboard.search.buttons.ssnPlaceholder') ?? '',
-        format: '###-##-####',
-        replaceValue: '-',
-    },
-    {
-        label: t('dashboard.search.buttons.ownerName'),
-        value: 'ownerFirstName',
-        group: [
-            {
-                label: t('dashboard.search.buttons.firstName'),
-                value: 'ownerFirstName',
-                placeholder: '',
-            },
-            {
-                label: t('dashboard.search.buttons.lastName'),
-                value: 'ownerLastName',
-                placeholder: '',
-            },
-        ],
-    },
-];
+export const toggleLabels = (t: TFunction, featureFlagDecisions?: FeatureFlags): LabelValue<PolicySearchKeys>[] => {
+    const shouldShowCaseIdSearchField = featureFlagDecisions?.[FEATURE_FLAGS.CASE_MANAGEMENT_CASE_ID_SEARCH_FIELD];
+
+    const labels: LabelValue<PolicySearchKeys>[] = [
+        {
+            label: t('dashboard.search.buttons.policyNumber'),
+            value: 'policyNumber',
+        },
+        {
+            label: t('dashboard.search.buttons.ownerSsn'),
+            value: 'ssn',
+            fullLabel: t('dashboard.search.buttons.ssnFullLabel') ?? '',
+            placeholder: t('dashboard.search.buttons.ssnPlaceholder') ?? '',
+            format: '###-##-####',
+            replaceValue: '-',
+        },
+        {
+            label: t('dashboard.search.buttons.ownerName'),
+            value: 'ownerFirstName',
+            group: [
+                {
+                    label: t('dashboard.search.buttons.firstName'),
+                    value: 'ownerFirstName',
+                    placeholder: '',
+                },
+                {
+                    label: t('dashboard.search.buttons.lastName'),
+                    value: 'ownerLastName',
+                    placeholder: '',
+                },
+            ],
+        },
+        {
+            label: t('caseManagementDashboard.case.caseId'),
+            value: 'caseId',
+            placeholder: t('caseManagementDashboard.case.caseId') ?? '',
+        },
+    ];
+    // to do - need a diff feature flag for the other two
+    if (shouldShowCaseIdSearchField) {
+        labels.push();
+    }
+    return labels;
+};
 
 export const calculateDaysAgo = (date: Date): number => {
     const now = new Date();

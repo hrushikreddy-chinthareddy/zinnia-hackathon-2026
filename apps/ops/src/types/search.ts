@@ -6,7 +6,7 @@ import { Order, SortObject } from './sort';
 
 export type View = 'Summary' | 'Details';
 export type SearchOperations = 'equals' | 'partial';
-export type PolicySearchKeys = 'firstName' | 'lastName' | 'ownerFirstName' | 'ownerLastName' | 'ssn' | 'policyNumber';
+export type PolicySearchKeys = 'firstName' | 'lastName' | 'ownerFirstName' | 'ownerLastName' | 'ssn' | 'policyNumber' | 'caseId';
 
 export interface PolicySearchResult {
     carrierId: string;
