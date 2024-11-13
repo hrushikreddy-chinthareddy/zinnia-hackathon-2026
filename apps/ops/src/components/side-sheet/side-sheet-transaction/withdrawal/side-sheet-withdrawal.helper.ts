@@ -246,13 +246,13 @@ const getActualWithdrawalAmount = (
     }
 
     const taxWithheldAmounts = quote ? quote?.taxWithheldAmounts : transaction?.taxWithheldAmounts;
-
+    // have to have prettier ignore here because ts-expect-error cant be bothered to read the wrapped lines
+    // prettier-ignore
     // @ts-expect-error API is returning withholdAmount instead of withheldAmount
-    const federalTaxWithheld =
-        taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.FEDERAL)?.[0]?.withholdAmount || 0;
+    const federalTaxWithheld = taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.FEDERAL)?.[0]?.withholdAmount || 0;
+    // prettier-ignore
     // @ts-expect-error API is returning withholdAmount instead of withheldAmount
-    const stateTaxWithheld =
-        taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.STATE)?.[0]?.withholdAmount || 0;
+    const stateTaxWithheld = taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.STATE)?.[0]?.withholdAmount || 0;
 
     const totalChargesWithoutTaxes = transaction.charges
         ? transaction.charges.reduce((acc, charge) => {
