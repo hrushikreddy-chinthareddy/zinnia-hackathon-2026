@@ -151,9 +151,11 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                     <Typography variant={TypographyVariant.BodySm} className="block">
                         {singleCase.processSubType ? toTitleCase(singleCase.processSubType) : singleCase.process}
                     </Typography>
-                    <Typography variant={TypographyVariant.BodySm} className={styles.detail}>
-                        {singleCase.id}
-                    </Typography>
+                    <CaseDetailField
+                        text={singleCase.id}
+                        className={styles.detail}
+                        highlights={searchValues?.caseId ? [searchValues.caseId] : null}
+                    />
                 </div>
             </TableCell>
             <TableCell>

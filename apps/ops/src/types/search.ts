@@ -33,6 +33,7 @@ export interface SearchViewQuery {
     ownerFirstName?: string;
     ownerLastName?: string;
     ssn?: string;
+    caseIds?: string[];
     [key: string]: any; // used to loop over the object
 }
 

@@ -15,9 +15,9 @@ export const isSearchValueObjectEmpty = (searchValueObject: Partial<Record<Polic
 
 // Combine all sources or just fetch one? API is currently just fetching the toggled view.
 export const getSearchValueObject = (
-    { ownerFirstName = '', ownerLastName = '', policyNumber = '', ssn = '', caseId }: SearchViewQuery,
+    { ownerFirstName = '', ownerLastName = '', policyNumber = '', ssn = '', caseId = '' }: SearchViewQuery,
     toggleValue: PolicySearchKeys
-): Partial<Record<PolicySearchKeys, string>> => {
+): SearchViewQuery => {
     switch (toggleValue) {
         case 'policyNumber':
             return policyNumber ? { policyNumber } : {};
@@ -30,7 +30,7 @@ export const getSearchValueObject = (
                 ...(ownerLastName ? { ownerLastName } : {}),
             };
         case 'caseId':
-            return caseId ? { caseId } : {};
+            return caseId ? { caseIds: [caseId] } : {};
         default:
             return {};
     }
