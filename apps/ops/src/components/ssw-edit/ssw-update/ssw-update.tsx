@@ -10,12 +10,10 @@ import { TranslationFiles } from '@deps/config/translations';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DocumentData } from '@deps/models/case/document';
-import { ApiVersion, ChannelType } from '@deps/models/case/enums';
-import { TaskApiVersionMapper } from '@deps/models/case/helpers';
+import { ChannelType } from '@deps/models/case/enums';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { FormSignature } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
-import { putCaseTask } from '@deps/queries/api/v1/task';
 import { updateTask } from '@deps/queries/api/v2/task';
 
 import Amount from './steps/amount';
@@ -43,21 +41,12 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
     const [timer] = useState(performance.now());
 
     const requestProgramUpdate = async (existingProg: Program, operationType: SswUpdateType, formSign: FormSignature) => {
-        let successfulCaseUpdate;
-        if (TaskApiVersionMapper[initialForm.taskType] === ApiVersion.v2) {
-            successfulCaseUpdate = await updateTask(
-                initialForm.caseId,
-                initialForm?.taskId,
-                buildSSWFormData(TaskStatus.Completed, initialForm, formSign, existingProg, updateProgram, document, operationType) as any,
-                timer
-            );
-        } else {
-            successfulCaseUpdate = await putCaseTask(
-                initialForm.taskType,
-                initialForm.taskId,
-                buildSSWFormData(TaskStatus.Completed, initialForm, formSign, existingProg, updateProgram, document, operationType) as any
-            );
-        }
+        const successfulCaseUpdate = await updateTask(
+            initialForm.caseId,
+            initialForm?.taskId,
+            buildSSWFormData(TaskStatus.Completed, initialForm, formSign, existingProg, updateProgram, document, operationType),
+            timer
+        );
         return successfulCaseUpdate;
     };
 
@@ -129,7 +118,7 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
     );
 
     const filteredSteps: Step[] = useMemo(
-        () => steps.filter((item: any) => item.isVisible?.()).map((item: any, index: number) => ({ ...item, index })),
+        () => steps.filter(item => item.isVisible?.()).map((item, index: number) => ({ ...item, index })),
         [steps]
     );
 
@@ -160,7 +149,7 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
             steps={filteredSteps}
             policy={policy}
             document={document}
-            programType={programType}
+            programType={programType as SswUpdateType}
             programs={programs}
             onSswUpdate={handleFormAction}
             isFormSubmitted={isFormSubmitted}

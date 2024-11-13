@@ -5,17 +5,14 @@ import { FormEvent, useContext, useState } from 'react';
 import SelectSimple from '@deps/components/select/select';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DocumentData } from '@deps/models/case/document';
-import { ApiVersion, BankUpdateType, ChannelType, ContributionType } from '@deps/models/case/enums';
-import { TaskApiVersionMapper } from '@deps/models/case/helpers';
+import { BankUpdateType, ChannelType, ContributionType } from '@deps/models/case/enums';
 import { TaskStatus } from '@deps/models/case/task-instance';
-import { CaseStatus } from '@deps/models/case/withdrawal/case';
 import { DEFAULT_DISBURSEMENT_UPDATE } from '@deps/models/case/withdrawal/disbursement-types';
-import { putCaseTask } from '@deps/queries/api/v1/task';
 import { updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as ChevronLeftIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-left.svg';
 
-import { BankUpdateFieldConfigs, bankUpdateFormData, channelOptions, signaturesConfig, typeOptions } from './bank-update.helper';
+import { BankUpdateFieldConfigs, bankUpdateFormData, signaturesConfig, typeOptions } from './bank-update.helper';
 import Button, { ButtonSize, ButtonType, ButtonVariant } from '../../button/button';
 import CardInfo from '../../card/card-info/card-info';
 import { FieldSize } from '../../fields/field';
@@ -36,41 +33,16 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
     const [formError, setFormError] = useState(false);
     const [timer] = useState(performance.now());
 
-    const { initialForm, formSource, setFormSource, formSignature } = useContext(FormDataContext);
+    const { initialForm, formSignature } = useContext(FormDataContext);
 
     const requestBankUpdate = async (bankUpdateType: BankUpdateType) => {
-        let successfulCaseUpdate;
         setIsLoading(true);
-        if (TaskApiVersionMapper[initialForm.taskType] === ApiVersion.v2) {
-            successfulCaseUpdate = await updateTask(
-                initialForm.caseId,
-                initialForm?.taskId,
-                bankUpdateFormData(
-                    TaskStatus.Completed,
-                    initialForm,
-                    formSource,
-                    bankUpdateDetails,
-                    formSignature,
-                    document,
-                    bankUpdateType
-                ) as any,
-                timer
-            );
-        } else {
-            successfulCaseUpdate = await putCaseTask(
-                initialForm.taskType,
-                initialForm.taskId,
-                bankUpdateFormData(
-                    CaseStatus.Submit,
-                    initialForm,
-                    formSource,
-                    bankUpdateDetails,
-                    formSignature,
-                    document,
-                    bankUpdateType
-                ) as any
-            );
-        }
+        const successfulCaseUpdate = await updateTask(
+            initialForm.caseId,
+            initialForm?.taskId,
+            bankUpdateFormData(TaskStatus.Completed, initialForm, bankUpdateDetails, formSignature, document, bankUpdateType),
+            timer
+        );
 
         if (successfulCaseUpdate) {
             setIsLoading(false);
@@ -115,7 +87,7 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
                     action: () => {
                         router.reload();
                     },
-                    text: t('tryAgain'),
+                    text: t('distributionMethod.tryAgain'),
                 }}
             />
         );
@@ -137,7 +109,7 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
                     </NavElement>
 
                     <div className="flex justify-between">
-                        <label className="font-primary text-lg font-bold">Bank Details</label>
+                        <label className="font-primary text-lg font-bold">{t('distributionMethod.bankUpdateTitle')}</label>
                         <Button
                             className="mr-4"
                             onClick={e => handleFormAction(e, BankUpdateType.BankTerminate)}
@@ -155,18 +127,6 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
             {!formSubmitted ? (
                 <>
                     <div className=" mx-6">
-                        <div className="my-4 grid w-full grid-cols-4 gap-4">
-                            <SelectSimple
-                                disabled={false}
-                                className="max-w-lg"
-                                label={t('distributionMethod.channel') || ''}
-                                options={channelOptions(t)}
-                                onChange={val => setFormSource(prevState => ({ ...prevState, channel: { text: val } }))}
-                                size={FieldSize.Small}
-                                value={formSource.channel?.text ? formSource.channel?.text : ChannelType.Phone}
-                                name="channel"
-                            />
-                        </div>
                         <div className="my-4 grid w-full grid-cols-4 gap-4">
                             <SelectSimple
                                 disabled={false}
@@ -189,7 +149,7 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
                         </div>
                     </div>
                     <div>
-                        {formSource.channel.text === ChannelType.Email && formSignature && (
+                        {document.source === ChannelType.Email && formSignature && (
                             <SignatureValidations isFormStateReadOnly={false} config={signaturesConfig} />
                         )}
 
@@ -203,7 +163,7 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
                                     disabled={isLoading}
                                     type={ButtonType.Primary}
                                 >
-                                    {t('submit')}
+                                    {t('distributionMethod.submit')}
                                 </Button>
                                 <NavElement
                                     aria-label={t('cancel') as string}
@@ -213,7 +173,7 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
                                     variant={NavElementVariant.Default}
                                     disabled={false}
                                 >
-                                    {t('cancel')}
+                                    {t('distributionMethod.cancel')}
                                 </NavElement>
                             </div>
                         </div>
@@ -229,7 +189,7 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
                             },
                             text: t('distributionMethod.close'),
                         }}
-                        subtitle={'Bank Change Request has been submitted.'}
+                        subtitle={'distributionMethod.submitMessage'}
                         title={t('distributionMethod.submitted')}
                     />
                 </div>
