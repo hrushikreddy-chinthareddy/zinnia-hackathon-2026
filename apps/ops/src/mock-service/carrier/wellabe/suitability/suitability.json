@@ -144,7 +144,9 @@
         "liquidityOptions": {
             "fundsAccessExplanation": "string",
             "distributionMethods": [
-                "INCOME"
+                "INCOME",
+                "TAX_DEFERRAL",
+                "GURANTEES"
             ],
             "firstPayoutOption": "string",
             "surrenderChargeConsent": "string",

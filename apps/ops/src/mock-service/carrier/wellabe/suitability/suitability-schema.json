@@ -289,7 +289,9 @@
                     "RETIREMENT_PLAN",
                     "INDEXED_ANNUITY",
                     "STOCKS_BONDS_MF",
-                    "OTHERS"
+                    "OTHERS",
+                    "RENTALINCOME",
+                    "SOCIAL_SECURITY"
                 ]
             },
             "financialProducts_assetsDistribution_productTypeEnum": {
@@ -1604,10 +1606,9 @@
                     ]
                 },
                 "employment": {
-                    "ui:options": {},
                     "employmentStatus": {
-                        "ui:widget": "checkboxes",
                         "ui:options": {
+                            "widget": "checkboxes",
                             "enumNames": [
                                 "Active",
                                 "Retired",
@@ -1843,7 +1844,9 @@
                         "Retirement Plan",
                         "Indexed Annuity",
                         "Stocks Bonds MF",
-                        "Others"
+                        "Others",
+                        "Rental Income",
+                        "Social Security"
                     ]
                 }
             },
@@ -1878,15 +1881,15 @@
                         "productType": {
                             "ui:options": {
                                 "enumNames": [
-                                    "CHECKING SAVING ACCOUNT",
-                                    "MONEY MARKET",
-                                    "STOCKS BONDS",
-                                    "PENSION",
-                                    "LIFE INSURENCE",
-                                    "ANNUITIES",
-                                    "ANNUITY SURRENDER FREE",
-                                    "REAL STATE",
-                                    "OTHERS"
+                                    "Checking Saving Account",
+                                    "Money Market",
+                                    "Stocks Bonds",
+                                    "Pension",
+                                    "Life Insurance",
+                                    "Annuities",
+                                    "Annuity Surrender Free",
+                                    "Real State",
+                                    "Others"
                                 ]
                             }
                         },
@@ -2002,10 +2005,16 @@
             },
             "fundsAccessExplanation": {},
             "distributionMethods": {
-                "items": {
-                    "ui:options": {
-                        "label": false
-                    }
+                "ui:options": {
+                    "enumNames": [
+                        "Income",
+                        "Tax Deferal",
+                        "Gurantees",
+                        "Growth",
+                        "Principal Protection",
+                        "Others"
+                    ],
+                    "label": false
                 }
             },
             "firstPayoutOption": {},

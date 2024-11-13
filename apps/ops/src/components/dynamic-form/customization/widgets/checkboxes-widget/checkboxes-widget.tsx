@@ -34,7 +34,7 @@ export default function CheckboxesWidget<T = any, S extends StrictRJSFSchema = R
             }
         };
 
-    if (readonly) return <>{checkboxesValues.join(', ')}</>;
+    if (readonly) return <>{checkboxesValues.map(value => enumOptions?.find(option => option.value === value)?.label).join(', ')}</>;
 
     return (
         <div id={id} className={styles.checkboxGroupRoot} aria-label="Checkbox Group">

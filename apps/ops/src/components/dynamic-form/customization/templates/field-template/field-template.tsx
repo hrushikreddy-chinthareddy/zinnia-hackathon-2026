@@ -1,15 +1,9 @@
 import { FieldTemplateProps, getUiOptions } from '@rjsf/utils';
 import { Divider, Label, Tooltip } from '@zinnia/bloom/components';
-import React from 'react';
 
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 
 import styles from './field-template.module.css';
-
-const handleTooltipIconClick = (event: React.SyntheticEvent) => {
-    event.preventDefault();
-    event.stopPropagation();
-};
 
 export function FieldTemplate(props: FieldTemplateProps) {
     const { id, label, displayLabel, required, description, errors, children, readonly, formData, classNames, uiSchema } = props;
@@ -17,7 +11,7 @@ export function FieldTemplate(props: FieldTemplateProps) {
     const helpText = uiOptions.help;
 
     const helpInformation = helpText && (
-        <Tooltip trigger={<CircleInfoIcon onClick={handleTooltipIconClick} height={'16px'} width={'16px'} className="text-primary" />}>
+        <Tooltip trigger={<CircleInfoIcon onClick={e => e.preventDefault()} height={'16px'} width={'16px'} className="text-primary" />}>
             {helpText}
         </Tooltip>
     );
