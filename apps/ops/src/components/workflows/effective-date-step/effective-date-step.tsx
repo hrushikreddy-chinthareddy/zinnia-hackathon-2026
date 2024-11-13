@@ -21,7 +21,7 @@ const EffectiveDate = ({
     policy: Policy;
     setEffectiveDate: (value: string) => void;
 }) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'cancelFreelook.date' });
+    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'cancelFreeLook.date' });
     const { goToNext } = useWorkflow();
 
     const [formError, setFormError] = useState<null | string>(null);

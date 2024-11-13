@@ -53,7 +53,7 @@
             "history": "History",
             "documents": "Documents",
             "newPremium": "New Premium",
-            "cancelFreelook": "Cancel Freelook",
+            "cancelFreeLook": "Free Look Cancel",
             "updatePremium": "Update Premium Autopay",
             "newWithdrawal": "New Withdrawal",
             "formData": "Form Data",
@@ -3791,12 +3791,15 @@
         },
         "checkingEndingIn": "Checking ending in {{ accountNumber }}"
     },
-    "cancelFreelook": {
+    "cancelFreeLook": {
         "confirm": {
             "cta": "Go to transaction history",
             "label": "Confirm",
             "secondaryCta": "Close",
-            "subtitle": "A cancellation request was submitted.  Once processed, a refund payment for {{name}} will be sent.",
+            "subtitle": {
+                "0": "A cancellation request was submitted. Once processed, a refund payment for ",
+                "1": " will be sent."
+            },
             "title": "Submitted!"
         },
         "date": {

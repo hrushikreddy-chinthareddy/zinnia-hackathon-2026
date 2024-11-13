@@ -18,8 +18,8 @@ const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
     const { t } = useTranslation();
     const { withdrawal, setWithdrawal } = useWithdrawal();
 
-    const startLabel = t('cancelFreelook.start.label');
-    const dateLabel = t('cancelFreelook.date.label');
+    const startLabel = t('cancelFreeLook.start.label');
+    const dateLabel = t('cancelFreeLook.date.label');
     const payeeLabel = t('withdrawals.payee.label');
     const paymentLabel = t('withdrawals.payment.label');
     const summaryLabel = t('withdrawals.summary.label');
@@ -35,7 +35,7 @@ const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
                     processType={Processes.NewBusiness}
                     setState={setWithdrawal as StartStepSetState}
                     state={withdrawal}
-                    title={t('cancelFreelook.start.title') as string}
+                    title={t('cancelFreeLook.start.title') as string}
                     subtitle={''}
                 />
             ),

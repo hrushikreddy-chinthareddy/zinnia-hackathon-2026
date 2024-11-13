@@ -13,14 +13,14 @@ import { submitFreeLookCancel } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 
-import { buildFreelookCancelRequestBody } from '../freelook-cancel.helpers';
+import { buildFreeLookCancelRequestBody } from '../free-look-cancel.helper';
 
 interface ConfirmProps {
     policy: Policy;
 }
 
 const Confirm = ({ policy }: ConfirmProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'cancelFreelook.confirm' });
+    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'cancelFreeLook.confirm' });
     const { t: defaultT } = useTranslation();
 
     const router = useRouter();
@@ -29,7 +29,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
     const [isLoading, setIsLoading] = useState(true);
 
     const submit = useCallback(async () => {
-        const requestBody = buildFreelookCancelRequestBody(withdrawal);
+        const requestBody = buildFreeLookCancelRequestBody(withdrawal);
         const response = await submitFreeLookCancel(policy.product?.planCode, policy.policyNumber, requestBody);
 
         if (![StatusCode.Accepted, StatusCode.Okay].includes(response.status as StatusCode)) {
@@ -57,7 +57,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
                 leaveRoute={`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/withdrawals`}
                 submit={{
                     action: submit,
-                    text: defaultT('cancelFreelook.summary.submitCancellation'),
+                    text: defaultT('cancelFreeLook.summary.submitCancellation'),
                 }}
             />
         );
@@ -84,7 +84,13 @@ const Confirm = ({ policy }: ConfirmProps) => {
                         {t('secondaryCta')}
                     </NavElement>
                 }
-                subtitle={<>{t('subtitle', { name: withdrawal.payeeFullName })}</>}
+                subtitle={
+                    <>
+                        {t('subtitle.0')}
+                        <span className="font-bold">{withdrawal.payeeFullName}</span>
+                        {t('subtitle.1')}
+                    </>
+                }
                 title={t('title')}
             />
         </div>

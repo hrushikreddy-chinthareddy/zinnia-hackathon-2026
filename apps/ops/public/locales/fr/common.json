@@ -53,7 +53,7 @@
             "history": "Histoire",
             "documents": "Documents",
             "newPremium": "Nouveau Prime",
-            "cancelFreelook": "Annuler Freelook",
+            "cancelFreeLook": "Annuler Free Look",
             "updatePremium": "Gérer Paiement Automatique",
             "newWithdrawal": "Nouveau Retrait",
             "formData": "Données du formulaire",
@@ -3548,12 +3548,15 @@
         },
         "checkingEndingIn": "Compte-chèques se terminant par {{ accountNumber }}"
     },
-    "cancelFreelook": {
+    "cancelFreeLook": {
         "confirm": {
             "cta": "Accéder à l'historique des transactions",
             "label": "Confirmer",
             "secondaryCta": "Fermer",
-            "subtitle": "Une demande d'annulation a été soumise. Une fois traitée, un remboursement pour {{name}} sera envoyé.",
+            "subtitle": {
+                "0": "Une demande d'annulation a été soumise. Une fois traitée, un remboursement pour ",
+                "1": " sera envoyé."
+            },
             "title": "Soumis !"
         },
         "date": {
