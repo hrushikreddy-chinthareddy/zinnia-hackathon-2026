@@ -1674,7 +1674,7 @@
                 "bankUpdateTitle": "Bank Details",
                 "cancel": "Cancel",
                 "submit": "Submit",
-                "submitMessage": "Bank Change Request has been submitted."
+                "submitedMessage": "Bank Update Request has been submitted."
             },
             "neaBenefitsSensitivity": "NEA Benefit Sensitivity",
             "distributionInstruction": {
@@ -1887,8 +1887,8 @@
             "openNigoExists": "An onbase case includes a NIGO. Please resolve the open NIGO issue before submitting another request through the Digital Portal."
         },
         "sidebar": {
-            "contractStatusCode":"Policy Status",
-            "abbreviatedcontractStatusCode":"Pol.",
+            "contractStatusCode": "Policy Status",
+            "abbreviatedcontractStatusCode": "Pol.",
             "abbreviatedCaseId": "Case",
             "abbreviatedContractId": "Cont.",
             "abbreviatedDocumentNumber": "Doc.",
@@ -1898,7 +1898,7 @@
             "abbreviatedAnnuitantName": "Ann.",
             "abbreviatedContractValue": "Ctr Val.",
             "qualType": "Qualification type",
-            "contractValue":"Contract Value",
+            "contractValue": "Contract Value",
             "issueDate": "Issue date",
             "contractId": "Contract id",
             "ownerName": "Owner Name",

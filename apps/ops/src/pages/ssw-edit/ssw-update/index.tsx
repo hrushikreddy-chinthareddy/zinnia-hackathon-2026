@@ -48,7 +48,6 @@ const SswEdit = (props: SswUpdateProps) => {
         SSWNet: 6,
         EFTDraw: 5,
     };
-    console.log(specialProgramdetails, '<====Special Program');
 
     const activeProg =
         specialProgramdetails?.allocationDetails?.filter(
@@ -109,8 +108,8 @@ const SswEdit = (props: SswUpdateProps) => {
 
     if (program?.length === 0)
         return (
-            <div className=" w-full overflow-auto px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10  bg-white h-screen">
-                <div className="bg-gray-100 my-2 flex justify-center align-middle h-[500px] ">
+            <div className="md:px-6 md:py-8 lg:px-8 lg:py-10 h-screen my-auto flex justify-center align-middle ">
+                <div className="bg-gray-100  my-auto">
                     <CardInfo
                         cta={{
                             action: () => {
@@ -119,7 +118,7 @@ const SswEdit = (props: SswUpdateProps) => {
                             text: 'back',
                         }}
                         title={'No Existing Program Found'}
-                        className=" justify-center"
+                        className="justify-center bg-white h-[450px] w-[900px]"
                     />
                 </div>
             </div>

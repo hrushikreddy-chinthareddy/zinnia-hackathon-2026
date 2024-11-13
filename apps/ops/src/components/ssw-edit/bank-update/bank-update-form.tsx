@@ -180,7 +180,7 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
                     </div>
                 </>
             ) : (
-                <div className="flex justify-center items-center py-9 ">
+                <div className="flex justify-center items-center my-auto ">
                     <CardInfo
                         icon={<CircleCheckIcon className="text-semantic-success" height={50} width={50} />}
                         cta={{
@@ -189,7 +189,7 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
                             },
                             text: t('distributionMethod.close'),
                         }}
-                        subtitle={'distributionMethod.submitMessage'}
+                        subtitle={t('distributionMethod.submitedMessage')}
                         title={t('distributionMethod.submitted')}
                     />
                 </div>
