@@ -178,10 +178,15 @@
             "diaryNotes": {
                 "text": "Diary notes"
             },
+            "viewDetails": {
+                "text": "View Details"
+            },
+
             "diaryNotesWarning": {
                 "text": "Attention: Diary notes present. Review required to submit.",
                 "clickToView": "Click to view"
             },
+
             "notes": {
                 "text": "Notes"
             },
@@ -696,7 +701,9 @@
                     "pendingLapseBannerText": "This policy needs a payment before it lapses. Go there now?",
                     "pendingLapseBannerLink": "Make a premium payment",
                     "lapseBannerText": "This policy is approved for a reinstatement premium.  Go there now?",
-                    "lapseBannerLink": "Make a premium payment"
+                    "lapseBannerLink": "Make a premium payment",
+                    "freeLookCancelBannerText": "This policy is still in its free look period and can be canceled without penalty until",
+                    "freeLookCancelBannerLink": "Cancel policy"
                 }
             },
             "empty": {
@@ -788,13 +795,20 @@
             "owner": "Owner",
             "ssn": "SSN",
             "policyNumber": "Policy number",
+            "policy": "Policy",
             "currentStage": "Current stage",
             "contractNumber": "Contract #",
             "productName": "Product name",
             "agent": "Agent",
             "caseId": "Case ID",
+            "case/ID": "Case/ID",
             "documentNumber": "Document number",
-            "viewCase": "View case details for case number {{caseNumber}}"
+            "viewCase": "View case",
+            "viewCaseNumber": "View case details for case number {{caseNumber}}",
+            "viewCaseDetails": "View case details",
+            "caseStatus": "Case Status",
+            "ownerSsn": "Owner/SSN",
+            "agentSsn": "Agent/SSN"
         },
         "pageSize": "Rows per page",
         "results": "Results",
@@ -870,6 +884,7 @@
             },
             "empty": {
                 "title": "We couldn't find a case that matches your search.",
+                "titleFilters": "We couldn't find a case that matches your filters.",
                 "paragraph": "Don't worry, it's probably just a typo. Check your input and try again.",
                 "action": {
                     "text": "Still having issues?",
@@ -1842,12 +1857,14 @@
             "createTaskSuccess": {
                 "WithdrawalFormInputTask": "Great news! We've initiated a withdrawal task for {{documentNumber}} and {{contractNumber}}",
                 "rmdTask": "Great news! We've initiated a Required Minimum Distribution task for {{documentNumber}} and {{contractNumber}}",
-                "oftTask": "Great news! We've initiated a Outgoing Funds Transfer task for {{documentNumber}} and {{contractNumber}}",
+                "OFTFormInputTask": "Great news! We've initiated a Outgoing Funds Transfer task for {{documentNumber}} and {{contractNumber}}",
                 "sswTask": "Great news! We've initiated a Systematic Withdrawal task for {{documentNumber}} and {{contractNumber}}"
             },
             "openNigoExists": "An onbase case includes a NIGO. Please resolve the open NIGO issue before submitting another request through the Digital Portal."
         },
         "sidebar": {
+            "contractStatusCode":"Policy Status",
+            "abbreviatedcontractStatusCode":"Pol.",
             "abbreviatedCaseId": "Case",
             "abbreviatedContractId": "Cont.",
             "abbreviatedDocumentNumber": "Doc.",
@@ -1855,7 +1872,9 @@
             "abbreviatedIssueDate": "Issue.",
             "abbreviatedOwnerName": "Own.",
             "abbreviatedAnnuitantName": "Ann.",
+            "abbreviatedContractValue": "Ctr Val.",
             "qualType": "Qualification type",
+            "contractValue":"Contract Value",
             "issueDate": "Issue date",
             "contractId": "Contract id",
             "ownerName": "Owner Name",
@@ -2257,6 +2276,18 @@
             "policyNotFound": {
                 "title": "Policy not found",
                 "subtitle": "An error occurred while retrieving policy. Please try again. If this problem persists, please notify operations support."
+            },
+            "taskInitialization": {
+                "title": "Error initializing task form",
+                "subtitle": "An error occurred while initializing the task. Please try again. If this problem persists, please notify operations support."
+            },
+            "caseTypeRetrievalError": {
+                "title": "Error identifying case type",
+                "subtitle": "An error occurred while identifying the case type. Please try again. If this problem persists, please notify operations support."
+            },
+            "docTypeRetrievalError": {
+                "title": "Error identifying document type",
+                "subtitle": "An error occurred while identifying the document type. Please try again. If this problem persists, please notify operations support."
             }
         }
     },
@@ -2705,6 +2736,7 @@
                 "reverseSurrender": "Reverse surrender",
                 "routingNumber": "Routing number",
                 "setAsMailingAddress": "Set as mailing address",
+                "stateNotFound": "State not found",
                 "submittedAmount": "Submitted amount",
                 "submittedAmountTooltip": "This is how much was submitted. In other words, the owner wrote a check or initiated a funds transfer for this amount. Submitted amount may differ from the applied amount if we could only apply a lower amount due to policy test limits. These are legal limits to how much an owner can pay into the policy within a certain time period. This can cause some funds to be returned to the owner (called a “force out”).",
                 "reverseRecreateSubmittedAmountTooltip": "This is how much was sent for payment initially. The owner wrote a check or initiated a funds transfer for this amount, and the request to apply this amount was submitted in our system. Submitted amount may differ from the applied amount if we could only apply a lower amount due to policy test limits. These are legal limits to how much an owner can pay into the policy within a certain time period. This can cause some funds to be returned to the owner (called a “force out”).",
@@ -3039,6 +3071,7 @@
     },
     "tooltip": {
         "jointOwner": "Joint owner",
+        "agent": "Agent",
         "ssn": "SSN",
         "other": "other"
     },
@@ -4064,7 +4097,8 @@
             "label": "Transactions",
             "managePremiumAutopay": "Manage premium autopay",
             "newPremium": "Start a one-time premium",
-            "startAWithdrawal": "Start a withdrawal"
+            "startAWithdrawal": "Start a withdrawal",
+            "cancelPolicy": "Cancel policy"
         }
     },
     "historyEventCard": {
@@ -4298,6 +4332,7 @@
     "nigoEntry": {
         "tabs": {
             "serviceFormReview": "Service Form Review",
+            "formEntry": "Form Entry",
             "nigoDetails": "Missing Information",
             "documentSelection": "New Form(s) Selection",
             "confirm": "Confirm"
@@ -4310,14 +4345,16 @@
             "view": "View",
             "documentTitle": "Document",
             "documents": "Documents",
-            "documentId": "Document ID"
+            "documentId": "Document ID",
+            "noFormAvailable": "No form available."
         },
         "confirmStep": {
             "title": "Submitted!",
             "subTitle": "Your request has been sent for processing.",
             "cta": "Go to case management",
             "secondaryCta": "Close",
-            "submitNigo": "Submit NIGO details"
+            "submitNigo": "Submit NIGO details",
+            "submitTask": "Submit task details"
         },
         "nigoDetails": {
             "title": "Missing Information",
@@ -4347,6 +4384,13 @@
                 "selectForm": "Select a form to continue."
             },
             "label": "Select the appropriate form that needs to be updated."
+        },
+        "formEntry": {
+            "formTitles": {
+                "withdrawal": "{{carrier}} Withdrawal Request",
+                "oft": "{{carrier}} Outgoing Funds Transfer Request",
+                "defaultTitle": "Form Entry"
+            }
         }
     }
 }

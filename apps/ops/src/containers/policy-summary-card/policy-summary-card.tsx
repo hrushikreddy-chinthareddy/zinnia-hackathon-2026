@@ -1,39 +1,36 @@
-import { Icon, IconType } from '@zinnia/bloom/components';
+import { Icon, IconType, BannerAlert, BannerVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { TFunction, useTranslation } from 'next-i18next';
 import { PropsWithChildren, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
 
 import { getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/badge.helper';
-import BannerAlert, { BannerVariant } from '@deps/components/banner-alert/banner-alert';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { FieldSize } from '@deps/components/fields/field';
 import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helper';
-import PolicyInfo from '@deps/components/global-values/policy-info/policy-info';
+// import PolicyInfo from '@deps/components/global-values/policy-info/policy-info';
+// import GlobalPolicyInfo from '@deps/components/global-values/policy-info/policy-info';
 import GlobalPolicyInfo from '@deps/components/global-values/policy-info/policy-info';
+import PolicyInfo from '@deps/components/global-values/policy-info/policy-info';
 import IconButton from '@deps/components/icon-button/icon-button';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import ResponsivePadding from '@deps/components/responsive-padding/responsive-padding';
 import SelectSearch from '@deps/components/select-search/select-search';
-import {
-    EmailWithPending,
-    PhoneWithPending,
-    AddressWithPending,
-} from '@deps/components/side-sheet/non-financial-transactions/non-financial-transactions.helper';
-import PendingTag from '@deps/components/side-sheet/non-financial-transactions/pending-tag';
+import { AddressWithPending, EmailWithPending, PhoneWithPending } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/non-financial-transactions.helper';
+import PendingTag from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/pending-tag';
 import { TranslationFiles } from '@deps/config/translations';
 import { FormattedAddress, sortAddressesByType } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
 import QuickLinks, { QuickLinksProps } from '@deps/containers/quick-links/quick-links';
 import SideSheetProductDetails from '@deps/containers/side-sheet-product-details/side-sheet-product-details';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { PolicyDetailsViewInfo, PolicyViewDetailsDto, toPolicyViewDetailsDto } from '@deps/data/policy-details-view';
-import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { fillColDefs } from '@deps/helpers/data-transform.helper';
 import { getTotalMinRequiredAmount, policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { BasePolicyComponentArgs, PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { formatDate, formatPhone, formatSSN, toTitleCase } from '@deps/helpers/string.helper';
+import { convertKebabedDateString, formatDate, formatPhone, formatSSN, toTitleCase } from '@deps/helpers/string.helper';
 import { mapAddressTypeToTranslation } from '@deps/helpers/translation.helper';
 import { CardColumnsTest, CardDetailsTest } from '@deps/jest/constants/test-id-constants';
 import {
@@ -46,20 +43,13 @@ import {
     PolicyFeatureFeatureType,
     PolicyStatus,
     ProductType,
-    Reason,
 } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
 import { DashboardContext } from '@deps/pages/policies';
-import {
-    TransactionResponseStatus,
-    checkEligibilityOneTimePremium,
-    checkEligibilityPartialWithdrawalOneTime,
-    checkEligibilitySystematicPrograms,
-} from '@deps/queries/api/bpm';
 import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
 import { DEFAULT_ERROR_STRING, DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
 import { SearchViewQuery } from '@deps/types/search';
-import { SegmentTrackedEventName, SegmentTrackEventState } from '@deps/types/segment-analytics';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import AnnuityQuickView from './active-quick-view/annuity';
 import EverlyIul from './active-quick-view/everly-iul';
@@ -155,82 +145,6 @@ const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
             ? formatDate(pendingLapse?.endDate)
             : formatDate(policy?.issueDate);
 
-    // BPB - systematic programs work
-    const systematicProgram = policy.policy.systematicPrograms?.find(sp => sp.reason === Reason.PREMIUM);
-    const arrangementId = systematicProgram?.arrangementId || '';
-
-    const [isEligibleManageAutopay, setIsEligibleManageAutopay] = useState(false);
-    const [autopayChecked, setAutopayChecked] = useState(false);
-    const [isEligibleNewPremium, setIsEligibleNewPremium] = useState(false);
-    const [newPremiumChecked, setNewPremiumChecked] = useState(false);
-    const [isEligibleWithdrawal, setIsEligibleWithdrawal] = useState(false);
-    const [withdrawalChecked, setWithdrawalChecked] = useState(false);
-
-    const [isLoading, setIsLoading] = useState(true);
-    const [fireEligibilityChecks, setFireEligibilityChecks] = useState(false);
-
-    const [isLife] = useState(policy.isLife);
-
-    // this should only run once after fireEligibilityChecks && isLife are both true
-    useEffect(() => {
-        if (fireEligibilityChecks && isLife) {
-            const checkManageAutopayEligibility = async () => {
-                const manageAutopayEligibility = await checkEligibilitySystematicPrograms(planCode, policyNumber, arrangementId || '');
-
-                if (manageAutopayEligibility?.status === TransactionResponseStatus.Success) {
-                    setIsEligibleManageAutopay(true);
-                }
-                setAutopayChecked(true);
-            };
-
-            const checkOneTimeEligibility = async () => {
-                const oneTimeEligibility = await checkEligibilityOneTimePremium(planCode, policyNumber);
-
-                if (oneTimeEligibility?.status === TransactionResponseStatus.Success) {
-                    setIsEligibleNewPremium(true);
-                }
-                setNewPremiumChecked(true);
-            };
-
-            const checkWithdrawalEligibility = async () => {
-                const withdrawalEligibility = await checkEligibilityPartialWithdrawalOneTime(planCode, policyNumber);
-
-                if (withdrawalEligibility?.status === TransactionResponseStatus.Success) {
-                    setIsEligibleWithdrawal(true);
-                }
-                setWithdrawalChecked(true);
-            };
-
-            checkManageAutopayEligibility();
-            checkOneTimeEligibility();
-            checkWithdrawalEligibility();
-        }
-    }, [planCode, policyNumber, arrangementId, fireEligibilityChecks, isLife]);
-
-    useEffect(() => {
-        if (autopayChecked && newPremiumChecked && withdrawalChecked) {
-            setIsLoading(false);
-        }
-    }, [autopayChecked, newPremiumChecked, withdrawalChecked]);
-
-    const eligibilityCheck = {
-        eligibleAutopay: isEligibleManageAutopay,
-        eligiblePremium: isEligibleNewPremium,
-        eligibleWithdrawal: isEligibleWithdrawal,
-    };
-
-    function onOpenChange(open: boolean) {
-        segmentAnalyticsTrackEvent(SegmentTrackedEventName.PolicyQuickActionsDropdown, {
-            state: open ? SegmentTrackEventState.Open : SegmentTrackEventState.Close,
-            policyNumber,
-            userId: userPartyId,
-        });
-
-        if (open) {
-            setFireEligibilityChecks(true);
-        }
-    }
-
     return (
         <header data-testid={CardDetailsTest.HEADER}>
             <div className="flex w-full items-end justify-between">
@@ -255,13 +169,10 @@ const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
                         openSideSheet={openDetailsSidesheet}
                     />
                     <div className="mt-8 flex flex-wrap gap-x-8 gap-y-4 lg:mt-0">
-                        {/* TODO MG: move the eligibilty checks into the quick links component */}
                         <QuickLinks
-                            eligibilityCheck={eligibilityCheck}
-                            isLife={policy.isLife}
-                            isLoading={isLoading}
+                            userPartyId={userPartyId}
+                            policy={policy}
                             links={quickLinks(t, policy, userPartyId)}
-                            onOpenChange={(open: boolean) => onOpenChange(open)}
                             planCode={planCode}
                             policyNumber={policyNumber}
                         />
@@ -470,6 +381,9 @@ const LapseQuickView = ({ policy }: BasePolicyComponentArgs) => {
 const StatusBanner = ({ policy }: BasePolicyComponentArgs) => {
     const { t } = useTranslation();
     const policyStatus = policy.policyStatus;
+    const { featureFlags } = useOptimizely();
+    const freeLookEnabled = featureFlags[FEATURE_FLAGS.POLICY_FREE_LOOK_CANCELLATION];
+
     if (policyStatus === PolicyStatus.PENDINGLAPSE) {
         return (
             <BannerAlert
@@ -478,9 +392,8 @@ const StatusBanner = ({ policy }: BasePolicyComponentArgs) => {
                     href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/new-premium/`,
                     text: t('dashboard.search.results.policySummaryCard.pendingLapseBannerLink'),
                 }}
-            >
-                {t('dashboard.search.results.policySummaryCard.pendingLapseBannerText')}
-            </BannerAlert>
+                bodyText={t('dashboard.search.results.policySummaryCard.pendingLapseBannerText')}
+            />
         );
     }
     if (policyStatus === PolicyStatus.LAPSE) {
@@ -500,11 +413,26 @@ const StatusBanner = ({ policy }: BasePolicyComponentArgs) => {
                     href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/new-premium/`,
                     text: t('dashboard.search.results.policySummaryCard.lapseBannerLink'),
                 }}
-            >
-                {t('dashboard.search.results.policySummaryCard.lapseBannerText')}
-            </BannerAlert>
+                bodyText={t('dashboard.search.results.policySummaryCard.lapseBannerText')}
+            />
         );
     }
+
+    if (freeLookEnabled && policy.freeLookPeriodDetails.isInFreeLookPeriod) {
+        return (
+            <BannerAlert
+                variant={BannerVariant.Warning}
+                bodyText={`${t('dashboard.search.results.policySummaryCard.freeLookCancelBannerText')} ${convertKebabedDateString(
+                    policy.freeLookPeriodDetails?.endDate
+                )}`}
+                cta={{
+                    href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/freelook/cancel-freelook/`,
+                    text: t('dashboard.search.results.policySummaryCard.freeLookCancelBannerLink'),
+                }}
+            />
+        );
+    }
+
     return null;
 };
 
@@ -719,7 +647,6 @@ const ActiveQuickView = ({ policy }: BasePolicyComponentArgs) => {
 
     return (
         <QuickViewRoot title={t('dashboard.search.results.policySummaryCard.header2')}>
-            {/* TODO MG: confirm we need searchValue in both of these - couple display fields had them but dont think we need them */}
             {policy?.product?.productType === ProductType.INDEXEDUNIVERSALLIFE ? (
                 <EverlyIul policy={policy} />
             ) : (

@@ -15,7 +15,7 @@ import LoadingState from '../non-financial-transactions/states/loading-state';
 import { ViewState } from '../non-financial-transactions/states/states.helpers';
 
 type SidesheetCancelPendingProps = {
-    amount: string;
+    amount?: number;
     closeSidesheet: () => void;
     exitTransaction: () => void;
     planCode: string | undefined;

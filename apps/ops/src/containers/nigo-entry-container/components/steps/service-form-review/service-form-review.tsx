@@ -2,10 +2,10 @@ import { Icon, IconType } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
-import DocumentPreviewer from '@deps/components/document-viewer/document-previewer';
 import Radio from '@deps/components/radio/radio';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
 import { TranslationFiles } from '@deps/config/translations';
+import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
 
 import { useGetPolicyTypeDocs } from './service-form-review.helper';
 import { useNigoEntry } from '../../nigo-entry-provider';
@@ -57,19 +57,11 @@ export const ServiceFormReview = ({ policyNumber, clientCode, docType, documentN
                         <div>
                             <div className="text-sm font-bold">{displayName}</div>
                             <div className="flex items-center text-sm font-normal text-gray-300">
-                                {t('documentId') + ' ' + documentNumber}
+                                {t('documentId') + ': ' + documentNumber}
                             </div>
                         </div>
                         <div className="flex items-center">
-                            <DocumentPreviewer
-                                className="flex gap-1"
-                                activeDocType={activeDocType}
-                                carrier={clientCode?.toUpperCase()}
-                                documentId={workingDocument?.documentId ?? (workingDocument?.documentID as string)}
-                                displayName={displayName}
-                            >
-                                <>{t('view')}</>
-                            </DocumentPreviewer>
+                            {createAction(workingDocument, clientCode?.toUpperCase(), t)}
                         </div>
                     </div>
                 )}

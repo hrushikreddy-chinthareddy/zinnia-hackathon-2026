@@ -5,28 +5,32 @@ import HighchartsReact, { HighchartsReactRefObject } from 'highcharts-react-offi
 import { forwardRef, useCallback, useEffect, useState } from 'react';
 
 import caseChartHelpers, { ChartConfigSeriesDataSimple } from '@deps/helpers/dashboard/case-chart-helpers';
-import { StatGroupingResponse } from '@deps/helpers/dashboard/types';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
+import { CaseDashboardStatsResponse } from '@deps/models/case/case';
 
 interface Props {
-    statGrouping: StatGroupingResponse;
+    agingRangesByProcess: CaseDashboardStatsResponse;
     classNames?: string;
     onRenderChart?: () => void;
 }
 
-const ActiveAgingBars = forwardRef<HighchartsReactRefObject, Props>(({ statGrouping, classNames, onRenderChart }, ref) => {
+const ActiveAgingBars = forwardRef<HighchartsReactRefObject, Props>(({ agingRangesByProcess, classNames, onRenderChart }, ref) => {
     const [chartConfig, setChartConfig] = useState<Highcharts.Options>({});
+    const [seriesData, setSeriesData] = useState<ChartConfigSeriesDataSimple[]>([]);
 
-    const getSeriesData = (statGrouping: StatGroupingResponse) => {
+    const getSeriesData = (agingRangesByProcess: CaseDashboardStatsResponse) => {
         const seriesData: ChartConfigSeriesDataSimple[] = [];
-        statGrouping.stats.forEach(currentStatGrouping => {
+        if (!agingRangesByProcess || !agingRangesByProcess.data || agingRangesByProcess.data.length === 0) {
+            return seriesData;
+        }
+        agingRangesByProcess.data.forEach(currentProcessStats => {
             const chartSeriesItem = {
-                name: (currentStatGrouping.label ?? 'Unknown') as string,
+                name: (currentProcessStats.name ?? 'Unknown') as string,
                 data: [] as number[],
             } as ChartConfigSeriesDataSimple;
 
-            currentStatGrouping.children?.stats.forEach(statGrouping => {
-                chartSeriesItem.data.push(statGrouping.count);
+            currentProcessStats.values?.forEach(aging => {
+                chartSeriesItem.data.push(aging.count);
             });
 
             seriesData.push(chartSeriesItem);
@@ -45,6 +49,7 @@ const ActiveAgingBars = forwardRef<HighchartsReactRefObject, Props>(({ statGroup
 
             const config: Highcharts.Options = {
                 chart: {
+                    backgroundColor: 'transparent',
                     type: 'column',
                     spacingBottom: 1,
                     spacingRight: 0,
@@ -147,12 +152,13 @@ const ActiveAgingBars = forwardRef<HighchartsReactRefObject, Props>(({ statGroup
     }, []);
 
     useEffect(() => {
-        const seriesData = getSeriesData(statGrouping);
+        const seriesData = getSeriesData(agingRangesByProcess);
         const config = getChartConfig(seriesData);
+        setSeriesData(seriesData);
         setChartConfig(config);
-    }, [getChartConfig, statGrouping]);
+    }, [getChartConfig, agingRangesByProcess]);
 
-    return <HighchartsReact ref={ref} className={classNames} highcharts={Highcharts} options={chartConfig} />;
+    return seriesData.length > 0 && <HighchartsReact ref={ref} className={classNames} highcharts={Highcharts} options={chartConfig} />;
 });
 
 ActiveAgingBars.displayName = 'ActiveAgingBars';

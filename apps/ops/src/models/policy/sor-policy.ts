@@ -5539,7 +5539,6 @@ export const FundAccountType = {
     INDEXED: 'INDEXED',
     VARIABLE: 'VARIABLE',
     INTERIM: 'INTERIM',
-    // TODO MG: adding manually
     HOLDING: 'HOLDING',
 } as const;
 

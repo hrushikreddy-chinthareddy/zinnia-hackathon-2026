@@ -5,12 +5,12 @@ import HighchartsReact from 'highcharts-react-official';
 import { useState, useEffect, useCallback } from 'react';
 
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
-import { StatGroupingResponse } from '@deps/helpers/dashboard/types';
+import { DashboardStatsElementResponse } from '@deps/models/case/case';
 
 interface Props {
     className?: string;
     seriesLabel?: string;
-    statGrouping: StatGroupingResponse;
+    statGrouping: DashboardStatsElementResponse;
     showInLegend?: boolean;
     height?: number;
     width?: number;
@@ -28,14 +28,14 @@ const DistributionPieChartSmall = ({
     sort = true,
 }: Props) => {
     const [chartConfig, setChartConfig] = useState({});
-    const getChartData = (statsGrouping: StatGroupingResponse) => {
+    const getChartData = (statsGrouping: DashboardStatsElementResponse) => {
         const chartData: { name: string; y: number; totalCount: number }[] = [];
-        if (!statsGrouping || !statsGrouping.stats || statsGrouping.stats.length === 0) {
+        if (!statsGrouping || !statsGrouping.values || statsGrouping.values.length === 0) {
             return chartData;
         }
-        statsGrouping.stats.forEach(statGrouping => {
+        statsGrouping.values.forEach(statGrouping => {
             chartData.push({
-                name: statGrouping.label,
+                name: statGrouping.name,
                 y: statGrouping.count / statsGrouping.count,
                 totalCount: statGrouping.count,
             });

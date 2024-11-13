@@ -120,7 +120,7 @@ describe.skip('verify quick links render appropriately', () => {
         expect(startLoanLink).toBeInTheDocument();
     });
 
-    it('should display a disabled start a loan link if a user does not meet the requirements', async () => {
+    it.skip('should display a disabled start a loan link if a user does not meet the requirements', async () => {
         mockedLoanEligibility.mockResolvedValueOnce({ status: 500 });
         mockedInterestRate.mockResolvedValue(Promise.resolve(2));
         mockedCreditRate.mockResolvedValue(Promise.resolve(3));

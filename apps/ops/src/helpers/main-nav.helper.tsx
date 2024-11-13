@@ -31,7 +31,7 @@ export const getMainNavItems = async (
         const isAllowReadPolicyAdmin = await permissionContext.doesUserHavePagePermission(UserPermission.AllowReadPolicyAdmin);
         const isAllowReadOtpRenewals = await permissionContext.doesUserHavePagePermission(UserPermission.AllowReadOtpRenewals);
         const isAdvisorsExcel = await permissionContext.getIsAdvisorsExcel();
-        const hasDashboardPermission = permissionContext.hasDashboardPermission;
+        const hasDashboardPermission = await permissionContext.doesUserHaveDashboardPermission();
 
         if (isAdvisorsExcel || isAllowReadCaseManagement) {
             navItems.push({ label: caseLinkText, link: caseLinkHref, icon: <DocumentIcon width={20} height={20} /> });
@@ -65,7 +65,6 @@ export const getMainNavItems = async (
             const dashboardHref = t('site.navLinks.dashboard.link') || '';
             navItems.push({ label: dashboardText, link: dashboardHref, icon: <DashboardIcon width={20} height={20} /> });
         }
-
         return navItems;
     };
     return await getNavItems();

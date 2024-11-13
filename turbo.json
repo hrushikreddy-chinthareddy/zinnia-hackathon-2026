@@ -55,7 +55,8 @@
         "NEXT_PUBLIC_MOCK_API_REQUEST",
         "NEXT_PUBLIC_DATADOG_BROWSER_APPLICATION_ID",
         "NEXT_PUBLIC_DATADOG_ENV",
-        "NEXT_PUBLIC_GIT_SHA"
+        "NEXT_PUBLIC_GIT_SHA",
+        "OPEN_AI_API_KEY"
       ],
       "dependsOn": ["^build"]
     },
