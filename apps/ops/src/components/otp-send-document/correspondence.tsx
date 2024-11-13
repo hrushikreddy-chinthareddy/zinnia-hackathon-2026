@@ -104,7 +104,7 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
             await goToNext();
         } catch (e: any) {
             setLoader(false);
-            setError({ ...error, submit: e?.message as string });
+            setError({ submit: e?.message as string });
         }
     };
 
@@ -126,6 +126,7 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
                 communicationOptions={communicationOptions}
                 correspondenceData={correspondenceData}
                 error={error}
+                setError={setError}
                 policy={policy}
             />
             {error?.submit && <AssistiveText text={error?.submit} variant={AssistiveTextVariant.Error} className="mt-2" />}
