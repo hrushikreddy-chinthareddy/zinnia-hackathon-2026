@@ -1,11 +1,9 @@
-import { Tag, TagVariant } from '@zinnia/bloom/components';
+import { Tag, TagVariant, TooltipPlacement } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { TFunction, useTranslation } from 'next-i18next';
-import React from 'react';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
-import { PopoverPlacement } from '@deps/components/popover/popover';
 import PopoverOnTruncate from '@deps/components/popover-on-truncate/popover-on-truncate';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { formatAddress } from '@deps/helpers/address.helper';
@@ -113,7 +111,7 @@ const PayeeName = ({ beneficiaryColor, index, payeeName }: PayeeNameProps) => {
                     <div className={`${getBeneficiaryColor(index)} h-[24px] min-w-[24px] self-center rounded`}></div>
                 </div>
             )}
-            <PopoverOnTruncate title={payeeName} placement={PopoverPlacement.TopRight}>
+            <PopoverOnTruncate title={payeeName} placement={TooltipPlacement.TopRight}>
                 <span>
                     <Typography className="text-left" variant={TypographyVariant.H3}>
                         <PiiWrapper>{payeeName}</PiiWrapper>

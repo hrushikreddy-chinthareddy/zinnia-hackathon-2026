@@ -1,5 +1,4 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
-import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useMemo, useState } from 'react';
 
@@ -47,16 +46,6 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
             docsToDisplay = correspondenceDocs;
         }
 
-        docsToDisplay.sort((a, b) => {
-            const includesA =
-                knownCaseDocIds.includes(a.documentID ?? (a.documentId as string)) || knownCaseDocIds.includes(a.documentNumber);
-            const includesB =
-                knownCaseDocIds.includes(b.documentID ?? (b.documentId as string)) || knownCaseDocIds.includes(b.documentNumber);
-            if (includesA && !includesB) return -1;
-            if (!includesA && includesB) return 1;
-            return dayjs(a.documentDate).isBefore(dayjs(b.documentDate)) ? 1 : -1;
-        });
-
         if (showAll) return docsToDisplay;
         return docsToDisplay.filter(
             doc => knownCaseDocIds.includes(doc.documentID ?? (doc.documentId as string)) || knownCaseDocIds.includes(doc.documentNumber)
@@ -71,7 +60,7 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
         (pageNumber: number) => {
             setOffset((pageNumber - 1) * limit);
         },
-        [limit, offset, total, setOffset]
+        [limit, setOffset]
     );
 
     const setDocSourceFilter = (val: string) => {
@@ -115,7 +104,7 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
                 <DocumentsResultsTable
                     carrierCode={caseDetails.carrier}
                     documentType={docSource as DocumentTypeView}
-                    linkedDocumentIdentifiers={[...knownCaseDocIds, '20240702-M-193066']}
+                    linkedDocumentIdentifiers={knownCaseDocIds}
                     results={displayDocs?.slice(offset, offset + limit) ?? []}
                     policyNumber={caseDetails.policyNumber}
                 />

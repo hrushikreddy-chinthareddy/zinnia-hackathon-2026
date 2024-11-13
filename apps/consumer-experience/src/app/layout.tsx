@@ -58,7 +58,7 @@ const primaryFont = localFont({
       style: 'normal',
       weight: '700',
     },
-  ], // TODO: 'everly' needs to be dynamic
+  ],
   preload: true,
 });
 

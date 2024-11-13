@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import EverlyLogoImage from '@/app/styles/everly/everly-logo.svg';
+import EverlyLogoImage from '@/app/styles/everly/assets/everly-logo-new.svg';
 import WellabeLogoImage from '@/app/styles/wellabe/assets/wellabe-logo.svg';
 import { getMyPoliciesByCarrier } from '@/services';
 import { getFeatureFlags } from '@/services/feature-flags';

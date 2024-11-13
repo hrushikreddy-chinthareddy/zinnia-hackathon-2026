@@ -6,6 +6,11 @@
 @import './wellabe/theme.css';
 @import './colors.css';
 
+/* TODO: this should be a token, right now setting it here prior to theme setting it */
+:root {
+  --user-badge-text-color: #fff;
+}
+
 /*
 * ELEMENTS
 * ========
@@ -35,14 +40,25 @@ main {
 }
 
 a {
-  color: var(--color-base-text-text-link, #1e359c);
+  color: var(--color-links-color-global-link, #1e359c);
   text-decoration: none;
+
   &:hover {
-    color: var(--color-states-hover-hover-text-link);
-    text-decoration: underline;
-    text-decoration-color: var(--color-states-hover-hover-text-link);
     text-underline-position: under;
-    text-decoration-thickness: 2px;
+    text-decoration: underline;
+    color: var(--color-links-color-global-link-dark);
+  }
+}
+
+/* inline anchor tags should be underlined by default and hidden on hover */
+p:has(a) {
+  a {
+    text-underline-position: under;
+    text-decoration: underline;
+
+    &:hover {
+      text-decoration: none;
+    }
   }
 }
 

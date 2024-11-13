@@ -16,7 +16,7 @@ class CreateCasePage extends Page {
     }
 
     get searchButton() {
-        return cy.get(`[type="button"]`).contains('Search');
+        return cy.get(`[data-testid="create-case-search-button"]`);
     }
 
     setDocumentIdDate(id) {

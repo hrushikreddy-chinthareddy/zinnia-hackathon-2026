@@ -10,13 +10,12 @@
 }
 
 .content {
-  margin: var(--measure-dimension-gap-lg, 1rem)
-    var(--measure-dimension-gap-md, 0.5rem);
+  margin: var(--measure-dimension-gap-lg, 1rem) var(--measure-dimension-gap-md, 0.5rem);
   min-width: 344px;
   width: 100%;
   background-color: white;
   padding: var(--measure-dimension-padding-2xl);
-  box-shadow: var(--shadow-elevation-elevation-light-04);
+  box-shadow: var(--shadow-elevation-elevation-light-sm);
   border-radius: var(--measure-dimension-radius-sm);
 }
 

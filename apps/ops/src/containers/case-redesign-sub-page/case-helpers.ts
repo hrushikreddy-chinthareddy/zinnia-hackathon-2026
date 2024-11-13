@@ -7,7 +7,7 @@ import { calculateDaysAgo } from '@deps/helpers/case-management';
 import { PolicyParty } from '@deps/helpers/policy-sor/Parties';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { formatPhone, toTitleCase } from '@deps/helpers/string.helper';
-import { Case } from '@deps/models/case/case';
+import { AgingTimeRangesKeysExtended, Case, StatCount, Statuses } from '@deps/models/case/case';
 import { PartyInstance } from '@deps/models/case/party-instance';
 import { IdentificationType, PartyRole } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
@@ -136,8 +136,10 @@ export const getPartiesFromPolicy = (policyDetails: PolicyDetails, t: TFunction)
                 },
                 ssn: {
                     label: t('colDefs:owner.ssnAbbreviated'),
-                    value: owner?.identifications?.find(id => id.identificationType === IdentificationType.SSN)?.identificationValue || DEFAULT_ERROR_STRING
-                }
+                    value:
+                        owner?.identifications?.find(id => id.identificationType === IdentificationType.SSN)?.identificationValue ||
+                        DEFAULT_ERROR_STRING,
+                },
             };
             const roles = getPartyRoles(owner);
 
@@ -196,4 +198,96 @@ export const getSideNavData = (
         status: caseDetails.caseStatus,
         updatedDate: dayjs(caseDetails.updatedAt).format('MM/DD/YYYY'),
     };
+};
+
+export const formatCaseTotals = (count: number, stats: StatCount, hasSearch: boolean) => {
+    const keyedStats = stats.counts.reduce((acc, stat) => {
+        acc[stat.label] = stat.value;
+        return acc;
+    }, {} as Record<string, number>);
+    const inProgressCount = keyedStats[Statuses.InProgress] ?? 0;
+    const exceptionCount = keyedStats[Statuses.Exception] ?? 0;
+    const completedCount = keyedStats[Statuses.Completed] ?? 0;
+    const canceledCount = keyedStats[Statuses.Canceled] ?? 0;
+
+    // if there's a search, don't mess with the caseStats counts.
+    if (hasSearch) {
+        return {
+            All: count,
+            [Statuses.InProgress]: inProgressCount,
+            [Statuses.Exception]: exceptionCount,
+        };
+    }
+    // all is either only the completed count, the total count when there's a search term, or the total minus completed when no search term
+    // const allCount = hasSearch ? count : count - completedCount;
+    const progCt = inProgressCount;
+    const excepCt = exceptionCount;
+    const allCount = count - completedCount - canceledCount;
+
+    return {
+        All: allCount,
+        [Statuses.InProgress]: progCt,
+        [Statuses.Exception]: excepCt,
+    };
+};
+
+export const dateToString = (dateObject: Date) => {
+    const date = dateObject.getDate();
+    const month = dateObject.getMonth() + 1;
+    const year = dateObject.getFullYear();
+    const dateParts = [month.toString().padStart(2, '0'), date.toString().padStart(2, '0'), year.toString()];
+    return dateParts.join('');
+};
+
+export const getDateWithDaysOffset = (daysOffset: number): Date => {
+    const newDate = new Date();
+    newDate.setDate(newDate.getDate() - daysOffset);
+    return newDate;
+};
+
+export const formatDateToApi = (date: string, isStartDate: boolean) => {
+    const dateParts = [date.slice(0, 2), date.slice(2, 4), date.slice(4, 8)];
+    const dateInLocalTimezone = dayjs(`${dateParts[2]}-${dateParts[0]}-${dateParts[1]}`);
+    return isStartDate ? dateInLocalTimezone.startOf('day').format() : dateInLocalTimezone.endOf('day').format();
+};
+
+export const getStartAndEndDates = (timeframe: AgingTimeRangesKeysExtended) => {
+    switch (timeframe) {
+        case 'ZeroToSeven':
+            return {
+                createdDateStart: formatDateToApi(dateToString(getDateWithDaysOffset(6)), true),
+                createdDateEnd: formatDateToApi(dateToString(getDateWithDaysOffset(0)), false),
+            };
+        case 'EightToFourteen':
+            return {
+                createdDateStart: formatDateToApi(dateToString(getDateWithDaysOffset(13)), true),
+                createdDateEnd: formatDateToApi(dateToString(getDateWithDaysOffset(7)), false),
+            };
+        case 'FifteenToThirty':
+            return {
+                createdDateStart: formatDateToApi(dateToString(getDateWithDaysOffset(29)), true),
+                createdDateEnd: formatDateToApi(dateToString(getDateWithDaysOffset(14)), false),
+            };
+        case 'ThirtyOneToFortyFive':
+            return {
+                createdDateStart: formatDateToApi(dateToString(getDateWithDaysOffset(44)), true),
+                createdDateEnd: formatDateToApi(dateToString(getDateWithDaysOffset(30)), false),
+            };
+        case 'FortySixToFiftyNine':
+            return {
+                createdDateStart: formatDateToApi(dateToString(getDateWithDaysOffset(58)), true),
+                createdDateEnd: formatDateToApi(dateToString(getDateWithDaysOffset(45)), false),
+            };
+        case 'SixtyPlus':
+            return {
+                createdDateStart: formatDateToApi(dateToString(new Date(new Date().getFullYear(), 0, 1)), true),
+                createdDateEnd: formatDateToApi(dateToString(getDateWithDaysOffset(59)), false),
+            };
+        case 'All':
+        default:
+            return {
+                createdDateStart: formatDateToApi(dateToString(new Date(new Date().getFullYear(), 0, 1)), true),
+                createdDateEnd: formatDateToApi(dateToString(new Date()), false),
+            };
+    }
 };

@@ -10,17 +10,17 @@ import Radio from '@deps/components/radio/radio';
 import {
     NonFinancialTransactionIdKeys,
     updateOptimistically,
-} from '@deps/components/side-sheet/non-financial-transactions/non-financial-transactions.helper';
-import AlertState from '@deps/components/side-sheet/non-financial-transactions/states/alert-state';
-import ApiErrorState from '@deps/components/side-sheet/non-financial-transactions/states/api-error-state';
-import BpmErrorState from '@deps/components/side-sheet/non-financial-transactions/states/bpm-error-state';
-import LoadingState from '@deps/components/side-sheet/non-financial-transactions/states/loading-state';
-import { ViewState, handleResponse } from '@deps/components/side-sheet/non-financial-transactions/states/states.helpers';
-import SuccessState from '@deps/components/side-sheet/non-financial-transactions/states/success-state';
-import WarnState from '@deps/components/side-sheet/non-financial-transactions/states/warn-state';
+} from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/non-financial-transactions.helper';
+import AlertState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/alert-state';
+import ApiErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/api-error-state';
+import BpmErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/bpm-error-state';
+import LoadingState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/loading-state';
+import { ViewState, handleResponse } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/states.helpers';
+import SuccessState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/success-state';
+import WarnState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/warn-state';
 import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
 import { TranslationFiles } from '@deps/config/translations';
-import { Errors, getEmailTypes, getFormErrors , EmailDetails } from '@deps/containers/people-data-cards/email-card/side-sheet/side-sheet-email.helpers';
+import { EmailDetails, Errors, getEmailTypes, getFormErrors } from '@deps/containers/people-data-cards/email-card/side-sheet/side-sheet-email.helpers';
 import { getFirstLastName } from '@deps/helpers/party-info-helper';
 import { mapEmailTypeToTranslation } from '@deps/helpers/translation.helper';
 import { Processes } from '@deps/models/case/case';

@@ -3,10 +3,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { FC, useRef } from 'react';
 
+import { actionLogInfo } from '@/actions/log-actions';
 import { getPolicyProfile } from '@/queries/policy-queries';
 import { QueryKeys } from '@/queries/query-keys';
 import { useBpmStore } from '@/store/store';
 import { PolicyProfile } from '@/types/policy';
+import { EVERLY_CONTACT_PHONE_NUMBER } from '@/utils/data';
 import { shouldStopBankPolling } from '@/utils/policy';
 
 import styles from './BankList.module.css';
@@ -32,7 +34,6 @@ export const BankList: FC<BankListProps> = ({
   const bpmAction = useBpmStore(state => state.bpmAction);
   const pollCount = useRef(0);
   const removeBpmAction = useBpmStore(state => state.removeBpmAction);
-
   const { data } = useQuery({
     queryKey: [QueryKeys.POLICY_PROFILE],
     refetchInterval: ({ state }) => {
@@ -40,6 +41,18 @@ export const BankList: FC<BankListProps> = ({
         shouldStopBankPolling(state.data, bpmAction) ||
         pollCount.current >= POLL_LIMIT
       ) {
+        // if pollCount has reached the limit and there is no change to the data, send a log
+        if (
+          !shouldStopBankPolling(state.data, bpmAction) &&
+          pollCount.current >= POLL_LIMIT
+        ) {
+          actionLogInfo('BankList poll limit reached', {
+            policyNumber,
+            planCode,
+            message: `After ${pollCount.current} times, we were unable to find changes submitted to the bank list. This could mean that it failed to reach Zahara from BPM, or something happened on the Zahara side that would prevent it from returning within ${(POLL_LIMIT * POLL_INTERVAL) / 1000} seconds. This could also mean that it was successful sometime after ${(POLL_LIMIT * POLL_INTERVAL) / 1000} seconds.`,
+            actionType: bpmAction?.actionType,
+          });
+        }
         if (bpmAction) {
           removeBpmAction();
         }
@@ -70,7 +83,16 @@ export const BankList: FC<BankListProps> = ({
     if (allBankData) {
       return (
         <div>
-          <h2 className="mb-lg">Banking Details</h2>
+          <h2 id="addBankSection" className="mb-lg">
+            Banking Details
+          </h2>
+          <p className="mb-lg">
+            Need help updating banking details? Give us a call at{' '}
+            <a href={`tel:+${EVERLY_CONTACT_PHONE_NUMBER}`}>
+              {EVERLY_CONTACT_PHONE_NUMBER}
+            </a>
+            .
+          </p>
           <div className={styles.multipleItemsInSection}>{allBankData}</div>
           {allowBankingChanges && <AddBankSidesheet partyId={data.partyId} />}
         </div>

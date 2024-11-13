@@ -5,7 +5,7 @@ import { GetServerSidePropsContext } from 'next';
 import router from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import xss from 'xss';
 
 import Button, { ButtonSize, ButtonType } from '@deps/components/button/button';
@@ -26,19 +26,22 @@ import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { toTitleCase } from '@deps/helpers/string.helper';
+import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { CaseType } from '@deps/models/case/case';
+import { DocumentData } from '@deps/models/case/document';
 import { docTypes } from '@deps/models/case/helpers';
 import { UserPermission } from '@deps/models/user-profile';
 import createCaseFromDocumentNumber from '@deps/operations/cases/caseOperations';
 import { fetchDocument } from '@deps/operations/documents/documentOperations';
 import { ReactComponent as ProgressIcon } from '@deps/styles/elements/icons/illustrations/check-progress.svg';
+import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
-type CaseCreateProps = {
+interface CaseCreatePageProps extends SegmentTrackedPageProps {
     featureFlagDecisions: FeatureFlags;
 };
 
@@ -55,7 +58,8 @@ const shouldShowCaseTaskList = (featureFlagDecisions: FeatureFlags, caseType: Ca
     return (
         (featureFlagDecisions?.[FEATURE_FLAGS.REG_60] && caseType == CaseType.Reg60) ||
         (featureFlagDecisions?.[FEATURE_FLAGS.SSW_SBGC] && caseType == CaseType.SSW) ||
-        (caseType == CaseType.Withdrawal)
+        (caseType == CaseType.Withdrawal) ||
+        (caseType == CaseType.Oft)
     );
 };
 
@@ -64,11 +68,14 @@ export enum TabOptions {
     search = 'Search',
 };
 
-const CaseCreate = ({ featureFlagDecisions }: CaseCreateProps) => {
+const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const [showLoader, setShowLoader] = useState(false);
     const [activeTab, setActiveTab] = useState(TabOptions.search);
 
+    useSegmentPageTracker(user, SegmentPageName.CreateCaseLanding);
+
+    // TODO MG: call `useSegmentPageTracker()` when tab is changed?
     const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
 
     const handleRouteChange = () => {
@@ -87,7 +94,7 @@ const CaseCreate = ({ featureFlagDecisions }: CaseCreateProps) => {
     const [clientIds, setClientIds] = useState([] as string[]);
     const [documentNumber, setDocumentNumber] = useState<string>('');
     const [policyNumber, setPolicyNumber] = useState<string>('');
-    const [caseId, setCaseId] = useState('');
+    const [document, setDocument] = useState<DocumentData | null>(null);
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState<string | undefined>(undefined);
     const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
@@ -198,30 +205,33 @@ const CaseCreate = ({ featureFlagDecisions }: CaseCreateProps) => {
             return;
         }
         const document = documentResult.value;
-        const caseResult = await createCaseFromDocumentNumber(
-            document.documentNumber,
-            document.caseId,
-            document.contract,
-            caseType,
-            clientId
-        );
+        setPolicyNumber(document.contract);
+        setDocument(document);
 
-        if (!caseResult.success) {
-            console.error('createDocument:: No case id from createCase', {
-                documentNumber: document.documentNumber,
-                caseType,
-                clientId,
-            });
-            setErrorMessage(t('caseRenewal.caseCreate.createError', { documentNumber: document.documentNumber }) as string);
-            setShowLoader(false);
-            return;
-        }
-        const caseData = caseResult.value;
         if ((shouldShowNewExperience && caseType !== CaseType.Renewal) || caseType === CaseType.Reg60) {
             setShowLoader(false);
-            setCaseId(caseData.id);
-            setPolicyNumber(caseData.policyNumber);
+            setPolicyNumber(document.contract);
         } else {
+            setPolicyNumber('');
+            const caseResult = await createCaseFromDocumentNumber(
+                document.documentNumber,
+                document.caseId,
+                document.contract,
+                caseType,
+                clientId
+            );
+
+            if (!caseResult.success) {
+                console.error('createDocument:: No case id from createCase', {
+                    documentNumber: document.documentNumber,
+                    caseType,
+                    clientId,
+                });
+                setErrorMessage(t('caseRenewal.caseCreate.createError', { documentNumber: document.documentNumber }) as string);
+                setShowLoader(false);
+                return;
+            }
+            const caseData = caseResult.value;
             const route = `${caseType.toLowerCase()}/${caseData.id}`;
             router.push(`/create-case/${route}?doc=${document.documentNumber}&clientId=${clientId}`);
         }
@@ -230,11 +240,13 @@ const CaseCreate = ({ featureFlagDecisions }: CaseCreateProps) => {
     const onCaseTypeChange = (value: CaseType) => {
         setCaseType(value);
         setDocumentNumber('');
+        setPolicyNumber('');
     };
 
     const onClientChange = (value: string) => {
         setClientId(value);
         setDocumentNumber('');
+        setPolicyNumber('');
     };
 
     async function handleSearch(): Promise<void> {
@@ -280,7 +292,7 @@ const CaseCreate = ({ featureFlagDecisions }: CaseCreateProps) => {
     const renderTabContent = (
         <>
             <TabContent className="flex w-full flex-col" value={TabOptions.myTasks}>
-                <TaskManagementQueueContainer />
+                <TaskManagementQueueContainer featureFlagDecisions={featureFlagDecisions} />
             </TabContent>
             <TabContent className="flex w-full flex-col" value={TabOptions.search}>
                 <div className="my-5">
@@ -305,20 +317,20 @@ const CaseCreate = ({ featureFlagDecisions }: CaseCreateProps) => {
                     setSearchByOption={setSearchByOption}
                 />
                 {shouldShowCaseTaskList(featureFlagDecisions, caseType) || shouldShowNewExperience ? (
-                    caseId ? (
-                        <CaseListContainer
-                            t={t}
-                            policyNumber={policyNumber}
-                            caseType={caseType}
-                            clientId={clientId}
-                            caseId={caseId}
-                        ></CaseListContainer>
-                    ) : null
+                    <CaseListContainer
+                        t={t}
+                        policyNumber={policyNumber}
+                        caseType={caseType}
+                        clientId={clientId}
+                        document={document}
+                        setShowLoader={setShowLoader}
+                        setErrorMessage={setErrorMessage}
+                        setPolicyNumber={setPolicyNumber}
+                    ></CaseListContainer>
                 ) : null}
             </TabContent>
         </>
     );
-
 
     return (
         <NoNavLayout fullHeight={true}>
@@ -453,7 +465,7 @@ export const getServerSideProps = withPageAuthRequired({
             nextI18nextConfig,
             ALL_LOCALES
         );
-        return { props: { featureFlagDecisions, locale, ...translations } };
+        return { props: { featureFlagDecisions, locale, ...translations, user } };
     },
 });
 

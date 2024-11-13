@@ -1,20 +1,12 @@
-import { CaseSearchAdditionalFilters, CaseStatusFilter } from '@deps/contexts/CaseManagementFilters';
+import { CaseSearchAdditionalFilters } from '@deps/contexts/CaseManagementFilters';
 import { Case, Metadata, Processes, Statuses } from '@deps/models/case/case';
 import { StageInstance } from '@deps/models/case/stage-instance';
 import { StepInstance } from '@deps/models/case/step-instance';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 
-import {
-    getSearchValueObject,
-    getCaseStatuses,
-    getAdditionalFilters,
-    isSearchValueObjectEmpty,
-    insertStepDetails,
-} from './case-management';
+import { getSearchValueObject, getAdditionalFilters, isSearchValueObjectEmpty, insertStepDetails } from './case-management';
 
 const baseFilters = {
-    showOnlyCompletedCases: false,
-    showOnlyCanceledCases: false,
     processTypes: new Set([]),
     requestSubType: new Set([]),
     products: new Set([]),
@@ -89,90 +81,6 @@ describe('case-management.ts helper functions', () => {
             const searchValueObject = {};
             const result = isSearchValueObjectEmpty(searchValueObject);
             expect(result).toEqual(true);
-        });
-    });
-
-    describe('getCaseStatuses', () => {
-        it('should return an object with caseStatus Completed when showOnlyCompletedCases is true', () => {
-            const statusCounterTileFilter: CaseStatusFilter = 'All';
-            const showOnlyCompletedCases = true;
-            const showOnlyCanceledCases = false;
-
-            const result = getCaseStatuses(statusCounterTileFilter, showOnlyCompletedCases, showOnlyCanceledCases, {
-                policyNumber: 'mockPolicyNumber',
-            });
-
-            expect(result).toEqual({ caseStatus: [Statuses.Completed] });
-        });
-
-        it('should return an object with caseStatus Canceled when showOnlyCanceledCases is true', () => {
-            const statusCounterTileFilter: CaseStatusFilter = 'All';
-            const showOnlyCompletedCases = false;
-            const showOnlyCanceledCases = true;
-
-            const result = getCaseStatuses(statusCounterTileFilter, showOnlyCompletedCases, showOnlyCanceledCases, {
-                policyNumber: 'mockPolicyNumber',
-            });
-
-            expect(result).toEqual({ caseStatus: [Statuses.Canceled] });
-        });
-
-        it('should return an object with caseStatus Completed and Canceled when showOnlyCompletedCases and showOnlyCanceledCases are true', () => {
-            const statusCounterTileFilter: CaseStatusFilter = 'All';
-            const showOnlyCompletedCases = true;
-            const showOnlyCanceledCases = true;
-
-            const result = getCaseStatuses(statusCounterTileFilter, showOnlyCompletedCases, showOnlyCanceledCases, {
-                policyNumber: 'mockPolicyNumber',
-            });
-
-            expect(result).toEqual({ caseStatus: [Statuses.Completed, Statuses.Canceled] });
-        });
-
-        it('should return an object with caseStatus InProgress when statusCounterTileFilter is InProgress', () => {
-            const statusCounterTileFilter: CaseStatusFilter = Statuses.InProgress;
-            const showOnlyCompletedCases = false;
-            const showOnlyCanceledCases = false;
-
-            const result = getCaseStatuses(statusCounterTileFilter, showOnlyCompletedCases, showOnlyCanceledCases, {
-                policyNumber: 'mockPolicyNumber',
-            });
-
-            expect(result).toEqual({ caseStatus: [Statuses.InProgress] });
-        });
-
-        it('should return an object with caseStatus Exception when statusCounterTileFilter is Exception', () => {
-            const statusCounterTileFilter: CaseStatusFilter = Statuses.Exception;
-            const showOnlyCompletedCases = false;
-            const showOnlyCanceledCases = false;
-
-            const result = getCaseStatuses(statusCounterTileFilter, showOnlyCompletedCases, showOnlyCanceledCases, {
-                policyNumber: 'mockPolicyNumber',
-            });
-
-            expect(result).toEqual({ caseStatus: [Statuses.Exception] });
-        });
-
-        it('should return an object when statusCounterTileFilter is All and a search value is provided', () => {
-            const statusCounterTileFilter: CaseStatusFilter = 'All';
-            const showOnlyCompletedCases = false;
-            const showOnlyCanceledCases = false;
-
-            const result = getCaseStatuses(statusCounterTileFilter, showOnlyCompletedCases, showOnlyCanceledCases, {
-                policyNumber: 'mockPolicyNumber',
-            });
-
-            expect(result).toEqual({});
-        });
-
-        it('should return an object with notInCaseStatus Completed or Canceled  when statusCounterTileFilter is All and no search values are provided (default search)', () => {
-            const statusCounterTileFilter: CaseStatusFilter = 'All';
-            const showOnlyCompletedCases = false;
-            const showOnlyCanceledCases = false;
-
-            const result = getCaseStatuses(statusCounterTileFilter, showOnlyCompletedCases, showOnlyCanceledCases, {});
-
-            expect(result).toEqual({ notInCaseStatus: [Statuses.Completed, Statuses.Canceled] });
         });
     });
 

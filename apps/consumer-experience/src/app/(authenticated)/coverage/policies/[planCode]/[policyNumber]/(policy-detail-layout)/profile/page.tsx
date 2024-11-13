@@ -114,7 +114,12 @@ export default async function Profile({ params }: Props) {
   };
 
   return (
-    <div className="container">
+    <div>
+      <CallForAssistance
+        callToAction="The ability to edit contact info is coming soon."
+        contactPrompt="For now, call"
+        customInstruction="to make changes."
+      />
       <div className="info-card-container">
         <div>
           <h2 className="mb-lg">Name</h2>
@@ -133,11 +138,6 @@ export default async function Profile({ params }: Props) {
         {email()}
         {bank()}
       </div>
-
-      <CallForAssistance
-        callToAction="Making profile changes is coming soon."
-        customInstruction=" to make changes."
-      />
     </div>
   );
 }

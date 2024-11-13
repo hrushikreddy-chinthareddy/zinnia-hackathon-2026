@@ -5,7 +5,14 @@ import { PaginationParams } from '@deps/components/pagination/pagination';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { Carrier, SpecialProgram, TransactionHistory } from '@deps/models/case/withdrawal/case';
 import { VariableQuoteResponse } from '@deps/models/case/withdrawal/rmd';
-import { Policy, Transaction, TransactionStatus } from '@deps/models/policy/sor-policy';
+import {
+    FullSurrenderQuoteResponse,
+    PartialWithdrawalOneTimeQuoteResponse,
+    Policy,
+    Transaction,
+    TransactionStatus,
+    TransactionType,
+} from '@deps/models/policy/sor-policy';
 import { client } from '@deps/queries/api-utils/client';
 import { isMockPolicyDetailsRequestEnabled, isMockPolicySearchRequestEnabled } from '@deps/services/api-config';
 import { mockPolicy } from '@deps/services/mocks/sor-policy';
@@ -511,8 +518,8 @@ interface PolicyTransactionQuery {
 // Get policy transactions by transactionType
 export const getPolicyTransactions = async ({
     id: policyNumber,
-    limit = 10,
-    offset = 0,
+    limit,
+    offset,
     planCode,
     sortOrder = 'ASC',
     status,
@@ -545,6 +552,42 @@ export const getPolicyTransactions = async ({
         console.error('An error occurred while requesting transactions', error);
 
         return error.response;
+    }
+};
+enum WithdrawalQuoteEndpointType {
+    FullSurrender = 'fullsurrender',
+    PartialWithdrawalOneTime = 'partialwithdrawalonetime',
+}
+
+// TODO MG: remove any for actual types
+export const policyWithdrawalQuote = async (
+    planCode: string | undefined,
+    policyNumber?: string,
+    transactionType?: TransactionType,
+    requestBody?: any
+): Promise<any> => {
+    if (!planCode || !policyNumber || !transactionType || !requestBody) {
+        console.error('policyWithdrawalQuote::missing-args');
+
+        return null;
+    }
+
+    try {
+        const type =
+            transactionType === TransactionType.FullSurrender
+                ? WithdrawalQuoteEndpointType.FullSurrender
+                : WithdrawalQuoteEndpointType.PartialWithdrawalOneTime;
+
+        const { data } = await client.post<any, AxiosResponse<FullSurrenderQuoteResponse | PartialWithdrawalOneTimeQuoteResponse>>(
+            `${baseAppUrl}/api/policy/v1/policies/${planCode}/${policyNumber}/${type}/quote`,
+            requestBody
+        );
+
+        return data;
+    } catch (error: any) {
+        console.error('policyWithdrawalQuote::an error occurred during policy withdrawal quote', error);
+
+        return error?.data;
     }
 };
 
