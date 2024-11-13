@@ -1,23 +1,44 @@
-import dayjs from "dayjs";
-import { TFunction } from "next-i18next";
+import dayjs from 'dayjs';
+import { TFunction } from 'next-i18next';
 
-import { getOwnersTaxJurisdictionState } from "@deps/containers/financial-transactions/withdrawal/taxes/taxes.helpers";
-import { forcePositiveNumber, negativeNumberFormatify, numberFormatify } from "@deps/helpers/numbers.helper";
-import { convertKebabedDateString, toSentenceCase } from "@deps/helpers/string.helper";
-import { getRequestedWithheldTaxesDisplay, getTaxWithheldByType } from "@deps/helpers/tax-withholdings.helper";
+import { getOwnersTaxJurisdictionState } from '@deps/containers/financial-transactions/withdrawal/taxes/taxes.helpers';
+import { forcePositiveNumber, negativeNumberFormatify, numberFormatify } from '@deps/helpers/numbers.helper';
+import { convertKebabedDateString, toSentenceCase } from '@deps/helpers/string.helper';
+import { getRequestedWithheldTaxesDisplay, getTaxWithheldByType } from '@deps/helpers/tax-withholdings.helper';
 import {
-    AddressType, AllocationOption, AmountType, DisbursementType, FullSurrenderQuoteResponse,
-    PartialWithdrawalOneTimeQuoteResponse, PaymentForm, Policy, TaxWithholdingType, Transaction,
+    AddressType,
+    AllocationOption,
+    AmountType,
+    DisbursementType,
+    FullSurrenderQuoteResponse,
+    PartialWithdrawalOneTimeQuoteResponse,
+    PaymentForm,
+    Policy,
+    TaxWithholdingType,
+    Transaction,
     TransactionChargesItem,
-    TransactionPayeeOrBeneficiariesItem, TransactionStatus, TransactionType
-} from "@deps/models/policy/sor-policy";
-import { policyWithdrawalQuote } from "@deps/queries/api/policies";
-import { DEFAULT_ERROR_STRING, ZAHARA_API_DATE_FORMAT } from "@deps/types/constants";
+    TransactionPayeeOrBeneficiariesItem,
+    TransactionStatus,
+    TransactionType,
+} from '@deps/models/policy/sor-policy';
+import { policyWithdrawalQuote } from '@deps/queries/api/policies';
+import { DEFAULT_ERROR_STRING, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
-import { WithdrawalChargesValues, WithdrawalDetails, WithdrawalDetailsValues, WithdrawalQuoteResponse, WithdrawalSideSheetValues } from "./types";
-import { PayeePaymentDetails } from "../types";
+import {
+    WithdrawalChargesValues,
+    WithdrawalDetails,
+    WithdrawalDetailsValues,
+    WithdrawalQuoteResponse,
+    WithdrawalSideSheetValues,
+} from './types';
+import { PayeePaymentDetails } from '../types';
 
-const getPayeePaymentDetails = (policy: Policy, t: TFunction, totalPayment: number | undefined, payeeOrBeneficiaries?: TransactionPayeeOrBeneficiariesItem[]): PayeePaymentDetails[] => {
+const getPayeePaymentDetails = (
+    policy: Policy,
+    t: TFunction,
+    totalPayment: number | undefined,
+    payeeOrBeneficiaries?: TransactionPayeeOrBeneficiariesItem[]
+): PayeePaymentDetails[] => {
     const results: PayeePaymentDetails[] = [];
 
     const partyIds: string[] = payeeOrBeneficiaries?.map(item => item.partyId).filter((id): id is string => id !== undefined) || [];
@@ -32,9 +53,7 @@ const getPayeePaymentDetails = (policy: Policy, t: TFunction, totalPayment: numb
 
             results.push({
                 partyId: party.partyId as string,
-                state: address
-                    ? (address.state as string)
-                    : t('policy.history.sidesheet.stateNotFound') as string,
+                state: address ? (address.state as string) : (t('policy.history.sidesheet.stateNotFound') as string),
                 bankDetails: {
                     branchName: bankDetails?.branchName || '',
                     nameOnAccount: bankDetails?.nameOnAccount as string,
@@ -43,7 +62,7 @@ const getPayeePaymentDetails = (policy: Policy, t: TFunction, totalPayment: numb
                 // Hardcoded total payment amount since we're only supporting one payee at this time
                 disbursementAmount: Math.abs(totalPayment || 0),
                 // Hardcoded for now since we're only showing one payee
-                allocationPercentage: 100
+                allocationPercentage: 100,
             });
         }
     });
@@ -51,7 +70,12 @@ const getPayeePaymentDetails = (policy: Policy, t: TFunction, totalPayment: numb
     return results;
 };
 
-const getTaxWithholdings = (policy: Policy, transaction: Transaction, t: TFunction, quote?: WithdrawalQuoteResponse): WithdrawalDetails[] => {
+const getTaxWithholdings = (
+    policy: Policy,
+    transaction: Transaction,
+    t: TFunction,
+    quote?: WithdrawalQuoteResponse
+): WithdrawalDetails[] => {
     const ownerTaxState = getOwnersTaxJurisdictionState(policy);
 
     const { taxWithholdingInstructions } = quote || transaction;
@@ -61,32 +85,29 @@ const getTaxWithholdings = (policy: Policy, transaction: Transaction, t: TFuncti
             label: t('policy.history.withdrawalSidesheet.federalTax') as string,
             tooltipTitle: t('policy.history.withdrawalSidesheet.federalTax') as string,
             tooltipBody: t('policy.history.withdrawalSidesheet.federalTaxTooltip') as string,
-            value: getRequestedWithheldTaxesDisplay(
-                taxWithholdingInstructions,
-                TaxWithholdingType.FEDERAL,
-                DEFAULT_ERROR_STRING
-            ),
+            value: getRequestedWithheldTaxesDisplay(taxWithholdingInstructions, TaxWithholdingType.FEDERAL, DEFAULT_ERROR_STRING),
         },
         {
             label: t('policy.history.withdrawalSidesheet.stateTax', { stateAbbreviation: ownerTaxState }) as string,
             tooltipTitle: t('policy.history.withdrawalSidesheet.stateTax', { stateAbbreviation: ownerTaxState }) as string,
             tooltipBody: t('policy.history.withdrawalSidesheet.stateTaxTooltip') as string,
-            value: getRequestedWithheldTaxesDisplay(
-                taxWithholdingInstructions,
-                TaxWithholdingType.STATE,
-                DEFAULT_ERROR_STRING
-            ),
+            value: getRequestedWithheldTaxesDisplay(taxWithholdingInstructions, TaxWithholdingType.STATE, DEFAULT_ERROR_STRING),
             sentenceCase: false,
         },
     ];
-}
+};
 
 const getWithdrawalDetails = (values: WithdrawalDetailsValues, t: TFunction): WithdrawalDetails[] => {
     const {
-        disbursementType, totalPayment,
-        effectiveDate, processDate, status,
-        requestedWithdrawalAmount, fundDisbursementType,
-        transactionType, actualWithdrawalAmount
+        disbursementType,
+        totalPayment,
+        effectiveDate,
+        processDate,
+        status,
+        requestedWithdrawalAmount,
+        fundDisbursementType,
+        transactionType,
+        actualWithdrawalAmount,
     } = values;
 
     if (transactionType === TransactionType.FullSurrender) {
@@ -96,13 +117,13 @@ const getWithdrawalDetails = (values: WithdrawalDetailsValues, t: TFunction): Wi
                 caption: t('policy.history.withdrawalSidesheet.disbursementType', {
                     disbursementType: toSentenceCase(disbursementType),
                 }) as string,
-                value: numberFormatify(requestedWithdrawalAmount)
+                value: numberFormatify(requestedWithdrawalAmount),
             },
             {
                 label: t('policy.history.withdrawalSidesheet.totalPayment') as string,
                 tooltipTitle: t('policy.history.withdrawalSidesheet.totalPayment') as string,
                 tooltipBody: t('policy.history.withdrawalSidesheet.totalPaymentTooltip') as string,
-                value: numberFormatify(forcePositiveNumber(totalPayment)), 
+                value: numberFormatify(forcePositiveNumber(totalPayment)),
             },
             {
                 label: t('policy.history.withdrawalSidesheet.effectiveDate') as string,
@@ -154,25 +175,29 @@ const getWithdrawalDetails = (values: WithdrawalDetailsValues, t: TFunction): Wi
                 tooltipBody: t('policy.history.withdrawalSidesheet.fundDisbursementTypeTooltip') as string,
                 value: fundDisbursementType,
             },
-                {
-                    label: t('policy.history.withdrawalSidesheet.effectiveDate') as string,
-                    tooltipTitle: t('policy.history.withdrawalSidesheet.effectiveDate') as string,
-                    tooltipBody: t('policy.history.withdrawalSidesheet.effectiveDateTooltip') as string,
-                    value: effectiveDate,
-                },
-                {
-                    label: t('policy.history.withdrawalSidesheet.processDate') as string,
-                    tooltipTitle: t('policy.history.withdrawalSidesheet.processDate') as string,
-                    tooltipBody: t('policy.history.withdrawalSidesheet.processDateTooltip') as string,
-                    value: status === TransactionStatus.Completed ? processDate : DEFAULT_ERROR_STRING,
-                },
-            ];
+            {
+                label: t('policy.history.withdrawalSidesheet.effectiveDate') as string,
+                tooltipTitle: t('policy.history.withdrawalSidesheet.effectiveDate') as string,
+                tooltipBody: t('policy.history.withdrawalSidesheet.effectiveDateTooltip') as string,
+                value: effectiveDate,
+            },
+            {
+                label: t('policy.history.withdrawalSidesheet.processDate') as string,
+                tooltipTitle: t('policy.history.withdrawalSidesheet.processDate') as string,
+                tooltipBody: t('policy.history.withdrawalSidesheet.processDateTooltip') as string,
+                value: status === TransactionStatus.Completed ? processDate : DEFAULT_ERROR_STRING,
+            },
+        ];
     }
 
     return [];
-}
+};
 
-const getRequestedWithdrawalAmount = (amount: number | undefined, status: TransactionStatus | undefined, quote?: WithdrawalQuoteResponse): number => {
+const getRequestedWithdrawalAmount = (
+    amount: number | undefined,
+    status: TransactionStatus | undefined,
+    quote?: WithdrawalQuoteResponse
+): number => {
     let requestedAmount: number | undefined = 0;
 
     // if (status === TransactionStatus.Pending) {
@@ -192,7 +217,7 @@ const getRequestedWithdrawalAmount = (amount: number | undefined, status: Transa
     }
 
     return Math.abs(requestedAmount || 0);
-}
+};
 
 const getActualWithdrawalAmount = (
     amount: number | undefined,
@@ -220,14 +245,14 @@ const getActualWithdrawalAmount = (
         return Math.abs(withdrawalAmount);
     }
 
-    const taxWithheldAmounts = quote
-        ? quote?.taxWithheldAmounts
-        : transaction?.taxWithheldAmounts;
+    const taxWithheldAmounts = quote ? quote?.taxWithheldAmounts : transaction?.taxWithheldAmounts;
 
     // @ts-expect-error API is returning withholdAmount instead of withheldAmount
-    const federalTaxWithheld = taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.FEDERAL)?.[0]?.withholdAmount || 0;
+    const federalTaxWithheld =
+        taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.FEDERAL)?.[0]?.withholdAmount || 0;
     // @ts-expect-error API is returning withholdAmount instead of withheldAmount
-    const stateTaxWithheld = taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.STATE)?.[0]?.withholdAmount || 0;
+    const stateTaxWithheld =
+        taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.STATE)?.[0]?.withholdAmount || 0;
 
     const totalChargesWithoutTaxes = transaction.charges
         ? transaction.charges.reduce((acc, charge) => {
@@ -237,20 +262,12 @@ const getActualWithdrawalAmount = (
         : 0;
 
     return Math.abs(withdrawalAmount + federalTaxWithheld + stateTaxWithheld + totalChargesWithoutTaxes);
-}
+};
 
 const getWithdrawalDetailsValues = (transaction: Transaction, t: TFunction, quote?: WithdrawalQuoteResponse): WithdrawalDetailsValues => {
-    const {
-        effectiveDate,
-        processDate,
-        status,
-        transactionAmounts,
-        transactionType,
-    } = transaction;
+    const { effectiveDate, processDate, status, transactionAmounts, transactionType } = transaction;
     const { appliedAmount, disbursementType, requestedAmount } = transactionAmounts ?? {};
-    const amount = transactionType === TransactionType.FullSurrender
-        ? requestedAmount
-        : appliedAmount;
+    const amount = transactionType === TransactionType.FullSurrender ? requestedAmount : appliedAmount;
     const actualWithdrawalAmount = getActualWithdrawalAmount(appliedAmount, disbursementType, transaction, quote);
     const totalPayment = getWithdrawalTotalPayment(transaction, quote);
 
@@ -259,16 +276,17 @@ const getWithdrawalDetailsValues = (transaction: Transaction, t: TFunction, quot
         actualWithdrawalAmount,
         totalPayment,
         fundDisbursementType: t('policy.history.withdrawalSidesheet.proRata') as string,
-        effectiveDate : convertKebabedDateString(effectiveDate),
+        effectiveDate: convertKebabedDateString(effectiveDate),
         transactionType,
         disbursementType,
         processDate: convertKebabedDateString(processDate),
         status,
     };
-}
+};
 
 const callWithdrawalQuote = async (policy: Policy, transaction: Transaction, bankId?: string): Promise<WithdrawalQuoteResponse> => {
-    const { caseId, correlationId, payeeOrBeneficiaries, taxWithholdingInstructions, transactionAmounts, transactionType } = transaction ?? {}
+    const { caseId, correlationId, payeeOrBeneficiaries, taxWithholdingInstructions, transactionAmounts, transactionType } =
+        transaction ?? {};
     const { disbursementType, requestedAmount } = transactionAmounts ?? {};
 
     const baseRequestBody = {
@@ -301,7 +319,7 @@ const callWithdrawalQuote = async (policy: Policy, transaction: Transaction, ban
     };
 
     return await policyWithdrawalQuote(policy.product?.planCode, policy.policyNumber, transactionType, requestBody);
-}
+};
 
 const getWithdrawalChargesValues = (policy: Policy, transaction: Transaction, quote?: WithdrawalQuoteResponse): WithdrawalChargesValues => {
     const { charges } = transaction;
@@ -314,14 +332,21 @@ const getWithdrawalChargesValues = (policy: Policy, transaction: Transaction, qu
         federalTaxWithheld: getTaxWithheldByType(transaction, TaxWithholdingType.FEDERAL, quote),
         stateTaxWithheld: getTaxWithheldByType(transaction, TaxWithholdingType.STATE, quote),
         state: state.toUpperCase(),
-    }
-}
+    };
+};
 
-const getWithdrawalCharges = (policy: Policy, transaction: Transaction, t: TFunction, totalPayment: number | undefined, quote?: WithdrawalQuoteResponse): WithdrawalDetails[] => {
-    const {
-        charges, federalTaxWithheld, state, stateTaxWithheld,
-        totalChargesWithoutTaxes
-    } = getWithdrawalChargesValues(policy, transaction, quote);
+const getWithdrawalCharges = (
+    policy: Policy,
+    transaction: Transaction,
+    t: TFunction,
+    totalPayment: number | undefined,
+    quote?: WithdrawalQuoteResponse
+): WithdrawalDetails[] => {
+    const { charges, federalTaxWithheld, state, stateTaxWithheld, totalChargesWithoutTaxes } = getWithdrawalChargesValues(
+        policy,
+        transaction,
+        quote
+    );
 
     return [
         ...(charges?.map(charge => ({
@@ -330,12 +355,8 @@ const getWithdrawalCharges = (policy: Policy, transaction: Transaction, t: TFunc
             label: t(`policy.history.withdrawalSidesheet.${charge.chargeType}`) as string,
         })) || []),
         {
-            amount: !charges
-                ? negativeNumberFormatify(totalChargesWithoutTaxes)
-                : numberFormatify(0),
-            label: !charges
-                ? t(`policy.history.withdrawalSidesheet.WITHDRAWALCHARGE`) as string
-                : undefined,
+            amount: !charges ? negativeNumberFormatify(totalChargesWithoutTaxes) : numberFormatify(0),
+            label: !charges ? (t(`policy.history.withdrawalSidesheet.WITHDRAWALCHARGE`) as string) : undefined,
         },
         {
             amount: federalTaxWithheld,
@@ -351,7 +372,7 @@ const getWithdrawalCharges = (policy: Policy, transaction: Transaction, t: TFunc
             isSidesheetSumTotalRow: true,
         },
     ];
-}
+};
 
 export const getWithdrawalSideSheetValues = (policy: Policy, transaction: Transaction, t: TFunction): WithdrawalSideSheetValues => {
     const { payeeOrBeneficiaries, transactionType } = transaction;
@@ -361,9 +382,10 @@ export const getWithdrawalSideSheetValues = (policy: Policy, transaction: Transa
     return {
         // TODO MG: used for actual amount line in `Payment Details` above the charges
         actualWithdrawalAmount: detailsValues.actualWithdrawalAmount,
-        cancelCta: transaction?.status === TransactionStatus.Pending && transactionType === TransactionType.FullSurrender
-            ? t('policy.history.sidesheet.cancelSurrender') as string
-            : undefined,
+        cancelCta:
+            transaction?.status === TransactionStatus.Pending && transactionType === TransactionType.FullSurrender
+                ? (t('policy.history.sidesheet.cancelSurrender') as string)
+                : undefined,
         taxWithholdings: getTaxWithholdings(policy, transaction, t),
         withdrawalDetails: getWithdrawalDetails(detailsValues, t),
         withdrawalCharges: getWithdrawalCharges(policy, transaction, t, detailsValues.totalPayment),
@@ -383,7 +405,52 @@ export const getWithdrawalSideSheetValues = (policy: Policy, transaction: Transa
             };
         },
     };
-}
+};
+
+export const getFreeLookCancellationSideSheetValues = (
+    policy: Policy,
+    transaction: Transaction,
+    t: TFunction
+): WithdrawalSideSheetValues => {
+    const totalPayment = transaction.transactionAmounts?.appliedAmount
+        ? transaction.transactionAmounts?.appliedAmount * -1
+        : DEFAULT_ERROR_STRING;
+    const effectiveDate = convertKebabedDateString(transaction.requestDate);
+    const processDate = convertKebabedDateString(transaction.processDate);
+    const status = transaction.status;
+
+    return {
+        transactionType: transaction.transactionType,
+        withdrawalDetails: [
+            {
+                label: t('policy.history.withdrawalSidesheet.totalPayment') as string,
+                tooltipTitle: t('policy.history.withdrawalSidesheet.totalPayment') as string,
+                tooltipBody: t('policy.history.withdrawalSidesheet.totalPaymentTooltip') as string,
+                value: numberFormatify(totalPayment),
+            },
+
+            {
+                label: t('policy.history.withdrawalSidesheet.effectiveDate') as string,
+                tooltipTitle: t('policy.history.withdrawalSidesheet.effectiveDate') as string,
+                tooltipBody: t('policy.history.withdrawalSidesheet.effectiveDateTooltip') as string,
+                value: effectiveDate,
+            },
+
+            {
+                label: t('policy.history.withdrawalSidesheet.processDate') as string,
+                tooltipTitle: t('policy.history.withdrawalSidesheet.processDate') as string,
+                tooltipBody: t('policy.history.withdrawalSidesheet.processDateTooltip') as string,
+                value: status === TransactionStatus.Completed ? processDate : DEFAULT_ERROR_STRING,
+            },
+        ],
+        payeePaymentDetails: getPayeePaymentDetails(
+            policy,
+            t,
+            transaction.transactionAmounts?.appliedAmount,
+            transaction.payeeOrBeneficiaries
+        ),
+    };
+};
 
 const getChargesWithoutTaxes = (charges?: TransactionChargesItem[]): number => {
     if (!charges) return 0;
@@ -392,7 +459,7 @@ const getChargesWithoutTaxes = (charges?: TransactionChargesItem[]): number => {
         const amount = charge.chargeAmount;
         return acc + (typeof amount === 'number' ? amount : 0);
     }, 0);
-}
+};
 
 const getWithdrawalTotalPayment = (
     transaction: Transaction,
@@ -401,14 +468,14 @@ const getWithdrawalTotalPayment = (
     const { charges, status, transactionAmounts, transactionType } = transaction;
     const { appliedAmount, disbursementType } = transactionAmounts ?? {};
 
-    const taxWithheldAmounts = quote
-        ? quote?.taxWithheldAmounts
-        : transaction?.taxWithheldAmounts;
+    const taxWithheldAmounts = quote ? quote?.taxWithheldAmounts : transaction?.taxWithheldAmounts;
     // TODO MG: helper function since this is the same logic in getActualWithdrawalAmount()
     // @ts-expect-error API is returning withholdAmount instead of withheldAmount
-    const federalTaxWithheld = taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.FEDERAL)?.[0]?.withholdAmount || 0;
+    const federalTaxWithheld =
+        taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.FEDERAL)?.[0]?.withholdAmount || 0;
     // @ts-expect-error API is returning withholdAmount instead of withheldAmount
-    const stateTaxWithheld = taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.STATE)?.[0]?.withholdAmount || 0;
+    const stateTaxWithheld =
+        taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.STATE)?.[0]?.withholdAmount || 0;
     // TODO MG: this is always 0 for now so maybe hardcode it for now
     const totalChargesWithoutTaxes = getChargesWithoutTaxes(charges as TransactionChargesItem[]);
 

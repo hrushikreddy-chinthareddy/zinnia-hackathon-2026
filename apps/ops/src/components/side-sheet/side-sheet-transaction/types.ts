@@ -24,6 +24,7 @@ export const FinancialTransactionTypes: TransactionType[] = [
     TransactionType.SubsequentPremium,
     TransactionType.FullSurrender,
     TransactionType.PartialWithdrawalOneTime,
+    TransactionType.FreeLookCancellation,
 ];
 
 export type TransactionSideSheetBaseModel = TransactionSideSheetValues | WithdrawalSideSheetValues;
@@ -45,12 +46,12 @@ export interface TransactionSideSheetValues extends BaseTransactionSideSheetValu
     totalPayment?: number;
 
     paymentMethod?: string;
-    
+
     effectiveDate?: string;
     processDate?: string;
 
     status?: string;
-};
+}
 
 export interface NonFianancialTransactionSideSheetValues extends BaseTransactionSideSheetValues {
     effectiveDate?: string;
@@ -68,8 +69,7 @@ export type ReverseTransactionSidesheetOriginalTransactionValues = {
     submittedAmount?: number;
     appliedAmount?: number | TransactionStatus;
     processDate?: string;
-    
-}
+};
 
 export type ReverseTransactionSidesheetValues = {
     effectiveDate?: string;
