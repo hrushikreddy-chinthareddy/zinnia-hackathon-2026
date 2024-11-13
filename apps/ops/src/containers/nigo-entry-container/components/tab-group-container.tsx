@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import GlobalValuesBar from '@deps/components/global-values/global-values-bar/global-values-bar';
 import NavElement, { NavElementType, NavElementSize } from '@deps/components/nav-element/nav-element';
@@ -53,9 +53,6 @@ const TabGroupContent = ({
 
         setCurrentStepIndex(step.index);
     };
-    useEffect(() => {
-        console.log('policy', policy.issueState);
-    }, []);
     const openSideSheet = () => {
         const content = <DocumentPortalPanel policy={policy} documentNumber={documentNumber} docType={docType} />;
         sideSheet.changeSideSheetContent(t('nigoEntry.documentPanel.documents'), content);
