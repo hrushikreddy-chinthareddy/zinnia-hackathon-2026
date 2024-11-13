@@ -10,6 +10,7 @@ import {
   Status,
   Reason,
   Transaction_Payor,
+  FeatureType,
 } from '@zinnia/api-types/types/sor';
 import { policyOwner } from '@zinnia/utils';
 import dayjs from 'dayjs';
@@ -429,7 +430,7 @@ export const transformRiders = (policy: Policy): RidersAndBenefits => {
   const { riders } = policy;
   const lapsedProtection = transformPolicyFeature(
     policy,
-    'LAPSEPROTECTION' as PolicyFeature.featureType
+    FeatureType.LAPSEPROTECTION
   );
 
   const additionalBenefits = [];
@@ -487,7 +488,7 @@ export const transformRiders = (policy: Policy): RidersAndBenefits => {
 
 export const transformPolicyFeature = (
   policy: Policy,
-  feature: PolicyFeature.featureType
+  feature: FeatureType
 ): PolicyFeatureDetail | null => {
   const { policyFeatures } = policy;
 
@@ -523,16 +524,13 @@ export const transformPolicyStatusDetails = (
   // Free look is returned as a feature but the policy status will say active
   // so need to check specifically against the endDate of the free look
   // feature
-  const freeLookFeature = transformPolicyFeature(
-    policy,
-    'FREELOOK' as PolicyFeature.featureType
-  );
+  const freeLookFeature = transformPolicyFeature(policy, FeatureType.FREELOOK);
   const freeLookActive = dayjs().isBefore(dayjs(freeLookFeature?.endDate));
 
   if (policyStatus === PolicyStatus.PENDINGLAPSE) {
     const featureDetails = transformPolicyFeature(
       policy,
-      'LAPSEASSESSMENT' as PolicyFeature.featureType
+      FeatureType.LAPSEASSESSMENT
     );
 
     return {
@@ -545,12 +543,12 @@ export const transformPolicyStatusDetails = (
   if (policyStatus === PolicyStatus.LAPSE) {
     const lapseAssessmentDetails = transformPolicyFeature(
       policy,
-      'LAPSEASSESSMENT' as PolicyFeature.featureType
+      FeatureType.LAPSEASSESSMENT
     );
 
     const reinstantementDetails = transformPolicyFeature(
       policy,
-      'REINSTATEMENT' as PolicyFeature.featureType
+      FeatureType.REINSTATEMENT
     );
 
     return {
@@ -563,7 +561,7 @@ export const transformPolicyStatusDetails = (
 
   if (freeLookActive && policyStatus !== PolicyStatus.CANCELEDFREELOOK) {
     return {
-      policyStatus: 'FREELOOK' as PolicyFeature.featureType,
+      policyStatus: FeatureType.FREELOOK,
       endDate: freeLookFeature?.endDate,
       period: freeLookFeature?.period,
     };
