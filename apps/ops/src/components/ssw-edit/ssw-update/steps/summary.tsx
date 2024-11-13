@@ -9,21 +9,20 @@ import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card
 import { TranslationFiles } from '@deps/config/translations';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
+import { FormSignature } from '@deps/models/case/withdrawal/case';
 
-import { SswUpdateType } from '../../ssw-edit-helper';
+import { SswUpdateType, UpdatedProgram } from '../../ssw-edit-helper';
 
 type SummaryProps = {
     currentProgram: Program;
-    updatedProgram: Program | any;
-    onContinue: any;
+    updatedProgram: UpdatedProgram;
+    onContinue: (item: Program, operationType: SswUpdateType, formSign: FormSignature) => void;
 };
 
 const Summary = ({ currentProgram, updatedProgram, onContinue }: SummaryProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'sswUpdate.tabs.summary' });
     const { goToNext } = useWorkflow();
-
     const { formSignature } = useContext(FormDataContext);
-
     const signObj = structuredClone(formSignature);
 
     const handleSubmitSswUpdate = () => {
@@ -61,7 +60,7 @@ const Summary = ({ currentProgram, updatedProgram, onContinue }: SummaryProps) =
                     <TableBody>
                         <TableRow>
                             <TableCell>
-                                <Content details={'Amount'} variant={ContentVariant.BodySm} />
+                                <Content details={t('amount') as string} variant={ContentVariant.BodySm} />
                             </TableCell>
                             <TableCell>
                                 <Content details={updatedProgram?.amount || ''} variant={ContentVariant.BodySm} />
@@ -72,7 +71,7 @@ const Summary = ({ currentProgram, updatedProgram, onContinue }: SummaryProps) =
                         </TableRow>
                         <TableRow>
                             <TableCell>
-                                <Content details={'Frequency'} variant={ContentVariant.BodySm} />
+                                <Content details={t('frequency') as string} variant={ContentVariant.BodySm} />
                             </TableCell>
                             <TableCell>
                                 <Content details={updatedProgram?.frequency || ''} variant={ContentVariant.BodySm} />
@@ -83,7 +82,7 @@ const Summary = ({ currentProgram, updatedProgram, onContinue }: SummaryProps) =
                         </TableRow>
                         <TableRow>
                             <TableCell>
-                                <Content details={'Duration'} variant={ContentVariant.BodySm} />
+                                <Content details={t('duration') as string} variant={ContentVariant.BodySm} />
                             </TableCell>
                             <TableCell>
                                 <Content details={updatedProgram?.duration || ''} variant={ContentVariant.BodySm} />
@@ -94,7 +93,7 @@ const Summary = ({ currentProgram, updatedProgram, onContinue }: SummaryProps) =
                         </TableRow>
                         <TableRow>
                             <TableCell>
-                                <Content details={'Next Date'} variant={ContentVariant.BodySm} />
+                                <Content details={t('nextDate') as string} variant={ContentVariant.BodySm} />
                             </TableCell>
                             <TableCell>
                                 <Content details={updatedProgram?.nextDate || ''} variant={ContentVariant.BodySm} />

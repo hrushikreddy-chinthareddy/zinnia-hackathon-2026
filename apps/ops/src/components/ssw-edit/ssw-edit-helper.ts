@@ -3,15 +3,25 @@ import dayjs from 'dayjs';
 import { Program } from '@deps/components/otp-withdrawal-form/rmd-method/program-item';
 import { DocumentData } from '@deps/models/case/document';
 import { ChannelType } from '@deps/models/case/enums';
-import { TaskSource } from '@deps/models/case/task';
+import { CreateTaskBody, TaskSource, TaskV2Payload } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
-import { ActiveWithdrawalCase, CaseStatus, FormSignature, Frequency } from '@deps/models/case/withdrawal/case';
+import { ActiveWithdrawalCase, FormSignature, Frequency, RMDProgramType } from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 export enum SswUpdateType {
     PROGRAM_TERMINATE = 'ProgramTerminate',
     PROGRAM_UPDATE = 'ProgramUpdate',
 }
+export type UpdatedProgram = {
+    programType?: string;
+    startDate?: string;
+    nextDate?: string;
+    amount?: string;
+    frequency?: string;
+    duration?: string;
+    status?: RMDProgramType;
+    allocationId?: number;
+};
 
 const getSswEditPayload = (
     initialForm: ActiveWithdrawalCase,
@@ -90,19 +100,19 @@ const getSswEditPayload = (
 };
 
 export const buildSSWFormData = (
-    status: TaskStatus | CaseStatus,
+    status: TaskStatus,
     initialForm: ActiveWithdrawalCase,
     formSignature: FormSignature,
     existingProg: Program,
     updateProgram: Program,
     document: DocumentData,
     operationType: SswUpdateType
-) => {
+): CreateTaskBody<TaskStatus, TaskV2Payload> => {
     return {
         source: TaskSource.ZinniaTaskManagement,
         taskType: initialForm.taskType,
         status,
-        data: getSswEditPayload(initialForm, formSignature, existingProg, updateProgram, document, operationType),
+        data: getSswEditPayload(initialForm, formSignature, existingProg, updateProgram, document, operationType) as any,
     };
 };
 

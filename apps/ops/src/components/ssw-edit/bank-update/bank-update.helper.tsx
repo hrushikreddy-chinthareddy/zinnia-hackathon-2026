@@ -7,17 +7,9 @@ import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext'
 import { DocumentData } from '@deps/models/case/document';
 import { BankUpdateType, ChannelType, ContributionType } from '@deps/models/case/enums';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
-import { TaskSource } from '@deps/models/case/task';
+import { CreateTaskBody, TaskSource, TaskV2Payload } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
-import {
-    AccountType,
-    ActiveWithdrawalCase,
-    CaseStatus,
-    FormSignature,
-    FormSource,
-    LifeCadPartyRoles,
-    PartyRoles,
-} from '@deps/models/case/withdrawal/case';
+import { AccountType, ActiveWithdrawalCase, FormSignature, LifeCadPartyRoles, PartyRoles } from '@deps/models/case/withdrawal/case';
 import { DisbursementParts } from '@deps/models/case/withdrawal/disbursement-types';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
@@ -212,7 +204,6 @@ export const signaturesConfig = [
 
 export const getBankUpdatePayload = (
     initialForm: ActiveWithdrawalCase,
-    formSource: FormSource,
     bankUpdateDetails: DisbursementParts,
     formSignature: FormSignature,
     document: DocumentData,
@@ -239,23 +230,14 @@ export const getBankUpdatePayload = (
     };
 
     const source = {
-        ...formSource,
         channel: {
-            text: formSource.channel.text ?? ChannelType.Phone,
+            text: document.source,
         },
         businessKey: document.documentNumber,
         receivedDate: dayjs(document.dateReceived, 'M/D/YYYY hh:mm:ss A').format(ZAHARA_API_DATE_FORMAT),
         receivedDateTime: dayjs(document.dateReceived, 'M/D/YYYY hh:mm:ss A').format('YYYY-MM-DDTHH:mm:ss:Z'),
         sourceSysId: 'ONBASE',
     };
-
-    let signatureV;
-
-    if (formSource.channel?.text === ChannelType.Email) {
-        signatureV = formSignature;
-    } else {
-        signatureV = null;
-    }
 
     const formData = {
         formExtName: `${initialForm.carrier}_UPDATE_DIGITAL_FORM`,
@@ -282,7 +264,7 @@ export const getBankUpdatePayload = (
             formParty: null,
             formProgram: null,
             formRestriction: null,
-            formSignature: signatureV,
+            formSignature: document.source === ChannelType.Email ? formSignature : null,
             formTaxWithholding: null,
             formTpaAuthorization: null,
             formSurrenderingCompany: null,
@@ -295,18 +277,17 @@ export const getBankUpdatePayload = (
 };
 
 export const bankUpdateFormData = (
-    status: TaskStatus | CaseStatus,
+    status: TaskStatus,
     initialForm: ActiveWithdrawalCase,
-    formSource: FormSource,
     bankUpdateDetails: DisbursementParts,
     formSignature: FormSignature,
     document: DocumentData,
     bankUpdateType: BankUpdateType
-) => {
+): CreateTaskBody<TaskStatus, TaskV2Payload> => {
     return {
         source: TaskSource.ZinniaTaskManagement,
         taskType: initialForm.taskType,
         status,
-        data: getBankUpdatePayload(initialForm, formSource, bankUpdateDetails, formSignature, document, bankUpdateType),
+        data: getBankUpdatePayload(initialForm, bankUpdateDetails, formSignature, document, bankUpdateType) as any,
     };
 };

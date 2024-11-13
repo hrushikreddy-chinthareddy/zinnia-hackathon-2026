@@ -24,9 +24,9 @@ type TabGroupContainerProps = {
     steps: Step[];
     policy: Policy;
     document: DocumentData;
-    programType: string;
+    programType: SswUpdateType;
     programs: Program[];
-    onSswUpdate: (item: Program, type: SswUpdateType, sign: FormSignature) => {};
+    onSswUpdate: (item: Program, operationType: SswUpdateType, formSign: FormSignature) => void;
     isFormSubmitted: boolean;
     setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };

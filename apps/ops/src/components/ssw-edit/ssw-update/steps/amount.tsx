@@ -4,7 +4,6 @@ import xss from 'xss';
 
 import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
 import FieldDateSelect, { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/field-date-select';
-import { Program } from '@deps/components/otp-withdrawal-form/rmd-method/program-item';
 import { SSWProgram } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-row';
 import SelectSimple from '@deps/components/select/select';
 import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
@@ -12,6 +11,8 @@ import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { Frequency } from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+
+import { UpdatedProgram } from '../../ssw-edit-helper';
 
 const frequencyOptions = (t: TFunction) => [
     {
@@ -37,8 +38,8 @@ const frequencyOptions = (t: TFunction) => [
 ];
 
 type AmountProps = {
-    updateProgram: Program | any;
-    onProgramUpdate: any;
+    updateProgram: UpdatedProgram;
+    onProgramUpdate: React.Dispatch<any>;
     isReadOnly: boolean;
 };
 
@@ -53,7 +54,7 @@ const Amount = ({ updateProgram, onProgramUpdate, isReadOnly }: AmountProps) => 
         }));
     };
 
-    const handleNextDateChange = (e: any) => {
+    const handleNextDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         onProgramUpdate((fs: SSWProgram) => ({
             ...fs,
             nextDate: formNextDate ? dayjs(e.target.value, DATE_PICKER_FORMAT).format(ZAHARA_API_DATE_FORMAT) : '',

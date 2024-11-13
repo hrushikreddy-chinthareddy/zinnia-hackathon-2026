@@ -105,10 +105,6 @@ export const sswUpdateOptions = (t: TFunction) => [
         label: t('sswUpdateOptions.eftDrawUpdate'),
         value: SswUpdateOption.EFT_DRAW_UPDATE,
     },
-    // {
-    //     label: 'Loan repayment Edit',
-    //     value: SswRequestOption.LOAN_REPAYMENT_EDIT,
-    // },
 ];
 
 export default function SSWCase({ document, form, parties, transactionsHistory, featureFlagDecisions }: SSWCaseProps) {
@@ -164,17 +160,17 @@ export default function SSWCase({ document, form, parties, transactionsHistory, 
             }
             case SswUpdateOption.SSW_UPDATE: {
                 setLoading(true);
-                router.push(`/ssw-edit/ssw-update?taskId=${form?.taskId}&programType=SSW&doc=${document?.documentNumber}`);
+                router.push(`/ssw-edit/ssw-update?taskId=${form?.taskId}&programType=SSW`);
                 break;
             }
             case SswUpdateOption.RMD_UPDATE: {
                 setLoading(true);
-                router.push(`/ssw-edit/ssw-update?taskId=${form?.taskId}&programType=RMD&doc=${document?.documentNumber}`);
+                router.push(`/ssw-edit/ssw-update?taskId=${form?.taskId}&programType=RMD`);
                 break;
             }
             case SswUpdateOption.EFT_DRAW_UPDATE: {
                 setLoading(true);
-                router.push(`/ssw-edit/ssw-update?taskId=${form?.taskId}&programType=EFT&doc=${document?.documentNumber}`);
+                router.push(`/ssw-edit/ssw-update?taskId=${form?.taskId}&programType=EFT`);
                 break;
             }
         }

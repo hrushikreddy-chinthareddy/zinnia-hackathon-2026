@@ -61,16 +61,6 @@ export const getServerSideProps = withPageAuthRequired({
             });
             return serverSidePropsLogout();
         }
-        // Create a permissions object to pass to the page, strongly typed using the enum.
-        // const doesUserHasPagePermissions = await doesUserHavePagePermissions(accessToken, user, UserPermission.AllowReadOtpRenewals);
-        // if (!doesUserHasPagePermissions) {
-        //     return {
-        //         redirect: {
-        //             destination: '/403',
-        //             permanent: false,
-        //         },
-        //     };
-        // }
 
         try {
             const [translations, activeForm] = await Promise.all([
@@ -124,7 +114,6 @@ export const getServerSideProps = withPageAuthRequired({
             }
 
             const policy = await getPolicyDetailsSsr(contractNum, planCode, accessToken, userInfoForLogging);
-            // const docType = docTypes[activeForm?.process || ''];
             if (!policy) {
                 logError('bank-update::Policy not found', {
                     taskId,

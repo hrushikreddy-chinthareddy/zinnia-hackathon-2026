@@ -1551,7 +1551,6 @@
             },
             "distributionMethod": {
                 "payeeName": "Payee name",
-                "channel": "Channel",
                 "confirmTerminate": "Are you sure you want to terminate",
                 "type": "Type",
                 "participantId": "Participant id",
@@ -1616,10 +1615,7 @@
                 "yes": "Yes",
                 "no": "No",
                 "forethought": "Forethought",
-                "channelOptions": {
-                    "emailFaxMail": "Email/Fax/Mail",
-                    "phone": "Phone"
-                },
+
                 "contributionType": {
                     "contribution": "Contribution",
                     "loan": "Loan Repayment",
@@ -1632,7 +1628,12 @@
                 "submitted": "Submitted",
                 "close": "Close",
                 "back": "Back to create task",
-                "terminate": "Terminate"
+                "terminate": "Terminate",
+                "tryAgain": "Try Again",
+                "bankUpdateTitle": "Bank Details",
+                "cancel": "Cancel",
+                "submit": "Submit",
+                "submitMessage": "Bank Change Request has been submitted."
             },
             "neaBenefitsSensitivity": "NEA Benefit Sensitivity",
             "distributionInstruction": {
@@ -4256,10 +4257,6 @@
             "bankUpdate": "Bank Update",
             "eftDrawUpdate": "EFT Draw Update"
         },
-        "channelOptions": {
-            "emailFaxMail": "Email/Fax/Mail",
-            "phone": "Phone"
-        },
         "tabs": {
             "start": {
                 "tabTitle": "Start",
@@ -4287,7 +4284,11 @@
                 "tabTitle": "Summary",
                 "reviewMessage": "Looking good! Be sure to review your entries before submitting",
                 "updatedProgram": "Program Updates",
-                "current": "Current"
+                "current": "Current",
+                "amount": "Amount",
+                "frequency": "Frequency",
+                "duration": "Duration",
+                "nextDate": "Next Date"
             },
             "confirm": {
                 "tabTitle": "Confirm"
