@@ -35,17 +35,14 @@ type FormProviderProps = {
 const getFundWithdrawnMethod = (form: ActiveWithdrawalCase) => {
     const { formProgram } = form.data.formRequest;
 
-    if ([Carrier.NASU, Carrier.RSLN, Carrier.GDMN, Carrier.MASS, Carrier.FLIC].includes(form.data.clientCode as Carrier)) {
-
+    if ([Carrier.NASU, Carrier.RSLN, Carrier.GDMN, Carrier.MASS, Carrier.DLIC].includes(form.data.clientCode as Carrier)) {
         const filterdFunds = form.data.formRequest.formDistribution.funds.filter(fund => !isNullEmptyOrUndefined(fund.amount?.text || ''));
-
         if (filterdFunds.length > 0) {
             return FundWithdrawnMethod.SpecifyFunds;
         }
         return FundWithdrawnMethod.Prorata;
     }
-    if ([Carrier.SBGC].includes(form.data.clientCode as Carrier)) {
-
+    if ([Carrier.SBGC, Carrier.FLIC].includes(form.data.clientCode as Carrier)) {
         const filterdFunds = form.data.formRequest.formDistribution.funds.filter(fund => !isNullEmptyOrUndefined(fund.amount?.text || ''));
         if (filterdFunds.length > 0) {
             return FundWithdrawnMethod.SpecifyFunds;
@@ -111,7 +108,9 @@ export const FormProvider = ({
     const [formValidator, setFormValidator] = useState<(val?: FormParts) => FormValidationErrors>(() => () => {
         return {};
     });
-
+    // useEffect(() => {
+    //     console.log('fundWithdrawnMethod', fundWithdrawnMethod);
+    // }, []);
     // Update contract issue state when issue state changes
     useEffect(() => {
         setContractIssueState(issueState);
