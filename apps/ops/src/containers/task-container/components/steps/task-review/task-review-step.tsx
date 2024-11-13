@@ -23,7 +23,7 @@ type TaskReviewStepProps = {
     taskType: TaskType;
 };
 
-export const TaskReviewStep = ({ policyNumber, documentNumber, docType, clientCode, taskInfoLink, taskType }: TaskReviewStepProps) => {
+export const TaskReviewStep = ({ policyNumber, documentNumber, docType, clientCode, taskType }: TaskReviewStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.taskReview` });
 
     const { goToNext } = useWorkflow();

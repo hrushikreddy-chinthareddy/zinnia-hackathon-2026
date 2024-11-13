@@ -9,7 +9,7 @@ export default function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFS
 }: IconButtonProps<T, S, F>) {
     const { translateString } = registry;
     return (
-        <Button aria-label="Add" mode="primary" size="small" {...props}>
+        <Button aria-label="Remove" mode="primary" size="small" {...props}>
             {title?.split('_').findLast(s => s !== 's') || translateString(TranslatableString.RemoveButton)}
         </Button>
     );

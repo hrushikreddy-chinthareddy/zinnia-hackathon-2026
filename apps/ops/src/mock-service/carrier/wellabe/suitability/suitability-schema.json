@@ -1369,10 +1369,10 @@
                     "gender": {
                         "ui:options": {
                             "enumNames": [
-                                "MALE",
-                                "FEMALE",
-                                "TRANSGENDER",
-                                "OTHER"
+                                "Male",
+                                "Female",
+                                "Transgender",
+                                "Other"
                             ]
                         }
                     },
@@ -1386,12 +1386,12 @@
                     "martialStatus": {
                         "ui:options": {
                             "enumNames": [
-                                "SINGLE",
-                                "MARRIED",
-                                "DIVORCED",
-                                "WIDOWED",
-                                "UNKNOWN",
-                                "LEGALLY_SEPARATED"
+                                "Single",
+                                "Married",
+                                "Divorced",
+                                "Widowed",
+                                "Unknown",
+                                "Legally Seperated"
                             ]
                         }
                     },
@@ -1540,9 +1540,9 @@
                             "ui:options": {
                                 "enumNames": [
                                     "SSN",
-                                    "PASSPORT",
-                                    "DRIVER LICENSE",
-                                    "ARMED FORCEID"
+                                    "Passport",
+                                    "Driver License",
+                                    "Armed Forceid"
                                 ]
                             }
                         },
@@ -1566,12 +1566,12 @@
                             "uniqueItems": true,
                             "ui:options": {
                                 "enumNames": [
-                                    "RESIDENCE",
-                                    "MAILING",
-                                    "BUSINESS",
-                                    "PRIMARY ADDRESS",
-                                    "VACATION",
-                                    "BILLING MAILING"
+                                    "Residence",
+                                    "Mailing",
+                                    "Business",
+                                    "Primary Address",
+                                    "Vacation",
+                                    "Billing Mailing"
                                 ]
                             }
                         },
@@ -1609,11 +1609,11 @@
                         "ui:widget": "checkboxes",
                         "ui:options": {
                             "enumNames": [
-                                "ACTIVE",
-                                "RETIRED",
-                                "DISABLED",
-                                "TERMINATED",
-                                "OTHERS"
+                                "Active",
+                                "Retired",
+                                "Disabled",
+                                "TerminatedD",
+                                "Others"
                             ]
                         }
                     },
@@ -1633,8 +1633,8 @@
             "lineOfBusiness": {
                 "ui:options": {
                     "enumNames": [
-                        "ANNUITY",
-                        "LIFE"
+                        "Annuity",
+                        "Life"
                     ]
                 }
             },
@@ -1647,8 +1647,8 @@
             "qualPlanType": {
                 "ui:options": {
                     "enumNames": [
-                        "NON QUALIFIED",
-                        "QUALIFIED"
+                        "Non Qualified",
+                        "Qualified"
                     ]
                 }
             },
@@ -1667,8 +1667,8 @@
                 "ui:options": {
                     "inline": true,
                     "enumNames": [
-                        "YES",
-                        "NO"
+                        "Yes",
+                        "No"
                     ]
                 }
             },
@@ -1678,8 +1678,8 @@
             "replacedContractType": {
                 "ui:options": {
                     "enumNames": [
-                        "ANNUITY",
-                        "LIFE"
+                        "Annuity",
+                        "Life"
                     ]
                 }
             },
@@ -1688,8 +1688,8 @@
                     "ui:widget": "radio",
                     "ui:options": {
                         "enumNames": [
-                            "YES",
-                            "NO"
+                            "Yes",
+                            "No"
                         ]
                     }
                 },
@@ -1708,8 +1708,8 @@
                     "ui:options": {
                         "inline": true,
                         "enumNames": [
-                            "YES",
-                            "NO"
+                            "Yes",
+                            "No"
                         ]
                     }
                 }
@@ -1767,8 +1767,8 @@
                 "ui:options": {
                     "inline": true,
                     "enumNames": [
-                        "YES",
-                        "NO"
+                        "Yes",
+                        "No"
                     ]
                 }
             },
@@ -1784,17 +1784,17 @@
                         "ui:options": {
                             "label": true,
                             "enumNames": [
-                                "LIVING EXPENSE INCREASE",
-                                "LIVING EXPENSE DECREASE",
-                                "LIVING ASSET DECREASE"
+                                "Living Expense Increase",
+                                "Living Expense Decrease",
+                                "Living Asset Decrease"
                             ]
                         }
                     },
                     "isApplicable": {
                         "ui:options": {
                             "enumNames": [
-                                "YES",
-                                "NO"
+                                "Yes",
+                                "No"
                             ]
                         }
                     },
@@ -1859,8 +1859,8 @@
                 "ui:options": {
                     "inline": true,
                     "enumNames": [
-                        "YES",
-                        "NO"
+                        "Yes",
+                        "No"
                     ]
                 }
             },
@@ -1896,8 +1896,8 @@
                             "ui:options": {
                                 "inline": true,
                                 "enumNames": [
-                                    "QUALIFIED",
-                                    "NON QUALIFIED"
+                                    "Qualified",
+                                    "Non Qualified"
                                 ]
                             }
                         },
@@ -1918,16 +1918,16 @@
                             "ui:options": {
                                 "inline": true,
                                 "enumNames": [
-                                    "QUALIFIED",
-                                    "NON QUALIFIED"
+                                    "Qualified",
+                                    "Non Qualified"
                                 ]
                             }
                         },
                         "assetType": {
                             "ui:options": {
                                 "enumNames": [
-                                    "LIQUID ASSET",
-                                    "NON LIQUID ASSET"
+                                    "Liquid Asset",
+                                    "Non LILiquidQUID Asset"
                                 ]
                             }
                         },
@@ -1948,11 +1948,11 @@
                 "ui:options": {
                     "inline": true,
                     "enumNames": [
-                        "CONSERVATIVE",
-                        "MODERATE CONSERVATIVE",
-                        "MODERATE",
-                        "MODERATE AGGRESSIVE",
-                        "AGGRESSIVE"
+                        "Conservative",
+                        "Moderate Conversative",
+                        "Moderate",
+                        "Moderate Aggressive",
+                        "Aggressive"
                     ]
                 }
             },
@@ -1962,8 +1962,8 @@
                 "ui:options": {
                     "inline": true,
                     "enumNames": [
-                        "YES",
-                        "NO"
+                        "Yes",
+                        "No"
                     ]
                 }
             }
@@ -1976,12 +1976,12 @@
                 "ui:options": {
                     "widget": "checkboxes",
                     "enumNames": [
-                        "INCOME",
-                        "TAX DEFERRAL",
-                        "GURANTEES",
-                        "GROWTH",
-                        "PRINCIPAL PROTECTION",
-                        "OTHERS"
+                        "Income",
+                        "Tax Deferal",
+                        "Gurantees",
+                        "Growth",
+                        "Principal Protection",
+                        "Others"
                     ]
                 }
             },
@@ -1990,8 +1990,8 @@
                 "ui:options": {
                     "inline": true,
                     "enumNames": [
-                        "YES",
-                        "NO"
+                        "Yes",
+                        "No"
                     ]
                 }
             }
@@ -2034,8 +2034,8 @@
                     "ui:widget": "radio",
                     "ui:options": {
                         "enumNames": [
-                            "YES",
-                            "NO"
+                            "Yes",
+                            "No"
                         ]
                     }
                 },
@@ -2043,8 +2043,8 @@
                     "ui:widget": "radio",
                     "ui:options": {
                         "enumNames": [
-                            "YES",
-                            "NO"
+                            "Yes",
+                            "No"
                         ]
                     }
                 },
@@ -2060,8 +2060,8 @@
                         "productType": {
                             "ui:options": {
                                 "enumNames": [
-                                    "ANNUITY",
-                                    "LIFE"
+                                    "Annuity",
+                                    "Life"
                                 ]
                             }
                         },
@@ -2131,8 +2131,8 @@
                 "signatureRoleCode": {
                     "ui:options": {
                         "enumNames": [
-                            "OWNER",
-                            "AGENT"
+                            "Owner",
+                            "Agent"
                         ]
                     }
                 },
@@ -2149,11 +2149,11 @@
                 "signatoryDesignation": {
                     "ui:options": {
                         "enumNames": [
-                            "TRUSTEE",
-                            "EXECUTOR",
-                            "CUSTODIAN",
-                            "GUARDIAN",
-                            "ATTORNEY_IN_FACT"
+                            "Trustee",
+                            "Executor",
+                            "Custodian",
+                            "Guardian",
+                            "Attorney In Fact"
                         ]
                     }
                 }
