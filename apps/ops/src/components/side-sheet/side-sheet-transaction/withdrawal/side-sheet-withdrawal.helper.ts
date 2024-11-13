@@ -469,13 +469,13 @@ const getWithdrawalTotalPayment = (
     const { appliedAmount, disbursementType } = transactionAmounts ?? {};
 
     const taxWithheldAmounts = quote ? quote?.taxWithheldAmounts : transaction?.taxWithheldAmounts;
+    // prettier-ignore
     // TODO MG: helper function since this is the same logic in getActualWithdrawalAmount()
     // @ts-expect-error API is returning withholdAmount instead of withheldAmount
-    const federalTaxWithheld =
-        taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.FEDERAL)?.[0]?.withholdAmount || 0;
+    const federalTaxWithheld = taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.FEDERAL)?.[0]?.withholdAmount || 0;
+    // prettier-ignore
     // @ts-expect-error API is returning withholdAmount instead of withheldAmount
-    const stateTaxWithheld =
-        taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.STATE)?.[0]?.withholdAmount || 0;
+    const stateTaxWithheld = taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.STATE)?.[0]?.withholdAmount || 0;
     // TODO MG: this is always 0 for now so maybe hardcode it for now
     const totalChargesWithoutTaxes = getChargesWithoutTaxes(charges as TransactionChargesItem[]);
 
