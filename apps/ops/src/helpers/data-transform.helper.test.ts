@@ -1,4 +1,6 @@
-import { filterTruthyProps } from './data-transform.helper';
+import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
+
+import { filterTruthyProps, rateFormatted } from './data-transform.helper';
 
 describe('filterTruthyProps', () => {
     it('should filter out falsy values', () => {
@@ -56,5 +58,24 @@ describe('filterTruthyProps', () => {
         const result = filterTruthyProps(testObj);
 
         expect(result).toEqual({});
+    });
+});
+
+describe('rateFormatted', () => {
+    it('should format a decimal rate as a percentage', () => {
+        const result = rateFormatted(0.0375);
+        expect(result).toBe('3.75%');
+    });
+    it('should format a whole number rate as a percentage', () => {
+        const result = rateFormatted(3.75);
+        expect(result).toBe('3.75%');
+    });
+    it('should return a default error string if null or undefined', () => {
+        const result = rateFormatted(null);
+        expect(result).toBe(DEFAULT_ERROR_STRING);
+    });
+    it('should return 0 if the rate is 0', () => {
+        const result = rateFormatted(0);
+        expect(result).toBe('0%');
     });
 });

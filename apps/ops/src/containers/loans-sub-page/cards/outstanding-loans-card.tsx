@@ -11,7 +11,8 @@ import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useContentContext } from '@deps/contexts/LayoutContexts/StaticContentContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { numberFormatify, percentFormatify } from '@deps/helpers/numbers.helper';
+import { rateFormatted } from '@deps/helpers/data-transform.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { convertKebabedDateString, isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { LoanSegment } from '@deps/models/policy/sor-policy';
 import { ReactComponent as CircleExclamationIcon } from '@deps/styles/elements/icons/circles/circle-exclamation.svg';
@@ -35,16 +36,6 @@ interface OutstandingLoansCardProps {
     lastLoanInterestDueDate?: string;
 }
 
-// loanInterestRate is sometimes returned as 3.75 and sometimes returned as 0.0375, so we have to account for that
-// when formatting
-export const loanInterestRateFormatted = (loanInterestRate?: number) => {
-    if (!loanInterestRate) {
-        return DEFAULT_ERROR_STRING;
-    }
-
-    return percentFormatify(loanInterestRate, { isInteger: loanInterestRate > 1 });
-};
-
 const ActiveCard = ({ currency, lastLoanInterestDueDate, loanNumber, loanSegment, t, totalActiveLoans }: ActiveCardProps) => {
     const { globalValuesData } = useContentContext();
     const sideSheet = useSideSheetContext();
@@ -58,7 +49,7 @@ const ActiveCard = ({ currency, lastLoanInterestDueDate, loanNumber, loanSegment
     const ytdInterestValue = !isNullEmptyOrUndefined(loanAccruedInterest)
         ? numberFormatify(loanAccruedInterest as number, currencyFormat)
         : DEFAULT_ERROR_STRING;
-    const loanInterestRateValue = loanInterestRateFormatted(loanInterestRate);
+    const loanInterestRateValue = rateFormatted(loanInterestRate);
 
     const openSideSheet = () => {
         sideSheet.changeSideSheetContent(
