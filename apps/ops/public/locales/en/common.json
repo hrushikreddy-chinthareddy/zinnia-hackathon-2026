@@ -4381,7 +4381,8 @@
         "formSelection": {
             "title": "New Form Selection",
             "errors": {
-                "selectForm": "Select a form to continue."
+                "selectForm": "Select a form to continue.",
+                "selectOptions": "Select a transaction type and subtype to continue."
             },
             "label": "Select the appropriate form that needs to be updated."
         },
