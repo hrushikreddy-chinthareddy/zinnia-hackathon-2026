@@ -69,10 +69,10 @@
         border-left-width: 0;
         border-top-width: var(--measure-border-width-stroke-sm);
         border-radius: 0 var(--measure-border-radius-radius-md) var(--measure-border-radius-radius-md) 0;
-        width: 186px;
+        min-width: 186px;
 
         &.wide {
-            width: 340px;
+            min-width: 340px;
         }
     }
 }
