@@ -122,7 +122,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
     const fetchCases = useCallback(async () => {
         try {
             const searchValueObject = getSearchValueObject(caseManagementFilters.searchValue, caseManagementFilters.toggleValue);
-            console.log('here', searchValueObject);
 
             let additionalFilters = getAdditionalFilters(caseManagementFilters.additionalFilters);
 

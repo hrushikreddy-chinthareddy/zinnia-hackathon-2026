@@ -101,7 +101,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
     const otherAgents = agents.slice(1).map(owner => ({ name: toTitleCase(owner.fullName), ssn: formatSSN(owner.ssn) }));
     const agentComponentProps = {
         text: toTitleCase(agents?.[0]?.fullName),
-        highlights: [searchValues?.ownerFirstName, searchValues?.ownerLastName].filter(Boolean) as string[],
+        highlights: [searchValues?.agentFirstName, searchValues?.agentLastName].filter(Boolean) as string[],
         entities: otherAgents,
         truncate: true,
     };
@@ -133,8 +133,6 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
 
         router.push(href);
     };
-
-    console.log(searchValues);
 
     return (
         <TableRow className={styles.row}>

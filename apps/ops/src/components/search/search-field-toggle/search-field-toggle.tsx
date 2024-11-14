@@ -36,6 +36,8 @@ export const SearchFieldContainer = ({ handleChange, activeLabels, onClear }: Se
         switch (activeLabels.value) {
             case 'ssn':
             case 'policyNumber':
+            case 'caseId':
+            case 'firmName':
                 return styles.wide;
         }
     };
