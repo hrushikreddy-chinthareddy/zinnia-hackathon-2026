@@ -144,7 +144,7 @@ const NigoEntryContainer = ({
             {
                 ariaLabel: t('tabs.documentSelection'),
                 isVisible: () => !isReadyForDataEntry,
-                component: <FormSelectionStep availableFormsTransactions={availableFormsTransactions} policy={policy} documentData={documentData}/>,
+                component: <FormSelectionStep availableFormsTransactions={availableFormsTransactions} policy={policy} documentData={documentData} clientCode={clientCode}/>,
                 screenReaderLabel: t('tabs.documentSelection'),
                 index: 2,
                 text: t('tabs.documentSelection'),

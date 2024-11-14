@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { PolicyFeature } from '@zinnia/api-types/types/sor';
+import { FeatureType } from '@zinnia/api-types/types/sor';
 
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { NonHoldingFunds } from '@/components/funds-table/NonHoldingFunds';
@@ -11,7 +11,6 @@ import {
 } from '@/queries/policy-queries';
 import { QueryKeys } from '@/queries/query-keys';
 import { PolicyRequestInputs, PolicyStatusDetail } from '@/types/policy';
-import { convertKebabedDateString } from '@/utils/dates';
 
 interface ULFundsViewProps extends PolicyRequestInputs {
   initialPolicyStatus?: Partial<PolicyStatusDetail> | null;
@@ -33,8 +32,7 @@ export const ULFundsView = ({
     initialData: initialPolicyStatus,
     select: data => {
       return {
-        isFreelook:
-          data?.policyStatus === ('FREELOOK' as PolicyFeature.featureType),
+        isFreelook: data?.policyStatus === FeatureType.FREELOOK,
         freelookDate: data?.endDate,
       };
     },
@@ -49,7 +47,7 @@ export const ULFundsView = ({
       <CallForAssistance
         callToAction={
           freelookData?.isFreelook
-            ? `You can't edit allocations until your free look period ends on ${convertKebabedDateString(freelookData.freelookDate)}. Questions?`
+            ? `You can't edit allocations until your free look period ends. Questions?`
             : 'Questions about your allocations? '
         }
         contactPrompt={freelookData?.isFreelook ? undefined : 'Call'}

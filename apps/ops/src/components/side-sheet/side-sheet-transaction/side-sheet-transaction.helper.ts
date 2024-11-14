@@ -14,7 +14,7 @@ import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
 import { getInitialPremiumSideSheetValues, getOneTimePremiumSideSheetValues } from './premiums/side-sheet-premiums.helper';
 import { NonFianancialTransactionSideSheetValues, ReverseTransactionSidesheetValues, TransactionSideSheetValues } from './types';
-import { getWithdrawalSideSheetValues } from './withdrawal/side-sheet-withdrawal.helper';
+import { getFreeLookCancellationSideSheetValues, getWithdrawalSideSheetValues } from './withdrawal/side-sheet-withdrawal.helper';
 import { WithdrawalSideSheetValues } from './withdrawal/types';
 
 export const getTransactionSideSheetTitle = (transaction: Transaction, t: TFunction): string => {
@@ -44,6 +44,8 @@ export const getTransactionSideSheetTitle = (transaction: Transaction, t: TFunct
 
         case TransactionType.Lapse:
             return toTitleCase(t('historyEventCard.policyLapsed') as string);
+        case TransactionType.FreeLookCancellation:
+            return toTitleCase(t('historyEventCard.transactionTypes.FreeLookCancellation') as string);
 
         case TransactionType.AddressChange:
         case TransactionType.EmailChange:
@@ -213,6 +215,8 @@ export const getFinancialTransactionSideSheetValues = (
         case TransactionType.FullSurrender:
         case TransactionType.PartialWithdrawalOneTime:
             return getWithdrawalSideSheetValues(policy, transaction, t);
+        case TransactionType.FreeLookCancellation:
+            return getFreeLookCancellationSideSheetValues(policy, transaction, t);
         default:
             return {};
     }

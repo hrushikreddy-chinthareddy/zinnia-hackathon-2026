@@ -86,7 +86,7 @@ const SendDocument = ({ policy, availableFormsTransactions, shouldShowCaseButton
                     formDetails?.transactionSubType?.list?.find(item => item.value === formDetails?.transactionSubType?.selected)?.label ||
                     '',
                 attachmentType: 'form',
-                displayName: formDetails?.document.selected?.formDisplayName ?? '',
+                displayName: formDetails?.document.selected?.formShortName ?? '',
                 formId: formDetails?.document.selected?.formId.toString() ?? '',
                 formName: formDetails?.document.selected?.formDisplayName ?? '',
             },
@@ -94,7 +94,7 @@ const SendDocument = ({ policy, availableFormsTransactions, shouldShowCaseButton
 
         const requestBody = generateCommunicationRequest(
             policy,
-            state?.correspondence?.type,
+            state?.correspondence?.type as CommunicationTypes,
             state,
             user,
             ctiCallNumber as string,

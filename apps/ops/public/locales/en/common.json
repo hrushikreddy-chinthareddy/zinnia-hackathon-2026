@@ -1593,6 +1593,8 @@
             },
             "distributionMethod": {
                 "payeeName": "Payee name",
+                "confirmTerminate": "Are you sure you want to terminate",
+                "type": "Type",
                 "participantId": "Participant id",
                 "accountHolder": "Account holder",
                 "accountNumber": "Account number",
@@ -1654,7 +1656,25 @@
                 "consentAvailable": "Consent Available",
                 "yes": "Yes",
                 "no": "No",
-                "forethought": "Forethought"
+                "forethought": "Forethought",
+                "contributionType": {
+                    "contribution": "Contribution",
+                    "loan": "Loan Repayment",
+                    "disbursement": "Disbursement"
+                },
+                "accountTypeO": {
+                    "savings": "Savings",
+                    "checking": "Checking"
+                },
+                "submitted": "Submitted",
+                "close": "Close",
+                "back": "Back to create task",
+                "terminate": "Terminate",
+                "tryAgain": "Try Again",
+                "bankUpdateTitle": "Bank Details",
+                "cancel": "Cancel",
+                "submit": "Submit",
+                "submitedMessage": "Bank Update Request has been submitted."
             },
             "neaBenefitsSensitivity": "NEA Benefit Sensitivity",
             "distributionInstruction": {
@@ -1847,6 +1867,9 @@
                 "fullWithdrawal": "Surrender/Full withdrawal form",
                 "partialWithdrawal": "Partial withdrawal form"
             },
+            "bankUpdate": {
+                "title": "Bank Details"
+            },
             "cancel": "Cancel",
             "cancelConfirm": "Returning to create case will delete your draft. OK to return to create case?",
             "cancelError": "An error occurred while cancelling this task. Please try again.",
@@ -1908,7 +1931,13 @@
         },
         "correspondence": {
             "label": "Where should the document(s)  be sent",
+            "addAdditionalRecipient": "+ Add additional recipient",
+            "emailTooltip": "Please enter a valid email address. Only one email address is allowed in this field.",
+            "additionalRecipientTooltip": "You can add up to 5 email addresses in the CC field. Use a comma(,), semicolon(;), or Enter to separate them",
+            "maxEmails": "Maximum 5 emails allowed",
+            "duplicateEmail": "Email already exist in the list",
             "email": "Email",
+            "ccEmail": "CC Emails",
             "fax": "Fax",
             "mail": "Mail",
             "emailAddress": "Email Address",
@@ -1924,8 +1953,13 @@
             "cta": "Go to case",
             "secondaryCta": "Close",
             "subtitle": {
-                "0": "The document ",
-                "1": "has been sent to"
+                "0": "The documents ",
+                "1": "and cc'd"
+            },
+            "channel": {
+                "paper_mail": "mailed to",
+                "fax": "faxed to",
+                "email": "emailed to"
             },
             "title": "Submitted!"
         },
@@ -1981,6 +2015,13 @@
             "formTitles": {
                 "sbgc": "Annuity Contract Scheduled Systematic Withdrawal",
                 "standard": "{{carrier}} Systematic Withdrawal Request"
+            },
+            "sswUpdateOptions": {
+                "new": "New",
+                "rmdUpdate": "RMD Update",
+                "sswUpdate": "SSW Update",
+                "bankUpdate": "Bank Update",
+                "eftDrawUpdate": "EFT Draw Update"
             }
         }
     },
@@ -4413,7 +4454,8 @@
         "formSelection": {
             "title": "New Form Selection",
             "errors": {
-                "selectForm": "Select a form to continue."
+                "selectForm": "Select a form to continue.",
+                "selectOptions": "Select a transaction type and subtype to continue."
             },
             "label": "Select the appropriate form that needs to be updated."
         },
@@ -4424,5 +4466,61 @@
                 "defaultTitle": "Form Entry"
             }
         }
+    },
+    "sswUpdate": {
+        "sswUpdateOptions": {
+            "new": "New",
+            "rmdUpdate": "RMD Update",
+            "sswUpdate": "SSW Update",
+            "bankUpdate": "Bank Update",
+            "eftDrawUpdate": "EFT Draw Update"
+        },
+        "tabs": {
+            "start": {
+                "tabTitle": "Start",
+                "title": "Update SSW Program",
+                "subTitle": "Make changes to the schedule amount or payment method for this policy's premium autopay. First up, let's make sure we can keep trackof this transaction in OnBase."
+            },
+            "amount": {
+                "tabTitle": "Amount",
+                "programAmount": "Amount",
+                "programFrequency": "Frequency",
+                "programDuration": "Duration",
+                "programNextDate": "Next Date",
+                "frequencyOptions": {
+                    "none": "None",
+                    "monthly": "Monthly",
+                    "quarterly": "Quarterly",
+                    "semiAnnually": "Semi annually",
+                    "annually": "Annually"
+                }
+            },
+            "summary": {
+                "tabTitle": "Summary",
+                "reviewMessage": "Looking good! Be sure to review your entries before submitting",
+                "updatedProgram": "Program Updates",
+                "current": "Current",
+                "amount": "Amount",
+                "frequency": "Frequency",
+                "duration": "Duration",
+                "nextDate": "Next Date"
+            },
+            "confirm": {
+                "tabTitle": "Confirm"
+            }
+        },
+        "formValidation": {
+            "signaturePresentOptionMustBeSelected": "Signature present option must be selected"
+        },
+        "signTabTitle": "Signature",
+        "success": "SSW Request has been submitted.",
+        "back": "Back to create task",
+        "channel": "Channel",
+        "close": "Close",
+        "tryAgain": "Try Again",
+        "submitted": "Submitted",
+        "SSW": "Existing SSW Program",
+        "RMD": "Existing RMD Program",
+        "EFT": "Existing EFT Program"
     }
 }
