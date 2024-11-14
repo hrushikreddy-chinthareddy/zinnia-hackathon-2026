@@ -1,3 +1,4 @@
+import { convertToCamelCase } from '@zinnia/utils';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useContext, useEffect } from 'react';
 
@@ -9,7 +10,6 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { DocumentData } from '@deps/models/case/document';
 import { TaskType } from '@deps/models/case/task';
-import { convertToCamelCase } from '@deps/utils/string.utils';
 
 import { TaskReview } from './task-review';
 

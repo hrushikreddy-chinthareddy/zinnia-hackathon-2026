@@ -1,4 +1,5 @@
 import { Icon, IconType } from '@zinnia/bloom/components';
+import { convertToCamelCase } from '@zinnia/utils';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
@@ -6,7 +7,6 @@ import DocumentPreviewer from '@deps/components/document-viewer/document-preview
 import Radio from '@deps/components/radio/radio';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
 import { TranslationFiles } from '@deps/config/translations';
-import { convertToCamelCase } from '@deps/utils/string.utils';
 
 import { useGetPolicyTypeDocs } from './task-review.helper';
 

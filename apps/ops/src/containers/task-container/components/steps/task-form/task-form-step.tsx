@@ -1,4 +1,5 @@
 import Form from '@rjsf/core';
+import { convertToCamelCase } from '@zinnia/utils';
 import { useTranslation } from 'next-i18next';
 import { createRef, memo, useCallback } from 'react';
 
@@ -8,7 +9,6 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { TaskType } from '@deps/models/case/task';
 import { Policy } from '@deps/models/policy/sor-policy';
-import { convertToCamelCase } from '@deps/utils/string.utils';
 
 import { TaskForm } from './task-form';
 
