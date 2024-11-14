@@ -20,7 +20,13 @@ import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-da
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { AttachmentDetails, CorrespondenceFormParts } from '@deps/models/case/correspondence';
-import { AvailableFormsTransaction, CommunicationTypes, SearchTransactionRequestBody, SendDocumentFormParts, SendDocumentFormType } from '@deps/models/case/send-document';
+import {
+    AvailableFormsTransaction,
+    CommunicationTypes,
+    SearchTransactionRequestBody,
+    SendDocumentFormParts,
+    SendDocumentFormType,
+} from '@deps/models/case/send-document';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission, UserProfile } from '@deps/models/user-profile';
 import { getSearchTransactionsSSR, sendCommunication } from '@deps/queries/api/c2web';
@@ -28,7 +34,7 @@ import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { logWarn, logError, getUserInfoFromUser, parseErrorInformation } from '@deps/utils/server-logging';
+import { logWarn, logError, getUserInfoFromUser, parseErrorInformation, logInfo } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface SendDocumentProps extends SegmentTrackedPageProps {
@@ -37,11 +43,10 @@ interface SendDocumentProps extends SegmentTrackedPageProps {
     shouldShowCaseButton: FeatureFlags;
     shouldShowMailOption: FeatureFlags;
     user: UserProfile;
-};
+}
 
 const SendDocument = ({ policy, availableFormsTransactions, shouldShowCaseButton, shouldShowMailOption, user }: SendDocumentProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
-
 
     const [formDetails, setFormDetails] = useState<SendDocumentFormParts>({} as SendDocumentFormParts);
     const { ctiCallNumber, correlationId } = router.query;
@@ -203,6 +208,7 @@ export const getServerSideProps = withPageAuthRequired({
             const userInfoForLogging = getUserInfoFromUser(user);
             const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging);
             if (!policy) {
+                logInfo('contact-center/send-document/policy not found', { policyNumber, planCode });
                 return {
                     redirect: {
                         destination: '/404',

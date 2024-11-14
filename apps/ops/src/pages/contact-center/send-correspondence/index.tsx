@@ -31,7 +31,7 @@ import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { logWarn, logError, getUserInfoFromUser, parseErrorInformation } from '@deps/utils/server-logging';
+import { logWarn, logError, getUserInfoFromUser, parseErrorInformation, logInfo } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface SendCorrespondenceProps extends SegmentTrackedPageProps {
@@ -40,7 +40,7 @@ interface SendCorrespondenceProps extends SegmentTrackedPageProps {
     shouldShowEmailFaxOption: FeatureFlags;
     shouldShowMailOption: FeatureFlags;
     applicableStatement: StatementTypes[];
-};
+}
 
 const SendCorrespondence = ({
     policy,
@@ -197,6 +197,7 @@ export const getServerSideProps = withPageAuthRequired({
             const userInfoForLogging = getUserInfoFromUser(user);
             const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging);
             if (!policy) {
+                logInfo('contact-center/send-statement/policy not found', { policyNumber, planCode });
                 return {
                     redirect: {
                         destination: '/404',

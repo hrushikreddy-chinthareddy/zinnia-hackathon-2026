@@ -95,13 +95,19 @@ export const getSearchTransactionsSSR = async (
 
 export const searchForms = async (requestBody: SearchFormRequestBody): Promise<FormDetails[] | null> => {
     try {
+        datadogLogs.logger.info('contactCenterSearchForms', {
+            payload: requestBody,
+            url: `${baseUrl}/forms/search`,
+            function: 'c2web.searchForms',
+        });
         const { data } = await client.post<SearchFormRequestBody, AxiosResponse<FormDetails[]>>(`${baseUrl}/forms/search`, requestBody);
         return data;
     } catch (e) {
         datadogLogs.logger.error('contactCenterSearchForms', {
             payload: requestBody,
             url: `${baseUrl}/forms/search`,
-            function: 'c2web.contactCenterSearchForms',
+            error: e,
+            function: 'c2web.searchForms',
         });
         console.error('c2web::contactCenterSearchForms::error', e);
         return null;
@@ -113,6 +119,11 @@ export const downloadFormById = async (formId: number): Promise<string | null> =
         if (!formId) {
             throw new Error('No formId provided');
         }
+        datadogLogs.logger.info('contactCenterDownloadFormById', {
+            payload: formId,
+            url: `${baseUrl}/forms/${formId}/download`,
+            function: 'c2web.downloadFormById',
+        });
         const { data } = await client.get<string, AxiosResponse<string>>(`${baseUrl}/forms/${formId}/download`);
 
         return data;
@@ -120,7 +131,8 @@ export const downloadFormById = async (formId: number): Promise<string | null> =
         datadogLogs.logger.error('contactCenterDownloadFormById', {
             payload: formId,
             url: `${baseUrl}/forms/${formId}/download`,
-            function: 'c2web.contactCenterDownloadFormById',
+            error: e,
+            function: 'c2web.downloadFormById',
         });
         console.error('c2web::contactCenterDownloadFormById::error', e);
         throw new Error(e?.data?.message || 'Error');
@@ -133,6 +145,11 @@ export const sendCommunication = async (requestBody: SendCommunicationRequestBod
     }
 
     try {
+        datadogLogs.logger.info('contactCenterSendCommunication', {
+            payload: requestBody,
+            url: `${baseUrl}/forms/communication`,
+            function: 'c2web.contactCenterSendCommunication',
+        });
         const { data } = await client.post<SendCommunicationRequestBody, AxiosResponse<Confirm>>(
             `${baseUrl}/forms/communication`,
             requestBody
@@ -140,10 +157,11 @@ export const sendCommunication = async (requestBody: SendCommunicationRequestBod
 
         return data;
     } catch (error: any) {
-        datadogLogs.logger.error('contactCenterDownloadFormById', {
+        datadogLogs.logger.error('contactCenterSendCommunication', {
             payload: requestBody,
             url: `${baseUrl}/forms/communication`,
-            function: 'c2web.contactCenterDownloadFormById',
+            function: 'c2web.contactCenterSendCommunication',
+            error: error,
         });
         console.error('c2web::sendDocumentCallCenterForms::error', error);
         throw new Error(error?.data?.message || 'Error');
