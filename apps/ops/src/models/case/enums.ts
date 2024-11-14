@@ -61,3 +61,9 @@ export enum GroupByOptions {
     CreatedAt = 'createdAt',
     AgingRange = 'agingRange',
 }
+
+export enum SpecialProgramType {
+    SSW = 'SSW',
+    RMD = 'RMD',
+    EFT = 'EFT',
+}

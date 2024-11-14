@@ -26,6 +26,7 @@ import { getCaseTaskByIdSSR } from '@deps/queries/api/v2/task';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { getUserInfoFromUser, logError, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
+import { SpecialProgramType } from '@deps/models/case/enums';
 
 type SswUpdateProps = {
     policy: Policy;
@@ -62,7 +63,7 @@ const SswEdit = (props: SswUpdateProps) => {
         const specialProg: Program[] = [];
         activeProg?.forEach((program: any) => {
             const freqencyMapping = getFullFrequency(program.mode);
-            if (programType === 'SSW') {
+            if (programType === SpecialProgramType.SSW) {
                 if ([ProgramCode.SSW, ProgramCode.SSWNet].includes(program.typeOfAlloc)) {
                     specialProg.push({
                         programType: 'SSW',
@@ -75,7 +76,7 @@ const SswEdit = (props: SswUpdateProps) => {
                         allocationId: program.allocationId,
                     });
                 }
-            } else if (programType === 'RMD') {
+            } else if (programType === SpecialProgramType.RMD) {
                 if (program.typeOfAlloc === ProgramCode.RMD) {
                     specialProg.push({
                         programType: 'RMD',
@@ -88,7 +89,7 @@ const SswEdit = (props: SswUpdateProps) => {
                         allocationId: program.allocationId,
                     });
                 }
-            } else if (programType === 'EFT') {
+            } else if (programType === SpecialProgramType.EFT) {
                 if (program.typeOfAlloc === ProgramCode.EFTDraw) {
                     specialProg.push({
                         programType: 'EFT Draw',

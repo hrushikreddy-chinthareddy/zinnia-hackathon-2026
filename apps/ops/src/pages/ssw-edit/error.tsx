@@ -14,50 +14,7 @@ import { UserPermission } from '@deps/models/user-profile';
 import { ReactComponent as ErrorIcon } from '@deps/styles/elements/icons/icons_outlined/exclamation-alert.svg';
 import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
-
-export const ERROR_CODES = {
-    DOCUMENT_RETRIEVAL: '1',
-    WITHDRAWAL_FORM_CREATION: '2',
-    WITHDRAWAL_TASK_INITIALIZATION: '3',
-    RENEWAL_FORM_CREATION: '4',
-    RENEWAL_FORM_FUNDS_LIST: '5',
-    RMD_FORM_CREATION: '6',
-    RMD_TASK_INITIALIZATION: '7',
-    OFT_FORM_CREATION: '8',
-    OFT_TASK_INITIALIZATION: '9',
-    NB_REG60_FORM_CREATION: '10',
-    NB_REG60_TASK_INITIALIZATION: '11',
-    SSW_FORM_CREATION: '12',
-    SSW_TASK_INITIALIZATION: '13',
-    NIGO_EXISTS: '14',
-    RENEWAL_FORM_PLAN_CODE: '15',
-    DATA_ENTRY_START_TASK_ERROR: '16',
-    POLICY_NOT_FOUND: '17',
-    TASK_INITIALIZATION: '18',
-    CASE_TYPE_RETRIEVAL_ERROR: '19',
-    DOC_TYPE_RETRIEVAL_ERROR: '20',
-};
-
-// These keys map to the createCaseError.errorMessaging translations.
-export const ERROR_KEYS: { [key: (typeof ERROR_CODES)[keyof typeof ERROR_CODES] | 'default']: string } = {
-    default: 'default',
-    [ERROR_CODES.DOCUMENT_RETRIEVAL]: 'documentRetrieval',
-    [ERROR_CODES.RMD_FORM_CREATION]: 'rmdFormCreation',
-    [ERROR_CODES.RMD_TASK_INITIALIZATION]: 'rmdTaskInitialization',
-    [ERROR_CODES.WITHDRAWAL_FORM_CREATION]: 'withdrawalFormCreation',
-    [ERROR_CODES.WITHDRAWAL_TASK_INITIALIZATION]: 'withdrawalTaskInitialization',
-    [ERROR_CODES.RENEWAL_FORM_CREATION]: 'renewalFormCreation',
-    [ERROR_CODES.RENEWAL_FORM_FUNDS_LIST]: 'renewalFormFundsList',
-    [ERROR_CODES.OFT_FORM_CREATION]: 'oftFormCreation',
-    [ERROR_CODES.OFT_TASK_INITIALIZATION]: 'oftTaskInitialization',
-    [ERROR_CODES.NIGO_EXISTS]: 'nigoExists',
-    [ERROR_CODES.RENEWAL_FORM_PLAN_CODE]: 'renewalFormPlanCode',
-    [ERROR_CODES.DATA_ENTRY_START_TASK_ERROR]: 'dataEntryStartTaskError',
-    [ERROR_CODES.POLICY_NOT_FOUND]: 'policyNotFound',
-    [ERROR_CODES.TASK_INITIALIZATION]: 'taskInitialization',
-    [ERROR_CODES.CASE_TYPE_RETRIEVAL_ERROR]: 'caseTypeRetrievalError',
-    [ERROR_CODES.DOC_TYPE_RETRIEVAL_ERROR]: 'docTypeRetrievalError',
-};
+import { ERROR_KEYS } from '../create-case/error';
 
 export default function CreateCaseErrorPage() {
     const { t } = useTranslation(undefined, { keyPrefix: 'createCaseError' });
