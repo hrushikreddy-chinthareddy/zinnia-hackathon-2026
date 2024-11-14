@@ -1,3 +1,4 @@
+import { datadogLogs } from '@datadog/browser-logs';
 import { AxiosResponse } from 'axios';
 
 import { SendCommunicationRequestBody } from '@deps/models/case/correspondence';
@@ -97,7 +98,12 @@ export const searchForms = async (requestBody: SearchFormRequestBody): Promise<F
         const { data } = await client.post<SearchFormRequestBody, AxiosResponse<FormDetails[]>>(`${baseUrl}/forms/search`, requestBody);
         return data;
     } catch (e) {
-        console.error('c2web::getCallCenterForms::error', e);
+        datadogLogs.logger.error('contactCenterSearchForms', {
+            payload: requestBody,
+            url: `${baseUrl}/forms/search`,
+            function: 'c2web.contactCenterSearchForms',
+        });
+        console.error('c2web::contactCenterSearchForms::error', e);
         return null;
     }
 };
@@ -111,7 +117,12 @@ export const downloadFormById = async (formId: number): Promise<string | null> =
 
         return data;
     } catch (e: any) {
-        console.error('c2web::downloadCallCenterForms::error', e);
+        datadogLogs.logger.error('contactCenterDownloadFormById', {
+            payload: formId,
+            url: `${baseUrl}/forms/${formId}/download`,
+            function: 'c2web.contactCenterDownloadFormById',
+        });
+        console.error('c2web::contactCenterDownloadFormById::error', e);
         throw new Error(e?.data?.message || 'Error');
     }
 };
@@ -129,6 +140,11 @@ export const sendCommunication = async (requestBody: SendCommunicationRequestBod
 
         return data;
     } catch (error: any) {
+        datadogLogs.logger.error('contactCenterDownloadFormById', {
+            payload: requestBody,
+            url: `${baseUrl}/forms/communication`,
+            function: 'c2web.contactCenterDownloadFormById',
+        });
         console.error('c2web::sendDocumentCallCenterForms::error', error);
         throw new Error(error?.data?.message || 'Error');
     }
