@@ -1,10 +1,3 @@
-import { i18n, I18n } from 'next-i18next';
-
-import { TaxRateToUse, TaxWithheldAmount, TaxWithholdingInstructions, TaxWithholdingType } from '@deps/models/policy/sor-policy';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
-
-import { negativeNumberFormatify, numberFormatify, percentFormatify } from './numbers.helper';
-
 export interface TransactionOption {
     label: string;
     value: string;
@@ -78,47 +71,4 @@ export enum TransactionTypes {
 
 export const getTrasanctionsByIds = (ids: string[]): TransactionOption[] => {
     return transactionOptions.filter(transaction => ids.includes(transaction.value));
-};
-
-export const getRequestedWithheldTaxesDisplay = (
-    taxWithholdingInstructions: TaxWithholdingInstructions[],
-    withholdingType: TaxWithholdingType,
-    emptyFormat: string | number,
-): string => {
-    const { t } = i18n as I18n;
-    const withholding = taxWithholdingInstructions?.find(tw => tw.taxWithholdingType === withholdingType);
-
-    if (!withholding && emptyFormat === DEFAULT_ERROR_STRING) {
-        return DEFAULT_ERROR_STRING;
-    } else if (!withholding && emptyFormat === 0) {
-        return numberFormatify(emptyFormat);
-    }
-
-    if (withholding?.taxRateToUse === TaxRateToUse.USEDEFAULTTABLE) {
-        if (withholdingType === TaxWithholdingType.FEDERAL) return t('withdrawals.summary.minRequiredPercent', { percent: '10' });
-        else return t('withdrawals.summary.minRequired');
-    }
-
-    if (withholding?.taxRateToUse === TaxRateToUse.NOWITHHOLDINGELECTED) {
-        return t('withdrawals.summary.doNotWithhold');
-    }
-
-    return withholding?.dollar ? numberFormatify(withholding.dollar) : percentFormatify(withholding?.percentage, { isInteger: true });
-};
-
-export const getReturnedWithheldTaxesDisplay = (
-    taxWithheldAmounts: TaxWithheldAmount[],
-    withholdingType: TaxWithholdingType,
-    emptyFormat: string | number
-): string => {
-    const withheldAmount = taxWithheldAmounts?.find(tw => tw.taxWithholdingType === withholdingType);
-
-    if (!withheldAmount?.withheldAmount && emptyFormat === DEFAULT_ERROR_STRING) {
-        return DEFAULT_ERROR_STRING;
-    } else if (!withheldAmount?.withheldAmount && emptyFormat === 0) {
-        return numberFormatify(emptyFormat);
-    }
-
-    // double check to see if this format should be reflected in BOTH Summary and withdrawal sidesheets
-    return negativeNumberFormatify(withheldAmount?.withheldAmount);
 };

@@ -12,11 +12,11 @@ import {
   PolicyStatus,
   Reason,
   TransactionStatus,
-  PolicyFeature,
   ProductType,
   Fund,
   LineOfBusiness,
   Status,
+  FeatureType,
 } from '@zinnia/api-types/types/sor';
 
 import { BankDetail } from '@/components/person-data/types';
@@ -251,7 +251,7 @@ export interface PolicyWithdrawals {
 
 export interface PolicyFeatureDetail {
   timestamp?: string;
-  featureType?: PolicyFeature.featureType;
+  featureType?: FeatureType;
   startDate?: string;
   endDate?: string;
   status?: boolean;
@@ -261,12 +261,12 @@ export interface PolicyFeatureDetail {
   totalMinimumRequiredAmount?: number;
   paymentAmount?: number;
   totalPaymentAmount?: number;
-  underwritingDecision?: string;
+  underwritingDecision?: boolean;
   approvalDate?: string;
 }
 
 export interface PolicyStatusDetail {
-  policyStatus: PolicyStatus | PolicyFeature.featureType;
+  policyStatus: PolicyStatus | FeatureType;
   minimumPaymentDue: number;
   minimumPaymentDueDate: string;
   lapsedOn: string;

@@ -583,7 +583,6 @@ export interface Transaction {
     TransactionAmount: number;
 }
 
-// TODO MG: this should be using TransactionStatus from sor-policy
 export enum TransactionStatus {
     Complete = 'Complete',
     Pending = 'Pending',

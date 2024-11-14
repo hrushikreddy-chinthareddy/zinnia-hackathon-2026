@@ -157,15 +157,16 @@ export const getHistoryEventCardValues = (policy: Policy, transaction: Transacti
 
         case TransactionType.FullSurrender:
         case TransactionType.PartialWithdrawalOneTime: {
-            const bankAccount = getBankAccount({ policy, payorsOrPayees: payeeOrBeneficiaries });
+            const isFullSurrender = transaction?.transactionType === TransactionType.FullSurrender;
 
-            amount = appliedAmount;
-            if (transaction?.transactionType === TransactionType.FullSurrender) {
+            amount = isFullSurrender ? appliedAmount : isPending ? (requestedAmount ? -requestedAmount : requestedAmount) : appliedAmount;
+
+            if (isFullSurrender) {
                 eventTitle = t('historyEventCard.surrender');
             } else if (transaction?.transactionType === TransactionType.PartialWithdrawalOneTime) {
                 eventTitle = t('historyEventCard.withdrawal');
             }
-
+            const bankAccount = getBankAccount({ policy, payorsOrPayees: payeeOrBeneficiaries });
             const eventBankingBody = t('historyEventCard.toBanking', {
                 accountType: mapAccountTypeToTranslation(bankAccount?.accountType, t).toLowerCase(),
                 lastFour: formatAccountNumber(bankAccount?.internationalBankAccountNumber ?? bankAccount?.accountNumber, true),
@@ -177,6 +178,9 @@ export const getHistoryEventCardValues = (policy: Policy, transaction: Transacti
 
         case TransactionType.PaymentLoanRepaymentOneTime:
         case 'LoanRepaymentOneTime' as TransactionType: {
+            amount = isPending ? paymentAmount : appliedAmount;
+
+            // TODO MG: dry this up into a single function
             const bankAccount = getBankAccount({ policy, payorsOrPayees: payors });
             const bankingEventBody = t('historyEventCard.oneTimeFromBanking', {
                 accountType: mapAccountTypeToTranslation(bankAccount?.accountType, t).toLowerCase(),
@@ -190,9 +194,10 @@ export const getHistoryEventCardValues = (policy: Policy, transaction: Transacti
 
         case TransactionType.PaymentSystematicLoanRepayment:
         case TransactionType.SystematicLoanRepayment: {
+            amount = requestedAmount;
+
             const bankAccount = getBankAccount({ policy, payorsOrPayees: payors });
 
-            amount = requestedAmount;
             eventBody = t('historyEventCard.fromBanking', {
                 accountType: mapAccountTypeToTranslation(bankAccount?.accountType, t).toLowerCase(),
                 lastFour: formatAccountNumber(bankAccount?.internationalBankAccountNumber ?? bankAccount?.accountNumber, true),
@@ -233,6 +238,19 @@ export const getHistoryEventCardValues = (policy: Policy, transaction: Transacti
             eventTitle = toSentenceCase(getPeopleChangeEventTitle(transaction, t));
             isClickable = true;
             break;
+        case TransactionType.FreeLookCancellation: {
+            const bankAccount = getBankAccount({ policy, payorsOrPayees: payeeOrBeneficiaries });
+            const eventBankingBody = t('historyEventCard.toBanking', {
+                accountType: mapAccountTypeToTranslation(bankAccount?.accountType, t).toLowerCase(),
+                lastFour: formatAccountNumber(bankAccount?.internationalBankAccountNumber ?? bankAccount?.accountNumber, true),
+            });
+
+            eventTitle = t(`historyEventCard.transactionTypes.${transactionType}`, transactionType || DEFAULT_ERROR_STRING);
+            eventBody = eventBankingBody;
+            amount = transaction.transactionAmounts?.appliedAmount;
+            isClickable = true;
+            break;
+        }
 
         default:
             eventTitle = t(`historyEventCard.transactionTypes.${transactionType}`, transactionType ?? DEFAULT_ERROR_STRING);

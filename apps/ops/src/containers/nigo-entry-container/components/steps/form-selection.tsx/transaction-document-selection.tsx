@@ -37,9 +37,10 @@ function TransactionDocumentSelection({
     const [loader, setLoader] = useState(false);
 
     const onTransactionTypeChange = (transactionType: string) => {
-        setFormDetails(ogForomdetais => ({
-            ...ogForomdetais,
+        setFormDetails(ogFormDetails => ({
+            ...ogFormDetails,
             transactionType: { selected: transactionType, list: transactionTypes },
+            transactionSubType: { selected: null,  list: []  },
             document: { selected: null, list: [] },
         }));
 

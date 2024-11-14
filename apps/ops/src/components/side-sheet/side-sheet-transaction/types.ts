@@ -1,116 +1,75 @@
 import { TFunction } from 'next-i18next';
 
-import { PayeeParty } from '@deps/components/history-event-card/types';
-import {
-    FullSurrenderQuoteResponse,
-    PartialWithdrawalOneTimeQuoteResponse,
-    Policy,
-    TaxWithheldAmount,
-    TaxWithholdingInstructions,
-    Transaction,
-    TransactionChargesItem,
-    TransactionStatus,
-} from '@deps/models/policy/sor-policy';
+import { AccountType, Policy, Transaction, TransactionStatus, TransactionType } from '@deps/models/policy/sor-policy';
 
-export interface BaseCardViewModel {
+import { WithdrawalSideSheetValues } from './withdrawal/types';
+
+export interface BaseCardModel {
     loading: boolean;
     t: TFunction;
 }
 
-export interface BaseFinancialTransactionSideSheetViewModel {
+export interface BaseFinancialTransactionSideSheetModel {
     content?: string;
     transactionType?: string;
     title?: string;
 }
 
-export type Charge = {
-    amount: string;
-    label?: string;
-    isSidesheetSumTotalRow?: boolean;
-};
+export const FinancialTransactionTypes: TransactionType[] = [
+    TransactionType.PaymentInitialPremium,
+    TransactionType.InitialPremium,
+    TransactionType.OneTimePremium,
+    TransactionType.PaymentOneTimePremium,
+    TransactionType.SubsequentPayment,
+    TransactionType.SubsequentPremium,
+    TransactionType.FullSurrender,
+    TransactionType.PartialWithdrawalOneTime,
+    TransactionType.FreeLookCancellation,
+];
 
-type InterestRateValue = {
-    interestRate?: number;
-};
+export type TransactionSideSheetBaseModel = TransactionSideSheetValues | WithdrawalSideSheetValues;
 
-export type NewLoanTransactionSideSheetValues = {
-    effectiveDate: string;
-    fundDisbursementType?: string;
-    getAsyncSideSheetValues?: () => Promise<Partial<NewLoanTransactionSideSheetValues>>;
-    interestRate?: number;
-    loanAmount?: number;
-    loanInterestType?: string;
-    payees: PayeeParty[];
-    processDate: string;
-    processedAmount?: number | null;
-    status?: string;
-    submittedAmount?: number;
-} & InterestRateValue;
-
-export interface SideSheetFinancialTransactionViewModel extends BaseCardViewModel {
-    values: TransactionSideSheetValues;
+export interface BaseTransactionSideSheetValues {
+    cancelCta?: string;
+    reverseCta?: string;
+    getAsyncSideSheetValues?: () => Promise<Partial<TransactionSideSheetValues | WithdrawalSideSheetValues>>;
+    refreshTransactions?: () => void;
+    reversalTransactionId?: string | null;
+    transactionId?: string;
+    transactionType?: string;
+    transactionValue?: number;
 }
 
-export interface SideSheetReversedTransactionViewModel extends BaseCardViewModel {
-    values: ReverseTransactionSidesheetValues;
+export interface TransactionSideSheetValues extends BaseTransactionSideSheetValues {
+    appliedAmount?: number | string;
+    submittedAmount?: number;
+    totalPayment?: number;
+
+    paymentMethod?: string;
+
+    effectiveDate?: string;
+    processDate?: string;
+
+    status?: string;
+}
+
+export interface NonFianancialTransactionSideSheetValues extends BaseTransactionSideSheetValues {
+    effectiveDate?: string;
+    name?: string;
+    roleTags?: string[];
 }
 
 export type SideSheetTransactionProps = {
-    refreshTransactions?: () => void;
     policy: Policy;
+    refreshTransactions?: () => void;
     transaction: Transaction;
-};
-
-export type TransactionSideSheetValues = {
-    appliedAmount?: string | number;
-    cancelCta?: string | null;
-    reverseCta?: string | null;
-    reversalTransactionId?: string | null;
-    effectiveDate?: string;
-    paymentMethod?: string;
-    processDate?: string;
-    submittedAmount?: number | string;
-    transactionId?: string;
-    transactionType?: string;
-    transactionValue?: string | number;
-    status?: string;
-    totalPayment?: string | number;
-    disbursementType?: string;
-    bankDetails?: any;
-    requestedAmount?: number | string;
-    actualAmount?: number | string;
-    charges?: TransactionChargesItem[];
-    payees?: PayeeParty[];
-
-    taxWithheldAmounts?: TaxWithheldAmount[];
-    taxWithholdingInstructions?: TaxWithholdingInstructions[];
-    netActualWithdrawalAmount?: string;
-    taxWithholdingDetails?: TransactionDetails[];
-    transactionDetails?: TransactionDetails[];
-    quote?: FullSurrenderQuoteResponse | PartialWithdrawalOneTimeQuoteResponse;
-    federalTaxWithheld?: string;
-    federalTaxWithholding?: string;
-    // Gross or Net
-    fundDisbursementType?: string;
-    payee?: PayeeParty;
-    state?: string;
-    stateTaxWithheld?: string;
-    stateTaxWithholding?: string;
-    totalChargesWithoutTaxes?: string;
-    withdrawalCharge?: string;
-
-    // non financial
-    name?: string;
-    roleTags?: string[];
-    getAsyncSideSheetValues?: () => Promise<Partial<TransactionSideSheetValues>>;
 };
 
 export type ReverseTransactionSidesheetOriginalTransactionValues = {
     submittedAmount?: number;
     appliedAmount?: number | TransactionStatus;
     processDate?: string;
-    
-}
+};
 
 export type ReverseTransactionSidesheetValues = {
     effectiveDate?: string;
@@ -130,4 +89,17 @@ export interface TransactionDetails {
     tooltipTitle?: string;
     tooltipBody?: string;
     value?: string;
+}
+
+export interface PayeePaymentDetails {
+    allocationPercentage?: number;
+    bankDetails: {
+        accountNumber: string;
+        accountType?: AccountType;
+        branchName: string;
+        nameOnAccount: string;
+    };
+    disbursementAmount?: number;
+    partyId: string;
+    state?: string;
 }

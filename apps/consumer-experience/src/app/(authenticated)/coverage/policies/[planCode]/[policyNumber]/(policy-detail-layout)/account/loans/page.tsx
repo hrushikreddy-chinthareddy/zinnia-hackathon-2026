@@ -1,4 +1,4 @@
-import { PolicyFeature } from '@zinnia/api-types/types/sor';
+import { FeatureType } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
@@ -16,10 +16,7 @@ import {
 import { getLoanEligibility } from '@/services/bpm';
 import { PolicyLoans, PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
-import {
-  convertKebabedDateString,
-  standardDateMonthDayYear,
-} from '@/utils/dates';
+import { standardDateMonthDayYear } from '@/utils/dates';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 const pageTitle = getPageTitle(RouteKey.LOANS);
@@ -70,9 +67,7 @@ export default async function Loans({
 
   const policyStatusData =
     policyStatus?.status === 'fulfilled' ? policyStatus.value.data : null;
-  const isFreelook =
-    policyStatusData?.policyStatus ===
-    ('FREELOOK' as PolicyFeature.featureType);
+  const isFreelook = policyStatusData?.policyStatus === FeatureType.FREELOOK;
 
   const { data, error } = summaryData;
 
@@ -166,7 +161,7 @@ export default async function Loans({
       <CallForAssistance
         callToAction={
           isFreelook
-            ? `You can't take a loan until your free look period ends on ${convertKebabedDateString(policyStatusData.endDate)}. Questions?`
+            ? `You can't take a loan until your free look period ends. Questions?`
             : 'Taking a loan is coming soon. For now, '
         }
         contactPrompt={isFreelook ? undefined : 'call'}
