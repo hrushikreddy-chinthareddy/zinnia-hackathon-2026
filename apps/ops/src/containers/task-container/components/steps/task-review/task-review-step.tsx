@@ -1,12 +1,11 @@
 import { convertToCamelCase } from '@zinnia/utils';
 import { useTranslation } from 'next-i18next';
-import { useCallback, useContext, useEffect } from 'react';
+import { useCallback } from 'react';
 
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
 import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
-import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { DocumentData } from '@deps/models/case/document';
 import { TaskType } from '@deps/models/case/task';
@@ -28,24 +27,9 @@ export const TaskReviewStep = ({ policyNumber, documentNumber, docType, clientCo
 
     const { goToNext } = useWorkflow();
 
-    const formState = useContext(FormDataContext);
-    const { formData, setFormData } = formState;
-
     const handleStepContinue = useCallback(() => {
         goToNext();
     }, [goToNext]);
-
-    useEffect(() => {
-        setFormData({
-            ...formData,
-            formExtName: `${clientCode.toUpperCase()}_WD_REDEMPTION_DIGITAL_FORM`,
-            metaData: {
-                formType: `${clientCode.toUpperCase()}_WD_REDEMPTION_DIGITAL_FORM`,
-                formId: null,
-                formNumber: '',
-            },
-        });
-    }, [clientCode, formData, setFormData]);
 
     return (
         <WorkflowCard
