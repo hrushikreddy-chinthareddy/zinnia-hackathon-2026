@@ -185,13 +185,13 @@ export const getTaskFormMetadataSSR = async (
     accessToken?: string
 ): Promise<FormMetadata | null> => {
     try {
-        const url = `${ssrSchemaUrl}/form/metadata?process=${processType}&taskType=${taskType}`;
+        const url = `${ssrSchemaUrl}/form/metadata?process=${processType}&taskType=${taskType}&carrier=${clientId.toUpperCase()}`;
         logInfo('getTaskFormMetadataSSR', {
             file: 'queries/api/newBusiness/v1/suitability',
             function: 'getTaskFormMetadataSSR',
             url,
         });
-        const { data } = await serverApi.get<null, AxiosResponse>(url, {
+        const { data } = await serverApi.get<FormMetadata, AxiosResponse>(url, {
             authorization: `Bearer ${accessToken}`,
             headers: {
                 Accept: '*/*',
