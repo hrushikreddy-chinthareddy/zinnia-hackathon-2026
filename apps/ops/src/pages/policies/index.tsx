@@ -89,7 +89,7 @@ export interface DashboardContextProps {
 
 export const DashboardContext = createContext<DashboardContextProps>({ searchValue: SearchBarInitialValues });
 
-interface PolicyManagementDashboardProps extends SegmentTrackedPageProps { };
+interface PolicyManagementDashboardProps extends SegmentTrackedPageProps {}
 
 const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => {
     const { t } = useTranslation();
@@ -174,7 +174,7 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
         setLoadSearchResults(true);
         setIsIdle(false);
 
-        segmentAnalyticsTrackEvent(SegmentTrackedEventName.PolicySearch, {	
+        segmentAnalyticsTrackEvent(SegmentTrackedEventName.PolicySearch, {
             policyNumber: value?.policyNumber,
             ssnUsed: value?.ssn,
             firstNameUsed: value?.firstName,
@@ -228,7 +228,9 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
             <PageHead titleKey="policySearch" />
             <NoNavLayout displayTopNavBar={false}>
                 <div className="flex flex-col items-center xl:items-start">
-                    <Typography variant={TypographyVariant.H1}>{t('dashboard.h1')}</Typography>
+                    <Typography variant={TypographyVariant.H1} className="md:mb-8 mb-4">
+                        {t('dashboard.h1')}
+                    </Typography>
                     <SearchBar
                         searchValue={policySearchFilters.searchValue}
                         onSearch={handleSearch}

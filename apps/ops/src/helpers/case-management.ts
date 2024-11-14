@@ -171,6 +171,7 @@ export const toggleLabels = (t: TFunction, featureFlagDecisions?: FeatureFlags):
         {
             label: t('dashboard.search.buttons.policyNumber'),
             value: 'policyNumber',
+            placeholder: 'e.g. 1234567',
         },
         {
             label: t('dashboard.search.buttons.ownerSsn'),
