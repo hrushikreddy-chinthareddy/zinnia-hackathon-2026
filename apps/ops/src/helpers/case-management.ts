@@ -165,7 +165,7 @@ export const getAdditionalFilters = (additionalFilters: CaseSearchAdditionalFilt
 };
 
 export const toggleLabels = (t: TFunction, featureFlagDecisions?: FeatureFlags): LabelValue<PolicySearchKeys>[] => {
-    const shouldShowCaseIdSearchField = featureFlagDecisions?.[FEATURE_FLAGS.CASE_MANAGEMENT_CASE_ID_SEARCH_FIELD];
+    const showFields = featureFlagDecisions?.[FEATURE_FLAGS.CASE_MANAGEMENT_SEARCH_FIELDS];
 
     const labels: LabelValue<PolicySearchKeys>[] = [
         {
@@ -203,8 +203,7 @@ export const toggleLabels = (t: TFunction, featureFlagDecisions?: FeatureFlags):
             placeholder: t('caseManagementDashboard.case.caseId') ?? '',
         },
     ];
-    // to do - need a diff feature flag?
-    if (shouldShowCaseIdSearchField) {
+    if (showFields) {
         labels.push({
             label: t('dashboard.search.buttons.agentName'),
             value: 'agentName',
