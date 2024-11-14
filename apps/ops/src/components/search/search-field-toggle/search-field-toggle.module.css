@@ -1,21 +1,22 @@
 .fieldSet {
-    display: flex;
     & .inputContainer {
         &:first-of-type {
             & input {
-                border-radius: 0 0 0 var(--measure-border-radius-radius-md);
-                @media (min-width: 500px) {
+                border-radius: 0;
+                @media (min-width: 768px) {
                     border-radius: 0;
                 }
             }
         }
         &:last-of-type input {
-            border-radius: 0 0 var(--measure-border-radius-radius-md) 0;
-            border-left-width: 0;
-            @media (min-width: 500px) {
+            border-radius: 0 0 var(--measure-border-radius-radius-md) var(--measure-border-radius-radius-md);
+            @media (min-width: 768px) {
                 border-radius: 0 var(--measure-border-radius-radius-md) var(--measure-border-radius-radius-md) 0;
             }
         }
+    }
+    @media (min-width: 768px) {
+        display: flex;
     }
 }
 
@@ -28,8 +29,10 @@
     border: var(--measure-border-width-stroke-sm) solid var(--color-base-border-border-subtle);
     border-top-width: 0;
     border-radius: 0 0 var(--measure-border-radius-radius-md) var(--measure-border-radius-radius-md);
-    padding: var(--measure-spacing-padding-lg) var(--measure-spacing-padding-2xl);
+    font-family: var(--font-family-secondary);
+    padding-block: var(--measure-spacing-padding-lg);
     padding-left: calc(var(--iconSize) + var(--measure-dimension-gap-lg) + var(--measure-spacing-padding-2xl));
+    padding-right: calc(var(--iconSize) + var(--measure-spacing-padding-lg));
     width: 100%;
 
     /* Browser resets */
@@ -39,6 +42,7 @@
         margin: 0;
     }
     &[type='number'] {
+        appearance: textfield;
         -moz-appearance: textfield;
     }
 
@@ -58,20 +62,17 @@
 
     &:hover {
         outline: 2px solid var(--color-states-hover-border-hover-border);
-        outline-offset: -1px;
+        outline-offset: -2px;
     }
 
-    @media (min-width: 500px) {
+    @media (min-width: 768px) {
         border-left-width: 0;
         border-top-width: var(--measure-border-width-stroke-sm);
         border-radius: 0 var(--measure-border-radius-radius-md) var(--measure-border-radius-radius-md) 0;
+        width: 186px;
 
-        [type='number'] {
-            width: 306px;
-        }
-
-        [type='text'] {
-            width: 186px;
+        &.wide {
+            width: 340px;
         }
     }
 }

@@ -149,7 +149,7 @@ export const toggleLabels = (t: TFunction): LabelValue<PolicySearchKeys>[] => [
     {
         label: t('dashboard.search.buttons.policyNumber'),
         value: 'policyNumber',
-        placeholder: '',
+        placeholder: 'e.g. 1234567',
     },
     {
         label: t('dashboard.search.buttons.ownerSsn'),

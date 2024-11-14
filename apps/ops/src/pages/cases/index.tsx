@@ -345,7 +345,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         <CaseManagementFiltersContext.Provider value={[caseManagementFilters, setCaseManagementFilters]}>
             <PageHead titleKey="caseManagement" />
             <NoNavLayout fullHeight={true}>
-                <Typography variant={TypographyVariant.H1} className="mb-8">
+                <Typography variant={TypographyVariant.H1} className="md:mb-8 mb-4">
                     {t('caseManagementDashboard.h1')}
                 </Typography>
                 <div className={styles.container}>

@@ -25,11 +25,18 @@ export const SearchFieldContainer = ({ handleChange, activeLabels, onClear }: Se
 
     const inputType = () => {
         switch (activeLabels.value) {
-            case 'policyNumber':
             case 'ssn':
                 return 'number';
             default:
                 return 'text';
+        }
+    };
+
+    const inputClass = () => {
+        switch (activeLabels.value) {
+            case 'ssn':
+            case 'policyNumber':
+                return styles.wide;
         }
     };
 
@@ -49,7 +56,7 @@ export const SearchFieldContainer = ({ handleChange, activeLabels, onClear }: Se
                 aria-labelledby="case-search-label"
                 type={inputType()}
                 placeholder={placeholder ? placeholder : toSentenceCase(label)}
-                className={clsx(styles.input, 'text-body-sm focus:!ring-0')}
+                className={clsx(styles.input, inputClass(), 'text-body-sm focus:!ring-0')}
                 onChange={e => {
                     const text = (e.target as HTMLInputElement).value;
                     handleChange(e, text, policyKey as PolicySearchKeys);
