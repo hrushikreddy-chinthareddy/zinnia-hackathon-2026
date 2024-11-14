@@ -76,7 +76,7 @@ export const getServerSideProps = withPageAuthRequired({
                 });
                 return {
                     redirect: {
-                        destination: `bank-update/:id/error?errorCode=${ERROR_CODES.WITHDRAWAL_TASK_INITIALIZATION}`,
+                        destination: `/ssw-edit/error?errorCode=${ERROR_CODES.WITHDRAWAL_TASK_INITIALIZATION}`,
                         permanent: false,
                     },
                 };
@@ -107,7 +107,7 @@ export const getServerSideProps = withPageAuthRequired({
                 });
                 return {
                     redirect: {
-                        destination: `/bank-update/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
+                        destination: `/ssw-edit/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
                         permanent: false,
                     },
                 };
@@ -125,7 +125,7 @@ export const getServerSideProps = withPageAuthRequired({
                 });
                 return {
                     redirect: {
-                        destination: `/bank-update/error?errorCode=${ERROR_CODES.POLICY_NOT_FOUND}`,
+                        destination: `/ssw-edit/error?errorCode=${ERROR_CODES.POLICY_NOT_FOUND}`,
                         permanent: false,
                     },
                 };

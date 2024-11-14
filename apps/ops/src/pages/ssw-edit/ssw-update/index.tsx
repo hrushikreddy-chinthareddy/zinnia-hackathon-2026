@@ -171,7 +171,7 @@ export const getServerSideProps = withPageAuthRequired({
                 });
                 return {
                     redirect: {
-                        destination: `ssw-edit/:id/error?errorCode=${ERROR_CODES.WITHDRAWAL_TASK_INITIALIZATION}`,
+                        destination: `ssw-edit/error?errorCode=${ERROR_CODES.WITHDRAWAL_TASK_INITIALIZATION}`,
                         permanent: false,
                     },
                 };
