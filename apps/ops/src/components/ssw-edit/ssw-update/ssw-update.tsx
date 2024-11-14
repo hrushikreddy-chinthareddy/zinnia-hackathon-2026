@@ -50,10 +50,9 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
     };
 
     const handleFormAction = async (item: Program, operationType: SswUpdateType, formSign: FormSignature) => {
-        const formErr = sswEditFormValidator(formSign, t);
+        const formErr = document.source === ChannelType.Email && sswEditFormValidator(formSign, t);
         if (Object.keys(formErr).length > 0) {
-            setFormErrors(formErr);
-            return;
+            formErr && setFormErrors(formErr);
         } else {
             setFormErrors({});
         }
@@ -66,10 +65,11 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
             res = requestProgramUpdate(item, operationType, formSign);
         }
         if (res) {
-            setIsLoading(false);
             setIsFormSubmitted(true);
+            setIsLoading(false);
         } else {
             setSubmitError(true);
+            setIsLoading(false);
         }
     };
 
@@ -109,7 +109,7 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
             },
             {
                 ariaLabel: t('tabs.confirm.tabTitle'),
-                component: <>{<div></div>} </>,
+                component: <>{isLoading ? <PageLoader variant={PageLoaderVariant.Center} /> : <div></div>}</>,
                 screenReaderLabel: t('tabs.confirm.tabTitle'),
                 index: 4,
                 text: t('tabs.confirm.tabTitle'),
@@ -155,6 +155,7 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
             programs={programs}
             onSswUpdate={handleFormAction}
             isFormSubmitted={isFormSubmitted}
+            isLoading={isLoading}
             setIsLoading={setIsLoading}
         />
     );
