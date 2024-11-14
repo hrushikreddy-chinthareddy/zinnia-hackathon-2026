@@ -201,7 +201,7 @@
                 "clickToView": "Clique pour voir"
             },
             "viewDetails": {
-                "text":"voir les détails"
+                "text": "voir les détails"
             },
             "history": {
                 "text": "Histoire",
@@ -1581,6 +1581,8 @@
             },
             "distributionMethod": {
                 "payeeName": "Le nom du bénéficiaire",
+                "confirmTerminate": "Êtes-vous sûr de vouloir terminer",
+                "type": "Type",
                 "participantId": "Identifiant du participant",
                 "accountHolder": "Titulaire du compte",
                 "reEnterAccountNumber": "Réécrivez votre numéro de compte",
@@ -1639,7 +1641,25 @@
                 "isDirectDepositFormValid": "Le formulaire de dépôt direct est-il valide?",
                 "yes": "Oui",
                 "no": "Non",
-                "forethought": "Forethought"
+                "forethought": "Forethought",
+                "contributionType": {
+                    "contribution": "Contribution",
+                    "loan": "Remboursement de prêt",
+                    "disbursement": "Décaissement"
+                },
+                "accountTypeO": {
+                    "savings": "Épargne",
+                    "checking": "Compte courant"
+                },
+                "submitted": "Soumis",
+                "close": "Fermer",
+                "back": "Retour à la création de tâche",
+                "terminate": "Terminer",
+                "tryAgain": "Réessayer",
+                "bankUpdateTitle": "Détails bancaires",
+                "cancel": "Annuler",
+                "submit": "Soumettre",
+                "submitedMessage": "La demande de mise à jour bancaire a été soumise."
             },
             "neaBenefitsSensitivity": "Sensibilité aux avantages NEA",
             "distributionInstruction": {
@@ -1828,6 +1848,9 @@
                 "fullWithdrawal": "Formulaire de rachat total",
                 "partialWithdrawal": "Formulaire de rachat partiel"
             },
+            "bankUpdate": {
+                "title": "Détails bancaires"
+            },
             "cancel": "Annuler",
             "cancelConfirm": "Revenir à la création du dossier effacera votre brouillon. Êtes-vous sûr de vouloir revenir à la création du dossier ?",
             "cancelError": "Une erreur s'est produite lors de l'annulation de cette tâche. Veuillez réessayer.",
@@ -1846,8 +1869,8 @@
             "openNigoExists": "Un cas de base comprend un NIGO. Veuillez résoudre le problème ouvert NIGO avant de soumettre une autre demande via le portail numérique."
         },
         "sidebar": {
-            "contractStatusCode":"Statut de la politique",
-             "abbreviatedcontractStatusCode":"Pol.",
+            "contractStatusCode": "Statut de la politique",
+            "abbreviatedcontractStatusCode": "Pol.",
             "abbreviatedCaseId": "Cais.",
             "abbreviatedContractId": "Ctr.",
             "abbreviatedContractValue": "Ctr Val.",
@@ -1859,7 +1882,7 @@
             "qualType": "type de qualification",
             "issueDate": "Date d'émission",
             "contractId": "ID du contrat",
-            "contractValue":"valeur du contrat",
+            "contractValue": "valeur du contrat",
             "ownerName": "Le nom du propriétaire",
             "annuitantName": "Nom du rentier",
             "copyToClipboard": "Copier {{item}} dans le presse-papiers",
@@ -1962,6 +1985,13 @@
             "formTitles": {
                 "sbgc": "Annuity Contract Scheduled Systematic Withdrawal",
                 "standard": "{{carrier}} Systematic Withdrawal Request"
+            },
+            "sswUpdateOptions": {
+                "new": "Nouveau",
+                "rmdUpdate": "Mise à jour RMD",
+                "sswUpdate": "Mise à jour SSW",
+                "bankUpdate": "Mise à jour bancaire",
+                "eftDrawUpdate": "Mise à jour de prélèvement EFT"
             }
         }
     },
@@ -4366,5 +4396,61 @@
                 "defaultTitle": "Form Entry"
             }
         }
+    },
+    "sswUpdate": {
+        "sswUpdateOptions": {
+            "new": "Nouveau",
+            "rmdUpdate": "Mise à jour RMD",
+            "sswUpdate": "Mise à jour SSW",
+            "bankUpdate": "Mise à jour bancaire",
+            "eftDrawUpdate": "Mise à jour de prélèvement EFT"
+        },
+        "tabs": {
+            "start": {
+                "tabTitle": "Démarrer",
+                "title": "Mettre à jour le programme SSW",
+                "subTitle": "Apportez des modifications au montant ou à la méthode de paiement pour l'autopaiement de la prime de cette police. Tout d'abord, assurons-nous de pouvoir suivre cette transaction dans OnBase."
+            },
+            "amount": {
+                "tabTitle": "Montant",
+                "programAmount": "Montant",
+                "programFrequency": "Fréquence",
+                "programDuration": "Durée",
+                "programNextDate": "Prochaine date",
+                "frequencyOptions": {
+                    "none": "Aucune",
+                    "monthly": "Mensuel",
+                    "quarterly": "Trimestriel",
+                    "semiAnnually": "Semestriel",
+                    "annually": "Annuel"
+                }
+            },
+            "summary": {
+                "tabTitle": "Résumé",
+                "reviewMessage": "Tout semble bon ! Assurez-vous de vérifier vos entrées avant de soumettre",
+                "updatedProgram": "Mises à jour du programme",
+                "current": "Actuel",
+                "amount": "Montant",
+                "frequency": "Fréquence",
+                "duration": "Durée",
+                "nextDate": "Prochaine date"
+            },
+            "confirm": {
+                "tabTitle": "Confirmer"
+            }
+        },
+        "formValidation": {
+            "signaturePresentOptionMustBeSelected": "L'option de signature présente doit être sélectionnée"
+        },
+        "signTabTitle": "Signature",
+        "success": "La demande SSW a été soumise.",
+        "back": "Retour à la création de tâche",
+        "channel": "Canal",
+        "close": "Fermer",
+        "tryAgain": "Réessayer",
+        "submitted": "Soumis",
+        "SSW": "Programme SSW existant",
+        "RMD": "Programme RMD existant",
+        "EFT": "Programme EFT existant"
     }
 }

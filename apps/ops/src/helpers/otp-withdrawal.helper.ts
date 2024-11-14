@@ -22,7 +22,7 @@ const determinePartyOwner = (parties: Party[] = []): Party | null => {
 };
 
 export const getOwnerStateOfResidence = (formParty: FormParty): string | null => {
-    const owner = determinePartyOwner(formParty.parties);
+    const owner = determinePartyOwner(formParty?.parties);
     if (!owner) return null;
     const ownerPrimaryAddress = determinePrimaryAddress(owner.addresses);
     return ownerPrimaryAddress?.state || null;
