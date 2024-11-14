@@ -40,20 +40,22 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
     const [asyncValues, setAsyncValues] = useState<any | null>(null);
     const [view, setView] = useState(SidesheetViews.default);
     const { handleOpen, changeSideSheetContent } = useSideSheetContext();
-    const {
-        policy, transaction,
-        refreshTransactions,
-    } = props || {};
+    const { policy, transaction, refreshTransactions } = props || {};
 
     const [sideSheetValues, setSideSheetValues] = useState<TransactionSideSheetValues | WithdrawalSideSheetValues>(
         getFinancialTransactionSideSheetValues(policy, transaction, t, featureFlags)
     );
     const {
-        cancelCta, effectiveDate, getAsyncSideSheetValues, reverseCta,
-        processDate, reversalTransactionId, transactionId, transactionValue
+        cancelCta,
+        effectiveDate,
+        getAsyncSideSheetValues,
+        reverseCta,
+        processDate,
+        reversalTransactionId,
+        transactionId,
+        transactionValue,
     } = sideSheetValues || {};
     const { status, transactionType } = transaction || {};
-    
 
     useEffect(() => {
         if (featureFlags[FEATURE_FLAGS.REVERSE_RECREATE_ENABLED]) return;
@@ -107,9 +109,7 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
         const getValues = async () => {
             setLoading(true);
 
-            const asyncValues = getAsyncSideSheetValues
-                ? await getAsyncSideSheetValues()
-                : {};
+            const asyncValues = getAsyncSideSheetValues ? await getAsyncSideSheetValues() : {};
             setAsyncValues(asyncValues);
 
             setSideSheetValues(vals => {
@@ -119,7 +119,6 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
         };
 
         !loading && !asyncValues && getAsyncSideSheetValues && getValues();
-
     }, [asyncValues, getAsyncSideSheetValues, loading]);
 
     let SidesheetContent;
@@ -127,11 +126,15 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
     switch (transactionType) {
         case TransactionType.FullSurrender:
         case TransactionType.PartialWithdrawalOneTime:
-            
+            SidesheetContent = <SideSheetWithdrawalContent t={t} values={sideSheetValues as WithdrawalSideSheetValues} loading={loading} />;
+            break;
+        case TransactionType.FreeLookCancellation:
             SidesheetContent = <SideSheetWithdrawalContent t={t} values={sideSheetValues as WithdrawalSideSheetValues} loading={loading} />;
             break;
         default:
-            SidesheetContent = <SideSheetFinancialTransactionContent t={t} values={sideSheetValues as TransactionSideSheetValues} loading={loading} />;
+            SidesheetContent = (
+                <SideSheetFinancialTransactionContent t={t} values={sideSheetValues as TransactionSideSheetValues} loading={loading} />
+            );
             break;
     }
 
@@ -182,16 +185,16 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
                     <div className={`flex flex-col gap-4`}>
                         <div className="flex flex-col">
                             {transactionType !== TransactionType.FullSurrender &&
-                                transactionType !== TransactionType.PartialWithdrawalOneTime && (
+                                transactionType !== TransactionType.PartialWithdrawalOneTime &&
+                                transactionType !== TransactionType.FreeLookCancellation && (
                                     <div className={cancelCta ? 'mb-4' : ''}>
-                                        <Content
-                                            details={numberFormatify(transactionValue)}
-                                            variant={ContentVariant.Value}
-                                        />
+                                        <Content details={numberFormatify(transactionValue)} variant={ContentVariant.Value} />
                                         <Content
                                             className="text-gray-600"
                                             details={
-                                                t('policy.history.sidesheet.effective', { date: convertKebabedDateString(effectiveDate) }) as string
+                                                t('policy.history.sidesheet.effective', {
+                                                    date: convertKebabedDateString(effectiveDate),
+                                                }) as string
                                             }
                                             variant={ContentVariant.Caption}
                                         />

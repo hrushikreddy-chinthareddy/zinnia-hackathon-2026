@@ -1,6 +1,5 @@
 import { setCookie } from 'cookies-next';
 import { useTranslation } from 'next-i18next';
-import React from 'react';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
@@ -36,7 +35,7 @@ const CaseDetailsSideNav = ({ CaseAdditionalDetails, carrier }: CaseDetailsSideN
             </Title>
 
             <NavElement
-                className={''}
+                className={'whitespace-normal break-words'}
                 href={url}
                 isNewPage={true}
                 size={NavElementSize.Small}

@@ -97,7 +97,6 @@ function FormSelection({ policy, ctiCallNumber, availableFormsTransactions, form
                     </div>
                     {index > 0 && (
                         <div>
-                            {' '}
                             <NavElement
                                 size={NavElementSize.Small}
                                 type={NavElementType.Button}

@@ -81,7 +81,6 @@ const SendCorrespondence = ({
         [shouldShowEmailFaxOption, shouldShowMailOption, t]
     );
     const [communicationOptions] = useState<RadioItem[]>(communicationTypes);
-
     const handleSubmitRequest = async (state: CorrespondenceFormParts) => {
         const attachments: AttachmentDetails[] = statements.map(statement => {
             return {
@@ -95,7 +94,7 @@ const SendCorrespondence = ({
         });
         const requestBody = generateCommunicationRequest(
             policy,
-            state?.correspondence?.type,
+            state?.correspondence?.type as CommunicationTypes,
             state,
             user,
             ctiCallNumber as string,

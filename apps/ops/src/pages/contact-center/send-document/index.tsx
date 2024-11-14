@@ -91,15 +91,15 @@ const SendDocument = ({ policy, availableFormsTransactions, shouldShowCaseButton
                     formDetail?.transactionSubType?.list?.find(item => item.value === formDetail?.transactionSubType?.selected)?.label ||
                     '',
                 attachmentType: 'form',
-                displayName: formDetail?.document.selected?.formDisplayName ?? '',
+                displayName: formDetail?.document.selected?.formShortName ?? '',
                 formId: formDetail?.document.selected?.formId.toString() ?? '',
-                formName: formDetail?.document.selected?.formDisplayName ?? '',
+                formName: formDetail?.document.selected?.formShortName ?? '',
             };
         });
 
         const requestBody = generateCommunicationRequest(
             policy,
-            state?.correspondence?.type,
+            state?.correspondence?.type as CommunicationTypes,
             state,
             user,
             ctiCallNumber as string,
