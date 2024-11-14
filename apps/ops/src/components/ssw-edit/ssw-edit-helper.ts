@@ -5,8 +5,11 @@ import { DocumentData } from '@deps/models/case/document';
 import { ChannelType } from '@deps/models/case/enums';
 import { CreateTaskBody, TaskSource, TaskV2Payload } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
-import { ActiveWithdrawalCase, FormSignature, Frequency, RMDProgramType } from '@deps/models/case/withdrawal/case';
+import { ActiveWithdrawalCase, FormSignature, FormValidationErrors, Frequency, RMDProgramType } from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
+import { SignatureFieldNames } from '../otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
+import { TFunction } from 'next-i18next';
 
 export enum SswUpdateType {
     PROGRAM_TERMINATE = 'ProgramTerminate',
@@ -122,4 +125,16 @@ export const getFullFrequency = (mode: string) => {
     if (mode === 'S') return Frequency.SemiAnnually;
     if (mode === 'Q') return Frequency.Quarterly;
     return '';
+};
+
+export const sswEditFormValidator = (formSignature: FormSignature, t: TFunction) => {
+    const errors = {} as FormValidationErrors;
+    const ownerSignature = formSignature?.signatures?.find(sigInfo => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner);
+
+    if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
+        errors[`${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`] = t(
+            'formValidation.signaturePresentOptionMustBeSelected'
+        );
+    }
+    return errors;
 };

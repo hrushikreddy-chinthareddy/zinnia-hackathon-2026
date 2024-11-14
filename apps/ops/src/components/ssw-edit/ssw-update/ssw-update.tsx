@@ -6,7 +6,6 @@ import { Program } from '@deps/components/otp-withdrawal-form/rmd-method/program
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
-import { TranslationFiles } from '@deps/config/translations';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DocumentData } from '@deps/models/case/document';
@@ -20,7 +19,7 @@ import Amount from './steps/amount';
 import Start from './steps/start';
 import Summary from './steps/summary';
 import TabGroupContainer from './tab-group-container';
-import { buildSSWFormData, SswUpdateType } from '../ssw-edit-helper';
+import { buildSSWFormData, sswEditFormValidator, SswUpdateType } from '../ssw-edit-helper';
 import Signature from './steps/signature';
 
 type SswUpdateContainerProps = {
@@ -31,13 +30,13 @@ type SswUpdateContainerProps = {
 };
 
 const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContainerProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON);
+    const { t } = useTranslation(undefined, { keyPrefix: 'sswUpdate' });
     const router = useRouter();
     const [updateProgram, setUpdateProgram] = useState<Program>(programs[0]);
-    const { initialForm } = useContext(FormDataContext);
+    const { initialForm, setFormErrors } = useContext(FormDataContext);
     const [isLoading, setIsLoading] = useState(false);
     const [isFormSubmitted, setIsFormSubmitted] = useState(false);
-    const [formError, setFormError] = useState(false);
+    const [submitError, setSubmitError] = useState(false);
     const [timer] = useState(performance.now());
 
     const requestProgramUpdate = async (existingProg: Program, operationType: SswUpdateType, formSign: FormSignature) => {
@@ -51,14 +50,17 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
     };
 
     const handleFormAction = async (item: Program, operationType: SswUpdateType, formSign: FormSignature) => {
+        const formErr = sswEditFormValidator(formSign, t);
+        if (Object.keys(formErr).length > 0) {
+            setFormErrors(formErr);
+            return;
+        } else {
+            setFormErrors({});
+        }
         setIsLoading(true);
-        let confirmCancel;
         let res;
         if (operationType === SswUpdateType.PROGRAM_TERMINATE) {
-            confirmCancel = window.confirm('Do you want to terminate program' as string);
-            if (confirmCancel) {
-                res = requestProgramUpdate(item, operationType, formSign);
-            }
+            res = requestProgramUpdate(item, operationType, formSign);
         }
         if (operationType === SswUpdateType.PROGRAM_UPDATE) {
             res = requestProgramUpdate(item, operationType, formSign);
@@ -67,50 +69,50 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
             setIsLoading(false);
             setIsFormSubmitted(true);
         } else {
-            setFormError(true);
+            setSubmitError(true);
         }
     };
 
     const steps = useMemo(
         () => [
             {
-                ariaLabel: t('sswUpdate.tabs.start.tabTitle'),
+                ariaLabel: t('tabs.start.tabTitle'),
                 component: <Start parentPage={ParentPage.CreateCase} policy={policy} />,
-                screenReaderLabel: t('sswUpdate.tabs.start.tabTitle'),
+                screenReaderLabel: t('tabs.start.tabTitle'),
                 index: 0,
-                text: t('sswUpdate.tabs.start.tabTitle'),
+                text: t('tabs.start.tabTitle'),
                 isVisible: () => true,
             },
             {
-                ariaLabel: t('sswUpdate.tabs.amount.tabTitle'),
+                ariaLabel: t('tabs.amount.tabTitle'),
                 component: <Amount updateProgram={updateProgram} onProgramUpdate={setUpdateProgram} isReadOnly={false} />,
-                screenReaderLabel: t('sswUpdate.tabs.amount.tabTitle'),
+                screenReaderLabel: t('tabs.amount.tabTitle'),
                 index: 1,
-                text: t('sswUpdate.tabs.amount.tabTitle'),
+                text: t('tabs.amount.tabTitle'),
                 isVisible: () => true,
             },
 
             {
-                ariaLabel: t('sswUpdate.tabs.signature.tabTitle'),
+                ariaLabel: t('signTabTitle'),
                 component: <Signature />,
-                screenReaderLabel: t('sswUpdate.tabs.signature.tabTitle'),
+                screenReaderLabel: t('signTabTitle'),
                 isVisible: () => document?.source === ChannelType.Email,
-                text: t('sswUpdate.tabs.signature.tabTitle'),
+                text: t('signTabTitle'),
             },
             {
-                ariaLabel: t('sswUpdate.tabs.summary.tabTitle'),
+                ariaLabel: t('tabs.summary.tabTitle'),
                 component: <Summary currentProgram={programs[0]} updatedProgram={updateProgram} onContinue={handleFormAction} />,
-                screenReaderLabel: t('sswUpdate.tabs.summary.tabTitle'),
+                screenReaderLabel: t('tabs.summary.tabTitle'),
                 index: 3,
-                text: t('sswUpdate.tabs.summary.tabTitle'),
+                text: t('tabs.summary.tabTitle'),
                 isVisible: () => true,
             },
             {
-                ariaLabel: t('sswUpdate.tabs.confirm.tabTitle'),
+                ariaLabel: t('tabs.confirm.tabTitle'),
                 component: <>{<div></div>} </>,
-                screenReaderLabel: t('sswUpdate.tabs.confirm.tabTitle'),
+                screenReaderLabel: t('tabs.confirm.tabTitle'),
                 index: 4,
-                text: t('sswUpdate.tabs.confirm.tabTitle'),
+                text: t('tabs.confirm.tabTitle'),
                 isVisible: () => true,
             },
         ],
@@ -122,7 +124,7 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
         [steps]
     );
 
-    if (formError) {
+    if (submitError) {
         return (
             <ApiErrorCard
                 leaveRoute={'/create-case'}
@@ -130,7 +132,7 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
                     action: () => {
                         router.reload();
                     },
-                    text: 'tryAgain',
+                    text: t('tryAgain'),
                 }}
             />
         );

@@ -1,6 +1,6 @@
 import router from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { FormEvent, useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 
 import SelectSimple from '@deps/components/select/select';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
@@ -20,7 +20,8 @@ import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '.
 import FormDisbursementSection from '../../otp-withdrawal-form/form-disbursement/form-disbursement-section';
 import SignatureValidations from '../../otp-withdrawal-form/signature-validation/signature-validations';
 import PageLoader, { PageLoaderVariant } from '../../page-loader/page-loader';
-import ApiErrorCard from '../../workflows/api-error-card/api-error-card';
+import { sswEditFormValidator } from '../ssw-edit-helper';
+import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 
 type BankUpdateFormProps = {
     document: DocumentData;
@@ -30,10 +31,10 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
     const [bankUpdateDetails, setBankUpdateDetails] = useState(DEFAULT_DISBURSEMENT_UPDATE);
     const [isLoading, setIsLoading] = useState(false);
     const [formSubmitted, setFormSubmitted] = useState(false);
-    const [formError, setFormError] = useState(false);
     const [timer] = useState(performance.now());
+    const [submitFailed, setSubmitFailed] = useState(false);
 
-    const { initialForm, formSignature } = useContext(FormDataContext);
+    const { initialForm, formSignature, setFormErrors } = useContext(FormDataContext);
 
     const requestBankUpdate = async (bankUpdateType: BankUpdateType) => {
         setIsLoading(true);
@@ -43,23 +44,24 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
             bankUpdateFormData(TaskStatus.Completed, initialForm, bankUpdateDetails, formSignature, document, bankUpdateType),
             timer
         );
-
         if (successfulCaseUpdate) {
             setIsLoading(false);
             setFormSubmitted(true);
         } else {
-            setFormError(true);
+            setSubmitFailed(true);
         }
     };
 
-    const handleFormAction = async (event: FormEvent, bankUpdateType: BankUpdateType) => {
-        event.preventDefault();
-        let confirmCancel;
+    const handleFormAction = async (bankUpdateType: BankUpdateType) => {
+        const formErr = sswEditFormValidator(formSignature, t);
+        if (Object.keys(formErr).length > 0) {
+            setFormErrors(formErr);
+            return;
+        } else {
+            setFormErrors({});
+        }
         if (bankUpdateType === BankUpdateType.BankTerminate) {
-            confirmCancel = window.confirm(t('distributionMethod.confirmTerminate') as string);
-            if (confirmCancel) {
-                requestBankUpdate(bankUpdateType);
-            }
+            requestBankUpdate(bankUpdateType);
         }
         if (bankUpdateType === BankUpdateType.BankUpdate) {
             requestBankUpdate(bankUpdateType);
@@ -79,7 +81,7 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
         );
     }
 
-    if (formError) {
+    if (submitFailed) {
         return (
             <ApiErrorCard
                 leaveRoute={'/create-case'}
@@ -112,7 +114,7 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
                         <label className="font-primary text-lg font-bold">{t('distributionMethod.bankUpdateTitle')}</label>
                         <Button
                             className="mr-4"
-                            onClick={e => handleFormAction(e, BankUpdateType.BankTerminate)}
+                            onClick={() => handleFormAction(BankUpdateType.BankTerminate)}
                             size={ButtonSize.Small}
                             variant={ButtonVariant.Default}
                             disabled={false}
@@ -157,7 +159,7 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
                             <div className="flex">
                                 <Button
                                     className="mr-4"
-                                    onClick={e => handleFormAction(e, BankUpdateType.BankUpdate)}
+                                    onClick={() => handleFormAction(BankUpdateType.BankUpdate)}
                                     size={ButtonSize.Small}
                                     variant={ButtonVariant.Default}
                                     disabled={isLoading}

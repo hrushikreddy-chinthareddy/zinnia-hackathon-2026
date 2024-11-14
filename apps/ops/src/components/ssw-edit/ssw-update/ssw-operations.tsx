@@ -7,6 +7,11 @@ import { FormSignature } from '@deps/models/case/withdrawal/case';
 
 import EditProgram from './edit-program';
 import { SswUpdateType } from '../ssw-edit-helper';
+import { ChannelType } from '@deps/models/case/enums';
+import { useContext } from 'react';
+import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
+import { signaturesConfig } from '../bank-update/bank-update.helper';
 
 type SswOperationsProps = {
     document: DocumentData;
@@ -18,6 +23,7 @@ type SswOperationsProps = {
 
 const SswOperations = ({ document, programs, setSswUpdateView, programType, onProgramUpdate }: SswOperationsProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
+    const { formSignature } = useContext(FormDataContext);
 
     return (
         <div className="p-8">
@@ -25,6 +31,9 @@ const SswOperations = ({ document, programs, setSswUpdateView, programType, onPr
             {programs?.map((item: Program, index: number) => (
                 <EditProgram key={index} program={item} onTerminate={onProgramUpdate} onEdit={setSswUpdateView} document={document} />
             ))}
+            {document.source === ChannelType.Email && formSignature && (
+                <SignatureValidations isFormStateReadOnly={false} config={signaturesConfig} />
+            )}
         </div>
     );
 };

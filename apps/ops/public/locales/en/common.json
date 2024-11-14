@@ -4452,9 +4452,6 @@
                     "annually": "Annually"
                 }
             },
-            "signature": {
-                "tabTitle": "Signature"
-            },
             "summary": {
                 "tabTitle": "Summary",
                 "reviewMessage": "Looking good! Be sure to review your entries before submitting",
@@ -4469,10 +4466,15 @@
                 "tabTitle": "Confirm"
             }
         },
+        "formValidation": {
+            "signaturePresentOptionMustBeSelected": "Signature present option must be selected"
+        },
+        "signTabTitle": "Signature",
         "success": "SSW Request has been submitted.",
         "back": "Back to create task",
         "channel": "Channel",
         "close": "Close",
+        "tryAgain": "Try Again",
         "submitted": "Submitted",
         "SSW": "Existing SSW Program",
         "RMD": "Existing RMD Program",

@@ -6,20 +6,35 @@ import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 
 import { signaturesConfig } from '../../bank-update/bank-update.helper';
+import { sswEditFormValidator } from '../../ssw-edit-helper';
+import { useContext } from 'react';
+import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 
 const Signature = () => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'sswUpdate.tabs.signature' });
+    const { t } = useTranslation(undefined, { keyPrefix: 'sswUpdate' });
 
     const { goToNext } = useWorkflow();
 
+    const { formSignature, setFormErrors } = useContext(FormDataContext);
+
+    const handleContinue = () => {
+        const formErr = sswEditFormValidator(formSignature, t);
+        if (Object.keys(formErr).length > 0) {
+            setFormErrors(formErr);
+            return;
+        } else {
+            goToNext();
+        }
+    };
+
     return (
         <WorkflowCard
-            title={t('tabTitle')}
+            title={t('signTabTitle')}
             footerContent={
                 <TransactionNavigationButtons
                     className="mt-10"
                     disableContinue={false}
-                    handleContinue={() => goToNext()}
+                    handleContinue={handleContinue}
                     parentPage={ParentPage.CreateCase}
                     leaveTransactionLink="/create-case"
                 />

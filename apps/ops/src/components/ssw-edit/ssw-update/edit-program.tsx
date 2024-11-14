@@ -3,13 +3,10 @@ import { useContext } from 'react';
 
 import IconButton from '@deps/components/icon-button/icon-button';
 import { Program } from '@deps/components/otp-withdrawal-form/rmd-method/program-item';
-import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DocumentData } from '@deps/models/case/document';
-import { ChannelType } from '@deps/models/case/enums';
 import { FormSignature } from '@deps/models/case/withdrawal/case';
 
-import { signaturesConfig } from '../bank-update/bank-update.helper';
 import { SswUpdateType } from '../ssw-edit-helper';
 
 type EditProgramProps = {
@@ -42,10 +39,6 @@ const EditProgram = ({ program, onTerminate, onEdit, document }: EditProgramProp
                     </div>
                 </div>
             </div>
-
-            {document.source === ChannelType.Email && formSignature && (
-                <SignatureValidations isFormStateReadOnly={false} config={signaturesConfig} />
-            )}
         </div>
     );
 };
