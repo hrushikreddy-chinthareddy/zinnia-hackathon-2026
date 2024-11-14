@@ -160,7 +160,7 @@ export const getServerSideProps = withPageAuthRequired({
         const { locale = DEFAULT_LOCALE, query, req, res } = context;
         const planCode = (query.planCode as string) || '';
         const policyNumber = (query?.policyNumber as string) || '';
-
+        const correlationId = (query?.correlationId as string) || '';
         let accessToken;
         try {
             accessToken = (await getAccessToken(req, res)).accessToken;
@@ -197,7 +197,7 @@ export const getServerSideProps = withPageAuthRequired({
             const userInfoForLogging = getUserInfoFromUser(user);
             const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging);
             if (!policy) {
-                logInfo('contact-center/send-statement/policy not found', { policyNumber, planCode });
+                logInfo('contact-center/send-statement/policy not found', { policyNumber, planCode, correlationId });
                 return {
                     redirect: {
                         destination: '/404',
