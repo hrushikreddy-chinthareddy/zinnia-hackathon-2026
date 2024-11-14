@@ -3,6 +3,7 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useState } from 'react';
 
 import SelectSimple from '@deps/components/select/select';
+import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DocumentData } from '@deps/models/case/document';
 import { BankUpdateType, ChannelType, ContributionType } from '@deps/models/case/enums';
@@ -21,7 +22,6 @@ import FormDisbursementSection from '../../otp-withdrawal-form/form-disbursement
 import SignatureValidations from '../../otp-withdrawal-form/signature-validation/signature-validations';
 import PageLoader, { PageLoaderVariant } from '../../page-loader/page-loader';
 import { sswEditFormValidator } from '../ssw-edit-helper';
-import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 
 type BankUpdateFormProps = {
     document: DocumentData;
@@ -53,10 +53,9 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
     };
 
     const handleFormAction = async (bankUpdateType: BankUpdateType) => {
-        const formErr = sswEditFormValidator(formSignature, t);
+        const formErr = document.source === ChannelType.Email && sswEditFormValidator(formSignature, t);
         if (Object.keys(formErr).length > 0) {
-            setFormErrors(formErr);
-            return;
+            formErr && setFormErrors(formErr);
         } else {
             setFormErrors({});
         }
