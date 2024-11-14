@@ -94,7 +94,7 @@ const SendDocument = ({ policy, availableFormsTransactions, shouldShowCaseButton
 
         const requestBody = generateCommunicationRequest(
             policy,
-            state?.correspondence?.type,
+            state?.correspondence?.type as CommunicationTypes,
             state,
             user,
             ctiCallNumber as string,

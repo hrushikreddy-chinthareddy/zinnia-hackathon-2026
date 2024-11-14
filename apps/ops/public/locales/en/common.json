@@ -1930,7 +1930,13 @@
         },
         "correspondence": {
             "label": "Where should the document(s)  be sent",
+            "addAdditionalRecipient": "+ Add additional recipient",
+            "emailTooltip": "Please enter a valid email address. Only one email address is allowed in this field.",
+            "additionalRecipientTooltip": "You can add up to 5 email addresses in the CC field. Use a comma(,), semicolon(;), or Enter to separate them",
+            "maxEmails": "Maximum 5 emails allowed",
+            "duplicateEmail": "Email already exist in the list",
             "email": "Email",
+            "ccEmail": "CC Emails",
             "fax": "Fax",
             "mail": "Mail",
             "emailAddress": "Email Address",
@@ -1946,8 +1952,13 @@
             "cta": "Go to case",
             "secondaryCta": "Close",
             "subtitle": {
-                "0": "The document ",
-                "1": "has been sent to"
+                "0": "The documents ",
+                "1": "and cc'd"
+            },
+            "channel": {
+                "paper_mail": "mailed to",
+                "fax": "faxed to",
+                "email": "emailed to"
             },
             "title": "Submitted!"
         },
