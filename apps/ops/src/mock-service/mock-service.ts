@@ -1,4 +1,4 @@
-import { getCaseTaskByIdSSRMock, getTaskFormMetadataSSRMock } from './mockTaskService';
+import { getCaseTaskByIdSSRMock, getTaskFormMetadataSSRMock } from './mock-task-service';
 
 export const mockService = {
     getCaseTaskByIdSSRMock,

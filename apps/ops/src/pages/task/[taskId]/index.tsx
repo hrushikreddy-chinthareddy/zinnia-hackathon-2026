@@ -16,7 +16,7 @@ import { ManagementTask } from '@deps/models/case/task-instance';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
-import { getCaseTaskByIdSSR, getTaskFormMetadata } from '@deps/operations/tasks/taskOperations';
+import { getCaseTaskByIdSSR, getTaskFormMetadata } from '@deps/operations/tasks/task-operations';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { getPolicyDetailsSsr, searchPolicySSR } from '@deps/queries/api/policies';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
@@ -108,12 +108,12 @@ export const getServerSideProps = withPageAuthRequired({
             // If feature flag is not enabled, redirect to error page
             if (!isFormFeatureEnabled(process as ProcessType, carrier, featureFlagDecisions)) {
                 logWarn('task/:id::feature flag not enabled', { carrier });
-                // return {
-                //     redirect: {
-                //         destination: '/403',
-                //         permanent: false,
-                //     },
-                // };
+                return {
+                    redirect: {
+                        destination: '/403',
+                        permanent: false,
+                    },
+                };
             }
 
             const taskMetadata = await getTaskFormMetadata(carrier, taskType as TaskType, process as ProcessType, accessToken);
