@@ -33,12 +33,12 @@ export default function StatusFilter({
                 value: Statuses.Exception,
             },
             {
-                label: `${t('status.completed')}`,
+                label: `${t('status.completed')} (${wholeNumberFormatify(caseTotals[Statuses.Completed] ?? 0)})`,
                 displayText: t('status.completed'),
                 value: Statuses.Completed,
             },
             {
-                label: `${t('status.canceled')}`,
+                label: `${t('status.canceled')} (${wholeNumberFormatify(caseTotals[Statuses.Canceled] ?? 0)})`,
                 displayText: t('status.canceled'),
                 value: Statuses.Canceled,
             },
