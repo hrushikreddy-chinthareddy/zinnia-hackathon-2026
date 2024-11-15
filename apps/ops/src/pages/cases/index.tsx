@@ -391,7 +391,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                             {t('policy.documents.xToYOfZ', {
                                 x: caseManagementFilters.offset + 1,
                                 y: Math.min(caseManagementFilters.offset + limit, caseTableData.total),
-                                z: caseTableData.total.toLocaleString(),
+                                z: `${caseTableData.total.toLocaleString()}${caseTableData.total === 10000 ? '+' : ''}`,
                             })}
                         </Typography>
                         {paginationControls}
