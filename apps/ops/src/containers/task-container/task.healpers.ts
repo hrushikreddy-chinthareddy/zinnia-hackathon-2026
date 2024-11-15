@@ -8,7 +8,9 @@ export const processDocuments = (task: ManagementTask, policy: Policy): boolean 
     switch (task.taskType as TaskType) {
         case TaskType.SuitabilityReview: {
             const attachments: [] = task.data?.attachment;
+            if (attachments?.length === 0) return true;
             attachments?.forEach(async (attachment: any) => {
+                if (!attachment.attachmentFile) return;
                 const document = await uploadDocument(task, policy, attachment.attachmentFile);
                 if (document?.success) {
                     attachment.documentId = document?.documentId;

@@ -11,8 +11,8 @@ export default function AddButton<T = any, S extends StrictRJSFSchema = RJSFSche
     const uiOptions = getUiOptions<T, S, F>(uiSchema?.items);
 
     return (
-        <Button aria-label="Add" mode="primary" size="small" {...props}>
-            Add {uiOptions.title || translateString(TranslatableString.AddButton)}
+        <Button aria-label="Add" mode="link" size="small" {...props}>
+            + Add {uiOptions.title || translateString(TranslatableString.AddButton)}
         </Button>
     );
 }

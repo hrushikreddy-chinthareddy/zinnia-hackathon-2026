@@ -29,7 +29,7 @@ export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSche
     };
     return (
         <div>
-            <div className="flex">
+            <div className="flex bg-gray-100 mb-2 pt-2 px-3">
                 <div className="flex w-full">{children}</div>
                 <div className="ml-auto mt-2">
                     {hasToolbar && (
@@ -69,7 +69,7 @@ export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSche
                                 </div>
                             )}
                             {hasRemove && !readonly && (
-                                <div className="pr-4">
+                                <div className="pr-4 mt-2">
                                     <RemoveButton
                                         style={btnStyle}
                                         disabled={disabled || readonly}

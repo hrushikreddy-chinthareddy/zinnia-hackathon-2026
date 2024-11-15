@@ -1,5 +1,6 @@
 import { dataURItoBlob } from '@rjsf/utils';
 import { AxiosResponse } from 'axios';
+import dayjs from 'dayjs';
 
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import {
@@ -14,6 +15,7 @@ import { ManagementTask } from '@deps/models/case/task-instance';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { isMockPolicyDocsRequestEnabled } from '@deps/services/api-config';
 import { mockPolicyDocs } from '@deps/services/mocks/policy-docs';
+import { EDS_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
 import { pullFromCache, writeToCache } from '@deps/utils/cache';
 import { logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
@@ -39,33 +41,25 @@ export const getDocument = async (documentNumber: string, docType: string, clien
 
 export const uploadDocument = async (task: ManagementTask, policy: Policy, document: any): Promise<EDSDocumentResponse | null> => {
     try {
-        const url = `${baseAppUrl}/api/document/v3/documents`;
+        const url = `${baseAppUrl}/api/documents/upload`;
         const { blob, name } = dataURItoBlob(document);
 
         // TODO: Update metadata
         const fileData = {
             file: document,
             metadata: {
-                sourceFileName: 'Q100720JHLILFGRC1LETTER.pdf',
+                sourceFileName: name,
                 docAccessLevel: 'ALL_ACCESS',
-                documentDate: '2024-11-12T10:21:33.690Z',
+                documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT), //'2024-11-15T10:21:33.690Z',
                 docCategory: 'NEW_BUSINESS',
-                fileType: 'PDF',
-                parentCarrierCode: 'NASU',
+                fileType: blob.type,
+                parentCarrierCode: task.carrier.toUpperCase(),
                 formType: 'NB Application',
                 docClassification: 'INBOUND',
             },
         };
 
-        const formData = new FormData();
-        formData.append('file', blob, name);
-        formData.append('metadata', JSON.stringify(fileData.metadata));
-
-        const { data } = await client.post<any, AxiosResponse>(url, formData, {
-            headers: {
-                'content-type': 'multipart/form-data',
-            },
-        });
+        const { data } = await client.post<any, AxiosResponse>(url, fileData);
         return data;
     } catch (error: any) {
         logWarn('An error occurred while uploading document', {

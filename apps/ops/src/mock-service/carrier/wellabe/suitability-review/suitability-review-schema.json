@@ -236,10 +236,12 @@
             }
         },
         "attachment": {
+            "ui:options": {
+                "label": true
+            },
             "items": {
                 "ui:options": {
-                    "label": false,
-                    "title": "Attachment"
+                    "label": false
                 },
                 "documentId": {
                     "ui:options": {
@@ -260,6 +262,9 @@
                     }
                 },
                 "attachmentFile": {
+                    "ui:options": {
+                        "label": false
+                    },
                     "items": {
                         "ui:options": {
                             "label": false,

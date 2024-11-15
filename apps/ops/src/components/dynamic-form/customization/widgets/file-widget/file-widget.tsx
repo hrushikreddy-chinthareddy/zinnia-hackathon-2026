@@ -10,6 +10,8 @@ import {
 } from '@rjsf/utils';
 import { ChangeEvent, useCallback, useMemo } from 'react';
 
+import style from './file-widget.module.css';
+
 function addNameToDataURL(dataURL: string, name: string) {
     if (dataURL === null) {
         return null;
@@ -74,13 +76,13 @@ function FilesInfo<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends F
     const { RemoveButton } = getTemplate<'ButtonTemplates', T, S, F>('ButtonTemplates', registry, options);
 
     return (
-        <ul className="file-info">
+        <ul className="file-info mt-4">
             {filesInfo.map((fileInfo, key) => {
                 const { name, size, type } = fileInfo;
                 const handleRemove = () => onRemove(key);
                 return (
                     <li key={key}>
-                        <div>{name}</div>
+                        <div className="typography-content-body-sm-bold">{name !== undefined ? name : 'No file chosen'}</div>
                         {/* <div>{translateString(TranslatableString.FilesInfo, [name, type, String(size)])}</div> */}
                         {/* {preview && <FileInfoPreview<T, S, F> fileInfo={fileInfo} registry={registry} />} */}
                         {/* <RemoveButton onClick={handleRemove} registry={registry} /> */}
@@ -151,7 +153,10 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         [multiple, value, onChange]
     );
     return (
-        <div>
+        <div className="mt-2">
+            <label htmlFor={props.id} className={style.customFileUpload}>
+                Add Attachment {props.title}
+            </label>
             <BaseInputTemplate
                 {...props}
                 disabled={disabled || readonly}
@@ -160,6 +165,7 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
                 onChangeOverride={handleChange}
                 value=""
                 accept={options.accept ? String(options.accept) : undefined}
+                className={style.input}
             />
             <FilesInfo<T, S, F>
                 filesInfo={filesInfo}

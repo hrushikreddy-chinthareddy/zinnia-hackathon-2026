@@ -1,5 +1,5 @@
-import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
-import { Button } from '@zinnia/bloom/components';
+import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { Button, Icon, IconType } from '@zinnia/bloom/components';
 
 export default function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
     uiSchema,
@@ -7,10 +7,10 @@ export default function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFS
     title,
     ...props
 }: IconButtonProps<T, S, F>) {
-    const { translateString } = registry;
     return (
-        <Button aria-label="Remove" mode="primary" size="small" {...props}>
-            {title?.split('_').findLast(s => s !== 's') || translateString(TranslatableString.RemoveButton)}
+        <Button aria-label="Remove" mode="link" size="small" {...props}>
+            <Icon type={IconType.TRASH} />
+            {title}
         </Button>
     );
 }
