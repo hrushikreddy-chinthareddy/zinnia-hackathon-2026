@@ -17,6 +17,28 @@ export enum TypeOfPayment {
     Variable = 'Variable',
 }
 
+export enum SswUpdateOption {
+    SSW_UPDATE = 'SSW Update',
+    BANK_UPDATE = 'Bank Update',
+    RMD_UPDATE = 'RMD Update',
+    EFT_DRAW_UPDATE = 'EFT Draw Update',
+    NEW = 'New',
+}
+export enum ContributionType {
+    Contribution = 'Contribution',
+    Loan = 'Loan Repayment',
+    Disbursement = 'Disbursement',
+}
+
+export enum ChannelType {
+    Phone = 'PHONE',
+    Email = 'EMAIL',
+}
+
+export enum BankUpdateType {
+    BankUpdate = 'BankUpdate',
+    BankTerminate = 'BankTerminate',
+}
 export enum GroupByOptions {
     /**
      * [WARNING!] Only use when creating generic types, do not use for filtering in the API
@@ -39,4 +61,10 @@ export enum GroupByOptions {
     UpdatedAt = 'updatedAt',
     CreatedAt = 'createdAt',
     AgingRange = 'agingRange',
+}
+
+export enum SpecialProgramType {
+    SSW = 'SSW',
+    RMD = 'RMD',
+    EFT = 'EFT',
 }
