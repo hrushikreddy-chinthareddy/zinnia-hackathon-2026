@@ -10,7 +10,7 @@ import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav
 import NoNavLayout from '@deps/components/no-nav-layout';
 import { PageLoader, PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import { PageHead } from '@deps/components/page-title';
-import SearchBar from '@deps/components/search/search-bar';
+import SearchBar, { SearchBarInitialValues } from '@deps/components/search/search-bar';
 import { CaseResultTable } from '@deps/components/table/case-result-table';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
@@ -26,14 +26,7 @@ import {
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getAdvisorsExcelCaseSearchParams, getAdvisorsExcelCaseStatsParams } from '@deps/helpers/advisors-excel';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
-import {
-    formatCaseTotals,
-    getAdditionalFilters,
-    getSearchValueObject,
-    isSearchValueObjectEmpty,
-    toggleLabels,
-} from '@deps/helpers/case-management';
-import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
+import { formatCaseTotals, getAdditionalFilters, getSearchValueObject, toggleLabels } from '@deps/helpers/case-management';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { storage } from '@deps/helpers/sessionStorage.helper';
@@ -49,6 +42,7 @@ import { SearchSubmittedEvent, SegmentPageName, SegmentTrackedEventName, Segment
 import nextI18nextConfig from 'next-i18next.config';
 
 import useCaseFilterQueryStore from './caseFilterQueryStore';
+import styles from './index.module.css';
 
 // Lazy Loaded Components
 const SideSheetRefineResults = dynamic(() => import('@deps/containers/side-sheet-refine-results/side-sheet-refine-results'));
@@ -110,8 +104,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
             const response = await getCaseStats(caseStatsRequest);
 
             if ('stats' in response) {
-                const hasSearch = !isSearchValueObjectEmpty(searchValueObject);
-                const newResult = formatCaseTotals(response.count, response.stats[0], hasSearch);
+                const newResult = formatCaseTotals(response.count, response.stats[0]);
 
                 setCaseTotals(newResult);
             } else {
@@ -176,14 +169,17 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                 loading: false,
                 error: true,
             });
-        } // eslint-disable-next-line react-hooks/exhaustive-deps
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
-        // for caseManagementFilters.toggleValue
+        // for caseManagementFilters.toggleValue,
         caseManagementFilters.searchValue,
         caseManagementFilters.additionalFilters,
         caseManagementFilters.offset,
         limit,
         caseManagementFilters.sortDirection,
+        caseManagementFilters.sortBy,
+        isAdvisorsExcel,
     ]);
 
     // useEffect(s)
@@ -241,7 +237,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         }
 
         setLoadedStoredFilters(true);
-        // to do - this freaks out if I add the dep
+        // for caseManagementFilters
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -259,18 +255,40 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
     const removeAdditionalFilter = (filters: CaseSearchAdditionalFilters) =>
         setCaseManagementFilters(prevFilters => ({ ...prevFilters, additionalFilters: filters, offset: 0 }));
 
-    const handleSearch = (value: SearchViewQuery) => {
-        segmentAnalyticsTrackEvent<SearchSubmittedEvent>(SegmentTrackedEventName.SearchSubmitted, {
-            ssnUsed: !!value?.ssn,
-            firstNameUsed: !!value?.firstName,
-            lastNameUsed: !!value?.lastName,
-            policyNumber: value?.policyNumber,
-            userId: user.partyId,
-        });
-        setCaseManagementFilters(prevFilters => ({ ...prevFilters, searchValue: value, offset: 0 }));
-    };
+    const handleSearch = useCallback(
+        (value: SearchViewQuery) => {
+            segmentAnalyticsTrackEvent<SearchSubmittedEvent>(SegmentTrackedEventName.SearchSubmitted, {
+                ssnUsed: !!value?.ssn,
+                firstNameUsed: !!value?.firstName,
+                lastNameUsed: !!value?.lastName,
+                policyNumber: value?.policyNumber,
+                userId: user.partyId,
+            });
+            setCaseManagementFilters(prevFilters => ({ ...prevFilters, searchValue: value, offset: 0 }));
+        },
+        [setCaseManagementFilters]
+    );
 
-    const handleToggle = (value: PolicySearchKeys) => setCaseManagementFilters(prevFilters => ({ ...prevFilters, toggleValue: value }));
+    const handleClear = useCallback(
+        (searchField: PolicySearchKeys | undefined) => {
+            if (searchField) {
+                const prevSearch = caseManagementFilters.searchValue;
+                delete prevSearch?.[searchField];
+                setCaseManagementFilters(prevFilters => ({
+                    ...prevFilters,
+                    searchValue: { ...prevSearch },
+                    offset: 0,
+                }));
+            }
+        },
+        [caseManagementFilters.searchValue, setCaseManagementFilters]
+    );
+
+    const handleToggle = useCallback(
+        (value: PolicySearchKeys) =>
+            setCaseManagementFilters(prevFilters => ({ ...prevFilters, searchValue: SearchBarInitialValues, toggleValue: value })),
+        [setCaseManagementFilters]
+    );
 
     // Memoized Component(s)
     const searchBar = useMemo(() => {
@@ -281,10 +299,10 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                 toggleLabels={toggleLabels}
                 initialToggleValue={caseManagementFilters.toggleValue}
                 onToggle={handleToggle}
+                onClear={handleClear}
             />
         );
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [caseManagementFilters.searchValue, caseManagementFilters.toggleValue]);
+    }, [caseManagementFilters.searchValue, caseManagementFilters.toggleValue, handleClear, handleSearch, handleToggle]);
 
     const paginationControls = useMemo(() => {
         const goToPage = (pageNumber: number) => {
@@ -338,63 +356,55 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         <CaseManagementFiltersContext.Provider value={[caseManagementFilters, setCaseManagementFilters]}>
             <PageHead titleKey="caseManagement" />
             <NoNavLayout fullHeight={true}>
-                <div className="flex flex-col items-center xl:items-start">
-                    <Typography variant={TypographyVariant.H1}>{t('caseManagementDashboard.h1')}</Typography>
+                <Typography variant={TypographyVariant.H1} className="md:mb-8 mb-4">
+                    {t('caseManagementDashboard.h1')}
+                </Typography>
+                <div className={styles.container}>
                     {searchBar}
-                </div>
-
-                <div className="prose min-h-screen">
-                    <div className="early-col-break my-6 flex flex-col items-start justify-start sm:flex-row sm:items-center sm:justify-between">
-                        <div className="early-break mb-4 flex flex-row items-center justify-start sm:mb-0 sm:justify-between">
-                            <p className="mr-2 whitespace-nowrap font-primary text-2xl font-normal text-gray-900">
-                                {`${t('caseManagementDashboard.results')} (${wholeNumberFormatify(caseTableData.total)}${
-                                    caseTableData.total === 10000 ? '+' : ''
-                                })`}
-                            </p>
-                            <NavElement
-                                tabIndex={0}
-                                size={NavElementSize.Small}
-                                type={NavElementType.Button}
-                                startIcon={<FilterButton />}
-                                className="ml-2 flex items-center self-center whitespace-nowrap"
-                                aria-label={t('ariaLabel.openRefineResultsButton') as string}
-                                onClick={openRefineResultsSidesheet}
-                                onKeyDown={e => {
-                                    if (e.key === 'Enter' || e.key === ' ') {
-                                        e.preventDefault();
-                                        openRefineResultsSidesheet();
-                                    }
-                                }}
-                            >
-                                {t('caseManagementDashboard.refineResults')}
-                            </NavElement>
-                        </div>
+                    <div className="sm:my-4 mt-4 mb-6 flex flex-col gap-2 sm:flex-row sm:items-center">
+                        <ActiveFilters
+                            authorizedCarriers={authorizedCarriers}
+                            filters={caseManagementFilters.additionalFilters}
+                            removeFilter={removeAdditionalFilter}
+                            onReset={resetAllFilters}
+                        />
+                        <StatusFilter
+                            caseTotals={caseTotals}
+                            onChange={vals =>
+                                setCaseManagementFilters(prev => {
+                                    const { notInCaseStatus = [] } = prev.additionalFilters;
+                                    const nonConflictingNicsVals = notInCaseStatus.filter(val => !vals.includes(val)); // remove any values that are both in caseStatus and notInCaseStatus
+                                    return {
+                                        ...prev,
+                                        additionalFilters: {
+                                            ...prev.additionalFilters,
+                                            caseStatus: vals,
+                                            notInCaseStatus: nonConflictingNicsVals,
+                                        },
+                                    };
+                                })
+                            }
+                            userId={user.partyId}
+                            values={caseManagementFilters.additionalFilters.caseStatus}
+                        />
+                        <NavElement
+                            tabIndex={0}
+                            size={NavElementSize.Small}
+                            type={NavElementType.Button}
+                            startIcon={<FilterButton />}
+                            className="flex items-center whitespace-nowrap"
+                            aria-label={t('ariaLabel.openRefineResultsButton') as string}
+                            onClick={openRefineResultsSidesheet}
+                            onKeyDown={e => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    openRefineResultsSidesheet();
+                                }
+                            }}
+                        >
+                            {t('caseManagementDashboard.refineResults')}
+                        </NavElement>
                     </div>
-                    <ActiveFilters
-                        authorizedCarriers={authorizedCarriers}
-                        filters={caseManagementFilters.additionalFilters}
-                        removeFilter={removeAdditionalFilter}
-                        onReset={resetAllFilters}
-                    />
-                    <StatusFilter
-                        caseTotals={caseTotals}
-                        onChange={vals =>
-                            setCaseManagementFilters(prev => {
-                                const { notInCaseStatus = [] } = prev.additionalFilters;
-                                const nonConflictingNicsVals = notInCaseStatus.filter(val => !vals.includes(val)); // remove any values that are both in caseStatus and notInCaseStatus
-                                return {
-                                    ...prev,
-                                    additionalFilters: {
-                                        ...prev.additionalFilters,
-                                        caseStatus: vals,
-                                        notInCaseStatus: nonConflictingNicsVals,
-                                    },
-                                };
-                            })
-                        }
-                        userId={user.partyId}
-                        values={caseManagementFilters.additionalFilters.caseStatus}
-                    />
                     {tableContent}
                     <div className="flex flex-col items-center lg:grid lg:grid-cols-3 mt-3">
                         <Typography variant={TypographyVariant.BodySm} className="mb-6 lg:mb-0">

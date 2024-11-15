@@ -694,6 +694,7 @@
         "search": {
             "btnText": "Search",
             "searchKeyType": "Search by",
+            "clear": "Clear search",
             "results": {
                 "policySummaryCard": {
                     "header1": "Owner Information",
@@ -738,13 +739,15 @@
                 "lastName": "Enter a last name to return search results"
             },
             "buttons": {
-                "policyNumber": "Policy Number",
+                "policyNumber": "Policy number",
+                "ownerSsn": "Owner SSN",
                 "ssn": "SSN",
                 "ssnFullLabel": "Owner Social Security number",
                 "ssnPlaceholder": "###-##-####",
                 "name": "Name",
-                "firstName": "Owner First Name",
-                "lastName": "Owner Last Name"
+                "firstName": "First name",
+                "lastName": "Last name",
+                "ownerName": "Owner name"
             }
         },
         "quickSearch": {

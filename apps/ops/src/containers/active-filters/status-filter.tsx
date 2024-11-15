@@ -114,7 +114,7 @@ export default function StatusFilter({
     }, [selected]);
 
     return (
-        <div className="max-w-[234px] mb-4">
+        <div className="w-[214px] sm:w-[234px]">
             <Select
                 isMultiselect
                 options={statusOptions}
