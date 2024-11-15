@@ -5,7 +5,6 @@
     flex-wrap: wrap;
     gap: var(--measure-dimension-gap-lg);
     @media (min-width: 768px) {
-        align-items: flex-start;
         flex-direction: row;
         column-gap: var(--measure-dimension-gap-md);
         row-gap: var(--measure-dimension-gap-lg);

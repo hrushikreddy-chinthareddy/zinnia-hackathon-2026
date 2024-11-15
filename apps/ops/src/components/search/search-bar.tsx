@@ -22,6 +22,7 @@ interface SearchBarProps {
     toggleLabels: (t: TFunction) => LabelValue<PolicySearchKeys>[];
     onToggle?: (value: PolicySearchKeys) => void;
     onClear?: (searchField: PolicySearchKeys | undefined) => void;
+    formClasses?: string;
 }
 
 const SearchBar = ({
@@ -31,6 +32,7 @@ const SearchBar = ({
     toggleLabels,
     onToggle,
     onClear,
+    formClasses,
 }: SearchBarProps) => {
     const { setShowFieldErrorMessage } = useContext(PolicySearchFiltersContext);
     const { t } = useTranslation(TranslationFiles.COMMON);
@@ -95,7 +97,7 @@ const SearchBar = ({
     const dropdownLabels = toggleLabels(t);
 
     return (
-        <form className={styles.formContainer} onSubmit={handleFormSubmit}>
+        <form className={clsx(styles.formContainer, formClasses)} onSubmit={handleFormSubmit}>
             <div className={styles.searchContainer}>
                 <DropdownMenu.Root>
                     <DropdownMenu.Trigger className={clsx(styles.dropdownTrigger, 'typography-content-body-sm whitespace-nowrap')}>
@@ -127,6 +129,7 @@ const SearchBar = ({
                 data-testid="search-btn"
                 aria-label={t('ariaLabel.search') as string}
                 type="submit"
+                size="small"
             >
                 {t('dashboard.search.btnText')}
             </Button>

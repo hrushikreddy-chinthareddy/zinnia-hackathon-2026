@@ -71,7 +71,7 @@ export const SearchFieldContainer = ({ handleChange, activeLabels, onClear }: Se
                 </Button>
             )}
             {showFieldErrorMessage && errorMessage && (
-                <AssistiveText text={errorMessage} variant={AssistiveTextVariant.Error} className="mt-2" />
+                <AssistiveText text={errorMessage} variant={AssistiveTextVariant.Error} className="mt-2 max-w-[210px]" />
             )}
         </div>
     );
