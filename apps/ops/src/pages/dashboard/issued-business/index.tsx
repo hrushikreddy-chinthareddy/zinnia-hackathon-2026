@@ -1,5 +1,5 @@
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
-import { Link } from '@zinnia/bloom/components';
+import { Link, TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
 import { FgaRoles } from '@zinnia/utils';
 import clsx from 'clsx';
 import { GetServerSidePropsContext } from 'next';
@@ -12,7 +12,6 @@ import { MultiselectOption, SimpleOption } from '@deps/components/autocomplete/a
 import ActiveAging from '@deps/components/dashboard/active-aging/active-aging';
 import { BrokerDealerFilter } from '@deps/components/dashboard/broker-dealer-filter/broker-dealer-filter';
 import { sankeyTitleFormat } from '@deps/components/dashboard/dashboard.helper';
-import SankeyChart from '@deps/components/dashboard/sankey-chart';
 import CaseStatBlock from '@deps/components/dashboard/stat-blocks/case-stat-block';
 import { FieldSize } from '@deps/components/fields/field';
 import NoNavLayout from '@deps/components/no-nav-layout';
@@ -41,7 +40,7 @@ import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimize
 import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
-import styles from './Dashboard.module.css';
+import styles from '../Dashboard.module.css';
 
 export interface CarrierListItem {
     [key: string]: string;
@@ -374,70 +373,123 @@ const DashboardPage = ({
                         </div>
                     )}
                     <CardContainer classNames="relative !pt-0" containerClassNames="mt-none">
-                        <SankeyChart baseDashboardQueryFilter={baseDashboardQueryFilter} />
+                        <Typography variant={TypographyVariant.LabelLg}>Top 5 Processes by Volume</Typography>
+                        <TabGroup>
+                            <TabList className="flex gap-4">
+                                {[
+                                    {
+                                        title: 'NB Reg 60',
+                                        cases: 600,
+                                        avgTimeToClose: 4.35,
+                                    },
+                                    {
+                                        title: 'Incoming Transfer',
+                                        cases: 600,
+                                        avgTimeToClose: 4.35,
+                                    },
+                                    {
+                                        title: 'Annuity Application',
+                                        cases: 600,
+                                        avgTimeToClose: 4.35,
+                                    },
+                                    {
+                                        title: 'NB Purchase W app',
+                                        cases: 600,
+                                        avgTimeToClose: 4.35,
+                                    },
+                                    {
+                                        title: 'Life Application',
+                                        cases: 600,
+                                        avgTimeToClose: 4.35,
+                                    },
+                                ].map((element, index) => {
+                                    return (
+                                        <TabTrigger
+                                            value={element.title}
+                                            key={index}
+                                            className={`flex items-center justify-between bg-red-${700 - (index + 1) * 100} h-64 w-64 p-4`}
+                                        >
+                                            <h4>{element.title}</h4>
+                                            <p>{element.cases} Cases</p>
+                                            <p>{element.avgTimeToClose} Days</p>
+                                        </TabTrigger>
+                                    );
+                                })}
+                            </TabList>
+                            <TabContent value="NB Reg 60">
+                                {' '}
+                                <div
+                                    className={clsx(styles.insightsHeader, {
+                                        [styles.pinned as string]:
+                                            footerIsIntersecting || Number(insightChartEntry?.boundingClientRect.bottom) < 0,
+                                    })}
+                                    style={
+                                        {
+                                            '--pinned-height': carrierHeaderHeight + 'px',
+                                        } as CSSProperties
+                                    }
+                                >
+                                    <Typography className="flex items-center" variant={TypographyVariant.H2} data-testid="header-text">
+                                        {t('insights')}
+                                    </Typography>
+                                    <div className={`${styles.insightsHeaderDropdown}`}>
+                                        <Select
+                                            options={processListOptions}
+                                            size={FieldSize.Small}
+                                            name="process-type-dropdown-btn"
+                                            placeholder={t('selectProcessType') || ''}
+                                            value={insightOption}
+                                            onChange={value => handleInsightChange(value as Processes)}
+                                        />
+                                    </div>
+                                </div>
+                            </TabContent>
+                            <TabContent value="Incoming Transfer">
+                                <div ref={insightChartRef}>
+                                    <div className={styles.container}>
+                                        <ActiveAging
+                                            createdBySubProcess={insightCreatedBySubProcess}
+                                            openStagesByCreated={insightStagesByCreated}
+                                            loading={loading}
+                                            selectedProcess={insightOption}
+                                            carriers={Object.keys(selectedCarriers)}
+                                        />
+                                        <div className="flex flex-col gap-1 mt-1">
+                                            <div className="flex gap-1">
+                                                <CaseStatBlock
+                                                    dashboardStatsResponse={insightGroupingCountByCarrierStats}
+                                                    blockLabel="Carrier"
+                                                    timeFrameLabel={timeFrameLabel}
+                                                    statMeasurementLabel="case"
+                                                    variant="double"
+                                                    loading={loading}
+                                                    showViewMore={true}
+                                                    filterParams={{
+                                                        createdDateEnd,
+                                                        createdDateStart,
+                                                        process: insightOption,
+                                                        carrier: Object.keys(selectedCarriers)?.length ? Object.keys(selectedCarriers) : '',
+                                                    }}
+                                                />
+                                                <CaseStatBlock
+                                                    dashboardStatsResponse={insightGroupingCountBySubProcessStats}
+                                                    blockLabel="Case Type"
+                                                    timeFrameLabel={timeFrameLabel}
+                                                    statMeasurementLabel="case"
+                                                    variant="double"
+                                                    loading={loading}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </TabContent>
+                            <TabContent value="Annuity Application">Annuity Application Content</TabContent>
+                            <TabContent value="NB Purchase W app">NB Purchase W app Content</TabContent>
+                            <TabContent value="Life Application">Life Application Content</TabContent>
+                        </TabGroup>
+                        <div className="flex gap-4"></div>
                     </CardContainer>
-                </div>
-                <div
-                    className={clsx(styles.insightsHeader, {
-                        [styles.pinned as string]: footerIsIntersecting || Number(insightChartEntry?.boundingClientRect.bottom) < 0,
-                    })}
-                    style={
-                        {
-                            '--pinned-height': carrierHeaderHeight + 'px',
-                        } as CSSProperties
-                    }
-                >
-                    <Typography className="flex items-center" variant={TypographyVariant.H2} data-testid="header-text">
-                        {t('insights')}
-                    </Typography>
-                    <div className={`${styles.insightsHeaderDropdown}`}>
-                        <Select
-                            options={processListOptions}
-                            size={FieldSize.Small}
-                            name="process-type-dropdown-btn"
-                            placeholder={t('selectProcessType') || ''}
-                            value={insightOption}
-                            onChange={value => handleInsightChange(value as Processes)}
-                        />
-                    </div>
-                </div>
-                <div ref={insightChartRef}>
-                    <div className={styles.container}>
-                        <ActiveAging
-                            createdBySubProcess={insightCreatedBySubProcess}
-                            openStagesByCreated={insightStagesByCreated}
-                            loading={loading}
-                            selectedProcess={insightOption}
-                            carriers={Object.keys(selectedCarriers)}
-                        />
-                        <div className="flex flex-col gap-1 mt-1">
-                            <div className="flex gap-1">
-                                <CaseStatBlock
-                                    dashboardStatsResponse={insightGroupingCountByCarrierStats}
-                                    blockLabel="Carrier"
-                                    timeFrameLabel={timeFrameLabel}
-                                    statMeasurementLabel="case"
-                                    variant="double"
-                                    loading={loading}
-                                    showViewMore={true}
-                                    filterParams={{
-                                        createdDateEnd,
-                                        createdDateStart,
-                                        process: insightOption,
-                                        carrier: Object.keys(selectedCarriers)?.length ? Object.keys(selectedCarriers) : '',
-                                    }}
-                                />
-                                <CaseStatBlock
-                                    dashboardStatsResponse={insightGroupingCountBySubProcessStats}
-                                    blockLabel="Case Type"
-                                    timeFrameLabel={timeFrameLabel}
-                                    statMeasurementLabel="case"
-                                    variant="double"
-                                    loading={loading}
-                                />
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </NoNavLayout>
         </div>
