@@ -6,10 +6,12 @@ import { Program } from '@deps/components/otp-withdrawal-form/rmd-method/program
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
+import { getChannel } from '@deps/containers/address-change-container/utils/address-change-helper';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DocumentData } from '@deps/models/case/document';
 import { ChannelType } from '@deps/models/case/enums';
+import { Channel } from '@deps/models/case/renewal/case-renewal';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { FormSignature } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
@@ -38,6 +40,7 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
     const [isFormSubmitted, setIsFormSubmitted] = useState(false);
     const [submitError, setSubmitError] = useState(false);
     const [timer] = useState(performance.now());
+    const source = getChannel(document.documentNumber);
 
     const requestProgramUpdate = async (existingProg: Program, operationType: SswUpdateType, formSign: FormSignature) => {
         const successfulCaseUpdate = await updateTask(
@@ -50,12 +53,16 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
     };
 
     const handleFormAction = async (item: Program, operationType: SswUpdateType, formSign: FormSignature) => {
-        const formErr = document.source === ChannelType.Email && sswEditFormValidator(formSign, t);
-        if (Object.keys(formErr).length > 0) {
-            formErr && setFormErrors(formErr);
-        } else {
-            setFormErrors({});
+        if (source !== Channel.Phone) {
+            const formErr = sswEditFormValidator(formSign, t);
+            if (Object.keys(formErr).length > 0) {
+                setFormErrors(formErr);
+                return;
+            } else {
+                setFormErrors({});
+            }
         }
+
         setIsLoading(true);
         let res;
         if (operationType === SswUpdateType.PROGRAM_TERMINATE) {

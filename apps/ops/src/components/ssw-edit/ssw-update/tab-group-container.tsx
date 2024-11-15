@@ -47,7 +47,6 @@ const TabGroupContent = ({
     const { currentStepIndex, setCurrentStepIndex } = useWorkflow();
     const globalValuesData = useMemo(() => policyDataToGlobalValues(new PolicyDetails(policy), t), [policy, t]);
     const { marketingName, planCode, policyNumber, productType, status, tooltip, variant } = globalValuesData;
-    console.log(currentStepIndex);
     const handleClick = (step: Step) => {
         if (step.isDisabled || currentStepIndex === step.index) return;
         if (currentStepIndex === steps.length - 1) return;
