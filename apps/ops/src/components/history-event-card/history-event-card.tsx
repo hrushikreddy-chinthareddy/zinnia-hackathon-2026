@@ -1,4 +1,6 @@
+// TODO MG: why is this warning that TagProps isnt in bloom?
 import { Tag, TagProps, TagVariant } from '@zinnia/bloom/components';
+import { toTitleCase } from '@zinnia/utils';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
@@ -6,9 +8,6 @@ import { useTranslation } from 'next-i18next';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import SideSheetFinancialTransaction from '@deps/components/side-sheet/side-sheet-transaction/financial/side-sheet-financial-transaction';
 import SideSheetNonFinancialTransaction from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/side-sheet-non-financial-transaction';
-import {
-    getTransactionSideSheetTitle,
-} from '@deps/components/side-sheet/side-sheet-transaction/side-sheet-transaction.helper';
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { AccessibleFormattedAmount } from '@deps/helpers/numbers.helper';
@@ -17,9 +16,10 @@ import { Policy, Transaction, TransactionStatus, TransactionType } from '@deps/m
 import { ReactComponent as ChevronRightIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-right.svg';
 import { DEFAULT_DATE_FORMAT } from '@deps/types/constants';
 
-import { getHistoryEventCardValues } from './history-event-card.helper';
+import { getEventTitle, getHistoryEventCardValues } from './history-event-card.helper';
+import { FinancialTransactionTypes } from '../side-sheet/side-sheet-transaction/financial/types';
 import SideSheetNewLoanTransaction from '../side-sheet/side-sheet-transaction/loan/side-sheet-new-loan-transaction';
-import { FinancialTransactionTypes, SideSheetTransactionProps } from '../side-sheet/side-sheet-transaction/types';
+import { SideSheetTransactionProps } from '../side-sheet/side-sheet-transaction/types';
 
 export interface HistoryEventCardProps {
     refreshTransactions?: () => void;
@@ -48,7 +48,7 @@ const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryE
         }
 
         const { transactionType } = transaction;
-        const title = getTransactionSideSheetTitle(transaction as Transaction, t);
+        const title = toTitleCase(getEventTitle(transaction as Transaction, t));
 
         let Component: (props: SideSheetTransactionProps) => JSX.Element;
 
@@ -92,8 +92,6 @@ const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryE
         isClickable ? 'hover:border-yellow-400' : 'pointer-events-none'
     );
 
-    // Sidesheet Support
-
     let tagProps: TagProps | undefined;
 
     if (status) {
@@ -102,7 +100,8 @@ const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryE
 
     return (
         <li>
-            <button aria-disabled={!isClickable} className={containerClasses} onClick={openTransactionSidesheet}>
+            {/* TODO MG: warning about aria-disabled not being set correctly */}
+            <button aria-disabled={isClickable} className={containerClasses} onClick={openTransactionSidesheet}>
                 <div className="flex min-h-[62px] w-full items-center justify-between gap-4">
                     <div className="flex grow flex-col items-start">
                         <div className="text-content-caption font-medium text-gray-500">{caption}</div>

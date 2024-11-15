@@ -49,7 +49,6 @@ if (process.env.NODE_ENV === NODE_ENV_PRODUCTION) {
 }
 
 const AppHead = () => {
-    // TODO MG: follow up
     // DEPU-1025 to clean up only required user fields once we start collecting data
     const { user } = useUser();
 

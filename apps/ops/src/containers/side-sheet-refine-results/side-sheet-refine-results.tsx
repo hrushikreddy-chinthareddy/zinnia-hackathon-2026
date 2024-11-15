@@ -187,7 +187,6 @@ export default function SideSheetRefineResults({
         }
     }, [authorizedCarriers, additionalFilters.carriers, additionalFilters.processTypes, filters.requestSubType]);
 
-    // TODO MG: move these to another file
     // Field Handlers
     const createdStartOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newStartValue = e.target.value;

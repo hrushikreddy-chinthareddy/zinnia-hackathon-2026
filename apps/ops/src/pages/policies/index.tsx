@@ -84,7 +84,6 @@ interface PolicySearchResultsProps {
     total: number;
 }
 
-// TODO MG: put in a provider file
 export interface DashboardContextProps {
     searchValue: SearchViewQuery;
 }

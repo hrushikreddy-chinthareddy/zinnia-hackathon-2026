@@ -101,7 +101,6 @@ const SelectSearch = ({
 
     const ref = useRef<HTMLInputElement>(null);
 
-    // TODO MG: useCallback or useMemo?
     const onOutsideClick = () => {
         segmentAnalyticsTrackEvent<DropdownClickedEvent>(SegmentTrackedEventName.DropdownClicked, {
             dropdownName: 'Key Value Search',
