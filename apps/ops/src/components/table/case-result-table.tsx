@@ -30,7 +30,7 @@ import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
 import { Case } from '@deps/models/case/case';
 import { CaseDetailsTabValues, DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { SearchViewQuery } from '@deps/types/search';
-import { SegmentTrackedEventName } from '@deps/types/segment-analytics';
+import { CaseClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
 import { getCarrierLogoByClientId, getCarrierNameByClientId } from '@deps/utils/carriers';
 
 import styles from './case-result-table.module.css';
@@ -126,7 +126,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
     };
 
     const loadCaseDetails = (href: string) => {
-        segmentAnalyticsTrackEvent(SegmentTrackedEventName.PolicyKeyValuesItemClick, {
+        segmentAnalyticsTrackEvent<CaseClickedEvent>(SegmentTrackedEventName.CaseClicked, {
             caseId: singleCase.id,
             userId: perms.getUserPartyId(),
         });

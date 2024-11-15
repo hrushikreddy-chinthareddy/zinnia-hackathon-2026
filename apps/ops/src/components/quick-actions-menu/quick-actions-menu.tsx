@@ -11,12 +11,14 @@ import { commonPopoverClasses, commonTriggerClasses } from '@deps/components/pop
 import { TranslationFiles } from '@deps/config/translations';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 import { ReactComponent as PaymentIcon } from '@deps/styles/elements/icons/content/payment.svg';
 import { ReactComponent as AutopayIcon } from '@deps/styles/elements/icons/currency/autopay.svg';
 import { ReactComponent as CashIcon } from '@deps/styles/elements/icons/icons_outlined/cash.svg';
 import { ReactComponent as MenuHorizontal } from '@deps/styles/elements/icons/icons_outlined/menu-horizontal.svg';
 import loaderImage from '@deps/styles/images/loader-contrast.png';
+import { DropdownClickedEvent, PolicyClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 interface TranslateProps {
@@ -52,6 +54,21 @@ const MenuContextualContent = ({ t, planCode, policyNumber, eligibilityCheck, is
     const { featureFlags } = useOptimizely();
     const freeLookEnabled = featureFlags[FEATURE_FLAGS.POLICY_FREE_LOOK_CANCELLATION];
 
+    const trackClick = (linkName: string, linkUrl: string) => {
+        // Tracking
+        segmentAnalyticsTrackEvent<DropdownClickedEvent>(SegmentTrackedEventName.DropdownClicked, {
+            dropdownName: 'Policy Quick Actions',
+            selectedItemName: linkName,
+            userId: userPartyId,
+        });
+        segmentAnalyticsTrackEvent<PolicyClickedEvent>(SegmentTrackedEventName.PolicyClicked, {
+            contractNumber: policyNumber,
+            linkName,
+            linkUrl,
+            userId: userPartyId,
+        });
+    };
+
     return (
         <MenuContextualLabel label={t('transactions.label')}>
             {isLoading ? (
@@ -65,7 +82,9 @@ const MenuContextualContent = ({ t, planCode, policyNumber, eligibilityCheck, is
                             content={t('transactions.cancelPolicy')}
                             href={`/policies/${planCode}/${policyNumber}/policy/freelook/cancel-freelook/`}
                             icon={<CashIcon height={20} width={20} />}
-                            userPartyId={userPartyId}
+                            onClick={() => {
+                                trackClick('Cancel Policy', `/policies/${planCode}/${policyNumber}/policy/freelook/cancel-freelook/`);
+                            }}
                         />
                     )}
                     <MenuContextualItem
@@ -73,7 +92,12 @@ const MenuContextualContent = ({ t, planCode, policyNumber, eligibilityCheck, is
                         content={t('transactions.managePremiumAutopay')}
                         href={`/policies/${planCode}/${policyNumber}/policy/premiums/update-premium-autopay/`}
                         icon={<AutopayIcon height={20} width={20} />}
-                        userPartyId={userPartyId}
+                        onClick={() => {
+                            trackClick(
+                                'Manage Premium Autopay',
+                                `/policies/${planCode}/${policyNumber}/policy/premiums/update-premium-autopay/`
+                            );
+                        }}
                     />
 
                     <MenuContextualItem
@@ -81,7 +105,9 @@ const MenuContextualContent = ({ t, planCode, policyNumber, eligibilityCheck, is
                         content={t('transactions.newPremium')}
                         href={`/policies/${planCode}/${policyNumber}/policy/premiums/new-premium/`}
                         icon={<PaymentIcon height={20} width={20} />}
-                        userPartyId={userPartyId}
+                        onClick={() => {
+                            trackClick('New Premium', `/policies/${planCode}/${policyNumber}/policy/premiums/new-premium/`);
+                        }}
                     />
 
                     <MenuContextualItem
@@ -89,7 +115,9 @@ const MenuContextualContent = ({ t, planCode, policyNumber, eligibilityCheck, is
                         content={t('transactions.startAWithdrawal')}
                         href={`/policies/${planCode}/${policyNumber}/policy/withdrawals/new-withdrawal/`}
                         icon={<CashIcon height={20} width={20} />}
-                        userPartyId={userPartyId}
+                        onClick={() => {
+                            trackClick('Start a Withdrawal', `/policies/${planCode}/${policyNumber}/policy/withdrawals/new-withdrawal/`);
+                        }}
                     />
                 </>
             )}

@@ -25,6 +25,7 @@ import {
 } from '@deps/contexts/CaseManagementFilters';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getAdvisorsExcelCaseSearchParams, getAdvisorsExcelCaseStatsParams } from '@deps/helpers/advisors-excel';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import {
     formatCaseTotals,
     getAdditionalFilters,
@@ -44,7 +45,7 @@ import { checkTupleSsr, getCarrierListServerSSR } from '@deps/queries/api/fga';
 import { CaseSearchQuery, CaseStatsQuery } from '@deps/queries/cases';
 import { FgaRelation } from '@deps/types/fga';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
-import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
+import { SearchSubmittedEvent, SegmentPageName, SegmentTrackedEventName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import nextI18nextConfig from 'next-i18next.config';
 
 import useCaseFilterQueryStore from './caseFilterQueryStore';
@@ -258,8 +259,16 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
     const removeAdditionalFilter = (filters: CaseSearchAdditionalFilters) =>
         setCaseManagementFilters(prevFilters => ({ ...prevFilters, additionalFilters: filters, offset: 0 }));
 
-    const handleSearch = (value: SearchViewQuery) =>
+    const handleSearch = (value: SearchViewQuery) => {
+        segmentAnalyticsTrackEvent<SearchSubmittedEvent>(SegmentTrackedEventName.SearchSubmitted, {
+            ssnUsed: !!value?.ssn,
+            firstNameUsed: !!value?.firstName,
+            lastNameUsed: !!value?.lastName,
+            policyNumber: value?.policyNumber,
+            userId: user.partyId,
+        });
         setCaseManagementFilters(prevFilters => ({ ...prevFilters, searchValue: value, offset: 0 }));
+    };
 
     const handleToggle = (value: PolicySearchKeys) => setCaseManagementFilters(prevFilters => ({ ...prevFilters, toggleValue: value }));
 
@@ -369,7 +378,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                     />
                     <StatusFilter
                         caseTotals={caseTotals}
-                        values={caseManagementFilters.additionalFilters.caseStatus}
                         onChange={vals =>
                             setCaseManagementFilters(prev => {
                                 const { notInCaseStatus = [] } = prev.additionalFilters;
@@ -384,6 +392,8 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                                 };
                             })
                         }
+                        userId={user.partyId}
+                        values={caseManagementFilters.additionalFilters.caseStatus}
                     />
                     {tableContent}
                     <div className="flex flex-col items-center lg:grid lg:grid-cols-3 mt-3">
