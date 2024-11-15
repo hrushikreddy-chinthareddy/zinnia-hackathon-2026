@@ -1,4 +1,4 @@
-// POLICIES
+// ANNUITIES
 import { IconType } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
