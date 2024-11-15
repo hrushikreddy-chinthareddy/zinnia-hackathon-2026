@@ -2,10 +2,12 @@ import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
 import { BankingFields, DisbursementFields } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helper';
+import { getChannel } from '@deps/containers/address-change-container/utils/address-change-helper';
 import { createValidator } from '@deps/containers/otp/utils/helper-utils';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DocumentData } from '@deps/models/case/document';
 import { BankUpdateType, ChannelType, ContributionType } from '@deps/models/case/enums';
+import { Channel } from '@deps/models/case/renewal/case-renewal';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import { CreateTaskBody, TaskSource, TaskV2Payload } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
@@ -209,6 +211,8 @@ export const getBankUpdatePayload = (
     document: DocumentData,
     bankUpdateType: BankUpdateType
 ) => {
+    const documentSource = getChannel(document.documentNumber);
+
     const formUpdateData = {
         updateType: bankUpdateType,
         contractNumber: initialForm.data.contractNum,
@@ -264,7 +268,7 @@ export const getBankUpdatePayload = (
             formParty: null,
             formProgram: null,
             formRestriction: null,
-            formSignature: document.source === ChannelType.Email ? formSignature : null,
+            formSignature: documentSource !== Channel.Phone ? formSignature : null,
             formTaxWithholding: null,
             formTpaAuthorization: null,
             formSurrenderingCompany: null,
