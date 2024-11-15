@@ -1,11 +1,14 @@
 'use client';
 
+import Cookies from 'js-cookie';
+
 import { CompanyName } from '@/types/carriers';
+import { THEME_COOKIE } from '@/utils/serverClientUtils';
 
 export const EVERLY_CONTACT_PHONE_NUMBER = '1-855-290-0529';
 export const WELLABE_CONTACT_PHONE_NUMBER = '1-888-222-3003';
 
-const phoneByCarrier = (name: CompanyName | string) => {
+const phoneByCarrier = (name?: CompanyName | string) => {
   switch (name?.toLowerCase()) {
     case CompanyName.EVERLY:
       return EVERLY_CONTACT_PHONE_NUMBER;
@@ -16,17 +19,12 @@ const phoneByCarrier = (name: CompanyName | string) => {
   }
 };
 
-export const CarrierPhoneNumber = ({
-  carrierId,
-}: {
-  carrierId: string | undefined | null;
-}) => {
-  // const carrierName = getCarrierNameById(carrierId);
-  const carrierName = '';
+export const CarrierPhoneNumber = () => {
+  const currentTheme = Cookies.get(THEME_COOKIE);
 
   return (
-    <a href={`tel:+${phoneByCarrier(carrierName)}`}>
-      {phoneByCarrier(carrierName)}
+    <a href={`tel:+${phoneByCarrier(currentTheme)}`}>
+      {phoneByCarrier(currentTheme)}
     </a>
   );
 };

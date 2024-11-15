@@ -5,12 +5,10 @@ import { CarrierPhoneNumber } from '../carrier-phone-number/CarrierPhoneNumber';
 
 export const CallForAssistance = ({
   callToAction,
-  carrierId,
   contactPrompt = 'Call',
   customInstruction,
 }: {
   callToAction?: ReactNode;
-  carrierId?: string | null;
   contactPrompt?: string;
   customInstruction?: string;
 } & HTMLAttributes<HTMLDivElement>) => {
@@ -21,8 +19,7 @@ export const CallForAssistance = ({
       bodyText={
         <p className="typography-nav-links-sm-inline">
           <span>{callToAction}</span> <span>{contactPrompt}</span>{' '}
-          <CarrierPhoneNumber carrierId={carrierId} />{' '}
-          <span>{customInstruction}</span>
+          <CarrierPhoneNumber /> <span>{customInstruction}</span>
         </p>
       }
       variant={BannerVariant.Information}

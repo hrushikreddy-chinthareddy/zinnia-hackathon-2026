@@ -95,7 +95,7 @@ export const BankList: FC<BankListProps> = ({
           </h2>
           <p className="mb-lg">
             Need help updating banking details? Give us a call at{' '}
-            <CarrierPhoneNumber carrierId={policyData?.carrierId} />.
+            <CarrierPhoneNumber />.
           </p>
           <div className={styles.multipleItemsInSection}>{allBankData}</div>
           {allowBankingChanges && <AddBankSidesheet partyId={data.partyId} />}

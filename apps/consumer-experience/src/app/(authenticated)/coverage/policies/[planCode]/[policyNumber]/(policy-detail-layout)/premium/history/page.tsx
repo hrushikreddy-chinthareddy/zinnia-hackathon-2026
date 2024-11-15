@@ -122,10 +122,7 @@ export default async function PaymentHistory({ params }: Props) {
 
   return (
     <div className="container">
-      <CallForAssistance
-        customInstruction="for questions about a payment."
-        carrierId={carrierId}
-      />
+      <CallForAssistance customInstruction="for questions about a payment." />
 
       {pendingTransactions.length > 0 && (
         <CardListHistory>
