@@ -2,6 +2,7 @@ import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import dayjs from 'dayjs';
 import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect, useState } from 'react';
 
@@ -16,6 +17,7 @@ import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
+import { SpecialProgramType } from '@deps/models/case/enums';
 import { ActiveWithdrawalCase, Carrier, RMDProgramType } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { mapTaskToActiveWithdrawalCaseTask } from '@deps/operations/tasks/v2/helpers';
@@ -26,7 +28,6 @@ import { getCaseTaskByIdSSR } from '@deps/queries/api/v2/task';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { getUserInfoFromUser, logError, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
-import { SpecialProgramType } from '@deps/models/case/enums';
 
 type SswUpdateProps = {
     policy: Policy;
@@ -37,6 +38,8 @@ type SswUpdateProps = {
 };
 
 const SswEdit = (props: SswUpdateProps) => {
+    const { t } = useTranslation(undefined, { keyPrefix: 'sswUpdate' });
+
     const router = useRouter();
     const { form, policy, document, featureFlagDecisions, specialProgramdetails } = props;
     const { programType } = router.query;
@@ -98,7 +101,7 @@ const SswEdit = (props: SswUpdateProps) => {
                         amount: program.dbAmount.toString(),
                         frequency: program.mode,
                         duration: program.duration.toString(),
-                        status: 'Active' as any,
+                        status: RMDProgramType.Active,
                         allocationId: program.allocationId,
                     });
                 }
@@ -116,9 +119,9 @@ const SswEdit = (props: SswUpdateProps) => {
                             action: () => {
                                 router.back();
                             },
-                            text: 'back',
+                            text: t('back'),
                         }}
-                        title={'No Existing Program Found'}
+                        title={t('noProgramFound')}
                         className="justify-center bg-white h-[450px] w-[900px]"
                     />
                 </div>
