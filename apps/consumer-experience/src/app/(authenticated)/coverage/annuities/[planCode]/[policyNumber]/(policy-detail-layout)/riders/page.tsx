@@ -1,13 +1,13 @@
+// ANNUITIES
 import { IconType } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
+import { Rider } from '@/components/rider/Rider';
 import { getRiders } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
-
-import { Rider } from '@/components/rider/Rider';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
@@ -29,14 +29,6 @@ export default async function Riders({
 
   return (
     <div className="container">
-      <p className="typography-content-body-sm">
-        <span className="typography-content-body-sm-bold">What's a rider?</span>{' '}
-        A rider is an add-on to your insurance coverage. Riders are designed to
-        offer additional types of coverage for certain circumstances. They often
-        (but not always) cost extra. They can provide major benefits if and when
-        you need them. You can learn more about what your riders cover in your
-        policy documents.
-      </p>
       {(error ||
         !data ||
         (!data.riders?.length && !data.additionalBenefits?.length)) && (
@@ -50,17 +42,16 @@ export default async function Riders({
           </div>
         </div>
       )}
-      <>
+      <div>
         {!!electedRiders?.length && (
           <div>
-            <h2 className="pb-2xl border-b mt-lg">My Riders</h2>
             {electedRiders?.map(rider => (
               <Rider key={rider.riderCode} {...rider} />
             ))}
           </div>
         )}
         {!!additionalRiders?.length && (
-          <div>
+          <>
             <div>
               <h2 className="pb-2xl border-b mt-lg">Additional Riders</h2>
               <p className="typography-content-body">
@@ -71,24 +62,24 @@ export default async function Riders({
             {additionalRiders?.map(rider => (
               <Rider key={rider.riderCode} {...rider} />
             ))}
+          </>
+        )}
+        {data?.additionalBenefits?.length && (
+          <div style={{ borderTop: 'var(--border-style)' }}>
+            {data.additionalBenefits.map(rider => {
+              return (
+                <Rider
+                  key={rider.riderCode}
+                  {...rider}
+                  // Hide popover for any additional features that have an effective date
+                  hidePopover={!!rider.effectiveDate}
+                />
+              );
+            })}
           </div>
         )}
-      </>
-      {data?.additionalBenefits?.length && (
-        <div>
-          <h2 className="pb-2xl border-b mt-lg">Additional Benefits</h2>
-          {data.additionalBenefits.map(rider => {
-            return (
-              <Rider
-                key={rider.riderCode}
-                {...rider}
-                // Hide popover for any additional features that have an effective date
-                hidePopover={!!rider.effectiveDate}
-              />
-            );
-          })}
-        </div>
-      )}
+      </div>
+
       <CallForAssistance
         callToAction="Online claims are coming soon. For now,"
         contactPrompt="call"
