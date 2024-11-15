@@ -400,8 +400,8 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                         <Typography variant={TypographyVariant.BodySm} className="mb-6 lg:mb-0">
                             {t('policy.documents.xToYOfZ', {
                                 x: caseManagementFilters.offset + 1,
-                                y: Math.min(caseManagementFilters.offset + limit, caseTotals.All),
-                                z: caseTotals.All.toLocaleString(),
+                                y: Math.min(caseManagementFilters.offset + limit, caseTableData.total),
+                                z: caseTableData.total.toLocaleString(),
                             })}
                         </Typography>
                         {paginationControls}

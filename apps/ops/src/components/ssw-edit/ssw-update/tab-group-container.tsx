@@ -28,6 +28,7 @@ type TabGroupContainerProps = {
     programs: Program[];
     onSswUpdate: (item: Program, operationType: SswUpdateType, formSign: FormSignature) => void;
     isFormSubmitted: boolean;
+    isLoading: boolean;
     setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 const TabGroupContent = ({
@@ -38,6 +39,7 @@ const TabGroupContent = ({
     programs,
     onSswUpdate,
     isFormSubmitted,
+    isLoading,
     setIsLoading,
 }: TabGroupContainerProps) => {
     const { t } = useTranslation();
@@ -47,7 +49,8 @@ const TabGroupContent = ({
     const { marketingName, planCode, policyNumber, productType, status, tooltip, variant } = globalValuesData;
     const handleClick = (step: Step) => {
         if (step.isDisabled || currentStepIndex === step.index) return;
-        if (step.text !== 'Confirm') setCurrentStepIndex(step.index);
+        if (currentStepIndex === steps.length - 1) return;
+        setCurrentStepIndex(step.index);
     };
     const policyOwnerId = policy?.partyRoles?.find(pr => pr.partyRole === PartyRole.OWNER)?.partyId;
     const policyOwner = policy?.parties?.find(party => party.partyId === policyOwnerId);
@@ -101,7 +104,7 @@ const TabGroupContent = ({
                               onProgramUpdate={onSswUpdate}
                           />
                       )}
-                {isFormSubmitted && (
+                {!isLoading && isFormSubmitted && (
                     <div className="flex justify-center items-center py-20">
                         <CardInfo
                             icon={<CircleCheckIcon className="text-semantic-success" height={50} width={50} />}
@@ -129,6 +132,7 @@ const TabGroupContainer = ({
     programs,
     onSswUpdate,
     isFormSubmitted,
+    isLoading,
     setIsLoading,
 }: TabGroupContainerProps) => {
     return (
@@ -141,6 +145,7 @@ const TabGroupContainer = ({
                 programs={programs}
                 onSswUpdate={onSswUpdate}
                 isFormSubmitted={isFormSubmitted}
+                isLoading={isLoading}
                 setIsLoading={setIsLoading}
             />
         </WorkflowProvider>

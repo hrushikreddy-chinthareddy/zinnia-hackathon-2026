@@ -27,6 +27,18 @@ export type UpdatedProgram = {
     allocationId?: number;
 };
 
+export const getDocumentSource = (documentId: string): ChannelType => {
+    if (documentId) {
+        if (documentId.includes('-O-') || documentId.includes('-MAN-')) {
+            return ChannelType.Phone;
+        } else {
+            return ChannelType.Email;
+        }
+    } else {
+        return ChannelType.Email;
+    }
+};
+
 const getSswEditPayload = (
     initialForm: ActiveWithdrawalCase,
     formSign: FormSignature,
@@ -36,6 +48,8 @@ const getSswEditPayload = (
     operationType: SswUpdateType
 ) => {
     const isTerminate = operationType === SswUpdateType.PROGRAM_TERMINATE;
+    const documentSource = getDocumentSource(document.documentNumber);
+
     const formUpdateData = {
         updateType: operationType,
         contractNumber: initialForm.data.contractNum,
@@ -91,7 +105,7 @@ const getSswEditPayload = (
             formParty: null,
             formProgram: null,
             formRestriction: null,
-            formSignature: document.source === ChannelType.Email ? structuredClone(formSign) : null,
+            formSignature: documentSource !== ChannelType.Phone ? structuredClone(formSign) : null,
             formTaxWithholding: null,
             formTpaAuthorization: null,
             formSurrenderingCompany: null,

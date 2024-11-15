@@ -2,6 +2,7 @@ import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import dayjs from 'dayjs';
 import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect, useState } from 'react';
 
@@ -37,6 +38,8 @@ type SswUpdateProps = {
 };
 
 const SswEdit = (props: SswUpdateProps) => {
+    const { t } = useTranslation(undefined, { keyPrefix: 'sswUpdate' });
+
     const router = useRouter();
     const { form, policy, document, featureFlagDecisions, specialProgramdetails } = props;
     const { programType } = router.query;
@@ -98,7 +101,7 @@ const SswEdit = (props: SswUpdateProps) => {
                         amount: program.dbAmount.toString(),
                         frequency: program.mode,
                         duration: program.duration.toString(),
-                        status: 'Active' as any,
+                        status: RMDProgramType.Active,
                         allocationId: program.allocationId,
                     });
                 }
@@ -116,9 +119,9 @@ const SswEdit = (props: SswUpdateProps) => {
                             action: () => {
                                 router.back();
                             },
-                            text: 'back',
+                            text: t('back'),
                         }}
-                        title={'No Existing Program Found'}
+                        title={t('noProgramFound')}
                         className="justify-center bg-white h-[450px] w-[900px]"
                     />
                 </div>

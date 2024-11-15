@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import { v4 as uuidV4 } from 'uuid';
 
 import {
+    FreeLookCancellationRequest,
     FullSurrenderQuoteResponse,
     FullSurrenderRequest,
     OneTimePremiumRequest,
@@ -22,6 +23,10 @@ export interface OneTimePremiumRequestQuery extends OneTimePremiumRequest {
 
 interface SystematicProgramUpdateRequestQuery extends SystematicProgramUpdateRequest {
     caseId: string;
+}
+
+export interface FreeLookCancellationRequestQuery extends FreeLookCancellationRequest {
+    caseId?: string;
 }
 
 export interface FullSurrenderWithdrawalRequestQuery extends FullSurrenderRequest {
@@ -228,6 +233,24 @@ export const validateSystematicProgramUpdate = async (
         console.error('validateSystematicProgramUpdate::an error occurred during validation', error);
 
         return error?.data;
+    }
+};
+
+export const submitFreeLookCancel = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined,
+    query: FreeLookCancellationRequestQuery
+): Promise<TransactionResponse> => {
+    try {
+        const response = await client.post<FreeLookCancellationRequestQuery, AxiosResponse>(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/freelookcancellation`,
+            query
+        );
+        return { status: response.status };
+    } catch (error: any) {
+        console.error('submitFreeLookCancel::an error occurred during submission', error);
+
+        return { status: error.response?.status };
     }
 };
 

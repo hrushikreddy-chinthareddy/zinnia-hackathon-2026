@@ -6,6 +6,10 @@ import { prependSubdomain } from './url';
 export const getCarrierSubdomainById = (
   carrierId: string | undefined | null
 ): string => {
+  if (!carrierId) {
+    return '';
+  }
+
   switch (carrierId?.toUpperCase()) {
     case CarrierId.ELIC:
     case CarrierId.SBUL:
@@ -33,9 +37,19 @@ export const getCarrierSubdomainByName = (
   }
 };
 
+/**
+ * Returns the human-readable name of a carrier given its ID.
+ *
+ * @param carrierId The carrier ID to look up.
+ * @returns The human-readable name of the carrier, or an empty string if the ID is unknown.
+ */
 export const getCarrierNameById = (
   carrierId: string | undefined | null
 ): CarrierNames | string => {
+  if (!carrierId) {
+    return '';
+  }
+
   switch (carrierId?.toUpperCase()) {
     case CarrierId.ELIC:
     case CarrierId.SBUL:
