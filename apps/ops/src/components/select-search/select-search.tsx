@@ -107,7 +107,7 @@ const SelectSearch = ({
         if (!segmentTrackName) {
             return;
         }
-        console.log('searchValue', searchValue);
+
         segmentAnalyticsTrackEvent(segmentTrackName, {
             searchText: searchValue,
             userId: userPartyId

@@ -102,6 +102,7 @@ const getAutopayPremiumSideSheetValues = (
     const { appliedAmount, paymentAmount, requestedAmount } = transactionAmounts ?? {};
 
     try {
+        const isCancelled = status === ('Canceled' as TransactionStatus);
         const isPending = status === ('Pending' as TransactionStatus);
         const paymentMethod = getPaymentMethod(policy, payors as TransactionPayor[], t);
         const isPayment = transactionType === TransactionType.SubsequentPayment;
@@ -125,9 +126,9 @@ const getAutopayPremiumSideSheetValues = (
                     : undefined,
             reversalTransactionId: isPayment ? transactionId : transaction.parentId,
             status,
-            submittedAmount: isPending ? paymentAmount : requestedAmount,
+            submittedAmount: isCancelled ||isPending ? paymentAmount : requestedAmount,
             transactionId,
-            transactionValue: isPending ? paymentAmount : appliedAmount,
+            transactionValue: isCancelled || isPending ? paymentAmount : appliedAmount,
         };
     } catch (error) {
         console.error('getAutopayPremiumSideSheetValues error', error);
