@@ -11,6 +11,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useContentContext } from '@deps/contexts/LayoutContexts/StaticContentContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { rateFormatted } from '@deps/helpers/data-transform.helper';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { convertKebabedDateString, isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { LoanSegment } from '@deps/models/policy/sor-policy';
@@ -48,9 +49,7 @@ const ActiveCard = ({ currency, lastLoanInterestDueDate, loanNumber, loanSegment
     const ytdInterestValue = !isNullEmptyOrUndefined(loanAccruedInterest)
         ? numberFormatify(loanAccruedInterest as number, currencyFormat)
         : DEFAULT_ERROR_STRING;
-    const loanInterestRateValue = !isNullEmptyOrUndefined(loanInterestRate)
-        ? (loanInterestRate as number) * 100 + '%'
-        : DEFAULT_ERROR_STRING;
+    const loanInterestRateValue = rateFormatted(loanInterestRate);
 
     const openSideSheet = () => {
         sideSheet.changeSideSheetContent(

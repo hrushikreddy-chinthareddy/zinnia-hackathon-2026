@@ -1,8 +1,8 @@
 'use client';
 
 import {
+  FeatureType,
   LineOfBusiness,
-  PolicyFeature,
   PolicyStatus,
 } from '@zinnia/api-types/types/sor';
 import { BannerAlert, BannerVariant, IconType } from '@zinnia/bloom/components';
@@ -77,7 +77,7 @@ export const PolicyStatusAlertBanner = ({
       };
       break;
 
-    case 'FREELOOK' as PolicyFeature.featureType:
+    case FeatureType.FREELOOK:
       if (canShowFreelookBanner) {
         statusContent = {
           text: (

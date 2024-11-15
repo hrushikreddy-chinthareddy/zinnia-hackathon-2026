@@ -1,6 +1,5 @@
 import router from 'next/router';
 import { useTranslation } from 'next-i18next';
-import React from 'react';
 
 import { useCorrespondence } from '@deps/contexts/CorrespondenceContext';
 import { CommunicationTypes } from '@deps/models/case/send-document';
@@ -18,6 +17,7 @@ const Confirm = ({ shouldShowCaseButton, formNames }: ConfirmProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
     const { state } = useCorrespondence();
     const source = state?.correspondence?.recipient;
+    const ccList = state?.correspondence?.ccList || [];
     const communicationType = state?.correspondence?.type;
 
     const address = state?.correspondence?.mailDetails;
@@ -42,13 +42,21 @@ const Confirm = ({ shouldShowCaseButton, formNames }: ConfirmProps) => {
                         <span className="font-bold"> {formNames?.map(formName => (formName ? formName : '')).join(', ')} </span>
                         {[CommunicationTypes.Email, CommunicationTypes.Fax].includes(communicationType as CommunicationTypes) && (
                             <PiiWrapper>
-                                <span>{t('confirm.subtitle.1')}</span> <span className="font-bold">{source}</span>
+                                <span>{t(`confirm.channel.${communicationType.toLowerCase()}`)}</span>
+                                <span className="font-bold"> {source}</span>
+                            </PiiWrapper>
+                        )}
+
+                        {communicationType === CommunicationTypes.Email && ccList?.length > 0 && (
+                            <PiiWrapper>
+                                <span> {t('confirm.subtitle.1')} </span>
+                                <span className="font-bold"> {ccList?.map(cc => (cc ? cc : '')).join(', ')}</span>
                             </PiiWrapper>
                         )}
                         {communicationType === CommunicationTypes.Mail && address && (
                             <>
                                 <PiiWrapper>
-                                    <span>{t('confirm.subtitle.1')} </span>
+                                    <span>{t(`confirm.channel.${communicationType.toLowerCase()}`)}</span>{' '}
                                     <span className="font-bold">
                                         {address?.addressLine1} {address?.addressLine2} {address?.addressLine3} {address?.city}{' '}
                                         {address?.zipCode?.substring(0, 5)}-{address?.zipCode?.substring(5, 9)}

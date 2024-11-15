@@ -1,18 +1,15 @@
-import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
-import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
-import FieldDateSelect, { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/field-date-select';
+import { FieldSize, FieldVariant } from '@deps/components/fields/field';
 import { Loader } from '@deps/components/page-loader';
 import SelectSimple from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { RMDProgramType, Terminateprogram, SpecialProgram } from '@deps/models/case/withdrawal/case';
-import { getSpecialPrograms } from '@deps/queries/api/policies';
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const noop = () => {};
+import { useSpecialProgram } from '@deps/hooks/useSpecialProgram';
+import { RMDProgramType, Terminateprogram } from '@deps/models/case/withdrawal/case';
+
+import { Program } from './program-item';
 
 const ProgramType = {
     PremiumDefault: 0,
@@ -33,9 +30,6 @@ export default function ExistingPrograms({ disableAllPrograms = false, terminate
 
     const [sswprograms, setsswprograms] = useState<Program[]>([]);
     const [rmdPrograms, setrmdPrograms] = useState<Program[]>([]);
-    const [loader, setLoader] = useState(false);
-
-    const [programs, setActivePrograms] = useState<SpecialProgram[] | null>([]);
 
     const rmdProgramStatus = [
         {
@@ -48,37 +42,13 @@ export default function ExistingPrograms({ disableAllPrograms = false, terminate
         },
     ];
 
-    useEffect(() => {
-        const getPrograms = async () => {
-            try {
-                setLoader(true);
-                setActivePrograms([]);
-                const spcialProgramdetails = await getSpecialPrograms(initialForm.data.contractNum, initialForm.carrier);
-
-                setActivePrograms(
-                    spcialProgramdetails?.allocationDetails?.filter(
-                        program =>
-                            [ProgramType.PremiumDefault, ProgramType.RMD, ProgramType.SSW, ProgramType.SSWNet].includes(
-                                program.typeOfAlloc
-                            ) &&
-                            (program.termDate === '' || dayjs().isBefore(program.termDate))
-                    ) || null
-                );
-                setLoader(false);
-            } catch (e) {
-                setLoader(false);
-                console.error('GetRMDSpecialPrograms::Error retrieving special program list', e);
-            }
-        };
-
-        getPrograms();
-    }, []);
+    const { activePrograms, isLoading } = useSpecialProgram(initialForm);
 
     useEffect(() => {
         const sswPrograms: Program[] = [];
         const rmdPrograms: Program[] = [];
 
-        programs?.forEach(program => {
+        activePrograms?.forEach(program => {
             if ([ProgramType.SSW, ProgramType.SSWNet].includes(program.typeOfAlloc)) {
                 sswPrograms.push({
                     programType: 'SSW',
@@ -108,7 +78,7 @@ export default function ExistingPrograms({ disableAllPrograms = false, terminate
 
         setsswprograms(sswPrograms);
         setrmdPrograms(rmdPrograms);
-    }, [programs]);
+    }, [activePrograms]);
 
     const addtoTerminatedprograms = (status: RMDProgramType, program: Program) => {
         program.programType === 'RMD' &&
@@ -147,6 +117,7 @@ export default function ExistingPrograms({ disableAllPrograms = false, terminate
                     return (
                         <div className="my-2 grid grid-cols-auto-2 gap-2" key={i}>
                             <Program program={item} isFormStateReadOnly={disableAllPrograms} />
+
                             <SelectSimple
                                 label={t('action') as string}
                                 options={rmdProgramStatus}
@@ -186,73 +157,8 @@ export default function ExistingPrograms({ disableAllPrograms = false, terminate
 
     return (
         <>
-            {loader && <Loader />}
-            {programs && programs.length > 0 ? allPrograms : null}
+            {isLoading && <Loader />}
+            {activePrograms && activePrograms.length > 0 ? allPrograms : null}
         </>
-    );
-}
-
-interface Program {
-    programType: string;
-    startDate: string;
-    nextDate: string;
-    amount: string;
-    frequency: string;
-    duration: string;
-    status: RMDProgramType;
-    allocationId: number;
-}
-interface ProgramProps {
-    program: Program;
-    isFormStateReadOnly: boolean;
-}
-export function Program({ program, isFormStateReadOnly }: ProgramProps) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.rmdMethod' });
-
-    return (
-        <div className="readonly pointer-events-none grid grid-cols-auto-4 gap-2">
-            <FieldDateSelect
-                label={t('startDate') as string}
-                id="startDate"
-                isFutureDateDisabled={false}
-                size={FieldSize.Small}
-                type={FieldType.BaseActive}
-                variant={FieldVariant.Inactive}
-                onChange={noop}
-                value={program.startDate ? dayjs(program.startDate, ZAHARA_API_DATE_FORMAT).format(DATE_PICKER_FORMAT) : ''}
-                disabled={isFormStateReadOnly}
-            />
-
-            <FieldDateSelect
-                label={t('transactions.nextDate') as string}
-                id="nextDate"
-                isFutureDateDisabled={false}
-                size={FieldSize.Small}
-                type={FieldType.BaseActive}
-                variant={FieldVariant.Inactive}
-                onChange={noop}
-                value={program.nextDate ? dayjs(program.nextDate, ZAHARA_API_DATE_FORMAT).format(DATE_PICKER_FORMAT) : ''}
-                disabled={isFormStateReadOnly}
-            />
-
-            <Field
-                label={t(`duration`) as string}
-                value={program.duration}
-                size={FieldSize.Small}
-                type={FieldType.BaseActive}
-                variant={FieldVariant.Inactive}
-                onChange={noop}
-            />
-
-            <Field
-                label={t(`amount`) as string}
-                value={program.amount}
-                size={FieldSize.Small}
-                leading={<div>$</div>}
-                type={FieldType.BaseActive}
-                variant={FieldVariant.Inactive}
-                onChange={noop}
-            />
-        </div>
     );
 }

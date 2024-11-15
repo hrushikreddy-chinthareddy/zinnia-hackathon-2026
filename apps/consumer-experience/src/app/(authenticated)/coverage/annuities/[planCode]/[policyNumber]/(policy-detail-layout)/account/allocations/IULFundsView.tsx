@@ -1,7 +1,7 @@
 'use client';
 import { useQuery } from '@tanstack/react-query';
 import { FundAccountTypeEnum } from '@zinnia/api-types/types/funds';
-import { LineOfBusiness, PolicyFeature } from '@zinnia/api-types/types/sor';
+import { FeatureType, LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/components';
 import { toTitleCase } from '@zinnia/utils';
 
@@ -48,8 +48,7 @@ export const IULFundsView = ({
     initialData: initialPolicyStatus,
     select: data => {
       return {
-        isFreelook:
-          data?.policyStatus === ('FREELOOK' as PolicyFeature.featureType),
+        isFreelook: data?.policyStatus === FeatureType.FREELOOK,
         freelookDate: data?.endDate,
       };
     },
