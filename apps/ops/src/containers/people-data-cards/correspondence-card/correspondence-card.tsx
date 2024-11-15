@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import React, { useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 import ContactCenterAddress from '@deps/components/otp-send-document/components/contact-address';
 import EmailAddress from '@deps/components/otp-send-document/components/email-field';
@@ -21,10 +21,18 @@ type CorrespondenceProps = {
     communicationOptions?: RadioItem[];
     policy: Policy;
     error: FormValidationErrors;
+    setError: Dispatch<SetStateAction<FormValidationErrors>>;
     correspondenceData?: Correspondence;
     setCorrespondenceData: (val: Correspondence) => void;
 };
-const CorrespondenceCard = ({ policy, communicationOptions, correspondenceData, error, setCorrespondenceData }: CorrespondenceProps) => {
+const CorrespondenceCard = ({
+    policy,
+    communicationOptions,
+    correspondenceData,
+    error,
+    setError,
+    setCorrespondenceData,
+}: CorrespondenceProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
 
     const selectedCommunicationType = correspondenceData?.type;
@@ -76,7 +84,10 @@ const CorrespondenceCard = ({ policy, communicationOptions, correspondenceData, 
             <Radio
                 items={communicationOptions ?? communicationTypes}
                 label={t('correspondence.label') as string}
-                onChange={event => setCommunicationType(event.target.value as CommunicationTypes)}
+                onChange={event => {
+                    setCommunicationType(event.target.value as CommunicationTypes);
+                    setError({});
+                }}
                 value={communicationType}
             />
 
