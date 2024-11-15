@@ -29,8 +29,6 @@ interface Props {
 export default async function PaymentHistory({ params }: Props) {
   const { data, error } = await getPaymentHistory(params);
 
-  console.log(data);
-
   if (
     error ||
     (data?.completedTransactions.length === 0 &&
@@ -47,7 +45,7 @@ export default async function PaymentHistory({ params }: Props) {
     );
   }
 
-  const { completedTransactions, pendingTransactions, carrierId } = data!;
+  const { completedTransactions, pendingTransactions } = data!;
 
   const sortedPendingTransactions = pendingTransactions.sort((a, b) =>
     sortByDate(a.date, b.date, { order: 'asc' })

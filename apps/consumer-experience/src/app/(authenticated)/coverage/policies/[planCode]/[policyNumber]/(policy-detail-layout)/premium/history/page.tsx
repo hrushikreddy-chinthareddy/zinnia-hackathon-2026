@@ -45,7 +45,7 @@ export default async function PaymentHistory({ params }: Props) {
     );
   }
 
-  const { completedTransactions, pendingTransactions, carrierId } = data!;
+  const { completedTransactions, pendingTransactions } = data!;
 
   const sortedPendingTransactions = pendingTransactions.sort((a, b) =>
     sortByDate(a.date, b.date, { order: 'asc' })

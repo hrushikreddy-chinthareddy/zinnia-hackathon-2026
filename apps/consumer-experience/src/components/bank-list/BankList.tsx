@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { FC, useRef } from 'react';
 
 import { actionLogInfo } from '@/actions/log-actions';
-import { getPolicyDetails, getPolicyProfile } from '@/queries/policy-queries';
+import { getPolicyProfile } from '@/queries/policy-queries';
 import { QueryKeys } from '@/queries/query-keys';
 import { useBpmStore } from '@/store/store';
 import { PolicyProfile } from '@/types/policy';
@@ -66,13 +66,6 @@ export const BankList: FC<BankListProps> = ({
     initialData: initialProfileData,
     queryFn: () => getPolicyProfile(planCode, policyNumber),
   });
-
-  const { data: policyData } = useQuery({
-    queryKey: [QueryKeys.POLICY],
-    queryFn: () => getPolicyDetails(planCode, policyNumber),
-  });
-
-  console.log('POLICY DATA++++++', policyData);
 
   if (data?.bankDetails && data.bankDetails.length) {
     const allBankData = data.bankDetails.map(bankDetail => {

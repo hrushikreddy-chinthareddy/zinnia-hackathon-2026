@@ -778,9 +778,7 @@ export const getPaymentDetails = async (
 export const getPaymentHistory = async ({
   planCode,
   policyNumber,
-}: PolicyRequestInputs): Promise<
-  ApiResponse<PaymentHistoryTransaction & Partial<Policy>>
-> => {
+}: PolicyRequestInputs): Promise<ApiResponse<PaymentHistoryTransaction>> => {
   logTrace('getPaymentHistory', {
     planCode,
     policyNumber,
@@ -854,8 +852,6 @@ export const getPaymentHistory = async ({
     const pendingTransactions =
       pendingPromise.status === 'fulfilled' ? pendingPromise.value : [];
 
-    const policyData = transformPolicyDetails(policyPromise.value);
-
     return {
       data: {
         completedTransactions: completedTransactions.map(t =>
@@ -864,7 +860,6 @@ export const getPaymentHistory = async ({
         pendingTransactions: pendingTransactions.map(t =>
           transformPaymentHistory(policyPromise.value, t)
         ),
-        ...policyData,
       },
       error: null,
     };
