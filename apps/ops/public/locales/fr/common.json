@@ -4458,6 +4458,7 @@
         "submitted": "Soumis",
         "SSW": "Programme SSW existant",
         "RMD": "Programme RMD existant",
-        "EFT": "Programme EFT existant"
+        "EFT": "Programme EFT existant",
+        "noProgramFound": "Aucun programme existant trouvé"
     }
 }

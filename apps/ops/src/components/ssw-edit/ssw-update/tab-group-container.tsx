@@ -49,7 +49,8 @@ const TabGroupContent = ({
     const { marketingName, planCode, policyNumber, productType, status, tooltip, variant } = globalValuesData;
     console.log(currentStepIndex);
     const handleClick = (step: Step) => {
-        if (step.isDisabled || currentStepIndex === step.index || step.text === 'Confirm') return;
+        if (step.isDisabled || currentStepIndex === step.index) return;
+        if (currentStepIndex === steps.length - 1) return;
         setCurrentStepIndex(step.index);
     };
     const policyOwnerId = policy?.partyRoles?.find(pr => pr.partyRole === PartyRole.OWNER)?.partyId;
@@ -104,7 +105,7 @@ const TabGroupContent = ({
                               onProgramUpdate={onSswUpdate}
                           />
                       )}
-                {isFormSubmitted && !isLoading && (
+                {!isLoading && isFormSubmitted && (
                     <div className="flex justify-center items-center py-20">
                         <CardInfo
                             icon={<CircleCheckIcon className="text-semantic-success" height={50} width={50} />}
