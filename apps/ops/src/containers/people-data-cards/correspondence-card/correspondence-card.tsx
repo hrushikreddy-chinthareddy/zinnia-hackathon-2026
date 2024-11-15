@@ -35,8 +35,8 @@ const CorrespondenceCard = ({
     correspondenceData,
     error,
     showAdditionalRecipient,
-    setCorrespondenceData,
     setError,
+    setCorrespondenceData,
 }: CorrespondenceProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
 
@@ -131,7 +131,10 @@ const CorrespondenceCard = ({
             <Radio
                 items={communicationOptions ?? communicationTypes}
                 label={t('correspondence.label') as string}
-                onChange={event => setCommunicationType(event.target.value as CommunicationTypes)}
+                onChange={event => {
+                    setCommunicationType(event.target.value as CommunicationTypes);
+                    setError({});
+                }}
                 value={communicationType}
             />
 
