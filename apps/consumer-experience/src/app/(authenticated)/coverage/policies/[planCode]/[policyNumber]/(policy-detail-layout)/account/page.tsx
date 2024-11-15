@@ -1,4 +1,4 @@
-import { PolicyFeature } from '@zinnia/api-types/types/sor';
+import { FeatureType } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import { Metadata } from 'next';
 
@@ -6,13 +6,9 @@ import { AccountValue } from '@/components/account-value/AccountValue';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { StatusIconText } from '@/components/status-icon-text/StatusIconText';
 import { RouteKey, getPageTitle } from '@/route-map';
-import {
-  ApiResponse,
-  getPolicyDetails,
-  getPolicyStatusDetails,
-} from '@/services';
+import { getPolicyDetails, getPolicyStatusDetails } from '@/services';
 import { getLoanEligibility, getWithdrawalEligibility } from '@/services/bpm';
-import { Fund, getFunds } from '@/services/funds';
+import { getFunds } from '@/services/funds';
 import { PolicyRequestInputs } from '@/types/policy';
 import { isNullEmptyOrUndefined } from '@/utils/data';
 
@@ -59,10 +55,6 @@ export default async function AccountValuePage({
     }),
   ]);
 
-  const summaryData =
-    fundsDataRes.status === 'fulfilled'
-      ? fundsDataRes.value
-      : ({} as ApiResponse<Fund[]>);
   const withdrawalEligibility =
     withDrawalEligibilityRes.status === 'fulfilled'
       ? withDrawalEligibilityRes.value?.data?.isEligible
@@ -71,15 +63,9 @@ export default async function AccountValuePage({
     loanEligibilityRes.status === 'fulfilled'
       ? loanEligibilityRes.value?.data?.isEligible
       : null;
-  const policyDetails =
-    policyDetailsRes.status === 'fulfilled'
-      ? policyDetailsRes.value?.data
-      : null;
   const policyStatusData =
     policyStatusRes?.status === 'fulfilled' ? policyStatusRes.value.data : null;
-  const isFreelook =
-    policyStatusData?.policyStatus ===
-    ('FREELOOK' as PolicyFeature.featureType);
+  const isFreelook = policyStatusData?.policyStatus === FeatureType.FREELOOK;
 
   const accountValueSummary = () => {
     // TODO: not actually sure what the right error handling is here

@@ -8,18 +8,20 @@ import { Content, ContentVariant } from '@deps/components/content/content';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { convertKebabedDateString } from '@deps/helpers/string.helper';
 import { Statuses } from '@deps/models/case/case';
 import { TransactionStatus, TransactionType } from '@deps/models/policy/sor-policy';
 import { getPolicyTransactions } from '@deps/queries/api/policies';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
-import SidesheetReverseRecreate from './reverse-recreate/side-sheet-reverse-recreate';
-import SideSheetReversedTransaction from './reverse-recreate/side-sheet-reversed-transaction';
-import SidesheetCancelPending from './side-sheet-cancel-pending';
 import SideSheetFinancialTransactionContent from './side-sheet-financial-content';
-import { getFinancialTransactionSideSheetValues, replacesReverseInitiator } from './side-sheet-transaction.helper';
-import { SideSheetTransactionProps, TransactionSideSheetValues } from './types';
-import SideSheetWithdrawalContent from './withdrawal/side-sheet-withdrawal-content';
+import SidesheetCancelPending from '../cancel/side-sheet-cancel-pending';
+import SidesheetReverseRecreate from '../reverse-recreate/side-sheet-reverse-recreate';
+import SideSheetReversedTransaction from '../reverse-recreate/side-sheet-reversed-transaction';
+import { getFinancialTransactionSideSheetValues, replacesReverseInitiator } from '../side-sheet-transaction.helper';
+import { SideSheetTransactionProps, TransactionSideSheetValues } from '../types';
+import SideSheetWithdrawalContent from '../withdrawal/side-sheet-withdrawal-content';
+import { WithdrawalSideSheetValues } from '../withdrawal/types';
 
 const SidesheetViews = {
     surrender: 'surrender',
@@ -30,20 +32,29 @@ const SidesheetViews = {
     reverseInitiator: 'reverseInitiator',
 };
 
-const SideSheetFinancialTransaction = ({ policy, refreshTransactions, transaction }: SideSheetTransactionProps) => {
-    const { t } = useTranslation(undefined);
+const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
+    const { t } = useTranslation();
     const { featureFlags } = useOptimizely();
 
-    const [sidesheetValues, setSidesheetValues] = useState<TransactionSideSheetValues>(
-        getFinancialTransactionSideSheetValues(policy, transaction, t, featureFlags)
-    );
-    const { cancelCta, reverseCta, getAsyncSideSheetValues } = sidesheetValues;
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState<boolean>(false);
     const [asyncValues, setAsyncValues] = useState<any | null>(null);
-
     const [view, setView] = useState(SidesheetViews.default);
     const { handleOpen, changeSideSheetContent } = useSideSheetContext();
+    const { policy, transaction, refreshTransactions } = props || {};
 
+    const [sideSheetValues, setSideSheetValues] = useState<TransactionSideSheetValues | WithdrawalSideSheetValues>(
+        getFinancialTransactionSideSheetValues(policy, transaction, t, featureFlags)
+    );
+    const {
+        cancelCta,
+        effectiveDate,
+        getAsyncSideSheetValues,
+        reverseCta,
+        processDate,
+        reversalTransactionId,
+        transactionId,
+        transactionValue,
+    } = sideSheetValues || {};
     const { status, transactionType } = transaction || {};
 
     useEffect(() => {
@@ -100,24 +111,30 @@ const SideSheetFinancialTransaction = ({ policy, refreshTransactions, transactio
 
             const asyncValues = getAsyncSideSheetValues ? await getAsyncSideSheetValues() : {};
             setAsyncValues(asyncValues);
-            setSidesheetValues(vals => {
+
+            setSideSheetValues(vals => {
                 return { ...vals, ...asyncValues };
             });
             setLoading(false);
         };
 
         !loading && !asyncValues && getAsyncSideSheetValues && getValues();
-    }, [getAsyncSideSheetValues, asyncValues, setAsyncValues, loading, setLoading, setSidesheetValues]);
+    }, [asyncValues, getAsyncSideSheetValues, loading]);
 
     let SidesheetContent;
 
     switch (transactionType) {
         case TransactionType.FullSurrender:
         case TransactionType.PartialWithdrawalOneTime:
-            SidesheetContent = <SideSheetWithdrawalContent loading={loading} t={t} values={sidesheetValues} />;
+            SidesheetContent = <SideSheetWithdrawalContent t={t} values={sideSheetValues as WithdrawalSideSheetValues} loading={loading} />;
+            break;
+        case TransactionType.FreeLookCancellation:
+            SidesheetContent = <SideSheetWithdrawalContent t={t} values={sideSheetValues as WithdrawalSideSheetValues} loading={loading} />;
             break;
         default:
-            SidesheetContent = <SideSheetFinancialTransactionContent loading={loading} t={t} values={sidesheetValues} />;
+            SidesheetContent = (
+                <SideSheetFinancialTransactionContent t={t} values={sideSheetValues as TransactionSideSheetValues} loading={loading} />
+            );
             break;
     }
 
@@ -133,32 +150,32 @@ const SideSheetFinancialTransaction = ({ policy, refreshTransactions, transactio
         case SidesheetViews.cancel:
             return (
                 <SidesheetCancelPending
-                    amount={sidesheetValues.transactionValue as string}
+                    amount={transactionValue}
                     closeSidesheet={() => {
                         refreshTransactions && refreshTransactions();
                         handleOpen(false);
                     }}
                     exitTransaction={() => setView(SidesheetViews.default)}
-                    policyNumber={policy.policyNumber}
-                    planCode={policy.product?.planCode}
-                    transactionId={sidesheetValues.transactionId as string}
-                    transactionType={sidesheetValues.transactionType as string}
+                    policyNumber={policy?.policyNumber}
+                    planCode={policy?.product?.planCode}
+                    transactionId={transactionId as string}
+                    transactionType={transactionType as string}
                 />
             );
         case SidesheetViews.reverse:
             return (
                 <SidesheetReverseRecreate
-                    amount={sidesheetValues.transactionValue as string}
-                    effectiveDate={sidesheetValues.effectiveDate as string}
+                    amount={transactionValue}
+                    effectiveDate={effectiveDate as string}
                     exitTransaction={() => setView(SidesheetViews.default)}
                     closeSidesheet={() => {
                         refreshTransactions && refreshTransactions();
                         handleOpen(false);
                     }}
-                    policyNumber={policy.policyNumber}
-                    planCode={policy.product?.planCode}
-                    transactionType={sidesheetValues.transactionType as string}
-                    reversalTransactionId={sidesheetValues.reversalTransactionId as string}
+                    policyNumber={policy?.policyNumber}
+                    planCode={policy?.product?.planCode}
+                    transactionType={transactionType as string}
+                    reversalTransactionId={reversalTransactionId as string}
                 />
             );
         case SidesheetViews.default:
@@ -168,33 +185,35 @@ const SideSheetFinancialTransaction = ({ policy, refreshTransactions, transactio
                     <div className={`flex flex-col gap-4`}>
                         <div className="flex flex-col">
                             {transactionType !== TransactionType.FullSurrender &&
-                                transactionType !== TransactionType.PartialWithdrawalOneTime && (
+                                transactionType !== TransactionType.PartialWithdrawalOneTime &&
+                                transactionType !== TransactionType.FreeLookCancellation && (
                                     <div className={cancelCta ? 'mb-4' : ''}>
-                                        <Content
-                                            details={numberFormatify(sidesheetValues?.transactionValue)}
-                                            variant={ContentVariant.Value}
-                                        />
+                                        <Content details={numberFormatify(transactionValue)} variant={ContentVariant.Value} />
                                         <Content
                                             className="text-gray-600"
                                             details={
-                                                t('policy.history.sidesheet.effective', { date: sidesheetValues?.effectiveDate }) as string
+                                                t('policy.history.sidesheet.effective', {
+                                                    date: convertKebabedDateString(effectiveDate),
+                                                }) as string
                                             }
                                             variant={ContentVariant.Caption}
                                         />
                                     </div>
                                 )}
                             {reverseCta && (
-                                <Button
-                                    onClick={() => {
-                                        changeSideSheetContent(t('policy.history.reverseRecreateSidesheet.title'));
-                                        setView(SidesheetViews.reverse);
-                                    }}
-                                    mode="link"
-                                    size="small"
-                                    className="mt-4.5 !justify-start !p-0"
-                                >
-                                    {reverseCta}
-                                </Button>
+                                <div>
+                                    <Button
+                                        onClick={() => {
+                                            changeSideSheetContent(t('policy.history.reverseRecreateSidesheet.title'));
+                                            setView(SidesheetViews.reverse);
+                                        }}
+                                        mode="link"
+                                        size="small"
+                                        className="mt-4.5 !justify-start !p-0"
+                                    >
+                                        {reverseCta}
+                                    </Button>
+                                </div>
                             )}
                             {cancelCta && (
                                 <Button
@@ -213,7 +232,7 @@ const SideSheetFinancialTransaction = ({ policy, refreshTransactions, transactio
                                 <ChipStatus
                                     classNames="mb-4"
                                     status={'Canceled' as Statuses}
-                                    statusText={t('status.canceledOn', { date: sidesheetValues?.processDate }) as string}
+                                    statusText={t('status.canceledOn', { date: convertKebabedDateString(processDate) }) as string}
                                 />
                             )}
                         </div>

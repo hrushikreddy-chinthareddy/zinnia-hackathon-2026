@@ -1,8 +1,8 @@
 'use client';
 
 import {
+  FeatureType,
   LineOfBusiness,
-  PolicyFeature,
   PolicyStatus,
 } from '@zinnia/api-types/types/sor';
 import { BannerAlert, BannerVariant, IconType } from '@zinnia/bloom/components';
@@ -15,10 +15,7 @@ import {
   EVERLY_CONTACT_PHONE_NUMBER,
   lineOfBusinessUrlPath,
 } from '@/utils/data';
-import {
-  convertKebabedDateString,
-  standardDateMonthDayYear,
-} from '@/utils/dates';
+import { standardDateMonthDayYear } from '@/utils/dates';
 
 interface PolicyStatusAlertBannerProps extends PolicyRequestInputs {
   lineOfBusiness?: LineOfBusiness;
@@ -80,15 +77,14 @@ export const PolicyStatusAlertBanner = ({
       };
       break;
 
-    case 'FREELOOK' as PolicyFeature.featureType:
+    case FeatureType.FREELOOK:
       if (canShowFreelookBanner) {
         statusContent = {
           text: (
             <span className="typography-nav-links-sm-inline">
-              You're still in the free look period. That means you can cancel
-              this policy without penalty anytime before{' '}
-              {convertKebabedDateString(policyStatusData.endDate)}. If you'd
-              like to cancel, call{' '}
+              You’re still in the free look period, a {policyStatusData.period}
+              -day window after policy issuance when you can cancel without
+              penalty. If you'd like to cancel, call{' '}
               <a href={`tel:+${EVERLY_CONTACT_PHONE_NUMBER}`}>
                 {EVERLY_CONTACT_PHONE_NUMBER}
               </a>

@@ -724,7 +724,9 @@
                     "pendingLapseBannerText": "Cette police nécessite un paiement avant son expiration. Y aller maintenant?",
                     "pendingLapseBannerLink": "Effectuer un paiement de prime",
                     "lapseBannerText": "Ce contrat est agréé moyennant une prime de réintégration. Y aller maintenant ?",
-                    "lapseBannerLink": "Effectuer un paiement de prime"
+                    "lapseBannerLink": "Effectuer un paiement de prime",
+                    "freeLookCancelBannerText": "Cette police est encore dans sa période d'examen gratuit et peut être annulée sans pénalité jusqu'à cette date.",
+                    "freeLookCancelBannerLink": "Annuler la police"
                 }
             },
             "empty": {
@@ -786,13 +788,20 @@
             "owner": "Propriétaire",
             "ssn": "SSN",
             "policyNumber": "Numéro de police",
+            "policy": "Politique",
             "currentStage": "Étape actuelle",
             "contractNumber": "Contrat #",
             "productName": "Nom du produit",
             "agent": "Agent",
             "caseId": "ID du dossier",
+            "case/ID": "Dossier/ID",
             "documentNumber": "Numéro de document",
-            "viewCase": "Afficher les détails du cas numéro {{caseNumber}}"
+            "viewCase": "Afficher le cas",
+            "viewCaseNumber": "Afficher les détails du cas numéro {{caseNumber}}",
+            "viewCaseDetails": "Afficher les détails du cas",
+            "caseStatus": "Statut du dossier",
+            "ownerSsn": "Propriétaire/SSN",
+            "agentSsn": "Agente/SSN"
         },
         "pageSize": "Lignes par page",
         "results": "Résultats",
@@ -868,6 +877,7 @@
             },
             "empty": {
                 "title": "Nous n’avons pas trouvé de cas correspondant à votre recherche.",
+                "titleFilters": "Nous n'avons pas pu trouver de cas correspondant à vos filtres.",
                 "paragraph": "Ne vous inquiétez pas, c'est probablement juste une faute de frappe. Vérifiez votre saisie et réessayez.",
                 "action": {
                     "text": "Vous rencontrez toujours des problèmes ? ",
@@ -1571,6 +1581,8 @@
             },
             "distributionMethod": {
                 "payeeName": "Le nom du bénéficiaire",
+                "confirmTerminate": "Êtes-vous sûr de vouloir terminer",
+                "type": "Type",
                 "participantId": "Identifiant du participant",
                 "accountHolder": "Titulaire du compte",
                 "reEnterAccountNumber": "Réécrivez votre numéro de compte",
@@ -1629,7 +1641,25 @@
                 "isDirectDepositFormValid": "Le formulaire de dépôt direct est-il valide?",
                 "yes": "Oui",
                 "no": "Non",
-                "forethought": "Forethought"
+                "forethought": "Forethought",
+                "contributionType": {
+                    "contribution": "Contribution",
+                    "loan": "Remboursement de prêt",
+                    "disbursement": "Décaissement"
+                },
+                "accountTypeO": {
+                    "savings": "Épargne",
+                    "checking": "Compte courant"
+                },
+                "submitted": "Soumis",
+                "close": "Fermer",
+                "back": "Retour à la création de tâche",
+                "terminate": "Terminer",
+                "tryAgain": "Réessayer",
+                "bankUpdateTitle": "Détails bancaires",
+                "cancel": "Annuler",
+                "submit": "Soumettre",
+                "submitedMessage": "La demande de mise à jour bancaire a été soumise."
             },
             "neaBenefitsSensitivity": "Sensibilité aux avantages NEA",
             "distributionInstruction": {
@@ -1818,6 +1848,9 @@
                 "fullWithdrawal": "Formulaire de rachat total",
                 "partialWithdrawal": "Formulaire de rachat partiel"
             },
+            "bankUpdate": {
+                "title": "Détails bancaires"
+            },
             "cancel": "Annuler",
             "cancelConfirm": "Revenir à la création du dossier effacera votre brouillon. Êtes-vous sûr de vouloir revenir à la création du dossier ?",
             "cancelError": "Une erreur s'est produite lors de l'annulation de cette tâche. Veuillez réessayer.",
@@ -1876,7 +1909,8 @@
             "transactionSubType": "Sous-type",
             "documentsTitle": "Formulaire(s) à mettre à jour",
             "view": "Afficher",
-            "noFormsFound": "Aucun formulaire trouvé"
+            "noFormsFound": "Aucun formulaire trouvé",
+            "addNewDocument": "Envoyer un autre document"
         },
         "correspondence": {
             "label": "Où le(s) document(s) doivent-ils être envoyés ? ",
@@ -1959,6 +1993,13 @@
             "formTitles": {
                 "sbgc": "Annuity Contract Scheduled Systematic Withdrawal",
                 "standard": "{{carrier}} Systematic Withdrawal Request"
+            },
+            "sswUpdateOptions": {
+                "new": "Nouveau",
+                "rmdUpdate": "Mise à jour RMD",
+                "sswUpdate": "Mise à jour SSW",
+                "bankUpdate": "Mise à jour bancaire",
+                "eftDrawUpdate": "Mise à jour de prélèvement EFT"
             }
         }
     },
@@ -2493,6 +2534,7 @@
                 "reverseSurrender": "Annuler la reddition",
                 "routingNumber": "Numéro de routage",
                 "setAsMailingAddress": "Définir comme adresse postale",
+                "stateNotFound": "État non trouvé",
                 "submittedAmount": "Montant soumis",
                 "submittedAmountTooltip": "Ceci est le montant soumis. En d'autres termes, le propriétaire a écrit un chèque ou initié un virement de fonds pour ce montant. Le montant soumis peut différer du montant appliqué si nous ne pouvions appliquer qu'un montant inférieur en raison des limites de test de la politique. Ce sont des limites légales quant à la somme qu'un propriétaire peut verser dans la police sur une certaine période de temps. Cela peut entraîner le retour de certains fonds au propriétaire (appelé un « forçage »).",
                 "surrender": "Reddition",
@@ -2822,6 +2864,7 @@
     },
     "tooltip": {
         "jointOwner": "Co-titulaire",
+        "agent": "Agent",
         "ssn": "SSN",
         "other": "autre"
     },
@@ -3849,7 +3892,8 @@
             "label": "Transactions",
             "managePremiumAutopay": "Gérer le paiement automatique des primes",
             "newPremium": "Démarrez un abonnement premium unique",
-            "startAWithdrawal": "Démarrer un retrait"
+            "startAWithdrawal": "Démarrer un retrait",
+            "cancelPolicy": "Annuler la police"
         }
     },
     "historyEventCard": {
@@ -4348,7 +4392,8 @@
         "formSelection": {
             "title": "Sélection de nouveau formulaire",
             "errors": {
-                "selectForm": "Sélectionnez un formulaire pour continuer."
+                "selectForm": "Sélectionnez un formulaire pour continuer.",
+                "selectOptions": "Sélectionnez un type et un sous-type de transaction pour continuer."
             },
             "label": "Sélectionnez le formulaire approprié qui doit être mis à jour."
         },
@@ -4359,5 +4404,62 @@
                 "defaultTitle": "Form Entry"
             }
         }
+    },
+    "sswUpdate": {
+        "sswUpdateOptions": {
+            "new": "Nouveau",
+            "rmdUpdate": "Mise à jour RMD",
+            "sswUpdate": "Mise à jour SSW",
+            "bankUpdate": "Mise à jour bancaire",
+            "eftDrawUpdate": "Mise à jour de prélèvement EFT"
+        },
+        "tabs": {
+            "start": {
+                "tabTitle": "Démarrer",
+                "title": "Mettre à jour le programme SSW",
+                "subTitle": "Apportez des modifications au montant ou à la méthode de paiement pour l'autopaiement de la prime de cette police. Tout d'abord, assurons-nous de pouvoir suivre cette transaction dans OnBase."
+            },
+            "amount": {
+                "tabTitle": "Montant",
+                "programAmount": "Montant",
+                "programFrequency": "Fréquence",
+                "programDuration": "Durée",
+                "programNextDate": "Prochaine date",
+                "frequencyOptions": {
+                    "none": "Aucune",
+                    "monthly": "Mensuel",
+                    "quarterly": "Trimestriel",
+                    "semiAnnually": "Semestriel",
+                    "annually": "Annuel"
+                }
+            },
+            "summary": {
+                "tabTitle": "Résumé",
+                "reviewMessage": "Tout semble bon ! Assurez-vous de vérifier vos entrées avant de soumettre",
+                "updatedProgram": "Mises à jour du programme",
+                "current": "Actuel",
+                "amount": "Montant",
+                "frequency": "Fréquence",
+                "duration": "Durée",
+                "nextDate": "Prochaine date"
+            },
+            "confirm": {
+                "tabTitle": "Confirmer"
+            }
+        },
+        "formValidation": {
+            "signaturePresentOptionMustBeSelected": "L'option de signature présente doit être sélectionnée"
+        },
+        "signTabTitle": "Signature",
+        "success": "La demande SSW a été soumise.",
+        "back": "Retour à la création de tâche",
+        "channel": "Canal",
+        "close": "Fermer",
+        "tryAgain": "Réessayer",
+        "submitted": "Soumis",
+        "SSW": "Programme SSW existant",
+        "RMD": "Programme RMD existant",
+        "EFT": "Programme EFT existant",
+        "noProgramFound": "Aucun programme existant trouvé"
     }
 }

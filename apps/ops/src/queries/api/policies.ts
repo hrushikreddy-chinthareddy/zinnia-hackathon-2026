@@ -5,7 +5,14 @@ import { PaginationParams } from '@deps/components/pagination/pagination';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { Carrier, SpecialProgram, TransactionHistory } from '@deps/models/case/withdrawal/case';
 import { VariableQuoteResponse } from '@deps/models/case/withdrawal/rmd';
-import { Policy, Transaction, TransactionStatus } from '@deps/models/policy/sor-policy';
+import {
+    FullSurrenderQuoteResponse,
+    PartialWithdrawalOneTimeQuoteResponse,
+    Policy,
+    Transaction,
+    TransactionStatus,
+    TransactionType,
+} from '@deps/models/policy/sor-policy';
 import { client } from '@deps/queries/api-utils/client';
 import { isMockPolicyDetailsRequestEnabled, isMockPolicySearchRequestEnabled } from '@deps/services/api-config';
 import { mockPolicy } from '@deps/services/mocks/sor-policy';
@@ -429,6 +436,39 @@ export const getPolicyTransactionHistory = async (
     }
 };
 
+export const getSpecialProgramsSSR = async (
+    policyNumber: string,
+    clientCode: string,
+    accessToken?: string
+): Promise<SpecialProgram | null> => {
+    const loggingContext = {
+        file: 'queries/api/policies',
+        function: 'getSpecialProgramsSSR',
+    };
+
+    try {
+        const url = `${apiServerBaseUrl}/policy/v1/policies/specialprogramdetails?policyNumber=${policyNumber}&clientCode=${clientCode}`;
+        const { data } = await serverApi.get<SpecialProgram | null, AxiosResponse<SpecialProgram>>(url, {
+            authorization: `Bearer ${accessToken}`,
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                Accept: 'application/json',
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+        return data;
+    } catch (error: any) {
+        logWarn('getSpecialProgramsSSR', {
+            ...parseErrorInformation(error),
+            policyNumber,
+            clientCode,
+            ...loggingContext,
+        });
+        return null;
+    }
+};
+
 // This hits a Spectrum API to get Special programs
 export const getSpecialPrograms = async (policyNumber: string, clientCode: string): Promise<SpecialProgram | null> => {
     try {
@@ -512,6 +552,42 @@ export const getPolicyTransactions = async ({
         console.error('An error occurred while requesting transactions', error);
 
         return error.response;
+    }
+};
+enum WithdrawalQuoteEndpointType {
+    FullSurrender = 'fullsurrender',
+    PartialWithdrawalOneTime = 'partialwithdrawalonetime',
+}
+
+// TODO MG: remove any for actual types
+export const policyWithdrawalQuote = async (
+    planCode: string | undefined,
+    policyNumber?: string,
+    transactionType?: TransactionType,
+    requestBody?: any
+): Promise<any> => {
+    if (!planCode || !policyNumber || !transactionType || !requestBody) {
+        console.error('policyWithdrawalQuote::missing-args');
+
+        return null;
+    }
+
+    try {
+        const type =
+            transactionType === TransactionType.FullSurrender
+                ? WithdrawalQuoteEndpointType.FullSurrender
+                : WithdrawalQuoteEndpointType.PartialWithdrawalOneTime;
+
+        const { data } = await client.post<any, AxiosResponse<FullSurrenderQuoteResponse | PartialWithdrawalOneTimeQuoteResponse>>(
+            `${baseAppUrl}/api/policy/v1/policies/${planCode}/${policyNumber}/${type}/quote`,
+            requestBody
+        );
+
+        return data;
+    } catch (error: any) {
+        console.error('policyWithdrawalQuote::an error occurred during policy withdrawal quote', error);
+
+        return error?.data;
     }
 };
 

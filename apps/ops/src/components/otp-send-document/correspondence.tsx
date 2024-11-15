@@ -116,7 +116,7 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
             await goToNext();
         } catch (e: any) {
             setLoader(false);
-            setError({ ...error, submit: e?.message as string });
+            setError({ submit: e?.message as string });
         }
     };
 

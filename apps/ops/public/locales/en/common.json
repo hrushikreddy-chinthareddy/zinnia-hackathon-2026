@@ -701,7 +701,9 @@
                     "pendingLapseBannerText": "This policy needs a payment before it lapses. Go there now?",
                     "pendingLapseBannerLink": "Make a premium payment",
                     "lapseBannerText": "This policy is approved for a reinstatement premium.  Go there now?",
-                    "lapseBannerLink": "Make a premium payment"
+                    "lapseBannerLink": "Make a premium payment",
+                    "freeLookCancelBannerText": "This policy is still in its free look period and can be canceled without penalty until",
+                    "freeLookCancelBannerLink": "Cancel policy"
                 }
             },
             "empty": {
@@ -793,13 +795,20 @@
             "owner": "Owner",
             "ssn": "SSN",
             "policyNumber": "Policy number",
+            "policy": "Policy",
             "currentStage": "Current stage",
             "contractNumber": "Contract #",
             "productName": "Product name",
             "agent": "Agent",
             "caseId": "Case ID",
+            "case/ID": "Case/ID",
             "documentNumber": "Document number",
-            "viewCase": "View case details for case number {{caseNumber}}"
+            "viewCase": "View case",
+            "viewCaseNumber": "View case details for case number {{caseNumber}}",
+            "viewCaseDetails": "View case details",
+            "caseStatus": "Case Status",
+            "ownerSsn": "Owner/SSN",
+            "agentSsn": "Agent/SSN"
         },
         "pageSize": "Rows per page",
         "results": "Results",
@@ -875,6 +884,7 @@
             },
             "empty": {
                 "title": "We couldn't find a case that matches your search.",
+                "titleFilters": "We couldn't find a case that matches your filters.",
                 "paragraph": "Don't worry, it's probably just a typo. Check your input and try again.",
                 "action": {
                     "text": "Still having issues?",
@@ -1582,6 +1592,8 @@
             },
             "distributionMethod": {
                 "payeeName": "Payee name",
+                "confirmTerminate": "Are you sure you want to terminate",
+                "type": "Type",
                 "participantId": "Participant id",
                 "accountHolder": "Account holder",
                 "accountNumber": "Account number",
@@ -1643,7 +1655,25 @@
                 "consentAvailable": "Consent Available",
                 "yes": "Yes",
                 "no": "No",
-                "forethought": "Forethought"
+                "forethought": "Forethought",
+                "contributionType": {
+                    "contribution": "Contribution",
+                    "loan": "Loan Repayment",
+                    "disbursement": "Disbursement"
+                },
+                "accountTypeO": {
+                    "savings": "Savings",
+                    "checking": "Checking"
+                },
+                "submitted": "Submitted",
+                "close": "Close",
+                "back": "Back to create task",
+                "terminate": "Terminate",
+                "tryAgain": "Try Again",
+                "bankUpdateTitle": "Bank Details",
+                "cancel": "Cancel",
+                "submit": "Submit",
+                "submitedMessage": "Bank Update Request has been submitted."
             },
             "neaBenefitsSensitivity": "NEA Benefit Sensitivity",
             "distributionInstruction": {
@@ -1836,6 +1866,9 @@
                 "fullWithdrawal": "Surrender/Full withdrawal form",
                 "partialWithdrawal": "Partial withdrawal form"
             },
+            "bankUpdate": {
+                "title": "Bank Details"
+            },
             "cancel": "Cancel",
             "cancelConfirm": "Returning to create case will delete your draft. OK to return to create case?",
             "cancelError": "An error occurred while cancelling this task. Please try again.",
@@ -1893,7 +1926,8 @@
             "transactionSubType": "Subtype",
             "documentsTitle": "Form(s) to update",
             "view": "View",
-            "noFormsFound": "No forms found"
+            "noFormsFound": "No forms found",
+            "addNewDocument": "Send another document"
         },
         "correspondence": {
             "label": "Where should the document(s)  be sent",
@@ -1981,6 +2015,13 @@
             "formTitles": {
                 "sbgc": "Annuity Contract Scheduled Systematic Withdrawal",
                 "standard": "{{carrier}} Systematic Withdrawal Request"
+            },
+            "sswUpdateOptions": {
+                "new": "New",
+                "rmdUpdate": "RMD Update",
+                "sswUpdate": "SSW Update",
+                "bankUpdate": "Bank Update",
+                "eftDrawUpdate": "EFT Draw Update"
             }
         }
     },
@@ -2737,6 +2778,7 @@
                 "reverseSurrender": "Reverse surrender",
                 "routingNumber": "Routing number",
                 "setAsMailingAddress": "Set as mailing address",
+                "stateNotFound": "State not found",
                 "submittedAmount": "Submitted amount",
                 "submittedAmountTooltip": "This is how much was submitted. In other words, the owner wrote a check or initiated a funds transfer for this amount. Submitted amount may differ from the applied amount if we could only apply a lower amount due to policy test limits. These are legal limits to how much an owner can pay into the policy within a certain time period. This can cause some funds to be returned to the owner (called a “force out”).",
                 "reverseRecreateSubmittedAmountTooltip": "This is how much was sent for payment initially. The owner wrote a check or initiated a funds transfer for this amount, and the request to apply this amount was submitted in our system. Submitted amount may differ from the applied amount if we could only apply a lower amount due to policy test limits. These are legal limits to how much an owner can pay into the policy within a certain time period. This can cause some funds to be returned to the owner (called a “force out”).",
@@ -3071,6 +3113,7 @@
     },
     "tooltip": {
         "jointOwner": "Joint owner",
+        "agent": "Agent",
         "ssn": "SSN",
         "other": "other"
     },
@@ -4096,7 +4139,8 @@
             "label": "Transactions",
             "managePremiumAutopay": "Manage premium autopay",
             "newPremium": "Start a one-time premium",
-            "startAWithdrawal": "Start a withdrawal"
+            "startAWithdrawal": "Start a withdrawal",
+            "cancelPolicy": "Cancel policy"
         }
     },
     "historyEventCard": {
@@ -4379,7 +4423,8 @@
         "formSelection": {
             "title": "New Form Selection",
             "errors": {
-                "selectForm": "Select a form to continue."
+                "selectForm": "Select a form to continue.",
+                "selectOptions": "Select a transaction type and subtype to continue."
             },
             "label": "Select the appropriate form that needs to be updated."
         },
@@ -4390,5 +4435,62 @@
                 "defaultTitle": "Form Entry"
             }
         }
+    },
+    "sswUpdate": {
+        "sswUpdateOptions": {
+            "new": "New",
+            "rmdUpdate": "RMD Update",
+            "sswUpdate": "SSW Update",
+            "bankUpdate": "Bank Update",
+            "eftDrawUpdate": "EFT Draw Update"
+        },
+        "tabs": {
+            "start": {
+                "tabTitle": "Start",
+                "title": "Update SSW Program",
+                "subTitle": "Make changes to the schedule amount or payment method for this policy's premium autopay. First up, let's make sure we can keep trackof this transaction in OnBase."
+            },
+            "amount": {
+                "tabTitle": "Amount",
+                "programAmount": "Amount",
+                "programFrequency": "Frequency",
+                "programDuration": "Duration",
+                "programNextDate": "Next Date",
+                "frequencyOptions": {
+                    "none": "None",
+                    "monthly": "Monthly",
+                    "quarterly": "Quarterly",
+                    "semiAnnually": "Semi annually",
+                    "annually": "Annually"
+                }
+            },
+            "summary": {
+                "tabTitle": "Summary",
+                "reviewMessage": "Looking good! Be sure to review your entries before submitting",
+                "updatedProgram": "Program Updates",
+                "current": "Current",
+                "amount": "Amount",
+                "frequency": "Frequency",
+                "duration": "Duration",
+                "nextDate": "Next Date"
+            },
+            "confirm": {
+                "tabTitle": "Confirm"
+            }
+        },
+        "formValidation": {
+            "signaturePresentOptionMustBeSelected": "Signature present option must be selected"
+        },
+        "signTabTitle": "Signature",
+        "success": "SSW Request has been submitted.",
+        "back": "Back to create task",
+        "channel": "Channel",
+        "close": "Close",
+        "tryAgain": "Try Again",
+        "submitted": "Submitted",
+        "SSW": "Existing SSW Program",
+        "RMD": "Existing RMD Program",
+        "EFT": "Existing EFT Program",
+        "noProgramFound": "No Existing Program Found"
     }
 }

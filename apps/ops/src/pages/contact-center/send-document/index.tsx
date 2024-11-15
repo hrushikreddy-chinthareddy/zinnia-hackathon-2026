@@ -9,7 +9,7 @@ import NoNavLayout from '@deps/components/no-nav-layout';
 import ConfirmComponent from '@deps/components/otp-send-document/confirm';
 import Correspondence from '@deps/components/otp-send-document/correspondence';
 import { generateCommunicationRequest } from '@deps/components/otp-send-document/correspondence.helper';
-import FormSelection from '@deps/components/otp-send-document/form-selection';
+import FormSelection, { DefaultFormDetail } from '@deps/components/otp-send-document/form-selection';
 import { TranslationFiles } from '@deps/config/translations';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import TabGroupContainer from '@deps/containers/tab-group-container/tab-group';
@@ -48,7 +48,7 @@ interface SendDocumentProps extends SegmentTrackedPageProps {
 const SendDocument = ({ policy, availableFormsTransactions, shouldShowCaseButton, shouldShowMailOption, user }: SendDocumentProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
 
-    const [formDetails, setFormDetails] = useState<SendDocumentFormParts>({} as SendDocumentFormParts);
+    const [formDetails, setFormDetails] = useState<SendDocumentFormParts[]>([DefaultFormDetail]);
     const { ctiCallNumber, correlationId } = router.query;
 
     useSegmentPageTracker(user, SegmentPageName.SendDocument, { ctiCallNumber, correlationId, policyNumber: policy.policyNumber });
@@ -83,19 +83,19 @@ const SendDocument = ({ policy, availableFormsTransactions, shouldShowCaseButton
     }, [communicationTypes, shouldShowMailOption, t]);
 
     const handleSubmitRequest = async (state: CorrespondenceFormParts) => {
-        const attachments: AttachmentDetails[] = [
-            {
+        const attachments: AttachmentDetails[] = formDetails.map(formDetail => {
+            return {
                 transactionType:
-                    formDetails?.transactionType?.list?.find(item => item.value === formDetails?.transactionType?.selected)?.label || '',
+                    formDetail?.transactionType?.list?.find(item => item.value === formDetail?.transactionType?.selected)?.label || '',
                 transactionSubType:
-                    formDetails?.transactionSubType?.list?.find(item => item.value === formDetails?.transactionSubType?.selected)?.label ||
+                    formDetail?.transactionSubType?.list?.find(item => item.value === formDetail?.transactionSubType?.selected)?.label ||
                     '',
                 attachmentType: 'form',
-                displayName: formDetails?.document.selected?.formDisplayName ?? '',
-                formId: formDetails?.document.selected?.formId.toString() ?? '',
-                formName: formDetails?.document.selected?.formDisplayName ?? '',
-            },
-        ];
+                displayName: formDetail?.document.selected?.formShortName ?? '',
+                formId: formDetail?.document.selected?.formId.toString() ?? '',
+                formName: formDetail?.document.selected?.formShortName ?? '',
+            };
+        });
 
         const requestBody = generateCommunicationRequest(
             policy,
@@ -147,7 +147,7 @@ const SendDocument = ({ policy, availableFormsTransactions, shouldShowCaseButton
             component: (
                 <ConfirmComponent
                     shouldShowCaseButton={shouldShowCaseButton}
-                    formNames={[formDetails?.document?.selected?.formDisplayName || '']}
+                    formNames={formDetails.map(formDetail => formDetail.document.selected?.formDisplayName || '')}
                 />
             ),
             screenReaderLabel: confirmLabel,

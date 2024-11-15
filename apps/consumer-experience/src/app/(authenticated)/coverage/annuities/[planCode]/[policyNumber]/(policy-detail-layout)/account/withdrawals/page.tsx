@@ -1,4 +1,4 @@
-import { PolicyFeature } from '@zinnia/api-types/types/sor';
+import { FeatureType } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
@@ -17,11 +17,7 @@ import { getWithdrawalEligibility } from '@/services/bpm';
 import { PolicyRequestInputs, PolicyWithdrawals } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined } from '@/utils/data';
-import {
-  convertKebabedDateString,
-  dayOfMonthWithOrdinal,
-  standardDateMonthDayYear,
-} from '@/utils/dates';
+import { dayOfMonthWithOrdinal, standardDateMonthDayYear } from '@/utils/dates';
 import {
   DEFAULT_ERROR_STRING,
   DEFAULT_UNAVAILABLE_STRING,
@@ -80,9 +76,7 @@ export default async function Withdrawals({
 
   const policyStatusData =
     policyStatus?.status === 'fulfilled' ? policyStatus.value.data : null;
-  const isFreelook =
-    policyStatusData?.policyStatus ===
-    ('FREELOOK' as PolicyFeature.featureType);
+  const isFreelook = policyStatusData?.policyStatus === FeatureType.FREELOOK;
 
   const { data, error } = summaryData;
   const withdrawalsData = () => {
@@ -262,7 +256,7 @@ export default async function Withdrawals({
       <CallForAssistance
         callToAction={
           isFreelook
-            ? `You can't take a withdrawal until your free look period ends on ${convertKebabedDateString(policyStatusData.endDate)}. Questions?`
+            ? `You can't take a withdrawal until your free look period ends. Questions?`
             : 'Taking a withdrawal is coming soon. For now, '
         }
         contactPrompt={isFreelook ? undefined : 'call'}
