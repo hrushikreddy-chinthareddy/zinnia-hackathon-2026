@@ -53,6 +53,7 @@
             "history": "Histoire",
             "documents": "Documents",
             "newPremium": "Nouveau Prime",
+            "cancelFreeLook": "Annuler Free Look",
             "updatePremium": "Gérer Paiement Automatique",
             "newWithdrawal": "Nouveau Retrait",
             "formData": "Données du formulaire",
@@ -3584,6 +3585,37 @@
             "check": "Chèque"
         },
         "checkingEndingIn": "Compte-chèques se terminant par {{ accountNumber }}"
+    },
+    "cancelFreeLook": {
+        "confirm": {
+            "cta": "Accéder à l'historique des transactions",
+            "label": "Confirmer",
+            "secondaryCta": "Fermer",
+            "subtitle": {
+                "0": "Une demande d'annulation a été soumise. Une fois traitée, un remboursement pour ",
+                "1": " sera envoyé."
+            },
+            "title": "Soumis !"
+        },
+        "date": {
+            "label": "Date",
+            "title": "Date",
+            "effectiveDate": "$t(withdrawals.amount.effectiveDate)",
+            "effectiveDateTooltip": "$t(withdrawals.amount.effectiveDateTooltip)",
+            "effectiveDateError": "$t(withdrawals.amount.effectiveDateError)"
+        },
+        "start": {
+            "label": "Démarrer",
+            "title": "Annuler la police"
+        },
+        "summary": {
+            "effectiveDate": "Date d'effet",
+            "effectiveDateTooltip": "Ceci est la date utilisée pour calculer toutes les valeurs de compte disponibles pour ce retrait. Comme les fonds dans la valeur du compte sont investis, cette valeur peut changer de jour en jour. Le traitement peut se produire à tout moment, il est donc nécessaire de savoir à quel moment retirer effectivement les fonds, même si nous traitons la transaction quelques jours avant ou après.",
+            "label": "Résumé",
+            "payee": "Bénéficiaire",
+            "status200subtitle": "Parfait ! Veuillez vérifier vos entrées avant de soumettre.",
+            "submitCancellation": "Soumettre l'annulation"
+        }
     },
     "withdrawals": {
         "requestedWithdrawal": {
