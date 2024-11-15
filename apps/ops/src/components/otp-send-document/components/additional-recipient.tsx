@@ -69,7 +69,7 @@ const AdditionalRecipient = ({ classNames, emails, setEmails, setError }: Additi
                 ))}
                 <Field
                     onChange={e => {
-                        setEmail(xss(e?.target?.value.trim()));
+                        setEmail(xss(e?.target?.value));
                     }}
                     handleEnterKey={() => {
                         addEmail(email);

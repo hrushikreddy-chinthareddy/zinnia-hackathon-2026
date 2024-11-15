@@ -30,10 +30,11 @@ const getDefaultCommunicationType = (communicationOptions?: RadioItem[]) => {
 };
 
 export const validateEmail = (email: string) => {
-    if (!emailRegex.test(email)) {
+    const trimmedEmail = email.trim();
+    if (!emailRegex.test(trimmedEmail)) {
         return 'errors.inValidEmail';
     }
-    if (!domainValidation.test(email) && isNonProductionEnvironment()) {
+    if (!domainValidation.test(trimmedEmail) && isNonProductionEnvironment()) {
         return 'errors.inValidDomain';
     }
     return;
