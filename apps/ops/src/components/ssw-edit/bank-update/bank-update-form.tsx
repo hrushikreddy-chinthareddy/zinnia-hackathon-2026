@@ -4,11 +4,9 @@ import { useContext, useState } from 'react';
 
 import SelectSimple from '@deps/components/select/select';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
-import { getChannel } from '@deps/containers/address-change-container/utils/address-change-helper';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DocumentData } from '@deps/models/case/document';
 import { BankUpdateType, ChannelType, ContributionType } from '@deps/models/case/enums';
-import { Channel } from '@deps/models/case/renewal/case-renewal';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { DEFAULT_DISBURSEMENT_UPDATE } from '@deps/models/case/withdrawal/disbursement-types';
 import { updateTask } from '@deps/queries/api/v2/task';
@@ -23,7 +21,7 @@ import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '.
 import FormDisbursementSection from '../../otp-withdrawal-form/form-disbursement/form-disbursement-section';
 import SignatureValidations from '../../otp-withdrawal-form/signature-validation/signature-validations';
 import PageLoader, { PageLoaderVariant } from '../../page-loader/page-loader';
-import { sswEditFormValidator } from '../ssw-edit-helper';
+import { getDocumentSource, sswEditFormValidator } from '../ssw-edit-helper';
 
 type BankUpdateFormProps = {
     document: DocumentData;
@@ -35,7 +33,7 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
     const [formSubmitted, setFormSubmitted] = useState(false);
     const [timer] = useState(performance.now());
     const [submitFailed, setSubmitFailed] = useState(false);
-    const source = getChannel(document.documentNumber);
+    const source = getDocumentSource(document.documentNumber);
 
     const { initialForm, formSignature, setFormErrors } = useContext(FormDataContext);
 
@@ -56,7 +54,7 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
     };
 
     const handleFormAction = async (bankUpdateType: BankUpdateType) => {
-        if (source !== Channel.Phone) {
+        if (source !== ChannelType.Phone) {
             const formErr = sswEditFormValidator(formSignature, t);
             if (Object.keys(formErr).length > 0) {
                 setFormErrors(formErr);

@@ -2,9 +2,8 @@ import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
 import { Program } from '@deps/components/otp-withdrawal-form/rmd-method/program-item';
-import { getChannel } from '@deps/containers/address-change-container/utils/address-change-helper';
 import { DocumentData } from '@deps/models/case/document';
-import { Channel } from '@deps/models/case/renewal/case-renewal';
+import { ChannelType } from '@deps/models/case/enums';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import { CreateTaskBody, TaskSource, TaskV2Payload } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
@@ -28,6 +27,18 @@ export type UpdatedProgram = {
     allocationId?: number;
 };
 
+export const getDocumentSource = (documentId: string): ChannelType => {
+    if (documentId) {
+        if (documentId.includes('-O-') || documentId.includes('-MAN-')) {
+            return ChannelType.Phone;
+        } else {
+            return ChannelType.Email;
+        }
+    } else {
+        return ChannelType.Email;
+    }
+};
+
 const getSswEditPayload = (
     initialForm: ActiveWithdrawalCase,
     formSign: FormSignature,
@@ -37,7 +48,7 @@ const getSswEditPayload = (
     operationType: SswUpdateType
 ) => {
     const isTerminate = operationType === SswUpdateType.PROGRAM_TERMINATE;
-    const documentSource = getChannel(document.documentNumber);
+    const documentSource = getDocumentSource(document.documentNumber);
 
     const formUpdateData = {
         updateType: operationType,
@@ -94,7 +105,7 @@ const getSswEditPayload = (
             formParty: null,
             formProgram: null,
             formRestriction: null,
-            formSignature: documentSource !== Channel.Phone ? structuredClone(formSign) : null,
+            formSignature: documentSource !== ChannelType.Phone ? structuredClone(formSign) : null,
             formTaxWithholding: null,
             formTpaAuthorization: null,
             formSurrenderingCompany: null,

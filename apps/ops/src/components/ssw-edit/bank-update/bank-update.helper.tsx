@@ -2,12 +2,10 @@ import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
 import { BankingFields, DisbursementFields } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helper';
-import { getChannel } from '@deps/containers/address-change-container/utils/address-change-helper';
 import { createValidator } from '@deps/containers/otp/utils/helper-utils';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DocumentData } from '@deps/models/case/document';
 import { BankUpdateType, ChannelType, ContributionType } from '@deps/models/case/enums';
-import { Channel } from '@deps/models/case/renewal/case-renewal';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import { CreateTaskBody, TaskSource, TaskV2Payload } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
@@ -16,6 +14,7 @@ import { DisbursementParts } from '@deps/models/case/withdrawal/disbursement-typ
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { SignatureFields } from '../../otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
+import { getDocumentSource } from '../ssw-edit-helper';
 
 export const channelOptions = (t: TFunction) => [
     {
@@ -211,7 +210,7 @@ export const getBankUpdatePayload = (
     document: DocumentData,
     bankUpdateType: BankUpdateType
 ) => {
-    const documentSource = getChannel(document.documentNumber);
+    const documentSource = getDocumentSource(document.documentNumber);
 
     const formUpdateData = {
         updateType: bankUpdateType,
@@ -268,7 +267,7 @@ export const getBankUpdatePayload = (
             formParty: null,
             formProgram: null,
             formRestriction: null,
-            formSignature: documentSource !== Channel.Phone ? formSignature : null,
+            formSignature: documentSource !== ChannelType.Phone ? formSignature : null,
             formTaxWithholding: null,
             formTpaAuthorization: null,
             formSurrenderingCompany: null,
