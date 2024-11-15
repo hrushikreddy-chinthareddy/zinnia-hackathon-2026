@@ -25,6 +25,7 @@ import {
 } from '@deps/contexts/CaseManagementFilters';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getAdvisorsExcelCaseSearchParams, getAdvisorsExcelCaseStatsParams } from '@deps/helpers/advisors-excel';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { formatCaseTotals, getAdditionalFilters, getSearchValueObject, toggleLabels } from '@deps/helpers/case-management';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
@@ -37,7 +38,7 @@ import { checkTupleSsr, getCarrierListServerSSR } from '@deps/queries/api/fga';
 import { CaseSearchQuery, CaseStatsQuery } from '@deps/queries/cases';
 import { FgaRelation } from '@deps/types/fga';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
-import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
+import { SearchSubmittedEvent, SegmentPageName, SegmentTrackedEventName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import nextI18nextConfig from 'next-i18next.config';
 
 import useCaseFilterQueryStore from './caseFilterQueryStore';
@@ -255,9 +256,19 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         setCaseManagementFilters(prevFilters => ({ ...prevFilters, additionalFilters: filters, offset: 0 }));
 
     const handleSearch = useCallback(
-        (value: SearchViewQuery) => setCaseManagementFilters(prevFilters => ({ ...prevFilters, searchValue: value, offset: 0 })),
+        (value: SearchViewQuery) => {
+            segmentAnalyticsTrackEvent<SearchSubmittedEvent>(SegmentTrackedEventName.SearchSubmitted, {
+                ssnUsed: !!value?.ssn,
+                firstNameUsed: !!value?.firstName,
+                lastNameUsed: !!value?.lastName,
+                policyNumber: value?.policyNumber,
+                userId: user.partyId,
+            });
+            setCaseManagementFilters(prevFilters => ({ ...prevFilters, searchValue: value, offset: 0 }));
+        },
         [setCaseManagementFilters]
     );
+
     const handleClear = useCallback(
         (searchField: PolicySearchKeys | undefined) => {
             if (searchField) {
@@ -359,7 +370,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                         />
                         <StatusFilter
                             caseTotals={caseTotals}
-                            values={caseManagementFilters.additionalFilters.caseStatus}
                             onChange={vals =>
                                 setCaseManagementFilters(prev => {
                                     const { notInCaseStatus = [] } = prev.additionalFilters;
@@ -374,6 +384,8 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                                     };
                                 })
                             }
+                            userId={user.partyId}
+                            values={caseManagementFilters.additionalFilters.caseStatus}
                         />
                         <NavElement
                             tabIndex={0}
@@ -398,8 +410,8 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                         <Typography variant={TypographyVariant.BodySm} className="mb-6 lg:mb-0">
                             {t('policy.documents.xToYOfZ', {
                                 x: caseManagementFilters.offset + 1,
-                                y: Math.min(caseManagementFilters.offset + limit, caseTotals.All),
-                                z: caseTotals.All.toLocaleString(),
+                                y: Math.min(caseManagementFilters.offset + limit, caseTableData.total),
+                                z: `${caseTableData.total.toLocaleString()}${caseTableData.total === 10000 ? '+' : ''}`,
                             })}
                         </Typography>
                         {paginationControls}

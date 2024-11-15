@@ -4,7 +4,13 @@ import { useEffect, useState } from 'react';
 import CorrespondenceCard from '@deps/containers/people-data-cards/correspondence-card/correspondence-card';
 import { useCorrespondence } from '@deps/contexts/CorrespondenceContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { Correspondence, CorrespondenceAction, CorrespondenceFormParts } from '@deps/models/case/correspondence';
+import {
+    Correspondence,
+    CorrespondenceAction,
+    CorrespondenceFormParts,
+    domainValidation,
+    emailRegex,
+} from '@deps/models/case/correspondence';
 import { CommunicationTypes, Confirm } from '@deps/models/case/send-document';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
@@ -22,14 +28,22 @@ const getDefaultCommunicationType = (communicationOptions?: RadioItem[]) => {
     if (activeOptions?.length > 0) return activeOptions[0].value;
     return '';
 };
+
+export const validateEmail = (email: string) => {
+    if (!emailRegex.test(email)) {
+        return 'errors.inValidEmail';
+    }
+    if (!domainValidation.test(email) && isNonProductionEnvironment()) {
+        return 'errors.inValidDomain';
+    }
+    return;
+};
 type CorrespondenceProps = {
     communicationOptions?: RadioItem[];
     policy: Policy;
     submitRequest: (val: CorrespondenceFormParts) => Promise<Confirm | null>;
 };
 const ContactCenterCorrespondence = ({ policy, communicationOptions, submitRequest }: CorrespondenceProps) => {
-    const domainValidation = new RegExp(/^[a-z0-9](\.?[a-z0-9]){3,}@zinnia\.com$/);
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
     const { setCurrentStepIndex, goToNext } = useWorkflow();
     const { state, dispatch } = useCorrespondence();
@@ -54,33 +68,31 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
     }, [correspondenceData]);
 
     const validRequest = () => {
+        setError({});
         switch (correspondenceData.type) {
-            case CommunicationTypes.Email:
-                if (!emailRegex.test(correspondenceData.recipient)) {
-                    setError({ ...error, email: t('errors.inValidEmail') as string });
+            case CommunicationTypes.Email: {
+                const emailError = validateEmail(correspondenceData.recipient);
+                if (emailError) {
+                    setError({ ...error, submit: t(emailError) as string });
                     return false;
                 }
-                if (!domainValidation.test(correspondenceData.recipient) && isNonProductionEnvironment()) {
-                    setError({ ...error, email: t('errors.inValidDomain') as string });
-                    return false;
-                }
+
                 break;
+            }
             case CommunicationTypes.Mail:
                 if (!state.correspondence?.mailDetails) {
                     setError({ ...error, submit: t('errors.mailDetails') as string });
                     return false;
                 }
-                setError({ ...error, submit: '' });
+
                 break;
             default:
                 if (!state.correspondence.recipient) {
                     setError({ ...error, submit: t('errors.recipient') as string });
                     return false;
                 }
-                setError({ ...error, submit: '' });
         }
-
-        return true;
+        return Object.keys(error).length === 0;
     };
 
     const handleContinue = async () => {
@@ -104,7 +116,7 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
             await goToNext();
         } catch (e: any) {
             setLoader(false);
-            setError({ ...error, submit: e?.message as string });
+            setError({ submit: e?.message as string });
         }
     };
 
@@ -127,6 +139,8 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
                 correspondenceData={correspondenceData}
                 error={error}
                 policy={policy}
+                showAdditionalRecipient={true}
+                setError={setError}
             />
             {error?.submit && <AssistiveText text={error?.submit} variant={AssistiveTextVariant.Error} className="mt-2" />}
         </WorkflowCard>

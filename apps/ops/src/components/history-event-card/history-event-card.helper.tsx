@@ -238,6 +238,19 @@ export const getHistoryEventCardValues = (policy: Policy, transaction: Transacti
             eventTitle = toSentenceCase(getPeopleChangeEventTitle(transaction, t));
             isClickable = true;
             break;
+        case TransactionType.FreeLookCancellation: {
+            const bankAccount = getBankAccount({ policy, payorsOrPayees: payeeOrBeneficiaries });
+            const eventBankingBody = t('historyEventCard.toBanking', {
+                accountType: mapAccountTypeToTranslation(bankAccount?.accountType, t).toLowerCase(),
+                lastFour: formatAccountNumber(bankAccount?.internationalBankAccountNumber ?? bankAccount?.accountNumber, true),
+            });
+
+            eventTitle = t(`historyEventCard.transactionTypes.${transactionType}`, transactionType || DEFAULT_ERROR_STRING);
+            eventBody = eventBankingBody;
+            amount = transaction.transactionAmounts?.appliedAmount;
+            isClickable = true;
+            break;
+        }
 
         default:
             eventTitle = t(`historyEventCard.transactionTypes.${transactionType}`, transactionType ?? DEFAULT_ERROR_STRING);

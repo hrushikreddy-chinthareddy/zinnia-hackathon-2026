@@ -1,20 +1,20 @@
 import dayjs from 'dayjs';
 import { i18n, TFunction } from 'next-i18next';
 
-import { getPaymentMethods, getPeopleChangeEventTitle } from "@deps/components/history-event-card/history-event-card.helper";
-import { convertToChipText } from "@deps/containers/people-sub-page/people-sub-page.helpers";
-import { getFullName } from "@deps/helpers/party-info-helper";
-import { orderObjectsByString } from "@deps/helpers/sort.helper";
-import { convertKebabedDateString, formatAccountNumber, toSentenceCase, toTitleCase } from "@deps/helpers/string.helper";
-import { Policy, Transaction, TransactionPayor, TransactionStatus, TransactionType } from "@deps/models/policy/sor-policy";
-import { fetchVersionedPolicy, getPolicyTransaction } from "@deps/queries/api/policies";
-import { DEFAULT_ERROR_STRING, ZAHARA_API_DATE_FORMAT } from "@deps/types/constants";
+import { getPaymentMethods, getPeopleChangeEventTitle } from '@deps/components/history-event-card/history-event-card.helper';
+import { convertToChipText } from '@deps/containers/people-sub-page/people-sub-page.helpers';
+import { getFullName } from '@deps/helpers/party-info-helper';
+import { orderObjectsByString } from '@deps/helpers/sort.helper';
+import { convertKebabedDateString, formatAccountNumber, toSentenceCase, toTitleCase } from '@deps/helpers/string.helper';
+import { Policy, Transaction, TransactionPayor, TransactionStatus, TransactionType } from '@deps/models/policy/sor-policy';
+import { fetchVersionedPolicy, getPolicyTransaction } from '@deps/queries/api/policies';
+import { DEFAULT_ERROR_STRING, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
 import { getInitialPremiumSideSheetValues, getOneTimePremiumSideSheetValues } from './premiums/side-sheet-premiums.helper';
-import { NonFianancialTransactionSideSheetValues, ReverseTransactionSidesheetValues, TransactionSideSheetValues } from "./types";
-import { getWithdrawalSideSheetValues } from './withdrawal/side-sheet-withdrawal.helper';
+import { NonFianancialTransactionSideSheetValues, ReverseTransactionSidesheetValues, TransactionSideSheetValues } from './types';
+import { getFreeLookCancellationSideSheetValues, getWithdrawalSideSheetValues } from './withdrawal/side-sheet-withdrawal.helper';
 import { WithdrawalSideSheetValues } from './withdrawal/types';
 
 export const getTransactionSideSheetTitle = (transaction: Transaction, t: TFunction): string => {
@@ -44,6 +44,8 @@ export const getTransactionSideSheetTitle = (transaction: Transaction, t: TFunct
 
         case TransactionType.Lapse:
             return toTitleCase(t('historyEventCard.policyLapsed') as string);
+        case TransactionType.FreeLookCancellation:
+            return toTitleCase(t('historyEventCard.transactionTypes.FreeLookCancellation') as string);
 
         case TransactionType.AddressChange:
         case TransactionType.EmailChange:
@@ -61,18 +63,19 @@ export const getPaymentMethod = (policy: Policy, payors: TransactionPayor[], t: 
 
     return paymentMethod
         ? t('historyEventCard.bankingBody', {
-            accountType: t(`historyEventCard.bankAccountTypes.${paymentMethod.accountType?.toLowerCase()}`),
-            lastFour: formatAccountNumber(paymentMethod.internationalBankAccountNumber ?? paymentMethod.accountNumber, true),
-        }) : DEFAULT_ERROR_STRING;
-}
+              accountType: t(`historyEventCard.bankAccountTypes.${paymentMethod.accountType?.toLowerCase()}`),
+              lastFour: formatAccountNumber(paymentMethod.internationalBankAccountNumber ?? paymentMethod.accountNumber, true),
+          })
+        : DEFAULT_ERROR_STRING;
+};
 
 const getTransactionType = async (policy: Policy, transaction: Transaction, t: TFunction): Promise<string> => {
     const { parentId, version } = transaction;
     const [policyForFrequency, parentTransaction] = version
         ? await Promise.all([
-            fetchVersionedPolicy(policy.policyNumber as string, policy.product?.planCode as string, version),
-            getPolicyTransaction(policy.product?.planCode as string, policy.policyNumber as string, parentId as string),
-        ])
+              fetchVersionedPolicy(policy.policyNumber as string, policy.product?.planCode as string, version),
+              getPolicyTransaction(policy.product?.planCode as string, policy.policyNumber as string, parentId as string),
+          ])
         : [policy, transaction];
 
     const frequency =
@@ -99,17 +102,18 @@ const getAutopayPremiumSideSheetValues = (
     const { appliedAmount, paymentAmount, requestedAmount } = transactionAmounts ?? {};
 
     try {
+        const isCancelled = status === ('Canceled' as TransactionStatus);
         const isPending = status === ('Pending' as TransactionStatus);
         const paymentMethod = getPaymentMethod(policy, payors as TransactionPayor[], t);
         const isPayment = transactionType === TransactionType.SubsequentPayment;
         const reverseRecreateEnabled = featureFlags[FEATURE_FLAGS.REVERSE_RECREATE_ENABLED];
-    
+
         return {
             appliedAmount: isPending ? status : appliedAmount,
             effectiveDate: convertKebabedDateString(effectiveDate),
             getAsyncSideSheetValues: async () => {
                 const transactionType = await getTransactionType(policy, transaction, t);
-    
+
                 return {
                     transactionType,
                 };
@@ -118,13 +122,13 @@ const getAutopayPremiumSideSheetValues = (
             processDate: convertKebabedDateString(processDate),
             reverseCta:
                 reverseRecreateEnabled && transaction.status === TransactionStatus.Completed
-                    ? t('policy.history.reverseRecreateSidesheet.reversePayment') as string
+                    ? (t('policy.history.reverseRecreateSidesheet.reversePayment') as string)
                     : undefined,
             reversalTransactionId: isPayment ? transactionId : transaction.parentId,
             status,
-            submittedAmount: isPending ? paymentAmount : requestedAmount,
+            submittedAmount: isCancelled ||isPending ? paymentAmount : requestedAmount,
             transactionId,
-            transactionValue: isPending ? paymentAmount : appliedAmount,
+            transactionValue: isCancelled || isPending ? paymentAmount : appliedAmount,
         };
     } catch (error) {
         console.error('getAutopayPremiumSideSheetValues error', error);
@@ -149,7 +153,6 @@ export const getReverseRecreateTransactionSideSheetValues = (
     const getOriginalTransactionValues = async () => {
         const { policyNumber, product } = policy;
         const originalTransactionValues = await getPolicyTransaction(`${product?.planCode}`, `${policyNumber}`, `${originalTransactionId}`);
-
 
         if (!originalTransactionValues) {
             return {};
@@ -182,7 +185,9 @@ export const getReverseRecreateTransactionSideSheetValues = (
         effectiveDate: convertKebabedDateString(effectiveDate),
         status,
         transactionId: transactionId + '-reverse',
-        transactionType: `${isPending ? t('policy.history.sidesheet.paymentOneTimePremium') : t('policy.history.sidesheet.oneTimePremium')}`,
+        transactionType: `${
+            isPending ? t('policy.history.sidesheet.paymentOneTimePremium') : t('policy.history.sidesheet.oneTimePremium')
+        }`,
         newAppliedAmount: amount || requestedAmount,
         paymentMethod: paymentMethod,
         getAsyncSideSheetValues: getOriginalTransactionValues,
@@ -211,6 +216,8 @@ export const getFinancialTransactionSideSheetValues = (
         case TransactionType.FullSurrender:
         case TransactionType.PartialWithdrawalOneTime:
             return getWithdrawalSideSheetValues(policy, transaction, t);
+        case TransactionType.FreeLookCancellation:
+            return getFreeLookCancellationSideSheetValues(policy, transaction, t);
         default:
             return {};
     }
@@ -245,9 +252,11 @@ export const getNonFinancialTransactionSideSheetValues = (
     };
 };
 
-
-export const replacesReverseInitiator = async (transaction: Transaction, reverseInitiators: Transaction[], policy: Policy): Promise<boolean> => {
-
+export const replacesReverseInitiator = async (
+    transaction: Transaction,
+    reverseInitiators: Transaction[],
+    policy: Policy
+): Promise<boolean> => {
     // if the originalTransactionId of this transaction is matches any transaction in reverseInitiator array
     // then it is the original reversed transaction
     // and we need to display the reversed transaction sidesheet
@@ -260,7 +269,7 @@ export const replacesReverseInitiator = async (transaction: Transaction, reverse
     // check if this transaction replaces any reverseInitiator
     // and save it in checkedIds
     if (reverseInitiatorIds.includes(originalTransactionId)) return true;
-    
+
     const parentId = transaction.parentId;
     // check if parentId
     // if there is no parentId, we went to the original transaction

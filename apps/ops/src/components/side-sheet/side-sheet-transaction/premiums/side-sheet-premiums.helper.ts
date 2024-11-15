@@ -9,11 +9,11 @@ import { getPaymentMethod } from "../side-sheet-transaction.helper";
 import { TransactionSideSheetValues } from "../types";
 
 export const getInitialPremiumSideSheetValues = (policy: Policy, transaction: Transaction, t: TFunction): TransactionSideSheetValues => {
-    const { effectiveDate, payors, processDate, status, transactionId, transactionType } = transaction ?? {};
-    const { appliedAmount, paymentAmount, requestedAmount } = transaction.transactionAmounts ?? {};
-
+    const { effectiveDate, payors, processDate, status, transactionAmounts, transactionId, transactionType } = transaction ?? {};
+    const { appliedAmount, paymentAmount, requestedAmount } = transactionAmounts ?? {};
     const isPending = status === ('Pending' as TransactionStatus);
-    const amount = transactionType === TransactionType.PaymentInitialPremium ? paymentAmount : appliedAmount;
+    const isCanceled = status === ('Canceled' as TransactionStatus);
+    const amount = isCanceled || transactionType === TransactionType.PaymentInitialPremium ? paymentAmount : appliedAmount;
 
     const paymentMethod = getPaymentMethod(policy, payors as TransactionPayor[], t);
 
@@ -23,7 +23,7 @@ export const getInitialPremiumSideSheetValues = (policy: Policy, transaction: Tr
         paymentMethod,
         processDate: convertKebabedDateString(processDate),
         status,
-        submittedAmount: amount,
+        submittedAmount: isCanceled || isPending ? paymentAmount : requestedAmount,
         transactionId,
         transactionType: t('policy.history.sidesheet.initialPremium') as string,
         transactionValue: amount || requestedAmount,
@@ -37,16 +37,17 @@ export const getOneTimePremiumSideSheetValues = (
     featureFlags: FeatureFlags
 ): TransactionSideSheetValues => {
     try {
-        const { effectiveDate, payors, processDate, status, transactionId, transactionType } = transaction ?? {};
-        const { appliedAmount, paymentAmount, requestedAmount } = transaction.transactionAmounts ?? {};
-    
+        const { effectiveDate, payors, processDate, status, transactionAmounts, transactionId, transactionType } = transaction ?? {};
+        const { appliedAmount, paymentAmount, requestedAmount } = transactionAmounts ?? {};
+
         const isPending = status === ('Pending' as TransactionStatus);
-        const isPayment = transaction.transactionType === TransactionType.PaymentOneTimePremium; // Payment One Time Premium and One Time Premium are different - we'll need the parentId for Premiums
-    
-        const amount = transactionType === TransactionType.PaymentOneTimePremium ? paymentAmount : appliedAmount;
-    
+        const isCanceled = status === ('Canceled' as TransactionStatus);
+        const isPayment = transactionType === TransactionType.PaymentOneTimePremium;
+
+        const amount = isCanceled || isPayment ? paymentAmount : appliedAmount;
+
         const reverseRecreateEnabled = featureFlags[FEATURE_FLAGS.REVERSE_RECREATE_ENABLED];
-    
+
         return {
             appliedAmount: isPending ? status : appliedAmount,
             cancelCta: isPending
@@ -59,9 +60,10 @@ export const getOneTimePremiumSideSheetValues = (
                 reverseRecreateEnabled && transaction.status === TransactionStatus.Completed
                     ? t('policy.history.reverseRecreateSidesheet.reversePayment') as string
                     : undefined,
+            // Payment One Time Premium and One Time Premium are different - we'll need the parentId for Premiums
             reversalTransactionId: isPayment ? transactionId : transaction.parentId,
             status,
-            submittedAmount: amount || requestedAmount,
+            submittedAmount: isCanceled || isPending ? paymentAmount : requestedAmount,
             transactionId,
             transactionType: isPending ? TransactionType.PaymentOneTimePremium : TransactionType.OneTimePremium,
             transactionValue: amount || requestedAmount,

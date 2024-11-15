@@ -5,7 +5,7 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import CardContainer from '@deps/containers/card-container/card-container';
 import { FormDataContext, OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
-import { PartyRoles , FormValidationErrors, SignatureWithdrawal } from '@deps/models/case/withdrawal/case';
+import { PartyRoles, FormValidationErrors, SignatureWithdrawal } from '@deps/models/case/withdrawal/case';
 
 import SignatureValidation, { SignatureValidationField } from './signature-validation';
 import { SignatureFieldNames, SignaturePartProps } from './signature-validation-parts/signature-parts';
@@ -124,7 +124,7 @@ export default function SignatureValidations({
                         fields={fields}
                         onDataChange={setSignature(signatureType)}
                         sigProp={
-                            formDataContext.formSignature.signatures.find(val => val.signType?.text === signatureType) ||
+                            formDataContext.formSignature?.signatures.find(val => val.signType?.text === signatureType) ||
                             getDefaultSignature(signatureType)
                         }
                         isFormStateReadOnly={isFormStateReadOnly}
