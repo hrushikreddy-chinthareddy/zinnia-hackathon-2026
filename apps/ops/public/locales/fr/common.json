@@ -1909,7 +1909,8 @@
             "transactionSubType": "Sous-type",
             "documentsTitle": "Formulaire(s) à mettre à jour",
             "view": "Afficher",
-            "noFormsFound": "Aucun formulaire trouvé"
+            "noFormsFound": "Aucun formulaire trouvé",
+            "addNewDocument": "Envoyer un autre document"
         },
         "correspondence": {
             "label": "Où le(s) document(s) doivent-ils être envoyés ? ",
