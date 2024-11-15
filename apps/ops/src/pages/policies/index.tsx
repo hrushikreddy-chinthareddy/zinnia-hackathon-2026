@@ -242,7 +242,7 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
                             setIsIdle(true);
                             clearPolicySearchFilters();
                         }}
-                        formClasses={styles.searchBar}
+                        className={styles.searchBar}
                     />
                 </div>
 
