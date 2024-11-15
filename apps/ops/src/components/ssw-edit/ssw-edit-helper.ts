@@ -1,15 +1,16 @@
 import dayjs from 'dayjs';
+import { TFunction } from 'next-i18next';
 
 import { Program } from '@deps/components/otp-withdrawal-form/rmd-method/program-item';
 import { DocumentData } from '@deps/models/case/document';
 import { ChannelType } from '@deps/models/case/enums';
+import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import { CreateTaskBody, TaskSource, TaskV2Payload } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { ActiveWithdrawalCase, FormSignature, FormValidationErrors, Frequency, RMDProgramType } from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
-import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
+
 import { SignatureFieldNames } from '../otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
-import { TFunction } from 'next-i18next';
 
 export enum SswUpdateType {
     PROGRAM_TERMINATE = 'ProgramTerminate',

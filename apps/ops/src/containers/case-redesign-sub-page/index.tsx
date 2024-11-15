@@ -2,6 +2,7 @@ import { BadgeVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
+import { getStatusDetails } from '@deps/components/case-list/components/case-status-tooltip';
 import CaseSubPage from '@deps/components/case-sub-page/case-sub-page';
 import { TranslationFiles } from '@deps/config/translations';
 import { Case } from '@deps/models/case/case';
@@ -13,7 +14,6 @@ import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
 import CasePageHeader from './CasePageHeader';
 import CaseSideNav from './CaseSideNav';
-import { getStatusDetails } from '@deps/components/case-list/components/case-status-tooltip';
 
 interface CaseRedesignProps {
     caseDetails: Case;

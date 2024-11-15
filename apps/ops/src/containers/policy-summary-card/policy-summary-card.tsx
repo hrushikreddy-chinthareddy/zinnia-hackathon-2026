@@ -7,10 +7,7 @@ import { getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/ba
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { FieldSize } from '@deps/components/fields/field';
 import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helper';
-// import PolicyInfo from '@deps/components/global-values/policy-info/policy-info';
-// import GlobalPolicyInfo from '@deps/components/global-values/policy-info/policy-info';
 import GlobalPolicyInfo from '@deps/components/global-values/policy-info/policy-info';
-import PolicyInfo from '@deps/components/global-values/policy-info/policy-info';
 import IconButton from '@deps/components/icon-button/icon-button';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { PopoverPlacement } from '@deps/components/popover/popover';
@@ -150,7 +147,7 @@ const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
         <header data-testid={CardDetailsTest.HEADER}>
             <div className="flex w-full items-end justify-between">
                 <div className="w-full flex-wrap lg:flex lg:items-end lg:justify-between">
-                    <PolicyInfo
+                    <GlobalPolicyInfo
                         carrierId={carrierId}
                         marketingName={marketingName}
                         planName={planName}
@@ -173,7 +170,7 @@ const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
                         <QuickLinks
                             userPartyId={userPartyId}
                             policy={policy}
-                            links={quickLinks(t, policy, userPartyId)}
+                            links={quickLinks(t, policy)}
                             planCode={planCode}
                             policyNumber={policyNumber}
                         />
