@@ -49,9 +49,7 @@ export type SearchSubmittedEvent = BaseSegmentEventProperties & {
 
 export type DropdownClickedEvent = BaseSegmentEventProperties & {
     dropdownName: string;
-    searchText?: string;
-    selectedItemName: string;
-};
+} & ({ searchText: string } | { selectedItemName: string } | { searchText: string; selectedItemName: string });
 
 export type PolicyClickedEvent = BaseSegmentEventProperties & {
     contractNumber?: string;

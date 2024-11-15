@@ -184,6 +184,7 @@ const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
 
 const KeyValuesBar: React.FC<KeyValuesBarProps> = ({ policy }) => {
     const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
+    const perms = usePermissionsContext();
     const searchableDetailsDto = toPolicyViewDetailsDto(policy);
     const searchableDetailsData = fillColDefs<PolicyViewDetailsDto>(
         searchableDetailsDto,
@@ -206,6 +207,7 @@ const KeyValuesBar: React.FC<KeyValuesBarProps> = ({ policy }) => {
                     errorMessageLink={`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/policy-details`}
                     group={true}
                     dropUp
+                    userPartyId={perms.getUserPartyId()}
                 />
             </div>
         </div>
