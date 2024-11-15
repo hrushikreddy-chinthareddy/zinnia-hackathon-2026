@@ -1,21 +1,21 @@
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 
 import Button, { ButtonType } from '@deps/components/button/button';
 import { FieldSize } from '@deps/components/fields/field';
 import NavElement, { NavElementType } from '@deps/components/nav-element/nav-element';
 import Select from '@deps/components/select/select';
 import { CaseSearchAdditionalFilters, CaseSearchFilters, initialAdditionalFilters } from '@deps/contexts/CaseManagementFilters';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { ReferenceDataQuery, getReferenceData } from '@deps/queries/api/cases';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+import { FilterClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
 import { getCarrierListItem, getCarrierNameByClientId, getClientIdsByCarrierName, getSelectedCarriers } from '@deps/utils/carriers';
 
 import DateRangeFields from './date-range-fields';
 import MultiselectField from './multiselect-field';
-import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
-import { SegmentTrackedEventName } from '@deps/types/segment-analytics';
-import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 
 const REFINE_RESULTS_BASE_KEY = 'caseManagementDashboard.refineResultsOptions.';
 
@@ -300,25 +300,24 @@ export default function SideSheetRefineResults({
         }));
     };
 
-    const validateForm = () => {
-        let errors: Errors = {};
-        if (additionalFilters.createdDateStart && dayjs(additionalFilters.createdDateStart, NUMERIC_DATE_FORMAT).isAfter(dayjs())) {
-            errors = { ...errors, createdDateStart: t(`${REFINE_RESULTS_BASE_KEY}date`) as string };
-        }
-        if (additionalFilters.createdDateEnd && dayjs(additionalFilters.createdDateEnd, NUMERIC_DATE_FORMAT).isAfter(dayjs())) {
-            errors = { ...errors, createdDateEnd: t(`${REFINE_RESULTS_BASE_KEY}date`) as string };
-        }
-        if (additionalFilters.updatedDateStart && dayjs(additionalFilters.updatedDateStart, NUMERIC_DATE_FORMAT).isAfter(dayjs())) {
-            errors = { ...errors, updatedDateStart: t(`${REFINE_RESULTS_BASE_KEY}date`) as string };
-        }
-        if (additionalFilters.updatedDateEnd && dayjs(additionalFilters.updatedDateEnd, NUMERIC_DATE_FORMAT).isAfter(dayjs())) {
-            errors = { ...errors, updatedDateEnd: t(`${REFINE_RESULTS_BASE_KEY}date`) as string };
-        }
-        setErrors(errors);
-        return Object.keys(errors).length === 0;
-    };
-
-    const handleSubmit = () => {
+    const handleSubmit = useCallback(() => {
+        const validateForm = () => {
+            let errors: Errors = {};
+            if (additionalFilters.createdDateStart && dayjs(additionalFilters.createdDateStart, NUMERIC_DATE_FORMAT).isAfter(dayjs())) {
+                errors = { ...errors, createdDateStart: t(`${REFINE_RESULTS_BASE_KEY}date`) as string };
+            }
+            if (additionalFilters.createdDateEnd && dayjs(additionalFilters.createdDateEnd, NUMERIC_DATE_FORMAT).isAfter(dayjs())) {
+                errors = { ...errors, createdDateEnd: t(`${REFINE_RESULTS_BASE_KEY}date`) as string };
+            }
+            if (additionalFilters.updatedDateStart && dayjs(additionalFilters.updatedDateStart, NUMERIC_DATE_FORMAT).isAfter(dayjs())) {
+                errors = { ...errors, updatedDateStart: t(`${REFINE_RESULTS_BASE_KEY}date`) as string };
+            }
+            if (additionalFilters.updatedDateEnd && dayjs(additionalFilters.updatedDateEnd, NUMERIC_DATE_FORMAT).isAfter(dayjs())) {
+                errors = { ...errors, updatedDateEnd: t(`${REFINE_RESULTS_BASE_KEY}date`) as string };
+            }
+            setErrors(errors);
+            return Object.keys(errors).length === 0;
+        };
         if (!validateForm()) {
             return;
         }
@@ -330,11 +329,28 @@ export default function SideSheetRefineResults({
         }));
         closeSideSheet();
 
-        segmentAnalyticsTrackEvent(SegmentTrackedEventName.CaseFilterClick, {
-            selectedItemName: 'this',
+        const selectedFilters = Object.keys(additionalFilters).reduce((acc, key) => {
+            if (additionalFilters[key as keyof typeof additionalFilters] instanceof Set) {
+                const arrayVersionOfSet = Array.from(additionalFilters[key as keyof typeof additionalFilters] as Set<string>);
+                if (arrayVersionOfSet.length > 0) {
+                    acc[key] = arrayVersionOfSet;
+                }
+            } else if (
+                Array.isArray(additionalFilters[key as keyof typeof additionalFilters]) &&
+                (additionalFilters[key as keyof typeof additionalFilters] as string[]).length > 0
+            ) {
+                acc[key] = additionalFilters[key as keyof typeof additionalFilters];
+            } else if (additionalFilters[key as keyof typeof additionalFilters]) {
+                acc[key] = additionalFilters[key as keyof typeof additionalFilters];
+            }
+            return acc;
+        }, {} as { [key: string]: any });
+
+        segmentAnalyticsTrackEvent<FilterClickedEvent>(SegmentTrackedEventName.FilterClicked, {
+            selectedItemName: JSON.stringify(selectedFilters),
             userId: perms.getUserPartyId(),
         });
-    };
+    }, [additionalFilters, perms, closeSideSheet, setCaseManagementFilters, t]);
 
     const handleReset = () => {
         setCaseManagementFilters(prevFilters => ({ ...prevFilters, offset: 0, additionalFilters: initialAdditionalFilters }));

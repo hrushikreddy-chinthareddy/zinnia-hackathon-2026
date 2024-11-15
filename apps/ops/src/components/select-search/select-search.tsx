@@ -107,12 +107,11 @@ const SelectSearch = ({
         if (!segmentTrackName) {
             return;
         }
-        console.log('searchValue', searchValue);
         segmentAnalyticsTrackEvent(segmentTrackName, {
             searchText: searchValue,
-            userId: userPartyId
+            userId: userPartyId,
         });
-    }
+    };
     useOutsideClick(ref, open, setOpen, onOutsideClick);
 
     const debouncedSearchValue = useDebounce(searchValue, 300);

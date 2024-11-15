@@ -16,7 +16,11 @@ import Label, { LabelVariant } from '@deps/components/label/label';
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import ResponsivePadding from '@deps/components/responsive-padding/responsive-padding';
 import SelectSearch from '@deps/components/select-search/select-search';
-import { AddressWithPending, EmailWithPending, PhoneWithPending } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/non-financial-transactions.helper';
+import {
+    AddressWithPending,
+    EmailWithPending,
+    PhoneWithPending,
+} from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/non-financial-transactions.helper';
 import PendingTag from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/pending-tag';
 import { TranslationFiles } from '@deps/config/translations';
 import { FormattedAddress, sortAddressesByType } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
@@ -72,17 +76,14 @@ interface KeyValuesBarProps {
 }
 
 // TODO MG: move these into different files
-const quickLinks = (t: TFunction, policy: PolicyDetails, userPartyId?: string): QuickLinksProps['links'] => {
+const quickLinks = (t: TFunction, policy: PolicyDetails): QuickLinksProps['links'] => {
     const { policyNumber, planCode } = policy;
-    const detailsLink = {
-        href: t('site.navLinks.policyDetails.link', { id: policyNumber, planCode }),
-        name: t(policy.isLife ? 'site.navLinks.policyDetails.altText' : 'site.navLinks.contractDetails.altText'),
-        segmentTrackingName: 'Policy Search Card Policy Click',
-        userPartyId,
-    };
 
     return [
-        detailsLink,
+        {
+            href: t('site.navLinks.policyDetails.link', { id: policyNumber, planCode }),
+            name: t(policy.isLife ? 'site.navLinks.policyDetails.altText' : 'site.navLinks.contractDetails.altText'),
+        },
         {
             href: t('site.navLinks.people.link', { id: policyNumber, planCode }),
             name: t('site.navLinks.people.text'),
