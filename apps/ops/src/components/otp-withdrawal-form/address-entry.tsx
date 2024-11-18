@@ -68,7 +68,7 @@ export default function AddressEntry({
                 <Field
                     label={t(`mailingAddress`) as string}
                     message={errors.addressLine1}
-                    onChange={e => setAddressLine1(xss(e.target.value.toUpperCase()))}
+                    onChange={e => setAddressLine1(xss(e.target.value?.toUpperCase?.()))}
                     size={FieldSize.Small}
                     type={FieldType.BaseActive}
                     value={addressLine1}
