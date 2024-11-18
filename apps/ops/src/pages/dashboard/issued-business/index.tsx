@@ -1,6 +1,6 @@
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { Link, TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
-import { FgaRoles } from '@zinnia/utils';
+import { DEFAULT_ERROR_STRING, FgaRoles } from '@zinnia/utils';
 import clsx from 'clsx';
 import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
@@ -9,11 +9,11 @@ import { CSSProperties, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { MultiselectOption, SimpleOption } from '@deps/components/autocomplete/autocomplete.types';
-import ActiveAging from '@deps/components/dashboard/active-aging/active-aging';
 import { BrokerDealerFilter } from '@deps/components/dashboard/broker-dealer-filter/broker-dealer-filter';
 import { sankeyTitleFormat } from '@deps/components/dashboard/dashboard.helper';
-import CaseStatBlock from '@deps/components/dashboard/stat-blocks/case-stat-block';
 import { FieldSize } from '@deps/components/fields/field';
+import FieldData, { FieldDataVariant } from '@deps/components/fields/field-data/field-data';
+import Label, { LabelVariant } from '@deps/components/label/label';
 import NoNavLayout from '@deps/components/no-nav-layout';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import { PageHead } from '@deps/components/page-title';
@@ -31,9 +31,10 @@ import { CaseDashboardStatsResponse, Processes, Statuses } from '@deps/models/ca
 import { GroupByOptions } from '@deps/models/case/enums';
 import { UserPermission } from '@deps/models/user-profile';
 import { getCaseDashboardStats } from '@deps/queries/api/cases';
-import { BrokerDealerResponse, getBrokerDealerAgentsSSR } from '@deps/queries/api/dashboard';
+import { BrokerDealerResponse, completedCasesByProcessSubTypeSSR, getBrokerDealerAgentsSSR } from '@deps/queries/api/dashboard';
 import { checkTupleSsr, getCarrierListServerSSR } from '@deps/queries/api/fga';
 import { CaseDashboardStatsQuery, DashboardSearchFilter } from '@deps/queries/cases';
+import { ReactComponent as ChevronRightIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-right.svg';
 import { FgaRelation } from '@deps/types/fga';
 import { getCarrierListItem, getCarrierNameByClientId, getClientIdsByCarrierName } from '@deps/utils/carriers';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
@@ -49,9 +50,11 @@ export interface CarrierListItem {
 const DashboardPage = ({
     authorizedCarriers,
     brokerDealersSSR,
+    completedCasesByProcessSubType,
 }: {
     authorizedCarriers: string[];
     brokerDealersSSR: BrokerDealerResponse[];
+    completedCasesByProcessSubType: BrokerDealerResponse[];
 }) => {
     const router = useRouter();
     const carrierHeaderRef = useRef<HTMLDivElement>(null);
@@ -98,6 +101,21 @@ const DashboardPage = ({
     const [processListOptions, setProcessListOptions] = useState<SimpleOption[]>([]);
     const [brokerDealers, setBrokerDealers] = useState<BrokerDealerResponse[]>(brokerDealersSSR || []);
 
+    const calculateTimeToClose = async (type: Processes) => {
+        const cases = await getCaseDashboardStats({
+            filter: {
+                createdDateStart,
+                createdDateEnd,
+                caseStatus: [Statuses.Completed],
+                process: [type],
+            },
+        });
+        if (!cases || 'status' in cases) {
+            return DEFAULT_ERROR_STRING;
+        } else {
+            return cases.data.reduce((acc, curr) => acc + curr.count, 0);
+        }
+    };
     const carrierFilterItems = useMemo(
         () =>
             authorizedCarriers.map((carrierCode: string) => {
@@ -299,7 +317,7 @@ const DashboardPage = ({
         };
         getPageData();
     }, [baseDashboardQueryFilter, baseInsightQueryFilter]);
-
+    console.log(completedCasesByProcessSubType);
     return (
         <div>
             <PageHead titleKey="dashboard" />
@@ -364,7 +382,16 @@ const DashboardPage = ({
                         />
                     </nav>
                 </div>
-                <div className="relative" ref={sankeyChartRef}>
+                <div
+                    style={
+                        {
+                            '--indicator-color': 'transparent',
+                            '--indicator-width': '0px',
+                        } as CSSProperties
+                    }
+                    className="relative"
+                    ref={sankeyChartRef}
+                >
                     {loading && (
                         <div className="absolute bottom-0 left-0 right-0 top-0 z-10 flex h-full justify-center bg-gray-800 opacity-80">
                             <div className="mt-4">
@@ -372,51 +399,59 @@ const DashboardPage = ({
                             </div>
                         </div>
                     )}
-                    <CardContainer classNames="relative !pt-0" containerClassNames="mt-none">
-                        <Typography variant={TypographyVariant.LabelLg}>Top 5 Processes by Volume</Typography>
-                        <TabGroup>
-                            <TabList className="flex gap-4">
-                                {[
-                                    {
-                                        title: 'NB Reg 60',
-                                        cases: 600,
-                                        avgTimeToClose: 4.35,
-                                    },
-                                    {
-                                        title: 'Incoming Transfer',
-                                        cases: 600,
-                                        avgTimeToClose: 4.35,
-                                    },
-                                    {
-                                        title: 'Annuity Application',
-                                        cases: 600,
-                                        avgTimeToClose: 4.35,
-                                    },
-                                    {
-                                        title: 'NB Purchase W app',
-                                        cases: 600,
-                                        avgTimeToClose: 4.35,
-                                    },
-                                    {
-                                        title: 'Life Application',
-                                        cases: 600,
-                                        avgTimeToClose: 4.35,
-                                    },
-                                ].map((element, index) => {
+                    <TabGroup asChild defaultValue={completedCasesByProcessSubType[0].name}>
+                        <CardContainer
+                            classNames="relative !pt-0 flex flex-col flex-1 gap-4 !border-none"
+                            containerClassNames="mt-none !border-none"
+                        >
+                            <Typography variant={TypographyVariant.LabelLg}>Top 5 Processes by Volume</Typography>
+                            <TabList className="flex gap-4 !border-b-0 !after:content-none [& .indicator]">
+                                {completedCasesByProcessSubType.slice(0, 5).map((element, index) => {
                                     return (
                                         <TabTrigger
-                                            value={element.title}
+                                            value={element.name}
                                             key={index}
-                                            className={`flex items-center justify-between bg-red-${700 - (index + 1) * 100} h-64 w-64 p-4`}
+                                            className={clsx(
+                                                'flex',
+                                                'flex-col',
+                                                'border-2',
+                                                '!after:content-none',
+                                                '!mb-0',
+                                                'border-[--color-base-border-border-subtle]',
+                                                'data-[state=active]:border-[--color-base-border-border-primary-color]',
+                                                'data-[state=active]:[& .indicator]:height-0',
+                                                'hover:border-[--color-base-border-border-secondary-color]',
+                                                'items-start justify-between'
+                                            )}
                                         >
-                                            <h4>{element.title}</h4>
-                                            <p>{element.cases} Cases</p>
-                                            <p>{element.avgTimeToClose} Days</p>
+                                            <div className="flex flex-row justify-between items-center align-middle self-stretch">
+                                                <Label variant={LabelVariant.LabelLg} label={sankeyTitleFormat(element.name)} />
+                                                <ChevronRightIcon width="18px" height="18px" className="text-secondary" />
+                                            </div>
+                                            <FieldData
+                                                caption={
+                                                    <>
+                                                        Avg time to close
+                                                        <Label variant={LabelVariant.LabelLg} label={DEFAULT_ERROR_STRING} />
+                                                    </>
+                                                }
+                                                variant={FieldDataVariant.Large}
+                                                label="cases"
+                                            >
+                                                {element.count}
+                                            </FieldData>
                                         </TabTrigger>
                                     );
                                 })}
                             </TabList>
-                            <TabContent value="NB Reg 60">
+                            {completedCasesByProcessSubType.map((element, index) => {
+                                return (
+                                    <TabContent value={element.name} key={index}>
+                                        <h1>{sankeyTitleFormat(element.name)}</h1>
+                                    </TabContent>
+                                );
+                            })}
+                            {/* <TabContent value="NB Reg 60">
                                 {' '}
                                 <div
                                     className={clsx(styles.insightsHeader, {
@@ -486,10 +521,9 @@ const DashboardPage = ({
                             </TabContent>
                             <TabContent value="Annuity Application">Annuity Application Content</TabContent>
                             <TabContent value="NB Purchase W app">NB Purchase W app Content</TabContent>
-                            <TabContent value="Life Application">Life Application Content</TabContent>
-                        </TabGroup>
-                        <div className="flex gap-4"></div>
-                    </CardContainer>
+                            <TabContent value="Life Application">Life Application Content</TabContent> */}
+                        </CardContainer>
+                    </TabGroup>
                 </div>
             </NoNavLayout>
         </div>
@@ -540,12 +574,14 @@ export const getServerSideProps = withPageAuthRequired({
         const brokerDealersSSR = await getBrokerDealerAgentsSSR(accessToken || '');
 
         const authorizedCarriers = await getCarrierListServerSSR(accessToken || '', user.partyId, UserPermission.AllowReadCaseManagement);
+        const { data: completedCasesByProcessSubType } = await completedCasesByProcessSubTypeSSR(accessToken || '');
         return {
             props: {
                 locale,
                 authorizedCarriers,
                 brokerDealersSSR,
                 ...translations,
+                completedCasesByProcessSubType,
             },
         };
     },
