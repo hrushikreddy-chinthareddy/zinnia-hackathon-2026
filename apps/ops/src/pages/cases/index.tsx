@@ -83,7 +83,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         const { caseStatus, notInCaseStatus, ...additionalFilters } = getAdditionalFilters(caseManagementFilters.additionalFilters);
 
         const searchValueObject = getSearchValueObject(caseManagementFilters.searchValue, caseManagementFilters.toggleValue);
-        console.log(searchValueObject);
 
         let caseStatsRequest: CaseStatsQuery = {
             ...additionalFilters,
