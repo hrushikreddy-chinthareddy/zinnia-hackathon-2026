@@ -22,6 +22,7 @@ export const getAutopayPremiumSideSheetValues = (
 
     try {
         const isPending = status === TransactionStatus.Pending;
+        const isCanceled = status === TransactionStatus.Canceled;
         const paymentMethod = getPaymentMethod(policy, payors as TransactionPayor[], t);
         const isPayment = transactionType === TransactionType.SubsequentPayment;
         const reverseRecreateEnabled = featureFlags[FEATURE_FLAGS.REVERSE_RECREATE_ENABLED];
@@ -44,7 +45,7 @@ export const getAutopayPremiumSideSheetValues = (
                     : undefined,
             reversalTransactionId: isPayment ? transactionId : transaction.parentId,
             status,
-            submittedAmount: isPending ? paymentAmount : requestedAmount,
+            submittedAmount: isCanceled || isPending ? paymentAmount : requestedAmount,
             transactionId,
             transactionValue: isPending ? paymentAmount : appliedAmount,
         };
