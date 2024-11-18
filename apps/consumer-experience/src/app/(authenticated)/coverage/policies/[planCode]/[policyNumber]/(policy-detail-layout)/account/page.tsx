@@ -1,16 +1,11 @@
-import { FeatureType } from '@zinnia/api-types/types/sor';
-import clsx from 'clsx';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Metadata } from 'next';
 
 import { AccountValue } from '@/components/account-value/AccountValue';
+import { AdditionalAccountValueLinks } from '@/components/account-value/AdditionalAccountValueLinks';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
-import { StatusIconText } from '@/components/status-icon-text/StatusIconText';
 import { RouteKey, getPageTitle } from '@/route-map';
-import { getPolicyDetails, getPolicyStatusDetails } from '@/services';
-import { getLoanEligibility, getWithdrawalEligibility } from '@/services/bpm';
-import { getFunds } from '@/services/funds';
 import { PolicyRequestInputs } from '@/types/policy';
-import { isNullEmptyOrUndefined } from '@/utils/data';
 
 const pageTitle = getPageTitle(RouteKey.ACCOUNT);
 // disable because NextJS needs this to be exported from this file
@@ -26,132 +21,22 @@ export default async function AccountValuePage({
 }) {
   const { planCode, policyNumber } = params;
 
-  const [
-    fundsDataRes,
-    withDrawalEligibilityRes,
-    loanEligibilityRes,
-    policyDetailsRes,
-    policyStatusRes,
-  ] = await Promise.allSettled([
-    getFunds({
-      planCode,
-      policyNumber,
-    }),
-    getWithdrawalEligibility({
-      planCode,
-      policyNumber,
-    }),
-    getLoanEligibility({
-      planCode,
-      policyNumber,
-    }),
-    getPolicyDetails({
-      planCode,
-      policyNumber,
-    }),
-    getPolicyStatusDetails({
-      planCode,
-      policyNumber,
-    }),
-  ]);
-
-  const withdrawalEligibility =
-    withDrawalEligibilityRes.status === 'fulfilled'
-      ? withDrawalEligibilityRes.value?.data?.isEligible
-      : null;
-  const loanEligibility =
-    loanEligibilityRes.status === 'fulfilled'
-      ? loanEligibilityRes.value?.data?.isEligible
-      : null;
-  const policyStatusData =
-    policyStatusRes?.status === 'fulfilled' ? policyStatusRes.value.data : null;
-  const isFreelook = policyStatusData?.policyStatus === FeatureType.FREELOOK;
-
-  const accountValueSummary = () => {
-    // TODO: not actually sure what the right error handling is here
-    // if (error || !data) {
-    //   return <NoDataAvailable message={DEFAULT_UNAVAILABLE_STRING} />;
-    // }
-
-    return (
-      <ClickableCardContainer
-        listItems={[
-          {
-            content: (
-              <div className="stacked-items py-lg">
-                <span className="typography-labels-label-md-alt">
-                  Allocations
-                </span>
-              </div>
-            ),
-            linkTo: {
-              url: `/coverage/policies/${planCode}/${policyNumber}/account/allocations`,
-              label: 'go to allocations page',
-            },
-          },
-          {
-            content: (
-              <div
-                className={clsx('stacked-items', {
-                  'py-lg': isNullEmptyOrUndefined(withdrawalEligibility),
-                })}
-              >
-                <span className="typography-labels-label-md-alt">
-                  Withdrawals
-                </span>
-                <StatusIconText
-                  isEligible={withdrawalEligibility}
-                  className="typography-content-caption"
-                />
-              </div>
-            ),
-            linkTo: {
-              url: `/coverage/policies/${planCode}/${policyNumber}/account/withdrawals`,
-              label: 'go to withdrawals page',
-            },
-          },
-          {
-            content: (
-              <div
-                className={clsx('stacked-items', {
-                  'py-lg': isNullEmptyOrUndefined(loanEligibility),
-                })}
-              >
-                <span className="typography-labels-label-md-alt">Loans</span>
-                <StatusIconText
-                  isEligible={loanEligibility && !isFreelook}
-                  className="typography-content-caption"
-                />
-              </div>
-            ),
-            linkTo: {
-              url: `/coverage/policies/${planCode}/${policyNumber}/account/loans`,
-              label: 'go to loans page',
-            },
-          },
-          {
-            content: (
-              <div className="stacked-items py-lg">
-                <span className="typography-labels-label-md-alt">
-                  Surrender policy
-                </span>
-              </div>
-            ),
-            linkTo: {
-              url: `/coverage/policies/${planCode}/${policyNumber}/account/surrender`,
-              label: 'go to surrender policy page',
-            },
-          },
-        ]}
-      >
-        <AccountValue
+  return (
+    <div className="container">
+      <div className="card-container">
+        <ClickableCardContainer>
+          <AccountValue
+            planCode={planCode}
+            policyNumber={policyNumber}
+            hideLabel
+          />
+        </ClickableCardContainer>
+        <AdditionalAccountValueLinks
           planCode={planCode}
           policyNumber={policyNumber}
-          hideLabel
+          lineOfBusiness={LineOfBusiness.LIFE}
         />
-      </ClickableCardContainer>
-    );
-  };
-
-  return <div className="container">{accountValueSummary()}</div>;
+      </div>
+    </div>
+  );
 }
