@@ -17,8 +17,9 @@ import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import SideSheetFinancialTransactionContent from './side-sheet-financial-content';
 import SidesheetCancelPending from '../cancel/side-sheet-cancel-pending';
 import SidesheetReverseRecreate from '../reverse-recreate/side-sheet-reverse-recreate';
+import { replacesReverseInitiator } from '../reverse-recreate/side-sheet-reverse-recreate.helper';
 import SideSheetReversedTransaction from '../reverse-recreate/side-sheet-reversed-transaction';
-import { getFinancialTransactionSideSheetValues, replacesReverseInitiator } from '../side-sheet-transaction.helper';
+import { getFinancialTransactionSideSheetValues } from '../side-sheet-transaction.helper';
 import { SideSheetTransactionProps, TransactionSideSheetValues } from '../types';
 import SideSheetWithdrawalContent from '../withdrawal/side-sheet-withdrawal-content';
 import { WithdrawalSideSheetValues } from '../withdrawal/types';
@@ -126,8 +127,6 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
     switch (transactionType) {
         case TransactionType.FullSurrender:
         case TransactionType.PartialWithdrawalOneTime:
-            SidesheetContent = <SideSheetWithdrawalContent t={t} values={sideSheetValues as WithdrawalSideSheetValues} loading={loading} />;
-            break;
         case TransactionType.FreeLookCancellation:
             SidesheetContent = <SideSheetWithdrawalContent t={t} values={sideSheetValues as WithdrawalSideSheetValues} loading={loading} />;
             break;

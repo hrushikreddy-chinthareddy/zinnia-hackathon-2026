@@ -4,7 +4,7 @@ import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { logError } from '@/utils/logging/server-logging';
 
 import { productRateBaseUrl } from '../api-config';
-import { ServerApi } from '../server-http';
+import { EnterpriseTokenApi } from '../enterprise-api-token-http';
 
 // TODO: update the name and structure of this
 export enum ConfiguredSettingId {
@@ -40,7 +40,7 @@ export const getListOfConfiguredItemsForProductBenefit = async ({
 }): Promise<ConfiguredSettingId[]> => {
   const url = `${productRateBaseUrl}/${carrierId}/products/${planCode}/benefits/${benefitId}/configured-settings`;
 
-  const rawResponse = await ServerApi.get(url);
+  const rawResponse = await EnterpriseTokenApi.get(url);
 
   const response = await parseAPIResponse(rawResponse);
 
@@ -88,7 +88,7 @@ export const getProductBenefitConfiguredSettingsDetails = async ({
   // does the fees request need any of that?
   const url = `${productRateBaseUrl}/${carrierCode}/products/${planCode}/benefits/${benefit_id}/configured-settings/${resource}?${qsps}`;
 
-  const rawResponse = await ServerApi.get(url);
+  const rawResponse = await EnterpriseTokenApi.get(url);
 
   const response = await parseAPIResponse(rawResponse);
 

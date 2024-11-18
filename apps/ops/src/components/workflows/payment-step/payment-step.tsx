@@ -124,7 +124,7 @@ const PaymentStep = ({ parentPage, policy, setState, state, subtitle, validateTr
     return (
         <WorkflowCard
             title={t('workflows.paymentStep.heading')}
-            footerContent={<TransactionCta className="mt-4" mainCta={mainCta} secondaryCta={secondaryCta} stopLoading={stopLoading} />}
+            footerContent={<TransactionCta mainCta={mainCta} secondaryCta={secondaryCta} stopLoading={stopLoading} />}
         >
             <div className="flex flex-col gap-2">
                 <div className="flex flex-col">

@@ -4,18 +4,15 @@ import { useTranslation } from 'next-i18next';
 import { CSSProperties } from 'react';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
-// import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import Popover, { PopoverPlacement } from '@deps/components/popover/popover';
 import { TranslationFiles } from '@deps/config/translations';
 import { getBeneficiaryColor } from '@deps/containers/people-card-container/people-card-container.helper';
-// import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { toSentenceCase } from '@deps/helpers/string.helper';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import styles from './funds-table.module.css';
 import { FundViewModel } from '../types';
-// import SideSheetFundDetails from './side-sheet-fund-details';
 
 interface FundsTableProps {
     funds?: FundViewModel[];
@@ -27,14 +24,6 @@ const FundsTable = ({ funds, loading, policy }: FundsTableProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'policy.funds.fundsTable',
     });
-
-    // TODO MG: for DEPU-2420
-    // const sideSheet = useSideSheetContext();
-
-    // const openFundDetailsSideSheet = (fund: FundViewModel) => {
-    //     sideSheet.changeSideSheetContent('Fund Details', <SideSheetFundDetails fund={fund} />);
-    //     sideSheet.handleOpen(true);
-    // };
 
     if (!loading && !funds?.length) {
         return (
@@ -136,15 +125,6 @@ const FundsTable = ({ funds, loading, policy }: FundsTableProps) => {
                         return (
                             <TableRow key={`fund-${fund.fundId}-${index}`}>
                                 <TableCell className={styles.nameCell}>
-                                    {/* TODO MG: when do we show link? 
-                                    {fund.hasSegments ? (
-                                        <NavElement onClick={() => openFundDetailsSideSheet(fund) } size={NavElementSize.Small} type={NavElementType.Button}>
-                                            {fund.fundName}
-                                        </NavElement>
-                                    ) : (
-                                        <Content details={fund.fundName} variant={ContentVariant.BodySm} />
-                                    )}
-                                */}
                                     <Content details={fund.fundName} variant={ContentVariant.BodySm} />
                                 </TableCell>
                                 <TableCell className={styles.typeCell}>

@@ -15,7 +15,7 @@ const options = [
     { label: 'Option 3', value: 'option3' },
 ];
 
-describe.skip('Autocomplete Component', () => {
+describe('Autocomplete Component', () => {
     it('renders a Autocomplete component with a label when provided', async () => {
         render(
             <Autocomplete label="Autoselect Label" placeholder="Pick a card, any card" options={options} value={''} onChange={() => null} />

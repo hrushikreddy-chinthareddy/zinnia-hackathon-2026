@@ -1,14 +1,14 @@
 import { useTranslation } from 'next-i18next';
+import { useContext } from 'react';
 
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
+import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 
 import { signaturesConfig } from '../../bank-update/bank-update.helper';
 import { sswEditFormValidator } from '../../ssw-edit-helper';
-import { useContext } from 'react';
-import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 
 const Signature = () => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sswUpdate' });

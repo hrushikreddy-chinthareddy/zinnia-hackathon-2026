@@ -34,11 +34,6 @@ export const getSearchValueObject = (
     }
 };
 
-type CaseStatusResult = {
-    caseStatus?: Statuses[];
-    notInCaseStatus?: Statuses[];
-};
-
 type AdditionalFiltersResult = {
     brokerDealerName?: string;
     createdDateStart?: string;
@@ -154,10 +149,10 @@ export const toggleLabels = (t: TFunction): LabelValue<PolicySearchKeys>[] => [
     {
         label: t('dashboard.search.buttons.policyNumber'),
         value: 'policyNumber',
-        placeholder: '',
+        placeholder: 'e.g. 1234567',
     },
     {
-        label: t('dashboard.search.buttons.ssn'),
+        label: t('dashboard.search.buttons.ownerSsn'),
         value: 'ssn',
         fullLabel: t('dashboard.search.buttons.ssnFullLabel') ?? '',
         placeholder: t('dashboard.search.buttons.ssnPlaceholder') ?? '',
@@ -165,7 +160,7 @@ export const toggleLabels = (t: TFunction): LabelValue<PolicySearchKeys>[] => [
         replaceValue: '-',
     },
     {
-        label: t('dashboard.search.buttons.name'),
+        label: t('dashboard.search.buttons.ownerName'),
         value: 'ownerFirstName',
         group: [
             {
@@ -219,7 +214,7 @@ export const insertStepDetails = (caseDetails: Case, metadata: Metadata) => {
     return caseDetails;
 };
 
-export const formatCaseTotals = (count: number, stats: StatCount, hasSearch: boolean) => {
+export const formatCaseTotals = (count: number, stats: StatCount) => {
     const keyedStats = stats.counts.reduce((acc, stat) => {
         acc[stat.label] = stat.value;
         return acc;

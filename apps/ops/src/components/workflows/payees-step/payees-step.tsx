@@ -105,7 +105,6 @@ const PayeesStep = ({ parentPage, policy, setState, state }: PayeesStepProps) =>
             title={t('workflows.payeesStep.title')}
             footerContent={
                 <TransactionNavigationButtons
-                    className="mt-6"
                     handleContinue={handleContinue}
                     parentPage={parentPage}
                     planCode={policy.product?.planCode}
