@@ -95,11 +95,11 @@ body {
 
         column-gap: var(--responsive-grid-column-gap);
         row-gap: var(--responsive-grid-row-gap);
-        /* 
+        /*
             The 'grid-template-columns' property is being set up for a responsive grid layout.
             - 'repeat(auto-fill, ...)' allows the grid to create as many columns as can fit in the container.
             - 'minmax(..., 1fr)' sets a minimum and maximum width for each column.
-            - 'max(var(--responsive-grid-item--min-width), var(--responsive-grid-item--max-width))' ensures that each column has a minimum width 
+            - 'max(var(--responsive-grid-item--min-width), var(--responsive-grid-item--max-width))' ensures that each column has a minimum width
                 of '--responsive-grid-item--min-width' or '--responsive-grid-item--max-width', whichever is larger, thus creating a flexible, responsive grid.
                 example: --responsive-grid-item--min-width: 350px;
                 then no cell will be smaller than 350px
@@ -409,19 +409,6 @@ input:-webkit-autofill:active {
 /* For IE and Edge */
 * {
     -ms-overflow-style: -ms-autohiding-scrollbar; /* autohiding scrollbar */
-}
-
-/* Early Breakpoint for Sort Direction in Case Management */
-@media (max-width: 767px) {
-    .early-col-break {
-        flex-direction: column !important;
-        align-items: start !important;
-        justify-content: start !important;
-    }
-
-    .early-break {
-        justify-content: start !important;
-    }
 }
 
 /* Height - 100view height - 80 px (height of the top navbar) */

@@ -1,24 +1,28 @@
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { Button, Icon, IconType } from '@zinnia/bloom/components';
+import clsx from 'clsx';
 import { TFunction, useTranslation } from 'next-i18next';
-import { ChangeEvent, RefObject, useCallback, useContext, useEffect, useState } from 'react';
+import { ChangeEvent, HTMLAttributes, useCallback, useContext, useEffect, useState } from 'react';
 
-import Button, { ButtonType } from '@deps/components/button/button';
-import ButtonGroup from '@deps/components/button-group/button-group';
 import { TranslationFiles } from '@deps/config/translations';
 import { PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
 import { LabelValue } from '@deps/types/data';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 
+import styles from './search-bar.module.css';
 import SearchFieldToggle from './search-field-toggle/search-field-toggle';
+import Typography, { TypographyVariant } from '../typography/typography';
 
 export const SearchBarInitialValues: SearchViewQuery = {};
 
-interface SearchBarProps {
+interface SearchBarProps extends Omit<HTMLAttributes<HTMLInputElement>, 'onToggle'> {
     searchValue: SearchViewQuery;
     onSearch: (value: SearchViewQuery) => void;
     initialToggleValue: PolicySearchKeys;
     toggleLabels: (t: TFunction) => LabelValue<PolicySearchKeys>[];
     onToggle?: (value: PolicySearchKeys) => void;
-    onClear?: (ref: RefObject<HTMLInputElement>) => void;
+    onClear?: (searchField: PolicySearchKeys | undefined) => void;
+    formClasses?: string;
 }
 
 const SearchBar = ({
@@ -28,6 +32,7 @@ const SearchBar = ({
     toggleLabels,
     onToggle,
     onClear,
+    className,
 }: SearchBarProps) => {
     const { setShowFieldErrorMessage } = useContext(PolicySearchFiltersContext);
     const { t } = useTranslation(TranslationFiles.COMMON);
@@ -89,31 +94,45 @@ const SearchBar = ({
         [activeToggleBtn, getToggleLabel, onToggle]
     );
 
+    const dropdownLabels = toggleLabels(t);
+
     return (
-        <form className="flex flex-col items-start gap-4 sm:w-[492px] xl:w-full xl:flex-row" onSubmit={handleFormSubmit}>
-            <div className="leading-[18px] sm:w-[492px]">
-                <ButtonGroup
-                    isFullWidth
-                    activeValue={activeToggleBtn}
-                    toggle={handleToggle}
-                    labels={toggleLabels(t)}
-                    groupLabel={t('dashboard.search.searchKeyType')}
-                />
+        <form className={clsx(styles.formContainer, className)} onSubmit={handleFormSubmit}>
+            <div className={styles.searchContainer}>
+                <DropdownMenu.Root>
+                    <DropdownMenu.Trigger className={clsx(styles.dropdownTrigger, 'typography-content-body-sm whitespace-nowrap')}>
+                        <label id="case-search-label">
+                            <Typography variant={TypographyVariant.BodySm}>{activeLabels.label}</Typography>
+                        </label>
+                        <Icon type={IconType.CHEVRON} height={22} width={22} color="#00628B" />
+                    </DropdownMenu.Trigger>
+
+                    <DropdownMenu.Portal>
+                        <DropdownMenu.Content className={styles.dropdownMenu}>
+                            {dropdownLabels.map((item, index) => (
+                                <DropdownMenu.Item
+                                    className={styles.dropdownItem}
+                                    key={`dropdown-item-${index}`}
+                                    onSelect={() => handleToggle(item.value || '')}
+                                >
+                                    <Typography variant={TypographyVariant.BodySm}>{item.label}</Typography>
+                                </DropdownMenu.Item>
+                            ))}
+                        </DropdownMenu.Content>
+                    </DropdownMenu.Portal>
+                </DropdownMenu.Root>
+                <SearchFieldToggle activeLabels={activeLabels} handleChange={handleNewValue} onClear={onClear} />
             </div>
-            <div className="flex w-full grow items-end gap-4">
-                <SearchFieldToggle
-                    values={values}
-                    activeLabels={activeLabels}
-                    handleEnterKey={handleSearch}
-                    handleChange={handleNewValue}
-                    onClear={onClear}
-                />
-            </div>
-            <div className="self-center xl:mt-5 xl:self-baseline">
-                <Button type={ButtonType.Primary} onClick={handleSearch} data-testid="search-btn" aria-label={t('ariaLabel.search') as string}>
-                    {t('dashboard.search.btnText')}
-                </Button>
-            </div>
+            <Button
+                mode="primary"
+                onClick={handleSearch}
+                data-testid="search-btn"
+                aria-label={t('ariaLabel.search') as string}
+                type="submit"
+                size="small"
+            >
+                {t('dashboard.search.btnText')}
+            </Button>
         </form>
     );
 };

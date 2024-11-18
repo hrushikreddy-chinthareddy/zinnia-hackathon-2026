@@ -15,9 +15,10 @@ import { reverseRecreateTransaction } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as HexExclamationIcon } from '@deps/styles/elements/icons/icons_outlined/hex-exclamation.svg';
-import { ViewState } from '../non-financial-transactions/states/states.helpers';
+
 import { HELP_DESK_LINK } from '../non-financial-transactions/states/api-error-state';
 import LoadingState from '../non-financial-transactions/states/loading-state';
+import { ViewState } from '../non-financial-transactions/states/states.helpers';
 
 type SidesheetReverseRecreateProps = {
     amount?: number;

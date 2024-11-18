@@ -1,3 +1,4 @@
+import { datadogLogs } from '@datadog/browser-logs';
 import dayjs, { Dayjs } from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import React, { useEffect, useState } from 'react';
@@ -192,6 +193,11 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                         setStatements(ownerCopyStatements(statements.items));
                     }
                 } catch (error) {
+                    datadogLogs.logger.warn('contactCenterGetStatements', {
+                        payload: { policyNumber: policy?.policyNumber, startDate, endDate },
+                        error,
+                        function: 'documents.getCorrespondenceDocs',
+                    });
                     console.error('An error occurred while getting Contact Center statements', error);
                 } finally {
                     setLoader(false);

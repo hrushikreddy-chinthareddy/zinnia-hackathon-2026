@@ -57,6 +57,7 @@
             "history": "History",
             "documents": "Documents",
             "newPremium": "New Premium",
+            "cancelFreeLook": "Free Look Cancel",
             "updatePremium": "Update Premium Autopay",
             "newWithdrawal": "New Withdrawal",
             "formData": "Form Data",
@@ -697,6 +698,7 @@
         "search": {
             "btnText": "Search",
             "searchKeyType": "Search by",
+            "clear": "Clear search",
             "results": {
                 "policySummaryCard": {
                     "header1": "Owner Information",
@@ -741,13 +743,15 @@
                 "lastName": "Enter a last name to return search results"
             },
             "buttons": {
-                "policyNumber": "Policy Number",
+                "policyNumber": "Policy number",
+                "ownerSsn": "Owner SSN",
                 "ssn": "SSN",
                 "ssnFullLabel": "Owner Social Security number",
                 "ssnPlaceholder": "###-##-####",
                 "name": "Name",
-                "firstName": "Owner First Name",
-                "lastName": "Owner Last Name"
+                "firstName": "First name",
+                "lastName": "Last name",
+                "ownerName": "Owner name"
             }
         },
         "quickSearch": {
@@ -3836,6 +3840,37 @@
         },
         "checkingEndingIn": "Checking ending in {{ accountNumber }}"
     },
+    "cancelFreeLook": {
+        "confirm": {
+            "cta": "Go to transaction history",
+            "label": "Confirm",
+            "secondaryCta": "Close",
+            "subtitle": {
+                "0": "A cancellation request was submitted. Once processed, a refund payment for ",
+                "1": " will be sent."
+            },
+            "title": "Submitted!"
+        },
+        "date": {
+            "label": "Date",
+            "title": "Date",
+            "effectiveDate": "$t(withdrawals.amount.effectiveDate)",
+            "effectiveDateTooltip": "$t(withdrawals.amount.effectiveDateTooltip)",
+            "effectiveDateError": "$t(withdrawals.amount.effectiveDateError)"
+        },
+        "start": {
+            "label": "Start",
+            "title": "Cancel Policy"
+        },
+        "summary": {
+            "effectiveDate": "Effective date",
+            "effectiveDateTooltip": "This is the date used to calculate all the available account values for this withdrawal. Because funds in the account value are invested, the account value can change day by day. Processing can happen at any time, so we need to know at what point to effectively withdraw the funds, even if we're processing the transaction some days before or after.",
+            "label": "Summary",
+            "payee": "Payee",
+            "status200subtitle": "Looking good! Be sure to review your entries before submitting.",
+            "submitCancellation": "Submit cancellation"
+        }
+    },
     "withdrawals": {
         "requestedWithdrawal": {
             "label": "Requested withdrawal",
@@ -4197,7 +4232,7 @@
             "FreeLookExpiration": "Free look expiration",
             "FreeLookCancellation": "Free look cancellation",
             "FullSurrender": "Full surrender",
-            "PaymentInitialPremium": "Payment of initial premium",
+            "PaymentInitialPremium": "Payment initial premium",
             "InitialPremium": "Initial premium",
             "InterestCredit": "Interest credit",
             "InterestCreditLoan": "Interest credit on loan",

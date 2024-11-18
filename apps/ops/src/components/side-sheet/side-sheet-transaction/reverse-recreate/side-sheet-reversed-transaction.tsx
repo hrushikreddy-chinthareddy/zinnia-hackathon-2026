@@ -7,8 +7,9 @@ import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { TransactionType } from '@deps/models/policy/sor-policy';
 
 import SideSheetReversedTransactionContent from './side-sheet-reversed-transaction-content';
-import { getReverseRecreateTransactionSideSheetValues } from '../side-sheet-transaction.helper';
-import { ReverseTransactionSidesheetValues, SideSheetTransactionProps } from '../types';
+import { SideSheetTransactionProps } from '../types';
+import { getReverseRecreateTransactionSideSheetValues } from './side-sheet-reverse-recreate.helper';
+import { ReverseTransactionSidesheetValues } from './types';
 
 export const SideSheetReversedTransaction = ({ policy, transaction }: SideSheetTransactionProps) => {
     const { t } = useTranslation(undefined);
@@ -28,7 +29,7 @@ export const SideSheetReversedTransaction = ({ policy, transaction }: SideSheetT
 
             const asyncValues = getAsyncSideSheetValues ? await getAsyncSideSheetValues() : {};
             setAsyncValues(asyncValues);
-            setSidesheetValues(vals => {
+            setSidesheetValues((vals: ReverseTransactionSidesheetValues) => {
                 return { ...vals, ...asyncValues };
             });
             setLoading(false);

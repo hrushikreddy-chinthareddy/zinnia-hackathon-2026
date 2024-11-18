@@ -112,11 +112,9 @@ const SideSheetWithdrawalContent = ({ values, t }: SideSheetWithdrawalContentPro
                 </>
             )}
 
-            {/* TODO MG: make its own component */}
             <section>
                 <Typography variant={TypographyVariant.H4}>{t('policy.history.withdrawalSidesheet.payeeDetailsTitle')}</Typography>
                 <div className="mt-4">
-                    {/* ="contents" */}
                     <table role="table" className="w-full rounded-lg">
                         {/* Hardcoded table caption
                         TODO MG: This will need to be updated/cleared through Amelia for a11y purposes */}

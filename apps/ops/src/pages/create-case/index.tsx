@@ -75,7 +75,6 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
 
     useSegmentPageTracker(user, SegmentPageName.CreateCaseLanding);
 
-    // TODO MG: call `useSegmentPageTracker()` when tab is changed?
     const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
 
     const handleRouteChange = () => {

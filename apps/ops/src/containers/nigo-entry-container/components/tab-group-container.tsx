@@ -1,9 +1,12 @@
+import { Icon, IconType } from '@zinnia/bloom/components';
+import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 
 import GlobalValuesBar from '@deps/components/global-values/global-values-bar/global-values-bar';
 import NavElement, { NavElementType, NavElementSize } from '@deps/components/nav-element/nav-element';
 import { DiaryNotesContent } from '@deps/components/side-sheet/diary-notes/diary-notes-content';
+import { ViewDetailsContent } from '@deps/components/side-sheet/view-details/view-details-content';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import ProgressBarSteps from '@deps/containers/progress-bar-steps/progress-bar-steps';
@@ -14,16 +17,13 @@ import { WorkflowProvider, useWorkflow } from '@deps/contexts/WorkflowContainerC
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { useDiaryNotes } from '@deps/hooks/useDiaryNotes';
+import { DocumentData } from '@deps/models/case/document';
 import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
 import { ReactComponent as AnnotationIcon } from '@deps/styles/elements/icons/icons_outlined/annotation.svg';
 import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icons_outlined/document-text-2.svg';
+import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
 
 import DocumentPortalPanel from './side-panel/document-portal-panel';
-import { ViewDetailsContent } from '@deps/components/side-sheet/view-details/view-details-content';
-import { DocumentData } from '@deps/models/case/document';
-import { Icon, IconType } from '@zinnia/bloom/components';
-import dayjs from 'dayjs';
-import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
 
 type TabGroupContainerProps = {
     steps: Step[];

@@ -7,20 +7,21 @@ import { v4 as uuidV4 } from 'uuid';
 import { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
 import CaseDocumentSelect, { CaseDocumentOption, SetStateCaseId } from '@deps/components/case-document-select/case-document-select';
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
-import Field, { FieldType , FieldSize, FieldVariant } from '@deps/components/fields/field';
+import Field, { FieldType, FieldSize, FieldVariant } from '@deps/components/fields/field';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import Radio from '@deps/components/radio/radio';
 import SelectSimple from '@deps/components/select/select';
-import {
-    NonFinancialTransactionIdKeys,
-    updateOptimistically,
-} from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/non-financial-transactions.helper';
+import { updateOptimistically } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/side-sheet-non-financial-transactions.helper';
 import ApiErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/api-error-state';
 import BpmErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/bpm-error-state';
 import LoadingState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/loading-state';
-import { ViewState, handleResponse } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/states.helpers';
+import {
+    ViewState,
+    handleResponse,
+} from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/states.helpers';
 import SuccessState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/success-state';
 import WarnState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/warn-state';
+import { NonFinancialTransactionIdKeys } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/types';
 import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
 import { TranslationFiles } from '@deps/config/translations';
 import {

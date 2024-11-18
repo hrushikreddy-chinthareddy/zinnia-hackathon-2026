@@ -7,17 +7,14 @@ import { getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/ba
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { FieldSize } from '@deps/components/fields/field';
 import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helper';
-// import PolicyInfo from '@deps/components/global-values/policy-info/policy-info';
-// import GlobalPolicyInfo from '@deps/components/global-values/policy-info/policy-info';
 import GlobalPolicyInfo from '@deps/components/global-values/policy-info/policy-info';
-import PolicyInfo from '@deps/components/global-values/policy-info/policy-info';
 import IconButton from '@deps/components/icon-button/icon-button';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import ResponsivePadding from '@deps/components/responsive-padding/responsive-padding';
 import SelectSearch from '@deps/components/select-search/select-search';
-import { AddressWithPending, EmailWithPending, PhoneWithPending } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/non-financial-transactions.helper';
 import PendingTag from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/pending-tag';
+import { AddressWithPending, EmailWithPending, PhoneWithPending } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/types';
 import { TranslationFiles } from '@deps/config/translations';
 import { FormattedAddress, sortAddressesByType } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
 import QuickLinks, { QuickLinksProps } from '@deps/containers/quick-links/quick-links';
@@ -72,17 +69,14 @@ interface KeyValuesBarProps {
 }
 
 // TODO MG: move these into different files
-const quickLinks = (t: TFunction, policy: PolicyDetails, userPartyId?: string): QuickLinksProps['links'] => {
+const quickLinks = (t: TFunction, policy: PolicyDetails): QuickLinksProps['links'] => {
     const { policyNumber, planCode } = policy;
-    const detailsLink = {
-        href: t('site.navLinks.policyDetails.link', { id: policyNumber, planCode }),
-        name: t(policy.isLife ? 'site.navLinks.policyDetails.altText' : 'site.navLinks.contractDetails.altText'),
-        segmentTrackingName: 'Policy Search Card Policy Click',
-        userPartyId,
-    };
 
     return [
-        detailsLink,
+        {
+            href: t('site.navLinks.policyDetails.link', { id: policyNumber, planCode }),
+            name: t(policy.isLife ? 'site.navLinks.policyDetails.altText' : 'site.navLinks.contractDetails.altText'),
+        },
         {
             href: t('site.navLinks.people.link', { id: policyNumber, planCode }),
             name: t('site.navLinks.people.text'),
@@ -149,7 +143,7 @@ const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
         <header data-testid={CardDetailsTest.HEADER}>
             <div className="flex w-full items-end justify-between">
                 <div className="w-full flex-wrap lg:flex lg:items-end lg:justify-between">
-                    <PolicyInfo
+                    <GlobalPolicyInfo
                         carrierId={carrierId}
                         marketingName={marketingName}
                         planName={planName}
@@ -172,7 +166,7 @@ const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
                         <QuickLinks
                             userPartyId={userPartyId}
                             policy={policy}
-                            links={quickLinks(t, policy, userPartyId)}
+                            links={quickLinks(t, policy)}
                             planCode={planCode}
                             policyNumber={policyNumber}
                         />
@@ -186,6 +180,7 @@ const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
 
 const KeyValuesBar: React.FC<KeyValuesBarProps> = ({ policy }) => {
     const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
+    const perms = usePermissionsContext();
     const searchableDetailsDto = toPolicyViewDetailsDto(policy);
     const searchableDetailsData = fillColDefs<PolicyViewDetailsDto>(
         searchableDetailsDto,
@@ -208,6 +203,7 @@ const KeyValuesBar: React.FC<KeyValuesBarProps> = ({ policy }) => {
                     errorMessageLink={`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/policy-details`}
                     group={true}
                     dropUp
+                    userPartyId={perms.getUserPartyId()}
                 />
             </div>
         </div>

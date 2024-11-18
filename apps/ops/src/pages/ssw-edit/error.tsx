@@ -14,6 +14,7 @@ import { UserPermission } from '@deps/models/user-profile';
 import { ReactComponent as ErrorIcon } from '@deps/styles/elements/icons/icons_outlined/exclamation-alert.svg';
 import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
+
 import { ERROR_KEYS } from '../create-case/error';
 
 export default function CreateCaseErrorPage() {
