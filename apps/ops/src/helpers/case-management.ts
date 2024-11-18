@@ -171,7 +171,12 @@ export const toggleLabels = (t: TFunction, featureFlagDecisions?: FeatureFlags):
         {
             label: t('dashboard.search.buttons.policyNumber'),
             value: 'policyNumber',
-            placeholder: 'e.g. 1234567',
+            placeholder: t('dashboard.search.buttons.policyPlaceholder') ?? '',
+        },
+        {
+            label: t('caseManagementDashboard.case.caseId'),
+            value: 'caseId',
+            placeholder: t('dashboard.search.buttons.policyPlaceholder') ?? '',
         },
         {
             label: t('dashboard.search.buttons.ownerSsn'),
@@ -196,11 +201,6 @@ export const toggleLabels = (t: TFunction, featureFlagDecisions?: FeatureFlags):
                     placeholder: '',
                 },
             ],
-        },
-        {
-            label: t('caseManagementDashboard.case.caseId'),
-            value: 'caseId',
-            placeholder: t('caseManagementDashboard.case.caseId') ?? '',
         },
     ];
     if (showFields) {

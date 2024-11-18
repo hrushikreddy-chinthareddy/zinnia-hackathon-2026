@@ -762,6 +762,7 @@
             },
             "buttons": {
                 "policyNumber": "Numéro de police",
+                "policyPlaceholder": "e.g. 1234567",
                 "ssn": "SSN",
                 "ownerSsn": "SSN du propriétaire",
                 "ssnFullLabel": "Numéro de sécurité sociale du propriétaire",
