@@ -40,8 +40,7 @@ export const getSearchValueObject = (
             };
         case 'caseId':
             return caseId ? { caseIds: [caseId] } : {};
-        case 'agentFirstName':
-        case 'agentLastName':
+        case 'agentName':
             return {
                 ...(agentFirstName ? { agentFirstName } : {}),
                 ...(agentLastName ? { agentLastName } : {}),
@@ -202,9 +201,7 @@ export const toggleLabels = (t: TFunction, featureFlagDecisions?: FeatureFlags):
                 },
             ],
         },
-    ];
-    if (showFields) {
-        labels.push({
+        {
             label: t('dashboard.search.buttons.agentName'),
             value: 'agentName',
             group: [
@@ -219,7 +216,9 @@ export const toggleLabels = (t: TFunction, featureFlagDecisions?: FeatureFlags):
                     placeholder: '',
                 },
             ],
-        });
+        },
+    ];
+    if (showFields) {
         labels.push({
             label: t('dashboard.search.buttons.firmName'),
             value: 'firmName',
