@@ -12,7 +12,6 @@ import {
     EDSDocumentResponse,
 } from '@deps/models/case/document';
 import { ManagementTask } from '@deps/models/case/task-instance';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { isMockPolicyDocsRequestEnabled } from '@deps/services/api-config';
 import { mockPolicyDocs } from '@deps/services/mocks/policy-docs';
 import { EDS_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
@@ -39,7 +38,7 @@ export const getDocument = async (documentNumber: string, docType: string, clien
     }
 };
 
-export const uploadDocument = async (task: ManagementTask, policy: Policy, document: any): Promise<EDSDocumentResponse | null> => {
+export const uploadDocument = async (task: ManagementTask, document: any): Promise<EDSDocumentResponse | null> => {
     try {
         const url = `${baseAppUrl}/api/documents/upload`;
         const { blob, name } = dataURItoBlob(document);

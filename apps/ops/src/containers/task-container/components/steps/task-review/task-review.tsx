@@ -1,17 +1,18 @@
 import { Icon, IconType } from '@zinnia/bloom/components';
 import { convertToCamelCase } from '@zinnia/utils';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import DocumentPreviewer from '@deps/components/document-viewer/document-previewer';
 import Radio from '@deps/components/radio/radio';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
 import { TranslationFiles } from '@deps/config/translations';
+import { TaskDataContext } from '@deps/containers/task-container/task-context';
 
-import { useGetPolicyTypeDocs } from './task-review.helper';
+import { useGetCaseDocs } from './task-review.helper';
 
 interface TaskReviewProps {
-    policyNumber: string;
+    caseId: string;
     clientCode: string;
     docType: string;
     documentNumber: string;
@@ -19,11 +20,12 @@ interface TaskReviewProps {
     taskType: string;
 }
 
-export const TaskReview = ({ policyNumber, clientCode, docType, documentNumber, taskType, activeDocType }: TaskReviewProps) => {
+export const TaskReview = ({ caseId, clientCode, activeDocType, documentNumber, taskType }: TaskReviewProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.taskReview` });
+    const { setIsReadyForDataEntry } = useContext(TaskDataContext);
 
     const [sectionOption, setSectionOption] = useState('true');
-    const [loading, getPolicyDocs, workingDocument] = useGetPolicyTypeDocs(policyNumber, clientCode, docType, documentNumber);
+    const [loading, getCaseDocs, workingDocument] = useGetCaseDocs(caseId, documentNumber);
     const sectionOptions = [
         {
             label: t('options.allSectionsAreComplete'),
@@ -36,11 +38,12 @@ export const TaskReview = ({ policyNumber, clientCode, docType, documentNumber, 
     ];
 
     useEffect(() => {
-        getPolicyDocs();
-    }, []);
+        getCaseDocs();
+    }, [getCaseDocs]);
 
     const onOptionSelection = (value: string) => {
         setSectionOption(value);
+        setIsReadyForDataEntry(value === 'true');
     };
 
     const { displayName } = workingDocument || {};

@@ -7,22 +7,20 @@ import TransactionNavigationButtons, { ParentPage } from '@deps/components/trans
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { DocumentData } from '@deps/models/case/document';
 import { TaskType } from '@deps/models/case/task';
 
 import { TaskReview } from './task-review';
 
 type TaskReviewStepProps = {
-    policyNumber: string;
+    caseId: string;
     documentNumber: string;
-    docType: string;
-    clientCode: string;
     taskInfoLink: string;
-    document?: DocumentData;
     taskType: TaskType;
+    clientCode: string;
+    docType: string;
 };
 
-export const TaskReviewStep = ({ policyNumber, documentNumber, docType, clientCode, taskType }: TaskReviewStepProps) => {
+export const TaskReviewStep = ({ caseId, documentNumber, clientCode, docType, taskType }: TaskReviewStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.taskReview` });
 
     const { goToNext } = useWorkflow();
@@ -48,12 +46,12 @@ export const TaskReviewStep = ({ policyNumber, documentNumber, docType, clientCo
             <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1">
                     <TaskReview
-                        activeDocType={DocumentTypeView.Policy}
+                        caseId={caseId}
                         documentNumber={documentNumber}
-                        clientCode={clientCode}
-                        policyNumber={policyNumber}
-                        docType={docType}
                         taskType={taskType}
+                        clientCode={clientCode}
+                        docType={docType}
+                        activeDocType={DocumentTypeView.Case}
                     />
                 </div>
             </div>

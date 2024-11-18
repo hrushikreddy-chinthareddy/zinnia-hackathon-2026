@@ -1318,7 +1318,8 @@
         "parties": {
             "items": {
                 "ui:options": {
-                    "title": "Party"
+                    "title": "Party",
+                    "minItems": 1
                 },
                 "partyType": {
                     "ui:options": {
@@ -1533,7 +1534,8 @@
                 "govtIdInfo": {
                     "items": {
                         "ui:options": {
-                            "title": "Govt Id"
+                            "title": "Govt Id",
+                            "minItems": 1
                         },
                         "govtId": {
                             "ui:options": {}
@@ -1562,7 +1564,8 @@
                 "addresses": {
                     "items": {
                         "ui:options": {
-                            "title": "Address"
+                            "title": "Address",
+                            "minItems": 1
                         },
                         "addressType": {
                             "uniqueItems": true,
@@ -1779,7 +1782,8 @@
             "materialChangeDetails": {
                 "items": {
                     "ui:options": {
-                        "title": "Material change detail"
+                        "title": "Material change detail",
+                        "minItems": 1
                     },
                     "changeType": {
                         "ui:options": {
@@ -1876,7 +1880,8 @@
                 "assetsDistribution": {
                     "items": {
                         "ui:options": {
-                            "title": "Asset distribution"
+                            "title": "Asset distribution",
+                            "minItems": 1
                         },
                         "productType": {
                             "ui:options": {
@@ -1914,7 +1919,8 @@
                 "totalAsset": {
                     "items": {
                         "ui:options": {
-                            "title": "Total asset"
+                            "title": "Total asset",
+                            "minItems": 1
                         },
                         "qualificationType": {
                             "ui:widget": "radio",
@@ -2028,7 +2034,8 @@
                 "planForIncomeDecreaseAfter10Years": {
                     "items": {
                         "ui:options": {
-                            "title": "Plan for Income Decrease After 10 Years"
+                            "title": "Plan for Income Decrease After 10 Years",
+                            "minItems": 1
                         }
                     }
                 }
@@ -2064,7 +2071,8 @@
                     },
                     "items": {
                         "ui:options": {
-                            "title": "Product detail"
+                            "title": "Product detail",
+                            "minItems": 1
                         },
                         "productType": {
                             "ui:options": {
@@ -2135,7 +2143,8 @@
             },
             "items": {
                 "ui:options": {
-                    "title": "Signature information"
+                    "title": "Signature information",
+                    "minItems": 1
                 },
                 "signatureRoleCode": {
                     "ui:options": {

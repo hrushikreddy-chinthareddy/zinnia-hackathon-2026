@@ -68,7 +68,7 @@ export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSche
                                     />
                                 </div>
                             )}
-                            {hasRemove && !readonly && (
+                            {hasRemove && !readonly && props.totalItems > (props.uiSchema?.['ui:options']?.minItems as number) && (
                                 <div className="pr-4 mt-2">
                                     <RemoveButton
                                         style={btnStyle}

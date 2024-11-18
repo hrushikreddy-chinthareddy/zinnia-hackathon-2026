@@ -1,22 +1,19 @@
 import { useCallback, useState } from 'react';
 
-import { PolicyDocuments, PolicyDocument } from '@deps/models/case/document';
-import { getPolicyTypeDocs } from '@deps/queries/api/documents';
+import { CaseDocument } from '@deps/models/case/document';
+import { getCaseDocuments } from '@deps/queries/api/cases';
 
-export const useGetPolicyTypeDocs = (id: string, clientCode: string, docType: string, documentNumber: string): [boolean, () => void, any, any] => {
+export const useGetCaseDocs = (caseId: string, documentNumber: string): [boolean, () => void, any, any] => {
     const [loading, setLoading] = useState(false);
-    const [workingDocument, setWorkingDocument] = useState<PolicyDocument>();
-    const [relatedDocument, setRelatedDocument] = useState<PolicyDocument[]>();
-    const getPolicyDocs = useCallback(async () => {
+    const [workingDocument, setWorkingDocument] = useState<CaseDocument>();
+    const [relatedDocument, setRelatedDocument] = useState<CaseDocument[]>();
+    const getCaseDocs = useCallback(async () => {
         if (loading) return;
 
         try {
             setLoading(true);
-
-            const response = await getPolicyTypeDocs(id, clientCode, docType);
-           
-            const items = (response.data as PolicyDocuments)?.items || [];
-
+            const response = await getCaseDocuments(caseId);
+            const items = (response as CaseDocument[]) || [];
             if (items) {
                 const workingDoc = items.find(item => item.documentNumber === documentNumber);
                 const relatedDoc = items.filter(item => item.documentNumber !== documentNumber);
@@ -28,7 +25,7 @@ export const useGetPolicyTypeDocs = (id: string, clientCode: string, docType: st
             console.error('useGetPolicyTypeDocs::error validating address', e);
             setLoading(false);
         }
-    }, [loading, id, clientCode, docType, documentNumber]);
+    }, [loading, caseId, documentNumber]);
 
-    return [loading, getPolicyDocs, workingDocument, relatedDocument];
+    return [loading, getCaseDocs, workingDocument, relatedDocument];
 };

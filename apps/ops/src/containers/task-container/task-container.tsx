@@ -18,27 +18,28 @@ type TaskContainerProps = {
 };
 
 const TaskContainer = ({ policy, docType, documentNumber, taskInfoLink }: TaskContainerProps) => {
-    const { task } = useContext(TaskDataContext);
+    const { task, isReadyForDataEntry } = useContext(TaskDataContext);
     const { carrier, caseId, id, taskType } = task;
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: convertToCamelCase(taskType) });
 
     const steps = stepsProvider.getSteps(taskType as TaskType, {
-        policy,
         docType,
-        clientCode: carrier,
+        carrierId: carrier,
         documentNumber,
         caseId,
         taskId: id,
         taskType: taskType as TaskType,
         t,
+        isReadyForDataEntry,
     });
 
     return (
         <WorkflowProvider>
             <TaskWorkflowContent
-                steps={steps}
                 policy={policy}
-                docType={docType}
+                steps={steps}
+                caseId={caseId}
+                carrierId={carrier}
                 documentNumber={documentNumber}
                 taskInfoLink={taskInfoLink}
             />

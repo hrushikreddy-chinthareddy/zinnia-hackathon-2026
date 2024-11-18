@@ -5,16 +5,15 @@ import DocumentPreviewer from '@deps/components/document-viewer/document-preview
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
 import { TranslationFiles } from '@deps/config/translations';
 import { PolicyDocument } from '@deps/models/case/document';
-import { Policy } from '@deps/models/policy/sor-policy';
 
 type DocumentItemProps = {
     document: PolicyDocument;
-    policy: Policy;
+    carrierId: string;
     documentNumber: string;
     activeDocType: DocumentTypeView;
 };
 
-const DocumentItem = ({ document, policy, documentNumber, activeDocType }: DocumentItemProps) => {
+const DocumentItem = ({ document, carrierId, documentNumber, activeDocType }: DocumentItemProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.documentPanel' });
 
     return (
@@ -30,7 +29,7 @@ const DocumentItem = ({ document, policy, documentNumber, activeDocType }: Docum
                 <DocumentPreviewer
                     className="flex gap-1"
                     activeDocType={activeDocType}
-                    carrier={policy?.carrierId || ''}
+                    carrier={carrierId}
                     documentId={document?.documentId || document?.documentID || ''}
                     displayName={document?.displayName || ''}
                 >

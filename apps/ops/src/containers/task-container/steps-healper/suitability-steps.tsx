@@ -4,18 +4,27 @@ import ConfirmStep from '../components/steps/confirm/confirm-step';
 import { MemoizedTaskFormStep as TaskFormStep } from '../components/steps/task-form/task-form-step';
 import { TaskReviewStep } from '../components/steps/task-review/task-review-step';
 
-export const getSuitabilitySteps = ({ policy, docType, clientCode, documentNumber, caseId, taskId, taskType, t }: GetStepsProps) => {
+export const getSuitabilitySteps = ({
+    docType,
+    carrierId,
+    documentNumber,
+    caseId,
+    taskId,
+    taskType,
+    isReadyForDataEntry,
+    t,
+}: GetStepsProps) => {
     const steps: Step[] = [
         {
             ariaLabel: t('tabs.taskReview'),
+            isVisible: () => true,
             component: (
                 <TaskReviewStep
-                    policyNumber={policy.policyNumber || ''}
+                    caseId={caseId}
                     docType={docType}
-                    clientCode={clientCode}
+                    clientCode={carrierId}
                     taskInfoLink={''}
                     documentNumber={documentNumber}
-                    document={undefined}
                     taskType={taskType}
                 />
             ),
@@ -26,20 +35,39 @@ export const getSuitabilitySteps = ({ policy, docType, clientCode, documentNumbe
         },
         {
             ariaLabel: t('tabs.suitabilityForm'),
-            component: <TaskFormStep taskType={taskType} policy={policy} taskInfoLink={''} isSubmit={false}></TaskFormStep>,
+            isVisible: () => isReadyForDataEntry,
+            component: <TaskFormStep taskType={taskType} taskInfoLink={''} isSubmit={false}></TaskFormStep>,
             text: t('tabs.suitabilityForm'),
             index: 1,
             screenReaderLabel: t('tabs.suitabilityForm'),
         },
         {
             ariaLabel: t('tabs.summary'),
-            component: <TaskFormStep taskType={taskType} policy={policy} taskInfoLink={''} readonly={true} isSubmit={true}></TaskFormStep>,
+            isVisible: () => isReadyForDataEntry,
+            component: <TaskFormStep taskType={taskType} taskInfoLink={''} readonly={true} isSubmit={true}></TaskFormStep>,
             text: t('tabs.summary'),
             index: 2,
             screenReaderLabel: t('tabs.summary'),
         },
+        // {
+        //     ariaLabel: t('tabs.nigoDetails'),
+        //     isVisible: () => !isReadyForDataEntry,
+        //     component: <NigoDetailsStep nigoExceptions={nigoExceptions} nigoSubExceptions={nigoSubExceptions} />,
+        //     screenReaderLabel: t('tabs.nigoDetails'),
+        //     index: 1,
+        //     text: t('tabs.nigoDetails'),
+        // },
+        // {
+        //     ariaLabel: t('tabs.documentSelection'),
+        //     isVisible: () => !isReadyForDataEntry,
+        //     component: <FormSelectionStep availableFormsTransactions={availableFormsTransactions} policy={policy} documentData={documentData} clientCode={clientCode}/>,
+        //     screenReaderLabel: t('tabs.documentSelection'),
+        //     index: 2,
+        //     text: t('tabs.documentSelection'),
+        // },
         {
             ariaLabel: t('tabs.confirm'),
+            isVisible: () => true,
             component: <ConfirmStep caseId={caseId} taskId={taskId} taskType={taskType}></ConfirmStep>,
             text: t('tabs.confirm'),
             index: 3,

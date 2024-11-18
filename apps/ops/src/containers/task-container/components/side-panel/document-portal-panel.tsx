@@ -5,10 +5,9 @@ import { useEffect, useState } from 'react';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
 import { TranslationFiles } from '@deps/config/translations';
 import { PolicyDocument } from '@deps/models/case/document';
-import { Policy } from '@deps/models/policy/sor-policy';
 
 import DocumentItem from './document-portal-item';
-import { useGetPolicyTypeDocs } from '../steps/task-review/task-review.helper';
+import { useGetCaseDocs } from '../steps/task-review/task-review.helper';
 
 export enum TabOptions {
     Working = 'Working',
@@ -16,21 +15,16 @@ export enum TabOptions {
 }
 
 type DocumentViewProps = {
-    policy: Policy;
+    caseId: string;
+    carrierId: string;
     documentNumber: string;
-    docType: string;
 };
 
-const DocumentPortalPanel = ({ policy, documentNumber, docType }: DocumentViewProps) => {
+const DocumentPortalPanel = ({ caseId, carrierId, documentNumber }: DocumentViewProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.documentPanel' });
     const [activeTab, setActiveTab] = useState(TabOptions.Working);
 
-    const [loading, getPolicyDocs, workingDocument, relatedDocument] = useGetPolicyTypeDocs(
-        policy?.policyNumber || '',
-        policy?.carrierId || '',
-        docType,
-        documentNumber
-    );
+    const [loading, getPolicyDocs, workingDocument, relatedDocument] = useGetCaseDocs(caseId, carrierId);
 
     useEffect(() => {
         getPolicyDocs();
@@ -44,8 +38,8 @@ const DocumentPortalPanel = ({ policy, documentNumber, docType }: DocumentViewPr
                 <DocumentItem
                     document={workingDocument}
                     documentNumber={documentNumber}
-                    policy={policy}
-                    activeDocType={DocumentTypeView.Policy}
+                    carrierId={carrierId}
+                    activeDocType={DocumentTypeView.Case}
                 />
             </TabContent>
             <TabContent className="flex w-full flex-col items-center" value={TabOptions.Related}>
@@ -56,8 +50,8 @@ const DocumentPortalPanel = ({ policy, documentNumber, docType }: DocumentViewPr
                                 key={item?.documentNumber}
                                 document={item}
                                 documentNumber={item?.documentNumber}
-                                policy={policy}
-                                activeDocType={DocumentTypeView.Policy}
+                                carrierId={carrierId}
+                                activeDocType={DocumentTypeView.Case}
                             />
                         ))}
                     </>

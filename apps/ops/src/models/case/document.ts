@@ -90,6 +90,17 @@ export interface DocumentResponse {
     message: string;
 }
 
+export type CaseDocument = {
+    id: string;
+    name: string;
+    url: string;
+    source: string;
+    documentNumber?: string;
+    documentUploadDate?: string;
+    updatedAt: string;
+    fileType: string;
+};
+
 export type EDSDocumentRequest = {
     pageCount: number;
     agentTaxId: string;

@@ -13,7 +13,13 @@ type TaskProviderProps = {
 
 export const TaskProvider = ({ children, initialTask, taskMetadata }: TaskProviderProps) => {
     const [task, setTask] = useState<ManagementTask>(initialTask);
-    return <TaskDataContext.Provider value={{ task, setTask, taskMetadata }}>{children}</TaskDataContext.Provider>;
+    const [isReadyForDataEntry, setIsReadyForDataEntry] = useState<boolean>(false);
+
+    return (
+        <TaskDataContext.Provider value={{ task, setTask, taskMetadata, isReadyForDataEntry, setIsReadyForDataEntry }}>
+            {children}
+        </TaskDataContext.Provider>
+    );
 };
 
 export const useTask = () => {

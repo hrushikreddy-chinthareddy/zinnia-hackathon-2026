@@ -17,13 +17,14 @@ import DocumentPortalPanel from './components/side-panel/document-portal-panel';
 type TaskPageProps = {
     steps: Step[];
     policy: Policy;
+    caseId: string;
     documentNumber?: string;
-    docType: string;
+    carrierId: string;
     showJointOwner?: boolean;
     taskInfoLink?: string;
 };
 
-export const TaskWorkflowContent = ({ steps, policy, documentNumber = '', docType = '', showJointOwner = false }: TaskPageProps) => {
+export const TaskWorkflowContent = ({ steps, policy, caseId, documentNumber = '', carrierId, showJointOwner = false }: TaskPageProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const { currentStepIndex, setCurrentStepIndex } = useWorkflow();
     const sideSheet = useSideSheetContext();
@@ -38,7 +39,7 @@ export const TaskWorkflowContent = ({ steps, policy, documentNumber = '', docTyp
     };
 
     const openSideSheet = () => {
-        const content = <DocumentPortalPanel policy={policy} documentNumber={documentNumber} docType={docType} />;
+        const content = <DocumentPortalPanel caseId={caseId} documentNumber={documentNumber} carrierId={carrierId} />;
         sideSheet.changeSideSheetContent(t('nigoEntry.documentPanel.documents'), content);
         sideSheet.handleOpen(true);
     };
@@ -51,6 +52,11 @@ export const TaskWorkflowContent = ({ steps, policy, documentNumber = '', docTyp
     const showDocumentPanel = () => {
         openSideSheet();
     };
+
+    const filteredSteps: Step[] = useMemo(
+        () => steps.filter((item: any) => item.isVisible?.()).map((item: any, index: number) => ({ ...item, index })),
+        [steps]
+    );
 
     return (
         <div className="workflow-height-adjusted flex w-full max-w-[1130px] grow flex-col self-center">
@@ -82,9 +88,11 @@ export const TaskWorkflowContent = ({ steps, policy, documentNumber = '', docTyp
                 classNames={`pb-2 grid-cols-${steps.length}`}
                 currentStepIndex={currentStepIndex}
                 onClick={handleProgressBarClick}
-                steps={steps}
+                steps={filteredSteps}
             />
-            <div className="flex w-full grow flex-col rounded bg-white shadow-elevation-light-04">{steps[currentStepIndex].component}</div>
+            <div className="flex w-full grow flex-col rounded bg-white shadow-elevation-light-04">
+                {filteredSteps[currentStepIndex].component}
+            </div>
         </div>
     );
 };
