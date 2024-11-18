@@ -23,7 +23,7 @@ const BankTextField = ({
     const setDataChange = (val: string) => {
         onDataChange(ogData => ({
             ...ogData,
-            [fieldName]: ['payeeName', 'fboDetails', 'contractNumber'].includes(fieldName) ? val?.toUpperCase() : val,
+            [fieldName]: ['payeeName', 'fboDetails', 'contractNumber'].includes(fieldName) ? val?.toUpperCase?.() : val,
         }));
     };
 
