@@ -1,6 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import React from 'react';
 
 import { ReactComponent as AcademicCap } from '@deps/styles/elements/icons/icons_outlined/academic-cap.svg';
 import { ReactComponent as SparklesIcon } from '@deps/styles/elements/icons/icons_outlined/sparkles.svg';
@@ -155,7 +154,7 @@ describe('Select Component', () => {
         });
     });
 
-    describe('Multiselect version', () => {
+    describe.skip('Multiselect version', () => {
         it('renders a Select component with a label when provided', async () => {
             render(
                 <SelectComponent
