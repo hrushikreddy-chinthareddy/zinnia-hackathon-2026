@@ -63,4 +63,5 @@ export enum FEATURE_FLAGS {
     CASE_STATS_DASHBOARD = 'case-management-case_stats_dashboard',
     CASE_INSIGHTS = 'case_insights',
     POLICY_FREE_LOOK_CANCELLATION = 'policy-management_feature_free-look-cancellation',
+    POM_EXPERIENCE = 'pom-experience',
 }
