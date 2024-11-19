@@ -15,6 +15,7 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { Carrier, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case';
 
 import getSbgcConfig from './sbgc-ssw-form-helper';
+import SswEditSelection from '../ssw-edit-selection';
 
 export function SbgcSSWForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
@@ -49,6 +50,7 @@ export function SbgcSSWForm() {
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
+            <SswEditSelection />
             <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
             <DistributionReason isFormStateReadOnly={isFormStateReadOnly} reasonOptions={reasonOptions} />
             <AmountDetails isFormStateReadOnly={isFormStateReadOnly} isOnlyWithdrawalTypeControls={true} />
