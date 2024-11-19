@@ -362,12 +362,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                 <div className={styles.container}>
                     {searchBar}
                     <div className="sm:my-4 mt-4 mb-6 flex flex-col gap-2 sm:flex-row sm:items-center">
-                        <ActiveFilters
-                            authorizedCarriers={authorizedCarriers}
-                            filters={caseManagementFilters.additionalFilters}
-                            removeFilter={removeAdditionalFilter}
-                            onReset={resetAllFilters}
-                        />
                         <StatusFilter
                             caseTotals={caseTotals}
                             onChange={vals =>
@@ -404,6 +398,12 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                         >
                             {t('caseManagementDashboard.refineResults')}
                         </NavElement>
+                        <ActiveFilters
+                            authorizedCarriers={authorizedCarriers}
+                            filters={caseManagementFilters.additionalFilters}
+                            removeFilter={removeAdditionalFilter}
+                            onReset={resetAllFilters}
+                        />
                     </div>
                     {tableContent}
                     <div className="flex flex-col items-center lg:grid lg:grid-cols-3 mt-3">

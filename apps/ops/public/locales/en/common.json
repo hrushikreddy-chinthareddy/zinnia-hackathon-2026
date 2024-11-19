@@ -738,6 +738,7 @@
             },
             "buttons": {
                 "policyNumber": "Policy number",
+                "policyPlaceholder": "e.g. 1234567",
                 "ownerSsn": "Owner SSN",
                 "ssn": "SSN",
                 "ssnFullLabel": "Owner Social Security number",
@@ -745,7 +746,9 @@
                 "name": "Name",
                 "firstName": "First name",
                 "lastName": "Last name",
-                "ownerName": "Owner name"
+                "ownerName": "Owner name",
+                "agentName": "Agent name",
+                "firmName": "Firm name"
             }
         },
         "quickSearch": {

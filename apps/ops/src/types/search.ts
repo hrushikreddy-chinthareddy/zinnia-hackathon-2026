@@ -6,7 +6,18 @@ import { Order, SortObject } from './sort';
 
 export type View = 'Summary' | 'Details';
 export type SearchOperations = 'equals' | 'partial';
-export type PolicySearchKeys = 'firstName' | 'lastName' | 'ownerFirstName' | 'ownerLastName' | 'ssn' | 'policyNumber';
+export type PolicySearchKeys =
+    | 'firstName'
+    | 'lastName'
+    | 'ownerFirstName'
+    | 'ownerLastName'
+    | 'ssn'
+    | 'policyNumber'
+    | 'caseId'
+    | 'firmName'
+    | 'agentName'
+    | 'agentFirstName'
+    | 'agentLastName';
 
 export interface PolicySearchResult {
     carrierId: string;
@@ -33,6 +44,10 @@ export interface SearchViewQuery {
     ownerFirstName?: string;
     ownerLastName?: string;
     ssn?: string;
+    caseIds?: string[];
+    agentFirstName?: string;
+    agentLastName?: string;
+    brokerDealerName?: string;
     [key: string]: any; // used to loop over the object
 }
 
