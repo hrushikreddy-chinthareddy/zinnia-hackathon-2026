@@ -156,7 +156,7 @@ const SendCorrespondence = ({
 export const getServerSideProps = withPageAuthRequired({
     getServerSideProps: async (context: GetServerSidePropsContext) => {
         const user = await getUserData(context);
-        const { locale = DEFAULT_LOCALE, query, req, res } = context;
+        const { locale = DEFAULT_LOCALE, query, req, res, resolvedUrl } = context;
         const planCode = (query.planCode as string) || '';
         const policyNumber = (query?.policyNumber as string) || '';
         const correlationId = (query?.correlationId as string) || '';
@@ -196,7 +196,7 @@ export const getServerSideProps = withPageAuthRequired({
             const userInfoForLogging = getUserInfoFromUser(user);
             const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging);
             if (!policy) {
-                logInfo('contact-center/send-statement/policy not found', { policyNumber, planCode, correlationId });
+                logInfo('contact-center/send-statement/policy-not-found', { policyNumber, planCode, correlationId, page: resolvedUrl });
                 return {
                     redirect: {
                         destination: '/404',
@@ -204,7 +204,8 @@ export const getServerSideProps = withPageAuthRequired({
                     },
                 };
             }
-            const applicableStatements = (await getApplicableStatementsSSR(planCode, accessToken, userInfoForLogging)) || [];
+            const applicableStatements =
+                (await getApplicableStatementsSSR(planCode, accessToken, { userInfoForLogging, correlationId, page: resolvedUrl })) || [];
             const shouldShowEmailFaxOption = featureFlagDecisions?.[FEATURE_FLAGS.SEND_STATEMENT_SHOW_EMAIL_FAX_Option];
             const key = `SEND_CORRESPONDENCE_SHOW_Mail_${policy.carrierId}` as keyof typeof FEATURE_FLAGS;
             const shouldShowMailOption = featureFlagDecisions?.[FEATURE_FLAGS[key]];

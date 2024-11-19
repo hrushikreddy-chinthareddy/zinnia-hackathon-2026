@@ -168,7 +168,7 @@ const SendDocument = ({ policy, availableFormsTransactions, shouldShowCaseButton
 export const getServerSideProps = withPageAuthRequired({
     getServerSideProps: async (context: GetServerSidePropsContext) => {
         const user = await getUserData(context);
-        const { locale = DEFAULT_LOCALE, query, req, res } = context;
+        const { locale = DEFAULT_LOCALE, query, req, res, resolvedUrl } = context;
         const planCode = (query.planCode as string) || '';
         const policyNumber = (query?.policyNumber as string) || '';
         const correlationId = (query?.correlationId as string) || '';
@@ -209,7 +209,7 @@ export const getServerSideProps = withPageAuthRequired({
             const userInfoForLogging = getUserInfoFromUser(user);
             const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging);
             if (!policy) {
-                logInfo('contact-center/send-document/policy not found', { policyNumber, planCode, correlationId });
+                logInfo('contact-center/send-document/policy-not-found', { policyNumber, planCode, correlationId, page: resolvedUrl });
                 return {
                     redirect: {
                         destination: '/404',
@@ -223,7 +223,11 @@ export const getServerSideProps = withPageAuthRequired({
                 planCode: policy.product?.planCode || '',
             };
 
-            const transactionTypeSubTypes = await getSearchTransactionsSSR(transactionRequestBody, accessToken, userInfoForLogging);
+            const transactionTypeSubTypes = await getSearchTransactionsSSR(transactionRequestBody, accessToken, {
+                userInfoForLogging,
+                correlationId,
+                page: resolvedUrl,
+            });
             const hideMailOptionForSpecifiedCarrier = `SEND_DOCUMENT_HIDE_MAIL_OPTION_${policy.carrierId}` as keyof typeof FEATURE_FLAGS;
 
             const shouldShowMailOption =
