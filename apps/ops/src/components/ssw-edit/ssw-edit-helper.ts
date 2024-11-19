@@ -29,10 +29,10 @@ export type UpdatedProgram = {
 
 export const getDocumentSource = (documentId: string): ChannelType => {
     if (documentId) {
-        if (documentId.includes('-EM-')) {
-            return ChannelType.Email;
-        } else {
+        if (documentId.includes('-MAN-') || documentId.includes('-O-')) {
             return ChannelType.Phone;
+        } else {
+            return ChannelType.Email;
         }
     } else {
         return ChannelType.Phone;
