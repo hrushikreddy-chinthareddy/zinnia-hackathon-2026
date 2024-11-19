@@ -9,6 +9,7 @@ export enum ProcessType {
     WITHDRAWAL = 'WITHDRAWAL',
     ADDRESS_CHANGE = 'ADDRESS_CHANGE',
     REREG = 'REREG',
+    SUITABILITY = 'Suitability',
 }
 
 export enum TypeOfPayment {

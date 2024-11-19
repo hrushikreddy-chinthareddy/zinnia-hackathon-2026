@@ -1,0 +1,8 @@
+.customFieldTemplate {
+    margin-bottom: var(--measure-dimension-gap-xl);
+}
+
+.children {
+    margin-bottom: var(--measure-dimension-z-space-4, 0.125rem);
+    width: 100%;
+}

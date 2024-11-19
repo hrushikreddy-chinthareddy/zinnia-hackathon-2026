@@ -182,12 +182,10 @@
             "viewDetails": {
                 "text": "View Details"
             },
-
             "diaryNotesWarning": {
                 "text": "Attention: Diary notes present. Review required to submit.",
                 "clickToView": "Click to view"
             },
-
             "notes": {
                 "text": "Notes"
             },
@@ -2910,7 +2908,6 @@
                 "reversePayment": "Reverse payment",
                 "reversePremiumPayment": "Reverse premium payment",
                 "successTitle": "Submitted!",
-
                 "successSubtitle": "A ",
                 "successSubtitle2": " of ",
                 "successSubtitle3": " was submitted for reversal to ",
@@ -4527,5 +4524,60 @@
         "RMD": "Existing RMD Program",
         "EFT": "Existing EFT Program",
         "noProgramFound": "No Existing Program Found"
+    },
+    "suitability": {
+        "tabs": {
+            "taskReview": "Input Suitability Data",
+            "confirm": "Confirm",
+            "start": "Start",
+            "suitabilityForm": "Suitability form",
+            "nigoDetails": "Missing Information",
+            "summary": "Summary"
+        },
+        "taskReview": {
+            "title": "Input Suitability Data",
+            "subTitle": "Is the suitability form complete?",
+            "options": {
+                "allSectionsAreComplete": "All sections are complete and ready for data entry.",
+                "missingDetails": "All sections are not complete."
+            },
+            "view": "View",
+            "documentId": "Document ID",
+            "submitLabel": "Submit",
+            "continueLabel": "Continue",
+            "cancelLabel": "Cancel"
+        },
+        "taskForm": {
+            "title": "Input Suitability Data",
+            "subTitle": "Manually enter all suitability data. Note that canceling at any point will erase all the entered data.",
+            "submitLabel": "Submit",
+            "cancelLabel": "Cancel"
+        },
+        "confirmStep": {
+            "title": "Submitted!",
+            "subTitle": "Input suitability data was submitted.",
+            "cta": "Go to incoming transfer",
+            "secondaryCta": "Close",
+            "submitTask": "Submit suitability details"
+        }
+    },
+    "suitabilityReview": {
+        "tabs": {
+            "taskReview": "Review Suitability",
+            "confirm": "Confirm"
+        },
+        "taskForm": {
+            "title": "Review Suitability",
+            "subTitle": "This customer's application was flagged for review. Accept or Decline each issue before submitting a final decision.",
+            "submitLabel": "Submit decision",
+            "cancelLabel": "Cancel"
+        },
+        "confirmStep": {
+            "title": "Submitted!",
+            "subTitle": "Review suitability was submitted.",
+            "cta": "Go to incoming transfer",
+            "secondaryCta": "Close",
+            "submitTask": "Submit Suitability details"
+        }
     }
 }
