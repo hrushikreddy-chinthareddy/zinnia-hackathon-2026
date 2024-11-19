@@ -7,6 +7,7 @@ export const getSuitabilityReviewSteps = ({ caseId, taskId, taskType, t }: GetSt
     const steps: Step[] = [
         {
             ariaLabel: t('tabs.taskReview'),
+            isVisible: () => true,
             component: <TaskFormStep taskType={taskType} taskInfoLink={''} isSubmit={true}></TaskFormStep>,
             text: t('tabs.taskReview'),
             index: 0,
@@ -15,6 +16,7 @@ export const getSuitabilityReviewSteps = ({ caseId, taskId, taskType, t }: GetSt
         },
         {
             ariaLabel: t('tabs.confirm'),
+            isVisible: () => true,
             component: <ConfirmStep caseId={caseId} taskId={taskId} taskType={taskType}></ConfirmStep>,
             text: t('tabs.confirm'),
             index: 1,

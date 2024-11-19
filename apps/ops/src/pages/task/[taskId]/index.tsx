@@ -4,6 +4,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import NoNavLayout from '@deps/components/no-nav-layout';
 import { buildCaseLink } from '@deps/components/tasks-listing/task-listing.helpers';
 import { TranslationFiles } from '@deps/config/translations';
+import { getNigoExceptions } from '@deps/containers/task-container/components/steps/nigo-details/nigo-details.helper';
 import TaskContainer from '@deps/containers/task-container/task-container';
 import { TaskProvider } from '@deps/containers/task-container/task-provider';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
@@ -11,6 +12,7 @@ import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-da
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { ProcessType } from '@deps/models/case/enums';
 import { docTypes } from '@deps/models/case/helpers';
+import { SearchTransactionRequestBody } from '@deps/models/case/send-document';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { ManagementTask } from '@deps/models/case/task-instance';
 import { Carrier } from '@deps/models/case/withdrawal/case';
@@ -18,6 +20,7 @@ import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
 import { getCaseTaskByIdSSR, getTaskFormMetadata } from '@deps/operations/tasks/task-operations';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
+import { getSearchTransactionsSSR } from '@deps/queries/api/c2web';
 import { getPolicyDetailsSsr, searchPolicySSR } from '@deps/queries/api/policies';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
@@ -35,14 +38,32 @@ type TaskPageProps = {
     taskMetadata: FormMetadata;
     taskData: any;
     taskInfoLink: string;
+    nigoExceptions: any;
+    nigoSubExceptions: any;
 };
 
-export const TaskPage: React.FC<TaskPageProps> = ({ policy, documentNumber, docType, task, taskMetadata, taskInfoLink }: TaskPageProps) => {
+export const TaskPage: React.FC<TaskPageProps> = ({
+    policy,
+    documentNumber,
+    docType,
+    task,
+    taskMetadata,
+    taskInfoLink,
+    nigoExceptions,
+    nigoSubExceptions,
+}: TaskPageProps) => {
     return (
         <div>
             <NoNavLayout fullHeight={true}>
                 <TaskProvider taskMetadata={taskMetadata} initialTask={task}>
-                    <TaskContainer policy={policy} docType={docType} documentNumber={documentNumber} taskInfoLink={taskInfoLink} />
+                    <TaskContainer
+                        policy={policy}
+                        docType={docType}
+                        documentNumber={documentNumber}
+                        taskInfoLink={taskInfoLink}
+                        nigoExceptions={nigoExceptions}
+                        nigoSubExceptions={nigoSubExceptions}
+                    />
                 </TaskProvider>
             </NoNavLayout>
         </div>
@@ -165,6 +186,26 @@ export const getServerSideProps = withPageAuthRequired({
                     },
                 };
             }
+
+            const transactionRequestBody: SearchTransactionRequestBody = {
+                carrier: policy.carrierId || '',
+                issueState: policy.issueState || '',
+                planCode: policy.product?.planCode || '',
+            };
+
+            const nigoFilters = {
+                categoryIds: ['Form', 'Signature', 'Account Information'],
+                carrier: carrier?.toUpperCase(),
+                process: 'Withdrawal', //task?.process,
+            };
+
+            const [availableFormsTransactions, nigoExceptionResponse] = await Promise.all([
+                await getSearchTransactionsSSR(transactionRequestBody, accessToken, userInfoForLogging),
+                await getNigoExceptions(nigoFilters, accessToken),
+            ]);
+
+            const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
+
             const taskInfoLink = buildCaseLink(taskId, caseId, process, documentNumber, carrier);
             const docType = docTypes[task?.process];
             return {
@@ -176,6 +217,9 @@ export const getServerSideProps = withPageAuthRequired({
                     docType,
                     documentNumber,
                     taskInfoLink,
+                    nigoExceptions,
+                    nigoSubExceptions,
+                    availableFormsTransactions,
                 },
             };
         } catch (error) {

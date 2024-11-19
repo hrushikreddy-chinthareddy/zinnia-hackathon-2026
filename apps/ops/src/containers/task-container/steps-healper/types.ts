@@ -12,6 +12,8 @@ export type GetStepsProps = {
     taskType: TaskType;
     isReadyForDataEntry: boolean;
     t: TFunction;
+    nigoExceptions: any;
+    nigoSubExceptions: any;
 };
 
 export interface GetSteps {

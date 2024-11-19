@@ -1,6 +1,7 @@
 import { GetStepsProps } from './types';
 import { Step } from '../../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import ConfirmStep from '../components/steps/confirm/confirm-step';
+import { NigoDetailsStep } from '../components/steps/nigo-details/nigo-details-step';
 import { MemoizedTaskFormStep as TaskFormStep } from '../components/steps/task-form/task-form-step';
 import { TaskReviewStep } from '../components/steps/task-review/task-review-step';
 
@@ -13,6 +14,8 @@ export const getSuitabilitySteps = ({
     taskType,
     isReadyForDataEntry,
     t,
+    nigoExceptions,
+    nigoSubExceptions,
 }: GetStepsProps) => {
     const steps: Step[] = [
         {
@@ -49,22 +52,14 @@ export const getSuitabilitySteps = ({
             index: 2,
             screenReaderLabel: t('tabs.summary'),
         },
-        // {
-        //     ariaLabel: t('tabs.nigoDetails'),
-        //     isVisible: () => !isReadyForDataEntry,
-        //     component: <NigoDetailsStep nigoExceptions={nigoExceptions} nigoSubExceptions={nigoSubExceptions} />,
-        //     screenReaderLabel: t('tabs.nigoDetails'),
-        //     index: 1,
-        //     text: t('tabs.nigoDetails'),
-        // },
-        // {
-        //     ariaLabel: t('tabs.documentSelection'),
-        //     isVisible: () => !isReadyForDataEntry,
-        //     component: <FormSelectionStep availableFormsTransactions={availableFormsTransactions} policy={policy} documentData={documentData} clientCode={clientCode}/>,
-        //     screenReaderLabel: t('tabs.documentSelection'),
-        //     index: 2,
-        //     text: t('tabs.documentSelection'),
-        // },
+        {
+            ariaLabel: t('tabs.nigoDetails'),
+            isVisible: () => !isReadyForDataEntry,
+            component: <NigoDetailsStep nigoExceptions={nigoExceptions} nigoSubExceptions={nigoSubExceptions} />,
+            screenReaderLabel: t('tabs.nigoDetails'),
+            index: 1,
+            text: t('tabs.nigoDetails'),
+        },
         {
             ariaLabel: t('tabs.confirm'),
             isVisible: () => true,

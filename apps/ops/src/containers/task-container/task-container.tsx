@@ -15,9 +15,11 @@ type TaskContainerProps = {
     docType: string;
     documentNumber: string;
     taskInfoLink: string;
+    nigoExceptions: any;
+    nigoSubExceptions: any;
 };
 
-const TaskContainer = ({ policy, docType, documentNumber, taskInfoLink }: TaskContainerProps) => {
+const TaskContainer = ({ policy, docType, documentNumber, taskInfoLink, nigoExceptions, nigoSubExceptions }: TaskContainerProps) => {
     const { task, isReadyForDataEntry } = useContext(TaskDataContext);
     const { carrier, caseId, id, taskType } = task;
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: convertToCamelCase(taskType) });
@@ -31,6 +33,8 @@ const TaskContainer = ({ policy, docType, documentNumber, taskInfoLink }: TaskCo
         taskType: taskType as TaskType,
         t,
         isReadyForDataEntry,
+        nigoExceptions,
+        nigoSubExceptions,
     });
 
     return (

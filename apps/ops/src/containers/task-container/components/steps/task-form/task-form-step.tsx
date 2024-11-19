@@ -20,7 +20,7 @@ type TaskFormStepProps = {
 };
 
 const TaskFormStep = ({ taskType, readonly = false, taskInfoLink, isSubmit }: TaskFormStepProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.taskReview` });
+    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.taskForm` });
     const { goToNext } = useWorkflow();
     const formRef = createRef<Form>();
 
