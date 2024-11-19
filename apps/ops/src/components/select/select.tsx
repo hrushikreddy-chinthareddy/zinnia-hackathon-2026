@@ -9,7 +9,7 @@ import FieldIcon from '@deps/components/fields/field-icon';
 import FieldLabel from '@deps/components/fields/field-label';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { ReactComponent as ChevronDownIcon } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
-
+import style from './select.module.css';
 import {
     SelectProps,
     getItemClasses,
@@ -177,7 +177,7 @@ const SelectComponent = ({
                 </MainComponent.Trigger>
                 <MainComponent.Content
                     position="popper"
-                    className={`${contentClasses} z-20 max-h-[266px] w-[var(--radix-popper-anchor-width)]`}
+                    className={clsx(`${contentClasses} max-h-[266px] w-[var(--radix-popper-anchor-width)]`, style.content)}
                     onEscapeKeyDown={e => e.stopPropagation()} // Prevents closure of the side sheet or any parent element
                 >
                     {isMultiselect ? (
