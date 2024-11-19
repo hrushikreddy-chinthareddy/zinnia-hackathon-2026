@@ -31,7 +31,7 @@ import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { logWarn, logError, getUserInfoFromUser, parseErrorInformation } from '@deps/utils/server-logging';
+import { logWarn, logError, getUserInfoFromUser, parseErrorInformation, logInfo } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface SendCorrespondenceProps extends SegmentTrackedPageProps {
@@ -40,7 +40,7 @@ interface SendCorrespondenceProps extends SegmentTrackedPageProps {
     shouldShowEmailFaxOption: FeatureFlags;
     shouldShowMailOption: FeatureFlags;
     applicableStatement: StatementTypes[];
-};
+}
 
 const SendCorrespondence = ({
     policy,
@@ -81,7 +81,6 @@ const SendCorrespondence = ({
         [shouldShowEmailFaxOption, shouldShowMailOption, t]
     );
     const [communicationOptions] = useState<RadioItem[]>(communicationTypes);
-
     const handleSubmitRequest = async (state: CorrespondenceFormParts) => {
         const attachments: AttachmentDetails[] = statements.map(statement => {
             return {
@@ -95,7 +94,7 @@ const SendCorrespondence = ({
         });
         const requestBody = generateCommunicationRequest(
             policy,
-            state?.correspondence?.type,
+            state?.correspondence?.type as CommunicationTypes,
             state,
             user,
             ctiCallNumber as string,
@@ -160,7 +159,7 @@ export const getServerSideProps = withPageAuthRequired({
         const { locale = DEFAULT_LOCALE, query, req, res } = context;
         const planCode = (query.planCode as string) || '';
         const policyNumber = (query?.policyNumber as string) || '';
-
+        const correlationId = (query?.correlationId as string) || '';
         let accessToken;
         try {
             accessToken = (await getAccessToken(req, res)).accessToken;
@@ -197,6 +196,7 @@ export const getServerSideProps = withPageAuthRequired({
             const userInfoForLogging = getUserInfoFromUser(user);
             const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging);
             if (!policy) {
+                logInfo('contact-center/send-statement/policy not found', { policyNumber, planCode, correlationId });
                 return {
                     redirect: {
                         destination: '/404',

@@ -547,6 +547,7 @@ export const getPolicyProfileData = async (
   try {
     const response = await getPolicyByPlanCodeAndId(options);
     const transformedResults = transformPolicyForProfile(response);
+
     return {
       data: transformedResults,
       error: null,

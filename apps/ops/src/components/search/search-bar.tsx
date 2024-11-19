@@ -2,7 +2,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Button, Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { TFunction, useTranslation } from 'next-i18next';
-import { ChangeEvent, useCallback, useContext, useEffect, useState } from 'react';
+import { ChangeEvent, HTMLAttributes, useCallback, useContext, useEffect, useState } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
@@ -16,13 +16,14 @@ import Typography, { TypographyVariant } from '../typography/typography';
 
 export const SearchBarInitialValues: SearchViewQuery = {};
 
-interface SearchBarProps {
+interface SearchBarProps extends Omit<HTMLAttributes<HTMLInputElement>, 'onToggle'> {
     searchValue: SearchViewQuery;
     onSearch: (value: SearchViewQuery) => void;
     initialToggleValue: PolicySearchKeys;
     toggleLabels: (t: TFunction, featureFlagDecisions?: FeatureFlags) => LabelValue<PolicySearchKeys>[];
     onToggle?: (value: PolicySearchKeys) => void;
     onClear?: (searchField: PolicySearchKeys | undefined) => void;
+    formClasses?: string;
 }
 
 const SearchBar = ({
@@ -32,6 +33,7 @@ const SearchBar = ({
     toggleLabels,
     onToggle,
     onClear,
+    className,
 }: SearchBarProps) => {
     const { setShowFieldErrorMessage } = useContext(PolicySearchFiltersContext);
     const { t } = useTranslation(TranslationFiles.COMMON);
@@ -96,7 +98,7 @@ const SearchBar = ({
     const dropdownLabels = toggleLabels(t);
 
     return (
-        <form className={styles.formContainer} onSubmit={handleFormSubmit}>
+        <form className={clsx(styles.formContainer, className)} onSubmit={handleFormSubmit}>
             <div className={styles.searchContainer}>
                 <DropdownMenu.Root>
                     <DropdownMenu.Trigger className={clsx(styles.dropdownTrigger, 'typography-content-body-sm whitespace-nowrap')}>
@@ -128,6 +130,7 @@ const SearchBar = ({
                 data-testid="search-btn"
                 aria-label={t('ariaLabel.search') as string}
                 type="submit"
+                size="small"
             >
                 {t('dashboard.search.btnText')}
             </Button>

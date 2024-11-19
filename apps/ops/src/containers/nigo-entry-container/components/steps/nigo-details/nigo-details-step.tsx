@@ -21,7 +21,7 @@ interface NigoDetailsStepProps {
 export const  NigoDetailsStep = ({nigoExceptions, nigoSubExceptions} : NigoDetailsStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.nigoDetails' });
     const { goToNext } = useWorkflow();
-    const { exceptions, messages, formErrors, setFormErrors } = useNigoEntry();    
+    const { exceptions, messages, formErrors, setFormErrors } = useNigoEntry();
     const { setFormNigos } = useContext(FormDataContext);
 
     const handleStepContinue = useCallback(() => {
@@ -50,10 +50,9 @@ export const  NigoDetailsStep = ({nigoExceptions, nigoSubExceptions} : NigoDetai
                 nigos.push(obj);
             });
             setFormNigos({ nigos: nigos } );
-                
             goToNext();
         }
-        
+
     }, [exceptions, goToNext, messages, setFormErrors, setFormNigos, t]);
 
     return (
@@ -70,8 +69,8 @@ export const  NigoDetailsStep = ({nigoExceptions, nigoSubExceptions} : NigoDetai
         >
             <div className="flex flex-col gap-5">
                <NigoDetails nigoExceptions={nigoExceptions} nigoSubExceptions={nigoSubExceptions} />
-               {formErrors?.noCategorySelected && <AssistiveText text={formErrors?.noCategorySelected} variant={AssistiveTextVariant.Error} className="my-4" />}
-               {formErrors?.noCategoryDetailsSelected && <AssistiveText text={formErrors?.noCategoryDetailsSelected} variant={AssistiveTextVariant.Error} className="my-4" />}
+               {formErrors?.noCategorySelected && <AssistiveText text={formErrors?.noCategorySelected} variant={AssistiveTextVariant.Error} className="mt-2" />}
+               {formErrors?.noCategoryDetailsSelected && <AssistiveText text={formErrors?.noCategoryDetailsSelected} variant={AssistiveTextVariant.Error} className="mt-2" />}
             </div>
         </WorkflowCard>
     );

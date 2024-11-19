@@ -1,4 +1,4 @@
-import { PolicyFeature } from '@zinnia/api-types/types/sor';
+import { FeatureType } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
@@ -67,9 +67,7 @@ export default async function Loans({
 
   const policyStatusData =
     policyStatus?.status === 'fulfilled' ? policyStatus.value.data : null;
-  const isFreelook =
-    policyStatusData?.policyStatus ===
-    ('FREELOOK' as PolicyFeature.featureType);
+  const isFreelook = policyStatusData?.policyStatus === FeatureType.FREELOOK;
 
   const { data, error } = summaryData;
 

@@ -27,10 +27,12 @@ import { searchPolicy } from '@deps/queries/api/policies';
 import { isResetQueryParam } from '@deps/types/constants';
 import { LabelValue } from '@deps/types/data';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
-import { SegmentPageName, SegmentTrackedEventName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
+import { SearchSubmittedEvent, SegmentPageName, SegmentTrackedEventName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
+
+import styles from './index.module.css';
 
 const toggleLabels = (t: TFunction): LabelValue<PolicySearchKeys>[] => [
     {
@@ -82,7 +84,6 @@ interface PolicySearchResultsProps {
     total: number;
 }
 
-// TODO MG: put in a provider file
 export interface DashboardContextProps {
     searchValue: SearchViewQuery;
 }
@@ -174,13 +175,11 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
         setLoadSearchResults(true);
         setIsIdle(false);
 
-        segmentAnalyticsTrackEvent(SegmentTrackedEventName.PolicySearch, {
+        segmentAnalyticsTrackEvent<SearchSubmittedEvent>(SegmentTrackedEventName.SearchSubmitted, {
             policyNumber: value?.policyNumber,
-            ssnUsed: value?.ssn,
-            firstNameUsed: value?.firstName,
-            lastNameUsed: value?.lastName,
-            // TODO MG: we shouldnt have to pass this in
-            // timestamp,
+            ssnUsed: !!value?.ssn,
+            firstNameUsed: !!value?.firstName,
+            lastNameUsed: !!value?.lastName,
             userId: user.partyId,
         });
 
@@ -240,6 +239,7 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
                             setIsIdle(true);
                             clearPolicySearchFilters();
                         }}
+                        className={styles.searchBar}
                     />
                 </div>
 

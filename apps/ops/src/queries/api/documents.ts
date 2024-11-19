@@ -1,4 +1,6 @@
+import { dataURItoBlob } from '@rjsf/utils';
 import { AxiosResponse } from 'axios';
+import dayjs from 'dayjs';
 
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import {
@@ -7,9 +9,12 @@ import {
     DocumentErrorResponse,
     DocumentDownload,
     DocumentDownloadWithMime,
+    EDSDocumentResponse,
 } from '@deps/models/case/document';
+import { ManagementTask } from '@deps/models/case/task-instance';
 import { isMockPolicyDocsRequestEnabled } from '@deps/services/api-config';
 import { mockPolicyDocs } from '@deps/services/mocks/policy-docs';
+import { EDS_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
 import { pullFromCache, writeToCache } from '@deps/utils/cache';
 import { logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
@@ -28,6 +33,39 @@ export const getDocument = async (documentNumber: string, docType: string, clien
         return data;
     } catch (error: any) {
         console.error('An error occurred while getting document', error);
+
+        return error.response;
+    }
+};
+
+export const uploadDocument = async (task: ManagementTask, document: any): Promise<EDSDocumentResponse | null> => {
+    try {
+        const url = `${baseAppUrl}/api/documents/upload`;
+        const { blob, name } = dataURItoBlob(document);
+
+        // TODO: Update metadata
+        const fileData = {
+            file: document,
+            metadata: {
+                sourceFileName: name,
+                docAccessLevel: 'ALL_ACCESS',
+                documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT), //'2024-11-15T10:21:33.690Z',
+                docCategory: 'NEW_BUSINESS',
+                fileType: blob.type,
+                parentCarrierCode: task.carrier.toUpperCase(),
+                formType: 'NB Application',
+                docClassification: 'INBOUND',
+            },
+        };
+
+        const { data } = await client.post<any, AxiosResponse>(url, fileData);
+        return data;
+    } catch (error: any) {
+        logWarn('An error occurred while uploading document', {
+            ...parseErrorInformation(error),
+            file: 'queries/api/documents',
+            function: 'uploadDocument',
+        });
 
         return error.response;
     }
@@ -185,7 +223,7 @@ export const getPolicyTypeDocs = async (
     try {
         let queryParams = `?source=Policy&contractNumber=${id}&clientCode=${clientCode?.toUpperCase()}`;
 
-        if(!isNullEmptyOrUndefined(docType)) {
+        if (!isNullEmptyOrUndefined(docType)) {
             queryParams += `&documentType=${docType}`;
         }
         const cachedResult = pullFromCache('getPolicyTypeDocs', queryParams);
@@ -199,3 +237,6 @@ export const getPolicyTypeDocs = async (
         return error.response;
     }
 };
+function uuidV4(): any | import('axios').AxiosHeaderValue | undefined {
+    throw new Error('Function not implemented.');
+}

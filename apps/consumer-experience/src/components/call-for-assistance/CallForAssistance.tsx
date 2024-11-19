@@ -1,7 +1,7 @@
 import { BannerAlert, BannerVariant } from '@zinnia/bloom/components';
-import { ReactNode } from 'react';
+import { HTMLAttributes, ReactNode } from 'react';
 
-import { EVERLY_CONTACT_PHONE_NUMBER } from '@/utils/data';
+import { CarrierPhoneNumber } from '../carrier-phone-number/CarrierPhoneNumber';
 
 export const CallForAssistance = ({
   callToAction,
@@ -11,17 +11,15 @@ export const CallForAssistance = ({
   callToAction?: ReactNode;
   contactPrompt?: string;
   customInstruction?: string;
-}) => {
+} & HTMLAttributes<HTMLDivElement>) => {
   return (
     <BannerAlert
+      // TODO: eventually move this class out. This should be set by parent
       className="mb-lg"
       bodyText={
         <p className="typography-nav-links-sm-inline">
           <span>{callToAction}</span> <span>{contactPrompt}</span>{' '}
-          <a href={`tel:+${EVERLY_CONTACT_PHONE_NUMBER}`}>
-            {EVERLY_CONTACT_PHONE_NUMBER}
-          </a>{' '}
-          <span>{customInstruction}</span>
+          <CarrierPhoneNumber /> <span>{customInstruction}</span>
         </p>
       }
       variant={BannerVariant.Information}

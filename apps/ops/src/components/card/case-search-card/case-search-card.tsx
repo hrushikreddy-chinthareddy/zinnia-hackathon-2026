@@ -17,7 +17,7 @@ import { PartyInstance } from '@deps/models/case/party-instance';
 import { ReactComponent as ChevronRightIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-right.svg';
 import { CaseDetailsTabValues } from '@deps/types/constants';
 import { SearchViewQuery } from '@deps/types/search';
-import { SegmentTrackedEventName } from '@deps/types/segment-analytics';
+import { CaseClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
 import { getCarrierLogoByClientId } from '@deps/utils/carriers';
 
 import CaseDetailField from './case-detail-field';
@@ -92,7 +92,7 @@ export default function CaseSearchCard({
     const isExceptionRow = caseStatus === Statuses.Exception && !!openExceptions?.length;
 
     const loadCaseDetails = (href: string) => {
-        segmentAnalyticsTrackEvent(SegmentTrackedEventName.PolicyKeyValuesItemClick, {
+        segmentAnalyticsTrackEvent<CaseClickedEvent>(SegmentTrackedEventName.CaseClicked, {
             caseId: id,
             userId: perms.getUserPartyId(),
         });

@@ -47,7 +47,6 @@ const UserInformation = ({ userInfo, setUserInfo, formErrors, formConfig }: User
                         size={FieldSize.Small}
                         type={FieldType.BaseActive}
                         value={userInfo.personalInformation.firstName}
-                        // TODO MG: better name in case more than one party has the same first name
                         data-testid={`firstName-${userInfo.personalInformation.firstName}`}
                         variant={selectVarientByConfig({
                             value: userInfo.personalInformation.firstName,
