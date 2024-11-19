@@ -1997,6 +1997,13 @@
                 "quarterlyStatement": "Quarterly Statement"
             }
         },
+        "sendTaxForms": {
+            "tabs": {
+                "taxFormsSelection": "Tax Form(s) Selection",
+                "correspondence": "Correspondence",
+                "confirm": "Confirm"
+            }
+        },
         "statementDetails": {
             "name": "Statement name",
             "createdDate": "Created date",

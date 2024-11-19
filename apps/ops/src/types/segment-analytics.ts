@@ -24,6 +24,7 @@ export enum SegmentPageName {
     RmdCase = 'RMD Case',
     SendCorrespondence = 'Send Correspondence',
     SendDocument = 'Send Document',
+    SendTaxForms = 'Send Tax Forms',
     SswCase = 'SSW Case',
     WithdrawalCase = 'Withdrawal Case',
 }

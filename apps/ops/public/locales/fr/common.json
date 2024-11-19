@@ -1975,6 +1975,13 @@
                 "quarterlyStatement": "Déclaration trimestrielle"
             }
         },
+        "sendTaxForms": {
+            "tabs": {
+                "taxFormsSelection": "Sélection de formulaires",
+                "correspondence": "Correspondence",
+                "confirm": "Confirmer"
+            }
+        },
         "statementDetails": {
             "name": "Nom",
             "createdDate": "Date de création",
