@@ -681,7 +681,7 @@
         }
     },
     "welcome": {
-        "header": "Bienvenue sur le portail des politiques {{policyPortalName}}",
+        "header": "Bienvenue sur {{policyPortalName}}",
         "subHeader": "Un outil d'expérience de gestion des politiques pour vous faciliter la vie",
         "signInBtn": "Continuer",
         "note": {

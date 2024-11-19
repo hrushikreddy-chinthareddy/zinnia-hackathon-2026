@@ -35,7 +35,6 @@ const WelcomePage = () => {
                             <div className="mb-2 font-primary text-lg font-light">
                                 {t('welcome.header', { policyPortalName: t('site.name') })}
                             </div>
-                            <div className="font-secondary text-base font-normal">{t('welcome.subHeader')}</div>
 
                             <div className="border-box context-center mt-11 rounded-lg border-2 border-slate-100 p-8 font-secondary lg:flex">
                                 <div className="lg:basis-1/2">

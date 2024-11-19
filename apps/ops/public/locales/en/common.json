@@ -20,7 +20,7 @@
     "selectProcessType": "Select Process Type",
     "trend": "Trend",
     "site": {
-        "name": "Zinnia",
+        "name": "Zinnia Live",
         "home": {
             "link": "/cases",
             "imageSrc": "/images/logos/zinnia-logo.svg"
@@ -658,7 +658,7 @@
         }
     },
     "welcome": {
-        "header": "Welcome to the {{policyPortalName}} Policy Portal",
+        "header": "Welcome to {{policyPortalName}}",
         "subHeader": "A policy management experience tool to make your life a little easier.",
         "signInBtn": "Continue to sign in",
         "note": {
