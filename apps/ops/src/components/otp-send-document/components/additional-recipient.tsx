@@ -1,3 +1,4 @@
+import { datadogLogs } from '@datadog/browser-logs';
 import { ChipX, Label, Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
@@ -30,6 +31,11 @@ const AdditionalRecipient = ({ classNames, emails, setEmails, setError }: Additi
             return;
         }
         if (emailError) {
+            datadogLogs.logger.info('contactCenterCCEmailValidation', {
+                payload: val,
+                error: t(emailError) as string,
+                function: 'correspondence.cc.validateEmail',
+            });
             setError(error => ({ ...error, submit: t(emailError) as string }));
             return;
         }
