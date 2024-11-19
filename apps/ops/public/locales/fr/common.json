@@ -4514,6 +4514,12 @@
             "continueLabel": "Continuer",
             "cancelLabel": "Annuler"
         },
+        "taskForm": {
+            "title": "Données d’adéquation des entrées",
+            "subTitle": "Saisissez manuellement toutes les données d'adéquation. Notez que l'annulation à tout moment effacera toutes les données saisies.",
+            "submitLabel": "Soumettre",
+            "cancelLabel": "Annuler"
+        },
         "confirmStep": {
             "title": "Soumise!",
             "subTitle": "Les données d'adéquation des entrées ont été soumises.",
@@ -4527,7 +4533,7 @@
             "taskReview": "Évaluation de la pertinence",
             "confirm": "Confirmer"
         },
-        "taskReview": {
+        "taskForm": {
             "title": "Évaluation de la pertinence",
             "subTitle": "La candidature de ce client a été marquée pour examen. Acceptez ou refusez chaque problème avant de soumettre une décision finale.",
             "submitLabel": "Soumettre la décision",

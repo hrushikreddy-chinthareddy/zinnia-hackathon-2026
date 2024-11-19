@@ -4531,6 +4531,7 @@
             "confirm": "Confirm",
             "start": "Start",
             "suitabilityForm": "Suitability form",
+            "nigoDetails": "Missing Information",
             "summary": "Summary"
         },
         "taskReview": {
@@ -4546,12 +4547,18 @@
             "continueLabel": "Continue",
             "cancelLabel": "Cancel"
         },
+        "taskForm": {
+            "title": "Input Suitability Data",
+            "subTitle": "Manually enter all suitability data. Note that canceling at any point will erase all the entered data.",
+            "submitLabel": "Submit",
+            "cancelLabel": "Cancel"
+        },
         "confirmStep": {
             "title": "Submitted!",
             "subTitle": "Input suitability data was submitted.",
             "cta": "Go to incoming transfer",
             "secondaryCta": "Close",
-            "submitTask": "Submit Suitability details"
+            "submitTask": "Submit suitability details"
         }
     },
     "suitabilityReview": {
@@ -4559,7 +4566,7 @@
             "taskReview": "Review Suitability",
             "confirm": "Confirm"
         },
-        "taskReview": {
+        "taskForm": {
             "title": "Review Suitability",
             "subTitle": "This customer's application was flagged for review. Accept or Decline each issue before submitting a final decision.",
             "submitLabel": "Submit decision",

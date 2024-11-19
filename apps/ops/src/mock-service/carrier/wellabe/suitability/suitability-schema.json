@@ -404,7 +404,7 @@
         "properties": {
             "parties": {
                 "type": "array",
-                "title": "PARTIES",
+                "title": "Party",
                 "minItems": 1,
                 "items": {
                     "type": "object",
@@ -428,7 +428,7 @@
                         },
                         "person": {
                             "type": "object",
-                            "title": "Person information",
+                            "title": "Person Information",
                             "properties": {
                                 "firstName": {
                                     "type": "string",
@@ -488,7 +488,7 @@
                         },
                         "govtIdInfo": {
                             "type": "array",
-                            "title": "Government id information",
+                            "title": "Government Id Information",
                             "items": {
                                 "title": "Government id",
                                 "type": "object",
@@ -673,17 +673,17 @@
                         "properties": {
                             "soldPoliciesToApplicant": {
                                 "type": "string",
-                                "title": "Sold Policies to Applicant",
+                                "title": "Sold policies to applicant",
                                 "$ref": "#/definitions/soldPoliciesToApplicantEnum"
                             },
                             "pastReplacement": {
                                 "type": "string",
-                                "title": "Past Replacement",
+                                "title": "Past replacement",
                                 "$ref": "#/definitions/pastReplacementEnum"
                             },
                             "coverageExpenseConsideration": {
                                 "type": "string",
-                                "title": "Coverage Expense Consideration",
+                                "title": "Coverage expense consideration",
                                 "$ref": "#/definitions/coverageExpenseConsiderationEnum"
                             }
                         },
@@ -703,7 +703,7 @@
             },
             "fiscalData": {
                 "type": "object",
-                "title": "FISCAL DATA",
+                "title": "Fiscal Data",
                 "properties": {
                     "annualIncome": {
                         "type": "string",
@@ -741,7 +741,7 @@
                     },
                     "materialChangeDetails": {
                         "type": "array",
-                        "title": "Material change details",
+                        "title": "Material Change Details",
                         "items": {
                             "type": "object",
                             "properties": {
@@ -819,7 +819,7 @@
             },
             "financialExperience": {
                 "type": "object",
-                "title": "FINANCIAL EXPERIENCE",
+                "title": "Financial Experience",
                 "properties": {
                     "rateChangeAcknowledgment": {
                         "type": "string",
@@ -832,7 +832,7 @@
                     },
                     "financialProducts": {
                         "type": "object",
-                        "title": "Financial products",
+                        "title": "Financial Products",
                         "properties": {
                             "assetsDistribution": {
                                 "type": "array",
@@ -842,12 +842,12 @@
                                     "properties": {
                                         "productType": {
                                             "type": "string",
-                                            "title": "Product Type",
+                                            "title": "Product type",
                                             "$ref": "#/definitions/financialProducts_assetsDistribution_productTypeEnum"
                                         },
                                         "qualificationType": {
                                             "type": "string",
-                                            "title": "Qualification Type",
+                                            "title": "Qualification type",
                                             "$ref": "#/definitions/financialProducts_assetsDistribution_qualificationTypeEnum"
                                         },
                                         "amount": {
@@ -905,20 +905,20 @@
             },
             "investmentRiskInfo": {
                 "type": "object",
-                "title": "INVESTMENT RISK INFORMATION",
+                "title": "Investment Risk Information",
                 "properties": {
                     "riskTolerance": {
                         "type": "string",
-                        "title": "Risk Tolerance",
+                        "title": "Risk tolerance",
                         "$ref": "#/definitions/investProduct_riskToleranceEnum"
                     },
                     "riskToleranceDesc": {
                         "type": "string",
-                        "title": "Risk Tolerance Description"
+                        "title": "Risk tolerance description"
                     },
                     "annuityFitsRiskTolerance": {
                         "type": "string",
-                        "title": "Annuity Fits Risk Tolerance",
+                        "title": "Annuity fits risk tolerance",
                         "$ref": "#/definitions/investProduct_annuityFitsRiskToleranceEnum"
                     }
                 },
@@ -930,11 +930,11 @@
             },
             "financialObjectives": {
                 "type": "object",
-                "title": "FINANCIAL OBJECTIVES",
+                "title": "Financial Objectives",
                 "properties": {
                     "buyingReason": {
                         "type": "array",
-                        "title": "Buying Reason",
+                        "title": "Buying reason",
                         "items": {
                             "type": "string",
                             "$ref": "#/definitions/financialObjectives_buyingReasonEnum"
@@ -943,11 +943,11 @@
                     },
                     "buyingReasonDetails": {
                         "type": "string",
-                        "title": "Buying Reason Details"
+                        "title": "Buying reason details"
                     },
                     "annuityMeetsFinancialNeeds": {
                         "type": "string",
-                        "title": "Annuity Meets Financial Needs",
+                        "title": "Annuity meets financial needs",
                         "$ref": "#/definitions/financialObjectives_annuityMeetsFinancialNeedsEnum"
                     }
                 },
@@ -959,15 +959,15 @@
             },
             "liquidityOptions": {
                 "type": "object",
-                "title": "LIQUIDITY OPTIONS",
+                "title": "Liquidity Options",
                 "properties": {
                     "fundsAccessExplanation": {
                         "type": "string",
-                        "title": "Funds Access Explanation"
+                        "title": "Funds access explanation"
                     },
                     "distributionMethods": {
                         "type": "array",
-                        "title": "Distribution Methods",
+                        "title": "Distribution methods",
                         "items": {
                             "type": "string",
                             "$ref": "#/definitions/financialObjectives_buyingReasonEnum"
@@ -976,39 +976,39 @@
                     },
                     "firstPayoutOption": {
                         "type": "string",
-                        "title": "First Payout Option"
+                        "title": "First payout option"
                     },
                     "surrenderChargeConsent": {
                         "type": "string",
-                        "title": "Surrender Charge Consent"
+                        "title": "Surrender charge consent"
                     },
                     "possibleReductionInValue": {
                         "type": "string",
-                        "title": "Possible Reduction In Value"
+                        "title": "Possible reduction in value"
                     },
                     "planToHoldAnnuity": {
                         "type": "string",
-                        "title": "Plan to Hold Annuity"
+                        "title": "Plan to hold annuity"
                     },
                     "explainedOtherCharges": {
                         "type": "string",
-                        "title": "Explained Other Charges"
+                        "title": "Explained other charges"
                     },
                     "benefitAnnuityQuestions": {
                         "type": "object",
-                        "title": "Benefit Annuity Questions",
+                        "title": "Benefit annuity questions",
                         "properties": {
                             "understandIncomeAdjustmentFactor": {
                                 "type": "string",
-                                "title": "Understand Income Adjustment Factor"
+                                "title": "Understand income adjustment factor"
                             },
                             "consideredFinancialNeedsAfter10Years": {
                                 "type": "string",
-                                "title": "Considered Financial Needs After 10 Years"
+                                "title": "Considered financial needs after 10 years"
                             },
                             "planForIncomeDecreaseAfter10Years": {
                                 "type": "array",
-                                "title": "Plan for Income Decrease After 10 Years",
+                                "title": "Plan for income decrease after 10 years",
                                 "items": {
                                     "type": "string"
                                 }
@@ -1034,7 +1034,7 @@
             },
             "agentAcknowledgment": {
                 "type": "object",
-                "title": "AGENT ACKNOWLEDGEMENT",
+                "title": "Agent Acknowledgment",
                 "properties": {
                     "maApplicationQuestionnaire": {
                         "type": "object",
@@ -1096,19 +1096,19 @@
                         "properties": {
                             "evaluatedInformation": {
                                 "type": "string",
-                                "title": "Evaluated Information"
+                                "title": "Evaluated information"
                             },
                             "informedOfFeatures": {
                                 "type": "string",
-                                "title": "Informed of Features"
+                                "title": "Informed of features"
                             },
                             "communicatedBasis": {
                                 "type": "string",
-                                "title": "Communicated Basis"
+                                "title": "Communicated basis"
                             },
                             "disclosureRetention": {
                                 "type": "string",
-                                "title": "Disclosure Retention"
+                                "title": "Disclosure retention"
                             }
                         },
                         "required": [
@@ -1124,39 +1124,39 @@
                         "properties": {
                             "scopeAndTerms": {
                                 "type": "string",
-                                "title": "Scope and Terms"
+                                "title": "Scope and terms"
                             },
                             "typesOfProducts": {
                                 "type": "string",
-                                "title": "Types of Products"
+                                "title": "Types of products"
                             },
                             "authorizedInsurers": {
                                 "type": "string",
-                                "title": "Authorized Insurers"
+                                "title": "Authorized insurers"
                             },
                             "compensationDescription": {
                                 "type": "string",
-                                "title": "Compensation Description"
+                                "title": "Compensation description"
                             },
                             "rightToRequestInfo": {
                                 "type": "string",
-                                "title": "Right to Request Information"
+                                "title": "Right to request information"
                             },
                             "compensationEstimate": {
                                 "type": "string",
-                                "title": "Compensation Estimate"
+                                "title": "Compensation estimate"
                             },
                             "conflictsOfInterest": {
                                 "type": "string",
-                                "title": "Conflicts of Interest"
+                                "title": "Conflicts of interest"
                             },
                             "productAdvantages": {
                                 "type": "string",
-                                "title": "Product Advantages"
+                                "title": "Product advantages"
                             },
                             "productCons": {
                                 "type": "string",
-                                "title": "Product Cons"
+                                "title": "Product cons"
                             }
                         },
                         "required": [
@@ -1180,7 +1180,7 @@
             },
             "additionalInfo": {
                 "type": "object",
-                "title": "ADDITIONAL INFORMATION",
+                "title": "Additional Information",
                 "properties": {
                     "currentResidenceOption": {
                         "type": "string",
@@ -1228,7 +1228,7 @@
             },
             "californiaResidentQuestions": {
                 "type": "object",
-                "title": "CALIFORNIA RESIDENT QUESTIONS",
+                "title": "California Resident Questions",
                 "properties": {
                     "applyForMeansTestedBenefits": {
                         "type": "string",
@@ -1251,7 +1251,7 @@
             },
             "signatureInfo": {
                 "type": "array",
-                "title": "SIGNATURE INFORMATION",
+                "title": "Signature Information",
                 "items": {
                     "type": "object",
                     "title": "",
@@ -1319,7 +1319,8 @@
             "items": {
                 "ui:options": {
                     "title": "Party",
-                    "minItems": 1
+                    "minItems": 1,
+                    "label": false
                 },
                 "partyType": {
                     "ui:options": {
@@ -1782,8 +1783,9 @@
             "materialChangeDetails": {
                 "items": {
                     "ui:options": {
-                        "title": "Material change detail",
-                        "minItems": 1
+                        "title": "Material Change Detail",
+                        "minItems": 1,
+                        "label": false
                     },
                     "changeType": {
                         "ui:options": {
@@ -1880,8 +1882,9 @@
                 "assetsDistribution": {
                     "items": {
                         "ui:options": {
-                            "title": "Asset distribution",
-                            "minItems": 1
+                            "title": "Asset Distribution",
+                            "minItems": 1,
+                            "label": false
                         },
                         "productType": {
                             "ui:options": {
@@ -1919,8 +1922,9 @@
                 "totalAsset": {
                     "items": {
                         "ui:options": {
-                            "title": "Total asset",
-                            "minItems": 1
+                            "title": "Total Asset",
+                            "minItems": 1,
+                            "label": false
                         },
                         "qualificationType": {
                             "ui:widget": "radio",
@@ -2069,7 +2073,8 @@
                     "items": {
                         "ui:options": {
                             "title": "Product detail",
-                            "minItems": 1
+                            "minItems": 1,
+                            "label": false
                         },
                         "productType": {
                             "ui:options": {
@@ -2114,7 +2119,8 @@
             "items": {
                 "ui:options": {
                     "title": "Signature information",
-                    "minItems": 1
+                    "minItems": 1,
+                    "label": false
                 },
                 "signatureRoleCode": {
                     "ui:options": {

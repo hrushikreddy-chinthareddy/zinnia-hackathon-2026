@@ -75,7 +75,7 @@
                 "properties": {
                     "suitabilityStatus": {
                         "type": "string",
-                        "title": "Suitability Decision",
+                        "title": "Suitability decision",
                         "$ref": "#/definitions/suitabilityStatus",
                         "default": "ACCEPT"
                     }
@@ -93,7 +93,7 @@
                             "properties": {
                                 "declineReason": {
                                     "type": "array",
-                                    "title": "Reason for Decline",
+                                    "title": "Reason for decline",
                                     "items": {
                                         "type": "string",
                                         "$ref": "#/definitions/declineReason"
@@ -116,16 +116,16 @@
                     "properties": {
                         "attachmentFile": {
                             "type": "string",
-                            "title": "Add Attachments",
+                            "title": "Add attachment",
                             "format": "data-url"
                         },
                         "documentId": {
                             "type": "string",
-                            "title": "Document ID"
+                            "title": "Document Id"
                         },
                         "documentType": {
                             "type": "string",
-                            "title": "Document Type"
+                            "title": "Document type"
                         },
                         "uploadedOn": {
                             "type": "string",
