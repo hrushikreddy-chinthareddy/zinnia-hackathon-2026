@@ -40,6 +40,7 @@
         "pageTitles": {
             "caseManagement": "Case Management",
             "caseOverview": "Case Overview",
+            "contractExtras": "Contract Extras",
             "policySearch": "Policy Search",
             "policyDetails": "Policy Details",
             "policyExtras": "Policy Extras",
@@ -2555,6 +2556,7 @@
                 "planCode": "Plan code"
             },
             "policyExtras": {
+                "contractExtras": "Contract Extras",
                 "policyExtras": "Policy Extras",
                 "filter": {
                     "label": "Filter by type:",

@@ -174,6 +174,7 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({ user }) => {
         return (
             <PolicyLayout loading={true}>
                 <div className="flex h-[500px] w-full items-center justify-center">
+                    <h1 className="hidden">loading policy</h1>
                     <PageLoader variant={PageLoaderVariant.Center} />
                 </div>
             </PolicyLayout>
@@ -193,6 +194,7 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({ user }) => {
 
     let subPageContent = null;
     let subPageTitleKey = '';
+    const policyDetails = new PolicyDetails(policy);
 
     // policies/id/... with no slug
     if (!slug || slug.length === 0) {
@@ -220,12 +222,11 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({ user }) => {
 
                 if (slug[1] === 'policy-extras') {
                     subPageContent = <PolicyExtrasSubPage />;
-                    subPageTitleKey = 'policyExtras';
+                    subPageTitleKey = policyDetails.isAnnuity ? 'contractExtras' : 'policyExtras';
                 }
 
                 if (slug[1] === 'funds') {
-                    const p = new PolicyDetails(policy);
-                    subPageContent = <FundsSubPage policy={p} />;
+                    subPageContent = <FundsSubPage policy={policyDetails} />;
                     subPageTitleKey = 'funds';
                 }
                 if (slug[1] === 'premiums') {

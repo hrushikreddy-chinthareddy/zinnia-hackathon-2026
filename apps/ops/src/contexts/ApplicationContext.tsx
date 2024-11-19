@@ -73,10 +73,13 @@ const ApplicationComponentWrapper = ({ children }: Omit<ApplicationDataProviderP
 
             const handleRouteChangeComplete = (url: string) => {
                 managePathHistory(url);
-                setTimeout(() => {
-                    // hacky but resolves the breadcrumb issue for now
-                    setCurrentSessionStorage(url, document.querySelector('h1')?.textContent || '');
-                }, 1000);
+                const checkH1 = setInterval(() => {
+                    const header = document.querySelector('h1');
+                    if (header?.textContent !== 'loading policy') {
+                        setCurrentSessionStorage(url, header?.textContent || '');
+                        clearInterval(checkH1);
+                    }
+                }, 500);
             };
 
             router.events.on('routeChangeComplete', handleRouteChangeComplete);
