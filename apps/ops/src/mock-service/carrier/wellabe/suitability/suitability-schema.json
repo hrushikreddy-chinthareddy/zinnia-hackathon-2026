@@ -404,31 +404,31 @@
         "properties": {
             "parties": {
                 "type": "array",
-                "title": "Parties",
+                "title": "PARTIES",
                 "minItems": 1,
                 "items": {
                     "type": "object",
-                    "title": "Party",
+                    "title": "PARTY",
                     "properties": {
                         "partyType": {
                             "type": "string",
-                            "title": "Party Type",
+                            "title": "Party type",
                             "$ref": "#/definitions/partyTypeEnum",
                             "uniqueItems": false
                         },
                         "roleType": {
                             "type": "string",
-                            "title": "Role Type",
+                            "title": "Role type",
                             "$ref": "#/definitions/roleTypeEnum",
                             "uniqueItems": true
                         },
                         "fullName": {
                             "type": "string",
-                            "title": "Full Name"
+                            "title": "Full name"
                         },
                         "person": {
                             "type": "object",
-                            "title": "Person Information",
+                            "title": "Person information",
                             "properties": {
                                 "firstName": {
                                     "type": "string",
@@ -437,11 +437,11 @@
                                 },
                                 "middleName": {
                                     "type": "string",
-                                    "title": "Middle Name"
+                                    "title": "Middle name"
                                 },
                                 "lastName": {
                                     "type": "string",
-                                    "title": "Last Name"
+                                    "title": "Last name"
                                 },
                                 "gender": {
                                     "type": "string",
@@ -455,22 +455,22 @@
                                 "birthDate": {
                                     "type": "string",
                                     "format": "date",
-                                    "title": "Birth Date"
+                                    "title": "Birth date"
                                 },
                                 "martialStatus": {
                                     "type": "string",
-                                    "title": "Marital Status",
+                                    "title": "Marital status",
                                     "$ref": "#/definitions/martialStatusEnum"
                                 },
                                 "birthCountry": {
                                     "type": "string",
-                                    "title": "Birth Country",
+                                    "title": "Birth country",
                                     "$ref": "#/definitions/birthCountryEnum",
                                     "uniqueItems": true
                                 },
                                 "birthJurisdictionState": {
                                     "type": "string",
-                                    "title": "Birth Jurisdiction State",
+                                    "title": "Birth jurisdiction state",
                                     "$ref": "#/definitions/birthJurisdictionStateEnum",
                                     "uniqueItems": true
                                 }
@@ -488,24 +488,24 @@
                         },
                         "govtIdInfo": {
                             "type": "array",
-                            "title": "Government ID Information",
+                            "title": "Government id information",
                             "items": {
-                                "title": "Government ID",
+                                "title": "Government id",
                                 "type": "object",
                                 "properties": {
                                     "govtId": {
                                         "type": "string",
-                                        "title": "Government ID"
+                                        "title": "Government id"
                                     },
                                     "govtIdType": {
                                         "type": "string",
-                                        "title": "Government ID Type",
+                                        "title": "Government id type",
                                         "$ref": "#/definitions/govtIdTypeEnum"
                                     },
                                     "govtIdExpDate": {
                                         "type": "string",
                                         "format": "date",
-                                        "title": "Government ID Expiry Date"
+                                        "title": "Government id expiry date"
                                     }
                                 },
                                 "required": [
@@ -524,33 +524,33 @@
                                 "properties": {
                                     "addressType": {
                                         "type": "string",
-                                        "title": "Address Type",
+                                        "title": "Address type",
                                         "$ref": "#/definitions/addressTypeEnum",
                                         "uniqueItems": true
                                     },
                                     "line1": {
                                         "type": "string",
-                                        "title": "Address Line 1"
+                                        "title": "Address line 1"
                                     },
                                     "line2": {
                                         "type": "string",
-                                        "title": "Address Line 2"
+                                        "title": "Address line 2"
                                     },
                                     "city": {
                                         "type": "string",
-                                        "title": "City"
+                                        "title": "city"
                                     },
                                     "state": {
                                         "type": "string",
-                                        "title": "State"
+                                        "title": "state"
                                     },
                                     "country": {
                                         "type": "string",
-                                        "title": "Country"
+                                        "title": "country"
                                     },
                                     "zip": {
                                         "type": "string",
-                                        "title": "Zip Code"
+                                        "title": "Zip code"
                                     }
                                 },
                                 "required": [
@@ -573,7 +573,7 @@
                             "properties": {
                                 "employmentStatus": {
                                     "type": "array",
-                                    "title": "Employment Status",
+                                    "title": "Employment status",
                                     "items": {
                                         "type": "string",
                                         "$ref": "#/definitions/employmentStatusEnum"
@@ -620,25 +620,25 @@
                 "properties": {
                     "lineOfBusiness": {
                         "type": "string",
-                        "title": "Line of Business",
+                        "title": "Line of business",
                         "$ref": "#/definitions/lineOfBusinessEnum"
                     },
                     "productCode": {
                         "type": "string",
-                        "title": "Product Code"
+                        "title": "Product code"
                     },
                     "productType": {
                         "type": "string",
-                        "title": "Product Type"
+                        "title": "Product type"
                     },
                     "qualPlanType": {
                         "type": "string",
-                        "title": "Qualification Plan Type",
+                        "title": "Qualification plan type",
                         "$ref": "#/definitions/qualPlanTypeEnum"
                     },
                     "annualPaymentAmt": {
                         "type": "string",
-                        "title": "Annual Payment Amount"
+                        "title": "Annual payment amount"
                     }
                 },
                 "required": [
@@ -655,16 +655,16 @@
                 "properties": {
                     "replacementInd": {
                         "type": "string",
-                        "title": "Replacement Indicator",
+                        "title": "Replacement indicator",
                         "$ref": "#/definitions/replacementIndEnum"
                     },
                     "replacementReason": {
                         "type": "string",
-                        "title": "Replacement Reason"
+                        "title": "Replacement reason"
                     },
                     "replacedContractType": {
                         "type": "string",
-                        "title": "Replaced Contract Type",
+                        "title": "Replaced contract type",
                         "$ref": "#/definitions/replacedContractTypeEnum"
                     },
                     "additionalInformation": {
@@ -703,23 +703,23 @@
             },
             "fiscalData": {
                 "type": "object",
-                "title": "Fiscal Data",
+                "title": "FISCAL DATA",
                 "properties": {
                     "annualIncome": {
                         "type": "string",
-                        "title": "Annual Income"
+                        "title": "Annual income"
                     },
                     "netWorth": {
                         "type": "string",
-                        "title": "Net Worth"
+                        "title": "Net worth"
                     },
                     "liquidNetWorth": {
                         "type": "string",
-                        "title": "Liquid Net Worth"
+                        "title": "Liquid net worth"
                     },
                     "sourceOfIncome": {
                         "type": "array",
-                        "title": "Source of Income",
+                        "title": "Source of income",
                         "items": {
                             "type": "string",
                             "$ref": "#/definitions/sourceOfIncomeEnum"
@@ -728,20 +728,20 @@
                     },
                     "sourceOfIncomeOther": {
                         "type": "string",
-                        "title": "Other Source of Income"
+                        "title": "Other source of income"
                     },
                     "materialChangeExp": {
                         "type": "string",
-                        "title": "Material Change Expected",
+                        "title": "Material change expected",
                         "$ref": "#/definitions/materialChangeExpEnum"
                     },
                     "materialChangeReason": {
                         "type": "string",
-                        "title": "Material Change Reason"
+                        "title": "Material change reason"
                     },
                     "materialChangeDetails": {
                         "type": "array",
-                        "title": "Material Change Details",
+                        "title": "Material change details",
                         "items": {
                             "type": "object",
                             "properties": {
@@ -773,19 +773,19 @@
                     },
                     "totalAssets": {
                         "type": "string",
-                        "title": "Total Assets"
+                        "title": "Total assets"
                     },
                     "totalDebt": {
                         "type": "string",
-                        "title": "Total Debt"
+                        "title": "Total debt"
                     },
                     "annualExpenses": {
                         "type": "string",
-                        "title": "Annual Expenses"
+                        "title": "Annual expenses"
                     },
                     "sourceOfFunds": {
                         "type": "array",
-                        "title": "Source of Funds",
+                        "title": "Source of funds",
                         "items": {
                             "type": "string",
                             "$ref": "#/definitions/sourceOfIncomeEnum"
@@ -794,11 +794,11 @@
                     },
                     "federalTaxBand": {
                         "type": "string",
-                        "title": "Federal Tax Band"
+                        "title": "Federal tax band"
                     },
                     "otherTaxBand": {
                         "type": "string",
-                        "title": "Other Tax Band"
+                        "title": "Other tax band"
                     }
                 },
                 "required": [
@@ -819,20 +819,20 @@
             },
             "financialExperience": {
                 "type": "object",
-                "title": "Financial Experience",
+                "title": "FINANCIAL EXPERIENCE",
                 "properties": {
                     "rateChangeAcknowledgment": {
                         "type": "string",
-                        "title": "Rate Change Acknowledgment",
+                        "title": "Rate change acknowledgment",
                         "$ref": "#/definitions/rateChangeAcknowledgmentEnum"
                     },
                     "totalAnnuityValue": {
                         "type": "string",
-                        "title": "Total Annuity Value"
+                        "title": "Total annuity value"
                     },
                     "financialProducts": {
                         "type": "object",
-                        "title": "Financial Products",
+                        "title": "Financial products",
                         "properties": {
                             "assetsDistribution": {
                                 "type": "array",
@@ -905,7 +905,7 @@
             },
             "investmentRiskInfo": {
                 "type": "object",
-                "title": "Investment Risk Information",
+                "title": "INVESTMENT RISK INFORMATION",
                 "properties": {
                     "riskTolerance": {
                         "type": "string",
@@ -930,7 +930,7 @@
             },
             "financialObjectives": {
                 "type": "object",
-                "title": "Financial Objectives",
+                "title": "FINANCIAL OBJECTIVES",
                 "properties": {
                     "buyingReason": {
                         "type": "array",
@@ -959,7 +959,7 @@
             },
             "liquidityOptions": {
                 "type": "object",
-                "title": "Liquidity Options",
+                "title": "LIQUIDITY OPTIONS",
                 "properties": {
                     "fundsAccessExplanation": {
                         "type": "string",
@@ -1034,7 +1034,7 @@
             },
             "agentAcknowledgment": {
                 "type": "object",
-                "title": "Agent Acknowledgment",
+                "title": "AGENT ACKNOWLEDGEMENT",
                 "properties": {
                     "maApplicationQuestionnaire": {
                         "type": "object",
@@ -1042,17 +1042,17 @@
                         "properties": {
                             "soldPoliciesToApplicant": {
                                 "type": "string",
-                                "title": "Sold Policies to Applicant",
+                                "title": "Sold policies to applicant",
                                 "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_soldPoliciesToApplicantEnum"
                             },
                             "saleInLast5Years": {
                                 "type": "string",
-                                "title": "Sale in Last 5 Years",
+                                "title": "Sale in last 5 years",
                                 "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_saleInLast5YearsEnum"
                             },
                             "saleDetails": {
                                 "type": "string",
-                                "title": "Sale Details"
+                                "title": "Sale details"
                             },
                             "productDetails": {
                                 "type": "array",
@@ -1063,21 +1063,21 @@
                                     "properties": {
                                         "productType": {
                                             "type": "string",
-                                            "title": "Product Type",
+                                            "title": "Product type",
                                             "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_productDetails_productTypeEnum"
                                         },
                                         "companyName": {
                                             "type": "string",
-                                            "title": "Company Name"
+                                            "title": "Company name"
                                         },
                                         "policyNumber": {
                                             "type": "string",
-                                            "title": "Policy Number"
+                                            "title": "Policy number"
                                         },
                                         "issueDate": {
                                             "type": "string",
                                             "format": "date",
-                                            "title": "Issue Date"
+                                            "title": "Issue date"
                                         }
                                     },
                                     "required": [
@@ -1180,39 +1180,39 @@
             },
             "additionalInfo": {
                 "type": "object",
-                "title": "Additional Information",
+                "title": "ADDITIONAL INFORMATION",
                 "properties": {
                     "currentResidenceOption": {
                         "type": "string",
-                        "title": "Current Residence Option"
+                        "title": "Current residence option"
                     },
                     "assistedLivingFacilityInd": {
                         "type": "string",
-                        "title": "Assisted Living Facility Indicator"
+                        "title": "Assisted living facility indicator"
                     },
                     "extraFundAvailable": {
                         "type": "string",
-                        "title": "Extra Fund Available"
+                        "title": "Extra fund available"
                     },
                     "existingPoliciesSoldByAgent": {
                         "type": "string",
-                        "title": "Existing Policies Sold by Agent"
+                        "title": "Existing policies sold by agent"
                     },
                     "consideredOtherInsuranceNeeds": {
                         "type": "string",
-                        "title": "Considered Other Insurance Needs"
+                        "title": "Considered other insurance needs"
                     },
                     "resideInNursingHomeOrAssistedLiving": {
                         "type": "string",
-                        "title": "Reside in Nursing Home or Assisted Living"
+                        "title": "Reside in nursing home or assisted living"
                     },
                     "noOfDependents": {
                         "type": "string",
-                        "title": "Number of Dependents"
+                        "title": "Number of dependents"
                     },
                     "otherDependents": {
                         "type": "string",
-                        "title": "Other Dependents"
+                        "title": "Other dependents"
                     }
                 },
                 "required": [
@@ -1228,19 +1228,19 @@
             },
             "californiaResidentQuestions": {
                 "type": "object",
-                "title": "California Resident Questions",
+                "title": "CALIFORNIA RESIDENT QUESTIONS",
                 "properties": {
                     "applyForMeansTestedBenefits": {
                         "type": "string",
-                        "title": "Apply for Means Tested Benefits"
+                        "title": "Apply for means tested benefits"
                     },
                     "buyingForGovernmentBenefits": {
                         "type": "string",
-                        "title": "Buying for Government Benefits"
+                        "title": "Buying for government benefits"
                     },
                     "reverseMortgage": {
                         "type": "string",
-                        "title": "Reverse Mortgage"
+                        "title": "Reverse mortgage"
                     }
                 },
                 "required": [
@@ -1251,37 +1251,37 @@
             },
             "signatureInfo": {
                 "type": "array",
-                "title": "Signature Information",
+                "title": "SIGNATURE INFORMATION",
                 "items": {
                     "type": "object",
                     "title": "",
                     "properties": {
                         "signatureRoleCode": {
                             "type": "string",
-                            "title": "Signature Role Code",
+                            "title": "Signature role code",
                             "$ref": "#/definitions/signatureInfo_signatureRoleCodeEnum"
                         },
                         "signatoryName": {
                             "type": "string",
-                            "title": "Signatory Name"
+                            "title": "Signatory name"
                         },
                         "signatureDate": {
                             "type": "string",
                             "format": "date",
-                            "title": "Signature Date"
+                            "title": "Signature date"
                         },
                         "signatureCity": {
                             "type": "string",
-                            "title": "Signature City"
+                            "title": "Signature city"
                         },
                         "signatureState": {
                             "type": "string",
-                            "title": "Signature State",
+                            "title": "Signature state",
                             "$ref": "#/definitions/signatureInfo_signatureStateEnum"
                         },
                         "signatoryDesignation": {
                             "type": "string",
-                            "title": "Signatory Designation",
+                            "title": "Signatory designation",
                             "$ref": "#/definitions/signatureInfo_signatoryDesignationEnum"
                         }
                     },
@@ -2066,9 +2066,6 @@
                 },
                 "saleDetails": {},
                 "productDetails": {
-                    "ui:options": {
-                        "classNames": "divider"
-                    },
                     "items": {
                         "ui:options": {
                             "title": "Product detail",
@@ -2087,29 +2084,6 @@
                         "issueDate": {}
                     }
                 }
-            },
-            "financialAcknowledgement": {
-                "ui:options": {
-                    "classNames": "divider"
-                },
-                "evaluatedInformation": {},
-                "informedOfFeatures": {},
-                "communicatedBasis": {},
-                "disclosureRetention": {}
-            },
-            "disclosureAcknowledgement": {
-                "ui:options": {
-                    "classNames": "divider"
-                },
-                "scopeAndTerms": {},
-                "typesOfProducts": {},
-                "authorizedInsurers": {},
-                "compensationDescription": {},
-                "rightToRequestInfo": {},
-                "compensationEstimate": {},
-                "conflictsOfInterest": {},
-                "productAdvantages": {},
-                "productCons": {}
             }
         },
         "additionalInfo": {
@@ -2120,11 +2094,7 @@
             "assistedLivingFacilityInd": {},
             "extraFundAvailable": {},
             "existingPoliciesSoldByAgent": {},
-            "consideredOtherInsuranceNeeds": {
-                "ui:options": {
-                    "label": false
-                }
-            },
+            "consideredOtherInsuranceNeeds": {},
             "resideInNursingHomeOrAssistedLiving": {},
             "noOfDependents": {},
             "otherDependents": {}

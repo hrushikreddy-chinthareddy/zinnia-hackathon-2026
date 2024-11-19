@@ -18,11 +18,7 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
           }))
         : [];
 
-    return (
-        <>
-            <Radio id={id} options={newOptions} isDisabled={disabled} defaultValue={value} onValueChange={onChange} />
-        </>
-    );
+    return <Radio id={id} options={newOptions} isDisabled={disabled} defaultValue={value} onValueChange={onChange} />;
 }
 
 export default RadioWidget;

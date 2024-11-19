@@ -85,7 +85,7 @@ export const TaskWorkflowContent = ({ steps, policy, caseId, documentNumber = ''
                 </div>
             </div>
             <ProgressBarSteps
-                classNames={`pb-2 grid-cols-${steps.length}`}
+                classNames={`pb-2 grid-cols-${filteredSteps.length}`}
                 currentStepIndex={currentStepIndex}
                 onClick={handleProgressBarClick}
                 steps={filteredSteps}
