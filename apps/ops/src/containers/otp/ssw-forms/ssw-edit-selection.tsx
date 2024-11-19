@@ -34,7 +34,7 @@ export const sswUpdateOptions = (t: TFunction) => [
 const SswEditSelection = () => {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseSSW.request' });
     const router = useRouter();
-    const { initialForm } = useContext(FormDataContext);
+    const { initialForm, isFormStateReadOnly } = useContext(FormDataContext);
     const [sswRequest, setSswRequest] = useState(SswUpdateOption.NEW);
     const [loading, setLoading] = useState(false);
 
@@ -73,7 +73,6 @@ const SswEditSelection = () => {
     return (
         <div>
             <SelectSimple
-                disabled={false}
                 className="max-w-lg my-3"
                 label={t('sswRequest') as string}
                 options={sswUpdateOptions(t)}
@@ -84,6 +83,7 @@ const SswEditSelection = () => {
                 size={FieldSize.Small}
                 value={sswRequest}
                 name="sswRequest"
+                disabled={isFormStateReadOnly}
             />
         </div>
     );
