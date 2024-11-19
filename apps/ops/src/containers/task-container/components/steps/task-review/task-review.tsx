@@ -22,9 +22,9 @@ interface TaskReviewProps {
 
 export const TaskReview = ({ caseId, clientCode, activeDocType, documentNumber, taskType }: TaskReviewProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.taskReview` });
-    const { setIsReadyForDataEntry } = useContext(TaskDataContext);
+    const { setIsReadyForDataEntry, isReadyForDataEntry } = useContext(TaskDataContext);
 
-    const [sectionOption, setSectionOption] = useState('true');
+    const [sectionOption, setSectionOption] = useState(isReadyForDataEntry ? 'true' : 'false');
     const [loading, getCaseDocs, workingDocument] = useGetCaseDocs(caseId, documentNumber);
     const sectionOptions = [
         {
