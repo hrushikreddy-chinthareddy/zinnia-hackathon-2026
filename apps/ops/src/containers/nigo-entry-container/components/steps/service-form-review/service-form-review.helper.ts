@@ -19,8 +19,8 @@ export const useGetPolicyTypeDocs = (id: string, clientCode: string, docType: st
             const items = (response?.data as PolicyDocuments)?.items || [];
 
             if (items) {
-                const workingDoc = items.find(item => item.documentNumber === documentNumber && item.documentType === docType);
-                const relatedDoc = items.filter(item => item.documentNumber !== documentNumber && item.documentType === docType);
+                const workingDoc = items.find(item => item.documentNumber === documentNumber && item.documentType.toLowerCase() === docType.toLowerCase());
+                const relatedDoc = items.filter(item => item.documentNumber !== documentNumber && item.documentType.toLowerCase() === docType.toLowerCase());
                 setWorkingDocument(workingDoc);
                 setRelatedDocument(relatedDoc);
             }
