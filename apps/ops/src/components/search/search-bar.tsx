@@ -8,7 +8,6 @@ import { TranslationFiles } from '@deps/config/translations';
 import { PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
 import { LabelValue } from '@deps/types/data';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
-import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
 import styles from './search-bar.module.css';
 import SearchFieldToggle from './search-field-toggle/search-field-toggle';
@@ -20,7 +19,7 @@ interface SearchBarProps extends Omit<HTMLAttributes<HTMLInputElement>, 'onToggl
     searchValue: SearchViewQuery;
     onSearch: (value: SearchViewQuery) => void;
     initialToggleValue: PolicySearchKeys;
-    toggleLabels: (t: TFunction, featureFlagDecisions?: FeatureFlags) => LabelValue<PolicySearchKeys>[];
+    toggleLabels: (t: TFunction) => LabelValue<PolicySearchKeys>[];
     onToggle?: (value: PolicySearchKeys) => void;
     onClear?: (searchField: PolicySearchKeys | undefined) => void;
     formClasses?: string;

@@ -154,7 +154,7 @@ describe('Select Component', () => {
         });
     });
 
-    describe.skip('Multiselect version', () => {
+    describe('Multiselect version', () => {
         it('renders a Select component with a label when provided', async () => {
             render(
                 <SelectComponent
@@ -273,7 +273,7 @@ describe('Select Component', () => {
             userEvent.click(option3);
 
             await waitFor(() => {
-                expect(onChange).toHaveBeenCalledWith('option3', 'Option 3');
+                expect(onChange).toHaveBeenCalledWith('option3', 'Option 3', true);
                 expect(onChange).toHaveBeenCalledTimes(1);
             });
         });

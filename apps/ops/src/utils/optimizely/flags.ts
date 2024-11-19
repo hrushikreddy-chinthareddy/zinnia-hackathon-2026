@@ -63,7 +63,6 @@ export enum FEATURE_FLAGS {
     CASE_STATS_DASHBOARD = 'case-management-case_stats_dashboard',
     CASE_INSIGHTS = 'case_insights',
     POLICY_FREE_LOOK_CANCELLATION = 'policy-management_feature_free-look-cancellation',
-    CASE_MANAGEMENT_SEARCH_FIELDS = 'case-management-feature_search_fields',
     Suitability_SBGC = 'task-queue_feature_sbgc_suitability',
     SuitabilityReview_SBGC = 'task-queue_feature_sbgc_suitability_review',
     Suitability_WELB = 'task-queue_feature_welb_suitability',
