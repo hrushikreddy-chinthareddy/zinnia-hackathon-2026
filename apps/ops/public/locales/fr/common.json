@@ -4518,6 +4518,7 @@
             "title": "Données d’adéquation des entrées",
             "subTitle": "Saisissez manuellement toutes les données d'adéquation. Notez que l'annulation à tout moment effacera toutes les données saisies.",
             "submitLabel": "Soumettre",
+            "continueLabel": "Continuer",
             "cancelLabel": "Annuler"
         },
         "confirmStep": {

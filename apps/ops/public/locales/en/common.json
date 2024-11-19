@@ -4551,6 +4551,7 @@
             "title": "Input Suitability Data",
             "subTitle": "Manually enter all suitability data. Note that canceling at any point will erase all the entered data.",
             "submitLabel": "Submit",
+            "continueLabel": "Continue",
             "cancelLabel": "Cancel"
         },
         "confirmStep": {

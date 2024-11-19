@@ -43,14 +43,7 @@
                 "SPIF_DECLINED",
                 "BENEFIT_LOSS"
             ]
-        },
-        "attachment": [
-            {
-                "documentId": "12344",
-                "documentType": "",
-                "uploadedOn": ""
-            }
-        ]
+        }
     },
     "queue": null,
     "assigneePartyId": "adea3f47d69740178fbd688e6e768cd1",
