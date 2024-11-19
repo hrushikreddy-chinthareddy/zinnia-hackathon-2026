@@ -1,6 +1,5 @@
 import { LineOfBusiness, PolicyStatus } from '@zinnia/api-types/types/sor';
-import { Icon, IconType } from '@zinnia/bloom/components';
-import { toSentenceCase } from '@zinnia/utils';
+import { IconType } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
 import { AccountValue } from '@/components/account-value/AccountValue';
@@ -8,6 +7,7 @@ import { CallForAssistance } from '@/components/call-for-assistance/CallForAssis
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
+import AdditionalOverviewLinks from '@/components/policy-overview/AdditionalOverviewLinks';
 import { Coverage } from '@/components/policy-overview/Coverage';
 import { CanceledFreelook } from '@/components/policy-overview/non-active-statuses/CanceledFreelook';
 import { LapsedPolicy } from '@/components/policy-overview/non-active-statuses/LapsedPolicy';
@@ -100,42 +100,11 @@ export default async function Page({
           policyNumber={policyNumber}
           lineOfBusiness={LineOfBusiness.ANNUITY}
         />
-        <ClickableCardContainer>
-          <ClickableCardContainer.LinkContent
-            linkTo={{
-              url: `/coverage/${LineOfBusinessPath.ANNUITIES}/${planCode}/${policyNumber}/profile`,
-              label: 'go to owner profile',
-            }}
-          >
-            <div className="flex-center">
-              <Icon
-                type={IconType.CIRCLE_USER}
-                color="var(--color-base-icon-icon-dark)"
-              />
-              <span className="typography-labels-field-label ml-md">
-                {toSentenceCase('owner profile')}
-              </span>
-            </div>
-          </ClickableCardContainer.LinkContent>
-        </ClickableCardContainer>
-        <ClickableCardContainer>
-          <ClickableCardContainer.LinkContent
-            linkTo={{
-              url: `/coverage/${LineOfBusinessPath.ANNUITIES}/${planCode}/${policyNumber}/documents`,
-              label: 'go to policy documents',
-            }}
-          >
-            <div className="flex-center">
-              <Icon
-                type={IconType.DOCUMENT_TEXT}
-                color="var(--color-base-icon-icon-dark)"
-              />
-              <span className="typography-labels-field-label ml-md">
-                Documents
-              </span>
-            </div>
-          </ClickableCardContainer.LinkContent>
-        </ClickableCardContainer>
+        <AdditionalOverviewLinks
+          planCode={planCode}
+          policyNumber={policyNumber}
+          lineOfBusiness={LineOfBusiness.ANNUITY}
+        />
       </div>
     );
   };
