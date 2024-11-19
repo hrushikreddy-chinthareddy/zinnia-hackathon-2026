@@ -46,6 +46,7 @@ import {
   transformPolicyForSurrender,
   transformPolicyStatusDetails,
   transformPolicyDetails,
+  sortPoliciesByIssuedDate,
 } from '@/services/policy/transformers';
 import { DocumentApiRequestInputs, PolicyDocument } from '@/types/document';
 import {
@@ -93,7 +94,7 @@ import {
  */
 
 const getPolicyReferencesByCarrier = async () => {
-  const searchUrl = `${policyApiBaseUrl}/search?offset=0&limit=10`;
+  const searchUrl = `${policyApiBaseUrl}/search?offset=0&limit=100`;
   const searchFilter: PolicySearchRequest = {};
 
   if (isTestPoliciesEnabled()) {
@@ -323,9 +324,9 @@ export const getMyPoliciesByCarrier = async (
     });
 
     const transformedResults = transformPolicyReferenceData(allPolicyData);
-
+    const sortedResults = sortPoliciesByIssuedDate(transformedResults);
     return {
-      data: transformedResults,
+      data: sortedResults,
       error: null,
     };
   } catch (error) {
@@ -546,6 +547,7 @@ export const getPolicyProfileData = async (
   try {
     const response = await getPolicyByPlanCodeAndId(options);
     const transformedResults = transformPolicyForProfile(response);
+
     return {
       data: transformedResults,
       error: null,

@@ -1,4 +1,4 @@
-import { PartyRole, Policy, PolicyParties, Reason } from '@deps/models/policy/sor-policy';
+import { Frequency, PartyRole, Policy, PolicyParties, Reason, SystematicProgram } from '@deps/models/policy/sor-policy';
 
 const partyRoles: PolicyParties[] = [
     { partyId: '123', partyRole: PartyRole.OWNER },
@@ -9,6 +9,13 @@ const partyRoles: PolicyParties[] = [
     { partyId: 'Party_Trust', partyRole: PartyRole.ASSIGNEE },
     { partyId: 'Party_PI_1', partyRole: PartyRole.INSURED },
 ];
+
+export const mockPremiumSystematicProgram: Partial<SystematicProgram> = {
+    amount: 300,
+    nextProgramDate: '2024-10-14',
+    reason: Reason.PREMIUM,
+    frequency: Frequency.MONTHLY,
+};
 
 export const mockPolicy: Policy = {
     partyRoles: partyRoles,
@@ -728,11 +735,6 @@ export const mockPolicy: Policy = {
             },
         ],
     },
-    systematicPrograms: [{
-        amount: 300,
-        nextProgramDate: '2024-10-14',
-        reason: Reason.PREMIUM,
-        
-    }],
+    systematicPrograms: [mockPremiumSystematicProgram],
     fixedCostPeriod: 20
 };

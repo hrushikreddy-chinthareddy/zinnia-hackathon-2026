@@ -1,7 +1,9 @@
+import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
 import { TFunction } from 'next-i18next';
 
 import { DataDefinition, KeyObjectDef } from '@deps/types/data';
 
+import { percentFormatify } from './numbers.helper';
 import { getObjDeepValue } from './objects.helper';
 
 export const fillColDefs = <T extends object>(obj: T, colDef: DataDefinition<T>[], t?: TFunction, translationPath = 'common.default') => {
@@ -78,4 +80,15 @@ export function filterTruthyProps<T extends object>(obj: T): Partial<T> {
         }
         return acc;
     }, {} as Partial<T>);
+}
+
+// Some rate values are returned as their decimal values (ex. 0.05) and some are
+// returned as their whole number value (ex. 5). This function is meant to
+// account for both cases.
+export function rateFormatted(value?: number | null) {
+    if (value == null) {
+        return DEFAULT_ERROR_STRING;
+    }
+
+    return percentFormatify(value, { isInteger: value > 1 });
 }

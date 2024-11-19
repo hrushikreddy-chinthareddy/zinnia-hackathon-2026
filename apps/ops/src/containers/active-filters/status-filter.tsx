@@ -1,18 +1,22 @@
 import { useTranslation } from 'next-i18next';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import Select from '@deps/components/select/select';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
 import { Statuses } from '@deps/models/case/case';
+import { DropdownClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
 
 export default function StatusFilter({
     caseTotals = {},
-    values = [Statuses.Exception, Statuses.InProgress, Statuses.NotStarted],
     onChange,
+    userId,
+    values = [Statuses.Exception, Statuses.InProgress, Statuses.NotStarted],
 }: {
     caseTotals?: { [key: string]: number };
     values?: Statuses[];
     onChange: (values: Statuses[]) => void;
+    userId: string;
 }) {
     const { t } = useTranslation();
     const statusOptions = useMemo(
@@ -33,12 +37,12 @@ export default function StatusFilter({
                 value: Statuses.Exception,
             },
             {
-                label: `${t('status.completed')}`,
+                label: `${t('status.completed')} (${wholeNumberFormatify(caseTotals[Statuses.Completed] ?? 0)})`,
                 displayText: t('status.completed'),
                 value: Statuses.Completed,
             },
             {
-                label: `${t('status.canceled')}`,
+                label: `${t('status.canceled')} (${wholeNumberFormatify(caseTotals[Statuses.Canceled] ?? 0)})`,
                 displayText: t('status.canceled'),
                 value: Statuses.Canceled,
             },
@@ -87,17 +91,36 @@ export default function StatusFilter({
         });
     };
 
+    const handleOpenChange = useCallback(
+        (isOpen: boolean) => {
+            if (!isOpen) {
+                segmentAnalyticsTrackEvent<DropdownClickedEvent>(SegmentTrackedEventName.DropdownClicked, {
+                    dropdownName: 'Case Status Filter',
+                    selectedItemName:
+                        statusOptions.reduce((acc, option) => {
+                            if (selected[option.value]) {
+                                return `${acc}${acc.length ? ', ' : ''}${option.value}`;
+                            } else return acc;
+                        }, '') ?? 'All',
+                    userId,
+                });
+            }
+        },
+        [selected, statusOptions, userId]
+    );
+
     useEffect(() => {
         onChange(Object.keys(selected).filter(key => selected[key]) as Statuses[]);
     }, [selected]);
 
     return (
-        <div className="max-w-[234px] mb-4">
+        <div className="w-[214px] sm:w-[234px]">
             <Select
                 isMultiselect
                 options={statusOptions}
                 value={selected}
                 onChange={handleSelection}
+                onOpenChange={handleOpenChange}
                 placeholder={t('caseManagementDashboard.selectStatus') as string}
             />
         </div>

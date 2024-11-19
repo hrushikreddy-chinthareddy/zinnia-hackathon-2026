@@ -28,6 +28,7 @@ import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { toTitleCase } from '@deps/helpers/string.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { CaseType } from '@deps/models/case/case';
+import { DocumentData } from '@deps/models/case/document';
 import { docTypes } from '@deps/models/case/helpers';
 import { UserPermission } from '@deps/models/user-profile';
 import createCaseFromDocumentNumber from '@deps/operations/cases/caseOperations';
@@ -75,7 +76,6 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
 
     useSegmentPageTracker(user, SegmentPageName.CreateCaseLanding);
 
-    // TODO MG: call `useSegmentPageTracker()` when tab is changed?
     const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
 
     const handleRouteChange = () => {
@@ -94,7 +94,7 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
     const [clientIds, setClientIds] = useState([] as string[]);
     const [documentNumber, setDocumentNumber] = useState<string>('');
     const [policyNumber, setPolicyNumber] = useState<string>('');
-    const [caseId, setCaseId] = useState('');
+    const [document, setDocument] = useState<DocumentData | null>(null);
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState<string | undefined>(undefined);
     const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
@@ -205,30 +205,33 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
             return;
         }
         const document = documentResult.value;
-        const caseResult = await createCaseFromDocumentNumber(
-            document.documentNumber,
-            document.caseId,
-            document.contract,
-            caseType,
-            clientId
-        );
+        setPolicyNumber(document.contract);
+        setDocument(document);
 
-        if (!caseResult.success) {
-            console.error('createDocument:: No case id from createCase', {
-                documentNumber: document.documentNumber,
-                caseType,
-                clientId,
-            });
-            setErrorMessage(t('caseRenewal.caseCreate.createError', { documentNumber: document.documentNumber }) as string);
-            setShowLoader(false);
-            return;
-        }
-        const caseData = caseResult.value;
         if ((shouldShowNewExperience && caseType !== CaseType.Renewal) || caseType === CaseType.Reg60) {
             setShowLoader(false);
-            setCaseId(caseData.id);
-            setPolicyNumber(caseData.policyNumber);
+            setPolicyNumber(document.contract);
         } else {
+            setPolicyNumber('');
+            const caseResult = await createCaseFromDocumentNumber(
+                document.documentNumber,
+                document.caseId,
+                document.contract,
+                caseType,
+                clientId
+            );
+
+            if (!caseResult.success) {
+                console.error('createDocument:: No case id from createCase', {
+                    documentNumber: document.documentNumber,
+                    caseType,
+                    clientId,
+                });
+                setErrorMessage(t('caseRenewal.caseCreate.createError', { documentNumber: document.documentNumber }) as string);
+                setShowLoader(false);
+                return;
+            }
+            const caseData = caseResult.value;
             const route = `${caseType.toLowerCase()}/${caseData.id}`;
             router.push(`/create-case/${route}?doc=${document.documentNumber}&clientId=${clientId}`);
         }
@@ -237,11 +240,13 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
     const onCaseTypeChange = (value: CaseType) => {
         setCaseType(value);
         setDocumentNumber('');
+        setPolicyNumber('');
     };
 
     const onClientChange = (value: string) => {
         setClientId(value);
         setDocumentNumber('');
+        setPolicyNumber('');
     };
 
     async function handleSearch(): Promise<void> {
@@ -312,15 +317,16 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
                     setSearchByOption={setSearchByOption}
                 />
                 {shouldShowCaseTaskList(featureFlagDecisions, caseType) || shouldShowNewExperience ? (
-                    caseId ? (
-                        <CaseListContainer
-                            t={t}
-                            policyNumber={policyNumber}
-                            caseType={caseType}
-                            clientId={clientId}
-                            caseId={caseId}
-                        ></CaseListContainer>
-                    ) : null
+                    <CaseListContainer
+                        t={t}
+                        policyNumber={policyNumber}
+                        caseType={caseType}
+                        clientId={clientId}
+                        document={document}
+                        setShowLoader={setShowLoader}
+                        setErrorMessage={setErrorMessage}
+                        setPolicyNumber={setPolicyNumber}
+                    ></CaseListContainer>
                 ) : null}
             </TabContent>
         </>

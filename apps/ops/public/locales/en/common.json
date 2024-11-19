@@ -53,6 +53,7 @@
             "history": "History",
             "documents": "Documents",
             "newPremium": "New Premium",
+            "cancelFreeLook": "Free Look Cancel",
             "updatePremium": "Update Premium Autopay",
             "newWithdrawal": "New Withdrawal",
             "formData": "Form Data",
@@ -693,6 +694,7 @@
         "search": {
             "btnText": "Search",
             "searchKeyType": "Search by",
+            "clear": "Clear search",
             "results": {
                 "policySummaryCard": {
                     "header1": "Owner Information",
@@ -737,13 +739,15 @@
                 "lastName": "Enter a last name to return search results"
             },
             "buttons": {
-                "policyNumber": "Policy Number",
+                "policyNumber": "Policy number",
+                "ownerSsn": "Owner SSN",
                 "ssn": "SSN",
                 "ssnFullLabel": "Owner Social Security number",
                 "ssnPlaceholder": "###-##-####",
                 "name": "Name",
-                "firstName": "Owner First Name",
-                "lastName": "Owner Last Name"
+                "firstName": "First name",
+                "lastName": "Last name",
+                "ownerName": "Owner name"
             }
         },
         "quickSearch": {
@@ -1592,6 +1596,8 @@
             },
             "distributionMethod": {
                 "payeeName": "Payee name",
+                "confirmTerminate": "Are you sure you want to terminate",
+                "type": "Type",
                 "participantId": "Participant id",
                 "accountHolder": "Account holder",
                 "accountNumber": "Account number",
@@ -1653,7 +1659,25 @@
                 "consentAvailable": "Consent Available",
                 "yes": "Yes",
                 "no": "No",
-                "forethought": "Forethought"
+                "forethought": "Forethought",
+                "contributionType": {
+                    "contribution": "Contribution",
+                    "loan": "Loan Repayment",
+                    "disbursement": "Disbursement"
+                },
+                "accountTypeO": {
+                    "savings": "Savings",
+                    "checking": "Checking"
+                },
+                "submitted": "Submitted",
+                "close": "Close",
+                "back": "Back to create task",
+                "terminate": "Terminate",
+                "tryAgain": "Try Again",
+                "bankUpdateTitle": "Bank Details",
+                "cancel": "Cancel",
+                "submit": "Submit",
+                "submitedMessage": "Bank Update Request has been submitted."
             },
             "neaBenefitsSensitivity": "NEA Benefit Sensitivity",
             "distributionInstruction": {
@@ -1846,6 +1870,9 @@
                 "fullWithdrawal": "Surrender/Full withdrawal form",
                 "partialWithdrawal": "Partial withdrawal form"
             },
+            "bankUpdate": {
+                "title": "Bank Details"
+            },
             "cancel": "Cancel",
             "cancelConfirm": "Returning to create case will delete your draft. OK to return to create case?",
             "cancelError": "An error occurred while cancelling this task. Please try again.",
@@ -1863,8 +1890,8 @@
             "openNigoExists": "An onbase case includes a NIGO. Please resolve the open NIGO issue before submitting another request through the Digital Portal."
         },
         "sidebar": {
-            "contractStatusCode":"Policy Status",
-            "abbreviatedcontractStatusCode":"Pol.",
+            "contractStatusCode": "Policy Status",
+            "abbreviatedcontractStatusCode": "Pol.",
             "abbreviatedCaseId": "Case",
             "abbreviatedContractId": "Cont.",
             "abbreviatedDocumentNumber": "Doc.",
@@ -1874,7 +1901,7 @@
             "abbreviatedAnnuitantName": "Ann.",
             "abbreviatedContractValue": "Ctr Val.",
             "qualType": "Qualification type",
-            "contractValue":"Contract Value",
+            "contractValue": "Contract Value",
             "issueDate": "Issue date",
             "contractId": "Contract id",
             "ownerName": "Owner Name",
@@ -1903,11 +1930,18 @@
             "transactionSubType": "Subtype",
             "documentsTitle": "Form(s) to update",
             "view": "View",
-            "noFormsFound": "No forms found"
+            "noFormsFound": "No forms found",
+            "addNewDocument": "Send another document"
         },
         "correspondence": {
             "label": "Where should the document(s)  be sent",
+            "addAdditionalRecipient": "+ Add additional recipient",
+            "emailTooltip": "Please enter a valid email address. Only one email address is allowed in this field.",
+            "additionalRecipientTooltip": "You can add up to 5 email addresses in the CC field. Use a comma(,), semicolon(;), or Enter to separate them",
+            "maxEmails": "Maximum 5 emails allowed",
+            "duplicateEmail": "Email already exist in the list",
             "email": "Email",
+            "ccEmail": "CC Emails",
             "fax": "Fax",
             "mail": "Mail",
             "emailAddress": "Email Address",
@@ -1923,8 +1957,13 @@
             "cta": "Go to case",
             "secondaryCta": "Close",
             "subtitle": {
-                "0": "The document ",
-                "1": "has been sent to"
+                "0": "The documents ",
+                "1": "and cc'd"
+            },
+            "channel": {
+                "paper_mail": "mailed to",
+                "fax": "faxed to",
+                "email": "emailed to"
             },
             "title": "Submitted!"
         },
@@ -1980,6 +2019,13 @@
             "formTitles": {
                 "sbgc": "Annuity Contract Scheduled Systematic Withdrawal",
                 "standard": "{{carrier}} Systematic Withdrawal Request"
+            },
+            "sswUpdateOptions": {
+                "new": "New",
+                "rmdUpdate": "RMD Update",
+                "sswUpdate": "SSW Update",
+                "bankUpdate": "Bank Update",
+                "eftDrawUpdate": "EFT Draw Update"
             }
         }
     },
@@ -3790,6 +3836,37 @@
         },
         "checkingEndingIn": "Checking ending in {{ accountNumber }}"
     },
+    "cancelFreeLook": {
+        "confirm": {
+            "cta": "Go to transaction history",
+            "label": "Confirm",
+            "secondaryCta": "Close",
+            "subtitle": {
+                "0": "A cancellation request was submitted. Once processed, a refund payment for ",
+                "1": " will be sent."
+            },
+            "title": "Submitted!"
+        },
+        "date": {
+            "label": "Date",
+            "title": "Date",
+            "effectiveDate": "$t(withdrawals.amount.effectiveDate)",
+            "effectiveDateTooltip": "$t(withdrawals.amount.effectiveDateTooltip)",
+            "effectiveDateError": "$t(withdrawals.amount.effectiveDateError)"
+        },
+        "start": {
+            "label": "Start",
+            "title": "Cancel Policy"
+        },
+        "summary": {
+            "effectiveDate": "Effective date",
+            "effectiveDateTooltip": "This is the date used to calculate all the available account values for this withdrawal. Because funds in the account value are invested, the account value can change day by day. Processing can happen at any time, so we need to know at what point to effectively withdraw the funds, even if we're processing the transaction some days before or after.",
+            "label": "Summary",
+            "payee": "Payee",
+            "status200subtitle": "Looking good! Be sure to review your entries before submitting.",
+            "submitCancellation": "Submit cancellation"
+        }
+    },
     "withdrawals": {
         "requestedWithdrawal": {
             "label": "Requested withdrawal",
@@ -4151,7 +4228,7 @@
             "FreeLookExpiration": "Free look expiration",
             "FreeLookCancellation": "Free look cancellation",
             "FullSurrender": "Full surrender",
-            "PaymentInitialPremium": "Payment of initial premium",
+            "PaymentInitialPremium": "Payment initial premium",
             "InitialPremium": "Initial premium",
             "InterestCredit": "Interest credit",
             "InterestCreditLoan": "Interest credit on loan",
@@ -4381,7 +4458,8 @@
         "formSelection": {
             "title": "New Form Selection",
             "errors": {
-                "selectForm": "Select a form to continue."
+                "selectForm": "Select a form to continue.",
+                "selectOptions": "Select a transaction type and subtype to continue."
             },
             "label": "Select the appropriate form that needs to be updated."
         },
@@ -4394,5 +4472,62 @@
                 "defaultTitle": "Form Entry"
             }
         }
+    },
+    "sswUpdate": {
+        "sswUpdateOptions": {
+            "new": "New",
+            "rmdUpdate": "RMD Update",
+            "sswUpdate": "SSW Update",
+            "bankUpdate": "Bank Update",
+            "eftDrawUpdate": "EFT Draw Update"
+        },
+        "tabs": {
+            "start": {
+                "tabTitle": "Start",
+                "title": "Update SSW Program",
+                "subTitle": "Make changes to the schedule amount or payment method for this policy's premium autopay. First up, let's make sure we can keep trackof this transaction in OnBase."
+            },
+            "amount": {
+                "tabTitle": "Amount",
+                "programAmount": "Amount",
+                "programFrequency": "Frequency",
+                "programDuration": "Duration",
+                "programNextDate": "Next Date",
+                "frequencyOptions": {
+                    "none": "None",
+                    "monthly": "Monthly",
+                    "quarterly": "Quarterly",
+                    "semiAnnually": "Semi annually",
+                    "annually": "Annually"
+                }
+            },
+            "summary": {
+                "tabTitle": "Summary",
+                "reviewMessage": "Looking good! Be sure to review your entries before submitting",
+                "updatedProgram": "Program Updates",
+                "current": "Current",
+                "amount": "Amount",
+                "frequency": "Frequency",
+                "duration": "Duration",
+                "nextDate": "Next Date"
+            },
+            "confirm": {
+                "tabTitle": "Confirm"
+            }
+        },
+        "formValidation": {
+            "signaturePresentOptionMustBeSelected": "Signature present option must be selected"
+        },
+        "signTabTitle": "Signature",
+        "success": "SSW Request has been submitted.",
+        "back": "Back to create task",
+        "channel": "Channel",
+        "close": "Close",
+        "tryAgain": "Try Again",
+        "submitted": "Submitted",
+        "SSW": "Existing SSW Program",
+        "RMD": "Existing RMD Program",
+        "EFT": "Existing EFT Program",
+        "noProgramFound": "No Existing Program Found"
     }
 }

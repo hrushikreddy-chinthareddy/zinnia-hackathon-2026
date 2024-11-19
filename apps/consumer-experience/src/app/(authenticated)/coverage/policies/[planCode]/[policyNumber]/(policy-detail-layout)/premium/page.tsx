@@ -1,4 +1,3 @@
-import { Icon, IconType } from '@zinnia/bloom/components';
 import { toSentenceCase } from '@zinnia/utils';
 import { Metadata } from 'next';
 
@@ -38,11 +37,6 @@ export default async function PremiumPayments({
             }}
           >
             <div className="flex-center">
-              {/* TODO: update once new version of bloom is released */}
-              <Icon
-                type={IconType.CALENDAR}
-                color="var(--color-base-icon-icon-dark)"
-              />
               <span className="typography-labels-field-label ml-md">
                 {toSentenceCase('Payment history')}
               </span>

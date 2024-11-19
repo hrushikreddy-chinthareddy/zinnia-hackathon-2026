@@ -196,6 +196,7 @@ export interface DisbursementParts {
     selectIfPayeeIsDifferent: boolean;
     isDirectDepositValid: boolean | null;
     bank?: BankDetails;
+    bankType?: string;
     isDirectDeposit?: boolean;
     fboDetails: string;
     consentAvailable: boolean | null;
