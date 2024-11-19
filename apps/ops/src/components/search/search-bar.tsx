@@ -5,7 +5,6 @@ import { TFunction, useTranslation } from 'next-i18next';
 import { ChangeEvent, useCallback, useContext, useEffect, useState } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
 import { LabelValue } from '@deps/types/data';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
@@ -36,12 +35,11 @@ const SearchBar = ({
 }: SearchBarProps) => {
     const { setShowFieldErrorMessage } = useContext(PolicySearchFiltersContext);
     const { t } = useTranslation(TranslationFiles.COMMON);
-    const { featureFlags } = useOptimizely();
     const getToggleLabel = useCallback(
         (targetVal: string) => {
-            return toggleLabels(t, featureFlags).find(a => a.value === targetVal) as LabelValue<PolicySearchKeys>;
+            return toggleLabels(t).find(a => a.value === targetVal) as LabelValue<PolicySearchKeys>;
         },
-        [featureFlags, t, toggleLabels]
+        [t, toggleLabels]
     );
 
     const [values, setValues] = useState<SearchViewQuery>({});
@@ -95,7 +93,7 @@ const SearchBar = ({
         [activeToggleBtn, getToggleLabel, onToggle]
     );
 
-    const dropdownLabels = toggleLabels(t, featureFlags);
+    const dropdownLabels = toggleLabels(t);
 
     return (
         <form className={styles.formContainer} onSubmit={handleFormSubmit}>

@@ -47,7 +47,7 @@ export interface SearchViewQuery {
     caseIds?: string[];
     agentFirstName?: string;
     agentLastName?: string;
-    firmName?: string;
+    brokerFirmName?: string;
     [key: string]: any; // used to loop over the object
 }
 

@@ -6,8 +6,6 @@ import { Case, Metadata, StatCount, Statuses } from '@deps/models/case/case';
 import { IdentifierInstance } from '@deps/models/case/identifier-instance';
 import { LabelValue } from '@deps/types/data';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
-import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
 export const isSearchValueObjectEmpty = (searchValueObject: Partial<Record<PolicySearchKeys, string>> = {}): boolean => {
     return Object.keys(searchValueObject).length === 0;
@@ -46,7 +44,7 @@ export const getSearchValueObject = (
                 ...(agentLastName ? { agentLastName } : {}),
             };
         case 'firmName':
-            return firmName ? { firmName } : {};
+            return firmName ? { brokerFirmName: firmName } : {};
         default:
             return {};
     }
@@ -163,9 +161,7 @@ export const getAdditionalFilters = (additionalFilters: CaseSearchAdditionalFilt
     return result;
 };
 
-export const toggleLabels = (t: TFunction, featureFlagDecisions?: FeatureFlags): LabelValue<PolicySearchKeys>[] => {
-    const showFields = featureFlagDecisions?.[FEATURE_FLAGS.CASE_MANAGEMENT_SEARCH_FIELDS];
-
+export const toggleLabels = (t: TFunction): LabelValue<PolicySearchKeys>[] => {
     const labels: LabelValue<PolicySearchKeys>[] = [
         {
             label: t('dashboard.search.buttons.policyNumber'),
@@ -217,14 +213,12 @@ export const toggleLabels = (t: TFunction, featureFlagDecisions?: FeatureFlags):
                 },
             ],
         },
-    ];
-    if (showFields) {
-        labels.push({
+        {
             label: t('dashboard.search.buttons.firmName'),
             value: 'firmName',
             placeholder: t('dashboard.search.buttons.firmName') ?? '',
-        });
-    }
+        },
+    ];
     return labels;
 };
 
