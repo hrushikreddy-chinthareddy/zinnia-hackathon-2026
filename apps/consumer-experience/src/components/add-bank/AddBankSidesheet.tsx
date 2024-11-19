@@ -6,7 +6,6 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { FC, ReactNode, useEffect, useState } from 'react';
 
 import { addBankRequest } from '@/actions/bpm-actions';
-import { useUser } from '@/hooks/use-user';
 import { ActionTypes, useBpmStore } from '@/store/store';
 import { BankFormFields, FormSteps } from '@/types/bank';
 
@@ -22,12 +21,14 @@ export interface AddBankSidesheet {
   values?: BankFormFields;
   autopayEnabled?: boolean;
   numberOfAccounts?: number;
+  policyOwner: string;
 }
 
 export const AddBankSidesheet: FC<AddBankSidesheet> = ({
   values,
   partyId,
   bankId,
+  policyOwner,
 }) => {
   const updateBpmAction = useBpmStore(state => state.updateBpmAction);
   const params = useParams<{
@@ -35,7 +36,6 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
     policyNumber: string;
   }>();
   const [open, setOpen] = useState(false);
-  const { user } = useUser();
   const [step, setStep] = useState<FormSteps>();
   const [errorTitle, setErrorTitle] = useState('An error occurred');
   const [errorMessage, setErrorMessage] = useState<ReactNode>(
@@ -66,7 +66,7 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
         bankAccount: {
           ...requestValues,
           accountStatus: AccountStatus.ACTIVEBANKACCOUNT,
-          nameOnAccount: user?.name,
+          nameOnAccount: policyOwner,
         },
       },
     });
