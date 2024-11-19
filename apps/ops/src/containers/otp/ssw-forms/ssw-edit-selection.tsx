@@ -75,7 +75,7 @@ const SswEditSelection = () => {
             <SelectSimple
                 disabled={false}
                 className="max-w-lg my-3"
-                label={'SSW Request'}
+                label={t('sswRequest') as string}
                 options={sswUpdateOptions(t)}
                 onChange={(val: string) => {
                     setSswRequest(val as SswUpdateOption);
