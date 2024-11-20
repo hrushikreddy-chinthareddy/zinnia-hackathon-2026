@@ -323,7 +323,10 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
                                             )}
                                         >
                                             {loading ? (
-                                                <PageLoader />
+                                                <>
+                                                    <PageLoader />
+                                                    <Typography variant={TypographyVariant.BodyBold}>Loading...</Typography>
+                                                </>
                                             ) : (
                                                 <>
                                                     <div className="flex flex-row justify-between items-center align-middle self-stretch text-ellipsis overflow-hidden">
@@ -349,13 +352,21 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
                                 })}
                             </div>
                         </RadioGroup.Root>
-                        <ExceptionInsights
-                            timeframe={timeframe}
-                            completedCasesByProcessSubType={exceptionData}
-                            selectedSubprocess={selectedSubprocess}
-                            selectedException={selectedException}
-                            carrierOrBrokerDealer={undefined}
-                        />
+                        {loading ? (
+                            <>
+                                <div className="min-h-[600px] grid gap-4 h-full mb-4 w-full place-content-center bg-[--color-base-surface-surface-tertiary]">
+                                    <PageLoader />
+                                </div>
+                            </>
+                        ) : (
+                            <ExceptionInsights
+                                timeframe={timeframe}
+                                completedCasesByProcessSubType={exceptionData}
+                                selectedSubprocess={selectedSubprocess}
+                                selectedException={selectedException}
+                                carrierOrBrokerDealer={undefined}
+                            />
+                        )}
                     </div>
                 </CardContainer>
             </NoNavLayout>

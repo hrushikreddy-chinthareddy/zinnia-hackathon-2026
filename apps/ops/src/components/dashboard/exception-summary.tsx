@@ -160,7 +160,6 @@ export const ExceptionSummary = ({
             <Typography className="mb-1" variant={TypographyVariant.H2}>
                 {'Exception Summary'}
             </Typography>
-            {startDate}
             <div
                 style={{ height: '600px' }}
                 className={clsx('w-full h-[600px]', {
