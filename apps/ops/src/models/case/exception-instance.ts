@@ -3,6 +3,7 @@ import { AdditionalDataInstance } from './additional-data-instance';
 export enum ExceptionStatuses {
     New = 'NEW',
     Resolved = 'RESOLVED',
+    Overridden = 'OVERRIDDEN'
 }
 
 export type ExceptionInstance = {

@@ -13,7 +13,7 @@ export interface CardInfoProps extends JestProps {
     };
     icon?: ReactNode;
     secondaryCta?: ReactNode;
-    subtitle: ReactNode;
+    subtitle?: ReactNode;
     title: string;
 }
 

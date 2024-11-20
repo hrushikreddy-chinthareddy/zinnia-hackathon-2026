@@ -161,7 +161,7 @@ export default function Field({
     const classes = `${stateClass} ${variantClass} flex flex-row justify-between rounded-lg ${className}`;
 
     return (
-        <div data-testid={FieldTest.Container} className="flex flex-col" onClick={onClick} ref={containerRef}>
+        <div data-testid={FieldTest.Container} className={'flex flex-col'} onClick={onClick} ref={containerRef}>
             <FieldLabel
                 classNames={labelClassNames}
                 label={label}

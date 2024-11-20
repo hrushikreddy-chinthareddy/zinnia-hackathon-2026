@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/react';
+import { toTitleCase } from '@zinnia/utils';
 
 import { SideSheetContext } from '@deps/contexts/SideSheetContext';
-import { mockPolicy } from '@deps/jest/data/mockPolicy';
+import { mockPolicy, mockPremiumSystematicProgram } from '@deps/jest/data/mockPolicy';
 import { Transaction, TransactionStatus, TransactionType } from '@deps/models/policy/sor-policy';
 import {} from '@deps/setupTests';
 
@@ -81,8 +82,8 @@ describe('getEventCardValues', () => {
 
             expect(amount).toBe(86753.09);
             expect(caption).toBe('6/26/2023');
-            expect(eventBody).toBe('historyEventCard.initialPayment | historyEventCard.bankingBody');
-            expect(eventTitle).toBe('historyEventCard.premiumPayment');
+            expect(eventBody).toBe('historyEventCard.bankingBody');
+            expect(eventTitle).toBe('historyEventCard.transactionTypes.PaymentInitialPremium');
             expect(isClickable).toBe(true);
             expect(isPending).toBe(true);
         });
@@ -96,8 +97,8 @@ describe('getEventCardValues', () => {
 
             expect(amount).toBe(86753.09);
             expect(caption).toBe('6/26/2023');
-            expect(eventBody).toBe('historyEventCard.oneTimePayment | historyEventCard.bankingBody');
-            expect(eventTitle).toBe('historyEventCard.premiumPayment');
+            expect(eventBody).toBe('historyEventCard.bankingBody');
+            expect(eventTitle).toBe('historyEventCard.transactionTypes.PaymentOneTimePremium');
             expect(isClickable).toBe(true);
             expect(isPending).toBe(true);
         });
@@ -109,10 +110,10 @@ describe('getEventCardValues', () => {
                 transactionType: TransactionType.SubsequentPayment,
             });
 
-            expect(amount).toBe(86753.09);
+            expect(amount).toBe(mockPremiumSystematicProgram.amount);
             expect(caption).toBe('6/26/2023');
-            expect(eventBody).toBe('historyEventCard.bankingBody');
-            expect(eventTitle).toBe('historyEventCard.premiumAutopay');
+            expect(eventBody).toBe(`${toTitleCase(mockPremiumSystematicProgram.frequency)} | historyEventCard.bankingBody`);
+            expect(eventTitle).toBe('historyEventCard.transactionTypes.SubsequentPayment');
             expect(isClickable).toBe(true);
             expect(isPending).toBe(true);
         });
@@ -126,8 +127,8 @@ describe('getEventCardValues', () => {
 
             expect(amount).toBe(100000.0);
             expect(caption).toBe('6/26/2023');
-            expect(eventBody).toBe('historyEventCard.initialPayment | historyEventCard.bankingBody');
-            expect(eventTitle).toBe('historyEventCard.premiumPayment');
+            expect(eventBody).toBe('historyEventCard.bankingBody');
+            expect(eventTitle).toBe('historyEventCard.transactionTypes.InitialPremium');
             expect(isClickable).toBe(true);
             expect(isPending).toBe(false);
         });
@@ -141,8 +142,8 @@ describe('getEventCardValues', () => {
 
             expect(amount).toBe(100000.0);
             expect(caption).toBe('6/26/2023');
-            expect(eventBody).toBe('historyEventCard.oneTimePayment | historyEventCard.bankingBody');
-            expect(eventTitle).toBe('historyEventCard.premiumPayment');
+            expect(eventBody).toBe('historyEventCard.bankingBody');
+            expect(eventTitle).toBe('historyEventCard.transactionTypes.OneTimePremium');
             expect(isClickable).toBe(true);
             expect(isPending).toBe(false);
         });
@@ -154,10 +155,10 @@ describe('getEventCardValues', () => {
                 transactionType: TransactionType.SubsequentPremium,
             });
 
-            expect(amount).toBe(100000.0);
+            expect(amount).toBe(mockPremiumSystematicProgram.amount);
             expect(caption).toBe('6/26/2023');
-            expect(eventBody).toBe('historyEventCard.bankingBody');
-            expect(eventTitle).toBe('historyEventCard.premiumAutopay');
+            expect(eventBody).toBe(`${toTitleCase(mockPremiumSystematicProgram.frequency)} | historyEventCard.bankingBody`);
+            expect(eventTitle).toBe('historyEventCard.transactionTypes.SubsequentPremium');
             expect(isClickable).toBe(true);
             expect(isPending).toBe(false);
         });
@@ -172,7 +173,7 @@ describe('getEventCardValues', () => {
             expect(amount).toBeUndefined();
             expect(caption).toBe('6/26/2023');
             expect(eventBody).toBeUndefined();
-            expect(eventTitle).toBe('historyEventCard.policyAnniversary');
+            expect(eventTitle).toBe('historyEventCard.transactionTypes.Anniversary');
             expect(isClickable).toBe(false);
             expect(isPending).toBe(false);
         });
@@ -187,7 +188,7 @@ describe('getEventCardValues', () => {
             expect(amount).toBeUndefined();
             expect(caption).toBe('6/26/2023');
             expect(eventBody).toBeUndefined();
-            expect(eventTitle).toBe('historyEventCard.policyActivation');
+            expect(eventTitle).toBe('historyEventCard.transactionTypes.Activation');
             expect(isClickable).toBe(false);
             expect(isPending).toBe(true);
         });

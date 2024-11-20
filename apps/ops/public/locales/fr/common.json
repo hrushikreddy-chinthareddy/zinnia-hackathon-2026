@@ -53,6 +53,7 @@
             "history": "Histoire",
             "documents": "Documents",
             "newPremium": "Nouveau Prime",
+            "cancelFreeLook": "Annuler Free Look",
             "updatePremium": "Gérer Paiement Automatique",
             "newWithdrawal": "Nouveau Retrait",
             "formData": "Données du formulaire",
@@ -195,13 +196,12 @@
             "diaryNotes": {
                 "text": "Notes de journal"
             },
-
             "diaryNotesWarning": {
                 "text": "Attention: Notes d'agenda présentes. Examen requis pour soumettre",
                 "clickToView": "Clique pour voir"
             },
             "viewDetails": {
-                "text":"voir les détails"
+                "text": "voir les détails"
             },
             "history": {
                 "text": "Histoire",
@@ -501,7 +501,6 @@
                 "addressDetails": "Veuillez vous assurer que les détails de l'adresse sont correctement renseignés lors de l'ajout/mise à jour du bénéficiaire"
             }
         },
-
         "signature": {
             "header": "Validation de la signature",
             "isIrrevocableBene": "Y a-t-il un bénéficiaire irrévocable ?",
@@ -716,6 +715,7 @@
         "search": {
             "btnText": "Rechercher",
             "searchKeyType": "Type de recherche",
+            "clear": "Recherche claire",
             "results": {
                 "policySummaryCard": {
                     "header1": "Information du propriétaire",
@@ -762,11 +762,13 @@
             "buttons": {
                 "policyNumber": "Numéro de police",
                 "ssn": "SSN",
+                "ownerSsn": "SSN du propriétaire",
                 "ssnFullLabel": "Numéro de sécurité sociale du propriétaire",
                 "ssnPlaceholder": "###-##-####",
                 "name": "Nom",
-                "firstName": "Prénom du propriétaire",
-                "lastName": "Nom de famille du propriétaire"
+                "firstName": "Prénom",
+                "lastName": "Nom de famille",
+                "ownerName": "Nom du propriétaire"
             }
         },
         "quickSearch": {
@@ -1581,6 +1583,8 @@
             },
             "distributionMethod": {
                 "payeeName": "Le nom du bénéficiaire",
+                "confirmTerminate": "Êtes-vous sûr de vouloir terminer",
+                "type": "Type",
                 "participantId": "Identifiant du participant",
                 "accountHolder": "Titulaire du compte",
                 "reEnterAccountNumber": "Réécrivez votre numéro de compte",
@@ -1639,7 +1643,25 @@
                 "isDirectDepositFormValid": "Le formulaire de dépôt direct est-il valide?",
                 "yes": "Oui",
                 "no": "Non",
-                "forethought": "Forethought"
+                "forethought": "Forethought",
+                "contributionType": {
+                    "contribution": "Contribution",
+                    "loan": "Remboursement de prêt",
+                    "disbursement": "Décaissement"
+                },
+                "accountTypeO": {
+                    "savings": "Épargne",
+                    "checking": "Compte courant"
+                },
+                "submitted": "Soumis",
+                "close": "Fermer",
+                "back": "Retour à la création de tâche",
+                "terminate": "Terminer",
+                "tryAgain": "Réessayer",
+                "bankUpdateTitle": "Détails bancaires",
+                "cancel": "Annuler",
+                "submit": "Soumettre",
+                "submitedMessage": "La demande de mise à jour bancaire a été soumise."
             },
             "neaBenefitsSensitivity": "Sensibilité aux avantages NEA",
             "distributionInstruction": {
@@ -1828,6 +1850,9 @@
                 "fullWithdrawal": "Formulaire de rachat total",
                 "partialWithdrawal": "Formulaire de rachat partiel"
             },
+            "bankUpdate": {
+                "title": "Détails bancaires"
+            },
             "cancel": "Annuler",
             "cancelConfirm": "Revenir à la création du dossier effacera votre brouillon. Êtes-vous sûr de vouloir revenir à la création du dossier ?",
             "cancelError": "Une erreur s'est produite lors de l'annulation de cette tâche. Veuillez réessayer.",
@@ -1846,8 +1871,8 @@
             "openNigoExists": "Un cas de base comprend un NIGO. Veuillez résoudre le problème ouvert NIGO avant de soumettre une autre demande via le portail numérique."
         },
         "sidebar": {
-            "contractStatusCode":"Statut de la politique",
-             "abbreviatedcontractStatusCode":"Pol.",
+            "contractStatusCode": "Statut de la politique",
+            "abbreviatedcontractStatusCode": "Pol.",
             "abbreviatedCaseId": "Cais.",
             "abbreviatedContractId": "Ctr.",
             "abbreviatedContractValue": "Ctr Val.",
@@ -1859,7 +1884,7 @@
             "qualType": "type de qualification",
             "issueDate": "Date d'émission",
             "contractId": "ID du contrat",
-            "contractValue":"valeur du contrat",
+            "contractValue": "valeur du contrat",
             "ownerName": "Le nom du propriétaire",
             "annuitantName": "Nom du rentier",
             "copyToClipboard": "Copier {{item}} dans le presse-papiers",
@@ -1886,10 +1911,18 @@
             "transactionSubType": "Sous-type",
             "documentsTitle": "Formulaire(s) à mettre à jour",
             "view": "Afficher",
-            "noFormsFound": "Aucun formulaire trouvé"
+            "noFormsFound": "Aucun formulaire trouvé",
+            "addNewDocument": "Envoyer un autre document"
         },
         "correspondence": {
+            "label": "Où le(s) document(s) doivent-ils être envoyés ? ",
+            "addAdditionalRecipient": "+ Ajouter un destinataire",
+            "emailTooltip": "Veuillez entrer une adresse e-mail valide. Un seul e-mail est autorisé dans ce champ.",
+            "additionalRecipientTooltip": "Vous pouvez ajouter jusqu'a 5 adresses e-mail dans le champ CC. Utilisez une virgule (,), point-virgule (;) ou Enter pour les séparer",
+            "maxEmails": "Maximum 5 e-mails autorisés",
+            "duplicateEmail": "L'e-mail existe déjà dans la liste",
             "email": "E-mail",
+            "ccEmail": "Destinataires en copie carbone",
             "fax": "Fax",
             "mail": "Mail préféré",
             "emailAddress": "Adresse e-mail",
@@ -1905,8 +1938,8 @@
             "cta": "Accéder au cas",
             "secondaryCta": "Fermer",
             "subtitle": {
-                "0": "Le document ",
-                "1": "a été envoyé à "
+                "0": "Les documents ",
+                "1": "et en copie"
             },
             "title": "Soumise!"
         },
@@ -1962,6 +1995,13 @@
             "formTitles": {
                 "sbgc": "Annuity Contract Scheduled Systematic Withdrawal",
                 "standard": "{{carrier}} Systematic Withdrawal Request"
+            },
+            "sswUpdateOptions": {
+                "new": "Nouveau",
+                "rmdUpdate": "Mise à jour RMD",
+                "sswUpdate": "Mise à jour SSW",
+                "bankUpdate": "Mise à jour bancaire",
+                "eftDrawUpdate": "Mise à jour de prélèvement EFT"
             }
         }
     },
@@ -3269,7 +3309,6 @@
                 "trustee": "Fiduciaire",
                 "yes": "Oui",
                 "no": "Non",
-
                 "options": {
                     "driversLicense": "Le permis de conduire",
                     "entityType": "Type d'entité",
@@ -3547,6 +3586,37 @@
         },
         "checkingEndingIn": "Compte-chèques se terminant par {{ accountNumber }}"
     },
+    "cancelFreeLook": {
+        "confirm": {
+            "cta": "Accéder à l'historique des transactions",
+            "label": "Confirmer",
+            "secondaryCta": "Fermer",
+            "subtitle": {
+                "0": "Une demande d'annulation a été soumise. Une fois traitée, un remboursement pour ",
+                "1": " sera envoyé."
+            },
+            "title": "Soumis !"
+        },
+        "date": {
+            "label": "Date",
+            "title": "Date",
+            "effectiveDate": "$t(withdrawals.amount.effectiveDate)",
+            "effectiveDateTooltip": "$t(withdrawals.amount.effectiveDateTooltip)",
+            "effectiveDateError": "$t(withdrawals.amount.effectiveDateError)"
+        },
+        "start": {
+            "label": "Démarrer",
+            "title": "Annuler la police"
+        },
+        "summary": {
+            "effectiveDate": "Date d'effet",
+            "effectiveDateTooltip": "Ceci est la date utilisée pour calculer toutes les valeurs de compte disponibles pour ce retrait. Comme les fonds dans la valeur du compte sont investis, cette valeur peut changer de jour en jour. Le traitement peut se produire à tout moment, il est donc nécessaire de savoir à quel moment retirer effectivement les fonds, même si nous traitons la transaction quelques jours avant ou après.",
+            "label": "Résumé",
+            "payee": "Bénéficiaire",
+            "status200subtitle": "Parfait ! Veuillez vérifier vos entrées avant de soumettre.",
+            "submitCancellation": "Soumettre l'annulation"
+        }
+    },
     "withdrawals": {
         "requestedWithdrawal": {
             "label": "Retrait demandé",
@@ -3691,7 +3761,6 @@
             "coverageLimit": "Limite de préservation de couverture",
             "coverageLimitTooltip": "Les propriétaires peuvent retirer ce montant sans affecter leur couverture. En d'autres termes, ils peuvent retirer ce montant et conserver intact leur capital-décès."
         },
-
         "upcoming": {
             "manageAutopay": "$t(premium.upcoming.manageAutopay)",
             "oneTimePaymentText": "$t(premium.upcoming.oneTimePaymentText)",
@@ -4354,7 +4423,8 @@
         "formSelection": {
             "title": "Sélection de nouveau formulaire",
             "errors": {
-                "selectForm": "Sélectionnez un formulaire pour continuer."
+                "selectForm": "Sélectionnez un formulaire pour continuer.",
+                "selectOptions": "Sélectionnez un type et un sous-type de transaction pour continuer."
             },
             "label": "Sélectionnez le formulaire approprié qui doit être mis à jour."
         },
@@ -4364,6 +4434,117 @@
                 "oft": "{{carrier}} Outgoing Funds Transfer Request",
                 "defaultTitle": "Form Entry"
             }
+        }
+    },
+    "sswUpdate": {
+        "sswUpdateOptions": {
+            "new": "Nouveau",
+            "rmdUpdate": "Mise à jour RMD",
+            "sswUpdate": "Mise à jour SSW",
+            "bankUpdate": "Mise à jour bancaire",
+            "eftDrawUpdate": "Mise à jour de prélèvement EFT"
+        },
+        "tabs": {
+            "start": {
+                "tabTitle": "Démarrer",
+                "title": "Mettre à jour le programme SSW",
+                "subTitle": "Apportez des modifications au montant ou à la méthode de paiement pour l'autopaiement de la prime de cette police. Tout d'abord, assurons-nous de pouvoir suivre cette transaction dans OnBase."
+            },
+            "amount": {
+                "tabTitle": "Montant",
+                "programAmount": "Montant",
+                "programFrequency": "Fréquence",
+                "programDuration": "Durée",
+                "programNextDate": "Prochaine date",
+                "frequencyOptions": {
+                    "none": "Aucune",
+                    "monthly": "Mensuel",
+                    "quarterly": "Trimestriel",
+                    "semiAnnually": "Semestriel",
+                    "annually": "Annuel"
+                }
+            },
+            "summary": {
+                "tabTitle": "Résumé",
+                "reviewMessage": "Tout semble bon ! Assurez-vous de vérifier vos entrées avant de soumettre",
+                "updatedProgram": "Mises à jour du programme",
+                "current": "Actuel",
+                "amount": "Montant",
+                "frequency": "Fréquence",
+                "duration": "Durée",
+                "nextDate": "Prochaine date"
+            },
+            "confirm": {
+                "tabTitle": "Confirmer"
+            }
+        },
+        "formValidation": {
+            "signaturePresentOptionMustBeSelected": "L'option de signature présente doit être sélectionnée"
+        },
+        "signTabTitle": "Signature",
+        "success": "La demande SSW a été soumise.",
+        "back": "Retour à la création de tâche",
+        "channel": "Canal",
+        "close": "Fermer",
+        "tryAgain": "Réessayer",
+        "submitted": "Soumis",
+        "SSW": "Programme SSW existant",
+        "RMD": "Programme RMD existant",
+        "EFT": "Programme EFT existant",
+        "noProgramFound": "Aucun programme existant trouvé"
+    },
+    "suitability": {
+        "tabs": {
+            "taskReview": "Données d’adéquation des entrées",
+            "confirm": "Confirmer",
+            "start": "Commencer",
+            "suitabilityForm": "Formulaire d'aptitude",
+            "summary": "Résumé"
+        },
+        "taskReview": {
+            "title": "Données d’adéquation des entrées",
+            "subTitle": "Le formulaire d'adéquation est-il complet?",
+            "options": {
+                "allSectionsAreComplete": "Toutes les sections sont complètes et prêtes pour la saisie des données.",
+                "missingDetails": "Toutes les sections ne sont pas complètes."
+            },
+            "view": "Voir",
+            "documentId": "ID du document",
+            "submitLabel": "Soumettre",
+            "continueLabel": "Continuer",
+            "cancelLabel": "Annuler"
+        },
+        "taskForm": {
+            "title": "Données d’adéquation des entrées",
+            "subTitle": "Saisissez manuellement toutes les données d'adéquation. Notez que l'annulation à tout moment effacera toutes les données saisies.",
+            "submitLabel": "Soumettre",
+            "cancelLabel": "Annuler"
+        },
+        "confirmStep": {
+            "title": "Soumise!",
+            "subTitle": "Les données d'adéquation des entrées ont été soumises.",
+            "cta": "Aller au virement entrant",
+            "secondaryCta": "Fermer",
+            "submitTask": "Soumettre les détails de l'adéquation"
+        }
+    },
+    "suitabilityReview": {
+        "tabs": {
+            "taskReview": "Évaluation de la pertinence",
+            "confirm": "Confirmer"
+        },
+        "taskForm": {
+            "title": "Évaluation de la pertinence",
+            "subTitle": "La candidature de ce client a été marquée pour examen. Acceptez ou refusez chaque problème avant de soumettre une décision finale.",
+            "submitLabel": "Soumettre la décision",
+            "cancelLabel": "Annuler"
+        },
+        "confirmStep": {
+            "title": "Soumise!",
+            "subTitle": "La pertinence de l'avis a été soumise.",
+            "cta": "Aller au virement entrant",
+            "secondaryCta": "Fermer",
+            "submitTask": "Soumettre les détails de l'adéquation"
         }
     }
 }

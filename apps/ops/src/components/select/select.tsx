@@ -50,7 +50,7 @@ const MultiselectOptionItem = ({ options, value, onChange }: MultiselectProps) =
                 <DropdownMenu.CheckboxItem
                     key={`option-${option.value}`}
                     checked={!!value[option.value]}
-                    onCheckedChange={() => onChange(option.value, option.displayText ?? '')}
+                    onCheckedChange={isChecked => onChange(option.value, option.displayText ?? '', isChecked)}
                     onSelect={e => e.preventDefault()}
                     className={getItemClasses(option, index, options.length, false)}
                 >

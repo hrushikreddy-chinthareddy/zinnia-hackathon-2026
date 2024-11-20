@@ -46,7 +46,6 @@ export const getReturnedWithheldTaxesDisplay = (
         return numberFormatify(emptyFormat);
     }
 
-    // TODO MG:double check to see if this format should be reflected in BOTH Summary and withdrawal sidesheets
     // @ts-expect-error API is returning withholdAmount instead of withheldAmount
     return negativeNumberFormatify(withheldAmount?.withholdAmount);
 };

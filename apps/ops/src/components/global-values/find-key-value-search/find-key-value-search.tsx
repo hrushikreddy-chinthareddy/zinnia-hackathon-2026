@@ -5,8 +5,6 @@ import { FieldSize } from '@deps/components/fields/field';
 import SelectSearch from '@deps/components/select-search/select-search';
 import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
-import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
-import { SegmentTrackedEventName } from '@deps/types/segment-analytics';
 
 interface FindKeyValueSearchProps {
     isNavDrawerOpen?: boolean;
@@ -35,7 +33,6 @@ export const FindKeyValueSearch = ({ isNavDrawerOpen, keyValues, planCode, polic
                 values={keyValues}
                 errorMessageLink={`/policies/${planCode}/${policyNumber}/policy/policy-details`}
                 group={true}
-                segmentTrackName={SegmentTrackedEventName.PolicyKeyValuesItemClick}
                 userPartyId={perms.getUserPartyId()}
             />
         </div>

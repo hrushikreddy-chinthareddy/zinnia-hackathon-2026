@@ -7,8 +7,9 @@ import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { TransactionType } from '@deps/models/policy/sor-policy';
 
 import SideSheetReversedTransactionContent from './side-sheet-reversed-transaction-content';
-import { getReverseRecreateTransactionSideSheetValues } from '../side-sheet-transaction.helper';
-import { ReverseTransactionSidesheetValues, SideSheetTransactionProps } from '../types';
+import { SideSheetTransactionProps } from '../types';
+import { getReverseRecreateTransactionSideSheetValues } from './side-sheet-reverse-recreate.helper';
+import { ReverseTransactionSidesheetValues } from './types';
 
 export const SideSheetReversedTransaction = ({ policy, transaction }: SideSheetTransactionProps) => {
     const { t } = useTranslation(undefined);
@@ -28,7 +29,7 @@ export const SideSheetReversedTransaction = ({ policy, transaction }: SideSheetT
 
             const asyncValues = getAsyncSideSheetValues ? await getAsyncSideSheetValues() : {};
             setAsyncValues(asyncValues);
-            setSidesheetValues(vals => {
+            setSidesheetValues((vals: ReverseTransactionSidesheetValues) => {
                 return { ...vals, ...asyncValues };
             });
             setLoading(false);
@@ -55,16 +56,18 @@ export const SideSheetReversedTransaction = ({ policy, transaction }: SideSheetT
                             text={t('status.reversedOn', { date: sidesheetValues?.reversalDate }) as string}
                         ></Tag>
                     )}
-                    {transactionType !== TransactionType.FullSurrender && transactionType !== TransactionType.PartialWithdrawalOneTime && (
-                        <div>
-                            <Content details={numberFormatify(sidesheetValues?.transactionValue)} variant={ContentVariant.Value} />
-                            <Content
-                                className="text-gray-600"
-                                details={t('policy.history.sidesheet.effective', { date: sidesheetValues?.effectiveDate }) as string}
-                                variant={ContentVariant.Caption}
-                            />
-                        </div>
-                    )}
+                    {transactionType !== TransactionType.FullSurrender &&
+                        transactionType !== TransactionType.PartialWithdrawalOneTime &&
+                        transactionType !== TransactionType.FreeLookCancellation && (
+                            <div>
+                                <Content details={numberFormatify(sidesheetValues?.transactionValue)} variant={ContentVariant.Value} />
+                                <Content
+                                    className="text-gray-600"
+                                    details={t('policy.history.sidesheet.effective', { date: sidesheetValues?.effectiveDate }) as string}
+                                    variant={ContentVariant.Caption}
+                                />
+                            </div>
+                        )}
                 </div>
             </div>
             {SidesheetContent}

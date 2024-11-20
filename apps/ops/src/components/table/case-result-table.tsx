@@ -30,7 +30,7 @@ import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
 import { Case } from '@deps/models/case/case';
 import { CaseDetailsTabValues, DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { SearchViewQuery } from '@deps/types/search';
-import { SegmentTrackedEventName } from '@deps/types/segment-analytics';
+import { CaseClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
 import { getCarrierLogoByClientId, getCarrierNameByClientId } from '@deps/utils/carriers';
 
 import styles from './case-result-table.module.css';
@@ -126,7 +126,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
     };
 
     const loadCaseDetails = (href: string) => {
-        segmentAnalyticsTrackEvent(SegmentTrackedEventName.PolicyKeyValuesItemClick, {
+        segmentAnalyticsTrackEvent<CaseClickedEvent>(SegmentTrackedEventName.CaseClicked, {
             caseId: singleCase.id,
             userId: perms.getUserPartyId(),
         });
@@ -136,17 +136,16 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
 
     return (
         <TableRow className={styles.row}>
-            {/* This lives as a visibly hidden link instead of as a click handler on the table row for acccessibility concerns. Nested interactive elements are not allowed */}
-            <Link
-                onClick={() => loadCaseDetails(`/cases/${singleCase.id}/${CaseDetailsTabValues.progress}`)}
-                href={`/cases/${singleCase.id}/${CaseDetailsTabValues.progress}`}
-                className={styles.caseLink}
-                aria-label={viewCaseText}
-            >
-                <Typography variant={TypographyVariant.BodySm} className={styles.caseLinkText}>
-                    {t('caseManagementDashboard.case.viewCase')}
-                </Typography>
-            </Link>
+            <TableCell className={styles.caseLinkContainer}>
+                {/* This lives as a visibly hidden link instead of as a click handler on the table row for acccessibility concerns. Nested interactive elements are not allowed */}
+                <Link
+                    onClick={() => loadCaseDetails(`/cases/${singleCase.id}/${CaseDetailsTabValues.progress}`)}
+                    href={`/cases/${singleCase.id}/${CaseDetailsTabValues.progress}`}
+                    className={styles.caseLink}
+                >
+                    {viewCaseText}
+                </Link>
+            </TableCell>
             <TableCell>
                 <div className="flex flex-col">
                     <Typography variant={TypographyVariant.BodySm} className="block">

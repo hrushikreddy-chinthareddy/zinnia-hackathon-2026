@@ -64,6 +64,8 @@ export enum CaseType {
     Reg60 = 'NB REG 60',
     AddressChange = 'Address Change',
     ReReg = 'ReReg',
+    Suitability = 'Suitability',
+    SuitabilityReview = 'SuitabilityReview',
 }
 
 export enum Processes {
@@ -82,6 +84,8 @@ export enum Processes {
     OneTimePremium = 'One Time Premium',
     Loan = 'Loan',
     LoanRepaymentOneTime = 'Loan Repayment One Time',
+    Suitability = 'Suitability',
+    SuitabilityReview = 'Suitability Review',
 }
 
 export enum Actions {
@@ -97,6 +101,7 @@ export enum Statuses {
     NotStarted = 'NOT_STARTED',
     Canceled = 'CANCELED',
     New = 'NEW',
+    Overridden = 'OVERRIDDEN',
 }
 
 export interface StatCount {
@@ -153,39 +158,6 @@ export interface DashboardStatsElementResponse {
      * see {@link DashboardStatsElementResponse} for more details.
      */
     values?: DashboardStatsElementResponse[];
-}
-
-/**
- * The response object returned by the {@link getCaseDashboardStats} endpoint.
- */
-export interface CaseDashboardStatsResponseOld {
-    /**
-     * Array of elements that contain the stats, example:
-     * see {@link DashboardSearchRequest} for more details.
-     *
-     */
-    element: DashboardStatsElementResponseOld[];
-}
-
-export interface DashboardStatsElementResponseOld {
-    /**
-     * The count of occurences that match the filter
-     */
-    count: number;
-    /**
-     * The @see {@link GroupByOptions} passed from the request
-     */
-    key: string;
-    /**
-     * The name of the label that matches the value of the GroupBy parameter
-     * @see {@link Case} for field names
-     */
-    name: string;
-    /**
-     * Array of elements that contain the stats, example:
-     * see {@link DashboardStatsElementResponse} for more details.
-     */
-    values?: CaseDashboardStatsResponseOld;
 }
 
 export interface CaseDashboardStatsErrorResponse {

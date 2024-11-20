@@ -1,6 +1,6 @@
-import { TransactionStatus } from "@deps/models/policy/sor-policy";
+import { TransactionStatus } from '@deps/models/policy/sor-policy';
 
-import { BaseCardModel } from "../types";
+import { BaseCardModel } from '../types';
 
 export type ReverseTransactionSidesheetOriginalTransactionValues = {
     submittedAmount?: number;
