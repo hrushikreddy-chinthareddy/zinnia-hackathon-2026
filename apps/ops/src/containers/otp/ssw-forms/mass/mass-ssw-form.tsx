@@ -17,21 +17,15 @@ import useMassWithdrawalConfig from './mass-ssw-form-helper';
 import SignatureVerificationReasons from '@deps/components/otp-withdrawal-form/signature-validation/signature-verification-reason';
 import { USStates } from '@deps/constants/geography/us-states';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
+import SswEditSelection from '../ssw-edit-selection';
 type MassWithdrawalFormProps = {
     qualType: QualTypes | '';
 };
 
 export function MassMutualSSWForm({ qualType }: MassWithdrawalFormProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
-    const {
-        formSignature,
-        formParty,
-        setFormValidator,
-        setFormData,
-        initialForm,
-        isFormStateReadOnly,
-        contractIssueState,
-    } = useContext(FormDataContext);
+    const { formSignature, formParty, setFormValidator, setFormData, initialForm, isFormStateReadOnly, contractIssueState } =
+        useContext(FormDataContext);
 
     const {
         reasonOptions,
@@ -71,6 +65,7 @@ export function MassMutualSSWForm({ qualType }: MassWithdrawalFormProps) {
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
+            <SswEditSelection />
             <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
             <DistributionReason isFormStateReadOnly={isFormStateReadOnly} reasonOptions={reasonOptions} />
             <AmountDetails isFormStateReadOnly={isFormStateReadOnly} isOnlyWithdrawalTypeControls={true} />

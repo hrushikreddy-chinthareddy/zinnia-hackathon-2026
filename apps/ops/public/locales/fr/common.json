@@ -2003,7 +2003,8 @@
                 "sswUpdate": "Mise à jour SSW",
                 "bankUpdate": "Mise à jour bancaire",
                 "eftDrawUpdate": "Mise à jour de prélèvement EFT"
-            }
+            },
+            "sswRequest": "Demande SSW"
         }
     },
     "createCaseCreate": {
