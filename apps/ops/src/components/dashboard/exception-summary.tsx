@@ -12,8 +12,9 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import CardContainer from '@deps/containers/card-container/card-container';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 import { GroupByOptions } from '@deps/models/case/enums';
+import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 
-import useExceptionData from './useExceptionData';
+import useExceptionData from '../../pages/dashboard/issued-business/useExceptionData';
 
 if (typeof Highcharts === 'object') {
     HighchartsExporting(Highcharts);
@@ -22,19 +23,20 @@ if (typeof Highcharts === 'object') {
 
 export const ExceptionSummary = ({
     startDate,
-    selectedSubprocess,
+    timeframe = '',
     carrierOrBrokerDealer = GroupByOptions.Carrier,
 }: {
     startDate: string;
-    selectedSubprocess?: string;
+    timeframe?: string;
     carrierOrBrokerDealer?: GroupByOptions.Carrier | GroupByOptions.BrokerDealerName;
 }) => {
-    const [loading, exceptionData] = useExceptionData({ startDate, carrierOrBrokerDealer, processSubType: selectedSubprocess });
+    const [loading, exceptionData] = useExceptionData({ startDate, carrierOrBrokerDealer });
     const chartRef = useRef<HighchartsReact.RefObject>(null);
 
     const chartConfig: Highcharts.Options = useMemo(() => {
-        const year = exceptionData?.startYear || dayjs().subtract(1, 'year').year();
-        const month = exceptionData?.startMonth || dayjs().month(0).month();
+        if (!exceptionData) return {};
+        const year = exceptionData.startYear;
+        const month = exceptionData.startMonth;
         let weeklyData: Highcharts.Options['series'] = [];
         let monthlyData: Highcharts.Options['series'] = [];
         if (exceptionData?.weekly) {
@@ -53,13 +55,7 @@ export const ExceptionSummary = ({
                 name: carrier,
                 color: caseChartHelpers.getColors()[exceptionData.carriers.indexOf(carrier)],
                 data: exceptionData.monthly[carrier].map((val, index) => {
-                    return [
-                        dayjs(`${year}-${month + index}-01`)
-                            .startOf('day')
-                            .startOf('month')
-                            .unix() * 1000,
-                        val,
-                    ];
+                    return [dayjs().year(year).month(month).add(index, 'month').startOf('day').startOf('month').unix() * 1000, val];
                 }),
                 id: `column-${carrier}`,
                 type: 'column' as const,
@@ -160,31 +156,31 @@ export const ExceptionSummary = ({
     }, [exceptionData]);
 
     return (
-        <CardContainer containerClassNames="rounded" fullWidth={true}>
+        <CardContainer containerClassNames="rounded" classNames="!p-0" fullWidth={true}>
             <Typography className="mb-1" variant={TypographyVariant.H2}>
                 {'Exception Summary'}
             </Typography>
+            {startDate}
             <div
                 style={{ height: '600px' }}
                 className={clsx('w-full h-[600px]', {
-                    'grid gap-4 place-content-center bg-gray-800 opacity-70': loading || !exceptionData,
+                    'grid gap-4 place-content-center bg-[--color-base-surface-surface-tertiary]': loading || !exceptionData,
                 })}
             >
                 {loading ? (
                     <>
                         <PageLoader />
-                        <Typography className="text-white" variant={TypographyVariant.BodyBold}>
-                            Loading...
-                        </Typography>
+                        <Typography variant={TypographyVariant.BodyBold}>Loading...</Typography>
                     </>
                 ) : (
                     <>
                         {exceptionData ? (
                             <HighchartsReact ref={chartRef} highcharts={Highcharts} options={chartConfig} />
                         ) : (
-                            <Typography className="text-white" variant={TypographyVariant.BodyBold}>
-                                No Data
-                            </Typography>
+                            <div className="flex flex-col gap-2 items-center">
+                                <ChartBarsIcon height={'24px'} width={'24px'} />
+                                <Typography variant={TypographyVariant.BodyBold}>No exceptions in the {timeframe}</Typography>
+                            </div>
                         )}
                     </>
                 )}

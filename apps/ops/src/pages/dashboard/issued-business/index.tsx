@@ -3,31 +3,40 @@ import * as RadioGroup from '@radix-ui/react-radio-group';
 import { IconType, Link } from '@zinnia/bloom/components';
 import { DEFAULT_ERROR_STRING, FgaRoles, toTitleCase } from '@zinnia/utils';
 import clsx from 'clsx';
+import dayjs from 'dayjs';
 import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { MultiselectOption } from '@deps/components/autocomplete/autocomplete.types';
 import { BrokerDealerFilter } from '@deps/components/dashboard/broker-dealer-filter/broker-dealer-filter';
+import { ExceptionSummary } from '@deps/components/dashboard/exception-summary';
 import { FieldSize } from '@deps/components/fields/field';
 import FieldData, { FieldDataVariant } from '@deps/components/fields/field-data/field-data';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import NoNavLayout from '@deps/components/no-nav-layout';
+import PageLoader from '@deps/components/page-loader/page-loader';
 import { PageHead } from '@deps/components/page-title';
 import Select from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { oneYearAgoISO, sankeyTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
+import { sankeyTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { useIntersectionObserver } from '@deps/hooks/useIntersectionObserver';
+import { Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { UserPermission } from '@deps/models/user-profile';
-import { DashboardResponseData, fetchAgentsSSR, fetchCompletedCasesByProcessSubTypeSSR } from '@deps/queries/api/dashboard';
+import {
+    DashboardResponseData,
+    fetchAgentsSSR,
+    fetchCompletedCasesByProcessSubType,
+    fetchCompletedCasesByProcessSubTypeSSR,
+} from '@deps/queries/api/dashboard';
 import { checkTupleSsr, getCarrierListServerSSR } from '@deps/queries/api/fga';
 import { FgaRelation } from '@deps/types/fga';
 import { getCarrierListItem, getCarrierNameByClientId, getClientIdsByCarrierName } from '@deps/utils/carriers';
@@ -35,14 +44,14 @@ import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimize
 import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
+import { ExceptionInsights } from '../../../components/dashboard/exception-insights';
 import styles from '../Dashboard.module.css';
-import { ExceptionInsights } from './exception-insights';
-import { ExceptionSummary } from './exception-summary';
 
 export interface CarrierListItem {
     [key: string]: string;
 }
 
+const timeFrameFilterOptions = ['trailing 12 months', 'last 6 months', 'last 90 days', 'last 60 days', 'last month'];
 type IssuedBusinessPageProps = {
     authorizedCarriers: string[];
     brokerDealersSSR: DashboardResponseData[];
@@ -56,7 +65,10 @@ type IssuedBusinessPageProps = {
 export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, completedCasesByProcessSubType }: IssuedBusinessPageProps) => {
     const router = useRouter();
     const carrierHeaderRef = useRef<HTMLDivElement>(null);
+    const [loading, setLoading] = useState(false);
+    const [exceptionData, setExceptiondata] = useState<DashboardResponseData[]>(completedCasesByProcessSubType);
     const [selectedException, setSelectedException] = useState<string | undefined>();
+    const [timeframe, setTimeframe] = useState<string>(timeFrameFilterOptions[0]);
     const {
         isIntersecting: carrierHeaderIsIntersecting,
         ref: cardContainerRef,
@@ -154,6 +166,52 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
         return undefined;
     }, [selectedBrokerDealers, selectedCarriers]);
 
+    const handleTimeFrameChange = (value: string) => {
+        setTimeframe(value);
+    };
+
+    const createdDateStart = useMemo(() => {
+        let startDate = dayjs().subtract(1, 'year').format('YYYY-MM-DD');
+        switch (timeframe) {
+            case 'trailing 12 months':
+                startDate = dayjs().subtract(12, 'month').format('YYYY-MM-DD');
+                break;
+            case 'last 6 months':
+                startDate = dayjs().subtract(6, 'month').format('YYYY-MM-DD');
+                break;
+            case 'last 90 days':
+                startDate = dayjs().subtract(90, 'day').format('YYYY-MM-DD');
+                break;
+            case 'last 60 days':
+                startDate = dayjs().subtract(60, 'day').format('YYYY-MM-DD');
+                break;
+            case 'last month':
+                startDate = dayjs().subtract(1, 'month').format('YYYY-MM-DD');
+                break;
+        }
+        return startDate;
+    }, [timeframe]);
+
+    useEffect(() => {
+        const getCases = async () =>
+            await fetchCompletedCasesByProcessSubType({
+                filter: {
+                    createdDateStart: createdDateStart,
+                    process: [Processes.NewBusiness],
+                    caseStatus: [Statuses.Completed],
+                },
+                groupBy: [GroupByOptions.ProcessSubType, GroupByOptions.ExceptionCategory],
+            });
+        setLoading(true);
+        getCases()
+            .then(response => {
+                setExceptiondata(response.slice(0, 5));
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }, [createdDateStart]);
+
     return (
         <>
             <PageHead titleKey="dashboard" />
@@ -220,20 +278,29 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
                 </nav>
                 <CardContainer
                     ref={cardContainerRef}
-                    classNames="relative !p-0 flex flex-col flex-1 gap-4 !border-none  bg-[--color-base-border-border-light]"
+                    classNames="relative !p-0 flex flex-col flex-1 gap-4 !border-none  bg-[--color-base-surface-surface-tertiary]"
                     containerClassNames="mt-none !p-0  border-t-2 border-[--color-base-border-border-light]"
                 >
-                    <ExceptionSummary
-                        carrierOrBrokerDealer={carrierOrBrokerDealer}
-                        startDate={oneYearAgoISO}
-                        selectedSubprocess={selectedSubprocess}
-                    />
+                    <div className="bg-white p-8 flex flex-col gap-8">
+                        <div className="w-52">
+                            <Select
+                                options={timeFrameFilterOptions.map(option => ({ label: option, value: option }))}
+                                value={timeframe}
+                                onChange={handleTimeFrameChange}
+                            />
+                        </div>
+                        <ExceptionSummary
+                            timeframe={timeframe}
+                            carrierOrBrokerDealer={carrierOrBrokerDealer}
+                            startDate={createdDateStart}
+                        />
+                    </div>
 
                     <div className=" bg-white p-8 flex flex-col gap-4 rounded">
                         <Typography variant={TypographyVariant.H2}>Top 5 Processes by Volume</Typography>
                         <RadioGroup.Root asChild onValueChange={handleSelectedSubprocess}>
                             <div className=" grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 !items-stretch !border-b-0 !after:content-none [& .indicator]">
-                                {completedCasesByProcessSubType.map((element, index) => {
+                                {exceptionData.map((element, index) => {
                                     return (
                                         <RadioGroup.Item
                                             defaultChecked={index === 0}
@@ -255,28 +322,39 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
                                                 'items-start justify-between'
                                             )}
                                         >
-                                            <div className="flex flex-row justify-between items-center align-middle self-stretch text-ellipsis overflow-hidden">
-                                                <div className="text-ellipsis text-left">
-                                                    <Label variant={LabelVariant.LabelLg} label={sankeyTitleFormat(element.name, false)} />
-                                                </div>
-                                            </div>
-                                            <div className="flex flex-row flex-wrap gap-4">
-                                                <FieldData variant={FieldDataVariant.Large} label="cases">
-                                                    {element.count}
-                                                </FieldData>
-                                                <FieldData variant={FieldDataVariant.Large} label="Avg days to close">
-                                                    {DEFAULT_ERROR_STRING}
-                                                </FieldData>
-                                            </div>
+                                            {loading ? (
+                                                <PageLoader />
+                                            ) : (
+                                                <>
+                                                    <div className="flex flex-row justify-between items-center align-middle self-stretch text-ellipsis overflow-hidden">
+                                                        <div className="text-ellipsis text-left">
+                                                            <Label
+                                                                variant={LabelVariant.LabelLg}
+                                                                label={sankeyTitleFormat(element.name, false)}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex flex-row flex-wrap gap-4">
+                                                        <FieldData variant={FieldDataVariant.Large} label="cases">
+                                                            {element.count}
+                                                        </FieldData>
+                                                        <FieldData variant={FieldDataVariant.Large} label="Avg days to close">
+                                                            {DEFAULT_ERROR_STRING}
+                                                        </FieldData>
+                                                    </div>
+                                                </>
+                                            )}
                                         </RadioGroup.Item>
                                     );
                                 })}
                             </div>
                         </RadioGroup.Root>
                         <ExceptionInsights
-                            completedCasesByProcessSubType={completedCasesByProcessSubType}
+                            timeframe={timeframe}
+                            completedCasesByProcessSubType={exceptionData}
                             selectedSubprocess={selectedSubprocess}
                             selectedException={selectedException}
+                            carrierOrBrokerDealer={undefined}
                         />
                     </div>
                 </CardContainer>

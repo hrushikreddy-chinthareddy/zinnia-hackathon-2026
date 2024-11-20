@@ -81,6 +81,7 @@ export const brokerDealerBody: DashboardRequestBody = {
   groupBy: ['brokerDealerName'],
 }
 
+
 export const fetchAgents = async (body = brokerDealerBody, config?: AxiosRequestConfig): Promise<DashboardResponseData[]> =>
   fetchDashboardStats(body, 'fetchAgents', config).then((data) => data.data.sort((a, b) => sortAlphabetically(a.name, b.name)));
 
@@ -99,5 +100,5 @@ export const completedCasesByProcessSubtypeBody = {
 export const fetchCompletedCasesByProcessSubTypeSSR = async (accessToken: string, config?: AxiosAuthRequestConfig): Promise<DashboardResponseData[]> =>
   fetchDashboardStatsSSR(accessToken, completedCasesByProcessSubtypeBody, 'fetchCompletedCasesByProcessSubTypeSSR', config).then((data) => data.data);
 
-export const fetchCompletedCasesByProcessSubType = async (config?: AxiosAuthRequestConfig): Promise<DashboardResponseData[]> =>
-  fetchDashboardStats(completedCasesByProcessSubtypeBody, 'fetchCompletedCasesByProcessSubType', config).then((data) => data.data);
+export const fetchCompletedCasesByProcessSubType = async (body = completedCasesByProcessSubtypeBody, config?: AxiosAuthRequestConfig): Promise<DashboardResponseData[]> =>
+  fetchDashboardStats(body, 'fetchCompletedCasesByProcessSubType', config).then((data) => data.data);

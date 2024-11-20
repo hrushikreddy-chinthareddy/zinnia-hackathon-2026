@@ -46,13 +46,10 @@ const useExceptionData = ({
 }) => {
     const [loading, setLoading] = useState(true);
     const [chartData, setChartData] = useState<MappedExceptionData>();
-    const [statsResponse, setStatsResponse] = useState<DashboardStatsElementResponse[]>();
-    const createdDateStart = dayjs(startDate).toISOString();
+    const [statsResponse, setStatsResponse] = useState<{ data: DashboardStatsElementResponse[]; createdDateStart: string }>();
 
     useEffect(() => {
-        if (window && !window.dayjs) {
-            window.dayjs = dayjs;
-        }
+        const createdDateStart = dayjs(startDate).toISOString();
         const fetchData = async () => {
             try {
                 // Grab the case stats
@@ -70,7 +67,7 @@ const useExceptionData = ({
                     throw new Error('No data found');
                 }
 
-                setStatsResponse(data as DashboardStatsElementResponse[]);
+                setStatsResponse({ data: data as DashboardStatsElementResponse[], createdDateStart });
             } catch (e) {
                 console.error('Error fetching chart data', e);
                 setLoading(false);
@@ -79,18 +76,20 @@ const useExceptionData = ({
 
         setLoading(true);
         fetchData();
-    }, [carrierOrBrokerDealer, createdDateStart, processSubType]);
+    }, [carrierOrBrokerDealer, startDate, processSubType]);
 
     useEffect(() => {
         if (!statsResponse) {
             return;
         }
+        const { data, createdDateStart } = statsResponse;
         // Get the number of elements we'll need for the charts based on current date and start date
         const maxDayIndex = getArrayIndexFromDate(dayjs().format('YYYY-MM-DD'), createdDateStart);
         const maxWeekIndex = getArrayIndexFromDate(dayjs().format('YYYY-MM-DD'), createdDateStart, 'week');
         const maxMonthIndex = getArrayIndexFromDate(dayjs().format('YYYY-MM-DD'), createdDateStart, 'month');
+
         // Set up default data
-        const fixedUpData: MappedExceptionData = {
+        const parsedResponse: MappedExceptionData = {
             totalCasesByCarrier: {},
             total: {},
             daily: {},
@@ -103,49 +102,51 @@ const useExceptionData = ({
             totalMonths: maxMonthIndex + 1,
         };
 
-        if ((statsResponse as DashboardStatsElementResponse[]).length) {
-            (statsResponse as DashboardStatsElementResponse[]).forEach(carrierGroup => {
+        if ((data as DashboardStatsElementResponse[]).length) {
+            (data as DashboardStatsElementResponse[]).forEach(carrierGroup => {
                 const carrier = carrierGroup.name;
-                fixedUpData.carriers.push(carrier);
-                fixedUpData.totalCasesByCarrier[carrier] = carrierGroup.count;
+                parsedResponse.carriers.push(carrier);
+                parsedResponse.totalCasesByCarrier[carrier] = carrierGroup.count;
                 carrierGroup.values?.forEach(exceptionGroup => {
-                    const exCat = exceptionGroup.name;
+                    // const exCat = exceptionGroup.name;
                     // initialize the objects for the carrier
-                    fixedUpData.total[carrier] = 0;
+                    parsedResponse.total[carrier] = 0;
                     // Build up the arrays for daily and monthly charts (filled with nulls)
-                    fixedUpData.daily[carrier] = Array(maxDayIndex + 1)
+                    parsedResponse.daily[carrier] = Array(maxDayIndex + 1)
                         .fill(null)
                         .map((val, index) => [dayjs(createdDateStart).add(index, 'day').unix() * 1000, 0]);
 
-                    fixedUpData.weekly[carrier] = Array(maxWeekIndex + 1)
+                    parsedResponse.weekly[carrier] = Array(maxWeekIndex + 1)
                         .fill(null)
                         .map((val, index) => [dayjs(createdDateStart).add(index, 'week').startOf('week').unix() * 1000, 0]);
-                    fixedUpData.monthly[carrier] = Array(maxMonthIndex + 1).fill(null);
+                    parsedResponse.monthly[carrier] = Array(maxMonthIndex + 1).fill(null);
 
                     let totalNigos = 0;
                     exceptionGroup.values?.forEach(dayGroup => {
                         const dayIndex = getArrayIndexFromDate(dayGroup.name, createdDateStart);
                         const weekIndex = getArrayIndexFromDate(dayGroup.name, createdDateStart, 'week');
                         const monthIndex = getArrayIndexFromDate(dayGroup.name, createdDateStart, 'month');
+
                         if (dayGroup.count) {
                             totalNigos += dayGroup.count;
-                            fixedUpData.total[carrier] += dayGroup.count;
-                            fixedUpData.daily[carrier][dayIndex] = [dayjs(dayGroup.name, 'YYYY-MM-DD').unix() * 1000, dayGroup.count];
-                            fixedUpData.weekly[carrier][weekIndex] = [
+                            parsedResponse.total[carrier] += dayGroup.count;
+                            parsedResponse.daily[carrier][dayIndex] = [dayjs(dayGroup.name, 'YYYY-MM-DD').unix() * 1000, dayGroup.count];
+                            parsedResponse.weekly[carrier][weekIndex] = [
                                 dayjs(dayGroup.name, 'YYYY-MM-DD').startOf('week').unix() * 1000,
-                                dayGroup.count + (fixedUpData.weekly[carrier][weekIndex][1] || 0),
+                                dayGroup.count + (parsedResponse.weekly[carrier][weekIndex][1] || 0),
                             ];
-                            fixedUpData.monthly[carrier][monthIndex] = dayGroup.count + (fixedUpData.monthly[carrier][monthIndex] || 0);
+                            parsedResponse.monthly[carrier][monthIndex] =
+                                dayGroup.count + (parsedResponse.monthly[carrier][monthIndex] || 0);
                         }
                     });
-                    fixedUpData.total[carrier] = totalNigos;
+                    parsedResponse.total[carrier] = totalNigos;
                 });
             });
-            fixedUpData.carriers.sort((a, b) => fixedUpData.totalCasesByCarrier[b] - fixedUpData.totalCasesByCarrier[a]);
+            parsedResponse.carriers.sort((a, b) => parsedResponse.totalCasesByCarrier[b] - parsedResponse.totalCasesByCarrier[a]);
         }
-        setChartData(fixedUpData);
+        setChartData(parsedResponse);
         setLoading(false);
-    }, [createdDateStart, statsResponse]);
+    }, [statsResponse]);
     return [loading, chartData] as [boolean, MappedExceptionData | undefined];
 };
 
