@@ -1,0 +1,31 @@
+.customFileUpload {
+    font-family: var(--font-family-primary);
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 32px;
+    letter-spacing: 0em;
+    text-indent: 0px;
+    padding: 0.4em;
+    padding-left: 1.2em;
+    padding-right: 1.2em;
+    margin-bottom: 10em;
+
+    --font-weight-semibold: 600;
+    --button-border-width: 3px;
+    --button-border-style: solid;
+    --button-border-radius: var(--measure-dimension-button-button-default-radius);
+
+    align-items: center;
+    border-radius: var(--button-border-radius);
+    color: var(--color-button-primary-button-primary-default-text);
+    cursor: pointer;
+
+    background-color: var(--color-button-primary-button-primary-default-fill, #fff);
+    border: var(--button-border-width) var(--button-border-style) var(--color-button-primary-button-primary-border);
+    color: var(--color-button-primary-button-primary-default-text);
+}
+
+.input {
+    display: none;
+}

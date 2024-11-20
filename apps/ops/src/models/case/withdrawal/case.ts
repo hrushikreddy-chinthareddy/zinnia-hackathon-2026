@@ -997,6 +997,7 @@ export enum Carrier {
     NASU = 'NASU',
     GDMN = 'GDMN',
     RSLN = 'RSLN',
+    WELB = 'WELB',
 }
 export const ParticipantCompanies = [
     { companyName: 'AIG ANNUITIES-VAR & IDX/VAR.ANN.LIFE', code: '3179' },
