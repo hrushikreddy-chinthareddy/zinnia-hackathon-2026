@@ -91,7 +91,12 @@ export const BankList: FC<BankListProps> = ({
             <CarrierPhoneNumber />.
           </p>
           <div className={styles.multipleItemsInSection}>{allBankData}</div>
-          {allowBankingChanges && <AddBankSidesheet partyId={data.partyId} />}
+          {allowBankingChanges && (
+            <AddBankSidesheet
+              partyId={data.partyId}
+              policyOwner={`${initialProfileData?.name.firstName} ${initialProfileData?.name.lastName}`}
+            />
+          )}
         </div>
       );
     }

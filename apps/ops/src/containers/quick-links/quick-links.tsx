@@ -57,10 +57,11 @@ const QuickLinks = ({ links, planCode, policyNumber, policy, userPartyId }: Quic
     const [fireEligibilityChecks, setFireEligibilityChecks] = useState(false);
 
     const [isLife] = useState(policy.isLife);
+    const [isAnnuity] = useState(policy.isAnnuity);
 
     // this should only run once after fireEligibilityChecks && isLife are both true
     useEffect(() => {
-        if (fireEligibilityChecks && isLife) {
+        if (fireEligibilityChecks && (isLife || isAnnuity)) {
             const checkManageAutopayEligibility = async () => {
                 const manageAutopayEligibility = await checkEligibilitySystematicPrograms(planCode, policyNumber, arrangementId || '');
 
@@ -92,7 +93,7 @@ const QuickLinks = ({ links, planCode, policyNumber, policy, userPartyId }: Quic
             checkOneTimeEligibility();
             checkWithdrawalEligibility();
         }
-    }, [planCode, policyNumber, arrangementId, fireEligibilityChecks, isLife]);
+    }, [planCode, policyNumber, arrangementId, fireEligibilityChecks, isLife, isAnnuity]);
 
     useEffect(() => {
         if (autopayChecked && newPremiumChecked && withdrawalChecked) {
@@ -128,7 +129,7 @@ const QuickLinks = ({ links, planCode, policyNumber, policy, userPartyId }: Quic
                 </NavElement>
             ))}
 
-            {isLife && (
+            {(isLife || isAnnuity) && (
                 <>
                     <div className="hidden min-w-[2px] bg-gray-100 md:block" />
 
