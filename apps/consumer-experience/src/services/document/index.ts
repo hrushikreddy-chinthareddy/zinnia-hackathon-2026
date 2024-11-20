@@ -97,7 +97,7 @@ export const getDocuments = async (
   const documentUrl = `${documentApiBaseUrl}?${documentQueryParams.toString()}`;
   try {
     const docsData = await getDocumentsRaw(documentUrl);
-    console.log('docsData', docsData);
+
     return {
       data: {
         ...docsData,
