@@ -56,6 +56,7 @@ const SendCorrespondence = ({
     user,
     applicableStatement,
 }: SendCorrespondenceProps) => {
+    console.log('🚀 ~ policy:', policy);
     const { t } = useTranslation(undefined, { keyPrefix: '' });
     const [statements, setStatements] = useState<PolicyDocument[]>([]);
     const { ctiCallNumber, correlationId } = router.query;
