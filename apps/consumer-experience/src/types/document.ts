@@ -42,3 +42,10 @@ export interface DocumentResponseError {
   message: string;
   status: number;
 }
+
+export enum DocumentCategory {
+  DOCUMENTS = 'documents',
+  STATEMENTS = 'statements',
+  TAX = 'tax',
+}
+

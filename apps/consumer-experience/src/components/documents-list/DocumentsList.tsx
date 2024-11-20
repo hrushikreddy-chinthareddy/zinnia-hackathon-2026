@@ -7,11 +7,17 @@ import { useCallback, useState } from 'react';
 import { ClickableListContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
-import { ExtendedDocumentMeta } from '@/types/document';
+import { DocumentCategory, ExtendedDocumentMeta } from '@/types/document';
 import { checkIfNull, lineOfBusinessUrlPath } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
 
 import styles from './documentsList.module.css';
+
+const documentCategoryDisplayName = {
+  [DocumentCategory.DOCUMENTS]: 'documents',
+  [DocumentCategory.STATEMENTS]: 'statements',
+  [DocumentCategory.TAX]: 'tax documents',
+};
 
 export default function DocumentsList({
   docCategory,
@@ -20,7 +26,7 @@ export default function DocumentsList({
   policyNumber,
   lineOfBusiness,
 }: {
-  docCategory: string;
+  docCategory: DocumentCategory;
   documents: ExtendedDocumentMeta[];
   planCode: string;
   policyNumber: string;
@@ -39,7 +45,7 @@ export default function DocumentsList({
   if (!documents?.length) {
     return (
       <NoDataAvailable
-        message={`No ${docCategory ?? 'documents'} available.`}
+        message={`No ${documentCategoryDisplayName[docCategory] ?? 'documents'} available.`}
         iconType={IconType.DOCUMENT_DUPLICATE}
       />
     );

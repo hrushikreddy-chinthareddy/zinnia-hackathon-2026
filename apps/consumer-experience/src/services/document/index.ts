@@ -1,7 +1,8 @@
 import { DownloadDocumentResponse } from '@zinnia/api-types/types/documents';
 
 import { DocumentApiRequestInputs, PolicyDocument } from '@/types/document';
-import { logWarn } from '@/utils/logging/server-logging';
+import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
+import { logError, logWarn } from '@/utils/logging/server-logging';
 
 import {
   ApiResponse,
@@ -10,6 +11,33 @@ import {
   isMockDocumentRequestEnabled,
 } from '..';
 import { mockDocumentResponse } from '../mocks/document';
+
+const getDocumentsRaw = async (documentUrl: string) => {
+  const rawResponse = await ServerApi.get(documentUrl);
+  const response = (await parseAPIResponse(rawResponse)) as PolicyDocument;
+
+  if (!rawResponse?.ok) {
+    logError(
+      'Error fetching documents',
+      await logApiNotOkDetails({ rawResponse, parsedResponse: response })
+    );
+
+    throw new Error('Error fetching documents.', {
+      cause: rawResponse.status,
+    });
+  }
+
+  if (!response) {
+    logError(
+      'Documents request returned with no data',
+      await logApiNotOkDetails({ rawResponse, parsedResponse: response })
+    );
+
+    throw new Error('Error fetching documnts data.');
+  }
+
+  return response;
+};
 
 export const getDocumentDownload = async (
   documentNumber: string,
@@ -46,10 +74,9 @@ export const getDocumentDownload = async (
   }
 };
 
-export const getDocuments = async (
+const getDocumentQueryParams = (
   queryParams: Partial<DocumentApiRequestInputs>
-): Promise<PolicyDocument> => {
-  const { clientCode, source } = queryParams;
+) => {
   const documentQueryParams = new URLSearchParams();
   for (const key in queryParams) {
     if (queryParams[key as keyof typeof queryParams] !== undefined) {
@@ -59,21 +86,75 @@ export const getDocuments = async (
       );
     }
   }
+  return documentQueryParams;
+};
+
+export const getDocuments = async (
+  queryParams: Partial<DocumentApiRequestInputs>
+): Promise<ApiResponse<PolicyDocument>> => {
+  const { clientCode, source } = queryParams;
+  const documentQueryParams = getDocumentQueryParams(queryParams);
   const documentUrl = `${documentApiBaseUrl}?${documentQueryParams.toString()}`;
+  try {
+    const docsData = await getDocumentsRaw(documentUrl);
+    console.log('docsData', docsData);
+    return {
+      data: {
+        ...docsData,
+        items: docsData?.items?.map(item => ({
+          ...item,
+          clientCode,
+          downloadSource: source,
+        })),
+      },
+      error: null,
+    };
+  } catch (error) {
+    logWarn('getDocuments error', { error });
 
-  const response = await ServerApi.get(documentUrl);
-
-  if (response.status !== 200) {
-    throw new Error(`API returned an error. Status code: ${response.status}`);
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 500,
+        name: 'getDocuments Error',
+      },
+    };
   }
+};
 
-  const data = (await response.json()) as PolicyDocument;
-  return {
-    ...data,
-    items: data?.items?.map(item => ({
-      ...item,
-      clientCode,
-      downloadSource: source,
-    })),
-  };
+export const getTaxDocuments = async (
+  queryParams: Partial<
+    DocumentApiRequestInputs & { taxYear: string; numYears: number }
+  >
+): Promise<ApiResponse<PolicyDocument>> => {
+  const { clientCode } = queryParams;
+  const documentQueryParams = getDocumentQueryParams(queryParams);
+  const documentUrl = `${documentApiBaseUrl}/taxDocs?${documentQueryParams.toString()}`;
+
+  try {
+    const docsData = await getDocumentsRaw(documentUrl);
+
+    return {
+      data: {
+        ...docsData,
+        items: docsData?.items?.map(item => ({
+          ...item,
+          clientCode,
+        })),
+      },
+      error: null,
+    };
+  } catch (error) {
+    logWarn('getTaxDocuments error', { error });
+
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 500,
+        name: 'getTaxDocuments Error',
+      },
+    };
+  }
 };

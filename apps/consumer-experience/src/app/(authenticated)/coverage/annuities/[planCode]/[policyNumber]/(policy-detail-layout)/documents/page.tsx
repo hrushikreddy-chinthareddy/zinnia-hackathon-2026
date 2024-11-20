@@ -7,9 +7,10 @@ import documentStyles from '@/app/(authenticated)/coverage/shared-styles/Documen
 import DocumentsList from '@/components/documents-list/DocumentsList';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { RouteKey, getPageTitle } from '@/route-map';
-import { getCorrespondenceDocuments } from '@/services/policy';
+import { getDocuments, getTaxDocuments } from '@/services/document';
+import { getPolicyDetails } from '@/services/policy';
 import { LineOfBusinessPath } from '@/types';
-import { ExtendedDocumentMeta } from '@/types/document';
+import { DocumentCategory, ExtendedDocumentMeta } from '@/types/document';
 import { PolicyRequestInputs } from '@/types/policy';
 
 const pageTitle = getPageTitle(RouteKey.DOCUMENTS);
@@ -29,64 +30,99 @@ export default async function Documents({
   searchParams,
 }: {
   params: PolicyRequestInputs;
-  searchParams: { type: 'statements' | 'documents' };
+  searchParams: { type: DocumentCategory };
 }) {
-  const { data, error } = await getCorrespondenceDocuments(
-    {
-      planCode: params.planCode,
-      policyNumber: params.policyNumber,
-    },
-    {
+  const { data: policyData, error: policyError } =
+    await getPolicyDetails(params);
+
+  const [correspondenceDocsRes, taxDocsRes] = await Promise.allSettled([
+    getDocuments({
+      clientCode: policyData?.carrierId,
+      source: 'Correspondence',
       contractNumber: params.policyNumber,
       recipient: 'Client',
-    }
-  );
+    }),
+    getTaxDocuments({
+      clientCode: policyData?.carrierId,
+      contractNumber: params.policyNumber,
+      taxYear: new Date().getFullYear().toString(),
+      numYears: 1,
+    }),
+  ]);
 
-  const isStatementsSelected = searchParams.type === 'statements';
+  const correspondenceDocs =
+    correspondenceDocsRes.status === 'fulfilled'
+      ? correspondenceDocsRes.value.data
+      : null;
+  const taxDocs =
+    taxDocsRes.status === 'fulfilled' ? taxDocsRes.value.data : null;
 
+  const activeTab = searchParams.type || DocumentCategory.DOCUMENTS;
+  /**
+   * Checks if a document type is a statement type.
+   * @param doc the document to check
+   * @returns true if the document type is a statement type, false otherwise
+   */
   const statementsFilter = (doc: ExtendedDocumentMeta) =>
     StatementDocumentTypes.includes(doc.documentType as string);
-  const docs =
-    data?.items?.filter(doc =>
-      isStatementsSelected ? statementsFilter(doc) : !statementsFilter(doc)
-    ) ?? [];
+
+  const docs = () => {
+    switch (activeTab) {
+      case DocumentCategory.DOCUMENTS:
+        return (
+          correspondenceDocs?.items?.filter(doc => !statementsFilter(doc)) ?? []
+        );
+      case DocumentCategory.STATEMENTS:
+        return correspondenceDocs?.items?.filter(statementsFilter) ?? [];
+      case DocumentCategory.TAX:
+        return taxDocs?.items ?? [];
+      default:
+        return [];
+    }
+  };
 
   return (
     <div className="container">
       <ul className={documentStyles.nav}>
         <li>
           <Link
-            href={`/coverage/${LineOfBusinessPath.ANNUITIES}/${params.planCode}/${params.policyNumber}/documents`}
-            className={`${!isStatementsSelected ? documentStyles.active : ''}`}
+            href={`/coverage/${LineOfBusinessPath.POLICIES}/${params.planCode}/${params.policyNumber}/documents`}
+            className={`${activeTab === DocumentCategory.DOCUMENTS ? documentStyles.active : ''}`}
           >
             Documents
           </Link>
         </li>
         <li>
           <Link
-            href={`/coverage/${LineOfBusinessPath.ANNUITIES}/${params.planCode}/${params.policyNumber}/documents?type=statements`}
-            className={`${isStatementsSelected ? documentStyles.active : ''}`}
+            href={`/coverage/${LineOfBusinessPath.POLICIES}/${params.planCode}/${params.policyNumber}/documents?type=${DocumentCategory.STATEMENTS}`}
+            className={`${activeTab === DocumentCategory.STATEMENTS ? documentStyles.active : ''}`}
           >
             Statements
           </Link>
         </li>
+        <li>
+          <Link
+            href={`/coverage/${LineOfBusinessPath.POLICIES}/${params.planCode}/${params.policyNumber}/documents?type=${DocumentCategory.TAX}`}
+            className={`${activeTab === DocumentCategory.TAX ? documentStyles.active : ''}`}
+          >
+            Tax Documents
+          </Link>
+        </li>
       </ul>
-      {error || data?.count === 0 ? (
+      {/* TODO: what should the error state check for? */}
+      {/* {policyError || data?.count === 0 ? ( */}
+      {policyError ? (
         <NoDataAvailable
-          message={
-            isStatementsSelected
-              ? 'No statements available.'
-              : 'No documents available.'
-          }
+          message={`Something went wrong. Please try again later.`}
           iconType={IconType.DOCUMENT_DUPLICATE}
         />
       ) : (
         <DocumentsList
-          docCategory={isStatementsSelected ? 'statements' : 'documents'}
-          documents={docs}
+          docCategory={activeTab}
+          documents={docs()}
           planCode={params.planCode}
           policyNumber={params.policyNumber}
-          lineOfBusiness={LineOfBusiness.ANNUITY}
+          lineOfBusiness={LineOfBusiness.LIFE}
         />
       )}
     </div>
