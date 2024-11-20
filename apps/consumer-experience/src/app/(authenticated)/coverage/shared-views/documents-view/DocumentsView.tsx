@@ -1,6 +1,6 @@
 // ATTENTION!!!!!!! This file exists becuase the documents view is currently exactly the same
-// between policies and annuities. If this changes, don't think about it just separate them
-// and return this to the page view rather than having it as a data component
+// between policies and annuities. If this changes, don't think too much about it just separate them
+// and return this to the page view rather than having it as a separate view.
 
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { IconType } from '@zinnia/bloom/components';
