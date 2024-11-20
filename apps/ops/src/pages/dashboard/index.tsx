@@ -11,7 +11,6 @@ import { useTranslation } from 'react-i18next';
 import { MultiselectOption, SimpleOption } from '@deps/components/autocomplete/autocomplete.types';
 import ActiveAging from '@deps/components/dashboard/active-aging/active-aging';
 import { BrokerDealerFilter } from '@deps/components/dashboard/broker-dealer-filter/broker-dealer-filter';
-import { sankeyTitleFormat } from '@deps/components/dashboard/dashboard.helper';
 import SankeyChart from '@deps/components/dashboard/sankey-chart';
 import CaseStatBlock from '@deps/components/dashboard/stat-blocks/case-stat-block';
 import { FieldSize } from '@deps/components/fields/field';
@@ -23,6 +22,7 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { getStartAndEndDates } from '@deps/containers/case-redesign-sub-page/case-helpers';
+import { sankeyTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
@@ -32,7 +32,7 @@ import { CaseDashboardStatsResponse, Processes, Statuses } from '@deps/models/ca
 import { GroupByOptions } from '@deps/models/case/enums';
 import { UserPermission } from '@deps/models/user-profile';
 import { getCaseDashboardStats } from '@deps/queries/api/cases';
-import { BrokerDealerResponse, getBrokerDealerAgentsSSR } from '@deps/queries/api/dashboard';
+import { DashboardResponseData, fetchAgentsSSR } from '@deps/queries/api/dashboard';
 import { checkTupleSsr, getCarrierListServerSSR } from '@deps/queries/api/fga';
 import { CaseDashboardStatsQuery, DashboardSearchFilter } from '@deps/queries/cases';
 import { FgaRelation } from '@deps/types/fga';
@@ -52,7 +52,7 @@ const DashboardPage = ({
     brokerDealersSSR,
 }: {
     authorizedCarriers: string[];
-    brokerDealersSSR: BrokerDealerResponse[];
+    brokerDealersSSR: DashboardResponseData[];
 }) => {
     const router = useRouter();
     const carrierHeaderRef = useRef<HTMLDivElement>(null);
@@ -97,7 +97,7 @@ const DashboardPage = ({
     const [insightOption, setInsightOption] = useState<Processes>(Processes.NewBusiness);
     const [loading, setLoading] = useState<boolean>(false);
     const [processListOptions, setProcessListOptions] = useState<SimpleOption[]>([]);
-    const [brokerDealers, setBrokerDealers] = useState<BrokerDealerResponse[]>(brokerDealersSSR || []);
+    const [brokerDealers, setBrokerDealers] = useState<DashboardResponseData[]>(brokerDealersSSR || []);
 
     const carrierFilterItems = useMemo(
         () =>
@@ -342,7 +342,7 @@ const DashboardPage = ({
                             </div>
                         </div>
                     </div>
-                    <nav className=" flex basis-full no-wrap gap-4 border-b-2 border-solid border-gray-100">
+                    <nav className="flex basis-full no-wrap gap-4">
                         <Link
                             href="/dashboard"
                             text="active applications"
@@ -365,7 +365,7 @@ const DashboardPage = ({
                         />
                     </nav>
                 </div>
-                <div className="relative" ref={sankeyChartRef}>
+                <div className="relative border-t-2 border-[--color-base-border-border-light]" ref={sankeyChartRef}>
                     {loading && (
                         <div className="absolute bottom-0 left-0 right-0 top-0 z-10 flex h-full justify-center bg-gray-800 opacity-80">
                             <div className="mt-4">
@@ -485,7 +485,7 @@ export const getServerSideProps = withPageAuthRequired({
             nextI18nextConfig,
             ALL_LOCALES
         );
-        const brokerDealersSSR = await getBrokerDealerAgentsSSR(accessToken || '');
+        const brokerDealersSSR = await fetchAgentsSSR(accessToken || '');
 
         const authorizedCarriers = await getCarrierListServerSSR(accessToken || '', user.partyId, UserPermission.AllowReadCaseManagement);
         return {

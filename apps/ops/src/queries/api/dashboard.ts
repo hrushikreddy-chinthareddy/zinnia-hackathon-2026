@@ -1,155 +1,103 @@
-import { AxiosResponse } from 'axios';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
 
-import { sortAlphabetically } from '@deps/helpers/dashboard/dashboard-helpers';
-import { logError, logInfo, parseErrorInformation } from '@deps/utils/server-logging';
+import { oneYearAgoISO, sortAlphabetically } from '@deps/helpers/dashboard/dashboard-helpers';
+import { logError, parseErrorInformation } from '@deps/utils/server-logging';
 
 import { baseAppUrl, se2ApiServerUrl } from '../api-config';
 import { client } from '../api-utils/client';
 import { AxiosAuthRequestConfig, serverApi } from '../api-utils/serverApiClient';
 
-export type BrokerDealerRequestBody = {
-  filter: {
-    createdDateStart: string;
-    caseStatus?: string[];
-  };
-  groupBy: string[];
+
+export type DashboardRequestFilters = {
+  createdDateStart?: string;
   process?: string[];
+  processSubType?: string[];
+  caseStatus?: string[];
 }
 
-export type BrokerDealerAPIResponse = {
-  data: BrokerDealerResponse[];
-  totalElements: number;
-};
-export type BrokerDealerResponse = {
+export type DashboardRequestBody = {
+  filter?: DashboardRequestFilters;
+  groupBy?: string[];
+}
+
+export type DashboardResponseData = {
   key: string;
   name: string;
   count: number;
-};
-
-export const defaultBrokerDealerBody: BrokerDealerRequestBody = {
-  filter: {
-    createdDateStart: new Date(`01/01/${new Date().getFullYear()}`).toISOString(),
-  },
-  groupBy: ['brokerDealerName'],
+  values?: DashboardResponseData[]
 }
+
+export type DashboardRequestAPIResponse = {
+  data: DashboardResponseData[];
+  totalElements: number;
+}
+
 const baseDashboardUrl = `${baseAppUrl}/api/case/v1/dashboard`;
 const baseDashboardUrlSSR = `${se2ApiServerUrl}/dashboard`;
 
 
-export const fetchAgents = async (body = defaultBrokerDealerBody): Promise<BrokerDealerResponse[]> => {
+export const fetchDashboardStats = async (body: DashboardRequestBody, fnName = 'fetchDashboardStats', config?: AxiosRequestConfig): Promise<DashboardRequestAPIResponse> => {
   const url = new URL(`${baseDashboardUrl}/stats`);
   try {
-    const { data } = await client.post<BrokerDealerRequestBody, AxiosResponse<BrokerDealerAPIResponse>>(url.toString(), body);
-    data.data.sort((a, b) => sortAlphabetically(a.name, b.name));
-    return data.data;
+    const { data } = await client.post<DashboardRequestBody, AxiosResponse<DashboardRequestAPIResponse>>(url.toString(), body, config);
+    return data;
   } catch (error: any) {
-    logError('fetchAgents', {
+    logError('fetchDashboardStats', {
       ...parseErrorInformation(error),
       file: 'queries/api/dashboard',
-      function: 'fetchAgents',
+      function: fnName,
     });
-    return [];
+    return { data: [], totalElements: 0 };
   }
 }
 
-
-export const getBrokerDealerAgentsSSR = async (accessToken: string, body = defaultBrokerDealerBody, config?: AxiosAuthRequestConfig): Promise<BrokerDealerResponse[]> => {
+export const fetchDashboardStatsSSR = async (accessToken: string, body: DashboardRequestBody, fnName = 'fetchDashboardStatsSSR', config?: AxiosAuthRequestConfig): Promise<DashboardRequestAPIResponse> => {
   const url = new URL(`${baseDashboardUrlSSR}/stats`);
   try {
-    logInfo('getBrokerDealerAgentsSSR', { file: 'queries/api/dashboard', function: 'getBrokerDealerAgentsSSR', url: baseDashboardUrlSSR });
-    const { data } = await serverApi.post<BrokerDealerRequestBody, AxiosResponse<BrokerDealerAPIResponse>>(url.toString(), body, {
+    const { data } = await serverApi.post<DashboardRequestBody, AxiosResponse<DashboardRequestAPIResponse>>(url.toString(), body, {
       ...config,
       authorization: `Bearer ${accessToken}`,
       headers: {
         Accept: '*/*',
         'Accept-Encoding': 'gzip, deflate, br',
-        Connection: 'keep-alive',
         'Access-Control-Allow-Origin': '*',
-      },
-    });
-
-    return data.data.sort((a, b) => sortAlphabetically(a.name, b.name));
-  } catch (error: any) {
-    logError('getBrokerDealerAgentsSSR', {
-      ...parseErrorInformation(error),
-      file: 'queries/api/dashboard',
-      function: 'getBrokerDealerAgentsSSR',
-    });
-    return [];
-  }
-}
-
-export const completedCasesByProcessSubTypeSSR = async (accessToken: string, config?: AxiosAuthRequestConfig): Promise<BrokerDealerAPIResponse> => {
-  const url = new URL(`${baseDashboardUrlSSR}/stats`);
-  try {
-    logInfo('completedCasesByProcessSubType', { file: 'queries/api/dashboard', function: 'completedCasesByProcessSubType', url: baseDashboardUrlSSR });
-    const { data } = await serverApi.post<BrokerDealerRequestBody, AxiosResponse<BrokerDealerAPIResponse>>(url.toString(), {
-      filter: {
-        createdDateStart: new Date(`01/01/${new Date().getFullYear()}`).toISOString(),
-        caseStatus: ['COMPLETED'],
-      },
-      process: ['New Business'],
-      groupBy: ['processSubType'],
-    }, {
-      ...config,
-      authorization: `Bearer ${accessToken}`,
-      headers: {
-        Accept: '*/*',
-        'Accept-Encoding': 'gzip, deflate, br',
         Connection: 'keep-alive',
-        'Access-Control-Allow-Origin': '*',
       },
     });
     return data;
   } catch (error: any) {
-    logError('completedCasesByProcessSubType', {
+    logError('fetchDashboardStatsSSR', {
       ...parseErrorInformation(error),
       file: 'queries/api/dashboard',
-      function: 'completedCasesByProcessSubTypeSSR',
+      function: fnName,
     });
-    return {
-      data: [],
-      totalElements: 0,
-    };
+    return { data: [], totalElements: 0 };
   }
 }
-
-export const completedCasesByProcessSubType = async (config?: AxiosAuthRequestConfig): Promise<BrokerDealerAPIResponse> => {
-  const url = new URL(`${baseDashboardUrl}/stats`);
-  try {
-    const { data } = await client.post<BrokerDealerRequestBody, AxiosResponse<BrokerDealerAPIResponse>>(url.toString(), {
-      filter: {
-        createdDateStart: new Date(`01/01/${new Date().getFullYear()}`).toISOString(),
-        caseStatus: ['COMPLETED'],
-      },
-      process: ['New Business'],
-      groupBy: ['processSubType'],
-    }, config);
-    return data;
-  } catch (error: any) {
-    logError('completedCasesByProcessSubType', {
-      ...parseErrorInformation(error),
-      file: 'queries/api/dashboard',
-      function: 'completedCasesByProcessSubType',
-    });
-    return {
-      data: [],
-      totalElements: 0,
-    };
-  }
+export const brokerDealerBody: DashboardRequestBody = {
+  filter: {
+    createdDateStart: oneYearAgoISO,
+  },
+  groupBy: ['brokerDealerName'],
 }
 
-/**
- * curl --location 'https://api.zinnia.io//case/v1/dashboard/stats' \
---header 'Content-Type: application/json' \
---header 'Accept: application/json' \
---header 'Authorization: ••••••' \
---data '{
-    "filter":{
-        "createdDateStart":"2023-11-13T00:00:00-06:00",
-        "process": ["New Business"],
-        "caseStatus": ["COMPLETED"]
-    },
-    "groupBy": ["processSubType"]
-}'
- */
+export const fetchAgents = async (body = brokerDealerBody, config?: AxiosRequestConfig): Promise<DashboardResponseData[]> =>
+  fetchDashboardStats(body, 'fetchAgents', config).then((data) => data.data.sort((a, b) => sortAlphabetically(a.name, b.name)));
+
+export const fetchAgentsSSR = async (accessToken: string, body = brokerDealerBody, config?: AxiosAuthRequestConfig): Promise<DashboardResponseData[]> =>
+  fetchDashboardStatsSSR(accessToken, body, 'fetchAgentsSSR', config).then((data) => data.data.sort((a, b) => sortAlphabetically(a.name, b.name)));
+
+export const completedCasesByProcessSubtypeBody = {
+  filter: {
+    createdDateStart: oneYearAgoISO,
+    caseStatus: ['COMPLETED'],
+    process: ['New Business'],
+  },
+  groupBy: ['processSubType', 'exceptionCategory'],
+}
+
+export const fetchCompletedCasesByProcessSubTypeSSR = async (accessToken: string, config?: AxiosAuthRequestConfig): Promise<DashboardResponseData[]> =>
+  fetchDashboardStatsSSR(accessToken, completedCasesByProcessSubtypeBody, 'fetchCompletedCasesByProcessSubTypeSSR', config).then((data) => data.data);
+
+export const fetchCompletedCasesByProcessSubType = async (config?: AxiosAuthRequestConfig): Promise<DashboardResponseData[]> =>
+  fetchDashboardStats(completedCasesByProcessSubtypeBody, 'fetchCompletedCasesByProcessSubType', config).then((data) => data.data);

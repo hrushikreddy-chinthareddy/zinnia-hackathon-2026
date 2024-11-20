@@ -3,17 +3,16 @@ import { useEffect, useRef, useState } from 'react';
 
 import { FieldSize, FieldType } from '@deps/components/fields/field';
 import SelectSimple from '@deps/components/select/select';
+import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { getStartAndEndDates } from '@deps/containers/case-redesign-sub-page/case-helpers';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
+import { getLabelSubString, sankeyTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
 import { CaseDashboardStatsResponse, DashboardStatsElementResponse, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { getCaseDashboardStats } from '@deps/queries/api/cases';
 import { CaseDashboardStatsQuery, DashboardSearchFilter } from '@deps/queries/cases';
 import { debounce } from '@deps/utils/useDebounce';
-
-import { getLabelSubString, sankeyTitleFormat } from './dashboard.helper';
-import Typography, { TypographyVariant } from '../typography/typography';
 
 interface Props {
     height?: number;
@@ -765,7 +764,7 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                                     label: 'Sub Case Type',
                                 },
                                 {
-                                    value: GroupByOptions.ExpectionCategory.toString(),
+                                    value: GroupByOptions.ExceptionCategory.toString(),
                                     label: 'Exceptions Category',
                                 },
                             ]}
@@ -795,7 +794,7 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                                     label: 'Sub Case Type',
                                 },
                                 {
-                                    value: GroupByOptions.ExpectionCategory.toString(),
+                                    value: GroupByOptions.ExceptionCategory.toString(),
                                     label: 'Exceptions Category',
                                 },
                             ]}
