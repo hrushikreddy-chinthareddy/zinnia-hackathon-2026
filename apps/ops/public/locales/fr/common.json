@@ -196,7 +196,6 @@
             "diaryNotes": {
                 "text": "Notes de journal"
             },
-
             "diaryNotesWarning": {
                 "text": "Attention: Notes d'agenda présentes. Examen requis pour soumettre",
                 "clickToView": "Clique pour voir"
@@ -502,7 +501,6 @@
                 "addressDetails": "Veuillez vous assurer que les détails de l'adresse sont correctement renseignés lors de l'ajout/mise à jour du bénéficiaire"
             }
         },
-
         "signature": {
             "header": "Validation de la signature",
             "isIrrevocableBene": "Y a-t-il un bénéficiaire irrévocable ?",
@@ -763,6 +761,7 @@
             },
             "buttons": {
                 "policyNumber": "Numéro de police",
+                "policyPlaceholder": "e.g. 1234567",
                 "ssn": "SSN",
                 "ownerSsn": "SSN du propriétaire",
                 "ssnFullLabel": "Numéro de sécurité sociale du propriétaire",
@@ -770,7 +769,9 @@
                 "name": "Nom",
                 "firstName": "Prénom",
                 "lastName": "Nom de famille",
-                "ownerName": "Nom du propriétaire"
+                "ownerName": "Nom du propriétaire",
+                "agentName": "Nom de l'agent",
+                "firmName": "Nom de l'entreprise"
             }
         },
         "quickSearch": {
@@ -933,7 +934,7 @@
             "sswRequestProcessing": "Traiter la transaction",
             "sswRequestValidation": "Valider la transaction",
             "suitabilityReview": "Valider l'admissibilité",
-            "toaLetter": "Créer et envoyer le paquet de transfert",
+            "toaLetter": "Informer le transporteur cédant du transfert",
             "viewDetails": "View details"
         },
         "steps": {
@@ -976,6 +977,13 @@
             "toaLetter.toaPacketGeneration": "Créer un dossier de transfert",
             "toaLetter.toaPacketDelivery": "Envoyer le dossier de transfert",
             "toaLetter.contractStatusValidation": "Confirmer le statut du contrat",
+            "toaLetter.transferPacketDeliveryInstructions": "Valider les informations de transfert",
+            "toaLetter.createTransferPacket": "Créer un paquet de transfert",
+            "toaLetter.sendToaPacket": "Envoyer un paquet de transfert",
+            "toaLetter.preNoteEligibility": "Valider les règles de la lettre de pré-notification",
+            "toaLetter.preNoteDeliveryInstructions": "Confirmer les informations de pré-notification et les instructions de livraison",
+            "toaLetter.preNoteLetterGeneration": "Créer une lettre de pré-notification",
+            "toaLetter.sendPreNoteLetter": "Envoyer une lettre de pré-notification",
             "premiumProcessing.erDetailValidation": "Créer un dossier d'échange de remplacement (ER)",
             "premiumProcessing.suspenseValidation": "Confirmer que les fonds ont été reçus en attente",
             "premiumProcessing.paymentSourceValidation": "Confirmer la source de paiement",
@@ -1034,6 +1042,13 @@
             "toaLetter.toaPacketGeneration": "Nous combinons la lettre de transfert et les documents justificatifs nécessaires en un seul fichier afin qu'il puisse être envoyé au transporteur cédant.",
             "toaLetter.toaPacketDelivery": "Nous envoyons le dossier de transfert par courrier ou fax. Une fois envoyé, nous aurons un numéro de suivi (pour le courrier) ou un message de succès (pour le fax).",
             "toaLetter.contractStatusValidation": "Nous confirmons dans le système d'enregistrement que le statut du contrat est correct.",
+            "toaLetter.transferPacketDeliveryInstructions": "Nous examinons les documents de transfert et échangeons des informations de remplacement avant de créer le dossier de transfert.",
+            "toaLetter.createTransferPacket": "Nous combinons la lettre de transfert et les documents justificatifs nécessaires dans un seul fichier afin qu'il puisse être envoyé au transporteur cédant.",
+            "toaLetter.sendToaPacket": "Nous envoyons le paquet de transfert par courrier ou par fax. Une fois envoyé, nous recevons un numéro de suivi (pour le courrier) ou un message de réussite (pour le fax).",
+            "toaLetter.preNoteEligibility": "Nous vérifions si une lettre de pré-notification est nécessaire pour ce transporteur et ce produit",
+            "toaLetter.preNoteDeliveryInstructions": "Nous vérifions toutes les informations et les détails de livraison de la lettre de pré-note.",
+            "toaLetter.preNoteLetterGeneration": "Nous générons la lettre de pré-notification, qui informe le transporteur cédant que le demandeur a demandé un transfert.",
+            "toaLetter.sendPreNoteLetter": "Nous envoyons la lettre de pré-notification au transporteur cédant par courrier ou par fax, en fonction de ses préférences.",
             "premiumProcessing.erDetailValidation": "Nous créons un dossier dans le système d'enregistrement pour enregistrer le montant de la prime et le type d'échange.",
             "premiumProcessing.suspenseValidation": "Nous confirmons que les fonds ont été reçus et sont conservés sur le compte de suspense avant de les appliquer.",
             "premiumProcessing.paymentSourceValidation": "Nous confirmons que la source de paiement est légitime et correcte.",
@@ -3311,7 +3326,6 @@
                 "trustee": "Fiduciaire",
                 "yes": "Oui",
                 "no": "Non",
-
                 "options": {
                     "driversLicense": "Le permis de conduire",
                     "entityType": "Type d'entité",
@@ -3764,7 +3778,6 @@
             "coverageLimit": "Limite de préservation de couverture",
             "coverageLimitTooltip": "Les propriétaires peuvent retirer ce montant sans affecter leur couverture. En d'autres termes, ils peuvent retirer ce montant et conserver intact leur capital-décès."
         },
-
         "upcoming": {
             "manageAutopay": "$t(premium.upcoming.manageAutopay)",
             "oneTimePaymentText": "$t(premium.upcoming.oneTimePaymentText)",
@@ -4498,5 +4511,60 @@
         "RMD": "Programme RMD existant",
         "EFT": "Programme EFT existant",
         "noProgramFound": "Aucun programme existant trouvé"
+    },
+    "suitability": {
+        "tabs": {
+            "taskReview": "Données d’adéquation des entrées",
+            "confirm": "Confirmer",
+            "start": "Commencer",
+            "suitabilityForm": "Formulaire d'aptitude",
+            "summary": "Résumé"
+        },
+        "taskReview": {
+            "title": "Données d’adéquation des entrées",
+            "subTitle": "Le formulaire d'adéquation est-il complet?",
+            "options": {
+                "allSectionsAreComplete": "Toutes les sections sont complètes et prêtes pour la saisie des données.",
+                "missingDetails": "Toutes les sections ne sont pas complètes."
+            },
+            "view": "Voir",
+            "documentId": "ID du document",
+            "submitLabel": "Soumettre",
+            "continueLabel": "Continuer",
+            "cancelLabel": "Annuler"
+        },
+        "taskForm": {
+            "title": "Données d’adéquation des entrées",
+            "subTitle": "Saisissez manuellement toutes les données d'adéquation. Notez que l'annulation à tout moment effacera toutes les données saisies.",
+            "submitLabel": "Soumettre",
+            "continueLabel": "Continuer",
+            "cancelLabel": "Annuler"
+        },
+        "confirmStep": {
+            "title": "Soumise!",
+            "subTitle": "Les données d'adéquation des entrées ont été soumises.",
+            "cta": "Aller au virement entrant",
+            "secondaryCta": "Fermer",
+            "submitTask": "Soumettre les détails de l'adéquation"
+        }
+    },
+    "suitabilityReview": {
+        "tabs": {
+            "taskReview": "Évaluation de la pertinence",
+            "confirm": "Confirmer"
+        },
+        "taskForm": {
+            "title": "Évaluation de la pertinence",
+            "subTitle": "La candidature de ce client a été marquée pour examen. Acceptez ou refusez chaque problème avant de soumettre une décision finale.",
+            "submitLabel": "Soumettre la décision",
+            "cancelLabel": "Annuler"
+        },
+        "confirmStep": {
+            "title": "Soumise!",
+            "subTitle": "La pertinence de l'avis a été soumise.",
+            "cta": "Aller au virement entrant",
+            "secondaryCta": "Fermer",
+            "submitTask": "Soumettre les détails de l'adéquation"
+        }
     }
 }

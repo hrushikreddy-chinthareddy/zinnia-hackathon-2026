@@ -1,0 +1,11 @@
+.arrayField {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+}
+
+.arrayFieldList {
+    display: flex;
+    flex-direction: column;
+}

@@ -182,12 +182,10 @@
             "viewDetails": {
                 "text": "View Details"
             },
-
             "diaryNotesWarning": {
                 "text": "Attention: Diary notes present. Review required to submit.",
                 "clickToView": "Click to view"
             },
-
             "notes": {
                 "text": "Notes"
             },
@@ -740,6 +738,7 @@
             },
             "buttons": {
                 "policyNumber": "Policy number",
+                "policyPlaceholder": "e.g. 1234567",
                 "ownerSsn": "Owner SSN",
                 "ssn": "SSN",
                 "ssnFullLabel": "Owner Social Security number",
@@ -747,7 +746,9 @@
                 "name": "Name",
                 "firstName": "First name",
                 "lastName": "Last name",
-                "ownerName": "Owner name"
+                "ownerName": "Owner name",
+                "agentName": "Agent name",
+                "firmName": "Firm name"
             }
         },
         "quickSearch": {
@@ -940,7 +941,7 @@
             "sswRequestProcessing": "Process transaction",
             "sswRequestValidation": "Validate transaction",
             "suitabilityReview": "Validate suitability",
-            "toaLetter": "Create and send transfer packet",
+            "toaLetter": "Notify ceding carrier of transfer",
             "viewDetails": "View details"
         },
         "steps": {
@@ -983,6 +984,13 @@
             "toaLetter.toaPacketGeneration": "Create transfer packet",
             "toaLetter.toaPacketDelivery": "Send transfer packet",
             "toaLetter.contractStatusValidation": "Confirm contract status",
+            "toaLetter.transferPacketDeliveryInstructions": "Validate transfer information",
+            "toaLetter.createTransferPacket": "Create transfer packet",
+            "toaLetter.sendToaPacket": "Send transfer packet",
+            "toaLetter.preNoteEligibility": "Validate pre-notification letter rules",
+            "toaLetter.preNoteDeliveryInstructions": "Confirm pre-notification information and delivery instructions",
+            "toaLetter.preNoteLetterGeneration": "Create pre-notification letter",
+            "toaLetter.sendPreNoteLetter": "Send pre-notification letter",
             "premiumProcessing.erDetailValidation": "Create exchange replacement (ER) record",
             "premiumProcessing.suspenseValidation": "Confirm funds received in suspense",
             "premiumProcessing.paymentSourceValidation": "Confirm payment source",
@@ -1041,6 +1049,13 @@
             "toaLetter.toaPacketGeneration": "We combine transfer letter and necessary supporting documents into a single file so it can be sent over to the ceding carrier.",
             "toaLetter.toaPacketDelivery": "We send the transfer packet via mail or fax. Once sent, we will have a tracking number (for mail) or a success message (for fax).",
             "toaLetter.contractStatusValidation": "We confirm in system of record that the contract status is correct.",
+            "toaLetter.transferPacketDeliveryInstructions": "We review the transfer documents and exchange replacement information before creating the transfer packet.",
+            "toaLetter.createTransferPacket": "We combine transfer letter and necessary supporting documents into a single file so it can be sent over to the ceding carrier.",
+            "toaLetter.sendToaPacket": "We send the transfer packet via mail or fax. Once sent, we will receive a tracking number (for mail) or a success message (for fax).",
+            "toaLetter.preNoteEligibility": "We check if a pre-notification letter is needed for this carrier and product",
+            "toaLetter.preNoteDeliveryInstructions": "We verify all information and delivery details for the pre-note letter.",
+            "toaLetter.preNoteLetterGeneration": "We generate the pre-notification letter, which lets the ceding carrier know that the applicant has requested a transfer.",
+            "toaLetter.sendPreNoteLetter": "We send the pre-notification letter to the ceding carrier by mail or fax, based on their preferences. ",
             "premiumProcessing.erDetailValidation": "We create a record in the system of record to record the premium amount and exchange type.",
             "premiumProcessing.suspenseValidation": "We confirm that funds were received and are held in the suspense account before applying them.",
             "premiumProcessing.paymentSourceValidation": "We confirm that the payment source is legitimate and correct.",
@@ -2911,7 +2926,6 @@
                 "reversePayment": "Reverse payment",
                 "reversePremiumPayment": "Reverse premium payment",
                 "successTitle": "Submitted!",
-
                 "successSubtitle": "A ",
                 "successSubtitle2": " of ",
                 "successSubtitle3": " was submitted for reversal to ",
@@ -4530,5 +4544,61 @@
         "RMD": "Existing RMD Program",
         "EFT": "Existing EFT Program",
         "noProgramFound": "No Existing Program Found"
+    },
+    "suitability": {
+        "tabs": {
+            "taskReview": "Input Suitability Data",
+            "confirm": "Confirm",
+            "start": "Start",
+            "suitabilityForm": "Suitability form",
+            "nigoDetails": "Missing Information",
+            "summary": "Summary"
+        },
+        "taskReview": {
+            "title": "Input Suitability Data",
+            "subTitle": "Is the suitability form complete?",
+            "options": {
+                "allSectionsAreComplete": "All sections are complete and ready for data entry.",
+                "missingDetails": "All sections are not complete."
+            },
+            "view": "View",
+            "documentId": "Document ID",
+            "submitLabel": "Submit",
+            "continueLabel": "Continue",
+            "cancelLabel": "Cancel"
+        },
+        "taskForm": {
+            "title": "Input Suitability Data",
+            "subTitle": "Manually enter all suitability data. Note that canceling at any point will erase all the entered data.",
+            "submitLabel": "Submit",
+            "continueLabel": "Continue",
+            "cancelLabel": "Cancel"
+        },
+        "confirmStep": {
+            "title": "Submitted!",
+            "subTitle": "Input suitability data was submitted.",
+            "cta": "Go to incoming transfer",
+            "secondaryCta": "Close",
+            "submitTask": "Submit suitability details"
+        }
+    },
+    "suitabilityReview": {
+        "tabs": {
+            "taskReview": "Review Suitability",
+            "confirm": "Confirm"
+        },
+        "taskForm": {
+            "title": "Review Suitability",
+            "subTitle": "This customer's application was flagged for review. Accept or Decline each issue before submitting a final decision.",
+            "submitLabel": "Submit decision",
+            "cancelLabel": "Cancel"
+        },
+        "confirmStep": {
+            "title": "Submitted!",
+            "subTitle": "Review suitability was submitted.",
+            "cta": "Go to incoming transfer",
+            "secondaryCta": "Close",
+            "submitTask": "Submit Suitability details"
+        }
     }
 }
