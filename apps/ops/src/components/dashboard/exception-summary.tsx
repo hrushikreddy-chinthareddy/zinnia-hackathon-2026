@@ -33,7 +33,7 @@ export const ExceptionSummary = ({
     const [loading, exceptionData] = useExceptionData({ startDate, carrierOrBrokerDealer });
     const chartRef = useRef<HighchartsReact.RefObject>(null);
 
-    const chartConfig: Highcharts.Options = useMemo(() => {
+    const chartConfig: Highcharts.Options = useMemo((): Highcharts.Options => {
         if (!exceptionData) return {};
         const year = exceptionData.startYear;
         const month = exceptionData.startMonth;
@@ -64,9 +64,6 @@ export const ExceptionSummary = ({
         }
 
         return {
-            accessissibility: {
-                enabled: true,
-            },
             chart: {
                 height: 600,
             },
@@ -145,6 +142,9 @@ export const ExceptionSummary = ({
             plotOptions: {
                 series: {
                     connectNulls: false,
+                    marker: {
+                        enabled: false,
+                    },
                 },
                 column: {
                     stacking: 'percent',

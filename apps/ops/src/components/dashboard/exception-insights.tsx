@@ -47,14 +47,21 @@ export const ExceptionInsights = ({
     const shouldShowCaseInsights = useCaseInsightsPermission();
     const [loading, setLoading] = useState(false);
 
-    const getOpenAiSummary = async (caseStats: DashboardResponseData[]) => {
+    const getOpenAiSummary = async (caseStats: DashboardResponseData[], processSubType: string) => {
         try {
             setLoading(true);
             const summary = await getCaseInsights({
                 content: JSON.stringify(caseStats),
-                prompt: `You are an expert in all things case data. Your job is to summarize the data for business and executive users.
-                          They want simple and insightful information about the data provided to you. The cases provided to you here are open cases delineated by insurance carrier. Avoid using phrases such as "the data".
-                          Your responses should be insightful and will be displayed on a UI as a summary for a module related to a pie chart. Use percentages and real data where it makes sense. Keep it conscise and to the point. Format number values to U.S.`,
+                prompt: `You are an expert in all things new business application data. Your job is to summarize the data for business and executive users. They want simple and insightful information about the data provided to you. The data provided to you here are completed ${sankeyTitleFormat(
+                    processSubType,
+                    false
+                )} applications, but the ${sankeyTitleFormat(
+                    processSubType,
+                    false
+                )} applications encountered exceptions along their path to completion. The data is grouped by Exception Category and the values represent an exception that occurred for a ${sankeyTitleFormat(
+                    processSubType,
+                    false
+                )} application. Avoid using phrases such as "the data". Your responses should be insightful and will be displayed on a UI as a summary for a module related to a distribution chart. Use percentages and real data where it makes sense. Keep it concise and to the point. Format number values to U.S.`,
             });
             setLoading(false);
             return summary;
@@ -62,13 +69,11 @@ export const ExceptionInsights = ({
             return '';
         }
     };
-    const exceptions = useMemo(
-        () =>
-            completedCasesByProcessSubType
-                .find(item => item.name === selectedSubprocess)
-                ?.values?.filter(item => item.name !== 'NULL_VALUE'),
-        [completedCasesByProcessSubType, selectedSubprocess]
-    );
+    const exceptions = useMemo(() => {
+        return completedCasesByProcessSubType
+            .find(item => item.name === selectedSubprocess)
+            ?.values?.filter(item => item.name !== 'NULL_VALUE');
+    }, [completedCasesByProcessSubType, selectedSubprocess]);
     const noData = !exceptions || exceptions?.length === 0;
     const chartOptions: Highcharts.Options = useMemo(() => {
         // todo: XG - add ref for keeping track of all exception types so we can animate smoothly
@@ -153,20 +158,23 @@ export const ExceptionInsights = ({
             return;
         }
         if (exceptions?.length) {
-            getOpenAiSummary(exceptions).then(summary => {
+            getOpenAiSummary(exceptions, selectedSubprocess).then(summary => {
                 if (summary) {
                     setAiSummary(summary);
                 }
             });
         } else {
-            setAiSummary('');
+            setAiSummary(`No exceptions for ${sankeyTitleFormat(selectedSubprocess)} in the ${timeframe}.`);
         }
-    }, [exceptions, shouldShowCaseInsights]);
+    }, [exceptions, selectedSubprocess, shouldShowCaseInsights, timeframe]);
 
     return (
         <div className={clsx('bg-white flex flex-col min-h-[600px] lg:flex-row gap-4 pt-6')}>
             <div className="basis-1/3 flex flex-col gap-4 items-start">
-                <Typography variant={TypographyVariant.H3}>{sankeyTitleFormat(selectedSubprocess, false)}</Typography>
+                <div>
+                    <Typography variant={TypographyVariant.H3}>{sankeyTitleFormat(selectedSubprocess, false)}</Typography>
+                    <Typography variant={TypographyVariant.Label}>Exception Distribution</Typography>
+                </div>
                 {loading ? (
                     <div className="grid gap-4 h-full mb-4 w-full place-content-center bg-[--color-base-surface-surface-tertiary]">
                         <PageLoader />

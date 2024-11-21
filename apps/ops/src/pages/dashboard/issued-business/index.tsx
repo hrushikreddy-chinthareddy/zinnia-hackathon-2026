@@ -145,7 +145,7 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
         }
     };
 
-    const [selectedSubprocess, setSelectedSubprocess] = useState<string>(completedCasesByProcessSubType[0].name);
+    const [selectedSubprocess, setSelectedSubprocess] = useState<string>('');
 
     const handleSelectedSubprocess = (subprocess: string) => {
         setSelectedException(undefined);
@@ -198,10 +198,13 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
                 },
                 groupBy: [GroupByOptions.ProcessSubType, GroupByOptions.ExceptionCategory],
             });
+
         setLoading(true);
         getCases()
             .then(response => {
                 if (!!response.data && Array.isArray(response.data)) {
+                    console.log(response.data[0].name);
+                    setSelectedSubprocess(response.data[0].name);
                     setExceptiondata(response.data.slice(0, 5));
                 } else {
                     setExceptiondata([]);
@@ -298,7 +301,7 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
 
                     <div className=" bg-white p-8 flex flex-col gap-4 rounded">
                         <Typography variant={TypographyVariant.H2}>Top 5 Processes by Volume</Typography>
-                        <RadioGroup.Root asChild onValueChange={handleSelectedSubprocess}>
+                        <RadioGroup.Root asChild onValueChange={handleSelectedSubprocess} value={selectedSubprocess}>
                             <div className=" grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 !items-stretch !border-b-0 !after:content-none [& .indicator]">
                                 {exceptionData.map((element, index) => {
                                     return (
