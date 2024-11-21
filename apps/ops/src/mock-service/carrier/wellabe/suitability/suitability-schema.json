@@ -996,7 +996,7 @@
                     },
                     "benefitAnnuityQuestions": {
                         "type": "object",
-                        "title": "Benefit annuity questions",
+                        "title": "Benefit Annuity Questions",
                         "properties": {
                             "understandIncomeAdjustmentFactor": {
                                 "type": "string",
@@ -1008,7 +1008,7 @@
                             },
                             "planForIncomeDecreaseAfter10Years": {
                                 "type": "array",
-                                "title": "Plan for income decrease after 10 years",
+                                "title": "Plan for Income Decrease After 10 Years",
                                 "items": {
                                     "type": "string"
                                 }

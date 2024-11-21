@@ -1,5 +1,5 @@
 import { FieldTemplateProps, getUiOptions } from '@rjsf/utils';
-import { Divider, Label, Tooltip } from '@zinnia/bloom/components';
+import { Divider, Label, Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
 
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 
@@ -11,7 +11,10 @@ export function FieldTemplate(props: FieldTemplateProps) {
     const helpText = uiOptions.help;
 
     const helpInformation = helpText && (
-        <Tooltip trigger={<CircleInfoIcon onClick={e => e.preventDefault()} height={'16px'} width={'16px'} className="text-primary" />}>
+        <Tooltip
+            trigger={<CircleInfoIcon onClick={e => e.preventDefault()} height={'16px'} width={'16px'} className="text-primary" />}
+            placement={TooltipPlacement.TopRight}
+        >
             {helpText}
         </Tooltip>
     );

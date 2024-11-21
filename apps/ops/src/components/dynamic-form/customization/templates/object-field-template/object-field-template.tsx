@@ -1,6 +1,5 @@
 import { getUiOptions, ObjectFieldTemplateProps } from '@rjsf/utils';
-import { Tooltip } from '@zinnia/bloom/components';
-import clsx from 'clsx';
+import { Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
 
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 
@@ -11,15 +10,22 @@ export function ObjectFieldTemplate(props: ObjectFieldTemplateProps) {
     const helpText = uiOptions.help;
 
     const helpInformation = helpText && (
-        <Tooltip trigger={<CircleInfoIcon height={'16px'} width={'16px'} className="text-primary" />}>{helpText}</Tooltip>
+        <Tooltip
+            trigger={<CircleInfoIcon onClick={e => e.preventDefault()} height={'16px'} width={'16px'} className="text-primary" />}
+            placement={TooltipPlacement.TopRight}
+        >
+            {helpText}
+        </Tooltip>
     );
 
     return (
-        <div className="my-1">
+        <div>
             {props.title && (
-                <div className={clsx('my-2 flex', style.container)}>
-                    <div className={style.text}>{props.title}</div>
-                    {helpInformation}
+                <div className={'flex my-2'}>
+                    <div className={style.container}>
+                        <div className={style.text}>{props.title}</div>
+                        {helpInformation}
+                    </div>
                 </div>
             )}
 
