@@ -3,6 +3,7 @@ import { useTranslation } from 'next-i18next';
 import { TranslationFiles } from '@deps/config/translations';
 
 import Typography, { TypographyVariant } from "../typography/typography";
+import { PiiWrapper } from '../pii/PiiWrapper';
 
 interface DocumentInfoProps {
     documentNumber: string;
@@ -16,7 +17,7 @@ export const DocumentInfo = ({ documentNumber }: DocumentInfoProps) => {
                 <label className="font-primary text-[12px] font-bold text-gray-900">
                     {t('document.title')}
                 </label>
-                <Typography variant={TypographyVariant.BodySm}>{documentNumber}</Typography>
+                <Typography variant={TypographyVariant.BodySm}><PiiWrapper>{documentNumber}</PiiWrapper></Typography>
             </div>
         </div>
     )

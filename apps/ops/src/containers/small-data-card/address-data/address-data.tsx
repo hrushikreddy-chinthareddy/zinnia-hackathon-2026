@@ -63,6 +63,7 @@ export const AddressTypeAndAddress = ({ address, addressType, isAddressChange = 
                         variant={isAddressChange ? ContentVariant.BodySmBold : ContentVariant.BodySm}
                         popoverBody={fullAddress}
                         popoverClassName="w-full "
+                        pii={true}
                     />
                 ))}
             </div>
