@@ -28,43 +28,41 @@ function ArrayFieldTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
         ButtonTemplates: { AddButton },
     } = registry.templates;
     return (
-        <div className="mt-4">
-            <Card variant="classic">
-                <ArrayFieldTitleTemplate
-                    idSchema={idSchema}
-                    title={uiOptions.title || title}
-                    schema={schema}
-                    uiSchema={uiSchema}
-                    required={required}
-                    registry={registry}
-                />
-                <ArrayFieldDescriptionTemplate
-                    idSchema={idSchema}
-                    description={uiOptions.description || schema.description}
-                    schema={schema}
-                    uiSchema={uiSchema}
-                    registry={registry}
-                />
-                <div key={`array-item-list-${idSchema.$id}`} className={style.arrayFieldList}>
-                    {items &&
-                        items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
-                            <ArrayFieldItemTemplate key={key} {...itemProps} />
-                        ))}
-                    {canAdd && !readonly && (
-                        <div className="flex">
-                            <AddButton
-                                className="array-item-add"
-                                title={idSchema.$id}
-                                onClick={onAddClick}
-                                disabled={disabled || readonly}
-                                uiSchema={uiSchema}
-                                registry={registry}
-                            />
-                        </div>
-                    )}
-                </div>
-            </Card>
-        </div>
+        <Card variant="classic">
+            <ArrayFieldTitleTemplate
+                idSchema={idSchema}
+                title={uiOptions.title || title}
+                schema={schema}
+                uiSchema={uiSchema}
+                required={required}
+                registry={registry}
+            />
+            <ArrayFieldDescriptionTemplate
+                idSchema={idSchema}
+                description={uiOptions.description || schema.description}
+                schema={schema}
+                uiSchema={uiSchema}
+                registry={registry}
+            />
+            <div key={`array-item-list-${idSchema.$id}`} className={style.arrayFieldList}>
+                {items &&
+                    items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
+                        <ArrayFieldItemTemplate key={key} {...itemProps} />
+                    ))}
+                {canAdd && !readonly && (
+                    <div className="flex">
+                        <AddButton
+                            className="array-item-add"
+                            title={idSchema.$id}
+                            onClick={onAddClick}
+                            disabled={disabled || readonly}
+                            uiSchema={uiSchema}
+                            registry={registry}
+                        />
+                    </div>
+                )}
+            </div>
+        </Card>
     );
 }
 
