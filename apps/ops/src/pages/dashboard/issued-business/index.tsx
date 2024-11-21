@@ -31,12 +31,8 @@ import { useIntersectionObserver } from '@deps/hooks/useIntersectionObserver';
 import { Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { UserPermission } from '@deps/models/user-profile';
-import {
-    DashboardResponseData,
-    fetchAgentsSSR,
-    fetchCompletedCasesByProcessSubType,
-    fetchCompletedCasesByProcessSubTypeSSR,
-} from '@deps/queries/api/dashboard';
+import { getCaseDashboardStats } from '@deps/queries/api/cases';
+import { DashboardResponseData, fetchAgentsSSR, fetchCompletedCasesByProcessSubTypeSSR } from '@deps/queries/api/dashboard';
 import { checkTupleSsr, getCarrierListServerSSR } from '@deps/queries/api/fga';
 import { FgaRelation } from '@deps/types/fga';
 import { getCarrierListItem, getCarrierNameByClientId, getClientIdsByCarrierName } from '@deps/utils/carriers';
@@ -194,7 +190,7 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
 
     useEffect(() => {
         const getCases = async () =>
-            await fetchCompletedCasesByProcessSubType({
+            await getCaseDashboardStats({
                 filter: {
                     createdDateStart: createdDateStart,
                     process: [Processes.NewBusiness],
@@ -205,7 +201,11 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
         setLoading(true);
         getCases()
             .then(response => {
-                setExceptiondata(response.slice(0, 5));
+                if (!!response.data && Array.isArray(response.data)) {
+                    setExceptiondata(response.data.slice(0, 5));
+                } else {
+                    setExceptiondata([]);
+                }
             })
             .finally(() => {
                 setLoading(false);
