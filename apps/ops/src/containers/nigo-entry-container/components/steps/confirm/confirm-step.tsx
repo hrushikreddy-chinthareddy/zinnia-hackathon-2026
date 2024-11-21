@@ -18,6 +18,7 @@ import { updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 
 import { useNigoEntry } from '../../nigo-entry-provider';
+import { selOptionType } from '../service-form-review/service-form-review';
 interface ConfirmStepProps {
     documentNumber?: string;
     docType?: string;
@@ -28,11 +29,19 @@ interface ConfirmStepProps {
 const ConfirmStep = ({ document}: ConfirmStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.confirmStep' });
     const router = useRouter();
-    const { isReadyForDataEntry, submitFailed, setSubmitFailed } = useNigoEntry();
+    const { submitFailed, setSubmitFailed, sectionOption } = useNigoEntry();
     const formState = useContext(FormDataContext);
     const [isLoading, setIsLoading] = useState(false);
     const [timer] = useState(performance.now());
 
+    const getSubmitLabel = () => {
+        switch(sectionOption) {
+            case selOptionType.DATA_ENTRY: return t('submitTask');
+            case selOptionType.NIGO_ENTRY: return t('submitNigo');
+            case selOptionType.DOC_INDEXING: return t('submitDocIndexing');
+            default: return t('submit');
+        }
+    }
     const submit = useCallback(async () => {
         setIsLoading(true);
         if (TaskApiVersionMapper[formState.initialForm.taskType] === ApiVersion.v2 && formState.initialForm.status !== TaskStatus.Completed) {
@@ -69,7 +78,7 @@ const ConfirmStep = ({ document}: ConfirmStepProps) => {
                 leaveRoute={'/create-case'}
                 submit={{
                     action: submit,
-                    text: isReadyForDataEntry ? t('submitTask') : t('submitNigo'),
+                    text: getSubmitLabel(),
                 }}
             />
         );

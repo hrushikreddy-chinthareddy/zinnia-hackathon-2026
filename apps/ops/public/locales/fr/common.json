@@ -4432,10 +4432,25 @@
             "subTitle": "Vérifiez le formulaire pour toute section manquante avant de continuer.",
             "options": {
                 "allSectionsAreComplete": "Toutes les sections sont complètes et prêtes pour la saisie des données.",
-                "missingDetails": "Il manque des détails"
+                "missingDetails": "Il manque des détails",
+                "incorrectDocIndexing": "The document was indexed incorrectly."
             },
             "view": "Voir",
-            "documentId": "ID du document"
+            "documentId": "ID du document",
+            "documentIndexingInfo": {
+                "suggestedDocumentType": "Suggested document type",
+                "notes": "Notes",
+                "documentOptions": {
+                    "systematic": "Systematic",
+                    "stopPayment": "Stop Payment",
+                    "returnedMail": "Returned Mail",
+                    "accountUpdates": "Account Updates",
+                    "requiredMinimumDistribution": "Required Minimum Distribution",
+                    "redemption": "Redemption",
+                    "policyUpdates": "Policy Updates",
+                    "outgoingTransfers": "Outgoing Transfers"
+                }
+            }
         },
         "formSelection": {
             "title": "Sélection de nouveau formulaire",

@@ -14,7 +14,8 @@ const INITIAL_FORM_DATA: any = {
 
 export const NigoEntryProvider = ({ children }: NigoEntryProviderProps) => {
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
-    const [isReadyForDataEntry, setIsReadyForDataEntry] = useState<boolean>(false);
+    //const [isReadyForDataEntry, setIsReadyForDataEntry] = useState<boolean>(false);
+    const [sectionOption, setSectionOption] = useState<any>(null);
     const [messages, setMessages] = useState<any>([]);
     const [exceptions, setExceptions] = useState<string[]>([]);
     const [transactionType, setTransactionType] = useState<CallCenterElement<string, SimpleOption>>({} as CallCenterElement<string, SimpleOption>);
@@ -27,7 +28,8 @@ export const NigoEntryProvider = ({ children }: NigoEntryProviderProps) => {
         <NigoEntryContext.Provider
             value={{
                 formData,
-                isReadyForDataEntry,
+                //isReadyForDataEntry,
+                sectionOption,
                 exceptions,
                 messages,
                 transactionType,
@@ -36,7 +38,8 @@ export const NigoEntryProvider = ({ children }: NigoEntryProviderProps) => {
                 formErrors,
                 submitFailed,
                 setFormData,
-                setIsReadyForDataEntry,
+                //setIsReadyForDataEntry,
+                setSectionOption,
                 setExceptions,
                 setMessages,
                 setTransactionType,

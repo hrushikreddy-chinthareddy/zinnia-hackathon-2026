@@ -4464,10 +4464,25 @@
             "subTitle": "Review the form for any missing sections before continuing.",
             "options": {
                 "allSectionsAreComplete": "All sections are complete and ready for data entry.",
-                "missingDetails": "There are missing details"
+                "missingDetails": "There are missing details",
+                "incorrectDocIndexing": "The document was indexed incorrectly."
             },
             "view": "View",
-            "documentId": "Document ID"
+            "documentId": "Document ID",
+            "documentIndexingInfo": {
+                "suggestedDocumentType": "Suggested document type",
+                "notes": "Notes",
+                "documentOptions": {
+                    "systematic": "Systematic",
+                    "stopPayment": "Stop Payment",
+                    "returnedMail": "Returned Mail",
+                    "accountUpdates": "Account Updates",
+                    "requiredMinimumDistribution": "Required Minimum Distribution",
+                    "redemption": "Redemption",
+                    "policyUpdates": "Policy Updates",
+                    "outgoingTransfers": "Outgoing Transfers"
+                }
+            }
         },
         "formSelection": {
             "title": "New Form Selection",
