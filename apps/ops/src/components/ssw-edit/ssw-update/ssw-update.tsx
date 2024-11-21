@@ -62,14 +62,14 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
         }
 
         setIsLoading(true);
-        let res;
+        let res: any;
         if (operationType === SswUpdateType.PROGRAM_TERMINATE) {
             res = requestProgramUpdate(item, operationType, formSign);
         }
         if (operationType === SswUpdateType.PROGRAM_UPDATE) {
             res = requestProgramUpdate(item, operationType, formSign);
         }
-        if (res) {
+        if (res?.status === 200) {
             setIsFormSubmitted(true);
             setIsLoading(false);
         } else {
