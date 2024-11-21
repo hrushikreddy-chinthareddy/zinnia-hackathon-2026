@@ -40,16 +40,6 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
     const [timer] = useState(performance.now());
     const source = getDocumentSource(document.documentNumber);
 
-    const requestProgramUpdate = async (existingProg: Program, operationType: SswUpdateType, formSign: FormSignature) => {
-        const successfulCaseUpdate = await updateTask(
-            initialForm.caseId,
-            initialForm?.taskId,
-            buildSSWFormData(TaskStatus.Completed, initialForm, formSign, existingProg, updateProgram, document, operationType),
-            timer
-        );
-        return successfulCaseUpdate;
-    };
-
     const handleFormAction = async (item: Program, operationType: SswUpdateType, formSign: FormSignature) => {
         if (source !== ChannelType.Phone) {
             const formErr = sswEditFormValidator(formSign, t);
@@ -60,16 +50,25 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
                 setFormErrors({});
             }
         }
-
         setIsLoading(true);
-        let res: any;
+        let res;
         if (operationType === SswUpdateType.PROGRAM_TERMINATE) {
-            res = requestProgramUpdate(item, operationType, formSign);
+            res = await updateTask(
+                initialForm.caseId,
+                initialForm?.taskId,
+                buildSSWFormData(TaskStatus.Completed, initialForm, formSign, item, updateProgram, document, operationType),
+                timer
+            );
         }
         if (operationType === SswUpdateType.PROGRAM_UPDATE) {
-            res = requestProgramUpdate(item, operationType, formSign);
+            res = await updateTask(
+                initialForm.caseId,
+                initialForm?.taskId,
+                buildSSWFormData(TaskStatus.Completed, initialForm, formSign, item, updateProgram, document, operationType),
+                timer
+            );
         }
-        if (res?.status === 200) {
+        if (res.status === 'COMPLETED') {
             setIsFormSubmitted(true);
             setIsLoading(false);
         } else {
