@@ -15,9 +15,9 @@ export function ObjectFieldTemplate(props: ObjectFieldTemplateProps) {
     );
 
     return (
-        <div className="mt-2">
+        <div className="my-1">
             {props.title && (
-                <div className={clsx('my-4 flex', style.container)}>
+                <div className={clsx('my-2 flex', style.container)}>
                     <div className={style.text}>{props.title}</div>
                     {helpInformation}
                 </div>

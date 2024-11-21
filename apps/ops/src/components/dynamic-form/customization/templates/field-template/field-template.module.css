@@ -3,6 +3,7 @@
 }
 
 .children {
-    margin-bottom: var(--measure-dimension-z-space-4, 0.125rem);
+    margin-top: var(--measure-dimension-z-space-2, 0.125rem);
+    margin-bottom: var(--measure-dimension-z-space-2, 0.125rem);
     width: 100%;
 }

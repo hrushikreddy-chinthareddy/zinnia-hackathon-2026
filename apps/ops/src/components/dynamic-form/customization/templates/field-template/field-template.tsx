@@ -18,12 +18,18 @@ export function FieldTemplate(props: FieldTemplateProps) {
     const fieldLabel = label ? `${label} ${required ? '*' : ''}` : '';
     return (
         <>
-            <div>{classNames?.indexOf('divider') !== -1 && <Divider direction="horizontal" color="subtle" />}</div>
+            {classNames?.indexOf('divider') !== -1 && (
+                <div className="mb-4">
+                    <Divider direction="horizontal" color="subtle" />
+                </div>
+            )}
             <div className={styles.children}>
                 {displayLabel && (
-                    <Label labelFor={id} interactiveElements={[helpInformation]}>
-                        {fieldLabel}
-                    </Label>
+                    <div className="mb-1">
+                        <Label labelFor={id} interactiveElements={[helpInformation]}>
+                            {fieldLabel}
+                        </Label>
+                    </div>
                 )}
                 {description}
                 {readonly && typeof formData === 'string' ? formData : children}
