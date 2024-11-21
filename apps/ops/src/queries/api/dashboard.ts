@@ -32,14 +32,14 @@ export type DashboardRequestAPIResponse = {
   totalElements: number;
 }
 
-const baseDashboardUrl = `${baseAppUrl}/api/case/v1/dashboard`;
+// const baseDashboardUrl = `${baseAppUrl}/api/case/v1/dashboard`;
 const baseDashboardUrlSSR = `${se2ApiServerUrl}/dashboard`;
 
 
 export const fetchDashboardStats = async (body: DashboardRequestBody, fnName = 'fetchDashboardStats', config?: AxiosRequestConfig): Promise<DashboardRequestAPIResponse> => {
-  const url = new URL(`${baseDashboardUrl}/stats`);
+  const url = (`${baseAppUrl}/api/case/v1/dashboard/stats`);
   try {
-    const { data } = await client.post<DashboardRequestBody, AxiosResponse<DashboardRequestAPIResponse>>(url.toString(), body, config);
+    const { data } = await client.post<DashboardRequestBody, AxiosResponse<DashboardRequestAPIResponse>>(url, body, config);
     return data;
   } catch (error: any) {
     logError('fetchDashboardStats', {
