@@ -68,9 +68,10 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
                 timer
             );
         }
+
         if (res.status === 'COMPLETED') {
-            setIsFormSubmitted(true);
             setIsLoading(false);
+            setIsFormSubmitted(true);
         } else {
             setSubmitError(true);
             setIsLoading(false);
@@ -113,7 +114,7 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
             },
             {
                 ariaLabel: t('tabs.confirm.tabTitle'),
-                component: <>{isLoading ? <PageLoader variant={PageLoaderVariant.Center} /> : <div></div>}</>,
+                component: <>{<div></div>}</>,
                 screenReaderLabel: t('tabs.confirm.tabTitle'),
                 index: 4,
                 text: t('tabs.confirm.tabTitle'),
