@@ -72,7 +72,10 @@ function FormSelectionStep({ availableFormsTransactions, policy, documentData, c
     const submit = useCallback(async () => {
         setIsLoading(true);
 
-        if (TaskApiVersionMapper[formState.initialForm.taskType] === ApiVersion.v2 && formState.initialForm.status !== TaskStatus.Completed) {
+        if (
+            TaskApiVersionMapper[formState.initialForm.taskType] === ApiVersion.v2 &&
+            formState.initialForm.status !== TaskStatus.Completed
+        ) {
             const successfulCaseUpdate = await updateTask(
                 formState.initialForm.caseId,
                 formState.initialForm.taskId,
@@ -92,10 +95,11 @@ function FormSelectionStep({ availableFormsTransactions, policy, documentData, c
         setIsLoading(false);
     }, [documentData, formState, setSubmitFailed, timer]);
 
-
     useEffect(() => {
-       if ((isFormIdRequired && !isNullEmptyOrUndefined(document?.selected?.formId))
-            || (!isFormIdRequired && !isNullEmptyOrUndefined(transactionType.selected) && !isNullEmptyOrUndefined(transactionSubType.selected))) {
+        if (
+            (isFormIdRequired && !isNullEmptyOrUndefined(document?.selected?.formId)) ||
+            (!isFormIdRequired && !isNullEmptyOrUndefined(transactionType.selected) && !isNullEmptyOrUndefined(transactionSubType.selected))
+        ) {
             setFormProgram(prevFormProgram => {
                 return {
                     ...prevFormProgram,
@@ -115,17 +119,20 @@ function FormSelectionStep({ availableFormsTransactions, policy, documentData, c
                         text: document?.selected?.formShortName || null,
                     },
                     transactionDisplayName: {
-                        text: document?.selected?.formDisplayName || null,
+                        text: document?.selected?.formShortName || null,
                     },
                 };
             });
         }
     }, [clientCode, document?.selected, isFormIdRequired, setFormProgram, transactionSubType.selected, transactionType.selected]);
 
-    const handleStepContinue = useCallback(async() => {
-        if (isFormIdRequired  == true && isNullEmptyOrUndefined(document?.selected?.formId)) {
+    const handleStepContinue = useCallback(async () => {
+        if (isFormIdRequired == true && isNullEmptyOrUndefined(document?.selected?.formId)) {
             return setError(t('errors.selectForm') as string);
-        } else if (isFormIdRequired === false && (isNullEmptyOrUndefined(transactionType.selected) || isNullEmptyOrUndefined(transactionSubType.selected))) {
+        } else if (
+            isFormIdRequired === false &&
+            (isNullEmptyOrUndefined(transactionType.selected) || isNullEmptyOrUndefined(transactionSubType.selected))
+        ) {
             return setError(t('errors.selectOptions') as string);
         } else {
             await submit();

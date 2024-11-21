@@ -147,7 +147,7 @@ const SendDocument = ({ policy, availableFormsTransactions, shouldShowCaseButton
             component: (
                 <ConfirmComponent
                     shouldShowCaseButton={shouldShowCaseButton}
-                    formNames={formDetails.map(formDetail => formDetail.document.selected?.formDisplayName || '')}
+                    formNames={formDetails.map(formDetail => formDetail.document.selected?.formShortName || '')}
                 />
             ),
             screenReaderLabel: confirmLabel,
