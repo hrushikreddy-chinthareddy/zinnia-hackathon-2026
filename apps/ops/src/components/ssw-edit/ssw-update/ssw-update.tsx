@@ -101,7 +101,7 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
                 ariaLabel: t('signTabTitle'),
                 component: <Signature />,
                 screenReaderLabel: t('signTabTitle'),
-                isVisible: () => document?.source === ChannelType.Email,
+                isVisible: () => document?.source !== ChannelType.Phone,
                 text: t('signTabTitle'),
             },
             {
