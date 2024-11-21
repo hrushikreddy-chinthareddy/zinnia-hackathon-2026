@@ -25,43 +25,41 @@ export const ExceptionSummary = ({
     startDate,
     timeframe = '',
     carrierOrBrokerDealer = GroupByOptions.Carrier,
+    processSubType,
 }: {
     startDate: string;
     timeframe?: string;
     carrierOrBrokerDealer?: GroupByOptions.Carrier | GroupByOptions.BrokerDealerName;
+    processSubType?: string;
 }) => {
-    const [loading, exceptionData] = useExceptionData({ startDate, carrierOrBrokerDealer });
+    const [loading, exceptionData] = useExceptionData({ startDate, carrierOrBrokerDealer, processSubType });
     const chartRef = useRef<HighchartsReact.RefObject>(null);
 
     const chartConfig: Highcharts.Options = useMemo((): Highcharts.Options => {
         if (!exceptionData) return {};
         const year = exceptionData.startYear;
         const month = exceptionData.startMonth;
-        let weeklyData: Highcharts.Options['series'] = [];
-        let monthlyData: Highcharts.Options['series'] = [];
-        if (exceptionData?.weekly) {
-            weeklyData = Object.keys(exceptionData.weekly).map(carrier => ({
-                name: carrier,
-                pointInterval: 24 * 3600 * 1000 * 7,
-                color: caseChartHelpers.getColors()[exceptionData.carriers.indexOf(carrier)],
-                data: exceptionData.weekly[carrier],
-                type: 'line' as const,
-                yAxis: 0,
-                linkedTo: `column-${carrier}`,
-            }));
-        }
-        if (exceptionData?.monthly) {
-            monthlyData = Object.keys(exceptionData.monthly).map(carrier => ({
-                name: carrier,
-                color: caseChartHelpers.getColors()[exceptionData.carriers.indexOf(carrier)],
-                data: exceptionData.monthly[carrier].map((val, index) => {
-                    return [dayjs().year(year).month(month).add(index, 'month').startOf('day').startOf('month').unix() * 1000, val];
-                }),
-                id: `column-${carrier}`,
-                type: 'column' as const,
-                yAxis: 1,
-            }));
-        }
+
+        const weeklyData = Object.keys(exceptionData.weekly).map(carrier => ({
+            name: carrier,
+            pointInterval: 24 * 3600 * 1000 * 7,
+            color: caseChartHelpers.getColors()[exceptionData.carriers.indexOf(carrier)],
+            data: exceptionData.weekly[carrier],
+            type: 'line' as const,
+            yAxis: 0,
+            linkedTo: `column-${carrier}`,
+        }));
+
+        const monthlyData = Object.keys(exceptionData.monthly).map(carrier => ({
+            name: carrier,
+            color: caseChartHelpers.getColors()[exceptionData.carriers.indexOf(carrier)],
+            data: exceptionData.monthly[carrier].map((val, index) => {
+                return [dayjs().year(year).month(month).add(index, 'month').startOf('day').startOf('month').unix() * 1000, val];
+            }),
+            id: `column-${carrier}`,
+            type: 'column' as const,
+            yAxis: 1,
+        }));
 
         return {
             chart: {

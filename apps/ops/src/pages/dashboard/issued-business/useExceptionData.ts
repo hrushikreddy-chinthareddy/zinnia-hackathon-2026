@@ -58,7 +58,7 @@ const useExceptionData = ({
                         createdDateStart: createdDateStart,
                         process: [Processes.NewBusiness],
                         caseStatus: [Statuses.Completed],
-                        ...(processSubType ? { processSubType: [processSubType] } : {}),
+                        requestSubType: [processSubType ?? ''],
                     },
                     groupBy: [carrierOrBrokerDealer, GroupByOptions.ExceptionCategory, GroupByOptions.UpdatedAt],
                 });
