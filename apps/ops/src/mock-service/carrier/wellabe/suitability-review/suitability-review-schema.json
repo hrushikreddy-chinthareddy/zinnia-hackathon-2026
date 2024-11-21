@@ -242,7 +242,8 @@
             "items": {
                 "ui:options": {
                     "label": false,
-                    "title": "Attachment"
+                    "title": "attachment",
+                    "minItems": 0
                 },
                 "documentId": {
                     "ui:options": {

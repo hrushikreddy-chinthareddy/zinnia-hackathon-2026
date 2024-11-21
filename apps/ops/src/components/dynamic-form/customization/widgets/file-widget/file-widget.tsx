@@ -76,7 +76,7 @@ function FilesInfo<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends F
     const { RemoveButton } = getTemplate<'ButtonTemplates', T, S, F>('ButtonTemplates', registry, options);
 
     return (
-        <ul className="file-info mt-4">
+        <ul className="file-info mt-2 pl-4">
             {filesInfo.map((fileInfo, key) => {
                 const { name, size, type } = fileInfo;
                 const handleRemove = () => onRemove(key);
@@ -153,7 +153,7 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         [multiple, value, onChange]
     );
     return (
-        <div className="mt-2">
+        <div>
             <label htmlFor={props.id} className={style.customFileUpload}>
                 Add Attachment {props.title}
             </label>
