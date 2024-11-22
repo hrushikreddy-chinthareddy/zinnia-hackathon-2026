@@ -119,7 +119,7 @@ function FormSelectionStep({ availableFormsTransactions, policy, documentData, c
                         text: document?.selected?.formShortName || null,
                     },
                     transactionDisplayName: {
-                        text: document?.selected?.formShortName || null,
+                        text: document?.selected?.formDisplayName || null,
                     },
                 };
             });
