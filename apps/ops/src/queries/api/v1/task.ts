@@ -9,6 +9,7 @@ import { baseAppUrl, se2ApiServerUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { logError, logInfo, parseErrorInformation } from '@deps/utils/server-logging';
+import { datadogLogs } from '@datadog/browser-logs';
 
 const baseCasesUrl = `${baseAppUrl}/api/case/v1/cases`;
 const baseTasksUrl = `${baseAppUrl}/api/case/v1/tasks`;
@@ -209,6 +210,24 @@ export const getTaskFormMetadataSSR = async (
             file: 'queries/api/newBusiness/v1/suitability',
             function: 'getTaskFormMetadataSSR',
         });
+        return null;
+    }
+};
+export const unassignTask = async (caseId: string, taskId: string): Promise<any> => {
+    try {
+        const url = `${baseAppUrl}/api/case/v1/tasks/${taskId}/unclaim`;
+        const { data } = await client.put<AxiosResponse>(url);
+        logInfo('Successfully updated task using v1', { caseId, taskId, url, function: 'tasks.unassignTask' });
+
+        datadogLogs.logger.info('Form entry time', {
+            caseId,
+            url,
+            function: 'tasks.unassignTask',
+        });
+        console.log(data);
+        return data;
+    } catch (error: any) {
+        logError('An error occurred during update task using v1', { error, caseId, taskId, function: 'tasks.unassignTask' });
         return null;
     }
 };
