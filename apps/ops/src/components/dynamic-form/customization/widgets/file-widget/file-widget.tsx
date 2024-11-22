@@ -1,0 +1,181 @@
+import {
+    dataURItoBlob,
+    FormContextType,
+    getTemplate,
+    Registry,
+    RJSFSchema,
+    StrictRJSFSchema,
+    UIOptionsType,
+    WidgetProps,
+} from '@rjsf/utils';
+import { ChangeEvent, useCallback, useMemo } from 'react';
+
+import style from './file-widget.module.css';
+
+function addNameToDataURL(dataURL: string, name: string) {
+    if (dataURL === null) {
+        return null;
+    }
+    return dataURL.replace(';base64', `;name=${encodeURIComponent(name)};base64`);
+}
+
+type FileInfoType = {
+    dataURL?: string | null;
+    name: string;
+    size: number;
+    type: string;
+};
+
+function processFile(file: File): Promise<FileInfoType> {
+    const { name, size, type } = file;
+    return new Promise((resolve, reject) => {
+        const reader = new window.FileReader();
+        reader.onerror = reject;
+        reader.onload = event => {
+            if (typeof event.target?.result === 'string') {
+                resolve({
+                    dataURL: addNameToDataURL(event.target.result, name),
+                    name,
+                    size,
+                    type,
+                });
+            } else {
+                resolve({
+                    dataURL: null,
+                    name,
+                    size,
+                    type,
+                });
+            }
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+function processFiles(files: FileList) {
+    return Promise.all(Array.from(files).map(processFile));
+}
+
+function FilesInfo<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+    filesInfo,
+    registry,
+    onRemove,
+    options,
+}: {
+    filesInfo: FileInfoType[];
+    registry: Registry<T, S, F>;
+    preview?: boolean;
+    onRemove: (index: number) => void;
+    options: UIOptionsType<T, S, F>;
+}) {
+    if (filesInfo.length === 0) {
+        return null;
+    }
+    const { translateString } = registry;
+
+    const { RemoveButton } = getTemplate<'ButtonTemplates', T, S, F>('ButtonTemplates', registry, options);
+
+    return (
+        <ul className="file-info mt-2 pl-4">
+            {filesInfo.map((fileInfo, key) => {
+                const { name, size, type } = fileInfo;
+                const handleRemove = () => onRemove(key);
+                return (
+                    <li key={key}>
+                        <div className="typography-content-body-sm-bold">{name !== undefined ? name : 'No file chosen'}</div>
+                        {/* <div>{translateString(TranslatableString.FilesInfo, [name, type, String(size)])}</div> */}
+                        {/* {preview && <FileInfoPreview<T, S, F> fileInfo={fileInfo} registry={registry} />} */}
+                        {/* <RemoveButton onClick={handleRemove} registry={registry} /> */}
+                    </li>
+                );
+            })}
+        </ul>
+    );
+}
+
+function extractFileInfo(dataURLs: string[]): FileInfoType[] {
+    return dataURLs.reduce((acc, dataURL) => {
+        if (!dataURL) {
+            return acc;
+        }
+        try {
+            const { blob, name } = dataURItoBlob(dataURL);
+            return [
+                ...acc,
+                {
+                    dataURL,
+                    name: name,
+                    size: blob.size,
+                    type: blob.type,
+                },
+            ];
+        } catch (e) {
+            // Invalid dataURI, so just ignore it.
+            return acc;
+        }
+    }, [] as FileInfoType[]);
+}
+
+function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(props: WidgetProps<T, S, F>) {
+    const { disabled, readonly, required, multiple, onChange, value, options, registry } = props;
+    const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>('BaseInputTemplate', registry, options);
+
+    const handleChange = useCallback(
+        (event: ChangeEvent<HTMLInputElement>) => {
+            if (!event.target.files) {
+                return;
+            }
+            // Due to variances in themes, dealing with multiple files for the array case now happens one file at a time.
+            // This is because we don't pass `multiple` into the `BaseInputTemplate` anymore. Instead, we deal with the single
+            // file in each event and concatenate them together ourselves
+            processFiles(event.target.files).then(filesInfoEvent => {
+                const newValue = filesInfoEvent.map(fileInfo => fileInfo.dataURL);
+                if (multiple) {
+                    onChange(value.concat(newValue[0]));
+                } else {
+                    onChange(newValue[0]);
+                }
+            });
+        },
+        [multiple, value, onChange]
+    );
+
+    const filesInfo = useMemo(() => extractFileInfo(Array.isArray(value) ? value : [value]), [value]);
+    const rmFile = useCallback(
+        (index: number) => {
+            if (multiple) {
+                const newValue = value.filter((_: any, i: number) => i !== index);
+                onChange(newValue);
+            } else {
+                onChange(undefined);
+            }
+        },
+        [multiple, value, onChange]
+    );
+    return (
+        <div>
+            <label htmlFor={props.id} className={style.customFileUpload}>
+                Add Attachment {props.title}
+            </label>
+            <BaseInputTemplate
+                {...props}
+                disabled={disabled || readonly}
+                type="file"
+                required={value ? false : required} // this turns off HTML required validation when a value exists
+                onChangeOverride={handleChange}
+                value=""
+                accept={options.accept ? String(options.accept) : undefined}
+                className={style.input}
+            />
+            <FilesInfo<T, S, F>
+                filesInfo={filesInfo}
+                onRemove={rmFile}
+                registry={registry}
+                preview={options.filePreview}
+                options={options}
+            />
+        </div>
+    );
+}
+
+export default FileWidget;

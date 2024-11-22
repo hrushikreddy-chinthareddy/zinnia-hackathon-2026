@@ -345,7 +345,7 @@ export default function SideSheetRefineResults({
             return acc;
         }, {} as { [key: string]: any });
 
-        segmentAnalyticsTrackEvent<FilterClickedEvent>(SegmentTrackedEventName.FilterClicked, {
+        segmentAnalyticsTrackEvent<FilterClickedEvent>(SegmentTrackedEventName.FilterApplied, {
             selectedItemName: JSON.stringify(selectedFilters),
             userId: perms.getUserPartyId(),
         });
