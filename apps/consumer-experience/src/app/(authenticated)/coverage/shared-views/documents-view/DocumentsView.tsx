@@ -8,15 +8,15 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 
 import documentStyles from '@/app/(authenticated)/coverage/shared-styles/Documents.module.css';
-import DocumentsList from '@/components/documents-list/DocumentsList';
+import DocumentsWithPagination from '@/components/documents-list/DocumentsWithPagination';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getDocuments, getTaxDocuments } from '@/services/document';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { getPolicyDetails } from '@/services/policy';
 import { DocumentCategory, ExtendedDocumentMeta } from '@/types/document';
-import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import { lineOfBusinessUrlPath } from '@/utils/data';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 const pageTitle = getPageTitle(RouteKey.DOCUMENTS);
 // disable because NextJS needs this to be exported from this file
@@ -47,7 +47,6 @@ export const DocumentsView = async ({
     policyNumber,
   });
   const showTaxDocuments = flags?.[FEATURE_FLAGS.VIEW_TAX_DOCUMENTS];
-
   const [correspondenceDocsRes, taxDocsRes] = await Promise.allSettled([
     getDocuments({
       clientCode: policyData?.carrierId,
@@ -71,6 +70,7 @@ export const DocumentsView = async ({
     taxDocsRes.status === 'fulfilled' ? taxDocsRes.value.data : null;
 
   const activeTab = currentView || DocumentCategory.DOCUMENTS;
+
   /**
    * Checks if a document type is a statement type.
    * @param doc the document to check
@@ -96,6 +96,15 @@ export const DocumentsView = async ({
 
   const lineOfBusinessPath = lineOfBusinessUrlPath(lineOfBusiness);
 
+  if (!policyData) {
+    return (
+      <NoDataAvailable
+        message={`Something went wrong. Please try again later.`}
+        iconType={IconType.DOCUMENT_DUPLICATE}
+      />
+    );
+  }
+
   return (
     <div className="container">
       <ul className={documentStyles.nav}>
@@ -104,7 +113,7 @@ export const DocumentsView = async ({
             href={`/coverage/${lineOfBusinessPath}/${planCode}/${policyNumber}/documents`}
             className={`${activeTab === DocumentCategory.DOCUMENTS ? documentStyles.active : ''}`}
           >
-            Documents
+            Correspondence
           </Link>
         </li>
         <li>
@@ -126,22 +135,13 @@ export const DocumentsView = async ({
           </li>
         )}
       </ul>
-      {/* TODO: what should the error state check for? */}
-      {/* {policyError || data?.count === 0 ? ( */}
-      {policyError ? (
-        <NoDataAvailable
-          message={`Something went wrong. Please try again later.`}
-          iconType={IconType.DOCUMENT_DUPLICATE}
-        />
-      ) : (
-        <DocumentsList
-          docCategory={activeTab}
-          documents={docs()}
-          planCode={planCode}
-          policyNumber={policyNumber}
-          lineOfBusiness={LineOfBusiness.LIFE}
-        />
-      )}
+      <DocumentsWithPagination
+        docCategory={activeTab}
+        documents={docs()}
+        planCode={planCode}
+        policyNumber={policyNumber}
+        lineOfBusiness={LineOfBusiness.LIFE}
+      />
     </div>
   );
 };

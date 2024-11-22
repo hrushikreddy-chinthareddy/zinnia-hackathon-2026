@@ -1,6 +1,14 @@
-import { DownloadDocumentResponse } from '@zinnia/api-types/types/documents';
+import {
+  DownloadDocumentResponse,
+  TaxFormsResponse200,
+} from '@zinnia/api-types/types/documents';
 
-import { DocumentApiRequestInputs, PolicyDocument } from '@/types/document';
+import {
+  DocumentApiRequestInputs,
+  PolicyDocument,
+  TaxDocument,
+  TaxDocumentApiRequestInputs,
+} from '@/types/document';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { logError, logWarn } from '@/utils/logging/server-logging';
 
@@ -14,7 +22,7 @@ import { mockDocumentResponse } from '../mocks/document';
 
 const getDocumentsRaw = async (documentUrl: string) => {
   const rawResponse = await ServerApi.get(documentUrl);
-  const response = (await parseAPIResponse(rawResponse)) as PolicyDocument;
+  const response = await parseAPIResponse(rawResponse);
 
   if (!rawResponse?.ok) {
     logError(
@@ -50,7 +58,7 @@ export const getDocumentDownload = async (
     if (isMockDocumentRequestEnabled()) {
       return { data: mockDocumentResponse, error: null };
     }
-    const url = `${documentApiBaseUrl}/${documentNumber}/download?clientCode=${clientCode.toUpperCase()}&source=${source}&planCode=${planCode}&policyNumber=${policyNumber}`;
+    const url = `${documentApiBaseUrl}/documents/${documentNumber}/download?clientCode=${clientCode.toUpperCase()}&source=${source}&planCode=${planCode}&policyNumber=${policyNumber}`;
     const response = await ServerApi.get(url);
     if (!response.ok) {
       throw response;
@@ -94,14 +102,14 @@ export const getDocuments = async (
 ): Promise<ApiResponse<PolicyDocument>> => {
   const { clientCode, source } = queryParams;
   const documentQueryParams = getDocumentQueryParams(queryParams);
-  const documentUrl = `${documentApiBaseUrl}?${documentQueryParams.toString()}`;
+  const documentUrl = `${documentApiBaseUrl}/documents?${documentQueryParams.toString()}`;
   try {
     const docsData = await getDocumentsRaw(documentUrl);
 
     return {
       data: {
         ...docsData,
-        items: docsData?.items?.map(item => ({
+        items: docsData?.items?.map((item: PolicyDocument) => ({
           ...item,
           clientCode,
           downloadSource: source,
@@ -123,11 +131,14 @@ export const getDocuments = async (
   }
 };
 
+/**
+ * =====================
+ * TAX DOCUMENTS
+ * =====================
+ */
 export const getTaxDocuments = async (
-  queryParams: Partial<
-    DocumentApiRequestInputs & { taxYear: string; numYears: number }
-  >
-): Promise<ApiResponse<PolicyDocument>> => {
+  queryParams: Partial<TaxDocumentApiRequestInputs>
+): Promise<ApiResponse<TaxFormsResponse200>> => {
   const { clientCode } = queryParams;
   const documentQueryParams = getDocumentQueryParams(queryParams);
   const documentUrl = `${documentApiBaseUrl}/taxDocs?${documentQueryParams.toString()}`;
@@ -138,7 +149,7 @@ export const getTaxDocuments = async (
     return {
       data: {
         ...docsData,
-        items: docsData?.items?.map(item => ({
+        items: docsData?.items?.map((item: TaxDocument) => ({
           ...item,
           clientCode,
         })),
@@ -154,6 +165,48 @@ export const getTaxDocuments = async (
         message: 'Something went wrong',
         status: 500,
         name: 'getTaxDocuments Error',
+      },
+    };
+  }
+};
+
+export const getTaxDocumentDownload = async ({
+  formId,
+  taxYear,
+  carrierId,
+  fChar,
+  contractNumber,
+}: {
+  formId: string;
+  taxYear: string;
+  carrierId: string;
+  fChar: string;
+  contractNumber: string;
+}): Promise<ApiResponse<DownloadDocumentResponse>> => {
+  try {
+    if (isMockDocumentRequestEnabled()) {
+      return { data: mockDocumentResponse, error: null };
+    }
+    // TODO: call clientCode carrierId to follow pattern from everywhere else?
+    const url = `${documentApiBaseUrl}/taxForms/${formId}?clientCode=${carrierId}&fChar=${fChar}&contractNumber=${contractNumber}&taxYear=${taxYear}`;
+    const response = await ServerApi.get(url);
+    if (!response.ok) {
+      throw response;
+    }
+    return { data: await response.json(), error: null };
+  } catch (e) {
+    logWarn('getDocument::Error', {
+      error: (e as Error)?.message || (e as Response).statusText,
+      file: 'services/document',
+      function: 'getDocumentDownload',
+    });
+    return {
+      data: null,
+      error: {
+        cause: e,
+        status: (e as Response)?.status ?? 502,
+        name: 'getDocument::Error',
+        message: 'error getting document',
       },
     };
   }

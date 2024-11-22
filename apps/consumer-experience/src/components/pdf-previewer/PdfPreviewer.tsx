@@ -5,18 +5,14 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 
 import Loading from '@/app/loading';
+import { DocumentCategory } from '@/types/document';
 
 import PreviewUnsupported from './PreviewUnsupported';
+import { createQueryString } from '../documents-list/DocumentsList';
 
-export default function PdfPreviewer({
-  clientCode,
-  documentId,
-  fileName,
-  planCode,
-  policyNumber,
-  source,
-  lineOfBusiness,
-}: {
+export default function PdfPreviewer(docInfo: {
+  // TODO: need to figure out a better way to type this because it can be
+  // the plain document or the tax document
   clientCode: string;
   documentId: string;
   planCode: string;
@@ -24,7 +20,18 @@ export default function PdfPreviewer({
   fileName: string;
   source: string;
   lineOfBusiness: LineOfBusiness;
+  docCategory: DocumentCategory;
 }) {
+  const {
+    clientCode,
+    documentId,
+    fileName,
+    planCode,
+    policyNumber,
+    source,
+    lineOfBusiness,
+  } = docInfo;
+
   const [supportsEmbed, setSupportsEmbed] = useState(true);
   const [documentData, setDocumentData] = useState<string>('');
   const fetchInProgress = useRef(false);
@@ -41,10 +48,14 @@ export default function PdfPreviewer({
       // default to the documents error page, however, if the response is a redirect we will use that (see below)
       let redirectHref = `/coverage/${lineOfBusiness}/${planCode}/${policyNumber}/documents/error`;
 
+      // TODO: add handling for if tax doc passed vs regular doc...i guess it just hast to be a param
+      const queryParams = createQueryString(docInfo);
+      const docDownloadUrl =
+        docInfo.docCategory === DocumentCategory.TAX
+          ? `/api/documents/tax-docs/${documentId}/download/${fileName}.pdf?${queryParams}`
+          : `/api/documents/${documentId}/download/${fileName}.pdf?${queryParams}`;
       try {
-        const response = await fetch(
-          `/api/documents/${documentId}/download/${fileName}.pdf?clientCode=${clientCode}&source=${source}&planCode=${planCode}&policyNumber=${policyNumber}&lineOfBusiness=${lineOfBusiness}`
-        );
+        const response = await fetch(docDownloadUrl);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -87,6 +98,7 @@ export default function PdfPreviewer({
     router,
     source,
     lineOfBusiness,
+    docInfo,
   ]);
 
   return supportsEmbed ? (

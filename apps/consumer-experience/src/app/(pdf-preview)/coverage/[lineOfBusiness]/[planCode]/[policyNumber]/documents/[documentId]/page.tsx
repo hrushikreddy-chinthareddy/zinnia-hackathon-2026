@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 
 import PdfPreviewer from '@/components/pdf-previewer/PdfPreviewer';
 import { RouteKey, getPageTitle } from '@/route-map';
+import { DocumentCategory } from '@/types/document';
 import { PolicyRequestInputs } from '@/types/policy';
 
 import previewStyles from './Preview.module.css';
@@ -21,20 +22,17 @@ export default async function DocumentPreview({
   params: PolicyRequestInputs & { documentId: string } & {
     lineOfBusiness: LineOfBusiness;
   };
-  searchParams: { source: string; clientCode: string; fileName: string };
+  searchParams: {
+    source: string;
+    clientCode: string;
+    fileName: string;
+    docCategory: DocumentCategory;
+  };
 }) {
   return (
     <div style={{ height: '100svh' }}>
       <div className={previewStyles.container}>
-        <PdfPreviewer
-          clientCode={searchParams.clientCode}
-          documentId={params.documentId}
-          fileName={searchParams.fileName ?? params.documentId}
-          planCode={params.planCode}
-          policyNumber={params.policyNumber}
-          source={searchParams.source}
-          lineOfBusiness={params.lineOfBusiness}
-        />
+        <PdfPreviewer {...{ ...params, ...searchParams }} />
       </div>
     </div>
   );
