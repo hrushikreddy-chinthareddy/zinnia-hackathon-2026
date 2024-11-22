@@ -262,20 +262,24 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
                         iconType={IconType.DOCUMENT_TEXT}
                         href="/dashboard"
                         text={toTitleCase('active applications')}
+                        style={{ paddingBottom: 'var(--measure-dimension-padding-lg)' }}
                         className={clsx(
                             'border-b-4',
-                            router.pathname === '/dashboard' ? 'border-[--color-base-border-border-secondary-color]' : 'border-transparent'
+                            router.pathname === '/dashboard'
+                                ? 'border-[--color-base-border-border-secondary-color]'
+                                : 'border-transparent !text-[--color-base-text-text-secondary]'
                         )}
                     />
                     <Link
                         iconType={IconType.SHIELD_CHECKMARK}
                         href="/dashboard/issued-business"
                         text={toTitleCase('issued business')}
+                        style={{ paddingBottom: 'var(--measure-dimension-padding-lg)' }}
                         className={clsx(
                             'border-b-4',
                             router.pathname === '/dashboard/issued-business'
                                 ? 'border-[--color-base-border-border-secondary-color]'
-                                : 'border-transparent'
+                                : 'border-transparent !text-[--color-base-text-text-secondary]'
                         )}
                     />
                 </nav>
@@ -287,7 +291,11 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
                     <div className="bg-white p-8 flex flex-col gap-8">
                         <div className="w-52">
                             <Select
-                                options={timeFrameFilterOptions.map(option => ({ label: option, value: option }))}
+                                options={timeFrameFilterOptions.map(option => ({
+                                    label: toTitleCase(option),
+                                    value: option,
+                                    displayText: toTitleCase(option),
+                                }))}
                                 value={timeframe}
                                 onChange={handleTimeFrameChange}
                             />
