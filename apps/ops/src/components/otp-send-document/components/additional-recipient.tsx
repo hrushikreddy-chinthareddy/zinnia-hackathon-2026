@@ -40,7 +40,7 @@ const AdditionalRecipient = ({ classNames, emails, setEmails, setError }: Additi
         }
 
         setEmails([...emails, val]);
-        setError(error => ({ ...error, submit: '' }));
+        setError({});
         setEmail('');
     };
 
