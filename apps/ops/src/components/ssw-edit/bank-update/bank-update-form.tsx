@@ -21,7 +21,7 @@ import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '.
 import FormDisbursementSection from '../../otp-withdrawal-form/form-disbursement/form-disbursement-section';
 import SignatureValidations from '../../otp-withdrawal-form/signature-validation/signature-validations';
 import PageLoader, { PageLoaderVariant } from '../../page-loader/page-loader';
-import { sswEditFormValidator } from '../ssw-edit-helper';
+import { getDocumentSource, sswEditFormValidator } from '../ssw-edit-helper';
 
 type BankUpdateFormProps = {
     document: DocumentData;
@@ -33,6 +33,7 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
     const [formSubmitted, setFormSubmitted] = useState(false);
     const [timer] = useState(performance.now());
     const [submitFailed, setSubmitFailed] = useState(false);
+    const source = getDocumentSource(document.documentNumber);
 
     const { initialForm, formSignature, setFormErrors } = useContext(FormDataContext);
 
@@ -53,11 +54,14 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
     };
 
     const handleFormAction = async (bankUpdateType: BankUpdateType) => {
-        const formErr = document.source === ChannelType.Email && sswEditFormValidator(formSignature, t);
-        if (Object.keys(formErr).length > 0) {
-            formErr && setFormErrors(formErr);
-        } else {
-            setFormErrors({});
+        if (source !== ChannelType.Phone) {
+            const formErr = sswEditFormValidator(formSignature, t);
+            if (Object.keys(formErr).length > 0) {
+                setFormErrors(formErr);
+                return;
+            } else {
+                setFormErrors({});
+            }
         }
         if (bankUpdateType === BankUpdateType.BankTerminate) {
             requestBankUpdate(bankUpdateType);

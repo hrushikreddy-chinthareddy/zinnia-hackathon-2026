@@ -7,6 +7,8 @@ export enum DocumentType {
     Reg60 = 'NB Reg 60',
     AddressChange = 'Address Change',
     ReReg = 'ReReg',
+    Suitability = 'Suitability',
+    SuitabilityReview = 'SuitabilityReview',
 }
 
 export enum DocumentFileExtension {
@@ -87,6 +89,79 @@ export interface DocumentResponse {
     status: number;
     message: string;
 }
+
+export type CaseDocument = {
+    id: string;
+    name: string;
+    url: string;
+    source: string;
+    documentNumber?: string;
+    documentUploadDate?: string;
+    updatedAt: string;
+    fileType: string;
+};
+
+export type EDSDocumentRequest = {
+    pageCount: number;
+    agentTaxId: string;
+    lastName: string;
+    brokerMAN: string;
+    sourceFileName: string;
+    scannerDocNumber: string;
+    participantAccountNumber: string;
+    documentNumber: string;
+    agentLastName: string;
+    emailFrom: string;
+    shareSubPath: string;
+    externalId: string;
+    documentTypeDescription: string;
+    bdExternalId: string;
+    availabilityCode: string;
+    sedDocumentSchemaType: string;
+    documentDate: string;
+    masterNumber: string;
+    caseId: string;
+    bdNumber: string;
+    dataServicesUpdateDateTime: string;
+    bdName: string;
+    displayName: string;
+    mtrackingNumber: string;
+    emailSubject: string;
+    payerId: string;
+    startPage: string;
+    trackingId: string;
+    status: string;
+    originalTextIndex: string;
+    ssnOrTaxId: string;
+    deliveryMethod: string;
+    documentType: string;
+    docPopUrl: string;
+    planCode: string;
+    fileType: string;
+    documentId: string;
+    agentFirstName: string;
+    emailTo: string;
+    mshipDate: string;
+    clientCode: string;
+    caseNumber: string;
+    productName: string;
+    source: string;
+    firstName: string;
+    appId: string;
+    roles: string;
+    attachmentType: string;
+    repMan: string;
+    zinniaLiveCaseId: string;
+    distributionChannel: string;
+    stockNumber: string;
+};
+
+export type EDSDocumentResponse = {
+    documentId: string;
+    correlationId: string;
+    message: string;
+    success: boolean;
+};
 
 export interface DocumentErrorResponse {
     data: {

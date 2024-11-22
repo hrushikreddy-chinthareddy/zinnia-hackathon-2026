@@ -1,11 +1,7 @@
-import { UserProfile } from "@deps/models/user-profile";
-import { SegmentPageName, SegmentProps } from "@deps/types/segment-analytics";
+import { UserProfile } from '@deps/models/user-profile';
+import { SegmentPageName, SegmentProps } from '@deps/types/segment-analytics';
 
-const segmentAnalyticsIdentifyUserAndPage = (
-    user: UserProfile | undefined,
-    pageName: SegmentPageName,
-    pageProps: SegmentProps
-) => {
+const segmentAnalyticsIdentifyUserAndPage = (user: UserProfile | undefined, pageName: SegmentPageName, pageProps: SegmentProps) => {
     if (!window || !window.analytics) {
         console.warn('Segment Analytics.js not loaded');
 
@@ -14,7 +10,7 @@ const segmentAnalyticsIdentifyUserAndPage = (
 
     segmentAnalyticsIdentify(user);
     segmentAnalyticsPage(pageName, { userPartyId: user?.partyId as string, ...pageProps });
-}
+};
 
 const segmentAnalyticsIdentify = (user: UserProfile | undefined) => {
     if (!window.analytics.identify) {
@@ -31,9 +27,9 @@ const segmentAnalyticsIdentify = (user: UserProfile | undefined) => {
 
     window.analytics.identify(`${user.partyId}`, {
         name: `${user.name}`,
-        email: `${user.email}`
+        email: `${user.email}`,
     });
-}
+};
 
 const segmentAnalyticsPage = (pageName: SegmentPageName, pageProps?: SegmentProps) => {
     if (!window.analytics.page) {
@@ -42,9 +38,9 @@ const segmentAnalyticsPage = (pageName: SegmentPageName, pageProps?: SegmentProp
         return;
     }
     window.analytics.page(pageName, { ...pageProps });
-}
+};
 
-const segmentAnalyticsTrackEvent = (eventName: string, eventProps?: SegmentProps) => {
+function segmentAnalyticsTrackEvent<T>(eventName: string, eventProps?: T) {
     if (!window.analytics.track) {
         console.warn('window.analytics.track() not found');
 
@@ -54,9 +50,4 @@ const segmentAnalyticsTrackEvent = (eventName: string, eventProps?: SegmentProps
     window.analytics.track(eventName, { ...eventProps });
 }
 
-
-export {
-    segmentAnalyticsIdentifyUserAndPage,
-    segmentAnalyticsTrackEvent,    
-};
-
+export { segmentAnalyticsIdentifyUserAndPage, segmentAnalyticsTrackEvent };

@@ -1,7 +1,7 @@
-import { ProcessType } from "@deps/models/case/enums";
+import { ProcessType } from '@deps/models/case/enums';
 
-import { FEATURE_FLAGS, FeatureKeyIdentifier } from "./flags";
-import { FeatureFlags } from "./optimizely";
+import { FEATURE_FLAGS, FeatureKeyIdentifier } from './flags';
+import { FeatureFlags } from './optimizely';
 
 export const isFormFeatureEnabled = (processType: ProcessType, clientId: string, featureFlagMap: FeatureFlags): boolean => {
     const identifier = `${processType}_${clientId.toUpperCase()}` as FeatureKeyIdentifier;

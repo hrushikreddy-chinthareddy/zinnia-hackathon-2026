@@ -36,6 +36,9 @@ export const ERROR_CODES = {
     TASK_INITIALIZATION: '18',
     CASE_TYPE_RETRIEVAL_ERROR: '19',
     DOC_TYPE_RETRIEVAL_ERROR: '20',
+    PLAN_CODE_NOT_FOUND: '21',
+    SUITABILITY_FORM_TASK_INITIALIZATION: '22',
+    SUITABILITY_REVIEW_TASK_INITIALIZATION: '23',
 };
 
 // These keys map to the createCaseError.errorMessaging translations.

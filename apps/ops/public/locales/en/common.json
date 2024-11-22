@@ -20,7 +20,7 @@
     "selectProcessType": "Select Process Type",
     "trend": "Trend",
     "site": {
-        "name": "Zinnia",
+        "name": "Zinnia Live",
         "home": {
             "link": "/cases",
             "imageSrc": "/images/logos/zinnia-logo.svg"
@@ -53,6 +53,7 @@
             "history": "History",
             "documents": "Documents",
             "newPremium": "New Premium",
+            "cancelFreeLook": "Free Look Cancel",
             "updatePremium": "Update Premium Autopay",
             "newWithdrawal": "New Withdrawal",
             "formData": "Form Data",
@@ -181,12 +182,10 @@
             "viewDetails": {
                 "text": "View Details"
             },
-
             "diaryNotesWarning": {
                 "text": "Attention: Diary notes present. Review required to submit.",
                 "clickToView": "Click to view"
             },
-
             "notes": {
                 "text": "Notes"
             },
@@ -657,7 +656,7 @@
         }
     },
     "welcome": {
-        "header": "Welcome to the {{policyPortalName}} Policy Portal",
+        "header": "Welcome to {{policyPortalName}}",
         "subHeader": "A policy management experience tool to make your life a little easier.",
         "signInBtn": "Continue to sign in",
         "note": {
@@ -693,6 +692,7 @@
         "search": {
             "btnText": "Search",
             "searchKeyType": "Search by",
+            "clear": "Clear search",
             "results": {
                 "policySummaryCard": {
                     "header1": "Owner Information",
@@ -737,13 +737,18 @@
                 "lastName": "Enter a last name to return search results"
             },
             "buttons": {
-                "policyNumber": "Policy Number",
+                "policyNumber": "Policy number",
+                "policyPlaceholder": "e.g. 1234567",
+                "ownerSsn": "Owner SSN",
                 "ssn": "SSN",
                 "ssnFullLabel": "Owner Social Security number",
                 "ssnPlaceholder": "###-##-####",
                 "name": "Name",
-                "firstName": "Owner First Name",
-                "lastName": "Owner Last Name"
+                "firstName": "First name",
+                "lastName": "Last name",
+                "ownerName": "Owner name",
+                "agentName": "Agent name",
+                "firmName": "Firm name"
             }
         },
         "quickSearch": {
@@ -936,7 +941,7 @@
             "sswRequestProcessing": "Process transaction",
             "sswRequestValidation": "Validate transaction",
             "suitabilityReview": "Validate suitability",
-            "toaLetter": "Create and send transfer packet",
+            "toaLetter": "Notify ceding carrier of transfer",
             "viewDetails": "View details"
         },
         "steps": {
@@ -979,6 +984,13 @@
             "toaLetter.toaPacketGeneration": "Create transfer packet",
             "toaLetter.toaPacketDelivery": "Send transfer packet",
             "toaLetter.contractStatusValidation": "Confirm contract status",
+            "toaLetter.transferPacketDeliveryInstructions": "Validate transfer information",
+            "toaLetter.createTransferPacket": "Create transfer packet",
+            "toaLetter.sendToaPacket": "Send transfer packet",
+            "toaLetter.preNoteEligibility": "Validate pre-notification letter rules",
+            "toaLetter.preNoteDeliveryInstructions": "Confirm pre-notification information and delivery instructions",
+            "toaLetter.preNoteLetterGeneration": "Create pre-notification letter",
+            "toaLetter.sendPreNoteLetter": "Send pre-notification letter",
             "premiumProcessing.erDetailValidation": "Create exchange replacement (ER) record",
             "premiumProcessing.suspenseValidation": "Confirm funds received in suspense",
             "premiumProcessing.paymentSourceValidation": "Confirm payment source",
@@ -1037,6 +1049,13 @@
             "toaLetter.toaPacketGeneration": "We combine transfer letter and necessary supporting documents into a single file so it can be sent over to the ceding carrier.",
             "toaLetter.toaPacketDelivery": "We send the transfer packet via mail or fax. Once sent, we will have a tracking number (for mail) or a success message (for fax).",
             "toaLetter.contractStatusValidation": "We confirm in system of record that the contract status is correct.",
+            "toaLetter.transferPacketDeliveryInstructions": "We review the transfer documents and exchange replacement information before creating the transfer packet.",
+            "toaLetter.createTransferPacket": "We combine transfer letter and necessary supporting documents into a single file so it can be sent over to the ceding carrier.",
+            "toaLetter.sendToaPacket": "We send the transfer packet via mail or fax. Once sent, we will receive a tracking number (for mail) or a success message (for fax).",
+            "toaLetter.preNoteEligibility": "We check if a pre-notification letter is needed for this carrier and product",
+            "toaLetter.preNoteDeliveryInstructions": "We verify all information and delivery details for the pre-note letter.",
+            "toaLetter.preNoteLetterGeneration": "We generate the pre-notification letter, which lets the ceding carrier know that the applicant has requested a transfer.",
+            "toaLetter.sendPreNoteLetter": "We send the pre-notification letter to the ceding carrier by mail or fax, based on their preferences. ",
             "premiumProcessing.erDetailValidation": "We create a record in the system of record to record the premium amount and exchange type.",
             "premiumProcessing.suspenseValidation": "We confirm that funds were received and are held in the suspense account before applying them.",
             "premiumProcessing.paymentSourceValidation": "We confirm that the payment source is legitimate and correct.",
@@ -1879,9 +1898,9 @@
             "submitError": "An error occurred while submitting this task. Please try again.",
             "createTaskSuccess": {
                 "WithdrawalFormInputTask": "Great news! We've initiated a withdrawal task for {{documentNumber}} and {{contractNumber}}",
-                "rmdTask": "Great news! We've initiated a Required Minimum Distribution task for {{documentNumber}} and {{contractNumber}}",
+                "RMDFormInputTask": "Great news! We've initiated a Required Minimum Distribution task for {{documentNumber}} and {{contractNumber}}",
                 "OFTFormInputTask": "Great news! We've initiated a Outgoing Funds Transfer task for {{documentNumber}} and {{contractNumber}}",
-                "sswTask": "Great news! We've initiated a Systematic Withdrawal task for {{documentNumber}} and {{contractNumber}}"
+                "SSWFormInputTask": "Great news! We've initiated a Systematic Withdrawal task for {{documentNumber}} and {{contractNumber}}"
             },
             "openNigoExists": "An onbase case includes a NIGO. Please resolve the open NIGO issue before submitting another request through the Digital Portal."
         },
@@ -2022,7 +2041,8 @@
                 "sswUpdate": "SSW Update",
                 "bankUpdate": "Bank Update",
                 "eftDrawUpdate": "EFT Draw Update"
-            }
+            },
+            "sswRequest": "SSW Request"
         }
     },
     "caseReg60": {
@@ -2906,7 +2926,6 @@
                 "reversePayment": "Reverse payment",
                 "reversePremiumPayment": "Reverse premium payment",
                 "successTitle": "Submitted!",
-
                 "successSubtitle": "A ",
                 "successSubtitle2": " of ",
                 "successSubtitle3": " was submitted for reversal to ",
@@ -3832,6 +3851,37 @@
         },
         "checkingEndingIn": "Checking ending in {{ accountNumber }}"
     },
+    "cancelFreeLook": {
+        "confirm": {
+            "cta": "Go to transaction history",
+            "label": "Confirm",
+            "secondaryCta": "Close",
+            "subtitle": {
+                "0": "A cancellation request was submitted. Once processed, a refund payment for ",
+                "1": " will be sent."
+            },
+            "title": "Submitted!"
+        },
+        "date": {
+            "label": "Date",
+            "title": "Date",
+            "effectiveDate": "$t(withdrawals.amount.effectiveDate)",
+            "effectiveDateTooltip": "$t(withdrawals.amount.effectiveDateTooltip)",
+            "effectiveDateError": "$t(withdrawals.amount.effectiveDateError)"
+        },
+        "start": {
+            "label": "Start",
+            "title": "Cancel Policy"
+        },
+        "summary": {
+            "effectiveDate": "Effective date",
+            "effectiveDateTooltip": "This is the date used to calculate all the available account values for this withdrawal. Because funds in the account value are invested, the account value can change day by day. Processing can happen at any time, so we need to know at what point to effectively withdraw the funds, even if we're processing the transaction some days before or after.",
+            "label": "Summary",
+            "payee": "Payee",
+            "status200subtitle": "Looking good! Be sure to review your entries before submitting.",
+            "submitCancellation": "Submit cancellation"
+        }
+    },
     "withdrawals": {
         "requestedWithdrawal": {
             "label": "Requested withdrawal",
@@ -4193,7 +4243,7 @@
             "FreeLookExpiration": "Free look expiration",
             "FreeLookCancellation": "Free look cancellation",
             "FullSurrender": "Full surrender",
-            "PaymentInitialPremium": "Payment of initial premium",
+            "PaymentInitialPremium": "Payment initial premium",
             "InitialPremium": "Initial premium",
             "InterestCredit": "Interest credit",
             "InterestCreditLoan": "Interest credit on loan",
@@ -4432,6 +4482,8 @@
             "formTitles": {
                 "withdrawal": "{{carrier}} Withdrawal Request",
                 "oft": "{{carrier}} Outgoing Funds Transfer Request",
+                "ssw": "{{carrier}} Systematic Withdrawal Request",
+                "rmd": "{{carrier}} Required Minimum Distribution Request",
                 "defaultTitle": "Form Entry"
             }
         }
@@ -4492,5 +4544,61 @@
         "RMD": "Existing RMD Program",
         "EFT": "Existing EFT Program",
         "noProgramFound": "No Existing Program Found"
+    },
+    "suitability": {
+        "tabs": {
+            "taskReview": "Input Suitability Data",
+            "confirm": "Confirm",
+            "start": "Start",
+            "suitabilityForm": "Suitability form",
+            "nigoDetails": "Missing Information",
+            "summary": "Summary"
+        },
+        "taskReview": {
+            "title": "Input Suitability Data",
+            "subTitle": "Is the suitability form complete?",
+            "options": {
+                "allSectionsAreComplete": "All sections are complete and ready for data entry.",
+                "missingDetails": "All sections are not complete."
+            },
+            "view": "View",
+            "documentId": "Document ID",
+            "submitLabel": "Submit",
+            "continueLabel": "Continue",
+            "cancelLabel": "Cancel"
+        },
+        "taskForm": {
+            "title": "Input Suitability Data",
+            "subTitle": "Manually enter all suitability data. Note that canceling at any point will erase all the entered data.",
+            "submitLabel": "Submit",
+            "continueLabel": "Continue",
+            "cancelLabel": "Cancel"
+        },
+        "confirmStep": {
+            "title": "Submitted!",
+            "subTitle": "Input suitability data was submitted.",
+            "cta": "Go to incoming transfer",
+            "secondaryCta": "Close",
+            "submitTask": "Submit suitability details"
+        }
+    },
+    "suitabilityReview": {
+        "tabs": {
+            "taskReview": "Review Suitability",
+            "confirm": "Confirm"
+        },
+        "taskForm": {
+            "title": "Review Suitability",
+            "subTitle": "This customer's application was flagged for review. Accept or Decline each issue before submitting a final decision.",
+            "submitLabel": "Submit decision",
+            "cancelLabel": "Cancel"
+        },
+        "confirmStep": {
+            "title": "Submitted!",
+            "subTitle": "Review suitability was submitted.",
+            "cta": "Go to incoming transfer",
+            "secondaryCta": "Close",
+            "submitTask": "Submit Suitability details"
+        }
     }
 }
