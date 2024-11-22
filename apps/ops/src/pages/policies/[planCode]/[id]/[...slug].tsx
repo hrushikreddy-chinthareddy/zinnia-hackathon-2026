@@ -171,6 +171,7 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({ user }) => {
     }, [planCode, policy]);
 
     if (loading) {
+        // note: the loading policy hidden text is for our breadcrumb implementation to know that the page is still loading, and to wait to grab the breadcrumb title
         return (
             <PolicyLayout loading={true}>
                 <div className="flex h-[500px] w-full items-center justify-center">

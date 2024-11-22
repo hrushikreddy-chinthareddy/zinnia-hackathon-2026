@@ -73,6 +73,7 @@ const ApplicationComponentWrapper = ({ children }: Omit<ApplicationDataProviderP
 
             const handleRouteChangeComplete = (url: string) => {
                 managePathHistory(url);
+                // This checks to see if the page is still loading for policies before setting a breadcrumb title.  Not ideal, but it gets this working with the current implementation
                 const checkH1 = setInterval(() => {
                     const header = document.querySelector('h1');
                     if (header?.textContent !== 'loading policy') {
