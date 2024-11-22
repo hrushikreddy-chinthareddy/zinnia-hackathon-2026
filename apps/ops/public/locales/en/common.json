@@ -774,6 +774,8 @@
         "noTasksFoundTitle": "Your task list is currently empty.",
         "noTasksMessage": "Click 'Claim Task' to get started.",
         "claimTaskError": "Claim task error: ",
+        "unassignTaskError": "Unassign task error: ",
+        "unassignTask": "Unassign Task",
         "startTask": "Start Task",
         "transaction": "Transaction: {{transactionType}}",
         "tasksListing": {

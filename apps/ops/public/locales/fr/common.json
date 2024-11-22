@@ -236,6 +236,8 @@
         "noTasksFoundTitle": "Votre liste de tâches est actuellement vide.",
         "noTasksMessage": "Cliquez sur « Réclamer une tâche » pour commencer.",
         "claimTaskError": "Erreur de tâche de réclamation :",
+        "unassignTask": "Annuler l'attribution d'une tâche",
+        "unassignTaskError": "Erreur de désattribution de tâche :",
         "startTask": "Démarrer la tâche",
         "transaction": "Transaction: {{transactionType}}",
         "tasksListing": {
