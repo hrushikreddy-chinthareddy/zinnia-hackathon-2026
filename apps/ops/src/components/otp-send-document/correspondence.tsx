@@ -38,6 +38,13 @@ export const validateEmail = (email: string) => {
     }
     return;
 };
+
+const validateNoEmailOverlap = (recipient: string, ccList: string[]) => {
+    if (ccList?.includes(recipient)) {
+        return 'errors.duplicateEmail';
+    }
+    return false;
+};
 type CorrespondenceProps = {
     communicationOptions?: RadioItem[];
     policy: Policy;
@@ -74,6 +81,12 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
                 const emailError = validateEmail(correspondenceData.recipient);
                 if (emailError) {
                     setError({ ...error, submit: t(emailError) as string });
+                    return false;
+                }
+
+                const duplicateEmail = validateNoEmailOverlap(correspondenceData.recipient, correspondenceData?.ccList || []);
+                if (duplicateEmail) {
+                    setError({ ...error, submit: t(duplicateEmail) as string });
                     return false;
                 }
 
