@@ -34,11 +34,13 @@ export default function DocumentsListTax({
   planCode,
   policyNumber,
   lineOfBusiness,
+  carrierId,
 }: {
   documents: TaxDocument[];
   planCode: string;
   policyNumber: string;
   lineOfBusiness: LineOfBusiness;
+  carrierId: string;
 }) {
   if (!documents?.length) {
     return (
@@ -53,8 +55,7 @@ export default function DocumentsListTax({
     <ClickableListContainer
       listItems={documents.map(d => {
         const queryParams = {
-          // TODO: need to replace the carrierId, will need to pass it down
-          clientCode: 'SBUL',
+          clientCode: carrierId,
           fChar: d.fChar,
           taxYear: d.taxYear,
           docCategory: DocumentCategory.TAX,

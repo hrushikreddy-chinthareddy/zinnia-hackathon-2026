@@ -48,7 +48,6 @@ export default function PdfPreviewer(docInfo: {
       // default to the documents error page, however, if the response is a redirect we will use that (see below)
       let redirectHref = `/coverage/${lineOfBusiness}/${planCode}/${policyNumber}/documents/error`;
 
-      // TODO: add handling for if tax doc passed vs regular doc...i guess it just hast to be a param
       const queryParams = createQueryString(docInfo);
       const docDownloadUrl =
         docInfo.docCategory === DocumentCategory.TAX

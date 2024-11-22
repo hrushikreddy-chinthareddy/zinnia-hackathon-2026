@@ -20,12 +20,14 @@ export default function DocumentsWithPagination({
   planCode,
   policyNumber,
   lineOfBusiness,
+  carrierId,
 }: {
   docCategory: DocumentCategory;
   documents: ExtendedDocumentMeta[] | TaxDocument[];
   planCode: string;
   policyNumber: string;
   lineOfBusiness: LineOfBusiness;
+  carrierId: string;
 }) {
   const limit = 10;
   const [offset, setOffset] = useState(0);
@@ -50,6 +52,7 @@ export default function DocumentsWithPagination({
             planCode={planCode}
             policyNumber={policyNumber}
             lineOfBusiness={lineOfBusiness}
+            carrierId={carrierId}
           />
         )}
 

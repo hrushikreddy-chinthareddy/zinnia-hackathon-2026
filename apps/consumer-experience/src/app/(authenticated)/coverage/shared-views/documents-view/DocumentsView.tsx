@@ -141,6 +141,9 @@ export const DocumentsView = async ({
         planCode={planCode}
         policyNumber={policyNumber}
         lineOfBusiness={LineOfBusiness.LIFE}
+        // TODO: if this could possibly be null, should we handle it in the
+        // component and not even make the call for docs?
+        carrierId={policyData.carrierId || ''}
       />
     </div>
   );
