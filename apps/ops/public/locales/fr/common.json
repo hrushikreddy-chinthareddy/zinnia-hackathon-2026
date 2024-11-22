@@ -679,7 +679,7 @@
         }
     },
     "welcome": {
-        "header": "Bienvenue sur le portail des politiques {{policyPortalName}}",
+        "header": "Bienvenue sur {{policyPortalName}}",
         "subHeader": "Un outil d'expérience de gestion des politiques pour vous faciliter la vie",
         "signInBtn": "Continuer",
         "note": {
@@ -1879,11 +1879,10 @@
             "ignoreWarning": "Ignorer les avertissements",
             "submitError": "Une erreur s'est produite lors de la soumission de cette tâche. Veuillez réessayer.",
             "createTaskSuccess": {
-                "withdrawalTask": "Bonne nouvelle! Nous avons lancé une tâche de retrait pour {{documentNumber}} et {{contractNumber}}",
-                "WithdrawalFormInputTask": "Excellente nouvelle ! Nous avons lancé une tâche de retrait pour {{documentNumber}} et {{contractNumber}}",
-                "rmdTask": "Bonne nouvelle! Nous avons lancé une tâche de distribution minimale requise pour {{documentNumber}} et {{contractNumber}}.",
+                "WithdrawalFormInputTask": "Bonne nouvelle!! Nous avons lancé une tâche de retrait pour {{documentNumber}} et {{contractNumber}}",
+                "RMDFormInputTask": "Bonne nouvelle! Nous avons lancé une tâche de distribution minimale requise pour {{documentNumber}} et {{contractNumber}}.",
                 "OFTFormInputTask": "Bonne nouvelle! Nous avons lancé une tâche de transfert de fonds sortants pour{{documentNumber}} et {{contractNumber}}",
-                "sswTask": "Bonne nouvelle! Nous avons lancé une tâche de retrait systématique pour {{documentNumber}} et {{contractNumber}}"
+                "SSWFormInputTask": "Bonne nouvelle! Nous avons lancé une tâche de retrait systématique pour {{documentNumber}} et {{contractNumber}}"
             },
             "openNigoExists": "Un cas de base comprend un NIGO. Veuillez résoudre le problème ouvert NIGO avant de soumettre une autre demande via le portail numérique."
         },
@@ -2019,7 +2018,8 @@
                 "sswUpdate": "Mise à jour SSW",
                 "bankUpdate": "Mise à jour bancaire",
                 "eftDrawUpdate": "Mise à jour de prélèvement EFT"
-            }
+            },
+            "sswRequest": "Demande SSW"
         }
     },
     "createCaseCreate": {
@@ -4447,9 +4447,11 @@
         },
         "formEntry": {
             "formTitles": {
-                "withdrawal": "{{carrier}} Withdrawal Request",
-                "oft": "{{carrier}} Outgoing Funds Transfer Request",
-                "defaultTitle": "Form Entry"
+                "withdrawal": "{{carrier}} Demande de retrait",
+                "oft": "{{carrier}} Demande de transfert de fonds sortants",
+                "ssw": "{{carrier}} Demande de retrait systématique",
+                "rmd": "{{carrier}} Demande de distribution minimale requise",
+                "defaultTitle": "Formulaire de saisie"
             }
         }
     },

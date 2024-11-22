@@ -63,7 +63,7 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions }: TaskQueueTableRowProp
 
 
         // If feature flag is not enabled, redirect to error page
-        if (!isFormFeatureEnabled(caseType.toUpperCase() as ProcessType, taskData?.carrier, featureFlagDecisions)) {
+        if (caseType.toUpperCase() !== 'RMD' && !isFormFeatureEnabled(caseType.toUpperCase() as ProcessType, taskData?.carrier, featureFlagDecisions)) {
             logWarn('task-queue::feature flag not enabled', {
                 taskId: taskData.id,
                 documentNumber: taskData?.data?.documentNumber,

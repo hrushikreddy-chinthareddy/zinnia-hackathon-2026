@@ -29,9 +29,9 @@ export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSche
     };
     return (
         <div>
-            <div className="flex bg-gray-100 mb-2 pt-2 px-3">
+            <div className="flex rounded border-2 border-dashed border-gray-100 bg-gray-50 mb-2 pt-2 px-3">
                 <div className="flex w-full">{children}</div>
-                <div className="ml-auto mt-2">
+                <div className="ml-auto my-3">
                     {hasToolbar && (
                         <div className="d-flex flex-row">
                             {(hasMoveUp || hasMoveDown) && (
@@ -69,7 +69,7 @@ export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSche
                                 </div>
                             )}
                             {hasRemove && !readonly && props.totalItems > (props.uiSchema?.['ui:options']?.minItems as number) && (
-                                <div className="pr-4 mt-2">
+                                <div className="px-4 my-2">
                                     <RemoveButton
                                         style={btnStyle}
                                         disabled={disabled || readonly}

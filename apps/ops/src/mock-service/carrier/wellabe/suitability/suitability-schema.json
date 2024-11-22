@@ -996,7 +996,7 @@
                     },
                     "benefitAnnuityQuestions": {
                         "type": "object",
-                        "title": "Benefit annuity questions",
+                        "title": "Benefit Annuity Questions",
                         "properties": {
                             "understandIncomeAdjustmentFactor": {
                                 "type": "string",
@@ -1008,7 +1008,7 @@
                             },
                             "planForIncomeDecreaseAfter10Years": {
                                 "type": "array",
-                                "title": "Plan for income decrease after 10 years",
+                                "title": "Plan for Income Decrease After 10 Years",
                                 "items": {
                                     "type": "string"
                                 }
@@ -1318,7 +1318,7 @@
         "parties": {
             "items": {
                 "ui:options": {
-                    "title": "Party",
+                    "title": "party",
                     "minItems": 1,
                     "label": false
                 },
@@ -1535,7 +1535,8 @@
                 "govtIdInfo": {
                     "items": {
                         "ui:options": {
-                            "title": "Govt Id",
+                            "title": "govt Id",
+                            "label": false,
                             "minItems": 1
                         },
                         "govtId": {
@@ -1565,7 +1566,8 @@
                 "addresses": {
                     "items": {
                         "ui:options": {
-                            "title": "Address",
+                            "title": "address",
+                            "label": false,
                             "minItems": 1
                         },
                         "addressType": {
@@ -1783,7 +1785,7 @@
             "materialChangeDetails": {
                 "items": {
                     "ui:options": {
-                        "title": "Material Change Detail",
+                        "title": "material change detail",
                         "minItems": 1,
                         "label": false
                     },
@@ -1882,7 +1884,7 @@
                 "assetsDistribution": {
                     "items": {
                         "ui:options": {
-                            "title": "Asset Distribution",
+                            "title": "asset distribution",
                             "minItems": 1,
                             "label": false
                         },
@@ -1922,7 +1924,7 @@
                 "totalAsset": {
                     "items": {
                         "ui:options": {
-                            "title": "Total Asset",
+                            "title": "total asset",
                             "minItems": 1,
                             "label": false
                         },
@@ -2038,7 +2040,8 @@
                 "planForIncomeDecreaseAfter10Years": {
                     "items": {
                         "ui:options": {
-                            "title": "Plan for Income Decrease After 10 Years",
+                            "label": false,
+                            "title": "plan for income decrease after 10 years",
                             "minItems": 1
                         }
                     }
@@ -2072,7 +2075,7 @@
                 "productDetails": {
                     "items": {
                         "ui:options": {
-                            "title": "Product detail",
+                            "title": "product detail",
                             "minItems": 1,
                             "label": false
                         },
@@ -2118,7 +2121,7 @@
             },
             "items": {
                 "ui:options": {
-                    "title": "Signature information",
+                    "title": "signature information",
                     "minItems": 1,
                     "label": false
                 },

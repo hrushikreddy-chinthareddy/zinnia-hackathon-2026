@@ -1,5 +1,5 @@
 import { FieldTemplateProps, getUiOptions } from '@rjsf/utils';
-import { Divider, Label, Tooltip } from '@zinnia/bloom/components';
+import { Divider, Label, Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
 
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 
@@ -11,19 +11,28 @@ export function FieldTemplate(props: FieldTemplateProps) {
     const helpText = uiOptions.help;
 
     const helpInformation = helpText && (
-        <Tooltip trigger={<CircleInfoIcon onClick={e => e.preventDefault()} height={'16px'} width={'16px'} className="text-primary" />}>
+        <Tooltip
+            trigger={<CircleInfoIcon onClick={e => e.preventDefault()} height={'16px'} width={'16px'} className="text-primary" />}
+            placement={TooltipPlacement.TopRight}
+        >
             {helpText}
         </Tooltip>
     );
     const fieldLabel = label ? `${label} ${required ? '*' : ''}` : '';
     return (
         <>
-            <div>{classNames?.indexOf('divider') !== -1 && <Divider direction="horizontal" color="subtle" />}</div>
+            {classNames?.indexOf('divider') !== -1 && (
+                <div className="mb-4">
+                    <Divider direction="horizontal" color="subtle" />
+                </div>
+            )}
             <div className={styles.children}>
                 {displayLabel && (
-                    <Label labelFor={id} interactiveElements={[helpInformation]}>
-                        {fieldLabel}
-                    </Label>
+                    <div className="mb-1">
+                        <Label labelFor={id} interactiveElements={[helpInformation]}>
+                            {fieldLabel}
+                        </Label>
+                    </div>
                 )}
                 {description}
                 {readonly && typeof formData === 'string' ? formData : children}
