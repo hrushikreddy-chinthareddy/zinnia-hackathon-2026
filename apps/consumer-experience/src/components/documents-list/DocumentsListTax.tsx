@@ -12,16 +12,6 @@ import { standardDateMonthDayYear } from '@/utils/dates';
 import styles from './documentsList.module.css';
 import { NoDataAvailable } from '../no-data-available/NoDataAvailable';
 
-const mockTaxDocs = [
-  {
-    contractNumber: '1234567898',
-    name: '1099-R',
-    fChar: 'R',
-    formId: '123456',
-    taxYear: '2023',
-  },
-];
-
 // TODO: move this to a util file somewhere...not the utils/url file because that
 // uses headers :/
 const createQueryString = (obj: Record<string, unknown>) =>

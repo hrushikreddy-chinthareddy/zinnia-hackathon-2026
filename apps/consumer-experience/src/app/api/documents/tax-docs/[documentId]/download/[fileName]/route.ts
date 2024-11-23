@@ -1,6 +1,7 @@
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { NextRequest, NextResponse } from 'next/server';
 
+import { b64ToBlob } from '@/app/api/documents/utils';
 import { getTaxDocumentDownload } from '@/services/document';
 import { getSession } from '@/utils/auth';
 import {
@@ -9,35 +10,6 @@ import {
   logWarn,
 } from '@/utils/logging/server-logging';
 
-// Converts the Base 64 encoded binaryData string into a blob on the client to allow for downloading.
-const b64ToBlob = (b64data: string): Blob | null => {
-  try {
-    const chunkSize = 1024;
-    const byteChars = atob(b64data);
-
-    const chunks: Uint8Array[] = [];
-
-    for (let i = 0; i < byteChars.length; i += chunkSize) {
-      const chunk = byteChars.slice(i, i + chunkSize);
-
-      const byteArray = new Uint8Array(chunk.length);
-      for (let j = 0; j < chunkSize; ++j) {
-        byteArray[j] = chunk.charCodeAt(j);
-      }
-
-      chunks.push(byteArray);
-    }
-
-    const blob = new Blob(chunks, { type: 'application/pdf' });
-    return blob;
-  } catch (error) {
-    console.error(
-      'document-downloader::b64ToBlob::Error converting document response to Blob',
-      error
-    );
-    return null;
-  }
-};
 export const GET = async (
   request: NextRequest,
   { params }: { params: { documentId: string; lineOfBusiness: LineOfBusiness } }
@@ -48,7 +20,6 @@ export const GET = async (
   }
 
   const searchParams = request.nextUrl.searchParams;
-  console.log('searchParams', searchParams);
   const clientCode = searchParams.get('clientCode') as string;
   const taxYear = searchParams.get('taxYear') as string;
   const formId = searchParams.get('formId') as string;

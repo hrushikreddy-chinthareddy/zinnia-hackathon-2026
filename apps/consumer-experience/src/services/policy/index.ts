@@ -1250,14 +1250,14 @@ export const getPolicyDetails = async (policyInputs: PolicyRequestInputs) => {
     policyNumber: policyInputs.policyNumber,
   });
 
-  // if (isMockPolicyOverviewRequestEnabled()) {
-  //   const transformedResults = transformPolicyDetails(mockPolicyResponse);
+  if (isMockPolicyOverviewRequestEnabled()) {
+    const transformedResults = transformPolicyDetails(mockPolicyResponse);
 
-  //   return {
-  //     data: transformedResults,
-  //     error: null,
-  //   };
-  // }
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  }
 
   try {
     const response = await getPolicyByPlanCodeAndId(policyInputs);

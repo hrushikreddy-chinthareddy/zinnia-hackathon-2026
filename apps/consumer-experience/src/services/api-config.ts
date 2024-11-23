@@ -119,6 +119,14 @@ export const isMockRidersRequestEnabled = () => {
   return getMockParam()?.includes('riders') || isMockAllRequestEnabled();
 };
 
+export const isMockDocumentsRequestEnabled = () => {
+  if (!isMockAllowed()) {
+    return false;
+  }
+
+  return getMockParam()?.includes('documents') || isMockAllRequestEnabled();
+};
+
 export const isTestAnnuitiesEnabled = () => {
   if (!isMockAllowed()) {
     return false;

@@ -3,6 +3,7 @@ import {
   TaxFormsResponse200,
 } from '@zinnia/api-types/types/documents';
 
+import { ApiEndpoints } from '@/components/dev-menu/types';
 import {
   DocumentApiRequestInputs,
   PolicyDocument,
@@ -17,12 +18,18 @@ import {
   ServerApi,
   documentApiBaseUrl,
   isMockDocumentRequestEnabled,
+  isMockDocumentsRequestEnabled,
+  isMockErrorEnabled,
 } from '..';
 import { mockDocumentResponse } from '../mocks/document';
+import { mockTaxDocumentsResponse } from '../mocks/documents';
 
 const getDocumentsRaw = async (documentUrl: string) => {
   const rawResponse = await ServerApi.get(documentUrl);
   const response = await parseAPIResponse(rawResponse);
+  if (isMockErrorEnabled(ApiEndpoints.DOCUMENTS)) {
+    throw new Error('Error fetching documents.');
+  }
 
   if (!rawResponse?.ok) {
     logError(
@@ -143,6 +150,13 @@ export const getTaxDocuments = async (
   const documentQueryParams = getDocumentQueryParams(queryParams);
   const documentUrl = `${documentApiBaseUrl}/taxDocs?${documentQueryParams.toString()}`;
 
+  if (isMockDocumentsRequestEnabled()) {
+    return {
+      data: mockTaxDocumentsResponse,
+      error: null,
+    };
+  }
+
   try {
     const docsData = await getDocumentsRaw(documentUrl);
 
@@ -198,7 +212,7 @@ export const getTaxDocumentDownload = async ({
     logWarn('getDocument::Error', {
       error: (e as Error)?.message || (e as Response).statusText,
       file: 'services/document',
-      function: 'getDocumentDownload',
+      function: 'getTaxDocumentDownload',
     });
     return {
       data: null,
