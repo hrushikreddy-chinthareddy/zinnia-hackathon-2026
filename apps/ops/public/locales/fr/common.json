@@ -201,7 +201,11 @@
                 "clickToView": "Clique pour voir"
             },
             "viewDetails": {
-                "text": "voir les détails"
+                "text": "voir les détails",
+                "qualificationType": "Type de qualification",
+                "contractValue": "Valeur du contrat",
+                "policyDate": "date du contrat",
+                "issueState": "État d'émission"
             },
             "history": {
                 "text": "Histoire",

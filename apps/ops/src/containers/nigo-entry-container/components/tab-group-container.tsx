@@ -53,7 +53,6 @@ const TabGroupContent = ({
 
         setCurrentStepIndex(step.index);
     };
-
     const openSideSheet = () => {
         const content = <DocumentPortalPanel policy={policy} documentNumber={documentNumber} docType={docType} />;
         sideSheet.changeSideSheetContent(t('nigoEntry.documentPanel.documents'), content);
@@ -83,6 +82,7 @@ const TabGroupContent = ({
                 qualificationType={policy.qualificationType ?? ''}
                 contractValue={documentData.contractValue ?? ''}
                 policyDate={formattedIssueDate}
+                issueState={policy.issueState ?? ''}
             />
         );
         sideSheet.changeSideSheetContent(t('site.navLinks.viewDetails.text'), content);

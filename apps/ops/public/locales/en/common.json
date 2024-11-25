@@ -180,7 +180,11 @@
                 "text": "Diary notes"
             },
             "viewDetails": {
-                "text": "View Details"
+                "text": "View Details",
+                "qualificationType": "Qualification Type",
+                "contractValue": "Contract Value",
+                "policyDate": "Policy Date",
+                "issueState": "Issue State"
             },
             "diaryNotesWarning": {
                 "text": "Attention: Diary notes present. Review required to submit.",
