@@ -23,9 +23,7 @@ export default withAuthAndLogging(
         const config = {
             authorization: `Bearer ${accessToken}`,
             headers: {
-                Accept: '*/*',
-                'Accept-Encoding': 'gzip, deflate, br',
-                Connection: 'keep-alive',
+                'Content-type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
             },
         };
