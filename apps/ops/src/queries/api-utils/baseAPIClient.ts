@@ -103,6 +103,7 @@ export abstract class Http {
                 break;
             }
             case StatusCode.Forbidden: {
+                console.log('FORBIDDEN', error);
                 break;
             }
             case StatusCode.Unauthorized: {
