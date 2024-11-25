@@ -82,7 +82,7 @@ export default function AddressEntry({
                     <Field
                         label={t(`mailingAddressLine2`) as string}
                         message={errors.addressLine2}
-                        onChange={e => setAddressLine2(xss(e.target.value.toUpperCase()))}
+                        onChange={e => setAddressLine2(xss(e.target.value?.toUpperCase()))}
                         size={FieldSize.Small}
                         type={FieldType.BaseActive}
                         value={addressLine2}
@@ -111,7 +111,7 @@ export default function AddressEntry({
                 <Field
                     label={t(`city`) as string}
                     message={errors.city}
-                    onChange={e => setCity(xss(e.target.value.toUpperCase()))}
+                    onChange={e => setCity(xss(e.target.value?.toUpperCase()))}
                     size={FieldSize.Small}
                     type={FieldType.BaseActive}
                     value={city}
