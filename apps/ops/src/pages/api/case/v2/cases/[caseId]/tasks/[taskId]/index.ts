@@ -3,7 +3,7 @@ import { AxiosResponse } from 'axios';
 
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
-import { logTrace, logWarn, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
+import { logInfo, logWarn, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -17,7 +17,7 @@ export default withAuthAndLogging(
 
         const url = `${baseUrl}/cases/${caseId}/tasks/${taskId}`;
         const loggingContext = { ...logCtx, caseId, taskId, url };
-        logTrace('updateTask::start', loggingContext);
+        logInfo('updateTask::start', loggingContext);
 
         const formData = req.body;
         const config = {
@@ -32,7 +32,7 @@ export default withAuthAndLogging(
 
         try {
             const { data } = await serverApi.put<any, AxiosResponse>(url, formData, config, loggingContext);
-            logTrace('updateTask::success', { ...loggingContext, duration: performance.now() - now });
+            logInfo('updateTask::success', { ...loggingContext, duration: performance.now() - now });
             res.json(data);
         } catch (error) {
             logWarn('updateTask::error', { ...parseErrorInformation(error), ...loggingContext, duration: performance.now() - now });
