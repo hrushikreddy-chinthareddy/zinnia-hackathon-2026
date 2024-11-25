@@ -1976,10 +1976,22 @@
             }
         },
         "sendTaxForms": {
+            "selectTaxYear": "Sélectionner l'année fiscale",
+            "applicationTaxForms": "Formulaires fiscaux",
             "tabs": {
                 "taxFormsSelection": "Sélection de formulaires",
                 "correspondence": "Correspondence",
                 "confirm": "Confirmer"
+            },
+            "taxFormDetails": {
+                "documentType": "Type de document",
+                "periodYear": "Période année",
+                "actions": "Actions",
+                "noTaxForms": "Aucun formulaire fiscale trouvé pour cette période"
+            },
+            "warning": {
+                "0": "Veuillez consulter les formulaires fiscaux avant de continuer",
+                "1": "Tous les formulaires fiscaux ci-dessus seront envoyés."
             }
         },
         "statementDetails": {

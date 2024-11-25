@@ -1998,10 +1998,22 @@
             }
         },
         "sendTaxForms": {
+            "selectTaxYear": "Select tax year(s)",
+            "applicationTaxForms": "Application tax forms",
             "tabs": {
                 "taxFormsSelection": "Tax Form(s) Selection",
                 "correspondence": "Correspondence",
                 "confirm": "Confirm"
+            },
+            "taxFormDetails": {
+                "documentType": "Document type",
+                "periodYear": "Period year",
+                "actions": "Actions",
+                "noTaxForms": "No tax forms found for this period"
+            },
+            "warning": {
+                "0": "Please review tax forms before continuing",
+                "1": "All selected tax forms for the chosen year will be sent."
             }
         },
         "statementDetails": {
