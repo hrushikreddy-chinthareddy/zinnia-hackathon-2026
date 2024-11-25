@@ -62,7 +62,7 @@ export enum FEATURE_FLAGS {
     NIGO_ENTRY_SBGC_SSW = 'nigo-entry_sbgc_ssw',
     NIGO_ENTRY_FLIC_SSW = 'nigo-entry_flic_ssw',
     NIGO_ENTRY_MASS_SSW = 'nigo-entry_mass_ssw',
-    NIGO_ENTRY_nasu_SSW = 'nigo-entry_nasu_ssw',
+    NIGO_ENTRY_NASU_SSW = 'nigo-entry_nasu_ssw',
     NIGO_ENTRY_SBGC_RMD = 'nigo-entry_sbgc_rmd',
     NIGO_ENTRY_FLIC_RMD = 'nigo-entry_flic_rmd',
     NIGO_ENTRY_MASS_RMD = 'nigo-entry_mass_rmd',
