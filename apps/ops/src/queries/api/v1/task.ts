@@ -213,18 +213,20 @@ export const getTaskFormMetadataSSR = async (
         return null;
     }
 };
-export const unassignTask = async (caseId: string, taskId: string): Promise<any> => {
+export const unassignTask = async (caseId: string, taskId: string, entryDuration?: number): Promise<any> => {
     try {
+        const logTime = entryDuration ? performance.now() - entryDuration : 0;
+        const timeInSeconds = ((logTime % 60000) / 1000).toFixed(0);
         const url = `${baseAppUrl}/api/case/v1/tasks/${taskId}/unclaim`;
         const { data } = await client.put<AxiosResponse>(url);
         logInfo('Successfully updated task using v1', { caseId, taskId, url, function: 'tasks.unassignTask' });
 
         datadogLogs.logger.info('Form entry time', {
+            timeElapsedSinceLoad: timeInSeconds,
             caseId,
             url,
             function: 'tasks.unassignTask',
         });
-        console.log(data);
         return data;
     } catch (error: any) {
         logError('An error occurred during update task using v1', { error, caseId, taskId, function: 'tasks.unassignTask' });
