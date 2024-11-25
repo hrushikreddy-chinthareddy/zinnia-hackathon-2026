@@ -1,4 +1,3 @@
-
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
@@ -9,10 +8,15 @@ import { CaseStatus } from '@deps/models/case/withdrawal/case';
 import ActionCellRenderer from './action-cell-renderer';
 import { Task } from './task-listing.types';
 
-
 export const buildTaskLink = (taskId: string, caseId: string, caseType: string, documentNumber: string, clientId: string) => {
     const caseSlug = getSlug(caseType);
     const link = `/create-case/${caseSlug}/${caseId}?taskId=${taskId}&doc=${documentNumber}&clientId=${clientId}`;
+    return link;
+};
+
+export const buildCaseLink = (taskId: string, caseId: string, caseType: string, documentNumber: string, clientId: string) => {
+    const caseSlug = getSlug(caseType);
+    const link = `/cases/${caseSlug}/${caseId}/progress`;
     return link;
 };
 
@@ -30,8 +34,7 @@ export const getStatusDuration = (t: TFunction, date: string, taskStatus: string
     }
 
     return statusDuration;
-
-}
+};
 
 const getTaskStatusText = (t: TFunction, status: string) => {
     switch (status) {
@@ -47,7 +50,7 @@ const getTaskStatusText = (t: TFunction, status: string) => {
         default:
             return toTitleCase(status);
     }
-}
+};
 export const toFormattedTask = (t: TFunction, task: Task, caseId: string, caseType: string, documentNumber: string, clientId: string) => {
     const statusDuration = getStatusDuration(t, task.updatedDate, task.status);
     return {
@@ -61,7 +64,6 @@ export const toFormattedTask = (t: TFunction, task: Task, caseId: string, caseTy
         actions: ActionCellRenderer,
     };
 };
-
 
 export const getTimeAgoUnitValue = (date: string): { unit: string; count: number } | null => {
     const today = new Date();
@@ -98,7 +100,6 @@ export const getTimeAgoUnitValue = (date: string): { unit: string; count: number
     return { unit, count };
 };
 
-
 export const getTaskStatus = (t: TFunction, status: string) => {
     switch (status) {
         case TaskStatus.Open:
@@ -111,6 +112,5 @@ export const getTaskStatus = (t: TFunction, status: string) => {
             return t('tasksListing.taskStatus.completed');
         case TaskStatus.InProgress:
             return t('tasksListing.taskStatus.inProgress');
-            return toTitleCase(status);
     }
-}
+};

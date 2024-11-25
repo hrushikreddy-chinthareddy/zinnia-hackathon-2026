@@ -82,6 +82,10 @@ export type SendDocumentFormParts = {
     document: CallCenterElement<FormDetails, FormDetails>;
 };
 
+export type SendDocumentFormPartsAdditionData = {
+    id: string;
+} & SendDocumentFormParts;
+
 export type Confirm = {
     caseId: string;
     message: string;
@@ -90,5 +94,5 @@ export type Confirm = {
 
 export type CallCenterElement<Selected, ListType> = {
     selected: Selected | null;
-    list: ListType[];
+    list: ListType[] | null;
 };

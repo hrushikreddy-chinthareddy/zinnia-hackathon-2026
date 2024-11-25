@@ -34,7 +34,6 @@ import { ActiveWithdrawalCase, Carrier, QualTypes, Transaction, TransactionStatu
 import { UserPermission } from '@deps/models/user-profile';
 import { initializeOTPTaskSSR } from '@deps/operations/tasks/v2/initialize';
 import { getDocumentSSR } from '@deps/queries/api/documents';
-import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import { getPolicyPartiesSSR } from '@deps/queries/api/policies';
 import { SCREEN_BREAKPOINTS } from '@deps/types/constants';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
@@ -49,6 +48,8 @@ import { CarrierToCarrierTitleMap } from '@deps/constants/page-title';
 import { FlicSSWForm } from '@deps/containers/otp/ssw-forms/flic/flic-ssw-form';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
+
+import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 
 interface SSWCaseProps extends SegmentTrackedPageProps {
     document: DocumentData;
@@ -118,7 +119,6 @@ export default function SSWCase({ document, form, parties, transactionsHistory, 
         });
         router.push(`/create-case/error?errorCode=${ERROR_CODES.SSW_FORM_CREATION}`);
     }
-
     useEffect(() => {
         setTransactionDetail({
             contractId: document?.contract || '',

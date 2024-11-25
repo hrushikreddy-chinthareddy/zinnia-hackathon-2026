@@ -304,6 +304,7 @@ export class TransformedCase {
     caseRaw: Case;
     caseStatus: Statuses;
     completedSteps: number;
+    resolvedExceptionStatuses: Array<ExceptionStatuses | Statuses>;
     documentsMap: { [key: string]: DocumentView };
     exceptionMap: { [key: string]: ExceptionInstance & { usedInStep?: boolean } };
     processSubType: string;
@@ -321,6 +322,7 @@ export class TransformedCase {
         this.totalSteps = 0;
         this.completedSteps = 0;
         this.unresolvedExceptionCount = 0;
+        this.resolvedExceptionStatuses = [Statuses.Completed, ExceptionStatuses.Resolved, ExceptionStatuses.Overridden];
         this.documentsMap = caseDetails?.documents?.reduce((acc, document) => {
             if (document.id) {
                 acc[document.id] = {
@@ -337,8 +339,9 @@ export class TransformedCase {
         }, {} as { [key: string]: DocumentView });
         this.exceptionMap = caseDetails?.exceptions?.reduce((acc, exception) => {
             if (exception?.id) {
+                const exceptionIsResolved = this.resolvedExceptionStatuses.includes(exception.status as ExceptionStatuses | Statuses);
                 acc[exception.id] = exception;
-                if (![ExceptionStatuses.Resolved, Statuses.Completed].includes(exception.status as ExceptionStatuses | Statuses)) {
+                if (!exceptionIsResolved) {
                     this.unresolvedExceptionCount++;
                 }
             }
@@ -387,7 +390,7 @@ export class TransformedCase {
     }
     // Builds an ExceptionView from an ExceptionInstance
     private buildException(exception: ExceptionInstance): ExceptionView {
-        const exceptionReason = toSentenceCase(exception?.detailedReason ?? exception?.reason);
+        const exceptionReason = toSentenceCase(exception?.detailedReason ? exception?.detailedReason : exception?.reason);
         const tasks: TaskView[] = (
             (exception.taskIdList || ([] as string[]))
                 .map(taskId => {
@@ -396,7 +399,7 @@ export class TransformedCase {
                 .filter(Boolean) as TaskView[]
         ).sort(taskSorter);
         const description = this.t(
-            [Statuses.Completed, ExceptionStatuses.Resolved].includes(exception.status)
+            this.resolvedExceptionStatuses.includes(exception.status)
                 ? 'caseOverview.tabs.resolved'
                 : 'caseOverview.tabs.issue',
             { issue: exceptionReason }

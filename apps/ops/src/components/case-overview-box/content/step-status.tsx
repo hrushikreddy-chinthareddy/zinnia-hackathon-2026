@@ -24,6 +24,10 @@ const StepStatus: React.FC<StepStatusProps> = ({ status, label, updatedAt, info 
         status = Statuses.Completed;
     }
 
+    if (status === ExceptionStatuses.Overridden) {
+        status = Statuses.Overridden;
+    }
+
     const { statusIcon, iconClassNames, reasonClassNames, updatedText, reasonText } = useStatusInfo(status, updatedAt, label, '');
 
     return (

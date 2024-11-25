@@ -52,9 +52,7 @@
   "paths": {
     "/v1/carriers": {
       "get": {
-        "tags": [
-          "Carrier"
-        ],
+        "tags": ["Carrier"],
         "summary": "Fetches all carriers",
         "operationId": "getAllCarriers",
         "responses": {
@@ -100,9 +98,7 @@
     },
     "/v1/carriers/{carrierId}": {
       "get": {
-        "tags": [
-          "Carrier"
-        ],
+        "tags": ["Carrier"],
         "summary": "Fetches carrier details",
         "operationId": "getCarrier",
         "parameters": [
@@ -155,9 +151,7 @@
     },
     "/v1/thirdpartyadministrators": {
       "get": {
-        "tags": [
-          "Third Party Administrator"
-        ],
+        "tags": ["Third Party Administrator"],
         "summary": "Fetches all third party administrators",
         "operationId": "getAllThirdPartyAdministrators",
         "responses": {
@@ -203,9 +197,7 @@
     },
     "/v1/thirdpartyadministrators/{thirdPartyAdministratorId}": {
       "get": {
-        "tags": [
-          "Third Party Administrator"
-        ],
+        "tags": ["Third Party Administrator"],
         "summary": "Fetches Third Party Administrator details",
         "operationId": "getThirdPartyAdministratorDetails",
         "parameters": [
@@ -258,9 +250,7 @@
     },
     "/v1/accountentryrules": {
       "get": {
-        "tags": [
-          "Accounting"
-        ],
+        "tags": ["Accounting"],
         "summary": "Fetches all account entry rules values",
         "operationId": "getAllAccountingEntryRules",
         "parameters": [
@@ -338,9 +328,7 @@
         }
       },
       "post": {
-        "tags": [
-          "Accounting"
-        ],
+        "tags": ["Accounting"],
         "summary": "A chart Of Accounts",
         "operationId": "createAccountEntryRules",
         "requestBody": {
@@ -396,9 +384,7 @@
     },
     "/v1/chartofaccounts": {
       "get": {
-        "tags": [
-          "Accounting"
-        ],
+        "tags": ["Accounting"],
         "summary": "Fetches all chart Of Accounts",
         "operationId": "getAllChartOfAccounts",
         "parameters": [
@@ -468,9 +454,7 @@
         }
       },
       "post": {
-        "tags": [
-          "Accounting"
-        ],
+        "tags": ["Accounting"],
         "summary": "A chart Of Accounts",
         "operationId": "createChartOfAccount",
         "requestBody": {
@@ -526,9 +510,7 @@
     },
     "/v1/disbursements": {
       "get": {
-        "tags": [
-          "Accounting"
-        ],
+        "tags": ["Accounting"],
         "summary": "Disbursements from Disbursement Transaction",
         "operationId": "getAllDisbursements",
         "parameters": [
@@ -635,9 +617,7 @@
     },
     "/v1/accountingentries": {
       "get": {
-        "tags": [
-          "Accounting"
-        ],
+        "tags": ["Accounting"],
         "summary": "Fetches all accounting entry values",
         "operationId": "getAllAccountingEntries",
         "parameters": [
@@ -671,6 +651,14 @@
             "required": false,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "transactionType",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/TransactionType"
             }
           },
           {
@@ -749,16 +737,22 @@
     },
     "/v1/events": {
       "get": {
-        "tags": [
-          "Event"
-        ],
+        "tags": ["Event"],
         "summary": "Fetches all events",
         "operationId": "getAllEvents",
         "parameters": [
           {
             "name": "type",
             "in": "query",
-            "required": true,
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "planCode",
+            "in": "query",
+            "required": false,
             "schema": {
               "type": "string"
             }
@@ -834,9 +828,7 @@
     },
     "/v1/events/{eventId}": {
       "get": {
-        "tags": [
-          "Event"
-        ],
+        "tags": ["Event"],
         "summary": "Fetches data for a specific event",
         "operationId": "getEvent",
         "parameters": [
@@ -889,9 +881,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}": {
       "get": {
-        "tags": [
-          "Policy"
-        ],
+        "tags": ["Policy"],
         "summary": "Fetches data for a specific policy",
         "operationId": "getPolicy",
         "parameters": [
@@ -917,10 +907,7 @@
             "required": false,
             "schema": {
               "type": "boolean",
-              "enum": [
-                true,
-                false
-              ],
+              "enum": [true, false],
               "default": false
             }
           },
@@ -994,9 +981,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/versions": {
       "get": {
-        "tags": [
-          "Policy"
-        ],
+        "tags": ["Policy"],
         "summary": "Fetches all versions for a policy",
         "operationId": "getVersionForPolicy",
         "parameters": [
@@ -1082,9 +1067,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/versions/{version}": {
       "get": {
-        "tags": [
-          "Policy"
-        ],
+        "tags": ["Policy"],
         "summary": "Fetches data for a specific version of a policy",
         "operationId": "getPolicyForVersion",
         "parameters": [
@@ -1159,9 +1142,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/transactions": {
       "get": {
-        "tags": [
-          "Policy"
-        ],
+        "tags": ["Policy"],
         "summary": "Fetches transactions for a policy",
         "operationId": "getTransactionsForPolicy",
         "parameters": [
@@ -1182,11 +1163,14 @@
             }
           },
           {
-            "name": "transactionType",
+            "name": "transactionTypes",
             "in": "query",
             "required": false,
             "schema": {
-              "$ref": "#/components/schemas/TransactionType"
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/TransactionType"
+              }
             }
           },
           {
@@ -1204,10 +1188,16 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": [
-                "ASC",
-                "DESC"
-              ]
+              "enum": ["ASC", "DESC"]
+            }
+          },
+          {
+            "name": "sortField",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["EFFECTIVEDATE", "PROCESSDATE", "REVERSALDATE"]
             }
           },
           {
@@ -1262,6 +1252,16 @@
                 ]
               }
             }
+          },
+          {
+            "name": "reverseInitiatorOnly",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "enum": [true, false],
+              "default": false
+            }
           }
         ],
         "responses": {
@@ -1312,9 +1312,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/transactions/{transactionId}": {
       "get": {
-        "tags": [
-          "Policy"
-        ],
+        "tags": ["Policy"],
         "summary": "Fetches a policy transaction by transactionId",
         "operationId": "getPolicyTransactionById",
         "parameters": [
@@ -1388,9 +1386,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/systematicPrograms": {
       "get": {
-        "tags": [
-          "Policy"
-        ],
+        "tags": ["Policy"],
         "summary": "Fetches Systematic Program information for a policy",
         "operationId": "getSystematicProgramsForPolicy",
         "parameters": [
@@ -1459,9 +1455,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/riders": {
       "get": {
-        "tags": [
-          "Policy"
-        ],
+        "tags": ["Policy"],
         "summary": "Fetches riders information for a policy",
         "operationId": "getRidersForPolicy",
         "parameters": [
@@ -1530,9 +1524,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/parties": {
       "get": {
-        "tags": [
-          "Policy"
-        ],
+        "tags": ["Policy"],
         "summary": "Fetches parties information for a policy",
         "operationId": "getPartiesForPolicy",
         "parameters": [
@@ -1634,9 +1626,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/lpspayload": {
       "get": {
-        "tags": [
-          "Policy"
-        ],
+        "tags": ["Policy"],
         "summary": "LPS Payload format for Illustration",
         "operationId": "getLpsPayload",
         "parameters": [
@@ -3111,9 +3101,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/features": {
       "get": {
-        "tags": [
-          "Policy"
-        ],
+        "tags": ["Policy"],
         "summary": "Fetches Policy Feature information for a policy",
         "operationId": "getPolicyFeatureForPolicy",
         "parameters": [
@@ -3182,9 +3170,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/distribution": {
       "get": {
-        "tags": [
-          "Policy"
-        ],
+        "tags": ["Policy"],
         "summary": "Fetches distribution information for a policy",
         "operationId": "getDistributionForPolicy",
         "parameters": [
@@ -3262,9 +3248,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/coverage": {
       "get": {
-        "tags": [
-          "Policy"
-        ],
+        "tags": ["Policy"],
         "summary": "Fetches coverage information for a policy",
         "operationId": "getCoverageForPolicy",
         "parameters": [
@@ -3328,13 +3312,11 @@
         ]
       }
     },
-    "/v1/policies/{planCode}/{policyNumber}/aggregate": {
+    "/v1/policies/{planCode}/{policyNumber}/metrics": {
       "post": {
-        "tags": [
-          "Policy - Transactions"
-        ],
-        "summary": "Aggregate statistics for a given policy number and time period",
-        "operationId": "aggregate",
+        "tags": ["Policy - Transactions"],
+        "summary": "Metric statistics for a given policy number and time period",
+        "operationId": "metrics",
         "parameters": [
           {
             "name": "planCode",
@@ -3358,7 +3340,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AggregateRequest"
+                "$ref": "#/components/schemas/PolicyMetricsRequest"
               }
             }
           }
@@ -3369,7 +3351,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AggregateResponse"
+                  "$ref": "#/components/schemas/PolicyMetricsResponse"
                 }
               }
             }
@@ -3379,7 +3361,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AggregateErrorResponse"
+                  "$ref": "#/components/schemas/MetricsErrorResponse"
                 }
               }
             }
@@ -3389,7 +3371,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AggregateErrorResponse"
+                  "$ref": "#/components/schemas/MetricsErrorResponse"
                 }
               }
             }
@@ -3399,7 +3381,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AggregateErrorResponse"
+                  "$ref": "#/components/schemas/MetricsErrorResponse"
                 }
               }
             }
@@ -3409,9 +3391,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/canceltransaction": {
       "post": {
-        "tags": [
-          "Policy - Transactions"
-        ],
+        "tags": ["Policy - Transactions"],
         "summary": "Submit request for Cancel Adhoc Transaction Requests",
         "operationId": "Cancel Transaction",
         "parameters": [
@@ -3503,9 +3483,7 @@
     },
     "/v1/lifecycle/{planCode}/{policyNumber}/{scheduledTime}": {
       "post": {
-        "tags": [
-          "Policy - Transactions"
-        ],
+        "tags": ["Policy - Transactions"],
         "summary": "Lifecycle a policy",
         "operationId": "lifeCycle",
         "parameters": [
@@ -3571,9 +3549,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/reverserecreate": {
       "post": {
-        "tags": [
-          "Policy - Transactions"
-        ],
+        "tags": ["Policy - Transactions"],
         "summary": "Request to reverse a recreation request",
         "operationId": "reverseRecreate",
         "parameters": [
@@ -3622,6 +3598,11 @@
                         }
                       }
                     }
+                  },
+                  "noRecreateTransactions": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "optional and default value is false"
                   }
                 }
               }
@@ -3674,9 +3655,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/parties/{partyRole}": {
       "post": {
-        "tags": [
-          "Policy - Non-Financial Transactions"
-        ],
+        "tags": ["Policy - Non-Financial Transactions"],
         "summary": "Add Payee/Payor/Owner/TPD/Beneficiary based on the request",
         "operationId": "addParty",
         "parameters": [
@@ -3771,9 +3750,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/{partyRole}": {
       "put": {
-        "tags": [
-          "Policy - Non-Financial Transactions"
-        ],
+        "tags": ["Policy - Non-Financial Transactions"],
         "summary": "End Date Payee/Payor/Owner/TPD/Beneficiary and Add new Payee/Payor/Owner/TPD/Beneficiary based on the request",
         "operationId": "updateParty",
         "parameters": [
@@ -3877,9 +3854,7 @@
         ]
       },
       "delete": {
-        "tags": [
-          "Policy - Non-Financial Transactions"
-        ],
+        "tags": ["Policy - Non-Financial Transactions"],
         "summary": "End Date Payee/Payor/Owner/TPD/Beneficiary",
         "operationId": "removeParty",
         "parameters": [
@@ -3975,9 +3950,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/phone": {
       "post": {
-        "tags": [
-          "Policy - Non-Financial Transactions"
-        ],
+        "tags": ["Policy - Non-Financial Transactions"],
         "summary": "Update phone number based on the request",
         "operationId": "addPhoneNumber",
         "parameters": [
@@ -4062,9 +4035,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/phone/{phoneId}": {
       "put": {
-        "tags": [
-          "Policy - Non-Financial Transactions"
-        ],
+        "tags": ["Policy - Non-Financial Transactions"],
         "summary": "End Date phone based on phoneId and Create new phone number based on request",
         "operationId": "updatePhoneNumber",
         "parameters": [
@@ -4155,9 +4126,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Policy - Non-Financial Transactions"
-        ],
+        "tags": ["Policy - Non-Financial Transactions"],
         "summary": "End Date or Delete phone details based on the request",
         "operationId": "deletePhoneNumber",
         "parameters": [
@@ -4240,9 +4209,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/emailaddress": {
       "post": {
-        "tags": [
-          "Policy - Non-Financial Transactions"
-        ],
+        "tags": ["Policy - Non-Financial Transactions"],
         "summary": "Create new email address based on request",
         "operationId": "addNewEmailAddress",
         "parameters": [
@@ -4327,9 +4294,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/emailaddress/{emailId}": {
       "put": {
-        "tags": [
-          "Policy - Non-Financial Transactions"
-        ],
+        "tags": ["Policy - Non-Financial Transactions"],
         "summary": "End Date email address based on emailId and Create new email address based on request",
         "operationId": "updateEmailAddress",
         "parameters": [
@@ -4420,9 +4385,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Policy - Non-Financial Transactions"
-        ],
+        "tags": ["Policy - Non-Financial Transactions"],
         "summary": "End Date email address based on the request",
         "operationId": "deleteEmailAddress",
         "parameters": [
@@ -4505,9 +4468,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/bankaccount": {
       "post": {
-        "tags": [
-          "Policy - Non-Financial Transactions"
-        ],
+        "tags": ["Policy - Non-Financial Transactions"],
         "summary": "Add a new Bank Account",
         "operationId": "addBankAccount",
         "parameters": [
@@ -4592,9 +4553,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/bankaccount/{bankId}": {
       "put": {
-        "tags": [
-          "Policy - Non-Financial Transactions"
-        ],
+        "tags": ["Policy - Non-Financial Transactions"],
         "summary": "Update bank account details",
         "operationId": "updateBankAccount",
         "parameters": [
@@ -4685,9 +4644,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Policy - Non-Financial Transactions"
-        ],
+        "tags": ["Policy - Non-Financial Transactions"],
         "summary": "End Date bank account based on request",
         "operationId": "endDateBankAccount",
         "parameters": [
@@ -4770,9 +4727,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/address": {
       "post": {
-        "tags": [
-          "Policy - Non-Financial Transactions"
-        ],
+        "tags": ["Policy - Non-Financial Transactions"],
         "summary": "Create new address based on request",
         "operationId": "addNewAddress",
         "parameters": [
@@ -4857,9 +4812,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/address/{addressId}": {
       "put": {
-        "tags": [
-          "Policy - Non-Financial Transactions"
-        ],
+        "tags": ["Policy - Non-Financial Transactions"],
         "summary": "End Date address and create new address based on request",
         "operationId": "updateAddress",
         "parameters": [
@@ -4950,9 +4903,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Policy - Non-Financial Transactions"
-        ],
+        "tags": ["Policy - Non-Financial Transactions"],
         "summary": "End Date address based on request",
         "operationId": "deleteAddress",
         "parameters": [
@@ -5033,11 +4984,86 @@
         }
       }
     },
+    "/v1/policies/{planCode}/{policyNumber}/deliverydatesetup": {
+      "post": {
+        "tags": ["Policy - Non-Financial Transactions"],
+        "summary": "Submit request for Delivery Date",
+        "operationId": "submitFinalizedDeliveryDateSetupRequest",
+        "parameters": [
+          {
+            "name": "planCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policyNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeliveryDateSetupRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns error - Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error occured, please check server logs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/partyname": {
       "post": {
-        "tags": [
-          "Policy - Non-Financial Transactions"
-        ],
+        "tags": ["Policy - Non-Financial Transactions"],
         "summary": "Update party name based on the request",
         "operationId": "addPartyName",
         "parameters": [
@@ -5122,9 +5148,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/communicationpreference": {
       "post": {
-        "tags": [
-          "Policy - Non-Financial Transactions"
-        ],
+        "tags": ["Policy - Non-Financial Transactions"],
         "summary": "Update Communication Preference based on request",
         "operationId": "updateCommunicationPreference",
         "parameters": [
@@ -5207,11 +5231,317 @@
         }
       }
     },
+    "/v1/policies/{planCode}/{policyNumber}/initialpremium": {
+      "post": {
+        "tags": ["Policy - Financial Transactions"],
+        "summary": "Submit request for Initial Premium",
+        "operationId": "submitFinalizedInitialPremiumRequest",
+        "parameters": [
+          {
+            "name": "planCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policyNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InitialPremiumRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns error - Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error occured, please check server logs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/policies/{planCode}/{policyNumber}/freelookcancellation": {
+      "post": {
+        "tags": ["Policy - Financial Transactions"],
+        "summary": "Submit request for Freelook Cancellation",
+        "operationId": "submitFinalizedFreeLookCancellationRequest",
+        "parameters": [
+          {
+            "name": "planCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policyNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FreeLookCancellationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns error - Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error occured, please check server logs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/policies/{planCode}/{policyNumber}/fundallocationschange": {
+      "post": {
+        "tags": ["Policy - Financial Transactions"],
+        "summary": "Submit request for Fund Default Allocaiton Change",
+        "operationId": "submitFinalizedFundAllocationsChangeRequest",
+        "parameters": [
+          {
+            "name": "planCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policyNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FundAllocationsChangeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns error - Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error occured, please check server logs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/policies/{planCode}/{policyNumber}/fundtransfer": {
+      "post": {
+        "tags": ["Policy - Financial Transactions"],
+        "summary": "Submit request for Fund Transfer",
+        "operationId": "submitFinalizedFundTransferRequest",
+        "parameters": [
+          {
+            "name": "planCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policyNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FundTransferRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns error - Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error occured, please check server logs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/policies/{planCode}/{policyNumber}/systematicprograms": {
       "post": {
-        "tags": [
-          "Policy - Financial Transactions"
-        ],
+        "tags": ["Policy - Financial Transactions"],
         "summary": "Systematic Program Setup",
         "operationId": "systematicProgramSetup",
         "parameters": [
@@ -5288,9 +5618,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/systematicprograms/{arrangementId}": {
       "put": {
-        "tags": [
-          "Policy - Financial Transactions"
-        ],
+        "tags": ["Policy - Financial Transactions"],
         "summary": "Systematic means that happens regularly on a frequency (Monthly, Annual, SemiAnnual etc) programs - like payment, withdrawal and loanrepayment.",
         "operationId": "systematicProgramUpdate",
         "parameters": [
@@ -5377,9 +5705,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/partialwithdrawalonetime": {
       "post": {
-        "tags": [
-          "Policy - Financial Transactions"
-        ],
+        "tags": ["Policy - Financial Transactions"],
         "summary": "Submit request for Partial Withdrawal One Time",
         "operationId": "partialWithdrawalOneTime",
         "parameters": [
@@ -5456,9 +5782,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/partialwithdrawalonetime/quote": {
       "post": {
-        "tags": [
-          "Policy - Financial Transactions"
-        ],
+        "tags": ["Policy - Financial Transactions"],
         "summary": "Submit request for Partial Withdrawal One Time - Quote",
         "operationId": "Partial Withdrawal One Time - Quote",
         "parameters": [
@@ -5535,9 +5859,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/onetimepremium": {
       "post": {
-        "tags": [
-          "Policy - Financial Transactions"
-        ],
+        "tags": ["Policy - Financial Transactions"],
         "summary": "Submit request for One Time Premium",
         "operationId": "submitFinalizedOneTimePremium",
         "parameters": [
@@ -5614,9 +5936,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/onetimepremium/quote": {
       "post": {
-        "tags": [
-          "Policy - Financial Transactions"
-        ],
+        "tags": ["Policy - Financial Transactions"],
         "summary": "Submit request for One Time Premium - Quote",
         "operationId": "One Time Premium - Quote",
         "parameters": [
@@ -5693,9 +6013,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/newloan": {
       "post": {
-        "tags": [
-          "Policy - Financial Transactions"
-        ],
+        "tags": ["Policy - Financial Transactions"],
         "summary": "New Loan Request",
         "operationId": "newLoanRequest",
         "parameters": [
@@ -5772,9 +6090,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/newloan/quote": {
       "post": {
-        "tags": [
-          "Policy - Financial Transactions"
-        ],
+        "tags": ["Policy - Financial Transactions"],
         "summary": "Create a new loan request",
         "operationId": "newLoanRequestQuote",
         "parameters": [
@@ -5902,9 +6218,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/loanrepaymentonetime": {
       "post": {
-        "tags": [
-          "Policy - Financial Transactions"
-        ],
+        "tags": ["Policy - Financial Transactions"],
         "summary": "Loan Repayment One Time Request",
         "operationId": "loanRepayment",
         "parameters": [
@@ -5981,9 +6295,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/loanrepaymentonetime/quote": {
       "post": {
-        "tags": [
-          "Policy - Financial Transactions"
-        ],
+        "tags": ["Policy - Financial Transactions"],
         "summary": "Loan Repayment One Time Request Quote",
         "operationId": "loanRepaymentQuote",
         "parameters": [
@@ -6060,9 +6372,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/fullsurrender": {
       "post": {
-        "tags": [
-          "Policy - Financial Transactions"
-        ],
+        "tags": ["Policy - Financial Transactions"],
         "summary": "Create new full surrender based on request",
         "operationId": "addNewFullSurrenderRequest",
         "parameters": [
@@ -6139,9 +6449,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/fullsurrender/quote": {
       "post": {
-        "tags": [
-          "Policy - Financial Transactions"
-        ],
+        "tags": ["Policy - Financial Transactions"],
         "summary": "Preview full surrender based on request",
         "operationId": "addNewFullSurrenderRequestQuote",
         "parameters": [
@@ -6218,9 +6526,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/deathclaimnotification": {
       "post": {
-        "tags": [
-          "Policy - Financial Transactions"
-        ],
+        "tags": ["Policy - Financial Transactions"],
         "summary": "Generate death claim notification",
         "operationId": "addNewDeathClaimNotification",
         "parameters": [
@@ -6297,9 +6603,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/deathclaim": {
       "post": {
-        "tags": [
-          "Policy - Financial Transactions"
-        ],
+        "tags": ["Policy - Financial Transactions"],
         "summary": "Generate death claim complete response",
         "operationId": "addNewDeathClaim",
         "parameters": [
@@ -6376,9 +6680,7 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/reinstatementapproved": {
       "post": {
-        "tags": [
-          "Policy - Financial Transactions"
-        ],
+        "tags": ["Policy - Financial Transactions"],
         "summary": "Create a new Reinstatement",
         "operationId": "addNewReinstatementApproval",
         "parameters": [
@@ -6453,11 +6755,86 @@
         }
       }
     },
+    "/v1/policies/{planCode}/{policyNumber}/reinstatementrequest/quote": {
+      "post": {
+        "tags": ["Policy - Financial Transactions"],
+        "summary": "Create a new Reinstatement Request",
+        "operationId": "newReinstatementApprovalRequest",
+        "parameters": [
+          {
+            "name": "planCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policyNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReinstatementApproved"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "New Reinstatement Approved Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReinstatementApprovedQuoteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns error - Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Returns error - Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error occured, please check server logs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/policies/{planCode}/{policyNumber}/valueadjustment": {
       "post": {
-        "tags": [
-          "Policy - Financial Transactions"
-        ],
+        "tags": ["Policy - Financial Transactions"],
         "summary": "Create a Value adjustment request",
         "operationId": "addNewValueAdjustmentRequest",
         "parameters": [
@@ -6534,9 +6911,7 @@
     },
     "/v1/issuance": {
       "post": {
-        "tags": [
-          "Operations"
-        ],
+        "tags": ["Operations"],
         "summary": "Policy Issuance API",
         "operationId": "uploadAcordXml",
         "requestBody": {
@@ -6595,9 +6970,7 @@
     },
     "/v1/conversion": {
       "post": {
-        "tags": [
-          "Operations"
-        ],
+        "tags": ["Operations"],
         "summary": "Publish a new request for policy conversion",
         "operationId": "createNewConversionRequest",
         "requestBody": {
@@ -6650,9 +7023,7 @@
     },
     "/v1/policies": {
       "get": {
-        "tags": [
-          "Operations"
-        ],
+        "tags": ["Operations"],
         "summary": "Get all policies with a short summary",
         "operationId": "getPolicies",
         "responses": {
@@ -6700,9 +7071,7 @@
     },
     "/v1/conversion/status": {
       "get": {
-        "tags": [
-          "Operations"
-        ],
+        "tags": ["Operations"],
         "summary": "Fetches conversion status for queried policy numbers",
         "operationId": "getAllConversionStatus",
         "responses": {
@@ -6748,9 +7117,7 @@
     },
     "/v1/conversion/policies": {
       "get": {
-        "tags": [
-          "Operations"
-        ],
+        "tags": ["Operations"],
         "summary": "Fetches fast backup data based on date",
         "operationId": "getFastDataByDate",
         "parameters": [
@@ -6824,9 +7191,7 @@
     "schemas": {
       "Account": {
         "type": "string",
-        "enum": [
-          "GENERAL"
-        ],
+        "enum": ["GENERAL"],
         "description": "Account"
       },
       "AccountEntryRuleRequestFields": {
@@ -6854,28 +7219,19 @@
           "CREDITCARD",
           "DEBITCARD",
           "BROKERAGEACCOUNT",
-          "CERTIFICATEOFDEPOSIT"
+          "CERTIFICATEOFDEPOSIT",
+          "WIRE"
         ],
         "description": "Account Type"
       },
       "AccountTypeCode": {
         "type": "string",
-        "enum": [
-          "A",
-          "L",
-          "I",
-          "B"
-        ],
+        "enum": ["A", "L", "I", "B"],
         "description": "Chart of accounts account type short form names"
       },
       "FundAccountType": {
         "type": "string",
-        "enum": [
-          "FIXED",
-          "INDEX",
-          "VARIABLE",
-          "INTERIM"
-        ],
+        "enum": ["FIXED", "INDEXED", "VARIABLE", "INTERIM"],
         "description": "Account Type"
       },
       "AccountValuebyPolicyYear": {
@@ -6942,6 +7298,12 @@
             "description": "Sum of money an insurance company pays to the policyholder or account owner upon the surrender of a policy/account",
             "example": 161.81698
           },
+          "guaranteedCashSurrenderValueFixed": {
+            "type": "number",
+            "format": "double",
+            "description": "The fixed amount of cash that the policyholder is guaranteed to receive upon surrendering the policy before its maturity.",
+            "example": 161.81698
+          },
           "netAmountAtRisk": {
             "type": "number",
             "format": "double",
@@ -6986,14 +7348,13 @@
           },
           "modifiedEndowmentContractAuthorization": {
             "type": "boolean",
-            "enum": [
-              true,
-              false
-            ],
+            "enum": [true, false],
             "description": "This is based on owner / product default"
           },
           "projectedLapseIndicator": {
-            "$ref": "#/components/schemas/IndicatorCode"
+            "type": "boolean",
+            "enum": [true, false],
+            "description": "Indicates whether a policy can be recovered from a lapse or not"
           },
           "policyGainAmount": {
             "type": "number",
@@ -7006,6 +7367,23 @@
             "format": "double",
             "description": "Negative charges assessed on lapse condition",
             "example": 0
+          },
+          "annualTargetPremium": {
+            "type": "number",
+            "format": "double",
+            "description": "Annual Target Premium for the calculation of commissions will be calculated using the following formula \"((Monthly Expense Charge + Monthly Unit Charge + Monthly Coverage Charge + Children’s Term Insurance Rider Charge) ÷ (1 – Payment Charge)) × 12\"",
+            "example": 99
+          },
+          "modalTargetPremium": {
+            "type": "number",
+            "format": "double",
+            "description": "Modal Target Premium for the calculation of commissions will be calculated using the following formula \"((Monthly Expense Charge + Monthly Unit Charge + Monthly Coverage Charge + Children’s Term Insurance Rider Charge) ÷ (1 – Payment Charge)) × 12\"",
+            "example": 99
+          },
+          "suppressionIndicator": {
+            "type": "boolean",
+            "enum": [true, false],
+            "description": "Indicates whether a policy can be recovered from a lapse or not"
           }
         }
       },
@@ -7211,10 +7589,7 @@
       },
       "AccountStatus": {
         "type": "string",
-        "enum": [
-          "ACTIVEBANKACCOUNT",
-          "TERMINATEDBANKACCOUNT"
-        ],
+        "enum": ["ACTIVEBANKACCOUNT", "TERMINATEDBANKACCOUNT"],
         "description": "Account Status"
       },
       "Address": {
@@ -7300,10 +7675,7 @@
           },
           "preferredAddressIndicator": {
             "type": "string",
-            "enum": [
-              "YES",
-              "NO"
-            ],
+            "enum": ["YES", "NO"],
             "description": "Indicates whether the address being added should be set as default or not. Yes - address being entered is default."
           },
           "effectiveDate": {
@@ -7319,12 +7691,7 @@
       },
       "AddressType": {
         "type": "string",
-        "enum": [
-          "RESIDENCE",
-          "BUSINESS",
-          "POBOX",
-          "SEASONAL"
-        ],
+        "enum": ["RESIDENCE", "BUSINESS", "POBOX", "SEASONAL", "SECONDARY"],
         "description": "The type of party address such as residence, business or unknown"
       },
       "AdhocFundAllocation": {
@@ -7478,6 +7845,66 @@
           }
         }
       },
+      "AdhocFundTransferFromFund": {
+        "type": "object",
+        "properties": {
+          "fundId": {
+            "type": "string"
+          },
+          "requestedAmount": {
+            "type": "number",
+            "format": "double",
+            "example": 124.124213
+          },
+          "fundSegments": {
+            "type": "array",
+            "items": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "segmentId": {
+                      "type": "string"
+                    }
+                  }
+                },
+                {
+                  "$ref": "#/components/schemas/AdhocFundTransferFundSegment"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "AdhocFundTransferToFund": {
+        "type": "object",
+        "properties": {
+          "fundId": {
+            "type": "string"
+          },
+          "requestedAmount": {
+            "type": "number",
+            "format": "double",
+            "example": 124.124213
+          },
+          "fundSegments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdhocFundTransferFundSegment"
+            }
+          }
+        }
+      },
+      "AdhocFundTransferFundSegment": {
+        "type": "object",
+        "properties": {
+          "requestedAmount": {
+            "type": "number",
+            "format": "double",
+            "example": 124.124213
+          }
+        }
+      },
       "AdhocTaxWithheldAmount": {
         "type": "object",
         "properties": {
@@ -7506,10 +7933,7 @@
           },
           "taxableFlag": {
             "type": "boolean",
-            "enum": [
-              true,
-              false
-            ],
+            "enum": [true, false],
             "description": "Transaction is taxable or not"
           }
         }
@@ -7525,106 +7949,80 @@
           }
         }
       },
-      "AggregateErrorResponse": {
-        "type": "object",
-        "properties": {
-          "timestamp": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2024-03-29T16:40:17.935Z"
-          },
-          "message": {
-            "type": "string",
-            "example": "Invalid date range provided"
-          }
-        }
-      },
-      "AggregateRequest": {
-        "type": "object",
-        "properties": {
-          "startDate": {
-            "type": "string",
-            "format": "date",
-            "description": "TBD",
-            "example": "2024-02-02"
-          },
-          "endDate": {
-            "type": "string",
-            "format": "date",
-            "description": "TBD",
-            "example": "2024-02-02"
-          },
-          "metrics": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/MetricsType"
-            }
-          }
-        }
-      },
-      "AggregateResponse": {
-        "type": "array",
-        "items": {
-          "properties": {
-            "metric": {
-              "type": "string",
-              "example": "LAPSEPROTECTIONPAYMENTAMOUNT",
-              "description": "Requested metric"
-            },
-            "begin": {
-              "type": "integer",
-              "format": "int32",
-              "example": 8,
-              "description": "TBD"
-            },
-            "minimum": {
-              "type": "integer",
-              "format": "int32",
-              "example": 8,
-              "description": "TBD"
-            },
-            "maximum": {
-              "type": "integer",
-              "format": "int32",
-              "example": 8,
-              "description": "TBD"
-            },
-            "average": {
-              "type": "integer",
-              "format": "int32",
-              "example": 8,
-              "description": "TBD"
-            },
-            "sum": {
-              "type": "integer",
-              "format": "int32",
-              "example": 32,
-              "description": "TBD"
-            },
-            "count": {
-              "type": "integer",
-              "format": "int32",
-              "example": 4,
-              "description": "TBD"
-            },
-            "end": {
-              "type": "integer",
-              "format": "int32",
-              "example": 8,
-              "description": "TBD"
-            }
-          }
-        }
+      "AgentType": {
+        "type": "string",
+        "enum": [
+          "ACCOUNTMANAGER",
+          "ADDITIONALCOMPENSATIONRECIPIENT",
+          "ADVANCEDUNDERWRITINGCONSULTANT",
+          "AGENCYORGENERALAGENT",
+          "AGENCYDIRECTOR",
+          "AGENCYSUPERINTENDENT",
+          "AGENCYVICEPRESIDENT",
+          "AGENTORPRODUCER",
+          "ASSISTANT",
+          "ASSISTANTGROUPUNDERWRITER",
+          "ASSISTANTMANAGER",
+          "ASSISTANTVICEPRESIDENT",
+          "ASSISTANTVPCOMPLIANCE",
+          "ASSOCIATEAGENCYMANAGER",
+          "ASSOCIATEFINANCIALPLANNER",
+          "ASSOCIATEOFFICERMANAGER",
+          "ASSOCIATESALEDEVELOPMENTMANAGERINTRAINING",
+          "ASSOCIATESALESDEVELOPMENTMANAGER",
+          "BANK",
+          "BANKEMPLOYEE",
+          "BRANCHMANAGER",
+          "BROKER",
+          "BROKERORDEALER",
+          "BROKERAGEDIRECTOR",
+          "BROKERAGEGENERALAGENT",
+          "CERTIFIEDFINANCIALPLANNER",
+          "DISTRIBUTOR",
+          "FINANCIALCONSULTANT",
+          "FINANCIALPLANNER",
+          "MANAGINGDIRECTOR",
+          "MANAGINGGENERALAGENT",
+          "OFFICEMANAGER",
+          "OTHER",
+          "PLATFORMREP",
+          "QUALIFYINGOFFICER",
+          "REGISTEREDFINANCIALPLANNER",
+          "REGISTEREDREPRESENTATIVE",
+          "SALESDEVELOPMENTMANAGER",
+          "SECONDLINEMANAGER",
+          "SENIORADMINISTRATIVECONSULTANT",
+          "SENIORADVANCEDUNDERWRITINGCONSULTANT",
+          "SENIORFINANCIALPLANNER",
+          "SENIORGROUPACCOUNTEXECUTIVE",
+          "SENIORGROUPSALESREPRESENTATIVE",
+          "SENIORPARTNER",
+          "SENIORSALESDEVELOPMENTMANAGER",
+          "SENIORVICEPRESIDENT",
+          "SERVICINGBROKER",
+          "SERVICINGONLYAGENT",
+          "SOLICITOR",
+          "TEAM",
+          "UNKNOWN"
+        ],
+        "description": "Agent Type"
       },
       "AllocationOption": {
         "type": "string",
         "enum": [
           "PRORATA",
+          "DOLLAR",
+          "SPECIFYPERCENTAGE",
           "SPECIFIEDFUNDS",
           "SPECIFIEDSEGMENTS",
-          "DEFAULT"
+          "DEFAULT",
+          "PECKINGORDER",
+          "EARNINGSONLY"
         ],
         "description": "Defines the format of how the funds are removed, i.e. dollar, percentage, pro-rata, etc."
+      },
+      "AllocationOptionType": {
+        "$ref": "#/components/schemas/AllocationOption"
       },
       "AllTransactions": {
         "type": "object",
@@ -7648,16 +8046,20 @@
           "PERCENTAGE",
           "MAX",
           "FREEWITHDRAWALAMOUNT",
-          "WITHDRAWALUNTILBASIS"
+          "WITHDRAWALUNTILBASIS",
+          "EARNINGSONLY",
+          "PRORATA"
         ],
         "description": "Amount Type selected by user. Following is dropdown list 1. Amount -- If selected user should be able to enter Amount for Transaction Amount field 2. Percent -- If selected user should be able to enter Percentage for Transaction Amount field 3. Max -- If selected user should NOT be able to enter Amount. Auto calculated using Maximum Withdrawal Amount. 4. Free Withdrawal Amount -- If selected user should NOT be able to enter Amount. Auto calcualted using Free Withdrawal Amount. 5. Withdraw Until Basis ---- If selected user should NOT be able to enter Amount. Auto calcualted using Cost Basis."
       },
       "ArrangementType": {
         "type": "string",
         "enum": [
-          "PREMIUM",
+          "PAYMENT",
           "WITHDRAWAL",
-          "LOANREPAYMENT"
+          "LOANREPAYMENT",
+          "REQUIREDMINIMUMDISTRIBUTION",
+          "PAYOUT"
         ],
         "description": "The type of payment such as fixed or flexible"
       },
@@ -7803,7 +8205,7 @@
           }
         }
       },
-      "BeneficiaryAllocation": {
+      "PartyAllocation": {
         "type": "object",
         "properties": {
           "partyPolicyId": {
@@ -7917,14 +8319,10 @@
           }
         }
       },
-      "BeneficiaryStatus": {
+      "PartyStatus": {
         "type": "string",
         "description": "TBD",
-        "enum": [
-          "APPROVED",
-          "NOTAPPROVED",
-          "PROCESSED"
-        ]
+        "enum": ["APPROVED", "NOTAPPROVED", "PROCESSED"]
       },
       "BasePolicy": {
         "type": "object",
@@ -7965,9 +8363,7 @@
           },
           "banding": {
             "type": "string",
-            "enum": [
-              "NoPremiumBanding"
-            ],
+            "enum": ["NoPremiumBanding"],
             "description": "Coverage layers/ Face amount bands"
           },
           "matchBonusVersion": {
@@ -7976,12 +8372,7 @@
             "example": "2021.10.15"
           },
           "qualificationType": {
-            "type": "string",
-            "description": "The type of transaction added and processed",
-            "enum": [
-              "QUALIFIED",
-              "NONQUALIFIED"
-            ]
+            "$ref": "#/components/schemas/QualificationType"
           },
           "policyTerm": {
             "type": "number",
@@ -8009,6 +8400,9 @@
           "policyStatus": {
             "$ref": "#/components/schemas/PolicyStatus"
           },
+          "restrictStatus": {
+            "$ref": "#/components/schemas/RestrictStatus"
+          },
           "nonForfeitureOption": {
             "type": "string"
           },
@@ -8027,6 +8421,12 @@
           "costBasis": {
             "$ref": "#/components/schemas/CostBasis"
           },
+          "fixedCostPeriod": {
+            "type": "number",
+            "format": "int32",
+            "example": 10,
+            "description": "This is the initial 10, 20, or 30-year period after the Policy Start Date in which Protection Costs will not charge. After the Fixed Cost Period, the policy enters the Post Fixed Period."
+          },
           "accountValues": {
             "$ref": "#/components/schemas/AccountValues"
           },
@@ -8035,6 +8435,12 @@
           },
           "withdrawalValues": {
             "$ref": "#/components/schemas/WithdrawalValues"
+          },
+          "marketValueAdjustment": {
+            "$ref": "#/components/schemas/MarketValueAdjustment"
+          },
+          "requiredMinimumDistribution": {
+            "$ref": "#/components/schemas/RequiredMinimumDistribution"
           },
           "testValues": {
             "$ref": "#/components/schemas/TestValues"
@@ -8055,6 +8461,12 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Rider"
+            }
+          },
+          "charges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PolicyCharges"
             }
           },
           "systematicPrograms": {
@@ -8125,13 +8537,7 @@
       },
       "BusinessDays": {
         "type": "string",
-        "enum": [
-          "MONDAY",
-          "TUESDAY",
-          "WEDNESDAY",
-          "THURSDAY",
-          "FRIDAY"
-        ]
+        "enum": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"]
       },
       "BusinessSchedule": {
         "type": "object",
@@ -8153,13 +8559,7 @@
               "$ref": "#/components/schemas/BusinessDays"
             },
             "description": "TBD",
-            "example": [
-              "MONDAY",
-              "TUESDAY",
-              "WEDNESDAY",
-              "THURSDAY",
-              "FRIDAY"
-            ]
+            "example": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"]
           },
           "budgetCenter": {
             "type": "string",
@@ -8293,12 +8693,6 @@
               "$ref": "#/components/schemas/Email"
             }
           },
-          "taxWithholdings": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TaxWithholding"
-            }
-          },
           "carrierId": {
             "type": "string",
             "description": "TBD",
@@ -8329,6 +8723,11 @@
             "description": "TBD",
             "example": "SBCOC"
           },
+          "bankCompanyId": {
+            "type": "string",
+            "description": "TBD",
+            "example": 3480409770
+          },
           "accountsPayableBusinessUnit": {
             "type": "string",
             "description": "TBD",
@@ -8340,8 +8739,20 @@
           "depositoryAccount": {
             "$ref": "#/components/schemas/BankAccount"
           },
+          "depositoryAccounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BankAccount"
+            }
+          },
           "controlledDisbursementAccount": {
             "$ref": "#/components/schemas/BankAccount"
+          },
+          "controlledDisbursementAccounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BankAccount"
+            }
           },
           "carrierCode": {
             "type": "string"
@@ -8354,16 +8765,14 @@
       },
       "CarrierType": {
         "type": "string",
-        "enum": [
-          "SB"
-        ],
+        "enum": ["SB"],
         "description": "A Carrier the Policy Ties to"
       },
       "Charge": {
         "type": "object",
         "properties": {
           "chargeType": {
-            "$ref": "#/components/schemas/ChargeType"
+            "$ref": "#/components/schemas/TransactionChargeType"
           },
           "chargeWaiverIndicator": {
             "$ref": "#/components/schemas/ChargeWaiverIndicator"
@@ -8377,23 +8786,8 @@
       },
       "ChargeWaiverIndicator": {
         "type": "string",
-        "enum": [
-          "Yes",
-          "No"
-        ],
+        "enum": ["Yes", "No"],
         "description": "Charge Waiver Indicator"
-      },
-      "ChargeType": {
-        "type": "string",
-        "enum": [
-          "COSTOFINSURANCE",
-          "EXPENSECHARGE",
-          "UNITEXPENSECHARGE",
-          "RIDERCHARGE",
-          "SURRENDERCHARGE",
-          "WITHDRAWALCHARGE"
-        ],
-        "description": "Charge Type"
       },
       "ChartOfAccount": {
         "type": "object",
@@ -8501,22 +8895,13 @@
       },
       "ClaimStatus": {
         "type": "string",
-        "enum": [
-          "APPROVED",
-          "NOTAPPROVED",
-          "PROCESSED"
-        ],
+        "enum": ["APPROVED", "NOTAPPROVED", "PROCESSED"],
         "description": "If the claim is Processed, approved or not",
         "example": "APPROVED"
       },
       "ChartOfAccountsAccountType": {
         "type": "string",
-        "enum": [
-          "ASSET",
-          "LIABILITY",
-          "INCOME",
-          "BENEFIT"
-        ],
+        "enum": ["ASSET", "LIABILITY", "INCOME", "BENEFIT"],
         "description": "Chart of account type"
       },
       "CommunicationType": {
@@ -8528,6 +8913,7 @@
           "FAX",
           "TEXT",
           "NOPREFERENCESPECIFIED",
+          "POSTAL",
           "OTHER"
         ],
         "description": "Communication Type"
@@ -8554,12 +8940,17 @@
               },
               "text": {
                 "type": "string",
-                "example": "in-person meetings or video call id https://company.us/j/1234567890",
+                "example": "OTHER",
                 "description": "If type OTHER, then provide further info using text."
               }
             }
           }
         }
+      },
+      "Contribution": {
+        "type": "string",
+        "enum": ["NOTAPPLICABLE", "EMPLOYEEVOLUNTARY", "EMPLOYEEDISCRETIONARY"],
+        "description": "Not applicable, Employee Voluntary and Employee Discretionary"
       },
       "ConversionCreateRequest": {
         "type": "object",
@@ -8675,6 +9066,12 @@
             "format": "date",
             "description": "The date on which Cost Basis value is calculated",
             "example": "2023-01-01"
+          },
+          "preTaxEquityAndFiscalResponsibilityActBasis": {
+            "type": "number",
+            "format": "double",
+            "description": "Cost basis established before August 14, 1982. This type of cost basis will be withdrawn from an annuity before any gain (taxable amount) is withdrawn",
+            "example": 161.81698
           }
         }
       },
@@ -8998,11 +9395,7 @@
       },
       "CoverageBand": {
         "type": "string",
-        "enum": [
-          "BAND1",
-          "BAND2",
-          "BAND3"
-        ],
+        "enum": ["BAND1", "BAND2", "BAND3"],
         "description": "TBD"
       },
       "CoverageLayer": {
@@ -9014,7 +9407,7 @@
             "example": "Base_Coverage"
           },
           "coverageType": {
-            "$ref": "#/components/schemas/IndicatorCode"
+            "$ref": "#/components/schemas/RiderType"
           },
           "coverageName": {
             "type": "string",
@@ -9032,7 +9425,7 @@
             "description": "Current Coveregae Amount of the Policy / same as Total Coverage Amount",
             "example": 300000
           },
-          "orignalCoverageAmount": {
+          "originalCoverageAmount": {
             "type": "number",
             "format": "double",
             "description": "Original when policy was issue (this amount does not change) - day 1 amount",
@@ -9087,9 +9480,9 @@
             "example": "2023-01-01"
           },
           "unitOfCoverage": {
-            "type": "integer",
-            "format": "int32",
-            "description": "The Actual Unit Value for ex for TL it will be 25 for 25,000.",
+            "type": "number",
+            "format": "double",
+            "description": "The Actual Unit Value for ex for TL it will be 25.00 for 25,000.00.",
             "example": 300
           },
           "valuePerUnitOfCoverage": {
@@ -9138,6 +9531,12 @@
             "description": "Insured Age when the Coverage was Added",
             "example": 43
           },
+          "partyAgeAtIssue:": {
+            "type": "number",
+            "format": "int32",
+            "description": "Insured Age when the Coverage was Added",
+            "example": 43
+          },
           "riskClass": {
             "$ref": "#/components/schemas/RiskClass"
           },
@@ -9154,17 +9553,13 @@
       },
       "Currency": {
         "type": "string",
-        "enum": [
-          "USD",
-          "CAD",
-          "AUD",
-          "NZD",
-          "GBP",
-          "EUR",
-          "CHF",
-          "JPY"
-        ],
+        "enum": ["USD", "CAD", "AUD", "NZD", "GBP", "EUR", "CHF", "JPY"],
         "description": "System of money used for monetary exchanges"
+      },
+      "ClaimCode": {
+        "type": "string",
+        "enum": ["DEATH", "RIDER"],
+        "description": "Claim Code"
       },
       "DeathBenefit": {
         "type": "object",
@@ -9183,6 +9578,12 @@
             "format": "date",
             "description": "This is to track when DBO change  is requested and processed.",
             "example": "2023-01-01"
+          },
+          "deemedDeathBenefit": {
+            "type": "number",
+            "format": "double",
+            "description": "section 7702(e)(1)(B)) deemed which does not exceed the least amount payable as a \"death benefit\" at any time under the contract.",
+            "example": 12203.12
           },
           "deathBenefitAgeGuarantee": {
             "type": "number",
@@ -9277,10 +9678,7 @@
           },
           "proofOfDeathReceived": {
             "type": "boolean",
-            "enum": [
-              true,
-              false
-            ],
+            "enum": [true, false],
             "description": "TBD"
           }
         }
@@ -9311,8 +9709,8 @@
             "description": "The benefit percentage of the beneficiary",
             "example": 100
           },
-          "beneficiaryStatus": {
-            "$ref": "#/components/schemas/BeneficiaryStatus"
+          "partyStatus": {
+            "$ref": "#/components/schemas/PartyStatus"
           }
         }
       },
@@ -9366,7 +9764,7 @@
           "dateOfDeath": {
             "type": "string",
             "format": "date",
-            "description": "Party date of birth",
+            "description": "Party date of death",
             "example": "2023-01-01"
           },
           "causeOfDeath": {
@@ -9477,15 +9875,40 @@
               "WHOOPINGCOUGH"
             ],
             "description": "Cause Of Death"
+          },
+          "deathNotificationDate": {
+            "type": "string",
+            "format": "date",
+            "description": "The date on which carrier was notified of the death",
+            "example": "2023-01-01"
+          },
+          "dateOfDueProof": {
+            "type": "string",
+            "format": "date",
+            "description": "Date the appropriate death paperwork was received (example - death certificate receive date)",
+            "example": "2023-01-01"
+          }
+        }
+      },
+      "ImpairmentDetails": {
+        "type": "object",
+        "properties": {
+          "disabled": {
+            "type": "boolean",
+            "enum": [true, false],
+            "description": "Any disability details of the insured"
+          },
+          "disabilityStartDate": {
+            "type": "string",
+            "format": "date",
+            "description": "The disability start date of the insured",
+            "example": "2023-01-01"
           }
         }
       },
       "DeathBenefitInterestCalculatedFromDate": {
         "type": "string",
-        "enum": [
-          "DATEOFDEATH",
-          "DATEOFDEATHREPORTED"
-        ],
+        "enum": ["DATEOFDEATH", "DATEOFDEATHREPORTED"],
         "description": "Death Benefit Interest Calculated From Date Options"
       },
       "DeathBenefitOption": {
@@ -9501,19 +9924,34 @@
       },
       "DeathBenefitOptionType": {
         "type": "string",
-        "enum": [
-          "LEVEL",
-          "INCREASING"
-        ],
+        "enum": ["LEVEL", "INCREASING"],
         "description": "Payout option to the beficiary when the insured dies. Can be Level (Option A) or Increasing (Option B)"
       },
       "DefinitionOfLifeInsurance": {
         "type": "string",
-        "enum": [
-          "GPT",
-          "CVAT"
-        ],
+        "enum": ["GPT", "CVAT"],
         "description": "TBD"
+      },
+      "DeliveryDateSetupRequest": {
+        "type": "object",
+        "properties": {
+          "correlationId": {
+            "type": "string",
+            "example": "864e43a0-2c2f-4a11-9d7f-69ed40115066",
+            "description": "The unique ID to track transaction request across all systems"
+          },
+          "effectiveDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2023-01-01",
+            "description": "Date when the transaction was originally scheduled or expected to happen. It can be a non-business day"
+          },
+          "reverseInitiator": {
+            "type": "boolean",
+            "default": false,
+            "description": "Property to isolate source transaction(s) that initiated the reversal"
+          }
+        }
       },
       "Disbursement": {
         "type": "object",
@@ -9537,6 +9975,11 @@
             "type": "string",
             "description": "Carrier Code",
             "example": "SB"
+          },
+          "planCode": {
+            "type": "string",
+            "description": "TBD",
+            "example": "SBFIXUL1"
           },
           "setId": {
             "type": "string",
@@ -9566,6 +10009,11 @@
           },
           "transactionType": {
             "$ref": "#/components/schemas/TransactionType"
+          },
+          "originalTransactionId": {
+            "type": "string",
+            "description": "TBD",
+            "example": 1
           },
           "transactionId": {
             "type": "string",
@@ -9606,21 +10054,12 @@
       },
       "DisbursementPaymentForm": {
         "type": "string",
-        "enum": [
-          "DTCC",
-          "EFT",
-          "ACH",
-          "CHECK"
-        ],
+        "enum": ["DTCC", "EFT", "ACH", "CHECK"],
         "description": "The type of disbursement method such as DTCC,EFT or credit card.Default EFT."
       },
       "DisbursementType": {
         "type": "string",
-        "enum": [
-          "GROSS",
-          "NET",
-          "NETNET"
-        ],
+        "enum": ["GROSS", "NET", "NETNET"],
         "description": "The type of amount for systematic withdrawal such as Gross or Net"
       },
       "Details": {
@@ -9678,7 +10117,7 @@
           "NORMALDISTRIBUTION",
           "EXCESSCONTRIBSCURRYRTAX",
           "PS58COSTS",
-          "10YEARTAXOPTION",
+          "TENYEARTAXOPTION",
           "EXCESSCONTRIBS2YRPRIORTAX",
           "EXCESSANNUALADDITIONSSEC415",
           "CHARITABLEGIFTANNUITY",
@@ -9820,12 +10259,7 @@
       },
       "EmailType": {
         "type": "string",
-        "enum": [
-          "PERSONAL",
-          "BUSINESS",
-          "CUSTOMERSERVICE",
-          "OTHER"
-        ],
+        "enum": ["PERSONAL", "BUSINESS", "CUSTOMERSERVICE", "OTHER"],
         "description": "Email Type"
       },
       "EmploymentStatus": {
@@ -9863,51 +10297,27 @@
           }
         }
       },
-      "AggregateFees": {
-        "type": "object",
-        "properties": {
-          "begin": {
-            "type": "number",
-            "format": "double",
-            "description": "TBD",
-            "example": 8
-          },
-          "minimum": {
-            "type": "number",
-            "format": "double",
-            "description": "TBD",
-            "example": 8
-          },
-          "maximum": {
-            "type": "number",
-            "format": "double",
-            "description": "TBD",
-            "example": 8
-          },
-          "average": {
-            "type": "number",
-            "format": "double",
-            "description": "TBD",
-            "example": 8
-          },
-          "sum": {
-            "type": "number",
-            "format": "double",
-            "description": "TBD",
-            "example": 8
-          },
-          "count": {
-            "type": "number",
-            "description": "TBD",
-            "example": 1
-          },
-          "end": {
-            "type": "number",
-            "format": "double",
-            "description": "TBD",
-            "example": 8
-          }
-        }
+      "ExchangeDescription": {
+        "type": "string",
+        "enum": [
+          "DEFAULT",
+          "EXTERNAL1035",
+          "INTERNAL1035",
+          "EXTERNALDIRECTTRANSFER",
+          "INTERNALDIRECTTRANSFER",
+          "EXTERNALROLLOVERQUALIFIED",
+          "INTERNALROLLOVERQUALIFIED",
+          "EXTERNALROTHROLLOVER",
+          "INTERNALROTHROLLOVER",
+          "EXTERNALROTHDIRECTTRANSFER",
+          "INTERNALROTHDIRECTTRANSFER",
+          "BENEFITPROCEEDS",
+          "CASHCONTRIBUTIONS",
+          "EXTERNAL1035PARTIAL",
+          "INTERNAL1035PARTIAL",
+          "BIRTHORADOPTIONREPAYMENT"
+        ],
+        "description": "Indicates the type of exchange being conducted"
       },
       "Event": {
         "type": "object",
@@ -9942,10 +10352,7 @@
             "description": "Type of event represented by combining the different event name and the status Entity - policy EventName - activation - addresschange - anniversary - bankaccountchange - Beneficiarychange - claimpayout - costofinsurance - disbursement - emailchange - expensecharge - faceamountchange - freelookcancellation - freelookexpiration - fullsurrender - paymentInitialPremium - initialpremium - interestcredit - interestcreditloan - interestcreditmatch - interestloan - lapseassessment - loananniversarytrueUp - newloan - ownerchange - partialwithdrawalonetime - payeechange - paymentsystematicloanrepayment - payorchange - phonenumberchange - policyissuance - preferredmailingaddresschange - subsequentpayment - subsequentpremium - systematicloanrepayment - systematicloanrepaymentsetup - systematicpartialwithdrawal - systematicpartialwithdrawalsetup - tpdchange - unitexpensecharge - paymentonetimepremium - onetimepremium Status - pending - completed - canceled - reversed - failed - pendingreversal"
           },
           "datacontenttype": {
-            "enum": [
-              "application/json",
-              "application/xml"
-            ],
+            "enum": ["application/json", "application/xml"],
             "description": "Defines the content type of data field"
           },
           "data": {
@@ -10019,6 +10426,30 @@
         ],
         "description": "Filing status"
       },
+      "FeatureType": {
+        "type": "string",
+        "enum": [
+          "FREELOOK",
+          "LAPSEASSESSMENT",
+          "LAPSEPROTECTION",
+          "REINSTATEMENT",
+          "RATELOCK",
+          "ANNUITIZATION"
+        ],
+        "description": "Feature Type"
+      },
+      "FeatureOption": {
+        "type": "string",
+        "enum": [
+          "LIFEONLY",
+          "JOINTLIFEONLYJOINTANDSURVIVOR",
+          "PERIODCERTAIN",
+          "AMOUNTCERTAIN",
+          "LIFEWITHPERIODCERTAIN",
+          "LIFEWITHCASHREFUND"
+        ],
+        "description": "Feature Option"
+      },
       "FlatExtra": {
         "type": "object",
         "properties": {
@@ -10044,10 +10475,7 @@
       },
       "FlatExtraType": {
         "type": "string",
-        "enum": [
-          "TEMP",
-          "PERM"
-        ],
+        "enum": ["TEMP", "PERM"],
         "description": "Flat Extra Type"
       },
       "FormerName": {
@@ -10123,6 +10551,42 @@
           "SINGLEPAYMENT"
         ],
         "description": "frequency"
+      },
+      "FreeLookCancellationRequest": {
+        "type": "object",
+        "properties": {
+          "correlationId": {
+            "type": "string",
+            "example": "864e43a0-2c2f-4a11-9d7f-69ed40115066",
+            "description": "The unique ID to track transaction request across all systems"
+          },
+          "effectiveDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2023-01-01",
+            "description": "Date when the transaction was originally scheduled or expected to happen. It can be a non-business day"
+          },
+          "transactionAmounts": {
+            "type": "object",
+            "properties": {
+              "disbursementType": {
+                "$ref": "#/components/schemas/DisbursementType"
+              },
+              "disbursementPaymentForm": {
+                "$ref": "#/components/schemas/DisbursementPaymentForm"
+              }
+            }
+          },
+          "payeeOrBeneficiary": {
+            "type": "object",
+            "$ref": "#/components/schemas/PayeeOrBeneficiary"
+          },
+          "reverseInitiator": {
+            "type": "boolean",
+            "default": false,
+            "description": "Property to isolate source transaction(s) that initiated the reversal"
+          }
+        }
       },
       "FullSurrenderRequest": {
         "type": "object",
@@ -10301,6 +10765,12 @@
             "description": "TBD",
             "example": 161.81698
           },
+          "interestGuaranteedPeriod": {
+            "type": "number",
+            "format": "int32",
+            "description": "Period picked by carrier",
+            "example": 5
+          },
           "fundSegments": {
             "type": "array",
             "items": {
@@ -10322,6 +10792,12 @@
             "format": "double",
             "description": "Pending Review by Product Team",
             "example": 1000000
+          },
+          "appliedAmount": {
+            "type": "number",
+            "format": "double",
+            "description": "Total applied amount for the segments",
+            "example": 100
           },
           "fundActivitySegments": {
             "type": "array",
@@ -10385,6 +10861,11 @@
             "example": "2023-01-01"
           }
         }
+      },
+      "FundBanding": {
+        "type": "string",
+        "enum": ["LOWBAND", "HIGHBAND"],
+        "description": "The type of fund band"
       },
       "FundDistribution": {
         "type": "object",
@@ -10501,6 +10982,9 @@
             "description": "TBD",
             "example": 161.81698
           },
+          "banding": {
+            "$ref": "#/components/schemas/FundBanding"
+          },
           "renewalDate": {
             "type": "string",
             "format": "date",
@@ -10518,6 +11002,36 @@
             "description": "TBD",
             "example": "TBD"
           },
+          "interestEarningAmount": {
+            "type": "number",
+            "format": "double",
+            "description": "13th Month Averaging for Everly. Will be set at Sweep and rate Renewal",
+            "example": 161.81698
+          },
+          "startingPrice": {
+            "type": "number",
+            "format": "double",
+            "description": "Starting Price of Index",
+            "example": 1234.21321
+          },
+          "startingPriceDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Date of Starting Price to be used for Index",
+            "example": "2023-01-01"
+          },
+          "endingPrice": {
+            "type": "number",
+            "format": "double",
+            "description": "Ending Price of Index",
+            "example": 2000.81698
+          },
+          "endingPriceDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Date of Ending Price to be used for Index",
+            "example": "2023-01-01"
+          },
           "startDate": {
             "type": "string",
             "format": "date",
@@ -10529,16 +11043,128 @@
             "format": "date",
             "description": "TBD",
             "example": "2023-01-01"
+          },
+          "maxPrice": {
+            "type": "number",
+            "format": "double",
+            "description": "Max Price = Max (IQ1, IQ2, IQ3, IQ4, …. IQN). where IQ1 denotes the index value at the 1st Quarterversary of the contract, IQ2 denotes the index value at the 2nd Quarterversary of the contract and so on and IQN denotes the index value at the end of the guarantee period (N=4*Guarantee period of the fund).",
+            "example": 1234.21321
+          },
+          "maxPriceDate": {
+            "type": "string",
+            "format": "date",
+            "description": "The corresponding date of the determined Quarterversary",
+            "example": "2023-01-01"
+          }
+        }
+      },
+      "FundAllocationsChangeRequest": {
+        "type": "object",
+        "properties": {
+          "correlationId": {
+            "type": "string"
+          },
+          "effectiveDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2024-01-01"
+          },
+          "reverseInitiator": {
+            "type": "boolean",
+            "default": false
+          },
+          "allocation": {
+            "type": "object",
+            "properties": {
+              "investmentType": {
+                "$ref": "#/components/schemas/InvestmentType"
+              },
+              "modelId": {
+                "type": "string",
+                "description": "The corresponding Model Id of the elected model",
+                "example": "TBD"
+              },
+              "fundAllocationsInvestments": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "fundId": {
+                      "type": "string",
+                      "description": "TBD",
+                      "example": "FundAccount1"
+                    },
+                    "allocationPercentage": {
+                      "type": "number",
+                      "format": "double",
+                      "description": "At Policy Level for Each Applicable Fund (Everly there is only one Fixed) Therefore this be 100%",
+                      "example": 100
+                    },
+                    "startDate": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "TBD",
+                      "example": "2024-01-01"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "FundTransferRequest": {
+        "type": "object",
+        "properties": {
+          "correlationId": {
+            "type": "string"
+          },
+          "effectiveDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "reverseInitiator": {
+            "type": "boolean",
+            "default": false
+          },
+          "transactionAmounts": {
+            "type": "object",
+            "properties": {
+              "amountType": {
+                "$ref": "#/components/schemas/AmountType"
+              }
+            }
+          },
+          "fundAllocation": {
+            "type": "object",
+            "properties": {
+              "allocationOption": {
+                "$ref": "#/components/schemas/AllocationOption"
+              }
+            }
+          },
+          "fundTransfer": {
+            "type": "object",
+            "properties": {
+              "sourceFund": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/AdhocFundTransferFromFund"
+                }
+              },
+              "destinationFund": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/AdhocFundTransferToFund"
+                }
+              }
+            }
           }
         }
       },
       "Gender": {
         "type": "string",
-        "enum": [
-          "MALE",
-          "FEMALE",
-          "UNISEX"
-        ],
+        "enum": ["MALE", "FEMALE", "UNISEX"],
         "description": "gender"
       },
       "GetCVQ": {
@@ -10634,11 +11260,7 @@
       },
       "HoldingForm": {
         "type": "string",
-        "enum": [
-          "INDIVIDUAL",
-          "GROUP",
-          "JOINTINDIVIDUAL"
-        ],
+        "enum": ["INDIVIDUAL", "GROUP", "JOINTINDIVIDUAL"],
         "description": "Type of policy holder"
       },
       "Identification": {
@@ -10687,25 +11309,93 @@
           }
         }
       },
-      "IndicatorCode": {
+      "RiderType": {
         "type": "string",
         "enum": [
           "BASE",
           "RIDER",
           "BASEINCREASE",
           "INTEGRATEDRIDER",
-          "RIDERINCREASE"
+          "RIDERINCREASE",
+          "BENEFIT",
+          "DISCOUNT",
+          "OTHER",
+          "UNKNOWN"
         ]
+      },
+      "InitialPremiumRequest": {
+        "type": "object",
+        "properties": {
+          "correlationId": {
+            "type": "string",
+            "example": "864e43a0-2c2f-4a11-9d7f-69ed40115066",
+            "description": "The unique ID to track transaction request across all systems"
+          },
+          "effectiveDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2023-01-01",
+            "description": "Date when the transaction was originally scheduled or expected to happen. It can be a non-business day"
+          },
+          "reverseInitiator": {
+            "type": "boolean",
+            "default": false,
+            "description": "Property to isolate source transaction(s) that initiated the reversal"
+          },
+          "transactionReason": {
+            "$ref": "#/components/schemas/TransactionReason"
+          },
+          "transactionAmounts": {
+            "type": "object",
+            "properties": {
+              "requestedAmount": {
+                "type": "number",
+                "format": "double",
+                "example": 1000,
+                "description": "Requested amount value"
+              }
+            }
+          },
+          "fundAllocation": {
+            "type": "object",
+            "properties": {
+              "allocationOption": {
+                "$ref": "#/components/schemas/AllocationOption"
+              }
+            }
+          },
+          "exchange": {
+            "$ref": "#/components/schemas/TransactionExchange"
+          },
+          "taxBasis": {
+            "$ref": "#/components/schemas/TransactionTaxBasis"
+          },
+          "payor": {
+            "type": "object",
+            "properties": {
+              "partyId": {
+                "type": "string",
+                "example": "Party_PI_1",
+                "description": "Impacted Party in the event of financial transaction"
+              },
+              "paymentForm": {
+                "$ref": "#/components/schemas/PaymentForm"
+              },
+              "bankId": {
+                "type": "string",
+                "example": "Bank_1",
+                "description": "Comes in Acord 103"
+              }
+            }
+          }
+        }
       },
       "Insured": {
         "type": "object",
         "properties": {
           "existingLifeInsurance": {
             "type": "boolean",
-            "enum": [
-              true,
-              false
-            ],
+            "enum": [true, false],
             "description": "TBD"
           },
           "existingLifeInsuranceAmount": {
@@ -10716,34 +11406,22 @@
           },
           "replaceLifeInsurance": {
             "type": "boolean",
-            "enum": [
-              true,
-              false
-            ],
+            "enum": [true, false],
             "description": "TBD"
           },
           "pendingOrPlanToBuyAdditional": {
             "type": "boolean",
-            "enum": [
-              true,
-              false
-            ],
+            "enum": [true, false],
             "description": "TBD"
           },
           "isDependent": {
             "type": "boolean",
-            "enum": [
-              true,
-              false
-            ],
+            "enum": [true, false],
             "description": "TBD"
           },
           "employed": {
             "type": "boolean",
-            "enum": [
-              true,
-              false
-            ],
+            "enum": [true, false],
             "description": "TBD"
           },
           "employmentStatus": {
@@ -10764,23 +11442,7 @@
             "$ref": "#/components/schemas/DeathDetail"
           },
           "impairmentDetails": {
-            "type": "object",
-            "properties": {
-              "disabled": {
-                "type": "boolean",
-                "enum": [
-                  true,
-                  false
-                ],
-                "description": "Any disability details of the insured"
-              },
-              "disabilityStartDate": {
-                "type": "string",
-                "format": "date",
-                "description": "The disability start date of the insured",
-                "example": "2023-01-01"
-              }
-            }
+            "$ref": "#/components/schemas/ImpairmentDetails"
           }
         }
       },
@@ -10876,10 +11538,7 @@
       },
       "InvestmentType": {
         "type": "string",
-        "enum": [
-          "INVESTMENTFUND",
-          "INVESTMENTMODEL"
-        ],
+        "enum": ["INVESTMENTFUND", "INVESTMENTMODEL"],
         "description": "TBD"
       },
       "IssueType": {
@@ -10941,11 +11600,8 @@
       },
       "LineOfBusiness": {
         "type": "string",
-        "enum": [
-          "LIFE",
-          "ANNUITY"
-        ],
-        "description": "Line of business of the insurance"
+        "enum": ["LIFE", "ANNUITY"],
+        "description": "Line of business annuity or life"
       },
       "Loan": {
         "type": "object",
@@ -10998,6 +11654,12 @@
             "type": "number",
             "format": "double",
             "description": "Pending Review by Product Team",
+            "example": 100
+          },
+          "repaymentInterestAmount": {
+            "type": "number",
+            "format": "double",
+            "description": "Loan Interest Repaid with current Repayment Transaction",
             "example": 100
           },
           "loanSegments": {
@@ -11058,18 +11720,12 @@
       },
       "LoanInterestMethod": {
         "type": "string",
-        "enum": [
-          "ADVANCE",
-          "ARREARS"
-        ],
+        "enum": ["ADVANCE", "ARREARS"],
         "description": "Defines when the loan interest is paid, in advance or in arrears"
       },
       "LoanRepaymentType": {
         "type": "string",
-        "enum": [
-          "INTERESTFIRST",
-          "PRINCIPALFIRST"
-        ],
+        "enum": ["INTERESTFIRST", "PRINCIPALFIRST"],
         "description": "TBD"
       },
       "LoanRepaymentOneTimeRequest": {
@@ -11188,6 +11844,12 @@
             "type": "number",
             "format": "double",
             "description": "Loan principal + loan collateral accrued interest",
+            "example": 0
+          },
+          "preInvestmentSegmentAmount": {
+            "type": "number",
+            "format": "double",
+            "description": "TBD",
             "example": 0
           },
           "loanInterestRate": {
@@ -11312,12 +11974,24 @@
       },
       "LoanType": {
         "type": "string",
-        "enum": [
-          "PREFERRED",
-          "NONPREFERREDSTANDARDLOAN",
-          "INDEXLOAN"
-        ],
+        "enum": ["PREFERRED", "NONPREFERREDSTANDARDLOAN", "INDEXLOAN"],
         "description": "Loan Types - Selected by user from dropdown values, default to Non-Preferred Standard Loan"
+      },
+      "MarketValueAdjustment": {
+        "type": "object",
+        "properties": {
+          "marketValueAdjustmentIndicator": {
+            "type": "boolean",
+            "enum": [true, false],
+            "description": "A flag or indicator that shows whether a Market Value Adjustment (MVA) applies to the annuity or investment"
+          },
+          "marketValueAdjustmentAmount": {
+            "type": "number",
+            "format": "double",
+            "description": "The adjustment amount either positive or negative due to the MVA calculation.",
+            "example": 12.42342
+          }
+        }
       },
       "MatchActivity": {
         "type": "object",
@@ -11415,6 +12089,20 @@
         "type": "object",
         "additionalProperties": true
       },
+      "MetricsErrorResponse": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-03-29T16:40:17.935Z"
+          },
+          "message": {
+            "type": "string",
+            "example": "Invalid date range provided"
+          }
+        }
+      },
       "MetricsType": {
         "type": "string",
         "enum": [
@@ -11422,6 +12110,7 @@
           "ACCOUNTSURRENDERVALUE",
           "ACCOUNTVALUE",
           "COSTOFINSURANCE",
+          "NETDEATHBENEFIT",
           "EXPENSECHARGE",
           "UNITEXPENSECHARGE",
           "INTERESTCREDITRATE",
@@ -11437,7 +12126,12 @@
           "TOTALLOANBALANCE",
           "TOTALCOVERAGEAMOUNT",
           "CUMULATIVEGROSSDEATHBENEFITAMOUNT",
-          "CUMULATIVEPREMIUMSINCEISSUE"
+          "CUMULATIVEPREMIUMSINCEISSUE",
+          "COVERAGECHARGE",
+          "COVERAGECREDIT",
+          "INITIALPREMIUMCALCULATEDAMOUNT",
+          "SUBSEQUENTPREMIUMCALCULATEDAMOUNT",
+          "ONETIMEPREMIUMCALCULATEDAMOUNT"
         ],
         "description": "Metrics"
       },
@@ -11464,10 +12158,7 @@
           },
           "modifiedEndowmentContractStatus": {
             "type": "boolean",
-            "enum": [
-              true,
-              false
-            ],
+            "enum": [true, false],
             "description": "This is if policy is Mec or not"
           },
           "sevenPayTestBasis": {
@@ -11505,6 +12196,12 @@
             "format": "int32",
             "description": "TBD",
             "example": 0
+          },
+          "unnecessaryPremium": {
+            "type": "number",
+            "format": "double",
+            "description": "Will be populated as a result NPT test, when premium is higher than the NPT test.",
+            "example": 232.12
           }
         }
       },
@@ -11771,10 +12468,7 @@
         "type": "boolean",
         "description": "The calculated values received after each transaction is processed (mostly from LPS)",
         "example": true,
-        "enum": [
-          true,
-          false
-        ]
+        "enum": [true, false]
       },
       "Owner": {
         "type": "object",
@@ -12138,6 +12832,12 @@
                 "items": {
                   "$ref": "#/components/schemas/BankAccount"
                 }
+              },
+              "deathDetails": {
+                "$ref": "#/components/schemas/DeathDetail"
+              },
+              "impairmentDetails": {
+                "$ref": "#/components/schemas/ImpairmentDetails"
               }
             }
           }
@@ -12154,6 +12854,20 @@
             "format": "double",
             "description": "The benefit percentage of the beneficiary",
             "example": 100
+          },
+          "agentPercentage": {
+            "type": "number",
+            "format": "double",
+            "description": "Comission percentage for each agent",
+            "example": 100
+          },
+          "agentExternalId": {
+            "type": "string",
+            "description": "The Id which user enters(Id validated in MCS) - Agent External ID and Compnay ID uniquely identifies the right Agent.",
+            "example": 3160000751
+          },
+          "agentType": {
+            "$ref": "#/components/schemas/AgentType"
           },
           "firstName": {
             "type": "string",
@@ -12199,6 +12913,10 @@
           "birthCountry": {
             "$ref": "#/components/schemas/Country"
           },
+          "citizenCountry": {
+            "$ref": "#/components/schemas/Country",
+            "description": "If not US citizen, capture the country of citizenship"
+          },
           "birthState": {
             "$ref": "#/components/schemas/State"
           },
@@ -12227,9 +12945,7 @@
             "example": "2023-01-01"
           },
           "trustType": {
-            "type": "string",
-            "description": "TBD",
-            "example": "TBD"
+            "$ref": "#/components/schemas/TrustType"
           },
           "trustTitle": {
             "type": "string",
@@ -12249,6 +12965,11 @@
             "description": "TBD",
             "example": 1
           },
+          "partyPercentage": {
+            "type": "number",
+            "format": "double",
+            "example": 12.1213
+          },
           "formerName": {
             "$ref": "#/components/schemas/FormerName"
           },
@@ -12263,6 +12984,14 @@
             "items": {
               "$ref": "#/components/schemas/TaxWithholding"
             }
+          },
+          "partyStatus": {
+            "$ref": "#/components/schemas/PartyStatus"
+          },
+          "is72uNonNaturalOwner": {
+            "type": "boolean",
+            "enum": [true, false],
+            "description": "An indicator to denote if 72u tax calculations for gain will be utilized for the non-natural owner"
           }
         }
       },
@@ -12347,7 +13076,13 @@
                   "beneficiaryAllocation": {
                     "type": "array",
                     "items": {
-                      "$ref": "#/components/schemas/BeneficiaryAllocation"
+                      "$ref": "#/components/schemas/PartyAllocation"
+                    }
+                  },
+                  "partyAllocation": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/PartyAllocation"
                     }
                   }
                 }
@@ -12430,17 +13165,23 @@
           "PAYOR",
           "PAYEE",
           "AGENT",
-          "THIRDPARTYDESIGNEE"
+          "PRIMARYWRITINGAGENT",
+          "PRIMARYSERVICINGAGENT",
+          "ADDITIONALSERVICINGAGENT",
+          "ADDITIONALWRITINGGAGENT",
+          "THIRDPARTYDESIGNEE",
+          "JOINTOWNER",
+          "COVERAGEINSURED",
+          "ASSIGNEE",
+          "ANNUITANT",
+          "EXCHANGECOMPANY",
+          "JOINTANNUITANT"
         ],
         "description": "Party Role"
       },
       "PartyType": {
         "type": "string",
-        "enum": [
-          "INDIVIDUAL",
-          "ORGANIZATION",
-          "TRUST"
-        ],
+        "enum": ["INDIVIDUAL", "ORGANIZATION", "TRUST"],
         "description": "Defines Party type example individual or Organization. For Insured this should always be Individual"
       },
       "PayeeOrBeneficiary": {
@@ -12469,11 +13210,7 @@
       },
       "PaymentForm": {
         "type": "string",
-        "enum": [
-          "DTCC",
-          "CREDITCARD",
-          "ACH"
-        ],
+        "enum": ["DTCC", "CREDITCARD", "ACH", "CHECK", "WIRE", "EXCHANGE"],
         "description": "Mode of payment"
       },
       "PaymentInfo": {
@@ -12691,9 +13428,6 @@
                           "type": "number",
                           "format": "int32",
                           "example": 1
-                        },
-                        "beneficiaryStatus": {
-                          "$ref": "#/components/schemas/BeneficiaryStatus"
                         }
                       }
                     }
@@ -12807,6 +13541,20 @@
             "type": "number"
           }
         }
+      },
+      "PolicyChargeType": {
+        "type": "string",
+        "enum": [
+          "COSTOFINSURANCE",
+          "EXPENSECHARGE",
+          "UNITEXPENSECHARGE",
+          "PAYMENTCHARGE",
+          "COVERAGECHARGE",
+          "COVERAGECREDIT",
+          "PREMIUMTAX",
+          "SURRENDERCHARGE"
+        ],
+        "description": "Charge Type"
       },
       "PolicyCoverage": {
         "type": "object",
@@ -13314,12 +14062,7 @@
           },
           "loanInterestType": {
             "type": "string",
-            "enum": [
-              "FIXED",
-              "INDEXED",
-              "VARIABLE",
-              "ADJUSTABLE"
-            ],
+            "enum": ["FIXED", "INDEXED", "VARIABLE", "ADJUSTABLE"],
             "description": "Loan Interest Type - Selected by user from dropdown values, default to Fixed"
           },
           "imputedInterestRate": {
@@ -13583,6 +14326,12 @@
             "description": "Policy Sign Date",
             "example": "2023-01-01"
           },
+          "applicationReceivedDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Application Received Date",
+            "example": "2023-01-01"
+          },
           "issueDate": {
             "type": "string",
             "format": "date",
@@ -13666,6 +14415,12 @@
             "format": "date",
             "example": "2023-01-01"
           },
+          "deferralEndDate": {
+            "type": "string",
+            "description": "Deferral End date set on the contract. Used for deferred contracts. Policy auto-surrenders after this date. For inherited IRA.",
+            "format": "date",
+            "example": "2023-01-01"
+          },
           "conversionDate": {
             "type": "string",
             "format": "date",
@@ -13703,10 +14458,16 @@
             "example": "2023-01-01T12:00:00.000Z"
           },
           "featureType": {
-            "type": "string",
-            "enum": [
-              "freelook"
-            ],
+            "$ref": "#/components/schemas/FeatureType",
+            "description": "Feature type"
+          },
+          "featureIndicator": {
+            "type": "boolean",
+            "enum": [true, false],
+            "description": "Indicates whether the Rate lock lock is applicable on the premium being applied on the policy"
+          },
+          "featureOption": {
+            "$ref": "#/components/schemas/FeatureOption",
             "description": "Feature type"
           },
           "startDate": {
@@ -13723,10 +14484,7 @@
           },
           "status": {
             "type": "boolean",
-            "enum": [
-              true,
-              false
-            ],
+            "enum": [true, false],
             "description": "TBD"
           },
           "period": {
@@ -13759,16 +14517,41 @@
             "description": "Monthly Payment Required for Policy In Force",
             "example": 46.49
           },
+          "exclusionAmount": {
+            "type": "number",
+            "format": "double",
+            "description": "Portion of each payment that is not taxable, as it’s considered a return of principal",
+            "example": 46.49
+          },
+          "yearToDatePaymentAmount": {
+            "type": "number",
+            "format": "double",
+            "description": "Total payments made from the annuity year-to-date",
+            "example": 46.49
+          },
+          "exclusionRatio": {
+            "type": "number",
+            "format": "double",
+            "description": "Ratio determining the non-taxable portion of each payment based on principal and expected returns.",
+            "example": 46.49
+          },
           "totalPaymentAmount": {
             "type": "number",
             "format": "double",
             "description": "Total of Payment received,  minus Loan Payoff and Withdrawals",
             "example": 46.49
           },
+          "jointLivesPercentageToSurvivor": {
+            "type": "number",
+            "format": "double",
+            "description": "For Jointly Owned Policy this is the % that suriver gets (amount get is calculated by LPS based on this %).",
+            "example": 100
+          },
           "underwritingDecision": {
-            "type": "string",
+            "type": "boolean",
+            "enum": [true, false],
             "description": "TBD",
-            "example": "TBD"
+            "example": true
           },
           "approvalDate": {
             "type": "string",
@@ -13840,6 +14623,114 @@
           }
         }
       },
+      "PolicyCharges": {
+        "type": "object",
+        "properties": {
+          "chargeType": {
+            "$ref": "#/components/schemas/PolicyChargeType"
+          },
+          "coverageId": {
+            "type": "string",
+            "description": "Coverage Id for coverage for which charges being calculated.This is optional field which will be populated by LPS.",
+            "example": "Base_Coverage"
+          },
+          "currentMonthCharge": {
+            "type": "number",
+            "format": "double",
+            "description": "Current Processing month charge, LPS will set this on porcessing current month charge event.",
+            "example": 123.12
+          },
+          "uncollectedPerCharge": {
+            "type": "number",
+            "format": "double",
+            "description": "Uncollected charges tracked per charge. This will be set by LPS along with policy level uncollected charges on each charge transaction post lapse assessment failure.",
+            "example": 10.42
+          },
+          "cumulativePerCharge": {
+            "type": "number",
+            "format": "double",
+            "description": "Summation of charge from Issue Date until processing date. Calculated by LPS.",
+            "example": 721.42
+          }
+        }
+      },
+      "PolicyMetricsRequest": {
+        "type": "object",
+        "properties": {
+          "startDate": {
+            "type": "string",
+            "format": "date",
+            "description": "TBD",
+            "example": "2024-02-02"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date",
+            "description": "TBD",
+            "example": "2024-02-02"
+          },
+          "metrics": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MetricsType"
+            }
+          }
+        }
+      },
+      "PolicyMetricsResponse": {
+        "type": "array",
+        "items": {
+          "properties": {
+            "metric": {
+              "type": "string",
+              "example": "LAPSEPROTECTIONPAYMENTAMOUNT",
+              "description": "Requested metric"
+            },
+            "begin": {
+              "type": "number",
+              "format": "double",
+              "example": 28.44,
+              "description": "TBD"
+            },
+            "minimum": {
+              "type": "number",
+              "format": "double",
+              "example": 28.44,
+              "description": "TBD"
+            },
+            "maximum": {
+              "type": "number",
+              "format": "double",
+              "example": 28.44,
+              "description": "TBD"
+            },
+            "average": {
+              "type": "number",
+              "format": "double",
+              "example": 28.44,
+              "description": "TBD"
+            },
+            "sum": {
+              "type": "number",
+              "format": "double",
+              "example": 8389.8,
+              "description": "TBD"
+            },
+            "count": {
+              "type": "integer",
+              "format": "int64",
+              "example": 295,
+              "description": "TBD"
+            },
+            "end": {
+              "type": "number",
+              "format": "double",
+              "example": 28.44,
+              "description": "TBD"
+            }
+          }
+        }
+      },
       "PolicyParties": {
         "type": "object",
         "properties": {
@@ -13871,6 +14762,24 @@
             "format": "date",
             "description": "TBD",
             "example": "2023-01-01"
+          },
+          "preferredCommunicationType": {
+            "$ref": "#/components/schemas/CommunicationType"
+          },
+          "preferredAddressId": {
+            "type": "string",
+            "description": "Indicates preferred address selected",
+            "example": 1
+          },
+          "preferredEmailId": {
+            "type": "string",
+            "description": "Indicates preferred email selected",
+            "example": 1
+          },
+          "preferredPhoneId": {
+            "type": "string",
+            "description": "Indicates preferred phone selected",
+            "example": 1
           }
         }
       },
@@ -13889,11 +14798,258 @@
           "SURRENDERED",
           "LIVINGCLAIMPENDING",
           "DEATHCLAIMPENDING",
-          "DEATHCLAIMPAID"
+          "DEATHCLAIMPAID",
+          "NOTTAKEN",
+          "ISSUED",
+          "PARTIALDEATHCLAIM",
+          "PAYOUT"
         ],
         "description": "The current status of the contract"
       },
+      "RestrictStatus": {
+        "type": "string",
+        "enum": ["LEGAL", "OPERATIONAL"],
+        "description": "The current status of the contract"
+      },
       "PolicySummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "TBD",
+            "example": "657bddcddc353e5fc5f45acd"
+          },
+          "event": {
+            "type": "string",
+            "description": "TBD",
+            "example": "InterestCreditMatch"
+          },
+          "effectiveDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Policy as of effective date, (with pattern \"yyyy-mm-dd\").",
+            "example": "2023-01-01"
+          },
+          "policyNumber": {
+            "type": "string",
+            "description": "Unique number assigned to the contract or policy by admin system.",
+            "example": "ZH12345678"
+          },
+          "carrierId": {
+            "type": "string",
+            "description": "A Carrier the Policy Ties to",
+            "example": "SB"
+          },
+          "product": {
+            "type": "object",
+            "properties": {
+              "lineOfBusiness": {
+                "$ref": "#/components/schemas/LineOfBusiness"
+              },
+              "planCode": {
+                "type": "string",
+                "description": "This is a carrier assigned code used to uniquely identify product, rate, version",
+                "example": "BFIXUL1S"
+              },
+              "planName": {
+                "type": "string",
+                "description": "The product choice of the contract owner",
+                "example": "SB UL Premium Match"
+              },
+              "productType": {
+                "$ref": "#/components/schemas/ProductType"
+              }
+            }
+          },
+          "qualificationType": {
+            "$ref": "#/components/schemas/QualificationType"
+          },
+          "qualificationPlanTypeDescription": {
+            "type": "string",
+            "description": "TBD",
+            "example": "Qualification description"
+          },
+          "policyStatus": {
+            "$ref": "#/components/schemas/PolicyStatus"
+          },
+          "restrictStatus": {
+            "$ref": "#/components/schemas/RestrictStatus"
+          },
+          "issueState": {
+            "$ref": "#/components/schemas/State"
+          },
+          "policyDates": {
+            "type": "object",
+            "properties": {
+              "maturityDate": {
+                "type": "string",
+                "format": "date",
+                "description": "The date the investment will mature or expire.(Based on Policy Start Date)",
+                "example": "2023-01-01"
+              },
+              "policyTerminationDate": {
+                "type": "string",
+                "format": "date",
+                "description": "The date Policy has been Terminated",
+                "example": "2023-01-01"
+              },
+              "applicationDate": {
+                "type": "string",
+                "format": "date",
+                "description": "Policy Sign Date",
+                "example": "2023-01-01"
+              },
+              "issueDate": {
+                "type": "string",
+                "format": "date",
+                "description": "Policy Launch Date - The date that the policy was issued to the client This is the date that an applicant accepts an offer and provides payment information This is the event that triggers policy delivery Contestability period starts",
+                "example": "2023-01-01"
+              },
+              "nextAnniversaryDate": {
+                "type": "string",
+                "format": "date",
+                "description": "The day and month that an insurance policy came into effect (Based on Policy Start Date)",
+                "example": "2023-01-01"
+              }
+            }
+          },
+          "currency": {
+            "$ref": "#/components/schemas/Currency"
+          },
+          "testValues": {
+            "type": "object",
+            "properties": {
+              "modifiedEndowmentContract": {
+                "type": "object",
+                "properties": {
+                  "modifiedEndowmentContractStatus": {
+                    "type": "boolean",
+                    "enum": [true, false],
+                    "description": "This is if policy is Mec or not, applicable for Life only"
+                  }
+                }
+              }
+            }
+          },
+          "marketValueAdjustmentProduct": {
+            "type": "boolean",
+            "enum": [true, false],
+            "description": "Flag to identify whether the contract is MVA product or not"
+          },
+          "accountValues": {
+            "type": "object",
+            "properties": {
+              "endingAccountValue": {
+                "type": "number",
+                "format": "double",
+                "description": "Total Account Value of the Policy (loanned and unloanned if no Loan on Policy) as of Last Transaction Processed. Note - this is the value if we wanted to check the Avilable AV for the Policy. This will be the value on which the Fixed Int is credited",
+                "example": 161.81698
+              }
+            }
+          },
+          "partyRoles": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "partyRole": {
+                  "$ref": "#/components/schemas/PartyRole"
+                },
+                "partyRoleId": {
+                  "type": "string",
+                  "description": "TBD",
+                  "example": "Party_PI_1"
+                },
+                "partyId": {
+                  "type": "string",
+                  "description": "Impacted Party in the event of non-financial adhoc change request",
+                  "example": "Party_PI_1"
+                },
+                "startDate": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "TBD",
+                  "example": "2023-01-01"
+                },
+                "endDate": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "TBD",
+                  "example": "2023-01-01"
+                }
+              }
+            }
+          },
+          "parties": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "partyId": {
+                  "type": "string",
+                  "description": "Impacted Party in the event of non-financial adhoc change request",
+                  "example": "Party_PI_1"
+                },
+                "partyType": {
+                  "$ref": "#/components/schemas/PartyType"
+                },
+                "firstName": {
+                  "type": "string",
+                  "description": "The first name of the party",
+                  "example": "Karen"
+                },
+                "middleName": {
+                  "type": "string",
+                  "description": "The middle name of the party",
+                  "example": "Anne"
+                },
+                "lastName": {
+                  "type": "string",
+                  "description": "The last name of the party",
+                  "example": "Bates"
+                },
+                "fullName": {
+                  "type": "string",
+                  "description": "Fullname of the party",
+                  "example": "Karen Anne Bates"
+                },
+                "dateOfBirth": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "Party date of birth",
+                  "example": "2023-01-01"
+                },
+                "attainedAge": {
+                  "type": "number",
+                  "format": "int32",
+                  "description": "Party age  calculated by Date of Birth",
+                  "example": 55
+                },
+                "partyStatus": {
+                  "$ref": "#/components/schemas/PartyStatus"
+                },
+                "addresses": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "addressId": {
+                        "type": "string",
+                        "description": "TBD",
+                        "example": 1
+                      },
+                      "state": {
+                        "$ref": "#/components/schemas/State"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "PolicySummarySnapshot": {
         "type": "object",
         "properties": {
           "effectiveDate": {
@@ -13912,21 +15068,26 @@
             "description": "A Carrier the Policy Ties to",
             "example": "SB"
           },
-          "lineOfBusiness": {
-            "$ref": "#/components/schemas/LineOfBusiness"
-          },
-          "planCode": {
-            "type": "string",
-            "description": "This is a carrier assigned code used to uniquely identify product, rate, version",
-            "example": "BFIXUL1S"
-          },
-          "planName": {
-            "type": "string",
-            "description": "The product choice of the contract owner",
-            "example": "SB UL Premium Match"
-          },
-          "productType": {
-            "$ref": "#/components/schemas/ProductType"
+          "product": {
+            "type": "object",
+            "properties": {
+              "lineOfBusiness": {
+                "$ref": "#/components/schemas/LineOfBusiness"
+              },
+              "planCode": {
+                "type": "string",
+                "description": "This is a carrier assigned code used to uniquely identify product, rate, version",
+                "example": "BFIXUL1S"
+              },
+              "planName": {
+                "type": "string",
+                "description": "The product choice of the contract owner",
+                "example": "SB UL Premium Match"
+              },
+              "productType": {
+                "$ref": "#/components/schemas/ProductType"
+              }
+            }
           },
           "qualificationType": {
             "$ref": "#/components/schemas/QualificationType"
@@ -13942,170 +15103,182 @@
           "issueState": {
             "$ref": "#/components/schemas/State"
           },
-          "maturityDate": {
-            "type": "string",
-            "format": "date",
-            "description": "The date the investment will mature or expire.(Based on Policy Start Date)",
-            "example": "2023-01-01"
-          },
-          "policyTerminationDate": {
-            "type": "string",
-            "format": "date",
-            "description": "The date Policy has been Terminated",
-            "example": "2023-01-01"
-          },
-          "applicationDate": {
-            "type": "string",
-            "format": "date",
-            "description": "Policy Sign Date",
-            "example": "2023-01-01"
-          },
-          "issueDate": {
-            "type": "string",
-            "format": "date",
-            "description": "Policy Launch Date - The date that the policy was issued to the client This is the date that an applicant accepts an offer and provides payment information This is the event that triggers policy delivery Contestability period starts",
-            "example": "2023-01-01"
-          },
-          "nextAnniversaryDate": {
-            "type": "string",
-            "format": "date",
-            "description": "The day and month that an insurance policy came into effect (Based on Policy Start Date)",
-            "example": "2023-01-01"
-          },
-          "dateOfBirth": {
-            "type": "string",
-            "format": "date",
-            "description": "Party date of birth",
-            "example": "2023-01-01"
-          },
-          "issueAge": {
-            "type": "string",
-            "description": "TBD",
-            "example": "Age of primary owner at time of policy issuance"
+          "policyDates": {
+            "type": "object",
+            "properties": {
+              "maturityDate": {
+                "type": "string",
+                "format": "date",
+                "description": "The date the investment will mature or expire.(Based on Policy Start Date)",
+                "example": "2023-01-01"
+              },
+              "policyTerminationDate": {
+                "type": "string",
+                "format": "date",
+                "description": "The date Policy has been Terminated",
+                "example": "2023-01-01"
+              },
+              "applicationDate": {
+                "type": "string",
+                "format": "date",
+                "description": "Policy Sign Date",
+                "example": "2023-01-01"
+              },
+              "issueDate": {
+                "type": "string",
+                "format": "date",
+                "description": "Policy Launch Date - The date that the policy was issued to the client This is the date that an applicant accepts an offer and provides payment information This is the event that triggers policy delivery Contestability period starts",
+                "example": "2023-01-01"
+              },
+              "nextAnniversaryDate": {
+                "type": "string",
+                "format": "date",
+                "description": "The day and month that an insurance policy came into effect (Based on Policy Start Date)",
+                "example": "2023-01-01"
+              }
+            }
           },
           "currency": {
             "type": "string",
             "description": "TBD",
             "example": "Payment Currency"
           },
-          "modifiedEndowmentContractStatus": {
-            "type": "boolean",
-            "enum": [
-              true,
-              false
-            ],
-            "description": "This is if policy is Mec or not, applicable for Life only"
+          "testValues": {
+            "type": "object",
+            "properties": {
+              "modifiedEndowmentContract": {
+                "type": "object",
+                "properties": {
+                  "modifiedEndowmentContractStatus": {
+                    "type": "boolean",
+                    "enum": [true, false],
+                    "description": "This is if policy is Mec or not, applicable for Life only"
+                  }
+                }
+              }
+            }
           },
           "marketValueAdjustmentProduct": {
             "type": "boolean",
-            "enum": [
-              true,
-              false
-            ],
+            "enum": [true, false],
             "description": "Flag to identify whether the contract is MVA product or not"
           },
-          "endingAccountValue": {
-            "type": "number",
-            "format": "double",
-            "description": "Total Account Value of the Policy (loanned and unloanned if no Loan on Policy) as of Last Transaction Processed. Note - this is the value if we wanted to check the Avilable AV for the Policy. This will be the value on which the Fixed Int is credited",
-            "example": 161.81698
+          "accountValues": {
+            "type": "object",
+            "properties": {
+              "endingAccountValue": {
+                "type": "number",
+                "format": "double",
+                "description": "Total Account Value of the Policy (loanned and unloanned if no Loan on Policy) as of Last Transaction Processed. Note - this is the value if we wanted to check the Avilable AV for the Policy. This will be the value on which the Fixed Int is credited",
+                "example": 161.81698
+              }
+            }
           },
-          "partyRole": {
-            "$ref": "#/components/schemas/PartyRole"
+          "partyRoles": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "partyRole": {
+                  "$ref": "#/components/schemas/PartyRole"
+                },
+                "partyRoleId": {
+                  "type": "number",
+                  "format": "int32",
+                  "example": 8,
+                  "description": "TBD"
+                },
+                "partyId": {
+                  "type": "string",
+                  "description": "Impacted Party in the event of non-financial adhoc change request",
+                  "example": "Party_PI_1"
+                },
+                "startDate": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "TBD",
+                  "example": "2023-01-01"
+                },
+                "endDate": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "TBD",
+                  "example": "2023-01-01"
+                }
+              }
+            }
           },
-          "partyRoleId": {
-            "type": "string",
-            "description": "TBD",
-            "example": "Party_PI_1"
-          },
-          "partyId": {
-            "type": "string",
-            "description": "Impacted Party in the event of non-financial adhoc change request",
-            "example": "Party_PI_1"
-          },
-          "startDate": {
-            "type": "string",
-            "format": "date",
-            "description": "TBD",
-            "example": "2023-01-01"
-          },
-          "endDate": {
-            "type": "string",
-            "format": "date",
-            "description": "TBD",
-            "example": "2023-01-01"
-          },
-          "partyType": {
-            "$ref": "#/components/schemas/PartyType"
-          },
-          "firstName": {
-            "type": "string",
-            "description": "The first name of the party",
-            "example": "Karen"
-          },
-          "middleName": {
-            "type": "string",
-            "description": "The middle name of the party",
-            "example": "Anne"
-          },
-          "lastName": {
-            "type": "string",
-            "description": "The last name of the party",
-            "example": "Bates"
-          },
-          "fullName": {
-            "type": "string",
-            "description": "Fullname of the party",
-            "example": "Karen Anne Bates"
-          },
-          "roleStatus": {
-            "type": "string",
-            "description": "Status of the party role",
-            "example": "TBD"
-          }
-        }
-      },
-      "PolicySummarySnapshot": {
-        "type": "object",
-        "properties": {
-          "policyNumber": {
-            "type": "string"
-          },
-          "policyStatus": {
-            "type": "string"
-          },
-          "carrierID": {
-            "type": "string"
-          },
-          "productLine": {
-            "type": "string"
-          },
-          "productType": {
-            "type": "string"
-          },
-          "product": {
-            "type": "string"
-          },
-          "planCode": {
-            "type": "string"
-          },
-          "ownerName": {
-            "type": "string"
-          },
-          "issueDate": {
-            "type": "string"
-          },
-          "effectiveDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "version": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "timestamp": {
-            "type": "string",
-            "format": "date-time"
+          "parties": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "partyId": {
+                  "type": "string",
+                  "description": "Impacted Party in the event of non-financial adhoc change request",
+                  "example": "Party_PI_1"
+                },
+                "partyType": {
+                  "$ref": "#/components/schemas/PartyType"
+                },
+                "firstName": {
+                  "type": "string",
+                  "description": "The first name of the party",
+                  "example": "Karen"
+                },
+                "middleName": {
+                  "type": "string",
+                  "description": "The middle name of the party",
+                  "example": "Anne"
+                },
+                "lastName": {
+                  "type": "string",
+                  "description": "The last name of the party",
+                  "example": "Bates"
+                },
+                "fullName": {
+                  "type": "string",
+                  "description": "Fullname of the party",
+                  "example": "Karen Anne Bates"
+                },
+                "dateOfBirth": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "Party date of birth",
+                  "example": "2023-01-01"
+                },
+                "attainedAge": {
+                  "type": "number",
+                  "format": "int32",
+                  "description": "Party age  calculated by Date of Birth",
+                  "example": 55
+                },
+                "partyStatus": {
+                  "$ref": "#/components/schemas/PartyStatus"
+                },
+                "preferredAddressIndicator": {
+                  "type": "string",
+                  "description": "TBD",
+                  "example": 1
+                },
+                "addresses": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "addressId": {
+                        "type": "string",
+                        "description": "TBD",
+                        "example": 1
+                      },
+                      "state": {
+                        "$ref": "#/components/schemas/State"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -14159,19 +15332,15 @@
           "FAX",
           "TEXT",
           "NOPREFERENCESPECIFIED",
+          "POSTAL",
           "OTHER"
         ],
         "description": "The preference of communication such as phone, email or mail"
       },
       "Prefix": {
         "type": "string",
-        "enum": [
-          "MR",
-          "MS",
-          "MISS",
-          "MRS."
-        ],
-        "description": "The prefix of the party party name"
+        "enum": ["MR", "MS", "MISS", "MRS.", "DR."],
+        "description": "The prefix of the party name"
       },
       "PremiumHistory": {
         "type": "object",
@@ -14244,30 +15413,31 @@
           "UNIVERSALLIFE",
           "VARIABLEUNIVERSALLIFE",
           "VARIABLEWHOLELIFE",
-          "INDEXEDUNIVERSALLIFE"
+          "INDEXEDUNIVERSALLIFE",
+          "FIXEDANNUITY"
         ],
         "description": "Whether the underlying insurance policy is a Life, or an Annuity"
       },
       "ProgramType": {
         "type": "string",
-        "enum": [
-          "PREMIUM",
-          "LOANREPAYMENT",
-          "WITHDRAWAL"
-        ],
+        "enum": ["PREMIUM", "LOANREPAYMENT", "WITHDRAWAL"],
         "description": "Type of systematic program"
       },
       "ProofOfDeathReceived": {
         "type": "string",
-        "enum": [
-          "Yes",
-          "No"
-        ],
+        "enum": ["Yes", "No"],
         "description": "If proof of death Is received or not"
       },
       "QualificationType": {
         "type": "string",
         "enum": [
+          "INDIVIDUALRETIREMENTACCOUNTREGULAR",
+          "INDIVIDUALRETIREMENTACCOUNTSPOUSAL",
+          "INDIVIDUALRETIREMENTACCOUNTROLLOVER",
+          "ROTHINDIVIDUALRETIREMENTACCOUNT",
+          "CUSTODIALINDIVIDUALRETIREMENTACCOUNT",
+          "CUSTODIALROTHINDIVIDUALRETIREMENTACCOUNT",
+          "CUSTODIALROLLOVERINDIVIDUALRETIREMENTACCOUNT",
           "QUALIFIED",
           "NONQUALIFIED"
         ],
@@ -14279,7 +15449,9 @@
           "PREMIUM",
           "LOANREPAYMENT",
           "FREEWITHDRAWALAMOUNT",
-          "WITHDRAWAL"
+          "WITHDRAWAL",
+          "ANNUITYPAYOUT",
+          "REQUIREDMINIMUMDISTRIBUTION"
         ],
         "description": "The reason for the payment"
       },
@@ -14322,20 +15494,73 @@
         "type": "object",
         "properties": {
           "featureType": {
-            "type": "string",
-            "enum": [
-              "FREELOOK",
-              "LAPSEASSESSMENT",
-              "LAPSEPROTECTION",
-              "REINSTATEMENT"
-            ],
-            "description": "Feature Type"
+            "$ref": "#/components/schemas/FeatureType"
           },
           "approvalDate": {
             "type": "string",
             "format": "date",
             "example": "2024-02-21",
             "description": "Date (with pattern \"yyyy-mm-dd\")"
+          }
+        }
+      },
+      "ReinstatementApprovedQuoteResponse": {
+        "type": "object",
+        "properties": {
+          "correlationId": {
+            "type": "string",
+            "example": "657b717b7dcf554abf9ef067",
+            "description": "The unique ID to track transaction request across all systems"
+          },
+          "policy": {
+            "$ref": "#/components/schemas/BasePolicy"
+          }
+        }
+      },
+      "RequiredMinimumDistributionCalculationOption": {
+        "type": "string",
+        "enum": [
+          "RULE2002",
+          "BENEFICIARYDISTRIBUTIONQUALIFIED",
+          "BENEFICIARYDISTRIBUTIONNONQUALIFIED"
+        ],
+        "description": "At Issuance 2002 rules will be default. "
+      },
+      "RequiredMinimumDistribution": {
+        "type": "object",
+        "properties": {
+          "totalRequiredMinimumDistributionAnnualAmount": {
+            "type": "number",
+            "format": "double",
+            "description": "Annual MRD amount that the policy owner need to take out from contract to avoid penalty",
+            "example": 12.42342
+          },
+          "remainingRequiredMinimumDistributionAmount": {
+            "type": "number",
+            "format": "double",
+            "description": "RMD amount less any withdrawals taken during the calendar year.This is the annual RMD amount less calendar year-to-date withdrawals attributable to the current calendar year.",
+            "example": 12.42342
+          },
+          "actuarialPresentValue": {
+            "type": "number",
+            "format": "double",
+            "description": "Acturial Present Value as of end of year",
+            "example": 12.42342
+          },
+          "priorYearEndAccountValue": {
+            "type": "number",
+            "format": "double",
+            "description": "Total account value at the end of previous year",
+            "example": 12.42342
+          },
+          "requiredMinimumDistributionRecalculationDate": {
+            "type": "string",
+            "format": "date",
+            "description": "MRD Recalculation transaction automatically generates for qualified contracts starting in the year after the 12/31 date that the owner turns 69.5 and every year thereafter.  The actual date the transaction is generated will be determined by a ‘days after 12/31’ field set at the product level.  If a contract does not have an active RMD Special Program, the transaction is suppressed.When the new MRD Recalculation transaction is processed the system first calculates the RMD Annual Amount. Then the system updates the GMDB Annual Limit, GMDB Remaining Annual Limit, GMWB Annual Limit, GMWB Remaining Annual Limit and Free Withdrawal Amount. Same as APV Date.",
+            "example": "2023-01-01"
+          },
+          "requiredMinimumDistributionCalculationOption": {
+            "$ref": "#/components/schemas/RequiredMinimumDistributionCalculationOption"
           }
         }
       },
@@ -14377,7 +15602,7 @@
             "example": "2023-01-01T12:00:00.000Z"
           },
           "type": {
-            "$ref": "#/components/schemas/IndicatorCode"
+            "$ref": "#/components/schemas/RiderType"
           },
           "riderName": {
             "type": "string",
@@ -14393,6 +15618,12 @@
             "type": "string",
             "description": "TBD",
             "example": "SBLCHR"
+          },
+          "qualifiedAdditionalBenefit": {
+            "type": "boolean",
+            "enum": [true, false],
+            "description": "To denote whether specific Rider is Qualified Benefit or not.",
+            "example": true
           },
           "effectiveDate": {
             "type": "string",
@@ -14432,6 +15663,12 @@
               "$ref": "#/components/schemas/RiderParticipant"
             }
           },
+          "riderParticipants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PartyRiderParticipant"
+            }
+          },
           "charge": {
             "$ref": "#/components/schemas/RiderCharge"
           },
@@ -14449,10 +15686,7 @@
           },
           "claimStatus": {
             "type": "boolean",
-            "enum": [
-              true,
-              false
-            ],
+            "enum": [true, false],
             "description": "TBD"
           },
           "nextEvaluationDate": {
@@ -14568,6 +15802,22 @@
           }
         }
       },
+      "PartyRiderParticipant": {
+        "type": "object",
+        "properties": {
+          "partyId": {
+            "type": "string",
+            "description": "Insured or Annuitant Party ID",
+            "example": "Party_PI_1"
+          },
+          "partyAgeAtIssue": {
+            "type": "number",
+            "format": "int32",
+            "description": "Age when the Policy was issued",
+            "example": 50
+          }
+        }
+      },
       "RiskClass": {
         "type": "string",
         "enum": [
@@ -14660,7 +15910,10 @@
       "State": {
         "type": "string",
         "enum": [
+          "AA",
+          "AE",
           "AL",
+          "AP",
           "AK",
           "AZ",
           "AR",
@@ -14715,12 +15968,7 @@
       },
       "Status": {
         "type": "string",
-        "enum": [
-          "ACTIVE",
-          "TERMINATED",
-          "PENDING",
-          "SUSPENDED"
-        ],
+        "enum": ["ACTIVE", "TERMINATED", "PENDING", "SUSPENDED"],
         "description": "TBD"
       },
       "SubStandardRating": {
@@ -14740,13 +15988,7 @@
       },
       "Suffix": {
         "type": "string",
-        "enum": [
-          "JR",
-          "SN",
-          "I",
-          "II",
-          "III"
-        ],
+        "enum": ["JR", "SN", "I", "II", "III"],
         "description": "The suffix of the party name"
       },
       "SystematicProgram": {
@@ -14830,10 +16072,7 @@
               "properties": {
                 "partyRole": {
                   "type": "string",
-                  "enum": [
-                    "PAYOR",
-                    "PAYEE"
-                  ],
+                  "enum": ["PAYOR", "PAYEE"],
                   "description": "Party Role",
                   "example": "PAYOR"
                 },
@@ -14852,6 +16091,9 @@
                   "type": "string",
                   "description": "Pending Review by Product Team",
                   "example": "Bank_1"
+                },
+                "paymentForm": {
+                  "$ref": "#/components/schemas/PaymentForm"
                 }
               }
             }
@@ -14910,7 +16152,9 @@
           "NOWITHHOLDINGELECTED",
           "USEVALUESENTERED",
           "NOWITHHOLDINGALLOWED",
-          "USEDEFAULTTABLE"
+          "USEDEFAULTTABLE",
+          "ADDITIONALWITHHOLDING",
+          "TAKEINPUTTEDVALUE"
         ],
         "description": "Mode of payment"
       },
@@ -14965,23 +16209,50 @@
             "type": "number",
             "format": "int32",
             "description": "TBD",
-            "example": "TBD"
+            "example": 0
           },
           "taxJurisdiction": {
             "type": "string",
             "description": "TBD",
             "example": "USA_WY"
+          },
+          "contribution": {
+            "$ref": "#/components/schemas/Contribution"
+          },
+          "w4p": {
+            "type": "object",
+            "properties": {
+              "totalAmountOfOtherIncomeAndOtherPensionsOrAnnuities": {
+                "type": "number",
+                "format": "double",
+                "description": "Below Amounts are for periodic Payments Only  - Certain States Require these amounts to be entered",
+                "example": 12.12
+              },
+              "totalAmountOfClaimsAndOtherCredits": {
+                "type": "number",
+                "format": "double",
+                "description": "This indicates the total amount of tax claims and credits party is eligible for to reduce the tax liabilities",
+                "example": 213.73
+              },
+              "otherIncome": {
+                "type": "number",
+                "format": "double",
+                "description": "Not from Jobs or Pension/Annuities",
+                "example": 144.53
+              },
+              "otherDeduction": {
+                "type": "number",
+                "format": "double",
+                "description": "If Standard Deduction is not used",
+                "example": 42.83
+              }
+            }
           }
         }
       },
       "TaxWithholdingType": {
         "type": "string",
-        "enum": [
-          "FEDERAL",
-          "STATE",
-          "NRA",
-          "BACKUP"
-        ],
+        "enum": ["FEDERAL", "STATE", "NRA", "BACKUP"],
         "description": "Tax Withholding Types"
       },
       "TaxWithholdingInstructions": {
@@ -15122,12 +16393,6 @@
               "$ref": "#/components/schemas/Email"
             }
           },
-          "taxWithholdings": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TaxWithholding"
-            }
-          },
           "organizationPurposeSystemOfRecord": {
             "type": "string",
             "description": "TBD",
@@ -15156,6 +16421,26 @@
             "type": "string",
             "description": "The unique ID for each transaction added and processed",
             "example": 1
+          },
+          "originalTransactionId": {
+            "type": "string",
+            "description": "Original Transaction ID is the ID of the reversed transaction",
+            "example": 1
+          },
+          "partyPolicyChangeReferenceId": {
+            "type": "string",
+            "description": "Trigger to Pass in API which non financial was updated out of multiple change requests, for example out of mutiple address which was changed.",
+            "example": 1
+          },
+          "partyPolicyNewReferenceId": {
+            "type": "string",
+            "description": "Trigger to Pass in API which non financial was newly added out of multiple change requests, for example a new email was added.",
+            "example": 1
+          },
+          "planCode": {
+            "type": "string",
+            "description": "TBD",
+            "example": "SBFIXUL1"
           },
           "policyNumber": {
             "type": "string",
@@ -15193,6 +16478,12 @@
             "description": "Date the transaction gets processed. It should be a business day (Note:the issuance transaction will not be processed on 29th, 30th and 31st of the month).",
             "example": "2023-01-01"
           },
+          "reversalDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Transaction Reversal Date is the date the transaction gets reversed.",
+            "example": "2023-01-01"
+          },
           "status": {
             "$ref": "#/components/schemas/TransactionStatus"
           },
@@ -15215,6 +16506,9 @@
           "transactionAmounts": {
             "$ref": "#/components/schemas/TransactionAmounts"
           },
+          "exchange": {
+            "$ref": "#/components/schemas/TransactionExchange"
+          },
           "charges": {
             "type": "array",
             "items": {
@@ -15225,6 +16519,11 @@
                 {
                   "type": "object",
                   "properties": {
+                    "coverageId": {
+                      "type": "string",
+                      "description": "Coverage Id for coverage for which charges being calculated.This is optional field which will be populated by LPS.",
+                      "example": "Base_Coverage"
+                    },
                     "chargeAmount": {
                       "type": "string",
                       "format": "double",
@@ -15262,6 +16561,9 @@
           },
           "loanActivity": {
             "$ref": "#/components/schemas/LoanActivity"
+          },
+          "taxBasis": {
+            "$ref": "#/components/schemas/TransactionTaxBasis"
           },
           "taxWithholdingInstructions": {
             "type": "array",
@@ -15327,10 +16629,7 @@
           },
           "reverseInitiator": {
             "type": "boolean",
-            "enum": [
-              true,
-              false
-            ],
+            "enum": [true, false],
             "description": "set to true if the tranaction reversed"
           },
           "version": {
@@ -15347,29 +16646,32 @@
           "ONETIMEPREMIUM",
           "GRACEPERIODPREMIUM",
           "REINSTATEMENTPREMIUM",
-          "1035EXCHANGE",
+          "EXCHANGE1035",
           "SURRENDER",
           "AMOUNTEXCESSTOMEC",
           "AMOUNTEXCESSTOGUIDELINE",
-          "CURRENTAMOUNT",
           "CURRENTVALUE",
           "COSTBASIS",
           "GUIDELINESINGLEPREMIUM",
           "GUIDELINELEVELPREMIUM",
           "SEVENPAYPREMIUM",
-          "TOTALYTDPREMIUMAMOUNT"
+          "TOTALYTDPREMIUMAMOUNT",
+          "FACEDECREASECOVERAGE",
+          "INITIALPREMIUMEXPIRATION",
+          "COMPLIANCE",
+          "STARTINGPRICE"
         ],
         "description": "Optional Reason for this transaction"
       },
       "TransactionStatus": {
         "type": "string",
         "enum": [
-          "PENDING",
-          "COMPLETED",
-          "FAILED",
-          "REVERSED",
-          "CANCELED",
-          "PENDINGREVERSAL"
+          "Pending",
+          "Completed",
+          "Failed",
+          "Reversed",
+          "Canceled",
+          "PendingReversal"
         ],
         "description": "Tax Withholding Types"
       },
@@ -15414,6 +16716,12 @@
                 "description": "The initial premium amount that is actually applied to the policy.",
                 "example": 100
               },
+              "freeAppliedAmount": {
+                "type": "number",
+                "format": "double",
+                "description": "Amount of partial withdrawal that was free of surrender charges applies to Withdrawal or Surrender (free of charges amount).",
+                "example": 100
+              },
               "calculatedAmount": {
                 "type": "number",
                 "format": "double",
@@ -15452,10 +16760,77 @@
                 "format": "double",
                 "description": "Product team to review",
                 "example": 1000
+              },
+              "claimCode": {
+                "$ref": "#/components/schemas/ClaimCode"
               }
             }
           }
         ]
+      },
+      "TransactionExchange": {
+        "type": "object",
+        "properties": {
+          "policyNumber": {
+            "type": "string",
+            "description": "Unique number given to an exchange/transfer.",
+            "example": "EX0000001"
+          },
+          "exchangeDescription": {
+            "$ref": "#/components/schemas/ExchangeDescription"
+          },
+          "exchangeDate": {
+            "type": "string",
+            "format": "date",
+            "description": "The date on which 1035 Exchange occurs",
+            "example": "2023-01-01"
+          },
+          "lifeOfBusiness": {
+            "$ref": "#/components/schemas/LineOfBusiness"
+          },
+          "exchangeAmount": {
+            "type": "number",
+            "format": "double",
+            "description": "Total Dollar received in 1035 Exchange",
+            "example": 161.81698
+          },
+          "qualificationType": {
+            "$ref": "#/components/schemas/QualificationType"
+          },
+          "costBasis": {
+            "type": "number",
+            "format": "double",
+            "description": "Original cost basis of the policy being exchanged - previous Policy",
+            "example": 161.81698
+          },
+          "modifiedEndowmentContractStatus": {
+            "type": "boolean",
+            "enum": [true, false],
+            "description": "Indicates if the original policy being exchanged is classified as modifiedEndowment contract status"
+          },
+          "outstandingLoanRolloverAmount": {
+            "type": "number",
+            "format": "double",
+            "description": "The amount of any outstanding loan against the original policy that will be rolled over into the new policy during the 1035 exchange",
+            "example": 161.81698
+          }
+        }
+      },
+      "TransactionChargeType": {
+        "type": "string",
+        "enum": [
+          "COSTOFINSURANCE",
+          "EXPENSECHARGE",
+          "UNITEXPENSECHARGE",
+          "RIDERCHARGE",
+          "SURRENDERCHARGE",
+          "WITHDRAWALCHARGE",
+          "PAYMENTCHARGE",
+          "COVERAGECHARGE",
+          "COVERAGECREDIT",
+          "PREMIUMTAX"
+        ],
+        "description": "Charge Type"
       },
       "TransactionFundAllocation": {
         "type": "object",
@@ -15470,11 +16845,15 @@
         "properties": {
           "correlationId": {
             "type": "string",
-            "example": "657b717b7dcf554abf9ef067"
+            "example": "864e43a0-2c2f-4a11-9d7f-69ed40115066"
           },
           "transactionId": {
             "type": "string",
             "example": 377
+          },
+          "entityId": {
+            "type": "string",
+            "example": 1
           }
         }
       },
@@ -15488,7 +16867,7 @@
             "properties": {
               "correlationId": {
                 "type": "string",
-                "example": "657b717b7dcf554abf9ef067",
+                "example": "864e43a0-2c2f-4a11-9d7f-69ed40115066",
                 "description": "The unique ID to track correlation request across all systems"
               },
               "details": {
@@ -15498,19 +16877,70 @@
           }
         ]
       },
+      "TransactionTaxBasis": {
+        "type": "object",
+        "properties": {
+          "currentContributionAmount": {
+            "type": "number",
+            "format": "double",
+            "description": "Only for Qualified IRA - normally entered by Ops. It has to do with contribution year.  People can submit IRA payment for the 2024 tax year up until April 15, 2025 If they were to send in, say $10,000, in March and say that $5,000 was 2024 and $5,000 is 2025, we'd load $5,000 as a current year contribution and $5,000 as a prior year contribution",
+            "example": 161.81698
+          },
+          "currentTaxYear": {
+            "type": "number",
+            "format": "int32",
+            "description": "The tax year for which the current contribution is being reported.",
+            "example": 1
+          },
+          "priorContributionAmount": {
+            "type": "number",
+            "format": "double",
+            "description": "Only for Qualified IRA - normally entered by Ops",
+            "example": 161.81698
+          },
+          "priorTaxYear": {
+            "type": "number",
+            "format": "int32",
+            "description": "Current Tax Year - Default to",
+            "example": 1
+          },
+          "preTaxEquityAndFiscalResponsibilityActBasis": {
+            "type": "number",
+            "format": "double",
+            "description": "Cost basis established before August 14, 1982. This type of cost basis will be withdrawn from an annuity before any gain (taxable amount) is withdrawn",
+            "example": 161.81698
+          },
+          "postTaxEquityAndFiscalResponsibilityActBasis": {
+            "type": "number",
+            "format": "double",
+            "description": "Cost basis established on or after August 14, 1982. This type of cost basis is not withdrawn from an annuity until all gain has been withdrawn",
+            "example": 161.81698
+          },
+          "postTechnicalAndMiscellaneousRevenueActAmount": {
+            "type": "number",
+            "format": "double",
+            "description": "Applies to 403b Qual type",
+            "example": 161.81698
+          }
+        }
+      },
       "TransactionType": {
         "type": "string",
         "enum": [
           "Activation",
           "AddressChange",
+          "AgentChange",
           "Anniversary",
           "BankAccountChange",
           "BeneficiaryChange",
+          "CalendarProcessing",
           "CancelNoPremium",
           "ClaimPayout",
           "CommunicationPreferenceChange",
           "ConversionActivation",
           "CostOfInsurance",
+          "CoverageCharge",
+          "CoverageCredit",
           "DeathClaim",
           "DeliveryDateSetup",
           "Disbursement",
@@ -15521,9 +16951,11 @@
           "FaceAmountDecrease",
           "FaceAmountIncrease",
           "ForceOut",
-          "FreeLookCancellation",
           "FreeLookExpiration",
+          "FreeLookCancellation",
           "FullSurrender",
+          "FundAllocationsChange",
+          "FundTransfer",
           "PaymentInitialPremium",
           "InitialPremium",
           "InterestCredit",
@@ -15533,7 +16965,7 @@
           "Lapse",
           "LapseAssessment",
           "LoanAnniversaryTrueUp",
-          "LoanRepayment",
+          "LoanRepaymentOneTime",
           "MatchBonusVesting",
           "NewLoan",
           "NotificationOfDeathClaim",
@@ -15541,22 +16973,32 @@
           "OwnerChange",
           "PartialWithdrawalOneTime",
           "PayeeChange",
+          "PaymentExpiration",
           "PaymentLoanRepaymentOneTime",
           "PaymentOneTimePremium",
           "PaymentSystematicLoanRepayment",
           "PayorChange",
           "PhoneNumberChange",
+          "Rescission",
           "Issuance",
-          "PolicyValueAdjustment",
+          "ValueAdjustment",
           "PreferredMailingAddressChange",
           "Reinstatement",
           "ReinstatementApproved",
           "SubsequentPayment",
           "SubsequentPremium",
+          "Sweep",
           "SystematicLoanRepayment",
           "SystematicLoanRepaymentSetup",
           "SystematicPartialWithdrawal",
           "SystematicPartialWithdrawalSetup",
+          "SystematicPartialWithdrawalUpdate",
+          "SystematicRequiredMinimumDistribution",
+          "SystematicRequiredMinimumDistributionSetup",
+          "SystematicRequiredMinimumDistributionUpdate",
+          "SystematicAnnuityPayout",
+          "SystematicAnnuityPayoutSetup",
+          "SystematicAnnuityPayoutUpdate",
           "SystematicProgramUpdate",
           "TPDChange",
           "UnitExpenseCharge"
@@ -15577,6 +17019,11 @@
             }
           }
         }
+      },
+      "TrustType": {
+        "type": "string",
+        "enum": ["INDIVIDUALTRUST", "CORPORATETRUST"],
+        "description": "The type of trust"
       },
       "Url": {
         "type": "object",
@@ -15608,7 +17055,18 @@
             "description": "Property to isolate source transaction(s) that initiated the reversal"
           },
           "transactionReason": {
-            "$ref": "#/components/schemas/TransactionReason"
+            "type": "string",
+            "enum": [
+              "CURRENTVALUE",
+              "COSTBASIS",
+              "GUIDELINESINGLEPREMIUM",
+              "GUIDELINELEVELPREMIUM",
+              "SEVENPAYPREMIUM",
+              "TOTALYTDPREMIUMAMOUNT",
+              "FACEDECREASECOVERAGE",
+              "STARTINGPRICE"
+            ],
+            "description": "Optional reason for this transaction"
           },
           "transactionAmounts": {
             "$ref": "#/components/schemas/ValueAdjustmentRequest.TransactionAmounts"
@@ -15656,6 +17114,12 @@
             "example": 0
           },
           "freeWithdrawalAmount": {
+            "type": "number",
+            "format": "double",
+            "description": "The max amount that can be withdrawn in a Contract Year without being subject to a surrender charge",
+            "example": 0
+          },
+          "yearToDateFreeWithdrawalAmount": {
             "type": "number",
             "format": "double",
             "description": "The max amount that can be withdrawn in a Contract Year without being subject to a surrender charge",

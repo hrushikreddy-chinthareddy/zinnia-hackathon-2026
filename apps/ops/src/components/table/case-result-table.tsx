@@ -30,7 +30,7 @@ import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
 import { Case } from '@deps/models/case/case';
 import { CaseDetailsTabValues, DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { SearchViewQuery } from '@deps/types/search';
-import { SegmentTrackedEventName } from '@deps/types/segment-analytics';
+import { CaseClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
 import { getCarrierLogoByClientId, getCarrierNameByClientId } from '@deps/utils/carriers';
 
 import styles from './case-result-table.module.css';
@@ -101,7 +101,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
     const otherAgents = agents.slice(1).map(owner => ({ name: toTitleCase(owner.fullName), ssn: formatSSN(owner.ssn) }));
     const agentComponentProps = {
         text: toTitleCase(agents?.[0]?.fullName),
-        highlights: [searchValues?.ownerFirstName, searchValues?.ownerLastName].filter(Boolean) as string[],
+        highlights: [searchValues?.agentFirstName, searchValues?.agentLastName].filter(Boolean) as string[],
         entities: otherAgents,
         truncate: true,
     };
@@ -126,7 +126,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
     };
 
     const loadCaseDetails = (href: string) => {
-        segmentAnalyticsTrackEvent(SegmentTrackedEventName.PolicyKeyValuesItemClick, {
+        segmentAnalyticsTrackEvent<CaseClickedEvent>(SegmentTrackedEventName.CaseClicked, {
             caseId: singleCase.id,
             userId: perms.getUserPartyId(),
         });
@@ -151,9 +151,11 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                     <Typography variant={TypographyVariant.BodySm} className="block">
                         {singleCase.processSubType ? toTitleCase(singleCase.processSubType) : singleCase.process}
                     </Typography>
-                    <Typography variant={TypographyVariant.BodySm} className={styles.detail}>
-                        {singleCase.id}
-                    </Typography>
+                    <CaseDetailField
+                        text={singleCase.id}
+                        className={styles.detail}
+                        highlights={searchValues?.caseId ? [searchValues.caseId] : null}
+                    />
                 </div>
             </TableCell>
             <TableCell>

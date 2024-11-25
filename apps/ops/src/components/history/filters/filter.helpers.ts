@@ -77,13 +77,6 @@ export const removeEventFilter = (setHistoryFilters: SetHistoryFilters) => {
     });
 };
 
-export const removeStatusFilter = (setHistoryFilters: SetHistoryFilters) => {
-    setHistoryFilters(prevState => {
-        const { statusFilter, ...updatedState } = prevState;
-        return updatedState;
-    });
-};
-
 export const removeYearFilter = (setHistoryFilters: SetHistoryFilters) => {
     setHistoryFilters(prevState => {
         const { yearFilter, ...updatedState } = prevState;

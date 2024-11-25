@@ -31,21 +31,27 @@ import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { logWarn, logError, getUserInfoFromUser, parseErrorInformation } from '@deps/utils/server-logging';
+import { logWarn, logError, getUserInfoFromUser, parseErrorInformation, logInfo } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface SendCorrespondenceProps extends SegmentTrackedPageProps {
     policy: Policy;
     shouldShowCaseButton: FeatureFlags;
-    shouldShowEmailFaxOption: FeatureFlags;
+    shouldShowEmailOption: FeatureFlags;
+    shouldShowFaxOption: FeatureFlags;
     shouldShowMailOption: FeatureFlags;
     applicableStatement: StatementTypes[];
+}
+
+const getFeatureFlagKey = (carrierId: string, type: 'EMAIL' | 'FAX' | 'MAIL') => {
+    return `SEND_STATEMENT_${type}_${carrierId}` as keyof typeof FEATURE_FLAGS;
 };
 
 const SendCorrespondence = ({
     policy,
     shouldShowCaseButton,
-    shouldShowEmailFaxOption,
+    shouldShowEmailOption,
+    shouldShowFaxOption,
     shouldShowMailOption,
     user,
     applicableStatement,
@@ -65,12 +71,12 @@ const SendCorrespondence = ({
             {
                 label: t('sendDocument.correspondence.email'),
                 value: CommunicationTypes.Email,
-                disabled: !shouldShowEmailFaxOption,
+                disabled: !shouldShowEmailOption,
             },
             {
                 label: t('sendDocument.correspondence.fax'),
                 value: CommunicationTypes.Fax,
-                disabled: !shouldShowEmailFaxOption,
+                disabled: !shouldShowFaxOption,
             },
             {
                 label: t('sendDocument.correspondence.mail'),
@@ -78,7 +84,7 @@ const SendCorrespondence = ({
                 disabled: !shouldShowMailOption,
             },
         ],
-        [shouldShowEmailFaxOption, shouldShowMailOption, t]
+        [shouldShowEmailOption, shouldShowFaxOption, shouldShowMailOption, t]
     );
     const [communicationOptions] = useState<RadioItem[]>(communicationTypes);
     const handleSubmitRequest = async (state: CorrespondenceFormParts) => {
@@ -94,7 +100,7 @@ const SendCorrespondence = ({
         });
         const requestBody = generateCommunicationRequest(
             policy,
-            state?.correspondence?.type,
+            state?.correspondence?.type as CommunicationTypes,
             state,
             user,
             ctiCallNumber as string,
@@ -159,7 +165,7 @@ export const getServerSideProps = withPageAuthRequired({
         const { locale = DEFAULT_LOCALE, query, req, res } = context;
         const planCode = (query.planCode as string) || '';
         const policyNumber = (query?.policyNumber as string) || '';
-
+        const correlationId = (query?.correlationId as string) || '';
         let accessToken;
         try {
             accessToken = (await getAccessToken(req, res)).accessToken;
@@ -195,7 +201,8 @@ export const getServerSideProps = withPageAuthRequired({
         try {
             const userInfoForLogging = getUserInfoFromUser(user);
             const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging);
-            if (!policy) {
+            if (!policy || !policy.carrierId) {
+                logInfo('contact-center/send-statement/policy not found', { policyNumber, planCode, correlationId });
                 return {
                     redirect: {
                         destination: '/404',
@@ -204,16 +211,18 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
             const applicableStatements = (await getApplicableStatementsSSR(planCode, accessToken, userInfoForLogging)) || [];
-            const shouldShowEmailFaxOption = featureFlagDecisions?.[FEATURE_FLAGS.SEND_STATEMENT_SHOW_EMAIL_FAX_Option];
-            const key = `SEND_CORRESPONDENCE_SHOW_Mail_${policy.carrierId}` as keyof typeof FEATURE_FLAGS;
-            const shouldShowMailOption = featureFlagDecisions?.[FEATURE_FLAGS[key]];
+
+            const shouldShowEmailOption = featureFlagDecisions?.[FEATURE_FLAGS[getFeatureFlagKey(policy.carrierId, 'EMAIL')]];
+            const shouldShowFaxOption = featureFlagDecisions?.[FEATURE_FLAGS[getFeatureFlagKey(policy.carrierId, 'FAX')]];
+            const shouldShowMailOption = featureFlagDecisions?.[FEATURE_FLAGS[getFeatureFlagKey(policy.carrierId, 'MAIL')]];
 
             return {
                 props: {
                     ...translations,
                     policy,
                     shouldShowCaseButton: shouldShowCaseButton ?? false,
-                    shouldShowEmailFaxOption: shouldShowEmailFaxOption ?? false,
+                    shouldShowEmailOption: shouldShowEmailOption ?? false,
+                    shouldShowFaxOption: shouldShowFaxOption ?? false,
                     shouldShowMailOption: shouldShowMailOption ?? false,
                     user,
                     applicableStatement: applicableStatements,

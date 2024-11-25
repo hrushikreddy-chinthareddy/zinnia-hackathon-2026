@@ -8,12 +8,12 @@ import { getPolicyProfile } from '@/queries/policy-queries';
 import { QueryKeys } from '@/queries/query-keys';
 import { useBpmStore } from '@/store/store';
 import { PolicyProfile } from '@/types/policy';
-import { EVERLY_CONTACT_PHONE_NUMBER } from '@/utils/data';
 import { shouldStopBankPolling } from '@/utils/policy';
 
 import styles from './BankList.module.css';
 import { AddBankSidesheet } from '../add-bank/AddBankSidesheet';
 import { BankData } from '../bank-data/BankData';
+import { CarrierPhoneNumber } from '../carrier-phone-number/CarrierPhoneNumber';
 
 const POLL_INTERVAL = 1000;
 const POLL_LIMIT = 5;
@@ -88,13 +88,15 @@ export const BankList: FC<BankListProps> = ({
           </h2>
           <p className="mb-lg">
             Need help updating banking details? Give us a call at{' '}
-            <a href={`tel:+${EVERLY_CONTACT_PHONE_NUMBER}`}>
-              {EVERLY_CONTACT_PHONE_NUMBER}
-            </a>
-            .
+            <CarrierPhoneNumber />.
           </p>
           <div className={styles.multipleItemsInSection}>{allBankData}</div>
-          {allowBankingChanges && <AddBankSidesheet partyId={data.partyId} />}
+          {allowBankingChanges && (
+            <AddBankSidesheet
+              partyId={data.partyId}
+              policyOwner={`${initialProfileData?.name.firstName} ${initialProfileData?.name.lastName}`}
+            />
+          )}
         </div>
       );
     }

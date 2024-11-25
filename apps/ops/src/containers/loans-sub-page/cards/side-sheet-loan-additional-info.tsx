@@ -4,7 +4,8 @@ import Content, { ContentVariant } from '@deps/components/content/content';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { numberFormatify, percentFormatify } from '@deps/helpers/numbers.helper';
+import { rateFormatted } from '@deps/helpers/data-transform.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { LoanSegment, LoanType } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
@@ -70,7 +71,8 @@ export default function SideSheetLoanAdditionalInfo({ currencyFormat, loanRepaym
                         variant={LabelVariant.FieldLabel}
                     />
                     <Content
-                        details={`${percentFormatify((loanCreditRate as number) * 100, { isInteger: true })}`}
+                        // details={`${percentFormatify((loanCreditRate as number) * 100, { isInteger: true })}`}
+                        details={rateFormatted(loanCreditRate)}
                         variant={ContentVariant.BodySm}
                     />
                 </div>

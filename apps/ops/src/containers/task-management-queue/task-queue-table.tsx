@@ -8,17 +8,19 @@ import { TranslationFiles } from '@deps/config/translations';
 import { AssignedTask } from '@deps/models/case/task-instance';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 import styles from '@deps/utils/styles';
-
 import TaskQueueTableHeader from './task-queue-table-header';
 import TaskQueueTableRow from './task-queue-table-row';
+
 
 type TaskQueueTableProps = {
     tasks: AssignedTask[];
     featureFlagDecisions: FeatureFlags;
     isLoading?: boolean;
+    getTasks: () => void;
+    setErrorMessage: (message: string) => void;
 };
 
-const TaskQueueTable = ({ tasks, featureFlagDecisions, isLoading }: TaskQueueTableProps) => {
+const TaskQueueTable = ({ tasks, featureFlagDecisions, isLoading, getTasks, setErrorMessage }: TaskQueueTableProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'taskManagementQueue' });
 
     return (
@@ -28,19 +30,19 @@ const TaskQueueTable = ({ tasks, featureFlagDecisions, isLoading }: TaskQueueTab
                 <TableBody>
                     {isLoading && (
                         <TableRow>
-                            <TableCell colSpan={6}>
+                            <TableCell colSpan={7}>
                                 <div className={styles.loaderContainer}>
-                                    <Loader variant={PageLoaderVariant.Center}/>
+                                    <Loader variant={PageLoaderVariant.Center} />
                                 </div>
                             </TableCell>
                         </TableRow>
                     )}
                     {tasks?.map(task => {
-                        return task && <TaskQueueTableRow task={task} key={`task_queue_${task.id}`} featureFlagDecisions={featureFlagDecisions}/>
+                        return task && <TaskQueueTableRow task={task} key={`task_queue_${task.id}`} featureFlagDecisions={featureFlagDecisions} getTasks={getTasks} setErrorMessage={setErrorMessage} />
                     })}
                     {!tasks.length && (
                         <TableRow className="disabled-tr w-full">
-                            <TableCell className="!text-left md:!text-center" colSpan={6}>
+                            <TableCell className="!text-left md:!text-center" colSpan={7}>
                                 <Typography variant={TypographyVariant.BodyBold} className="mt-1 text-center">
                                     {t('noTasksFoundTitle')}
                                 </Typography>

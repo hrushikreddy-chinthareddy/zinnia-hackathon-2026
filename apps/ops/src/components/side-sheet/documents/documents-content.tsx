@@ -17,6 +17,7 @@ interface DocumentsContentCaseProps {
 export enum DocumentTypeView {
     Policy = 'Policy',
     Correspondence = 'Correspondence',
+    Case = 'Case',
 }
 
 export const DocumentsContent: React.FC<DocumentsContentCaseProps> = ({ caseDetails }) => {

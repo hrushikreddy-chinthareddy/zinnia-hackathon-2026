@@ -16,6 +16,7 @@ import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-not
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
 import TaxOL4753Attachment from '@deps/components/otp-withdrawal-form/tax-ol4753-attachment';
 import CslnCheck from '@deps/components/otp-withdrawal-form/csln-check';
+import SswEditSelection from '../ssw-edit-selection';
 
 export function NassauSSWForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
@@ -56,6 +57,7 @@ export function NassauSSWForm() {
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
+            <SswEditSelection />
             <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
             <AmountDetails isFormStateReadOnly={isFormStateReadOnly} isOnlyWithdrawalTypeControls={true} />
             <SystematicWithdrawalProgram isReadOnly={isFormStateReadOnly} options={systematicWithdrawalOptions} />
@@ -64,10 +66,7 @@ export function NassauSSWForm() {
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
                 title={t('distributionInstruction.investmentSelectionForDistribution') as string}
             />
-            <TaxWithholdings
-                isFormStateReadOnly={isFormStateReadOnly}
-                ownerStateOfResidence={ownerStateOfResidence}
-            />
+            <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
             <TaxOL4753Attachment isFormStateReadOnly={isFormStateReadOnly} shouldShowDOBInOl4573={shouldShowDOBInOl4573} />
             <FormDisbursement
                 isFormStateReadOnly={isFormStateReadOnly}

@@ -7,20 +7,26 @@ import CaseDocumentSelect, { CaseDocumentOption, SetStateCaseId } from '@deps/co
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
 import Radio from '@deps/components/radio/radio';
-import {
-    NonFinancialTransactionIdKeys,
-    updateOptimistically,
-} from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/non-financial-transactions.helper';
+import { updateOptimistically } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/side-sheet-non-financial-transactions.helper';
 import AlertState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/alert-state';
 import ApiErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/api-error-state';
 import BpmErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/bpm-error-state';
 import LoadingState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/loading-state';
-import { ViewState, handleResponse } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/states.helpers';
+import {
+    ViewState,
+    handleResponse,
+} from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/states.helpers';
 import SuccessState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/success-state';
 import WarnState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/warn-state';
+import { NonFinancialTransactionIdKeys } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/types';
 import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
 import { TranslationFiles } from '@deps/config/translations';
-import { EmailDetails, Errors, getEmailTypes, getFormErrors } from '@deps/containers/people-data-cards/email-card/side-sheet/side-sheet-email.helpers';
+import {
+    EmailDetails,
+    Errors,
+    getEmailTypes,
+    getFormErrors,
+} from '@deps/containers/people-data-cards/email-card/side-sheet/side-sheet-email.helpers';
 import { getFirstLastName } from '@deps/helpers/party-info-helper';
 import { mapEmailTypeToTranslation } from '@deps/helpers/translation.helper';
 import { Processes } from '@deps/models/case/case';

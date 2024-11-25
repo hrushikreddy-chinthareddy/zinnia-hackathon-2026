@@ -6,13 +6,9 @@ import { FieldData } from '@/components/field-data/FieldData';
 import { CoveragePopover } from '@/components/policy-overview/CoveragePopover';
 import { getCoverage } from '@/services';
 import { formatUSDollars } from '@/utils/currency';
-import {
-  isAnnuity,
-  isNullEmptyOrUndefined,
-  lineOfBusinessUrlPath,
-} from '@/utils/data';
+import { isNullEmptyOrUndefined, lineOfBusinessUrlPath } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
-import { DEFAULT_UNAVAILABLE_STRING, pluralize } from '@/utils/strings';
+import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 import styles from './PolicyOverview.module.css';
 
@@ -37,52 +33,7 @@ export const Coverage = async ({
   if (error) {
     return null;
   }
-  const {
-    beneficiaryCount,
-    totalCoverageAmount,
-    policyStartDate,
-    maturityDate,
-    riderCount,
-    effectiveDate,
-  } = data!;
-  const additionalItems = [];
-  if (riderCount > 0) {
-    const riderText = pluralize(
-      riderCount,
-      isAnnuity(lineOfBusiness) ? 'feature' : 'rider'
-    );
-    additionalItems.push({
-      content: (
-        <FieldData
-          Label={
-            <Label>{isAnnuity(lineOfBusiness) ? 'Features' : 'Riders'}</Label>
-          }
-        >
-          <p className="typography-content-body-sm">{`${riderText}`}</p>
-        </FieldData>
-      ),
-      linkTo: {
-        url: `/coverage/${lineOfBusinessUrlPath(lineOfBusiness)}/${planCode}/${policyNumber}/riders`,
-        label: isAnnuity(lineOfBusiness) ? 'features' : 'riders',
-      },
-    });
-  }
-
-  if (beneficiaryCount) {
-    const beneficiaryText =
-      beneficiaryCount > 1 ? 'beneficiaries' : 'beneficiary';
-    additionalItems.push({
-      content: (
-        <FieldData Label={<Label>Beneficiary</Label>}>
-          <p className="typography-content-body-sm">{`${beneficiaryCount} ${beneficiaryText}`}</p>
-        </FieldData>
-      ),
-      linkTo: {
-        url: `/coverage/${lineOfBusinessUrlPath(lineOfBusiness)}/${planCode}/${policyNumber}/beneficiaries`,
-        label: 'go to beneficiaries page',
-      },
-    });
-  }
+  const { totalCoverageAmount, policyStartDate, maturityDate } = data!;
 
   const coverageContent = isNullEmptyOrUndefined(totalCoverageAmount) ? (
     <p className="typography-content-body-sm">{DEFAULT_UNAVAILABLE_STRING}</p>
@@ -93,7 +44,7 @@ export const Coverage = async ({
   );
 
   return (
-    <ClickableCardContainer listItems={additionalItems}>
+    <ClickableCardContainer>
       <ClickableCardContainer.LinkContent
         linkTo={{
           url: `/coverage/${lineOfBusinessUrlPath(lineOfBusiness)}/${planCode}/${policyNumber}/my-coverage`,

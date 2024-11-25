@@ -7,6 +7,13 @@ enum MissingTransactionTypes {
     FundTransfer = 'FundTransfer',
 }
 
+export const PeopleChangeTransactionTypes = [
+    TransactionType.AddressChange as TransactionType,
+    TransactionType.EmailChange as TransactionType,
+    TransactionType.PhoneNumberChange as TransactionType,
+    TransactionType.BankAccountChange as TransactionType,
+];
+
 // BPB - ToDo: Remove these once the Sor spec has been updated to include them.
 export const TransactionTypesNotInTheSpecYet = [
     MissingTransactionTypes.CalendarProcessing as unknown as TransactionType,
