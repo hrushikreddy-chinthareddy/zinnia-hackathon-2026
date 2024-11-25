@@ -62,7 +62,7 @@ interface NigoEntryProps extends SegmentTrackedPageProps {
     isNigoCase?: boolean;
 };
 
-const isNigoEntryEnabled = (clientId: string, process: string, featureFlagMap: FeatureFlags ) => {
+const isNigoEntryEnabled = (clientId: string, process: string, featureFlagMap: FeatureFlags) => {
     const identifier = `NIGO_ENTRY_${clientId.toUpperCase()}_${process.toUpperCase().replaceAll(' ', '_')}` as FeatureKeyIdentifier;
     const featureKey = FEATURE_FLAGS[identifier];
     return featureKey && featureFlagMap[featureKey] ? featureFlagMap[featureKey] : false;
@@ -218,13 +218,13 @@ export const getServerSideProps = withPageAuthRequired({
             const shouldShowNigoEntry = isNigoEntryEnabled(clientCode, caseType, featureFlagDecisions);
             // If feature flag is not enabled, redirect to error page
             if (!shouldShowNigoEntry) {
-               logWarn('nigo_entry::feature flag not enabled', { taskId, clientCode });
-               return {
+                logWarn('nigo_entry::feature flag not enabled', { taskId, clientCode });
+                return {
                     redirect: {
-                       destination: '/403',
-                       permanent: false,
+                        destination: '/403',
+                        permanent: false,
                     },
-               };
+                };
             }
 
             const userInfoForLogging = getUserInfoFromUser(user);

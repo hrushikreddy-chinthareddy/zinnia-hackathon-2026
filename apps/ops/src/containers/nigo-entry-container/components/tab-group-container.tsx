@@ -24,6 +24,8 @@ import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icon
 import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
 
 import DocumentPortalPanel from './side-panel/document-portal-panel';
+import CaseDetailsContent from '@deps/components/side-sheet/case-details/case-details-content';
+
 
 type TabGroupContainerProps = {
     steps: Step[];
@@ -41,6 +43,7 @@ const TabGroupContent = ({
     docType = '',
     documentData,
 }: TabGroupContainerProps) => {
+
     const { t } = useTranslation(TranslationFiles.COMMON);
     const { currentStepIndex, setCurrentStepIndex } = useWorkflow();
     const sideSheet = useSideSheetContext();
@@ -58,6 +61,7 @@ const TabGroupContent = ({
         sideSheet.changeSideSheetContent(t('nigoEntry.documentPanel.documents'), content);
         sideSheet.handleOpen(true);
     };
+
 
     const policyOwnerId = policy?.partyRoles?.find(pr => pr.partyRole === PartyRole.OWNER)?.partyId;
     const policyOwner = policy?.parties?.find(party => party.partyId === policyOwnerId);
@@ -86,6 +90,13 @@ const TabGroupContent = ({
             />
         );
         sideSheet.changeSideSheetContent(t('site.navLinks.viewDetails.text'), content);
+        sideSheet.handleOpen(true);
+    };
+    const openCaseDetails = () => {
+        const content = (
+            <CaseDetailsContent policy={policy} documentData={documentData} />
+        );
+        sideSheet.changeSideSheetContent(t('site.navLinks.caseDetails.text'), content);
         sideSheet.handleOpen(true);
     };
 
@@ -155,14 +166,15 @@ const TabGroupContent = ({
                         }
                     }}
                 >
-                    {t('site.navLinks.caseDetails.text')}
+                    {t('nigoEntry.documentPanel.documentTitle')}
+
                 </NavElement>
                 <NavElement
                     type={NavElementType.Button}
                     size={NavElementSize.Small}
                     className="flex items-center capitalize"
                     startIcon={<Icon type={IconType.MENU_VERTICAL} width={16} height={16} />}
-                    onClick={() => openViewDetails()}
+                    onClick={() => openCaseDetails()}
                     onKeyDown={e => {
                         if (e.key === 'Enter' || e.key === ' ') {
                             e.preventDefault();
@@ -170,7 +182,8 @@ const TabGroupContent = ({
                         }
                     }}
                 >
-                    {t('nigoEntry.documentPanel.documentTitle')}
+                    {t('site.navLinks.caseDetails.text')}
+
                 </NavElement>
 
             </div>

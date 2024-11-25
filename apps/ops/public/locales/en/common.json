@@ -180,7 +180,7 @@
                 "text": "Diary notes"
             },
             "caseDetails": {
-                "text": "Case details"
+                "text": "Case Details"
             },
             "viewDetails": {
                 "text": "View Details",
@@ -4448,6 +4448,20 @@
             "documents": "Documents",
             "documentId": "Document ID",
             "noFormAvailable": "No form available."
+        },
+        "CaseDetailsContent": {
+            "tabs": {
+                "details": "Details",
+                "related": "Related"
+            },
+            "applicationSignedDate": "Application Signed Date",
+            "issueState": "Issue State",
+            "recievedDate": "Recieved Date",
+            "QualificationType": "Qualification Type",
+            "detailsTab": {
+                "people": "People",
+                "cedingCarriers": "Ceding Carriers"
+            }
         },
         "confirmStep": {
             "title": "Submitted!",

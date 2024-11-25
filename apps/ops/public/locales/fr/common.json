@@ -4417,6 +4417,20 @@
             "documentId": "ID du document",
             "noFormAvailable": "Aucun formulaire disponible."
         },
+        "CaseDetailsContent": {
+            "tabs": {
+                "details": "Détails",
+                "related": "En rapport"
+            },
+            "applicationSignedDate": "Date de signature de la demande",
+            "issueState": "État du problème",
+            "recievedDate": "Date de réception",
+            "QualificationType": "Type de qualification",
+            "detailsTab": {
+                "people": "personnes",
+                "cedingCarriers": "Transporteurs cédants"
+            }
+        },
         "confirmStep": {
             "title": "Soumis!",
             "subTitle": "Votre demande a été envoyée pour traitement.",
