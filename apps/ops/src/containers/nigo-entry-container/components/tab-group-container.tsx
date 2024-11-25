@@ -155,8 +155,24 @@ const TabGroupContent = ({
                         }
                     }}
                 >
+                    {t('site.navLinks.caseDetails.text')}
+                </NavElement>
+                <NavElement
+                    type={NavElementType.Button}
+                    size={NavElementSize.Small}
+                    className="flex items-center capitalize"
+                    startIcon={<Icon type={IconType.MENU_VERTICAL} width={16} height={16} />}
+                    onClick={() => openViewDetails()}
+                    onKeyDown={e => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            openSideSheet();
+                        }
+                    }}
+                >
                     {t('nigoEntry.documentPanel.documentTitle')}
                 </NavElement>
+
             </div>
 
             <ProgressBarSteps

@@ -196,6 +196,9 @@
             "diaryNotes": {
                 "text": "Notes de journal"
             },
+            "caseDetails": {
+                "text": "Détails du cas"
+            },
             "diaryNotesWarning": {
                 "text": "Attention: Notes d'agenda présentes. Examen requis pour soumettre",
                 "clickToView": "Clique pour voir"

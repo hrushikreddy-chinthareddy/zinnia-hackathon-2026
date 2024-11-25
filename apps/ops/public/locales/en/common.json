@@ -179,6 +179,9 @@
             "diaryNotes": {
                 "text": "Diary notes"
             },
+            "caseDetails": {
+                "text": "Case details"
+            },
             "viewDetails": {
                 "text": "View Details",
                 "qualificationType": "Qualification Type",
