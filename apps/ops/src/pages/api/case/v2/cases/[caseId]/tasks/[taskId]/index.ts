@@ -17,7 +17,7 @@ export default withAuthAndLogging(
 
         const url = `${baseUrl}/cases/${caseId}/tasks/${taskId}`;
         const loggingContext = { ...logCtx, caseId, taskId, url };
-        logTrace('createTask::start', loggingContext);
+        logTrace('updateTask::start', loggingContext);
 
         const formData = req.body;
         const config = {
@@ -32,10 +32,10 @@ export default withAuthAndLogging(
 
         try {
             const { data } = await serverApi.put<any, AxiosResponse>(url, formData, config, loggingContext);
-            logTrace('createTask::success', { ...loggingContext, duration: performance.now() - now });
+            logTrace('updateTask::success', { ...loggingContext, duration: performance.now() - now });
             res.json(data);
         } catch (error) {
-            logWarn('createTask::error', { ...parseErrorInformation(error), ...loggingContext, duration: performance.now() - now });
+            logWarn('updateTask::error', { ...parseErrorInformation(error), ...loggingContext, duration: performance.now() - now });
             res.status(500).json(null);
         }
     },
