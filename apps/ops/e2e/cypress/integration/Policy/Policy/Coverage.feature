@@ -1,4 +1,5 @@
-@DEPU-1130    
+@DEPU-1130
+
 Feature: Ops user views coverage details for a policy
 Background: Ops user views the details for a policy
 Given 'Ops User' logs into Zinnia Live
