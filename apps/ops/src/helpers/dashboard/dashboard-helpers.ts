@@ -25,17 +25,17 @@ export const sortAlphabetically = (a: any, b: any, key?: string) => {
     return 0;
 };
 
-const replaceLabels = [
+export const DASHBOARD_REPLACE_LABELS = [
     '',
     null,
     undefined,
     'NULL_VALUE',
 ];
 
-const DEFAULT_LABEL = '[UNKNOWN]';
+export const DASHBOARD_DEFAULT_LABEL = '[UNKNOWN]';
 
 export const sankeyTitleFormat = (label: string, length?: number | boolean) => {
-    if (!label || replaceLabels.includes(label)) return DEFAULT_LABEL;
+    if (!label || DASHBOARD_REPLACE_LABELS.includes(label)) return DASHBOARD_DEFAULT_LABEL;
     label = label.replace(/_/g, ' ');
     label = toTitleCase(label);
     label = getLabelSubString(label, length);

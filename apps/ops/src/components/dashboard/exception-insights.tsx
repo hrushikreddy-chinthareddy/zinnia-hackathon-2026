@@ -10,7 +10,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
-import { sankeyTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
+import { DASHBOARD_DEFAULT_LABEL, DASHBOARD_REPLACE_LABELS, sankeyTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { DashboardResponseData } from '@deps/queries/api/dashboard';
@@ -83,11 +83,13 @@ export const ExceptionInsights = ({
         } else {
             seriesData = exceptions;
         }
+
         const chartData: Highcharts.SeriesTreemapOptions['data'] = seriesData.map((item: DashboardResponseData) => ({
-            name: item.name,
+            name: DASHBOARD_REPLACE_LABELS.includes(item.name) ? DASHBOARD_DEFAULT_LABEL : item.name,
             value: item.count,
             colorValue: item.count,
         }));
+
         return {
             accessibility: {
                 enabled: true,
