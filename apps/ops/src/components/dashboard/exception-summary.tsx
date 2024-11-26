@@ -84,6 +84,13 @@ export const ExceptionSummary = ({
                 align: 'left',
                 verticalAlign: 'top',
                 layout: 'vertical',
+                events: {
+                    itemClick: function () {
+                        // can't figure out how to get item clicked title
+                        // from the legend click event
+                        console.log('clicked', this);
+                    },
+                },
                 labelFormatter: function () {
                     const carrier = this.name;
                     const total = exceptionData?.totalCasesByCarrier[carrier];
@@ -110,6 +117,9 @@ export const ExceptionSummary = ({
                 gridLineWidth: 1,
                 tickPosition: 'inside',
                 showLastLabel: true,
+                labels: {
+                    align: 'left',
+                },
             },
             yAxis: [
                 {
