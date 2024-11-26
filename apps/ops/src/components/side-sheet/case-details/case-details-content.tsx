@@ -7,7 +7,7 @@ import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import { DocumentData } from '@deps/models/case/document';
 import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
 import dayjs from 'dayjs';
-import DetailsTab from './detail-tab';
+import DetailsTab from './details-tab';
 export enum TabOptions {
   Details = 'Details',
   Related = 'Related',
