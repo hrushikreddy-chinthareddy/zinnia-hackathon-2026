@@ -1,9 +1,7 @@
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
-import { IconType, Link } from '@zinnia/bloom/components';
 import { FgaRoles } from '@zinnia/utils';
 import clsx from 'clsx';
 import { GetServerSidePropsContext } from 'next';
-import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { CSSProperties, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { MultiselectOption, SimpleOption } from '@deps/components/autocomplete/autocomplete.types';
 import ActiveAging from '@deps/components/dashboard/active-aging/active-aging';
 import { BrokerDealerFilter } from '@deps/components/dashboard/broker-dealer-filter/broker-dealer-filter';
+import { DashboardNavLinks } from '@deps/components/dashboard/dashboard-nav-links';
 import SankeyChart from '@deps/components/dashboard/sankey-chart';
 import CaseStatBlock from '@deps/components/dashboard/stat-blocks/case-stat-block';
 import { FieldSize } from '@deps/components/fields/field';
@@ -26,7 +25,6 @@ import { sankeyTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
-import { toTitleCase } from '@deps/helpers/string.helper';
 import { useIntersectionObserver } from '@deps/hooks/useIntersectionObserver';
 import { useResizeObserver } from '@deps/hooks/useResizeObserver';
 import { CaseDashboardStatsResponse, Processes, Statuses } from '@deps/models/case/case';
@@ -55,7 +53,6 @@ const DashboardPage = ({
     authorizedCarriers: string[];
     brokerDealersSSR: DashboardResponseData[];
 }) => {
-    const router = useRouter();
     const carrierHeaderRef = useRef<HTMLDivElement>(null);
     const { createdDateStart, createdDateEnd } = getStartAndEndDates('All');
     const { height: carrierHeaderHeight } = useResizeObserver({ ref: carrierHeaderRef, box: 'border-box' });
@@ -344,32 +341,7 @@ const DashboardPage = ({
                         </div>
                     </div>
                 </div>
-                <nav className="flex basis-full no-wrap gap-4 bg-white px-8 pb-0">
-                    <Link
-                        iconType={IconType.DOCUMENT_TEXT}
-                        href="/dashboard"
-                        text={toTitleCase('active applications')}
-                        style={{ paddingBottom: 'var(--measure-dimension-padding-lg)' }}
-                        className={clsx(
-                            'border-b-4',
-                            router.pathname === '/dashboard'
-                                ? 'border-[--color-base-border-border-secondary-color]'
-                                : 'border-transparent !text-[--color-base-text-text-secondary]'
-                        )}
-                    />
-                    <Link
-                        iconType={IconType.SHIELD_CHECKMARK}
-                        href="/dashboard/issued-business"
-                        text={toTitleCase('issued business')}
-                        style={{ paddingBottom: 'var(--measure-dimension-padding-lg)' }}
-                        className={clsx(
-                            'border-b-4',
-                            router.pathname === '/dashboard/issued-business'
-                                ? 'border-[--color-base-border-border-secondary-color]'
-                                : 'border-transparent !text-[--color-base-text-text-secondary]'
-                        )}
-                    />
-                </nav>
+                <DashboardNavLinks />
                 <div className="relative border-t-2 border-[--color-base-border-border-light]" ref={sankeyChartRef}>
                     {loading && (
                         <div className="absolute bottom-0 left-0 right-0 top-0 z-10 flex h-full justify-center bg-gray-800 opacity-80">

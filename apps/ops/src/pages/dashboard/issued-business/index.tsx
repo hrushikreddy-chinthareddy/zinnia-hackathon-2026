@@ -1,17 +1,16 @@
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import * as RadioGroup from '@radix-ui/react-radio-group';
-import { IconType, Link } from '@zinnia/bloom/components';
 import { DEFAULT_ERROR_STRING, FgaRoles, toTitleCase } from '@zinnia/utils';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { GetServerSidePropsContext } from 'next';
-import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { MultiselectOption } from '@deps/components/autocomplete/autocomplete.types';
 import { BrokerDealerFilter } from '@deps/components/dashboard/broker-dealer-filter/broker-dealer-filter';
+import { DashboardNavLinks } from '@deps/components/dashboard/dashboard-nav-links';
 import { ExceptionSummary } from '@deps/components/dashboard/exception-summary';
 import { FieldSize } from '@deps/components/fields/field';
 import FieldData, { FieldDataVariant } from '@deps/components/fields/field-data/field-data';
@@ -59,7 +58,6 @@ type IssuedBusinessPageProps = {
 // 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9
 
 export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, completedCasesByProcessSubType }: IssuedBusinessPageProps) => {
-    const router = useRouter();
     const carrierHeaderRef = useRef<HTMLDivElement>(null);
     const [loading, setLoading] = useState(false);
     const [exceptionData, setExceptiondata] = useState<DashboardResponseData[]>(completedCasesByProcessSubType);
@@ -257,32 +255,7 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
                         </div>
                     </div>
                 </div>
-                <nav className="flex basis-full no-wrap gap-4 bg-white px-8 pb-0">
-                    <Link
-                        iconType={IconType.DOCUMENT_TEXT}
-                        href="/dashboard"
-                        text={toTitleCase('active applications')}
-                        style={{ paddingBottom: 'var(--measure-dimension-padding-lg)' }}
-                        className={clsx(
-                            'border-b-4',
-                            router.pathname === '/dashboard'
-                                ? 'border-[--color-base-border-border-secondary-color]'
-                                : 'border-transparent !text-[--color-base-text-text-secondary]'
-                        )}
-                    />
-                    <Link
-                        iconType={IconType.SHIELD_CHECKMARK}
-                        href="/dashboard/issued-business"
-                        text={toTitleCase('issued business')}
-                        style={{ paddingBottom: 'var(--measure-dimension-padding-lg)' }}
-                        className={clsx(
-                            'border-b-4',
-                            router.pathname === '/dashboard/issued-business'
-                                ? 'border-[--color-base-border-border-secondary-color]'
-                                : 'border-transparent !text-[--color-base-text-text-secondary]'
-                        )}
-                    />
-                </nav>
+                <DashboardNavLinks />
                 <CardContainer
                     ref={cardContainerRef}
                     classNames="relative !p-0 flex flex-col flex-1 gap-4 !border-none  bg-[--color-base-surface-surface-tertiary]"
@@ -300,7 +273,9 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
                                 onChange={handleTimeFrameChange}
                             />
                         </div>
-                        <Typography variant={TypographyVariant.H2}>Top 5 Processes by Volume</Typography>
+                        <Typography className="py-4" variant={TypographyVariant.H2}>
+                            Top 5 Processes by Volume
+                        </Typography>
                         <RadioGroup.Root asChild onValueChange={handleSelectedSubprocess} value={selectedSubprocess}>
                             <div className=" grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 !items-stretch !border-b-0 !after:content-none [& .indicator]">
                                 {exceptionData.map((element, index) => {

@@ -3,6 +3,10 @@
     background-color: var(--color-base-surface-surface-secondary);
 }
 
+.link {
+    z-index: 2;
+}
+
 .insightsHeader,
 .filtersHeader {
     padding: var(--measure-dimension-gap-2xl);
@@ -26,8 +30,11 @@
     justify-content: space-between;
     position: sticky;
     top: 0;
-    z-index: 2;
     background-color: var(--color-base-surface-surface-primary);
+
+    &.pinned {
+        z-index: 3;
+    }
 
 }
 
