@@ -1,24 +1,31 @@
-import { getAccessToken } from '@auth0/nextjs-auth0';
+import { getSession } from '@auth0/nextjs-auth0';
 import { AxiosResponse } from 'axios';
 
 import { DocumentDownload } from '@deps/models/case/document';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
-import { logError, logTrace, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
+import { logCompliance, logError, logTrace, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
+import canUnmaskPii from '@deps/queries/server/fga/can-unmask';
 
 const baseUrl = `${apiServerBaseUrl}/document/v2`;
 
 export default withAuthAndLogging(
-    async (req: NextApiRequest, res: NextApiResponse<DocumentDownload | null>, loggingContext) => {
+    async (req: NextApiRequest, res: NextApiResponse<DocumentDownload | any | null>, loggingContext) => {
         const now = performance.now();
+        const session = await getSession(req, res);
         const { documentNumber, clientCode, source } = req.query;
-        const accessToken = (await getAccessToken(req, res)).accessToken;
+        const accessToken = session?.accessToken;
 
         const url = `${baseUrl}/documents/${documentNumber}/download?clientCode=${clientCode}&source=${source}`;
+        const canUnmask = await canUnmaskPii(accessToken, session?.user?.partyId);
 
         logTrace('documentPreview::start', loggingContext);
+        if (!canUnmask) {
+            logCompliance('Document Preview request denied due to missing unmask pii permission', loggingContext);
+            return res.status(403).json({ error: 'Forbidden' });
+        }
 
         try {
             const { data } = await serverApi.get<DocumentDownload, AxiosResponse>(
