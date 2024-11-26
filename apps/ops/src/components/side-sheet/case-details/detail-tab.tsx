@@ -1,9 +1,10 @@
 import { PolicyCarrierLogo } from "@deps/components/global-values/policy-info/policy-info";
 import { Policy } from '@deps/models/policy/sor-policy';
 import { DocumentData } from '@deps/models/case/document';
-import { useState } from "react";
+
 import { TFunction } from "next-i18next";
-import { TabContent, TabGroup, TabTrigger, TabList } from "@zinnia/bloom/components";
+import { IconType, Icon } from "@zinnia/bloom/components";
+
 
 
 type DetailTabProps = {
@@ -15,25 +16,9 @@ type DetailTabProps = {
   t: TFunction
 }
 
-export enum TabOptions {
-  People = 'People',
-  CedingCarriers = 'Ceding Carriers',
-}
 
-const renderTabContent = (
-  <>
-    <TabContent value={TabOptions.People} className='flex flex-col px-6 pt-6 md:px-8 lg:px-10 gap-5'>
-
-    </TabContent>
-    <TabContent className="flex w-full flex-col items-center" value={TabOptions.CedingCarriers}>
-
-    </TabContent>
-  </>
-);
 
 function DetailTab({ carrierName, formattedApplicationDate, formattedCertifiedReceiveDate, policy, documentData, t }: DetailTabProps) {
-  const [activeTab, setActiveTab] = useState(TabOptions.People);
-  const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
   return (
     <>
       <div className='flex float-start'>
@@ -70,19 +55,12 @@ function DetailTab({ carrierName, formattedApplicationDate, formattedCertifiedRe
         <div className='col-span-1'>
           {policy.qualificationType}
         </div>
+
       </div>
-
-      <div>
-        <TabGroup defaultValue={activeTab} value={activeTab} activationMode="manual" onValueChange={handleTabChange}>
-          <TabList className="!mb-0 w-full px-4 pt-4 md:px-6 lg:px-8">
-            <TabTrigger value={TabOptions.People}>{t('detailsTab.people') ?? ''}</TabTrigger>
-            <TabTrigger value={TabOptions.CedingCarriers}>{t('detailsTab.cedingCarriers') ?? ''}</TabTrigger>
-          </TabList>
-          {renderTabContent}
-
-        </TabGroup>
+      <div className="text-[--color-base-text-text-link] font-semibold text-md ">
+        <span>View full details</span>
+        <Icon type={IconType.EXTERNAL_LINK} width={20} height={20} />
       </div>
-
     </>
   )
 }
