@@ -212,7 +212,7 @@ export const getServerSideProps = withPageAuthRequired({
                 logInfo('contact-center/send-document/policy not found', { policyNumber, planCode, correlationId });
                 return {
                     redirect: {
-                        destination: '/404',
+                        destination: `/404?title=policyNotFound&planCode=${planCode}&policyNumber=${policyNumber}`,
                         permanent: false,
                     },
                 };
