@@ -288,7 +288,7 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
                     classNames="relative !p-0 flex flex-col flex-1 gap-4 !border-none  bg-[--color-base-surface-surface-tertiary]"
                     containerClassNames="mt-none !p-0  border-t-2 border-[--color-base-border-border-light]"
                 >
-                    <div className="bg-white p-8 flex flex-col gap-8">
+                    <div className=" bg-white p-8 flex flex-col gap-4 rounded">
                         <div className="w-52">
                             <Select
                                 options={timeFrameFilterOptions.map(option => ({
@@ -300,14 +300,6 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
                                 onChange={handleTimeFrameChange}
                             />
                         </div>
-                        <ExceptionSummary
-                            timeframe={timeframe}
-                            carrierOrBrokerDealer={carrierOrBrokerDealer}
-                            startDate={createdDateStart}
-                        />
-                    </div>
-
-                    <div className=" bg-white p-8 flex flex-col gap-4 rounded">
                         <Typography variant={TypographyVariant.H2}>Top 5 Processes by Volume</Typography>
                         <RadioGroup.Root asChild onValueChange={handleSelectedSubprocess} value={selectedSubprocess}>
                             <div className=" grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 !items-stretch !border-b-0 !after:content-none [& .indicator]">
@@ -378,6 +370,13 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
                                 carrierOrBrokerDealer={undefined}
                             />
                         )}
+                    </div>
+                    <div className="bg-white p-8 flex flex-col gap-8">
+                        <ExceptionSummary
+                            timeframe={timeframe}
+                            carrierOrBrokerDealer={carrierOrBrokerDealer}
+                            startDate={createdDateStart}
+                        />
                     </div>
                 </CardContainer>
             </NoNavLayout>
