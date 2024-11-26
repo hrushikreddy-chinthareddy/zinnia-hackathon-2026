@@ -4,7 +4,6 @@ import { Dispatch, SetStateAction, useEffect } from 'react';
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
 import CardCaseDocument from '@deps/components/card/card-case-document/card-case-document';
 import Label, { LabelVariant } from '@deps/components/label/label';
-// TODO MG: we should move ViewState to somewhere more genereic since this isnt a side sheeet
 import { ViewState } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/states.helpers'
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { CaseIdentifier, Processes, Statuses } from '@deps/models/case/case';

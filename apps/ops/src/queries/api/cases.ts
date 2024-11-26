@@ -11,6 +11,7 @@ import {
     CreateCaseResponse,
     Metadata,
 } from '@deps/models/case/case';
+import { CaseDocument } from '@deps/models/case/document';
 import { NoteInstance } from '@deps/models/case/note-instance';
 import { CaseDashboardStatsQuery, CaseStatsQuery } from '@deps/queries/cases';
 import { isMockCaseDetailsRequestEnabled } from '@deps/services/api-config';
@@ -208,5 +209,17 @@ export const searchCasesSSR = async (formData: CaseSearchBody, accessToken: stri
             function: 'searchCasesSSR',
         });
         return null;
+    }
+};
+
+export const getCaseDocuments = async (id: string): Promise<CaseDocument[]> => {
+    try {
+        const url = `${baseCasesUrl}/${id}/document`;
+        const { data } = await client.get<CaseSearchBody, AxiosResponse>(url);
+        logInfo('getCaseDocuments', { file: 'queries/api/cases', function: 'getCaseDocuments', url });
+        return data;
+    } catch (error: any) {
+        console.error('getCaseDocuments::An error occurred while getting case document results', error);
+        return error.response;
     }
 };

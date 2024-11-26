@@ -2,12 +2,12 @@ import { useTranslation } from 'next-i18next';
 
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
-import { BankAccountWithPending } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/non-financial-transactions.helper';
 import PendingTag from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/pending-tag';
+import { BankAccountWithPending } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/types';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { getBankAccountType } from '@deps/helpers/party-info-helper';
-import { formatCardExpirationDate , formatAccountNumber, toTitleCase } from '@deps/helpers/string.helper';
+import { formatCardExpirationDate, formatAccountNumber, toTitleCase } from '@deps/helpers/string.helper';
 import { AccountType, BankAccount } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 

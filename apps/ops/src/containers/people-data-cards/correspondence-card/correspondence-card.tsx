@@ -14,7 +14,6 @@ import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { PartyRole, PartyType, Policy } from '@deps/models/policy/sor-policy';
 import { ReactComponent as TrashIcon } from '@deps/styles/elements/icons/icons_outlined/trash.svg';
 const getPrimaryEmail = (policy: Policy) => {
-    // TODO MG: `PartyRole.EDELIVERY` isnt in the new spec - this was manually added
     const eDeliveryRoleId = policy.partyRoles?.find(party => party.partyRole === PartyRole.EDELIVERY)?.partyId;
     const primaryEmails =
         policy.parties?.find(policy => policy.partyType === PartyType.INDIVIDUAL && policy.partyId === eDeliveryRoleId)?.emails || [];
@@ -35,8 +34,8 @@ const CorrespondenceCard = ({
     correspondenceData,
     error,
     showAdditionalRecipient,
-    setCorrespondenceData,
     setError,
+    setCorrespondenceData,
 }: CorrespondenceProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
 
@@ -131,7 +130,10 @@ const CorrespondenceCard = ({
             <Radio
                 items={communicationOptions ?? communicationTypes}
                 label={t('correspondence.label') as string}
-                onChange={event => setCommunicationType(event.target.value as CommunicationTypes)}
+                onChange={event => {
+                    setCommunicationType(event.target.value as CommunicationTypes);
+                    setError({});
+                }}
                 value={communicationType}
             />
 

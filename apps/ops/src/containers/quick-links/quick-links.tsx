@@ -11,14 +11,12 @@ import {
     checkEligibilitySystematicPrograms,
     TransactionResponseStatus,
 } from '@deps/queries/api/bpm';
-import { SegmentTrackedEventName, SegmentTrackEventState } from '@deps/types/segment-analytics';
+import { PolicyClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
 
 export interface QuickLinksProps extends QuickActionsMenuProps {
     links: {
         href: string;
         name: string;
-        segmentTrackingName?: string;
-        userPartyId?: string;
     }[];
     policy: PolicyDetails;
     userPartyId: string;
@@ -35,7 +33,7 @@ const trackClick = (
         return;
     }
 
-    segmentAnalyticsTrackEvent(segmentTrackingName, {
+    segmentAnalyticsTrackEvent<PolicyClickedEvent>(segmentTrackingName, {
         contractNumber: policyNumber,
         linkName,
         linkUrl,
@@ -59,10 +57,11 @@ const QuickLinks = ({ links, planCode, policyNumber, policy, userPartyId }: Quic
     const [fireEligibilityChecks, setFireEligibilityChecks] = useState(false);
 
     const [isLife] = useState(policy.isLife);
+    const [isAnnuity] = useState(policy.isAnnuity);
 
     // this should only run once after fireEligibilityChecks && isLife are both true
     useEffect(() => {
-        if (fireEligibilityChecks && isLife) {
+        if (fireEligibilityChecks && (isLife || isAnnuity)) {
             const checkManageAutopayEligibility = async () => {
                 const manageAutopayEligibility = await checkEligibilitySystematicPrograms(planCode, policyNumber, arrangementId || '');
 
@@ -94,7 +93,7 @@ const QuickLinks = ({ links, planCode, policyNumber, policy, userPartyId }: Quic
             checkOneTimeEligibility();
             checkWithdrawalEligibility();
         }
-    }, [planCode, policyNumber, arrangementId, fireEligibilityChecks, isLife]);
+    }, [planCode, policyNumber, arrangementId, fireEligibilityChecks, isLife, isAnnuity]);
 
     useEffect(() => {
         if (autopayChecked && newPremiumChecked && withdrawalChecked) {
@@ -110,12 +109,6 @@ const QuickLinks = ({ links, planCode, policyNumber, policy, userPartyId }: Quic
     };
 
     function onOpenChange(open: boolean) {
-        segmentAnalyticsTrackEvent(SegmentTrackedEventName.PolicyQuickActionsDropdown, {
-            state: open ? SegmentTrackEventState.Open : SegmentTrackEventState.Close,
-            policyNumber,
-            userId: userPartyId,
-        });
-
         if (open) {
             setFireEligibilityChecks(true);
         }
@@ -123,20 +116,20 @@ const QuickLinks = ({ links, planCode, policyNumber, policy, userPartyId }: Quic
 
     return (
         <div className="flex flex-wrap gap-x-8 gap-y-4 text-md" data-testid="quick-links">
-            {links.map(({ name, href, segmentTrackingName, userPartyId }) => (
+            {links.map(({ name, href }) => (
                 <NavElement
                     className="font-primary text-md"
                     data-testid={name}
                     href={href}
                     key={name + href}
-                    onClick={segmentTrackingName ? () => trackClick(segmentTrackingName, name, href, policyNumber, userPartyId) : undefined}
+                    onClick={() => trackClick(SegmentTrackedEventName.PolicyClicked, name, href, policyNumber, userPartyId)}
                     type={NavElementType.Link}
                 >
                     {name}
                 </NavElement>
             ))}
 
-            {isLife && (
+            {(isLife || isAnnuity) && (
                 <>
                     <div className="hidden min-w-[2px] bg-gray-100 md:block" />
 

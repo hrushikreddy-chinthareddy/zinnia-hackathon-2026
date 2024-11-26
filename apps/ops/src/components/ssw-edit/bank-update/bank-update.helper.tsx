@@ -14,6 +14,7 @@ import { DisbursementParts } from '@deps/models/case/withdrawal/disbursement-typ
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { SignatureFields } from '../../otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
+import { getDocumentSource } from '../ssw-edit-helper';
 
 export const channelOptions = (t: TFunction) => [
     {
@@ -209,6 +210,8 @@ export const getBankUpdatePayload = (
     document: DocumentData,
     bankUpdateType: BankUpdateType
 ) => {
+    const documentSource = getDocumentSource(document.documentNumber);
+
     const formUpdateData = {
         updateType: bankUpdateType,
         contractNumber: initialForm.data.contractNum,
@@ -264,7 +267,7 @@ export const getBankUpdatePayload = (
             formParty: null,
             formProgram: null,
             formRestriction: null,
-            formSignature: document.source === ChannelType.Email ? formSignature : null,
+            formSignature: documentSource !== ChannelType.Phone ? formSignature : null,
             formTaxWithholding: null,
             formTpaAuthorization: null,
             formSurrenderingCompany: null,

@@ -71,6 +71,8 @@ import {
   PolicyLoans,
   PolicySurrender,
   CarrierPolicyDetails,
+  CompletedAnnuityTransactionType,
+  PendingAnnuityTransactionType,
 } from '@/types/policy';
 import { RidersAndBenefits } from '@/types/riders';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
@@ -547,6 +549,7 @@ export const getPolicyProfileData = async (
   try {
     const response = await getPolicyByPlanCodeAndId(options);
     const transformedResults = transformPolicyForProfile(response);
+
     return {
       data: transformedResults,
       error: null,
@@ -871,6 +874,108 @@ export const getPaymentHistory = async ({
         message: 'Something went wrong',
         status: 500,
         name: 'getPaymentHistory Error',
+      },
+    };
+  }
+};
+
+export const getAnnuityRecentTransactions = async ({
+  planCode,
+  policyNumber,
+}: PolicyRequestInputs): Promise<ApiResponse<PaymentHistoryTransaction>> => {
+  logTrace('getAnnuityRecentTransactions', {
+    planCode,
+    policyNumber,
+  });
+
+  const currentYear = new Date().getFullYear().toString();
+  const completedTransactionTypes = Object.values(
+    CompletedAnnuityTransactionType
+  ).map(String);
+  const pendingTransactionTypes = Object.values(
+    PendingAnnuityTransactionType
+  ).map(String);
+
+  if (isMockPaymentHistoryRequestEnabled()) {
+    const product = isTestAnnuitiesEnabled()
+      ? mockAnnuityResponse
+      : mockPolicyResponse;
+    return {
+      data: {
+        completedTransactions: mockCompletedTransactions.map(t =>
+          transformPaymentHistory(product, t)
+        ),
+        pendingTransactions: mockPendingTransactions.map(t =>
+          transformPaymentHistory(product, t)
+        ),
+      },
+      error: null,
+    };
+  }
+
+  try {
+    const [policyPromise, completedPromise, pendingPromise] =
+      await Promise.allSettled([
+        getPolicyByPlanCodeAndId({ planCode, policyNumber }),
+        getPolicyTransactions({
+          transactionTypes: completedTransactionTypes,
+          planCode,
+          policyNumber,
+          limit: 30,
+          status: 'Completed',
+          year: currentYear,
+        }),
+        getPolicyTransactions({
+          transactionTypes: pendingTransactionTypes,
+          planCode,
+          policyNumber,
+          status: 'Pending',
+          year: currentYear,
+        }),
+      ]);
+
+    if (policyPromise.status === 'rejected') {
+      throw new Error('Policy Call failed');
+    }
+
+    if (
+      completedPromise.status === 'rejected' &&
+      pendingPromise.status === 'rejected'
+    ) {
+      logTrace('all requests for transactions were rejected', {
+        completedReason: completedPromise.reason,
+        pendingReason: pendingPromise.reason,
+      });
+
+      throw new Error('Something went wrong retrieving transactions');
+    }
+
+    // TODO: do we want to handle if just completed or just pending succeeds for whatever reason?
+    const completedTransactions =
+      completedPromise.status === 'fulfilled' ? completedPromise.value : [];
+    const pendingTransactions =
+      pendingPromise.status === 'fulfilled' ? pendingPromise.value : [];
+
+    return {
+      data: {
+        completedTransactions: completedTransactions.map(t =>
+          transformPaymentHistory(policyPromise.value, t)
+        ),
+        pendingTransactions: pendingTransactions.map(t =>
+          transformPaymentHistory(policyPromise.value, t)
+        ),
+      },
+      error: null,
+    };
+  } catch (error) {
+    logWarn('getAnnuityRecentTransactions Error', { error });
+
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 500,
+        name: 'getAnnuityRecentTransactions Error',
       },
     };
   }

@@ -17,7 +17,7 @@ const EmailAddress = ({ email, setEmail, error }: EmailAddressProps) => {
             <Field
                 label={t('correspondence.email') as string}
                 onChange={e => {
-                    setEmail(xss(e?.target?.value));
+                    setEmail(xss(e?.target?.value?.trim() ?? ''));
                 }}
                 value={email as string}
                 size={FieldSize.Default}

@@ -1,4 +1,4 @@
-import { EventFilterKeys, PolicyFilters, TransactionFilters } from '@deps/contexts/HistoryFiltersContext';
+import { EventFilterKeys, initialFilter, PolicyFilters, TransactionFilters } from '@deps/contexts/HistoryFiltersContext';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import {
@@ -100,7 +100,7 @@ describe('HistoryFilters helpers', () => {
 
                 removeAllFilters(setHistoryFilters);
 
-                expect(setHistoryFilters).toHaveBeenCalledWith({});
+                expect(setHistoryFilters).toHaveBeenCalledWith(initialFilter);
             });
         });
 

@@ -1,3 +1,5 @@
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+
 import { Reg60FormData } from '@deps/containers/otp/reg60-forms/reg60.types';
 
 import { Channel } from './renewal/case-renewal';
@@ -6,11 +8,14 @@ import { ActiveWithdrawalCase, ActiveWithdrawalCaseData } from './withdrawal/cas
 export enum TaskType {
     Withdrawal = 'WithdrawalFormInputTask',
     OFT = 'OFTFormInputTask',
-    RMD = 'RMDTask',
-    SSW = 'SSWTask',
+    RMD = 'RMDFormInputTask',
+    SSW = 'SSWFormInputTask',
     RENEWAL = 'RenewalTask',
     REG60 = 'NBReg60Comparision',
+    Suitability = 'SUITABILITY',
+    SuitabilityReview = 'SUITABILITY_REVIEW',
 }
+
 export enum TaskSource {
     ZinniaTaskManagement = 'Zinnia.TaskManagement',
 }
@@ -94,3 +99,8 @@ export interface renewalsFormParts {
     renewalRequestSignDate: string;
     subsequentTargetFunds: TargetFundAllocation[] | null;
 }
+
+export type FormMetadata = {
+    formSchema: RJSFSchema;
+    uiSchema: UiSchema;
+};

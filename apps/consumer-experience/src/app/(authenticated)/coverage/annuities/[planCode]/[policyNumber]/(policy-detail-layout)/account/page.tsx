@@ -1,15 +1,23 @@
-import clsx from 'clsx';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
+import dayjs from 'dayjs';
 import { Metadata } from 'next';
 
 import { AccountValue } from '@/components/account-value/AccountValue';
+import { AdditionalAccountValueLinks } from '@/components/account-value/AdditionalAccountValueLinks';
+import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
-import { StatusIconText } from '@/components/status-icon-text/StatusIconText';
+import { FreeWithdrawalValuePopover } from '@/components/free-withdrawal-value/FreeWithdrawalValuePopover';
+import { LabelPopover } from '@/components/label-popover/LabelPopover';
+import { ValueWithPopover } from '@/components/value-with-popover/ValueWithPopover';
 import { RouteKey, getPageTitle } from '@/route-map';
-import { getPolicyDetails, getPolicyStatusDetails } from '@/services';
-import { getLoanEligibility, getWithdrawalEligibility } from '@/services/bpm';
-import { getFunds } from '@/services/funds';
+import { getPolicyAccountValue } from '@/services';
+import { getFundDetails } from '@/services/funds';
+import { LineOfBusinessPath } from '@/types';
 import { PolicyRequestInputs } from '@/types/policy';
-import { isNullEmptyOrUndefined } from '@/utils/data';
+import { formatUSDollars } from '@/utils/currency';
+import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
+
+import styles from './account.module.css';
 
 const pageTitle = getPageTitle(RouteKey.ACCOUNT);
 // disable because NextJS needs this to be exported from this file
@@ -25,118 +33,148 @@ export default async function AccountValuePage({
 }) {
   const { planCode, policyNumber } = params;
 
-  const [
-    fundsDataRes,
-    withDrawalEligibilityRes,
-    loanEligibilityRes,
-    policyDetailsRes,
-    policyStatusRes,
-  ] = await Promise.allSettled([
-    getFunds({
+  const { data: accountValueData, error: accountValueError } =
+    await getPolicyAccountValue({
       planCode,
       policyNumber,
-    }),
-    getWithdrawalEligibility({
-      planCode,
-      policyNumber,
-    }),
-    getLoanEligibility({
-      planCode,
-      policyNumber,
-    }),
-    getPolicyDetails({
-      planCode,
-      policyNumber,
-    }),
-    getPolicyStatusDetails({
-      planCode,
-      policyNumber,
-    }),
-  ]);
+    });
 
-  const withdrawalEligibility =
-    withDrawalEligibilityRes.status === 'fulfilled'
-      ? withDrawalEligibilityRes.value?.data?.isEligible
-      : null;
+  const { data: fundData } = await getFundDetails({
+    carrierId: accountValueData?.carrierId,
+    fundId: accountValueData?.fundId,
+  });
 
-  const accountValueSummary = () => {
-    // TODO: not actually sure what the right error handling is here
-    // if (error || !data) {
-    //   return <NoDataAvailable message={DEFAULT_UNAVAILABLE_STRING} />;
-    // }
+  if (accountValueError || !accountValueData) {
+    return null;
+  }
 
-    return (
-      <ClickableCardContainer
-        listItems={[
-          {
-            content: (
-              <div className="stacked-items py-lg">
-                <span className="typography-labels-label-md-alt">Premiums</span>
-              </div>
-            ),
-            // TODO:need to determine where this will go
-            linkTo: {
-              url: '#',
-              label: 'go to premiums page',
-            },
-          },
-          {
-            content: (
-              <div className="stacked-items py-lg">
-                <span className="typography-labels-label-md-alt">
-                  Allocations
-                </span>
-              </div>
-            ),
-            linkTo: {
-              url: `/coverage/annuities/${planCode}/${policyNumber}/account/allocations`,
-              label: 'go to allocations page',
-            },
-          },
-          {
-            content: (
-              <div
-                className={clsx('stacked-items', {
-                  'py-lg': isNullEmptyOrUndefined(withdrawalEligibility),
-                })}
-              >
-                <span className="typography-labels-label-md-alt">
-                  Withdrawals
-                </span>
-                <StatusIconText
-                  isEligible={withdrawalEligibility}
-                  className="typography-content-caption"
-                />
-              </div>
-            ),
-            linkTo: {
-              url: `/coverage/annuities/${planCode}/${policyNumber}/account/withdrawals`,
-              label: 'go to withdrawals page',
-            },
-          },
-          {
-            content: (
-              <div className="stacked-items py-lg">
-                <span className="typography-labels-label-md-alt">
-                  Surrender contract
-                </span>
-              </div>
-            ),
-            linkTo: {
-              url: `/coverage/annuities/${planCode}/${policyNumber}/account/surrender`,
-              label: 'go to surrender contract page',
-            },
-          },
-        ]}
-      >
-        <AccountValue
+  const {
+    freeWithdrawalAmount,
+    endingAccountValue,
+    cumulativeGrossDeathBenefitAmount,
+    totalYearToDatePremiumAmount,
+    withdrawalAllowedStartDate,
+    interestGuaranteedPeriod,
+    renewalDate,
+  } = accountValueData!;
+
+  const interestRate = `${fundData?.fixedFund?.interestRate}%` || null;
+  const formattedRenewalDate = renewalDate
+    ? dayjs(renewalDate).format(DEFAULT_DATE_FORMAT)
+    : null;
+
+  // calc withdrawal percentage by taking free withdrawal amount and dividing by ending account value
+  const accountWithdrawalPercentage =
+    freeWithdrawalAmount && endingAccountValue
+      ? ((freeWithdrawalAmount / endingAccountValue) * 100).toFixed(2)
+      : '0';
+
+  //If withdrawal amount is greater than 0 and also if we're past the withdrawal start date
+  const canShowWithdrawal =
+    freeWithdrawalAmount &&
+    freeWithdrawalAmount > 0 &&
+    withdrawalAllowedStartDate !== null &&
+    dayjs().isAfter(dayjs(withdrawalAllowedStartDate));
+
+  // should show the annuitization prompt only if after the renewalDate
+  const showAnnuitizationPrompt = dayjs().isAfter(dayjs(formattedRenewalDate));
+
+  return (
+    <div className="container">
+      <div className="card-container">
+        <ClickableCardContainer>
+          <div className={styles.accountValueCard}>
+            <AccountValue planCode={planCode} policyNumber={policyNumber} />
+            <div className={styles.accountValueDetails}>
+              <ValueWithPopover
+                className={styles.accountAccountValueCell}
+                value={interestRate}
+                label="Interest rate"
+                popoverElement={
+                  <LabelPopover title={'Interest Rate'}>
+                    This is the annual rate of growth you're currently earning
+                    on the money in your annuity. Your rate is guaranteed for{' '}
+                    {interestGuaranteedPeriod} years.
+                  </LabelPopover>
+                }
+              />
+              <ValueWithPopover
+                value={formattedRenewalDate}
+                label="Renewal date"
+                className={styles.accountAccountValueCell}
+                popoverElement={
+                  <LabelPopover title={'Renewal Date'}>
+                    This is the date your guarantee period ends. After this
+                    date, your annuity renews automatically with a new interest
+                    rate. At this point, you can choose to annuitize your
+                    contract (meaning start your payout phase), if you'd like.
+                  </LabelPopover>
+                }
+              />
+            </div>
+          </div>
+        </ClickableCardContainer>
+        {!!canShowWithdrawal && (
+          <ClickableCardContainer>
+            <ClickableCardContainer.LinkContent
+              linkTo={{
+                url: `/coverage/${LineOfBusinessPath.ANNUITIES}/${planCode}/${policyNumber}/account/withdrawals`,
+                label: 'go to free withdrawal page',
+              }}
+            >
+              <ValueWithPopover
+                value={formatUSDollars(freeWithdrawalAmount)}
+                label="Free withdrawal"
+                emphasizeValue
+                popoverElement={
+                  <FreeWithdrawalValuePopover
+                    percentValue={accountWithdrawalPercentage}
+                  />
+                }
+              />
+            </ClickableCardContainer.LinkContent>
+          </ClickableCardContainer>
+        )}
+
+        <ClickableCardContainer>
+          <ValueWithPopover
+            value={formatUSDollars(cumulativeGrossDeathBenefitAmount)}
+            label="Death benefit"
+            emphasizeValue
+            popoverElement={
+              <LabelPopover title={'Death Benefit'}>
+                This is the amount, inclusive of any additional riders or
+                features, that will be available to your beneficiaries should
+                you pass away.
+              </LabelPopover>
+            }
+          />
+        </ClickableCardContainer>
+        <ClickableCardContainer>
+          <ValueWithPopover
+            value={formatUSDollars(totalYearToDatePremiumAmount)}
+            label="Total premium"
+            emphasizeValue
+            popoverElement={
+              <LabelPopover title={'Total Premium'}>
+                This is the amount of money you've contributed to your account
+                value to date.
+              </LabelPopover>
+            }
+          />
+        </ClickableCardContainer>
+        <AdditionalAccountValueLinks
           planCode={planCode}
           policyNumber={policyNumber}
-          hideLabel
+          lineOfBusiness={LineOfBusiness.ANNUITY}
         />
-      </ClickableCardContainer>
-    );
-  };
-
-  return <div className="container">{accountValueSummary()}</div>;
+        {showAnnuitizationPrompt && (
+          <CallForAssistance
+            callToAction="Ready to start payout?"
+            customInstruction="to begin the process. "
+          />
+        )}
+      </div>
+    </div>
+  );
 }

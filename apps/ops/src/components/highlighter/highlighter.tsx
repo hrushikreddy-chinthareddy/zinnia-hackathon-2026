@@ -33,17 +33,17 @@ const Highlighter = ({ text, highlights, renderTextFunction = (text: string) => 
     }
 
     if (!highlights || !highlights.length) {
-        return <div>{renderTextFunction(text)}</div>;
+        return <>{renderTextFunction(text)}</>;
     }
 
     // filter out empty strings from the highlight array
     highlights = highlights.filter(Boolean);
 
     if (!highlights || !highlights.length) {
-        return <div>{renderTextFunction(text)}</div>;
+        return <>{renderTextFunction(text)}</>;
     }
 
-    return <div>{highlightText({ text, highlights, renderTextFunction })}</div>;
+    return <>{highlightText({ text, highlights, renderTextFunction })}</>;
 };
 
 export default Highlighter;

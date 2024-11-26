@@ -1,15 +1,16 @@
 import dayjs from 'dayjs';
+import { TFunction } from 'next-i18next';
 
 import { Program } from '@deps/components/otp-withdrawal-form/rmd-method/program-item';
 import { DocumentData } from '@deps/models/case/document';
 import { ChannelType } from '@deps/models/case/enums';
+import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import { CreateTaskBody, TaskSource, TaskV2Payload } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { ActiveWithdrawalCase, FormSignature, FormValidationErrors, Frequency, RMDProgramType } from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
-import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
+
 import { SignatureFieldNames } from '../otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
-import { TFunction } from 'next-i18next';
 
 export enum SswUpdateType {
     PROGRAM_TERMINATE = 'ProgramTerminate',
@@ -26,6 +27,18 @@ export type UpdatedProgram = {
     allocationId?: number;
 };
 
+export const getDocumentSource = (documentId: string): ChannelType => {
+    if (documentId) {
+        if (documentId.includes('-MAN-') || documentId.includes('-O-')) {
+            return ChannelType.Phone;
+        } else {
+            return ChannelType.Email;
+        }
+    } else {
+        return ChannelType.Phone;
+    }
+};
+
 const getSswEditPayload = (
     initialForm: ActiveWithdrawalCase,
     formSign: FormSignature,
@@ -35,6 +48,8 @@ const getSswEditPayload = (
     operationType: SswUpdateType
 ) => {
     const isTerminate = operationType === SswUpdateType.PROGRAM_TERMINATE;
+    const documentSource = getDocumentSource(document.documentNumber);
+
     const formUpdateData = {
         updateType: operationType,
         contractNumber: initialForm.data.contractNum,
@@ -90,7 +105,7 @@ const getSswEditPayload = (
             formParty: null,
             formProgram: null,
             formRestriction: null,
-            formSignature: document.source === ChannelType.Email ? structuredClone(formSign) : null,
+            formSignature: documentSource !== ChannelType.Phone ? structuredClone(formSign) : null,
             formTaxWithholding: null,
             formTpaAuthorization: null,
             formSurrenderingCompany: null,

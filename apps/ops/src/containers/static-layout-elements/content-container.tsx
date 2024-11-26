@@ -19,7 +19,15 @@ interface ContentContainerProps extends PropsWithChildren {
     showLink?: boolean;
 }
 
-const ContentContainer = ({ children, policy, openSideSheet, isFullHeight, hideSearch, showJointOwner, showLink }: ContentContainerProps) => {
+const ContentContainer = ({
+    children,
+    policy,
+    openSideSheet,
+    isFullHeight,
+    hideSearch,
+    showJointOwner,
+    showLink,
+}: ContentContainerProps) => {
     const { t } = useTranslation();
     const { isNavDrawerOpen } = useStaticNestedNavDrawerContext();
     const { globalValuesData } = useContentContext();

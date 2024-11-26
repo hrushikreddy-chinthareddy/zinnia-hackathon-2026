@@ -11,6 +11,7 @@ import { filterOnSearchHandler } from '@deps/helpers/search.helper';
 import { useOutsideClick } from '@deps/hooks/useOutsideClick';
 import { ReactComponent as ChevronIcon } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 import { DataDefinition } from '@deps/types/data';
+import { DropdownClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
 import useDebounce from '@deps/utils/useDebounce';
 
 import SelectSearchGroupContainer from './select-search-group-container/select-search-group-container';
@@ -29,7 +30,6 @@ interface SelectFieldProps {
     group?: boolean;
     value?: any;
     dropUp?: boolean;
-    segmentTrackName?: string;
     userPartyId?: string;
 }
 
@@ -90,7 +90,6 @@ const SelectSearch = ({
     group,
     value,
     dropUp,
-    segmentTrackName,
     userPartyId,
 }: SelectFieldProps) => {
     const [open, setOpen] = useState(false);
@@ -102,17 +101,13 @@ const SelectSearch = ({
 
     const ref = useRef<HTMLInputElement>(null);
 
-    // TODO MG: useCallback or useMemo?
     const onOutsideClick = () => {
-        if (!segmentTrackName) {
-            return;
-        }
-        console.log('searchValue', searchValue);
-        segmentAnalyticsTrackEvent(segmentTrackName, {
-            searchText: searchValue,
-            userId: userPartyId
+        segmentAnalyticsTrackEvent<DropdownClickedEvent>(SegmentTrackedEventName.DropdownClicked, {
+            dropdownName: 'Key Value Search',
+            searchText: searchValue as string,
+            userId: userPartyId as string,
         });
-    }
+    };
     useOutsideClick(ref, open, setOpen, onOutsideClick);
 
     const debouncedSearchValue = useDebounce(searchValue, 300);

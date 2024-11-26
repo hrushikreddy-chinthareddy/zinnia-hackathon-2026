@@ -20,10 +20,9 @@ import {
 import { Address as PolicyAddress, Policy, Transaction, TransactionType, PolicyFeatureFeatureType } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING, DEFAULT_EXTENDED_DAY_DATE_FORMAT } from '@deps/types/constants';
 
-import { getNonFinancialTransactionSideSheetValues } from '../side-sheet-transaction.helper';
 import { SideSheetTransactionProps } from '../types';
+import { getNonFinancialTransactionSideSheetValues } from './side-sheet-non-financial-transactions.helper';
 
-// TODO MG: move these?
 const changeTable = (vals: { updated: ReactNode; original: ReactNode; label: string }[], t: TFunction) => {
     return (
         <table className="w-full table-fixed border-separate border-spacing-0 rounded-lg border border-gray-200">
@@ -439,6 +438,6 @@ const SideSheetNonFinancialTransaction = ({ policy, transaction }: SideSheetTran
             </div>
         </div>
     );
-}
+};
 
 export default SideSheetNonFinancialTransaction;

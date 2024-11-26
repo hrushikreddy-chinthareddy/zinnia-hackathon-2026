@@ -196,24 +196,16 @@ const getWithdrawalDetails = (values: WithdrawalDetailsValues, t: TFunction): Wi
 const getRequestedWithdrawalAmount = (
     amount: number | undefined,
     status: TransactionStatus | undefined,
-    quote?: WithdrawalQuoteResponse
+    quote?: WithdrawalQuoteResponse | FullSurrenderQuoteResponse
 ): number => {
     let requestedAmount: number | undefined = 0;
 
-    // if (status === TransactionStatus.Pending) {
-    //     requestedAmount = TransactionType.FullSurrender
-    //         ? quote?.transactionAmounts?.requestedAmount
-    //         : quote?.transactionAmounts?.appliedAmount;
-    // } else {
-
-    //     requestedAmount = TransactionType.FullSurrender
-    //         ? quote?.transactionAmounts?.requestedAmount
-    //         : quote?.transactionAmounts?.appliedAmount;
-    // }
-    if (quote?.transactionAmounts) {
+    if (status === TransactionStatus.Pending && quote?.transactionAmounts) {
         requestedAmount = TransactionType.FullSurrender
             ? quote?.transactionAmounts?.requestedAmount
             : quote?.transactionAmounts?.appliedAmount;
+    } else {
+        requestedAmount = amount;
     }
 
     return Math.abs(requestedAmount || 0);
@@ -380,7 +372,6 @@ export const getWithdrawalSideSheetValues = (policy: Policy, transaction: Transa
     let detailsValues = getWithdrawalDetailsValues(transaction, t);
 
     return {
-        // TODO MG: used for actual amount line in `Payment Details` above the charges
         actualWithdrawalAmount: detailsValues.actualWithdrawalAmount,
         cancelCta:
             transaction?.status === TransactionStatus.Pending && transactionType === TransactionType.FullSurrender
@@ -482,7 +473,6 @@ const getWithdrawalTotalPayment = (
 
     let withdrawalAmount;
 
-    // TODO MG: confirm shouldnt be requestedAmount
     if (quote?.transactionAmounts?.appliedAmount) {
         withdrawalAmount = quote?.transactionAmounts?.appliedAmount
             ? Math.abs(quote?.transactionAmounts?.appliedAmount)

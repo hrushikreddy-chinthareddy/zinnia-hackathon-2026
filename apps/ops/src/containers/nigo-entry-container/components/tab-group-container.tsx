@@ -1,9 +1,12 @@
+import { Icon, IconType } from '@zinnia/bloom/components';
+import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 
 import GlobalValuesBar from '@deps/components/global-values/global-values-bar/global-values-bar';
 import NavElement, { NavElementType, NavElementSize } from '@deps/components/nav-element/nav-element';
 import { DiaryNotesContent } from '@deps/components/side-sheet/diary-notes/diary-notes-content';
+import { ViewDetailsContent } from '@deps/components/side-sheet/view-details/view-details-content';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import ProgressBarSteps from '@deps/containers/progress-bar-steps/progress-bar-steps';
@@ -14,16 +17,13 @@ import { WorkflowProvider, useWorkflow } from '@deps/contexts/WorkflowContainerC
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { useDiaryNotes } from '@deps/hooks/useDiaryNotes';
+import { DocumentData } from '@deps/models/case/document';
 import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
 import { ReactComponent as AnnotationIcon } from '@deps/styles/elements/icons/icons_outlined/annotation.svg';
 import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icons_outlined/document-text-2.svg';
+import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
 
 import DocumentPortalPanel from './side-panel/document-portal-panel';
-import { ViewDetailsContent } from '@deps/components/side-sheet/view-details/view-details-content';
-import { DocumentData } from '@deps/models/case/document';
-import { Icon, IconType } from '@zinnia/bloom/components';
-import dayjs from 'dayjs';
-import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
 
 type TabGroupContainerProps = {
     steps: Step[];
@@ -53,7 +53,6 @@ const TabGroupContent = ({
 
         setCurrentStepIndex(step.index);
     };
-
     const openSideSheet = () => {
         const content = <DocumentPortalPanel policy={policy} documentNumber={documentNumber} docType={docType} />;
         sideSheet.changeSideSheetContent(t('nigoEntry.documentPanel.documents'), content);
@@ -83,6 +82,7 @@ const TabGroupContent = ({
                 qualificationType={policy.qualificationType ?? ''}
                 contractValue={documentData.contractValue ?? ''}
                 policyDate={formattedIssueDate}
+                issueState={policy.issueState ?? ''}
             />
         );
         sideSheet.changeSideSheetContent(t('site.navLinks.viewDetails.text'), content);
@@ -91,30 +91,22 @@ const TabGroupContent = ({
 
     return (
         <div className="workflow-height-adjusted flex w-full max-w-[1130px] grow flex-col self-center">
-            <div className="flex">
-                <GlobalValuesBar
-                    carrierId={policy.carrierId}
-                    marketingName={marketingName}
-                    owner={policyOwner}
-                    jointOwner={jointOwner}
-                    planCode={planCode}
-                    policyNumber={policyNumber}
-                    productType={productType}
-                    status={status}
-                    tooltip={tooltip}
-                    variant={variant}
-                    showJointOwner={showJointOwner}
-                    showDocument={true}
-                    documentNumber={documentNumber}
-                    showLink={false}
-                />
-                <div className="my-2 ml-auto" onClick={showDocumentPanel}>
-                    <div className="flex  font-semibold text-secondary">
-                        <DocumentIcon height={20} width={20} />
-                        <span>{t('nigoEntry.documentPanel.documentTitle')}</span>
-                    </div>
-                </div>
-            </div>
+            <GlobalValuesBar
+                carrierId={policy.carrierId}
+                marketingName={marketingName}
+                owner={policyOwner}
+                jointOwner={jointOwner}
+                planCode={planCode}
+                policyNumber={policyNumber}
+                productType={productType}
+                status={status}
+                tooltip={tooltip}
+                variant={variant}
+                showJointOwner={showJointOwner}
+                showDocument={true}
+                documentNumber={documentNumber}
+                showLink={false}
+            />
 
             <div className="my-2 flex flex-row items-center justify-end space-x-3">
                 <Typography variant={TypographyVariant.FieldLabel} className="hidden md:block">
@@ -149,6 +141,21 @@ const TabGroupContent = ({
                     }}
                 >
                     {t('site.navLinks.viewDetails.text')}
+                </NavElement>
+                <NavElement
+                    type={NavElementType.Button}
+                    size={NavElementSize.Small}
+                    className="flex items-center"
+                    startIcon={<DocumentIcon height={16} width={16} />}
+                    onClick={showDocumentPanel}
+                    onKeyDown={e => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            openSideSheet();
+                        }
+                    }}
+                >
+                    {t('nigoEntry.documentPanel.documentTitle')}
                 </NavElement>
             </div>
 

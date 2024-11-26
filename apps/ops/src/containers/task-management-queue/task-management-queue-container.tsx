@@ -16,7 +16,7 @@ type TaskManagementQueueProps = {
     featureFlagDecisions: FeatureFlags;
 };
 
-const TaskManagementQueue = ({featureFlagDecisions} : TaskManagementQueueProps) => {
+const TaskManagementQueue = ({ featureFlagDecisions }: TaskManagementQueueProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'taskManagementQueue' });
     const [taskDetails, setTaskDetails] = useState<AssignedTask[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -30,7 +30,7 @@ const TaskManagementQueue = ({featureFlagDecisions} : TaskManagementQueueProps) 
         if (res.status === 200) {
             const { data } = res;
             if (data.statusCode) {
-                switch(data.statusCode) {
+                switch (data.statusCode) {
                     case 400:
                         setErrorMessage(t('claimTaskError') + data.message);
                         break;
@@ -75,7 +75,7 @@ const TaskManagementQueue = ({featureFlagDecisions} : TaskManagementQueueProps) 
                             aria-label={t('claimTask') as string}
                             size={ButtonSize.Small}
                             disabled={taskDetails.length > 0}
-                            variant={taskDetails.length > 0 ?  ButtonVariant.Inactive : ButtonVariant.Default}
+                            variant={taskDetails.length > 0 ? ButtonVariant.Inactive : ButtonVariant.Default}
                         >
                             {t('claimTask')}
                         </Button>
@@ -86,7 +86,7 @@ const TaskManagementQueue = ({featureFlagDecisions} : TaskManagementQueueProps) 
                     <AssistiveText text={errorMessage} variant={AssistiveTextVariant.Error} className="my-4" />
                 )}
 
-                <TaskQueueTable tasks={taskDetails} isLoading={isLoading} featureFlagDecisions={featureFlagDecisions} />
+                <TaskQueueTable tasks={taskDetails} isLoading={isLoading} featureFlagDecisions={featureFlagDecisions} getTasks={getTasks} setErrorMessage={setErrorMessage} />
             </div>
         </>
     );

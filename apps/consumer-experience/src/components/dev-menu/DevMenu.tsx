@@ -6,17 +6,17 @@ import Cookies from 'js-cookie';
 import { MouseEvent, useEffect, useMemo, useState } from 'react';
 
 import useMock from '@/hooks/use-mock';
+import { ROOT_URL_PATH } from '@/types';
 import { isMockAllowed } from '@/utils';
 import {
-    MOCK_ANNUITY_COOKIE_KEY,
-    MOCK_ERROR_COOKIE_KEY,
-    SHOW_TEST_POLICIES_COOKIE_KEY,
+  MOCK_ANNUITY_COOKIE_KEY,
+  MOCK_ERROR_COOKIE_KEY,
+  SHOW_TEST_POLICIES_COOKIE_KEY,
 } from '@/utils/serverClientUtils';
 import { zIndexOrder } from '@/utils/zIndexOrder';
 
 import styles from './DevMenu.module.css';
 import { ApiEndpoints } from './types';
-import { ROOT_URL_PATH } from '@/types';
 
 export const DevMenu = () => {
   const [open, setOpen] = useState(false);

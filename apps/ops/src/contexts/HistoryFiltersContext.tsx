@@ -62,7 +62,7 @@ interface HistoryFiltersProps {
     setHistoryFilters: SetHistoryFilters;
 }
 
-export const initialFilter: HistoryFilters = {};
+export const initialFilter: HistoryFilters = { statusFilter: TransactionStatus.Completed };
 
 export const HistoryFiltersContext = createContext<HistoryFiltersProps>({
     historyFilters: initialFilter,

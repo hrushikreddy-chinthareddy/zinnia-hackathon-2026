@@ -1,11 +1,11 @@
 'use client';
 import {
-    AssistiveText,
-    AssistiveTextVariant,
-    Icon,
-    IconType,
-    LoaderVariant,
-    SpinnerButton,
+  AssistiveText,
+  AssistiveTextVariant,
+  Icon,
+  IconType,
+  LoaderVariant,
+  SpinnerButton,
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useState, FocusEvent } from 'react';
@@ -23,7 +23,7 @@ const SubmitButton = () => {
       disabled={pending}
       variant={LoaderVariant.CTA}
       hide={!pending}
-      className={clsx('mt-3xl', styles.submit)}
+      className={clsx('mt-lg', styles.submit)}
     >
       <span>Continue</span>
     </SpinnerButton>
@@ -110,11 +110,10 @@ export const MfaEnrollment = () => {
       </fieldset>
       <p className="typography-content-caption text-left">
         By inputting your mobile number and clicking Continue, you are providing
-        express written consent to Everly Life Insurance Company, Everly, LLC,
-        and Zinnia Tech Solutions, LLC to call via live, automated, or
-        prerecorded call or send text or SMS messages at the number you provided
-        (message and data rates may apply and message frequency varies) for
-        multi-factor authentication.
+        express written consent to Zinnia Tech Solutions, LLC to call via live,
+        automated, or prerecorded call or send text or SMS messages at the
+        number you provided (message and data rates may apply and message
+        frequency varies) for multi-factor authentication.
       </p>
       <SubmitButton />
     </form>
