@@ -132,7 +132,7 @@ export const ExceptionInsights = ({
                     data: chartData,
                     colorAxis: 0,
                     colorKey: 'colorValue',
-                    colors: caseChartHelpers.getColors(),
+                    colors: caseChartHelpers.getTreeMapColors(),
                     colorByPoint: true,
                 },
             ],
