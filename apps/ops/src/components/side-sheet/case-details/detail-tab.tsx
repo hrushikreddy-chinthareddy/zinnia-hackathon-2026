@@ -18,7 +18,7 @@ type DetailTabProps = {
 
 
 
-function DetailTab({ carrierName, formattedApplicationDate, formattedCertifiedReceiveDate, policy, documentData, t }: DetailTabProps) {
+function DetailsTab({ carrierName, formattedApplicationDate, formattedCertifiedReceiveDate, policy, documentData, t }: DetailTabProps) {
   return (
     <>
       <div className='flex float-start'>
@@ -65,4 +65,4 @@ function DetailTab({ carrierName, formattedApplicationDate, formattedCertifiedRe
   )
 }
 
-export default DetailTab
+export default DetailsTab

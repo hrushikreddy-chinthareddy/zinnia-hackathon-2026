@@ -7,7 +7,7 @@ import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import { DocumentData } from '@deps/models/case/document';
 import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
 import dayjs from 'dayjs';
-import DetailTab from './detail-tab';
+import DetailsTab from './detail-tab';
 export enum TabOptions {
   Details = 'Details',
   Related = 'Related',
@@ -30,7 +30,7 @@ function CaseDetailsContent({ policy, documentData, }: CaseDetailsProps) {
   const renderTabContent = (
     <>
       <TabContent value={TabOptions.Details} className='flex flex-col px-6 pt-6 md:px-8 lg:px-10 gap-5'>
-        <DetailTab
+        <DetailsTab
           carrierName={carrierName}
           documentData={documentData}
           policy={policy}
