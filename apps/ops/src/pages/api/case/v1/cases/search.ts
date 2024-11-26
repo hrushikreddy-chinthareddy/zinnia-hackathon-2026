@@ -20,7 +20,7 @@ export default withAuthAndLogging(
 
         const canUnmask = await canUnmaskPii(session?.accessToken, session?.user?.partyId);
 
-        const masker = !canUnmask ? caseSearchSanitizer : caseSearchFullMasker;
+        const masker = canUnmask ? caseSearchSanitizer : caseSearchFullMasker;
         return await requestHandler<any>(proxyUrl as string, req, res, masker);
     },
     { file: 'cases/search', function: 'routeHandler' }
