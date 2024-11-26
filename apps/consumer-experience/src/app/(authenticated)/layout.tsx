@@ -40,7 +40,7 @@ export default async function AuthenticatedLayout({
   // const userName = session?.user?.name.split(' ');
 
   return (
-    <main className={`${styles.body} ${styles.main}`} data-theme={themeCookie}>
+    <main data-theme={themeCookie}>
       <UserProvider user={session?.user}>
         {/* As of May 22, 2024 we have not started phase 2 of masking PII data. This provider is setup for future use. Once we iron out the requirements around PII levels and data masking, we will populate this provider */}
         <PiiProvider
