@@ -14,13 +14,13 @@ import { ProcessType } from '@deps/models/case/enums';
 import { TaskSource } from '@deps/models/case/task';
 import { AssignedTask, TaskStatus } from '@deps/models/case/task-instance';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
+import { unassignTask } from '@deps/queries/api/v1/task';
 import { getTaskInstance, updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as SparklesIcon } from '@deps/styles/elements/icons/icons_outlined/sparkles.svg';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { logError, logWarn } from '@deps/utils/server-logging';
-import { unassignTask } from '@deps/queries/api/v1/task';
 type TaskQueueTableRowProps = {
     task: AssignedTask;
     featureFlagDecisions: FeatureFlags;

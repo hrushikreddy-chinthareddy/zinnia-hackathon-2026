@@ -1,3 +1,4 @@
+import { datadogLogs } from '@datadog/browser-logs';
 import { AxiosResponse } from 'axios';
 
 import { ActiveReg60Case } from '@deps/containers/otp/reg60-forms/reg60.types';
@@ -9,7 +10,6 @@ import { baseAppUrl, se2ApiServerUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { logError, logInfo, parseErrorInformation } from '@deps/utils/server-logging';
-import { datadogLogs } from '@datadog/browser-logs';
 
 const baseCasesUrl = `${baseAppUrl}/api/case/v1/cases`;
 const baseTasksUrl = `${baseAppUrl}/api/case/v1/tasks`;

@@ -1,6 +1,7 @@
+import { useTranslation } from 'react-i18next';
+
 import ViewDetailCard from '@deps/components/card/view-detail-card/view-detail-card';
 import { TranslationFiles } from '@deps/config/translations';
-import { useTranslation } from 'react-i18next';
 
 interface ViewDetailsContentProps {
     qualificationType: string;

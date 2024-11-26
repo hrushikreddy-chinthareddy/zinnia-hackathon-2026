@@ -8,6 +8,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { AssignedTask } from '@deps/models/case/task-instance';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 import styles from '@deps/utils/styles';
+
 import TaskQueueTableHeader from './task-queue-table-header';
 import TaskQueueTableRow from './task-queue-table-row';
 
