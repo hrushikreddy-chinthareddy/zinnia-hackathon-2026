@@ -8,6 +8,7 @@ import { DocumentData } from '@deps/models/case/document';
 import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
 import dayjs from 'dayjs';
 import DetailsTab from './details-tab';
+import RelatedTab from './related-tab';
 export enum TabOptions {
   Details = 'Details',
   Related = 'Related',
@@ -40,7 +41,7 @@ function CaseDetailsContent({ policy, documentData, }: CaseDetailsProps) {
         />
       </TabContent>
       <TabContent className="flex w-full flex-col items-center" value={TabOptions.Related}>
-
+        <RelatedTab policyNumber={policy.policyNumber} t={t} />
       </TabContent>
     </>
   );

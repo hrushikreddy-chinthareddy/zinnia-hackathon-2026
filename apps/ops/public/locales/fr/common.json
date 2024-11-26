@@ -4429,8 +4429,13 @@
             "detailsTab": {
                 "people": "personnes",
                 "cedingCarriers": "Transporteurs cédants"
+            },
+            "relatedTab": {
+                "lastUpdated": "Dernière mise à jour",
+                "caseId": "ID du cas"
             }
         },
+
         "confirmStep": {
             "title": "Soumis!",
             "subTitle": "Votre demande a été envoyée pour traitement.",

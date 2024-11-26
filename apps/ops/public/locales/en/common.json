@@ -4461,6 +4461,10 @@
             "detailsTab": {
                 "people": "People",
                 "cedingCarriers": "Ceding Carriers"
+            },
+            "relatedTab": {
+                "lastUpdated": "Last updated",
+                "caseId": "Case ID "
             }
         },
         "confirmStep": {
