@@ -180,6 +180,12 @@ const fullyMaskEmails = (emails: Email[] | undefined): Email[] | undefined => {
 
 const fullyMaskIdentifications = (identifications: Identification[] | undefined): Identification[] | undefined => {
     return identifications?.map(identification => {
+        if (identification.identificationType === IdentificationType.SSN) {
+            return {
+                ...identification,
+                identificationValue: formatSSN(identification.identificationValue?.replace(/./g, '*')),
+            };
+        }
         return {
             ...identification,
             identificationValue: identification.identificationValue?.replace(/./g, '*') || undefined,

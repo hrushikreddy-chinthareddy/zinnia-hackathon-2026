@@ -23,6 +23,7 @@ export default withAuthAndLogging(
                 offset: offset as number,
                 limit: limit as number,
                 loggingContext,
+                partyId: session?.user?.partyId,
             });
             if (!data) {
                 logWarn('policySearch::no data', { ...loggingContext, duration: performance.now() - now });

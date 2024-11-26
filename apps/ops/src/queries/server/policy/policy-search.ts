@@ -88,7 +88,7 @@ const policySearch = async ({
         const failures = [] as string[];
         settledPromises.forEach((settledPromise, index) => {
             if (settledPromise.status === PromiseSettledStatus.fulfilled && settledPromise?.value?.data?.data) {
-                const policyTupleKey = `${settledPromise.value.data.data?.policyNumber?.toLowerCase()}_${settledPromise.value.data.data?.product?.planCode?.toLowerCase()}`;
+                const policyTupleKey = `policy:${settledPromise.value.data.data?.policyNumber?.toLowerCase()}_${settledPromise.value.data.data?.product?.planCode?.toLowerCase()}`;
                 const masker = allowedUnmaskingPolicies[policyTupleKey] ? policySanitizer : policyMasker;
                 results.push(masker(settledPromise.value.data.data));
             } else if (settledPromise.status === PromiseSettledStatus.fulfilled) {
