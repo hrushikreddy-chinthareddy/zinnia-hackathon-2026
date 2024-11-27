@@ -1963,8 +1963,6 @@
             "addAdditionalRecipient": "+ Add additional recipient",
             "emailTooltip": "Please enter a valid email address. Only one email address is allowed in this field.",
             "additionalRecipientTooltip": "You can add up to 5 email addresses in the CC field. Use a comma(,), semicolon(;), or Enter to separate them",
-            "maxEmails": "Maximum 5 emails allowed",
-            "duplicateEmail": "Email already exist in the list",
             "email": "Email",
             "ccEmail": "CC Emails",
             "fax": "Fax",
@@ -2004,7 +2002,10 @@
             "inValidEmail": "Please enter valid email address",
             "firstName": "First name is required",
             "lastName": "Last name is required",
-            "address": "Verify & select the address to continue."
+            "address": "Verify & select the address to continue.",
+            "maxEmails": "Maximum 5 emails allowed",
+            "duplicateEmailInCC": "Email already exist in the list",
+            "duplicateEmail": "Please ensure the email address is unique between the Recipient and CC fields."
         }
     },
     "contactCenter": {
