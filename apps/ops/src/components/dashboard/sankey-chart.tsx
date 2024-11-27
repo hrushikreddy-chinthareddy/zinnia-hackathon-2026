@@ -6,7 +6,7 @@ import SelectSimple from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { getStartAndEndDates } from '@deps/containers/case-redesign-sub-page/case-helpers';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
-import { getLabelSubString, sankeyTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
+import { getLabelSubString, dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
 import { CaseDashboardStatsResponse, DashboardStatsElementResponse, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
@@ -476,8 +476,10 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                         <tspan className="tracking-normal no-underline font-primary text-xl font-medium">
                             {wholeNumberFormatify(getL2ObjectCount(l2StatGrouping))}
                         </tspan>
-                        <tspan className="font-primary text-sm font-medium">&nbsp;{sankeyTitleFormat(l2StatGrouping.name, 15)}</tspan>
-                        <title>{sankeyTitleFormat(l2StatGrouping.name, false)}</title>
+                        <tspan className="font-primary text-sm font-medium">
+                            &nbsp;{dashboardChartTitleFormat(l2StatGrouping.name, 15)}
+                        </tspan>
+                        <title>{dashboardChartTitleFormat(l2StatGrouping.name, false)}</title>
                     </text>
                 </g>
                 {/* </a> */}
@@ -519,8 +521,8 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                     <tspan className="tracking-normal no-underline font-primary text-xl font-medium">
                         {wholeNumberFormatify(getL3ObjectCount(l3StatGrouping))}
                     </tspan>
-                    <tspan className="font-primary text-sm font-medium"> {sankeyTitleFormat(l3StatGrouping.name)}</tspan>
-                    <title>{sankeyTitleFormat(l3StatGrouping.name, false)}</title>
+                    <tspan className="font-primary text-sm font-medium"> {dashboardChartTitleFormat(l3StatGrouping.name)}</tspan>
+                    <title>{dashboardChartTitleFormat(l3StatGrouping.name, false)}</title>
                 </text>
             </g>
         );
