@@ -169,7 +169,7 @@ const OpenStatusRow = ({
                     <div className="my-4">
                         <Typography variant={TypographyVariant.LabelMd}>{t(`${BASE_TRANSLATION_KEY}ownerName`)}</Typography>
                         <div className="flex items-center gap-1">
-                            <Content details={ownerName} variant={ContentVariant.Value} />
+                            <Content details={ownerName} variant={ContentVariant.Value} pii={true} />
                             <ClickWrapper
                                 ariaLabel={t(`${BASE_TRANSLATION_KEY}copyToClipboard`, { item: t(`${BASE_TRANSLATION_KEY}ownerName`) })}
                                 classes="mb-1"
