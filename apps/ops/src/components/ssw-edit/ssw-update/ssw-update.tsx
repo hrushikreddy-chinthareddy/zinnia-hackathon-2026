@@ -3,7 +3,6 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useMemo, useState } from 'react';
 
 import { Program } from '@deps/components/otp-withdrawal-form/rmd-method/program-item';
-import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
@@ -140,14 +139,6 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
                     text: t('tryAgain'),
                 }}
             />
-        );
-    }
-
-    if (isLoading) {
-        return (
-            <div className="fixed left-0 top-0 z-10 flex h-screen w-screen justify-center bg-gray-800 opacity-80">
-                <PageLoader variant={PageLoaderVariant.Center} />
-            </div>
         );
     }
 
