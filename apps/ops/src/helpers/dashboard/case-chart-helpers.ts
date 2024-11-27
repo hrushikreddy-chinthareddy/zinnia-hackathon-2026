@@ -69,6 +69,7 @@ const caseChartHelpers = {
         return this.getColors().reverse();
     },
     getBaseSmallBarConfiguration: (): Highcharts.Options => ({
+        navigation: { buttonOptions: { enabled: false } },
         chart: {
             type: 'column',
             width: 200,
@@ -171,6 +172,7 @@ const caseChartHelpers = {
         },
     }),
     getBaseSmallPieConfiguration: (): Highcharts.Options => ({
+        navigation: { buttonOptions: { enabled: false } },
         chart: {
             type: 'pie',
             spacing: [0, 0, 0, 0],

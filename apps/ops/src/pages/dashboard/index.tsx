@@ -12,6 +12,7 @@ import { BrokerDealerFilter } from '@deps/components/dashboard/broker-dealer-fil
 import { DashboardNavLinks } from '@deps/components/dashboard/dashboard-nav-links';
 import SankeyChart from '@deps/components/dashboard/sankey-chart';
 import CaseStatBlock from '@deps/components/dashboard/stat-blocks/case-stat-block';
+import { TreeMapInsights } from '@deps/components/dashboard/tree-map-insights';
 import { FieldSize } from '@deps/components/fields/field';
 import NoNavLayout from '@deps/components/no-nav-layout';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
@@ -90,6 +91,11 @@ const DashboardPage = ({
         data: [],
         totalElements: 0,
     });
+    const [insightExceptionStats, setInsightExceptionStats] = useState<CaseDashboardStatsResponse>({
+        data: [],
+        totalElements: 0,
+    });
+
     const [baseDashboardQueryFilter, setBaseDashboardQueryFilter] = useState<DashboardSearchFilter>({});
     const [baseInsightQueryFilter, setBaseInsightQueryFilter] = useState<DashboardSearchFilter>({});
     const [insightOption, setInsightOption] = useState<Processes>(Processes.NewBusiness);
@@ -222,6 +228,14 @@ const DashboardPage = ({
         return getCaseDashboardStats(query);
     };
 
+    const getExceptionCategoryStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
+        const query: CaseDashboardStatsQuery = {
+            filter: baseInsightQueryFilter,
+            groupBy: [GroupByOptions.ExceptionCategory],
+        };
+        return getCaseDashboardStats(query);
+    };
+
     useEffect(() => {
         const baseFilter: DashboardSearchFilter = {
             caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
@@ -260,13 +274,19 @@ const DashboardPage = ({
                 if (Object.keys(baseDashboardQueryFilter).length === 0 || Object.keys(baseInsightQueryFilter).length === 0) {
                     return;
                 }
-                const [insightCountByCarrierStats, insightCountBySubProcessStats, insightCreatedBySubProcess, insightOpenStagesByCreated] =
-                    await Promise.all([
-                        getCountByCarrierInsightStats(baseInsightQueryFilter),
-                        getCountBySubProcessInsightStats(baseInsightQueryFilter),
-                        getCreatedBySubProcessInsightStats(baseInsightQueryFilter),
-                        getOpenStagesByCreatedInsightStats(baseInsightQueryFilter),
-                    ]);
+                const [
+                    insightCountByCarrierStats,
+                    insightCountBySubProcessStats,
+                    insightCreatedBySubProcess,
+                    insightOpenStagesByCreated,
+                    insightExceptionCategoryStats,
+                ] = await Promise.all([
+                    getCountByCarrierInsightStats(baseInsightQueryFilter),
+                    getCountBySubProcessInsightStats(baseInsightQueryFilter),
+                    getCreatedBySubProcessInsightStats(baseInsightQueryFilter),
+                    getOpenStagesByCreatedInsightStats(baseInsightQueryFilter),
+                    getExceptionCategoryStats(baseInsightQueryFilter),
+                ]);
                 if (!insightCountByCarrierStats || 'status' in insightCountByCarrierStats) {
                     console.error('getCountByCarrierInsightStats::Failed to fetch carrier count insight stats');
                 } else {
@@ -289,6 +309,12 @@ const DashboardPage = ({
                     console.error('getOpenStagesByCreatedStats::Failed to fetch carrier count insight stats');
                 } else {
                     setInsightStagesByCreated(insightOpenStagesByCreated);
+                }
+
+                if (!insightExceptionCategoryStats || 'status' in insightExceptionCategoryStats) {
+                    console.error('getExceptionCategoryStats::Failed to fetch carrier count insight stats');
+                } else {
+                    setInsightExceptionStats(insightExceptionCategoryStats);
                 }
             } catch (error) {
                 console.error('an error occurred fetching dashboard insight stats', error);
@@ -387,6 +413,15 @@ const DashboardPage = ({
                             selectedProcess={insightOption}
                             carriers={Object.keys(selectedCarriers)}
                         />
+                        <div className="mt-1">
+                            {/* this is the Exception Distribution by Category tree map chart */}
+                            <CardContainer fullWidth={false}>
+                                <TreeMapInsights
+                                    dashboardStatsData={insightExceptionStats}
+                                    heading="Exception Distribution by Category"
+                                ></TreeMapInsights>
+                            </CardContainer>
+                        </div>
                         <div className="flex flex-col gap-1 mt-1">
                             <div className="flex gap-1">
                                 <CaseStatBlock

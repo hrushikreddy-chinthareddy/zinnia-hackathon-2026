@@ -48,6 +48,7 @@ const ActiveAgingBars = forwardRef<HighchartsReactRefObject, Props>(({ agingRang
             });
 
             const config: Highcharts.Options = {
+                navigation: { buttonOptions: { enabled: false } },
                 chart: {
                     backgroundColor: 'transparent',
                     type: 'column',
