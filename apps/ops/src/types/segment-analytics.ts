@@ -34,7 +34,7 @@ export enum SegmentTrackedEventName {
     DropdownClicked = 'Dropdown Clicked',
     PolicyClicked = 'Policy Clicked',
     CaseClicked = 'Case Clicked',
-    FilterClicked = 'Filter Clicked',
+    FilterApplied = 'Filter Applied',
 }
 
 export interface BaseSegmentEventProperties {

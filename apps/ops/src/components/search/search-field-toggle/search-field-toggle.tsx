@@ -7,7 +7,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
 import { toSentenceCase } from '@deps/helpers/string.helper';
 import { LabelValue } from '@deps/types/data';
-import { PolicySearchKeys } from '@deps/types/search';
+import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 
 import styles from './search-field-toggle.module.css';
 
@@ -15,13 +15,15 @@ interface SearchFieldToggleProps {
     handleChange: (e: ChangeEvent<HTMLInputElement>, value: string, key: PolicySearchKeys) => void;
     activeLabels: LabelValue<PolicySearchKeys>;
     onClear?: (searchField: PolicySearchKeys | undefined) => void;
+    values: SearchViewQuery;
 }
 
-export const SearchFieldContainer = ({ handleChange, activeLabels, onClear }: SearchFieldToggleProps) => {
+export const SearchFieldContainer = ({ handleChange, activeLabels, onClear, values }: SearchFieldToggleProps) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
     const { showFieldErrorMessage } = useContext(PolicySearchFiltersContext);
     const { value: policyKey, label = '', placeholder, errorMessage } = activeLabels;
     const { t } = useTranslation(TranslationFiles.COMMON);
+    const inputValue = values[activeLabels?.value || ''] || '';
 
     const inputType = () => {
         switch (activeLabels.value) {
@@ -36,6 +38,8 @@ export const SearchFieldContainer = ({ handleChange, activeLabels, onClear }: Se
         switch (activeLabels.value) {
             case 'ssn':
             case 'policyNumber':
+            case 'caseId':
+            case 'firmName':
                 return styles.wide;
         }
     };
@@ -63,6 +67,7 @@ export const SearchFieldContainer = ({ handleChange, activeLabels, onClear }: Se
                 }}
                 key={activeLabels.value}
                 ref={inputRef}
+                value={inputValue}
             />
             {hasValue && (
                 <Button className={styles.close} onClick={handleClear} mode="link">
@@ -77,7 +82,7 @@ export const SearchFieldContainer = ({ handleChange, activeLabels, onClear }: Se
     );
 };
 
-const SearchFieldToggle = ({ activeLabels, ...rest }: SearchFieldToggleProps) => {
+const SearchFieldToggle = ({ activeLabels, values, ...rest }: SearchFieldToggleProps) => {
     let fields;
     if (activeLabels) {
         const { group } = activeLabels;
@@ -86,12 +91,12 @@ const SearchFieldToggle = ({ activeLabels, ...rest }: SearchFieldToggleProps) =>
             fields = (
                 <fieldset className={styles.fieldSet}>
                     {group.map((g, index) => (
-                        <SearchFieldContainer key={'search-field-container-key-' + index} activeLabels={g} {...rest} />
+                        <SearchFieldContainer key={'search-field-container-key-' + index} activeLabels={g} values={values} {...rest} />
                     ))}
                 </fieldset>
             );
         } else {
-            fields = <SearchFieldContainer activeLabels={activeLabels} {...rest} />;
+            fields = <SearchFieldContainer activeLabels={activeLabels} values={values} {...rest} />;
         }
     }
 

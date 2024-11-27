@@ -40,16 +40,6 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
     const [timer] = useState(performance.now());
     const source = getDocumentSource(document.documentNumber);
 
-    const requestProgramUpdate = async (existingProg: Program, operationType: SswUpdateType, formSign: FormSignature) => {
-        const successfulCaseUpdate = await updateTask(
-            initialForm.caseId,
-            initialForm?.taskId,
-            buildSSWFormData(TaskStatus.Completed, initialForm, formSign, existingProg, updateProgram, document, operationType),
-            timer
-        );
-        return successfulCaseUpdate;
-    };
-
     const handleFormAction = async (item: Program, operationType: SswUpdateType, formSign: FormSignature) => {
         if (source !== ChannelType.Phone) {
             const formErr = sswEditFormValidator(formSign, t);
@@ -60,18 +50,28 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
                 setFormErrors({});
             }
         }
-
         setIsLoading(true);
         let res;
         if (operationType === SswUpdateType.PROGRAM_TERMINATE) {
-            res = requestProgramUpdate(item, operationType, formSign);
+            res = await updateTask(
+                initialForm.caseId,
+                initialForm?.taskId,
+                buildSSWFormData(TaskStatus.Completed, initialForm, formSign, item, updateProgram, document, operationType),
+                timer
+            );
         }
         if (operationType === SswUpdateType.PROGRAM_UPDATE) {
-            res = requestProgramUpdate(item, operationType, formSign);
+            res = await updateTask(
+                initialForm.caseId,
+                initialForm?.taskId,
+                buildSSWFormData(TaskStatus.Completed, initialForm, formSign, item, updateProgram, document, operationType),
+                timer
+            );
         }
-        if (res) {
-            setIsFormSubmitted(true);
+
+        if (res.status === 'COMPLETED') {
             setIsLoading(false);
+            setIsFormSubmitted(true);
         } else {
             setSubmitError(true);
             setIsLoading(false);
@@ -101,7 +101,7 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
                 ariaLabel: t('signTabTitle'),
                 component: <Signature />,
                 screenReaderLabel: t('signTabTitle'),
-                isVisible: () => document?.source === ChannelType.Email,
+                isVisible: () => document?.source !== ChannelType.Phone,
                 text: t('signTabTitle'),
             },
             {
@@ -114,7 +114,7 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
             },
             {
                 ariaLabel: t('tabs.confirm.tabTitle'),
-                component: <>{isLoading ? <PageLoader variant={PageLoaderVariant.Center} /> : <div></div>}</>,
+                component: <>{<div></div>}</>,
                 screenReaderLabel: t('tabs.confirm.tabTitle'),
                 index: 4,
                 text: t('tabs.confirm.tabTitle'),

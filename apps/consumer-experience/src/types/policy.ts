@@ -53,6 +53,14 @@ export interface PolicyAccountValue {
   valueChange?: number | null;
   policyStartDate?: string;
   lineOfBusiness?: LineOfBusiness;
+  cumulativeGrossDeathBenefitAmount?: number | null;
+  freeWithdrawalAmount?: number | null;
+  totalYearToDatePremiumAmount?: number | null;
+  withdrawalAllowedStartDate?: string | null;
+  carrierId?: string;
+  fundId?: string;
+  interestGuaranteedPeriod?: number | null;
+  renewalDate?: string | null;
 }
 
 export interface PolicyCoverage {
@@ -154,6 +162,46 @@ export enum PendingPremiumTransactionType {
   PaymentOneTimePremium = 'PaymentOneTimePremium',
 }
 
+export enum CompletedAnnuityTransactionType {
+  CostOfInsurance = 'CostOfInsurance',
+  CoverageCharge = 'CoverageCharge',
+  CoverageCredit = 'CoverageCredit',
+  Disbursement = 'Disbursement',
+  ExpenseCharge = 'ExpenseCharge',
+  FullSurrender = 'FullSurrender',
+  FundTransfer = 'FundTransfer',
+  InitialPremium = 'InitialPremium',
+  InterestCredit = 'InterestCredit',
+  InterestCreditMatch = 'InterestCreditMatch',
+  MatchBonusVesting = 'MatchBonusVesting',
+  OneTimePremium = 'OneTimePremium',
+  PartialWithdrawalOneTime = 'PartialWithdrawalOneTime',
+  PaymentExpiration = 'PaymentExpiration',
+  PaymentOneTimePremium = 'PaymentOneTimePremium',
+  ValueAdjustment = 'ValueAdjustment',
+  SubsequentPayment = 'SubsequentPayment',
+  SubsequentPremium = 'SubsequentPremium',
+  Sweep = 'Sweep',
+  SystematicPartialWithdrawal = 'SystematicPartialWithdrawal',
+  SystematicRequiredMinimumDistribution = 'SystematicRequiredMinimumDistribution',
+  SystematicAnnuityPayout = 'SystematicAnnuityPayout',
+  TPDChange = 'TPDChange',
+  UnitExpenseCharge = 'UnitExpenseCharge',
+  PaymentInitialPremium = 'PaymentInitialPremium',
+}
+
+export enum PendingAnnuityTransactionType {
+  PaymentInitialPremium = 'PaymentInitialPremium',
+  OneTimePremium = 'OneTimePremium',
+  PartialWithdrawalOneTime = 'PartialWithdrawalOneTime',
+  PaymentOneTimePremium = 'PaymentOneTimePremium',
+  SubsequentPayment = 'SubsequentPayment',
+  SubsequentPremium = 'SubsequentPremium',
+  SystematicPartialWithdrawal = 'SystematicPartialWithdrawal',
+  SystematicRequiredMinimumDistribution = 'SystematicRequiredMinimumDistribution',
+  SystematicAnnuityPayout = 'SystematicAnnuityPayout',
+}
+
 export type MethodAndProgram = BankAccount & {
   amount?: number;
   frequency?: Frequency;
@@ -238,6 +286,7 @@ export interface PolicyWithdrawals {
   nextMonthiversaryDate?: string;
   nextAnniversaryDate?: string;
   withdrawalAllowedStartDate?: string | null;
+  freeWithdrawalAmount?: number | null;
   maximumWithdrawalAmount?: number | null;
   numberOfWithdrawal?: number | null;
   totalWithdrawalAmount?: number | null;
@@ -245,6 +294,7 @@ export interface PolicyWithdrawals {
   availableToWithdrawTaxFree?: number | null;
   vestingDetails: VestingDetails;
   effectiveDate?: string;
+  endingAccountValue?: number | null;
 }
 
 // export type PolicyFeatureType = keyof typeof PolicyFeature.featureType;

@@ -16,6 +16,7 @@ import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helper';
 import { Carrier, Frequency, FundWithdrawnMethod, PaymentMethod, QualTypes } from '@deps/models/case/withdrawal/case';
 
 import getFlicConfig from './flic-ssw-form-helper';
+import SswEditSelection from '../ssw-edit-selection';
 
 type SswFormProps = {
     qualType: QualTypes | '';
@@ -83,6 +84,7 @@ export function FlicSSWForm({ qualType }: SswFormProps) {
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
+            <SswEditSelection />
             <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
             <AmountDetails isFormStateReadOnly={isFormStateReadOnly} isOnlyWithdrawalTypeControls={true} />
             <SystematicWithdrawalProgram

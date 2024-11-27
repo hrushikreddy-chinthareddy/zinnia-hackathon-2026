@@ -29,7 +29,6 @@ interface NigoEntryContainerContainerProps {
     documentData: DocumentData;
     taskInfoLink: string;
     prevTransactionDetails: TransactionDetails | null;
-
 }
 
 const NigoEntryContainer = ({
@@ -80,7 +79,7 @@ const NigoEntryContainer = ({
                             ctiCallNumber: '',
                         };
                         const searchResponse = await searchForms(formSearchRequestBody);
-                        const selectedForm = searchResponse?.find(form => form.formDisplayName === formName);
+                        const selectedForm = searchResponse?.find(form => form.formShortName === formName);
                         if (searchResponse) {
                             setDocument({ list: searchResponse, selected: selectedForm || null });
                         }
@@ -144,7 +143,14 @@ const NigoEntryContainer = ({
             {
                 ariaLabel: t('tabs.documentSelection'),
                 isVisible: () => !isReadyForDataEntry,
-                component: <FormSelectionStep availableFormsTransactions={availableFormsTransactions} policy={policy} documentData={documentData} clientCode={clientCode}/>,
+                component: (
+                    <FormSelectionStep
+                        availableFormsTransactions={availableFormsTransactions}
+                        policy={policy}
+                        documentData={documentData}
+                        clientCode={clientCode}
+                    />
+                ),
                 screenReaderLabel: t('tabs.documentSelection'),
                 index: 2,
                 text: t('tabs.documentSelection'),
@@ -152,13 +158,27 @@ const NigoEntryContainer = ({
             {
                 ariaLabel: t('tabs.confirm'),
                 isVisible: () => true,
-                component: <ConfirmStep documentNumber={documentNumber} docType={docType} clientCode={clientCode} document={documentData} />,
+                component: (
+                    <ConfirmStep documentNumber={documentNumber} docType={docType} clientCode={clientCode} document={documentData} />
+                ),
                 screenReaderLabel: t('tabs.confirm'),
                 index: 3,
                 text: t('tabs.confirm'),
             },
         ],
-        [availableFormsTransactions, clientCode, docType, documentData, documentNumber, isReadyForDataEntry, nigoExceptions, nigoSubExceptions, policy, t, taskInfoLink]
+        [
+            availableFormsTransactions,
+            clientCode,
+            docType,
+            documentData,
+            documentNumber,
+            isReadyForDataEntry,
+            nigoExceptions,
+            nigoSubExceptions,
+            policy,
+            t,
+            taskInfoLink,
+        ]
     );
 
     const filteredSteps: Step[] = useMemo(
@@ -166,7 +186,15 @@ const NigoEntryContainer = ({
         [steps]
     );
 
-    return <TabGroupContainer steps={filteredSteps} policy={policy} documentNumber={documentNumber} docType={docType} documentData={documentData}></TabGroupContainer>;
+    return (
+        <TabGroupContainer
+            steps={filteredSteps}
+            policy={policy}
+            documentNumber={documentNumber}
+            docType={docType}
+            documentData={documentData}
+        ></TabGroupContainer>
+    );
 };
 
 export default NigoEntryContainer;

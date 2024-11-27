@@ -10,6 +10,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 // Will proxy any request made to the next server directly to the gateway apis
 export default withAuthAndLogging(
     async (req: NextApiRequest, res: NextApiResponse<AxiosResponse<any> | ErrorResponse>) => {
+        console.log('🚀 ~ req:', req, 'Inside the server api call', 'vijaya..........?????????????');
         const re = new RegExp('^.*?/api');
         const proxyUrl = req.url?.replace(re, apiServerBaseUrl as string);
 

@@ -8,7 +8,6 @@ import { ClickableCardContainer } from '@/components/clickable-card-container/Cl
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import AdditionalOverviewLinks from '@/components/policy-overview/AdditionalOverviewLinks';
-import { Coverage } from '@/components/policy-overview/Coverage';
 import { CanceledFreelook } from '@/components/policy-overview/non-active-statuses/CanceledFreelook';
 import { LapsedPolicy } from '@/components/policy-overview/non-active-statuses/LapsedPolicy';
 import { SurrenderedPolicy } from '@/components/policy-overview/non-active-statuses/SurrenderedPolicy';
@@ -95,11 +94,7 @@ export default async function Page({
             />
           </ClickableCardContainer.LinkContent>
         </ClickableCardContainer>
-        <Coverage
-          planCode={planCode}
-          policyNumber={policyNumber}
-          lineOfBusiness={LineOfBusiness.ANNUITY}
-        />
+
         <AdditionalOverviewLinks
           planCode={planCode}
           policyNumber={policyNumber}

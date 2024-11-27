@@ -7,17 +7,24 @@ import { IdentifierInstance } from '@deps/models/case/identifier-instance';
 import { LabelValue } from '@deps/types/data';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 
-export const isSearchValueObjectEmpty = (
-    searchValueObject: Partial<Record<'policyNumber' | 'ssn' | 'ownerFirstName' | 'ownerLastName', string>> = {}
-): boolean => {
+export const isSearchValueObjectEmpty = (searchValueObject: Partial<Record<PolicySearchKeys, string>> = {}): boolean => {
     return Object.keys(searchValueObject).length === 0;
 };
 
 // Combine all sources or just fetch one? API is currently just fetching the toggled view.
 export const getSearchValueObject = (
-    { ownerFirstName = '', ownerLastName = '', policyNumber = '', ssn = '' }: SearchViewQuery,
+    {
+        ownerFirstName = '',
+        ownerLastName = '',
+        policyNumber = '',
+        ssn = '',
+        caseId = '',
+        agentFirstName = '',
+        agentLastName = '',
+        firmName = '',
+    }: SearchViewQuery,
     toggleValue: PolicySearchKeys
-): Partial<Record<'policyNumber' | 'ssn' | 'ownerFirstName' | 'ownerLastName', string>> => {
+): SearchViewQuery => {
     switch (toggleValue) {
         case 'policyNumber':
             return policyNumber ? { policyNumber } : {};
@@ -29,6 +36,15 @@ export const getSearchValueObject = (
                 ...(ownerFirstName ? { ownerFirstName } : {}),
                 ...(ownerLastName ? { ownerLastName } : {}),
             };
+        case 'caseId':
+            return caseId ? { caseIds: [caseId] } : {};
+        case 'agentName':
+            return {
+                ...(agentFirstName ? { agentFirstName } : {}),
+                ...(agentLastName ? { agentLastName } : {}),
+            };
+        case 'firmName':
+            return firmName ? { brokerDealerName: firmName } : {};
         default:
             return {};
     }
@@ -145,37 +161,66 @@ export const getAdditionalFilters = (additionalFilters: CaseSearchAdditionalFilt
     return result;
 };
 
-export const toggleLabels = (t: TFunction): LabelValue<PolicySearchKeys>[] => [
-    {
-        label: t('dashboard.search.buttons.policyNumber'),
-        value: 'policyNumber',
-        placeholder: 'e.g. 1234567',
-    },
-    {
-        label: t('dashboard.search.buttons.ownerSsn'),
-        value: 'ssn',
-        fullLabel: t('dashboard.search.buttons.ssnFullLabel') ?? '',
-        placeholder: t('dashboard.search.buttons.ssnPlaceholder') ?? '',
-        format: '###-##-####',
-        replaceValue: '-',
-    },
-    {
-        label: t('dashboard.search.buttons.ownerName'),
-        value: 'ownerFirstName',
-        group: [
-            {
-                label: t('dashboard.search.buttons.firstName'),
-                value: 'ownerFirstName',
-                placeholder: '',
-            },
-            {
-                label: t('dashboard.search.buttons.lastName'),
-                value: 'ownerLastName',
-                placeholder: '',
-            },
-        ],
-    },
-];
+export const toggleLabels = (t: TFunction): LabelValue<PolicySearchKeys>[] => {
+    const labels: LabelValue<PolicySearchKeys>[] = [
+        {
+            label: t('dashboard.search.buttons.policyNumber'),
+            value: 'policyNumber',
+            placeholder: t('dashboard.search.buttons.policyPlaceholder') ?? '',
+        },
+        {
+            label: t('caseManagementDashboard.case.caseId'),
+            value: 'caseId',
+            placeholder: t('dashboard.search.buttons.policyPlaceholder') ?? '',
+        },
+        {
+            label: t('dashboard.search.buttons.ownerSsn'),
+            value: 'ssn',
+            fullLabel: t('dashboard.search.buttons.ssnFullLabel') ?? '',
+            placeholder: t('dashboard.search.buttons.ssnPlaceholder') ?? '',
+            format: '###-##-####',
+            replaceValue: '-',
+        },
+        {
+            label: t('dashboard.search.buttons.ownerName'),
+            value: 'ownerFirstName',
+            group: [
+                {
+                    label: t('dashboard.search.buttons.firstName'),
+                    value: 'ownerFirstName',
+                    placeholder: '',
+                },
+                {
+                    label: t('dashboard.search.buttons.lastName'),
+                    value: 'ownerLastName',
+                    placeholder: '',
+                },
+            ],
+        },
+        {
+            label: t('dashboard.search.buttons.agentName'),
+            value: 'agentName',
+            group: [
+                {
+                    label: t('dashboard.search.buttons.firstName'),
+                    value: 'agentFirstName',
+                    placeholder: '',
+                },
+                {
+                    label: t('dashboard.search.buttons.lastName'),
+                    value: 'agentLastName',
+                    placeholder: '',
+                },
+            ],
+        },
+        {
+            label: t('dashboard.search.buttons.firmName'),
+            value: 'firmName',
+            placeholder: t('dashboard.search.buttons.firmName') ?? '',
+        },
+    ];
+    return labels;
+};
 
 export const calculateDaysAgo = (date: Date): number => {
     const now = new Date();

@@ -234,6 +234,22 @@ export const getServerSideProps = withPageAuthRequired({
                 ? await getDocumentSSR(documentNumber, DocumentType.SSW, clientCode?.toUpperCase(), accessToken as string)
                 : null;
 
+            if (!document) {
+                logError('ssw-edit::Error getting document', {
+                    documentNumber,
+                    clientCode,
+                    contractNum,
+                    taskId,
+                });
+                return {
+                    redirect: {
+                        destination: `/ssw-edit/error?errorCode=${ERROR_CODES.DOCUMENT_RETRIEVAL}`,
+                        permanent: false,
+                    },
+                };
+            }
+
+
             const specialProgramdetails = await getSpecialProgramsSSR(form.data.contractNum, form.carrier, accessToken);
             if (!specialProgramdetails) {
                 logError('ssw-edit::Special Program API responded - not found', {

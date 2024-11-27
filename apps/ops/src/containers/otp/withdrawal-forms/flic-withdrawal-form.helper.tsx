@@ -255,7 +255,7 @@ export default function getFlicConfig(t: TFunction) {
         },
     ];
 
-    const cslnCheckStates = ['AZ', 'CA', 'CO', 'LA', 'MT', 'NV', 'NM', 'OH', 'TX', 'WA', 'ND', 'RI'];
+    const cslnCheckStates = ['AZ', 'CA', 'CO', 'LA', 'NV', 'TX', 'ND', 'RI'];
     const formPartyConfigs: PartyConfig[] = [
         {
             partyRoleType: PartyRoles.OWNER,

@@ -1,16 +1,14 @@
-.body {
-  background-color: var(--color-base-surface-surface-tertiary, #ededed);
-  overflow: auto;
-  scroll-behavior: smooth;
-}
-
 .container {
   display: flex;
   justify-content: center;
+  /* This is to prevent the layout shift when a scrollbar is present */
+  /* when the scrollbar isn't present 100vw and 100% are equal, so calculate when it is present*/
+  padding-left: calc(100vw - 100%);
 }
 
 .content {
-  margin: var(--measure-dimension-gap-lg, 1rem) var(--measure-dimension-gap-md, 0.5rem);
+  margin: var(--measure-dimension-gap-lg, 1rem)
+    var(--measure-dimension-gap-md, 0.5rem);
   min-width: 344px;
   width: 100%;
   background-color: white;

@@ -1,17 +1,20 @@
 import { AxiosResponse } from 'axios';
 
 import { ActiveReg60Case } from '@deps/containers/otp/reg60-forms/reg60.types';
-import { CreateTaskBody, CreateTaskResponse, TaskV1Payload } from '@deps/models/case/task';
+import { ProcessType } from '@deps/models/case/enums';
+import { CreateTaskBody, CreateTaskResponse, FormMetadata, TaskType, TaskV1Payload } from '@deps/models/case/task';
 import { AssignedTask, ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { ActiveWithdrawalCase, DigitalFormWithdrawal } from '@deps/models/case/withdrawal/case';
 import { baseAppUrl, se2ApiServerUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { logError, logInfo, parseErrorInformation } from '@deps/utils/server-logging';
+import { datadogLogs } from '@datadog/browser-logs';
 
 const baseCasesUrl = `${baseAppUrl}/api/case/v1/cases`;
 const baseTasksUrl = `${baseAppUrl}/api/case/v1/tasks`;
 const ssrCasesUrl = `${se2ApiServerUrl}/cases`;
+const ssrSchemaUrl = `${se2ApiServerUrl}`;
 
 export const getCaseTasksSSR = async (
     caseId: string,
@@ -162,9 +165,9 @@ export const getCaseTasksByIdSSR = async (caseId: string, taskId: string, access
     }
 };
 
-export const getAssignedTasks = async (): Promise<AssignedTask[] | []>  => {
+export const getAssignedTasks = async (): Promise<AssignedTask[] | []> => {
     try {
-        const {data} = await client.get(`${baseAppUrl}/api/case/v1/tasks/assigned`);
+        const { data } = await client.get(`${baseAppUrl}/api/case/v1/tasks/assigned`);
         return data ?? [];
     } catch (error) {
         logError('getAssignedTasks::', {
@@ -173,5 +176,60 @@ export const getAssignedTasks = async (): Promise<AssignedTask[] | []>  => {
             function: 'getAssignedTasks',
         });
         return [];
+    }
+};
+
+export const getTaskFormMetadataSSR = async (
+    clientId: string,
+    taskType?: TaskType,
+    processType?: ProcessType,
+    accessToken?: string
+): Promise<FormMetadata | null> => {
+    try {
+        const url = `${ssrSchemaUrl}/form/metadata?process=${processType}&taskType=${taskType}&carrier=${clientId.toUpperCase()}`;
+        logInfo('getTaskFormMetadataSSR', {
+            file: 'queries/api/newBusiness/v1/suitability',
+            function: 'getTaskFormMetadataSSR',
+            url,
+        });
+        const { data } = await serverApi.get<FormMetadata, AxiosResponse>(url, {
+            authorization: `Bearer ${accessToken}`,
+            headers: {
+                Accept: '*/*',
+                'Accept-Encoding': 'gzip, deflate, br',
+                Connection: 'keep-alive',
+                'Access-Control-Allow-Origin': '*',
+            },
+        });
+
+        return data as FormMetadata;
+    } catch (error: any) {
+        logError('getFormSchemaSSR', {
+            ...parseErrorInformation(error),
+
+            file: 'queries/api/newBusiness/v1/suitability',
+            function: 'getTaskFormMetadataSSR',
+        });
+        return null;
+    }
+};
+export const unassignTask = async (caseId: string, taskId: string, entryDuration?: number): Promise<any> => {
+    try {
+        const logTime = entryDuration ? performance.now() - entryDuration : 0;
+        const timeInSeconds = ((logTime % 60000) / 1000).toFixed(0);
+        const url = `${baseAppUrl}/api/case/v1/tasks/${taskId}/unclaim`;
+        const { data } = await client.put<AxiosResponse>(url);
+        logInfo('Successfully updated task using v1', { caseId, taskId, url, function: 'tasks.unassignTask' });
+
+        datadogLogs.logger.info('Form entry time', {
+            timeElapsedSinceLoad: timeInSeconds,
+            caseId,
+            url,
+            function: 'tasks.unassignTask',
+        });
+        return data;
+    } catch (error: any) {
+        logError('An error occurred during update task using v1', { error, caseId, taskId, function: 'tasks.unassignTask' });
+        return null;
     }
 };
