@@ -28,6 +28,7 @@ type TabGroupContainerProps = {
     programType: SswUpdateType;
     programs: Program[];
     onSswUpdate: (item: Program, operationType: SswUpdateType, formSign: FormSignature) => void;
+    setSelectedProgram: React.Dispatch<Program>;
     isFormSubmitted: boolean;
     isLoading: boolean;
     setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -40,6 +41,7 @@ const TabGroupContent = ({
     programs,
     onSswUpdate,
     isFormSubmitted,
+    setSelectedProgram,
     isLoading,
     setIsLoading,
 }: TabGroupContainerProps) => {
@@ -106,6 +108,7 @@ const TabGroupContent = ({
                                   <SswOperations
                                       document={document}
                                       setSswUpdateView={setSswUpdateView}
+                                      setSelectedProgram={setSelectedProgram}
                                       programType={programType}
                                       programs={programs}
                                       onProgramUpdate={onSswUpdate}
@@ -140,6 +143,7 @@ const TabGroupContainer = ({
     programType,
     programs,
     onSswUpdate,
+    setSelectedProgram,
     isFormSubmitted,
     isLoading,
     setIsLoading,
@@ -154,6 +158,7 @@ const TabGroupContainer = ({
                 programs={programs}
                 onSswUpdate={onSswUpdate}
                 isFormSubmitted={isFormSubmitted}
+                setSelectedProgram={setSelectedProgram}
                 isLoading={isLoading}
                 setIsLoading={setIsLoading}
             />

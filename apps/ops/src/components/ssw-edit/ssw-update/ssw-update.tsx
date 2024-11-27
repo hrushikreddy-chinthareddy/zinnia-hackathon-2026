@@ -31,7 +31,7 @@ type SswUpdateContainerProps = {
 const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContainerProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sswUpdate' });
     const router = useRouter();
-    const [updateProgram, setUpdateProgram] = useState<Program>(programs[0]);
+    const [updateProgram, setUpdateProgram] = useState<Program>();
     const { initialForm, setFormErrors } = useContext(FormDataContext);
     const [isLoading, setIsLoading] = useState(false);
     const [isFormSubmitted, setIsFormSubmitted] = useState(false);
@@ -150,6 +150,7 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
             programType={programType as SswUpdateType}
             programs={programs}
             onSswUpdate={handleFormAction}
+            setSelectedProgram={setUpdateProgram}
             isFormSubmitted={isFormSubmitted}
             isLoading={isLoading}
             setIsLoading={setIsLoading}

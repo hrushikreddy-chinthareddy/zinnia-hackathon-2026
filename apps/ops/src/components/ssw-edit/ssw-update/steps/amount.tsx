@@ -38,7 +38,7 @@ const frequencyOptions = (t: TFunction) => [
 ];
 
 type AmountProps = {
-    updateProgram: UpdatedProgram;
+    updateProgram: UpdatedProgram | undefined;
     onProgramUpdate: React.Dispatch<any>;
     isReadOnly: boolean;
 };
@@ -81,7 +81,7 @@ const Amount = ({ updateProgram, onProgramUpdate, isReadOnly }: AmountProps) => 
                         onChange={e => {
                             setSSWData(xss(e?.target?.value), 'amount');
                         }}
-                        value={updateProgram.amount || ''}
+                        value={updateProgram?.amount || ''}
                         size={FieldSize.Small}
                         leading={<div>$</div>}
                         type={FieldType.BaseActive}
@@ -102,7 +102,7 @@ const Amount = ({ updateProgram, onProgramUpdate, isReadOnly }: AmountProps) => 
                         options={frequencyOptions(t)}
                         onChange={(val: string) => setSSWData(val as Frequency, 'frequency')}
                         size={FieldSize.Small}
-                        value={updateProgram.frequency}
+                        value={updateProgram?.frequency}
                         name="frequency"
                         placeholder={t('selectOption') as string}
                     />
@@ -113,7 +113,7 @@ const Amount = ({ updateProgram, onProgramUpdate, isReadOnly }: AmountProps) => 
                         onChange={e => {
                             setSSWData(xss(e?.target?.value), 'duration');
                         }}
-                        value={updateProgram.duration || ''}
+                        value={updateProgram?.duration || ''}
                         size={FieldSize.Small}
                         type={FieldType.BaseActive}
                         data-testid={`duration`}
