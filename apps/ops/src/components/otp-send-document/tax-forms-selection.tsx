@@ -4,7 +4,9 @@ import { useState } from 'react';
 
 import Select from '@deps/components/select/select';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
+import { TaxForm } from '@deps/models/case/send-tax-forms';
 import { Policy } from '@deps/models/policy/sor-policy';
+import { searchTaxForms } from '@deps/queries/api/tax-forms';
 
 import SendDocumentNavigationButtons from './action-components/navigation-buttons';
 import { MultiselectOption } from '../autocomplete/autocomplete.types';
@@ -18,6 +20,7 @@ const TaxFormsSelection = ({ policy }: StatementSelectionProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'contactCenter' });
     const currentYear = new Date().getFullYear();
     const taxYears = Array.from({ length: 5 }, (_, i) => currentYear - i).reverse();
+    const [taxForms, setTaxForms] = useState<TaxForm[]>([]);
     const { goToNext } = useWorkflow();
 
     const [selected, setSelected] = useState<{ [key: string]: string }>({});
@@ -25,15 +28,37 @@ const TaxFormsSelection = ({ policy }: StatementSelectionProps) => {
         goToNext();
     };
 
+    const getTaxForms = async (selected: string) => {
+        try {
+            const requestData = {
+                contractNumber: policy?.policyNumber || '',
+                clientCode: policy?.carrierId || '',
+                taxYear: Number(selected),
+            };
+
+            const response = await searchTaxForms(requestData);
+            return response;
+        } catch (error) {
+            console.error('An error occurred while getting Tax Forms', error);
+            return;
+        }
+    };
+
     const handleSelection = (selectedValue: string, displayText: string) => {
         setSelected(prev => {
-            const newSelections = { ...prev };
-            if (newSelections[selectedValue]) {
-                delete newSelections[selectedValue];
+            const previousSelections = { ...prev };
+            if (previousSelections[selectedValue]) {
+                setTaxForms(prevTaxForms => {
+                    return prevTaxForms.filter(form => form.taxYear !== selectedValue);
+                });
+
+                delete previousSelections[selectedValue];
             } else {
-                newSelections[selectedValue] = displayText;
+                const taxForms = getTaxForms(selectedValue);
+                setTaxForms(prev => ({ ...prev, taxForms }));
+                previousSelections[selectedValue] = displayText;
             }
-            return newSelections;
+            return previousSelections;
         });
     };
 
@@ -43,22 +68,6 @@ const TaxFormsSelection = ({ policy }: StatementSelectionProps) => {
         displayText: year.toString(),
     }));
 
-    const taxForms = [
-        {
-            contractNumber: 'KA12317559',
-            name: '1099-R',
-            fChar: 'R',
-            formId: '104',
-            taxYear: '2019',
-        },
-        {
-            contractNumber: 'KA12317559',
-            name: '1099-R',
-            fChar: 'R',
-            formId: '105',
-            taxYear: '2019',
-        },
-    ];
     const handleCancel = () => {};
     return (
         <WorkflowCard
