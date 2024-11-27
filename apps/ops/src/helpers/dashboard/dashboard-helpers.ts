@@ -1,4 +1,4 @@
-import { toTitleCase } from "@zinnia/utils";
+import { toTitleCase } from '@zinnia/utils';
 
 export const sortAlphabetically = (a: any, b: any, key?: string) => {
     let aa: string = '';
@@ -25,16 +25,11 @@ export const sortAlphabetically = (a: any, b: any, key?: string) => {
     return 0;
 };
 
-export const DASHBOARD_REPLACE_LABELS = [
-    '',
-    null,
-    undefined,
-    'NULL_VALUE',
-];
+export const DASHBOARD_REPLACE_LABELS = ['', null, undefined, 'NULL_VALUE'];
 
 export const DASHBOARD_DEFAULT_LABEL = '[UNKNOWN]';
 
-export const sankeyTitleFormat = (label: string, length?: number | boolean) => {
+export const dashboardChartTitleFormat = (label: string, length?: number | boolean) => {
     if (!label || DASHBOARD_REPLACE_LABELS.includes(label)) return DASHBOARD_DEFAULT_LABEL;
     label = label.replace(/_/g, ' ');
     label = toTitleCase(label);

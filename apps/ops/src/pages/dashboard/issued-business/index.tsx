@@ -22,7 +22,7 @@ import Select from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { sankeyTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
+import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
@@ -311,7 +311,7 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
                                                         <div className="text-ellipsis text-left">
                                                             <Label
                                                                 variant={LabelVariant.LabelLg}
-                                                                label={sankeyTitleFormat(element.name, false)}
+                                                                label={dashboardChartTitleFormat(element.name, false)}
                                                             />
                                                         </div>
                                                     </div>

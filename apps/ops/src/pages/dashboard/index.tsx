@@ -22,7 +22,7 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { getStartAndEndDates } from '@deps/containers/case-redesign-sub-page/case-helpers';
-import { sankeyTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
+import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
@@ -220,12 +220,12 @@ const DashboardPage = ({
         return getCaseDashboardStats(query);
     };
 
-    const getOpenStagesByCreatedInsightStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
+    const getOpenExceptionCategoriesByCreatedInsightStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
         const query: CaseDashboardStatsQuery = {
             filter: baseInsightQueryFilter,
-            groupBy: [GroupByOptions.CreatedAt, GroupByOptions.OpenStages],
+            groupBy: [GroupByOptions.CreatedAt, GroupByOptions.ExceptionCategory],
         };
-        return getCaseDashboardStats(query);
+        return await getCaseDashboardStats(query);
     };
 
     const getExceptionCategoryStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
@@ -284,7 +284,7 @@ const DashboardPage = ({
                     getCountByCarrierInsightStats(baseInsightQueryFilter),
                     getCountBySubProcessInsightStats(baseInsightQueryFilter),
                     getCreatedBySubProcessInsightStats(baseInsightQueryFilter),
-                    getOpenStagesByCreatedInsightStats(baseInsightQueryFilter),
+                    getOpenExceptionCategoriesByCreatedInsightStats(baseInsightQueryFilter),
                     getExceptionCategoryStats(baseInsightQueryFilter),
                 ]);
                 if (!insightCountByCarrierStats || 'status' in insightCountByCarrierStats) {
@@ -296,7 +296,7 @@ const DashboardPage = ({
                     console.error('getCountByProcessInsightStats::Failed to fetch carrier count insight stats');
                 } else {
                     insightCountBySubProcessStats.data.forEach(element => {
-                        element.name = sankeyTitleFormat(element.name);
+                        element.name = dashboardChartTitleFormat(element.name);
                     });
                     setInsightGroupingCountBySubProcessStats(insightCountBySubProcessStats);
                 }
@@ -408,7 +408,7 @@ const DashboardPage = ({
                     <div className={styles.container}>
                         <ActiveAging
                             createdBySubProcess={insightCreatedBySubProcess}
-                            openStagesByCreated={insightStagesByCreated}
+                            openExceptionCategoiresByCreated={insightStagesByCreated}
                             loading={loading}
                             selectedProcess={insightOption}
                             carriers={Object.keys(selectedCarriers)}

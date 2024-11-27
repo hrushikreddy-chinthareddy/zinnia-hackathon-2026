@@ -10,7 +10,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
-import { DASHBOARD_DEFAULT_LABEL, DASHBOARD_REPLACE_LABELS, sankeyTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
+import { DASHBOARD_DEFAULT_LABEL, DASHBOARD_REPLACE_LABELS, dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { DashboardResponseData } from '@deps/queries/api/dashboard';
@@ -52,13 +52,13 @@ export const ExceptionInsights = ({
             setLoading(true);
             const summary = await getCaseInsights({
                 content: JSON.stringify(caseStats),
-                prompt: `You are an expert in all things new business application data. Your job is to summarize the data for business and executive users. They want simple and insightful information about the data provided to you. The data provided to you here are completed ${sankeyTitleFormat(
+                prompt: `You are an expert in all things new business application data. Your job is to summarize the data for business and executive users. They want simple and insightful information about the data provided to you. The data provided to you here are completed ${dashboardChartTitleFormat(
                     processSubType,
                     false
-                )} applications, but the ${sankeyTitleFormat(
+                )} applications, but the ${dashboardChartTitleFormat(
                     processSubType,
                     false
-                )} applications encountered exceptions along their path to completion. The data is grouped by Exception Category and the values represent an exception that occurred for a ${sankeyTitleFormat(
+                )} applications encountered exceptions along their path to completion. The data is grouped by Exception Category and the values represent an exception that occurred for a ${dashboardChartTitleFormat(
                     processSubType,
                     false
                 )} application. Avoid using phrases such as "the data". Your responses should be insightful and will be displayed on a UI as a summary for a module related to a distribution chart. Use percentages and real data where it makes sense. Keep it concise and to the point. Format number values to U.S.`,
@@ -166,7 +166,7 @@ export const ExceptionInsights = ({
                 }
             });
         } else {
-            setAiSummary(`No exceptions for ${sankeyTitleFormat(selectedSubprocess)} in the ${timeframe}.`);
+            setAiSummary(`No exceptions for ${dashboardChartTitleFormat(selectedSubprocess)} in the ${timeframe}.`);
         }
     }, [exceptions, selectedSubprocess, shouldShowCaseInsights, timeframe]);
 
@@ -174,7 +174,7 @@ export const ExceptionInsights = ({
         <div className={clsx('bg-white flex flex-col min-h-[600px] lg:flex-row gap-4 pt-6')}>
             <div className="basis-1/3 flex flex-col gap-4 items-start">
                 <div>
-                    <Typography variant={TypographyVariant.H3}>{sankeyTitleFormat(selectedSubprocess, false)}</Typography>
+                    <Typography variant={TypographyVariant.H3}>{dashboardChartTitleFormat(selectedSubprocess, false)}</Typography>
                     <Typography variant={TypographyVariant.Label}>Exception Distribution</Typography>
                 </div>
                 {loading ? (
@@ -196,7 +196,7 @@ export const ExceptionInsights = ({
                             size="small"
                             className="mt-4 inline"
                             href={caseLink}
-                            text={`View all ${sankeyTitleFormat(selectedSubprocess)} exceptions`}
+                            text={`View all ${dashboardChartTitleFormat(selectedSubprocess)} exceptions`}
                         />
                     </>
                 )}
@@ -215,7 +215,7 @@ export const ExceptionInsights = ({
                         <div className="flex flex-col gap-2 items-center">
                             <ChartBarsIcon height={'24px'} width={'24px'} />
                             <Typography variant={TypographyVariant.BodyBold}>
-                                No exceptions for {sankeyTitleFormat(selectedSubprocess)} in the {timeframe}
+                                No exceptions for {dashboardChartTitleFormat(selectedSubprocess)} in the {timeframe}
                             </Typography>
                         </div>
                     ) : (
