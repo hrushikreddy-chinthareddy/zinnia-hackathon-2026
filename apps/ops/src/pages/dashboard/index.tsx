@@ -408,7 +408,7 @@ const DashboardPage = ({
                     <div className={styles.container}>
                         <ActiveAging
                             createdBySubProcess={insightCreatedBySubProcess}
-                            openExceptionCategoiresByCreated={insightStagesByCreated}
+                            openExceptionCategoriesByCreated={insightStagesByCreated}
                             loading={loading}
                             selectedProcess={insightOption}
                             carriers={Object.keys(selectedCarriers)}

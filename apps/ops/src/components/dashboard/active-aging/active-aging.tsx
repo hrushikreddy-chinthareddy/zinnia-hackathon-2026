@@ -28,7 +28,7 @@ import ActiveAgingPies from './active-aging-pies';
 interface Props {
     classNames?: string;
     createdBySubProcess: CaseDashboardStatsResponse;
-    openExceptionCategoiresByCreated: CaseDashboardStatsResponse;
+    openExceptionCategoriesByCreated: CaseDashboardStatsResponse;
     loading?: boolean;
     selectedProcess: Processes;
     carriers: string[];
@@ -37,7 +37,7 @@ interface Props {
 const ActiveAging = ({
     classNames,
     createdBySubProcess,
-    openExceptionCategoiresByCreated: openStagesByCreated,
+    openExceptionCategoriesByCreated,
     loading = true,
     selectedProcess,
     carriers,
@@ -277,47 +277,49 @@ const ActiveAging = ({
     }, [createdBySubProcess, groupIntoAgingRanges]);
 
     useEffect(() => {
-        const groupedOpenStagesByAgingRanges: CaseDashboardStatsResponse = { data: [], totalElements: 0 };
-        const openStagesByAgingRangeMap: { [key: string]: DashboardStatsElementResponse[] } = {};
+        const groupedExceptionCategoryByAgingRanges: CaseDashboardStatsResponse = { data: [], totalElements: 0 };
+        const exceptionCategoryByAgingRangeMap: { [key: string]: DashboardStatsElementResponse[] } = {};
         const distinctAgingStatGroupingLabels: Record<string, boolean> = {};
 
         // first we are going to create the aging ranges in the grouping and our mapping to house the child values
         Object.keys(AgingTimeRanges).forEach(key => {
-            groupedOpenStagesByAgingRanges.data.push({
+            groupedExceptionCategoryByAgingRanges.data.push({
                 key: GroupByOptions.AgingRange,
                 name: key,
                 count: 0,
                 values: [],
             });
-            openStagesByAgingRangeMap[key] = [];
+            exceptionCategoryByAgingRangeMap[key] = [];
         });
 
         // second we need to create a map of all the open stages by aging range (this gives us a lot of entries)
-        openStagesByCreated.data.forEach(createdGroupingOfOpenStages => {
-            const timeRange = getAgingTimeRangeFromDate(new Date(createdGroupingOfOpenStages.name));
-            openStagesByAgingRangeMap[timeRange] = openStagesByAgingRangeMap[timeRange].concat(createdGroupingOfOpenStages.values ?? []);
+        openExceptionCategoriesByCreated.data.forEach(createdGroupingOfExceptionCategories => {
+            const timeRange = getAgingTimeRangeFromDate(new Date(createdGroupingOfExceptionCategories.name));
+            exceptionCategoryByAgingRangeMap[timeRange] = exceptionCategoryByAgingRangeMap[timeRange].concat(
+                createdGroupingOfExceptionCategories.values ?? []
+            );
         });
 
         // third we need to finally reduce the open stages in each range leaving us with the final grouping
         Object.keys(AgingTimeRanges).forEach(agingTimeFrameKey => {
-            const matchingGroupItem = groupedOpenStagesByAgingRanges.data.find(item => item.name === agingTimeFrameKey);
+            const matchingGroupItem = groupedExceptionCategoryByAgingRanges.data.find(item => item.name === agingTimeFrameKey);
             if (!matchingGroupItem) {
                 return;
             }
             const stageCounts: { [key: string]: number } = {};
-            openStagesByAgingRangeMap[agingTimeFrameKey].forEach(openStage => {
-                const stageName = openStage.name.toLocaleLowerCase();
-                if (!stageCounts[stageName]) {
-                    stageCounts[stageName] = openStage.count;
+            exceptionCategoryByAgingRangeMap[agingTimeFrameKey].forEach(exceptionCategory => {
+                const categoryName = exceptionCategory.name.toLocaleLowerCase();
+                if (!stageCounts[categoryName]) {
+                    stageCounts[categoryName] = exceptionCategory.count;
                 } else {
-                    stageCounts[stageName] += openStage.count;
+                    stageCounts[categoryName] += exceptionCategory.count;
                 }
-                matchingGroupItem.count += openStage.count;
+                matchingGroupItem.count += exceptionCategory.count;
 
                 // check to see if the label is already in the list, if not, add it
-                const labelAddedToList = !!distinctAgingStatGroupingLabels[openStage.name];
+                const labelAddedToList = !!distinctAgingStatGroupingLabels[exceptionCategory.name];
                 if (!labelAddedToList) {
-                    distinctAgingStatGroupingLabels[openStage.name] = true;
+                    distinctAgingStatGroupingLabels[exceptionCategory.name] = true;
                 }
             });
             Object.keys(stageCounts).forEach(stageKey => {
@@ -335,7 +337,7 @@ const ActiveAging = ({
         const distinctOpenStagesLabels: string[] = Object.keys(distinctAgingStatGroupingLabels);
         setDistinctOpenStages(distinctOpenStagesLabels);
         // set the grouping into state so we can use it later
-        const agingStageGroupingMap: { [key in AgingTimeRangesKeysExtended]: DashboardStatsElementResponse[] } = {
+        const agingExceptionCategoryGroupingMap: { [key in AgingTimeRangesKeysExtended]: DashboardStatsElementResponse[] } = {
             EightToFourteen: [],
             FifteenToThirty: [],
             FortySixToFiftyNine: [],
@@ -344,38 +346,43 @@ const ActiveAging = ({
             ZeroToSeven: [],
             All: [],
         };
-        groupedOpenStagesByAgingRanges.data.forEach(element => {
+        groupedExceptionCategoryByAgingRanges.data.forEach(element => {
             if (element?.values) {
                 element.values.forEach(statGrouping => {
-                    const agingStage = agingStageGroupingMap[element.name as AgingTimeRangesKeysExtended].find(
+                    const agingStage = agingExceptionCategoryGroupingMap[element.name as AgingTimeRangesKeysExtended].find(
                         item => item.name === statGrouping.name
                     );
-                    const allAgingStages = agingStageGroupingMap.All.find(item => item.name === statGrouping.name);
 
                     if (agingStage) {
                         agingStage.count += statGrouping.count;
                     } else {
-                        agingStageGroupingMap[element.name as AgingTimeRangesKeysExtended].push(statGrouping);
+                        agingExceptionCategoryGroupingMap[element.name as AgingTimeRangesKeysExtended].push(
+                            JSON.parse(JSON.stringify(statGrouping)) as DashboardStatsElementResponse
+                        );
                     }
 
+                    const allAgingStages = agingExceptionCategoryGroupingMap.All.find(item => item.name === statGrouping.name);
                     if (allAgingStages) {
                         allAgingStages.count += statGrouping.count;
                     } else {
-                        agingStageGroupingMap.All.push(statGrouping);
+                        agingExceptionCategoryGroupingMap.All.push(
+                            JSON.parse(JSON.stringify(statGrouping)) as DashboardStatsElementResponse
+                        );
                     }
                 });
             }
         });
 
-        Object.keys(agingStageGroupingMap).forEach(key => {
-            agingStageGroupingMap[key as AgingTimeRangesKeysExtended].sort((a, b) => {
+        Object.keys(agingExceptionCategoryGroupingMap).forEach(key => {
+            agingExceptionCategoryGroupingMap[key as AgingTimeRangesKeysExtended].sort((a, b) => {
                 return b.count - a.count;
             });
         });
         setExceptionCategoryToColorMap(createExceptionCategoryToColorMap(distinctOpenStagesLabels));
-        setAgingStageGroupingMap(agingStageGroupingMap);
-        setOpenStagesByAgingRanges(groupedOpenStagesByAgingRanges);
-    }, [getAgingTimeRangeFromDate, openStagesByCreated]);
+
+        setAgingStageGroupingMap(agingExceptionCategoryGroupingMap);
+        setOpenStagesByAgingRanges(groupedExceptionCategoryByAgingRanges);
+    }, [getAgingTimeRangeFromDate, openExceptionCategoriesByCreated]);
 
     useEffect(() => {
         setStartAndEndDates(getStartAndEndDates(selectedAgingRange));
