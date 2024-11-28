@@ -28,6 +28,9 @@ const TaskQueueTableHeader = () => {
                 <TableHeaderCell>
                     <Content details={''} variant={ContentVariant.BodySmBold} />
                 </TableHeaderCell>
+                <TableHeaderCell>
+                    <Content details={''} variant={ContentVariant.BodySmBold} />
+                </TableHeaderCell>
             </TableRow>
         </TableHeader>
     );

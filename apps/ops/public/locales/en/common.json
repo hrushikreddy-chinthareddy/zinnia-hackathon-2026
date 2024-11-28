@@ -20,7 +20,7 @@
     "selectProcessType": "Select Process Type",
     "trend": "Trend",
     "site": {
-        "name": "Zinnia",
+        "name": "Zinnia Live",
         "home": {
             "link": "/cases",
             "imageSrc": "/images/logos/zinnia-logo.svg"
@@ -28,6 +28,10 @@
         "pageNotFound": {
             "title": "Page Not Found",
             "message": "Sorry, we couldn't find the page you are looking for."
+        },
+        "policyNotFound": {
+            "title": "Policy Not Found",
+            "message": "We couldn't find the policy associated with Policy Number {{policyNumber}} and Plan Code {{planCode}}. If this issue continues, please reach out to Operations Support for assistance."
         },
         "accessDenied": {
             "title": "Access Denied",
@@ -180,7 +184,11 @@
                 "text": "Diary notes"
             },
             "viewDetails": {
-                "text": "View Details"
+                "text": "View Details",
+                "qualificationType": "Qualification Type",
+                "contractValue": "Contract Value",
+                "policyDate": "Policy Date",
+                "issueState": "Issue State"
             },
             "diaryNotesWarning": {
                 "text": "Attention: Diary notes present. Review required to submit.",
@@ -656,7 +664,7 @@
         }
     },
     "welcome": {
-        "header": "Welcome to the {{policyPortalName}} Policy Portal",
+        "header": "Welcome to {{policyPortalName}}",
         "subHeader": "A policy management experience tool to make your life a little easier.",
         "signInBtn": "Continue to sign in",
         "note": {
@@ -774,6 +782,8 @@
         "noTasksFoundTitle": "Your task list is currently empty.",
         "noTasksMessage": "Click 'Claim Task' to get started.",
         "claimTaskError": "Claim task error: ",
+        "unassignTaskError": "Unassign task error: ",
+        "unassignTask": "Unassign Task",
         "startTask": "Start Task",
         "transaction": "Transaction: {{transactionType}}",
         "tasksListing": {
@@ -1898,9 +1908,9 @@
             "submitError": "An error occurred while submitting this task. Please try again.",
             "createTaskSuccess": {
                 "WithdrawalFormInputTask": "Great news! We've initiated a withdrawal task for {{documentNumber}} and {{contractNumber}}",
-                "rmdTask": "Great news! We've initiated a Required Minimum Distribution task for {{documentNumber}} and {{contractNumber}}",
+                "RMDFormInputTask": "Great news! We've initiated a Required Minimum Distribution task for {{documentNumber}} and {{contractNumber}}",
                 "OFTFormInputTask": "Great news! We've initiated a Outgoing Funds Transfer task for {{documentNumber}} and {{contractNumber}}",
-                "sswTask": "Great news! We've initiated a Systematic Withdrawal task for {{documentNumber}} and {{contractNumber}}"
+                "SSWFormInputTask": "Great news! We've initiated a Systematic Withdrawal task for {{documentNumber}} and {{contractNumber}}"
             },
             "openNigoExists": "An onbase case includes a NIGO. Please resolve the open NIGO issue before submitting another request through the Digital Portal."
         },
@@ -1953,8 +1963,6 @@
             "addAdditionalRecipient": "+ Add additional recipient",
             "emailTooltip": "Please enter a valid email address. Only one email address is allowed in this field.",
             "additionalRecipientTooltip": "You can add up to 5 email addresses in the CC field. Use a comma(,), semicolon(;), or Enter to separate them",
-            "maxEmails": "Maximum 5 emails allowed",
-            "duplicateEmail": "Email already exist in the list",
             "email": "Email",
             "ccEmail": "CC Emails",
             "fax": "Fax",
@@ -1994,7 +2002,10 @@
             "inValidEmail": "Please enter valid email address",
             "firstName": "First name is required",
             "lastName": "Last name is required",
-            "address": "Verify & select the address to continue."
+            "address": "Verify & select the address to continue.",
+            "maxEmails": "Maximum 5 emails allowed",
+            "duplicateEmailInCC": "Email already exist in the list",
+            "duplicateEmail": "Please ensure the email address is unique between the Recipient and CC fields."
         }
     },
     "contactCenter": {
@@ -2041,7 +2052,8 @@
                 "sswUpdate": "SSW Update",
                 "bankUpdate": "Bank Update",
                 "eftDrawUpdate": "EFT Draw Update"
-            }
+            },
+            "sswRequest": "SSW Request"
         }
     },
     "caseReg60": {
@@ -4496,6 +4508,8 @@
             "formTitles": {
                 "withdrawal": "{{carrier}} Withdrawal Request",
                 "oft": "{{carrier}} Outgoing Funds Transfer Request",
+                "ssw": "{{carrier}} Systematic Withdrawal Request",
+                "rmd": "{{carrier}} Required Minimum Distribution Request",
                 "defaultTitle": "Form Entry"
             }
         }

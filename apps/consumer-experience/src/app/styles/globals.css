@@ -23,8 +23,7 @@ html {
 
 body {
   height: 100%;
-  /* This is to prevent the layout shift when a scrollbar is present */
-  width: 100vw;
+  background-color: var(--color-base-surface-surface-tertiary, #ededed);
 }
 
 body,

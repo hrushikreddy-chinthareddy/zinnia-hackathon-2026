@@ -1,8 +1,7 @@
 import '@testing-library/jest-dom';
 
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import React from 'react';
 
 import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
@@ -175,13 +174,14 @@ describe('TAX OL4753 Attachment Component', () => {
         );
         const checkbox = getByLabelText(/isOL4753Attached/i);
 
-        await fireEvent.click(checkbox);
+        await waitFor(() => fireEvent.click(checkbox));
 
         const addressLine1Field = getByRole('textbox', { name: /mailingaddress/i });
         expect(addressLine1Field).toBeInTheDocument();
         const addressLine1 = '560 calle de la sierra';
+        const expectedAddressLine1 = addressLine1.toUpperCase();
         fireEvent.change(addressLine1Field, { target: { value: addressLine1 } });
-        expect(addressLine1Field).toHaveValue(addressLine1);
+        expect(addressLine1Field).toHaveValue(expectedAddressLine1);
 
         const cityField = getByRole('textbox', { name: /city/i });
         expect(cityField).toBeInTheDocument();
@@ -224,8 +224,9 @@ describe('TAX OL4753 Attachment Component', () => {
         const addressLine1Field = getByRole('textbox', { name: /mailingaddress/i });
         expect(addressLine1Field).toBeInTheDocument();
         const addressLine1 = '560 calle de la sierra';
+        const expectedAddressLine1 = addressLine1.toUpperCase();
         fireEvent.change(addressLine1Field, { target: { value: addressLine1 } });
-        expect(addressLine1Field).toHaveValue(addressLine1);
+        expect(addressLine1Field).toHaveValue(expectedAddressLine1);
 
         const cityField = getByRole('textbox', { name: /city/i });
         expect(cityField).toBeInTheDocument();
@@ -252,7 +253,7 @@ describe('TAX OL4753 Attachment Component', () => {
         expect(setFormOL4753Data).toHaveBeenCalledWith({
             isAttached: { text: true },
             address: {
-                addressLine1: '560 calle de la sierra',
+                addressLine1: '560 CALLE DE LA SIERRA',
                 addressLine2: '',
                 addressLine3: '',
                 addressLine4: null,

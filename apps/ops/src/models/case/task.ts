@@ -8,8 +8,8 @@ import { ActiveWithdrawalCase, ActiveWithdrawalCaseData } from './withdrawal/cas
 export enum TaskType {
     Withdrawal = 'WithdrawalFormInputTask',
     OFT = 'OFTFormInputTask',
-    RMD = 'RMDTask',
-    SSW = 'SSWTask',
+    RMD = 'RMDFormInputTask',
+    SSW = 'SSWFormInputTask',
     RENEWAL = 'RenewalTask',
     REG60 = 'NBReg60Comparision',
     Suitability = 'SUITABILITY',

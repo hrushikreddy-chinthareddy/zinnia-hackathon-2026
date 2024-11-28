@@ -9,6 +9,7 @@ import { createAction } from '@deps/containers/subpages/documents-sub-page/docum
 import { DocumentIndexingInfo } from './document-indexing-info';
 import { useGetPolicyTypeDocs } from './service-form-review.helper';
 import { useNigoEntry } from '../../nigo-entry-provider';
+import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 
 export enum SelOptionType {
     DATA_ENTRY = "DATA_ENTRY",
@@ -67,9 +68,11 @@ export const ServiceFormReview = ({ policyNumber, clientCode, docType, documentN
                             <Icon width={20} height={20} type={IconType.DOCUMENT_TEXT} />{' '}
                         </div>
                         <div>
-                            <div className="text-sm font-bold">{displayName}</div>
+                            <div className="text-sm font-bold"><PiiWrapper>{displayName}</PiiWrapper></div>
                             <div className="flex items-center text-sm font-normal text-gray-300">
-                                {t('documentId') + ': ' + documentNumber}
+                                <PiiWrapper>
+                                    {t('documentId') + ': ' + documentNumber}
+                                </PiiWrapper>
                             </div>
                         </div>
                         <div className="flex items-center">

@@ -1,4 +1,3 @@
-import styles from '@/app/layout.module.css';
 import { SessionManager } from '@/components/providers/SessionManager';
 
 export default async function AuthenticatedLayout({
@@ -7,7 +6,7 @@ export default async function AuthenticatedLayout({
   children: React.ReactNode;
 }) {
   return (
-    <main className={`${styles.body} ${styles.main}`}>
+    <main>
       <SessionManager>
         <>{children}</>
       </SessionManager>

@@ -3,6 +3,8 @@ import { Metadata } from 'next';
 
 import { Footer } from '@/components/footer/Footer';
 import { GenericInfoPage } from '@/components/generic-info-page/GenericInfoPage';
+import { MyPolicyViewLogo } from '@/components/my-policy-view-logo/MyPolicyViewLogo';
+import loginStyles from '@/app/login/Login.module.css';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
@@ -16,13 +18,19 @@ export default async function WelcomePage() {
       title="Welcome!"
       description="Access your coverage in the portal—no password needed."
       action={
-        <Link
-          href="/login"
-          text="Sign in"
-          variant="button"
-          className="mt-3xl mx-auto"
-          expand
-        />
+        <>
+          <Link
+            href="/login"
+            text="Sign in"
+            variant="button"
+            className="mt-3xl mx-auto"
+            expand
+          />
+          <MyPolicyViewLogo
+            className={loginStyles.policyViewLogo}
+            style={{ display: 'flex', justifyContent: 'center' }}
+          />
+        </>
       }
       footer={<Footer />}
     />

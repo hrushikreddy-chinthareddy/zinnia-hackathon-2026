@@ -108,6 +108,20 @@ export const transformPolicyForAccountValue = (
     endingAccountValue: policy?.accountValues?.endingAccountValue,
     policyStartDate: policy?.policyDates?.policyStartDate,
     lineOfBusiness: policy?.product?.lineOfBusiness,
+    cumulativeGrossDeathBenefitAmount:
+      policy?.coverage?.cumulativeGrossDeathBenefitAmount,
+    freeWithdrawalAmount: policy?.withdrawalValues?.freeWithdrawalAmount,
+    totalYearToDatePremiumAmount:
+      policy?.accountValues?.totalYearToDatePremiumAmount,
+    withdrawalAllowedStartDate:
+      policy?.withdrawalValues?.withdrawalAllowedStartDate,
+    carrierId: policy.carrierId,
+    //TODO: We use these values for the annuity account value page. This could eventually be multiple funds.
+    //TODO: Refactor this to not only pull from the first array. Designs will need to change to support that.
+    fundId: policy?.allocation?.funds?.[0]?.fundId,
+    interestGuaranteedPeriod:
+      policy?.allocation?.funds?.[0]?.interestGuaranteedPeriod,
+    renewalDate: policy?.allocation?.funds?.[0]?.fundSegments?.[0]?.renewalDate,
   };
 };
 
@@ -302,8 +316,10 @@ export const transformPolicyForWithdrawals = (
       policyHasVested: policyHasVested(policy),
       matchVestingDate: policy.allocation?.matchSegment?.matchVestingDate,
     },
+    freeWithdrawalAmount: withdrawalValues.freeWithdrawalAmount,
     // Date of last policy transaction, when policy value was last updated
     effectiveDate: policy.effectiveDate,
+    endingAccountValue: policy.accountValues?.endingAccountValue,
   };
 };
 
@@ -417,6 +433,10 @@ export const transformPaymentHistory = (
       break;
     case 'Anniversary':
       paymentHistoryObject.title = 'Policy anniversary';
+      break;
+    case TransactionType.INTEREST_CREDIT:
+      paymentHistoryObject.amount = appliedAmount;
+      paymentHistoryObject.title = 'Interest Credit';
       break;
     default:
       paymentHistoryObject.title = transactionType ?? DEFAULT_ERROR_STRING;

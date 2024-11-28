@@ -13,7 +13,6 @@ import EditProgram from './edit-program';
 import { signaturesConfig } from '../bank-update/bank-update.helper';
 import { SswUpdateType } from '../ssw-edit-helper';
 
-
 type SswOperationsProps = {
     document: DocumentData;
     programs: Program[];
@@ -32,7 +31,7 @@ const SswOperations = ({ document, programs, setSswUpdateView, programType, onPr
             {programs?.map((item: Program, index: number) => (
                 <EditProgram key={index} program={item} onTerminate={onProgramUpdate} onEdit={setSswUpdateView} document={document} />
             ))}
-            {document.source === ChannelType.Email && formSignature && (
+            {document.source !== ChannelType.Phone && formSignature && (
                 <SignatureValidations isFormStateReadOnly={false} config={signaturesConfig} />
             )}
         </div>

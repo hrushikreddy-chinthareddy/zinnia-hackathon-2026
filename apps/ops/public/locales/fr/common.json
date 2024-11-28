@@ -29,6 +29,10 @@
             "title": "Page non trouvée",
             "message": "Désolé, nous n'avons pas trouvé la page que vous recherchez."
         },
+        "policyNotFound": {
+            "title": "Politique non trouvée",
+            "message": "Nous n'avons pas pu trouver la police associée au numéro de police {{policyNumber}} et au code du plan {{planCode}}. Si ce problème persiste, veuillez contacter le support des opérations pour obtenir de l'aide."
+        },
         "accessDenied": {
             "title": "Accès refusé",
             "message": "Désolé, vous n'êtes pas autorisé à afficher cette page. Veuillez contacter votre administrateur pour demander l'accès."
@@ -201,7 +205,11 @@
                 "clickToView": "Clique pour voir"
             },
             "viewDetails": {
-                "text": "voir les détails"
+                "text": "voir les détails",
+                "qualificationType": "Type de qualification",
+                "contractValue": "Valeur du contrat",
+                "policyDate": "date du contrat",
+                "issueState": "État d'émission"
             },
             "history": {
                 "text": "Histoire",
@@ -236,6 +244,8 @@
         "noTasksFoundTitle": "Votre liste de tâches est actuellement vide.",
         "noTasksMessage": "Cliquez sur « Réclamer une tâche » pour commencer.",
         "claimTaskError": "Erreur de tâche de réclamation :",
+        "unassignTask": "Annuler l'attribution d'une tâche",
+        "unassignTaskError": "Erreur de désattribution de tâche :",
         "startTask": "Démarrer la tâche",
         "transaction": "Transaction: {{transactionType}}",
         "tasksListing": {
@@ -679,7 +689,7 @@
         }
     },
     "welcome": {
-        "header": "Bienvenue sur le portail des politiques {{policyPortalName}}",
+        "header": "Bienvenue sur {{policyPortalName}}",
         "subHeader": "Un outil d'expérience de gestion des politiques pour vous faciliter la vie",
         "signInBtn": "Continuer",
         "note": {
@@ -1879,11 +1889,10 @@
             "ignoreWarning": "Ignorer les avertissements",
             "submitError": "Une erreur s'est produite lors de la soumission de cette tâche. Veuillez réessayer.",
             "createTaskSuccess": {
-                "withdrawalTask": "Bonne nouvelle! Nous avons lancé une tâche de retrait pour {{documentNumber}} et {{contractNumber}}",
-                "WithdrawalFormInputTask": "Excellente nouvelle ! Nous avons lancé une tâche de retrait pour {{documentNumber}} et {{contractNumber}}",
-                "rmdTask": "Bonne nouvelle! Nous avons lancé une tâche de distribution minimale requise pour {{documentNumber}} et {{contractNumber}}.",
+                "WithdrawalFormInputTask": "Bonne nouvelle!! Nous avons lancé une tâche de retrait pour {{documentNumber}} et {{contractNumber}}",
+                "RMDFormInputTask": "Bonne nouvelle! Nous avons lancé une tâche de distribution minimale requise pour {{documentNumber}} et {{contractNumber}}.",
                 "OFTFormInputTask": "Bonne nouvelle! Nous avons lancé une tâche de transfert de fonds sortants pour{{documentNumber}} et {{contractNumber}}",
-                "sswTask": "Bonne nouvelle! Nous avons lancé une tâche de retrait systématique pour {{documentNumber}} et {{contractNumber}}"
+                "SSWFormInputTask": "Bonne nouvelle! Nous avons lancé une tâche de retrait systématique pour {{documentNumber}} et {{contractNumber}}"
             },
             "openNigoExists": "Un cas de base comprend un NIGO. Veuillez résoudre le problème ouvert NIGO avant de soumettre une autre demande via le portail numérique."
         },
@@ -1936,8 +1945,6 @@
             "addAdditionalRecipient": "+ Ajouter un destinataire",
             "emailTooltip": "Veuillez entrer une adresse e-mail valide. Un seul e-mail est autorisé dans ce champ.",
             "additionalRecipientTooltip": "Vous pouvez ajouter jusqu'a 5 adresses e-mail dans le champ CC. Utilisez une virgule (,), point-virgule (;) ou Enter pour les séparer",
-            "maxEmails": "Maximum 5 e-mails autorisés",
-            "duplicateEmail": "L'e-mail existe déjà dans la liste",
             "email": "E-mail",
             "ccEmail": "Destinataires en copie carbone",
             "fax": "Fax",
@@ -1972,7 +1979,10 @@
             "inValidEmail": "Veuillez saisir une adresse e-mail valide",
             "firstName": "Le prénom est obligatoire",
             "lastName": "Le nom de famille est obligatoire",
-            "address": "Vérifiez et sélectionnez l'adresse pour continuer."
+            "address": "Vérifiez et sélectionnez l'adresse pour continuer.",
+            "maxEmails": "Maximum 5 e-mails autorisés",
+            "duplicateEmailInCC": "L'e-mail existe deja dans la liste",
+            "duplicateEmail": "Assurez-vous que l'adresse e-mail est unique entre les champs Destinataire et CC"
         }
     },
     "contactCenter": {
@@ -2019,7 +2029,8 @@
                 "sswUpdate": "Mise à jour SSW",
                 "bankUpdate": "Mise à jour bancaire",
                 "eftDrawUpdate": "Mise à jour de prélèvement EFT"
-            }
+            },
+            "sswRequest": "Demande SSW"
         }
     },
     "createCaseCreate": {
@@ -4462,9 +4473,11 @@
         },
         "formEntry": {
             "formTitles": {
-                "withdrawal": "{{carrier}} Withdrawal Request",
-                "oft": "{{carrier}} Outgoing Funds Transfer Request",
-                "defaultTitle": "Form Entry"
+                "withdrawal": "{{carrier}} Demande de retrait",
+                "oft": "{{carrier}} Demande de transfert de fonds sortants",
+                "ssw": "{{carrier}} Demande de retrait systématique",
+                "rmd": "{{carrier}} Demande de distribution minimale requise",
+                "defaultTitle": "Formulaire de saisie"
             }
         }
     },

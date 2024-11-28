@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import https from 'https';
 import { v4 as uuidV4 } from 'uuid';
 
-import { logTrace, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { logInfo, logTrace, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
 export enum StatusCode {
     BadRequest = 400,
@@ -118,6 +118,7 @@ export abstract class ServerApiClient {
             correlationId,
         };
         logTrace('serverApiClient::put', loggingContext);
+        logInfo('serverApiClient::put::authorization', {authorization : configWithToken?.headers?.Authorization ? true : false });
         try {
             const result = await this.instance.put<T, R>(url, data, configWithToken);
             logTrace('serverApiClient::put::success', {

@@ -1,7 +1,7 @@
 .consumerFooter {
   color: var(--color-base-text-text-secondary, #676767);
 
-  > * {
+  > *:not(:last-child) {
     margin-bottom: var(--measure-dimension-gap-lg, 1rem);
   }
 }

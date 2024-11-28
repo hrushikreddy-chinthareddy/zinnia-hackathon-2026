@@ -1,8 +1,9 @@
+import { GenericInfoPage } from '@/components/generic-info-page/GenericInfoPage';
 import { EnterEmailStep } from '@/components/login/EnterEmailStep';
-import { GenericLoginPage } from './GenericLoginPage';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
-import { GenericInfoPage } from '@/components/generic-info-page/GenericInfoPage';
+
+import { GenericLoginPage } from './GenericLoginPage';
 
 export default async function LoginPage() {
   const featureFlagDecisions = await getFeatureFlags();
