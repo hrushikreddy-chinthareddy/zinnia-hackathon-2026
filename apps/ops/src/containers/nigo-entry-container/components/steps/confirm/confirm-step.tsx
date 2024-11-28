@@ -89,7 +89,7 @@ const ConfirmStep = ({ document}: ConfirmStepProps) => {
         <div className="responsive-padding flex h-full w-full grow flex-col items-center justify-center">
             <CardInfo
                 icon={<CircleCheckIcon className="text-semantic-success" height={50} width={50} />}
-                subtitle={t('subTitle')}
+                subtitle={sectionOption === SelOptionType.DOC_INDEXING ? t('subTitleReindexing') : t('subTitle')}
                 title={t('title')}
                 cta={{
                     action: () => {

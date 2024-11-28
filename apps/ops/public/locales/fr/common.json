@@ -4422,6 +4422,7 @@
         "confirmStep": {
             "title": "Soumis!",
             "subTitle": "Votre demande a été envoyée pour traitement.",
+            "subTitleReindexing": "Ce document sera réindexé. Le dossier existant a été annulé.",
             "cta": "Aller à la gestion des cas",
             "secondaryCta": "Fermer",
             "submitNigo": "Soumettre les détails NIGO"
