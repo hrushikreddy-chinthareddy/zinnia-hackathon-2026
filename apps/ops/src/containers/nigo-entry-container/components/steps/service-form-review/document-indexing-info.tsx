@@ -1,4 +1,5 @@
 import { useTranslation } from 'next-i18next';
+import xss from 'xss';
 
 import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
 import SelectSimple from '@deps/components/select/select';
@@ -41,7 +42,7 @@ export const DocumentIndexingInfo = () => {
 
     const setNotes = (value: string) => {
         setDocumentIndexingInfo((prevValues: any) => (
-            { ...prevValues, notes: value.trim()}
+            { ...prevValues, notes: xss(value) }
         ));
     };
 
