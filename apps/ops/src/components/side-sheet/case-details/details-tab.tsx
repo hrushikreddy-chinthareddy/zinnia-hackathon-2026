@@ -2,11 +2,12 @@ import { PolicyCarrierLogo } from "@deps/components/global-values/policy-info/po
 import { Policy } from '@deps/models/policy/sor-policy';
 import { DocumentData } from '@deps/models/case/document';
 
-import { TFunction } from "next-i18next";
+import { useTranslation } from "next-i18next";
 import { IconType, Icon } from "@zinnia/bloom/components";
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from "@deps/components/nav-element/nav-element";
 import dayjs from "dayjs";
 import { DEFAULT_EXTENDED_DATE_FORMAT } from "@deps/types/constants";
+import { TranslationFiles } from "@deps/config/translations";
 
 
 
@@ -16,13 +17,13 @@ type DetailTabProps = {
   formattedCertifiedReceiveDate: string,
   policy: Policy,
   documentData: DocumentData
-  t: TFunction
+
 }
 
 
 
-function DetailsTab({ carrierName, formattedApplicationDate, formattedCertifiedReceiveDate, policy, documentData, t }: DetailTabProps) {
-
+function DetailsTab({ carrierName, formattedApplicationDate, formattedCertifiedReceiveDate, policy, documentData }: DetailTabProps) {
+  const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.CaseDetailsContent' });
   const url = `/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/policy-details`
   const formattedIssueDate = dayjs(policy.policyDates?.issueDate).format(DEFAULT_EXTENDED_DATE_FORMAT);
   return (

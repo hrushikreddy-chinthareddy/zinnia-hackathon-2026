@@ -51,7 +51,6 @@ function CaseDetailsContent({ policy, documentData, }: CaseDetailsProps) {
       if (!response) {
         throw new Error('Error fetching cases: No response');
       }
-      // Check for error in fetch response
       if ('total' in response) {
         setCaseTableData({
           cases: response.data,
@@ -84,12 +83,11 @@ function CaseDetailsContent({ policy, documentData, }: CaseDetailsProps) {
           documentData={documentData}
           policy={policy}
           formattedCertifiedReceiveDate={formattedCertifiedReceiveDate}
-          t={t}
           formattedApplicationDate={formattedApplicationDate}
         />
       </TabContent>
       <TabContent className="flex w-full flex-col items-center" value={TabOptions.Related}>
-        <RelatedTab offset={offset} limit={limit} setOffset={setOffset} t={t} caseTableData={caseTableData} />
+        <RelatedTab offset={offset} limit={limit} setOffset={setOffset} caseTableData={caseTableData} />
       </TabContent>
     </>
   );

@@ -1,21 +1,21 @@
 import ChipStatus from "@deps/components/chip-status/chip-status";
 import PaginationControls from "@deps/components/pagination/pagination";
+import { TranslationFiles } from "@deps/config/translations";
 import { CaseTableData } from "@deps/contexts/CaseManagementFilters";
 import { DEFAULT_EXTENDED_DATE_FORMAT } from "@deps/types/constants";
 import dayjs from "dayjs";
-import { TFunction } from "next-i18next";
+import { useTranslation } from "next-i18next";
 import { useMemo } from "react";
 
 type relatedTabProps = {
-  t: TFunction,
   caseTableData: CaseTableData,
   offset: number,
   limit: number,
   setOffset: React.Dispatch<React.SetStateAction<number>>
 }
 
-function RelatedTab({ t, caseTableData, offset, limit, setOffset }: relatedTabProps) {
-
+function RelatedTab({ caseTableData, offset, limit, setOffset }: relatedTabProps) {
+  const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.CaseDetailsContent' });
   const paginationControls = useMemo(() => {
     const goToPage = (pageNumber: number) => {
       setOffset((pageNumber - 1) * limit);
