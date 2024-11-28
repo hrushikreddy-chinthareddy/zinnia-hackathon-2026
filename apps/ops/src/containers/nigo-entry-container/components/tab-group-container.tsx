@@ -1,4 +1,3 @@
-import { Icon, IconType } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 
@@ -19,7 +18,7 @@ import { DocumentData } from '@deps/models/case/document';
 import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
 import { ReactComponent as AnnotationIcon } from '@deps/styles/elements/icons/icons_outlined/annotation.svg';
 import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icons_outlined/document-text-2.svg';
-
+import { ReactComponent as MenuIcon } from '@deps/styles/elements/icons/navigation/menu.svg';
 import DocumentPortalPanel from './side-panel/document-portal-panel';
 import CaseDetailsContent from '@deps/components/side-sheet/case-details/case-details-content';
 
@@ -144,7 +143,7 @@ const TabGroupContent = ({
                     type={NavElementType.Button}
                     size={NavElementSize.Small}
                     className="flex items-center capitalize"
-                    startIcon={<Icon type={IconType.MENU_VERTICAL} width={16} height={16} />}
+                    startIcon={<MenuIcon height={10} width={10} className="text-secondary" />}
                     onClick={() => openCaseDetails()}
                     onKeyDown={e => {
                         if (e.key === 'Enter' || e.key === ' ') {
