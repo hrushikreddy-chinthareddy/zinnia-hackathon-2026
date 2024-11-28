@@ -1,19 +1,20 @@
 import ChipStatus from "@deps/components/chip-status/chip-status";
 import PaginationControls from "@deps/components/pagination/pagination";
 import { CaseTableData } from "@deps/contexts/CaseManagementFilters";
-import { getCases } from "@deps/queries/api/cases";
-import { CaseSearchQuery } from "@deps/queries/cases";
 import { DEFAULT_EXTENDED_DATE_FORMAT } from "@deps/types/constants";
 import dayjs from "dayjs";
 import { TFunction } from "next-i18next";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 
+type relatedTabProps = {
+  t: TFunction,
+  caseTableData: CaseTableData,
+  offset: number,
+  limit: number,
+  setOffset: React.Dispatch<React.SetStateAction<number>>
+}
 
-function RelatedTab({ policyNumber, t }: { policyNumber: string | undefined, t: TFunction }) {
-
-  const [caseTableData, setCaseTableData] = useState<CaseTableData>({ cases: [], total: 0, loading: true, error: false });
-  const [offset, setOffset] = useState(0)
-  const limit = 25
+function RelatedTab({ t, caseTableData, offset, limit, setOffset }: relatedTabProps) {
 
   const paginationControls = useMemo(() => {
     const goToPage = (pageNumber: number) => {
@@ -23,47 +24,6 @@ function RelatedTab({ policyNumber, t }: { policyNumber: string | undefined, t: 
 
     return <PaginationControls total={caseTableData.total} limit={limit} offset={offset} goToPage={goToPage} />;
   }, [caseTableData.total, offset, limit]);
-
-  const fetchCases = async () => {
-    try {
-      const searchValueObject = { policyNumber: policyNumber }
-
-      const updatedRequest: CaseSearchQuery = {
-        ...searchValueObject,
-        limit: limit,
-        offset: offset,
-        sortDirection: "desc",
-        sortBy: 'createdAt',
-      };
-      const response = await getCases(updatedRequest);
-
-      if (!response) {
-        throw new Error('Error fetching cases: No response');
-      }
-      // Check for error in fetch response
-      if ('total' in response) {
-        setCaseTableData({
-          cases: response.data,
-          total: response.total,
-          loading: false,
-          error: false,
-        });
-      } else {
-        throw new Error(response.data.err ? response.data.err : 'Error fetching cases');
-      }
-    } catch (error) {
-      console.error(error);
-      setCaseTableData({
-        cases: [],
-        total: 0,
-        loading: false,
-        error: true,
-      });
-    }
-  }
-  useEffect(() => {
-    fetchCases()
-  }, [offset, limit])
 
 
   return (
@@ -78,7 +38,7 @@ function RelatedTab({ policyNumber, t }: { policyNumber: string | undefined, t: 
             </div>
             <div className="col-span-1">
               <div className="font-secondary text-md font-bold text-gray-800"> {t('relatedTab.caseId')}</div>
-              <div className="font-secondary text-md text-[--color-base-text-text-link] font-bold">#{caseData.policyNumber}</div>
+              <div className="font-secondary text-md text-[--color-base-text-text-link] font-bold">#{caseData.id}</div>
             </div>
             <div className="col-span-1 flex justify-end items-end pb-2">
               <div>

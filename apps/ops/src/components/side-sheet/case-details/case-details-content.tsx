@@ -9,6 +9,9 @@ import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
 import dayjs from 'dayjs';
 import DetailsTab from './details-tab';
 import RelatedTab from './related-tab';
+import { CaseTableData } from '@deps/contexts/CaseManagementFilters';
+import { CaseSearchQuery } from '@deps/queries/cases';
+import { getCases } from '@deps/queries/api/cases';
 export enum TabOptions {
   Details = 'Details',
   Related = 'Related',
@@ -23,11 +26,56 @@ function CaseDetailsContent({ policy, documentData, }: CaseDetailsProps) {
   const [activeTab, setActiveTab] = useState(TabOptions.Details);
   const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
   const carrierName = getCarrierNameByClientId(policy.carrierId as string);
-  useEffect(() => {
-    console.log(policy)
-  }, [])
+
   const formattedCertifiedReceiveDate = dayjs(policy.policyDates?.certifiedReceivedDate).format(DEFAULT_EXTENDED_DATE_FORMAT);
   const formattedApplicationDate = dayjs(policy.policyDates?.applicationDate).format(DEFAULT_EXTENDED_DATE_FORMAT);
+
+  const [caseTableData, setCaseTableData] = useState<CaseTableData>({ cases: [], total: 0, loading: true, error: false });
+  const [offset, setOffset] = useState(0)
+  const limit = 25
+
+  const fetchCases = async () => {
+    try {
+      const searchValueObject = { policyNumber: policy.policyNumber }
+
+      const updatedRequest: CaseSearchQuery = {
+        ...searchValueObject,
+        limit: limit,
+        offset: offset,
+        sortDirection: "desc",
+        sortBy: 'createdAt',
+      };
+
+      const response = await getCases(updatedRequest);
+
+      if (!response) {
+        throw new Error('Error fetching cases: No response');
+      }
+      // Check for error in fetch response
+      if ('total' in response) {
+        setCaseTableData({
+          cases: response.data,
+          total: response.total,
+          loading: false,
+          error: false,
+        });
+      } else {
+        throw new Error(response.data.err ? response.data.err : 'Error fetching cases');
+      }
+    } catch (error) {
+      console.error(error);
+      setCaseTableData({
+        cases: [],
+        total: 0,
+        loading: false,
+        error: true,
+      });
+    }
+  }
+  useEffect(() => {
+    fetchCases()
+  }, [offset, limit])
+
   const renderTabContent = (
     <>
       <TabContent value={TabOptions.Details} className='flex flex-col px-6 pt-6 md:px-8 lg:px-10 gap-5'>
@@ -41,7 +89,7 @@ function CaseDetailsContent({ policy, documentData, }: CaseDetailsProps) {
         />
       </TabContent>
       <TabContent className="flex w-full flex-col items-center" value={TabOptions.Related}>
-        <RelatedTab policyNumber={policy.policyNumber} t={t} />
+        <RelatedTab offset={offset} limit={limit} setOffset={setOffset} t={t} caseTableData={caseTableData} />
       </TabContent>
     </>
   );
@@ -50,7 +98,7 @@ function CaseDetailsContent({ policy, documentData, }: CaseDetailsProps) {
       <TabGroup defaultValue={activeTab} value={activeTab} activationMode="manual" onValueChange={handleTabChange}>
         <TabList className="!mb-0 w-full px-4 pt-4 md:px-6 lg:px-8">
           <TabTrigger value={TabOptions.Details}>{t('tabs.details') ?? ''}</TabTrigger>
-          <TabTrigger value={TabOptions.Related}>{t('tabs.related') ?? ''}</TabTrigger>
+          <TabTrigger value={TabOptions.Related}>{t('tabs.related') ?? ''} ({caseTableData.total})</TabTrigger>
         </TabList>
         {renderTabContent}
 

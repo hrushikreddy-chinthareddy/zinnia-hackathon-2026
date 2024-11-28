@@ -4457,7 +4457,10 @@
             "applicationSignedDate": "Application Signed Date",
             "issueState": "Issue State",
             "recievedDate": "Recieved Date",
-            "QualificationType": "Qualification Type",
+            "qualificationType": "Qualification Type",
+            "viewFullDeatils": "View full details",
+            "contractValue": "Contract Value",
+            "policyDate": "Policy Date",
             "detailsTab": {
                 "people": "People",
                 "cedingCarriers": "Ceding Carriers"

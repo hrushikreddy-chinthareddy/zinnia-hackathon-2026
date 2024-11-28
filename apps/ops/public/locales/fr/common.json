@@ -4425,7 +4425,10 @@
             "applicationSignedDate": "Date de signature de la demande",
             "issueState": "État du problème",
             "recievedDate": "Date de réception",
-            "QualificationType": "Type de qualification",
+            "qualificationType": "Type de qualification",
+            "viewFullDeatils": "Voir les détails",
+            "contractValue": "Valeur du contrat",
+            "policyDate": "Date du contrat",
             "detailsTab": {
                 "people": "personnes",
                 "cedingCarriers": "Transporteurs cédants"

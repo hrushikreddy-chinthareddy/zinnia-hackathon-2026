@@ -4,6 +4,9 @@ import { DocumentData } from '@deps/models/case/document';
 
 import { TFunction } from "next-i18next";
 import { IconType, Icon } from "@zinnia/bloom/components";
+import NavElement, { NavElementSize, NavElementType, NavElementVariant } from "@deps/components/nav-element/nav-element";
+import dayjs from "dayjs";
+import { DEFAULT_EXTENDED_DATE_FORMAT } from "@deps/types/constants";
 
 
 
@@ -19,6 +22,9 @@ type DetailTabProps = {
 
 
 function DetailsTab({ carrierName, formattedApplicationDate, formattedCertifiedReceiveDate, policy, documentData, t }: DetailTabProps) {
+
+  const url = `/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/policy-details`
+  const formattedIssueDate = dayjs(policy.policyDates?.issueDate).format(DEFAULT_EXTENDED_DATE_FORMAT);
   return (
     <>
       <div className='flex float-start'>
@@ -50,16 +56,42 @@ function DetailsTab({ carrierName, formattedApplicationDate, formattedCertifiedR
           {formattedCertifiedReceiveDate}
         </div>
         <div className='col-span-1  text-[--color-base-text-text-secondary]'>
-          {t('QualificationType')}
+          {t('qualificationType')}
         </div>
         <div className='col-span-1'>
           {policy.qualificationType}
         </div>
+        <div className='col-span-1  text-[--color-base-text-text-secondary]'>
+          {t('contractValue')}
+        </div>
+        <div className='col-span-1'>
+          ${documentData.contractValue}
+        </div>  <div className='col-span-1  text-[--color-base-text-text-secondary]'>
+          {t('policyDate')}
+        </div>
+        <div className='col-span-1'>
+          {formattedIssueDate}
+        </div>
 
       </div>
       <div className="text-[--color-base-text-text-link] font-semibold text-md ">
-        <span>View full details</span>
-        <Icon type={IconType.EXTERNAL_LINK} width={20} height={20} />
+
+        <NavElement
+          className={'whitespace-normal break-words'}
+          href={url}
+          isNewPage={true}
+          size={NavElementSize.Small}
+          target="_blank"
+          title={t('viewFullDeatils')?.toString()}
+          type={NavElementType.Link}
+          startIcon={<Icon type={IconType.EXTERNAL_LINK} width={20} height={20} />}
+
+          variant={NavElementVariant.Secondary}
+        >
+          {t('viewFullDeatils')}
+        </NavElement>
+
+
       </div>
     </>
   )

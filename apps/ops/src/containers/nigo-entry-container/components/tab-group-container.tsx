@@ -1,12 +1,10 @@
 import { Icon, IconType } from '@zinnia/bloom/components';
-import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 
 import GlobalValuesBar from '@deps/components/global-values/global-values-bar/global-values-bar';
 import NavElement, { NavElementType, NavElementSize } from '@deps/components/nav-element/nav-element';
 import { DiaryNotesContent } from '@deps/components/side-sheet/diary-notes/diary-notes-content';
-import { ViewDetailsContent } from '@deps/components/side-sheet/view-details/view-details-content';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import ProgressBarSteps from '@deps/containers/progress-bar-steps/progress-bar-steps';
@@ -21,7 +19,6 @@ import { DocumentData } from '@deps/models/case/document';
 import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
 import { ReactComponent as AnnotationIcon } from '@deps/styles/elements/icons/icons_outlined/annotation.svg';
 import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icons_outlined/document-text-2.svg';
-import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
 
 import DocumentPortalPanel from './side-panel/document-portal-panel';
 import CaseDetailsContent from '@deps/components/side-sheet/case-details/case-details-content';
@@ -79,19 +76,7 @@ const TabGroupContent = ({
         sideSheet.handleOpen(true);
     };
 
-    const formattedIssueDate = dayjs(policy.policyDates?.issueDate).format(DEFAULT_EXTENDED_DATE_FORMAT);
-    const openViewDetails = () => {
-        const content = (
-            <ViewDetailsContent
-                qualificationType={policy.qualificationType ?? ''}
-                contractValue={documentData.contractValue ?? ''}
-                policyDate={formattedIssueDate}
-                issueState={policy.issueState ?? ''}
-            />
-        );
-        sideSheet.changeSideSheetContent(t('site.navLinks.viewDetails.text'), content);
-        sideSheet.handleOpen(true);
-    };
+
     const openCaseDetails = () => {
         const content = (
             <CaseDetailsContent policy={policy} documentData={documentData} />
@@ -138,21 +123,7 @@ const TabGroupContent = ({
                 >
                     {t('site.navLinks.diaryNotes.text')}
                 </NavElement>
-                <NavElement
-                    type={NavElementType.Button}
-                    size={NavElementSize.Small}
-                    className="flex items-center"
-                    startIcon={<Icon type={IconType.CIRCLE_INFO} width={16} height={16} />}
-                    onClick={() => openViewDetails()}
-                    onKeyDown={e => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            openSideSheet();
-                        }
-                    }}
-                >
-                    {t('site.navLinks.viewDetails.text')}
-                </NavElement>
+
                 <NavElement
                     type={NavElementType.Button}
                     size={NavElementSize.Small}
