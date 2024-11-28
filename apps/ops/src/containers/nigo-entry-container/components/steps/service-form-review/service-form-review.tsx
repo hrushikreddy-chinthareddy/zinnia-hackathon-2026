@@ -2,6 +2,7 @@ import { Icon, IconType } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useEffect } from 'react';
 
+import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Radio from '@deps/components/radio/radio';
 import { TranslationFiles } from '@deps/config/translations';
 import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
@@ -9,7 +10,6 @@ import { createAction } from '@deps/containers/subpages/documents-sub-page/docum
 import { DocumentIndexingInfo } from './document-indexing-info';
 import { useGetPolicyTypeDocs } from './service-form-review.helper';
 import { useNigoEntry } from '../../nigo-entry-provider';
-import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 
 export enum SelOptionType {
     DATA_ENTRY = "DATA_ENTRY",
@@ -26,12 +26,11 @@ interface SetFormReviewProps {
 
 export const ServiceFormReview = ({ policyNumber, clientCode, docType, documentNumber }: SetFormReviewProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.serviceFormReview' });
-   // const { isReadyForDataEntry, setIsReadyForDataEntry, isReadyForDocumentIndexing, setIsReadyForDocumentIndexing } = useNigoEntry();
 
     const { sectionOption, setSectionOption } = useNigoEntry();
-    console.log("??sectionOption", sectionOption)
-
     const [loading, getPolicyDocs, workingDocument] = useGetPolicyTypeDocs(policyNumber, clientCode, docType, documentNumber);
+    const { displayName } = workingDocument || {};
+
     const sectionOptions = [
         {
             label: t('options.allSectionsAreComplete'),
@@ -47,17 +46,13 @@ export const ServiceFormReview = ({ policyNumber, clientCode, docType, documentN
         },
     ];
 
-
     useEffect(() => {
         getPolicyDocs();
     }, []);
 
-    console.log("??selection option", sectionOption)
     const onOptionSelection = (value: SelOptionType) => {
         setSectionOption(value);
     };
-
-    const { displayName } = workingDocument || {};
 
     return (
         <>
@@ -80,8 +75,8 @@ export const ServiceFormReview = ({ policyNumber, clientCode, docType, documentN
                         </div>
                     </div>
                 )}
-                <Radio items={sectionOptions} label={''} onChange={event => onOptionSelection(event.target.value as SelOptionType)} value={sectionOption} />
-                { sectionOption === SelOptionType.DOC_INDEXING && <DocumentIndexingInfo />}
+                <Radio items={sectionOptions} label={''} onChange={event => onOptionSelection(event.target.value as SelOptionType)} value={sectionOption || SelOptionType.DATA_ENTRY} />
+                { sectionOption === SelOptionType.DOC_INDEXING && <DocumentIndexingInfo /> }
             </div>
         </>
     );

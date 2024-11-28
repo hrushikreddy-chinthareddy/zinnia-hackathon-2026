@@ -84,6 +84,7 @@ export const FormProvider = ({
     const [formSurrenderingCompany, setFormSurrenderingCompany] = useState(form.data.formRequest.formSurrenderingCompany || null);
     const [formAdditionalWaivers, setFormAdditionalWaivers] = useState(form.data.formRequest.formAdditionalWaivers || null);
     const [formNigos, setFormNigos] = useState(form.data.formRequest.formNigos || null);
+    const [formReindexingData, setFormReindexingData] = useState(form.data.formRequest.formReindexingData || null);
     const [currentFormState, setCurrentFormState] = useState(form.status);
     const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
     const isFormStateReadOnly = shouldShowNewExperience
@@ -150,6 +151,7 @@ export const FormProvider = ({
                 formWarnings,
                 parties,
                 formNigos,
+                formReindexingData,
                 setFormSubtype,
                 setCurrentFormState,
                 setFormWarnings,
@@ -176,6 +178,7 @@ export const FormProvider = ({
                 setFormSpecialInstruction,
                 setOwnerAcknowledgement,
                 setFormNigos,
+                setFormReindexingData
             }}
         >
             {children}

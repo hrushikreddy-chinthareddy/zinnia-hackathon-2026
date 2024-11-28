@@ -4494,6 +4494,12 @@
                     "policyUpdates": "Policy Updates",
                     "outgoingTransfers": "Outgoing Transfers"
                 }
+            },
+            "formErrors": {
+                "formValidation": {
+                    "noDocTypeToReindex": "Please document type for re-indexing",
+                    "noNotes": "Please enter notes"
+                }
             }
         },
         "formSelection": {
