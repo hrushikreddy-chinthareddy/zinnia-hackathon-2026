@@ -1,9 +1,10 @@
-import { Table, TableHeader, TableHeaderCell, TableRow, TableBody, TableCell } from '@zinnia/bloom/components';
+import { Table, TableHeader, TableHeaderCell, TableRow, TableBody, TableCell, Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { TaxForm } from '@deps/models/case/send-tax-forms';
+import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 type TaxFormsListingProps = {
     taxForms: TaxForm[];
 };
@@ -45,7 +46,27 @@ const TaxFormsListing = ({ taxForms }: TaxFormsListingProps) => {
                             {taxForms?.map((form, index) => (
                                 <TableRow key={index}>
                                     <TableCell>
-                                        <Content details={form.name} variant={ContentVariant.BodySm} />
+                                        <div className="flex gap-2">
+                                            <Content details={form.name} variant={ContentVariant.BodySm} />
+                                            <Tooltip
+                                                placement={TooltipPlacement.TopRight}
+                                                trigger={
+                                                    <CircleInfoIcon
+                                                        onClick={e => e.preventDefault()}
+                                                        height={'16px'}
+                                                        width={'16px'}
+                                                        className="text-primary"
+                                                    />
+                                                }
+                                            >
+                                                {t(
+                                                    `contactCenter.sendTaxForms.taxFormDetails.popover.${form.name
+                                                        ?.split('-')
+                                                        .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+                                                        .join('')}`
+                                                )}
+                                            </Tooltip>
+                                        </div>
                                     </TableCell>
 
                                     <TableCell>
@@ -58,8 +79,8 @@ const TaxFormsListing = ({ taxForms }: TaxFormsListingProps) => {
                         </TableBody>
                     </Table>
                     <PiiWrapper className="mt-4">
-                        <span>{t('contactCenter.taxFormDetails.warning.0')}</span>{' '}
-                        <span>{t('contactCenter.taxFormDetails.warning.1')}</span>
+                        <span>{t('contactCenter.sendTaxForms.taxFormDetails.warning.0')}</span>{' '}
+                        <span className="font-semibold">{t('contactCenter.sendTaxForms.taxFormDetails.warning.1')}</span>
                     </PiiWrapper>
                 </>
             ) : (

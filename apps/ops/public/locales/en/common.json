@@ -2035,11 +2035,16 @@
                 "documentType": "Document type",
                 "periodYear": "Period year",
                 "actions": "Actions",
-                "noTaxForms": "No tax forms found for this period"
-            },
-            "warning": {
-                "0": "Please review tax forms before continuing",
-                "1": "All selected tax forms for the chosen year will be sent."
+                "noTaxForms": "No tax forms found for this period",
+                "popover": {
+                    "1099R": "Reports distributions from policy/contracts.",
+                    "1099Int": "Reports interest income earned.",
+                    "5098": "Reports contributions made to IRAs, including rollovers and fair market values for the tax year."
+                },
+                "warning": {
+                    "0": "Please review tax forms before continuing.",
+                    "1": "All selected tax forms for the chosen year will be sent."
+                }
             }
         },
         "statementDetails": {

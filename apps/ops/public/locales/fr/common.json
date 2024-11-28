@@ -2012,11 +2012,16 @@
                 "documentType": "Type de document",
                 "periodYear": "Période année",
                 "actions": "Actions",
-                "noTaxForms": "Aucun formulaire fiscale trouvé pour cette période"
-            },
-            "warning": {
-                "0": "Veuillez consulter les formulaires fiscaux avant de continuer",
-                "1": "Tous les formulaires fiscaux ci-dessus seront envoyés."
+                "noTaxForms": "Aucun formulaire fiscale trouvé pour cette période",
+                "popover": {
+                    "1099R": "Déclare les distributions provenant de polices/contrats.",
+                    "1099Int": "Déclare les revenus d'intérêts gagnés.",
+                    "5098": "Déclare les contributions versées aux IRA, y compris les rollovers et les valeurs de marché équitables pour l'année fiscale."
+                },
+                "warning": {
+                    "0": "Veuillez consulter les formulaires fiscaux avant de continuer.",
+                    "1": "Tous les formulaires fiscaux ci-dessus seront envoyés."
+                }
             }
         },
         "statementDetails": {

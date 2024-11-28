@@ -16,7 +16,6 @@ export type StatementSelectionProps = {
     policy: Policy;
 };
 const TaxFormsSelection = ({ policy }: StatementSelectionProps) => {
-    console.log('🚀 ~ TaxFormsSelection ~ policy:', policy);
     const { t } = useTranslation(undefined, { keyPrefix: 'contactCenter' });
     const currentYear = new Date().getFullYear();
     const taxYears = Array.from({ length: 5 }, (_, i) => currentYear - i).reverse();
@@ -49,7 +48,11 @@ const TaxFormsSelection = ({ policy }: StatementSelectionProps) => {
             const previousSelections = { ...prev };
             if (previousSelections[selectedValue]) {
                 setTaxForms(prevTaxForms => {
-                    return prevTaxForms.filter(form => form.taxYear !== selectedValue);
+                    if (Array.isArray(prevTaxForms)) {
+                        return prevTaxForms.filter(form => form.taxYear !== selectedValue);
+                    } else {
+                        return [];
+                    }
                 });
 
                 delete previousSelections[selectedValue];
