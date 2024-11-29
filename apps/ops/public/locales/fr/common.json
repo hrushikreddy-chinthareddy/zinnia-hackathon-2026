@@ -4450,17 +4450,18 @@
             "view": "Voir",
             "documentId": "ID du document",
             "documentIndexingInfo": {
-                "suggestedDocumentType": "Suggested document type",
-                "notes": "Notes",
+                "suggestedDocumentType": "Type de document suggéré",
+                "notes": "Remarques",
                 "documentOptions": {
-                    "systematic": "Systematic",
-                    "stopPayment": "Stop Payment",
-                    "returnedMail": "Returned Mail",
-                    "accountUpdates": "Account Updates",
-                    "requiredMinimumDistribution": "Required Minimum Distribution",
-                    "redemption": "Redemption",
-                    "policyUpdates": "Policy Updates",
-                    "outgoingTransfers": "Outgoing Transfers"
+                    "systematic": "Systématique",
+                    "stopPayment": "Arrêt de paiement",
+                    "returnedMail": "Courrier retourné",
+                    "accountUpdates": "Mises à jour du compte",
+                    "requiredMinimumDistribution": "Distribution minimale requise",
+                    "redemption": "Rachat",
+                    "policyUpdates": "Mises à jour des politiques",
+                    "outgoingTransfers": "Transferts sortants",
+                    "other": "Autre"
                 }
             },
             "formErrors": {

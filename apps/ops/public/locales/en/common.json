@@ -4493,7 +4493,8 @@
                     "requiredMinimumDistribution": "Required Minimum Distribution",
                     "redemption": "Redemption",
                     "policyUpdates": "Policy Updates",
-                    "outgoingTransfers": "Outgoing Transfers"
+                    "outgoingTransfers": "Outgoing Transfers",
+                    "other": "Other"
                 }
             },
             "formErrors": {

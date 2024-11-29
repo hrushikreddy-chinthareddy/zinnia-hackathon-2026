@@ -17,6 +17,7 @@ const enum SuggestedDocType {
     REDEMPTION = 'REDEMPTION',
     POLICY_CHANGE = 'POLICY CHANGE',
     OUTGOING_TRANSFER  = 'OUTGOING TRANSFER',
+    OTHER = 'OTHER'
 };
 
 export const DocumentIndexingInfo = () => {
@@ -31,7 +32,8 @@ export const DocumentIndexingInfo = () => {
       { label: t('documentOptions.requiredMinimumDistribution'), value: SuggestedDocType.REQUIRED_MINIMUM_DISTRIBUTION },
       { label: t('documentOptions.redemption'), value: SuggestedDocType.REDEMPTION },
       { label: t('documentOptions.policyUpdates'), value: SuggestedDocType.POLICY_CHANGE },
-      { label: t('documentOptions.outgoingTransfers'), value: SuggestedDocType.OUTGOING_TRANSFER }
+      { label: t('documentOptions.outgoingTransfers'), value: SuggestedDocType.OUTGOING_TRANSFER },
+      { label: t('documentOptions.other'), value: SuggestedDocType.OTHER }
     ];
 
     const setDocTypeToReindex = (documentType: SuggestedDocType) => {
