@@ -1,4 +1,5 @@
 import ChipStatus from "@deps/components/chip-status/chip-status";
+import NavElement, { NavElementSize, NavElementType, NavElementVariant } from "@deps/components/nav-element/nav-element";
 import PaginationControls from "@deps/components/pagination/pagination";
 import { TranslationFiles } from "@deps/config/translations";
 import { CaseTableData } from "@deps/contexts/CaseManagementFilters";
@@ -30,6 +31,7 @@ function RelatedTab({ caseTableData, offset, limit, setOffset }: relatedTabProps
     <div className="flex-1 flex flex-col w-full !mb-0 px-4 pt-4 md:px-6 lg:px-8 gap-4">
       {caseTableData.cases.map((caseData) => {
         const formattedApplicationDate = dayjs(caseData.updatedAt).format(DEFAULT_EXTENDED_DATE_FORMAT);
+        const url = `/cases/${`${caseData.id}`}`;
         return (
           <div className="border-2 border-gray-200  min-w-full rounded-sm grid grid-cols-2 p-4 gap-3 hover:border-black">
             <div className="col-span-2 ">
@@ -38,7 +40,19 @@ function RelatedTab({ caseTableData, offset, limit, setOffset }: relatedTabProps
             </div>
             <div className="col-span-1">
               <div className="font-secondary text-md font-bold text-gray-800"> {t('relatedTab.caseId')}</div>
-              <div className="font-secondary text-md text-[--color-base-text-text-link] font-bold">#{caseData.id}</div>
+
+              <NavElement
+                className={'whitespace-normal break-words'}
+                href={url}
+                isNewPage={true}
+                size={NavElementSize.Small}
+                target="_blank"
+                title={t('viewFullDeatils')?.toString()}
+                type={NavElementType.Link}
+                variant={NavElementVariant.Secondary}
+              >
+                #{caseData.id}
+              </NavElement>
             </div>
             <div className="col-span-1 flex justify-end items-end pb-2">
               <div>

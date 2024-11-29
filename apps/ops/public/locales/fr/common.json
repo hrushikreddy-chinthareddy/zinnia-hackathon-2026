@@ -4424,7 +4424,6 @@
             },
             "applicationSignedDate": "Date de signature de la demande",
             "issueState": "État du problème",
-            "recievedDate": "Date de réception",
             "qualificationType": "Type de qualification",
             "viewFullDeatils": "Voir les détails",
             "contractValue": "Valeur du contrat",

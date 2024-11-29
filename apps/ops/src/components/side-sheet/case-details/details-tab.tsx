@@ -50,12 +50,7 @@ function DetailsTab({ carrierName, formattedApplicationDate, formattedCertifiedR
         <div className='col-span-1'>
           {policy.issueState}
         </div>
-        <div className='col-span-1  text-[--color-base-text-text-secondary]'>
-          {t('recievedDate')}
-        </div>
-        <div className='col-span-1'>
-          {formattedCertifiedReceiveDate}
-        </div>
+
         <div className='col-span-1  text-[--color-base-text-text-secondary]'>
           {t('qualificationType')}
         </div>
