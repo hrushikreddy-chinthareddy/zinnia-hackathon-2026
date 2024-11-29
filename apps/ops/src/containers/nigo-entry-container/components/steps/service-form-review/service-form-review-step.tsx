@@ -127,7 +127,7 @@ export const ServiceFormReviewStep = ({documentNumber, policy, docType, clientCo
                 lob: document.lob,
                 docHandle: document.sysDocumentHandle,
                 docTypeToReindex: documentIndexingInfo?.docTypeToReindex,
-                notes: documentIndexingInfo?.docTypeToReindex + ': ' + documentIndexingInfo?.notes
+                notes: documentIndexingInfo?.notes
             }));
         }
     }, [sectionOption, document, documentIndexingInfo]);

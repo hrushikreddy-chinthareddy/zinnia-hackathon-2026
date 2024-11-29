@@ -69,6 +69,7 @@ export const DocumentIndexingInfo = () => {
                     value={documentIndexingInfo?.notes || ''}
                     variant={isNullEmptyOrUndefined(documentIndexingInfo?.docTypeToReindex) ? FieldVariant.Inactive : FieldVariant.Default}
                     disabled={isNullEmptyOrUndefined(documentIndexingInfo?.docTypeToReindex)}
+                    maxLength={200}
                 />
             </div>
         </div>
