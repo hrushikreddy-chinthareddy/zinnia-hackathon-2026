@@ -33,7 +33,9 @@ function RelatedTab({ caseTableData, offset, limit, setOffset }: relatedTabProps
         const formattedApplicationDate = dayjs(caseData.updatedAt).format(DEFAULT_EXTENDED_DATE_FORMAT);
         const url = `/cases/${`${caseData.id}`}`;
         return (
-          <div className="border-2 border-gray-200  min-w-full rounded-sm grid grid-cols-2 p-4 gap-3 hover:border-black">
+          <div
+            key={caseData.id}
+            className="border-2 border-gray-200  min-w-full rounded-sm grid grid-cols-2 p-4 gap-3 hover:border-black">
             <div className="col-span-2 ">
               <div className="font-secondary text-[18px] font-bold text-gray-800">{caseData.process}</div>
               <div className="font-secondary text-md text-gray-600">{t('relatedTab.lastUpdated')}: {formattedApplicationDate}</div>
