@@ -56,7 +56,7 @@ export enum GroupByOptions {
     PolicyNumber = 'policyNumber',
     Process = 'process',
     ProductName = 'productName',
-    ExpectionCategory = 'expectionCategory',
+    ExceptionCategory = 'exceptionCategory',
     OpenStages = 'openStages',
     UpdatedAt = 'updatedAt',
     CreatedAt = 'createdAt',

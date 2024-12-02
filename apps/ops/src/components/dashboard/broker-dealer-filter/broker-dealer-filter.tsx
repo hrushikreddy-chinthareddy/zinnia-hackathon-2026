@@ -7,11 +7,11 @@ import { MultiselectOption } from '@deps/components/select/select.helpers';
 import { TranslationFiles } from '@deps/config/translations';
 import { toTitleCase } from '@deps/helpers/string.helper';
 import { CarrierListItem } from '@deps/pages/dashboard';
-import { BrokerDealerResponse, fetchAgents } from '@deps/queries/api/dashboard';
+import { DashboardResponseData, fetchAgents } from '@deps/queries/api/dashboard';
 type BrokerDealerFilterProps = {
-    brokerDealers: BrokerDealerResponse[];
+    brokerDealers: DashboardResponseData[];
     selectedCarriers: string[];
-    setSelectedBrokerDealers: Dispatch<SetStateAction<BrokerDealerResponse[]>>;
+    setSelectedBrokerDealers: Dispatch<SetStateAction<DashboardResponseData[]>>;
     updateBrokerDealerFilters: (value: string, displayText: string) => void;
     selectedBrokerDealers: CarrierListItem;
 };

@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { ReactNode } from 'react';
+import { ElementType, ReactNode } from 'react';
 
 import Label, { LabelProps, LabelVariant } from '@deps/components/label/label';
 import ResponsiveFlex, { ResponsiveFlexProps } from '@deps/components/responsive-flex/responsive-flex';
@@ -31,6 +31,7 @@ export type FieldDataProps = {
     editable?: boolean;
     label: string;
     variant?: FieldDataVariant;
+    captionTag?: ElementType;
 } & Omit<LabelProps, 'variant'>;
 
 type FieldDataMappingProps = Partial<ResponsiveFlexProps> & {
@@ -128,6 +129,7 @@ const FieldData = ({
     children,
     variant = FieldDataVariant.Default,
     caption,
+    captionTag = 'p',
     className,
     sentenceCase,
     editable,
@@ -152,7 +154,9 @@ const FieldData = ({
         </ResponsiveFlex>
         {!!caption && (
             <ResponsiveFlex data-testid={FieldDataTest.Caption} {...filterTruthyProps(fieldDataMapping[variant].caption)}>
-                <Typography variant={fieldDataMapping[variant].caption.typography as TypographyVariant}>{caption}</Typography>
+                <Typography asTag={captionTag} variant={fieldDataMapping[variant].caption.typography as TypographyVariant}>
+                    {caption}
+                </Typography>
             </ResponsiveFlex>
         )}
     </ResponsiveFlex>

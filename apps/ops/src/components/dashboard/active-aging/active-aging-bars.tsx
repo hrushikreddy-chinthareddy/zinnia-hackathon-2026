@@ -1,6 +1,6 @@
 import * as changeCase from 'change-case';
 import Highcharts, { AxisLabelsFormatterContextObject } from 'highcharts';
-import more from 'highcharts/highcharts-more';
+import more from 'highcharts/highcharts-more'; // is this required?
 import HighchartsReact, { HighchartsReactRefObject } from 'highcharts-react-official';
 import { forwardRef, useCallback, useEffect, useState } from 'react';
 
@@ -48,6 +48,7 @@ const ActiveAgingBars = forwardRef<HighchartsReactRefObject, Props>(({ agingRang
             });
 
             const config: Highcharts.Options = {
+                navigation: { buttonOptions: { enabled: false } },
                 chart: {
                     backgroundColor: 'transparent',
                     type: 'column',
