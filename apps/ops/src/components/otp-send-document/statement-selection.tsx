@@ -7,7 +7,7 @@ import 'react-pdf/dist/Page/TextLayer.css';
 import { Loader } from '@deps/components/page-loader';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { DocumentDisplayCode, PolicyDocument, PolicyDocuments } from '@deps/models/case/document';
-import { StatementTypes } from '@deps/models/case/send-statement';
+import { StatementStartYear, StatementTypes } from '@deps/models/case/send-statement';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { getCorrespondenceDocs } from '@deps/queries/api/documents';
@@ -113,7 +113,7 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
     const { t } = useTranslation(undefined, { keyPrefix: 'contactCenter' });
     const { goToNext } = useWorkflow();
 
-    const statementStartYear = policy.policyDates?.issueDate || '';
+    const statementStartYear = policy.policyDates?.issueDate || StatementStartYear;
     const [selectedStatementType, setSelectedStatementType] = useState<StatementTypes[]>(applicableStatement);
     const currentYear = dayjs().year().toString();
     const currentQuarter = `${currentYear}-Q${getQuarter(dayjs())}`;

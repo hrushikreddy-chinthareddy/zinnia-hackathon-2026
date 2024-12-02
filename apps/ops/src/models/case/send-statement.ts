@@ -12,6 +12,8 @@ export enum StatementTypes {
     QuarterlyStatement = 'SOA',
 }
 
+export const StatementStartYear = '2022-Q1';
+
 export type StatementTypesResponse = {
     applicableStatement: StatementTypes[];
 };
