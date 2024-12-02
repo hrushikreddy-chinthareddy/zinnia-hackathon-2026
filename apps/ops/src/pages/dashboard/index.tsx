@@ -22,6 +22,7 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { getStartAndEndDates } from '@deps/containers/case-redesign-sub-page/case-helpers';
+import { DashboardResponsiveLayout } from '@deps/containers/dashboard/dashboard-responsive-layout';
 import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helper';
@@ -326,7 +327,7 @@ const DashboardPage = ({
     }, [baseDashboardQueryFilter, baseInsightQueryFilter]);
 
     return (
-        <div>
+        <DashboardResponsiveLayout>
             <PageHead titleKey="dashboard" />
             <NoNavLayout fullHeight={true} displayTopNavBar={true} size="large">
                 <div
@@ -350,7 +351,7 @@ const DashboardPage = ({
                                     onChange={updateCarrierFilters}
                                     size={FieldSize.Small}
                                     placeholder={t('allCarriers') || ''}
-                                    disabled={carrierFilterItems.length === 1}
+                                    disabled={loading || carrierFilterItems.length === 1}
                                     name="carrier-dropdown-btn"
                                     onOpenChange={handleOnOpenChange}
                                 />
@@ -362,6 +363,7 @@ const DashboardPage = ({
                                     selectedCarriers={Object.keys(placeholderSelectedCarriers)}
                                     setSelectedBrokerDealers={setBrokerDealers}
                                     updateBrokerDealerFilters={updateBrokerDealerFilters}
+                                    disabled={loading}
                                 />
                             </div>
                         </div>
@@ -452,7 +454,7 @@ const DashboardPage = ({
                     </div>
                 </div>
             </NoNavLayout>
-        </div>
+        </DashboardResponsiveLayout>
     );
 };
 

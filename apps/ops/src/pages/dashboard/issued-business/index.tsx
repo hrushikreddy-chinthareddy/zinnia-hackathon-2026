@@ -22,6 +22,7 @@ import Select from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
+import { DashboardResponsiveLayout } from '@deps/containers/dashboard/dashboard-responsive-layout';
 import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helper';
@@ -213,7 +214,7 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
     }, [createdDateStart]);
 
     return (
-        <>
+        <DashboardResponsiveLayout>
             <PageHead titleKey="dashboard" />
             <NoNavLayout fullHeight={true} displayTopNavBar={true} size="large">
                 <div
@@ -237,7 +238,7 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
                                     onChange={updateCarrierFilters}
                                     size={FieldSize.Small}
                                     placeholder={t('allCarriers') || ''}
-                                    disabled={carrierFilterItems.length === 1}
+                                    disabled={loading || carrierFilterItems.length === 1}
                                     name="carrier-dropdown-btn"
                                     onOpenChange={handleOnOpenChange}
                                 />
@@ -249,6 +250,7 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
                                     selectedCarriers={Object.keys(placeholderSelectedCarriers)}
                                     setSelectedBrokerDealers={setBrokerDealers}
                                     updateBrokerDealerFilters={updateBrokerDealerFilters}
+                                    disabled={loading}
                                 />
                             </div>
                         </div>
@@ -352,9 +354,16 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
                             selectedSubprocess={selectedSubprocess}
                         />
                     </div>
+                    <div className="bg-white p-8 flex flex-col gap-8">
+                        <ExceptionSummary
+                            timeframe={timeframe}
+                            carrierOrBrokerDealer={carrierOrBrokerDealer}
+                            startDate={createdDateStart}
+                        />
+                    </div>
                 </CardContainer>
             </NoNavLayout>
-        </>
+        </DashboardResponsiveLayout>
     );
 };
 
