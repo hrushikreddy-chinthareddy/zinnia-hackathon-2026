@@ -19,7 +19,7 @@ export type MappedExceptionData = {
     total: { [key: CarrierOrBrokerDealerName]: number };
     // Daily Nigos Carrier
     daily: { [key: CarrierOrBrokerDealerName]: [number, number | null][] };
-    weekly: { [key: CarrierOrBrokerDealerName]: [number, number | null][] };
+    weekly: { [key: CarrierOrBrokerDealerName]: number[] };
     // Monthly Nigos Carrier
     monthly: { [key: CarrierOrBrokerDealerName]: (number | null)[] };
     startMonth: number; // Index of the first month to be included in the chart
@@ -78,6 +78,33 @@ const useExceptionData = ({
         fetchData();
     }, [carrierOrBrokerDealer, startDate, processSubType]);
 
+    // function structureData(data: DashboardStatsElementResponse[], createdDateStart: string) {
+    //     const parsedResponse: MappedExceptionData = {
+    //         totalCasesByCarrier: {},
+    //         total: {},
+    //         daily: {},
+    //         weekly: {},
+    //         monthly: {},
+    //         startMonth: dayjs(createdDateStart).month(),
+    //         startYear: dayjs(createdDateStart).year(),
+    //         carriers: [],
+    //         exceptionCategories: [],
+    //         totalMonths: maxMonthIndex + 1,
+    //     };
+
+    //     if ((data as DashboardStatsElementResponse[]).length) {
+    //         (data as DashboardStatsElementResponse[]).forEach(carrierGroup => {
+    //             const carrier = carrierGroup.name;
+    //             parsedResponse.carriers.push(carrier);
+    //             parsedResponse.totalCasesByCarrier[carrier] = carrierGroup.count;
+    //             carrierGroup.values?.forEach(exceptionGroup => {
+
+    //             });
+    //         }
+    //     }
+
+    // }
+
     useEffect(() => {
         if (!statsResponse) {
             return;
@@ -88,6 +115,7 @@ const useExceptionData = ({
         const maxWeekIndex = getArrayIndexFromDate(dayjs().format('YYYY-MM-DD'), createdDateStart, 'week');
         const maxMonthIndex = getArrayIndexFromDate(dayjs().format('YYYY-MM-DD'), createdDateStart, 'month');
 
+        console.log('data', data);
         // Set up default data
         const parsedResponse: MappedExceptionData = {
             totalCasesByCarrier: {},
@@ -118,7 +146,7 @@ const useExceptionData = ({
 
                     parsedResponse.weekly[carrier] = Array(maxWeekIndex + 1)
                         .fill(null)
-                        .map((val, index) => [dayjs(createdDateStart).add(index, 'week').startOf('week').unix() * 1000, 0]);
+                        .map((val, index) => 0);
                     parsedResponse.monthly[carrier] = Array(maxMonthIndex + 1).fill(null);
 
                     let totalNigos = 0;
@@ -131,12 +159,9 @@ const useExceptionData = ({
                             totalNigos += dayGroup.count;
                             parsedResponse.total[carrier] += dayGroup.count;
                             parsedResponse.daily[carrier][dayIndex] = [dayjs(dayGroup.name, 'YYYY-MM-DD').unix() * 1000, dayGroup.count];
-                            parsedResponse.weekly[carrier][weekIndex] = [
-                                dayjs(dayGroup.name, 'YYYY-MM-DD').startOf('week').unix() * 1000,
-                                dayGroup.count + (parsedResponse.weekly[carrier][weekIndex][1] || 0),
-                            ];
-                            parsedResponse.monthly[carrier][monthIndex] =
-                                dayGroup.count + (parsedResponse.monthly[carrier][monthIndex] || 0);
+                            (parsedResponse.weekly[carrier][weekIndex] = dayGroup.count + (parsedResponse.weekly[carrier][weekIndex] || 0)),
+                                (parsedResponse.monthly[carrier][monthIndex] =
+                                    dayGroup.count + (parsedResponse.monthly[carrier][monthIndex] || 0));
                         }
                     });
                     parsedResponse.total[carrier] = totalNigos;
@@ -144,10 +169,15 @@ const useExceptionData = ({
             });
             parsedResponse.carriers.sort((a, b) => parsedResponse.totalCasesByCarrier[b] - parsedResponse.totalCasesByCarrier[a]);
         }
+        console.log('parsedResponse', parsedResponse);
         setChartData(parsedResponse);
         setLoading(false);
     }, [statsResponse]);
-    return [loading, chartData] as [boolean, MappedExceptionData | undefined];
+    return [loading, chartData, statsResponse?.data] as [
+        boolean,
+        MappedExceptionData | undefined,
+        DashboardStatsElementResponse[] | undefined
+    ];
 };
 
 export default useExceptionData;
