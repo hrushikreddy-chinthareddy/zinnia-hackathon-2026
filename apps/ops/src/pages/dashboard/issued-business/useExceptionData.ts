@@ -1,11 +1,12 @@
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { DashboardStatsElementResponse, Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { getCaseDashboardStats } from '@deps/queries/api/cases';
+import { DashboardSearchFilter } from '@deps/queries/cases';
 
 dayjs.extend(customParseFormat);
 dayjs.extend(weekOfYear);
@@ -19,7 +20,7 @@ export type MappedExceptionData = {
     total: { [key: CarrierOrBrokerDealerName]: number };
     // Daily Nigos Carrier
     daily: { [key: CarrierOrBrokerDealerName]: [number, number | null][] };
-    weekly: { [key: CarrierOrBrokerDealerName]: [number, number | null][] };
+    weekly: { [key: CarrierOrBrokerDealerName]: number[] };
     // Monthly Nigos Carrier
     monthly: { [key: CarrierOrBrokerDealerName]: (number | null)[] };
     startMonth: number; // Index of the first month to be included in the chart
@@ -48,18 +49,23 @@ const useExceptionData = ({
     const [chartData, setChartData] = useState<MappedExceptionData>();
     const [statsResponse, setStatsResponse] = useState<{ data: DashboardStatsElementResponse[]; createdDateStart: string }>();
 
+    const createdDateStart = dayjs(startDate).toISOString();
+
+    const filter: DashboardSearchFilter = useMemo(() => {
+        return {
+            createdDateStart: createdDateStart,
+            process: [Processes.NewBusiness],
+            caseStatus: [Statuses.Completed],
+            ...(processSubType ? { requestSubType: [processSubType] } : {}),
+        };
+    }, [createdDateStart, processSubType]);
+
     useEffect(() => {
-        const createdDateStart = dayjs(startDate).toISOString();
         const fetchData = async () => {
             try {
                 // Grab the case stats
                 const { data } = await getCaseDashboardStats({
-                    filter: {
-                        createdDateStart: createdDateStart,
-                        process: [Processes.NewBusiness],
-                        caseStatus: [Statuses.Completed],
-                        requestSubType: [processSubType ?? ''],
-                    },
+                    filter,
                     groupBy: [carrierOrBrokerDealer, GroupByOptions.ExceptionCategory, GroupByOptions.UpdatedAt],
                 });
 
@@ -76,7 +82,34 @@ const useExceptionData = ({
 
         setLoading(true);
         fetchData();
-    }, [carrierOrBrokerDealer, startDate, processSubType]);
+    }, [carrierOrBrokerDealer, createdDateStart, filter]);
+
+    // function structureData(data: DashboardStatsElementResponse[], createdDateStart: string) {
+    //     const parsedResponse: MappedExceptionData = {
+    //         totalCasesByCarrier: {},
+    //         total: {},
+    //         daily: {},
+    //         weekly: {},
+    //         monthly: {},
+    //         startMonth: dayjs(createdDateStart).month(),
+    //         startYear: dayjs(createdDateStart).year(),
+    //         carriers: [],
+    //         exceptionCategories: [],
+    //         totalMonths: maxMonthIndex + 1,
+    //     };
+
+    //     if ((data as DashboardStatsElementResponse[]).length) {
+    //         (data as DashboardStatsElementResponse[]).forEach(carrierGroup => {
+    //             const carrier = carrierGroup.name;
+    //             parsedResponse.carriers.push(carrier);
+    //             parsedResponse.totalCasesByCarrier[carrier] = carrierGroup.count;
+    //             carrierGroup.values?.forEach(exceptionGroup => {
+
+    //             });
+    //         }
+    //     }
+
+    // }
 
     useEffect(() => {
         if (!statsResponse) {
@@ -118,7 +151,7 @@ const useExceptionData = ({
 
                     parsedResponse.weekly[carrier] = Array(maxWeekIndex + 1)
                         .fill(null)
-                        .map((val, index) => [dayjs(createdDateStart).add(index, 'week').startOf('week').unix() * 1000, 0]);
+                        .map((val, index) => 0);
                     parsedResponse.monthly[carrier] = Array(maxMonthIndex + 1).fill(null);
 
                     let totalNigos = 0;
@@ -131,12 +164,9 @@ const useExceptionData = ({
                             totalNigos += dayGroup.count;
                             parsedResponse.total[carrier] += dayGroup.count;
                             parsedResponse.daily[carrier][dayIndex] = [dayjs(dayGroup.name, 'YYYY-MM-DD').unix() * 1000, dayGroup.count];
-                            parsedResponse.weekly[carrier][weekIndex] = [
-                                dayjs(dayGroup.name, 'YYYY-MM-DD').startOf('week').unix() * 1000,
-                                dayGroup.count + (parsedResponse.weekly[carrier][weekIndex][1] || 0),
-                            ];
-                            parsedResponse.monthly[carrier][monthIndex] =
-                                dayGroup.count + (parsedResponse.monthly[carrier][monthIndex] || 0);
+                            (parsedResponse.weekly[carrier][weekIndex] = dayGroup.count + (parsedResponse.weekly[carrier][weekIndex] || 0)),
+                                (parsedResponse.monthly[carrier][monthIndex] =
+                                    dayGroup.count + (parsedResponse.monthly[carrier][monthIndex] || 0));
                         }
                     });
                     parsedResponse.total[carrier] = totalNigos;
@@ -144,10 +174,16 @@ const useExceptionData = ({
             });
             parsedResponse.carriers.sort((a, b) => parsedResponse.totalCasesByCarrier[b] - parsedResponse.totalCasesByCarrier[a]);
         }
+
         setChartData(parsedResponse);
         setLoading(false);
     }, [statsResponse]);
-    return [loading, chartData] as [boolean, MappedExceptionData | undefined];
+    return [loading, chartData, statsResponse?.data, filter] as [
+        boolean,
+        MappedExceptionData | undefined,
+        DashboardStatsElementResponse[] | undefined,
+        DashboardSearchFilter
+    ];
 };
 
 export default useExceptionData;

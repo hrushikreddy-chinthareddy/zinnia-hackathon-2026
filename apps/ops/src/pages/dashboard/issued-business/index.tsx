@@ -202,7 +202,6 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
         getCases()
             .then(response => {
                 if (!!response.data && Array.isArray(response.data)) {
-                    console.log(response.data[0].name);
                     setSelectedSubprocess(response.data[0].name);
                     setExceptiondata(response.data.slice(0, 5));
                 } else {
@@ -350,9 +349,9 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
                     </div>
                     <div className="bg-white p-8 flex flex-col gap-8">
                         <ExceptionSummary
-                            timeframe={timeframe}
                             carrierOrBrokerDealer={carrierOrBrokerDealer}
                             startDate={createdDateStart}
+                            selectedSubprocess={selectedSubprocess}
                         />
                     </div>
                     <div className="bg-white p-8 flex flex-col gap-8">
