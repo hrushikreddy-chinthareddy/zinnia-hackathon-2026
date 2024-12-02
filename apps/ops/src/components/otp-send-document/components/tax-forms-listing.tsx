@@ -2,6 +2,7 @@ import { Table, TableHeader, TableHeaderCell, TableRow, TableBody, TableCell, To
 import { useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
+import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { TaxForm } from '@deps/models/case/send-tax-forms';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
@@ -73,7 +74,20 @@ const TaxFormsListing = ({ taxForms }: TaxFormsListingProps) => {
                                         <Content details={form.taxYear || ''} variant={ContentVariant.BodySm} />
                                     </TableCell>
 
-                                    <TableCell></TableCell>
+                                    <TableCell>
+                                        <NavElement
+                                            className={''}
+                                            href={`/contact-center/document/tax-forms/${form?.formId}`}
+                                            isNewPage={false}
+                                            size={NavElementSize.Small}
+                                            target="_blank"
+                                            title={`${t('sendDocument.formSelection.view')} `}
+                                            type={NavElementType.Link}
+                                            variant={NavElementVariant.Secondary}
+                                        >
+                                            {t('sendDocument.formSelection.view')}
+                                        </NavElement>
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
