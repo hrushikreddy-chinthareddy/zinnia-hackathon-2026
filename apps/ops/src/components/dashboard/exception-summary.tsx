@@ -3,7 +3,7 @@ import * as Highcharts from 'highcharts';
 import HC_ACCESSIBILITY from 'highcharts/modules/accessibility';
 import HighchartsExporting from 'highcharts/modules/exporting';
 import HighchartsReact from 'highcharts-react-official';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import PageLoader from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
@@ -27,7 +27,7 @@ if (typeof Highcharts === 'object') {
 }
 
 type summary = {
-    series: Highcharts.SeriesOptionsType;
+    series: Highcharts.SeriesLineOptions | Highcharts.SeriesColumnOptions;
     name: string;
     total: number;
 };
@@ -35,16 +35,18 @@ type summary = {
 type Output = {
     weekly: Record<string, summary>;
     monthly: Record<string, summary>;
+    weeklyCategories: string[];
+    monthlyCategories: number[];
 };
 
 const colors = ['#D385A5', '#BD85D3', '#8593D3', '#00628B', '#021936'];
 
-function processCarrierData(input: DashboardStatsElementResponse[]): Output & { weeklyCategories: string[]; monthlyCategories: number[] } {
+function processCarrierData(input: DashboardStatsElementResponse[]): Output {
     const WEEKLY_WEEKS = 48; // 4 weeks per month for 12 months
     const MONTHLY_MONTHS = 12;
     const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-    const result: Output & { weeklyCategories: string[]; monthlyCategories: number[] } = {
+    const result: Output = {
         weekly: {},
         monthly: {},
         weeklyCategories: [],
@@ -85,14 +87,14 @@ function processCarrierData(input: DashboardStatsElementResponse[]): Output & { 
         const carrierName = carrier.name;
         if (!result.weekly[carrierName]) {
             result.weekly[carrierName] = {
-                series: {} as Highcharts.SeriesOptionsType,
+                series: {} as Highcharts.SeriesLineOptions,
                 name: carrierName,
                 total: 0,
             };
         }
         if (!result.monthly[carrierName]) {
             result.monthly[carrierName] = {
-                series: {} as Highcharts.SeriesOptionsType,
+                series: {} as Highcharts.SeriesColumnOptions,
                 name: carrierName,
                 total: 0,
             };
@@ -145,11 +147,22 @@ function processCarrierData(input: DashboardStatsElementResponse[]): Output & { 
             // Update monthly data
             monthlyData[month] += count;
             result.monthly[carrierName].total += count;
-
-            // Set the total for each month. this is used as the category for the stacked bar chart
-            result.monthlyCategories[i] += count;
         });
     });
+
+    // Set the total for each month. this is used as the category for the stacked bar chart
+    const totals: number[] = new Array(MONTHLY_MONTHS).fill(0);
+
+    for (const key in result.monthly) {
+        if (result.monthly.hasOwnProperty(key)) {
+            const series = result.monthly[key].series.data;
+            series?.forEach((value, index) => {
+                totals[index] += typeof value === 'number' ? value : 0; // Accumulate the value at each index
+            });
+        }
+    }
+
+    result.monthlyCategories = totals;
 
     return result;
 }
@@ -157,7 +170,7 @@ function processCarrierData(input: DashboardStatsElementResponse[]): Output & { 
 export const ExceptionSummary = ({
     startDate,
     carrierOrBrokerDealer = GroupByOptions.Carrier,
-    selectedSubprocess = '',
+    selectedSubprocess = 'NB_REG60',
 }: {
     startDate: string;
     carrierOrBrokerDealer?: GroupByOptions.Carrier | GroupByOptions.BrokerDealerName;
@@ -171,173 +184,183 @@ export const ExceptionSummary = ({
         processSubType: selectedSubprocess,
     });
 
-    const processedData = processCarrierData(statsResponse || []);
-
-    // sort and slice to find the top 5 months
-    const monthlyArray: summary[] = [];
-    Object.entries(processedData.monthly).forEach(([, value]) => {
-        monthlyArray.push(value);
-    });
-
-    const sortedMonthly = monthlyArray.sort((a, b) => b.total - a.total).slice(0, 5);
-
     const chartRef = useRef<HighchartsReact.RefObject>(null);
+    const [sortedMonthly, setSortedMonthly] = useState([] as summary[]);
+    const [chartConfig, setChartConfig] = useState({} as Highcharts.Options);
 
-    const chartConfig: Highcharts.Options = useMemo((): Highcharts.Options => {
-        if (!statsResponse) return {};
+    const getChartConfig = useCallback(
+        (processedData: Output, sortedMonthly: summary[]): Highcharts.Options => {
+            if (!statsResponse) return {};
 
-        // get the weekly data for the top 5 carriers based on total
-        const weekly: Highcharts.SeriesOptionsType[] = [];
-        sortedMonthly.forEach(carrier => {
-            weekly.push(processedData.weekly[carrier.name].series as Highcharts.SeriesOptionsType);
-        });
+            // get the weekly data for the top 5 carriers based on total
+            const weekly: Highcharts.SeriesOptionsType[] = [];
+            sortedMonthly.forEach(carrier => {
+                weekly.push(processedData.weekly[carrier.name].series as Highcharts.SeriesOptionsType);
+            });
 
-        // get the series data for the top 5 carriers
-        const monthly = sortedMonthly.map(carrier => {
-            return carrier.series;
-        });
+            // get the series data for the top 5 carriers
+            const monthly = sortedMonthly.map(carrier => {
+                return carrier.series;
+            });
 
-        return {
-            chart: {
-                height: 600,
-                type: 'line', // Line chart
-                // plotBorderWidth: 1, // Add a border around the plot area
-                // plotBorderColor: '#D3D3D3', // Set the border color
-                spacingTop: 0, // Remove top spacing
-                spacingLeft: 0,
-                spacingRight: 0,
-            },
-            legend: {
-                enabled: false, // Disable the legend
-            },
-            credits: {
-                enabled: false,
-            },
-            navigation: {
-                buttonOptions: {
+            return {
+                chart: {
+                    height: 600,
+                    type: 'line', // Line chart
+                    // plotBorderWidth: 1, // Add a border around the plot area
+                    // plotBorderColor: '#D3D3D3', // Set the border color
+                    spacingTop: 0, // Remove top spacing
+                    spacingLeft: 0,
+                    spacingRight: 0,
+                },
+                legend: {
+                    enabled: false, // Disable the legend
+                },
+                credits: {
                     enabled: false,
                 },
-            },
-            title: {
-                text: '', // No title
-            },
-            xAxis: [
-                {
-                    endOnTick: true, // Ensures the axis extends to the last tick
-                    // gridLineWidth: 1,
-                    height: '60%',
-                    min: 0, // Start at the first category or value
-                    // max: processedData.weeklyCategories.length, // End at the last category or value (update as needed)
-                    offset: 0, // Remove extra spacing
-                    tickmarkPlacement: 'between',
-                    plotLines: [
-                        ...Array.from({ length: processedData.weeklyCategories.length }, (_, i) => {
-                            if (i === 0 || i % 4 === 0) {
-                                return {
-                                    color: '#D3D3D3', // Color ticks for the edges of the month
-                                    width: 1,
-                                    value: i - 0.5, // Position of the gridline
-                                    zIndex: 1,
-                                };
-                            } else {
-                                return {
-                                    color: '#FFFFFF', // Weekly ticks that are inside the month (they should look hidden)
-                                    width: 1,
-                                    value: i - 0.5, // Position of the gridline
-                                    zIndex: 1,
-                                };
-                            }
-                        }).filter(Boolean),
-                    ],
+                navigation: {
+                    buttonOptions: {
+                        enabled: false,
+                    },
+                },
+                title: {
+                    text: '', // No title
+                },
+                xAxis: [
+                    {
+                        endOnTick: true, // Ensures the axis extends to the last tick
+                        // gridLineWidth: 1,
+                        height: '60%',
+                        min: 0, // Start at the first category or value
+                        // max: processedData.weeklyCategories.length, // End at the last category or value (update as needed)
+                        offset: 0, // Remove extra spacing
+                        tickmarkPlacement: 'between',
+                        plotLines: [
+                            ...Array.from({ length: processedData.weeklyCategories.length }, (_, i) => {
+                                if (i === 0 || i % 4 === 0) {
+                                    return {
+                                        color: '#D3D3D3', // Color ticks for the edges of the month
+                                        width: 1,
+                                        value: i - 0.5, // Position of the gridline
+                                        zIndex: 1,
+                                    };
+                                } else {
+                                    return {
+                                        color: '#FFFFFF', // Weekly ticks that are inside the month (they should look hidden)
+                                        width: 1,
+                                        value: i - 0.5, // Position of the gridline
+                                        zIndex: 1,
+                                    };
+                                }
+                            }).filter(Boolean),
+                        ],
 
-                    labels: {
-                        step: 1,
-                        formatter: function () {
-                            // Only show the label starting from the 3rd tick (index 2)
-                            if (this.pos < 3) {
-                                return this.pos >= 2 ? (this.value as string) : '';
-                            } else if (this.pos > 3 && this.pos % 2 === 0 && this.pos % 4 !== 0) {
-                                return this.value as string;
-                            } else {
-                                return '';
-                            }
+                        labels: {
+                            step: 1,
+                            formatter: function () {
+                                // Only show the label starting from the 3rd tick (index 2)
+                                if (this.pos < 3) {
+                                    return this.pos >= 2 ? (this.value as string) : '';
+                                } else if (this.pos > 3 && this.pos % 2 === 0 && this.pos % 4 !== 0) {
+                                    return this.value as string;
+                                } else {
+                                    return '';
+                                }
+                            },
+                            align: 'right',
+                            rotation: 0, // Force labels to be horizontal
                         },
-                        align: 'right',
-                        rotation: 0, // Force labels to be horizontal
+                        top: '0%',
+                        categories: processedData.weeklyCategories,
                     },
-                    top: '0%',
-                    categories: processedData.weeklyCategories,
-                },
-                {
-                    categories: processedData.monthlyCategories.map(volume => volume.toString()),
-                    gridLineWidth: 1,
-                    height: '30%',
-                    offset: 0, // Remove extra spacing
-                    // linkedTo: 0, // Link categories with the first axis
-                    tickLength: 0, // Hide tick marks
-                    top: '68%',
-                },
-            ],
-            yAxis: [
-                {
-                    allowDecimals: false,
-                    gridLineWidth: 1,
-                    height: '60%',
-                    lineWidth: 2,
-                    min: 0,
-                    offset: 0, // Remove extra spacing
-                    opposite: true, // Moves the x-axis to the right side
-                    title: {
-                        text: '<b>Weekly<br/>Exceptions</b>',
-                        align: 'high', // Aligns the title to the top
-                        rotation: 0, // Force title to be horizontal
-                        x: -15,
-                        y: 15,
-                        useHTML: true, // Enables HTML in the title
+                    {
+                        categories: processedData.monthlyCategories.map(volume => volume.toString()),
+                        gridLineWidth: 1,
+                        height: '30%',
+                        offset: 0, // Remove extra spacing
+                        // linkedTo: 0, // Link categories with the first axis
+                        tickLength: 0, // Hide tick marks
+                        top: '68%',
                     },
-                    top: 0,
-                    labels: {
-                        y: 12,
+                ],
+                yAxis: [
+                    {
+                        allowDecimals: false,
+                        gridLineWidth: 1,
+                        height: '60%',
+                        lineWidth: 2,
+                        min: 0,
+                        offset: 0, // Remove extra spacing
+                        opposite: true, // Moves the x-axis to the right side
+                        title: {
+                            text: '<b>Weekly<br/>Exceptions</b>',
+                            align: 'high', // Aligns the title to the top
+                            rotation: 0, // Force title to be horizontal
+                            x: -15,
+                            y: 15,
+                            useHTML: true, // Enables HTML in the title
+                        },
+                        top: 0,
+                        labels: {
+                            y: 12,
+                        },
+                    },
+                    {
+                        allowDecimals: false,
+                        gridLineWidth: 1,
+                        height: '30%',
+                        lineWidth: 2,
+                        min: 0,
+                        offset: 0, // Remove extra spacing
+                        opposite: true, // Moves the x-axis to the right side
+                        title: {
+                            text: '<b>Monthly<br/>Volume</b>',
+                            align: 'high', // Aligns the title to the top
+                            rotation: 0, // Force title to be horizontal
+                            x: -15,
+                            useHTML: true, // Enables HTML in the title
+                        },
+                        top: '68%',
+                    },
+                ],
+                series: [...(weekly as Highcharts.SeriesOptionsType[]), ...(monthly as Highcharts.SeriesOptionsType[])],
+                plotOptions: {
+                    column: {
+                        stacking: 'normal',
+                        pointWidth: 20, // Fixed width for bars
+                        groupPadding: 0.1, // Reduce group spacing
+                        pointPadding: 0.05, // Minimize spacing between bars in a group
+                        borderWidth: 0, // Remove borders
+                        // dataLabels: {
+                        //     enabled: true,
+                        //     inside: true,
+                        //     format: '{y}',
+                        //     style: {
+                        //         color: '#FFFFFF',
+                        //     },
+                        // },
                     },
                 },
-                {
-                    allowDecimals: false,
-                    gridLineWidth: 1,
-                    height: '30%',
-                    lineWidth: 2,
-                    min: 0,
-                    offset: 0, // Remove extra spacing
-                    opposite: true, // Moves the x-axis to the right side
-                    title: {
-                        text: '<b>Monthly<br/>Volume</b>',
-                        align: 'high', // Aligns the title to the top
-                        rotation: 0, // Force title to be horizontal
-                        x: -15,
-                        useHTML: true, // Enables HTML in the title
-                    },
-                    top: '68%',
-                },
-            ],
-            series: [...(weekly as Highcharts.SeriesOptionsType[]), ...(monthly as Highcharts.SeriesOptionsType[])],
-            plotOptions: {
-                column: {
-                    stacking: 'normal',
-                    pointWidth: 20, // Fixed width for bars
-                    groupPadding: 0.1, // Reduce group spacing
-                    pointPadding: 0.05, // Minimize spacing between bars in a group
-                    borderWidth: 0, // Remove borders
-                    // dataLabels: {
-                    //     enabled: true,
-                    //     inside: true,
-                    //     format: '{y}',
-                    //     style: {
-                    //         color: '#FFFFFF',
-                    //     },
-                    // },
-                },
-            },
-        };
-    }, [statsResponse, sortedMonthly, processedData.weeklyCategories, processedData.monthlyCategories, processedData.weekly]);
+            };
+        },
+        [statsResponse]
+    );
+
+    useEffect(() => {
+        const processedData = processCarrierData(statsResponse || []);
+
+        // sort and slice to find the top 5 months
+        const monthlyArray: summary[] = [];
+        Object.entries(processedData.monthly).forEach(([, value]) => {
+            monthlyArray.push(value);
+        });
+
+        const sortedMonthly = monthlyArray.sort((a, b) => b.total - a.total).slice(0, 5);
+        const myChartConfig = getChartConfig(processedData, sortedMonthly);
+        setChartConfig(myChartConfig);
+        setSortedMonthly(sortedMonthly);
+    }, [statsResponse, getChartConfig]);
 
     const getOpenAiSummary = async (caseStats: DashboardStatsElementResponse[], processSubType: string) => {
         try {
@@ -364,7 +387,6 @@ export const ExceptionSummary = ({
         if (!shouldShowCaseInsights) {
             return;
         }
-        console.log('statsResponse', statsResponse, 'selectedSubprocess', selectedSubprocess);
         if (statsResponse?.length && selectedSubprocess) {
             getOpenAiSummary(statsResponse, selectedSubprocess).then(summary => {
                 if (summary) {

@@ -201,7 +201,6 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
         getCases()
             .then(response => {
                 if (!!response.data && Array.isArray(response.data)) {
-                    console.log(response.data[0].name);
                     setSelectedSubprocess(response.data[0].name);
                     setExceptiondata(response.data.slice(0, 5));
                 } else {
@@ -351,7 +350,6 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
                             carrierOrBrokerDealer={carrierOrBrokerDealer}
                             startDate={createdDateStart}
                             selectedSubprocess={selectedSubprocess}
-                            // selectedCarriers ={selectedCarriers}
                         />
                     </div>
                 </CardContainer>
