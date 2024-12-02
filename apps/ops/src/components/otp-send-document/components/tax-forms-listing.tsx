@@ -16,7 +16,7 @@ const TaxFormsListing = ({ taxForms }: TaxFormsListingProps) => {
         <>
             {taxForms?.length > 0 ? (
                 <>
-                    <Content details={t('contactCenter.taxFormDetails.title') as string} variant={ContentVariant.BodyBold} />
+                    <Content details={t('contactCenter.sendTaxForms.taxFormDetails.title') as string} variant={ContentVariant.BodyBold} />
                     <Table className="my-4">
                         <TableHeader>
                             <TableRow>

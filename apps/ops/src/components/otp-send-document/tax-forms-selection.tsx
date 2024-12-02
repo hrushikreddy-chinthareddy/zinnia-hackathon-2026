@@ -36,7 +36,7 @@ const TaxFormsSelection = ({ policy }: StatementSelectionProps) => {
             };
 
             const response = await searchTaxForms(requestData);
-            return response;
+            setTaxForms(prev => [...prev, ...response.items]);
         } catch (error) {
             console.error('An error occurred while getting Tax Forms', error);
             return;
@@ -57,8 +57,7 @@ const TaxFormsSelection = ({ policy }: StatementSelectionProps) => {
 
                 delete previousSelections[selectedValue];
             } else {
-                const taxForms = getTaxForms(selectedValue);
-                setTaxForms(prev => ({ ...prev, taxForms }));
+                getTaxForms(selectedValue);
                 previousSelections[selectedValue] = displayText;
             }
             return previousSelections;

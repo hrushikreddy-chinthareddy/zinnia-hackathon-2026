@@ -2009,6 +2009,7 @@
                 "confirm": "Confirmer"
             },
             "taxFormDetails": {
+                "title": "Formulaires fiscaux à envoyer",
                 "documentType": "Type de document",
                 "periodYear": "Période année",
                 "actions": "Actions",

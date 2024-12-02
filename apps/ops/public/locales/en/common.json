@@ -2032,6 +2032,7 @@
                 "confirm": "Confirm"
             },
             "taxFormDetails": {
+                "title": "Tax forms to sent",
                 "documentType": "Document type",
                 "periodYear": "Period year",
                 "actions": "Actions",

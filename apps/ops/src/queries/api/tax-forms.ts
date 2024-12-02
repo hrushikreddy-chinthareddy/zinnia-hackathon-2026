@@ -8,7 +8,7 @@ import { baseAppUrl } from '../api-config';
 
 const baseUrl = baseAppUrl + '/api/document/v2/';
 
-export const searchTaxForms = async (requestBody: SearchTaxFormRequestBody): Promise<SearchTaxFormResponseBody | null> => {
+export const searchTaxForms = async (requestBody: SearchTaxFormRequestBody): Promise<SearchTaxFormResponseBody> => {
     try {
         let url = `${baseUrl}taxForms?contractNumber=${requestBody.contractNumber}&clientCode=${requestBody.clientCode}`;
 
@@ -35,7 +35,7 @@ export const searchTaxForms = async (requestBody: SearchTaxFormRequestBody): Pro
             function: 'searchTaxForms.searchTaxForms',
         });
         console.error('searchTaxForms::contactCenterSearchTaxForms::error', e);
-        return null;
+        return {} as SearchTaxFormResponseBody;
     }
 };
 
