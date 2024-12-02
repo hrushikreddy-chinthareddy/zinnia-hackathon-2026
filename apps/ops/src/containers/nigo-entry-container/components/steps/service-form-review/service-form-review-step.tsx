@@ -82,7 +82,7 @@ export const ServiceFormReviewStep = ({documentNumber, policy, docType, clientCo
                 setFormErrors(errors);
             }
 
-            if (!isNullEmptyOrUndefined(documentIndexingInfo?.docTypeToReindex) && isNullEmptyOrUndefined(documentIndexingInfo?.notes)) {
+            if (!isNullEmptyOrUndefined(documentIndexingInfo?.docTypeToReindex) && documentIndexingInfo?.docTypeToReindex === SuggestedDocType.OTHER && isNullEmptyOrUndefined(documentIndexingInfo?.notes)) {
                 errors['noNotes'] = t('formErrors.formValidation.noNotes');
                 setFormErrors(errors);
             }
