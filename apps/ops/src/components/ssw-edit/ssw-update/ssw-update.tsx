@@ -18,7 +18,7 @@ import Amount from './steps/amount';
 import Start from './steps/start';
 import Summary from './steps/summary';
 import TabGroupContainer from './tab-group-container';
-import { buildSSWFormData, getDocumentSource, sswEditFormValidator, SswUpdateType } from '../ssw-edit-helper';
+import { buildSSWFormData, getDocumentSource, sswEditFormValidator, SswUpdateType, UpdatedProgram } from '../ssw-edit-helper';
 import Signature from './steps/signature';
 
 type SswUpdateContainerProps = {
@@ -31,7 +31,7 @@ type SswUpdateContainerProps = {
 const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContainerProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sswUpdate' });
     const router = useRouter();
-    const [updateProgram, setUpdateProgram] = useState<Program>();
+    const [updateProgram, setUpdateProgram] = useState<UpdatedProgram>({});
     const { initialForm, setFormErrors } = useContext(FormDataContext);
     const [isLoading, setIsLoading] = useState(false);
     const [isFormSubmitted, setIsFormSubmitted] = useState(false);

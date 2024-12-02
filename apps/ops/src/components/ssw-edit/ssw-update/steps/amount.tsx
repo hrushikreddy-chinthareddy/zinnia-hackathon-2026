@@ -38,7 +38,7 @@ const frequencyOptions = (t: TFunction) => [
 ];
 
 type AmountProps = {
-    updateProgram: UpdatedProgram | undefined;
+    updateProgram: UpdatedProgram;
     onProgramUpdate: React.Dispatch<any>;
     isReadOnly: boolean;
 };

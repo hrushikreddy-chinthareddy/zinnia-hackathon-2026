@@ -122,7 +122,7 @@ export const buildSSWFormData = (
     initialForm: ActiveWithdrawalCase,
     formSignature: FormSignature,
     existingProg: Program,
-    updateProgram: Program | undefined,
+    updateProgram: UpdatedProgram,
     document: DocumentData,
     operationType: SswUpdateType
 ): CreateTaskBody<TaskStatus, TaskV2Payload> => {

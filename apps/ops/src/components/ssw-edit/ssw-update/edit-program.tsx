@@ -11,7 +11,7 @@ import { SswUpdateType } from '../ssw-edit-helper';
 type EditProgramProps = {
     program: Program;
     onTerminate: (item: Program, operationType: SswUpdateType, formSign: FormSignature) => void;
-    onEdit: (ind: number) => undefined;
+    onEdit: (ind: number) => void;
     programIndex: number;
 };
 

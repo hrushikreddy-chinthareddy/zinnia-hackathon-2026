@@ -15,7 +15,7 @@ import { SswUpdateType, UpdatedProgram } from '../../ssw-edit-helper';
 
 type SummaryProps = {
     currentProgram: Program;
-    updatedProgram: UpdatedProgram | undefined;
+    updatedProgram: UpdatedProgram;
     onContinue: (item: Program, operationType: SswUpdateType, formSign: FormSignature) => void;
 };
 
