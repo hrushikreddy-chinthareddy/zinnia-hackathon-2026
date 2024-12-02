@@ -364,7 +364,8 @@ export const ExceptionSummary = ({
         if (!shouldShowCaseInsights) {
             return;
         }
-        if (statsResponse?.length) {
+        console.log('statsResponse', statsResponse, 'selectedSubprocess', selectedSubprocess);
+        if (statsResponse?.length && selectedSubprocess) {
             getOpenAiSummary(statsResponse, selectedSubprocess).then(summary => {
                 if (summary) {
                     setAiSummary(summary);
@@ -373,7 +374,7 @@ export const ExceptionSummary = ({
         } else {
             setAiSummary(`No exceptions for ${dashboardChartTitleFormat(selectedSubprocess)}.`);
         }
-    }, [statsResponse, selectedSubprocess, shouldShowCaseInsights]);
+    }, [loading, statsResponse, selectedSubprocess, shouldShowCaseInsights]);
 
     return (
         <CardContainer containerClassNames="rounded" classNames="!p-0" fullWidth={true}>
