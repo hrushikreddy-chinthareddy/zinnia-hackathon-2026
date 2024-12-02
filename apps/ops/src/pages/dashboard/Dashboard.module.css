@@ -31,9 +31,11 @@
     position: sticky;
     top: 0;
     background-color: var(--color-base-surface-surface-primary);
+    z-index: 3;
+    padding-bottom: var(--measure-dimension-gap-lg);
 
     &.pinned {
-        z-index: 3;
+        z-index: 4;
     }
 
 }

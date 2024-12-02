@@ -102,3 +102,18 @@ export const fetchCompletedCasesByProcessSubTypeSSR = async (accessToken: string
 
 export const fetchCompletedCasesByProcessSubType = async (body = completedCasesByProcessSubtypeBody, config?: AxiosAuthRequestConfig): Promise<DashboardResponseData[]> =>
   fetchDashboardStats(body, 'fetchCompletedCasesByProcessSubType', config).then((data) => data.data);
+
+export const top5ProductsBody = {
+  filter: {
+    createdDateStart: oneYearAgoISO,
+    process: ['New Business'],
+    caseStatus: ['COMPLETED'],
+  },
+  groupBy: ['processSubType', 'productName', 'updatedAt'],
+}
+
+export const fetchTop5ProductsSSR = async (accessToken: string, config?: AxiosAuthRequestConfig): Promise<DashboardResponseData[]> =>
+  fetchDashboardStatsSSR(accessToken, top5ProductsBody, 'fetchTop5ProductsSSR', config).then((data) => data.data);
+
+export const fetchTop5Products = async (body = top5ProductsBody, config?: AxiosAuthRequestConfig): Promise<DashboardResponseData[]> =>
+  fetchDashboardStats(body, 'fetchTop5Products', config).then((data) => data.data);
