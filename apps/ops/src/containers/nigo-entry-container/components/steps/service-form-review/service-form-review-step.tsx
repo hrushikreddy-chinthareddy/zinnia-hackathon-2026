@@ -20,6 +20,7 @@ import { Policy } from '@deps/models/policy/sor-policy';
 import { updateTask } from '@deps/queries/api/v2/task';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
+import { SuggestedDocType } from './document-indexing-info';
 import { SelOptionType, ServiceFormReview } from './service-form-review';
 import { getFormData } from './service-form-review.helper';
 import { useNigoEntry } from '../../nigo-entry-provider';
@@ -41,7 +42,7 @@ export const ServiceFormReviewStep = ({documentNumber, policy, docType, clientCo
     const { sectionOption, documentIndexingInfo, formErrors, setFormErrors, setSubmitFailed } = useNigoEntry();
     const formState = useContext(FormDataContext);
 
-    const { formSource, setFormSource, setFormData, formSubtype, setFormReindexingData, formReindexingData, setFormNigos } = formState;
+    const { formSource, setFormSource, setFormData, formSubtype, setFormReindexingData } = formState;
     const caseType = getCaseType(docType as string);
     const carrier = clientCode.toUpperCase();
     const [isLoading, setIsLoading] = useState(false);
@@ -127,7 +128,7 @@ export const ServiceFormReviewStep = ({documentNumber, policy, docType, clientCo
                 lob: document.lob,
                 docHandle: document.sysDocumentHandle,
                 docTypeToReindex: documentIndexingInfo?.docTypeToReindex,
-                notes: documentIndexingInfo?.notes
+                notes: documentIndexingInfo?.docTypeToReindex === SuggestedDocType.OTHER ? documentIndexingInfo?.notes : null
             }));
         }
     }, [sectionOption, document, documentIndexingInfo]);

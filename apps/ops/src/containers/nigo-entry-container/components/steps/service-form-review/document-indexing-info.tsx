@@ -8,7 +8,7 @@ import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 
 import { useNigoEntry } from '../../nigo-entry-provider';
 
-const enum SuggestedDocType {
+export const enum SuggestedDocType {
     SYSTEMATIC = 'SYSTEMATIC',
     STOPPAY = 'STOPPAY',
     RETURN_MAIL = 'RETURN MAIL',
@@ -60,18 +60,20 @@ export const DocumentIndexingInfo = () => {
                     value={documentIndexingInfo?.docTypeToReindex || ''}
                 />
             </div>
-            <div className="mt-4">
-                <Field
-                    label={t('notes') as string}
-                    onChange={e => setNotes(e.target.value)}
-                    size={FieldSize.Small}
-                    type={FieldType.BaseActive}
-                    value={documentIndexingInfo?.notes || ''}
-                    variant={isNullEmptyOrUndefined(documentIndexingInfo?.docTypeToReindex) ? FieldVariant.Inactive : FieldVariant.Default}
-                    disabled={isNullEmptyOrUndefined(documentIndexingInfo?.docTypeToReindex)}
-                    maxLength={200}
-                />
-            </div>
+            {documentIndexingInfo?.docTypeToReindex === SuggestedDocType.OTHER && (
+                <div className="mt-4">
+                    <Field
+                        label={t('notes') as string}
+                        onChange={e => setNotes(e.target.value)}
+                        size={FieldSize.Small}
+                        type={FieldType.BaseActive}
+                        value={documentIndexingInfo?.notes || ''}
+                        variant={isNullEmptyOrUndefined(documentIndexingInfo?.docTypeToReindex) ? FieldVariant.Inactive : FieldVariant.Default}
+                        disabled={isNullEmptyOrUndefined(documentIndexingInfo?.docTypeToReindex)}
+                        maxLength={200}
+                    />
+                </div>
+            )}
         </div>
     );
 }
