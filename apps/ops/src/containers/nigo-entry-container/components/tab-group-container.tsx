@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import GlobalValuesBar from '@deps/components/global-values/global-values-bar/global-values-bar';
 import NavElement, { NavElementType, NavElementSize } from '@deps/components/nav-element/nav-element';
@@ -21,6 +21,10 @@ import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icon
 import { ReactComponent as MenuIcon } from '@deps/styles/elements/icons/navigation/menu.svg';
 import DocumentPortalPanel from './side-panel/document-portal-panel';
 import CaseDetailsContent from '@deps/components/side-sheet/case-details/case-details-content';
+import { Error } from '@deps/components/error/Error';
+import { CaseTableData } from '@deps/contexts/CaseManagementFilters';
+import { getCases } from '@deps/queries/api/cases';
+import { CaseSearchQuery } from '@deps/queries/cases';
 
 
 type TabGroupContainerProps = {
@@ -39,19 +43,63 @@ const TabGroupContent = ({
     docType = '',
     documentData,
 }: TabGroupContainerProps) => {
+    const [caseTableData, setCaseTableData] = useState<CaseTableData>({ cases: [], total: 0, loading: true, error: false });
+    const [offset, setOffset] = useState(0)
+    const [error, setError] = useState<React.ReactNode>(null);
+    const limit = 25
+    const fetchCases = async () => {
+        try {
+            const searchValueObject = { policyNumber: policy.policyNumber }
+
+            const updatedRequest: CaseSearchQuery = {
+                ...searchValueObject,
+                limit: limit,
+                offset: offset,
+                sortDirection: "desc",
+                sortBy: 'createdAt',
+            };
+
+            const response = await getCases(updatedRequest);
+
+            if (!response) {
+                throw new (Error as any)('Error fetching cases: No response');
+            }
+            if ('total' in response) {
+                setCaseTableData({
+                    cases: response.data,
+                    total: response.total,
+                    loading: false,
+                    error: false,
+                });
+                setError(<>There are <span className='text-[#00628b]'> {response.total} other open cases</span> realted to this policy</>)
+            } else {
+                throw new (Error as any)(response.data.err ? response.data.err : 'Error fetching cases');
+            }
+        } catch (error) {
+            console.error(error);
+            setCaseTableData({
+                cases: [],
+                total: 0,
+                loading: false,
+                error: true,
+            });
+        }
+    }
+    useEffect(() => {
+        fetchCases()
+    }, [offset, limit])
 
     const { t } = useTranslation(TranslationFiles.COMMON);
     const { currentStepIndex, setCurrentStepIndex } = useWorkflow();
     const sideSheet = useSideSheetContext();
-
     const globalValuesData = useMemo(() => policyDataToGlobalValues(new PolicyDetails(policy), t), [policy, t]);
-
     const { marketingName, planCode, policyNumber, productType, status, tooltip, variant } = globalValuesData;
     const handleClick = (step: Step) => {
         if (step.isDisabled || currentStepIndex === step.index) return;
 
         setCurrentStepIndex(step.index);
     };
+
     const openSideSheet = () => {
         const content = <DocumentPortalPanel policy={policy} documentNumber={documentNumber} docType={docType} />;
         sideSheet.changeSideSheetContent(t('nigoEntry.documentPanel.documents'), content);
@@ -78,7 +126,7 @@ const TabGroupContent = ({
 
     const openCaseDetails = () => {
         const content = (
-            <CaseDetailsContent policy={policy} documentData={documentData} />
+            <CaseDetailsContent policy={policy} documentData={documentData} offset={offset} setOffset={setOffset} limit={limit} caseTableData={caseTableData} />
         );
         sideSheet.changeSideSheetContent(t('site.navLinks.caseDetails.text'), content);
         sideSheet.handleOpen(true);
@@ -86,6 +134,7 @@ const TabGroupContent = ({
 
     return (
         <div className="workflow-height-adjusted flex w-full max-w-[1130px] grow flex-col self-center">
+            {error && <Error errorMessage={error} className='mb-4' />}
             <GlobalValuesBar
                 carrierId={policy.carrierId}
                 marketingName={marketingName}
@@ -102,7 +151,6 @@ const TabGroupContent = ({
                 documentNumber={documentNumber}
                 showLink={false}
             />
-
             <div className="my-2 flex flex-row items-center justify-end space-x-3">
                 <Typography variant={TypographyVariant.FieldLabel} className="hidden md:block">
                     {t('site.navLinks.relatedActivity.text')}
@@ -117,6 +165,7 @@ const TabGroupContent = ({
                         if (e.key === 'Enter' || e.key === ' ') {
                             e.preventDefault();
                             openSideSheet();
+
                         }
                     }}
                 >
@@ -172,9 +221,11 @@ const TabGroupContent = ({
 };
 
 const TabGroupContainer = ({ steps, policy, documentNumber, docType, documentData }: TabGroupContainerProps) => {
+
     return (
         <DiaryNotesProvider caseDetails={policy as any}>
             <WorkflowProvider>
+
                 <TabGroupContent
                     steps={steps}
                     policy={policy}
@@ -182,6 +233,7 @@ const TabGroupContainer = ({ steps, policy, documentNumber, docType, documentDat
                     documentNumber={documentNumber}
                     docType={docType}
                     documentData={documentData}
+
                 />
             </WorkflowProvider>
         </DiaryNotesProvider>

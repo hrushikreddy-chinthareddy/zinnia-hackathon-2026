@@ -1,6 +1,6 @@
 import { TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
 import { TranslationFiles } from "@deps/config/translations";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Policy } from '@deps/models/policy/sor-policy';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
@@ -10,8 +10,6 @@ import dayjs from 'dayjs';
 import DetailsTab from './details-tab';
 import RelatedTab from './related-tab';
 import { CaseTableData } from '@deps/contexts/CaseManagementFilters';
-import { CaseSearchQuery } from '@deps/queries/cases';
-import { getCases } from '@deps/queries/api/cases';
 export enum TabOptions {
   Details = 'Details',
   Related = 'Related',
@@ -19,9 +17,12 @@ export enum TabOptions {
 type CaseDetailsProps = {
   policy: Policy;
   documentData: DocumentData
-
+  offset: number;
+  limit: number;
+  setOffset: React.Dispatch<React.SetStateAction<number>>;
+  caseTableData: CaseTableData
 };
-function CaseDetailsContent({ policy, documentData, }: CaseDetailsProps) {
+function CaseDetailsContent({ policy, documentData, offset, limit, setOffset, caseTableData }: CaseDetailsProps) {
   const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.CaseDetailsContent' });
   const [activeTab, setActiveTab] = useState(TabOptions.Details);
   const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
@@ -30,50 +31,6 @@ function CaseDetailsContent({ policy, documentData, }: CaseDetailsProps) {
   const formattedCertifiedReceiveDate = dayjs(policy.policyDates?.certifiedReceivedDate).format(DEFAULT_EXTENDED_DATE_FORMAT);
   const formattedApplicationDate = dayjs(policy.policyDates?.applicationDate).format(DEFAULT_EXTENDED_DATE_FORMAT);
 
-  const [caseTableData, setCaseTableData] = useState<CaseTableData>({ cases: [], total: 0, loading: true, error: false });
-  const [offset, setOffset] = useState(0)
-  const limit = 25
-
-  const fetchCases = async () => {
-    try {
-      const searchValueObject = { policyNumber: policy.policyNumber }
-
-      const updatedRequest: CaseSearchQuery = {
-        ...searchValueObject,
-        limit: limit,
-        offset: offset,
-        sortDirection: "desc",
-        sortBy: 'createdAt',
-      };
-
-      const response = await getCases(updatedRequest);
-
-      if (!response) {
-        throw new Error('Error fetching cases: No response');
-      }
-      if ('total' in response) {
-        setCaseTableData({
-          cases: response.data,
-          total: response.total,
-          loading: false,
-          error: false,
-        });
-      } else {
-        throw new Error(response.data.err ? response.data.err : 'Error fetching cases');
-      }
-    } catch (error) {
-      console.error(error);
-      setCaseTableData({
-        cases: [],
-        total: 0,
-        loading: false,
-        error: true,
-      });
-    }
-  }
-  useEffect(() => {
-    fetchCases()
-  }, [offset, limit])
 
   const renderTabContent = (
     <>
