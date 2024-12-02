@@ -6,9 +6,9 @@ import { useEffect, useState, useRef } from 'react';
 
 import Loading from '@/app/loading';
 import { DocumentCategory } from '@/types/document';
+import { createQueryString } from '@/utils/strings';
 
 import PreviewUnsupported from './PreviewUnsupported';
-import { createQueryString } from '../documents-list/DocumentsList';
 
 export default function PdfPreviewer(docInfo: {
   // TODO: need to figure out a better way to type this because it can be

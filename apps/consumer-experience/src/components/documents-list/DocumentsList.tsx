@@ -9,6 +9,7 @@ import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable'
 import { DocumentCategory, ExtendedDocumentMeta } from '@/types/document';
 import { checkIfNull, lineOfBusinessUrlPath } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
+import { createQueryString } from '@/utils/strings';
 
 import styles from './documentsList.module.css';
 
@@ -17,11 +18,6 @@ const documentCategoryDisplayName = {
   [DocumentCategory.STATEMENTS]: 'statements',
   [DocumentCategory.TAX]: 'tax documents',
 };
-
-export const createQueryString = (obj: Record<string, unknown>) =>
-  Object.entries(obj)
-    .map(([key, value]) => `${key}=${value}`)
-    .join('&');
 
 export default function DocumentsList({
   docCategory,

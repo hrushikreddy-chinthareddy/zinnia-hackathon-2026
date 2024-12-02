@@ -8,16 +8,10 @@ import { FieldData } from '@/components/field-data/FieldData';
 import { DocumentCategory, TaxDocument } from '@/types/document';
 import { checkIfNull, lineOfBusinessUrlPath } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
+import { createQueryString } from '@/utils/strings';
 
 import styles from './documentsList.module.css';
 import { NoDataAvailable } from '../no-data-available/NoDataAvailable';
-
-// TODO: move this to a util file somewhere...not the utils/url file because that
-// uses headers :/
-const createQueryString = (obj: Record<string, unknown>) =>
-  Object.entries(obj)
-    .map(([key, value]) => `${key}=${value}`)
-    .join('&');
 
 export default function DocumentsListTax({
   documents,
