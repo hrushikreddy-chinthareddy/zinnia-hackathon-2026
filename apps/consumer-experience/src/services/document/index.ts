@@ -22,7 +22,10 @@ import {
   isMockErrorEnabled,
 } from '..';
 import { mockDocumentResponse } from '../mocks/document';
-import { mockTaxDocumentsResponse } from '../mocks/documents';
+import {
+  mockDocumentsResponse,
+  mockTaxDocumentsResponse,
+} from '../mocks/documents';
 
 const getDocumentsRaw = async (documentUrl: string) => {
   const rawResponse = await ServerApi.get(documentUrl);
@@ -110,6 +113,14 @@ export const getDocuments = async (
   const { clientCode, source } = queryParams;
   const documentQueryParams = getDocumentQueryParams(queryParams);
   const documentUrl = `${documentApiBaseUrl}/documents?${documentQueryParams.toString()}`;
+
+  if (isMockDocumentsRequestEnabled()) {
+    return {
+      data: mockDocumentsResponse,
+      error: null,
+    };
+  }
+
   try {
     const docsData = await getDocumentsRaw(documentUrl);
 
