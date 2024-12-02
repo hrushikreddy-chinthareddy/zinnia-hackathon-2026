@@ -351,7 +351,7 @@ const DashboardPage = ({
                                     onChange={updateCarrierFilters}
                                     size={FieldSize.Small}
                                     placeholder={t('allCarriers') || ''}
-                                    disabled={carrierFilterItems.length === 1}
+                                    disabled={loading || carrierFilterItems.length === 1}
                                     name="carrier-dropdown-btn"
                                     onOpenChange={handleOnOpenChange}
                                 />
@@ -363,6 +363,7 @@ const DashboardPage = ({
                                     selectedCarriers={Object.keys(placeholderSelectedCarriers)}
                                     setSelectedBrokerDealers={setBrokerDealers}
                                     updateBrokerDealerFilters={updateBrokerDealerFilters}
+                                    disabled={loading}
                                 />
                             </div>
                         </div>

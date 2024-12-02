@@ -8,7 +8,7 @@ import { default as styles } from '@deps/pages/dashboard/Dashboard.module.css';
 export const DashboardNavLinks = () => {
     const router = useRouter();
     return (
-        <nav className="flex basis-full no-wrap gap-4 bg-white px-8 pb-0">
+        <nav className="flex basis-full no-wrap gap-4 bg-white px-8 pt-4 pb-0">
             <Link
                 iconType={IconType.DOCUMENT_TEXT}
                 href="/dashboard"

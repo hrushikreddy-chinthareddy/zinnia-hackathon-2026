@@ -14,6 +14,7 @@ type BrokerDealerFilterProps = {
     setSelectedBrokerDealers: Dispatch<SetStateAction<DashboardResponseData[]>>;
     updateBrokerDealerFilters: (value: string, displayText: string) => void;
     selectedBrokerDealers: CarrierListItem;
+    disabled?: boolean;
 };
 
 export const BrokerDealerFilter = ({
@@ -22,6 +23,7 @@ export const BrokerDealerFilter = ({
     selectedBrokerDealers,
     selectedCarriers,
     setSelectedBrokerDealers,
+    disabled,
 }: BrokerDealerFilterProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
 
@@ -52,7 +54,7 @@ export const BrokerDealerFilter = ({
             onChange={updateBrokerDealerFilters}
             size={FieldSize.Small}
             placeholder={t('allAgents') || ''}
-            disabled={brokerDealers.length < 2}
+            disabled={disabled !== undefined ? disabled : brokerDealers.length === 0}
             name="agent-dropdown-btn"
         />
     );
