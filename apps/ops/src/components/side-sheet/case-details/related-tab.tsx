@@ -6,16 +6,17 @@ import { CaseTableData } from "@deps/contexts/CaseManagementFilters";
 import { DEFAULT_EXTENDED_DATE_FORMAT } from "@deps/types/constants";
 import dayjs from "dayjs";
 import { useTranslation } from "next-i18next";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 type relatedTabProps = {
   caseTableData: CaseTableData,
   offset: number,
   limit: number,
-  setOffset: React.Dispatch<React.SetStateAction<number>>
+  setOffset: React.Dispatch<React.SetStateAction<number>>,
+  setError: React.Dispatch<React.SetStateAction<React.ReactNode>>
 }
 
-function RelatedTab({ caseTableData, offset, limit, setOffset }: relatedTabProps) {
+function RelatedTab({ caseTableData, offset, limit, setOffset, setError }: relatedTabProps) {
   const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.CaseDetailsContent' });
   const paginationControls = useMemo(() => {
     const goToPage = (pageNumber: number) => {
@@ -25,7 +26,9 @@ function RelatedTab({ caseTableData, offset, limit, setOffset }: relatedTabProps
 
     return <PaginationControls total={caseTableData.total} limit={limit} offset={offset} goToPage={goToPage} />;
   }, [caseTableData.total, offset, limit]);
-
+  useEffect(() => {
+    setError(null)
+  }, [])
 
   return (
     <div className="flex-1 flex flex-col w-full !mb-0 px-4 pt-4 md:px-6 lg:px-8 gap-4">

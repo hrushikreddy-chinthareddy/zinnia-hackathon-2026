@@ -130,7 +130,7 @@ const TabGroupContent = ({
 
     const openCaseDetails = () => {
         const content = (
-            <CaseDetailsContent policy={policy} documentData={documentData} offset={offset} setOffset={setOffset} limit={limit} caseTableData={caseTableData} />
+            <CaseDetailsContent policy={policy} documentData={documentData} offset={offset} setOffset={setOffset} limit={limit} caseTableData={caseTableData} setError={setError} />
         );
         sideSheet.changeSideSheetContent(t('site.navLinks.caseDetails.text'), content);
         sideSheet.handleOpen(true);

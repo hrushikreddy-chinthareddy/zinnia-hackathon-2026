@@ -20,9 +20,10 @@ type CaseDetailsProps = {
   offset: number;
   limit: number;
   setOffset: React.Dispatch<React.SetStateAction<number>>;
-  caseTableData: CaseTableData
+  caseTableData: CaseTableData;
+  setError: React.Dispatch<React.SetStateAction<React.ReactNode>>
 };
-function CaseDetailsContent({ policy, documentData, offset, limit, setOffset, caseTableData }: CaseDetailsProps) {
+function CaseDetailsContent({ policy, documentData, offset, limit, setOffset, caseTableData, setError }: CaseDetailsProps) {
   const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.CaseDetailsContent' });
   const [activeTab, setActiveTab] = useState(TabOptions.Details);
   const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
@@ -44,7 +45,7 @@ function CaseDetailsContent({ policy, documentData, offset, limit, setOffset, ca
         />
       </TabContent>
       <TabContent className="flex w-full flex-col items-center" value={TabOptions.Related}>
-        <RelatedTab offset={offset} limit={limit} setOffset={setOffset} caseTableData={caseTableData} />
+        <RelatedTab offset={offset} limit={limit} setOffset={setOffset} caseTableData={caseTableData} setError={setError} />
       </TabContent>
     </>
   );
