@@ -17,14 +17,13 @@ export enum TabOptions {
 type DocumentViewProps = {
     caseId: string;
     carrierId: string;
-    documentNumber: string;
 };
 
-const DocumentPortalPanel = ({ caseId, carrierId, documentNumber }: DocumentViewProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.documentPanel' });
+const DocumentPortalPanel = ({ caseId, carrierId }: DocumentViewProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'task.documentPanel' });
     const [activeTab, setActiveTab] = useState(TabOptions.Working);
 
-    const [loading, getPolicyDocs, workingDocument, relatedDocument] = useGetCaseDocs(caseId, carrierId);
+    const [loading, getPolicyDocs, workingDocument, relatedDocument] = useGetCaseDocs(caseId);
 
     useEffect(() => {
         getPolicyDocs();
@@ -35,12 +34,12 @@ const DocumentPortalPanel = ({ caseId, carrierId, documentNumber }: DocumentView
     const renderTabContent = (
         <>
             <TabContent className="flex w-full flex-col items-center" value={TabOptions.Working}>
-                <DocumentItem
+                {/* <DocumentItem
                     document={workingDocument}
                     documentNumber={documentNumber}
                     carrierId={carrierId}
                     activeDocType={DocumentTypeView.Case}
-                />
+                /> */}
             </TabContent>
             <TabContent className="flex w-full flex-col items-center" value={TabOptions.Related}>
                 {relatedDocument?.length !== 0 && (

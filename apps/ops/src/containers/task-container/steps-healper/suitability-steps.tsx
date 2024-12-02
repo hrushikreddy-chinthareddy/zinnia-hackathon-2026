@@ -8,7 +8,7 @@ import { TaskReviewStep } from '../components/steps/task-review/task-review-step
 export const getSuitabilitySteps = ({
     docType,
     carrierId,
-    documentNumber,
+
     caseId,
     taskId,
     taskType,
@@ -21,16 +21,7 @@ export const getSuitabilitySteps = ({
         {
             ariaLabel: t('tabs.taskReview'),
             isVisible: () => true,
-            component: (
-                <TaskReviewStep
-                    caseId={caseId}
-                    docType={docType}
-                    clientCode={carrierId}
-                    taskInfoLink={''}
-                    documentNumber={documentNumber}
-                    taskType={taskType}
-                />
-            ),
+            component: <TaskReviewStep caseId={caseId} docType={docType} clientCode={carrierId} taskInfoLink={''} taskType={taskType} />,
             text: t('tabs.start'),
             index: 0,
             isCompleted: true,

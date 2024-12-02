@@ -13,14 +13,13 @@ import { TaskReview } from './task-review';
 
 type TaskReviewStepProps = {
     caseId: string;
-    documentNumber: string;
     taskInfoLink: string;
     taskType: TaskType;
     clientCode: string;
     docType: string;
 };
 
-export const TaskReviewStep = ({ caseId, documentNumber, clientCode, docType, taskType }: TaskReviewStepProps) => {
+export const TaskReviewStep = ({ caseId, clientCode, docType, taskType }: TaskReviewStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.taskReview` });
 
     const { goToNext } = useWorkflow();
@@ -47,7 +46,6 @@ export const TaskReviewStep = ({ caseId, documentNumber, clientCode, docType, ta
                 <div className="flex flex-col gap-1">
                     <TaskReview
                         caseId={caseId}
-                        documentNumber={documentNumber}
                         taskType={taskType}
                         clientCode={clientCode}
                         docType={docType}

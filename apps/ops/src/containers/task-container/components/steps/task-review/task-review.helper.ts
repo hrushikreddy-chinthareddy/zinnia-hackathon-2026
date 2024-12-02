@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react';
 import { CaseDocument } from '@deps/models/case/document';
 import { getCaseDocuments } from '@deps/queries/api/cases';
 
-export const useGetCaseDocs = (caseId: string, documentNumber: string): [boolean, () => void, any, any] => {
+export const useGetCaseDocs = (caseId: string): [boolean, () => void, any, any] => {
     // const { task } = useContext(TaskDataContext);
     const [loading, setLoading] = useState(false);
     const [workingDocument, setWorkingDocument] = useState<CaseDocument>();
@@ -16,8 +16,8 @@ export const useGetCaseDocs = (caseId: string, documentNumber: string): [boolean
             const response = await getCaseDocuments(caseId);
             const items = (response as CaseDocument[]) || [];
             if (items) {
-                const workingDoc = items.find(item => item.documentNumber === documentNumber);
-                const relatedDoc = items.filter(item => item.documentNumber !== documentNumber);
+                const workingDoc = items.find(item => item.documentNumber === '');
+                const relatedDoc = items.filter(item => item.documentNumber !== '');
                 setWorkingDocument(workingDoc);
                 setRelatedDocument(relatedDoc);
             }
@@ -26,7 +26,7 @@ export const useGetCaseDocs = (caseId: string, documentNumber: string): [boolean
             console.error('useGetPolicyTypeDocs::error validating address', e);
             setLoading(false);
         }
-    }, [loading, caseId, documentNumber]);
+    }, [loading, caseId]);
 
     return [loading, getCaseDocs, workingDocument, relatedDocument];
 };

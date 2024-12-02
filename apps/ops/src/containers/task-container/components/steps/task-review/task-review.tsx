@@ -15,17 +15,16 @@ interface TaskReviewProps {
     caseId: string;
     clientCode: string;
     docType: string;
-    documentNumber: string;
     activeDocType: DocumentTypeView;
     taskType: string;
 }
 
-export const TaskReview = ({ caseId, clientCode, activeDocType, documentNumber, taskType }: TaskReviewProps) => {
+export const TaskReview = ({ caseId, clientCode, activeDocType, taskType }: TaskReviewProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.taskReview` });
     const { setIsReadyForDataEntry, isReadyForDataEntry } = useContext(TaskDataContext);
 
     const [sectionOption, setSectionOption] = useState(isReadyForDataEntry ? 'true' : 'false');
-    const [loading, getCaseDocs, workingDocument] = useGetCaseDocs(caseId, documentNumber);
+    const [loading, getCaseDocs, workingDocument] = useGetCaseDocs(caseId);
     const sectionOptions = [
         {
             label: t('options.allSectionsAreComplete'),
@@ -58,9 +57,6 @@ export const TaskReview = ({ caseId, clientCode, activeDocType, documentNumber, 
                         </div>
                         <div>
                             <div className="text-sm font-bold">{displayName}</div>
-                            <div className="flex items-center text-sm font-normal text-gray-300">
-                                {t('documentId') + ' ' + documentNumber}
-                            </div>
                         </div>
                         <div className="flex items-center">
                             <DocumentPreviewer
