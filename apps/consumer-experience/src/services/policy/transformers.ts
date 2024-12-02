@@ -292,7 +292,7 @@ export const transformPolicyForWithdrawals = (
   const withdrawalsTaken =
     policy.withdrawalValues?.yearToDateNumberOfWithdrawal;
   const withdrawalValues = policy.withdrawalValues || {};
-
+  const requiredMinimumDistribution = policy.requiredMinimumDistribution || {};
   return {
     withdrawalAllowedStartDate: withdrawalValues.withdrawalAllowedStartDate,
     maximumWithdrawalAmount: withdrawalValues.maximumWithdrawalAmount,
@@ -317,6 +317,8 @@ export const transformPolicyForWithdrawals = (
       matchVestingDate: policy.allocation?.matchSegment?.matchVestingDate,
     },
     freeWithdrawalAmount: withdrawalValues.freeWithdrawalAmount,
+    requiredMinimumDistributionAmount:
+      requiredMinimumDistribution.totalRequiredMinimumDistributionAnnualAmount,
     // Date of last policy transaction, when policy value was last updated
     effectiveDate: policy.effectiveDate,
     endingAccountValue: policy.accountValues?.endingAccountValue,

@@ -295,6 +295,7 @@ export interface PolicyWithdrawals {
   vestingDetails: VestingDetails;
   effectiveDate?: string;
   endingAccountValue?: number | null;
+  requiredMinimumDistributionAmount?: number | null;
 }
 
 // export type PolicyFeatureType = keyof typeof PolicyFeature.featureType;

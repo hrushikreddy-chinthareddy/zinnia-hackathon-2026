@@ -163,6 +163,73 @@ export default async function AccountValuePage({
             }
           />
         </ClickableCardContainer>
+        <ClickableCardContainer>
+          <ClickableCardContainer.LinkContent
+            linkTo={{
+              url: `/coverage/${LineOfBusinessPath.ANNUITIES}/${planCode}/${policyNumber}/withdrawals`,
+              label: 'go to free withdrawal page',
+            }}
+          >
+            <ValueWithPopover
+              value={freeWithdrawalAmount}
+              label="Free withdrawal"
+              popoverElement={
+                <FreeWithdrawalValuePopover
+                  percentValue={accountWithdrawalPercentage}
+                />
+              }
+            />
+          </ClickableCardContainer.LinkContent>
+        </ClickableCardContainer>
+        {canShowWithdrawal && (
+          <ClickableCardContainer>
+            <ClickableCardContainer.LinkContent
+              linkTo={{
+                url: `/coverage/${LineOfBusinessPath.ANNUITIES}/${planCode}/${policyNumber}/account/withdrawals`,
+                label: 'go to free withdrawal page',
+              }}
+            >
+              <ValueWithPopover
+                value={freeWithdrawalAmount}
+                label="Free withdrawal"
+                emphasizeValue
+                popoverElement={
+                  <FreeWithdrawalValuePopover
+                    percentValue={accountWithdrawalPercentage}
+                  />
+                }
+              />
+            </ClickableCardContainer.LinkContent>
+          </ClickableCardContainer>
+        )}
+
+        <ClickableCardContainer>
+          <ValueWithPopover
+            value={formatUSDollars(cumulativeGrossDeathBenefitAmount)}
+            label="Death benefit"
+            emphasizeValue
+            popoverElement={
+              <LabelPopover title={'Death Benefit'}>
+                This is the amount, inclusive of any additional riders or
+                features, that will be available to your beneficiaries should
+                you pass away.
+              </LabelPopover>
+            }
+          />
+        </ClickableCardContainer>
+        <ClickableCardContainer>
+          <ValueWithPopover
+            value={formatUSDollars(totalYearToDatePremiumAmount)}
+            label="Total premium"
+            emphasizeValue
+            popoverElement={
+              <LabelPopover title={'Total Premium'}>
+                This is the amount of money you've contributed to your account
+                value to date.
+              </LabelPopover>
+            }
+          />
+        </ClickableCardContainer>
         <AdditionalAccountValueLinks
           planCode={planCode}
           policyNumber={policyNumber}
