@@ -22,6 +22,7 @@ import Select from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
+import { DashboardResponsiveLayout } from '@deps/containers/dashboard/dashboard-responsive-layout';
 import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helper';
@@ -214,7 +215,7 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
     }, [createdDateStart]);
 
     return (
-        <>
+        <DashboardResponsiveLayout>
             <PageHead titleKey="dashboard" />
             <NoNavLayout fullHeight={true} displayTopNavBar={true} size="large">
                 <div
@@ -362,7 +363,7 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
                     </div>
                 </CardContainer>
             </NoNavLayout>
-        </>
+        </DashboardResponsiveLayout>
     );
 };
 

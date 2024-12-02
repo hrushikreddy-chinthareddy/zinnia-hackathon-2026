@@ -22,6 +22,7 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { getStartAndEndDates } from '@deps/containers/case-redesign-sub-page/case-helpers';
+import { DashboardResponsiveLayout } from '@deps/containers/dashboard/dashboard-responsive-layout';
 import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helper';
@@ -326,7 +327,7 @@ const DashboardPage = ({
     }, [baseDashboardQueryFilter, baseInsightQueryFilter]);
 
     return (
-        <div>
+        <DashboardResponsiveLayout>
             <PageHead titleKey="dashboard" />
             <NoNavLayout fullHeight={true} displayTopNavBar={true} size="large">
                 <div
@@ -452,7 +453,7 @@ const DashboardPage = ({
                     </div>
                 </div>
             </NoNavLayout>
-        </div>
+        </DashboardResponsiveLayout>
     );
 };
 
