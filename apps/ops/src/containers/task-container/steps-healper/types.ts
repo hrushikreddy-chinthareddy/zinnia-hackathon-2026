@@ -6,10 +6,10 @@ import { TaskType } from '@deps/models/case/task';
 export type GetStepsProps = {
     docType: string;
     carrierId: string;
-    documentNumber: string;
     caseId: string;
     taskId: string;
     taskType: TaskType;
+    taskInfoLink: string;
     isReadyForDataEntry: boolean;
     t: TFunction;
     nigoExceptions: any;

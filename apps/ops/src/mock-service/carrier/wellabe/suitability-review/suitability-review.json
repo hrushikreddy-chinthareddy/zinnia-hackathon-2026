@@ -45,6 +45,32 @@
             ]
         }
     },
+    "documents": [
+        {
+            "documentId": "123",
+            "documentName": "Document1 DisplayName",
+            "documentSource": "Working",
+            "createdDate": "2024-10-16T14:20:33.757Z"
+        },
+        {
+            "documentId": "345",
+            "documentName": "Document2 DisplayName",
+            "documentSource": "Working",
+            "createdDate": "2024-10-16T14:20:33.757Z"
+        },
+        {
+            "documentId": "678",
+            "documentName": "Document3 DisplayName",
+            "documentSource": "Related",
+            "createdDate": "2024-10-16T14:20:33.757Z"
+        },
+        {
+            "documentId": "910",
+            "documentName": "Document4 DisplayName",
+            "documentSource": "Related",
+            "createdDate": "2024-10-16T14:20:33.757Z"
+        }
+    ],
     "queue": null,
     "assigneePartyId": "adea3f47d69740178fbd688e6e768cd1",
     "assignedAt": "2024-10-16T14:20:33.757Z",

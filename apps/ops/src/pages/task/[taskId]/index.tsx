@@ -12,25 +12,20 @@ import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-da
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { ProcessType } from '@deps/models/case/enums';
 import { docTypes } from '@deps/models/case/helpers';
-import { SearchTransactionRequestBody } from '@deps/models/case/send-document';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { ManagementTask } from '@deps/models/case/task-instance';
-import { Carrier } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
 import { getCaseTaskByIdSSR, getTaskFormMetadata } from '@deps/operations/tasks/task-operations';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
-import { getSearchTransactionsSSR } from '@deps/queries/api/c2web';
-import { getPolicyDetailsSsr, searchPolicySSR } from '@deps/queries/api/policies';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
-import { getUserInfoFromUser, logError, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { logError, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 type TaskPageProps = {
     policy: Policy;
     clientCode: string;
-    documentNumber: string;
     docType: string;
     caseId: string;
     taskId: string;
@@ -43,8 +38,6 @@ type TaskPageProps = {
 };
 
 export const TaskPage: React.FC<TaskPageProps> = ({
-    policy,
-    documentNumber,
     docType,
     task,
     taskMetadata,
@@ -57,9 +50,7 @@ export const TaskPage: React.FC<TaskPageProps> = ({
             <NoNavLayout fullHeight={true}>
                 <TaskProvider taskMetadata={taskMetadata} initialTask={task}>
                     <TaskContainer
-                        policy={policy}
                         docType={docType}
-                        documentNumber={documentNumber}
                         taskInfoLink={taskInfoLink}
                         nigoExceptions={nigoExceptions}
                         nigoSubExceptions={nigoSubExceptions}
@@ -124,7 +115,6 @@ export const getServerSideProps = withPageAuthRequired({
             }
 
             const { taskType, carrier, caseId, process } = task;
-            const { documentNumber, contractNum } = task.data;
 
             // If feature flag is not enabled, redirect to error page
             if (!isFormFeatureEnabled(process as ProcessType, carrier, featureFlagDecisions)) {
@@ -141,57 +131,11 @@ export const getServerSideProps = withPageAuthRequired({
             if (!taskMetadata?.formSchema || !taskMetadata?.uiSchema) {
                 logError('task::Form schema not found', {
                     taskId,
-                    documentNumber,
                     carrier,
-                    contractNum,
                     file: `pages/task/${taskId}/${taskType}`,
                     function: 'getServerSideProps',
                 });
             }
-
-            const response = await searchPolicySSR(contractNum, [carrier?.toUpperCase() as Carrier], accessToken, 1, 0);
-            const planCode = response ? response[0]?.planCode : null;
-            if (!planCode) {
-                logError('task::Policy plan code not found', {
-                    taskId,
-                    documentNumber,
-                    carrier,
-                    contractNum,
-                    file: `pages/${taskType}`,
-                    function: 'getServerSideProps',
-                });
-                return {
-                    redirect: {
-                        destination: `/create-case/error?errorCode=${ERROR_CODES.PLAN_CODE_NOT_FOUND}`,
-                        permanent: false,
-                    },
-                };
-            }
-
-            const userInfoForLogging = getUserInfoFromUser(user);
-            const policy = await getPolicyDetailsSsr(contractNum, planCode, accessToken, userInfoForLogging);
-            if (!policy) {
-                logError('task::Policy not found', {
-                    taskId,
-                    documentNumber,
-                    carrier,
-                    contractNum,
-                    file: `pages/${taskType}`,
-                    function: 'getServerSideProps',
-                });
-                return {
-                    redirect: {
-                        destination: `/create-case/error?errorCode=${ERROR_CODES.POLICY_NOT_FOUND}`,
-                        permanent: false,
-                    },
-                };
-            }
-
-            const transactionRequestBody: SearchTransactionRequestBody = {
-                carrier: policy.carrierId || '',
-                issueState: policy.issueState || '',
-                planCode: policy.product?.planCode || '',
-            };
 
             const nigoFilters = {
                 categoryIds: ['Form', 'Signature', 'Account Information'],
@@ -199,27 +143,21 @@ export const getServerSideProps = withPageAuthRequired({
                 process: 'Withdrawal', //task?.process,
             };
 
-            const [availableFormsTransactions, nigoExceptionResponse] = await Promise.all([
-                await getSearchTransactionsSSR(transactionRequestBody, accessToken, userInfoForLogging),
-                await getNigoExceptions(nigoFilters, accessToken),
-            ]);
+            const [nigoExceptionResponse] = await Promise.all([await getNigoExceptions(nigoFilters, accessToken)]);
 
             const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
 
-            const taskInfoLink = buildCaseLink(taskId, caseId, process, documentNumber, carrier);
+            const taskInfoLink = buildCaseLink(caseId);
             const docType = docTypes[task?.process];
             return {
                 props: {
                     ...translations,
-                    policy,
                     taskMetadata,
                     task,
                     docType,
-                    documentNumber,
                     taskInfoLink,
                     nigoExceptions,
                     nigoSubExceptions,
-                    availableFormsTransactions,
                 },
             };
         } catch (error) {

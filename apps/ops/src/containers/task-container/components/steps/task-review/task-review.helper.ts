@@ -4,6 +4,7 @@ import { CaseDocument } from '@deps/models/case/document';
 import { getCaseDocuments } from '@deps/queries/api/cases';
 
 export const useGetCaseDocs = (caseId: string, documentNumber: string): [boolean, () => void, any, any] => {
+    // const { task } = useContext(TaskDataContext);
     const [loading, setLoading] = useState(false);
     const [workingDocument, setWorkingDocument] = useState<CaseDocument>();
     const [relatedDocument, setRelatedDocument] = useState<CaseDocument[]>();

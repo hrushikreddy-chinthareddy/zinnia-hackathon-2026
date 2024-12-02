@@ -1,13 +1,10 @@
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 
-import GlobalValuesBar from '@deps/components/global-values/global-values-bar/global-values-bar';
+import GlobalValuesNbBar from '@deps/components/global-values/global-values-bar/global-values-nb-bar';
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { policyDataToGlobalValues } from '@deps/helpers/global-values';
-import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
 import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icons_outlined/document-text-2.svg';
 
 import ProgressBarSteps from '../progress-bar-steps/progress-bar-steps';
@@ -16,7 +13,6 @@ import DocumentPortalPanel from './components/side-panel/document-portal-panel';
 
 type TaskPageProps = {
     steps: Step[];
-    policy: Policy;
     caseId: string;
     documentNumber?: string;
     carrierId: string;
@@ -24,13 +20,10 @@ type TaskPageProps = {
     taskInfoLink?: string;
 };
 
-export const TaskWorkflowContent = ({ steps, policy, caseId, documentNumber = '', carrierId, showJointOwner = false }: TaskPageProps) => {
+export const TaskWorkflowContent = ({ steps, caseId, carrierId }: TaskPageProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const { currentStepIndex, setCurrentStepIndex } = useWorkflow();
     const sideSheet = useSideSheetContext();
-    const globalValuesData = useMemo(() => policyDataToGlobalValues(new PolicyDetails(policy), t), [policy, t]);
-
-    const { marketingName, planCode, policyNumber, productType, status, tooltip, variant } = globalValuesData;
 
     const handleProgressBarClick = (step: Step) => {
         if (step.isDisabled || currentStepIndex === step.index) return;
@@ -39,15 +32,10 @@ export const TaskWorkflowContent = ({ steps, policy, caseId, documentNumber = ''
     };
 
     const openSideSheet = () => {
-        const content = <DocumentPortalPanel caseId={caseId} documentNumber={documentNumber} carrierId={carrierId} />;
-        sideSheet.changeSideSheetContent(t('nigoEntry.documentPanel.documents'), content);
+        const content = <DocumentPortalPanel caseId={caseId} carrierId={carrierId} />;
+        sideSheet.changeSideSheetContent(t('task.documentPanel.documents'), content);
         sideSheet.handleOpen(true);
     };
-
-    const policyOwnerId = policy?.partyRoles?.find(pr => pr.partyRole === PartyRole.OWNER)?.partyId;
-    const policyOwner = policy?.parties?.find(party => party.partyId === policyOwnerId);
-    const jointOwnerId = policy?.partyRoles?.find(pr => pr.partyRole === PartyRole.JOINTOWNER)?.partyId;
-    const jointOwner = policy?.parties?.find(party => party.partyId === jointOwnerId);
 
     const showDocumentPanel = () => {
         openSideSheet();
@@ -61,22 +49,7 @@ export const TaskWorkflowContent = ({ steps, policy, caseId, documentNumber = ''
     return (
         <div className="workflow-height-adjusted flex w-full max-w-[1130px] grow flex-col self-center">
             <div className="flex">
-                <GlobalValuesBar
-                    carrierId={policy.carrierId}
-                    marketingName={marketingName}
-                    owner={policyOwner}
-                    jointOwner={jointOwner}
-                    planCode={planCode}
-                    policyNumber={policyNumber}
-                    productType={productType}
-                    status={status}
-                    tooltip={tooltip}
-                    variant={variant}
-                    showJointOwner={showJointOwner}
-                    showDocument={false}
-                    documentNumber={documentNumber}
-                    showLink={false}
-                />
+                <GlobalValuesNbBar carrierId={carrierId} showLink={false} caseId={caseId} />
                 <div className="my-2 ml-auto" onClick={showDocumentPanel}>
                     <div className="flex  font-semibold text-secondary">
                         <DocumentIcon height={20} width={20} />
