@@ -39,6 +39,12 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
     const [timer] = useState(performance.now());
     const source = getDocumentSource(document.documentNumber);
 
+    let oldProgram: Program[] = [];
+
+    if (updateProgram) {
+        oldProgram = programs.filter(item => item.allocationId === updateProgram.allocationId);
+    }
+
     const handleFormAction = async (item: Program, operationType: SswUpdateType, formSign: FormSignature) => {
         if (source !== ChannelType.Phone) {
             const formErr = sswEditFormValidator(formSign, t);
@@ -105,7 +111,7 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
             },
             {
                 ariaLabel: t('tabs.summary.tabTitle'),
-                component: <Summary currentProgram={programs[0]} updatedProgram={updateProgram} onContinue={handleFormAction} />,
+                component: <Summary currentProgram={oldProgram?.[0]} updatedProgram={updateProgram} onContinue={handleFormAction} />,
                 screenReaderLabel: t('tabs.summary.tabTitle'),
                 index: 3,
                 text: t('tabs.summary.tabTitle'),
