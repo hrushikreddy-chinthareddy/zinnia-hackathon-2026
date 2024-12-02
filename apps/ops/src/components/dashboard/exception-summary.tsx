@@ -35,12 +35,12 @@ type Output = {
 
 const colors = ['#D385A5', '#BD85D3', '#8593D3', '#00628B', '#021936'];
 
-function processCarrierData(input: DashboardStatsElementResponse[]): Output & { weeklyCategories: string[]; monthlyCategories: string[] } {
+function processCarrierData(input: DashboardStatsElementResponse[]): Output & { weeklyCategories: string[]; monthlyCategories: number[] } {
     const WEEKLY_WEEKS = 48; // 4 weeks per month for 12 months
     const MONTHLY_MONTHS = 12;
     const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-    const result: Output & { weeklyCategories: string[]; monthlyCategories: string[] } = {
+    const result: Output & { weeklyCategories: string[]; monthlyCategories: number[] } = {
         weekly: {},
         monthly: {},
         weeklyCategories: [],
@@ -68,9 +68,10 @@ function processCarrierData(input: DashboardStatsElementResponse[]): Output & { 
 
     // Generate categories
     const startMonthIndex = earliestDate.getUTCMonth(); // 0-based month index
-    result.monthlyCategories = Array.from({ length: MONTHLY_MONTHS }, (_, i) => MONTH_NAMES[(startMonthIndex + i) % 12]);
+    result.monthlyCategories = Array(12).fill(0); // Array.from({ length: MONTHLY_MONTHS }, (_, i) => MONTH_NAMES[(startMonthIndex + i) % 12]);
 
-    result.weeklyCategories = result.monthlyCategories.flatMap(month => [month, month, month, month]);
+    const months = Array.from({ length: MONTHLY_MONTHS }, (_, i) => MONTH_NAMES[(startMonthIndex + i) % 12]);
+    result.weeklyCategories = months.flatMap(month => [month, month, month, month]);
 
     // Process data as before
     input.forEach((carrier, i) => {
@@ -140,6 +141,9 @@ function processCarrierData(input: DashboardStatsElementResponse[]): Output & { 
             // Update monthly data
             monthlyData[month] += count;
             result.monthly[carrierName].total += count;
+
+            // Set the total for each month. this is used as the category for the stacked bar chart
+            result.monthlyCategories[i] += count;
         });
     });
 
@@ -166,10 +170,7 @@ export const ExceptionSummary = ({
     // sort and slice to find the top 5 months
     const monthlyArray: summary[] = [];
     Object.entries(processedData.monthly).forEach(([, value]) => {
-        if (value.name !== 'MASS') {
-            // TODO: remove. This is just for testing
-            monthlyArray.push(value);
-        }
+        monthlyArray.push(value);
     });
 
     const sortedMonthly = monthlyArray.sort((a, b) => b.total - a.total).slice(0, 5);
@@ -262,7 +263,7 @@ export const ExceptionSummary = ({
                     categories: processedData.weeklyCategories,
                 },
                 {
-                    categories: processedData.monthlyCategories,
+                    categories: processedData.monthlyCategories.map(volume => volume.toString()),
                     gridLineWidth: 1,
                     height: '30%',
                     offset: 0, // Remove extra spacing
