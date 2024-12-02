@@ -71,7 +71,11 @@ const TabGroupContent = ({
                     loading: false,
                     error: false,
                 });
-                setError(<>There are <span className='text-[#00628b]'> {response.total} other open cases</span> realted to this policy</>)
+                const currentDate = new Date();
+                const ninetyDaysAgo = new Date();
+                ninetyDaysAgo.setDate(currentDate.getDate() - 90);
+                const caseNumber = response.data.filter((item) => new Date(item.updatedAt) >= ninetyDaysAgo).length;
+                setError(<>There are <span className='text-[#00628b]'> {caseNumber} other open cases</span> realted to this policy</>)
             } else {
                 throw new (Error as any)(response.data.err ? response.data.err : 'Error fetching cases');
             }
