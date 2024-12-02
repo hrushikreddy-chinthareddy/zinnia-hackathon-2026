@@ -9,28 +9,18 @@ import PageLoader from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
+import { convertToQueryString } from '@deps/helpers/routing.helper';
 import { DashboardStatsElementResponse } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 
 import useExceptionData from '../../pages/dashboard/issued-business/useExceptionData';
+import NavElement, { NavElementSize, NavElementType } from '../nav-element/nav-element';
 
 if (typeof Highcharts === 'object') {
     HighchartsExporting(Highcharts);
     HC_ACCESSIBILITY(Highcharts);
 }
-
-// This should be moved
-type DataEntry = {
-    key: string;
-    name: string;
-    count: number;
-    values: Array<{ key: string; name: string; count: number; values: Array<{ key: string; name: string; count: number }> }>;
-};
-
-type Input = {
-    data: DataEntry[];
-};
 
 type summary = {
     series: Highcharts.SeriesOptionsType;
@@ -158,19 +148,20 @@ function processCarrierData(input: DashboardStatsElementResponse[]): Output & { 
 
 export const ExceptionSummary = ({
     startDate,
-    timeframe = '',
     carrierOrBrokerDealer = GroupByOptions.Carrier,
+    selectedSubprocess = '',
 }: {
     startDate: string;
-    timeframe?: string;
     carrierOrBrokerDealer?: GroupByOptions.Carrier | GroupByOptions.BrokerDealerName;
+    selectedSubprocess: string;
 }) => {
-    const [loading, exceptionData, statsResponse] = useExceptionData({ startDate, carrierOrBrokerDealer });
-    console.log('exceptionData', exceptionData);
-    console.log('statsResponse', statsResponse);
+    const [loading, exceptionData, statsResponse, filter] = useExceptionData({
+        startDate,
+        carrierOrBrokerDealer,
+        processSubType: selectedSubprocess,
+    });
 
     const processedData = processCarrierData(statsResponse || []);
-    console.log('my new data ==>', processedData);
 
     // sort and slice to find the top 5 months
     const monthlyArray: summary[] = [];
@@ -182,7 +173,6 @@ export const ExceptionSummary = ({
     });
 
     const sortedMonthly = monthlyArray.sort((a, b) => b.total - a.total).slice(0, 5);
-    console.log('sortedMonthly', sortedMonthly);
 
     const chartRef = useRef<HighchartsReact.RefObject>(null);
 
@@ -299,6 +289,9 @@ export const ExceptionSummary = ({
                         useHTML: true, // Enables HTML in the title
                     },
                     top: 0,
+                    labels: {
+                        y: 12,
+                    },
                 },
                 {
                     allowDecimals: false,
@@ -356,22 +349,16 @@ export const ExceptionSummary = ({
                                     <div className="flex items-center gap-3">
                                         <div className="h-3 w-3" style={{ backgroundColor: colors[index] }}></div>
                                         <div className="flex items-center gap-1 w-full justify-between">
-                                            <span>{stat.name.toLocaleUpperCase()}</span>
-                                            {/* <NavElement
-                                                href={`/cases${convertToQueryString({
-                                                    requestSubType: stat.name,
-                                                    process: selectedProcess,
-                                                    createdDateStart: startAndEndDates.createdDateStart,
-                                                    createdDateEnd: startAndEndDates.createdDateEnd,
-                                                    carrier: carriers?.length ? carriers : '',
-                                                })}`}
+                                            {/* <span>{stat.name.toLocaleUpperCase()}</span> */}
+                                            <NavElement
+                                                href={`/cases${convertToQueryString(filter as any)}`}
                                                 size={NavElementSize.Small}
                                                 type={NavElementType.Link}
                                                 className="capitalize"
                                                 target="_blank"
                                             >
-                                                {stat.name.toLocaleLowerCase()}
-                                            </NavElement> */}
+                                                {stat.name.toLocaleUpperCase()}
+                                            </NavElement>
                                             <Typography
                                                 className="flex gap-2"
                                                 variant={TypographyVariant.BodySmBold}
@@ -405,7 +392,7 @@ export const ExceptionSummary = ({
                                 ) : (
                                     <div className="flex flex-col gap-2 items-center">
                                         <ChartBarsIcon height={'24px'} width={'24px'} />
-                                        <Typography variant={TypographyVariant.BodyBold}>No exceptions in the {timeframe}</Typography>
+                                        <Typography variant={TypographyVariant.BodyBold}>No exceptions</Typography>
                                     </div>
                                 )}
                             </>

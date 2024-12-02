@@ -1,11 +1,12 @@
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { DashboardStatsElementResponse, Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { getCaseDashboardStats } from '@deps/queries/api/cases';
+import { DashboardSearchFilter } from '@deps/queries/cases';
 
 dayjs.extend(customParseFormat);
 dayjs.extend(weekOfYear);
@@ -48,18 +49,23 @@ const useExceptionData = ({
     const [chartData, setChartData] = useState<MappedExceptionData>();
     const [statsResponse, setStatsResponse] = useState<{ data: DashboardStatsElementResponse[]; createdDateStart: string }>();
 
+    const createdDateStart = dayjs(startDate).toISOString();
+
+    const filter: DashboardSearchFilter = useMemo(() => {
+        return {
+            createdDateStart: createdDateStart,
+            process: [Processes.NewBusiness],
+            caseStatus: [Statuses.Completed],
+            ...(processSubType ? { requestSubType: [processSubType] } : {}),
+        };
+    }, [createdDateStart, processSubType]);
+
     useEffect(() => {
-        const createdDateStart = dayjs(startDate).toISOString();
         const fetchData = async () => {
             try {
                 // Grab the case stats
                 const { data } = await getCaseDashboardStats({
-                    filter: {
-                        createdDateStart: createdDateStart,
-                        process: [Processes.NewBusiness],
-                        caseStatus: [Statuses.Completed],
-                        ...(processSubType ? { processSubType: [processSubType] } : {}),
-                    },
+                    filter,
                     groupBy: [carrierOrBrokerDealer, GroupByOptions.ExceptionCategory, GroupByOptions.UpdatedAt],
                 });
 
@@ -76,7 +82,7 @@ const useExceptionData = ({
 
         setLoading(true);
         fetchData();
-    }, [carrierOrBrokerDealer, startDate, processSubType]);
+    }, [carrierOrBrokerDealer, startDate, processSubType, filter, createdDateStart]);
 
     // function structureData(data: DashboardStatsElementResponse[], createdDateStart: string) {
     //     const parsedResponse: MappedExceptionData = {
@@ -173,10 +179,11 @@ const useExceptionData = ({
         setChartData(parsedResponse);
         setLoading(false);
     }, [statsResponse]);
-    return [loading, chartData, statsResponse?.data] as [
+    return [loading, chartData, statsResponse?.data, filter] as [
         boolean,
         MappedExceptionData | undefined,
-        DashboardStatsElementResponse[] | undefined
+        DashboardStatsElementResponse[] | undefined,
+        DashboardSearchFilter
     ];
 };
 
