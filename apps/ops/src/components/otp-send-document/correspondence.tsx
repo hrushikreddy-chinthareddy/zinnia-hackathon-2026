@@ -1,3 +1,4 @@
+import { datadogLogs } from '@datadog/browser-logs';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useMemo, useState } from 'react';
 
@@ -83,6 +84,11 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
             case CommunicationTypes.Email: {
                 const emailError = validateEmail(correspondenceData.recipient);
                 if (emailError) {
+                    datadogLogs.logger.info('contactCenterEmailValidation', {
+                        payload: correspondenceData?.recipient,
+                        error: t(emailError) as string,
+                        function: 'correspondence.validateEmail',
+                    });
                     setError({ ...error, submit: t(emailError) as string });
                     return false;
                 }
