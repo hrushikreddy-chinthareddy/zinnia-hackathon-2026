@@ -4420,7 +4420,8 @@
         "CaseDetailsContent": {
             "tabs": {
                 "details": "Détails",
-                "related": "En rapport"
+                "related": "En rapport",
+                "addressHistory": "Historique des adresses"
             },
             "applicationSignedDate": "Date de signature de la demande",
             "issueState": "État du problème",
@@ -4435,6 +4436,11 @@
             "relatedTab": {
                 "lastUpdated": "Dernière mise à jour",
                 "caseId": "ID du cas"
+            },
+            "addressHistory": {
+                "defaultAddress": "Adresse par défaut",
+                "residentialAddress": "Adresse résidentielle",
+                "mailingAddress": "Adresse postale"
             }
         },
 

@@ -2,7 +2,7 @@ import { TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/compone
 import { TranslationFiles } from "@deps/config/translations";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Policy } from '@deps/models/policy/sor-policy';
+import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import { DocumentData } from '@deps/models/case/document';
 import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
@@ -10,9 +10,11 @@ import dayjs from 'dayjs';
 import DetailsTab from './details-tab';
 import RelatedTab from './related-tab';
 import { CaseTableData } from '@deps/contexts/CaseManagementFilters';
+import AddressTab from './address-tab';
 export enum TabOptions {
   Details = 'Details',
   Related = 'Related',
+  Address = 'Address'
 }
 type CaseDetailsProps = {
   policy: Policy;
@@ -31,6 +33,9 @@ function CaseDetailsContent({ policy, documentData, offset, limit, setOffset, ca
 
   const formattedCertifiedReceiveDate = dayjs(policy.policyDates?.certifiedReceivedDate).format(DEFAULT_EXTENDED_DATE_FORMAT);
   const formattedApplicationDate = dayjs(policy.policyDates?.applicationDate).format(DEFAULT_EXTENDED_DATE_FORMAT);
+  const policyOwnerId = policy?.partyRoles?.find(pr => pr.partyRole === PartyRole.OWNER)?.partyId;
+  const policyOwner = policy?.parties?.find(party => party.partyId === policyOwnerId);
+
 
 
   const renderTabContent = (
@@ -47,6 +52,9 @@ function CaseDetailsContent({ policy, documentData, offset, limit, setOffset, ca
       <TabContent className="flex w-full flex-col items-center" value={TabOptions.Related}>
         <RelatedTab offset={offset} limit={limit} setOffset={setOffset} caseTableData={caseTableData} setError={setError} />
       </TabContent>
+      <TabContent className="flex w-full flex-col items-center" value={TabOptions.Address}>
+        <AddressTab Address={policyOwner?.addresses} />
+      </TabContent>
     </>
   );
   return (
@@ -55,6 +63,7 @@ function CaseDetailsContent({ policy, documentData, offset, limit, setOffset, ca
         <TabList className="!mb-0 w-full px-4 pt-4 md:px-6 lg:px-8">
           <TabTrigger value={TabOptions.Details}>{t('tabs.details') ?? ''}</TabTrigger>
           <TabTrigger value={TabOptions.Related}>{t('tabs.related') ?? ''} ({caseTableData.total})</TabTrigger>
+          <TabTrigger value={TabOptions.Address}>{t('tabs.addressHistory') ?? ''} ({policyOwner?.addresses?.length})</TabTrigger>
         </TabList>
         {renderTabContent}
 

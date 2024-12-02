@@ -4452,7 +4452,8 @@
         "CaseDetailsContent": {
             "tabs": {
                 "details": "Details",
-                "related": "Related"
+                "related": "Related",
+                "addressHistory": "Address History"
             },
             "applicationSignedDate": "Application Signed Date",
             "issueState": "Issue State",
@@ -4467,6 +4468,11 @@
             "relatedTab": {
                 "lastUpdated": "Last updated",
                 "caseId": "Case ID "
+            },
+            "addressHistoryTab": {
+                "defaultAddress": "Default Address",
+                "residentialAddress": "Residential Address",
+                "mailingAddress": "Mailing Address"
             }
         },
         "confirmStep": {
