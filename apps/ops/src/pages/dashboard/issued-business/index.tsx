@@ -354,13 +354,6 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
                             selectedSubprocess={selectedSubprocess}
                         />
                     </div>
-                    <div className="bg-white p-8 flex flex-col gap-8">
-                        <ExceptionSummary
-                            timeframe={timeframe}
-                            carrierOrBrokerDealer={carrierOrBrokerDealer}
-                            startDate={createdDateStart}
-                        />
-                    </div>
                 </CardContainer>
             </NoNavLayout>
         </DashboardResponsiveLayout>
