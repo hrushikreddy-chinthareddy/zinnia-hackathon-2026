@@ -60,8 +60,6 @@ export default function DocumentsList({
 
         const queryString = createQueryString(queryParams);
 
-        console.log(queryString);
-
         return {
           content: (
             <>

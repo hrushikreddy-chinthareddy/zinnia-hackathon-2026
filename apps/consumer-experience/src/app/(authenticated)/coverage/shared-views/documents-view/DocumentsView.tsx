@@ -58,7 +58,7 @@ export const DocumentsView = async ({
       clientCode: policyData?.carrierId,
       contractNumber: policyNumber,
       taxYear: new Date().getFullYear().toString(),
-      numYears: 1,
+      numYears: 5,
     }),
   ]);
 

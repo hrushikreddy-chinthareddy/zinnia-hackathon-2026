@@ -148,7 +148,7 @@ export const getTaxDocuments = async (
 ): Promise<ApiResponse<TaxFormsResponse200>> => {
   const { clientCode } = queryParams;
   const documentQueryParams = getDocumentQueryParams(queryParams);
-  const documentUrl = `${documentApiBaseUrl}/taxDocs?${documentQueryParams.toString()}`;
+  const documentUrl = `${documentApiBaseUrl}/taxForms?${documentQueryParams.toString()}`;
 
   if (isMockDocumentsRequestEnabled()) {
     return {
@@ -159,7 +159,6 @@ export const getTaxDocuments = async (
 
   try {
     const docsData = await getDocumentsRaw(documentUrl);
-
     return {
       data: {
         ...docsData,
@@ -201,7 +200,6 @@ export const getTaxDocumentDownload = async ({
     if (isMockDocumentRequestEnabled()) {
       return { data: mockDocumentResponse, error: null };
     }
-    // TODO: call clientCode carrierId to follow pattern from everywhere else?
     const url = `${documentApiBaseUrl}/taxForms/${formId}?clientCode=${carrierId}&fChar=${fChar}&contractNumber=${contractNumber}&taxYear=${taxYear}`;
     const response = await ServerApi.get(url);
     if (!response.ok) {
