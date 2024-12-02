@@ -82,7 +82,7 @@ const useExceptionData = ({
 
         setLoading(true);
         fetchData();
-    }, [carrierOrBrokerDealer, startDate, processSubType, filter, createdDateStart]);
+    }, [carrierOrBrokerDealer, createdDateStart, filter]);
 
     // function structureData(data: DashboardStatsElementResponse[], createdDateStart: string) {
     //     const parsedResponse: MappedExceptionData = {
@@ -121,7 +121,6 @@ const useExceptionData = ({
         const maxWeekIndex = getArrayIndexFromDate(dayjs().format('YYYY-MM-DD'), createdDateStart, 'week');
         const maxMonthIndex = getArrayIndexFromDate(dayjs().format('YYYY-MM-DD'), createdDateStart, 'month');
 
-        console.log('data', data);
         // Set up default data
         const parsedResponse: MappedExceptionData = {
             totalCasesByCarrier: {},
@@ -175,7 +174,7 @@ const useExceptionData = ({
             });
             parsedResponse.carriers.sort((a, b) => parsedResponse.totalCasesByCarrier[b] - parsedResponse.totalCasesByCarrier[a]);
         }
-        console.log('parsedResponse', parsedResponse);
+
         setChartData(parsedResponse);
         setLoading(false);
     }, [statsResponse]);
