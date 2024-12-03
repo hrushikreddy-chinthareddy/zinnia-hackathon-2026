@@ -3,7 +3,7 @@ import { GetServerSidePropsContext } from 'next';
 import router from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 import NoNavLayout from '@deps/components/no-nav-layout';
 import ConfirmComponent from '@deps/components/otp-send-document/confirm';
@@ -21,6 +21,7 @@ import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { CorrespondenceFormParts } from '@deps/models/case/correspondence';
 import { CommunicationTypes, SendDocumentFormType } from '@deps/models/case/send-document';
+import { TaxForm } from '@deps/models/case/send-tax-forms';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission, UserProfile } from '@deps/models/user-profile';
 import { sendCommunication } from '@deps/queries/api/c2web';
@@ -41,6 +42,7 @@ const SendTaxForms = ({ policy, user, shouldShowCaseButton }: SendTaxFormsProps)
     const { t } = useTranslation(undefined, { keyPrefix: '' });
 
     const { ctiCallNumber, correlationId } = router.query;
+    const [taxFormDetails, setTaxFormDetails] = useState<TaxForm[]>([]);
 
     useSegmentPageTracker(user, SegmentPageName.SendTaxForms, { ctiCallNumber, correlationId, policyNumber: policy.policyNumber });
 
@@ -92,7 +94,7 @@ const SendTaxForms = ({ policy, user, shouldShowCaseButton }: SendTaxFormsProps)
     const steps: Step[] = [
         {
             ariaLabel: formSelectionLabel,
-            component: <TaxFormsSelection policy={policy} />,
+            component: <TaxFormsSelection policy={policy} selectedTaxForms={taxFormDetails} setSelectedTaxForms={setTaxFormDetails} />,
             screenReaderLabel: formSelectionLabel,
             index: 0,
             text: formSelectionLabel,

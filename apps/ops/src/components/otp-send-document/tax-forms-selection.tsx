@@ -1,6 +1,6 @@
 import 'react-pdf/dist/Page/TextLayer.css';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { SetStateAction, useState } from 'react';
 
 import Select from '@deps/components/select/select';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
@@ -14,8 +14,10 @@ import TaxFormsListing from './components/tax-forms-listing';
 import WorkflowCard from '../workflows/workflow-card/workflow-card';
 export type StatementSelectionProps = {
     policy: Policy;
+    selectedTaxForms: TaxForm[];
+    setSelectedTaxForms: (value: SetStateAction<TaxForm[]>) => void;
 };
-const TaxFormsSelection = ({ policy }: StatementSelectionProps) => {
+const TaxFormsSelection = ({ policy, selectedTaxForms, setSelectedTaxForms }: StatementSelectionProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'contactCenter' });
     const currentYear = new Date().getFullYear();
     const taxYears = Array.from({ length: 5 }, (_, i) => currentYear - i).reverse();
@@ -87,7 +89,12 @@ const TaxFormsSelection = ({ policy }: StatementSelectionProps) => {
                 />
             </div>
             <div>
-                <TaxFormsListing taxForms={taxForms} carrierCode={policy?.carrierId || ''} />
+                <TaxFormsListing
+                    taxForms={taxForms}
+                    carrierCode={policy?.carrierId || ''}
+                    selectedTaxForms={selectedTaxForms}
+                    setSelectedTaxForms={setSelectedTaxForms}
+                />
             </div>
         </WorkflowCard>
     );
