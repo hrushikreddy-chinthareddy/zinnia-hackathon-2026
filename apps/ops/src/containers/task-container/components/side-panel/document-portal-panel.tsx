@@ -55,12 +55,12 @@ const DocumentPortalPanel = ({ clientCode, documents }: DocumentViewProps) => {
     const renderTabContent = (
         <>
             <TabContent className="flex w-full flex-col items-center" value={TabOptions.Working}>
-                {workingDocument?.length !== 0 && (
+                {workingDocument && workingDocument?.length !== 0 && (
                     <>{workingDocument?.map((item: TaskDocument) => renderDocumentSection(item, item?.documentName || '', clientCode))}</>
                 )}
-                {workingDocument?.length === 0 && (
+                {(!workingDocument || workingDocument?.length === 0) && (
                     <div className="border-box w-full lg:px-[30px] mt-2">
-                        <div className="w-full rounded border-2 border border-gray-100 bg-gray-50 p-8">
+                        <div className="w-full rounded border-2 border-gray-100 bg-gray-50 p-8">
                             <AssistiveText
                                 text={t('noFormAvailable')}
                                 variant={AssistiveTextVariant.Default}
@@ -71,12 +71,12 @@ const DocumentPortalPanel = ({ clientCode, documents }: DocumentViewProps) => {
                 )}
             </TabContent>
             <TabContent className="flex w-full flex-col items-center" value={TabOptions.Related}>
-                {relatedDocument?.length !== 0 && (
+                {relatedDocument && relatedDocument?.length !== 0 && (
                     <>{relatedDocument?.map((item: TaskDocument) => renderDocumentSection(item, item?.documentName || '', clientCode))}</>
                 )}
-                {relatedDocument?.length === 0 && (
+                {(!relatedDocument || relatedDocument?.length === 0) && (
                     <div className="border-box w-full lg:px-[30px] mt-2">
-                        <div className="w-full rounded border-2 border border-gray-100 bg-gray-50 p-8">
+                        <div className="w-full rounded border-2  border-gray-100 bg-gray-50 p-8">
                             <AssistiveText
                                 text={t('noFormAvailable')}
                                 variant={AssistiveTextVariant.Default}
