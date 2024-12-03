@@ -232,7 +232,11 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
             }
         };
         getPageData();
+<<<<<<< HEAD
     }, [baseDashboardQueryFilter, baseInsightQueryFilter, handleSetLoading]);
+=======
+    }, [baseDashboardQueryFilter, baseInsightQueryFilter]);
+>>>>>>> f35eef3df (move charts into their own components)
 
     return (
         <>
