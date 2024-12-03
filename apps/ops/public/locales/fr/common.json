@@ -1179,7 +1179,9 @@
                 "pre-note": "Pre-Note: {{label}}",
                 "source of premium": "Source de prétium: {{label}}",
                 "transfer of assets": "Transfert d'actifs: {{label}}"
-            }
+            },
+            "reviewIssues": "Revoir {{taskType}} problèmes",
+            "suitabilityReview": "suitability revoir"
         },
         "processDate": {
             "cancled": "Annulé le",
@@ -4557,6 +4559,19 @@
             "cta": "Aller au virement entrant",
             "secondaryCta": "Fermer",
             "submitTask": "Soumettre les détails de l'adéquation"
+        }
+    },
+    "task": {
+        "documentPanel": {
+            "tabs": {
+                "working": "En cours",
+                "related": "Liés"
+            },
+            "view": "Voir",
+            "documentTitle": "Document",
+            "documents": "Documents",
+            "documentId": "ID du document",
+            "noFormAvailable": "Aucun formulaire disponible."
         }
     },
     "suitabilityReview": {

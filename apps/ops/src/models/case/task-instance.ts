@@ -42,7 +42,22 @@ export type ManagementTask<T = TaskStatus> = {
     taskType: string;
     updatedAt: string;
     data: any;
+    documents: TaskDocument[];
 };
+
+export type TaskDocument = {
+    documentId: string;
+    documentName: string;
+    documentSource: DocumentSource;
+    fileType: string;
+    createdAt: string;
+    updatedAt: string;
+};
+
+export enum DocumentSource {
+    Working = 'Working',
+    Related = 'Related',
+}
 
 export type TaskComment = {
     comment?: string | null;
@@ -55,12 +70,11 @@ export type TaskComment = {
     submissionDate?: string | null;
 };
 
-
 export type AssignedTask<T = TaskStatus> = {
     id: string;
     caseId: string;
     source: string;
-    templateId: string
+    templateId: string;
     process: string;
     carrier: string;
     taskType: string;

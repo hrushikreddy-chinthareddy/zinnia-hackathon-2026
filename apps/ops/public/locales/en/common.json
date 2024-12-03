@@ -1186,7 +1186,9 @@
                 "pre-note": "Pre-Note: {{label}}",
                 "source of premium": "Source of Premium: {{label}}",
                 "transfer of assets": "Transfer of Assets: {{label}}"
-            }
+            },
+            "reviewIssues": "Review {{taskType}} issues",
+            "suitabilityReview": "suitability review"
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -4555,6 +4557,19 @@
         "RMD": "Existing RMD Program",
         "EFT": "Existing EFT Program",
         "noProgramFound": "No Existing Program Found"
+    },
+    "task": {
+        "documentPanel": {
+            "tabs": {
+                "working": "Working",
+                "related": "Related"
+            },
+            "view": "View",
+            "documentTitle": "Document",
+            "documents": "Documents",
+            "documentId": "Document ID",
+            "noFormAvailable": "No form available."
+        }
     },
     "suitability": {
         "tabs": {

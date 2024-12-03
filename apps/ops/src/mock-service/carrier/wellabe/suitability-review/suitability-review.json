@@ -47,28 +47,32 @@
     },
     "documents": [
         {
-            "documentId": "123",
-            "documentName": "Document1 DisplayName",
+            "documentId": "20156083",
+            "documentName": "Suitability review form ABC TEST - 10/8/2024",
             "documentSource": "Working",
-            "createdDate": "2024-10-16T14:20:33.757Z"
+            "createdDate": "2024-10-16T14:20:33.757Z",
+            "fileType": "pdf"
         },
         {
-            "documentId": "345",
-            "documentName": "Document2 DisplayName",
+            "documentId": "20027230",
+            "documentName": "Suitability additional doc ABC TEST - 10/8/2024",
             "documentSource": "Working",
-            "createdDate": "2024-10-16T14:20:33.757Z"
+            "createdDate": "2024-10-16T14:20:33.757Z",
+            "fileType": "pdf"
         },
         {
-            "documentId": "678",
+            "documentId": "20027231",
             "documentName": "Document3 DisplayName",
             "documentSource": "Related",
-            "createdDate": "2024-10-16T14:20:33.757Z"
+            "createdDate": "2024-10-16T14:20:33.757Z",
+            "fileType": "pdf"
         },
         {
-            "documentId": "910",
+            "documentId": "19997616",
             "documentName": "Document4 DisplayName",
             "documentSource": "Related",
-            "createdDate": "2024-10-16T14:20:33.757Z"
+            "createdDate": "2024-10-16T14:20:33.757Z",
+            "fileType": "pdf"
         }
     ],
     "queue": null,

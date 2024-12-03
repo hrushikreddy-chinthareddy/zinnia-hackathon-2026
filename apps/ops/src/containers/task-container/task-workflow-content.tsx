@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 
 import GlobalValuesNbBar from '@deps/components/global-values/global-values-bar/global-values-nb-bar';
 import { TranslationFiles } from '@deps/config/translations';
@@ -10,6 +10,7 @@ import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icon
 import ProgressBarSteps from '../progress-bar-steps/progress-bar-steps';
 import { Step } from '../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import DocumentPortalPanel from './components/side-panel/document-portal-panel';
+import { TaskDataContext } from './task-context';
 
 type TaskPageProps = {
     steps: Step[];
@@ -23,6 +24,7 @@ type TaskPageProps = {
 export const TaskWorkflowContent = ({ steps, caseId, carrierId }: TaskPageProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const { currentStepIndex, setCurrentStepIndex } = useWorkflow();
+    const { task } = useContext(TaskDataContext);
     const sideSheet = useSideSheetContext();
 
     const handleProgressBarClick = (step: Step) => {
@@ -32,7 +34,7 @@ export const TaskWorkflowContent = ({ steps, caseId, carrierId }: TaskPageProps)
     };
 
     const openSideSheet = () => {
-        const content = <DocumentPortalPanel caseId={caseId} carrierId={carrierId} />;
+        const content = <DocumentPortalPanel documents={task.documents} clientCode={carrierId} />;
         sideSheet.changeSideSheetContent(t('task.documentPanel.documents'), content);
         sideSheet.handleOpen(true);
     };
