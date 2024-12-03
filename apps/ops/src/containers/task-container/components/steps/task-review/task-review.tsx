@@ -19,12 +19,12 @@ interface TaskReviewProps {
     taskType: string;
 }
 
-export const TaskReview = ({ caseId, clientCode, activeDocType, taskType }: TaskReviewProps) => {
+export const TaskReview = ({ clientCode, activeDocType, taskType }: TaskReviewProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.taskReview` });
     const { setIsReadyForDataEntry, isReadyForDataEntry } = useContext(TaskDataContext);
 
     const [sectionOption, setSectionOption] = useState(isReadyForDataEntry ? 'true' : 'false');
-    const [loading, getCaseDocs, workingDocument] = useGetCaseDocs(caseId);
+    const [loading, getCaseDocs, workingDocument] = useGetCaseDocs();
     const sectionOptions = [
         {
             label: t('options.allSectionsAreComplete'),
@@ -45,7 +45,7 @@ export const TaskReview = ({ caseId, clientCode, activeDocType, taskType }: Task
         setIsReadyForDataEntry(value === 'true');
     };
 
-    const { displayName } = workingDocument || {};
+    const { documentName, documentId } = workingDocument?.[0] || {};
 
     return (
         <>
@@ -56,15 +56,15 @@ export const TaskReview = ({ caseId, clientCode, activeDocType, taskType }: Task
                             <Icon width={20} height={20} type={IconType.DOCUMENT_TEXT} />{' '}
                         </div>
                         <div>
-                            <div className="text-sm font-bold">{displayName}</div>
+                            <div className="text-sm font-bold">{documentName}</div>
                         </div>
                         <div className="flex items-center">
                             <DocumentPreviewer
                                 className="flex gap-1"
                                 activeDocType={activeDocType}
                                 carrier={clientCode?.toUpperCase()}
-                                documentId={workingDocument?.documentId ?? (workingDocument?.documentID as string)}
-                                displayName={displayName}
+                                documentId={documentId || ''}
+                                displayName={documentName ?? ''}
                             >
                                 <>{t('view')}</>
                             </DocumentPreviewer>
