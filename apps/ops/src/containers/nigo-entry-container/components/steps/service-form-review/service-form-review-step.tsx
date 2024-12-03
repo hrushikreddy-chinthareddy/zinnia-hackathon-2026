@@ -88,8 +88,10 @@ export const ServiceFormReviewStep = ({documentNumber, policy, docType, clientCo
             }
         }
 
-        if (Object.keys(errors).length === 0) {
+        if (sectionOption === SelOptionType.DOC_INDEXING && Object.keys(errors).length === 0) {
             await submit();
+            goToNext();
+        } else {
             goToNext();
         }
     }, [documentIndexingInfo, goToNext, sectionOption, setFormErrors, submit, t]);
