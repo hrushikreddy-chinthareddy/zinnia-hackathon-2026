@@ -39,17 +39,19 @@ export const searchTaxForms = async (requestBody: SearchTaxFormRequestBody): Pro
     }
 };
 
-export const downloadTaxFormById = async (formId: number): Promise<string | null> => {
+export const downloadTaxFormById = async (formId: number, optionalParams: { [key: string]: string } = {}): Promise<any> => {
     try {
         if (!formId) {
             throw new Error('No formId provided');
         }
+        const url = `${baseAppUrl}/api/documents/tax-form/${formId}/preview?clientCode=${optionalParams?.clientCode}&contractNumber=${optionalParams?.contractNumber}&fChar=${optionalParams?.fChar}&taxYear=${optionalParams?.taxYear}`;
+
         datadogLogs.logger.info('contactCenterDownloadTaxFormById', {
             payload: formId,
-            url: `${baseUrl}/forms/${formId}/download`,
+            url,
             function: 'searchTaxForms.downloadTaxFormById',
         });
-        const { data } = await client.get<string, AxiosResponse<string>>(`${baseUrl}/forms/${formId}/download`);
+        const { data } = await client.get<string, AxiosResponse<any>>(url);
 
         return data;
     } catch (e: any) {

@@ -87,7 +87,7 @@ const TaxFormsSelection = ({ policy }: StatementSelectionProps) => {
                 />
             </div>
             <div>
-                <TaxFormsListing taxForms={taxForms} />
+                <TaxFormsListing taxForms={taxForms} carrierCode={policy?.carrierId || ''} />
             </div>
         </WorkflowCard>
     );

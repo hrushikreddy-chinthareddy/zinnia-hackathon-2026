@@ -1,4 +1,5 @@
 import { Table, TableHeader, TableHeaderCell, TableRow, TableBody, TableCell, Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
+import { setCookie } from 'cookies-next';
 import { useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
@@ -8,10 +9,18 @@ import { TaxForm } from '@deps/models/case/send-tax-forms';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 type TaxFormsListingProps = {
     taxForms: TaxForm[];
+    carrierCode: string;
 };
 
-const TaxFormsListing = ({ taxForms }: TaxFormsListingProps) => {
+const TaxFormsListing = ({ taxForms, carrierCode }: TaxFormsListingProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: '' });
+
+    const setCookies = (form: TaxForm) => {
+        setCookie('carrierCode', carrierCode);
+        setCookie('contractNumber', form?.contractNumber);
+        setCookie('fChar', form?.fChar);
+        setCookie('taxYear', form?.taxYear);
+    };
 
     return (
         <>
@@ -84,6 +93,7 @@ const TaxFormsListing = ({ taxForms }: TaxFormsListingProps) => {
                                             title={`${t('sendDocument.formSelection.view')} `}
                                             type={NavElementType.Link}
                                             variant={NavElementVariant.Secondary}
+                                            onClick={() => setCookies(form)}
                                         >
                                             {t('sendDocument.formSelection.view')}
                                         </NavElement>

@@ -1,4 +1,5 @@
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { deleteCookie, getCookies } from 'cookies-next';
 import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect, useState } from 'react';
@@ -10,16 +11,20 @@ import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-da
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { UserPermission } from '@deps/models/user-profile';
-import { downloadFormById } from '@deps/queries/api/c2web';
+import { downloadTaxFormById } from '@deps/queries/api/tax-forms';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface FormViewerProps extends SegmentTrackedPageProps {
     formId: number;
+    contractNumber: string;
+    carrierCode: string;
+    fChar: string;
+    taxYear: string;
 }
 
-const FormViewer = ({ formId, user }: FormViewerProps) => {
+const FormViewer = ({ formId, user, contractNumber, carrierCode, fChar, taxYear }: FormViewerProps) => {
     const [pdf, setPdf] = useState<string | null>(null);
 
     useSegmentPageTracker(user, SegmentPageName.FormViewer, { formId });
@@ -27,16 +32,14 @@ const FormViewer = ({ formId, user }: FormViewerProps) => {
     useEffect(() => {
         const getForms = async () => {
             try {
-                const response = await downloadFormById(formId);
-
-                setPdf(response);
+                const response = await downloadTaxFormById(formId, { contractNumber, clientCode: carrierCode, fChar, taxYear });
+                setPdf(response?.binaryData);
             } catch (e: any) {
                 console.error('GetCallCenterForms::Error call center forms', e);
             }
         };
-
         getForms();
-    }, [formId]);
+    }, [carrierCode, contractNumber, fChar, formId, taxYear]);
 
     return <>{pdf && <PdfPreview documentBinary={pdf} />}</>;
 };
@@ -81,7 +84,15 @@ export const getServerSideProps = withPageAuthRequired({
                 },
             };
         }
+
         try {
+            const { contractNumber, carrierCode, fChar, taxYear } = getCookies({ req, res });
+
+            deleteCookie('contractNumber');
+            deleteCookie('carrierCode');
+            deleteCookie('fChar');
+            deleteCookie('taxYear');
+
             const translations = await serverSideTranslations(
                 locale,
                 [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
@@ -94,6 +105,10 @@ export const getServerSideProps = withPageAuthRequired({
                     locale,
                     ...translations,
                     formId: Number(formId),
+                    contractNumber,
+                    carrierCode,
+                    fChar,
+                    taxYear,
                 },
             };
         } catch (e) {
