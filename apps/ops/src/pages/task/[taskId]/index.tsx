@@ -143,7 +143,7 @@ export const getServerSideProps = withPageAuthRequired({
                 process: 'Withdrawal', //task?.process,
             };
 
-            const [nigoExceptionResponse] = await Promise.all([await getNigoExceptions(nigoFilters, accessToken)]);
+            const nigoExceptionResponse = await getNigoExceptions(nigoFilters, accessToken);
 
             const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
 
