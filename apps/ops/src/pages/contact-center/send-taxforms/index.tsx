@@ -19,9 +19,9 @@ import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
-import { CorrespondenceFormParts } from '@deps/models/case/correspondence';
+import { AttachmentType, CorrespondenceFormParts, TransactionSubTypes, TransactionTypes } from '@deps/models/case/correspondence';
 import { CommunicationTypes, SendDocumentFormType } from '@deps/models/case/send-document';
-import { TaxForm } from '@deps/models/case/send-tax-forms';
+import { DisplayName, TaxForm } from '@deps/models/case/send-tax-forms';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission, UserProfile } from '@deps/models/user-profile';
 import { sendCommunication } from '@deps/queries/api/c2web';
@@ -39,6 +39,7 @@ interface SendTaxFormsProps extends SegmentTrackedPageProps {
 }
 
 const SendTaxForms = ({ policy, user, shouldShowCaseButton }: SendTaxFormsProps) => {
+    console.log('🚀 ~ SendTaxForms ~ policy:', policy);
     const { t } = useTranslation(undefined, { keyPrefix: '' });
 
     const { ctiCallNumber, correlationId } = router.query;
@@ -69,6 +70,16 @@ const SendTaxForms = ({ policy, user, shouldShowCaseButton }: SendTaxFormsProps)
     );
 
     const handleSubmitRequest = async (state: CorrespondenceFormParts) => {
+        const attachments = taxFormDetails.map(formDetail => {
+            return {
+                transactionType: TransactionTypes.TaxForms,
+                transactionSubType: TransactionSubTypes.TaxForms,
+                attachmentType: AttachmentType.TaxForms,
+                displayName: DisplayName.TaxForms,
+                formId: formDetail?.formId ?? '',
+                formName: DisplayName.TaxForms,
+            };
+        });
         const requestBody = generateCommunicationRequest(
             policy,
             state?.correspondence?.type as CommunicationTypes,
@@ -77,7 +88,7 @@ const SendTaxForms = ({ policy, user, shouldShowCaseButton }: SendTaxFormsProps)
             ctiCallNumber as string,
             correlationId as string,
             SendDocumentFormType.ServiceRequestForm,
-            []
+            attachments
         );
 
         try {

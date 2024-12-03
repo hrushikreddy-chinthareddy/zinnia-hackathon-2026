@@ -19,7 +19,7 @@ import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
-import { AttachmentDetails, CorrespondenceFormParts } from '@deps/models/case/correspondence';
+import { AttachmentDetails, AttachmentType, CorrespondenceFormParts } from '@deps/models/case/correspondence';
 import {
     AvailableFormsTransaction,
     CommunicationTypes,
@@ -90,7 +90,7 @@ const SendDocument = ({ policy, availableFormsTransactions, shouldShowCaseButton
                 transactionSubType:
                     formDetail?.transactionSubType?.list?.find(item => item.value === formDetail?.transactionSubType?.selected)?.label ||
                     '',
-                attachmentType: 'form',
+                attachmentType: AttachmentType.Form,
                 displayName: formDetail?.document.selected?.formShortName ?? '',
                 formId: formDetail?.document.selected?.formId.toString() ?? '',
                 formName: formDetail?.document.selected?.formShortName ?? '',

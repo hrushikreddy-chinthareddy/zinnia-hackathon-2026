@@ -17,3 +17,7 @@ export type SearchTaxFormResponseBody = {
     count: number;
     items: TaxForm[];
 };
+
+export enum DisplayName {
+    TaxForms = 'TAX Forms',
+}
