@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
 
@@ -60,7 +61,6 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
         maxItems,
     } = mergedChartOptions;
     const { createdDateStart, createdDateEnd } = getStartAndEndDates('All');
-    const [caseGroupingState, setCaseGroupingState] = useState<CaseDashboardStatsResponse>();
     const [totalCases, setTotalCases] = useState<number>(0);
 
     const [level1ObjectGrouping, setLevel1ObjectGrouping] = useState<DashboardStatsElementResponse[]>([]);
@@ -74,6 +74,26 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
 
     const [parentSize, setParentSize] = useState({ width: 0, height: 0 });
     const svgParentRef = useRef<HTMLDivElement>(null);
+
+    const getStatsFromSelection = async () => {
+        const filter: DashboardSearchFilter = Object.assign({}, baseDashboardQueryFilter, {
+            caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
+            createdDateStart,
+        });
+
+        const query: CaseDashboardStatsQuery = {
+            filter,
+            groupBy: [l1SelectValue as GroupByOptions, l2SelectValue as GroupByOptions, l3SelectValue as GroupByOptions],
+        };
+
+        const statsResponse = await getCaseDashboardStats(query);
+        if (!statsResponse || 'status' in statsResponse) {
+            console.error('getStatsFromSelection::Failed to fetch stats');
+        }
+        return statsResponse as CaseDashboardStatsResponse;
+    };
+
+    const { data: caseGroupingState } = useQuery({ queryKey: ['caseGrouping', baseDashboardQueryFilter], queryFn: getStatsFromSelection });
 
     const getGroupingsFromL1 = (l1ObjectGrouping: DashboardStatsElementResponse[]) => {
         const l2Grouping: DashboardStatsElementResponse[] = [];
@@ -649,27 +669,6 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
             setParentSize({ height, width });
         }
     }, [height, width]);
-
-    useEffect(() => {
-        const getStatsFromSelection = async () => {
-            const filter: DashboardSearchFilter = Object.assign({}, baseDashboardQueryFilter, {
-                caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
-                createdDateStart,
-            });
-
-            const query: CaseDashboardStatsQuery = {
-                filter,
-                groupBy: [l1SelectValue as GroupByOptions, l2SelectValue as GroupByOptions, l3SelectValue as GroupByOptions],
-            };
-
-            const statsResponse = await getCaseDashboardStats(query);
-            if (!statsResponse || 'status' in statsResponse) {
-                console.error('getStatsFromSelection::Failed to fetch stats');
-            }
-            setCaseGroupingState(statsResponse as CaseDashboardStatsResponse);
-        };
-        getStatsFromSelection();
-    }, [baseDashboardQueryFilter, createdDateEnd, createdDateStart, l1SelectValue, l2SelectValue, l3SelectValue]);
 
     useEffect(() => {
         if (!caseGroupingState || !caseGroupingState.data || caseGroupingState.data.length === 0) {

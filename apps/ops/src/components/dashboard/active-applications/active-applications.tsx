@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { FC, CSSProperties, useState, useEffect, RefObject } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +11,6 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { getStartAndEndDates } from '@deps/containers/case-redesign-sub-page/case-helpers';
-import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { useIntersectionObserver } from '@deps/hooks/useIntersectionObserver';
 import { useResizeObserver } from '@deps/hooks/useResizeObserver';
 import { CaseDashboardStatsResponse, Processes, Statuses } from '@deps/models/case/case';
@@ -54,33 +54,16 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
     });
     const { t } = useTranslation(TranslationFiles.COMMON);
     const [timeFrameLabel] = useState<string>('Year to Date');
-    const [insightGroupingCountByCarrierStats, setInsightGroupingCountByCarrierStats] = useState<CaseDashboardStatsResponse>({
-        data: [],
-        totalElements: 0,
-    });
-    const [insightGroupingCountBySubProcessStats, setInsightGroupingCountBySubProcessStats] = useState<CaseDashboardStatsResponse>({
-        data: [],
-        totalElements: 0,
-    });
-    const [insightCreatedBySubProcess, setInsightCreatedBySubProcess] = useState<CaseDashboardStatsResponse>({
-        data: [],
-        totalElements: 0,
-    });
-    const [insightStagesByCreated, setInsightStagesByCreated] = useState<CaseDashboardStatsResponse>({
-        data: [],
-        totalElements: 0,
-    });
-    const [insightExceptionStats, setInsightExceptionStats] = useState<CaseDashboardStatsResponse>({
-        data: [],
-        totalElements: 0,
-    });
 
     const [baseDashboardQueryFilter, setBaseDashboardQueryFilter] = useState<DashboardSearchFilter>({});
     const [baseInsightQueryFilter, setBaseInsightQueryFilter] = useState<DashboardSearchFilter>({});
     const [insightOption, setInsightOption] = useState<Processes>(Processes.NewBusiness);
-    const [processListOptions, setProcessListOptions] = useState<SimpleOption[]>([]);
 
-    const getProcessListOptions = async (baseDashboardQueryFilter: DashboardSearchFilter) => {
+    const getProcessListOptions = async () => {
+        const baseDashboardQueryFilter: DashboardSearchFilter = {
+            caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
+            createdDateStart,
+        };
         const query: CaseDashboardStatsQuery = {
             filter: baseDashboardQueryFilter,
             groupBy: [GroupByOptions.Process],
@@ -98,9 +81,8 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
             }, [])
             .sort((item1, item2) => item1.label.localeCompare(item2.label));
 
-        setProcessListOptions(listOptions);
+        return listOptions;
     };
-
     const handleInsightChange = (processType: Processes) => {
         setInsightOption(processType);
     };
@@ -145,6 +127,31 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
         return getCaseDashboardStats(query);
     };
 
+    const { data: processListOptions, isLoading: processListOptionsLoading } = useQuery({
+        queryKey: ['processListOptions'],
+        queryFn: getProcessListOptions,
+    });
+    const { data: insightGroupingCountByCarrierStats } = useQuery({
+        queryKey: ['countByCarrierInsights', baseInsightQueryFilter],
+        queryFn: () => getCountByCarrierInsightStats(baseInsightQueryFilter),
+    });
+    const { data: insightGroupingCountBySubProcessStats, isLoading: insightGroupingCountBySubProcessStatsLoading } = useQuery({
+        queryKey: ['countBySubProcessInsights', baseInsightQueryFilter],
+        queryFn: () => getCountBySubProcessInsightStats(baseInsightQueryFilter),
+    });
+    const { data: insightCreatedBySubProcess, isLoading: insightCreatedBySubProcessLoading } = useQuery({
+        queryKey: ['createdBySubProcessInsights', baseInsightQueryFilter],
+        queryFn: () => getCreatedBySubProcessInsightStats(baseInsightQueryFilter),
+    });
+    const { data: insightStagesByCreated, isLoading: insightStagesByCreatedLoading } = useQuery({
+        queryKey: ['stagesByCreatedInsights', baseInsightQueryFilter],
+        queryFn: () => getOpenExceptionCategoriesByCreatedInsightStats(baseInsightQueryFilter),
+    });
+    const { data: insightExceptionStats, isLoading: insightExceptionStatsLoading } = useQuery({
+        queryKey: ['exceptionStats', baseInsightQueryFilter],
+        queryFn: () => getExceptionCategoryStats(baseInsightQueryFilter),
+    });
+
     useEffect(() => {
         const baseFilter: DashboardSearchFilter = {
             caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
@@ -172,10 +179,10 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
         }
 
         setBaseDashboardQueryFilter(baseFilter);
-        getProcessListOptions(baseFilter);
         setBaseInsightQueryFilter(insightFilter);
     }, [selectedCarriers, insightOption, selectedBrokerDealers, createdDateEnd, createdDateStart]);
 
+<<<<<<< HEAD
     useEffect(() => {
         const getPageData = async () => {
             handleSetLoading(true);
@@ -241,6 +248,25 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
 =======
     }, [baseDashboardQueryFilter, baseInsightQueryFilter, handleSetLoading]);
 >>>>>>> 0cab77e15 (fix use effect)
+=======
+    if (
+        processListOptionsLoading ||
+        loading ||
+        insightGroupingCountBySubProcessStatsLoading ||
+        insightGroupingCountBySubProcessStatsLoading ||
+        insightCreatedBySubProcessLoading ||
+        insightStagesByCreatedLoading ||
+        insightExceptionStatsLoading
+    ) {
+        return (
+            <div className="relative border-t-2 border-[--color-base-border-border-light]">
+                <CardContainer classNames="relative !pt-0" containerClassNames="mt-none">
+                    <PageLoader variant={PageLoaderVariant.CenterWhiteText} showText={true} />
+                </CardContainer>
+            </div>
+        );
+    }
+>>>>>>> c69e24ce8 (pull in tanstack and test out doing the data calls that way)
 
     return (
         <>
@@ -271,7 +297,7 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
                 </Typography>
                 <div className={`${styles.insightsHeaderDropdown}`}>
                     <Select
-                        options={processListOptions}
+                        options={processListOptions || []}
                         size={FieldSize.Small}
                         name="process-type-dropdown-btn"
                         placeholder={t('selectProcessType') || ''}
@@ -284,7 +310,7 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
                 <div className={styles.container}>
                     <ActiveAging
                         createdBySubProcess={insightCreatedBySubProcess}
-                        openExceptionCategoriesByCreated={insightStagesByCreated}
+                        openExceptionCategoriesByCreated={insightStagesByCreated as CaseDashboardStatsResponse}
                         loading={loading}
                         selectedProcess={insightOption}
                         carriers={Object.keys(selectedCarriers)}
@@ -293,7 +319,7 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
                         {/* this is the Exception Distribution by Category tree map chart */}
                         <CardContainer fullWidth={false}>
                             <TreeMapInsights
-                                dashboardStatsData={insightExceptionStats}
+                                dashboardStatsData={insightExceptionStats as CaseDashboardStatsResponse}
                                 heading="Exception Distribution by Category"
                             ></TreeMapInsights>
                         </CardContainer>
@@ -301,7 +327,7 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
                     <div className="flex flex-col gap-1 mt-1">
                         <div className="flex gap-1">
                             <CaseStatBlock
-                                dashboardStatsResponse={insightGroupingCountByCarrierStats}
+                                dashboardStatsResponse={insightGroupingCountByCarrierStats as CaseDashboardStatsResponse}
                                 blockLabel="Carrier"
                                 timeFrameLabel={timeFrameLabel}
                                 statMeasurementLabel="case"

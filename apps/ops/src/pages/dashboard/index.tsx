@@ -1,4 +1,5 @@
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { TabContent } from '@zinnia/bloom/components';
 import { FgaRoles } from '@zinnia/utils';
 import clsx from 'clsx';
@@ -37,6 +38,9 @@ import styles from './Dashboard.module.css';
 export interface CarrierListItem {
     [key: string]: string;
 }
+
+// Create a client
+const queryClient = new QueryClient();
 
 const DashboardPage = ({
     authorizedCarriers,
@@ -133,69 +137,71 @@ const DashboardPage = ({
         }
     };
     return (
-        <DashboardResponsiveLayout>
-            <PageHead titleKey="dashboard" />
-            <NoNavLayout fullHeight={true} displayTopNavBar={true} size="large">
-                <div
-                    id="carrier-header"
-                    ref={carrierHeaderRef}
-                    className={clsx('flex-wrap', styles.filtersHeader, {
-                        [styles.pinned as string]:
-                            carrierHeaderIsIntersecting || Number(carrierHeaderEntry?.boundingClientRect.bottom) < 64,
-                    })}
-                >
-                    <Typography className="flex items-center" variant={TypographyVariant.H1} data-testid="header-text">
-                        {t('caseStatsDashboardTitle')}
-                    </Typography>
-                    <div className="flex justify-between items-center">
-                        <div className="flex nowrap gap-4">
-                            <div className="w-52">
-                                <Select
-                                    isMultiselect
-                                    options={getUniqueCarrierFilterItems()}
-                                    value={placeholderSelectedCarriers}
-                                    onChange={updateCarrierFilters}
-                                    size={FieldSize.Small}
-                                    placeholder={t('allCarriers') || ''}
-                                    disabled={loading || carrierFilterItems.length === 1}
-                                    name="carrier-dropdown-btn"
-                                    onOpenChange={handleOnOpenChange}
-                                />
-                            </div>
-                            <div className="w-52">
-                                <BrokerDealerFilter
-                                    brokerDealers={brokerDealers}
-                                    selectedBrokerDealers={selectedBrokerDealers}
-                                    selectedCarriers={Object.keys(placeholderSelectedCarriers)}
-                                    setSelectedBrokerDealers={setBrokerDealers}
-                                    updateBrokerDealerFilters={updateBrokerDealerFilters}
-                                    disabled={loading}
-                                />
+        <QueryClientProvider client={queryClient}>
+            <DashboardResponsiveLayout>
+                <PageHead titleKey="dashboard" />
+                <NoNavLayout fullHeight={true} displayTopNavBar={true} size="large">
+                    <div
+                        id="carrier-header"
+                        ref={carrierHeaderRef}
+                        className={clsx('flex-wrap', styles.filtersHeader, {
+                            [styles.pinned as string]:
+                                carrierHeaderIsIntersecting || Number(carrierHeaderEntry?.boundingClientRect.bottom) < 64,
+                        })}
+                    >
+                        <Typography className="flex items-center" variant={TypographyVariant.H1} data-testid="header-text">
+                            {t('caseStatsDashboardTitle')}
+                        </Typography>
+                        <div className="flex justify-between items-center">
+                            <div className="flex nowrap gap-4">
+                                <div className="w-52">
+                                    <Select
+                                        isMultiselect
+                                        options={getUniqueCarrierFilterItems()}
+                                        value={placeholderSelectedCarriers}
+                                        onChange={updateCarrierFilters}
+                                        size={FieldSize.Small}
+                                        placeholder={t('allCarriers') || ''}
+                                        disabled={loading || carrierFilterItems.length === 1}
+                                        name="carrier-dropdown-btn"
+                                        onOpenChange={handleOnOpenChange}
+                                    />
+                                </div>
+                                <div className="w-52">
+                                    <BrokerDealerFilter
+                                        brokerDealers={brokerDealers}
+                                        selectedBrokerDealers={selectedBrokerDealers}
+                                        selectedCarriers={Object.keys(placeholderSelectedCarriers)}
+                                        setSelectedBrokerDealers={setBrokerDealers}
+                                        updateBrokerDealerFilters={updateBrokerDealerFilters}
+                                        disabled={loading}
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <DashboardTabNav>
-                    <TabContent className="w-full" value={'active-applications'}>
-                        <ActiveApplications
-                            sankeyChartRef={sankeyChartRef}
-                            selectedBrokerDealers={selectedBrokerDealers}
-                            selectedCarriers={selectedCarriers}
-                            handleSetLoading={handleSetLoading}
-                            loading={loading}
-                            carrierHeaderRef={carrierHeaderRef}
-                        />
-                    </TabContent>
-                    <TabContent className="w-full" value={'issued-business'}>
-                        <IssuedBusiness
-                            authorizedCarriers={authorizedCarriers}
-                            brokerDealersSSR={brokerDealers}
-                            completedCasesByProcessSubType={completedCasesByProcessSubType}
-                        />
-                    </TabContent>
-                </DashboardTabNav>
-            </NoNavLayout>
-        </DashboardResponsiveLayout>
+                    <DashboardTabNav>
+                        <TabContent className="w-full" value={'active-applications'}>
+                            <ActiveApplications
+                                sankeyChartRef={sankeyChartRef}
+                                selectedBrokerDealers={selectedBrokerDealers}
+                                selectedCarriers={selectedCarriers}
+                                handleSetLoading={handleSetLoading}
+                                loading={loading}
+                                carrierHeaderRef={carrierHeaderRef}
+                            />
+                        </TabContent>
+                        <TabContent className="w-full" value={'issued-business'}>
+                            <IssuedBusiness
+                                authorizedCarriers={authorizedCarriers}
+                                brokerDealersSSR={brokerDealers}
+                                completedCasesByProcessSubType={completedCasesByProcessSubType}
+                            />
+                        </TabContent>
+                    </DashboardTabNav>
+                </NoNavLayout>
+            </DashboardResponsiveLayout>
+        </QueryClientProvider>
     );
 };
 
