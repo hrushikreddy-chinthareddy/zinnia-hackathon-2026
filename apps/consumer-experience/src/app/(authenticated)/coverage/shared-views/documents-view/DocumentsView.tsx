@@ -29,6 +29,8 @@ export const metadata: Metadata = {
 // https://zinnia.atlassian.net/wiki/spaces/SISED/pages/3834871816/SED+New+Document+Types+-+Next+Gen+Correspondence
 // https://zinnia.atlassian.net/wiki/spaces/SISED/pages/3013640218/SED+Document+Types
 const StatementDocumentTypes = ['ANNSTM', 'ANNSTME', 'ANN', 'SOA'];
+// This is the maximum number of years retrievable by the API
+const maxTaxYears = 5;
 
 export const DocumentsView = async ({
   planCode,
@@ -58,7 +60,7 @@ export const DocumentsView = async ({
       clientCode: policyData?.carrierId,
       contractNumber: policyNumber,
       taxYear: new Date().getFullYear().toString(),
-      numYears: 5,
+      numYears: maxTaxYears,
     }),
   ]);
 
@@ -69,8 +71,6 @@ export const DocumentsView = async ({
   const taxDocs =
     taxDocsRes.status === 'fulfilled' ? taxDocsRes.value.data : null;
 
-  const activeTab = currentView || DocumentCategory.DOCUMENTS;
-
   /**
    * Checks if a document type is a statement type.
    * @param doc the document to check
@@ -79,7 +79,8 @@ export const DocumentsView = async ({
   const statementsFilter = (doc: ExtendedDocumentMeta) =>
     StatementDocumentTypes.includes(doc.documentType as string);
 
-  const docs = () => {
+  const activeTab = currentView || DocumentCategory.DOCUMENTS;
+  const currentViewDocs = () => {
     switch (activeTab) {
       case DocumentCategory.DOCUMENTS:
         return (
@@ -96,7 +97,7 @@ export const DocumentsView = async ({
 
   const lineOfBusinessPath = lineOfBusinessUrlPath(lineOfBusiness);
 
-  if (!policyData) {
+  if (!policyData || policyError || !policyData.carrierId) {
     return (
       <NoDataAvailable
         message={`Something went wrong. Please try again later.`}
@@ -137,13 +138,11 @@ export const DocumentsView = async ({
       </ul>
       <DocumentsWithPagination
         docCategory={activeTab}
-        documents={docs()}
+        documents={currentViewDocs()}
         planCode={planCode}
         policyNumber={policyNumber}
         lineOfBusiness={LineOfBusiness.LIFE}
-        // TODO: if this could possibly be null, should we handle it in the
-        // component and not even make the call for docs?
-        carrierId={policyData.carrierId || ''}
+        carrierId={policyData.carrierId}
       />
     </div>
   );

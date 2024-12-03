@@ -1,37 +1,21 @@
 'use client';
 
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 
 import Loading from '@/app/loading';
-import { DocumentCategory } from '@/types/document';
-import { createQueryString } from '@/utils/strings';
 
 import PreviewUnsupported from './PreviewUnsupported';
 
-export default function PdfPreviewer(docInfo: {
-  // TODO: need to figure out a better way to type this because it can be
-  // the plain document or the tax document
-  clientCode: string;
-  documentId: string;
-  planCode: string;
-  policyNumber: string;
+export default function PdfPreviewer({
+  defaultRedirectUrl,
+  documentDownloadUrl,
+  fileName,
+}: {
+  defaultRedirectUrl: string;
+  documentDownloadUrl: string;
   fileName: string;
-  source: string;
-  lineOfBusiness: LineOfBusiness;
-  docCategory: DocumentCategory;
 }) {
-  const {
-    clientCode,
-    documentId,
-    fileName,
-    planCode,
-    policyNumber,
-    source,
-    lineOfBusiness,
-  } = docInfo;
-
   const [supportsEmbed, setSupportsEmbed] = useState(true);
   const [documentData, setDocumentData] = useState<string>('');
   const fetchInProgress = useRef(false);
@@ -45,16 +29,10 @@ export default function PdfPreviewer(docInfo: {
 
     const getDocumentData = async () => {
       let shouldRedirectToError = false;
-      // default to the documents error page, however, if the response is a redirect we will use that (see below)
-      let redirectHref = `/coverage/${lineOfBusiness}/${planCode}/${policyNumber}/documents/error`;
+      let redirectHref = defaultRedirectUrl;
 
-      const queryParams = createQueryString(docInfo);
-      const docDownloadUrl =
-        docInfo.docCategory === DocumentCategory.TAX
-          ? `/api/documents/tax-docs/${documentId}/download/${fileName}.pdf?${queryParams}`
-          : `/api/documents/${documentId}/download/${fileName}.pdf?${queryParams}`;
       try {
-        const response = await fetch(docDownloadUrl);
+        const response = await fetch(documentDownloadUrl);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -87,18 +65,7 @@ export default function PdfPreviewer(docInfo: {
         URL.revokeObjectURL(documentData);
       }
     };
-  }, [
-    clientCode,
-    documentData,
-    documentId,
-    fileName,
-    planCode,
-    policyNumber,
-    router,
-    source,
-    lineOfBusiness,
-    docInfo,
-  ]);
+  }, [defaultRedirectUrl, documentData, documentDownloadUrl, router]);
 
   return supportsEmbed ? (
     documentData ? (
