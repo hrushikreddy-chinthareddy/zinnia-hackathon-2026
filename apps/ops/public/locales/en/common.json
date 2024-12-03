@@ -4454,6 +4454,7 @@
         "confirmStep": {
             "title": "Submitted!",
             "subTitle": "Your request has been sent for processing.",
+            "subTitleReindexing": "This document will be re-indexed. The existing case had been cancelled.",
             "cta": "Go to case management",
             "secondaryCta": "Close",
             "submitNigo": "Submit NIGO details",
@@ -4476,10 +4477,32 @@
             "subTitle": "Review the form for any missing sections before continuing.",
             "options": {
                 "allSectionsAreComplete": "All sections are complete and ready for data entry.",
-                "missingDetails": "There are missing details"
+                "missingDetails": "There are missing details",
+                "incorrectDocIndexing": "The document was indexed incorrectly."
             },
             "view": "View",
-            "documentId": "Document ID"
+            "documentId": "Document ID",
+            "documentIndexingInfo": {
+                "suggestedDocumentType": "Suggested document type",
+                "notes": "Notes",
+                "documentOptions": {
+                    "systematic": "Systematic",
+                    "stopPayment": "Stop Payment",
+                    "returnedMail": "Returned Mail",
+                    "accountUpdates": "Account Updates",
+                    "requiredMinimumDistribution": "Required Minimum Distribution",
+                    "redemption": "Redemption",
+                    "policyUpdates": "Policy Updates",
+                    "outgoingTransfers": "Outgoing Transfers",
+                    "other": "Other"
+                }
+            },
+            "formErrors": {
+                "formValidation": {
+                    "noDocTypeToReindex": "Please document type for re-indexing",
+                    "noNotes": "Please enter notes"
+                }
+            }
         },
         "formSelection": {
             "title": "New Form Selection",

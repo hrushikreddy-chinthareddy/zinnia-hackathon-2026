@@ -9,7 +9,6 @@ import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-ca
 import { TranslationFiles } from '@deps/config/translations';
 import { buildFormV2 } from '@deps/containers/otp/withdrawal-forms/utils/withdrawal-form-helper';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-//import { useIsMounted } from '@deps/hooks/useIsMounted';
 import { DocumentData } from '@deps/models/case/document';
 import { ApiVersion } from '@deps/models/case/enums';
 import { TaskApiVersionMapper } from '@deps/models/case/helpers';
@@ -18,6 +17,8 @@ import { updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 
 import { useNigoEntry } from '../../nigo-entry-provider';
+import { SelOptionType } from '../service-form-review/service-form-review';
+
 interface ConfirmStepProps {
     documentNumber?: string;
     docType?: string;
@@ -28,10 +29,19 @@ interface ConfirmStepProps {
 const ConfirmStep = ({ document}: ConfirmStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.confirmStep' });
     const router = useRouter();
-    const { isReadyForDataEntry, submitFailed, setSubmitFailed } = useNigoEntry();
+    const { submitFailed, setSubmitFailed, sectionOption } = useNigoEntry();
     const formState = useContext(FormDataContext);
     const [isLoading, setIsLoading] = useState(false);
     const [timer] = useState(performance.now());
+
+    const getSubmitLabel = () => {
+        switch(sectionOption) {
+            case SelOptionType.DATA_ENTRY: return t('submitTask');
+            case SelOptionType.NIGO_ENTRY: return t('submitNigo');
+            case SelOptionType.DOC_INDEXING: return t('submitDocIndexing');
+            default: return t('submit');
+        }
+    };
 
     const submit = useCallback(async () => {
         setIsLoading(true);
@@ -69,7 +79,7 @@ const ConfirmStep = ({ document}: ConfirmStepProps) => {
                 leaveRoute={'/create-case'}
                 submit={{
                     action: submit,
-                    text: isReadyForDataEntry ? t('submitTask') : t('submitNigo'),
+                    text: getSubmitLabel(),
                 }}
             />
         );
@@ -79,7 +89,7 @@ const ConfirmStep = ({ document}: ConfirmStepProps) => {
         <div className="responsive-padding flex h-full w-full grow flex-col items-center justify-center">
             <CardInfo
                 icon={<CircleCheckIcon className="text-semantic-success" height={50} width={50} />}
-                subtitle={t('subTitle')}
+                subtitle={sectionOption === SelOptionType.DOC_INDEXING ? t('subTitleReindexing') : t('subTitle')}
                 title={t('title')}
                 cta={{
                     action: () => {
@@ -100,7 +110,6 @@ const ConfirmStep = ({ document}: ConfirmStepProps) => {
                         {t('secondaryCta')}
                     </NavElement>
                 }
-
             />
         </div>
     );

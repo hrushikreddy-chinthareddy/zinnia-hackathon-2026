@@ -4422,6 +4422,7 @@
         "confirmStep": {
             "title": "Soumis!",
             "subTitle": "Votre demande a été envoyée pour traitement.",
+            "subTitleReindexing": "Ce document sera réindexé. Le dossier existant a été annulé.",
             "cta": "Aller à la gestion des cas",
             "secondaryCta": "Fermer",
             "submitNigo": "Soumettre les détails NIGO"
@@ -4443,10 +4444,32 @@
             "subTitle": "Vérifiez le formulaire pour toute section manquante avant de continuer.",
             "options": {
                 "allSectionsAreComplete": "Toutes les sections sont complètes et prêtes pour la saisie des données.",
-                "missingDetails": "Il manque des détails"
+                "missingDetails": "Il manque des détails",
+                "incorrectDocIndexing": "The document was indexed incorrectly."
             },
             "view": "Voir",
-            "documentId": "ID du document"
+            "documentId": "ID du document",
+            "documentIndexingInfo": {
+                "suggestedDocumentType": "Type de document suggéré",
+                "notes": "Remarques",
+                "documentOptions": {
+                    "systematic": "Systématique",
+                    "stopPayment": "Arrêt de paiement",
+                    "returnedMail": "Courrier retourné",
+                    "accountUpdates": "Mises à jour du compte",
+                    "requiredMinimumDistribution": "Distribution minimale requise",
+                    "redemption": "Rachat",
+                    "policyUpdates": "Mises à jour des politiques",
+                    "outgoingTransfers": "Transferts sortants",
+                    "other": "Autre"
+                }
+            },
+            "formErrors": {
+                "formValidation": {
+                    "noDocTypeToReindex": "Veuillez indiquer le type de document pour la réindexation",
+                    "noNotes": "Veuillez saisir des notes"
+                }
+            }
         },
         "formSelection": {
             "title": "Sélection de nouveau formulaire",

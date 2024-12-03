@@ -1,21 +1,29 @@
 import React, { createContext } from 'react';
 
 import { SimpleOption } from '@deps/components/autocomplete/autocomplete.types';
+import { SelOptionType } from '@deps/containers/nigo-entry-container/components/steps/service-form-review/service-form-review';
 import { FormDetails, CallCenterElement } from '@deps/models/case/send-document';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
+export interface DocumentIndexingInfo {
+    docTypeToReindex: string | null;
+    notes: string | null;
+};
+
 export type NigoEntryFormState = {
     formData: any;
-    isReadyForDataEntry: boolean,
-    exceptions: string[],
-    messages:  {[key: string]: {[key: string]: string}},
+    sectionOption: SelOptionType;
+    documentIndexingInfo: DocumentIndexingInfo;
+    exceptions: string[];
+    messages:  {[key: string]: {[key: string]: string}};
     transactionType: CallCenterElement<string, SimpleOption>;
     transactionSubType: CallCenterElement<string, SimpleOption>;
     document: CallCenterElement<FormDetails, FormDetails>;
     formErrors: FormValidationErrors;
     submitFailed: boolean;
     setFormData: React.Dispatch<React.SetStateAction<any>>;
-    setIsReadyForDataEntry: React.Dispatch<React.SetStateAction<boolean>>;
+    setSectionOption: React.Dispatch<React.SetStateAction<SelOptionType>>;
+    setDocumentIndexingInfo: React.Dispatch<React.SetStateAction<DocumentIndexingInfo>>;
     setExceptions: React.Dispatch<React.SetStateAction<string[]>>;
     setMessages: React.Dispatch<React.SetStateAction<string[]>>;
     setTransactionType: React.Dispatch<React.SetStateAction<CallCenterElement<string, SimpleOption>>>;
@@ -23,15 +31,15 @@ export type NigoEntryFormState = {
     setDocument:React.Dispatch<React.SetStateAction<CallCenterElement<FormDetails, FormDetails>>>;
     setFormErrors: React.Dispatch<React.SetStateAction<FormValidationErrors>>;
     setSubmitFailed: React.Dispatch<React.SetStateAction<boolean>>;
-
 };
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = (() => {}) as React.Dispatch<React.SetStateAction<any>>;
+
 export const nigoEntryDefaultValues = {
     formData: {} as any,
     setFormData: noop,
-    isReadyForDataEntry: false,
+    sectionOption: SelOptionType.DATA_ENTRY,
+    documentIndexingInfo: {} as DocumentIndexingInfo,
     exceptions: [] as any,
     messages: [] as any,
     transactionType: {} as CallCenterElement<string, SimpleOption>,
@@ -39,7 +47,8 @@ export const nigoEntryDefaultValues = {
     document: {} as CallCenterElement<FormDetails, FormDetails>,
     formErrors: {} as FormValidationErrors,
     submitFailed: false,
-    setIsReadyForDataEntry: noop,
+    setSectionOption: noop,
+    setDocumentIndexingInfo: noop,
     setExceptions: noop,
     setMessages: noop,
     setTransactionType: noop,

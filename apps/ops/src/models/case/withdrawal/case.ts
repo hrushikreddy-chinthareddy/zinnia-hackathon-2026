@@ -103,6 +103,7 @@ export interface FormParts {
     formOL4753Data?: FormOL4753Data | null;
     ownerAcknowledgement?: OwnerAcknowledgement;
     formNigos?: FormNigos | null;
+    formReindexingData?: FormReIndexingData | null;
 }
 
 export interface FormIrsData {
@@ -1074,9 +1075,16 @@ export enum SortOrder {
 
 export interface FormNigos {
     nigos: NigoMessages[];
-}
+};
 
 export interface NigoMessages {
     exceptionId: string;
     messages: string[];
-}
+};
+
+export interface FormReIndexingData {
+    lob: string | null;
+	docHandle: string | null;
+	docTypeToReindex?: string | null;
+	notes: string | null;
+};
