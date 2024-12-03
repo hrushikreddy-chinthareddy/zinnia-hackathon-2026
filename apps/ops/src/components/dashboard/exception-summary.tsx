@@ -345,6 +345,58 @@ export const ExceptionSummary = ({
                         // },
                     },
                 },
+                tooltip: {
+                    formatter: function () {
+                        const xAxis = this.series.xAxis;
+
+                        // Find the index of the xAxis in the chart's xAxis array
+                        const xAxisIndex = this.series.chart.xAxis.indexOf(xAxis);
+
+                        console.log('this', xAxisIndex, 'x:', this.x, 'y:', this.y, this);
+
+                        // Apply custom formatting based on xAxis index
+                        // this is the lower chart
+                        if (xAxisIndex === 1) {
+                            const formattedValue = new Intl.NumberFormat().format(this.y || 0);
+                            const pointIndex = this.point.index;
+                            // find the category label from the first xAxis and display it in the tooltip
+                            return `<div>${this.series.chart.xAxis[0].categories[pointIndex * 4]}<br/><b>${
+                                this.series.name
+                            }</b>: ${formattedValue}</div>`;
+                        } else {
+                            console.log('other xAxisIndex', xAxisIndex);
+                            const formattedValue = new Intl.NumberFormat().format(this.y || 0);
+                            return `<div>${this.key}<br/><b>${this.series.name}</b>: ${formattedValue}`;
+                            // Get the category label (e.g., 'Jan', 'Feb', etc.)
+                            // const category = this.x;
+
+                            // // Get the numeric index of the category from xAxis.categories
+                            // const categoryIndex = this.series.chart.xAxis[0].categories.indexOf(category as string);
+                            // console.log('categoryIndex', categoryIndex);
+                            // let tooltipText = `<b>${category}</b><br>`;
+
+                            // // Loop through all series to display the value for the same category
+                            // this.series.chart.series.forEach(function (series) {
+                            //     // if (series.chart.xAxis.indexOf(series.xAxis) === 0) {
+                            //     {
+                            //         // if(series.xAxis.index === 0) {
+
+                            //         // }
+                            //         // Check if the current series has a data point for this category index
+                            //         const point = series.data[categoryIndex]; // Access data by category index
+                            //         console.log('point', point);
+                            //         console.log('series', series);
+                            //         if (point) {
+                            //             const formattedValue = new Intl.NumberFormat().format(point.y || 0); // Format value with commas
+                            //             tooltipText += `<span style="color:${series.color}">\u25CF</span> ${series.name}: ${formattedValue}<br>`;
+                            //         }
+                            //     }
+                            // });
+
+                            // return tooltipText;
+                        }
+                    },
+                },
             };
         },
         [statsResponse]
@@ -405,13 +457,11 @@ export const ExceptionSummary = ({
         <CardContainer containerClassNames="rounded" classNames="!p-0" fullWidth={true}>
             <div className="flex flex-col xl:flex-row justify-between gap-4 w-full">
                 <div className="flex xl:flex-col xl:w-1/4 gap-4 mb-8 xl:mb-0">
-                    <Typography className="mb-1" variant={TypographyVariant.H2}>
+                    <Typography className="mb-1" variant={TypographyVariant.H3}>
                         {'Exception Summary'}
                     </Typography>
-                    <div className="flex-1 border-r-1 xl:border-r-0 xl:border-t-1 border-[#EDEDED] flex flex-col gap-4">
-                        <Typography className="xl:mt-1" variant={TypographyVariant.BodySmBold}>
-                            Avg Monthly Exceptions / Total Cases
-                        </Typography>
+
+                    <div className="flex-1 border-r-1 xl:border-r-0 border-[#EDEDED] flex flex-col gap-4 pt-4">
                         {loading ? (
                             <div className="grid gap-4 h-full mb-4 w-full place-content-center bg-[--color-base-surface-surface-tertiary]">
                                 <PageLoader />
@@ -429,6 +479,9 @@ export const ExceptionSummary = ({
                                 )}
                             </>
                         )}
+                        <Typography className="xl:mt-1" variant={TypographyVariant.BodySmBold}>
+                            Avg Monthly Exceptions / Total Cases
+                        </Typography>
                         <table>
                             <thead>
                                 <tr>

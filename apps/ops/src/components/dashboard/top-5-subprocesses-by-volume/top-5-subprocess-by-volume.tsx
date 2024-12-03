@@ -384,6 +384,25 @@ export const Top5SubprocessByVolume = ({
                         // },
                     },
                 },
+                tooltip: {
+                    formatter: function () {
+                        const xAxis = this.series.xAxis;
+
+                        // Find the index of the xAxis in the chart's xAxis array
+                        const xAxisIndex = this.series.chart.xAxis.indexOf(xAxis);
+
+                        // Apply custom formatting based on xAxis index
+                        if (xAxisIndex === 1) {
+                            const formattedValue = new Intl.NumberFormat().format(this.y || 0);
+                            const pointIndex = this.point.index;
+                            // find the category label from the first xAxis and display it in the tooltip
+                            return `<b>${this.series.chart.xAxis[0].categories[pointIndex * 4]}</b>: ${formattedValue}`;
+                        } else {
+                            const formattedValue = new Intl.NumberFormat().format(this.y || 0);
+                            return `<b>${this.key}</b>: ${formattedValue}`;
+                        }
+                    },
+                },
             };
         },
         [statsResponse]
@@ -444,7 +463,7 @@ export const Top5SubprocessByVolume = ({
         <CardContainer containerClassNames="rounded" classNames="!p-0" fullWidth={true}>
             <div className="flex flex-col xl:flex-row justify-between gap-4 w-full">
                 <div className="flex xl:flex-col xl:w-1/4 gap-4 mb-8 xl:mb-0">
-                    <Typography className="mb-1" variant={TypographyVariant.H2}>
+                    <Typography className="mb-1" variant={TypographyVariant.H3}>
                         {'Top 5 Products'}
                     </Typography>
                     <div className="flex-1 border-r-1 xl:border-r-0 border-[#EDEDED] flex flex-col gap-4">
