@@ -12,6 +12,7 @@ import { MultiselectOption } from '@deps/components/autocomplete/autocomplete.ty
 import { BrokerDealerFilter } from '@deps/components/dashboard/broker-dealer-filter/broker-dealer-filter';
 import { DashboardNavLinks } from '@deps/components/dashboard/dashboard-nav-links';
 import { ExceptionSummary } from '@deps/components/dashboard/exception-summary';
+import { Top5SubprocessByVolume } from '@deps/components/dashboard/top-5-subprocesses-by-volume/top-5-subprocess-by-volume';
 import { FieldSize } from '@deps/components/fields/field';
 import FieldData, { FieldDataVariant } from '@deps/components/fields/field-data/field-data';
 import Label, { LabelVariant } from '@deps/components/label/label';
@@ -354,6 +355,11 @@ export const IssuedBusinessPage = ({ authorizedCarriers, brokerDealersSSR, compl
                                 startDate={createdDateStart}
                                 selectedSubprocess={selectedSubprocess}
                             />
+                        )}
+                    </div>
+                    <div className="bg-white p-8 flex flex-col gap-8">
+                        {selectedSubprocess && (
+                            <Top5SubprocessByVolume createdDateStart={createdDateStart} requestSubType={selectedSubprocess} />
                         )}
                     </div>
                 </CardContainer>

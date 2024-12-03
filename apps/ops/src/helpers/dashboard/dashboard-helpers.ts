@@ -51,3 +51,10 @@ export const getLabelSubString = (label: string, length: number | boolean = 25) 
 };
 
 export const oneYearAgoISO = new Date(new Date().setFullYear(new Date().getFullYear() - 1)).toISOString();
+
+export const splitAndSentenceCase = (input: string): string => {
+    // Split the string on uppercase letters
+    const words = input.replace(/([A-Z])/g, ' $1').trim();
+    // Convert the first character to uppercase and the rest to lowercase
+    return words.charAt(0).toUpperCase() + words.slice(1).toLowerCase();
+};

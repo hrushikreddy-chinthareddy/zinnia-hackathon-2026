@@ -8,7 +8,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import PageLoader from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
+import { dashboardChartTitleFormat, splitAndSentenceCase } from '@deps/helpers/dashboard/dashboard-helpers';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
 import { convertToQueryString } from '@deps/helpers/routing.helper';
 import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
@@ -20,6 +20,7 @@ import { ReactComponent as LightBulbIcon } from '@deps/styles/elements/icons/ill
 
 import useExceptionData from '../../pages/dashboard/issued-business/useExceptionData';
 import NavElement, { NavElementSize, NavElementType } from '../nav-element/nav-element';
+import styles from './top-5-subprocesses-by-volume/top-5-subprocess-by-volume.module.css';
 
 if (typeof Highcharts === 'object') {
     HighchartsExporting(Highcharts);
@@ -187,6 +188,7 @@ export const ExceptionSummary = ({
     const chartRef = useRef<HighchartsReact.RefObject>(null);
     const [sortedMonthly, setSortedMonthly] = useState([] as summary[]);
     const [chartConfig, setChartConfig] = useState({} as Highcharts.Options);
+    const groupBy: GroupByOptions = GroupByOptions.Carrier;
 
     const getChartConfig = useCallback(
         (processedData: Output, sortedMonthly: summary[]): Highcharts.Options => {
@@ -316,9 +318,10 @@ export const ExceptionSummary = ({
                         opposite: true, // Moves the x-axis to the right side
                         title: {
                             text: '<b>Monthly<br/>Volume</b>',
-                            align: 'high', // Aligns the title to the top
+                            align: 'low', // Aligns the title to the top
                             rotation: 0, // Force title to be horizontal
-                            x: -15,
+                            x: 30,
+                            y: -15,
                             useHTML: true, // Enables HTML in the title
                         },
                         top: '68%',
@@ -426,34 +429,37 @@ export const ExceptionSummary = ({
                                 )}
                             </>
                         )}
-                        <ol className="flex flex-col gap-2 pr-4">
-                            {sortedMonthly.map((stat, index) => (
-                                <li key={`stat-${index}-${stat.name}`}>
-                                    <div className="flex items-center gap-3">
-                                        <div className="h-3 w-3" style={{ backgroundColor: colors[index] }}></div>
-                                        <div className="flex items-center gap-1 w-full justify-between">
-                                            {/* <span>{stat.name.toLocaleUpperCase()}</span> */}
-                                            <NavElement
-                                                href={`/cases${convertToQueryString(filter as any)}`}
-                                                size={NavElementSize.Small}
-                                                type={NavElementType.Link}
-                                                className="capitalize"
-                                                target="_blank"
-                                            >
-                                                {stat.name.toLocaleUpperCase()}
-                                            </NavElement>
-                                            <Typography
-                                                className="flex gap-2"
-                                                variant={TypographyVariant.BodySmBold}
-                                                data-testid="header-text"
-                                            >
-                                                {wholeNumberFormatify(stat.total / 12)} / {wholeNumberFormatify(stat.total)}
-                                            </Typography>
-                                        </div>
-                                    </div>
-                                </li>
-                            ))}
-                        </ol>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th className={`text-left ${styles.th}`}>{splitAndSentenceCase(groupBy)}</th>
+                                    <th className={`text-right ${styles.th}`}>Monthly Avg. / Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {sortedMonthly.map((stat, index) => (
+                                    <tr key={`stat-${index}-${stat.name}`}>
+                                        <td className="text-left">
+                                            <div className="flex items-center gap-3">
+                                                <div className="h-3 w-3" style={{ backgroundColor: colors[index] }}></div>
+                                                <NavElement
+                                                    href={`/cases${convertToQueryString(filter as any)}`}
+                                                    size={NavElementSize.Small}
+                                                    type={NavElementType.Link}
+                                                    className="capitalize"
+                                                    target="_blank"
+                                                >
+                                                    {stat.name}
+                                                </NavElement>
+                                            </div>
+                                        </td>
+                                        <td className={`text-right ${styles.value}`}>
+                                            {wholeNumberFormatify(stat.total / 12)} / {wholeNumberFormatify(stat.total)}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <div className="relative xl:w-3/4">

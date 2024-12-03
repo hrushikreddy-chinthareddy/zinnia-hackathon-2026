@@ -4,239 +4,527 @@ import * as Highcharts from 'highcharts';
 import HC_ACCESSIBILITY from 'highcharts/modules/accessibility';
 import HighchartsExporting from 'highcharts/modules/exporting';
 import HighchartsReact from 'highcharts-react-official';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import PageLoader from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
-// import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
-import { Processes, Statuses } from '@deps/models/case/case';
+import { dashboardChartTitleFormat, splitAndSentenceCase } from '@deps/helpers/dashboard/dashboard-helpers';
+import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
+import { convertToQueryString } from '@deps/helpers/routing.helper';
+import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
+import { DashboardStatsElementResponse, Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { getCaseDashboardStats } from '@deps/queries/api/cases';
-import { DashboardResponseData } from '@deps/queries/api/dashboard';
+import { getCaseInsights } from '@deps/queries/api/openai';
+import { DashboardSearchFilter } from '@deps/queries/cases';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
+import { ReactComponent as LightBulbIcon } from '@deps/styles/elements/icons/illustrations/light-bulb.svg';
 
-import { getTop5Products, sortCountsByMonth, Top5SubprocessByVolumeProps } from './top-5-subprocess-by-volume.helper';
+import styles from './top-5-subprocess-by-volume.module.css';
 
 if (typeof Highcharts === 'object') {
     HighchartsExporting(Highcharts);
     HC_ACCESSIBILITY(Highcharts);
 }
 
-export const Top5SubprocessByVolume = ({
-    startDate,
-    timeframe = '',
-    processSubType,
-}: // carrierOrBrokerDealer = GroupByOptions.Carrier,
-Top5SubprocessByVolumeProps) => {
-    const [loading, setLoading] = useState(true);
-    const [exceptionData, setExceptionData] = useState<DashboardResponseData[]>();
-    const chartRef = useRef<HighchartsReact.RefObject>(null);
+type summary = {
+    series: Highcharts.SeriesLineOptions | Highcharts.SeriesColumnOptions;
+    name: string;
+    total: number;
+};
 
-    const chartConfig: Highcharts.Options = useMemo((): Highcharts.Options => {
-        // console.log(carrierOrBrokerDealer);
-        if (!exceptionData) return {};
+type Output = {
+    weekly: Record<string, summary>;
+    monthly: Record<string, summary>;
+    weeklyCategories: string[];
+    monthlyCategories: number[];
+};
 
-        const top5Products = getTop5Products(exceptionData);
-        const productsToDisplay = top5Products.map(product => product.name);
-        const carrierData = [] as Highcharts.SeriesOptionsType[];
+const colors = ['#D385A5', '#BD85D3', '#8593D3', '#00628B', '#021936'];
 
-        exceptionData.map(value => {
-            if (!value || !value.values || !value.name) return;
+function processData(input: DashboardStatsElementResponse[]): Output {
+    const WEEKLY_WEEKS = 48; // 4 weeks per month for 12 months
+    const MONTHLY_MONTHS = 12;
+    const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-            const productName = value.name;
+    const result: Output = {
+        weekly: {},
+        monthly: {},
+        weeklyCategories: [],
+        monthlyCategories: [],
+    };
 
-            if (productName === 'NULL_VALUE') return;
-
-            if (!productsToDisplay.includes(productName)) return;
-
-            const formattedValues = sortCountsByMonth(value.values);
-            const chartData = Array(12).fill(0);
-            Object.entries(formattedValues).map(([month, count]) => {
-                const idx = parseInt(month, 10);
-                const daysInMonth = dayjs(month, 'MM YYYY').daysInMonth();
-                const average = count / daysInMonth;
-                chartData[idx] = average;
-            });
-            if (!formattedValues) return;
-            carrierData.push({
-                type: 'line',
-                name: value.name,
-                data: chartData,
+    // Get the earliest date in the data
+    let earliestDate: Date = new Date();
+    input.forEach(carrier => {
+        carrier.values?.forEach(exceptionCategory => {
+            exceptionCategory.values?.forEach(entry => {
+                const date = new Date(entry.name);
+                if (!earliestDate || date < earliestDate) {
+                    earliestDate = date;
+                    return; // break the loop
+                }
             });
         });
+    });
 
-        return {
-            chart: {
-                height: 600,
+    // Use the earliest date to calculate the starting point for categories
+    if (!earliestDate) {
+        throw new Error('No valid dates found in input data');
+    }
+
+    // Generate categories
+    const startMonthIndex = earliestDate.getUTCMonth(); // 0-based month index
+    result.monthlyCategories = Array(12).fill(0); // Array.from({ length: MONTHLY_MONTHS }, (_, i) => MONTH_NAMES[(startMonthIndex + i) % 12]);
+
+    const months = Array.from({ length: MONTHLY_MONTHS }, (_, i) => MONTH_NAMES[(startMonthIndex + i) % 12]);
+    result.weeklyCategories = months.flatMap(month => [month, month, month, month]);
+
+    // Process data as before
+    input.forEach((groupBy, i) => {
+        const weeklyData: number[] = new Array(WEEKLY_WEEKS).fill(0);
+        const monthlyData: number[] = new Array(MONTHLY_MONTHS).fill(0);
+
+        const groupByName = groupBy.name || 'Unknown';
+        if (!result.weekly[groupByName]) {
+            result.weekly[groupByName] = {
+                series: {} as Highcharts.SeriesLineOptions,
+                name: groupByName,
+                total: 0,
+            };
+        }
+        if (!result.monthly[groupByName]) {
+            result.monthly[groupByName] = {
+                series: {} as Highcharts.SeriesColumnOptions,
+                name: groupByName,
+                total: 0,
+            };
+        }
+
+        result.weekly[groupByName].series = {
+            type: 'line',
+            data: weeklyData,
+            name: groupByName,
+            lineWidth: 2,
+            marker: {
+                enabled: false, // Disable markers for a clean line chart
             },
-            credits: {
-                enabled: false,
-            },
-            navigation: {
-                buttonOptions: {
-                    enabled: false,
-                },
-            },
-            // legend: {
-            //     title: {
-            //         text: 'Carrier: Avg Monthly Nigos / Total Cases',
-            //     },
-            //     enabled: true,
-            //     align: 'left',
-            //     verticalAlign: 'top',
-            //     layout: 'vertical',
-            //     // labelFormatter: function () {
-            //     //     const carrier = this.name;
-            //     //     const total = exceptionData?.totalCasesByCarrier[carrier];
-            //     //     const monthly = exceptionData?.monthly[carrier];
-            //     //     if (!total || !monthly) {
-            //     //         return DEFAULT_ERROR_STRING;
-            //     //     }
-            //     //     const totalMonths = exceptionData.totalMonths;
-            //     //     const avgTotalCases = total ? Math.round(total / totalMonths) : DEFAULT_ERROR_STRING;
-            //     //     const avgMonthlyNigos = monthly?.length
-            //     //         ? Math.round(monthly.reduce((prevValue: number, value: number | null) => prevValue + (value || 0), 0) / totalMonths)
-            //     //         : DEFAULT_ERROR_STRING;
-            //     //     return `${carrier}: ${avgMonthlyNigos} / ${avgTotalCases}`;
-            //     // },
-            // },
-            // xAxis: {
-            //     min: dayjs().year(year).month(month).unix() * 1000,
-            //     // startOnTick: true,
-            //     alignTicks: true,
-            //     tickInterval: 24 * 3600 * 1000 * 30,
-            //     top: '-40%',
-            //     type: 'datetime',
-            //     tickWidth: 0,
-            //     gridLineWidth: 1,
-            //     tickPosition: 'inside',
-            //     showLastLabel: true,
-            // },
-            // ],
-            legend: {
-                enabled: false,
-            },
-            plotOptions: {
-                series: {
-                    connectNulls: false,
-                    marker: {
-                        enabled: false,
-                    },
-                },
-                column: {
-                    stacking: 'percent',
-                    pointWidth: 20,
-                },
-            },
-            xAxis: {
-                labels: {
-                    formatter: function () {
-                        return dayjs()
-                            .month(this.value as number)
-                            .format('MMM YY');
-                    },
-                },
-            },
-            yAxis: {
-                allowDecimals: false,
-                min: 0,
-                title: {
-                    text: 'Average products closed/day',
-                },
-                lineWidth: 2,
-                resize: {
-                    enabled: true,
-                },
-                opposite: true,
-            },
-            series: carrierData,
-            title: {
-                text: '',
-            },
+            color: colors[i % colors.length],
+            xAxis: 0, // Use the first xAxis
+            yAxis: 0,
         };
-    }, [exceptionData]);
+
+        result.monthly[groupByName].series = {
+            name: groupByName,
+            data: monthlyData,
+            stack: 'stackedBar',
+            type: 'column',
+            color: colors[i % colors.length],
+            xAxis: 1, // Use the second xAxis
+            yAxis: 1,
+        };
+
+        const groupedByDate: Record<string, number> = {};
+
+        // Flatten and aggregate counts by date
+        groupBy.values?.forEach(entryDate => {
+            // exceptionCategory.values?.forEach(entry => {
+            const date = entryDate.name; // Example: "2024-01-05"
+            groupedByDate[date] = (groupedByDate[date] || 0) + entryDate.count;
+            // });
+        });
+
+        // Process dates
+        Object.entries(groupedByDate).forEach(([dateString, count]) => {
+            const date = new Date(dateString);
+            const month = (date.getUTCMonth() - startMonthIndex + 12) % 12; // Relative month index (wraps around)
+            const day = date.getUTCDate();
+            const weekOfMonth = Math.min(Math.ceil(day / 7), 4); // Group all 5th weeks into the 4th week
+
+            // Update weekly data
+            const weeklyIndex = month * 4 + (weekOfMonth - 1);
+            weeklyData[weeklyIndex] += count;
+
+            // Update monthly data
+            monthlyData[month] += count;
+            result.monthly[groupByName].total += count;
+        });
+    });
+
+    // Set the total for each month. this is used as the category for the stacked bar chart
+    const totals: number[] = new Array(MONTHLY_MONTHS).fill(0);
+
+    for (const key in result.monthly) {
+        if (result.monthly.hasOwnProperty(key)) {
+            const series = result.monthly[key].series.data;
+            series?.forEach((value, index) => {
+                totals[index] += typeof value === 'number' ? value : 0; // Accumulate the value at each index
+            });
+        }
+    }
+
+    result.monthlyCategories = totals;
+
+    return result;
+}
+
+export const Top5SubprocessByVolume = ({
+    createdDateStart,
+    requestSubType = 'NB_REG60',
+}: {
+    createdDateStart: string;
+    carrierOrBrokerDealer?: GroupByOptions.Carrier | GroupByOptions.BrokerDealerName;
+    requestSubType: string;
+}) => {
+    const [aiSummary, setAiSummary] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [statsResponse, setStatsResponse] = useState<DashboardStatsElementResponse[]>();
+    const shouldShowCaseInsights = useCaseInsightsPermission();
+    const groupBy: GroupByOptions = GroupByOptions.ProductName;
+
+    // const [loading, exceptionData, statsResponse, filter] = useExceptionData({
+    //     startDate,
+    //     carrierOrBrokerDealer,
+    //     processSubType: selectedSubprocess,
+    // });
+
+    const filter: DashboardSearchFilter = useMemo(() => {
+        return {
+            createdDateStart: dayjs(createdDateStart).toISOString(),
+            process: [Processes.NewBusiness],
+            caseStatus: [Statuses.Completed],
+            ...(requestSubType ? { requestSubType: [requestSubType] } : {}),
+        };
+    }, [createdDateStart, requestSubType]);
 
     useEffect(() => {
         const fetchData = async () => {
-            let ignore = false;
-            setLoading(true);
             try {
+                // Grab the case stats
                 const { data } = await getCaseDashboardStats({
-                    filter: {
-                        createdDateStart: startDate,
-                        process: [Processes.NewBusiness],
-                        requestSubType: [processSubType ?? ''],
-                        caseStatus: [Statuses.Completed],
-                    },
-                    groupBy: [GroupByOptions.ProductName, GroupByOptions.UpdatedAt],
+                    filter,
+                    groupBy: [groupBy, GroupByOptions.UpdatedAt],
                 });
-                if (!data) return;
-                if (data && Array.isArray(data)) {
-                    if (ignore) return;
-                    setExceptionData(data);
-                    setLoading(false);
+
+                if (!data || !(data as DashboardStatsElementResponse[])?.length) {
+                    throw new Error('No data found');
                 }
+
+                setStatsResponse(data as DashboardStatsElementResponse[]);
+                setLoading(false);
             } catch (e) {
                 console.error('Error fetching chart data', e);
-            } finally {
                 setLoading(false);
             }
-
-            return () => {
-                ignore = true;
-            };
         };
 
+        setLoading(true);
         fetchData();
-    }, [processSubType, startDate]);
+    }, [createdDateStart, filter, groupBy]);
+
+    const chartRef = useRef<HighchartsReact.RefObject>(null);
+    const [sortedMonthly, setSortedMonthly] = useState([] as summary[]);
+    const [chartConfig, setChartConfig] = useState({} as Highcharts.Options);
+
+    console.log('statsResponse', statsResponse);
+    const getChartConfig = useCallback(
+        (processedData: Output, sortedMonthly: summary[]): Highcharts.Options => {
+            if (!statsResponse) return {};
+
+            // get the weekly data for the top 5 carriers based on total
+            const weekly: Highcharts.SeriesOptionsType[] = [];
+            sortedMonthly.forEach(carrier => {
+                weekly.push(processedData.weekly[carrier.name].series as Highcharts.SeriesOptionsType);
+            });
+
+            // get the series data for the top 5 carriers
+            const monthly = sortedMonthly.map(carrier => {
+                return carrier.series;
+            });
+
+            return {
+                chart: {
+                    height: 600,
+                    type: 'line', // Line chart
+                    // plotBorderWidth: 1, // Add a border around the plot area
+                    // plotBorderColor: '#D3D3D3', // Set the border color
+                    spacingTop: 0, // Remove top spacing
+                    spacingLeft: 0,
+                    spacingRight: 0,
+                },
+                legend: {
+                    enabled: false, // Disable the legend
+                },
+                credits: {
+                    enabled: false,
+                },
+                navigation: {
+                    buttonOptions: {
+                        enabled: false,
+                    },
+                },
+                title: {
+                    text: '', // No title
+                },
+                xAxis: [
+                    {
+                        endOnTick: true, // Ensures the axis extends to the last tick
+                        // gridLineWidth: 1,
+                        height: '60%',
+                        min: 0, // Start at the first category or value
+                        // max: processedData.weeklyCategories.length, // End at the last category or value (update as needed)
+                        offset: 0, // Remove extra spacing
+                        tickmarkPlacement: 'between',
+                        plotLines: [
+                            ...Array.from({ length: processedData.weeklyCategories.length }, (_, i) => {
+                                if (i === 0 || i % 4 === 0) {
+                                    return {
+                                        color: '#D3D3D3', // Color ticks for the edges of the month
+                                        width: 1,
+                                        value: i - 0.5, // Position of the gridline
+                                        zIndex: 1,
+                                    };
+                                } else {
+                                    return {
+                                        color: '#FFFFFF', // Weekly ticks that are inside the month (they should look hidden)
+                                        width: 1,
+                                        value: i - 0.5, // Position of the gridline
+                                        zIndex: 1,
+                                    };
+                                }
+                            }).filter(Boolean),
+                        ],
+
+                        labels: {
+                            step: 1,
+                            formatter: function () {
+                                // Only show the label starting from the 3rd tick (index 2)
+                                if (this.pos < 3) {
+                                    return this.pos >= 2 ? (this.value as string) : '';
+                                } else if (this.pos > 3 && this.pos % 2 === 0 && this.pos % 4 !== 0) {
+                                    return this.value as string;
+                                } else {
+                                    return '';
+                                }
+                            },
+                            align: 'right',
+                            rotation: 0, // Force labels to be horizontal
+                        },
+                        top: '0%',
+                        categories: processedData.weeklyCategories,
+                    },
+                    {
+                        categories: processedData.monthlyCategories.map(volume => volume.toString()),
+                        gridLineWidth: 1,
+                        height: '30%',
+                        offset: 0, // Remove extra spacing
+                        // linkedTo: 0, // Link categories with the first axis
+                        tickLength: 0, // Hide tick marks
+                        top: '68%',
+                    },
+                ],
+                yAxis: [
+                    {
+                        allowDecimals: false,
+                        gridLineWidth: 1,
+                        height: '60%',
+                        lineWidth: 2,
+                        min: 0,
+                        offset: 0, // Remove extra spacing
+                        opposite: true, // Moves the x-axis to the right side
+                        title: {
+                            text: '<b>Weekly<br/>Exceptions</b>',
+                            align: 'high', // Aligns the title to the top
+                            rotation: 0, // Force title to be horizontal
+                            x: -15,
+                            y: 15,
+                            useHTML: true, // Enables HTML in the title
+                        },
+                        top: 0,
+                        labels: {
+                            y: 12,
+                        },
+                    },
+                    {
+                        allowDecimals: false,
+                        gridLineWidth: 1,
+                        height: '30%',
+                        lineWidth: 2,
+                        min: 0,
+                        offset: 0, // Remove extra spacing
+                        opposite: true, // Moves the x-axis to the right side
+                        title: {
+                            text: '<b>Monthly<br/>Volume</b>',
+                            align: 'low', // Aligns the title to the top
+                            rotation: 0, // Force title to be horizontal
+                            x: 30,
+                            y: -15,
+                            useHTML: true, // Enables HTML in the title
+                        },
+                        top: '68%',
+                    },
+                ],
+                series: [...(weekly as Highcharts.SeriesOptionsType[]), ...(monthly as Highcharts.SeriesOptionsType[])],
+                plotOptions: {
+                    column: {
+                        stacking: 'normal',
+                        pointWidth: 20, // Fixed width for bars
+                        groupPadding: 0.1, // Reduce group spacing
+                        pointPadding: 0.05, // Minimize spacing between bars in a group
+                        borderWidth: 0, // Remove borders
+                        // dataLabels: {
+                        //     enabled: true,
+                        //     inside: true,
+                        //     format: '{y}',
+                        //     style: {
+                        //         color: '#FFFFFF',
+                        //     },
+                        // },
+                    },
+                },
+            };
+        },
+        [statsResponse]
+    );
+
+    useEffect(() => {
+        const processedData = processData(statsResponse || []);
+
+        // sort and slice to find the top 5 months
+        const monthlyArray: summary[] = [];
+        Object.entries(processedData.monthly).forEach(([, value]) => {
+            monthlyArray.push(value);
+        });
+
+        const sortedMonthly = monthlyArray.sort((a, b) => b.total - a.total).slice(0, 5);
+        const myChartConfig = getChartConfig(processedData, sortedMonthly);
+        setChartConfig(myChartConfig);
+        setSortedMonthly(sortedMonthly);
+    }, [statsResponse, getChartConfig]);
+
+    const getOpenAiSummary = async (caseStats: DashboardStatsElementResponse[], processSubType: string) => {
+        try {
+            const summary = await getCaseInsights({
+                content: JSON.stringify(caseStats),
+                prompt: `You are an expert in all things new business application data. Your job is to summarize the data for business and executive users. They want simple and insightful information about the data provided to you. The data provided to you here are completed ${dashboardChartTitleFormat(
+                    processSubType,
+                    false
+                )} applications, but the ${dashboardChartTitleFormat(
+                    processSubType,
+                    false
+                )} applications encountered exceptions along their path to completion. The data is grouped by Carrier and then by Exception Category and the values represent an exception that occurred for a ${dashboardChartTitleFormat(
+                    processSubType,
+                    false
+                )} application. Avoid using phrases such as "the data". Your responses should be insightful and will be displayed on a UI as a summary for a module related to a distribution chart. Use percentages and real data where it makes sense. Keep it concise and to the point. Format number values to U.S. inclding commas where appropriate.`,
+            });
+            return summary;
+        } catch (error) {
+            return '';
+        }
+    };
+
+    useEffect(() => {
+        if (!shouldShowCaseInsights) {
+            return;
+        }
+        if (statsResponse?.length && requestSubType) {
+            getOpenAiSummary(statsResponse, requestSubType).then(summary => {
+                if (summary) {
+                    setAiSummary(summary);
+                }
+            });
+        } else {
+            setAiSummary(`No exceptions for ${dashboardChartTitleFormat(requestSubType)}.`);
+        }
+    }, [loading, statsResponse, requestSubType, shouldShowCaseInsights]);
 
     return (
-        <CardContainer containerClassNames="rounded !p-8 flex flex-col gap-4" classNames="!p-0" fullWidth={true}>
-            <Typography className="mb-1" variant={TypographyVariant.H2}>
-                {'Top 5 Products by Volume'}
-            </Typography>
-            <div className="w-full bg-white p-4 rounded flex gap-4">
-                <div className="basis-1/3">
-                    {!loading && !!exceptionData && (
-                        <>
-                            <div className="flex flex-row justify-between gap-2">
-                                <Typography variant={TypographyVariant.BodyBold}>Product</Typography>
-                                <Typography variant={TypographyVariant.BodyBold}>Count</Typography>
+        <CardContainer containerClassNames="rounded" classNames="!p-0" fullWidth={true}>
+            <div className="flex flex-col xl:flex-row justify-between gap-4 w-full">
+                <div className="flex xl:flex-col xl:w-1/4 gap-4 mb-8 xl:mb-0">
+                    <Typography className="mb-1" variant={TypographyVariant.H2}>
+                        {'Top 5 Products'}
+                    </Typography>
+                    <div className="flex-1 border-r-1 xl:border-r-0 border-[#EDEDED] flex flex-col gap-4">
+                        {loading ? (
+                            <div className="grid gap-4 h-full mb-4 w-full place-content-center bg-[--color-base-surface-surface-tertiary]">
+                                <PageLoader />
                             </div>
-                            {getTop5Products(exceptionData).map(item => (
-                                <div key={item.name} className="flex flex-row justify-between gap-2">
-                                    <Typography variant={TypographyVariant.Body}>{item.name}</Typography>
-                                    <Typography variant={TypographyVariant.Body}>{item.count}</Typography>
-                                </div>
-                            ))}
-                        </>
-                    )}
+                        ) : (
+                            <>
+                                {!!aiSummary?.length && (
+                                    <>
+                                        <div className="flex flow-col items-center align-middle gap-2">
+                                            <LightBulbIcon height={'24px'} width={'24px'} />
+                                            <Typography variant={TypographyVariant.LabelLg}>Insight</Typography>
+                                        </div>
+                                        <Typography variant={TypographyVariant.BodySm}>{aiSummary}</Typography>
+                                    </>
+                                )}
+                            </>
+                        )}
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th className={`text-left ${styles.th}`}>{splitAndSentenceCase(groupBy)}</th>
+                                    <th className={`text-right ${styles.th}`}>Monthly Avg. / Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {sortedMonthly.map((stat, index) => (
+                                    <tr key={`stat-${index}-${stat.name}`}>
+                                        <td className="text-left">
+                                            <div className="flex items-center gap-3">
+                                                <div className="h-3 w-3" style={{ backgroundColor: colors[index] }}>
+                                                    <span className="sr-only">color indicator for {stat.name}</span>
+                                                </div>
+                                                <NavElement
+                                                    href={`/cases${convertToQueryString(filter as any)}`}
+                                                    size={NavElementSize.Small}
+                                                    type={NavElementType.Link}
+                                                    className={`capitalize ${styles.ellipsis}`}
+                                                    target="_blank"
+                                                >
+                                                    {stat.name}
+                                                </NavElement>
+                                            </div>
+                                        </td>
+                                        <td className={`text-right ${styles.value}`}>
+                                            {wholeNumberFormatify(stat.total / 12)} / {wholeNumberFormatify(stat.total)}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div
-                    style={{ height: '600px' }}
-                    className={clsx('w-full h-[600px] basis-2/3', {
-                        'grid gap-4 place-content-center bg-[--color-base-surface-surface-tertiary]': loading || !exceptionData,
-                    })}
-                >
-                    {loading ? (
-                        <>
-                            <PageLoader />
-                            <Typography variant={TypographyVariant.BodyBold}>Loading...</Typography>
-                        </>
-                    ) : (
-                        <>
-                            {exceptionData ? (
-                                <HighchartsReact ref={chartRef} highcharts={Highcharts} options={chartConfig} />
-                            ) : (
-                                // <pre>{JSON.stringify(exceptionData, null, 2)}</pre>
-                                <div className="flex flex-col gap-2 items-center">
-                                    <ChartBarsIcon height={'24px'} width={'24px'} />
-                                    <Typography variant={TypographyVariant.BodyBold}>No exceptions in the {timeframe}</Typography>
-                                </div>
-                            )}
-                        </>
-                    )}
+                <div className="relative xl:w-3/4">
+                    <div
+                        style={{ height: '600px' }}
+                        className={clsx('w-full h-[600px]', {
+                            'grid gap-4 place-content-center bg-[--color-base-surface-surface-tertiary]': loading || !statsResponse?.length,
+                        })}
+                    >
+                        {loading ? (
+                            <>
+                                <PageLoader />
+                                <Typography variant={TypographyVariant.BodyBold}>Loading...</Typography>
+                            </>
+                        ) : (
+                            <>
+                                {statsResponse ? (
+                                    <HighchartsReact ref={chartRef} highcharts={Highcharts} options={chartConfig} />
+                                ) : (
+                                    <div className="flex flex-col gap-2 items-center">
+                                        <ChartBarsIcon height={'24px'} width={'24px'} />
+                                        <Typography variant={TypographyVariant.BodyBold}>No exceptions</Typography>
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </div>
                 </div>
             </div>
         </CardContainer>
