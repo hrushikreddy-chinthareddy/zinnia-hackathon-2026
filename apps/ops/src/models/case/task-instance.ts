@@ -50,8 +50,6 @@ export type TaskDocument = {
     documentName: string;
     documentSource: DocumentSource;
     fileType: string;
-    createdAt: string;
-    updatedAt: string;
 };
 
 export enum DocumentSource {
