@@ -37,7 +37,6 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
     sankeyChartRef,
     selectedCarriers,
     selectedBrokerDealers,
-    handleSetLoading,
     loading,
     carrierHeaderRef,
 }) => {
@@ -92,7 +91,11 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
             filter: baseInsightQueryFilter,
             groupBy: [GroupByOptions.Carrier],
         };
-        return getCaseDashboardStats(query);
+        const statsResponse = await getCaseDashboardStats(query);
+        if (!statsResponse || 'status' in statsResponse) {
+            throw statsResponse;
+        }
+        return statsResponse;
     };
 
     const getCountBySubProcessInsightStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
@@ -100,7 +103,11 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
             filter: baseInsightQueryFilter,
             groupBy: [GroupByOptions.ProcessSubType],
         };
-        return getCaseDashboardStats(query);
+        const statsResponse = await getCaseDashboardStats(query);
+        if (!statsResponse || 'status' in statsResponse) {
+            throw statsResponse;
+        }
+        return statsResponse;
     };
 
     const getCreatedBySubProcessInsightStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
@@ -108,7 +115,11 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
             filter: baseInsightQueryFilter,
             groupBy: [GroupByOptions.ProcessSubType, GroupByOptions.CreatedAt],
         };
-        return getCaseDashboardStats(query);
+        const statsResponse = await getCaseDashboardStats(query);
+        if (!statsResponse || 'status' in statsResponse) {
+            throw statsResponse;
+        }
+        return statsResponse;
     };
 
     const getOpenExceptionCategoriesByCreatedInsightStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
@@ -116,7 +127,11 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
             filter: baseInsightQueryFilter,
             groupBy: [GroupByOptions.CreatedAt, GroupByOptions.ExceptionCategory],
         };
-        return await getCaseDashboardStats(query);
+        const statsResponse = await getCaseDashboardStats(query);
+        if (!statsResponse || 'status' in statsResponse) {
+            throw statsResponse;
+        }
+        return statsResponse;
     };
 
     const getExceptionCategoryStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
@@ -124,7 +139,11 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
             filter: baseInsightQueryFilter,
             groupBy: [GroupByOptions.ExceptionCategory],
         };
-        return getCaseDashboardStats(query);
+        const statsResponse = await getCaseDashboardStats(query);
+        if (!statsResponse || 'status' in statsResponse) {
+            throw statsResponse;
+        }
+        return statsResponse;
     };
 
     const { data: processListOptions, isLoading: processListOptionsLoading } = useQuery({
@@ -327,7 +346,7 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
                     <div className="flex flex-col gap-1 mt-1">
                         <div className="flex gap-1">
                             <CaseStatBlock
-                                dashboardStatsResponse={insightGroupingCountByCarrierStats as CaseDashboardStatsResponse}
+                                dashboardStatsResponse={insightGroupingCountByCarrierStats}
                                 blockLabel="Carrier"
                                 timeFrameLabel={timeFrameLabel}
                                 statMeasurementLabel="case"

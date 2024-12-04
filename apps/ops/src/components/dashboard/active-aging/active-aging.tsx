@@ -27,7 +27,7 @@ import ActiveAgingPies from './active-aging-pies';
 
 interface Props {
     classNames?: string;
-    createdBySubProcess: CaseDashboardStatsResponse;
+    createdBySubProcess?: CaseDashboardStatsResponse;
     openExceptionCategoriesByCreated: CaseDashboardStatsResponse;
     loading?: boolean;
     selectedProcess: Processes;
@@ -118,7 +118,7 @@ const ActiveAging = ({
         // at the same time.
         let totalCaseCount = 0;
         if (selectedAgingRange === 'All') {
-            totalCaseCount = createdBySubProcess.data.reduce((a, b) => a + b.count, 0);
+            totalCaseCount = createdBySubProcess?.data.reduce((a, b) => a + b.count, 0) || 0;
             return `Showing All (Total ${wholeNumberFormatify(totalCaseCount)} apps)`;
         }
 
@@ -238,7 +238,7 @@ const ActiveAging = ({
 
     useEffect(() => {
         const groupedAgingRangeBySubProcess: CaseDashboardStatsResponse = { data: [], totalElements: 0 };
-        createdBySubProcess.data.forEach(subProcess => {
+        createdBySubProcess?.data.forEach(subProcess => {
             groupedAgingRangeBySubProcess.data.push({
                 key: GroupByOptions.ProcessSubType,
                 name: subProcess.name,
@@ -522,7 +522,7 @@ const ActiveAging = ({
                                     className="chip w-4/5"
                                     key={`people-chip-${option}`}
                                     value={option}
-                                    aria-checked={selectedAgingRange === option}
+                                    type="button"
                                     onClick={() => onAgingTimelineChange(option as AgingTimeRangesKeysExtended)}
                                 >
                                     {AgingTimeRanges[option as AgingTimeRangesKeys]}
