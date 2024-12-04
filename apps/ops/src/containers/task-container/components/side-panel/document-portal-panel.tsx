@@ -29,7 +29,7 @@ const DocumentPortalPanel = ({ clientCode, documents }: DocumentViewProps) => {
 
     useEffect(() => {
         getCaseDocs(documents);
-    }, []);
+    }, [documents, getCaseDocs]);
 
     const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
 
@@ -55,9 +55,10 @@ const DocumentPortalPanel = ({ clientCode, documents }: DocumentViewProps) => {
     const renderTabContent = (
         <>
             <TabContent className="flex w-full flex-col items-center" value={TabOptions.Working}>
-                {workingDocument && workingDocument?.length !== 0 && (
-                    <>{workingDocument?.map((item: TaskDocument) => renderDocumentSection(item, item?.documentName || '', clientCode))}</>
-                )}
+                {workingDocument &&
+                    workingDocument?.length !== 0 &&
+                    workingDocument?.map((item: TaskDocument) => renderDocumentSection(item, item?.documentName || '', clientCode))}
+
                 {(!workingDocument || workingDocument?.length === 0) && (
                     <div className="border-box w-full lg:px-[30px] mt-2">
                         <div className="w-full rounded border-2 border-gray-100 bg-gray-50 p-8">
@@ -71,9 +72,9 @@ const DocumentPortalPanel = ({ clientCode, documents }: DocumentViewProps) => {
                 )}
             </TabContent>
             <TabContent className="flex w-full flex-col items-center" value={TabOptions.Related}>
-                {relatedDocument && relatedDocument?.length !== 0 && (
-                    <>{relatedDocument?.map((item: TaskDocument) => renderDocumentSection(item, item?.documentName || '', clientCode))}</>
-                )}
+                {relatedDocument &&
+                    relatedDocument?.length !== 0 &&
+                    relatedDocument?.map((item: TaskDocument) => renderDocumentSection(item, item?.documentName || '', clientCode))}
                 {(!relatedDocument || relatedDocument?.length === 0) && (
                     <div className="border-box w-full lg:px-[30px] mt-2">
                         <div className="w-full rounded border-2  border-gray-100 bg-gray-50 p-8">

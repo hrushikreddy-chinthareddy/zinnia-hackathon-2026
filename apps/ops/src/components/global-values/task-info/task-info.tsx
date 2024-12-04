@@ -34,8 +34,8 @@ export const CarrierLogo = ({ carrierId, tooltipPlacements = PopoverPlacement.To
 };
 
 export interface TaskInfoProps {
-    carrierId?: string;
-    caseId?: string;
+    carrierId: string;
+    caseId: string;
 }
 
 const TaslInfo = ({ carrierId, caseId }: TaskInfoProps) => {
