@@ -13,7 +13,6 @@ import { DashboardStatsElementResponse } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { DashboardSearchFilter } from '@deps/queries/cases';
 import { getStatsFromSelectionQuery } from '@deps/queries/tanstack/dashboard';
-import { debounce } from '@deps/utils/useDebounce';
 
 interface Props {
     height?: number;
@@ -72,7 +71,7 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
     const [l2SelectValue, setL2SelectValue] = useState(GroupByOptions.Process);
     const [l3SelectValue, setL3SelectValue] = useState(GroupByOptions.CaseStatus);
 
-    const [parentSize, setParentSize] = useState({ width: 0, height: 0 });
+    const [parentSize, setParentSize] = useState({ width, height });
     const svgParentRef = useRef<HTMLDivElement>(null);
 
     const { data: caseGroupingState } = useQuery({
@@ -630,12 +629,12 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
     const isMatchForL1SelectedStatGrouping = (index: number) => l1SelectedIndex === index;
 
     useEffect(() => {
-        const handleWindowResize = debounce(() => {
+        const handleWindowResize = () => {
             if (svgParentRef.current) {
                 const { width, height } = svgParentRef.current.getBoundingClientRect();
                 setParentSize({ width: Math.floor(width), height: Math.floor(height) });
             }
-        }, 200);
+        };
 
         const observer = new ResizeObserver(handleWindowResize);
         const currentSvgParentRef = svgParentRef.current;
@@ -649,12 +648,6 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
             }
         };
     }, []);
-
-    useEffect(() => {
-        if (height && width) {
-            setParentSize({ height, width });
-        }
-    }, [height, width]);
 
     useEffect(() => {
         if (!caseGroupingState || !caseGroupingState.data || caseGroupingState.data.length === 0) {
