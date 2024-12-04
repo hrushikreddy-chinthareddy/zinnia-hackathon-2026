@@ -60,7 +60,7 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
         maxPathStrokeWidth,
         maxItems,
     } = mergedChartOptions;
-    const { createdDateStart, createdDateEnd } = getStartAndEndDates('All');
+    const { createdDateStart } = getStartAndEndDates('All');
     const [totalCases, setTotalCases] = useState<number>(0);
 
     const [level1ObjectGrouping, setLevel1ObjectGrouping] = useState<DashboardStatsElementResponse[]>([]);
@@ -68,32 +68,40 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
     const [level3ObjectGrouping, setLevel3ObjectGrouping] = useState<DashboardStatsElementResponse[]>([]);
     const [l1SelectedIndex, setL1SelectedIndex] = useState<number>(-100);
 
-    const [l1SelectValue, setL1SelectValue] = useState<string>(GroupByOptions.Carrier.toString());
-    const [l2SelectValue, setL2SelectValue] = useState<string>(GroupByOptions.Process.toString());
-    const [l3SelectValue, setL3SelectValue] = useState<string>(GroupByOptions.CaseStatus.toString());
+    const [l1SelectValue, setL1SelectValue] = useState(GroupByOptions.Carrier);
+    const [l2SelectValue, setL2SelectValue] = useState(GroupByOptions.Process);
+    const [l3SelectValue, setL3SelectValue] = useState(GroupByOptions.CaseStatus);
 
     const [parentSize, setParentSize] = useState({ width: 0, height: 0 });
     const svgParentRef = useRef<HTMLDivElement>(null);
 
-    const getStatsFromSelection = async () => {
-        const filter: DashboardSearchFilter = Object.assign({}, baseDashboardQueryFilter, {
+    const getStatsFromSelectionQuery = async (
+        baseFilter: DashboardSearchFilter | undefined,
+        l1SelectValue: GroupByOptions,
+        l2SelectValue: GroupByOptions,
+        l3SelectValue: GroupByOptions
+    ) => {
+        const filter: DashboardSearchFilter = Object.assign({}, baseFilter, {
             caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
             createdDateStart,
         });
 
         const query: CaseDashboardStatsQuery = {
             filter,
-            groupBy: [l1SelectValue as GroupByOptions, l2SelectValue as GroupByOptions, l3SelectValue as GroupByOptions],
+            groupBy: [l1SelectValue, l2SelectValue, l3SelectValue],
         };
 
         const statsResponse = await getCaseDashboardStats(query);
         if (!statsResponse || 'status' in statsResponse) {
-            console.error('getStatsFromSelection::Failed to fetch stats');
+            throw statsResponse;
         }
         return statsResponse as CaseDashboardStatsResponse;
     };
 
-    const { data: caseGroupingState } = useQuery({ queryKey: ['caseGrouping', baseDashboardQueryFilter], queryFn: getStatsFromSelection });
+    const { data: caseGroupingState } = useQuery({
+        queryKey: ['caseGrouping', baseDashboardQueryFilter, l1SelectValue, l2SelectValue, l3SelectValue],
+        queryFn: () => getStatsFromSelectionQuery(baseDashboardQueryFilter, l1SelectValue, l2SelectValue, l2SelectValue),
+    });
 
     const getGroupingsFromL1 = (l1ObjectGrouping: DashboardStatsElementResponse[]) => {
         const l2Grouping: DashboardStatsElementResponse[] = [];
@@ -622,14 +630,14 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
     // };
 
     const handleL1SelectChange = (value: string) => {
-        setL1SelectValue(value);
+        setL1SelectValue(value as GroupByOptions);
         setL1SelectedIndex(-1); // reset whatever was selected on L1
     };
     const handleL2SelectChange = (value: string) => {
-        setL2SelectValue(value);
+        setL2SelectValue(value as GroupByOptions);
     };
     const handleL3SelectChange = (value: string) => {
-        setL3SelectValue(value);
+        setL3SelectValue(value as GroupByOptions);
     };
 
     const isL1Selected = () => l1SelectedIndex > -1;
