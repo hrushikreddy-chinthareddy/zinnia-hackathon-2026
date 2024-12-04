@@ -78,6 +78,8 @@ const SendTaxForms = ({ policy, user, shouldShowCaseButton }: SendTaxFormsProps)
                 displayName: DisplayName.TaxForms,
                 formId: formDetail?.formId ?? '',
                 formName: DisplayName.TaxForms,
+                taxYear: formDetail?.taxYear ?? '',
+                fChar: formDetail?.fChar ?? '',
             };
         });
         const requestBody = generateCommunicationRequest(

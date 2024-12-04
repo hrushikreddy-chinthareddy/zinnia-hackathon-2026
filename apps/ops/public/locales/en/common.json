@@ -2046,6 +2046,10 @@
                     "0": "Please review tax forms before continuing.",
                     "1": "All selected tax forms for the chosen year will be sent."
                 }
+            },
+            "errors": {
+                "taxForms": "Tax forms are required to continue.",
+                "noTaxForms": "No tax forms found for few selected years"
             }
         },
         "statementDetails": {

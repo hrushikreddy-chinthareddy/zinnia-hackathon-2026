@@ -1,10 +1,12 @@
 import 'react-pdf/dist/Page/TextLayer.css';
+import { AssistiveText, AssistiveTextVariant, Loader } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { SetStateAction, useState } from 'react';
 
 import Select from '@deps/components/select/select';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { TaxForm } from '@deps/models/case/send-tax-forms';
+import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { searchTaxForms } from '@deps/queries/api/tax-forms';
 
@@ -21,16 +23,23 @@ const TaxFormsSelection = ({ policy, selectedTaxForms, setSelectedTaxForms }: St
     const { t } = useTranslation(undefined, { keyPrefix: 'contactCenter' });
     const currentYear = new Date().getFullYear();
     const taxYears = Array.from({ length: 5 }, (_, i) => currentYear - i).reverse();
+    const [error, setError] = useState<FormValidationErrors>({});
+    const [loader, setLoader] = useState(false);
     const [taxForms, setTaxForms] = useState<TaxForm[]>([]);
     const { goToNext } = useWorkflow();
 
     const [selected, setSelected] = useState<{ [key: string]: string }>({});
     const handleContinue = async () => {
+        if (!selectedTaxForms.length) {
+            return setError({ submit: t('errors.taxForms') as string });
+        }
         goToNext();
     };
 
     const getTaxForms = async (selected: string) => {
         try {
+            setError({});
+            setLoader(true);
             const requestData = {
                 contractNumber: policy?.policyNumber || '',
                 clientCode: policy?.carrierId || '',
@@ -39,7 +48,10 @@ const TaxFormsSelection = ({ policy, selectedTaxForms, setSelectedTaxForms }: St
 
             const response = await searchTaxForms(requestData);
             setTaxForms(prev => [...prev, ...response.items]);
+            setError({ submit: t('errors.noTaxForms', { year: selected }) as string });
+            setLoader(false);
         } catch (error) {
+            setLoader(false);
             console.error('An error occurred while getting Tax Forms', error);
             return;
         }
@@ -89,13 +101,23 @@ const TaxFormsSelection = ({ policy, selectedTaxForms, setSelectedTaxForms }: St
                 />
             </div>
             <div>
-                <TaxFormsListing
-                    taxForms={taxForms}
-                    carrierCode={policy?.carrierId || ''}
-                    selectedTaxForms={selectedTaxForms}
-                    setSelectedTaxForms={setSelectedTaxForms}
-                />
+                {loader ? (
+                    <Loader />
+                ) : (
+                    <TaxFormsListing
+                        taxForms={taxForms}
+                        carrierCode={policy?.carrierId || ''}
+                        selectedTaxForms={selectedTaxForms}
+                        setSelectedTaxForms={setSelectedTaxForms}
+                    />
+                )}
             </div>
+
+            {error && (
+                <div className="flex flex-col mt-2">
+                    {error.submit && <AssistiveText text={error?.submit} variant={AssistiveTextVariant.Error} />}
+                </div>
+            )}
         </WorkflowCard>
     );
 };

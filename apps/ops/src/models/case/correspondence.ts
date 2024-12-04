@@ -73,7 +73,6 @@ export type AttachmentDetails = {
     formName: string;
     attachmentType: string;
     // required for the tax forms
-    ssnNumber?: string;
     taxYear?: string;
     fChar?: string;
 };

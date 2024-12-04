@@ -2023,6 +2023,10 @@
                     "0": "Veuillez consulter les formulaires fiscaux avant de continuer.",
                     "1": "Tous les formulaires fiscaux ci-dessus seront envoyés."
                 }
+            },
+            "errors": {
+                "taxForms": "Les formulaires fiscaux sont nécessaires pour continuer.",
+                "noTaxForms": "Aucun formulaire fiscal trouvé pour {{year}}"
             }
         },
         "statementDetails": {
