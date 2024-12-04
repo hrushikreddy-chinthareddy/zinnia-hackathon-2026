@@ -1,3 +1,8 @@
+import { formatWithHash } from "@zinnia/utils/src/strings";
+import dayjs from "dayjs";
+import { useTranslation } from "next-i18next";
+import React, { useEffect } from "react";
+
 import ChipStatus from "@deps/components/chip-status/chip-status";
 import { ErrorMessagePart } from "@deps/components/error/Error";
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from "@deps/components/nav-element/nav-element";
@@ -5,9 +10,7 @@ import PaginationControls from "@deps/components/pagination/pagination";
 import { TranslationFiles } from "@deps/config/translations";
 import { CaseTableData } from "@deps/contexts/CaseManagementFilters";
 import { DEFAULT_EXTENDED_DATE_FORMAT } from "@deps/types/constants";
-import dayjs from "dayjs";
-import { useTranslation } from "next-i18next";
-import React, { useEffect } from "react";
+
 
 type relatedTabProps = {
   caseTableData: CaseTableData,
@@ -26,9 +29,7 @@ function RelatedTab({ caseTableData, offset, limit, setOffset, setError }: relat
   };
 
 
-  const formatWithHash = (id: string) => {
-    return `#${id}`;
-  };
+
   useEffect(() => {
     setError(null)
   }, [])
@@ -37,7 +38,7 @@ function RelatedTab({ caseTableData, offset, limit, setOffset, setError }: relat
     <div className="flex-1 flex flex-col w-full !mb-0 px-4 pt-4 md:px-6 lg:px-8 gap-4">
       {caseTableData.cases.map((caseData) => {
         const formattedApplicationDate = dayjs(caseData.updatedAt).format(DEFAULT_EXTENDED_DATE_FORMAT);
-        const url = `/cases/${`${caseData.id}`}`;
+        const url = `/cases/${caseData.id}`;
         return (
           <div
             key={caseData.id}
