@@ -46,3 +46,15 @@ export const formatSsn = (ssn?: string): string => {
   // Append the last 4 digits to the static string
   return last4Digits;
 };
+
+export const formatCurrencyLocal = (value: number | string): string => {
+  const numberValue = typeof value === 'string' ? Number(value) : value;
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  }).format(numberValue);
+};
+
+export const formatWithHash = (id: string) => {
+  return `#${id}`;
+};

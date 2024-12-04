@@ -200,6 +200,9 @@
             "diaryNotes": {
                 "text": "Notes de journal"
             },
+            "caseDetails": {
+                "text": "Détails du cas"
+            },
             "diaryNotesWarning": {
                 "text": "Attention: Notes d'agenda présentes. Examen requis pour soumettre",
                 "clickToView": "Clique pour voir"
@@ -2836,6 +2839,29 @@
             "totalAllocationsEqual100Pct": "Les allocations totales équivalent à 100%.",
             "updateAllocations": "Mettre à jour les allocations"
         },
+        "caseDetailsContent": {
+            "tabs": {
+                "details": "Détails",
+                "related": "En rapport"
+            },
+            "thereAre": "Il y a",
+            "otherOpenCases": "autres dossiers ouverts",
+            "relatedToThisPolicy": "liés à cette politique",
+            "applicationSignedDate": "Date de signature de la demande",
+            "issueState": "État du problème",
+            "qualificationType": "Type de qualification",
+            "viewFullDeatils": "Voir les détails",
+            "contractValue": "Valeur du contrat",
+            "policyDate": "Date du contrat",
+            "detailsTab": {
+                "people": "personnes",
+                "cedingCarriers": "Transporteurs cédants"
+            },
+            "relatedTab": {
+                "lastUpdated": "Dernière mise à jour",
+                "caseId": "ID du cas"
+            }
+        },
         "correspondence": "Correspondence ({{count}})",
         "policy": "Police ({{count}})",
         "suitability": {
@@ -4419,6 +4445,7 @@
             "documentId": "ID du document",
             "noFormAvailable": "Aucun formulaire disponible."
         },
+
         "confirmStep": {
             "title": "Soumis!",
             "subTitle": "Votre demande a été envoyée pour traitement.",

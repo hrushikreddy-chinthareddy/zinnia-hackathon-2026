@@ -144,7 +144,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                 sortDirection: caseManagementFilters.sortDirection,
                 sortBy: caseManagementFilters.sortBy || 'createdAt',
             };
-
             const response = await getCases(updatedRequest);
 
             if (!response) {
