@@ -1,62 +1,52 @@
 {
-    "id": "TA000000013372",
-    "correlationId": "e3a4a780-de9d-4fa9-b0aa-2dc936d8a94f",
-    "caseId": "CA0000371122",
+    "id": "TA000000015334",
+    "caseId": "CA0000379935",
     "source": "BPM.Suitability",
-    "externalTaskId": "61f65203-def6-4b17-bb1c-febf1d481573",
-    "templateId": "g9f78538-18b6-45f1-b365-59f75a1fc198",
-    "process": "Suitability",
-    "carrier": "SBGC",
+    "templateId": "f9f78538-18b6-45f1-b365-59f75a1fc195",
+    "process": "New Business",
+    "carrier": "WELB",
     "taskType": "SUITABILITY_REVIEW",
-    "taskName": "Withdrawal form input",
-    "taskDetail": "The Suitability must be reviewed for given rules",
-    "status": "COMPLETED",
+    "taskName": "Suitability Review",
+    "status": "NEW",
     "data": {
-        "contractNum": "7700002658",
-        "clientCode": "SBGC",
-        "documentNumber": "20241008-MAN-997616",
-        "suitabiltyRules": [
+        "suitabilityRules": [
             {
-                "issue": "Disposable Income",
-                "rule": "Must be > $0",
-                "applicationValue": "-$1340"
+                "issue": "Future Distribution Plan",
+                "rule": "FutureDistribution = 3-4 Years",
+                "applicationValue": "3-4 years",
+                "nmid": "SU.EM.039",
+                "externalId": "ae6c6010-8ced-47ea-9f9f-5a7be8238186"
             },
             {
-                "issue": "Expected Income/Expense Change",
-                "rule": "Any change must be reviewed",
-                "applicationValue": "Changes expected"
-            },
-            {
-                "issue": "Liquid Assets",
-                "rule": "Must be > $30000",
-                "applicationValue": "$28500"
-            },
-            {
-                "issue": "Net Worth in Annuities",
-                "rule": "Must be < 75%",
-                "applicationValue": "78%"
+                "issue": "Withdrawal Understanding",
+                "rule": "WithdrawalUnderstanding  = NO",
+                "applicationValue": "NO",
+                "nmid": "SU.EM.037",
+                "externalId": "d0641107-4dd7-4925-b6e3-8260fc2f5f2a"
             }
         ],
-        "suitabilityReviewStatus": {
-            "suitabilityStatus": "DECLINE",
-            "declineReason": [
-                "SPIF_DECLINED",
-                "BENEFIT_LOSS"
-            ]
-        }
+        "nigos": [
+            "EX000000002744",
+            "EX000000002745"
+        ]
     },
-    "queue": null,
-    "assigneePartyId": "adea3f47d69740178fbd688e6e768cd1",
-    "assignedAt": "2024-10-16T14:20:33.757Z",
-    "assignee": "anurag.chaudhary@zinnia.com",
-    "assigneeFirstName": "Anurag",
-    "assigneeLastName": "Chaudhary",
+    "mappedExceptions": [
+        "EX000000002744",
+        "EX000000002745"
+    ],
+    "mappedDocuments": [],
+    "escalated": false,
+    "createdBy": "SYSTEM",
     "createdByPartyId": "SYSTEM",
-    "createdDate": "2024-10-16T14:20:33.757Z",
+    "createdAt": "2024-12-02T07:28:46Z",
+    "updatedBy": "SYSTEM",
     "updatedByPartyId": "SYSTEM",
-    "updatedDate": "2024-10-16T14:20:33.757Z",
-    "taskCreatedOn": "2024-10-16T14:20:28.223Z",
-    "taskUpdatedOn": "2024-10-16T14:20:28.223Z",
-    "createdAt": "2024-10-14T10:21:35Z",
-    "updatedAt": "2024-10-15T19:48:30Z"
+    "updatedAt": "2024-12-02T07:28:46Z",
+    "identifiers": [
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000379935"
+        }
+    ],
+    "externalId": "e9bd47f5-7eba-4f6b-9cbd-83eda0d40816"
 }
