@@ -4440,7 +4440,8 @@
             "addressHistory": {
                 "defaultAddress": "Adresse par défaut",
                 "residentialAddress": "Adresse résidentielle",
-                "mailingAddress": "Adresse postale"
+                "mailingAddress": "Adresse postale",
+                "viewFullDeatils": "Voir les détails"
             }
         },
 

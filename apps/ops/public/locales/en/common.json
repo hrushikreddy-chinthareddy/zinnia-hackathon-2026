@@ -4472,7 +4472,8 @@
             "addressHistoryTab": {
                 "defaultAddress": "Default Address",
                 "residentialAddress": "Residential Address",
-                "mailingAddress": "Mailing Address"
+                "mailingAddress": "Mailing Address",
+                "viewFullDeatils": "View full details"
             }
         },
         "confirmStep": {

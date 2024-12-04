@@ -1,9 +1,12 @@
+import NavElement, { NavElementSize, NavElementType, NavElementVariant } from "@deps/components/nav-element/nav-element";
 import { TranslationFiles } from "@deps/config/translations";
+import { IconType, Icon } from "@zinnia/bloom/components";
 import { useTranslation } from "react-i18next";
 
 
-function AddressTab({ Address }: { Address: any }) {
+function AddressTab({ Address, planCode, policyNumber }: { Address: any, planCode: string | undefined, policyNumber: string | undefined }) {
   const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.CaseDetailsContent.addressHistoryTab' });
+  const url = `/policies/${planCode}/${policyNumber}/policy/policy-details`
   return (
     <div className="flex-1 flex flex-col w-full !mb-0 px-4 pt-5 md:px-6 lg:px-8 gap-4">
       {Address.map((address: any) => {
@@ -25,6 +28,25 @@ function AddressTab({ Address }: { Address: any }) {
 
         )
       })}
+      <div className="text-[--color-base-text-text-link] font-semibold text-md p-4">
+
+        <NavElement
+          className={'whitespace-normal break-words'}
+          href={url}
+          isNewPage={true}
+          size={NavElementSize.Small}
+          target="_blank"
+          title={t('viewFullDeatils')?.toString()}
+          type={NavElementType.Link}
+          startIcon={<Icon type={IconType.EXTERNAL_LINK} width={20} height={20} />}
+
+          variant={NavElementVariant.Secondary}
+        >
+          {t('viewFullDeatils')}
+        </NavElement>
+
+
+      </div>
     </div>
   )
 }

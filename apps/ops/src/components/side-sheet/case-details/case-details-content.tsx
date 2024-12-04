@@ -53,7 +53,7 @@ function CaseDetailsContent({ policy, documentData, offset, limit, setOffset, ca
         <RelatedTab offset={offset} limit={limit} setOffset={setOffset} caseTableData={caseTableData} setError={setError} />
       </TabContent>
       <TabContent className="flex w-full flex-col items-center" value={TabOptions.Address}>
-        <AddressTab Address={policyOwner?.addresses} />
+        <AddressTab Address={policyOwner?.addresses} planCode={policy.product?.planCode} policyNumber={policy?.policyNumber} />
       </TabContent>
     </>
   );
