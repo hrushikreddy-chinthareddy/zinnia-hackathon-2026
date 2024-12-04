@@ -901,9 +901,10 @@ export enum LifeCadPartyPersonType {
 }
 
 export enum AddressTypes {
-    DEFAULT = 'DEFAULT', // Residential address
+    DEFAULT = 'DEFAULT',
     MAILING_ADDRESS = 'MAILING_ADDRESS',
     AGENT_ADDRESS = 'AGENT_ADDRESS',
+    RESIDENTIAL_ADDRESS = 'RESIDENCE',
 }
 export enum PhoneTypes {
     Owner_Phone_Day = 'Owner_Phone_Day',
@@ -1075,16 +1076,16 @@ export enum SortOrder {
 
 export interface FormNigos {
     nigos: NigoMessages[];
-};
+}
 
 export interface NigoMessages {
     exceptionId: string;
     messages: string[];
-};
+}
 
 export interface FormReIndexingData {
     lob: string | null;
-	docHandle: string | null;
-	docTypeToReindex?: string | null;
-	notes: string | null;
-};
+    docHandle: string | null;
+    docTypeToReindex?: string | null;
+    notes: string | null;
+}

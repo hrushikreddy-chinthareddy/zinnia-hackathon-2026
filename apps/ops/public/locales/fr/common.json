@@ -2844,7 +2844,8 @@
         "caseDetailsContent": {
             "tabs": {
                 "details": "Détails",
-                "related": "En rapport"
+                "related": "En rapport",
+                "addressHistory": "Historique des adresses"
             },
             "thereAre": "Il y a",
             "otherOpenCases": "autres dossiers ouverts",
@@ -2862,6 +2863,14 @@
             "relatedTab": {
                 "lastUpdated": "Dernière mise à jour",
                 "caseId": "ID du cas"
+            },
+            "addressHistoryTab": {
+                "defaultAddress": "Adresse par défaut",
+                "residentialAddress": "Adresse résidentielle",
+                "mailingAddress": "Adresse postale",
+                "viewFullDeatils": "Voir les détails",
+                "preferredAddress": "Adresse choisie",
+                "agentAddress": "Adresse de l'agent"
             }
         },
         "correspondence": "Correspondence ({{count}})",
@@ -4446,6 +4455,26 @@
             "documents": "Documents",
             "documentId": "ID du document",
             "noFormAvailable": "Aucun formulaire disponible."
+        },
+        "CaseDetailsContent": {
+            "tabs": {
+                "details": "Détails",
+                "related": "En rapport"
+            },
+            "applicationSignedDate": "Date de signature de la demande",
+            "issueState": "État du problème",
+            "qualificationType": "Type de qualification",
+            "viewFullDeatils": "Voir les détails",
+            "contractValue": "Valeur du contrat",
+            "policyDate": "Date du contrat",
+            "detailsTab": {
+                "people": "personnes",
+                "cedingCarriers": "Transporteurs cédants"
+            },
+            "relatedTab": {
+                "lastUpdated": "Dernière mise à jour",
+                "caseId": "ID du cas"
+            }
         },
 
         "confirmStep": {

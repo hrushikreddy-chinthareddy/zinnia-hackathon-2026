@@ -3093,7 +3093,8 @@
         "caseDetailsContent": {
             "tabs": {
                 "details": "Details",
-                "related": "Related"
+                "related": "Related",
+                "addressHistory": "Address History"
             },
             "applicationSignedDate": "Application Signed Date",
             "issueState": "Issue State",
@@ -3111,6 +3112,14 @@
             "relatedTab": {
                 "lastUpdated": "Last updated",
                 "caseId": "Case ID "
+            },
+            "addressHistoryTab": {
+                "defaultAddress": "Default Address",
+                "residentialAddress": "Residential Address",
+                "mailingAddress": "Mailing Address",
+                "viewFullDeatils": "View full details",
+                "preferredAddress": "Preferred Address",
+                "agentAddress": "Agent Address"
             }
         },
         "correspondence": "Correspondence ({{count}})",
@@ -4479,7 +4488,26 @@
             "documentId": "Document ID",
             "noFormAvailable": "No form available."
         },
-
+        "CaseDetailsContent": {
+            "tabs": {
+                "details": "Details",
+                "related": "Related"
+            },
+            "applicationSignedDate": "Application Signed Date",
+            "issueState": "Issue State",
+            "qualificationType": "Qualification Type",
+            "viewFullDeatils": "View full details",
+            "contractValue": "Contract Value",
+            "policyDate": "Policy Date",
+            "detailsTab": {
+                "people": "People",
+                "cedingCarriers": "Ceding Carriers"
+            },
+            "relatedTab": {
+                "lastUpdated": "Last updated",
+                "caseId": "Case ID "
+            }
+        },
         "confirmStep": {
             "title": "Submitted!",
             "subTitle": "Your request has been sent for processing.",
