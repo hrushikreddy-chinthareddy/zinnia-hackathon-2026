@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { MultiselectOption } from '@deps/components/autocomplete/autocomplete.types';
 import { ActiveApplications } from '@deps/components/dashboard/active-applications/active-applications';
 import { BrokerDealerFilter } from '@deps/components/dashboard/broker-dealer-filter/broker-dealer-filter';
-import { DashboardTabNav } from '@deps/components/dashboard/dashboard-nav-links';
+import { DashboardTabNav, DashboardTabs } from '@deps/components/dashboard/dashboard-nav-links';
 import IssuedBusiness from '@deps/components/dashboard/issued-business/issued-business';
 import { FieldSize } from '@deps/components/fields/field';
 import NoNavLayout from '@deps/components/no-nav-layout';
@@ -176,7 +176,7 @@ const DashboardPage = ({
                     </div>
                 </div>
                 <DashboardTabNav>
-                    <TabContent className="w-full" value={'active-applications'}>
+                    <TabContent className="w-full" value={DashboardTabs.ACTIVE_APPLICATIONS}>
                         <ActiveApplications
                             sankeyChartRef={sankeyChartRef}
                             selectedBrokerDealers={selectedBrokerDealers}
@@ -186,7 +186,7 @@ const DashboardPage = ({
                             carrierHeaderRef={carrierHeaderRef}
                         />
                     </TabContent>
-                    <TabContent className="w-full" value={'issued-business'}>
+                    <TabContent className="w-full" value={DashboardTabs.ISSUED_BUSINESS}>
                         <IssuedBusiness
                             authorizedCarriers={authorizedCarriers}
                             brokerDealersSSR={brokerDealers}
