@@ -14,7 +14,6 @@ import { useGetCaseDocs } from './task-review.helper';
 interface TaskReviewProps {
     caseId: string;
     clientCode: string;
-    docType: string;
     activeDocType: DocumentTypeView;
     taskType: string;
 }

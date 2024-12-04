@@ -16,10 +16,9 @@ type TaskReviewStepProps = {
     taskInfoLink: string;
     taskType: TaskType;
     clientCode: string;
-    docType: string;
 };
 
-export const TaskReviewStep = ({ caseId, clientCode, docType, taskType }: TaskReviewStepProps) => {
+export const TaskReviewStep = ({ caseId, clientCode, taskType }: TaskReviewStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.taskReview` });
 
     const { goToNext } = useWorkflow();
@@ -44,13 +43,7 @@ export const TaskReviewStep = ({ caseId, clientCode, docType, taskType }: TaskRe
         >
             <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1">
-                    <TaskReview
-                        caseId={caseId}
-                        taskType={taskType}
-                        clientCode={clientCode}
-                        docType={docType}
-                        activeDocType={DocumentTypeView.Case}
-                    />
+                    <TaskReview caseId={caseId} taskType={taskType} clientCode={clientCode} activeDocType={DocumentTypeView.Case} />
                 </div>
             </div>
         </WorkflowCard>

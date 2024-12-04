@@ -11,12 +11,11 @@ import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { ProcessType } from '@deps/models/case/enums';
-import { docTypes } from '@deps/models/case/helpers';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { ManagementTask } from '@deps/models/case/task-instance';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
-import { getCaseTaskByIdSSR, getTaskFormMetadata } from '@deps/operations/tasks/task-operations';
+import { getCaseTaskById, getTaskFormMetadata } from '@deps/operations/tasks/task-operations';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
@@ -38,7 +37,6 @@ type TaskPageProps = {
 };
 
 export const TaskPage: React.FC<TaskPageProps> = ({
-    docType,
     task,
     taskMetadata,
     taskInfoLink,
@@ -49,12 +47,7 @@ export const TaskPage: React.FC<TaskPageProps> = ({
         <div>
             <NoNavLayout fullHeight={true}>
                 <TaskProvider taskMetadata={taskMetadata} initialTask={task}>
-                    <TaskContainer
-                        docType={docType}
-                        taskInfoLink={taskInfoLink}
-                        nigoExceptions={nigoExceptions}
-                        nigoSubExceptions={nigoSubExceptions}
-                    />
+                    <TaskContainer taskInfoLink={taskInfoLink} nigoExceptions={nigoExceptions} nigoSubExceptions={nigoSubExceptions} />
                 </TaskProvider>
             </NoNavLayout>
         </div>
@@ -98,7 +91,7 @@ export const getServerSideProps = withPageAuthRequired({
         try {
             const [translations, task] = await Promise.all([
                 await serverSideTranslations(locale, [TranslationFiles.COMMON, TranslationFiles.COLDEFS], nextI18nextConfig, ALL_LOCALES),
-                await getCaseTaskByIdSSR(taskId, accessToken),
+                await getCaseTaskById(taskId, accessToken),
             ]);
             if (!task) {
                 logError('Task::Error getting task by id', {
@@ -117,7 +110,7 @@ export const getServerSideProps = withPageAuthRequired({
             const { taskType, carrier, caseId, process } = task;
 
             // If feature flag is not enabled, redirect to error page
-            if (!isFormFeatureEnabled(process as ProcessType, carrier, featureFlagDecisions)) {
+            if (!isFormFeatureEnabled(taskType as TaskType, carrier, featureFlagDecisions)) {
                 logWarn('task/:id::feature flag not enabled', { carrier });
                 return {
                     redirect: {
@@ -140,21 +133,18 @@ export const getServerSideProps = withPageAuthRequired({
             const nigoFilters = {
                 categoryIds: ['Form', 'Signature', 'Account Information'],
                 carrier: carrier?.toUpperCase(),
-                process: 'Withdrawal', //task?.process,
+                process: taskType,
             };
 
             const nigoExceptionResponse = await getNigoExceptions(nigoFilters, accessToken);
-
             const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
-
             const taskInfoLink = buildCaseLink(caseId);
-            const docType = docTypes[task?.process];
+
             return {
                 props: {
                     ...translations,
                     taskMetadata,
                     task,
-                    docType,
                     taskInfoLink,
                     nigoExceptions,
                     nigoSubExceptions,

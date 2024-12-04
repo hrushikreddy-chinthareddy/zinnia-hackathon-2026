@@ -10,19 +10,17 @@ import { stepsProvider } from './steps-healper/steps-provider';
 import { TaskDataContext } from './task-context';
 import { TaskWorkflowContent } from './task-workflow-content';
 type TaskContainerProps = {
-    docType: string;
     taskInfoLink: string;
     nigoExceptions: any;
     nigoSubExceptions: any;
 };
 
-const TaskContainer = ({ docType, taskInfoLink, nigoExceptions, nigoSubExceptions }: TaskContainerProps) => {
+const TaskContainer = ({ taskInfoLink, nigoExceptions, nigoSubExceptions }: TaskContainerProps) => {
     const { task, isReadyForDataEntry } = useContext(TaskDataContext);
     const { carrier, caseId, id, taskType } = task;
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: convertToCamelCase(taskType) });
 
     const steps = stepsProvider.getSteps(taskType as TaskType, {
-        docType,
         carrierId: carrier,
         caseId,
         taskId: id,
