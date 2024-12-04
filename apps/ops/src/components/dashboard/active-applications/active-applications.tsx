@@ -3,7 +3,6 @@ import clsx from 'clsx';
 import { FC, CSSProperties, useState, useEffect, RefObject } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { SimpleOption } from '@deps/components/autocomplete/autocomplete.types';
 import { FieldSize } from '@deps/components/fields/field';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import Select from '@deps/components/select/select';
@@ -14,9 +13,15 @@ import { getStartAndEndDates } from '@deps/containers/case-redesign-sub-page/cas
 import { useIntersectionObserver } from '@deps/hooks/useIntersectionObserver';
 import { useResizeObserver } from '@deps/hooks/useResizeObserver';
 import { Processes, Statuses } from '@deps/models/case/case';
-import { GroupByOptions } from '@deps/models/case/enums';
-import { getCaseDashboardStats } from '@deps/queries/api/cases';
-import { DashboardSearchFilter, CaseDashboardStatsQuery } from '@deps/queries/cases';
+import { DashboardSearchFilter } from '@deps/queries/cases';
+import {
+    getCountByCarrierInsightStats,
+    getCountBySubProcessInsightStats,
+    getCreatedBySubProcessInsightStats,
+    getOpenExceptionCategoriesByCreatedInsightStats,
+    getExceptionCategoryStats,
+    getProcessListOptions,
+} from '@deps/queries/tanstack/dashboard';
 
 import styles from '../../../pages/dashboard/Dashboard.module.css';
 import ActiveAging from '../active-aging/active-aging';
@@ -58,97 +63,13 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
     const [baseInsightQueryFilter, setBaseInsightQueryFilter] = useState<DashboardSearchFilter>({});
     const [insightOption, setInsightOption] = useState<Processes>(Processes.NewBusiness);
 
-    const getProcessListOptions = async () => {
-        const baseDashboardQueryFilter: DashboardSearchFilter = {
-            caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
-            createdDateStart,
-        };
-        const query: CaseDashboardStatsQuery = {
-            filter: baseDashboardQueryFilter,
-            groupBy: [GroupByOptions.Process],
-        };
-        const statsResponse = await getCaseDashboardStats(query);
-        if (!statsResponse || 'status' in statsResponse) {
-            return [];
-        }
-        const listOptions = statsResponse.data
-            .reduce<SimpleOption[]>((prev, curr) => {
-                if (curr.name && !prev.some(item => item.value === curr.name)) {
-                    prev.push({ value: curr.name, label: curr.name });
-                }
-                return prev;
-            }, [])
-            .sort((item1, item2) => item1.label.localeCompare(item2.label));
-
-        return listOptions;
-    };
     const handleInsightChange = (processType: Processes) => {
         setInsightOption(processType);
     };
 
-    const getCountByCarrierInsightStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
-        const query = {
-            filter: baseInsightQueryFilter,
-            groupBy: [GroupByOptions.Carrier],
-        };
-        const statsResponse = await getCaseDashboardStats(query);
-        if (!statsResponse || 'status' in statsResponse) {
-            throw statsResponse;
-        }
-        return statsResponse;
-    };
-
-    const getCountBySubProcessInsightStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
-        const query = {
-            filter: baseInsightQueryFilter,
-            groupBy: [GroupByOptions.ProcessSubType],
-        };
-        const statsResponse = await getCaseDashboardStats(query);
-        if (!statsResponse || 'status' in statsResponse) {
-            throw statsResponse;
-        }
-        return statsResponse;
-    };
-
-    const getCreatedBySubProcessInsightStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
-        const query = {
-            filter: baseInsightQueryFilter,
-            groupBy: [GroupByOptions.ProcessSubType, GroupByOptions.CreatedAt],
-        };
-        const statsResponse = await getCaseDashboardStats(query);
-        if (!statsResponse || 'status' in statsResponse) {
-            throw statsResponse;
-        }
-        return statsResponse;
-    };
-
-    const getOpenExceptionCategoriesByCreatedInsightStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
-        const query = {
-            filter: baseInsightQueryFilter,
-            groupBy: [GroupByOptions.CreatedAt, GroupByOptions.ExceptionCategory],
-        };
-        const statsResponse = await getCaseDashboardStats(query);
-        if (!statsResponse || 'status' in statsResponse) {
-            throw statsResponse;
-        }
-        return statsResponse;
-    };
-
-    const getExceptionCategoryStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
-        const query = {
-            filter: baseInsightQueryFilter,
-            groupBy: [GroupByOptions.ExceptionCategory],
-        };
-        const statsResponse = await getCaseDashboardStats(query);
-        if (!statsResponse || 'status' in statsResponse) {
-            throw statsResponse;
-        }
-        return statsResponse;
-    };
-
     const { data: processListOptions, isLoading: processListOptionsLoading } = useQuery({
-        queryKey: ['processListOptions'],
-        queryFn: getProcessListOptions,
+        queryKey: ['processListOptions', createdDateStart],
+        queryFn: () => getProcessListOptions(createdDateStart),
     });
     const { data: insightGroupingCountByCarrierStats } = useQuery({
         queryKey: ['countByCarrierInsights', baseInsightQueryFilter],
@@ -201,93 +122,6 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
         setBaseInsightQueryFilter(insightFilter);
     }, [selectedCarriers, insightOption, selectedBrokerDealers, createdDateEnd, createdDateStart]);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    useEffect(() => {
-        const getPageData = async () => {
-            handleSetLoading(true);
-            try {
-                if (Object.keys(baseDashboardQueryFilter).length === 0 || Object.keys(baseInsightQueryFilter).length === 0) {
-                    return;
-                }
-                const [
-                    insightCountByCarrierStats,
-                    insightCountBySubProcessStats,
-                    insightCreatedBySubProcess,
-                    insightOpenStagesByCreated,
-                    insightExceptionCategoryStats,
-                ] = await Promise.all([
-                    getCountByCarrierInsightStats(baseInsightQueryFilter),
-                    getCountBySubProcessInsightStats(baseInsightQueryFilter),
-                    getCreatedBySubProcessInsightStats(baseInsightQueryFilter),
-                    getOpenExceptionCategoriesByCreatedInsightStats(baseInsightQueryFilter),
-                    getExceptionCategoryStats(baseInsightQueryFilter),
-                ]);
-                if (!insightCountByCarrierStats || 'status' in insightCountByCarrierStats) {
-                    console.error('getCountByCarrierInsightStats::Failed to fetch carrier count insight stats');
-                } else {
-                    setInsightGroupingCountByCarrierStats(insightCountByCarrierStats);
-                }
-                if (!insightCountBySubProcessStats || 'status' in insightCountBySubProcessStats) {
-                    console.error('getCountByProcessInsightStats::Failed to fetch carrier count insight stats');
-                } else {
-                    insightCountBySubProcessStats.data.forEach(element => {
-                        element.name = dashboardChartTitleFormat(element.name);
-                    });
-                    setInsightGroupingCountBySubProcessStats(insightCountBySubProcessStats);
-                }
-                if (!insightCreatedBySubProcess || 'status' in insightCreatedBySubProcess) {
-                    console.error('getSubProcessByCreatedInsightStats::Failed to fetch carrier count insight stats');
-                } else {
-                    setInsightCreatedBySubProcess(insightCreatedBySubProcess);
-                }
-                if (!insightOpenStagesByCreated || 'status' in insightOpenStagesByCreated) {
-                    console.error('getOpenStagesByCreatedStats::Failed to fetch carrier count insight stats');
-                } else {
-                    setInsightStagesByCreated(insightOpenStagesByCreated);
-                }
-
-                if (!insightExceptionCategoryStats || 'status' in insightExceptionCategoryStats) {
-                    console.error('getExceptionCategoryStats::Failed to fetch carrier count insight stats');
-                } else {
-                    setInsightExceptionStats(insightExceptionCategoryStats);
-                }
-            } catch (error) {
-                console.error('an error occurred fetching dashboard insight stats', error);
-            } finally {
-                handleSetLoading(false);
-            }
-        };
-        getPageData();
-<<<<<<< HEAD
-<<<<<<< HEAD
-    }, [baseDashboardQueryFilter, baseInsightQueryFilter, handleSetLoading]);
-=======
-    }, [baseDashboardQueryFilter, baseInsightQueryFilter]);
->>>>>>> f35eef3df (move charts into their own components)
-=======
-    }, [baseDashboardQueryFilter, baseInsightQueryFilter, handleSetLoading]);
->>>>>>> 0cab77e15 (fix use effect)
-=======
-    if (
-        processListOptionsLoading ||
-        loading ||
-        insightGroupingCountBySubProcessStatsLoading ||
-        insightGroupingCountBySubProcessStatsLoading ||
-        insightCreatedBySubProcessLoading ||
-        insightStagesByCreatedLoading ||
-        insightExceptionStatsLoading
-    ) {
-        return (
-            <div className="relative border-t-2 border-[--color-base-border-border-light]">
-                <CardContainer classNames="relative !pt-0" containerClassNames="mt-none">
-                    <PageLoader variant={PageLoaderVariant.CenterWhiteText} showText={true} />
-                </CardContainer>
-            </div>
-        );
-    }
->>>>>>> c69e24ce8 (pull in tanstack and test out doing the data calls that way)
-=======
     // if (
     //     processListOptionsLoading ||
     //     loading ||
@@ -305,7 +139,6 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
     //         </div>
     //     );
     // }
->>>>>>> 879dddae6 (null checks)
 
     return (
         <>

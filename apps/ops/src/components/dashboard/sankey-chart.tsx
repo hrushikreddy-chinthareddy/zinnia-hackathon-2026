@@ -9,10 +9,10 @@ import { getStartAndEndDates } from '@deps/containers/case-redesign-sub-page/cas
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 import { getLabelSubString, dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
-import { CaseDashboardStatsResponse, DashboardStatsElementResponse, Statuses } from '@deps/models/case/case';
+import { DashboardStatsElementResponse } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
-import { getCaseDashboardStats } from '@deps/queries/api/cases';
-import { CaseDashboardStatsQuery, DashboardSearchFilter } from '@deps/queries/cases';
+import { DashboardSearchFilter } from '@deps/queries/cases';
+import { getStatsFromSelectionQuery } from '@deps/queries/tanstack/dashboard';
 import { debounce } from '@deps/utils/useDebounce';
 
 interface Props {
@@ -75,32 +75,9 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
     const [parentSize, setParentSize] = useState({ width: 0, height: 0 });
     const svgParentRef = useRef<HTMLDivElement>(null);
 
-    const getStatsFromSelectionQuery = async (
-        baseFilter: DashboardSearchFilter | undefined,
-        l1SelectValue: GroupByOptions,
-        l2SelectValue: GroupByOptions,
-        l3SelectValue: GroupByOptions
-    ) => {
-        const filter: DashboardSearchFilter = Object.assign({}, baseFilter, {
-            caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
-            createdDateStart,
-        });
-
-        const query: CaseDashboardStatsQuery = {
-            filter,
-            groupBy: [l1SelectValue, l2SelectValue, l3SelectValue],
-        };
-
-        const statsResponse = await getCaseDashboardStats(query);
-        if (!statsResponse || 'status' in statsResponse) {
-            throw statsResponse;
-        }
-        return statsResponse as CaseDashboardStatsResponse;
-    };
-
     const { data: caseGroupingState } = useQuery({
-        queryKey: ['caseGrouping', baseDashboardQueryFilter, l1SelectValue, l2SelectValue, l3SelectValue],
-        queryFn: () => getStatsFromSelectionQuery(baseDashboardQueryFilter, l1SelectValue, l2SelectValue, l2SelectValue),
+        queryKey: ['caseGrouping', baseDashboardQueryFilter, l1SelectValue, l2SelectValue, l3SelectValue, createdDateStart],
+        queryFn: () => getStatsFromSelectionQuery(baseDashboardQueryFilter, l1SelectValue, l2SelectValue, l3SelectValue, createdDateStart),
     });
 
     const getGroupingsFromL1 = (l1ObjectGrouping: DashboardStatsElementResponse[]) => {

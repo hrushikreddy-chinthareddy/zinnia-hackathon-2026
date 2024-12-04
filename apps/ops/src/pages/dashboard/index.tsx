@@ -40,7 +40,6 @@ export interface CarrierListItem {
     [key: string]: string;
 }
 
-// Create a client
 const queryClient = new QueryClient();
 
 const DashboardPage = ({
