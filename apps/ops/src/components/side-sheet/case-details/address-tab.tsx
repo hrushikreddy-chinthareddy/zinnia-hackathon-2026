@@ -1,11 +1,12 @@
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from "@deps/components/nav-element/nav-element";
-import { TranslationFiles } from "@deps/config/translations";
 import { IconType, Icon } from "@zinnia/bloom/components";
 import { useTranslation } from "react-i18next";
 
+import NavElement, { NavElementSize, NavElementType, NavElementVariant } from "@deps/components/nav-element/nav-element";
+import { TranslationFiles } from "@deps/config/translations";
+
 
 function AddressTab({ Address, planCode, policyNumber }: { Address: any, planCode: string | undefined, policyNumber: string | undefined }) {
-  const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.CaseDetailsContent.addressHistoryTab' });
+  const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'sideSheet.caseDetailsContent.addressHistoryTab' });
   const url = `/policies/${planCode}/${policyNumber}/policy/policy-details`
   return (
     <div className="flex-1 flex flex-col w-full !mb-0 px-4 pt-5 md:px-6 lg:px-8 gap-4">
