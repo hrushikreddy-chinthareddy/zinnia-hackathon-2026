@@ -29,6 +29,10 @@
             "title": "Page Not Found",
             "message": "Sorry, we couldn't find the page you are looking for."
         },
+        "policyNotFound": {
+            "title": "Policy Not Found",
+            "message": "We couldn't find the policy associated with Policy Number {{policyNumber}} and Plan Code {{planCode}}. If this issue continues, please reach out to Operations Support for assistance."
+        },
         "accessDenied": {
             "title": "Access Denied",
             "message": "Sorry, you don't have permission to view this page. Please contact your administrator to request access."
@@ -1962,8 +1966,6 @@
             "addAdditionalRecipient": "+ Add additional recipient",
             "emailTooltip": "Please enter a valid email address. Only one email address is allowed in this field.",
             "additionalRecipientTooltip": "You can add up to 5 email addresses in the CC field. Use a comma(,), semicolon(;), or Enter to separate them",
-            "maxEmails": "Maximum 5 emails allowed",
-            "duplicateEmail": "Email already exist in the list",
             "email": "Email",
             "ccEmail": "CC Emails",
             "fax": "Fax",
@@ -2003,7 +2005,10 @@
             "inValidEmail": "Please enter valid email address",
             "firstName": "First name is required",
             "lastName": "Last name is required",
-            "address": "Verify & select the address to continue."
+            "address": "Verify & select the address to continue.",
+            "maxEmails": "Maximum 5 emails allowed",
+            "duplicateEmailInCC": "Email already exist in the list",
+            "duplicateEmail": "Please ensure the email address is unique between the Recipient and CC fields."
         }
     },
     "contactCenter": {
@@ -3082,6 +3087,29 @@
             "primaryBeneficiaries": "Primary beneficiaries",
             "totalAllocationsEqual100Pct": "Total allocations equal 100%.",
             "updateAllocations": "Update allocations"
+        },
+        "caseDetailsContent": {
+            "tabs": {
+                "details": "Details",
+                "related": "Related"
+            },
+            "applicationSignedDate": "Application Signed Date",
+            "issueState": "Issue State",
+            "qualificationType": "Qualification Type",
+            "viewFullDeatils": "View full details",
+            "contractValue": "Contract Value",
+            "policyDate": "Policy Date",
+            "thereAre": "There are",
+            "otherOpenCases": "other open cases",
+            "relatedToThisPolicy": " related to this policy",
+            "detailsTab": {
+                "people": "People",
+                "cedingCarriers": "Ceding Carriers"
+            },
+            "relatedTab": {
+                "lastUpdated": "Last updated",
+                "caseId": "Case ID "
+            }
         },
         "correspondence": "Correspondence ({{count}})",
         "policy": "Policy ({{count}})",
@@ -4452,8 +4480,7 @@
         "CaseDetailsContent": {
             "tabs": {
                 "details": "Details",
-                "related": "Related",
-                "addressHistory": "Address History"
+                "related": "Related"
             },
             "applicationSignedDate": "Application Signed Date",
             "issueState": "Issue State",
@@ -4468,17 +4495,12 @@
             "relatedTab": {
                 "lastUpdated": "Last updated",
                 "caseId": "Case ID "
-            },
-            "addressHistoryTab": {
-                "defaultAddress": "Default Address",
-                "residentialAddress": "Residential Address",
-                "mailingAddress": "Mailing Address",
-                "viewFullDeatils": "View full details"
             }
         },
         "confirmStep": {
             "title": "Submitted!",
             "subTitle": "Your request has been sent for processing.",
+            "subTitleReindexing": "This document will be re-indexed. The existing case had been cancelled.",
             "cta": "Go to case management",
             "secondaryCta": "Close",
             "submitNigo": "Submit NIGO details",
@@ -4501,10 +4523,32 @@
             "subTitle": "Review the form for any missing sections before continuing.",
             "options": {
                 "allSectionsAreComplete": "All sections are complete and ready for data entry.",
-                "missingDetails": "There are missing details"
+                "missingDetails": "There are missing details",
+                "incorrectDocIndexing": "The document was indexed incorrectly."
             },
             "view": "View",
-            "documentId": "Document ID"
+            "documentId": "Document ID",
+            "documentIndexingInfo": {
+                "suggestedDocumentType": "Suggested document type",
+                "notes": "Notes",
+                "documentOptions": {
+                    "systematic": "Systematic",
+                    "stopPayment": "Stop Payment",
+                    "returnedMail": "Returned Mail",
+                    "accountUpdates": "Account Updates",
+                    "requiredMinimumDistribution": "Required Minimum Distribution",
+                    "redemption": "Redemption",
+                    "policyUpdates": "Policy Updates",
+                    "outgoingTransfers": "Outgoing Transfers",
+                    "other": "Other"
+                }
+            },
+            "formErrors": {
+                "formValidation": {
+                    "noDocTypeToReindex": "Please document type for re-indexing",
+                    "noNotes": "Please enter notes"
+                }
+            }
         },
         "formSelection": {
             "title": "New Form Selection",
@@ -4524,6 +4568,7 @@
             }
         }
     },
+
     "sswUpdate": {
         "sswUpdateOptions": {
             "new": "New",

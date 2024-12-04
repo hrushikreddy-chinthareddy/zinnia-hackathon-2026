@@ -113,6 +113,7 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
     const { t } = useTranslation(undefined, { keyPrefix: 'contactCenter' });
     const { goToNext } = useWorkflow();
 
+    const statementStartYear = policy.policyDates?.issueDate || StatementStartYear;
     const [selectedStatementType, setSelectedStatementType] = useState<StatementTypes[]>(applicableStatement);
     const currentYear = dayjs().year().toString();
     const currentQuarter = `${currentYear}-Q${getQuarter(dayjs())}`;
@@ -249,7 +250,7 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                     disableFormat={true}
                     showMonths={false}
                     datePickerType={datePickerType}
-                    isDateAllowed={date => handleIsDateAllowed(date, StatementStartYear)}
+                    isDateAllowed={date => handleIsDateAllowed(date, statementStartYear)}
                     readOnly={true}
                 />
 

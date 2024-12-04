@@ -6,6 +6,7 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import CardContainer from '@deps/containers/card-container/card-container';
 import { getStartAndEndDates } from '@deps/containers/case-redesign-sub-page/case-helpers';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
+import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
 import { convertToQueryString } from '@deps/helpers/routing.helper';
 import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
@@ -27,13 +28,20 @@ import ActiveAgingPies from './active-aging-pies';
 interface Props {
     classNames?: string;
     createdBySubProcess: CaseDashboardStatsResponse;
-    openStagesByCreated: CaseDashboardStatsResponse;
+    openExceptionCategoriesByCreated: CaseDashboardStatsResponse;
     loading?: boolean;
     selectedProcess: Processes;
     carriers: string[];
 }
 
-const ActiveAging = ({ classNames, createdBySubProcess, openStagesByCreated, loading = true, selectedProcess, carriers }: Props) => {
+const ActiveAging = ({
+    classNames,
+    createdBySubProcess,
+    openExceptionCategoriesByCreated,
+    loading = true,
+    selectedProcess,
+    carriers,
+}: Props) => {
     const agingChartsRef = useRef<HighchartsReactRefObject>(null);
     const numColumns = 7;
     const [agingChartWidth, setAgingChartWidth] = useState(877);
@@ -65,7 +73,7 @@ const ActiveAging = ({ classNames, createdBySubProcess, openStagesByCreated, loa
         All: [],
     });
     const [subProcessToColorMap, setSubProcessToColorMap] = useState<{ [key: string]: string }>({});
-    const [stageDreakdownToColorMap, setStageDreakdownToColorMap] = useState<{ [key: string]: string }>({});
+    const [exceptionCategoryToColorMap, setExceptionCategoryToColorMap] = useState<{ [key: string]: string }>({});
     const [startAndEndDates, setStartAndEndDates] = useState<{
         createdDateStart: string;
         createdDateEnd: string;
@@ -181,7 +189,7 @@ const ActiveAging = ({ classNames, createdBySubProcess, openStagesByCreated, loa
         return map;
     };
 
-    const createAgingStageBreakDownToColorMap = (agingStatGroupingLabels: string[]) => {
+    const createExceptionCategoryToColorMap = (agingStatGroupingLabels: string[]) => {
         const map: { [key: string]: string } = {};
         const pieColors = caseChartHelpers.getColors();
 
@@ -269,47 +277,49 @@ const ActiveAging = ({ classNames, createdBySubProcess, openStagesByCreated, loa
     }, [createdBySubProcess, groupIntoAgingRanges]);
 
     useEffect(() => {
-        const groupedOpenStagesByAgingRanges: CaseDashboardStatsResponse = { data: [], totalElements: 0 };
-        const openStagesByAgingRangeMap: { [key: string]: DashboardStatsElementResponse[] } = {};
+        const groupedExceptionCategoryByAgingRanges: CaseDashboardStatsResponse = { data: [], totalElements: 0 };
+        const exceptionCategoryByAgingRangeMap: { [key: string]: DashboardStatsElementResponse[] } = {};
         const distinctAgingStatGroupingLabels: Record<string, boolean> = {};
 
         // first we are going to create the aging ranges in the grouping and our mapping to house the child values
         Object.keys(AgingTimeRanges).forEach(key => {
-            groupedOpenStagesByAgingRanges.data.push({
+            groupedExceptionCategoryByAgingRanges.data.push({
                 key: GroupByOptions.AgingRange,
                 name: key,
                 count: 0,
                 values: [],
             });
-            openStagesByAgingRangeMap[key] = [];
+            exceptionCategoryByAgingRangeMap[key] = [];
         });
 
         // second we need to create a map of all the open stages by aging range (this gives us a lot of entries)
-        openStagesByCreated.data.forEach(createdGroupingOfOpenStages => {
-            const timeRange = getAgingTimeRangeFromDate(new Date(createdGroupingOfOpenStages.name));
-            openStagesByAgingRangeMap[timeRange] = openStagesByAgingRangeMap[timeRange].concat(createdGroupingOfOpenStages.values ?? []);
+        openExceptionCategoriesByCreated.data.forEach(createdGroupingOfExceptionCategories => {
+            const timeRange = getAgingTimeRangeFromDate(new Date(createdGroupingOfExceptionCategories.name));
+            exceptionCategoryByAgingRangeMap[timeRange] = exceptionCategoryByAgingRangeMap[timeRange].concat(
+                createdGroupingOfExceptionCategories.values ?? []
+            );
         });
 
         // third we need to finally reduce the open stages in each range leaving us with the final grouping
         Object.keys(AgingTimeRanges).forEach(agingTimeFrameKey => {
-            const matchingGroupItem = groupedOpenStagesByAgingRanges.data.find(item => item.name === agingTimeFrameKey);
+            const matchingGroupItem = groupedExceptionCategoryByAgingRanges.data.find(item => item.name === agingTimeFrameKey);
             if (!matchingGroupItem) {
                 return;
             }
             const stageCounts: { [key: string]: number } = {};
-            openStagesByAgingRangeMap[agingTimeFrameKey].forEach(openStage => {
-                const stageName = openStage.name.toLocaleLowerCase();
-                if (!stageCounts[stageName]) {
-                    stageCounts[stageName] = openStage.count;
+            exceptionCategoryByAgingRangeMap[agingTimeFrameKey].forEach(exceptionCategory => {
+                const categoryName = exceptionCategory.name.toLocaleLowerCase();
+                if (!stageCounts[categoryName]) {
+                    stageCounts[categoryName] = exceptionCategory.count;
                 } else {
-                    stageCounts[stageName] += openStage.count;
+                    stageCounts[categoryName] += exceptionCategory.count;
                 }
-                matchingGroupItem.count += openStage.count;
+                matchingGroupItem.count += exceptionCategory.count;
 
                 // check to see if the label is already in the list, if not, add it
-                const labelAddedToList = !!distinctAgingStatGroupingLabels[openStage.name];
+                const labelAddedToList = !!distinctAgingStatGroupingLabels[exceptionCategory.name];
                 if (!labelAddedToList) {
-                    distinctAgingStatGroupingLabels[openStage.name] = true;
+                    distinctAgingStatGroupingLabels[exceptionCategory.name] = true;
                 }
             });
             Object.keys(stageCounts).forEach(stageKey => {
@@ -327,7 +337,7 @@ const ActiveAging = ({ classNames, createdBySubProcess, openStagesByCreated, loa
         const distinctOpenStagesLabels: string[] = Object.keys(distinctAgingStatGroupingLabels);
         setDistinctOpenStages(distinctOpenStagesLabels);
         // set the grouping into state so we can use it later
-        const agingStageGroupingMap: { [key in AgingTimeRangesKeysExtended]: DashboardStatsElementResponse[] } = {
+        const agingExceptionCategoryGroupingMap: { [key in AgingTimeRangesKeysExtended]: DashboardStatsElementResponse[] } = {
             EightToFourteen: [],
             FifteenToThirty: [],
             FortySixToFiftyNine: [],
@@ -336,38 +346,43 @@ const ActiveAging = ({ classNames, createdBySubProcess, openStagesByCreated, loa
             ZeroToSeven: [],
             All: [],
         };
-        groupedOpenStagesByAgingRanges.data.forEach(element => {
+        groupedExceptionCategoryByAgingRanges.data.forEach(element => {
             if (element?.values) {
                 element.values.forEach(statGrouping => {
-                    const agingStage = agingStageGroupingMap[element.name as AgingTimeRangesKeysExtended].find(
+                    const agingStage = agingExceptionCategoryGroupingMap[element.name as AgingTimeRangesKeysExtended].find(
                         item => item.name === statGrouping.name
                     );
-                    const allAgingStages = agingStageGroupingMap.All.find(item => item.name === statGrouping.name);
 
                     if (agingStage) {
                         agingStage.count += statGrouping.count;
                     } else {
-                        agingStageGroupingMap[element.name as AgingTimeRangesKeysExtended].push(statGrouping);
+                        agingExceptionCategoryGroupingMap[element.name as AgingTimeRangesKeysExtended].push(
+                            JSON.parse(JSON.stringify(statGrouping)) as DashboardStatsElementResponse
+                        );
                     }
 
+                    const allAgingStages = agingExceptionCategoryGroupingMap.All.find(item => item.name === statGrouping.name);
                     if (allAgingStages) {
                         allAgingStages.count += statGrouping.count;
                     } else {
-                        agingStageGroupingMap.All.push(statGrouping);
+                        agingExceptionCategoryGroupingMap.All.push(
+                            JSON.parse(JSON.stringify(statGrouping)) as DashboardStatsElementResponse
+                        );
                     }
                 });
             }
         });
 
-        Object.keys(agingStageGroupingMap).forEach(key => {
-            agingStageGroupingMap[key as AgingTimeRangesKeysExtended].sort((a, b) => {
+        Object.keys(agingExceptionCategoryGroupingMap).forEach(key => {
+            agingExceptionCategoryGroupingMap[key as AgingTimeRangesKeysExtended].sort((a, b) => {
                 return b.count - a.count;
             });
         });
-        setStageDreakdownToColorMap(createAgingStageBreakDownToColorMap(distinctOpenStagesLabels));
-        setAgingStageGroupingMap(agingStageGroupingMap);
-        setOpenStagesByAgingRanges(groupedOpenStagesByAgingRanges);
-    }, [getAgingTimeRangeFromDate, openStagesByCreated]);
+        setExceptionCategoryToColorMap(createExceptionCategoryToColorMap(distinctOpenStagesLabels));
+
+        setAgingStageGroupingMap(agingExceptionCategoryGroupingMap);
+        setOpenStagesByAgingRanges(groupedExceptionCategoryByAgingRanges);
+    }, [getAgingTimeRangeFromDate, openExceptionCategoriesByCreated]);
 
     useEffect(() => {
         setStartAndEndDates(getStartAndEndDates(selectedAgingRange));
@@ -437,20 +452,20 @@ const ActiveAging = ({ classNames, createdBySubProcess, openStagesByCreated, loa
                     </div>
                     <div className="flex-1 xl:border-t-1 border-[#EDEDED]">
                         <Typography className="mb-4 xl:mt-1" variant={TypographyVariant.BodySmBold}>
-                            Top stage breakdown
+                            Top exception categories
                         </Typography>
                         <ol className="flex flex-col gap-2 pr-4">
                             {agingStageGroupingMap[selectedAgingRange as AgingTimeRangesKeys].slice(0, 5).map(stat => (
                                 <li key={stat.name}>
                                     <div className="flex items-center gap-3">
-                                        <div className="h-3 w-3" style={{ backgroundColor: stageDreakdownToColorMap[stat.name] }}></div>
+                                        <div className="h-3 w-3" style={{ backgroundColor: exceptionCategoryToColorMap[stat.name] }}></div>
                                         <div className="flex items-center gap-1 w-full justify-between">
                                             <Typography
                                                 className="flex gap-1 truncate capitalize"
                                                 variant={TypographyVariant.BodySm}
                                                 data-testid="header-text"
                                             >
-                                                {stat.name}
+                                                {dashboardChartTitleFormat(stat.name)}
                                             </Typography>
                                             <Typography
                                                 className="flex gap-2"
@@ -522,7 +537,7 @@ const ActiveAging = ({ classNames, createdBySubProcess, openStagesByCreated, loa
                         agingRangesByProcess={agingRangesBySubProcess ?? { data: [], totalElements: 0 }}
                     />
                     <ActiveAgingPies
-                        distinctAgingStatGroupingLabels={distinctOpenStages}
+                        distinctExceptionCategoryStatGroupingLabels={distinctOpenStages}
                         width={agingChartWidth}
                         dashboardStatsResponse={openStagesByAgingRanges ?? { data: [], totalElements: 0 }}
                     />

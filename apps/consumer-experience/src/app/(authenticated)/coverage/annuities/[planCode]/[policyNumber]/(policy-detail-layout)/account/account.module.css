@@ -1,0 +1,14 @@
+.accountValueCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-xl);
+}
+
+.accountValueDetails {
+  display: flex;
+  gap: var(--measure-dimension-gap-xl);
+}
+
+.accountAccountValueCell {
+  flex: 0 1 auto;
+}

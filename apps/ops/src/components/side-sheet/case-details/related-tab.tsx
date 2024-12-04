@@ -1,31 +1,35 @@
+import { formatWithHash } from "@zinnia/utils/src/strings";
+import dayjs from "dayjs";
+import { useTranslation } from "next-i18next";
+import React, { useEffect } from "react";
+
 import ChipStatus from "@deps/components/chip-status/chip-status";
+import { ErrorMessagePart } from "@deps/components/error/Error";
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from "@deps/components/nav-element/nav-element";
 import PaginationControls from "@deps/components/pagination/pagination";
 import { TranslationFiles } from "@deps/config/translations";
 import { CaseTableData } from "@deps/contexts/CaseManagementFilters";
 import { DEFAULT_EXTENDED_DATE_FORMAT } from "@deps/types/constants";
-import dayjs from "dayjs";
-import { useTranslation } from "next-i18next";
-import { useEffect, useMemo } from "react";
+
 
 type relatedTabProps = {
   caseTableData: CaseTableData,
   offset: number,
   limit: number,
   setOffset: React.Dispatch<React.SetStateAction<number>>,
-  setError: React.Dispatch<React.SetStateAction<React.ReactNode>>
+  setError: React.Dispatch<React.SetStateAction<ErrorMessagePart[] | null>>
 }
 
 function RelatedTab({ caseTableData, offset, limit, setOffset, setError }: relatedTabProps) {
-  const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.CaseDetailsContent' });
-  const paginationControls = useMemo(() => {
-    const goToPage = (pageNumber: number) => {
-      setOffset((pageNumber - 1) * limit);
-      window.scrollTo(0, 0);
-    };
+  const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'sideSheet.caseDetailsContent' });
 
-    return <PaginationControls total={caseTableData.total} limit={limit} offset={offset} goToPage={goToPage} />;
-  }, [caseTableData.total, offset, limit]);
+  const goToPage = (pageNumber: number) => {
+    setOffset((pageNumber - 1) * limit);
+    window.scrollTo(0, 0);
+  };
+
+
+
   useEffect(() => {
     setError(null)
   }, [])
@@ -34,7 +38,7 @@ function RelatedTab({ caseTableData, offset, limit, setOffset, setError }: relat
     <div className="flex-1 flex flex-col w-full !mb-0 px-4 pt-4 md:px-6 lg:px-8 gap-4">
       {caseTableData.cases.map((caseData) => {
         const formattedApplicationDate = dayjs(caseData.updatedAt).format(DEFAULT_EXTENDED_DATE_FORMAT);
-        const url = `/cases/${`${caseData.id}`}`;
+        const url = `/cases/${caseData.id}`;
         return (
           <div
             key={caseData.id}
@@ -52,11 +56,11 @@ function RelatedTab({ caseTableData, offset, limit, setOffset, setError }: relat
                 isNewPage={true}
                 size={NavElementSize.Small}
                 target="_blank"
-                title={t('viewFullDeatils')?.toString()}
+                title={t('viewFullDeatils') as string}
                 type={NavElementType.Link}
                 variant={NavElementVariant.Secondary}
               >
-                #{caseData.id}
+                {formatWithHash(caseData.id)}
               </NavElement>
             </div>
             <div className="col-span-1 flex justify-end items-end pb-2">
@@ -70,7 +74,7 @@ function RelatedTab({ caseTableData, offset, limit, setOffset, setError }: relat
       })}
 
 
-      {paginationControls}
+      <PaginationControls total={caseTableData.total} limit={limit} offset={offset} goToPage={goToPage} />;
     </div>
   )
 }

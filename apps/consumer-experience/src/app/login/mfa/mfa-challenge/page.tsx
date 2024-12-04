@@ -1,8 +1,9 @@
-import { MfaChallenge } from '@/components/login/MfaChallenge';
-import { GenericLoginPage } from '../../GenericLoginPage';
 import { GenericInfoPage } from '@/components/generic-info-page/GenericInfoPage';
-import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { MfaChallenge } from '@/components/login/MfaChallenge';
 import { getFeatureFlags } from '@/services/feature-flags';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+
+import { GenericLoginPage } from '../../GenericLoginPage';
 
 export default async function MfaChallengePage({
   searchParams,

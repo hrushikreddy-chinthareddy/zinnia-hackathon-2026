@@ -9,9 +9,10 @@ import { useTranslation } from 'react-i18next';
 import { MultiselectOption, SimpleOption } from '@deps/components/autocomplete/autocomplete.types';
 import ActiveAging from '@deps/components/dashboard/active-aging/active-aging';
 import { BrokerDealerFilter } from '@deps/components/dashboard/broker-dealer-filter/broker-dealer-filter';
-import { sankeyTitleFormat } from '@deps/components/dashboard/dashboard.helper';
+import { DashboardNavLinks } from '@deps/components/dashboard/dashboard-nav-links';
 import SankeyChart from '@deps/components/dashboard/sankey-chart';
 import CaseStatBlock from '@deps/components/dashboard/stat-blocks/case-stat-block';
+import { TreeMapInsights } from '@deps/components/dashboard/tree-map-insights';
 import { FieldSize } from '@deps/components/fields/field';
 import NoNavLayout from '@deps/components/no-nav-layout';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
@@ -21,6 +22,8 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { getStartAndEndDates } from '@deps/containers/case-redesign-sub-page/case-helpers';
+import { DashboardResponsiveLayout } from '@deps/containers/dashboard/dashboard-responsive-layout';
+import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
@@ -30,7 +33,7 @@ import { CaseDashboardStatsResponse, Processes, Statuses } from '@deps/models/ca
 import { GroupByOptions } from '@deps/models/case/enums';
 import { UserPermission } from '@deps/models/user-profile';
 import { getCaseDashboardStats } from '@deps/queries/api/cases';
-import { BrokerDealerResponse, getBrokerDealerAgentsSSR } from '@deps/queries/api/dashboard';
+import { DashboardResponseData, fetchAgentsSSR } from '@deps/queries/api/dashboard';
 import { checkTupleSsr, getCarrierListServerSSR } from '@deps/queries/api/fga';
 import { CaseDashboardStatsQuery, DashboardSearchFilter } from '@deps/queries/cases';
 import { FgaRelation } from '@deps/types/fga';
@@ -50,7 +53,7 @@ const DashboardPage = ({
     brokerDealersSSR,
 }: {
     authorizedCarriers: string[];
-    brokerDealersSSR: BrokerDealerResponse[];
+    brokerDealersSSR: DashboardResponseData[];
 }) => {
     const carrierHeaderRef = useRef<HTMLDivElement>(null);
     const { createdDateStart, createdDateEnd } = getStartAndEndDates('All');
@@ -89,12 +92,17 @@ const DashboardPage = ({
         data: [],
         totalElements: 0,
     });
+    const [insightExceptionStats, setInsightExceptionStats] = useState<CaseDashboardStatsResponse>({
+        data: [],
+        totalElements: 0,
+    });
+
     const [baseDashboardQueryFilter, setBaseDashboardQueryFilter] = useState<DashboardSearchFilter>({});
     const [baseInsightQueryFilter, setBaseInsightQueryFilter] = useState<DashboardSearchFilter>({});
     const [insightOption, setInsightOption] = useState<Processes>(Processes.NewBusiness);
     const [loading, setLoading] = useState<boolean>(false);
     const [processListOptions, setProcessListOptions] = useState<SimpleOption[]>([]);
-    const [brokerDealers, setBrokerDealers] = useState<BrokerDealerResponse[]>(brokerDealersSSR || []);
+    const [brokerDealers, setBrokerDealers] = useState<DashboardResponseData[]>(brokerDealersSSR || []);
 
     const carrierFilterItems = useMemo(
         () =>
@@ -213,10 +221,18 @@ const DashboardPage = ({
         return getCaseDashboardStats(query);
     };
 
-    const getOpenStagesByCreatedInsightStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
+    const getOpenExceptionCategoriesByCreatedInsightStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
         const query: CaseDashboardStatsQuery = {
             filter: baseInsightQueryFilter,
-            groupBy: [GroupByOptions.CreatedAt, GroupByOptions.OpenStages],
+            groupBy: [GroupByOptions.CreatedAt, GroupByOptions.ExceptionCategory],
+        };
+        return await getCaseDashboardStats(query);
+    };
+
+    const getExceptionCategoryStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
+        const query: CaseDashboardStatsQuery = {
+            filter: baseInsightQueryFilter,
+            groupBy: [GroupByOptions.ExceptionCategory],
         };
         return getCaseDashboardStats(query);
     };
@@ -259,13 +275,19 @@ const DashboardPage = ({
                 if (Object.keys(baseDashboardQueryFilter).length === 0 || Object.keys(baseInsightQueryFilter).length === 0) {
                     return;
                 }
-                const [insightCountByCarrierStats, insightCountBySubProcessStats, insightCreatedBySubProcess, insightOpenStagesByCreated] =
-                    await Promise.all([
-                        getCountByCarrierInsightStats(baseInsightQueryFilter),
-                        getCountBySubProcessInsightStats(baseInsightQueryFilter),
-                        getCreatedBySubProcessInsightStats(baseInsightQueryFilter),
-                        getOpenStagesByCreatedInsightStats(baseInsightQueryFilter),
-                    ]);
+                const [
+                    insightCountByCarrierStats,
+                    insightCountBySubProcessStats,
+                    insightCreatedBySubProcess,
+                    insightOpenStagesByCreated,
+                    insightExceptionCategoryStats,
+                ] = await Promise.all([
+                    getCountByCarrierInsightStats(baseInsightQueryFilter),
+                    getCountBySubProcessInsightStats(baseInsightQueryFilter),
+                    getCreatedBySubProcessInsightStats(baseInsightQueryFilter),
+                    getOpenExceptionCategoriesByCreatedInsightStats(baseInsightQueryFilter),
+                    getExceptionCategoryStats(baseInsightQueryFilter),
+                ]);
                 if (!insightCountByCarrierStats || 'status' in insightCountByCarrierStats) {
                     console.error('getCountByCarrierInsightStats::Failed to fetch carrier count insight stats');
                 } else {
@@ -275,7 +297,7 @@ const DashboardPage = ({
                     console.error('getCountByProcessInsightStats::Failed to fetch carrier count insight stats');
                 } else {
                     insightCountBySubProcessStats.data.forEach(element => {
-                        element.name = sankeyTitleFormat(element.name);
+                        element.name = dashboardChartTitleFormat(element.name);
                     });
                     setInsightGroupingCountBySubProcessStats(insightCountBySubProcessStats);
                 }
@@ -289,6 +311,12 @@ const DashboardPage = ({
                 } else {
                     setInsightStagesByCreated(insightOpenStagesByCreated);
                 }
+
+                if (!insightExceptionCategoryStats || 'status' in insightExceptionCategoryStats) {
+                    console.error('getExceptionCategoryStats::Failed to fetch carrier count insight stats');
+                } else {
+                    setInsightExceptionStats(insightExceptionCategoryStats);
+                }
             } catch (error) {
                 console.error('an error occurred fetching dashboard insight stats', error);
             } finally {
@@ -299,12 +327,13 @@ const DashboardPage = ({
     }, [baseDashboardQueryFilter, baseInsightQueryFilter]);
 
     return (
-        <div>
+        <DashboardResponsiveLayout>
             <PageHead titleKey="dashboard" />
             <NoNavLayout fullHeight={true} displayTopNavBar={true} size="large">
                 <div
+                    id="carrier-header"
                     ref={carrierHeaderRef}
-                    className={clsx(styles.filtersHeader, {
+                    className={clsx('flex-wrap', styles.filtersHeader, {
                         [styles.pinned as string]:
                             carrierHeaderIsIntersecting || Number(carrierHeaderEntry?.boundingClientRect.bottom) < 64,
                     })}
@@ -322,7 +351,7 @@ const DashboardPage = ({
                                     onChange={updateCarrierFilters}
                                     size={FieldSize.Small}
                                     placeholder={t('allCarriers') || ''}
-                                    disabled={carrierFilterItems.length === 1}
+                                    disabled={loading || carrierFilterItems.length === 1}
                                     name="carrier-dropdown-btn"
                                     onOpenChange={handleOnOpenChange}
                                 />
@@ -334,12 +363,14 @@ const DashboardPage = ({
                                     selectedCarriers={Object.keys(placeholderSelectedCarriers)}
                                     setSelectedBrokerDealers={setBrokerDealers}
                                     updateBrokerDealerFilters={updateBrokerDealerFilters}
+                                    disabled={loading}
                                 />
                             </div>
                         </div>
                     </div>
                 </div>
-                <div ref={sankeyChartRef}>
+                <DashboardNavLinks />
+                <div className="relative border-t-2 border-[--color-base-border-border-light]" ref={sankeyChartRef}>
                     {loading && (
                         <div className="absolute bottom-0 left-0 right-0 top-0 z-10 flex h-full justify-center bg-gray-800 opacity-80">
                             <div className="mt-4">
@@ -379,11 +410,20 @@ const DashboardPage = ({
                     <div className={styles.container}>
                         <ActiveAging
                             createdBySubProcess={insightCreatedBySubProcess}
-                            openStagesByCreated={insightStagesByCreated}
+                            openExceptionCategoriesByCreated={insightStagesByCreated}
                             loading={loading}
                             selectedProcess={insightOption}
                             carriers={Object.keys(selectedCarriers)}
                         />
+                        <div className="mt-1">
+                            {/* this is the Exception Distribution by Category tree map chart */}
+                            <CardContainer fullWidth={false}>
+                                <TreeMapInsights
+                                    dashboardStatsData={insightExceptionStats}
+                                    heading="Exception Distribution by Category"
+                                ></TreeMapInsights>
+                            </CardContainer>
+                        </div>
                         <div className="flex flex-col gap-1 mt-1">
                             <div className="flex gap-1">
                                 <CaseStatBlock
@@ -414,7 +454,7 @@ const DashboardPage = ({
                     </div>
                 </div>
             </NoNavLayout>
-        </div>
+        </DashboardResponsiveLayout>
     );
 };
 
@@ -459,7 +499,7 @@ export const getServerSideProps = withPageAuthRequired({
             nextI18nextConfig,
             ALL_LOCALES
         );
-        const brokerDealersSSR = await getBrokerDealerAgentsSSR(accessToken || '');
+        const brokerDealersSSR = await fetchAgentsSSR(accessToken || '');
 
         const authorizedCarriers = await getCarrierListServerSSR(accessToken || '', user.partyId, UserPermission.AllowReadCaseManagement);
         return {

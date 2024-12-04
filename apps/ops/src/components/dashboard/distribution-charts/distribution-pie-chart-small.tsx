@@ -5,6 +5,7 @@ import HighchartsReact from 'highcharts-react-official';
 import { useState, useEffect, useCallback } from 'react';
 
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
+import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { DashboardStatsElementResponse } from '@deps/models/case/case';
 
 interface Props {
@@ -35,7 +36,7 @@ const DistributionPieChartSmall = ({
         }
         statsGrouping.values.forEach(statGrouping => {
             chartData.push({
-                name: statGrouping.name,
+                name: dashboardChartTitleFormat(statGrouping.name),
                 y: statGrouping.count / statsGrouping.count,
                 totalCount: statGrouping.count,
             });

@@ -11,7 +11,7 @@ import { FormSignature } from '@deps/models/case/withdrawal/case';
 
 import EditProgram from './edit-program';
 import { signaturesConfig } from '../bank-update/bank-update.helper';
-import { SswUpdateType } from '../ssw-edit-helper';
+import { getDocumentSource, SswUpdateType } from '../ssw-edit-helper';
 
 type SswOperationsProps = {
     document: DocumentData;
@@ -19,19 +19,26 @@ type SswOperationsProps = {
     setSswUpdateView: React.Dispatch<boolean>;
     programType: SswUpdateType;
     onProgramUpdate: (item: Program, operationType: SswUpdateType, formSign: FormSignature) => void;
+    setSelectedProgram: React.Dispatch<Program>;
 };
 
-const SswOperations = ({ document, programs, setSswUpdateView, programType, onProgramUpdate }: SswOperationsProps) => {
+const SswOperations = ({ document, programs, setSswUpdateView, programType, onProgramUpdate, setSelectedProgram }: SswOperationsProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const { formSignature } = useContext(FormDataContext);
+    const source = getDocumentSource(document.documentNumber);
+
+    const handleEditProgram = (index: number): undefined => {
+        setSelectedProgram(programs[index]);
+        setSswUpdateView(true);
+    };
 
     return (
         <div className="p-8">
             <label className="font-primary text-lg font-bold mb-5 ml-8">{t(`sswUpdate.${programType}`)}</label>
             {programs?.map((item: Program, index: number) => (
-                <EditProgram key={index} program={item} onTerminate={onProgramUpdate} onEdit={setSswUpdateView} document={document} />
+                <EditProgram key={index} program={item} onTerminate={onProgramUpdate} onEdit={handleEditProgram} programIndex={index} />
             ))}
-            {document.source !== ChannelType.Phone && formSignature && (
+            {source !== ChannelType.Phone && formSignature && (
                 <SignatureValidations isFormStateReadOnly={false} config={signaturesConfig} />
             )}
         </div>

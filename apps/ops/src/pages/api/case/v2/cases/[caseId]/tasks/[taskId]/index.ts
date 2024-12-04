@@ -13,22 +13,26 @@ export default withAuthAndLogging(
     async (req: NextApiRequest, res: NextApiResponse<any | null>, logCtx) => {
         const now = performance.now();
         const { caseId, taskId } = req.query;
-        const accessToken = (await getAccessToken(req, res)).accessToken;
-
         const url = `${baseUrl}/cases/${caseId}/tasks/${taskId}`;
         const loggingContext = { ...logCtx, caseId, taskId, url };
-        logInfo('updateTask::start', loggingContext);
-
-        const formData = req.body;
-        const config = {
-            authorization: `Bearer ${accessToken}`,
-            headers: {
-                'Content-type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-            },
-        };
 
         try {
+            const accessToken = (await getAccessToken(req, res)).accessToken;
+            if (!accessToken) {
+                return res.status(401).json({});
+            }
+
+            logInfo('updateTask::start', loggingContext);
+
+            const formData = req.body;
+            const config = {
+                authorization: `Bearer ${accessToken}`,
+                headers: {
+                    'Content-type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                },
+            };
+
             const { data } = await serverApi.put<any, AxiosResponse>(url, formData, config, loggingContext);
             logInfo('updateTask::success', { ...loggingContext, duration: performance.now() - now });
             res.json(data);
