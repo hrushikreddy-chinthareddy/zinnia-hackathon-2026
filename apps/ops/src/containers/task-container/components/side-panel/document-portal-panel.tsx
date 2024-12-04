@@ -29,7 +29,7 @@ const DocumentPortalPanel = ({ clientCode, documents }: DocumentViewProps) => {
 
     useEffect(() => {
         getCaseDocs(documents);
-    }, [documents, getCaseDocs]);
+    }, [documents]);
 
     const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
 
