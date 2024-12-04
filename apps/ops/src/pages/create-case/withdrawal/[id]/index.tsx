@@ -19,6 +19,7 @@ import { FormProvider } from '@deps/containers/otp/withdrawal-forms/components/f
 import DlicWithdrawalForm from '@deps/containers/otp/withdrawal-forms/dlic/dlic-withdrawal-form';
 import FlicWithdrawalForm from '@deps/containers/otp/withdrawal-forms/flic-withdrawal-form';
 import GdmnWithdrawalForm from '@deps/containers/otp/withdrawal-forms/gdmn/gdmn-withdrawal-form';
+import GilicoWithdrawalForm from '@deps/containers/otp/withdrawal-forms/gilico/gilico-withdrawal-form';
 import MassWithdrawalForm from '@deps/containers/otp/withdrawal-forms/mass/mass-withdrawal-form';
 import NasuWithdrawalForm from '@deps/containers/otp/withdrawal-forms/nasu/nasu-withdrawal-form';
 import RslnWithdrawalForm from '@deps/containers/otp/withdrawal-forms/rsln/rsln-withdrawal-form';
@@ -35,7 +36,6 @@ import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
 import { useScreenSize } from '@deps/hooks/useScreenSize';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
-import { ProcessType } from '@deps/models/case/enums';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { TaskType } from '@deps/models/case/task';
 import { ActiveWithdrawalCase, Carrier, QualTypes, TransactionStatus, SortOrder } from '@deps/models/case/withdrawal/case';
@@ -49,7 +49,6 @@ import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-an
 import { isNonProductionEnvironment } from '@deps/utils/environment.helper';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { logError, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
 import { ERROR_CODES } from '../../error';
@@ -79,6 +78,7 @@ const getFormComponentMap = (qualType: QualTypes | ''): Record<string, React.Rea
     [Carrier.NASU]: <NasuWithdrawalForm />,
     [Carrier.GDMN]: <GdmnWithdrawalForm />,
     [Carrier.RSLN]: <RslnWithdrawalForm />,
+    [Carrier.GLCO]: <GilicoWithdrawalForm />,
 });
 
 export default function WithdrawalCase({ document, form, isNigoCase, featureFlagDecisions, parties, user }: WithdrawalCaseProps) {
@@ -304,15 +304,15 @@ export const getServerSideProps = withPageAuthRequired({
             logInfo('create-case/withdrawal/:id:Skipping NIGO check', { taskId, action, documentNumber, id, clientId });
         }
         // If feature flag is not enabled, redirect to error page
-        if (!isFormFeatureEnabled(ProcessType.WITHDRAWAL, clientId, featureFlagDecisions)) {
-            logWarn('create-case/withdrawal/:id::feature flag not enabled', { documentNumber, clientId });
-            return {
-                redirect: {
-                    destination: '/403',
-                    permanent: false,
-                },
-            };
-        }
+        // if (!isFormFeatureEnabled(ProcessType.WITHDRAWAL, clientId, featureFlagDecisions)) {
+        //     logWarn('create-case/withdrawal/:id::feature flag not enabled', { documentNumber, clientId });
+        //     return {
+        //         redirect: {
+        //             destination: '/403',
+        //             permanent: false,
+        //         },
+        //     };
+        // }
 
         const form = await initializeOTPTaskSSR({
             accessToken,

@@ -1335,7 +1335,8 @@
                 "defaultTitle": "Annuity Contract Withdrawal Request",
                 "nasu": "Annuity Contract Withdrawal Request ",
                 "gdmn": "Commonwealth Withdrawal Request",
-                "rsln": "Lincoln Benefit Life Withdrawal Request"
+                "rsln": "Lincoln Benefit Life Withdrawal Request",
+                "glco": "Annuity Contract Withdrawal Request"
             },
             "personalDetails": {
                 "title": "Personal Details",
