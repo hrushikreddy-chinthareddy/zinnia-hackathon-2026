@@ -122,28 +122,18 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
         setBaseInsightQueryFilter(insightFilter);
     }, [selectedCarriers, insightOption, selectedBrokerDealers, createdDateEnd, createdDateStart]);
 
-    // if (
-    //     processListOptionsLoading ||
-    //     loading ||
-    //     insightGroupingCountBySubProcessStatsLoading ||
-    //     insightGroupingCountBySubProcessStatsLoading ||
-    //     insightCreatedBySubProcessLoading ||
-    //     insightStagesByCreatedLoading ||
-    //     insightExceptionStatsLoading
-    // ) {
-    //     return (
-    //         <div className="relative border-t-2 border-[--color-base-border-border-light]">
-    //             <CardContainer classNames="relative !pt-0" containerClassNames="mt-none">
-    //                 <PageLoader variant={PageLoaderVariant.CenterWhiteText} showText={true} />
-    //             </CardContainer>
-    //         </div>
-    //     );
-    // }
+    const sankeyChartLoading =
+        loading ||
+        processListOptionsLoading ||
+        insightGroupingCountBySubProcessStatsLoading ||
+        insightCreatedBySubProcessLoading ||
+        insightStagesByCreatedLoading ||
+        insightExceptionStatsLoading;
 
     return (
         <>
             <div className="relative border-t-2 border-[--color-base-border-border-light]" ref={sankeyChartRef}>
-                {loading && (
+                {sankeyChartLoading && (
                     <div className="absolute bottom-0 left-0 right-0 top-0 z-10 flex h-full justify-center bg-gray-800 opacity-80">
                         <div className="mt-4">
                             <PageLoader variant={PageLoaderVariant.CenterWhiteText} showText={true} />
