@@ -18,7 +18,7 @@ import { getCaseInsights } from '@deps/queries/api/openai';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 import { ReactComponent as LightBulbIcon } from '@deps/styles/elements/icons/illustrations/light-bulb.svg';
 
-import useExceptionData from '../../pages/dashboard/issued-business/useExceptionData';
+import useExceptionData from './issued-business/useExceptionData';
 import NavElement, { NavElementSize, NavElementType } from '../nav-element/nav-element';
 import styles from './top-5-subprocesses-by-volume/top-5-subprocess-by-volume.module.css';
 

@@ -1,42 +1,49 @@
-import { IconType, Link } from '@zinnia/bloom/components';
+import { Icon, IconType, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
 import { toTitleCase } from '@zinnia/utils';
-import { clsx } from 'clsx';
+import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
+import { FC, PropsWithChildren, useState } from 'react';
 
-import { default as styles } from '@deps/pages/dashboard/Dashboard.module.css';
+export enum DashboardTabs {
+    ACTIVE_APPLICATIONS = 'active-applications',
+    ISSUED_BUSINESS = 'issued-business',
+}
+const DEFAULT_TAB = DashboardTabs.ACTIVE_APPLICATIONS;
 
-export const DashboardNavLinks = () => {
+export const DashboardTabNav: FC<PropsWithChildren> = ({ children }) => {
     const router = useRouter();
+    const params = useSearchParams();
+    const tabParam = params.get('tab');
+    const [tabVal, setTabVal] = useState(tabParam || DEFAULT_TAB);
+
+    const handleTabChange = (val: string) => {
+        setTabVal(val);
+        router.replace(`/dashboard?tab=${val}`, undefined, { shallow: true });
+    };
+
+    if (!tabParam) {
+        router.replace(`/dashboard?tab=${DEFAULT_TAB}`, undefined, { shallow: true });
+    }
+
     return (
-        <nav className="flex basis-full no-wrap gap-4 bg-white px-8 pt-4 pb-0">
-            <Link
-                iconType={IconType.DOCUMENT_TEXT}
-                href="/dashboard"
-                text={toTitleCase('active applications')}
-                style={{ paddingBottom: 'var(--measure-dimension-padding-lg)' }}
-                className={clsx(
-                    'border-b-4',
-                    'overflow-visible',
-                    styles.link,
-                    router.pathname === '/dashboard'
-                        ? 'border-[--color-base-border-border-secondary-color]'
-                        : 'border-transparent !text-[--color-base-text-text-secondary]'
-                )}
-            />
-            <Link
-                iconType={IconType.SHIELD_CHECKMARK}
-                href="/dashboard/issued-business"
-                text={toTitleCase('issued business')}
-                style={{ paddingBottom: 'var(--measure-dimension-padding-lg)' }}
-                className={clsx(
-                    'border-b-4',
-                    'overflow-visible',
-                    styles.link,
-                    router.pathname === '/dashboard/issued-business'
-                        ? 'border-[--color-base-border-border-secondary-color]'
-                        : 'border-transparent !text-[--color-base-text-text-secondary]'
-                )}
-            />
-        </nav>
+        <TabGroup
+            className=" bg-white px-8 pt-4 pb-0 "
+            defaultValue={tabVal}
+            value={tabVal}
+            activationMode="manual"
+            onValueChange={handleTabChange}
+        >
+            <TabList className="!mb-0 w-full !border-b-0">
+                <TabTrigger value={DashboardTabs.ACTIVE_APPLICATIONS}>
+                    <Icon type={IconType.DOCUMENT_TEXT} width={24} height={24} className="hidden lg:block" />{' '}
+                    {toTitleCase('active applications')}
+                </TabTrigger>
+                <TabTrigger value={DashboardTabs.ISSUED_BUSINESS}>
+                    <Icon type={IconType.SHIELD_CHECKMARK} width={24} height={24} className="hidden lg:block" />{' '}
+                    {toTitleCase('issued business')}
+                </TabTrigger>
+            </TabList>
+            {children}
+        </TabGroup>
     );
 };
