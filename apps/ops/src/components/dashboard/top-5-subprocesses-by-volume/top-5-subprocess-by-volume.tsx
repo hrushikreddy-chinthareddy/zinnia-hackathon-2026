@@ -392,14 +392,17 @@ export const Top5SubprocessByVolume = ({
                         const xAxisIndex = this.series.chart.xAxis.indexOf(xAxis);
 
                         // Apply custom formatting based on xAxis index
+                        // this is the lower chart
                         if (xAxisIndex === 1) {
                             const formattedValue = new Intl.NumberFormat().format(this.y || 0);
                             const pointIndex = this.point.index;
                             // find the category label from the first xAxis and display it in the tooltip
-                            return `<b>${this.series.chart.xAxis[0].categories[pointIndex * 4]}</b>: ${formattedValue}`;
+                            return `<div>${this.series.chart.xAxis[0].categories[pointIndex * 4]}<br/><b>${
+                                this.series.name
+                            }</b>: ${formattedValue}</div>`;
                         } else {
                             const formattedValue = new Intl.NumberFormat().format(this.y || 0);
-                            return `<b>${this.key}</b>: ${formattedValue}`;
+                            return `<div>${this.key}<br/><b>${this.series.name}</b>: ${formattedValue}`;
                         }
                     },
                 },

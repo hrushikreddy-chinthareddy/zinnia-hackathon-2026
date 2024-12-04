@@ -352,8 +352,6 @@ export const ExceptionSummary = ({
                         // Find the index of the xAxis in the chart's xAxis array
                         const xAxisIndex = this.series.chart.xAxis.indexOf(xAxis);
 
-                        console.log('this', xAxisIndex, 'x:', this.x, 'y:', this.y, this);
-
                         // Apply custom formatting based on xAxis index
                         // this is the lower chart
                         if (xAxisIndex === 1) {
@@ -364,36 +362,8 @@ export const ExceptionSummary = ({
                                 this.series.name
                             }</b>: ${formattedValue}</div>`;
                         } else {
-                            console.log('other xAxisIndex', xAxisIndex);
                             const formattedValue = new Intl.NumberFormat().format(this.y || 0);
                             return `<div>${this.key}<br/><b>${this.series.name}</b>: ${formattedValue}`;
-                            // Get the category label (e.g., 'Jan', 'Feb', etc.)
-                            // const category = this.x;
-
-                            // // Get the numeric index of the category from xAxis.categories
-                            // const categoryIndex = this.series.chart.xAxis[0].categories.indexOf(category as string);
-                            // console.log('categoryIndex', categoryIndex);
-                            // let tooltipText = `<b>${category}</b><br>`;
-
-                            // // Loop through all series to display the value for the same category
-                            // this.series.chart.series.forEach(function (series) {
-                            //     // if (series.chart.xAxis.indexOf(series.xAxis) === 0) {
-                            //     {
-                            //         // if(series.xAxis.index === 0) {
-
-                            //         // }
-                            //         // Check if the current series has a data point for this category index
-                            //         const point = series.data[categoryIndex]; // Access data by category index
-                            //         console.log('point', point);
-                            //         console.log('series', series);
-                            //         if (point) {
-                            //             const formattedValue = new Intl.NumberFormat().format(point.y || 0); // Format value with commas
-                            //             tooltipText += `<span style="color:${series.color}">\u25CF</span> ${series.name}: ${formattedValue}<br>`;
-                            //         }
-                            //     }
-                            // });
-
-                            // return tooltipText;
                         }
                     },
                 },
