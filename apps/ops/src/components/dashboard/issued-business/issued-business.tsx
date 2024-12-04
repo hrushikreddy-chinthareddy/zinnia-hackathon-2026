@@ -198,7 +198,7 @@ export const IssuedBusiness = ({ authorizedCarriers, brokerDealersSSR, completed
     return (
         <CardContainer
             ref={cardContainerRef}
-            classNames="relative !p-0 flex flex-col flex-1 gap-4 !border-none  bg-[--color-base-surface-surface-tertiary]"
+            classNames="relative !p-0 flex flex-col flex-1 !border-none  bg-[--color-base-surface-surface-tertiary]"
             containerClassNames="mt-none !p-0  border-t-2 border-[--color-base-border-border-light]"
         >
             <div className=" bg-white p-8 flex flex-col gap-4 rounded">
@@ -257,7 +257,7 @@ export const IssuedBusiness = ({ authorizedCarriers, brokerDealersSSR, completed
                                             </div>
                                             <div className="flex flex-row flex-wrap gap-4">
                                                 <FieldData variant={FieldDataVariant.Large} label="cases">
-                                                    {element.count}
+                                                    {element.count.toLocaleString('en-US')}
                                                 </FieldData>
                                                 <FieldData variant={FieldDataVariant.Large} label="Avg days to close">
                                                     {DEFAULT_ERROR_STRING}
