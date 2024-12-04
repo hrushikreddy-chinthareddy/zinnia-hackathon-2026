@@ -34,7 +34,7 @@ const TaskContainer = ({ taskInfoLink, nigoExceptions, nigoSubExceptions }: Task
 
     return (
         <WorkflowProvider>
-            <TaskWorkflowContent steps={steps} caseId={caseId} carrierId={carrier} taskInfoLink={taskInfoLink} />
+            <TaskWorkflowContent steps={steps} caseId={caseId} carrierId={carrier} />
         </WorkflowProvider>
     );
 };

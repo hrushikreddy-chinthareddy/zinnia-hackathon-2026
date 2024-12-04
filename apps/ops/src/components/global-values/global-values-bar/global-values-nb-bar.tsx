@@ -7,7 +7,7 @@ export interface GlobalValuesBarNbProps {
     carrierId: string;
     isNavDrawerOpen?: boolean;
     showLink?: boolean;
-    caseId?: string;
+    caseId: string;
 }
 
 const GlobalValuesNbBar = ({ children, carrierId, isNavDrawerOpen, caseId }: GlobalValuesBarNbProps) => {

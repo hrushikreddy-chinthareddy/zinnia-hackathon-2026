@@ -15,10 +15,7 @@ import { TaskDataContext } from './task-context';
 type TaskPageProps = {
     steps: Step[];
     caseId: string;
-    documentNumber?: string;
     carrierId: string;
-    showJointOwner?: boolean;
-    taskInfoLink?: string;
 };
 
 export const TaskWorkflowContent = ({ steps, caseId, carrierId }: TaskPageProps) => {
