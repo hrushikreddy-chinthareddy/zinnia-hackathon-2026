@@ -1,63 +1,66 @@
-import { IconType, Icon, Tooltip, TooltipPlacement } from "@zinnia/bloom/components";
-import { useTranslation } from "react-i18next";
+import { IconType, Icon, Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
+import { useTranslation } from 'react-i18next';
 
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from "@deps/components/nav-element/nav-element";
-import { TranslationFiles } from "@deps/config/translations";
+import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import { TranslationFiles } from '@deps/config/translations';
+import { AddressTypes } from '@deps/models/case/withdrawal/case';
 
+import { addressType } from './case-details-content';
 
-function AddressTab({ Address, planCode, policyNumber }: { Address: any, planCode: string | undefined, policyNumber: string | undefined }) {
+interface AddressTabProps {
+  address: addressType[];
+  planCode: string | undefined;
+  policyNumber: string | undefined;
+}
+function AddressTab({ address, planCode, policyNumber }: AddressTabProps) {
   const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'sideSheet.caseDetailsContent.addressHistoryTab' });
-  const url = `/policies/${planCode}/${policyNumber}/policy/policy-details`
+  const url = `/policies/${planCode}/${policyNumber}/policy/policy-details`;
   return (
     <div className="flex-1 flex flex-col w-full !mb-0 px-4 pt-5 md:px-6 lg:px-8 gap-4">
-      {Address.map((address: any) => {
+      {address.map((address: any) => {
         return (
           <div key={address.addressId} className="px-4 mt-3">
             <div className="flex gap-2  items-center">
               <div className="font-medium">
-                {address.addressType === 'DEFAULT' && t('defaultAddress')}
-                {address.addressType === 'RESIDENCE' && t('residentialAddress')}
-                {address.addressType === 'MAILING' && t('mailingAddress')}
-
+                {address.addressType === AddressTypes.DEFAULT && t('defaultAddress')}
+                {address.addressType === AddressTypes.RESIDENTIAL_ADDRESS && t('residentialAddress')}
+                {address.addressType === AddressTypes.MAILING_ADDRESS && t('mailingAddress')}
+                {address.addressType === AddressTypes.AGENT_ADDRESS && t('agentAddress')}
               </div>
 
-
-              {address.preferredAddress &&
-                <Tooltip trigger={<div className=" bg-green-600 inline-block h-2 w-2 rounded-full"></div>}
+              {address.preferredAddress && (
+                <Tooltip
+                  trigger={<div className=" bg-green-600 inline-block h-2 w-2 rounded-full"></div>}
                   placement={TooltipPlacement.TopRight}
-                  tooltipClassName={"px-4 py-4 !w-auto"}
+                  tooltipClassName={'px-4 py-4 !w-auto'}
                 >
                   {t('preferredAddress')}
-                </Tooltip>}
+                </Tooltip>
+              )}
             </div>
             <div className="text-md">
               {address.city}, {address.state}-{address.zipCode}
             </div>
           </div>
-
-        )
+        );
       })}
       <div className="text-[--color-base-text-text-link] font-semibold text-md p-4">
-
         <NavElement
           className={'whitespace-normal break-words'}
           href={url}
           isNewPage={true}
           size={NavElementSize.Small}
           target="_blank"
-          title={t('viewFullDeatils')?.toString()}
+          title={t('viewFullDeatils') as string}
           type={NavElementType.Link}
           startIcon={<Icon type={IconType.EXTERNAL_LINK} width={20} height={20} />}
-
           variant={NavElementVariant.Secondary}
         >
           {t('viewFullDeatils')}
         </NavElement>
-
-
       </div>
-    </div >
-  )
+    </div>
+  );
 }
 
-export default AddressTab
+export default AddressTab;

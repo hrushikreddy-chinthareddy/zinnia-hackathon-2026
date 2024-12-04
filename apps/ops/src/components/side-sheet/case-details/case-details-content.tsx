@@ -6,6 +6,7 @@ import { ErrorMessagePart } from '@deps/components/error/Error';
 import { TranslationFiles } from '@deps/config/translations';
 import { CaseTableData } from '@deps/contexts/CaseManagementFilters';
 import { DocumentData } from '@deps/models/case/document';
+import { AddressTypes } from '@deps/models/case/withdrawal/case';
 import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 
@@ -16,7 +17,7 @@ import RelatedTab from './related-tab';
 export enum TabOptions {
   Details = 'Details',
   Related = 'Related',
-  Address = 'Address'
+  Address = 'Address',
 }
 type CaseDetailsProps = {
   policy: Policy;
@@ -27,17 +28,15 @@ type CaseDetailsProps = {
   caseTableData: CaseTableData;
   setError: React.Dispatch<React.SetStateAction<ErrorMessagePart[] | null>>;
 };
+export type addressType = { addressType: AddressTypes; preferredAddress: boolean; City: string; State: string; ZipCode: string }[];
 function CaseDetailsContent({ policy, documentData, offset, limit, setOffset, caseTableData, setError }: CaseDetailsProps) {
   const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'sideSheet.caseDetailsContent' });
   const [activeTab, setActiveTab] = useState(TabOptions.Details);
   const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
   const carrierName = getCarrierNameByClientId(policy.carrierId as string);
 
-
   const policyOwnerId = policy?.partyRoles?.find(pr => pr.partyRole === PartyRole.OWNER)?.partyId;
   const policyOwner = policy?.parties?.find(party => party.partyId === policyOwnerId);
-
-
 
   const renderTabContent = (
     <>
@@ -48,7 +47,11 @@ function CaseDetailsContent({ policy, documentData, offset, limit, setOffset, ca
         <RelatedTab offset={offset} limit={limit} setOffset={setOffset} caseTableData={caseTableData} setError={setError} />
       </TabContent>
       <TabContent className="flex w-full flex-col items-center" value={TabOptions.Address}>
-        <AddressTab Address={policyOwner?.addresses} planCode={policy.product?.planCode} policyNumber={policy?.policyNumber} />
+        <AddressTab
+          address={policyOwner?.addresses as addressType[]}
+          planCode={policy.product?.planCode}
+          policyNumber={policy?.policyNumber}
+        />
       </TabContent>
     </>
   );
@@ -57,8 +60,12 @@ function CaseDetailsContent({ policy, documentData, offset, limit, setOffset, ca
       <TabGroup defaultValue={activeTab} value={activeTab} activationMode="manual" onValueChange={handleTabChange}>
         <TabList className="!mb-0 w-full px-4 pt-4 md:px-6 lg:px-8">
           <TabTrigger value={TabOptions.Details}>{t('tabs.details') ?? ''}</TabTrigger>
-          <TabTrigger value={TabOptions.Related}>{t('tabs.related') ?? ''} ({caseTableData.total})</TabTrigger>
-          <TabTrigger value={TabOptions.Address}>{t('tabs.addressHistory') ?? ''} ({policyOwner?.addresses?.length})</TabTrigger>
+          <TabTrigger value={TabOptions.Related}>
+            {t('tabs.related') ?? ''} ({caseTableData.total})
+          </TabTrigger>
+          <TabTrigger value={TabOptions.Address}>
+            {t('tabs.addressHistory') ?? ''} ({policyOwner?.addresses?.length})
+          </TabTrigger>
         </TabList>
         {renderTabContent}
       </TabGroup>

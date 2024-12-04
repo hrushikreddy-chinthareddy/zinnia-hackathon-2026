@@ -2867,7 +2867,8 @@
                 "residentialAddress": "Adresse résidentielle",
                 "mailingAddress": "Adresse postale",
                 "viewFullDeatils": "Voir les détails",
-                "preferredAddress": "Adresse choisie"
+                "preferredAddress": "Adresse choisie",
+                "agentAddress": "Adresse de l'agent"
             }
         },
         "correspondence": "Correspondence ({{count}})",

@@ -3116,7 +3116,8 @@
                 "residentialAddress": "Residential Address",
                 "mailingAddress": "Mailing Address",
                 "viewFullDeatils": "View full details",
-                "preferredAddress": "Preferred Address"
+                "preferredAddress": "Preferred Address",
+                "agentAddress": "Agent Address"
             }
         },
         "correspondence": "Correspondence ({{count}})",
