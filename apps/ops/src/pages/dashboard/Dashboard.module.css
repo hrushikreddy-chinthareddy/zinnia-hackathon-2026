@@ -45,6 +45,8 @@
     top: var(--pinned-height);
     z-index: 1;
     background-color: var(--color-base-surface-surface-secondary);
+    margin-left: -32px;
+    margin-right: -32px;
 }
 
 .insightsHeaderDropdown {
