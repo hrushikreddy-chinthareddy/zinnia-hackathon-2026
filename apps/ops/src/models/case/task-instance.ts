@@ -36,7 +36,7 @@ export type ManagementTask<T = TaskStatus> = {
     createdAt: string;
     id: string;
     process: string;
-    queue?: null;
+    queue?: string | null;
     status: T;
     taskName: string;
     taskType: string;
