@@ -155,7 +155,7 @@ function processCarrierData(input: DashboardStatsElementResponse[]): Output {
     const totals: number[] = new Array(MONTHLY_MONTHS).fill(0);
 
     for (const key in result.monthly) {
-        if (result.monthly.hasOwnProperty(key)) {
+        if (Object.prototype.hasOwnProperty.call(result.monthly, key)) {
             const series = result.monthly[key].series.data;
             series?.forEach((value, index) => {
                 totals[index] += typeof value === 'number' ? value : 0; // Accumulate the value at each index
@@ -400,7 +400,7 @@ export const ExceptionSummary = ({
                 )} applications encountered exceptions along their path to completion. The data is grouped by Carrier and then by Exception Category and the values represent an exception that occurred for a ${dashboardChartTitleFormat(
                     processSubType,
                     false
-                )} application. Avoid using phrases such as "the data". Your responses should be insightful and will be displayed on a UI as a summary for a module related to a distribution chart. Use percentages and real data where it makes sense. Keep it concise and to the point. Format number values to U.S. inclding commas where appropriate.`,
+                )} application. Avoid using phrases such as "the data". Your responses should be insightful and will be displayed on a UI as a summary for a module related to a distribution chart. Use percentages and real data where it makes sense. Keep it concise and to the point. Format number values to U.S. including commas where appropriate.`,
             });
             return summary;
         } catch (error) {
