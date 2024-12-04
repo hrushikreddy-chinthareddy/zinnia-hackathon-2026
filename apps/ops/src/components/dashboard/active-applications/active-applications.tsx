@@ -72,7 +72,7 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
         queryKey: ['processListOptions', createdDateStart],
         queryFn: () => getProcessListOptions(createdDateStart),
     });
-    const { data: insightGroupingCountByCarrierStats } = useQuery({
+    const { data: insightGroupingCountByCarrierStats, isLoading: insightGroupingCountByCarrierStatsLoading } = useQuery({
         queryKey: ['countByCarrierInsights', baseInsightQueryFilter],
         queryFn: () => getCountByCarrierInsightStats(baseInsightQueryFilter),
     });
@@ -128,7 +128,8 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
         insightGroupingCountBySubProcessStatsLoading ||
         insightCreatedBySubProcessLoading ||
         insightStagesByCreatedLoading ||
-        insightExceptionStatsLoading;
+        insightExceptionStatsLoading ||
+        insightGroupingCountByCarrierStatsLoading;
 
     useEffect(() => {
         handleSetLoading(sankeyChartLoading);
