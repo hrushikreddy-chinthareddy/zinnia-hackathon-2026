@@ -29,7 +29,7 @@ if (typeof Highcharts === 'object') {
 }
 
 export type TreeMapInsightsProps = {
-    dashboardStatsData: CaseDashboardStatsResponse;
+    dashboardStatsData?: CaseDashboardStatsResponse;
     heading: string;
     carrierOrBrokerDealer?: GroupByOptions.Carrier | GroupByOptions.BrokerDealerName;
 };
@@ -63,13 +63,13 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
     //     return data || []; // always return an array
     // }, [dashboardStatsData]);
 
-    const seriesData = dashboardStatsData.data; // this will change once filters are added
+    const seriesData = dashboardStatsData?.data; // this will change once filters are added
 
-    const noData = seriesData?.length === 0 || dashboardStatsData.totalElements === 0;
+    const noData = seriesData?.length === 0 || dashboardStatsData?.totalElements === 0;
 
     // this is the same code that is found in exception-insights.tsx
     const chartOptions: Highcharts.Options = useMemo(() => {
-        const chartData: Highcharts.SeriesTreemapOptions['data'] = seriesData.map((item: DashboardResponseData) => ({
+        const chartData: Highcharts.SeriesTreemapOptions['data'] = seriesData?.map((item: DashboardResponseData) => ({
             name: DASHBOARD_REPLACE_LABELS.includes(item.name) ? DASHBOARD_DEFAULT_LABEL : item.name,
             value: item.count,
             colorValue: item.count,
@@ -149,7 +149,7 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
                     {/* <Typography variant={TypographyVariant.H3}>{sankeyTitleFormat(selectedSubprocess, false)}</Typography> */}
                     <Typography variant={TypographyVariant.H3}>{heading}</Typography>
                     <Typography variant={TypographyVariant.Label}>
-                        There are {wholeNumberFormatify(dashboardStatsData.totalElements)} Exceptions
+                        There are {wholeNumberFormatify(dashboardStatsData?.totalElements)} Exceptions
                     </Typography>
                 </div>
                 {loading ? (

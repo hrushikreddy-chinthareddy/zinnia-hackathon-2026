@@ -28,7 +28,7 @@ import ActiveAgingPies from './active-aging-pies';
 interface Props {
     classNames?: string;
     createdBySubProcess?: CaseDashboardStatsResponse;
-    openExceptionCategoriesByCreated: CaseDashboardStatsResponse;
+    openExceptionCategoriesByCreated?: CaseDashboardStatsResponse;
     loading?: boolean;
     selectedProcess: Processes;
     carriers: string[];
@@ -293,7 +293,7 @@ const ActiveAging = ({
         });
 
         // second we need to create a map of all the open stages by aging range (this gives us a lot of entries)
-        openExceptionCategoriesByCreated.data.forEach(createdGroupingOfExceptionCategories => {
+        openExceptionCategoriesByCreated?.data.forEach(createdGroupingOfExceptionCategories => {
             const timeRange = getAgingTimeRangeFromDate(new Date(createdGroupingOfExceptionCategories.name));
             exceptionCategoryByAgingRangeMap[timeRange] = exceptionCategoryByAgingRangeMap[timeRange].concat(
                 createdGroupingOfExceptionCategories.values ?? []

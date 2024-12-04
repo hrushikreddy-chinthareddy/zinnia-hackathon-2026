@@ -13,7 +13,7 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import { getStartAndEndDates } from '@deps/containers/case-redesign-sub-page/case-helpers';
 import { useIntersectionObserver } from '@deps/hooks/useIntersectionObserver';
 import { useResizeObserver } from '@deps/hooks/useResizeObserver';
-import { CaseDashboardStatsResponse, Processes, Statuses } from '@deps/models/case/case';
+import { Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { getCaseDashboardStats } from '@deps/queries/api/cases';
 import { DashboardSearchFilter, CaseDashboardStatsQuery } from '@deps/queries/cases';
@@ -202,6 +202,7 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
     }, [selectedCarriers, insightOption, selectedBrokerDealers, createdDateEnd, createdDateStart]);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     useEffect(() => {
         const getPageData = async () => {
             handleSetLoading(true);
@@ -286,6 +287,25 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
         );
     }
 >>>>>>> c69e24ce8 (pull in tanstack and test out doing the data calls that way)
+=======
+    // if (
+    //     processListOptionsLoading ||
+    //     loading ||
+    //     insightGroupingCountBySubProcessStatsLoading ||
+    //     insightGroupingCountBySubProcessStatsLoading ||
+    //     insightCreatedBySubProcessLoading ||
+    //     insightStagesByCreatedLoading ||
+    //     insightExceptionStatsLoading
+    // ) {
+    //     return (
+    //         <div className="relative border-t-2 border-[--color-base-border-border-light]">
+    //             <CardContainer classNames="relative !pt-0" containerClassNames="mt-none">
+    //                 <PageLoader variant={PageLoaderVariant.CenterWhiteText} showText={true} />
+    //             </CardContainer>
+    //         </div>
+    //     );
+    // }
+>>>>>>> 879dddae6 (null checks)
 
     return (
         <>
@@ -329,7 +349,7 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
                 <div className={styles.container}>
                     <ActiveAging
                         createdBySubProcess={insightCreatedBySubProcess}
-                        openExceptionCategoriesByCreated={insightStagesByCreated as CaseDashboardStatsResponse}
+                        openExceptionCategoriesByCreated={insightStagesByCreated}
                         loading={loading}
                         selectedProcess={insightOption}
                         carriers={Object.keys(selectedCarriers)}
@@ -338,7 +358,7 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
                         {/* this is the Exception Distribution by Category tree map chart */}
                         <CardContainer fullWidth={false}>
                             <TreeMapInsights
-                                dashboardStatsData={insightExceptionStats as CaseDashboardStatsResponse}
+                                dashboardStatsData={insightExceptionStats}
                                 heading="Exception Distribution by Category"
                             ></TreeMapInsights>
                         </CardContainer>
