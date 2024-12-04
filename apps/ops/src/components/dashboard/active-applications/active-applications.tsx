@@ -43,6 +43,7 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
     selectedCarriers,
     selectedBrokerDealers,
     loading,
+    handleSetLoading,
     carrierHeaderRef,
 }) => {
     const { createdDateStart, createdDateEnd } = getStartAndEndDates('All');
@@ -123,12 +124,15 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
     }, [selectedCarriers, insightOption, selectedBrokerDealers, createdDateEnd, createdDateStart]);
 
     const sankeyChartLoading =
-        loading ||
         processListOptionsLoading ||
         insightGroupingCountBySubProcessStatsLoading ||
         insightCreatedBySubProcessLoading ||
         insightStagesByCreatedLoading ||
         insightExceptionStatsLoading;
+
+    useEffect(() => {
+        handleSetLoading(sankeyChartLoading);
+    }, [handleSetLoading, sankeyChartLoading]);
 
     return (
         <>
