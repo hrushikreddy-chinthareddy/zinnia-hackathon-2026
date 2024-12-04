@@ -1,4 +1,4 @@
-import { IconType, Icon } from "@zinnia/bloom/components";
+import { IconType, Icon, Tooltip, TooltipPlacement } from "@zinnia/bloom/components";
 import { useTranslation } from "react-i18next";
 
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from "@deps/components/nav-element/nav-element";
@@ -20,7 +20,15 @@ function AddressTab({ Address, planCode, policyNumber }: { Address: any, planCod
                 {address.addressType === 'MAILING' && t('mailingAddress')}
 
               </div>
-              {address.preferredAddress && <div className=" bg-green-600 inline-block h-2 w-2 rounded-full"></div>}
+
+
+              {address.preferredAddress &&
+                <Tooltip trigger={<div className=" bg-green-600 inline-block h-2 w-2 rounded-full"></div>}
+                  placement={TooltipPlacement.TopRight}
+                  tooltipClassName={"px-4 py-4 !w-auto"}
+                >
+                  {t('preferredAddress')}
+                </Tooltip>}
             </div>
             <div className="text-md">
               {address.city}, {address.state}-{address.zipCode}
@@ -48,7 +56,7 @@ function AddressTab({ Address, planCode, policyNumber }: { Address: any, planCod
 
 
       </div>
-    </div>
+    </div >
   )
 }
 

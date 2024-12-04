@@ -3115,7 +3115,8 @@
                 "defaultAddress": "Default Address",
                 "residentialAddress": "Residential Address",
                 "mailingAddress": "Mailing Address",
-                "viewFullDeatils": "View full details"
+                "viewFullDeatils": "View full details",
+                "preferredAddress": "Preferred Address"
             }
         },
         "correspondence": "Correspondence ({{count}})",
