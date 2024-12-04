@@ -34,7 +34,7 @@ export const TaskWorkflowContent = ({ steps, caseId, carrierId }: TaskPageProps)
     };
 
     const openSideSheet = () => {
-        const content = <DocumentPortalPanel documents={task.documents} clientCode={carrierId} />;
+        const content = <DocumentPortalPanel documents={task.documents || []} clientCode={carrierId} />;
         sideSheet.changeSideSheetContent(t('task.documentPanel.documents'), content);
         sideSheet.handleOpen(true);
     };
