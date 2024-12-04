@@ -36,13 +36,12 @@ export type ManagementTask<T = TaskStatus> = {
     createdAt: string;
     id: string;
     process: string;
-    queue: null;
     status: T;
     taskName: string;
     taskType: string;
     updatedAt: string;
     data: any;
-    documents: TaskDocument[];
+    documents?: TaskDocument[];
 };
 
 export type TaskDocument = {
