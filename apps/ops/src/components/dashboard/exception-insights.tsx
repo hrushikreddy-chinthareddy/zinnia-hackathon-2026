@@ -136,6 +136,33 @@ export const ExceptionInsights = ({
                     colorKey: 'colorValue',
                     colors: caseChartHelpers.getTreeMapColors(),
                     colorByPoint: true,
+                    dataLabels: {
+                        useHTML: true,
+                        formatter: function () {
+                            const name = this.point.name;
+                            // @ts-expect-error: this actually exists
+                            const value = this.point.value;
+                            // @ts-expect-error: this actually exists
+                            const seriesValues: Array<number> = this.series.valueData;
+                            const total = seriesValues.reduce((sum, val) => sum + val, 0);
+                            const wrapper = document.createElement('div');
+                            wrapper.style.color = 'white';
+                            wrapper.style.textShadow = '2px 2px black';
+                            wrapper.style.display = 'flex';
+                            wrapper.style.flexDirection = 'column';
+                            wrapper.style.alignItems = 'center';
+                            wrapper.style.justifyContent = 'center';
+                            wrapper.style.textAlign = 'center';
+                            wrapper.style.gap = '4px';
+                            const nameSpan = document.createElement('span');
+                            nameSpan.innerText = name;
+                            wrapper.appendChild(nameSpan);
+                            const valueSpan = document.createElement('span');
+                            valueSpan.innerText = `${value} / ${total}`;
+                            wrapper.appendChild(valueSpan);
+                            return wrapper.outerHTML;
+                        },
+                    },
                 },
             ],
             title: {
