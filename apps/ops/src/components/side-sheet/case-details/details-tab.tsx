@@ -13,8 +13,6 @@ import { TranslationFiles } from "@deps/config/translations";
 
 type DetailTabProps = {
   carrierName: string,
-  formattedApplicationDate: string,
-  formattedCertifiedReceiveDate: string,
   policy: Policy,
   documentData: DocumentData
 
@@ -22,10 +20,15 @@ type DetailTabProps = {
 
 
 
-function DetailsTab({ carrierName, formattedApplicationDate, formattedCertifiedReceiveDate, policy, documentData }: DetailTabProps) {
-  const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.CaseDetailsContent' });
+function DetailsTab({ carrierName, policy, documentData }: DetailTabProps) {
+  const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'sideSheet.caseDetailsContent' });
   const url = `/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/policy-details`
   const formattedIssueDate = dayjs(policy.policyDates?.issueDate).format(DEFAULT_EXTENDED_DATE_FORMAT);
+  const formattedApplicationDate = dayjs(policy.policyDates?.applicationDate).format(DEFAULT_EXTENDED_DATE_FORMAT);
+  const formattedContractValue = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  }).format(Number(documentData.contractValue));
   return (
     <>
       <div className='flex float-start'>
@@ -40,7 +43,6 @@ function DetailsTab({ carrierName, formattedApplicationDate, formattedCertifiedR
         <div className='col-span-1  text-[--color-base-text-text-secondary]'>
           {t('applicationSignedDate')}
         </div>
-        {/* not sure if this is the date */}
         <div className='col-span-1'>
           {formattedApplicationDate}
         </div>
@@ -61,7 +63,7 @@ function DetailsTab({ carrierName, formattedApplicationDate, formattedCertifiedR
           {t('contractValue')}
         </div>
         <div className='col-span-1'>
-          ${documentData.contractValue}
+          {formattedContractValue}
         </div>  <div className='col-span-1  text-[--color-base-text-text-secondary]'>
           {t('policyDate')}
         </div>
@@ -78,7 +80,7 @@ function DetailsTab({ carrierName, formattedApplicationDate, formattedCertifiedR
           isNewPage={true}
           size={NavElementSize.Small}
           target="_blank"
-          title={t('viewFullDeatils')?.toString()}
+          title={t('viewFullDeatils') as string}
           type={NavElementType.Link}
           startIcon={<Icon type={IconType.EXTERNAL_LINK} width={20} height={20} />}
 

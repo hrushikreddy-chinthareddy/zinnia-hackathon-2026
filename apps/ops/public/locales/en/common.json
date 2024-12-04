@@ -3083,6 +3083,29 @@
             "totalAllocationsEqual100Pct": "Total allocations equal 100%.",
             "updateAllocations": "Update allocations"
         },
+        "caseDetailsContent": {
+            "tabs": {
+                "details": "Details",
+                "related": "Related"
+            },
+            "applicationSignedDate": "Application Signed Date",
+            "issueState": "Issue State",
+            "qualificationType": "Qualification Type",
+            "viewFullDeatils": "View full details",
+            "contractValue": "Contract Value",
+            "policyDate": "Policy Date",
+            "thereAre": "There are",
+            "otherOpenCases": "other open cases",
+            "relatedToThisPolicy": " related to this policy",
+            "detailsTab": {
+                "people": "People",
+                "cedingCarriers": "Ceding Carriers"
+            },
+            "relatedTab": {
+                "lastUpdated": "Last updated",
+                "caseId": "Case ID "
+            }
+        },
         "correspondence": "Correspondence ({{count}})",
         "policy": "Policy ({{count}})",
         "suitability": {
@@ -4449,26 +4472,7 @@
             "documentId": "Document ID",
             "noFormAvailable": "No form available."
         },
-        "CaseDetailsContent": {
-            "tabs": {
-                "details": "Details",
-                "related": "Related"
-            },
-            "applicationSignedDate": "Application Signed Date",
-            "issueState": "Issue State",
-            "qualificationType": "Qualification Type",
-            "viewFullDeatils": "View full details",
-            "contractValue": "Contract Value",
-            "policyDate": "Policy Date",
-            "detailsTab": {
-                "people": "People",
-                "cedingCarriers": "Ceding Carriers"
-            },
-            "relatedTab": {
-                "lastUpdated": "Last updated",
-                "caseId": "Case ID "
-            }
-        },
+
         "confirmStep": {
             "title": "Submitted!",
             "subTitle": "Your request has been sent for processing.",
@@ -4517,6 +4521,7 @@
             }
         }
     },
+
     "sswUpdate": {
         "sswUpdateOptions": {
             "new": "New",

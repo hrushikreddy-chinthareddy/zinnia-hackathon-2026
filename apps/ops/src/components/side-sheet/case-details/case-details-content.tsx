@@ -5,11 +5,10 @@ import { useTranslation } from "react-i18next";
 import { Policy } from '@deps/models/policy/sor-policy';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import { DocumentData } from '@deps/models/case/document';
-import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
-import dayjs from 'dayjs';
 import DetailsTab from './details-tab';
 import RelatedTab from './related-tab';
 import { CaseTableData } from '@deps/contexts/CaseManagementFilters';
+import { ErrorMessagePart } from '@deps/components/error/Error';
 export enum TabOptions {
   Details = 'Details',
   Related = 'Related',
@@ -21,16 +20,13 @@ type CaseDetailsProps = {
   limit: number;
   setOffset: React.Dispatch<React.SetStateAction<number>>;
   caseTableData: CaseTableData;
-  setError: React.Dispatch<React.SetStateAction<React.ReactNode>>
+  setError: React.Dispatch<React.SetStateAction<ErrorMessagePart[] | null>>
 };
 function CaseDetailsContent({ policy, documentData, offset, limit, setOffset, caseTableData, setError }: CaseDetailsProps) {
-  const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.CaseDetailsContent' });
+  const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'sideSheet.caseDetailsContent' });
   const [activeTab, setActiveTab] = useState(TabOptions.Details);
   const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
   const carrierName = getCarrierNameByClientId(policy.carrierId as string);
-
-  const formattedCertifiedReceiveDate = dayjs(policy.policyDates?.certifiedReceivedDate).format(DEFAULT_EXTENDED_DATE_FORMAT);
-  const formattedApplicationDate = dayjs(policy.policyDates?.applicationDate).format(DEFAULT_EXTENDED_DATE_FORMAT);
 
 
   const renderTabContent = (
@@ -40,8 +36,6 @@ function CaseDetailsContent({ policy, documentData, offset, limit, setOffset, ca
           carrierName={carrierName}
           documentData={documentData}
           policy={policy}
-          formattedCertifiedReceiveDate={formattedCertifiedReceiveDate}
-          formattedApplicationDate={formattedApplicationDate}
         />
       </TabContent>
       <TabContent className="flex w-full flex-col items-center" value={TabOptions.Related}>

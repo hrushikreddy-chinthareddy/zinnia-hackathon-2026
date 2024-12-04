@@ -21,11 +21,11 @@ import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icon
 import { ReactComponent as MenuIcon } from '@deps/styles/elements/icons/navigation/menu.svg';
 import DocumentPortalPanel from './side-panel/document-portal-panel';
 import CaseDetailsContent from '@deps/components/side-sheet/case-details/case-details-content';
-import { Error } from '@deps/components/error/Error';
+import { Error, ErrorMessagePart } from '@deps/components/error/Error';
 import { CaseTableData } from '@deps/contexts/CaseManagementFilters';
 import { getCases } from '@deps/queries/api/cases';
 import { CaseSearchQuery } from '@deps/queries/cases';
-
+import { useCallback } from 'react';
 
 type TabGroupContainerProps = {
     steps: Step[];
@@ -45,11 +45,13 @@ const TabGroupContent = ({
 }: TabGroupContainerProps) => {
     const [caseTableData, setCaseTableData] = useState<CaseTableData>({ cases: [], total: 0, loading: true, error: false });
     const [offset, setOffset] = useState(0)
-    const [error, setError] = useState<React.ReactNode>(null);
+    const [error, setError] = useState<ErrorMessagePart[] | null>(null);
+    const { t } = useTranslation(TranslationFiles.COMMON);
     const limit = 25
-    const fetchCases = async () => {
+
+    const fetchCases = useCallback(async () => {
         try {
-            const searchValueObject = { policyNumber: policy.policyNumber }
+            const searchValueObject = { policyNumber: policy.policyNumber };
 
             const updatedRequest: CaseSearchQuery = {
                 ...searchValueObject,
@@ -62,8 +64,9 @@ const TabGroupContent = ({
             const response = await getCases(updatedRequest);
 
             if (!response) {
-                throw new (Error as any)('Error fetching cases: No response');
+                console.log('Error fetching cases: No data in response');
             }
+
             if ('total' in response) {
                 setCaseTableData({
                     cases: response.data,
@@ -71,13 +74,21 @@ const TabGroupContent = ({
                     loading: false,
                     error: false,
                 });
+
                 const currentDate = new Date();
                 const ninetyDaysAgo = new Date();
                 ninetyDaysAgo.setDate(currentDate.getDate() - 90);
                 const caseNumber = response.data.filter((item) => new Date(item.updatedAt) >= ninetyDaysAgo).length;
-                setError(<>There are <span className='text-[#00628b]'> {caseNumber} other open cases</span> realted to this policy</>)
+
+                setError(
+                    [
+                        { text: t('sideSheet.caseDetailsContent.thereAre') + ' ' },
+                        { text: `${caseNumber} ${t('sideSheet.caseDetailsContent.otherOpenCases')} `, color: '#00628b' },
+                        { text: t('sideSheet.caseDetailsContent.relatedToThisPolicy') },
+                    ]
+                );
             } else {
-                throw new (Error as any)(response.data.err ? response.data.err : 'Error fetching cases');
+                console.log('Error fetching cases: No data in response');
             }
         } catch (error) {
             console.error(error);
@@ -88,12 +99,14 @@ const TabGroupContent = ({
                 error: true,
             });
         }
-    }
-    useEffect(() => {
-        fetchCases()
-    }, [offset, limit])
+    }, [policy.policyNumber, limit, offset]);
 
-    const { t } = useTranslation(TranslationFiles.COMMON);
+    useEffect(() => {
+        fetchCases();
+    }, [fetchCases]);
+
+
+
     const { currentStepIndex, setCurrentStepIndex } = useWorkflow();
     const sideSheet = useSideSheetContext();
     const globalValuesData = useMemo(() => policyDataToGlobalValues(new PolicyDetails(policy), t), [policy, t]);
