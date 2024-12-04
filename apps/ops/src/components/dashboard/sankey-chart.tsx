@@ -78,6 +78,7 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
     const { data: caseGroupingState } = useQuery({
         queryKey: ['caseGrouping', baseDashboardQueryFilter, l1SelectValue, l2SelectValue, l3SelectValue, createdDateStart],
         queryFn: () => getStatsFromSelectionQuery(baseDashboardQueryFilter, l1SelectValue, l2SelectValue, l3SelectValue, createdDateStart),
+        placeholderData: previousData => previousData,
     });
 
     const getGroupingsFromL1 = (l1ObjectGrouping: DashboardStatsElementResponse[]) => {
