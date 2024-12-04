@@ -5,6 +5,7 @@ import { CaseApiVersionMapper } from '@deps/models/case/helpers';
 import { TaskType } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { getCaseTaskInstances, getCaseTasks } from '@deps/queries/api/v1/task';
+import { getCaseTaskByIdSSR } from '@deps/queries/api/v2/task';
 
 interface TaskItem {
     id: string;
@@ -65,11 +66,9 @@ export const fetchTasks = async (caseId: string, caseType: CaseType) => {
 
 export const getTaskFormMetadata = async (clientId: string, taskType: TaskType, processType?: ProcessType, accessToken?: string) => {
     // TODO: Remove Mock service after API integration is complete
-    return mockService.getTaskFormMetadataSSRMock(TaskType.Suitability);
+    return mockService.getTaskFormMetadataSSRMock(TaskType.SuitabilityReview);
     // return getTaskFormMetadataSSR(clientId, taskType, processType, accessToken);
 };
-export const getCaseTaskByIdSSR = async (taskId: string, accessToken?: string): Promise<ManagementTask<TaskStatus> | null> => {
-    // TODO: Remove Mock service after API integration is complete
-    return mockService.getCaseTaskByIdSSRMock(TaskType.Suitability);
-    // return getCaseTaskByIdSSR(taskId, accessToken);
+export const getCaseTaskById = async (taskId: string, accessToken?: string): Promise<ManagementTask<TaskStatus> | null> => {
+    return getCaseTaskByIdSSR(taskId, accessToken);
 };
