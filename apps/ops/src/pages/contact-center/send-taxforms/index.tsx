@@ -21,7 +21,7 @@ import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { AttachmentType, CorrespondenceFormParts, TransactionSubTypes, TransactionTypes } from '@deps/models/case/correspondence';
 import { CommunicationTypes, SendDocumentFormType } from '@deps/models/case/send-document';
-import { DisplayName, TaxForm } from '@deps/models/case/send-tax-forms';
+import { DisplayName, TaxFormSelectionDetails } from '@deps/models/case/send-tax-forms';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission, UserProfile } from '@deps/models/user-profile';
 import { sendCommunication } from '@deps/queries/api/c2web';
@@ -39,11 +39,10 @@ interface SendTaxFormsProps extends SegmentTrackedPageProps {
 }
 
 const SendTaxForms = ({ policy, user, shouldShowCaseButton }: SendTaxFormsProps) => {
-    console.log('🚀 ~ SendTaxForms ~ policy:', policy);
     const { t } = useTranslation(undefined, { keyPrefix: '' });
 
     const { ctiCallNumber, correlationId } = router.query;
-    const [taxFormDetails, setTaxFormDetails] = useState<TaxForm[]>([]);
+    const [taxFormSelectionDetails, setTaxFormSelectionDetails] = useState<TaxFormSelectionDetails>({} as TaxFormSelectionDetails);
 
     useSegmentPageTracker(user, SegmentPageName.SendTaxForms, { ctiCallNumber, correlationId, policyNumber: policy.policyNumber });
 
@@ -70,7 +69,7 @@ const SendTaxForms = ({ policy, user, shouldShowCaseButton }: SendTaxFormsProps)
     );
 
     const handleSubmitRequest = async (state: CorrespondenceFormParts) => {
-        const attachments = taxFormDetails.map(formDetail => {
+        const attachments = taxFormSelectionDetails?.selectedTaxForms?.map(formDetail => {
             return {
                 transactionType: TransactionTypes.TaxForms,
                 transactionSubType: TransactionSubTypes.TaxForms,
@@ -107,7 +106,13 @@ const SendTaxForms = ({ policy, user, shouldShowCaseButton }: SendTaxFormsProps)
     const steps: Step[] = [
         {
             ariaLabel: formSelectionLabel,
-            component: <TaxFormsSelection policy={policy} selectedTaxForms={taxFormDetails} setSelectedTaxForms={setTaxFormDetails} />,
+            component: (
+                <TaxFormsSelection
+                    policy={policy}
+                    taxFormSelectionDetails={taxFormSelectionDetails}
+                    setTaxFormSelectionDetails={setTaxFormSelectionDetails}
+                />
+            ),
             screenReaderLabel: formSelectionLabel,
             index: 0,
             text: formSelectionLabel,

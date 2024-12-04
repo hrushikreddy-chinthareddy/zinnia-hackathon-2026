@@ -5,7 +5,7 @@ import { SetStateAction, useState } from 'react';
 
 import Select from '@deps/components/select/select';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { TaxForm } from '@deps/models/case/send-tax-forms';
+import { TaxForm, TaxFormSelectionDetails } from '@deps/models/case/send-tax-forms';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { searchTaxForms } from '@deps/queries/api/tax-forms';
@@ -16,22 +16,20 @@ import TaxFormsListing from './components/tax-forms-listing';
 import WorkflowCard from '../workflows/workflow-card/workflow-card';
 export type StatementSelectionProps = {
     policy: Policy;
-    selectedTaxForms: TaxForm[];
-    setSelectedTaxForms: (value: SetStateAction<TaxForm[]>) => void;
+    taxFormSelectionDetails: TaxFormSelectionDetails;
+    setTaxFormSelectionDetails: (value: SetStateAction<TaxFormSelectionDetails>) => void;
 };
-const TaxFormsSelection = ({ policy, selectedTaxForms, setSelectedTaxForms }: StatementSelectionProps) => {
+const TaxFormsSelection = ({ policy, taxFormSelectionDetails, setTaxFormSelectionDetails }: StatementSelectionProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'contactCenter' });
     const currentYear = new Date().getFullYear();
     const taxYears = Array.from({ length: 5 }, (_, i) => currentYear - i).reverse();
     const [error, setError] = useState<FormValidationErrors>({});
     const [loader, setLoader] = useState(false);
-    const [taxForms, setTaxForms] = useState<TaxForm[]>([]);
     const { goToNext } = useWorkflow();
 
-    const [selected, setSelected] = useState<{ [key: string]: string }>({});
     const handleContinue = async () => {
-        if (!selectedTaxForms.length) {
-            return setError({ submit: t('errors.taxForms') as string });
+        if (!taxFormSelectionDetails?.selectedTaxForms?.length) {
+            return setError({ submit: t('sendTaxForms.errors.taxForms') as string });
         }
         goToNext();
     };
@@ -47,8 +45,14 @@ const TaxFormsSelection = ({ policy, selectedTaxForms, setSelectedTaxForms }: St
             };
 
             const response = await searchTaxForms(requestData);
-            setTaxForms(prev => [...prev, ...response.items]);
-            setError({ submit: t('errors.noTaxForms', { year: selected }) as string });
+            if (!response.items.length) {
+                setError({ submit: t('sendTaxForms.errors.noTaxForms', { year: selected }) as string });
+            }
+            setTaxFormSelectionDetails(prev => ({
+                ...prev,
+                taxForms: [...(prev?.taxForms || []), ...response.items],
+            }));
+
             setLoader(false);
         } catch (error) {
             setLoader(false);
@@ -58,24 +62,28 @@ const TaxFormsSelection = ({ policy, selectedTaxForms, setSelectedTaxForms }: St
     };
 
     const handleSelection = (selectedValue: string, displayText: string) => {
-        setSelected(prev => {
-            const previousSelections = { ...prev };
-            if (previousSelections[selectedValue]) {
-                setTaxForms(prevTaxForms => {
-                    if (Array.isArray(prevTaxForms)) {
-                        return prevTaxForms.filter(form => form.taxYear !== selectedValue);
-                    } else {
-                        return [];
-                    }
-                });
-
-                delete previousSelections[selectedValue];
+        const previousSelections = { ...taxFormSelectionDetails?.selectedYears };
+        if (previousSelections[selectedValue]) {
+            let currentTaxForms = taxFormSelectionDetails?.taxForms;
+            if (Array.isArray(currentTaxForms)) {
+                currentTaxForms = currentTaxForms.filter(form => form.taxYear !== selectedValue);
             } else {
-                getTaxForms(selectedValue);
-                previousSelections[selectedValue] = displayText;
+                currentTaxForms = [];
             }
-            return previousSelections;
-        });
+            setTaxFormSelectionDetails(prev => ({
+                ...prev,
+                taxForms: currentTaxForms,
+            }));
+            delete previousSelections[selectedValue];
+        } else {
+            getTaxForms(selectedValue);
+            previousSelections[selectedValue] = displayText;
+        }
+
+        setTaxFormSelectionDetails(prev => ({
+            ...prev,
+            selectedYears: previousSelections,
+        }));
     };
 
     const taxYearOptions: MultiselectOption[] = taxYears.map(year => ({
@@ -85,6 +93,13 @@ const TaxFormsSelection = ({ policy, selectedTaxForms, setSelectedTaxForms }: St
     }));
 
     const handleCancel = () => {};
+
+    const setSelectedTaxForms = (selectedTaxForms: TaxForm[]) => {
+        setTaxFormSelectionDetails(prev => ({
+            ...prev,
+            selectedTaxForms: selectedTaxForms,
+        }));
+    };
     return (
         <WorkflowCard
             title={t(`sendTaxForms.tabs.taxFormsSelection`)}
@@ -95,7 +110,7 @@ const TaxFormsSelection = ({ policy, selectedTaxForms, setSelectedTaxForms }: St
                     label={t('sendTaxForms.selectTaxYear') as string}
                     isMultiselect
                     options={taxYearOptions}
-                    value={selected}
+                    value={taxFormSelectionDetails?.selectedYears || {}}
                     onChange={handleSelection}
                     placeholder={t('sendTaxForms.selectTaxYear') as string}
                 />
@@ -105,9 +120,9 @@ const TaxFormsSelection = ({ policy, selectedTaxForms, setSelectedTaxForms }: St
                     <Loader />
                 ) : (
                     <TaxFormsListing
-                        taxForms={taxForms}
+                        taxForms={taxFormSelectionDetails?.taxForms}
                         carrierCode={policy?.carrierId || ''}
-                        selectedTaxForms={selectedTaxForms}
+                        selectedTaxForms={taxFormSelectionDetails.selectedTaxForms}
                         setSelectedTaxForms={setSelectedTaxForms}
                     />
                 )}

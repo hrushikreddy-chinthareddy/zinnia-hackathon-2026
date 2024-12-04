@@ -6,6 +6,12 @@ export type TaxForm = {
     taxYear: string;
 };
 
+export type TaxFormSelectionDetails = {
+    taxForms: TaxForm[];
+    selectedTaxForms: TaxForm[];
+    selectedYears: { [key: string]: string };
+};
+
 export type SearchTaxFormRequestBody = {
     contractNumber: string;
     numYears?: number;

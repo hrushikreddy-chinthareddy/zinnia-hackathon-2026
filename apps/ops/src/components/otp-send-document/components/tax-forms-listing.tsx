@@ -11,7 +11,7 @@ import {
 } from '@zinnia/bloom/components';
 import { setCookie } from 'cookies-next';
 import { useTranslation } from 'next-i18next';
-import { Dispatch, SetStateAction } from 'react';
+import { useEffect, useState } from 'react';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
@@ -19,8 +19,8 @@ import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { TaxForm } from '@deps/models/case/send-tax-forms';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 
-const toggleFormSelection = (selectedForm: TaxForm, setSelectedTaxForms: React.Dispatch<React.SetStateAction<TaxForm[]>>) => {
-    setSelectedTaxForms(prevForms => {
+const toggleFormSelection = (selectedForm: TaxForm, setSelected: React.Dispatch<React.SetStateAction<TaxForm[]>>) => {
+    setSelected(prevForms => {
         const hasForm = prevForms.find(existingForm => existingForm.formId === selectedForm.formId);
         if (hasForm) {
             return prevForms.filter(form => form.formId !== selectedForm.formId);
@@ -38,12 +38,14 @@ type TaxFormsListingProps = {
     taxForms: TaxForm[];
     carrierCode: string;
     selectedTaxForms: TaxForm[];
-    setSelectedTaxForms: Dispatch<SetStateAction<TaxForm[]>>;
+    setSelectedTaxForms: (selectedTaxForms: TaxForm[]) => void;
 };
 
 const TaxFormsListing = ({ taxForms, carrierCode, selectedTaxForms, setSelectedTaxForms }: TaxFormsListingProps) => {
+    console.log('🚀 ~ TaxFormsListing ~ selectedTaxForms:', selectedTaxForms);
     const { t } = useTranslation(undefined, { keyPrefix: '' });
-
+    const [selected, setSelected] = useState(selectedTaxForms || []);
+    console.log('🚀 ~ TaxFormsListing ~ selected:', selected);
     const setCookies = (form: TaxForm) => {
         setCookie('carrierCode', carrierCode);
         setCookie('contractNumber', form?.contractNumber);
@@ -51,8 +53,16 @@ const TaxFormsListing = ({ taxForms, carrierCode, selectedTaxForms, setSelectedT
         setCookie('taxYear', form?.taxYear);
     };
 
+    useEffect(() => {
+        setSelectedTaxForms(selected);
+    }, [selected]);
+
     const isChecked = (formId: string): boolean => {
-        return !!selectedTaxForms?.find(taxForm => taxForm.formId === formId);
+        console.log(
+            '🚀 ~ isChecked ~ !!selected?.find(taxForm => taxForm.formId === formId);:',
+            !!selected?.find(taxForm => taxForm.formId === formId)
+        );
+        return !!selected?.find(taxForm => taxForm.formId === formId);
     };
 
     return (
@@ -93,9 +103,9 @@ const TaxFormsListing = ({ taxForms, carrierCode, selectedTaxForms, setSelectedT
                                 <TableRow key={index}>
                                     <TableHeaderCell>
                                         <Checkbox
-                                            id={form?.formId}
-                                            onClick={() => toggleFormSelection(form, setSelectedTaxForms)}
-                                            isCheckedByDefault={isChecked(form.formId)}
+                                            id={form.formId}
+                                            onClick={() => toggleFormSelection(form, setSelected)}
+                                            isCheckedByDefault={true}
                                         />
                                     </TableHeaderCell>
                                     <TableCell>
