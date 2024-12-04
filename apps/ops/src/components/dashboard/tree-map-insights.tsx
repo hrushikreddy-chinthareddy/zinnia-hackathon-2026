@@ -65,7 +65,7 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
 
     const seriesData = dashboardStatsData?.data; // this will change once filters are added
 
-    const noData = seriesData?.length === 0 || dashboardStatsData?.totalElements === 0;
+    const noData = !seriesData || seriesData?.length === 0 || dashboardStatsData?.totalElements === 0;
 
     // this is the same code that is found in exception-insights.tsx
     const chartOptions: Highcharts.Options = useMemo(() => {
@@ -103,7 +103,7 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
                 {
                     type: 'treemap',
                     layoutAlgorithm: 'squarified',
-                    data: chartData,
+                    data: chartData || [],
                     colorAxis: 0,
                     colorKey: 'colorValue',
                     colors: caseChartHelpers.getTreeMapColors(),

@@ -29,7 +29,7 @@ if (typeof Highcharts === 'object') {
 }
 
 export type ExceptionInsightsProps = {
-    completedCasesByProcessSubType: DashboardResponseData[];
+    completedCasesByProcessSubType?: DashboardResponseData[];
     selectedSubprocess: string;
     selectedException: string | undefined;
     timeframe: string;
@@ -71,8 +71,10 @@ export const ExceptionInsights = ({
     };
     const exceptions = useMemo(() => {
         return completedCasesByProcessSubType
-            .find(item => item.name === selectedSubprocess)
-            ?.values?.filter(item => item.name !== 'NULL_VALUE');
+            ? completedCasesByProcessSubType
+                  .find(item => item.name === selectedSubprocess)
+                  ?.values?.filter(item => item.name !== 'NULL_VALUE')
+            : null;
     }, [completedCasesByProcessSubType, selectedSubprocess]);
     const noData = !exceptions || exceptions?.length === 0;
     const chartOptions: Highcharts.Options = useMemo(() => {

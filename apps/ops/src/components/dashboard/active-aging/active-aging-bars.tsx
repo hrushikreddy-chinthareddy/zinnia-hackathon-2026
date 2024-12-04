@@ -9,7 +9,7 @@ import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
 import { CaseDashboardStatsResponse } from '@deps/models/case/case';
 
 interface Props {
-    agingRangesByProcess: CaseDashboardStatsResponse;
+    agingRangesByProcess?: CaseDashboardStatsResponse;
     classNames?: string;
     onRenderChart?: () => void;
 }
@@ -18,7 +18,7 @@ const ActiveAgingBars = forwardRef<HighchartsReactRefObject, Props>(({ agingRang
     const [chartConfig, setChartConfig] = useState<Highcharts.Options>({});
     const [seriesData, setSeriesData] = useState<ChartConfigSeriesDataSimple[]>([]);
 
-    const getSeriesData = (agingRangesByProcess: CaseDashboardStatsResponse) => {
+    const getSeriesData = (agingRangesByProcess: CaseDashboardStatsResponse | undefined) => {
         const seriesData: ChartConfigSeriesDataSimple[] = [];
         if (!agingRangesByProcess || !agingRangesByProcess.data || agingRangesByProcess.data.length === 0) {
             return seriesData;

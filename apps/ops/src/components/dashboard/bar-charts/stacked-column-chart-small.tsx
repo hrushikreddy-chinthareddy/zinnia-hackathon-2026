@@ -9,7 +9,7 @@ import caseChartHelpers, { ChartConfigSeriesDataSimple } from '@deps/helpers/das
 import { CaseDashboardStatsResponse } from '@deps/models/case/case';
 
 interface Props {
-    statGrouping: CaseDashboardStatsResponse;
+    statGrouping?: CaseDashboardStatsResponse;
     startDate: Date;
     endDate: Date;
     title: string;
@@ -18,10 +18,10 @@ interface Props {
 const SmallStackedColumnChart = ({ statGrouping, startDate, endDate, title }: Props) => {
     const [chartConfig, setChartConfig] = useState<Highcharts.Options>({});
 
-    const getSeriesData = (statGrouping: CaseDashboardStatsResponse, startDate: Date, endDate: Date) => {
+    const getSeriesData = (statGrouping: CaseDashboardStatsResponse | undefined, startDate: Date, endDate: Date) => {
         const seriesData: ChartConfigSeriesDataSimple[] = [];
 
-        statGrouping.data.forEach(currentStatGrouping => {
+        statGrouping?.data.forEach(currentStatGrouping => {
             const chartSeriesItem = {
                 name: (currentStatGrouping.name ?? 'Unknown') as string,
                 data: [] as number[],
