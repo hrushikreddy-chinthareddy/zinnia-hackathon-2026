@@ -8,16 +8,16 @@ import { AddressTypes } from '@deps/models/case/withdrawal/case';
 import { addressType } from './case-details-content';
 
 interface AddressTabProps {
-  address: addressType[];
+  addresses: addressType[];
   planCode: string | undefined;
   policyNumber: string | undefined;
 }
-function AddressTab({ address, planCode, policyNumber }: AddressTabProps) {
+function AddressTab({ addresses, planCode, policyNumber }: AddressTabProps) {
   const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'sideSheet.caseDetailsContent.addressHistoryTab' });
   const url = `/policies/${planCode}/${policyNumber}/policy/policy-details`;
   return (
     <div className="flex-1 flex flex-col w-full !mb-0 px-4 pt-5 md:px-6 lg:px-8 gap-4">
-      {address.map((address: any) => {
+      {addresses.map((address: any) => {
         return (
           <div key={address.addressId} className="px-4 mt-3">
             <div className="flex gap-2  items-center">
