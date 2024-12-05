@@ -16,7 +16,7 @@ export enum TransactionSubTypes {
 
 export enum AttachmentType {
     Form = 'form',
-    TaxForms = 'taxForms',
+    TaxForms = 'TAX_FORMS',
 }
 
 export type ContactCenterActions = CorrespondenceAction | SendDocumentActions;
