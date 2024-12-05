@@ -39,7 +39,7 @@ function AddressTab({ addresses, planCode, policyNumber }: AddressTabProps) {
               )}
             </div>
             <div className='text-md'>
-              {address.addressLine1}{address.addressLine2}, {address.addressLine3}
+              {address.addressLine1}
             </div>
             {address.addressLine2 && <div className='text-md'>
               {address.addressLine2}
