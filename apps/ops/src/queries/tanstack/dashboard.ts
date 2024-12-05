@@ -1,5 +1,5 @@
 import { SimpleOption } from '@deps/components/select/select.helpers';
-import { Statuses, CaseDashboardStatsResponse, Processes } from '@deps/models/case/case';
+import { Statuses, CaseDashboardStatsResponse } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 
 import { getCaseDashboardStats } from '../api/cases';
@@ -129,13 +129,9 @@ export const getStatsFromSelectionQuery = async (
  * *************************
  */
 
-export const getCases = async (createdDateStart: string) => {
+export const getCases = async (baseFilter: DashboardSearchFilter) => {
     const statsResponse = await getCaseDashboardStats({
-        filter: {
-            createdDateStart: createdDateStart,
-            process: [Processes.NewBusiness],
-            caseStatus: [Statuses.Completed],
-        },
+        filter: baseFilter,
         groupBy: [GroupByOptions.ProcessSubType, GroupByOptions.ExceptionCategory],
     });
 

@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { DEFAULT_ERROR_STRING, toTitleCase } from '@zinnia/utils';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { ExceptionSummary } from '@deps/components/dashboard/exception-summary';
 import { Top5SubprocessByVolume } from '@deps/components/dashboard/top-5-subprocesses-by-volume/top-5-subprocess-by-volume';
@@ -14,7 +14,9 @@ import Select from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
+import { Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
+import { DashboardSearchFilter } from '@deps/queries/cases';
 import { getCases } from '@deps/queries/tanstack/dashboard';
 
 import { ExceptionInsights } from '../../../components/dashboard/exception-insights';
@@ -33,6 +35,7 @@ export const IssuedBusiness = ({ selectedBrokerDealers, selectedCarriers }: Issu
     const [timeframe, setTimeframe] = useState<string>(timeFrameFilterOptions[0]);
     const [selectedSubprocess, setSelectedSubprocess] = useState<string>('');
     const [selectedException, setSelectedException] = useState<string | undefined>();
+    const [baseDashboardQueryFilter, setBaseDashboardQueryFilter] = useState<DashboardSearchFilter>({});
 
     const handleSelectedSubprocess = (subprocess: string) => {
         setSelectedException(undefined);
@@ -76,8 +79,8 @@ export const IssuedBusiness = ({ selectedBrokerDealers, selectedCarriers }: Issu
     }, [timeframe]);
 
     const { data: caseData, isLoading } = useQuery({
-        queryKey: ['getCases', createdDateStart],
-        queryFn: () => getCases(createdDateStart),
+        queryKey: ['getCases', baseDashboardQueryFilter],
+        queryFn: () => getCases(baseDashboardQueryFilter),
         select: ({ data }) => {
             return {
                 selectedSubprocess: data[0].name,
@@ -85,6 +88,26 @@ export const IssuedBusiness = ({ selectedBrokerDealers, selectedCarriers }: Issu
             };
         },
     });
+
+    useEffect(() => {
+        const baseFilter: DashboardSearchFilter = {
+            createdDateStart: createdDateStart,
+            process: [Processes.NewBusiness],
+            caseStatus: [Statuses.Completed],
+        };
+
+        const carriers = Object.keys(selectedCarriers);
+        if (selectedCarriers && carriers.length) {
+            baseFilter.carrier = carriers;
+        }
+
+        const brokers = Object.keys(selectedBrokerDealers);
+        if (selectedBrokerDealers && brokers.length) {
+            baseFilter.brokerDealerName = brokers;
+        }
+
+        setBaseDashboardQueryFilter(baseFilter);
+    }, [selectedCarriers, createdDateStart, selectedBrokerDealers]);
 
     return (
         <CardContainer
