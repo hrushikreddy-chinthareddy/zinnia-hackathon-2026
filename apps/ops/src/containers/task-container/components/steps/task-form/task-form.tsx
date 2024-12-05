@@ -4,7 +4,8 @@ import React, { ForwardedRef, useCallback, useContext } from 'react';
 
 import DynamicForm from '@deps/components/dynamic-form/dynamic-form';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
-import { processDocuments } from '@deps/containers/task-container/task.healpers';
+import { processPayload } from '@deps/containers/task-container/task.healpers';
+import { updateCaseTask } from '@deps/operations/tasks/task-operations';
 
 type TaskFormProps = {
     readonly: boolean;
@@ -19,10 +20,12 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     const formState = useContext(TaskDataContext);
     const { task, setTask, taskMetadata } = formState;
 
-    const handleSubmit = useCallback(() => {
+    const handleSubmit = useCallback(async () => {
         if (isSubmit) {
-            const success = processDocuments(task);
-            if (!success) {
+            const success = await processPayload(task);
+            if (success) {
+                updateCaseTask(task);
+            } else {
                 console.log('Error occured during EDS files upload');
             }
         }
