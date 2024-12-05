@@ -38,6 +38,15 @@ function AddressTab({ addresses, planCode, policyNumber }: AddressTabProps) {
                 </Tooltip>
               )}
             </div>
+            <div className='text-md'>
+              {address.addressLine1}{address.addressLine2}, {address.addressLine3}
+            </div>
+            {address.addressLine2 && <div className='text-md'>
+              {address.addressLine2}
+            </div>}
+            {address.addressLine3 && <div className='text-md'>
+              {address.addressLine3}
+            </div>}
             <div className="text-md">
               {address.city}, {address.state}-{address.zipCode}
             </div>
