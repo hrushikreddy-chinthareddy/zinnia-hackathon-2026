@@ -31,13 +31,13 @@ export const processPayload = (task: ManagementTask): boolean => {
     return success;
 };
 
-export const updateTask = async (task: ManagementTask) => {
-    let success = await processPayload(task);
+export const updateTask = async (task: ManagementTask): Promise<boolean> => {
+    const success = await processPayload(task);
     if (success) {
         const taskResponse = await updateCaseTask(task);
         if (!taskResponse) {
-            success = false;
+            return false;
         }
-        return success;
     }
+    return success;
 };
