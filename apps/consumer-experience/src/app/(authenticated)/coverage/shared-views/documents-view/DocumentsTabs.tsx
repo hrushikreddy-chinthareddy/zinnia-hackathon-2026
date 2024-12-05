@@ -50,7 +50,7 @@ export const DocumentsTabs = ({
               href={`/coverage/${lineOfBusinessPath}/${planCode}/${policyNumber}/documents?type=${DocumentCategory.TAX}`}
               className={`${activeTab === DocumentCategory.TAX ? documentStyles.active : ''}`}
             >
-              {width < 768 ? 'Tax' : 'Tax Documents'}
+              {width < 501 ? 'Tax' : 'Tax Documents'}
             </Link>
           </li>
         )}
