@@ -1,5 +1,4 @@
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
-import { QueryClient } from '@tanstack/react-query';
 import { TabContent } from '@zinnia/bloom/components';
 import { FgaRoles } from '@zinnia/utils';
 import clsx from 'clsx';
@@ -25,7 +24,7 @@ import { getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { useIntersectionObserver } from '@deps/hooks/useIntersectionObserver';
 import { UserPermission } from '@deps/models/user-profile';
-import { DashboardResponseData, fetchAgentsSSR, fetchCompletedCasesByProcessSubTypeSSR } from '@deps/queries/api/dashboard';
+import { DashboardResponseData, fetchAgentsSSR } from '@deps/queries/api/dashboard';
 import { checkTupleSsr, getCarrierListServerSSR } from '@deps/queries/api/fga';
 import { FgaRelation } from '@deps/types/fga';
 import { getCarrierListItem, getCarrierNameByClientId, getClientIdsByCarrierName } from '@deps/utils/carriers';
@@ -39,16 +38,12 @@ export interface CarrierListItem {
     [key: string]: string;
 }
 
-const queryClient = new QueryClient();
-
 const DashboardPage = ({
     authorizedCarriers,
     brokerDealersSSR,
-    completedCasesByProcessSubType,
 }: {
     authorizedCarriers: string[];
     brokerDealersSSR: DashboardResponseData[];
-    completedCasesByProcessSubType: DashboardResponseData[];
 }) => {
     const carrierHeaderRef = useRef<HTMLDivElement>(null);
     const {
@@ -242,7 +237,6 @@ export const getServerSideProps = withPageAuthRequired({
         const brokerDealersSSR = await fetchAgentsSSR(accessToken || '');
 
         const authorizedCarriers = await getCarrierListServerSSR(accessToken || '', user.partyId, UserPermission.AllowReadCaseManagement);
-        const completedCasesByProcessSubType = (await fetchCompletedCasesByProcessSubTypeSSR(accessToken || '')).slice(0, 5);
 
         return {
             props: {
@@ -250,7 +244,6 @@ export const getServerSideProps = withPageAuthRequired({
                 authorizedCarriers,
                 brokerDealersSSR,
                 ...translations,
-                completedCasesByProcessSubType,
             },
         };
     },
