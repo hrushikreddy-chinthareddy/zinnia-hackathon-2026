@@ -191,9 +191,11 @@ const DashboardPage = ({
                     </TabContent>
                     <TabContent className="w-full" value={'issued-business'}>
                         <IssuedBusiness
-                            authorizedCarriers={authorizedCarriers}
-                            brokerDealersSSR={brokerDealers}
+                            selectedBrokerDealers={selectedBrokerDealers}
+                            selectedCarriers={selectedCarriers}
                             completedCasesByProcessSubType={completedCasesByProcessSubType}
+                            handleSetLoading={handleSetLoading}
+                            loading={loading}
                         />
                     </TabContent>
                 </DashboardTabNav>

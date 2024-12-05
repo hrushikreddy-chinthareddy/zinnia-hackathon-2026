@@ -1,11 +1,10 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
+import { useQuery } from '@tanstack/react-query';
 import { DEFAULT_ERROR_STRING, toTitleCase } from '@zinnia/utils';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useMemo, useState } from 'react';
 
-import { MultiselectOption } from '@deps/components/autocomplete/autocomplete.types';
 import { ExceptionSummary } from '@deps/components/dashboard/exception-summary';
 import { Top5SubprocessByVolume } from '@deps/components/dashboard/top-5-subprocesses-by-volume/top-5-subprocess-by-volume';
 import FieldData, { FieldDataVariant } from '@deps/components/fields/field-data/field-data';
@@ -13,15 +12,11 @@ import Label, { LabelVariant } from '@deps/components/label/label';
 import PageLoader from '@deps/components/page-loader/page-loader';
 import Select from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
-import { useIntersectionObserver } from '@deps/hooks/useIntersectionObserver';
-import { Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
-import { getCaseDashboardStats } from '@deps/queries/api/cases';
 import { DashboardResponseData } from '@deps/queries/api/dashboard';
-import { getCarrierListItem, getCarrierNameByClientId, getClientIdsByCarrierName } from '@deps/utils/carriers';
+import { getCases } from '@deps/queries/tanstack/dashboard';
 
 import { ExceptionInsights } from '../../../components/dashboard/exception-insights';
 
@@ -31,102 +26,17 @@ export interface CarrierListItem {
 
 const timeFrameFilterOptions = ['trailing 12 months', 'last 6 months', 'last 90 days', 'last 60 days', 'last month'];
 type IssuedBusinessPageProps = {
-    authorizedCarriers: string[];
-    brokerDealersSSR: DashboardResponseData[];
     completedCasesByProcessSubType: DashboardResponseData[];
+    selectedCarriers: CarrierListItem;
+    selectedBrokerDealers: CarrierListItem;
+    handleSetLoading: (loading: boolean) => void;
+    loading: boolean;
 };
 
-// opacity 100 - 10
-// step evenly
-// 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9
-
-export const IssuedBusiness = ({ authorizedCarriers, brokerDealersSSR, completedCasesByProcessSubType }: IssuedBusinessPageProps) => {
-    const carrierHeaderRef = useRef<HTMLDivElement>(null);
-    const [loading, setLoading] = useState(false);
-    const [exceptionData, setExceptiondata] = useState<DashboardResponseData[]>(completedCasesByProcessSubType);
-    const [selectedException, setSelectedException] = useState<string | undefined>();
+export const IssuedBusiness = ({ selectedBrokerDealers, selectedCarriers, completedCasesByProcessSubType }: IssuedBusinessPageProps) => {
     const [timeframe, setTimeframe] = useState<string>(timeFrameFilterOptions[0]);
-    const {
-        isIntersecting: carrierHeaderIsIntersecting,
-        ref: cardContainerRef,
-        entry: carrierHeaderEntry,
-    } = useIntersectionObserver({
-        threshold: 0,
-        rootMargin: `${-64}px 0px -100% 0px`,
-    });
-
-    const { t } = useTranslation(TranslationFiles.COMMON);
-    const [brokerDealers, setBrokerDealers] = useState<DashboardResponseData[]>(brokerDealersSSR || []);
-
-    const carrierFilterItems = useMemo(
-        () =>
-            authorizedCarriers.map((carrierCode: string) => {
-                const valueAndDisplay = getCarrierNameByClientId(carrierCode) || carrierCode.toUpperCase();
-
-                return {
-                    value: getClientIdsByCarrierName(authorizedCarriers, valueAndDisplay) || carrierCode.toUpperCase(),
-                    displayText: valueAndDisplay,
-                    label: getCarrierListItem(carrierCode),
-                };
-            }),
-        [authorizedCarriers]
-    );
-
-    const [selectedCarriers, setSelectedCarriers] = useState<CarrierListItem>(
-        carrierFilterItems.length === 1 ? { [carrierFilterItems[0].value]: carrierFilterItems[0].displayText } : {}
-    );
-    const [placeholderSelectedCarriers, setPlaceholderSelectedCarriers] = useState<CarrierListItem>(
-        carrierFilterItems.length === 1 ? { [carrierFilterItems[0].value]: carrierFilterItems[0].displayText } : {}
-    );
-    const [selectedBrokerDealers, setSelectedBrokerDealers] = useState<CarrierListItem>(
-        brokerDealers?.length === 1 ? { [brokerDealers[0].key]: brokerDealers[0].name } : {}
-    );
-
-    const getUniqueCarrierFilterItems = (): MultiselectOption[] => {
-        const carrierLabels = new Set();
-
-        const uniqueCarrierFilterItems = (
-            carrierFilterItems.filter(item => {
-                if (carrierLabels.has(item.displayText)) {
-                    return false;
-                }
-
-                carrierLabels.add(item.displayText);
-                return true;
-            }) as typeof carrierFilterItems
-        ).sort((item1, item2) => item1.displayText.localeCompare(item2.displayText));
-        return uniqueCarrierFilterItems;
-    };
-
-    const updateCarrierFilters = (value: string, displayText: string) => {
-        setPlaceholderSelectedCarriers(prevSelectedCarriers => {
-            if (prevSelectedCarriers[value]) {
-                delete prevSelectedCarriers[value];
-                return { ...prevSelectedCarriers };
-            } else {
-                return { ...prevSelectedCarriers, [value]: displayText };
-            }
-        });
-    };
-
-    const updateBrokerDealerFilters = (value: string, displayText: string) => {
-        setSelectedBrokerDealers(prevSelectedAgents => {
-            if (prevSelectedAgents[value]) {
-                delete prevSelectedAgents[value];
-                return { ...prevSelectedAgents };
-            } else {
-                return { ...prevSelectedAgents, [value]: displayText };
-            }
-        });
-    };
-
-    const handleOnOpenChange = (open: boolean) => {
-        if (!open) {
-            setSelectedCarriers(placeholderSelectedCarriers);
-        }
-    };
-
     const [selectedSubprocess, setSelectedSubprocess] = useState<string>('');
+    const [selectedException, setSelectedException] = useState<string | undefined>();
 
     const handleSelectedSubprocess = (subprocess: string) => {
         setSelectedException(undefined);
@@ -169,35 +79,19 @@ export const IssuedBusiness = ({ authorizedCarriers, brokerDealersSSR, completed
         return startDate;
     }, [timeframe]);
 
-    useEffect(() => {
-        const getCases = async () =>
-            await getCaseDashboardStats({
-                filter: {
-                    createdDateStart: createdDateStart,
-                    process: [Processes.NewBusiness],
-                    caseStatus: [Statuses.Completed],
-                },
-                groupBy: [GroupByOptions.ProcessSubType, GroupByOptions.ExceptionCategory],
-            });
-
-        setLoading(true);
-        getCases()
-            .then(response => {
-                if (!!response.data && Array.isArray(response.data)) {
-                    setSelectedSubprocess(response.data[0].name);
-                    setExceptiondata(response.data.slice(0, 5));
-                } else {
-                    setExceptiondata([]);
-                }
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    }, [createdDateStart]);
+    const { data: caseData, isLoading } = useQuery({
+        queryKey: ['getCases', createdDateStart],
+        queryFn: () => getCases(createdDateStart),
+        select: ({ data }) => {
+            return {
+                selectedSubprocess: data[0].name,
+                exceptionData: data.slice(0, 5),
+            };
+        },
+    });
 
     return (
         <CardContainer
-            ref={cardContainerRef}
             classNames="relative !p-0 flex flex-col flex-1 gap-4 !border-none  bg-[--color-base-surface-surface-tertiary]"
             containerClassNames="mt-none !p-0  border-t-2 border-[--color-base-border-border-light]"
         >
@@ -216,9 +110,13 @@ export const IssuedBusiness = ({ authorizedCarriers, brokerDealersSSR, completed
                 <Typography className="py-4" variant={TypographyVariant.H2}>
                     Top 5 Processes by Volume
                 </Typography>
-                <RadioGroup.Root asChild onValueChange={handleSelectedSubprocess} value={selectedSubprocess}>
+                <RadioGroup.Root
+                    asChild
+                    onValueChange={handleSelectedSubprocess}
+                    value={selectedSubprocess || caseData?.selectedSubprocess}
+                >
                     <div className=" grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 !items-stretch !border-b-0 !after:content-none [& .indicator]">
-                        {exceptionData.map((element, index) => {
+                        {caseData?.exceptionData.map((element, index) => {
                             return (
                                 <RadioGroup.Item
                                     defaultChecked={index === 0}
@@ -240,7 +138,7 @@ export const IssuedBusiness = ({ authorizedCarriers, brokerDealersSSR, completed
                                         'items-start justify-between'
                                     )}
                                 >
-                                    {loading ? (
+                                    {isLoading ? (
                                         <>
                                             <PageLoader />
                                             <Typography variant={TypographyVariant.BodyBold}>Loading...</Typography>
@@ -270,7 +168,7 @@ export const IssuedBusiness = ({ authorizedCarriers, brokerDealersSSR, completed
                         })}
                     </div>
                 </RadioGroup.Root>
-                {loading ? (
+                {isLoading ? (
                     <>
                         <div className="min-h-[600px] grid gap-4 h-full mb-4 w-full place-content-center bg-[--color-base-surface-surface-tertiary]">
                             <PageLoader />
@@ -279,8 +177,8 @@ export const IssuedBusiness = ({ authorizedCarriers, brokerDealersSSR, completed
                 ) : (
                     <ExceptionInsights
                         timeframe={timeframe}
-                        completedCasesByProcessSubType={exceptionData}
-                        selectedSubprocess={selectedSubprocess}
+                        completedCasesByProcessSubType={caseData?.exceptionData}
+                        selectedSubprocess={selectedSubprocess || caseData?.selectedSubprocess || ''}
                         selectedException={selectedException}
                         carrierOrBrokerDealer={undefined}
                     />
@@ -291,12 +189,17 @@ export const IssuedBusiness = ({ authorizedCarriers, brokerDealersSSR, completed
                     <ExceptionSummary
                         carrierOrBrokerDealer={carrierOrBrokerDealer}
                         startDate={createdDateStart}
-                        selectedSubprocess={selectedSubprocess}
+                        selectedSubprocess={selectedSubprocess || caseData?.selectedSubprocess || ''}
                     />
                 )}
             </div>
             <div className="bg-white p-8 flex flex-col gap-8">
-                {selectedSubprocess && <Top5SubprocessByVolume createdDateStart={createdDateStart} requestSubType={selectedSubprocess} />}
+                {selectedSubprocess && (
+                    <Top5SubprocessByVolume
+                        createdDateStart={createdDateStart}
+                        requestSubType={selectedSubprocess || caseData?.selectedSubprocess || ''}
+                    />
+                )}
             </div>
         </CardContainer>
     );
