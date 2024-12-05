@@ -15,7 +15,6 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import CardContainer from '@deps/containers/card-container/card-container';
 import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { GroupByOptions } from '@deps/models/case/enums';
-import { DashboardResponseData } from '@deps/queries/api/dashboard';
 import { getCases } from '@deps/queries/tanstack/dashboard';
 
 import { ExceptionInsights } from '../../../components/dashboard/exception-insights';
@@ -26,14 +25,11 @@ export interface CarrierListItem {
 
 const timeFrameFilterOptions = ['trailing 12 months', 'last 6 months', 'last 90 days', 'last 60 days', 'last month'];
 type IssuedBusinessPageProps = {
-    completedCasesByProcessSubType: DashboardResponseData[];
     selectedCarriers: CarrierListItem;
     selectedBrokerDealers: CarrierListItem;
-    handleSetLoading: (loading: boolean) => void;
-    loading: boolean;
 };
 
-export const IssuedBusiness = ({ selectedBrokerDealers, selectedCarriers, completedCasesByProcessSubType }: IssuedBusinessPageProps) => {
+export const IssuedBusiness = ({ selectedBrokerDealers, selectedCarriers }: IssuedBusinessPageProps) => {
     const [timeframe, setTimeframe] = useState<string>(timeFrameFilterOptions[0]);
     const [selectedSubprocess, setSelectedSubprocess] = useState<string>('');
     const [selectedException, setSelectedException] = useState<string | undefined>();
