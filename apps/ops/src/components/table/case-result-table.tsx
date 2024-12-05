@@ -85,13 +85,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
     const router = useRouter();
     const perms = usePermissionsContext();
     const getValidFullName = (owner: PartyInstance) => {
-        let fullName = owner?.fullName;
-
-        if (!fullName) {
-            fullName = `${owner.firstName} ${owner.middleName} ${owner.lastName}`;
-        }
-
-        return fullName;
+        return owner?.fullName ?? `${owner.firstName} ${owner.middleName} ${owner.lastName}`;
     };
 
     const policyOwners = singleCase.parties ? getPolicyOwners(singleCase.parties) : [];
