@@ -137,29 +137,40 @@ export const ExceptionInsights = ({
                     colors: caseChartHelpers.getTreeMapColors(),
                     colorByPoint: true,
                     dataLabels: {
+                        align: 'left',
+                        verticalAlign: 'top',
                         useHTML: true,
                         formatter: function () {
+                            console.log(this);
                             const name = this.point.name;
                             // @ts-expect-error: this actually exists
                             const value = this.point.value;
                             // @ts-expect-error: this actually exists
                             const seriesValues: Array<number> = this.series.valueData;
                             const total = seriesValues.reduce((sum, val) => sum + val, 0);
+                            const ratio = `${value} / ${total}`;
                             const wrapper = document.createElement('div');
-                            wrapper.style.color = 'white';
-                            wrapper.style.textShadow = '2px 2px black';
+                            wrapper.style.backgroundColor = 'var(--color-base-surface-surface-primary)';
+                            wrapper.classList.add('rounded', 'typography-content-body');
+                            wrapper.style.color = 'var(--color-base-text-text-primary)';
+                            wrapper.style.padding = 'var(--measure-dimension-padding-lg)';
+                            wrapper.style.margin = 'var(--measure-dimension-margin-sm)';
                             wrapper.style.display = 'flex';
                             wrapper.style.flexDirection = 'column';
-                            wrapper.style.alignItems = 'center';
-                            wrapper.style.justifyContent = 'center';
-                            wrapper.style.textAlign = 'center';
+                            wrapper.style.justifyContent = 'start';
                             wrapper.style.gap = '4px';
                             const nameSpan = document.createElement('span');
-                            nameSpan.innerText = name;
-                            wrapper.appendChild(nameSpan);
                             const valueSpan = document.createElement('span');
-                            valueSpan.innerText = `${value} / ${total}`;
-                            wrapper.appendChild(valueSpan);
+                            if (value < name.length) {
+                                wrapper.style.margin = 'var(--measure-dimension-margin-2xs)';
+                                wrapper.style.padding = 'var(--measure-dimension-padding-xs)';
+                                nameSpan.innerText = `...`;
+                            } else {
+                                nameSpan.innerText = name;
+                                valueSpan.innerText = ratio;
+                                wrapper.appendChild(valueSpan);
+                            }
+                            wrapper.appendChild(nameSpan);
                             return wrapper.outerHTML;
                         },
                     },
