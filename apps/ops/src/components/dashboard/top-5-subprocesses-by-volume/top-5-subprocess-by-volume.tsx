@@ -466,9 +466,10 @@ export const Top5SubprocessByVolume = ({
         <CardContainer containerClassNames="rounded" classNames="!p-0" fullWidth={true}>
             <div className="flex flex-col xl:flex-row justify-between gap-4 w-full">
                 <div className="flex xl:flex-col xl:w-1/4 gap-4 mb-8 xl:mb-0">
-                    <Typography className="mb-1" variant={TypographyVariant.H3}>
-                        {'Top 5 Products'}
-                    </Typography>
+                    <div>
+                        <Typography variant={TypographyVariant.H3}>{'Top 5 Products'}</Typography>
+                        <Typography variant={TypographyVariant.Label}> {dashboardChartTitleFormat(requestSubType, false)} </Typography>
+                    </div>
                     <div className="flex-1 border-r-1 xl:border-r-0 border-[#EDEDED] flex flex-col gap-4">
                         {loading ? (
                             <div className="grid gap-4 h-full mb-4 w-full place-content-center bg-[--color-base-surface-surface-tertiary]">
