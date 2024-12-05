@@ -108,9 +108,9 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
 
     const agents = getAgents(singleCase?.parties || []);
     const agentSsn = agents.length ? agents[0].ssn : undefined;
-    const otherAgents = agents.slice(1).map(owner => ({ name: toTitleCase(owner.fullName), ssn: formatSSN(owner.ssn) }));
+    const otherAgents = agents.slice(1).map(owner => ({ name: toTitleCase(getValidFullName(owner)), ssn: formatSSN(owner.ssn) }));
     const agentComponentProps = {
-        text: toTitleCase(agents?.[0]?.fullName),
+        text: toTitleCase(getValidFullName(agents?.[0])),
         highlights: [searchValues?.agentFirstName, searchValues?.agentLastName].filter(Boolean) as string[],
         entities: otherAgents,
         truncate: true,
