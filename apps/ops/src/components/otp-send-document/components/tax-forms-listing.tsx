@@ -42,10 +42,8 @@ type TaxFormsListingProps = {
 };
 
 const TaxFormsListing = ({ taxForms, carrierCode, selectedTaxForms, setSelectedTaxForms }: TaxFormsListingProps) => {
-    console.log('🚀 ~ TaxFormsListing ~ selectedTaxForms:', selectedTaxForms);
     const { t } = useTranslation(undefined, { keyPrefix: '' });
     const [selected, setSelected] = useState(selectedTaxForms || []);
-    console.log('🚀 ~ TaxFormsListing ~ selected:', selected);
     const setCookies = (form: TaxForm) => {
         setCookie('carrierCode', carrierCode);
         setCookie('contractNumber', form?.contractNumber);
@@ -105,7 +103,7 @@ const TaxFormsListing = ({ taxForms, carrierCode, selectedTaxForms, setSelectedT
                                         <Checkbox
                                             id={form.formId}
                                             onClick={() => toggleFormSelection(form, setSelected)}
-                                            isCheckedByDefault={true}
+                                            isCheckedByDefault={isChecked(form.formId)}
                                         />
                                     </TableHeaderCell>
                                     <TableCell>
