@@ -63,7 +63,8 @@ export const HeaderBreadcrumb = ({
       heading = routeMap[`/${routeKey}`]?.title ?? toTitleCase(defaultTitle);
     }
     setFormatTitle(toTitleCase(heading));
-  }, [params.beneficiary, params.policyNumber, pathname, title]);
+    analytics.page(toTitleCase(heading), { policyId: params.policyNumber });
+  }, [defaultTitle, params.beneficiary, params.policyNumber, pathname, title]);
 
   const currentPath = paths[paths.length - 1];
 
@@ -78,8 +79,6 @@ export const HeaderBreadcrumb = ({
   }
   const previousPathName = previousPath || defaultTitle;
   const previousPathRoute = previousPath ? `/${previousPath}` : '/';
-
-  analytics.page(formatTitle, { policyId: params.policyNumber });
 
   return (
     <HeaderLink

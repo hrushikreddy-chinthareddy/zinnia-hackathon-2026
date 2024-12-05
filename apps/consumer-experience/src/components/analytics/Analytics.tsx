@@ -10,9 +10,7 @@ export default function Analytics() {
   const { user } = useUser();
 
   useEffect(() => {
-    // TODO: how to test this?
     analytics.segmentIdentify(user?.partyId);
-    // analytics.page('');
   }, [user]);
 
   return null;
