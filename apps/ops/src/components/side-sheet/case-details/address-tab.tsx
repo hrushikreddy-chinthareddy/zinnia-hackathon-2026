@@ -1,9 +1,9 @@
-import { IconType, Icon, Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
+import { IconType, Icon } from '@zinnia/bloom/components';
 import { useTranslation } from 'react-i18next';
 
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { TranslationFiles } from '@deps/config/translations';
-import { AddressTypes } from '@deps/models/case/withdrawal/case';
+import { AddressTypeAndAddress } from '@deps/containers/small-data-card/address-data/address-data';
 
 import { addressType } from './case-details-content';
 
@@ -20,36 +20,8 @@ function AddressTab({ addresses, planCode, policyNumber }: AddressTabProps) {
       {addresses.map((address: any) => {
         return (
           <div key={address.addressId} className="px-4 mt-3">
-            <div className="flex gap-2  items-center">
-              <div className="font-medium">
-                {address.addressType === AddressTypes.DEFAULT && t('defaultAddress')}
-                {address.addressType === AddressTypes.RESIDENTIAL_ADDRESS && t('residentialAddress')}
-                {address.addressType === AddressTypes.MAILING_ADDRESS && t('mailingAddress')}
-                {address.addressType === AddressTypes.AGENT_ADDRESS && t('agentAddress')}
-              </div>
 
-              {address.preferredAddress && (
-                <Tooltip
-                  trigger={<div className=" bg-green-600 inline-block h-2 w-2 rounded-full"></div>}
-                  placement={TooltipPlacement.TopRight}
-                  tooltipClassName={'px-4 py-4 !w-auto'}
-                >
-                  {t('preferredAddress')}
-                </Tooltip>
-              )}
-            </div>
-            <div className='text-md'>
-              {address.addressLine1}
-            </div>
-            {address.addressLine2 && <div className='text-md'>
-              {address.addressLine2}
-            </div>}
-            {address.addressLine3 && <div className='text-md'>
-              {address.addressLine3}
-            </div>}
-            <div className="text-md">
-              {address.city}, {address.state}-{address.zipCode}
-            </div>
+            <AddressTypeAndAddress address={address} addressType={address.addressType} isAddressChange={true} />
           </div>
         );
       })}
