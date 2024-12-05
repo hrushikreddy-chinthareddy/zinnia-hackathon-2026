@@ -522,7 +522,7 @@ const ActiveAging = ({
                             {Object.keys(AgingTimeRanges).map(option => (
                                 <button
                                     className="chip w-4/5"
-                                    key={`people-chip-${option}`}
+                                    key={`active-aging-${option}`}
                                     value={option}
                                     type="button"
                                     onClick={() => onAgingTimelineChange(option as AgingTimeRangesKeysExtended)}
