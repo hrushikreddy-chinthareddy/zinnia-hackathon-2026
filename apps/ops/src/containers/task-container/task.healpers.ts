@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 
 import { TaskType } from '@deps/models/case/task';
 import { ManagementTask } from '@deps/models/case/task-instance';
+import { updateCaseTask } from '@deps/operations/tasks/task-operations';
 import { uploadDocument } from '@deps/queries/api/documents';
 import { DEFAULT_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
 
@@ -28,4 +29,15 @@ export const processPayload = (task: ManagementTask): boolean => {
         }
     }
     return success;
+};
+
+export const updateTask = async (task: ManagementTask) => {
+    let success = await processPayload(task);
+    if (success) {
+        const taskResponse = await updateCaseTask(task);
+        if (!taskResponse) {
+            success = false;
+        }
+        return success;
+    }
 };
