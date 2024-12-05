@@ -56,9 +56,7 @@ const ActiveAgingBars = forwardRef<HighchartsReactRefObject, Props>(({ agingRang
                     spacingRight: 0,
                     events: {
                         render: () => {
-                            if (onRenderChart) {
-                                onRenderChart();
-                            }
+                            onRenderChart?.();
                         },
                     },
                 },
