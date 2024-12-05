@@ -1,3 +1,4 @@
+import { headers } from 'next/headers';
 import { v4 as uuid4 } from 'uuid';
 
 import {
@@ -77,10 +78,12 @@ class ServerHttpRequest extends HttpRequest {
     email: string;
     code: string;
   }) => {
+    const userIp = headers().get('x-forwarded-for');
     return fetch(`${process.env.AUTH0_ISSUER_BASE_URL}/oauth/token`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'auth0-forwarded-for': userIp || '',
       },
       cache: 'no-store',
       body: JSON.stringify({
