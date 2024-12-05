@@ -14,9 +14,8 @@ export const buildTaskLink = (taskId: string, caseId: string, caseType: string, 
     return link;
 };
 
-export const buildCaseLink = (taskId: string, caseId: string, caseType: string, documentNumber: string, clientId: string) => {
-    const caseSlug = getSlug(caseType);
-    const link = `/cases/${caseSlug}/${caseId}/progress`;
+export const buildCaseLink = (caseId: string) => {
+    const link = `/cases/${caseId}/progress`;
     return link;
 };
 
