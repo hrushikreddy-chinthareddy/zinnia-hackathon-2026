@@ -43,6 +43,7 @@ const ActiveAging = ({
     carriers,
 }: Props) => {
     const agingChartsRef = useRef<HighchartsReactRefObject>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
     const numColumns = 7;
     const [agingChartWidth, setAgingChartWidth] = useState(877);
     const [aiSummary, setAiSummary] = useState<string | null>(null);
@@ -165,8 +166,9 @@ const ActiveAging = ({
     };
 
     const handleWindowResize = useCallback(() => {
-        if (agingChartsRef.current) {
-            const highchartsPlotBackground = agingChartsRef.current.container.current?.querySelector('.highcharts-plot-background');
+        if (containerRef.current) {
+            const highchartsPlotBackground = containerRef.current.querySelector('.highcharts-plot-background');
+
             if (highchartsPlotBackground) {
                 const { width } = highchartsPlotBackground.getBoundingClientRect();
                 setAgingChartWidth(Math.floor(width));
@@ -530,12 +532,15 @@ const ActiveAging = ({
                             ))}
                         </div>
                     </div>
-                    <ActiveAgingBars
-                        classNames="-mb-10"
-                        onRenderChart={onRenderChart}
-                        ref={agingChartsRef}
-                        agingRangesByProcess={agingRangesBySubProcess ?? { data: [], totalElements: 0 }}
-                    />
+                    <div ref={containerRef}>
+                        <ActiveAgingBars
+                            classNames="-mb-10"
+                            onRenderChart={onRenderChart}
+                            ref={agingChartsRef}
+                            agingRangesByProcess={agingRangesBySubProcess ?? { data: [], totalElements: 0 }}
+                        />
+                    </div>
+
                     <ActiveAgingPies
                         distinctExceptionCategoryStatGroupingLabels={distinctOpenStages}
                         width={agingChartWidth}
