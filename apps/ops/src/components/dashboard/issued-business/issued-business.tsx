@@ -185,21 +185,23 @@ export const IssuedBusiness = ({ selectedBrokerDealers, selectedCarriers, comple
                 )}
             </div>
             <div className="bg-white p-8 flex flex-col gap-8">
-                {selectedSubprocess && (
-                    <ExceptionSummary
-                        carrierOrBrokerDealer={carrierOrBrokerDealer}
-                        startDate={createdDateStart}
-                        selectedSubprocess={selectedSubprocess || caseData?.selectedSubprocess || ''}
-                    />
-                )}
+                {selectedSubprocess ||
+                    (caseData?.selectedSubprocess && (
+                        <ExceptionSummary
+                            carrierOrBrokerDealer={carrierOrBrokerDealer}
+                            startDate={createdDateStart}
+                            selectedSubprocess={selectedSubprocess || caseData?.selectedSubprocess || ''}
+                        />
+                    ))}
             </div>
             <div className="bg-white p-8 flex flex-col gap-8">
-                {selectedSubprocess && (
-                    <Top5SubprocessByVolume
-                        createdDateStart={createdDateStart}
-                        requestSubType={selectedSubprocess || caseData?.selectedSubprocess || ''}
-                    />
-                )}
+                {selectedSubprocess ||
+                    (caseData?.selectedSubprocess && (
+                        <Top5SubprocessByVolume
+                            createdDateStart={createdDateStart}
+                            requestSubType={selectedSubprocess || caseData?.selectedSubprocess || ''}
+                        />
+                    ))}
             </div>
         </CardContainer>
     );
