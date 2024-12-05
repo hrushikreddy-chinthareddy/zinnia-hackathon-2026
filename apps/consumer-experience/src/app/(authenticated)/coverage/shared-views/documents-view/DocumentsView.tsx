@@ -5,9 +5,7 @@
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { IconType } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
-import Link from 'next/link';
 
-import documentStyles from '@/app/(authenticated)/coverage/shared-styles/Documents.module.css';
 import DocumentsWithPagination from '@/components/documents-list/DocumentsWithPagination';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { RouteKey, getPageTitle } from '@/route-map';
@@ -15,8 +13,9 @@ import { getDocuments, getTaxDocuments } from '@/services/document';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { getPolicyDetails } from '@/services/policy';
 import { DocumentCategory, ExtendedDocumentMeta } from '@/types/document';
-import { lineOfBusinessUrlPath } from '@/utils/data';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+
+import { DocumentsTabs } from './DocumentsTabs';
 
 const pageTitle = getPageTitle(RouteKey.DOCUMENTS);
 // disable because NextJS needs this to be exported from this file
@@ -95,8 +94,6 @@ export const DocumentsView = async ({
     }
   };
 
-  const lineOfBusinessPath = lineOfBusinessUrlPath(lineOfBusiness);
-
   if (!policyData || policyError || !policyData.carrierId) {
     return (
       <NoDataAvailable
@@ -108,34 +105,13 @@ export const DocumentsView = async ({
 
   return (
     <div className="container">
-      <ul className={documentStyles.nav}>
-        <li>
-          <Link
-            href={`/coverage/${lineOfBusinessPath}/${planCode}/${policyNumber}/documents`}
-            className={`${activeTab === DocumentCategory.DOCUMENTS ? documentStyles.active : ''}`}
-          >
-            Correspondence
-          </Link>
-        </li>
-        <li>
-          <Link
-            href={`/coverage/${lineOfBusinessPath}/${planCode}/${policyNumber}/documents?type=${DocumentCategory.STATEMENTS}`}
-            className={`${activeTab === DocumentCategory.STATEMENTS ? documentStyles.active : ''}`}
-          >
-            Statements
-          </Link>
-        </li>
-        {showTaxDocuments && (
-          <li>
-            <Link
-              href={`/coverage/${lineOfBusinessPath}/${planCode}/${policyNumber}/documents?type=${DocumentCategory.TAX}`}
-              className={`${activeTab === DocumentCategory.TAX ? documentStyles.active : ''}`}
-            >
-              Tax Documents
-            </Link>
-          </li>
-        )}
-      </ul>
+      <DocumentsTabs
+        lineOfBusiness={lineOfBusiness}
+        planCode={planCode}
+        policyNumber={policyNumber}
+        activeTab={activeTab}
+        showTaxDocuments={showTaxDocuments}
+      />
       <DocumentsWithPagination
         docCategory={activeTab}
         documents={currentViewDocs()}
