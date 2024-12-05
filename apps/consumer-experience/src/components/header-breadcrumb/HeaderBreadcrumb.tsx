@@ -4,9 +4,10 @@ import { useParams, usePathname } from 'next/navigation';
 import { ReactNode, useEffect, useState } from 'react';
 
 import { RouteKey, getPageTitle, routeMap } from '@/route-map';
+import { LineOfBusinessPath } from '@/types';
+import { analytics } from '@/utils/segment';
 
 import { HeaderLink } from '../header-link/HeaderLink';
-import { LineOfBusinessPath } from '@/types';
 
 interface PopoverInfo {
   content: ReactNode;
@@ -77,6 +78,8 @@ export const HeaderBreadcrumb = ({
   }
   const previousPathName = previousPath || defaultTitle;
   const previousPathRoute = previousPath ? `/${previousPath}` : '/';
+
+  analytics.page(formatTitle, { policyId: params.policyNumber });
 
   return (
     <HeaderLink
