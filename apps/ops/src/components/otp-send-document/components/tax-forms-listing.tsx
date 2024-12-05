@@ -56,10 +56,6 @@ const TaxFormsListing = ({ taxForms, carrierCode, selectedTaxForms, setSelectedT
     }, [selected]);
 
     const isChecked = (formId: string): boolean => {
-        console.log(
-            '🚀 ~ isChecked ~ !!selected?.find(taxForm => taxForm.formId === formId);:',
-            !!selected?.find(taxForm => taxForm.formId === formId)
-        );
         return !!selected?.find(taxForm => taxForm.formId === formId);
     };
 

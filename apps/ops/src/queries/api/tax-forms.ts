@@ -22,7 +22,7 @@ export const searchTaxForms = async (requestBody: SearchTaxFormRequestBody): Pro
         datadogLogs.logger.info('contactCenterSearchTaxForms', {
             payload: requestBody,
             url,
-            function: 'searchTaxForms.searchTaxForms',
+            function: 'tax-forms.searchTaxForms',
         });
 
         const { data } = await client.get<SearchTaxFormRequestBody, AxiosResponse<SearchTaxFormResponseBody>>(url);
@@ -32,9 +32,9 @@ export const searchTaxForms = async (requestBody: SearchTaxFormRequestBody): Pro
             payload: requestBody,
             url: `${baseUrl}/taxForms?contractNumber=${requestBody.contractNumber}&numYears=${requestBody.numYears}&clientCode=${requestBody.clientCode}&taxYear=${requestBody.taxYear}`,
             error: e,
-            function: 'searchTaxForms.searchTaxForms',
+            function: 'tax-forms.searchTaxForms',
         });
-        console.error('searchTaxForms::contactCenterSearchTaxForms::error', e);
+        console.error('tax-forms::contactCenterSearchTaxForms::error', e);
         return {} as SearchTaxFormResponseBody;
     }
 };
@@ -47,9 +47,9 @@ export const downloadTaxFormById = async (formId: number, optionalParams: { [key
         const url = `${baseAppUrl}/api/documents/tax-form/${formId}/preview?clientCode=${optionalParams?.clientCode}&contractNumber=${optionalParams?.contractNumber}&fChar=${optionalParams?.fChar}&taxYear=${optionalParams?.taxYear}`;
 
         datadogLogs.logger.info('contactCenterDownloadTaxFormById', {
-            payload: formId,
+            payload: { formId, ...optionalParams },
             url,
-            function: 'searchTaxForms.downloadTaxFormById',
+            function: 'tax-forms.downloadTaxFormById',
         });
         const { data } = await client.get<string, AxiosResponse<any>>(url);
 
@@ -59,9 +59,9 @@ export const downloadTaxFormById = async (formId: number, optionalParams: { [key
             payload: formId,
             url: `${baseUrl}/forms/${formId}/download`,
             error: e,
-            function: 'searchTaxForms.downloadTaxFormById',
+            function: 'tax-forms.downloadTaxFormById',
         });
-        console.error('searchTaxForms::contactCenterDownloadTaxFormById::error', e);
+        console.error('tax-forms::contactCenterDownloadTaxFormById::error', e);
         throw new Error(e?.data?.message || 'Error');
     }
 };

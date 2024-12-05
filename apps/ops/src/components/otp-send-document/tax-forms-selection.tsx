@@ -92,7 +92,14 @@ const TaxFormsSelection = ({ policy, taxFormSelectionDetails, setTaxFormSelectio
         displayText: year.toString(),
     }));
 
-    const handleCancel = () => {};
+    const handleCancel = () => {
+        setError({});
+        setTaxFormSelectionDetails({
+            taxForms: [],
+            selectedTaxForms: [],
+            selectedYears: {},
+        });
+    };
 
     const setSelectedTaxForms = (selectedTaxForms: TaxForm[]) => {
         setTaxFormSelectionDetails(prev => ({
@@ -100,6 +107,7 @@ const TaxFormsSelection = ({ policy, taxFormSelectionDetails, setTaxFormSelectio
             selectedTaxForms: selectedTaxForms,
         }));
     };
+
     return (
         <WorkflowCard
             title={t(`sendTaxForms.tabs.taxFormsSelection`)}

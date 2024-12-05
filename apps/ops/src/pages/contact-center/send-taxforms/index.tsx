@@ -189,7 +189,7 @@ export const getServerSideProps = withPageAuthRequired({
                 logInfo('contact-center/send-taxforms/policy-not-found', { policyNumber, planCode, correlationId, page: resolvedUrl });
                 return {
                     redirect: {
-                        destination: '/404',
+                        destination: `/404?title=policyNotFound&planCode=${planCode}&policyNumber=${policyNumber}`,
                         permanent: false,
                     },
                 };
