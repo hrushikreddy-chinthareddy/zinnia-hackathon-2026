@@ -1,4 +1,4 @@
-import { IconType, Icon } from '@zinnia/bloom/components';
+import { IconType, Icon, Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
 import { useTranslation } from 'react-i18next';
 
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
@@ -20,11 +20,23 @@ function AddressTab({ addresses, planCode, policyNumber }: AddressTabProps) {
       {addresses.map((address: any) => {
         return (
           <div key={address.addressId} className="px-4 mt-3">
+            <div className="flex gap-2  items-center">
 
-            <AddressTypeAndAddress address={address} addressType={address.addressType} isAddressChange={true} />
+              <AddressTypeAndAddress address={address} addressType={address.addressType} isAddressChange={true} />
+              {address.preferredAddress && (
+                <Tooltip
+                  trigger={<div className=" bg-green-600 inline-block h-2 w-2 rounded-full"></div>}
+                  placement={TooltipPlacement.TopRight}
+                  tooltipClassName={'px-4 py-4 !w-auto'}
+                >
+                  {t('preferredAddress')}
+                </Tooltip>
+              )}
+            </div>
           </div>
         );
       })}
+
       <div className="text-[--color-base-text-text-link] font-semibold text-md p-4">
         <NavElement
           className={'whitespace-normal break-words'}
