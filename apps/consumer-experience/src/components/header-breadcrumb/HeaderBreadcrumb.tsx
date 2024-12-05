@@ -5,7 +5,6 @@ import { ReactNode, useEffect, useState } from 'react';
 
 import { RouteKey, getPageTitle, routeMap } from '@/route-map';
 import { LineOfBusinessPath } from '@/types';
-import { analytics } from '@/utils/segment';
 
 import { HeaderLink } from '../header-link/HeaderLink';
 
@@ -63,7 +62,6 @@ export const HeaderBreadcrumb = ({
       heading = routeMap[`/${routeKey}`]?.title ?? toTitleCase(defaultTitle);
     }
     setFormatTitle(toTitleCase(heading));
-    analytics.page(toTitleCase(heading), { policyId: params.policyNumber });
   }, [defaultTitle, params.beneficiary, params.policyNumber, pathname, title]);
 
   const currentPath = paths[paths.length - 1];
@@ -89,6 +87,7 @@ export const HeaderBreadcrumb = ({
       }
       title={formatTitle}
       className={className}
+      policyNumber={params.policyNumber}
     />
   );
 };

@@ -5,6 +5,7 @@ import PdfPreviewer from '@/components/pdf-previewer/PdfPreviewer';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { DocumentCategory } from '@/types/document';
 import { PolicyRequestInputs } from '@/types/policy';
+import { analytics } from '@/utils/segment';
 import { createQueryString } from '@/utils/strings';
 
 import previewStyles from './Preview.module.css';
@@ -40,6 +41,8 @@ export default async function DocumentPreview({
     searchParams.docCategory === DocumentCategory.TAX
       ? `/api/documents/tax-docs/${documentId}/download/${fileName}.pdf?${queryParamString}`
       : `/api/documents/${documentId}/download/${fileName}.pdf?${queryParamString}`;
+
+  analytics.page('pdf preview', { policyId: params.policyNumber });
 
   return (
     <div style={{ height: '100svh' }}>
