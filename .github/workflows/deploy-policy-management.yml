@@ -1,4 +1,4 @@
-name: 'Deploy Portal Frontend to AWS East'
+name: 'Policy Management Deployment'
 
 on:
   workflow_call:
