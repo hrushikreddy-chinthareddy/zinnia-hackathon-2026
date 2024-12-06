@@ -30,7 +30,7 @@ export type MappedExceptionData = {
     totalMonths: number; // Number of months to be included in the chart
 };
 
-const getArrayIndexFromDate = (date: string, startDate: string, unitOfTime: 'month' | 'week' | 'day' = 'day'): number => {
+export const getArrayIndexFromDate = (date: string, startDate: string, unitOfTime: 'month' | 'week' | 'day' = 'day'): number => {
     const dateToStart = dayjs(startDate, 'YYYY-M-D').startOf(unitOfTime);
 
     return dayjs(date, 'YYYY-M-D').diff(dateToStart, unitOfTime);

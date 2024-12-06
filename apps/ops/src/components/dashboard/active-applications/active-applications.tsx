@@ -21,7 +21,7 @@ import {
     getOpenExceptionCategoriesByCreatedInsightStats,
     getExceptionCategoryStats,
     getProcessListOptions,
-} from '@deps/queries/tanstack/dashboard';
+} from '@deps/queries/tanstack/dashboardQueries';
 
 import styles from '../../../pages/dashboard/Dashboard.module.css';
 import ActiveAging from '../active-aging/active-aging';

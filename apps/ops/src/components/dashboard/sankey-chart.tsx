@@ -12,7 +12,7 @@ import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
 import { DashboardStatsElementResponse } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { DashboardSearchFilter } from '@deps/queries/cases';
-import { getStatsFromSelectionQuery } from '@deps/queries/tanstack/dashboard';
+import { getStatsFromSelectionQuery } from '@deps/queries/tanstack/dashboardQueries';
 
 interface Props {
     height?: number;
