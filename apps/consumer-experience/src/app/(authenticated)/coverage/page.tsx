@@ -1,3 +1,4 @@
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { IconType, Label } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
@@ -8,6 +9,7 @@ import { ClickableCardContainer } from '@/components/clickable-card-container/Cl
 import { FieldData } from '@/components/field-data/FieldData';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
+import { LabelPopover } from '@/components/label-popover/LabelPopover';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { PolicyDetailsSummary } from '@/components/policy-details-summary/PolicyDetailsSummary';
@@ -123,20 +125,45 @@ export default async function Page({
                   >
                     {formatUSDollars(p.totalFundValue)}
                   </FieldData>
-                  <FieldData
-                    className="typography-content-body-sm-bold"
-                    Label={
-                      <Label
-                        interactiveElements={[
-                          <CoveragePopover key="coverage-popover" />,
-                        ]}
-                      >
-                        Coverage
-                      </Label>
-                    }
-                  >
-                    {formatUSDollars(p.totalCoverageAmount)}
-                  </FieldData>
+                  {p.lineOfBusiness === LineOfBusiness.LIFE && (
+                    <FieldData
+                      className="typography-content-body-sm-bold"
+                      Label={
+                        <Label
+                          interactiveElements={[
+                            <CoveragePopover key="coverage-popover" />,
+                          ]}
+                        >
+                          Coverage
+                        </Label>
+                      }
+                    >
+                      {formatUSDollars(p.totalCoverageAmount)}
+                    </FieldData>
+                  )}
+                  {p.lineOfBusiness === LineOfBusiness.ANNUITY && (
+                    <FieldData
+                      className="typography-content-body-sm-bold"
+                      Label={
+                        <Label
+                          interactiveElements={[
+                            <LabelPopover title="Death Benefit">
+                              <div className={styles.popoverContent}>
+                                <p>
+                                  This is how much money your beneficiaries may
+                                  receive when you die.
+                                </p>
+                              </div>
+                            </LabelPopover>,
+                          ]}
+                        >
+                          Death Benefit
+                        </Label>
+                      }
+                    >
+                      {formatUSDollars(p.cumulativeGrossDeathBenefitAmount)}
+                    </FieldData>
+                  )}
                 </div>
               </div>
             </ClickableCardContainer.LinkContent>
