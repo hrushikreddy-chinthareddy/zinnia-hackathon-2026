@@ -87,7 +87,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
     const getValidFullName = (owner: PartyInstance) => {
         let fullName = owner?.fullName;
 
-        if (!fullName) {
+        if (owner && !fullName) {
             fullName = `${owner?.firstName} ${owner?.middleName} ${owner?.lastName}`;
         }
 
