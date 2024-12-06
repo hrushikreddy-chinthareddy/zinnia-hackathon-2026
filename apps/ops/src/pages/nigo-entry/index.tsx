@@ -37,10 +37,10 @@ import nextI18nextConfig from 'next-i18next.config';
 import { ERROR_CODES } from '../create-case/error';
 
 export type TransactionDetails = {
-    policyNumber: string,
-    transactionSubType: string,
-    requestSubType: string,
-    formName: string
+    policyNumber: string;
+    transactionSubType: string;
+    requestSubType: string;
+    formName: string;
 };
 
 interface NigoEntryProps extends SegmentTrackedPageProps {
@@ -59,7 +59,7 @@ interface NigoEntryProps extends SegmentTrackedPageProps {
     taskInfoLink: string;
     prevTransactionDetails: TransactionDetails | null;
     isNigoCase?: boolean;
-};
+}
 
 const isNigoEntryEnabled = (clientId: string, process: string, featureFlagMap: FeatureFlags) => {
     const identifier = `NIGO_ENTRY_${clientId.toUpperCase()}_${process.toUpperCase().replaceAll(' ', '_')}` as FeatureKeyIdentifier;
@@ -97,7 +97,6 @@ const NigoEntry = ({
 
     return (
         <div className="flex w-full flex-col overflow-auto px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10">
-
             <FormProvider
                 form={form}
                 initialForm={form}
@@ -107,7 +106,6 @@ const NigoEntry = ({
                 parties={parties}
             >
                 <NigoEntryProvider>
-
                     <NigoEntryContainer
                         documentNumber={documentNumber}
                         policy={policy}
@@ -130,6 +128,7 @@ const NigoEntry = ({
 export const getServerSideProps = withPageAuthRequired({
     getServerSideProps: async (context: GetServerSidePropsContext) => {
         const user = await getUserData(context);
+        const userInfoForLogging = getUserInfoFromUser(user);
 
         const { locale = DEFAULT_LOCALE, query, req, res } = context;
         const taskId = (query.taskId as string) || '';
@@ -142,6 +141,7 @@ export const getServerSideProps = withPageAuthRequired({
                 ...parseErrorInformation(e),
                 file: 'pages/nigo-entry',
                 function: 'getServerSideProps',
+                user: userInfoForLogging.email,
             });
             return serverSidePropsLogout();
         }
@@ -168,6 +168,7 @@ export const getServerSideProps = withPageAuthRequired({
                     taskId,
                     file: 'pages/nigo-entry',
                     function: 'getServerSideProps',
+                    user: userInfoForLogging.email,
                 });
                 return {
                     redirect: {
@@ -181,6 +182,7 @@ export const getServerSideProps = withPageAuthRequired({
                 taskId,
                 file: 'pages/nigo-entry',
                 function: 'getServerSideProps',
+                user: userInfoForLogging.email,
             });
 
             const form = mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm.data, userId: user?.name });
@@ -191,8 +193,14 @@ export const getServerSideProps = withPageAuthRequired({
             if (!caseType) {
                 logError('nigo-entry::Error getting case type', {
                     taskId,
+                    caseType,
+                    documentType: docType,
+                    documentNumber,
+                    contractNum,
+                    clientCode,
                     file: 'pages/nigo-entry',
                     function: 'getServerSideProps',
+                    user: userInfoForLogging.email,
                 });
                 return {
                     redirect: {
@@ -207,6 +215,7 @@ export const getServerSideProps = withPageAuthRequired({
                     taskId,
                     file: 'pages/nigo-entry',
                     function: 'getServerSideProps',
+                    user: userInfoForLogging.email,
                 });
                 return {
                     redirect: {
@@ -228,8 +237,6 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
-            const userInfoForLogging = getUserInfoFromUser(user);
-
             const response = await searchPolicySSR(contractNum, [clientCode?.toUpperCase() as Carrier], accessToken, 1, 0);
             const planCode = response ? response[0]?.planCode : null;
             if (!planCode) {
@@ -240,6 +247,7 @@ export const getServerSideProps = withPageAuthRequired({
                     contractNum,
                     file: 'pages/nigo-entry',
                     function: 'getServerSideProps',
+                    user: userInfoForLogging.email,
                 });
                 return {
                     redirect: {
@@ -258,6 +266,7 @@ export const getServerSideProps = withPageAuthRequired({
                     contractNum,
                     file: 'pages/nigo-entry',
                     function: 'getServerSideProps',
+                    user: userInfoForLogging.email,
                 });
                 return {
                     redirect: {
@@ -270,7 +279,7 @@ export const getServerSideProps = withPageAuthRequired({
             const nigoFilters = {
                 categoryIds: ['Form', 'Signature', 'Account Information'],
                 carrier: clientCode?.toUpperCase(),
-                process: activeForm?.process
+                process: activeForm?.process,
             };
 
             const transactionRequestBody: SearchTransactionRequestBody = {
@@ -308,6 +317,8 @@ export const getServerSideProps = withPageAuthRequired({
                     clientCode,
                     contractNum,
                     taskId,
+                    docType,
+                    user: userInfoForLogging.email,
                 });
                 return {
                     redirect: {
@@ -336,11 +347,13 @@ export const getServerSideProps = withPageAuthRequired({
                         },
                     };
                 } else {
-                    logInfo('nigoEntry::Skipping NIGO check', { taskId, documentNumber, clientCode });
+                    logInfo('nigoEntry::Skipping NIGO check', { taskId, documentNumber, clientCode, user: userInfoForLogging.email });
                 }
             }
 
-            const latestForm = searchCasesResponse?.data?.find((item) => (item?.additionalData?.requestSubType.toUpperCase() === docType.toUpperCase()));
+            const latestForm = searchCasesResponse?.data?.find(
+                item => item?.additionalData?.requestSubType.toUpperCase() === docType.toUpperCase()
+            );
             return {
                 props: {
                     ...translations,
