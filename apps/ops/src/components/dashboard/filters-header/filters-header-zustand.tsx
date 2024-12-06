@@ -23,6 +23,8 @@ interface FiltersHeaderZustandProps {
     loading: boolean;
 }
 
+//TODO: Rename this
+
 const FiltersHeaderZustand = forwardRef<HTMLDivElement, FiltersHeaderZustandProps>(
     ({ authorizedCarriers, brokerDealersSSR, carrierHeaderIsIntersecting, carrierHeaderEntry, loading }, ref) => {
         const { t } = useTranslation(TranslationFiles.COMMON);

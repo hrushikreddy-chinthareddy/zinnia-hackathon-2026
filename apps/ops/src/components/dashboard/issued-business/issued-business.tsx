@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { DEFAULT_ERROR_STRING, toTitleCase } from '@zinnia/utils';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
-import { useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 
 import { ExceptionSummary } from '@deps/components/dashboard/exception-summary';
 import { Top5SubprocessByVolume } from '@deps/components/dashboard/top-5-subprocesses-by-volume/top-5-subprocess-by-volume';
@@ -18,6 +18,7 @@ import { Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { DashboardSearchFilter } from '@deps/queries/cases';
 import { getCaseDashboardStatsQuery } from '@deps/queries/tanstack/dashboardQueries';
+import { useDashboardStore } from '@deps/store/store';
 
 import { ExceptionInsights } from '../../../components/dashboard/exception-insights';
 
@@ -26,12 +27,8 @@ export interface CarrierListItem {
 }
 
 const timeFrameFilterOptions = ['trailing 12 months', 'last 6 months', 'last 90 days', 'last 60 days', 'last month'];
-type IssuedBusinessPageProps = {
-    selectedCarriers: CarrierListItem;
-    selectedBrokerDealers: CarrierListItem;
-};
 
-export const IssuedBusiness = ({ selectedBrokerDealers, selectedCarriers }: IssuedBusinessPageProps) => {
+export const IssuedBusiness: FC = () => {
     const [timeframe, setTimeframe] = useState<string>(timeFrameFilterOptions[0]);
     const [selectedSubprocess, setSelectedSubprocess] = useState<string>('');
     const [selectedException, setSelectedException] = useState<string | undefined>();
@@ -41,7 +38,7 @@ export const IssuedBusiness = ({ selectedBrokerDealers, selectedCarriers }: Issu
         setSelectedException(undefined);
         setSelectedSubprocess(subprocess);
     };
-
+    const { selectedBrokerDealers, selectedCarriers } = useDashboardStore(state => state);
     const carrierOrBrokerDealer = useMemo(() => {
         if (selectedCarriers) {
             return GroupByOptions.Carrier;

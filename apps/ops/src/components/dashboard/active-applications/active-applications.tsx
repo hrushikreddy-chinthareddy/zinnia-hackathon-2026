@@ -22,30 +22,21 @@ import {
     getExceptionCategoryStats,
     getProcessListOptions,
 } from '@deps/queries/tanstack/dashboardQueries';
+import { useDashboardStore } from '@deps/store/store';
 
 import styles from '../../../pages/dashboard/Dashboard.module.css';
 import ActiveAging from '../active-aging/active-aging';
-import { CarrierListItem } from '../issued-business/issued-business';
 import SankeyChart from '../sankey-chart';
 import CaseStatBlock from '../stat-blocks/case-stat-block';
 import { TreeMapInsights } from '../tree-map-insights';
 interface ActiveApplicationsProps {
     sankeyChartRef: (node?: Element | null) => void;
-    selectedCarriers: CarrierListItem;
-    selectedBrokerDealers: CarrierListItem;
     handleSetLoading: (loading: boolean) => void;
     loading: boolean;
     carrierHeaderRef: RefObject<HTMLElement>;
 }
 
-export const ActiveApplications: FC<ActiveApplicationsProps> = ({
-    sankeyChartRef,
-    selectedCarriers,
-    selectedBrokerDealers,
-    loading,
-    handleSetLoading,
-    carrierHeaderRef,
-}) => {
+export const ActiveApplications: FC<ActiveApplicationsProps> = ({ sankeyChartRef, loading, handleSetLoading, carrierHeaderRef }) => {
     const { createdDateStart, createdDateEnd } = getStartAndEndDates('All');
     const { height: carrierHeaderHeight } = useResizeObserver({ ref: carrierHeaderRef, box: 'border-box' });
 
@@ -63,6 +54,8 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
     const [baseDashboardQueryFilter, setBaseDashboardQueryFilter] = useState<DashboardSearchFilter>({});
     const [baseInsightQueryFilter, setBaseInsightQueryFilter] = useState<DashboardSearchFilter>({});
     const [insightOption, setInsightOption] = useState<Processes>(Processes.NewBusiness);
+
+    const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
 
     const handleInsightChange = (processType: Processes) => {
         setInsightOption(processType);

@@ -15,6 +15,7 @@ type BrokerDealerFilterProps = {
     updateBrokerDealerFilters: (value: string, displayText: string) => void;
     selectedBrokerDealers: CarrierListItem;
     disabled?: boolean;
+    handleOnOpenChangeBroker?: (open: boolean) => void;
 };
 
 export const BrokerDealerFilter = ({
@@ -24,6 +25,7 @@ export const BrokerDealerFilter = ({
     selectedCarriers,
     setSelectedBrokerDealers,
     disabled,
+    handleOnOpenChangeBroker,
 }: BrokerDealerFilterProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
 
@@ -56,6 +58,7 @@ export const BrokerDealerFilter = ({
             placeholder={t('allAgents') || ''}
             disabled={disabled !== undefined ? disabled : brokerDealers.length === 0}
             name="agent-dropdown-btn"
+            onOpenChange={handleOnOpenChangeBroker}
         />
     );
 };
