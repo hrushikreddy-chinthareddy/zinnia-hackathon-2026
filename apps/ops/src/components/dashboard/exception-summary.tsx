@@ -348,6 +348,8 @@ export const ExceptionSummary = ({
                 tooltip: {
                     formatter: function () {
                         const xAxis = this.series.xAxis;
+                        const total = this.points?.reduce((total, point) => total + (point?.y || 0), 0) || 0;
+                        const formattedValue = new Intl.NumberFormat().format(total);
 
                         // Find the index of the xAxis in the chart's xAxis array
                         const xAxisIndex = this.series.chart.xAxis.indexOf(xAxis);
@@ -355,17 +357,16 @@ export const ExceptionSummary = ({
                         // Apply custom formatting based on xAxis index
                         // this is the lower chart
                         if (xAxisIndex === 1) {
-                            const formattedValue = new Intl.NumberFormat().format(this.y || 0);
                             const pointIndex = this.point.index;
                             // find the category label from the first xAxis and display it in the tooltip
-                            return `<div>${this.series.chart.xAxis[0].categories[pointIndex * 4]}<br/><b>${
-                                this.series.name
-                            }</b>: ${formattedValue}</div>`;
+                            return `<div>${
+                                this.series.chart.xAxis[0].categories[pointIndex * 4]
+                            }<br/><b>${'Exceptions'}</b>: ${formattedValue}</div>`;
                         } else {
-                            const formattedValue = new Intl.NumberFormat().format(this.y || 0);
-                            return `<div>${this.key}<br/><b>${this.series.name}</b>: ${formattedValue}`;
+                            return `<div>${this.key}<br/><b>${'Exceptions'}</b>: ${formattedValue}`;
                         }
                     },
+                    shared: true,
                 },
             };
         },

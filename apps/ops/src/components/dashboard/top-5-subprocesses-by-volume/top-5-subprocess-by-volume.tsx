@@ -157,7 +157,7 @@ function processData(input: DashboardStatsElementResponse[]): Output {
     const totals: number[] = new Array(MONTHLY_MONTHS).fill(0);
 
     for (const key in result.monthly) {
-        if (result.monthly.hasOwnProperty(key)) {
+        if (Object.prototype.hasOwnProperty.call(result.monthly, key)) {
             const series = result.monthly[key].series.data;
             series?.forEach((value, index) => {
                 totals[index] += typeof value === 'number' ? value : 0; // Accumulate the value at each index
@@ -183,12 +183,6 @@ export const Top5SubprocessByVolume = ({
     const [statsResponse, setStatsResponse] = useState<DashboardStatsElementResponse[]>();
     const shouldShowCaseInsights = useCaseInsightsPermission();
     const groupBy: GroupByOptions = GroupByOptions.ProductName;
-
-    // const [loading, exceptionData, statsResponse, filter] = useExceptionData({
-    //     startDate,
-    //     carrierOrBrokerDealer,
-    //     processSubType: selectedSubprocess,
-    // });
 
     const filter: DashboardSearchFilter = useMemo(() => {
         return {
@@ -228,7 +222,6 @@ export const Top5SubprocessByVolume = ({
     const [sortedMonthly, setSortedMonthly] = useState([] as summary[]);
     const [chartConfig, setChartConfig] = useState({} as Highcharts.Options);
 
-    console.log('statsResponse', statsResponse);
     const getChartConfig = useCallback(
         (processedData: Output, sortedMonthly: summary[]): Highcharts.Options => {
             if (!statsResponse) return {};
@@ -387,6 +380,8 @@ export const Top5SubprocessByVolume = ({
                 tooltip: {
                     formatter: function () {
                         const xAxis = this.series.xAxis;
+                        const total = this.points?.reduce((total, point) => total + (point?.y || 0), 0) || 0;
+                        const formattedValue = new Intl.NumberFormat().format(total);
 
                         // Find the index of the xAxis in the chart's xAxis array
                         const xAxisIndex = this.series.chart.xAxis.indexOf(xAxis);
@@ -394,17 +389,16 @@ export const Top5SubprocessByVolume = ({
                         // Apply custom formatting based on xAxis index
                         // this is the lower chart
                         if (xAxisIndex === 1) {
-                            const formattedValue = new Intl.NumberFormat().format(this.y || 0);
                             const pointIndex = this.point.index;
                             // find the category label from the first xAxis and display it in the tooltip
                             return `<div>${this.series.chart.xAxis[0].categories[pointIndex * 4]}<br/><b>${
                                 this.series.name
                             }</b>: ${formattedValue}</div>`;
                         } else {
-                            const formattedValue = new Intl.NumberFormat().format(this.y || 0);
                             return `<div>${this.key}<br/><b>${this.series.name}</b>: ${formattedValue}`;
                         }
                     },
+                    shared: true,
                 },
             };
         },
