@@ -25,7 +25,6 @@ import SankeyChart from '../sankey-chart';
 import CaseStatBlock from '../stat-blocks/case-stat-block';
 import { TreeMapInsights } from '../tree-map-insights';
 interface ActiveApplicationsProps {
-    sankeyChartRef: (node?: Element | null) => void;
     selectedCarriers: CarrierListItem;
     selectedBrokerDealers: CarrierListItem;
     handleSetLoading: (loading: boolean) => void;
@@ -34,7 +33,6 @@ interface ActiveApplicationsProps {
 }
 
 export const ActiveApplications: FC<ActiveApplicationsProps> = ({
-    sankeyChartRef,
     selectedCarriers,
     selectedBrokerDealers,
     handleSetLoading,
@@ -236,7 +234,7 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
 
     return (
         <>
-            <div className="relative border-t-2 border-[--color-base-border-border-light]" ref={sankeyChartRef}>
+            <div className="relative border-t-2 border-[--color-base-border-border-light]">
                 {loading && (
                     <div className="absolute bottom-0 left-0 right-0 top-0 z-10 flex h-full justify-center bg-gray-800 opacity-80">
                         <div className="mt-4">

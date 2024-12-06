@@ -50,7 +50,7 @@ const DashboardPage = ({
     const carrierHeaderRef = useRef<HTMLDivElement>(null);
     const {
         isIntersecting: carrierHeaderIsIntersecting,
-        ref: sankeyChartRef,
+        ref: tabContentRef,
         entry: carrierHeaderEntry,
     } = useIntersectionObserver({
         threshold: 0,
@@ -175,25 +175,33 @@ const DashboardPage = ({
                         </div>
                     </div>
                 </div>
-                <DashboardTabNav>
-                    <TabContent className="w-full" value={DashboardTabs.ACTIVE_APPLICATIONS}>
-                        <ActiveApplications
-                            sankeyChartRef={sankeyChartRef}
-                            selectedBrokerDealers={selectedBrokerDealers}
-                            selectedCarriers={selectedCarriers}
-                            handleSetLoading={handleSetLoading}
-                            loading={loading}
-                            carrierHeaderRef={carrierHeaderRef}
-                        />
-                    </TabContent>
-                    <TabContent className="w-full" value={DashboardTabs.ISSUED_BUSINESS}>
-                        <IssuedBusiness
-                            authorizedCarriers={authorizedCarriers}
-                            brokerDealersSSR={brokerDealers}
-                            completedCasesByProcessSubType={completedCasesByProcessSubType}
-                        />
-                    </TabContent>
-                </DashboardTabNav>
+                <div ref={tabContentRef}>
+                    <DashboardTabNav>
+                        <TabContent className="w-full" value={DashboardTabs.ACTIVE_APPLICATIONS}>
+                            <ActiveApplications
+                                selectedBrokerDealers={selectedBrokerDealers}
+                                selectedCarriers={selectedCarriers}
+                                handleSetLoading={handleSetLoading}
+                                loading={loading}
+                                carrierHeaderRef={carrierHeaderRef}
+                            />
+                        </TabContent>
+                        <TabContent className="w-full" value={DashboardTabs.ISSUED_BUSINESS}>
+                            <IssuedBusiness
+                                authorizedCarriers={authorizedCarriers}
+                                brokerDealersSSR={brokerDealers}
+                                completedCasesByProcessSubType={completedCasesByProcessSubType}
+                                loading={loading}
+                                carrierHeaderRef={carrierHeaderRef}
+                                selectedBrokerDealers={selectedBrokerDealers}
+                                selectedCarriers={selectedCarriers}
+                                handleSetLoading={handleSetLoading}
+                                setSelectedBrokerDealers={setSelectedBrokerDealers}
+                                setSelectedCarriers={setSelectedCarriers}
+                            />
+                        </TabContent>
+                    </DashboardTabNav>
+                </div>
             </NoNavLayout>
         </DashboardResponsiveLayout>
     );
