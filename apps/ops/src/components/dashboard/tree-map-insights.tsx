@@ -6,6 +6,7 @@ import HC_TREEMAP from 'highcharts/modules/treemap';
 import HighchartsReact from 'highcharts-react-official';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
+import PageLoader from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 import { DASHBOARD_DEFAULT_LABEL, DASHBOARD_REPLACE_LABELS } from '@deps/helpers/dashboard/dashboard-helpers';
@@ -13,12 +14,11 @@ import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
 import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
 import { CaseDashboardStatsResponse } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
+import styles from '@deps/pages/dashboard/Dashboard.module.css';
 import { DashboardResponseData } from '@deps/queries/api/dashboard';
 import { getCaseInsights } from '@deps/queries/api/openai';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 import { ReactComponent as LightBulbIcon } from '@deps/styles/elements/icons/illustrations/light-bulb.svg';
-
-import PageLoader from '../page-loader/page-loader';
 
 const CHART_HEIGHT = 600;
 
@@ -131,15 +131,17 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
                             wrapper.style.flexDirection = 'column';
                             wrapper.style.justifyContent = 'start';
                             wrapper.style.gap = '4px';
+                            wrapper.style.overflow = 'hidden';
+                            wrapper.style.textOverflow = 'ellipsis';
                             const nameSpan = document.createElement('span');
                             const valueSpan = document.createElement('span');
-                            if (len < name.length) {
+                            if (len < Math.max(name.length, ratio.length)) {
                                 wrapper.style.margin = 'var(--measure-dimension-margin-2xs)';
                                 wrapper.style.padding = '0 var(--measure-dimension-padding-xs)';
                                 wrapper.style.justifyContent = 'center';
                                 wrapper.style.alignItems = 'center';
-                                nameSpan.innerText = name.substring(0, 5) + '...';
-                                valueSpan.innerText = ratio;
+                                nameSpan.innerText = len < name.length ? name.substring(0, Math.floor(len)) + '...' : name;
+                                valueSpan.innerText = len < ratio.length ? ratio.substring(0, Math.floor(len)) + '...' : ratio;
                                 if (len < 1) {
                                     wrapper.style.visibility = 'hidden';
                                 }
@@ -157,19 +159,32 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
             title: {
                 text: '',
             },
+            tooltip: {
+                useHTML: true,
+                formatter: function () {
+                    const wrapper = document.createElement('div');
+                    wrapper.classList.add(styles.tooltip);
+                    wrapper.style.backgroundColor = 'var(--color-base-surface-surface-primary)';
+                    wrapper.classList.add('rounded', 'typography-content-body');
+                    wrapper.style.color = 'var(--color-base-text-text-primary)';
+                    wrapper.style.padding = 'var(--measure-dimension-padding-lg)';
+                    wrapper.style.display = 'flex';
+                    wrapper.style.flexDirection = 'column';
+                    wrapper.style.justifyContent = 'start';
+                    wrapper.style.gap = '4px';
+                    const nameSpan = document.createElement('span');
+                    const valueSpan = document.createElement('span');
+                    nameSpan.innerText = this.point.name;
+                    // @ts-expect-error: this actually exists
+                    valueSpan.innerText = this.point.value;
+                    wrapper.appendChild(nameSpan);
+                    wrapper.appendChild(valueSpan);
+                    return wrapper.outerHTML;
+                },
+                padding: 0,
+            },
         };
     }, [seriesData]);
-
-    // const caseLink = useMemo(() => {
-    //     const href = new URL('/cases', window.location.origin);
-    //     if (selectedSubprocess.length > 0) {
-    //         href.searchParams.append('processSubType', selectedSubprocess);
-    //     }
-    //     if (selectedException.length > 0) {
-    //         href.searchParams.append('case', selectedException);
-    //     }
-    //     return href.toString();
-    // }, [selectedSubprocess, selectedException]);
 
     useEffect(() => {
         if (!shouldShowCaseInsights) {
@@ -190,7 +205,6 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
         <div className={clsx('bg-white flex flex-col min-h-[600px] lg:flex-row gap-4')}>
             <div className="basis-1/3 flex flex-col gap-4 items-start">
                 <div>
-                    {/* <Typography variant={TypographyVariant.H3}>{sankeyTitleFormat(selectedSubprocess, false)}</Typography> */}
                     <Typography variant={TypographyVariant.H3}>{heading}</Typography>
                     <Typography variant={TypographyVariant.Label}>
                         There are {wholeNumberFormatify(dashboardStatsData.totalElements)} Exceptions
@@ -211,19 +225,10 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
                                 <Typography variant={TypographyVariant.BodySm}>{aiSummary}</Typography>
                             </>
                         )}
-                        {/* <Link
-                            size="small"
-                            className="mt-4 inline"
-                            href={caseLink}
-                            text={`View all ${sankeyTitleFormat(selectedSubprocess)} exceptions`}
-                        /> */}
                     </>
                 )}
             </div>
             <div className="basis-2/3 flex flex-col">
-                {/* <Typography className="ml-2" variant={TypographyVariant.LabelMd}>
-                    {toTitleCase(timeframe)}
-                </Typography> */}
                 <div
                     className={clsx(
                         `w-full h-[${CHART_HEIGHT}px]`,

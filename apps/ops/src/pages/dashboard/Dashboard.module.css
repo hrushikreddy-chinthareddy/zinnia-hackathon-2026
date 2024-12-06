@@ -52,3 +52,8 @@
 .insightsHeaderDropdown {
     width: 306px;
 }
+
+.tooltip {
+    border: 16px solid var(--color-base-surface-surface-primry);
+
+}

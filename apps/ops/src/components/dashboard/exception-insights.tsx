@@ -13,6 +13,7 @@ import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 import { DASHBOARD_DEFAULT_LABEL, DASHBOARD_REPLACE_LABELS, dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
 import { GroupByOptions } from '@deps/models/case/enums';
+import styles from '@deps/pages/dashboard/Dashboard.module.css';
 import { DashboardResponseData } from '@deps/queries/api/dashboard';
 import { getCaseInsights } from '@deps/queries/api/openai';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
@@ -114,19 +115,6 @@ export const ExceptionInsights = ({
                     enabled: false,
                 },
             },
-            // plotOptions: {
-            // series: {
-            // allowPointSelect: true,
-            // point: {
-            //     events: {
-            //         select: function (e: Highcharts.PointInteractionEventObject) {
-            //             const selection = e.target as unknown as Highcharts.Point;
-            //             setSelectedException(selection?.name);
-            //         },
-            //     },
-            // },
-            // },
-            // },
             series: [
                 {
                     type: 'treemap',
@@ -159,15 +147,17 @@ export const ExceptionInsights = ({
                             wrapper.style.flexDirection = 'column';
                             wrapper.style.justifyContent = 'start';
                             wrapper.style.gap = '4px';
+                            wrapper.style.overflow = 'hidden';
+                            wrapper.style.textOverflow = 'ellipsis';
                             const nameSpan = document.createElement('span');
                             const valueSpan = document.createElement('span');
-                            if (len < name.length) {
+                            if (len < Math.max(name.length, ratio.length)) {
                                 wrapper.style.margin = 'var(--measure-dimension-margin-2xs)';
                                 wrapper.style.padding = '0 var(--measure-dimension-padding-xs)';
                                 wrapper.style.justifyContent = 'center';
                                 wrapper.style.alignItems = 'center';
-                                nameSpan.innerText = name.substring(0, 5) + '...';
-                                valueSpan.innerText = ratio;
+                                nameSpan.innerText = len < name.length ? name.substring(0, Math.floor(len)) + '...' : name;
+                                valueSpan.innerText = len < ratio.length ? ratio.substring(0, Math.floor(len)) + '...' : ratio;
                                 if (len < 1) {
                                     wrapper.style.visibility = 'hidden';
                                 }
@@ -184,6 +174,30 @@ export const ExceptionInsights = ({
             ],
             title: {
                 text: '',
+            },
+            tooltip: {
+                useHTML: true,
+                formatter: function () {
+                    const wrapper = document.createElement('div');
+                    wrapper.classList.add(styles.tooltip);
+                    wrapper.style.backgroundColor = 'var(--color-base-surface-surface-primary)';
+                    wrapper.classList.add('rounded', 'typography-content-body');
+                    wrapper.style.color = 'var(--color-base-text-text-primary)';
+                    wrapper.style.padding = 'var(--measure-dimension-padding-lg)';
+                    wrapper.style.display = 'flex';
+                    wrapper.style.flexDirection = 'column';
+                    wrapper.style.justifyContent = 'start';
+                    wrapper.style.gap = '4px';
+                    const nameSpan = document.createElement('span');
+                    const valueSpan = document.createElement('span');
+                    nameSpan.innerText = this.point.name;
+                    // @ts-expect-error: this actually exists
+                    valueSpan.innerText = this.point.value;
+                    wrapper.appendChild(nameSpan);
+                    wrapper.appendChild(valueSpan);
+                    return wrapper.outerHTML;
+                },
+                padding: 0,
             },
         };
     }, [exceptions]);
