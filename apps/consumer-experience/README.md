@@ -170,6 +170,8 @@ Feature flags are implemented using [Optimizely Javascript SDK](https://docs.dev
 
 To get access, contact a lead. You will need to get a PolicyGenius email and be added to the Optimizely account to log in.
 
-# TODO Docs
+# Docs
 
-TBD
+There is documentation throughout the project in the form of jsdoc comments or various markdown files. There is also a folder called `documentation` that contains higher level information related to multiple places.
+
+To view mermaid diagrams install [Markdown Preview Mermaid Support](https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid)
