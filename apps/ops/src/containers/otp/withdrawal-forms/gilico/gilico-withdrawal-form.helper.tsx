@@ -351,11 +351,11 @@ export default function getGilicoConfig(t: TFunction) {
             label: t('distributionMethod.eft'),
             value: FormDisbursementSelections.EFT,
             fields: [
-                // {
-                //     fieldLabel: t('distributionMethod.chooseTheBank'),
-                //     fieldName: BankingFields.Bank,
-                //     component: DisbursementFields.SelectBank,
-                // },
+                {
+                    fieldLabel: t('distributionMethod.chooseTheBank'),
+                    fieldName: BankingFields.Bank,
+                    component: DisbursementFields.SelectBank,
+                },
                 {
                     fieldName: BankingFields.IsVoidCheckAttached,
                     fieldLabel: t('distributionMethod.isVoidCheckAttached'),
@@ -611,61 +611,15 @@ export default function getGilicoConfig(t: TFunction) {
         {
             label: t('distributionMethod.sendCheck'),
             value: FormDisbursementSelections.Check,
-            fields: [
-                {
-                    fieldName: BankingFields.PayeeName,
-                    fieldLabel: t('distributionMethod.payeeName'),
-                    component: DisbursementFields.BankTextField,
-                    classNames: 'col-start-1',
-                    maxLength: 40,
-                },
-                // {
-                //     fieldName: BankingFields.FboDetails,
-                //     fieldLabel: t('distributionMethod.fboDetails'),
-                //     component: DisbursementFields.BankTextField,
-                //     maxLength: 35,
-                // },
-                // {
-                //     fieldName: BankingFields.ContractNumber,
-                //     fieldLabel: t('distributionMethod.contractNumber'),
-                //     component: DisbursementFields.BankTextField,
-                //     maxLength: 35,
-                //     tooltip: {
-                //         shouldDisplay: true,
-                //         title: t('distributionMethod.contractLabelPopoverTitle') as string,
-                //         body: t('distributionMethod.contractLabelPopoverMessage') as string,
-                //     },
-                // },
-                {
-                    fieldName: BankingFields.Address,
-                    fieldLabel: '',
-                    component: DisbursementFields.BankAddress,
-                    classNames: 'col-span-3',
-                },
-            ],
-            getDefaultPayload({ paymentMethod, paymentMailType, payee }: FormDisbursement) {
-                if (paymentMethod.text === PaymentMailType.Check && paymentMailType.text === null) {
-                    return {
-                        ...DEFAULT_DISBURSEMENT_UPDATE,
-                        payeeName: payee?.name.text ?? '',
-                        address: payee?.addresses?.[0] ?? DEFAULT_ADDRESS,
-                        // contractNumber: payee?.contractNumber.text ?? '',
-                        // fboDetails: payee?.fboDetails?.text || '',
-                    };
-                }
+            fields: null,
+            getDefaultPayload() {
                 return DEFAULT_DISBURSEMENT_UPDATE;
             },
-            generatePayloadFromSelection: ({ fboDetails, payeeName, address, contractNumber }: DisbursementParts) => {
+            generatePayloadFromSelection: () => {
                 return {
                     ...getDefaultFormDisbursementValues(),
                     paymentMethod: { text: PaymentMailType.Check },
                     paymentMailType: { text: null },
-                    payee: {
-                        name: { text: payeeName || null },
-                        addresses: [address || DEFAULT_ADDRESS],
-                        contractNumber: { text: contractNumber || null },
-                        fboDetails: { text: fboDetails ?? null },
-                    },
                 };
             },
         },
@@ -673,35 +627,6 @@ export default function getGilicoConfig(t: TFunction) {
             label: t('distributionMethod.overnightCheck'),
             value: FormDisbursementSelections.ExpressCheck,
             fields: [
-                {
-                    fieldName: BankingFields.PayeeName,
-                    fieldLabel: t('distributionMethod.payeeName'),
-                    component: DisbursementFields.BankTextField,
-                    classNames: 'col-start-1',
-                    maxLength: 40,
-                },
-                // {
-                //     fieldName: BankingFields.FboDetails,
-                //     fieldLabel: t('distributionMethod.fboDetails'),
-                //     component: DisbursementFields.BankTextField,
-                //     maxLength: 35,
-                // },
-                // {
-                //     fieldName: BankingFields.ContractNumber,
-                //     fieldLabel: t('distributionMethod.contractNumber'),
-                //     component: DisbursementFields.BankTextField,
-                //     maxLength: 35,
-                //     tooltip: {
-                //         shouldDisplay: true,
-                //         title: t('distributionMethod.contractLabelPopoverTitle') as string,
-                //         body: t('distributionMethod.contractLabelPopoverMessage') as string,
-                //     },
-                // },
-                {
-                    fieldName: BankingFields.Address,
-                    fieldLabel: '',
-                    component: DisbursementFields.BankAddress,
-                },
                 {
                     fieldName: BankingFields.AccountNumber,
                     fieldLabel: t('distributionMethod.upsAccountNumber'),
@@ -713,14 +638,10 @@ export default function getGilicoConfig(t: TFunction) {
                     component: DisbursementFields.BankTextField,
                 },
             ],
-            getDefaultPayload({ paymentMethod, paymentMailType, payee, upsAccount }: FormDisbursement) {
+            getDefaultPayload({ paymentMethod, paymentMailType, upsAccount }: FormDisbursement) {
                 if (paymentMethod.text === FormDisbursementSelections.Check && paymentMailType.text === PaymentMailType.ExpressCheck) {
                     return {
                         ...DEFAULT_DISBURSEMENT_UPDATE,
-                        payeeName: payee?.name.text ?? '',
-                        address: payee?.addresses?.[0] ?? DEFAULT_ADDRESS,
-                        fboDetails: payee?.fboDetails?.text || '',
-                        contractNumber: payee?.contractNumber.text ?? '',
                         accountNumber: upsAccount?.accountNumber?.text ?? '',
                         accountName: upsAccount?.accountName?.text ?? '',
                     };
