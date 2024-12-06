@@ -513,6 +513,9 @@ importers:
       xss:
         specifier: ^1.0.14
         version: 1.0.15
+      zustand:
+        specifier: ^4.5.4
+        version: 4.5.5(@types/react@18.3.12)(immer@9.0.21)(react@18.3.1)
     devDependencies:
       '@datadog/datadog-ci':
         specifier: ^2.19.1
