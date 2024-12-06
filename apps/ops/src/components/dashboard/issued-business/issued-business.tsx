@@ -94,17 +94,9 @@ export const IssuedBusiness = ({ selectedBrokerDealers, selectedCarriers }: Issu
             createdDateStart: createdDateStart,
             process: [Processes.NewBusiness],
             caseStatus: [Statuses.Completed],
+            carrier: Object.keys(selectedCarriers),
+            brokerDealerName: Object.keys(selectedBrokerDealers),
         };
-
-        const carriers = Object.keys(selectedCarriers);
-        if (selectedCarriers && carriers.length) {
-            baseFilter.carrier = carriers;
-        }
-
-        const brokers = Object.keys(selectedBrokerDealers);
-        if (selectedBrokerDealers && brokers.length) {
-            baseFilter.brokerDealerName = brokers;
-        }
 
         setBaseDashboardQueryFilter(baseFilter);
     }, [selectedCarriers, createdDateStart, selectedBrokerDealers]);
