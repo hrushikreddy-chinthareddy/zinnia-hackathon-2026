@@ -20,6 +20,21 @@ export interface PolicyDocument {
   items: ExtendedDocumentMeta[];
 }
 
+export interface TaxDocumentApiRequestInputs {
+  contractNumber: string;
+  taxYear: string;
+  numYears: number;
+  clientCode: string;
+}
+
+export interface TaxDocument {
+  contractNumber: string;
+  name: string;
+  fChar: string;
+  formId: string;
+  taxYear: string;
+}
+
 export interface DocumentApiRequestInputs {
   caseId: string;
   clientCode: string;
@@ -41,4 +56,11 @@ export interface DocumentApiRequestInputs {
 export interface DocumentResponseError {
   message: string;
   status: number;
+}
+
+export enum DocumentCategory {
+  // Documents is the default view when there is no query param
+  DOCUMENTS = 'documents',
+  STATEMENTS = 'statements',
+  TAX = 'tax',
 }

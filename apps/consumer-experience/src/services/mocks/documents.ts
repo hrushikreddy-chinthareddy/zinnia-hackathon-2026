@@ -247,3 +247,23 @@ export const mockDocumentsResponse: PolicyDocument = {
     },
   ],
 };
+
+export const mockTaxDocumentsResponse = {
+  count: 2,
+  items: [
+    {
+      contractNumber: '1234567898',
+      name: '1099-R',
+      fChar: 'R',
+      formId: '123456',
+      taxYear: '2023',
+    },
+    {
+      contractNumber: '876593462728',
+      name: '1099-R',
+      fChar: 'R',
+      formId: '123456',
+      taxYear: '2022',
+    },
+  ],
+};

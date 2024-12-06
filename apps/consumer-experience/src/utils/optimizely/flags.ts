@@ -4,4 +4,5 @@ export enum FEATURE_FLAGS {
   MULTIPLE_FUNDS_VIEW = 'multiple_funds_view',
   ANNUITY_MODE = 'annuity_mode',
   RESET_DELIVERY_DATE_ACTIVE = 'reset_delivery_date_active',
+  VIEW_TAX_DOCUMENTS = 'view_tax_documents',
 }
