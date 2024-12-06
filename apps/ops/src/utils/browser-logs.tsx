@@ -4,7 +4,7 @@ import { datadogLogs } from '@datadog/browser-logs';
 
 export const initializeBrowserLogging = () => {
     datadogLogs.init({
-        clientToken: process.env.NEXT_PUBLIC_DATADOG_BROWSER_APPLICATION_ID || '',
+        clientToken: process.env.NEXT_PUBLIC_DATADOG_BROWSER_TOKEN || '',
         site: 'datadoghq.com',
         service: 'zinnia-live-browser',
         forwardErrorsToLogs: true,
