@@ -288,6 +288,9 @@ export const ExceptionSummary = ({
                 ],
                 yAxis: [
                     {
+                        stackLabels: {
+                            enabled: true,
+                        },
                         allowDecimals: false,
                         gridLineWidth: 1,
                         height: '60%',
@@ -347,25 +350,53 @@ export const ExceptionSummary = ({
                 },
                 tooltip: {
                     formatter: function () {
-                        const xAxis = this.series.xAxis;
-                        const total = this.points?.reduce((total, point) => total + (point?.y || 0), 0) || 0;
-                        const formattedValue = new Intl.NumberFormat().format(total);
+                        let total = 0;
+                        const labelData: Array<{
+                            label: string;
+                            total: number;
+                            color: string | Highcharts.GradientColorObject | Highcharts.PatternObject;
+                        }> =
+                            this.points?.map(point => {
+                                const value = point?.y || 0;
+                                const color = point?.color || '#000000';
+                                total += value;
+                                return {
+                                    label: point?.series?.name,
+                                    total: value,
+                                    color: color,
+                                };
+                            }) || [];
 
-                        // Find the index of the xAxis in the chart's xAxis array
-                        const xAxisIndex = this.series.chart.xAxis.indexOf(xAxis);
+                        const labelWrapper = document.createElement('div');
 
-                        // Apply custom formatting based on xAxis index
-                        // this is the lower chart
-                        if (xAxisIndex === 1) {
-                            const pointIndex = this.point.index;
-                            // find the category label from the first xAxis and display it in the tooltip
-                            return `<div>${
-                                this.series.chart.xAxis[0].categories[pointIndex * 4]
-                            }<br/><b>${'Exceptions'}</b>: ${formattedValue}</div>`;
-                        } else {
-                            return `<div>${this.key}<br/><b>${'Exceptions'}</b>: ${formattedValue}`;
+                        labelWrapper.style.display = 'flex';
+                        labelWrapper.style.flexDirection = 'column';
+                        labelWrapper.style.gap = '4px';
+                        for (const value of labelData) {
+                            const labelElement = document.createElement('div');
+                            labelElement.style.display = 'flex';
+                            labelElement.style.alignItems = 'center';
+                            labelElement.style.gap = '5px';
+                            const colorElement = document.createElement('div');
+                            colorElement.style.backgroundColor = String(value.color);
+                            colorElement.style.width = '10px';
+                            colorElement.style.height = '10px';
+                            colorElement.style.borderRadius = '50%';
+                            const titleElement = document.createElement('div');
+                            titleElement.innerHTML = `<b>${value.label}</b>: ${value.total.toLocaleString()}`;
+                            labelElement.appendChild(colorElement);
+                            labelElement.appendChild(titleElement);
+                            labelWrapper.appendChild(labelElement);
                         }
+                        const totalElement = document.createElement('div');
+                        totalElement.style.justifySelf = 'end';
+                        totalElement.style.alignSelf = 'end';
+                        totalElement.style.marginTop = '4px';
+                        totalElement.innerHTML = `<b>Total</b>: ${total.toLocaleString()}`;
+                        labelWrapper.appendChild(totalElement);
+                        return labelWrapper.outerHTML;
                     },
+                    useHTML: true,
                     shared: true,
                 },
             };
