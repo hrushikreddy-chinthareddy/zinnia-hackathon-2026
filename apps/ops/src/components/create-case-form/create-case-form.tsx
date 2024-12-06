@@ -1,6 +1,5 @@
 import { useTranslation } from 'next-i18next';
 import xss from 'xss';
-
 import Button, { ButtonSize, ButtonType } from '@deps/components/button/button';
 import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
 import SelectSimple from '@deps/components/select/select';
@@ -49,6 +48,7 @@ const CreateCaseForm = ({
     searchByOption,
     setSearchByOption,
 }: CreateCaseViewProps) => {
+
     const { t } = useTranslation(TranslationFiles.COMMON);
     const isNewLayout = caseType === CaseType.AddressChange || caseType === CaseType.ReReg;
 
