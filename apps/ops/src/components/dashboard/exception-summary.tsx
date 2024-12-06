@@ -355,17 +355,19 @@ export const ExceptionSummary = ({
                             label: string;
                             total: number;
                             color: string | Highcharts.GradientColorObject | Highcharts.PatternObject;
-                        }> =
-                            this.points?.map(point => {
-                                const value = point?.y || 0;
-                                const color = point?.color || '#000000';
-                                total += value;
-                                return {
-                                    label: point?.series?.name,
-                                    total: value,
-                                    color: color,
-                                };
-                            }) || [];
+                        }> = [];
+
+                        for (const point of this.points || []) {
+                            const value = point?.y;
+                            if (!value) continue;
+                            const color = point?.color || '#000000';
+                            total += value;
+                            labelData.push({
+                                label: point?.series?.name,
+                                total: value,
+                                color: color,
+                            });
+                        }
 
                         const labelWrapper = document.createElement('div');
 
@@ -383,7 +385,7 @@ export const ExceptionSummary = ({
                             colorElement.style.height = '10px';
                             colorElement.style.borderRadius = '50%';
                             const titleElement = document.createElement('div');
-                            titleElement.innerHTML = `<b>${value.label}</b>: ${value.total.toLocaleString()}`;
+                            titleElement.innerHTML = `${value.label}: <b>${value.total.toLocaleString()}</b>`;
                             labelElement.appendChild(colorElement);
                             labelElement.appendChild(titleElement);
                             labelWrapper.appendChild(labelElement);
@@ -392,7 +394,7 @@ export const ExceptionSummary = ({
                         totalElement.style.justifySelf = 'end';
                         totalElement.style.alignSelf = 'end';
                         totalElement.style.marginTop = '4px';
-                        totalElement.innerHTML = `<b>Total</b>: ${total.toLocaleString()}`;
+                        totalElement.innerHTML = `Total: <b>${total.toLocaleString()}</b>`;
                         labelWrapper.appendChild(totalElement);
                         return labelWrapper.outerHTML;
                     },
