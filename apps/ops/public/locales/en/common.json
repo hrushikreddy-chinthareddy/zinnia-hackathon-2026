@@ -1776,6 +1776,7 @@
                 "state": "State income tax",
                 "title": "Income Tax Withholding",
                 "maritalStatusAllowances": "Marital Status and Allowances (for GA, MN and SC only)",
+                "maritalStatusAllowancesMN": "Marital Status and Allowances (MN and MI only)",
                 "maritalStatusAllowancesLabel": "Marital Status and Allowances",
                 "noOfAllowance": "No of allowance",
                 "withholdingStateAmount": "Withholding state amount (if applicable)",

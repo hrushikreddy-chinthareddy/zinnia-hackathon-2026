@@ -12,6 +12,7 @@ import IrsWithholding from '@deps/components/otp-withdrawal-form/irs-withholding
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
+import { USStates } from '@deps/constants/geography/us-states';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helper';
 import { Carrier } from '@deps/models/case/withdrawal/case';
@@ -33,6 +34,8 @@ export default function GilicoWithdrawalForm() {
         formPartyConfigs,
         selectOneOptions,
         fullWithdrawalOptions,
+        validateMaritalStatusAllowances,
+        meritalStatusAllowanceConfig,
     } = getGilicoConfig(t);
 
     const {
@@ -70,6 +73,9 @@ export default function GilicoWithdrawalForm() {
             setOwnerStateOfResidence(newOwnerStateOfResidence);
         }
     }, [formParty]);
+
+    const isMaritalStatusAllowances = contractIssueState ? validateMaritalStatusAllowances(contractIssueState as USStates) : false;
+
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -97,10 +103,16 @@ export default function GilicoWithdrawalForm() {
                     />
                 </>
             )}
-            <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
+            <TaxWithholdings
+                isFormStateReadOnly={isFormStateReadOnly}
+                isMaritalStatusAllowances={isMaritalStatusAllowances}
+                ownerStateOfResidence={ownerStateOfResidence}
+                meritalStatusAllowanceConfig={meritalStatusAllowanceConfig}
+            />
             <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} />
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
             {(ownerStateOfResidence || contractIssueState) &&
+                formSubtype === FormSubtype.FullWithdrawal &&
                 [ownerStateOfResidence, contractIssueState].some(state => state && cslnCheckStates.includes(state)) && (
                     <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />
                 )}
