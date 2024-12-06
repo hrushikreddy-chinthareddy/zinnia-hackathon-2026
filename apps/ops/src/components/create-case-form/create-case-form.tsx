@@ -88,7 +88,7 @@ const CreateCaseForm = ({
                             label={t('caseRenewal.caseCreate.client') as string}
                             options={clientIds.map(cId => {
                                 return { label: `${getCarrierNameByClientId(cId) || cId}`, value: cId.toLowerCase() };
-                            })}
+                            }).sort((a, b) => a.label.localeCompare(b.label))}
                             placeholder={t('caseRenewal.caseCreate.selectAClient') as string}
                             size={FieldSize.Small}
                             value={clientId}
