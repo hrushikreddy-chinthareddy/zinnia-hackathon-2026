@@ -83,8 +83,8 @@ export const IssuedBusiness = ({ selectedBrokerDealers, selectedCarriers }: Issu
         queryFn: () => getCaseDashboardStatsQuery(baseDashboardQueryFilter),
         select: ({ data }) => {
             return {
-                selectedSubprocess: data[0].name,
-                exceptionData: data.slice(0, 5),
+                selectedSubprocess: data?.[0]?.name || '',
+                exceptionData: data?.slice(0, 5) || [],
             };
         },
     });
@@ -100,6 +100,8 @@ export const IssuedBusiness = ({ selectedBrokerDealers, selectedCarriers }: Issu
 
         setBaseDashboardQueryFilter(baseFilter);
     }, [selectedCarriers, createdDateStart, selectedBrokerDealers]);
+
+    console.log('caseData', caseData?.exceptionData);
 
     return (
         <CardContainer
