@@ -88,7 +88,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
         let fullName = owner?.fullName;
 
         if (!fullName) {
-            fullName = `${owner.firstName} ${owner.middleName} ${owner.lastName}`;
+            fullName = `${owner?.firstName} ${owner?.middleName} ${owner?.lastName}`;
         }
 
         return fullName;
