@@ -143,9 +143,8 @@ export default async function AccountValuePage({
             emphasizeValue
             popoverElement={
               <LabelPopover title={'Death Benefit'}>
-                This is the amount, inclusive of any additional riders or
-                features, that will be available to your beneficiaries should
-                you pass away.
+                This is how much money your beneficiaries may receive when you
+                die.
               </LabelPopover>
             }
           />
