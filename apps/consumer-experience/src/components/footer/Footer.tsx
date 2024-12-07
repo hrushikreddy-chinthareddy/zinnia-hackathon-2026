@@ -50,7 +50,7 @@ export const Footer = ({ hasBorder, style, className }: Props) => {
       <p className="typography-content-footer-legal">
         By using this website, you agree to the terms and conditions outlined in
         our {legalLink('Terms of Use', 'https://zinnia.com/terms-of-use/')} and{' '}
-        {legalLink('Privacy Policy', 'https://zinnia.com/privacy/')}.
+        {legalLink('Privacy Policy', 'https://zinnia.com/privacy-policy/')}.
       </p>
       <p>
         <a

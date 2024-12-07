@@ -15,7 +15,6 @@ import { BankDetail } from '@/components/person-data/types';
 import {
   ApiResponse,
   ServerApi,
-  isMockDocumentRequestEnabled,
   isMockErrorEnabled,
   isMockPaymentHistoryRequestEnabled,
   isMockPolicyMetricsRequestEnabled,
@@ -48,7 +47,6 @@ import {
   transformPolicyDetails,
   sortPoliciesByIssuedDate,
 } from '@/services/policy/transformers';
-import { DocumentApiRequestInputs, PolicyDocument } from '@/types/document';
 import {
   PolicyApiResponse,
   PolicyProfile,
@@ -71,14 +69,14 @@ import {
   PolicyLoans,
   PolicySurrender,
   CarrierPolicyDetails,
+  CompletedAnnuityTransactionType,
+  PendingAnnuityTransactionType,
 } from '@/types/policy';
 import { RidersAndBenefits } from '@/types/riders';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { logError, logTrace, logWarn } from '@/utils/logging/server-logging';
 
-import { getDocuments } from '../document';
 import { mockAnnuityResponse } from '../mocks/annuity';
-import { mockDocumentsResponse } from '../mocks/documents';
 import { MockMetricsResponse } from '../mocks/metrics';
 import {
   mockCompletedTransactions,
@@ -483,6 +481,7 @@ export const getPolicyAccountValueWith30DayChange = async (
   };
 };
 
+// TODO: convert this to just getPolicyDetails
 export const getPolicyForHeaderDetails = async (
   options: PolicyRequestInputs
 ): Promise<ApiResponse<PolicyDetails>> => {
@@ -877,45 +876,103 @@ export const getPaymentHistory = async ({
   }
 };
 
-export const getCorrespondenceDocuments = async (
-  policyInputs: PolicyRequestInputs,
-  inputs: Partial<DocumentApiRequestInputs>
-): Promise<ApiResponse<PolicyDocument>> => {
-  logTrace('getCorrespondenceDocuments', {
-    planCode: policyInputs.planCode,
-    policyNumber: policyInputs.policyNumber,
+export const getAnnuityRecentTransactions = async ({
+  planCode,
+  policyNumber,
+}: PolicyRequestInputs): Promise<ApiResponse<PaymentHistoryTransaction>> => {
+  logTrace('getAnnuityRecentTransactions', {
+    planCode,
+    policyNumber,
   });
 
-  if (isMockDocumentRequestEnabled()) {
+  const currentYear = new Date().getFullYear().toString();
+  const completedTransactionTypes = Object.values(
+    CompletedAnnuityTransactionType
+  ).map(String);
+  const pendingTransactionTypes = Object.values(
+    PendingAnnuityTransactionType
+  ).map(String);
+
+  if (isMockPaymentHistoryRequestEnabled()) {
+    const product = isTestAnnuitiesEnabled()
+      ? mockAnnuityResponse
+      : mockPolicyResponse;
     return {
-      data: mockDocumentsResponse,
+      data: {
+        completedTransactions: mockCompletedTransactions.map(t =>
+          transformPaymentHistory(product, t)
+        ),
+        pendingTransactions: mockPendingTransactions.map(t =>
+          transformPaymentHistory(product, t)
+        ),
+      },
       error: null,
     };
   }
 
   try {
-    const policy = await getPolicyByPlanCodeAndId(policyInputs);
-    inputs.clientCode = policy.carrierId;
-    inputs.source = 'Correspondence';
-    const response = await getDocuments(inputs);
+    const [policyPromise, completedPromise, pendingPromise] =
+      await Promise.allSettled([
+        getPolicyByPlanCodeAndId({ planCode, policyNumber }),
+        getPolicyTransactions({
+          transactionTypes: completedTransactionTypes,
+          planCode,
+          policyNumber,
+          limit: 30,
+          status: 'Completed',
+          year: currentYear,
+        }),
+        getPolicyTransactions({
+          transactionTypes: pendingTransactionTypes,
+          planCode,
+          policyNumber,
+          status: 'Pending',
+          year: currentYear,
+        }),
+      ]);
 
-    if (!response?.items) {
-      throw new Error('No documents returned from the API');
+    if (policyPromise.status === 'rejected') {
+      throw new Error('Policy Call failed');
     }
 
+    if (
+      completedPromise.status === 'rejected' &&
+      pendingPromise.status === 'rejected'
+    ) {
+      logTrace('all requests for transactions were rejected', {
+        completedReason: completedPromise.reason,
+        pendingReason: pendingPromise.reason,
+      });
+
+      throw new Error('Something went wrong retrieving transactions');
+    }
+
+    // TODO: do we want to handle if just completed or just pending succeeds for whatever reason?
+    const completedTransactions =
+      completedPromise.status === 'fulfilled' ? completedPromise.value : [];
+    const pendingTransactions =
+      pendingPromise.status === 'fulfilled' ? pendingPromise.value : [];
+
     return {
-      data: response,
+      data: {
+        completedTransactions: completedTransactions.map(t =>
+          transformPaymentHistory(policyPromise.value, t)
+        ),
+        pendingTransactions: pendingTransactions.map(t =>
+          transformPaymentHistory(policyPromise.value, t)
+        ),
+      },
       error: null,
     };
   } catch (error) {
-    logWarn('getCorrespondenceDocuments error', { error });
+    logWarn('getAnnuityRecentTransactions Error', { error });
 
     return {
       data: null,
       error: {
         message: 'Something went wrong',
-        status: 400,
-        name: 'getCorrespondenceDocuments Error',
+        status: 500,
+        name: 'getAnnuityRecentTransactions Error',
       },
     };
   }
@@ -976,6 +1033,7 @@ export const getPolicyFundDetails = async (
   }
 };
 
+// TODO: add this returned data to getPolicyDetails and use that call in the component
 export const getPolicySurrenderDetails = async (
   policyInputs: PolicyRequestInputs
 ): Promise<ApiResponse<PolicySurrender>> => {
@@ -1192,14 +1250,14 @@ export const getPolicyDetails = async (policyInputs: PolicyRequestInputs) => {
     policyNumber: policyInputs.policyNumber,
   });
 
-  // if (isMockPolicyOverviewRequestEnabled()) {
-  //   const transformedResults = transformPolicyDetails(mockPolicyResponse);
+  if (isMockPolicyOverviewRequestEnabled()) {
+    const transformedResults = transformPolicyDetails(mockPolicyResponse);
 
-  //   return {
-  //     data: transformedResults,
-  //     error: null,
-  //   };
-  // }
+    return {
+      data: transformedResults,
+      error: null,
+    };
+  }
 
   try {
     const response = await getPolicyByPlanCodeAndId(policyInputs);

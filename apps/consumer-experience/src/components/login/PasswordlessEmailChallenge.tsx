@@ -27,7 +27,7 @@ const SubmitButton = () => {
       disabled={pending}
       variant={LoaderVariant.CTA}
       hide={!pending}
-      className={clsx('mt-3xl', styles.submit)}
+      className={clsx('mt-lg', styles.submit)}
     >
       <span>Continue</span>
     </SpinnerButton>

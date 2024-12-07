@@ -3,7 +3,6 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useMemo, useState } from 'react';
 
 import { Program } from '@deps/components/otp-withdrawal-form/rmd-method/program-item';
-import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
@@ -19,7 +18,7 @@ import Amount from './steps/amount';
 import Start from './steps/start';
 import Summary from './steps/summary';
 import TabGroupContainer from './tab-group-container';
-import { buildSSWFormData, getDocumentSource, sswEditFormValidator, SswUpdateType } from '../ssw-edit-helper';
+import { buildSSWFormData, getDocumentSource, sswEditFormValidator, SswUpdateType, UpdatedProgram } from '../ssw-edit-helper';
 import Signature from './steps/signature';
 
 type SswUpdateContainerProps = {
@@ -32,13 +31,19 @@ type SswUpdateContainerProps = {
 const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContainerProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sswUpdate' });
     const router = useRouter();
-    const [updateProgram, setUpdateProgram] = useState<Program>(programs[0]);
+    const [updateProgram, setUpdateProgram] = useState<UpdatedProgram>({});
     const { initialForm, setFormErrors } = useContext(FormDataContext);
     const [isLoading, setIsLoading] = useState(false);
     const [isFormSubmitted, setIsFormSubmitted] = useState(false);
     const [submitError, setSubmitError] = useState(false);
     const [timer] = useState(performance.now());
     const source = getDocumentSource(document.documentNumber);
+
+    let oldProgram: Program[] = [];
+
+    if (updateProgram) {
+        oldProgram = programs.filter(item => item.allocationId === updateProgram.allocationId);
+    }
 
     const handleFormAction = async (item: Program, operationType: SswUpdateType, formSign: FormSignature) => {
         if (source !== ChannelType.Phone) {
@@ -101,12 +106,12 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
                 ariaLabel: t('signTabTitle'),
                 component: <Signature />,
                 screenReaderLabel: t('signTabTitle'),
-                isVisible: () => document?.source !== ChannelType.Phone,
+                isVisible: () => source !== ChannelType.Phone,
                 text: t('signTabTitle'),
             },
             {
                 ariaLabel: t('tabs.summary.tabTitle'),
-                component: <Summary currentProgram={programs[0]} updatedProgram={updateProgram} onContinue={handleFormAction} />,
+                component: <Summary currentProgram={oldProgram?.[0]} updatedProgram={updateProgram} onContinue={handleFormAction} />,
                 screenReaderLabel: t('tabs.summary.tabTitle'),
                 index: 3,
                 text: t('tabs.summary.tabTitle'),
@@ -143,14 +148,6 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
         );
     }
 
-    if (isLoading) {
-        return (
-            <div className="fixed left-0 top-0 z-10 flex h-screen w-screen justify-center bg-gray-800 opacity-80">
-                <PageLoader variant={PageLoaderVariant.Center} />
-            </div>
-        );
-    }
-
     return (
         <TabGroupContainer
             steps={filteredSteps}
@@ -159,6 +156,7 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
             programType={programType as SswUpdateType}
             programs={programs}
             onSswUpdate={handleFormAction}
+            setSelectedProgram={setUpdateProgram}
             isFormSubmitted={isFormSubmitted}
             isLoading={isLoading}
             setIsLoading={setIsLoading}

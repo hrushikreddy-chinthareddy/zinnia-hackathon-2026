@@ -1,37 +1,48 @@
 import { Icon, IconType } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
+import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Radio from '@deps/components/radio/radio';
-import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
 import { TranslationFiles } from '@deps/config/translations';
 import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
 
+import { DocumentIndexingInfo } from './document-indexing-info';
 import { useGetPolicyTypeDocs } from './service-form-review.helper';
 import { useNigoEntry } from '../../nigo-entry-provider';
+
+export enum SelOptionType {
+    DATA_ENTRY = "DATA_ENTRY",
+    NIGO_ENTRY = "NIGO_ENTRY",
+    DOC_INDEXING = "DOC_INDEXING"
+};
 
 interface SetFormReviewProps {
     policyNumber: string;
     clientCode: string;
     docType: string;
     documentNumber: string;
-    activeDocType: DocumentTypeView;
 }
 
-export const ServiceFormReview = ({ policyNumber, clientCode, docType, documentNumber, activeDocType }: SetFormReviewProps) => {
+export const ServiceFormReview = ({ policyNumber, clientCode, docType, documentNumber }: SetFormReviewProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.serviceFormReview' });
-    const { isReadyForDataEntry, setIsReadyForDataEntry } = useNigoEntry();
 
-    const [sectionOption, setSectionOption] = useState(isReadyForDataEntry ? 'true' : 'false');
+    const { sectionOption, setSectionOption } = useNigoEntry();
     const [loading, getPolicyDocs, workingDocument] = useGetPolicyTypeDocs(policyNumber, clientCode, docType, documentNumber);
+    const { displayName } = workingDocument || {};
+
     const sectionOptions = [
         {
             label: t('options.allSectionsAreComplete'),
-            value: 'true',
+            value: SelOptionType.DATA_ENTRY
         },
         {
             label: t('options.missingDetails'),
-            value: 'false',
+            value:  SelOptionType.NIGO_ENTRY
+        },
+        {
+            label: t('options.incorrectDocIndexing'),
+            value: SelOptionType.DOC_INDEXING
         },
     ];
 
@@ -39,12 +50,9 @@ export const ServiceFormReview = ({ policyNumber, clientCode, docType, documentN
         getPolicyDocs();
     }, []);
 
-    const onOptionSelection = (value: string) => {
+    const onOptionSelection = (value: SelOptionType) => {
         setSectionOption(value);
-        setIsReadyForDataEntry(value === 'true');
     };
-
-    const { displayName } = workingDocument || {};
 
     return (
         <>
@@ -55,9 +63,11 @@ export const ServiceFormReview = ({ policyNumber, clientCode, docType, documentN
                             <Icon width={20} height={20} type={IconType.DOCUMENT_TEXT} />{' '}
                         </div>
                         <div>
-                            <div className="text-sm font-bold">{displayName}</div>
+                            <div className="text-sm font-bold"><PiiWrapper>{displayName}</PiiWrapper></div>
                             <div className="flex items-center text-sm font-normal text-gray-300">
-                                {t('documentId') + ': ' + documentNumber}
+                                <PiiWrapper>
+                                    {t('documentId') + ': ' + documentNumber}
+                                </PiiWrapper>
                             </div>
                         </div>
                         <div className="flex items-center">
@@ -65,7 +75,8 @@ export const ServiceFormReview = ({ policyNumber, clientCode, docType, documentN
                         </div>
                     </div>
                 )}
-                <Radio items={sectionOptions} label={''} onChange={event => onOptionSelection(event.target.value)} value={sectionOption} />
+                <Radio items={sectionOptions} label={''} onChange={event => onOptionSelection(event.target.value as SelOptionType)} value={sectionOption || SelOptionType.DATA_ENTRY} />
+                { sectionOption === SelOptionType.DOC_INDEXING && <DocumentIndexingInfo /> }
             </div>
         </>
     );

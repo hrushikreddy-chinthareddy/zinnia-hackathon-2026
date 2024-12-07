@@ -16,7 +16,7 @@ const DocumentDetail = ({ document, isSelected }: DocumentDetailsProps) => {
     const { state, dispatch } = useSendDocument();
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const { formId, formDisplayName, formNumber } = document;
+    const { formId, formShortName, formNumber } = document;
 
     // this removes focus state on mouse click, but allows it on arrow key navigation
     const handleClick = (e: React.MouseEvent<HTMLLabelElement, MouseEvent>) => {
@@ -49,10 +49,8 @@ const DocumentDetail = ({ document, isSelected }: DocumentDetailsProps) => {
                 value={formNumber}
                 ref={inputRef}
             />
-
-            <Icon width={20} height={20}  type={IconType.DOCUMENT_TEXT} />{' '}
-            <div className="grow text-sm font-semibold text-secondary-dark">{formDisplayName}</div>
-
+            <Icon width={20} height={20} type={IconType.DOCUMENT_TEXT} />{' '}
+            <div className="grow text-sm font-semibold text-secondary-dark">{formShortName}</div>
             <NavElement
                 className={''}
                 href={`/contact-center/document/${formId}`}

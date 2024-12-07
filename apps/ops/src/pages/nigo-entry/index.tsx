@@ -1,7 +1,6 @@
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-
 import { buildTaskLink } from '@deps/components/tasks-listing/task-listing.helpers';
 import { TranslationFiles } from '@deps/config/translations';
 import { ProcessesToCaseTypeMap } from '@deps/constants/case';
@@ -62,7 +61,7 @@ interface NigoEntryProps extends SegmentTrackedPageProps {
     isNigoCase?: boolean;
 };
 
-const isNigoEntryEnabled = (clientId: string, process: string, featureFlagMap: FeatureFlags ) => {
+const isNigoEntryEnabled = (clientId: string, process: string, featureFlagMap: FeatureFlags) => {
     const identifier = `NIGO_ENTRY_${clientId.toUpperCase()}_${process.toUpperCase().replaceAll(' ', '_')}` as FeatureKeyIdentifier;
     const featureKey = FEATURE_FLAGS[identifier];
     return featureKey && featureFlagMap[featureKey] ? featureFlagMap[featureKey] : false;
@@ -98,6 +97,7 @@ const NigoEntry = ({
 
     return (
         <div className="flex w-full flex-col overflow-auto px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10">
+
             <FormProvider
                 form={form}
                 initialForm={form}
@@ -107,6 +107,7 @@ const NigoEntry = ({
                 parties={parties}
             >
                 <NigoEntryProvider>
+
                     <NigoEntryContainer
                         documentNumber={documentNumber}
                         policy={policy}
@@ -218,13 +219,13 @@ export const getServerSideProps = withPageAuthRequired({
             const shouldShowNigoEntry = isNigoEntryEnabled(clientCode, caseType, featureFlagDecisions);
             // If feature flag is not enabled, redirect to error page
             if (!shouldShowNigoEntry) {
-               logWarn('nigo_entry::feature flag not enabled', { taskId, clientCode });
-               return {
+                logWarn('nigo_entry::feature flag not enabled', { taskId, clientCode });
+                return {
                     redirect: {
-                       destination: '/403',
-                       permanent: false,
+                        destination: '/403',
+                        permanent: false,
                     },
-               };
+                };
             }
 
             const userInfoForLogging = getUserInfoFromUser(user);

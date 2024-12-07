@@ -1,3 +1,4 @@
+import { datadogLogs } from '@datadog/browser-logs';
 import { ChipX, Label, Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
@@ -26,21 +27,26 @@ const AdditionalRecipient = ({ classNames, emails, setEmails, setError }: Additi
         const emailError = validateEmail(val);
 
         if (emails.length >= 5) {
-            setError(error => ({ ...error, submit: t('correspondence.maxEmails') as string }));
+            setError(error => ({ ...error, submit: t('correspondence.errors.maxEmails') as string }));
             return;
         }
         if (emailError) {
+            datadogLogs.logger.info('contactCenterCCEmailValidation', {
+                payload: val,
+                error: t(emailError) as string,
+                function: 'correspondence.cc.validateEmail',
+            });
             setError(error => ({ ...error, submit: t(emailError) as string }));
             return;
         }
 
         if (emails.includes(val)) {
-            setError(error => ({ ...error, submit: t('correspondence.duplicateEmail') as string }));
+            setError(error => ({ ...error, submit: t('correspondence.errors.duplicateEmailInCC') as string }));
             return;
         }
 
         setEmails([...emails, val]);
-        setError(error => ({ ...error, submit: '' }));
+        setError({});
         setEmail('');
     };
 

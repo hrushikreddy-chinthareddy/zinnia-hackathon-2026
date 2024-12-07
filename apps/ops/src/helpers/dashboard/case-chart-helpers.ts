@@ -37,6 +37,20 @@ const caseChartHelpers = {
         'Withdrawal',
         'Unknown',
     ],
+    getTreeMapColors: () => [
+        '#DB004F',
+        '#DE165E',
+        '#E12D6E',
+        '#E4447D',
+        '#E85A8D',
+        '#EB719C',
+        '#EE88AC',
+        '#F19FBB',
+        '#F5B5CB',
+        '#F8CCDA',
+        '#FBE3EA',
+        '#FFFAFA',
+    ],
     getColors: () => [
         '#87bf54',
         '#65bda5',
@@ -55,6 +69,7 @@ const caseChartHelpers = {
         return this.getColors().reverse();
     },
     getBaseSmallBarConfiguration: (): Highcharts.Options => ({
+        navigation: { buttonOptions: { enabled: false } },
         chart: {
             type: 'column',
             width: 200,
@@ -157,6 +172,7 @@ const caseChartHelpers = {
         },
     }),
     getBaseSmallPieConfiguration: (): Highcharts.Options => ({
+        navigation: { buttonOptions: { enabled: false } },
         chart: {
             type: 'pie',
             spacing: [0, 0, 0, 0],

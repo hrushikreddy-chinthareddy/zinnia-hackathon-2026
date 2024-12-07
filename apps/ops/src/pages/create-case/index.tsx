@@ -184,7 +184,7 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
         const docType = docTypes[caseType];
         setShowLoader(true);
 
-        if (docType === docTypes[CaseType.AddressChange] || docType ===docTypes[CaseType.ReReg]) {
+        if (docType === docTypes[CaseType.AddressChange] || docType === docTypes[CaseType.ReReg]) {
             await handleSearch();
             return;
         }
@@ -279,7 +279,7 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
             if (caseType === CaseType.ReReg) {
                 router.push(`/re-reg?policyNumber=${document.contract}&clientId=${clientId}&doc=${documentNumber}`);
             }
-        } else if (policyNumber){
+        } else if (policyNumber) {
             if (caseType === CaseType.AddressChange) {
                 router.push(`/address-change?policyNumber=${policyNumber}&clientId=${clientId}`);
             }

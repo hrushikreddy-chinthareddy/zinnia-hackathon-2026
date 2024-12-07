@@ -3,6 +3,10 @@
     background-color: var(--color-base-surface-surface-secondary);
 }
 
+.link {
+    z-index: 2;
+}
+
 .insightsHeader,
 .filtersHeader {
     padding: var(--measure-dimension-gap-2xl);
@@ -15,10 +19,10 @@
     border-right-width: 0;
 
     &.pinned {
-        border-color: var(--color-base-border-border-bold);
-        padding: var(--measure-dimension-padding-md) var(--measure-dimension-padding-2xl);
+        border-bottom-color: var(--color-base-border-border-bold);
+        padding: var(--measure-dimension-padding-2xl);
         background-color: var(--color-base-surface-surface-secondary);
-        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        box-shadow: var(--shadow-elevation-elevation-light-sm);
     }
 }
 
@@ -26,8 +30,13 @@
     justify-content: space-between;
     position: sticky;
     top: 0;
-    z-index: 2;
     background-color: var(--color-base-surface-surface-primary);
+    z-index: 3;
+    padding-bottom: var(--measure-dimension-gap-lg);
+
+    &.pinned {
+        z-index: 4;
+    }
 
 }
 
@@ -36,8 +45,15 @@
     top: var(--pinned-height);
     z-index: 1;
     background-color: var(--color-base-surface-surface-secondary);
+    margin-left: -32px;
+    margin-right: -32px;
 }
 
 .insightsHeaderDropdown {
     width: 306px;
+}
+
+.tooltip {
+    border: 16px solid var(--color-base-surface-surface-primry);
+
 }

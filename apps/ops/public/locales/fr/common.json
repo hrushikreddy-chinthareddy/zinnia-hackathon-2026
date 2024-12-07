@@ -29,6 +29,10 @@
             "title": "Page non trouvée",
             "message": "Désolé, nous n'avons pas trouvé la page que vous recherchez."
         },
+        "policyNotFound": {
+            "title": "Politique non trouvée",
+            "message": "Nous n'avons pas pu trouver la police associée au numéro de police {{policyNumber}} et au code du plan {{planCode}}. Si ce problème persiste, veuillez contacter le support des opérations pour obtenir de l'aide."
+        },
         "accessDenied": {
             "title": "Accès refusé",
             "message": "Désolé, vous n'êtes pas autorisé à afficher cette page. Veuillez contacter votre administrateur pour demander l'accès."
@@ -195,6 +199,9 @@
             },
             "diaryNotes": {
                 "text": "Notes de journal"
+            },
+            "caseDetails": {
+                "text": "Détails du cas"
             },
             "diaryNotesWarning": {
                 "text": "Attention: Notes d'agenda présentes. Examen requis pour soumettre",
@@ -1175,7 +1182,9 @@
                 "pre-note": "Pre-Note: {{label}}",
                 "source of premium": "Source de prétium: {{label}}",
                 "transfer of assets": "Transfert d'actifs: {{label}}"
-            }
+            },
+            "reviewIssues": "Revoir {{taskType}} problèmes",
+            "suitabilityReview": "suitability revoir"
         },
         "processDate": {
             "cancled": "Annulé le",
@@ -1941,8 +1950,6 @@
             "addAdditionalRecipient": "+ Ajouter un destinataire",
             "emailTooltip": "Veuillez entrer une adresse e-mail valide. Un seul e-mail est autorisé dans ce champ.",
             "additionalRecipientTooltip": "Vous pouvez ajouter jusqu'a 5 adresses e-mail dans le champ CC. Utilisez une virgule (,), point-virgule (;) ou Enter pour les séparer",
-            "maxEmails": "Maximum 5 e-mails autorisés",
-            "duplicateEmail": "L'e-mail existe déjà dans la liste",
             "email": "E-mail",
             "ccEmail": "Destinataires en copie carbone",
             "fax": "Fax",
@@ -1977,7 +1984,10 @@
             "inValidEmail": "Veuillez saisir une adresse e-mail valide",
             "firstName": "Le prénom est obligatoire",
             "lastName": "Le nom de famille est obligatoire",
-            "address": "Vérifiez et sélectionnez l'adresse pour continuer."
+            "address": "Vérifiez et sélectionnez l'adresse pour continuer.",
+            "maxEmails": "Maximum 5 e-mails autorisés",
+            "duplicateEmailInCC": "L'e-mail existe deja dans la liste",
+            "duplicateEmail": "Assurez-vous que l'adresse e-mail est unique entre les champs Destinataire et CC"
         }
     },
     "contactCenter": {
@@ -2830,6 +2840,38 @@
             "primaryBeneficiaries": "Bénéficiaires principaux",
             "totalAllocationsEqual100Pct": "Les allocations totales équivalent à 100%.",
             "updateAllocations": "Mettre à jour les allocations"
+        },
+        "caseDetailsContent": {
+            "tabs": {
+                "details": "Détails",
+                "related": "En rapport",
+                "addressHistory": "Historique des adresses"
+            },
+            "thereAre": "Il y a",
+            "otherOpenCases": "autres dossiers ouverts",
+            "relatedToThisPolicy": "liés à cette politique",
+            "applicationSignedDate": "Date de signature de la demande",
+            "issueState": "État du problème",
+            "qualificationType": "Type de qualification",
+            "viewFullDeatils": "Voir les détails",
+            "contractValue": "Valeur du contrat",
+            "policyDate": "Date du contrat",
+            "detailsTab": {
+                "people": "personnes",
+                "cedingCarriers": "Transporteurs cédants"
+            },
+            "relatedTab": {
+                "lastUpdated": "Dernière mise à jour",
+                "caseId": "ID du cas"
+            },
+            "addressHistoryTab": {
+                "defaultAddress": "Adresse par défaut",
+                "residentialAddress": "Adresse résidentielle",
+                "mailingAddress": "Adresse postale",
+                "viewFullDeatils": "Voir les détails",
+                "preferredAddress": "Adresse choisie",
+                "agentAddress": "Adresse de l'agent"
+            }
         },
         "correspondence": "Correspondence ({{count}})",
         "policy": "Police ({{count}})",
@@ -4414,9 +4456,31 @@
             "documentId": "ID du document",
             "noFormAvailable": "Aucun formulaire disponible."
         },
+        "CaseDetailsContent": {
+            "tabs": {
+                "details": "Détails",
+                "related": "En rapport"
+            },
+            "applicationSignedDate": "Date de signature de la demande",
+            "issueState": "État du problème",
+            "qualificationType": "Type de qualification",
+            "viewFullDeatils": "Voir les détails",
+            "contractValue": "Valeur du contrat",
+            "policyDate": "Date du contrat",
+            "detailsTab": {
+                "people": "personnes",
+                "cedingCarriers": "Transporteurs cédants"
+            },
+            "relatedTab": {
+                "lastUpdated": "Dernière mise à jour",
+                "caseId": "ID du cas"
+            }
+        },
+
         "confirmStep": {
             "title": "Soumis!",
             "subTitle": "Votre demande a été envoyée pour traitement.",
+            "subTitleReindexing": "Ce document sera réindexé. Le dossier existant a été annulé.",
             "cta": "Aller à la gestion des cas",
             "secondaryCta": "Fermer",
             "submitNigo": "Soumettre les détails NIGO"
@@ -4438,10 +4502,32 @@
             "subTitle": "Vérifiez le formulaire pour toute section manquante avant de continuer.",
             "options": {
                 "allSectionsAreComplete": "Toutes les sections sont complètes et prêtes pour la saisie des données.",
-                "missingDetails": "Il manque des détails"
+                "missingDetails": "Il manque des détails",
+                "incorrectDocIndexing": "The document was indexed incorrectly."
             },
             "view": "Voir",
-            "documentId": "ID du document"
+            "documentId": "ID du document",
+            "documentIndexingInfo": {
+                "suggestedDocumentType": "Type de document suggéré",
+                "notes": "Remarques",
+                "documentOptions": {
+                    "systematic": "Systématique",
+                    "stopPayment": "Arrêt de paiement",
+                    "returnedMail": "Courrier retourné",
+                    "accountUpdates": "Mises à jour du compte",
+                    "requiredMinimumDistribution": "Distribution minimale requise",
+                    "redemption": "Rachat",
+                    "policyUpdates": "Mises à jour des politiques",
+                    "outgoingTransfers": "Transferts sortants",
+                    "other": "Autre"
+                }
+            },
+            "formErrors": {
+                "formValidation": {
+                    "noDocTypeToReindex": "Veuillez indiquer le type de document pour la réindexation",
+                    "noNotes": "Veuillez saisir des notes"
+                }
+            }
         },
         "formSelection": {
             "title": "Sélection de nouveau formulaire",
@@ -4552,6 +4638,19 @@
             "cta": "Aller au virement entrant",
             "secondaryCta": "Fermer",
             "submitTask": "Soumettre les détails de l'adéquation"
+        }
+    },
+    "task": {
+        "documentPanel": {
+            "tabs": {
+                "working": "En cours",
+                "related": "Liés"
+            },
+            "view": "Voir",
+            "documentTitle": "Document",
+            "documents": "Documents",
+            "documentId": "ID du document",
+            "noFormAvailable": "Aucun formulaire disponible."
         }
     },
     "suitabilityReview": {

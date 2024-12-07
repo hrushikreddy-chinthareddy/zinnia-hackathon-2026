@@ -154,7 +154,7 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
                         </div>
                     </div>
                     <div>
-                        {document.source !== ChannelType.Phone && formSignature && (
+                        {source !== ChannelType.Phone && formSignature && (
                             <SignatureValidations isFormStateReadOnly={false} config={signaturesConfig} />
                         )}
 

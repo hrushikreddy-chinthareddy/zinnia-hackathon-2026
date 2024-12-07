@@ -1,0 +1,11 @@
+name: 'Policy Management Dev Deployment'
+
+on:
+  workflow_dispatch:
+
+jobs:
+  dev-deploy-east:
+    uses: ./.github/workflows/deploy-policy-management.yml
+    with:
+      environment-level: dev
+    secrets: inherit

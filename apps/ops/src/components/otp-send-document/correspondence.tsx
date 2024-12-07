@@ -1,5 +1,6 @@
+import { datadogLogs } from '@datadog/browser-logs';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import CorrespondenceCard from '@deps/containers/people-data-cards/correspondence-card/correspondence-card';
 import { useCorrespondence } from '@deps/contexts/CorrespondenceContext';
@@ -38,6 +39,13 @@ export const validateEmail = (email: string) => {
     }
     return;
 };
+
+const validateNoEmailOverlap = (recipient: string, ccList: string[]) => {
+    if (ccList?.includes(recipient)) {
+        return 'errors.duplicateEmail';
+    }
+    return false;
+};
 type CorrespondenceProps = {
     communicationOptions?: RadioItem[];
     policy: Policy;
@@ -49,23 +57,26 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
     const { state, dispatch } = useCorrespondence();
     const defaultCommunicationType = getDefaultCommunicationType(communicationOptions);
 
-    const [correspondenceData, setCorrespondenceData] = useState<Correspondence>({
-        ...state?.correspondence,
-        type: state?.correspondence?.type || defaultCommunicationType,
-        recipient: state?.correspondence?.recipient,
-    });
+    const correspondenceData = useMemo(
+        () => ({
+            ...state?.correspondence,
+            type: state?.correspondence?.type || defaultCommunicationType,
+            recipient: state?.correspondence?.recipient,
+        }),
+        [defaultCommunicationType, state?.correspondence]
+    );
     const [loader, setLoader] = useState(false);
     const [error, setError] = useState<FormValidationErrors>({});
 
-    useEffect(() => {
-        dispatch({
-            type: CorrespondenceAction.Correspondence,
-            payload: {
-                ...state.correspondence,
-                ...correspondenceData,
-            },
-        });
-    }, [correspondenceData]);
+    const handleCorrespondenceData = useCallback(
+        (correspondenceData: Correspondence) => {
+            dispatch({
+                type: CorrespondenceAction.Correspondence,
+                payload: correspondenceData,
+            });
+        },
+        [dispatch]
+    );
 
     const validRequest = () => {
         setError({});
@@ -73,7 +84,18 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
             case CommunicationTypes.Email: {
                 const emailError = validateEmail(correspondenceData.recipient);
                 if (emailError) {
+                    datadogLogs.logger.info('contactCenterEmailValidation', {
+                        payload: correspondenceData?.recipient,
+                        error: t(emailError) as string,
+                        function: 'correspondence.validateEmail',
+                    });
                     setError({ ...error, submit: t(emailError) as string });
+                    return false;
+                }
+
+                const duplicateEmail = validateNoEmailOverlap(correspondenceData.recipient, correspondenceData?.ccList || []);
+                if (duplicateEmail) {
+                    setError({ ...error, submit: t(duplicateEmail) as string });
                     return false;
                 }
 
@@ -134,7 +156,7 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
         >
             {loader && <Loader />}
             <CorrespondenceCard
-                setCorrespondenceData={setCorrespondenceData}
+                setCorrespondenceData={handleCorrespondenceData}
                 communicationOptions={communicationOptions}
                 correspondenceData={correspondenceData}
                 error={error}

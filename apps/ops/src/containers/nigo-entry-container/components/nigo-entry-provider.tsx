@@ -5,6 +5,8 @@ import { NigoEntryContext } from '@deps/contexts/NigoEntryContext';
 import { CallCenterElement, FormDetails } from '@deps/models/case/send-document';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
+import { SelOptionType } from './steps/service-form-review/service-form-review';
+
 type NigoEntryProviderProps = {
     children: React.ReactNode;
 };
@@ -14,7 +16,8 @@ const INITIAL_FORM_DATA: any = {
 
 export const NigoEntryProvider = ({ children }: NigoEntryProviderProps) => {
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
-    const [isReadyForDataEntry, setIsReadyForDataEntry] = useState<boolean>(false);
+    const [sectionOption, setSectionOption] = useState<SelOptionType>(SelOptionType.DATA_ENTRY);
+    const [documentIndexingInfo, setDocumentIndexingInfo] = useState<any>(null);
     const [messages, setMessages] = useState<any>([]);
     const [exceptions, setExceptions] = useState<string[]>([]);
     const [transactionType, setTransactionType] = useState<CallCenterElement<string, SimpleOption>>({} as CallCenterElement<string, SimpleOption>);
@@ -27,7 +30,8 @@ export const NigoEntryProvider = ({ children }: NigoEntryProviderProps) => {
         <NigoEntryContext.Provider
             value={{
                 formData,
-                isReadyForDataEntry,
+                sectionOption,
+                documentIndexingInfo,
                 exceptions,
                 messages,
                 transactionType,
@@ -36,7 +40,8 @@ export const NigoEntryProvider = ({ children }: NigoEntryProviderProps) => {
                 formErrors,
                 submitFailed,
                 setFormData,
-                setIsReadyForDataEntry,
+                setSectionOption,
+                setDocumentIndexingInfo,
                 setExceptions,
                 setMessages,
                 setTransactionType,
