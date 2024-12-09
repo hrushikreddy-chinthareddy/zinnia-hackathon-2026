@@ -125,32 +125,30 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
                             wrapper.style.backgroundColor = 'var(--color-base-surface-surface-primary)';
                             wrapper.classList.add('rounded', 'typography-content-body');
                             wrapper.style.color = 'var(--color-base-text-text-primary)';
-                            wrapper.style.padding = 'var(--measure-dimension-padding-lg)';
                             wrapper.style.margin = 'var(--measure-dimension-margin-sm)';
-                            wrapper.style.display = 'flex';
-                            wrapper.style.flexDirection = 'column';
-                            wrapper.style.justifyContent = 'start';
-                            wrapper.style.gap = '4px';
+                            wrapper.style.fontFamily = 'var(--font-family-secondary)';
+                            wrapper.style.fontSize = '11px';
                             wrapper.style.overflow = 'hidden';
                             wrapper.style.textOverflow = 'ellipsis';
+
+                            wrapper.style.margin = 'var(--measure-dimension-margin-2xs)';
+                            wrapper.style.padding = 'var(--measure-dimension-padding-xs)';
+                            wrapper.style.alignItems = 'center';
+
                             const nameSpan = document.createElement('span');
-                            const valueSpan = document.createElement('span');
+                            // const valueSpan = document.createElement('span');
                             if (len < Math.max(name.length, ratio.length)) {
-                                wrapper.style.margin = 'var(--measure-dimension-margin-2xs)';
-                                wrapper.style.padding = '0 var(--measure-dimension-padding-xs)';
-                                wrapper.style.justifyContent = 'center';
-                                wrapper.style.alignItems = 'center';
                                 nameSpan.innerText = len < name.length ? name.substring(0, Math.floor(len)) + '...' : name;
-                                valueSpan.innerText = len < ratio.length ? ratio.substring(0, Math.floor(len)) + '...' : ratio;
+                                // valueSpan.innerText = len < ratio.length ? ratio.substring(0, Math.floor(len)) + '...' : ratio;
                                 if (len < 1) {
                                     wrapper.style.visibility = 'hidden';
                                 }
                             } else {
                                 nameSpan.innerText = name;
-                                valueSpan.innerText = ratio;
+                                // valueSpan.innerText = ratio;
                             }
                             wrapper.appendChild(nameSpan);
-                            wrapper.appendChild(valueSpan);
+                            // wrapper.appendChild(valueSpan);
                             return wrapper.outerHTML;
                         },
                     },
@@ -171,12 +169,19 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
                     wrapper.style.display = 'flex';
                     wrapper.style.flexDirection = 'column';
                     wrapper.style.justifyContent = 'start';
-                    wrapper.style.gap = '4px';
+                    wrapper.style.fontSize = '11px';
                     const nameSpan = document.createElement('span');
                     const valueSpan = document.createElement('span');
-                    nameSpan.innerText = this.point.name;
+
                     // @ts-expect-error: this actually exists
-                    valueSpan.innerText = this.point.value;
+                    const value = this.point.value;
+                    // @ts-expect-error: this actually exists
+                    const seriesValues: Array<number> = this.series.valueData;
+                    const total = seriesValues.reduce((sum, val) => sum + val, 0);
+                    const ratio = `${value} / ${total}`;
+
+                    nameSpan.innerText = this.point.name;
+                    valueSpan.innerText = ratio; //this.point.value;
                     wrapper.appendChild(nameSpan);
                     wrapper.appendChild(valueSpan);
                     return wrapper.outerHTML;
