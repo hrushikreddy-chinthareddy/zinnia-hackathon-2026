@@ -24,7 +24,7 @@ import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimize
 import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
-import FiltersHeaderZustand from '@deps/components/dashboard/filters-header/filters-header-zustand';
+import FiltersHeader from '@deps/components/dashboard/filters-header/filters-header';
 
 export interface CarrierListItem {
     [key: string]: string;
@@ -57,7 +57,7 @@ const DashboardPage = ({
         <DashboardResponsiveLayout>
             <PageHead titleKey="dashboard" />
             <NoNavLayout fullHeight={true} displayTopNavBar={true} size="large">
-                <FiltersHeaderZustand
+                <FiltersHeader
                     carrierHeaderIsIntersecting={carrierHeaderIsIntersecting}
                     carrierHeaderEntry={carrierHeaderEntry}
                     authorizedCarriers={authorizedCarriers}

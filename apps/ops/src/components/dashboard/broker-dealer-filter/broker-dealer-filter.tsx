@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useCallback, useEffect } from 'react';
+import { Dispatch, SetStateAction, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FieldSize } from '@deps/components/fields/field';
@@ -18,6 +18,13 @@ type BrokerDealerFilterProps = {
     handleOnOpenChangeBroker?: (open: boolean) => void;
 };
 
+const getBrokerDealerOptions = (brokerDealers: DashboardResponseData[]): MultiselectOption[] => {
+    return brokerDealers.map(agent => {
+        const formattedName = toTitleCase(agent.name);
+        return { label: <span>{formattedName}</span>, value: agent.name, displayText: `${formattedName}` };
+    });
+};
+
 export const BrokerDealerFilter = ({
     brokerDealers,
     updateBrokerDealerFilters,
@@ -29,11 +36,8 @@ export const BrokerDealerFilter = ({
 }: BrokerDealerFilterProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
 
-    const getBrokerDealerOptions = useCallback((): MultiselectOption[] => {
-        return brokerDealers.map(agent => {
-            const formattedName = toTitleCase(agent.name);
-            return { label: <span>{formattedName}</span>, value: agent.name, displayText: `${formattedName}` };
-        });
+    const brokerDealerOptions = useMemo(() => {
+        return getBrokerDealerOptions(brokerDealers);
     }, [brokerDealers]);
 
     useEffect(() => {
@@ -51,7 +55,7 @@ export const BrokerDealerFilter = ({
     return (
         <Select
             isMultiselect
-            options={getBrokerDealerOptions()}
+            options={brokerDealerOptions}
             value={selectedBrokerDealers}
             onChange={updateBrokerDealerFilters}
             size={FieldSize.Small}
