@@ -7,6 +7,7 @@ import { useCallback, useRef, useState } from 'react';
 
 import { ActiveApplications } from '@deps/components/dashboard/active-applications/active-applications';
 import { DashboardTabNav } from '@deps/components/dashboard/dashboard-nav-links';
+import FiltersHeader from '@deps/components/dashboard/filters-header/filters-header';
 import IssuedBusiness from '@deps/components/dashboard/issued-business/issued-business';
 import NoNavLayout from '@deps/components/no-nav-layout';
 import { PageHead } from '@deps/components/page-title';
@@ -65,15 +66,10 @@ const DashboardPage = ({
                 />
 
                 <DashboardTabNav>
-                    <TabContent className="w-full" value={'active-applications'}>
-                        <ActiveApplications
-                            sankeyChartRef={sankeyChartRef}
-                            handleSetLoading={handleSetLoading}
-                            loading={loading}
-                            carrierHeaderRef={carrierHeaderRef}
-                        />
+                    <TabContent ref={tabContentRef} value={'active-applications'}>
+                        <ActiveApplications handleSetLoading={handleSetLoading} loading={loading} carrierHeaderRef={carrierHeaderRef} />
                     </TabContent>
-                    <TabContent className="w-full" value={'issued-business'}>
+                    <TabContent ref={tabContentRef} value={'issued-business'}>
                         <IssuedBusiness />
                     </TabContent>
                 </DashboardTabNav>
