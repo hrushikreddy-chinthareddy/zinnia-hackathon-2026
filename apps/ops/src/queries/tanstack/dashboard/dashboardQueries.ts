@@ -1,12 +1,13 @@
 import dayjs from 'dayjs';
 
-import { getArrayIndexFromDate, MappedExceptionData } from '@deps/components/dashboard/issued-business/useExceptionData';
 import { SimpleOption } from '@deps/components/select/select.helpers';
+import { getArrayIndexFromDate } from '@deps/helpers/date.helper';
 import { Statuses, CaseDashboardStatsResponse, Processes, DashboardStatsElementResponse } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 
-import { getCaseDashboardStats } from '../api/cases';
-import { CaseDashboardStatsQuery, DashboardSearchFilter } from '../cases';
+import { MappedExceptionData } from './types';
+import { getCaseDashboardStats } from '../../api/cases';
+import { CaseDashboardStatsQuery, DashboardSearchFilter } from '../../cases';
 
 /**************************
  * ****Geneeral Case Dashboard Stats Query

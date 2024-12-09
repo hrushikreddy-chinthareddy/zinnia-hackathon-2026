@@ -15,7 +15,7 @@ import { useResizeObserver } from '@deps/hooks/useResizeObserver';
 import { Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { DashboardSearchFilter } from '@deps/queries/cases';
-import { getProcessListOptions, getCaseDashboardStatsQuery } from '@deps/queries/tanstack/dashboardQueries';
+import { getProcessListOptions, getCaseDashboardStatsQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 import { useDashboardStore } from '@deps/store/store';
 
 import styles from '../../../pages/dashboard/Dashboard.module.css';

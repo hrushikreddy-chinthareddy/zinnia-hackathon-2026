@@ -17,7 +17,7 @@ import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-hel
 import { Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { DashboardSearchFilter } from '@deps/queries/cases';
-import { getCaseDashboardStatsQuery } from '@deps/queries/tanstack/dashboardQueries';
+import { getCaseDashboardStatsQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 import { useDashboardStore } from '@deps/store/store';
 
 import { ExceptionInsights } from '../../../components/dashboard/exception-insights';
@@ -46,7 +46,7 @@ export const IssuedBusiness: FC = () => {
         if (selectedBrokerDealers) {
             return GroupByOptions.BrokerDealerName;
         }
-        return undefined;
+        return GroupByOptions.Carrier;
     }, [selectedBrokerDealers, selectedCarriers]);
 
     const handleTimeFrameChange = (value: string) => {

@@ -19,7 +19,7 @@ import { DashboardStatsElementResponse, Processes, Statuses } from '@deps/models
 import { GroupByOptions } from '@deps/models/case/enums';
 import { getCaseInsights } from '@deps/queries/api/openai';
 import { DashboardSearchFilter } from '@deps/queries/cases';
-import { getCaseDashboardStatsQuery } from '@deps/queries/tanstack/dashboardQueries';
+import { getCaseDashboardStatsQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 import { ReactComponent as LightBulbIcon } from '@deps/styles/elements/icons/illustrations/light-bulb.svg';
 
