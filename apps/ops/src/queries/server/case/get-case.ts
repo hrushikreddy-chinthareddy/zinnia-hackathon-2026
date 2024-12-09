@@ -23,7 +23,7 @@ const getCase = async ({
             { authorization: 'Bearer ' + accessToken },
             loggingContext
         );
-        const maskedData = !canUnmask ? caseSanitizer(getCaseResponse.data) : fullyMaskCase(getCaseResponse.data);
+        const maskedData = canUnmask ? caseSanitizer(getCaseResponse.data) : fullyMaskCase(getCaseResponse.data);
 
         return { ...getCaseResponse, data: maskedData };
     } catch (e) {

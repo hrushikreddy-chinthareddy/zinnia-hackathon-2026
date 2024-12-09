@@ -13,7 +13,7 @@ const canUnmaskPii = async (accessToken: string | undefined, partyId: string | u
         loggingContext
     );
 
-    return !!userUnmaskingRolesResponse?.data?.objects?.length;
+    return userUnmaskingRolesResponse?.data?.objects?.length;
 };
 
 export default canUnmaskPii;

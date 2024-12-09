@@ -10,6 +10,7 @@ import { getRiskClass } from '@deps/helpers/party-info-helper';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { ReactComponent as ShieldHeart } from '@deps/styles/elements/icons/navigation/shield-heart.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 
 const InsuredCard = ({ policy }: { policy: PolicyDetails }) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'policy.detailCards.coveredParty' });
@@ -95,7 +96,11 @@ const AnnuitantCard = ({ policy }: { policy: PolicyDetails }) => {
                                 <Label label={t('currentAge')} variant={LabelVariant.FieldLabel} />
                                 <Content
                                     pii={true}
-                                    details={t('yearsOld', { count: ageInYears }) as string}
+                                    details={
+                                        isNullEmptyOrUndefined(ageInYears)
+                                            ? DEFAULT_ERROR_STRING
+                                            : (t('yearsOld', { count: ageInYears }) as string)
+                                    }
                                     variant={ContentVariant.BodySm}
                                 />
                             </div>
