@@ -13,15 +13,9 @@ import { getStartAndEndDates } from '@deps/containers/case-redesign-sub-page/cas
 import { useIntersectionObserver } from '@deps/hooks/useIntersectionObserver';
 import { useResizeObserver } from '@deps/hooks/useResizeObserver';
 import { Processes, Statuses } from '@deps/models/case/case';
+import { GroupByOptions } from '@deps/models/case/enums';
 import { DashboardSearchFilter } from '@deps/queries/cases';
-import {
-    getCountByCarrierInsightStats,
-    getCountBySubProcessInsightStats,
-    getCreatedBySubProcessInsightStats,
-    getOpenExceptionCategoriesByCreatedInsightStats,
-    getExceptionCategoryStats,
-    getProcessListOptions,
-} from '@deps/queries/tanstack/dashboardQueries';
+import { getProcessListOptions, getCaseDashboardStatsQuery } from '@deps/queries/tanstack/dashboardQueries';
 import { useDashboardStore } from '@deps/store/store';
 
 import styles from '../../../pages/dashboard/Dashboard.module.css';
@@ -67,23 +61,23 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ sankeyChartRef
     });
     const { data: insightGroupingCountByCarrierStats, isLoading: insightGroupingCountByCarrierStatsLoading } = useQuery({
         queryKey: ['countByCarrierInsights', baseInsightQueryFilter],
-        queryFn: () => getCountByCarrierInsightStats(baseInsightQueryFilter),
+        queryFn: () => getCaseDashboardStatsQuery(baseInsightQueryFilter, [GroupByOptions.Carrier]),
     });
     const { data: insightGroupingCountBySubProcessStats, isLoading: insightGroupingCountBySubProcessStatsLoading } = useQuery({
         queryKey: ['countBySubProcessInsights', baseInsightQueryFilter],
-        queryFn: () => getCountBySubProcessInsightStats(baseInsightQueryFilter),
+        queryFn: () => getCaseDashboardStatsQuery(baseInsightQueryFilter, [GroupByOptions.ProcessSubType]),
     });
     const { data: insightCreatedBySubProcess, isLoading: insightCreatedBySubProcessLoading } = useQuery({
         queryKey: ['createdBySubProcessInsights', baseInsightQueryFilter],
-        queryFn: () => getCreatedBySubProcessInsightStats(baseInsightQueryFilter),
+        queryFn: () => getCaseDashboardStatsQuery(baseInsightQueryFilter, [GroupByOptions.ProcessSubType, GroupByOptions.CreatedAt]),
     });
     const { data: insightStagesByCreated, isLoading: insightStagesByCreatedLoading } = useQuery({
         queryKey: ['stagesByCreatedInsights', baseInsightQueryFilter],
-        queryFn: () => getOpenExceptionCategoriesByCreatedInsightStats(baseInsightQueryFilter),
+        queryFn: () => getCaseDashboardStatsQuery(baseInsightQueryFilter, [GroupByOptions.CreatedAt, GroupByOptions.ExceptionCategory]),
     });
     const { data: insightExceptionStats, isLoading: insightExceptionStatsLoading } = useQuery({
         queryKey: ['exceptionStats', baseInsightQueryFilter],
-        queryFn: () => getExceptionCategoryStats(baseInsightQueryFilter),
+        queryFn: () => getCaseDashboardStatsQuery(baseInsightQueryFilter, [GroupByOptions.ExceptionCategory]),
     });
 
     useEffect(() => {

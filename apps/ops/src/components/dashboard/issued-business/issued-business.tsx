@@ -75,9 +75,10 @@ export const IssuedBusiness: FC = () => {
         return startDate;
     }, [timeframe]);
 
-    const { data: caseData, isLoading } = useQuery({
+    const { data: caseDashboardStatsData, isLoading } = useQuery({
         queryKey: ['getCases', baseDashboardQueryFilter],
-        queryFn: () => getCaseDashboardStatsQuery(baseDashboardQueryFilter),
+        queryFn: () =>
+            getCaseDashboardStatsQuery(baseDashboardQueryFilter, [GroupByOptions.ProcessSubType, GroupByOptions.ExceptionCategory]),
         select: ({ data }) => {
             return {
                 selectedSubprocess: data?.[0]?.name || '',
@@ -98,7 +99,7 @@ export const IssuedBusiness: FC = () => {
         setBaseDashboardQueryFilter(baseFilter);
     }, [selectedCarriers, createdDateStart, selectedBrokerDealers]);
 
-    console.log('caseData', caseData?.exceptionData);
+    console.log('caseData', caseDashboardStatsData?.exceptionData);
 
     return (
         <CardContainer
@@ -123,10 +124,10 @@ export const IssuedBusiness: FC = () => {
                 <RadioGroup.Root
                     asChild
                     onValueChange={handleSelectedSubprocess}
-                    value={selectedSubprocess || caseData?.selectedSubprocess}
+                    value={selectedSubprocess || caseDashboardStatsData?.selectedSubprocess}
                 >
                     <div className=" grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 !items-stretch !border-b-0 !after:content-none [& .indicator]">
-                        {caseData?.exceptionData.map((element, index) => {
+                        {caseDashboardStatsData?.exceptionData.map((element, index) => {
                             return (
                                 <RadioGroup.Item
                                     defaultChecked={index === 0}
@@ -187,27 +188,27 @@ export const IssuedBusiness: FC = () => {
                 ) : (
                     <ExceptionInsights
                         timeframe={timeframe}
-                        completedCasesByProcessSubType={caseData?.exceptionData}
-                        selectedSubprocess={selectedSubprocess || caseData?.selectedSubprocess || ''}
+                        completedCasesByProcessSubType={caseDashboardStatsData?.exceptionData}
+                        selectedSubprocess={selectedSubprocess || caseDashboardStatsData?.selectedSubprocess || ''}
                         selectedException={selectedException}
                         carrierOrBrokerDealer={undefined}
                     />
                 )}
             </div>
             <div className="bg-white p-8 flex flex-col gap-8">
-                {(selectedSubprocess || caseData?.selectedSubprocess) && (
+                {(selectedSubprocess || caseDashboardStatsData?.selectedSubprocess) && (
                     <ExceptionSummary
                         carrierOrBrokerDealer={carrierOrBrokerDealer}
                         startDate={createdDateStart}
-                        selectedSubprocess={selectedSubprocess || caseData?.selectedSubprocess || ''}
+                        selectedSubprocess={selectedSubprocess || caseDashboardStatsData?.selectedSubprocess || ''}
                     />
                 )}
             </div>
             <div className="bg-white p-8 flex flex-col gap-8">
-                {(selectedSubprocess || caseData?.selectedSubprocess) && (
+                {(selectedSubprocess || caseDashboardStatsData?.selectedSubprocess) && (
                     <Top5SubprocessByVolume
                         createdDateStart={createdDateStart}
-                        requestSubType={selectedSubprocess || caseData?.selectedSubprocess || ''}
+                        requestSubType={selectedSubprocess || caseDashboardStatsData?.selectedSubprocess || ''}
                     />
                 )}
             </div>

@@ -8,8 +8,27 @@ import { GroupByOptions } from '@deps/models/case/enums';
 import { getCaseDashboardStats } from '../api/cases';
 import { CaseDashboardStatsQuery, DashboardSearchFilter } from '../cases';
 
+/**************************
+ * ****Geneeral Case Dashboard Stats Query
+ * You can use this for lots of the dashboard queries and just pass in filter and groupby
+ * *************************
+ */
+
+export const getCaseDashboardStatsQuery = async (baseFilter: DashboardSearchFilter, groupBy: GroupByOptions[]) => {
+    const statsResponse = await getCaseDashboardStats({
+        filter: baseFilter,
+        groupBy,
+    });
+
+    if (!statsResponse || 'status' in statsResponse) {
+        throw statsResponse;
+    }
+
+    return statsResponse;
+};
+
 /*************************
- **** Active Applications Queries****
+ **** Active Applications Query****
  **************************
  */
 
@@ -36,66 +55,6 @@ export const getProcessListOptions = async (createdDateStart: string) => {
         .sort((item1, item2) => item1.label.localeCompare(item2.label));
 
     return listOptions;
-};
-
-export const getCountByCarrierInsightStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
-    const query = {
-        filter: baseInsightQueryFilter,
-        groupBy: [GroupByOptions.Carrier],
-    };
-    const statsResponse = await getCaseDashboardStats(query);
-    if (!statsResponse || 'status' in statsResponse) {
-        throw statsResponse;
-    }
-    return statsResponse;
-};
-
-export const getCountBySubProcessInsightStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
-    const query = {
-        filter: baseInsightQueryFilter,
-        groupBy: [GroupByOptions.ProcessSubType],
-    };
-    const statsResponse = await getCaseDashboardStats(query);
-    if (!statsResponse || 'status' in statsResponse) {
-        throw statsResponse;
-    }
-    return statsResponse;
-};
-
-export const getCreatedBySubProcessInsightStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
-    const query = {
-        filter: baseInsightQueryFilter,
-        groupBy: [GroupByOptions.ProcessSubType, GroupByOptions.CreatedAt],
-    };
-    const statsResponse = await getCaseDashboardStats(query);
-    if (!statsResponse || 'status' in statsResponse) {
-        throw statsResponse;
-    }
-    return statsResponse;
-};
-
-export const getOpenExceptionCategoriesByCreatedInsightStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
-    const query = {
-        filter: baseInsightQueryFilter,
-        groupBy: [GroupByOptions.CreatedAt, GroupByOptions.ExceptionCategory],
-    };
-    const statsResponse = await getCaseDashboardStats(query);
-    if (!statsResponse || 'status' in statsResponse) {
-        throw statsResponse;
-    }
-    return statsResponse;
-};
-
-export const getExceptionCategoryStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
-    const query = {
-        filter: baseInsightQueryFilter,
-        groupBy: [GroupByOptions.ExceptionCategory],
-    };
-    const statsResponse = await getCaseDashboardStats(query);
-    if (!statsResponse || 'status' in statsResponse) {
-        throw statsResponse;
-    }
-    return statsResponse;
 };
 
 /**************************
@@ -125,24 +84,6 @@ export const getStatsFromSelectionQuery = async (
         throw statsResponse;
     }
     return statsResponse as CaseDashboardStatsResponse;
-};
-
-/**************************
- * ****Issued Business Queries
- * *************************
- */
-
-export const getCaseDashboardStatsQuery = async (baseFilter: DashboardSearchFilter) => {
-    const statsResponse = await getCaseDashboardStats({
-        filter: baseFilter,
-        groupBy: [GroupByOptions.ProcessSubType, GroupByOptions.ExceptionCategory],
-    });
-
-    if (!statsResponse || 'status' in statsResponse) {
-        throw statsResponse;
-    }
-
-    return statsResponse;
 };
 
 /********************************
