@@ -17,13 +17,13 @@ export default function Exceptions({ exceptions, unmapped = false }: { exception
         return null;
     }
 
-    const areGroupedExceptions = exceptions.every(
+    const isSingleTask = exceptions.every(
         exception => exception.tasks.length > 0 && exception.tasks.every(task => task.id === exceptions[0].tasks[0].id)
     );
 
     return (
         <ul>
-            {!areGroupedExceptions &&
+            {!isSingleTask &&
                 exceptions.map(exception => (
                     <li className="flex w-full flex-col" key={exception.id}>
                         <div className="flex w-full flex-col justify-between lg:flex-row">
@@ -45,7 +45,7 @@ export default function Exceptions({ exceptions, unmapped = false }: { exception
                         <Tasks tasks={exception.tasks} />
                     </li>
                 ))}
-            {areGroupedExceptions && (
+            {isSingleTask && (
                 <li className="flex w-full flex-col">
                     <div className="flex w-full flex-col justify-between lg:flex-row">
                         <Content
