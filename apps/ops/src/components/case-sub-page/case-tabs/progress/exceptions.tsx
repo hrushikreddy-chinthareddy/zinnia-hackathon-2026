@@ -52,7 +52,11 @@ export default function Exceptions({ exceptions, unmapped = false }: { exception
                             className="text-semantic-error"
                             contentClassName="mt-1"
                             variant={ContentVariant.BodySm}
-                            details={t(`One or more ${TaskTypeMap[exceptions[0].tasks[0].description]} exceptions found`) as string}
+                            details={
+                                t('caseOverview.tabs.commonTaskIssues', {
+                                    taskType: TaskTypeMap[exceptions[0].tasks[0].description],
+                                }) as string
+                            }
                         />
                         {unmapped && (
                             <Content

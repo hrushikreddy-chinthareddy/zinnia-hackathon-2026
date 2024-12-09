@@ -1191,7 +1191,8 @@
                 "transfer of assets": "Transfer of Assets: {{label}}"
             },
             "reviewIssues": "Review {{taskType}} issues",
-            "suitabilityReview": "suitability review"
+            "suitabilityReview": "suitability review",
+            "commonTaskIssues": "Issue: One or more {{taskType}} exceptions found"
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -4579,7 +4580,6 @@
             }
         }
     },
-
     "sswUpdate": {
         "sswUpdateOptions": {
             "new": "New",
