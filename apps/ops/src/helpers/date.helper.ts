@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 
+export const ZAHARA_DATE_FORMAT = 'YYYY-MM-DD';
 interface DateRange {
     startDate?: string | undefined;
     endDate?: string | undefined;

@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 
 import { SimpleOption } from '@deps/components/select/select.helpers';
-import { getArrayIndexFromDate } from '@deps/helpers/date.helper';
+import { getArrayIndexFromDate, ZAHARA_DATE_FORMAT } from '@deps/helpers/date.helper';
 import { Statuses, CaseDashboardStatsResponse, DashboardStatsElementResponse } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 
@@ -10,7 +10,7 @@ import { getCaseDashboardStats } from '../../api/cases';
 import { CaseDashboardStatsQuery, DashboardSearchFilter } from '../../cases';
 
 /**************************
- * ****Geneeral Case Dashboard Stats Query
+ * ****General Case Dashboard Stats Query
  * You can use this for lots of the dashboard queries and just pass in filter and groupby
  * *************************
  */
@@ -116,9 +116,9 @@ export const getExceptionData = async (filter: DashboardSearchFilter, groupBy: G
     const { data: statsData } = { ...statsResponse };
     const { createdDateStart = '' } = filter;
     // Get the number of elements we'll need for the charts based on current date and start date
-    const maxDayIndex = getArrayIndexFromDate(dayjs().format('YYYY-MM-DD'), createdDateStart);
-    const maxWeekIndex = getArrayIndexFromDate(dayjs().format('YYYY-MM-DD'), createdDateStart, 'week');
-    const maxMonthIndex = getArrayIndexFromDate(dayjs().format('YYYY-MM-DD'), createdDateStart, 'month');
+    const maxDayIndex = getArrayIndexFromDate(dayjs().format(ZAHARA_DATE_FORMAT), createdDateStart);
+    const maxWeekIndex = getArrayIndexFromDate(dayjs().format(ZAHARA_DATE_FORMAT), createdDateStart, 'week');
+    const maxMonthIndex = getArrayIndexFromDate(dayjs().format(ZAHARA_DATE_FORMAT), createdDateStart, 'month');
 
     // Set up default data
     const parsedResponse: ExceptionDataResponse = {

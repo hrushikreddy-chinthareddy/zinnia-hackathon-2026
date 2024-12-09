@@ -18,7 +18,7 @@ const ActiveAgingBars = forwardRef<HighchartsReactRefObject, Props>(({ agingRang
     const [chartConfig, setChartConfig] = useState<Highcharts.Options>({});
     const [seriesData, setSeriesData] = useState<ChartConfigSeriesDataSimple[]>([]);
 
-    const getSeriesData = (agingRangesByProcess: CaseDashboardStatsResponse | undefined) => {
+    const getSeriesData = (agingRangesByProcess?: CaseDashboardStatsResponse) => {
         const seriesData: ChartConfigSeriesDataSimple[] = [];
         if (!agingRangesByProcess || !agingRangesByProcess.data || agingRangesByProcess.data.length === 0) {
             return seriesData;

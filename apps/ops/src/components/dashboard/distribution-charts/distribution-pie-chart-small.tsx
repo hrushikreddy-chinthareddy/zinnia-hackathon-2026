@@ -29,7 +29,7 @@ const DistributionPieChartSmall = ({
     sort = true,
 }: Props) => {
     const [chartConfig, setChartConfig] = useState({});
-    const getChartData = (statsGrouping: DashboardStatsElementResponse | undefined) => {
+    const getChartData = (statsGrouping?: DashboardStatsElementResponse) => {
         const chartData: { name: string; y: number; totalCount: number }[] = [];
         if (!statsGrouping || !statsGrouping.values || statsGrouping.values.length === 0) {
             return chartData;
