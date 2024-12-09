@@ -3,7 +3,7 @@ import { toTitleCase } from '@zinnia/utils';
 import { useParams, usePathname } from 'next/navigation';
 import { ReactNode, useEffect, useState } from 'react';
 
-import { RouteKey, getPageTitle, routeMap } from '@/route-map';
+import { RouteKey, getPageTitle } from '@/route-map';
 import { LineOfBusinessPath } from '@/types';
 
 import { HeaderLink } from '../header-link/HeaderLink';
@@ -59,10 +59,21 @@ export const HeaderBreadcrumb = ({
     } else if (params.beneficiary === routeKey) {
       heading = getPageTitle(RouteKey.BENEFICIARY);
     } else {
-      heading = routeMap[`/${routeKey}`]?.title ?? toTitleCase(defaultTitle);
+      heading =
+        getPageTitle(
+          `/${routeKey}` as RouteKey,
+          paths[2] as LineOfBusinessPath
+        ) ?? toTitleCase(defaultTitle);
     }
     setFormatTitle(toTitleCase(heading));
-  }, [defaultTitle, params.beneficiary, params.policyNumber, pathname, title]);
+  }, [
+    defaultTitle,
+    params.beneficiary,
+    params.policyNumber,
+    pathname,
+    paths,
+    title,
+  ]);
 
   const currentPath = paths[paths.length - 1];
 
