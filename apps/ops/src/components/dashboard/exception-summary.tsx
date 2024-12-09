@@ -18,6 +18,7 @@ import { GroupByOptions } from '@deps/models/case/enums';
 import { getCaseInsights } from '@deps/queries/api/openai';
 import { DashboardSearchFilter } from '@deps/queries/cases';
 import { getExceptionData } from '@deps/queries/tanstack/dashboard/dashboardQueries';
+import { useDashboardStore } from '@deps/store/store';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 import { ReactComponent as LightBulbIcon } from '@deps/styles/elements/icons/illustrations/light-bulb.svg';
 
@@ -188,10 +189,12 @@ export const ExceptionSummary = ({
     const [sortedMonthly, setSortedMonthly] = useState([] as summary[]);
     const [chartConfig, setChartConfig] = useState({} as Highcharts.Options);
     const groupBy: GroupByOptions = GroupByOptions.Carrier;
+    const { selectedBrokerDealers, selectedCarriers } = useDashboardStore(state => state);
 
     const { data: exceptionData, isLoading: exceptionDataLoading } = useQuery({
-        queryKey: ['exceptionData', startDate, selectedSubprocess, carrierOrBrokerDealer],
-        queryFn: () => getExceptionData(startDate, selectedSubprocess, carrierOrBrokerDealer),
+        queryKey: ['exceptionData', baseDashboardQueryFilter, carrierOrBrokerDealer],
+        queryFn: () =>
+            getExceptionData(baseDashboardQueryFilter, [carrierOrBrokerDealer, GroupByOptions.ExceptionCategory, GroupByOptions.UpdatedAt]),
         placeholderData: previousData => previousData,
     });
 
@@ -200,11 +203,13 @@ export const ExceptionSummary = ({
             createdDateStart: startDate,
             process: [Processes.NewBusiness],
             caseStatus: [Statuses.Completed],
+            carrier: Object.keys(selectedCarriers),
+            brokerDealerName: Object.keys(selectedBrokerDealers),
             ...(selectedSubprocess ? { requestSubType: [selectedSubprocess] } : {}),
         };
 
         setBaseDashboardQueryFilter(baseFilter);
-    }, [selectedSubprocess, startDate]);
+    }, [selectedBrokerDealers, selectedCarriers, selectedSubprocess, startDate]);
 
     const getChartConfig = useCallback(
         (processedData: Output, sortedMonthly: summary[]): Highcharts.Options => {

@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 
 import { SimpleOption } from '@deps/components/select/select.helpers';
 import { getArrayIndexFromDate } from '@deps/helpers/date.helper';
-import { Statuses, CaseDashboardStatsResponse, Processes, DashboardStatsElementResponse } from '@deps/models/case/case';
+import { Statuses, CaseDashboardStatsResponse, DashboardStatsElementResponse } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 
 import { MappedExceptionData } from './types';
@@ -103,20 +103,10 @@ interface ExceptionDataResponse {
  *
  * Get a bunch of stats response data and add to it. Then return the whole thing.
  */
-export const getExceptionData = async (
-    createdDateStart: string,
-    processSubType: string,
-    carrierOrBrokerDealer = GroupByOptions.Carrier
-) => {
-    const filter: DashboardSearchFilter = {
-        createdDateStart: createdDateStart,
-        process: [Processes.NewBusiness],
-        caseStatus: [Statuses.Completed],
-        ...(processSubType ? { requestSubType: [processSubType] } : {}),
-    };
+export const getExceptionData = async (filter: DashboardSearchFilter, groupBy: GroupByOptions[]) => {
     const statsResponse = await getCaseDashboardStats({
         filter,
-        groupBy: [carrierOrBrokerDealer, GroupByOptions.ExceptionCategory, GroupByOptions.UpdatedAt],
+        groupBy,
     });
 
     if (!statsResponse || 'status' in statsResponse) {
@@ -124,6 +114,7 @@ export const getExceptionData = async (
     }
 
     const { data: statsData } = { ...statsResponse };
+    const { createdDateStart = '' } = filter;
     // Get the number of elements we'll need for the charts based on current date and start date
     const maxDayIndex = getArrayIndexFromDate(dayjs().format('YYYY-MM-DD'), createdDateStart);
     const maxWeekIndex = getArrayIndexFromDate(dayjs().format('YYYY-MM-DD'), createdDateStart, 'week');

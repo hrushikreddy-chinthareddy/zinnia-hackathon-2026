@@ -20,6 +20,7 @@ import { GroupByOptions } from '@deps/models/case/enums';
 import { getCaseInsights } from '@deps/queries/api/openai';
 import { DashboardSearchFilter } from '@deps/queries/cases';
 import { getCaseDashboardStatsQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
+import { useDashboardStore } from '@deps/store/store';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 import { ReactComponent as LightBulbIcon } from '@deps/styles/elements/icons/illustrations/light-bulb.svg';
 
@@ -183,14 +184,18 @@ export const Top5SubprocessByVolume = ({
     const shouldShowCaseInsights = useCaseInsightsPermission();
     const groupBy: GroupByOptions = GroupByOptions.ProductName;
 
+    const { selectedBrokerDealers, selectedCarriers } = useDashboardStore(state => state);
+
     const filter: DashboardSearchFilter = useMemo(() => {
         return {
             createdDateStart: dayjs(createdDateStart).toISOString(),
             process: [Processes.NewBusiness],
             caseStatus: [Statuses.Completed],
+            carrier: Object.keys(selectedCarriers),
+            brokerDealerName: Object.keys(selectedBrokerDealers),
             ...(requestSubType ? { requestSubType: [requestSubType] } : {}),
         };
-    }, [createdDateStart, requestSubType]);
+    }, [createdDateStart, requestSubType, selectedBrokerDealers, selectedCarriers]);
 
     const { data: statsResponse, isLoading: loading } = useQuery({
         queryKey: ['getTopFiveData', filter, groupBy],
