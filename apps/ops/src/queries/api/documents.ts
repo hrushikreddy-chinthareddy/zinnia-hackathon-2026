@@ -43,18 +43,18 @@ export const uploadDocument = async (task: ManagementTask, document: any): Promi
         const url = `${baseAppUrl}/api/documents/upload`;
         const { blob, name } = dataURItoBlob(document);
 
-        // TODO: Update metadata
         const fileData = {
             file: document,
             metadata: {
                 sourceFileName: name,
                 docAccessLevel: 'ALL_ACCESS',
-                documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT), //'2024-11-15T10:21:33.690Z',
+                documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
                 docCategory: 'NEW_BUSINESS',
                 fileType: blob.type,
                 parentCarrierCode: task.carrier.toUpperCase(),
                 formType: 'NB Application',
                 docClassification: 'INBOUND',
+                zinniaLiveCaseId: task.caseId,
             },
         };
 

@@ -4,7 +4,7 @@ import { CaseApiVersionMapper } from '@deps/models/case/helpers';
 import { TaskType } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { getCaseTaskInstances, getCaseTasks, getTaskFormMetadataSSR } from '@deps/queries/api/v1/task';
-import { getCaseTaskByIdSSR } from '@deps/queries/api/v2/task';
+import { getCaseTaskByIdSSR, updateTask } from '@deps/queries/api/v2/task';
 
 interface TaskItem {
     id: string;
@@ -68,4 +68,9 @@ export const getTaskFormMetadata = async (clientId: string, taskType: TaskType, 
 };
 export const getCaseTaskById = async (taskId: string, accessToken?: string): Promise<ManagementTask<TaskStatus> | null> => {
     return getCaseTaskByIdSSR(taskId, accessToken);
+};
+
+export const updateCaseTask = async (task: ManagementTask): Promise<ManagementTask<TaskStatus> | null> => {
+    const body = { ...task, status: TaskStatus.Completed };
+    return await updateTask(task.caseId, task.id, body);
 };
