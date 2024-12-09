@@ -159,11 +159,11 @@ export const getExceptionData = async (
                 // Build up the arrays for daily and monthly charts (filled with nulls)
                 parsedResponse.data.exceptionData.daily[carrier] = Array(maxDayIndex + 1)
                     .fill(null)
-                    .map((val, index) => [dayjs(createdDateStart).add(index, 'day').unix() * 1000, 0]);
+                    .map((_val, index) => [dayjs(createdDateStart).add(index, 'day').unix() * 1000, 0]);
 
                 parsedResponse.data.exceptionData.weekly[carrier] = Array(maxWeekIndex + 1)
                     .fill(null)
-                    .map((val, index) => 0);
+                    .map(() => 0);
                 parsedResponse.data.exceptionData.monthly[carrier] = Array(maxMonthIndex + 1).fill(null);
 
                 let totalNigos = 0;
