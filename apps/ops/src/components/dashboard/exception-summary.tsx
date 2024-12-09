@@ -24,7 +24,6 @@ import { ReactComponent as LightBulbIcon } from '@deps/styles/elements/icons/ill
 
 import NavElement, { NavElementSize, NavElementType } from '../nav-element/nav-element';
 import styles from './top-5-subprocesses-by-volume/top-5-subprocess-by-volume.module.css';
-import loading from '../loading/loading';
 
 if (typeof Highcharts === 'object') {
     HighchartsExporting(Highcharts);
@@ -544,7 +543,8 @@ export const ExceptionSummary = ({
                     <div
                         style={{ height: '600px' }}
                         className={clsx('w-full h-[600px]', {
-                            'grid gap-4 place-content-center bg-[--color-base-surface-surface-tertiary]': loading || !exceptionData,
+                            'grid gap-4 place-content-center bg-[--color-base-surface-surface-tertiary]':
+                                exceptionDataLoading || !exceptionData,
                         })}
                     >
                         {exceptionDataLoading ? (
