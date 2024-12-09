@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { FC, useRef } from 'react';
+import { FC, useMemo, useRef } from 'react';
 
 import { actionLogInfo } from '@/actions/log-actions';
 import { getPolicyProfile } from '@/queries/policy-queries';
@@ -67,8 +67,8 @@ export const BankList: FC<BankListProps> = ({
     queryFn: () => getPolicyProfile(planCode, policyNumber),
   });
 
-  if (data?.bankDetails && data.bankDetails.length) {
-    const allBankData = data.bankDetails.map(bankDetail => {
+  const allBankData = useMemo(() => {
+    return data?.bankDetails.map(bankDetail => {
       return (
         <BankData
           key={bankDetail.accountNumber}
@@ -79,28 +79,29 @@ export const BankList: FC<BankListProps> = ({
         />
       );
     });
+  }, [allowBankingChanges, data?.bankDetails]);
 
-    if (allBankData) {
-      return (
-        <div>
-          <h2 id="addBankSection" className="mb-lg">
-            Banking Details
-          </h2>
+  return (
+    <div>
+      <h2 id="addBankSection" className="mb-lg">
+        Banking Details
+      </h2>
+
+      {data?.bankDetails && !!data.bankDetails.length && (
+        <>
           <p className="mb-lg">
             Need help updating banking details? Give us a call at{' '}
             <CarrierPhoneNumber />.
           </p>
           <div className={styles.multipleItemsInSection}>{allBankData}</div>
-          {allowBankingChanges && (
-            <AddBankSidesheet
-              partyId={data.partyId}
-              policyOwner={`${initialProfileData?.name.firstName} ${initialProfileData?.name.lastName}`}
-            />
-          )}
-        </div>
-      );
-    }
-  }
-
-  return null;
+        </>
+      )}
+      {allowBankingChanges && (
+        <AddBankSidesheet
+          partyId={data?.partyId || ''}
+          policyOwner={`${initialProfileData?.name.firstName} ${initialProfileData?.name.lastName}`}
+        />
+      )}
+    </div>
+  );
 };
