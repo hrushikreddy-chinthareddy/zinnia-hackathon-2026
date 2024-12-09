@@ -6,7 +6,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useCallback, useRef, useState } from 'react';
 
 import { ActiveApplications } from '@deps/components/dashboard/active-applications/active-applications';
-import { DashboardTabNav } from '@deps/components/dashboard/dashboard-nav-links';
+import { DashboardTabNav, DashboardTabs } from '@deps/components/dashboard/dashboard-nav-links';
 import FiltersHeader from '@deps/components/dashboard/filters-header/filters-header';
 import IssuedBusiness from '@deps/components/dashboard/issued-business/issued-business';
 import NoNavLayout from '@deps/components/no-nav-layout';
@@ -64,14 +64,15 @@ const DashboardPage = ({
                     ref={carrierHeaderRef}
                     loading={loading}
                 />
-
                 <DashboardTabNav>
-                    <TabContent ref={tabContentRef} value={'active-applications'}>
-                        <ActiveApplications handleSetLoading={handleSetLoading} loading={loading} carrierHeaderRef={carrierHeaderRef} />
-                    </TabContent>
-                    <TabContent ref={tabContentRef} value={'issued-business'}>
-                        <IssuedBusiness />
-                    </TabContent>
+                    <div ref={tabContentRef}>
+                        <TabContent value={DashboardTabs.ACTIVE_APPLICATIONS}>
+                            <ActiveApplications handleSetLoading={handleSetLoading} loading={loading} carrierHeaderRef={carrierHeaderRef} />
+                        </TabContent>
+                        <TabContent value={DashboardTabs.ISSUED_BUSINESS}>
+                            <IssuedBusiness />
+                        </TabContent>
+                    </div>
                 </DashboardTabNav>
             </NoNavLayout>
         </DashboardResponsiveLayout>
