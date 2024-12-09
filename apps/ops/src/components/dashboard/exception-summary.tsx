@@ -227,7 +227,7 @@ export const ExceptionSummary = ({
 
             return {
                 chart: {
-                    height: 600,
+                    height: 500,
                     type: 'line', // Line chart
                     // plotBorderWidth: 1, // Add a border around the plot area
                     // plotBorderColor: '#D3D3D3', // Set the border color
@@ -336,15 +336,18 @@ export const ExceptionSummary = ({
                         gridLineWidth: 1,
                         height: '30%',
                         lineWidth: 2,
+                        labels: {
+                            y: 12,
+                        },
                         min: 0,
                         offset: 0, // Remove extra spacing
                         opposite: true, // Moves the x-axis to the right side
                         title: {
                             text: '<b>Monthly<br/>Volume</b>',
-                            align: 'low', // Aligns the title to the top
+                            align: 'high', // Aligns the title to the top
                             rotation: 0, // Force title to be horizontal
-                            x: 30,
-                            y: -15,
+                            x: -15,
+                            y: 15,
                             useHTML: true, // Enables HTML in the title
                         },
                         top: '68%',
@@ -479,7 +482,7 @@ export const ExceptionSummary = ({
 
     return (
         <CardContainer containerClassNames="rounded" classNames="!p-0" fullWidth={true}>
-            <div className="flex flex-col xl:flex-row justify-between gap-4 w-full">
+            <div className="flex flex-col xl:flex-row justify-between gap-8 w-full">
                 <div className="flex xl:flex-col xl:w-1/4 gap-4 mb-8 xl:mb-0">
                     <div>
                         <Typography variant={TypographyVariant.H3}>{'Exception Summary'}</Typography>
