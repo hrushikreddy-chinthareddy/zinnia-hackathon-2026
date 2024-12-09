@@ -107,7 +107,14 @@ export const transformPolicyForAccountValue = (
 ): PolicyAccountValue => {
   return {
     // Date of last policy transaction, when policy value was last updated
-    effectiveDate: policy?.effectiveDate,
+    // the frequency of transactions is a lot higher on life products, so the
+    // effective date shows when the last transaction occurred
+    // for annuity products, we just show current date
+    // (decision documented in CUI-512)
+    effectiveDate:
+      policy?.product?.lineOfBusiness === LineOfBusiness.ANNUITY
+        ? new Date().toISOString()
+        : policy?.effectiveDate,
     endingAccountValue: policy?.accountValues?.endingAccountValue,
     policyStartDate: policy?.policyDates?.policyStartDate,
     lineOfBusiness: policy?.product?.lineOfBusiness,
@@ -482,7 +489,7 @@ export const transformRiders = (policy: Policy): RidersAndBenefits => {
         ownerInfo?.partyId === riderInsured?.insuredId ||
         // We are assuming that the insured is owner for annuities because
         // annuities are not returning a partyRole with partyRole === INSURED,
-        // which is what we are looking for on life products
+        // which is what we are looking for on life products (decision documented in CUI-512)
         product?.lineOfBusiness === LineOfBusiness.ANNUITY,
       title: rider.riderName,
       status: rider.status,
