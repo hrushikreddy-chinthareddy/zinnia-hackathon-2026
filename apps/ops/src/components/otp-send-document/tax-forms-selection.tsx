@@ -127,12 +127,16 @@ const TaxFormsSelection = ({ policy, taxFormSelectionDetails, setTaxFormSelectio
                 {loader ? (
                     <Loader />
                 ) : (
-                    <TaxFormsListing
-                        taxForms={taxFormSelectionDetails?.taxForms}
-                        carrierCode={policy?.carrierId || ''}
-                        selectedTaxForms={taxFormSelectionDetails.selectedTaxForms}
-                        setSelectedTaxForms={setSelectedTaxForms}
-                    />
+                    <>
+                        {(taxFormSelectionDetails?.taxForms?.length > 0 || !Object.keys(error).length) && (
+                            <TaxFormsListing
+                                taxForms={taxFormSelectionDetails?.taxForms}
+                                carrierCode={policy?.carrierId || ''}
+                                selectedTaxForms={taxFormSelectionDetails.selectedTaxForms}
+                                setSelectedTaxForms={setSelectedTaxForms}
+                            />
+                        )}
+                    </>
                 )}
             </div>
 
