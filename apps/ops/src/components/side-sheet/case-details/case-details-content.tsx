@@ -28,7 +28,11 @@ type CaseDetailsProps = {
   caseTableData: CaseTableData;
   setError: React.Dispatch<React.SetStateAction<ErrorMessagePart[] | null>>;
 };
-export type addressType = { addressType: AddressTypes; preferredAddress: boolean; city: string; state: string; zipCode: string }[];
+export type addressType = {
+  addressType: AddressTypes; preferredAddress: boolean; city: string; state: string; zipCode: string;
+  addressLine1: string; addressLine2: string; addressLine3: string
+
+}[];
 function CaseDetailsContent({ policy, documentData, offset, limit, setOffset, caseTableData, setError }: CaseDetailsProps) {
   const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'sideSheet.caseDetailsContent' });
   const [activeTab, setActiveTab] = useState(TabOptions.Details);

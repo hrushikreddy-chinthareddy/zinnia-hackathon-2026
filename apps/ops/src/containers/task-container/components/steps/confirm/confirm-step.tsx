@@ -1,7 +1,7 @@
 import { convertToCamelCase } from '@zinnia/utils';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
@@ -9,8 +9,8 @@ import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
+import { updateTask } from '@deps/containers/task-container/task.healpers';
 import { TaskType } from '@deps/models/case/task';
-import { updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 
 interface ConfirmStepProps {
@@ -18,29 +18,21 @@ interface ConfirmStepProps {
     taskId: string;
     taskType: TaskType;
 }
-const ConfirmStep = ({ caseId, taskId, taskType }: ConfirmStepProps) => {
+const ConfirmStep = ({ taskType }: ConfirmStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.confirmStep` });
     const router = useRouter();
     const formState = useContext(TaskDataContext);
 
-    const [submitFailed, setSubmitFailed] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
-    const [timer] = useState(performance.now());
-    const { task } = formState;
+    const [isLoading, setIsLoading] = useState(false);
+
+    const { task, submitFailed, setSubmitFailed } = formState;
 
     const submit = useCallback(async () => {
-        const response = await updateTask(caseId, taskId, task, timer);
-        if (response && response.id) {
-            setSubmitFailed(false);
-        } else {
-            setSubmitFailed(false);
-        }
+        setIsLoading(true);
+        const success = await updateTask(task);
+        setSubmitFailed(!success);
         setIsLoading(false);
-    }, [caseId, task, taskId, timer]);
-
-    useEffect(() => {
-        submit();
-    }, [submit]);
+    }, [setSubmitFailed, task]);
 
     if (isLoading) {
         return (

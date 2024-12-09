@@ -24,8 +24,6 @@ import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimize
 import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
-import FiltersHeader from '@deps/components/dashboard/filters-header/filters-header';
-
 export interface CarrierListItem {
     [key: string]: string;
 }
@@ -40,7 +38,7 @@ const DashboardPage = ({
     const carrierHeaderRef = useRef<HTMLDivElement>(null);
     const {
         isIntersecting: carrierHeaderIsIntersecting,
-        ref: sankeyChartRef,
+        ref: tabContentRef,
         entry: carrierHeaderEntry,
     } = useIntersectionObserver({
         threshold: 0,

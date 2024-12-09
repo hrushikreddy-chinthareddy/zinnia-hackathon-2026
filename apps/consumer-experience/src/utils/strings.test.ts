@@ -5,6 +5,7 @@ import {
   toSentenceCase,
   toTitleCase,
   pluralize,
+  createQueryString,
 } from './strings';
 
 describe('toTitleCase', () => {
@@ -70,5 +71,29 @@ describe('pluralize', () => {
   it('should return the plural form of a given string when quantity is 0', () => {
     const result = pluralize(1, 'apple', true);
     expect(result).toBe('apple');
+  });
+});
+
+describe('createQueryString', () => {
+  it('should return an empty string if given an empty object', () => {
+    expect(createQueryString({})).toBe('');
+  });
+
+  it('should return a query string from a given object', () => {
+    const obj = { foo: 'bar', baz: 'qux' };
+    const queryString = createQueryString(obj);
+    expect(queryString).toBe('foo=bar&baz=qux');
+  });
+
+  it('should handle objects with multiple key-value pairs', () => {
+    const obj = { foo: 'bar', baz: 'qux', quux: 'corge' };
+    const queryString = createQueryString(obj);
+    expect(queryString).toBe('foo=bar&baz=qux&quux=corge');
+  });
+
+  it('should handle objects with non-string values', () => {
+    const obj = { foo: 123, baz: true };
+    const queryString = createQueryString(obj);
+    expect(queryString).toBe('foo=123&baz=true');
   });
 });

@@ -153,7 +153,7 @@ const TabGroupContent = ({
 
     return (
         <div className="workflow-height-adjusted flex w-full max-w-[1130px] grow flex-col self-center">
-            {error && <Error errorMessage={error} className="mb-4" />}
+
             <GlobalValuesBar
                 carrierId={policy.carrierId}
                 marketingName={marketingName}
@@ -170,6 +170,7 @@ const TabGroupContent = ({
                 documentNumber={documentNumber}
                 showLink={false}
             />
+            {error && <Error errorMessage={error} className="mb-4" />}
             <div className="my-2 flex flex-row items-center justify-end space-x-3">
                 <Typography variant={TypographyVariant.FieldLabel} className="hidden md:block">
                     {t('site.navLinks.relatedActivity.text')}

@@ -159,7 +159,7 @@ function processData(input: DashboardStatsElementResponse[]): Output {
     const totals: number[] = new Array(MONTHLY_MONTHS).fill(0);
 
     for (const key in result.monthly) {
-        if (result.monthly.hasOwnProperty(key)) {
+        if (Object.prototype.hasOwnProperty.call(result.monthly, key)) {
             const series = result.monthly[key].series.data;
             series?.forEach((value, index) => {
                 totals[index] += typeof value === 'number' ? value : 0; // Accumulate the value at each index
@@ -363,25 +363,56 @@ export const Top5SubprocessByVolume = ({
                 },
                 tooltip: {
                     formatter: function () {
-                        const xAxis = this.series.xAxis;
+                        let total = 0;
+                        const labelData: Array<{
+                            label: string;
+                            total: number;
+                            color: string | Highcharts.GradientColorObject | Highcharts.PatternObject;
+                        }> = [];
 
-                        // Find the index of the xAxis in the chart's xAxis array
-                        const xAxisIndex = this.series.chart.xAxis.indexOf(xAxis);
-
-                        // Apply custom formatting based on xAxis index
-                        // this is the lower chart
-                        if (xAxisIndex === 1) {
-                            const formattedValue = new Intl.NumberFormat().format(this.y || 0);
-                            const pointIndex = this.point.index;
-                            // find the category label from the first xAxis and display it in the tooltip
-                            return `<div>${this.series.chart.xAxis[0].categories[pointIndex * 4]}<br/><b>${
-                                this.series.name
-                            }</b>: ${formattedValue}</div>`;
-                        } else {
-                            const formattedValue = new Intl.NumberFormat().format(this.y || 0);
-                            return `<div>${this.key}<br/><b>${this.series.name}</b>: ${formattedValue}`;
+                        for (const point of this.points || []) {
+                            const value = point?.y;
+                            if (!value) continue;
+                            const color = point?.color || '#000000';
+                            total += value;
+                            labelData.push({
+                                label: point?.series?.name,
+                                total: value,
+                                color: color,
+                            });
                         }
+
+                        const labelWrapper = document.createElement('div');
+
+                        labelWrapper.style.display = 'flex';
+                        labelWrapper.style.flexDirection = 'column';
+                        labelWrapper.style.gap = '4px';
+                        for (const value of labelData) {
+                            const labelElement = document.createElement('div');
+                            labelElement.style.display = 'flex';
+                            labelElement.style.alignItems = 'center';
+                            labelElement.style.gap = '5px';
+                            const colorElement = document.createElement('div');
+                            colorElement.style.backgroundColor = String(value.color);
+                            colorElement.style.width = '10px';
+                            colorElement.style.height = '10px';
+                            colorElement.style.borderRadius = '50%';
+                            const titleElement = document.createElement('div');
+                            titleElement.innerHTML = `${value.label}: <b>${value.total.toLocaleString()}</b>`;
+                            labelElement.appendChild(colorElement);
+                            labelElement.appendChild(titleElement);
+                            labelWrapper.appendChild(labelElement);
+                        }
+                        const totalElement = document.createElement('div');
+                        totalElement.style.justifySelf = 'end';
+                        totalElement.style.alignSelf = 'end';
+                        totalElement.style.marginTop = '4px';
+                        totalElement.innerHTML = `Total: <b>${total.toLocaleString()}</b>`;
+                        labelWrapper.appendChild(totalElement);
+                        return labelWrapper.outerHTML;
                     },
+                    useHTML: true,
+                    shared: true,
                 },
             };
         },
@@ -443,9 +474,10 @@ export const Top5SubprocessByVolume = ({
         <CardContainer containerClassNames="rounded" classNames="!p-0" fullWidth={true}>
             <div className="flex flex-col xl:flex-row justify-between gap-4 w-full">
                 <div className="flex xl:flex-col xl:w-1/4 gap-4 mb-8 xl:mb-0">
-                    <Typography className="mb-1" variant={TypographyVariant.H3}>
-                        {'Top 5 Products'}
-                    </Typography>
+                    <div>
+                        <Typography variant={TypographyVariant.H3}>{'Top 5 Products'}</Typography>
+                        <Typography variant={TypographyVariant.Label}> {dashboardChartTitleFormat(requestSubType, false)} </Typography>
+                    </div>
                     <div className="flex-1 border-r-1 xl:border-r-0 border-[#EDEDED] flex flex-col gap-4">
                         {loading ? (
                             <div className="grid gap-4 h-full mb-4 w-full place-content-center bg-[--color-base-surface-surface-tertiary]">

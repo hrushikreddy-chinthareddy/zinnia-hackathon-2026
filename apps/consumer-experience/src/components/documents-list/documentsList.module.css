@@ -4,6 +4,5 @@
 }
 
 .documentsListContainer {
-  min-height: 608px;
   margin-top: var(--measure-dimension-gap-md);
 }
