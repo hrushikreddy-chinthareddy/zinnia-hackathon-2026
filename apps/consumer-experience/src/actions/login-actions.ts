@@ -2,6 +2,7 @@
 import { RedirectType, redirect } from 'next/navigation';
 
 import { ServerApi } from '@/services';
+import { ROOT_URL_PATH } from '@/types';
 import {
   Auth0ErrorResponse,
   MfaAssoicateResponse,
@@ -20,7 +21,6 @@ import {
 } from '@/utils/auth';
 import { logTrace, logWarn } from '@/utils/logging/server-logging';
 import { FROM_LOGIN_QUERY_KEY } from '@/utils/serverClientUtils';
-import { ROOT_URL_PATH } from '@/types';
 
 interface LoginActionErrorResponse extends Auth0ErrorResponse {
   timestamp: Date;

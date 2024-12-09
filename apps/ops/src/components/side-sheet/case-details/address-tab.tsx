@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { TranslationFiles } from '@deps/config/translations';
-import { AddressTypes } from '@deps/models/case/withdrawal/case';
+import { AddressTypeAndAddress } from '@deps/containers/small-data-card/address-data/address-data';
 
 import { addressType } from './case-details-content';
 
@@ -21,13 +21,8 @@ function AddressTab({ addresses, planCode, policyNumber }: AddressTabProps) {
         return (
           <div key={address.addressId} className="px-4 mt-3">
             <div className="flex gap-2  items-center">
-              <div className="font-medium">
-                {address.addressType === AddressTypes.DEFAULT && t('defaultAddress')}
-                {address.addressType === AddressTypes.RESIDENTIAL_ADDRESS && t('residentialAddress')}
-                {address.addressType === AddressTypes.MAILING_ADDRESS && t('mailingAddress')}
-                {address.addressType === AddressTypes.AGENT_ADDRESS && t('agentAddress')}
-              </div>
 
+              <AddressTypeAndAddress address={address} addressType={address.addressType} isAddressChange={true} />
               {address.preferredAddress && (
                 <Tooltip
                   trigger={<div className=" bg-green-600 inline-block h-2 w-2 rounded-full"></div>}
@@ -38,12 +33,10 @@ function AddressTab({ addresses, planCode, policyNumber }: AddressTabProps) {
                 </Tooltip>
               )}
             </div>
-            <div className="text-md">
-              {address.city}, {address.state}-{address.zipCode}
-            </div>
           </div>
         );
       })}
+
       <div className="text-[--color-base-text-text-link] font-semibold text-md p-4">
         <NavElement
           className={'whitespace-normal break-words'}
