@@ -12,7 +12,6 @@ import { getFeatureFlags } from '@/services/feature-flags';
 import { PolicyRequestInputs } from '@/types/policy';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
-import { IULFundsView } from './IULFundsView';
 import { OriginalFundsView } from './OriginalFundsView';
 import { ULFundsView } from './ULFundsView';
 
@@ -52,25 +51,6 @@ export default async function FundsPage({
 
   return (
     <div className="container">
-      {data?.product?.productType === ProductType.UNIVERSALLIFE && (
-        <p>
-          <span className="typography-content-body-sm-bold">
-            Your policy's value is held within an account.
-          </span>{' '}
-          As you pay premiums, we first deduct all fees and charges, then
-          leftover premium dollars are deposited into your account, which
-          typically earns an interest rate.
-        </p>
-      )}
-      {data?.product?.productType === ProductType.INDEXEDUNIVERSALLIFE && (
-        <p>
-          <span className="typography-content-body-sm-bold">
-            Your policy's value is held within one or more accounts.
-          </span>{' '}
-          As you pay premiums, we first deduct all fees and charges, then
-          leftover premium dollars are deposited into the account(s) you select.
-        </p>
-      )}
       <div className={`${styles.detailsContainer} card`}>
         <AccountValue
           planCode={planCode}
@@ -80,16 +60,8 @@ export default async function FundsPage({
         />
         <OutstandingLoanValue planCode={planCode} policyNumber={policyNumber} />
       </div>
-      {data?.product?.productType === ProductType.UNIVERSALLIFE && (
+      {data?.product?.productType === ProductType.FIXEDANNUITY && (
         <ULFundsView
-          planCode={planCode}
-          policyNumber={policyNumber}
-          initialPolicyStatus={policyStatusDetails}
-        />
-      )}
-
-      {data?.product?.productType === ProductType.INDEXEDUNIVERSALLIFE && (
-        <IULFundsView
           planCode={planCode}
           policyNumber={policyNumber}
           initialPolicyStatus={policyStatusDetails}

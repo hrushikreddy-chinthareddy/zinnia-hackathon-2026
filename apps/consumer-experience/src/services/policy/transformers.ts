@@ -94,7 +94,7 @@ export const transformPolicyReferenceData = (
       // Date of last policy transaction, when policy value was last updated
       effectiveDate: p?.effectiveDate,
       lineOfBusiness: p?.product?.lineOfBusiness,
-cumulativeGrossDeathBenefitAmount:
+      cumulativeGrossDeathBenefitAmount:
         p?.coverage?.cumulativeGrossDeathBenefitAmount,
       ...policyDetails,
     };
