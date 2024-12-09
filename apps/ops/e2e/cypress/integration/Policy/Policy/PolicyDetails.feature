@@ -1,10 +1,6 @@
 @DEP-37 @DEPU-1129
 Feature: Ops user views details for a policy
 Background: Ops user views a policy from the search results
-# Given 'Ops User' logs into Zinnia Live
-#   When I click on 'Policy Search' on the Navigation bar
-#   And I search by 'Policy Number' for 'ZHA9260272'
-#   Then I should see the policy in Search Results
 
 Given 'Ops User' logs into Zinnia Live
   When I click on 'Policy Search' on the Navigation bar

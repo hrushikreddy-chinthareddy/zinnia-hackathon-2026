@@ -7,10 +7,10 @@ class ManageAutoPayStartPage extends Page {
     }
 
     get leaveTransaction() {
-        return cy.get(`[data-testid="Cancel"]`);
+        return cy.get(`[data-testid="Leave this transaction"]`);
     }
 
-//----------------------------------------------------------------------------------------------------------------------- 
+//-----------------------------------------------------------------------------------------------------------------------
 
     getContinueButton() {
         this.continueButton.click();

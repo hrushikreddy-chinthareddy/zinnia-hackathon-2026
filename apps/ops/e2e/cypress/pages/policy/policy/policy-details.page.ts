@@ -17,6 +17,7 @@ class PolicyDetailsPage extends Page {
 
     get clickPolicySearchDropdown() {
       return cy.get('button[id="radix-:r2h:"]');
+      //return cy.get('button[id*="radix"]');
     }
 
     get firstNameTextBox() {

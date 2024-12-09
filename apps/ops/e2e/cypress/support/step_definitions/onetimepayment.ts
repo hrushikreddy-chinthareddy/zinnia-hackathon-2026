@@ -23,28 +23,28 @@ Then('I should verify Start page Details on one time payment start page', () => 
 
 When('I click Continue button on One Time Payment Start page', () => {
     oneTimePaymentStartPage.getContinueButton();
-    cy.wait(2000); 
+    cy.wait(2000);
 });
 
 When('I click Leave Transaction button on One Time Payment Start page', () => {
     oneTimePaymentStartPage.getLeaveTransaction();
-    cy.wait(2000); 
+    cy.wait(2000);
 });
 
 Then('I should see message to select a document to continue on One Time Payment page', () => {
     cy.contains('Select a document (or proceed without) to continue.').should('be.visible');
-    cy.wait(2000); 
+    cy.wait(2000);
  });
 
 When('I select document as {string} on One Time Payment Start page', (document) => {
     oneTimePaymentStartPage.getDocuments(document);
-    cy.wait(2000); 
+    cy.wait(2000);
 });
 
 Then('I should verify Amount page details on One Time Payment Amount page', () => {
     cy.get('h1').contains('Amount').should('be.visible');
     cy.contains('Effective date').should('be.visible');
-    cy.contains('Premium payment amount').should('be.visible'); 
+    cy.contains('Premium payment amount').should('be.visible');
 });
 
 When('I enter Effective date on One Time payment Amount page', () => {
@@ -123,16 +123,16 @@ Then('I should verify One Time Payment Details on One Time Payment page', () => 
  When('I deselect a payment account on One Time Payment page', () => {
     onetimePaymentMethodPage.getBankDetails();
  });
- 
- 
+
+
  When('I click Continue button on One Time Payment page', () => {
     onetimePaymentMethodPage.getContinueButtonPaymentPage();
-    cy.wait(3000); 
+    cy.wait(3000);
  });
 
  When('I click Leave transaction button on One Time Payment page', () => {
     onetimePaymentMethodPage.getLeaveTransactionPaymentPage();
-    cy.wait(3000); 
+    cy.wait(3000);
  });
 
  Then('I should verify One Time Payment Summary Details', () => {
@@ -163,18 +163,18 @@ Then('I should verify Payor details on Summary page', () => {
    cy.get('h4').contains('Payment method').should('be.visible');
    cy.get('span').contains('JPMORGAN CHASE').should('be.visible');
 });
- 
+
 When('I click Continue button on Summary page', () => {
    onetimePaymentSummaryPage.getContinueButtonSummaryPage();
-   cy.wait(3000); 
+   cy.wait(3000);
 });
 
 Then('I should verify Confirm page details', () => {
    cy.get('h3').contains('Submitted!').should('be.visible');
    cy.get('span').contains('$100.00').should('be.visible');
 });
- 
- 
 
- 
- 
+
+
+
+
