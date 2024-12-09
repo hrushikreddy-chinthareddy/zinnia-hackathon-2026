@@ -2045,7 +2045,7 @@
                 "popover": {
                     "1099R": "Reports distributions from policy/contracts.",
                     "1099Int": "Reports interest income earned.",
-                    "5098": "Reports contributions made to IRAs, including rollovers and fair market values for the tax year."
+                    "5498": "Reports contributions made to IRAs, including rollovers and fair market values for the tax year."
                 },
                 "warning": {
                     "0": "Please review tax forms before continuing.",
