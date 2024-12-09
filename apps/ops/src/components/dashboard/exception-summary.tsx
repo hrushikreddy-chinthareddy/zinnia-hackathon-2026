@@ -544,8 +544,7 @@ export const ExceptionSummary = ({
                 </div>
                 <div className="relative xl:w-3/4">
                     <div
-                        style={{ height: '600px' }}
-                        className={clsx('w-full h-[600px]', {
+                        className={clsx('w-full', {
                             'grid gap-4 place-content-center bg-[--color-base-surface-surface-tertiary]':
                                 exceptionDataLoading || !exceptionData,
                         })}

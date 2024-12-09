@@ -536,8 +536,7 @@ export const Top5SubprocessByVolume = ({
                 </div>
                 <div className="relative xl:w-3/4">
                     <div
-                        style={{ height: '600px' }}
-                        className={clsx('w-full h-[600px]', {
+                        className={clsx('w-full', {
                             'grid gap-4 place-content-center bg-[--color-base-surface-surface-tertiary]':
                                 loading || !statsResponse?.data.length,
                         })}
