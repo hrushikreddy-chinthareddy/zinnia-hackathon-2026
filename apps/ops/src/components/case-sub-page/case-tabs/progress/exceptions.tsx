@@ -2,21 +2,13 @@ import { useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { ExceptionStatuses } from '@deps/models/case/exception-instance';
-import { TaskType } from '@deps/models/case/task';
 
 import { formatTimestamp } from './progress-tab-helpers';
 import { ExceptionView } from './progress-tab-types';
 import Tasks from './tasks';
 
-const TaskTypeMap: Record<TaskType, string> = {
-    [TaskType.SuitabilityReview]: 'suitability review',
-    [TaskType.Withdrawal]: '',
-    [TaskType.OFT]: '',
-    [TaskType.RMD]: '',
-    [TaskType.SSW]: '',
-    [TaskType.RENEWAL]: '',
-    [TaskType.REG60]: '',
-    [TaskType.Suitability]: '',
+const TaskTypeMap: Record<string, string> = {
+    ['SUITABILITY_REVIEW']: 'suitability review',
 };
 
 export default function Exceptions({ exceptions, unmapped = false }: { exceptions: ExceptionView[]; unmapped?: boolean }) {
@@ -60,9 +52,7 @@ export default function Exceptions({ exceptions, unmapped = false }: { exception
                             className="text-semantic-error"
                             contentClassName="mt-1"
                             variant={ContentVariant.BodySm}
-                            details={
-                                t(`One or more ${TaskTypeMap[exceptions[0].tasks[0].description as TaskType]} exceptions found`) as string
-                            }
+                            details={t(`One or more ${TaskTypeMap[exceptions[0].tasks[0].description]} exceptions found`) as string}
                         />
                         {unmapped && (
                             <Content
