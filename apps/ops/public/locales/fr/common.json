@@ -44,6 +44,7 @@
         "pageTitles": {
             "caseManagement": "Gestion des Dossiers",
             "caseOverview": "Aperçu du Dossier",
+            "contractExtras": "Options du Contrat",
             "policySearch": "Recherche de Politique",
             "policyDetails": "Détails de la Police",
             "policyExtras": "Options de Police",
@@ -2341,6 +2342,7 @@
                 "planCode": "Code du plan"
             },
             "policyExtras": {
+                "contractExtras": "Options de contrat supplémentaires",
                 "policyExtras": "Options de police supplémentaires",
                 "filter": {
                     "label": "Filtrer par type :",
