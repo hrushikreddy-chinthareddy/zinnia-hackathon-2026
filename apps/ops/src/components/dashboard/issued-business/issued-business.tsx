@@ -1,10 +1,10 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
+import { useQuery } from '@tanstack/react-query';
 import { DEFAULT_ERROR_STRING, toTitleCase } from '@zinnia/utils';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
-import { Dispatch, RefObject, SetStateAction, useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 
-import { ExceptionInsights } from '@deps/components/dashboard/exception-insights';
 import { ExceptionSummary } from '@deps/components/dashboard/exception-summary';
 import { Top5SubprocessByVolume } from '@deps/components/dashboard/top-5-subprocesses-by-volume/top-5-subprocess-by-volume';
 import FieldData, { FieldDataVariant } from '@deps/components/fields/field-data/field-data';
@@ -16,48 +16,29 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
-import { getCaseDashboardStats } from '@deps/queries/api/cases';
-import { DashboardResponseData } from '@deps/queries/api/dashboard';
+import { DashboardSearchFilter } from '@deps/queries/cases';
+import { getCaseDashboardStatsQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
+import { useDashboardStore } from '@deps/store/store';
+
+import { ExceptionInsights } from '../../../components/dashboard/exception-insights';
 
 export interface CarrierListItem {
     [key: string]: string;
 }
 
 const timeFrameFilterOptions = ['trailing 12 months', 'last 6 months', 'last 90 days', 'last 60 days', 'last month'];
-type IssuedBusinessPageProps = {
-    authorizedCarriers: string[];
-    brokerDealersSSR: DashboardResponseData[];
-    completedCasesByProcessSubType: DashboardResponseData[];
-    loading: boolean;
-    carrierHeaderRef: RefObject<HTMLElement>;
-    handleSetLoading: (loading: boolean) => void;
-    selectedCarriers: CarrierListItem;
-    selectedBrokerDealers: CarrierListItem;
-    setSelectedCarriers: Dispatch<SetStateAction<CarrierListItem>>;
-    setSelectedBrokerDealers: Dispatch<SetStateAction<CarrierListItem>>;
-};
 
-// opacity 100 - 10
-// step evenly
-// 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9
-
-export const IssuedBusiness = ({
-    completedCasesByProcessSubType,
-    loading,
-    handleSetLoading,
-    selectedCarriers,
-    selectedBrokerDealers,
-}: IssuedBusinessPageProps) => {
-    const [exceptionData, setExceptiondata] = useState<DashboardResponseData[]>(completedCasesByProcessSubType);
-    const [selectedException, setSelectedException] = useState<string | undefined>();
+export const IssuedBusiness: FC = () => {
     const [timeframe, setTimeframe] = useState<string>(timeFrameFilterOptions[0]);
     const [selectedSubprocess, setSelectedSubprocess] = useState<string>('');
+    const [selectedException, setSelectedException] = useState<string | undefined>();
+    const [baseDashboardQueryFilter, setBaseDashboardQueryFilter] = useState<DashboardSearchFilter>({});
 
     const handleSelectedSubprocess = (subprocess: string) => {
         setSelectedException(undefined);
         setSelectedSubprocess(subprocess);
     };
-
+    const { selectedBrokerDealers, selectedCarriers } = useDashboardStore(state => state);
     const carrierOrBrokerDealer = useMemo(() => {
         if (selectedCarriers) {
             return GroupByOptions.Carrier;
@@ -65,7 +46,7 @@ export const IssuedBusiness = ({
         if (selectedBrokerDealers) {
             return GroupByOptions.BrokerDealerName;
         }
-        return undefined;
+        return GroupByOptions.Carrier;
     }, [selectedBrokerDealers, selectedCarriers]);
 
     const handleTimeFrameChange = (value: string) => {
@@ -94,33 +75,31 @@ export const IssuedBusiness = ({
         return startDate;
     }, [timeframe]);
 
-    useEffect(() => {
-        const getCases = async () =>
-            await getCaseDashboardStats({
-                filter: {
-                    createdDateStart: createdDateStart,
-                    process: [Processes.NewBusiness],
-                    caseStatus: [Statuses.Completed],
-                    carrier: Object.keys(selectedCarriers),
-                    brokerDealerName: Object.keys(selectedBrokerDealers),
-                },
-                groupBy: [GroupByOptions.ProcessSubType, GroupByOptions.ExceptionCategory],
-            });
+    const { data: caseDashboardStatsData, isLoading } = useQuery({
+        queryKey: ['getCases', baseDashboardQueryFilter],
+        queryFn: () =>
+            getCaseDashboardStatsQuery(baseDashboardQueryFilter, [GroupByOptions.ProcessSubType, GroupByOptions.ExceptionCategory]),
+        select: ({ data }) => {
+            return {
+                selectedSubprocess: data?.[0]?.name || '',
+                exceptionData: data?.slice(0, 5) || [],
+            };
+        },
+    });
 
-        handleSetLoading(true);
-        getCases()
-            .then(response => {
-                if (!!response?.data && Array.isArray(response.data) && response.data.length > 0) {
-                    setSelectedSubprocess(response.data[0].name);
-                    setExceptiondata(response.data.slice(0, 5));
-                } else {
-                    setExceptiondata([]);
-                }
-            })
-            .finally(() => {
-                handleSetLoading(false);
-            });
-    }, [createdDateStart, handleSetLoading, selectedCarriers, selectedBrokerDealers]);
+    useEffect(() => {
+        const baseFilter: DashboardSearchFilter = {
+            createdDateStart: createdDateStart,
+            process: [Processes.NewBusiness],
+            caseStatus: [Statuses.Completed],
+            carrier: Object.keys(selectedCarriers),
+            brokerDealerName: Object.keys(selectedBrokerDealers),
+        };
+
+        setBaseDashboardQueryFilter(baseFilter);
+    }, [selectedCarriers, createdDateStart, selectedBrokerDealers]);
+
+    console.log('caseData', caseDashboardStatsData?.exceptionData);
 
     return (
         <CardContainer
@@ -142,9 +121,13 @@ export const IssuedBusiness = ({
                 <Typography className="py-4" variant={TypographyVariant.H2}>
                     Top 5 Processes by Volume
                 </Typography>
-                <RadioGroup.Root asChild onValueChange={handleSelectedSubprocess} value={selectedSubprocess}>
+                <RadioGroup.Root
+                    asChild
+                    onValueChange={handleSelectedSubprocess}
+                    value={selectedSubprocess || caseDashboardStatsData?.selectedSubprocess}
+                >
                     <div className=" grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 !items-stretch !border-b-0 !after:content-none [& .indicator]">
-                        {exceptionData.map((element, index) => {
+                        {caseDashboardStatsData?.exceptionData.map((element, index) => {
                             return (
                                 <RadioGroup.Item
                                     defaultChecked={index === 0}
@@ -166,7 +149,7 @@ export const IssuedBusiness = ({
                                         'items-start justify-between'
                                     )}
                                 >
-                                    {loading ? (
+                                    {isLoading ? (
                                         <>
                                             <PageLoader />
                                             <Typography variant={TypographyVariant.BodyBold}>Loading...</Typography>
@@ -196,7 +179,7 @@ export const IssuedBusiness = ({
                         })}
                     </div>
                 </RadioGroup.Root>
-                {loading ? (
+                {isLoading ? (
                     <>
                         <div className="min-h-[600px] grid gap-4 h-full mb-4 w-full place-content-center bg-[--color-base-surface-surface-tertiary]">
                             <PageLoader />
@@ -205,24 +188,29 @@ export const IssuedBusiness = ({
                 ) : (
                     <ExceptionInsights
                         timeframe={timeframe}
-                        completedCasesByProcessSubType={exceptionData}
-                        selectedSubprocess={selectedSubprocess}
+                        completedCasesByProcessSubType={caseDashboardStatsData?.exceptionData}
+                        selectedSubprocess={selectedSubprocess || caseDashboardStatsData?.selectedSubprocess || ''}
                         selectedException={selectedException}
                         carrierOrBrokerDealer={undefined}
                     />
                 )}
             </div>
             <div className="bg-white p-8 flex flex-col gap-8">
-                {selectedSubprocess && (
+                {(selectedSubprocess || caseDashboardStatsData?.selectedSubprocess) && (
                     <ExceptionSummary
                         carrierOrBrokerDealer={carrierOrBrokerDealer}
                         startDate={createdDateStart}
-                        selectedSubprocess={selectedSubprocess}
+                        selectedSubprocess={selectedSubprocess || caseDashboardStatsData?.selectedSubprocess || ''}
                     />
                 )}
             </div>
             <div className="bg-white p-8 flex flex-col gap-8">
-                {selectedSubprocess && <Top5SubprocessByVolume createdDateStart={createdDateStart} requestSubType={selectedSubprocess} />}
+                {(selectedSubprocess || caseDashboardStatsData?.selectedSubprocess) && (
+                    <Top5SubprocessByVolume
+                        createdDateStart={createdDateStart}
+                        requestSubType={selectedSubprocess || caseDashboardStatsData?.selectedSubprocess || ''}
+                    />
+                )}
             </div>
         </CardContainer>
     );

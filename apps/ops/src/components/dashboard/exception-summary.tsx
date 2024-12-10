@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import * as Highcharts from 'highcharts';
 import HC_ACCESSIBILITY from 'highcharts/modules/accessibility';
@@ -12,13 +13,15 @@ import { dashboardChartTitleFormat, splitAndSentenceCase } from '@deps/helpers/d
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
 import { convertToQueryString } from '@deps/helpers/routing.helper';
 import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
-import { DashboardStatsElementResponse } from '@deps/models/case/case';
+import { DashboardStatsElementResponse, Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { getCaseInsights } from '@deps/queries/api/openai';
+import { DashboardSearchFilter } from '@deps/queries/cases';
+import { getExceptionData } from '@deps/queries/tanstack/dashboard/dashboardQueries';
+import { useDashboardStore } from '@deps/store/store';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 import { ReactComponent as LightBulbIcon } from '@deps/styles/elements/icons/illustrations/light-bulb.svg';
 
-import useExceptionData from './issued-business/useExceptionData';
 import NavElement, { NavElementSize, NavElementType } from '../nav-element/nav-element';
 import styles from './top-5-subprocesses-by-volume/top-5-subprocess-by-volume.module.css';
 
@@ -179,20 +182,37 @@ export const ExceptionSummary = ({
 }) => {
     const [aiSummary, setAiSummary] = useState<string | null>(null);
     const shouldShowCaseInsights = useCaseInsightsPermission();
-    const [loading, exceptionData, statsResponse, filter] = useExceptionData({
-        startDate,
-        carrierOrBrokerDealer,
-        processSubType: selectedSubprocess,
-    });
+    const [baseDashboardQueryFilter, setBaseDashboardQueryFilter] = useState<DashboardSearchFilter>({});
 
     const chartRef = useRef<HighchartsReact.RefObject>(null);
     const [sortedMonthly, setSortedMonthly] = useState([] as summary[]);
     const [chartConfig, setChartConfig] = useState({} as Highcharts.Options);
     const groupBy: GroupByOptions = GroupByOptions.Carrier;
+    const { selectedBrokerDealers, selectedCarriers } = useDashboardStore(state => state);
+
+    const { data: exceptionData, isLoading: exceptionDataLoading } = useQuery({
+        queryKey: ['exceptionData', baseDashboardQueryFilter, carrierOrBrokerDealer],
+        queryFn: () =>
+            getExceptionData(baseDashboardQueryFilter, [carrierOrBrokerDealer, GroupByOptions.ExceptionCategory, GroupByOptions.UpdatedAt]),
+        placeholderData: previousData => previousData,
+    });
+
+    useEffect(() => {
+        const baseFilter: DashboardSearchFilter = {
+            createdDateStart: startDate,
+            process: [Processes.NewBusiness],
+            caseStatus: [Statuses.Completed],
+            carrier: Object.keys(selectedCarriers),
+            brokerDealerName: Object.keys(selectedBrokerDealers),
+            ...(selectedSubprocess ? { requestSubType: [selectedSubprocess] } : {}),
+        };
+
+        setBaseDashboardQueryFilter(baseFilter);
+    }, [selectedBrokerDealers, selectedCarriers, selectedSubprocess, startDate]);
 
     const getChartConfig = useCallback(
         (processedData: Output, sortedMonthly: summary[]): Highcharts.Options => {
-            if (!statsResponse) return {};
+            if (!exceptionData) return {};
 
             // get the weekly data for the top 5 carriers based on total
             const weekly: Highcharts.SeriesOptionsType[] = [];
@@ -207,7 +227,7 @@ export const ExceptionSummary = ({
 
             return {
                 chart: {
-                    height: 600,
+                    height: 500,
                     type: 'line', // Line chart
                     // plotBorderWidth: 1, // Add a border around the plot area
                     // plotBorderColor: '#D3D3D3', // Set the border color
@@ -316,15 +336,18 @@ export const ExceptionSummary = ({
                         gridLineWidth: 1,
                         height: '30%',
                         lineWidth: 2,
+                        labels: {
+                            y: 12,
+                        },
                         min: 0,
                         offset: 0, // Remove extra spacing
                         opposite: true, // Moves the x-axis to the right side
                         title: {
                             text: '<b>Monthly<br/>Volume</b>',
-                            align: 'low', // Aligns the title to the top
+                            align: 'high', // Aligns the title to the top
                             rotation: 0, // Force title to be horizontal
-                            x: 30,
-                            y: -15,
+                            x: -15,
+                            y: 15,
                             useHTML: true, // Enables HTML in the title
                         },
                         top: '68%',
@@ -403,11 +426,11 @@ export const ExceptionSummary = ({
                 },
             };
         },
-        [statsResponse]
+        [exceptionData]
     );
 
     useEffect(() => {
-        const processedData = processCarrierData(statsResponse || []);
+        const processedData = processCarrierData(exceptionData?.data.statsResponseData || []);
 
         // sort and slice to find the top 5 months
         const monthlyArray: summary[] = [];
@@ -419,7 +442,7 @@ export const ExceptionSummary = ({
         const myChartConfig = getChartConfig(processedData, sortedMonthly);
         setChartConfig(myChartConfig);
         setSortedMonthly(sortedMonthly);
-    }, [statsResponse, getChartConfig]);
+    }, [exceptionData, getChartConfig]);
 
     const getOpenAiSummary = async (caseStats: DashboardStatsElementResponse[], processSubType: string) => {
         try {
@@ -446,8 +469,8 @@ export const ExceptionSummary = ({
         if (!shouldShowCaseInsights) {
             return;
         }
-        if (statsResponse?.length && selectedSubprocess) {
-            getOpenAiSummary(statsResponse, selectedSubprocess).then(summary => {
+        if (exceptionData?.data && selectedSubprocess) {
+            getOpenAiSummary(exceptionData.data.statsResponseData, selectedSubprocess).then(summary => {
                 if (summary) {
                     setAiSummary(summary);
                 }
@@ -455,18 +478,18 @@ export const ExceptionSummary = ({
         } else {
             setAiSummary(`No exceptions for ${dashboardChartTitleFormat(selectedSubprocess)}.`);
         }
-    }, [loading, statsResponse, selectedSubprocess, shouldShowCaseInsights]);
+    }, [exceptionData, selectedSubprocess, shouldShowCaseInsights]);
 
     return (
         <CardContainer containerClassNames="rounded" classNames="!p-0" fullWidth={true}>
-            <div className="flex flex-col xl:flex-row justify-between gap-4 w-full">
+            <div className="flex flex-col xl:flex-row justify-between gap-8 w-full">
                 <div className="flex xl:flex-col xl:w-1/4 gap-4 mb-8 xl:mb-0">
                     <div>
                         <Typography variant={TypographyVariant.H3}>{'Exception Summary'}</Typography>
                         <Typography variant={TypographyVariant.Label}>{dashboardChartTitleFormat(selectedSubprocess)}</Typography>
                     </div>
                     <div className="flex-1 border-r-1 xl:border-r-0 border-[#EDEDED] flex flex-col gap-4 pt-4">
-                        {loading ? (
+                        {exceptionDataLoading ? (
                             <div className="grid gap-4 h-full mb-4 w-full place-content-center bg-[--color-base-surface-surface-tertiary]">
                                 <PageLoader />
                             </div>
@@ -500,7 +523,7 @@ export const ExceptionSummary = ({
                                             <div className="flex items-center gap-3">
                                                 <div className="h-3 w-3" style={{ backgroundColor: colors[index] }}></div>
                                                 <NavElement
-                                                    href={`/cases${convertToQueryString(filter as any)}`}
+                                                    href={`/cases${convertToQueryString(baseDashboardQueryFilter as any)}`}
                                                     size={NavElementSize.Small}
                                                     type={NavElementType.Link}
                                                     className="capitalize"
@@ -521,12 +544,12 @@ export const ExceptionSummary = ({
                 </div>
                 <div className="relative xl:w-3/4">
                     <div
-                        style={{ height: '600px' }}
-                        className={clsx('w-full h-[600px]', {
-                            'grid gap-4 place-content-center bg-[--color-base-surface-surface-tertiary]': loading || !exceptionData,
+                        className={clsx('w-full', {
+                            'grid gap-4 place-content-center bg-[--color-base-surface-surface-tertiary]':
+                                exceptionDataLoading || !exceptionData,
                         })}
                     >
-                        {loading ? (
+                        {exceptionDataLoading ? (
                             <>
                                 <PageLoader />
                                 <Typography variant={TypographyVariant.BodyBold}>Loading...</Typography>

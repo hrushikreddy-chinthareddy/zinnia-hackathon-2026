@@ -38,7 +38,7 @@ export const getDocument = async (documentNumber: string, docType: string, clien
     }
 };
 
-export const uploadDocument = async (task: ManagementTask, document: any): Promise<EDSDocumentResponse | null> => {
+export const uploadDocument = async (task: ManagementTask, document: any, correlationId: string): Promise<EDSDocumentResponse | null> => {
     try {
         const url = `${baseAppUrl}/api/documents/upload`;
         const { blob, name } = dataURItoBlob(document);
@@ -55,6 +55,7 @@ export const uploadDocument = async (task: ManagementTask, document: any): Promi
                 formType: 'NB Application',
                 docClassification: 'INBOUND',
                 zinniaLiveCaseId: task.caseId,
+                correlationId: correlationId,
             },
         };
 

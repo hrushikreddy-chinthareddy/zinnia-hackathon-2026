@@ -1,8 +1,8 @@
+import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { FC, CSSProperties, useState, useEffect, RefObject } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { SimpleOption } from '@deps/components/autocomplete/autocomplete.types';
 import { FieldSize } from '@deps/components/fields/field';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import Select from '@deps/components/select/select';
@@ -10,35 +10,26 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { getStartAndEndDates } from '@deps/containers/case-redesign-sub-page/case-helpers';
-import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { useIntersectionObserver } from '@deps/hooks/useIntersectionObserver';
 import { useResizeObserver } from '@deps/hooks/useResizeObserver';
-import { CaseDashboardStatsResponse, Processes, Statuses } from '@deps/models/case/case';
+import { Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
-import { getCaseDashboardStats } from '@deps/queries/api/cases';
-import { DashboardSearchFilter, CaseDashboardStatsQuery } from '@deps/queries/cases';
+import { DashboardSearchFilter } from '@deps/queries/cases';
+import { getProcessListOptions, getCaseDashboardStatsQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
+import { useDashboardStore } from '@deps/store/store';
 
 import styles from '../../../pages/dashboard/Dashboard.module.css';
 import ActiveAging from '../active-aging/active-aging';
-import { CarrierListItem } from '../issued-business/issued-business';
 import SankeyChart from '../sankey-chart';
 import CaseStatBlock from '../stat-blocks/case-stat-block';
 import { TreeMapInsights } from '../tree-map-insights';
 interface ActiveApplicationsProps {
-    selectedCarriers: CarrierListItem;
-    selectedBrokerDealers: CarrierListItem;
     handleSetLoading: (loading: boolean) => void;
     loading: boolean;
     carrierHeaderRef: RefObject<HTMLElement>;
 }
 
-export const ActiveApplications: FC<ActiveApplicationsProps> = ({
-    selectedCarriers,
-    selectedBrokerDealers,
-    handleSetLoading,
-    loading,
-    carrierHeaderRef,
-}) => {
+export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, handleSetLoading, carrierHeaderRef }) => {
     const { createdDateStart, createdDateEnd } = getStartAndEndDates('All');
     const { height: carrierHeaderHeight } = useResizeObserver({ ref: carrierHeaderRef, box: 'border-box' });
 
@@ -52,96 +43,41 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
     });
     const { t } = useTranslation(TranslationFiles.COMMON);
     const [timeFrameLabel] = useState<string>('Year to Date');
-    const [insightGroupingCountByCarrierStats, setInsightGroupingCountByCarrierStats] = useState<CaseDashboardStatsResponse>({
-        data: [],
-        totalElements: 0,
-    });
-    const [insightGroupingCountBySubProcessStats, setInsightGroupingCountBySubProcessStats] = useState<CaseDashboardStatsResponse>({
-        data: [],
-        totalElements: 0,
-    });
-    const [insightCreatedBySubProcess, setInsightCreatedBySubProcess] = useState<CaseDashboardStatsResponse>({
-        data: [],
-        totalElements: 0,
-    });
-    const [insightStagesByCreated, setInsightStagesByCreated] = useState<CaseDashboardStatsResponse>({
-        data: [],
-        totalElements: 0,
-    });
-    const [insightExceptionStats, setInsightExceptionStats] = useState<CaseDashboardStatsResponse>({
-        data: [],
-        totalElements: 0,
-    });
 
     const [baseDashboardQueryFilter, setBaseDashboardQueryFilter] = useState<DashboardSearchFilter>({});
     const [baseInsightQueryFilter, setBaseInsightQueryFilter] = useState<DashboardSearchFilter>({});
     const [insightOption, setInsightOption] = useState<Processes>(Processes.NewBusiness);
-    const [processListOptions, setProcessListOptions] = useState<SimpleOption[]>([]);
 
-    const getProcessListOptions = async (baseDashboardQueryFilter: DashboardSearchFilter) => {
-        const query: CaseDashboardStatsQuery = {
-            filter: baseDashboardQueryFilter,
-            groupBy: [GroupByOptions.Process],
-        };
-        const statsResponse = await getCaseDashboardStats(query);
-        if (!statsResponse || 'status' in statsResponse) {
-            return [];
-        }
-        const listOptions = statsResponse.data
-            .reduce<SimpleOption[]>((prev, curr) => {
-                if (curr.name && !prev.some(item => item.value === curr.name)) {
-                    prev.push({ value: curr.name, label: curr.name });
-                }
-                return prev;
-            }, [])
-            .sort((item1, item2) => item1.label.localeCompare(item2.label));
-
-        setProcessListOptions(listOptions);
-    };
+    const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
 
     const handleInsightChange = (processType: Processes) => {
         setInsightOption(processType);
     };
 
-    const getCountByCarrierInsightStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
-        const query = {
-            filter: baseInsightQueryFilter,
-            groupBy: [GroupByOptions.Carrier],
-        };
-        return getCaseDashboardStats(query);
-    };
-
-    const getCountBySubProcessInsightStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
-        const query = {
-            filter: baseInsightQueryFilter,
-            groupBy: [GroupByOptions.ProcessSubType],
-        };
-        return getCaseDashboardStats(query);
-    };
-
-    const getCreatedBySubProcessInsightStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
-        const query = {
-            filter: baseInsightQueryFilter,
-            groupBy: [GroupByOptions.ProcessSubType, GroupByOptions.CreatedAt],
-        };
-        return getCaseDashboardStats(query);
-    };
-
-    const getOpenExceptionCategoriesByCreatedInsightStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
-        const query = {
-            filter: baseInsightQueryFilter,
-            groupBy: [GroupByOptions.CreatedAt, GroupByOptions.ExceptionCategory],
-        };
-        return await getCaseDashboardStats(query);
-    };
-
-    const getExceptionCategoryStats = async (baseInsightQueryFilter: DashboardSearchFilter) => {
-        const query = {
-            filter: baseInsightQueryFilter,
-            groupBy: [GroupByOptions.ExceptionCategory],
-        };
-        return getCaseDashboardStats(query);
-    };
+    const { data: processListOptions, isLoading: processListOptionsLoading } = useQuery({
+        queryKey: ['processListOptions', createdDateStart],
+        queryFn: () => getProcessListOptions(createdDateStart),
+    });
+    const { data: insightGroupingCountByCarrierStats, isLoading: insightGroupingCountByCarrierStatsLoading } = useQuery({
+        queryKey: ['countByCarrierInsights', baseInsightQueryFilter],
+        queryFn: () => getCaseDashboardStatsQuery(baseInsightQueryFilter, [GroupByOptions.Carrier]),
+    });
+    const { data: insightGroupingCountBySubProcessStats, isLoading: insightGroupingCountBySubProcessStatsLoading } = useQuery({
+        queryKey: ['countBySubProcessInsights', baseInsightQueryFilter],
+        queryFn: () => getCaseDashboardStatsQuery(baseInsightQueryFilter, [GroupByOptions.ProcessSubType]),
+    });
+    const { data: insightCreatedBySubProcess, isLoading: insightCreatedBySubProcessLoading } = useQuery({
+        queryKey: ['createdBySubProcessInsights', baseInsightQueryFilter],
+        queryFn: () => getCaseDashboardStatsQuery(baseInsightQueryFilter, [GroupByOptions.ProcessSubType, GroupByOptions.CreatedAt]),
+    });
+    const { data: insightStagesByCreated, isLoading: insightStagesByCreatedLoading } = useQuery({
+        queryKey: ['stagesByCreatedInsights', baseInsightQueryFilter],
+        queryFn: () => getCaseDashboardStatsQuery(baseInsightQueryFilter, [GroupByOptions.CreatedAt, GroupByOptions.ExceptionCategory]),
+    });
+    const { data: insightExceptionStats, isLoading: insightExceptionStatsLoading } = useQuery({
+        queryKey: ['exceptionStats', baseInsightQueryFilter],
+        queryFn: () => getCaseDashboardStatsQuery(baseInsightQueryFilter, [GroupByOptions.ExceptionCategory]),
+    });
 
     useEffect(() => {
         const baseFilter: DashboardSearchFilter = {
@@ -170,72 +106,25 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
         }
 
         setBaseDashboardQueryFilter(baseFilter);
-        getProcessListOptions(baseFilter);
         setBaseInsightQueryFilter(insightFilter);
     }, [selectedCarriers, insightOption, selectedBrokerDealers, createdDateEnd, createdDateStart]);
 
-    useEffect(() => {
-        const getPageData = async () => {
-            handleSetLoading(true);
-            try {
-                if (Object.keys(baseDashboardQueryFilter).length === 0 || Object.keys(baseInsightQueryFilter).length === 0) {
-                    return;
-                }
-                const [
-                    insightCountByCarrierStats,
-                    insightCountBySubProcessStats,
-                    insightCreatedBySubProcess,
-                    insightOpenStagesByCreated,
-                    insightExceptionCategoryStats,
-                ] = await Promise.all([
-                    getCountByCarrierInsightStats(baseInsightQueryFilter),
-                    getCountBySubProcessInsightStats(baseInsightQueryFilter),
-                    getCreatedBySubProcessInsightStats(baseInsightQueryFilter),
-                    getOpenExceptionCategoriesByCreatedInsightStats(baseInsightQueryFilter),
-                    getExceptionCategoryStats(baseInsightQueryFilter),
-                ]);
-                if (!insightCountByCarrierStats || 'status' in insightCountByCarrierStats) {
-                    console.error('getCountByCarrierInsightStats::Failed to fetch carrier count insight stats');
-                } else {
-                    setInsightGroupingCountByCarrierStats(insightCountByCarrierStats);
-                }
-                if (!insightCountBySubProcessStats || 'status' in insightCountBySubProcessStats) {
-                    console.error('getCountByProcessInsightStats::Failed to fetch carrier count insight stats');
-                } else {
-                    insightCountBySubProcessStats.data.forEach(element => {
-                        element.name = dashboardChartTitleFormat(element.name);
-                    });
-                    setInsightGroupingCountBySubProcessStats(insightCountBySubProcessStats);
-                }
-                if (!insightCreatedBySubProcess || 'status' in insightCreatedBySubProcess) {
-                    console.error('getSubProcessByCreatedInsightStats::Failed to fetch carrier count insight stats');
-                } else {
-                    setInsightCreatedBySubProcess(insightCreatedBySubProcess);
-                }
-                if (!insightOpenStagesByCreated || 'status' in insightOpenStagesByCreated) {
-                    console.error('getOpenStagesByCreatedStats::Failed to fetch carrier count insight stats');
-                } else {
-                    setInsightStagesByCreated(insightOpenStagesByCreated);
-                }
+    const sankeyChartLoading =
+        processListOptionsLoading ||
+        insightGroupingCountBySubProcessStatsLoading ||
+        insightCreatedBySubProcessLoading ||
+        insightStagesByCreatedLoading ||
+        insightExceptionStatsLoading ||
+        insightGroupingCountByCarrierStatsLoading;
 
-                if (!insightExceptionCategoryStats || 'status' in insightExceptionCategoryStats) {
-                    console.error('getExceptionCategoryStats::Failed to fetch carrier count insight stats');
-                } else {
-                    setInsightExceptionStats(insightExceptionCategoryStats);
-                }
-            } catch (error) {
-                console.error('an error occurred fetching dashboard insight stats', error);
-            } finally {
-                handleSetLoading(false);
-            }
-        };
-        getPageData();
-    }, [baseDashboardQueryFilter, baseInsightQueryFilter, handleSetLoading]);
+    useEffect(() => {
+        handleSetLoading(sankeyChartLoading);
+    }, [handleSetLoading, sankeyChartLoading]);
 
     return (
         <>
             <div className="relative border-t-2 border-[--color-base-border-border-light]">
-                {loading && (
+                {sankeyChartLoading && (
                     <div className="absolute bottom-0 left-0 right-0 top-0 z-10 flex h-full justify-center bg-gray-800 opacity-80">
                         <div className="mt-4">
                             <PageLoader variant={PageLoaderVariant.CenterWhiteText} showText={true} />
@@ -261,7 +150,7 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
                 </Typography>
                 <div className={`${styles.insightsHeaderDropdown}`}>
                     <Select
-                        options={processListOptions}
+                        options={processListOptions || []}
                         size={FieldSize.Small}
                         name="process-type-dropdown-btn"
                         placeholder={t('selectProcessType') || ''}
