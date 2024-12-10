@@ -1,6 +1,8 @@
+import { Button } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
+import { useRouter } from 'next/navigation';
 import { useTranslation } from 'next-i18next';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import CallLogCard from '@deps/components/card/card-call-log/card-call-log';
 import Label, { LabelVariant } from '@deps/components/label/label';
@@ -8,6 +10,7 @@ import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { parseAndFormatDate } from '@deps/helpers/string.helper';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
+import { TaskType } from '@deps/models/case/task';
 import { ManagementTask, TaskComment, TaskStatus } from '@deps/models/case/task-instance';
 import { getTaskInstance } from '@deps/queries/api/v2/task';
 import { ReactComponent as NotStartedIcon } from '@deps/styles/elements/icons/alert/not-started.svg';
@@ -18,9 +21,25 @@ import { DEFAULT_DATE_FORMAT, DEFAULT_ERROR_STRING, NUMERIC_DATE_FORMAT } from '
 const SpecificTaskBody = (task: ManagementTask) => {
     const { t } = useTranslation();
     let body;
-
+    const router = useRouter();
     switch (task.taskType) {
-        case 'Suitability':
+        case TaskType.SuitabilityReview:
+            body = (
+                <div className="flex flex-col items-start gap-8 border-b-2 border-gray-100 p-8 last:border-b-0">
+                    <div className="flex flex-row">
+                        <Button
+                            mode="primary"
+                            size="small"
+                            onClick={() => {
+                                router.push(`/task/${task.id}`);
+                            }}
+                        >
+                            Start task
+                        </Button>
+                    </div>
+                </div>
+            );
+            break;
         case 'SDP Suitability':
             body = (
                 <div className="flex flex-col items-start gap-8 border-b-2 border-gray-100 p-8 last:border-b-0">
