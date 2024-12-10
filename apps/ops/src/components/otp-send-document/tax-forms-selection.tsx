@@ -16,13 +16,12 @@ import TaxFormsListing from './components/tax-forms-listing';
 import WorkflowCard from '../workflows/workflow-card/workflow-card';
 export type StatementSelectionProps = {
     policy: Policy;
+    taxYearOptions?: MultiselectOption[];
     taxFormSelectionDetails: TaxFormSelectionDetails;
     setTaxFormSelectionDetails: (value: SetStateAction<TaxFormSelectionDetails>) => void;
 };
-const TaxFormsSelection = ({ policy, taxFormSelectionDetails, setTaxFormSelectionDetails }: StatementSelectionProps) => {
+const TaxFormsSelection = ({ policy, taxFormSelectionDetails, setTaxFormSelectionDetails, taxYearOptions }: StatementSelectionProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'contactCenter' });
-    const currentYear = new Date().getFullYear();
-    const taxYears = Array.from({ length: 5 }, (_, i) => currentYear - i).reverse();
     const [error, setError] = useState<FormValidationErrors>({});
     const [loader, setLoader] = useState(false);
     const { goToNext } = useWorkflow();
@@ -86,12 +85,6 @@ const TaxFormsSelection = ({ policy, taxFormSelectionDetails, setTaxFormSelectio
         }));
     };
 
-    const taxYearOptions: MultiselectOption[] = taxYears.map(year => ({
-        label: year.toString(),
-        value: year.toString(),
-        displayText: year.toString(),
-    }));
-
     const handleCancel = () => {
         setError({});
         setTaxFormSelectionDetails({
@@ -117,10 +110,9 @@ const TaxFormsSelection = ({ policy, taxFormSelectionDetails, setTaxFormSelectio
                 <Select
                     label={t('sendTaxForms.selectTaxYear') as string}
                     isMultiselect
-                    options={taxYearOptions}
+                    options={taxYearOptions ?? []}
                     value={taxFormSelectionDetails?.selectedYears || {}}
                     onChange={handleSelection}
-                    placeholder={t('sendTaxForms.selectTaxYear') as string}
                 />
             </div>
             <div>

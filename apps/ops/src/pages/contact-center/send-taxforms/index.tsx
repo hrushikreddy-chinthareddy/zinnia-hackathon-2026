@@ -5,6 +5,7 @@ import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useMemo, useState } from 'react';
 
+import { MultiselectOption } from '@deps/components/autocomplete/autocomplete.types';
 import NoNavLayout from '@deps/components/no-nav-layout';
 import ConfirmComponent from '@deps/components/otp-send-document/confirm';
 import Correspondence from '@deps/components/otp-send-document/correspondence';
@@ -42,7 +43,19 @@ const SendTaxForms = ({ policy, user, shouldShowCaseButton }: SendTaxFormsProps)
     const { t } = useTranslation(undefined, { keyPrefix: '' });
 
     const { ctiCallNumber, correlationId } = router.query;
-    const [taxFormSelectionDetails, setTaxFormSelectionDetails] = useState<TaxFormSelectionDetails>({} as TaxFormSelectionDetails);
+
+    const currentYear = new Date().getFullYear();
+    const taxYears = Array.from({ length: 5 }, (_, i) => currentYear - i).reverse();
+
+    const taxYearOptions: MultiselectOption[] = taxYears.map(year => ({
+        label: year.toString(),
+        value: year.toString(),
+        displayText: year.toString(),
+    }));
+
+    const [taxFormSelectionDetails, setTaxFormSelectionDetails] = useState<TaxFormSelectionDetails>({
+        selectedYears: { [currentYear.toString()]: currentYear.toString() },
+    } as TaxFormSelectionDetails);
 
     useSegmentPageTracker(user, SegmentPageName.SendTaxForms, { ctiCallNumber, correlationId, policyNumber: policy.policyNumber });
 
@@ -111,6 +124,7 @@ const SendTaxForms = ({ policy, user, shouldShowCaseButton }: SendTaxFormsProps)
                     policy={policy}
                     taxFormSelectionDetails={taxFormSelectionDetails}
                     setTaxFormSelectionDetails={setTaxFormSelectionDetails}
+                    taxYearOptions={taxYearOptions}
                 />
             ),
             screenReaderLabel: formSelectionLabel,
