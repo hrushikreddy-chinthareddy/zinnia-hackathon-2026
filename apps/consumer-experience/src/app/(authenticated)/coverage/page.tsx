@@ -114,7 +114,11 @@ export default async function Page({
                         interactiveElements={[
                           <AccountValuePopover
                             key="account-value-popover"
-                            dataTimestamp={p.effectiveDate}
+                            dataTimestamp={
+                              p.lineOfBusiness === LineOfBusiness.ANNUITY
+                                ? new Date().toISOString()
+                                : p.effectiveDate
+                            }
                             lineOfBusiness={p.lineOfBusiness}
                           />,
                         ]}
