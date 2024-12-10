@@ -197,11 +197,11 @@ const fullyMaskPhones = (phones: Phone[] | undefined): Phone[] | undefined => {
     return phones?.map(phone => {
         return {
             ...phone,
-            areaCode: phone?.areaCode?.replace(/./g, '*') || undefined,
+            areaCode: toMaskedStringOrNull(phone?.areaCode),
             bestTime: toMaskedStringOrNull(phone?.bestTime),
-            countryCode: phone?.countryCode?.replace(/./g, '*') || undefined,
-            dialNumber: phone?.dialNumber?.replace(/./g, '*') || undefined,
-            extension: phone?.extension?.replace(/./g, '*') || undefined,
+            countryCode: toMaskedStringOrNull(phone?.countryCode),
+            dialNumber: toMaskedStringOrNull(phone?.dialNumber),
+            extension: toMaskedStringOrNull(phone?.extension),
             phoneType: undefined,
             timezone: undefined,
         } as Phone;
@@ -245,7 +245,7 @@ const fullyMaskPolicyParties = (parties: PolicyAllOfPartiesItem[] | undefined): 
                 abbreviatedName: toMaskedStringOrNull(abbreviatedName),
                 addresses: addresses?.map(fullyMaskAddress) as Address[] | undefined,
                 bankDetails: fullyMaskBankDetails(bankDetails),
-                dateOfBirth: 'XXXX-XX-XX',
+                dateOfBirth: toMaskedStringOrNull(dateOfBirth),
                 emails: fullyMaskEmails(emails),
                 firstName: toMaskedStringOrNull(firstName),
                 fullName: toMaskedStringOrNull(fullName),
