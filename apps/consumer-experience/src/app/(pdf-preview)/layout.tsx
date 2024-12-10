@@ -13,7 +13,7 @@ export default async function AuthenticatedLayout({
     <main>
       <UserProvider user={session?.user}>
         <SessionManager>
-          <>{children}</>
+          {children}
           <Analytics />
         </SessionManager>
       </UserProvider>
