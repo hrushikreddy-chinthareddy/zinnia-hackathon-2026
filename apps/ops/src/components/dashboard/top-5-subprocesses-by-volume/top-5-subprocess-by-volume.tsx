@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import * as Highcharts from 'highcharts';
@@ -16,9 +17,10 @@ import { convertToQueryString } from '@deps/helpers/routing.helper';
 import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
 import { DashboardStatsElementResponse, Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
-import { getCaseDashboardStats } from '@deps/queries/api/cases';
 import { getCaseInsights } from '@deps/queries/api/openai';
 import { DashboardSearchFilter } from '@deps/queries/cases';
+import { getCaseDashboardStatsQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
+import { useDashboardStore } from '@deps/store/store';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 import { ReactComponent as LightBulbIcon } from '@deps/styles/elements/icons/illustrations/light-bulb.svg';
 
@@ -179,44 +181,26 @@ export const Top5SubprocessByVolume = ({
     requestSubType: string;
 }) => {
     const [aiSummary, setAiSummary] = useState<string | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [statsResponse, setStatsResponse] = useState<DashboardStatsElementResponse[]>();
     const shouldShowCaseInsights = useCaseInsightsPermission();
     const groupBy: GroupByOptions = GroupByOptions.ProductName;
+
+    const { selectedBrokerDealers, selectedCarriers } = useDashboardStore(state => state);
 
     const filter: DashboardSearchFilter = useMemo(() => {
         return {
             createdDateStart: dayjs(createdDateStart).toISOString(),
             process: [Processes.NewBusiness],
             caseStatus: [Statuses.Completed],
+            carrier: Object.keys(selectedCarriers),
+            brokerDealerName: Object.keys(selectedBrokerDealers),
             ...(requestSubType ? { requestSubType: [requestSubType] } : {}),
         };
-    }, [createdDateStart, requestSubType]);
+    }, [createdDateStart, requestSubType, selectedBrokerDealers, selectedCarriers]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                // Grab the case stats
-                const { data } = await getCaseDashboardStats({
-                    filter,
-                    groupBy: [groupBy, GroupByOptions.UpdatedAt],
-                });
-
-                if (!data || !(data as DashboardStatsElementResponse[])?.length) {
-                    throw new Error('No data found');
-                }
-
-                setStatsResponse(data as DashboardStatsElementResponse[]);
-                setLoading(false);
-            } catch (e) {
-                console.error('Error fetching chart data', e);
-                setLoading(false);
-            }
-        };
-
-        setLoading(true);
-        fetchData();
-    }, [createdDateStart, filter, groupBy]);
+    const { data: statsResponse, isLoading: loading } = useQuery({
+        queryKey: ['getTopFiveData', filter, groupBy],
+        queryFn: () => getCaseDashboardStatsQuery(filter, [groupBy, GroupByOptions.UpdatedAt]),
+    });
 
     const chartRef = useRef<HighchartsReact.RefObject>(null);
     const [sortedMonthly, setSortedMonthly] = useState([] as summary[]);
@@ -439,7 +423,7 @@ export const Top5SubprocessByVolume = ({
     );
 
     useEffect(() => {
-        const processedData = processData(statsResponse || []);
+        const processedData = processData(statsResponse?.data || []);
 
         // sort and slice to find the top 5 months
         const monthlyArray: summary[] = [];
@@ -478,8 +462,8 @@ export const Top5SubprocessByVolume = ({
         if (!shouldShowCaseInsights) {
             return;
         }
-        if (statsResponse?.length && requestSubType) {
-            getOpenAiSummary(statsResponse, requestSubType).then(summary => {
+        if (statsResponse?.data?.length && requestSubType) {
+            getOpenAiSummary(statsResponse.data, requestSubType).then(summary => {
                 if (summary) {
                     setAiSummary(summary);
                 }
@@ -553,7 +537,8 @@ export const Top5SubprocessByVolume = ({
                 <div className="relative xl:w-3/4">
                     <div
                         className={clsx('w-full', {
-                            'grid gap-4 place-content-center bg-[--color-base-surface-surface-tertiary]': loading || !statsResponse?.length,
+                            'grid gap-4 place-content-center bg-[--color-base-surface-surface-tertiary]':
+                                loading || !statsResponse?.data.length,
                         })}
                     >
                         {loading ? (
