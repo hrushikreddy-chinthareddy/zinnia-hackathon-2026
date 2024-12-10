@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 
 import Loading from '@/app/loading';
+import { analytics } from '@/utils/segment';
 
 import PreviewUnsupported from './PreviewUnsupported';
 
@@ -26,6 +27,7 @@ export default function PdfPreviewer({
       return;
     }
     fetchInProgress.current = true;
+    analytics?.page('pdf preview', { documentUrl: documentDownloadUrl });
 
     const getDocumentData = async () => {
       let shouldRedirectToError = false;
