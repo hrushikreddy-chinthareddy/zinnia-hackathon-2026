@@ -12,9 +12,10 @@ type TaskProviderProps = {
     children: React.ReactNode;
     taskMetadata: FormMetadata;
     initialTask: ManagementTask;
+    correlationId: string;
 };
 
-export const TaskProvider = ({ children, initialTask, taskMetadata }: TaskProviderProps) => {
+export const TaskProvider = ({ children, initialTask, taskMetadata, correlationId }: TaskProviderProps) => {
     const [task, setTask] = useState<ManagementTask>(initialTask);
     const [isReadyForDataEntry, setIsReadyForDataEntry] = useState<boolean>(false);
     const [messages, setMessages] = useState<any>([]);
@@ -33,6 +34,7 @@ export const TaskProvider = ({ children, initialTask, taskMetadata }: TaskProvid
             value={{
                 taskMetadata,
                 task,
+                correlationId,
                 isReadyForDataEntry,
                 exceptions,
                 messages,
