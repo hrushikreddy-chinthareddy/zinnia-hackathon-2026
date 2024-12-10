@@ -1193,6 +1193,7 @@
             },
             "reviewIssues": "Review {{taskType}} issues",
             "suitabilityReview": "suitability review",
+            "commonTaskIssues": "Issue: One or more {{taskType}} issues found.",
             "suitabilityReviewIssues": "Review Suitability Issue(s)"
         },
         "processDate": {
