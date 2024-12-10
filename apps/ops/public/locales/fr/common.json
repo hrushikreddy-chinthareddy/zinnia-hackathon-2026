@@ -1185,7 +1185,8 @@
                 "transfer of assets": "Transfert d'actifs: {{label}}"
             },
             "reviewIssues": "Revoir {{taskType}} problèmes",
-            "suitabilityReview": "suitability revoir"
+            "suitabilityReview": "suitability revoir",
+            "commonTaskIssues": "Problème: Une ou plusieurs problèmes {{taskType}} trouvées."
         },
         "processDate": {
             "cancled": "Annulé le",
@@ -4478,7 +4479,6 @@
                 "caseId": "ID du cas"
             }
         },
-
         "confirmStep": {
             "title": "Soumis!",
             "subTitle": "Votre demande a été envoyée pour traitement.",
