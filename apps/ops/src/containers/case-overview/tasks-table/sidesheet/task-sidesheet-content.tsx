@@ -20,8 +20,9 @@ import { DEFAULT_DATE_FORMAT, DEFAULT_ERROR_STRING, NUMERIC_DATE_FORMAT } from '
 
 const SpecificTaskBody = (task: ManagementTask) => {
     const { t } = useTranslation();
-    let body;
     const router = useRouter();
+    let body;
+
     switch (task.taskType) {
         case TaskType.SuitabilityReview:
             body = (
