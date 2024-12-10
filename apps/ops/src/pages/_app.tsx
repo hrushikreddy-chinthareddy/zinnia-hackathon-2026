@@ -73,7 +73,7 @@ const AppHead = () => {
     return (
         <Head>
             <title>{DEFAULT_PAGE_TITLE}</title>
-            <meta name="description" content="DEPS Frontend" />
+            <meta name="description" content="Creating a modern experience today" />
             <meta name="viewport" content="width=device-width, initial-scale=1" />
             <link rel="icon" href="/favicon.ico" />
             <link rel="alternate" hrefLang="x-default" href="/" />
