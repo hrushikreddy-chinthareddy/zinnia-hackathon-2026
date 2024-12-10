@@ -541,6 +541,9 @@ export interface SignatureWithdrawal {
     ssn?: {
         text: string | null;
     };
+    isSignatureCityProvided?: {
+        text: boolean | null;
+    };
 }
 
 export interface TaxWithholding {
