@@ -7,7 +7,7 @@ import { updateCaseTask } from '@deps/operations/tasks/task-operations';
 import { uploadDocument } from '@deps/queries/api/documents';
 import { DEFAULT_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
 
-export const processPayload = (task: ManagementTask): boolean => {
+export const processPayload = (task: ManagementTask, correlationId: string): boolean => {
     let success = true;
     switch (task.taskType as TaskType) {
         case TaskType.SuitabilityReview: {
@@ -15,7 +15,7 @@ export const processPayload = (task: ManagementTask): boolean => {
             if (attachments?.length === 0) return true;
             attachments?.forEach(async (attachment: any) => {
                 if (!attachment.attachmentFile) return;
-                const document = await uploadDocument(task, attachment.attachmentFile);
+                const document = await uploadDocument(task, attachment.attachmentFile, correlationId);
                 const { blob } = dataURItoBlob(attachment.attachmentFile);
                 if (document?.success) {
                     attachment.documentId = document?.documentId;
@@ -31,8 +31,8 @@ export const processPayload = (task: ManagementTask): boolean => {
     return success;
 };
 
-export const updateTask = async (task: ManagementTask): Promise<boolean> => {
-    const success = await processPayload(task);
+export const updateTask = async (task: ManagementTask, correlationId: string): Promise<boolean> => {
+    const success = await processPayload(task, correlationId);
     if (success) {
         const taskResponse = await updateCaseTask(task);
         if (!taskResponse) {
