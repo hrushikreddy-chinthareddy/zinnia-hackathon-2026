@@ -132,6 +132,8 @@ export const ServiceFormReviewStep = ({documentNumber, policy, docType, clientCo
                 docTypeToReindex: documentIndexingInfo?.docTypeToReindex,
                 notes: documentIndexingInfo?.docTypeToReindex === SuggestedDocType.OTHER ? documentIndexingInfo?.notes : null
             }));
+        } else {
+            setFormReindexingData(null);
         }
     }, [sectionOption, document, documentIndexingInfo]);
 
