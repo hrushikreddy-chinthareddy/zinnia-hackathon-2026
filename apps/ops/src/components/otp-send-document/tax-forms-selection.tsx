@@ -61,19 +61,16 @@ const TaxFormsSelection = ({ policy, taxFormSelectionDetails, setTaxFormSelectio
     };
 
     const handleSelection = (selectedValue: string, displayText: string) => {
-        const previousSelections = { ...taxFormSelectionDetails?.selectedYears };
+        const previousSelections = taxFormSelectionDetails?.selectedYears;
+        let currentTaxForms = taxFormSelectionDetails?.taxForms;
         if (previousSelections[selectedValue]) {
-            let currentTaxForms = taxFormSelectionDetails?.taxForms;
             if (Array.isArray(currentTaxForms)) {
                 currentTaxForms = currentTaxForms.filter(form => form.taxYear !== selectedValue);
             } else {
                 currentTaxForms = [];
             }
-            setTaxFormSelectionDetails(prev => ({
-                ...prev,
-                taxForms: currentTaxForms,
-            }));
             delete previousSelections[selectedValue];
+            return currentTaxForms;
         } else {
             getTaxForms(selectedValue);
             previousSelections[selectedValue] = displayText;
@@ -81,6 +78,7 @@ const TaxFormsSelection = ({ policy, taxFormSelectionDetails, setTaxFormSelectio
 
         setTaxFormSelectionDetails(prev => ({
             ...prev,
+            taxForms: currentTaxForms,
             selectedYears: previousSelections,
         }));
     };

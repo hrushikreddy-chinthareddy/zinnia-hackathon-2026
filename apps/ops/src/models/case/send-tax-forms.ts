@@ -5,7 +5,7 @@ export type TaxForm = {
     formId: string;
     taxYear: string;
 };
-
+export const ALLOWED_TAX_YEARS = 5;
 export type TaxFormSelectionDetails = {
     taxForms: TaxForm[];
     selectedTaxForms: TaxForm[];

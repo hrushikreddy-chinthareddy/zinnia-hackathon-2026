@@ -22,7 +22,7 @@ import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { AttachmentType, CorrespondenceFormParts, TransactionSubTypes, TransactionTypes } from '@deps/models/case/correspondence';
 import { CommunicationTypes, SendDocumentFormType } from '@deps/models/case/send-document';
-import { DisplayName, TaxFormSelectionDetails } from '@deps/models/case/send-tax-forms';
+import { ALLOWED_TAX_YEARS, DisplayName, TaxFormSelectionDetails } from '@deps/models/case/send-tax-forms';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission, UserProfile } from '@deps/models/user-profile';
 import { sendCommunication } from '@deps/queries/api/c2web';
@@ -45,7 +45,7 @@ const SendTaxForms = ({ policy, user, shouldShowCaseButton }: SendTaxFormsProps)
     const { ctiCallNumber, correlationId } = router.query;
 
     const currentYear = new Date().getFullYear();
-    const taxYears = Array.from({ length: 5 }, (_, i) => currentYear - i).reverse();
+    const taxYears = Array.from({ length: ALLOWED_TAX_YEARS }, (_, i) => currentYear - i).reverse();
 
     const taxYearOptions: MultiselectOption[] = taxYears.map(year => ({
         label: year.toString(),

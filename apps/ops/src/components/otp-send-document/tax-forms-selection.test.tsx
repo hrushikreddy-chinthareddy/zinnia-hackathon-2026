@@ -1,0 +1,190 @@
+import '@testing-library/jest-dom';
+import { render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
+import { WorkflowProvider } from '@deps/contexts/WorkflowContainerContext';
+import { ALLOWED_TAX_YEARS } from '@deps/models/case/send-tax-forms';
+import * as TaxForm from '@deps/queries/api/tax-forms';
+
+import TaxFormsSelection from './tax-forms-selection';
+import { MultiselectOption } from '../autocomplete/autocomplete.types';
+window.HTMLElement.prototype.scrollIntoView = jest.fn();
+window.HTMLElement.prototype.hasPointerCapture = jest.fn();
+
+jest.mock('@deps/utils/server-logging');
+jest.mock('next-i18next', () => ({
+    useTranslation: () => ({
+        t: jest.fn((key: string, options?: Record<string, string>) => {
+            if (options) return `${key} ${Object.values(options).join(' ')}`;
+            return key;
+        }),
+    }),
+}));
+
+jest.mock('@deps/queries/api/tax-forms');
+const mockedSearchTaxForms = jest.mocked(TaxForm.searchTaxForms);
+
+afterEach(() => {
+    jest.clearAllMocks();
+});
+
+describe('TaxFormsSelection component', () => {
+    const currentYear = new Date().getFullYear();
+    const mockTaxYears = Array.from({ length: 5 }, (_, i) => currentYear - i).reverse();
+
+    const mockTaxFormSelectionDetails = {
+        selectedTaxForms: [],
+        selectedYears: {},
+        taxForms: [],
+    };
+
+    const taxYears = Array.from({ length: ALLOWED_TAX_YEARS }, (_, i) => currentYear - i).reverse();
+
+    const taxYearOptions: MultiselectOption[] = taxYears.map(year => ({
+        label: year.toString(),
+        value: year.toString(),
+        displayText: year.toString(),
+    }));
+
+    const mockSetTaxFormSelectionDetails = jest.fn();
+    it('renders the form selection component', () => {
+        const { getByText } = render(
+            <WorkflowProvider>
+                <TaxFormsSelection
+                    policy={{}}
+                    taxFormSelectionDetails={mockTaxFormSelectionDetails}
+                    setTaxFormSelectionDetails={mockSetTaxFormSelectionDetails}
+                    taxYearOptions={taxYearOptions}
+                />
+            </WorkflowProvider>
+        );
+        expect(getByText('sendTaxForms.tabs.taxFormsSelection')).toBeInTheDocument();
+    });
+
+    it('Should render tax year options', async () => {
+        const mockTaxFormSelectionDetails = {
+            selectedTaxForms: [],
+            selectedYears: {},
+            taxForms: [],
+        };
+        const { getByText, getByLabelText } = render(
+            <WorkflowProvider>
+                <TaxFormsSelection
+                    policy={{}}
+                    taxFormSelectionDetails={mockTaxFormSelectionDetails}
+                    setTaxFormSelectionDetails={mockSetTaxFormSelectionDetails}
+                    taxYearOptions={taxYearOptions}
+                />
+            </WorkflowProvider>
+        );
+
+        const checkboxOption = getByLabelText('sendTaxForms.selectTaxYear');
+        await userEvent.click(checkboxOption);
+        await waitFor(() => mockTaxYears.map(year => expect(getByText(year.toString())).toBeInTheDocument()));
+    });
+
+    it('should display a warning message when API returns an empty array response', async () => {
+        mockedSearchTaxForms.mockResolvedValue(Promise.resolve({ count: 0, items: [] }));
+
+        let setMethodArgs;
+        const mockSetTaxFormSelectionDetails = jest.fn(cb => {
+            setMethodArgs = cb(mockTaxFormSelectionDetails);
+            return setMethodArgs;
+        });
+
+        const { getByText, findByText, getByLabelText } = render(
+            <WorkflowProvider>
+                <TaxFormsSelection
+                    policy={{}}
+                    taxFormSelectionDetails={mockTaxFormSelectionDetails}
+                    setTaxFormSelectionDetails={mockSetTaxFormSelectionDetails}
+                    taxYearOptions={taxYearOptions}
+                />
+            </WorkflowProvider>
+        );
+
+        const checkboxOption = getByLabelText('sendTaxForms.selectTaxYear');
+        await userEvent.click(checkboxOption);
+
+        const lastYearOption = await findByText(currentYear.toString(), { ignore: 'option' });
+
+        expect(lastYearOption).toBeInTheDocument();
+
+        await userEvent.click(lastYearOption);
+
+        expect(mockSetTaxFormSelectionDetails).toHaveReturnedWith({
+            selectedTaxForms: [],
+            selectedYears: { [currentYear.toString()]: currentYear.toString() },
+            taxForms: [],
+        });
+
+        expect(getByText('sendTaxForms.tabs.taxFormsSelection')).toBeInTheDocument();
+    });
+
+    it('should display a tax forms list', async () => {
+        const mockTaxFormSelectionDetails = {
+            selectedTaxForms: [],
+            selectedYears: {},
+            taxForms: [],
+        };
+
+        jest.clearAllMocks();
+
+        mockedSearchTaxForms.mockResolvedValue(
+            Promise.resolve({
+                count: 1,
+                items: [
+                    {
+                        contractNumber: '7003304118',
+                        name: '5498',
+                        fChar: '5',
+                        formId: '5646',
+                        taxYear: '2022',
+                    },
+                ],
+            })
+        );
+
+        let setMethodArgs;
+        const mockSetTaxFormSelectionDetails = jest.fn(cb => {
+            setMethodArgs = cb(mockTaxFormSelectionDetails);
+            return setMethodArgs;
+        });
+
+        const { findByText, getByLabelText } = render(
+            <WorkflowProvider>
+                <TaxFormsSelection
+                    policy={{}}
+                    taxFormSelectionDetails={mockTaxFormSelectionDetails}
+                    setTaxFormSelectionDetails={mockSetTaxFormSelectionDetails}
+                    taxYearOptions={taxYearOptions}
+                />
+            </WorkflowProvider>
+        );
+
+        const checkboxOption = getByLabelText('sendTaxForms.selectTaxYear');
+        await userEvent.click(checkboxOption);
+
+        const lastYearOption = await findByText(currentYear.toString(), { ignore: 'option' });
+
+        expect(lastYearOption).toBeInTheDocument();
+
+        userEvent.click(lastYearOption);
+
+        await waitFor(() =>
+            expect(mockSetTaxFormSelectionDetails).toHaveReturnedWith({
+                selectedTaxForms: [],
+                selectedYears: { [currentYear.toString()]: currentYear.toString() },
+                taxForms: [
+                    {
+                        contractNumber: '7003304118',
+                        name: '5498',
+                        fChar: '5',
+                        formId: '5646',
+                        taxYear: '2022',
+                    },
+                ],
+            })
+        );
+    });
+});
