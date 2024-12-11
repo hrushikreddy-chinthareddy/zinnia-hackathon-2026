@@ -26,6 +26,14 @@ const SpecificTaskBody = (task: ManagementTask) => {
             body = (
                 <div className="flex flex-col items-start gap-8 border-b-2 border-gray-100 p-8 last:border-b-0">
                     <div className="flex flex-row">
+                        <Label
+                            label={t('sideSheet.suitability.suitabilityStatus.header')}
+                            variant={LabelVariant.FieldLabel}
+                            className="w-[140px] py-1"
+                        />
+                        <Typography variant={TypographyVariant.BodySm}>{task.data?.suitabilityStatus || DEFAULT_ERROR_STRING}</Typography>
+                    </div>
+                    <div className="flex flex-row">
                         <Link href={`/task/${task.id}`} text="Start task" variant="button" size="small"></Link>
                     </div>
                 </div>
