@@ -53,7 +53,9 @@ export const getStatusDetails = ({ singleCase, t }: GetStatusDetailsProps) => {
 
         case Statuses.Canceled:
             statusVariant = BadgeVariant.INACTIVE;
-            statusTooltip = `${t('caseOverview.caseStatus.canceled.tooltip')}${dayjs(updatedAt).format('MM/DD/YYYY')}.`;
+            statusTooltip = `${t('caseOverview.caseStatus.canceled.tooltip', {
+                processSubType: processSubType ? processSubType : process,
+            })}${dayjs(updatedAt).format('MM/DD/YYYY')}.`;
             statusText = t('caseOverview.caseStatus.canceled.badgeText');
             break;
 
@@ -64,7 +66,11 @@ export const getStatusDetails = ({ singleCase, t }: GetStatusDetailsProps) => {
             })}${dayjs(updatedAt).format('MM/DD/YYYY')}.`;
             statusText = t('caseOverview.caseStatus.completed.badgeText');
             break;
-
+        case Statuses.NotStarted:
+            statusVariant = BadgeVariant.DEFAULT;
+            statusTooltip = t('caseOverview.caseStatus.notStarted.statusTooltip');
+            statusText = t('caseOverview.caseStatus.notStarted.statusTooltip');
+            break;
         default:
             statusVariant = BadgeVariant.DEFAULT;
             statusTooltip = t('caseOverview.caseStatus.unknown.tooltip');
