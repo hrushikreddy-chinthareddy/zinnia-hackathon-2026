@@ -182,7 +182,7 @@ export const getPolicyDetailsSsr = async (
     id?: string,
     planCode?: string,
     accessToken?: string,
-    userInfo: object = {},
+    userInfo: { partyId?: string; sessionId?: string; userId?: string; userName?: string } = {},
     nonSanitizedSSN = false
 ): Promise<Policy | null> => {
     const loggingContext = { file: 'queries/api/policies', function: 'getPolicyDetailsSSR', ...userInfo };
