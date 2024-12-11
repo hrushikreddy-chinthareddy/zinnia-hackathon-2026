@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { getStatusDetails } from '@deps/components/case-list/components/case-status-tooltip';
 import CaseSubPage from '@deps/components/case-sub-page/case-sub-page';
 import { TranslationFiles } from '@deps/config/translations';
+import { toTitleCase } from '@deps/helpers/string.helper';
 import { Case } from '@deps/models/case/case';
 import { getCaseDetails } from '@deps/queries/api/cases';
 import { baseAppUrl } from '@deps/queries/api-config';
@@ -55,7 +56,7 @@ const CaseRedesign = ({ caseDetails, tab, featureFlags }: CaseRedesignProps) => 
         setTabVal(val);
     };
 
-    const statusDetails = getStatusDetails({ singleCase: caseDetailsModel, t });
+    const statusDetails = getStatusDetails({ singleCase: caseDetailsModel, t, toTitleCase });
 
     return (
         <div className="w-full bg-gray-50">
