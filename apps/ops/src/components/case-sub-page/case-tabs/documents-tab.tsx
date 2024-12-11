@@ -13,8 +13,7 @@ import DocumentsResultsTable from '@deps/containers/subpages/documents-sub-page/
 import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
 import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import { Case } from '@deps/models/case/case';
-import CardInfo from '@deps/components/card/card-info/card-info';
-import { Icon, IconType } from '@zinnia/bloom/components';
+import UnauthorizedCard from '@deps/components/card/card-unauthorized';
 
 // try to get any documentIds associated with this case.
 // As we find more ways to associate documents with a case, we can add the ways to retrieve them here.
@@ -80,12 +79,7 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
                 <Typography variant={TypographyVariant.H2}>{t(`caseOverview.tabs.documents`)}</Typography>
             </div>
             {documentsStatusCode === 403 ? (
-                <CardInfo
-                    icon={<Icon type={IconType.ALERT_EXCLAMATION} width={50} height={50} className="text-semantic-warning" />}
-                    title={t('unauthorized.title')}
-                    subtitle={t('unauthorized.message')}
-                    className="mt-8"
-                />
+                <UnauthorizedCard />
             ) : (
                 <>
                     <div className="mt-6 flex w-full flex-col gap-6 md:flex-row md:justify-between">

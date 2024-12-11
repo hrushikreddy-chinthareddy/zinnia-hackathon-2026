@@ -9,6 +9,7 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import { toSentenceCase, toTitleCase } from '@deps/helpers/string.helper';
+import UnauthorizedCard from '@deps/components/card/card-unauthorized';
 export const NoSummaryCard = ({ content }: { content: string }) => (
     <div className="flex items-center gap-1 rounded-sm border border-dashed border-gray-100 bg-gray-50 p-4">
         <Icon type={IconType.PHONE} height={16} width={16} />
@@ -119,14 +120,7 @@ export default function CallLogsTab() {
                     ))}
                 </>
             )}
-            {callLogsStatusCode === 403 && (
-                <CardInfo
-                    icon={<Icon type={IconType.ALERT_EXCLAMATION} width={50} height={50} className="text-semantic-warning" />}
-                    title={t('unauthorized.title')}
-                    subtitle={t('unauthorized.message')}
-                    className="mt-8"
-                />
-            )}
+            {callLogsStatusCode === 403 && <UnauthorizedCard />}
         </CardContainer>
     );
 }

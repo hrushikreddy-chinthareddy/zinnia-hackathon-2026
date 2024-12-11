@@ -19,8 +19,7 @@ import { DEFAULT_ERROR_STRING, ZAHARA_API_DATE_FORMAT } from '@deps/types/consta
 
 import DocumentResultsPagination from './documents-results-pagination';
 import DocumentsResultsTable from './documents-results-table';
-import CardInfo from '@deps/components/card/card-info/card-info';
-import { Icon, IconType } from '@zinnia/bloom/components';
+import UnauthorizedCard from '@deps/components/card/card-unauthorized';
 
 type DocumentsSubPageProps = {
     policy: Policy;
@@ -148,12 +147,7 @@ export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
                     </RadioGroup.Root>
                 </div>
                 {statuses[documentType] === 403 ? (
-                    <CardInfo
-                        icon={<Icon type={IconType.ALERT_EXCLAMATION} width={50} height={50} className="text-semantic-warning" />}
-                        title={t('unauthorized.title')}
-                        subtitle={t('unauthorized.message')}
-                        className="mt-8 mx-auto"
-                    />
+                    <UnauthorizedCard />
                 ) : (
                     <>
                         {!loading && (
