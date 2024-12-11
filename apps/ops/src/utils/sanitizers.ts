@@ -14,6 +14,7 @@ import {
     Phone,
     Policy,
     PolicyAllOfPartiesItem,
+    PolicyCoverage,
     State,
     TaxWithholding,
 } from '@deps/models/policy/sor-policy';
@@ -212,6 +213,23 @@ const fullyMaskTaxWithholdings = (taxWithholdings: TaxWithholding[] | undefined)
     return taxWithholdings;
 };
 
+const fullyMaskCoverage = (coverage: PolicyCoverage | undefined): PolicyCoverage | undefined => {
+    if (!coverage) {
+        return undefined;
+    }
+    const maskedCoverage = coverage?.coverageLayers?.map(layer => {
+        const maskedParticipants = layer?.coverageParticipants?.map(participant => {
+            return {
+                ...participant,
+                issueAge: undefined,
+                partyAgeAtIssue: undefined,
+            };
+        });
+        return { ...layer, coverageParticipants: maskedParticipants };
+    });
+    return { ...coverage, coverageLayers: maskedCoverage };
+};
+
 const fullyMaskPolicyParties = (parties: PolicyAllOfPartiesItem[] | undefined): PolicyAllOfPartiesItem[] | undefined => {
     return parties?.map(
         ({
@@ -260,8 +278,8 @@ const fullyMaskPolicyParties = (parties: PolicyAllOfPartiesItem[] | undefined): 
 };
 
 export const policyMasker = (policy: Policy): Policy => {
-    const { parties, ...rest } = policy;
-    return { ...rest, parties: fullyMaskPolicyParties(parties) };
+    const { parties, coverage, ...rest } = policy;
+    return { ...rest, parties: fullyMaskPolicyParties(parties), coverage: fullyMaskCoverage(coverage) };
 };
 
 export const fullyMaskPolicyResponse = (policyResponse: GetPolicyResponse): GetPolicyResponse => {
