@@ -1,4 +1,4 @@
-import { Button } from '@zinnia/bloom/components';
+import { Link } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'next-i18next';
@@ -28,15 +28,7 @@ const SpecificTaskBody = (task: ManagementTask) => {
             body = (
                 <div className="flex flex-col items-start gap-8 border-b-2 border-gray-100 p-8 last:border-b-0">
                     <div className="flex flex-row">
-                        <Button
-                            mode="primary"
-                            size="small"
-                            onClick={() => {
-                                router.push(`/task/${task.id}`);
-                            }}
-                        >
-                            Start task
-                        </Button>
+                        <Link href={`/task/${task.id}`} text="Start task" variant="button" size="small"></Link>
                     </div>
                 </div>
             );
