@@ -31,7 +31,11 @@ export default function Exceptions({ exceptions, unmapped = false }: { exception
                                 className={exception.status === ExceptionStatuses.New ? 'text-semantic-error' : 'text-semantic-success'}
                                 contentClassName="mt-1"
                                 variant={ContentVariant.BodySm}
-                                details={exception.description}
+                                details={
+                                    exception.nigoMsgId
+                                        ? t(`caseManagementApiKeys.nigoReasons.${exception.nigoMsgId}`) || exception.description
+                                        : exception.description
+                                }
                             />
                             {unmapped && (
                                 <Content

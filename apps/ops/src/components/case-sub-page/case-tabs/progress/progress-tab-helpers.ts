@@ -399,15 +399,14 @@ export class TransformedCase {
                 .filter(Boolean) as TaskView[]
         ).sort(taskSorter);
         const description = this.t(
-            this.resolvedExceptionStatuses.includes(exception.status)
-                ? 'caseOverview.tabs.resolved'
-                : 'caseOverview.tabs.issue',
+            this.resolvedExceptionStatuses.includes(exception.status) ? 'caseOverview.tabs.resolved' : 'caseOverview.tabs.issue',
             { issue: exceptionReason }
         );
         return {
             createdAt: exception.createdAt,
             description,
             id: exception.id,
+            nigoMsgId: exception.nigoMsgId || undefined,
             status: exception.status,
             tasks: tasks,
             updatedAt: exception.updatedAt,
