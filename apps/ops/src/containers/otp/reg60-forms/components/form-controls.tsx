@@ -16,6 +16,7 @@ import { FormSuccessMessageKey } from '@deps/types/localStorage';
 import getMassMutualReg60Config from '../mass-mutual/mass-mutual-reg60-form-helper';
 import { CurrentPage } from '../reg60.types';
 import { buildForm } from '../utils/reg60-form-helper';
+import { TranslationFiles } from '@deps/config/translations';
 
 export type FormControlsProps = {
     document: DocumentData;
@@ -41,7 +42,7 @@ export function allValuesEmptyObjects(obj: any) {
 export function FormControls({ isLoading, setIsLoading, setTaskApiError, document }: FormControlsProps) {
     const router = useRouter();
     const [timer] = useState(performance.now());
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseReg60.request' });
+    const { t } = useTranslation(TranslationFiles.REG60DEFS, { keyPrefix: 'caseReg60.request' });
     const formState = useContext(Reg60FormContext);
     const formStatusCompleted = formState?.initialForm?.status === TaskStatus.Completed;
     const caseId = router?.query?.id || '';

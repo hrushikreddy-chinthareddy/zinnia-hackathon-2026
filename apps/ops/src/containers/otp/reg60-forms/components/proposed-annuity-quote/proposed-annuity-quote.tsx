@@ -10,8 +10,8 @@ import Radio, { RadioVariant } from '@deps/components/radio/radio';
 import SelectSimple from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { Reg60FormContext } from '@deps/contexts/Reg60FormContext';
+import { TranslationFiles } from '@deps/config/translations';
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
-
 import { ProposedAnnuityQuoteProps } from './proposed-annuity-quote.types';
 import { amountFormat } from '../../utils/reg60-constants';
 import {
@@ -29,7 +29,7 @@ const ProposedAnnuityQuote = ({
     product,
     contractId,
 }: ProposedAnnuityQuoteProps): JSX.Element => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseReg60.request' });
+    const { t } = useTranslation(TranslationFiles.REG60DEFS, { keyPrefix: 'caseReg60.request' });
     const { fields } = formConfig;
     const { formErrors, isFormStateReadOnly } = useContext(Reg60FormContext);
     const [radioSelection, setRadioSelection] = useState(annuityQuote.typeOfPayment);

@@ -9,6 +9,7 @@ import SelectSimple from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { Reg60FormContext } from '@deps/contexts/Reg60FormContext';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
+import { TranslationFiles } from '@deps/config/translations';
 
 import { ChannelType, UserInformationProps } from './user-information.type';
 import { SSN_FORMAT } from '../../utils/reg60-constants';
@@ -16,7 +17,7 @@ import AddressDetails from '../address-details/address-details';
 import UserPhoneNumber from '../phone-number/phone-number';
 
 const UserInformation = ({ userInfo, setUserInfo, formErrors, formConfig }: UserInformationProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseReg60.request.partyDetails' });
+    const { t } = useTranslation(TranslationFiles.REG60DEFS, { keyPrefix: 'caseReg60.request.partyDetails' });
 
     const { isFormStateReadOnly } = useContext(Reg60FormContext);
     return (

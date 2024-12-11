@@ -23,6 +23,7 @@ import { RowConfig } from '../comparison-benefits/benefits-table.types';
 import { Products } from '../disclosure-authorization/disclosure-authorization.types';
 import ProposedAnnuityQuote from '../proposed-annuity-quote/proposed-annuity-quote';
 import { AnnuityQuote } from '../proposed-annuity-quote/proposed-annuity-quote.types';
+import { TranslationFiles } from '@deps/config/translations';
 
 const getComparisonTypeOptions = (t: TFunction) => [
     { label: t('comparisonTypes.veriableToFixed'), value: ComparisonType.VARIABLE_TO_FIXED },
@@ -38,7 +39,7 @@ const ComparisonContract = ({
     formErrors = {},
     onComparisonContractChange,
 }: ComparisonContractProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseReg60.request' });
+    const { t } = useTranslation(TranslationFiles.REG60DEFS, { keyPrefix: 'caseReg60.request' });
     const { annuitizationQuoteConfig } = getMassMutualReg60Config(t);
     const { disclosureAuthorization, isFormStateReadOnly } = useContext(Reg60FormContext);
     const { field } = formConfigs;

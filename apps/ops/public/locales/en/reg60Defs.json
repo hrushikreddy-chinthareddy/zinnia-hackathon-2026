@@ -1,0 +1,224 @@
+{
+    "caseReg60": {
+        "request": {
+            "pageHeader": "Contact Information",
+            "channel": {
+                "cas": "CAS",
+                "broker": "Broker"
+            },
+            "ownerInformation": {
+                "header": "Owner Information",
+                "titleTooltip": "Owner information is prefilled from OnBase keywords."
+            },
+            "agentInformation": {
+                "header": "Agent Information",
+                "titleTooltip": "Agent information is prefilled from OnBase keywords."
+            },
+            "partyDetails": {
+                "firstName": "First name",
+                "middleName": "Middle name",
+                "lastName": "Last name",
+                "ownerPhoneNumber": "Owner phone number",
+                "agentPhoneNumber": "Agent/Broker phone number",
+                "ownerSSN": "Owner SSN",
+                "channel": "Channel",
+                "agentCompany": "Agent/Broker company",
+                "extension": "Extension",
+                "home": "Home",
+                "work": "Work",
+                "mobile": "Mobile",
+                "channelOption": {
+                    "cas": "CAS",
+                    "broker": "Broker"
+                },
+                "addressDetails": {
+                    "streetAddress": "Owner street address",
+                    "agentStreetAddress": "Agent/Broker street address",
+                    "streetAddress2": "Street address 2",
+                    "streetAddress3": "Street address 3",
+                    "city": "City",
+                    "state": "State",
+                    "zip": "Zip",
+                    "zipPlusFour": "Zip+4"
+                }
+            },
+            "actionButtons": {
+                "submit": "Submit"
+            },
+            "contractComparison": {
+                "createDisclosureHeader": "Create Disclosure",
+                "comparisonContract": "Comparison Contract",
+                "addNewComparison": "Add new comparison",
+                "removeComparison": "Remove comparison",
+                "back": "Back",
+                "info": "Info",
+                "goodFaithEstimateInfo": "If checked, Surrender Value and Death Benefits values are not required",
+                "comparisonWarning": "If more than 3 transfer requests are received, comparison must be generated manually.",
+                "isRequired": "is required",
+                "greaterThanZero": "must be greater than 0",
+                "comparisonType": "Comparison type",
+                "partialRequest": "Partial request",
+                "goodFaithEstimateRequired": "Good faith estimate required",
+                "companyName": "Company name",
+                "companyPhoneNumber": "Company phone number",
+                "contractNumber": "Contract number",
+                "issueDate": "Issue date",
+                "accountValue": "Account value",
+                "surrenderChargeApplies": "Surrender charge applies",
+                "surrenderChargeAmount": "Surrender charge amount",
+                "mvaApplies": "MVA applies",
+                "mvaAmount": "MVA amount",
+                "surrenderValue": "Surrender value",
+                "annuitizationValueReceived": "Annuitization values received",
+                "table": {
+                    "surrenderValueTable": {
+                        "title": "Surrender value",
+                        "fixedCol": {
+                            "years": "Years",
+                            "guaranteedRate": "Guaranteed rate",
+                            "currentRate": "Current rate"
+                        },
+                        "variableCol": {
+                            "year": "Year",
+                            "zeroPercent": "0%",
+                            "sixPercent": "6%",
+                            "twelvePercent": "12%"
+                        },
+                        "rowPeriods": {
+                            "fiveYears": "5 years",
+                            "tenYears": "10 years"
+                        }
+                    },
+                    "deathBenefitsTable": {
+                        "title": "Death Benefits",
+                        "fixedCol": {
+                            "years": "Years",
+                            "guaranteedRate": "Guaranteed rate",
+                            "currentRate": "Current rate"
+                        },
+                        "variableCol": {
+                            "year": "Year",
+                            "zeroPercent": "0%",
+                            "sixPercent": "6%",
+                            "twelvePercent": "12%"
+                        },
+                        "rowPeriods": {
+                            "fiveYears": "5 years",
+                            "tenYears": "10 years"
+                        }
+                    }
+                }
+            },
+            "comparisonTypes": {
+                "veriableToFixed": "Variable to Fixed",
+                "VeriableToImmediate": "Variable to Immediate",
+                "fixedToFixed": "Fixed to Fixed",
+                "fixedToImmediate": "Fixed to Immediate",
+                "lifeToFixed": "Life to Fixed",
+                "lifeToImmediate": "Life to Immediate"
+            },
+            "proposedAnnuityQuote": {
+                "proposedAnnuityQuoteTitle": "Proposed Annuity Quote",
+                "annuitizationQuoteTitle": "Annuitization Quote",
+                "annuityPaymentAmount": "Annuity payment amount",
+                "firstPaymentDate": "First payment date",
+                "paymentFrequencyLabel": "Payment frequency",
+                "incomeOptionLabel": "Income option",
+                "periodCertainYears": "Period certain years",
+                "typeOfPayment": "Type of payment",
+                "typeOfPaymentOptions": {
+                    "fixed": "Fixed",
+                    "variable": "Variable"
+                },
+                "paymentFrequency": {
+                    "monthly": "Monthly",
+                    "annually": "Annually",
+                    "semiAnnually": "Semi-annually",
+                    "quarterly": "Quarterly"
+                },
+                "incomeOption": {
+                    "singleLifeNoDeathBft": "Single Life No Death Bft",
+                    "singleLifeCashRefund": "Single Life Cash Refund",
+                    "singleLifeInstallRef": "Single Life Install Ref",
+                    "singleLifePC": "Single Life PC",
+                    "singleLifeNoRefund": "Single Life No Refund",
+                    "jtAndSurvLifeCashRef": "Jt & Surv Life Cash Ref",
+                    "jtAndSurvInstallRef": "Jt & Surv Install Ref",
+                    "jtAndSurvLifePC": "Jt & Surv Life PC",
+                    "jtAndSurvLifeHalfReduct": "Jt&Surv Life 1/2 Reduct",
+                    "jtAndSurvLifeTwoThirdsReduct": "Jt&Surv Life 2/3 Reduct",
+                    "jtAndSurvLifeThreeFourthsReduct": "Jt&Surv Life 3/4 Reduct",
+                    "jtAndSurvLifeNoRefund": "Jt & Surv Life No Refund",
+                    "jtAndSurvLifeNoDeathBenefit": "Jt & Surv Life No Death Bft",
+                    "jtAndSurvConvNoRef": "Jt&Surv Conv No Ref",
+                    "jtAndSurvConvPC": "Jt&Surv Conv PC",
+                    "periodCertain": "Period Certain",
+                    "jtAndSurvConvCashRef": "Jt&Surv Conv Cash Ref",
+                    "jtAndSurvConvInstallRef": "Jt&Surv Conv Install Ref"
+                }
+            },
+            "comparisonTable": {
+                "surrenderValue": "Surrender Value",
+                "deathBenefits": "Death Benefits"
+            },
+            "disclosureAuthorization": {
+                "title": "Authorization for Disclosure Information",
+                "signatureDate": "Signature date",
+                "expectedAcctValue": "Expected account value",
+                "product": "Product",
+                "cdscPeriod": "CDSC period",
+                "products": {
+                    "stableVoyage": "Stable Voyage",
+                    "retireEase": "Retire Ease",
+                    "retireEaseChoice": "RetireEase Choice"
+                },
+                "cdscPeriods": {
+                    "na": "N/A",
+                    "oneYearGuarantee": "1 Year Guarantee",
+                    "threeYearGuarantee": "3 Year Guarantee",
+                    "fourYearGuarantee": "4 Year Guarantee",
+                    "fiveYearGuarantee": "5 Year Guarantee",
+                    "sevenYearGuarantee": "7 Year Guarantee",
+                    "nineYearGuarantee": "9 Year Guarantee"
+                }
+            },
+            "formControls": {
+                "cancel": "Cancel",
+                "cancelConfirm": "Do you want to cancel this request? All data will be lost.",
+                "cancelError": "An error occurred while cancelling this task. Please try again.",
+                "saveAsDraft": "Save as a draft",
+                "saveAsDraftError": "An error occurred while saving a draft of this task. Please try again.",
+                "continue": "Continue",
+                "calculateComparison": "Calculate Comparison",
+                "submitError": "An error occurred while submitting comparison request. Please try again.",
+                "createTaskSuccessStart": "Comparison request successfully submitted for {{documentNumber}}",
+                "createTaskSuccessEnd": " and {{contractNumber}}"
+            },
+            "formErrors": {
+                "formValidation": {
+                    "formValidationError": "Form submission was prevented due to validation errors. Address the errors above and try again.",
+                    "firstNameIsRequired": "First name is required",
+                    "middleNameIsRequired": "Middle name is required",
+                    "lastNameIsRequired": "Last name is required",
+                    "ownerSSNisRequired": "Owner SSN is required",
+                    "companyNameIsRequired": "Company name is required",
+                    "ownerStreetAddressIsRequired": "Owner street address is required",
+                    "cityIsRequired": "City is required",
+                    "stateIsRequired": "State is required",
+                    "zipIsRequired": "Zip is required",
+                    "channelIsRequired": "Channel is required",
+                    "signatureDateIsRequired": "Signature date is required",
+                    "signatureDateIsInvalid": "Cannot be a date prior to 120 days from current system date and can not be greater than current system date.",
+                    "expectedAcctValueIsRequired": "Expected account value is required",
+                    "productIsRequired": "Product is required",
+                    "cdscPeriodIsRequired": "CDSC period is required",
+                    "annuityPaymentAmountIsRequired": "Annuity payment amount is required",
+                    "firstPaymentDateIsRequired": "First payment date is required",
+                    "paymentFrequencyIsRequired": "Payment frequency is required",
+                    "incomeOptionIsRequired": "Income option is required",
+                    "periodCertainYearsIsRequired": "Period certain years is required"
+                }
+            }
+        }
+    }
+}
