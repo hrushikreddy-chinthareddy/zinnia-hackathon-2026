@@ -1186,7 +1186,8 @@
             },
             "reviewIssues": "Revoir {{taskType}} problèmes",
             "suitabilityReview": "suitability revoir",
-            "commonTaskIssues": "Problème: Une ou plusieurs problèmes {{taskType}} trouvées."
+            "commonTaskIssues": "Problème: Une ou plusieurs problèmes {{taskType}} trouvées.",
+            "suitabilityReviewIssues": "Revoir Suitability Problèmes"
         },
         "processDate": {
             "cancled": "Annulé le",
