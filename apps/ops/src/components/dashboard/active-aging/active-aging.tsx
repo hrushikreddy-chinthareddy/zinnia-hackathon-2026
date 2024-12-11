@@ -119,7 +119,7 @@ const ActiveAging = ({
         // at the same time.
         let totalCaseCount = 0;
         if (selectedAgingRange === 'All') {
-            totalCaseCount = createdBySubProcess?.data.reduce((a, b) => a + b.count, 0) || 0;
+            totalCaseCount = createdBySubProcess?.data?.reduce((a, b) => a + b.count, 0) || 0;
             return `Showing All (Total ${wholeNumberFormatify(totalCaseCount)} apps)`;
         }
 
@@ -240,7 +240,7 @@ const ActiveAging = ({
 
     useEffect(() => {
         const groupedAgingRangeBySubProcess: CaseDashboardStatsResponse = { data: [], totalElements: 0 };
-        createdBySubProcess?.data.forEach(subProcess => {
+        createdBySubProcess?.data?.forEach(subProcess => {
             groupedAgingRangeBySubProcess.data.push({
                 key: GroupByOptions.ProcessSubType,
                 name: subProcess.name,
@@ -295,7 +295,7 @@ const ActiveAging = ({
         });
 
         // second we need to create a map of all the open stages by aging range (this gives us a lot of entries)
-        openExceptionCategoriesByCreated?.data.forEach(createdGroupingOfExceptionCategories => {
+        openExceptionCategoriesByCreated?.data?.forEach(createdGroupingOfExceptionCategories => {
             const timeRange = getAgingTimeRangeFromDate(new Date(createdGroupingOfExceptionCategories.name));
             exceptionCategoryByAgingRangeMap[timeRange] = exceptionCategoryByAgingRangeMap[timeRange].concat(
                 createdGroupingOfExceptionCategories.values ?? []

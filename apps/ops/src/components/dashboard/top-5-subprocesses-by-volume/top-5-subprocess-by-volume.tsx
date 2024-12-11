@@ -299,7 +299,7 @@ export const Top5SubprocessByVolume = ({
                         offset: 0, // Remove extra spacing
                         // linkedTo: 0, // Link categories with the first axis
                         tickLength: 0, // Hide tick marks
-                        top: '68%',
+                        top: '69%',
                     },
                 ],
                 yAxis: [
@@ -343,7 +343,7 @@ export const Top5SubprocessByVolume = ({
                             y: 15,
                             useHTML: true, // Enables HTML in the title
                         },
-                        top: '68%',
+                        top: '69%',
                     },
                 ],
                 series: [...(weekly as Highcharts.SeriesOptionsType[]), ...(monthly as Highcharts.SeriesOptionsType[])],
@@ -538,7 +538,7 @@ export const Top5SubprocessByVolume = ({
                     <div
                         className={clsx('w-full', {
                             'grid gap-4 place-content-center bg-[--color-base-surface-surface-tertiary]':
-                                loading || !statsResponse?.data.length,
+                                loading || !statsResponse?.data?.length,
                         })}
                     >
                         {loading ? (

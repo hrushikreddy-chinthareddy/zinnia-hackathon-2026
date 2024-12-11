@@ -113,8 +113,8 @@ function processCarrierData(input: DashboardStatsElementResponse[]): Output {
                 enabled: false, // Disable markers for a clean line chart
             },
             color: colors[i % colors.length],
-            xAxis: 0, // Use the first xAxis
-            yAxis: 0,
+            // xAxis: 0, // Use the first xAxis
+            // yAxis: 0,
         };
 
         result.monthly[carrierName].series = {
@@ -123,8 +123,8 @@ function processCarrierData(input: DashboardStatsElementResponse[]): Output {
             stack: 'stackedBar',
             type: 'column',
             color: colors[i % colors.length],
-            xAxis: 1, // Use the second xAxis
-            yAxis: 1,
+            // xAxis: 1, // Use the second xAxis
+            // yAxis: 1,
         };
 
         const groupedByDate: Record<string, number> = {};
@@ -185,8 +185,12 @@ export const ExceptionSummary = ({
     const [baseDashboardQueryFilter, setBaseDashboardQueryFilter] = useState<DashboardSearchFilter>({});
 
     const chartRef = useRef<HighchartsReact.RefObject>(null);
+    const topChartRef = useRef<HighchartsReact.RefObject>(null);
+    const bottomChartRef = useRef<HighchartsReact.RefObject>(null);
     const [sortedMonthly, setSortedMonthly] = useState([] as summary[]);
     const [chartConfig, setChartConfig] = useState({} as Highcharts.Options);
+    const [topChartConfig, setTopChartConfig] = useState({} as Highcharts.Options);
+    const [bottomChartConfig, setBottomChartConfig] = useState({} as Highcharts.Options);
     const groupBy: GroupByOptions = GroupByOptions.Carrier;
     const { selectedBrokerDealers, selectedCarriers } = useDashboardStore(state => state);
 
@@ -210,7 +214,55 @@ export const ExceptionSummary = ({
         setBaseDashboardQueryFilter(baseFilter);
     }, [selectedBrokerDealers, selectedCarriers, selectedSubprocess, startDate]);
 
-    const getChartConfig = useCallback(
+    const tootTipFormatter = (points: Highcharts.TooltipFormatterContextObject[] | undefined) => {
+        if (!points || points.length === 0) return;
+
+        let total = 0;
+        const hoveredYAxis = points[0]?.series?.yAxis;
+
+        const labelData: Array<{
+            label: string;
+            total: number;
+            color: string | Highcharts.GradientColorObject | Highcharts.PatternObject;
+        }> = points.map(point => {
+            total += point.y || 0;
+            return {
+                label: point.series.name,
+                total: point.y || 0,
+                color: point.color || '#000000',
+            };
+        });
+        const labelWrapper = document.createElement('div');
+
+        labelWrapper.style.display = 'flex';
+        labelWrapper.style.flexDirection = 'column';
+        labelWrapper.style.gap = '4px';
+        for (const value of labelData) {
+            const labelElement = document.createElement('div');
+            labelElement.style.display = 'flex';
+            labelElement.style.alignItems = 'center';
+            labelElement.style.gap = '5px';
+            const colorElement = document.createElement('div');
+            colorElement.style.backgroundColor = String(value.color);
+            colorElement.style.width = '10px';
+            colorElement.style.height = '10px';
+            colorElement.style.borderRadius = '50%';
+            const titleElement = document.createElement('div');
+            titleElement.innerHTML = `${value.label}: <b>${value.total.toLocaleString()}</b>`;
+            labelElement.appendChild(colorElement);
+            labelElement.appendChild(titleElement);
+            labelWrapper.appendChild(labelElement);
+        }
+        const totalElement = document.createElement('div');
+        totalElement.style.justifySelf = 'end';
+        totalElement.style.alignSelf = 'end';
+        totalElement.style.marginTop = '4px';
+        totalElement.innerHTML = `Total: <b>${total.toLocaleString()}</b>`;
+        labelWrapper.appendChild(totalElement);
+        return labelWrapper.outerHTML;
+    };
+
+    const getTopChartConfig = useCallback(
         (processedData: Output, sortedMonthly: summary[]): Highcharts.Options => {
             if (!exceptionData) return {};
 
@@ -227,7 +279,7 @@ export const ExceptionSummary = ({
 
             return {
                 chart: {
-                    height: 500,
+                    height: 350,
                     type: 'line', // Line chart
                     // plotBorderWidth: 1, // Add a border around the plot area
                     // plotBorderColor: '#D3D3D3', // Set the border color
@@ -253,7 +305,7 @@ export const ExceptionSummary = ({
                     {
                         endOnTick: true, // Ensures the axis extends to the last tick
                         // gridLineWidth: 1,
-                        height: '60%',
+                        height: '100%',
                         min: 0, // Start at the first category or value
                         // max: processedData.weeklyCategories.length, // End at the last category or value (update as needed)
                         offset: 0, // Remove extra spacing
@@ -296,15 +348,6 @@ export const ExceptionSummary = ({
                         top: '0%',
                         categories: processedData.weeklyCategories,
                     },
-                    {
-                        categories: processedData.monthlyCategories.map(volume => volume.toString()),
-                        gridLineWidth: 1,
-                        height: '30%',
-                        offset: 0, // Remove extra spacing
-                        // linkedTo: 0, // Link categories with the first axis
-                        tickLength: 0, // Hide tick marks
-                        top: '68%',
-                    },
                 ],
                 yAxis: [
                     {
@@ -313,7 +356,7 @@ export const ExceptionSummary = ({
                         },
                         allowDecimals: false,
                         gridLineWidth: 1,
-                        height: '60%',
+                        height: '100%',
                         lineWidth: 2,
                         min: 0,
                         offset: 0, // Remove extra spacing
@@ -331,67 +374,38 @@ export const ExceptionSummary = ({
                             y: 12,
                         },
                     },
-                    {
-                        allowDecimals: false,
-                        gridLineWidth: 1,
-                        height: '30%',
-                        lineWidth: 2,
-                        labels: {
-                            y: 12,
-                        },
-                        min: 0,
-                        offset: 0, // Remove extra spacing
-                        opposite: true, // Moves the x-axis to the right side
-                        title: {
-                            text: '<b>Monthly<br/>Volume</b>',
-                            align: 'high', // Aligns the title to the top
-                            rotation: 0, // Force title to be horizontal
-                            x: -15,
-                            y: 15,
-                            useHTML: true, // Enables HTML in the title
-                        },
-                        top: '68%',
-                    },
                 ],
-                series: [...(weekly as Highcharts.SeriesOptionsType[]), ...(monthly as Highcharts.SeriesOptionsType[])],
+                series: [...(weekly as Highcharts.SeriesOptionsType[])],
                 plotOptions: {
+                    // TODO: remove
                     column: {
                         stacking: 'normal',
                         pointWidth: 20, // Fixed width for bars
                         groupPadding: 0.1, // Reduce group spacing
                         pointPadding: 0.05, // Minimize spacing between bars in a group
                         borderWidth: 0, // Remove borders
-                        // dataLabels: {
-                        //     enabled: true,
-                        //     inside: true,
-                        //     format: '{y}',
-                        //     style: {
-                        //         color: '#FFFFFF',
-                        //     },
-                        // },
                     },
                 },
                 tooltip: {
+                    shared: true, // Set shared to false
                     formatter: function () {
+                        if (!this.points || this.points.length === 0) return;
+
                         let total = 0;
+                        const hoveredYAxis = this.points[0]?.series?.yAxis;
+
                         const labelData: Array<{
                             label: string;
                             total: number;
                             color: string | Highcharts.GradientColorObject | Highcharts.PatternObject;
-                        }> = [];
-
-                        for (const point of this.points || []) {
-                            const value = point?.y;
-                            if (!value) continue;
-                            const color = point?.color || '#000000';
-                            total += value;
-                            labelData.push({
-                                label: point?.series?.name,
-                                total: value,
-                                color: color,
-                            });
-                        }
-
+                        }> = this.points.map(point => {
+                            total += point.y || 0;
+                            return {
+                                label: point.series.name,
+                                total: point.y || 0,
+                                color: point.color || '#000000',
+                            };
+                        });
                         const labelWrapper = document.createElement('div');
 
                         labelWrapper.style.display = 'flex';
@@ -422,7 +436,101 @@ export const ExceptionSummary = ({
                         return labelWrapper.outerHTML;
                     },
                     useHTML: true,
+                },
+            };
+        },
+        [exceptionData]
+    );
+
+    const getBottomChartConfig = useCallback(
+        (processedData: Output, sortedMonthly: summary[]): Highcharts.Options => {
+            if (!exceptionData) return {};
+
+            // get the weekly data for the top 5 carriers based on total
+            const weekly: Highcharts.SeriesOptionsType[] = [];
+            sortedMonthly.forEach(carrier => {
+                weekly.push(processedData.weekly[carrier.name].series as Highcharts.SeriesColumnOptions);
+            });
+
+            // get the series data for the top 5 carriers
+            const monthly = sortedMonthly.map(carrier => {
+                return carrier.series;
+            });
+
+            return {
+                chart: {
+                    height: 150,
+                    type: 'column', // Line chart
+                    // plotBorderWidth: 1, // Add a border around the plot area
+                    // plotBorderColor: '#D3D3D3', // Set the border color
+                    spacingTop: 0, // Remove top spacing
+                    spacingLeft: 0,
+                    spacingRight: 0,
+                },
+                legend: {
+                    enabled: false, // Disable the legend
+                },
+                credits: {
+                    enabled: false,
+                },
+                navigation: {
+                    buttonOptions: {
+                        enabled: false,
+                    },
+                },
+                title: {
+                    text: '', // No title
+                },
+                xAxis: {
+                    categories: processedData.monthlyCategories.map(volume => volume.toString()),
+                    gridLineWidth: 1,
+                    height: '100%',
+                    labels: {
+                        formatter: function () {
+                            return new Intl.NumberFormat().format(this.value?.toString() as unknown as number);
+                        },
+                    },
+                    offset: 0, // Remove extra spacing
+                    tickLength: 0, // Hide tick marks
+                    top: '0%',
+                },
+                yAxis: {
+                    allowDecimals: false,
+                    gridLineWidth: 1,
+                    height: '100%',
+                    lineWidth: 2,
+                    labels: {
+                        y: 12,
+                    },
+                    min: 0,
+                    offset: 0, // Remove extra spacing
+                    opposite: true, // Moves the x-axis to the right side
+                    title: {
+                        text: '<b>Monthly<br/>Volume</b>',
+                        align: 'high', // Aligns the title to the top
+                        rotation: 0, // Force title to be horizontal
+                        x: -15,
+                        y: 15,
+                        useHTML: true, // Enables HTML in the title
+                    },
+                    top: '0%',
+                },
+                series: [...(monthly as Highcharts.SeriesColumnOptions[])],
+                plotOptions: {
+                    column: {
+                        stacking: 'normal',
+                        pointWidth: 20, // Fixed width for bars
+                        groupPadding: 0.1, // Reduce group spacing
+                        pointPadding: 0.05, // Minimize spacing between bars in a group
+                        borderWidth: 0, // Remove borders
+                    },
+                },
+                tooltip: {
                     shared: true,
+                    formatter: function () {
+                        return tootTipFormatter(this.points);
+                    },
+                    useHTML: true,
                 },
             };
         },
@@ -439,10 +547,13 @@ export const ExceptionSummary = ({
         });
 
         const sortedMonthly = monthlyArray.sort((a, b) => b.total - a.total).slice(0, 5);
-        const myChartConfig = getChartConfig(processedData, sortedMonthly);
-        setChartConfig(myChartConfig);
+        const topChartConfig = getTopChartConfig(processedData, sortedMonthly);
+        const bottomChartConfig = getBottomChartConfig(processedData, sortedMonthly);
+
+        setTopChartConfig(topChartConfig);
+        setBottomChartConfig(bottomChartConfig);
         setSortedMonthly(sortedMonthly);
-    }, [exceptionData, getChartConfig]);
+    }, [exceptionData, getTopChartConfig, getBottomChartConfig]);
 
     const getOpenAiSummary = async (caseStats: DashboardStatsElementResponse[], processSubType: string) => {
         try {
@@ -557,7 +668,10 @@ export const ExceptionSummary = ({
                         ) : (
                             <>
                                 {exceptionData ? (
-                                    <HighchartsReact ref={chartRef} highcharts={Highcharts} options={chartConfig} />
+                                    <div>
+                                        <HighchartsReact ref={topChartRef} highcharts={Highcharts} options={topChartConfig} />
+                                        <HighchartsReact ref={bottomChartRef} highcharts={Highcharts} options={bottomChartConfig} />
+                                    </div>
                                 ) : (
                                     <div className="flex flex-col gap-2 items-center">
                                         <ChartBarsIcon height={'24px'} width={'24px'} />

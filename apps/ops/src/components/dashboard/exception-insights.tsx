@@ -21,7 +21,7 @@ import { ReactComponent as LightBulbIcon } from '@deps/styles/elements/icons/ill
 
 import PageLoader from '../page-loader/page-loader';
 
-const CHART_HEIGHT = 400;
+const CHART_HEIGHT = 500;
 
 if (typeof Highcharts === 'object') {
     HighchartsExporting(Highcharts);
