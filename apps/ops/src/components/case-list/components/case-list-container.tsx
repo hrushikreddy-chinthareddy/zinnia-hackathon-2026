@@ -23,11 +23,12 @@ export interface CaseListContainerProps {
     clientId: string;
     policyNumber: string;
     document: DocumentData | null;
+    caseId: string;
     setShowLoader: Dispatch<SetStateAction<any>>;
     setErrorMessage: Dispatch<SetStateAction<any>>;
     setPolicyNumber: Dispatch<SetStateAction<any>>;
 }
-export const CaseListContainer = ({ t, caseType, policyNumber, clientId, document, setShowLoader, setErrorMessage, setPolicyNumber }: CaseListContainerProps) => {
+export const CaseListContainer = ({ t, caseType, policyNumber, clientId, document, caseId, setShowLoader, setErrorMessage, setPolicyNumber }: CaseListContainerProps) => {
     const { cases, total, loading, error, fetchCases, filters, setFilters } = useFetchCases();
     const [selectedCaseData, setSelectedCaseData] = useState<Case | null>(null);
     const [showCreateCase, setShowCreateCase] = useState<boolean>(false);
@@ -42,8 +43,16 @@ export const CaseListContainer = ({ t, caseType, policyNumber, clientId, documen
                     process: [CaseTypeToProcessesMap[caseType]],
                 });
             }
+            if (!policyNumber && caseId) {
+                setFilters({
+                    ...initialCaseSearchCriteria,
+                    caseIds: [caseId],
+                    carrier: [clientId.toUpperCase()],
+                    process: [CaseTypeToProcessesMap[caseType]],
+                });
+            }
         }
-    }, [policyNumber, clientId, caseType, setFilters]);
+    }, [policyNumber, clientId, caseType, setFilters, caseId]);
 
     useEffect(() => {
         if (!isEmptyObject(filters)) {

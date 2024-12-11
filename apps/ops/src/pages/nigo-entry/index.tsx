@@ -1,6 +1,7 @@
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+
 import { buildTaskLink } from '@deps/components/tasks-listing/task-listing.helpers';
 import { TranslationFiles } from '@deps/config/translations';
 import { ProcessesToCaseTypeMap } from '@deps/constants/case';
@@ -301,7 +302,7 @@ export const getServerSideProps = withPageAuthRequired({
                 offset: 0,
                 sortDirection: 'desc',
                 sortBy: 'createdAt',
-                carrier: [clientCode.toUpperCase()],
+                carrier: [clientCode?.toUpperCase()],
                 process: [Processes.Correspondence as string],
             };
 
