@@ -18,7 +18,7 @@ import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { getSlug } from '@deps/helpers/string.helper';
-import { CaseIdentifier, CaseType, CreateCaseBody, CreateCaseResponse } from '@deps/models/case/case';
+import { CaseIdentifier, CaseType, CreateCaseBody, CreateCaseResponse, Statuses } from '@deps/models/case/case';
 import { DocumentType } from '@deps/models/case/document';
 import { caseTypes } from '@deps/models/case/helpers';
 import { UserPermission } from '@deps/models/user-profile';
@@ -138,6 +138,7 @@ export default function CaseCreate({ featureFlagDecisions }: CaseCreateProps) {
             if (caseType !== CaseType.Renewal && document.contract) {
                 const response = await getCases({
                     limit: 25,
+                    notInCaseStatus: [Statuses.Canceled, Statuses.Completed],
                     policyNumber: document?.contract,
                     process: [CaseTypeToProcessesMap[caseType]],
                 });
