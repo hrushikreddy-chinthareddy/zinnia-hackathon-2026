@@ -114,6 +114,11 @@ export default async function Page({
                         interactiveElements={[
                           <AccountValuePopover
                             key="account-value-popover"
+                            // Date of last policy transaction, when policy value was last updated
+                            // the frequency of transactions is a lot higher on life products, so the
+                            // effective date shows when the last transaction occurred
+                            // for annuity products, we just show current date
+                            // (decision documented in CUI-512)
                             dataTimestamp={
                               p.lineOfBusiness === LineOfBusiness.ANNUITY
                                 ? new Date().toISOString()
