@@ -70,17 +70,21 @@ const TaxFormsSelection = ({ policy, taxFormSelectionDetails, setTaxFormSelectio
                 currentTaxForms = [];
             }
             delete previousSelections[selectedValue];
-            return currentTaxForms;
+            setTaxFormSelectionDetails(prev => ({
+                ...prev,
+                taxForms: currentTaxForms,
+                selectedYears: previousSelections,
+            }));
         } else {
             getTaxForms(selectedValue);
             previousSelections[selectedValue] = displayText;
-        }
 
-        setTaxFormSelectionDetails(prev => ({
-            ...prev,
-            taxForms: currentTaxForms,
-            selectedYears: previousSelections,
-        }));
+            setTaxFormSelectionDetails(prev => ({
+                ...prev,
+                taxForms: currentTaxForms,
+                selectedYears: previousSelections,
+            }));
+        }
     };
 
     const handleCancel = () => {
