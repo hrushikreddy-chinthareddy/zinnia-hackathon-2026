@@ -1,9 +1,9 @@
-import { ArrayFieldTemplateProps } from '@rjsf/utils';
+import { ArrayFieldTemplateProps, getUiOptions } from '@rjsf/utils';
 import { Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow } from '@zinnia/bloom/components';
 import React, { useEffect, useState } from 'react';
 
 export function ArrayFieldTableTemplate(props: ArrayFieldTemplateProps) {
-    const { items, schema, formData } = props;
+    const { items, schema, formData, uiSchema } = props;
     const [columns, setColumns] = useState<{ [key: string]: string }>({});
 
     useEffect(() => {
@@ -11,11 +11,13 @@ export function ArrayFieldTableTemplate(props: ArrayFieldTemplateProps) {
         if (items.length > 0) {
             const properties = items[0].schema.properties;
             for (const property in properties) {
-                cols[property] = (properties[property] as any).title;
+                if (getUiOptions(uiSchema?.items[property]).widget !== 'hidden') {
+                    cols[property] = (properties[property] as any).title;
+                }
             }
         }
         setColumns(cols);
-    }, [items]);
+    }, [items, uiSchema]);
 
     return (
         <>
@@ -34,11 +36,14 @@ export function ArrayFieldTableTemplate(props: ArrayFieldTemplateProps) {
                         <TableBody>
                             {formData.map((element: any) => (
                                 <TableRow key={element.key}>
-                                    {Object.keys(element).map((property, index) => (
-                                        <TableCell key={index} className="typography-content-body-sm">
-                                            {element[property]}
-                                        </TableCell>
-                                    ))}
+                                    {Object.keys(element).map(
+                                        (property, index) =>
+                                            getUiOptions(uiSchema?.items[property]).widget !== 'hidden' && (
+                                                <TableCell key={index} className="typography-content-body-sm">
+                                                    {element[property]}
+                                                </TableCell>
+                                            )
+                                    )}
                                 </TableRow>
                             ))}
                         </TableBody>

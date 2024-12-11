@@ -23,18 +23,23 @@ export const AdditionalAccountValueLinks: FC<
       isInternal: true,
       linkText: 'Allocations',
     },
-    {
-      url: `/coverage/${lineOfBusinessURL}/${planCode}/${policyNumber}/account/withdrawals`,
-      urlLabel: 'withdrawals',
-      isInternal: true,
-      linkText: 'Withdrawals',
-    },
-    {
-      url: `/coverage/${lineOfBusinessURL}/${planCode}/${policyNumber}/account/loans`,
-      urlLabel: 'loans',
-      isInternal: true,
-      linkText: 'Loans',
-    },
+
+    ...(lineOfBusiness === LineOfBusiness.LIFE
+      ? [
+          {
+            url: `/coverage/${lineOfBusinessURL}/${planCode}/${policyNumber}/account/withdrawals`,
+            urlLabel: 'withdrawals',
+            isInternal: true,
+            linkText: 'Withdrawals',
+          },
+          {
+            url: `/coverage/${lineOfBusinessURL}/${planCode}/${policyNumber}/account/loans`,
+            urlLabel: 'loans',
+            isInternal: true,
+            linkText: 'Loans',
+          },
+        ]
+      : []),
     {
       url: `/coverage/${lineOfBusinessURL}/${planCode}/${policyNumber}/account/surrender`,
       urlLabel: 'go to surrender policy page',

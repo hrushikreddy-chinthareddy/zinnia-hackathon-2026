@@ -56,3 +56,19 @@ export const pluralize = (
 
   return `${quantity} ${pluralizedVal}`;
 };
+
+/**
+ * Creates a query string from an object.
+ *
+ * @example
+ * const obj = { foo: 'bar', baz: 'qux' };
+ * const queryString = createQueryString(obj);
+ * // queryString = 'foo=bar&baz=qux'
+ *
+ * @param {Record<string, unknown>} obj - The object to convert to a query string
+ * @returns {string} The query string
+ */
+export const createQueryString = (obj: Record<string, unknown>) =>
+  Object.entries(obj)
+    .map(([key, value]) => `${key}=${value}`)
+    .join('&');

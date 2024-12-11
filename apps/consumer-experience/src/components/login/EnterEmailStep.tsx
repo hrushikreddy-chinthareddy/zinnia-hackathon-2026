@@ -1,11 +1,11 @@
 'use client';
 import {
-    AssistiveText,
-    AssistiveTextVariant,
-    Icon,
-    IconType,
-    LoaderVariant,
-    SpinnerButton,
+  AssistiveText,
+  AssistiveTextVariant,
+  Icon,
+  IconType,
+  LoaderVariant,
+  SpinnerButton,
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
@@ -23,7 +23,7 @@ const SubmitButton = () => {
       disabled={pending}
       variant={LoaderVariant.CTA}
       hide={!pending}
-      className={clsx('mt-3xl', styles.submit)}
+      className={clsx('mt-lg', styles.submit)}
     >
       <span>Continue</span>
     </SpinnerButton>
@@ -92,10 +92,11 @@ export const EnterEmailStep = () => {
         )}
       </div>
       <p className="typography-content-caption text-left">
-        By clicking Continue, you understand and agree that you are responsible
-        for the security of your devices and any tokens used for passwordless
-        login and you will take all necessary precautions to safeguard your
-        devices and tokens.
+        By using this website and clicking Continue, you agree to the terms and
+        conditions outlined in our Terms of Use and Privacy Policy. You
+        understand and agree that you are responsible for the security of your
+        devices and any tokens used for passwordless login and you will take all
+        necessary precautions to safeguard your devices and tokens.
       </p>
       <SubmitButton />
     </form>

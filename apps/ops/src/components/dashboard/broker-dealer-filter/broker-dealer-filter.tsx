@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useCallback, useEffect } from 'react';
+import { Dispatch, SetStateAction, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FieldSize } from '@deps/components/fields/field';
@@ -7,13 +7,22 @@ import { MultiselectOption } from '@deps/components/select/select.helpers';
 import { TranslationFiles } from '@deps/config/translations';
 import { toTitleCase } from '@deps/helpers/string.helper';
 import { CarrierListItem } from '@deps/pages/dashboard';
-import { BrokerDealerResponse, fetchAgents } from '@deps/queries/api/dashboard';
+import { DashboardResponseData, fetchAgents } from '@deps/queries/api/dashboard';
 type BrokerDealerFilterProps = {
-    brokerDealers: BrokerDealerResponse[];
+    brokerDealers: DashboardResponseData[];
     selectedCarriers: string[];
-    setSelectedBrokerDealers: Dispatch<SetStateAction<BrokerDealerResponse[]>>;
+    setSelectedBrokerDealers: Dispatch<SetStateAction<DashboardResponseData[]>>;
     updateBrokerDealerFilters: (value: string, displayText: string) => void;
     selectedBrokerDealers: CarrierListItem;
+    disabled?: boolean;
+    handleOnOpenChangeBroker?: (open: boolean) => void;
+};
+
+const getBrokerDealerOptions = (brokerDealers: DashboardResponseData[]): MultiselectOption[] => {
+    return brokerDealers.map(agent => {
+        const formattedName = toTitleCase(agent.name);
+        return { label: <span>{formattedName}</span>, value: agent.name, displayText: `${formattedName}` };
+    });
 };
 
 export const BrokerDealerFilter = ({
@@ -22,14 +31,13 @@ export const BrokerDealerFilter = ({
     selectedBrokerDealers,
     selectedCarriers,
     setSelectedBrokerDealers,
+    disabled,
+    handleOnOpenChangeBroker,
 }: BrokerDealerFilterProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
 
-    const getBrokerDealerOptions = useCallback((): MultiselectOption[] => {
-        return brokerDealers.map(agent => {
-            const formattedName = toTitleCase(agent.name);
-            return { label: <span>{formattedName}</span>, value: agent.name, displayText: `${formattedName}` };
-        });
+    const brokerDealerOptions = useMemo(() => {
+        return getBrokerDealerOptions(brokerDealers);
     }, [brokerDealers]);
 
     useEffect(() => {
@@ -47,13 +55,14 @@ export const BrokerDealerFilter = ({
     return (
         <Select
             isMultiselect
-            options={getBrokerDealerOptions()}
+            options={brokerDealerOptions}
             value={selectedBrokerDealers}
             onChange={updateBrokerDealerFilters}
             size={FieldSize.Small}
             placeholder={t('allAgents') || ''}
-            disabled={brokerDealers.length < 2}
+            disabled={disabled !== undefined ? disabled : brokerDealers.length === 0}
             name="agent-dropdown-btn"
+            onOpenChange={handleOnOpenChangeBroker}
         />
     );
 };

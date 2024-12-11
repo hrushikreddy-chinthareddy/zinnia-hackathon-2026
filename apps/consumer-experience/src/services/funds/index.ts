@@ -56,7 +56,7 @@ export interface Fund {
 
 interface GetFundDetailsArgs {
   carrierId?: string;
-  fundId: string;
+  fundId?: string;
 }
 
 interface getProductDetailsArgs {

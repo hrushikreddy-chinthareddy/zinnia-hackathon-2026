@@ -44,7 +44,7 @@
             }
         },
         "properties": {
-            "suitabiltyRules": {
+            "suitabilityRules": {
                 "type": "array",
                 "title": "",
                 "items": {
@@ -60,6 +60,14 @@
                             "title": "Rule"
                         },
                         "applicationValue": {
+                            "type": "string",
+                            "title": "Additional Info"
+                        },
+                        "nmid": {
+                            "type": "string",
+                            "title": "Additional Info"
+                        },
+                        "externalId": {
                             "type": "string",
                             "title": "Additional Info"
                         }
@@ -154,7 +162,7 @@
                 }
             }
         },
-        "suitabiltyRules": {
+        "suitabilityRules": {
             "ui:options": {
                 "label": false,
                 "ArrayFieldTemplate": "ArrayFieldTableTemplate"
@@ -178,6 +186,18 @@
                 "applicationValue": {
                     "ui:options": {
                         "label": false
+                    }
+                },
+                "nmid": {
+                    "ui:options": {
+                        "label": false,
+                        "widget": "hidden"
+                    }
+                },
+                "externalId": {
+                    "ui:options": {
+                        "label": false,
+                        "widget": "hidden"
                     }
                 }
             }

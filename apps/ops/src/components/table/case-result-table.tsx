@@ -41,6 +41,7 @@ import { PiiProps } from '../pii/pii';
 import { PiiWrapper } from '../pii/PiiWrapper';
 import PlusOthers from '../plus-others/plus-others';
 import PopoverOnTruncate from '../popover-on-truncate/popover-on-truncate';
+import { PartyInstance } from '@deps/models/case/party-instance';
 
 dayjs.extend(timezone);
 dayjs.extend(advanced);
@@ -83,10 +84,19 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const router = useRouter();
     const perms = usePermissionsContext();
+    const getValidFullName = (owner: PartyInstance) => {
+        let fullName = owner?.fullName;
+
+        if (owner && !fullName) {
+            fullName = `${owner?.firstName || ""} ${owner?.middleName || ""} ${owner?.lastName || ""}`;
+        }
+
+        return fullName;
+    };
 
     const policyOwners = singleCase.parties ? getPolicyOwners(singleCase.parties) : [];
-    const entities = policyOwners.slice(1).map(owner => ({ name: toTitleCase(owner.fullName), ssn: formatSSN(owner.ssn) }));
-    const ownerName = policyOwners.length ? policyOwners?.[0]?.fullName : null;
+    const entities = policyOwners.slice(1).map(owner => ({ name: toTitleCase(getValidFullName(owner)), ssn: formatSSN(owner.ssn) }));
+    const ownerName = policyOwners.length ? getValidFullName(policyOwners?.[0]) : null;
     const ssn = policyOwners.length ? policyOwners[0].ssn : undefined;
 
     const ownerComponentProps = {
@@ -98,9 +108,9 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
 
     const agents = getAgents(singleCase?.parties || []);
     const agentSsn = agents.length ? agents[0].ssn : undefined;
-    const otherAgents = agents.slice(1).map(owner => ({ name: toTitleCase(owner.fullName), ssn: formatSSN(owner.ssn) }));
+    const otherAgents = agents.slice(1).map(owner => ({ name: toTitleCase(getValidFullName(owner)), ssn: formatSSN(owner.ssn) }));
     const agentComponentProps = {
-        text: toTitleCase(agents?.[0]?.fullName),
+        text: toTitleCase(getValidFullName(agents?.[0])),
         highlights: [searchValues?.agentFirstName, searchValues?.agentLastName].filter(Boolean) as string[],
         entities: otherAgents,
         truncate: true,

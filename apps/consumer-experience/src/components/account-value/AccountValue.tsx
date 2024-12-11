@@ -19,6 +19,7 @@ interface Props extends PolicyRequestInputs, HTMLAttributes<HTMLDivElement> {
   hideTicker?: boolean;
   isLink?: boolean;
   showIcon?: boolean;
+  interestRate?: number | null;
 }
 
 export const AccountValue = async ({

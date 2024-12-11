@@ -1,6 +1,5 @@
 'use client';
 
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 
@@ -9,21 +8,13 @@ import Loading from '@/app/loading';
 import PreviewUnsupported from './PreviewUnsupported';
 
 export default function PdfPreviewer({
-  clientCode,
-  documentId,
+  defaultRedirectUrl,
+  documentDownloadUrl,
   fileName,
-  planCode,
-  policyNumber,
-  source,
-  lineOfBusiness,
 }: {
-  clientCode: string;
-  documentId: string;
-  planCode: string;
-  policyNumber: string;
+  defaultRedirectUrl: string;
+  documentDownloadUrl: string;
   fileName: string;
-  source: string;
-  lineOfBusiness: LineOfBusiness;
 }) {
   const [supportsEmbed, setSupportsEmbed] = useState(true);
   const [documentData, setDocumentData] = useState<string>('');
@@ -38,13 +29,10 @@ export default function PdfPreviewer({
 
     const getDocumentData = async () => {
       let shouldRedirectToError = false;
-      // default to the documents error page, however, if the response is a redirect we will use that (see below)
-      let redirectHref = `/coverage/${lineOfBusiness}/${planCode}/${policyNumber}/documents/error`;
+      let redirectHref = defaultRedirectUrl;
 
       try {
-        const response = await fetch(
-          `/api/documents/${documentId}/download/${fileName}.pdf?clientCode=${clientCode}&source=${source}&planCode=${planCode}&policyNumber=${policyNumber}&lineOfBusiness=${lineOfBusiness}`
-        );
+        const response = await fetch(documentDownloadUrl);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -77,17 +65,7 @@ export default function PdfPreviewer({
         URL.revokeObjectURL(documentData);
       }
     };
-  }, [
-    clientCode,
-    documentData,
-    documentId,
-    fileName,
-    planCode,
-    policyNumber,
-    router,
-    source,
-    lineOfBusiness,
-  ]);
+  }, [defaultRedirectUrl, documentData, documentDownloadUrl, router]);
 
   return supportsEmbed ? (
     documentData ? (

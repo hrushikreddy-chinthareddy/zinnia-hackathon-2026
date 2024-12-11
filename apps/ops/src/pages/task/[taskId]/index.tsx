@@ -11,59 +11,39 @@ import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { ProcessType } from '@deps/models/case/enums';
-import { docTypes } from '@deps/models/case/helpers';
-import { SearchTransactionRequestBody } from '@deps/models/case/send-document';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { ManagementTask } from '@deps/models/case/task-instance';
-import { Carrier } from '@deps/models/case/withdrawal/case';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
-import { getCaseTaskByIdSSR, getTaskFormMetadata } from '@deps/operations/tasks/task-operations';
+import { getCaseTaskById, getTaskFormMetadata } from '@deps/operations/tasks/task-operations';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
-import { getSearchTransactionsSSR } from '@deps/queries/api/c2web';
-import { getPolicyDetailsSsr, searchPolicySSR } from '@deps/queries/api/policies';
+import { getCaseDetailsSSR } from '@deps/queries/api/cases';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
-import { getUserInfoFromUser, logError, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { logError, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 type TaskPageProps = {
-    policy: Policy;
-    clientCode: string;
-    documentNumber: string;
-    docType: string;
-    caseId: string;
-    taskId: string;
     task: ManagementTask;
     taskMetadata: FormMetadata;
-    taskData: any;
+    correlationId: string;
     taskInfoLink: string;
     nigoExceptions: any;
     nigoSubExceptions: any;
 };
 
 export const TaskPage: React.FC<TaskPageProps> = ({
-    policy,
-    documentNumber,
-    docType,
     task,
     taskMetadata,
     taskInfoLink,
+    correlationId,
     nigoExceptions,
     nigoSubExceptions,
 }: TaskPageProps) => {
     return (
         <div>
             <NoNavLayout fullHeight={true}>
-                <TaskProvider taskMetadata={taskMetadata} initialTask={task}>
-                    <TaskContainer
-                        policy={policy}
-                        docType={docType}
-                        documentNumber={documentNumber}
-                        taskInfoLink={taskInfoLink}
-                        nigoExceptions={nigoExceptions}
-                        nigoSubExceptions={nigoSubExceptions}
-                    />
+                <TaskProvider taskMetadata={taskMetadata} initialTask={task} correlationId={correlationId}>
+                    <TaskContainer taskInfoLink={taskInfoLink} nigoExceptions={nigoExceptions} nigoSubExceptions={nigoSubExceptions} />
                 </TaskProvider>
             </NoNavLayout>
         </div>
@@ -107,7 +87,7 @@ export const getServerSideProps = withPageAuthRequired({
         try {
             const [translations, task] = await Promise.all([
                 await serverSideTranslations(locale, [TranslationFiles.COMMON, TranslationFiles.COLDEFS], nextI18nextConfig, ALL_LOCALES),
-                await getCaseTaskByIdSSR(taskId, accessToken),
+                await getCaseTaskById(taskId, accessToken),
             ]);
             if (!task) {
                 logError('Task::Error getting task by id', {
@@ -124,10 +104,11 @@ export const getServerSideProps = withPageAuthRequired({
             }
 
             const { taskType, carrier, caseId, process } = task;
-            const { documentNumber, contractNum } = task.data;
+            const caseDetails = await getCaseDetailsSSR(caseId, accessToken as string);
+            const correlationId = caseDetails?.correlationId; // Access the property using optional chaining
 
             // If feature flag is not enabled, redirect to error page
-            if (!isFormFeatureEnabled(process as ProcessType, carrier, featureFlagDecisions)) {
+            if (!isFormFeatureEnabled(taskType as TaskType, carrier, featureFlagDecisions)) {
                 logWarn('task/:id::feature flag not enabled', { carrier });
                 return {
                     redirect: {
@@ -141,85 +122,31 @@ export const getServerSideProps = withPageAuthRequired({
             if (!taskMetadata?.formSchema || !taskMetadata?.uiSchema) {
                 logError('task::Form schema not found', {
                     taskId,
-                    documentNumber,
                     carrier,
-                    contractNum,
                     file: `pages/task/${taskId}/${taskType}`,
                     function: 'getServerSideProps',
                 });
             }
 
-            const response = await searchPolicySSR(contractNum, [carrier?.toUpperCase() as Carrier], accessToken, 1, 0);
-            const planCode = response ? response[0]?.planCode : null;
-            if (!planCode) {
-                logError('task::Policy plan code not found', {
-                    taskId,
-                    documentNumber,
-                    carrier,
-                    contractNum,
-                    file: `pages/${taskType}`,
-                    function: 'getServerSideProps',
-                });
-                return {
-                    redirect: {
-                        destination: `/create-case/error?errorCode=${ERROR_CODES.PLAN_CODE_NOT_FOUND}`,
-                        permanent: false,
-                    },
-                };
-            }
-
-            const userInfoForLogging = getUserInfoFromUser(user);
-            const policy = await getPolicyDetailsSsr(contractNum, planCode, accessToken, userInfoForLogging);
-            if (!policy) {
-                logError('task::Policy not found', {
-                    taskId,
-                    documentNumber,
-                    carrier,
-                    contractNum,
-                    file: `pages/${taskType}`,
-                    function: 'getServerSideProps',
-                });
-                return {
-                    redirect: {
-                        destination: `/create-case/error?errorCode=${ERROR_CODES.POLICY_NOT_FOUND}`,
-                        permanent: false,
-                    },
-                };
-            }
-
-            const transactionRequestBody: SearchTransactionRequestBody = {
-                carrier: policy.carrierId || '',
-                issueState: policy.issueState || '',
-                planCode: policy.product?.planCode || '',
-            };
-
             const nigoFilters = {
                 categoryIds: ['Form', 'Signature', 'Account Information'],
                 carrier: carrier?.toUpperCase(),
-                process: 'Withdrawal', //task?.process,
+                process: taskType,
             };
 
-            const [availableFormsTransactions, nigoExceptionResponse] = await Promise.all([
-                await getSearchTransactionsSSR(transactionRequestBody, accessToken, userInfoForLogging),
-                await getNigoExceptions(nigoFilters, accessToken),
-            ]);
-
+            const nigoExceptionResponse = await getNigoExceptions(nigoFilters, accessToken);
             const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
+            const taskInfoLink = buildCaseLink(caseId);
 
-            const taskInfoLink = buildCaseLink(taskId, caseId, process, documentNumber, carrier);
-            const docType = docTypes[task?.process];
             return {
                 props: {
                     ...translations,
-                    policy,
                     taskMetadata,
                     task,
-                    docType,
-                    documentNumber,
+                    correlationId,
                     taskInfoLink,
                     nigoExceptions,
                     nigoSubExceptions,
-                    availableFormsTransactions,
                 },
             };
         } catch (error) {

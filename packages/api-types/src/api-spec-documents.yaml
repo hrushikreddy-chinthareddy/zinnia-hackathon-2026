@@ -1,0 +1,778 @@
+openapi: 3.0.0
+paths:
+  /document/v2/documents:
+    get:
+      operationId: getDocuments
+      summary: ''
+      description: this is an endpoint to get a list of document metadata
+      parameters:
+        - name: Authorization
+          required: true
+          in: header
+          schema:
+            type: string
+        - name: source
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: clientCode
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: contractNumber
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: documentDate
+          required: false
+          in: query
+          schema:
+            format: date-time
+            type: string
+        - name: documentStartDate
+          required: false
+          in: query
+          schema:
+            format: date-time
+            type: string
+        - name: documentEndDate
+          required: false
+          in: query
+          schema:
+            format: date-time
+            type: string
+        - name: documentType
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: importStartDate
+          required: false
+          in: query
+          schema:
+            format: date-time
+            type: string
+        - name: importEndDate
+          required: false
+          in: query
+          schema:
+            format: date-time
+            type: string
+        - name: masterNumber
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: docStatus
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: caseId
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: documentNumber
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: recipient
+          required: false
+          in: query
+          schema:
+            $ref: '#/components/schemas/Recipient'
+        - name: zinniaLiveCaseId
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: periods
+          required: false
+          in: query
+          example:
+            - PeriodYear: '2020'
+              PeriodQuarters:
+                - Q1
+                - Q2
+                - Q3
+                - Q4
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                PeriodYear:
+                  type: string
+                PeriodQuarters:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InlineResponse200'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InlineResponse400'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InlineResponse401'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InlineResponse404'
+      tags: &a1
+        - Documents Api
+      security:
+        - Auth0: []
+  /document/v2/documents/{documentId}:
+    get:
+      operationId: getDocument
+      summary: ''
+      description: this is an endpoint to get a specific documents metadata
+      parameters:
+        - name: Authorization
+          required: true
+          in: header
+          schema:
+            type: string
+        - name: documentId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: docType
+          required: true
+          in: query
+          schema:
+            type: string
+        - name: source
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: clientCode
+          required: false
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InlineResponse400'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InlineResponse401'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InlineResponse404'
+      tags: *a1
+      security:
+        - Auth0: []
+  /document/v2/documents/{documentId}/download:
+    get:
+      operationId: downloadDocument
+      summary: ''
+      description: this is an endpoint to download a document
+      parameters:
+        - name: documentId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: Authorization
+          required: true
+          in: header
+          schema:
+            type: string
+        - name: source
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: clientCode
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: policyNumber
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: planCode
+          required: false
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DownloadDocumentResponse'
+            application/octect-stream:
+              schema:
+                $ref: '#/components/schemas/DownloadDocumentResponse'
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InlineResponse4001'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InlineResponse401'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InlineResponse404'
+      tags: *a1
+      security:
+        - Auth0: []
+  /document/v2/taxForms:
+    get:
+      operationId: getTaxForms
+      summary: ''
+      description: This is an endpoint to get a list of tax-forms from SOVOS
+      parameters:
+        - name: Authorization
+          required: true
+          in: header
+          example: Bearer <token>
+          description: Authorization token
+          schema:
+            type: string
+        - name: clientCode
+          required: true
+          in: query
+          example: ELIC
+          description: Client code for the carrier/client
+          schema:
+            type: string
+        - name: contractNumber
+          required: true
+          in: query
+          description: Contract number for the document/tax-form
+          example: '1234567898'
+          schema:
+            type: string
+        - name: taxYear
+          required: false
+          in: query
+          description: Tax-year for the form (defaults to current year-1)
+          example: '2023'
+          schema:
+            type: string
+        - name: numYears
+          required: false
+          in: query
+          example: 1
+          description:
+            Number of years of forms to query in reverse chronological order
+            from taxyear (incl). Min=1 and Max=5
+          schema:
+            minimum: 1
+            maximum: 5
+            default: 1
+            type: number
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaxFormsResponse200'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InlineResponse400'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InlineResponse401'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InlineResponse404'
+      tags: &a2
+        - TaxForms API
+      security:
+        - Auth0: []
+  /document/v2/taxForms/{formId}:
+    get:
+      operationId: downloadTaxForm
+      summary: ''
+      description: This is an endpoint to download a tax-form from SOVOS
+      parameters:
+        - name: Authorization
+          required: true
+          in: header
+          example: Bearer <token>
+          description: Authorization token
+          schema:
+            type: string
+        - name: formId
+          required: true
+          in: path
+          example: '123456'
+          description: Form id for the tax-form
+          schema:
+            type: string
+        - name: clientCode
+          required: true
+          in: query
+          example: ELIC
+          description: Client code for the carrier/client
+          schema:
+            type: string
+        - name: contractNumber
+          required: true
+          in: query
+          example: '1234567898'
+          description: Contract number for the document/tax-form
+          schema:
+            type: string
+        - name: fChar
+          required: true
+          in: query
+          example: R
+          description: Unique string character associated with the tax-form name
+          schema:
+            type: string
+        - name: taxYear
+          required: false
+          in: query
+          example: '2023'
+          description: Tax-year for the form (defaults to current year-1)
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DownloadDocumentResponse'
+            application/octect-stream:
+              schema:
+                $ref: '#/components/schemas/DownloadDocumentResponse'
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InlineResponse400'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InlineResponse401'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InlineResponse404'
+      tags: *a2
+      security:
+        - Auth0: []
+info:
+  title: Zinnia Documents
+  description: Enterprise document service
+  version: 0.1.0
+  contact: {}
+tags:
+  - name: Documents Api
+    description: ''
+  - name: TaxForms API
+    description: ''
+servers:
+  - url: https://dev.api.zinnia.io
+components:
+  securitySchemes:
+    basic:
+      type: http
+      scheme: basic
+    Auth0:
+      type: openIdConnect
+      openIdConnectUrl: https://login.dev.zinnia.com/.well-known/openid-configuration
+      x-kong-security-openid-connect:
+        config:
+          run_on_preflight: true
+          scopes_claim:
+            - https://dev.api.zinnia.io/permissions
+          audience_claim:
+            - aud
+          audience_required:
+            - https://dev.api.zinnia.io
+          client_id:
+            - bGOIRPRq2ZnjCujDXC7ikwR5ez7VH5GZ
+          auth_methods:
+            - bearer
+          scopes: []
+        enabled: true
+        protocols:
+          - grpc
+          - grpcs
+          - http
+          - https
+  schemas:
+    Recipient:
+      type: string
+      enum:
+        - Agent
+        - Client
+    DocumentMetadata:
+      type: object
+      properties:
+        documentID:
+          type: string
+        pageCount:
+          type: string
+        documentDate:
+          format: date-time
+          type: string
+        importDate:
+          format: date-time
+          type: string
+        fileName:
+          type: string
+        fileType:
+          type: string
+        displayName:
+          type: string
+        sourceFileName:
+          type: string
+        status:
+          type: string
+        documentType:
+          type: string
+        contractNumber:
+          type: string
+        masterNumber:
+          type: string
+        repMan:
+          type: string
+        clientID:
+          type: string
+        history:
+          type: boolean
+        docStatus:
+          type: string
+        documentNumber:
+          type: string
+        caseId:
+          type: number
+        zinniaLiveCaseId:
+          type: string
+        docPopUrl:
+          type: string
+        attachmentType:
+          type: string
+        periodYear:
+          type: string
+        periodQuarter:
+          type: string
+      required:
+        - documentID
+        - pageCount
+        - documentDate
+        - importDate
+        - fileName
+        - fileType
+        - displayName
+        - sourceFileName
+        - status
+        - documentType
+        - contractNumber
+        - masterNumber
+        - repMan
+        - clientID
+        - history
+        - docStatus
+        - documentNumber
+        - caseId
+        - zinniaLiveCaseId
+        - docPopUrl
+        - attachmentType
+        - periodYear
+        - periodQuarter
+    InlineResponse200:
+      type: object
+      properties:
+        count:
+          type: number
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentMetadata'
+      required:
+        - count
+        - items
+    InlineResponse400:
+      type: object
+      properties:
+        xCorrelationId:
+          type: string
+        status:
+          type: number
+        errorDesc:
+          type: string
+        errorDetailedDesc:
+          type: string
+      required:
+        - xCorrelationId
+        - status
+        - errorDesc
+        - errorDetailedDesc
+    InlineResponse401:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+    InlineResponse404:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+    Document:
+      type: object
+      properties:
+        clientInstitution:
+          type: string
+        lob:
+          type: string
+        contract:
+          type: string
+        agentNumber:
+          type: string
+        externalId:
+          type: string
+        documentNumber:
+          type: string
+        processCompanyCode:
+          type: string
+        contractStatusCode:
+          type: string
+        system:
+          type: string
+        productLine:
+          type: string
+        productName:
+          type: string
+        productCompanyCode:
+          type: string
+        ssNTaxId:
+          type: string
+        caseId:
+          type: string
+        batchId:
+          type: string
+        route:
+          type: string
+        source:
+          type: string
+        sysMailToAddress:
+          type: string
+        sysMailFromAddress:
+          type: string
+        dateReceived:
+          type: string
+        onBaseDt:
+          type: string
+        queueName:
+          type: string
+        transactionType:
+          type: string
+        sysDocumentHandle:
+          type: string
+        agentTaxId:
+          type: string
+        documentTypeGroup:
+          type: string
+        distributionChannel:
+          type: string
+        businessUnit:
+          type: string
+        productCategory:
+          type: string
+        deliveryMethod:
+          type: string
+          enum:
+            - Email
+            - Fax
+            - Mail
+      required:
+        - clientInstitution
+        - lob
+        - contract
+        - agentNumber
+        - externalId
+        - documentNumber
+        - processCompanyCode
+        - contractStatusCode
+        - system
+        - productLine
+        - productName
+        - productCompanyCode
+        - ssNTaxId
+        - caseId
+        - batchId
+        - route
+        - source
+        - sysMailToAddress
+        - sysMailFromAddress
+        - dateReceived
+        - onBaseDt
+        - queueName
+        - transactionType
+        - sysDocumentHandle
+        - agentTaxId
+        - documentTypeGroup
+        - distributionChannel
+        - businessUnit
+        - productCategory
+        - deliveryMethod
+    DownloadDocumentResponse:
+      type: object
+      properties:
+        fileExtension:
+          type: string
+        binaryData:
+          type: string
+      required:
+        - fileExtension
+        - binaryData
+    Message:
+      type: object
+      properties:
+        lang:
+          type: string
+        value:
+          type: string
+      required:
+        - lang
+        - value
+    InnerError:
+      type: object
+      properties:
+        message:
+          type: string
+        type:
+          type: string
+        stacktrace:
+          type: string
+      required:
+        - message
+        - type
+        - stacktrace
+    OdataError:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          $ref: '#/components/schemas/Message'
+        innererror:
+          $ref: '#/components/schemas/InnerError'
+      required:
+        - code
+        - message
+        - innererror
+    InlineResponse4001:
+      type: object
+      properties:
+        odataError:
+          $ref: '#/components/schemas/OdataError'
+      required:
+        - odataError
+    TaxFormsResponse:
+      type: object
+      properties:
+        contractNumber:
+          type: string
+          example: '1234567898'
+          description: Contract number for the document/tax-form
+        name:
+          type: string
+          example: 1099-R
+          description: Name of the tax-form
+        fChar:
+          type: string
+          example: R
+          description: Unique string character associated with the tax-form name
+        formId:
+          type: string
+          example: '123456'
+          description: Form id for the tax-form
+        taxYear:
+          type: string
+          example: '2023'
+          description: Tax year for the tax-form
+      required:
+        - contractNumber
+        - name
+        - fChar
+        - formId
+        - taxYear
+    TaxFormsResponse200:
+      type: object
+      properties:
+        count:
+          type: number
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaxFormsResponse'
+      required:
+        - count
+        - items

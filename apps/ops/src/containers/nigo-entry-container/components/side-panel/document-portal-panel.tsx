@@ -9,6 +9,7 @@ import { PolicyDocument } from '@deps/models/case/document';
 import { Policy } from '@deps/models/policy/sor-policy';
 
 import { useGetPolicyTypeDocs } from '../steps/service-form-review/service-form-review.helper';
+import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 
 export enum TabOptions {
     Working = 'Working',
@@ -45,9 +46,11 @@ const DocumentPortalPanel = ({ policy, documentNumber, docType }: DocumentViewPr
                     <Icon width={20} height={20} type={IconType.DOCUMENT_TEXT} />{' '}
                 </div>
                 <div>
-                    <div className="text-sm font-bold">{displayName}</div>
+                    <div className="text-sm font-bold"><PiiWrapper>{displayName}</PiiWrapper></div>
                     <div className="flex items-center text-sm font-normal text-gray-300">
-                        {t('documentId') + ': ' + document.documentNumber}
+                        <PiiWrapper>
+                            {t('documentId') + ': ' + document.documentNumber}
+                        </PiiWrapper>
                     </div>
                 </div>
                 <div className="flex items-center">

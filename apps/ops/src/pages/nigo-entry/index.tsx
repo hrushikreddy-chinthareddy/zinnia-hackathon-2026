@@ -1,7 +1,6 @@
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-
 import { buildTaskLink } from '@deps/components/tasks-listing/task-listing.helpers';
 import { TranslationFiles } from '@deps/config/translations';
 import { ProcessesToCaseTypeMap } from '@deps/constants/case';
@@ -38,10 +37,10 @@ import nextI18nextConfig from 'next-i18next.config';
 import { ERROR_CODES } from '../create-case/error';
 
 export type TransactionDetails = {
-    policyNumber: string,
-    transactionSubType: string,
-    requestSubType: string,
-    formName: string
+    policyNumber: string;
+    transactionSubType: string;
+    requestSubType: string;
+    formName: string;
 };
 
 interface NigoEntryProps extends SegmentTrackedPageProps {
@@ -60,9 +59,9 @@ interface NigoEntryProps extends SegmentTrackedPageProps {
     taskInfoLink: string;
     prevTransactionDetails: TransactionDetails | null;
     isNigoCase?: boolean;
-};
+}
 
-const isNigoEntryEnabled = (clientId: string, process: string, featureFlagMap: FeatureFlags ) => {
+const isNigoEntryEnabled = (clientId: string, process: string, featureFlagMap: FeatureFlags) => {
     const identifier = `NIGO_ENTRY_${clientId.toUpperCase()}_${process.toUpperCase().replaceAll(' ', '_')}` as FeatureKeyIdentifier;
     const featureKey = FEATURE_FLAGS[identifier];
     return featureKey && featureFlagMap[featureKey] ? featureFlagMap[featureKey] : false;
@@ -129,6 +128,7 @@ const NigoEntry = ({
 export const getServerSideProps = withPageAuthRequired({
     getServerSideProps: async (context: GetServerSidePropsContext) => {
         const user = await getUserData(context);
+        const userInfoForLogging = getUserInfoFromUser(user);
 
         const { locale = DEFAULT_LOCALE, query, req, res } = context;
         const taskId = (query.taskId as string) || '';
@@ -141,6 +141,7 @@ export const getServerSideProps = withPageAuthRequired({
                 ...parseErrorInformation(e),
                 file: 'pages/nigo-entry',
                 function: 'getServerSideProps',
+                user: userInfoForLogging.email,
             });
             return serverSidePropsLogout();
         }
@@ -167,6 +168,7 @@ export const getServerSideProps = withPageAuthRequired({
                     taskId,
                     file: 'pages/nigo-entry',
                     function: 'getServerSideProps',
+                    user: userInfoForLogging.email,
                 });
                 return {
                     redirect: {
@@ -180,6 +182,7 @@ export const getServerSideProps = withPageAuthRequired({
                 taskId,
                 file: 'pages/nigo-entry',
                 function: 'getServerSideProps',
+                user: userInfoForLogging.email,
             });
 
             const form = mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm.data, userId: user?.name });
@@ -190,8 +193,14 @@ export const getServerSideProps = withPageAuthRequired({
             if (!caseType) {
                 logError('nigo-entry::Error getting case type', {
                     taskId,
+                    caseType,
+                    documentType: docType,
+                    documentNumber,
+                    contractNum,
+                    clientCode,
                     file: 'pages/nigo-entry',
                     function: 'getServerSideProps',
+                    user: userInfoForLogging.email,
                 });
                 return {
                     redirect: {
@@ -206,6 +215,7 @@ export const getServerSideProps = withPageAuthRequired({
                     taskId,
                     file: 'pages/nigo-entry',
                     function: 'getServerSideProps',
+                    user: userInfoForLogging.email,
                 });
                 return {
                     redirect: {
@@ -218,16 +228,14 @@ export const getServerSideProps = withPageAuthRequired({
             const shouldShowNigoEntry = isNigoEntryEnabled(clientCode, caseType, featureFlagDecisions);
             // If feature flag is not enabled, redirect to error page
             if (!shouldShowNigoEntry) {
-               logWarn('nigo_entry::feature flag not enabled', { taskId, clientCode });
-               return {
+                logWarn('nigo_entry::feature flag not enabled', { taskId, clientCode });
+                return {
                     redirect: {
-                       destination: '/403',
-                       permanent: false,
+                        destination: '/403',
+                        permanent: false,
                     },
-               };
+                };
             }
-
-            const userInfoForLogging = getUserInfoFromUser(user);
 
             const response = await searchPolicySSR(contractNum, [clientCode?.toUpperCase() as Carrier], accessToken, 1, 0);
             const planCode = response ? response[0]?.planCode : null;
@@ -239,6 +247,7 @@ export const getServerSideProps = withPageAuthRequired({
                     contractNum,
                     file: 'pages/nigo-entry',
                     function: 'getServerSideProps',
+                    user: userInfoForLogging.email,
                 });
                 return {
                     redirect: {
@@ -257,6 +266,7 @@ export const getServerSideProps = withPageAuthRequired({
                     contractNum,
                     file: 'pages/nigo-entry',
                     function: 'getServerSideProps',
+                    user: userInfoForLogging.email,
                 });
                 return {
                     redirect: {
@@ -269,7 +279,7 @@ export const getServerSideProps = withPageAuthRequired({
             const nigoFilters = {
                 categoryIds: ['Form', 'Signature', 'Account Information'],
                 carrier: clientCode?.toUpperCase(),
-                process: activeForm?.process
+                process: activeForm?.process,
             };
 
             const transactionRequestBody: SearchTransactionRequestBody = {
@@ -307,6 +317,8 @@ export const getServerSideProps = withPageAuthRequired({
                     clientCode,
                     contractNum,
                     taskId,
+                    docType,
+                    user: userInfoForLogging.email,
                 });
                 return {
                     redirect: {
@@ -335,11 +347,13 @@ export const getServerSideProps = withPageAuthRequired({
                         },
                     };
                 } else {
-                    logInfo('nigoEntry::Skipping NIGO check', { taskId, documentNumber, clientCode });
+                    logInfo('nigoEntry::Skipping NIGO check', { taskId, documentNumber, clientCode, user: userInfoForLogging.email });
                 }
             }
 
-            const latestForm = searchCasesResponse?.data?.find((item) => (item?.additionalData?.requestSubType.toUpperCase() === docType.toUpperCase()));
+            const latestForm = searchCasesResponse?.data?.find(
+                item => item?.additionalData?.requestSubType.toUpperCase() === docType.toUpperCase()
+            );
             return {
                 props: {
                     ...translations,

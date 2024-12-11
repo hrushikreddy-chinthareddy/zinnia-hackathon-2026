@@ -50,7 +50,7 @@
     "test": "echo ",
     "typecheck": "tsc --noEmit",
     "update-spec": "node ./src/update-type-definition.mjs",
-    "generate-types:documents": "npx openapi --input ./src/api-spec-documents.json --output ./src/generated-types/documents --exportCore false --exportServices false;",
+    "generate-types:documents": "npx openapi --input ./src/api-spec-documents.yaml --output ./src/generated-types/documents --exportCore false --exportServices false;",
     "generate-types:sor": "npx openapi --input ./src/api-spec-sor.updated.json --output ./src/generated-types/sor --exportCore false --exportServices false;",
     "generate-types:search": "npx openapi --input ./src/api-spec-search.yaml --output ./src/generated-types/search --exportCore false --exportServices false;",
     "generate-types:bpm": "npx openapi --input ./src/api-spec-bpm.yaml --output ./src/generated-types/bpm --exportCore false --exportServices false;",
