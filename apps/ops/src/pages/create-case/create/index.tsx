@@ -5,21 +5,24 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import React, { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
+import { CaseDocumentOption } from '@deps/components/case-document-select/case-document-select';
 import NoNavLayout from '@deps/components/no-nav-layout';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
+import { CaseTypeToProcessesMap } from '@deps/constants/case';
+import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { getSlug } from '@deps/helpers/string.helper';
-import { CaseType, CreateCaseBody, CreateCaseResponse } from '@deps/models/case/case';
+import { CaseIdentifier, CaseType, CreateCaseBody, CreateCaseResponse } from '@deps/models/case/case';
 import { DocumentType } from '@deps/models/case/document';
 import { caseTypes } from '@deps/models/case/helpers';
 import { UserPermission } from '@deps/models/user-profile';
-import { createCase } from '@deps/queries/api/cases';
+import { createCase, getCases } from '@deps/queries/api/cases';
 import { getDocument } from '@deps/queries/api/documents';
 import { ReactComponent as ErrorIcon } from '@deps/styles/elements/icons/icons_outlined/exclamation-alert.svg';
 import { ReactComponent as SuccessIcon } from '@deps/styles/elements/icons/icons_outlined/refresh-2.svg';
@@ -130,17 +133,49 @@ export default function CaseCreate({ featureFlagDecisions }: CaseCreateProps) {
             if (!document?.documentNumber) {
                 throw new Error('Document data was not returned from the documents service.');
             }
+            let data;
+            let caseId;
+            if (caseType !== CaseType.Renewal && document.contract) {
+                const response = await getCases({
+                    limit: 25,
+                    policyNumber: document?.contract,
+                    process: [CaseTypeToProcessesMap[caseType]],
+                });
 
-            const data = await createCaseFromDocumentNumber(
-                document?.documentNumber,
-                document?.caseId,
-                document?.contract,
-                caseType,
-                clientCode as string
-            );
+                if (response && 'total' in response) {
+                    const mappedCaseOptions = response.data
+                        .map(caseItem => {
+                            const documentNumber = getCaseIdentifierValue(caseItem.identifiers, CaseIdentifier.DocumentNumber);
+                            if (!documentNumber) return;
+                            return {
+                                documentNumber,
+                                tag: caseItem.processSubType ?? caseItem.process,
+                                value: caseItem.id,
+                            };
+                        }).filter(Boolean) as CaseDocumentOption[];
+                    data = mappedCaseOptions?.[0] || {};
+                    caseId = data?.value;
+                }
 
-            if (!data?.id) {
-                throw new Error('The case creation request to the case management service did not succeed.');
+               // If no data found then pass t
+                if (!data?.value) {
+                    router.push(
+                        `/create-case/`
+                    );
+                    return;
+                }
+            } else {
+                data = await createCaseFromDocumentNumber(
+                    document?.documentNumber,
+                    document?.caseId,
+                    document?.contract,
+                    caseType,
+                    clientCode as string
+                );
+                caseId = data.id;
+                if (!caseId) {
+                    throw new Error('The case creation request to the case management service did not succeed.');
+                }
             }
 
             setCardProps({
@@ -154,7 +189,7 @@ export default function CaseCreate({ featureFlagDecisions }: CaseCreateProps) {
             const caseSlug = getSlug(caseType);
 
             router.push(
-                `/create-case/${caseSlug}/${data.id}?doc=${document.documentNumber}&clientId=${clientCode as string}${getLastSaved}`
+                `/create-case/${caseSlug}/${caseId}?doc=${document.documentNumber}&clientId=${clientCode as string}${getLastSaved}`
             );
         } catch (e) {
             console.error('create-case/create::initializeCaseCreation', e);
