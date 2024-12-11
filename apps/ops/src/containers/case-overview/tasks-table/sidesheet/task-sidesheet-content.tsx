@@ -1,6 +1,5 @@
 import { Link } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
-import { useRouter } from 'next/navigation';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
@@ -20,7 +19,6 @@ import { DEFAULT_DATE_FORMAT, DEFAULT_ERROR_STRING, NUMERIC_DATE_FORMAT } from '
 
 const SpecificTaskBody = (task: ManagementTask) => {
     const { t } = useTranslation();
-    const router = useRouter();
     let body;
 
     switch (task.taskType) {
