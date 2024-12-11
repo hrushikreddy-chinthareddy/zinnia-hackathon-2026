@@ -37,9 +37,23 @@ interface SendTaxFormsProps extends SegmentTrackedPageProps {
     policy: Policy;
     user: UserProfile;
     shouldShowCaseButton: FeatureFlags;
+    shouldShowEmailOption: FeatureFlags;
+    shouldShowFaxOption: FeatureFlags;
+    shouldShowMailOption: FeatureFlags;
 }
 
-const SendTaxForms = ({ policy, user, shouldShowCaseButton }: SendTaxFormsProps) => {
+const getFeatureFlagKey = (carrierId: string, type: 'EMAIL' | 'FAX' | 'MAIL') => {
+    return `SEND_TAX_FORMS_${type}_${carrierId}` as keyof typeof FEATURE_FLAGS;
+};
+
+const SendTaxForms = ({
+    policy,
+    user,
+    shouldShowCaseButton,
+    shouldShowEmailOption,
+    shouldShowFaxOption,
+    shouldShowMailOption,
+}: SendTaxFormsProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: '' });
 
     const { ctiCallNumber, correlationId } = router.query;
@@ -68,17 +82,20 @@ const SendTaxForms = ({ policy, user, shouldShowCaseButton }: SendTaxFormsProps)
             {
                 label: t('sendDocument.correspondence.email'),
                 value: CommunicationTypes.Email,
+                disabled: !shouldShowEmailOption,
             },
             {
                 label: t('sendDocument.correspondence.fax'),
                 value: CommunicationTypes.Fax,
+                disabled: !shouldShowFaxOption,
             },
             {
                 label: t('sendDocument.correspondence.mail'),
                 value: CommunicationTypes.Mail,
+                disabled: !shouldShowMailOption,
             },
         ],
-        [t]
+        [shouldShowEmailOption, shouldShowFaxOption, shouldShowMailOption, t]
     );
 
     const handleSubmitRequest = async (state: CorrespondenceFormParts) => {
@@ -199,7 +216,7 @@ export const getServerSideProps = withPageAuthRequired({
         try {
             const userInfoForLogging = getUserInfoFromUser(user);
             const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging);
-            if (!policy) {
+            if (!policy || !policy.carrierId) {
                 logInfo('contact-center/send-taxforms/policy-not-found', { policyNumber, planCode, correlationId, page: resolvedUrl });
                 return {
                     redirect: {
@@ -209,12 +226,19 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
+            const shouldShowEmailOption = featureFlagDecisions?.[FEATURE_FLAGS[getFeatureFlagKey(policy.carrierId, 'EMAIL')]];
+            const shouldShowFaxOption = featureFlagDecisions?.[FEATURE_FLAGS[getFeatureFlagKey(policy.carrierId, 'FAX')]];
+            const shouldShowMailOption = featureFlagDecisions?.[FEATURE_FLAGS[getFeatureFlagKey(policy.carrierId, 'MAIL')]];
+
             return {
                 props: {
                     ...translations,
                     policy,
                     shouldShowCaseButton: shouldShowCaseButton ?? false,
                     user,
+                    shouldShowEmailOption: shouldShowEmailOption ?? false,
+                    shouldShowFaxOption: shouldShowFaxOption ?? false,
+                    shouldShowMailOption: shouldShowMailOption ?? false,
                 },
             };
         } catch (error) {
