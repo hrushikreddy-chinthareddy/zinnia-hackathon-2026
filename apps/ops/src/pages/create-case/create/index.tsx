@@ -135,10 +135,10 @@ export default function CaseCreate({ featureFlagDecisions }: CaseCreateProps) {
             }
             let data;
             let caseId;
+
             if (caseType !== CaseType.Renewal && document.contract) {
                 const response = await getCases({
                     limit: 25,
-                    notInCaseStatus: [Statuses.Canceled, Statuses.Completed],
                     policyNumber: document?.contract,
                     process: [CaseTypeToProcessesMap[caseType]],
                 });
@@ -146,8 +146,10 @@ export default function CaseCreate({ featureFlagDecisions }: CaseCreateProps) {
                 if (response && 'total' in response) {
                     const mappedCaseOptions = response.data
                         .map(caseItem => {
+                            if (caseItem.caseStatus === Statuses.Completed) return;
                             const documentNumber = getCaseIdentifierValue(caseItem.identifiers, CaseIdentifier.DocumentNumber);
                             if (!documentNumber) return;
+
                             return {
                                 documentNumber,
                                 tag: caseItem.processSubType ?? caseItem.process,
@@ -159,7 +161,7 @@ export default function CaseCreate({ featureFlagDecisions }: CaseCreateProps) {
                 }
 
                // If no data found then pass t
-                if (!data?.value) {
+                if (!caseId) {
                     router.push(
                         `/create-case/`
                     );
