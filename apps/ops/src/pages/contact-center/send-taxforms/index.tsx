@@ -53,9 +53,9 @@ const SendTaxForms = ({ policy, user, shouldShowCaseButton }: SendTaxFormsProps)
         displayText: year.toString(),
     }));
 
-    const [taxFormSelectionDetails, setTaxFormSelectionDetails] = useState<TaxFormSelectionDetails>({
-        selectedYears: { [currentYear.toString()]: currentYear.toString() },
-    } as TaxFormSelectionDetails);
+    const [taxFormSelectionDetails, setTaxFormSelectionDetails] = useState<TaxFormSelectionDetails>({} as TaxFormSelectionDetails);
+
+    const [selectedYears, setSelectedYears] = useState<{ [key: string]: string }>({ [currentYear.toString()]: currentYear.toString() });
 
     useSegmentPageTracker(user, SegmentPageName.SendTaxForms, { ctiCallNumber, correlationId, policyNumber: policy.policyNumber });
 
@@ -125,6 +125,8 @@ const SendTaxForms = ({ policy, user, shouldShowCaseButton }: SendTaxFormsProps)
                     taxFormSelectionDetails={taxFormSelectionDetails}
                     setTaxFormSelectionDetails={setTaxFormSelectionDetails}
                     taxYearOptions={taxYearOptions}
+                    selectedYears={selectedYears}
+                    setSelectedYears={setSelectedYears}
                 />
             ),
             screenReaderLabel: formSelectionLabel,

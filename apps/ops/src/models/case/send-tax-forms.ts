@@ -9,7 +9,6 @@ export const ALLOWED_TAX_YEARS = 5;
 export type TaxFormSelectionDetails = {
     taxForms: TaxForm[];
     selectedTaxForms: TaxForm[];
-    selectedYears: { [key: string]: string };
 };
 
 export type SearchTaxFormRequestBody = {

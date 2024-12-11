@@ -1,7 +1,7 @@
 import 'react-pdf/dist/Page/TextLayer.css';
 import { AssistiveText, AssistiveTextVariant, Loader } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { SetStateAction, useState } from 'react';
+import { SetStateAction, useRef, useState } from 'react';
 
 import Select from '@deps/components/select/select';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
@@ -19,12 +19,22 @@ export type StatementSelectionProps = {
     taxYearOptions?: MultiselectOption[];
     taxFormSelectionDetails: TaxFormSelectionDetails;
     setTaxFormSelectionDetails: (value: SetStateAction<TaxFormSelectionDetails>) => void;
+    selectedYears: { [key: string]: string };
+    setSelectedYears: (value: SetStateAction<{ [key: string]: string }>) => void;
 };
-const TaxFormsSelection = ({ policy, taxFormSelectionDetails, setTaxFormSelectionDetails, taxYearOptions }: StatementSelectionProps) => {
+const TaxFormsSelection = ({
+    policy,
+    taxFormSelectionDetails,
+    setTaxFormSelectionDetails,
+    taxYearOptions,
+    selectedYears,
+    setSelectedYears,
+}: StatementSelectionProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'contactCenter' });
     const [error, setError] = useState<FormValidationErrors>({});
     const [loader, setLoader] = useState(false);
     const { goToNext } = useWorkflow();
+    const abortControllerRef = useRef<AbortController | null>(null);
 
     const handleContinue = async () => {
         if (!taxFormSelectionDetails?.selectedTaxForms?.length) {
@@ -33,7 +43,7 @@ const TaxFormsSelection = ({ policy, taxFormSelectionDetails, setTaxFormSelectio
         goToNext();
     };
 
-    const getTaxForms = async (selected: string) => {
+    const getTaxForms = async (selected: string, newAbortController: AbortController) => {
         try {
             setError({});
             setLoader(true);
@@ -42,49 +52,55 @@ const TaxFormsSelection = ({ policy, taxFormSelectionDetails, setTaxFormSelectio
                 clientCode: policy?.carrierId || '',
                 taxYear: Number(selected),
             };
-
-            const response = await searchTaxForms(requestData);
+            abortControllerRef.current = newAbortController;
+            const response = await searchTaxForms(requestData, newAbortController.signal);
             if (!response.items.length) {
                 setError({ submit: t('sendTaxForms.errors.noTaxForms', { year: selected }) as string });
             }
-            setTaxFormSelectionDetails(prev => ({
-                ...prev,
-                taxForms: [...(prev?.taxForms || []), ...response.items],
-            }));
 
             setLoader(false);
+            return response.items;
         } catch (error) {
             setLoader(false);
             console.error('An error occurred while getting Tax Forms', error);
-            return;
+            return [];
         }
     };
 
     const handleSelection = (selectedValue: string, displayText: string) => {
-        const previousSelections = taxFormSelectionDetails?.selectedYears;
-        let currentTaxForms = taxFormSelectionDetails?.taxForms;
-        if (previousSelections[selectedValue]) {
-            if (Array.isArray(currentTaxForms)) {
-                currentTaxForms = currentTaxForms.filter(form => form.taxYear !== selectedValue);
-            } else {
-                currentTaxForms = [];
-            }
-            delete previousSelections[selectedValue];
-            setTaxFormSelectionDetails(prev => ({
-                ...prev,
-                taxForms: currentTaxForms,
-                selectedYears: previousSelections,
-            }));
-        } else {
-            getTaxForms(selectedValue);
-            previousSelections[selectedValue] = displayText;
+        setSelectedYears(prev => {
+            const newSelections = { ...prev };
+            let currentTaxForms = taxFormSelectionDetails?.taxForms;
+            if (newSelections[selectedValue]) {
+                delete newSelections[selectedValue];
 
-            setTaxFormSelectionDetails(prev => ({
-                ...prev,
-                taxForms: currentTaxForms,
-                selectedYears: previousSelections,
-            }));
-        }
+                if (Array.isArray(currentTaxForms)) {
+                    currentTaxForms = currentTaxForms.filter(form => form.taxYear !== selectedValue);
+                } else {
+                    currentTaxForms = [];
+                }
+                delete newSelections[selectedValue];
+                setTaxFormSelectionDetails(prev => ({
+                    ...prev,
+                    taxForms: currentTaxForms,
+                    selectedYears: newSelections,
+                }));
+            } else {
+                if (abortControllerRef.current) {
+                    abortControllerRef.current.abort();
+                }
+                const newAbortController = new AbortController();
+
+                getTaxForms(selectedValue, newAbortController).then(taxForms => {
+                    setTaxFormSelectionDetails(prev => ({
+                        ...prev,
+                        taxForms: [...(prev?.taxForms || []), ...taxForms],
+                    }));
+                });
+                newSelections[selectedValue] = displayText;
+            }
+            return newSelections;
+        });
     };
 
     const handleCancel = () => {
@@ -92,7 +108,6 @@ const TaxFormsSelection = ({ policy, taxFormSelectionDetails, setTaxFormSelectio
         setTaxFormSelectionDetails({
             taxForms: [],
             selectedTaxForms: [],
-            selectedYears: {},
         });
     };
 
@@ -113,7 +128,7 @@ const TaxFormsSelection = ({ policy, taxFormSelectionDetails, setTaxFormSelectio
                     label={t('sendTaxForms.selectTaxYear') as string}
                     isMultiselect
                     options={taxYearOptions ?? []}
-                    value={taxFormSelectionDetails?.selectedYears || {}}
+                    value={selectedYears || {}}
                     onChange={handleSelection}
                 />
             </div>

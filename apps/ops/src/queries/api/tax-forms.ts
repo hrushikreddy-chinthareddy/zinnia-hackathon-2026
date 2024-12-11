@@ -1,5 +1,5 @@
 import { datadogLogs } from '@datadog/browser-logs';
-import { AxiosResponse } from 'axios';
+import { AxiosRequestConfig, AxiosResponse, isCancel } from 'axios';
 
 import { SearchTaxFormRequestBody, SearchTaxFormResponseBody } from '@deps/models/case/send-tax-forms';
 import { client } from '@deps/queries/api-utils/client';
@@ -8,7 +8,7 @@ import { baseAppUrl } from '../api-config';
 
 const baseUrl = baseAppUrl + '/api/document/v2/';
 
-export const searchTaxForms = async (requestBody: SearchTaxFormRequestBody): Promise<SearchTaxFormResponseBody> => {
+export const searchTaxForms = async (requestBody: SearchTaxFormRequestBody, signal?: AbortSignal): Promise<SearchTaxFormResponseBody> => {
     try {
         let url = `${baseUrl}taxForms?contractNumber=${requestBody.contractNumber}&clientCode=${requestBody.clientCode}`;
 
@@ -19,13 +19,17 @@ export const searchTaxForms = async (requestBody: SearchTaxFormRequestBody): Pro
             url += `&taxYear=${requestBody.taxYear}`;
         }
 
+        const options: AxiosRequestConfig = {
+            signal,
+        };
+
         datadogLogs.logger.info('contactCenterSearchTaxForms', {
             payload: requestBody,
             url,
             function: 'tax-forms.searchTaxForms',
         });
 
-        const { data } = await client.get<SearchTaxFormRequestBody, AxiosResponse<SearchTaxFormResponseBody>>(url);
+        const { data } = await client.get<SearchTaxFormRequestBody, AxiosResponse<SearchTaxFormResponseBody>>(url, options);
         return data;
     } catch (e) {
         datadogLogs.logger.error('contactCenterSearchTaxForms', {
@@ -34,8 +38,12 @@ export const searchTaxForms = async (requestBody: SearchTaxFormRequestBody): Pro
             error: e,
             function: 'tax-forms.searchTaxForms',
         });
-        console.error('tax-forms::contactCenterSearchTaxForms::error', e);
-        return {} as SearchTaxFormResponseBody;
+        if (isCancel(e)) {
+            throw new Error('Request was aborted');
+        } else {
+            console.error('tax-forms::contactCenterSearchTaxForms::error', e);
+            return {} as SearchTaxFormResponseBody;
+        }
     }
 };
 
