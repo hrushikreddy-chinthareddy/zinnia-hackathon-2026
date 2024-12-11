@@ -13,6 +13,8 @@ import DocumentsResultsTable from '@deps/containers/subpages/documents-sub-page/
 import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
 import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import { Case } from '@deps/models/case/case';
+import CardInfo from '@deps/components/card/card-info/card-info';
+import { Icon, IconType } from '@zinnia/bloom/components';
 
 // try to get any documentIds associated with this case.
 // As we find more ways to associate documents with a case, we can add the ways to retrieve them here.
@@ -30,7 +32,7 @@ const getKnownCaseDocIds = (caseDetails: Case): string[] => {
 export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
     const { t } = useTranslation();
     const knownCaseDocIds = getKnownCaseDocIds(caseDetails);
-    const { policyDocs, correspondenceDocs, loadingDocuments, isNewBusinessCase } = useCaseActivityContext();
+    const { policyDocs, correspondenceDocs, loadingDocuments, isNewBusinessCase, documentsStatusCode } = useCaseActivityContext();
     // Always show all docs for new business cases
     const [showAll, setShowAll] = useState(isNewBusinessCase);
     const [docSource, setDocSource] = useState(DocumentTypeView.Policy as string);
@@ -77,44 +79,54 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
             <div>
                 <Typography variant={TypographyVariant.H2}>{t(`caseOverview.tabs.documents`)}</Typography>
             </div>
-            <div className="mt-6 flex w-full flex-col gap-6 md:flex-row md:justify-between">
-                <div className="flex flex-col gap-2">
-                    <Label label={t('policy.documents.filterByCategory') as string} variant={LabelVariant.LabelSm} />
-                    <RadioGroup.Root className="flex gap-2" onValueChange={setDocSourceFilter} value={docSource}>
-                        <RadioGroup.Item className="chip" value={DocumentTypeView.Policy}>
-                            {t('policy.documents.received') as string}
-                        </RadioGroup.Item>
-                        <RadioGroup.Item className="chip" value={DocumentTypeView.Correspondence}>
-                            {t('policy.documents.sent') as string}
-                        </RadioGroup.Item>
-                    </RadioGroup.Root>
-                </div>
-                {!isNewBusinessCase && (
-                    <Toggle
-                        classes="md:self-end"
-                        text={t('caseOverview.tabs.showAllPolicyDocuments') as string}
-                        ariaLabel={t('caseOverview.tabs.showAllPolicyDocuments') as string}
-                        value={showAll}
-                        handleToggle={setShowAllToggle}
-                    />
-                )}
-            </div>
-
-            {!loadingDocuments && (
-                <DocumentsResultsTable
-                    carrierCode={caseDetails.carrier}
-                    documentType={docSource as DocumentTypeView}
-                    linkedDocumentIdentifiers={knownCaseDocIds}
-                    results={displayDocs?.slice(offset, offset + limit) ?? []}
-                    policyNumber={caseDetails.policyNumber}
+            {documentsStatusCode === 403 ? (
+                <CardInfo
+                    icon={<Icon type={IconType.ALERT_EXCLAMATION} width={50} height={50} className="text-semantic-warning" />}
+                    title={t('unauthorized.title')}
+                    subtitle={t('unauthorized.message')}
+                    className="mt-8"
                 />
+            ) : (
+                <>
+                    <div className="mt-6 flex w-full flex-col gap-6 md:flex-row md:justify-between">
+                        <div className="flex flex-col gap-2">
+                            <Label label={t('policy.documents.filterByCategory') as string} variant={LabelVariant.LabelSm} />
+                            <RadioGroup.Root className="flex gap-2" onValueChange={setDocSourceFilter} value={docSource}>
+                                <RadioGroup.Item className="chip" value={DocumentTypeView.Policy}>
+                                    {t('policy.documents.received') as string}
+                                </RadioGroup.Item>
+                                <RadioGroup.Item className="chip" value={DocumentTypeView.Correspondence}>
+                                    {t('policy.documents.sent') as string}
+                                </RadioGroup.Item>
+                            </RadioGroup.Root>
+                        </div>
+                        {!isNewBusinessCase && (
+                            <Toggle
+                                classes="md:self-end"
+                                text={t('caseOverview.tabs.showAllPolicyDocuments') as string}
+                                ariaLabel={t('caseOverview.tabs.showAllPolicyDocuments') as string}
+                                value={showAll}
+                                handleToggle={setShowAllToggle}
+                            />
+                        )}
+                    </div>
+                    {!loadingDocuments && (
+                        <DocumentsResultsTable
+                            carrierCode={caseDetails.carrier}
+                            documentType={docSource as DocumentTypeView}
+                            linkedDocumentIdentifiers={knownCaseDocIds}
+                            results={displayDocs?.slice(offset, offset + limit) ?? []}
+                            policyNumber={caseDetails.policyNumber}
+                        />
+                    )}
+                    {loadingDocuments && (
+                        <div className="mx-auto flex items-center justify-center gap-2">
+                            <EventsLoader message={t('policy.documents.loadingDocuments')} />
+                        </div>
+                    )}
+                    <DocumentResultsPagination goToPage={goToPage} limit={limit} offset={offset} total={total} loading={loadingDocuments} />
+                </>
             )}
-            {loadingDocuments && (
-                <div className="mx-auto flex items-center justify-center gap-2">
-                    <EventsLoader message={t('policy.documents.loadingDocuments')} />
-                </div>
-            )}
-            <DocumentResultsPagination goToPage={goToPage} limit={limit} offset={offset} total={total} loading={loadingDocuments} />
         </CardContainer>
     );
 }

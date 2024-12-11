@@ -1,4 +1,4 @@
-import { formatAccountNumber, formatSSN } from '@deps/helpers/string.helper';
+import { formatAccountNumber, formatSSN, isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { Case } from '@deps/models/case/case';
 import { DocumentInstance } from '@deps/models/case/document-instance';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
@@ -133,13 +133,19 @@ export const lcPartyResponseSanitizer = (partyResponse: LifeCadParty[] = []): Li
     }
 };
 
-const toMaskedStringOrNull = (value: string | null | undefined): string | null => {
-    return value ? `${value}`.replace(/./g, '*') : null;
+const toMaskedStringOrNull = (value: string | null | undefined, length?: number): string | null => {
+    if (isNullEmptyOrUndefined(value)) {
+        return null;
+    }
+    if (length) {
+        return new Array(length).fill('*').join('');
+    }
+    return `${value}`.replace(/./g, '*');
 };
 
 const fullyMaskAddress = (address: Address | undefined): Address | undefined => {
     if (!address) {
-        return undefined;
+        return null as unknown as undefined;
     }
     return {
         ...address,
@@ -158,7 +164,7 @@ const fullyMaskBankDetails = (bankDetails: BankAccount[] | undefined): BankAccou
         return {
             ...bankDetail,
             accountNumber: toMaskedStringOrNull(bankDetail?.accountNumber),
-            accountType: undefined,
+            accountType: null as unknown as undefined,
             branchAddress: fullyMaskAddress(bankDetail?.branchAddress),
             branchName: toMaskedStringOrNull(bankDetail?.branchName),
             branchPhoneNumber: toMaskedStringOrNull(bankDetail?.branchPhoneNumber),
@@ -174,7 +180,7 @@ const fullyMaskEmails = (emails: Email[] | undefined): Email[] | undefined => {
         return {
             ...email,
             emailAddress: toMaskedStringOrNull(email?.emailAddress),
-            emailType: undefined,
+            emailType: null as unknown as undefined,
         } as Email;
     });
 };
@@ -185,11 +191,13 @@ const fullyMaskIdentifications = (identifications: Identification[] | undefined)
             return {
                 ...identification,
                 identificationValue: formatSSN(identification.identificationValue?.replace(/./g, '*')),
+                issueState: null as unknown as undefined,
+                issueCountry: null as unknown as undefined,
             };
         }
         return {
             ...identification,
-            identificationValue: identification.identificationValue?.replace(/./g, '*') || undefined,
+            identificationValue: identification.identificationValue?.replace(/./g, '*') || (null as unknown as undefined),
         };
     });
 };
@@ -203,8 +211,8 @@ const fullyMaskPhones = (phones: Phone[] | undefined): Phone[] | undefined => {
             countryCode: toMaskedStringOrNull(phone?.countryCode),
             dialNumber: toMaskedStringOrNull(phone?.dialNumber),
             extension: toMaskedStringOrNull(phone?.extension),
-            phoneType: undefined,
-            timezone: undefined,
+            phoneType: null as unknown as undefined,
+            timezone: null as unknown as undefined,
         } as Phone;
     });
 };
@@ -215,14 +223,14 @@ const fullyMaskTaxWithholdings = (taxWithholdings: TaxWithholding[] | undefined)
 
 const fullyMaskCoverage = (coverage: PolicyCoverage | undefined): PolicyCoverage | undefined => {
     if (!coverage) {
-        return undefined;
+        return null as unknown as undefined;
     }
     const maskedCoverage = coverage?.coverageLayers?.map(layer => {
         const maskedParticipants = layer?.coverageParticipants?.map(participant => {
             return {
                 ...participant,
-                issueAge: undefined,
-                partyAgeAtIssue: undefined,
+                issueAge: null as unknown as undefined,
+                partyAgeAtIssue: null as unknown as undefined,
             };
         });
         return { ...layer, coverageParticipants: maskedParticipants };
@@ -242,6 +250,7 @@ const fullyMaskPolicyParties = (parties: PolicyAllOfPartiesItem[] | undefined): 
             firstName,
             formerName,
             fullName,
+            gender,
             identifications,
             insured,
             lastName,
@@ -260,16 +269,17 @@ const fullyMaskPolicyParties = (parties: PolicyAllOfPartiesItem[] | undefined): 
         }) => {
             return {
                 ...rest,
-                abbreviatedName: toMaskedStringOrNull(abbreviatedName),
-                addresses: addresses?.map(fullyMaskAddress) as Address[] | undefined,
+                abbreviatedName: toMaskedStringOrNull(abbreviatedName, 5),
+                addresses: addresses?.map(fullyMaskAddress) as Address[] | null as unknown as undefined,
                 bankDetails: fullyMaskBankDetails(bankDetails),
                 dateOfBirth: toMaskedStringOrNull(dateOfBirth),
                 emails: fullyMaskEmails(emails),
-                firstName: toMaskedStringOrNull(firstName),
-                fullName: toMaskedStringOrNull(fullName),
+                firstName: toMaskedStringOrNull(firstName, 5),
+                fullName: toMaskedStringOrNull(fullName, 5),
+                gender: toMaskedStringOrNull(gender, 5),
                 identifications: fullyMaskIdentifications(identifications),
-                lastName: toMaskedStringOrNull(lastName),
-                middleName: toMaskedStringOrNull(middleName),
+                lastName: toMaskedStringOrNull(lastName, 5),
+                middleName: toMaskedStringOrNull(middleName, 5),
                 phones: fullyMaskPhones(phones),
                 taxWithholdings: fullyMaskTaxWithholdings(taxWithholdings),
             } as PolicyAllOfPartiesItem;

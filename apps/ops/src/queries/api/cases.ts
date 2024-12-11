@@ -56,15 +56,14 @@ export const getCases = async (query: CaseSearchBody): Promise<CaseSearchRespons
     }
 };
 
-export const getCaseNotes = async (caseId: string, includeInternal = false): Promise<NoteInstance[]> => {
+export const getCaseNotes = async (caseId: string, includeInternal = false): Promise<{ data: NoteInstance[]; status: number }> => {
     try {
         if (!caseId) throw new Error('no caseId provided');
         const caseNotesResponse = await client.get(`${baseCasesUrl}/${caseId}/note?includeInternal=${includeInternal}`);
 
-        return caseNotesResponse?.data ?? [];
+        return { data: caseNotesResponse?.data ?? [], status: caseNotesResponse?.status ?? 200 };
     } catch (err) {
-        console.warn('getCaseNotes::error getting case notes', err);
-        return [];
+        return { data: [], status: (err as AxiosResponse)?.status || 500 };
     }
 };
 

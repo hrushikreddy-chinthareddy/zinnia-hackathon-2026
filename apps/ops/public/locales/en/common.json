@@ -4707,5 +4707,9 @@
             "secondaryCta": "Close",
             "submitTask": "Submit Suitability details"
         }
+    },
+    "unauthorized": {
+        "title": "Unauthorized",
+        "message": "You do not have access to view this information."
     }
 }

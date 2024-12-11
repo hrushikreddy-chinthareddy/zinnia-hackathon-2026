@@ -1,5 +1,5 @@
 import { TFunction } from 'next-i18next';
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import CallLogCard from '@deps/components/card/card-call-log/card-call-log';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
@@ -19,6 +19,7 @@ interface CallLogsContentProps {
 export function CallLogsContent({ contractNumber, t }: CallLogsContentProps) {
     const [isLoading, setIsLoading] = useState(true);
     const [callLogs, setCallLogs] = useState<CallLog[]>([]);
+    const [callLogsStatusCode, setCallLogsStatusCode] = useState<number | null>(null);
     const [offset, setOffset] = useState(0);
     const [totalLogs, setTotalLogs] = useState(0);
     const [focusedCall, setFocusedCall] = useState<null | number>(null);
@@ -29,8 +30,9 @@ export function CallLogsContent({ contractNumber, t }: CallLogsContentProps) {
             if (contractNumber) {
                 const results = await getCaseCallLogs({ contract: contractNumber, offset, limit });
 
-                setCallLogs(results?.items || []);
-                setTotalLogs(results?.totalCount || 0);
+                setCallLogs(results?.data?.items || []);
+                setTotalLogs(results?.data?.totalCount || 0);
+                setCallLogsStatusCode(results?.status);
             } else {
                 console.error('No contract number associated');
             }
@@ -53,6 +55,15 @@ export function CallLogsContent({ contractNumber, t }: CallLogsContentProps) {
             <div className="p-8">
                 <PageLoader variant={PageLoaderVariant.Center} />
             </div>
+        );
+
+    if (callLogsStatusCode === 403)
+        return (
+            <SideSheetEmpty
+                icon={<PhoneIcon width={50} height={50} className="text-semantic-error" data-testid="call-logs-empty-icon" />}
+                header={t('unauthorized.title')}
+                text={t('unauthorized.message')}
+            />
         );
 
     if (focusedCall !== null) return <SecondaryCallLog call={callLogs[focusedCall]} setFocusedCall={setFocusedCall} />;

@@ -54,11 +54,23 @@ const InsuredCard = ({ policy }: { policy: PolicyDetails }) => {
                 <div className="flex flex-col gap-8 lg:flex-row">
                     <div>
                         <Label label={t('currentAge')} variant={LabelVariant.FieldLabel} />
-                        <Content pii={true} details={t('yearsOld', { count: ageInYears }) as string} variant={ContentVariant.BodySm} />
+                        <Content
+                            pii={true}
+                            details={
+                                isNullEmptyOrUndefined(ageInYears) ? DEFAULT_ERROR_STRING : (t('yearsOld', { count: ageInYears }) as string)
+                            }
+                            variant={ContentVariant.BodySm}
+                        />
                     </div>
                     <div>
                         <Label label={t('ageAtIssue')} variant={LabelVariant.FieldLabel} />
-                        <Content pii={true} details={t('yearsOld', { count: issueAge }) as string} variant={ContentVariant.BodySm} />
+                        <Content
+                            pii={true}
+                            details={
+                                isNullEmptyOrUndefined(issueAge) ? DEFAULT_ERROR_STRING : (t('yearsOld', { count: issueAge }) as string)
+                            }
+                            variant={ContentVariant.BodySm}
+                        />
                     </div>
                 </div>
             </div>
@@ -109,9 +121,11 @@ const AnnuitantCard = ({ policy }: { policy: PolicyDetails }) => {
                                 <Content
                                     pii={true}
                                     details={
-                                        t('yearsOld', {
-                                            count: policy.coverage.getCoverageParticipantByPartyId(partyId)?.issueAge,
-                                        }) as string
+                                        isNullEmptyOrUndefined(policy.coverage.getCoverageParticipantByPartyId(partyId)?.issueAge)
+                                            ? DEFAULT_ERROR_STRING
+                                            : (t('yearsOld', {
+                                                  count: policy.coverage.getCoverageParticipantByPartyId(partyId)?.issueAge,
+                                              }) as string)
                                     }
                                     variant={ContentVariant.BodySm}
                                 />

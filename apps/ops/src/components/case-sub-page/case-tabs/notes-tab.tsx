@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 
+import { Icon, IconType } from '@zinnia/bloom/components';
 import CardInfo from '@deps/components/card/card-info/card-info';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
@@ -36,7 +37,7 @@ const NoteItem = ({ note }: { note: NoteInstance }) => {
 
 export default function NotesTab() {
     const { t } = useTranslation();
-    const { caseNotes, loadingNotes } = useCaseActivityContext();
+    const { caseNotes, loadingNotes, notesStatusCode } = useCaseActivityContext();
     return (
         <CardContainer>
             <div>
@@ -47,7 +48,7 @@ export default function NotesTab() {
                     <PageLoader variant={PageLoaderVariant.Center} />
                 </div>
             )}
-            {!loadingNotes && !caseNotes?.length && (
+            {!loadingNotes && !caseNotes?.length && notesStatusCode !== 403 && (
                 <div className="flex justify-center">
                     <CardInfo
                         icon={<AnnotationsIcon width={50} height={50} className="text-gray-300" />}
@@ -63,6 +64,14 @@ export default function NotesTab() {
                         <NoteItem key={note.id} note={note} />
                     ))}
                 </div>
+            )}
+            {notesStatusCode === 403 && (
+                <CardInfo
+                    icon={<Icon type={IconType.ALERT_EXCLAMATION} width={50} height={50} className="text-semantic-warning" />}
+                    title={t('unauthorized.title')}
+                    subtitle={t('unauthorized.message')}
+                    className="mt-8"
+                />
             )}
         </CardContainer>
     );

@@ -83,7 +83,7 @@ const CallLogCard = ({
 
 export default function CallLogsTab() {
     const { t } = useTranslation();
-    const { loadingCallLogs, callLogs } = useCaseActivityContext();
+    const { loadingCallLogs, callLogs, callLogsStatusCode } = useCaseActivityContext();
     return (
         <CardContainer>
             <div>
@@ -94,7 +94,7 @@ export default function CallLogsTab() {
                     <PageLoader variant={PageLoaderVariant.Center} />
                 </div>
             )}
-            {!loadingCallLogs && !callLogs.length && (
+            {!loadingCallLogs && !callLogs.length && callLogsStatusCode !== 403 && (
                 <div className="flex justify-center">
                     <CardInfo
                         icon={<Icon type={IconType.PHONE} width={50} height={50} className="text-gray-300" />}
@@ -118,6 +118,14 @@ export default function CallLogsTab() {
                         />
                     ))}
                 </>
+            )}
+            {callLogsStatusCode === 403 && (
+                <CardInfo
+                    icon={<Icon type={IconType.ALERT_EXCLAMATION} width={50} height={50} className="text-semantic-warning" />}
+                    title={t('unauthorized.title')}
+                    subtitle={t('unauthorized.message')}
+                    className="mt-8"
+                />
             )}
         </CardContainer>
     );
