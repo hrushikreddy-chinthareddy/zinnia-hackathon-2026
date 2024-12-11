@@ -27,7 +27,7 @@ interface CreateCaseViewProps {
     setSearchByOption: React.Dispatch<React.SetStateAction<SearchKeys>>;
 }
 
-interface Option {
+type Option = {
     label: string;
     value: string;
 }
