@@ -4,9 +4,9 @@ import { useParams, usePathname } from 'next/navigation';
 import { ReactNode, useEffect, useState } from 'react';
 
 import { RouteKey, getPageTitle, routeMap } from '@/route-map';
+import { LineOfBusinessPath } from '@/types';
 
 import { HeaderLink } from '../header-link/HeaderLink';
-import { LineOfBusinessPath } from '@/types';
 
 interface PopoverInfo {
   content: ReactNode;
@@ -62,7 +62,7 @@ export const HeaderBreadcrumb = ({
       heading = routeMap[`/${routeKey}`]?.title ?? toTitleCase(defaultTitle);
     }
     setFormatTitle(toTitleCase(heading));
-  }, [params.beneficiary, params.policyNumber, pathname, title]);
+  }, [defaultTitle, params.beneficiary, params.policyNumber, pathname, title]);
 
   const currentPath = paths[paths.length - 1];
 
@@ -87,6 +87,7 @@ export const HeaderBreadcrumb = ({
       }
       title={formatTitle}
       className={className}
+      policyNumber={params.policyNumber}
     />
   );
 };

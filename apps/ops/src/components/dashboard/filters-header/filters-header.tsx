@@ -13,7 +13,7 @@ import { getCarrierNameByClientId, getClientIdsByCarrierName, getCarrierListItem
 
 import styles from './filters-header.module.css';
 import { BrokerDealerFilter } from '../broker-dealer-filter/broker-dealer-filter';
-import { CarrierListItem } from '../issued-business/issued-business';
+import { CarrierListItem } from '../../../containers/dashboard/issued-business/issued-business';
 
 interface FiltersHeaderProps {
     authorizedCarriers: string[];

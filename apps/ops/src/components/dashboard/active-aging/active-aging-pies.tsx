@@ -21,7 +21,7 @@ const ActiveAgingPies = ({ dashboardStatsResponse, classNames, width, distinctEx
             </Typography>
             <div className={`${classNames} border-b-1 border-[#ddd]`} style={{ width: `${width}px` }}>
                 <div className="grid grid-cols-6 gap-2 w-full justify-items-center">
-                    {dashboardStatsResponse.data.map(currentStatGrouping => {
+                    {dashboardStatsResponse?.data?.map(currentStatGrouping => {
                         const additionalStats: DashboardStatsElementResponse[] = [];
 
                         distinctExceptionCategoryStatGroupingLabels.forEach(currentLabel => {

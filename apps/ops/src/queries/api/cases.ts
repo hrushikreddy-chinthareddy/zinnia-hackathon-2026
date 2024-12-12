@@ -77,7 +77,10 @@ export const getCaseStats = async (query: CaseStatsQuery): Promise<CaseStatsResp
 
         const { data } = await client.post<CaseStatsQuery, AxiosResponse>(`${baseCasesUrl}/stats`, query);
 
-        writeToCache('getCaseStats', query, data);
+        if (Array.isArray(data?.data) && data?.data?.length > 0) {
+            writeToCache('getCaseStats', query, data);
+            return data;
+        }
 
         return data ?? {};
     } catch (error: any) {
@@ -95,7 +98,10 @@ export const getCaseDashboardStats = async (
             AxiosResponse<CaseDashboardStatsResponse | CaseDashboardStatsErrorResponse>
         >(`${baseAppUrl}/api/case/v1/dashboard/stats`, query);
 
-        return data ?? {};
+        if (Array.isArray(data?.data) && data?.data?.length > 0) {
+            return data;
+        }
+        return { data: [], totalElements: 0 };
     } catch (error: any) {
         console.error('getCaseDashboardStats::An error occurred while getting case dashboard stats results', error);
         return error.response;

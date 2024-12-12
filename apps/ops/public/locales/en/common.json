@@ -1193,7 +1193,8 @@
             },
             "reviewIssues": "Review {{taskType}} issues",
             "suitabilityReview": "suitability review",
-            "commonTaskIssues": "Issue: One or more {{taskType}} issues found."
+            "commonTaskIssues": "Issue: One or more {{taskType}} issues found.",
+            "suitabilityReviewIssues": "Review Suitability Issue(s)"
         },
         "processDate": {
             "canceled": "Canceled on",

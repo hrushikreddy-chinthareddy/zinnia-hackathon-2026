@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query';
 import { HighchartsReactRefObject } from 'highcharts-react-official';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -46,7 +47,6 @@ const ActiveAging = ({
     const containerRef = useRef<HTMLDivElement>(null);
     const numColumns = 7;
     const [agingChartWidth, setAgingChartWidth] = useState(877);
-    const [aiSummary, setAiSummary] = useState<string | null>(null);
 
     const [agingRangesBySubProcess, setAgingRangesBySubProcess] = useState<CaseDashboardStatsResponse>();
     const [openStagesByAgingRanges, setOpenStagesByAgingRanges] = useState<CaseDashboardStatsResponse>();
@@ -119,11 +119,11 @@ const ActiveAging = ({
         // at the same time.
         let totalCaseCount = 0;
         if (selectedAgingRange === 'All') {
-            totalCaseCount = createdBySubProcess?.data.reduce((a, b) => a + b.count, 0) || 0;
+            totalCaseCount = createdBySubProcess?.data?.reduce((a, b) => a + b.count, 0) || 0;
             return `Showing All (Total ${wholeNumberFormatify(totalCaseCount)} apps)`;
         }
 
-        agingRangesBySubProcess?.data.forEach(subProcessGrouping => {
+        agingRangesBySubProcess?.data?.forEach(subProcessGrouping => {
             subProcessGrouping.values?.forEach(agingRangeUnderSubProcessGrouping => {
                 if (agingRangeUnderSubProcessGrouping.name === selectedAgingRange) {
                     totalCaseCount += agingRangeUnderSubProcessGrouping.count;
@@ -134,36 +134,36 @@ const ActiveAging = ({
         return `${AgingTimeRanges[selectedAgingRange]} Days (Total ${wholeNumberFormatify(totalCaseCount ?? -1000)} apps)`;
     };
 
-    const getOpenAiSummary = async (caseStats: DashboardStatsElementResponse[]) => {
-        try {
-            const summary = await getCaseInsights({
-                content: JSON.stringify(caseStats),
+    const {
+        data: aiSummaryResponse,
+        isLoading: aiLoading,
+        isError: aiError,
+    } = useQuery({
+        queryKey: [
+            'getAiSummary',
+            agingGroupingMap,
+            agingRangesBySubProcess?.data,
+            selectedAgingRange,
+            agingGroupingMap[selectedAgingRange],
+        ],
+        queryFn: () =>
+            getCaseInsights({
+                content: JSON.stringify(agingGroupingMap[selectedAgingRange]),
                 prompt: `You are an expert in all things case data. Your job is to summarize the data for business and executive users.
                           They want simple and insightful information about the data provided to you. The cases provided to you here are open cases delineated by insurance carrier. Avoid using phrases such as "the data".
                           Your responses should be insightful and will be displayed on a UI as a summary for a module related to a pie chart. Use percentages and real data where it makes sense. Keep it conscise and to the point. Format number values to U.S.`,
-            });
-            return summary;
-        } catch (error) {
-            return '';
-        }
-    };
+            }),
+        enabled: shouldShowCaseInsights && !!agingRangesBySubProcess?.data && !loading,
+    });
 
-    const renderDummyText = () => {
-        if (!shouldShowCaseInsights) {
-            return null;
-        }
-        return (
-            <>
-                <div className="flex-1 border-r-1 xl:border-r-0 border-[#EDEDED] pr-2 xl:pr-0">
-                    <Typography className="flex gap-2 items-center mb-4" variant={TypographyVariant.BodyBold}>
-                        <LighBulb height={24} width={24} />
-                        <span>Insight</span>
-                    </Typography>
-                    <Typography variant={TypographyVariant.BodySm}>{aiSummary ?? 'Generating AI Summary...'}</Typography>
-                </div>
-            </>
-        );
-    };
+    let aiSummaryText = 'No AI Summary';
+    if (aiError) {
+        aiSummaryText = 'Error generating AI Summary';
+    } else if (aiLoading) {
+        aiSummaryText = 'Generating AI Summary...';
+    } else if (aiSummaryResponse?.length) {
+        aiSummaryText = aiSummaryResponse;
+    }
 
     const handleWindowResize = useCallback(() => {
         if (containerRef.current) {
@@ -184,7 +184,7 @@ const ActiveAging = ({
         const map: { [key: string]: string } = {};
         const barChartColors = caseChartHelpers.getAlternativeColors();
 
-        subProcessStatGroupings.data.forEach((statGrouping, index) => {
+        subProcessStatGroupings.data?.forEach((statGrouping, index) => {
             map[statGrouping.name] = barChartColors[index];
         });
 
@@ -240,8 +240,8 @@ const ActiveAging = ({
 
     useEffect(() => {
         const groupedAgingRangeBySubProcess: CaseDashboardStatsResponse = { data: [], totalElements: 0 };
-        createdBySubProcess?.data.forEach(subProcess => {
-            groupedAgingRangeBySubProcess.data.push({
+        createdBySubProcess?.data?.forEach(subProcess => {
+            groupedAgingRangeBySubProcess?.data?.push({
                 key: GroupByOptions.ProcessSubType,
                 name: subProcess.name,
                 count: subProcess.count,
@@ -260,7 +260,7 @@ const ActiveAging = ({
             All: JSON.parse(JSON.stringify(groupedAgingRangeBySubProcess.data)),
         };
 
-        groupedAgingRangeBySubProcess.data.forEach(element => {
+        groupedAgingRangeBySubProcess.data?.forEach(element => {
             element.values?.forEach(agingRange => {
                 agingGroupingMap[agingRange.name as AgingTimeRangesKeys].push({
                     key: GroupByOptions.AgingRange,
@@ -276,7 +276,7 @@ const ActiveAging = ({
             });
         });
         setAgingGroupingMap(agingGroupingMap);
-    }, [createdBySubProcess, groupIntoAgingRanges]);
+    }, [createdBySubProcess?.data, groupIntoAgingRanges]);
 
     useEffect(() => {
         const groupedExceptionCategoryByAgingRanges: CaseDashboardStatsResponse = { data: [], totalElements: 0 };
@@ -285,7 +285,7 @@ const ActiveAging = ({
 
         // first we are going to create the aging ranges in the grouping and our mapping to house the child values
         Object.keys(AgingTimeRanges).forEach(key => {
-            groupedExceptionCategoryByAgingRanges.data.push({
+            groupedExceptionCategoryByAgingRanges?.data?.push({
                 key: GroupByOptions.AgingRange,
                 name: key,
                 count: 0,
@@ -295,7 +295,7 @@ const ActiveAging = ({
         });
 
         // second we need to create a map of all the open stages by aging range (this gives us a lot of entries)
-        openExceptionCategoriesByCreated?.data.forEach(createdGroupingOfExceptionCategories => {
+        openExceptionCategoriesByCreated?.data?.forEach(createdGroupingOfExceptionCategories => {
             const timeRange = getAgingTimeRangeFromDate(new Date(createdGroupingOfExceptionCategories.name));
             exceptionCategoryByAgingRangeMap[timeRange] = exceptionCategoryByAgingRangeMap[timeRange].concat(
                 createdGroupingOfExceptionCategories.values ?? []
@@ -304,7 +304,7 @@ const ActiveAging = ({
 
         // third we need to finally reduce the open stages in each range leaving us with the final grouping
         Object.keys(AgingTimeRanges).forEach(agingTimeFrameKey => {
-            const matchingGroupItem = groupedExceptionCategoryByAgingRanges.data.find(item => item.name === agingTimeFrameKey);
+            const matchingGroupItem = groupedExceptionCategoryByAgingRanges.data?.find(item => item.name === agingTimeFrameKey);
             if (!matchingGroupItem) {
                 return;
             }
@@ -348,10 +348,10 @@ const ActiveAging = ({
             ZeroToSeven: [],
             All: [],
         };
-        groupedExceptionCategoryByAgingRanges.data.forEach(element => {
+        groupedExceptionCategoryByAgingRanges.data?.forEach(element => {
             if (element?.values) {
                 element.values.forEach(statGrouping => {
-                    const agingStage = agingExceptionCategoryGroupingMap[element.name as AgingTimeRangesKeysExtended].find(
+                    const agingStage = agingExceptionCategoryGroupingMap[element.name as AgingTimeRangesKeysExtended]?.find(
                         item => item.name === statGrouping.name
                     );
 
@@ -384,24 +384,11 @@ const ActiveAging = ({
 
         setAgingStageGroupingMap(agingExceptionCategoryGroupingMap);
         setOpenStagesByAgingRanges(groupedExceptionCategoryByAgingRanges);
-    }, [getAgingTimeRangeFromDate, openExceptionCategoriesByCreated]);
+    }, [getAgingTimeRangeFromDate, openExceptionCategoriesByCreated?.data]);
 
     useEffect(() => {
         setStartAndEndDates(getStartAndEndDates(selectedAgingRange));
     }, [selectedAgingRange]);
-
-    useEffect(() => {
-        if (!shouldShowCaseInsights) {
-            return;
-        }
-        if (!loading && agingRangesBySubProcess && agingRangesBySubProcess.data && agingRangesBySubProcess.data.length > 0) {
-            getOpenAiSummary(agingGroupingMap[selectedAgingRange]).then(summary => {
-                if (summary) {
-                    setAiSummary(summary);
-                }
-            });
-        }
-    }, [agingGroupingMap, agingRangesBySubProcess, loading, selectedAgingRange, shouldShowCaseInsights]);
 
     return (
         <CardContainer fullWidth={false} containerClassNames={classNames}>
@@ -412,8 +399,15 @@ const ActiveAging = ({
                 {getAgingSubtitle()}
             </Typography>
             <div className="flex flex-col xl:flex-row justify-between gap-4 w-full">
-                <div className="flex xl:flex-col xl:w-1/4 gap-4 mb-8 xl:mb-0">
-                    {renderDummyText()}
+                <div className="flex grow xl:flex-col xl:w-1/4 gap-4 mb-8 xl:mb-0">
+                    <div className="flex-1 grow border-r-1 xl:border-r-0 border-[#EDEDED] pr-2 xl:pr-0">
+                        <Typography className="flex gap-2 items-center mb-4" variant={TypographyVariant.BodyBold}>
+                            <LighBulb height={24} width={24} />
+                            <span>Insight</span>
+                        </Typography>
+                        <Typography variant={TypographyVariant.BodySm}>{aiSummaryText}</Typography>
+                    </div>
+
                     <div className="flex-1 border-r-1 xl:border-r-0 xl:border-t-1 border-[#EDEDED]">
                         <Typography className="mb-4 xl:mt-1" variant={TypographyVariant.BodySmBold}>
                             Top volume by type
