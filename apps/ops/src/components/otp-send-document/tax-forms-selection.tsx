@@ -1,7 +1,7 @@
 import 'react-pdf/dist/Page/TextLayer.css';
 import { AssistiveText, AssistiveTextVariant, Loader } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { SetStateAction, useRef, useState } from 'react';
+import { SetStateAction, useEffect, useRef, useState } from 'react';
 
 import Select from '@deps/components/select/select';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
@@ -43,6 +43,13 @@ const TaxFormsSelection = ({
         goToNext();
     };
 
+    useEffect(() => {
+        Object.keys(selectedYears).forEach(year => {
+            const newAbortController = new AbortController();
+            getTaxForms(year, newAbortController);
+        });
+    }, []);
+
     const getTaxForms = async (selected: string, newAbortController: AbortController) => {
         try {
             setError({});
@@ -59,12 +66,21 @@ const TaxFormsSelection = ({
                 setError({ submit: t('sendTaxForms.errors.noTaxForms', { year: selected }) as string });
             }
 
+            setTaxFormSelectionDetails(prev => {
+                const existingTaxForms = prev?.taxForms || [];
+                const newTaxForms = response?.items?.filter(
+                    form => !existingTaxForms.find(existingForm => existingForm.taxYear === form.taxYear)
+                );
+                return {
+                    ...prev,
+                    taxForms: [...existingTaxForms, ...newTaxForms],
+                };
+            });
             setLoader(false);
-            return response.items;
         } catch (error) {
             setLoader(false);
             console.error('An error occurred while getting Tax Forms', error);
-            return [];
+            return;
         }
     };
 
@@ -92,18 +108,7 @@ const TaxFormsSelection = ({
 
             const newAbortController = new AbortController();
 
-            getTaxForms(selectedValue, newAbortController).then(taxForms => {
-                setTaxFormSelectionDetails(prev => {
-                    const existingTaxForms = prev?.taxForms || [];
-                    const newTaxForms = taxForms.filter(
-                        form => !existingTaxForms.find(existingForm => existingForm.taxYear === form.taxYear)
-                    );
-                    return {
-                        ...prev,
-                        taxForms: [...existingTaxForms, ...newTaxForms],
-                    };
-                });
-            });
+            getTaxForms(selectedValue, newAbortController);
             newSelections[selectedValue] = displayText;
         }
         setSelectedYears(newSelections);
