@@ -5,14 +5,14 @@ import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useCallback, useRef, useState } from 'react';
 
-import { ActiveApplications } from '@deps/components/dashboard/active-applications/active-applications';
 import { DashboardTabNav, DashboardTabs } from '@deps/components/dashboard/dashboard-nav-links';
 import FiltersHeader from '@deps/components/dashboard/filters-header/filters-header';
-import IssuedBusiness from '@deps/components/dashboard/issued-business/issued-business';
 import NoNavLayout from '@deps/components/no-nav-layout';
 import { PageHead } from '@deps/components/page-title';
 import { TranslationFiles } from '@deps/config/translations';
+import { ActiveApplications } from '@deps/containers/dashboard/active-applications/active-applications';
 import { DashboardResponsiveLayout } from '@deps/containers/dashboard/dashboard-responsive-layout';
+import { IssuedBusiness } from '@deps/containers/dashboard/issued-business/issued-business';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';

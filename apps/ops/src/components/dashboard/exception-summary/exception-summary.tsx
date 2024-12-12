@@ -1,13 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-import dayjs from 'dayjs';
 import * as Highcharts from 'highcharts';
 import HC_ACCESSIBILITY from 'highcharts/modules/accessibility';
 import HighchartsExporting from 'highcharts/modules/exporting';
 import HighchartsReact from 'highcharts-react-official';
 import { useMemo, useRef, useState } from 'react';
 
-import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
+import styles from '@deps/components/dashboard/top-5-subprocesses-by-volume/top-5-subprocess-by-volume.module.css';
 import PageLoader from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
@@ -19,14 +18,15 @@ import { DashboardStatsElementResponse, Processes, Statuses } from '@deps/models
 import { GroupByOptions } from '@deps/models/case/enums';
 import { getCaseInsights } from '@deps/queries/api/openai';
 import { DashboardSearchFilter } from '@deps/queries/cases';
-import { getCaseDashboardStatsQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
+import { getExceptionData } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 import { useDashboardStore } from '@deps/store/store';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 import { ReactComponent as LightBulbIcon } from '@deps/styles/elements/icons/illustrations/light-bulb.svg';
 
-import styles from './top-5-subprocess-by-volume.module.css';
+import NavElement, { NavElementSize, NavElementType } from '../../nav-element/nav-element';
 
 const CHART_HEIGHT = 500;
+
 if (typeof Highcharts === 'object') {
     HighchartsExporting(Highcharts);
     HC_ACCESSIBILITY(Highcharts);
@@ -46,132 +46,6 @@ type Output = {
 };
 
 const colors = ['#D385A5', '#BD85D3', '#8593D3', '#00628B', '#021936'];
-
-function processData(input: DashboardStatsElementResponse[]): Output {
-    const WEEKLY_WEEKS = 48; // 4 weeks per month for 12 months
-    const MONTHLY_MONTHS = 12;
-    const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-    const result: Output = {
-        weekly: {},
-        monthly: {},
-        weeklyCategories: [],
-        monthlyCategories: [],
-    };
-
-    // Get the earliest date in the data
-    let earliestDate: Date = new Date();
-    input.forEach(carrier => {
-        carrier.values?.forEach(exceptionCategory => {
-            exceptionCategory.values?.forEach(entry => {
-                const date = new Date(entry.name);
-                if (!earliestDate || date < earliestDate) {
-                    earliestDate = date;
-                    return; // break the loop
-                }
-            });
-        });
-    });
-
-    // Use the earliest date to calculate the starting point for categories
-    if (!earliestDate) {
-        throw new Error('No valid dates found in input data');
-    }
-
-    // Generate categories
-    const startMonthIndex = earliestDate.getUTCMonth(); // 0-based month index
-    result.monthlyCategories = Array(12).fill(0); // Array.from({ length: MONTHLY_MONTHS }, (_, i) => MONTH_NAMES[(startMonthIndex + i) % 12]);
-
-    const months = Array.from({ length: MONTHLY_MONTHS }, (_, i) => MONTH_NAMES[(startMonthIndex + i) % 12]);
-    result.weeklyCategories = months.flatMap(month => [month, month, month, month]);
-
-    // Process data as before
-    input.forEach((groupBy, i) => {
-        const weeklyData: number[] = new Array(WEEKLY_WEEKS).fill(0);
-        const monthlyData: number[] = new Array(MONTHLY_MONTHS).fill(0);
-
-        const groupByName = groupBy.name || 'Unknown';
-        if (!result.weekly[groupByName]) {
-            result.weekly[groupByName] = {
-                series: {} as Highcharts.SeriesLineOptions,
-                name: groupByName,
-                total: 0,
-            };
-        }
-        if (!result.monthly[groupByName]) {
-            result.monthly[groupByName] = {
-                series: {} as Highcharts.SeriesColumnOptions,
-                name: groupByName,
-                total: 0,
-            };
-        }
-
-        result.weekly[groupByName].series = {
-            type: 'line',
-            data: weeklyData,
-            name: groupByName,
-            lineWidth: 2,
-            marker: {
-                enabled: false, // Disable markers for a clean line chart
-            },
-            color: colors[i % colors.length],
-            xAxis: 0, // Use the first xAxis
-            yAxis: 0,
-        };
-
-        result.monthly[groupByName].series = {
-            name: groupByName,
-            data: monthlyData,
-            stack: 'stackedBar',
-            type: 'column',
-            color: colors[i % colors.length],
-            xAxis: 1, // Use the second xAxis
-            yAxis: 1,
-        };
-
-        const groupedByDate: Record<string, number> = {};
-
-        // Flatten and aggregate counts by date
-        groupBy.values?.forEach(entryDate => {
-            // exceptionCategory.values?.forEach(entry => {
-            const date = entryDate.name; // Example: "2024-01-05"
-            groupedByDate[date] = (groupedByDate[date] || 0) + entryDate.count;
-            // });
-        });
-
-        // Process dates
-        Object.entries(groupedByDate).forEach(([dateString, count]) => {
-            const date = new Date(dateString);
-            const month = (date.getUTCMonth() - startMonthIndex + 12) % 12; // Relative month index (wraps around)
-            const day = date.getUTCDate();
-            const weekOfMonth = Math.min(Math.ceil(day / 7), 4); // Group all 5th weeks into the 4th week
-
-            // Update weekly data
-            const weeklyIndex = month * 4 + (weekOfMonth - 1);
-            weeklyData[weeklyIndex] += count;
-
-            // Update monthly data
-            monthlyData[month] += count;
-            result.monthly[groupByName].total += count;
-        });
-    });
-
-    // Set the total for each month. this is used as the category for the stacked bar chart
-    const totals: number[] = new Array(MONTHLY_MONTHS).fill(0);
-
-    for (const key in result.monthly) {
-        if (Object.prototype.hasOwnProperty.call(result.monthly, key)) {
-            const series = result.monthly[key].series.data;
-            series?.forEach((value, index) => {
-                totals[index] += typeof value === 'number' ? value : 0; // Accumulate the value at each index
-            });
-        }
-    }
-
-    result.monthlyCategories = totals;
-
-    return result;
-}
 
 function getChartConfig(processedData: Output, sortedMonthly: Summary[]): Highcharts.Options {
     if (!processedData) return {};
@@ -270,6 +144,9 @@ function getChartConfig(processedData: Output, sortedMonthly: Summary[]): Highch
         ],
         yAxis: [
             {
+                stackLabels: {
+                    enabled: true,
+                },
                 allowDecimals: false,
                 gridLineWidth: 1,
                 height: '60%',
@@ -386,41 +263,175 @@ function getChartConfig(processedData: Output, sortedMonthly: Summary[]): Highch
     };
 }
 
-export const Top5SubprocessByVolume = ({
-    createdDateStart,
-    requestSubType = 'NB_REG60',
+function processCarrierData(input: DashboardStatsElementResponse[]): Output {
+    const WEEKLY_WEEKS = 48; // 4 weeks per month for 12 months
+    const MONTHLY_MONTHS = 12;
+    const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    const result: Output = {
+        weekly: {},
+        monthly: {},
+        weeklyCategories: [],
+        monthlyCategories: [],
+    };
+
+    // Get the earliest date in the data
+    let earliestDate: Date = new Date();
+    input.forEach(carrier => {
+        carrier.values?.forEach(exceptionCategory => {
+            exceptionCategory.values?.forEach(entry => {
+                const date = new Date(entry.name);
+                if (!earliestDate || date < earliestDate) {
+                    earliestDate = date;
+                    return; // break the loop
+                }
+            });
+        });
+    });
+
+    // Use the earliest date to calculate the starting point for categories
+    if (!earliestDate) {
+        throw new Error('No valid dates found in input data');
+    }
+
+    // Generate categories
+    const startMonthIndex = earliestDate.getUTCMonth(); // 0-based month index
+    result.monthlyCategories = Array(12).fill(0); // Array.from({ length: MONTHLY_MONTHS }, (_, i) => MONTH_NAMES[(startMonthIndex + i) % 12]);
+
+    const months = Array.from({ length: MONTHLY_MONTHS }, (_, i) => MONTH_NAMES[(startMonthIndex + i) % 12]);
+    result.weeklyCategories = months.flatMap(month => [month, month, month, month]);
+
+    // Process data as before
+    input.forEach((carrier, i) => {
+        const weeklyData: number[] = new Array(WEEKLY_WEEKS).fill(0);
+        const monthlyData: number[] = new Array(MONTHLY_MONTHS).fill(0);
+
+        const carrierName = carrier.name;
+        if (!result.weekly[carrierName]) {
+            result.weekly[carrierName] = {
+                series: {} as Highcharts.SeriesLineOptions,
+                name: carrierName,
+                total: 0,
+            };
+        }
+        if (!result.monthly[carrierName]) {
+            result.monthly[carrierName] = {
+                series: {} as Highcharts.SeriesColumnOptions,
+                name: carrierName,
+                total: 0,
+            };
+        }
+
+        result.weekly[carrierName].series = {
+            type: 'line',
+            data: weeklyData,
+            name: carrierName,
+            lineWidth: 2,
+            marker: {
+                enabled: false, // Disable markers for a clean line chart
+            },
+            color: colors[i % colors.length],
+            xAxis: 0, // Use the first xAxis
+            yAxis: 0,
+        };
+
+        result.monthly[carrierName].series = {
+            name: carrierName,
+            data: monthlyData,
+            stack: 'stackedBar',
+            type: 'column',
+            color: colors[i % colors.length],
+            xAxis: 1, // Use the second xAxis
+            yAxis: 1,
+        };
+
+        const groupedByDate: Record<string, number> = {};
+
+        // Flatten and aggregate counts by date
+        carrier.values?.forEach(exceptionCategory => {
+            exceptionCategory.values?.forEach(entry => {
+                const date = entry.name; // Example: "2024-01-05"
+                groupedByDate[date] = (groupedByDate[date] || 0) + entry.count;
+            });
+        });
+
+        // Process dates
+        Object.entries(groupedByDate).forEach(([dateString, count]) => {
+            const date = new Date(dateString);
+            const month = (date.getUTCMonth() - startMonthIndex + 12) % 12; // Relative month index (wraps around)
+            const day = date.getUTCDate();
+            const weekOfMonth = Math.min(Math.ceil(day / 7), 4); // Group all 5th weeks into the 4th week
+
+            // Update weekly data
+            const weeklyIndex = month * 4 + (weekOfMonth - 1);
+            weeklyData[weeklyIndex] += count;
+
+            // Update monthly data
+            monthlyData[month] += count;
+            result.monthly[carrierName].total += count;
+        });
+    });
+
+    // Set the total for each month. this is used as the category for the stacked bar chart
+    const totals: number[] = new Array(MONTHLY_MONTHS).fill(0);
+
+    for (const key in result.monthly) {
+        if (Object.prototype.hasOwnProperty.call(result.monthly, key)) {
+            const series = result.monthly[key].series.data;
+            series?.forEach((value, index) => {
+                totals[index] += typeof value === 'number' ? value : 0; // Accumulate the value at each index
+            });
+        }
+    }
+
+    result.monthlyCategories = totals;
+
+    return result;
+}
+
+export const ExceptionSummary = ({
+    startDate,
+    carrierOrBrokerDealer = GroupByOptions.Carrier,
+    selectedSubprocess = 'NB_REG60',
 }: {
-    createdDateStart: string;
+    startDate: string;
     carrierOrBrokerDealer?: GroupByOptions.Carrier | GroupByOptions.BrokerDealerName;
-    requestSubType: string;
+    selectedSubprocess: string;
 }) => {
     const shouldShowCaseInsights = useCaseInsightsPermission();
-    const groupBy: GroupByOptions = GroupByOptions.ProductName;
-    const [processingLoading, setProcessingLoading] = useState(false);
 
+    const chartRef = useRef<HighchartsReact.RefObject>(null);
+    const [processingLoading, setProcessingLoading] = useState(false);
+    const groupBy: GroupByOptions = GroupByOptions.Carrier;
     const { selectedBrokerDealers, selectedCarriers } = useDashboardStore(state => state);
 
-    const filter: DashboardSearchFilter = useMemo(() => {
-        return {
-            createdDateStart: dayjs(createdDateStart).toISOString(),
+    const baseDashboardQueryFilter = useMemo(() => {
+        const baseFilter: DashboardSearchFilter = {
+            createdDateStart: startDate,
             process: [Processes.NewBusiness],
             caseStatus: [Statuses.Completed],
             carrier: Object.keys(selectedCarriers),
             brokerDealerName: Object.keys(selectedBrokerDealers),
-            ...(requestSubType ? { requestSubType: [requestSubType] } : {}),
+            ...(selectedSubprocess ? { requestSubType: [selectedSubprocess] } : {}),
         };
-    }, [createdDateStart, requestSubType, selectedBrokerDealers, selectedCarriers]);
 
-    const { data: statsResponse, isLoading: loading } = useQuery({
-        queryKey: ['getTopFiveData', filter, groupBy],
+        return baseFilter;
+    }, [selectedBrokerDealers, selectedCarriers, selectedSubprocess, startDate]);
+
+    const { data: exceptionData, isLoading: exceptionDataLoading } = useQuery({
+        queryKey: ['exceptionData', baseDashboardQueryFilter, carrierOrBrokerDealer],
         queryFn: async () => {
-            const data = await getCaseDashboardStatsQuery(filter, [groupBy, GroupByOptions.UpdatedAt]);
-
-            if (!data.data?.length) {
+            const data = await getExceptionData(baseDashboardQueryFilter, [
+                carrierOrBrokerDealer,
+                GroupByOptions.ExceptionCategory,
+                GroupByOptions.UpdatedAt,
+            ]);
+            if (!data?.data?.statsResponseData) {
                 throw data;
             }
             return data;
         },
+        placeholderData: previousData => previousData,
     });
 
     const {
@@ -428,41 +439,47 @@ export const Top5SubprocessByVolume = ({
         isLoading: aiLoading,
         isError: aiError,
     } = useQuery({
-        queryKey: ['getAiSummary', filter, statsResponse?.data, requestSubType],
-        queryFn: () =>
-            getCaseInsights({
-                content: JSON.stringify(statsResponse?.data),
-                prompt: `You are an expert in all things new business application data. Your job is to summarize the data for business and executive users. They want simple and insightful information about the data provided to you. The data provided to you here are completed ${dashboardChartTitleFormat(
-                    requestSubType,
-                    false
-                )} applications, but the ${dashboardChartTitleFormat(
-                    requestSubType,
-                    false
-                )} applications encountered exceptions along their path to completion. The data is grouped by Carrier and then by Exception Category and the values represent an exception that occurred for a ${dashboardChartTitleFormat(
-                    requestSubType,
-                    false
-                )} application. Avoid using phrases such as "the data". Your responses should be insightful and will be displayed on a UI as a summary for a module related to a distribution chart. Use percentages and real data where it makes sense. Keep it concise and to the point. Format number values to U.S. inclding commas where appropriate.`,
-            }),
-        enabled: shouldShowCaseInsights && !!statsResponse?.data?.length && !!requestSubType.length,
+        queryKey: ['getAiSummary', baseDashboardQueryFilter, exceptionData?.data?.statsResponseData, selectedSubprocess],
+        queryFn: async () => {
+            try {
+                const summary = await getCaseInsights({
+                    content: JSON.stringify(exceptionData?.data?.statsResponseData),
+                    prompt: `You are an expert in all things new business application data. Your job is to summarize the data for business and executive users. They want simple and insightful information about the data provided to you. The data provided to you here are completed ${dashboardChartTitleFormat(
+                        selectedSubprocess,
+                        false
+                    )} applications, but the ${dashboardChartTitleFormat(
+                        selectedSubprocess,
+                        false
+                    )} applications encountered exceptions along their path to completion. The data is grouped by Carrier and then by Exception Category and the values represent an exception that occurred for a ${dashboardChartTitleFormat(
+                        selectedSubprocess,
+                        false
+                    )} application. Avoid using phrases such as "the data". Your responses should be insightful and will be displayed on a UI as a summary for a module related to a distribution chart. Use percentages and real data where it makes sense. Keep it concise and to the point. Format number values to U.S. including commas where appropriate.`,
+                });
+                return summary;
+            } catch (error) {
+                return '';
+            }
+        },
+        enabled: shouldShowCaseInsights && !!exceptionData?.data?.statsResponseData?.length && !!selectedSubprocess.length,
     });
 
-    const chartRef = useRef<HighchartsReact.RefObject>(null);
-
-    const summary = useMemo(() => {
-        if (aiError) return 'Sorry, there was a problem loading data...';
-        if (aiSummaryResponse?.length) return aiSummaryResponse;
-        if (!statsResponse?.data?.length) return `No exceptions for ${dashboardChartTitleFormat(requestSubType)}.`;
-        return 'Sorry, there was a problem loading data...';
-    }, [aiSummaryResponse, aiError, statsResponse?.data?.length, requestSubType]);
-
-    const noStatsData = !statsResponse?.data?.length;
+    const noExceptionData = !exceptionData?.data?.statsResponseData?.length;
     const processedData = useMemo(() => {
-        if (noStatsData) return null;
+        if (noExceptionData) return null;
         setProcessingLoading(true);
-        const processedData = processData(statsResponse?.data || []);
+        const processedData = processCarrierData(exceptionData?.data.statsResponseData || []);
         setProcessingLoading(false);
         return processedData;
-    }, [statsResponse?.data, noStatsData]);
+    }, [exceptionData?.data.statsResponseData, noExceptionData]);
+
+    const myChartConfig = useMemo(() => {
+        if (!processedData) return {};
+        const monthlyArray: Summary[] = [];
+        Object.entries(processedData.monthly).forEach(([, value]) => {
+            monthlyArray.push(value);
+        });
+        return getChartConfig(processedData, monthlyArray);
+    }, [processedData]);
 
     const sortedMonthlyArray = useMemo(() => {
         if (!processedData) return [];
@@ -473,23 +490,21 @@ export const Top5SubprocessByVolume = ({
         return monthlyArray.sort((a, b) => b.total - a.total).slice(0, 5);
     }, [processedData]);
 
-    const myChartConfig = useMemo(() => {
-        if (!processedData) return {};
-        const monthlyArray: Summary[] = [];
-        Object.entries(processedData.monthly).forEach(([, value]) => {
-            monthlyArray.push(value);
-        });
-        return getChartConfig(processedData, monthlyArray);
-    }, [processedData]);
+    const summary = useMemo(() => {
+        if (aiError) return 'Sorry, there was a problem loading data...';
+        if (aiSummaryResponse?.length) return aiSummaryResponse;
+        if (!exceptionData?.data?.statsResponseData?.length) return `No exceptions for ${dashboardChartTitleFormat(selectedSubprocess)}.`;
+        return 'Sorry, there was a problem loading data...';
+    }, [aiError, aiSummaryResponse, exceptionData?.data?.statsResponseData?.length, selectedSubprocess]);
+
     return (
         <CardContainer containerClassNames="rounded" classNames="!p-0" fullWidth={true}>
             <div className="flex flex-col xl:flex-row justify-between gap-8 w-full">
                 <div className="flex xl:flex-col xl:w-1/4 gap-4 mb-8 xl:mb-0">
-                    <div>
-                        <Typography variant={TypographyVariant.H3}>{'Top 5 Products'}</Typography>
-                        <Typography variant={TypographyVariant.Label}> {dashboardChartTitleFormat(requestSubType, false)} </Typography>
-                    </div>
-                    <div className="flex-1 border-r-1 xl:border-r-0 border-[#EDEDED] flex flex-col gap-4">
+                    <Typography variant={TypographyVariant.H3}>{'Exception Summary'}</Typography>
+                    {/* <pre>{JSON.stringify(exceptionData?.data?.statsResponseData, null, 2)}</pre> */}
+                    <Typography variant={TypographyVariant.Label}>{dashboardChartTitleFormat(selectedSubprocess)}</Typography>
+                    <div className="flex-1 border-r-1 xl:border-r-0 border-[#EDEDED] flex flex-col gap-4 pt-4">
                         {aiLoading ? (
                             <div className="grid gap-4 h-full mb-4 w-full place-content-center bg-[--color-base-surface-surface-tertiary]">
                                 <PageLoader />
@@ -503,6 +518,9 @@ export const Top5SubprocessByVolume = ({
                                 <Typography variant={TypographyVariant.BodySm}>{summary}</Typography>
                             </>
                         )}
+                        <Typography className="xl:mt-1" variant={TypographyVariant.BodySmBold}>
+                            Avg Monthly Exceptions / Total Cases
+                        </Typography>
                         <table>
                             <thead>
                                 <tr>
@@ -515,14 +533,12 @@ export const Top5SubprocessByVolume = ({
                                     <tr key={`stat-${index}-${stat.name}`}>
                                         <td className="text-left">
                                             <div className="flex items-center gap-3">
-                                                <div className="h-3 w-3" style={{ backgroundColor: colors[index] }}>
-                                                    <span className="sr-only">color indicator for {stat.name}</span>
-                                                </div>
+                                                <div className="h-3 w-3" style={{ backgroundColor: colors[index] }}></div>
                                                 <NavElement
-                                                    href={`/cases${convertToQueryString(filter as any)}`}
+                                                    href={`/cases${convertToQueryString(baseDashboardQueryFilter as any)}`}
                                                     size={NavElementSize.Small}
                                                     type={NavElementType.Link}
-                                                    className={`capitalize ${styles.ellipsis}`}
+                                                    className="capitalize"
                                                     target="_blank"
                                                 >
                                                     {stat.name}
@@ -540,22 +556,27 @@ export const Top5SubprocessByVolume = ({
                 </div>
                 <div className="relative xl:w-3/4">
                     <div
+                        style={{
+                            height: `${CHART_HEIGHT}px`,
+                        }}
                         className={clsx('w-full', {
-                            'grid gap-4 place-content-center bg-[--color-base-surface-surface-tertiary]':
-                                loading || processingLoading || !statsResponse?.data?.length,
+                            [`grid gap-4 place-content-center bg-[--color-base-surface-surface-tertiary]`]:
+                                exceptionDataLoading || processingLoading || !exceptionData || !processedData,
                         })}
                     >
-                        {loading || processingLoading ? (
-                            <>
-                                <PageLoader />
-                                <Typography variant={TypographyVariant.BodyBold}>Loading...</Typography>
-                            </>
+                        {exceptionDataLoading || processingLoading || !processedData ? (
+                            <div className="flex flex-row gap-2 items-center">
+                                {!processedData ? <ChartBarsIcon height={'24px'} width={'24px'} /> : <PageLoader />}
+                                <Typography variant={TypographyVariant.BodyBold}>
+                                    {!processedData ? 'Error loading data, please try again by refreshing the page' : 'Loading...'}
+                                </Typography>
+                            </div>
                         ) : (
                             <>
-                                {statsResponse?.data?.length ? (
+                                {exceptionData ? (
                                     <HighchartsReact ref={chartRef} highcharts={Highcharts} options={myChartConfig} />
                                 ) : (
-                                    <div style={{ minHeight: `${CHART_HEIGHT}px` }} className="flex flex-col gap-2 items-center">
+                                    <div className="flex flex-col gap-2 items-center bg-red-400">
                                         <ChartBarsIcon height={'24px'} width={'24px'} />
                                         <Typography variant={TypographyVariant.BodyBold}>No exceptions</Typography>
                                     </div>

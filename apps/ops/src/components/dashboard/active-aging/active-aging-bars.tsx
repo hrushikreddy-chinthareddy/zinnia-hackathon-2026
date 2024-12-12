@@ -155,7 +155,7 @@ const ActiveAgingBars = forwardRef<HighchartsReactRefObject, Props>(({ agingRang
         const config = getChartConfig(seriesData);
         setSeriesData(seriesData);
         setChartConfig(config);
-    }, [getChartConfig, agingRangesByProcess]);
+    }, [getChartConfig, agingRangesByProcess, agingRangesByProcess?.data?.length]);
 
     return seriesData.length > 0 && <HighchartsReact ref={ref} className={classNames} highcharts={Highcharts} options={chartConfig} />;
 });
