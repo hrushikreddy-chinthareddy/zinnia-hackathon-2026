@@ -108,6 +108,9 @@ export const ExceptionInsights = ({
             chart: {
                 height: CHART_HEIGHT,
                 styledMode: false,
+                spacingTop: 0,
+                spacingLeft: 0,
+                spacingRight: 0,
             },
             credits: {
                 enabled: false,

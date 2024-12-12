@@ -14,8 +14,10 @@ export type ChartSeriesSummary = {
 };
 
 export type LineAndVolumeCategoryAndSeries = {
-    weeklySeries: Record<string, ChartSeriesSummary>;
-    monthlySeries: Record<string, ChartSeriesSummary>;
+    weeklyByLevel1Grouping: Record<string, ChartSeriesSummary>;
+    weeklySeries: Highcharts.SeriesLineOptions;
+    monthlyByLevel1Grouping: Record<string, ChartSeriesSummary>;
+    monthlySeries: Highcharts.SeriesColumnOptions;
     weeklyCategories: string[];
     monthlyCategories: number[];
 };
@@ -28,23 +30,33 @@ export function processGroupedData(input: DashboardStatsElementResponse[]): Line
     const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     const result: LineAndVolumeCategoryAndSeries = {
-        weeklySeries: {},
-        monthlySeries: {},
+        weeklyByLevel1Grouping: {},
+        weeklySeries: {} as Highcharts.SeriesLineOptions,
+        monthlyByLevel1Grouping: {},
+        monthlySeries: {} as Highcharts.SeriesColumnOptions,
         weeklyCategories: [],
         monthlyCategories: [],
     };
 
     // Get the earliest date in the data
     let earliestDate: Date = new Date();
-    input.forEach(carrier => {
-        carrier.values?.forEach(exceptionCategory => {
-            exceptionCategory.values?.forEach(entry => {
-                const date = new Date(entry.name);
+    input.forEach(level1Group => {
+        level1Group.values?.forEach(level2Group => {
+            if (level2Group.values && level2Group.values.length > 0) {
+                level2Group.values?.forEach(entry => {
+                    const date = new Date(entry.name);
+                    if (!earliestDate || date < earliestDate) {
+                        earliestDate = date;
+                        return; // break the loop
+                    }
+                });
+            } else {
+                const date = new Date(level2Group.name);
                 if (!earliestDate || date < earliestDate) {
                     earliestDate = date;
                     return; // break the loop
                 }
-            });
+            }
         });
     });
 
@@ -55,36 +67,36 @@ export function processGroupedData(input: DashboardStatsElementResponse[]): Line
 
     // Generate categories
     const startMonthIndex = earliestDate.getUTCMonth(); // 0-based month index
-    result.monthlyCategories = Array(12).fill(0); // Array.from({ length: MONTHLY_MONTHS }, (_, i) => MONTH_NAMES[(startMonthIndex + i) % 12]);
+    result.monthlyCategories = Array(12).fill(0);
 
     const months = Array.from({ length: MONTHLY_MONTHS }, (_, i) => MONTH_NAMES[(startMonthIndex + i) % 12]);
     result.weeklyCategories = months.flatMap(month => [month, month, month, month]);
 
     // Process data as before
-    input.forEach((carrier, i) => {
+    input.forEach((level1GroupedBy, i) => {
         const weeklyData: number[] = new Array(WEEKLY_WEEKS).fill(0);
         const monthlyData: number[] = new Array(MONTHLY_MONTHS).fill(0);
 
-        const carrierName = carrier.name;
-        if (!result.weeklySeries[carrierName]) {
-            result.weeklySeries[carrierName] = {
+        const level1GroupedByName = level1GroupedBy.name;
+        if (!result.weeklyByLevel1Grouping[level1GroupedByName]) {
+            result.weeklyByLevel1Grouping[level1GroupedByName] = {
                 series: {} as Highcharts.SeriesLineOptions,
-                name: carrierName,
+                name: level1GroupedByName,
                 total: 0,
             };
         }
-        if (!result.monthlySeries[carrierName]) {
-            result.monthlySeries[carrierName] = {
+        if (!result.monthlyByLevel1Grouping[level1GroupedByName]) {
+            result.monthlyByLevel1Grouping[level1GroupedByName] = {
                 series: {} as Highcharts.SeriesColumnOptions,
-                name: carrierName,
+                name: level1GroupedByName,
                 total: 0,
             };
         }
 
-        result.weeklySeries[carrierName].series = {
+        result.weeklyByLevel1Grouping[level1GroupedByName].series = {
             type: 'line',
             data: weeklyData,
-            name: carrierName,
+            name: level1GroupedByName,
             lineWidth: 2,
             marker: {
                 enabled: false, // Disable markers for a clean line chart
@@ -94,8 +106,8 @@ export function processGroupedData(input: DashboardStatsElementResponse[]): Line
             // yAxis: 0,
         };
 
-        result.monthlySeries[carrierName].series = {
-            name: carrierName,
+        result.monthlyByLevel1Grouping[level1GroupedByName].series = {
+            name: level1GroupedByName,
             data: monthlyData,
             stack: 'stackedBar',
             type: 'column',
@@ -107,11 +119,16 @@ export function processGroupedData(input: DashboardStatsElementResponse[]): Line
         const groupedByDate: Record<string, number> = {};
 
         // Flatten and aggregate counts by date
-        carrier.values?.forEach(exceptionCategory => {
-            exceptionCategory.values?.forEach(entry => {
-                const date = entry.name; // Example: "2024-01-05"
-                groupedByDate[date] = (groupedByDate[date] || 0) + entry.count;
-            });
+        level1GroupedBy.values?.forEach(level2GroupedBy => {
+            if (level2GroupedBy.values && level2GroupedBy.values.length > 0) {
+                level2GroupedBy.values?.forEach(entry => {
+                    const date = entry.name; // Example: "2024-01-05"
+                    groupedByDate[date] = (groupedByDate[date] || 0) + entry.count;
+                });
+            } else {
+                const date = level2GroupedBy.name; // Example: "2024-01-05"
+                groupedByDate[date] = (groupedByDate[date] || 0) + level2GroupedBy.count;
+            }
         });
 
         // Process dates
@@ -119,7 +136,7 @@ export function processGroupedData(input: DashboardStatsElementResponse[]): Line
             const date = new Date(dateString);
             const month = (date.getUTCMonth() - startMonthIndex + 12) % 12; // Relative month index (wraps around)
             const day = date.getUTCDate();
-            const weekOfMonth = Math.min(Math.ceil(day / 7), 4); // Group all 5th weeks into the 4th week
+            const weekOfMonth = Math.min(Math.ceil(day / 7), 4); // Group all 5th weeks into the 4th week. This gives us 4 weeks per month
 
             // Update weekly data
             const weeklyIndex = month * 4 + (weekOfMonth - 1);
@@ -127,16 +144,16 @@ export function processGroupedData(input: DashboardStatsElementResponse[]): Line
 
             // Update monthly data
             monthlyData[month] += count;
-            result.monthlySeries[carrierName].total += count;
+            result.monthlyByLevel1Grouping[level1GroupedByName].total += count;
         });
     });
 
     // Set the total for each month. this is used as the category for the stacked bar chart
     const totals: number[] = new Array(MONTHLY_MONTHS).fill(0);
 
-    for (const key in result.monthlySeries) {
-        if (Object.prototype.hasOwnProperty.call(result.monthlySeries, key)) {
-            const series = result.monthlySeries[key].series.data;
+    for (const key in result.monthlyByLevel1Grouping) {
+        if (Object.prototype.hasOwnProperty.call(result.monthlyByLevel1Grouping, key)) {
+            const series = result.monthlyByLevel1Grouping[key].series.data;
             series?.forEach((value, index) => {
                 totals[index] += typeof value === 'number' ? value : 0; // Accumulate the value at each index
             });
@@ -160,7 +177,7 @@ export const LineAndVolumeCategoryChart = ({ chartData }: LineAndVolumeCategoryC
 
     useEffect(() => {
         const monthlyArray: ChartSeriesSummary[] = [];
-        Object.entries(chartData.monthlySeries).forEach(([, value]) => {
+        Object.entries(chartData.monthlyByLevel1Grouping).forEach(([, value]) => {
             monthlyArray.push(value);
         });
 
@@ -168,7 +185,7 @@ export const LineAndVolumeCategoryChart = ({ chartData }: LineAndVolumeCategoryC
 
         const weeklySeries: Highcharts.SeriesLineOptions[] = []; // Highcharts.SeriesOptionsType
         sortedMonthly.forEach(carrier => {
-            weeklySeries.push(chartData.weeklySeries[carrier.name].series as Highcharts.SeriesLineOptions);
+            weeklySeries.push(chartData.weeklyByLevel1Grouping[carrier.name].series as Highcharts.SeriesLineOptions);
         });
 
         // get the series data for the top 5 carriers
@@ -241,6 +258,8 @@ export const LineAndVolumeCategoryChart = ({ chartData }: LineAndVolumeCategoryC
                     spacingTop: 0, // Remove top spacing
                     spacingLeft: 0,
                     spacingRight: 0,
+                    marginLeft: 0, // Set consistent left margin. Need to be the same for both charts
+                    marginRight: 120, // this needs to be the same for both charts so the y-axis is aligned
                 },
                 legend: {
                     enabled: false, // Disable the legend
@@ -261,6 +280,7 @@ export const LineAndVolumeCategoryChart = ({ chartData }: LineAndVolumeCategoryC
                         endOnTick: true, // Ensures the axis extends to the last tick
                         // gridLineWidth: 1,
                         height: '100%',
+                        width: '90%',
                         min: 0, // Start at the first category or value
                         // max: chartData.weeklyCategories.length, // End at the last category or value (update as needed)
                         offset: 0, // Remove extra spacing
@@ -408,6 +428,8 @@ export const LineAndVolumeCategoryChart = ({ chartData }: LineAndVolumeCategoryC
                     spacingTop: 0, // Remove top spacing
                     spacingLeft: 0,
                     spacingRight: 0,
+                    marginLeft: 0, // Set consistent left margin
+                    marginRight: 120,
                 },
                 legend: {
                     enabled: false, // Disable the legend
@@ -427,6 +449,7 @@ export const LineAndVolumeCategoryChart = ({ chartData }: LineAndVolumeCategoryC
                     categories: chartData.monthlyCategories.map(volume => volume.toString()),
                     gridLineWidth: 1,
                     height: '100%',
+                    width: '90%',
                     labels: {
                         formatter: function () {
                             return new Intl.NumberFormat().format(this.value?.toString() as unknown as number);
