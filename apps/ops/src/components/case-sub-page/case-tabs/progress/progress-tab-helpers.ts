@@ -406,7 +406,7 @@ export class TransformedCase {
             createdAt: exception.createdAt,
             description,
             id: exception.id,
-            nigoMsgId: exception.nigoMsgId || undefined,
+            exceptionRefId: exception.exceptionRefId || undefined,
             status: exception.status,
             tasks: tasks,
             updatedAt: exception.updatedAt,

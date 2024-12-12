@@ -14,7 +14,7 @@ export type ExceptionInstance = {
     eventRef?: string[];
     id: string;
     mappedTasks?: string[];
-    nigoMsgId?: string; // to do - this doesn't exist yet, but is supposed to. name might change
+    exceptionRefId?: string;
     reason: string;
     status: ExceptionStatuses;
     taskIdList?: string[];
