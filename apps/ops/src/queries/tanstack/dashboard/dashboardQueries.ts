@@ -46,8 +46,8 @@ export const getProcessListOptions = async (createdDateStart: string) => {
     if (!statsResponse || 'status' in statsResponse) {
         throw statsResponse;
     }
-    const listOptions = statsResponse.data
-        .reduce<SimpleOption[]>((prev, curr) => {
+    const listOptions = statsResponse?.data
+        ?.reduce<SimpleOption[]>((prev, curr) => {
             if (curr.name && !prev.some(item => item.value === curr.name)) {
                 prev.push({ value: curr.name, label: curr.name });
             }
@@ -94,7 +94,7 @@ export const getStatsFromSelectionQuery = async (
 
 interface ExceptionDataResponse {
     data: {
-        statsResponseData: DashboardStatsElementResponse[];
+        statsResponseData?: DashboardStatsElementResponse[];
         exceptionData: MappedExceptionData;
     };
 }
@@ -139,7 +139,7 @@ export const getExceptionData = async (filter: DashboardSearchFilter, groupBy: G
         },
     };
 
-    if (parsedResponse.data.statsResponseData.length) {
+    if (parsedResponse?.data?.statsResponseData?.length) {
         parsedResponse.data.statsResponseData.forEach(carrierGroup => {
             const carrier = carrierGroup.name;
             parsedResponse.data.exceptionData.carriers.push(carrier);

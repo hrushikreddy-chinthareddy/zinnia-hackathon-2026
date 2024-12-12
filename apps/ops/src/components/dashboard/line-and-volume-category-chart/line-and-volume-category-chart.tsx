@@ -166,10 +166,18 @@ export function processGroupedData(input: DashboardStatsElementResponse[]): Line
 }
 
 interface LineAndVolumeCategoryChartProps {
-    chartData: LineAndVolumeCategoryAndSeries;
+    chartData: LineAndVolumeCategoryAndSeries | null;
 }
 
 export const LineAndVolumeCategoryChart = ({ chartData }: LineAndVolumeCategoryChartProps) => {
+    if (!chartData) {
+        return (
+            <div className="flex flex-col gap-2 items-center">
+                <ChartBarsIcon height={'24px'} width={'24px'} />
+                <Typography variant={TypographyVariant.BodyBold}>Chart unavailable</Typography>
+            </div>
+        );
+    }
     const [topChartConfig, setTopChartConfig] = useState({} as Highcharts.Options);
     const [bottomChartConfig, setBottomChartConfig] = useState({} as Highcharts.Options);
     const topChartRef = useRef<HighchartsReact.RefObject>(null);
