@@ -89,15 +89,22 @@ const TaxFormsSelection = ({
             if (abortControllerRef?.current?.get(selectedValue)) {
                 abortControllerRef.current.get(selectedValue)?.abort();
             }
-            newSelections[selectedValue] = displayText;
+
             const newAbortController = new AbortController();
 
             getTaxForms(selectedValue, newAbortController).then(taxForms => {
-                setTaxFormSelectionDetails(prev => ({
-                    ...prev,
-                    taxForms: [...(prev?.taxForms || []), ...taxForms],
-                }));
+                setTaxFormSelectionDetails(prev => {
+                    const existingTaxForms = prev?.taxForms || [];
+                    const newTaxForms = taxForms.filter(
+                        form => !existingTaxForms.find(existingForm => existingForm.taxYear === form.taxYear)
+                    );
+                    return {
+                        ...prev,
+                        taxForms: [...existingTaxForms, ...newTaxForms],
+                    };
+                });
             });
+            newSelections[selectedValue] = displayText;
         }
         setSelectedYears(newSelections);
     };
