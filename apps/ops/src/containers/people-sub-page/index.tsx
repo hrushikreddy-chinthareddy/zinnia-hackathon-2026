@@ -65,6 +65,7 @@ export const PeopleSubPage: React.FC = () => {
         () => combineNameAndRoles(extractedParties, extractedPartyRoles, t),
         [extractedParties, extractedPartyRoles, t]
     );
+
     const [peopleState, setPeopleState] = useState<PeopleState>(initialPeopleState);
     const { breadcrumb } = useBreadcrumb();
     const { peopleRolesFilter, setPeopleRolesFilter, clearPeopleRolesFilter } = useContext(PeopleRolesFilterContext);

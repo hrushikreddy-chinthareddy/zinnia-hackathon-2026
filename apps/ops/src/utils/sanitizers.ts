@@ -203,16 +203,14 @@ const fullyMaskIdentifications = (identifications: Identification[] | undefined)
 };
 
 const fullyMaskPhones = (phones: Phone[] | undefined): Phone[] | undefined => {
-    return phones?.map(phone => {
+    return phones?.map(({ areaCode, bestTime, countryCode, dialNumber, extension, phoneType, timezone, ...rest }) => {
         return {
-            ...phone,
-            areaCode: toMaskedStringOrNull(phone?.areaCode),
-            bestTime: toMaskedStringOrNull(phone?.bestTime),
-            countryCode: toMaskedStringOrNull(phone?.countryCode),
-            dialNumber: toMaskedStringOrNull(phone?.dialNumber),
-            extension: toMaskedStringOrNull(phone?.extension),
-            phoneType: null as unknown as undefined,
-            timezone: null as unknown as undefined,
+            ...rest,
+            ...(areaCode ? { areaCode: toMaskedStringOrNull(areaCode) } : {}),
+            ...(bestTime ? { bestTime: toMaskedStringOrNull(bestTime) } : {}),
+            ...(countryCode ? { countryCode: toMaskedStringOrNull(countryCode) } : {}),
+            ...(dialNumber ? { dialNumber: toMaskedStringOrNull(dialNumber) } : {}),
+            ...(extension ? { extension: toMaskedStringOrNull(extension) } : {}),
         } as Phone;
     });
 };
