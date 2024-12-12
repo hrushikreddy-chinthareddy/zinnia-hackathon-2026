@@ -16,10 +16,7 @@ import {
 
 import { getMyPoliciesByCarrier, getPolicyDetails } from './services';
 import { consumerExperienceAPIBaseUrl } from './services/api-config';
-import {
-  checkResetDeliveryDateEligibility,
-  postResetDeliveryDate,
-} from './services/bpm';
+import { checkResetDeliveryDateEligibility } from './services/bpm';
 import { ServerApi } from './services/server-http';
 import { ROOT_URL_PATH } from './types';
 import { TermsAndConditionApiResponse } from './types/auth';
@@ -90,8 +87,6 @@ export async function middleware(req: NextRequest) {
   // trying to make a route handler call from within this file on mypolicyview domains. We were seeing a cert
   // issue in the logs that is most likely related
   // const featureFlags = await getFeatureFlagQuery(req);
-  const annuityModeOn = true;
-  const resetDeliveryDateActive = true;
 
   applyThemeCookies(req, resNext);
 
@@ -209,10 +204,18 @@ export async function middleware(req: NextRequest) {
       // This has something to do with how middleware runs on the Edge runtime instead of Node runtime
       // If you try to hit the server function directly, optimizely will error out initializing.
 
-      if (!annuityModeOn) {
-        if (allPolicies.data && allPolicies.data.length === 1) {
-          const [policy] = allPolicies.data;
+      // If Annuity mode is on, if they are on a valid subdomain, direct them straight to the policy.
+      // Otherwise they need to go to the carrier picker and select a carrier before this applies
+      const currentSubDomain = getSubdomain(req.headers);
+      const validSubdomain = isValidCarrierSubdomain(currentSubDomain);
 
+      if (allPolicies.data && allPolicies.data.length === 1 && validSubdomain) {
+        const [policy] = allPolicies.data;
+        const carrierSubdomainById = getCarrierSubdomainById(policy?.carrierId);
+
+        // Make sure that if someone is logging into like 'every.mypolicyview' but they only have a 'wellabe' policy,
+        // we dont send them to the every policy.
+        if (carrierSubdomainById === currentSubDomain) {
           return NextResponse.redirect(
             new URL(
               `/coverage/${lineOfBusinessUrlPath(policy?.lineOfBusiness)}/${policy?.planCode}/${policy?.policyNumber}`,
@@ -220,85 +223,55 @@ export async function middleware(req: NextRequest) {
             )
           );
         }
-      } else {
-        // If Annuity mode is on, if they are on a valid subdomain, direct them straight to the policy.
-        // Otherwise they need to go to the carrier picker and select a carrier before this applies
-        const currentSubDomain = getSubdomain(req.headers);
-        const validSubdomain = isValidCarrierSubdomain(currentSubDomain);
-
-        if (
-          allPolicies.data &&
-          allPolicies.data.length === 1 &&
-          validSubdomain
-        ) {
-          const [policy] = allPolicies.data;
-          const carrierSubdomainById = getCarrierSubdomainById(
-            policy?.carrierId
-          );
-
-          // Make sure that if someone is logging into like 'every.mypolicyview' but they only have a 'wellabe' policy,
-          // we dont send them to the every policy.
-          if (carrierSubdomainById === currentSubDomain) {
-            return NextResponse.redirect(
-              new URL(
-                `/coverage/${lineOfBusinessUrlPath(policy?.lineOfBusiness)}/${policy?.planCode}/${policy?.policyNumber}`,
-                req.url
-              )
-            );
-          }
-        }
       }
     }
 
     // Ensure user is on a valid subdomain for the policy theyre viewing.
     // If not, redirect them to the correct subdomain for a policy
     if (pathname.includes('/coverage/')) {
-      if (annuityModeOn) {
-        const { planCode, policyNumber, lineOfBusiness } =
-          getPolicyDataFromPath(pathname);
+      const { planCode, policyNumber, lineOfBusiness } =
+        getPolicyDataFromPath(pathname);
 
-        if (!planCode || !policyNumber || !lineOfBusiness) {
-          return resNext;
-        }
-
-        const { data: policyData } = await getPolicyDetails({
-          planCode,
-          policyNumber,
-        });
-
-        // if the user is not on a valid subdomain, redirect them to the correct subdomain based on the
-        // policy they have selected. Prevents someone from being going to like `wellabe.com/123everlyCode/456everlyPolicyNumber`
-        const carrierSubdomain = getCarrierSubdomainById(policyData?.carrierId);
-        const currentSubDomain = getSubdomain(req.headers);
-        const validSubdomain = isValidCarrierSubdomain(currentSubDomain);
-
-        const onWrongUrl =
-          carrierSubdomain &&
-          carrierSubdomain !== currentSubDomain &&
-          validSubdomain;
-
-        if (onWrongUrl) {
-          const subdomainPath = prependSubdomain(carrierSubdomain);
-          return NextResponse.redirect(
-            new URL(
-              `/coverage/${lineOfBusinessUrlPath(lineOfBusiness as LineOfBusiness)}/${planCode}/${policyNumber}`,
-              subdomainPath
-            )
-          );
-        }
-      }
-    }
-
-    // Check if the user is eligible to reset their delivery date.
-    // We only check this a single time, then set a cookie for that policy so we skip the check the next time.
-    //TODO: Turn off feature flag when this is ready to go in prod
-    if (resetDeliveryDateActive && pathname.includes('/coverage/')) {
-      const { planCode, policyNumber } = getPolicyDataFromPath(pathname);
-
-      if (!planCode || !policyNumber) {
+      if (!planCode || !policyNumber || !lineOfBusiness) {
         return resNext;
       }
 
+      const { data: policyData } = await getPolicyDetails({
+        planCode,
+        policyNumber,
+      });
+
+      // if the user is not on a valid subdomain, redirect them to the correct subdomain based on the
+      // policy they have selected. Prevents someone from being going to like `wellabe.com/123everlyCode/456everlyPolicyNumber`
+      const carrierSubdomain = getCarrierSubdomainById(policyData?.carrierId);
+      const currentSubDomain = getSubdomain(req.headers);
+      const validSubdomain = isValidCarrierSubdomain(currentSubDomain);
+
+      const onWrongUrl =
+        carrierSubdomain &&
+        carrierSubdomain !== currentSubDomain &&
+        validSubdomain;
+
+      if (onWrongUrl) {
+        const subdomainPath = prependSubdomain(carrierSubdomain);
+        return NextResponse.redirect(
+          new URL(
+            `/coverage/${lineOfBusinessUrlPath(lineOfBusiness as LineOfBusiness)}/${planCode}/${policyNumber}`,
+            subdomainPath
+          )
+        );
+      }
+    }
+
+    //********************************** */
+    // Policy delivery eligibility check
+    //********************************** */
+    // Check if the user is eligible to reset their delivery date.
+    // First check if we've already checked this policy in this session, if yes, ignore,
+    // otherwise check if the policy is eligible and redirect them back to the coverage page instead of letting them
+    // go to the policy details page
+    if (pathname.includes('/coverage/')) {
+      const { planCode, policyNumber } = getPolicyDataFromPath(pathname);
       const deliveryDateEligibleCookie = req.cookies.get(
         'hasCheckedDeliveryDateEligible'
       )?.value;
@@ -306,22 +279,26 @@ export async function middleware(req: NextRequest) {
       const parsedCookie: { [key: string]: boolean } = JSON.parse(
         deliveryDateEligibleCookie || '{}'
       );
-
       const hasCheckedPolicy = parsedCookie[policyNumber];
-      if (!hasCheckedPolicy) {
-        const { data: eligiblityData } =
-          await checkResetDeliveryDateEligibility({ planCode, policyNumber });
 
-        //Set the cookie that we're checked the eligibility
-        parsedCookie[policyNumber] = true;
-        resNext.cookies.set(
-          'hasCheckedDeliveryDateEligible',
-          JSON.stringify(parsedCookie)
-        );
+      if (!planCode || !policyNumber || hasCheckedPolicy) {
+        return resNext;
+      }
 
-        if (eligiblityData.isEligible) {
-          await postResetDeliveryDate({ planCode, policyNumber });
-        }
+      const { data: eligiblityData } = await checkResetDeliveryDateEligibility({
+        planCode,
+        policyNumber,
+      });
+
+      //Set the cookie that we're checked the eligibility
+      parsedCookie[policyNumber] = true;
+      resNext.cookies.set(
+        'hasCheckedDeliveryDateEligible',
+        JSON.stringify(parsedCookie)
+      );
+
+      if (eligiblityData.isEligible) {
+        return NextResponse.redirect(new URL('/coverage', req.url));
       }
     }
 
