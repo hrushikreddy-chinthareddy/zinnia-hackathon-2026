@@ -42,7 +42,9 @@ export const CardInsertHistory = ({
         </div>
         <p className="typography-content-body-sm">{subtitle}</p>
       </div>
-      <div className="typography-content-body-sm-bold">{amount}</div>
+      <div className={`typography-content-body-sm-bold ${styles.amount}`}>
+        {amount}
+      </div>
     </li>
   );
 };

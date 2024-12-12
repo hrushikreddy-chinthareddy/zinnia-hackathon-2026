@@ -5,6 +5,7 @@ import { Metadata } from 'next';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { CardInsertHistory } from '@/components/card-list-history/CardInsertHistory';
 import { CardListHistory } from '@/components/card-list-history/CardListHistory';
+import { RequestedAppliedAmount } from '@/components/card-list-history/RequestedAppliedAmount';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { AccountNumber } from '@/components/pii/AccountNumber';
@@ -12,7 +13,6 @@ import { AccountType } from '@/components/pii/AccountType';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getPaymentHistory } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
-import { formatUSDollars } from '@/utils/currency';
 import { formatBankAccountTypeText } from '@/utils/data';
 import { sortByDate } from '@/utils/dates';
 import { toSentenceCase } from '@/utils/strings';
@@ -64,13 +64,16 @@ export default async function PaymentHistory({ params }: Props) {
 
   const pendingPayments = () => {
     return sortedPendingTransactions?.map((item, index) => {
-      const amount = <span>{formatUSDollars(item.amount?.paymentAmount)}</span>;
       return (
         <CardInsertHistory
           isPending
           key={index}
           date={item.date}
-          amount={amount}
+          amount={
+            <RequestedAppliedAmount
+              requestedAmount={item.amount?.paymentAmount}
+            />
+          }
           title={item.title}
           subtitle={
             <>
@@ -99,24 +102,19 @@ export default async function PaymentHistory({ params }: Props) {
   };
   const completedPayments = () => {
     return completedTransactions.map((item, index) => {
-      let amount = <span>{formatUSDollars(item.amount?.paymentAmount)}</span>;
+      let amount = (
+        <RequestedAppliedAmount appliedAmount={item.amount?.paymentAmount} />
+      );
 
       if (
         item.type &&
         displayWithRequested.includes(item.type as TransactionType)
       ) {
         amount = (
-          // TODO: this should probably just be a component in the same place as CardInsertHistory
-          // TODO: needs to wrap on certain screen sizes
-          <div>
-            <p>{formatUSDollars(item.amount?.appliedAmount)}</p>
-            <p
-              className="typography-content-body-sm"
-              style={{ color: 'var(--color-base-text-text-secondary' }}
-            >
-              Requested: {formatUSDollars(item.amount?.requestedAmount)}
-            </p>
-          </div>
+          <RequestedAppliedAmount
+            appliedAmount={item.amount?.appliedAmount}
+            requestedAmount={item.amount?.requestedAmount}
+          />
         );
       }
 
