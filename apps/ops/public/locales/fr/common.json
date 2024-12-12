@@ -1182,7 +1182,8 @@
                 "agent": "Agent: {{label}}",
                 "pre-note": "Pre-Note: {{label}}",
                 "source of premium": "Source de prétium: {{label}}",
-                "transfer of assets": "Transfert d'actifs: {{label}}"
+                "transfer of assets": "Transfert d'actifs: {{label}}",
+                "ceding carrier": "Transporteur cédant: {{label}}"
             },
             "reviewIssues": "Revoir {{taskType}} problèmes",
             "suitabilityReview": "suitability revoir",
