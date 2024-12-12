@@ -290,7 +290,6 @@ export async function middleware(req: NextRequest) {
         policyNumber,
       });
 
-      console.log({ eligiblityData });
       //Set the cookie that we're checked the eligibility
       parsedCookie[policyNumber] = true;
       resNext.cookies.set(
