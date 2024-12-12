@@ -277,7 +277,6 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
                     ) as string
                 );
                 setShowLoader(false);
-
                 return;
             }
             const document = documentResult.value;
@@ -335,6 +334,7 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
                         setErrorMessage={setErrorMessage}
                         setPolicyNumber={setPolicyNumber}
                         caseId={caseId}
+                        isInvalid={errorMessage !== ''}
                     ></CaseListContainer>
                 ) : null}
             </TabContent>
