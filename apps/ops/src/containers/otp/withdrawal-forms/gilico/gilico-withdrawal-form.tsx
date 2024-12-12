@@ -21,6 +21,20 @@ import getGilicoConfig, { FormSubtype } from './gilico-withdrawal-form.helper';
 
 export default function GilicoWithdrawalForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+
+    const {
+        formSubtype,
+        formParty,
+        setFormData,
+        formData,
+        initialForm,
+        setFormValidator,
+        ownerStateOfResidence,
+        setOwnerStateOfResidence,
+        contractIssueState,
+        isFormStateReadOnly,
+    } = useContext(FormDataContext);
+
     const {
         cslnCheckStates,
         identifySelectedFormProgramOption,
@@ -36,20 +50,7 @@ export default function GilicoWithdrawalForm() {
         fullWithdrawalOptions,
         validateMaritalStatusAllowances,
         meritalStatusAllowanceConfig,
-    } = getGilicoConfig(t);
-
-    const {
-        formSubtype,
-        formParty,
-        setFormData,
-        formData,
-        initialForm,
-        setFormValidator,
-        ownerStateOfResidence,
-        setOwnerStateOfResidence,
-        contractIssueState,
-        isFormStateReadOnly,
-    } = useContext(FormDataContext);
+    } = getGilicoConfig(t, formSubtype as FormSubtype);
 
     useEffect(() => {
         setFormValidator(() => formValidation);

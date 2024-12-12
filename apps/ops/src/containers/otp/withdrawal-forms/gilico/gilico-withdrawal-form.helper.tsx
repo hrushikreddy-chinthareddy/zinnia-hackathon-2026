@@ -72,7 +72,7 @@ export const spousalSignatureStateCodes = [
     statesAndTerritories.WISCONSIN,
 ];
 
-export default function getGilicoConfig(t: TFunction) {
+export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) {
     const identifySelectedFormProgramOption = (formProgram: FormProgram): { selectedOption: string | null; amount: string | null } => {
         const programTypeText = formProgram?.programType?.text || '';
         if (programTypeText === ProgramType.TotalFreeAmt) {
@@ -248,7 +248,11 @@ export default function getGilicoConfig(t: TFunction) {
                 },
             ],
             shouldDisplay: ({ ownerStateOfResidence }: OtpWithdrawalFormState): boolean => {
-                return !!ownerStateOfResidence && spousalSignatureStateCodes.includes(ownerStateOfResidence?.toUpperCase());
+                return (
+                    !!ownerStateOfResidence &&
+                    formSubtype === FormSubtype.FullWithdrawal &&
+                    spousalSignatureStateCodes.includes(ownerStateOfResidence?.toUpperCase())
+                );
             },
             signatureType: SignatureValidationTypeWithdrawal.Spouse,
         },
