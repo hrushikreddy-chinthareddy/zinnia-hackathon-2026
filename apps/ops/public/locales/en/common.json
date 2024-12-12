@@ -1182,9 +1182,11 @@
             "adverse": "Adverse",
             "approved": "Approved",
             "declined": "Declined",
+            "riskNotAcceptable": "Risk not acceptable",
             "rejected": "Rejected",
             "expired": "Expired",
-            "amended": "Amended offer requested",
+            "amendedOfferRequested": "Amended offer requested",
+            "amendmentAccepted": "Amendment accepted",
             "entityTypes": {
                 "agent": "Agent: {{label}}",
                 "pre-note": "Pre-Note: {{label}}",

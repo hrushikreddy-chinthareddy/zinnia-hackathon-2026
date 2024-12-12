@@ -1176,8 +1176,10 @@
             "approved": "Approuvée",
             "declined": "Refusé",
             "rejected": "Rejetée",
+            "riskNotAcceptable": "Risque non acceptable",
             "expired": "Expiré",
-            "amended": "Demande d'offre modifiée",
+            "amendedOfferRequested": "Demande d'offre modifiée",
+            "amendmentAccepted": "Demande d'offre modifiée acceptée",
             "entityTypes": {
                 "agent": "Agent: {{label}}",
                 "pre-note": "Pre-Note: {{label}}",
