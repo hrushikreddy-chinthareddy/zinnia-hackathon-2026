@@ -69,7 +69,7 @@ const DownloadItem = ({ doc, carrierCode }: { doc: DocumentWithSource; carrierCo
     );
 };
 
-export const createAction = (doc: DocumentWithSource, carrierCode: string, t: TFunction, label?:string) => {
+export const createAction = (doc: DocumentWithSource, carrierCode: string, t: TFunction, label?: string) => {
     return isPreviewSupported(doc) ? (
         <DocumentPreviewer
             className="!underline-offset-2"
@@ -79,7 +79,7 @@ export const createAction = (doc: DocumentWithSource, carrierCode: string, t: TF
             activeDocType={doc.documentSource}
             variant={NavElementVariant.Secondary}
         >
-             {label ? t(label) :t('view')}
+            {label ? t(label) : t('view')}
         </DocumentPreviewer>
     ) : (
         <DownloadItem doc={doc} carrierCode={carrierCode} />
@@ -102,7 +102,7 @@ export default function DocumentsResultsTable({
                 <TableRow>
                     <TableHeaderCell>
                         <div className="flex flex-row items-center gap-1">
-                            {t('documentIdentifier')}
+                            {t('document')}
                             <Popover
                                 body={t('documentIdentifierTooltip')}
                                 title={t('documentIdentifier') as string}
@@ -112,7 +112,6 @@ export default function DocumentsResultsTable({
                             </Popover>
                         </div>
                     </TableHeaderCell>
-                    <TableHeaderCell>{t('document')}</TableHeaderCell>
                     <TableHeaderCell>{t(documentType === DocumentTypeView.Correspondence ? 'sentDate' : 'receivedDate')}</TableHeaderCell>
                     <TableHeaderCell>{t('fileType')}</TableHeaderCell>
                     <TableHeaderCell>
@@ -131,24 +130,24 @@ export default function DocumentsResultsTable({
                     return (
                         <TableRow className="disabled-tr" key={`document-${document.documentId || document.documentID}`}>
                             <TableCell>
-                                {linkedDocumentIdentifiers.includes(docDisplayId) ? (
-                                    <Tooltip
-                                        body={
-                                            t('linkedTo', {
-                                                type: document.documentType?.toLowerCase() || DEFAULT_ERROR_STRING,
-                                            }) as string
-                                        }
-                                        placement={PopoverPlacement.TopRight}
-                                    >
-                                        <LinkIcon className="-mt-0.5 mr-1.5 inline text-gray-600" width={16} height={16} />
+                                <div className="flex flex-col">
+                                    <Tooltip body={document.displayName} placement={PopoverPlacement.TopRight}>
+                                        <PiiWrapper>{document.displayName}</PiiWrapper>
                                     </Tooltip>
-                                ) : null}
-                                {docDisplayId}
-                            </TableCell>
-                            <TableCell>
-                                <Tooltip body={document.displayName} placement={PopoverPlacement.TopRight}>
-                                    <PiiWrapper>{document.displayName}</PiiWrapper>
-                                </Tooltip>
+                                    {linkedDocumentIdentifiers.includes(docDisplayId) ? (
+                                        <Tooltip
+                                            body={
+                                                t('linkedTo', {
+                                                    type: document.documentType?.toLowerCase() || DEFAULT_ERROR_STRING,
+                                                }) as string
+                                            }
+                                            placement={PopoverPlacement.TopRight}
+                                        >
+                                            <LinkIcon className="-mt-0.5 mr-1.5 inline text-gray-600" width={16} height={16} />
+                                        </Tooltip>
+                                    ) : null}
+                                    {docDisplayId}
+                                </div>
                             </TableCell>
                             <TableCell>
                                 <span>{convertKebabedDateString(document.documentDate)}</span>
