@@ -1,32 +1,37 @@
+import { datadogLogs } from '@datadog/browser-logs';
 import { AxiosResponse } from 'axios';
 
 import { baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
-import { logError, logInfo } from '@deps/utils/server-logging';
 
 const baseUrl = `${baseAppUrl}/api/webnonfinancial/nonfinancial/v1`;
 
 export const addTransaction = async (body: any): Promise<any> => {
     try {
-        logInfo('Adding a transaction', {
-            file: 'queries/webnonfinancial/nonfinancial/v1',
-            function: 'putTransaction',
+        datadogLogs.logger.info('webNonFinancial', {
+            message: 'Adding a transaction',
+            payload: body,
             url: `${baseUrl}/transactions`,
+            function: 'web-non-financial.addTransaction',
         });
         const {data} = await client.put<any, AxiosResponse>(
             `${baseUrl}/transactions`,
             body
         );
-        logInfo('Added a transaction', {
-            file: 'queries/webnonfinancial/nonfinancial/v1',
-            function: 'putTransaction',
+        datadogLogs.logger.info('webNonFinancial', {
+            message: 'Added a transaction',
+            payload: body,
             url: `${baseUrl}/transactions`,
+            function: 'web-non-financial.addTransaction',
         });
         return data;
     } catch (error: any) {
-        logError('An error occurred while adding  web non financial transaction', {
-            file: 'queries/webnonfinancial/nonfinancial/v1',
-            function: 'putTransaction',
+        datadogLogs.logger.error('webNonFinancial', {
+            payload: body,
+            message: 'Failed to add transaction',
+            error,
+            url: `${baseUrl}/transactions`,
+            function: 'web-non-financial.addTransaction',
         });
         return error;
     }
