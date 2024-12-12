@@ -18,7 +18,7 @@ interface DetailProps {
   className?: string;
   planCode: string;
   policyNumber: string;
-  summary: CarrierPolicyDetails;
+  summary: Partial<CarrierPolicyDetails>;
 }
 
 export const PolicyDetailsSummary = async ({
@@ -72,14 +72,16 @@ export const PolicyDetailsSummary = async ({
             <span>{isAnnuity(lineOfBusiness) ? 'Annuitant' : 'Insured'}</span>:{' '}
             <FullName firstName={firstName} lastName={lastName} />
           </p>
-          <p className="typography-labels-label-md-alt">
-            Status:{' '}
-            <span className={statusStyle()}>
-              {checkIfNull(
-                toSentenceCase(policyStatusDisplayText[policyStatus])
-              )}
-            </span>
-          </p>
+          {policyStatus && (
+            <p className="typography-labels-label-md-alt">
+              Status:{' '}
+              <span className={statusStyle()}>
+                {checkIfNull(
+                  toSentenceCase(policyStatusDisplayText[policyStatus])
+                )}
+              </span>
+            </p>
+          )}
         </>
       </div>
     </div>
