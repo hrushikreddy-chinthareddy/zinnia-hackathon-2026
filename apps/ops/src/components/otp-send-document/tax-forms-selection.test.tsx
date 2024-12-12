@@ -34,7 +34,6 @@ describe('TaxFormsSelection component', () => {
 
     const mockTaxFormSelectionDetails = {
         selectedTaxForms: [],
-        selectedYears: {},
         taxForms: [],
     };
 
@@ -67,7 +66,6 @@ describe('TaxFormsSelection component', () => {
     it('Should render tax year options', async () => {
         const mockTaxFormSelectionDetails = {
             selectedTaxForms: [],
-            selectedYears: {},
             taxForms: [],
         };
         const mockSetSelectedYears = jest.fn();
@@ -122,10 +120,8 @@ describe('TaxFormsSelection component', () => {
 
         await userEvent.click(lastYearOption);
 
-        expect(mockSetSelectedYears).toHaveReturnedWith({
-            selectedTaxForms: [],
-            selectedYears: { [currentYear.toString()]: currentYear.toString() },
-            taxForms: [],
+        expect(mockSetSelectedYears).toHaveBeenCalledWith({
+            [currentYear.toString()]: currentYear.toString(),
         });
 
         expect(getByText('sendTaxForms.tabs.taxFormsSelection')).toBeInTheDocument();
@@ -134,7 +130,6 @@ describe('TaxFormsSelection component', () => {
     it('should display a tax forms list', async () => {
         const mockTaxFormSelectionDetails = {
             selectedTaxForms: [],
-            selectedYears: {},
             taxForms: [],
         };
 
@@ -188,7 +183,6 @@ describe('TaxFormsSelection component', () => {
         await waitFor(() =>
             expect(mockSetTaxFormSelectionDetails).toHaveReturnedWith({
                 selectedTaxForms: [],
-                selectedYears: { [currentYear.toString()]: currentYear.toString() },
                 taxForms: [
                     {
                         contractNumber: '7003304118',
