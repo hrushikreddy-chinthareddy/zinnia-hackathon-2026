@@ -106,9 +106,14 @@ export default async function PaymentHistory({ params }: Props) {
         displayWithRequested.includes(item.type as TransactionType)
       ) {
         amount = (
+          // TODO: this should probably just be a component in the same place as CardInsertHistory
+          // TODO: needs to wrap on certain screen sizes
           <div>
             <p>{formatUSDollars(item.amount?.appliedAmount)}</p>
-            <p className="typography-content-body-sm">
+            <p
+              className="typography-content-body-sm"
+              style={{ color: 'var(--color-base-text-text-secondary' }}
+            >
               Requested: {formatUSDollars(item.amount?.requestedAmount)}
             </p>
           </div>
