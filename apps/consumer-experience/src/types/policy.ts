@@ -17,6 +17,7 @@ import {
   LineOfBusiness,
   Status,
   FeatureType,
+  TransactionAmounts,
 } from '@zinnia/api-types/types/sor';
 
 import { BankDetail } from '@/components/person-data/types';
@@ -224,7 +225,7 @@ export interface TransactionRequestErrorResponse {
 }
 
 export interface PaymentHistory {
-  amount?: number;
+  amount?: Partial<TransactionAmounts>;
   date?: string;
   frequency?: 'one-time' | 'initial' | null;
   type?: keyof typeof Reason;

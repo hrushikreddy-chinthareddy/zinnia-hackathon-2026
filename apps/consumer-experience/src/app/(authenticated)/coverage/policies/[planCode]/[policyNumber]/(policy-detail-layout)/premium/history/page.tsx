@@ -1,3 +1,4 @@
+import { TransactionType } from '@zinnia/api-types/types/sor';
 import { IconType } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
@@ -11,9 +12,19 @@ import { AccountType } from '@/components/pii/AccountType';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getPaymentHistory } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
+import { formatUSDollars } from '@/utils/currency';
 import { formatBankAccountTypeText } from '@/utils/data';
 import { sortByDate } from '@/utils/dates';
 import { toSentenceCase } from '@/utils/strings';
+
+const displayWithRequested = [
+  TransactionType.PAYMENT_INITIAL_PREMIUM,
+  TransactionType.INITIAL_PREMIUM,
+  TransactionType.PAYMENT_ONE_TIME_PREMIUM,
+  TransactionType.ONE_TIME_PREMIUM,
+  TransactionType.SUBSEQUENT_PAYMENT,
+  TransactionType.SUBSEQUENT_PREMIUM,
+];
 
 const pageTitle = getPageTitle(RouteKey.PREMIUM_HISTORY);
 // disable because NextJS needs this to be exported from this file
@@ -53,12 +64,13 @@ export default async function PaymentHistory({ params }: Props) {
 
   const pendingPayments = () => {
     return sortedPendingTransactions?.map((item, index) => {
+      const amount = <span>{formatUSDollars(item.amount?.paymentAmount)}</span>;
       return (
         <CardInsertHistory
           isPending
           key={index}
           date={item.date}
-          amount={item.amount}
+          amount={amount}
           title={item.title}
           subtitle={
             <>
@@ -87,11 +99,27 @@ export default async function PaymentHistory({ params }: Props) {
   };
   const completedPayments = () => {
     return completedTransactions.map((item, index) => {
+      let amount = <span>{formatUSDollars(item.amount?.paymentAmount)}</span>;
+
+      if (
+        item.type &&
+        displayWithRequested.includes(item.type as TransactionType)
+      ) {
+        amount = (
+          <div>
+            <p>{formatUSDollars(item.amount?.appliedAmount)}</p>
+            <p className="typography-content-body-sm">
+              Requested: {formatUSDollars(item.amount?.requestedAmount)}
+            </p>
+          </div>
+        );
+      }
+
       return (
         <CardInsertHistory
           key={index}
           date={item.date}
-          amount={item.amount}
+          amount={amount}
           title={item.title}
           subtitle={
             <>
