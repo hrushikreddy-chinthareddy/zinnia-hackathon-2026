@@ -27,7 +27,6 @@ import {
     FundWithdrawnMethod,
     ProgramType,
     WithdrawalType,
-    ProgramSubType,
     FormParts,
     AmountType,
     PaymentMethod,
@@ -93,18 +92,6 @@ export default function getGilicoConfig(t: TFunction) {
     };
 
     const partialWithdrawalOptions: PartialWithdrawalOption[] = [
-        {
-            label: t('amountDetails.partialWithdrawal.freeWithdrawalAmountOnly'),
-            value: WithdrawalSelectionValues.TotalFreeWithdrawal,
-            generatePayloadFromSelection: () => {
-                return {
-                    ...getDefaultFormProgramValues(),
-                    withdrawType: { text: WithdrawalType.Gross },
-                    programType: { text: ProgramType.TotalFreeAmt },
-                    programSubType: { text: ProgramSubType.TotalFreeWithdrawal },
-                };
-            },
-        },
         {
             label: t('amountDetails.partialWithdrawal.netWithdrawal'),
             value: WithdrawalSelectionValues.NetWithdrawal,
@@ -300,26 +287,7 @@ export default function getGilicoConfig(t: TFunction) {
                     fieldName: PartyFields.TaxId,
                     fieldLabel: t('personalDetails.ssn'),
                 },
-                // {
-                //     fieldName: PartyFields.Dob,
-                //     fieldLabel: t('personalDetails.dob'),
-                // },
-                // {
-                //     fieldName: PartyFields.Email,
-                //     fieldLabel: t('personalDetails.email'),
-                // },
             ],
-            // phones: [
-            //     {
-            //         phoneType: PhoneTypes.Owner_Phone_Day,
-            //         fields: [
-            //             {
-            //                 fieldName: PhoneFields.phoneNumber,
-            //                 fieldLabel: t('phoneDetails.telephoneNumber'),
-            //             },
-            //         ],
-            //     },
-            // ],
 
             addressFields: [
                 {
@@ -352,14 +320,6 @@ export default function getGilicoConfig(t: TFunction) {
                     fieldName: PartyFields.TaxId,
                     fieldLabel: t('personalDetails.ssn'),
                 },
-                // {
-                //     fieldName: PartyFields.Dob,
-                //     fieldLabel: t('personalDetails.dob'),
-                // },
-                // {
-                //     fieldName: PartyFields.Email,
-                //     fieldLabel: t('personalDetails.email'),
-                // },
             ],
         },
     ];
@@ -369,11 +329,11 @@ export default function getGilicoConfig(t: TFunction) {
             label: t('distributionMethod.eft'),
             value: FormDisbursementSelections.EFT,
             fields: [
-                {
-                    fieldLabel: t('distributionMethod.chooseTheBank'),
-                    fieldName: BankingFields.Bank,
-                    component: DisbursementFields.SelectBank,
-                },
+                // {
+                //     fieldLabel: t('distributionMethod.chooseTheBank'),
+                //     fieldName: BankingFields.Bank,
+                //     component: DisbursementFields.SelectBank,
+                // },
                 {
                     fieldName: BankingFields.IsVoidCheckAttached,
                     fieldLabel: t('distributionMethod.isVoidCheckAttached'),
@@ -435,16 +395,6 @@ export default function getGilicoConfig(t: TFunction) {
                     classNames: 'col-start-1',
                     isBankingField: true,
                 },
-                // {
-                //     fieldName: BankingFields.BankFurtherCreditName,
-                //     fieldLabel: t('distributionMethod.bankFurtherCreditName'),
-                //     component: DisbursementFields.BankTextField,
-                // },
-                // {
-                //     fieldName: BankingFields.BankFurtherCreditAccount,
-                //     fieldLabel: t('distributionMethod.bankFurtherCreditAccount'),
-                //     component: DisbursementFields.BankTextField,
-                // },
             ],
             getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.EFT) {
@@ -560,16 +510,6 @@ export default function getGilicoConfig(t: TFunction) {
                     component: DisbursementFields.BankTextField,
                     classNames: 'col-start-1',
                 },
-                // {
-                //     fieldName: BankingFields.BankFurtherCreditName,
-                //     fieldLabel: t('distributionMethod.bankFurtherCreditName'),
-                //     component: DisbursementFields.BankTextField,
-                // },
-                // {
-                //     fieldName: BankingFields.BankFurtherCreditAccount,
-                //     fieldLabel: t('distributionMethod.bankFurtherCreditAccount'),
-                //     component: DisbursementFields.BankTextField,
-                // },
             ],
             getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.Wire) {
@@ -629,15 +569,61 @@ export default function getGilicoConfig(t: TFunction) {
         {
             label: t('distributionMethod.sendCheck'),
             value: FormDisbursementSelections.Check,
-            fields: null,
-            getDefaultPayload() {
+            fields: [
+                {
+                    fieldName: BankingFields.PayeeName,
+                    fieldLabel: t('distributionMethod.payeeName'),
+                    component: DisbursementFields.BankTextField,
+                    classNames: 'col-start-1',
+                    maxLength: 40,
+                },
+                // {
+                //     fieldName: BankingFields.FboDetails,
+                //     fieldLabel: t('distributionMethod.fboDetails'),
+                //     component: DisbursementFields.BankTextField,
+                //     maxLength: 35,
+                // },
+                // {
+                //     fieldName: BankingFields.ContractNumber,
+                //     fieldLabel: t('distributionMethod.contractNumber'),
+                //     component: DisbursementFields.BankTextField,
+                //     maxLength: 35,
+                //     tooltip: {
+                //         shouldDisplay: true,
+                //         title: t('distributionMethod.contractLabelPopoverTitle') as string,
+                //         body: t('distributionMethod.contractLabelPopoverMessage') as string,
+                //     },
+                // },
+                {
+                    fieldName: BankingFields.Address,
+                    fieldLabel: '',
+                    component: DisbursementFields.BankAddress,
+                    classNames: 'col-span-3',
+                },
+            ],
+            getDefaultPayload({ paymentMethod, paymentMailType, payee }: FormDisbursement) {
+                if (paymentMethod.text === PaymentMailType.Check && paymentMailType.text === null) {
+                    return {
+                        ...DEFAULT_DISBURSEMENT_UPDATE,
+                        payeeName: payee?.name.text ?? '',
+                        address: payee?.addresses?.[0] ?? DEFAULT_ADDRESS,
+                        // contractNumber: payee?.contractNumber.text ?? '',
+                        // fboDetails: payee?.fboDetails?.text || '',
+                    };
+                }
                 return DEFAULT_DISBURSEMENT_UPDATE;
             },
-            generatePayloadFromSelection: () => {
+            generatePayloadFromSelection: ({ fboDetails, payeeName, address, contractNumber }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
                     paymentMethod: { text: PaymentMailType.Check },
                     paymentMailType: { text: null },
+                    payee: {
+                        name: { text: payeeName || null },
+                        addresses: [address || DEFAULT_ADDRESS],
+                        contractNumber: { text: contractNumber || null },
+                        fboDetails: { text: fboDetails ?? null },
+                    },
                 };
             },
         },
