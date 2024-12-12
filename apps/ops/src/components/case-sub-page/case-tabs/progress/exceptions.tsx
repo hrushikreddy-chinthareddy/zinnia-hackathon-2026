@@ -32,8 +32,8 @@ export default function Exceptions({ exceptions, unmapped = false }: { exception
                                 contentClassName="mt-1"
                                 variant={ContentVariant.BodySm}
                                 details={
-                                    exception.nigoMsgId
-                                        ? t(`caseManagementApiKeys.nigoReasons.${exception.nigoMsgId}`) || exception.description
+                                    exception.exceptionRefId
+                                        ? t(`caseManagementApiKeys.nigoReasons.${exception.exceptionRefId}`) || exception.description
                                         : exception.description
                                 }
                             />
