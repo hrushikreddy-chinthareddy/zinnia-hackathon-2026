@@ -34,7 +34,7 @@ const TaxFormsSelection = ({
     const [error, setError] = useState<FormValidationErrors>({});
     const [loader, setLoader] = useState(false);
     const { goToNext } = useWorkflow();
-    const abortControllerRef = useRef<AbortController | null>(null);
+    const abortControllerRef = useRef<Map<string, AbortController>>(new Map());
 
     const handleContinue = async () => {
         if (!taxFormSelectionDetails?.selectedTaxForms?.length) {
@@ -52,7 +52,8 @@ const TaxFormsSelection = ({
                 clientCode: policy?.carrierId || '',
                 taxYear: Number(selected),
             };
-            abortControllerRef.current = newAbortController;
+            abortControllerRef.current.set(selected, newAbortController);
+
             const response = await searchTaxForms(requestData, newAbortController.signal);
             if (!response.items.length) {
                 setError({ submit: t('sendTaxForms.errors.noTaxForms', { year: selected }) as string });
@@ -68,39 +69,37 @@ const TaxFormsSelection = ({
     };
 
     const handleSelection = (selectedValue: string, displayText: string) => {
-        setSelectedYears(prev => {
-            const newSelections = { ...prev };
-            let currentTaxForms = taxFormSelectionDetails?.taxForms;
-            if (newSelections[selectedValue]) {
-                delete newSelections[selectedValue];
+        const newSelections = { ...selectedYears };
+        let currentTaxForms = taxFormSelectionDetails?.taxForms;
+        if (newSelections[selectedValue]) {
+            delete newSelections[selectedValue];
 
-                if (Array.isArray(currentTaxForms)) {
-                    currentTaxForms = currentTaxForms.filter(form => form.taxYear !== selectedValue);
-                } else {
-                    currentTaxForms = [];
-                }
-                delete newSelections[selectedValue];
+            if (Array.isArray(currentTaxForms)) {
+                currentTaxForms = currentTaxForms.filter(form => form.taxYear !== selectedValue);
+            } else {
+                currentTaxForms = [];
+            }
+            delete newSelections[selectedValue];
+            setTaxFormSelectionDetails(prev => ({
+                ...prev,
+                taxForms: currentTaxForms,
+                selectedYears: newSelections,
+            }));
+        } else {
+            if (abortControllerRef?.current?.get(selectedValue)) {
+                abortControllerRef.current.get(selectedValue)?.abort();
+            }
+            newSelections[selectedValue] = displayText;
+            const newAbortController = new AbortController();
+
+            getTaxForms(selectedValue, newAbortController).then(taxForms => {
                 setTaxFormSelectionDetails(prev => ({
                     ...prev,
-                    taxForms: currentTaxForms,
-                    selectedYears: newSelections,
+                    taxForms: [...(prev?.taxForms || []), ...taxForms],
                 }));
-            } else {
-                if (abortControllerRef.current) {
-                    abortControllerRef.current.abort();
-                }
-                const newAbortController = new AbortController();
-
-                getTaxForms(selectedValue, newAbortController).then(taxForms => {
-                    setTaxFormSelectionDetails(prev => ({
-                        ...prev,
-                        taxForms: [...(prev?.taxForms || []), ...taxForms],
-                    }));
-                });
-                newSelections[selectedValue] = displayText;
-            }
-            return newSelections;
-        });
+            });
+        }
+        setSelectedYears(newSelections);
     };
 
     const handleCancel = () => {

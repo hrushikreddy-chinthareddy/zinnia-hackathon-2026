@@ -46,6 +46,7 @@ describe('TaxFormsSelection component', () => {
         displayText: year.toString(),
     }));
 
+    const mockSetSelectedYears = jest.fn();
     const mockSetTaxFormSelectionDetails = jest.fn();
     it('renders the form selection component', () => {
         const { getByText } = render(
@@ -55,6 +56,8 @@ describe('TaxFormsSelection component', () => {
                     taxFormSelectionDetails={mockTaxFormSelectionDetails}
                     setTaxFormSelectionDetails={mockSetTaxFormSelectionDetails}
                     taxYearOptions={taxYearOptions}
+                    selectedYears={{}}
+                    setSelectedYears={mockSetSelectedYears}
                 />
             </WorkflowProvider>
         );
@@ -67,6 +70,7 @@ describe('TaxFormsSelection component', () => {
             selectedYears: {},
             taxForms: [],
         };
+        const mockSetSelectedYears = jest.fn();
         const { getByText, getByLabelText } = render(
             <WorkflowProvider>
                 <TaxFormsSelection
@@ -74,6 +78,8 @@ describe('TaxFormsSelection component', () => {
                     taxFormSelectionDetails={mockTaxFormSelectionDetails}
                     setTaxFormSelectionDetails={mockSetTaxFormSelectionDetails}
                     taxYearOptions={taxYearOptions}
+                    selectedYears={{}}
+                    setSelectedYears={mockSetSelectedYears}
                 />
             </WorkflowProvider>
         );
@@ -92,6 +98,8 @@ describe('TaxFormsSelection component', () => {
             return setMethodArgs;
         });
 
+        const mockSetSelectedYears = jest.fn();
+
         const { getByText, findByText, getByLabelText } = render(
             <WorkflowProvider>
                 <TaxFormsSelection
@@ -99,6 +107,8 @@ describe('TaxFormsSelection component', () => {
                     taxFormSelectionDetails={mockTaxFormSelectionDetails}
                     setTaxFormSelectionDetails={mockSetTaxFormSelectionDetails}
                     taxYearOptions={taxYearOptions}
+                    selectedYears={{}}
+                    setSelectedYears={mockSetSelectedYears}
                 />
             </WorkflowProvider>
         );
@@ -112,7 +122,7 @@ describe('TaxFormsSelection component', () => {
 
         await userEvent.click(lastYearOption);
 
-        expect(mockSetTaxFormSelectionDetails).toHaveReturnedWith({
+        expect(mockSetSelectedYears).toHaveReturnedWith({
             selectedTaxForms: [],
             selectedYears: { [currentYear.toString()]: currentYear.toString() },
             taxForms: [],
@@ -151,6 +161,8 @@ describe('TaxFormsSelection component', () => {
             return setMethodArgs;
         });
 
+        const mockSetSelectedYears = jest.fn();
+
         const { findByText, getByLabelText } = render(
             <WorkflowProvider>
                 <TaxFormsSelection
@@ -158,6 +170,8 @@ describe('TaxFormsSelection component', () => {
                     taxFormSelectionDetails={mockTaxFormSelectionDetails}
                     setTaxFormSelectionDetails={mockSetTaxFormSelectionDetails}
                     taxYearOptions={taxYearOptions}
+                    selectedYears={{}}
+                    setSelectedYears={mockSetSelectedYears}
                 />
             </WorkflowProvider>
         );
