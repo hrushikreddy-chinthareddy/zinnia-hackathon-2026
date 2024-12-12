@@ -44,7 +44,7 @@ const mapDataToPeopleCard = ({ chipEntered, index, party, peopleCard, isRereg }:
             name = toTitleCase(`${firstName} ${lastName}`);
             break;
         case PartyType.ORGANIZATION:
-            name = safeString(organizationCode);
+            name = toTitleCase(safeString(fullName)); // DEPU-3511 -> old code used to be safeString(organizationCode);
             break;
         case PartyType.TRUST:
             name = toTitleCase(safeString(fullName));
