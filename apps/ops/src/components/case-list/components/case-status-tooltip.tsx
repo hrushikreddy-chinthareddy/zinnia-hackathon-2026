@@ -12,7 +12,6 @@ import { Case, Statuses } from '@deps/models/case/case';
 interface GetStatusDetailsProps {
     singleCase: Case;
     t: TFunction;
-    toTitleCase: (value: string) => string;
 }
 
 interface CaseStatusTooltipProps {
@@ -20,7 +19,7 @@ interface CaseStatusTooltipProps {
     singleCase: Case;
 }
 
-export const getStatusDetails = ({ singleCase, t, toTitleCase }: GetStatusDetailsProps) => {
+export const getStatusDetails = ({ singleCase, t }: GetStatusDetailsProps) => {
     const { caseStatus, processSubType, process, createdAt, exceptions, updatedAt } = singleCase;
     const daysAgo = calculateDaysAgo(new Date(singleCase.createdAt));
 
@@ -85,7 +84,7 @@ export const getStatusDetails = ({ singleCase, t, toTitleCase }: GetStatusDetail
 
 export const CaseStatusTooltip = ({ trigger, singleCase }: CaseStatusTooltipProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
-    const statusTooltip = getStatusDetails({ singleCase, t, toTitleCase }).statusTooltip;
+    const statusTooltip = getStatusDetails({ singleCase, t }).statusTooltip;
 
     return (
         <Tooltip placement={TooltipPlacement.TopRight} tooltipClassName="!w-auto" triggerClassName="!z-10" trigger={trigger}>
