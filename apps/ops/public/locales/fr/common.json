@@ -1840,6 +1840,7 @@
                 "commissionExpiresOn": "La comisión vence el",
                 "signatureComment": "numéro de document",
                 "signatureSsn": "SSN",
+                "signatureCityProvided": "Ville/État",
                 "signatureCommentLabel": "Commentaire signé",
                 "signGuaranteeStamp": "Garantie de signature",
                 "spouseConsentText": "Si vous n'avez pas de conjoint ou si votre conjoint est décédé, cochez cette case.",

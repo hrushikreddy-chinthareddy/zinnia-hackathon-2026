@@ -1860,6 +1860,7 @@
                 "commissionExpiresOn": "Commission expires on",
                 "signatureComment": "Document number",
                 "signatureSsn": "SSN",
+                "signatureCityProvided": "City/State",
                 "signatureCommentLabel": "Signature comment",
                 "signGuaranteeStamp": "Signature guarantee",
                 "spouseConsentText": "If you do not have a spouse, or if your spouse is deceased, check this box.",
