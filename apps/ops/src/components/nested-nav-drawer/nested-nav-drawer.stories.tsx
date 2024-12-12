@@ -1,6 +1,6 @@
 import '@deps/styles/styles.css';
 import { Meta } from '@storybook/react';
-import { useTranslation } from 'next-18next';
+import { useTranslation } from 'next-i18next';
 
 import { ParentKeys } from '@deps/config/nav.config';
 import { StaticNestedNavDrawerProvider } from '@deps/contexts/LayoutContexts/StaticNestedNavDrawerContext';

@@ -1,5 +1,5 @@
 import { IconType, Icon, Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
-import { useTranslation } from 'next-18next';
+import { useTranslation } from 'next-i18next';
 
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { TranslationFiles } from '@deps/config/translations';

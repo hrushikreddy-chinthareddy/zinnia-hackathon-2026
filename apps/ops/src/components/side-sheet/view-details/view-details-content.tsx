@@ -1,4 +1,4 @@
-import { useTranslation } from 'next-18next';
+import { useTranslation } from 'next-i18next';
 
 import ViewDetailCard from '@deps/components/card/view-detail-card/view-detail-card';
 import { TranslationFiles } from '@deps/config/translations';

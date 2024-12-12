@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { useTranslation } from 'next-18next';
+import { useTranslation } from 'next-i18next';
 
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';

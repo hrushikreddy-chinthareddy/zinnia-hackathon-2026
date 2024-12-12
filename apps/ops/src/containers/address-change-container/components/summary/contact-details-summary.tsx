@@ -2,7 +2,7 @@ import { Address, AddressProps, Tag, TagVariant } from '@zinnia/bloom/components
 import { TFunction } from 'i18next';
 import * as React from 'react';
 import { ReactNode } from 'react';
-import { useTranslation } from 'next-18next';
+import { useTranslation } from 'next-i18next';
 
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';

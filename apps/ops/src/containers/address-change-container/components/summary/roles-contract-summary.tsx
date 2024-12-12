@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useTranslation } from 'next-18next';
+import { useTranslation } from 'next-i18next';
 
 import Table from '@deps/components/table-v2/table';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';

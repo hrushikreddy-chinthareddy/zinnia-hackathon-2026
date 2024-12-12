@@ -1,6 +1,6 @@
 import { TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
 import { useState } from 'react';
-import { useTranslation } from 'next-18next';
+import { useTranslation } from 'next-i18next';
 
 import { ErrorMessagePart } from '@deps/components/error/Error';
 import { TranslationFiles } from '@deps/config/translations';

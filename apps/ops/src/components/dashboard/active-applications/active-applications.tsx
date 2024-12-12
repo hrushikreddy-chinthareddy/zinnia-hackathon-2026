@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { FC, CSSProperties, useState, useEffect, RefObject } from 'react';
-import { useTranslation } from 'next-18next';
+import { useTranslation } from 'next-i18next';
 
 import { FieldSize } from '@deps/components/fields/field';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';

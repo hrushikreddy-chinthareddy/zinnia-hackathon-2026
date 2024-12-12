@@ -1,4 +1,4 @@
-import { useTranslation } from 'next-18next';
+import { useTranslation } from 'next-i18next';
 
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';

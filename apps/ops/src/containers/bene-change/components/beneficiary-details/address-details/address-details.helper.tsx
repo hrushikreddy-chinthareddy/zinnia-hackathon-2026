@@ -1,5 +1,5 @@
 import { Transition } from '@headlessui/react';
-import { useTranslation } from 'next-18next';
+import { useTranslation } from 'next-i18next';
 
 import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
 import IconButton from '@deps/components/icon-button/icon-button';

@@ -1,4 +1,4 @@
-import { useTranslation } from 'next-18next';
+import { useTranslation } from 'next-i18next';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import StartStep, { StartStepSetState } from '@deps/components/workflows/start-step/start-step';

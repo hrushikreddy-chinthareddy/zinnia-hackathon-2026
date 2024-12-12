@@ -1,5 +1,5 @@
 import { useMemo, useCallback } from 'react';
-import { useTranslation } from 'next-18next';
+import { useTranslation } from 'next-i18next';
 
 import SignatureValidationContainer from '@deps/components/otp-signature-container/component/otp-signature-conatiner';
 import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
