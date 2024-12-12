@@ -1189,7 +1189,8 @@
                 "agent": "Agent: {{label}}",
                 "pre-note": "Pre-Note: {{label}}",
                 "source of premium": "Source of Premium: {{label}}",
-                "transfer of assets": "Transfer of Assets: {{label}}"
+                "transfer of assets": "Transfer of Assets: {{label}}",
+                "ceding carrier": "Ceding Carrier: {{label}}"
             },
             "reviewIssues": "Review {{taskType}} issues",
             "suitabilityReview": "suitability review",
