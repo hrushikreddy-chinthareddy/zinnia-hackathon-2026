@@ -161,7 +161,7 @@ export default function DocumentsResultsTable({
                 })}
                 {!results.length && (
                     <TableRow className="disabled-tr w-full">
-                        <TableCell className="!text-left md:!text-center" colSpan={5}>
+                        <TableCell className={clsx('!text-left md:!text-center', styles.noResults)} colSpan={5}>
                             {t('noResults')}
                         </TableCell>
                     </TableRow>
