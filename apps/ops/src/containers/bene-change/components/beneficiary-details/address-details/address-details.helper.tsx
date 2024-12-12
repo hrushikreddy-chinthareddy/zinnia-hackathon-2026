@@ -1,11 +1,11 @@
-import { Transition } from "@headlessui/react";
-import { useTranslation } from "react-i18next";
+import { Transition } from '@headlessui/react';
+import { useTranslation } from 'next-18next';
 
-import Field, { FieldSize, FieldType, FieldVariant } from "@deps/components/fields/field";
-import IconButton from "@deps/components/icon-button/icon-button";
-import { isEndDated } from "@deps/helpers/date.helper";
-import { toTitleCase } from "@deps/helpers/string.helper";
-import { Country, State } from "@deps/models/policy/sor-policy";
+import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import IconButton from '@deps/components/icon-button/icon-button';
+import { isEndDated } from '@deps/helpers/date.helper';
+import { toTitleCase } from '@deps/helpers/string.helper';
+import { Country, State } from '@deps/models/policy/sor-policy';
 import { ReactComponent as TrashIcon } from '@deps/styles/elements/icons/icons_outlined/trash.svg';
 
 interface AdditionalAddressLineProps {
@@ -53,13 +53,13 @@ export const AdditionalAddressLine = ({ disabled, label, onChange, removeAddress
 };
 
 export const ENTERPRISE_ADDRESS_TYPE = {
-    'HOME': 'RESIDENCE',
-    'BUSINESS': 'BUSINESS',
-    'DEFAULT': 'DEFAULT',
-    'SECONDARY': 'SECONDARYADDRESS'
+    HOME: 'RESIDENCE',
+    BUSINESS: 'BUSINESS',
+    DEFAULT: 'DEFAULT',
+    SECONDARY: 'SECONDARYADDRESS',
 };
 
-export type EnterpriseAddressType = typeof ENTERPRISE_ADDRESS_TYPE[keyof typeof ENTERPRISE_ADDRESS_TYPE];
+export type EnterpriseAddressType = (typeof ENTERPRISE_ADDRESS_TYPE)[keyof typeof ENTERPRISE_ADDRESS_TYPE];
 
 export const INITIAL_ADDRESS = {
     addressType: ENTERPRISE_ADDRESS_TYPE.HOME,
@@ -87,15 +87,15 @@ export interface EnterpriseAddress {
     /** Zip code extension of the party address */
     zipCodeExtension?: string;
     addressId?: string;
-};
+}
 
-export interface  EnterpriseAddresses {
+export interface EnterpriseAddresses {
     addresses?: EnterpriseAddress[];
-};
+}
 
 export const getAddresses = ({ addresses }: EnterpriseAddresses): EnterpriseAddress[] => {
     if (!addresses) return [];
-    return  addresses?.filter((address: any) => !isEndDated(address.endDate)) ?? [];
+    return addresses?.filter((address: any) => !isEndDated(address.endDate)) ?? [];
 };
 
 export const getResidenceAddresses = ({ addresses }: EnterpriseAddresses): EnterpriseAddress[] => {
@@ -137,4 +137,4 @@ export interface Errors {
     state?: string;
     zipCode?: string;
     zipCodeExtension?: string;
-};
+}

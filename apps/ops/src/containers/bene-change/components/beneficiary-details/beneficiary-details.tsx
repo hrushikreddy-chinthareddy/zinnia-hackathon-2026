@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-18next';
 
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
@@ -25,35 +25,50 @@ import PhoneDetails from './phone-details/phone-details';
 import { EnterprisePhone, INITIAL_PHONE } from './phone-details/phone-details.helper';
 import { useBeneChange } from '../../bene-change-provider';
 
-
 interface BeneficiaryDetailsProps {
     partyRole: PartyRole;
     partyId?: string;
     selectedParty?: any;
-    carrierId: string
+    carrierId: string;
     setBeneData: Dispatch<SetStateAction<any>>;
     index: string;
     policy: Policy;
     setShowBeneficiary?: Dispatch<SetStateAction<any>>;
     action?: string;
     isNonEditable?: boolean;
-    partyRoleId?: any
-};
+    partyRoleId?: any;
+}
 
-export default function BeneficiaryDetails({ policy, partyRole, partyId, selectedParty, carrierId, setBeneData, index, setShowBeneficiary, action, isNonEditable, partyRoleId}: BeneficiaryDetailsProps) {
+export default function BeneficiaryDetails({
+    policy,
+    partyRole,
+    partyId,
+    selectedParty,
+    carrierId,
+    setBeneData,
+    index,
+    setShowBeneficiary,
+    action,
+    isNonEditable,
+    partyRoleId,
+}: BeneficiaryDetailsProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'beneChange.beneDetails' });
     const { beneData } = useBeneChange();
     const containerClasses = clsx('flex flex-col', 'w-full  my-3', 'rounded border-2 border-gray-100', 'bg-gray-50');
     const sectionClasses = 'flex flex-col p-4 md:p-6 lg:p-8';
     const title = partyId
         ? ''
-        : partyRole === PartyRole.PRIMARYBENEFICIARY ? t('beneficiaryListing.addPrimaryBeneficiary') : t('beneficiaryListing.addContingentBeneficiary');
+        : partyRole === PartyRole.PRIMARYBENEFICIARY
+        ? t('beneficiaryListing.addPrimaryBeneficiary')
+        : t('beneficiaryListing.addContingentBeneficiary');
     const isReadOnly = partyId ? isNonEditable : false;
 
     const position = beneData.map((element: any) => element.index).indexOf(index);
     const relationshipToInsured = partyRoleId && policy?.partyRoles?.find(role => role.partyRoleId === partyRoleId)?.relationshipToInsured;
     const [currentBene, setCurrentBene] = useState(
-        position > -1 ? beneData[position] : getInitialBene(partyRole, index, selectedParty, relationshipToInsured, partyId, !isReadOnly, action, partyRoleId)
+        position > -1
+            ? beneData[position]
+            : getInitialBene(partyRole, index, selectedParty, relationshipToInsured, partyId, !isReadOnly, action, partyRoleId)
     );
     const [currentEmails, setCurrentEmails] = useState<Email[]>(currentBene?.party?.emails || [INITIAL_EMAIL]);
     const [currentPhones, setCurrentPhones] = useState<EnterprisePhone[]>(currentBene?.party?.phones || [INITIAL_PHONE]);
@@ -62,32 +77,32 @@ export default function BeneficiaryDetails({ policy, partyRole, partyId, selecte
     const [allocationDetails, setAllocationDetails] = useState<any>(currentBene?.party.allocation);
     const [currentParty, setCurrentParty] = useState<any>(currentBene?.party?.info || {});
 
-    useEffect(()=> {
+    useEffect(() => {
         setBeneData((prevState: any) => {
             const position = prevState.map((element: any) => element.index).indexOf(index);
             if (position > -1) {
                 prevState[position] = currentBene;
-                return [...prevState ]
+                return [...prevState];
             } else {
-                return [...prevState, { ...currentBene } ]
+                return [...prevState, { ...currentBene }];
             }
         });
     }, [currentBene, index, setBeneData]);
 
     useEffect(() => {
-        setCurrentBene((prevState: any) =>  {
+        setCurrentBene((prevState: any) => {
             const newState = prevState;
             if (action !== 'ADD') {
-                newState.action = isReadOnly ? "NONE" : "UPDATE";
-                return { ...newState};
+                newState.action = isReadOnly ? 'NONE' : 'UPDATE';
+                return { ...newState };
             } else {
-                return { ...prevState};
+                return { ...prevState };
             }
         });
     }, [action, isNonEditable, isReadOnly]);
 
     useEffect(() => {
-        setCurrentBene((prevState: any) =>  {
+        setCurrentBene((prevState: any) => {
             const newState = prevState;
             newState.party.addresses = currentAddresses;
             return newState;
@@ -95,7 +110,7 @@ export default function BeneficiaryDetails({ policy, partyRole, partyId, selecte
     }, [currentAddresses]);
 
     useEffect(() => {
-        setCurrentBene((prevState: any) =>  {
+        setCurrentBene((prevState: any) => {
             const newState = prevState;
             newState.party.phones = currentPhones;
             return newState;
@@ -103,7 +118,7 @@ export default function BeneficiaryDetails({ policy, partyRole, partyId, selecte
     }, [currentPhones]);
 
     useEffect(() => {
-        setCurrentBene((prevState: any) =>  {
+        setCurrentBene((prevState: any) => {
             const newState = prevState;
             newState.party.emails = currentEmails;
             return newState;
@@ -111,7 +126,7 @@ export default function BeneficiaryDetails({ policy, partyRole, partyId, selecte
     }, [currentEmails]);
 
     useEffect(() => {
-        setCurrentBene((prevState: any) =>  {
+        setCurrentBene((prevState: any) => {
             const newState = prevState;
             newState.party.info = currentParty;
             return newState;
@@ -119,7 +134,7 @@ export default function BeneficiaryDetails({ policy, partyRole, partyId, selecte
     }, [currentParty]);
 
     useEffect(() => {
-        setCurrentBene((prevState: any) =>  {
+        setCurrentBene((prevState: any) => {
             const newState = prevState;
             newState.beneInfo = beneInfo;
             return newState;
@@ -127,7 +142,7 @@ export default function BeneficiaryDetails({ policy, partyRole, partyId, selecte
     }, [beneInfo]);
 
     useEffect(() => {
-        setCurrentBene((prevState: any) =>  {
+        setCurrentBene((prevState: any) => {
             const newState = prevState;
             newState.party.allocation = allocationDetails;
             return newState;
@@ -147,7 +162,7 @@ export default function BeneficiaryDetails({ policy, partyRole, partyId, selecte
                     <FingerprintIcon role="presentation" width={24} height={24} className="mr-2 text-primary" />
                     <Typography variant={TypographyVariant.H2}>{t('identification.title')}</Typography>
                 </div>
-                <BeneficiaryIdentification updateParty={currentParty} setCurrentParty={setCurrentParty} isReadOnly={isReadOnly}/>
+                <BeneficiaryIdentification updateParty={currentParty} setCurrentParty={setCurrentParty} isReadOnly={isReadOnly} />
             </div>
 
             <div className="my-6">
@@ -174,10 +189,15 @@ export default function BeneficiaryDetails({ policy, partyRole, partyId, selecte
                     <ContactIcon height={24} className="mr-2 text-primary" role="presentation" />
                     <Typography variant={TypographyVariant.H2}>{t('phone.title')}</Typography>
                 </div>
-             
+
                 <div className={containerClasses} key={'phone'}>
                     <div className={sectionClasses}>
-                        <PhoneDetails setCurrentPhones={setCurrentPhones} updatePhone={currentPhones?.[0]} index={0} isReadOnly={isReadOnly}/>
+                        <PhoneDetails
+                            setCurrentPhones={setCurrentPhones}
+                            updatePhone={currentPhones?.[0]}
+                            index={0}
+                            isReadOnly={isReadOnly}
+                        />
                     </div>
                 </div>
             </div>
@@ -188,10 +208,14 @@ export default function BeneficiaryDetails({ policy, partyRole, partyId, selecte
                     <Typography variant={TypographyVariant.H2}>{t('email.title')}</Typography>
                 </div>
 
-                
                 <div className={containerClasses} key={'email'}>
                     <div className={sectionClasses}>
-                        <EmailDetails setCurrentEmails={setCurrentEmails} updateEmail={currentEmails?.[0]} index={0} isReadOnly={isReadOnly}/>
+                        <EmailDetails
+                            setCurrentEmails={setCurrentEmails}
+                            updateEmail={currentEmails?.[0]}
+                            index={0}
+                            isReadOnly={isReadOnly}
+                        />
                     </div>
                 </div>
             </div>
@@ -204,7 +228,11 @@ export default function BeneficiaryDetails({ policy, partyRole, partyId, selecte
 
                 <div className={containerClasses}>
                     <div className={sectionClasses}>
-                        <AllocationDetails updateAllocation={allocationDetails} setAllocationDetails={setAllocationDetails} isReadOnly={isReadOnly} />
+                        <AllocationDetails
+                            updateAllocation={allocationDetails}
+                            setAllocationDetails={setAllocationDetails}
+                            isReadOnly={isReadOnly}
+                        />
                     </div>
                 </div>
             </div>
@@ -216,12 +244,17 @@ export default function BeneficiaryDetails({ policy, partyRole, partyId, selecte
 
                 <div className={containerClasses}>
                     <div className={sectionClasses}>
-                        <BeneficiaryInformation carrierId={carrierId} setBeneInfo={setBeneInfo} updateInfo={beneInfo} isReadOnly={isReadOnly}/>
+                        <BeneficiaryInformation
+                            carrierId={carrierId}
+                            setBeneInfo={setBeneInfo}
+                            updateInfo={beneInfo}
+                            isReadOnly={isReadOnly}
+                        />
                     </div>
                 </div>
             </div>
 
-            { partyId && (
+            {partyId && (
                 <div className="flex  w-full justify-center  p-10 align-middle">
                     <div className="flex">
                         <NavElement

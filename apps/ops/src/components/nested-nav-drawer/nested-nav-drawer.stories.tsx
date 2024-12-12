@@ -1,6 +1,6 @@
 import '@deps/styles/styles.css';
 import { Meta } from '@storybook/react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-18next';
 
 import { ParentKeys } from '@deps/config/nav.config';
 import { StaticNestedNavDrawerProvider } from '@deps/contexts/LayoutContexts/StaticNestedNavDrawerContext';
@@ -9,10 +9,7 @@ import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icon
 import { ReactComponent as ShieldIcon } from '@deps/styles/elements/icons/icons_outlined/shield-magnify.svg';
 import { ReactComponent as UserCircleIcon } from '@deps/styles/elements/icons/icons_outlined/user-circle.svg';
 
-
 import NestedNavDrawer from './nested-nav-drawer';
-
-
 
 const meta: Meta<typeof NestedNavDrawer> = {
     title: 'Components/NestedNavDrawer',

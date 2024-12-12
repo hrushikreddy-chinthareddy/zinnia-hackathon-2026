@@ -1,7 +1,7 @@
 import { AssistiveText, AssistiveTextVariant, Button, Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { ChangeEvent, useContext, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-18next';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';

@@ -14,6 +14,7 @@ import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page
 import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import { Case } from '@deps/models/case/case';
 import UnauthorizedCard from '@deps/components/card/card-unauthorized';
+import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 
 // try to get any documentIds associated with this case.
 // As we find more ways to associate documents with a case, we can add the ways to retrieve them here.
@@ -78,7 +79,7 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
             <div>
                 <Typography variant={TypographyVariant.H2}>{t(`caseOverview.tabs.documents`)}</Typography>
             </div>
-            {documentsStatusCode === 403 ? (
+            {documentsStatusCode === StatusCode.Forbidden ? (
                 <UnauthorizedCard />
             ) : (
                 <>

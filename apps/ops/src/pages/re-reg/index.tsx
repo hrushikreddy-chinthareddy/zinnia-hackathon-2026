@@ -1,7 +1,7 @@
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-18next';
 
 import PolicyLayout from '@deps/components/policy-layout';
 import { getReRegNavLinks } from '@deps/config/nav.config';
@@ -39,10 +39,22 @@ const BeneChange = ({ policy, document, clientId, planCode, user }: AddressChang
     const { t } = useTranslation();
     const showJointOwner = policy?.carrierId === Carrier.FLIC;
 
-    useSegmentPageTracker(user, SegmentPageName.BeneChange, { policyNumber: policy.policyNumber, documentNumber: document.documentNumber, clientId, planCode });
+    useSegmentPageTracker(user, SegmentPageName.BeneChange, {
+        policyNumber: policy.policyNumber,
+        documentNumber: document.documentNumber,
+        clientId,
+        planCode,
+    });
 
     return (
-        <PolicyLayout showJointOwner={showJointOwner} showLink={false} navLinks={getReRegNavLinks(clientId, policy.policyNumber??'', t)} hideSearch={true} isFullHeight={true} policyDetails={policy}>
+        <PolicyLayout
+            showJointOwner={showJointOwner}
+            showLink={false}
+            navLinks={getReRegNavLinks(clientId, policy.policyNumber ?? '', t)}
+            hideSearch={true}
+            isFullHeight={true}
+            policyDetails={policy}
+        >
             <div>
                 <BeneChangeProvider>
                     <BeneChangeContainer policy={policy} document={document} planCode={planCode} />
@@ -123,7 +135,7 @@ export const getServerSideProps = withPageAuthRequired({
             const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging, true);
 
             if (!policy) {
-                logInfo('re-reg/:id::Policy not found', { documentNumber, docType:  DocumentType.ReReg, policyNumber, clientId, planCode });
+                logInfo('re-reg/:id::Policy not found', { documentNumber, docType: DocumentType.ReReg, policyNumber, clientId, planCode });
                 return {
                     redirect: {
                         destination: '/404',

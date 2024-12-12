@@ -1,7 +1,7 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-18next';
 
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import PeoplePageHeaderContainer from '@deps/containers/page-header/people-page-header';

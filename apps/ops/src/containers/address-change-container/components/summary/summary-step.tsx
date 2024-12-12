@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-18next';
 
 import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';

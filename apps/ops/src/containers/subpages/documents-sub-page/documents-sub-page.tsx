@@ -20,6 +20,7 @@ import { DEFAULT_ERROR_STRING, ZAHARA_API_DATE_FORMAT } from '@deps/types/consta
 import DocumentResultsPagination from './documents-results-pagination';
 import DocumentsResultsTable from './documents-results-table';
 import UnauthorizedCard from '@deps/components/card/card-unauthorized';
+import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 
 type DocumentsSubPageProps = {
     policy: Policy;
@@ -146,7 +147,7 @@ export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
                         </RadioGroup.Item>
                     </RadioGroup.Root>
                 </div>
-                {statuses[documentType] === 403 ? (
+                {statuses[documentType] === StatusCode.Forbidden ? (
                     <UnauthorizedCard />
                 ) : (
                     <>

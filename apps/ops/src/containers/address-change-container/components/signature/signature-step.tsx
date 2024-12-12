@@ -1,5 +1,5 @@
 import { useMemo, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-18next';
 
 import SignatureValidationContainer from '@deps/components/otp-signature-container/component/otp-signature-conatiner';
 import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
@@ -25,7 +25,7 @@ export function SignatureStep({ policy }: SignatureStepProps) {
 
     const { goToNext } = useWorkflow();
     // const isJointOwnerExistForPolicy = useMemo(() => isJointOwnerExist(policy?.partyRoles ?? []), [policy]);
-    const isJointOwnerExistForPolicy = useMemo(() => isJointOwnerPresent(policy?.partyRoles ?? []), [policy])
+    const isJointOwnerExistForPolicy = useMemo(() => isJointOwnerPresent(policy?.partyRoles ?? []), [policy]);
     const isAnnuitant = useMemo(() => isAnnuitantSignatureRequired(policy?.partyRoles ?? [], policy.parties ?? []), [policy]);
 
     const { signatureData, setSignatureData, formErrors, setFormErrors } = useAddressChange();

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-18next';
 
 import Radio, { RadioVariant } from '@deps/components/radio/radio';
 import Table from '@deps/components/table-v2/table';

@@ -10,6 +10,7 @@ import { CallLog } from '@deps/models/case/call-log';
 import { getCaseCallLogs } from '@deps/queries/api/contracts';
 import { ReactComponent as PhoneIcon } from '@deps/styles/elements/icons/icons_outlined/phone.svg';
 import { Icon, IconType } from '@zinnia/bloom/components';
+import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 
 interface CallLogsContentProps {
     contractNumber?: string;
@@ -58,7 +59,7 @@ export function CallLogsContent({ contractNumber, t }: CallLogsContentProps) {
             </div>
         );
 
-    if (callLogsStatusCode === 403)
+    if (callLogsStatusCode === StatusCode.Forbidden)
         return (
             <SideSheetEmpty
                 icon={

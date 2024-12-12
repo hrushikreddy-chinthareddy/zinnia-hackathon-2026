@@ -1,6 +1,6 @@
 import { AssistiveTextVariant } from '@zinnia/bloom/components';
 import { useCallback, useEffect, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-18next';
 
 import AssistiveText from '@deps/components/assistive-text/assistive-text';
 import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
@@ -80,7 +80,6 @@ export const RolesAndContractStep = ({ policy }: IRolesAndContractProps) => {
     }, [roleIdentifier, partyCardsData, setApplyToRoles, setFormErrors, policy?.policyNumber]);*/
 
     useEffect(() => {
-
         if (selectedIds.length > 0) {
             const applicableRoles: any[] = [];
             selectedIds.map(selectedId => {
@@ -89,9 +88,9 @@ export const RolesAndContractStep = ({ policy }: IRolesAndContractProps) => {
                         policyNumber: policy?.policyNumber,
                         partyId: role.partyId,
                         partyRole: role.partyRole,
-                        partyRoleId: role.partyRoleId
-                    })
-                })
+                        partyRoleId: role.partyRoleId,
+                    });
+                });
             });
             setApplyToRoles([...applicableRoles]);
 
@@ -123,12 +122,17 @@ export const RolesAndContractStep = ({ policy }: IRolesAndContractProps) => {
                     className="mt-4"
                     handleContinue={handleStepContinue}
                     parentPage={ParentPage.CreateCase}
-                    leaveTransactionLink='/create-case'
+                    leaveTransactionLink="/create-case"
                 />
             }
         >
             <div className="flex flex-col gap-5">
-                <RoleAddressCard partyCardsLits={partyCardsData} title={t('rolesAndContracts.title')} handleClick={handleClick} selectedIds={selectedIds} ></RoleAddressCard>
+                <RoleAddressCard
+                    partyCardsLits={partyCardsData}
+                    title={t('rolesAndContracts.title')}
+                    handleClick={handleClick}
+                    selectedIds={selectedIds}
+                ></RoleAddressCard>
                 {/*<RolesRadioSelectors extractedPartyRoles={extractedPartyRoles}></RolesRadioSelectors>*}
                 {/*<AssociatedAddressTable extractedPartyRoles={extractedPartyRoles} policy={policy}></AssociatedAddressTable>*/}
                 {formErrors[RoleContractValidationKeys.RolesContractPresent] ? (
