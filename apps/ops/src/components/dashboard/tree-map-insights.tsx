@@ -20,7 +20,7 @@ import { getCaseInsights } from '@deps/queries/api/openai';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 import { ReactComponent as LightBulbIcon } from '@deps/styles/elements/icons/illustrations/light-bulb.svg';
 
-const CHART_HEIGHT = 600;
+const CHART_HEIGHT = 500;
 
 if (typeof Highcharts === 'object') {
     HighchartsExporting(Highcharts);
@@ -207,8 +207,8 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
     }, [seriesData, shouldShowCaseInsights]);
 
     return (
-        <div className={clsx('bg-white flex flex-col min-h-[600px] lg:flex-row gap-4')}>
-            <div className="basis-1/3 flex flex-col gap-4 items-start">
+        <div className={clsx('bg-white flex flex-col lg:flex-row gap-4')}>
+            <div className="basis-1/4 flex flex-col gap-4 items-start">
                 <div>
                     <Typography variant={TypographyVariant.H3}>{heading}</Typography>
                     <Typography variant={TypographyVariant.Label}>
@@ -233,7 +233,7 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
                     </>
                 )}
             </div>
-            <div className="basis-2/3 flex flex-col">
+            <div className="basis-3/4 flex flex-col">
                 <div
                     className={clsx(
                         `w-full h-[${CHART_HEIGHT}px]`,
