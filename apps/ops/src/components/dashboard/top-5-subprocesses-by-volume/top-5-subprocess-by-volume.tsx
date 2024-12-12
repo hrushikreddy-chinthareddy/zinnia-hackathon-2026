@@ -135,14 +135,6 @@ export const Top5SubprocessByVolume = ({
         return monthlyArray.sort((a, b) => b.total - a.total).slice(0, 5);
     }, [processedData]);
 
-    // const myChartConfig = useMemo(() => {
-    //     if (!processedData) return {};
-    //     const monthlyArray: Summary[] = [];
-    //     Object.entries(processedData.monthlyByLevel1Grouping).forEach(([, value]) => {
-    //         monthlyArray.push(value);
-    //     });
-    //     return getChartConfig(processedData, monthlyArray);
-    // }, [processedData]);
     return (
         <CardContainer containerClassNames="rounded" classNames="!p-0" fullWidth={true}>
             <div className="flex flex-col xl:flex-row justify-between gap-8 w-full">
