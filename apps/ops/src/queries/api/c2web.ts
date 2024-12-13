@@ -54,8 +54,8 @@ export const getTransactionSubTypes = async (transactionType: string): Promise<T
         );
 
         return data;
-    } catch (e) {
-        console.error('c2web::getTransactionSubTypes::error', e);
+    } catch (e: any) {
+        browserLogError('c2web::getTransactionSubTypes::error', { ...parseErrorInformation(e), transactionType });
         return null;
     }
 };
@@ -111,7 +111,7 @@ export const searchForms = async (requestBody: SearchFormRequestBody, loggingCon
             url: `${baseUrl}/forms/search`,
             function: 'c2web.searchForms',
         });
-        console.error('c2web::contactCenterSearchForms::error', e);
+
         return null;
     }
 };
@@ -137,7 +137,6 @@ export const downloadFormById = async (formId: number): Promise<string | null> =
             error: e,
             function: 'c2web.downloadFormById',
         });
-        console.error('c2web::contactCenterDownloadFormById::error', e);
         throw new Error(e?.data?.message || 'Error');
     }
 };
@@ -167,7 +166,6 @@ export const sendCommunication = async (requestBody: SendCommunicationRequestBod
             function: 'c2web.contactCenterSendCommunication',
             error: error,
         });
-        console.error('c2web::sendDocumentCallCenterForms::error', error);
         throw new Error(error?.data?.message || 'Error');
     }
 };
