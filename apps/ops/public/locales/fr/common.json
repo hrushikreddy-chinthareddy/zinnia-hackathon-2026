@@ -2280,7 +2280,8 @@
                 "riskClassTooltip": "Les propriétaires sont regroupés en fonction de leur niveau de risque à assurer, basé sur leur santé et leur mode de vie. Moins de risques = meilleure classe de risque = prime plus basse. Et vice versa.",
                 "riskClass": "Classe de risque",
                 "yearsOld_one": "{{count}} an",
-                "yearsOld_other": "{{count}} ans"
+                "yearsOld_other": "{{count}} ans",
+                "yearsOld_zero": "-- ans"
             },
             "policyTimeline": {
                 "ageOfContract": "Âge du contrat",

@@ -9,6 +9,7 @@ import { TagKey } from '@deps/types/components';
 
 import { BeneficiaryType, PeopleCardContainerProps, PeopleCardData } from './people-card-container.types';
 import { NameTag } from '../people-sub-page/people-sub-page.helpers';
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 interface MapDataToPeopleProps {
     chipEntered: boolean;
@@ -41,7 +42,7 @@ const mapDataToPeopleCard = ({ chipEntered, index, party, peopleCard, isRereg }:
     let name = '';
     switch (partyType) {
         case PartyType.INDIVIDUAL:
-            name = toTitleCase(`${firstName} ${lastName}`);
+            name = toTitleCase(`${firstName ?? DEFAULT_ERROR_STRING} ${lastName ?? DEFAULT_ERROR_STRING}`);
             break;
         case PartyType.ORGANIZATION:
             name = toTitleCase(safeString(fullName)); // DEPU-3511 -> old code used to be safeString(organizationCode);
