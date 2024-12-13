@@ -117,8 +117,11 @@ export const AcknowledgePolicyCard = ({
             <Link
               href={`/coverage/${lineOfBusinessUrlPath(lineOfBusiness)}/${planCode}/${policyNumber}/documents/policy-acknowledgement?clientCode=${carrierId}`}
               text="View policy document"
-              // TODO: why is this so mad?
-              // target="_blank"
+              // TODO: i'm not sure why this is throwing an error, this component extends teh anchor element
+              // so should have target attribute by default
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              target="_blank"
             />
             {/* TODO: had to add this here because teh component defaults it to in front of text
             will need to also fix hover color */}

@@ -38,10 +38,8 @@ export default async function PolicyAcknowledgementDocumentPreview({
   const { lineOfBusiness, policyNumber, planCode } = params;
   const { clientCode } = searchParams;
   const document = policyDocuments?.data?.items?.[0];
-  console.log('docs!', policyDocuments.data?.items);
-  const docDownloadUrl = document
-    ? `/api/documents/${document?.documentID || document?.documentId}/download/${document?.fileName}.pdf?clientCode=${clientCode}&policyNumber=${policyNumber}&planCode=${planCode}`
-    : '';
+
+  const docDownloadUrl = `/api/documents/${document?.documentID || document?.documentId}/download/${document?.fileName}.pdf?clientCode=${clientCode}&policyNumber=${policyNumber}&planCode=${planCode}`;
 
   return (
     <div style={{ height: '100svh' }}>
