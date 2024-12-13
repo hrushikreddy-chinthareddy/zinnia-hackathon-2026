@@ -90,7 +90,7 @@ const InteriorPeoplePageHeaderContainer = ({
                         <PiiWrapper>{formatDate(selectedPolicyParty?.dateOfBirth)}</PiiWrapper>
                     </p>
                     <p className="body-sm">
-                        <PiiWrapper>{t('policy.detailCards.coveredParty.yearsOld', { count: ageInYears })}</PiiWrapper>
+                        <PiiWrapper>{t('policy.detailCards.coveredParty.yearsOld', { count: ageInYears ?? 0 })}</PiiWrapper>
                     </p>
                 </div>
             );

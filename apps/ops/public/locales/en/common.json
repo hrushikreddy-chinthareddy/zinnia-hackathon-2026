@@ -2525,7 +2525,8 @@
                 "riskClassTooltip": "Owners are grouped by how risky they are to insure based on health and lifestyle. Less risky=better risk class=lower premium. And vice versa.",
                 "riskClass": "Risk class",
                 "yearsOld_one": "{{count}} year old",
-                "yearsOld_other": "{{count}} years old"
+                "yearsOld_other": "{{count}} years old",
+                "yearsOld_zero": "-- years old"
             },
             "policyTimeline": {
                 "ageOfContract": "Age of contract",
