@@ -7,10 +7,12 @@ import { client } from '@deps/queries/api-utils/client';
 const baseUrl = `${baseAppUrl}/api/webnonfinancial/nonfinancial/v1`;
 
 export const addTransaction = async (body: any): Promise<any> => {
+    const { businessKey, correlationid, carrierId, policyNumber, }  = body || {};
+
     try {
         datadogLogs.logger.info('webNonFinancial', {
             message: 'Adding a transaction',
-            payload: body,
+            payload: { businessKey, correlationid, carrierId, policyNumber },
             url: `${baseUrl}/transactions`,
             function: 'web-non-financial.addTransaction',
         });
@@ -20,15 +22,15 @@ export const addTransaction = async (body: any): Promise<any> => {
         );
         datadogLogs.logger.info('webNonFinancial', {
             message: 'Added a transaction',
-            payload: body,
+            payload: { businessKey, correlationid, carrierId, policyNumber },
             url: `${baseUrl}/transactions`,
             function: 'web-non-financial.addTransaction',
         });
         return data;
     } catch (error: any) {
         datadogLogs.logger.error('webNonFinancial', {
-            payload: body,
             message: 'Failed to add transaction',
+            payload: { businessKey, correlationid, carrierId, policyNumber },
             error,
             url: `${baseUrl}/transactions`,
             function: 'web-non-financial.addTransaction',

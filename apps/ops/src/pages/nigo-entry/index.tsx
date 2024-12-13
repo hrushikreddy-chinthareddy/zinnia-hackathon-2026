@@ -192,7 +192,7 @@ export const getServerSideProps = withPageAuthRequired({
             const docType = caseType ? docTypes[caseType] : null;
 
             if (!caseType) {
-                logError('nigo-entry::Error getting case type', {
+                logWarn('nigo-entry::Error getting case type', {
                     taskId,
                     caseType,
                     documentType: docType,
@@ -212,7 +212,7 @@ export const getServerSideProps = withPageAuthRequired({
             }
 
             if (!docType) {
-                logError('nigo-entry::Error getting doc type', {
+                logWarn('nigo-entry::Error getting doc type', {
                     taskId,
                     clientCode,
                     documentType: docType,
@@ -273,7 +273,7 @@ export const getServerSideProps = withPageAuthRequired({
             const response = await searchPolicySSR(contractNum, [clientCode?.toUpperCase() as Carrier], accessToken, 1, 0);
             const planCode = response ? response[0]?.planCode : null;
             if (!planCode) {
-                logError('nigo-entry::Policy plan code not found', {
+                logWarn('nigo-entry::Policy plan code not found', {
                     taskId,
                     documentNumber,
                     documentType: docType,
@@ -303,7 +303,7 @@ export const getServerSideProps = withPageAuthRequired({
 
             const policy = await getPolicyDetailsSsr(contractNum, planCode, accessToken, userInfoForLogging);
             if (!policy) {
-                logError('nigo-entry::Policy not found', {
+                logWarn('nigo-entry::Policy not found', {
                     taskId,
                     documentNumber,
                     documentType: docType,
@@ -387,7 +387,7 @@ export const getServerSideProps = withPageAuthRequired({
             });
 
             if (!document) {
-                logError('nigoEntry::Error getting document', {
+                logWarn('nigoEntry::Error getting document', {
                     taskId,
                     documentNumber,
                     documentType: docType,
