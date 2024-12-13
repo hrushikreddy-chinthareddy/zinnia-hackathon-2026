@@ -37,6 +37,7 @@ import {
     AccountType,
     FormDisbursement,
     AddressTypes,
+    ProgramSubType,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -92,6 +93,18 @@ export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) 
     };
 
     const partialWithdrawalOptions: PartialWithdrawalOption[] = [
+        {
+            label: t('amountDetails.partialWithdrawal.freeWithdrawalAmountOnly'),
+            value: WithdrawalSelectionValues.TotalFreeWithdrawal,
+            generatePayloadFromSelection: () => {
+                return {
+                    ...getDefaultFormProgramValues(),
+                    withdrawType: { text: WithdrawalType.Gross },
+                    programType: { text: ProgramType.TotalFreeAmt },
+                    programSubType: { text: ProgramSubType.TotalFreeWithdrawal },
+                };
+            },
+        },
         {
             label: t('amountDetails.partialWithdrawal.netWithdrawal'),
             value: WithdrawalSelectionValues.NetWithdrawal,

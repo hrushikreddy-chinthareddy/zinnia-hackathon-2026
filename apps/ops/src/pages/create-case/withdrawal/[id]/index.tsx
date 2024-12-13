@@ -36,6 +36,7 @@ import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
 import { useScreenSize } from '@deps/hooks/useScreenSize';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
+import { ProcessType } from '@deps/models/case/enums';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { TaskType } from '@deps/models/case/task';
 import { ActiveWithdrawalCase, Carrier, QualTypes, TransactionStatus, SortOrder } from '@deps/models/case/withdrawal/case';
@@ -49,6 +50,7 @@ import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-an
 import { isNonProductionEnvironment } from '@deps/utils/environment.helper';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
+import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { logError, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
 import { ERROR_CODES } from '../../error';
@@ -304,15 +306,15 @@ export const getServerSideProps = withPageAuthRequired({
             logInfo('create-case/withdrawal/:id:Skipping NIGO check', { taskId, action, documentNumber, id, clientId });
         }
         // If feature flag is not enabled, redirect to error page
-        // if (!isFormFeatureEnabled(ProcessType.WITHDRAWAL, clientId, featureFlagDecisions)) {
-        //     logWarn('create-case/withdrawal/:id::feature flag not enabled', { documentNumber, clientId });
-        //     return {
-        //         redirect: {
-        //             destination: '/403',
-        //             permanent: false,
-        //         },
-        //     };
-        // }
+        if (!isFormFeatureEnabled(ProcessType.WITHDRAWAL, clientId, featureFlagDecisions)) {
+            logWarn('create-case/withdrawal/:id::feature flag not enabled', { documentNumber, clientId });
+            return {
+                redirect: {
+                    destination: '/403',
+                    permanent: false,
+                },
+            };
+        }
 
         const form = await initializeOTPTaskSSR({
             accessToken,
