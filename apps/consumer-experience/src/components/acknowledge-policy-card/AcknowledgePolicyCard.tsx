@@ -1,16 +1,17 @@
 'use client';
 
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import {
   AssistiveText,
   AssistiveTextVariant,
   Button,
+  Checkbox,
   Icon,
   IconType,
   Link,
 } from '@zinnia/bloom/components';
 import { toSentenceCase } from '@zinnia/utils';
-import { useRef } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 import { CarrierPolicyDetails } from '@/types/policy';
 import {
@@ -25,14 +26,31 @@ import styles from './AcknowledgePolicyCard.module.css';
 import { ClickableCardContainer } from '../clickable-card-container/ClickableCardContainer';
 import { FullName } from '../pii/FullName';
 
+export interface AckowledgeInputs {
+  policyAcknowledged: boolean;
+  planCode: string;
+  policyNumber: string;
+  lineOfBusiness: LineOfBusiness;
+}
+
 export const AcknowledgePolicyCard = ({
   policy,
 }: {
   policy: CarrierPolicyDetails;
 }) => {
-  const { control, formState, handleSubmit } = useForm();
-  const formRef = useRef<HTMLFormElement>(null);
-  console.log(formState.errors);
+  const { control, formState, handleSubmit } = useForm<AckowledgeInputs>({
+    defaultValues: {
+      policyAcknowledged: false,
+      planCode: policy.planCode,
+      policyNumber: policy.policyNumber,
+      lineOfBusiness: policy.lineOfBusiness,
+    },
+  });
+
+  const onSubmit: SubmitHandler<AckowledgeInputs> = async data => {
+    console.log({ data });
+    await acknowledgePolicyAction(data);
+  };
 
   return (
     <ClickableCardContainer>
@@ -58,60 +76,31 @@ export const AcknowledgePolicyCard = ({
         </div>
       </div>
       <form
-        ref={formRef}
         className={styles.policyAcknowledgment}
-        action={acknowledgePolicyAction}
-        onSubmit={evt => {
-          evt.preventDefault();
-          handleSubmit(() => {
-            acknowledgePolicyAction(new FormData(formRef.current!));
-          })(evt);
-        }}
+        onSubmit={handleSubmit(onSubmit)}
       >
         <Controller
           control={control}
           name="policyAcknowledged"
           rules={{ required: true }}
-          render={({ field }) => (
-            <div
-              className={
-                formState.errors['policyAcknowledged'] ? styles.formError : ''
-              }
-            >
-              {/* TODO: the bloom checkbox isn't working because i think the input is too deeply nested */}
-              <label>
-                <input
-                  type="checkbox"
-                  {...field}
-                  value={policy.policyNumber}
-                  name="policyAcknowledged"
-                  id={`${policy.policyNumber}-policyAcknowledgement`}
-                />
-                <span>
-                  {`I acknowledge the receipt of Policy ${policy.policyNumber} issued by ${policy.marketingName}
-                    insurance company on ${standardDateMonthDayYear(policy.issueDate)}`}
-                </span>
-              </label>
-              {/* <Checkbox
-                {...field}
-                value={policy.policyNumber}
+          render={() => (
+            <div>
+              <Checkbox
                 name="policyAcknowledged"
+                //TODO: When bloom is updated, show this prop again
+                //onValueChange={field.onChange}
+                showError={!!formState.errors['policyAcknowledged']}
                 id={`${policy.policyNumber}-policyAcknowledgement`}
               >
                 <span>
                   {`I acknowledge the receipt of Policy ${policy.policyNumber} issued by ${policy.marketingName}
                     insurance company on ${standardDateMonthDayYear(policy.issueDate)}`}
                 </span>
-              </Checkbox> */}
+              </Checkbox>
             </div>
           )}
         />
-        <input type="hidden" value={policy.planCode} name="planCode" />
-        <input
-          type="hidden"
-          value={policy.lineOfBusiness}
-          name="lineOfBusiness"
-        />
+
         {formState.errors['policyAcknowledged'] && (
           <AssistiveText
             className="my-lg"
