@@ -134,19 +134,21 @@ export default function DocumentsResultsTable({
                                     <Tooltip body={document.displayName} placement={PopoverPlacement.TopRight}>
                                         <PiiWrapper>{document.displayName}</PiiWrapper>
                                     </Tooltip>
-                                    {linkedDocumentIdentifiers.includes(docDisplayId) ? (
-                                        <Tooltip
-                                            body={
-                                                t('linkedTo', {
-                                                    type: document.documentType?.toLowerCase() || DEFAULT_ERROR_STRING,
-                                                }) as string
-                                            }
-                                            placement={PopoverPlacement.TopRight}
-                                        >
-                                            <LinkIcon className="-mt-0.5 mr-1.5 inline text-gray-600" width={16} height={16} />
-                                        </Tooltip>
-                                    ) : null}
-                                    {docDisplayId}
+                                    <div>
+                                        {linkedDocumentIdentifiers.includes(docDisplayId) ? (
+                                            <Tooltip
+                                                body={
+                                                    t('linkedTo', {
+                                                        type: document.documentType?.toLowerCase() || DEFAULT_ERROR_STRING,
+                                                    }) as string
+                                                }
+                                                placement={PopoverPlacement.TopRight}
+                                            >
+                                                <LinkIcon className="-mt-0.5 mr-1.5 inline text-gray-600" width={16} height={16} />
+                                            </Tooltip>
+                                        ) : null}
+                                        {docDisplayId}
+                                    </div>
                                 </div>
                             </TableCell>
                             <TableCell>
