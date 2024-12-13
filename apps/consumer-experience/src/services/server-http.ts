@@ -34,7 +34,6 @@ class ServerHttpRequest extends HttpRequest {
     const correlationId = uuid4();
     const now = performance.now();
     const { accessToken } = await getAccessToken();
-    console.log({ accessToken });
     const session = await getSession();
     const loggingContext = {
       ...getUserInfoFromSession(session),

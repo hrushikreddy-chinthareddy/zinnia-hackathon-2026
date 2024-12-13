@@ -244,6 +244,7 @@ export const getSession = async (
       const { payload } = await decrypt(existingSessionValue);
       const { oauthToken } = payload;
       const { access_token, id_token } = oauthToken;
+
       const userClaims = jose.decodeJwt(id_token) as UserClaims;
       const user: User = {
         ...userClaims,

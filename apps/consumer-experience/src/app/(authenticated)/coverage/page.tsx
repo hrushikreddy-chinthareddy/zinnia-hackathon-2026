@@ -1,31 +1,24 @@
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
-import { IconType, Label } from '@zinnia/bloom/components';
+import { IconType } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
-import { AccountValuePopover } from '@/components/account-value/AccountValuePopover';
+import { AcknowledgePolicyCard } from '@/components/acknowledge-policy-card/AcknowledgePolicyCard';
 import { CarrierPicker } from '@/components/carrier-picker/CarrierPicker';
 import { CarrierPickerCookieOnly } from '@/components/carrier-picker/CarrierPickerCookieOnly';
-import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
-import { FieldData } from '@/components/field-data/FieldData';
+import { CoverageOverviewCard } from '@/components/coverage-overview-card/CoverageOverviewCard';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
-import { LabelPopover } from '@/components/label-popover/LabelPopover';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
-import { PolicyDetailsSummary } from '@/components/policy-details-summary/PolicyDetailsSummary';
-import { CoveragePopover } from '@/components/policy-overview/CoveragePopover';
 import { RouteKey, getPageTitle } from '@/route-map';
-import { getMyPoliciesByCarrier } from '@/services';
+import { checkResetDeliveryDateEligibility } from '@/services/bpm';
 import { getFeatureFlags } from '@/services/feature-flags';
+import { getMyPoliciesByCarrier } from '@/services/policy';
 import { SearchParams } from '@/types/url';
+import { getCookie } from '@/utils/auth';
 import { getCarrierIdsByThemeCookie } from '@/utils/carriers';
-import { formatUSDollars } from '@/utils/currency';
-import { lineOfBusinessUrlPath } from '@/utils/data';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import { getThemeCookies } from '@/utils/theme';
 import { isVercelEnvironment } from '@/utils/url';
-
-import styles from './policies.module.css';
 
 const pageTitle = getPageTitle(RouteKey.COVERAGE);
 // disable because NextJS needs this to be exported from this file
@@ -48,6 +41,35 @@ export default async function Page({
 
   const { data: policyReferenceData, error } =
     await getMyPoliciesByCarrier(carrierIds);
+
+  const eligibilityCookie = await getCookie(
+    'hasAcknowledgedPolicyOrDoesNotRequireReset'
+  );
+  const parsedCookie = JSON.parse(eligibilityCookie || '{}');
+  console.log('eligibilityCookie', typeof eligibilityCookie);
+
+  // 1. check cookies to see if policy eligibility has been checked
+  // 2. if not add to promise array
+  // 3. promise.allSettled to get all eligibilty
+  const checkEligibility = [];
+  for (const policy of policyReferenceData || []) {
+    const policyIsInAcknowledgedCookie =
+      parsedCookie?.[policy.policyNumber] === false;
+
+    if (!policyIsInAcknowledgedCookie) {
+      checkEligibility.push(
+        checkResetDeliveryDateEligibility({
+          planCode: policy.planCode || '',
+          policyNumber: policy.policyNumber,
+        })
+      );
+    }
+  }
+
+  // TODO: should we set the cookie here at all? or should we just rely on the middleware
+  const checkEligibilityResults = (await Promise.allSettled(checkEligibility))
+    .filter(result => result.status === 'fulfilled')
+    .map(result => result.value.data);
 
   if (error || policyReferenceData?.length === 0) {
     return (
@@ -90,94 +112,17 @@ export default async function Page({
     <div className="container">
       <HeaderBreadcrumb title={pageTitle} preventReturnToPrevious />
       <div className="card-container" style={{ paddingLeft: 0 }}>
-        {policyReferenceData?.map(p => (
-          <ClickableCardContainer key={p.policyNumber}>
-            <ClickableCardContainer.LinkContent
-              linkTo={{
-                label: `Get details for Policy ${p.marketingName}`,
-                url: `/coverage/${lineOfBusinessUrlPath(p?.lineOfBusiness)}/${p.planCode}/${p.policyNumber}`,
-                isInternal: true,
-              }}
-            >
-              <div className={`${styles.policyCard} mr-lg`}>
-                <PolicyDetailsSummary
-                  className="pl-none"
-                  planCode={p.planCode || ''}
-                  policyNumber={p.policyNumber}
-                  summary={{ ...p }}
-                />
-                <div className={styles.policyCardPolicyValues}>
-                  <FieldData
-                    className="mr-3xl typography-content-body-sm-bold"
-                    Label={
-                      <Label
-                        interactiveElements={[
-                          <AccountValuePopover
-                            key="account-value-popover"
-                            // Date of last policy transaction, when policy value was last updated
-                            // the frequency of transactions is a lot higher on life products, so the
-                            // effective date shows when the last transaction occurred
-                            // for annuity products, we just show current date
-                            // (decision documented in CUI-512)
-                            dataTimestamp={
-                              p.lineOfBusiness === LineOfBusiness.ANNUITY
-                                ? new Date().toISOString()
-                                : p.effectiveDate
-                            }
-                            lineOfBusiness={p.lineOfBusiness}
-                          />,
-                        ]}
-                      >
-                        Account value
-                      </Label>
-                    }
-                  >
-                    {formatUSDollars(p.totalFundValue)}
-                  </FieldData>
-                  {p.lineOfBusiness === LineOfBusiness.LIFE && (
-                    <FieldData
-                      className="typography-content-body-sm-bold"
-                      Label={
-                        <Label
-                          interactiveElements={[
-                            <CoveragePopover key="coverage-popover" />,
-                          ]}
-                        >
-                          Coverage
-                        </Label>
-                      }
-                    >
-                      {formatUSDollars(p.totalCoverageAmount)}
-                    </FieldData>
-                  )}
-                  {p.lineOfBusiness === LineOfBusiness.ANNUITY && (
-                    <FieldData
-                      className="typography-content-body-sm-bold"
-                      Label={
-                        <Label
-                          interactiveElements={[
-                            <LabelPopover title="Death Benefit">
-                              <div className={styles.popoverContent}>
-                                <p>
-                                  This is how much money your beneficiaries may
-                                  receive when you die.
-                                </p>
-                              </div>
-                            </LabelPopover>,
-                          ]}
-                        >
-                          Death Benefit
-                        </Label>
-                      }
-                    >
-                      {formatUSDollars(p.cumulativeGrossDeathBenefitAmount)}
-                    </FieldData>
-                  )}
-                </div>
-              </div>
-            </ClickableCardContainer.LinkContent>
-          </ClickableCardContainer>
-        ))}
+        {policyReferenceData?.map(p => {
+          const requiresAcknowledgement = checkEligibilityResults.find(
+            result =>
+              result.policyNumber === p.policyNumber && result.isEligible
+          );
+
+          if (requiresAcknowledgement) {
+            return <AcknowledgePolicyCard key={p.policyNumber} policy={p} />;
+          }
+          return <CoverageOverviewCard key={p.policyNumber} policy={p} />;
+        })}
       </div>
     </div>
   );
