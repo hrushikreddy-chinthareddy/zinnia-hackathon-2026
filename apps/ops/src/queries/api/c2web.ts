@@ -1,4 +1,3 @@
-import { datadogLogs } from '@datadog/browser-logs';
 import { AxiosResponse } from 'axios';
 
 import { SendCommunicationRequestBody } from '@deps/models/case/correspondence';
@@ -13,10 +12,11 @@ import {
 } from '@deps/models/case/send-document';
 import { StatementTypes, StatementTypesResponse } from '@deps/models/case/send-statement';
 import { client } from '@deps/queries/api-utils/client';
-import { logError, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { logError, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
 import { baseAppUrl, contactCenterBaseUrlV2 } from '../api-config';
 import { serverApi } from '../api-utils/serverApiClient';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 
 const baseUrl = baseAppUrl + '/api/c2web/v2/';
 
@@ -93,9 +93,10 @@ export const getSearchTransactionsSSR = async (
     }
 };
 
-export const searchForms = async (requestBody: SearchFormRequestBody): Promise<FormDetails[] | null> => {
+export const searchForms = async (requestBody: SearchFormRequestBody, loggingContext?: object): Promise<FormDetails[] | null> => {
     try {
-        datadogLogs.logger.info('contactCenterSearchForms', {
+        browserLogInfo('contactCenterSearchForms', {
+            ...loggingContext,
             payload: requestBody,
             url: `${baseUrl}/forms/search`,
             function: 'c2web.searchForms',
@@ -103,10 +104,11 @@ export const searchForms = async (requestBody: SearchFormRequestBody): Promise<F
         const { data } = await client.post<SearchFormRequestBody, AxiosResponse<FormDetails[]>>(`${baseUrl}/forms/search`, requestBody);
         return data;
     } catch (e) {
-        datadogLogs.logger.error('contactCenterSearchForms', {
+        browserLogError('contactCenterSearchForms', {
+            ...loggingContext,
+            ...parseErrorInformation(e),
             payload: requestBody,
             url: `${baseUrl}/forms/search`,
-            error: e,
             function: 'c2web.searchForms',
         });
         console.error('c2web::contactCenterSearchForms::error', e);
@@ -119,7 +121,7 @@ export const downloadFormById = async (formId: number): Promise<string | null> =
         if (!formId) {
             throw new Error('No formId provided');
         }
-        datadogLogs.logger.info('contactCenterDownloadFormById', {
+        browserLogInfo('contactCenterDownloadFormById', {
             payload: formId,
             url: `${baseUrl}/forms/${formId}/download`,
             function: 'c2web.downloadFormById',
@@ -128,7 +130,8 @@ export const downloadFormById = async (formId: number): Promise<string | null> =
 
         return data;
     } catch (e: any) {
-        datadogLogs.logger.error('contactCenterDownloadFormById', {
+        browserLogError('contactCenterDownloadFormById', {
+            ...parseErrorInformation(e),
             payload: formId,
             url: `${baseUrl}/forms/${formId}/download`,
             error: e,
@@ -145,7 +148,7 @@ export const sendCommunication = async (requestBody: SendCommunicationRequestBod
     }
 
     try {
-        datadogLogs.logger.info('contactCenterSendCommunication', {
+        browserLogInfo('contactCenterSendCommunication', {
             payload: requestBody,
             url: `${baseUrl}/forms/communication`,
             function: 'c2web.contactCenterSendCommunication',
@@ -157,7 +160,8 @@ export const sendCommunication = async (requestBody: SendCommunicationRequestBod
 
         return data;
     } catch (error: any) {
-        datadogLogs.logger.error('contactCenterSendCommunication', {
+        browserLogError('contactCenterSendCommunication', {
+            ...parseErrorInformation(error),
             payload: requestBody,
             url: `${baseUrl}/forms/communication`,
             function: 'c2web.contactCenterSendCommunication',
@@ -174,14 +178,13 @@ export const getApplicableStatementsSSR = async (
     userInfo: object = {}
 ): Promise<StatementTypes[] | null> => {
     const loggingContext = { file: 'queries/api/c2web', function: 'getActiveStatementsSSR', ...userInfo };
-
     if (!accessToken) {
         logWarn('getApplicableStatementsSSR::No accessToken to fetch applicable statements', loggingContext);
         return null;
     }
-
+    const url = `${contactCenterBaseUrlV2}/anniversary/statements/search`;
+    logInfo('c2web: getApplicableStatementsSSR', { planCode, ...loggingContext, url });
     try {
-        const url = `${contactCenterBaseUrlV2}/anniversary/statements/search`;
         const requestBody = {
             planCode,
         };
@@ -198,7 +201,7 @@ export const getApplicableStatementsSSR = async (
         } = await serverApi.post<any, AxiosResponse<StatementTypesResponse>>(url, requestBody, config);
         return applicableStatement;
     } catch (error: any) {
-        logError('c2web: getApplicableStatementsSSR', { ...parseErrorInformation(error), ...loggingContext });
+        logError('c2web: getApplicableStatementsSSR', { ...parseErrorInformation(error), ...loggingContext, url });
         return null;
     }
 };

@@ -16,6 +16,7 @@ import { searchForms } from '@deps/queries/api/c2web';
 type FormSelectionProps = {
     policy: Policy;
     ctiCallNumber: string;
+    correlationId?: string;
     availableFormsTransactions: AvailableFormsTransaction[];
     formDetails: SendDocumentFormParts;
     setFormDetails: (val: SendDocumentFormParts) => void;
@@ -27,6 +28,7 @@ function TransactionDocumentSelection({
     availableFormsTransactions,
     formDetails,
     setFormDetails,
+    correlationId,
 }: FormSelectionProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
     const transactionTypes = availableFormsTransactions?.map(transaction => {
@@ -89,7 +91,7 @@ function TransactionDocumentSelection({
                 };
 
                 try {
-                    const response = await searchForms(formSearchRequestBody);
+                    const response = await searchForms(formSearchRequestBody, { correlationId });
                     if (response) {
                         setDocument(ogFormDetails => ({
                             ...ogFormDetails,

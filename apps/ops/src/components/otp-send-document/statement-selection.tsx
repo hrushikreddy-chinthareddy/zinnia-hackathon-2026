@@ -1,4 +1,3 @@
-import { datadogLogs } from '@datadog/browser-logs';
 import dayjs, { Dayjs } from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import React, { useEffect, useState } from 'react';
@@ -20,6 +19,8 @@ import { DatePickerTypes, getQuarter, Quarter, quarters } from '../date-picker/d
 import { FieldSize, FieldType } from '../fields/field';
 import FieldDateSelect from '../fields/field-date-select/field-date-select';
 import WorkflowCard from '../workflows/workflow-card/workflow-card';
+import { browserLogInfo, browserLogWarn } from '@deps/utils/browser-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
 
 const toggleStatement = (val: StatementTypes, SetSelectedStatements: React.Dispatch<React.SetStateAction<StatementTypes[]>>) => {
     return (shouldHaveStatement: boolean) => {
@@ -184,6 +185,19 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                             documentType: documentTypes.join(','),
                             periods: encodeURIComponent(JSON.stringify(selectedYearQuarters)),
                         };
+
+                        browserLogInfo('contactCenterGetStatements', {
+                            ...parseErrorInformation(error),
+                            payload: {
+                                contractNumber: policy?.policyNumber,
+                                planCode: policy?.product?.planCode || '',
+                                startDate,
+                                endDate,
+                                ...optionalParams,
+                            },
+                            function: 'documents.getCorrespondenceDocs',
+                        });
+
                         const response = await getCorrespondenceDocs(policy?.policyNumber || '', policy?.carrierId || '', optionalParams);
 
                         if ('err' in response.data) {
@@ -194,9 +208,9 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                         setStatements(ownerCopyStatements(statements.items));
                     }
                 } catch (error) {
-                    datadogLogs.logger.warn('contactCenterGetStatements', {
-                        payload: { policyNumber: policy?.policyNumber, startDate, endDate },
-                        error,
+                    browserLogWarn('contactCenterGetStatements', {
+                        ...parseErrorInformation(error),
+                        payload: { contractNumber: policy?.policyNumber, startDate, endDate, planCode: policy?.product?.planCode || '' },
                         function: 'documents.getCorrespondenceDocs',
                     });
                     console.error('An error occurred while getting Contact Center statements', error);
