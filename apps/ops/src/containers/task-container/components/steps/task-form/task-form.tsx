@@ -17,15 +17,15 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     forwardedRef: ForwardedRef<Form>
 ) {
     const formState = useContext(TaskDataContext);
-    const { task, setTask, taskMetadata, setSubmitFailed } = formState;
+    const { task, setTask, taskMetadata, setSubmitFailed, correlationId } = formState;
 
     const handleSubmit = useCallback(async () => {
         if (isSubmit) {
-            const success = await updateTask(task);
+            const success = await updateTask(task, correlationId);
             setSubmitFailed(!success);
         }
         onSubmit();
-    }, [isSubmit, onSubmit, task]);
+    }, [correlationId, isSubmit, onSubmit, setSubmitFailed, task]);
 
     const handleChange = useCallback(
         (event: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {

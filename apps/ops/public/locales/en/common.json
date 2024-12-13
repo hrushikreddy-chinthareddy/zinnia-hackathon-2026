@@ -44,6 +44,7 @@
         "pageTitles": {
             "caseManagement": "Case Management",
             "caseOverview": "Case Overview",
+            "contractExtras": "Contract Extras",
             "policySearch": "Policy Search",
             "policyDetails": "Policy Details",
             "policyExtras": "Policy Extras",
@@ -1188,10 +1189,13 @@
                 "agent": "Agent: {{label}}",
                 "pre-note": "Pre-Note: {{label}}",
                 "source of premium": "Source of Premium: {{label}}",
-                "transfer of assets": "Transfer of Assets: {{label}}"
+                "transfer of assets": "Transfer of Assets: {{label}}",
+                "ceding carrier": "Ceding Carrier: {{label}}"
             },
             "reviewIssues": "Review {{taskType}} issues",
-            "suitabilityReview": "suitability review"
+            "suitabilityReview": "suitability review",
+            "commonTaskIssues": "Issue: One or more {{taskType}} issues found.",
+            "suitabilityReviewIssues": "Review Suitability Issue(s)"
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -2541,7 +2545,8 @@
                 "riskClassTooltip": "Owners are grouped by how risky they are to insure based on health and lifestyle. Less risky=better risk class=lower premium. And vice versa.",
                 "riskClass": "Risk class",
                 "yearsOld_one": "{{count}} year old",
-                "yearsOld_other": "{{count}} years old"
+                "yearsOld_other": "{{count}} years old",
+                "yearsOld_zero": "-- years old"
             },
             "policyTimeline": {
                 "ageOfContract": "Age of contract",
@@ -2606,6 +2611,7 @@
                 "planCode": "Plan code"
             },
             "policyExtras": {
+                "contractExtras": "Contract Extras",
                 "policyExtras": "Policy Extras",
                 "filter": {
                     "label": "Filter by type:",
@@ -4599,7 +4605,6 @@
             }
         }
     },
-
     "sswUpdate": {
         "sswUpdateOptions": {
             "new": "New",

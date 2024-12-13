@@ -1,6 +1,6 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import { useTranslation } from 'next-i18next';
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 
 import PageHeader from '@deps/components/page-header/page-header';
 import CardContainer from '@deps/containers/card-container/card-container';
@@ -29,7 +29,11 @@ const PolicyExtrasSubPage = () => {
     return (
         <div className="rounded bg-white pb-4 text-gray-900 shadow-elevation-light-04">
             <div className="rounded-t border-b-2 border-gray-100 bg-white text-gray-900">
-                <PageHeader headerText={t('policyExtras') || ''} breadcrumbText={breadcrumb?.text} breadcrumbUrl={breadcrumb?.url} />
+                <PageHeader
+                    headerText={t(policyDetails.isAnnuity ? 'contractExtras' : 'policyExtras') || ''}
+                    breadcrumbText={breadcrumb?.text}
+                    breadcrumbUrl={breadcrumb?.url}
+                />
             </div>
             <CardContainer classNames="flex flex-col gap-4">
                 <div>
@@ -56,7 +60,10 @@ const PolicyExtrasSubPage = () => {
                     </RadioGroup.Root>
                 </div>
                 <div>
-                    <PolicyExtrasCards policyDetails={policyDetails} filterValues={selectedChip === ExtraFilters.All ? null : filterValues} />
+                    <PolicyExtrasCards
+                        policyDetails={policyDetails}
+                        filterValues={selectedChip === ExtraFilters.All ? null : filterValues}
+                    />
                 </div>
             </CardContainer>
         </div>

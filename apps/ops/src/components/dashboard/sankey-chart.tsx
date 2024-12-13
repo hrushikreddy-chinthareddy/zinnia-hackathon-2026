@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
 
@@ -8,11 +9,10 @@ import { getStartAndEndDates } from '@deps/containers/case-redesign-sub-page/cas
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 import { getLabelSubString, dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
-import { CaseDashboardStatsResponse, DashboardStatsElementResponse, Statuses } from '@deps/models/case/case';
+import { DashboardStatsElementResponse } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
-import { getCaseDashboardStats } from '@deps/queries/api/cases';
-import { CaseDashboardStatsQuery, DashboardSearchFilter } from '@deps/queries/cases';
-import { debounce } from '@deps/utils/useDebounce';
+import { DashboardSearchFilter } from '@deps/queries/cases';
+import { getStatsFromSelectionQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 
 interface Props {
     height?: number;
@@ -59,8 +59,7 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
         maxPathStrokeWidth,
         maxItems,
     } = mergedChartOptions;
-    const { createdDateStart, createdDateEnd } = getStartAndEndDates('All');
-    const [caseGroupingState, setCaseGroupingState] = useState<CaseDashboardStatsResponse>();
+    const { createdDateStart } = getStartAndEndDates('All');
     const [totalCases, setTotalCases] = useState<number>(0);
 
     const [level1ObjectGrouping, setLevel1ObjectGrouping] = useState<DashboardStatsElementResponse[]>([]);
@@ -68,12 +67,18 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
     const [level3ObjectGrouping, setLevel3ObjectGrouping] = useState<DashboardStatsElementResponse[]>([]);
     const [l1SelectedIndex, setL1SelectedIndex] = useState<number>(-100);
 
-    const [l1SelectValue, setL1SelectValue] = useState<string>(GroupByOptions.Carrier.toString());
-    const [l2SelectValue, setL2SelectValue] = useState<string>(GroupByOptions.Process.toString());
-    const [l3SelectValue, setL3SelectValue] = useState<string>(GroupByOptions.CaseStatus.toString());
+    const [l1SelectValue, setL1SelectValue] = useState(GroupByOptions.Carrier);
+    const [l2SelectValue, setL2SelectValue] = useState(GroupByOptions.Process);
+    const [l3SelectValue, setL3SelectValue] = useState(GroupByOptions.CaseStatus);
 
-    const [parentSize, setParentSize] = useState({ width: 0, height: 0 });
+    const [parentSize, setParentSize] = useState({ width, height });
     const svgParentRef = useRef<HTMLDivElement>(null);
+
+    const { data: caseGroupingState } = useQuery({
+        queryKey: ['caseGrouping', baseDashboardQueryFilter, l1SelectValue, l2SelectValue, l3SelectValue, createdDateStart],
+        queryFn: () => getStatsFromSelectionQuery(baseDashboardQueryFilter, l1SelectValue, l2SelectValue, l3SelectValue, createdDateStart),
+        placeholderData: previousData => previousData,
+    });
 
     const getGroupingsFromL1 = (l1ObjectGrouping: DashboardStatsElementResponse[]) => {
         const l2Grouping: DashboardStatsElementResponse[] = [];
@@ -602,14 +607,14 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
     // };
 
     const handleL1SelectChange = (value: string) => {
-        setL1SelectValue(value);
+        setL1SelectValue(value as GroupByOptions);
         setL1SelectedIndex(-1); // reset whatever was selected on L1
     };
     const handleL2SelectChange = (value: string) => {
-        setL2SelectValue(value);
+        setL2SelectValue(value as GroupByOptions);
     };
     const handleL3SelectChange = (value: string) => {
-        setL3SelectValue(value);
+        setL3SelectValue(value as GroupByOptions);
     };
 
     const isL1Selected = () => l1SelectedIndex > -1;
@@ -624,12 +629,12 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
     const isMatchForL1SelectedStatGrouping = (index: number) => l1SelectedIndex === index;
 
     useEffect(() => {
-        const handleWindowResize = debounce(() => {
+        const handleWindowResize = () => {
             if (svgParentRef.current) {
                 const { width, height } = svgParentRef.current.getBoundingClientRect();
                 setParentSize({ width: Math.floor(width), height: Math.floor(height) });
             }
-        }, 200);
+        };
 
         const observer = new ResizeObserver(handleWindowResize);
         const currentSvgParentRef = svgParentRef.current;
@@ -643,33 +648,6 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
             }
         };
     }, []);
-
-    useEffect(() => {
-        if (height && width) {
-            setParentSize({ height, width });
-        }
-    }, [height, width]);
-
-    useEffect(() => {
-        const getStatsFromSelection = async () => {
-            const filter: DashboardSearchFilter = Object.assign({}, baseDashboardQueryFilter, {
-                caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
-                createdDateStart,
-            });
-
-            const query: CaseDashboardStatsQuery = {
-                filter,
-                groupBy: [l1SelectValue as GroupByOptions, l2SelectValue as GroupByOptions, l3SelectValue as GroupByOptions],
-            };
-
-            const statsResponse = await getCaseDashboardStats(query);
-            if (!statsResponse || 'status' in statsResponse) {
-                console.error('getStatsFromSelection::Failed to fetch stats');
-            }
-            setCaseGroupingState(statsResponse as CaseDashboardStatsResponse);
-        };
-        getStatsFromSelection();
-    }, [baseDashboardQueryFilter, createdDateEnd, createdDateStart, l1SelectValue, l2SelectValue, l3SelectValue]);
 
     useEffect(() => {
         if (!caseGroupingState || !caseGroupingState.data || caseGroupingState.data.length === 0) {

@@ -90,11 +90,21 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
     }
   };
 
+  const onClose = () => {
+    setOpen(false);
+
+    // Timeout is here to prevent the flash of the internal sidesheet component from showing
+    // as the animation happens
+    setTimeout(() => {
+      setStep(undefined);
+    }, 300);
+  };
+
   return (
     <SideSheet
       header="Add New Bank Account"
       overrideOpen={open}
-      closeCallback={() => setOpen(false)}
+      closeCallback={onClose}
       trigger={
         <Button
           className={styles.addBank as string}
@@ -110,7 +120,7 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
       {!step && (
         <AddBank
           values={values}
-          cancelCallback={() => setOpen(false)}
+          cancelCallback={onClose}
           submitCallback={handleAdd}
         />
       )}
@@ -120,14 +130,14 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
           errorTitle={errorTitle}
           isServerError={isServerError}
           errorMessage={errorMessage}
-          closeCallback={() => setOpen(false)}
+          closeCallback={onClose}
         />
       )}
       {step === FormSteps.SUCCESS && (
         <Success
           successTitle={successTitle}
           successMessage={successMessage}
-          closeCallback={() => setOpen(false)}
+          closeCallback={onClose}
         />
       )}
     </SideSheet>

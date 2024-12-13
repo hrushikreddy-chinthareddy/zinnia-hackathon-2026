@@ -40,7 +40,11 @@ export const fetchDashboardStats = async (body: DashboardRequestBody, fnName = '
   const url = (`${baseAppUrl}/api/case/v1/dashboard/stats`);
   try {
     const { data } = await client.post<DashboardRequestBody, AxiosResponse<DashboardRequestAPIResponse>>(url, body, config);
-    return data;
+    if (Array.isArray(data?.data) && data?.data?.length > 0) {
+      return data;
+    }
+
+    return { data: [], totalElements: 0 };
   } catch (error: any) {
     logError('fetchDashboardStats', {
       ...parseErrorInformation(error),
@@ -64,7 +68,11 @@ export const fetchDashboardStatsSSR = async (accessToken: string, body: Dashboar
         Connection: 'keep-alive',
       },
     });
-    return data;
+    if (Array.isArray(data?.data) && data?.data?.length > 0) {
+      return data;
+    }
+
+    return { data: [], totalElements: 0 };
   } catch (error: any) {
     logError('fetchDashboardStatsSSR', {
       ...parseErrorInformation(error),

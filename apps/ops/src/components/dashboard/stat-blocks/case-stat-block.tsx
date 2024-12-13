@@ -17,7 +17,7 @@ import { ReactComponent as LighBulb } from '@deps/styles/elements/icons/icons_ou
 import DistributionPieChartSmallAPIBased from '../distribution-charts/distribution-pie-chart-small-api-based';
 
 interface Props {
-    dashboardStatsResponse: CaseDashboardStatsResponse;
+    dashboardStatsResponse?: CaseDashboardStatsResponse;
     blockLabel: string;
     timeFrameLabel: string;
     classNames?: string;
@@ -66,7 +66,7 @@ const CaseStatBlock = ({
     };
 
     const getTotalStatValue = () => {
-        const value = dashboardStatsResponse?.data.reduce((prevValue, statElement) => prevValue + statElement.count, 0);
+        const value = dashboardStatsResponse?.data?.reduce((prevValue, statElement) => prevValue + statElement.count, 0);
         return value;
     };
 

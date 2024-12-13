@@ -1,4 +1,4 @@
-import { Index, ROOT_URL_PATH } from '@/types';
+import { Index, LineOfBusinessPath, ROOT_URL_PATH } from '@/types';
 
 export interface RouteMap {
   source: string;
@@ -24,6 +24,11 @@ export enum RouteKey {
   ALLOCATIONS = '/allocations',
   COVERAGE = '/coverage',
 }
+
+const annuityPageTitles: Index<string> = {
+  [RouteKey.RIDERS]: 'Riders and Extras',
+  [RouteKey.SURRENDER]: 'Surrender Contract',
+};
 
 export const routeMap: Index<RouteMap> = {
   [RouteKey.RIDERS]: {
@@ -137,6 +142,16 @@ export const getRedirectUrl = (
   return result;
 };
 
-export const getPageTitle = (key: RouteKey) => {
+export const getPageTitle = (
+  key: RouteKey,
+  lineOfBusiness?: LineOfBusinessPath
+) => {
+  if (
+    lineOfBusiness === LineOfBusinessPath.ANNUITIES &&
+    annuityPageTitles[key]
+  ) {
+    return annuityPageTitles[key];
+  }
+
   return routeMap[key]?.title ?? '';
 };
