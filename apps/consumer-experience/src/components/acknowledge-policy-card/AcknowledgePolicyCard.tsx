@@ -1,21 +1,29 @@
 'use client';
+
 import {
   AssistiveText,
   AssistiveTextVariant,
   Button,
-  Checkbox,
   Icon,
   IconType,
   Link,
 } from '@zinnia/bloom/components';
+import { toSentenceCase } from '@zinnia/utils';
+import { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { CarrierPolicyDetails } from '@/types/policy';
+import {
+  checkIfNull,
+  isAnnuity,
+  lineOfBusinessDisplayText,
+} from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
 
+import { acknowledgePolicyAction } from './acknowledge-policy-action';
 import styles from './AcknowledgePolicyCard.module.css';
 import { ClickableCardContainer } from '../clickable-card-container/ClickableCardContainer';
-import { PolicyDetailsSummary } from '../policy-details-summary/PolicyDetailsSummary';
+import { FullName } from '../pii/FullName';
 
 export const AcknowledgePolicyCard = ({
   policy,
@@ -23,56 +31,94 @@ export const AcknowledgePolicyCard = ({
   policy: CarrierPolicyDetails;
 }) => {
   const { control, formState, handleSubmit } = useForm();
+  const formRef = useRef<HTMLFormElement>(null);
+  console.log(formState.errors);
 
   return (
     <ClickableCardContainer>
-      <PolicyDetailsSummary
-        className="pl-none"
-        planCode={policy.planCode || ''}
-        policyNumber={policy.policyNumber}
-        summary={{ ...policy, policyStatus: undefined }}
-      />
+      <div>
+        <p className="typography-labels-label-lg-alt">
+          <span>{policy.marketingName || ''}</span>
+        </p>
+        <div className={styles.policyDetails}>
+          <p className="typography-labels-label-md-alt">{`${toSentenceCase(lineOfBusinessDisplayText(policy.lineOfBusiness))} #: ${checkIfNull(policy.policyNumber)}`}</p>
+
+          <>
+            <p className="typography-labels-label-md-alt">
+              <span>
+                {isAnnuity(policy.lineOfBusiness) ? 'Annuitant' : 'Insured'}
+              </span>
+              :{' '}
+              <FullName
+                firstName={policy.firstName}
+                lastName={policy.lastName}
+              />
+            </p>
+          </>
+        </div>
+      </div>
       <form
+        ref={formRef}
         className={styles.policyAcknowledgment}
-        onSubmit={handleSubmit(() => {
-          console.log('submitted');
-        })}
+        action={acknowledgePolicyAction}
+        onSubmit={evt => {
+          evt.preventDefault();
+          handleSubmit(() => {
+            acknowledgePolicyAction(new FormData(formRef.current!));
+          })(evt);
+        }}
       >
         <Controller
           control={control}
-          name={`${policy.policyNumber}-policyAcknowledgement`}
+          name="policyAcknowledged"
           rules={{ required: true }}
           render={({ field }) => (
             <div
               className={
-                formState.errors[`${policy.policyNumber}-policyAcknowledgement`]
-                  ? styles.formError
-                  : ''
+                formState.errors['policyAcknowledged'] ? styles.formError : ''
               }
             >
-              <Checkbox
-                {...field}
-                id={`${policy.policyNumber}-policyAcknowledgement`}
-              >
-                {/* TODO: figure out delivery date */}
-                {/* TODO: i think i might need to update variables in bloom for this, its using default colors */}
+              {/* TODO: the bloom checkbox isn't working because i think the input is too deeply nested */}
+              <label>
+                <input
+                  type="checkbox"
+                  {...field}
+                  value={policy.policyNumber}
+                  name="policyAcknowledged"
+                  id={`${policy.policyNumber}-policyAcknowledgement`}
+                />
                 <span>
-                  {`I acknowledge the receipt of Policy ${policy.policyNumber} issued by Everly Life
+                  {`I acknowledge the receipt of Policy ${policy.policyNumber} issued by ${policy.marketingName}
                     insurance company on ${standardDateMonthDayYear(policy.issueDate)}`}
                 </span>
-              </Checkbox>
-              {formState.errors[
-                `${policy.policyNumber}-policyAcknowledgement`
-              ] && (
-                <AssistiveText
-                  className="my-lg"
-                  variant={AssistiveTextVariant.Error}
-                  text="Acknowledgement is required before you can access your policy details"
-                />
-              )}
+              </label>
+              {/* <Checkbox
+                {...field}
+                value={policy.policyNumber}
+                name="policyAcknowledged"
+                id={`${policy.policyNumber}-policyAcknowledgement`}
+              >
+                <span>
+                  {`I acknowledge the receipt of Policy ${policy.policyNumber} issued by ${policy.marketingName}
+                    insurance company on ${standardDateMonthDayYear(policy.issueDate)}`}
+                </span>
+              </Checkbox> */}
             </div>
           )}
         />
+        <input type="hidden" value={policy.planCode} name="planCode" />
+        <input
+          type="hidden"
+          value={policy.lineOfBusiness}
+          name="lineOfBusiness"
+        />
+        {formState.errors['policyAcknowledged'] && (
+          <AssistiveText
+            className="my-lg"
+            variant={AssistiveTextVariant.Error}
+            text="Acknowledgement is required before you can access your policy details"
+          />
+        )}
 
         <div className={styles.policyAcknowledgmentActions}>
           <Button type="submit">Go to policy</Button>

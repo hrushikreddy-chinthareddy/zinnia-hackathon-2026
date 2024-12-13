@@ -1,6 +1,7 @@
 import { IconType } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
+import { AcknowledgePolicyCard } from '@/components/acknowledge-policy-card/AcknowledgePolicyCard';
 import { CarrierPicker } from '@/components/carrier-picker/CarrierPicker';
 import { CarrierPickerCookieOnly } from '@/components/carrier-picker/CarrierPickerCookieOnly';
 import { CoverageOverviewCard } from '@/components/coverage-overview-card/CoverageOverviewCard';
@@ -9,9 +10,11 @@ import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrum
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { RouteKey, getPageTitle } from '@/route-map';
-import { getMyPoliciesByCarrier } from '@/services';
+import { checkResetDeliveryDateEligibility } from '@/services/bpm';
 import { getFeatureFlags } from '@/services/feature-flags';
+import { getMyPoliciesByCarrier } from '@/services/policy';
 import { SearchParams } from '@/types/url';
+import { getCookie } from '@/utils/auth';
 import { getCarrierIdsByThemeCookie } from '@/utils/carriers';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import { getThemeCookies } from '@/utils/theme';
@@ -38,6 +41,35 @@ export default async function Page({
 
   const { data: policyReferenceData, error } =
     await getMyPoliciesByCarrier(carrierIds);
+
+  const eligibilityCookie = await getCookie(
+    'hasAcknowledgedPolicyOrDoesNotRequireReset'
+  );
+  const parsedCookie = JSON.parse(eligibilityCookie || '{}');
+  console.log('eligibilityCookie', typeof eligibilityCookie);
+
+  // 1. check cookies to see if policy eligibility has been checked
+  // 2. if not add to promise array
+  // 3. promise.allSettled to get all eligibilty
+  const checkEligibility = [];
+  for (const policy of policyReferenceData || []) {
+    const policyIsInAcknowledgedCookie =
+      parsedCookie?.[policy.policyNumber] === false;
+
+    if (!policyIsInAcknowledgedCookie) {
+      checkEligibility.push(
+        checkResetDeliveryDateEligibility({
+          planCode: policy.planCode || '',
+          policyNumber: policy.policyNumber,
+        })
+      );
+    }
+  }
+
+  // TODO: should we set the cookie here at all? or should we just rely on the middleware
+  const checkEligibilityResults = (await Promise.allSettled(checkEligibility))
+    .filter(result => result.status === 'fulfilled')
+    .map(result => result.value.data);
 
   if (error || policyReferenceData?.length === 0) {
     return (
@@ -80,10 +112,17 @@ export default async function Page({
     <div className="container">
       <HeaderBreadcrumb title={pageTitle} preventReturnToPrevious />
       <div className="card-container" style={{ paddingLeft: 0 }}>
-        {policyReferenceData?.map(p => (
-          <CoverageOverviewCard key={p.policyNumber} policy={p} />
-          // <AcknowledgePolicyCard key={p.policyNumber} policy={p} />
-        ))}
+        {policyReferenceData?.map(p => {
+          const requiresAcknowledgement = checkEligibilityResults.find(
+            result =>
+              result.policyNumber === p.policyNumber && result.isEligible
+          );
+
+          if (requiresAcknowledgement) {
+            return <AcknowledgePolicyCard key={p.policyNumber} policy={p} />;
+          }
+          return <CoverageOverviewCard key={p.policyNumber} policy={p} />;
+        })}
       </div>
     </div>
   );

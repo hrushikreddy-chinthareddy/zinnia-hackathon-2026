@@ -273,32 +273,50 @@ export async function middleware(req: NextRequest) {
     if (pathname.includes('/coverage/')) {
       const { planCode, policyNumber } = getPolicyDataFromPath(pathname);
       const deliveryDateEligibleCookie = req.cookies.get(
-        'hasCheckedDeliveryDateEligible'
+        'hasAcknowledgedPolicyOrDoesNotRequireReset'
       )?.value;
+      console.log('deliveryDateEligibleCookie', deliveryDateEligibleCookie);
 
+      // COOKIE EXAMPLE:{"MC53227658":true,"OR05377571":true,"AR49304815":true,"ZS26417JK9":true,"L1A0822243":true}
       const parsedCookie: { [key: string]: boolean } = JSON.parse(
+        // we are setting this as an object to make sure we're not getting duplicates
+        // in this cookie, the values of each key should always be false
         deliveryDateEligibleCookie || '{}'
       );
-      const hasCheckedPolicy = parsedCookie[policyNumber];
+      // we need to specificallly check if the policyNumber exists in the cookie
+      // AND is false, this means it either does not require a policy date reset OR
+      // user has already acknowledged their policy
+      const requiresPolicyDateReset = parsedCookie[policyNumber];
 
-      if (!planCode || !policyNumber || hasCheckedPolicy) {
+      if (!planCode || !policyNumber || requiresPolicyDateReset === false) {
         return resNext;
       }
 
+      // You'll only get to this logic if you NEED to acknowledge the policy
+      // AND you've NEVER been to the policy page before AND you're trying
+      // to get to an interior page (not the index page). Includes the case
+      // where you have a single policy and this is the first time you've
+      // visited the site
       const { data: eligiblityData } = await checkResetDeliveryDateEligibility({
         planCode,
         policyNumber,
       });
 
-      //Set the cookie that we're checked the eligibility
-      parsedCookie[policyNumber] = true;
-      resNext.cookies.set(
-        'hasCheckedDeliveryDateEligible',
-        JSON.stringify(parsedCookie)
-      );
-
+      // If you REQUIRE policy acknowledgement, you will be redirected to the index page
       if (eligiblityData.isEligible) {
         return NextResponse.redirect(new URL('/coverage', req.url));
+        // OTHERWISE, you will be continued to the policy page
+      } else {
+        // Set the cookie with the eligibility response
+        // We want to set the cookie here so that we won't check eligibilty endpoint
+        // unnecessarily. This covers the case where a user never needs to acknowledge
+        // the policy, we also set this cookie after submitting policy acknowledged
+        parsedCookie[policyNumber] = eligiblityData.isEligible;
+        resNext.cookies.set(
+          'hasAcknowledgedPolicyOrDoesNotRequireReset',
+          JSON.stringify(parsedCookie)
+        );
+        return resNext;
       }
     }
 
