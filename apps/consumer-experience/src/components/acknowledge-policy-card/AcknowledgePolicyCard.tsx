@@ -18,6 +18,7 @@ import {
   checkIfNull,
   isAnnuity,
   lineOfBusinessDisplayText,
+  lineOfBusinessUrlPath,
 } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
 
@@ -38,12 +39,13 @@ export const AcknowledgePolicyCard = ({
 }: {
   policy: CarrierPolicyDetails;
 }) => {
+  const { planCode, policyNumber, carrierId, lineOfBusiness } = policy;
   const { control, formState, handleSubmit } = useForm<AckowledgeInputs>({
     defaultValues: {
       policyAcknowledged: false,
-      planCode: policy.planCode,
-      policyNumber: policy.policyNumber,
-      lineOfBusiness: policy.lineOfBusiness,
+      planCode: planCode,
+      policyNumber: policyNumber,
+      lineOfBusiness: lineOfBusiness,
     },
   });
 
@@ -112,7 +114,15 @@ export const AcknowledgePolicyCard = ({
         <div className={styles.policyAcknowledgmentActions}>
           <Button type="submit">Go to policy</Button>
           <span className={styles.viewPolicyDocument}>
-            <Link href="#" text="View policy document" />
+            <Link
+              href={`/coverage/${lineOfBusinessUrlPath(lineOfBusiness)}/${planCode}/${policyNumber}/documents/policy-acknowledgement?clientCode=${carrierId}`}
+              text="View policy document"
+              // TODO: i'm not sure why this is throwing an error, this component extends teh anchor element
+              // so should have target attribute by default
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              target="_blank"
+            />
             {/* TODO: had to add this here because teh component defaults it to in front of text
             will need to also fix hover color */}
             <Icon type={IconType.EXTERNAL_LINK} className="ml-sm" />

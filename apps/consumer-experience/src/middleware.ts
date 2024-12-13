@@ -288,7 +288,15 @@ export async function middleware(req: NextRequest) {
       // user has already acknowledged their policy
       const requiresPolicyDateReset = parsedCookie[policyNumber];
 
-      if (!planCode || !policyNumber || requiresPolicyDateReset === false) {
+      if (
+        !planCode ||
+        !policyNumber ||
+        requiresPolicyDateReset === false ||
+        // These two routes need to be accessible so that users can view their
+        // policy acknowledgement page
+        pathname.includes('/policy-acknowledgement') ||
+        pathname.includes('/documents/error')
+      ) {
         return resNext;
       }
 

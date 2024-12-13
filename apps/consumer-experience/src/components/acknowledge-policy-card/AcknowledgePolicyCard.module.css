@@ -25,14 +25,17 @@
 .policyAcknowledgmentActions {
   display: flex;
   align-items: center;
-  flex-direction: column;
   margin-top: var(--measure-dimension-gap-lg);
+  flex-direction: column;
+
+  > :first-child {
+    margin-bottom: var(--measure-dimension-gap-lg);
+  }
 }
 
 .viewPolicyDocument {
   display: flex;
   color: var(--color-base-text-text-link);
-  margin-top: var(--measure-dimension-gap-lg);
 
   /* override the global consumer anchor hover style */
   a:hover {
@@ -42,4 +45,15 @@
 
 .policyDetails {
   color: var(--color-base-text-text-secondary);
+}
+
+@media (width > 767px) {
+  .policyAcknowledgmentActions {
+    flex-direction: row;
+
+    > :first-child {
+      margin-right: var(--measure-dimension-gap-xl);
+      margin-bottom: 0;
+    }
+  }
 }
