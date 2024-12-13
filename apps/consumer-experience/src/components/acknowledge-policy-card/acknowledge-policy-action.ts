@@ -13,12 +13,10 @@ export async function acknowledgePolicyAction(
 ): Promise<any | never> {
   const cookieStore = await cookies();
   console.log('acknowledging policy');
-  const policyNumber = formData.get('policyAcknowledged') as string;
-  const planCode = formData.get('planCode');
+  const policyNumber = formData.get('policyAcknowledged')?.toString() || '';
+  const planCode = formData.get('planCode')?.toString() || '';
   const lineOfBusiness = formData.get('lineOfBusiness') as LineOfBusiness;
   console.log('policyNumber', policyNumber);
-  // const policyNumber = formData.get('policyAcknowledged')?.toString() || '';
-  // const planCode = formData.get('planCode')?.toString() || '';
 
   try {
     // const response = await postResetDeliveryDate({
