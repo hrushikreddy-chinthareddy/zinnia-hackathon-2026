@@ -25,14 +25,14 @@ const ConfirmStep = ({ taskType }: ConfirmStepProps) => {
 
     const [isLoading, setIsLoading] = useState(false);
 
-    const { task, submitFailed, setSubmitFailed } = formState;
+    const { task, submitFailed, setSubmitFailed, correlationId } = formState;
 
     const submit = useCallback(async () => {
         setIsLoading(true);
-        const success = await updateTask(task);
+        const success = await updateTask(task, correlationId);
         setSubmitFailed(!success);
         setIsLoading(false);
-    }, [setSubmitFailed, task]);
+    }, [correlationId, setSubmitFailed, task]);
 
     if (isLoading) {
         return (

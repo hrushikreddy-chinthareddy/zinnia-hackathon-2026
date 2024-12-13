@@ -1,11 +1,12 @@
 /** @type {import("eslint").Linter.Config} */
+
 module.exports = {
     root: true,
     env: {
         browser: true,
         es2021: true,
     },
-    extends: ['@zinnia/eslint-config/next.js'],
+    extends: ['@zinnia/eslint-config/next.js', 'plugin:@tanstack/eslint-plugin-query/recommended'],
     overrides: [
         {
             files: ['**/*.stories.tsx'],
@@ -19,6 +20,7 @@ module.exports = {
         ecmaVersion: 'latest',
         sourceType: 'module',
     },
+
     rules: {
         '@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true, varsIgnorePattern: '^_' }],
         '@typescript-eslint/no-explicit-any': 'off',

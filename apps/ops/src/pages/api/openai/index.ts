@@ -13,7 +13,7 @@ export default withAuthAndLogging(
             const content = typeof req.body.content === 'string' ? req.body.content : JSON.stringify(req.body.content);
             const prompt = req.body.prompt || '';
             const completion = await openai.chat.completions.create({
-                model: 'gpt-3.5-turbo',
+                model: 'gpt-4o-mini',
                 temperature: 0.2,
                 messages: [
                     {

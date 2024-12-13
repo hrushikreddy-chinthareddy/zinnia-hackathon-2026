@@ -20,7 +20,7 @@ import { getCaseInsights } from '@deps/queries/api/openai';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 import { ReactComponent as LightBulbIcon } from '@deps/styles/elements/icons/illustrations/light-bulb.svg';
 
-const CHART_HEIGHT = 600;
+const CHART_HEIGHT = 500;
 
 if (typeof Highcharts === 'object') {
     HighchartsExporting(Highcharts);
@@ -29,7 +29,7 @@ if (typeof Highcharts === 'object') {
 }
 
 export type TreeMapInsightsProps = {
-    dashboardStatsData: CaseDashboardStatsResponse;
+    dashboardStatsData?: CaseDashboardStatsResponse;
     heading: string;
     carrierOrBrokerDealer?: GroupByOptions.Carrier | GroupByOptions.BrokerDealerName;
 };
@@ -63,13 +63,13 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
     //     return data || []; // always return an array
     // }, [dashboardStatsData]);
 
-    const seriesData = dashboardStatsData.data; // this will change once filters are added
+    const seriesData = dashboardStatsData?.data; // this will change once filters are added
 
-    const noData = seriesData?.length === 0 || dashboardStatsData.totalElements === 0;
+    const noData = !seriesData || seriesData?.length === 0 || dashboardStatsData?.totalElements === 0;
 
     // this is the same code that is found in exception-insights.tsx
     const chartOptions: Highcharts.Options = useMemo(() => {
-        const chartData: Highcharts.SeriesTreemapOptions['data'] = seriesData.map((item: DashboardResponseData) => ({
+        const chartData: Highcharts.SeriesTreemapOptions['data'] = seriesData?.map((item: DashboardResponseData) => ({
             name: DASHBOARD_REPLACE_LABELS.includes(item.name) ? DASHBOARD_DEFAULT_LABEL : item.name,
             value: item.count,
             colorValue: item.count,
@@ -103,7 +103,7 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
                 {
                     type: 'treemap',
                     layoutAlgorithm: 'squarified',
-                    data: chartData,
+                    data: chartData || [],
                     colorAxis: 0,
                     colorKey: 'colorValue',
                     colors: caseChartHelpers.getTreeMapColors(),
@@ -125,32 +125,30 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
                             wrapper.style.backgroundColor = 'var(--color-base-surface-surface-primary)';
                             wrapper.classList.add('rounded', 'typography-content-body');
                             wrapper.style.color = 'var(--color-base-text-text-primary)';
-                            wrapper.style.padding = 'var(--measure-dimension-padding-lg)';
                             wrapper.style.margin = 'var(--measure-dimension-margin-sm)';
-                            wrapper.style.display = 'flex';
-                            wrapper.style.flexDirection = 'column';
-                            wrapper.style.justifyContent = 'start';
-                            wrapper.style.gap = '4px';
+                            wrapper.style.fontFamily = 'var(--font-family-secondary)';
+                            wrapper.style.fontSize = '11px';
                             wrapper.style.overflow = 'hidden';
                             wrapper.style.textOverflow = 'ellipsis';
+
+                            wrapper.style.margin = 'var(--measure-dimension-margin-2xs)';
+                            wrapper.style.padding = 'var(--measure-dimension-padding-xs)';
+                            wrapper.style.alignItems = 'center';
+
                             const nameSpan = document.createElement('span');
-                            const valueSpan = document.createElement('span');
+                            // const valueSpan = document.createElement('span');
                             if (len < Math.max(name.length, ratio.length)) {
-                                wrapper.style.margin = 'var(--measure-dimension-margin-2xs)';
-                                wrapper.style.padding = '0 var(--measure-dimension-padding-xs)';
-                                wrapper.style.justifyContent = 'center';
-                                wrapper.style.alignItems = 'center';
                                 nameSpan.innerText = len < name.length ? name.substring(0, Math.floor(len)) + '...' : name;
-                                valueSpan.innerText = len < ratio.length ? ratio.substring(0, Math.floor(len)) + '...' : ratio;
+                                // valueSpan.innerText = len < ratio.length ? ratio.substring(0, Math.floor(len)) + '...' : ratio;
                                 if (len < 1) {
                                     wrapper.style.visibility = 'hidden';
                                 }
                             } else {
                                 nameSpan.innerText = name;
-                                valueSpan.innerText = ratio;
+                                // valueSpan.innerText = ratio;
                             }
                             wrapper.appendChild(nameSpan);
-                            wrapper.appendChild(valueSpan);
+                            // wrapper.appendChild(valueSpan);
                             return wrapper.outerHTML;
                         },
                     },
@@ -171,12 +169,19 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
                     wrapper.style.display = 'flex';
                     wrapper.style.flexDirection = 'column';
                     wrapper.style.justifyContent = 'start';
-                    wrapper.style.gap = '4px';
+                    wrapper.style.fontSize = '11px';
                     const nameSpan = document.createElement('span');
                     const valueSpan = document.createElement('span');
-                    nameSpan.innerText = this.point.name;
+
                     // @ts-expect-error: this actually exists
-                    valueSpan.innerText = this.point.value;
+                    const value = this.point.value;
+                    // @ts-expect-error: this actually exists
+                    const seriesValues: Array<number> = this.series.valueData;
+                    const total = seriesValues.reduce((sum, val) => sum + val, 0);
+                    const ratio = `${value} / ${total}`;
+
+                    nameSpan.innerText = this.point.name;
+                    valueSpan.innerText = ratio; //this.point.value;
                     wrapper.appendChild(nameSpan);
                     wrapper.appendChild(valueSpan);
                     return wrapper.outerHTML;
@@ -202,12 +207,12 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
     }, [seriesData, shouldShowCaseInsights]);
 
     return (
-        <div className={clsx('bg-white flex flex-col min-h-[600px] lg:flex-row gap-4')}>
-            <div className="basis-1/3 flex flex-col gap-4 items-start">
+        <div className={clsx('bg-white flex flex-col lg:flex-row gap-4')}>
+            <div className="basis-1/4 flex flex-col gap-4 items-start">
                 <div>
                     <Typography variant={TypographyVariant.H3}>{heading}</Typography>
                     <Typography variant={TypographyVariant.Label}>
-                        There are {wholeNumberFormatify(dashboardStatsData.totalElements)} Exceptions
+                        There are {wholeNumberFormatify(dashboardStatsData?.totalElements)} Exceptions
                     </Typography>
                 </div>
                 {loading ? (
@@ -228,7 +233,7 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
                     </>
                 )}
             </div>
-            <div className="basis-2/3 flex flex-col">
+            <div className="basis-3/4 flex flex-col">
                 <div
                     className={clsx(
                         `w-full h-[${CHART_HEIGHT}px]`,

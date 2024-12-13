@@ -13,24 +13,19 @@ import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { ProcessType } from '@deps/models/case/enums';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { ManagementTask } from '@deps/models/case/task-instance';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
 import { getCaseTaskById, getTaskFormMetadata } from '@deps/operations/tasks/task-operations';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
+import { getCaseDetailsSSR } from '@deps/queries/api/cases';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { logError, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 type TaskPageProps = {
-    policy: Policy;
-    clientCode: string;
-    docType: string;
-    caseId: string;
-    taskId: string;
     task: ManagementTask;
     taskMetadata: FormMetadata;
-    taskData: any;
+    correlationId: string;
     taskInfoLink: string;
     nigoExceptions: any;
     nigoSubExceptions: any;
@@ -40,13 +35,14 @@ export const TaskPage: React.FC<TaskPageProps> = ({
     task,
     taskMetadata,
     taskInfoLink,
+    correlationId,
     nigoExceptions,
     nigoSubExceptions,
 }: TaskPageProps) => {
     return (
         <div>
             <NoNavLayout fullHeight={true}>
-                <TaskProvider taskMetadata={taskMetadata} initialTask={task}>
+                <TaskProvider taskMetadata={taskMetadata} initialTask={task} correlationId={correlationId}>
                     <TaskContainer taskInfoLink={taskInfoLink} nigoExceptions={nigoExceptions} nigoSubExceptions={nigoSubExceptions} />
                 </TaskProvider>
             </NoNavLayout>
@@ -108,6 +104,8 @@ export const getServerSideProps = withPageAuthRequired({
             }
 
             const { taskType, carrier, caseId, process } = task;
+            const caseDetails = await getCaseDetailsSSR(caseId, accessToken as string);
+            const correlationId = caseDetails?.correlationId; // Access the property using optional chaining
 
             // If feature flag is not enabled, redirect to error page
             if (!isFormFeatureEnabled(taskType as TaskType, carrier, featureFlagDecisions)) {
@@ -145,6 +143,7 @@ export const getServerSideProps = withPageAuthRequired({
                     ...translations,
                     taskMetadata,
                     task,
+                    correlationId,
                     taskInfoLink,
                     nigoExceptions,
                     nigoSubExceptions,

@@ -44,6 +44,7 @@
         "pageTitles": {
             "caseManagement": "Gestion des Dossiers",
             "caseOverview": "Aperçu du Dossier",
+            "contractExtras": "Options du Contrat",
             "policySearch": "Recherche de Politique",
             "policyDetails": "Détails de la Police",
             "policyExtras": "Options de Police",
@@ -1181,10 +1182,13 @@
                 "agent": "Agent: {{label}}",
                 "pre-note": "Pre-Note: {{label}}",
                 "source of premium": "Source de prétium: {{label}}",
-                "transfer of assets": "Transfert d'actifs: {{label}}"
+                "transfer of assets": "Transfert d'actifs: {{label}}",
+                "ceding carrier": "Transporteur cédant: {{label}}"
             },
             "reviewIssues": "Revoir {{taskType}} problèmes",
-            "suitabilityReview": "suitability revoir"
+            "suitabilityReview": "suitability revoir",
+            "commonTaskIssues": "Problème: Une ou plusieurs problèmes {{taskType}} trouvées.",
+            "suitabilityReviewIssues": "Revoir Suitability Problèmes"
         },
         "processDate": {
             "cancled": "Annulé le",
@@ -2276,7 +2280,8 @@
                 "riskClassTooltip": "Les propriétaires sont regroupés en fonction de leur niveau de risque à assurer, basé sur leur santé et leur mode de vie. Moins de risques = meilleure classe de risque = prime plus basse. Et vice versa.",
                 "riskClass": "Classe de risque",
                 "yearsOld_one": "{{count}} an",
-                "yearsOld_other": "{{count}} ans"
+                "yearsOld_other": "{{count}} ans",
+                "yearsOld_zero": "-- ans"
             },
             "policyTimeline": {
                 "ageOfContract": "Âge du contrat",
@@ -2341,6 +2346,7 @@
                 "planCode": "Code du plan"
             },
             "policyExtras": {
+                "contractExtras": "Options de contrat supplémentaires",
                 "policyExtras": "Options de police supplémentaires",
                 "filter": {
                     "label": "Filtrer par type :",
@@ -4476,7 +4482,6 @@
                 "caseId": "ID du cas"
             }
         },
-
         "confirmStep": {
             "title": "Soumis!",
             "subTitle": "Votre demande a été envoyée pour traitement.",

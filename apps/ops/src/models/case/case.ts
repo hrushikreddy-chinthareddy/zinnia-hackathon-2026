@@ -135,7 +135,7 @@ export interface CaseDashboardStatsResponse {
      * see {@link DashboardSearchRequest} for more details.
      *
      */
-    data: DashboardStatsElementResponse[];
+    data?: DashboardStatsElementResponse[];
     totalElements: number;
 }
 
