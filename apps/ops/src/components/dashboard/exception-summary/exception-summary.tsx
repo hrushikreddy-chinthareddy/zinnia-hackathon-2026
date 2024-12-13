@@ -3,8 +3,7 @@ import clsx from 'clsx';
 import * as Highcharts from 'highcharts';
 import HC_ACCESSIBILITY from 'highcharts/modules/accessibility';
 import HighchartsExporting from 'highcharts/modules/exporting';
-import HighchartsReact from 'highcharts-react-official';
-import { useMemo, useRef, useState } from 'react';
+import { useMemo } from 'react';
 
 import styles from '@deps/components/dashboard/top-5-subprocesses-by-volume/top-5-subprocess-by-volume.module.css';
 import PageLoader from '@deps/components/page-loader/page-loader';
@@ -39,13 +38,6 @@ type Summary = {
     total: number;
 };
 
-type Output = {
-    weekly: Record<string, Summary>;
-    monthly: Record<string, Summary>;
-    weeklyCategories: string[];
-    monthlyCategories: number[];
-};
-
 const colors = ['#D385A5', '#BD85D3', '#8593D3', '#00628B', '#021936'];
 
 export const ExceptionSummary = ({
@@ -59,8 +51,6 @@ export const ExceptionSummary = ({
 }) => {
     const shouldShowCaseInsights = useCaseInsightsPermission();
 
-    const chartRef = useRef<HighchartsReact.RefObject>(null);
-    const [processingLoading, setProcessingLoading] = useState(false);
     const groupBy: GroupByOptions = GroupByOptions.Carrier;
     const { selectedBrokerDealers, selectedCarriers } = useDashboardStore(state => state);
 
@@ -79,6 +69,7 @@ export const ExceptionSummary = ({
 
     const { data: exceptionData, isLoading: exceptionDataLoading } = useQuery({
         queryKey: ['exceptionData', baseDashboardQueryFilter, carrierOrBrokerDealer],
+
         queryFn: async () => {
             const data = await getExceptionData(baseDashboardQueryFilter, [
                 carrierOrBrokerDealer,
@@ -90,7 +81,6 @@ export const ExceptionSummary = ({
             }
             return data;
         },
-        placeholderData: previousData => previousData,
     });
 
     const {
@@ -125,9 +115,7 @@ export const ExceptionSummary = ({
     const noExceptionData = !exceptionData?.data?.statsResponseData?.length;
     const processedData = useMemo(() => {
         if (noExceptionData) return null;
-        setProcessingLoading(true);
         const processedData = processGroupedData(exceptionData?.data.statsResponseData || []);
-        setProcessingLoading(false);
         return processedData;
     }, [exceptionData?.data.statsResponseData, noExceptionData]);
 
@@ -211,10 +199,10 @@ export const ExceptionSummary = ({
                         }}
                         className={clsx('w-full', {
                             [`grid gap-4 place-content-center bg-[--color-base-surface-surface-tertiary]`]:
-                                exceptionDataLoading || processingLoading || !exceptionData || !processedData,
+                                exceptionDataLoading || !exceptionData || !processedData,
                         })}
                     >
-                        {exceptionDataLoading || processingLoading || !processedData ? (
+                        {exceptionDataLoading || !processedData ? (
                             <>
                                 <PageLoader />
                                 <Typography variant={TypographyVariant.BodyBold}>Loading...</Typography>

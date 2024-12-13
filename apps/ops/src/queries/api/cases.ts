@@ -9,6 +9,7 @@ import {
     CaseStatsResponse,
     CreateCaseBody,
     CreateCaseResponse,
+    DashboardStatsElementResponse,
     Metadata,
 } from '@deps/models/case/case';
 import { CaseDocument } from '@deps/models/case/document';
@@ -90,6 +91,27 @@ export const getCaseStats = async (query: CaseStatsQuery): Promise<CaseStatsResp
     }
 };
 
+const recursivelyFilter = (
+    items: DashboardStatsElementResponse[],
+    root: DashboardStatsElementResponse | null,
+    filterString: string
+): DashboardStatsElementResponse[] => {
+    return items.filter(item => {
+        if (item.name !== filterString) {
+            if (item.values) {
+                // Recursively process nested values, directly modifying them
+                item.values = recursivelyFilter(item.values, item, filterString);
+            }
+            return true;
+        } else {
+            if (root) {
+                root.count -= item.count; // Directly modify the root count
+            }
+            return false;
+        }
+    });
+};
+
 export const getCaseDashboardStats = async (
     query: CaseDashboardStatsQuery
 ): Promise<CaseDashboardStatsResponse | CaseDashboardStatsErrorResponse> => {
@@ -100,6 +122,9 @@ export const getCaseDashboardStats = async (
         >(`${baseAppUrl}/api/case/v1/dashboard/stats`, query);
 
         if (Array.isArray(data?.data) && data?.data?.length > 0) {
+            const filteredData = recursivelyFilter(data.data || [], null, 'NOT_APPLICABLE');
+
+            data.data = filteredData;
             return data;
         }
         return { data: [], totalElements: 0 };
