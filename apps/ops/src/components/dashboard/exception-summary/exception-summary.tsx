@@ -215,12 +215,10 @@ export const ExceptionSummary = ({
                         })}
                     >
                         {exceptionDataLoading || processingLoading || !processedData ? (
-                            <div className="flex flex-row gap-2 items-center">
-                                {!processedData ? <ChartBarsIcon height={'24px'} width={'24px'} /> : <PageLoader />}
-                                <Typography variant={TypographyVariant.BodyBold}>
-                                    {!processedData ? 'Error loading data, please try again by refreshing the page' : 'Loading...'}
-                                </Typography>
-                            </div>
+                            <>
+                                <PageLoader />
+                                <Typography variant={TypographyVariant.BodyBold}>Loading...</Typography>
+                            </>
                         ) : (
                             <>
                                 {exceptionData ? (
@@ -228,7 +226,7 @@ export const ExceptionSummary = ({
                                 ) : (
                                     <div className="flex flex-col gap-2 items-center bg-red-400">
                                         <ChartBarsIcon height={'24px'} width={'24px'} />
-                                        <Typography variant={TypographyVariant.BodyBold}>No exceptions</Typography>
+                                        <Typography variant={TypographyVariant.BodyBold}>Chart unavailable</Typography>
                                     </div>
                                 )}
                             </>

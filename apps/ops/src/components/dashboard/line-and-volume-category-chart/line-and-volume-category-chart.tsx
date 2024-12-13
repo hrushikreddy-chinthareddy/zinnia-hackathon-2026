@@ -1,10 +1,9 @@
-import { DashboardStatsElementResponse } from '@deps/models/case/case';
-import { useCallback, useEffect, useRef, useState } from 'react';
-
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
+import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import { DashboardStatsElementResponse } from '@deps/models/case/case';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 
 export type ChartSeriesSummary = {
@@ -102,8 +101,6 @@ export function processGroupedData(input: DashboardStatsElementResponse[]): Line
                 enabled: false, // Disable markers for a clean line chart
             },
             color: colors[i % colors.length],
-            // xAxis: 0, // Use the first xAxis
-            // yAxis: 0,
         };
 
         result.monthlyByLevel1Grouping[level1GroupedByName].series = {
@@ -112,8 +109,6 @@ export function processGroupedData(input: DashboardStatsElementResponse[]): Line
             stack: 'stackedBar',
             type: 'column',
             color: colors[i % colors.length],
-            // xAxis: 1, // Use the second xAxis
-            // yAxis: 1,
         };
 
         const groupedByDate: Record<string, number> = {};
@@ -171,89 +166,13 @@ interface LineAndVolumeCategoryChartProps {
 
 export const LineAndVolumeCategoryChart = ({ chartData }: LineAndVolumeCategoryChartProps) => {
     if (!chartData) {
-        return (
-            <div className="flex flex-col gap-2 items-center">
-                <ChartBarsIcon height={'24px'} width={'24px'} />
-                <Typography variant={TypographyVariant.BodyBold}>Chart unavailable</Typography>
-            </div>
-        );
+        chartData = {} as LineAndVolumeCategoryAndSeries;
     }
+
     const [topChartConfig, setTopChartConfig] = useState({} as Highcharts.Options);
     const [bottomChartConfig, setBottomChartConfig] = useState({} as Highcharts.Options);
     const topChartRef = useRef<HighchartsReact.RefObject>(null);
     const bottomChartRef = useRef<HighchartsReact.RefObject>(null);
-
-    useEffect(() => {
-        const monthlyArray: ChartSeriesSummary[] = [];
-        Object.entries(chartData.monthlyByLevel1Grouping).forEach(([, value]) => {
-            monthlyArray.push(value);
-        });
-
-        const sortedMonthly = monthlyArray.sort((a, b) => b.total - a.total).slice(0, 5);
-
-        const weeklySeries: Highcharts.SeriesLineOptions[] = []; // Highcharts.SeriesOptionsType
-        sortedMonthly.forEach(carrier => {
-            weeklySeries.push(chartData.weeklyByLevel1Grouping[carrier.name].series as Highcharts.SeriesLineOptions);
-        });
-
-        // get the series data for the top 5 carriers
-        const monthlySeries: Highcharts.SeriesColumnOptions[] = sortedMonthly.map(carrier => {
-            return carrier.series as Highcharts.SeriesColumnOptions;
-        });
-
-        const topChartConfig = getTopChartConfig(chartData, weeklySeries);
-        const bottomChartConfig = getBottomChartConfig(chartData, monthlySeries);
-        setTopChartConfig(topChartConfig);
-        setBottomChartConfig(bottomChartConfig);
-    }, [chartData]);
-
-    const tootTipFormatter = (points: Highcharts.TooltipFormatterContextObject[] | undefined) => {
-        if (!points || points.length === 0) return;
-
-        let total = 0;
-        const hoveredYAxis = points[0]?.series?.yAxis;
-
-        const labelData: Array<{
-            label: string;
-            total: number;
-            color: string | Highcharts.GradientColorObject | Highcharts.PatternObject;
-        }> = points.map(point => {
-            total += point.y || 0;
-            return {
-                label: point.series.name,
-                total: point.y || 0,
-                color: point.color || '#000000',
-            };
-        });
-        const labelWrapper = document.createElement('div');
-
-        labelWrapper.style.display = 'flex';
-        labelWrapper.style.flexDirection = 'column';
-        labelWrapper.style.gap = '4px';
-        for (const value of labelData) {
-            const labelElement = document.createElement('div');
-            labelElement.style.display = 'flex';
-            labelElement.style.alignItems = 'center';
-            labelElement.style.gap = '5px';
-            const colorElement = document.createElement('div');
-            colorElement.style.backgroundColor = String(value.color);
-            colorElement.style.width = '10px';
-            colorElement.style.height = '10px';
-            colorElement.style.borderRadius = '50%';
-            const titleElement = document.createElement('div');
-            titleElement.innerHTML = `${value.label}: <b>${value.total.toLocaleString()}</b>`;
-            labelElement.appendChild(colorElement);
-            labelElement.appendChild(titleElement);
-            labelWrapper.appendChild(labelElement);
-        }
-        const totalElement = document.createElement('div');
-        totalElement.style.justifySelf = 'end';
-        totalElement.style.alignSelf = 'end';
-        totalElement.style.marginTop = '4px';
-        totalElement.innerHTML = `Total: <b>${total.toLocaleString()}</b>`;
-        labelWrapper.appendChild(totalElement);
-        return labelWrapper.outerHTML;
-    };
 
     const getTopChartConfig = useCallback(
         (chartData: LineAndVolumeCategoryAndSeries, series: Highcharts.SeriesLineOptions[]): Highcharts.Options => {
@@ -288,7 +207,7 @@ export const LineAndVolumeCategoryChart = ({ chartData }: LineAndVolumeCategoryC
                         endOnTick: true, // Ensures the axis extends to the last tick
                         // gridLineWidth: 1,
                         height: '100%',
-                        width: '90%',
+                        width: '100%',
                         min: 0, // Start at the first category or value
                         // max: chartData.weeklyCategories.length, // End at the last category or value (update as needed)
                         offset: 0, // Remove extra spacing
@@ -375,7 +294,6 @@ export const LineAndVolumeCategoryChart = ({ chartData }: LineAndVolumeCategoryC
                         if (!this.points || this.points.length === 0) return;
 
                         let total = 0;
-                        const hoveredYAxis = this.points[0]?.series?.yAxis;
 
                         const labelData: Array<{
                             label: string;
@@ -422,7 +340,7 @@ export const LineAndVolumeCategoryChart = ({ chartData }: LineAndVolumeCategoryC
                 },
             };
         },
-        [chartData]
+        []
     );
 
     const getBottomChartConfig = useCallback(
@@ -457,7 +375,7 @@ export const LineAndVolumeCategoryChart = ({ chartData }: LineAndVolumeCategoryC
                     categories: chartData.monthlyCategories.map(volume => volume.toString()),
                     gridLineWidth: 1,
                     height: '100%',
-                    width: '90%',
+                    width: '100%',
                     labels: {
                         formatter: function () {
                             return new Intl.NumberFormat().format(this.value?.toString() as unknown as number);
@@ -507,8 +425,79 @@ export const LineAndVolumeCategoryChart = ({ chartData }: LineAndVolumeCategoryC
                 },
             };
         },
-        [chartData]
+        []
     );
+
+    useEffect(() => {
+        const monthlyArray: ChartSeriesSummary[] = [];
+        Object.entries(chartData.monthlyByLevel1Grouping).forEach(([, value]) => {
+            monthlyArray.push(value);
+        });
+
+        const sortedMonthly = monthlyArray.sort((a, b) => b.total - a.total).slice(0, 5);
+
+        const weeklySeries: Highcharts.SeriesLineOptions[] = []; // Highcharts.SeriesOptionsType
+        sortedMonthly.forEach(carrier => {
+            weeklySeries.push(chartData.weeklyByLevel1Grouping[carrier.name].series as Highcharts.SeriesLineOptions);
+        });
+
+        // get the series data for the top 5 carriers
+        const monthlySeries: Highcharts.SeriesColumnOptions[] = sortedMonthly.map(carrier => {
+            return carrier.series as Highcharts.SeriesColumnOptions;
+        });
+
+        const topChartConfig = getTopChartConfig(chartData, weeklySeries);
+        const bottomChartConfig = getBottomChartConfig(chartData, monthlySeries);
+        setTopChartConfig(topChartConfig);
+        setBottomChartConfig(bottomChartConfig);
+    }, [chartData, getBottomChartConfig, getTopChartConfig]);
+
+    const tootTipFormatter = (points: Highcharts.TooltipFormatterContextObject[] | undefined) => {
+        if (!points || points.length === 0) return;
+
+        let total = 0;
+
+        const labelData: Array<{
+            label: string;
+            total: number;
+            color: string | Highcharts.GradientColorObject | Highcharts.PatternObject;
+        }> = points.map(point => {
+            total += point.y || 0;
+            return {
+                label: point.series.name,
+                total: point.y || 0,
+                color: point.color || '#000000',
+            };
+        });
+        const labelWrapper = document.createElement('div');
+
+        labelWrapper.style.display = 'flex';
+        labelWrapper.style.flexDirection = 'column';
+        labelWrapper.style.gap = '4px';
+        for (const value of labelData) {
+            const labelElement = document.createElement('div');
+            labelElement.style.display = 'flex';
+            labelElement.style.alignItems = 'center';
+            labelElement.style.gap = '5px';
+            const colorElement = document.createElement('div');
+            colorElement.style.backgroundColor = String(value.color);
+            colorElement.style.width = '10px';
+            colorElement.style.height = '10px';
+            colorElement.style.borderRadius = '50%';
+            const titleElement = document.createElement('div');
+            titleElement.innerHTML = `${value.label}: <b>${value.total.toLocaleString()}</b>`;
+            labelElement.appendChild(colorElement);
+            labelElement.appendChild(titleElement);
+            labelWrapper.appendChild(labelElement);
+        }
+        const totalElement = document.createElement('div');
+        totalElement.style.justifySelf = 'end';
+        totalElement.style.alignSelf = 'end';
+        totalElement.style.marginTop = '4px';
+        totalElement.innerHTML = `Total: <b>${total.toLocaleString()}</b>`;
+        labelWrapper.appendChild(totalElement);
+        return labelWrapper.outerHTML;
+    };
 
     return (
         <>
