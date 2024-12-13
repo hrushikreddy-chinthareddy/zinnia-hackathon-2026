@@ -34,7 +34,7 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
     // Always show all docs for new business cases
     const [showAll, setShowAll] = useState(isNewBusinessCase);
     const [docSource, setDocSource] = useState(DocumentTypeView.Policy as string);
-    const limit = 10;
+    const limit = 25;
     const [offset, setOffset] = useState(0);
 
     // add linkIcon to docs known to be linked
