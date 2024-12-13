@@ -2722,6 +2722,7 @@
                 "expirationDate": "Expiration date",
                 "insured": "Insured",
                 "maxClaims": "Max claims allowed",
+                "coverageAmount": "Coverage Amount",
                 "notElected": "Not elected",
                 "notElectedTooltip": "Not elected riders or features are those that the owner has the option to add to this policy. They are not currently paying for these additional types of coverage and may not currently submit claims for related benefits. But they could potentially add these to the policy.",
                 "terminalIllnessBenefit": "Up to {{percent}}% ({{amount}}).",
