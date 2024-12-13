@@ -197,6 +197,8 @@ const fullyMaskIdentifications = (identifications: Identification[] | undefined)
         }
         return {
             ...identification,
+            issueState: null as unknown as undefined,
+            issueCountry: null as unknown as undefined,
             identificationValue: identification.identificationValue?.replace(/./g, '*') || (null as unknown as undefined),
         };
     });
