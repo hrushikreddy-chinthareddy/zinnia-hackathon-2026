@@ -17,6 +17,7 @@ import { SearchParams } from '@/types/url';
 import { getCookie } from '@/utils/auth';
 import { getCarrierIdsByThemeCookie } from '@/utils/carriers';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { ACKNOWLEDGEMENT_COOKIE_KEY } from '@/utils/serverClientUtils';
 import { getThemeCookies } from '@/utils/theme';
 import { isVercelEnvironment } from '@/utils/url';
 
@@ -42,22 +43,18 @@ export default async function Page({
   const { data: policyReferenceData, error } =
     await getMyPoliciesByCarrier(carrierIds);
 
-  const eligibilityCookie = await getCookie(
-    'hasAcknowledgedPolicyOrDoesNotRequireReset'
-  );
-  const parsedCookie = JSON.parse(eligibilityCookie || '{}');
-  console.log('eligibilityCookie', typeof eligibilityCookie);
+  const ackowledgedCookie = await getCookie(ACKNOWLEDGEMENT_COOKIE_KEY);
+  const parsedCookie = JSON.parse(ackowledgedCookie || '[]');
 
-  // 1. check cookies to see if policy eligibility has been checked
-  // 2. if not add to promise array
-  // 3. promise.allSettled to get all eligibilty
-  const checkEligibility = [];
+  const checkRequiresAckowledgement = [];
   for (const policy of policyReferenceData || []) {
-    const policyIsInAcknowledgedCookie =
-      parsedCookie?.[policy.policyNumber] === false;
+    const policyIsInAcknowledgedCookie = parsedCookie?.includes(
+      policy.policyNumber
+    );
 
+    // Only want to check if the policy needs to be acknowledged if it isn't in the cookie
     if (!policyIsInAcknowledgedCookie) {
-      checkEligibility.push(
+      checkRequiresAckowledgement.push(
         checkResetDeliveryDateEligibility({
           planCode: policy.planCode || '',
           policyNumber: policy.policyNumber,
@@ -66,8 +63,9 @@ export default async function Page({
     }
   }
 
-  // TODO: should we set the cookie here at all? or should we just rely on the middleware
-  const checkEligibilityResults = (await Promise.allSettled(checkEligibility))
+  const checkEligibilityResults = (
+    await Promise.allSettled(checkRequiresAckowledgement)
+  )
     .filter(result => result.status === 'fulfilled')
     .map(result => result.value.data);
 
@@ -113,6 +111,9 @@ export default async function Page({
       <HeaderBreadcrumb title={pageTitle} preventReturnToPrevious />
       <div className="card-container" style={{ paddingLeft: 0 }}>
         {policyReferenceData?.map(p => {
+          // We don't set the cookie here because we rely on that to happen
+          // either in middleware or once the user has actively acknowledged the
+          // policy
           const requiresAcknowledgement = checkEligibilityResults.find(
             result =>
               result.policyNumber === p.policyNumber && result.isEligible
