@@ -10,7 +10,7 @@ import { CaseDashboardStatsResponse } from '@deps/models/case/case';
 interface Props {
     className?: string;
     seriesLabel?: string;
-    dashboardStatsResponse: CaseDashboardStatsResponse;
+    dashboardStatsResponse?: CaseDashboardStatsResponse;
     showInLegend?: boolean;
     height?: number;
     width?: number;
@@ -28,7 +28,7 @@ const DistributionPieChartSmallAPIBased = ({
     sort = true,
 }: Props) => {
     const [chartConfig, setChartConfig] = useState({});
-    const getChartData = (dashboardStatsResponse: CaseDashboardStatsResponse) => {
+    const getChartData = (dashboardStatsResponse?: CaseDashboardStatsResponse) => {
         const chartData: { name: string; y: number; totalCount: number }[] = [];
 
         if (!dashboardStatsResponse || !dashboardStatsResponse.data || dashboardStatsResponse.data.length === 0) {

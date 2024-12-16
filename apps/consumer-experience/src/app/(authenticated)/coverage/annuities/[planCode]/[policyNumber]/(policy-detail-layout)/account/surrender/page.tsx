@@ -12,7 +12,7 @@ import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
-const NET_SURRENDER_VALUE = 'Net surrender value';
+const CASH_SURRENDER_VALUE = 'Cash surrender value';
 
 const pageTitle = getPageTitle(RouteKey.SURRENDER);
 // disable because NextJS needs this to be exported from this file
@@ -51,20 +51,18 @@ export default async function SurrenderPolicy({
                 <Label
                   interactiveElements={[
                     <LabelPopover
-                      key={NET_SURRENDER_VALUE}
-                      title={NET_SURRENDER_VALUE}
+                      key={CASH_SURRENDER_VALUE}
+                      title={CASH_SURRENDER_VALUE}
                     >
                       <p>
-                        Your net surrender value is the current account value
-                        minus surrender charges, outstanding loans, and other
-                        fees. This number tells you how much you can expect to
-                        receive if you decide to surrender your policy and
-                        cancel your coverage.
+                        This is the amount you may receive if you cancel your
+                        contract early. It's the current account value minus
+                        applicable charges, fees, and penalties.
                       </p>
                     </LabelPopover>,
                   ]}
                 >
-                  {NET_SURRENDER_VALUE}
+                  {CASH_SURRENDER_VALUE}
                 </Label>
               }
             >

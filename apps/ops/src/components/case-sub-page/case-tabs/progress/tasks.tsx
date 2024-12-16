@@ -6,16 +6,26 @@ import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { convertKebabedDateString } from '@deps/helpers/string.helper';
 import { Statuses } from '@deps/models/case/case';
 import { ExceptionStatuses } from '@deps/models/case/exception-instance';
+import { TaskType } from '@deps/models/case/task';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 
 import { TaskView } from './progress-tab-types';
 
 export function Task({ task }: { task: TaskView }) {
     const { t } = useTranslation();
+
     const sideSheet = useSideSheetContext();
 
+    const TaskTitle: Record<string, string> = {
+        [TaskType.SuitabilityReview]: t('caseOverview.tabs.suitabilityReviewIssues'),
+    };
+
+    const TaskTypeMap: Record<string, string> = {
+        [TaskType.SuitabilityReview]: t('caseOverview.tabs.suitabilityReview'),
+    };
+
     const handleClick = (task: TaskView) => {
-        sideSheet.changeSideSheetContent(task.description, <TaskSideSheet taskId={task.id} />);
+        sideSheet.changeSideSheetContent(TaskTitle[task.description], <TaskSideSheet taskId={task.id} />);
         sideSheet.handleOpen(true);
     };
 
@@ -40,7 +50,11 @@ export function Task({ task }: { task: TaskView }) {
                 onClick={() => handleClick(task)}
             >
                 <div className="flex w-full flex-col justify-between lg:flex-row">
-                    <Content contentClassName="min-w-max" variant={ContentVariant.BodySm} details={task.description} />
+                    <Content
+                        contentClassName="min-w-max"
+                        variant={ContentVariant.BodySm}
+                        details={t('caseOverview.tabs.reviewIssues', { taskType: TaskTypeMap[task.description] }) as string}
+                    />
                     <Content className="min-w-max" variant={ContentVariant.BodySm} details={dateString} />
                 </div>
                 <ChevronDown className="rotate-270 text-secondary" width={16} height={16} />
