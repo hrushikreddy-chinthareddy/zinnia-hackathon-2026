@@ -11,6 +11,7 @@ import {
   Link,
 } from '@zinnia/bloom/components';
 import { toSentenceCase } from '@zinnia/utils';
+import { redirect } from 'next/navigation';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 import { CarrierPolicyDetails } from '@/types/policy';
@@ -39,19 +40,25 @@ export const AcknowledgePolicyCard = ({
 }: {
   policy: CarrierPolicyDetails;
 }) => {
-  const { planCode, policyNumber, carrierId, lineOfBusiness } = policy;
+  const { planCode, policyNumber, lineOfBusiness } = policy;
   const { control, formState, handleSubmit } = useForm<AckowledgeInputs>({
     defaultValues: {
       policyAcknowledged: false,
-      planCode: planCode,
-      policyNumber: policyNumber,
-      lineOfBusiness: lineOfBusiness,
+      planCode,
+      policyNumber,
+      lineOfBusiness,
     },
   });
 
   const onSubmit: SubmitHandler<AckowledgeInputs> = async data => {
-    console.log({ data });
-    await acknowledgePolicyAction(data);
+    try {
+      await acknowledgePolicyAction(data);
+      redirect(
+        `/coverage/${lineOfBusinessUrlPath(lineOfBusiness)}/${planCode}/${policyNumber}`
+      );
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -84,7 +91,7 @@ export const AcknowledgePolicyCard = ({
         <Controller
           control={control}
           name="policyAcknowledged"
-          rules={{ required: true }}
+          rules={{ required: false }}
           render={() => (
             <div>
               <Checkbox
