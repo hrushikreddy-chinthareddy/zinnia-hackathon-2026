@@ -104,6 +104,7 @@ export interface CarrierPolicyDetails extends PolicyDetails {
   cumulativeGrossDeathBenefitAmount?: number | null;
   policyStartDate?: string | null;
   effectiveDate?: string | null;
+  issueDate?: string | null;
   lineOfBusiness?: LineOfBusiness;
 }
 
