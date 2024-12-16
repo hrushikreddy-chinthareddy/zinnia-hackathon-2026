@@ -63,11 +63,13 @@ export default async function Page({
     }
   }
 
-  const checkEligibilityResults = (
-    await Promise.allSettled(checkRequiresAckowledgement)
-  )
-    .filter(result => result.status === 'fulfilled')
-    .map(result => result.value.data);
+  // const checkEligibilityResults = (
+  //   await Promise.allSettled(checkRequiresAckowledgement)
+  // )
+  //   .filter(result => result.status === 'fulfilled')
+  //   .map(result => result.value.data);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const checkEligibilityResults = [] as any;
 
   if (error || policyReferenceData?.length === 0) {
     return (
@@ -115,7 +117,7 @@ export default async function Page({
           // either in middleware or once the user has actively acknowledged the
           // policy
           const requiresAcknowledgement = checkEligibilityResults.find(
-            result =>
+            (result: { policyNumber: string; isEligible: unknown }) =>
               result.policyNumber === p.policyNumber && result.isEligible
           );
 
