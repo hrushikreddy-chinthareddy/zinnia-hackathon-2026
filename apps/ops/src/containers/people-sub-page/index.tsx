@@ -95,7 +95,6 @@ export const PeopleSubPage: React.FC = () => {
     }, [extractedParties, extractedPartyRoles, t]);
 
     useEffect(() => {
-        console.log('peopleRolesFilter', peopleRolesFilter);
         // Set selected chip, tag list, and card action data on initial load
         if (peopleRolesFilter.filterValue !== 'All') {
             setPeopleState(prevState => ({
@@ -116,10 +115,8 @@ export const PeopleSubPage: React.FC = () => {
                     isBeneficiarySelected: peopleRolesFilter.filterValue === 'beneficiary',
                 },
             }));
-        } else {
-            setPeopleRolesFilter({ ...peopleRolesFilter });
         }
-    }, []);
+    }, [nameTags, peopleRolesFilter]);
 
     // Handler(s)
     const handleChipClick = (chipValue: string) => {
