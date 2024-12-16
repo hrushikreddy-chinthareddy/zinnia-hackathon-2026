@@ -1,16 +1,16 @@
-import { Tag } from '@zinnia/bloom/components';
 import { TFunction, useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import TempNavInactive, { isStillInactive } from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { PageHeader } from '@deps/components/page-header/page-header';
+import PartyTag from '@deps/components/party/party-tag';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { calculateAgeNumber } from '@deps/helpers/age.helper';
 import { getHeaderIcon, getHeaderText, getPrefCommunicationType } from '@deps/helpers/party-info-helper';
 import { orderObjectsByString } from '@deps/helpers/sort.helper';
 import { formatDate } from '@deps/helpers/string.helper';
-import { PartyType, PolicyAllOfPartiesItem, PolicyParties } from '@deps/models/policy/sor-policy';
+import { PartyStatus, PartyType, PolicyAllOfPartiesItem, PolicyParties } from '@deps/models/policy/sor-policy';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
 import { ReactComponent as UserGroup } from '@deps/styles/elements/icons/icons_outlined/user-group.svg';
 
@@ -22,6 +22,7 @@ interface InteriorPeoplePageHeaderContainerProps {
     selectedPolicyParty?: PolicyAllOfPartiesItem;
     selectedPolicyPartyRoles?: PolicyParties[];
     editable: boolean;
+    partyStatus?: PartyStatus;
 }
 
 const InteriorPeoplePageHeaderContainer = ({
@@ -30,6 +31,7 @@ const InteriorPeoplePageHeaderContainer = ({
     selectedPolicyParty,
     selectedPolicyPartyRoles,
     editable,
+    partyStatus,
 }: InteriorPeoplePageHeaderContainerProps) => {
     const { t } = useTranslation();
 
@@ -114,7 +116,7 @@ const InteriorPeoplePageHeaderContainer = ({
             <div className="flex flex-wrap gap-1">
                 {tags?.map((tag: { text: string }) => (
                     <span key={tag.text} className="pointer-events-none">
-                        <Tag text={tag.text} />
+                        <PartyTag partyStatus={partyStatus} text={tag.text} />
                     </span>
                 ))}
             </div>

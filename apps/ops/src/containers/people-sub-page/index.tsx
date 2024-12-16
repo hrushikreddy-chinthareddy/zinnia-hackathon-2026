@@ -56,7 +56,7 @@ export const PeopleSubPage: React.FC = () => {
     const { policy, refreshPolicy } = useContext(PolicyData);
     const { t } = useTranslation();
     // BPB - ToDo: Use this everywhere here.
-    const policyDetails = new PolicyDetails(policy);
+    const policyDetails = useMemo(() => new PolicyDetails(policy), [policy]);
     const router = useRouter();
     const extractedParties = useMemo(() => policy?.parties || [], [policy]);
     const extractedPartyRoles = useMemo(() => policy?.partyRoles || [], [policy]);
@@ -95,6 +95,7 @@ export const PeopleSubPage: React.FC = () => {
     }, [extractedParties, extractedPartyRoles, t]);
 
     useEffect(() => {
+        console.log('peopleRolesFilter', peopleRolesFilter);
         // Set selected chip, tag list, and card action data on initial load
         if (peopleRolesFilter.filterValue !== 'All') {
             setPeopleState(prevState => ({
