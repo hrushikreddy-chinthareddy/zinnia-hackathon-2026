@@ -11,7 +11,7 @@ import {
   Link,
 } from '@zinnia/bloom/components';
 import { toSentenceCase } from '@zinnia/utils';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 import { CarrierPolicyDetails } from '@/types/policy';
@@ -41,6 +41,7 @@ export const AcknowledgePolicyCard = ({
   policy: CarrierPolicyDetails;
 }) => {
   const { planCode, policyNumber, lineOfBusiness } = policy;
+  const router = useRouter();
   const { control, formState, handleSubmit } = useForm<AckowledgeInputs>({
     defaultValues: {
       policyAcknowledged: false,
@@ -53,11 +54,12 @@ export const AcknowledgePolicyCard = ({
   const onSubmit: SubmitHandler<AckowledgeInputs> = async data => {
     try {
       await acknowledgePolicyAction(data);
-      redirect(
-        `/coverage/${lineOfBusinessUrlPath(lineOfBusiness)}/${planCode}/${policyNumber}`
-      );
     } catch (error) {
       console.error(error);
+    } finally {
+      router.push(
+        `/coverage/${lineOfBusinessUrlPath(lineOfBusiness)}/${planCode}/${policyNumber}`
+      );
     }
   };
 
@@ -91,13 +93,13 @@ export const AcknowledgePolicyCard = ({
         <Controller
           control={control}
           name="policyAcknowledged"
-          rules={{ required: false }}
+          rules={{ required: true }}
           render={() => (
             <div>
               <Checkbox
                 name="policyAcknowledged"
                 //TODO: When bloom is updated, show this prop again
-                //onValueChange={field.onChange}
+                //onClick={field.onChange}
                 showError={!!formState.errors['policyAcknowledged']}
                 id={`${policy.policyNumber}-policyAcknowledgement`}
               >
