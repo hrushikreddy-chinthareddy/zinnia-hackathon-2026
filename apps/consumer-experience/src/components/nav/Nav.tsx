@@ -51,7 +51,6 @@ export async function Nav({
       return (
         <WellabeLogoImage
           alt="Everly Logo"
-          width="auto"
           height="32px"
           color="var(--color-primary-color-primary)"
           fill="var(--color-primary-color-primary)"

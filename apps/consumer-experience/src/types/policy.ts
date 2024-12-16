@@ -98,6 +98,10 @@ export interface CarrierPolicyDetails extends PolicyDetails {
   planCode: string;
   totalFundValue?: number | null;
   totalCoverageAmount?: number | null;
+  /**
+   * Coverage amount for annuities
+   */
+  cumulativeGrossDeathBenefitAmount?: number | null;
   policyStartDate?: string | null;
   effectiveDate?: string | null;
   lineOfBusiness?: LineOfBusiness;

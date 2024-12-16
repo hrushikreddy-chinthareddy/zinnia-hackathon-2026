@@ -24,16 +24,22 @@ export interface CaseListContainerProps {
     policyNumber: string;
     document: DocumentData | null;
     caseId: string;
+    isInvalid: boolean;
     setShowLoader: Dispatch<SetStateAction<any>>;
     setErrorMessage: Dispatch<SetStateAction<any>>;
     setPolicyNumber: Dispatch<SetStateAction<any>>;
 }
-export const CaseListContainer = ({ t, caseType, policyNumber, clientId, document, caseId, setShowLoader, setErrorMessage, setPolicyNumber }: CaseListContainerProps) => {
+export const CaseListContainer = ({ t, caseType, policyNumber, clientId, document, caseId, isInvalid, setShowLoader, setErrorMessage, setPolicyNumber }: CaseListContainerProps) => {
     const { cases, total, loading, error, fetchCases, filters, setFilters } = useFetchCases();
     const [selectedCaseData, setSelectedCaseData] = useState<Case | null>(null);
     const [showCreateCase, setShowCreateCase] = useState<boolean>(false);
 
     useEffect(() => {
+        if (isInvalid) {
+            setFilters({});
+            return;
+        }
+
         if (clientId && caseType) {
             if (policyNumber) {
                 setFilters({
@@ -52,7 +58,7 @@ export const CaseListContainer = ({ t, caseType, policyNumber, clientId, documen
                 });
             }
         }
-    }, [policyNumber, clientId, caseType, setFilters, caseId]);
+    }, [policyNumber, clientId, caseType, setFilters, caseId, isInvalid]);
 
     useEffect(() => {
         if (!isEmptyObject(filters)) {

@@ -15,6 +15,17 @@ import { AUTH0_SCOPE } from '@/utils/serverClientUtils';
 
 import { HttpRequest } from './http';
 
+function getIp() {
+  const FALLBACK_IP_ADDRESS = '0.0.0.0';
+  const forwardedFor = headers().get('x-forwarded-for');
+
+  if (forwardedFor) {
+    return forwardedFor.split(',')[0] ?? FALLBACK_IP_ADDRESS;
+  }
+
+  return headers().get('x-real-ip') ?? FALLBACK_IP_ADDRESS;
+}
+
 class ServerHttpRequest extends HttpRequest {
   request = async (
     input: string | URL | Request,
@@ -78,12 +89,11 @@ class ServerHttpRequest extends HttpRequest {
     email: string;
     code: string;
   }) => {
-    const userIp = headers().get('x-forwarded-for');
     return fetch(`${process.env.AUTH0_ISSUER_BASE_URL}/oauth/token`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'auth0-forwarded-for': userIp || '',
+        'auth0-forwarded-for': getIp(),
       },
       cache: 'no-store',
       body: JSON.stringify({

@@ -59,6 +59,7 @@ export enum RidersCardsTest {
     ExpirationDate = 'riders-cards-expiration-date',
     Insured = 'riders-cards-insured',
     MaxClaims = 'riders-cards-max-claims',
+    Amount = 'riders-cards-amount',
 }
 
 export enum FieldDateSelectTest {
