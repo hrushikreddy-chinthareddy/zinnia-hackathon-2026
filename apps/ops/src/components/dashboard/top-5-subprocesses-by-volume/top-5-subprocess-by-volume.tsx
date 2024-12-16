@@ -4,8 +4,7 @@ import dayjs from 'dayjs';
 import * as Highcharts from 'highcharts';
 import HC_ACCESSIBILITY from 'highcharts/modules/accessibility';
 import HighchartsExporting from 'highcharts/modules/exporting';
-import HighchartsReact from 'highcharts-react-official';
-import { useMemo, useRef, useState } from 'react';
+import { useMemo } from 'react';
 
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import PageLoader from '@deps/components/page-loader/page-loader';
@@ -58,7 +57,6 @@ export const Top5SubprocessByVolume = ({
 }) => {
     const shouldShowCaseInsights = useCaseInsightsPermission();
     const groupBy: GroupByOptions = GroupByOptions.ProductName;
-    const [processingLoading, setProcessingLoading] = useState(false);
 
     const { selectedBrokerDealers, selectedCarriers } = useDashboardStore(state => state);
 
@@ -108,8 +106,6 @@ export const Top5SubprocessByVolume = ({
         enabled: shouldShowCaseInsights && !!statsResponse?.data?.length && !!requestSubType.length,
     });
 
-    const chartRef = useRef<HighchartsReact.RefObject>(null);
-
     const summary = useMemo(() => {
         if (aiError) return 'Sorry, there was a problem loading data...';
         if (aiSummaryResponse?.length) return aiSummaryResponse;
@@ -120,9 +116,7 @@ export const Top5SubprocessByVolume = ({
     const noStatsData = !statsResponse?.data?.length;
     const processedData = useMemo(() => {
         if (noStatsData) return null;
-        setProcessingLoading(true);
         const processedData = processGroupedData(statsResponse?.data || []);
-        setProcessingLoading(false);
         return processedData;
     }, [statsResponse?.data, noStatsData]);
 
@@ -194,12 +188,15 @@ export const Top5SubprocessByVolume = ({
                 </div>
                 <div className="relative xl:w-3/4">
                     <div
+                        style={{
+                            height: `${CHART_HEIGHT}px`,
+                        }}
                         className={clsx('w-full', {
                             'grid gap-4 place-content-center bg-[--color-base-surface-surface-tertiary]':
-                                loading || processingLoading || !statsResponse?.data?.length,
+                                loading || !statsResponse?.data?.length,
                         })}
                     >
-                        {loading || processingLoading ? (
+                        {loading ? (
                             <>
                                 <PageLoader />
                                 <Typography variant={TypographyVariant.BodyBold}>Loading...</Typography>
