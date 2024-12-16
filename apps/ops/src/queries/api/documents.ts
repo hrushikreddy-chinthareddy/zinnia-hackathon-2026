@@ -47,7 +47,7 @@ export const uploadDocument = async (task: ManagementTask, document: any, correl
             file: document,
             metadata: {
                 sourceFileName: name,
-                docAccessLevel: 'ALL_ACCESS',
+                docAccessLevel: 'CLIENT_COPY',
                 documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
                 docCategory: 'NEW_BUSINESS',
                 fileType: blob.type,
