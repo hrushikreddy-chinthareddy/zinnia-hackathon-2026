@@ -2043,17 +2043,17 @@
         }
     },
     "createCaseCreate": {
-        "creatingCase": "Création d'un dossier pour le code client {{clientCode}} numéro de document {{documentNumber}}",
+        "creatingCase": "Identifier un cas pour le code client {{clientCode}} numéro de document {{documentNumber}}",
         "errors": {
             "backToCreateCase": "Retour à la création de cas",
-            "errorCreatingCase": "Une erreur s'est produite lors de la création d'un dossier.",
-            "missingValues": "Les valeurs requises pour créer un dossier n'ont pas été fournies. Un code client, un type de document et un numéro de document sont nécessaires pour créer un dossier. Code client : {{clientCode}}, Type de document : {{docType}}, Numéro de document : {{documentNumber}}. Si vous avez ces valeurs, vous pouvez essayer de créer un dossier en utilisant le lien ci-dessous.",
+            "errorCreatingCase": "Une erreur s'est produite lors de l'identification d'un cas.",
+            "missingValues": "Les valeurs requises pour identifier un cas n'ont pas été fournies. Un code client, un type de document et un numéro de document sont requis pour créer un cas. clientCode : {{clientCode}}, docType : {{docType}}, documentNumber : {{documentNumber}}. Si vous disposez de ces valeurs, vous pouvez essayer d'identifier un cas à l'aide du lien ci-dessous.",
             "unsupportedDocType": "Le type de document fourni n'est pas pris en charge par ce portail. Si vous pensez que c'est incorrect, veuillez en informer le support opérationnel."
         },
         "momentPlease": "Un moment s'il vous plaît.",
         "success": "Succès !",
         "successMessage": "Redirection vers la page d'entrée de tâche (formulaire).",
-        "title": "Création de dossier"
+        "title": "Identification du cas"
     },
     "createCaseError": {
         "backToCreateCase": "Retour à la création de cas",
