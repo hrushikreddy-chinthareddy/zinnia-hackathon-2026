@@ -40,7 +40,7 @@ export const AcknowledgePolicyCard = ({
 }: {
   policy: CarrierPolicyDetails;
 }) => {
-  const { planCode, policyNumber, lineOfBusiness } = policy;
+  const { planCode, policyNumber, lineOfBusiness, carrierId } = policy;
   const router = useRouter();
   const { control, formState, handleSubmit } = useForm<AckowledgeInputs>({
     defaultValues: {
@@ -94,12 +94,11 @@ export const AcknowledgePolicyCard = ({
           control={control}
           name="policyAcknowledged"
           rules={{ required: true }}
-          render={() => (
+          render={({ field }) => (
             <div>
               <Checkbox
                 name="policyAcknowledged"
-                //TODO: When bloom is updated, show this prop again
-                //onClick={field.onChange}
+                onClick={field.onChange}
                 showError={!!formState.errors['policyAcknowledged']}
                 id={`${policy.policyNumber}-policyAcknowledgement`}
               >

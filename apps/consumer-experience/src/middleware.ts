@@ -267,9 +267,9 @@ export async function middleware(req: NextRequest) {
     //********************************** */
     // Policy delivery eligibility check
     //********************************** */
-    // Check if the user is eligible to reset their delivery date.
+    // Check if the user still needs to acknowledge their policy.
     // First check if we've already checked this policy in this session, if yes, ignore,
-    // otherwise check if the policy is eligible and redirect them back to the coverage page instead of letting them
+    // otherwise check if the policy requires acknowledgement and redirect them back to the coverage page instead of letting them
     // go to the policy details page
     if (pathname.includes('/coverage/')) {
       const { planCode, policyNumber } = getPolicyDataFromPath(pathname);
@@ -278,20 +278,15 @@ export async function middleware(req: NextRequest) {
         ACKNOWLEDGEMENT_COOKIE_KEY
       )?.value;
 
-      // COOKIE EXAMPLE:{"MC53227658":true,"OR05377571":true,"AR49304815":true,"ZS26417JK9":true,"L1A0822243":true}
-      const parsedCookie: string[] = JSON.parse(
-        // we are setting this as an object to make sure we're not getting duplicates
-        // in this cookie, the values of each key should always be false
-        hasAckowledgedPolicy || '[]'
-      );
-      // we need to specificallly check if the policyNumber exists in the cookie
-      // AND is false, this means it either does not require a policy date reset OR
-      // user has already acknowledged their policy
+      const parsedCookie: string[] = JSON.parse(hasAckowledgedPolicy || '[]');
+      // we check to see if the policy number is in the cookie,
+      // this means they have already acknowledged the policy
       if (
         !planCode ||
         !policyNumber ||
-        parsedCookie.includes(policyNumber) || // These two routes need to be accessible so that users can view their
-        // policy acknowledgement page
+        parsedCookie.includes(policyNumber) ||
+        // These two routes need to be accessible so that users can view their
+        // policy acknowledgement document
         pathname.includes('/policy-acknowledgement') ||
         pathname.includes('/documents/error')
       ) {
@@ -309,10 +304,12 @@ export async function middleware(req: NextRequest) {
       });
 
       // If you REQUIRE policy acknowledgement, you will be redirected to the index page
-      // We can assume that once theyve ackowledged the policy, it will be reset and they will get to the else statement
+      // We can assume that once theyve ackowledged the policy, the cookie will be set
+      // in policy acknowledgement action and they won't make it here, but if the policy
+      // is not in the cookie, then the eligibility check will have returned false
+      // and user will get to the else here
       if (eligiblityData.isEligible) {
         return NextResponse.redirect(new URL('/coverage', req.url));
-        // OTHERWISE, you will be continued to the policy page
       } else {
         parsedCookie.push(policyNumber);
         resNext.cookies.set(

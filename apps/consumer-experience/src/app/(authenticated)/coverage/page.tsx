@@ -46,15 +46,13 @@ export default async function Page({
   const ackowledgedCookie = await getCookie(ACKNOWLEDGEMENT_COOKIE_KEY);
   const parsedCookie = JSON.parse(ackowledgedCookie || '[]');
 
-  // 1. check cookies to see if policy eligibility has been checked
-  // 2. if not add to promise array
-  // 3. promise.allSettled to get all eligibilty
   const checkRequiresAckowledgement = [];
   for (const policy of policyReferenceData || []) {
     const policyIsInAcknowledgedCookie = parsedCookie?.includes(
       policy.policyNumber
     );
 
+    // Only want to check if the policy needs to be acknowledged if it isn't in the cookie
     if (!policyIsInAcknowledgedCookie) {
       checkRequiresAckowledgement.push(
         checkResetDeliveryDateEligibility({
@@ -65,7 +63,6 @@ export default async function Page({
     }
   }
 
-  // TODO: should we set the cookie here at all? or should we just rely on the middleware
   const checkEligibilityResults = (
     await Promise.allSettled(checkRequiresAckowledgement)
   )
@@ -114,6 +111,9 @@ export default async function Page({
       <HeaderBreadcrumb title={pageTitle} preventReturnToPrevious />
       <div className="card-container" style={{ paddingLeft: 0 }}>
         {policyReferenceData?.map(p => {
+          // We don't set the cookie here because we rely on that to happen
+          // either in middleware or once the user has actively acknowledged the
+          // policy
           const requiresAcknowledgement = checkEligibilityResults.find(
             result =>
               result.policyNumber === p.policyNumber && result.isEligible
