@@ -4,17 +4,19 @@ import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import {
   AssistiveText,
   AssistiveTextVariant,
-  Button,
   Checkbox,
   Icon,
   IconType,
   Link,
+  LoaderVariant,
+  SpinnerButton,
 } from '@zinnia/bloom/components';
 import { toSentenceCase } from '@zinnia/utils';
 import { useRouter } from 'next/navigation';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 import { CarrierPolicyDetails } from '@/types/policy';
+import { getCarrierNameById } from '@/utils/carriers';
 import {
   checkIfNull,
   isAnnuity,
@@ -42,7 +44,12 @@ export const AcknowledgePolicyCard = ({
 }) => {
   const { planCode, policyNumber, lineOfBusiness, carrierId } = policy;
   const router = useRouter();
-  const { control, formState, handleSubmit } = useForm<AckowledgeInputs>({
+  const {
+    control,
+    formState,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<AckowledgeInputs>({
     defaultValues: {
       policyAcknowledged: false,
       planCode,
@@ -103,7 +110,7 @@ export const AcknowledgePolicyCard = ({
                 id={`${policy.policyNumber}-policyAcknowledgement`}
               >
                 <span>
-                  {`I acknowledge the receipt of Policy ${policy.policyNumber} issued by ${policy.marketingName}
+                  {`I acknowledge the receipt of Policy ${policy.policyNumber} issued by ${getCarrierNameById(carrierId)}
                     insurance company on ${standardDateMonthDayYear(policy.issueDate)}`}
                 </span>
               </Checkbox>
@@ -120,7 +127,16 @@ export const AcknowledgePolicyCard = ({
         )}
 
         <div className={styles.policyAcknowledgmentActions}>
-          <Button type="submit">Go to policy</Button>
+          <SpinnerButton
+            expand
+            type="submit"
+            disabled={isSubmitting}
+            variant={LoaderVariant.CTA}
+            hide={!isSubmitting}
+            className={styles.submit}
+          >
+            <span>Go to policy</span>
+          </SpinnerButton>
           <span className={styles.viewPolicyDocument}>
             <Link
               href={`/coverage/${lineOfBusinessUrlPath(lineOfBusiness)}/${planCode}/${policyNumber}/documents/policy-acknowledgement?clientCode=${carrierId}`}
