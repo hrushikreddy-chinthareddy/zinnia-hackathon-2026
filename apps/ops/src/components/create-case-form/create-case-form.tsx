@@ -1,5 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import xss from 'xss';
+
 import Button, { ButtonSize, ButtonType } from '@deps/components/button/button';
 import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
 import SelectSimple from '@deps/components/select/select';
@@ -48,7 +49,6 @@ const CreateCaseForm = ({
     searchByOption,
     setSearchByOption,
 }: CreateCaseViewProps) => {
-
     const { t } = useTranslation(TranslationFiles.COMMON);
     const isNewLayout = caseType === CaseType.AddressChange || caseType === CaseType.ReReg;
 
@@ -91,9 +91,11 @@ const CreateCaseForm = ({
                             onChange={onClientChange}
                             className="md:min-w-[250px]"
                             label={t('caseRenewal.caseCreate.client') as string}
-                            options={clientIds.map((cId : string) => {
-                                return { label: `${getCarrierNameByClientId(cId) || cId}`, value: cId.toLowerCase() };
-                            }).sort((a:Option,b:Option) => a.label.localeCompare(b.label))}
+                            options={clientIds
+                                .map((cId: string) => {
+                                    return { label: `${getCarrierNameByClientId(cId) || cId}`, value: cId.toLowerCase() };
+                                })
+                                .sort((a: Option, b: Option) => a.label.localeCompare(b.label))}
                             placeholder={t('caseRenewal.caseCreate.selectAClient') as string}
                             size={FieldSize.Small}
                             value={clientId}
