@@ -2043,7 +2043,7 @@
         }
     },
     "createCaseCreate": {
-        "creatingCase": "Identification d'un dossier pour le numéro de document {{client Code}} {{document Number}}",
+        "creatingCase": "Identifier un cas pour le code client {{clientCode}} numéro de document {{documentNumber}}",
         "errors": {
             "backToCreateCase": "Retour à la création de cas",
             "errorCreatingCase": "Une erreur s'est produite lors de l'identification d'un cas.",
