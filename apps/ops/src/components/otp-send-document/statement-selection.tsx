@@ -19,7 +19,7 @@ import { DatePickerTypes, getQuarter, Quarter, quarters } from '../date-picker/d
 import { FieldSize, FieldType } from '../fields/field';
 import FieldDateSelect from '../fields/field-date-select/field-date-select';
 import WorkflowCard from '../workflows/workflow-card/workflow-card';
-import { browserLogInfo, browserLogWarn } from '@deps/utils/browser-logging';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
 const toggleStatement = (val: StatementTypes, SetSelectedStatements: React.Dispatch<React.SetStateAction<StatementTypes[]>>) => {
@@ -208,12 +208,11 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                         setStatements(ownerCopyStatements(statements.items));
                     }
                 } catch (error) {
-                    browserLogWarn('contactCenterGetStatements', {
+                    browserLogError('contactCenterGetStatements', {
                         ...parseErrorInformation(error),
                         payload: { contractNumber: policy?.policyNumber, startDate, endDate, planCode: policy?.product?.planCode || '' },
                         function: 'documents.getCorrespondenceDocs',
                     });
-                    console.error('An error occurred while getting Contact Center statements', error);
                 } finally {
                     setLoader(false);
                 }
