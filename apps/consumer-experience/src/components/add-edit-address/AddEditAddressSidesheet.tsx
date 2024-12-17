@@ -1,35 +1,27 @@
 'use client';
 
-import { AccountStatus } from '@zinnia/api-types/types/sor';
 import { SideSheet, Button, Icon, IconType } from '@zinnia/bloom/components';
-import { useParams, useSearchParams } from 'next/navigation';
-import { FC, ReactNode, useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
+import { FC, ReactNode, useState } from 'react';
 
-import { addBankRequest } from '@/actions/bpm-actions';
-import { ActionTypes, useBpmStore } from '@/store/store';
-import { BankFormFields } from '@/types/bank';
+import { useBpmStore } from '@/store/store';
 import { FormSteps } from '@/types/transactions';
 
-import styles from './AddBankSidesheet.module.css';
-import { AddBank } from './form-steps/add/AddBank';
+import styles from './AddEditAddressSidesheet.module.css';
 import { Error } from '../transaction-steps/error/Error';
 import { Loading } from '../transaction-steps/loading/Loading';
 import { Success } from '../transaction-steps/success/Success';
+import { AddAddress, AddressFormFields } from './form-steps/add/AddAddress';
 
-export interface AddBankSidesheet {
+export interface AddEditAddressSidesheetProps {
   partyId: string;
-  bankId?: string;
-  values?: BankFormFields;
-  autopayEnabled?: boolean;
-  numberOfAccounts?: number;
-  policyOwner: string;
+
+  values?: AddressFormFields;
 }
 
-export const AddBankSidesheet: FC<AddBankSidesheet> = ({
+export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
   values,
   partyId,
-  bankId,
-  policyOwner,
 }) => {
   const updateBpmAction = useBpmStore(state => state.updateBpmAction);
   const params = useParams<{
@@ -48,47 +40,45 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
     'Some generic messaging that will get updated based on the api response'
   );
 
-  const search = useSearchParams();
-
-  useEffect(() => {
-    if (search.get('addBank') === 'true') {
-      setOpen(true);
-    }
-  }, [search]);
-
-  const handleAdd = async (requestValues: BankFormFields) => {
+  const handleAdd = async (requestValues: AddressFormFields) => {
     setStep(FormSteps.LOADING);
-    const { data, error } = await addBankRequest({
-      planCode: params.planCode,
-      policyNumber: params.policyNumber,
-      partyId,
-      bankId,
-      bankAccountChangeRequest: {
-        bankAccount: {
-          ...requestValues,
-          accountStatus: AccountStatus.ACTIVEBANKACCOUNT,
-          nameOnAccount: policyOwner,
-        },
-      },
-    });
-    if (error) {
-      setIsServerError(error.status >= 500);
-      setErrorTitle(error.name);
-      setErrorMessage(error.message);
-      setStep(FormSteps.ERROR);
-      return;
-    }
-    if (data) {
-      setSuccessTitle(data.messages.title);
-      setSuccessMessage(data.messages.message);
-      setStep(FormSteps.SUCCESS);
 
-      updateBpmAction({
-        actionType: ActionTypes.ADD,
-        bankAccountNumber: requestValues.accountNumber,
-      });
-      return;
-    }
+    console.log('adding');
+
+    setTimeout(() => {
+      setStep(FormSteps.SUCCESS);
+    }, 2000);
+    // const { data, error } = await addBankRequest({
+    //   planCode: params.planCode,
+    //   policyNumber: params.policyNumber,
+    //   partyId,
+    //   bankId,
+    //   bankAccountChangeRequest: {
+    //     bankAccount: {
+    //       ...requestValues,
+    //       accountStatus: AccountStatus.ACTIVEBANKACCOUNT,
+    //       nameOnAccount: policyOwner,
+    //     },
+    //   },
+    // });
+    // if (error) {
+    //   setIsServerError(error.status >= 500);
+    //   setErrorTitle(error.name);
+    //   setErrorMessage(error.message);
+    //   setStep(FormSteps.ERROR);
+    //   return;
+    // }
+    // if (data) {
+    //   setSuccessTitle(data.messages.title);
+    //   setSuccessMessage(data.messages.message);
+    //   setStep(FormSteps.SUCCESS);
+
+    //   updateBpmAction({
+    //     actionType: ActionTypes.ADD,
+    //     bankAccountNumber: requestValues.accountNumber,
+    //   });
+    //   return;
+    // }
   };
 
   const onClose = () => {
@@ -103,7 +93,7 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
 
   return (
     <SideSheet
-      header="Add New Bank Account"
+      header="Add Address"
       overrideOpen={open}
       closeCallback={onClose}
       trigger={
@@ -114,12 +104,12 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
           onClick={() => setOpen(true)}
         >
           <Icon small type={IconType.ADD} />
-          Add another bank account
+          Add address
         </Button>
       }
     >
       {!step && (
-        <AddBank
+        <AddAddress
           values={values}
           cancelCallback={onClose}
           submitCallback={handleAdd}

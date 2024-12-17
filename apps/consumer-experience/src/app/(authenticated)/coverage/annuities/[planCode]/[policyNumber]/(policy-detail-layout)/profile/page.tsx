@@ -70,6 +70,7 @@ export default async function Profile({ params }: Props) {
             addresses={currentAddresses as Address[]}
             title="Address"
             preferredAddressIndicator={profileData.preferredAddressIndicator}
+            partyId={profileData.partyId}
           />
         );
       }

@@ -13,6 +13,7 @@ import { Address } from '@/components/pii/Address';
 
 import styles from './PersonData.module.css';
 import { AddressProps } from './types';
+import { AddEditAddressSidesheet } from '../add-edit-address/AddEditAddressSidesheet';
 
 const displayAddressType: { [key in AddressType]?: string } = {
   [AddressType.POBOX]: 'PO Box',
@@ -64,6 +65,7 @@ export const Addresses = ({
   addresses,
   title,
   preferredAddressIndicator,
+  partyId,
 }: AddressProps) => {
   if (addresses.length === 0) {
     return null;
@@ -96,6 +98,7 @@ export const Addresses = ({
           addresses={businessAddresses}
           preferredAddressIndicator={preferredAddressIndicator}
         />
+        <AddEditAddressSidesheet partyId={partyId || ''} />
       </div>
     </div>
   );

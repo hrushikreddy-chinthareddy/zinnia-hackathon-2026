@@ -83,6 +83,7 @@ export interface AddressProps {
   addresses: Address[];
   title: string;
   preferredAddressIndicator: string;
+  partyId?: string;
 }
 
 export interface BankDetail extends BankAccount {
