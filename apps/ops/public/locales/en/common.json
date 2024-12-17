@@ -20,6 +20,8 @@
     "selectProcessType": "Select Process Type",
     "trend": "Trend",
     "unapproved": "Unapproved",
+    "yes": "Yes",
+    "no": "No",
     "site": {
         "name": "Zinnia Live",
         "home": {
@@ -139,6 +141,10 @@
                 "withdrawalStart": {
                     "href": "/policies/{{planCode}}/{{id}}/policy/withdrawals/new-withdrawal",
                     "text": "Start a withdrawal"
+                },
+                "withdrawalOneTime": {
+                    "href": "/policies/{{planCode}}/{{id}}/policy/withdrawals/new-withdrawal",
+                    "text": "Make a one-time withdrawal"
                 },
                 "loans": {
                     "text": "Loans",
@@ -3760,6 +3766,15 @@
     },
     "annuitization": {
         "title": "Annuitization and Payout",
+        "headerDetails": {
+            "payoutOption": "Annuity payout option",
+            "fixedPayoutAmount": "Fixed payout amount",
+            "fixedExclusionAmount": "Fixed exclusion amount",
+            "totalAnnuityPayments": "Total annuity payments",
+            "ytdAnnuityPayments": "Year to date annuity payments",
+            "accumulationPhase": "Accumulation Phase",
+            "incomePhase": "Income Phase"
+        },
         "details": {
             "header": "Annuitization Details",
             "paymentAmount": "Payment amount",
@@ -4106,9 +4121,9 @@
             "totalRMDAmountTooltip": "This is the total amount of the RMD that the owner is required to distribute. It's the requested amount minus any applicable transaction fees.",
             "remainingRMDAmount": "Remaining RMD amount",
             "remainingRMDAmountTooltip": "This is the amount of the RMD that the owner is still required to distribute.",
-            "calculationDate": "Calculation date",
+            "calculationDate": "Recalculation date",
             "calculationDateTooltip": "This is the date on which the RMD is calculated.",
-            "calculationType": "Calculation type",
+            "calculationType": "Recalculation type",
             "calculationTypeTooltip": "This is the method used to calculate the RMD."
         },
         "rules": {
@@ -4135,6 +4150,8 @@
         "exchange1035": "Start a 1035 Exchange",
         "allTimeWithdrawals": "All-time withdrawals",
         "allTimeWithdrawalsTooltip": "This is how much the owner has withdrawn from the account value since they've owned their policy.",
+        "mvaApplies": "Market value adjustment applies",
+        "mvaAppliesMetadata": "MVA adjustment",
         "annualWithdrawalsRemaining": "Annual withdrawals remaining",
         "annualWithdrawalsRemainingTooltip": "This is the number of withdrawals remaining for the policy year.",
         "eligible": "Eligible",
@@ -4146,6 +4163,7 @@
         "netSurrenderValue": "Net surrender value",
         "netSurrenderValueTooltip": "This is how much the owner or their payees can expect if the policy is surrendered. It's the current account value minus surrender charges, outstanding loans, and other fees.",
         "startAWithdrawal": "Start a withdrawal",
+        "oneTimeWithdrawal": "Make one-time withdrawal",
         "surrenderPolicy": "Surrender policy",
         "viewWithdrawalHistory": "Go to withdrawal transaction history",
         "withdrawal": "withdrawal",
