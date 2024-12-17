@@ -1,4 +1,3 @@
-import { datadogLogs } from '@datadog/browser-logs';
 import { ChipX, Label, Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
@@ -9,6 +8,7 @@ import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 
 import { validateEmail } from '../correspondence';
+import { browserLogWarn } from '@deps/utils/browser-logging';
 
 type AdditionalRecipientProps = {
     classNames?: string;
@@ -31,7 +31,7 @@ const AdditionalRecipient = ({ classNames, emails, setEmails, setError }: Additi
             return;
         }
         if (emailError) {
-            datadogLogs.logger.info('contactCenterCCEmailValidation', {
+            browserLogWarn('contactCenterCCEmailValidation', {
                 payload: val,
                 error: t(emailError) as string,
                 function: 'correspondence.cc.validateEmail',
