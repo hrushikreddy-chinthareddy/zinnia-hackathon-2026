@@ -3131,6 +3131,19 @@
         },
         "correspondence": "Correspondence ({{count}})",
         "policy": "Policy ({{count}})",
+        "task": {
+            "tabs": {
+                "details": "Details",
+                "history": "History",
+                "documents": "Documents"
+            },
+            "assigneeLabel": "Assignee",
+            "stepLabel": "Step",
+            "issueLabel": "Issue",
+            "detailsLabel": "Details",
+            "commonTaskIssues": "One or more {{taskType}} issues found.",
+            "taskDetails": "One or more issues were found during Zinnia {{taskType}}. These issues must be reviewed by Carrier and overridden to issue the contract."
+        },
         "suitability": {
             "header": "Complete Suitability Review",
             "taskLabel": "Task ID",
