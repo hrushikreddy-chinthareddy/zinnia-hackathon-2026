@@ -186,8 +186,9 @@ export const getServerSideProps = withPageAuthRequired({
                 user: userInfoForLogging.email,
             });
 
-            const form = mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm.data, userId: user?.name });
             const { documentNumber, contractNum, clientCode } = activeForm?.data || {};
+
+            const form = mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm?.data, userId: user?.name });
             const caseType = ProcessesToCaseTypeMap[activeForm.process as Processes];
             const docType = caseType ? docTypes[caseType] : null;
 
