@@ -131,7 +131,7 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
                         </Typography>
                     </div>
                 </div>
-                {task.status === TaskStatus.Open && (
+                {task.status === TaskStatus.New && (
                     <div className="flex flex-row items-center gap-1 pt-8">
                         <Link href={`/task/${task.id}`} text="Start task" variant="button" size="small"></Link>
                     </div>
