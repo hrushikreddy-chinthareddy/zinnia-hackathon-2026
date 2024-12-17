@@ -1,8 +1,9 @@
-import { datadogLogs } from '@datadog/browser-logs';
 import { AxiosResponse } from 'axios';
 
 import { baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
 
 const baseUrl = `${baseAppUrl}/api/webnonfinancial/nonfinancial/v1`;
 
@@ -10,7 +11,7 @@ export const addTransaction = async (body: any): Promise<any> => {
     const { businessKey, correlationid, carrierId, policyNumber, }  = body || {};
 
     try {
-        datadogLogs.logger.info('webNonFinancial', {
+        browserLogInfo('webNonFinancial', {
             message: 'Adding a transaction',
             payload: { businessKey, correlationid, carrierId, policyNumber },
             url: `${baseUrl}/transactions`,
@@ -20,7 +21,7 @@ export const addTransaction = async (body: any): Promise<any> => {
             `${baseUrl}/transactions`,
             body
         );
-        datadogLogs.logger.info('webNonFinancial', {
+        browserLogInfo('webNonFinancial', {
             message: 'Added a transaction',
             payload: { businessKey, correlationid, carrierId, policyNumber },
             url: `${baseUrl}/transactions`,
@@ -28,10 +29,10 @@ export const addTransaction = async (body: any): Promise<any> => {
         });
         return data;
     } catch (error: any) {
-        datadogLogs.logger.error('webNonFinancial', {
+        browserLogError('webNonFinancial', {
+            ...parseErrorInformation(error),
             message: 'Failed to add transaction',
             payload: { businessKey, correlationid, carrierId, policyNumber },
-            error,
             url: `${baseUrl}/transactions`,
             function: 'web-non-financial.addTransaction',
         });
