@@ -1,7 +1,3 @@
-'use server';
-
-import { headers } from 'next/headers';
-
 export const prependSubdomain = (subdomain: string): string => {
   let protocol = 'https';
   let domain =
@@ -13,17 +9,6 @@ export const prependSubdomain = (subdomain: string): string => {
     protocol = 'http';
   }
   return `${protocol}://${subdomain}.${domain}`;
-};
-
-/**
- *
- * @returns true if the url is running on vercel
- */
-export const isVercelEnvironment = () => {
-  const headersList = headers();
-  const url = headersList.get('host') || '';
-
-  return url.includes('vercel.app');
 };
 
 /**

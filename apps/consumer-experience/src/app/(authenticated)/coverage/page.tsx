@@ -16,10 +16,10 @@ import { getMyPoliciesByCarrier } from '@/services/policy';
 import { SearchParams } from '@/types/url';
 import { getCookie } from '@/utils/auth';
 import { getCarrierIdsByThemeCookie } from '@/utils/carriers';
+import { isVercelEnvironment } from '@/utils/environment';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import { ACKNOWLEDGEMENT_COOKIE_KEY } from '@/utils/serverClientUtils';
 import { getThemeCookies } from '@/utils/theme';
-import { isVercelEnvironment } from '@/utils/url';
 
 const pageTitle = getPageTitle(RouteKey.COVERAGE);
 // disable because NextJS needs this to be exported from this file

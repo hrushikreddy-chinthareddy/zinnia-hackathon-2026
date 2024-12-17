@@ -15,6 +15,7 @@ import { toSentenceCase } from '@zinnia/utils';
 import { useRouter } from 'next/navigation';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
+import { CarrierNames } from '@/types/carriers';
 import { CarrierPolicyDetails } from '@/types/policy';
 import { getCarrierNameById } from '@/utils/carriers';
 import {
@@ -36,6 +37,34 @@ export interface AckowledgeInputs {
   policyNumber: string;
   lineOfBusiness: LineOfBusiness;
 }
+
+const acknowledgmentCopy = ({
+  carrierId,
+  policyNumber,
+  issueDate,
+}: {
+  carrierId?: string;
+  policyNumber: string;
+  issueDate?: string | null;
+}) => {
+  const carrierName = getCarrierNameById(carrierId);
+  const issueDateFormatted = standardDateMonthDayYear(issueDate);
+
+  if (carrierName === CarrierNames.EVERLY) {
+    return (
+      <span>
+        {`I acknowledge the receipt of Policy ${policyNumber} issued by ${carrierName}
+        insurance company on ${issueDateFormatted}`}
+      </span>
+    );
+  }
+
+  return (
+    <span>
+      {`I acknowledge the receipt of Policy ${policyNumber} issued by ${carrierName} on ${issueDateFormatted}`}
+    </span>
+  );
+};
 
 export const AcknowledgePolicyCard = ({
   policy,
@@ -109,10 +138,11 @@ export const AcknowledgePolicyCard = ({
                 showError={!!formState.errors['policyAcknowledged']}
                 id={`${policy.policyNumber}-policyAcknowledgement`}
               >
-                <span>
-                  {`I acknowledge the receipt of Policy ${policy.policyNumber} issued by ${getCarrierNameById(carrierId)}
-                    insurance company on ${standardDateMonthDayYear(policy.issueDate)}`}
-                </span>
+                {acknowledgmentCopy({
+                  carrierId,
+                  policyNumber,
+                  issueDate: policy.issueDate,
+                })}
               </Checkbox>
             </div>
           )}
