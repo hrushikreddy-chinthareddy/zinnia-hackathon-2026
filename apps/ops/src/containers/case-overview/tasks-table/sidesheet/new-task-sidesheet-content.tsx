@@ -1,0 +1,195 @@
+import { Icon, IconType, Link, Loader, TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
+import Image from 'next/image';
+import { useTranslation } from 'next-i18next';
+import { useEffect, useState } from 'react';
+
+import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
+import Label, { LabelVariant } from '@deps/components/label/label';
+import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
+import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import { parseAndFormatDate, toSentenceCase } from '@deps/helpers/string.helper';
+import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
+import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
+import { getTaskInstance } from '@deps/queries/api/v2/task';
+import { ReactComponent as NotStartedIcon } from '@deps/styles/elements/icons/alert/not-started.svg';
+import { ReactComponent as CircleCheckedIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
+import { ReactComponent as CircleStoppedIcon } from '@deps/styles/elements/icons/circles/stop-circle.svg';
+import { DEFAULT_DATE_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+import { getCarrierLogoByClientId } from '@deps/utils/carriers';
+
+const TaskTypeMap: Record<string, string> = {
+    ['SUITABILITY_REVIEW']: 'suitability review',
+};
+
+export enum TabOptions {
+    Details = 'Details',
+    History = 'History',
+    Documents = 'Documents',
+}
+
+export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
+    const { t } = useTranslation();
+    const [loading, setLoading] = useState(true);
+    const [task, setTask] = useState<ManagementTask | null>(null);
+    const [activeTab, setActiveTab] = useState(TabOptions.Details);
+    const [imageSrc, setImageSrc] = useState('');
+
+    const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
+
+    useEffect(() => {
+        const getTaskData = async () => {
+            const data = await getTaskInstance({ taskId });
+            setTask(data);
+            setImageSrc(getCarrierLogoByClientId(data?.carrier as string));
+            setLoading(false);
+        };
+        getTaskData();
+    }, [taskId]);
+
+    if (loading) return <PageLoader variant={PageLoaderVariant.Center} />;
+
+    if (!task) return null;
+
+    const { unit: createdUnit, count: createdCount } = getTimeAgoUnitValue(task.createdAt) || {};
+    const formattedCreated = parseAndFormatDate(NUMERIC_DATE_FORMAT, DEFAULT_DATE_FORMAT, task.createdAt);
+
+    const renderDetails = (
+        <div className="flex flex-col w-full">
+            <label className="font-primary text-lg mt-10">{t('sideSheet.task.tabs.details')}</label>
+            <div className="flex flex-col items-start justify-center gap-1 border-b-2 border-gray-100 py-4 last:border-b-0">
+                <div className="flex flex-row items-center gap-1">
+                    <Label label={t('sideSheet.task.status.label')} variant={LabelVariant.FieldLabel} className="w-[100px] py-2" />
+                    <div className="flex items-center">
+                        {task.status == TaskStatus.New && <NotStartedIcon width={16} height={16} className="mr-2 text-gray-300" />}
+                        {task.status == TaskStatus.InProgress && (
+                            <CircleCheckedIcon width={16} height={16} className="mr-1 text-semantic-success" />
+                        )}
+                        {task.status == TaskStatus.Completed && <CircleStoppedIcon width={16} height={16} className="mr-2 text-gray-300" />}
+
+                        <Typography variant={TypographyVariant.BodySm} className="py-2 pr-6">
+                            {toSentenceCase(task.status)}
+                        </Typography>
+                    </div>
+                </div>
+
+                <div className="flex flex-row items-center gap-1">
+                    <Label label={t('sideSheet.task.assigneeLabel')} variant={LabelVariant.FieldLabel} className="w-[100px] py-2" />
+                    <div className="flex p-1 shrink-0 rounded border-gray-200">
+                        <Image
+                            src={imageSrc}
+                            className="py-2 "
+                            alt={`${task?.carrier} icon`}
+                            width={16}
+                            height={16}
+                            role="presentation"
+                            aria-hidden="true"
+                        />
+
+                        <Typography variant={TypographyVariant.BodySm} className="py-2 px-2">
+                            {task?.carrier}
+                        </Typography>
+                        <Typography variant={TypographyVariant.BodySm} className="py-2 pr-2">
+                            {task?.taskType}
+                        </Typography>
+                    </div>
+                </div>
+
+                <div className="flex flex-row items-center gap-1">
+                    <Label label={t('sideSheet.task.createdLabel')} variant={LabelVariant.FieldLabel} className="w-[100px] py-2" />
+                    <Typography variant={TypographyVariant.BodySm} className="py-2">
+                        {formattedCreated}
+                        <span className="text-gray-600">
+                            &nbsp;
+                            {`(${t('temporal.timeago', { formattedDate: '', count: createdCount, unit: createdUnit }).trim()})`}
+                        </span>
+                    </Typography>
+                </div>
+
+                <div className="flex flex-row items-center gap-1">
+                    <Label label={t('sideSheet.task.stepLabel')} variant={LabelVariant.FieldLabel} className="w-[100px] py-2" />
+                    <Typography variant={TypographyVariant.BodySm} className="py-2">
+                        {task.taskName}
+                    </Typography>
+                </div>
+
+                <div className="flex flex-row items-center gap-1">
+                    <Label label={t('sideSheet.task.issueLabel')} variant={LabelVariant.FieldLabel} className="w-[100px] py-2" />
+                    <Typography variant={TypographyVariant.BodySm} className="text-semantic-error py-2">
+                        {t('sideSheet.task.commonTaskIssues', {
+                            taskType: TaskTypeMap[task.taskType],
+                        })}
+                    </Typography>
+                </div>
+
+                <div className="flex flex-row items-center gap-1">
+                    <Label label={t('sideSheet.task.detailsLabel')} variant={LabelVariant.FieldLabel} className="w-[100px] py-2" />
+                    <div className="px-14">
+                        <Typography variant={TypographyVariant.BodySm} className="py-2">
+                            {t('sideSheet.task.taskDetails', {
+                                taskType: TaskTypeMap[task.taskType],
+                            })}
+                        </Typography>
+                    </div>
+                </div>
+                {task.status === TaskStatus.Open && (
+                    <div className="flex flex-row items-center gap-1 pt-8">
+                        <Link href={`/task/${task.id}`} text="Start task" variant="button" size="small"></Link>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+
+    const renderHistory = (
+        <div className="flex flex-col w-full">
+            <label className="font-primary text-lg mt-10">{t('sideSheet.task.tabs.history')}</label>
+            <div className="border-box w-full  mt-2">
+                <div className="w-full rounded border-2 border-gray-100 bg-gray-50 p-8">
+                    <AssistiveText
+                        text={t('noFormAvailable')}
+                        variant={AssistiveTextVariant.Default}
+                        iconOverride={<Icon width={16} height={16} type={IconType.DOCUMENT_TEXT} />}
+                    />
+                </div>
+            </div>
+        </div>
+    );
+    const renderDocuments = (
+        <div className="flex flex-col w-full">
+            <label className="font-primary text-lg mt-10">{t('sideSheet.task.tabs.documents')}</label>
+        </div>
+    );
+
+    const renderTabContent = (
+        <>
+            <TabContent className="flex mx-10 items-center" value={TabOptions.Details}>
+                {renderDetails}
+            </TabContent>
+            <TabContent className="mx-10 flex w-full items-center" value={TabOptions.History}>
+                {renderHistory}
+            </TabContent>
+            <TabContent className="mx-10 flex w-full items-center" value={TabOptions.Documents}>
+                {renderDocuments}
+            </TabContent>
+        </>
+    );
+
+    return (
+        <div>
+            <TabGroup defaultValue={activeTab} value={activeTab} activationMode="manual" onValueChange={handleTabChange}>
+                <TabList className="!mb-0 w-full px-4 pt-4 md:px-6 lg:px-8">
+                    <TabTrigger value={TabOptions.Details}>{t('sideSheet.task.tabs.details') ?? ''}</TabTrigger>
+                    <TabTrigger value={TabOptions.History}>{t('sideSheet.task.tabs.history') ?? ''}</TabTrigger>
+                    <TabTrigger value={TabOptions.Documents}>{t('sideSheet.task.tabs.documents') ?? ''}</TabTrigger>
+                </TabList>
+                {loading ? (
+                    <div className="my-5 flex flex-col items-center justify-center">
+                        <Loader />
+                    </div>
+                ) : (
+                    renderTabContent
+                )}
+            </TabGroup>
+        </div>
+    );
+}

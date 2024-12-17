@@ -2904,6 +2904,25 @@
         },
         "correspondence": "Correspondence ({{count}})",
         "policy": "Police ({{count}})",
+        "task": {
+            "tabs": {
+                "details": "Détails",
+                "history": "Histoire",
+                "documents": "Documents"
+            },
+            "status": {
+                "label": "Statut",
+                "open": "ouvrir",
+                "closed": "fermée"
+            },
+            "createdLabel": "Date de création",
+            "assigneeLabel": "Cessionnaire",
+            "stepLabel": "Étape",
+            "issueLabel": "Problème",
+            "detailsLabel": "Détails",
+            "commonTaskIssues": "Un ou plusieurs {{taskType}} problèmes trouvés.",
+            "taskDetails": "Un ou plusieurs problèmes ont été détectés lors de Zinnia {{taskType}}. Ces problèmes doivent être examinés par le transporteur et ignorés pour émettre le contrat.."
+        },
         "suitability": {
             "header": "Examen complet de l’adéquation",
             "taskLabel": "ID de tâche",
