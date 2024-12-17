@@ -51,7 +51,7 @@ export const initializeWithdrawalTaskSSR = async ({
             if (activeForm) {
                 logTrace('initializeTaskV2::getCaseTaskByIdSSR task active form found', loggingContext);
                 if (action === 'readonly' || activeForm.status === TaskStatus.New) {
-                    return mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm.data, userId });
+                    return mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm?.data, userId });
                 }
             }
         }
@@ -64,7 +64,7 @@ export const initializeWithdrawalTaskSSR = async ({
                 activeForm = await getCaseTaskByIdSSR(task.id, accessToken);
                 if (activeForm) {
                     logTrace('initializeTaskV2::active form found', loggingContext);
-                    return mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm.data, userId });
+                    return mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm?.data, userId });
                 }
             }
         }
@@ -150,7 +150,7 @@ export const initializeOTPTaskSSR = async ({
             if (activeForm) {
                 logTrace('initializeTaskV2::getCaseTaskByIdSSR task active form found', loggingContext);
                 if (action === 'readonly' || (activeForm.status === TaskStatus.New || activeForm.status === TaskStatus.InProgress)) {
-                    return mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm.data, userId });
+                    return mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm?.data, userId });
                 }
             }
         }
@@ -165,11 +165,11 @@ export const initializeOTPTaskSSR = async ({
                 if (activeForm) {
                     if (activeForm.status === TaskStatus.New || activeForm.status === TaskStatus.InProgress) {
                         logTrace('initializeTaskV2::active form found', loggingContext);
-                        return mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm.data, userId });
+                        return mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm?.data, userId });
                     }
                     if (activeForm.status === TaskStatus.Completed && getLastSaved) {
                         logTrace('initializeTaskV2::completed form found', loggingContext);
-                        completedForm = mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm.data, userId });
+                        completedForm = mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm?.data, userId });
                     }
                 }
             }
