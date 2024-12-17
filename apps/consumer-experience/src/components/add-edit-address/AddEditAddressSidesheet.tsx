@@ -21,7 +21,6 @@ export interface AddEditAddressSidesheetProps {
 
 export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
   values,
-  partyId,
 }) => {
   const updateBpmAction = useBpmStore(state => state.updateBpmAction);
   const params = useParams<{
@@ -43,7 +42,7 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
   const handleAdd = async (requestValues: AddressFormFields) => {
     setStep(FormSteps.LOADING);
 
-    console.log('adding');
+    console.log('adding', requestValues);
 
     setTimeout(() => {
       setStep(FormSteps.SUCCESS);

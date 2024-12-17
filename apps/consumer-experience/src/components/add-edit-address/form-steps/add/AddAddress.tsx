@@ -2,18 +2,26 @@
 import { AddressType } from '@zinnia/api-types/types/sor';
 import { Radio, Label, Button, Checkbox } from '@zinnia/bloom/components';
 import { FC } from 'react';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import {
+  Controller,
+  SubmitHandler,
+  useFieldArray,
+  useForm,
+} from 'react-hook-form';
 
 import styles from './AddAddress.module.css';
 import { FieldDataActive } from '../../../field/data-active/FieldDataActive';
 import { FieldStatus } from '../../../field/types';
 
+export interface AddressObj {
+  addressVal: string;
+}
 export interface AddressFormFields {
   addressType: AddressType;
-  addressLineOne: string;
+  addresses: AddressObj[];
   city: string;
   state: string;
-  zip: string;
+  zipCode: string;
   defaultAddress: boolean;
 }
 
@@ -37,12 +45,17 @@ export const AddAddress: FC<AddAddressProps> = ({
   } = useForm<AddressFormFields>({
     defaultValues: {
       addressType: values?.addressType || AddressType.RESIDENCE,
-      addressLineOne: values?.addressLineOne || '',
+      addresses: values?.addresses || [{ addressVal: '' }],
       city: values?.city || '',
       state: values?.state || '',
-      zip: values?.zip || '',
+      zipCode: values?.zipCode || '',
       defaultAddress: values?.defaultAddress || false,
     },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'addresses',
   });
 
   const handleCancel = () => {
@@ -54,11 +67,14 @@ export const AddAddress: FC<AddAddressProps> = ({
     submitCallback?.(data);
   };
 
+  console.log({ defaultValues });
+  console.log({ fields });
+
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
       <div className={styles.formFields}>
         <Controller
-          name="addressType" //TODO: match this to bpm field
+          name="addressType"
           control={control}
           rules={{ required: true }}
           render={({ field }) => (
@@ -89,25 +105,35 @@ export const AddAddress: FC<AddAddressProps> = ({
             </div>
           )}
         />
-        <Controller
-          name="addressLineOne"
-          control={control}
-          rules={{ required: 'Address is missing.' }}
-          render={({ field }) => (
-            <div>
-              <FieldDataActive
-                errorMessage={errors.addressLineOne?.message}
-                fieldStatus={
-                  errors.addressLineOne
-                    ? FieldStatus.ERROR
-                    : FieldStatus.DEFAULT
-                }
-                label={<Label>Address Line 1</Label>}
-                {...field}
-              />
-            </div>
-          )}
-        />
+
+        {fields.map((field, index) => {
+          const errorIndex = errors['addresses']?.[index];
+          return (
+            <Controller
+              name={`addresses.${index}`}
+              control={control}
+              key={field.id}
+              rules={{ required: `Address Line ${index + 1} is missing.` }}
+              render={({ field }) => (
+                <div>
+                  <FieldDataActive
+                    errorMessage={errorIndex?.message}
+                    fieldStatus={
+                      errorIndex ? FieldStatus.ERROR : FieldStatus.DEFAULT
+                    }
+                    label={<Label>Address Line {index + 1}</Label>}
+                    {...field}
+                    value={field.value.addressVal}
+                  />
+                </div>
+              )}
+            />
+          );
+        })}
+
+        <button type="button" onClick={() => append({ addressVal: '' })}>
+          Add address
+        </button>
 
         <Controller
           name="city"
@@ -147,15 +173,15 @@ export const AddAddress: FC<AddAddressProps> = ({
           />
 
           <Controller
-            name="zip"
+            name="zipCode"
             control={control}
             rules={{ required: 'Zip is missing.' }}
             render={({ field }) => (
               <div>
                 <FieldDataActive
-                  errorMessage={errors.zip?.message}
+                  errorMessage={errors.zipCode?.message}
                   fieldStatus={
-                    errors.zip ? FieldStatus.ERROR : FieldStatus.DEFAULT
+                    errors.zipCode ? FieldStatus.ERROR : FieldStatus.DEFAULT
                   }
                   label={<Label>Zip</Label>}
                   {...field}
