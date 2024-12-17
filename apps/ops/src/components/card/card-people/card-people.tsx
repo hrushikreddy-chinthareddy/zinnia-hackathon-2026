@@ -1,12 +1,13 @@
-import { Tag } from '@zinnia/bloom/components';
 import { useEffect, useRef } from 'react';
 
 import ClickContainer from '@deps/components/click-container/click-container';
+import PartyTag from '@deps/components/party/party-tag';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Title, { TitleVariant } from '@deps/components/title/title';
 import { getBeneficiaryColor, getContigentColor } from '@deps/containers/people-card-container/people-card-container.helper';
 import { BeneficiaryType } from '@deps/containers/people-card-container/people-card-container.types';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
+import { PartyStatus } from '@deps/models/policy/sor-policy';
 import { TagKey } from '@deps/types/components';
 
 export interface CardPeopleProps {
@@ -23,6 +24,7 @@ export interface CardPeopleProps {
     isSelected?: boolean;
     //TODO: remove the optional for testId, but for now we'll keep it optional for backwards compatibility
     testId?: string;
+    partyStatus?: PartyStatus;
 }
 
 const PREFERRED_TAG_ORDER = {
@@ -67,6 +69,7 @@ const CardPeople = ({
     shouldFocus = false,
     isSelected = false,
     testId,
+    partyStatus,
 }: CardPeopleProps) => {
     const hasAllocation = !isNullEmptyOrUndefined(allocation || '');
     const allocationBgClasses = hasAllocation ? getBeneficiaryColorByType(beneficiaryType, index) : '';
@@ -94,7 +97,15 @@ const CardPeople = ({
                 <div className="flex flex-wrap gap-1">
                     {sortedTags.map((tag, index) => {
                         const isSelected = selectedTags?.length > 0 && selectedTags.indexOf(tag.text?.toLocaleLowerCase() ?? '') > -1;
-                        return <Tag key={tag.text ?? '' + index} isSelected={isSelected} text={tag.text ?? ''} />;
+
+                        return (
+                            <PartyTag
+                                partyStatus={partyStatus}
+                                key={tag.text ?? '' + index}
+                                isSelected={isSelected}
+                                text={tag.text ?? ''}
+                            />
+                        );
                     })}
                 </div>
             )}
