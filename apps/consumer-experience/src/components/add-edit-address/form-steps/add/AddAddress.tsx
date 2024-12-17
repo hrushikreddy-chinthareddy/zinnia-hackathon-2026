@@ -1,6 +1,14 @@
 'use client';
 import { AddressType } from '@zinnia/api-types/types/sor';
-import { Radio, Label, Button, Checkbox } from '@zinnia/bloom/components';
+import {
+  Radio,
+  Label,
+  Button,
+  Checkbox,
+  Icon,
+  IconType,
+  Select,
+} from '@zinnia/bloom/components';
 import { FC } from 'react';
 import {
   Controller,
@@ -8,6 +16,8 @@ import {
   useFieldArray,
   useForm,
 } from 'react-hook-form';
+
+import { states } from '@/utils/states';
 
 import styles from './AddAddress.module.css';
 import { FieldDataActive } from '../../../field/data-active/FieldDataActive';
@@ -109,31 +119,47 @@ export const AddAddress: FC<AddAddressProps> = ({
         {fields.map((field, index) => {
           const errorIndex = errors['addresses']?.[index];
           return (
-            <Controller
-              name={`addresses.${index}`}
-              control={control}
-              key={field.id}
-              rules={{ required: `Address Line ${index + 1} is missing.` }}
-              render={({ field }) => (
-                <div>
-                  <FieldDataActive
-                    errorMessage={errorIndex?.message}
-                    fieldStatus={
-                      errorIndex ? FieldStatus.ERROR : FieldStatus.DEFAULT
-                    }
-                    label={<Label>Address Line {index + 1}</Label>}
-                    {...field}
-                    value={field.value.addressVal}
-                  />
-                </div>
+            <div key={field.id} className={styles.addressWrapper}>
+              <Controller
+                name={`addresses.${index}`}
+                control={control}
+                rules={{ required: `Address Line ${index + 1} is missing.` }}
+                render={({ field }) => (
+                  <div className={styles.addressField}>
+                    <FieldDataActive
+                      errorMessage={errorIndex?.message}
+                      fieldStatus={
+                        errorIndex ? FieldStatus.ERROR : FieldStatus.DEFAULT
+                      }
+                      label={<Label>Address Line {index + 1}</Label>}
+                      {...field}
+                      value={field.value.addressVal}
+                    />
+                  </div>
+                )}
+              />
+              {index > 0 && (
+                <Button
+                  mode="link"
+                  className={styles.trashIcon}
+                  onClick={() => remove(index)}
+                >
+                  <Icon small type={IconType.TRASH} />
+                </Button>
               )}
-            />
+            </div>
           );
         })}
 
-        <button type="button" onClick={() => append({ addressVal: '' })}>
-          Add address
-        </button>
+        <Button
+          type="button"
+          mode="link"
+          className={styles.addAddressButton}
+          onClick={() => append({ addressVal: '' })}
+        >
+          <Icon type={IconType.ADD} /> Add address line (e.g. unit, floor,
+          suite, etc)
+        </Button>
 
         <Controller
           name="city"
@@ -160,14 +186,20 @@ export const AddAddress: FC<AddAddressProps> = ({
             rules={{ required: 'State is missing.' }}
             render={({ field }) => (
               <div>
-                <FieldDataActive
+                <Select
+                  id="select-state"
+                  onValueChange={field.onChange}
+                  options={states}
+                  contentClassName={styles.select}
+                />
+                {/* <FieldDataActive
                   errorMessage={errors.state?.message}
                   fieldStatus={
                     errors.city ? FieldStatus.ERROR : FieldStatus.DEFAULT
                   }
                   label={<Label>State</Label>}
                   {...field}
-                />
+                /> */}
               </div>
             )}
           />

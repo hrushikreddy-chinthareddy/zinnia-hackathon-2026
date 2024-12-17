@@ -10,12 +10,33 @@
   gap: var(--measure-dimension-margin-md);
 }
 
+.addressWrapper {
+  display: flex;
+  gap: 16px;
+}
+
+.addressField {
+  flex: 1;
+}
+
+.trashIcon {
+  margin-top: 20px;
+}
+
 .buttonContainer {
   display: flex;
   flex-direction: column;
   gap: var(--measure-dimension-gap-lg);
 }
 
+.addAddressButton {
+  justify-content: flex-start;
+  padding: 0;
+}
+.select {
+  position: absolute;
+  z-index: 600;
+}
 .remove {
   border-color: var(--color-status-surface-status-error-border-alt, #db004f);
 }
