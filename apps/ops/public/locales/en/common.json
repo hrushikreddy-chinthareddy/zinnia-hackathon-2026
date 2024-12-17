@@ -1182,17 +1182,22 @@
             "adverse": "Adverse",
             "approved": "Approved",
             "declined": "Declined",
+            "riskNotAcceptable": "Risk not acceptable",
             "rejected": "Rejected",
             "expired": "Expired",
-            "amended": "Amended offer requested",
+            "amendedOfferRequested": "Amended offer requested",
+            "amendmentAccepted": "Amendment accepted",
             "entityTypes": {
                 "agent": "Agent: {{label}}",
                 "pre-note": "Pre-Note: {{label}}",
                 "source of premium": "Source of Premium: {{label}}",
-                "transfer of assets": "Transfer of Assets: {{label}}"
+                "transfer of assets": "Transfer of Assets: {{label}}",
+                "ceding carrier": "Ceding Carrier: {{label}}"
             },
             "reviewIssues": "Review {{taskType}} issues",
-            "suitabilityReview": "suitability review"
+            "suitabilityReview": "suitability review",
+            "commonTaskIssues": "Issue: One or more {{taskType}} issues found.",
+            "suitabilityReviewIssues": "Review Suitability Issue(s)"
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -2314,17 +2319,17 @@
         }
     },
     "createCaseCreate": {
-        "creatingCase": "Creating a case for {{clientCode}} document number {{documentNumber}}",
+        "creatingCase": "Identifying a case for {{clientCode}} document number {{documentNumber}}",
         "errors": {
             "backToCreateCase": "Back to create case",
-            "errorCreatingCase": "An error occurred while creating a case.",
-            "missingValues": "The required values to create a case were not provided. A client code, doc type, and document number are required to create a case. clientCode: {{clientCode}}, docType: {{docType}}, documentNumber: {{documentNumber}}. If you have these values, you can try to create a case using the link below.",
+            "errorCreatingCase": "An error occurred while identifying a case.",
+            "missingValues": "The required values to identify a case were not provided. A client code, doc type, and document number are required to create a case. clientCode: {{clientCode}}, docType: {{docType}}, documentNumber: {{documentNumber}}. If you have these values, you can try to identify a case using the link below.",
             "unsupportedDocType": "The document type provided is not supported by this portal. If you believe this is incorrect, please notify operations support."
         },
         "momentPlease": "A moment please",
         "success": "Success!",
         "successMessage": "Redirecting you to the task(form) entry page.",
-        "title": "Creating Case"
+        "title": "Identifying Case"
     },
     "createCaseError": {
         "backToCreateCase": "Back to create case",
@@ -2551,7 +2556,8 @@
                 "riskClassTooltip": "Owners are grouped by how risky they are to insure based on health and lifestyle. Less risky=better risk class=lower premium. And vice versa.",
                 "riskClass": "Risk class",
                 "yearsOld_one": "{{count}} year old",
-                "yearsOld_other": "{{count}} years old"
+                "yearsOld_other": "{{count}} years old",
+                "yearsOld_zero": "-- years old"
             },
             "policyTimeline": {
                 "ageOfContract": "Age of contract",
@@ -2747,6 +2753,7 @@
                 "expirationDate": "Expiration date",
                 "insured": "Insured",
                 "maxClaims": "Max claims allowed",
+                "coverageAmount": "Coverage Amount",
                 "notElected": "Not elected",
                 "notElectedTooltip": "Not elected riders or features are those that the owner has the option to add to this policy. They are not currently paying for these additional types of coverage and may not currently submit claims for related benefits. But they could potentially add these to the policy.",
                 "terminalIllnessBenefit": "Up to {{percent}}% ({{amount}}).",
@@ -4610,7 +4617,6 @@
             }
         }
     },
-
     "sswUpdate": {
         "sswUpdateOptions": {
             "new": "New",

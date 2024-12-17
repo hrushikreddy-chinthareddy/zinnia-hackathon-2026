@@ -354,6 +354,8 @@ export const checkResetDeliveryDateEligibility = async (
     return {
       data: {
         isEligible: false,
+        policyNumber,
+        planCode,
       },
       error: null,
     };
@@ -366,6 +368,8 @@ export const checkResetDeliveryDateEligibility = async (
     return {
       data: {
         isEligible: false,
+        policyNumber,
+        planCode,
         reasons: (response as BpmErrorResponse)?.validationResult,
       },
       error: null,
@@ -375,6 +379,8 @@ export const checkResetDeliveryDateEligibility = async (
   return {
     data: {
       isEligible: true,
+      policyNumber,
+      planCode,
       reasons: [],
     },
     error: null,

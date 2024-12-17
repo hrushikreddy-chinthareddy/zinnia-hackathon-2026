@@ -29,14 +29,6 @@ export default async function Riders({
 
   return (
     <div className="container">
-      <p>
-        <span className="typography-content-body-sm-bold">What's a rider?</span>{' '}
-        A rider is an add-on to your insurance coverage. Riders are designed to
-        offer additional types of coverage for certain circumstances. They often
-        (but not always) cost extra. They can provide major benefits if and when
-        you need them. You can learn more about what your riders cover in your
-        policy documents.
-      </p>
       {(error ||
         !data ||
         (!data.riders?.length && !data.additionalBenefits?.length)) && (
@@ -74,7 +66,7 @@ export default async function Riders({
           </div>
         )}
       </>
-      {data?.additionalBenefits?.length && (
+      {!!data?.additionalBenefits?.length && (
         <div>
           <h2 className="pb-2xl border-b mt-lg">Additional Benefits</h2>
           {data.additionalBenefits.map(rider => {

@@ -9,6 +9,7 @@ import {
     CaseStatsResponse,
     CreateCaseBody,
     CreateCaseResponse,
+    DashboardStatsElementResponse,
     Metadata,
 } from '@deps/models/case/case';
 import { CaseDocument } from '@deps/models/case/document';
@@ -78,13 +79,37 @@ export const getCaseStats = async (query: CaseStatsQuery): Promise<CaseStatsResp
 
         const { data } = await client.post<CaseStatsQuery, AxiosResponse>(`${baseCasesUrl}/stats`, query);
 
-        writeToCache('getCaseStats', query, data);
+        if (Array.isArray(data?.data) && data?.data?.length > 0) {
+            writeToCache('getCaseStats', query, data);
+            return data;
+        }
 
         return data ?? {};
     } catch (error: any) {
         console.error('getCaseStats::An error occurred while getting case stats results', error);
         return error.response;
     }
+};
+
+const recursivelyFilter = (
+    items: DashboardStatsElementResponse[],
+    root: DashboardStatsElementResponse | null,
+    filterString: string
+): DashboardStatsElementResponse[] => {
+    return items.filter(item => {
+        if (item.name !== filterString) {
+            if (item.values) {
+                // Recursively process nested values, directly modifying them
+                item.values = recursivelyFilter(item.values, item, filterString);
+            }
+            return true;
+        } else {
+            if (root) {
+                root.count -= item.count; // Directly modify the root count
+            }
+            return false;
+        }
+    });
 };
 
 export const getCaseDashboardStats = async (
@@ -96,7 +121,13 @@ export const getCaseDashboardStats = async (
             AxiosResponse<CaseDashboardStatsResponse | CaseDashboardStatsErrorResponse>
         >(`${baseAppUrl}/api/case/v1/dashboard/stats`, query);
 
-        return data ?? {};
+        if (Array.isArray(data?.data) && data?.data?.length > 0) {
+            const filteredData = recursivelyFilter(data.data || [], null, 'NOT_APPLICABLE');
+
+            data.data = filteredData;
+            return data;
+        }
+        return { data: [], totalElements: 0 };
     } catch (error: any) {
         console.error('getCaseDashboardStats::An error occurred while getting case dashboard stats results', error);
         return error.response;

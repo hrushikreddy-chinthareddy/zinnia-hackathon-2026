@@ -74,7 +74,7 @@ export default async function Riders({
           </div>
         )}
       </>
-      {data?.additionalBenefits?.length && (
+      {!!data?.additionalBenefits?.length && (
         <div>
           <h2 className="pb-2xl border-b mt-lg">Additional Benefits</h2>
           {data.additionalBenefits.map(rider => {

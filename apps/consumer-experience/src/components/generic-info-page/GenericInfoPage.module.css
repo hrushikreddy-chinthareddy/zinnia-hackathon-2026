@@ -20,10 +20,6 @@
   justify-content: flex-start;
   align-items: center;
 
-  &:has(.banner) {
-    max-width: 1440px;
-  }
-
   @media (width >=1024px) {
     flex-direction: row;
     align-items: stretch;

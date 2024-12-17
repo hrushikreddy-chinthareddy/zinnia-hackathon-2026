@@ -3,9 +3,9 @@ import { useQuery } from '@tanstack/react-query';
 import { DEFAULT_ERROR_STRING, toTitleCase } from '@zinnia/utils';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 
-import { ExceptionSummary } from '@deps/components/dashboard/exception-summary';
+import { ExceptionSummary } from '@deps/components/dashboard/exception-summary/exception-summary';
 import { Top5SubprocessByVolume } from '@deps/components/dashboard/top-5-subprocesses-by-volume/top-5-subprocess-by-volume';
 import FieldData, { FieldDataVariant } from '@deps/components/fields/field-data/field-data';
 import Label, { LabelVariant } from '@deps/components/label/label';
@@ -32,7 +32,6 @@ export const IssuedBusiness: FC = () => {
     const [timeframe, setTimeframe] = useState<string>(timeFrameFilterOptions[0]);
     const [selectedSubprocess, setSelectedSubprocess] = useState<string>('');
     const [selectedException, setSelectedException] = useState<string | undefined>();
-    const [baseDashboardQueryFilter, setBaseDashboardQueryFilter] = useState<DashboardSearchFilter>({});
 
     const handleSelectedSubprocess = (subprocess: string) => {
         setSelectedException(undefined);
@@ -75,6 +74,18 @@ export const IssuedBusiness: FC = () => {
         return startDate;
     }, [timeframe]);
 
+    const baseDashboardQueryFilter = useMemo(() => {
+        const baseFilter: DashboardSearchFilter = {
+            createdDateStart: createdDateStart,
+            process: [Processes.NewBusiness],
+            caseStatus: [Statuses.Completed],
+            carrier: Object.keys(selectedCarriers),
+            brokerDealerName: Object.keys(selectedBrokerDealers),
+        };
+
+        return baseFilter;
+    }, [selectedCarriers, createdDateStart, selectedBrokerDealers]);
+
     const { data: caseDashboardStatsData, isLoading } = useQuery({
         queryKey: ['getCases', baseDashboardQueryFilter],
         queryFn: () =>
@@ -86,20 +97,6 @@ export const IssuedBusiness: FC = () => {
             };
         },
     });
-
-    useEffect(() => {
-        const baseFilter: DashboardSearchFilter = {
-            createdDateStart: createdDateStart,
-            process: [Processes.NewBusiness],
-            caseStatus: [Statuses.Completed],
-            carrier: Object.keys(selectedCarriers),
-            brokerDealerName: Object.keys(selectedBrokerDealers),
-        };
-
-        setBaseDashboardQueryFilter(baseFilter);
-    }, [selectedCarriers, createdDateStart, selectedBrokerDealers]);
-
-    console.log('caseData', caseDashboardStatsData?.exceptionData);
 
     return (
         <CardContainer
