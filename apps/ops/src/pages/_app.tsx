@@ -19,7 +19,6 @@ import { DEFAULT_PAGE_TITLE } from '@deps/constants/page-title';
 import { ApplicationDataProvider } from '@deps/contexts/ApplicationContext';
 import { NODE_ENV_PRODUCTION } from '@deps/types/constants';
 import { initializeBrowserLogging } from '@deps/utils/browser-logs';
-import { isNonProductionEnvironment } from '@deps/utils/environment.helper';
 
 const poppins = Poppins({
     subsets: ['latin'],
@@ -104,7 +103,7 @@ queryClient.setDefaultOptions({
 });
 
 const App = (props: AppProps) => {
-    if (isClient() && !isNonProductionEnvironment()) {
+    if (isClient()) {
         // initializing the browser logs to datadog
         initializeBrowserLogging();
     }

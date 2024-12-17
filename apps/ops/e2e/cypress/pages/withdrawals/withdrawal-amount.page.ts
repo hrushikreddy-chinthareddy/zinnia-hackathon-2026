@@ -17,7 +17,7 @@ class WithdrawalAmountPage extends Page {
     get leaveTransactionStartPage() {
         return cy.get(`[data-testid="Cancel"]`);
     }
-    
+
     get effectiveDate() {
         return cy.get(`[data-testid="field-input-test-id"]`).first();
     }
@@ -27,7 +27,7 @@ class WithdrawalAmountPage extends Page {
     }
 
     get disbursementBox() {
-        return cy.get(`[role="combobox"]`); 
+        return cy.get(`[role="combobox"]`);
     }
 
     get customAmountTextBox() {
@@ -35,14 +35,14 @@ class WithdrawalAmountPage extends Page {
     }
 
     get fundDisbursementType() {
-        return cy.get(`[type="radio"][tabindex="-1"]`); 
+        return cy.get(`[type="radio"][tabindex="-1"]`);
     }
 
     get leaveTransactionAmountPage() {
-        return cy.get(`[data-testid="Cancel"]`);
+        return cy.get(`[data-testid="Leave this transaction"]`);
     }
 
-//----------------------------------------------------------------------------------------------------------------------- 
+//-----------------------------------------------------------------------------------------------------------------------
 
     getStartWithdrawalButton() {
         this.startWithdrawalButton.click();
@@ -80,11 +80,11 @@ class WithdrawalAmountPage extends Page {
     }
 
     getWithdrawalTypeCustom() {
-        return cy.get(`[id="radio-undefined-0"]`).click(); 
+        return cy.get(`[id="radio-undefined-0"]`).click();
     }
 
     getWithdrawalTypeMaximum() {
-        return cy.get(`[id="radio-undefined-1"]`).click(); 
+        return cy.get(`[id="radio-undefined-1"]`).click();
     }
 
     getCustomAmount(amount) {

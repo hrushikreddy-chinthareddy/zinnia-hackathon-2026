@@ -15,10 +15,10 @@ class WithdrawalStartPage extends Page {
     }
 
     get leaveTransactionStartPage() {
-        return cy.get(`[data-testid="Cancel"]`);
+        return cy.get(`[data-testid="Leave this transaction"]`);
     }
 
-//----------------------------------------------------------------------------------------------------------------------- 
+//-----------------------------------------------------------------------------------------------------------------------
 
     getWithdrawalPage() {
         this.withdrawalPage.click();

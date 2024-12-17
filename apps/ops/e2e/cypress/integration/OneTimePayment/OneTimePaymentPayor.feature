@@ -1,15 +1,16 @@
 Feature: Ops user navigates to One Time Payment
 Background: Login as Ops User test test
  Given 'Ops User' logs into Zinnia Live
+ When I click on 'Policy Search' on the Navigation bar
 
 Scenario: Ops user navigates to One Time Payment Payor page selecting the payor
 
-  When I click on 'Policy Search' on the Navigation bar
-  Then I should be on the 'Policy Management page'
-  When I search by 'Policy Number' for 'TAX77045515'
-  Then I should see the policy in Search Results
-  When I click on Policy on a Policy card
-  Then I should verify all information on Policy Details page
+  When I click on policy search dropdown and select 'Policy number' on policy search page
+  And I enter policy search criteria text 'TAX77045515'
+  When I navigate to the policy details from a Policy Card
+  Then I should be on the 'Policy Details page'
+  And I should see the detailed summary of the policy
+
   When I click on Premiums on Policy Details Page
   Then I should see premium information for the policy
 
@@ -32,15 +33,15 @@ Scenario: Ops user navigates to One Time Payment Payor page selecting the payor
   Then I should verify One Time Payment Details on One Time Payment method page
   When I click logout button
   Then Ops users navigates to homepage
-  
+
 Scenario: Ops user navigates to One Time Payment Payor page without selecting payor
 
-  When I click on 'Policy Search' on the Navigation bar
-  Then I should be on the 'Policy Management page'
-  When I search by 'Policy Number' for 'TAX77045515'
-  Then I should see the policy in Search Results
-  When I click on Policy on a Policy card
-  Then I should verify all information on Policy Details page
+  When I click on policy search dropdown and select 'Policy number' on policy search page
+  And I enter policy search criteria text 'TAX77045515'
+  When I navigate to the policy details from a Policy Card
+  Then I should be on the 'Policy Details page'
+  And I should see the detailed summary of the policy
+
   When I click on Premiums on Policy Details Page
   Then I should see premium information for the policy
 

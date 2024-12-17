@@ -6,9 +6,11 @@ import { FindKeyValueSearch } from '@deps/components/global-values/find-key-valu
 import GlobalValuesBar from '@deps/components/global-values/global-values-bar/global-values-bar';
 import { useContentContext } from '@deps/contexts/LayoutContexts/StaticContentContext';
 import { useStaticNestedNavDrawerContext } from '@deps/contexts/LayoutContexts/StaticNestedNavDrawerContext';
-import { PolicyDetailsViewInfo, PolicyViewDetailsDto, toPolicyViewDetailsDto } from '@deps/data/policy-details-view';
+import { AnnuityDetailsViewInfo, AnnuityViewDetailsDto } from '@deps/data/annuity-details-view';
+import { generatePolicyAnnuityDetailsDto } from '@deps/data/details-view';
+import { PolicyDetailsViewInfo, PolicyViewDetailsDto } from '@deps/data/policy-details-view';
 import { fillColDefs } from '@deps/helpers/data-transform.helper';
-import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
+import { LineOfBusiness, PartyRole, Policy } from '@deps/models/policy/sor-policy';
 
 interface ContentContainerProps extends PropsWithChildren {
     policy: Policy;
@@ -40,10 +42,11 @@ const ContentContainer = ({
     const jointOwnerId = policy?.partyRoles?.find(pr => pr.partyRole === PartyRole.JOINTOWNER)?.partyId;
     const jointOwner = policy?.parties?.find(party => party.partyId === jointOwnerId);
 
-    const searchableDetailsDto = toPolicyViewDetailsDto(policy);
-    const searchableDetailsData = fillColDefs<PolicyViewDetailsDto>(
+    const searchableDetailsDto = generatePolicyAnnuityDetailsDto(policy);
+    const colDefFunction = policy.product?.lineOfBusiness === LineOfBusiness.LIFE ? PolicyDetailsViewInfo : AnnuityDetailsViewInfo;
+    const searchableDetailsData = fillColDefs<PolicyViewDetailsDto | AnnuityViewDetailsDto>(
         searchableDetailsDto,
-        PolicyDetailsViewInfo(),
+        colDefFunction(),
         t,
         'colDefs:policyDetails'
     );

@@ -6,6 +6,7 @@ import {
 import { ApiEndpoints } from '@/components/dev-menu/types';
 import {
   DocumentApiRequestInputs,
+  DocumentDownloadApiRequestInputs,
   PolicyDocument,
   TaxDocument,
   TaxDocumentApiRequestInputs,
@@ -57,6 +58,24 @@ const getDocumentsRaw = async (documentUrl: string) => {
   return response;
 };
 
+// Remove any params that are null or undefined since this will throw a 400
+const buildDocumentQueryParams = (
+  queryParams:
+    | Partial<DocumentApiRequestInputs>
+    | Partial<DocumentDownloadApiRequestInputs>
+) => {
+  const documentQueryParams = new URLSearchParams();
+  for (const key in queryParams) {
+    if (queryParams[key as keyof typeof queryParams] != undefined) {
+      documentQueryParams.append(
+        key,
+        queryParams[key as keyof typeof queryParams] as string
+      );
+    }
+  }
+  return documentQueryParams;
+};
+
 export const getDocumentDownload = async (
   documentNumber: string,
   source: string,
@@ -64,11 +83,19 @@ export const getDocumentDownload = async (
   policyNumber: string,
   planCode: string
 ): Promise<ApiResponse<DownloadDocumentResponse>> => {
+  const queryParams = buildDocumentQueryParams({
+    documentNumber,
+    source,
+    clientCode,
+    policyNumber,
+    planCode,
+  });
+
   try {
     if (isMockDocumentRequestEnabled()) {
       return { data: mockDocumentResponse, error: null };
     }
-    const url = `${documentApiBaseUrl}/documents/${documentNumber}/download?clientCode=${clientCode.toUpperCase()}&source=${source}&planCode=${planCode}&policyNumber=${policyNumber}`;
+    const url = `${documentApiBaseUrl}/documents/${documentNumber}/download?${queryParams}`;
     const response = await ServerApi.get(url);
     if (!response.ok) {
       throw response;
@@ -92,26 +119,11 @@ export const getDocumentDownload = async (
   }
 };
 
-const getDocumentQueryParams = (
-  queryParams: Partial<DocumentApiRequestInputs>
-) => {
-  const documentQueryParams = new URLSearchParams();
-  for (const key in queryParams) {
-    if (queryParams[key as keyof typeof queryParams] !== undefined) {
-      documentQueryParams.append(
-        key,
-        queryParams[key as keyof typeof queryParams] as string
-      );
-    }
-  }
-  return documentQueryParams;
-};
-
 export const getDocuments = async (
   queryParams: Partial<DocumentApiRequestInputs>
 ): Promise<ApiResponse<PolicyDocument>> => {
   const { clientCode, source } = queryParams;
-  const documentQueryParams = getDocumentQueryParams(queryParams);
+  const documentQueryParams = buildDocumentQueryParams(queryParams);
   const documentUrl = `${documentApiBaseUrl}/documents?${documentQueryParams.toString()}`;
 
   if (isMockDocumentsRequestEnabled()) {
@@ -158,7 +170,7 @@ export const getTaxDocuments = async (
   queryParams: Partial<TaxDocumentApiRequestInputs>
 ): Promise<ApiResponse<TaxFormsResponse200>> => {
   const { clientCode } = queryParams;
-  const documentQueryParams = getDocumentQueryParams(queryParams);
+  const documentQueryParams = buildDocumentQueryParams(queryParams);
   const documentUrl = `${documentApiBaseUrl}/taxForms?${documentQueryParams.toString()}`;
 
   if (isMockDocumentsRequestEnabled()) {

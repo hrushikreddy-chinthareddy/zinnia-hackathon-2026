@@ -98,8 +98,6 @@ export const IssuedBusiness: FC = () => {
         },
     });
 
-    console.log('caseData', caseDashboardStatsData?.exceptionData);
-
     return (
         <CardContainer
             classNames="relative !p-0 flex flex-col flex-1 !border-none  bg-[--color-base-surface-surface-tertiary]"
