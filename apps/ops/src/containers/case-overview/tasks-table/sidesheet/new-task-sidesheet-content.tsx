@@ -9,46 +9,16 @@ import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { parseAndFormatDate, toSentenceCase } from '@deps/helpers/string.helper';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
-import { TaskType } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { getTaskInstance } from '@deps/queries/api/v2/task';
 import { ReactComponent as NotStartedIcon } from '@deps/styles/elements/icons/alert/not-started.svg';
 import { ReactComponent as CircleCheckedIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as CircleStoppedIcon } from '@deps/styles/elements/icons/circles/stop-circle.svg';
-import { DEFAULT_DATE_FORMAT, DEFAULT_ERROR_STRING, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+import { DEFAULT_DATE_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { getCarrierLogoByClientId } from '@deps/utils/carriers';
 
 const TaskTypeMap: Record<string, string> = {
     ['SUITABILITY_REVIEW']: 'suitability review',
-};
-
-const SpecificTaskBody = (task: ManagementTask) => {
-    const { t } = useTranslation();
-    let body;
-
-    switch (task.taskType) {
-        case TaskType.SuitabilityReview:
-            break;
-        case 'Suitability':
-        case 'SDP Suitability':
-            body = (
-                <div className="flex flex-col items-start gap-8 border-b-2 border-gray-100 p-8 last:border-b-0">
-                    <div className="flex flex-row">
-                        <Label
-                            label={t('sideSheet.suitability.suitabilityStatus.header')}
-                            variant={LabelVariant.FieldLabel}
-                            className="w-[140px] py-1"
-                        />
-                        <Typography variant={TypographyVariant.BodySm}>{task.data?.suitabilityStatus || DEFAULT_ERROR_STRING}</Typography>
-                    </div>
-                </div>
-            );
-            break;
-        default:
-            body = null;
-            break;
-    }
-    return body;
 };
 
 export enum TabOptions {
@@ -167,8 +137,6 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
                     </div>
                 )}
             </div>
-
-            <SpecificTaskBody {...task} />
         </div>
     );
 
