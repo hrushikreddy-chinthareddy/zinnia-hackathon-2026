@@ -2127,6 +2127,26 @@
             "docTypeRetrievalError": {
                 "title": "Erreur lors de l'identification du type de document",
                 "subtitle": "Une erreur s'est produite lors de l'identification du type de document. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
+            },
+            "nbReg60FormCreation": {
+                "title": "Erreur lors de la création du formulaire REG60",
+                "subtitle": "Une erreur s'est produite lors de la création du formulaire REG 60. Cela peut être dû au fait que le client n'est pas pris en charge à ce moment. Si vous pensez avoir atteint cette page par erreur, veuillez en informer le support opérationnel."
+            },
+            "nbReg60TaskInitialization": {
+                "title": "Erreur lors de l'initialisation de la tâche du formulaire REG60",
+                "subtitle": "Une erreur s'est produite lors de l'initialisation de la tâche REG60. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
+            },
+            "sswFormCreation": {
+                "title": "Erreur lors de la création du formulaire SSW",
+                "subtitle": "Une erreur s'est produite lors de la création du SSH. Cela peut être dû au fait que le client n'est pas pris en charge pour le moment. Si vous pensez avoir atteint cette page par erreur, veuillez en informer le support opérationnel."
+            },
+            "sswTaskInitialization": {
+                "title": "Erreur lors de l'initialisation de la tâche du formulaire SSW",
+                "subtitle": "Une erreur s'est produite lors de l'initialisation de la tâche SSW. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
+            },
+            "clientCodeRetrievalError": {
+                "title": "Erreur lors de l'identification du code client",
+                "subtitle": "Une erreur s'est produite lors de l'identification du code client. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
             }
         }
     },

@@ -2319,7 +2319,7 @@
             },
             "oftTaskInitialization": {
                 "title": "Error initializing task OFT form",
-                "subtitle": "An error occurred while initializing the OFT task.  Please try again.  If this problem persists, please notify operations support."
+                "subtitle": "An error occurred while initializing the OFT task. Please try again.  If this problem persists, please notify operations support."
             },
             "renewalFormCreation": {
                 "title": "Error creating form",
@@ -2372,6 +2372,26 @@
             "docTypeRetrievalError": {
                 "title": "Error identifying document type",
                 "subtitle": "An error occurred while identifying the document type. Please try again. If this problem persists, please notify operations support."
+            },
+            "nbReg60FormCreation": {
+                "title": "Error creating REG60 form",
+                "subtitle": "An error ocurred while creating the REG60 form. This could be due to the client not being supported at this time.  If you believe you have reached this page in error, please notify operations support."
+            },
+            "nbReg60TaskInitialization": {
+                "title": "Error initializing task REG60 form",
+                "subtitle": "An error occurred while initializing the REG60 task. Please try again.  If this problem persists, please notify operations support."
+            },
+            "sswFormCreation": {
+                "title": "Error creating SSW form",
+                "subtitle": "An error ocurred while creating the SSW form.  This could be due to the client not being supported at this time.  If you believe you have reached this page in error, please notify operations support."
+            },
+            "sswTaskInitialization": {
+                "title": "Error initializing task SSW form",
+                "subtitle": "An error occurred while initializing the SSW task. Please try again.  If this problem persists, please notify operations support."
+            },
+            "clientCodeRetrievalError": {
+                "title": "Error identifying client code",
+                "subtitle": "An error occurred while identifying the client code. Please try again. If this problem persists, please notify operations support."
             }
         }
     },
