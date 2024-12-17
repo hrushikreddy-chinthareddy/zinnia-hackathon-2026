@@ -3137,6 +3137,12 @@
                 "history": "History",
                 "documents": "Documents"
             },
+            "status": {
+                "label": "Status",
+                "open": "Open",
+                "closed": "Closed"
+            },
+            "createdLabel": "Date Created",
             "assigneeLabel": "Assignee",
             "stepLabel": "Step",
             "issueLabel": "Issue",

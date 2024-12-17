@@ -2888,6 +2888,12 @@
                 "history": "Histoire",
                 "documents": "Documents"
             },
+            "status": {
+                "label": "Statut",
+                "open": "ouvrir",
+                "closed": "fermée"
+            },
+            "createdLabel": "Date de création",
             "assigneeLabel": "Cessionnaire",
             "stepLabel": "Étape",
             "issueLabel": "Problème",

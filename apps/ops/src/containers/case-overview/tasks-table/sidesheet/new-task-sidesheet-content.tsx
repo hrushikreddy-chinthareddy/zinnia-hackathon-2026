@@ -1,8 +1,9 @@
-import { Link, Loader, TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
+import { Icon, IconType, Link, Loader, TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
 import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
+import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
@@ -84,7 +85,7 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
 
     const renderDetails = (
         <div className="flex flex-col w-full">
-            <label className="font-primary text-lg mt-10">Details</label>
+            <label className="font-primary text-lg mt-10">{t('sideSheet.task.tabs.details')}</label>
             <div className="flex flex-col items-start justify-center gap-1 border-b-2 border-gray-100 py-4 last:border-b-0">
                 <div className="flex flex-row items-center gap-1">
                     <Label label={t('sideSheet.task.status.label')} variant={LabelVariant.FieldLabel} className="w-[100px] py-2" />
@@ -160,10 +161,11 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
                         </Typography>
                     </div>
                 </div>
-
-                <div className="flex flex-row items-center gap-1 pt-8">
-                    <Link href={`/task/${task.id}`} text="Start task" variant="button" size="small"></Link>
-                </div>
+                {task.status === TaskStatus.Open && (
+                    <div className="flex flex-row items-center gap-1 pt-8">
+                        <Link href={`/task/${task.id}`} text="Start task" variant="button" size="small"></Link>
+                    </div>
+                )}
             </div>
 
             <SpecificTaskBody {...task} />
@@ -172,12 +174,21 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
 
     const renderHistory = (
         <div className="flex flex-col w-full">
-            <label className="font-primary text-lg mt-10">History</label>
+            <label className="font-primary text-lg mt-10">{t('sideSheet.task.tabs.history')}</label>
+            <div className="border-box w-full  mt-2">
+                <div className="w-full rounded border-2 border-gray-100 bg-gray-50 p-8">
+                    <AssistiveText
+                        text={t('noFormAvailable')}
+                        variant={AssistiveTextVariant.Default}
+                        iconOverride={<Icon width={16} height={16} type={IconType.DOCUMENT_TEXT} />}
+                    />
+                </div>
+            </div>
         </div>
     );
     const renderDocuments = (
         <div className="flex flex-col w-full">
-            <label className="font-primary text-lg mt-10">Documents</label>
+            <label className="font-primary text-lg mt-10">{t('sideSheet.task.tabs.documents')}</label>
         </div>
     );
 
