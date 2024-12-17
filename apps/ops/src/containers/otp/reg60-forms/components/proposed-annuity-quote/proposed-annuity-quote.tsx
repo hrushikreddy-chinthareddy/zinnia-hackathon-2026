@@ -9,9 +9,10 @@ import { selectVarientByConfig } from '@deps/components/otp-withdrawal-form/form
 import Radio, { RadioVariant } from '@deps/components/radio/radio';
 import SelectSimple from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { Reg60FormContext } from '@deps/contexts/Reg60FormContext';
 import { TranslationFiles } from '@deps/config/translations';
+import { Reg60FormContext } from '@deps/contexts/Reg60FormContext';
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+
 import { ProposedAnnuityQuoteProps } from './proposed-annuity-quote.types';
 import { amountFormat } from '../../utils/reg60-constants';
 import {

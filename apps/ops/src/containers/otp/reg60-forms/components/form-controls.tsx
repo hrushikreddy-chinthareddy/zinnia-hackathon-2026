@@ -4,6 +4,7 @@ import { FormEvent, useContext, useState } from 'react';
 
 import Button, { ButtonSize, ButtonType, ButtonVariant } from '@deps/components/button/button';
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import { TranslationFiles } from '@deps/config/translations';
 import { Reg60FormContext } from '@deps/contexts/Reg60FormContext';
 import { isLocalStorageEnabled } from '@deps/helpers/local-storage.hepler';
 import { getSlug } from '@deps/helpers/string.helper';
@@ -16,7 +17,6 @@ import { FormSuccessMessageKey } from '@deps/types/localStorage';
 import getMassMutualReg60Config from '../mass-mutual/mass-mutual-reg60-form-helper';
 import { CurrentPage } from '../reg60.types';
 import { buildForm } from '../utils/reg60-form-helper';
-import { TranslationFiles } from '@deps/config/translations';
 
 export type FormControlsProps = {
     document: DocumentData;

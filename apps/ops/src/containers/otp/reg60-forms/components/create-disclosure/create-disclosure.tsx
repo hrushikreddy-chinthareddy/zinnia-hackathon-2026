@@ -3,9 +3,9 @@ import { useContext } from 'react';
 
 import Button, { ButtonSize, ButtonType, ButtonVariant } from '@deps/components/button/button';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import { TranslationFiles } from '@deps/config/translations';
 import { Breadcrumb } from '@deps/containers/policy-details/breadcrumb';
 import { Reg60FormContext } from '@deps/contexts/Reg60FormContext';
-import { TranslationFiles } from '@deps/config/translations';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { ReactComponent as CancelIcon } from '@deps/styles/elements/icons/actions/cancel.svg';
 

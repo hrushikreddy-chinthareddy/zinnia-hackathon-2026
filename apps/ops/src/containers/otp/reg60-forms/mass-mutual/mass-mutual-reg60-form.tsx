@@ -2,9 +2,9 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import { TranslationFiles } from '@deps/config/translations';
 import { Reg60FormContext } from '@deps/contexts/Reg60FormContext';
 import { DocumentData } from '@deps/models/case/document';
-import { TranslationFiles } from '@deps/config/translations';
 
 import getMassMutualReg60Config from './mass-mutual-reg60-form-helper';
 import CreateDisclosure from '../components/create-disclosure/create-disclosure';

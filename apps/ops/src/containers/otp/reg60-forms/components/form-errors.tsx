@@ -2,11 +2,11 @@ import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
 
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
+import { TranslationFiles } from '@deps/config/translations';
 import { Reg60FormContext } from '@deps/contexts/Reg60FormContext';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
 import { allValuesEmptyObjects } from './form-controls';
-import { TranslationFiles } from '@deps/config/translations';
 
 export type FormErrorsProps = {
     taskApiError: string;
