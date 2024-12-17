@@ -1,7 +1,7 @@
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import { countries } from 'countries-list';
 import { useTranslation } from 'next-i18next';
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 import AddressEntry from '@deps/components/otp-withdrawal-form/address-entry';
@@ -20,7 +20,7 @@ import { useAddressChange } from '../../address-change-provider';
 export const ContactDetailsStep = ({ policy }: ContactDetailsProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'addressChange.contactDetails' });
     const { goToNext } = useWorkflow();
-    const { formErrors, setFormErrors, phone, setPhone, address, setAddress, setFormData, formData } = useAddressChange();
+    const { formErrors, setFormErrors, phone, setPhone, address, setAddress, setFormData, formData, submitSuccess } = useAddressChange();
     const [country, setCountry] = useState('US' as keyof typeof countries);
     const carrierId = policy?.carrierId || '';
     const [enteredAddress, setEnteredAddress] = useState<any>();
@@ -89,6 +89,7 @@ export const ContactDetailsStep = ({ policy }: ContactDetailsProps) => {
                     planCode={policy.product?.planCode}
                     policyNumber={policy.policyNumber}
                     leaveTransactionLink="/create-case"
+                    disableContinue={submitSuccess}
                 />
             }
         >

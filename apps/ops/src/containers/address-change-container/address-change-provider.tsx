@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
 import { AddressChangeContext } from '@deps/contexts/AddressChangeContext';
-import { FormValidationErrors , Address } from '@deps/models/case/withdrawal/case';
+import { FormValidationErrors, Address } from '@deps/models/case/withdrawal/case';
 import { Phone, PhoneType, PolicyParties } from '@deps/models/policy/sor-policy';
 
 import { ApplyToRolesState, ContractUpdateOptions, SignatureState } from './types/address-change-types';
@@ -40,6 +40,7 @@ export const AddressChangeProvider = ({ children }: AddressChangeProviderProps) 
     const [phone, setPhone] = useState(INITIAL_PHONE);
     const [address, setAddress] = useState<Address>(DEFAULT_ADDRESS);
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
+    const [submitSuccess, setSubmitSuccess] = useState(false);
 
     return (
         <AddressChangeContext.Provider
@@ -54,6 +55,7 @@ export const AddressChangeProvider = ({ children }: AddressChangeProviderProps) 
                 phone,
                 address,
                 selectedIds,
+                submitSuccess,
                 setContractUpdateOption,
                 setRoleIdentifier,
                 setApplyToRoles,
@@ -63,7 +65,8 @@ export const AddressChangeProvider = ({ children }: AddressChangeProviderProps) 
                 setFormErrors,
                 setPhone,
                 setAddress,
-                setSelectedIds
+                setSelectedIds,
+                setSubmitSuccess
             }}
         >
             {children}

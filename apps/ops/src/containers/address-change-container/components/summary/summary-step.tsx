@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
@@ -20,7 +19,7 @@ type AddressChangeSummaryStep = {
 
 export const SummaryStep = ({ policy, isSignatureSummaryRequired }: AddressChangeSummaryStep) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'addressChange' });
-    const { signatureData } = useAddressChange();
+    const { signatureData, submitSuccess } = useAddressChange();
     const dataRows = signatureData?.signatures ?? [];
 
     const { goToNext } = useWorkflow();
@@ -38,6 +37,7 @@ export const SummaryStep = ({ policy, isSignatureSummaryRequired }: AddressChang
                     handleContinue={handleStepContinue}
                     parentPage={ParentPage.CreateCase}
                     leaveTransactionLink="/create-case"
+                    disableContinue={submitSuccess}
                 />
             }
         >
