@@ -21,16 +21,16 @@ class WithdrawalTaxesPage extends Page {
     get checkbox() {
         return cy.get(`[data-testid="checkbox"]`);
     }
-    
+
     get leaveTransactionTaxesPage() {
-        return cy.get(`[data-testid="Cancel"]`);
+        return cy.get(`[data-testid="Leave this transaction"]`);
     }
- 
-//----------------------------------------------------------------------------------------------------------------------- 
+
+//-----------------------------------------------------------------------------------------------------------------------
 
     getFederalTaxPercentage(taxPercentage) {
         this.taxPercentage.first().type(taxPercentage);
-    } 
+    }
 
     getFederalTaxDollars(dollarAmount) {
         this.taxDollars.eq(1).type(dollarAmount);

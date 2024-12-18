@@ -21,12 +21,20 @@ When('I click on policy search dropdown and select {string} on policy search pag
   PolicyDetailsPage.getClickPolicySearchDropdown();
   cy.wait(2000);
   PolicyDetailsPage.getPolicySearchBy(searchCriteria).click({force:true});
+  cy.wait(1500);
 });
 
 When('I enter policy search criteria text {string}', (searchText) => {
   const policyPage = pages['Policy Management page'];
   PolicyDetailsPage.getSearchText(searchText);
   policyPage['Search button'].click();
+});
+
+When('I enter policy search criteria with blank field', () => {
+  const policyPage = pages['Policy Management page'];
+  cy.get(`[placeholder="Policy number"]`).clear();
+  policyPage['Search button'].click();
+  cy.wait(1500);
 });
 
 When('I enter policy search criteria firstName {string} and lastName {string}', (firstName,lastName) => {
