@@ -192,14 +192,6 @@ export const AddAddress: FC<AddAddressProps> = ({
                   options={states}
                   contentClassName={styles.select}
                 />
-                {/* <FieldDataActive
-                  errorMessage={errors.state?.message}
-                  fieldStatus={
-                    errors.city ? FieldStatus.ERROR : FieldStatus.DEFAULT
-                  }
-                  label={<Label>State</Label>}
-                  {...field}
-                /> */}
               </div>
             )}
           />
