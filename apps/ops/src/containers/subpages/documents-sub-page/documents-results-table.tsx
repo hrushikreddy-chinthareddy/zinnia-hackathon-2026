@@ -19,6 +19,7 @@ import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Popover from '@deps/components/popover/popover';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
 import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
+import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { isPreviewSupported, useDocumentDownload } from '@deps/helpers/documents.helper';
 import { convertKebabedDateString } from '@deps/helpers/string.helper';
 import { ReactComponent as LinkIcon } from '@deps/styles/elements/icons/actions/link.svg';
@@ -130,7 +131,7 @@ export default function DocumentsResultsTable({
                     return (
                         <TableRow className="disabled-tr" key={`document-${document.documentId || document.documentID}`}>
                             <TableCell>
-                                <div className="flex flex-col">
+                                <div className="flex flex-col items-start">
                                     <Tooltip body={document.displayName} placement={PopoverPlacement.TopRight}>
                                         <PiiWrapper>{document.displayName}</PiiWrapper>
                                     </Tooltip>
@@ -147,7 +148,9 @@ export default function DocumentsResultsTable({
                                                 <LinkIcon className="-mt-0.5 mr-1.5 inline text-gray-600" width={16} height={16} />
                                             </Tooltip>
                                         ) : null}
-                                        {docDisplayId}
+                                        <Typography variant={TypographyVariant.BodySm} className="text-gray-600">
+                                            {docDisplayId}
+                                        </Typography>
                                     </div>
                                 </div>
                             </TableCell>
