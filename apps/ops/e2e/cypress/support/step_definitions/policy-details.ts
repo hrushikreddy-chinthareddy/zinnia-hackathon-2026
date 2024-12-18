@@ -21,7 +21,7 @@ When('I click on policy search dropdown and select {string} on policy search pag
   PolicyDetailsPage.getClickPolicySearchDropdown();
   cy.wait(2000);
   PolicyDetailsPage.getPolicySearchBy(searchCriteria).click({force:true});
-  cy.wait(1500);
+  cy.wait(3000);
 });
 
 When('I enter policy search criteria text {string}', (searchText) => {
