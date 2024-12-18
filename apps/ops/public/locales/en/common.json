@@ -3176,6 +3176,7 @@
             "stepLabel": "Step",
             "issueLabel": "Issue",
             "detailsLabel": "Details",
+            "noDataAvailable": "No data available.",
             "commonTaskIssues": "One or more {{taskType}} issues found.",
             "taskDetails": "One or more issues were found during Zinnia {{taskType}}. These issues must be reviewed by Carrier and overridden to issue the contract."
         },

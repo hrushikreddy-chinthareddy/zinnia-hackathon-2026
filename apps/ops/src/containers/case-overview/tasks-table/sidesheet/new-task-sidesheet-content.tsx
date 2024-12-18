@@ -1,5 +1,5 @@
+import { useUser } from '@auth0/nextjs-auth0/client';
 import { Icon, IconType, Link, Loader, TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
-import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
@@ -14,8 +14,8 @@ import { getTaskInstance } from '@deps/queries/api/v2/task';
 import { ReactComponent as NotStartedIcon } from '@deps/styles/elements/icons/alert/not-started.svg';
 import { ReactComponent as CircleCheckedIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as CircleStoppedIcon } from '@deps/styles/elements/icons/circles/stop-circle.svg';
+import { ReactComponent as UserCircleIcon } from '@deps/styles/elements/icons/icons_outlined/user-circle.svg';
 import { DEFAULT_DATE_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
-import { carriers, getCarrierLogoByClientId } from '@deps/utils/carriers';
 
 const TaskTypeMap: Record<string, string> = {
     ['SUITABILITY_REVIEW']: 'suitability review',
@@ -32,7 +32,7 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
     const [loading, setLoading] = useState(true);
     const [task, setTask] = useState<ManagementTask | null>(null);
     const [activeTab, setActiveTab] = useState(TabOptions.Details);
-    const [imageSrc, setImageSrc] = useState('');
+    const { user } = useUser();
 
     const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
 
@@ -40,7 +40,6 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
         const getTaskData = async () => {
             const data = await getTaskInstance({ taskId });
             setTask(data);
-            setImageSrc(getCarrierLogoByClientId(data?.carrier as string));
             setLoading(false);
         };
         getTaskData();
@@ -75,21 +74,12 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
                 <div className="flex flex-row items-center gap-1">
                     <Label label={t('sideSheet.task.assigneeLabel')} variant={LabelVariant.FieldLabel} className="w-[100px] py-2" />
                     <div className="flex p-1 shrink-0 rounded border-gray-200">
-                        <Image
-                            src={imageSrc}
-                            className="py-2 "
-                            alt={`${task?.carrier} icon`}
-                            width={16}
-                            height={16}
-                            role="presentation"
-                            aria-hidden="true"
-                        />
+                        <div className="pt-2">
+                            <UserCircleIcon width={24} height={24} />
+                        </div>
 
                         <Typography variant={TypographyVariant.BodySm} className="py-2 px-2">
-                            {carriers[task?.carrier.toUpperCase() as keyof typeof carriers]}
-                        </Typography>
-                        <Typography variant={TypographyVariant.BodySm} className="py-2 pr-2">
-                            {toSentenceCase(TaskTypeMap[task?.taskType])}
+                            {user?.name}
                         </Typography>
                     </div>
                 </div>
