@@ -43,10 +43,6 @@ interface SendTaxFormsProps extends SegmentTrackedPageProps {
     shouldShowMailOption: FeatureFlags;
 }
 
-const getFeatureFlagKey = (carrierId: string, type: 'EMAIL' | 'FAX' | 'MAIL') => {
-    return `SEND_TAX_FORMS_${type}_${carrierId}` as keyof typeof FEATURE_FLAGS;
-};
-
 const SendTaxForms = ({
     policy,
     user,
@@ -232,17 +228,17 @@ export const getServerSideProps = withPageAuthRequired({
             }
 
             const mailOptionEnabled = await optimizelyService.getFeatureFlagVariables(
-                FEATURE_VARIABLES.SEND_TAX_FORMS,
+                FEATURE_VARIABLES.SEND_TAX_FORM,
                 FEATURE_VARIABLES_CORRESPONDENCE_KEYS.Mail,
                 user.sub
             );
             const emailOptionEnabled = await optimizelyService.getFeatureFlagVariables(
-                FEATURE_VARIABLES.SEND_TAX_FORMS,
+                FEATURE_VARIABLES.SEND_TAX_FORM,
                 FEATURE_VARIABLES_CORRESPONDENCE_KEYS.Email,
                 user.sub
             );
             const faxOptionEnabled = await optimizelyService.getFeatureFlagVariables(
-                FEATURE_VARIABLES.SEND_TAX_FORMS,
+                FEATURE_VARIABLES.SEND_TAX_FORM,
                 FEATURE_VARIABLES_CORRESPONDENCE_KEYS.Fax,
                 user.sub
             );

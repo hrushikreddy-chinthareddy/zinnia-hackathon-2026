@@ -33,6 +33,7 @@ import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logWarn, logError, getUserInfoFromUser, parseErrorInformation, logInfo } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
+import { FEATURE_VARIABLES, FEATURE_VARIABLES_CORRESPONDENCE_KEYS } from '@deps/utils/optimizely/variables';
 
 interface SendCorrespondenceProps extends SegmentTrackedPageProps {
     policy: Policy;
@@ -42,10 +43,6 @@ interface SendCorrespondenceProps extends SegmentTrackedPageProps {
     shouldShowMailOption: FeatureFlags;
     applicableStatement: StatementTypes[];
 }
-
-const getFeatureFlagKey = (carrierId: string, type: 'EMAIL' | 'FAX' | 'MAIL') => {
-    return `SEND_STATEMENT_${type}_${carrierId}` as keyof typeof FEATURE_FLAGS;
-};
 
 const SendCorrespondence = ({
     policy,
@@ -201,7 +198,8 @@ export const getServerSideProps = withPageAuthRequired({
         try {
             const userInfoForLogging = getUserInfoFromUser(user);
             const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging);
-            if (!policy || !policy.carrierId) {
+            const carrierId = policy?.carrierId?.toLowerCase() || '';
+            if (!policy || !carrierId) {
                 logInfo('contact-center/send-statement/policy-not-found', { policyNumber, planCode, correlationId, page: resolvedUrl });
                 return {
                     redirect: {
@@ -211,10 +209,25 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
             const applicableStatements = (await getApplicableStatementsSSR(planCode, accessToken, userInfoForLogging)) || [];
-            const shouldShowEmailOption = featureFlagDecisions?.[FEATURE_FLAGS[getFeatureFlagKey(policy.carrierId, 'EMAIL')]];
-            const shouldShowFaxOption = featureFlagDecisions?.[FEATURE_FLAGS[getFeatureFlagKey(policy.carrierId, 'FAX')]];
-            const shouldShowMailOption = featureFlagDecisions?.[FEATURE_FLAGS[getFeatureFlagKey(policy.carrierId, 'MAIL')]];
 
+            const mailOptionEnabled = await optimizelyService.getFeatureFlagVariables(
+                FEATURE_VARIABLES.SEND_STATEMENT,
+                FEATURE_VARIABLES_CORRESPONDENCE_KEYS.Mail,
+                user.sub
+            );
+            const emailOptionEnabled = await optimizelyService.getFeatureFlagVariables(
+                FEATURE_VARIABLES.SEND_STATEMENT,
+                FEATURE_VARIABLES_CORRESPONDENCE_KEYS.Email,
+                user.sub
+            );
+            const faxOptionEnabled = await optimizelyService.getFeatureFlagVariables(
+                FEATURE_VARIABLES.SEND_STATEMENT,
+                FEATURE_VARIABLES_CORRESPONDENCE_KEYS.Fax,
+                user.sub
+            );
+            const shouldShowMailOption = Object.keys(mailOptionEnabled).includes(carrierId);
+            const shouldShowEmailOption = Object.keys(emailOptionEnabled).includes(carrierId);
+            const shouldShowFaxOption = Object.keys(faxOptionEnabled).includes(carrierId);
             return {
                 props: {
                     ...translations,
