@@ -9,6 +9,7 @@ import { baseAppUrl, se2ApiServerUrl, se2ApiServerUrlV2 } from '@deps/queries/ap
 import { client } from '@deps/queries/api-utils/client';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { CaseSearchErrorResponse, CaseTaskSearchResponse } from '@deps/types/search';
+import { browserLogError } from '@deps/utils/browser-logging';
 import { pullFromCache, writeToCache } from '@deps/utils/cache';
 import { logError, logInfo, parseErrorInformation } from '@deps/utils/server-logging';
 
@@ -49,7 +50,7 @@ export const getTaskInstance = async (query: any): Promise<ManagementTask | null
 
         return data;
     } catch (error: any) {
-        logError('getTaskInstance::An error occurred while getting Task Instance', { ...parseErrorInformation(error), query, file: 'queries/api/v2/task', function: 'getTaskInstance' });
+        browserLogError('getTaskInstance::An error occurred while getting Task Instance', { ...parseErrorInformation(error), query, file: 'queries/api/v2/task', function: 'getTaskInstance' });
         return null;
     }
 };

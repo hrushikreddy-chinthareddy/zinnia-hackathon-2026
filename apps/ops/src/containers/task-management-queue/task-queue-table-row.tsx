@@ -21,7 +21,7 @@ import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
-import { logError, parseErrorInformation } from '@deps/utils/server-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
 
 type TaskQueueTableRowProps = {
     task: AssignedTask;
@@ -127,7 +127,7 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
                 setErrorMessage(t('unassignTaskError') + 'An error occurred while un-assigning the task')
             }
         } catch (e) {
-            logError('task-queue:handleUnassignTask::Error un-assigning task', {
+            browserLogError('task-queue:handleUnassignTask::Error un-assigning task', {
                 ...parseErrorInformation(e),
                 taskId: taskId,
                 caseId: taskData.caseId
