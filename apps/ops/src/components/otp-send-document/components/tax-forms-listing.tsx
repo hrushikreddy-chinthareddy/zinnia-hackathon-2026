@@ -95,13 +95,13 @@ const TaxFormsListing = ({ taxForms, carrierCode, selectedTaxForms, setSelectedT
                         <TableBody>
                             {taxForms?.map((form, index) => (
                                 <TableRow key={index}>
-                                    <TableHeaderCell>
+                                    <TableCell>
                                         <Checkbox
                                             id={form.formId}
                                             onClick={() => toggleFormSelection(form, setSelected)}
                                             isCheckedByDefault={isChecked(form.formId)}
                                         />
-                                    </TableHeaderCell>
+                                    </TableCell>
                                     <TableCell>
                                         <div className="flex gap-2">
                                             <Content details={form.name} variant={ContentVariant.BodySm} />
