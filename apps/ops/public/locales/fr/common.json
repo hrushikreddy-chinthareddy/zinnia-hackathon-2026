@@ -1980,7 +1980,7 @@
             "cta": "Accéder au cas",
             "secondaryCta": "Fermer",
             "subtitle": {
-                "0": "Les documents ",
+                "0": "Les documents ont été ",
                 "1": "et en copie"
             },
             "title": "Soumise!"
@@ -2016,6 +2016,35 @@
             "statementTypes": {
                 "annualAnniversaryStatement": "Déclaration annuelle/anniversaire",
                 "quarterlyStatement": "Déclaration trimestrielle"
+            }
+        },
+        "sendTaxForms": {
+            "selectTaxYear": "Sélectionner l'année fiscale",
+            "applicationTaxForms": "Formulaires fiscaux",
+            "tabs": {
+                "taxFormsSelection": "Sélection de formulaires",
+                "correspondence": "Correspondence",
+                "confirm": "Confirmer"
+            },
+            "taxFormDetails": {
+                "title": "Formulaires fiscaux à envoyer",
+                "documentType": "Type de document",
+                "periodYear": "Période année",
+                "actions": "Actions",
+                "noTaxForms": "Aucun formulaire fiscale trouvé pour cette période",
+                "popover": {
+                    "1099R": "Déclare les distributions provenant de polices/contrats.",
+                    "1099Int": "Déclare les revenus d'intérêts gagnés.",
+                    "5498": "Déclare les contributions versées aux IRA, y compris les rollovers et les valeurs de marché équitables pour l'année fiscale."
+                },
+                "warning": {
+                    "0": "Veuillez consulter les formulaires fiscaux avant de continuer.",
+                    "1": "Tous les formulaires fiscaux ci-dessus seront envoyés."
+                }
+            },
+            "errors": {
+                "taxForms": "Les formulaires fiscaux sont nécessaires pour continuer.",
+                "noTaxForms": "Aucun formulaire fiscal trouvé pour {{year}}"
             }
         },
         "statementDetails": {

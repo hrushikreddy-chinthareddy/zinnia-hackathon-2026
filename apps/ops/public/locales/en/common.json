@@ -1998,7 +1998,7 @@
             "cta": "Go to case",
             "secondaryCta": "Close",
             "subtitle": {
-                "0": "The documents ",
+                "0": "The documents have been",
                 "1": "and cc'd"
             },
             "channel": {
@@ -2039,6 +2039,35 @@
             "statementTypes": {
                 "annualAnniversaryStatement": "Annual/Anniversary Statement",
                 "quarterlyStatement": "Quarterly Statement"
+            }
+        },
+        "sendTaxForms": {
+            "selectTaxYear": "Select tax year(s)",
+            "applicationTaxForms": "Application tax forms",
+            "tabs": {
+                "taxFormsSelection": "Tax Form(s) Selection",
+                "correspondence": "Correspondence",
+                "confirm": "Confirm"
+            },
+            "taxFormDetails": {
+                "title": "Tax forms to sent",
+                "documentType": "Document type",
+                "periodYear": "Period year",
+                "actions": "Actions",
+                "noTaxForms": "No tax forms found for this period",
+                "popover": {
+                    "1099R": "Reports distributions from policy/contracts.",
+                    "1099Int": "Reports interest income earned.",
+                    "5498": "Reports contributions made to IRAs, including rollovers and fair market values for the tax year."
+                },
+                "warning": {
+                    "0": "Please review tax forms before continuing.",
+                    "1": "All selected tax forms for the chosen year will be sent."
+                }
+            },
+            "errors": {
+                "taxForms": "Tax forms are required to continue.",
+                "noTaxForms": "No tax forms found for few selected years"
             }
         },
         "statementDetails": {
