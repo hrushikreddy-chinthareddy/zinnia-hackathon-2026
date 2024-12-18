@@ -1348,7 +1348,8 @@
                 "defaultTitle": "Annuity Contract Withdrawal Request",
                 "nasu": "Annuity Contract Withdrawal Request ",
                 "gdmn": "Commonwealth Withdrawal Request",
-                "rsln": "Lincoln Benefit Life Withdrawal Request"
+                "rsln": "Lincoln Benefit Life Withdrawal Request",
+                "glco": "Annuity Contract Withdrawal Request"
             },
             "personalDetails": {
                 "title": "Personal Details",
@@ -1788,6 +1789,7 @@
                 "state": "State income tax",
                 "title": "Income Tax Withholding",
                 "maritalStatusAllowances": "Marital Status and Allowances (for GA, MN and SC only)",
+                "maritalStatusAllowancesMN": "Marital Status and Allowances (MN and MI only)",
                 "maritalStatusAllowancesLabel": "Marital Status and Allowances",
                 "noOfAllowance": "No of allowance",
                 "withholdingStateAmount": "Withholding state amount (if applicable)",
@@ -1871,6 +1873,7 @@
                 "commissionExpiresOn": "Commission expires on",
                 "signatureComment": "Document number",
                 "signatureSsn": "SSN",
+                "signatureCityProvided": "City/State",
                 "signatureCommentLabel": "Signature comment",
                 "signGuaranteeStamp": "Signature guarantee",
                 "spouseConsentText": "If you do not have a spouse, or if your spouse is deceased, check this box.",

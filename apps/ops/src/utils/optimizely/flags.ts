@@ -29,6 +29,7 @@ export enum FEATURE_FLAGS {
     WITHDRAWAL_NASU = 'case-management-otp_feature_nasu_withdrawal',
     WITHDRAWAL_RSLN = 'case-management-otp_feature_rsln_withdrawal',
     WITHDRAWAL_SBGC = 'case-management-otp_feature_sbgc_withdrawal',
+    WITHDRAWAL_GLCO = 'case-management-otp_feature_glco_withdrawal',
     SEND_DOCUMENT = 'contact-center-send-document',
     ADDRESS_CHANGE_SBGC = 'case-management-otp-feature-sbgc-address-change',
     ADDRESS_CHANGE_MASS = 'case-management-otp-feature-mass-address-change',
