@@ -15,7 +15,7 @@ import { ReactComponent as NotStartedIcon } from '@deps/styles/elements/icons/al
 import { ReactComponent as CircleCheckedIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as CircleStoppedIcon } from '@deps/styles/elements/icons/circles/stop-circle.svg';
 import { DEFAULT_DATE_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
-import { getCarrierLogoByClientId } from '@deps/utils/carriers';
+import { carriers, getCarrierLogoByClientId } from '@deps/utils/carriers';
 
 const TaskTypeMap: Record<string, string> = {
     ['SUITABILITY_REVIEW']: 'suitability review',
@@ -60,7 +60,7 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
                 <div className="flex flex-row items-center gap-1">
                     <Label label={t('sideSheet.task.status.label')} variant={LabelVariant.FieldLabel} className="w-[100px] py-2" />
                     <div className="flex items-center">
-                        {task.status == TaskStatus.New && <NotStartedIcon width={16} height={16} className="mr-2 text-gray-300" />}
+                        {task.status == TaskStatus.New && <NotStartedIcon width={16} height={16} className="text-gray-300" />}
                         {task.status == TaskStatus.InProgress && (
                             <CircleCheckedIcon width={16} height={16} className="mr-1 text-semantic-success" />
                         )}
@@ -86,10 +86,10 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
                         />
 
                         <Typography variant={TypographyVariant.BodySm} className="py-2 px-2">
-                            {task?.carrier}
+                            {carriers[task?.carrier.toUpperCase() as keyof typeof carriers]}
                         </Typography>
                         <Typography variant={TypographyVariant.BodySm} className="py-2 pr-2">
-                            {task?.taskType}
+                            {toSentenceCase(TaskTypeMap[task?.taskType])}
                         </Typography>
                     </div>
                 </div>
@@ -108,7 +108,7 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
                 <div className="flex flex-row items-center gap-1">
                     <Label label={t('sideSheet.task.stepLabel')} variant={LabelVariant.FieldLabel} className="w-[100px] py-2" />
                     <Typography variant={TypographyVariant.BodySm} className="py-2">
-                        {task.taskName}
+                        {toSentenceCase(task.taskName)}
                     </Typography>
                 </div>
 
@@ -123,7 +123,7 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
 
                 <div className="flex flex-row items-center gap-1">
                     <Label label={t('sideSheet.task.detailsLabel')} variant={LabelVariant.FieldLabel} className="w-[100px] py-2" />
-                    <div className="px-14">
+                    <div className="pl-14">
                         <Typography variant={TypographyVariant.BodySm} className="py-2">
                             {t('sideSheet.task.taskDetails', {
                                 taskType: TaskTypeMap[task.taskType],
@@ -131,7 +131,7 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
                         </Typography>
                     </div>
                 </div>
-                {task.status === TaskStatus.New && (
+                {(task.status === TaskStatus.New || task.status === TaskStatus.InProgress) && (
                     <div className="flex flex-row items-center gap-1 pt-8">
                         <Link href={`/task/${task.id}`} text="Start task" variant="button" size="small"></Link>
                     </div>
@@ -146,7 +146,7 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
             <div className="border-box w-full  mt-2">
                 <div className="w-full rounded border-2 border-gray-100 bg-gray-50 p-8">
                     <AssistiveText
-                        text={t('noFormAvailable')}
+                        text={t('sideSheet.task.noDataAvailable')}
                         variant={AssistiveTextVariant.Default}
                         iconOverride={<Icon width={16} height={16} type={IconType.DOCUMENT_TEXT} />}
                     />
@@ -157,18 +157,27 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
     const renderDocuments = (
         <div className="flex flex-col w-full">
             <label className="font-primary text-lg mt-10">{t('sideSheet.task.tabs.documents')}</label>
+            <div className="border-box w-full  mt-2">
+                <div className="w-full rounded border-2 border-gray-100 bg-gray-50 p-8">
+                    <AssistiveText
+                        text={t('sideSheet.task.noDataAvailable')}
+                        variant={AssistiveTextVariant.Default}
+                        iconOverride={<Icon width={16} height={16} type={IconType.DOCUMENT_TEXT} />}
+                    />
+                </div>
+            </div>
         </div>
     );
 
     const renderTabContent = (
         <>
-            <TabContent className="flex mx-10 items-center" value={TabOptions.Details}>
+            <TabContent className="flex px-10 flex-col items-center" value={TabOptions.Details}>
                 {renderDetails}
             </TabContent>
-            <TabContent className="mx-10 flex w-full items-center" value={TabOptions.History}>
+            <TabContent className="flex px-10 w-full flex-col items-center" value={TabOptions.History}>
                 {renderHistory}
             </TabContent>
-            <TabContent className="mx-10 flex w-full items-center" value={TabOptions.Documents}>
+            <TabContent className="flex px-10  w-full flex-col items-center" value={TabOptions.Documents}>
                 {renderDocuments}
             </TabContent>
         </>

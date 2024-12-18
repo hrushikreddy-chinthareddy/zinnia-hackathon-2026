@@ -9,7 +9,7 @@ import usaa from '@deps/styles/elements/icons/carriers/usaa.svg';
 import wellabe from '@deps/styles/elements/icons/carriers/wellabe.svg';
 
 // This is a stopgap until the carrier api is deployed
-const carriers = {
+export const carriers = {
     ALLM: 'Allmerica',
     ALLS: 'Allstate',
     CWA: 'Commomwealth',
