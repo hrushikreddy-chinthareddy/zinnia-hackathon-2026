@@ -16,6 +16,7 @@ export interface SignatureState extends SignatureWithdrawal {
     setIsNotaryValid: React.Dispatch<React.SetStateAction<boolean | null | undefined>>;
     setSignGuaranteeStamp: React.Dispatch<React.SetStateAction<{ text: string | null } | undefined>>;
     setSsn: React.Dispatch<React.SetStateAction<{ text: string | null } | undefined>>;
+    setIsSignatureCityProvided: React.Dispatch<React.SetStateAction<{ text: boolean | null} | undefined>>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -37,12 +38,14 @@ export const defaultSignatureState = {
     setCommissionExpiryDate: noop,
     setSignGuaranteeStamp: noop,
     setSsn: noop,
+    setIsSignatureCityProvided: noop,
     signatureComment: '',
     ssn: { text: '' },
     signDate: { text: '' },
     signTitle: { text: '' },
     signType: { text: null },
     commissionExpiryDate: { text: '' },
+    isSignatureCityProvided: { text: null }
 };
 
 export const SignatureValidationContext = createContext<SignatureState>(defaultSignatureState as SignatureState);

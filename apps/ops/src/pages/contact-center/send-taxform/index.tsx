@@ -32,7 +32,7 @@ import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logWarn, logError, getUserInfoFromUser, parseErrorInformation, logInfo } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
-import { FEATURE_VARIABLES } from '@deps/utils/optimizely/variables';
+import { FEATURE_VARIABLES, FEATURE_VARIABLES_CORRESPONDENCE_KEYS } from '@deps/utils/optimizely/variables';
 
 interface SendTaxFormsProps extends SegmentTrackedPageProps {
     policy: Policy;
@@ -231,9 +231,21 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
-            const mailOptionEnabled = await optimizelyService.getFeatureFlagVariables(FEATURE_VARIABLES.SEND_TAX_FORMS, 'mail', user.sub);
-            const emailOptionEnabled = await optimizelyService.getFeatureFlagVariables(FEATURE_VARIABLES.SEND_TAX_FORMS, 'email', user.sub);
-            const faxOptionEnabled = await optimizelyService.getFeatureFlagVariables(FEATURE_VARIABLES.SEND_TAX_FORMS, 'fax', user.sub);
+            const mailOptionEnabled = await optimizelyService.getFeatureFlagVariables(
+                FEATURE_VARIABLES.SEND_TAX_FORMS,
+                FEATURE_VARIABLES_CORRESPONDENCE_KEYS.Mail,
+                user.sub
+            );
+            const emailOptionEnabled = await optimizelyService.getFeatureFlagVariables(
+                FEATURE_VARIABLES.SEND_TAX_FORMS,
+                FEATURE_VARIABLES_CORRESPONDENCE_KEYS.Email,
+                user.sub
+            );
+            const faxOptionEnabled = await optimizelyService.getFeatureFlagVariables(
+                FEATURE_VARIABLES.SEND_TAX_FORMS,
+                FEATURE_VARIABLES_CORRESPONDENCE_KEYS.Fax,
+                user.sub
+            );
             const shouldShowMailOption = Object.keys(mailOptionEnabled).includes(carrierId);
             const shouldShowEmailOption = Object.keys(emailOptionEnabled).includes(carrierId);
             const shouldShowFaxOption = Object.keys(faxOptionEnabled).includes(carrierId);
