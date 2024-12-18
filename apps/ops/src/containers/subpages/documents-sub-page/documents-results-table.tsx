@@ -103,14 +103,16 @@ export default function DocumentsResultsTable({
                 <TableRow>
                     <TableHeaderCell>
                         <div className="flex flex-row items-center gap-1">
-                            {t('document')}
-                            <Popover
-                                body={t('documentIdentifierTooltip')}
-                                title={t('documentIdentifier') as string}
-                                placement={PopoverPlacement.TopRight}
-                            >
-                                <Icon type={IconType.CIRCLE_INFO} color="var(--color-primary-color-primary)" height={16} width={16} />
-                            </Popover>
+                            {t('documentId')}
+                            {documentType !== DocumentTypeView.Correspondence && (
+                                <Popover
+                                    body={t('documentIdentifierTooltip')}
+                                    title={t('document') as string}
+                                    placement={PopoverPlacement.TopRight}
+                                >
+                                    <Icon type={IconType.CIRCLE_INFO} color="var(--color-primary-color-primary)" height={16} width={16} />
+                                </Popover>
+                            )}
                         </div>
                     </TableHeaderCell>
                     <TableHeaderCell>{t(documentType === DocumentTypeView.Correspondence ? 'sentDate' : 'receivedDate')}</TableHeaderCell>
