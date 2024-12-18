@@ -1,4 +1,3 @@
-import { datadogLogs } from '@datadog/browser-logs';
 import { AxiosResponse } from 'axios';
 
 import { ActiveReg60Case } from '@deps/containers/otp/reg60-forms/reg60.types';
@@ -10,6 +9,7 @@ import { baseAppUrl, se2ApiServerUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { logError, logInfo, parseErrorInformation } from '@deps/utils/server-logging';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 
 const baseCasesUrl = `${baseAppUrl}/api/case/v1/cases`;
 const baseTasksUrl = `${baseAppUrl}/api/case/v1/tasks`;
@@ -221,7 +221,7 @@ export const unassignTask = async (caseId: string, taskId: string, entryDuration
         const { data } = await client.put<AxiosResponse>(url);
         logInfo('Successfully updated task using v1', { caseId, taskId, url, function: 'tasks.unassignTask' });
 
-        datadogLogs.logger.info('Form entry time', {
+        browserLogInfo('Form entry time', {
             timeElapsedSinceLoad: timeInSeconds,
             caseId,
             url,
@@ -229,7 +229,13 @@ export const unassignTask = async (caseId: string, taskId: string, entryDuration
         });
         return data;
     } catch (error: any) {
-        logError('An error occurred during update task using v1', { error, caseId, taskId, function: 'tasks.unassignTask' });
+        browserLogError('An error occurred during update task using v1', {
+            ...parseErrorInformation(error),
+            error,
+            caseId,
+            taskId,
+            function: 'tasks.unassignTask',
+        });
         return null;
     }
 };

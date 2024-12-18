@@ -3,6 +3,12 @@ import dayjs from 'dayjs';
 import { ArrangementType, SystematicProgram as SysProg } from '@deps/models/policy/sor-policy';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
+//TODO: Remove this eventually because LifeCAD should be sending correct enum values in arrangementTypes
+export enum TempAnnuityArrangementTypes {
+    WITHDRAWAL = 'Sys Partial Wthdrwl(Gross)',
+    REQUIREDMINIMUMDISTRIBUTION = 'Min Required Distribution',
+}
+
 export class SystematicPrograms {
     public systematicProgramById: Record<string, SysProg> = {};
     public systematicProgramsByType: Record<string, SysProg[]> = {};
@@ -32,7 +38,7 @@ export class SystematicPrograms {
         return this.systematicProgramById[programId];
     }
 
-    public getProgramsByType(arrangementType: ArrangementType): SysProg[] {
+    public getProgramsByType(arrangementType: ArrangementType | TempAnnuityArrangementTypes): SysProg[] {
         if (!arrangementType) {
             return [];
         }

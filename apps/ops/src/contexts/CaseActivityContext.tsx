@@ -5,12 +5,11 @@ import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { CallLog } from '@deps/models/case/call-log';
 import { Case, Processes } from '@deps/models/case/case';
-import { PolicyDocuments } from '@deps/models/case/document';
 import { NoteInstance } from '@deps/models/case/note-instance';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { getCaseNotes } from '@deps/queries/api/cases';
 import { getCaseCallLogs } from '@deps/queries/api/contracts';
-import { getPolicyDocs, getCorrespondenceDocs } from '@deps/queries/api/documents';
+import { getCaseDocuments } from '@deps/queries/api/documents';
 import { findUniquePolicy } from '@deps/queries/api/policies';
 
 export interface CaseActivityContextProps {
@@ -85,23 +84,34 @@ export const CaseActivityProvider = ({ children, caseDetails }: CaseActivityProv
                 setLoadingDocuments(false);
                 return;
             }
-            const [policyDocsReq, correspondenceDocsReq] = await Promise.all([
-                getPolicyDocs(caseDetails?.policyNumber, caseDetails?.carrier),
-                getCorrespondenceDocs(caseDetails?.policyNumber, caseDetails?.carrier),
+
+            const [policy, correspondence] = await Promise.all([
+                getCaseDocuments({
+                    caseId: caseDetails.id,
+                    clientCode: caseDetails.carrier?.toUpperCase(),
+                    policyNumber: caseDetails.policyNumber,
+                    source: DocumentTypeView.Policy,
+                }),
+                getCaseDocuments({
+                    caseId: caseDetails.id,
+                    clientCode: caseDetails.carrier?.toUpperCase(),
+                    policyNumber: caseDetails.policyNumber,
+                    source: DocumentTypeView.Correspondence,
+                }),
             ]);
 
-            if (policyDocsReq?.status == 200) {
+            if (policy.data) {
                 setPolicyDocs(
-                    ((policyDocsReq.data as PolicyDocuments)?.items || []).map(item => ({
+                    policy.data.map(item => ({
                         ...item,
                         documentSource: DocumentTypeView.Policy,
                     }))
                 );
             }
 
-            if (correspondenceDocsReq?.status == 200) {
+            if (correspondence.data) {
                 setCorrespondenceDocs(
-                    ((correspondenceDocsReq.data as PolicyDocuments)?.items || []).map(item => ({
+                    correspondence.data.map(item => ({
                         ...item,
                         documentSource: DocumentTypeView.Correspondence,
                     }))

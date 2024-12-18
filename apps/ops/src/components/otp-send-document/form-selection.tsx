@@ -32,12 +32,20 @@ export const DefaultFormDetail = {
 type FormSelectionProps = {
     policy: Policy;
     ctiCallNumber: string;
+    correlationId?: string;
     availableFormsTransactions: AvailableFormsTransaction[];
     formDetails: SendDocumentFormParts[];
     setFormDetails: React.Dispatch<React.SetStateAction<SendDocumentFormParts[]>>;
 };
 
-function FormSelection({ policy, ctiCallNumber, availableFormsTransactions, formDetails, setFormDetails }: FormSelectionProps) {
+function FormSelection({
+    policy,
+    ctiCallNumber,
+    availableFormsTransactions,
+    formDetails,
+    setFormDetails,
+    correlationId,
+}: FormSelectionProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
     const [forms, setForms] = useState(mapIdToFormDetails(formDetails));
     const { goToNext } = useWorkflow();
@@ -93,6 +101,7 @@ function FormSelection({ policy, ctiCallNumber, availableFormsTransactions, form
                             ctiCallNumber={ctiCallNumber}
                             availableFormsTransactions={availableFormsTransactions}
                             key={form.id}
+                            correlationId={correlationId}
                         />
                     </div>
                     {index > 0 && (

@@ -3,13 +3,13 @@ import { useContext } from 'react';
 import CardPeople from '@deps/components/card/card-people/card-people';
 import { ChipEnterContext } from '@deps/contexts/ChipEnterContext';
 import { goTo } from '@deps/helpers/routing.helper';
-import { buildFullName, safeString, toTitleCase } from '@deps/helpers/string.helper';
+import { safeString, toTitleCase } from '@deps/helpers/string.helper';
 import { PartyType } from '@deps/models/policy/sor-policy';
 import { TagKey } from '@deps/types/components';
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import { BeneficiaryType, PeopleCardContainerProps, PeopleCardData } from './people-card-container.types';
 import { NameTag } from '../people-sub-page/people-sub-page.helpers';
-import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
 
 interface MapDataToPeopleProps {
     chipEntered: boolean;
@@ -35,17 +35,17 @@ const tagsToBeneficiaryType = (tags: TagKey[]) => {
 };
 
 const mapDataToPeopleCard = ({ chipEntered, index, party, peopleCard, isRereg }: MapDataToPeopleProps) => {
-    const { partyType, firstName, lastName, organizationCode, fullName, tags, beneficiaryPercentage, partyId } = party;
+    const { partyType, firstName, lastName, fullName, tags, beneficiaryPercentage, partyId } = party;
     const { selectedTagList, accessibilityText, accessibilityClickText, planCode, policyNumber, isBeneficiarySelected, router } =
         peopleCard;
 
     let name = '';
     switch (partyType) {
         case PartyType.INDIVIDUAL:
-            name = firstName || lastName ? buildFullName(firstName, undefined, lastName) : DEFAULT_ERROR_STRING;
+            name = toTitleCase(`${firstName ?? DEFAULT_ERROR_STRING} ${lastName ?? DEFAULT_ERROR_STRING}`);
             break;
         case PartyType.ORGANIZATION:
-            name = safeString(organizationCode);
+            name = toTitleCase(safeString(fullName)); // DEPU-3511 -> old code used to be safeString(organizationCode);
             break;
         case PartyType.TRUST:
             name = toTitleCase(safeString(fullName));
@@ -65,6 +65,7 @@ const mapDataToPeopleCard = ({ chipEntered, index, party, peopleCard, isRereg }:
             accessibilityClickText={accessibilityClickText}
             onClick={() => !isRereg && goTo(`/policies/${planCode}/${policyNumber}/people/${partyId}`, router)}
             shouldFocus={index === 0 && chipEntered}
+            partyStatus={party.partyStatus}
         />
     );
 };

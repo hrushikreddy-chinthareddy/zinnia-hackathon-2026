@@ -49,7 +49,7 @@ export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
         [DocumentTypeView.Policy]: null,
     });
     const [yearSelection, setYearSelection] = useState<string>(dayjs().year().toString());
-    const limit = 10;
+    const limit = 25;
     const [offset, setOffset] = useState(0);
 
     const yearOptions = getYearOptions(policy);

@@ -14,8 +14,8 @@ import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { convertKebabedDateString, isNullEmptyOrUndefined, toSentenceCase } from '@deps/helpers/string.helper';
 import { FeaturesCardsTest, RidersCardsTest } from '@deps/jest/constants/test-id-constants';
-import { PolicyFeature, PolicyFeatureFeatureType, Rider } from '@deps/models/policy/sor-policy';
-import { DEFAULT_DATE_FORMAT, ZAHARA_API_DATE_FORMAT , DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { PartyStatus, PolicyFeature, PolicyFeatureFeatureType, Rider } from '@deps/models/policy/sor-policy';
+import { DEFAULT_DATE_FORMAT, ZAHARA_API_DATE_FORMAT, DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { ConfiguredSettingId } from '@deps/types/product-config-settings';
 import { BenefitId, CoverageId, CoverageToBenefitId, RiderBenefit } from '@deps/types/product-rate';
 
@@ -159,10 +159,7 @@ const getBadgeFromRider = (rider: Rider, t: TFunction): ReactElement<BadgeWithTo
     }
 };
 
-const getRiderInsuredContent = (
-    policyDetails: PolicyDetails,
-    { riderName, riderParticipant }: Rider
-): React.ReactNode => {
+const getRiderInsuredContent = (policyDetails: PolicyDetails, { riderName, riderParticipant }: Rider): React.ReactNode => {
     const insuredIds = riderParticipant?.map(participants => participants.insuredId);
 
     if (!insuredIds?.length) {
@@ -172,14 +169,14 @@ const getRiderInsuredContent = (
     const insuredElements = insuredIds.map((insuredId, index) => {
         const insuredParty = policyDetails.getPartyById(insuredId);
 
+        // DEPU-3651 we need to filter out any party that has not been approved
+        if (insuredParty?.party?.partyStatus === PartyStatus.NOTAPPROVED) {
+            return null;
+        }
+
         if (!policyDetails.coveredPeople.length || !insuredParty?.partyId) {
             return (
-                <Content
-                    details={insuredParty?.fullName}
-                    key={`insured-${insuredId}-${index}`}
-                    variant={ContentVariant.Body}
-                    pii={true}
-                />
+                <Content details={insuredParty?.fullName} key={`insured-${insuredId}-${index}`} variant={ContentVariant.Body} pii={true} />
             );
         }
 
@@ -292,37 +289,37 @@ const createFieldKvp = ({ key, testId, label, details, customContent }: CardFiel
     );
 };
 
-
 const mapFeatureFields = (feature: PolicyFeature, t: TFunction, currency: string, isAnnuity = false): ReactElement[] => {
-
     const formatPolicyFeatureDate = (date: string | Date | undefined) => {
         if (date === '2999-12-31') return t('features.lifetime');
         return dayjs(date, ZAHARA_API_DATE_FORMAT).format(DEFAULT_DATE_FORMAT);
-    }
+    };
 
-    const additionalFields = isAnnuity ? [
-        {
-            // @ts-expect-error until spec is updated
-            key: `feature-extras-card-${feature.featureDescription}-field-description`,
-            testId: `${FeaturesCardsTest.Description}-${feature.timestamp}`,
-            label: t('features.featureDescription'),
-            // @ts-expect-error until spec is updated
-            details: feature.featureDescription,
-        }
-    ] : [
-        {
-            key: `feature-extras-card-${feature.timestamp}-field-cost`,
-            testId: `${FeaturesCardsTest.Cost}-${feature.timestamp}`,
-            label: t('features.cost'),
-            details: numberFormatify(feature.paymentAmount as number, { style: 'currency', currency }),
-        },
-        {
-            key: `feature-extras-card-${feature.timestamp}-field-pmt`,
-            testId: `${FeaturesCardsTest.CumulativePayment}-${feature.timestamp}`,
-            label: t('features.cumulativePayment'),
-            details: numberFormatify(feature.totalPaymentAmount as number, { style: 'currency', currency }),
-        },
-    ]
+    const additionalFields = isAnnuity
+        ? [
+              {
+                  // @ts-expect-error until spec is updated
+                  key: `feature-extras-card-${feature.featureDescription}-field-description`,
+                  testId: `${FeaturesCardsTest.Description}-${feature.timestamp}`,
+                  label: t('features.featureDescription'),
+                  // @ts-expect-error until spec is updated
+                  details: feature.featureDescription,
+              },
+          ]
+        : [
+              {
+                  key: `feature-extras-card-${feature.timestamp}-field-cost`,
+                  testId: `${FeaturesCardsTest.Cost}-${feature.timestamp}`,
+                  label: t('features.cost'),
+                  details: numberFormatify(feature.paymentAmount as number, { style: 'currency', currency }),
+              },
+              {
+                  key: `feature-extras-card-${feature.timestamp}-field-pmt`,
+                  testId: `${FeaturesCardsTest.CumulativePayment}-${feature.timestamp}`,
+                  label: t('features.cumulativePayment'),
+                  details: numberFormatify(feature.totalPaymentAmount as number, { style: 'currency', currency }),
+              },
+          ];
     return [
         ...additionalFields,
         {
@@ -406,7 +403,7 @@ const mapRiderFields = (
         1. Product API currently does not support max claims for OverloanProtection or Child riders
         2. The reason I use benefit ids here and not coverage ids is because products on Zahara can have different
         coverage ids for the same benefit. For example, a rider on a SBUL policy can have a coverage id of
-        'Rider_SBLOPR' for overloan protection, but an Everly IUL policy will have a coverage id of 'Rider_OPR' 
+        'Rider_SBLOPR' for overloan protection, but an Everly IUL policy will have a coverage id of 'Rider_OPR'
         for the same thing.
     */
     if (benefitId !== BenefitId.OverloanProtection && benefitId !== BenefitId.Child) {
@@ -415,6 +412,15 @@ const mapRiderFields = (
             key: `rider-extras-card-${rider.riderName}-field-maxClaims`,
             label: t('riders.maxClaims'),
             testId: `${RidersCardsTest.MaxClaims}-${rider.riderName}`,
+        });
+    }
+
+    if (!isNullEmptyOrUndefined(rider.amount)) {
+        fields.push({
+            details: numberFormatify(rider.amount as number, { style: 'currency', currency }),
+            key: `rider-extras-card-${rider.riderName}-field-claimProcessed`,
+            label: t('riders.coverageAmount'),
+            testId: `${RidersCardsTest.Amount}-${rider.riderName}`,
         });
     }
 
@@ -445,7 +451,11 @@ export const mapPolicyFeaturesToExtrasCards = (
     });
 };
 
-export const mapPolicyRidersToExtrasCards = (policyDetails: PolicyDetails | undefined, t: TFunction, riderBenefitData: RiderBenefit[] = []): PolicyExtrasCards[] => {
+export const mapPolicyRidersToExtrasCards = (
+    policyDetails: PolicyDetails | undefined,
+    t: TFunction,
+    riderBenefitData: RiderBenefit[] = []
+): PolicyExtrasCards[] => {
     if (!policyDetails?.riders) return [];
 
     return policyDetails.riders.map(rider => {

@@ -1977,6 +1977,7 @@ export const PolicyStatus = {
     LIVINGCLAIMPENDING: 'LIVINGCLAIMPENDING',
     DEATHCLAIMPENDING: 'DEATHCLAIMPENDING',
     DEATHCLAIMPAID: 'DEATHCLAIMPAID',
+    PAYOUT: 'PAYOUT',
 } as const;
 
 export interface PolicyParties {
@@ -2082,6 +2083,8 @@ export interface PolicyFeature {
     totalRequiredAmount?: number;
     /** TBD */
     underwritingDecision?: boolean;
+    exclusionAmount?: number;
+    yearToDatePaymentAmount?: number;
 }
 
 export interface PolicyEvent {

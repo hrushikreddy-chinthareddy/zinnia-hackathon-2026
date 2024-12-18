@@ -2,6 +2,10 @@ import { render, screen } from '@testing-library/react';
 
 import CardPeople, { CardPeopleProps } from './card-people';
 
+jest.mock('react-i18next', () => ({
+    useTranslation: () => ({ t: () => {} }),
+}));
+
 describe('CardPeople', () => {
     const individualName = 'John Doe';
     const trustName = 'Example Trust';
@@ -14,20 +18,44 @@ describe('CardPeople', () => {
     const shouldFocus = false;
 
     test('renders correct names and tags', () => {
-        const individualProps: CardPeopleProps = { name: individualName, tags, allocation, accessibilityText, accessibilityClickText, index, shouldFocus };
-        
+        const individualProps: CardPeopleProps = {
+            name: individualName,
+            tags,
+            allocation,
+            accessibilityText,
+            accessibilityClickText,
+            index,
+            shouldFocus,
+        };
+
         render(<CardPeople {...individualProps} />);
         expect(screen.getByText(individualName)).toBeInTheDocument();
         expect(screen.getByText(tags[0].text)).toBeInTheDocument();
         expect(screen.getByText(tags[1].text)).toBeInTheDocument();
 
-        const trustProps: CardPeopleProps = { name: trustName, tags, allocation, accessibilityText, accessibilityClickText, index, shouldFocus };
-        
+        const trustProps: CardPeopleProps = {
+            name: trustName,
+            tags,
+            allocation,
+            accessibilityText,
+            accessibilityClickText,
+            index,
+            shouldFocus,
+        };
+
         render(<CardPeople {...trustProps} />);
         expect(screen.getByText(trustName)).toBeInTheDocument();
 
-        const orgProps: CardPeopleProps = { name: orgName, tags, allocation, accessibilityText, accessibilityClickText, index, shouldFocus };
-        
+        const orgProps: CardPeopleProps = {
+            name: orgName,
+            tags,
+            allocation,
+            accessibilityText,
+            accessibilityClickText,
+            index,
+            shouldFocus,
+        };
+
         render(<CardPeople {...orgProps} />);
         expect(screen.getByText(orgName)).toBeInTheDocument();
     });

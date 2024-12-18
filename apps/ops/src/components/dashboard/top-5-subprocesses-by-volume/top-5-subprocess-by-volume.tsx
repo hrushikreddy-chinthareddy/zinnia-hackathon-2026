@@ -4,8 +4,7 @@ import dayjs from 'dayjs';
 import * as Highcharts from 'highcharts';
 import HC_ACCESSIBILITY from 'highcharts/modules/accessibility';
 import HighchartsExporting from 'highcharts/modules/exporting';
-import HighchartsReact from 'highcharts-react-official';
-import { useMemo, useRef, useState } from 'react';
+import { useMemo } from 'react';
 
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import PageLoader from '@deps/components/page-loader/page-loader';
@@ -15,7 +14,7 @@ import { dashboardChartTitleFormat, splitAndSentenceCase } from '@deps/helpers/d
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
 import { convertToQueryString } from '@deps/helpers/routing.helper';
 import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
-import { DashboardStatsElementResponse, Processes, Statuses } from '@deps/models/case/case';
+import { Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { getCaseInsights } from '@deps/queries/api/openai';
 import { DashboardSearchFilter } from '@deps/queries/cases';
@@ -25,6 +24,7 @@ import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/ill
 import { ReactComponent as LightBulbIcon } from '@deps/styles/elements/icons/illustrations/light-bulb.svg';
 
 import styles from './top-5-subprocess-by-volume.module.css';
+import { LineAndVolumeCategoryChart, processGroupedData } from '../line-and-volume-category-chart/line-and-volume-category-chart';
 
 const CHART_HEIGHT = 500;
 if (typeof Highcharts === 'object') {
@@ -47,345 +47,6 @@ type Output = {
 
 const colors = ['#D385A5', '#BD85D3', '#8593D3', '#00628B', '#021936'];
 
-function processData(input: DashboardStatsElementResponse[]): Output {
-    const WEEKLY_WEEKS = 48; // 4 weeks per month for 12 months
-    const MONTHLY_MONTHS = 12;
-    const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-    const result: Output = {
-        weekly: {},
-        monthly: {},
-        weeklyCategories: [],
-        monthlyCategories: [],
-    };
-
-    // Get the earliest date in the data
-    let earliestDate: Date = new Date();
-    input.forEach(carrier => {
-        carrier.values?.forEach(exceptionCategory => {
-            exceptionCategory.values?.forEach(entry => {
-                const date = new Date(entry.name);
-                if (!earliestDate || date < earliestDate) {
-                    earliestDate = date;
-                    return; // break the loop
-                }
-            });
-        });
-    });
-
-    // Use the earliest date to calculate the starting point for categories
-    if (!earliestDate) {
-        throw new Error('No valid dates found in input data');
-    }
-
-    // Generate categories
-    const startMonthIndex = earliestDate.getUTCMonth(); // 0-based month index
-    result.monthlyCategories = Array(12).fill(0); // Array.from({ length: MONTHLY_MONTHS }, (_, i) => MONTH_NAMES[(startMonthIndex + i) % 12]);
-
-    const months = Array.from({ length: MONTHLY_MONTHS }, (_, i) => MONTH_NAMES[(startMonthIndex + i) % 12]);
-    result.weeklyCategories = months.flatMap(month => [month, month, month, month]);
-
-    // Process data as before
-    input.forEach((groupBy, i) => {
-        const weeklyData: number[] = new Array(WEEKLY_WEEKS).fill(0);
-        const monthlyData: number[] = new Array(MONTHLY_MONTHS).fill(0);
-
-        const groupByName = groupBy.name || 'Unknown';
-        if (!result.weekly[groupByName]) {
-            result.weekly[groupByName] = {
-                series: {} as Highcharts.SeriesLineOptions,
-                name: groupByName,
-                total: 0,
-            };
-        }
-        if (!result.monthly[groupByName]) {
-            result.monthly[groupByName] = {
-                series: {} as Highcharts.SeriesColumnOptions,
-                name: groupByName,
-                total: 0,
-            };
-        }
-
-        result.weekly[groupByName].series = {
-            type: 'line',
-            data: weeklyData,
-            name: groupByName,
-            lineWidth: 2,
-            marker: {
-                enabled: false, // Disable markers for a clean line chart
-            },
-            color: colors[i % colors.length],
-            xAxis: 0, // Use the first xAxis
-            yAxis: 0,
-        };
-
-        result.monthly[groupByName].series = {
-            name: groupByName,
-            data: monthlyData,
-            stack: 'stackedBar',
-            type: 'column',
-            color: colors[i % colors.length],
-            xAxis: 1, // Use the second xAxis
-            yAxis: 1,
-        };
-
-        const groupedByDate: Record<string, number> = {};
-
-        // Flatten and aggregate counts by date
-        groupBy.values?.forEach(entryDate => {
-            // exceptionCategory.values?.forEach(entry => {
-            const date = entryDate.name; // Example: "2024-01-05"
-            groupedByDate[date] = (groupedByDate[date] || 0) + entryDate.count;
-            // });
-        });
-
-        // Process dates
-        Object.entries(groupedByDate).forEach(([dateString, count]) => {
-            const date = new Date(dateString);
-            const month = (date.getUTCMonth() - startMonthIndex + 12) % 12; // Relative month index (wraps around)
-            const day = date.getUTCDate();
-            const weekOfMonth = Math.min(Math.ceil(day / 7), 4); // Group all 5th weeks into the 4th week
-
-            // Update weekly data
-            const weeklyIndex = month * 4 + (weekOfMonth - 1);
-            weeklyData[weeklyIndex] += count;
-
-            // Update monthly data
-            monthlyData[month] += count;
-            result.monthly[groupByName].total += count;
-        });
-    });
-
-    // Set the total for each month. this is used as the category for the stacked bar chart
-    const totals: number[] = new Array(MONTHLY_MONTHS).fill(0);
-
-    for (const key in result.monthly) {
-        if (Object.prototype.hasOwnProperty.call(result.monthly, key)) {
-            const series = result.monthly[key].series.data;
-            series?.forEach((value, index) => {
-                totals[index] += typeof value === 'number' ? value : 0; // Accumulate the value at each index
-            });
-        }
-    }
-
-    result.monthlyCategories = totals;
-
-    return result;
-}
-
-function getChartConfig(processedData: Output, sortedMonthly: Summary[]): Highcharts.Options {
-    if (!processedData) return {};
-
-    // get the weekly data for the top 5 carriers based on total
-    const weekly: Highcharts.SeriesOptionsType[] = [];
-    sortedMonthly.forEach(carrier => {
-        weekly.push(processedData.weekly[carrier.name].series as Highcharts.SeriesOptionsType);
-    });
-
-    // get the series data for the top 5 carriers
-    const monthly = sortedMonthly.map(carrier => {
-        return carrier.series;
-    });
-
-    return {
-        chart: {
-            height: CHART_HEIGHT,
-            type: 'line', // Line chart
-            // plotBorderWidth: 1, // Add a border around the plot area
-            // plotBorderColor: '#D3D3D3', // Set the border color
-            spacingTop: 0, // Remove top spacing
-            spacingLeft: 0,
-            spacingRight: 0,
-        },
-        legend: {
-            enabled: false, // Disable the legend
-        },
-        credits: {
-            enabled: false,
-        },
-        navigation: {
-            buttonOptions: {
-                enabled: false,
-            },
-        },
-        title: {
-            text: '', // No title
-        },
-        xAxis: [
-            {
-                endOnTick: true, // Ensures the axis extends to the last tick
-                // gridLineWidth: 1,
-                height: '60%',
-                min: 0, // Start at the first category or value
-                // max: processedData.weeklyCategories.length, // End at the last category or value (update as needed)
-                offset: 0, // Remove extra spacing
-                tickmarkPlacement: 'between',
-                plotLines: [
-                    ...Array.from({ length: processedData.weeklyCategories.length }, (_, i) => {
-                        if (i === 0 || i % 4 === 0) {
-                            return {
-                                color: '#D3D3D3', // Color ticks for the edges of the month
-                                width: 1,
-                                value: i - 0.5, // Position of the gridline
-                                zIndex: 1,
-                            };
-                        } else {
-                            return {
-                                color: '#FFFFFF', // Weekly ticks that are inside the month (they should look hidden)
-                                width: 1,
-                                value: i - 0.5, // Position of the gridline
-                                zIndex: 1,
-                            };
-                        }
-                    }).filter(Boolean),
-                ],
-
-                labels: {
-                    step: 1,
-                    formatter: function () {
-                        // Only show the label starting from the 3rd tick (index 2)
-                        if (this.pos < 3) {
-                            return this.pos >= 2 ? (this.value as string) : '';
-                        } else if (this.pos > 3 && this.pos % 2 === 0 && this.pos % 4 !== 0) {
-                            return this.value as string;
-                        } else {
-                            return '';
-                        }
-                    },
-                    align: 'right',
-                    rotation: 0, // Force labels to be horizontal
-                },
-                top: '0%',
-                categories: processedData.weeklyCategories,
-            },
-            {
-                categories: processedData.monthlyCategories.map(volume => volume.toString()),
-                gridLineWidth: 1,
-                height: '30%',
-                offset: 0, // Remove extra spacing
-                // linkedTo: 0, // Link categories with the first axis
-                tickLength: 0, // Hide tick marks
-                top: '68%',
-            },
-        ],
-        yAxis: [
-            {
-                allowDecimals: false,
-                gridLineWidth: 1,
-                height: '60%',
-                lineWidth: 2,
-                min: 0,
-                offset: 0, // Remove extra spacing
-                opposite: true, // Moves the x-axis to the right side
-                title: {
-                    text: '<b>Weekly<br/>Exceptions</b>',
-                    align: 'high', // Aligns the title to the top
-                    rotation: 0, // Force title to be horizontal
-                    x: -15,
-                    y: 15,
-                    useHTML: true, // Enables HTML in the title
-                },
-                top: 0,
-                labels: {
-                    y: 12,
-                },
-            },
-            {
-                allowDecimals: false,
-                gridLineWidth: 1,
-                height: '30%',
-                lineWidth: 2,
-                labels: {
-                    y: 12,
-                },
-                min: 0,
-                offset: 0, // Remove extra spacing
-                opposite: true, // Moves the x-axis to the right side
-                title: {
-                    text: '<b>Monthly<br/>Volume</b>',
-                    align: 'high', // Aligns the title to the top
-                    rotation: 0, // Force title to be horizontal
-                    x: -15,
-                    y: 15,
-                    useHTML: true, // Enables HTML in the title
-                },
-                top: '68%',
-            },
-        ],
-        series: [...(weekly as Highcharts.SeriesOptionsType[]), ...(monthly as Highcharts.SeriesOptionsType[])],
-        plotOptions: {
-            column: {
-                stacking: 'normal',
-                pointWidth: 20, // Fixed width for bars
-                groupPadding: 0.1, // Reduce group spacing
-                pointPadding: 0.05, // Minimize spacing between bars in a group
-                borderWidth: 0, // Remove borders
-                // dataLabels: {
-                //     enabled: true,
-                //     inside: true,
-                //     format: '{y}',
-                //     style: {
-                //         color: '#FFFFFF',
-                //     },
-                // },
-            },
-        },
-        tooltip: {
-            formatter: function () {
-                let total = 0;
-                const labelData: Array<{
-                    label: string;
-                    total: number;
-                    color: string | Highcharts.GradientColorObject | Highcharts.PatternObject;
-                }> = [];
-
-                for (const point of this.points || []) {
-                    const value = point?.y;
-                    if (!value) continue;
-                    const color = point?.color || '#000000';
-                    total += value;
-                    labelData.push({
-                        label: point?.series?.name,
-                        total: value,
-                        color: color,
-                    });
-                }
-
-                const labelWrapper = document.createElement('div');
-
-                labelWrapper.style.display = 'flex';
-                labelWrapper.style.flexDirection = 'column';
-                labelWrapper.style.gap = '4px';
-                for (const value of labelData) {
-                    const labelElement = document.createElement('div');
-                    labelElement.style.display = 'flex';
-                    labelElement.style.alignItems = 'center';
-                    labelElement.style.gap = '5px';
-                    const colorElement = document.createElement('div');
-                    colorElement.style.backgroundColor = String(value.color);
-                    colorElement.style.width = '10px';
-                    colorElement.style.height = '10px';
-                    colorElement.style.borderRadius = '50%';
-                    const titleElement = document.createElement('div');
-                    titleElement.innerHTML = `${value.label}: <b>${value.total.toLocaleString()}</b>`;
-                    labelElement.appendChild(colorElement);
-                    labelElement.appendChild(titleElement);
-                    labelWrapper.appendChild(labelElement);
-                }
-                const totalElement = document.createElement('div');
-                totalElement.style.justifySelf = 'end';
-                totalElement.style.alignSelf = 'end';
-                totalElement.style.marginTop = '4px';
-                totalElement.innerHTML = `Total: <b>${total.toLocaleString()}</b>`;
-                labelWrapper.appendChild(totalElement);
-                return labelWrapper.outerHTML;
-            },
-            useHTML: true,
-            shared: true,
-        },
-    };
-}
-
 export const Top5SubprocessByVolume = ({
     createdDateStart,
     requestSubType = 'NB_REG60',
@@ -396,7 +57,6 @@ export const Top5SubprocessByVolume = ({
 }) => {
     const shouldShowCaseInsights = useCaseInsightsPermission();
     const groupBy: GroupByOptions = GroupByOptions.ProductName;
-    const [processingLoading, setProcessingLoading] = useState(false);
 
     const { selectedBrokerDealers, selectedCarriers } = useDashboardStore(state => state);
 
@@ -446,8 +106,6 @@ export const Top5SubprocessByVolume = ({
         enabled: shouldShowCaseInsights && !!statsResponse?.data?.length && !!requestSubType.length,
     });
 
-    const chartRef = useRef<HighchartsReact.RefObject>(null);
-
     const summary = useMemo(() => {
         if (aiError) return 'Sorry, there was a problem loading data...';
         if (aiSummaryResponse?.length) return aiSummaryResponse;
@@ -458,29 +116,19 @@ export const Top5SubprocessByVolume = ({
     const noStatsData = !statsResponse?.data?.length;
     const processedData = useMemo(() => {
         if (noStatsData) return null;
-        setProcessingLoading(true);
-        const processedData = processData(statsResponse?.data || []);
-        setProcessingLoading(false);
+        const processedData = processGroupedData(statsResponse?.data || []);
         return processedData;
     }, [statsResponse?.data, noStatsData]);
 
     const sortedMonthlyArray = useMemo(() => {
         if (!processedData) return [];
         const monthlyArray: Summary[] = [];
-        Object.entries(processedData.monthly).forEach(([, value]) => {
+        Object.entries(processedData.monthlyByLevel1Grouping).forEach(([, value]) => {
             monthlyArray.push(value);
         });
         return monthlyArray.sort((a, b) => b.total - a.total).slice(0, 5);
     }, [processedData]);
 
-    const myChartConfig = useMemo(() => {
-        if (!processedData) return {};
-        const monthlyArray: Summary[] = [];
-        Object.entries(processedData.monthly).forEach(([, value]) => {
-            monthlyArray.push(value);
-        });
-        return getChartConfig(processedData, monthlyArray);
-    }, [processedData]);
     return (
         <CardContainer containerClassNames="rounded" classNames="!p-0" fullWidth={true}>
             <div className="flex flex-col xl:flex-row justify-between gap-8 w-full">
@@ -540,12 +188,15 @@ export const Top5SubprocessByVolume = ({
                 </div>
                 <div className="relative xl:w-3/4">
                     <div
+                        style={{
+                            height: `${CHART_HEIGHT}px`,
+                        }}
                         className={clsx('w-full', {
                             'grid gap-4 place-content-center bg-[--color-base-surface-surface-tertiary]':
-                                loading || processingLoading || !statsResponse?.data?.length,
+                                loading || !statsResponse?.data?.length,
                         })}
                     >
-                        {loading || processingLoading ? (
+                        {loading ? (
                             <>
                                 <PageLoader />
                                 <Typography variant={TypographyVariant.BodyBold}>Loading...</Typography>
@@ -553,11 +204,11 @@ export const Top5SubprocessByVolume = ({
                         ) : (
                             <>
                                 {statsResponse?.data?.length ? (
-                                    <HighchartsReact ref={chartRef} highcharts={Highcharts} options={myChartConfig} />
+                                    <LineAndVolumeCategoryChart chartData={processedData}></LineAndVolumeCategoryChart>
                                 ) : (
                                     <div style={{ minHeight: `${CHART_HEIGHT}px` }} className="flex flex-col gap-2 items-center">
                                         <ChartBarsIcon height={'24px'} width={'24px'} />
-                                        <Typography variant={TypographyVariant.BodyBold}>No exceptions</Typography>
+                                        <Typography variant={TypographyVariant.BodyBold}>Chart unavailable</Typography>
                                     </div>
                                 )}
                             </>

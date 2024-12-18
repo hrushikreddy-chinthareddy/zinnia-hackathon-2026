@@ -14,7 +14,11 @@ import { PopoverPlacement } from '@deps/components/popover/popover';
 import ResponsivePadding from '@deps/components/responsive-padding/responsive-padding';
 import SelectSearch from '@deps/components/select-search/select-search';
 import PendingTag from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/pending-tag';
-import { AddressWithPending, EmailWithPending, PhoneWithPending } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/types';
+import {
+    AddressWithPending,
+    EmailWithPending,
+    PhoneWithPending,
+} from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/types';
 import { TranslationFiles } from '@deps/config/translations';
 import { FormattedAddress, sortAddressesByType } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
 import QuickLinks, { QuickLinksProps } from '@deps/containers/quick-links/quick-links';
@@ -22,7 +26,9 @@ import SideSheetProductDetails from '@deps/containers/side-sheet-product-details
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { PolicyDetailsViewInfo, PolicyViewDetailsDto, toPolicyViewDetailsDto } from '@deps/data/policy-details-view';
+import { AnnuityDetailsViewInfo, AnnuityViewDetailsDto } from '@deps/data/annuity-details-view';
+import { generatePolicyAnnuityDetailsDto } from '@deps/data/details-view';
+import { PolicyDetailsViewInfo, PolicyViewDetailsDto } from '@deps/data/policy-details-view';
 import { fillColDefs } from '@deps/helpers/data-transform.helper';
 import { getTotalMinRequiredAmount, policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
@@ -34,6 +40,7 @@ import {
     Address,
     Email,
     EmailType,
+    LineOfBusiness,
     Phone,
     PhoneType,
     Policy,
@@ -181,10 +188,11 @@ const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
 const KeyValuesBar: React.FC<KeyValuesBarProps> = ({ policy }) => {
     const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
     const perms = usePermissionsContext();
-    const searchableDetailsDto = toPolicyViewDetailsDto(policy);
-    const searchableDetailsData = fillColDefs<PolicyViewDetailsDto>(
+    const searchableDetailsDto = generatePolicyAnnuityDetailsDto(policy);
+    const colDefFunction = policy.product?.lineOfBusiness === LineOfBusiness.LIFE ? PolicyDetailsViewInfo : AnnuityDetailsViewInfo;
+    const searchableDetailsData = fillColDefs<PolicyViewDetailsDto | AnnuityViewDetailsDto>(
         searchableDetailsDto,
-        PolicyDetailsViewInfo(),
+        colDefFunction(),
         t,
         'colDefs:policyDetails'
     );
