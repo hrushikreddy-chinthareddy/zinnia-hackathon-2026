@@ -46,6 +46,8 @@ const WithdrawalsPageHeaderContainer = ({
         annualWithdrawalsRemaining,
         annualWithdrawalsTaken,
         allTimeWithdrawalAmount,
+        marketValueAdjustmentAmount,
+        marketValueAdjustmentIndicator,
         allTimeWithdrawalCount,
         freeWithdrawalAmount,
     } = withdrawalsValues ?? {};
@@ -191,6 +193,26 @@ const WithdrawalsPageHeaderContainer = ({
                                 variant={ContentVariant.Caption}
                             />
                         </div>
+
+                        {policyDetails.isAnnuity && (
+                            <div className="w-[224px] xl:w-fit">
+                                <Label
+                                    label={t('withdrawals.mvaApplies')}
+                                    tooltipTitle={t('withdrawals.mvaApplies')}
+                                    tooltipBody={t('withdrawals.mvaApplies')}
+                                    variant={LabelVariant.FieldLabel}
+                                />
+                                <Content
+                                    details={marketValueAdjustmentIndicator ? (t('yes') as string) : (t('no') as string)}
+                                    variant={ContentVariant.Value}
+                                />
+                                <Content
+                                    className="text-gray-600"
+                                    details={`${t('withdrawals.mvaAppliesMetadata')}: ${numberFormatify(marketValueAdjustmentAmount)}`}
+                                    variant={ContentVariant.Caption}
+                                />
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
@@ -202,7 +224,7 @@ const WithdrawalsPageHeaderContainer = ({
                     type={NavElementType.Link}
                     data-testid="withdrawal-start-link"
                 >
-                    {t('site.navLinks.transactions.withdrawalStart.text')}
+                    {policyDetails.isAnnuity ? t('site.navLinks.transactions.withdrawalOneTime.text') : t('site.navLinks.transactions.withdrawalStart.text')}
                 </NavElement>
                 <NavElement
                     href={t('site.navLinks.transactions.withdrawalStart.href', { id: policyNumber, planCode }) || ''}

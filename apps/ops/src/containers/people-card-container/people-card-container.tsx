@@ -6,10 +6,10 @@ import { goTo } from '@deps/helpers/routing.helper';
 import { safeString, toTitleCase } from '@deps/helpers/string.helper';
 import { PartyType } from '@deps/models/policy/sor-policy';
 import { TagKey } from '@deps/types/components';
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import { BeneficiaryType, PeopleCardContainerProps, PeopleCardData } from './people-card-container.types';
 import { NameTag } from '../people-sub-page/people-sub-page.helpers';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 interface MapDataToPeopleProps {
     chipEntered: boolean;
@@ -35,7 +35,7 @@ const tagsToBeneficiaryType = (tags: TagKey[]) => {
 };
 
 const mapDataToPeopleCard = ({ chipEntered, index, party, peopleCard, isRereg }: MapDataToPeopleProps) => {
-    const { partyType, firstName, lastName, organizationCode, fullName, tags, beneficiaryPercentage, partyId } = party;
+    const { partyType, firstName, lastName, fullName, tags, beneficiaryPercentage, partyId } = party;
     const { selectedTagList, accessibilityText, accessibilityClickText, planCode, policyNumber, isBeneficiarySelected, router } =
         peopleCard;
 
@@ -65,6 +65,7 @@ const mapDataToPeopleCard = ({ chipEntered, index, party, peopleCard, isRereg }:
             accessibilityClickText={accessibilityClickText}
             onClick={() => !isRereg && goTo(`/policies/${planCode}/${policyNumber}/people/${partyId}`, router)}
             shouldFocus={index === 0 && chipEntered}
+            partyStatus={party.partyStatus}
         />
     );
 };

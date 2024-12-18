@@ -1,4 +1,5 @@
 import { Meta } from '@storybook/react';
+import { Policy } from '@zinnia/api-types/types/sor';
 import { Tag } from '@zinnia/bloom/components';
 
 import WithdrawalsPageHeaderContainer from '@deps/containers/page-header/withdrawals-page-header';
@@ -247,7 +248,7 @@ export const WithdrawalsPageHeader = () => {
         isEligible: false,
         isLoading: true,
     };
-    const withdrawalsValues = mapWithdrawalsSubPage({ isEligible: withdrawalEligibilityValues.isEligible, policy: mockPolicy });
+    const withdrawalsValues = mapWithdrawalsSubPage({ isEligible: withdrawalEligibilityValues.isEligible, policy: mockPolicy as Policy });
     return (
         <WithdrawalsPageHeaderContainer
             breadcrumbText="Back to previous page"

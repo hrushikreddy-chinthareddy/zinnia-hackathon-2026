@@ -224,7 +224,7 @@ export class PolicyDetails {
             requiredMinimumDistributionCalculationOption: calculationOption,
             requiredMinimumDistributionCalculationDate: calculationDate,
             totalRequiredMinimumDistributionAnnualAmount: totalAnnualAmount,
-            totalRequiredMinimumDistributionRemainingAmount: remainingAmount,
+            remainingRequiredMinimumDistributionAmount: remainingAmount,
             totalRequiredMinimumDistributionPriorYearEndAccountValue: priorYearValue,
             actuarialPresentValue,
             // @ts-expect-error waiting for requiredMinimumDistribution to be added to Policy

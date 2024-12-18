@@ -19,6 +19,9 @@
     "insights": "Aperçus",
     "selectProcessType": "Sélectionner un type de dossier",
     "trend": "Tendance",
+    "unapproved": "Non approuvé",
+    "yes": "Oui",
+    "no": "Non",
     "site": {
         "name": "Zinnia",
         "home": {
@@ -134,6 +137,10 @@
                 "withdrawalStart": {
                     "href": "/policies/{{planCode}}/{{id}}/policy/withdrawals/new-withdrawal",
                     "text": "Commencer un retrait"
+                },
+                "withdrawalOneTime": {
+                    "href": "/policies/{{planCode}}/{{id}}/policy/withdrawals/new-withdrawal",
+                    "text": "Faire un retrait unique"
                 },
                 "loans": {
                     "text": "Prêts",
@@ -2156,6 +2163,26 @@
             "docTypeRetrievalError": {
                 "title": "Erreur lors de l'identification du type de document",
                 "subtitle": "Une erreur s'est produite lors de l'identification du type de document. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
+            },
+            "nbReg60FormCreation": {
+                "title": "Erreur lors de la création du formulaire REG60",
+                "subtitle": "Une erreur s'est produite lors de la création du formulaire REG 60. Cela peut être dû au fait que le client n'est pas pris en charge à ce moment. Si vous pensez avoir atteint cette page par erreur, veuillez en informer le support opérationnel."
+            },
+            "nbReg60TaskInitialization": {
+                "title": "Erreur lors de l'initialisation de la tâche du formulaire REG60",
+                "subtitle": "Une erreur s'est produite lors de l'initialisation de la tâche REG60. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
+            },
+            "sswFormCreation": {
+                "title": "Erreur lors de la création du formulaire SSW",
+                "subtitle": "Une erreur s'est produite lors de la création du SSH. Cela peut être dû au fait que le client n'est pas pris en charge pour le moment. Si vous pensez avoir atteint cette page par erreur, veuillez en informer le support opérationnel."
+            },
+            "sswTaskInitialization": {
+                "title": "Erreur lors de l'initialisation de la tâche du formulaire SSW",
+                "subtitle": "Une erreur s'est produite lors de l'initialisation de la tâche SSW. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
+            },
+            "clientCodeRetrievalError": {
+                "title": "Erreur lors de l'identification du code client",
+                "subtitle": "Une erreur s'est produite lors de l'identification du code client. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
             }
         }
     },
@@ -2913,6 +2940,25 @@
         },
         "correspondence": "Correspondence ({{count}})",
         "policy": "Police ({{count}})",
+        "task": {
+            "tabs": {
+                "details": "Détails",
+                "history": "Histoire",
+                "documents": "Documents"
+            },
+            "status": {
+                "label": "Statut",
+                "open": "ouvrir",
+                "closed": "fermée"
+            },
+            "createdLabel": "Date de création",
+            "assigneeLabel": "Cessionnaire",
+            "stepLabel": "Étape",
+            "issueLabel": "Problème",
+            "detailsLabel": "Détails",
+            "commonTaskIssues": "Un ou plusieurs {{taskType}} problèmes trouvés.",
+            "taskDetails": "Un ou plusieurs problèmes ont été détectés lors de Zinnia {{taskType}}. Ces problèmes doivent être examinés par le transporteur et ignorés pour émettre le contrat.."
+        },
         "suitability": {
             "header": "Examen complet de l’adéquation",
             "taskLabel": "ID de tâche",
@@ -3499,6 +3545,15 @@
     },
     "annuitization": {
         "title": "Annuitisation et Paiement",
+        "headerDetails": {
+            "payoutOption": "Option de versement de rente",
+            "fixedPayoutAmount": "Montant fixe du paiement",
+            "fixedExclusionAmount": "Montant fixe de l'exclusion",
+            "totalAnnuityPayments": "Paiements de la rente totaux",
+            "ytdAnnuityPayments": "Paiements de la rente de l'annee",
+            "accumulationPhase": "Phase d'accumulation",
+            "incomePhase": "Phase de revenu"
+        },
         "details": {
             "header": "Détails du paiement",
             "payoutAmount": "Montant du paiement",
@@ -3846,9 +3901,9 @@
             "totalRMDAmountTooltip": "C'est le montant de distribution RMD qui est soumis. C'est le montant de la distribution qui est soumise moins les frais de transaction.",
             "remainingRMDAmount": "Montant restant de distribution RMD",
             "remainingRMDAmountTooltip": "C'est le montant de distribution RMD qui est soumis. C'est le montant de la distribution qui est soumise moins les frais de transaction.",
-            "calculationDate": "Date de calcul",
+            "calculationDate": "Date de recalcul",
             "calculationDateTooltip": "C'est la date à laquelle le montant de distribution RMD est soumis. C'est le montant de la distribution qui est soumise moins les frais de transaction.",
-            "calculationType": "Type de calcul",
+            "calculationType": "Type de recalcul",
             "calculationTypeTooltip": "C'est le type de distribution RMD qui est soumise. C'est le montant de la distribution qui est soumise moins les frais de transaction."
         },
         "rules": {
@@ -3875,6 +3930,8 @@
         "exchange1035": "Commencer un échange 1035",
         "allTimeWithdrawals": "Retraits cumulés",
         "allTimeWithdrawalsTooltip": "C'est le montant que le propriétaire a retiré de la valeur du compte depuis qu'il possède sa police.",
+        "mvaApplies": "Un ajustement de la valeur marchande s'applique",
+        "mvaAppliesMetadata": "MVA ajustement",
         "annualWithdrawalsRemaining": "Retraits annuels restants",
         "annualWithdrawalsRemainingTooltip": "Ceci est le nombre de retraits restants pour l'année de la police.",
         "eligible": "Éligible",
@@ -3886,6 +3943,7 @@
         "netSurrenderValue": "Valeur de rachat nette",
         "netSurrenderValueTooltip": "C'est le montant que le propriétaire ou ses bénéficiaires peuvent attendre si la police est rachetée. C'est la valeur du compte actuel moins les frais de rachat, les prêts en cours et d'autres frais.",
         "startAWithdrawal": "Commencer un retrait",
+        "oneTimeWithdrawal": "Effectuer un retrait unique",
         "surrenderPolicy": "Racheter la police",
         "viewWithdrawalHistory": "Accéder à l'historique des transactions de retrait",
         "withdrawal": "retrait",

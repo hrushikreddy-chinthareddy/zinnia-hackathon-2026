@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React, { PropsWithChildren, ReactNode } from 'react';
+import { PropsWithChildren, ReactNode } from 'react';
 
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
@@ -22,6 +22,8 @@ export const isStillInactive = {
     loanPageManageAutopay: 'Refer to guidelines for instructions to manage autopay.',
     loanPageOTP: 'Refer to guidelines for instructions to make one-time payment.',
     withdrawalPageexchange1035: 'Refer to guidelines for instructions to process 1035 exchange.',
+    withdrawalSetupAutopay: 'Refer to guidelines for instructions to setup autopay.',
+    withdrawalManageAutopay: 'Refer to guidelines for instructions to manage autopay.',
 };
 
 // https://zinnia.atlassian.net/browse/DEPU-1936

@@ -14,7 +14,7 @@ import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { convertKebabedDateString, isNullEmptyOrUndefined, toSentenceCase } from '@deps/helpers/string.helper';
 import { FeaturesCardsTest, RidersCardsTest } from '@deps/jest/constants/test-id-constants';
-import { PolicyFeature, PolicyFeatureFeatureType, Rider } from '@deps/models/policy/sor-policy';
+import { PartyStatus, PolicyFeature, PolicyFeatureFeatureType, Rider } from '@deps/models/policy/sor-policy';
 import { DEFAULT_DATE_FORMAT, ZAHARA_API_DATE_FORMAT, DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { ConfiguredSettingId } from '@deps/types/product-config-settings';
 import { BenefitId, CoverageId, CoverageToBenefitId, RiderBenefit } from '@deps/types/product-rate';
@@ -168,6 +168,11 @@ const getRiderInsuredContent = (policyDetails: PolicyDetails, { riderName, rider
 
     const insuredElements = insuredIds.map((insuredId, index) => {
         const insuredParty = policyDetails.getPartyById(insuredId);
+
+        // DEPU-3651 we need to filter out any party that has not been approved
+        if (insuredParty?.party?.partyStatus === PartyStatus.NOTAPPROVED) {
+            return null;
+        }
 
         if (!policyDetails.coveredPeople.length || !insuredParty?.partyId) {
             return (
