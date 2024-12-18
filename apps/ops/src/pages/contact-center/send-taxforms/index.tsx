@@ -197,6 +197,7 @@ export const getServerSideProps = withPageAuthRequired({
         // Create a permissions object to pass to the page, strongly typed using the enum.
         const doesUserHasPagePermissions = await doesUserHavePagePermissions(accessToken, user, UserPermission.AllowReadOtpRenewals);
         const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
+
         //  const shouldShowSendTaxFormsPage = featureFlagDecisions?.[FEATURE_FLAGS.SEND_TAX_FORMS];
         const shouldShowCaseButton = featureFlagDecisions?.[FEATURE_FLAGS.SEND_TAX_FORMS_SHOW_CASE_BUTTON];
 
@@ -228,9 +229,12 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
-            const shouldShowEmailOption = featureFlagDecisions?.[FEATURE_FLAGS[getFeatureFlagKey(policy.carrierId, 'EMAIL')]];
-            const shouldShowFaxOption = featureFlagDecisions?.[FEATURE_FLAGS[getFeatureFlagKey(policy.carrierId, 'FAX')]];
-            const shouldShowMailOption = featureFlagDecisions?.[FEATURE_FLAGS[getFeatureFlagKey(policy.carrierId, 'MAIL')]];
+            const mailOptionEnabled = await optimizelyService.getFeatureFlagVariables('contact-center-send-taxforms', 'mail', user.sub);
+            const emailOptionEnabled = await optimizelyService.getFeatureFlagVariables('contact-center-send-taxforms', 'email', user.sub);
+            const faxOptionEnabled = await optimizelyService.getFeatureFlagVariables('contact-center-send-taxforms', 'fax', user.sub);
+            const shouldShowMailOption = Object.keys(mailOptionEnabled).includes(policy.carrierId);
+            const shouldShowEmailOption = Object.keys(emailOptionEnabled).includes(policy.carrierId);
+            const shouldShowFaxOption = Object.keys(faxOptionEnabled).includes(policy.carrierId);
 
             return {
                 props: {
