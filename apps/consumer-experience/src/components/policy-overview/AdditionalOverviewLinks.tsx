@@ -51,10 +51,16 @@ const AdditionalLinks: FC<AdditionalLinksProps> = async ({
       : []),
     {
       url: `/coverage/${lineOfBusinessURL}/${planCode}/${policyNumber}/riders`,
-      urlLabel: 'riders and feature',
+      urlLabel:
+        lineOfBusiness === LineOfBusiness.ANNUITY
+          ? 'riders and extras'
+          : 'riders and feature',
       isInternal: true,
       iconType: IconType.SUPPORT,
-      linkText: 'Riders and features',
+      linkText:
+        lineOfBusiness === LineOfBusiness.ANNUITY
+          ? 'Riders and extras'
+          : 'riders and features',
     },
     {
       url: `/coverage/${lineOfBusinessURL}/${planCode}/${policyNumber}/documents`,

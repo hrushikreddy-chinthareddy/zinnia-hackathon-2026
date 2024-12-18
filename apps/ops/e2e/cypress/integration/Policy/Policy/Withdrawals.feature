@@ -3,7 +3,8 @@ Feature: Ops user views withdrawal information for a policy
 Background: Ops user views the details for a policy
 Given 'Ops User' logs into Zinnia Live
   When I click on 'Policy Search' on the Navigation bar
-  And I search by 'Policy Number' for 'TAX77045515'
+  And I click on policy search dropdown and select 'Policy number' on policy search page
+  And I enter policy search criteria text 'TAX77045515'
   And I navigate to the policy details from a Policy Card
   Then I should be on the 'Policy Details page'
 

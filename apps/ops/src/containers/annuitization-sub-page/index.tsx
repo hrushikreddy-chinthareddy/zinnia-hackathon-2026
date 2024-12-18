@@ -4,7 +4,6 @@ import { useContext, useEffect, useMemo, useState } from 'react';
 import CardSection, { FooterContent } from '@deps/components/card/card-section/card-section';
 import UpcomingPaymentCard from '@deps/components/card/card-upcoming-payment/card-upcoming-payment';
 import FieldData from '@deps/components/fields/field-data/field-data';
-import PageHeader from '@deps/components/page-header/page-header';
 import ResponsiveFlex from '@deps/components/responsive-flex/responsive-flex';
 import {
     HorizontalResizing,
@@ -23,9 +22,11 @@ import { ArrangementType, PolicyFeatureFeatureType } from '@deps/models/policy/s
 import { TransactionResponseStatus, checkEligibilitySystematicPrograms } from '@deps/queries/api/bpm';
 import { ReactComponent as FeatureIcon } from '@deps/styles/elements/icons/currency/transaction.svg';
 
+import { AnnuitizationPageHeader } from './annuitization-page-header';
+
 export const AnnuitizationSubPage = () => {
     const { breadcrumb } = useBreadcrumb();
-    const { policyDetails } = useContext(PolicyData);
+    const { policyDetails, policy } = useContext(PolicyData);
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'annuitization',
     });
@@ -33,7 +34,6 @@ export const AnnuitizationSubPage = () => {
     const [ineligibleManagePayoutReason, setIneligibleManagePayoutReason] = useState('');
 
     const { parties, planCode, features, policyNumber, systematicPrograms } = policyDetails;
-
     const upcomingPayout = useMemo(() => systematicPrograms.getNextProgramByType('PAYMENT' as ArrangementType), [systematicPrograms]);
     const annuitizationFeature = features.getFirstFeatureByType('ANNUITIZATION' as PolicyFeatureFeatureType);
 
@@ -69,7 +69,7 @@ export const AnnuitizationSubPage = () => {
 
     return (
         <div className="rounded bg-gray-50 shadow-elevation-light-04">
-            <PageHeader headerText={t('title') as string} breadcrumbText={breadcrumb?.text} breadcrumbUrl={breadcrumb?.url} />
+            <AnnuitizationPageHeader breadcrumb={breadcrumb} policy={policy} policyDetails={policyDetails} />
             <hr className="border-t-2 border-t-background" />
             <UpcomingPaymentCard
                 bankDetails={payeeBankDetails}

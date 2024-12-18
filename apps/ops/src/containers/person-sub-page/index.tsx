@@ -54,6 +54,7 @@ export const PersonSubPage = ({ partyId, editable = true }: PersonSubPageProps) 
                 selectedPolicyParty={selectedPolicyParty}
                 selectedPolicyPartyRoles={selectedPolicyPartyRoles}
                 editable={editable}
+                partyStatus={selectedPolicyParty?.partyStatus}
             />
 
             {beneficiaryRole && (

@@ -12,7 +12,7 @@ export const OtpBuildFormProcess = (status: CaseStatus | TaskStatus, formState: 
             currentFormState = WithdrawalBuildUpdate(status, formState);
             break;
         case TaskType.RMD:
-            currentFormState = RMDBuildUpdate(status as CaseStatus, formState);
+            currentFormState = RMDBuildUpdate(status, formState);
             break;
 
         default:
@@ -50,7 +50,7 @@ export const WithdrawalBuildUpdate = (status: CaseStatus | TaskStatus, formState
     return { ...formState, formDisbursement: updatedDisbursement, formDistribution: distributionInstruction, formProgram: amountDetails };
 };
 
-export const RMDBuildUpdate = (status: CaseStatus, formState: OtpWithdrawalFormState): OtpWithdrawalFormState => {
+export const RMDBuildUpdate = (status: CaseStatus | TaskStatus, formState: OtpWithdrawalFormState): OtpWithdrawalFormState => {
     const amountDetails = { ...formState.formProgram };
     const distributionInstruction = { ...formState.formDistribution };
     const funds = distributionInstruction.funds.filter(fund => !!fund.amount.text);
@@ -61,7 +61,7 @@ export const RMDBuildUpdate = (status: CaseStatus, formState: OtpWithdrawalFormS
         };
     }
 
-    if (status === CaseStatus.Submit) {
+    if (status === CaseStatus.Submit || [TaskStatus.New, TaskStatus.InProgress, TaskStatus.Completed].includes(status as TaskStatus)) {
         if (formState.fundWithdrawnMethod === FundWithdrawnMethod.SpecifyFunds) {
             distributionInstruction.funds = funds;
 
@@ -74,6 +74,5 @@ export const RMDBuildUpdate = (status: CaseStatus, formState: OtpWithdrawalFormS
             amountDetails.programSubType = { text: ProgramSubType.Prorata }; //CMW-14426 setting default to Prorata
         }
     }
-
     return { ...formState, formDistribution: distributionInstruction, formProgram: amountDetails };
 };

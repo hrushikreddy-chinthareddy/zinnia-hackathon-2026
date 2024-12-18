@@ -77,8 +77,7 @@
             "suitabilityReviewStatus": {
                 "type": "object",
                 "required": [
-                    "suitabilityStatus",
-                    "declineReason"
+                    "suitabilityStatus"
                 ],
                 "properties": {
                     "suitabilityStatus": {

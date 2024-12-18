@@ -65,7 +65,11 @@ export const HeaderPolicyDetails = async ({
         <p>{data.marketingName}</p>
         <p>
           <span>{isAnnuity(lineOfBusiness) ? 'Contract' : 'Policy'} #: </span>
-          <PolicyNumber planCode={planCode} policyNumber={policyNumber} />
+          <PolicyNumber
+            planCode={planCode}
+            policyNumber={policyNumber}
+            lineOfBusiness={lineOfBusiness}
+          />
         </p>
       </div>
       <div className={`ml-md ${styles.desktopBadge}`}>

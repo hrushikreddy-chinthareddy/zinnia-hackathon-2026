@@ -19,6 +19,10 @@
     "insights": "Insights",
     "selectProcessType": "Select Process Type",
     "trend": "Trend",
+    "unapproved": "Unapproved",
+    "excluded": "Excluded",
+    "yes": "Yes",
+    "no": "No",
     "site": {
         "name": "Zinnia Live",
         "home": {
@@ -138,6 +142,10 @@
                 "withdrawalStart": {
                     "href": "/policies/{{planCode}}/{{id}}/policy/withdrawals/new-withdrawal",
                     "text": "Start a withdrawal"
+                },
+                "withdrawalOneTime": {
+                    "href": "/policies/{{planCode}}/{{id}}/policy/withdrawals/new-withdrawal",
+                    "text": "Make a one-time withdrawal"
                 },
                 "loans": {
                     "text": "Loans",
@@ -1182,9 +1190,11 @@
             "adverse": "Adverse",
             "approved": "Approved",
             "declined": "Declined",
+            "riskNotAcceptable": "Risk not acceptable",
             "rejected": "Rejected",
             "expired": "Expired",
-            "amended": "Amended offer requested",
+            "amendedOfferRequested": "Amended offer requested",
+            "amendmentAccepted": "Amendment accepted",
             "entityTypes": {
                 "agent": "Agent: {{label}}",
                 "pre-note": "Pre-Note: {{label}}",
@@ -1339,7 +1349,8 @@
                 "defaultTitle": "Annuity Contract Withdrawal Request",
                 "nasu": "Annuity Contract Withdrawal Request ",
                 "gdmn": "Commonwealth Withdrawal Request",
-                "rsln": "Lincoln Benefit Life Withdrawal Request"
+                "rsln": "Lincoln Benefit Life Withdrawal Request",
+                "glco": "Annuity Contract Withdrawal Request"
             },
             "personalDetails": {
                 "title": "Personal Details",
@@ -1779,6 +1790,7 @@
                 "state": "State income tax",
                 "title": "Income Tax Withholding",
                 "maritalStatusAllowances": "Marital Status and Allowances (for GA, MN and SC only)",
+                "maritalStatusAllowancesMN": "Marital Status and Allowances (MN and MI only)",
                 "maritalStatusAllowancesLabel": "Marital Status and Allowances",
                 "noOfAllowance": "No of allowance",
                 "withholdingStateAmount": "Withholding state amount (if applicable)",
@@ -1862,6 +1874,7 @@
                 "commissionExpiresOn": "Commission expires on",
                 "signatureComment": "Document number",
                 "signatureSsn": "SSN",
+                "signatureCityProvided": "City/State",
                 "signatureCommentLabel": "Signature comment",
                 "signGuaranteeStamp": "Signature guarantee",
                 "spouseConsentText": "If you do not have a spouse, or if your spouse is deceased, check this box.",
@@ -1989,7 +2002,7 @@
             "cta": "Go to case",
             "secondaryCta": "Close",
             "subtitle": {
-                "0": "The documents ",
+                "0": "The documents have been",
                 "1": "and cc'd"
             },
             "channel": {
@@ -2030,6 +2043,35 @@
             "statementTypes": {
                 "annualAnniversaryStatement": "Annual/Anniversary Statement",
                 "quarterlyStatement": "Quarterly Statement"
+            }
+        },
+        "sendTaxForms": {
+            "selectTaxYear": "Select tax year(s)",
+            "applicationTaxForms": "Application tax forms",
+            "tabs": {
+                "taxFormsSelection": "Tax Form(s) Selection",
+                "correspondence": "Correspondence",
+                "confirm": "Confirm"
+            },
+            "taxFormDetails": {
+                "title": "Tax forms to send",
+                "documentType": "Document type",
+                "periodYear": "Period year",
+                "actions": "Actions",
+                "noTaxForms": "No tax forms found for this period",
+                "popover": {
+                    "1099R": "Reports distributions from policy/contracts.",
+                    "1099Int": "Reports interest income earned.",
+                    "5498": "Reports contributions made to IRAs, including rollovers and fair market values for the tax year."
+                },
+                "warning": {
+                    "0": "Please review tax forms before continuing.",
+                    "1": "All selected tax forms for the chosen year will be sent."
+                }
+            },
+            "errors": {
+                "taxForms": "Tax forms are required to continue.",
+                "noTaxForms": "No tax forms found for few selected years"
             }
         },
         "statementDetails": {
@@ -2288,17 +2330,17 @@
         }
     },
     "createCaseCreate": {
-        "creatingCase": "Creating a case for {{clientCode}} document number {{documentNumber}}",
+        "creatingCase": "Identifying a case for {{clientCode}} document number {{documentNumber}}",
         "errors": {
             "backToCreateCase": "Back to create case",
-            "errorCreatingCase": "An error occurred while creating a case.",
-            "missingValues": "The required values to create a case were not provided. A client code, doc type, and document number are required to create a case. clientCode: {{clientCode}}, docType: {{docType}}, documentNumber: {{documentNumber}}. If you have these values, you can try to create a case using the link below.",
+            "errorCreatingCase": "An error occurred while identifying a case.",
+            "missingValues": "The required values to identify a case were not provided. A client code, doc type, and document number are required to create a case. clientCode: {{clientCode}}, docType: {{docType}}, documentNumber: {{documentNumber}}. If you have these values, you can try to identify a case using the link below.",
             "unsupportedDocType": "The document type provided is not supported by this portal. If you believe this is incorrect, please notify operations support."
         },
         "momentPlease": "A moment please",
         "success": "Success!",
         "successMessage": "Redirecting you to the task(form) entry page.",
-        "title": "Creating Case"
+        "title": "Identifying Case"
     },
     "createCaseError": {
         "backToCreateCase": "Back to create case",
@@ -2317,7 +2359,7 @@
             },
             "oftTaskInitialization": {
                 "title": "Error initializing task OFT form",
-                "subtitle": "An error occurred while initializing the OFT task.  Please try again.  If this problem persists, please notify operations support."
+                "subtitle": "An error occurred while initializing the OFT task. Please try again.  If this problem persists, please notify operations support."
             },
             "renewalFormCreation": {
                 "title": "Error creating form",
@@ -2355,6 +2397,10 @@
                 "title": "Error starting a task",
                 "subtitle": "An error occurred while updating a task status. Please try again. If this problem persists, please notify operations support."
             },
+            "dataEntryUnassignTaskError": {
+                "title": "Error unassigning a task",
+                "subtitle": "An error occurred while unassigning a task. Please try again. If this problem persists, please notify operations support."
+            },
             "policyNotFound": {
                 "title": "Policy not found",
                 "subtitle": "An error occurred while retrieving policy. Please try again. If this problem persists, please notify operations support."
@@ -2370,6 +2416,26 @@
             "docTypeRetrievalError": {
                 "title": "Error identifying document type",
                 "subtitle": "An error occurred while identifying the document type. Please try again. If this problem persists, please notify operations support."
+            },
+            "nbReg60FormCreation": {
+                "title": "Error creating REG60 form",
+                "subtitle": "An error ocurred while creating the REG60 form. This could be due to the client not being supported at this time.  If you believe you have reached this page in error, please notify operations support."
+            },
+            "nbReg60TaskInitialization": {
+                "title": "Error initializing task REG60 form",
+                "subtitle": "An error occurred while initializing the REG60 task. Please try again.  If this problem persists, please notify operations support."
+            },
+            "sswFormCreation": {
+                "title": "Error creating SSW form",
+                "subtitle": "An error ocurred while creating the SSW form.  This could be due to the client not being supported at this time.  If you believe you have reached this page in error, please notify operations support."
+            },
+            "sswTaskInitialization": {
+                "title": "Error initializing task SSW form",
+                "subtitle": "An error occurred while initializing the SSW task. Please try again.  If this problem persists, please notify operations support."
+            },
+            "clientCodeRetrievalError": {
+                "title": "Error identifying client code",
+                "subtitle": "An error occurred while identifying the client code. Please try again. If this problem persists, please notify operations support."
             }
         }
     },
@@ -2525,7 +2591,8 @@
                 "riskClassTooltip": "Owners are grouped by how risky they are to insure based on health and lifestyle. Less risky=better risk class=lower premium. And vice versa.",
                 "riskClass": "Risk class",
                 "yearsOld_one": "{{count}} year old",
-                "yearsOld_other": "{{count}} years old"
+                "yearsOld_other": "{{count}} years old",
+                "yearsOld_zero": "-- years old"
             },
             "policyTimeline": {
                 "ageOfContract": "Age of contract",
@@ -2721,6 +2788,7 @@
                 "expirationDate": "Expiration date",
                 "insured": "Insured",
                 "maxClaims": "Max claims allowed",
+                "coverageAmount": "Coverage Amount",
                 "notElected": "Not elected",
                 "notElectedTooltip": "Not elected riders or features are those that the owner has the option to add to this policy. They are not currently paying for these additional types of coverage and may not currently submit claims for related benefits. But they could potentially add these to the policy.",
                 "terminalIllnessBenefit": "Up to {{percent}}% ({{amount}}).",
@@ -3129,6 +3197,26 @@
         },
         "correspondence": "Correspondence ({{count}})",
         "policy": "Policy ({{count}})",
+        "task": {
+            "tabs": {
+                "details": "Details",
+                "history": "History",
+                "documents": "Documents"
+            },
+            "status": {
+                "label": "Status",
+                "open": "Open",
+                "closed": "Closed"
+            },
+            "createdLabel": "Date Created",
+            "assigneeLabel": "Assignee",
+            "stepLabel": "Step",
+            "issueLabel": "Issue",
+            "detailsLabel": "Details",
+            "noDataAvailable": "No data available.",
+            "commonTaskIssues": "One or more {{taskType}} issues found.",
+            "taskDetails": "One or more issues were found during Zinnia {{taskType}}. These issues must be reviewed by Carrier and overridden to issue the contract."
+        },
         "suitability": {
             "header": "Complete Suitability Review",
             "taskLabel": "Task ID",
@@ -3716,6 +3804,15 @@
     },
     "annuitization": {
         "title": "Annuitization and Payout",
+        "headerDetails": {
+            "payoutOption": "Annuity payout option",
+            "fixedPayoutAmount": "Fixed payout amount",
+            "fixedExclusionAmount": "Fixed exclusion amount",
+            "totalAnnuityPayments": "Total annuity payments",
+            "ytdAnnuityPayments": "Year to date annuity payments",
+            "accumulationPhase": "Accumulation Phase",
+            "incomePhase": "Income Phase"
+        },
         "details": {
             "header": "Annuitization Details",
             "paymentAmount": "Payment amount",
@@ -4062,9 +4159,9 @@
             "totalRMDAmountTooltip": "This is the total amount of the RMD that the owner is required to distribute. It's the requested amount minus any applicable transaction fees.",
             "remainingRMDAmount": "Remaining RMD amount",
             "remainingRMDAmountTooltip": "This is the amount of the RMD that the owner is still required to distribute.",
-            "calculationDate": "Calculation date",
+            "calculationDate": "Recalculation date",
             "calculationDateTooltip": "This is the date on which the RMD is calculated.",
-            "calculationType": "Calculation type",
+            "calculationType": "Recalculation type",
             "calculationTypeTooltip": "This is the method used to calculate the RMD."
         },
         "rules": {
@@ -4091,6 +4188,8 @@
         "exchange1035": "Start a 1035 Exchange",
         "allTimeWithdrawals": "All-time withdrawals",
         "allTimeWithdrawalsTooltip": "This is how much the owner has withdrawn from the account value since they've owned their policy.",
+        "mvaApplies": "Market value adjustment applies",
+        "mvaAppliesMetadata": "MVA adjustment",
         "annualWithdrawalsRemaining": "Annual withdrawals remaining",
         "annualWithdrawalsRemainingTooltip": "This is the number of withdrawals remaining for the policy year.",
         "eligible": "Eligible",
@@ -4102,6 +4201,7 @@
         "netSurrenderValue": "Net surrender value",
         "netSurrenderValueTooltip": "This is how much the owner or their payees can expect if the policy is surrendered. It's the current account value minus surrender charges, outstanding loans, and other fees.",
         "startAWithdrawal": "Start a withdrawal",
+        "oneTimeWithdrawal": "Make one-time withdrawal",
         "surrenderPolicy": "Surrender policy",
         "viewWithdrawalHistory": "Go to withdrawal transaction history",
         "withdrawal": "withdrawal",
@@ -4707,7 +4807,7 @@
             "subTitle": "Review suitability was submitted.",
             "cta": "Go to incoming transfer",
             "secondaryCta": "Close",
-            "submitTask": "Submit Suitability details"
+            "submitTask": "Submit suitability details"
         }
     }
 }

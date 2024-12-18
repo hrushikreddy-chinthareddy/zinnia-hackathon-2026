@@ -1,14 +1,16 @@
 Feature: Ops user navigates to Manage AutoPay
 Background: Login as Ops User test test
  Given 'Ops User' logs into Zinnia Live
-  
+ When I click on 'Policy Search' on the Navigation bar
+
 Scenario: Ops user navigates to Manage AutoPay Payor page
 
-  When I click on 'Policy Search' on the Navigation bar
-  Then I should be on the 'Policy Management page'
-  When I search by 'Policy Number' for 'ZHA2047727'
-  When I click on Policy on a Policy card
-  Then I should verify all information on Policy Details page
+  When I click on policy search dropdown and select 'Policy number' on policy search page
+  And I enter policy search criteria text 'ZHA2047727'
+  When I navigate to the policy details from a Policy Card
+  Then I should be on the 'Policy Details page'
+  And I should see the detailed summary of the policy
+
   When I click on Premiums on Policy Details Page
   Then I should see premium information for the policy
 
@@ -16,7 +18,7 @@ Scenario: Ops user navigates to Manage AutoPay Payor page
   Then I should verify Update Autopay Details on Update Autopay page
 
   When I select document as 'Process without a document'
-  Then I should see message if I continue without a document selection, we cant update on OnBase for you 
+  Then I should see message if I continue without a document selection, we cant update on OnBase for you
 
   When I click Continue button on Update Autopay page
   Then I should verify Manage Autopay Amount Details on Amount page
@@ -34,11 +36,12 @@ Scenario: Ops user navigates to Manage AutoPay Payor page
 
 Scenario: Ops user navigates to Manage AutoPay Payor page without a payor
 
-  When I click on 'Policy Search' on the Navigation bar
-  Then I should be on the 'Policy Management page'
-  When I search by 'Policy Number' for 'ZHA2047727'
-  When I click on Policy on a Policy card
-  Then I should verify all information on Policy Details page
+  When I click on policy search dropdown and select 'Policy number' on policy search page
+  And I enter policy search criteria text 'ZHA2047727'
+  When I navigate to the policy details from a Policy Card
+  Then I should be on the 'Policy Details page'
+  And I should see the detailed summary of the policy
+
   When I click on Premiums on Policy Details Page
   Then I should see premium information for the policy
 
@@ -46,7 +49,7 @@ Scenario: Ops user navigates to Manage AutoPay Payor page without a payor
   Then I should verify Update Autopay Details on Update Autopay page
 
   When I select document as 'Process without a document'
-  Then I should see message if I continue without a document selection, we cant update on OnBase for you 
+  Then I should see message if I continue without a document selection, we cant update on OnBase for you
 
   When I click Continue button on Update Autopay page
   Then I should verify Manage Autopay Amount Details on Amount page

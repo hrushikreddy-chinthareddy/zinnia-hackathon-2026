@@ -1,7 +1,7 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import EventsLoader from '@deps/components/events-loader/events-loader';
 import FieldLabel from '@deps/components/fields/field-label';
@@ -12,14 +12,13 @@ import { DocumentTypeView } from '@deps/components/side-sheet/documents/document
 import CardContainer from '@deps/containers/card-container/card-container';
 import { determineRange } from '@deps/helpers/numbers.helper';
 import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
-import { PolicyDocument , PolicyDocuments } from '@deps/models/case/document';
+import { PolicyDocument, PolicyDocuments } from '@deps/models/case/document';
 import { Policy } from '@deps/models/policy/sor-policy';
-import { getPolicyDocs , getCorrespondenceDocs } from '@deps/queries/api/documents';
+import { getPolicyDocs, getCorrespondenceDocs } from '@deps/queries/api/documents';
 import { DEFAULT_ERROR_STRING, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import DocumentResultsPagination from './documents-results-pagination';
 import DocumentsResultsTable from './documents-results-table';
-
 
 type DocumentsSubPageProps = {
     policy: Policy;
@@ -44,7 +43,7 @@ export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
     const [policyResults, setPolicyResults] = useState<DocumentWithSource[] | null>(null);
     const [correspondenceResults, setCorrespondenceResults] = useState<DocumentWithSource[] | null>(null);
     const [yearSelection, setYearSelection] = useState<string>(dayjs().year().toString());
-    const limit = 10;
+    const limit = 25;
     const [offset, setOffset] = useState(0);
 
     const yearOptions = getYearOptions(policy);
