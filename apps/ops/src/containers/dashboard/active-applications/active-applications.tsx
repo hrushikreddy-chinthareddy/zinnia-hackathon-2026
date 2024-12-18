@@ -90,12 +90,12 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, handl
         queryFn: () => createBaseQuery([GroupByOptions.ProcessSubType, GroupByOptions.CreatedAt]),
     });
     const {
-        data: insightStagesByCreated,
-        isLoading: insightStagesByCreatedLoading,
-        isError: insightStagesByCreatedError,
+        data: insightActiveAgingPiesByCreated,
+        isLoading: insightActiveAgingPiesByCreatedLoading,
+        isError: insightActiveAgingPiesByCreatedError,
     } = useQuery({
-        queryKey: ['stagesByCreatedInsights', baseInsightQueryFilter],
-        queryFn: () => createBaseQuery([GroupByOptions.CreatedAt, GroupByOptions.ExceptionCategory]),
+        queryKey: ['activeAgingPieChartKeys', baseInsightQueryFilter],
+        queryFn: () => createBaseQuery([GroupByOptions.CreatedAt, GroupByOptions.ProductName]),
         placeholderData: previousData => previousData,
     });
     const { data: insightExceptionStats, isLoading: insightExceptionStatsLoading } = useQuery({
@@ -138,7 +138,7 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, handl
         processListOptionsLoading ||
         insightGroupingCountBySubProcessStatsLoading ||
         insightCreatedBySubProcessLoading ||
-        insightStagesByCreatedLoading ||
+        insightActiveAgingPiesByCreatedLoading ||
         insightExceptionStatsLoading ||
         insightGroupingCountByCarrierStatsLoading;
 
@@ -183,7 +183,9 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, handl
                         <div className="grid place-content-center h-full w-full min-h-[400px]">
                             <PageLoader />
                         </div>
-                    ) : insightCreatedBySubProcessError || insightStagesByCreatedError || !insightStagesByCreated?.data?.length ? (
+                    ) : insightCreatedBySubProcessError ||
+                      insightActiveAgingPiesByCreatedError ||
+                      !insightActiveAgingPiesByCreated?.data?.length ? (
                         <div className="grid place-content-center h-full w-full min-h-[400px]">
                             <Typography variant={TypographyVariant.BodyBold} className="mt-4 flex flex-row gap-2">
                                 <ChartBarsIcon height={'24px'} width={'24px'} />
@@ -193,8 +195,8 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, handl
                     ) : (
                         <ActiveAging
                             createdBySubProcess={insightCreatedBySubProcess}
-                            openExceptionCategoriesByCreated={insightStagesByCreated}
-                            loading={insightCreatedBySubProcessError || insightStagesByCreatedLoading}
+                            activeAgingPieChartByCreated={insightActiveAgingPiesByCreated}
+                            loading={insightCreatedBySubProcessError || insightActiveAgingPiesByCreatedLoading}
                             selectedProcess={insightOption}
                             carriers={Object.keys(selectedCarriers)}
                         />
