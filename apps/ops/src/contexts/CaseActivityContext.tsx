@@ -118,7 +118,7 @@ export const CaseActivityProvider = ({ children, caseDetails }: CaseActivityProv
                 );
             }
 
-            setDocumentsStatusCode(Math.max(policyDocsReq?.status || 0, correspondenceDocsReq?.status || 0));
+            setDocumentsStatusCode(Math.max(policy?.error?.status || 200, correspondence?.error?.status || 200));
 
             setLoadingDocuments(false);
         };
