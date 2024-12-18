@@ -2396,6 +2396,10 @@
                 "title": "Error starting a task",
                 "subtitle": "An error occurred while updating a task status. Please try again. If this problem persists, please notify operations support."
             },
+            "dataEntryUnassignTaskError": {
+                "title": "Error unassigning a task",
+                "subtitle": "An error occurred while unassigning a task. Please try again. If this problem persists, please notify operations support."
+            },
             "policyNotFound": {
                 "title": "Policy not found",
                 "subtitle": "An error occurred while retrieving policy. Please try again. If this problem persists, please notify operations support."
