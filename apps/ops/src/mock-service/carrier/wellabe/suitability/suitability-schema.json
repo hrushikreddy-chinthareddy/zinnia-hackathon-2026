@@ -1547,8 +1547,8 @@
                                 "enumNames": [
                                     "SSN",
                                     "Passport",
-                                    "Driver License",
-                                    "Armed Forceid"
+                                    "Driver license",
+                                    "Armed forceid"
                                 ]
                             }
                         },
@@ -1577,9 +1577,9 @@
                                     "Residence",
                                     "Mailing",
                                     "Business",
-                                    "Primary Address",
+                                    "Primary address",
                                     "Vacation",
-                                    "Billing Mailing"
+                                    "Billing mailing"
                                 ]
                             }
                         },
@@ -1654,7 +1654,7 @@
             "qualPlanType": {
                 "ui:options": {
                     "enumNames": [
-                        "Non Qualified",
+                        "Nonqualified",
                         "Qualified"
                     ]
                 }
@@ -1746,23 +1746,23 @@
                 "ui:widget": "checkboxes",
                 "ui:options": {
                     "enumNames": [
-                        "Fixed Annuity",
-                        "Life Insurance",
-                        "Checking Saving Account",
+                        "Fixed annuity",
+                        "Life insurance",
+                        "Checking saving account",
                         "Salary",
-                        "Variable Annuity",
-                        "Reverse Mortgage",
-                        "Saving Account",
-                        "Death Benefit",
+                        "Variable annuity",
+                        "Reverse mortgage",
+                        "Saving account",
+                        "Death benefit",
                         "Inherited IRA",
                         "Inheritance",
-                        "401K Rollover",
-                        "Retirememt Plan",
-                        "Indexed Aannuity",
-                        "Stocks Bonds MF",
+                        "401(k) rollover",
+                        "Retirememt plan",
+                        "Indexed aannuity",
+                        "Stocks bonds MF",
                         "Others",
-                        "Rental Income",
-                        "Social Security"
+                        "Rental income",
+                        "Social security"
                     ]
                 }
             },
@@ -1793,9 +1793,9 @@
                         "ui:options": {
                             "label": true,
                             "enumNames": [
-                                "Living Expense Increase",
-                                "Living Expense Decrease",
-                                "Living Asset Decrease"
+                                "Living expense increase",
+                                "Living expense decrease",
+                                "Living asset decrease"
                             ]
                         }
                     },
@@ -1838,23 +1838,23 @@
                 "ui:widget": "checkboxes",
                 "ui:options": {
                     "enumNames": [
-                        "Fixed Annuity",
-                        "Life Insurance",
-                        "Checking Saving Account",
+                        "Fixed annuity",
+                        "Life insurance",
+                        "Checking saving account",
                         "CD",
-                        "Variable Annuity",
-                        "Reverse Mortgage",
-                        "Saving Account",
-                        "Death Benefit",
+                        "Variable annuity",
+                        "Reverse mortgage",
+                        "Saving account",
+                        "Death benefit",
                         "Inherited IRA",
                         "Inheritance",
-                        "401K Rollover",
-                        "Retirement Plan",
-                        "Indexed Annuity",
-                        "Stocks Bonds MF",
+                        "401(k) rollover",
+                        "Retirement plan",
+                        "Indexed annuity",
+                        "Stocks bonds MF",
                         "Others",
-                        "Rental Income",
-                        "Social Security"
+                        "Rental income",
+                        "Social security"
                     ]
                 }
             },
@@ -1910,7 +1910,7 @@
                                 "inline": true,
                                 "enumNames": [
                                     "Qualified",
-                                    "Non Qualified"
+                                    "Nonqualified"
                                 ]
                             }
                         },
@@ -1934,7 +1934,7 @@
                                 "inline": true,
                                 "enumNames": [
                                     "Qualified",
-                                    "Non Qualified"
+                                    "Nonqualified"
                                 ]
                             }
                         },
@@ -1942,7 +1942,7 @@
                             "ui:options": {
                                 "enumNames": [
                                     "Liquid Asset",
-                                    "Non LILiquidQUID Asset"
+                                    "Non Liquid QUID Asset"
                                 ]
                             }
                         },
@@ -1964,9 +1964,9 @@
                     "inline": true,
                     "enumNames": [
                         "Conservative",
-                        "Moderate Conversative",
+                        "Moderate conversative",
                         "Moderate",
-                        "Moderate Aggressive",
+                        "Moderate aggressive",
                         "Aggressive"
                     ]
                 }
@@ -1992,10 +1992,10 @@
                     "widget": "checkboxes",
                     "enumNames": [
                         "Income",
-                        "Tax Deferal",
+                        "Tax deferal",
                         "Gurantees",
                         "Growth",
-                        "Principal Protection",
+                        "Principal protection",
                         "Others"
                     ]
                 }
@@ -2020,10 +2020,10 @@
                 "ui:options": {
                     "enumNames": [
                         "Income",
-                        "Tax Deferal",
+                        "Tax deferal",
                         "Gurantees",
                         "Growth",
-                        "Principal Protection",
+                        "Principal protection",
                         "Others"
                     ],
                     "label": false
@@ -2150,7 +2150,7 @@
                             "Executor",
                             "Custodian",
                             "Guardian",
-                            "Attorney In Fact"
+                            "Attorney in fact"
                         ]
                     }
                 }
