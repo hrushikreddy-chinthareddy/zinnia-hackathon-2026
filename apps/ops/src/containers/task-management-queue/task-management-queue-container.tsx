@@ -11,7 +11,6 @@ import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
 import TaskQueueTable from './task-queue-table';
 
-
 type TaskManagementQueueProps = {
     featureFlagDecisions: FeatureFlags;
 };

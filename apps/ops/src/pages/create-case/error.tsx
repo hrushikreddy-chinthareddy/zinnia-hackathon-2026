@@ -40,6 +40,7 @@ export const ERROR_CODES = {
     SUITABILITY_FORM_TASK_INITIALIZATION: '22',
     SUITABILITY_REVIEW_TASK_INITIALIZATION: '23',
     CLIENT_CODE_RETRIEVAL_ERROR: '24',
+    DATA_ENTRY_UNASSIGN_TASK_ERROR: '25',
 };
 
 // These keys map to the createCaseError.errorMessaging translations.
@@ -61,6 +62,7 @@ export const ERROR_KEYS: { [key: (typeof ERROR_CODES)[keyof typeof ERROR_CODES] 
     [ERROR_CODES.NIGO_EXISTS]: 'nigoExists',
     [ERROR_CODES.RENEWAL_FORM_PLAN_CODE]: 'renewalFormPlanCode',
     [ERROR_CODES.DATA_ENTRY_START_TASK_ERROR]: 'dataEntryStartTaskError',
+    [ERROR_CODES.DATA_ENTRY_UNASSIGN_TASK_ERROR]: 'dataEntryUnassignTaskError',
     [ERROR_CODES.POLICY_NOT_FOUND]: 'policyNotFound',
     [ERROR_CODES.TASK_INITIALIZATION]: 'taskInitialization',
     [ERROR_CODES.CASE_TYPE_RETRIEVAL_ERROR]: 'caseTypeRetrievalError',

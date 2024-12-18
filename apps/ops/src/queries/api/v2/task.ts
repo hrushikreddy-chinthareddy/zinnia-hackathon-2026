@@ -49,8 +49,8 @@ export const getTaskInstance = async (query: any): Promise<ManagementTask | null
 
         return data;
     } catch (error: any) {
-        console.error('getTaskInstance::An error occurred while getting Task Instance', error);
-        return error.response;
+        logError('getTaskInstance::An error occurred while getting Task Instance', { ...parseErrorInformation(error), query, file: 'queries/api/v2/task', function: 'getTaskInstance' });
+        return null;
     }
 };
 
