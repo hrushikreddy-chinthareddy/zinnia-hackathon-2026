@@ -14,8 +14,9 @@ const PartyTag = ({ partyStatus, text, ...props }: PartyTagProps) => {
 
     // DEPU-3651 we need to append the unapproved tag.
     // It's intentially translated separately from the original tag
+    // update language to excluded DEPU-3697
     if (partyStatus === PartyStatus.NOTAPPROVED) {
-        displayText = `${displayText} - ${t('unapproved')}`;
+        displayText = `${displayText} - ${t('excluded')}`;
     }
     return (
         <Tag text={displayText} {...props}>
