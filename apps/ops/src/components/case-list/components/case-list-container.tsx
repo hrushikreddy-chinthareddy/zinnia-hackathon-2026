@@ -16,6 +16,7 @@ import { CaseListControls } from './case-list-controls';
 import { CaseListEmptyState } from './case-list-empty-state';
 import { CaseListItem } from './case-list-item';
 import { initialCaseSearchCriteria } from '../helpers/const';
+import { browserLogInfo } from '@deps/utils/browser-logging';
 
 export interface CaseListContainerProps {
     t: TFunction;
@@ -96,14 +97,25 @@ export const CaseListContainer = ({ t, caseType, policyNumber, clientId, documen
         );
 
         if (!caseResult.success) {
-            console.error('createDocument:: No case id from createCase', {
+            browserLogInfo('caseListContainer::No case id from createCase', {
                 documentNumber: document.documentNumber,
+                caseId: document.caseId,
+                contract: document.contract,
                 caseType,
                 clientId,
+                file: 'case-list-container'
             });
             setErrorMessage(t('caseRenewal.caseCreate.createError', { documentNumber: document.documentNumber }) as string);
             setShowLoader(false);
         }
+        browserLogInfo('caseListContainer::Created a case', {
+            documentNumber: document.documentNumber,
+            caseId: document.caseId,
+            contract: document.contract,
+            caseType,
+            clientId,
+            file: 'case-list-container'
+        });
         setPolicyNumber(document.contract);
         setShowLoader(false);
     };
