@@ -11,8 +11,9 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import CardContainer from '@deps/containers/card-container/card-container';
 import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
-import { convertToQueryString } from '@deps/helpers/routing.helper';
+import { toTitleCase } from '@deps/helpers/string.helper';
 import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
+import { Processes } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { getCaseInsights } from '@deps/queries/api/openai';
 import { DashboardSearchFilter } from '@deps/queries/cases';
@@ -44,9 +45,19 @@ interface Props {
     title: string;
     filters: DashboardSearchFilter;
     groupByOptions: GroupByOptions[];
+    selectedProcess: Processes;
+    linkQueryFormat: string;
 }
 
-export const CaseTimeseries = ({ selectedSubprocess = 'NB_REG60', legendLabel, title, filters, groupByOptions }: Props) => {
+export const CaseTimeseries = ({
+    selectedSubprocess = 'NB_REG60',
+    legendLabel,
+    title,
+    filters,
+    groupByOptions,
+    selectedProcess,
+    linkQueryFormat,
+}: Props) => {
     const shouldShowCaseInsights = useCaseInsightsPermission();
     const { data: caseTimeseriesData, isLoading: caseTimeseriesDataLoading } = useQuery({
         queryKey: ['caseTimeseriesData', filters, groupByOptions],
@@ -85,21 +96,17 @@ export const CaseTimeseries = ({ selectedSubprocess = 'NB_REG60', legendLabel, t
         isLoading: insightLoading,
         isError: insightError,
     } = useQuery({
-        queryKey: ['getAiSummary', caseTimeseriesData?.data?.statsResponseData, selectedSubprocess],
+        queryKey: ['getAiSummary', processedData?.weeklyByLevel1Grouping, selectedSubprocess],
         queryFn: async () => {
             try {
                 const summary = await getCaseInsights({
-                    content: JSON.stringify(caseTimeseriesData?.data?.statsResponseData),
-                    prompt: `You are an expert in all things new business application data. Your job is to summarize the data for business and executive users. They want simple and insightful information about the data provided to you. The data provided to you here are completed ${dashboardChartTitleFormat(
+                    content: JSON.stringify(processedData?.weeklyByLevel1Grouping),
+                    prompt: `You are an expert in all things ${selectedProcess} case data. Your job is to summarize the data for business and executive users. They want simple and insightful information about the data provided to you. The data provided to you here are completed ${dashboardChartTitleFormat(
                         selectedSubprocess,
                         false
-                    )} applications, but the ${dashboardChartTitleFormat(
-                        selectedSubprocess,
-                        false
-                    )} applications encountered exceptions along their path to completion. The data is grouped by Carrier and then by Exception Category and the values represent an exception that occurred for a ${dashboardChartTitleFormat(
-                        selectedSubprocess,
-                        false
-                    )} application. Avoid using phrases such as "the data". Your responses should be insightful and will be displayed on a UI as a summary for a module related to a distribution chart. Use percentages and real data where it makes sense. Keep it concise and to the point. Format number values to U.S. including commas where appropriate.`,
+                    )} cases. The data is grouped by ${groupByOptions.join(
+                        ', '
+                    )}. Avoid using phrases such as "the data". Your responses should be insightful and will be displayed on a UI as a summary for a module related to a timeseries chart. Use percentages and real data where it makes sense. Keep it concise and to the point. Format number values to U.S. including commas where appropriate. Any keys you use make sure they are formatted to title case.`,
                 });
                 return summary;
             } catch (error) {
@@ -125,10 +132,9 @@ export const CaseTimeseries = ({ selectedSubprocess = 'NB_REG60', legendLabel, t
     return (
         <CardContainer containerClassNames="rounded" classNames="!p-0" fullWidth={true}>
             <div className="flex flex-col xl:flex-row justify-between gap-8 w-full">
-                <div className="flex xl:flex-col xl:w-1/4 gap-4 mb-8 xl:mb-0">
+                <div className="flex xl:flex-col xl:w-1/4 :md:gap-4 mb-8 xl:mb-0">
                     <Typography variant={TypographyVariant.H3}>{title}</Typography>
                     {/* {<pre>{JSON.stringify(caseVolumeTimeseriesData?.data?.statsResponseData, null, 2)}</pre>} */}
-                    <Typography variant={TypographyVariant.Label}>{dashboardChartTitleFormat(selectedSubprocess)}</Typography>
                     <div className="flex-1 border-r-1 xl:border-r-0 border-[#EDEDED] flex flex-col gap-4 pt-4">
                         {insightLoading ? (
                             <div className="grid gap-4 h-full mb-4 w-full place-content-center bg-[--color-base-surface-surface-tertiary]">
@@ -157,14 +163,14 @@ export const CaseTimeseries = ({ selectedSubprocess = 'NB_REG60', legendLabel, t
                                             <div className="flex items-center gap-3">
                                                 <div className="h-3 w-3" style={{ backgroundColor: colors[index] }}></div>
                                                 <NavElement
-                                                    href={`/cases${convertToQueryString(filters as any)}`}
+                                                    href={linkQueryFormat.replace(/replaceme/g, encodeURIComponent(stat.name))}
                                                     size={NavElementSize.Small}
                                                     type={NavElementType.Link}
                                                     className="capitalize whitespace-nowrap overflow-hidden text-ellipsis max-w-[175px] block"
                                                     target="_blank"
                                                     title={stat.name}
                                                 >
-                                                    {stat.name}
+                                                    {toTitleCase(stat.name)}
                                                 </NavElement>
                                             </div>
                                         </td>

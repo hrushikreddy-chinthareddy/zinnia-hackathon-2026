@@ -6,6 +6,7 @@ import { CaseSearchAdditionalFilters } from '@deps/contexts/CaseManagementFilter
 import { Processes } from '@deps/models/case/case';
 
 import AgeRangeChip from './chips/age-range-chip';
+import BrokerDealerChip from './chips/broker-dealer-chip';
 import CarrierChip from './chips/carrier-chip';
 import CreatedDateChip from './chips/created-date-chip';
 import ProcessTypeChip from './chips/process-chip';
@@ -42,11 +43,13 @@ export default function ActiveFilters({ filters, removeFilter, onReset, authoriz
     const hasCarriers = filters.carriers && !!Object.keys(filters.carriers).length;
     const hasProducts = filters.products.size !== 0;
     const hasSubtypes = filters.requestSubType.size !== 0;
+    const hasBrokerDealerName = filters.brokerDealerName && filters.brokerDealerName !== '';
 
     useEffect(() => {
-        if (createdDateStart || updatedDateStart || ageRange || hasProcessTypeFilters || hasCarriers) return setFiltersActive(true);
+        if (createdDateStart || updatedDateStart || ageRange || hasProcessTypeFilters || hasCarriers || hasBrokerDealerName)
+            return setFiltersActive(true);
         setFiltersActive(false);
-    }, [createdDateStart, !!updatedDateStart, ageRange, hasProcessTypeFilters, hasCarriers]);
+    }, [createdDateStart, ageRange, hasProcessTypeFilters, hasCarriers, hasBrokerDealerName, updatedDateStart]);
 
     const handleRemoveFilter = (removedFilters: { [key: string]: '' | boolean | object | Set<Processes> }) =>
         removeFilter({ ...filters, ...removedFilters });
@@ -66,6 +69,14 @@ export default function ActiveFilters({ filters, removeFilter, onReset, authoriz
                         t={t}
                     />
                 ))}
+            {hasBrokerDealerName && (
+                <BrokerDealerChip
+                    key={`broker-dealer-filter-${filters.brokerDealerName}`}
+                    brokerDealerName={filters.brokerDealerName}
+                    handleRemoveFilter={handleRemoveFilter}
+                    t={t}
+                />
+            )}
             {hasProducts &&
                 Array.from(filters.products).map(productCode => (
                     <ProductChip

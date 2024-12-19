@@ -146,6 +146,10 @@ export const getAdditionalFilters = (additionalFilters: CaseSearchAdditionalFilt
         result['productName'] = Array.from(additionalFilters.products);
     }
 
+    if (additionalFilters.brokerDealerName) {
+        result['brokerDealerName'] = additionalFilters.brokerDealerName;
+    }
+
     if (additionalFilters.requestSubType.size) {
         result['requestSubType'] = Array.from(additionalFilters.requestSubType);
     }

@@ -13,6 +13,7 @@ import Select from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { dashboardChartTitleFormat, splitAndSentenceCase } from '@deps/helpers/dashboard/dashboard-helpers';
+import { convertToQueryString } from '@deps/helpers/routing.helper';
 import { Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { DashboardSearchFilter } from '@deps/queries/cases';
@@ -196,7 +197,12 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
                         legendLabel={splitAndSentenceCase(carrierOrBrokerDealer)}
                         groupByOptions={[carrierOrBrokerDealer, GroupByOptions.UpdatedAt]}
                         filters={caseVolumeTimeseriesFilters}
-                        title={`${selectedSubprocess} Application Volume`}
+                        title={`${toTitleCase(selectedSubprocess)} Application Volume`}
+                        selectedProcess={selectedProcessType}
+                        linkQueryFormat={`/cases${convertToQueryString({
+                            ...caseVolumeTimeseriesFilters,
+                            [carrierOrBrokerDealer]: 'replaceme',
+                        } as any)}`}
                     />
                 )}
             </div>
@@ -207,7 +213,12 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
                         legendLabel={splitAndSentenceCase(GroupByOptions.ProductName)}
                         groupByOptions={[GroupByOptions.ProductName, GroupByOptions.UpdatedAt]}
                         filters={caseVolumeTimeseriesFilters}
-                        title={`Top 5 Products`}
+                        title={`${toTitleCase(selectedSubprocess)} Top 5 Products`}
+                        selectedProcess={selectedProcessType}
+                        linkQueryFormat={`/cases${convertToQueryString({
+                            ...caseVolumeTimeseriesFilters,
+                            productName: 'replaceme',
+                        } as any)}`}
                     />
                 )}
             </div>

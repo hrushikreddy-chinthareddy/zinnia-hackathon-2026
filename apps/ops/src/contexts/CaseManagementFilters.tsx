@@ -17,6 +17,7 @@ export interface CaseSearchFilters {
 }
 
 export interface CaseSearchAdditionalFilters {
+    brokerDealerName: string;
     createdDateStart?: string;
     createdDateEnd?: string;
     updatedDateStart?: string;
@@ -41,6 +42,7 @@ export const initialAdditionalFilters: CaseSearchAdditionalFilters = {
     carriers: {},
     caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.New, Statuses.NotStarted],
     products: new Set([]),
+    brokerDealerName: '',
 };
 
 export const initialFilters: CaseSearchFilters = {
