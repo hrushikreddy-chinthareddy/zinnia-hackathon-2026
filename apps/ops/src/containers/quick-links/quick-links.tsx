@@ -2,16 +2,19 @@ import { useEffect, useState } from 'react';
 
 import NavElement, { NavElementType } from '@deps/components/nav-element/nav-element';
 import QuickActionsMenu, { QuickActionsMenuProps } from '@deps/components/quick-actions-menu/quick-actions-menu';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { Reason } from '@deps/models/policy/sor-policy';
 import {
+    checkEligibilityNewLoan,
     checkEligibilityOneTimePremium,
     checkEligibilityPartialWithdrawalOneTime,
     checkEligibilitySystematicPrograms,
     TransactionResponseStatus,
 } from '@deps/queries/api/bpm';
 import { PolicyClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 export interface QuickLinksProps extends QuickActionsMenuProps {
     links: {
@@ -42,6 +45,9 @@ const trackClick = (
 };
 
 const QuickLinks = ({ links, planCode, policyNumber, policy, userPartyId }: QuickLinksProps) => {
+    const { featureFlags } = useOptimizely();
+    const newLoanEnabled = featureFlags?.[FEATURE_FLAGS.NEW_LOAN_TRANSACTION];
+
     // BPB - systematic programs work
     const systematicProgram = policy.policy.systematicPrograms?.find(sp => sp.reason === Reason.PREMIUM);
     const arrangementId = systematicProgram?.arrangementId || '';
@@ -52,6 +58,8 @@ const QuickLinks = ({ links, planCode, policyNumber, policy, userPartyId }: Quic
     const [newPremiumChecked, setNewPremiumChecked] = useState(false);
     const [isEligibleWithdrawal, setIsEligibleWithdrawal] = useState(false);
     const [withdrawalChecked, setWithdrawalChecked] = useState(false);
+    const [isEligibleNewLoan, setIsEligibleNewLoan] = useState(false);
+    const [newLoanChecked, setNewLoanChecked] = useState(false);
 
     const [isLoading, setIsLoading] = useState(true);
     const [fireEligibilityChecks, setFireEligibilityChecks] = useState(false);
@@ -89,20 +97,35 @@ const QuickLinks = ({ links, planCode, policyNumber, policy, userPartyId }: Quic
                 setWithdrawalChecked(true);
             };
 
+            const checkNewLoanEligibility = async () => {
+                if (!newLoanEnabled) {
+                    setNewLoanChecked(true);
+                    return;
+                }
+                const newLoanEligibility = await checkEligibilityNewLoan(planCode, policyNumber, policy.loanValues?.maximumLoanAmount);
+
+                if (newLoanEligibility?.status === TransactionResponseStatus.Success) {
+                    setIsEligibleNewLoan(true);
+                }
+                setNewLoanChecked(true);
+            };
+
             checkManageAutopayEligibility();
             checkOneTimeEligibility();
             checkWithdrawalEligibility();
+            checkNewLoanEligibility();
         }
-    }, [planCode, policyNumber, arrangementId, fireEligibilityChecks, isLife, isAnnuity]);
+    }, [planCode, policyNumber, arrangementId, fireEligibilityChecks, isLife, isAnnuity, newLoanEnabled, policy.loanValues?.maximumLoanAmount]);
 
     useEffect(() => {
-        if (autopayChecked && newPremiumChecked && withdrawalChecked) {
+        if (autopayChecked && newPremiumChecked && withdrawalChecked && newLoanChecked) {
             setIsLoading(false);
         }
-    }, [autopayChecked, newPremiumChecked, withdrawalChecked]);
+    }, [autopayChecked, newLoanChecked, newLoanEnabled, newPremiumChecked, withdrawalChecked]);
 
     const eligibilityCheck = {
         eligibleAutopay: isEligibleManageAutopay,
+        eligibleNewLoan: isEligibleNewLoan,
         eligiblePremium: isEligibleNewPremium,
         eligibleWithdrawal: isEligibleWithdrawal,
         eligibleFreeLookCancel: policy.freeLookPeriodDetails.isInFreeLookPeriod,

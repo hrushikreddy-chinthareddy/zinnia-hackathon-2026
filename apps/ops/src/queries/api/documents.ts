@@ -349,6 +349,3 @@ export const getPolicyTypeDocs = async (
         return error.response;
     }
 };
-function uuidV4(): any | import('axios').AxiosHeaderValue | undefined {
-    throw new Error('Function not implemented.');
-}

@@ -67,7 +67,8 @@
             "newWithdrawal": "New Withdrawal",
             "formData": "Form Data",
             "annuitization": "Annuitization",
-            "dashboard": "Case Stats"
+            "dashboard": "Case Stats",
+            "newLoan": "New Loan"
         },
         "navLinks": {
             "accessManagement": {
@@ -4115,6 +4116,7 @@
         "summary": {
             "actualWithdrawalAmount": "Actual withdrawal amount",
             "actualWithdrawalAmountTooltip": "This is how much will actually be withdrawn from the account value. The owner selected net disbursement, so we will withdraw any transaction fees (if applicable) in addition to the requested withdrawal amount.",
+            "bpm500Error": "BPM 500 error",
             "disbursement": "{{type}} disbursement",
             "doNotWithhold": "Do not withhold",
             "effectiveDate": "Effective date",
@@ -4212,6 +4214,85 @@
         "withdrawals": "Withdrawals",
         "taken": "taken",
         "left": "left"
+    },
+    "newLoan": {
+        "amount": {
+            "disbursementType": {
+                "gross": "Gross",
+                "label": "Disbursement type",
+                "net": "Net",
+                "tooltip": "Disbursement type affects how fees are paid. Gross means the fees are subtracted from the requested amount; net means they are added. Not all policies have fees so depending on the carrier and the product, this selection may not make a meaningful difference."
+            },
+            "effectiveDate": {
+                "error": "Enter a valid effective date.",
+                "label": "Effective date",
+                "tooltip": "This is the date used to calculate all the available account values for this loan. Because funds in the account value are invested, the account value can change day by day. Processing can happen at any time, so we need to know at what point  to effectively withdraw the funds, even if we're processing the transaction some days before or after."
+            },
+            "fundDisbursementType": {
+                "customFunds": "Custom funds",
+                "label": "Fund disbursement type",
+                "proRata": "Pro rata",
+                "title": "How will this amount be taken from funds?",
+                "tooltip": "The account value is invested in one or more investment funds. When we withdraw the money, we need to know how to take the amount from each investment fund.  Pro rata means take an equal amount from each investment fund. Custom allows the owner to choose a certain amount from each investment fund."
+            },
+            "label": "Amount",
+            "value": {
+                "amountMissingError": "Loan amount is missing.",
+                "custom": "Custom amount",
+                "customError": "Loan amount must be at least 1$",
+                "exceedMaximum": "Loan amount can not exceed {{maxLoanAmount}}.",
+                "maximum": "Max loan amount",
+                "maximumTooltip": "This amount is how much the owner may borrow from the account value of their policy. It’s the total amount eligible for loan. Loans have consequences. Aside from incurring interest, a loan may reduce the owner's death benefit.",
+                "title": "How much do you want to borrow?"
+            }
+        },
+        "confirm": {
+            "cta": "Go to transaction history",
+            "label": "Confirm",
+            "secondaryCta": "Close",
+            "subtitle": {
+                "0": "A ",
+                "1": " loan was submitted.",
+                "NIGO": " loan was submitted",
+                "NIGO1": " for",
+                "NIGO2": " NIGO processing."
+            },
+            "title": "Submitted!"
+        },
+        "payment": {
+            "label": "Payment Method",
+            "title": "Where should we send the payment?"
+        },
+        "payor": {
+            "label": "Payor"
+        },
+        "start": {
+            "label": "Start",
+            "title": "Start a Loan",
+            "subtitle": "Ready to submit a loan request? First up, let's make sure we can keep track of this transaction in OnBase."
+        },
+        "summary": {
+            "bpm500Error": "BPM 500 error",
+            "fundAllocation": "Fund allocation",
+            "fundAllocationTooltip": "The account value is invested in one or more investment funds. When we withdraw the money, we need to know how to take the amount from each investment fund. Pro rata means take an equal amount from each investment fund. Custom allows the owner to choose a certain amount from each investment fund.",
+            "funds": "Funds",
+            "label": "Summary",
+            "payor": "Payor",
+            "proRata": "Pro rata",
+            "submitLoan": "Submit loan",
+            "status200subtitle": "Looking good! Be sure to review your entries before submitting.",
+            "status400subtitle": "Hm, we found an issue when checking this policy's rules. Review the error below.",
+            "loanAmount": "Loan amount",
+            "effectiveDate": "Effective date",
+            "effectiveDateTooltip": "This is the date used to calculate all the available account values for this loan. Because funds in the account value are invested, the account value can change day by day. Processing can happen at any time, so we need to know at what point  to effectively withdraw the funds, even if we're processing the transaction some days before or after.",
+            "payorTitle": "Payor",
+            "validationStatusLabel": "Validation status",
+            "internal500Error": "Services are down, so we can't continue. You can submit a help desk ticket. Please leave this transaction and try again later.",
+            "internal500CTAlink": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
+            "internal500CTAlinkText": "Submit a help desk ticket",
+            "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+            "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task."
+        }
     },
     "newPremium": {
         "start": {
@@ -4345,6 +4426,7 @@
         "transactions": {
             "label": "Transactions",
             "managePremiumAutopay": "Manage premium autopay",
+            "newLoan": "Start a loan",
             "newPremium": "Start a one-time premium",
             "startAWithdrawal": "Start a withdrawal",
             "cancelPolicy": "Cancel policy"
@@ -4507,6 +4589,7 @@
                 "text": "submit a help desk ticket"
             },
             "leaveTransaction": "Leave this transaction",
+            "submitNewLoan": "Submit loan",
             "submitPayment": "Submit payment",
             "submitWithdrawal": "Submit withdrawal",
             "subtitle": "Services are down, so we couldn't submit this transaction. You can try submitting again, if it's still not working ",

@@ -106,4 +106,5 @@ export enum FEATURE_FLAGS {
     SUITABILITY_REVIEW_SBGC = 'task-queue_feature_sbgc_suitability_review',
     SUITABILITY_WELB = 'task-queue_feature_welb_suitability',
     SUITABILITY_REVIEW_WELB = 'task-queue_feature_welb_suitability_review',
+    NEW_LOAN_TRANSACTION = 'new_loan_transaction',
 }

@@ -2794,6 +2794,9 @@
         }
     },
     "transactions": {
+        "bpm": {
+            "500Error": "Erreur 500 BPM"
+        },
         "loans": {
             "header": {
                 "loansTitle": "Prêts",
@@ -3962,6 +3965,84 @@
         "taken": "pris",
         "left": "restants"
     },
+    "newLoan": {
+        "amount": {
+            "disbursementType": {
+                "gross": "Brut",
+                "label": "Type de décaissement",
+                "net": "Net",
+                "tooltip": "Le type de décaissement affecte la façon dont les frais sont payés. Brut signifie que les frais sont soustraits du montant demandé; net signifie qu'ils sont ajoutés. Toutes les polices n'ont pas de frais, donc selon le transporteur et le produit, cette sélection peut ne pas faire une différence significative."
+            },
+            "effectiveDate": {
+                "error": "Entrez une date d'entrée en vigueur valide.",
+                "label": "Date d'entrée en vigueur",
+                "tooltip": "Il s'agit de la date utilisée pour calculer toutes les valeurs de compte disponibles pour ce prêt. Puisque les fonds de la valeur du compte sont investis, la valeur du compte peut changer d'un jour à l'autre. Le traitement peut se produire à tout moment, nous devons donc savoir à quel moment retirer effectivement les fonds, même si nous traitons la transaction quelques jours avant ou après."
+            },
+            "fundDisbursementType": {
+                "customFunds": "Fonds personnalisés",
+                "label": "Type de décaissement des fonds",
+                "proRata": "Pro rata",
+                "title": "Comment ce montant sera-t-il pris des fonds?",
+                "tooltip": "La valeur du compte est investie dans un ou plusieurs fonds d'investissement. Lorsque nous retirons l'argent, nous devons savoir comment prendre le montant de chaque fonds d'investissement. Pro rata signifie prendre un montant égal de chaque fonds d'investissement. Personnalisé permet au propriétaire de choisir un certain montant de chaque fonds d'investissement."
+            },
+            "label": "Montant",
+            "value": {
+                "amountMissingError": "Le montant du prêt est manquant.",
+                "custom": "Montant personnalisé",
+                "customError": "Le montant du prêt doit être d'au moins 1 $",
+                "exceedMaximum": "Le montant du prêt ne peut pas dépasser {{maxLoanAmount}}.",
+                "maximum": "Montant maximum du prêt",
+                "maximumTooltip": "Ce montant est le montant que le propriétaire peut emprunter de la valeur de son compte. C'est le montant total admissible pour un prêt. Les prêts ont des conséquences. Outre les intérêts, un prêt peut réduire la prestation de décès.",
+                "title": "Combien voulez-vous emprunter?"
+            }
+        },
+        "confirm": {
+            "cta": "Aller à l'historique des transactions",
+            "label": "Confirmer",
+            "secondaryCta": "Fermer",
+            "subtitle": {
+                "0": "Un ",
+                "1": " prêt a été soumis.",
+                "NIGO": " prêt a été soumis",
+                "NIGO1": " pour",
+                "NIGO2": " traitement NIGO."
+            },
+            "title": "Soumis!"
+        },
+        "payment": {
+            "label": "Méthode de paiement",
+            "title": "Où devons-nous envoyer le paiement?"
+        },
+        "payor": {
+            "label": "Payeur"
+        },
+        "start": {
+            "label": "Démarrer",
+            "title": "Démarrer un prêt",
+            "subtitle": "Prêt à soumettre une demande de prêt? Tout d'abord, assurons-nous que nous pouvons suivre cette transaction dans OnBase."
+        },
+        "summary": {
+            "fundAllocation": "Allocation des fonds",
+            "fundAllocationTooltip": "La valeur du compte est investie dans un ou plusieurs fonds d'investissement. Lorsque nous retirons l'argent, nous devons savoir comment prendre le montant de chaque fonds d'investissement. Pro rata signifie prendre un montant égal de chaque fonds d'investissement. Personnalisé permet au propriétaire de choisir un certain montant de chaque fonds d'investissement.",
+            "funds": "Fonds",
+            "label": "Résumé",
+            "payor": "Payeur",
+            "proRata": "Pro rata",
+            "submitLoan": "Soumettre le prêt",
+            "status200subtitle": "Cela semble bien! Assurez-vous de réviser vos entrées avant de soumettre.",
+            "status400subtitle": "Hm, nous avons trouvé un problème lors de la vérification des règles de cette police. Révisez l'erreur ci-dessous.",
+            "loanAmount": "Montant du prêt",
+            "effectiveDate": "Date d'entrée en vigueur",
+            "effectiveDateTooltip": "Il s'agit de la date utilisée pour calculer toutes les valeurs de compte disponibles pour ce prêt. Puisque les fonds de la valeur du compte sont investis, la valeur du compte peut changer d'un jour à l'autre. Le traitement peut se produire à tout moment, nous devons donc savoir à quel moment retirer effectivement les fonds, même si nous traitons la transaction quelques jours avant ou après.",
+            "payorTitle": "Payeur",
+            "validationStatusLabel": "État de validation",
+            "internal500Error": "Les services sont en panne, nous ne pouvons donc pas continuer. Vous pouvez soumettre un ticket d'assistance. Veuillez quitter cette transaction et réessayer plus tard.",
+            "internal500CTAlink": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
+            "internal500CTAlinkText": "Soumettre un ticket d'assistance",
+            "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche NIGO pour l'équipe appropriée pour suivre.",
+            "missingCheckToConfirm": "Pour soumettre, confirmez que vous voulez soumettre avec des erreurs et créer une tâche NIGO."
+        }
+    },
     "newPremium": {
         "start": {
             "label": "Commencer",
@@ -4094,6 +4175,7 @@
         "transactions": {
             "label": "Transactions",
             "managePremiumAutopay": "Gérer le paiement automatique des primes",
+            "newLoan": "Démarrer un prêt",
             "newPremium": "Démarrez un abonnement premium unique",
             "startAWithdrawal": "Démarrer un retrait",
             "cancelPolicy": "Annuler la police"
@@ -4256,6 +4338,7 @@
                 "text": "soumettre un billet au centre d'assistance"
             },
             "leaveTransaction": "Quitter cette transaction",
+            "submitNewLoan": "Soumettre un prêt",
             "submitPayment": "Soumettre le paiement",
             "submitWithdrawal": "Soumettre le retrait",
             "subtitle": "Les services sont indisponibles, nous n'avons donc pas pu soumettre cette transaction. Vous pouvez essayer de soumettre à nouveau, si cela ne fonctionne toujours pas ",
