@@ -51,6 +51,7 @@ const ActiveAging = ({
     const [agingRangesBySubProcess, setAgingRangesBySubProcess] = useState<CaseDashboardStatsResponse>();
     const [pieChartDataByAgingRanges, setPieChartDataByAgingRanges] = useState<CaseDashboardStatsResponse>();
     const [distinctPieChartDataLabels, setDistinctPieChartDataLabels] = useState<string[]>([]);
+    const [productNameMap, setProductNameMap] = useState<{ [key: string]: string }>({});
 
     const [selectedAgingRange, setSelectedAgingRange] = useState<AgingTimeRangesKeysExtended>('All');
     const [agingGroupingMap, setAgingGroupingMap] = useState<{ [key in AgingTimeRangesKeysExtended]: DashboardStatsElementResponse[] }>({
@@ -299,7 +300,7 @@ const ActiveAging = ({
                 createdGroupingOfExceptionCategories.values ?? []
             );
         });
-
+        const productNameMapLocal: { [key: string]: string } = {};
         // third we need to finally reduce the pie chart data in each range leaving us with the final grouping
         Object.keys(AgingTimeRanges).forEach(agingTimeFrameKey => {
             const matchingGroupItem = groupedPieChartCategoryByAgingRanges.data?.find(item => item.name === agingTimeFrameKey);
@@ -309,6 +310,7 @@ const ActiveAging = ({
             const pieChartDataCounts: { [key: string]: number } = {};
             pieChartCategoryByAgingRangeMap[agingTimeFrameKey].forEach(elementResponse => {
                 const categoryName = elementResponse.name.toLocaleLowerCase();
+                productNameMapLocal[categoryName] = elementResponse.name;
                 if (!pieChartDataCounts[categoryName]) {
                     pieChartDataCounts[categoryName] = elementResponse.count;
                 } else {
@@ -382,6 +384,7 @@ const ActiveAging = ({
 
         setAgingPieChartGroupingMap(agingPieChartDataCategoryGroupingMap);
         setPieChartDataByAgingRanges(groupedPieChartCategoryByAgingRanges);
+        setProductNameMap(productNameMapLocal);
     }, [getAgingTimeRangeFromDate, activeAgingPieChartByCreated?.data]);
 
     useEffect(() => {
@@ -459,7 +462,7 @@ const ActiveAging = ({
                                         <div className="flex items-center gap-1 w-full justify-between">
                                             <NavElement
                                                 href={`/cases${convertToQueryString({
-                                                    productName: stat.name,
+                                                    productName: productNameMap[stat.name] || stat.name,
                                                     process: selectedProcess,
                                                     createdDateStart: startAndEndDates.createdDateStart,
                                                     createdDateEnd: startAndEndDates.createdDateEnd,
