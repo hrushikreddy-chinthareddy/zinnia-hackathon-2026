@@ -95,8 +95,8 @@ export const SummaryForm = ({
 
   const paymentSummaryStepDetails = [
     {
-      label: <Label>Submitted Amount</Label>,
-      value: paymentAmount.plain,
+      label: <Label>Add to account value</Label>,
+      value: paymentAmount.withFees - uncollectedCharges,
     },
   ];
 
@@ -114,17 +114,17 @@ export const SummaryForm = ({
             </LabelPopover>,
           ]}
         >
-          Charges
+          Fees
         </Label>
       ),
-      value: calculateFeeAmount * -1,
+      value: calculateFeeAmount,
     });
   }
 
   if (uncollectedCharges && uncollectedCharges > 0) {
     paymentSummaryStepDetails.push({
       label: <Label>Estimated charges</Label>,
-      value: uncollectedCharges * -1,
+      value: uncollectedCharges,
     });
   }
 
@@ -164,8 +164,33 @@ export const SummaryForm = ({
           className={styles.paymentSummaryStepContainer}
           transactionSummary={paymentSummaryStepDetails}
           total={{
-            label: <Label>Premium payment</Label>,
-            deposit: paymentAmount.withFees - uncollectedCharges,
+            label: (
+              <Label
+                interactiveElements={[
+                  <LabelPopover title="Premium payment" key="premium payment">
+                    <div>
+                      <p>
+                        Enter the amount you would like to pay into your policy.
+                        Keep in mind there are limits (set by federal laws) to
+                        the amount you can pay without impacting your coverage
+                        or losing tax advantages.{' '}
+                      </p>
+                      {/* <p>
+        Currently, you may pay up to [MEC limit value, CVAT value,
+        Guideline premium value, whichever is the lesser of] without
+        changing the nature of your policy or it's tax advantages.
+        If you'd like to pay more than this, we suggest speaking
+        with a financial professional (like a tax advisor) who can
+        help walk you through the consequences first.
+      </p> */}
+                    </div>
+                  </LabelPopover>,
+                ]}
+              >
+                Premium payment
+              </Label>
+            ),
+            deposit: paymentAmount.plain,
           }}
         />
       </div>

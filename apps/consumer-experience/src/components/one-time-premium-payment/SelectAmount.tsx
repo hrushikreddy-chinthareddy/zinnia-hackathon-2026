@@ -205,7 +205,7 @@ export const SelectAmount = ({
               />
             )}
           />
-          {minimumPaymentDue && (
+          {minimumPaymentDue > 0 && (
             <AssistiveText
               text={`A minimum payment of ${formatUSDollars(minimumPaymentDue)} is required`}
               variant={AssistiveTextVariant.Info}
