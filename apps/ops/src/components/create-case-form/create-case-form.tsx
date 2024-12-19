@@ -28,6 +28,11 @@ interface CreateCaseViewProps {
     setSearchByOption: React.Dispatch<React.SetStateAction<SearchKeys>>;
 }
 
+type Option = {
+    label: string;
+    value: string;
+}
+
 const CreateCaseForm = ({
     clientIds,
     caseType,
@@ -86,9 +91,11 @@ const CreateCaseForm = ({
                             onChange={onClientChange}
                             className="md:min-w-[250px]"
                             label={t('caseRenewal.caseCreate.client') as string}
-                            options={clientIds.map(cId => {
-                                return { label: `${getCarrierNameByClientId(cId) || cId}`, value: cId.toLowerCase() };
-                            })}
+                            options={clientIds
+                                .map((cId: string) => {
+                                    return { label: `${getCarrierNameByClientId(cId) || cId}`, value: cId.toLowerCase() };
+                                })
+                                .sort((a: Option, b: Option) => a.label.localeCompare(b.label))}
                             placeholder={t('caseRenewal.caseCreate.selectAClient') as string}
                             size={FieldSize.Small}
                             value={clientId}
