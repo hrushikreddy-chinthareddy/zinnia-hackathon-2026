@@ -133,6 +133,7 @@ export const transformPolicyForAccountValue = (
     interestGuaranteedPeriod:
       policy?.allocation?.funds?.[0]?.interestGuaranteedPeriod,
     renewalDate: policy?.allocation?.funds?.[0]?.fundSegments?.[0]?.renewalDate,
+    uncollectedCharges: policy?.accountValues?.uncollectedCharges,
   };
 };
 

@@ -59,11 +59,13 @@ export const SummaryForm = ({
   planCode,
   policyNumber,
   lineOfBusiness,
+  uncollectedCharges,
 }: {
   ottpPaymentData: OttpState;
   planCode: string;
   policyNumber: string;
   lineOfBusiness: LineOfBusiness;
+  uncollectedCharges: number;
 }) => {
   const { effectiveDate, paymentAmount, payorBank, paymentFee } =
     ottpPaymentData;
@@ -119,6 +121,13 @@ export const SummaryForm = ({
     });
   }
 
+  if (uncollectedCharges && uncollectedCharges > 0) {
+    paymentSummaryStepDetails.push({
+      label: <Label>Estimated charges</Label>,
+      value: uncollectedCharges * -1,
+    });
+  }
+
   return (
     <>
       <FormHeader
@@ -155,8 +164,8 @@ export const SummaryForm = ({
           className={styles.paymentSummaryStepContainer}
           transactionSummary={paymentSummaryStepDetails}
           total={{
-            label: <Label>Total deposit</Label>,
-            deposit: paymentAmount.withFees,
+            label: <Label>Premium payment</Label>,
+            deposit: paymentAmount.withFees - uncollectedCharges,
           }}
         />
       </div>
