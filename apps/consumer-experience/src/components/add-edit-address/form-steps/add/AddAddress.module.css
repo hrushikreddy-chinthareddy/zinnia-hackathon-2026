@@ -33,7 +33,7 @@
   justify-content: flex-start;
   padding: 0;
 }
-.select {
+.selectContent {
   z-index: 600;
 }
 .remove {
@@ -43,3 +43,38 @@
 .cancel {
   align-self: center;
 }
+
+.stateZipRow {
+  display: flex;
+  gap: 16px;
+
+  /* TODO: Remove when bloom updates */
+  button {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+.state {
+  width: 100%;
+  max-width: 96px;
+}
+
+.zip {
+  max-width: 115px;
+}
+/*
+.defaultAddress div[class^='_container'] {
+  display: flex;
+  flex-direction: row;
+  flex-direction: row-reverse;
+  flex-basis: initial;
+  justify-content: flex-end;
+  align-content: center;
+} */
+/*
+.defaultAddress div[class^='_label'] {
+  flex: 1;
+  margin-bottom: 0;
+  align-content: center;
+} */

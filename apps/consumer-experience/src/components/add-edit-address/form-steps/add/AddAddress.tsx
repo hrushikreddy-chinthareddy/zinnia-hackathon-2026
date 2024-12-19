@@ -17,6 +17,7 @@ import {
   useForm,
 } from 'react-hook-form';
 
+import { isNumber } from '@/utils/regex';
 import { states } from '@/utils/states';
 
 import styles from './AddAddress.module.css';
@@ -77,9 +78,6 @@ export const AddAddress: FC<AddAddressProps> = ({
     submitCallback?.(data);
   };
 
-  console.log({ defaultValues });
-  console.log({ fields });
-
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
       <div className={styles.formFields}>
@@ -117,23 +115,26 @@ export const AddAddress: FC<AddAddressProps> = ({
         />
 
         {fields.map((field, index) => {
-          const errorIndex = errors['addresses']?.[index];
+          const error = errors['addresses']?.[index]?.addressVal;
+
           return (
             <div key={field.id} className={styles.addressWrapper}>
               <Controller
-                name={`addresses.${index}`}
+                name={`addresses.${index}.addressVal`}
                 control={control}
-                rules={{ required: `Address Line ${index + 1} is missing.` }}
+                rules={{
+                  required: `Address Line ${index + 1} is missing.`,
+                }}
                 render={({ field }) => (
                   <div className={styles.addressField}>
                     <FieldDataActive
-                      errorMessage={errorIndex?.message}
+                      errorMessage={error?.message}
                       fieldStatus={
-                        errorIndex ? FieldStatus.ERROR : FieldStatus.DEFAULT
+                        error ? FieldStatus.ERROR : FieldStatus.DEFAULT
                       }
                       label={<Label>Address Line {index + 1}</Label>}
                       {...field}
-                      value={field.value.addressVal}
+                      value={field.value}
                     />
                   </div>
                 )}
@@ -179,18 +180,25 @@ export const AddAddress: FC<AddAddressProps> = ({
           )}
         />
 
-        <div className="flex gap-4">
+        <div className={styles.stateZipRow}>
           <Controller
             name="state"
             control={control}
             rules={{ required: 'State is missing.' }}
             render={({ field }) => (
-              <div>
+              <div className={styles.state}>
+                {/* TODO: Remove label and add to prop when bloom updates */}
+                <Label labelFor="select-state">State</Label>
                 <Select
                   id="select-state"
                   onValueChange={field.onChange}
                   options={states}
-                  contentClassName={styles.select}
+                  errorMessage={errors.state?.message}
+                  contentClassName={styles.selectContent}
+                  fieldSize="small"
+                  fieldStatus={
+                    errors.state ? FieldStatus.ERROR : FieldStatus.DEFAULT
+                  }
                 />
               </div>
             )}
@@ -199,9 +207,15 @@ export const AddAddress: FC<AddAddressProps> = ({
           <Controller
             name="zipCode"
             control={control}
-            rules={{ required: 'Zip is missing.' }}
+            rules={{
+              required: 'Zip is missing.',
+              pattern: {
+                value: /^[0-9]+$/,
+                message: 'Zip must be a number.',
+              },
+            }}
             render={({ field }) => (
-              <div>
+              <div className={styles.zip}>
                 <FieldDataActive
                   errorMessage={errors.zipCode?.message}
                   fieldStatus={
@@ -209,25 +223,30 @@ export const AddAddress: FC<AddAddressProps> = ({
                   }
                   label={<Label>Zip</Label>}
                   {...field}
-                />
-              </div>
-            )}
-          />
-
-          <Controller
-            name="defaultAddress"
-            control={control}
-            render={({ field }) => (
-              <div>
-                <Checkbox
-                  id="checkbox-default-address"
-                  onChange={field.onChange}
-                  label="Default Address"
+                  onChange={e => {
+                    if (!isNumber(e.target.value) && e.target.value !== '') {
+                      e.preventDefault();
+                    } else {
+                      field.onChange(e.target.value);
+                    }
+                  }}
                 />
               </div>
             )}
           />
         </div>
+        <Controller
+          name="defaultAddress"
+          control={control}
+          render={({ field }) => (
+            <div className={styles.defaultAddress}>
+              <Checkbox id="checkbox-default-address" onChange={field.onChange}>
+                {' '}
+                Set this address as my mailing address
+              </Checkbox>
+            </div>
+          )}
+        />
       </div>
 
       <div className={styles.buttonContainer}>
