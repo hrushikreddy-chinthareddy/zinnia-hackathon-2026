@@ -26,6 +26,7 @@ export const FormHeader = ({
           // TODO: probably something better here
           label: `return to previous page`,
         }}
+        policyNumber={policyNumber}
       />
       <ProgressBarSteps
         totalSteps={stepsOrder.length}

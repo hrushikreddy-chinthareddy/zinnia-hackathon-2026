@@ -2,15 +2,16 @@
 Feature: Ops user navigates to One Time Payment
 Background: Login as Ops User test test
  Given 'Ops User' logs into Zinnia Live
-  
+ When I click on 'Policy Search' on the Navigation bar
+
 Scenario: Ops user navigates to One Time Payment Summary page Payor details validation
 
-  When I click on 'Policy Search' on the Navigation bar
-  Then I should be on the 'Policy Management page'
-  When I search by 'Policy Number' for 'TAX77045515'
-  Then I should see the policy in Search Results
-  When I click on Policy on a Policy card
-  Then I should verify all information on Policy Details page
+  When I click on policy search dropdown and select 'Policy number' on policy search page
+  And I enter policy search criteria text 'TAX77045515'
+  When I navigate to the policy details from a Policy Card
+  Then I should be on the 'Policy Details page'
+  And I should see the detailed summary of the policy
+
   When I click on Premiums on Policy Details Page
   Then I should see premium information for the policy
   When I click One Time Payment on premiums page
@@ -26,15 +27,15 @@ Scenario: Ops user navigates to One Time Payment Summary page Payor details vali
   When I select a payor on One Time Payment Payor page
   When I click Continue button on One Time Payment Payor page
   Then I should verify One Time Payment Details on One Time Payment method page
-  
+
   When I select bank details on One Time Payment page
   When I click Continue button on One Time Payment page
   Then I should verify One Time Payment Summary Details
-  And I should verify Summary premium payment amount details  
+  And I should verify Summary premium payment amount details
   And I should verify Summary Effective date details
   And I should verify Payor details on Summary page
 
-  When I click Continue button on Summary page 
-  Then I should verify Confirm page details 
+  When I click Continue button on Summary page
+  Then I should verify Confirm page details
   When I click logout button
   Then Ops users navigates to homepage

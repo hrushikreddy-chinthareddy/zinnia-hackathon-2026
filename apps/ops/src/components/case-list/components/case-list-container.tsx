@@ -16,6 +16,7 @@ import { CaseListControls } from './case-list-controls';
 import { CaseListEmptyState } from './case-list-empty-state';
 import { CaseListItem } from './case-list-item';
 import { initialCaseSearchCriteria } from '../helpers/const';
+import { browserLogInfo } from '@deps/utils/browser-logging';
 
 export interface CaseListContainerProps {
     t: TFunction;
@@ -23,16 +24,23 @@ export interface CaseListContainerProps {
     clientId: string;
     policyNumber: string;
     document: DocumentData | null;
+    caseId: string;
+    isInvalid: boolean;
     setShowLoader: Dispatch<SetStateAction<any>>;
     setErrorMessage: Dispatch<SetStateAction<any>>;
     setPolicyNumber: Dispatch<SetStateAction<any>>;
 }
-export const CaseListContainer = ({ t, caseType, policyNumber, clientId, document, setShowLoader, setErrorMessage, setPolicyNumber }: CaseListContainerProps) => {
+export const CaseListContainer = ({ t, caseType, policyNumber, clientId, document, caseId, isInvalid, setShowLoader, setErrorMessage, setPolicyNumber }: CaseListContainerProps) => {
     const { cases, total, loading, error, fetchCases, filters, setFilters } = useFetchCases();
     const [selectedCaseData, setSelectedCaseData] = useState<Case | null>(null);
     const [showCreateCase, setShowCreateCase] = useState<boolean>(false);
 
     useEffect(() => {
+        if (isInvalid) {
+            setFilters({});
+            return;
+        }
+
         if (clientId && caseType) {
             if (policyNumber) {
                 setFilters({
@@ -42,8 +50,16 @@ export const CaseListContainer = ({ t, caseType, policyNumber, clientId, documen
                     process: [CaseTypeToProcessesMap[caseType]],
                 });
             }
+            if (!policyNumber && caseId) {
+                setFilters({
+                    ...initialCaseSearchCriteria,
+                    caseIds: [caseId],
+                    carrier: [clientId.toUpperCase()],
+                    process: [CaseTypeToProcessesMap[caseType]],
+                });
+            }
         }
-    }, [policyNumber, clientId, caseType, setFilters]);
+    }, [policyNumber, clientId, caseType, setFilters, caseId, isInvalid]);
 
     useEffect(() => {
         if (!isEmptyObject(filters)) {
@@ -81,14 +97,25 @@ export const CaseListContainer = ({ t, caseType, policyNumber, clientId, documen
         );
 
         if (!caseResult.success) {
-            console.error('createDocument:: No case id from createCase', {
+            browserLogInfo('caseListContainer::No case id from createCase', {
                 documentNumber: document.documentNumber,
+                caseId: document.caseId,
+                contract: document.contract,
                 caseType,
                 clientId,
+                file: 'case-list-container'
             });
             setErrorMessage(t('caseRenewal.caseCreate.createError', { documentNumber: document.documentNumber }) as string);
             setShowLoader(false);
         }
+        browserLogInfo('caseListContainer::Created a case', {
+            documentNumber: document.documentNumber,
+            caseId: document.caseId,
+            contract: document.contract,
+            caseType,
+            clientId,
+            file: 'case-list-container'
+        });
         setPolicyNumber(document.contract);
         setShowLoader(false);
     };

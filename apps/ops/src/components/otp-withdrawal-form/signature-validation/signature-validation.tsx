@@ -45,6 +45,7 @@ export default function SignatureValidation({
     const [commissionExpiryDate, setCommissionExpiryDate] = useState(signature.commissionExpiryDate);
     const [signGuaranteeStamp, setSignGuaranteeStamp] = useState(signature.signGuaranteeStamp);
     const [ssn, setSsn] = useState(signature.ssn || (preSelectedValues?.ssn && preSelectedValues.ssn));
+    const [isSignatureCityProvided, setIsSignatureCityProvided] = useState(signature.isSignatureCityProvided);
 
     useEffect(() => {
         onDataChange(signature);
@@ -64,6 +65,7 @@ export default function SignatureValidation({
             commissionExpiryDate,
             signGuaranteeStamp,
             ssn,
+            isSignatureCityProvided
         });
     }, [
         isSignatureValid,
@@ -77,6 +79,7 @@ export default function SignatureValidation({
         commissionExpiryDate,
         signGuaranteeStamp,
         ssn,
+        isSignatureCityProvided
     ]);
 
     const renderField = (field: SignatureValidationField, isFormStateReadOnly?: boolean) => {
@@ -107,6 +110,7 @@ export default function SignatureValidation({
                 setSignTitle,
                 setSignType,
                 setSsn,
+                setIsSignatureCityProvided,
                 signName,
                 setSignName,
                 signatureComment,
@@ -115,6 +119,7 @@ export default function SignatureValidation({
                 signTitle,
                 signType,
                 ssn,
+                isSignatureCityProvided
             }}
         >
             <div className={`grid grid-cols-${fields.length} gap-4 ${className}`}>

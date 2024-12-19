@@ -28,6 +28,7 @@ export const SHOW_DEV_MENU_COOKIE_KEY = '..show_dev_menu..';
 export const SHOW_TEST_POLICIES_COOKIE_KEY = '..show_test_policies..';
 export const MOCK_ANNUITY_COOKIE_KEY = '..mock_annuity..';
 export const THEME_COOKIE = '..theme..';
+export const ACKNOWLEDGEMENT_COOKIE_KEY = 'hasAckowledgedPolicy';
 
 export interface GetSessionResponse {
   isActiveSession: boolean;

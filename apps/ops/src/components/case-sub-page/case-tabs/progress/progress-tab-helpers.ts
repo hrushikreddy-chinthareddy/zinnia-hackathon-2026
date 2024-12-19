@@ -111,6 +111,7 @@ export class TransformedStep {
     parentStage: TransformedStage;
     status: string; // Status of the step, or ranked status if it is a multi-instance step
     stepRaw: StepInstance;
+    stepResult?: string | null;
     substeps?: TransformedStep[]; // Any steps that make up the multi-instance step
     tasks: TaskView[] = []; // Mapped tasks for the step that are unrelated to an exception
     updatedAt: string;
@@ -128,6 +129,7 @@ export class TransformedStep {
             }) ?? [];
         this.isMultiInstance = step.multiInstance && !!step?.instanceInfo?.identifier; // Is this step part of a multi-instance step
         this.substeps = this.isMultiInstance ? (step as MultiStepInstanceWithSteps)?.steps ?? [] : undefined;
+        this.stepResult = step?.stepResult;
         this.buildNameAndDescription();
         this.buildExceptions();
         this.buildTasks();

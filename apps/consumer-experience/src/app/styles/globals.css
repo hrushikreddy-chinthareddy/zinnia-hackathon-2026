@@ -35,6 +35,7 @@ main {
 main {
   /* This is set to min-height to enable scroll to top */
   min-height: 100svh;
+  height: 100%;
   overflow: auto;
 }
 

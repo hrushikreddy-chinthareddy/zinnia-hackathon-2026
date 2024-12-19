@@ -66,7 +66,7 @@ const CaseStatBlock = ({
     };
 
     const getTotalStatValue = () => {
-        const value = dashboardStatsResponse?.data.reduce((prevValue, statElement) => prevValue + statElement.count, 0);
+        const value = dashboardStatsResponse?.data?.reduce((prevValue, statElement) => prevValue + statElement.count, 0);
         return value;
     };
 

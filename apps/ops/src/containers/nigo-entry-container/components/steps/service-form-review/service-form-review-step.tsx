@@ -42,7 +42,7 @@ export const ServiceFormReviewStep = ({documentNumber, policy, docType, clientCo
     const { sectionOption, documentIndexingInfo, formErrors, setFormErrors, setSubmitFailed } = useNigoEntry();
     const formState = useContext(FormDataContext);
 
-    const { formSource, setFormSource, setFormData, formSubtype, setFormReindexingData } = formState;
+    const { formSource, setFormSource, setFormData, formSubtype, setFormReindexingData, setFormNigos } = formState;
     const caseType = getCaseType(docType as string);
     const carrier = clientCode.toUpperCase();
     const [isLoading, setIsLoading] = useState(false);
@@ -132,8 +132,12 @@ export const ServiceFormReviewStep = ({documentNumber, policy, docType, clientCo
                 docTypeToReindex: documentIndexingInfo?.docTypeToReindex,
                 notes: documentIndexingInfo?.docTypeToReindex === SuggestedDocType.OTHER ? documentIndexingInfo?.notes : null
             }));
+            setFormNigos(null);
+        } else if (sectionOption === SelOptionType.NIGO_ENTRY) {
+            setFormReindexingData(null);
         } else {
             setFormReindexingData(null);
+            setFormNigos(null);
         }
     }, [sectionOption, document, documentIndexingInfo]);
 

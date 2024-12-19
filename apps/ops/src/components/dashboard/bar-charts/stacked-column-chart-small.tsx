@@ -21,7 +21,7 @@ const SmallStackedColumnChart = ({ statGrouping, startDate, endDate, title }: Pr
     const getSeriesData = (statGrouping: CaseDashboardStatsResponse | undefined, startDate: Date, endDate: Date) => {
         const seriesData: ChartConfigSeriesDataSimple[] = [];
 
-        statGrouping?.data.forEach(currentStatGrouping => {
+        statGrouping?.data?.forEach(currentStatGrouping => {
             const chartSeriesItem = {
                 name: (currentStatGrouping.name ?? 'Unknown') as string,
                 data: [] as number[],

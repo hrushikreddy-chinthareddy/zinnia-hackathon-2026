@@ -39,6 +39,8 @@ export const ERROR_CODES = {
     PLAN_CODE_NOT_FOUND: '21',
     SUITABILITY_FORM_TASK_INITIALIZATION: '22',
     SUITABILITY_REVIEW_TASK_INITIALIZATION: '23',
+    CLIENT_CODE_RETRIEVAL_ERROR: '24',
+    DATA_ENTRY_UNASSIGN_TASK_ERROR: '25',
 };
 
 // These keys map to the createCaseError.errorMessaging translations.
@@ -53,13 +55,19 @@ export const ERROR_KEYS: { [key: (typeof ERROR_CODES)[keyof typeof ERROR_CODES] 
     [ERROR_CODES.RENEWAL_FORM_FUNDS_LIST]: 'renewalFormFundsList',
     [ERROR_CODES.OFT_FORM_CREATION]: 'oftFormCreation',
     [ERROR_CODES.OFT_TASK_INITIALIZATION]: 'oftTaskInitialization',
+    [ERROR_CODES.NB_REG60_FORM_CREATION]: 'nbReg60FormCreation',
+    [ERROR_CODES.NB_REG60_TASK_INITIALIZATION]: 'nbReg60TaskInitialization',
+    [ERROR_CODES.SSW_FORM_CREATION]: 'sswFormCreation',
+    [ERROR_CODES.SSW_TASK_INITIALIZATION]: 'sswTaskInitialization',
     [ERROR_CODES.NIGO_EXISTS]: 'nigoExists',
     [ERROR_CODES.RENEWAL_FORM_PLAN_CODE]: 'renewalFormPlanCode',
     [ERROR_CODES.DATA_ENTRY_START_TASK_ERROR]: 'dataEntryStartTaskError',
+    [ERROR_CODES.DATA_ENTRY_UNASSIGN_TASK_ERROR]: 'dataEntryUnassignTaskError',
     [ERROR_CODES.POLICY_NOT_FOUND]: 'policyNotFound',
     [ERROR_CODES.TASK_INITIALIZATION]: 'taskInitialization',
     [ERROR_CODES.CASE_TYPE_RETRIEVAL_ERROR]: 'caseTypeRetrievalError',
     [ERROR_CODES.DOC_TYPE_RETRIEVAL_ERROR]: 'docTypeRetrievalError',
+    [ERROR_CODES.CLIENT_CODE_RETRIEVAL_ERROR]: 'clientCodeRetrievalError',
 };
 
 export default function CreateCaseErrorPage() {

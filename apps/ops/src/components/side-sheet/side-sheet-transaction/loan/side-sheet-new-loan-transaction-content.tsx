@@ -1,6 +1,6 @@
 import Image from 'next/image';
-import { useTranslation } from 'next-i18next';
-import { Key, useEffect, useState } from 'react';
+import { TFunction } from 'next-i18next';
+import { Key } from 'react';
 
 import FieldData from '@deps/components/fields/field-data/field-data';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
@@ -10,42 +10,28 @@ import { getBankAccountType } from '@deps/helpers/party-info-helper';
 import { toSentenceCase } from '@deps/helpers/string.helper';
 import loadingImage from '@deps/styles/images/loader.png';
 
-import { getNewLoanSideSheetValues } from './side-sheet-loan.helper';
 import { NewLoanTransactionSideSheetValues } from './types';
-import { SideSheetTransactionProps } from '../types';
 
-const SideSheetNewLoanTransaction = ({ 
-    policy,
-    transaction
- }: SideSheetTransactionProps) => {
-    const { t } = useTranslation();
-    const [sideSheetValues, setSideSheetValues] = useState<NewLoanTransactionSideSheetValues>(
-        getNewLoanSideSheetValues(policy || {}, transaction || {}, t)
-    );
-    const { getAsyncSideSheetValues } = sideSheetValues;
-    const [loading, setLoading] = useState(false);
-    const [asyncValues, setAsyncValues] = useState<any | null>(null);
+type SideSheetNewLoanContentProps = {
+    loading?: boolean;
+    values: NewLoanTransactionSideSheetValues;
+    t: TFunction;
+};
 
-    useEffect(() => {
-        const getValues = async () => {
-            setLoading(true);
-
-            const asyncValues = getAsyncSideSheetValues
-                ? await getAsyncSideSheetValues()
-                : {};
-            setAsyncValues(asyncValues);
-            setSideSheetValues(vals => {
-                return { ...vals, ...asyncValues };
-            });
-            setLoading(false);
-        };
-
-        !loading && !asyncValues && getAsyncSideSheetValues && getValues();
-
-    }, [getAsyncSideSheetValues, asyncValues, setAsyncValues, loading, setLoading, setSideSheetValues]);
+const SideSheetNewLoanTransactionContent = ({ loading, values, t }: SideSheetNewLoanContentProps) => {
+    const {
+        effectiveDate,
+        fundDisbursementType,
+        interestRate,
+        loanAmount,
+        loanInterestType,
+        payeePaymentDetails,
+        processedAmount,
+        processDate,
+    } = values;
 
     return (
-        <div className="p-8">
+        <div className="mt-8">
             <Typography className="mb-4" variant={TypographyVariant.H4}>
                 {t('policy.history.newLoanSideSheet.loanDetails')}
             </Typography>
@@ -54,14 +40,14 @@ const SideSheetNewLoanTransaction = ({
                     label={t('policy.history.newLoanSideSheet.loanAmount')}
                     tooltipTitle={t('policy.history.newLoanSideSheet.loanAmount')}
                 >
-                    {numberFormatify(sideSheetValues?.loanAmount)}
+                    {numberFormatify(loanAmount)}
                 </FieldData>
                 <FieldData
                     label={t('policy.history.newLoanSideSheet.processedAmount')}
                     tooltipBody={t('policy.history.newLoanSideSheet.processedAmountTooltip')}
                     tooltipTitle={t('policy.history.newLoanSideSheet.processedAmount')}
                 >
-                    {numberFormatify(sideSheetValues?.processedAmount)}
+                    {numberFormatify(processedAmount)}
                 </FieldData>
                 <FieldData
                     label={t('policy.history.newLoanSideSheet.loanInterestRate')}
@@ -77,7 +63,7 @@ const SideSheetNewLoanTransaction = ({
                             width={20}
                         />
                     ) : (
-                        percentFormatify(sideSheetValues?.interestRate, { isInteger: true })
+                        percentFormatify(interestRate, { isInteger: true })
                     )}
                 </FieldData>
                 <FieldData
@@ -85,32 +71,32 @@ const SideSheetNewLoanTransaction = ({
                     tooltipBody={t('policy.history.newLoanSideSheet.loanInterestRateTypeTooltip')}
                     tooltipTitle={t('policy.history.newLoanSideSheet.loanInterestRateType')}
                 >
-                    {toSentenceCase(sideSheetValues?.loanInterestType)}
+                    {toSentenceCase(loanInterestType)}
                 </FieldData>
                 <FieldData
                     label={t('policy.history.newLoanSideSheet.effectiveDate')}
                     tooltipBody={t('policy.history.newLoanSideSheet.effectiveDateTooltip')}
                     tooltipTitle={t('policy.history.newLoanSideSheet.effectiveDate')}
                 >
-                    {sideSheetValues?.effectiveDate}
+                    {effectiveDate}
                 </FieldData>
                 <FieldData
                     label={t('policy.history.newLoanSideSheet.processDate')}
                     tooltipBody={t('policy.history.newLoanSideSheet.processDateTooltip')}
                     tooltipTitle={t('policy.history.newLoanSideSheet.processDate')}
                 >
-                    {sideSheetValues?.processDate}
+                    {processDate}
                 </FieldData>
                 <FieldData
                     label={t('policy.history.newLoanSideSheet.fundDisbursementType')}
                     tooltipBody={t('policy.history.newLoanSideSheet.fundDisbursementTypeTooltip')}
                     tooltipTitle={t('policy.history.newLoanSideSheet.fundDisbursementType')}
                 >
-                    {sideSheetValues?.fundDisbursementType}
+                    {fundDisbursementType}
                 </FieldData>
             </div>
 
-            {!!sideSheetValues?.payeePaymentDetails.length && (
+            {!!payeePaymentDetails.length && (
                 <>
                     <hr className="my-6 h-0.5 bg-gray-200" />
                     <section>
@@ -120,7 +106,7 @@ const SideSheetNewLoanTransaction = ({
                         <div className="mt-4">
                             <table role="table" className="w-full rounded-lg">
                                 {/* Hardcoded table caption
-                                    TODO: This will need to be updated/cleared through Amelia for a11y purposes 
+                                    TODO: This will need to be updated/cleared through Amelia for a11y purposes
                                     I have kept the comments in the aboe 2 lines and caption tage below just in case, as it was kept in alysia's pr who is using the same payeee details data, I have used the payee.allocation percentage and disbursement amount*/}
                                 <caption className="hidden">
                                     Payee details table of withdrawal transaction stating whom received the percentage and dollar amount of
@@ -156,18 +142,18 @@ const SideSheetNewLoanTransaction = ({
                                 </thead>
 
                                 <tbody>
-                                    {sideSheetValues.payeePaymentDetails?.map((payee, index: Key) => (
+                                    {payeePaymentDetails?.map((payee, index: Key) => (
                                         <tr
                                             role="row"
                                             key={index}
                                             className={`flex ${
-                                                index === sideSheetValues.payeePaymentDetails.length - 1 ? 'rounded-bl-lg rounded-br-lg' : ''
+                                                index === payeePaymentDetails.length - 1 ? 'rounded-bl-lg rounded-br-lg' : ''
                                             }`}
                                         >
                                             <td
                                                 role="cell"
                                                 className={`flex w-[60%] flex-col border-b-1 border-l-1 border-gray-200 px-3 py-2 text-left ${
-                                                    index === sideSheetValues.payeePaymentDetails.length - 1 ? 'rounded-bl-lg' : ''
+                                                    index === payeePaymentDetails.length - 1 ? 'rounded-bl-lg' : ''
                                                 }`}
                                             >
                                                 <Typography variant={TypographyVariant.BodySmBold}>
@@ -178,7 +164,6 @@ const SideSheetNewLoanTransaction = ({
                                                 </Typography>
                                                 <Typography variant={TypographyVariant.BodySm}>
                                                     <PiiWrapper>
-                                                        {/* TODO MG: do this in getNewLoanSideSheetValues() */}
                                                         {`${getBankAccountType(
                                                             payee.bankDetails.accountType,
                                                             t
@@ -199,7 +184,7 @@ const SideSheetNewLoanTransaction = ({
                                             <td
                                                 role="cell"
                                                 className={`w-[30%] content-center border-b-1 border-r-1 border-gray-200 px-3 py-2 text-right ${
-                                                    index === sideSheetValues.payeePaymentDetails.length - 1 ? 'rounded-br-lg' : ''
+                                                    index === payeePaymentDetails.length - 1 ? 'rounded-br-lg' : ''
                                                 }`}
                                             >
                                                 <Typography variant={TypographyVariant.BodySm}>
@@ -216,6 +201,6 @@ const SideSheetNewLoanTransaction = ({
             )}
         </div>
     );
-}
+};
 
-export default SideSheetNewLoanTransaction;
+export default SideSheetNewLoanTransactionContent;

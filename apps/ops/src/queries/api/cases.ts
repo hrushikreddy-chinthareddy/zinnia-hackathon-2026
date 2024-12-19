@@ -9,6 +9,7 @@ import {
     CaseStatsResponse,
     CreateCaseBody,
     CreateCaseResponse,
+    DashboardStatsElementResponse,
     Metadata,
 } from '@deps/models/case/case';
 import { CaseDocument } from '@deps/models/case/document';
@@ -24,6 +25,7 @@ import { logError, logInfo, parseErrorInformation } from '@deps/utils/server-log
 import { baseAppUrl, se2ApiServerUrl } from '../api-config';
 import { client } from '../api-utils/client';
 import { serverApi } from '../api-utils/serverApiClient';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 
 const baseCasesUrl = `${baseAppUrl}/api/case/v1/cases`;
 const ssrCasesUrl = `${se2ApiServerUrl}/cases`;
@@ -37,10 +39,21 @@ export type ReferenceDataQuery = {
 export const createCase = async (query: CreateCaseBody): Promise<CreateCaseResponse> => {
     try {
         const { data } = await client.post<CreateCaseBody, AxiosResponse>(baseCasesUrl, query);
-
+        browserLogInfo('cases::Successfully created a case', {
+            url: baseCasesUrl,
+            query,
+            id: data?.id ?? '',
+            function: 'cases.createCase',
+        });
         return data;
     } catch (error: any) {
         console.error('createCase::An error occurred create case ', error);
+        browserLogError('cases::Failed to create a case', {
+            ...parseErrorInformation(error),
+            url: baseCasesUrl,
+            query,
+            function: 'cases.createCase',
+        });
         return error.response;
     }
 };
@@ -56,15 +69,14 @@ export const getCases = async (query: CaseSearchBody): Promise<CaseSearchRespons
     }
 };
 
-export const getCaseNotes = async (caseId: string, includeInternal = false): Promise<NoteInstance[]> => {
+export const getCaseNotes = async (caseId: string, includeInternal = false): Promise<{ data: NoteInstance[]; status: number }> => {
     try {
         if (!caseId) throw new Error('no caseId provided');
         const caseNotesResponse = await client.get(`${baseCasesUrl}/${caseId}/note?includeInternal=${includeInternal}`);
 
-        return caseNotesResponse?.data ?? [];
+        return { data: caseNotesResponse?.data ?? [], status: caseNotesResponse?.status ?? 200 };
     } catch (err) {
-        console.warn('getCaseNotes::error getting case notes', err);
-        return [];
+        return { data: [], status: (err as AxiosResponse)?.status || 500 };
     }
 };
 
@@ -78,13 +90,37 @@ export const getCaseStats = async (query: CaseStatsQuery): Promise<CaseStatsResp
 
         const { data } = await client.post<CaseStatsQuery, AxiosResponse>(`${baseCasesUrl}/stats`, query);
 
-        writeToCache('getCaseStats', query, data);
+        if (Array.isArray(data?.data) && data?.data?.length > 0) {
+            writeToCache('getCaseStats', query, data);
+            return data;
+        }
 
         return data ?? {};
     } catch (error: any) {
         console.error('getCaseStats::An error occurred while getting case stats results', error);
         return error.response;
     }
+};
+
+const recursivelyFilter = (
+    items: DashboardStatsElementResponse[],
+    root: DashboardStatsElementResponse | null,
+    filterString: string
+): DashboardStatsElementResponse[] => {
+    return items.filter(item => {
+        if (item.name !== filterString) {
+            if (item.values) {
+                // Recursively process nested values, directly modifying them
+                item.values = recursivelyFilter(item.values, item, filterString);
+            }
+            return true;
+        } else {
+            if (root) {
+                root.count -= item.count; // Directly modify the root count
+            }
+            return false;
+        }
+    });
 };
 
 export const getCaseDashboardStats = async (
@@ -96,7 +132,13 @@ export const getCaseDashboardStats = async (
             AxiosResponse<CaseDashboardStatsResponse | CaseDashboardStatsErrorResponse>
         >(`${baseAppUrl}/api/case/v1/dashboard/stats`, query);
 
-        return data ?? {};
+        if (Array.isArray(data?.data) && data?.data?.length > 0) {
+            const filteredData = recursivelyFilter(data.data || [], null, 'NOT_APPLICABLE');
+
+            data.data = filteredData;
+            return data;
+        }
+        return { data: [], totalElements: 0 };
     } catch (error: any) {
         console.error('getCaseDashboardStats::An error occurred while getting case dashboard stats results', error);
         return error.response;

@@ -7,6 +7,16 @@ export const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 export enum TransactionTypes {
     Statements = 'Statements',
+    TaxForms = 'TaxForms',
+}
+
+export enum TransactionSubTypes {
+    TaxForms = 'TAX',
+}
+
+export enum AttachmentType {
+    Form = 'form',
+    TaxForms = 'TAX_FORMS',
 }
 
 export type ContactCenterActions = CorrespondenceAction | SendDocumentActions;
@@ -62,6 +72,9 @@ export type AttachmentDetails = {
     displayName: string;
     formName: string;
     attachmentType: string;
+    // required for the tax forms
+    taxYear?: string;
+    fChar?: string;
 };
 
 export type CorrespondenceActions =

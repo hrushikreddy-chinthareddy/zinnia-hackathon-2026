@@ -19,6 +19,10 @@
     "insights": "Aperçus",
     "selectProcessType": "Sélectionner un type de dossier",
     "trend": "Tendance",
+    "unapproved": "Non approuvé",
+    "excluded": "Exclus",
+    "yes": "Oui",
+    "no": "Non",
     "site": {
         "name": "Zinnia",
         "home": {
@@ -134,6 +138,10 @@
                 "withdrawalStart": {
                     "href": "/policies/{{planCode}}/{{id}}/policy/withdrawals/new-withdrawal",
                     "text": "Commencer un retrait"
+                },
+                "withdrawalOneTime": {
+                    "href": "/policies/{{planCode}}/{{id}}/policy/withdrawals/new-withdrawal",
+                    "text": "Faire un retrait unique"
                 },
                 "loans": {
                     "text": "Prêts",
@@ -1326,17 +1334,22 @@
             "approved": "Approuvée",
             "declined": "Refusé",
             "rejected": "Rejetée",
+            "riskNotAcceptable": "Risque non acceptable",
             "expired": "Expiré",
-            "amended": "Demande d'offre modifiée",
+            "amendedOfferRequested": "Demande d'offre modifiée",
+            "amendmentAccepted": "Demande d'offre modifiée acceptée",
             "entityTypes": {
                 "agent": "Agent: {{label}}",
                 "pre-note": "Pre-Note: {{label}}",
                 "source of premium": "Source de prétium: {{label}}",
-                "transfer of assets": "Transfert d'actifs: {{label}}"
+                "transfer of assets": "Transfert d'actifs: {{label}}",
+                "ceding carrier": "Transporteur cédant: {{label}}"
             },
             "reviewIssues": "Revoir {{taskType}} problèmes",
             "suitabilityReview": "suitability revoir",
-            "commonTaskIssues": "Problème: Une ou plusieurs problèmes {{taskType}} trouvées."
+            "noDataAvailable": "Aucune donnée disponible.",
+            "commonTaskIssues": "Problème: Une ou plusieurs problèmes {{taskType}} trouvées.",
+            "suitabilityReviewIssues": "Revoir Suitability Problèmes"
         },
         "processDate": {
             "cancled": "Annulé le",
@@ -1992,6 +2005,7 @@
                 "commissionExpiresOn": "La comisión vence el",
                 "signatureComment": "numéro de document",
                 "signatureSsn": "SSN",
+                "signatureCityProvided": "Ville/État",
                 "signatureCommentLabel": "Commentaire signé",
                 "signGuaranteeStamp": "Garantie de signature",
                 "spouseConsentText": "Si vous n'avez pas de conjoint ou si votre conjoint est décédé, cochez cette case.",
@@ -2119,7 +2133,7 @@
             "cta": "Accéder au cas",
             "secondaryCta": "Fermer",
             "subtitle": {
-                "0": "Les documents ",
+                "0": "Les documents ont été ",
                 "1": "et en copie"
             },
             "title": "Soumise!"
@@ -2157,6 +2171,35 @@
                 "quarterlyStatement": "Déclaration trimestrielle"
             }
         },
+        "sendTaxForms": {
+            "selectTaxYear": "Sélectionner l'année fiscale",
+            "applicationTaxForms": "Formulaires fiscaux",
+            "tabs": {
+                "taxFormsSelection": "Sélection de formulaires",
+                "correspondence": "Correspondence",
+                "confirm": "Confirmer"
+            },
+            "taxFormDetails": {
+                "title": "Formulaires fiscaux à envoyer",
+                "documentType": "Type de document",
+                "periodYear": "Période année",
+                "actions": "Actions",
+                "noTaxForms": "Aucun formulaire fiscale trouvé pour cette période",
+                "popover": {
+                    "1099R": "Déclare les distributions provenant de polices/contrats.",
+                    "1099Int": "Déclare les revenus d'intérêts gagnés.",
+                    "5498": "Déclare les contributions versées aux IRA, y compris les rollovers et les valeurs de marché équitables pour l'année fiscale."
+                },
+                "warning": {
+                    "0": "Veuillez consulter les formulaires fiscaux avant de continuer.",
+                    "1": "Tous les formulaires fiscaux ci-dessus seront envoyés."
+                }
+            },
+            "errors": {
+                "taxForms": "Les formulaires fiscaux sont nécessaires pour continuer.",
+                "noTaxForms": "Aucun formulaire fiscal trouvé pour {{year}}"
+            }
+        },
         "statementDetails": {
             "name": "Nom",
             "createdDate": "Date de création",
@@ -2191,17 +2234,17 @@
         }
     },
     "createCaseCreate": {
-        "creatingCase": "Création d'un dossier pour le code client {{clientCode}} numéro de document {{documentNumber}}",
+        "creatingCase": "Identifier un cas pour le code client {{clientCode}} numéro de document {{documentNumber}}",
         "errors": {
             "backToCreateCase": "Retour à la création de cas",
-            "errorCreatingCase": "Une erreur s'est produite lors de la création d'un dossier.",
-            "missingValues": "Les valeurs requises pour créer un dossier n'ont pas été fournies. Un code client, un type de document et un numéro de document sont nécessaires pour créer un dossier. Code client : {{clientCode}}, Type de document : {{docType}}, Numéro de document : {{documentNumber}}. Si vous avez ces valeurs, vous pouvez essayer de créer un dossier en utilisant le lien ci-dessous.",
+            "errorCreatingCase": "Une erreur s'est produite lors de l'identification d'un cas.",
+            "missingValues": "Les valeurs requises pour identifier un cas n'ont pas été fournies. Un code client, un type de document et un numéro de document sont requis pour créer un cas. clientCode : {{clientCode}}, docType : {{docType}}, documentNumber : {{documentNumber}}. Si vous disposez de ces valeurs, vous pouvez essayer d'identifier un cas à l'aide du lien ci-dessous.",
             "unsupportedDocType": "Le type de document fourni n'est pas pris en charge par ce portail. Si vous pensez que c'est incorrect, veuillez en informer le support opérationnel."
         },
         "momentPlease": "Un moment s'il vous plaît.",
         "success": "Succès !",
         "successMessage": "Redirection vers la page d'entrée de tâche (formulaire).",
-        "title": "Création de dossier"
+        "title": "Identification du cas"
     },
     "createCaseError": {
         "backToCreateCase": "Retour à la création de cas",
@@ -2258,6 +2301,10 @@
                 "title": "Erreur lors du démarrage d'une tâche",
                 "subtitle": "Une erreur s'est produite lors de la mise à jour du statut d'une tâche. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
             },
+            "dataEntryUnassignTaskError": {
+                "title": "Erreur lors de la désattribution d'une tâche",
+                "subtitle": "Une erreur s'est produite lors de la désaffectation d'une tâche. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
+            },
             "policyNotFound": {
                 "title": "Politique non trouvée",
                 "subtitle": "Une erreur s'est produite lors de la récupération de la politique. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
@@ -2273,6 +2320,26 @@
             "docTypeRetrievalError": {
                 "title": "Erreur lors de l'identification du type de document",
                 "subtitle": "Une erreur s'est produite lors de l'identification du type de document. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
+            },
+            "nbReg60FormCreation": {
+                "title": "Erreur lors de la création du formulaire REG60",
+                "subtitle": "Une erreur s'est produite lors de la création du formulaire REG 60. Cela peut être dû au fait que le client n'est pas pris en charge à ce moment. Si vous pensez avoir atteint cette page par erreur, veuillez en informer le support opérationnel."
+            },
+            "nbReg60TaskInitialization": {
+                "title": "Erreur lors de l'initialisation de la tâche du formulaire REG60",
+                "subtitle": "Une erreur s'est produite lors de l'initialisation de la tâche REG60. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
+            },
+            "sswFormCreation": {
+                "title": "Erreur lors de la création du formulaire SSW",
+                "subtitle": "Une erreur s'est produite lors de la création du SSH. Cela peut être dû au fait que le client n'est pas pris en charge pour le moment. Si vous pensez avoir atteint cette page par erreur, veuillez en informer le support opérationnel."
+            },
+            "sswTaskInitialization": {
+                "title": "Erreur lors de l'initialisation de la tâche du formulaire SSW",
+                "subtitle": "Une erreur s'est produite lors de l'initialisation de la tâche SSW. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
+            },
+            "clientCodeRetrievalError": {
+                "title": "Erreur lors de l'identification du code client",
+                "subtitle": "Une erreur s'est produite lors de l'identification du code client. Veuillez réessayer. Si ce problème persiste, veuillez en informer le support opérationnel."
             }
         }
     },
@@ -2428,7 +2495,8 @@
                 "riskClassTooltip": "Les propriétaires sont regroupés en fonction de leur niveau de risque à assurer, basé sur leur santé et leur mode de vie. Moins de risques = meilleure classe de risque = prime plus basse. Et vice versa.",
                 "riskClass": "Classe de risque",
                 "yearsOld_one": "{{count}} an",
-                "yearsOld_other": "{{count}} ans"
+                "yearsOld_other": "{{count}} ans",
+                "yearsOld_zero": "-- ans"
             },
             "policyTimeline": {
                 "ageOfContract": "Âge du contrat",
@@ -2513,7 +2581,7 @@
             "document": "Document",
             "documentDate": "Date du document",
             "documentIdentifier": "Identifiant du document",
-            "documentIdentifierTooltip": "Il s'agit d'un ensemble unique de caractères attribués à chaque document et qui vous donne quelques informations sur le document lui-même. Si l'identifiant du document est une seule chaîne de caractères, vous saurez qu'il s'agit d'un document sortant. S'il comporte 3 sections séparées par des tirets, c'est un document entrant. Pour les documents entrants, le premier ensemble de caractères représente la date à laquelle il a été reçu au format AAAAMMJJ. Le deuxième ensemble représente la manière dont il a été reçu (par exemple, DS = Docusign, EM = Courrier électronique, F = Télécopie, M = EApp, 1-8 = Numérisation de salle du courrier, etc.). Et le dernier ensemble est l'identifiant unique.",
+            "documentIdentifierTooltip": "Il s'agit du nom du document ainsi que de l'identifiant du document, un ensemble unique de caractères attribué à chaque document. Astuce : l'identifiant du document reçu peut vous en dire un peu plus sur le document lui-même. Le premier ensemble de caractères de l'identifiant d'un document reçu correspond à la date de réception au format AAAAMMJJ. Les majuscules correspondent à la manière dont il a été reçu (par exemple, DS = Docusign, EM = Courrier électronique, F = Télécopie, M = EApp, 1-8 = Numérisation de salle du courrier, etc.).",
             "documentNumber": "Numéro du document",
             "download": "Télécharger",
             "id": "ID",
@@ -2623,6 +2691,7 @@
                 "expirationDate": "Date d'expiration",
                 "insured": "Assuré",
                 "maxClaims": "Maximal de réclamations autorisées",
+                "coverageAmount": "Montant de la couverture",
                 "notElected": "Non choisi",
                 "notElectedTooltip": "Les avenants ou fonctionnalités non choisis sont ceux que le propriétaire a la possibilité d'ajouter à cette police. Ils ne paient pas actuellement pour ces types de couverture supplémentaire et pourraient ne pas être en mesure de soumettre des réclamations pour des prestations connexes. Cependant, ils pourraient éventuellement les ajouter à la police.",
                 "terminalIllnessBenefit": "Jusqu'à {{percent}}% ({{amount}})",
@@ -2692,6 +2761,7 @@
                 "bankName": "Nom de la banque",
                 "bestTime": "Meilleur moment",
                 "bestTimeToContact": "Meilleur moment pour contacter",
+                "cancelLoan": "Annuler le prêt",
                 "cancelPayment": "Annuler le paiement",
                 "cancelSurrender": "Annuler la reddition",
                 "correspondencePreference": "Préférence de correspondance",
@@ -2815,11 +2885,13 @@
             "cancelSidesheet": {
                 "title": {
                     "PaymentOneTimePremium": "Annuler le paiement?",
-                    "Surrender": "Annuler la reddition?"
+                    "FullSurrender": "Annuler la reddition?",
+                    "NewLoan": "Annuler le prêt?"
                 },
                 "confirmationSubtitle": "Si vous annulez maintenant, ceci",
                 "confirmationSubtitle2": "ne sera pas traité.",
                 "FullSurrender": "Reddition",
+                "NewLoan": "Nouveau prêt",
                 "PaymentOneTimePremium": "Prime à paiement unique",
                 "nevermind": "Laissez tomber",
                 "successTitle": "Succès!",
@@ -2828,7 +2900,8 @@
                 "close": "Fermer",
                 "cta": {
                     "PaymentOneTimePremium": "Annuler le paiement",
-                    "Surrender": "Annuler la reddition"
+                    "FullSurrender": "Annuler la reddition",
+                    "NewLoan": "Annuler le prêt"
                 },
                 "apiError": {
                     "title": "Désolé, cela n'a pas fonctionné.",
@@ -3028,6 +3101,25 @@
         },
         "correspondence": "Correspondence ({{count}})",
         "policy": "Police ({{count}})",
+        "task": {
+            "tabs": {
+                "details": "Détails",
+                "history": "Histoire",
+                "documents": "Documents"
+            },
+            "status": {
+                "label": "Statut",
+                "open": "ouvrir",
+                "closed": "fermée"
+            },
+            "createdLabel": "Date de création",
+            "assigneeLabel": "Cessionnaire",
+            "stepLabel": "Étape",
+            "issueLabel": "Problème",
+            "detailsLabel": "Détails",
+            "commonTaskIssues": "Un ou plusieurs {{taskType}} problèmes trouvés.",
+            "taskDetails": "Un ou plusieurs problèmes ont été détectés lors de Zinnia {{taskType}}. Ces problèmes doivent être examinés par le transporteur et ignorés pour émettre le contrat.."
+        },
         "suitability": {
             "header": "Examen complet de l’adéquation",
             "taskLabel": "ID de tâche",
@@ -3614,6 +3706,15 @@
     },
     "annuitization": {
         "title": "Annuitisation et Paiement",
+        "headerDetails": {
+            "payoutOption": "Option de versement de rente",
+            "fixedPayoutAmount": "Montant fixe du paiement",
+            "fixedExclusionAmount": "Montant fixe de l'exclusion",
+            "totalAnnuityPayments": "Paiements de la rente totaux",
+            "ytdAnnuityPayments": "Paiements de la rente de l'annee",
+            "accumulationPhase": "Phase d'accumulation",
+            "incomePhase": "Phase de revenu"
+        },
         "details": {
             "header": "Détails du paiement",
             "payoutAmount": "Montant du paiement",
@@ -3961,9 +4062,9 @@
             "totalRMDAmountTooltip": "C'est le montant de distribution RMD qui est soumis. C'est le montant de la distribution qui est soumise moins les frais de transaction.",
             "remainingRMDAmount": "Montant restant de distribution RMD",
             "remainingRMDAmountTooltip": "C'est le montant de distribution RMD qui est soumis. C'est le montant de la distribution qui est soumise moins les frais de transaction.",
-            "calculationDate": "Date de calcul",
+            "calculationDate": "Date de recalcul",
             "calculationDateTooltip": "C'est la date à laquelle le montant de distribution RMD est soumis. C'est le montant de la distribution qui est soumise moins les frais de transaction.",
-            "calculationType": "Type de calcul",
+            "calculationType": "Type de recalcul",
             "calculationTypeTooltip": "C'est le type de distribution RMD qui est soumise. C'est le montant de la distribution qui est soumise moins les frais de transaction."
         },
         "rules": {
@@ -3990,6 +4091,8 @@
         "exchange1035": "Commencer un échange 1035",
         "allTimeWithdrawals": "Retraits cumulés",
         "allTimeWithdrawalsTooltip": "C'est le montant que le propriétaire a retiré de la valeur du compte depuis qu'il possède sa police.",
+        "mvaApplies": "Un ajustement de la valeur marchande s'applique",
+        "mvaAppliesMetadata": "MVA ajustement",
         "annualWithdrawalsRemaining": "Retraits annuels restants",
         "annualWithdrawalsRemainingTooltip": "Ceci est le nombre de retraits restants pour l'année de la police.",
         "eligible": "Éligible",
@@ -4001,6 +4104,7 @@
         "netSurrenderValue": "Valeur de rachat nette",
         "netSurrenderValueTooltip": "C'est le montant que le propriétaire ou ses bénéficiaires peuvent attendre si la police est rachetée. C'est la valeur du compte actuel moins les frais de rachat, les prêts en cours et d'autres frais.",
         "startAWithdrawal": "Commencer un retrait",
+        "oneTimeWithdrawal": "Effectuer un retrait unique",
         "surrenderPolicy": "Racheter la police",
         "viewWithdrawalHistory": "Accéder à l'historique des transactions de retrait",
         "withdrawal": "retrait",
@@ -4823,5 +4927,9 @@
             "secondaryCta": "Fermer",
             "submitTask": "Soumettre les détails de l'adéquation"
         }
+    },
+    "unauthorized": {
+        "title": "Non autorisé",
+        "message": "Vous n'avez pas accès à cette information."
     }
 }

@@ -2,6 +2,7 @@ import { PolicyStatus } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 
 import { FullName } from '@/components/pii/FullName';
+import { CarrierPolicyDetails } from '@/types/policy';
 import {
   checkIfNull,
   isAnnuity,
@@ -11,22 +12,22 @@ import {
 import { toSentenceCase } from '@/utils/strings';
 
 import styles from './PolicyDetailsSummary.module.css';
-import { CarrierPolicyDetails } from '@/types/policy';
 
 interface DetailProps {
   className?: string;
   planCode: string;
   policyNumber: string;
-  summary: CarrierPolicyDetails;
+  summary: Partial<CarrierPolicyDetails>;
 }
 
-export const PolicyDetailsSummary = ({
+export const PolicyDetailsSummary = async ({
   summary,
   className,
   policyNumber,
 }: DetailProps) => {
   const { firstName, lastName, marketingName, policyStatus, lineOfBusiness } =
     summary;
+
   const statusStyle = () => {
     switch (policyStatus) {
       case PolicyStatus.PENDINGISSUED:
@@ -56,14 +57,16 @@ export const PolicyDetailsSummary = ({
             <span>{isAnnuity(lineOfBusiness) ? 'Annuitant' : 'Insured'}</span>:{' '}
             <FullName firstName={firstName} lastName={lastName} />
           </p>
-          <p className="typography-labels-label-md-alt">
-            Status:{' '}
-            <span className={statusStyle()}>
-              {checkIfNull(
-                toSentenceCase(policyStatusDisplayText[policyStatus])
-              )}
-            </span>
-          </p>
+          {policyStatus && (
+            <p className="typography-labels-label-md-alt">
+              Status:{' '}
+              <span className={statusStyle()}>
+                {checkIfNull(
+                  toSentenceCase(policyStatusDisplayText[policyStatus])
+                )}
+              </span>
+            </p>
+          )}
         </>
       </div>
     </div>

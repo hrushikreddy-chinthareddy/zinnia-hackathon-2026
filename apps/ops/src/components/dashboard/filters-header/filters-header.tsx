@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { forwardRef, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 
 import { MultiselectOption } from '@deps/components/autocomplete/autocomplete.types';
 import { FieldSize } from '@deps/components/fields/field';
@@ -13,7 +13,7 @@ import { getCarrierNameByClientId, getClientIdsByCarrierName, getCarrierListItem
 
 import styles from './filters-header.module.css';
 import { BrokerDealerFilter } from '../broker-dealer-filter/broker-dealer-filter';
-import { CarrierListItem } from '../issued-business/issued-business';
+import { CarrierListItem } from '../../../containers/dashboard/issued-business/issued-business';
 
 interface FiltersHeaderProps {
     authorizedCarriers: string[];

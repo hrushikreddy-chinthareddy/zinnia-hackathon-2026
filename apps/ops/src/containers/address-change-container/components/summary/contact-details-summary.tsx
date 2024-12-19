@@ -2,7 +2,7 @@ import { Address, AddressProps, Tag, TagVariant } from '@zinnia/bloom/components
 import { TFunction } from 'i18next';
 import * as React from 'react';
 import { ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
@@ -80,7 +80,7 @@ export const ContactDetailsSummary = ({ policy }: ContactDetailsSummaryProps) =>
     const qualificationType = React.useMemo(() => policy?.qualificationType ?? '', [policy]);
 
     const partyCardsData: PartyAddressCard[] = React.useMemo(
-        () => groupPartiesByAddress(extractedPartyRoles, extractedParties, qualificationType, t ),
+        () => groupPartiesByAddress(extractedPartyRoles, extractedParties, qualificationType, t),
         [extractedPartyRoles, extractedParties, qualificationType, t]
     );
 

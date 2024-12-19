@@ -25,7 +25,7 @@ import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import { getCountryByCode } from './countries.helper';
 import { isEndDated } from './date.helper';
-import { formatPhone, toTitleCase } from './string.helper';
+import { formatPhone, safeString, toTitleCase } from './string.helper';
 
 // switch case for header icon
 export const getHeaderIcon = (partyType: string | undefined): JSX.Element => {
@@ -61,10 +61,10 @@ export const getHeaderText = (partyInfo: PolicyAllOfPartiesItem | undefined): st
             return (
                 <PiiWrapper className="flex whitespace-nowrap xs:flex-col xs:gap-0 lg:flex-row lg:gap-2">
                     <span>
-                        {`${toTitleCase(partyInfo?.firstName)}`} {`${toTitleCase(partyInfo?.middleName)} `}
+                        {`${safeString(toTitleCase(partyInfo?.firstName))}`} {`${toTitleCase(partyInfo?.middleName)} `}
                     </span>
                     <span>
-                        {`${toTitleCase(partyInfo?.lastName)}`} {`${toTitleCase(partyInfo?.suffix)}`}
+                        {`${safeString(toTitleCase(partyInfo?.lastName))}`} {`${toTitleCase(partyInfo?.suffix)}`}
                     </span>
                 </PiiWrapper>
             );

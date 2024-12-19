@@ -53,6 +53,13 @@ export interface DocumentApiRequestInputs {
   source: string;
 }
 
+export interface DocumentDownloadApiRequestInputs {
+  source: string;
+  clientCode: string;
+  policyNumber: string;
+  planCode: string;
+}
+
 export interface DocumentResponseError {
   message: string;
   status: number;

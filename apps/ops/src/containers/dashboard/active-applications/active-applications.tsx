@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { FC, CSSProperties, useState, useEffect, RefObject } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 
 import { FieldSize } from '@deps/components/fields/field';
-import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
+import PageLoader from '@deps/components/page-loader/page-loader';
 import Select from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
@@ -17,12 +17,13 @@ import { GroupByOptions } from '@deps/models/case/enums';
 import { DashboardSearchFilter } from '@deps/queries/cases';
 import { getProcessListOptions, getCaseDashboardStatsQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 import { useDashboardStore } from '@deps/store/store';
+import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 
+import ActiveAging from '../../../components/dashboard/active-aging/active-aging';
+import SankeyChart from '../../../components/dashboard/sankey-chart';
+import CaseStatBlock from '../../../components/dashboard/stat-blocks/case-stat-block';
+import { TreeMapInsights } from '../../../components/dashboard/tree-map-insights';
 import styles from '../../../pages/dashboard/Dashboard.module.css';
-import ActiveAging from '../active-aging/active-aging';
-import SankeyChart from '../sankey-chart';
-import CaseStatBlock from '../stat-blocks/case-stat-block';
-import { TreeMapInsights } from '../tree-map-insights';
 interface ActiveApplicationsProps {
     handleSetLoading: (loading: boolean) => void;
     loading: boolean;
@@ -54,29 +55,53 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, handl
         setInsightOption(processType);
     };
 
+    const createBaseQuery = async (groupBy: GroupByOptions[]) => {
+        const response = await getCaseDashboardStatsQuery(baseInsightQueryFilter, groupBy);
+        if (!response?.data?.length) {
+            console.error(
+                'createBaseQuery::An error occurred while getting case dashboard stats results',
+                response?.data?.length,
+                JSON.stringify(response)
+            );
+            throw response;
+        } else {
+            return response;
+        }
+    };
+
     const { data: processListOptions, isLoading: processListOptionsLoading } = useQuery({
         queryKey: ['processListOptions', createdDateStart],
         queryFn: () => getProcessListOptions(createdDateStart),
     });
     const { data: insightGroupingCountByCarrierStats, isLoading: insightGroupingCountByCarrierStatsLoading } = useQuery({
         queryKey: ['countByCarrierInsights', baseInsightQueryFilter],
-        queryFn: () => getCaseDashboardStatsQuery(baseInsightQueryFilter, [GroupByOptions.Carrier]),
+        queryFn: () => createBaseQuery([GroupByOptions.Carrier]),
     });
     const { data: insightGroupingCountBySubProcessStats, isLoading: insightGroupingCountBySubProcessStatsLoading } = useQuery({
         queryKey: ['countBySubProcessInsights', baseInsightQueryFilter],
-        queryFn: () => getCaseDashboardStatsQuery(baseInsightQueryFilter, [GroupByOptions.ProcessSubType]),
+        queryFn: () => createBaseQuery([GroupByOptions.ProcessSubType]),
     });
-    const { data: insightCreatedBySubProcess, isLoading: insightCreatedBySubProcessLoading } = useQuery({
+    const {
+        data: insightCreatedBySubProcess,
+        isLoading: insightCreatedBySubProcessLoading,
+        isError: insightCreatedBySubProcessError,
+    } = useQuery({
         queryKey: ['createdBySubProcessInsights', baseInsightQueryFilter],
-        queryFn: () => getCaseDashboardStatsQuery(baseInsightQueryFilter, [GroupByOptions.ProcessSubType, GroupByOptions.CreatedAt]),
+        queryFn: () => createBaseQuery([GroupByOptions.ProcessSubType, GroupByOptions.CreatedAt]),
     });
-    const { data: insightStagesByCreated, isLoading: insightStagesByCreatedLoading } = useQuery({
+    const {
+        data: insightStagesByCreated,
+        isLoading: insightStagesByCreatedLoading,
+        isError: insightStagesByCreatedError,
+    } = useQuery({
         queryKey: ['stagesByCreatedInsights', baseInsightQueryFilter],
-        queryFn: () => getCaseDashboardStatsQuery(baseInsightQueryFilter, [GroupByOptions.CreatedAt, GroupByOptions.ExceptionCategory]),
+        queryFn: () => createBaseQuery([GroupByOptions.CreatedAt, GroupByOptions.ExceptionCategory]),
+        placeholderData: previousData => previousData,
     });
     const { data: insightExceptionStats, isLoading: insightExceptionStatsLoading } = useQuery({
         queryKey: ['exceptionStats', baseInsightQueryFilter],
-        queryFn: () => getCaseDashboardStatsQuery(baseInsightQueryFilter, [GroupByOptions.ExceptionCategory]),
+        queryFn: () => createBaseQuery([GroupByOptions.ExceptionCategory]),
+        placeholderData: previousData => previousData,
     });
 
     useEffect(() => {
@@ -124,13 +149,6 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, handl
     return (
         <>
             <div className="relative border-t-2 border-[--color-base-border-border-light]">
-                {sankeyChartLoading && (
-                    <div className="absolute bottom-0 left-0 right-0 top-0 z-10 flex h-full justify-center bg-gray-800 opacity-80">
-                        <div className="mt-4">
-                            <PageLoader variant={PageLoaderVariant.CenterWhiteText} showText={true} />
-                        </div>
-                    </div>
-                )}
                 <CardContainer classNames="relative !pt-0" containerClassNames="mt-none">
                     <SankeyChart baseDashboardQueryFilter={baseDashboardQueryFilter} />
                 </CardContainer>
@@ -161,13 +179,26 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, handl
             </div>
             <div ref={insightChartRef}>
                 <div className={styles.container}>
-                    <ActiveAging
-                        createdBySubProcess={insightCreatedBySubProcess}
-                        openExceptionCategoriesByCreated={insightStagesByCreated}
-                        loading={loading}
-                        selectedProcess={insightOption}
-                        carriers={Object.keys(selectedCarriers)}
-                    />
+                    {loading ? (
+                        <div className="grid place-content-center h-full w-full min-h-[400px]">
+                            <PageLoader />
+                        </div>
+                    ) : insightCreatedBySubProcessError || insightStagesByCreatedError || !insightStagesByCreated?.data?.length ? (
+                        <div className="grid place-content-center h-full w-full min-h-[400px]">
+                            <Typography variant={TypographyVariant.BodyBold} className="mt-4 flex flex-row gap-2">
+                                <ChartBarsIcon height={'24px'} width={'24px'} />
+                                {'Something went wrong fetching insights, please try again by refreshing the page'}
+                            </Typography>
+                        </div>
+                    ) : (
+                        <ActiveAging
+                            createdBySubProcess={insightCreatedBySubProcess}
+                            openExceptionCategoriesByCreated={insightStagesByCreated}
+                            loading={insightCreatedBySubProcessError || insightStagesByCreatedLoading}
+                            selectedProcess={insightOption}
+                            carriers={Object.keys(selectedCarriers)}
+                        />
+                    )}
                     <div className="mt-1">
                         {/* this is the Exception Distribution by Category tree map chart */}
                         <CardContainer fullWidth={false}>
