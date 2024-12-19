@@ -38,13 +38,6 @@ type Summary = {
     total: number;
 };
 
-type Output = {
-    weekly: Record<string, Summary>;
-    monthly: Record<string, Summary>;
-    weeklyCategories: string[];
-    monthlyCategories: number[];
-};
-
 const colors = ['#D385A5', '#BD85D3', '#8593D3', '#00628B', '#021936'];
 
 export const Top5SubprocessByVolume = ({

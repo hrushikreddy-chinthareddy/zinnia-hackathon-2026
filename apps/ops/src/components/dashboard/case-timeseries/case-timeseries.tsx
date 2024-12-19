@@ -1,4 +1,3 @@
-import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import * as Highcharts from 'highcharts';
 import HC_ACCESSIBILITY from 'highcharts/modules/accessibility';
@@ -9,16 +8,9 @@ import styles from '@deps/components/dashboard/top-5-subprocesses-by-volume/top-
 import PageLoader from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { dashboardChartTitleFormat, splitAndSentenceCase } from '@deps/helpers/dashboard/dashboard-helpers';
+import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
-import { convertToQueryString } from '@deps/helpers/routing.helper';
-import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
-import { Processes, Statuses } from '@deps/models/case/case';
-import { GroupByOptions } from '@deps/models/case/enums';
-import { getCaseInsights } from '@deps/queries/api/openai';
-import { DashboardSearchFilter } from '@deps/queries/cases';
-import { getExceptionData } from '@deps/queries/tanstack/dashboard/dashboardQueries';
-import { useDashboardStore } from '@deps/store/store';
+import { StatsDataResponse } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 import { ReactComponent as LightBulbIcon } from '@deps/styles/elements/icons/illustrations/light-bulb.svg';
 
@@ -40,83 +32,38 @@ type Summary = {
 
 const colors = ['#D385A5', '#BD85D3', '#8593D3', '#00628B', '#021936'];
 
-export const ExceptionSummary = ({
-    startDate,
-    carrierOrBrokerDealer = GroupByOptions.Carrier,
-    selectedSubprocess = 'NB_REG60',
-}: {
-    startDate: string;
-    carrierOrBrokerDealer?: GroupByOptions.Carrier | GroupByOptions.BrokerDealerName;
+interface Props {
     selectedSubprocess: string;
-}) => {
-    const shouldShowCaseInsights = useCaseInsightsPermission();
+    caseTimeseriesData: StatsDataResponse | undefined;
+    caseTimeseriesDataLoading: boolean;
+    legendLabel: string;
+    baseFilterLink: string;
+    insight?: string;
+    insightLoading?: boolean;
+}
 
-    const groupBy: GroupByOptions = carrierOrBrokerDealer;
-    const { selectedBrokerDealers, selectedCarriers } = useDashboardStore(state => state);
-
-    const baseDashboardQueryFilter = useMemo(() => {
-        const baseFilter: DashboardSearchFilter = {
-            createdDateStart: startDate,
-            process: [Processes.NewBusiness],
-            caseStatus: [Statuses.Completed],
-            carrier: Object.keys(selectedCarriers),
-            brokerDealerName: Object.keys(selectedBrokerDealers),
-            ...(selectedSubprocess ? { requestSubType: [selectedSubprocess] } : {}),
-        };
-
-        return baseFilter;
-    }, [selectedBrokerDealers, selectedCarriers, selectedSubprocess, startDate]);
-
-    const { data: exceptionData, isLoading: exceptionDataLoading } = useQuery({
-        queryKey: ['applicationVolume', baseDashboardQueryFilter, carrierOrBrokerDealer],
-
-        queryFn: async () => {
-            const data = await getExceptionData(baseDashboardQueryFilter, [carrierOrBrokerDealer, GroupByOptions.UpdatedAt]);
-            if (!data?.data?.statsResponseData) {
-                throw data;
-            }
-            return data;
-        },
-    });
-
-    const {
-        data: aiSummaryResponse,
-        isLoading: aiLoading,
-        isError: aiError,
-    } = useQuery({
-        queryKey: ['getAiSummary', baseDashboardQueryFilter, exceptionData?.data?.statsResponseData, selectedSubprocess],
-        queryFn: async () => {
-            try {
-                const summary = await getCaseInsights({
-                    content: JSON.stringify(exceptionData?.data?.statsResponseData),
-                    prompt: `You are an expert in all things new business application data. Your job is to summarize the data for business and executive users. They want simple and insightful information about the data provided to you. The data provided to you here are completed ${dashboardChartTitleFormat(
-                        selectedSubprocess,
-                        false
-                    )} applications, but the ${dashboardChartTitleFormat(
-                        selectedSubprocess,
-                        false
-                    )} applications encountered exceptions along their path to completion. The data is grouped by Carrier and then by Exception Category and the values represent an exception that occurred for a ${dashboardChartTitleFormat(
-                        selectedSubprocess,
-                        false
-                    )} application. Avoid using phrases such as "the data". Your responses should be insightful and will be displayed on a UI as a summary for a module related to a distribution chart. Use percentages and real data where it makes sense. Keep it concise and to the point. Format number values to U.S. including commas where appropriate.`,
-                });
-                return summary;
-            } catch (error) {
-                return '';
-            }
-        },
-        enabled: shouldShowCaseInsights && !!exceptionData?.data?.statsResponseData?.length && !!selectedSubprocess.length,
-    });
-
-    const noExceptionData = !exceptionData?.data?.statsResponseData?.length;
+export const CaseTimeseries = ({
+    selectedSubprocess = 'NB_REG60',
+    caseTimeseriesData,
+    caseTimeseriesDataLoading,
+    legendLabel,
+    baseFilterLink,
+    insight,
+    insightLoading,
+}: Props) => {
+    const noData = !caseTimeseriesData?.data?.statsResponseData?.length;
     const processedData = useMemo(() => {
-        if (noExceptionData) return null;
-        const processedData = processGroupedData(exceptionData?.data.statsResponseData || []);
+        if (noData) {
+            return null;
+        }
+        const processedData = processGroupedData(caseTimeseriesData?.data.statsResponseData || []);
         return processedData;
-    }, [exceptionData?.data.statsResponseData, noExceptionData]);
+    }, [caseTimeseriesData?.data.statsResponseData, noData]);
 
     const sortedMonthlyArray = useMemo(() => {
-        if (!processedData) return [];
+        if (!processedData) {
+            return [];
+        }
         const monthlyArray: Summary[] = [];
         Object.entries(processedData.monthlyByLevel1Grouping).forEach(([, value]) => {
             monthlyArray.push(value);
@@ -124,22 +71,15 @@ export const ExceptionSummary = ({
         return monthlyArray.sort((a, b) => b.total - a.total).slice(0, 5);
     }, [processedData]);
 
-    const summary = useMemo(() => {
-        if (aiError) return 'Insight data is currently unavailable.';
-        if (aiSummaryResponse?.length) return aiSummaryResponse;
-        if (!exceptionData?.data?.statsResponseData?.length) return `No data for ${dashboardChartTitleFormat(selectedSubprocess)}.`;
-        return 'Insight data is currently unavailable.';
-    }, [aiError, aiSummaryResponse, exceptionData?.data?.statsResponseData?.length, selectedSubprocess]);
-
     return (
         <CardContainer containerClassNames="rounded" classNames="!p-0" fullWidth={true}>
             <div className="flex flex-col xl:flex-row justify-between gap-8 w-full">
                 <div className="flex xl:flex-col xl:w-1/4 gap-4 mb-8 xl:mb-0">
                     <Typography variant={TypographyVariant.H3}>{'Application Volume'}</Typography>
-                    {/* <pre>{JSON.stringify(exceptionData?.data?.statsResponseData, null, 2)}</pre> */}
+                    {/* {<pre>{JSON.stringify(caseVolumeTimeseriesData?.data?.statsResponseData, null, 2)}</pre>} */}
                     <Typography variant={TypographyVariant.Label}>{dashboardChartTitleFormat(selectedSubprocess)}</Typography>
                     <div className="flex-1 border-r-1 xl:border-r-0 border-[#EDEDED] flex flex-col gap-4 pt-4">
-                        {aiLoading ? (
+                        {insightLoading ? (
                             <div className="grid gap-4 h-full mb-4 w-full place-content-center bg-[--color-base-surface-surface-tertiary]">
                                 <PageLoader />
                             </div>
@@ -149,17 +89,17 @@ export const ExceptionSummary = ({
                                     <LightBulbIcon height={'24px'} width={'24px'} />
                                     <Typography variant={TypographyVariant.LabelLg}>Insight</Typography>
                                 </div>
-                                <Typography variant={TypographyVariant.BodySm}>{summary}</Typography>
+                                <Typography variant={TypographyVariant.BodySm}>{insight}</Typography>
                             </>
                         )}
                         <Typography className="xl:mt-1" variant={TypographyVariant.BodySmBold}>
-                            Avg Monthly Volume / Total Cases
+                            Avg Monthly Volume
                         </Typography>
                         <table>
                             <thead>
                                 <tr>
-                                    <th className={`text-left ${styles.th}`}>{splitAndSentenceCase(groupBy)}</th>
-                                    <th className={`text-right ${styles.th}`}>Monthly Avg. / Total</th>
+                                    <th className={`text-left ${styles.th}`}>{legendLabel}</th>
+                                    <th className={`text-right ${styles.th}`}>Monthly Avg.</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -169,7 +109,7 @@ export const ExceptionSummary = ({
                                             <div className="flex items-center gap-3">
                                                 <div className="h-3 w-3" style={{ backgroundColor: colors[index] }}></div>
                                                 <NavElement
-                                                    href={`/cases${convertToQueryString(baseDashboardQueryFilter as any)}`}
+                                                    href={baseFilterLink}
                                                     size={NavElementSize.Small}
                                                     type={NavElementType.Link}
                                                     className="capitalize whitespace-nowrap overflow-hidden text-ellipsis max-w-[175px] block"
@@ -180,9 +120,7 @@ export const ExceptionSummary = ({
                                                 </NavElement>
                                             </div>
                                         </td>
-                                        <td className={`text-right ${styles.value}`}>
-                                            {wholeNumberFormatify(stat.total / 12)} / {wholeNumberFormatify(stat.total)}
-                                        </td>
+                                        <td className={`text-right ${styles.value}`}>{wholeNumberFormatify(stat.total / 12)} cases</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -196,17 +134,17 @@ export const ExceptionSummary = ({
                         }}
                         className={clsx('w-full', {
                             [`grid gap-4 place-content-center bg-[--color-base-surface-surface-tertiary]`]:
-                                exceptionDataLoading || !exceptionData || !processedData,
+                                caseTimeseriesDataLoading || !caseTimeseriesData || !processedData,
                         })}
                     >
-                        {exceptionDataLoading || !processedData ? (
+                        {caseTimeseriesDataLoading || !processedData ? (
                             <>
                                 <PageLoader />
                                 <Typography variant={TypographyVariant.BodyBold}>Loading...</Typography>
                             </>
                         ) : (
                             <>
-                                {exceptionData ? (
+                                {caseTimeseriesData ? (
                                     <LineAndVolumeCategoryChart chartData={processedData || {}}></LineAndVolumeCategoryChart>
                                 ) : (
                                     <div className="flex flex-col gap-2 items-center bg-red-400">
