@@ -100,7 +100,14 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, handl
     });
     const { data: insightExceptionStats, isLoading: insightExceptionStatsLoading } = useQuery({
         queryKey: ['exceptionStats', baseInsightQueryFilter],
-        queryFn: () => createBaseQuery([GroupByOptions.ExceptionCategory]),
+        queryFn: async () => {
+            const response = await createBaseQuery([GroupByOptions.ExceptionCategory]);
+            if (response?.data?.length) {
+                response.data = response?.data?.filter(item => item.name !== '');
+            }
+
+            return response;
+        },
         placeholderData: previousData => previousData,
     });
 
