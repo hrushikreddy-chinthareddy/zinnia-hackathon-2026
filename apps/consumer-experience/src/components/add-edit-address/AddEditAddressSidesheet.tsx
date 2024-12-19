@@ -41,11 +41,15 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
   const handleAdd = async (requestValues: AddressFormFields) => {
     setStep(FormSteps.LOADING);
 
+    //TODO: Remove this
     console.log('adding', requestValues);
 
     setTimeout(() => {
       setStep(FormSteps.SUCCESS);
     }, 2000);
+
+    //TODO: We will add this stuff back when we wire up the backend methods
+
     // const { data, error } = await addBankRequest({
     //   planCode: params.planCode,
     //   policyNumber: params.policyNumber,

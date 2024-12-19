@@ -84,6 +84,7 @@ export interface AddressProps {
   title: string;
   preferredAddressIndicator: string;
   partyId?: string;
+  allowAddressChanges?: boolean;
 }
 
 export interface BankDetail extends BankAccount {

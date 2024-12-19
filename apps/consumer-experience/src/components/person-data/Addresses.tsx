@@ -66,6 +66,7 @@ export const Addresses = ({
   title,
   preferredAddressIndicator,
   partyId,
+  allowAddressChanges,
 }: AddressProps) => {
   if (addresses.length === 0) {
     return null;
@@ -99,7 +100,9 @@ export const Addresses = ({
           preferredAddressIndicator={preferredAddressIndicator}
         />
       </div>
-      <AddEditAddressSidesheet partyId={partyId || ''} />
+      {allowAddressChanges && (
+        <AddEditAddressSidesheet partyId={partyId || ''} />
+      )}
     </div>
   );
 };

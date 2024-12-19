@@ -45,6 +45,8 @@ export default async function Profile({ params }: Props) {
   const allowBankingChanges =
     flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_BANK_ACCOUNT];
 
+  const allowAddressChanges = flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_ADDRESS];
+
   if (error) {
     return (
       <div className="space-mb-gap-lg">
@@ -72,9 +74,13 @@ export default async function Profile({ params }: Props) {
             title="Address"
             preferredAddressIndicator={profileData.preferredAddressIndicator}
             partyId={profileData.partyId}
+            allowAddressChanges={allowAddressChanges}
           />
         );
       }
+    }
+    if (!allowAddressChanges) {
+      return null;
     }
     // If there are no addresses, show the add address button and set defaultAddress to true
     return (
