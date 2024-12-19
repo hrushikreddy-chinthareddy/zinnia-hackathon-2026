@@ -2,6 +2,8 @@
 
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import {
+  AssistiveText,
+  AssistiveTextVariant,
   Button,
   Icon,
   IconType,
@@ -13,6 +15,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { formatUSDollars } from '@/utils/currency';
 import { DEFAULT_DATE_FORMAT, ZAHARA_DATE_FORMAT } from '@/utils/dates';
 
 import { CancelDialogLink } from './CancelDialogLink';
@@ -28,7 +31,7 @@ import { OttpAction } from '../providers/one-time-premium-payment/types';
 export const dateInvalidMessage = 'Please enter a valid date';
 export const dateOutOfRangeMessage =
   'Date must be between today and next 60 days';
-export const PREMIUM_PAYMENT_AMOUNT = 'Premium payment amount';
+export const PREMIUM_PAYMENT_AMOUNT = 'Premium payment';
 
 const sixtyDaysInFutureDay = dayjs().add(60, 'day').format('YYYY-MM-DD');
 const dateWithinSixtyDayRange = (date: string) => {
@@ -46,11 +49,13 @@ export const SelectAmount = ({
   policyNumber,
   paymentFee,
   lineOfBusiness,
+  minimumPaymentDue,
 }: {
   planCode: string;
   policyNumber: string;
   paymentFee: number;
   lineOfBusiness: LineOfBusiness;
+  minimumPaymentDue: number;
 }) => {
   const router = useRouter();
   const { state, dispatch } = useOttp();
@@ -167,8 +172,7 @@ export const SelectAmount = ({
                           <Icon
                             type={IconType.CIRCLE_INFO}
                             color="var(--color-base-icon-icon-tooltip, #ff7500)"
-                            width={16}
-                            height={16}
+                            small
                           />
                         }
                       >
@@ -201,6 +205,13 @@ export const SelectAmount = ({
               />
             )}
           />
+          {minimumPaymentDue && (
+            <AssistiveText
+              text={`A minimum payment of ${formatUSDollars(minimumPaymentDue)} is required`}
+              variant={AssistiveTextVariant.Info}
+              className="mt-md"
+            />
+          )}
         </div>
         {paymentFee > 0 && (
           <p className={`${premiumStyles.note} typography-content-body-sm`}>
