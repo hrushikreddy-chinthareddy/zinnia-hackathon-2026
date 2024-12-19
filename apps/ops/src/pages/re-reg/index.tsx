@@ -65,10 +65,10 @@ export const getServerSideProps = withPageAuthRequired({
         try {
             accessToken = (await getAccessToken(req, res)).accessToken;
         } catch (e) {
-            logWarn('getServerSidePropsAddressChangePage::Access token expired', {
+            logWarn('getServerSidePropsReRegPage::Access token expired', {
                 ...parseErrorInformation(e),
                 file: 'utils/page',
-                function: 'getServerSidePropsAddressChangePage',
+                function: 'getServerSidePropsReRegPage',
             });
             return serverSidePropsLogout();
         }
@@ -85,7 +85,7 @@ export const getServerSideProps = withPageAuthRequired({
 
         // If feature flag is not enabled, redirect to error page
         if (!isFormFeatureEnabled(ProcessType.REREG, clientId, featureFlagDecisions)) {
-            logWarn('re-reg/:id::feature flag not enabled', { documentNumber, policyNumber, clientId });
+            logWarn('re-reg::Feature flag not enabled', { documentNumber, policyNumber, clientId });
             return {
                 redirect: {
                     destination: '/403',
@@ -106,7 +106,7 @@ export const getServerSideProps = withPageAuthRequired({
             const response = await searchPolicySSR(policyNumber, [clientId.toUpperCase() as Carrier], accessToken, 1, 0);
             const planCode = response ? response[0]?.planCode : null;
             if (!planCode) {
-                logInfo('re-reg/:id::Plan code not found', { documentNumber, policyNumber, clientId });
+                logInfo('re-reg::Plan code not found', { documentNumber, policyNumber, clientId });
                 return {
                     redirect: {
                         destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
@@ -114,7 +114,7 @@ export const getServerSideProps = withPageAuthRequired({
                     },
                 };
             } else {
-                logInfo('re-reg/:id::Plan code found', { documentNumber, clientId, planCode });
+                logInfo('re-reg::Plan code found', { documentNumber, clientId, planCode });
             }
 
             const document = documentNumber
@@ -123,15 +123,16 @@ export const getServerSideProps = withPageAuthRequired({
             const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging, true);
 
             if (!policy) {
-                logInfo('re-reg/:id::Policy not found', { documentNumber, docType:  DocumentType.ReReg, policyNumber, clientId, planCode });
+                logInfo('re-reg::Policy not found', { documentNumber, policyNumber, clientId, planCode });
                 return {
                     redirect: {
-                        destination: '/404',
+                        destination: `/create-case/error?errorCode=${ERROR_CODES.POLICY_NOT_FOUND}`,
                         permanent: false,
                     },
                 };
             }
 
+            logInfo('re-reg::Policy details found', { documentNumber, policyNumber, clientId, planCode });
             return {
                 props: {
                     ...translations,
@@ -143,7 +144,7 @@ export const getServerSideProps = withPageAuthRequired({
                 },
             };
         } catch (error) {
-            logError('re-reg/:id::getServerSidePropsReRegPage', { ...parseErrorInformation(error) });
+            logError('re-reg/:id::getServerSidePropsReRegPage', { ...parseErrorInformation(error), documentNumber, docType: DocumentType.ReReg, policyNumber, clientId });
             return {
                 props: {},
             };

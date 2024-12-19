@@ -23,7 +23,7 @@ interface IRolesAndContractProps {
 export const RolesAndContractStep = ({ policy }: IRolesAndContractProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'addressChange' });
     const { goToNext } = useWorkflow();
-    const { applyToRoles, setApplyToRoles, formErrors, setRoleIdentifier, setFormErrors, selectedIds, setSelectedIds } = useAddressChange();
+    const { applyToRoles, setApplyToRoles, formErrors, setRoleIdentifier, setFormErrors, selectedIds, setSelectedIds, submitSuccess } = useAddressChange();
 
     const extractedParties = useMemo(() => policy?.parties || [], [policy]);
     const extractedPartyRoles = useMemo(
@@ -124,6 +124,7 @@ export const RolesAndContractStep = ({ policy }: IRolesAndContractProps) => {
                     handleContinue={handleStepContinue}
                     parentPage={ParentPage.CreateCase}
                     leaveTransactionLink='/create-case'
+                    disableContinue={submitSuccess}
                 />
             }
         >
