@@ -412,7 +412,11 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                         <tspan className="tracking-normal no-underline font-primary text-xl font-medium">
                             {wholeNumberFormatify(l1StatGrouping.count)}
                         </tspan>
-                        <tspan className="font-primary text-sm font-medium"> {getLabelSubString(l1StatGrouping.name)}</tspan>
+                        <tspan className="font-primary text-sm font-medium">
+                            {l1SelectValue === GroupByOptions.Carrier
+                                ? getLabelSubString(l1StatGrouping.name)
+                                : dashboardChartTitleFormat(l1StatGrouping.name, 15)}
+                        </tspan>
                         <title>{l1StatGrouping.name}</title>
                     </text>
                 </a>
