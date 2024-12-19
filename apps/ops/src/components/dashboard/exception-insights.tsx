@@ -239,7 +239,7 @@ export const ExceptionInsights = ({
     }, [exceptions, selectedSubprocess, shouldShowCaseInsights, timeframe]);
 
     return (
-        <div className={clsx('bg-white flex flex-col  lg:flex-row gap-8 pt-6')}>
+        <div className={clsx('bg-white flex flex-col lg:flex-row gap-4')}>
             <div className="basis-1/4 flex flex-col gap-4 items-start">
                 <div>
                     <Typography variant={TypographyVariant.H3}>{dashboardChartTitleFormat(selectedSubprocess, false)}</Typography>

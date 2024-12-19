@@ -117,10 +117,10 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
 
     return (
         <CardContainer
-            classNames="relative !p-0 flex flex-col flex-1 !border-none  bg-[--color-base-surface-surface-tertiary]"
+            classNames="relative !p-0 flex flex-col flex-1 !border-none"
             containerClassNames="mt-none !p-0  border-t-2 border-[--color-base-border-border-light]"
         >
-            <div className=" bg-white p-8 flex flex-col gap-4 rounded">
+            <div className=" bg-white p-8 mb-8 flex flex-col gap-4 rounded">
                 <div className="w-52">
                     <Select
                         options={timeFrameFilterOptions.map(option => ({
@@ -190,7 +190,7 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
                     </div>
                 </RadioGroup.Root>
             </div>
-            <div className="bg-white p-8 flex flex-col gap-8">
+            <div className="bg-white flex flex-col lg:flex-row gap-4 lg:gap-8 mb-8 lg:px-8">
                 {selectedSubprocess && (
                     <CaseTimeseries
                         selectedSubprocess={selectedSubprocess}
@@ -206,7 +206,7 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
                     />
                 )}
             </div>
-            <div className="bg-white p-8 flex flex-col gap-8">
+            <div className="bg-white flex flex-col lg:flex-row gap-4 lg:gap-8 mb-8 lg:px-8">
                 {selectedSubprocess && (
                     <CaseTimeseries
                         selectedSubprocess={selectedSubprocess}
@@ -222,7 +222,7 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
                     />
                 )}
             </div>
-            <div className="bg-white p-8 flex flex-col gap-8">
+            <div className="bg-white flex flex-col gap-4 lg:gap-8 mb-8 lg:px-8">
                 {isLoading ? (
                     <>
                         <div className="min-h-[600px] grid gap-4 h-full mb-4 w-full place-content-center bg-[--color-base-surface-surface-tertiary]">
