@@ -65,7 +65,7 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
                         )}
                         {task.status == TaskStatus.Completed && <CircleStoppedIcon width={16} height={16} className="mr-2 text-gray-300" />}
 
-                        <Typography variant={TypographyVariant.BodySm} className="py-2 pr-6">
+                        <Typography variant={TypographyVariant.BodySm} className="py-2 pr-6 px-2">
                             {toSentenceCase(task.status)}
                         </Typography>
                     </div>
@@ -99,15 +99,6 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
                     <Label label={t('sideSheet.task.stepLabel')} variant={LabelVariant.FieldLabel} className="w-[100px] py-2" />
                     <Typography variant={TypographyVariant.BodySm} className="py-2">
                         {toSentenceCase(task.taskName)}
-                    </Typography>
-                </div>
-
-                <div className="flex flex-row items-center gap-1">
-                    <Label label={t('sideSheet.task.issueLabel')} variant={LabelVariant.FieldLabel} className="w-[100px] py-2" />
-                    <Typography variant={TypographyVariant.BodySm} className="text-semantic-error py-2">
-                        {t('sideSheet.task.commonTaskIssues', {
-                            taskType: TaskTypeMap[task.taskType],
-                        })}
                     </Typography>
                 </div>
 

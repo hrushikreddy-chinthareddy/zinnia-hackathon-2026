@@ -1202,10 +1202,10 @@
                 "transfer of assets": "Transfer of Assets: {{label}}",
                 "ceding carrier": "Ceding Carrier: {{label}}"
             },
-            "reviewIssues": "Review {{taskType}} issues",
-            "suitabilityReview": "suitability review",
+            "reviewIssues": "Review {{taskType}}",
+            "suitabilityReview": "suitability",
             "commonTaskIssues": "Issue: One or more {{taskType}} issues found.",
-            "suitabilityReviewIssues": "Review Suitability Issue(s)"
+            "suitabilityReviewIssues": "Review Suitability"
         },
         "processDate": {
             "canceled": "Canceled on",

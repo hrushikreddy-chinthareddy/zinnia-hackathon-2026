@@ -1196,7 +1196,7 @@
                 "ceding carrier": "Transporteur cédant: {{label}}"
             },
             "reviewIssues": "Revoir {{taskType}} problèmes",
-            "suitabilityReview": "suitability revoir",
+            "suitabilityReview": "suitability",
             "noDataAvailable": "Aucune donnée disponible.",
             "commonTaskIssues": "Problème: Une ou plusieurs problèmes {{taskType}} trouvées.",
             "suitabilityReviewIssues": "Revoir Suitability Problèmes"
