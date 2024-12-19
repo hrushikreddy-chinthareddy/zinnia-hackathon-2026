@@ -11,7 +11,7 @@ import {
 import { FieldData } from '@/components/field-data/FieldData';
 import { Address } from '@/components/pii/Address';
 
-import styles from './addresses.module.css';
+import styles from './Addresses.module.css';
 import { AddressProps } from './types';
 import { AddEditAddressSidesheet } from '../add-edit-address/AddEditAddressSidesheet';
 import {
