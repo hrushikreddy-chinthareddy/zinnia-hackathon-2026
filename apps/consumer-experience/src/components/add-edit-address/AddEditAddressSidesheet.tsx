@@ -11,7 +11,10 @@ import styles from './AddEditAddressSidesheet.module.css';
 import { Error } from '../transaction-steps/error/Error';
 import { Loading } from '../transaction-steps/loading/Loading';
 import { Success } from '../transaction-steps/success/Success';
-import { AddAddress, AddressFormFields } from './form-steps/add/AddAddress';
+import {
+  AddEditAddress,
+  AddressFormFields,
+} from './form-steps/add/AddEditAddress';
 import { AddEditAddressSidesheetProps, FormActionType } from './types';
 
 export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
@@ -36,8 +39,13 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
     'Some generic messaging that will get updated based on the api response'
   );
 
-  const removeCallback = async (requestValues: AddressFormFields) => {
-    console.log('remove test', requestValues);
+  const removeCallback = async () => {
+    console.log('remove test');
+    setStep(FormSteps.LOADING);
+
+    setTimeout(() => {
+      setStep(FormSteps.SUCCESS);
+    }, 2000);
   };
 
   const handleAddEdit = async (requestValues: AddressFormFields) => {
@@ -97,13 +105,13 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
     }, 300);
   };
 
-  const triggerText =
+  const text =
     actionType === FormActionType.ADD ? 'Add address' : 'Edit address';
   const triggerIcon =
     actionType === FormActionType.ADD ? IconType.ADD : IconType.EDIT_ALT;
   return (
     <SideSheet
-      header="Add Address"
+      header={text}
       overrideOpen={open}
       closeCallback={onClose}
       trigger={
@@ -114,12 +122,12 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
           onClick={() => setOpen(true)}
         >
           <Icon small type={triggerIcon} />
-          {triggerText}
+          {text}
         </Button>
       }
     >
       {!step && (
-        <AddAddress
+        <AddEditAddress
           values={values}
           cancelCallback={onClose}
           submitCallback={handleAddEdit}

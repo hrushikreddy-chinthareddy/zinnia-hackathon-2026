@@ -17,7 +17,7 @@ import { AddEditAddressSidesheet } from '../add-edit-address/AddEditAddressSides
 import {
   AddressFormFields,
   AddressObj,
-} from '../add-edit-address/form-steps/add/AddAddress';
+} from '../add-edit-address/form-steps/add/AddEditAddress';
 import { FormActionType } from '../add-edit-address/types';
 
 const displayAddressType: { [key in AddressType]?: string } = {
@@ -29,9 +29,11 @@ const displayAddressType: { [key in AddressType]?: string } = {
 const AddressGroup = ({
   addresses,
   preferredAddressIndicator,
+  showEditButton,
 }: {
   addresses: AddressInterface[];
   preferredAddressIndicator: string;
+  showEditButton?: boolean;
 }) => {
   return addresses?.map((address, index) => {
     const mailingAddressText =
@@ -82,11 +84,13 @@ const AddressGroup = ({
             zipExt={address.zipCodeExtension}
           />
         </FieldData>
-        <AddEditAddressSidesheet
-          actionType={FormActionType.EDIT}
-          partyId={''}
-          values={editValues}
-        />
+        {showEditButton && (
+          <AddEditAddressSidesheet
+            actionType={FormActionType.EDIT}
+            partyId={''}
+            values={editValues}
+          />
+        )}
       </div>
     );
   });
@@ -121,14 +125,17 @@ export const Addresses = ({
         <AddressGroup
           addresses={residentialAddresses}
           preferredAddressIndicator={preferredAddressIndicator}
+          showEditButton={allowAddressChanges}
         />
         <AddressGroup
           addresses={boxAddresses}
           preferredAddressIndicator={preferredAddressIndicator}
+          showEditButton={allowAddressChanges}
         />
         <AddressGroup
           addresses={businessAddresses}
           preferredAddressIndicator={preferredAddressIndicator}
+          showEditButton={allowAddressChanges}
         />
       </div>
       {allowAddressChanges && (

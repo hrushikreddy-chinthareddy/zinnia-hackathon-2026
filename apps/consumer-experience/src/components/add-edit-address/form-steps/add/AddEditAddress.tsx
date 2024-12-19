@@ -20,7 +20,7 @@ import {
 import { isNumber } from '@/utils/regex';
 import { states } from '@/utils/states';
 
-import styles from './AddAddress.module.css';
+import styles from './AddEditAddress.module.css';
 import { FieldDataActive } from '../../../field/data-active/FieldDataActive';
 import { FieldStatus } from '../../../field/types';
 import { FormActionType } from '../../types';
@@ -37,18 +37,20 @@ export interface AddressFormFields {
   defaultAddress?: boolean;
 }
 
-export interface AddAddressProps {
+export interface AddEditAddressProps {
   values?: AddressFormFields;
   actionType?: FormActionType;
   cancelCallback?: () => void;
   submitCallback?: (val: AddressFormFields) => void;
-  removeCallback?: (val: AddressFormFields) => void;
+  removeCallback?: () => void;
 }
 
-export const AddAddress: FC<AddAddressProps> = ({
+export const AddEditAddress: FC<AddEditAddressProps> = ({
   values,
   cancelCallback,
   submitCallback,
+  removeCallback,
+  actionType,
 }) => {
   const {
     control,
@@ -79,6 +81,9 @@ export const AddAddress: FC<AddAddressProps> = ({
   const onSubmit: SubmitHandler<AddressFormFields> = data => {
     submitCallback?.(data);
   };
+
+  const buttonText =
+    actionType === FormActionType.ADD ? 'Save address' : 'Edit address';
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
@@ -196,6 +201,7 @@ export const AddAddress: FC<AddAddressProps> = ({
                   id="select-state"
                   onValueChange={field.onChange}
                   options={states}
+                  defaultValue={defaultValues?.state}
                   errorMessage={errors.state?.message}
                   contentClassName={styles.selectContent}
                   fieldSize="small"
@@ -265,7 +271,16 @@ export const AddAddress: FC<AddAddressProps> = ({
       </div>
 
       <div className={styles.buttonContainer}>
-        <Button type="submit">Save address</Button>
+        <Button type="submit">{buttonText}</Button>
+        {actionType === FormActionType.EDIT && (
+          <Button
+            onClick={removeCallback}
+            className={styles.delete}
+            mode="error"
+          >
+            Delete
+          </Button>
+        )}
         <Button onClick={handleCancel} className={styles.cancel} mode="link">
           Cancel
         </Button>

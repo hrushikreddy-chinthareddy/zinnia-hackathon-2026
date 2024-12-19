@@ -1,4 +1,4 @@
-import { AddressFormFields } from './form-steps/add/AddAddress';
+import { AddressFormFields } from './form-steps/add/AddEditAddress';
 
 export enum FormActionType {
   ADD = 'add',
