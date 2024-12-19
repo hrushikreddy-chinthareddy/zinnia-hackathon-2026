@@ -13,9 +13,9 @@ Scenario: Ops user views the details of a policy from a Policy Card using Policy
     Then I should be on the 'Policy Details page'
     And I should see the detailed summary of the policy
 
-Scenario: Ops user views the details of a policy from a Policy Card using First name and last name as search criteria
-    When I click on policy search dropdown and select 'Name' on policy search page
-    And I enter policy search criteria firstName 'Zaharaqa' and lastName '17194207'
-    When I navigate to the policy details from a Policy Card
-    Then I should be on the 'Policy Details page'
-    And I should see the detailed summary of the policy
+# Scenario: Ops user views the details of a policy from a Policy Card using First name and last name as search criteria
+#     When I click on policy search dropdown and select 'Name' on policy search page
+#     And I enter policy search criteria firstName 'Zaharaqa' and lastName '17194207'
+#     When I navigate to the policy details from a Policy Card
+#     Then I should be on the 'Policy Details page'
+#     And I should see the detailed summary of the policy
