@@ -67,7 +67,7 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
     const [level3ObjectGrouping, setLevel3ObjectGrouping] = useState<DashboardStatsElementResponse[]>([]);
     const [l1SelectedIndex, setL1SelectedIndex] = useState<number>(-100);
 
-    const [l1SelectValue, setL1SelectValue] = useState(GroupByOptions.Carrier);
+    const [l1SelectValue, setL1SelectValue] = useState(GroupByOptions.BrokerDealerName);
     const [l2SelectValue, setL2SelectValue] = useState(GroupByOptions.Process);
     const [l3SelectValue, setL3SelectValue] = useState(GroupByOptions.CaseStatus);
 
@@ -728,6 +728,10 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                         <SelectSimple
                             options={[
                                 {
+                                    value: GroupByOptions.BrokerDealerName.toString(),
+                                    label: 'Broker Dealer',
+                                },
+                                {
                                     value: GroupByOptions.Carrier.toString(),
                                     label: 'Carrier',
                                 },
@@ -736,16 +740,12 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                                     label: 'Case Type',
                                 },
                                 {
-                                    value: GroupByOptions.OpenStages.toString(),
-                                    label: 'Open Stages',
+                                    value: GroupByOptions.ProductName.toString(),
+                                    label: 'Product Name',
                                 },
                                 {
                                     value: GroupByOptions.ProcessSubType.toString(),
                                     label: 'Sub Case Type',
-                                },
-                                {
-                                    value: GroupByOptions.ExceptionCategory.toString(),
-                                    label: 'Exceptions Category',
                                 },
                             ]}
                             onChange={handleL1SelectChange}
@@ -758,6 +758,10 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                         <SelectSimple
                             options={[
                                 {
+                                    value: GroupByOptions.BrokerDealerName.toString(),
+                                    label: 'Broker Dealer',
+                                },
+                                {
                                     value: GroupByOptions.Carrier.toString(),
                                     label: 'Carrier',
                                 },
@@ -766,16 +770,12 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                                     label: 'Case Type',
                                 },
                                 {
-                                    value: GroupByOptions.OpenStages.toString(),
-                                    label: 'Open Stages',
+                                    value: GroupByOptions.ProductName.toString(),
+                                    label: 'Product Name',
                                 },
                                 {
                                     value: GroupByOptions.ProcessSubType.toString(),
                                     label: 'Sub Case Type',
-                                },
-                                {
-                                    value: GroupByOptions.ExceptionCategory.toString(),
-                                    label: 'Exceptions Category',
                                 },
                             ]}
                             onChange={handleL2SelectChange}
@@ -794,10 +794,6 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                                 {
                                     value: GroupByOptions.Process.toString(),
                                     label: 'Case Type',
-                                },
-                                {
-                                    value: GroupByOptions.ProductName.toString(),
-                                    label: 'Product Name',
                                 },
                             ]}
                             onChange={handleL3SelectChange}

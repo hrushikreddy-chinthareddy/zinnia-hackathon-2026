@@ -14,10 +14,8 @@ interface Props {
 const ActiveAgingPies = ({ dashboardStatsResponse, classNames, width, distinctPieChartCategoryStatGroupingLabels }: Props) => {
     return (
         <div className="relative flex justify-end">
-            <Typography className="-rotate-90 absolute text-center -left-[20px] top-[35px]" variant={TypographyVariant.BodyBold}>
-                Product
-                <br />
-                Name
+            <Typography className="-rotate-90 absolute text-center -left-[20px] top-[50px]" variant={TypographyVariant.BodyBold}>
+                Product Name
             </Typography>
             <div className={`${classNames} border-b-1 border-[#ddd]`} style={{ width: `${width}px` }}>
                 <div className="grid grid-cols-6 gap-2 w-full justify-items-center">
