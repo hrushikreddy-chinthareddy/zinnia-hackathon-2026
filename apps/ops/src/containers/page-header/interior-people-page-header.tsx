@@ -91,9 +91,11 @@ const InteriorPeoplePageHeaderContainer = ({
                     <p className="body-sm">
                         <PiiWrapper>{formatDate(selectedPolicyParty?.dateOfBirth)}</PiiWrapper>
                     </p>
-                    <p className="body-sm">
-                        <PiiWrapper>{t('policy.detailCards.coveredParty.yearsOld', { count: ageInYears ?? 0 })}</PiiWrapper>
-                    </p>
+                    {ageInYears !== undefined && (
+                        <p className="body-sm">
+                            <PiiWrapper>{t('policy.detailCards.coveredParty.yearsOld', { count: ageInYears })}</PiiWrapper>
+                        </p>
+                    )}
                 </div>
             );
         }

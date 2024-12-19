@@ -16,10 +16,13 @@ export interface CaseActivityContextProps {
     policyDocs: DocumentWithSource[];
     correspondenceDocs: DocumentWithSource[];
     loadingDocuments: boolean;
+    documentsStatusCode: number | null;
     caseNotes: NoteInstance[];
     loadingNotes: boolean;
+    notesStatusCode: number | null;
     callLogs: CallLog[];
     loadingCallLogs: boolean;
+    callLogsStatusCode: number | null;
     policy: PolicyDetails | null;
     loadingPolicy: boolean;
     isNewBusinessCase: boolean;
@@ -29,10 +32,13 @@ const defaultValue: CaseActivityContextProps = {
     policyDocs: [],
     correspondenceDocs: [],
     loadingDocuments: true,
+    documentsStatusCode: null,
     caseNotes: [],
     loadingNotes: true,
+    notesStatusCode: null,
     callLogs: [],
     loadingCallLogs: true,
+    callLogsStatusCode: null,
     policy: null,
     loadingPolicy: true,
     isNewBusinessCase: false,
@@ -53,12 +59,15 @@ export const CaseActivityProvider = ({ children, caseDetails }: CaseActivityProv
     const [policyDocs, setPolicyDocs] = useState([] as DocumentWithSource[]);
     const [correspondenceDocs, setCorrespondenceDocs] = useState([] as DocumentWithSource[]);
     const [loadingDocuments, setLoadingDocuments] = useState(true);
+    const [documentsStatusCode, setDocumentsStatusCode] = useState<number | null>(null);
 
     const [caseNotes, setCaseNotes] = useState([] as NoteInstance[]);
     const [loadingNotes, setLoadingNotes] = useState(true);
+    const [notesStatusCode, setNotesStatusCode] = useState<number | null>(null);
 
     const [callLogs, setCallLogs] = useState([] as CallLog[]);
     const [loadingCallLogs, setLoadingCallLogs] = useState(true);
+    const [callLogsStatusCode, setCallLogsStatusCode] = useState<number | null>(null);
 
     const [policy, setPolicy] = useState<PolicyDetails | null>(null);
     const [loadingPolicy, setLoadingPolicy] = useState(true);
@@ -109,6 +118,8 @@ export const CaseActivityProvider = ({ children, caseDetails }: CaseActivityProv
                 );
             }
 
+            setDocumentsStatusCode(Math.max(policy?.error?.status || 200, correspondence?.error?.status || 200));
+
             setLoadingDocuments(false);
         };
 
@@ -122,9 +133,10 @@ export const CaseActivityProvider = ({ children, caseDetails }: CaseActivityProv
                 setLoadingNotes(false);
                 return;
             }
-            const notes = await getCaseNotes(caseDetails.id);
+            const { data: notes, status } = await getCaseNotes(caseDetails.id);
             setCaseNotes(notes);
             setLoadingNotes(false);
+            setNotesStatusCode(status);
         };
 
         getNotes();
@@ -133,9 +145,10 @@ export const CaseActivityProvider = ({ children, caseDetails }: CaseActivityProv
     useEffect(() => {
         const getCallLogs = async () => {
             if (caseDetails?.policyNumber) {
-                const results = await getCaseCallLogs({ contract: caseDetails.policyNumber, limit: 100, offset: 0 });
+                const callLogsResponse = await getCaseCallLogs({ contract: caseDetails.policyNumber, limit: 100, offset: 0 });
 
-                setCallLogs(results?.items || []);
+                setCallLogs(callLogsResponse?.data?.items || []);
+                setCallLogsStatusCode(callLogsResponse?.status);
             } else {
                 console.error('No contract number associated');
             }
@@ -165,10 +178,13 @@ export const CaseActivityProvider = ({ children, caseDetails }: CaseActivityProv
                 policyDocs,
                 correspondenceDocs,
                 loadingDocuments,
+                documentsStatusCode,
                 caseNotes,
                 loadingNotes,
+                notesStatusCode,
                 callLogs,
                 loadingCallLogs,
+                callLogsStatusCode,
                 policy,
                 loadingPolicy,
                 isNewBusinessCase,

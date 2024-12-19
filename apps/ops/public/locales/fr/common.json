@@ -4773,5 +4773,9 @@
             "secondaryCta": "Fermer",
             "submitTask": "Soumettre les détails de l'adéquation"
         }
+    },
+    "unauthorized": {
+        "title": "Non autorisé",
+        "message": "Vous n'avez pas accès à cette information."
     }
 }

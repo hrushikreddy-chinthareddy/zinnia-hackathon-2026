@@ -23,7 +23,7 @@ import { CaseActivityProvider } from '@deps/contexts/CaseActivityContext';
 import { CaseOverviewNavDrawerProvider } from '@deps/contexts/CaseOverviewNavDrawer';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { SideSheetProvider } from '@deps/contexts/SideSheetContext';
-import { getCaseIdentifierValue, insertStepDetails } from '@deps/helpers/case-management';
+import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { shouldNavbarOverlay } from '@deps/helpers/page-layout';
 import { getAgents, getPolicyOwners } from '@deps/helpers/parties';
@@ -35,14 +35,14 @@ import { Case, CaseIdentifier } from '@deps/models/case/case';
 import { PartyInstance } from '@deps/models/case/party-instance';
 import { ManagementTask } from '@deps/models/case/task-instance';
 import { UserPermission } from '@deps/models/user-profile';
-import { getCaseDetailsSSR, getCaseMetadataSSR } from '@deps/queries/api/cases';
 import { checkTupleSsr } from '@deps/queries/api/fga';
 import { getCaseTaskInstances } from '@deps/queries/api/v1/task';
+import getCase from '@deps/queries/server/case/get-case';
 import { SCREEN_BREAKPOINTS, DEFAULT_ERROR_STRING, CaseDetailsTabValues } from '@deps/types/constants';
 import { FgaRelation } from '@deps/types/fga';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { getUserInfoFromUser, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
 interface BaseCaseDetailsPageProps {
     caseDetails: Case;
@@ -394,10 +394,14 @@ export const getServerSideProps = withPageAuthRequired({
         const tab = (params?.tab as string) || '';
 
         const translations = await serverSideTranslations(locale, [TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
-        const caseDetails = await getCaseDetailsSSR(id, accessToken as string);
-        const metadata = await getCaseMetadataSSR(id, accessToken as string);
+        const caseDetails = await getCase({
+            partyId: user.partyId,
+            caseId: id,
+            accessToken: accessToken as string,
+            loggingContext: { file: 'cases/:id', function: 'getServerSideProps', ...getUserInfoFromUser(user) },
+        });
 
-        if (!caseDetails) {
+        if (!caseDetails?.data) {
             return {
                 redirect: {
                     destination: '/404',
@@ -405,8 +409,6 @@ export const getServerSideProps = withPageAuthRequired({
                 },
             };
         }
-
-        const formattedCaseDetails = !metadata ? caseDetails : insertStepDetails(caseDetails, metadata);
 
         if (!tab || !CaseDetailsTabValues[tab]) {
             return {
@@ -420,7 +422,7 @@ export const getServerSideProps = withPageAuthRequired({
         return {
             props: {
                 ...translations,
-                caseDetails: formattedCaseDetails,
+                caseDetails: caseDetails.data,
                 id,
                 tab,
                 user,

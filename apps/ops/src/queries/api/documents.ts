@@ -287,7 +287,7 @@ export const getPolicyDocs = async (
         return data;
     } catch (error: any) {
         console.error('An error occurred while getting policy document results', error);
-        return error.response;
+        return error;
     }
 };
 
@@ -323,7 +323,7 @@ export const getCorrespondenceDocs = async (
         return data;
     } catch (error: any) {
         console.error('An error occurred while getting correspondence document results', error);
-        return error.response;
+        return error;
     }
 };
 

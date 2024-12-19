@@ -111,6 +111,8 @@ export const formatDate = (date: string | undefined) => {
     if (date === '' || date == null) return DEFAULT_ERROR_STRING;
 
     const dt = new Date(date + ' ');
+
+    if (isNaN(Number(dt))) return DEFAULT_ERROR_STRING;
     const month = [
         'January',
         'February',
@@ -178,8 +180,8 @@ export const formatDateForAriaLabel = (date: Date) => {
 export const formatSSN = (ssn?: string): string => {
     if (!ssn) return DEFAULT_ERROR_STRING;
 
-    // Remove any non-numeric characters
-    const cleanedSSN = ssn.replace(/\D/g, '');
+    // Remove any non-numeric characters except asterisks
+    const cleanedSSN = ssn.replace(/[^\d*]/g, '');
 
     // Get the last 4 digits
     const last4Digits = cleanedSSN.slice(-4);

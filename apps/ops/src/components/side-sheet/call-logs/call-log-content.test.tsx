@@ -36,7 +36,7 @@ describe('CallLogContent', () => {
         jest.clearAllMocks();
     });
     it('should render correct empty screen when there are no call logs', async () => {
-        mockedGetCallLogs.mockReturnValueOnce(Promise.resolve(null));
+        mockedGetCallLogs.mockReturnValueOnce(Promise.resolve({ data: null, status: 500 }));
 
         render(<CallLogsContent contractNumber="123" t={((key: any) => key) as TFunction} />);
         await waitFor(() => {
@@ -47,7 +47,7 @@ describe('CallLogContent', () => {
     });
 
     it('should render correctly when there is one call log available', async () => {
-        mockedGetCallLogs.mockReturnValueOnce(Promise.resolve(mockResult));
+        mockedGetCallLogs.mockReturnValueOnce(Promise.resolve({ data: mockResult, status: 200 }));
 
         render(<CallLogsContent contractNumber="123" t={((key: any) => key) as TFunction} />);
         await waitFor(() => {
@@ -61,7 +61,7 @@ describe('CallLogContent', () => {
     });
 
     it('renders pagination bar correctly based on totalCount returned from query', async () => {
-        mockedGetCallLogs.mockReturnValueOnce(Promise.resolve({ ...mockResult, totalCount: 23 }));
+        mockedGetCallLogs.mockReturnValueOnce(Promise.resolve({ data: { ...mockResult, totalCount: 23 }, status: 200 }));
 
         render(<CallLogsContent contractNumber="123" t={((key: any) => key) as TFunction} />);
         await waitFor(() => {
@@ -71,7 +71,7 @@ describe('CallLogContent', () => {
     });
 
     it('queries correctly when pagination buttons are clicked', async () => {
-        mockedGetCallLogs.mockReturnValueOnce(Promise.resolve({ ...mockResult, totalCount: 23 }));
+        mockedGetCallLogs.mockReturnValueOnce(Promise.resolve({ data: { ...mockResult, totalCount: 23 }, status: 200 }));
 
         render(<CallLogsContent contractNumber="123" t={((key: any) => key) as TFunction} />);
         await waitFor(() => {
@@ -87,7 +87,7 @@ describe('CallLogContent', () => {
     });
 
     it('renders and removes sidesheet correctly based on user interaction', async () => {
-        mockedGetCallLogs.mockReturnValueOnce(Promise.resolve(mockResult));
+        mockedGetCallLogs.mockReturnValueOnce(Promise.resolve({ data: mockResult, status: 200 }));
 
         render(<CallLogsContent contractNumber="123" t={((key: any) => key) as TFunction} />);
 

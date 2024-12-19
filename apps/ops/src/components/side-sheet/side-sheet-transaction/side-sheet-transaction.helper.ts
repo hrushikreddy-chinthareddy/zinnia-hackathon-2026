@@ -21,7 +21,10 @@ export const getPaymentMethod = (policy: Policy, payors: TransactionPayor[], t: 
 
     return paymentMethod
         ? t('historyEventCard.bankingBody', {
-              accountType: t(`historyEventCard.bankAccountTypes.${paymentMethod.accountType?.toLowerCase()}`),
+              accountType: t(
+                  `historyEventCard.bankAccountTypes.${paymentMethod.accountType?.toLowerCase()}`,
+                  paymentMethod.accountType ?? DEFAULT_ERROR_STRING
+              ),
               lastFour: formatAccountNumber(paymentMethod.internationalBankAccountNumber ?? paymentMethod.accountNumber, true),
           })
         : DEFAULT_ERROR_STRING;

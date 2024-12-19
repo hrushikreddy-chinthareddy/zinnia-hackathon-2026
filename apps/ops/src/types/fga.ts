@@ -1,4 +1,4 @@
-import { BulkCheckTuple, FGA_Tuple } from "@zinnia/utils";
+import { BulkCheckTuple, FGA_Tuple } from '@zinnia/utils';
 
 export type CheckTupleResponse = {
     allowed: boolean;
@@ -23,4 +23,8 @@ export type TupleRequest = {
 
 export type TupleResponse = {
     tuples: BulkCheckTuple[];
+};
+
+export type ListResponse = {
+    objects: string[];
 };

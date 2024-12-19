@@ -1,5 +1,5 @@
 import { Table, TableHeader, TableHeaderCell, TableRow, TableBody, TableCell, Icon, IconType } from '@zinnia/bloom/components';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Popover, { PopoverPlacement } from '@deps/components/popover/popover';
