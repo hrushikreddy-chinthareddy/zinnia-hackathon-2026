@@ -143,9 +143,6 @@ export const CaseTimeseries = ({ selectedSubprocess = 'NB_REG60', legendLabel, t
                                 <Typography variant={TypographyVariant.BodySm}>{aiInsights}</Typography>
                             </>
                         )}
-                        <Typography className="xl:mt-1" variant={TypographyVariant.BodySmBold}>
-                            Avg Monthly Volume
-                        </Typography>
                         <table>
                             <thead>
                                 <tr>
