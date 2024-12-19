@@ -74,7 +74,7 @@ export const ExceptionInsights = ({
         return completedCasesByProcessSubType
             ? completedCasesByProcessSubType
                   .find(item => item.name === selectedSubprocess)
-                  ?.values?.filter(item => item.name !== 'NULL_VALUE')
+                  ?.values?.filter(item => item.name !== 'NULL_VALUE' && item.name !== '')
             : null;
     }, [completedCasesByProcessSubType, selectedSubprocess]);
     const noData = !exceptions || exceptions?.length === 0;
