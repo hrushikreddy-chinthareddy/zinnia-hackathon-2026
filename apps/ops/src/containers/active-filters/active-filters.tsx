@@ -72,7 +72,7 @@ export default function ActiveFilters({ filters, removeFilter, onReset, authoriz
             {hasBrokerDealerName && (
                 <BrokerDealerChip
                     key={`broker-dealer-filter-${filters.brokerDealerName}`}
-                    brokerDealerName={filters.brokerDealerName}
+                    brokerDealerName={filters.brokerDealerName ?? ''}
                     handleRemoveFilter={handleRemoveFilter}
                     t={t}
                 />

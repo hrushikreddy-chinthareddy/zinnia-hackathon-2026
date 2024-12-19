@@ -17,7 +17,7 @@ export interface CaseSearchFilters {
 }
 
 export interface CaseSearchAdditionalFilters {
-    brokerDealerName: string;
+    brokerDealerName?: string;
     createdDateStart?: string;
     createdDateEnd?: string;
     updatedDateStart?: string;
