@@ -89,7 +89,7 @@ export default async function Profile({ params }: Props) {
         <h2 className="mb-lg">Addresses</h2>
         <AddEditAddressSidesheet
           values={{ defaultAddress: true }}
-          partyId={profileData.partyId || ''}
+          partyId={profileData.partyId}
           actionType={FormActionType.ADD}
         />
       </>

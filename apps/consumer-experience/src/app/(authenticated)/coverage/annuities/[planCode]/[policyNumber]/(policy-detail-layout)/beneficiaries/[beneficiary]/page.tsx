@@ -72,6 +72,7 @@ export default async function Beneficiary({
             addresses={currentAddresses as Address[]}
             title="Address"
             preferredAddressIndicator="1"
+            partyId={partyId}
           />
         );
       }

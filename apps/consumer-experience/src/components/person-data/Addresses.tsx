@@ -30,10 +30,12 @@ const AddressGroup = ({
   addresses,
   preferredAddressIndicator,
   showEditButton,
+  partyId,
 }: {
   addresses: AddressInterface[];
   preferredAddressIndicator: string;
   showEditButton?: boolean;
+  partyId: string;
 }) => {
   return addresses?.map((address, index) => {
     const mailingAddressText =
@@ -87,7 +89,7 @@ const AddressGroup = ({
         {showEditButton && (
           <AddEditAddressSidesheet
             actionType={FormActionType.EDIT}
-            partyId={''}
+            partyId={partyId}
             values={editValues}
           />
         )}
@@ -126,21 +128,24 @@ export const Addresses = ({
           addresses={residentialAddresses}
           preferredAddressIndicator={preferredAddressIndicator}
           showEditButton={allowAddressChanges}
+          partyId={partyId}
         />
         <AddressGroup
           addresses={boxAddresses}
           preferredAddressIndicator={preferredAddressIndicator}
           showEditButton={allowAddressChanges}
+          partyId={partyId}
         />
         <AddressGroup
           addresses={businessAddresses}
           preferredAddressIndicator={preferredAddressIndicator}
           showEditButton={allowAddressChanges}
+          partyId={partyId}
         />
       </div>
       {allowAddressChanges && (
         <AddEditAddressSidesheet
-          partyId={partyId || ''}
+          partyId={partyId}
           actionType={FormActionType.ADD}
         />
       )}

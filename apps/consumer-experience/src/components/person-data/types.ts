@@ -83,7 +83,7 @@ export interface AddressProps {
   addresses: Address[];
   title: string;
   preferredAddressIndicator: string;
-  partyId?: string;
+  partyId: string;
   allowAddressChanges?: boolean;
 }
 
