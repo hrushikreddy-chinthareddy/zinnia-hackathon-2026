@@ -15,7 +15,6 @@ import { AddAddress, AddressFormFields } from './form-steps/add/AddAddress';
 
 export interface AddEditAddressSidesheetProps {
   partyId: string;
-
   values?: AddressFormFields;
 }
 

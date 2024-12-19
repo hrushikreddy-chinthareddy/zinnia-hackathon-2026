@@ -28,12 +28,12 @@ export interface AddressObj {
   addressVal: string;
 }
 export interface AddressFormFields {
-  addressType: AddressType;
-  addresses: AddressObj[];
-  city: string;
-  state: string;
-  zipCode: string;
-  defaultAddress: boolean;
+  addressType?: AddressType;
+  addresses?: AddressObj[];
+  city?: string;
+  state?: string;
+  zipCode?: string;
+  defaultAddress?: boolean;
 }
 
 export interface AddAddressProps {
@@ -249,7 +249,11 @@ export const AddAddress: FC<AddAddressProps> = ({
           control={control}
           render={({ field }) => (
             <div className={styles.defaultAddress}>
-              <Checkbox id="checkbox-default-address" onChange={field.onChange}>
+              <Checkbox
+                id="checkbox-default-address"
+                onChange={field.onChange}
+                isCheckedByDefault={field.value}
+              >
                 {' '}
                 Set this address as my mailing address
               </Checkbox>
