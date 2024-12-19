@@ -77,7 +77,7 @@ const DashboardPage = ({
                                 />
                             </TabContent>
                             <TabContent value={DashboardTabs.ISSUED_BUSINESS}>
-                                <IssuedBusiness />
+                                <IssuedBusiness authorizedCarriers={authorizedCarriers} />
                             </TabContent>
                         </div>
                     </DashboardTabNav>

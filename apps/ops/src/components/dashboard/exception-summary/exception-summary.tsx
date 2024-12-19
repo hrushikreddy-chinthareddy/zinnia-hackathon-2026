@@ -51,7 +51,7 @@ export const ExceptionSummary = ({
 }) => {
     const shouldShowCaseInsights = useCaseInsightsPermission();
 
-    const groupBy: GroupByOptions = GroupByOptions.Carrier;
+    const groupBy: GroupByOptions = carrierOrBrokerDealer;
     const { selectedBrokerDealers, selectedCarriers } = useDashboardStore(state => state);
 
     const baseDashboardQueryFilter = useMemo(() => {
@@ -68,14 +68,10 @@ export const ExceptionSummary = ({
     }, [selectedBrokerDealers, selectedCarriers, selectedSubprocess, startDate]);
 
     const { data: exceptionData, isLoading: exceptionDataLoading } = useQuery({
-        queryKey: ['exceptionData', baseDashboardQueryFilter, carrierOrBrokerDealer],
+        queryKey: ['applicationVolume', baseDashboardQueryFilter, carrierOrBrokerDealer],
 
         queryFn: async () => {
-            const data = await getExceptionData(baseDashboardQueryFilter, [
-                carrierOrBrokerDealer,
-                GroupByOptions.ExceptionCategory,
-                GroupByOptions.UpdatedAt,
-            ]);
+            const data = await getExceptionData(baseDashboardQueryFilter, [carrierOrBrokerDealer, GroupByOptions.UpdatedAt]);
             if (!data?.data?.statsResponseData) {
                 throw data;
             }
@@ -129,17 +125,17 @@ export const ExceptionSummary = ({
     }, [processedData]);
 
     const summary = useMemo(() => {
-        if (aiError) return 'Sorry, there was a problem loading data...';
+        if (aiError) return 'Insight data is currently unavailable.';
         if (aiSummaryResponse?.length) return aiSummaryResponse;
-        if (!exceptionData?.data?.statsResponseData?.length) return `No exceptions for ${dashboardChartTitleFormat(selectedSubprocess)}.`;
-        return 'Sorry, there was a problem loading data...';
+        if (!exceptionData?.data?.statsResponseData?.length) return `No data for ${dashboardChartTitleFormat(selectedSubprocess)}.`;
+        return 'Insight data is currently unavailable.';
     }, [aiError, aiSummaryResponse, exceptionData?.data?.statsResponseData?.length, selectedSubprocess]);
 
     return (
         <CardContainer containerClassNames="rounded" classNames="!p-0" fullWidth={true}>
             <div className="flex flex-col xl:flex-row justify-between gap-8 w-full">
                 <div className="flex xl:flex-col xl:w-1/4 gap-4 mb-8 xl:mb-0">
-                    <Typography variant={TypographyVariant.H3}>{'Exception Summary'}</Typography>
+                    <Typography variant={TypographyVariant.H3}>{'Application Volume'}</Typography>
                     {/* <pre>{JSON.stringify(exceptionData?.data?.statsResponseData, null, 2)}</pre> */}
                     <Typography variant={TypographyVariant.Label}>{dashboardChartTitleFormat(selectedSubprocess)}</Typography>
                     <div className="flex-1 border-r-1 xl:border-r-0 border-[#EDEDED] flex flex-col gap-4 pt-4">
@@ -157,7 +153,7 @@ export const ExceptionSummary = ({
                             </>
                         )}
                         <Typography className="xl:mt-1" variant={TypographyVariant.BodySmBold}>
-                            Avg Monthly Exceptions / Total Cases
+                            Avg Monthly Volume / Total Cases
                         </Typography>
                         <table>
                             <thead>
@@ -176,8 +172,9 @@ export const ExceptionSummary = ({
                                                     href={`/cases${convertToQueryString(baseDashboardQueryFilter as any)}`}
                                                     size={NavElementSize.Small}
                                                     type={NavElementType.Link}
-                                                    className="capitalize"
+                                                    className="capitalize whitespace-nowrap overflow-hidden text-ellipsis max-w-[175px] block"
                                                     target="_blank"
+                                                    title={stat.name}
                                                 >
                                                     {stat.name}
                                                 </NavElement>

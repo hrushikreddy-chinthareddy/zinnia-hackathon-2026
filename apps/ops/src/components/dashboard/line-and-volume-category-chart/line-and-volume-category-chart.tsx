@@ -264,7 +264,7 @@ export const LineAndVolumeCategoryChart = ({ chartData }: LineAndVolumeCategoryC
                         offset: 0, // Remove extra spacing
                         opposite: true, // Moves the x-axis to the right side
                         title: {
-                            text: '<b>Weekly<br/>Exceptions</b>',
+                            text: '<b>Weekly<br/>Volume</b>',
                             align: 'high', // Aligns the title to the top
                             rotation: 0, // Force title to be horizontal
                             x: -15,

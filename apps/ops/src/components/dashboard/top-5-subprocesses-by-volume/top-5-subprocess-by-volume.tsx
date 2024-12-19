@@ -172,6 +172,7 @@ export const Top5SubprocessByVolume = ({
                                                     type={NavElementType.Link}
                                                     className={`capitalize ${styles.ellipsis}`}
                                                     target="_blank"
+                                                    title={stat.name}
                                                 >
                                                     {stat.name}
                                                 </NavElement>

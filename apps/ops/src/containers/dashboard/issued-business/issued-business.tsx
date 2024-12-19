@@ -28,7 +28,7 @@ export interface CarrierListItem {
 
 const timeFrameFilterOptions = ['trailing 12 months', 'last 6 months', 'last 90 days', 'last 60 days', 'last month'];
 
-export const IssuedBusiness: FC = () => {
+export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorizedCarriers }) => {
     const [timeframe, setTimeframe] = useState<string>(timeFrameFilterOptions[0]);
     const [selectedSubprocess, setSelectedSubprocess] = useState<string>('');
     const [selectedException, setSelectedException] = useState<string | undefined>();
@@ -39,14 +39,15 @@ export const IssuedBusiness: FC = () => {
     };
     const { selectedBrokerDealers, selectedCarriers } = useDashboardStore(state => state);
     const carrierOrBrokerDealer = useMemo(() => {
-        if (selectedCarriers) {
+        if (selectedCarriers && authorizedCarriers.length > 1) {
             return GroupByOptions.Carrier;
         }
-        if (selectedBrokerDealers) {
+
+        if (selectedBrokerDealers || authorizedCarriers.length === 1) {
             return GroupByOptions.BrokerDealerName;
         }
         return GroupByOptions.Carrier;
-    }, [selectedBrokerDealers, selectedCarriers]);
+    }, [authorizedCarriers, selectedBrokerDealers, selectedCarriers]);
 
     const handleTimeFrameChange = (value: string) => {
         setTimeframe(value);
