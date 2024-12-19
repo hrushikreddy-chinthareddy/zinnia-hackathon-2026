@@ -155,7 +155,7 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
                 return '';
             }
         },
-        enabled: shouldShowCaseInsights && !!caseVolumeTimeseriesData?.data?.statsResponseData?.length && !!selectedSubprocess.length,
+        enabled: shouldShowCaseInsights,
     });
 
     const aiSummaryCaseVolumeTimeseries = useMemo(() => {
