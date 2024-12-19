@@ -5,6 +5,7 @@ import PdfPreviewer from '@/components/pdf-previewer/PdfPreviewer';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getDocuments } from '@/services/document';
 import { PolicyRequestInputs } from '@/types/policy';
+import { POLICY_ACKNOWLEDGEMENT_DOC_TYPE } from '@/utils/data';
 
 import previewStyles from '../[documentId]/Preview.module.css';
 
@@ -33,7 +34,7 @@ export default async function PolicyAcknowledgementDocumentPreview({
     clientCode: searchParams.clientCode,
     contractNumber: params.policyNumber,
     recipient: 'Client',
-    documentType: 'POLPG',
+    documentType: POLICY_ACKNOWLEDGEMENT_DOC_TYPE,
   });
   const { lineOfBusiness, policyNumber, planCode } = params;
   const { clientCode } = searchParams;
