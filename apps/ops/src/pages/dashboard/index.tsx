@@ -72,10 +72,12 @@ const DashboardPage = ({
                                     handleSetLoading={handleSetLoading}
                                     loading={loading}
                                     carrierHeaderRef={carrierHeaderRef}
+                                    authorizedCarriers={authorizedCarriers}
+                                    brokerDealersSSR={brokerDealersSSR}
                                 />
                             </TabContent>
                             <TabContent value={DashboardTabs.ISSUED_BUSINESS}>
-                                <IssuedBusiness />
+                                <IssuedBusiness authorizedCarriers={authorizedCarriers} />
                             </TabContent>
                         </div>
                     </DashboardTabNav>
@@ -126,7 +128,11 @@ export const getServerSideProps = withPageAuthRequired({
             nextI18nextConfig,
             ALL_LOCALES
         );
+
         const brokerDealersSSR = await fetchAgentsSSR(accessToken || '');
+        const filteredBrokerDealers = brokerDealersSSR.filter(
+            brokerDealer => brokerDealer.name !== 'NOT_APPLICABLE' && brokerDealer.name !== ''
+        );
 
         const authorizedCarriers = await getCarrierListServerSSR(accessToken || '', user.partyId, UserPermission.AllowReadCaseManagement);
 
@@ -134,7 +140,7 @@ export const getServerSideProps = withPageAuthRequired({
             props: {
                 locale,
                 authorizedCarriers,
-                brokerDealersSSR,
+                brokerDealersSSR: filteredBrokerDealers,
                 ...translations,
             },
         };

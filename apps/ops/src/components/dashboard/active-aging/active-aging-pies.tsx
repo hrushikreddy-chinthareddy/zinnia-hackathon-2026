@@ -8,23 +8,21 @@ interface Props {
     dashboardStatsResponse: CaseDashboardStatsResponse;
     classNames?: string;
     width?: number;
-    distinctExceptionCategoryStatGroupingLabels: string[];
+    distinctPieChartCategoryStatGroupingLabels: string[];
 }
 
-const ActiveAgingPies = ({ dashboardStatsResponse, classNames, width, distinctExceptionCategoryStatGroupingLabels }: Props) => {
+const ActiveAgingPies = ({ dashboardStatsResponse, classNames, width, distinctPieChartCategoryStatGroupingLabels }: Props) => {
     return (
         <div className="relative flex justify-end">
-            <Typography className="-rotate-90 absolute text-center -left-[20px] top-[35px]" variant={TypographyVariant.BodyBold}>
-                Exception
-                <br />
-                Categories
+            <Typography className="-rotate-90 absolute text-center -left-[20px] top-[50px]" variant={TypographyVariant.BodyBold}>
+                Product Name
             </Typography>
             <div className={`${classNames} border-b-1 border-[#ddd]`} style={{ width: `${width}px` }}>
                 <div className="grid grid-cols-6 gap-2 w-full justify-items-center">
                     {dashboardStatsResponse?.data?.map(currentStatGrouping => {
                         const additionalStats: DashboardStatsElementResponse[] = [];
 
-                        distinctExceptionCategoryStatGroupingLabels.forEach(currentLabel => {
+                        distinctPieChartCategoryStatGroupingLabels.forEach(currentLabel => {
                             if (!currentStatGrouping.values?.find(stat => stat.name.toLowerCase() === currentLabel.toLowerCase())) {
                                 additionalStats.push({
                                     count: 0,

@@ -9,6 +9,7 @@ import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import useQueryFilters from '@deps/utils/queryStoreFilters';
 
 export enum QueryKeys {
+    brokerDealerName = 'brokerDealerName',
     carrier = 'carrier',
     caseStatus = 'caseStatus',
     createdDateEnd = 'createdDateEnd',
@@ -32,6 +33,7 @@ const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters =>
         processTypes: new Set([]),
         requestSubType: new Set([]),
         products: new Set([]),
+        brokerDealerName: '',
     };
     const caseFilters: CaseSearchFilters = {
         additionalFilters,
@@ -125,6 +127,14 @@ const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters =>
         }
     }
 
+    if (query[QueryKeys.brokerDealerName]) {
+        if (Array.isArray(query[QueryKeys.brokerDealerName])) {
+            additionalFilters.brokerDealerName = query[QueryKeys.brokerDealerName][0] as string;
+        } else if (typeof query[QueryKeys.brokerDealerName] === 'string') {
+            additionalFilters.brokerDealerName = query[QueryKeys.brokerDealerName];
+        }
+    }
+
     if (query[QueryKeys.requestSubType]) {
         if (Array.isArray(query[QueryKeys.requestSubType])) {
             additionalFilters.requestSubType = new Set(query[QueryKeys.requestSubType]);
@@ -180,6 +190,7 @@ const convertFilterToQuery = (filters: CaseSearchFilters): ParsedUrlQueryInput =
         requestSubType,
         updatedDateEnd,
         updatedDateStart,
+        brokerDealerName,
     } = additionalFilters;
 
     if (carriers) {
@@ -212,6 +223,10 @@ const convertFilterToQuery = (filters: CaseSearchFilters): ParsedUrlQueryInput =
 
     if (products.size > 0) {
         query[QueryKeys.productName] = Array.from(products);
+    }
+
+    if (brokerDealerName) {
+        query[QueryKeys.brokerDealerName] = brokerDealerName;
     }
 
     if (requestSubType.size > 0) {

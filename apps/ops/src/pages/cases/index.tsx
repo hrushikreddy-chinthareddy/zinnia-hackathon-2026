@@ -205,6 +205,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                     ...caseManagementFilters.additionalFilters,
                     processTypes: Array.from(caseManagementFilters.additionalFilters.processTypes),
                     products: Array.from(caseManagementFilters.additionalFilters.products),
+                    brokerDealerName: caseManagementFilters.additionalFilters.brokerDealerName,
                     requestSubType: Array.from(caseManagementFilters.additionalFilters.requestSubType),
                 },
             });

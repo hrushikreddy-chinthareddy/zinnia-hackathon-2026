@@ -14,6 +14,7 @@ import { useIntersectionObserver } from '@deps/hooks/useIntersectionObserver';
 import { useResizeObserver } from '@deps/hooks/useResizeObserver';
 import { Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
+import { DashboardResponseData } from '@deps/queries/api/dashboard';
 import { DashboardSearchFilter } from '@deps/queries/cases';
 import { getProcessListOptions, getCaseDashboardStatsQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 import { useDashboardStore } from '@deps/store/store';
@@ -28,9 +29,17 @@ interface ActiveApplicationsProps {
     handleSetLoading: (loading: boolean) => void;
     loading: boolean;
     carrierHeaderRef: RefObject<HTMLElement>;
+    brokerDealersSSR: DashboardResponseData[];
+    authorizedCarriers: string[];
 }
 
-export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, handleSetLoading, carrierHeaderRef }) => {
+export const ActiveApplications: FC<ActiveApplicationsProps> = ({
+    loading,
+    handleSetLoading,
+    carrierHeaderRef,
+    authorizedCarriers,
+    brokerDealersSSR,
+}) => {
     const { createdDateStart, createdDateEnd } = getStartAndEndDates('All');
     const { height: carrierHeaderHeight } = useResizeObserver({ ref: carrierHeaderRef, box: 'border-box' });
 
@@ -90,17 +99,24 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, handl
         queryFn: () => createBaseQuery([GroupByOptions.ProcessSubType, GroupByOptions.CreatedAt]),
     });
     const {
-        data: insightStagesByCreated,
-        isLoading: insightStagesByCreatedLoading,
-        isError: insightStagesByCreatedError,
+        data: insightActiveAgingPiesByCreated,
+        isLoading: insightActiveAgingPiesByCreatedLoading,
+        isError: insightActiveAgingPiesByCreatedError,
     } = useQuery({
-        queryKey: ['stagesByCreatedInsights', baseInsightQueryFilter],
-        queryFn: () => createBaseQuery([GroupByOptions.CreatedAt, GroupByOptions.ExceptionCategory]),
+        queryKey: ['activeAgingPieChartKeys', baseInsightQueryFilter],
+        queryFn: () => createBaseQuery([GroupByOptions.CreatedAt, GroupByOptions.ProductName]),
         placeholderData: previousData => previousData,
     });
     const { data: insightExceptionStats, isLoading: insightExceptionStatsLoading } = useQuery({
         queryKey: ['exceptionStats', baseInsightQueryFilter],
-        queryFn: () => createBaseQuery([GroupByOptions.ExceptionCategory]),
+        queryFn: async () => {
+            const response = await createBaseQuery([GroupByOptions.ExceptionCategory]);
+            if (response?.data?.length) {
+                response.data = response?.data?.filter(item => item.name !== '');
+            }
+
+            return response;
+        },
         placeholderData: previousData => previousData,
     });
 
@@ -138,7 +154,7 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, handl
         processListOptionsLoading ||
         insightGroupingCountBySubProcessStatsLoading ||
         insightCreatedBySubProcessLoading ||
-        insightStagesByCreatedLoading ||
+        insightActiveAgingPiesByCreatedLoading ||
         insightExceptionStatsLoading ||
         insightGroupingCountByCarrierStatsLoading;
 
@@ -183,7 +199,9 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, handl
                         <div className="grid place-content-center h-full w-full min-h-[400px]">
                             <PageLoader />
                         </div>
-                    ) : insightCreatedBySubProcessError || insightStagesByCreatedError || !insightStagesByCreated?.data?.length ? (
+                    ) : insightCreatedBySubProcessError ||
+                      insightActiveAgingPiesByCreatedError ||
+                      !insightActiveAgingPiesByCreated?.data?.length ? (
                         <div className="grid place-content-center h-full w-full min-h-[400px]">
                             <Typography variant={TypographyVariant.BodyBold} className="mt-4 flex flex-row gap-2">
                                 <ChartBarsIcon height={'24px'} width={'24px'} />
@@ -193,8 +211,8 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, handl
                     ) : (
                         <ActiveAging
                             createdBySubProcess={insightCreatedBySubProcess}
-                            openExceptionCategoriesByCreated={insightStagesByCreated}
-                            loading={insightCreatedBySubProcessError || insightStagesByCreatedLoading}
+                            activeAgingPieChartByCreated={insightActiveAgingPiesByCreated}
+                            loading={insightCreatedBySubProcessError || insightActiveAgingPiesByCreatedLoading}
                             selectedProcess={insightOption}
                             carriers={Object.keys(selectedCarriers)}
                         />
@@ -210,21 +228,42 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, handl
                     </div>
                     <div className="flex flex-col gap-1 mt-1">
                         <div className="flex gap-1">
-                            <CaseStatBlock
-                                dashboardStatsResponse={insightGroupingCountByCarrierStats}
-                                blockLabel="Carrier"
-                                timeFrameLabel={timeFrameLabel}
-                                statMeasurementLabel="case"
-                                variant="double"
-                                loading={loading}
-                                showViewMore={true}
-                                filterParams={{
-                                    createdDateEnd,
-                                    createdDateStart,
-                                    process: insightOption,
-                                    carrier: Object.keys(selectedCarriers)?.length ? Object.keys(selectedCarriers) : '',
-                                }}
-                            />
+                            {authorizedCarriers?.length > 1 && (
+                                <CaseStatBlock
+                                    dashboardStatsResponse={insightGroupingCountByCarrierStats}
+                                    blockLabel="Carrier"
+                                    timeFrameLabel={timeFrameLabel}
+                                    statMeasurementLabel="case"
+                                    variant="double"
+                                    loading={loading}
+                                    showViewMore={true}
+                                    filterParams={{
+                                        createdDateEnd,
+                                        createdDateStart,
+                                        process: insightOption,
+                                        carrier: Object.keys(selectedCarriers)?.length ? Object.keys(selectedCarriers) : '',
+                                    }}
+                                />
+                            )}
+                            {authorizedCarriers.length === 1 && (
+                                <CaseStatBlock
+                                    dashboardStatsResponse={{ data: brokerDealersSSR, totalElements: brokerDealersSSR.length }}
+                                    blockLabel="Broker Dealers"
+                                    timeFrameLabel={timeFrameLabel}
+                                    statMeasurementLabel="case"
+                                    variant="double"
+                                    loading={loading}
+                                    showViewMore={true}
+                                    filterParams={{
+                                        createdDateEnd,
+                                        createdDateStart,
+                                        process: insightOption,
+                                        brokerDealerName: Object.keys(selectedBrokerDealers)?.length
+                                            ? Object.keys(selectedBrokerDealers)
+                                            : '',
+                                    }}
+                                />
+                            )}
                             <CaseStatBlock
                                 dashboardStatsResponse={insightGroupingCountBySubProcessStats}
                                 blockLabel="Case Type"
