@@ -11,7 +11,7 @@ import {
 import { FieldData } from '@/components/field-data/FieldData';
 import { Address } from '@/components/pii/Address';
 
-import styles from './PersonData.module.css';
+import styles from './addresses.module.css';
 import { AddressProps } from './types';
 import { AddEditAddressSidesheet } from '../add-edit-address/AddEditAddressSidesheet';
 import {
@@ -19,7 +19,6 @@ import {
   AddressObj,
 } from '../add-edit-address/form-steps/add/AddEditAddress';
 import { FormActionType } from '../add-edit-address/types';
-
 const displayAddressType: { [key in AddressType]?: string } = {
   [AddressType.POBOX]: 'PO Box',
   [AddressType.RESIDENCE]: 'Residential',
@@ -61,7 +60,7 @@ const AddressGroup = ({
       defaultAddress: preferredAddressIndicator === address?.addressId,
     };
     return (
-      <div key={index}>
+      <div className={styles.addressGroup} key={index}>
         <FieldData
           key={`key-${index}`}
           Label={

@@ -105,13 +105,14 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
     }, 300);
   };
 
-  const text =
+  const title =
     actionType === FormActionType.ADD ? 'Add address' : 'Edit address';
+  const triggerText = actionType === FormActionType.ADD ? 'Add address' : '';
   const triggerIcon =
     actionType === FormActionType.ADD ? IconType.ADD : IconType.EDIT_ALT;
   return (
     <SideSheet
-      header={text}
+      header={title}
       overrideOpen={open}
       closeCallback={onClose}
       trigger={
@@ -121,8 +122,8 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
           mode="link"
           onClick={() => setOpen(true)}
         >
-          <Icon small type={triggerIcon} />
-          {text}
+          <Icon small={actionType === FormActionType.ADD} type={triggerIcon} />
+          {triggerText}
         </Button>
       }
     >

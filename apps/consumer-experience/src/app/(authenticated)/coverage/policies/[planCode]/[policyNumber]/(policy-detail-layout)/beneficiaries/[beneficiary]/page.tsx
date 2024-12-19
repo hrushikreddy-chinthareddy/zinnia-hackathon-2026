@@ -2,6 +2,8 @@ import { Address, Email, PartyRole } from '@zinnia/api-types/types/sor';
 import { IconType, Label } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
+import { AddEditAddressSidesheet } from '@/components/add-edit-address/AddEditAddressSidesheet';
+import { FormActionType } from '@/components/add-edit-address/types';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { FieldData } from '@/components/field-data/FieldData';
 import MockMessage from '@/components/MockMessage';
@@ -11,11 +13,13 @@ import { Emails } from '@/components/person-data/Emails';
 import { FullName } from '@/components/pii/FullName';
 import { Name } from '@/components/pii/Name';
 import { RouteKey, getPageTitle } from '@/route-map';
+import { getFeatureFlags } from '@/services/feature-flags';
 import { getBeneficiary } from '@/services/policy';
 import {
   isNullEmptyOrUndefined,
   filterItemsWithPastEndDate,
 } from '@/utils/data';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import { toSentenceCase } from '@/utils/strings';
 
 const pageTitle = getPageTitle(RouteKey.BENEFICIARY);
@@ -49,6 +53,9 @@ export default async function Beneficiary({
     partyId,
   });
 
+  const flags = await getFeatureFlags();
+  const allowAddressChanges = flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_ADDRESS];
+
   if (error || !data) {
     return (
       <div className="container">
@@ -73,12 +80,25 @@ export default async function Beneficiary({
             title="Address"
             preferredAddressIndicator="1"
             partyId={partyId}
+            allowAddressChanges={allowAddressChanges}
           />
         );
       }
-
+    }
+    if (!allowAddressChanges) {
       return null;
     }
+    // If there are no addresses, show the add address button and set defaultAddress to true
+    return (
+      <>
+        <h2 className="mb-lg">Addresses</h2>
+        <AddEditAddressSidesheet
+          values={{ defaultAddress: true }}
+          partyId={partyId}
+          actionType={FormActionType.ADD}
+        />
+      </>
+    );
   };
 
   const email = () => {
