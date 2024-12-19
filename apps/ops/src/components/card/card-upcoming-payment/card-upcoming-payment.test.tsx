@@ -72,7 +72,7 @@ describe('UpcomingPaymentCard', () => {
         const paymentText = faker.lorem.word();
         const paymentDateText = faker.lorem.word();
         const bankDetails = generateBankDetails('partyId', 'fullName');
-        const monthlyAmount = faker.number.int({
+        const autopayAmount = faker.number.int({
             min: 1,
             max: 1000,
         });
@@ -80,7 +80,7 @@ describe('UpcomingPaymentCard', () => {
         beforeEach(() => {
             props = {
                 ...defaultProps,
-                monthlyAmount,
+                autopayAmount,
                 paymentDate,
                 paymentText,
                 paymentDateText,
@@ -137,7 +137,7 @@ describe('UpcomingPaymentCard', () => {
     });
 
     describe('card-transactions props', () => {
-        const monthlyAmount = faker.number.int({
+        const autopayAmount = faker.number.int({
             min: 100,
             max: 1000,
         });
@@ -153,7 +153,7 @@ describe('UpcomingPaymentCard', () => {
         beforeEach(() => {
             props = {
                 ...defaultProps,
-                monthlyAmount,
+                autopayAmount,
                 paymentDate,
                 paymentFrequencyText,
                 additionalChargesTitle,
@@ -170,7 +170,7 @@ describe('UpcomingPaymentCard', () => {
 
         it('adds up additional charges to equal premium', () => {
             const additionalChargesTotal = additionalCharges.reduce((acc, { amount = 0 }) => (acc += amount), 0);
-            const total = monthlyAmount + additionalChargesTotal;
+            const total = autopayAmount + additionalChargesTotal;
             expect(element).toHaveTextContent(numberFormatify(total));
         });
     });

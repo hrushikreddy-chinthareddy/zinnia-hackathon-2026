@@ -44,7 +44,7 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
             {!!loanCarryingBalance && (
                 <UpcomingPaymentCard
                     className="content-divider"
-                    monthlyAmount={upcomingPayment?.amount}
+                    autopayAmount={upcomingPayment?.amount}
                     paymentDate={upcomingPayment?.nextProgramDate}
                     bankDetails={payorBankDetails}
                     additionalCharges={addCharges}

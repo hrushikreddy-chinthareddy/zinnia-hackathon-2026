@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-import { ArrangementType, SystematicProgram as SysProg } from '@deps/models/policy/sor-policy';
+import { ArrangementType, Reason, SystematicProgram as SysProg } from '@deps/models/policy/sor-policy';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 //TODO: Remove this eventually because LifeCAD should be sending correct enum values in arrangementTypes
@@ -11,18 +11,23 @@ export enum TempAnnuityArrangementTypes {
 
 export class SystematicPrograms {
     public systematicProgramById: Record<string, SysProg> = {};
+    public systematicProgramsByReason: Record<string, SysProg[]> = {};
     public systematicProgramsByType: Record<string, SysProg[]> = {};
     public allPrograms: SysProg[] = [];
 
     constructor(programs: SysProg[] = []) {
         this.allPrograms = programs;
         programs.forEach(program => {
-            const { arrangementType, arrangementId } = program;
+            const { arrangementType, arrangementId, reason } = program;
             if (arrangementType) {
                 if (!this.systematicProgramsByType[arrangementType]) {
                     this.systematicProgramsByType[arrangementType] = [];
                 }
                 this.systematicProgramsByType[arrangementType].push(program);
+            }
+
+            if (reason) {
+                this.systematicProgramById[reason] = program;
             }
 
             if (arrangementId) {
@@ -36,6 +41,13 @@ export class SystematicPrograms {
             return;
         }
         return this.systematicProgramById[programId];
+    }
+
+    public getProgramsByReason(reasonId: Reason): SysProg | undefined {
+        if (!reasonId) {
+            return;
+        }
+        return this.systematicProgramById[reasonId];
     }
 
     public getProgramsByType(arrangementType: ArrangementType | TempAnnuityArrangementTypes): SysProg[] {
