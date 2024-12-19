@@ -64,6 +64,26 @@ export class OptimizelyService {
             return {};
         }
     }
+
+    public async getFeatureFlagVariables(featureKey: string, variableName: string, userId: string): Promise<Record<string, unknown>> {
+        try {
+            if (!this.optimizelyClient) {
+                throw new Error('optimizely.ts::getFeatureFlagDecisions:: instance creation failed');
+            }
+
+            await this.ensureOnReady();
+
+            const attributes = { userId: userId };
+            return this.optimizelyClient.getFeatureVariableJSON(featureKey, variableName, userId, attributes) as Record<string, unknown>;
+        } catch (e) {
+            logError('getFeatureFlagVariable::Error initializing Optimizely instance', {
+                file: 'optimizely',
+                function: 'getFeatureFlagVariable',
+                ...parseErrorInformation(e),
+            });
+            return {} as Record<string, unknown>;
+        }
+    }
 }
 
 // Exporting a single instance of the class
