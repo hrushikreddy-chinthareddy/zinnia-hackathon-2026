@@ -107,7 +107,7 @@ export default function DocumentsResultsTable({
                             {documentType !== DocumentTypeView.Correspondence && (
                                 <Popover
                                     body={t('documentIdentifierTooltip')}
-                                    title={t('document') as string}
+                                    title={t('documentId') as string}
                                     placement={PopoverPlacement.TopRight}
                                 >
                                     <Icon type={IconType.CIRCLE_INFO} color="var(--color-primary-color-primary)" height={16} width={16} />
