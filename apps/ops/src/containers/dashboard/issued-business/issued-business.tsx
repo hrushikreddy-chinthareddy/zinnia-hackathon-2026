@@ -6,7 +6,6 @@ import dayjs from 'dayjs';
 import { FC, useMemo, useState } from 'react';
 
 import { CaseTimeseries } from '@deps/components/dashboard/case-timeseries/case-timeseries';
-import { Top5SubprocessByVolume } from '@deps/components/dashboard/top-5-subprocesses-by-volume/top-5-subprocess-by-volume';
 import FieldData, { FieldDataVariant } from '@deps/components/fields/field-data/field-data';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import PageLoader from '@deps/components/page-loader/page-loader';
@@ -14,13 +13,10 @@ import Select from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { dashboardChartTitleFormat, splitAndSentenceCase } from '@deps/helpers/dashboard/dashboard-helpers';
-import { convertToQueryString } from '@deps/helpers/routing.helper';
-import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
 import { Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
-import { getCaseInsights } from '@deps/queries/api/openai';
 import { DashboardSearchFilter } from '@deps/queries/cases';
-import { getCaseDashboardStatsQuery, getStatsData } from '@deps/queries/tanstack/dashboard/dashboardQueries';
+import { getCaseDashboardStatsQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 import { useDashboardStore } from '@deps/store/store';
 
 import { ExceptionInsights } from '../../../components/dashboard/exception-insights';
@@ -36,7 +32,6 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
     const [selectedSubprocess, setSelectedSubprocess] = useState<string>('');
     const [selectedProcessType] = useState<Processes>(Processes.NewBusiness);
     const [selectedException, setSelectedException] = useState<string | undefined>();
-    const shouldShowCaseInsights = useCaseInsightsPermission();
 
     const handleSelectedSubprocess = (subprocess: string) => {
         setSelectedException(undefined);
@@ -97,8 +92,10 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
         queryFn: () =>
             getCaseDashboardStatsQuery(baseDashboardQueryFilter, [GroupByOptions.ProcessSubType, GroupByOptions.ExceptionCategory]),
         select: ({ data }) => {
+            if (!selectedSubprocess) {
+                setSelectedSubprocess(data?.[0]?.name || '');
+            }
             return {
-                selectedSubprocess: data?.[0]?.name || '',
                 exceptionData: data?.slice(0, 5) || [],
             };
         },
@@ -116,66 +113,6 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
 
         return baseFilter;
     }, [selectedBrokerDealers, selectedCarriers, selectedProcessType, selectedSubprocess, createdDateStart]);
-
-    const { data: caseVolumeTimeseriesData, isLoading: caseVolumeTimeseriesDataLoading } = useQuery({
-        queryKey: ['caseVolumeTimeseriesData', caseVolumeTimeseriesFilters, carrierOrBrokerDealer],
-
-        queryFn: async () => {
-            const data = await getStatsData(caseVolumeTimeseriesFilters, [carrierOrBrokerDealer, GroupByOptions.UpdatedAt]);
-            if (!data?.data?.statsResponseData) {
-                throw data;
-            }
-            return data;
-        },
-    });
-
-    const {
-        data: aiSummaryCaseVolumeTimeseriesData,
-        isLoading: aiLoadingCaseVolumeTimeseriesData,
-        isError: aiErrorCaseVolumeTimeseriesData,
-    } = useQuery({
-        queryKey: ['getAiSummary', caseVolumeTimeseriesData?.data?.statsResponseData, selectedSubprocess],
-        queryFn: async () => {
-            try {
-                const summary = await getCaseInsights({
-                    content: JSON.stringify(caseVolumeTimeseriesData?.data?.statsResponseData),
-                    prompt: `You are an expert in all things new business application data. Your job is to summarize the data for business and executive users. They want simple and insightful information about the data provided to you. The data provided to you here are completed ${dashboardChartTitleFormat(
-                        selectedSubprocess,
-                        false
-                    )} applications, but the ${dashboardChartTitleFormat(
-                        selectedSubprocess,
-                        false
-                    )} applications encountered exceptions along their path to completion. The data is grouped by Carrier and then by Exception Category and the values represent an exception that occurred for a ${dashboardChartTitleFormat(
-                        selectedSubprocess,
-                        false
-                    )} application. Avoid using phrases such as "the data". Your responses should be insightful and will be displayed on a UI as a summary for a module related to a distribution chart. Use percentages and real data where it makes sense. Keep it concise and to the point. Format number values to U.S. including commas where appropriate.`,
-                });
-                return summary;
-            } catch (error) {
-                return '';
-            }
-        },
-        enabled: shouldShowCaseInsights,
-    });
-
-    const aiSummaryCaseVolumeTimeseries = useMemo(() => {
-        console.log(aiSummaryCaseVolumeTimeseriesData, aiErrorCaseVolumeTimeseriesData);
-        if (aiErrorCaseVolumeTimeseriesData) {
-            return 'Insight data is currently unavailable.';
-        }
-        if (aiSummaryCaseVolumeTimeseriesData?.length) {
-            return aiSummaryCaseVolumeTimeseriesData;
-        }
-        if (!caseVolumeTimeseriesData?.data?.statsResponseData?.length) {
-            return `No data for ${dashboardChartTitleFormat(selectedSubprocess)}.`;
-        }
-        return 'Insight data is currently unavailable.';
-    }, [
-        aiErrorCaseVolumeTimeseriesData,
-        aiSummaryCaseVolumeTimeseriesData,
-        caseVolumeTimeseriesData?.data?.statsResponseData?.length,
-        selectedSubprocess,
-    ]);
 
     return (
         <CardContainer
@@ -197,11 +134,7 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
                 <Typography className="py-4" variant={TypographyVariant.H2}>
                     Top 5 Processes by Volume
                 </Typography>
-                <RadioGroup.Root
-                    asChild
-                    onValueChange={handleSelectedSubprocess}
-                    value={selectedSubprocess || caseDashboardStatsData?.selectedSubprocess}
-                >
+                <RadioGroup.Root asChild onValueChange={handleSelectedSubprocess} value={selectedSubprocess}>
                     <div className=" grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 !items-stretch !border-b-0 !after:content-none [& .indicator]">
                         {caseDashboardStatsData?.exceptionData.map((element, index) => {
                             return (
@@ -257,23 +190,24 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
                 </RadioGroup.Root>
             </div>
             <div className="bg-white p-8 flex flex-col gap-8">
-                {(selectedSubprocess || caseDashboardStatsData?.selectedSubprocess) && (
+                {selectedSubprocess && (
                     <CaseTimeseries
-                        selectedSubprocess={selectedSubprocess || caseDashboardStatsData?.selectedSubprocess || ''}
-                        caseTimeseriesData={caseVolumeTimeseriesData}
-                        caseTimeseriesDataLoading={caseVolumeTimeseriesDataLoading}
+                        selectedSubprocess={selectedSubprocess}
                         legendLabel={splitAndSentenceCase(carrierOrBrokerDealer)}
-                        baseFilterLink={`/cases${convertToQueryString(baseDashboardQueryFilter as any)}`}
-                        insight={aiSummaryCaseVolumeTimeseries}
-                        insightLoading={aiLoadingCaseVolumeTimeseriesData}
+                        groupByOptions={[carrierOrBrokerDealer, GroupByOptions.UpdatedAt]}
+                        filters={caseVolumeTimeseriesFilters}
+                        title={`${selectedSubprocess} Application Volume`}
                     />
                 )}
             </div>
             <div className="bg-white p-8 flex flex-col gap-8">
-                {(selectedSubprocess || caseDashboardStatsData?.selectedSubprocess) && (
-                    <Top5SubprocessByVolume
-                        createdDateStart={createdDateStart}
-                        requestSubType={selectedSubprocess || caseDashboardStatsData?.selectedSubprocess || ''}
+                {selectedSubprocess && (
+                    <CaseTimeseries
+                        selectedSubprocess={selectedSubprocess}
+                        legendLabel={splitAndSentenceCase(GroupByOptions.ProductName)}
+                        groupByOptions={[GroupByOptions.ProductName, GroupByOptions.UpdatedAt]}
+                        filters={caseVolumeTimeseriesFilters}
+                        title={`Top 5 Products`}
                     />
                 )}
             </div>
@@ -288,7 +222,7 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
                     <ExceptionInsights
                         timeframe={timeframe}
                         completedCasesByProcessSubType={caseDashboardStatsData?.exceptionData}
-                        selectedSubprocess={selectedSubprocess || caseDashboardStatsData?.selectedSubprocess || ''}
+                        selectedSubprocess={selectedSubprocess}
                         selectedException={selectedException}
                         carrierOrBrokerDealer={undefined}
                     />
