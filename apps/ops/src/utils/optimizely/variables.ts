@@ -1,4 +1,4 @@
-export enum FEATURE_VARIABLES {
+export enum FEATURE_FLAG_VARIABLES {
     SEND_TAX_FORM = 'contact-center-send-taxforms',
     SEND_STATEMENT = 'contact-center-send-statement',
 }
