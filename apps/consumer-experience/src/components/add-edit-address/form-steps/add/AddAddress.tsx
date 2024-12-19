@@ -151,16 +151,17 @@ export const AddAddress: FC<AddAddressProps> = ({
             </div>
           );
         })}
-
-        <Button
-          type="button"
-          mode="link"
-          className={styles.addAddressButton}
-          onClick={() => append({ addressVal: '' })}
-        >
-          <Icon type={IconType.ADD} /> Add address line (e.g. unit, floor,
-          suite, etc)
-        </Button>
+        {fields.length < 3 && (
+          <Button
+            type="button"
+            mode="link"
+            className={styles.addAddressButton}
+            onClick={() => append({ addressVal: '' })}
+          >
+            <Icon type={IconType.ADD} /> Add address line (e.g. unit, floor,
+            suite, etc)
+          </Button>
+        )}
 
         <Controller
           name="city"
@@ -184,7 +185,7 @@ export const AddAddress: FC<AddAddressProps> = ({
           <Controller
             name="state"
             control={control}
-            rules={{ required: 'State is missing.' }}
+            rules={{ required: 'Select state' }}
             render={({ field }) => (
               <div className={styles.state}>
                 {/* TODO: Remove label and add to prop when bloom updates */}
@@ -208,7 +209,15 @@ export const AddAddress: FC<AddAddressProps> = ({
             name="zipCode"
             control={control}
             rules={{
-              required: 'Zip is missing.',
+              required: 'ZIP code must be between 5 and 9 digits.',
+              minLength: {
+                value: 5,
+                message: 'ZIP code must be between 5 and 9 digits.',
+              },
+              maxLength: {
+                value: 9,
+                message: 'ZIP code must be between 5 and 9 digits.',
+              },
               pattern: {
                 value: /^[0-9]+$/,
                 message: 'Zip must be a number.',

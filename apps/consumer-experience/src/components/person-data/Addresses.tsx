@@ -98,8 +98,8 @@ export const Addresses = ({
           addresses={businessAddresses}
           preferredAddressIndicator={preferredAddressIndicator}
         />
-        <AddEditAddressSidesheet partyId={partyId || ''} />
       </div>
+      <AddEditAddressSidesheet partyId={partyId || ''} />
     </div>
   );
 };
