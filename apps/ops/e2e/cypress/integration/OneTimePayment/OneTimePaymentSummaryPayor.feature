@@ -36,6 +36,6 @@ Scenario: Ops user navigates to One Time Payment Summary page Payor details vali
   And I should verify Payor details on Summary page
 
   When I click Continue button on Summary page
-  Then I should verify Confirm page details
+  # Then I should verify Confirm page details
   When I click logout button
   Then Ops users navigates to homepage

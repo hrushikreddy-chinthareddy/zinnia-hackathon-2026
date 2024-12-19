@@ -16,8 +16,8 @@ class PolicyDetailsPage extends Page {
     }
 
     get clickPolicySearchDropdown() {
-      return cy.get('button[id="radix-:r2h:"]');
-      //return cy.get('button[id*="radix"]');
+      // return cy.get('button[id="radix-:r2h:"]');
+      return cy.get('label[id="case-search-label"]');
     }
 
     get firstNameTextBox() {
@@ -50,7 +50,7 @@ class PolicyDetailsPage extends Page {
     }
 
   getSearchText(searchText) {
-    return cy.get(`[placeholder="Policy number"]`).type(searchText);
+    return cy.get(`[placeholder="Policy number"]`).type(searchText,{force: true});
     }
 
   getSearchTextByFirstName(firstName){
