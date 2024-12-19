@@ -12,13 +12,12 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { AccessibleFormattedAmount } from '@deps/helpers/numbers.helper';
 import { Statuses } from '@deps/models/case/case';
-import { Policy, Transaction, TransactionStatus, TransactionType } from '@deps/models/policy/sor-policy';
+import { Policy, Transaction, TransactionStatus } from '@deps/models/policy/sor-policy';
 import { ReactComponent as ChevronRightIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-right.svg';
 import { DEFAULT_DATE_FORMAT } from '@deps/types/constants';
 
 import { getEventTitle, getHistoryEventCardValues } from './history-event-card.helper';
 import { FinancialTransactionTypes } from '../side-sheet/side-sheet-transaction/financial/types';
-import SideSheetNewLoanTransaction from '../side-sheet/side-sheet-transaction/loan/side-sheet-new-loan-transaction';
 import { SideSheetTransactionProps } from '../side-sheet/side-sheet-transaction/types';
 
 export interface HistoryEventCardProps {
@@ -58,10 +57,7 @@ const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryE
             refreshTransactions: refreshTransactions,
         };
 
-        if (transactionType === TransactionType.NewLoan) {
-            props.refreshTransactions = undefined;
-            Component = SideSheetNewLoanTransaction;
-        } else if (transactionType && FinancialTransactionTypes.includes(transactionType)) {
+        if (transactionType && FinancialTransactionTypes.includes(transactionType)) {
             Component = SideSheetFinancialTransaction;
         } else {
             Component = SideSheetNonFinancialTransaction;

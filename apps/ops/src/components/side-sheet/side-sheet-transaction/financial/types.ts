@@ -16,4 +16,5 @@ export const FinancialTransactionTypes: TransactionType[] = [
     TransactionType.FullSurrender,
     TransactionType.PartialWithdrawalOneTime,
     TransactionType.FreeLookCancellation,
+    TransactionType.NewLoan,
 ];

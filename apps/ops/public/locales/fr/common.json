@@ -2611,6 +2611,7 @@
                 "bankName": "Nom de la banque",
                 "bestTime": "Meilleur moment",
                 "bestTimeToContact": "Meilleur moment pour contacter",
+                "cancelLoan": "Annuler le prêt",
                 "cancelPayment": "Annuler le paiement",
                 "cancelSurrender": "Annuler la reddition",
                 "correspondencePreference": "Préférence de correspondance",
@@ -2734,11 +2735,13 @@
             "cancelSidesheet": {
                 "title": {
                     "PaymentOneTimePremium": "Annuler le paiement?",
-                    "Surrender": "Annuler la reddition?"
+                    "FullSurrender": "Annuler la reddition?",
+                    "NewLoan": "Annuler le prêt?"
                 },
                 "confirmationSubtitle": "Si vous annulez maintenant, ceci",
                 "confirmationSubtitle2": "ne sera pas traité.",
                 "FullSurrender": "Reddition",
+                "NewLoan": "Nouveau prêt",
                 "PaymentOneTimePremium": "Prime à paiement unique",
                 "nevermind": "Laissez tomber",
                 "successTitle": "Succès!",
@@ -2747,7 +2750,8 @@
                 "close": "Fermer",
                 "cta": {
                     "PaymentOneTimePremium": "Annuler le paiement",
-                    "Surrender": "Annuler la reddition"
+                    "FullSurrender": "Annuler la reddition",
+                    "NewLoan": "Annuler le prêt"
                 },
                 "apiError": {
                     "title": "Désolé, cela n'a pas fonctionné.",

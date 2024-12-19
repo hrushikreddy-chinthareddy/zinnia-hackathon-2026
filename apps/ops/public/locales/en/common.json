@@ -2860,6 +2860,7 @@
                 "bankName": "Bank name",
                 "bestTime": "Best time",
                 "bestTimeToContact": "Best time to contact",
+                "cancelLoan": "Cancel loan",
                 "cancelPayment": "Cancel payment",
                 "cancelSurrender": "Cancel surrender",
                 "correspondencePreference": "Correspondence preference",
@@ -2982,11 +2983,13 @@
             "cancelSidesheet": {
                 "title": {
                     "PaymentOneTimePremium": "Cancel payment?",
-                    "FullSurrender": "Cancel surrender?"
+                    "FullSurrender": "Cancel surrender?",
+                    "NewLoan": "Cancel loan?"
                 },
                 "confirmationSubtitle": "If you cancel now, this",
                 "confirmationSubtitle2": "won't be processed.",
                 "FullSurrender": "Surrender",
+                "NewLoan": "New loan",
                 "PaymentOneTimePremium": "Payment one-time premium",
                 "nevermind": "Nevermind",
                 "successTitle": "Success!",
@@ -2995,7 +2998,8 @@
                 "close": "Close",
                 "cta": {
                     "PaymentOneTimePremium": "Cancel payment",
-                    "FullSurrender": "Cancel surrender"
+                    "FullSurrender": "Cancel surrender",
+                    "NewLoan": "Cancel loan"
                 },
                 "apiError": {
                     "title": "Sorry, that didn't work.",

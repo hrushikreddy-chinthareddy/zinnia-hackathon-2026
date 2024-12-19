@@ -6,6 +6,7 @@ import { Policy, Transaction, TransactionPayor, TransactionType } from '@deps/mo
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
+import { getNewLoanSideSheetValues } from './loan/side-sheet-loan.helper';
 import {
     getAutopayPremiumSideSheetValues,
     getInitialPremiumSideSheetValues,
@@ -38,7 +39,6 @@ export const getFinancialTransactionSideSheetValues = (
 ): TransactionSideSheetValues | WithdrawalSideSheetValues => {
     const { transactionType } = transaction;
 
-    // Loan transactions use a different component
     switch (transactionType) {
         case TransactionType.PaymentInitialPremium:
         case TransactionType.InitialPremium:
@@ -54,6 +54,8 @@ export const getFinancialTransactionSideSheetValues = (
             return getWithdrawalSideSheetValues(policy, transaction, t);
         case TransactionType.FreeLookCancellation:
             return getFreeLookCancellationSideSheetValues(policy, transaction, t);
+        case TransactionType.NewLoan:
+            return getNewLoanSideSheetValues(policy, transaction, t);
         default:
             return {};
     }
