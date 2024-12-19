@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
 import CardCaseDocument from '@deps/components/card/card-case-document/card-case-document';
@@ -29,10 +29,11 @@ interface StartStepProps {
     state: StartType;
     title: string;
     subtitle: string;
-    isOnBaseUpdateAssistiveText?: boolean
+    isOnBaseUpdateAssistiveText?: boolean;
+    isContinueDisabled?: boolean;
 }
 
-const StartStep = ({ parentPage, policy, processType, setState, state, title, subtitle, isOnBaseUpdateAssistiveText = false }: StartStepProps) => {
+const StartStep = ({ parentPage, policy, processType, setState, state, title, subtitle, isOnBaseUpdateAssistiveText = false, isContinueDisabled = false }: StartStepProps) => {
     const { t } = useTranslation();
     const { goToNext } = useWorkflow();
 
@@ -116,6 +117,7 @@ const StartStep = ({ parentPage, policy, processType, setState, state, title, su
                     planCode={product?.planCode}
                     policyNumber={policyNumber}
                     parentPage={parentPage}
+                    disableContinue={isContinueDisabled}
                 />
             }
         >

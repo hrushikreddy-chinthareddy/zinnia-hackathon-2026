@@ -53,29 +53,35 @@ const DashboardPage = ({
     }, []);
 
     return (
-        <DashboardResponsiveLayout>
+        <>
             <PageHead titleKey="dashboard" />
             <NoNavLayout fullHeight={true} displayTopNavBar={true} size="large">
-                <FiltersHeader
-                    carrierHeaderIsIntersecting={carrierHeaderIsIntersecting}
-                    carrierHeaderEntry={carrierHeaderEntry}
-                    authorizedCarriers={authorizedCarriers}
-                    brokerDealersSSR={brokerDealersSSR}
-                    ref={carrierHeaderRef}
-                    loading={loading}
-                />
-                <DashboardTabNav>
-                    <div ref={tabContentRef}>
-                        <TabContent value={DashboardTabs.ACTIVE_APPLICATIONS}>
-                            <ActiveApplications handleSetLoading={handleSetLoading} loading={loading} carrierHeaderRef={carrierHeaderRef} />
-                        </TabContent>
-                        <TabContent value={DashboardTabs.ISSUED_BUSINESS}>
-                            <IssuedBusiness />
-                        </TabContent>
-                    </div>
-                </DashboardTabNav>
+                <DashboardResponsiveLayout>
+                    <FiltersHeader
+                        carrierHeaderIsIntersecting={carrierHeaderIsIntersecting}
+                        carrierHeaderEntry={carrierHeaderEntry}
+                        authorizedCarriers={authorizedCarriers}
+                        brokerDealersSSR={brokerDealersSSR}
+                        ref={carrierHeaderRef}
+                        loading={loading}
+                    />
+                    <DashboardTabNav>
+                        <div ref={tabContentRef}>
+                            <TabContent value={DashboardTabs.ACTIVE_APPLICATIONS}>
+                                <ActiveApplications
+                                    handleSetLoading={handleSetLoading}
+                                    loading={loading}
+                                    carrierHeaderRef={carrierHeaderRef}
+                                />
+                            </TabContent>
+                            <TabContent value={DashboardTabs.ISSUED_BUSINESS}>
+                                <IssuedBusiness />
+                            </TabContent>
+                        </div>
+                    </DashboardTabNav>
+                </DashboardResponsiveLayout>
             </NoNavLayout>
-        </DashboardResponsiveLayout>
+        </>
     );
 };
 

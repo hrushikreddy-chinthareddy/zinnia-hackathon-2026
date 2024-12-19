@@ -20,6 +20,7 @@
     "selectProcessType": "Select Process Type",
     "trend": "Trend",
     "unapproved": "Unapproved",
+    "excluded": "Excluded",
     "yes": "Yes",
     "no": "No",
     "site": {
@@ -2676,7 +2677,7 @@
             "document": "Document",
             "documentDate": "Document date",
             "documentIdentifier": "Document identifier",
-            "documentIdentifierTooltip": "This is a unique set of characters assigned to each document and tells you a bit about the document itself. If the document identifier is a single string of characters, you’ll know it’s an outbound document. If it has 3 sections separated by hyphens, it’s an inbound document. For inbound documents, the first set of characters is the date it was received in YYYYMMDD format. The second set is how it was received (e.g., DS = Docusign, EM = Email, F = Fax, M = EApp, 1-8 = Mailroom scan, etc.). And the final set is the unique id.",
+            "documentIdentifierTooltip": "This is the name of the document along with the document identifier, a unique set of characters assigned to each document. Tip: The document identifier for received documents can tell you a bit about the document itself. The first set of characters in a received document’s identifier is the date it was received in YYYYMMDD format. The capital letters is how it was received (e.g., DS = Docusign, EM = Email, F = Fax, M = EApp, 1-8 = Mailroom scan, etc.)",
             "documentNumber": "Document number",
             "download": "Download",
             "id": "ID",

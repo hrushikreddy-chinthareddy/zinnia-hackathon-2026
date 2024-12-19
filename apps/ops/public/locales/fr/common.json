@@ -20,6 +20,7 @@
     "selectProcessType": "Sélectionner un type de dossier",
     "trend": "Tendance",
     "unapproved": "Non approuvé",
+    "excluded": "Exclus",
     "yes": "Oui",
     "no": "Non",
     "site": {
@@ -2430,7 +2431,7 @@
             "document": "Document",
             "documentDate": "Date du document",
             "documentIdentifier": "Identifiant du document",
-            "documentIdentifierTooltip": "Il s'agit d'un ensemble unique de caractères attribués à chaque document et qui vous donne quelques informations sur le document lui-même. Si l'identifiant du document est une seule chaîne de caractères, vous saurez qu'il s'agit d'un document sortant. S'il comporte 3 sections séparées par des tirets, c'est un document entrant. Pour les documents entrants, le premier ensemble de caractères représente la date à laquelle il a été reçu au format AAAAMMJJ. Le deuxième ensemble représente la manière dont il a été reçu (par exemple, DS = Docusign, EM = Courrier électronique, F = Télécopie, M = EApp, 1-8 = Numérisation de salle du courrier, etc.). Et le dernier ensemble est l'identifiant unique.",
+            "documentIdentifierTooltip": "Il s'agit du nom du document ainsi que de l'identifiant du document, un ensemble unique de caractères attribué à chaque document. Astuce : l'identifiant du document reçu peut vous en dire un peu plus sur le document lui-même. Le premier ensemble de caractères de l'identifiant d'un document reçu correspond à la date de réception au format AAAAMMJJ. Les majuscules correspondent à la manière dont il a été reçu (par exemple, DS = Docusign, EM = Courrier électronique, F = Télécopie, M = EApp, 1-8 = Numérisation de salle du courrier, etc.).",
             "documentNumber": "Numéro du document",
             "download": "Télécharger",
             "id": "ID",

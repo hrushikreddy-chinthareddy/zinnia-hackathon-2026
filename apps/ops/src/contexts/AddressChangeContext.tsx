@@ -16,6 +16,7 @@ export type AddressChangeFormState = {
     phone: Phone;
     address: Address;
     selectedIds: number[],
+    submitSuccess: boolean;
     setFormData: React.Dispatch<React.SetStateAction<any>>;
     setContractUpdateOption: React.Dispatch<React.SetStateAction<ContractUpdateOptions>>;
     setRoleIdentifier: React.Dispatch<React.SetStateAction<PolicyParties>>;
@@ -26,6 +27,7 @@ export type AddressChangeFormState = {
     setPhone: React.Dispatch<React.SetStateAction<Phone>>;
     setAddress: React.Dispatch<React.SetStateAction<Address>>;
     setSelectedIds: React.Dispatch<React.SetStateAction<number[]>>;
+    setSubmitSuccess: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -41,6 +43,7 @@ export const addressChangeDefaultValues = {
     phone: {} as any,
     address: {} as any,
     selectedIds: [] as any,
+    submitSuccess:  false,
     setContractUpdateOption: noop,
     setFormData: noop,
     setRoleIdentifier: noop,
@@ -51,6 +54,7 @@ export const addressChangeDefaultValues = {
     setPhone: noop,
     setAddress: noop,
     setSelectedIds: noop,
+    setSubmitSuccess: noop,
 };
 
 export const AddressChangeContext = createContext<AddressChangeFormState>(addressChangeDefaultValues);
