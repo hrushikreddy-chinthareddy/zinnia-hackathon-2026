@@ -23,6 +23,7 @@ import { states } from '@/utils/states';
 import styles from './AddAddress.module.css';
 import { FieldDataActive } from '../../../field/data-active/FieldDataActive';
 import { FieldStatus } from '../../../field/types';
+import { FormActionType } from '../../types';
 
 export interface AddressObj {
   addressVal: string;
@@ -38,9 +39,10 @@ export interface AddressFormFields {
 
 export interface AddAddressProps {
   values?: AddressFormFields;
+  actionType?: FormActionType;
   cancelCallback?: () => void;
   submitCallback?: (val: AddressFormFields) => void;
-  removeCallback?: () => void;
+  removeCallback?: (val: AddressFormFields) => void;
 }
 
 export const AddAddress: FC<AddAddressProps> = ({

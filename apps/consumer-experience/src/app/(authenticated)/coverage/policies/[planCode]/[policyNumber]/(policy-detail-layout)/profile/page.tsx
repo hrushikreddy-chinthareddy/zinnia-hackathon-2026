@@ -4,6 +4,7 @@ import { IconType, Label } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
 import { AddEditAddressSidesheet } from '@/components/add-edit-address/AddEditAddressSidesheet';
+import { FormActionType } from '@/components/add-edit-address/types';
 import { BankList } from '@/components/bank-list/BankList';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { FieldData } from '@/components/field-data/FieldData';
@@ -90,6 +91,7 @@ export default async function Profile({ params }: Props) {
         <AddEditAddressSidesheet
           values={{ defaultAddress: true }}
           partyId={profileData.partyId || ''}
+          actionType={FormActionType.ADD}
         />
       </>
     );

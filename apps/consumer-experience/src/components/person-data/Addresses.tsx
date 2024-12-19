@@ -14,6 +14,11 @@ import { Address } from '@/components/pii/Address';
 import styles from './PersonData.module.css';
 import { AddressProps } from './types';
 import { AddEditAddressSidesheet } from '../add-edit-address/AddEditAddressSidesheet';
+import {
+  AddressFormFields,
+  AddressObj,
+} from '../add-edit-address/form-steps/add/AddAddress';
+import { FormActionType } from '../add-edit-address/types';
 
 const displayAddressType: { [key in AddressType]?: string } = {
   [AddressType.POBOX]: 'PO Box',
@@ -32,31 +37,57 @@ const AddressGroup = ({
     const mailingAddressText =
       preferredAddressIndicator === address?.addressId ? 'Mailing address' : '';
 
+    //Build out the addresses array by taking all the address lines and making sure we filter all the bad values out
+    // there has to be a prettier and easier way of doing this
+    const addressValArray: AddressObj[] | undefined =
+      [
+        address.addressLine1 && { addressVal: address.addressLine1 },
+        address.addressLine2 && { addressVal: address.addressLine2 },
+        address.addressLine3 && { addressVal: address.addressLine3 },
+      ]
+        .filter(val => val !== undefined && val !== '')
+        .map(val => val as AddressObj) || undefined;
+
+    const editValues: AddressFormFields = {
+      addressType: address.addressType,
+      addresses: addressValArray,
+      city: address.city,
+      state: address.state,
+      zipCode: address.zipCode,
+      defaultAddress: preferredAddressIndicator === address?.addressId,
+    };
     return (
-      <FieldData
-        key={`key-${index}`}
-        Label={
-          <Label>
-            {displayAddressType[address.addressType || AddressType.RESIDENCE]}
-          </Label>
-        }
-        AssistiveText={
-          <AssistiveText
-            text={mailingAddressText}
-            variant={AssistiveTextVariant.Success}
+      <div key={index}>
+        <FieldData
+          key={`key-${index}`}
+          Label={
+            <Label>
+              {displayAddressType[address.addressType || AddressType.RESIDENCE]}
+            </Label>
+          }
+          AssistiveText={
+            <AssistiveText
+              text={mailingAddressText}
+              variant={AssistiveTextVariant.Success}
+            />
+          }
+        >
+          <Address
+            addrCountry={address.country}
+            addrLine1={address.addressLine1}
+            addrLine2={address.addressLine2}
+            city={address.city}
+            state={address.state}
+            zipCode={address.zipCode}
+            zipExt={address.zipCodeExtension}
           />
-        }
-      >
-        <Address
-          addrCountry={address.country}
-          addrLine1={address.addressLine1}
-          addrLine2={address.addressLine2}
-          city={address.city}
-          state={address.state}
-          zipCode={address.zipCode}
-          zipExt={address.zipCodeExtension}
+        </FieldData>
+        <AddEditAddressSidesheet
+          actionType={FormActionType.EDIT}
+          partyId={''}
+          values={editValues}
         />
-      </FieldData>
+      </div>
     );
   });
 };
@@ -101,7 +132,10 @@ export const Addresses = ({
         />
       </div>
       {allowAddressChanges && (
-        <AddEditAddressSidesheet partyId={partyId || ''} />
+        <AddEditAddressSidesheet
+          partyId={partyId || ''}
+          actionType={FormActionType.ADD}
+        />
       )}
     </div>
   );

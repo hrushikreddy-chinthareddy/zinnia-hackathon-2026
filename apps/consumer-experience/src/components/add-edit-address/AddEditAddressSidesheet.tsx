@@ -12,14 +12,12 @@ import { Error } from '../transaction-steps/error/Error';
 import { Loading } from '../transaction-steps/loading/Loading';
 import { Success } from '../transaction-steps/success/Success';
 import { AddAddress, AddressFormFields } from './form-steps/add/AddAddress';
-
-export interface AddEditAddressSidesheetProps {
-  partyId: string;
-  values?: AddressFormFields;
-}
+import { AddEditAddressSidesheetProps, FormActionType } from './types';
 
 export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
   values,
+  actionType = FormActionType.ADD,
+  partyId,
 }) => {
   const updateBpmAction = useBpmStore(state => state.updateBpmAction);
   const params = useParams<{
@@ -38,7 +36,11 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
     'Some generic messaging that will get updated based on the api response'
   );
 
-  const handleAdd = async (requestValues: AddressFormFields) => {
+  const removeCallback = async (requestValues: AddressFormFields) => {
+    console.log('remove test', requestValues);
+  };
+
+  const handleAddEdit = async (requestValues: AddressFormFields) => {
     setStep(FormSteps.LOADING);
 
     //TODO: Remove this
@@ -49,6 +51,8 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
     }, 2000);
 
     //TODO: We will add this stuff back when we wire up the backend methods
+    // TODO: Create a generic request method. It still takes in the same things, with the addition of a type.
+    // TODO: If edit type, its a put. If add type, its a post
 
     // const { data, error } = await addBankRequest({
     //   planCode: params.planCode,
@@ -93,6 +97,10 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
     }, 300);
   };
 
+  const triggerText =
+    actionType === FormActionType.ADD ? 'Add address' : 'Edit address';
+  const triggerIcon =
+    actionType === FormActionType.ADD ? IconType.ADD : IconType.EDIT_ALT;
   return (
     <SideSheet
       header="Add Address"
@@ -100,13 +108,13 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
       closeCallback={onClose}
       trigger={
         <Button
-          className={styles.addBank as string}
+          className={styles.addAddress}
           size="small"
           mode="link"
           onClick={() => setOpen(true)}
         >
-          <Icon small type={IconType.ADD} />
-          Add address
+          <Icon small type={triggerIcon} />
+          {triggerText}
         </Button>
       }
     >
@@ -114,7 +122,9 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
         <AddAddress
           values={values}
           cancelCallback={onClose}
-          submitCallback={handleAdd}
+          submitCallback={handleAddEdit}
+          actionType={actionType}
+          removeCallback={removeCallback}
         />
       )}
       {step === FormSteps.LOADING && <Loading />}
