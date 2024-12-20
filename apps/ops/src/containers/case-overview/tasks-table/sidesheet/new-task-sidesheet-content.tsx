@@ -1,4 +1,3 @@
-import { useUser } from '@auth0/nextjs-auth0/client';
 import { Icon, IconType, Link, Loader, TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
@@ -32,7 +31,6 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
     const [loading, setLoading] = useState(true);
     const [task, setTask] = useState<ManagementTask | null>(null);
     const [activeTab, setActiveTab] = useState(TabOptions.Details);
-    const { user } = useUser();
 
     const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
 
@@ -79,7 +77,7 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
                         </div>
 
                         <Typography variant={TypographyVariant.BodySm} className="py-2 px-2">
-                            {user?.name}
+                            {task.assignedTo}
                         </Typography>
                     </div>
                 </div>
