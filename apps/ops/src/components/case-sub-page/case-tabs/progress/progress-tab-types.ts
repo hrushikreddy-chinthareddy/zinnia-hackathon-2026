@@ -13,6 +13,7 @@ export type ExceptionView = {
     createdAt?: string;
     description: string;
     id: string;
+    exceptionRefId?: string;
     tasks: TaskView[];
     status: string;
     updatedAt: string;
