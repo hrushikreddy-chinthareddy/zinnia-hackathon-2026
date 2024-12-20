@@ -94,7 +94,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         }
 
         try {
-            const hasPermissions = await checkTuple(partyId, FgaRelation.Party, FgaRoles.CASE_STATS_DASHBOARD_ROLE);
+            const hasPermissions = await checkTuple(partyId, FgaRelation.UiAccess, FgaRoles.CASE_STATS_DASHBOARD_ENTITY);
 
             return hasPermissions;
         } catch (error: any) {
