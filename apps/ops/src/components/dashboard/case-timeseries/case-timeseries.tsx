@@ -96,9 +96,12 @@ export const CaseTimeseries = ({
         isLoading: insightLoading,
         isError: insightError,
     } = useQuery({
-        queryKey: ['getAiSummary', processedData?.weeklyByLevel1Grouping, selectedSubprocess],
+        queryKey: ['getAiSummary', sortedMonthlyArray, selectedSubprocess],
         queryFn: async () => {
             try {
+                if (!processedData?.weeklyByLevel1Grouping) {
+                    return '';
+                }
                 const summary = await getCaseInsights({
                     content: JSON.stringify(processedData?.weeklyByLevel1Grouping),
                     prompt: `You are an expert in all things ${selectedProcess} case data. Your job is to summarize the data for business and executive users. They want simple and insightful information about the data provided to you. The data provided to you here are completed ${dashboardChartTitleFormat(
@@ -106,7 +109,7 @@ export const CaseTimeseries = ({
                         false
                     )} cases. The data is grouped by ${groupByOptions.join(
                         ', '
-                    )}. Avoid using phrases such as "the data". Your responses should be insightful and will be displayed on a UI as a summary for a module related to a timeseries chart. Use percentages and real data where it makes sense. Keep it concise and to the point. Format number values to U.S. including commas where appropriate. Any keys you use make sure they are formatted to title case.`,
+                    )}. Avoid using phrases such as "the data". Your responses should be insightful and will be displayed on a UI as a summary for a module related to a timeseries chart. Use percentages and real data where it makes sense. Keep it concise and to the point. Format number values to U.S. including commas where appropriate. Any keys you use make sure they are formatted to title case. For example "ANNUITY APPLICATION" should be formatted to "Annuity Application".`,
                 });
                 return summary;
             } catch (error) {
@@ -168,7 +171,7 @@ export const CaseTimeseries = ({
                                                     type={NavElementType.Link}
                                                     className="capitalize whitespace-nowrap overflow-hidden text-ellipsis max-w-[300px] xl:max-w-[175px] block"
                                                     target="_blank"
-                                                    title={stat.name}
+                                                    title={toTitleCase(stat.name)}
                                                 >
                                                     {toTitleCase(stat.name)}
                                                 </NavElement>
@@ -181,7 +184,7 @@ export const CaseTimeseries = ({
                         </table>
                     </div>
                 </div>
-                <div className="relative xl:w-3/4">
+                <div className="relative lg:w-3/4">
                     <div
                         style={{
                             height: `${CHART_HEIGHT}px`,
@@ -193,7 +196,9 @@ export const CaseTimeseries = ({
                     >
                         {caseTimeseriesDataLoading || !processedData ? (
                             <>
-                                <PageLoader />
+                                <div className="grid gap-4 h-full mb-4 w-full min-w-full place-content-center bg-[--color-base-surface-surface-tertiary]">
+                                    <PageLoader />
+                                </div>
                                 <Typography variant={TypographyVariant.BodyBold}>Loading...</Typography>
                             </>
                         ) : (

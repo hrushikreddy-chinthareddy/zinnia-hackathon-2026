@@ -1,6 +1,6 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import { useQuery } from '@tanstack/react-query';
-import { DEFAULT_ERROR_STRING, toTitleCase } from '@zinnia/utils';
+import { toTitleCase } from '@zinnia/utils';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { FC, useMemo, useState } from 'react';
@@ -133,7 +133,7 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
                     />
                 </div>
                 <Typography className="py-4" variant={TypographyVariant.H2}>
-                    Top 5 Processes by Volume
+                    Top Processes by Volume
                 </Typography>
                 <RadioGroup.Root asChild onValueChange={handleSelectedSubprocess} value={selectedSubprocess}>
                     <div className=" grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 !items-stretch !border-b-0 !after:content-none [& .indicator]">
@@ -178,9 +178,6 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
                                                 <FieldData variant={FieldDataVariant.Large} label="cases">
                                                     {element.count.toLocaleString('en-US')}
                                                 </FieldData>
-                                                <FieldData variant={FieldDataVariant.Large} label="Avg days to close">
-                                                    {DEFAULT_ERROR_STRING}
-                                                </FieldData>
                                             </div>
                                         </>
                                     )}
@@ -190,14 +187,16 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
                     </div>
                 </RadioGroup.Root>
             </div>
-            <div className="bg-white flex flex-col lg:flex-row gap-4 lg:gap-8 mb-8 lg:px-8">
+            <div className="mb-10 lg:px-8">
                 {selectedSubprocess && (
                     <CaseTimeseries
                         selectedSubprocess={selectedSubprocess}
                         legendLabel={splitAndSentenceCase(carrierOrBrokerDealer)}
                         groupByOptions={[carrierOrBrokerDealer, GroupByOptions.UpdatedAt]}
                         filters={caseVolumeTimeseriesFilters}
-                        title={`${toTitleCase(selectedSubprocess)} Application Volume`}
+                        title={`Top 5 ${carrierOrBrokerDealer === GroupByOptions.BrokerDealerName ? 'Brokers' : 'Carriers'} ${toTitleCase(
+                            selectedSubprocess
+                        )} `}
                         selectedProcess={selectedProcessType}
                         linkQueryFormat={`/cases${convertToQueryString({
                             ...caseVolumeTimeseriesFilters,
@@ -206,14 +205,14 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
                     />
                 )}
             </div>
-            <div className="bg-white flex flex-col lg:flex-row gap-4 lg:gap-8 mb-8 lg:px-8">
+            <div className="mb-10 lg:px-8">
                 {selectedSubprocess && (
                     <CaseTimeseries
                         selectedSubprocess={selectedSubprocess}
                         legendLabel={splitAndSentenceCase(GroupByOptions.ProductName)}
                         groupByOptions={[GroupByOptions.ProductName, GroupByOptions.UpdatedAt]}
                         filters={caseVolumeTimeseriesFilters}
-                        title={`${toTitleCase(selectedSubprocess)} Top 5 Products`}
+                        title={`Top 5 Products ${toTitleCase(selectedSubprocess)}`}
                         selectedProcess={selectedProcessType}
                         linkQueryFormat={`/cases${convertToQueryString({
                             ...caseVolumeTimeseriesFilters,
@@ -222,7 +221,7 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
                     />
                 )}
             </div>
-            <div className="bg-white flex flex-col gap-4 lg:gap-8 mb-8 lg:px-8">
+            <div className="mb-10 lg:px-8">
                 {isLoading ? (
                     <>
                         <div className="min-h-[600px] grid gap-4 h-full mb-4 w-full place-content-center bg-[--color-base-surface-surface-tertiary]">
