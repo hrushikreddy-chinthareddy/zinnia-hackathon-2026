@@ -10,6 +10,7 @@ const states = {
     CALIFORNIA: 'CA',
     COLORADO: 'CO',
     CONNECTICUT: 'CT',
+    DC: 'DC',
     DELAWARE: 'DE',
     FLORIDA: 'FL',
     GEORGIA: 'GA',
@@ -53,7 +54,6 @@ const states = {
     'WEST VIRGINIA': 'WV',
     WISCONSIN: 'WI',
     WYOMING: 'WY',
-    'WASHINGTON DC': 'DC',
 };
 
 export const territoriesAndOutlyingIslands = {
