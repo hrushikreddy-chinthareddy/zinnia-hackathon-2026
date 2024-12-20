@@ -17,7 +17,7 @@ import { client } from '@deps/queries/api-utils/client';
 import { isMockPolicyDetailsRequestEnabled, isMockPolicySearchRequestEnabled } from '@deps/services/api-config';
 import { mockPolicy } from '@deps/services/mocks/sor-policy';
 import { PolicySearchResponse, SearchViewQuery } from '@deps/types/search';
-import { fullyMaskPolicyResponse, lcPartyResponseSanitizer, policyMasker, policySanitizerWithoutSSN } from '@deps/utils/sanitizers';
+import { fullyMaskPolicyResponse, lcPartyResponseSanitizer, policySanitizer, policySanitizerWithoutSSN } from '@deps/utils/sanitizers';
 import { logError, logInfo, logTrace, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
 import { apiServerBaseUrl, baseAppUrl, policyApiBaseUrl } from '../api-config';
@@ -238,7 +238,7 @@ export const getPolicyDetailsSsr = async (
             return fullyMaskPolicyResponse(policyResponse.data)?.data;
         }
 
-        return nonSanitizedSSN ? policySanitizerWithoutSSN(policyResponse?.data?.data) : policyMasker(policyResponse?.data?.data);
+        return nonSanitizedSSN ? policySanitizerWithoutSSN(policyResponse?.data?.data) : policySanitizer(policyResponse?.data?.data);
     } catch (error: any) {
         logError('getPolicyDetailsSSR', { ...parseErrorInformation(error), id, ...loggingContext });
 
