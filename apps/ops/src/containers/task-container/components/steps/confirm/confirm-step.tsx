@@ -41,10 +41,10 @@ const ConfirmStep = ({ taskType, taskInfoLink }: ConfirmStepProps) => {
         );
     }
 
-    if (submitFailed) {
+    if (!submitFailed) {
         return (
             <ApiErrorCard
-                leaveRoute={'/create-case'}
+                leaveRoute={taskInfoLink}
                 submit={{
                     action: submit,
                     text: t('submitTask'),
