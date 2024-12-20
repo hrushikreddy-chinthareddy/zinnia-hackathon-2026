@@ -4769,9 +4769,9 @@
         "confirmStep": {
             "title": "Soumise!",
             "subTitle": "La pertinence de l'avis a été soumise.",
-            "cta": "Aller au virement entrant",
+            "cta": "Aller à l'examen d'adéquation",
             "secondaryCta": "Fermer",
-            "submitTask": "Soumettre les détails de l'adéquation"
+            "submitTask": "Soumettre les détails de l'examen d'adéquation"
         }
     }
 }

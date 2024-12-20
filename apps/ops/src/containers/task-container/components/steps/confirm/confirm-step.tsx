@@ -14,11 +14,10 @@ import { TaskType } from '@deps/models/case/task';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 
 interface ConfirmStepProps {
-    caseId: string;
-    taskId: string;
     taskType: TaskType;
+    taskInfoLink: string;
 }
-const ConfirmStep = ({ taskType }: ConfirmStepProps) => {
+const ConfirmStep = ({ taskType, taskInfoLink }: ConfirmStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.confirmStep` });
     const router = useRouter();
     const formState = useContext(TaskDataContext);
@@ -60,16 +59,10 @@ const ConfirmStep = ({ taskType }: ConfirmStepProps) => {
                 icon={<CircleCheckIcon className="text-semantic-success" height={50} width={50} />}
                 subtitle={t('subTitle')}
                 title={t('title')}
-                cta={{
-                    action: () => {
-                        router.push('/create-case');
-                    },
-                    text: t('cta'),
-                }}
                 secondaryCta={
                     <NavElement
                         aria-label={t('secondaryCta') as string}
-                        onClick={() => router.push('/create-case')}
+                        onClick={() => router.push(taskInfoLink)}
                         size={NavElementSize.Small}
                         type={NavElementType.Button}
                         variant={NavElementVariant.Default}

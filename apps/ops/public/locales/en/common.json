@@ -4805,9 +4805,9 @@
         "confirmStep": {
             "title": "Submitted!",
             "subTitle": "Review suitability was submitted.",
-            "cta": "Go to incoming transfer",
+            "cta": "Go to suitability review",
             "secondaryCta": "Close",
-            "submitTask": "Submit suitability details"
+            "submitTask": "Submit suitability review details"
         }
     }
 }
