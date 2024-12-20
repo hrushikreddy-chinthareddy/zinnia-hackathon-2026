@@ -53,6 +53,7 @@ const states = {
     'WEST VIRGINIA': 'WV',
     WISCONSIN: 'WI',
     WYOMING: 'WY',
+    'WASHINGTON DC': 'DC',
 };
 
 export const territoriesAndOutlyingIslands = {
