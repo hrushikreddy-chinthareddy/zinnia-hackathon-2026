@@ -50,8 +50,8 @@ const getEarliestDate = (input: DashboardStatsElementResponse[]) => {
 };
 
 export function processGroupedData(input: DashboardStatsElementResponse[]): LineAndVolumeCategoryAndSeries {
-    const WEEKLY_WEEKS = 48; // 4 weeks per month for 12 months
-    const MONTHLY_MONTHS = 12;
+    const MONTHLY_MONTHS = 4;
+    const WEEKLY_WEEKS = 4 * MONTHLY_MONTHS; // 4 weeks per month for 12 months
     const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     const result: LineAndVolumeCategoryAndSeries = {
@@ -68,9 +68,9 @@ export function processGroupedData(input: DashboardStatsElementResponse[]): Line
 
     // Generate categories
     const startMonthIndex = earliestDate.getUTCMonth(); // 0-based month index
-    result.monthlyCategories = Array(12).fill(0);
+    result.monthlyCategories = Array(MONTHLY_MONTHS).fill(0);
 
-    const months = Array.from({ length: MONTHLY_MONTHS }, (_, i) => MONTH_NAMES[(startMonthIndex + i) % 12]);
+    const months = Array.from({ length: MONTHLY_MONTHS }, (_, i) => MONTH_NAMES[(startMonthIndex + i) % MONTHLY_MONTHS]);
     result.weeklyCategories = months.flatMap(month => [month, month, month, month]);
 
     // Process data as before
@@ -131,7 +131,7 @@ export function processGroupedData(input: DashboardStatsElementResponse[]): Line
         // Process dates
         Object.entries(groupedByDate).forEach(([dateString, count]) => {
             const date = new Date(dateString);
-            const month = (date.getUTCMonth() - startMonthIndex + 12) % 12; // Relative month index (wraps around)
+            const month = (date.getUTCMonth() - startMonthIndex + MONTHLY_MONTHS) % MONTHLY_MONTHS; // Relative month index (wraps around)
             const day = date.getUTCDate();
             const weekOfMonth = Math.min(Math.ceil(day / 7), 4); // Group all 5th weeks into the 4th week. This gives us 4 weeks per month
 

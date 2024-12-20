@@ -110,8 +110,8 @@ export const getServerSideProps = withPageAuthRequired({
         const doesUserHavePagePermission = await checkTupleSsr(
             `${accessToken}`,
             user.partyId,
-            FgaRelation.Party,
-            FgaRoles.CASE_STATS_DASHBOARD_ROLE
+            FgaRelation.UiAccess,
+            FgaRoles.CASE_STATS_DASHBOARD_ENTITY
         );
         if (!doesUserHavePagePermission || !featureFlagDecisions['case-management-case_stats_dashboard']) {
             return {
