@@ -1,7 +1,7 @@
 import { LineOfBusiness, PolicyStatus } from '@zinnia/api-types/types/sor';
 
 import { SelectAmount } from '@/components/one-time-premium-payment/SelectAmount';
-import { getPolicyStatusDetails } from '@/services';
+import { getPolicyDetails, getPolicyStatusDetails } from '@/services';
 import {
   ConfiguredSettingId,
   getCarrierProductOneTimePaymentFee,
@@ -14,6 +14,11 @@ export default async function SelectBankPage({
   params: PolicyRequestInputs;
 }) {
   const { planCode, policyNumber } = params;
+  const { data: policyDetails } = await getPolicyDetails({
+    planCode: params.planCode,
+    policyNumber: params.policyNumber,
+  });
+
   const [policyStatusRes, ottpFeeRes] = await Promise.allSettled([
     getPolicyStatusDetails({
       planCode: params.planCode,
@@ -21,7 +26,7 @@ export default async function SelectBankPage({
     }),
     getCarrierProductOneTimePaymentFee({
       configuredItemCode: ConfiguredSettingId.ONE_TIME_PREMIUM_PAYMENT_GUAR_FEE,
-      carrierId: 'SBUL',
+      carrierId: policyDetails?.carrierId || '',
       planCode: planCode,
       benefitId: 'Base_Coverage',
     }),
