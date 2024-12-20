@@ -6,6 +6,7 @@ export const states = [
   { textValue: 'CA', label: 'California', value: 'CA' },
   { textValue: 'CO', label: 'Colorado', value: 'CO' },
   { textValue: 'CT', label: 'Connecticut', value: 'CT' },
+  { textValue: 'DC', label: 'District of Columbia', value: 'DC' },
   { textValue: 'DE', label: 'Delaware', value: 'DE' },
   { textValue: 'FL', label: 'Florida', value: 'FL' },
   { textValue: 'GA', label: 'Georgia', value: 'GA' },
