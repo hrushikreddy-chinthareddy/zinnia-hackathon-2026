@@ -1,19 +1,19 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import { useQuery } from '@tanstack/react-query';
-import { DEFAULT_ERROR_STRING, toTitleCase } from '@zinnia/utils';
+import { toTitleCase } from '@zinnia/utils';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { FC, useMemo, useState } from 'react';
 
-import { ExceptionSummary } from '@deps/components/dashboard/exception-summary/exception-summary';
-import { Top5SubprocessByVolume } from '@deps/components/dashboard/top-5-subprocesses-by-volume/top-5-subprocess-by-volume';
+import { CaseTimeseries } from '@deps/components/dashboard/case-timeseries/case-timeseries';
 import FieldData, { FieldDataVariant } from '@deps/components/fields/field-data/field-data';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import PageLoader from '@deps/components/page-loader/page-loader';
 import Select from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
+import { dashboardChartTitleFormat, splitAndSentenceCase } from '@deps/helpers/dashboard/dashboard-helpers';
+import { convertToQueryString } from '@deps/helpers/routing.helper';
 import { Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { DashboardSearchFilter } from '@deps/queries/cases';
@@ -28,9 +28,10 @@ export interface CarrierListItem {
 
 const timeFrameFilterOptions = ['trailing 12 months', 'last 6 months', 'last 90 days', 'last 60 days', 'last month'];
 
-export const IssuedBusiness: FC = () => {
+export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorizedCarriers }) => {
     const [timeframe, setTimeframe] = useState<string>(timeFrameFilterOptions[0]);
     const [selectedSubprocess, setSelectedSubprocess] = useState<string>('');
+    const [selectedProcessType] = useState<Processes>(Processes.NewBusiness);
     const [selectedException, setSelectedException] = useState<string | undefined>();
 
     const handleSelectedSubprocess = (subprocess: string) => {
@@ -39,14 +40,15 @@ export const IssuedBusiness: FC = () => {
     };
     const { selectedBrokerDealers, selectedCarriers } = useDashboardStore(state => state);
     const carrierOrBrokerDealer = useMemo(() => {
-        if (selectedCarriers) {
+        if (selectedCarriers && authorizedCarriers.length > 1) {
             return GroupByOptions.Carrier;
         }
-        if (selectedBrokerDealers) {
+
+        if (selectedBrokerDealers || authorizedCarriers.length === 1) {
             return GroupByOptions.BrokerDealerName;
         }
         return GroupByOptions.Carrier;
-    }, [selectedBrokerDealers, selectedCarriers]);
+    }, [authorizedCarriers, selectedBrokerDealers, selectedCarriers]);
 
     const handleTimeFrameChange = (value: string) => {
         setTimeframe(value);
@@ -91,19 +93,34 @@ export const IssuedBusiness: FC = () => {
         queryFn: () =>
             getCaseDashboardStatsQuery(baseDashboardQueryFilter, [GroupByOptions.ProcessSubType, GroupByOptions.ExceptionCategory]),
         select: ({ data }) => {
+            if (!selectedSubprocess) {
+                setSelectedSubprocess(data?.[0]?.name || '');
+            }
             return {
-                selectedSubprocess: data?.[0]?.name || '',
                 exceptionData: data?.slice(0, 5) || [],
             };
         },
     });
 
+    const caseVolumeTimeseriesFilters = useMemo(() => {
+        const baseFilter: DashboardSearchFilter = {
+            createdDateStart: createdDateStart,
+            process: [selectedProcessType],
+            caseStatus: [Statuses.Completed],
+            carrier: Object.keys(selectedCarriers),
+            brokerDealerName: Object.keys(selectedBrokerDealers),
+            ...(selectedSubprocess ? { requestSubType: [selectedSubprocess] } : {}),
+        };
+
+        return baseFilter;
+    }, [selectedBrokerDealers, selectedCarriers, selectedProcessType, selectedSubprocess, createdDateStart]);
+
     return (
         <CardContainer
-            classNames="relative !p-0 flex flex-col flex-1 !border-none  bg-[--color-base-surface-surface-tertiary]"
+            classNames="relative !p-0 flex flex-col flex-1 !border-none"
             containerClassNames="mt-none !p-0  border-t-2 border-[--color-base-border-border-light]"
         >
-            <div className=" bg-white p-8 flex flex-col gap-4 rounded">
+            <div className=" bg-white p-8 mb-8 flex flex-col gap-4 rounded">
                 <div className="w-52">
                     <Select
                         options={timeFrameFilterOptions.map(option => ({
@@ -116,13 +133,9 @@ export const IssuedBusiness: FC = () => {
                     />
                 </div>
                 <Typography className="py-4" variant={TypographyVariant.H2}>
-                    Top 5 Processes by Volume
+                    Top Processes by Volume
                 </Typography>
-                <RadioGroup.Root
-                    asChild
-                    onValueChange={handleSelectedSubprocess}
-                    value={selectedSubprocess || caseDashboardStatsData?.selectedSubprocess}
-                >
+                <RadioGroup.Root asChild onValueChange={handleSelectedSubprocess} value={selectedSubprocess}>
                     <div className=" grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 !items-stretch !border-b-0 !after:content-none [& .indicator]">
                         {caseDashboardStatsData?.exceptionData.map((element, index) => {
                             return (
@@ -165,9 +178,6 @@ export const IssuedBusiness: FC = () => {
                                                 <FieldData variant={FieldDataVariant.Large} label="cases">
                                                     {element.count.toLocaleString('en-US')}
                                                 </FieldData>
-                                                <FieldData variant={FieldDataVariant.Large} label="Avg days to close">
-                                                    {DEFAULT_ERROR_STRING}
-                                                </FieldData>
                                             </div>
                                         </>
                                     )}
@@ -176,6 +186,42 @@ export const IssuedBusiness: FC = () => {
                         })}
                     </div>
                 </RadioGroup.Root>
+            </div>
+            <div className="mb-10 lg:px-8">
+                {selectedSubprocess && (
+                    <CaseTimeseries
+                        selectedSubprocess={selectedSubprocess}
+                        legendLabel={splitAndSentenceCase(carrierOrBrokerDealer)}
+                        groupByOptions={[carrierOrBrokerDealer, GroupByOptions.UpdatedAt]}
+                        filters={caseVolumeTimeseriesFilters}
+                        title={`Top 5 ${carrierOrBrokerDealer === GroupByOptions.BrokerDealerName ? 'Brokers' : 'Carriers'} ${toTitleCase(
+                            selectedSubprocess
+                        )} `}
+                        selectedProcess={selectedProcessType}
+                        linkQueryFormat={`/cases${convertToQueryString({
+                            ...caseVolumeTimeseriesFilters,
+                            [carrierOrBrokerDealer]: 'replaceme',
+                        } as any)}`}
+                    />
+                )}
+            </div>
+            <div className="mb-10 lg:px-8">
+                {selectedSubprocess && (
+                    <CaseTimeseries
+                        selectedSubprocess={selectedSubprocess}
+                        legendLabel={splitAndSentenceCase(GroupByOptions.ProductName)}
+                        groupByOptions={[GroupByOptions.ProductName, GroupByOptions.UpdatedAt]}
+                        filters={caseVolumeTimeseriesFilters}
+                        title={`Top 5 Products ${toTitleCase(selectedSubprocess)}`}
+                        selectedProcess={selectedProcessType}
+                        linkQueryFormat={`/cases${convertToQueryString({
+                            ...caseVolumeTimeseriesFilters,
+                            productName: 'replaceme',
+                        } as any)}`}
+                    />
+                )}
+            </div>
+            <div className="mb-10 lg:px-8">
                 {isLoading ? (
                     <>
                         <div className="min-h-[600px] grid gap-4 h-full mb-4 w-full place-content-center bg-[--color-base-surface-surface-tertiary]">
@@ -186,26 +232,9 @@ export const IssuedBusiness: FC = () => {
                     <ExceptionInsights
                         timeframe={timeframe}
                         completedCasesByProcessSubType={caseDashboardStatsData?.exceptionData}
-                        selectedSubprocess={selectedSubprocess || caseDashboardStatsData?.selectedSubprocess || ''}
+                        selectedSubprocess={selectedSubprocess}
                         selectedException={selectedException}
                         carrierOrBrokerDealer={undefined}
-                    />
-                )}
-            </div>
-            <div className="bg-white p-8 flex flex-col gap-8">
-                {(selectedSubprocess || caseDashboardStatsData?.selectedSubprocess) && (
-                    <ExceptionSummary
-                        carrierOrBrokerDealer={carrierOrBrokerDealer}
-                        startDate={createdDateStart}
-                        selectedSubprocess={selectedSubprocess || caseDashboardStatsData?.selectedSubprocess || ''}
-                    />
-                )}
-            </div>
-            <div className="bg-white p-8 flex flex-col gap-8">
-                {(selectedSubprocess || caseDashboardStatsData?.selectedSubprocess) && (
-                    <Top5SubprocessByVolume
-                        createdDateStart={createdDateStart}
-                        requestSubType={selectedSubprocess || caseDashboardStatsData?.selectedSubprocess || ''}
                     />
                 )}
             </div>

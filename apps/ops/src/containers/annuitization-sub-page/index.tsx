@@ -76,7 +76,7 @@ export const AnnuitizationSubPage = () => {
                 inactiveText={t('upcoming.inactive.text') as string}
                 inactiveHeaderText={t('upcoming.inactive.header') as string}
                 footerLinks={footerContent as FooterContent[]}
-                monthlyAmount={upcomingPayout?.amount}
+                autopayAmount={upcomingPayout?.amount}
                 paymentText={t('upcoming.payoutAmount') as string}
                 paymentDate={upcomingPayout?.nextProgramDate}
                 paymentDateText={(!!upcomingPayout?.nextProgramDate && t('upcoming.payoutDateText')) || undefined}

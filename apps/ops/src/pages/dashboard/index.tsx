@@ -53,29 +53,37 @@ const DashboardPage = ({
     }, []);
 
     return (
-        <DashboardResponsiveLayout>
+        <>
             <PageHead titleKey="dashboard" />
             <NoNavLayout fullHeight={true} displayTopNavBar={true} size="large">
-                <FiltersHeader
-                    carrierHeaderIsIntersecting={carrierHeaderIsIntersecting}
-                    carrierHeaderEntry={carrierHeaderEntry}
-                    authorizedCarriers={authorizedCarriers}
-                    brokerDealersSSR={brokerDealersSSR}
-                    ref={carrierHeaderRef}
-                    loading={loading}
-                />
-                <DashboardTabNav>
-                    <div ref={tabContentRef}>
-                        <TabContent value={DashboardTabs.ACTIVE_APPLICATIONS}>
-                            <ActiveApplications handleSetLoading={handleSetLoading} loading={loading} carrierHeaderRef={carrierHeaderRef} />
-                        </TabContent>
-                        <TabContent value={DashboardTabs.ISSUED_BUSINESS}>
-                            <IssuedBusiness />
-                        </TabContent>
-                    </div>
-                </DashboardTabNav>
+                <DashboardResponsiveLayout>
+                    <FiltersHeader
+                        carrierHeaderIsIntersecting={carrierHeaderIsIntersecting}
+                        carrierHeaderEntry={carrierHeaderEntry}
+                        authorizedCarriers={authorizedCarriers}
+                        brokerDealersSSR={brokerDealersSSR}
+                        ref={carrierHeaderRef}
+                        loading={loading}
+                    />
+                    <DashboardTabNav>
+                        <div ref={tabContentRef}>
+                            <TabContent value={DashboardTabs.ACTIVE_APPLICATIONS}>
+                                <ActiveApplications
+                                    handleSetLoading={handleSetLoading}
+                                    loading={loading}
+                                    carrierHeaderRef={carrierHeaderRef}
+                                    authorizedCarriers={authorizedCarriers}
+                                    brokerDealersSSR={brokerDealersSSR}
+                                />
+                            </TabContent>
+                            <TabContent value={DashboardTabs.ISSUED_BUSINESS}>
+                                <IssuedBusiness authorizedCarriers={authorizedCarriers} />
+                            </TabContent>
+                        </div>
+                    </DashboardTabNav>
+                </DashboardResponsiveLayout>
             </NoNavLayout>
-        </DashboardResponsiveLayout>
+        </>
     );
 };
 
@@ -120,7 +128,11 @@ export const getServerSideProps = withPageAuthRequired({
             nextI18nextConfig,
             ALL_LOCALES
         );
+
         const brokerDealersSSR = await fetchAgentsSSR(accessToken || '');
+        const filteredBrokerDealers = brokerDealersSSR.filter(
+            brokerDealer => brokerDealer.name !== 'NOT_APPLICABLE' && brokerDealer.name !== ''
+        );
 
         const authorizedCarriers = await getCarrierListServerSSR(accessToken || '', user.partyId, UserPermission.AllowReadCaseManagement);
 
@@ -128,7 +140,7 @@ export const getServerSideProps = withPageAuthRequired({
             props: {
                 locale,
                 authorizedCarriers,
-                brokerDealersSSR,
+                brokerDealersSSR: filteredBrokerDealers,
                 ...translations,
             },
         };

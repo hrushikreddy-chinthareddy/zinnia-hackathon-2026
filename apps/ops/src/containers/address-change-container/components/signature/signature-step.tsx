@@ -1,5 +1,5 @@
 import { useMemo, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 
 import SignatureValidationContainer from '@deps/components/otp-signature-container/component/otp-signature-conatiner';
 import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
@@ -25,10 +25,10 @@ export function SignatureStep({ policy }: SignatureStepProps) {
 
     const { goToNext } = useWorkflow();
     // const isJointOwnerExistForPolicy = useMemo(() => isJointOwnerExist(policy?.partyRoles ?? []), [policy]);
-    const isJointOwnerExistForPolicy = useMemo(() => isJointOwnerPresent(policy?.partyRoles ?? []), [policy])
+    const isJointOwnerExistForPolicy = useMemo(() => isJointOwnerPresent(policy?.partyRoles ?? []), [policy]);
     const isAnnuitant = useMemo(() => isAnnuitantSignatureRequired(policy?.partyRoles ?? [], policy.parties ?? []), [policy]);
 
-    const { signatureData, setSignatureData, formErrors, setFormErrors } = useAddressChange();
+    const { signatureData, setSignatureData, formErrors, setFormErrors, submitSuccess } = useAddressChange();
     const { signaturesConfig, formValidation } = useSignatureStepConfig(t, isJointOwnerExistForPolicy, isAnnuitant);
 
     const policyOwnerId = policy?.partyRoles?.find(pr => pr.partyRole === PartyRole.OWNER)?.partyId;
@@ -67,7 +67,7 @@ export function SignatureStep({ policy }: SignatureStepProps) {
             footerContent={
                 <TransactionNavigationButtons
                     className="mt-10"
-                    disableContinue={false}
+                    disableContinue={submitSuccess}
                     handleContinue={handleStepContinue}
                     parentPage={ParentPage.CreateCase}
                     leaveTransactionLink="/create-case"

@@ -31,7 +31,7 @@ class PolicyManagementPage extends Page {
     }
 
     get ['Policy search error']() {
-      return cy.get('[data-testid="hex-exclamation-icon"]').siblings('p');
+      return cy.get('p').contains('Enter a policy number to return search results');
     }
 }
 

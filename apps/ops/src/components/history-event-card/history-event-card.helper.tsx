@@ -1,4 +1,4 @@
-import { DEFAULT_ERROR_STRING, toSentenceCase, toTitleCase } from '@zinnia/utils';
+import { toSentenceCase, toTitleCase } from '@zinnia/utils';
 import { I18n, TFunction, i18n } from 'next-i18next';
 
 import { getFullName } from '@deps/helpers/party-info-helper';
@@ -16,6 +16,7 @@ import {
 } from '@deps/models/policy/sor-policy';
 
 import { GetBankAccount, PeopleChangeType } from './types';
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 const typeByTransactionType = {
     [TransactionType.AddressChange]: 'address',
@@ -96,8 +97,8 @@ export const getEventTitle = (transaction: Transaction, t: TFunction): string =>
         return toSentenceCase(getPeopleChangeEventTitle(transaction, t));
     }
 
-    return t(`historyEventCard.transactionTypes.${transactionType}`, transactionType ?? DEFAULT_ERROR_STRING);
-}
+    return t(`historyEventCard.transactionTypes.${transactionType}`, transactionType || DEFAULT_ERROR_STRING);
+};
 
 export interface EventCardValues {
     amount?: number;
@@ -126,13 +127,17 @@ export const getHistoryEventCardValues = (policy: Policy, transaction: Transacti
 
     const bankingBody = paymentMethod
         ? t('historyEventCard.bankingBody', {
-              accountType: t(`historyEventCard.bankAccountTypes.${paymentMethod.accountType?.toLowerCase()}`),
+              accountType: t(
+                  `historyEventCard.bankAccountTypes.${paymentMethod.accountType?.toLowerCase()}`,
+                  paymentMethod.accountType ?? DEFAULT_ERROR_STRING
+              ),
               lastFour: formatAccountNumber(paymentMethod.internationalBankAccountNumber ?? paymentMethod.accountNumber, true),
           })
         : null;
 
     let amount;
-    let eventBody;'';
+    let eventBody;
+
     let isClickable = false;
     const eventTitle = getEventTitle(transaction, t);
 
@@ -184,7 +189,7 @@ export const getHistoryEventCardValues = (policy: Policy, transaction: Transacti
                 accountType: mapAccountTypeToTranslation(bankAccount?.accountType, t).toLowerCase(),
                 lastFour: formatAccountNumber(bankAccount?.internationalBankAccountNumber ?? bankAccount?.accountNumber, true),
             });
-            eventBody = bankAccount ? eventBankingBody : ''
+            eventBody = bankAccount ? eventBankingBody : '';
             amount = isPending ? (requestedAmount ? -requestedAmount : requestedAmount) : appliedAmount;
             isClickable = true;
             break;

@@ -18,11 +18,11 @@ import { formatAccountNumber, toTitleCase } from '@deps/helpers/string.helper';
 import { Reason } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING, DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
 
-export const UpcomingPremium: React.FC<BasePolicyComponentArgs> = ({ policy }) => {
+export const UpcomingPremium: React.FC<BasePolicyComponentArgs> = ({ policy }: BasePolicyComponentArgs) => {
     const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
     const sideSheet = useSideSheetContext();
 
-    const premiumProgram = policy.policy.systematicPrograms?.find(sp => sp.reason === Reason.PREMIUM);
+    const premiumProgram = policy.systematicPrograms.getProgramsByReason(Reason.PREMIUM);
     const paymentDate = premiumProgram?.nextProgramDate;
     const amount = premiumProgram?.amount;
     const { bankId, partyId } = premiumProgram?.party?.[0] || {};
@@ -77,10 +77,12 @@ export const UpcomingPremium: React.FC<BasePolicyComponentArgs> = ({ policy }) =
 
 const UpcomingPremiumDisplayField = ({ policy }: BasePolicyComponentArgs) => {
     const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
+    const premiumProgram = policy.systematicPrograms.getProgramsByReason(Reason.PREMIUM);
+    const translatedFrequency = t(`common:systematicProgram.frequency.${premiumProgram?.frequency?.toLowerCase()}`);
 
     return (
         <div>
-            <Label variant={LabelVariant.FieldLabel} label={t('colDefs:policySummary.upcomingMonthlyPremium')} />
+            <Label variant={LabelVariant.FieldLabel} label={t('colDefs:policySummary.upcomingPremium', { frequency: translatedFrequency })} />
             <UpcomingPremium policy={policy} />
         </div>
     );

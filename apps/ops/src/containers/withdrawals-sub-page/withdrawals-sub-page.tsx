@@ -92,7 +92,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                     <UpcomingPaymentCard
                         title={`${t('withdrawalAutopay')}`}
                         titleCase={false}
-                        monthlyAmount={withdrwalProgram?.amount}
+                        autopayAmount={withdrwalProgram?.amount}
                         paymentDate={withdrwalProgram?.nextProgramDate}
                         bankDetails={getBankDetails(getParty(policyDetails.allParties, withdrwalProgram), withdrwalProgram)}
                         additionalCharges={getAddCharges({ flatExtra: getFlatExtra(policy.coverage), t })}
@@ -113,7 +113,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                         ]}
                     />
                     <UpcomingPaymentCard
-                        monthlyAmount={rmdProgram?.amount}
+                        autopayAmount={rmdProgram?.amount}
                         title={`${t('rmdAutopay')}`}
                         paymentDate={rmdProgram?.nextProgramDate}
                         bankDetails={getBankDetails(getParty(policyDetails.allParties, rmdProgram), rmdProgram)}

@@ -16,6 +16,8 @@ import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import SideSheetFinancialTransactionContent from './side-sheet-financial-content';
 import SidesheetCancelPending from '../cancel/side-sheet-cancel-pending';
+import SideSheetNewLoanTransactionContent from '../loan/side-sheet-new-loan-transaction-content';
+import { NewLoanTransactionSideSheetValues } from '../loan/types';
 import SidesheetReverseRecreate from '../reverse-recreate/side-sheet-reverse-recreate';
 import { replacesReverseInitiator } from '../reverse-recreate/side-sheet-reverse-recreate.helper';
 import SideSheetReversedTransaction from '../reverse-recreate/side-sheet-reversed-transaction';
@@ -125,6 +127,11 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
     let SidesheetContent;
 
     switch (transactionType) {
+        case TransactionType.NewLoan:
+            SidesheetContent = (
+                <SideSheetNewLoanTransactionContent t={t} values={sideSheetValues as NewLoanTransactionSideSheetValues} loading={loading} />
+            );
+            break;
         case TransactionType.FullSurrender:
         case TransactionType.PartialWithdrawalOneTime:
         case TransactionType.FreeLookCancellation:
@@ -185,7 +192,8 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
                         <div className="flex flex-col">
                             {transactionType !== TransactionType.FullSurrender &&
                                 transactionType !== TransactionType.PartialWithdrawalOneTime &&
-                                transactionType !== TransactionType.FreeLookCancellation && (
+                                transactionType !== TransactionType.FreeLookCancellation &&
+                                transactionType !== TransactionType.NewLoan && (
                                     <div className={cancelCta ? 'mb-4' : ''}>
                                         <Content details={numberFormatify(transactionValue)} variant={ContentVariant.Value} />
                                         <Content
@@ -215,16 +223,21 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
                                 </div>
                             )}
                             {cancelCta && (
-                                <Button
-                                    onClick={() => {
-                                        setView(SidesheetViews.cancel);
-                                    }}
-                                    mode="link"
-                                    size="small"
-                                    className={clsx('!justify-start !p-0', transactionType === TransactionType.FullSurrender ? 'mb-6' : '')}
-                                >
-                                    {cancelCta}
-                                </Button>
+                                <div>
+                                    <Button
+                                        onClick={() => {
+                                            setView(SidesheetViews.cancel);
+                                        }}
+                                        mode="link"
+                                        size="small"
+                                        className={clsx(
+                                            '!justify-start !p-0',
+                                            transactionType === TransactionType.FullSurrender ? 'mb-6' : ''
+                                        )}
+                                    >
+                                        {cancelCta}
+                                    </Button>
+                                </div>
                             )}
 
                             {status === TransactionStatus.Canceled && (

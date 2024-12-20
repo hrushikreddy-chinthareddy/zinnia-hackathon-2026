@@ -67,7 +67,8 @@
             "newWithdrawal": "New Withdrawal",
             "formData": "Form Data",
             "annuitization": "Annuitization",
-            "dashboard": "Case Stats"
+            "dashboard": "Case Stats",
+            "newLoan": "New Loan"
         },
         "navLinks": {
             "accessManagement": {
@@ -1089,6 +1090,156 @@
             "requestCompletion.caseCompleted": "The processing work in the workflow system case has been marked complete.",
             "requestCompletion.LCContractIssued": "We issue the contract once all processing work is complete and premium has processed.",
             "requestCompletion.policyPagesIssued": "We generate policy pages for the applicant (now owner) of the issued contract."
+        },
+        "nigoReasons": {
+            "EM.035": "Agent's line of business was inactive or nonexistent when application was signed.",
+            "EM.036": "Agent lacks required product training.",
+            "EM.037": "Application signed date is before the training effective date, so was inactive when application was signed.",
+            "EM.047": "Agent lacks a license in the state where product was sold.",
+            "EM.048": "Agent's license was inactive when application was signed.",
+            "EM.050": "Agent lacks an appointment in the state where product was sold.",
+            "EM.051": "Agent's appointment was inactive when the application was signed.",
+            "EM.053": "Agent's state appointment status is pending.",
+            "EM.054": "Agent's state appointment status is state pending.",
+            "EM.055": "Agent's state appointment status is terminated.",
+            "EM.056": "Agent lacks anti-money laundering training.",
+            "EM.057": "Agent's anti-money laundering training was not complete at time of sale.",
+            "EM.058": "Agent's anti-money laundering training is expired.",
+            "EM.009": "Agent not properly licensed to sell product according to FINRA Rule 8312.",
+            "EM.018": "Agent not approved to sell product and policy cannot be issued.",
+            "EM.020": "Agent lacks an appointment in the state where product was sold according to FINRA Rule 8312.",
+            "EM.022": "Agent lacks an appointment in the state where product was sold due to lacking a proper license according to FINRA Rule 8312.",
+            "NB.EM.058": "One or more of the following roles is missing an address: Owner, joint owner, annuitant, joint annuitant, servicing agent.",
+            "NB.EM.023": "Application must be reviewed by the submitting firm for suitability before processing can complete.",
+            "NB.EM.069": "Application must be reviewed by an internal processor for suitability before processing can complete.",
+            "NB.EM.090": "Required suitability form is missing. ",
+            "NB.EM.091": "Required suitability form is missing. ",
+            "NB.EM.093": "Required suitability form is missing. ",
+            "TP.EM.042": "<ExchangeReplace | CompanyName>, <ExchangeReplace | SourcePolicy> - Unable to determine address/fax for transfer. Review for valid address.",
+            "TP.EM.043": "<ExchangeReplace | CompanyName>, <ExchangeReplace | SourcePolicy> requires carrier specific transfer form. Review NB Supporting documents for transfer form.",
+            "TP.EM.004": "<ExchangeReplace | CompanyName>, <ExchangeReplace | SourcePolicy> - Unable to generate Transfer Letter. Please manually create Transfer Letter and request transfer to be mailed or faxed.",
+            "TP.EM.033": "Rate Lock update failed. Process transfer request manually.",
+            "TP.EM.069": "User Action Required: Transfer paperwork sent via DTCC. Unable to upload Output document. Please manually upload Output document.",
+            "TP.EM.070": "User Action Required: Transfer processing failed. Unable to send transfer paperwork via DTCC. Please mail/fax transfer paperwork.",
+            "TP.EM.027": "The replacement form we received is incorrect for the state where the product was sold.",
+            "TP.EM.032": "Ceding carrier company name is missing from replacement form.",
+            "TP.EM.020": "The owner's signature is missing from the ACORD form.",
+            "TP.EM.034": "The owner's signature is missing from the replacement form.",
+            "TP.EM.035": "The agent's signature is missing from the replacement form.",
+            "TP.EM.021": "The joint owner's signature is missing from the ACORD form.",
+            "TP.EM.022": "The owner's signature date is missing from the ACORD form.",
+            "TP.EM.036": "The owner's signature date is missing from the replacement form.",
+            "TP.EM.045": "The owner's signature date on the replacement form is not within the allowable time frame.",
+            "TP.EM.006": "The agent's signature date is invalid.",
+            "TP.EM.046": "The joint owner's signature date on the ACORD form is not within the allowable time frame.",
+            "TP.EM.038": "The agent's signature date is missing from the replacement form.",
+            "TP.EM.024": "The joint owner's signature date is missing from the ACORD form.",
+            "TP.EM.016": "The plan type is missing on the ACORD form.",
+            "TP.EM.003": "The ACORD form is missing.",
+            "TP.EM.017": "The plan type listed on ACORD form is not allowed for the qualification type.",
+            "TP.EM.018": "ACORD form doesn't indicate whether request is for full or partial transfer.",
+            "TP.EM.019": "The amount for partial transfer is missing from the ACORD form.",
+            "TP.EM.025": "The amount for transfer is missing from the ACORD form.",
+            "TP.EM.054": "Joint annuitant listed on the ACORD is not present on the application.",
+            "TP.EM.030": "The owner name is missing on the replacement form.",
+            "TP.EM.031": "Owner name on the replacement form does not match the owner name on the application.",
+            "TP.EM.040": "The instructions on the replacement form conflict with instructions on the application.",
+            "PP.EM.003": "Draft contract status in LifeCad must be \"App Entry\" or \"Pnd-Await funds.\" Invalid status found. ",
+            "PP.EM.001": "Premium amount received is greater than the allowed variance limit.",
+            "RN.EM.005": "The owner's full name is missing or incomplete on disclosure form.",
+            "RN.EM.006": "The owner's SSN or TIN is missing on disclosure form.",
+            "RN.EM.007": "The owner's birth date is missing on disclosure form.",
+            "RN.EM.008": "The joint owner's birth date is missing on disclosure form.",
+            "RN.EM.009": "The joint owner's SSN or TIN is missing on disclosure form.",
+            "RN.EM.001": "The replaced company's name is missing on disclosure form.",
+            "RN.EM.002": "The policy or contract number is missing on disclosure form.",
+            "RN.EM.003": "The contract type is missing on disclosure form.",
+            "RN.EM.004": "The plan type is missing on disclosure form.",
+            "RN.EM.012": "Multiple products are selected on disclosure form.",
+            "RN.EM.023": "The product selection is missing on disclosure form.",
+            "RN.EM.015": "The agent's full name is missing on disclosure form.",
+            "RN.EM.016": "The agency number is missing on disclosure form.",
+            "RN.EM.017": "The agent's email address is missing on disclosure form.",
+            "RN.EM.018": "The agent's broker dealer number is missing on disclosure form.",
+            "RN.EM.019": "The agent's phone number is missing on disclosure form.",
+            "RN.EM.020": "The agent's address is missing on disclosure form.",
+            "RN.EM.021": "The agent's fax number is missing on disclosure form.",
+            "RN.EM.010": "The joint owner's signature is missing on disclosure form.",
+            "RN.EM.013": "The owner's signature is missing on disclosure form.",
+            "RN.EM.040": "The agent's signature is missing on disclosure form.",
+            "RN.EM.011": "The joint owner's signature date is missing on disclosure form.",
+            "RN.EM.014": "The owner's signature date is missing on disclosure form.",
+            "RN.EM.041": "The agent's signature date is missing on disclosure form.",
+            "RN.EM.022": "The owner and/or agent signature date(s) are stale (not signed within 120 days of current date).",
+            "RN.EM.025": "There's a mismatch between replaced company's name on disclosure form and application.",
+            "RN.EM.026": "There's a mismatch between contract number on disclosure form and application. just noting this one is crossed out on the BRC?",
+            "RN.EM.027": "There's a mismatch between owner's full name on disclosure form and application.",
+            "RN.EM.028": "There's a mismatch between owner's SSN or TIN on the disclosure form and application.",
+            "RN.EM.029": "There's a mismatch between owner's birth date on disclosure form and application.",
+            "RN.EM.030": "There's a mismatch between joint owner's name on disclosure form and application.",
+            "RN.EM.031": "There's a mismatch between joint owner's birth date on disclosure form and application.",
+            "RN.EM.032": "There's a mismatch between joint owner's SSN or TIN on disclosure form and application.",
+            "RN.EM.033": "There's a mismatch between agent's name on disclosure form and eApplication.",
+            "RN.EM.034": "There's a mismatch between agency number on disclosure form and eApplication.",
+            "RN.EM.035": "There's a mismatch between agent's email on disclosure form and eApplication.",
+            "RN.EM.036": "There's a mismatch between agent's broker dealer number on disclosure form and eApplication.",
+            "RN.EM.037": "There's a mismatch between agent's phone number on disclosure form and eApplication.",
+            "RN.EM.038": "There's a mismatch between address on disclosure form and eApplication.",
+            "RN.EM.039": "There's a mismatch between agent's fax number on disclosure form and eApplication.",
+            "RN.EM.024": "The replacement form is missing.",
+            "RN.EM.042": "All replacement questions 1-6 are marked as \"No\", and the Yes/No question is unanswered.",
+            "RN.EM.043": "All replacement questions (1-6 and Yes/ No question) are unanswered.",
+            "RN.EM.044": "The Yes/No replacement question is marked \"No\", and one of the other questions (1-6) are marked \"Yes\".",
+            "NB.EM.006": "Age of owner or annuitant (or joint owner or joint annuitant) is greater than the maximum allowed.",
+            "NB.EM.007": "Age of owner or annuitant (or joint owner or joint annuitant) is less than the minimum allowed.",
+            "NB.EM.008": "One or more of the following are missing:  Primary owner, primary annuitant/insured, servicing agent, agent of record.",
+            "NB.EM.009": "Owner or annuitant (or joint owner or joint annuitant) birth date is missing.",
+            "NB.EM.012": "Residential address is incomplete or is a P.O. box for the primary owner (and/or joint owner, annuitant, joint annuitant).",
+            "NB.EM.015": "The primary owner is a trust.",
+            "NB.EM.017": "One or more of the following roles has multiple people listed when only one person is allowed per role: Owner, joint owner, annuitant, joint annuitant, servicing agent.",
+            "NB.EM.020": "The beneficiary allocation or agent commission percentage (for servicing agent or agent of record roles) doesn't equal 100%.",
+            "NB.EM.021": "The beneficiary allocation or agent commission percentage (for servicing agent or agent of record roles) is not a whole number.",
+            "NB.EM.026": "The primary owner is a company.",
+            "NB.EM.027": "For this product, primary owner information (first name, last name, SSN, sex, and birth date) must match primary annuitant information. At least one of these fields are mismatched.",
+            "NB.EM.028": "A joint owner is not allowed for this product when primary owner is an individual.",
+            "NB.EM.029": "For this product, joint annuitant and primary beneficiary must match (and have an allocation percentage of 100%).",
+            "NB.EM.030": "For this product, primary beneficiary first and last name must match the joint annuitant's.",
+            "NB.EM.031": "Contract is UGMA/UTMA.",
+            "NB.EM.032": "One or more of the following roles is missing  first or last name: Owner, joint owner, annuitant, joint annuitant, servicing agent.",
+            "NB.EM.033": "One or more of the following roles is missing a social security number: Owner, joint owner, annuitant, joint annuitant, servicing agent.",
+            "NB.EM.034": "One or more of the following roles is missing gender: Owner, joint owner, annuitant, joint annuitant, servicing agent.",
+            "NB.EM.035": "One or more of the following roles is missing a birth date: Owner, joint owner, annuitant, joint annuitant, servicing agent.",
+            "NB.EM.037": "Payee is missing.",
+            "NB.EM.043": "For this product, the joint owner must be an individual.",
+            "NB.EM.044": "For this product, the annuitant must be an individual.",
+            "NB.EM.049": "Product was sold in a state that doesn't allow sales.",
+            "NB.EM.050": "Qualification type, role type (owner, joint owner, etc.), and name type (individual, trust, etc.) must follow product rules. There is a mismatch for one or more roles.",
+            "NB.EM.053": "A joint annuitant is not allowed on non-qualified contracts.",
+            "NB.EM.055": "Beneficiary is missing. At least one is required.",
+            "NB.EM.056": "For this product, the joint owner must be designated as a spouse.",
+            "NB.EM.057": "One or more of the following roles is missing a relationship designation: Owner, joint owner, annuitant, joint annuitant, servicing agent.",
+            "NB.EM.061": "The replacement form is missing.",
+            "NB.EM.062": "Product disclosure form is missing.",
+            "NB.EM.063": "Product disclosure form is incorrect for the state where the product was sold.",
+            "NB.EM.064": "The replacement form we received is incorrect for the state where the product was sold.",
+            "NB.EM.068": "Primary beneficiary and/or irrevocable beneficiary is missing. At least one is required.",
+            "NB.EM.070": "Beneficiary name is listed as \"Children\" without any required information.",
+            "NB.EM.071": "For this product, primary beneficiaries must be the same people as primary owner and joint owner, and the primary beneficiaries allocation must be split evenly (50% each).",
+            "NB.EM.095": "Sales literature form is missing.",
+            "NB.EM.099": "When owner lives in Idaho, the state where the product was sold must also be Idaho.",
+            "NB.EM.102": "State disclosure form is missing.",
+            "NB.EM.103": "State Disclosure form is incorrect for the product.",
+            "NB.EM.106": "Out of state form is missing.",
+            "NB.EM.108": "California elderly abuse form is missing.",
+            "UI.EM.001": "Age of insured is greater than the maximum allowed.",
+            "UI.EM.002": "Age of insured is less than the minimum allowed.",
+            "UI.EM.003": "Sex of insured is missing.",
+            "UI.EM.004": "Product was sold in a state that doesn’t allow sales.",
+            "UI.EM.006": "Coverage amount is greater than the maximum coverage for this product.",
+            "UI.EM.007": "Coverage amount is less than the minimum coverage for this product.",
+            "UI.EM.008": "Product doesn’t allow this risk class.",
+            "UI.EM.010": "For this product, owner must be an individual.",
+            "UI.EM.013": "There is a mismatch between the client code and plan code."
         }
     },
     "caseOverview": {
@@ -1202,10 +1353,10 @@
                 "transfer of assets": "Transfer of Assets: {{label}}",
                 "ceding carrier": "Ceding Carrier: {{label}}"
             },
-            "reviewIssues": "Review {{taskType}} issues",
-            "suitabilityReview": "suitability review",
+            "reviewIssues": "Review {{taskType}}",
+            "suitabilityReview": "suitability",
             "commonTaskIssues": "Issue: One or more {{taskType}} issues found.",
-            "suitabilityReviewIssues": "Review Suitability Issue(s)"
+            "suitabilityReviewIssues": "Review Suitability"
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -2861,6 +3012,7 @@
                 "bankName": "Bank name",
                 "bestTime": "Best time",
                 "bestTimeToContact": "Best time to contact",
+                "cancelLoan": "Cancel loan",
                 "cancelPayment": "Cancel payment",
                 "cancelSurrender": "Cancel surrender",
                 "correspondencePreference": "Correspondence preference",
@@ -2983,11 +3135,13 @@
             "cancelSidesheet": {
                 "title": {
                     "PaymentOneTimePremium": "Cancel payment?",
-                    "FullSurrender": "Cancel surrender?"
+                    "FullSurrender": "Cancel surrender?",
+                    "NewLoan": "Cancel loan?"
                 },
                 "confirmationSubtitle": "If you cancel now, this",
                 "confirmationSubtitle2": "won't be processed.",
                 "FullSurrender": "Surrender",
+                "NewLoan": "New loan",
                 "PaymentOneTimePremium": "Payment one-time premium",
                 "nevermind": "Nevermind",
                 "successTitle": "Success!",
@@ -2996,7 +3150,8 @@
                 "close": "Close",
                 "cta": {
                     "PaymentOneTimePremium": "Cancel payment",
-                    "FullSurrender": "Cancel surrender"
+                    "FullSurrender": "Cancel surrender",
+                    "NewLoan": "Cancel loan"
                 },
                 "apiError": {
                     "title": "Sorry, that didn't work.",
@@ -4112,6 +4267,7 @@
         "summary": {
             "actualWithdrawalAmount": "Actual withdrawal amount",
             "actualWithdrawalAmountTooltip": "This is how much will actually be withdrawn from the account value. The owner selected net disbursement, so we will withdraw any transaction fees (if applicable) in addition to the requested withdrawal amount.",
+            "bpm500Error": "BPM 500 error",
             "disbursement": "{{type}} disbursement",
             "doNotWithhold": "Do not withhold",
             "effectiveDate": "Effective date",
@@ -4209,6 +4365,85 @@
         "withdrawals": "Withdrawals",
         "taken": "taken",
         "left": "left"
+    },
+    "newLoan": {
+        "amount": {
+            "disbursementType": {
+                "gross": "Gross",
+                "label": "Disbursement type",
+                "net": "Net",
+                "tooltip": "Disbursement type affects how fees are paid. Gross means the fees are subtracted from the requested amount; net means they are added. Not all policies have fees so depending on the carrier and the product, this selection may not make a meaningful difference."
+            },
+            "effectiveDate": {
+                "error": "Enter a valid effective date.",
+                "label": "Effective date",
+                "tooltip": "This is the date used to calculate all the available account values for this loan. Because funds in the account value are invested, the account value can change day by day. Processing can happen at any time, so we need to know at what point  to effectively withdraw the funds, even if we're processing the transaction some days before or after."
+            },
+            "fundDisbursementType": {
+                "customFunds": "Custom funds",
+                "label": "Fund disbursement type",
+                "proRata": "Pro rata",
+                "title": "How will this amount be taken from funds?",
+                "tooltip": "The account value is invested in one or more investment funds. When we withdraw the money, we need to know how to take the amount from each investment fund.  Pro rata means take an equal amount from each investment fund. Custom allows the owner to choose a certain amount from each investment fund."
+            },
+            "label": "Amount",
+            "value": {
+                "amountMissingError": "Loan amount is missing.",
+                "custom": "Custom amount",
+                "customError": "Loan amount must be at least 1$",
+                "exceedMaximum": "Loan amount can not exceed {{maxLoanAmount}}.",
+                "maximum": "Max loan amount",
+                "maximumTooltip": "This amount is how much the owner may borrow from the account value of their policy. It’s the total amount eligible for loan. Loans have consequences. Aside from incurring interest, a loan may reduce the owner's death benefit.",
+                "title": "How much do you want to borrow?"
+            }
+        },
+        "confirm": {
+            "cta": "Go to transaction history",
+            "label": "Confirm",
+            "secondaryCta": "Close",
+            "subtitle": {
+                "0": "A ",
+                "1": " loan was submitted.",
+                "NIGO": " loan was submitted",
+                "NIGO1": " for",
+                "NIGO2": " NIGO processing."
+            },
+            "title": "Submitted!"
+        },
+        "payment": {
+            "label": "Payment Method",
+            "title": "Where should we send the payment?"
+        },
+        "payor": {
+            "label": "Payor"
+        },
+        "start": {
+            "label": "Start",
+            "title": "Start a Loan",
+            "subtitle": "Ready to submit a loan request? First up, let's make sure we can keep track of this transaction in OnBase."
+        },
+        "summary": {
+            "bpm500Error": "BPM 500 error",
+            "fundAllocation": "Fund allocation",
+            "fundAllocationTooltip": "The account value is invested in one or more investment funds. When we withdraw the money, we need to know how to take the amount from each investment fund. Pro rata means take an equal amount from each investment fund. Custom allows the owner to choose a certain amount from each investment fund.",
+            "funds": "Funds",
+            "label": "Summary",
+            "payor": "Payor",
+            "proRata": "Pro rata",
+            "submitLoan": "Submit loan",
+            "status200subtitle": "Looking good! Be sure to review your entries before submitting.",
+            "status400subtitle": "Hm, we found an issue when checking this policy's rules. Review the error below.",
+            "loanAmount": "Loan amount",
+            "effectiveDate": "Effective date",
+            "effectiveDateTooltip": "This is the date used to calculate all the available account values for this loan. Because funds in the account value are invested, the account value can change day by day. Processing can happen at any time, so we need to know at what point  to effectively withdraw the funds, even if we're processing the transaction some days before or after.",
+            "payorTitle": "Payor",
+            "validationStatusLabel": "Validation status",
+            "internal500Error": "Services are down, so we can't continue. You can submit a help desk ticket. Please leave this transaction and try again later.",
+            "internal500CTAlink": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
+            "internal500CTAlinkText": "Submit a help desk ticket",
+            "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+            "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task."
+        }
     },
     "newPremium": {
         "start": {
@@ -4342,6 +4577,7 @@
         "transactions": {
             "label": "Transactions",
             "managePremiumAutopay": "Manage premium autopay",
+            "newLoan": "Start a loan",
             "newPremium": "Start a one-time premium",
             "startAWithdrawal": "Start a withdrawal",
             "cancelPolicy": "Cancel policy"
@@ -4504,6 +4740,7 @@
                 "text": "submit a help desk ticket"
             },
             "leaveTransaction": "Leave this transaction",
+            "submitNewLoan": "Submit loan",
             "submitPayment": "Submit payment",
             "submitWithdrawal": "Submit withdrawal",
             "subtitle": "Services are down, so we couldn't submit this transaction. You can try submitting again, if it's still not working ",
@@ -4806,9 +5043,13 @@
         "confirmStep": {
             "title": "Submitted!",
             "subTitle": "Review suitability was submitted.",
-            "cta": "Go to incoming transfer",
+            "cta": "Go to suitability review",
             "secondaryCta": "Close",
-            "submitTask": "Submit suitability details"
+            "submitTask": "Submit suitability review details"
         }
+    },
+    "unauthorized": {
+        "title": "Unauthorized",
+        "message": "You do not have access to view this information."
     }
 }

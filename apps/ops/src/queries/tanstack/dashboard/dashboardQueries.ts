@@ -114,7 +114,7 @@ export const getStatsFromSelectionQuery = async (
  * ******************************
  */
 
-interface ExceptionDataResponse {
+export interface StatsDataResponse {
     data: {
         statsResponseData?: DashboardStatsElementResponse[];
         // exceptionData: MappedExceptionData;
@@ -125,7 +125,7 @@ interface ExceptionDataResponse {
  *
  * Get a bunch of stats response data and add to it. Then return the whole thing.
  */
-export const getExceptionData = async (filter: DashboardSearchFilter, groupBy: GroupByOptions[]) => {
+export const getStatsData = async (filter: DashboardSearchFilter, groupBy: GroupByOptions[]) => {
     const statsResponse = await getCaseDashboardStats({
         filter,
         groupBy,
@@ -140,7 +140,7 @@ export const getExceptionData = async (filter: DashboardSearchFilter, groupBy: G
 
     const { data: statsData } = { ...statsResponse };
     // Set up default data
-    const parsedResponse: ExceptionDataResponse = {
+    const parsedResponse: StatsDataResponse = {
         data: {
             statsResponseData: statsData,
         },

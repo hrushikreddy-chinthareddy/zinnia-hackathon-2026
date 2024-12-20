@@ -14,7 +14,7 @@ export const processPayload = (task: ManagementTask, correlationId: string): boo
             const attachments: [] = task.data?.attachment;
             if (attachments?.length === 0) return true;
             attachments?.forEach(async (attachment: any) => {
-                if (!attachment.attachmentFile) return;
+                if (!attachment.attachmentFile || attachment.attachmentFile === '') return;
                 const document = await uploadDocument(task, attachment.attachmentFile, correlationId);
                 const { blob } = dataURItoBlob(attachment.attachmentFile);
                 if (document?.success) {

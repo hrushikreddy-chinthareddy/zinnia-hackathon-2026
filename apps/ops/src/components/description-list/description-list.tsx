@@ -150,7 +150,7 @@ const DescriptionList = ({
             textContent = (
                 <>
                     <span className={popoverClasses} aria-hidden="true">
-                        {t('policySummary.upcomingMonthlyPremiumNoPayment')}
+                        {t('policySummary.upcomingPremiumNoPayment')}
                     </span>
                     <span className={popoverClasses} aria-hidden="true">
                         {amountAndDate}

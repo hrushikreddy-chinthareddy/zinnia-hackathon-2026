@@ -25,6 +25,7 @@ import { logError, logInfo, parseErrorInformation } from '@deps/utils/server-log
 import { baseAppUrl, se2ApiServerUrl } from '../api-config';
 import { client } from '../api-utils/client';
 import { serverApi } from '../api-utils/serverApiClient';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 
 const baseCasesUrl = `${baseAppUrl}/api/case/v1/cases`;
 const ssrCasesUrl = `${se2ApiServerUrl}/cases`;
@@ -38,10 +39,21 @@ export type ReferenceDataQuery = {
 export const createCase = async (query: CreateCaseBody): Promise<CreateCaseResponse> => {
     try {
         const { data } = await client.post<CreateCaseBody, AxiosResponse>(baseCasesUrl, query);
-
+        browserLogInfo('cases::Successfully created a case', {
+            url: baseCasesUrl,
+            query,
+            id: data?.id ?? '',
+            function: 'cases.createCase',
+        });
         return data;
     } catch (error: any) {
         console.error('createCase::An error occurred create case ', error);
+        browserLogError('cases::Failed to create a case', {
+            ...parseErrorInformation(error),
+            url: baseCasesUrl,
+            query,
+            function: 'cases.createCase',
+        });
         return error.response;
     }
 };
@@ -57,15 +69,14 @@ export const getCases = async (query: CaseSearchBody): Promise<CaseSearchRespons
     }
 };
 
-export const getCaseNotes = async (caseId: string, includeInternal = false): Promise<NoteInstance[]> => {
+export const getCaseNotes = async (caseId: string, includeInternal = false): Promise<{ data: NoteInstance[]; status: number }> => {
     try {
         if (!caseId) throw new Error('no caseId provided');
         const caseNotesResponse = await client.get(`${baseCasesUrl}/${caseId}/note?includeInternal=${includeInternal}`);
 
-        return caseNotesResponse?.data ?? [];
+        return { data: caseNotesResponse?.data ?? [], status: caseNotesResponse?.status ?? 200 };
     } catch (err) {
-        console.warn('getCaseNotes::error getting case notes', err);
-        return [];
+        return { data: [], status: (err as AxiosResponse)?.status || 500 };
     }
 };
 

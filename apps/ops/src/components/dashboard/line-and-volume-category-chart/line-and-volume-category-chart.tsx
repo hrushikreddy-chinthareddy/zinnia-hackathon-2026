@@ -23,20 +23,7 @@ export type LineAndVolumeCategoryAndSeries = {
 
 const colors = ['#D385A5', '#BD85D3', '#8593D3', '#00628B', '#021936'];
 
-export function processGroupedData(input: DashboardStatsElementResponse[]): LineAndVolumeCategoryAndSeries {
-    const WEEKLY_WEEKS = 48; // 4 weeks per month for 12 months
-    const MONTHLY_MONTHS = 12;
-    const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-    const result: LineAndVolumeCategoryAndSeries = {
-        weeklyByLevel1Grouping: {},
-        weeklySeries: {} as Highcharts.SeriesLineOptions,
-        monthlyByLevel1Grouping: {},
-        monthlySeries: {} as Highcharts.SeriesColumnOptions,
-        weeklyCategories: [],
-        monthlyCategories: [],
-    };
-
+const getEarliestDate = (input: DashboardStatsElementResponse[]) => {
     // Get the earliest date in the data
     let earliestDate: Date = new Date();
     input.forEach(level1Group => {
@@ -59,10 +46,25 @@ export function processGroupedData(input: DashboardStatsElementResponse[]): Line
         });
     });
 
-    // Use the earliest date to calculate the starting point for categories
-    if (!earliestDate) {
-        throw new Error('No valid dates found in input data');
-    }
+    return earliestDate;
+};
+
+export function processGroupedData(input: DashboardStatsElementResponse[]): LineAndVolumeCategoryAndSeries {
+    const WEEKLY_WEEKS = 48; // 4 weeks per month for 12 months
+    const MONTHLY_MONTHS = 12;
+    const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    const result: LineAndVolumeCategoryAndSeries = {
+        weeklyByLevel1Grouping: {},
+        weeklySeries: {} as Highcharts.SeriesLineOptions,
+        monthlyByLevel1Grouping: {},
+        monthlySeries: {} as Highcharts.SeriesColumnOptions,
+        weeklyCategories: [],
+        monthlyCategories: [],
+    };
+
+    // Get the earliest date in the data
+    const earliestDate: Date = getEarliestDate(input);
 
     // Generate categories
     const startMonthIndex = earliestDate.getUTCMonth(); // 0-based month index
@@ -145,15 +147,20 @@ export function processGroupedData(input: DashboardStatsElementResponse[]): Line
 
     // Set the total for each month. this is used as the category for the stacked bar chart
     const totals: number[] = new Array(MONTHLY_MONTHS).fill(0);
+    const monthlyByLevel1GroupingAsArray: ChartSeriesSummary[] = [];
 
+    // We want to get the totals but only get the totals for the top 5 items we are showing in the line and bar chart
     for (const key in result.monthlyByLevel1Grouping) {
-        if (Object.prototype.hasOwnProperty.call(result.monthlyByLevel1Grouping, key)) {
-            const series = result.monthlyByLevel1Grouping[key].series.data;
-            series?.forEach((value, index) => {
-                totals[index] += typeof value === 'number' ? value : 0; // Accumulate the value at each index
-            });
-        }
+        monthlyByLevel1GroupingAsArray.push(result.monthlyByLevel1Grouping[key]);
     }
+    const sortedAndSlicedResults = monthlyByLevel1GroupingAsArray.sort((a, b) => b.total - a.total).slice(0, 5);
+
+    sortedAndSlicedResults.forEach(item => {
+        const series = item.series.data;
+        series?.forEach((value, index) => {
+            totals[index] += typeof value === 'number' ? value : 0; // Accumulate the value at each index
+        });
+    });
 
     result.monthlyCategories = totals;
 
@@ -264,7 +271,7 @@ export const LineAndVolumeCategoryChart = ({ chartData }: LineAndVolumeCategoryC
                         offset: 0, // Remove extra spacing
                         opposite: true, // Moves the x-axis to the right side
                         title: {
-                            text: '<b>Weekly<br/>Exceptions</b>',
+                            text: '<b>Weekly<br/>Volume</b>',
                             align: 'high', // Aligns the title to the top
                             rotation: 0, // Force title to be horizontal
                             x: -15,

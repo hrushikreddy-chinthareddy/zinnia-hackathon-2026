@@ -29,6 +29,7 @@ import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
+import { browserLogInfo } from '@deps/utils/browser-logging';
 
 const OTP_FORM_CLIENT_COOKIE = 'otp-form-client-cookie';
 const OTP_FORM_TYPE_COOKIE = 'otp-form-type-cookie';
@@ -141,14 +142,24 @@ export default function CaseCreate({ featureFlagDecisions }: CaseCreateProps) {
 
             if (response && 'total' in response) {
                 if (response.data.length > 0) {
-                    console.log("All the cases are not-completed. Redirecting to create case page.");
+                    browserLogInfo('onBaseCreateCase::Cases are not-completed. Redirecting to create case page.', {
+                        caseType,
+                        docType,
+                        clientCode,
+                        documentNumber
+                    });
                     router.push(
                         `/create-case/`
                     );
                     return;
                 }
 
-                console.log("All the cases are completed. Creating a new case.");
+                browserLogInfo('onBaseCreateCase::Cases are completed. Creating a new case.', {
+                    caseType,
+                    docType,
+                    clientCode,
+                    documentNumber
+                });
                 const data = await createCaseFromDocumentNumber(
                     document?.documentNumber,
                     document?.caseId,
@@ -170,6 +181,12 @@ export default function CaseCreate({ featureFlagDecisions }: CaseCreateProps) {
                 const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
                 const getLastSaved = shouldShowNewExperience ? `&getLastSaved=true` : '';
                 const caseSlug = getSlug(caseType);
+                browserLogInfo('onBaseCreateCase::Redirecting to task', {
+                    caseType,
+                    docType,
+                    clientCode,
+                    documentNumber
+                });
 
                 router.push(
                     `/create-case/${caseSlug}/${data.id}?doc=${document.documentNumber}&clientId=${clientCode as string}${getLastSaved}`
@@ -179,7 +196,13 @@ export default function CaseCreate({ featureFlagDecisions }: CaseCreateProps) {
                 throw new Error('Unable to retrieve cases search results.');
             }
         } catch (e) {
-            console.error('create-case/create::initializeCaseCreation', e);
+            browserLogInfo('CreateCase::Initialization failure', {
+                ...parseErrorInformation(e),
+                caseType,
+                docType,
+                clientCode,
+                documentNumber
+            });
             setIsError(true);
             setCardProps({
                 title: t('errors.errorCreatingCase') as string,

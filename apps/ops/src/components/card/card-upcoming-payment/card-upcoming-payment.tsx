@@ -36,7 +36,7 @@ const UpcomingPaymentCard = ({
     paymentDate,
     paymentDateText,
     bankDetails,
-    monthlyAmount = 0,
+    autopayAmount = 0,
     paymentFrequencyText,
     additionalChargesTitle,
     additionalCharges,
@@ -50,7 +50,7 @@ const UpcomingPaymentCard = ({
     const { globalValuesData } = useContentContext();
     const sideSheet = useSideSheetContext();
 
-    const paymentAmount = monthlyAmount + (additionalCharges?.reduce((a, b) => a + (b.amount || 0), 0) || 0);
+    const paymentAmount = autopayAmount + (additionalCharges?.reduce((a, b) => a + (b.amount || 0), 0) || 0);
     const hasUpcomingPayment = paymentAmount > 0;
 
     const activityPaymentDate = convertKebabedDateString(paymentDate || '');
@@ -116,7 +116,7 @@ const UpcomingPaymentCard = ({
                                     paymentType: t('paymentType.premium'),
                                 })
                             }
-                            premium={monthlyAmount}
+                            premium={autopayAmount}
                             additionalChargesTitle={additionalChargesTitle || t('additionalCharges.text')}
                             additionalCharges={additionalCharges}
                         />
