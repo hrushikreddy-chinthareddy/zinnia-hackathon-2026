@@ -50,7 +50,7 @@ const getEarliestDate = (input: DashboardStatsElementResponse[]) => {
 };
 
 export function processGroupedData(input: DashboardStatsElementResponse[]): LineAndVolumeCategoryAndSeries {
-    const MONTHLY_MONTHS = 4;
+    const MONTHLY_MONTHS = 12;
     const WEEKLY_WEEKS = 4 * MONTHLY_MONTHS; // 4 weeks per month for 12 months
     const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
