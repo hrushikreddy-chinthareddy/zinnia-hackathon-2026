@@ -41,7 +41,7 @@ const ConfirmStep = ({ taskType, taskInfoLink }: ConfirmStepProps) => {
         );
     }
 
-    if (!submitFailed) {
+    if (submitFailed) {
         return (
             <ApiErrorCard
                 leaveRoute={taskInfoLink}
