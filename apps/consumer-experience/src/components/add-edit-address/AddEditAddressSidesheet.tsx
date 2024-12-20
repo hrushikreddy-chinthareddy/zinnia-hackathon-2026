@@ -62,6 +62,8 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
     // TODO: Create a generic request method. It still takes in the same things, with the addition of a type.
     // TODO: If edit type, its a put. If add type, its a post
 
+    //TODO: the addresses array will need to be converted to key/value pairs like
+    // { addressLine1: address[0].addressVal}
     // const { data, error } = await addBankRequest({
     //   planCode: params.planCode,
     //   policyNumber: params.policyNumber,

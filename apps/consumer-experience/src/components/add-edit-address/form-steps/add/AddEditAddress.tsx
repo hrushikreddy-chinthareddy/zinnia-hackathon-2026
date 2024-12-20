@@ -17,7 +17,7 @@ import {
   useForm,
 } from 'react-hook-form';
 
-import { isNumber } from '@/utils/regex';
+import { isNumberOrHyphen } from '@/utils/regex';
 import { states } from '@/utils/states';
 
 import styles from './AddEditAddress.module.css';
@@ -227,7 +227,7 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
                 message: 'ZIP code must be between 5 and 9 digits.',
               },
               pattern: {
-                value: /^[0-9]+$/,
+                value: /^[0-9-]+$/,
                 message: 'Zip must be a number.',
               },
             }}
@@ -241,7 +241,10 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
                   label={<Label>Zip</Label>}
                   {...field}
                   onChange={e => {
-                    if (!isNumber(e.target.value) && e.target.value !== '') {
+                    if (
+                      !isNumberOrHyphen(e.target.value) &&
+                      e.target.value !== ''
+                    ) {
                       e.preventDefault();
                     } else {
                       field.onChange(e.target.value);
