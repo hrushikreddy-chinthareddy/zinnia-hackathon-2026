@@ -16,7 +16,7 @@ export default withAuthAndLogging(
 
         const url = `${baseUrl}/documents`;
         const loggingContext = {
-            file: '/documents/download',
+            file: '/documents/upload',
             function: 'routeHandler',
             ...userInfo,
         };

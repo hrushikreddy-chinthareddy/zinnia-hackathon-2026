@@ -1196,7 +1196,7 @@
                 "ceding carrier": "Transporteur cédant: {{label}}"
             },
             "reviewIssues": "Revoir {{taskType}} problèmes",
-            "suitabilityReview": "suitability revoir",
+            "suitabilityReview": "suitability",
             "noDataAvailable": "Aucune donnée disponible.",
             "commonTaskIssues": "Problème: Une ou plusieurs problèmes {{taskType}} trouvées.",
             "suitabilityReviewIssues": "Revoir Suitability Problèmes"
@@ -4856,9 +4856,9 @@
         "confirmStep": {
             "title": "Soumise!",
             "subTitle": "La pertinence de l'avis a été soumise.",
-            "cta": "Aller au virement entrant",
+            "cta": "Aller à l'examen d'adéquation",
             "secondaryCta": "Fermer",
-            "submitTask": "Soumettre les détails de l'adéquation"
+            "submitTask": "Soumettre les détails de l'examen d'adéquation"
         }
     },
     "unauthorized": {
