@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { toTitleCase } from '@zinnia/utils';
 import { HighchartsReactRefObject } from 'highcharts-react-official';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -150,7 +151,7 @@ const ActiveAging = ({
                 content: JSON.stringify(agingGroupingMap[selectedAgingRange]),
                 prompt: `You are an expert in all things case data. Your job is to summarize the data for business and executive users.
                           They want simple and insightful information about the data provided to you. The cases provided to you here are open cases delineated by insurance carrier. Avoid using phrases such as "the data".
-                          Your responses should be insightful and will be displayed on a UI as a summary for a module related to a pie chart. Use percentages and real data where it makes sense. Keep it conscise and to the point. Format number values to U.S.`,
+                          Your responses should be insightful and will be displayed on a UI as a summary for a module related to a pie chart. Use percentages and real data where it makes sense. Keep it conscise and to the point. Format number values to U.S. Any keys you use make sure they are formatted to title case. For example "ANNUITY APPLICATION" should be formatted to "Annuity Application".`,
             }),
         enabled: shouldShowCaseInsights && !!agingRangesBySubProcess?.data && !loading,
     });
@@ -427,6 +428,7 @@ const ActiveAging = ({
                                                     createdDateEnd: startAndEndDates.createdDateEnd,
                                                     carrier: carriers?.length ? carriers : '',
                                                 })}`}
+                                                title={toTitleCase(stat.name)}
                                                 size={NavElementSize.Small}
                                                 type={NavElementType.Link}
                                                 className="capitalize"
@@ -468,6 +470,7 @@ const ActiveAging = ({
                                                     createdDateEnd: startAndEndDates.createdDateEnd,
                                                     carrier: carriers?.length ? carriers : '',
                                                 })}`}
+                                                title={toTitleCase(stat.name)}
                                                 size={NavElementSize.Small}
                                                 type={NavElementType.Link}
                                                 className="capitalize"
