@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { FC, CSSProperties, useState, useEffect, RefObject } from 'react';
 import { useTranslation } from 'next-i18next';
+import { FC, CSSProperties, useState, useEffect, RefObject, useMemo } from 'react';
 
 import { FieldSize } from '@deps/components/fields/field';
 import PageLoader from '@deps/components/page-loader/page-loader';
@@ -59,6 +59,20 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
     const [insightOption, setInsightOption] = useState<Processes>(Processes.NewBusiness);
 
     const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
+
+    const brokerDealerOptions = useMemo(() => {
+        if (selectedBrokerDealers) {
+            const brokerDealers: DashboardResponseData[] = [];
+            Object.values(selectedBrokerDealers).forEach(key => {
+                const dealer = brokerDealersSSR.find(broker => broker.name.toLowerCase() === key.toLowerCase());
+                if (dealer) {
+                    brokerDealers.push(dealer);
+                }
+            });
+            return { data: brokerDealers, totalElements: brokerDealers.length };
+        }
+        return { data: brokerDealersSSR, totalElements: brokerDealersSSR.length };
+    }, [brokerDealersSSR, selectedBrokerDealers]);
 
     const handleInsightChange = (processType: Processes) => {
         setInsightOption(processType);
@@ -247,7 +261,7 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
                             )}
                             {authorizedCarriers.length === 1 && (
                                 <CaseStatBlock
-                                    dashboardStatsResponse={{ data: brokerDealersSSR, totalElements: brokerDealersSSR.length }}
+                                    dashboardStatsResponse={brokerDealerOptions}
                                     blockLabel="Broker Dealers"
                                     timeFrameLabel={timeFrameLabel}
                                     statMeasurementLabel="case"
