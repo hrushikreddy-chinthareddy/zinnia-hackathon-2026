@@ -261,7 +261,7 @@ export const getServerSideProps = withPageAuthRequired({
                     contractNum,
                     file: 'pages/nigo-entry',
                     function: 'getServerSideProps',
-                    user: userInfoForLogging.email
+                    user: userInfoForLogging.email,
                 });
                 return {
                     redirect: {
@@ -302,7 +302,7 @@ export const getServerSideProps = withPageAuthRequired({
                 user: userInfoForLogging.email,
             });
 
-            const policy = await getPolicyDetailsSsr(contractNum, planCode, accessToken, userInfoForLogging);
+            const policy = await getPolicyDetailsSsr(contractNum, planCode, accessToken, userInfoForLogging, true);
             if (!policy) {
                 logWarn('nigo-entry::Policy not found', {
                     taskId,

@@ -113,7 +113,7 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
-            const policy = await getPolicyDetailsSsr(contractNum, planCode, accessToken, userInfoForLogging);
+            const policy = await getPolicyDetailsSsr(contractNum, planCode, accessToken, userInfoForLogging, true);
             if (!policy) {
                 logError('bank-update::Policy not found', {
                     taskId,
