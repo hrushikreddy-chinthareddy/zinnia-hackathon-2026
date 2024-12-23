@@ -1811,11 +1811,26 @@
             },
             "irsData": {
                 "irsAmount": "Enter the rate as a whole number",
-                "isW4R": "Is W-4R form attached",
+                "isW4R": "Is State W4 form attached",
                 "signDate": "Signature date",
                 "signPresent": "Signature present",
                 "ssn": "SSN",
-                "title": "IRS data"
+                "title": "IRS data",
+                "isW4P": "Is W-4P form attached",
+                "name": "Name",
+                "address": "Address",
+                "city": "City",
+                "state": "State",
+                "zip": "Zip",
+                "maritalStatus": "Marital status",
+                "single": "Single",
+                "marriedFilingJointly": "Married Filing Jointly",
+                "marriedFilingSeparately": "Married Filing Separately",
+                "stateIncomeTax": "State Income Tax",
+                "doNotWithhold": "Do Not Withhold",
+                "numberofAllowance": "Number of Allowance",
+                "signatureValidation": "Signature Validation",
+                "Type": "type"
             },
             "OL4753Data": {
                 "isOL4753Attached": "Is OL4753 form attached",

@@ -53,7 +53,7 @@ export default function useFlicSSWConfig(t: TFunction) {
     const formValidation = useCallback(
         ({ formSignature, formDisbursement }: Partial<FormParts> = {}): FormValidationErrors => {
             const errors = {} as FormValidationErrors;
-            
+
             const ownerSignature = formSignature?.signatures?.find(
                 sigInfo => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
             );
@@ -262,6 +262,21 @@ export default function useFlicSSWConfig(t: TFunction) {
             component: SignatureFields.SignatureDate,
             key: 'irs-signature-sign-date',
         },
+    ];
+
+    const w4pSignaturesConfig = [
+        {
+            component: SignatureFields.SignaturePresent,
+            key: 'w4p-signature-sign-present',
+        },
+        {
+            component: SignatureFields.SignatureDate,
+            key: 'w4p-signature-sign-date',
+        },
+        {
+            component: SignatureFields.SignatureType,
+            key: 'w4p-owner-type',
+        }
     ];
 
     const checkQualType = (qualType: string) => {
@@ -560,6 +575,7 @@ export default function useFlicSSWConfig(t: TFunction) {
         systematicWithdrawalOptions,
         fundWithdrawnMethodOptions,
         irsSignatureConfig,
+        w4pSignaturesConfig,
         disbursementOptions,
         signaturesConfig,
         cslnCheckStates,

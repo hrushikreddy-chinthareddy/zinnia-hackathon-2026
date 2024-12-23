@@ -10,6 +10,7 @@ import {
     ActiveWithdrawalCase,
     Carrier,
     CaseStatus,
+    FormIrsData,
     FormParts,
     FormValidationErrors,
     FundWithdrawnMethod,
@@ -71,7 +72,7 @@ export const FormProvider = ({
     const [formDisbursement, setFormDisbursement] = useState(form.data.formRequest.formDisbursement);
     const [formDistribution, setFormDistribution] = useState(form.data.formRequest.formDistribution);
     const [formFullSurrenderAck, setFormFullSurrenderAck] = useState(form.data.formRequest.formFullSurrenderAck);
-    const [formIrsData, setFormIrsData] = useState(form.data.formRequest.formIrsData || null);
+    const [formIrsData, setFormIrsData] = useState(form.data.formRequest.formIrsData as FormIrsData[]);
     const [formOL4753Data, setFormOL4753Data] = useState(form.data.formRequest.formOL4753Data || null);
     const [formLoan, setFormLoan] = useState(form.data.formRequest.formLoan);
     const [formParty, setFormParty] = useState(form.data.formRequest.formParty);
@@ -89,8 +90,8 @@ export const FormProvider = ({
     const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
     const isFormStateReadOnly = shouldShowNewExperience
         ? searchParams.get('action') === 'readonly' ||
-          (!StatusesForSaveAsDraftAction.includes(currentFormState) && searchParams.get('action') !== 'duplicate') ||
-          isOpenNigo === true
+        (!StatusesForSaveAsDraftAction.includes(currentFormState) && searchParams.get('action') !== 'duplicate') ||
+        isOpenNigo === true
         : false;
 
     const [formSpecialInstruction, setFormSpecialInstruction] = useState(form.data.formRequest.formSpecialInstruction);

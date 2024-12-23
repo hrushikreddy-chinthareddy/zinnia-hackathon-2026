@@ -113,7 +113,7 @@ const baseWithholding = {
     },
 };
 
-const toViewTaxWithholding = (withholdings: TaxWithholding[] | undefined): WithholdingView | undefined => {
+export const toViewTaxWithholding = (withholdings: TaxWithholding[] | undefined): WithholdingView | undefined => {
     if (!Array.isArray(withholdings)) {
         return undefined;
     }
@@ -191,8 +191,8 @@ export default function TaxWithholdings({
         toViewTaxWithholding(
             !IOWAChecked
                 ? formTaxWithholding.taxWithholding?.filter(
-                      tw => tw.place.text === TaxWithholdingPlace.State && tw.type.text !== WithholdingType.NoTaxWithholdingAllowed
-                  )
+                    tw => tw.place.text === TaxWithholdingPlace.State && tw.type.text !== WithholdingType.NoTaxWithholdingAllowed
+                )
                 : undefined
         )
     );

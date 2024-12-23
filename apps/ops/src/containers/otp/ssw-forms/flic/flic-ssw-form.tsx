@@ -28,6 +28,7 @@ export function FlicSSWForm({ qualType }: SswFormProps) {
 
     const {
         formValidation,
+        w4pSignaturesConfig,
         formPartyConfigs,
         fundWithdrawnMethodOptions,
         systematicWithdrawalOptions,
@@ -100,7 +101,7 @@ export function FlicSSWForm({ qualType }: SswFormProps) {
                 title={t('distributionInstruction.investmentSelectionForDistribution') as string}
             />
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
-            <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} />
+            <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} w4pSignaturesConfig={w4pSignaturesConfig} />
             <FormDisbursement
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={disbursementOptions(sswProgramFrequency, qualType)}

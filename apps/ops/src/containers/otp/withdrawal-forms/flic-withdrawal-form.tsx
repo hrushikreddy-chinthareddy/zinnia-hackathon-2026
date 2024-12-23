@@ -26,6 +26,7 @@ export default function FlicWithdrawalForm() {
         irsSignatureConfig,
         formSubtypeOptions,
         formValidation,
+        w4pSignaturesConfig,
         fundWithdrawnMethodOptions,
         partialWithdrawalOptions,
         signaturesConfig,
@@ -98,7 +99,7 @@ export default function FlicWithdrawalForm() {
                 </>
             )}
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
-            <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} />
+            <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} w4pSignaturesConfig={w4pSignaturesConfig} />
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
             {(ownerStateOfResidence || contractIssueState) &&
                 [ownerStateOfResidence, contractIssueState].some(state => state && cslnCheckStates.includes(state)) && (
