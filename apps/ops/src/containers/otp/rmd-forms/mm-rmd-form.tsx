@@ -29,6 +29,7 @@ export default function MassMutualRmdWithdrawalForm({ qualType }: MassMutualRmdW
         formPartyConfigs,
         irsSignatureConfig,
         formValidation,
+        w4pSignaturesConfig,
         fundWithdrawnMethodOptions,
         disbursementOptions,
         jointLifeExpectancyConfigs,
@@ -93,7 +94,7 @@ export default function MassMutualRmdWithdrawalForm({ qualType }: MassMutualRmdW
                 isMaritalStatusAllowances={isMaritalStatusAllowances}
                 specifiedView={true}
             />
-            <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} />
+            <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} w4pSignaturesConfig={w4pSignaturesConfig} />
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
 
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig}>

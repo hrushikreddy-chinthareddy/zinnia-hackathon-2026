@@ -36,6 +36,7 @@ export function MassMutualSSWForm({ qualType }: MassWithdrawalFormProps) {
         systematicWithdrawalOptions,
         validateMaritalStatusAllowances,
         irsSignatureConfig,
+        w4pSignaturesConfig,
         signaturesNotaryConfig,
 
         signVerificationReasonConfig,
@@ -77,7 +78,7 @@ export function MassMutualSSWForm({ qualType }: MassWithdrawalFormProps) {
                 ownerStateOfResidence={ownerStateOfResidence}
                 isMaritalStatusAllowances={isMaritalStatusAllowances}
             />
-            <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} />
+            <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} w4pSignaturesConfig={w4pSignaturesConfig} />
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig}>
                 {isKeogh ? (

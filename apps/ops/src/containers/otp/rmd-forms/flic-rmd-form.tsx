@@ -25,6 +25,7 @@ export default function FlicRmdWithdrawalForm() {
         cslnCheckStates,
         irsSignatureConfig,
         formValidation,
+        w4pSignaturesConfig,
         fundWithdrawnMethodOptions,
         disbursementOptions,
         jointLifeExpectancyConfigs,
@@ -76,7 +77,7 @@ export default function FlicRmdWithdrawalForm() {
                 isFormStateReadOnly={isFormStateReadOnly}
             />
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
-            <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} />
+            <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} w4pSignaturesConfig={w4pSignaturesConfig} />
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
             {(ownerStateOfResidence || contractIssueState) &&
                 [ownerStateOfResidence, contractIssueState].some(state => state && cslnCheckStates.includes(state)) && (

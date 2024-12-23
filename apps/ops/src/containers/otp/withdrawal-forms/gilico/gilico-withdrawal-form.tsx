@@ -50,6 +50,7 @@ export default function GilicoWithdrawalForm() {
         fullWithdrawalOptions,
         validateMaritalStatusAllowances,
         meritalStatusAllowanceConfig,
+        w4pSignaturesConfig
     } = getGilicoConfig(t, formSubtype as FormSubtype);
 
     useEffect(() => {
@@ -110,7 +111,7 @@ export default function GilicoWithdrawalForm() {
                 ownerStateOfResidence={ownerStateOfResidence}
                 meritalStatusAllowanceConfig={meritalStatusAllowanceConfig}
             />
-            <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} />
+            <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} w4pSignaturesConfig={w4pSignaturesConfig} />
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
             {(ownerStateOfResidence || contractIssueState) &&
                 [ownerStateOfResidence, contractIssueState].some(state => state && cslnCheckStates.includes(state)) && (

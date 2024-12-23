@@ -870,6 +870,20 @@ export default function useMassWithdrawalConfig(t: TFunction) {
             options: getStandardYesNoOptions(t),
         },
     ];
+    const w4pSignaturesConfig = [
+        {
+            component: SignatureFields.SignaturePresent,
+            key: 'w4p-signature-sign-present',
+        },
+        {
+            component: SignatureFields.SignatureDate,
+            key: 'w4p-signature-sign-date',
+        },
+        {
+            component: SignatureFields.SignatureType,
+            key: 'w4p-owner-type',
+        }
+    ];
 
     return {
         disbursementOptions,
@@ -887,5 +901,6 @@ export default function useMassWithdrawalConfig(t: TFunction) {
         validateMaritalStatusAllowances,
         distributionReasonOptions,
         waiverItemsConfig,
+        w4pSignaturesConfig
     };
 }

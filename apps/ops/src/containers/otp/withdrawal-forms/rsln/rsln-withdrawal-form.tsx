@@ -38,6 +38,7 @@ export default function RslnWithdrawalForm() {
         identifySelectedFormProgramOption,
         irsSignatureConfig,
         meritalStatusAllowanceConfig,
+        w4pSignaturesConfig
     } = getRslnConfig(t);
     const {
         formParty,
@@ -117,7 +118,7 @@ export default function RslnWithdrawalForm() {
                 isMaritalStatusAllowances={true}
                 meritalStatusAllowanceConfig={meritalStatusAllowanceConfig}
             />
-            <IrsWithholding signatureFields={irsSignatureConfig} isFormStateReadOnly={isFormStateReadOnly} />
+            <IrsWithholding signatureFields={irsSignatureConfig} isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />
 
             <FormWaivers config={waiverItemsConfig} isFormStateReadOnly={isFormStateReadOnly} />
 

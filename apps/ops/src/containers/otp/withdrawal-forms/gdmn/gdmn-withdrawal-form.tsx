@@ -35,6 +35,7 @@ export default function GdmnWithdrawalForm() {
         selectOneOptions,
         fullWithdrawalOptions,
         reasonOptions,
+        w4pSignaturesConfig
     } = getGdmnConfig(t);
 
     const {
@@ -105,7 +106,7 @@ export default function GdmnWithdrawalForm() {
             )}
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
             {formSubtype === FormSubtype.FullWithdrawal ? <LoanAcknowledgement isFormStateReadOnly={isFormStateReadOnly} /> : null}
-            <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} />
+            <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} w4pSignaturesConfig={w4pSignaturesConfig} />
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
             {hasTpaAuthorization && <EmployerTpaAuthorization isFormStateReadOnly={isFormStateReadOnly} />}

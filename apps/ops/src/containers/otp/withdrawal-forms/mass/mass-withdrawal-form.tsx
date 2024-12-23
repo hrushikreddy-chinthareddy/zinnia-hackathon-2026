@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import React, { useContext, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
@@ -43,6 +43,7 @@ const MassWithdrawalForm = ({ qualType }: MassWithdrawalFormProps) => {
         validateMaritalStatusAllowances,
         distributionReasonOptions,
         waiverItemsConfig,
+        w4pSignaturesConfig
     } = useMassWithdrawalConfig(t);
     const {
         setFormValidator,
@@ -109,7 +110,7 @@ const MassWithdrawalForm = ({ qualType }: MassWithdrawalFormProps) => {
             {formSubtype === FormSubtype.FullWithdrawal && (
                 <FormWaivers config={waiverItemsConfig} isFormStateReadOnly={isFormStateReadOnly} />
             )}
-            <IrsWithholding signatureFields={irsSignatureConfig} isFormStateReadOnly={isFormStateReadOnly} />
+            <IrsWithholding signatureFields={irsSignatureConfig} isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
             <SignatureValidations config={signaturesConfig} isFormStateReadOnly={isFormStateReadOnly}>
                 {isKeogh ? (
