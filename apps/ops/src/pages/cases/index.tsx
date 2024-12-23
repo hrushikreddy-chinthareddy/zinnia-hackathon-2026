@@ -258,9 +258,12 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
     const handleSearch = useCallback(
         (value: SearchViewQuery) => {
             segmentAnalyticsTrackEvent<SearchSubmittedEvent>(SegmentTrackedEventName.SearchSubmitted, {
+                agentName: !!value?.agentFirstName || !!value?.agentLastName,
+                caseID: value?.caseId,
+                firmName: value?.firmName,
                 ssnUsed: !!value?.ssn,
-                firstNameUsed: !!value?.firstName,
-                lastNameUsed: !!value?.lastName,
+                firstNameUsed: !!value?.ownerFirstName,
+                lastNameUsed: !!value?.ownerLastName,
                 policyNumber: value?.policyNumber,
                 session_id: user.sid,
                 userId: user.partyId,
