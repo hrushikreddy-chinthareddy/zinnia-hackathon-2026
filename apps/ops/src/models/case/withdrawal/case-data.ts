@@ -13,6 +13,9 @@ import {
     PhoneTypes,
     AmountType,
     PolicyWaiver,
+    IrsFormType,
+    TaxWithholdingPlace,
+    WithholdingType,
 } from '@deps/models/case/withdrawal/case';
 
 import { SignatureValidationTypeWithdrawal } from '../renewal/signature-validation';
@@ -434,94 +437,136 @@ export const CaseDetails: DigitalFormWithdrawal = {
                     text: 'null',
                 },
             },
-            formIrsData: {
-                irsApplicable: true, // Should be false, but this is backend's responsibility
-                irsSpecified: true, // Should be false, but this is backend's responsibility
-                formParty: {
-                    partyRoleType: 'OWNER' as PartyRoles,
-                    firstName: 'JAMES',
-                    middleName: 'C',
-                    lastName: 'FORD',
-                    fullName: 'JAMES C FORD',
-                    suffix: '1',
-                    dob: { text: null },
-                    taxId: '572621420',
-                    email: null,
-                    employer: null,
-                    maritalStatus: {
-                        text: 'Married' as MaritalStatus,
-                    },
-                    addresses: [
-                        {
-                            addressLine1: '560 calle de la sierra',
-                            addressLine2: null,
-                            addressLine3: null,
-                            addressLine4: null,
-                            addressType: 'DEFAULT' as AddressTypes,
-                            city: 'el cajon',
-                            country: null,
-                            state: 'CA',
-                            zip: '92019-1241',
-                            zipPlusFour: null,
+            formIrsData: [
+                {
+                    irsFormType: IrsFormType.W4P,
+                    irsApplicable: true, // Should be false, but this is backend's responsibility
+                    irsSpecified: true, // Should be false, but this is backend's responsibility
+                    formParty: {
+                        partyRoleType: 'OWNER' as PartyRoles,
+                        firstName: 'JAMES',
+                        middleName: 'C',
+                        lastName: 'FORD',
+                        fullName: 'JAMES C FORD',
+                        suffix: '1',
+                        dob: { text: null },
+                        taxId: '572621420',
+                        email: null,
+                        employer: null,
+                        maritalStatus: {
+                            text: 'Married' as MaritalStatus,
                         },
-                    ],
-                    phones: [
-                        {
-                            phoneCountry: 'US',
-                            phoneNumber: '6192001466',
-                            phoneTypeDesc: 'Default',
-                            phoneType: {
-                                text: 'Owner_Phone_Day' as PhoneTypes,
+                        addresses: [
+                            {
+                                addressLine1: '560 calle de la sierra',
+                                addressLine2: null,
+                                addressLine3: null,
+                                addressLine4: null,
+                                addressType: 'DEFAULT' as AddressTypes,
+                                city: 'el cajon',
+                                country: null,
+                                state: 'CA',
+                                zip: '92019-1241',
+                                zipPlusFour: null,
                             },
+                        ],
+                        phones: [
+                            {
+                                phoneCountry: 'US',
+                                phoneNumber: '6192001466',
+                                phoneTypeDesc: 'Default',
+                                phoneType: {
+                                    text: 'Owner_Phone_Day' as PhoneTypes,
+                                },
+                            },
+                        ],
+                    },
+                    irsTaxWithholding: {
+                        place: {
+                            text: 'Federal',
                         },
-                    ],
-                },
-                irsTaxWithholding: {
-                    place: {
-                        text: 'Federal',
-                    },
-                    type: {
-                        text: 'No Tax Withholding',
-                    },
-                    amount: {
-                        text: '0',
-                        amountType: null,
-                    },
-                    filingStatus: {
-                        text: null,
-                    },
-                    exemption: {
-                        text: null,
-                    },
-                    additionalAmount: {
-                        text: null,
-                        amountType: null,
-                    },
-                },
-                irsSignature: {
-                    isSigned: null,
-                    signDate: {
-                        text: null,
-                    },
-                    signExtension: null,
-                    signName: null,
-                    signOtherTitle: null,
-                    signTitle: {
-                        text: null,
-                    },
-                    signTitles: [
-                        {
+                        type: {
+                            text: 'No Tax Withholding',
+                        },
+                        amount: {
+                            text: '0',
+                            amountType: null,
+                        },
+                        filingStatus: {
                             text: null,
                         },
-                    ],
-                    signType: {
-                        text: null,
+                        exemption: {
+                            text: null,
+                        },
+                        additionalAmount: {
+                            text: null,
+                            amountType: null,
+                        },
                     },
-                    spousalConsent: {
-                        text: null,
+                    irsSignature: {
+                        isSigned: null,
+                        signDate: {
+                            text: null,
+                        },
+                        signExtension: null,
+                        signName: null,
+                        signOtherTitle: null,
+                        signTitle: {
+                            text: null,
+                        },
+                        signTitles: [
+                            {
+                                text: null,
+                            },
+                        ],
+                        signType: {
+                            text: null,
+                        },
+                        spousalConsent: {
+                            text: null,
+                        },
                     },
                 },
-            },
+                {
+                    irsFormType: IrsFormType.W4P,
+                    irsApplicable: true,
+                    irsSpecified: true,
+                    formParty: {
+                        partyRoleType: 'OWNER' as PartyRoles,
+                        fullName: '',
+                        firstName: '',
+                        middleName: '',
+                        lastName: '',
+                        taxId: '',
+                        addresses: [
+                            {
+                                addressLine1: '',
+                                addressLine2: '',
+                                addressLine3: '',
+                                addressLine4: null,
+                                addressType: AddressTypes.DEFAULT,
+                                city: '',
+                                country: null,
+                                state: '',
+                                zip: '',
+                                zipPlusFour: '',
+                                isAddressChanged: false,
+                            },
+                        ],
+                        phones: [],
+                        maritalStatus: { text: null },
+                    },
+                    irsSignature: undefined,
+                    irsTaxWithholding: {
+                        place: { text: TaxWithholdingPlace.State },
+                        type: { text: WithholdingType.SpecifiedTaxWithholding },
+                        amount: { text: '20', amountType: AmountType.Percent },
+                        filingStatus: { text: null },
+                        exemption: { text: null },
+                        additionalAmount: { amountType: null, text: null },
+                    },
+                },
+            ],
         },
     },
 };
