@@ -138,6 +138,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
     const loadCaseDetails = (href: string) => {
         segmentAnalyticsTrackEvent<CaseClickedEvent>(SegmentTrackedEventName.CaseClicked, {
             caseId: singleCase.id,
+            session_id: perms.getSessionId(),
             userId: perms.getUserPartyId(),
         });
 

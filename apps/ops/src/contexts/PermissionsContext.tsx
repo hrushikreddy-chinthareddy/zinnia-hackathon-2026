@@ -16,6 +16,7 @@ import { FgaRelation } from '@deps/types/fga';
 
 export interface PermissionsContextProps {
     permissions: PermissionsModel;
+    getSessionId: () => string;
     getUserPartyId: () => string;
     getIsAdvisorsExcel: () => Promise<boolean>;
     getClientIds: (permission: UserPermission) => Promise<string[]>;
@@ -43,6 +44,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
 
     const { user } = useUser();
     const partyId = user?.partyId as string;
+    const sessionId = user?.sid as string;
     const [fgaRoles, setFgaRoles] = useState<BulkCheckTuple[]>([]);
     const [isSuperAdmin, setIsSuperAdmin] = useState(false);
     const [hasDashboardPermission, setHasDashboardPermission] = useState(false);
@@ -106,6 +108,10 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         return false;
     };
 
+    const getSessionId = (): string => {
+        return sessionId;
+    };
+
     const getUserPartyId = (): string => {
         return partyId;
     };
@@ -160,6 +166,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 permissions,
                 getIsAdvisorsExcel,
                 getClientIds,
+                getSessionId,
                 getUserPartyId,
                 doesUserHavePagePermission,
                 doesUserHaveDashboardPermission,

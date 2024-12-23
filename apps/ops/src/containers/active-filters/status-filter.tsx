@@ -10,12 +10,14 @@ import { DropdownClickedEvent, SegmentTrackedEventName } from '@deps/types/segme
 export default function StatusFilter({
     caseTotals = {},
     onChange,
+    sessionId,
     userId,
     values = [Statuses.Exception, Statuses.InProgress, Statuses.NotStarted],
 }: {
     caseTotals?: { [key: string]: number };
     values?: Statuses[];
     onChange: (values: Statuses[]) => void;
+    sessionId: string;
     userId: string;
 }) {
     const { t } = useTranslation();
@@ -102,11 +104,12 @@ export default function StatusFilter({
                                 return `${acc}${acc.length ? ', ' : ''}${option.value}`;
                             } else return acc;
                         }, '') ?? 'All',
+                    session_id: sessionId,
                     userId,
                 });
             }
         },
-        [selected, statusOptions, userId]
+        [selected, statusOptions, sessionId, userId]
     );
 
     useEffect(() => {

@@ -262,6 +262,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                 firstNameUsed: !!value?.firstName,
                 lastNameUsed: !!value?.lastName,
                 policyNumber: value?.policyNumber,
+                session_id: user.sid,
                 userId: user.partyId,
             });
             setCaseManagementFilters(prevFilters => ({ ...prevFilters, searchValue: value, offset: 0 }));
@@ -378,6 +379,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                                     };
                                 })
                             }
+                            sessionId={user.sid}
                             userId={user.partyId}
                             values={caseManagementFilters.additionalFilters.caseStatus}
                         />

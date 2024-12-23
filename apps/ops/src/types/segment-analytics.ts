@@ -38,6 +38,7 @@ export enum SegmentTrackedEventName {
 }
 
 export interface BaseSegmentEventProperties {
+    session_id: string;
     userId: string;
 }
 

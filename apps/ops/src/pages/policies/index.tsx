@@ -180,6 +180,7 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
             ssnUsed: !!value?.ssn,
             firstNameUsed: !!value?.firstName,
             lastNameUsed: !!value?.lastName,
+            session_id: user.sid,
             userId: user.partyId,
         });
 

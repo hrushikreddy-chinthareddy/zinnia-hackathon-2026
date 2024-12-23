@@ -2,18 +2,18 @@ import { UserProfile } from '@deps/models/user-profile';
 import { SegmentPageName, SegmentProps } from '@deps/types/segment-analytics';
 
 const segmentAnalyticsIdentifyUserAndPage = (user: UserProfile | undefined, pageName: SegmentPageName, pageProps: SegmentProps) => {
-    if (!window || !window.analytics) {
+    if (!window?.analytics) {
         console.warn('Segment Analytics.js not loaded');
 
         return;
     }
 
     segmentAnalyticsIdentify(user);
-    segmentAnalyticsPage(pageName, { userPartyId: user?.partyId as string, ...pageProps });
+    segmentAnalyticsPage(pageName, user, { ...pageProps });
 };
 
 const segmentAnalyticsIdentify = (user: UserProfile | undefined) => {
-    if (!window.analytics.identify) {
+    if (!window?.analytics?.identify) {
         console.warn('window.analytics.identify() not found');
 
         return;
@@ -26,22 +26,23 @@ const segmentAnalyticsIdentify = (user: UserProfile | undefined) => {
     }
 
     window.analytics.identify(`${user.partyId}`, {
-        name: `${user.name}`,
         email: `${user.email}`,
+        name: `${user.name}`,
+        session_id: `${user.sid}`,
     });
 };
 
-const segmentAnalyticsPage = (pageName: SegmentPageName, pageProps?: SegmentProps) => {
-    if (!window.analytics.page) {
+const segmentAnalyticsPage = (pageName: SegmentPageName, user: UserProfile | undefined, pageProps?: SegmentProps) => {
+    if (!window?.analytics?.page) {
         console.warn('window.analytics.page() not found');
 
         return;
     }
-    window.analytics.page(pageName, { ...pageProps });
+    window.analytics.page(pageName, { session_id: user?.sid, userPartyId: user?.partyId, ...pageProps });
 };
 
 function segmentAnalyticsTrackEvent<T>(eventName: string, eventProps?: T) {
-    if (!window.analytics.track) {
+    if (!window?.analytics?.track) {
         console.warn('window.analytics.track() not found');
 
         return;
