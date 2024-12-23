@@ -1,8 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
-import { FC, CSSProperties, useState, useEffect, RefObject, useMemo } from 'react';
+import { FC, CSSProperties, useState, useEffect, RefObject, SetStateAction, Dispatch, useMemo } from 'react';
 
+import ActiveAging from '@deps/components/dashboard/active-aging/active-aging';
+import SankeyChart from '@deps/components/dashboard/sankey-chart';
+import CaseStatBlock from '@deps/components/dashboard/stat-blocks/case-stat-block';
+import { TreeMapInsights } from '@deps/components/dashboard/tree-map-insights';
 import { FieldSize } from '@deps/components/fields/field';
 import PageLoader from '@deps/components/page-loader/page-loader';
 import Select from '@deps/components/select/select';
@@ -14,32 +18,22 @@ import { useIntersectionObserver } from '@deps/hooks/useIntersectionObserver';
 import { useResizeObserver } from '@deps/hooks/useResizeObserver';
 import { Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
+import styles from '@deps/pages/dashboard/Dashboard.module.css';
 import { DashboardResponseData } from '@deps/queries/api/dashboard';
 import { DashboardSearchFilter } from '@deps/queries/cases';
 import { getProcessListOptions, getCaseDashboardStatsQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 import { useDashboardStore } from '@deps/store/store';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 
-import ActiveAging from '../../../components/dashboard/active-aging/active-aging';
-import SankeyChart from '../../../components/dashboard/sankey-chart';
-import CaseStatBlock from '../../../components/dashboard/stat-blocks/case-stat-block';
-import { TreeMapInsights } from '../../../components/dashboard/tree-map-insights';
-import styles from '../../../pages/dashboard/Dashboard.module.css';
 interface ActiveApplicationsProps {
-    handleSetLoading: (loading: boolean) => void;
     loading: boolean;
     carrierHeaderRef: RefObject<HTMLElement>;
     brokerDealersSSR: DashboardResponseData[];
     authorizedCarriers: string[];
+    handleSetLoading: Dispatch<SetStateAction<boolean>>;
 }
 
-export const ActiveApplications: FC<ActiveApplicationsProps> = ({
-    loading,
-    handleSetLoading,
-    carrierHeaderRef,
-    authorizedCarriers,
-    brokerDealersSSR,
-}) => {
+export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carrierHeaderRef, authorizedCarriers, brokerDealersSSR }) => {
     const { createdDateStart, createdDateEnd } = getStartAndEndDates('All');
     const { height: carrierHeaderHeight } = useResizeObserver({ ref: carrierHeaderRef, box: 'border-box' });
 
@@ -165,6 +159,7 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
     }, [selectedCarriers, insightOption, selectedBrokerDealers, createdDateEnd, createdDateStart]);
 
     const sankeyChartLoading =
+        loading ||
         processListOptionsLoading ||
         insightGroupingCountBySubProcessStatsLoading ||
         insightCreatedBySubProcessLoading ||
@@ -172,15 +167,16 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
         insightExceptionStatsLoading ||
         insightGroupingCountByCarrierStatsLoading;
 
-    useEffect(() => {
-        handleSetLoading(sankeyChartLoading);
-    }, [handleSetLoading, sankeyChartLoading]);
-
     return (
         <>
             <div className="relative border-t-2 border-[--color-base-border-border-light]">
                 <CardContainer classNames="relative !pt-0" containerClassNames="mt-none">
-                    <SankeyChart baseDashboardQueryFilter={baseDashboardQueryFilter} />
+                    {sankeyChartLoading && (
+                        <div className="grid gap-4 h-full mb-4 w-full place-content-center bg-[--color-base-surface-surface-tertiary]">
+                            <PageLoader />
+                        </div>
+                    )}
+                    <SankeyChart key={JSON.stringify(baseDashboardQueryFilter)} baseDashboardQueryFilter={baseDashboardQueryFilter} />
                 </CardContainer>
             </div>
             <div
@@ -234,10 +230,7 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({
                     <div className="mt-1">
                         {/* this is the Exception Distribution by Category tree map chart */}
                         <CardContainer fullWidth={false}>
-                            <TreeMapInsights
-                                dashboardStatsData={insightExceptionStats}
-                                heading="Exception Distribution by Category"
-                            ></TreeMapInsights>
+                            <TreeMapInsights dashboardStatsData={insightExceptionStats} heading="Exception Distribution by Category" />
                         </CardContainer>
                     </div>
                     <div className="flex flex-col gap-1 mt-1">
