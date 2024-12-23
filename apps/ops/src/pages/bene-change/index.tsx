@@ -1,7 +1,6 @@
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import React from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
 import BeneChangeContainer from '@deps/containers/bene-change/bene-change-container';
@@ -106,7 +105,7 @@ export const getServerSideProps = withPageAuthRequired({
             const document = documentNumber
                 ? await getDocumentSSR(documentNumber, DocumentType.AddressChange, clientId.toUpperCase(), accessToken as string)
                 : null;
-            const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging);
+            const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging, true);
 
             if (!policy) {
                 return {
