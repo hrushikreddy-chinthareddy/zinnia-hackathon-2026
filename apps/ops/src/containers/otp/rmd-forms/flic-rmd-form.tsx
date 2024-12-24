@@ -6,7 +6,6 @@ import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import IrsWithholding from '@deps/components/otp-withdrawal-form/irs-withholdings';
-import NoteSection from '@deps/components/otp-withdrawal-form/note-section';
 import JointLifeExpectancy from '@deps/components/otp-withdrawal-form/rmd-method/joint-life-expectancy';
 import RMDMethod from '@deps/components/otp-withdrawal-form/rmd-method/rmd-method';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
@@ -67,7 +66,6 @@ export default function FlicRmdWithdrawalForm() {
     }, [formParty]);
     return (
         <>
-            <NoteSection readonly={isFormStateReadOnly} />
             {!isFormStateReadOnly && <DiaryNotesWarning />}
             <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
             <RMDMethod isFormStateReadOnly={isFormStateReadOnly} />

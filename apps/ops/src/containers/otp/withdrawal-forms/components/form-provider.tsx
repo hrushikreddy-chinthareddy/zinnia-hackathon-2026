@@ -10,6 +10,7 @@ import {
     ActiveWithdrawalCase,
     Carrier,
     CaseStatus,
+    FormComment,
     FormParts,
     FormValidationErrors,
     FundWithdrawnMethod,
@@ -86,6 +87,7 @@ export const FormProvider = ({
     const [formNigos, setFormNigos] = useState(form.data.formRequest.formNigos || null);
     const [formReindexingData, setFormReindexingData] = useState(form.data.formRequest.formReindexingData || null);
     const [currentFormState, setCurrentFormState] = useState(form.status);
+    const [formComment, setFormComment] = useState(form?.data?.formRequest?.formComment || ({} as FormComment));
     const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
     const isFormStateReadOnly = shouldShowNewExperience
         ? searchParams.get('action') === 'readonly' ||
@@ -151,6 +153,7 @@ export const FormProvider = ({
                 formWarnings,
                 parties,
                 formNigos,
+                formComment,
                 formReindexingData,
                 setFormSubtype,
                 setCurrentFormState,
@@ -178,7 +181,8 @@ export const FormProvider = ({
                 setFormSpecialInstruction,
                 setOwnerAcknowledgement,
                 setFormNigos,
-                setFormReindexingData
+                setFormReindexingData,
+                setFormComment,
             }}
         >
             {children}

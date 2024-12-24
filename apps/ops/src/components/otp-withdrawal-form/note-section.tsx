@@ -1,27 +1,33 @@
-import Form, { IChangeEvent } from '@rjsf/core';
+import { IChangeEvent } from '@rjsf/core';
 import { GenericObjectType, RJSFSchema } from '@rjsf/utils';
-import React, { ForwardedRef } from 'react';
+import React, { useContext } from 'react';
+
+import CardContainer from '@deps/containers/card-container/card-container';
+import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 
 import DynamicForm from '../dynamic-form/dynamic-form';
 const noop = (() => {}) as React.Dispatch<React.SetStateAction<any>>;
-type NoteSectionProps = {
-    readonly?: boolean;
-};
 
-const NoteSection = React.forwardRef(function NoteSectionComponent(
-    { readonly = false }: NoteSectionProps,
-    forwardedRef: ForwardedRef<Form>
-) {
-    const handleChange = (event: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
-        console.log('🚀 ~ event:', event);
+const NoteSection = React.forwardRef(function NoteSectionComponent() {
+    const { formComment, setFormComment, isFormStateReadOnly } = useContext(FormDataContext);
+    const commentParts = formComment?.comment?.split('-');
+
+    const formData = {
+        options: commentParts?.[0] ?? '',
+        comment: commentParts?.[1] ?? '',
     };
-
-    const formData = {};
+    const handleChange = (event: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
+        const { options, comment } = event.formData ?? {};
+        setFormComment(formComment => ({
+            ...formComment,
+            comment: options ? `${options}-${comment}` : comment,
+        }));
+    };
 
     const formSchema: RJSFSchema = {
         title: 'Comment',
         type: 'object',
-        required: ['options'],
+        required: [],
         properties: {
             options: {
                 type: 'string',
@@ -59,27 +65,28 @@ const NoteSection = React.forwardRef(function NoteSectionComponent(
     };
 
     return (
-        <DynamicForm
-            ref={forwardedRef}
-            formData={formData}
-            taskMetadata={{
-                formSchema,
-                uiSchema: {
-                    'ui:submitButtonOptions': {
-                        norender: true,
+        <CardContainer classNames={'w-full'} containerClassNames="w-full content-divider">
+            <DynamicForm
+                formData={formData}
+                taskMetadata={{
+                    formSchema,
+                    uiSchema: {
+                        'ui:submitButtonOptions': {
+                            norender: true,
+                        },
+                        options: {
+                            'ui:label': false,
+                        },
+                        comment: {
+                            'ui:label': false,
+                        },
                     },
-                    options: {
-                        'ui:label': false,
-                    },
-                    comment: {
-                        'ui:label': false,
-                    },
-                },
-            }}
-            onChange={handleChange}
-            onSubmit={noop}
-            readonly={readonly}
-        ></DynamicForm>
+                }}
+                onChange={handleChange}
+                onSubmit={noop}
+                readonly={isFormStateReadOnly}
+            ></DynamicForm>
+        </CardContainer>
     );
 });
 
