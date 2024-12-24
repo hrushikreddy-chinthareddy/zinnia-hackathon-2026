@@ -4745,6 +4745,15 @@
             "subtitle": "Services are down, so we couldn't submit this transaction. You can try submitting again, if it's still not working ",
             "title": "Sorry, that didn't work"
         },
+        "completeCard": {
+            "helpDesk": {
+                "link": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
+                "text": "submit a help desk ticket"
+            },
+            "leaveTransaction": "Leave this transaction",
+            "subtitle": "We couldn't submit this transaction again as this transaction have already completed. For any further help ",
+            "title": "This transaction have already completed"
+        },
         "start": {
             "documentSelectionLabel": "Which document are you working from?",
             "documentNumber": "Document number: ",
