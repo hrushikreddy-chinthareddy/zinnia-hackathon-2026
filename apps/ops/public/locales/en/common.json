@@ -5000,7 +5000,7 @@
             "noFormAvailable": "No form available."
         }
     },
-    "suitability": {
+    "suitabilityDataEntry": {
         "tabs": {
             "taskReview": "Input Suitability Data",
             "confirm": "Confirm",

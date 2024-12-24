@@ -4952,7 +4952,7 @@
         "EFT": "Programme EFT existant",
         "noProgramFound": "Aucun programme existant trouvé"
     },
-    "suitability": {
+    "suitabilityDataEntry": {
         "tabs": {
             "taskReview": "Données d’adéquation des entrées",
             "confirm": "Confirmer",

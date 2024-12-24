@@ -12,7 +12,7 @@ export enum TaskType {
     SSW = 'SSWFormInputTask',
     RENEWAL = 'RenewalTask',
     REG60 = 'NBReg60Comparision',
-    Suitability = 'SUITABILITY',
+    SuitabilityDataEntry = 'SUITABILITY_DATA_ENTRY',
     SuitabilityReview = 'SUITABILITY_REVIEW',
 }
 
