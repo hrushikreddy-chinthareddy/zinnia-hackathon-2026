@@ -4344,6 +4344,15 @@
             "subtitle": "Les services sont indisponibles, nous n'avons donc pas pu soumettre cette transaction. Vous pouvez essayer de soumettre à nouveau, si cela ne fonctionne toujours pas ",
             "title": "Désolé, cela n'a pas fonctionné"
         },
+        "completeCard": {
+            "helpDesk": {
+                "link": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
+                "text": "soumettre un billet au centre d'assistance"
+            },
+            "leaveTransaction": "Quitter cette transaction",
+            "subtitle": "Nous n'avons pas pu soumettre à nouveau cette transaction car elle est déjà terminée. Pour toute aide supplémentaire ",
+            "title": "cette transaction est déjà terminée"
+        },
         "start": {
             "documentSelectionLabel": "À partir de quel document travaillez-vous ?",
             "documentNumber": "Numéro de document: {{documentNumber}}",
