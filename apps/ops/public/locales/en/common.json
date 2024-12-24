@@ -550,7 +550,15 @@
                 "annuitantWithJoint": "Joint annuitant",
                 "annuitant": "Annuitant",
                 "payee": "Payee",
-                "jointAnnuitant": "Joint annuitant"
+                "jointAnnuitant": "Joint annuitant",
+                "primaryBeneficiary": "Primary beneficiary",
+                "payor": "Payor",
+                "agent": "Agent",
+                "primaryWritingAgent": "Primary writing agent",
+                "primaryServicingAgent": "Primary servicing agent",
+                "thirdPartyDesignee": "Third party designee",
+                "e-delivery": "E-delivery",
+                "contingentBenefeciary": "Contingent beneficiary"
             }
         },
         "tabs": {
@@ -2136,6 +2144,10 @@
             "addAdditionalRecipient": "+ Add additional recipient",
             "emailTooltip": "Please enter a valid email address. Only one email address is allowed in this field.",
             "additionalRecipientTooltip": "You can add up to 5 email addresses in the CC field. Use a comma(,), semicolon(;), or Enter to separate them",
+            "emailMessage": "Enter email addresses separated by commas or semicolons with a maximum of 5.",
+            "emailWarning": "You may add upto 5 additional recipients",
+            "emailLabel": "Select emails on file",
+            "noEmails": "No records found",
             "email": "Email",
             "ccEmail": "CC Emails",
             "fax": "Fax",
@@ -2178,7 +2190,8 @@
             "address": "Verify & select the address to continue.",
             "maxEmails": "Maximum 5 emails allowed",
             "duplicateEmailInCC": "Email already exist in the list",
-            "duplicateEmail": "Please ensure the email address is unique between the Recipient and CC fields."
+            "duplicateEmail": "Please ensure the email address is unique between the Recipient and CC fields.",
+            "emailRequired": "Email is required"
         }
     },
     "contactCenter": {

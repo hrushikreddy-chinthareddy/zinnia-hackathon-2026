@@ -575,7 +575,8 @@
                 "annuitant": "Rentière",
                 "payee": "Bénéficiaire",
                 "jointAnnuitant": "Co-rentier"
-            }
+                
+    }
         },
         "tabs": {
             "start": "Commencer",

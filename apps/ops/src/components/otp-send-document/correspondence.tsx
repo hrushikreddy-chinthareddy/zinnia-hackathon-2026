@@ -14,6 +14,7 @@ import {
 import { CommunicationTypes, Confirm } from '@deps/models/case/send-document';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
+import { browserLogWarn } from '@deps/utils/browser-logging';
 import { isNonProductionEnvironment } from '@deps/utils/environment.helper';
 
 import SendDocumentNavigationButtons from './action-components/navigation-buttons';
@@ -46,6 +47,14 @@ const validateNoEmailOverlap = (recipient: string, ccList: string[]) => {
     }
     return false;
 };
+
+const validateEmailExist = (ccList: string[]) => {
+    if (!ccList.length) {
+        return 'errors.emailRequired';
+    }
+    return false;
+};
+
 type CorrespondenceProps = {
     communicationOptions?: RadioItem[];
     policy: Policy;
@@ -82,9 +91,9 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
         setError({});
         switch (correspondenceData.type) {
             case CommunicationTypes.Email: {
-                const emailError = validateEmail(correspondenceData.recipient);
+                const emailError = validateEmailExist(correspondenceData?.ccList || []);
                 if (emailError) {
-                    browserLogInfo('contactCenterEmailValidation', {
+                    browserLogWarn('contactCenterEmailValidation', {
                         contractNumber: policy?.policyNumber || '',
                         planCode: policy?.product?.planCode || '',
                         carrierId: policy?.carrierId || '',
@@ -95,13 +104,6 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
                     setError({ ...error, submit: t(emailError) as string });
                     return false;
                 }
-
-                const duplicateEmail = validateNoEmailOverlap(correspondenceData.recipient, correspondenceData?.ccList || []);
-                if (duplicateEmail) {
-                    setError({ ...error, submit: t(duplicateEmail) as string });
-                    return false;
-                }
-
                 break;
             }
             case CommunicationTypes.Mail:

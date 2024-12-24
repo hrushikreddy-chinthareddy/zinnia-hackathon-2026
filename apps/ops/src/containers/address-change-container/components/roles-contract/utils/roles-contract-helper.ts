@@ -32,6 +32,10 @@ const isAddressAndPhoneMatch = (address: Address | undefined, homePhone: Phone |
     );
 };
 
+const isExistingEmail = (email: string, policyParty: PolicyAllOfPartiesItem )=>{
+    return email == policyParty?.emails?.[0]?.emailId;
+}
+
 export const isRowAlreadySelected = (row: AssociateAddressTableRow, applyToRolesData: ApplyToRolesState) => {
     return (
         row.partyRole === applyToRolesData.partyRole &&
@@ -86,7 +90,6 @@ export const groupPartiesByAddress = (
         } else {
             if (getDefaultAddress) {
                 // todo: VS: remove eslint check after spec update
-
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 const defaultAddress = policyParty.addresses?.find(address => address?.preferredAddress === true);
@@ -126,9 +129,72 @@ export const groupPartiesByAddress = (
             }
         }
     });
-
     return partyCards;
 };
+
+export const partyCardsEmail = (
+    roles: PolicyParties[],
+    parties: PolicyAllOfPartiesItem[],
+    qualificationType: string,
+    t: TFunction
+): PartyAddressCard[] => {
+    const partyCards: PartyAddressCard[] = [];
+    const extractedParties = parties ?? [];
+    const extractedPartyRoles = roles ?? [];
+
+    extractedPartyRoles?.map(partyItem => {
+        const partyRole = partyItem.partyRole || '';
+        const chipText = t(getRoleToLabelKeyMap(partyRole ?? ''));
+
+        const convertedPartyRole: TagKey = {
+            text: chipText,
+        };
+
+        const policyParty = extractedParties.find(pp => pp.partyId === partyItem.partyId);
+
+        if (!policyParty) return;
+
+        if (partyRole == PartyRole.OWNER && qualificationType && custodialQualTypes.includes(qualificationType)) {
+            return;
+        }
+
+        const existingEmailCard = partyCards.find((item: PartyAddressCard) => isExistingEmail(item?.email ?? '', policyParty));
+
+        if (existingEmailCard) {
+            const roleIndex = existingEmailCard.partyRoles.indexOf(partyRole);
+            if (roleIndex === -1) {
+                existingEmailCard.partyRoles.push(partyRole);
+                existingEmailCard.tags.push(convertedPartyRole);
+                existingEmailCard.roleIdentifiers.push({
+                    partyId: partyItem.partyId || '',
+                    partyRole: partyRole as PartyRole,
+                    partyRoleId: partyItem.partyRoleId,
+                });
+            }
+        } else {
+            const emailId = policyParty?.emails?.[0]?.emailId ?? 'shubham.bansal@zinnia.com';
+            if (emailId) {
+                const partyCard = {
+                    email: emailId,
+                    partyRoles: [partyRole],
+                    tags: [convertedPartyRole],
+                    firstName: policyParty.firstName,
+                    lastName: policyParty.lastName,
+                    roleIdentifiers: [
+                        {
+                            partyId: partyItem.partyId || '',
+                            partyRole: partyRole as PartyRole,
+                            partyRoleId: partyItem.partyRoleId,
+                        },
+                    ],
+                };
+                partyCards.push(partyCard);
+            }
+        }
+    });
+    return partyCards;
+};
+
 
 export const getRolesRadioConfig = (roles: PolicyParties[], t: TFunction): RadioItem[] => {
     return (

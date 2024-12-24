@@ -49,7 +49,6 @@ const Confirm = ({ shouldShowCaseButton, formNames }: ConfirmProps) => {
 
                         {communicationType === CommunicationTypes.Email && ccList?.length > 0 && (
                             <PiiWrapper>
-                                <span> {t('confirm.subtitle.1')} </span>
                                 <span className="font-bold"> {ccList?.map(cc => (cc ? cc : '')).join(', ')}</span>
                             </PiiWrapper>
                         )}

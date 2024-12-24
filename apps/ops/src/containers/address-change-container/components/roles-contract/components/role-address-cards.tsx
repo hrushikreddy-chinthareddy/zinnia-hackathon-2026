@@ -2,11 +2,13 @@ import { Tag } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 
 import ClickContainer from '@deps/components/click-container/click-container';
+import Label, { LabelVariant } from '@deps/components/label/label';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { FormattedPhone } from '@deps/containers/people-data-cards/phone-card/phone-card.helpers';
 import { AddressTypeAndAddress } from '@deps/containers/small-data-card/address-data/address-data';
 
-import { PartyAddressCard } from '../utils/roles-contract-types';
+import { PartyAddressCard } from '../utils/roles-contract-types'
+
 
 export interface IRoleAddressCardProps {
     partyCardsLits: PartyAddressCard[];
@@ -14,9 +16,18 @@ export interface IRoleAddressCardProps {
     selectedIds: number[];
     handleClick: (ids: number) => void;
     isAddressChange?: boolean;
+    isAddressCard?: boolean;
+    addEmail?: (email: string) => void;
 }
 
-export const RoleAddressCard = ({ partyCardsLits, title, selectedIds, handleClick, isAddressChange = true }: IRoleAddressCardProps) => {
+export const RoleAddressCard = ({
+    partyCardsLits,
+    title,
+    selectedIds,
+    handleClick,
+    isAddressChange = true,
+    isAddressCard = true,
+}: IRoleAddressCardProps) => {
     return (
         <>
             <Typography variant={TypographyVariant.LabelLg}>{title}</Typography>
@@ -46,8 +57,7 @@ export const RoleAddressCard = ({ partyCardsLits, title, selectedIds, handleClic
                                     {`${card?.firstName} ${card?.lastName}`}
                                 </Typography>
                             )}
-
-                            {card?.address ? (
+                            {isAddressCard && card?.address ? (
                                 <AddressTypeAndAddress
                                     key={card.address.addressId}
                                     address={card.address}
@@ -55,7 +65,18 @@ export const RoleAddressCard = ({ partyCardsLits, title, selectedIds, handleClic
                                     isAddressChange={isAddressChange}
                                 />
                             ) : null}
-                            {card?.homePhone ? <FormattedPhone phone={card.homePhone}></FormattedPhone> : null}
+                            {!isAddressCard && card?.email && (
+                                <div>
+                                    <div>
+                                        {' '}
+                                        <Label className="h-6 leading-4.5" label={'Email'} variant={LabelVariant.FieldLabel} />{' '}
+                                    </div>
+                                    <Typography variant={TypographyVariant.BodySm} className="py-0">
+                                        {`${card?.email}`}
+                                    </Typography>
+                                </div>
+                            )}
+                            {isAddressCard && card?.homePhone ? <FormattedPhone phone={card.homePhone}></FormattedPhone> : null}
                         </div>
                     </ClickContainer>
                 ))}
