@@ -126,7 +126,7 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
                 browserLogInfo('task-queue:handleUnassignTask::Successfully un-assigned task', { taskId: taskId });
                 getTasks();
             } else {
-                browserLogInfo('task-queue:handleUnassignTask::An error occurred while un-assigning the task', { taskId: taskId });
+                browserLogInfo('task-queue:handleUnassignTask::An error occurred while un-assigning the task', { taskId: taskId, status: response.status });
                 setErrorMessage(t('unassignTaskError') + 'An error occurred while un-assigning the task');
             }
         } catch (e) {

@@ -67,7 +67,7 @@ export const FormProvider = ({
     featureFlagDecisions,
 }: FormProviderProps) => {
     const searchParams = useSearchParams();
-    const [formData, setFormData] = useState(form.data.formRequest.formData);
+    const [formData, setFormData] = useState(form?.data?.formRequest?.formData);
     const [formDisbursement, setFormDisbursement] = useState(form.data.formRequest.formDisbursement);
     const [formDistribution, setFormDistribution] = useState(form.data.formRequest.formDistribution);
     const [formFullSurrenderAck, setFormFullSurrenderAck] = useState(form.data.formRequest.formFullSurrenderAck);
