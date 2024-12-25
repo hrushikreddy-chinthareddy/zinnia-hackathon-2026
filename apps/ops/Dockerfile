@@ -87,4 +87,4 @@ EXPOSE 9229
 ENV PORT 3000
 
 
-CMD HOSTNAME="0.0.0.0" NODE_OPTIONS='--max-http-header-size=32000' node apps/ops/server.js
+CMD HOSTNAME="0.0.0.0" NODE_OPTIONS='--max-http-header-size=64000' node apps/ops/server.js
