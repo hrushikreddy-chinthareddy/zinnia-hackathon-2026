@@ -481,28 +481,30 @@ export const CaseDetails: DigitalFormWithdrawal = {
                             },
                         ],
                     },
-                    irsTaxWithholding: {
-                        place: {
-                            text: 'Federal',
+                    irsTaxWithholding: [
+                        {
+                            place: {
+                                text: 'Federal',
+                            },
+                            type: {
+                                text: 'No Tax Withholding',
+                            },
+                            amount: {
+                                text: '0',
+                                amountType: null,
+                            },
+                            filingStatus: {
+                                text: null,
+                            },
+                            exemption: {
+                                text: null,
+                            },
+                            additionalAmount: {
+                                text: null,
+                                amountType: null,
+                            },
                         },
-                        type: {
-                            text: 'No Tax Withholding',
-                        },
-                        amount: {
-                            text: '0',
-                            amountType: null,
-                        },
-                        filingStatus: {
-                            text: null,
-                        },
-                        exemption: {
-                            text: null,
-                        },
-                        additionalAmount: {
-                            text: null,
-                            amountType: null,
-                        },
-                    },
+                    ],
                     irsSignature: {
                         isSigned: null,
                         signDate: {
@@ -557,14 +559,34 @@ export const CaseDetails: DigitalFormWithdrawal = {
                         maritalStatus: { text: null },
                     },
                     irsSignature: undefined,
-                    irsTaxWithholding: {
-                        place: { text: TaxWithholdingPlace.State },
-                        type: { text: WithholdingType.SpecifiedTaxWithholding },
-                        amount: { text: '20', amountType: AmountType.Percent },
-                        filingStatus: { text: null },
-                        exemption: { text: null },
-                        additionalAmount: { amountType: null, text: null },
-                    },
+                    irsTaxWithholding: [
+                        {
+                            place: {
+                                text: TaxWithholdingPlace.State,
+                            },
+                            type: {
+                                text: WithholdingType.NoTaxWithholding,
+                            },
+                            amount: {
+                                text: '10',
+                                amountType: AmountType.Dollar,
+                            },
+                            noOfallowances: {
+                                text: '10',
+                            },
+
+                            additionalAmount: {
+                                text: null,
+                                amountType: null,
+                            },
+                            filingStatus: {
+                                text: null,
+                            },
+                            exemption: {
+                                text: null,
+                            },
+                        },
+                    ],
                 },
             ],
         },

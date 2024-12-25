@@ -40,7 +40,7 @@ export default function IrsWithholding({ signatureFields, isFormStateReadOnly, w
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.irsData' });
     const [isIrsChecked, setIrsChecked] = useState(IrsW4rData?.irsApplicable || false);
 
-    const [amount, setAmount] = useState(IrsW4rData?.irsTaxWithholding?.amount?.text || '');
+    const [amount, setAmount] = useState(IrsW4rData?.irsTaxWithholding?.[0]?.amount?.text || '');
     const [taxId, setTaxId] = useState(IrsW4rData?.formParty?.taxId || owner?.taxId || '')
     const [signature, setSignature] = useState(IrsW4rData?.irsSignature || getDefaultSignature(SignatureValidationTypeWithdrawal.Owner));
     const [isW4pChecked, setW4pChecked] = useState(IrsW4pData?.irsApplicable || false);
@@ -49,7 +49,8 @@ export default function IrsWithholding({ signatureFields, isFormStateReadOnly, w
     const [ssn, setSsn] = useState(IrsW4pData?.formParty?.taxId || owner?.taxId || '');
     const [address, setAddress] = useState(IrsW4pData?.formParty?.addresses || owner?.addresses[0]);
     const [maritalStatus, setMaritalStatus] = useState<maritalStatusType>(IrsW4pData?.formParty?.maritalStatus?.text as maritalStatusType | undefined || maritalStatusType.single);
-    const [numberOfAllowances, setNumberOfAllowances] = useState(IrsW4pData?.irsTaxWithholding?.allowances || '');
+    const [numberOfAllowances, setNumberOfAllowances] = useState(IrsW4pData?.irsTaxWithholding?.[0]?.noOfallowances?.text || '');
+
     const [w4Psignature, setW4pSignature] = useState(
         IrsW4pData?.irsSignature || getDefaultSignature(SignatureValidationTypeWithdrawal.Owner)
     );
@@ -58,30 +59,27 @@ export default function IrsWithholding({ signatureFields, isFormStateReadOnly, w
     );
 
     const updateFormIrsData = (type: IrsFormType, data: any) => {
-        const existingDataIndex = formIrsData?.findIndex(item => item.irsFormType === type);
-
+        const existingDataIndex = formIrsData?.findIndex(item => {
+            return item.irsFormType === type
+        });
         setFormIrsData((prevData) => {
             const newData = [...prevData];
             if (existingDataIndex !== undefined && existingDataIndex !== -1) {
                 newData[existingDataIndex] = data;
-            } else {
-                newData.push(data);
             }
             return newData;
         });
     }
 
-
-
     useEffect(() => {
         if (isIrsChecked) {
             const w4rData = {
                 irsApplicable: isIrsChecked,
-                IrsFormType: IrsFormType.W4R,
+                irsFormType: IrsFormType.W4R,
                 irsSpecified: amount ? true : false,
                 formParty: { ...owner, taxId: taxId } as Party,
                 irsSignature: signature,
-                irsTaxWithholding: {
+                irsTaxWithholding: [{
                     place: {
                         text: TaxWithholdingPlace.Federal,
                     },
@@ -102,19 +100,18 @@ export default function IrsWithholding({ signatureFields, isFormStateReadOnly, w
                     exemption: {
                         text: null,
                     },
-                },
+                }],
             };
             updateFormIrsData(IrsFormType.W4R, w4rData);
         } else {
             updateFormIrsData(IrsFormType.W4R, null);
         }
     }, [isIrsChecked, amount, taxId, signature, owner, stateWithholding]);
-
     useEffect(() => {
         if (isW4pChecked) {
             const w4pData = {
                 irsApplicable: isW4pChecked,
-                IrsFormType: IrsFormType.W4P,
+                irsFormType: IrsFormType.W4P,
                 irsSpecified: !!name,
                 formParty: {
                     fullName: name,
@@ -123,10 +120,54 @@ export default function IrsWithholding({ signatureFields, isFormStateReadOnly, w
                     maritalStatus: { text: maritalStatus },
                 },
                 irsSignature: w4Psignature,
-                irsTaxWithholding: {
-                    allowances: numberOfAllowances,
-                    ...stateWithholding,
-                },
+                irsTaxWithholding: [{
+                    place: {
+                        text: TaxWithholdingPlace.State,
+                    },
+                    type: {
+                        text: WithholdingType.NoTaxWithholding
+                    },
+                    amount: {
+                        text: stateWithholding?.dollarAmount,
+                        amountType: AmountType.Dollar
+                    },
+                    noOfallowances: {
+                        text: numberOfAllowances
+                    },
+
+                    additionalAmount: {
+                        text: null,
+                        amountType: null
+                    },
+                    filingStatus: {
+                        text: null
+                    },
+                    exemption: {
+                        text: null
+                    }
+                }, {
+                    place: {
+                        text: TaxWithholdingPlace.State,
+                    },
+                    type: {
+                        text: WithholdingType.NoTaxWithholding
+                    },
+                    amount: {
+                        text: stateWithholding?.percentAmount,
+                        amountType: AmountType.Percent
+                    },
+                    additionalAmount: {
+                        text: null,
+                        amountType: null
+                    },
+                    filingStatus: {
+                        text: null
+                    },
+                    exemption: {
+                        text: null
+                    }
+
+                }],
             };
             updateFormIrsData(IrsFormType.W4P, w4pData);
         } else {

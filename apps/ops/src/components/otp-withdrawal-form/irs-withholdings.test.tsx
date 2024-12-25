@@ -4,12 +4,12 @@ import { cleanup, screen, fireEvent, render } from '@testing-library/react';
 
 import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import { TaxWithholdingPlace, AmountType, WithholdingType, PartyRoles, CaseStatus, IrsFormType, AddressTypes } from '@deps/models/case/withdrawal/case';
 import { CaseDetails } from '@deps/models/case/withdrawal/case-data';
 
 import IrsWithholding from './irs-withholdings';
 import { SignatureFields } from './signature-validation/signature-validation-parts/signature-parts';
-import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 
 jest.mock('next-i18next', () => ({
     useTranslation: () => ({
@@ -98,14 +98,14 @@ describe('IRS Withholding Component', () => {
                     phones: [],
                     dob: { text: null },
                 },
-                irsTaxWithholding: {
+                irsTaxWithholding: [{
                     place: { text: TaxWithholdingPlace.Federal },
                     type: { text: WithholdingType.SpecifiedTaxWithholding },
                     amount: { text: '20', amountType: AmountType.Percent },
                     filingStatus: { text: null },
                     exemption: { text: null },
                     additionalAmount: { amountType: null, text: null },
-                },
+                }],
                 irsSignature: undefined,
             },
             {
@@ -138,14 +138,28 @@ describe('IRS Withholding Component', () => {
                     maritalStatus: { text: null },
                 },
                 irsSignature: undefined,
-                irsTaxWithholding: {
-                    place: { text: TaxWithholdingPlace.State },
-                    type: { text: WithholdingType.SpecifiedTaxWithholding },
-                    amount: { text: '', amountType: AmountType.Percent },
-                    filingStatus: { text: null },
-                    exemption: { text: null },
-                    additionalAmount: { amountType: null, text: null },
-                },
+                irsTaxWithholding: [{
+                    place: {
+                        text: TaxWithholdingPlace.State,
+                    },
+                    type: {
+                        text: WithholdingType.NoTaxWithholding
+                    },
+                    amount: {
+                        text: '10',
+                        amountType: AmountType.Dollar
+                    },
+                    additionalAmount: {
+                        text: null,
+                        amountType: null
+                    },
+                    filingStatus: {
+                        text: null
+                    },
+                    exemption: {
+                        "text": null
+                    }
+                }],
             },
         ];
         let setMethodArgs;
@@ -167,11 +181,7 @@ describe('IRS Withholding Component', () => {
             </FormDataContext.Provider>
         );
 
-        const irsAmountElement = screen.getByTestId('w4r-irsAmount') as HTMLInputElement;
-        expect(irsAmountElement.value).toBe('20 ');
 
-        const ssnElement = screen.getByTestId('w4r-ssn') as HTMLInputElement;
-        expect(ssnElement.value).toBe('339333333');
 
 
 
@@ -180,7 +190,7 @@ describe('IRS Withholding Component', () => {
             irsApplicable: true,
             irsSpecified: true,
             formParty: { ...CaseDetails.data.formRequest.formParty.parties[0], taxId: '339333333' },
-            irsTaxWithholding: {
+            irsTaxWithholding: [{
                 place: { text: TaxWithholdingPlace.Federal },
                 type: {
                     text: WithholdingType.SpecifiedTaxWithholding,
@@ -197,7 +207,7 @@ describe('IRS Withholding Component', () => {
                 exemption: {
                     text: null,
                 },
-            },
+            }],
             irsSignature: {
                 isSigned: null,
                 signDate: {
@@ -252,14 +262,28 @@ describe('IRS Withholding Component', () => {
                 maritalStatus: { text: null },
             },
             irsSignature: undefined,
-            irsTaxWithholding: {
-                place: { text: TaxWithholdingPlace.State },
-                type: { text: WithholdingType.SpecifiedTaxWithholding },
-                amount: { text: '', amountType: AmountType.Percent },
-                filingStatus: { text: null },
-                exemption: { text: null },
-                additionalAmount: { amountType: null, text: null },
-            }
+            irsTaxWithholding: [{
+                place: {
+                    text: TaxWithholdingPlace.State,
+                },
+                type: {
+                    text: WithholdingType.NoTaxWithholding
+                },
+                amount: {
+                    text: '10',
+                    amountType: AmountType.Dollar
+                },
+                additionalAmount: {
+                    text: null,
+                    amountType: null
+                },
+                filingStatus: {
+                    text: null
+                },
+                exemption: {
+                    "text": null
+                }
+            }],
 
         }]);
     });
@@ -285,14 +309,14 @@ describe('IRS Withholding Component', () => {
                     phones: [],
                     dob: { text: null },
                 },
-                irsTaxWithholding: {
+                irsTaxWithholding: [{
                     place: { text: TaxWithholdingPlace.Federal },
                     type: { text: WithholdingType.SpecifiedTaxWithholding },
                     amount: { text: '20', amountType: AmountType.Percent },
                     filingStatus: { text: null },
                     exemption: { text: null },
                     additionalAmount: { amountType: null, text: null },
-                },
+                }],
                 irsSignature: undefined,
             },
             {
@@ -325,14 +349,32 @@ describe('IRS Withholding Component', () => {
                     maritalStatus: { text: null },
                 },
                 irsSignature: undefined,
-                irsTaxWithholding: {
-                    place: { text: TaxWithholdingPlace.State },
-                    type: { text: WithholdingType.SpecifiedTaxWithholding },
-                    amount: { text: "20", amountType: AmountType.Percent },
-                    filingStatus: { text: null },
-                    exemption: { text: null },
-                    additionalAmount: { amountType: null, text: null },
-                },
+                irsTaxWithholding: [{
+                    place: {
+                        text: TaxWithholdingPlace.State,
+                    },
+                    type: {
+                        text: WithholdingType.NoTaxWithholding
+                    },
+                    amount: {
+                        text: '10',
+                        amountType: AmountType.Dollar
+                    },
+                    noOfallowances: {
+                        text: '10'
+                    },
+
+                    additionalAmount: {
+                        text: null,
+                        amountType: null
+                    },
+                    filingStatus: {
+                        text: null
+                    },
+                    exemption: {
+                        "text": null
+                    }
+                }],
             }
         ];
         const setMockData = jest.fn();

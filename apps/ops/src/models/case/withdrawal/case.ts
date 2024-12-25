@@ -120,7 +120,7 @@ export interface FormIrsData {
     irsApplicable: boolean;
     irsSpecified: boolean;
     formParty: Party | null;
-    irsTaxWithholding?: TaxWithholding;
+    irsTaxWithholding?: TaxWithholding[];
     irsSignature?: SignatureWithdrawal;
     irsFormType: IrsFormType;
 }
