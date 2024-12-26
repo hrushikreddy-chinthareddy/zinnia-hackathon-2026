@@ -33,7 +33,7 @@ const isAddressAndPhoneMatch = (address: Address | undefined, homePhone: Phone |
 };
 
 const isExistingEmail = (email: string, policyParty: PolicyAllOfPartiesItem )=>{
-    return email == policyParty?.emails?.[0]?.emailId;
+    return email == policyParty?.emails?.[0]?.emailAddress;
 }
 
 export const isRowAlreadySelected = (row: AssociateAddressTableRow, applyToRolesData: ApplyToRolesState) => {
@@ -172,7 +172,7 @@ export const partyCardsEmail = (
                 });
             }
         } else {
-            const emailId = policyParty?.emails?.[0]?.emailId ?? 'shubham.bansal@zinnia.com';
+            const emailId = policyParty?.emails?.[0]?.emailAddress ;
             if (emailId) {
                 const partyCard = {
                     email: emailId,
