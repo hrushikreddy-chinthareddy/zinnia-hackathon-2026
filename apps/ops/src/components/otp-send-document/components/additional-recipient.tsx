@@ -91,19 +91,44 @@ const AdditionalRecipient = ({ classNames, emails, setEmails, setError, policy }
         setEmails(emails.filter(email => email !== val));
     };
 
-    // const helpInformation = (
-    //     <Tooltip
-    //         placement={TooltipPlacement.TopRight}
-    //         trigger={<CircleInfoIcon onClick={e => e.preventDefault()} height={'16px'} width={'16px'} className="text-primary" />}
-    //     >
-    //         {t('correspondence.additionalRecipientTooltip') as string}
-    //     </Tooltip>
-    // );
+    const emailBox = (
+        <div className={classNames}>
+            <Label labelFor={'additional-recipient'}>{t('correspondence.emailAddress')}</Label>
+            <div className={`border-2 border-gray-200 px-2 pt-2 mt-1 rounded-lg`}>
+                {emails.map(email => (
+                    <ChipX label={email as string} key={email} onDelete={() => deleteEmail(email)} className="my-1" />
+                ))}
+                <Field
+                    onChange={e => {
+                        setEmail(xss(e?.target?.value?.trim()) ?? '');
+                    }}
+                    handleEnterKey={() => {
+                        addEmail(email);
+                    }}
+                    onKeyPress={e => {
+                        if (e.key === ',' || e.key === ';') {
+                            e.preventDefault();
+                            addEmail(email);
+                        }
+                    }}
+                    onBlur={e => {
+                        e.preventDefault();
+                        addEmail(email);
+                    }}
+                    value={email as string}
+                    size={FieldSize.Default}
+                    type={FieldType.BaseActive}
+                    className="!border-0 max-w-xs"
+                />
+            </div>
+        </div>
+    );
+
     return (
         <>
             <div className="mt-4">
                 <Label labelFor={'email-heading'}>
-                    {partyCardsData?.length ? t(`correspondence.emailLabel`) : t(`correspondence.noEmails`)}
+                    {partyCardsData?.length ? t('correspondence.emailLabel') : t('correspondence.noEmails')}
                 </Label>
             </div>
             {partyCardsData?.length && (
@@ -118,40 +143,11 @@ const AdditionalRecipient = ({ classNames, emails, setEmails, setError, policy }
                 ></RoleAddressCard>
             )}
             <div className="max-w-sm">
-                <div className={classNames}>
-                    <Label labelFor={'additional-recipient'}>{t(`correspondence.emailAddress`)}</Label>
-                    <div className={`border-2 border-gray-200 px-2 pt-2 mt-1 rounded-lg`}>
-                        {emails.map(email => (
-                            <ChipX label={email as string} key={email} onDelete={() => deleteEmail(email)} className="my-1" />
-                        ))}
-                        <Field
-                            onChange={e => {
-                                setEmail(xss(e?.target?.value?.trim()) ?? '');
-                            }}
-                            handleEnterKey={() => {
-                                addEmail(email);
-                            }}
-                            onKeyPress={e => {
-                                if (e.key === ',' || e.key === ';') {
-                                    e.preventDefault();
-                                    addEmail(email);
-                                }
-                            }}
-                            onBlur={e => {
-                                e.preventDefault();
-                                addEmail(email);
-                            }}
-                            value={email as string}
-                            size={FieldSize.Default}
-                            type={FieldType.BaseActive}
-                            className="!border-0 max-w-xs"
-                        />
-                    </div>
-                </div>
+                {emailBox}
                 <Typography variant={TypographyVariant.Body} className={`whitespace-normal mb-2 break-words`}>
                     {t('correspondence.emailMessage')}
                 </Typography>
-                <AssistiveText text={`${t('correspondence.emailWarning')}`} variant={AssistiveTextVariant.Info} />
+                <AssistiveText text={t('correspondence.emailWarning')} variant={AssistiveTextVariant.Info} />
             </div>
         </>
     );

@@ -8,6 +8,7 @@ import { FormattedPhone } from '@deps/containers/people-data-cards/phone-card/ph
 import { AddressTypeAndAddress } from '@deps/containers/small-data-card/address-data/address-data';
 
 import { PartyAddressCard } from '../utils/roles-contract-types'
+import { useTranslation } from 'react-i18next';
 
 
 export interface IRoleAddressCardProps {
@@ -28,6 +29,9 @@ export const RoleAddressCard = ({
     isAddressChange = true,
     isAddressCard = true,
 }: IRoleAddressCardProps) => {
+    
+    const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
+
     return (
         <>
             <Typography variant={TypographyVariant.LabelLg}>{title}</Typography>
@@ -68,8 +72,7 @@ export const RoleAddressCard = ({
                             {!isAddressCard && card?.email && (
                                 <div>
                                     <div>
-                                        {' '}
-                                        <Label className="h-6 leading-4.5" label={'Email'} variant={LabelVariant.FieldLabel} />{' '}
+                                        <Label className="h-6 leading-4.5" label={t('correspondence.email')} variant={LabelVariant.FieldLabel} />
                                     </div>
                                     <Typography variant={TypographyVariant.BodySm} className="py-0">
                                         {`${card?.email}`}
