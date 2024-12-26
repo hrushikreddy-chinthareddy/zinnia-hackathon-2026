@@ -126,22 +126,20 @@ const AdditionalRecipient = ({ classNames, emails, setEmails, setError, policy }
 
     return (
         <>
-            <div className="mt-4">
+            <div className="mt-4 ">
                 <Label labelFor={'email-heading'}>
                     {partyCardsData?.length ? t('correspondence.emailLabel') : t('correspondence.noEmails')}
                 </Label>
             </div>
-            {partyCardsData?.length && (
-                <RoleAddressCard
-                    partyCardsLits={partyCardsData}
-                    title={''}
-                    handleClick={handleClick}
-                    selectedIds={[selectedEmailIndex]}
-                    isAddressChange={false}
-                    isAddressCard={false}
-                    addEmail={addEmail}
-                ></RoleAddressCard>
-            )}
+            <RoleAddressCard
+                partyCardsLits={partyCardsData}
+                title={''}
+                handleClick={handleClick}
+                selectedIds={[selectedEmailIndex]}
+                isAddressChange={false}
+                isAddressCard={false}
+                addEmail={addEmail}
+            ></RoleAddressCard>
             <div className="max-w-sm">
                 {emailBox}
                 <Typography variant={TypographyVariant.Body} className={`whitespace-normal mb-2 break-words`}>
