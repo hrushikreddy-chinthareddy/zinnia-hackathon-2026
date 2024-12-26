@@ -13,3 +13,9 @@ export interface BankRequest {
   bankId?: string;
   bankAccountChangeRequest: BankAccountChangeRequest;
 }
+
+export enum FormSteps {
+  LOADING = 'LOADING',
+  ERROR = 'ERROR',
+  SUCCESS = 'SUCCESS',
+}
