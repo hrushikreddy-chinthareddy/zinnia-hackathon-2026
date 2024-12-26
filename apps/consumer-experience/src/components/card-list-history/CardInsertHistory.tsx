@@ -2,7 +2,6 @@ import clsx from 'clsx';
 import { ReactNode } from 'react';
 
 import cardStyles from '@/components/clickable-card-container/ClickableCardContainer.module.css';
-import { formatUSDollars } from '@/utils/currency';
 import { standardDateMonthDayYear } from '@/utils/dates';
 
 import styles from './CardInsertHistory.module.css';
@@ -11,7 +10,7 @@ interface HistoryItemProps {
   date?: string;
   title: ReactNode;
   subtitle?: ReactNode;
-  amount?: number;
+  amount?: ReactNode;
   isPending?: boolean;
 }
 
@@ -43,8 +42,8 @@ export const CardInsertHistory = ({
         </div>
         <p className="typography-content-body-sm">{subtitle}</p>
       </div>
-      <div className="typography-content-body-sm-bold">
-        {formatUSDollars(amount)}
+      <div className={`typography-content-body-sm-bold ${styles.amount}`}>
+        {amount}
       </div>
     </li>
   );

@@ -1,6 +1,7 @@
 import { FC } from 'react';
 
 import { PaymentHistoryTransaction } from '@/types/policy';
+import { formatUSDollars } from '@/utils/currency';
 import { formatBankAccountTypeText } from '@/utils/data';
 
 import { CardInsertHistory } from '../card-list-history/CardInsertHistory';
@@ -29,7 +30,9 @@ export const RecentTransactions: FC<RecentTransactionProps> = ({
               <CardInsertHistory
                 key={'completed-' + index}
                 date={item.date}
-                amount={item.amount}
+                amount={
+                  <span>{formatUSDollars(item.amount?.appliedAmount)}</span>
+                }
                 title={item.title}
                 subtitle={
                   <span>
@@ -59,7 +62,9 @@ export const RecentTransactions: FC<RecentTransactionProps> = ({
               <CardInsertHistory
                 key={'pending-' + index}
                 date={item.date}
-                amount={item.amount}
+                amount={
+                  <span>{formatUSDollars(item.amount?.paymentAmount)}</span>
+                }
                 title={item.title}
                 isPending
                 subtitle={
