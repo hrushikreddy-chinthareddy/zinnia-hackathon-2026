@@ -10,7 +10,7 @@ const noop = (() => {}) as React.Dispatch<React.SetStateAction<any>>;
 
 const NoteSection = React.forwardRef(function NoteSectionComponent() {
     const { formComment, setFormComment, isFormStateReadOnly } = useContext(FormDataContext);
-    const commentParts = formComment?.comment?.split('-');
+    const commentParts = formComment?.comment?.split(' - ');
 
     const formData = {
         options: commentParts?.[0] ?? '',
@@ -20,7 +20,7 @@ const NoteSection = React.forwardRef(function NoteSectionComponent() {
         const { options, comment } = event.formData ?? {};
         setFormComment(formComment => ({
             ...formComment,
-            comment: options ? `${options}-${comment}` : comment,
+            comment: options ? `${options} - ${comment}` : comment,
         }));
     };
 
