@@ -5,6 +5,7 @@ import { useCallback, useContext, useState } from 'react';
 
 import 'react-pdf/dist/Page/TextLayer.css';
 
+import NoteSection from '@deps/components/otp-withdrawal-form/note-section';
 import TransactionNavigationButtons, { ParentPage } from "@deps/components/transaction-navigation-buttons/transaction-navigation-buttons";
 import WorkflowCard from "@deps/components/workflows/workflow-card/workflow-card";
 import { TranslationFiles } from '@deps/config/translations';
@@ -26,7 +27,6 @@ import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { getCaseType, getFormParts } from './form-entry-step.helper';
 import { useNigoEntry } from '../../nigo-entry-provider';
-
 
 type FormEntryStepProps = {
     document: DocumentData;
@@ -169,6 +169,7 @@ function FormEntryStep({document, clientCode, docType} : FormEntryStepProps) {
                     </div>
                 )}
                 {formParts}
+                <NoteSection />
                 <FormErrors  t={withdrawalTxt} taskApiError={taskApiError}></FormErrors>
                 <div className="my-2">
                 {!areDiaryNotesViewed && !isFormStateReadOnly && (
