@@ -491,7 +491,7 @@ export interface Party {
     email?: string | null;
     employer?: string | null;
     maritalStatus: {
-        text: MaritalStatus | null;
+        text: maritalStatusType | null;
     };
     addresses: Address[];
     phones: Phone[];

@@ -10,6 +10,7 @@ import FormProgramPartialWithdrawal from '@deps/components/otp-withdrawal-form/f
 import FormType from '@deps/components/otp-withdrawal-form/form-type';
 import IrsWithholding from '@deps/components/otp-withdrawal-form/irs-withholdings';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
+import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
@@ -76,7 +77,6 @@ export default function FlicWithdrawalForm() {
             {!isFormStateReadOnly && <DiaryNotesWarning />}
             <FormType isFormStateReadOnly={isFormStateReadOnly} formSubtypeOptions={formSubtypeOptions} />
             <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
-
             {formSubtype === FormSubtype.FullWithdrawal ? (
                 <FormProgramFullWithdrawal
                     selectOneOptions={selectOneOptions}
@@ -99,7 +99,8 @@ export default function FlicWithdrawalForm() {
                 </>
             )}
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
-            <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} w4pSignaturesConfig={w4pSignaturesConfig} />
+            <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} />
+            <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
             {(ownerStateOfResidence || contractIssueState) &&
                 [ownerStateOfResidence, contractIssueState].some(state => state && cslnCheckStates.includes(state)) && (
