@@ -43,7 +43,7 @@ const MassWithdrawalForm = ({ qualType }: MassWithdrawalFormProps) => {
         validateMaritalStatusAllowances,
         distributionReasonOptions,
         waiverItemsConfig,
-        w4pSignaturesConfig
+
     } = useMassWithdrawalConfig(t);
     const {
         setFormValidator,
@@ -110,7 +110,7 @@ const MassWithdrawalForm = ({ qualType }: MassWithdrawalFormProps) => {
             {formSubtype === FormSubtype.FullWithdrawal && (
                 <FormWaivers config={waiverItemsConfig} isFormStateReadOnly={isFormStateReadOnly} />
             )}
-            <IrsWithholding signatureFields={irsSignatureConfig} isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />
+            <IrsWithholding signatureFields={irsSignatureConfig} isFormStateReadOnly={isFormStateReadOnly} />
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
             <SignatureValidations config={signaturesConfig} isFormStateReadOnly={isFormStateReadOnly}>
                 {isKeogh ? (

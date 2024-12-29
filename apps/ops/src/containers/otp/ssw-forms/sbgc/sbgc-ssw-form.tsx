@@ -9,6 +9,7 @@ import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-pa
 import DistributionReason from '@deps/components/otp-withdrawal-form/form-restriction/distribution-reason';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import SystematicWithdrawalProgram from '@deps/components/otp-withdrawal-form/ssw-program/ssw-program';
+import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
@@ -28,6 +29,7 @@ export function SbgcSSWForm() {
         disbursementOptions,
         fundWithdrawnMethodOptions,
         systematicWithdrawalOptions,
+        w4pSignaturesConfig
     } = getSbgcConfig(t);
     const { formParty, formTpaAuthorization, setFormValidator, formData, setFormData, initialForm, isFormStateReadOnly } =
         useContext(FormDataContext);
@@ -64,6 +66,7 @@ export function SbgcSSWForm() {
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
                 title={t('distributionInstruction.investmentSelectionForDistribution') as string}
             />
+            <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />

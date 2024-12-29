@@ -17,6 +17,7 @@ import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-
 import TaxOL4753Attachment from '@deps/components/otp-withdrawal-form/tax-ol4753-attachment';
 import CslnCheck from '@deps/components/otp-withdrawal-form/csln-check';
 import SswEditSelection from '../ssw-edit-selection';
+import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 
 export function NassauSSWForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
@@ -34,6 +35,7 @@ export function NassauSSWForm() {
         cslnCheckStates,
         defaultValues,
         handleShouldShowDOBInOl4573,
+        w4pSignaturesConfig
     } = useNassauConfig(t);
 
     useEffect(() => {
@@ -73,6 +75,8 @@ export function NassauSSWForm() {
                 options={disbursementOptions}
                 defaultValue={defaultValues.disbursementOption}
             />
+            <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />
+
             {(ownerStateOfResidence || contractIssueState) &&
                 [ownerStateOfResidence, contractIssueState].some(state => state && cslnCheckStates.includes(state)) && (
                     <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />

@@ -7,6 +7,7 @@ import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disburse
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import FormProgramPartialWithdrawal from '@deps/components/otp-withdrawal-form/form-program/form-program-partial-withdrawal';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
+import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
@@ -29,6 +30,7 @@ export default function DlicWithdrawalForm() {
         fundWithdrawnMethodOptions,
         selectOneOptions,
         cslnCheckStates,
+        w4pSignaturesConfig
     } = useDlicConfig(t);
     const { formParty, setFormValidator, setFormData, initialForm, contractIssueState, isFormStateReadOnly } = useContext(FormDataContext);
 
@@ -66,6 +68,7 @@ export default function DlicWithdrawalForm() {
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
                 title={t('distributionInstruction.investmentSelectionForDistribution') as string}
             />
+            <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />
             <TaxWithholdings
                 isFormStateReadOnly={isFormStateReadOnly}
                 ownerStateOfResidence={ownerStateOfResidence}

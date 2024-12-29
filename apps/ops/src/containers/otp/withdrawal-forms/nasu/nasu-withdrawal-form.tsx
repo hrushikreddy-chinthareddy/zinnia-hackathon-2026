@@ -11,6 +11,7 @@ import FormProgramPartialWithdrawal from '@deps/components/otp-withdrawal-form/f
 import DistributionReason from '@deps/components/otp-withdrawal-form/form-restriction/distribution-reason';
 import FormType from '@deps/components/otp-withdrawal-form/form-type';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
+import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import TaxOL4753Attachment from '@deps/components/otp-withdrawal-form/tax-ol4753-attachment';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
@@ -39,6 +40,7 @@ export default function NasuWithdrawalForm() {
         reasonOptions,
         defaultValues,
         handleShouldShowDOBInOl4573,
+        w4pSignaturesConfig
     } = useNasuConfig(t);
     const {
         formParty,
@@ -104,6 +106,7 @@ export default function NasuWithdrawalForm() {
                 options={disbursementOptions}
                 defaultValue={defaultValues.disbursementOption}
             />
+            <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
             <TaxOL4753Attachment
                 isFormStateReadOnly={isFormStateReadOnly}

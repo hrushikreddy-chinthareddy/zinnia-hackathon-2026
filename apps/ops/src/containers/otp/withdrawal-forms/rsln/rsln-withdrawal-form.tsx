@@ -13,6 +13,7 @@ import FormWaivers from '@deps/components/otp-withdrawal-form/form-waivers/form-
 import IrsWithholding from '@deps/components/otp-withdrawal-form/irs-withholdings';
 import OwnerAcknowledgementOfTaxInformation from '@deps/components/otp-withdrawal-form/owner-acknowledgement-tax-information';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
+import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
@@ -118,7 +119,8 @@ export default function RslnWithdrawalForm() {
                 isMaritalStatusAllowances={true}
                 meritalStatusAllowanceConfig={meritalStatusAllowanceConfig}
             />
-            <IrsWithholding signatureFields={irsSignatureConfig} isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />
+            <IrsWithholding signatureFields={irsSignatureConfig} isFormStateReadOnly={isFormStateReadOnly} />
+            <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />
 
             <FormWaivers config={waiverItemsConfig} isFormStateReadOnly={isFormStateReadOnly} />
 

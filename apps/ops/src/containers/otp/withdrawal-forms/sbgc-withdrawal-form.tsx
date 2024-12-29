@@ -10,6 +10,7 @@ import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-pa
 import DistributionReason from '@deps/components/otp-withdrawal-form/form-restriction/distribution-reason';
 import LoanAcknowledgement from '@deps/components/otp-withdrawal-form/loan-acknowledgement';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
+import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { USStates } from '@deps/constants/geography/us-states';
@@ -31,6 +32,7 @@ export default function SbgcWithdrawalForm() {
         unforeseeableEmergencyOptions,
         hardshipOptions,
         reasonOptions,
+        w4pSignaturesConfig
     } = getSbgcConfig(t);
     const { formParty, formTpaAuthorization, setFormValidator, formData, setFormData, initialForm, isFormStateReadOnly } =
         useContext(FormDataContext);
@@ -71,6 +73,7 @@ export default function SbgcWithdrawalForm() {
                 title={t('distributionInstruction.distributionInstruction') as string}
                 isFormStateReadOnly={isFormStateReadOnly}
             />
+            <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
             <LoanAcknowledgement isFormStateReadOnly={isFormStateReadOnly} />
