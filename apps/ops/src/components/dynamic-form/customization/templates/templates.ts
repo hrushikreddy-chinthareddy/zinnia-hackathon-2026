@@ -6,6 +6,7 @@ import RemoveButton from './button-templates/remove-button/remove-button';
 import FieldErrorTemplate from './field-error-template/field-error-template';
 import { FieldTemplate } from './field-template/field-template';
 import { ObjectFieldTemplate } from './object-field-template/object-field-template';
+import { PartyCardTemplate } from './party-card-template/party-card-template';
 import { TitleFieldTemplate } from './title-field-template/title-field-template';
 
 export function generateTemplates() {
@@ -17,6 +18,7 @@ export function generateTemplates() {
         ObjectFieldTemplate,
         FieldErrorTemplate,
         ArrayFieldTableTemplate,
+        PartyCardTemplate,
         ButtonTemplates: { AddButton, RemoveButton },
     };
 }

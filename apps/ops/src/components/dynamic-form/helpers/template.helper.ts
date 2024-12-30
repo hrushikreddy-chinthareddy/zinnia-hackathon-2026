@@ -1,10 +1,12 @@
-import { ArrayFieldTemplateProps, isObject, UiSchema } from '@rjsf/utils';
+import { isObject, UiSchema } from '@rjsf/utils';
 
 import ArrayFieldTableTemplate from '../customization/templates/array-field-template/array-field-table-template';
 import ArrayFieldTemplate from '../customization/templates/array-field-template/array-field-template';
+import { PartyCardTemplate } from '../customization/templates/party-card-template/party-card-template';
 
-export const UITempleteMap: Record<string, (props: ArrayFieldTemplateProps) => React.JSX.Element> = {
+export const UITempleteMap: Record<string, (props: any) => React.JSX.Element> = {
     ['ArrayFieldTemplate']: ArrayFieldTemplate,
+    ['PartyCardTemplate']: PartyCardTemplate,
     ['ArrayFieldTableTemplate']: ArrayFieldTableTemplate,
 };
 

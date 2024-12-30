@@ -19,6 +19,7 @@ const ssrCasesUrlV2 = `${se2ApiServerUrlV2}`;
 
 export const getCaseTaskByIdSSR = async (taskId: string, accessToken: string | undefined): Promise<ManagementTask<TaskStatus> | null> => {
     try {
+        console.log(`🚀 ~ getCaseTaskByIdSSR ~ ${ssrCasesUrlV2}/tasks/${taskId}:`, `${ssrCasesUrlV2}/tasks/${taskId}`);
         const { data } = await serverApi.get<any>(`${ssrCasesUrlV2}/tasks/${taskId}`, {
             authorization: `Bearer ${accessToken}`,
             headers: {
@@ -50,7 +51,12 @@ export const getTaskInstance = async (query: any): Promise<ManagementTask | null
 
         return data;
     } catch (error: any) {
-        browserLogError('getTaskInstance::An error occurred while getting Task Instance', { ...parseErrorInformation(error), query, file: 'queries/api/v2/task', function: 'getTaskInstance' });
+        browserLogError('getTaskInstance::An error occurred while getting Task Instance', {
+            ...parseErrorInformation(error),
+            query,
+            file: 'queries/api/v2/task',
+            function: 'getTaskInstance',
+        });
         return null;
     }
 };
