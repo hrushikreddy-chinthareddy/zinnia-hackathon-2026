@@ -18,6 +18,7 @@ import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdin
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { Carrier, FundWithdrawnMethod, OwnerAcknowledgement } from '@deps/models/case/withdrawal/case';
+import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import getRslnConfig, { FormSubtype } from './rsln-withdrawal-form.helper';
 
@@ -52,6 +53,7 @@ export default function RslnWithdrawalForm() {
         initialForm,
         isFormStateReadOnly,
         formSubtype,
+        contractIssueState
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -79,7 +81,7 @@ export default function RslnWithdrawalForm() {
         },
         [setOwnerAcknowledgement]
     );
-
+    const shouldStateW4pRender = isAllowedState(contractIssueState ?? '')
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -120,7 +122,7 @@ export default function RslnWithdrawalForm() {
                 meritalStatusAllowanceConfig={meritalStatusAllowanceConfig}
             />
             <IrsWithholding signatureFields={irsSignatureConfig} isFormStateReadOnly={isFormStateReadOnly} />
-            <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />
+            {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
 
             <FormWaivers config={waiverItemsConfig} isFormStateReadOnly={isFormStateReadOnly} />
 

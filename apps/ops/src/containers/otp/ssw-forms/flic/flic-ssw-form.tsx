@@ -15,6 +15,7 @@ import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-not
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helper';
 import { Carrier, Frequency, FundWithdrawnMethod, PaymentMethod, QualTypes } from '@deps/models/case/withdrawal/case';
+import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import getFlicConfig from './flic-ssw-form-helper';
 import SswEditSelection from '../ssw-edit-selection';
@@ -82,7 +83,7 @@ export function FlicSSWForm({ qualType }: SswFormProps) {
         }));
         setSswProgramFrequency(frequency);
     };
-
+    const shouldStateW4pRender = isAllowedState(contractIssueState ?? '')
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -103,7 +104,7 @@ export function FlicSSWForm({ qualType }: SswFormProps) {
             />
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
             <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} />
-            <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />
+            {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
             <FormDisbursement
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={disbursementOptions(sswProgramFrequency, qualType)}

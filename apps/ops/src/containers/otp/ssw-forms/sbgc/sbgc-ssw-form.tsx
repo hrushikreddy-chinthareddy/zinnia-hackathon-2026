@@ -14,6 +14,7 @@ import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdin
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { Carrier, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case';
+import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import getSbgcConfig from './sbgc-ssw-form-helper';
 import SswEditSelection from '../ssw-edit-selection';
@@ -31,7 +32,7 @@ export function SbgcSSWForm() {
         systematicWithdrawalOptions,
         w4pSignaturesConfig
     } = getSbgcConfig(t);
-    const { formParty, formTpaAuthorization, setFormValidator, formData, setFormData, initialForm, isFormStateReadOnly } =
+    const { formParty, formTpaAuthorization, setFormValidator, formData, setFormData, initialForm, isFormStateReadOnly, contractIssueState } =
         useContext(FormDataContext);
 
     useEffect(() => {
@@ -49,6 +50,7 @@ export function SbgcSSWForm() {
     }, []);
     const hasTpaAuthorization = formTpaAuthorization && !Object.values(formTpaAuthorization).every(val => val === null);
     const ownerStateOfResidence = formParty?.parties?.[0]?.addresses?.[0]?.state;
+    const shouldStateW4pRender = isAllowedState(contractIssueState ?? '')
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -66,7 +68,7 @@ export function SbgcSSWForm() {
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
                 title={t('distributionInstruction.investmentSelectionForDistribution') as string}
             />
-            <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />
+            {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
