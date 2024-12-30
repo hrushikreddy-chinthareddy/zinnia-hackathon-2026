@@ -52,7 +52,7 @@ export default function DlicWithdrawalForm() {
     }, [setFormValidator]);
 
     const ownerStateOfResidence = formParty?.parties?.[0]?.addresses?.[0]?.state;
-    const shouldStateW4pRender = isAllowedState(contractIssueState ?? '')
+    const shouldStateW4pRender = isAllowedState(contractIssueState)
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}

@@ -79,7 +79,7 @@ export default function GilicoWithdrawalForm() {
     }, [formParty]);
 
     const isMaritalStatusAllowances = contractIssueState ? validateMaritalStatusAllowances(contractIssueState as USStates) : false;
-    const shouldStateW4pRender = isAllowedState(contractIssueState ?? '')
+    const shouldStateW4pRender = isAllowedState(contractIssueState)
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}

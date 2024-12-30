@@ -79,7 +79,7 @@ export default function MassMutualRmdWithdrawalForm({ qualType }: MassMutualRmdW
     const isKeogh = qualType === QualTypes.KEOGHHR10;
     const signaturesConfig = getSignaturesConfig(isKeogh);
     const isMaritalStatusAllowances = contractIssueState ? validateMaritalStatusAllowances(contractIssueState as USStates) : false;
-    const shouldStateW4pRender = isAllowedState(contractIssueState ?? '')
+    const shouldStateW4pRender = isAllowedState(contractIssueState)
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}

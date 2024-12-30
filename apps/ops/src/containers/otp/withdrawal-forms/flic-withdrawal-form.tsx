@@ -74,7 +74,7 @@ export default function FlicWithdrawalForm() {
         }
     }, [formParty]);
 
-    const shouldStateW4pRender = isAllowedState(contractIssueState ?? '')
+    const shouldStateW4pRender = isAllowedState(contractIssueState)
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}

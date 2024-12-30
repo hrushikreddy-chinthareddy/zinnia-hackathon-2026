@@ -83,7 +83,7 @@ export function FlicSSWForm({ qualType }: SswFormProps) {
         }));
         setSswProgramFrequency(frequency);
     };
-    const shouldStateW4pRender = isAllowedState(contractIssueState ?? '')
+    const shouldStateW4pRender = isAllowedState(contractIssueState)
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}

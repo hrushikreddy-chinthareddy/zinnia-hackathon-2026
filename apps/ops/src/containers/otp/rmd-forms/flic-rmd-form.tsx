@@ -67,7 +67,7 @@ export default function FlicRmdWithdrawalForm() {
             setOwnerStateOfResidence(newOwnerStateOfResidence);
         }
     }, [formParty]);
-    const shouldStateW4pRender = isAllowedState(contractIssueState ?? '')
+    const shouldStateW4pRender = isAllowedState(contractIssueState)
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}

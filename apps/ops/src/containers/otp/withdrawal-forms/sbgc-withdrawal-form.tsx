@@ -55,7 +55,7 @@ export default function SbgcWithdrawalForm() {
     const hasTpaAuthorization = formTpaAuthorization && !Object.values(formTpaAuthorization).every(val => val === null);
     const ownerStateOfResidence = formParty?.parties?.[0]?.addresses?.[0]?.state;
     const ownerIsVirginiaResident = ownerStateOfResidence === USStates.VIRGINIA;
-    const shouldStateW4pRender = isAllowedState(contractIssueState ?? '')
+    const shouldStateW4pRender = isAllowedState(contractIssueState)
 
     return (
         <>

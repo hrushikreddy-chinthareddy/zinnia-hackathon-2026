@@ -50,7 +50,7 @@ export function SbgcSSWForm() {
     }, []);
     const hasTpaAuthorization = formTpaAuthorization && !Object.values(formTpaAuthorization).every(val => val === null);
     const ownerStateOfResidence = formParty?.parties?.[0]?.addresses?.[0]?.state;
-    const shouldStateW4pRender = isAllowedState(contractIssueState ?? '')
+    const shouldStateW4pRender = isAllowedState(contractIssueState)
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
