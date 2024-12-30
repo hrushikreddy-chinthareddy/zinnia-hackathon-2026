@@ -21,9 +21,8 @@ type SideSheetWithdrawalContentProps = {
 };
 
 const SideSheetWithdrawalContent = ({ values, t }: SideSheetWithdrawalContentProps) => {
-    const { transactionType, withdrawalDetails, taxWithholdings, actualWithdrawalAmount, withdrawalCharges, payeePaymentDetails } =
+    const { disbursementType, transactionType, withdrawalDetails, taxWithholdings, actualWithdrawalAmount, withdrawalCharges, payeePaymentDetails } =
         values || {};
-
     let transactionTypeLabel;
 
     if (transactionType === TransactionType.FullSurrender) {
@@ -84,7 +83,7 @@ const SideSheetWithdrawalContent = ({ values, t }: SideSheetWithdrawalContentPro
                             <Typography variant={TypographyVariant.H4}>
                                 {t('policy.history.withdrawalSidesheet.paymentDetailsTitle')}
                             </Typography>
-                            <Tag variant={TagVariant.White} text={toSentenceCase(transactionTypeLabel)} />
+                            <Tag variant={TagVariant.White} text={toSentenceCase(disbursementType)} />
                         </div>
                         <div>
                             <PayeeSummaryCardRow
