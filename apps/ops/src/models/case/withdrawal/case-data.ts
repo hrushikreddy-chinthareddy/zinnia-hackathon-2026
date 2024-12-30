@@ -4,7 +4,6 @@ import {
     MoneyType,
     PaymentMethod,
     RestrictionOption,
-    MaritalStatus,
     WithdrawalType,
     AccountType,
     DigitalFormWithdrawal,
@@ -16,6 +15,7 @@ import {
     IrsFormType,
     TaxWithholdingPlace,
     WithholdingType,
+    maritalStatusType,
 } from '@deps/models/case/withdrawal/case';
 
 import { SignatureValidationTypeWithdrawal } from '../renewal/signature-validation';
@@ -123,7 +123,7 @@ export const CaseDetails: DigitalFormWithdrawal = {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: '' as MaritalStatus, //-UI
+                            text: '' as maritalStatusType, //-UI
                         },
                         addresses: [
                             {
@@ -454,7 +454,7 @@ export const CaseDetails: DigitalFormWithdrawal = {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: 'Married' as MaritalStatus,
+                            text: '' as maritalStatusType, //-UI
                         },
                         addresses: [
                             {
