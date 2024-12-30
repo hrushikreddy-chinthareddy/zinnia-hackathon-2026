@@ -12,7 +12,7 @@ import MartialStatusAllowancesWithholdings, { MaritalStatusAllowances } from './
 import TaxWithholdingRow, { WithholdingView } from './tax-withholding-row';
 import TaxWithholdingSpecified from './tax-withholding-specified';
 
-const toFormTaxWithholding = (
+export const toFormTaxWithholding = (
     withholding: WithholdingView | undefined,
     maritalAllowances?: Pick<TaxWithholding, 'multipleAllowances' | 'exemption' | 'allowances'>
 ): TaxWithholding[] | undefined => {

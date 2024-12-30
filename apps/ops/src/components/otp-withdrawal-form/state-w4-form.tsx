@@ -8,13 +8,13 @@ import SignatureValidation, {
 import CardContainer from '@deps/containers/card-container/card-container';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
-import { Address, IrsFormType, Party, PartyRoles, TaxWithholdingPlace, WithholdingType, AmountType, TaxWithholding, maritalStatusType } from '@deps/models/case/withdrawal/case';
+import { Address, IrsFormType, Party, PartyRoles, TaxWithholdingPlace, TaxWithholding, maritalStatusType } from '@deps/models/case/withdrawal/case';
 
 import AddressEntry from './address-entry';
-import FormProgramMaritalStatus from './form-program/form-program-marital-status';
+import FormProgramMaritalStatus from './form-irsData/form-program-marital-status';
 import { getDefaultSignature } from './signature-validation/signature-validations';
 import TaxWithholdingRow from './tax-withholding-row';
-import { toViewTaxWithholding } from './tax-withholdings';
+import { toFormTaxWithholding, toViewTaxWithholding } from './tax-withholdings';
 import CheckboxText from '../checkbox/checkbox-text/checkbox-text';
 import FieldLabel from '../fields/field-label';
 
@@ -77,54 +77,9 @@ export default function StateW4Form({ isFormStateReadOnly, w4pSignaturesConfig }
         maritalStatus: { text: maritalStatus as maritalStatusType | null }
       },
       irsSignature: w4Psignature,
-      irsTaxWithholding: [{
-        place: {
-          text: TaxWithholdingPlace.State,
-        },
-        type: {
-          text: WithholdingType.NoTaxWithholding
-        },
-        amount: {
-          text: stateWithholding?.dollarAmount as string || null,
-          amountType: AmountType.Dollar
-        },
-        noOfallowances: {
-          text: numberOfAllowances
-        },
-
-        additionalAmount: {
-          text: null,
-          amountType: null
-        },
-        filingStatus: {
-          text: null
-        },
-        exemption: {
-          text: null
-        }
-      }, {
-        place: {
-          text: TaxWithholdingPlace.State,
-        },
-        type: {
-          text: WithholdingType.NoTaxWithholding
-        },
-        amount: {
-          text: stateWithholding?.percentAmount as string || null,
-          amountType: AmountType.Percent
-        },
-        additionalAmount: {
-          text: null,
-          amountType: null
-        },
-        filingStatus: {
-          text: null
-        },
-        exemption: {
-          text: null
-        }
-
-      }],
+      irsTaxWithholding:
+        toFormTaxWithholding(stateWithholding)
+      ,
     };
     const index = formIrsData?.findIndex(data => data?.irsFormType === IrsFormType.W4P);
     const updateFormIrsData = [...formIrsData]

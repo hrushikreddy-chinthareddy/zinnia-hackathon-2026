@@ -1,11 +1,10 @@
-// Full corrected version of the test file
 import '@testing-library/jest-dom';
 import { cleanup, screen, fireEvent, render } from '@testing-library/react';
 
 import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
-import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
-import { TaxWithholdingPlace, AmountType, WithholdingType, PartyRoles, CaseStatus, IrsFormType, AddressTypes } from '@deps/models/case/withdrawal/case';
+import { SignPresent, SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
+import { TaxWithholdingPlace, AmountType, WithholdingType, PartyRoles, CaseStatus } from '@deps/models/case/withdrawal/case';
 import { CaseDetails } from '@deps/models/case/withdrawal/case-data';
 
 import IrsWithholding from './irs-withholdings';
@@ -21,8 +20,8 @@ jest.mock('next-i18next', () => ({
 }));
 
 describe('IRS Withholding Component', () => {
+    // orders of the tests are important here. Need to work on that
     afterEach(cleanup);
-
     const irsSignatureConfig = [
         {
             component: SignatureFields.SignaturePresent,
@@ -33,34 +32,17 @@ describe('IRS Withholding Component', () => {
             key: 'irs-signature-sign-date',
         },
     ];
-
-    const w4pSignaturesConfig = [
-        {
-            component: SignatureFields.SignaturePresent,
-            key: 'w4p-signature-sign-present',
-        },
-        {
-            component: SignatureFields.SignatureDate,
-            key: 'w4p-signature-sign-date',
-        },
-        {
-            component: SignatureFields.SignatureType,
-            key: 'w4p-owner-type',
-        },
-    ];
-
-    it('should render IRS withholding fields if W-4R option checked', async () => {
+    it('should render IRS withholding fields if W-4R option checked ', async () => {
         render(
             <FormDataContext.Provider value={{ ...defaultFormDataContext, currentFormState: CaseStatus.Pending, formParty: CaseDetails.data.formRequest.formParty }}>
-                <IrsWithholding signatureFields={irsSignatureConfig} w4pSignaturesConfig={w4pSignaturesConfig} />
+                <IrsWithholding signatureFields={irsSignatureConfig} />
             </FormDataContext.Provider>
         );
-
         // should render the owner type signature fields
         const irsAmountElement = screen.queryByText('irsAmount');
         expect(irsAmountElement).not.toBeInTheDocument();
 
-        const ssnElement = screen.queryByText('w4r-ssn');
+        const ssnElement = screen.queryByText('ssn');
         expect(ssnElement).not.toBeInTheDocument();
 
         const ownerSignPresentElement = screen.queryByText('Owner-signPresent');
@@ -71,103 +53,58 @@ describe('IRS Withholding Component', () => {
         fireEvent.click(isW4R);
         expect(isW4R).toBeChecked();
 
-        const isW4P = screen.getByLabelText('isW4P');
-        expect(isW4P).toBeInTheDocument();
-        fireEvent.click(isW4P);
-        expect(isW4P).toBeChecked();
+        const irsAmountElement1 = screen.getByText('irsAmount');
+        expect(irsAmountElement1).toBeInTheDocument();
+
+        const ssnElement1 = screen.getByText('ssn');
+        expect(ssnElement1).toBeInTheDocument();
+
+        const ownerSignPresentElement1 = screen.getByText('signPresent');
+        expect(ownerSignPresentElement1).toBeInTheDocument();
     });
 
-    it('should pre-populate data', async () => {
-        const irsData = [
-            {
-                irsFormType: IrsFormType.W4R,
-                irsApplicable: true,
-                irsSpecified: true,
-                formParty: {
-                    partyRoleType: 'OWNER' as PartyRoles,
-                    firstName: 'dom',
-                    middleName: '',
-                    lastName: 'greathead',
-                    suffix: null,
-                    fullName: 'dom',
-                    taxId: '339333333',
-                    maritalStatus: { text: null },
-                    email: null,
-                    employer: null,
-                    addresses: [],
-                    phones: [],
-                    dob: { text: null },
+    it('should pre-populate data', () => {
+        const irsData = {
+            irsApplicable: true,
+            irsSpecified: true,
+            formParty: {
+                partyRoleType: 'OWNER' as PartyRoles,
+                firstName: 'dom',
+                middleName: '',
+                lastName: 'greathead',
+                suffix: null,
+                fullName: 'dom',
+                taxId: '339333333',
+                maritalStatus: {
+                    text: null,
                 },
-                irsTaxWithholding: [{
-                    place: { text: TaxWithholdingPlace.Federal },
-                    type: { text: WithholdingType.SpecifiedTaxWithholding },
-                    amount: { text: '20', amountType: AmountType.Percent },
-                    filingStatus: { text: null },
-                    exemption: { text: null },
-                    additionalAmount: { amountType: null, text: null },
-                }],
-                irsSignature: undefined,
+                email: null,
+                employer: null,
+                addresses: [],
+                phones: [],
+                dob: { text: null },
             },
-            {
-                irsFormType: IrsFormType.W4P,
-                irsApplicable: true,
-                irsSpecified: true,
-                formParty: {
-                    partyRoleType: 'OWNER' as PartyRoles,
-                    fullName: '',
-                    firstName: '',
-                    middleName: '',
-                    lastName: '',
-                    taxId: '',
-                    addresses: [
-                        {
-                            addressLine1: '',
-                            addressLine2: '',
-                            addressLine3: '',
-                            addressLine4: null,
-                            addressType: AddressTypes.DEFAULT,
-                            city: '',
-                            country: null,
-                            state: '',
-                            zip: '',
-                            zipPlusFour: '',
-                            isAddressChanged: false,
-                        },
-                    ],
-                    phones: [],
-                    maritalStatus: { text: null },
+            irsTaxWithholding: {
+                place: { text: TaxWithholdingPlace.Federal },
+                type: {
+                    text: WithholdingType.SpecifiedTaxWithholding,
                 },
-                irsSignature: undefined,
-                irsTaxWithholding: [{
-                    place: {
-                        text: TaxWithholdingPlace.State,
-                    },
-                    type: {
-                        text: WithholdingType.NoTaxWithholding
-                    },
-                    amount: {
-                        text: '10',
-                        amountType: AmountType.Dollar
-                    },
-                    additionalAmount: {
-                        text: null,
-                        amountType: null
-                    },
-                    filingStatus: {
-                        text: null
-                    },
-                    exemption: {
-                        "text": null
-                    }
-                }],
+                amount: {
+                    text: '20',
+                    amountType: AmountType.Percent,
+                },
+                filingStatus: { text: null },
+                exemption: {
+                    text: null,
+                },
+                additionalAmount: {
+                    amountType: null,
+                    text: null,
+                }
             },
-        ];
-        let setMethodArgs;
-        const setMockData = jest.fn(cb => {
-            setMethodArgs = cb(irsData);
-            return setMethodArgs;
-        });
-
+            irsSignature: undefined,
+        };
+        const setMockData = jest.fn();
         render(
             <FormDataContext.Provider
                 value={{
@@ -177,20 +114,24 @@ describe('IRS Withholding Component', () => {
                     setFormIrsData: setMockData,
                 }}
             >
-                <IrsWithholding signatureFields={irsSignatureConfig} w4pSignaturesConfig={w4pSignaturesConfig} />
+                <IrsWithholding signatureFields={irsSignatureConfig} />
             </FormDataContext.Provider>
         );
+        // should render the owner type signature fields
+        const irsAmountElement = screen.getByLabelText('irsAmount') as HTMLInputElement;
+        expect(irsAmountElement.value).toBe('20 ');
 
+        const ssnElement = screen.getByLabelText('ssn') as HTMLInputElement;
+        expect(ssnElement.value).toBe('339333333');
 
+        const ownerSignPresentElement = screen.getByText('signPresent');
+        expect(ownerSignPresentElement).toBeInTheDocument();
 
-
-
-        expect(setMockData).toHaveBeenCalledWith([{
-            irsFormType: IrsFormType.W4R,
+        expect(setMockData).toHaveBeenCalledWith({
             irsApplicable: true,
             irsSpecified: true,
             formParty: { ...CaseDetails.data.formRequest.formParty.parties[0], taxId: '339333333' },
-            irsTaxWithholding: [{
+            irsTaxWithholding: {
                 place: { text: TaxWithholdingPlace.Federal },
                 type: {
                     text: WithholdingType.SpecifiedTaxWithholding,
@@ -207,7 +148,7 @@ describe('IRS Withholding Component', () => {
                 exemption: {
                     text: null,
                 },
-            }],
+            },
             irsSignature: {
                 isSigned: null,
                 signDate: {
@@ -227,156 +168,56 @@ describe('IRS Withholding Component', () => {
                 signType: {
                     text: SignatureValidationTypeWithdrawal.Owner,
                 },
-
+                signatureComment: undefined,
+                isSignatureValid: undefined,
                 spousalConsent: {
                     text: null,
                 },
-            }
-        }, {
-            irsFormType: IrsFormType.W4P,
+            },
+        });
+    });
+
+    it('should update payload on event change', async () => {
+        const irsData = {
             irsApplicable: true,
             irsSpecified: true,
             formParty: {
                 partyRoleType: 'OWNER' as PartyRoles,
-                fullName: '',
-                firstName: '',
+                firstName: 'dom',
                 middleName: '',
-                lastName: '',
-                taxId: '',
-                addresses: [
-                    {
-                        addressLine1: '',
-                        addressLine2: '',
-                        addressLine3: '',
-                        addressLine4: null,
-                        addressType: AddressTypes.DEFAULT,
-                        city: '',
-                        country: null,
-                        state: '',
-                        zip: '',
-                        zipPlusFour: '',
-                        isAddressChanged: false,
-                    },
-                ],
-                phones: [],
-                maritalStatus: { text: null },
-            },
-            irsSignature: undefined,
-            irsTaxWithholding: [{
-                place: {
-                    text: TaxWithholdingPlace.State,
+                lastName: 'greathead',
+                suffix: null,
+                fullName: 'dom',
+                taxId: '339333333',
+                maritalStatus: {
+                    text: null,
                 },
+                email: null,
+                employer: null,
+                addresses: [],
+                phones: [],
+                dob: { text: null },
+            },
+            irsTaxWithholding: {
+                place: { text: TaxWithholdingPlace.Federal },
                 type: {
-                    text: WithholdingType.NoTaxWithholding
+                    text: WithholdingType.SpecifiedTaxWithholding,
                 },
                 amount: {
-                    text: '10',
-                    amountType: AmountType.Dollar
+                    text: '20',
+                    amountType: AmountType.Percent,
                 },
                 additionalAmount: {
+                    amountType: null,
                     text: null,
-                    amountType: null
                 },
-                filingStatus: {
-                    text: null
-                },
+                filingStatus: { text: null },
                 exemption: {
-                    "text": null
-                }
-            }],
-
-        }]);
-    });
-
-    it('should update payload on event change', async () => {
-        const irsData = [
-            {
-                irsFormType: IrsFormType.W4R,
-                irsApplicable: true,
-                irsSpecified: true,
-                formParty: {
-                    partyRoleType: 'OWNER' as PartyRoles,
-                    firstName: 'dom',
-                    middleName: '',
-                    lastName: 'greathead',
-                    suffix: null,
-                    fullName: 'dom',
-                    taxId: '339333333',
-                    maritalStatus: { text: null },
-                    email: null,
-                    employer: null,
-                    addresses: [],
-                    phones: [],
-                    dob: { text: null },
+                    text: null,
                 },
-                irsTaxWithholding: [{
-                    place: { text: TaxWithholdingPlace.Federal },
-                    type: { text: WithholdingType.SpecifiedTaxWithholding },
-                    amount: { text: '20', amountType: AmountType.Percent },
-                    filingStatus: { text: null },
-                    exemption: { text: null },
-                    additionalAmount: { amountType: null, text: null },
-                }],
-                irsSignature: undefined,
             },
-            {
-                irsFormType: IrsFormType.W4P,
-                irsApplicable: true,
-                irsSpecified: true,
-                formParty: {
-                    partyRoleType: 'OWNER' as PartyRoles,
-                    fullName: '',
-                    firstName: '',
-                    middleName: '',
-                    lastName: '',
-                    taxId: '',
-                    addresses: [
-                        {
-                            addressLine1: '',
-                            addressLine2: '',
-                            addressLine3: '',
-                            addressLine4: null,
-                            addressType: AddressTypes.DEFAULT,
-                            city: '',
-                            country: null,
-                            state: '',
-                            zip: '',
-                            zipPlusFour: '',
-                            isAddressChanged: false,
-                        },
-                    ],
-                    phones: [],
-                    maritalStatus: { text: null },
-                },
-                irsSignature: undefined,
-                irsTaxWithholding: [{
-                    place: {
-                        text: TaxWithholdingPlace.State,
-                    },
-                    type: {
-                        text: WithholdingType.NoTaxWithholding
-                    },
-                    amount: {
-                        text: '10',
-                        amountType: AmountType.Dollar
-                    },
-                    noOfallowances: {
-                        text: '10'
-                    },
-
-                    additionalAmount: {
-                        text: null,
-                        amountType: null
-                    },
-                    filingStatus: {
-                        text: null
-                    },
-                    exemption: {
-                        "text": null
-                    }
-                }],
-            }
-        ];
+            irsSignature: undefined,
+        };
         const setMockData = jest.fn();
 
         render(
@@ -388,12 +229,68 @@ describe('IRS Withholding Component', () => {
                     setFormIrsData: setMockData,
                 }}
             >
-                <IrsWithholding signatureFields={irsSignatureConfig} w4pSignaturesConfig={w4pSignaturesConfig} />
+                <IrsWithholding signatureFields={irsSignatureConfig} />
             </FormDataContext.Provider>
         );
-
-        const irsAmountElement = screen.getByLabelText('irsAmount') as HTMLInputElement;
+        // should render the owner type signature fields
+        const irsAmountElement = (await screen.getByLabelText('irsAmount')) as HTMLInputElement;
         fireEvent.change(irsAmountElement, { target: { value: '30' } });
         expect(irsAmountElement.value).toBe('30 ');
+
+        const ssnElement = screen.getByLabelText('ssn') as HTMLInputElement;
+        fireEvent.change(ssnElement, { target: { value: '33933311' } });
+        expect(ssnElement.value).toBe('33933311');
+
+        const ownerSignPresentElement = screen.getByTestId('Owner-signature-present');
+        fireEvent.change(ownerSignPresentElement, { target: { value: SignPresent.Yes } });
+
+        expect(setMockData).toHaveBeenCalledWith({
+            irsApplicable: true,
+            irsSpecified: true,
+            formParty: { ...CaseDetails.data.formRequest.formParty.parties[0], taxId: '33933311' },
+            irsTaxWithholding: {
+                place: { text: TaxWithholdingPlace.Federal },
+                type: {
+                    text: WithholdingType.SpecifiedTaxWithholding,
+                },
+                amount: {
+                    text: '30',
+                    amountType: AmountType.Percent,
+                },
+                additionalAmount: {
+                    amountType: null,
+                    text: null,
+                },
+                filingStatus: { text: null },
+                exemption: {
+                    text: null,
+                },
+            },
+            irsSignature: {
+                isSigned: null,
+                signDate: {
+                    text: '',
+                },
+                signExtension: null,
+                signName: null,
+                signOtherTitle: null,
+                signTitle: {
+                    text: '',
+                },
+                signTitles: [
+                    {
+                        text: null,
+                    },
+                ],
+                signType: {
+                    text: SignatureValidationTypeWithdrawal.Owner,
+                },
+                signatureComment: undefined,
+                isSignatureValid: undefined,
+                spousalConsent: {
+                    text: null,
+                },
+            },
+        });
     });
 });
