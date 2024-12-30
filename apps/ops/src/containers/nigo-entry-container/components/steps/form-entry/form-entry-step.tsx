@@ -5,9 +5,8 @@ import { useCallback, useContext, useState } from 'react';
 
 import 'react-pdf/dist/Page/TextLayer.css';
 
-import NoteSection from '@deps/components/otp-withdrawal-form/note-section';
-import TransactionNavigationButtons, { ParentPage } from "@deps/components/transaction-navigation-buttons/transaction-navigation-buttons";
-import WorkflowCard from "@deps/components/workflows/workflow-card/workflow-card";
+import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { CarrierToCarrierTitleMap } from '@deps/constants/page-title';
 import { FormErrors } from '@deps/containers/otp/withdrawal-forms/components/form-errors';
@@ -34,10 +33,10 @@ type FormEntryStepProps = {
     docType: string;
 };
 
-function FormEntryStep({document, clientCode, docType} : FormEntryStepProps) {
+function FormEntryStep({ document, clientCode, docType }: FormEntryStepProps) {
     const router = useRouter();
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.formEntry' });
-    const { t: withdrawalTxt} = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+    const { t: withdrawalTxt } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const { goToNext } = useWorkflow();
     const { qualType } = useAccountInfo(document.contract, clientCode);
     const caseType = getCaseType(docType as string);
@@ -66,7 +65,6 @@ function FormEntryStep({document, clientCode, docType} : FormEntryStepProps) {
         });
         router.push(`/create-case/error?errorCode=${ERROR_CODES.WITHDRAWAL_FORM_CREATION}`);
     }
-
 
     const validateForm = () => {
         const {
@@ -116,7 +114,10 @@ function FormEntryStep({document, clientCode, docType} : FormEntryStepProps) {
 
     const submit = useCallback(async () => {
         setIsLoading(true);
-        if (TaskApiVersionMapper[formState.initialForm.taskType] === ApiVersion.v2 && formState.initialForm.status !== TaskStatus.Completed) {
+        if (
+            TaskApiVersionMapper[formState.initialForm.taskType] === ApiVersion.v2 &&
+            formState.initialForm.status !== TaskStatus.Completed
+        ) {
             const successfulCaseUpdate = await updateTask(
                 formState.initialForm.caseId,
                 formState.initialForm.taskId,
@@ -135,7 +136,6 @@ function FormEntryStep({document, clientCode, docType} : FormEntryStepProps) {
 
         setIsLoading(false);
     }, [document, formState, setSubmitFailed, timer]);
-
 
     const handleFormSubmit = async () => {
         setIsLoading(true);
@@ -157,7 +157,7 @@ function FormEntryStep({document, clientCode, docType} : FormEntryStepProps) {
                     className="mt-4"
                     handleContinue={handleFormSubmit}
                     parentPage={ParentPage.CreateCase}
-                    leaveTransactionLink='/create-case'
+                    leaveTransactionLink="/create-case"
                     disableContinue={formState.initialForm?.status === TaskStatus.Completed}
                 />
             }
@@ -169,19 +169,17 @@ function FormEntryStep({document, clientCode, docType} : FormEntryStepProps) {
                     </div>
                 )}
                 {formParts}
-                <NoteSection />
-                <FormErrors  t={withdrawalTxt} taskApiError={taskApiError}></FormErrors>
+                <FormErrors t={withdrawalTxt} taskApiError={taskApiError}></FormErrors>
                 <div className="my-2">
-                {!areDiaryNotesViewed && !isFormStateReadOnly && (
-                    <AssistiveText
-                        text={withdrawalTxt('formValidation.diaryNotesViewWarning')}
-                        variant={AssistiveTextVariant.Error}
-                        className="mt-2"
-                    />
-                )}
-            </div>
+                    {!areDiaryNotesViewed && !isFormStateReadOnly && (
+                        <AssistiveText
+                            text={withdrawalTxt('formValidation.diaryNotesViewWarning')}
+                            variant={AssistiveTextVariant.Error}
+                            className="mt-2"
+                        />
+                    )}
+                </div>
             </>
-
         </WorkflowCard>
     );
 }
