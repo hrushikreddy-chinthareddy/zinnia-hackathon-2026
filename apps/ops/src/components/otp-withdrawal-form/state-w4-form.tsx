@@ -12,6 +12,7 @@ import { Address, IrsFormType, Party, PartyRoles, TaxWithholdingPlace, TaxWithho
 
 import AddressEntry from './address-entry';
 import FormProgramMaritalStatus from './form-irsData/form-program-marital-status';
+import { MaritalStatusAllowances } from './maritial-status-allowance-withholdings';
 import { getDefaultSignature } from './signature-validation/signature-validations';
 import TaxWithholdingRow from './tax-withholding-row';
 import { toFormTaxWithholding, toViewTaxWithholding } from './tax-withholdings';
@@ -46,7 +47,7 @@ export default function StateW4Form({ isFormStateReadOnly, w4pSignaturesConfig }
   const [ssn, setSsn] = useState(IrsW4pData?.formParty?.taxId || owner?.taxId || '');
   const [address, setAddress] = useState(IrsW4pData?.formParty?.addresses[0] || owner?.addresses[0]);
   const [maritalStatus, setMaritalStatus] = useState<maritalStatusType>(IrsW4pData?.formParty?.maritalStatus?.text as maritalStatusType || null);
-  const [numberOfAllowances, setNumberOfAllowances] = useState(IrsW4pData?.irsTaxWithholding?.[0]?.noOfallowances?.text || '');
+  const [numberOfAllowances, setNumberOfAllowances] = useState(IrsW4pData?.irsTaxWithholding?.[0]?.allowances?.[0].text || '');
 
   const [w4Psignature, setW4pSignature] = useState(
     IrsW4pData?.irsSignature || getDefaultSignature(SignatureValidationTypeWithdrawal.Owner)
@@ -78,7 +79,7 @@ export default function StateW4Form({ isFormStateReadOnly, w4pSignaturesConfig }
       },
       irsSignature: w4Psignature,
       irsTaxWithholding:
-        toFormTaxWithholding(stateWithholding)
+        toFormTaxWithholding(stateWithholding, { allowances: [{ text: numberOfAllowances as MaritalStatusAllowances }] })
       ,
     };
     const index = formIrsData?.findIndex(data => data?.irsFormType === IrsFormType.W4P);

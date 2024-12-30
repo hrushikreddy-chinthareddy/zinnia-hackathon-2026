@@ -22,7 +22,6 @@ export const toFormTaxWithholding = (
     }
 
     const baseFormWithholding = { ...baseWithholding, place: { text: withholding.place } };
-
     if (withholding.dontWithhold) {
         const noWithholding = {
             type: {
