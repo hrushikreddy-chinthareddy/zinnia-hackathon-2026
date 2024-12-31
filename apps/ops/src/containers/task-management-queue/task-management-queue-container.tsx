@@ -31,13 +31,13 @@ const TaskManagementQueue = ({ featureFlagDecisions }: TaskManagementQueueProps)
             if (data.statusCode) {
                 switch (data.statusCode) {
                     case 400:
-                        setErrorMessage(t('claimTaskError') + data.message);
+                        setErrorMessage(data.message);
                         break;
                     case 404:
-                        setErrorMessage(t('claimTaskError') + data.message);
+                        setErrorMessage(data.message);
                         break;
                     default:
-                        setErrorMessage(t('claimTaskError') + data.message);
+                        setErrorMessage(data.message);
                         break;
                 }
             } else {
