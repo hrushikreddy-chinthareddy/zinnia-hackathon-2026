@@ -25,7 +25,7 @@ import { getDocument } from '@deps/queries/api/documents';
 import { ReactComponent as ErrorIcon } from '@deps/styles/elements/icons/icons_outlined/exclamation-alert.svg';
 import { ReactComponent as SuccessIcon } from '@deps/styles/elements/icons/icons_outlined/refresh-2.svg';
 import loadingImage from '@deps/styles/images/loader.png';
-import { browserLogInfo } from '@deps/utils/browser-logging';
+import { browserLogInfo, browserLogWarn } from '@deps/utils/browser-logging';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
@@ -94,7 +94,7 @@ export default function CaseCreate({ featureFlagDecisions }: CaseCreateProps) {
 
     const initializeCaseCreation = async () => {
         if (!caseType || !docType || !clientCode || !documentNumber) {
-            browserLogInfo('onBaseCreateTask::Missing case type, docType, clientCode, or documentNumber.', {
+            browserLogWarn('onBaseCreateTask::Missing case type, docType, clientCode, or documentNumber.', {
                 caseType,
                 docType,
                 clientCode,
@@ -170,7 +170,7 @@ export default function CaseCreate({ featureFlagDecisions }: CaseCreateProps) {
                 throw new Error('Unable to retrieve cases search results.');
             }
         } catch (e) {
-            browserLogInfo('onBaseCreateTask::Task initialization failure', {
+            browserLogWarn('onBaseCreateTask::Task initialization failure', {
                 ...parseErrorInformation(e),
                 caseType,
                 docType,
