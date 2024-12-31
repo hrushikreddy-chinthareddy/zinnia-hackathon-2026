@@ -11,6 +11,7 @@ import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/par
 import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
 import { JointLifeExpectancyConfig } from '@deps/components/otp-withdrawal-form/rmd-method/joint-life-expectancy';
 import { frequencyToValue } from '@deps/components/otp-withdrawal-form/rmd-method/rmd-method';
+import { SignatureFields } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import {
     FormValidationErrors,
     PartyRoles,
@@ -50,7 +51,7 @@ export default function getSbgcRmdConfig(t: TFunction) {
                 errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
             }
         }
-    
+
         if (rmds && rmds?.length === 0) {
             errors['rmdMinimumRequiredProgram'] = t('rmdMethod.rmdWarnings.minimumRequiredProgram');
         }
@@ -442,7 +443,20 @@ export default function getSbgcRmdConfig(t: TFunction) {
         { label: t('distributionInstruction.prorata'), value: FundWithdrawnMethod.Prorata },
         { label: t('distributionInstruction.specifyFunds'), value: FundWithdrawnMethod.SpecifyFunds },
     ];
-
+    const w4pSignaturesConfig = [
+        {
+            component: SignatureFields.SignaturePresent,
+            key: 'w4p-signature-sign-present',
+        },
+        {
+            component: SignatureFields.SignatureDate,
+            key: 'w4p-signature-sign-date',
+        },
+        {
+            component: SignatureFields.SignatureType,
+            key: 'w4p-owner-type',
+        }
+    ];
     return {
         signaturesConfig,
         formPartyConfigs,
@@ -450,5 +464,6 @@ export default function getSbgcRmdConfig(t: TFunction) {
         disbursementOptions,
         jointLifeExpectancyConfigs,
         fundWithdrawnMethodOptions,
+        w4pSignaturesConfig
     };
 }

@@ -94,6 +94,8 @@ export default function FormParties({ configs, isFormStateReadOnly }: FormPartie
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const [partyInfo, setPartyInfo] = useState<AdditionalPartyInformation[]>(getInitialParty(formParty?.parties || DEFAULT_Party));
     const [isAddressChanged, setAddressChanged] = useState(false);
+
+
     const setPartyInformation = (val: Party) => {
         setPartyInfo(parties => {
             const existingItemIndex = parties.findIndex(item => item.partyRoleType === val.partyRoleType);

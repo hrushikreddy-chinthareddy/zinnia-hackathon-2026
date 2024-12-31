@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import React, { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useMemo } from 'react';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
@@ -9,7 +9,7 @@ import SignatureValidation, {
 import CardContainer from '@deps/containers/card-container/card-container';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
-import { Party, TaxWithholdingPlace, AmountType, WithholdingType } from '@deps/models/case/withdrawal/case';
+import { Party, TaxWithholdingPlace, AmountType, WithholdingType, IrsFormType } from '@deps/models/case/withdrawal/case';
 
 import { getDefaultSignature } from './signature-validation/signature-validations';
 
@@ -21,25 +21,28 @@ export interface IrsWithholdingProps {
 export default function IrsWithholding({ signatureFields, isFormStateReadOnly }: IrsWithholdingProps) {
     const amountFormat = { format: '###' };
     const { formIrsData, setFormIrsData, formParty } = useContext(FormDataContext);
-
+    const IrsW4rData = useMemo(() => (
+        Array.isArray(formIrsData) ? formIrsData.find(data => data?.irsFormType && data.irsFormType === 'W4R') : null
+    ), [formIrsData]);
     // TODO - use PartyRoleType enum once created for FormParty work
     const owner = formParty.parties.find(party => party.partyRoleType === 'OWNER') as Party;
 
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.irsData' });
-    const [isIrsChecked, setIrsChecked] = useState(formIrsData?.irsApplicable || false);
-    const [amount, setAmount] = useState(formIrsData?.irsTaxWithholding?.amount?.text || '');
-    const [taxId, setTaxId] = useState(formIrsData?.formParty?.taxId || owner?.taxId || '');
+    const [isIrsChecked, setIrsChecked] = useState(IrsW4rData?.irsApplicable || false);
+    const [amount, setAmount] = useState(IrsW4rData?.irsTaxWithholding?.[0]?.amount?.text || '');
+    const [taxId, setTaxId] = useState(IrsW4rData?.formParty?.taxId || owner?.taxId || '');
 
-    const [signature, setSignature] = useState(formIrsData?.irsSignature || getDefaultSignature(SignatureValidationTypeWithdrawal.Owner));
+    const [signature, setSignature] = useState(IrsW4rData?.irsSignature || getDefaultSignature(SignatureValidationTypeWithdrawal.Owner));
 
     useEffect(() => {
         const irsDetails = {
-            ...formIrsData,
+            ...IrsW4rData,
+            irsFormType: IrsFormType.W4R,
             irsApplicable: isIrsChecked,
             irsSpecified: amount ? true : false,
             formParty: { ...owner, taxId: taxId } as Party,
             irsSignature: signature,
-            irsTaxWithholding: {
+            irsTaxWithholding: [{
                 place: {
                     text: TaxWithholdingPlace.Federal,
                 },
@@ -60,10 +63,19 @@ export default function IrsWithholding({ signatureFields, isFormStateReadOnly }:
                 exemption: {
                     text: null,
                 },
-            },
+            }],
         };
         // setting formIRSData only if isIrsChecked checkbox checked
-        setFormIrsData(isIrsChecked ? irsDetails : null);
+        const index = formIrsData?.findIndex(data => data?.irsFormType === 'W4R');
+        const updateFormIrsData = [...formIrsData]
+
+        if (index !== -1) {
+            updateFormIrsData[index] = irsDetails;
+        } else if (index === -1 || index === undefined) {
+            updateFormIrsData[0] = irsDetails;
+        }
+        setFormIrsData(updateFormIrsData);
+
     }, [isIrsChecked, amount, taxId, signature]);
 
     return (
@@ -75,7 +87,7 @@ export default function IrsWithholding({ signatureFields, isFormStateReadOnly }:
                         checked={isIrsChecked}
                         onChange={() => setIrsChecked(!isIrsChecked)}
                         isDisabled={isFormStateReadOnly}
-                        />
+                    />
                 </div>
             </div>
             {isIrsChecked && (

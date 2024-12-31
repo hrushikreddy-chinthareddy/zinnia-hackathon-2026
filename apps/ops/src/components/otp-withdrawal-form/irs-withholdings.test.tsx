@@ -84,7 +84,7 @@ describe('IRS Withholding Component', () => {
                 phones: [],
                 dob: { text: null },
             },
-            irsTaxWithholding: {
+            irsTaxWithholding: [{
                 place: { text: TaxWithholdingPlace.Federal },
                 type: {
                     text: WithholdingType.SpecifiedTaxWithholding,
@@ -101,7 +101,7 @@ describe('IRS Withholding Component', () => {
                     amountType: null,
                     text: null,
                 }
-            },
+            }],
             irsSignature: undefined,
         };
         const setMockData = jest.fn();

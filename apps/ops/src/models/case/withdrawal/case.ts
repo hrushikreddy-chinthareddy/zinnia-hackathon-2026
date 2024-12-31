@@ -54,7 +54,16 @@ export interface OwnerAcknowledgement {
         text: string | null;
     };
 }
+export enum maritalStatusType {
+    single = 'Single',
+    marriedFilingJointly = 'Married Filing Jointly',
+    marriedFilingSeparately = 'Married Filing Separately',
+}
 
+export enum IrsFormType {
+    W4R = 'W4R',
+    W4P = 'W4P',
+}
 export interface FormParts {
     formSource: FormSource;
     formData: FormData;
@@ -99,19 +108,21 @@ export interface FormParts {
     };
     formLoan: FormLoan;
     formSpecialInstruction: FormSpecialInstruction;
-    formIrsData?: FormIrsData | null;
+    formIrsData?: FormIrsData[];
     formOL4753Data?: FormOL4753Data | null;
     ownerAcknowledgement?: OwnerAcknowledgement;
     formNigos?: FormNigos | null;
     formReindexingData?: FormReIndexingData | null;
+    irsFormType?: IrsFormType;
 }
 
 export interface FormIrsData {
     irsApplicable: boolean;
     irsSpecified: boolean;
     formParty: Party | null;
-    irsTaxWithholding?: TaxWithholding;
+    irsTaxWithholding?: TaxWithholding[];
     irsSignature?: SignatureWithdrawal;
+    irsFormType: IrsFormType;
 }
 
 export interface FormOL4753Data {
@@ -480,7 +491,7 @@ export interface Party {
     email?: string | null;
     employer?: string | null;
     maritalStatus: {
-        text: MaritalStatus | null;
+        text: maritalStatusType | null;
     };
     addresses: Address[];
     phones: Phone[];
