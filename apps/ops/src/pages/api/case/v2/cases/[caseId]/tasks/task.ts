@@ -40,3 +40,12 @@ export default withAuthAndLogging(
     },
     { file: 'cases/:caseId/tasks', function: 'routeHandler' }
 );
+
+
+// Addresses NextJS error: API response for this route exceeds 4MB. API Routes are meant to respond quickly.
+// Occurs when documents are very large
+export const config = {
+    api: {
+        responseLimit: false,
+    },
+};

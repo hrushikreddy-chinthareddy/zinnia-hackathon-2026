@@ -36,7 +36,7 @@ export default function SidesheetCancelPending({
 }: SidesheetCancelPendingProps) {
     const { t } = useTranslation();
     const [viewState, setViewState] = useState(ViewState.Warn);
-    const cancelPayment = async () => {
+    const callCancelTransaction = async () => {
         setViewState(ViewState.Loading);
         const result = await cancelTransaction(planCode, policyNumber, transactionId);
         if (result.status !== StatusCode.Accepted) {
@@ -53,7 +53,7 @@ export default function SidesheetCancelPending({
             return (
                 <CardInfo
                     className="mt-8"
-                    cta={{ action: cancelPayment, text: t(`policy.history.cancelSidesheet.cta.${transactionType}`) }}
+                    cta={{ action: callCancelTransaction, text: t(`policy.history.cancelSidesheet.cta.${transactionType}`) }}
                     icon={<HexExclamationIcon className="text-semantic-error" height={50} width={50} />}
                     subtitle={
                         <>
@@ -78,7 +78,7 @@ export default function SidesheetCancelPending({
                 <CardInfo
                     className="mt-8"
                     cta={{
-                        action: cancelPayment,
+                        action: callCancelTransaction,
                         text: t(`policy.history.cancelSidesheet.cta.${transactionType}`),
                     }}
                     icon={<AlertExclamationIcon className="text-semantic-warning" height={50} width={50} />}

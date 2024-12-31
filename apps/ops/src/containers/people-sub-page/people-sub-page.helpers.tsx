@@ -161,19 +161,10 @@ export const combineNameAndRoles = (
             in identification-card.tsx for example. These names get displayed in the people cards and have a PII Wrapper on them
             in card-people.tsx.
         */
-        const { firstName, lastName, fullName, organizationCode, beneficiaryPercentage } = policyParty;
+        const { firstName, lastName, fullName, organizationCode, beneficiaryPercentage, partyId } = policyParty;
 
         const existingNameTag = nameTags.find(nt => {
-            switch (partyType) {
-                case PartyType.INDIVIDUAL:
-                    return nt.partyType === PartyType.INDIVIDUAL && nt.firstName === firstName && nt.lastName === lastName;
-                case PartyType.TRUST:
-                    return nt.partyType === PartyType.TRUST && nt.fullName === fullName;
-                case PartyType.ORGANIZATION:
-                    return nt.partyType === PartyType.ORGANIZATION && nt.organizationCode === organizationCode;
-                default:
-                    return false;
-            }
+            return nt.partyId === partyId;
         });
 
         if (existingNameTag) {

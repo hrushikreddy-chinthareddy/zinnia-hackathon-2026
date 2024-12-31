@@ -12,7 +12,7 @@ interface CaseCallLogsQuery {
     offset?: number;
 }
 
-export const getCaseCallLogs = async (query: CaseCallLogsQuery): Promise<CallLogResponse | null> => {
+export const getCaseCallLogs = async (query: CaseCallLogsQuery): Promise<{ data: CallLogResponse | null; status: number }> => {
     const { contract, limit, offset } = query;
     const queryParams = `?contract=${contract}&limit=${limit}&offset=${offset}`;
 
@@ -23,14 +23,16 @@ export const getCaseCallLogs = async (query: CaseCallLogsQuery): Promise<CallLog
             return cachedResult;
         }
 
-        const { data } = await client.get<CallLogResponse, AxiosResponse>(`${baseAppUrl}/api/callcenter/v1/CallEntry${queryParams}`);
+        const { data, status } = await client.get<CallLogResponse, AxiosResponse>(
+            `${baseAppUrl}/api/callcenter/v1/CallEntry${queryParams}`
+        );
 
         writeToCache('getCallLogs', query, data, 0.5); // These could change frequently, so only cache for 30 seconds for navigating between pages
 
-        return data;
+        return { data, status };
     } catch (error: any) {
         console.error('getCaseCallLogs::An error occurred while getting case call log results results', error);
 
-        return error.response;
+        return { data: null, status: (error as AxiosResponse)?.status || 500 };
     }
 };

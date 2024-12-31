@@ -231,7 +231,7 @@ const Summary = ({ policy }: SummaryProps) => {
                             })
                         ) : (
                             <BannerAlert canDismiss={false} variant={BannerVariant.Error}>
-                                <b>Unknown Issue</b>
+                                <b>{t('bpm500Error')}</b>
                             </BannerAlert>
                         )}
                         <div className="flex flex-row">

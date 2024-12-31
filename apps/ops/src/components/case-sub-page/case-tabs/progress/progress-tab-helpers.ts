@@ -392,7 +392,11 @@ export class TransformedCase {
     }
     // Builds an ExceptionView from an ExceptionInstance
     private buildException(exception: ExceptionInstance): ExceptionView {
+        // Building up the exceptionReason to use if the nigoReason hasn't mapped the provided exceptionRefId or if the refId is missing
         const exceptionReason = toSentenceCase(exception?.detailedReason ? exception?.detailedReason : exception?.reason);
+        const exceptionDescription = exception?.exceptionRefId
+            ? this.t(`caseManagementApiKeys.nigoReasons.${exception.exceptionRefId}`, exceptionReason)
+            : exceptionReason;
         const tasks: TaskView[] = (
             (exception.taskIdList || ([] as string[]))
                 .map(taskId => {
@@ -402,12 +406,13 @@ export class TransformedCase {
         ).sort(taskSorter);
         const description = this.t(
             this.resolvedExceptionStatuses.includes(exception.status) ? 'caseOverview.tabs.resolved' : 'caseOverview.tabs.issue',
-            { issue: exceptionReason }
+            { issue: exceptionDescription }
         );
         return {
             createdAt: exception.createdAt,
             description,
             id: exception.id,
+            exceptionRefId: exception.exceptionRefId || undefined,
             status: exception.status,
             tasks: tasks,
             updatedAt: exception.updatedAt,

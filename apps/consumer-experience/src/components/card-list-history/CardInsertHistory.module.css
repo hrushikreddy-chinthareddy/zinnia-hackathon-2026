@@ -3,6 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  column-gap: 50px;
   &.pending {
     border: 2px dashed var(--color-base-border-border-subtle, #ccc);
     background-color: var(--color-base-surface-surface-secondary, #f8f8f8);
@@ -12,6 +13,10 @@
 .details {
   display: flex;
   flex-direction: column;
+}
+
+.amount {
+  text-align: right;
 }
 
 .caption {

@@ -7,13 +7,14 @@ import { FC, ReactNode, useEffect, useState } from 'react';
 
 import { addBankRequest } from '@/actions/bpm-actions';
 import { ActionTypes, useBpmStore } from '@/store/store';
-import { BankFormFields, FormSteps } from '@/types/bank';
+import { BankFormFields } from '@/types/bank';
+import { FormSteps } from '@/types/transactions';
 
 import styles from './AddBankSidesheet.module.css';
 import { AddBank } from './form-steps/add/AddBank';
-import { Error } from './form-steps/error/Error';
-import { Loading } from './form-steps/loading/Loading';
-import { Success } from './form-steps/success/Success';
+import { Error } from '../transaction-steps/error/Error';
+import { Loading } from '../transaction-steps/loading/Loading';
+import { Success } from '../transaction-steps/success/Success';
 
 export interface AddBankSidesheet {
   partyId: string;

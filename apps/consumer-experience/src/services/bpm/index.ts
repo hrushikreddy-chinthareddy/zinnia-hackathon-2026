@@ -7,6 +7,7 @@ import { ApiEndpoints } from '@/components/dev-menu/types';
 import { PolicyRequestInputs } from '@/types/policy';
 import { TransactionEligbility } from '@/types/transactions';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
+import { POLICY_ACKNOWLEDGEMENT_DOC_TYPE } from '@/utils/data';
 import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
 import { logError, logTrace, logWarn } from '@/utils/logging/server-logging';
 
@@ -329,7 +330,7 @@ export const checkResetDeliveryDateEligibility = async (
   const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/deliverydatesetup/eligibilitycheck`;
   const body = {
     correlationId: uuidv4(),
-    documentType: 'POLPG',
+    documentType: POLICY_ACKNOWLEDGEMENT_DOC_TYPE,
   };
 
   const rawResponse = await ServerApi.post(url, JSON.stringify(body), {
@@ -395,7 +396,7 @@ export const postResetDeliveryDate = async (
   const body = {
     correlationId: uuidv4(),
     acknowledgementDate: new Date().toISOString(),
-    documentType: 'POLPG',
+    documentType: POLICY_ACKNOWLEDGEMENT_DOC_TYPE,
   };
 
   const rawResponse = await ServerApi.post(url, JSON.stringify(body), {

@@ -1,0 +1,80 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-3xl);
+}
+
+.formFields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-margin-md);
+}
+
+.addressWrapper {
+  display: flex;
+  gap: 16px;
+}
+
+.addressField {
+  flex: 1;
+}
+
+.trashIcon {
+  margin-top: 20px;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-lg);
+}
+
+.addAddressButton {
+  justify-content: flex-start;
+  padding: 0;
+}
+.selectContent {
+  z-index: 600;
+}
+.remove {
+  border-color: var(--color-status-surface-status-error-border-alt, #db004f);
+}
+
+.cancel {
+  align-self: center;
+}
+
+.stateZipRow {
+  display: flex;
+  gap: 16px;
+
+  /* TODO: Remove when bloom updates */
+  button {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+.state {
+  width: 100%;
+  max-width: 96px;
+}
+
+.zip {
+  max-width: 115px;
+}
+/*
+.defaultAddress div[class^='_container'] {
+  display: flex;
+  flex-direction: row;
+  flex-direction: row-reverse;
+  flex-basis: initial;
+  justify-content: flex-end;
+  align-content: center;
+} */
+/*
+.defaultAddress div[class^='_label'] {
+  flex: 1;
+  margin-bottom: 0;
+  align-content: center;
+} */

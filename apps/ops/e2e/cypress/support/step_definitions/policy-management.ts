@@ -17,7 +17,7 @@ When('I search by {string} for {string}', (searchBy: string, searchValue: string
   policyPage['Search button'].click();
 });
 
-Then('I should see a message for a policy not found in Search Results', () => {
+Then('I should see a message for a policy not found in Search Result', () => {
   const policyPage = pages['Policy Management page'];
 
   policyPage['No search results'].within(() => {
@@ -28,19 +28,10 @@ Then('I should see a message for a policy not found in Search Results', () => {
   });
 });
 
-When('I search by {string} with a blank field', (searchBy: string) => {
-  const policyPage = pages['Policy Management page'];
-
-  policyPage.getPolicySearchBy(searchBy).click();
-  policyPage['Search input'].clear();
-  policyPage['Search button'].click();
-  cy.wait(3000);
-});
-
 Then('I should see the policy in Search Results', () => {
   const searchResults = pages['Policy Management page']['Policy search results'];
 
-  /* Assertion: There should be at least one policy card displayed. 
+  /* Assertion: There should be at least one policy card displayed.
      Each card should have elements of the policy within, including:
      - Header
      - Owner Information
@@ -63,5 +54,5 @@ When('I navigate to the policy details from a Policy Card', () => {
 
 Then('I should see an error message to enter a policy number', () => {
   const policyPage = pages['Policy Management page'];
-  policyPage['Policy search error'].click();
+  policyPage['Policy search error'].should('be.visible');
 });

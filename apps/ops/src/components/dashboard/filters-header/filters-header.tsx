@@ -1,19 +1,18 @@
 import clsx from 'clsx';
+import { useTranslation } from 'next-i18next';
 import { forwardRef, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import { MultiselectOption } from '@deps/components/autocomplete/autocomplete.types';
+import { BrokerDealerFilter } from '@deps/components/dashboard/broker-dealer-filter/broker-dealer-filter';
+import styles from '@deps/components/dashboard/filters-header/filters-header.module.css';
 import { FieldSize } from '@deps/components/fields/field';
 import Select from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
+import { CarrierListItem } from '@deps/containers/dashboard/issued-business/issued-business';
 import { DashboardResponseData } from '@deps/queries/api/dashboard';
 import { useDashboardStore } from '@deps/store/store';
 import { getCarrierNameByClientId, getClientIdsByCarrierName, getCarrierListItem } from '@deps/utils/carriers';
-
-import styles from './filters-header.module.css';
-import { BrokerDealerFilter } from '../broker-dealer-filter/broker-dealer-filter';
-import { CarrierListItem } from '../../../containers/dashboard/issued-business/issued-business';
 
 interface FiltersHeaderProps {
     authorizedCarriers: string[];
@@ -138,7 +137,7 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
                                 onChange={updateCarrierFilters}
                                 size={FieldSize.Small}
                                 placeholder={t('allCarriers') || ''}
-                                disabled={loading || carrierFilterItems.length === 1}
+                                disabled={loading}
                                 name="carrier-dropdown-btn"
                                 onOpenChange={handleOnOpenChangeCarrier}
                             />

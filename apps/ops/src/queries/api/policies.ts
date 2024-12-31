@@ -16,8 +16,9 @@ import {
 import { client } from '@deps/queries/api-utils/client';
 import { isMockPolicyDetailsRequestEnabled, isMockPolicySearchRequestEnabled } from '@deps/services/api-config';
 import { mockPolicy } from '@deps/services/mocks/sor-policy';
+import { CheckTupleResponse } from '@deps/types/fga';
 import { PolicySearchResponse, SearchViewQuery } from '@deps/types/search';
-import { lcPartyResponseSanitizer, policySanitizer, policySanitizerWithoutSSN } from '@deps/utils/sanitizers';
+import { fullyMaskPolicyResponse, lcPartyResponseSanitizer, policyMasker, policySanitizerWithoutSSN } from '@deps/utils/sanitizers';
 import { logError, logInfo, logTrace, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
 import { apiServerBaseUrl, baseAppUrl, policyApiBaseUrl } from '../api-config';
@@ -181,7 +182,7 @@ export const getPolicyDetailsSsr = async (
     id?: string,
     planCode?: string,
     accessToken?: string,
-    userInfo: object = {},
+    userInfo: { partyId?: string; sessionId?: string; userId?: string; userName?: string } = {},
     nonSanitizedSSN = false
 ): Promise<Policy | null> => {
     const loggingContext = { file: 'queries/api/policies', function: 'getPolicyDetailsSSR', ...userInfo };
@@ -213,7 +214,14 @@ export const getPolicyDetailsSsr = async (
 
         logInfo('getPolicyDetailsSSR', { url, id, ...loggingContext });
 
-        const { data } = await serverApi.get<SearchViewQuery, AxiosResponse<GetPolicyResponse>>(url, {
+        const unmaskingRequest = serverApi.post<any, AxiosResponse<CheckTupleResponse>>(
+            `${apiServerBaseUrl}/fga/v1/check`,
+            { user: `party:${userInfo?.partyId}`, relation: 'unmask_pii', object: `policy:${id}_${planCode}` },
+            { authorization: 'Bearer ' + accessToken },
+            loggingContext
+        );
+
+        const policyRequest = serverApi.get<SearchViewQuery, AxiosResponse<GetPolicyResponse>>(url, {
             authorization: `Bearer ${accessToken}`,
             headers: {
                 'Content-Type': 'application/json',
@@ -223,7 +231,14 @@ export const getPolicyDetailsSsr = async (
             },
         });
 
-        return nonSanitizedSSN ? policySanitizerWithoutSSN(data.data) : policySanitizer(data.data);
+        const [unmaskingResponse, policyResponse] = await Promise.all([unmaskingRequest, policyRequest]);
+
+        // Do not show ANY PII if the user is not authorized to view it for the policy in question
+        if (!unmaskingResponse.data?.allowed) {
+            return fullyMaskPolicyResponse(policyResponse.data)?.data;
+        }
+
+        return nonSanitizedSSN ? policySanitizerWithoutSSN(policyResponse?.data?.data) : policyMasker(policyResponse?.data?.data);
     } catch (error: any) {
         logError('getPolicyDetailsSSR', { ...parseErrorInformation(error), id, ...loggingContext });
 

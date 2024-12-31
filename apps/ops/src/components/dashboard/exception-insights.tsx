@@ -9,6 +9,7 @@ import HighchartsReact from 'highcharts-react-official';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import { TimeframeFilterOptions } from '@deps/containers/dashboard/issued-business/issued-business';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 import { DASHBOARD_DEFAULT_LABEL, DASHBOARD_REPLACE_LABELS, dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
@@ -33,7 +34,7 @@ export type ExceptionInsightsProps = {
     completedCasesByProcessSubType?: DashboardResponseData[];
     selectedSubprocess: string;
     selectedException: string | undefined;
-    timeframe: string;
+    timeframe: TimeframeFilterOptions;
     carrierOrBrokerDealer?: GroupByOptions.Carrier | GroupByOptions.BrokerDealerName;
 };
 
@@ -62,7 +63,7 @@ export const ExceptionInsights = ({
                 )} applications encountered exceptions along their path to completion. The data is grouped by Exception Category and the values represent an exception that occurred for a ${dashboardChartTitleFormat(
                     processSubType,
                     false
-                )} application. Avoid using phrases such as "the data". Your responses should be insightful and will be displayed on a UI as a summary for a module related to a distribution chart. Use percentages and real data where it makes sense. Keep it concise and to the point. Format number values to United States, including commas where appropriate.`,
+                )} application. Avoid using phrases such as "the data". Your responses should be insightful and will be displayed on a UI as a summary for a module related to a distribution chart. Use percentages and real data where it makes sense. Keep it concise and to the point. Format number values to United States, including commas where appropriate. Any keys you use make sure they are formatted to title case. For example "ANNUITY APPLICATION" should be formatted to "Annuity Application".`,
             });
             setLoading(false);
             return summary;
@@ -74,7 +75,7 @@ export const ExceptionInsights = ({
         return completedCasesByProcessSubType
             ? completedCasesByProcessSubType
                   .find(item => item.name === selectedSubprocess)
-                  ?.values?.filter(item => item.name !== 'NULL_VALUE')
+                  ?.values?.filter(item => item.name !== 'NULL_VALUE' && item.name !== '')
             : null;
     }, [completedCasesByProcessSubType, selectedSubprocess]);
     const noData = !exceptions || exceptions?.length === 0;
@@ -239,7 +240,7 @@ export const ExceptionInsights = ({
     }, [exceptions, selectedSubprocess, shouldShowCaseInsights, timeframe]);
 
     return (
-        <div className={clsx('bg-white flex flex-col  lg:flex-row gap-8 pt-6')}>
+        <div className={clsx('bg-white flex flex-col lg:flex-row gap-4')}>
             <div className="basis-1/4 flex flex-col gap-4 items-start">
                 <div>
                     <Typography variant={TypographyVariant.H3}>{dashboardChartTitleFormat(selectedSubprocess, false)}</Typography>

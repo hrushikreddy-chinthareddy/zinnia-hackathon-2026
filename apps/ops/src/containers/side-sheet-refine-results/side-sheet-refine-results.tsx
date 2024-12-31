@@ -347,6 +347,7 @@ export default function SideSheetRefineResults({
 
         segmentAnalyticsTrackEvent<FilterClickedEvent>(SegmentTrackedEventName.FilterApplied, {
             selectedItemName: JSON.stringify(selectedFilters),
+            session_id: perms.getSessionId(),
             userId: perms.getUserPartyId(),
         });
     }, [additionalFilters, perms, closeSideSheet, setCaseManagementFilters, t]);

@@ -75,7 +75,6 @@ interface KeyValuesBarProps {
     policy: Policy;
 }
 
-// TODO MG: move these into different files
 const quickLinks = (t: TFunction, policy: PolicyDetails): QuickLinksProps['links'] => {
     const { policyNumber, planCode } = policy;
 
@@ -176,6 +175,7 @@ const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
                             links={quickLinks(t, policy)}
                             planCode={planCode}
                             policyNumber={policyNumber}
+                            sessionId={perms.getSessionId()}
                         />
                     </div>
                 </div>
@@ -211,6 +211,7 @@ const KeyValuesBar: React.FC<KeyValuesBarProps> = ({ policy }) => {
                     errorMessageLink={`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/policy-details`}
                     group={true}
                     dropUp
+                    sessionId={perms.getSessionId()}
                     userPartyId={perms.getUserPartyId()}
                 />
             </div>

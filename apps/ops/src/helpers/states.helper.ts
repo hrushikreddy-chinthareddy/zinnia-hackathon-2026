@@ -10,6 +10,7 @@ const states = {
     CALIFORNIA: 'CA',
     COLORADO: 'CO',
     CONNECTICUT: 'CT',
+    DC: 'DC',
     DELAWARE: 'DE',
     FLORIDA: 'FL',
     GEORGIA: 'GA',

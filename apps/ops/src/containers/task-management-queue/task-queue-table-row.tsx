@@ -74,7 +74,10 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
         }
 
         // If feature flag is not enabled, redirect to error page
-        if (caseType.toUpperCase() !== 'RMD' && !isFormFeatureEnabled(caseType.toUpperCase() as ProcessType, taskData?.carrier, featureFlagDecisions)) {
+        if (
+            caseType.toUpperCase() !== 'RMD' &&
+            !isFormFeatureEnabled(caseType.toUpperCase() as ProcessType, taskData?.carrier, featureFlagDecisions)
+        ) {
             browserLogInfo('task-queue:handleStartTask::Feature flag not enabled', {
                 taskId: taskData.id,
                 documentNumber: taskData?.data?.documentNumber,
@@ -103,7 +106,7 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
             browserLogError('task-queue:handleStartTask::Error updating task in progress', {
                 ...parseErrorInformation(e),
                 taskId: taskId,
-                caseId: taskData.caseId
+                caseId: taskData.caseId,
             });
             router.push(`/create-case/error?errorCode=${ERROR_CODES.DATA_ENTRY_START_TASK_ERROR}`);
             return;
@@ -123,19 +126,19 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
                 browserLogInfo('task-queue:handleUnassignTask::Successfully un-assigned task', { taskId: taskId });
                 getTasks();
             } else {
-                browserLogInfo('task-queue:handleUnassignTask::An error occurred while un-assigning the task', { taskId: taskId });
-                setErrorMessage(t('unassignTaskError') + 'An error occurred while un-assigning the task')
+                browserLogInfo('task-queue:handleUnassignTask::An error occurred while un-assigning the task', { taskId: taskId, status: response?.status });
+                setErrorMessage(t('unassignTaskError') + 'An error occurred while un-assigning the task');
             }
         } catch (e) {
             browserLogError('task-queue:handleUnassignTask::Error un-assigning task', {
                 ...parseErrorInformation(e),
                 taskId: taskId,
-                caseId: taskData.caseId
+                caseId: taskData.caseId,
             });
             router.push(`/create-case/error?errorCode=${ERROR_CODES.DATA_ENTRY_START_TASK_ERROR}`);
             return;
         }
-    }
+    };
 
     return (
         <TableRow key={`task_queue_row_${task.id}`}>

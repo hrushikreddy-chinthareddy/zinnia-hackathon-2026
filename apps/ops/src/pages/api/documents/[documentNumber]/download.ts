@@ -1,4 +1,4 @@
-import { getAccessToken } from '@auth0/nextjs-auth0';
+import { getSession } from '@auth0/nextjs-auth0';
 import { AxiosResponse } from 'axios';
 import { lookup } from 'mime-types';
 
@@ -8,16 +8,18 @@ import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { getUserInfoForLogging, logCompliance, logError, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
+import canUnmaskPii from '@deps/queries/server/fga/can-unmask';
 
 const baseUrl = `${apiServerBaseUrl}/document/v2`;
 
 export default withAuthAndLogging(
-    async (req: NextApiRequest, res: NextApiResponse<DocumentDownloadWithMime | null>) => {
+    async (req: NextApiRequest, res: NextApiResponse<DocumentDownloadWithMime | any | null>) => {
         const { documentNumber, clientCode, source } = req.query;
+        const session = await getSession(req, res);
         const userInfo = await getUserInfoForLogging(req, res);
-        const accessToken = (await getAccessToken(req, res)).accessToken;
 
         const url = `${baseUrl}/documents/${documentNumber}/download?clientCode=${clientCode}&source=${source}`;
+        const canUnmask = await canUnmaskPii(session?.accessToken, session?.user?.partyId);
 
         const loggingContext = {
             clientCode,
@@ -27,13 +29,17 @@ export default withAuthAndLogging(
             source,
             ...userInfo,
         };
+        if (!canUnmask) {
+            logCompliance('Document Download request denied due to missing unmask pii permission', loggingContext);
+            return res.status(403).json({ error: 'Forbidden' });
+        }
 
         logCompliance('Document Download Attempt', loggingContext);
         try {
             const { data } = await serverApi.get<DocumentDownload, AxiosResponse>(
                 url,
                 {
-                    authorization: `Bearer ${accessToken}`,
+                    authorization: `Bearer ${session?.accessToken}`,
                 },
                 loggingContext
             );

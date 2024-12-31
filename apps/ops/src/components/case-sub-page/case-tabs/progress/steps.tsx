@@ -23,6 +23,7 @@ import Tasks from './tasks';
 enum StepResults {
     Approved = 'approved',
     Declined = 'declined',
+    Failure = 'failure',
     Adverse = 'adverse',
     RiskNotAcceptable = 'risk not acceptable',
     Accepted = 'accepted',
@@ -44,6 +45,7 @@ const StepResultTag = ({ step }: { step: TransformedStep }) => {
             text = t('caseOverview.tabs.adverse');
             break;
         case StepResults.Declined:
+        case StepResults.Failure:
             text = t('caseOverview.tabs.declined');
             break;
         case StepResults.RiskNotAcceptable:

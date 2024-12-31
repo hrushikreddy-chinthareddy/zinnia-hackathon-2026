@@ -19,6 +19,8 @@ import { DEFAULT_ERROR_STRING, ZAHARA_API_DATE_FORMAT } from '@deps/types/consta
 
 import DocumentResultsPagination from './documents-results-pagination';
 import DocumentsResultsTable from './documents-results-table';
+import UnauthorizedCard from '@deps/components/card/card-unauthorized';
+import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 
 type DocumentsSubPageProps = {
     policy: Policy;
@@ -42,6 +44,10 @@ export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
     const [loading, setLoading] = useState<boolean | null>(null);
     const [policyResults, setPolicyResults] = useState<DocumentWithSource[] | null>(null);
     const [correspondenceResults, setCorrespondenceResults] = useState<DocumentWithSource[] | null>(null);
+    const [statuses, setStatuses] = useState<{ [key: string]: number | null }>({
+        [DocumentTypeView.Correspondence]: null,
+        [DocumentTypeView.Policy]: null,
+    });
     const [yearSelection, setYearSelection] = useState<string>(dayjs().year().toString());
     const limit = 25;
     const [offset, setOffset] = useState(0);
@@ -91,7 +97,7 @@ export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
             ]);
 
             const mappedPolicyResults =
-                (policyDocs?.data as PolicyDocuments)?.items.map(item => ({ ...item, documentSource: DocumentTypeView.Policy })) ?? [];
+                (policyDocs?.data as PolicyDocuments)?.items?.map(item => ({ ...item, documentSource: DocumentTypeView.Policy })) ?? [];
             const mappedCorrespondenceResults =
                 (correspondenceDocs?.data as PolicyDocuments)?.items?.map(item => ({
                     ...item,
@@ -99,6 +105,7 @@ export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
                 })) ?? [];
             setPolicyResults(mappedPolicyResults);
             setCorrespondenceResults(mappedCorrespondenceResults);
+            setStatuses({ [DocumentTypeView.Correspondence]: correspondenceDocs?.status, [DocumentTypeView.Policy]: policyDocs?.status });
             setLoading(false);
         };
         if (!loading && !results) {
@@ -140,20 +147,26 @@ export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
                         </RadioGroup.Item>
                     </RadioGroup.Root>
                 </div>
-                {!loading && (
-                    <DocumentsResultsTable
-                        carrierCode={policy.carrierId ?? ''}
-                        documentType={documentType as DocumentTypeView}
-                        policyNumber={policy.policyNumber ?? ''}
-                        results={results?.slice(offset, offset + limit) ?? []}
-                    />
+                {statuses[documentType] === StatusCode.Forbidden ? (
+                    <UnauthorizedCard />
+                ) : (
+                    <>
+                        {!loading && (
+                            <DocumentsResultsTable
+                                carrierCode={policy.carrierId ?? ''}
+                                documentType={documentType as DocumentTypeView}
+                                policyNumber={policy.policyNumber ?? ''}
+                                results={results?.slice(offset, offset + limit) ?? []}
+                            />
+                        )}
+                        {loading && (
+                            <div className="mx-auto flex items-center justify-center gap-2">
+                                <EventsLoader message={t('policy.documents.loadingDocuments')} />
+                            </div>
+                        )}
+                        <DocumentResultsPagination goToPage={goToPage} loading={loading} limit={limit} total={total} offset={offset} />
+                    </>
                 )}
-                {loading && (
-                    <div className="mx-auto flex items-center justify-center gap-2">
-                        <EventsLoader message={t('policy.documents.loadingDocuments')} />
-                    </div>
-                )}
-                <DocumentResultsPagination goToPage={goToPage} loading={loading} limit={limit} total={total} offset={offset} />
             </CardContainer>
         </div>
     );

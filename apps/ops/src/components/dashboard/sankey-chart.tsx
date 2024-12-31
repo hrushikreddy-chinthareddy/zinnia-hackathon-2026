@@ -67,7 +67,7 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
     const [level3ObjectGrouping, setLevel3ObjectGrouping] = useState<DashboardStatsElementResponse[]>([]);
     const [l1SelectedIndex, setL1SelectedIndex] = useState<number>(-100);
 
-    const [l1SelectValue, setL1SelectValue] = useState(GroupByOptions.Carrier);
+    const [l1SelectValue, setL1SelectValue] = useState(GroupByOptions.BrokerDealerName);
     const [l2SelectValue, setL2SelectValue] = useState(GroupByOptions.Process);
     const [l3SelectValue, setL3SelectValue] = useState(GroupByOptions.CaseStatus);
 
@@ -76,7 +76,10 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
 
     const { data: caseGroupingState } = useQuery({
         queryKey: ['caseGrouping', baseDashboardQueryFilter, l1SelectValue, l2SelectValue, l3SelectValue, createdDateStart],
-        queryFn: () => getStatsFromSelectionQuery(baseDashboardQueryFilter, l1SelectValue, l2SelectValue, l3SelectValue, createdDateStart),
+        queryFn: () => {
+            setL1SelectedIndex(-100);
+            return getStatsFromSelectionQuery(baseDashboardQueryFilter, l1SelectValue, l2SelectValue, l3SelectValue, createdDateStart);
+        },
         placeholderData: previousData => previousData,
     });
 
@@ -412,7 +415,11 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                         <tspan className="tracking-normal no-underline font-primary text-xl font-medium">
                             {wholeNumberFormatify(l1StatGrouping.count)}
                         </tspan>
-                        <tspan className="font-primary text-sm font-medium"> {getLabelSubString(l1StatGrouping.name)}</tspan>
+                        <tspan className="font-primary text-sm font-medium">
+                            {l1SelectValue === GroupByOptions.Carrier
+                                ? getLabelSubString(l1StatGrouping.name)
+                                : dashboardChartTitleFormat(l1StatGrouping.name, 15)}
+                        </tspan>
                         <title>{l1StatGrouping.name}</title>
                     </text>
                 </a>
@@ -728,6 +735,10 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                         <SelectSimple
                             options={[
                                 {
+                                    value: GroupByOptions.BrokerDealerName.toString(),
+                                    label: 'Broker Dealer',
+                                },
+                                {
                                     value: GroupByOptions.Carrier.toString(),
                                     label: 'Carrier',
                                 },
@@ -736,16 +747,12 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                                     label: 'Case Type',
                                 },
                                 {
-                                    value: GroupByOptions.OpenStages.toString(),
-                                    label: 'Open Stages',
+                                    value: GroupByOptions.ProductName.toString(),
+                                    label: 'Product Name',
                                 },
                                 {
                                     value: GroupByOptions.ProcessSubType.toString(),
                                     label: 'Sub Case Type',
-                                },
-                                {
-                                    value: GroupByOptions.ExceptionCategory.toString(),
-                                    label: 'Exceptions Category',
                                 },
                             ]}
                             onChange={handleL1SelectChange}
@@ -758,6 +765,10 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                         <SelectSimple
                             options={[
                                 {
+                                    value: GroupByOptions.BrokerDealerName.toString(),
+                                    label: 'Broker Dealer',
+                                },
+                                {
                                     value: GroupByOptions.Carrier.toString(),
                                     label: 'Carrier',
                                 },
@@ -766,16 +777,12 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                                     label: 'Case Type',
                                 },
                                 {
-                                    value: GroupByOptions.OpenStages.toString(),
-                                    label: 'Open Stages',
+                                    value: GroupByOptions.ProductName.toString(),
+                                    label: 'Product Name',
                                 },
                                 {
                                     value: GroupByOptions.ProcessSubType.toString(),
                                     label: 'Sub Case Type',
-                                },
-                                {
-                                    value: GroupByOptions.ExceptionCategory.toString(),
-                                    label: 'Exceptions Category',
                                 },
                             ]}
                             onChange={handleL2SelectChange}
@@ -794,10 +801,6 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                                 {
                                     value: GroupByOptions.Process.toString(),
                                     label: 'Case Type',
-                                },
-                                {
-                                    value: GroupByOptions.ProductName.toString(),
-                                    label: 'Product Name',
                                 },
                             ]}
                             onChange={handleL3SelectChange}

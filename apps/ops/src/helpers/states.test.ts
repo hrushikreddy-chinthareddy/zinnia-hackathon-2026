@@ -9,7 +9,7 @@ describe('State helper functions', () => {
             expect(stateNames).toContain('ALABAMA');
             expect(stateNames).toContain('CALIFORNIA');
             expect(stateNames).toContain('NEW YORK');
-            expect(stateNames.length).toBe(50);
+            expect(stateNames.length).toBe(51);
         });
     });
 
@@ -19,7 +19,7 @@ describe('State helper functions', () => {
             expect(stateCodes).toContain('AL');
             expect(stateCodes).toContain('CA');
             expect(stateCodes).toContain('NY');
-            expect(stateCodes.length).toBe(50);
+            expect(stateCodes.length).toBe(51);
         });
     });
 

@@ -8,7 +8,8 @@ import { FC, ReactNode, useState } from 'react';
 import { putEndDateBankAccount } from '@/actions/bpm-actions';
 import { useUser } from '@/hooks/use-user';
 import { ActionTypes, useBpmStore } from '@/store/store';
-import { BankFormFields, FormSteps } from '@/types/bank';
+import { BankFormFields } from '@/types/bank';
+import { FormSteps } from '@/types/transactions';
 import { EVERLY_CONTACT_PHONE_NUMBER } from '@/utils/data';
 
 import { Error } from './form-steps/error/Error';

@@ -94,6 +94,7 @@ export default function CaseSearchCard({
     const loadCaseDetails = (href: string) => {
         segmentAnalyticsTrackEvent<CaseClickedEvent>(SegmentTrackedEventName.CaseClicked, {
             caseId: id,
+            session_id: perms.getSessionId(),
             userId: perms.getUserPartyId(),
         });
 

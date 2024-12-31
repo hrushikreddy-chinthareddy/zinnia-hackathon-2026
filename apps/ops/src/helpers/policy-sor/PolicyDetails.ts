@@ -14,6 +14,7 @@ import {
     Product,
     ProductType,
     Rider,
+    LoanValues,
 } from '@deps/models/policy/sor-policy';
 import { DEFAULT_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
 import { getCarrierLogoByClientId, getCarrierNameByClientId } from '@deps/utils/carriers';
@@ -49,6 +50,7 @@ export class PolicyDetails {
     public isLife: boolean;
     public issueDate: string | undefined;
     public issueState: string | undefined;
+    public loanValues: LoanValues | undefined;
     public marketingName: string | undefined;
     public maturityDate: string | undefined;
     public netAmountAtRisk: number | undefined;
@@ -97,6 +99,7 @@ export class PolicyDetails {
         this.isLife = policy?.product?.lineOfBusiness === LineOfBusiness.LIFE;
         this.issueDate = policy.policyDates?.issueDate;
         this.issueState = policy.issueState;
+        this.loanValues = policy?.loanValues;
         this.marketingName = policy?.product?.marketingName;
         this.maturityDate = policy.policyDates?.maturityDate;
         this.netAmountAtRisk = policy?.accountValues?.netAmountAtRisk;

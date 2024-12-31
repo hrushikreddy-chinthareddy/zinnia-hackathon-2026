@@ -16,15 +16,16 @@ import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { getSlug } from '@deps/helpers/string.helper';
-import { CaseType, CreateCaseBody, CreateCaseResponse, Statuses } from '@deps/models/case/case';
+import { CaseType, Statuses } from '@deps/models/case/case';
 import { DocumentType } from '@deps/models/case/document';
 import { caseTypes } from '@deps/models/case/helpers';
 import { UserPermission } from '@deps/models/user-profile';
-import { createCase, getCases } from '@deps/queries/api/cases';
+import { getCases } from '@deps/queries/api/cases';
 import { getDocument } from '@deps/queries/api/documents';
 import { ReactComponent as ErrorIcon } from '@deps/styles/elements/icons/icons_outlined/exclamation-alert.svg';
 import { ReactComponent as SuccessIcon } from '@deps/styles/elements/icons/icons_outlined/refresh-2.svg';
 import loadingImage from '@deps/styles/images/loader.png';
+import { browserLogInfo, browserLogWarn } from '@deps/utils/browser-logging';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
@@ -32,34 +33,6 @@ import nextI18nextConfig from 'next-i18next.config';
 
 const OTP_FORM_CLIENT_COOKIE = 'otp-form-client-cookie';
 const OTP_FORM_TYPE_COOKIE = 'otp-form-type-cookie';
-
-const createCaseFromDocumentNumber = async (
-    documentNumber: string,
-    caseId: string,
-    contract: string,
-    process: CaseType,
-    clientId: string
-): Promise<CreateCaseResponse> => {
-    const query: CreateCaseBody = {
-        carrier: clientId.toUpperCase(),
-        process,
-        identifiers: [
-            {
-                identifier: 'documentNumber',
-                value: documentNumber,
-            },
-            {
-                identifier: 'contractNumber',
-                value: contract,
-            },
-            {
-                identifier: 'caseID',
-                value: caseId,
-            },
-        ],
-    };
-    return await createCase(query);
-};
 
 const getCaseType = (docTypeQuery: string): CaseType | undefined => {
     const loweredKeyedObj = Object.keys(caseTypes).reduce((acc, docTypeKey) => {
@@ -121,7 +94,12 @@ export default function CaseCreate({ featureFlagDecisions }: CaseCreateProps) {
 
     const initializeCaseCreation = async () => {
         if (!caseType || !docType || !clientCode || !documentNumber) {
-            console.error('Missing case type, docType, clientCode, or documentNumber.', { caseType, docType, clientCode, documentNumber });
+            browserLogWarn('onBaseCreateTask::Missing case type, docType, clientCode, or documentNumber.', {
+                caseType,
+                docType,
+                clientCode,
+                documentNumber
+            });
             return;
         }
         setCookie(OTP_FORM_CLIENT_COOKIE, clientCode, { maxAge: 1000 * 60 * 60 * 12 }); // 12hrs
@@ -137,49 +115,68 @@ export default function CaseCreate({ featureFlagDecisions }: CaseCreateProps) {
                 policyNumber: document?.contract,
                 notInCaseStatus: [Statuses.Completed],
                 process: [CaseTypeToProcessesMap[caseType]],
+                sortDirection: 'desc',
+                sortBy: 'createdAt',
             });
 
             if (response && 'total' in response) {
                 if (response.data.length > 0) {
-                    console.log("All the cases are not-completed. Redirecting to create case page.");
+                    const caseId = response.data?.[0].id;
+
+                    if (!caseId) {
+                        throw new Error('The case creation request to the case management service did not succeed.');
+                    }
+                    browserLogInfo('onBaseCreateTask::Cases are not-completed. Redirecting to existing case.', {
+                        caseId,
+                        caseType,
+                        docType,
+                        clientCode,
+                        documentNumber
+                    });
+
+                    setCardProps({
+                        title: t('success') as string,
+                        subtitle: t('successMessage') as string,
+                        icon: <SuccessIcon className="-scale-x-100 scale-y-100 text-semantic-success" width={50} height={50} />,
+                    });
+
+                    const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
+                    const getLastSaved = shouldShowNewExperience ? `&getLastSaved=true` : '';
+                    const caseSlug = getSlug(caseType);
+                    browserLogInfo('onBaseCreateTask::Redirecting to a task', {
+                        caseId,
+                        caseType,
+                        docType,
+                        clientCode,
+                        documentNumber
+                    });
+                    router.push(
+                        `/create-case/${caseSlug}/${caseId}?doc=${document.documentNumber}&clientId=${clientCode as string}${getLastSaved}`
+                    );
+                    return;
+                } else {
+                    browserLogInfo('onBaseCreateTask::Cases are completed. Re-directing to create case page', {
+                        caseType,
+                        docType,
+                        clientCode,
+                        documentNumber
+                    });
                     router.push(
                         `/create-case/`
                     );
                     return;
                 }
-
-                console.log("All the cases are completed. Creating a new case.");
-                const data = await createCaseFromDocumentNumber(
-                    document?.documentNumber,
-                    document?.caseId,
-                    document?.contract,
-                    caseType,
-                    clientCode as string
-                );
-
-                if (!data?.id) {
-                    throw new Error('The case creation request to the case management service did not succeed.');
-                }
-
-                setCardProps({
-                    title: t('success') as string,
-                    subtitle: t('successMessage') as string,
-                    icon: <SuccessIcon className="-scale-x-100 scale-y-100 text-semantic-success" width={50} height={50} />,
-                });
-
-                const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
-                const getLastSaved = shouldShowNewExperience ? `&getLastSaved=true` : '';
-                const caseSlug = getSlug(caseType);
-
-                router.push(
-                    `/create-case/${caseSlug}/${data.id}?doc=${document.documentNumber}&clientId=${clientCode as string}${getLastSaved}`
-                );
-                return;
             } else {
                 throw new Error('Unable to retrieve cases search results.');
             }
         } catch (e) {
-            console.error('create-case/create::initializeCaseCreation', e);
+            browserLogWarn('onBaseCreateTask::Task initialization failure', {
+                ...parseErrorInformation(e),
+                caseType,
+                docType,
+                clientCode,
+                documentNumber
+            });
             setIsError(true);
             setCardProps({
                 title: t('errors.errorCreatingCase') as string,
