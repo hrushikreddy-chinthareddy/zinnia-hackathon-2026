@@ -32,9 +32,8 @@ export const generateCommunicationRequest = (
         attachmentDetails,
         receiverDetails: {
             deliveryType: communicationType,
-            recipientList:
-                communicationType === CommunicationTypes.Email ? state.correspondence?.ccList ?? [] : [state.correspondence.recipient],
-            ccList: communicationType === CommunicationTypes.Email ? [] : state.correspondence?.ccList,
+            recipientList: state.correspondence?.recipients ?? [],
+            ccList: state.correspondence?.ccList ?? [],
             mailDetails: communicationType === CommunicationTypes.Mail ? state.correspondence?.mailDetails : undefined,
         },
     };

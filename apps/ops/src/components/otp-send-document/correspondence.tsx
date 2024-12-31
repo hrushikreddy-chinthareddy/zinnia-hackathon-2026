@@ -41,15 +41,8 @@ export const validateEmail = (email: string) => {
     return;
 };
 
-const validateNoEmailOverlap = (recipient: string, ccList: string[]) => {
-    if (ccList?.includes(recipient)) {
-        return 'errors.duplicateEmail';
-    }
-    return false;
-};
-
-const validateEmailExist = (ccList: string[]) => {
-    if (!ccList.length) {
+const validateEmailExist = (recipients: string[]) => {
+    if (!recipients.length) {
         return 'errors.emailRequired';
     }
     return false;
@@ -70,7 +63,7 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
         () => ({
             ...state?.correspondence,
             type: state?.correspondence?.type || defaultCommunicationType,
-            recipient: state?.correspondence?.recipient,
+            recipient: state?.correspondence?.recipients,
         }),
         [defaultCommunicationType, state?.correspondence]
     );
@@ -91,13 +84,13 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
         setError({});
         switch (correspondenceData.type) {
             case CommunicationTypes.Email: {
-                const emailError = validateEmailExist(correspondenceData?.ccList || []);
+                const emailError = validateEmailExist(correspondenceData?.recipients || []);
                 if (emailError) {
                     browserLogWarn('contactCenterEmailValidation', {
                         contractNumber: policy?.policyNumber || '',
                         planCode: policy?.product?.planCode || '',
                         carrierId: policy?.carrierId || '',
-                        payload: correspondenceData?.recipient,
+                        payload: correspondenceData?.recipients || [],
                         error: t(emailError) as string,
                         function: 'correspondence.validateEmail',
                     });
@@ -114,7 +107,7 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
 
                 break;
             default:
-                if (!state.correspondence.recipient) {
+                if (!state.correspondence.recipients.length) {
                     setError({ ...error, submit: t('errors.recipient') as string });
                     return false;
                 }

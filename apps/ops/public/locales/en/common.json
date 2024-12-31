@@ -2189,7 +2189,7 @@
             "lastName": "Last name is required",
             "address": "Verify & select the address to continue.",
             "maxEmails": "Maximum 5 emails allowed",
-            "duplicateEmailInCC": "Email already exist in the list",
+            "duplicateRecipientEmail": "Email already exist in the list",
             "duplicateEmail": "Please ensure the email address is unique between the Recipient and CC fields.",
             "emailRequired": "Email is required"
         }

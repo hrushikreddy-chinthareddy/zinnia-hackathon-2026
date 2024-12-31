@@ -37,13 +37,16 @@ const CorrespondenceCard = ({
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
 
     const selectedCommunicationType = correspondenceData?.type;
-    const recipient = correspondenceData?.recipient;
+    const recipients = correspondenceData?.recipients || [];
+
     const emailId = getPrimaryEmail(policy);
+
     const [communicationType, setCommunicationType] = useState(selectedCommunicationType || '');
-    const [email, setEmail] = useState(selectedCommunicationType === CommunicationTypes.Email ? recipient || emailId : '');
-    const [fax, setFax] = useState(selectedCommunicationType === CommunicationTypes.Fax ? recipient || '' : '');
+    const [emails, setEmails] = useState(selectedCommunicationType === CommunicationTypes.Email ? recipients || [emailId] : []);
+    const [fax, setFax] = useState(selectedCommunicationType === CommunicationTypes.Fax ? recipients || [] : []);
     const [address, setAddress] = useState(correspondenceData?.mailDetails);
-    const [additionalEmails, setAdditionalEmails] = useState<string[]>([]);
+    const [ccEmails, setCCEmails] = useState<string[]>([]);
+
 
     const communicationTypes = [
         {
@@ -63,11 +66,11 @@ const CorrespondenceCard = ({
     useEffect(() => {
         setCorrespondenceData({
             type: communicationType,
-            recipient: communicationType === CommunicationTypes.Email ? email : fax,
-            ccList: communicationType === CommunicationTypes.Email ? additionalEmails : [],
+            recipients: communicationType === CommunicationTypes.Email ? emails : fax,
+            ccList: communicationType === CommunicationTypes.Email ? ccEmails : [],
             mailDetails: address,
         });
-    }, [email, fax, address, additionalEmails, setCorrespondenceData, communicationType]);
+    }, [emails, fax, address, setCorrespondenceData, communicationType]);
 
    
     function renderReceiptComponent(communicationType: string): React.ReactNode {
@@ -76,8 +79,8 @@ const CorrespondenceCard = ({
                 return (
                     <>
                         <AdditionalRecipient
-                            emails={additionalEmails}
-                            setEmails={setAdditionalEmails}
+                            emails={emails}
+                            setEmails={setEmails}
                             classNames="flex-grow"
                             setError={setError}
                             policy={policy}
@@ -85,7 +88,7 @@ const CorrespondenceCard = ({
                     </>
                 );
             case CommunicationTypes.Fax:
-                return <FaxNumber fax={fax} setFax={(val: string) => setFax(val)} />;
+                return <FaxNumber fax={fax.length ? fax[0] : ''} setFax={(val: string) => setFax(val ? [val] : [])} />;
             case CommunicationTypes.Mail:
                 return <ContactCenterAddress policy={policy} setAddress={setAddress} />;
             default:

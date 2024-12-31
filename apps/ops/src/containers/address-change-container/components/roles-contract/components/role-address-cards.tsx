@@ -72,9 +72,13 @@ export const RoleAddressCard = ({
                             {!isAddressCard && card?.email && (
                                 <div>
                                     <div>
-                                        <Label className="h-6 leading-4.5" label={t('correspondence.email')} variant={LabelVariant.FieldLabel} />
+                                        <Label
+                                            className="h-6 leading-4.5"
+                                            label={t('correspondence.email')}
+                                            variant={LabelVariant.FieldLabel}
+                                        />
                                     </div>
-                                    <Typography variant={TypographyVariant.BodySm} className="py-0">
+                                    <Typography variant={TypographyVariant.BodySm} className="py-0 break-all">
                                         {`${card?.email}`}
                                     </Typography>
                                 </div>

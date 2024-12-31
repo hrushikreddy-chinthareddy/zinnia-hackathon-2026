@@ -2164,7 +2164,7 @@
             "lastName": "Le nom de famille est obligatoire",
             "address": "Vérifiez et sélectionnez l'adresse pour continuer.",
             "maxEmails": "Maximum 5 e-mails autorisés",
-            "duplicateEmailInCC": "L'e-mail existe deja dans la liste",
+            "duplicateRecipientEmail": "L'e-mail existe deja dans la liste",
             "duplicateEmail": "Assurez-vous que l'adresse e-mail est unique entre les champs Destinataire et CC",
             "emailRequired": "L'e-mail est requis"
         }

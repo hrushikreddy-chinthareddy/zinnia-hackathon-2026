@@ -67,17 +67,17 @@ const AdditionalRecipient = ({ classNames, emails, setEmails, setError, policy }
             return;
         }
         if (emailError) {
-            browserLogWarn('contactCenterCCEmailValidation', {
+            browserLogWarn('contactCenterRecipientsEmailValidation', {
                 payload: val,
                 error: t(emailError) as string,
-                function: 'correspondence.cc.validateEmail',
+                function: 'correspondence.recipients.validateEmail',
             });
             setError(error => ({ ...error, submit: t(emailError) as string }));
             return;
         }
 
         if (emails.includes(val)) {
-            setError(error => ({ ...error, submit: t('errors.duplicateEmailInCC') as string }));
+            setError(error => ({ ...error, submit: t('errors.duplicateRecipientEmail') as string }));
             return;
         }
 
