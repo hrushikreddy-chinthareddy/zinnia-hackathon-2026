@@ -22,7 +22,6 @@ describe('#ActionCellRenderer', () => {
                 },
                 actionMenu: 'Actions',
             }
-
         };
 
         render(<ActionCellRenderer {...(params as any)} />);

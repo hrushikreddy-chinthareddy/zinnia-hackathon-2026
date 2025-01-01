@@ -1,6 +1,9 @@
 import { render } from '@testing-library/react';
 // import router from 'next/router';
 
+import { TaskStatus } from '@deps/models/case/task-instance';
+import { CaseStatus } from '@deps/models/case/withdrawal/case';
+
 import TasksListing from './tasks-listing';
 
 jest.mock('next/router', () => ({
@@ -14,8 +17,17 @@ describe('#TasksListing', () => {
         config: {
             searchResults: 'Search Results',
             createNewTask: 'Create New Task',
-            taskTableColConfig: [],
             noTaskFound: 'No tasks found',
+            actionCellParams: {
+                isReadOnly: (status: string) => CaseStatus.Submit || status === TaskStatus.Completed,
+                isEditable: (status: string) =>  (status === CaseStatus.Pending || status === TaskStatus.New ||  status === TaskStatus.InProgress),
+                actionLabels: {
+                    edit: 'Edit',
+                    readOnlyView: 'Read-only view',
+                    duplicateTaskContent: 'Edit',
+                },
+                actionMenu: 'Actions',
+            }
         },
         caseId: '1',
         caseType: 'Type',
