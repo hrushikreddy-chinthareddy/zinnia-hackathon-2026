@@ -14,6 +14,8 @@ export enum TaskType {
     REG60 = 'NBReg60Comparision',
     SuitabilityDataEntry = 'SUITABILITY_DATA_ENTRY',
     SuitabilityReview = 'SUITABILITY_REVIEW',
+    MatchDocument = 'MATCH_DOCUMENT',
+    MatchPayment = 'MATCH_PAYMENT',
 }
 
 export enum TaskSource {
