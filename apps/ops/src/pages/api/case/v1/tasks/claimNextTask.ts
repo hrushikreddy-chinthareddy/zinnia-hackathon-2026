@@ -27,10 +27,10 @@ export default withAuthAndLogging(
 
         try {
             const data = await serverApi.patch(baseUrl, config);
-            logTrace('serverApiClient::patch::success::task claimed successful', { ...loggingContext, duration: performance.now() - now });
+            logTrace('claimNextTask::patch::success::task claimed successful', { ...loggingContext, duration: performance.now() - now });
             return res.status(200).send(await data.json());
         } catch (error) {
-            logWarn('serverApiClient::patch::error::something went wrong while claiming task', {
+            logWarn('claimNextTask::patch::error::something went wrong while claiming task', {
                 ...parseErrorInformation(error),
                 ...loggingContext,
                 duration: performance.now() - now,

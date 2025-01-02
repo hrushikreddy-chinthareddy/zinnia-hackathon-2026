@@ -15,7 +15,7 @@ export default withAuthAndLogging(
         const baseUrl = `${apiServerBaseUrl}/case/v1/tasks/${taskId}/unclaim`;
 
         const loggingContext = { ...logCtx, baseUrl };
-        logTrace('UnclaimTask::start', loggingContext);
+        logTrace('unclaimTask::start', loggingContext);
 
         const config = {
             headers: {
@@ -28,14 +28,14 @@ export default withAuthAndLogging(
         try {
             const data = await serverApi.patch(baseUrl, config);
             console.log(data);
-            logTrace('serverApiClient::patch::success::task unclaimed successful', {
+            logTrace('unclaimTask::patch::success::task unclaimed successful', {
                 ...loggingContext,
                 data,
                 duration: performance.now() - now,
             });
             return res.status(200).send(await data.json());
         } catch (error) {
-            logWarn('serverApiClient::patch::error::something went wrong while unclaiming task', {
+            logWarn('unclaimTask::patch::error::something went wrong while unclaim task', {
                 ...parseErrorInformation(error),
                 ...loggingContext,
                 duration: performance.now() - now,

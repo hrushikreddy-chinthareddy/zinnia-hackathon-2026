@@ -392,6 +392,23 @@ const ActiveAging = ({
         setStartAndEndDates(getStartAndEndDates(selectedAgingRange));
     }, [selectedAgingRange]);
 
+    const renderAISummary = () => {
+        if (!shouldShowCaseInsights) {
+            return null;
+        }
+        return (
+            <>
+                <div className="flex-1 grow border-r-1 xl:border-r-0 border-[#EDEDED] pr-2 xl:pr-0">
+                    <Typography className="flex gap-2 items-center mb-4" variant={TypographyVariant.BodyBold}>
+                        <LighBulb height={24} width={24} />
+                        <span>Insight</span>
+                    </Typography>
+                    <Typography variant={TypographyVariant.BodySm}>{aiSummaryText}</Typography>
+                </div>
+            </>
+        );
+    };
+
     return (
         <CardContainer fullWidth={false} containerClassNames={classNames}>
             <Typography className="mb-1" variant={TypographyVariant.H2}>
@@ -402,14 +419,7 @@ const ActiveAging = ({
             </Typography>
             <div className="flex flex-col xl:flex-row justify-between gap-4 w-full">
                 <div className="flex grow xl:flex-col xl:w-1/4 gap-4 mb-8 xl:mb-0">
-                    <div className="flex-1 grow border-r-1 xl:border-r-0 border-[#EDEDED] pr-2 xl:pr-0">
-                        <Typography className="flex gap-2 items-center mb-4" variant={TypographyVariant.BodyBold}>
-                            <LighBulb height={24} width={24} />
-                            <span>Insight</span>
-                        </Typography>
-                        <Typography variant={TypographyVariant.BodySm}>{aiSummaryText}</Typography>
-                    </div>
-
+                    {renderAISummary()}
                     <div className="flex-1 border-r-1 xl:border-r-0 xl:border-t-1 border-[#EDEDED]">
                         <Typography className="mb-4 xl:mt-1" variant={TypographyVariant.BodySmBold}>
                             Top volume by type

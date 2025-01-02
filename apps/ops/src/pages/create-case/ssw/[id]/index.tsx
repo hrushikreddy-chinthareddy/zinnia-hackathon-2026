@@ -50,6 +50,7 @@ import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
+import NoteSection from '@deps/components/otp-withdrawal-form/note-section';
 
 interface SSWCaseProps extends SegmentTrackedPageProps {
     document: DocumentData;
@@ -195,6 +196,7 @@ export default function SSWCase({ document, form, parties, transactionsHistory, 
                                     {
                                         <>
                                             {formParts}
+                                            <NoteSection />
                                             <FormErrors t={withdrawalTx} taskApiError={taskApiError}></FormErrors>
                                             <FormControls
                                                 document={document}

@@ -207,7 +207,7 @@ export const getServerSideProps = withPageAuthRequired({
         );
         try {
             const userInfoForLogging = getUserInfoFromUser(user);
-            const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging);
+            const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging, true);
             if (!policy) {
                 logInfo('contact-center/send-document/policy-not-found', { policyNumber, planCode, correlationId, page: resolvedUrl });
                 return {

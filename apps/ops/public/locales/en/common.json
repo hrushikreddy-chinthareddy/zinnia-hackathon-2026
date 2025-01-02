@@ -1966,7 +1966,22 @@
                 "signDate": "Signature date",
                 "signPresent": "Signature present",
                 "ssn": "SSN",
-                "title": "IRS data"
+                "title": "IRS data",
+                "isW4P": "Is State W4 form attached",
+                "name": "Name",
+                "address": "Address",
+                "city": "City",
+                "state": "State",
+                "zip": "Zip",
+                "maritalStatus": "Marital status",
+                "single": "Single",
+                "marriedFilingJointly": "Married filing jointly",
+                "marriedFilingSeparately": "Married filing separately",
+                "stateIncomeTax": "State income tax",
+                "doNotWithhold": "Do not withhold",
+                "numberofAllowance": "Number of allowances",
+                "signatureValidation": "Signature validation",
+                "Type": "type"
             },
             "OL4753Data": {
                 "isOL4753Attached": "Is OL4753 form attached",
@@ -4746,6 +4761,15 @@
             "subtitle": "Services are down, so we couldn't submit this transaction. You can try submitting again, if it's still not working ",
             "title": "Sorry, that didn't work"
         },
+        "completeCard": {
+            "helpDesk": {
+                "link": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
+                "text": "submit a help desk ticket"
+            },
+            "leaveTransaction": "Leave this transaction",
+            "subtitle": "We couldn't submit this transaction again as this transaction have already completed. For any further help ",
+            "title": "This transaction have already completed"
+        },
         "start": {
             "documentSelectionLabel": "Which document are you working from?",
             "documentNumber": "Document number: ",
@@ -4992,7 +5016,7 @@
             "noFormAvailable": "No form available."
         }
     },
-    "suitability": {
+    "suitabilityDataEntry": {
         "tabs": {
             "taskReview": "Input Suitability Data",
             "confirm": "Confirm",

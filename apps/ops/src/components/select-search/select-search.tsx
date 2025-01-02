@@ -30,6 +30,7 @@ interface SelectFieldProps {
     group?: boolean;
     value?: any;
     dropUp?: boolean;
+    sessionId?: string;
     userPartyId?: string;
 }
 
@@ -90,6 +91,7 @@ const SelectSearch = ({
     group,
     value,
     dropUp,
+    sessionId,
     userPartyId,
 }: SelectFieldProps) => {
     const [open, setOpen] = useState(false);
@@ -105,6 +107,7 @@ const SelectSearch = ({
         segmentAnalyticsTrackEvent<DropdownClickedEvent>(SegmentTrackedEventName.DropdownClicked, {
             dropdownName: 'Key Value Search',
             searchText: searchValue as string,
+            session_id: sessionId as string,
             userId: userPartyId as string,
         });
     };

@@ -30,6 +30,7 @@ export type WithdrawalDetails = {
 
 export interface WithdrawalSideSheetValues extends BaseTransactionSideSheetValues {
     actualWithdrawalAmount?: number;
+    disbursementType?: string;
     withdrawalDetails?: WithdrawalDetails[];
     taxWithholdings?: WithdrawalDetails[];
     withdrawalCharges?: WithdrawalDetails[];

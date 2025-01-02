@@ -531,13 +531,28 @@ export default function useMassMutualRmdConfig(t: TFunction) {
             },
         ],
     };
+    const w4pSignaturesConfig = [
+        {
+            component: SignatureFields.SignatureType,
+            key: 'w4p-owner-type',
+        },
+        {
+            component: SignatureFields.SignaturePresent,
+            key: 'w4p-signature-sign-present',
+        },
+        {
+            component: SignatureFields.SignatureDate,
+            key: 'w4p-signature-sign-date',
+        },
 
+    ];
     return {
         getSignaturesConfig,
         formPartyConfigs,
         formValidation: rmdformValidation,
         irsSignatureConfig,
         fundWithdrawnMethodOptions,
+        w4pSignaturesConfig,
         disbursementOptions,
         jointLifeExpectancyConfigs,
         signVerificationReasonConfig,

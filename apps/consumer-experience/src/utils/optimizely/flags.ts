@@ -5,4 +5,5 @@ export enum FEATURE_FLAGS {
   ANNUITY_MODE = 'annuity_mode',
   RESET_DELIVERY_DATE_ACTIVE = 'reset_delivery_date_active',
   VIEW_TAX_DOCUMENTS = 'view_tax_documents',
+  ADD_EDIT_DELETE_ADDRESS = 'add_edit_delete_address',
 }

@@ -678,7 +678,21 @@ export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) 
             { label: 'maritalStatusAllowanceItems.married', value: MaritalStatusAllowances.Married },
         ],
     };
+    const w4pSignaturesConfig = [
+        {
+            component: SignatureFields.SignatureType,
+            key: 'w4p-owner-type',
+        },
+        {
+            component: SignatureFields.SignaturePresent,
+            key: 'w4p-signature-sign-present',
+        },
+        {
+            component: SignatureFields.SignatureDate,
+            key: 'w4p-signature-sign-date',
+        },
 
+    ];
     return {
         cslnCheckStates,
         disbursementOptions,
@@ -692,6 +706,7 @@ export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) 
         signaturesConfig,
         selectOneOptions,
         fullWithdrawalOptions,
+        w4pSignaturesConfig,
         validateMaritalStatusAllowances,
         meritalStatusAllowanceConfig,
     };

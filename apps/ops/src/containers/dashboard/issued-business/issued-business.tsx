@@ -26,10 +26,18 @@ export interface CarrierListItem {
     [key: string]: string;
 }
 
-const timeFrameFilterOptions = ['trailing 12 months', 'last 6 months', 'last 90 days', 'last 60 days', 'last month'];
+export enum TimeframeFilterOptions {
+    Trailing12Months = 'trailing 12 months',
+    Last6Months = 'last 6 months',
+    Last90Days = 'last 90 days',
+    Last60Days = 'last 60 days',
+    LastMonth = 'last month',
+}
+
+const defaultDateFormat = 'YYYY-MM-DD';
 
 export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorizedCarriers }) => {
-    const [timeframe, setTimeframe] = useState<string>(timeFrameFilterOptions[0]);
+    const [timeframe, setTimeframe] = useState<TimeframeFilterOptions>(TimeframeFilterOptions.Trailing12Months);
     const [selectedSubprocess, setSelectedSubprocess] = useState<string>('');
     const [selectedProcessType] = useState<Processes>(Processes.NewBusiness);
     const [selectedException, setSelectedException] = useState<string | undefined>();
@@ -51,29 +59,18 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
     }, [authorizedCarriers, selectedBrokerDealers, selectedCarriers]);
 
     const handleTimeFrameChange = (value: string) => {
-        setTimeframe(value);
+        setTimeframe(value as TimeframeFilterOptions);
     };
 
     const createdDateStart = useMemo(() => {
-        let startDate = dayjs().subtract(1, 'year').format('YYYY-MM-DD');
-        switch (timeframe) {
-            case 'trailing 12 months':
-                startDate = dayjs().subtract(12, 'month').format('YYYY-MM-DD');
-                break;
-            case 'last 6 months':
-                startDate = dayjs().subtract(6, 'month').format('YYYY-MM-DD');
-                break;
-            case 'last 90 days':
-                startDate = dayjs().subtract(90, 'day').format('YYYY-MM-DD');
-                break;
-            case 'last 60 days':
-                startDate = dayjs().subtract(60, 'day').format('YYYY-MM-DD');
-                break;
-            case 'last month':
-                startDate = dayjs().subtract(1, 'month').format('YYYY-MM-DD');
-                break;
-        }
-        return startDate;
+        const startDates: Record<TimeframeFilterOptions, string> = {
+            [TimeframeFilterOptions.Trailing12Months]: dayjs().subtract(12, 'month').format(defaultDateFormat),
+            [TimeframeFilterOptions.Last6Months]: dayjs().subtract(6, 'month').format(defaultDateFormat),
+            [TimeframeFilterOptions.Last90Days]: dayjs().subtract(90, 'day').format(defaultDateFormat),
+            [TimeframeFilterOptions.Last60Days]: dayjs().subtract(60, 'day').format(defaultDateFormat),
+            [TimeframeFilterOptions.LastMonth]: dayjs().subtract(1, 'month').format(defaultDateFormat),
+        };
+        return startDates[timeframe];
     }, [timeframe]);
 
     const baseDashboardQueryFilter = useMemo(() => {
@@ -115,6 +112,12 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
         return baseFilter;
     }, [selectedBrokerDealers, selectedCarriers, selectedProcessType, selectedSubprocess, createdDateStart]);
 
+    const timeframeOptions = Object.values(TimeframeFilterOptions).map(option => ({
+        label: toTitleCase(option),
+        value: option,
+        displayText: toTitleCase(option),
+    }));
+
     return (
         <CardContainer
             classNames="relative !p-0 flex flex-col flex-1 !border-none"
@@ -122,15 +125,7 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
         >
             <div className=" bg-white p-8 mb-8 flex flex-col gap-4 rounded">
                 <div className="w-52">
-                    <Select
-                        options={timeFrameFilterOptions.map(option => ({
-                            label: toTitleCase(option),
-                            value: option,
-                            displayText: toTitleCase(option),
-                        }))}
-                        value={timeframe}
-                        onChange={handleTimeFrameChange}
-                    />
+                    <Select options={timeframeOptions} value={timeframe} onChange={handleTimeFrameChange} />
                 </div>
                 <Typography className="py-4" variant={TypographyVariant.H2}>
                     Top Processes by Volume
@@ -190,6 +185,7 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
             <div className="mb-10 lg:px-8">
                 {selectedSubprocess && (
                     <CaseTimeseries
+                        timeframe={timeframe}
                         selectedSubprocess={selectedSubprocess}
                         legendLabel={splitAndSentenceCase(carrierOrBrokerDealer)}
                         groupByOptions={[carrierOrBrokerDealer, GroupByOptions.UpdatedAt]}
@@ -208,6 +204,7 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
             <div className="mb-10 lg:px-8">
                 {selectedSubprocess && (
                     <CaseTimeseries
+                        timeframe={timeframe}
                         selectedSubprocess={selectedSubprocess}
                         legendLabel={splitAndSentenceCase(GroupByOptions.ProductName)}
                         groupByOptions={[GroupByOptions.ProductName, GroupByOptions.UpdatedAt]}

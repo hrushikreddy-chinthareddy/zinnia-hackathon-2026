@@ -1,9 +1,11 @@
+import { TransactionType } from '@zinnia/api-types/types/sor';
 import { IconType } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { CardInsertHistory } from '@/components/card-list-history/CardInsertHistory';
 import { CardListHistory } from '@/components/card-list-history/CardListHistory';
+import { RequestedAppliedAmount } from '@/components/card-list-history/RequestedAppliedAmount';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { AccountNumber } from '@/components/pii/AccountNumber';
@@ -14,6 +16,15 @@ import { PolicyRequestInputs } from '@/types/policy';
 import { formatBankAccountTypeText } from '@/utils/data';
 import { sortByDate } from '@/utils/dates';
 import { toSentenceCase } from '@/utils/strings';
+
+const displayWithRequested = [
+  TransactionType.PAYMENT_INITIAL_PREMIUM,
+  TransactionType.INITIAL_PREMIUM,
+  TransactionType.PAYMENT_ONE_TIME_PREMIUM,
+  TransactionType.ONE_TIME_PREMIUM,
+  TransactionType.SUBSEQUENT_PAYMENT,
+  TransactionType.SUBSEQUENT_PREMIUM,
+];
 
 const pageTitle = getPageTitle(RouteKey.PREMIUM_HISTORY);
 // disable because NextJS needs this to be exported from this file
@@ -58,7 +69,11 @@ export default async function PaymentHistory({ params }: Props) {
           isPending
           key={index}
           date={item.date}
-          amount={item.amount}
+          amount={
+            <RequestedAppliedAmount
+              requestedAmount={item.amount?.paymentAmount}
+            />
+          }
           title={item.title}
           subtitle={
             <>
@@ -87,11 +102,27 @@ export default async function PaymentHistory({ params }: Props) {
   };
   const completedPayments = () => {
     return completedTransactions.map((item, index) => {
+      let amount = (
+        <RequestedAppliedAmount appliedAmount={item.amount?.paymentAmount} />
+      );
+
+      if (
+        item.type &&
+        displayWithRequested.includes(item.type as TransactionType)
+      ) {
+        amount = (
+          <RequestedAppliedAmount
+            appliedAmount={item.amount?.appliedAmount}
+            requestedAmount={item.amount?.requestedAmount}
+          />
+        );
+      }
+
       return (
         <CardInsertHistory
           key={index}
           date={item.date}
-          amount={item.amount}
+          amount={amount}
           title={item.title}
           subtitle={
             <>

@@ -35,6 +35,7 @@ import createCaseFromDocumentNumber from '@deps/operations/cases/caseOperations'
 import { fetchDocument } from '@deps/operations/documents/documentOperations';
 import { ReactComponent as ProgressIcon } from '@deps/styles/elements/icons/illustrations/check-progress.svg';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
+import { browserLogInfo } from '@deps/utils/browser-logging';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
@@ -211,10 +212,26 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
         setDocument(document);
 
         if ((shouldShowNewExperience && caseType !== CaseType.Renewal) && document.contract) {
+            browserLogInfo('create-case::Document contract is present', {
+                caseType,
+                docType,
+                clientId,
+                documentNumber,
+                policyNumber: document.contract
+            });
             setShowLoader(false);
             setPolicyNumber(document.contract);
+            setCaseId('');
         } else {
+            browserLogInfo('create-case::Document contract is not present', {
+                caseType,
+                docType,
+                clientId,
+                documentNumber,
+                policyNumber: document.contract
+            });
             setPolicyNumber('');
+            setCaseId('');
             const caseResult = await createCaseFromDocumentNumber(
                 document.documentNumber,
                 document.caseId,
@@ -224,7 +241,7 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
             );
 
             if (!caseResult.success) {
-                console.error('createDocument:: No case id from createCase', {
+                browserLogInfo('create-case:: No case id from createCase', {
                     documentNumber: document.documentNumber,
                     caseType,
                     clientId,
@@ -234,6 +251,16 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
                 return;
             }
             const caseData = caseResult.value;
+
+            browserLogInfo('create-case::Case is created', {
+                caseType,
+                docType,
+                clientId,
+                documentNumber,
+                policyNumber: document.contract,
+                caseId: caseData.id
+            });
+
             if (caseType === CaseType.Reg60) {
                 setCaseId(caseData.id);
                 setPolicyNumber(caseData.policyNumber);

@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import ButtonGrp from '@deps/components/button-group/button-group';
 import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
 import FieldDateSelect, { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/field-date-select';
-import { FormValidationErrors, MaritalStatus, Party, PartyRoles } from '@deps/models/case/withdrawal/case';
+import { FormValidationErrors, MaritalStatus, maritalStatusType, Party, PartyRoles } from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { IFieldConfig, selectVarientByConfig } from './form-party';
@@ -51,7 +51,7 @@ export function usePartyFields(party: Party, formErrors?: FormValidationErrors) 
             taxId,
             email,
             dob: dob ? { text: dob && dayjs(dob, DATE_PICKER_FORMAT).format(ZAHARA_API_DATE_FORMAT) } : { text: null },
-            maritalStatus: { text: maritalStatus as MaritalStatus },
+            maritalStatus: { text: maritalStatus as maritalStatusType },
         });
     }, [firstName, middleName, lastName, taxId, email, dob]);
 
@@ -61,7 +61,7 @@ export function usePartyFields(party: Party, formErrors?: FormValidationErrors) 
         { label: t(`maritalStatus.widowed`), value: MaritalStatus.Widowed },
     ];
 
-    const firstNameField = ({label, isFormStateReadOnly}: IFieldConfig) => (
+    const firstNameField = ({ label, isFormStateReadOnly }: IFieldConfig) => (
         <Field
             label={label || (t(`firstName`) as string)}
             message={formErrors?.name}
@@ -69,11 +69,11 @@ export function usePartyFields(party: Party, formErrors?: FormValidationErrors) 
             size={FieldSize.Small}
             type={FieldType.BaseActive}
             value={firstName}
-            variant={selectVarientByConfig({ value: firstName, isFormStateReadOnly, error: formErrors?.name})}
+            variant={selectVarientByConfig({ value: firstName, isFormStateReadOnly, error: formErrors?.name })}
         />
     );
 
-    const middleNameField = ({label, isFormStateReadOnly}: IFieldConfig) => (
+    const middleNameField = ({ label, isFormStateReadOnly }: IFieldConfig) => (
         <Field
             className={formErrors?.name && 'border-2 border-solid border-semantic-error'}
             label={label || (t(`middleName`) as string)}
@@ -86,7 +86,7 @@ export function usePartyFields(party: Party, formErrors?: FormValidationErrors) 
         />
     );
 
-    const lastNameField = ({label, isFormStateReadOnly}: IFieldConfig) => (
+    const lastNameField = ({ label, isFormStateReadOnly }: IFieldConfig) => (
         <Field
             className={formErrors?.name && 'border-2 border-solid border-semantic-error'}
             label={label || (t(`lastName`) as string)}
@@ -98,7 +98,7 @@ export function usePartyFields(party: Party, formErrors?: FormValidationErrors) 
         />
     );
 
-    const emailField = ({label, isFormStateReadOnly}: IFieldConfig) => (
+    const emailField = ({ label, isFormStateReadOnly }: IFieldConfig) => (
         <Field
             className={formErrors?.email && 'border-2 border-solid border-semantic-error'}
             label={label || (t(`email`) as string)}
@@ -106,12 +106,12 @@ export function usePartyFields(party: Party, formErrors?: FormValidationErrors) 
             size={FieldSize.Small}
             type={FieldType.BaseActive}
             value={email}
-            variant={selectVarientByConfig({ value: email, isFormStateReadOnly, error: formErrors?.email})}
+            variant={selectVarientByConfig({ value: email, isFormStateReadOnly, error: formErrors?.email })}
 
         />
     );
 
-    const maritalStatusField = ({label}: IFieldConfig) => (
+    const maritalStatusField = ({ label }: IFieldConfig) => (
         <ButtonGrp
             activeValue={maritalStatus}
             groupLabel={label || t(`maritalStatus.title`)}
@@ -120,7 +120,7 @@ export function usePartyFields(party: Party, formErrors?: FormValidationErrors) 
         />
     );
 
-    const dobField = ({label, isFormStateReadOnly}: IFieldConfig) => (
+    const dobField = ({ label, isFormStateReadOnly }: IFieldConfig) => (
         <FieldDateSelect
             className={formErrors?.dob && 'border-2 border-solid border-semantic-error'}
             label={label || (t(`dob`) as string)}
@@ -133,7 +133,7 @@ export function usePartyFields(party: Party, formErrors?: FormValidationErrors) 
         />
     );
 
-    const taxIdField = ({label, isFormStateReadOnly}: IFieldConfig) => (
+    const taxIdField = ({ label, isFormStateReadOnly }: IFieldConfig) => (
         <Field
             className="max-w-lg"
             formatOptions={ssnFormat}
@@ -143,7 +143,7 @@ export function usePartyFields(party: Party, formErrors?: FormValidationErrors) 
             size={FieldSize.Small}
             type={FieldType.BaseActive}
             value={taxId}
-            variant={selectVarientByConfig({ value: taxId, isFormStateReadOnly, error: formErrors?.ssn})}
+            variant={selectVarientByConfig({ value: taxId, isFormStateReadOnly, error: formErrors?.ssn })}
 
         />
     );
