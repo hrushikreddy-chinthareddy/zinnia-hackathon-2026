@@ -118,6 +118,20 @@ export const FormProvider = ({
         setContractIssueState(issueState);
     }, [issueState]);
 
+    useEffect(() => {
+        if (Array.isArray(formIrsData)) {
+            const updatedFormIrsData = formIrsData.map((data) => {
+                if (!Array.isArray(data.irsTaxWithholding)) {
+                    return {
+                        ...data,
+                        irsTaxWithholding: data.irsTaxWithholding ? [data.irsTaxWithholding] : [],
+                    };
+                }
+                return data;
+            });
+            setFormIrsData(updatedFormIrsData);
+        }
+    }, [formIrsData]);
     return (
         <FormDataContext.Provider
             value={{
