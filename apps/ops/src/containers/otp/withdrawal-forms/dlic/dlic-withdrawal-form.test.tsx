@@ -115,7 +115,7 @@ describe('DLIC Form Specific component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: null as maritalStatusType | null,
+                            text: "" as maritalStatusType | null,
                         },
                         addresses: [
                             {
