@@ -1,7 +1,7 @@
-import wellabeSuitabilitySchema from '@deps/mock-service/carrier/wellabe/suitability/suitability-schema.json';
-import wellabeSuitabilityData from '@deps/mock-service/carrier/wellabe/suitability/suitability.json';
-import wellabeSuitabilityReviewSchema from '@deps/mock-service/carrier/wellabe/suitability-review/suitability-review-schema.json';
-import wellabeSuitabilityReviewData from '@deps/mock-service/carrier/wellabe/suitability-review/suitability-review.json';
+import wellabeSuitabilitySchema from '@deps/jsonschema-mock-service/carrier/wellabe/suitability/suitability-schema.json';
+import wellabeSuitabilityData from '@deps/jsonschema-mock-service/carrier/wellabe/suitability/suitability.json';
+import wellabeSuitabilityReviewSchema from '@deps/jsonschema-mock-service/carrier/wellabe/suitability-review/suitability-review-schema.json';
+import wellabeSuitabilityReviewData from '@deps/jsonschema-mock-service/carrier/wellabe/suitability-review/suitability-review.json';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 

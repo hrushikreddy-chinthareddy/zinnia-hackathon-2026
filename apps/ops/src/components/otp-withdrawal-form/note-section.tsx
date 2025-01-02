@@ -4,6 +4,8 @@ import React, { useContext } from 'react';
 
 import CardContainer from '@deps/containers/card-container/card-container';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import FormSchema from '@deps/jsonschema-mock-service/process-automation/note-section/form-schema.json';
+import UiSchema from '@deps/jsonschema-mock-service/process-automation/note-section/ui-schema.json';
 
 import DynamicForm from '../dynamic-form/dynamic-form';
 const noop = (() => {}) as React.Dispatch<React.SetStateAction<any>>;
@@ -24,63 +26,13 @@ const NoteSection = React.forwardRef(function NoteSectionComponent() {
         }));
     };
 
-    const formSchema: RJSFSchema = {
-        title: 'Comment',
-        type: 'object',
-        required: [],
-        properties: {
-            options: {
-                type: 'string',
-                title: 'Comment',
-                default: 'REPLACEMENT PAPERWORK',
-                oneOf: [
-                    {
-                        const: 'LOA',
-                        title: 'LOA',
-                    },
-                    {
-                        const: 'REPLACEMENT PAPERWORK',
-                        title: 'REPLACEMENT PAPERWORK',
-                    },
-                    {
-                        const: 'VOIDED CHECK/BANK LETTERHEAD',
-                        title: 'VOIDED CHECK/BANK LETTERHEAD',
-                    },
-                    {
-                        const: 'TRUST/NNO PAPERWORK',
-                        title: 'TRUST/NNO PAPERWORK',
-                    },
-                    {
-                        const: 'POA PAPERWORK',
-                        title: 'POA PAPERWORK',
-                    },
-                    {
-                        const: 'OTHER',
-                        title: 'OTHER',
-                    },
-                ],
-            },
-            comment: { type: 'string', title: 'Description', default: '' },
-        },
-    };
-
     return (
         <CardContainer classNames={'w-full'} containerClassNames="w-full content-divider">
             <DynamicForm
                 formData={formData}
                 taskMetadata={{
-                    formSchema,
-                    uiSchema: {
-                        'ui:submitButtonOptions': {
-                            norender: true,
-                        },
-                        options: {
-                            'ui:label': false,
-                        },
-                        comment: {
-                            'ui:label': false,
-                        },
-                    },
+                    formSchema: FormSchema as RJSFSchema,
+                    uiSchema: UiSchema,
                 }}
                 onChange={handleChange}
                 onSubmit={noop}
