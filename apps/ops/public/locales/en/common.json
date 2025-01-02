@@ -1976,12 +1976,12 @@
                 "zip": "Zip",
                 "maritalStatus": "Marital status",
                 "single": "Single",
-                "marriedFilingJointly": "Married Filing Jointly",
-                "marriedFilingSeparately": "Married Filing Separately",
-                "stateIncomeTax": "State Income Tax",
-                "doNotWithhold": "Do Not Withhold",
-                "numberofAllowance": "Number of Allowance",
-                "signatureValidation": "Signature Validation",
+                "marriedFilingJointly": "Married filing jointly",
+                "marriedFilingSeparately": "Married filing separately",
+                "stateIncomeTax": "State income tax",
+                "doNotWithhold": "Do not withhold",
+                "numberofAllowance": "Number of allowances",
+                "signatureValidation": "Signature validation",
                 "Type": "type"
             },
             "OL4753Data": {

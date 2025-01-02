@@ -1,6 +1,5 @@
 import '@testing-library/jest-dom';
 import { fireEvent, render, renderHook, screen } from '@testing-library/react';
-import React from 'react';
 
 import getFlicOftConfig from '@deps/containers/otp/oft-forms/flic/flic-oft-form.helper';
 import useDlicConfig from '@deps/containers/otp/withdrawal-forms/dlic/dlic-withdrawal-form-helper';
@@ -8,7 +7,7 @@ import getFlicConfig from '@deps/containers/otp/withdrawal-forms/flic-withdrawal
 import getSbgcConfig from '@deps/containers/otp/withdrawal-forms/sbgc-withdrawal-form.helper';
 import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
-import { AddressTypes, MaritalStatus, PartyRoles, PhoneTypes } from '@deps/models/case/withdrawal/case';
+import { AddressTypes, maritalStatusType, PartyRoles, PhoneTypes } from '@deps/models/case/withdrawal/case';
 import { CaseDetails } from '@deps/models/case/withdrawal/case-data';
 
 import FormParties from './form-party';
@@ -131,7 +130,7 @@ describe('Formparty component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: '' as MaritalStatus,
+                            text: '' as maritalStatusType,
                         },
                         addresses: [
                             {
@@ -218,7 +217,7 @@ describe('Formparty component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: '' as MaritalStatus,
+                            text: "" as maritalStatusType,
                         },
                         addresses: [
                             {
@@ -375,7 +374,7 @@ describe('Formparty component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: '' as MaritalStatus,
+                            text: "" as maritalStatusType,
                         },
                         addresses: [
                             {
@@ -461,7 +460,7 @@ describe('Formparty component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: '' as MaritalStatus,
+                            text: "" as maritalStatusType,
                         },
                         addresses: [
                             {
@@ -566,7 +565,7 @@ describe('Formparty component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: '' as MaritalStatus,
+                            text: "" as maritalStatusType,
                         },
                         addresses: [
                             {
@@ -682,7 +681,7 @@ describe('Formparty component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: '' as MaritalStatus,
+                            text: "" as maritalStatusType,
                         },
                         addresses: [
                             {
@@ -793,7 +792,7 @@ describe('Formparty component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: '' as MaritalStatus,
+                            text: "" as maritalStatusType,
                         },
                         addresses: [
                             {

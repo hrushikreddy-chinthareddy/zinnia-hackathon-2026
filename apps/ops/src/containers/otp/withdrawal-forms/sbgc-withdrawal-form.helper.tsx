@@ -622,6 +622,7 @@ export default function getSbgcConfig(t: TFunction) {
         },
     ]
 
+
     return {
         formPartyConfigs,
         formValidation,
