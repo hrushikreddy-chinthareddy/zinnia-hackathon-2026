@@ -690,22 +690,20 @@ export default function useDlicConfig(t: TFunction) {
 
     const cslnCheckStates = ['CA', 'CO', 'TX'];
     const w4pSignaturesConfig = [
-
         {
             component: SignatureFields.SignatureType,
-            key: 'owner-type',
+            key: 'w4p-owner-type',
         },
         {
             component: SignatureFields.SignaturePresent,
-            key: 'owner-sign-present',
+            key: 'w4p-signature-sign-present',
         },
-
         {
             component: SignatureFields.SignatureDate,
-            key: 'owner-date',
+            key: 'w4p-signature-sign-date',
         },
-    ]
 
+    ];
     return {
         disbursementOptions,
         formPartyConfigs,

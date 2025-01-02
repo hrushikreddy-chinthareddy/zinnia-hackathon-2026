@@ -533,6 +533,10 @@ export default function useMassMutualRmdConfig(t: TFunction) {
     };
     const w4pSignaturesConfig = [
         {
+            component: SignatureFields.SignatureType,
+            key: 'w4p-owner-type',
+        },
+        {
             component: SignatureFields.SignaturePresent,
             key: 'w4p-signature-sign-present',
         },
@@ -540,10 +544,7 @@ export default function useMassMutualRmdConfig(t: TFunction) {
             component: SignatureFields.SignatureDate,
             key: 'w4p-signature-sign-date',
         },
-        {
-            component: SignatureFields.SignatureType,
-            key: 'w4p-owner-type',
-        }
+
     ];
     return {
         getSignaturesConfig,

@@ -42,7 +42,7 @@ export default function IrsWithholding({ signatureFields, isFormStateReadOnly }:
             irsSpecified: amount ? true : false,
             formParty: { ...owner, taxId: taxId } as Party,
             irsSignature: signature,
-            irsTaxWithholding: [{
+            irsTaxWithholding: amount ? [{
                 place: {
                     text: TaxWithholdingPlace.Federal,
                 },
@@ -63,7 +63,7 @@ export default function IrsWithholding({ signatureFields, isFormStateReadOnly }:
                 exemption: {
                     text: null,
                 },
-            }],
+            }] : [],
         };
         // setting formIRSData only if isIrsChecked checkbox checked
         const index = formIrsData?.findIndex(data => data?.irsFormType === 'W4R');
