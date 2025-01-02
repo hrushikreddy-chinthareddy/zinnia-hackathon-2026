@@ -1,5 +1,4 @@
 .tableBody td {
-    max-width: 240px;
     white-space: nowrap;
     &,
     button {
@@ -10,4 +9,9 @@
     & button {
         max-width: 100%;
     }
+}
+
+.noResults:before {
+    /* hides the shadow for sticky scrolling since this cell is full width */
+    content: none !important;
 }
