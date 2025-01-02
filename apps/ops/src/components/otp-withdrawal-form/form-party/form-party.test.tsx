@@ -7,7 +7,7 @@ import getFlicConfig from '@deps/containers/otp/withdrawal-forms/flic-withdrawal
 import getSbgcConfig from '@deps/containers/otp/withdrawal-forms/sbgc-withdrawal-form.helper';
 import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
-import { AddressTypes, MaritalStatus, maritalStatusType, PartyRoles, PhoneTypes } from '@deps/models/case/withdrawal/case';
+import { AddressTypes, maritalStatusType, PartyRoles, PhoneTypes } from '@deps/models/case/withdrawal/case';
 import { CaseDetails } from '@deps/models/case/withdrawal/case-data';
 
 import FormParties from './form-party';
@@ -130,7 +130,7 @@ describe('Formparty component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: '' as MaritalStatus,
+                            text: null as maritalStatusType | null,
                         },
                         addresses: [
                             {
@@ -217,7 +217,7 @@ describe('Formparty component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: '' as MaritalStatus,
+                            text: null as maritalStatusType | null,
                         },
                         addresses: [
                             {
@@ -374,7 +374,7 @@ describe('Formparty component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: '' as MaritalStatus,
+                            text: null as maritalStatusType | null,
                         },
                         addresses: [
                             {
@@ -460,7 +460,7 @@ describe('Formparty component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: '' as MaritalStatus,
+                            text: null as maritalStatusType | null,
                         },
                         addresses: [
                             {
@@ -565,7 +565,7 @@ describe('Formparty component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: '' as maritalStatusType,
+                            text: null as maritalStatusType | null,
                         },
                         addresses: [
                             {
@@ -681,7 +681,7 @@ describe('Formparty component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: '' as MaritalStatus,
+                            text: null as maritalStatusType | null,
                         },
                         addresses: [
                             {
@@ -792,7 +792,7 @@ describe('Formparty component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: '' as MaritalStatus,
+                            text: null as maritalStatusType | null,
                         },
                         addresses: [
                             {
