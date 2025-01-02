@@ -1,7 +1,6 @@
 import { TFunction } from 'next-i18next';
 
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
-import { BankDetailsInputMethod } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement-parts/autofill-account-toggle';
 import {
   BankingFields,
   DisbursementFields,
@@ -33,18 +32,17 @@ import {
   ProcessRequestType,
   Program,
   FormDisbursement,
-  AccountType
+  AccountType,
+  FundWithdrawnMethod
 } from '@deps/models/case/withdrawal/case';
 import {
   DEFAULT_BANK_DETAILS,
   DEFAULT_DISBURSEMENT_UPDATE,
   DisbursementParts,
   PaymentMethodOption,
-  FormDisbursementSelections,
-  DisbursementToggleType,
+  FormDisbursementSelections
 } from '@deps/models/case/withdrawal/disbursement-types';
 
-import { createValidator } from '../../utils/helper-utils';
 import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helper';
 import { commonOftFormValidation, getQualTypeOptions } from '../oft-form-helper';
 
@@ -278,8 +276,8 @@ export default function getFlicOftConfig(t: TFunction) {
       },
     },
     {
-      label: t('amountDetails.programTypes.penaltyFreeAmount'),
-      value: ProgramType.PenaltyFreeAmount,
+      label: t('amountDetails.programTypes.totalFreeAmt'),
+      value: ProgramType.TotalFreeAmt,
       generatePayloadFromSelection: () => {
         return {
           ...getDefaultFormProgramValues(),
@@ -316,28 +314,6 @@ export default function getFlicOftConfig(t: TFunction) {
     {
       label: t('distributionMethod.eft'),
       value: FormDisbursementSelections.EFT,
-      additionalOptions: {
-        disbursementToggleType: DisbursementToggleType.AutoFillInfoToggle,
-        toggleOptions: [
-          {
-            label: t('distributionMethod.forethought'),
-            value: BankDetailsInputMethod.Auto,
-          },
-          {
-            label: t('distributionMethod.other'),
-            value: BankDetailsInputMethod.Manual,
-          },
-        ],
-        defaultPrefillMethod: BankDetailsInputMethod.Auto,
-        prefillBankData: {
-          ...DEFAULT_DISBURSEMENT_UPDATE,
-          payeeName: 'FORETHOUGHT LIFE INS RECEIPT ACCOUNT',
-          accountNumber: '4941021958',
-          bankName: 'Wells Fargo Bank, N.A',
-          bankRoutingNumber: '121000248',
-          accountType: AccountType.Checking,
-        },
-      },
       fields: [
         {
           fieldName: BankingFields.AccountType,
@@ -348,87 +324,33 @@ export default function getFlicOftConfig(t: TFunction) {
           isBankingField: true,
         },
         {
-          fieldName: BankingFields.PayeeName,
-          fieldLabel: t('distributionMethod.payeeName'),
-          component: DisbursementFields.BankTextField,
-          classNames: 'col-start-1',
-          maxLength: 40,
-          isBankingField: true,
-        },
-        {
           fieldName: BankingFields.AccountNumber,
           fieldLabel: t('distributionMethod.accountNumber'),
           component: DisbursementFields.BankTextField,
           maskOnBlur: true,
           disableCopyPaste: true,
           isBankingField: true,
-          classNames: 'col-start-1',
         },
         {
-          fieldName: BankingFields.ReEnterAccountNumber,
-          fieldLabel: t('distributionMethod.reEnterAccountNumber'),
+          fieldName: BankingFields.BankName,
+          fieldLabel: t('distributionMethod.bankName'),
           component: DisbursementFields.BankTextField,
-          classNames: 'col-start-2',
-          isBankingField: true,
-          disableCopyPaste: true,
-          validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
         },
+
         {
           fieldName: BankingFields.BankRoutingNumber,
           fieldLabel: t('distributionMethod.bankRoutingNumber'),
           component: DisbursementFields.BankTextField,
           maskOnBlur: true,
           disableCopyPaste: true,
-          classNames: 'col-start-1',
           isBankingField: true,
         },
-        {
-          fieldName: BankingFields.ReEnterBankRoutingNumber,
-          fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
-          component: DisbursementFields.BankTextField,
-          isBankingField: true,
-          disableCopyPaste: true,
-          validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
-        },
-        {
-          fieldName: BankingFields.BankName,
-          fieldLabel: t('distributionMethod.bankName'),
-          component: DisbursementFields.BankTextField,
-          classNames: 'col-start-1',
-        },
+
         {
           fieldName: BankingFields.BankFurtherCreditName,
           fieldLabel: t('distributionMethod.bankFurtherCreditName'),
           component: DisbursementFields.BankTextField,
-        },
-        {
-          fieldName: BankingFields.BankFurtherCreditAccount,
-          fieldLabel: t('distributionMethod.bankFurtherCreditAccount'),
-          component: DisbursementFields.BankTextField,
-        },
-        {
-          fieldName: BankingFields.FboDetails,
-          fieldLabel: t('distributionMethod.fboDetails'),
-          component: DisbursementFields.BankTextField,
-          maxLength: 35,
-        },
-        {
-          fieldName: BankingFields.ContractNumber,
-          fieldLabel: t('distributionMethod.contractNumber'),
-          component: DisbursementFields.BankTextField,
-          maxLength: 35,
-          tooltip: {
-            shouldDisplay: true,
-            title: t('distributionMethod.contractLabelPopoverTitle') as string,
-            body: t('distributionMethod.contractLabelPopoverMessage') as string,
-          },
-        },
-        {
-          fieldName: BankingFields.Address,
-          fieldLabel: '',
-          component: DisbursementFields.BankAddress,
-          classNames: 'col-span-3',
-        },
+        }
       ],
       getDefaultPayload({ paymentMethod, bank, payee }: FormDisbursement) {
         if (paymentMethod.text !== PaymentMethod.EFT) {
@@ -494,6 +416,119 @@ export default function getFlicOftConfig(t: TFunction) {
       },
     },
     {
+      label: t('distributionMethod.wire'),
+      value: FormDisbursementSelections.Wire,
+      fields: [
+        {
+          fieldName: BankingFields.AccountType,
+          fieldLabel: t('distributionMethod.accountType'),
+          component: DisbursementFields.AccountTypes,
+          classNames: 'col-span-1 ',
+        },
+        {
+          fieldName: BankingFields.AccountNumber,
+          fieldLabel: t('distributionMethod.accountNumber'),
+          component: DisbursementFields.BankTextField,
+          maskOnBlur: true,
+          classNames: 'col-start-1',
+          disableCopyPaste: true,
+        },
+        {
+          fieldName: BankingFields.BankName,
+          fieldLabel: t('distributionMethod.bankName'),
+          component: DisbursementFields.BankTextField
+        },
+        {
+          fieldName: BankingFields.BankRoutingNumber,
+          fieldLabel: t('distributionMethod.bankRoutingNumber'),
+          component: DisbursementFields.BankTextField,
+          maskOnBlur: true,
+          classNames: 'col-start-1',
+          disableCopyPaste: true,
+        },
+        {
+          fieldName: BankingFields.BankFurtherCreditName,
+          fieldLabel: t('distributionMethod.bankFurtherCreditName'),
+          component: DisbursementFields.BankTextField,
+        },
+        {
+          fieldName: BankingFields.BankFurtherCreditAccount,
+          fieldLabel: t('distributionMethod.bankFurtherCreditAccount'),
+          component: DisbursementFields.BankTextField,
+        },
+        {
+          fieldName: BankingFields.FboDetails,
+          fieldLabel: t('distributionMethod.fboDetails'),
+          component: DisbursementFields.BankTextField,
+          maxLength: 35,
+          classNames: 'col-start-1',
+        }
+      ],
+      getDefaultPayload({ paymentMethod, bank, payee }: FormDisbursement) {
+        if (paymentMethod.text !== PaymentMethod.Wire) {
+          return DEFAULT_DISBURSEMENT_UPDATE;
+        }
+        const selectedBank = bank[0];
+        return {
+          ...DEFAULT_DISBURSEMENT_UPDATE,
+          accountHolder: selectedBank.nameOnBankAccount ?? '',
+          accountNumber: selectedBank.accountNumber ?? '',
+          accountType: selectedBank.accountType?.text ?? AccountType.Checking,
+          bankName: selectedBank.bankName ?? '',
+          bankRoutingNumber: selectedBank.routingNumber ?? '',
+          bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
+          bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
+          payeeName: payee?.name?.text ?? '',
+          fboDetails: payee?.fboDetails?.text || '',
+          contractNumber: payee?.contractNumber.text ?? '',
+          address: payee?.addresses?.[0] ?? DEFAULT_ADDRESS,
+        };
+      },
+      generatePayloadFromSelection: ({
+        payeeName,
+        accountNumber,
+        accountType,
+        bankName,
+        bankRoutingNumber,
+        bankFurtherCreditAccount,
+        bankFurtherCreditName,
+        accountHolder,
+        reEnterAccountNumber,
+        reEnterBankRoutingNumber,
+        fboDetails,
+        contractNumber,
+        address,
+      }: DisbursementParts) => {
+        return {
+          ...getDefaultFormDisbursementValues(),
+          paymentMethod: { text: PaymentMethod.Wire },
+          paymentMailType: { text: null },
+          bank: [
+            {
+              ...DEFAULT_BANK_DETAILS,
+              accountNumber,
+              accountType: {
+                text: accountType,
+              },
+              bankName,
+              nameOnBankAccount: accountHolder ?? '',
+              routingNumber: bankRoutingNumber,
+              bankFurtherCreditAccount,
+              bankFurtherCreditName,
+              reEnterAccountNumber,
+              reEnterBankRoutingNumber,
+            },
+          ],
+          payee: {
+            name: { text: payeeName ?? null },
+            fboDetails: { text: fboDetails ?? null },
+            addresses: [address || DEFAULT_ADDRESS],
+            contractNumber: { text: contractNumber ?? null },
+          },
+        };
+      },
+    },
+    {
       label: t('distributionMethod.sendCheck'),
       value: FormDisbursementSelections.Check,
       fields: [
@@ -505,16 +540,15 @@ export default function getFlicOftConfig(t: TFunction) {
           maxLength: 40,
         },
         {
-          fieldName: BankingFields.FboDetails,
-          fieldLabel: t('distributionMethod.fboDetails'),
-          component: DisbursementFields.BankTextField,
-          maxLength: 35,
-        },
-        {
           fieldName: BankingFields.ContractNumber,
           fieldLabel: t('distributionMethod.contractNumber'),
           component: DisbursementFields.BankTextField,
           maxLength: 35,
+          tooltip: {
+            shouldDisplay: true,
+            title: t('distributionMethod.contractLabelPopoverTitle') as string,
+            body: t('distributionMethod.contractLabelPopoverMessage') as string,
+          },
         },
         {
           fieldName: BankingFields.Address,
@@ -558,12 +592,6 @@ export default function getFlicOftConfig(t: TFunction) {
           component: DisbursementFields.BankTextField,
           classNames: 'col-start-1',
           maxLength: 40,
-        },
-        {
-          fieldName: BankingFields.FboDetails,
-          fieldLabel: t('distributionMethod.fboDetails'),
-          component: DisbursementFields.BankTextField,
-          maxLength: 35,
         },
         {
           fieldName: BankingFields.ContractNumber,
@@ -632,56 +660,7 @@ export default function getFlicOftConfig(t: TFunction) {
           },
         };
       },
-    },
-    {
-      label: t('distributionMethod.dtcc'),
-      value: FormDisbursementSelections.DTCC,
-      fields: [
-        {
-          fieldName: BankingFields.PayeeName,
-          fieldLabel: t('distributionMethod.payeeName'),
-          component: DisbursementFields.BankTextField,
-          classNames: 'col-start-1',
-          maxLength: 40,
-        },
-        {
-          fieldName: BankingFields.ParticipantId,
-          fieldLabel: t('distributionMethod.participantId'),
-          component: DisbursementFields.SelectParticipantId,
-        },
-        {
-          fieldName: BankingFields.ContractNumber,
-          fieldLabel: t('distributionMethod.onlyContractNumber'),
-          component: DisbursementFields.BankTextField,
-          maxLength: 30,
-        },
-      ],
-      getDefaultPayload({ paymentMethod, payee, participantId, bank }: FormDisbursement) {
-        if (paymentMethod.text !== FormDisbursementSelections.DTCC) {
-          return DEFAULT_DISBURSEMENT_UPDATE;
-        }
-        return {
-          ...DEFAULT_DISBURSEMENT_UPDATE,
-          payeeName: payee?.name.text ?? '',
-          address: payee?.addresses?.[0] ?? DEFAULT_ADDRESS,
-          contractNumber: bank?.[0]?.accountNumber ?? '',
-          participantId: participantId?.text ?? '',
-        };
-      },
-      generatePayloadFromSelection: ({ payeeName, participantId, contractNumber }: DisbursementParts) => {
-        return {
-          ...getDefaultFormDisbursementValues(),
-          paymentMethod: { text: PaymentMethod.DTCC },
-          participantId: { text: participantId ?? null },
-          payee: {
-            name: { text: payeeName ?? null },
-            addresses: [],
-            contractNumber: { text: null },
-          },
-          bank: [{ ...DEFAULT_BANK_DETAILS, accountNumber: contractNumber ?? '' }],
-        };
-      },
-    },
+    }
   ];
 
   const selectOneOptions: SelectOneOption[] = [
@@ -697,6 +676,11 @@ export default function getFlicOftConfig(t: TFunction) {
     disbursementOption: FormDisbursementSelections.DTCC,
   };
 
+
+  const fundWithdrawnMethodOptions = [
+    { label: t('distributionInstruction.prorata'), value: FundWithdrawnMethod.Default },
+    { label: t('distributionInstruction.specifyFunds'), value: FundWithdrawnMethod.SpecifyFunds },
+  ];
   return {
     signaturesConfig,
     formPartyConfigs,
@@ -707,5 +691,6 @@ export default function getFlicOftConfig(t: TFunction) {
     selectOneOptions,
     defaultValues,
     qualificationOptions: getQualTypeOptions(t),
+    fundWithdrawnMethodOptions
   };
 }

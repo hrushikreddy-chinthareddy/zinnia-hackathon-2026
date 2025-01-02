@@ -2,6 +2,7 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
 import CedingCompanyDistribution from '@deps/components/otp-withdrawal-form/ceding-company-distribution';
+import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import FormProgramPartialWithdrawal from '@deps/components/otp-withdrawal-form/form-program/form-program-partial-withdrawal';
@@ -24,7 +25,8 @@ export default function GilicoOftWithdrawalForm() {
     identifySelectedFormProgramOption,
     selectOneOptions,
     defaultValues,
-    qualificationOptions
+    qualificationOptions,
+    fundWithdrawnMethodOptions
   } = getFlicOftConfig(t);
 
   const {
@@ -71,7 +73,13 @@ export default function GilicoOftWithdrawalForm() {
         selectionIdentifier={identifySelectedFormProgramOption}
         selectOneOptions={selectOneOptions}
       />
+      <FormDistribution
+        isFormStateReadOnly={isFormStateReadOnly}
+        fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
+        title={t('distributionInstruction.investmentSelectionForDistribution') as string}
+      />
       <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
+
       <CedingCompanyDistribution
         qualificationOptions={qualificationOptions}
         isFormStateReadOnly={isFormStateReadOnly}
