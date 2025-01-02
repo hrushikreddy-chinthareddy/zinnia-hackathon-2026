@@ -130,7 +130,7 @@ describe('Formparty component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: '' as maritalStatusType | null,
+                            text: '' as maritalStatusType,
                         },
                         addresses: [
                             {
@@ -217,7 +217,7 @@ describe('Formparty component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: "" as maritalStatusType | null,
+                            text: "" as maritalStatusType,
                         },
                         addresses: [
                             {
@@ -374,7 +374,7 @@ describe('Formparty component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: "" as maritalStatusType | null,
+                            text: "" as maritalStatusType,
                         },
                         addresses: [
                             {
@@ -460,7 +460,7 @@ describe('Formparty component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: "" as maritalStatusType | null,
+                            text: "" as maritalStatusType,
                         },
                         addresses: [
                             {
@@ -565,7 +565,7 @@ describe('Formparty component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: "" as maritalStatusType | null,
+                            text: "" as maritalStatusType,
                         },
                         addresses: [
                             {
@@ -681,7 +681,7 @@ describe('Formparty component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: "" as maritalStatusType | null,
+                            text: "" as maritalStatusType,
                         },
                         addresses: [
                             {
@@ -792,7 +792,7 @@ describe('Formparty component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: "" as maritalStatusType | null,
+                            text: "" as maritalStatusType,
                         },
                         addresses: [
                             {
