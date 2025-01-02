@@ -12,7 +12,7 @@ import MartialStatusAllowancesWithholdings, { MaritalStatusAllowances } from './
 import TaxWithholdingRow, { WithholdingView } from './tax-withholding-row';
 import TaxWithholdingSpecified from './tax-withholding-specified';
 
-const toFormTaxWithholding = (
+export const toFormTaxWithholding = (
     withholding: WithholdingView | undefined,
     maritalAllowances?: Pick<TaxWithholding, 'multipleAllowances' | 'exemption' | 'allowances'>
 ): TaxWithholding[] | undefined => {
@@ -22,7 +22,6 @@ const toFormTaxWithholding = (
     }
 
     const baseFormWithholding = { ...baseWithholding, place: { text: withholding.place } };
-
     if (withholding.dontWithhold) {
         const noWithholding = {
             type: {
@@ -113,7 +112,7 @@ const baseWithholding = {
     },
 };
 
-const toViewTaxWithholding = (withholdings: TaxWithholding[] | undefined): WithholdingView | undefined => {
+export const toViewTaxWithholding = (withholdings: TaxWithholding[] | undefined): WithholdingView | undefined => {
     if (!Array.isArray(withholdings)) {
         return undefined;
     }
@@ -191,8 +190,8 @@ export default function TaxWithholdings({
         toViewTaxWithholding(
             !IOWAChecked
                 ? formTaxWithholding.taxWithholding?.filter(
-                      tw => tw.place.text === TaxWithholdingPlace.State && tw.type.text !== WithholdingType.NoTaxWithholdingAllowed
-                  )
+                    tw => tw.place.text === TaxWithholdingPlace.State && tw.type.text !== WithholdingType.NoTaxWithholdingAllowed
+                )
                 : undefined
         )
     );

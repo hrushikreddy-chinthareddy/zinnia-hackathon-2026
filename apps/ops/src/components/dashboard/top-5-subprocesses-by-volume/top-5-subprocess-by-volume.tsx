@@ -4,13 +4,15 @@ import dayjs from 'dayjs';
 import * as Highcharts from 'highcharts';
 import HC_ACCESSIBILITY from 'highcharts/modules/accessibility';
 import HighchartsExporting from 'highcharts/modules/exporting';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import PageLoader from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
+import { TimeframeFilterOptions } from '@deps/containers/dashboard/issued-business/issued-business';
 import { dashboardChartTitleFormat, splitAndSentenceCase } from '@deps/helpers/dashboard/dashboard-helpers';
+import { CHART_HEIGHT, colors, processGroupedData } from '@deps/helpers/dashboard/line-and-volume-category-chart.helper';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
 import { convertToQueryString } from '@deps/helpers/routing.helper';
 import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
@@ -24,45 +26,40 @@ import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/ill
 import { ReactComponent as LightBulbIcon } from '@deps/styles/elements/icons/illustrations/light-bulb.svg';
 
 import styles from './top-5-subprocess-by-volume.module.css';
-import { LineAndVolumeCategoryChart, processGroupedData } from '../line-and-volume-category-chart/line-and-volume-category-chart';
+import { LineAndVolumeCategoryChart, Summary } from '../line-and-volume-category-chart/line-and-volume-category-chart';
 
-const CHART_HEIGHT = 500;
 if (typeof Highcharts === 'object') {
     HighchartsExporting(Highcharts);
     HC_ACCESSIBILITY(Highcharts);
 }
 
-type Summary = {
-    series: Highcharts.SeriesLineOptions | Highcharts.SeriesColumnOptions;
-    name: string;
-    total: number;
-};
-
-const colors = ['#D385A5', '#BD85D3', '#8593D3', '#00628B', '#021936'];
-
 export const Top5SubprocessByVolume = ({
     createdDateStart,
     requestSubType = 'NB_REG60',
+    timeframe,
 }: {
     createdDateStart: string;
     carrierOrBrokerDealer?: GroupByOptions.Carrier | GroupByOptions.BrokerDealerName;
     requestSubType: string;
+    timeframe: TimeframeFilterOptions;
 }) => {
     const shouldShowCaseInsights = useCaseInsightsPermission();
     const groupBy: GroupByOptions = GroupByOptions.ProductName;
+    const [processingLoading, setProcessingLoading] = useState(false);
 
     const { selectedBrokerDealers, selectedCarriers } = useDashboardStore(state => state);
 
-    const filter: DashboardSearchFilter = useMemo(() => {
-        return {
+    const filter: DashboardSearchFilter = useMemo(
+        () => ({
             createdDateStart: dayjs(createdDateStart).toISOString(),
             process: [Processes.NewBusiness],
             caseStatus: [Statuses.Completed],
             carrier: Object.keys(selectedCarriers),
             brokerDealerName: Object.keys(selectedBrokerDealers),
             ...(requestSubType ? { requestSubType: [requestSubType] } : {}),
-        };
-    }, [createdDateStart, requestSubType, selectedBrokerDealers, selectedCarriers]);
+        }),
+        [createdDateStart, requestSubType, selectedBrokerDealers, selectedCarriers]
+    );
 
     const { data: statsResponse, isLoading: loading } = useQuery({
         queryKey: ['getTopFiveData', filter, groupBy],
@@ -107,19 +104,18 @@ export const Top5SubprocessByVolume = ({
     }, [aiSummaryResponse, aiError, statsResponse?.data?.length, requestSubType]);
 
     const noStatsData = !statsResponse?.data?.length;
+
     const processedData = useMemo(() => {
         if (noStatsData) return null;
-        const processedData = processGroupedData(statsResponse?.data || []);
+        setProcessingLoading(true);
+        const processedData = processGroupedData(statsResponse?.data || [], timeframe);
+        setProcessingLoading(false);
         return processedData;
-    }, [statsResponse?.data, noStatsData]);
+    }, [statsResponse?.data, noStatsData, timeframe]);
 
-    const sortedMonthlyArray = useMemo(() => {
+    const sortedMonthlyArray: Summary[] = useMemo(() => {
         if (!processedData) return [];
-        const monthlyArray: Summary[] = [];
-        Object.entries(processedData.monthlyByLevel1Grouping).forEach(([, value]) => {
-            monthlyArray.push(value);
-        });
-        return monthlyArray.sort((a, b) => b.total - a.total).slice(0, 5);
+        return Object.values(processedData.monthlyByLevel1Grouping);
     }, [processedData]);
 
     return (
@@ -187,10 +183,10 @@ export const Top5SubprocessByVolume = ({
                         }}
                         className={clsx('w-full', {
                             'grid gap-4 place-content-center bg-[--color-base-surface-surface-tertiary]':
-                                loading || !statsResponse?.data?.length,
+                                loading || !statsResponse?.data?.length || processingLoading,
                         })}
                     >
-                        {loading ? (
+                        {loading || processingLoading ? (
                             <>
                                 <PageLoader />
                                 <Typography variant={TypographyVariant.BodyBold}>Loading...</Typography>
@@ -198,7 +194,7 @@ export const Top5SubprocessByVolume = ({
                         ) : (
                             <>
                                 {statsResponse?.data?.length ? (
-                                    <LineAndVolumeCategoryChart chartData={processedData}></LineAndVolumeCategoryChart>
+                                    <LineAndVolumeCategoryChart timeframe={timeframe} chartData={processedData} />
                                 ) : (
                                     <div style={{ minHeight: `${CHART_HEIGHT}px` }} className="flex flex-col gap-2 items-center">
                                         <ChartBarsIcon height={'24px'} width={'24px'} />

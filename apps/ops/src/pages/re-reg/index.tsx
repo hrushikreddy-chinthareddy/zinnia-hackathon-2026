@@ -1,7 +1,7 @@
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { GetServerSidePropsContext } from 'next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import PolicyLayout from '@deps/components/policy-layout';
 import { getReRegNavLinks } from '@deps/config/nav.config';

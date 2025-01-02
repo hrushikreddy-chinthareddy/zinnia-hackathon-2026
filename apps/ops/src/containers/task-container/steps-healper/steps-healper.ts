@@ -8,7 +8,7 @@ import { GetStepsProps } from './types';
 export const getFormSteps = (taskType: TaskType, props: GetStepsProps): Step[] => {
     let steps: Step[];
     switch (taskType) {
-        case TaskType.Suitability:
+        case TaskType.SuitabilityDataEntry:
             steps = getSuitabilitySteps(props);
             break;
         case TaskType.SuitabilityReview:

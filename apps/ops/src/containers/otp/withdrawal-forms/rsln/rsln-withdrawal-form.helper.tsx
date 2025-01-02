@@ -824,13 +824,26 @@ export default function getRslnConfig(t: TFunction) {
         }
         return { selectedOption: null, amount: '' };
     };
-
+    const w4pSignaturesConfig = [
+        {
+            component: SignatureFields.SignaturePresent,
+            key: 'w4p-signature-sign-present',
+        },
+        {
+            component: SignatureFields.SignatureDate,
+            key: 'w4p-signature-sign-date',
+        },
+        {
+            component: SignatureFields.SignatureType,
+            key: 'w4p-owner-type',
+        }
+    ];
     return {
         formPartyConfigs,
         formValidation,
         signaturesConfig,
         fundWithdrawnMethodOptions,
-
+        w4pSignaturesConfig,
         waiverItemsConfig,
         reasonOptions,
         disbursementOptions,

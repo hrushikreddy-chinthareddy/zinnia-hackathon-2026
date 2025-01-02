@@ -3,6 +3,8 @@ import { Address, Email, Phone } from '@zinnia/api-types/types/sor';
 import { IconType, Label } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
+import { AddEditAddressSidesheet } from '@/components/add-edit-address/AddEditAddressSidesheet';
+import { FormActionType } from '@/components/add-edit-address/types';
 import { BankList } from '@/components/bank-list/BankList';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { FieldData } from '@/components/field-data/FieldData';
@@ -44,6 +46,8 @@ export default async function Profile({ params }: Props) {
   const allowBankingChanges =
     flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_BANK_ACCOUNT];
 
+  const allowAddressChanges = flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_ADDRESS];
+
   if (error) {
     return (
       <div className="space-mb-gap-lg">
@@ -70,12 +74,26 @@ export default async function Profile({ params }: Props) {
             addresses={currentAddresses as Address[]}
             title="Address"
             preferredAddressIndicator={profileData.preferredAddressIndicator}
+            partyId={profileData.partyId}
+            allowAddressChanges={allowAddressChanges}
           />
         );
       }
     }
-
-    return null;
+    if (!allowAddressChanges) {
+      return null;
+    }
+    // If there are no addresses, show the add address button and set defaultAddress to true
+    return (
+      <>
+        <h2 className="mb-lg">Addresses</h2>
+        <AddEditAddressSidesheet
+          values={{ defaultAddress: true }}
+          partyId={profileData.partyId}
+          actionType={FormActionType.ADD}
+        />
+      </>
+    );
   };
 
   const phone = () => {

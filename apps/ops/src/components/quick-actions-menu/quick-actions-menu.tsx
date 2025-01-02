@@ -51,6 +51,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, TranslateProps>(function 
 
 const MenuContextualContent = ({ t, planCode, policyNumber, eligibilityCheck, isLoading }: TranslateProps & QuickActionsMenuProps) => {
     const permissions = usePermissionsContext();
+    const sessionId = permissions.getSessionId();
     const userPartyId = permissions.getUserPartyId();
     const { featureFlags } = useOptimizely();
 
@@ -62,12 +63,14 @@ const MenuContextualContent = ({ t, planCode, policyNumber, eligibilityCheck, is
         segmentAnalyticsTrackEvent<DropdownClickedEvent>(SegmentTrackedEventName.DropdownClicked, {
             dropdownName: 'Policy Quick Actions',
             selectedItemName: linkName,
+            session_id: sessionId,
             userId: userPartyId,
         });
         segmentAnalyticsTrackEvent<PolicyClickedEvent>(SegmentTrackedEventName.PolicyClicked, {
             contractNumber: policyNumber,
             linkName,
             linkUrl,
+            session_id: sessionId,
             userId: userPartyId,
         });
     };

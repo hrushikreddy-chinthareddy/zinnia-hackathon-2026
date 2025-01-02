@@ -38,16 +38,14 @@ export const getReturnedWithheldTaxesDisplay = (
     emptyFormat: string | number
 ): string => {
     const withheldAmount = taxWithheldAmounts?.find(tw => tw.taxWithholdingType === withholdingType);
-    // @ts-expect-error API is returning withholdAmount instead of withheldAmount
-    if (!withheldAmount?.withholdAmount && emptyFormat === DEFAULT_ERROR_STRING) {
+
+    if (!withheldAmount?.withheldAmount && emptyFormat === DEFAULT_ERROR_STRING) {
         return DEFAULT_ERROR_STRING;
-    // @ts-expect-error API is returning withholdAmount instead of withheldAmount
-    } else if (!withheldAmount?.withholdAmount && emptyFormat === 0) {
+    } else if (!withheldAmount?.withheldAmount && emptyFormat === 0) {
         return numberFormatify(emptyFormat);
     }
 
-    // @ts-expect-error API is returning withholdAmount instead of withheldAmount
-    return negativeNumberFormatify(withheldAmount?.withholdAmount);
+    return negativeNumberFormatify(withheldAmount?.withheldAmount);
 };
 
 export const getTaxWithheldByType = (transaction: Transaction, taxWithholdingType: TaxWithholdingType, quote?: WithdrawalQuoteResponse): string => {

@@ -41,7 +41,7 @@ export interface OtpWithdrawalFormState {
     formErrors: FormValidationErrors;
     formWarnings: FormValidationErrors;
     formFullSurrenderAck: FormFullSurrenderAck;
-    formIrsData: FormIrsData | null;
+    formIrsData: FormIrsData[];
     formOL4753Data: FormOL4753Data | null;
     formLoan: FormLoan;
     formParty: FormParty;
@@ -75,7 +75,7 @@ export interface OtpWithdrawalFormState {
     setFormErrors: React.Dispatch<React.SetStateAction<FormValidationErrors>>;
     setFormWarnings: React.Dispatch<React.SetStateAction<FormValidationErrors>>;
     setFormFullSurrenderAck: React.Dispatch<React.SetStateAction<FormFullSurrenderAck>>;
-    setFormIrsData: React.Dispatch<React.SetStateAction<FormIrsData | null>>;
+    setFormIrsData: React.Dispatch<React.SetStateAction<FormIrsData[]>>;
     setFormOL4753Data: React.Dispatch<React.SetStateAction<FormOL4753Data | null>>;
     setFormLoan: React.Dispatch<React.SetStateAction<FormLoan>>;
     setFormParty: React.Dispatch<React.SetStateAction<FormParty>>;
@@ -98,7 +98,7 @@ export interface OtpWithdrawalFormState {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
-const noop = (() => {}) as React.Dispatch<React.SetStateAction<any>>;
+const noop = (() => { }) as React.Dispatch<React.SetStateAction<any>>;
 
 export const defaultFormDataContext = {
     formData: {} as FormData,
@@ -106,7 +106,7 @@ export const defaultFormDataContext = {
     formDistribution: {} as FormDistribution,
     formErrors: {} as FormValidationErrors,
     formFullSurrenderAck: {} as FormFullSurrenderAck,
-    formIrsData: {} as FormIrsData,
+    formIrsData: [] as FormIrsData[],
     formOL4753Data: {} as FormOL4753Data,
     formLoan: {} as FormLoan,
     formParty: {} as FormParty,

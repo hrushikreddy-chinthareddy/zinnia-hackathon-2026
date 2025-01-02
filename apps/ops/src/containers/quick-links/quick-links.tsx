@@ -22,6 +22,7 @@ export interface QuickLinksProps extends QuickActionsMenuProps {
         name: string;
     }[];
     policy: PolicyDetails;
+    sessionId: string;
     userPartyId: string;
 }
 
@@ -30,9 +31,10 @@ const trackClick = (
     linkName: string,
     linkUrl: string,
     policyNumber: string | undefined,
+    sessionId: string | undefined,
     userPartyId: string | undefined
 ) => {
-    if (!segmentTrackingName || !userPartyId) {
+    if (!segmentTrackingName || !userPartyId || !sessionId) {
         return;
     }
 
@@ -40,11 +42,12 @@ const trackClick = (
         contractNumber: policyNumber,
         linkName,
         linkUrl,
+        session_id: sessionId,
         userId: userPartyId,
     });
 };
 
-const QuickLinks = ({ links, planCode, policyNumber, policy, userPartyId }: QuickLinksProps) => {
+const QuickLinks = ({ links, planCode, policyNumber, policy, sessionId, userPartyId }: QuickLinksProps) => {
     const { featureFlags } = useOptimizely();
     const newLoanEnabled = featureFlags?.[FEATURE_FLAGS.NEW_LOAN_TRANSACTION];
 
@@ -145,7 +148,7 @@ const QuickLinks = ({ links, planCode, policyNumber, policy, userPartyId }: Quic
                     data-testid={name}
                     href={href}
                     key={name + href}
-                    onClick={() => trackClick(SegmentTrackedEventName.PolicyClicked, name, href, policyNumber, userPartyId)}
+                    onClick={() => trackClick(SegmentTrackedEventName.PolicyClicked, name, href, policyNumber, sessionId, userPartyId)}
                     type={NavElementType.Link}
                 >
                     {name}

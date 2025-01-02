@@ -11,6 +11,7 @@ import {
     Carrier,
     CaseStatus,
     FormComment,
+    FormIrsData,
     FormParts,
     FormValidationErrors,
     FundWithdrawnMethod,
@@ -68,11 +69,17 @@ export const FormProvider = ({
     featureFlagDecisions,
 }: FormProviderProps) => {
     const searchParams = useSearchParams();
-    const [formData, setFormData] = useState(form.data.formRequest.formData);
+    const [formData, setFormData] = useState(form?.data?.formRequest?.formData);
     const [formDisbursement, setFormDisbursement] = useState(form.data.formRequest.formDisbursement);
     const [formDistribution, setFormDistribution] = useState(form.data.formRequest.formDistribution);
     const [formFullSurrenderAck, setFormFullSurrenderAck] = useState(form.data.formRequest.formFullSurrenderAck);
-    const [formIrsData, setFormIrsData] = useState(form.data.formRequest.formIrsData || null);
+    const [formIrsData, setFormIrsData] = useState(
+        form.data.formRequest.formIrsData
+            ? Array.isArray(form.data.formRequest.formIrsData)
+                ? form.data.formRequest.formIrsData
+                : ([form.data.formRequest.formIrsData] as FormIrsData[])
+            : []
+    );
     const [formOL4753Data, setFormOL4753Data] = useState(form.data.formRequest.formOL4753Data || null);
     const [formLoan, setFormLoan] = useState(form.data.formRequest.formLoan);
     const [formParty, setFormParty] = useState(form.data.formRequest.formParty);

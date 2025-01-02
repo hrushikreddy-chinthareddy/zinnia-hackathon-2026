@@ -1,6 +1,6 @@
 export enum FgaRoles {
-  CASE_STATS_DASHBOARD_ROLE = 'role:zinnia_read_stats_dashboard',
-  CASE_INSIGHTS_ROLE = 'role:zinnia_case_insights',
+  CASE_STATS_DASHBOARD_ENTITY = 'entity:case_stats_dashboard',
+  CASE_INSIGHTS_ENTITY = 'entity:case_insights',
 }
 
 export interface FGA_Tuple {
@@ -22,13 +22,13 @@ export function createBulkCheckBodyRequest(partyId: string) {
       },
       {
         user: `party:${partyId}`,
-        relation: 'party',
-        object: FgaRoles.CASE_STATS_DASHBOARD_ROLE,
+        relation: 'ui_access',
+        object: FgaRoles.CASE_STATS_DASHBOARD_ENTITY,
       },
       {
         user: `party:${partyId}`,
-        relation: 'party',
-        object: FgaRoles.CASE_INSIGHTS_ROLE,
+        relation: 'ui_access',
+        object: FgaRoles.CASE_INSIGHTS_ENTITY,
       },
     ],
   };
@@ -53,15 +53,15 @@ export function checkIfUserIsSuperAdmin(
 export function checkIfUserHasDashboardAccess(
   bulkCheckTuples: Array<BulkCheckTuple>
 ) {
-  const superAdminVals = {
-    object: FgaRoles.CASE_STATS_DASHBOARD_ROLE,
-    relation: 'party',
+  const roleVals = {
+    object: FgaRoles.CASE_STATS_DASHBOARD_ENTITY,
+    relation: 'ui_access',
   };
 
   return bulkCheckTuples.find(
     (tuple) =>
-      tuple.object === superAdminVals.object &&
-      tuple.relation === superAdminVals.relation &&
+      tuple.object === roleVals.object &&
+      tuple.relation === roleVals.relation &&
       tuple.allowed
   );
 }
@@ -69,15 +69,15 @@ export function checkIfUserHasDashboardAccess(
 export function checkIfUserHasCaseInsightsAccess(
   bulkCheckTuples: Array<BulkCheckTuple>
 ) {
-  const superAdminVals = {
-    object: FgaRoles.CASE_INSIGHTS_ROLE,
-    relation: 'party',
+  const roleVals = {
+    object: FgaRoles.CASE_INSIGHTS_ENTITY,
+    relation: 'ui_access',
   };
 
   return bulkCheckTuples.find(
     (tuple) =>
-      tuple.object === superAdminVals.object &&
-      tuple.relation === superAdminVals.relation &&
+      tuple.object === roleVals.object &&
+      tuple.relation === roleVals.relation &&
       tuple.allowed
   );
 }

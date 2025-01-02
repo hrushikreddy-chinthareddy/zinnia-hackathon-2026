@@ -238,13 +238,8 @@ const getActualWithdrawalAmount = (
     }
 
     const taxWithheldAmounts = quote ? quote?.taxWithheldAmounts : transaction?.taxWithheldAmounts;
-    // have to have prettier ignore here because ts-expect-error cant be bothered to read the wrapped lines
-    // prettier-ignore
-    // @ts-expect-error API is returning withholdAmount instead of withheldAmount
-    const federalTaxWithheld = taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.FEDERAL)?.[0]?.withholdAmount || 0;
-    // prettier-ignore
-    // @ts-expect-error API is returning withholdAmount instead of withheldAmount
-    const stateTaxWithheld = taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.STATE)?.[0]?.withholdAmount || 0;
+    const federalTaxWithheld = taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.FEDERAL)?.[0]?.withheldAmount || 0;
+    const stateTaxWithheld = taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.STATE)?.[0]?.withheldAmount || 0;
 
     const totalChargesWithoutTaxes = transaction.charges
         ? transaction.charges.reduce((acc, charge) => {
@@ -343,7 +338,6 @@ const getWithdrawalCharges = (
     return [
         ...(charges?.map(charge => ({
             amount: negativeNumberFormatify(charge.chargeAmount) as string,
-            // TODO MG: charge type may be wrong here
             label: t(`policy.history.withdrawalSidesheet.${charge.chargeType}`) as string,
         })) || []),
         {
@@ -367,7 +361,7 @@ const getWithdrawalCharges = (
 };
 
 export const getWithdrawalSideSheetValues = (policy: Policy, transaction: Transaction, t: TFunction): WithdrawalSideSheetValues => {
-    const { payeeOrBeneficiaries, transactionType } = transaction;
+    const { payeeOrBeneficiaries, status, transactionType } = transaction;
 
     let detailsValues = getWithdrawalDetailsValues(transaction, t);
 
@@ -377,12 +371,16 @@ export const getWithdrawalSideSheetValues = (policy: Policy, transaction: Transa
             transaction?.status === TransactionStatus.Pending && transactionType === TransactionType.FullSurrender
                 ? (t('policy.history.sidesheet.cancelSurrender') as string)
                 : undefined,
+        disbursementType: detailsValues.disbursementType,
         taxWithholdings: getTaxWithholdings(policy, transaction, t),
         withdrawalDetails: getWithdrawalDetails(detailsValues, t),
         withdrawalCharges: getWithdrawalCharges(policy, transaction, t, detailsValues.totalPayment),
         payeePaymentDetails: getPayeePaymentDetails(policy, t, detailsValues.totalPayment, payeeOrBeneficiaries),
         transactionType,
         getAsyncSideSheetValues: async () => {
+            if (status !== TransactionStatus.Pending) {
+                return {};
+            }
             const quote = await callWithdrawalQuote(policy, transaction);
 
             detailsValues = getWithdrawalDetailsValues(transaction, t, quote);
@@ -456,19 +454,12 @@ const getWithdrawalTotalPayment = (
     transaction: Transaction,
     quote?: FullSurrenderQuoteResponse | PartialWithdrawalOneTimeQuoteResponse
 ): number => {
-    const { charges, status, transactionAmounts, transactionType } = transaction;
+    const { charges, transactionAmounts, transactionType } = transaction;
     const { appliedAmount, disbursementType } = transactionAmounts ?? {};
 
     const taxWithheldAmounts = quote ? quote?.taxWithheldAmounts : transaction?.taxWithheldAmounts;
-    // have to have prettier ignore here because ts-expect-error cant be bothered to read the wrapped liness
-    // prettier-ignore
-    // TODO MG: helper function since this is the same logic in getActualWithdrawalAmount()
-    // @ts-expect-error API is returning withholdAmount instead of withheldAmount
-    const federalTaxWithheld = taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.FEDERAL)?.[0]?.withholdAmount || 0;
-    // prettier-ignore
-    // @ts-expect-error API is returning withholdAmount instead of withheldAmount
-    const stateTaxWithheld = taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.STATE)?.[0]?.withholdAmount || 0;
-    // TODO MG: this is always 0 for now so maybe hardcode it for now
+    const federalTaxWithheld = taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.FEDERAL)?.[0]?.withheldAmount || 0;
+    const stateTaxWithheld = taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.STATE)?.[0]?.withheldAmount || 0;
     const totalChargesWithoutTaxes = getChargesWithoutTaxes(charges as TransactionChargesItem[]);
 
     let withdrawalAmount;

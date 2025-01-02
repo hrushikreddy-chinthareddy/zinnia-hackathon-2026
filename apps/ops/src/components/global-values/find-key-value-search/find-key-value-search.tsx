@@ -33,6 +33,7 @@ export const FindKeyValueSearch = ({ isNavDrawerOpen, keyValues, planCode, polic
                 values={keyValues}
                 errorMessageLink={`/policies/${planCode}/${policyNumber}/policy/policy-details`}
                 group={true}
+                sessionId={perms.getSessionId()}
                 userPartyId={perms.getUserPartyId()}
             />
         </div>

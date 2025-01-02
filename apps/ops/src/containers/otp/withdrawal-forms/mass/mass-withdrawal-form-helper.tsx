@@ -871,6 +871,7 @@ export default function useMassWithdrawalConfig(t: TFunction) {
         },
     ];
 
+
     return {
         disbursementOptions,
         formPartyConfigs,
@@ -887,5 +888,6 @@ export default function useMassWithdrawalConfig(t: TFunction) {
         validateMaritalStatusAllowances,
         distributionReasonOptions,
         waiverItemsConfig,
+
     };
 }

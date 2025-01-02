@@ -37,7 +37,6 @@ export function MassMutualSSWForm({ qualType }: MassWithdrawalFormProps) {
         validateMaritalStatusAllowances,
         irsSignatureConfig,
         signaturesNotaryConfig,
-
         signVerificationReasonConfig,
     } = useMassWithdrawalConfig(t);
 

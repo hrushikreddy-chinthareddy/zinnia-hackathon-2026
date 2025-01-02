@@ -1,7 +1,7 @@
-import { useTranslation } from 'next-i18next';
+import { TFunction, useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
-import { ExceptionStatuses } from '@deps/models/case/exception-instance';
+import { TaskType } from '@deps/models/case/task';
 
 import { formatTimestamp } from './progress-tab-helpers';
 import { ExceptionView } from './progress-tab-types';
@@ -9,6 +9,37 @@ import Tasks from './tasks';
 
 const TaskTypeMap: Record<string, string> = {
     ['SUITABILITY_REVIEW']: 'suitability review',
+};
+
+const renderException = (exception: ExceptionView, isSingleTask: boolean, t: TFunction, unmapped?: boolean) => {
+    return (
+        <>
+            {exception.tasks.every(task => task.description !== TaskType.SuitabilityReview) && (
+                <div className="flex w-full flex-col justify-between lg:flex-row">
+                    <Content
+                        className="text-semantic-error"
+                        contentClassName="mt-1"
+                        variant={ContentVariant.BodySm}
+                        details={
+                            !isSingleTask
+                                ? exception.description
+                                : (t('caseOverview.tabs.commonTaskIssues', {
+                                      taskType: TaskTypeMap[exception.tasks[0].description],
+                                  }) as string)
+                        }
+                    />
+                    {unmapped && (
+                        <Content
+                            className="text-gray-600"
+                            contentClassName="mt-1"
+                            variant={ContentVariant.BodySm}
+                            details={t('caseOverview.tabs.since', { date: formatTimestamp(exception.updatedAt) }) as string}
+                        />
+                    )}
+                </div>
+            )}
+        </>
+    );
 };
 
 export default function Exceptions({ exceptions, unmapped = false }: { exceptions: ExceptionView[]; unmapped?: boolean }) {
@@ -26,47 +57,13 @@ export default function Exceptions({ exceptions, unmapped = false }: { exception
             {!isSingleTask &&
                 exceptions.map(exception => (
                     <li className="flex w-full flex-col" key={exception.id}>
-                        <div className="flex w-full flex-col justify-between lg:flex-row">
-                            <Content
-                                className={exception.status === ExceptionStatuses.New ? 'text-semantic-error' : 'text-semantic-success'}
-                                contentClassName="mt-1"
-                                variant={ContentVariant.BodySm}
-                                details={exception.description}
-                            />
-                            {unmapped && (
-                                <Content
-                                    className="text-gray-600"
-                                    contentClassName="mt-1"
-                                    variant={ContentVariant.BodySm}
-                                    details={t('caseOverview.tabs.since', { date: formatTimestamp(exception.updatedAt) }) as string}
-                                />
-                            )}
-                        </div>
+                        {renderException(exception, isSingleTask, t, unmapped)}
                         <Tasks tasks={exception.tasks} />
                     </li>
                 ))}
             {isSingleTask && (
                 <li className="flex w-full flex-col">
-                    <div className="flex w-full flex-col justify-between lg:flex-row">
-                        <Content
-                            className="text-semantic-error"
-                            contentClassName="mt-1"
-                            variant={ContentVariant.BodySm}
-                            details={
-                                t('caseOverview.tabs.commonTaskIssues', {
-                                    taskType: TaskTypeMap[exceptions[0].tasks[0].description],
-                                }) as string
-                            }
-                        />
-                        {unmapped && (
-                            <Content
-                                className="text-gray-600"
-                                contentClassName="mt-1"
-                                variant={ContentVariant.BodySm}
-                                details={t('caseOverview.tabs.since', { date: formatTimestamp(exceptions[0].updatedAt) }) as string}
-                            />
-                        )}
-                    </div>
+                    {renderException(exceptions[0], isSingleTask, t, unmapped)}
                     <Tasks tasks={exceptions[0].tasks} />
                 </li>
             )}

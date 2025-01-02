@@ -758,12 +758,26 @@ export default function getGdmnConfig(t: TFunction) {
             value: AccountCloseReason.Surrender,
         },
     ];
-
+    const w4pSignaturesConfig = [
+        {
+            component: SignatureFields.SignaturePresent,
+            key: 'w4p-signature-sign-present',
+        },
+        {
+            component: SignatureFields.SignatureDate,
+            key: 'w4p-signature-sign-date',
+        },
+        {
+            component: SignatureFields.SignatureType,
+            key: 'w4p-owner-type',
+        }
+    ];
     return {
         disbursementOptions,
         formPartyConfigs,
         formSubtypeOptions,
         formValidation,
+        w4pSignaturesConfig,
         fundWithdrawnMethodOptions,
         identifySelectedFormProgramOption,
         irsSignatureConfig,

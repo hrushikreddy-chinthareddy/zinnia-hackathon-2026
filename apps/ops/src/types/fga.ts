@@ -6,6 +6,7 @@ export type CheckTupleResponse = {
 
 export enum FgaRelation {
     Party = 'party',
+    UiAccess = 'ui_access',
 }
 
 export type GetCarrierListQuery = {

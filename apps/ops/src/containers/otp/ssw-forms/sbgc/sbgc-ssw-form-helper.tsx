@@ -499,6 +499,20 @@ export default function useSbgcConfig(t: TFunction) {
             generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.InterestEarningDividendsGains),
         },
     ];
+    const w4pSignaturesConfig = [
+        {
+            component: SignatureFields.SignaturePresent,
+            key: 'w4p-signature-sign-present',
+        },
+        {
+            component: SignatureFields.SignatureDate,
+            key: 'w4p-signature-sign-date',
+        },
+        {
+            component: SignatureFields.SignatureType,
+            key: 'w4p-owner-type',
+        }
+    ];
 
     return {
         disbursementOptions,
@@ -509,5 +523,6 @@ export default function useSbgcConfig(t: TFunction) {
         coveredPartyConfigs,
         reasonOptions,
         systematicWithdrawalOptions,
+        w4pSignaturesConfig
     };
 }

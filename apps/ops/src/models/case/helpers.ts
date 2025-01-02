@@ -52,6 +52,6 @@ export const TaskApiVersionMapper: Record<TaskType, ApiVersion> = {
     [TaskType.Withdrawal]: ApiVersion.v2,
     [TaskType.REG60]: ApiVersion.v2,
     [TaskType.SSW]: ApiVersion.v2,
-    [TaskType.Suitability]: ApiVersion.v2,
+    [TaskType.SuitabilityDataEntry]: ApiVersion.v2,
     [TaskType.SuitabilityReview]: ApiVersion.v2,
 };

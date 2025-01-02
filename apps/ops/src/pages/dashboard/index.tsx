@@ -3,7 +3,7 @@ import { TabContent } from '@zinnia/bloom/components';
 import { FgaRoles } from '@zinnia/utils';
 import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useCallback, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { DashboardTabNav, DashboardTabs } from '@deps/components/dashboard/dashboard-nav-links';
 import FiltersHeader from '@deps/components/dashboard/filters-header/filters-header';
@@ -48,10 +48,6 @@ const DashboardPage = ({
 
     const [loading, setLoading] = useState<boolean>(false);
 
-    const handleSetLoading = useCallback((bool: boolean) => {
-        setLoading(bool);
-    }, []);
-
     return (
         <>
             <PageHead titleKey="dashboard" />
@@ -69,7 +65,7 @@ const DashboardPage = ({
                         <div ref={tabContentRef}>
                             <TabContent value={DashboardTabs.ACTIVE_APPLICATIONS}>
                                 <ActiveApplications
-                                    handleSetLoading={handleSetLoading}
+                                    handleSetLoading={setLoading}
                                     loading={loading}
                                     carrierHeaderRef={carrierHeaderRef}
                                     authorizedCarriers={authorizedCarriers}
@@ -110,8 +106,8 @@ export const getServerSideProps = withPageAuthRequired({
         const doesUserHavePagePermission = await checkTupleSsr(
             `${accessToken}`,
             user.partyId,
-            FgaRelation.Party,
-            FgaRoles.CASE_STATS_DASHBOARD_ROLE
+            FgaRelation.UiAccess,
+            FgaRoles.CASE_STATS_DASHBOARD_ENTITY
         );
         if (!doesUserHavePagePermission || !featureFlagDecisions['case-management-case_stats_dashboard']) {
             return {

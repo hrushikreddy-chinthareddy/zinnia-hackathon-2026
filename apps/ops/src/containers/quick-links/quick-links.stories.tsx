@@ -1,9 +1,10 @@
 import { Meta } from '@storybook/react';
 
+import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+
 import QuickLinks from './quick-links';
 
 import '@deps/styles/styles.css';
-import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 
 export default {
     title: 'Components/QuickLinks',
@@ -27,6 +28,7 @@ export const QuickLinksComponent = () => {
                 ]}
                 planCode="planCode"
                 policyNumber="123456"
+                sessionId="123"
                 userPartyId="userPartyId"
                 policy={{ isLife: true, freeLookPeriodDetails: { isInFreeLookPeriod: true } } as PolicyDetails}
             />

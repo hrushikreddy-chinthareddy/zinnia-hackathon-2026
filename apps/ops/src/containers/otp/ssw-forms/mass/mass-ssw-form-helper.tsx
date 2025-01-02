@@ -98,7 +98,7 @@ export default function useMassSSWConfig(t: TFunction) {
         [t]
     );
 
-    const sswFormValidation = ({ formParty, formSignature, formDisbursement,  formProgram }: Partial<FormParts> = {}): FormValidationErrors => {
+    const sswFormValidation = ({ formParty, formSignature, formDisbursement, formProgram }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = formValidation({ formParty, formSignature, formDisbursement });
         const sswProgramStartDate = formProgram?.programFrequency?.beginDate?.text || null;
 
@@ -677,6 +677,8 @@ export default function useMassSSWConfig(t: TFunction) {
     const getFundWithdrawalDefaultSelection = (sswType: string) => {
         return sswType === SSWType.PercentOfAmountValue ? undefined : FundWithdrawnMethod.Prorata;
     };
+
+
 
     return {
         disbursementOptions,
