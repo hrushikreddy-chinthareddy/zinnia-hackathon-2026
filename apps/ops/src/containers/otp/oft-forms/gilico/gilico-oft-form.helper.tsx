@@ -9,7 +9,6 @@ import {
 } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helper';
 import { PartyConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helper';
-import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
 import AsOfDateComponent from '@deps/components/otp-withdrawal-form/form-program/as-of-date';
 import { PartialWithdrawalOption } from '@deps/components/otp-withdrawal-form/form-program/form-program-partial-withdrawal';
 import { SelectOneOption } from '@deps/components/otp-withdrawal-form/form-program/form-program-process-date';
@@ -23,9 +22,7 @@ import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext'
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
   FormValidationErrors,
-  PartyRoles,
-  PhoneTypes,
-  FormParts,
+  PartyRoles, FormParts,
   AmountType,
   WithdrawalType,
   ProgramType,
@@ -36,7 +33,7 @@ import {
   ProcessRequestType,
   Program,
   FormDisbursement,
-  AccountType,
+  AccountType
 } from '@deps/models/case/withdrawal/case';
 import {
   DEFAULT_BANK_DETAILS,
@@ -182,25 +179,10 @@ export default function getFlicOftConfig(t: TFunction) {
           fieldLabel: t('personalDetails.lastName'),
         },
         {
-          fieldName: PartyFields.Dob,
-          fieldLabel: t('personalDetails.dob'),
-        },
-        {
           fieldName: PartyFields.TaxId,
           fieldLabel: t('personalDetails.ssn'),
         },
-      ],
-      phones: [
-        {
-          phoneType: PhoneTypes.Owner_Phone_Day,
-          fields: [
-            {
-              fieldName: PhoneFields.phoneNumber,
-              fieldLabel: t('phoneDetails.telephoneNumber'),
-            },
-          ],
-        },
-      ],
+      ]
     },
     {
       partyRoleType: PartyRoles.JOINT_OWNER,
@@ -239,11 +221,7 @@ export default function getFlicOftConfig(t: TFunction) {
         {
           fieldName: PartyFields.LastName,
           fieldLabel: t('personalDetails.lastName'),
-        },
-        {
-          fieldName: PartyFields.TaxId,
-          fieldLabel: t('personalDetails.ssn'),
-        },
+        }
       ],
     },
   ];
