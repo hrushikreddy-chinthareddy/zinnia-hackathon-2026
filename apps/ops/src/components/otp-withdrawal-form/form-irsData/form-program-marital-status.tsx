@@ -21,8 +21,8 @@ export default function FormProgramMaritalStatus({ isFormStateReadOnly, selected
 
   const options: SelectOneOption[] = [
     { label: 'Single', value: maritalStatusType.single },
-    { label: 'Married Filing Jointly', value: maritalStatusType.marriedFilingJointly },
-    { label: 'Married Filing Separately', value: maritalStatusType.marriedFilingSeparately },
+    { label: 'Married filing jointly', value: maritalStatusType.marriedFilingJointly },
+    { label: 'Married filing separately', value: maritalStatusType.marriedFilingSeparately },
   ];
 
   return (
