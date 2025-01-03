@@ -35,7 +35,7 @@ export default function TasksTable({
   return (
     <>
         <div data-testid="task-list-container" className='p-4'>
-            <Table preventBackgroundHoverInteraction>
+            <Table>
                 <TableHeader>
                     <TableRow>
                         <TableHeaderCell><Label>{t('tasksListing.tableColumns.status')}</Label></TableHeaderCell>
