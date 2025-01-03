@@ -15,3 +15,7 @@ export interface BpmErrorResponse {
   status: 'failure';
   validationResult: ValidationResult[];
 }
+
+export const isBpmError = (e: unknown): e is BpmErrorResponse => {
+  return (e as BpmErrorResponse).validationResult.length > 0;
+};

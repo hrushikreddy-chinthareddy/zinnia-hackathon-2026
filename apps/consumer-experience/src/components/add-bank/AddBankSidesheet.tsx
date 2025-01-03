@@ -5,7 +5,7 @@ import { SideSheet, Button, Icon, IconType } from '@zinnia/bloom/components';
 import { useParams, useSearchParams } from 'next/navigation';
 import { FC, ReactNode, useEffect, useState } from 'react';
 
-import { addBankRequest } from '@/actions/bpm-actions';
+import { addBankRequest } from '@/actions/bpm/bank-actions';
 import { ActionTypes, useBpmStore } from '@/store/store';
 import { BankFormFields } from '@/types/bank';
 import { FormSteps } from '@/types/transactions';
