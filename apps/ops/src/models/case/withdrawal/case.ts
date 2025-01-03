@@ -571,7 +571,7 @@ export interface TaxWithholding {
     amount: TaxWithholdingAmount;
     additionalAmount: TaxWithholdingAmount;
     filingStatus: {
-        text: null; //-- always null
+        text: string | null;
     };
     exemption?: {
         text: string | null;
