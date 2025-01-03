@@ -27,6 +27,7 @@ describe('#ActionCellRenderer', () => {
         render(<ActionCellRenderer {...(params as any)} />);
 
         userEvent.click(screen.getByRole('button'));
+        screen.debug();
         expect(screen.queryByText('Edit')).not.toBeInTheDocument();
         expect(screen.queryByText('Read-only view')).toBeInTheDocument();
     });
@@ -51,6 +52,7 @@ describe('#ActionCellRenderer', () => {
         render(<ActionCellRenderer {...(params as any)} />);
 
         userEvent.click(screen.getByRole('button'));
+        screen.debug();
         expect(screen.queryByText('Edit')).toBeInTheDocument();
         expect(screen.queryByText('Read-only view')).not.toBeInTheDocument();
     });

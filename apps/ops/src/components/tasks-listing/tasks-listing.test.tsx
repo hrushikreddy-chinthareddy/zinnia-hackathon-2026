@@ -13,6 +13,8 @@ jest.mock('next/router', () => ({
 describe('#TasksListing', () => {
     const mockProps = {
         t: jest.fn(id => id),
+        isHeaderHidden: true,
+        isTaskCreationSupported: false,
         tasks: [],
         config: {
             searchResults: 'Search Results',
@@ -40,7 +42,18 @@ describe('#TasksListing', () => {
     });
 
     it('should display tasks when available', () => {
-        const { queryByText } = render(<TasksListing {...mockProps} tasks={[{ id: '1', name: 'Task 1' }] as any} />);
-        expect(queryByText('No tasks found')).toBeNull();
+        const mockTask = [
+            {
+                "id": "TA000000012645",
+                "status": "COMPLETED",
+                "taskName": "Withdrawal form input",
+                "userId": "B, Leena",
+                "createdDate": "2024-09-24T07:29:33Z",
+                "updatedDate": "2024-09-27T07:55:34Z"
+            }
+        ]
+        const { queryByText, container } = render(<TasksListing {...mockProps} tasks={mockTask} />);
+        console.log("??container", container);
+        expect(queryByText('TA000000012645')).toBeInTheDocument();
     });
 });
