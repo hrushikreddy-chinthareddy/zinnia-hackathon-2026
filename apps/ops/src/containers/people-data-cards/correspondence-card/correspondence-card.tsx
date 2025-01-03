@@ -9,6 +9,7 @@ import { Correspondence } from '@deps/models/case/correspondence';
 import { CommunicationTypes } from '@deps/models/case/send-document';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { PartyRole, PartyType, Policy } from '@deps/models/policy/sor-policy';
+import { validateEmail } from '@deps/components/otp-send-document/correspondence';
 
 const getPrimaryEmail = (policy: Policy) => {
     const eDeliveryRoleId = policy.partyRoles?.find(party => party.partyRole === PartyRole.EDELIVERY)?.partyId;
@@ -39,10 +40,16 @@ const CorrespondenceCard = ({
     const selectedCommunicationType = correspondenceData?.type;
     const recipients = correspondenceData?.recipients || [];
 
-    const emailId = getPrimaryEmail(policy);
+    var emailId = getPrimaryEmail(policy);
 
+    if (validateEmail(emailId)) {
+        emailId = '';
+    }
+    
     const [communicationType, setCommunicationType] = useState(selectedCommunicationType || '');
-    const [emails, setEmails] = useState(selectedCommunicationType === CommunicationTypes.Email ? recipients || [emailId] : []);
+    const [emails, setEmails] = useState(
+        selectedCommunicationType === CommunicationTypes.Email ? (recipients.length ? recipients : emailId ? [emailId] : []) : []
+    );
     const [fax, setFax] = useState(selectedCommunicationType === CommunicationTypes.Fax ? recipients || [] : []);
     const [address, setAddress] = useState(correspondenceData?.mailDetails);
     const [ccEmails, setCCEmails] = useState<string[]>([]);

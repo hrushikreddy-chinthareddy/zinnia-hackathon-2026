@@ -63,7 +63,7 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
         () => ({
             ...state?.correspondence,
             type: state?.correspondence?.type || defaultCommunicationType,
-            recipient: state?.correspondence?.recipients,
+            recipients: state?.correspondence?.recipients,
         }),
         [defaultCommunicationType, state?.correspondence]
     );
