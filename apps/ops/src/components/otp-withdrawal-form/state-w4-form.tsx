@@ -61,7 +61,16 @@ export default function StateW4Form({ isFormStateReadOnly, w4pSignaturesConfig }
 
 
   useEffect(() => {
+    let filingStatus = null;
+    if (maritalStatus) {
+      if (maritalStatus === maritalStatusType.marriedFilingJointly || maritalStatus === maritalStatusType.marriedFilingSeparately) {
+        filingStatus = 'Married'
+      }
+      else if (maritalStatus === maritalStatusType.single) {
+        filingStatus = 'Single'
+      }
 
+    }
     const w4pData = {
       irsApplicable: isW4pChecked,
       irsFormType: IrsFormType.W4P,
@@ -79,8 +88,7 @@ export default function StateW4Form({ isFormStateReadOnly, w4pSignaturesConfig }
       },
       irsSignature: w4Psignature,
       irsTaxWithholding:
-        toFormTaxWithholding(stateWithholding, { allowances: [{ text: numberOfAllowances as MaritalStatusAllowances }] })
-      ,
+        toFormTaxWithholding(stateWithholding, { exemption: { text: numberOfAllowances as MaritalStatusAllowances }, filingStatus: { text: filingStatus } })
     };
     const index = formIrsData?.findIndex(data => data?.irsFormType === IrsFormType.W4P);
     const updateFormIrsData = [...formIrsData]
