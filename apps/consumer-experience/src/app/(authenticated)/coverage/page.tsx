@@ -1,24 +1,20 @@
 import { IconType } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
-import { AcknowledgePolicyCard } from '@/components/acknowledge-policy-card/AcknowledgePolicyCard';
 import { CarrierPicker } from '@/components/carrier-picker/CarrierPicker';
 import { CarrierPickerCookieOnly } from '@/components/carrier-picker/CarrierPickerCookieOnly';
-import { CoverageOverviewCard } from '@/components/coverage-overview-card/CoverageOverviewCard';
+import { CoverageCard } from '@/components/coverage-card/CoverageCard';
 import { Footer } from '@/components/footer/Footer';
 import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { RouteKey, getPageTitle } from '@/route-map';
-import { checkResetDeliveryDateEligibility } from '@/services/bpm';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { getMyPoliciesByCarrier } from '@/services/policy';
 import { SearchParams } from '@/types/url';
-import { getCookie } from '@/utils/auth';
 import { getCarrierIdsByThemeCookie } from '@/utils/carriers';
 import { isVercelEnvironment } from '@/utils/environment';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
-import { ACKNOWLEDGEMENT_COOKIE_KEY } from '@/utils/serverClientUtils';
 import { getThemeCookies } from '@/utils/theme';
 
 const pageTitle = getPageTitle(RouteKey.COVERAGE);
@@ -43,31 +39,31 @@ export default async function Page({
   const { data: policyReferenceData, error } =
     await getMyPoliciesByCarrier(carrierIds);
 
-  const ackowledgedCookie = await getCookie(ACKNOWLEDGEMENT_COOKIE_KEY);
-  const parsedCookie = JSON.parse(ackowledgedCookie || '[]');
+  // const ackowledgedCookie = await getCookie(ACKNOWLEDGEMENT_COOKIE_KEY);
+  // const parsedCookie = JSON.parse(ackowledgedCookie || '[]');
 
-  const checkRequiresAckowledgement = [];
-  for (const policy of policyReferenceData || []) {
-    const policyIsInAcknowledgedCookie = parsedCookie?.includes(
-      policy.policyNumber
-    );
+  // const checkRequiresAckowledgement = [];
+  // for (const policy of policyReferenceData || []) {
+  //   const policyIsInAcknowledgedCookie = parsedCookie?.includes(
+  //     policy.policyNumber
+  //   );
 
-    // Only want to check if the policy needs to be acknowledged if it isn't in the cookie
-    if (!policyIsInAcknowledgedCookie) {
-      checkRequiresAckowledgement.push(
-        checkResetDeliveryDateEligibility({
-          planCode: policy.planCode || '',
-          policyNumber: policy.policyNumber,
-        })
-      );
-    }
-  }
+  //   // Only want to check if the policy needs to be acknowledged if it isn't in the cookie
+  //   if (!policyIsInAcknowledgedCookie) {
+  //     checkRequiresAckowledgement.push(
+  //       checkResetDeliveryDateEligibility({
+  //         planCode: policy.planCode || '',
+  //         policyNumber: policy.policyNumber,
+  //       })
+  //     );
+  //   }
+  // }
 
-  const checkEligibilityResults = (
-    await Promise.allSettled(checkRequiresAckowledgement)
-  )
-    .filter(result => result.status === 'fulfilled')
-    .map(result => result.value.data);
+  // const checkEligibilityResults = (
+  //   await Promise.allSettled(checkRequiresAckowledgement)
+  // )
+  //   .filter(result => result.status === 'fulfilled')
+  //   .map(result => result.value.data);
 
   if (error || policyReferenceData?.length === 0) {
     return (
@@ -111,18 +107,7 @@ export default async function Page({
       <HeaderBreadcrumb title={pageTitle} preventReturnToPrevious />
       <div className="card-container" style={{ paddingLeft: 0 }}>
         {policyReferenceData?.map(p => {
-          // We don't set the cookie here because we rely on that to happen
-          // either in middleware or once the user has actively acknowledged the
-          // policy
-          const requiresAcknowledgement = checkEligibilityResults.find(
-            result =>
-              result.policyNumber === p.policyNumber && result.isEligible
-          );
-
-          if (requiresAcknowledgement) {
-            return <AcknowledgePolicyCard key={p.policyNumber} policy={p} />;
-          }
-          return <CoverageOverviewCard key={p.policyNumber} policy={p} />;
+          return <CoverageCard key={p.policyNumber} policy={p} />;
         })}
       </div>
     </div>
