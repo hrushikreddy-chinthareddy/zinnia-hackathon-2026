@@ -23,23 +23,25 @@ export function PartyCardTemplate(props: ArrayFieldTemplateProps) {
     }, [items, uiSchema]);
 
     const handleDocumentClick = (element: any) => {
-        const details = {
-            Name: 'Name',
-            documentNumber: '3242543654 6546546546456546',
-        };
-        const content = <DetailsCard details={details} />;
+        const content = <DetailsCard details={element} />;
         sideSheet.changeSideSheetContent(element.title, content);
         sideSheet.handleOpen(true);
     };
     return (
         <>
+            {props?.title && (
+                <div className={'flex my-2'}>
+                    <div>{props.title}</div>
+                </div>
+            )}
             {schema.type === 'array' && (
+                // todo: vijaya: check the schema keys
                 <div>
                     {formData.map((element: any, index: number) => (
                         <div
                             className="my-3 flex w-[436px] rounded border border-gray-100 p-[12px]"
                             key={index}
-                            onClick={handleDocumentClick}
+                            onClick={() => handleDocumentClick(element)}
                         >
                             <div className="px-2">
                                 <Icon width={20} height={20} type={IconType.CIRCLE_USER} />{' '}
@@ -49,7 +51,7 @@ export function PartyCardTemplate(props: ArrayFieldTemplateProps) {
                                     <PiiWrapper>{element.title}</PiiWrapper>
                                 </div>
                                 <div className="flex items-center text-sm font-normal text-gray-300">
-                                    <PiiWrapper>documentNumber</PiiWrapper>
+                                    <PiiWrapper>{element.subTitle}</PiiWrapper>
                                 </div>
                             </div>
                             <div>
@@ -68,8 +70,8 @@ export default PartyCardTemplate;
 
 const DetailsCard = ({ title, details }: any) => {
     return (
-        <div className="flex flex-col">
-            <div className="mt-4 flex shrink-0 items-center sm:ml-14 md:ml-0 md:mt-0">
+        <div className="flex h-full flex-col p-2">
+            <div className="overflow-y-scroll">
                 <div className="flex flex-col">
                     <label className="font-primary text-[12px] font-bold text-gray-900">{title}</label>
                     {Object.keys(details).length > 0 &&

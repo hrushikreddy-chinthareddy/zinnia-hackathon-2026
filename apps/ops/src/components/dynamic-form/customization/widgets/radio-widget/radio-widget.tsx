@@ -10,6 +10,44 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
 }: WidgetProps<T, S, F>) {
     const { enumOptions } = options;
 
+    // const fetchData = async (search: { [key: string]: any }, nextPage: number) => {
+    //     try {
+    //         setLoading(true);
+    //         const response = await axios.post(api({ page: nextPage, page_size: 3 }), search);
+    //         const data: RadioOption[] = response.data.results.map((item: any) => ({
+    //             label: item[labelKey],
+    //             value: item[valueKey],
+    //         }));
+    //         setLoading(false);
+
+    //         return data;
+    //     } catch (error) {
+    //         setLoading(false);
+    //         console.error('Error fetching data:', error);
+    //         return [];
+    //     }
+    // };
+
+    // useEffect(() => {
+    //     let default_data = [];
+
+    //     const fetchDetails = async () => {
+    //         if (props.formData) {
+    //             const data = await fetchData(
+    //                 {
+    //                     [searchKey]: props.formData,
+    //                 },
+    //                 1
+    //             );
+    //             default_data = data;
+    //         }
+    //         const data = await fetchData({}, 1);
+    //         setOptions([...data, ...default_data]);
+    //     };
+
+    //     fetchDetails();
+    // }, []);
+
     const newOptions = Array.isArray(enumOptions)
         ? enumOptions.map(option => ({
               label: option.label,

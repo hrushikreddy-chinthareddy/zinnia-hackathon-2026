@@ -39,7 +39,7 @@ const TaskFormStep = ({ taskType, readonly = false, taskInfoLink, isSubmit }: Ta
         <WorkflowCard
             className="!gap-0"
             title={t('title')}
-            subtitle={t('subTitle') as string}
+            //   subtitle={t('subTitle') as string}
             footerContent={
                 <TransactionNavigationButtons
                     submitLabel={isSubmit ? (t('submitLabel') as string) : (t('continueLabel') as string)}

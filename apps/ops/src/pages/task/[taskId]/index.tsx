@@ -102,22 +102,18 @@ export const getServerSideProps = withPageAuthRequired({
                 taskName: 'Suitability Review',
                 status: 'NEW',
                 data: {
-                    documentMatcher: [
-                        {
-                            title: 'Financial Objective',
-                            subTitle: 'FinancialObjective = Other',
-                            applicationValue: 'OTHERS',
-                            nmid: 'SU.EM.033',
-                            externalId: '1f533df0-78fd-4d2f-8cc6-d6a6da6b6024',
-                        },
-                        {
-                            title: 'Employment and Source of Income',
-                            subTitle: 'Employment Status = Yes and Source of Income = [HOUSEHOLD_WAGE or ALIMONY]',
-                            applicationValue: 'Employment Status is YES and Source of Income is [HOUSEHOLD_WAGE or ALIMONY]',
-                            nmid: 'SU.EM.031',
-                            externalId: '3e3c7b9f-4677-4ca2-bddc-2c26bca7f8f8',
-                        },
-                    ],
+                    details: {
+                        amount: '2000 $',
+                        documentMatcher: [
+                            {
+                                title: 'Financial Objective',
+                                subTitle: 'FinancialObjective = Other',
+                                name: 'FinancialObjective',
+                                dob: 'Date of birth',
+                                type: 'payment',
+                            },
+                        ],
+                    },
 
                     nigos: ['EX000000003688'],
                 },
@@ -143,6 +139,14 @@ export const getServerSideProps = withPageAuthRequired({
                 ],
                 externalId: '4d4311d0-fee7-4930-9c1a-b03857cd2258',
             };
+
+            // task.data['documentMatcher'].push({
+            //     title: 'Dyanamic Title',
+            //     subTitle: 'Employment Status = Yes and Source of Income = [HOUSEHOLD_WAGE or ALIMONY]',
+            //     applicationValue: 'Employment Status is YES and Source of Income is [HOUSEHOLD_WAGE or ALIMONY]',
+            //     nmid: 'SU.EM.031',
+            //     externalId: '3e3c7b9f-4677-4ca2-bddc-2c26bca7f8f8',
+            // });
 
             if (!task) {
                 logError('Task::Error getting task by id', {
@@ -173,32 +177,57 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
-            //  const taskMetadata = await getTaskFormMetadata(carrier, taskType as TaskType, process as ProcessType, accessToken);
+            //  const taskMetadata = await getTaskFormMetadata(carrier, taskType as TtaskFormaskType, process as ProcessType, accessToken);
 
             const taskMetadata = {
                 formId: '004c97a1-d97c-4faa-9b7f-8ff9105b4c29',
                 process: 'New Business',
                 carrier: 'WELB',
                 taskType: 'SUITABILITY_REVIEW',
+                title: 'Match Document',
                 formSchema: {
                     $schema: 'http://json-schema.org/draft-07/schema#',
                     type: 'object',
-                    definitions: {},
+
                     properties: {
-                        documentMatcher: {
-                            type: 'array',
-                            title: '',
-                            items: {
-                                type: 'object',
-                                title: '',
-                                properties: {
-                                    title: {
-                                        type: 'string',
-                                        title: 'Title',
-                                    },
-                                    subtitle: {
-                                        type: 'string',
-                                        title: 'Subtitle',
+                        sectionHeader: {
+                            type: 'instructions',
+                            title: 'Processing Instructions',
+                            subTitle:
+                                "This customer's application was flagged for review. Accept or Decline each issue before submitting a final decision.",
+                        },
+                        details: {
+                            type: 'object',
+                            title: 'Details',
+                            properties: {
+                                amount: {
+                                    type: 'string',
+                                    title: 'Amount Received',
+                                },
+                                documentMatcher: {
+                                    type: 'array',
+                                    title: 'Supporting information',
+                                    items: {
+                                        type: 'object',
+                                        title: '',
+                                        properties: {
+                                            title: {
+                                                type: 'string',
+                                                title: 'Title',
+                                            },
+                                            subtitle: {
+                                                type: 'string',
+                                                title: 'Subtitle',
+                                            },
+                                            name: {
+                                                type: 'string',
+                                                title: 'Title',
+                                            },
+                                            dob: {
+                                                type: 'string',
+                                                title: 'Subtitle',
+                                            },
+                                        },
                                     },
                                 },
                             },
@@ -216,14 +245,31 @@ export const getServerSideProps = withPageAuthRequired({
                     'ui:submitButtonOptions': {
                         norender: true,
                     },
-                    documentMatcher: {
+                    sectionHeader: {
                         'ui:options': {
-                            label: false,
-                            ArrayFieldTemplate: 'PartyCardTemplate',
+                            label: true,
                         },
-                        items: {
+                        'ui:field': 'instructions',
+                    },
+                    details: {
+                        accord: true,
+                        'ui:options': {
+                            label: true,
+                        },
+                        amount: {
                             'ui:options': {
-                                canAdd: false,
+                                disabled: true,
+                            },
+                        },
+                        documentMatcher: {
+                            'ui:options': {
+                                label: false,
+                                ArrayFieldTemplate: 'PartyCardTemplate',
+                            },
+                            items: {
+                                'ui:options': {
+                                    canAdd: false,
+                                },
                             },
                         },
                     },
