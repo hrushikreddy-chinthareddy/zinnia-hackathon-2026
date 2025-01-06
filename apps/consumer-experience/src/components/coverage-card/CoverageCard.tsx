@@ -1,6 +1,6 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { skipToken, useQuery } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
 
@@ -22,6 +22,7 @@ export const CoverageCard = ({ policy }: { policy: CarrierPolicyDetails }) => {
 
   const ackowledgedCookie = Cookies.get(ACKNOWLEDGEMENT_COOKIE_KEY);
   const parsedCookie = JSON.parse(ackowledgedCookie || '[]');
+
   const policyIsInAcknowledgedCookie = parsedCookie?.includes(
     policy.policyNumber
   );
@@ -32,14 +33,18 @@ export const CoverageCard = ({ policy }: { policy: CarrierPolicyDetails }) => {
 
   // TODO: there is a full refresh happening for some reason, is it something with this?
   const { data: requiresAckowledgement, isLoading } = useQuery({
-    enabled: !policyIsInAcknowledgedCookie,
     queryKey: [QueryKeys.POLICY_ACKNOWLEDGEMENT, policy.policyNumber],
-    queryFn: () =>
-      checkIfPolicyRequiresAcknowledgement(
-        policy.planCode,
-        policy.policyNumber
-      ),
+    queryFn: !policyIsInAcknowledgedCookie
+      ? () =>
+          checkIfPolicyRequiresAcknowledgement(
+            policy.planCode,
+            policy.policyNumber
+          )
+      : skipToken,
   });
+
+  console.log('policyIsInAcknowledgedCookie', policyIsInAcknowledgedCookie);
+  console.log('requiresAckowledgement', requiresAckowledgement);
 
   if (!clientReady) {
     return null;
@@ -61,7 +66,14 @@ export const CoverageCard = ({ policy }: { policy: CarrierPolicyDetails }) => {
     );
   }
 
-  if (requiresAckowledgement && requiresAckowledgement.isEligible) {
+  if (
+    // Include this check because if the user checks the box to acknowledge the policy, the
+    // requiresAcknowledgement query was already run and the data cached, so this check
+    // will still return true without the additional cookie check
+    !policyIsInAcknowledgedCookie &&
+    requiresAckowledgement &&
+    requiresAckowledgement.isEligible
+  ) {
     return <AcknowledgePolicyCard policy={policy} />;
   }
 
