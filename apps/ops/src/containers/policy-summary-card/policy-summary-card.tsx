@@ -685,8 +685,7 @@ export const PolicyQuickView: React.FC<SummaryCardProps> = ({ policy }) => {
         try {
             const policyNumber = policyDetails.policyNumber;
             const response = await getCases({
-                // to do - what should I pass as limit if I just want the total?
-                limit: 200,
+                limit: 5,
                 notInCaseStatus: [Statuses.NotStarted, Statuses.InProgress, Statuses.Exception],
                 policyNumber,
             });
@@ -696,7 +695,7 @@ export const PolicyQuickView: React.FC<SummaryCardProps> = ({ policy }) => {
             }
 
             if ('total' in response) {
-                const total = response.data.length;
+                const total = response.total;
                 setCasesTotal(total);
             } else {
                 console.log('Error fetching cases: No data in response');
