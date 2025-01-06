@@ -1020,6 +1020,7 @@ export enum Carrier {
     RSLN = 'RSLN',
     WELB = 'WELB',
     GLCO = 'GLCO',
+    ULPC = 'ULPC'
 }
 export const ParticipantCompanies = [
     { companyName: 'AIG ANNUITIES-VAR & IDX/VAR.ANN.LIFE', code: '3179' },
