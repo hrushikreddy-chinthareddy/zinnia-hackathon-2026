@@ -31,7 +31,6 @@ export const CoverageCard = ({ policy }: { policy: CarrierPolicyDetails }) => {
     setClientReady(true);
   }, []);
 
-  // TODO: there is a full refresh happening for some reason, is it something with this?
   const { data: requiresAckowledgement, isLoading } = useQuery({
     queryKey: [QueryKeys.POLICY_ACKNOWLEDGEMENT, policy.policyNumber],
     queryFn: !policyIsInAcknowledgedCookie
