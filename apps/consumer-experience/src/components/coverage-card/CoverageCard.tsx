@@ -14,6 +14,22 @@ import { ACKNOWLEDGEMENT_COOKIE_KEY } from '@/utils/serverClientUtils';
 import { ClickableCardContainer } from '../clickable-card-container/ClickableCardContainer';
 import { SkeletonLoader } from '../skeleton-loader/SkeletonLoader';
 
+const CoverageCardSkeleton = () => {
+  return (
+    <ClickableCardContainer>
+      <div
+        className="stacked-items mb-lg"
+        style={{ gap: 'var(--measure-dimension-gap-sm)' }}
+      >
+        <SkeletonLoader width="150px" height="14px" />
+        <SkeletonLoader width="125px" height="14px" />
+        <SkeletonLoader width="175px" height="14px" />
+      </div>
+      <SkeletonLoader width="100%" height="14px" />
+    </ClickableCardContainer>
+  );
+};
+
 // We don't set the cookie here because we rely on that to happen
 // either in middleware or once the user has actively acknowledged the
 // policy
@@ -47,23 +63,11 @@ export const CoverageCard = ({ policy }: { policy: CarrierPolicyDetails }) => {
   console.log('requiresAckowledgement', requiresAckowledgement);
 
   if (!clientReady) {
-    return null;
+    return <CoverageCardSkeleton />;
   }
 
   if (isLoading) {
-    return (
-      <ClickableCardContainer>
-        <div
-          className="stacked-items mb-lg"
-          style={{ gap: 'var(--measure-dimension-gap-sm)' }}
-        >
-          <SkeletonLoader width="150px" height="14px" />
-          <SkeletonLoader width="125px" height="14px" />
-          <SkeletonLoader width="175px" height="14px" />
-        </div>
-        <SkeletonLoader width="100%" height="14px" />
-      </ClickableCardContainer>
-    );
+    return <CoverageCardSkeleton />;
   }
 
   if (
