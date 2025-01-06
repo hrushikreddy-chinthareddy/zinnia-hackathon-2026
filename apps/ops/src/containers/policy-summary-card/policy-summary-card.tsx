@@ -400,6 +400,7 @@ const StatusBanner = ({ policy, casesTotal }: BasePolicyComponentArgs & { casesT
                 cta={{
                     href: `/cases?caseStatus=NOT_STARTED&caseStatus=IN_PROGRESS&caseStatus=EXCEPTION&sortBy=createdAt&sortDirection=desc&policyNumber=${policy.policyNumber}`,
                     text: t('dashboard.search.results.policySummaryCard.caseBannerLink'),
+                    target: '_blank',
                 }}
             />
         );
