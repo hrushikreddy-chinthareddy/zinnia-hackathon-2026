@@ -23,6 +23,7 @@ export const CoverageCard = ({ policy }: { policy: CarrierPolicyDetails }) => {
     policy.policyNumber
   );
 
+  // TODO: there is a full refresh happening for some reason, is it something with this?
   const { data: requiresAckowledgement, isLoading } = useQuery({
     enabled: !policyIsInAcknowledgedCookie,
     queryKey: [QueryKeys.POLICY_ACKNOWLEDGEMENT, policy.policyNumber],
@@ -36,10 +37,13 @@ export const CoverageCard = ({ policy }: { policy: CarrierPolicyDetails }) => {
   if (isLoading) {
     return (
       <ClickableCardContainer>
-        <div className="stacked-items mb-lg">
-          <SkeletonLoader width="150px" height="14px" className="mb-sm" />
-          <SkeletonLoader width="125px" height="14px" className="mb-sm" />
-          <SkeletonLoader width="175px" height="14px" className="mb-sm" />
+        <div
+          className="stacked-items mb-lg"
+          style={{ gap: 'var(--measure-dimension-gap-sm)' }}
+        >
+          <SkeletonLoader width="150px" height="14px" />
+          <SkeletonLoader width="125px" height="14px" />
+          <SkeletonLoader width="175px" height="14px" />
         </div>
         <SkeletonLoader width="100%" height="14px" />
       </ClickableCardContainer>
