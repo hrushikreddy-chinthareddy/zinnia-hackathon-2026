@@ -107,8 +107,9 @@ export default function NasuWithdrawalForm() {
                 options={disbursementOptions}
                 defaultValue={defaultValues.disbursementOption}
             />
-            {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
+
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
+            {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
             <TaxOL4753Attachment
                 isFormStateReadOnly={isFormStateReadOnly}
                 shouldShowDOBInOl4573={shouldShowDOBInOl4573}
