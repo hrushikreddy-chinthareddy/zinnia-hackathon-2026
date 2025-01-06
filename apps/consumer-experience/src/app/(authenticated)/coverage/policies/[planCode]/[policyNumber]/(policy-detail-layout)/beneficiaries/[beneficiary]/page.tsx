@@ -72,7 +72,7 @@ export default async function Beneficiary({
   const address = () => {
     if (data.addresses) {
       const currentAddresses = filterItemsWithPastEndDate(data.addresses);
-
+      console.log('bene addresses', currentAddresses);
       if (currentAddresses.length > 0) {
         return (
           <Addresses

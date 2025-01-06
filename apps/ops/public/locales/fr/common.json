@@ -2597,6 +2597,7 @@
             "actions": "Actions",
             "actionsTooltip": "Pour l'instant, certains types de fichiers (par exemple, CTX et DOC) ne peuvent être téléchargés que. Nous travaillons actuellement sur la possibilité de rendre tous les types de fichiers entrants visibles dans Zinnia Live. Restez à l'écoute !",
             "document": "Document",
+            "documentId": "Document/ID",
             "documentDate": "Date du document",
             "documentIdentifier": "Identifiant du document",
             "documentIdentifierTooltip": "Il s'agit du nom du document ainsi que de l'identifiant du document, un ensemble unique de caractères attribué à chaque document. Astuce : l'identifiant du document reçu peut vous en dire un peu plus sur le document lui-même. Le premier ensemble de caractères de l'identifiant d'un document reçu correspond à la date de réception au format AAAAMMJJ. Les majuscules correspondent à la manière dont il a été reçu (par exemple, DS = Docusign, EM = Courrier électronique, F = Télécopie, M = EApp, 1-8 = Numérisation de salle du courrier, etc.).",

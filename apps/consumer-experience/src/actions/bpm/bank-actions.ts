@@ -1,6 +1,6 @@
 'use server';
+// TODO: genericize the bpm actions so don't have to duplicate the returns and errors and logging
 
-import { BankAccountChangeRequest } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -11,7 +11,7 @@ import {
   getUnsanitizedBanksByPolicyPlanCodeAndId,
   ServerApi,
 } from '@/services';
-import { BankRequest } from '@/types/transactions';
+import { BankRequest, BPMResponse } from '@/types/transactions';
 import { parseAPIResponse, logApiNotOkDetails } from '@/utils/api';
 import {
   bankAccountNumberSanitizer,
@@ -20,24 +20,6 @@ import {
 } from '@/utils/data';
 import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
 import { logError } from '@/utils/logging/server-logging';
-
-interface AddBankRequestArgs {
-  planCode: string;
-  policyNumber: string;
-  partyId: string;
-  bankId?: string;
-  bankAccountChangeRequest: BankAccountChangeRequest;
-}
-
-interface BPMBankResponse {
-  correlationId: string;
-  caseId: string;
-  caseStatus: string;
-  messages: {
-    title: string;
-    message: string;
-  };
-}
 
 /**
  * Posts a bank account to the BPM API.
@@ -51,7 +33,7 @@ interface BPMBankResponse {
  */
 export const postAddBankAccount = async (
   options: BankRequest
-): Promise<ApiResponse<BPMBankResponse>> => {
+): Promise<ApiResponse<BPMResponse>> => {
   try {
     const { planCode, policyNumber, partyId, bankAccountChangeRequest } =
       options;
@@ -134,8 +116,8 @@ export const postAddBankAccount = async (
 };
 
 export const addBankRequest = async (
-  options: AddBankRequestArgs
-): Promise<ApiResponse<BPMBankResponse>> => {
+  options: BankRequest
+): Promise<ApiResponse<BPMResponse>> => {
   return await postAddBankAccount(options);
 };
 
@@ -149,11 +131,10 @@ export const addBankRequest = async (
  * @param {string} options.bankId - The ID of the bank account to delete.
  * @return {Promise<ApiResponse>} The API response containing the deleted bank account details or an error.
  *
- * TODO: Ed: does this actually work? Unused in digital experience repo
  */
 export const putEndDateBankAccount = async (
   options: BankRequest
-): Promise<ApiResponse<BPMBankResponse>> => {
+): Promise<ApiResponse<BPMResponse>> => {
   const { planCode, policyNumber, partyId, bankId } = options;
   const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/parties/${partyId}/bankaccount/${bankId}`;
 

@@ -14,8 +14,9 @@ import TaxWithholdingSpecified from './tax-withholding-specified';
 
 export const toFormTaxWithholding = (
     withholding: WithholdingView | undefined,
-    maritalAllowances?: Pick<TaxWithholding, 'multipleAllowances' | 'exemption' | 'allowances'>
+    maritalAllowances?: Pick<TaxWithholding, 'multipleAllowances' | 'exemption' | 'allowances' | 'filingStatus'>
 ): TaxWithholding[] | undefined => {
+
     const formTaxWithholdings = [];
     if (!withholding) {
         return undefined;
@@ -214,7 +215,7 @@ export default function TaxWithholdings({
         };
 
         const fed = toFormTaxWithholding(federalWithholding);
-        const state = noWithholdings ? toFormTaxWithholding(IOWAWithholding) : toFormTaxWithholding(stateWithholding, maritalAllowances);
+        const state = noWithholdings ? toFormTaxWithholding(IOWAWithholding) : toFormTaxWithholding(stateWithholding, { ...maritalAllowances, filingStatus: { text: maritalAllowancesTax?.filingStatus?.text ?? null } });
 
         if (fed) {
             withholdings.push(...fed);

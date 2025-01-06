@@ -5,7 +5,7 @@ import { SideSheet, Button, Icon, IconType } from '@zinnia/bloom/components';
 import { useParams } from 'next/navigation';
 import { FC, ReactNode, useState } from 'react';
 
-import { putEndDateBankAccount } from '@/actions/bpm-actions';
+import { putEndDateBankAccount } from '@/actions/bpm/bank-actions';
 import { useUser } from '@/hooks/use-user';
 import { ActionTypes, useBpmStore } from '@/store/store';
 import { BankFormFields } from '@/types/bank';

@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
+import UnauthorizedCard from '@deps/components/card/card-unauthorized';
 import EventsLoader from '@deps/components/events-loader/events-loader';
 import FieldLabel from '@deps/components/fields/field-label';
 import PageHeader from '@deps/components/page-header/page-header';
@@ -15,12 +16,11 @@ import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 import { PolicyDocument, PolicyDocuments } from '@deps/models/case/document';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { getPolicyDocs, getCorrespondenceDocs } from '@deps/queries/api/documents';
+import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { DEFAULT_ERROR_STRING, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import DocumentResultsPagination from './documents-results-pagination';
 import DocumentsResultsTable from './documents-results-table';
-import UnauthorizedCard from '@deps/components/card/card-unauthorized';
-import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 
 type DocumentsSubPageProps = {
     policy: Policy;
@@ -82,7 +82,7 @@ export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
             let optionalParams;
             if (yearSelection !== 'all') {
                 const isFirstYearSelected = yearOptions[yearOptions.length - 1].value === yearSelection;
-                const startDate = dayjs().year(Number(yearSelection)).month(1).day(1);
+                const startDate = dayjs().year(Number(yearSelection)).month(0).date(1);
                 const documentStartDate = isFirstYearSelected
                     ? startDate.add(1, 'year').subtract(1100, 'days').format(ZAHARA_API_DATE_FORMAT) // this is the maximum range allowed
                     : startDate.format(ZAHARA_API_DATE_FORMAT);

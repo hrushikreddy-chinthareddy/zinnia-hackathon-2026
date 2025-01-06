@@ -32,6 +32,7 @@
 .addAddressButton {
   justify-content: flex-start;
   padding: 0;
+  width: fit-content;
 }
 .selectContent {
   z-index: 600;
