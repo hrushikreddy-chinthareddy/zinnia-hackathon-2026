@@ -63,7 +63,7 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
                             <CircleCheckedIcon width={16} height={16} className="mr-1 text-semantic-success" />
                         )}
                         {task.status == TaskStatus.Completed && (
-                            <CompletedIcon width={16} height={16} className="mr-1 text-semantic-success" />
+                            <CompletedIcon width={24} height={24} className="mr-1 text-semantic-success" />
                         )}
 
                         <Typography variant={TypographyVariant.BodySm} className="py-2 pr-6 px-2">
