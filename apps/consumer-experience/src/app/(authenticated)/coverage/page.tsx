@@ -39,32 +39,6 @@ export default async function Page({
   const { data: policyReferenceData, error } =
     await getMyPoliciesByCarrier(carrierIds);
 
-  // const ackowledgedCookie = await getCookie(ACKNOWLEDGEMENT_COOKIE_KEY);
-  // const parsedCookie = JSON.parse(ackowledgedCookie || '[]');
-
-  // const checkRequiresAckowledgement = [];
-  // for (const policy of policyReferenceData || []) {
-  //   const policyIsInAcknowledgedCookie = parsedCookie?.includes(
-  //     policy.policyNumber
-  //   );
-
-  //   // Only want to check if the policy needs to be acknowledged if it isn't in the cookie
-  //   if (!policyIsInAcknowledgedCookie) {
-  //     checkRequiresAckowledgement.push(
-  //       checkResetDeliveryDateEligibility({
-  //         planCode: policy.planCode || '',
-  //         policyNumber: policy.policyNumber,
-  //       })
-  //     );
-  //   }
-  // }
-
-  // const checkEligibilityResults = (
-  //   await Promise.allSettled(checkRequiresAckowledgement)
-  // )
-  //   .filter(result => result.status === 'fulfilled')
-  //   .map(result => result.value.data);
-
   if (error || policyReferenceData?.length === 0) {
     return (
       <>
@@ -109,6 +83,7 @@ export default async function Page({
         {policyReferenceData?.map(p => {
           return <CoverageCard key={p.policyNumber} policy={p} />;
         })}
+        {/* <CoverageCard policy={policyReferenceData[0]} /> */}
       </div>
     </div>
   );

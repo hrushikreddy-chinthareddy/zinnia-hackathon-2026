@@ -2,6 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
+import { useEffect, useState } from 'react';
 
 import { AcknowledgePolicyCard } from '@/components/acknowledge-policy-card/AcknowledgePolicyCard';
 import { CoverageOverviewCard } from '@/components/coverage-overview-card/CoverageOverviewCard';
@@ -17,11 +18,17 @@ import { SkeletonLoader } from '../skeleton-loader/SkeletonLoader';
 // either in middleware or once the user has actively acknowledged the
 // policy
 export const CoverageCard = ({ policy }: { policy: CarrierPolicyDetails }) => {
+  const [clientReady, setClientReady] = useState(false);
+
   const ackowledgedCookie = Cookies.get(ACKNOWLEDGEMENT_COOKIE_KEY);
   const parsedCookie = JSON.parse(ackowledgedCookie || '[]');
   const policyIsInAcknowledgedCookie = parsedCookie?.includes(
     policy.policyNumber
   );
+
+  useEffect(() => {
+    setClientReady(true);
+  }, []);
 
   // TODO: there is a full refresh happening for some reason, is it something with this?
   const { data: requiresAckowledgement, isLoading } = useQuery({
@@ -33,6 +40,10 @@ export const CoverageCard = ({ policy }: { policy: CarrierPolicyDetails }) => {
         policy.policyNumber
       ),
   });
+
+  if (!clientReady) {
+    return null;
+  }
 
   if (isLoading) {
     return (
