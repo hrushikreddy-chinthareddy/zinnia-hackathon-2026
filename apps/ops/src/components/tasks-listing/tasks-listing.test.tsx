@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-// import router from 'next/router';
 
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { CaseStatus } from '@deps/models/case/withdrawal/case';
@@ -7,7 +6,10 @@ import { CaseStatus } from '@deps/models/case/withdrawal/case';
 import TasksListing from './tasks-listing';
 
 jest.mock('next/router', () => ({
-    push: jest.fn(),
+    useRouter: jest.fn(() => ({
+        push: jest.fn(),
+        pathname: '',
+    })),
 }));
 
 describe('#TasksListing', () => {
@@ -47,13 +49,12 @@ describe('#TasksListing', () => {
                 "id": "TA000000012645",
                 "status": "COMPLETED",
                 "taskName": "Withdrawal form input",
-                "userId": "B, Leena",
+                "userId": "B, Lee",
                 "createdDate": "2024-09-24T07:29:33Z",
                 "updatedDate": "2024-09-27T07:55:34Z"
             }
         ]
-        const { queryByText, container } = render(<TasksListing {...mockProps} tasks={mockTask} />);
-        console.log("??container", container);
+        const { queryByText } = render(<TasksListing {...mockProps} tasks={mockTask} />);
         expect(queryByText('TA000000012645')).toBeInTheDocument();
     });
 });

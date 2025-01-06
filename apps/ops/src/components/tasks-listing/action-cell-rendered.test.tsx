@@ -6,14 +6,14 @@ import { CaseStatus } from '@deps/models/case/withdrawal/case';
 
 import ActionCellRenderer from './action-cell-renderer';
 
-describe('#ActionCellRenderer', () => {
-    it('should render readonly action when the task status is completed', () => {
+describe('#ActionCellRenderer', async() => {
+    it('should render readonly action when the task status is completed', async () => {
         const params = {
             data: {
                 status: TaskStatus.Completed,
             },
             actionParams: {
-                isReadOnly: (status: string) => CaseStatus.Submit || status === TaskStatus.Completed,
+                isReadOnly: (status: string) => (status === CaseStatus.Submit || status === TaskStatus.Completed),
                 isEditable: (status: string) =>  (status === CaseStatus.Pending || status === TaskStatus.New ||  status === TaskStatus.InProgress),
                 actionLabels: {
                     edit: 'Edit',
@@ -26,19 +26,18 @@ describe('#ActionCellRenderer', () => {
 
         render(<ActionCellRenderer {...(params as any)} />);
 
-        userEvent.click(screen.getByRole('button'));
-        screen.debug();
+        await userEvent.click(screen.getByRole('button'));
         expect(screen.queryByText('Edit')).not.toBeInTheDocument();
         expect(screen.queryByText('Read-only view')).toBeInTheDocument();
     });
 
-    it('should render the edit action when task Status us new', () => {
+    it('should render the edit action when task Status us new', async () => {
         const params = {
             data: {
                 status: TaskStatus.New ,
             },
             actionParams: {
-                isReadOnly: (status: string) => CaseStatus.Submit || status === TaskStatus.Completed,
+                isReadOnly: (status: string) => (status === CaseStatus.Submit || status === TaskStatus.Completed),
                 isEditable: (status: string) =>  (status === CaseStatus.Pending || status === TaskStatus.New ||  status === TaskStatus.InProgress),
                 actionLabels: {
                     edit: 'Edit',
@@ -51,8 +50,7 @@ describe('#ActionCellRenderer', () => {
 
         render(<ActionCellRenderer {...(params as any)} />);
 
-        userEvent.click(screen.getByRole('button'));
-        screen.debug();
+        await userEvent.click(screen.getByRole('button'));
         expect(screen.queryByText('Edit')).toBeInTheDocument();
         expect(screen.queryByText('Read-only view')).not.toBeInTheDocument();
     });
