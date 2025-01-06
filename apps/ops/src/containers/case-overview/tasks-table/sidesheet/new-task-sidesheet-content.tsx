@@ -1,4 +1,5 @@
 import { Icon, IconType, Link, Loader, TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
+import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
@@ -12,9 +13,9 @@ import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { getTaskInstance } from '@deps/queries/api/v2/task';
 import { ReactComponent as NotStartedIcon } from '@deps/styles/elements/icons/alert/not-started.svg';
 import { ReactComponent as CircleCheckedIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
-import { ReactComponent as CircleStoppedIcon } from '@deps/styles/elements/icons/circles/stop-circle.svg';
+import { ReactComponent as CompletedIcon } from '@deps/styles/elements/icons/icons_outlined/check-circle.svg';
 import { ReactComponent as UserCircleIcon } from '@deps/styles/elements/icons/icons_outlined/user-circle.svg';
-import { DEFAULT_DATE_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+import { DEFAULT_DATE_FORMAT, DEFAULT_DATETIME_DISPLAY_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 
 const TaskTypeMap: Record<string, string> = {
     ['SUITABILITY_REVIEW']: 'suitability review',
@@ -61,7 +62,9 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
                         {task.status == TaskStatus.InProgress && (
                             <CircleCheckedIcon width={16} height={16} className="mr-1 text-semantic-success" />
                         )}
-                        {task.status == TaskStatus.Completed && <CircleStoppedIcon width={16} height={16} className="mr-2 text-gray-300" />}
+                        {task.status == TaskStatus.Completed && (
+                            <CompletedIcon width={16} height={16} className="mr-1 text-semantic-success" />
+                        )}
 
                         <Typography variant={TypographyVariant.BodySm} className="py-2 pr-6 px-2">
                             {toSentenceCase(task.status)}
@@ -85,7 +88,7 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
                 <div className="flex flex-row items-center gap-1">
                     <Label label={t('sideSheet.task.createdLabel')} variant={LabelVariant.FieldLabel} className="w-[100px] py-2" />
                     <Typography variant={TypographyVariant.BodySm} className="py-2">
-                        {formattedCreated}
+                        {dayjs(formattedCreated).format(DEFAULT_DATETIME_DISPLAY_FORMAT)}
                         <span className="text-gray-600">
                             &nbsp;
                             {`(${t('temporal.timeago', { formattedDate: '', count: createdCount, unit: createdUnit }).trim()})`}
