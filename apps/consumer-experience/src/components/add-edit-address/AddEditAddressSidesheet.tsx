@@ -11,6 +11,7 @@ import {
   putEndDateAddress,
 } from '@/actions/bpm/address-actions';
 import { FormSteps } from '@/types/transactions';
+import { zipCodeInParts } from '@/utils/address';
 
 import styles from './AddEditAddressSidesheet.module.css';
 import { Error } from '../transaction-steps/error/Error';
@@ -23,20 +24,6 @@ import {
 } from './form-steps/add/AddEditAddress';
 import { AddEditAddressSidesheetProps, FormActionType } from './types';
 import { Confirm } from '../transaction-steps/confirm/Confirm';
-
-const zipCodeInParts = (postalCode?: string) => {
-  if (!postalCode) {
-    return {};
-  }
-
-  // This is extra extra precaution. The input field should prevent spaces.
-  const trimmedPostalCode = postalCode.trim();
-
-  return {
-    zipCode: trimmedPostalCode.split('-')[0],
-    extension: trimmedPostalCode.split('-')[1],
-  };
-};
 
 const formatAddressLines = (
   addressLines?: AddressObj[]
@@ -129,14 +116,14 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
     setStep(FormSteps.LOADING);
 
     const formattedAddressLines = formatAddressLines(requestValues.addresses);
-
+    const zipCodeParts = zipCodeInParts(requestValues?.zipCode);
     const addressChangeRequest = {
       preferredAddressIndicator: requestValues.defaultAddress
         ? AddressChange.preferredAddressIndicator.YES
         : AddressChange.preferredAddressIndicator.NO,
       address: {
         ...formattedAddressLines,
-        ...zipCodeInParts,
+        ...zipCodeParts,
         // TODO: i think these are for seasonal address setting which isn't available
         // yet so leaving null
         // startDate: '4186-48-30',
@@ -196,6 +183,10 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
       // });
       return;
     }
+  };
+
+  const errorCloseCallback = () => {
+    setStep(undefined);
   };
 
   const onClose = () => {
@@ -258,7 +249,7 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
           errorTitle={errorTitle}
           isServerError={isServerError}
           errorMessage={errorMessage}
-          closeCallback={onClose}
+          closeCallback={errorCloseCallback}
         />
       )}
       {step === FormSteps.SUCCESS && (

@@ -263,7 +263,7 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
             <div className={styles.defaultAddress}>
               <Checkbox
                 id="checkbox-default-address"
-                onChange={field.onChange}
+                onClick={field.onChange}
                 isCheckedByDefault={field.value}
               >
                 {' '}
