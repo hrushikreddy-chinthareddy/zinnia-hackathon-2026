@@ -6,7 +6,7 @@ import { CaseStatus } from '@deps/models/case/withdrawal/case';
 
 import ActionCellRenderer from './action-cell-renderer';
 
-describe('#ActionCellRenderer', async() => {
+describe('#ActionCellRenderer', () => {
     it('should render readonly action when the task status is completed', async () => {
         const params = {
             data: {
