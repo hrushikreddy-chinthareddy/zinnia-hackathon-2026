@@ -392,70 +392,62 @@ const StatusBanner = ({ policy, casesTotal }: BasePolicyComponentArgs & { casesT
     const freeLookEnabled = featureFlags[FEATURE_FLAGS.POLICY_FREE_LOOK_CANCELLATION];
 
     const showCaseBanner = casesTotal && casesTotal > 0;
-    if (showCaseBanner) {
-        return (
-            <BannerAlert
-                variant={BannerVariant.Warning}
-                bodyText={t('dashboard.search.results.policySummaryCard.caseBannerText', { count: casesTotal })}
-                cta={{
-                    href: `/cases?caseStatus=NOT_STARTED&caseStatus=IN_PROGRESS&caseStatus=EXCEPTION&sortBy=createdAt&sortDirection=desc&policyNumber=${policy.policyNumber}`,
-                    text: t('dashboard.search.results.policySummaryCard.caseBannerLink'),
-                    target: '_blank',
-                }}
-            />
-        );
-    }
 
-    if (policyStatus === PolicyStatus.PENDINGLAPSE) {
-        return (
-            <BannerAlert
-                variant={BannerVariant.Warning}
-                cta={{
-                    href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/new-premium/`,
-                    text: t('dashboard.search.results.policySummaryCard.pendingLapseBannerLink'),
-                }}
-                bodyText={t('dashboard.search.results.policySummaryCard.pendingLapseBannerText')}
-            />
-        );
-    }
-    if (policyStatus === PolicyStatus.LAPSE) {
-        // TODO - BPB: Policy Features Helper Class
-        const reinstatementWithApproval = policy.policy.policyFeatures?.find(
-            pf => pf.featureType === ('REINSTATEMENT' as PolicyFeatureFeatureType) && pf.approvalDate
-        );
+    // TODO - BPB: Policy Features Helper Class
+    const reinstatementWithApproval = policy.policy.policyFeatures?.find(
+        pf => pf.featureType === ('REINSTATEMENT' as PolicyFeatureFeatureType) && pf.approvalDate
+    );
 
-        if (!reinstatementWithApproval) {
-            return null;
-        }
+    return (
+        <div className="flex flex-col gap-4">
+            {showCaseBanner && (
+                <BannerAlert
+                    variant={BannerVariant.Warning}
+                    bodyText={t('dashboard.search.results.policySummaryCard.caseBannerText', { count: casesTotal })}
+                    cta={{
+                        href: `/cases?caseStatus=NOT_STARTED&caseStatus=IN_PROGRESS&caseStatus=EXCEPTION&sortBy=createdAt&sortDirection=desc&policyNumber=${policy.policyNumber}`,
+                        text: t('dashboard.search.results.policySummaryCard.caseBannerLink'),
+                        target: '_blank',
+                    }}
+                />
+            )}
 
-        return (
-            <BannerAlert
-                variant={BannerVariant.Error}
-                cta={{
-                    href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/new-premium/`,
-                    text: t('dashboard.search.results.policySummaryCard.lapseBannerLink'),
-                }}
-                bodyText={t('dashboard.search.results.policySummaryCard.lapseBannerText')}
-            />
-        );
-    }
+            {policyStatus === PolicyStatus.PENDINGLAPSE && (
+                <BannerAlert
+                    variant={BannerVariant.Warning}
+                    cta={{
+                        href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/new-premium/`,
+                        text: t('dashboard.search.results.policySummaryCard.pendingLapseBannerLink'),
+                    }}
+                    bodyText={t('dashboard.search.results.policySummaryCard.pendingLapseBannerText')}
+                />
+            )}
 
-    if (freeLookEnabled && policy.freeLookPeriodDetails.isInFreeLookPeriod) {
-        return (
-            <BannerAlert
-                variant={BannerVariant.Warning}
-                bodyText={`${t('dashboard.search.results.policySummaryCard.freeLookCancelBannerText')} ${convertKebabedDateString(
-                    policy.freeLookPeriodDetails?.endDate
-                )}`}
-                cta={{
-                    href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/freelook/cancel-freelook/`,
-                    text: t('dashboard.search.results.policySummaryCard.freeLookCancelBannerLink'),
-                }}
-            />
-        );
-    }
+            {policyStatus === PolicyStatus.LAPSE && !!reinstatementWithApproval && (
+                <BannerAlert
+                    variant={BannerVariant.Error}
+                    cta={{
+                        href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/new-premium/`,
+                        text: t('dashboard.search.results.policySummaryCard.lapseBannerLink'),
+                    }}
+                    bodyText={t('dashboard.search.results.policySummaryCard.lapseBannerText')}
+                />
+            )}
 
-    return null;
+            {freeLookEnabled && policy.freeLookPeriodDetails.isInFreeLookPeriod && (
+                <BannerAlert
+                    variant={BannerVariant.Warning}
+                    bodyText={`${t('dashboard.search.results.policySummaryCard.freeLookCancelBannerText')} ${convertKebabedDateString(
+                        policy.freeLookPeriodDetails?.endDate
+                    )}`}
+                    cta={{
+                        href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/freelook/cancel-freelook/`,
+                        text: t('dashboard.search.results.policySummaryCard.freeLookCancelBannerLink'),
+                    }}
+                />
+            )}
+        </div>
+    );
 };
 
 const QuickViewModule = ({ policy }: BasePolicyComponentArgs) => {
@@ -687,7 +679,7 @@ export const PolicyQuickView: React.FC<SummaryCardProps> = ({ policy }) => {
             const policyNumber = policyDetails.policyNumber;
             const response = await getCases({
                 limit: 5,
-                notInCaseStatus: [Statuses.NotStarted, Statuses.InProgress, Statuses.Exception],
+                notInCaseStatus: [Statuses.Canceled, Statuses.Completed],
                 policyNumber,
             });
 
