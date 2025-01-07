@@ -1,11 +1,11 @@
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
+import BeneficiaryInfo from '@deps/components/beneficiary-information/beneficiary-info';
 import CslnCheck from '@deps/components/otp-withdrawal-form/csln-check';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import IrsWithholding from '@deps/components/otp-withdrawal-form/irs-withholdings';
-import JointLifeExpectancy from '@deps/components/otp-withdrawal-form/rmd-method/joint-life-expectancy';
 import RMDMethod from '@deps/components/otp-withdrawal-form/rmd-method/rmd-method';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
@@ -27,9 +27,7 @@ export default function GlcoRmdWithdrawalForm() {
         irsSignatureConfig,
         formValidation,
         w4pSignaturesConfig,
-        // fundWithdrawnMethodOptions,
         disbursementOptions,
-        jointLifeExpectancyConfigs,
     } = getGlcoRmdConfig(t);
 
     const {
@@ -72,12 +70,8 @@ export default function GlcoRmdWithdrawalForm() {
             {!isFormStateReadOnly && <DiaryNotesWarning />}
             <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
             <RMDMethod isFormStateReadOnly={isFormStateReadOnly} />
-            <JointLifeExpectancy isFormStateReadOnly={isFormStateReadOnly} configs={jointLifeExpectancyConfigs} />
-            {/* <FormDistribution
-                fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
-                title={t('distributionInstruction.investmentSelectionForDistribution') as string}
-                isFormStateReadOnly={isFormStateReadOnly}
-            /> */}
+            <BeneficiaryInfo />
+
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
             <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} />
             {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
