@@ -24,7 +24,7 @@ describe('MourningBanner component', () => {
     jest.mock('dayjs', () =>
       jest.fn((...args) => {
         const dayjsInstance = jest.requireActual('dayjs')(
-          args.filter(arg => arg).length > 0 ? args : '2025-01-09'
+          args.filter(arg => arg).length > 0 ? args : '2025-01-01'
         );
         dayjsInstance.isBetween = jest.fn(() => true);
         return dayjsInstance;
