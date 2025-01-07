@@ -113,6 +113,14 @@ export const getServerSideProps = withPageAuthRequired({
                                 type: 'payment',
                             },
                         ],
+                        documents: [
+                            {
+                                documentId: '231hf324ffffsfds3444',
+                                documentName: 'Cheque.Pdf',
+                                documentSource: 'EDS',
+                                createdDate: '2024-11-05T19:57:48.1250188',
+                            },
+                        ],
                     },
 
                     nigos: ['EX000000003688'],
@@ -230,6 +238,32 @@ export const getServerSideProps = withPageAuthRequired({
                                         },
                                     },
                                 },
+                                documents: {
+                                    type: 'array',
+                                    title: '',
+                                    items: {
+                                        type: 'object',
+                                        title: '',
+                                        properties: {
+                                            title: {
+                                                type: 'string',
+                                                title: 'Title',
+                                            },
+                                            subtitle: {
+                                                type: 'string',
+                                                title: 'Subtitle',
+                                            },
+                                            name: {
+                                                type: 'string',
+                                                title: 'Title',
+                                            },
+                                            dob: {
+                                                type: 'string',
+                                                title: 'Subtitle',
+                                            },
+                                        },
+                                    },
+                                },
                             },
                         },
                     },
@@ -256,12 +290,31 @@ export const getServerSideProps = withPageAuthRequired({
                         'ui:options': {
                             label: true,
                         },
+
                         amount: {
                             'ui:options': {
                                 disabled: true,
                             },
                         },
                         documentMatcher: {
+                            title: true,
+                            props: {
+                                type: 'Party',
+                            },
+                            'ui:options': {
+                                label: false,
+                                ArrayFieldTemplate: 'PartyCardTemplate',
+                            },
+                            items: {
+                                'ui:options': {
+                                    canAdd: false,
+                                },
+                            },
+                        },
+                        documents: {
+                            props: {
+                                type: 'Document',
+                            },
                             'ui:options': {
                                 label: false,
                                 ArrayFieldTemplate: 'PartyCardTemplate',
