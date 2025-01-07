@@ -391,7 +391,7 @@ const StatusBanner = ({ policy, casesTotal }: BasePolicyComponentArgs & { casesT
     const { featureFlags } = useOptimizely();
     const freeLookEnabled = featureFlags[FEATURE_FLAGS.POLICY_FREE_LOOK_CANCELLATION];
 
-    const showCaseBanner = casesTotal && casesTotal > 0;
+    const showCaseBanner = !!casesTotal && casesTotal > 0;
 
     // TODO - BPB: Policy Features Helper Class
     const reinstatementWithApproval = policy.policy.policyFeatures?.find(
