@@ -23,8 +23,9 @@ import {
     initialFilters,
     CaseTableData,
 } from '@deps/contexts/CaseManagementFilters';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { getAdvisorsExcelCaseSearchParams, getAdvisorsExcelCaseStatsParams } from '@deps/helpers/advisors-excel';
+import { getAdvisorsExcelCaseParams } from '@deps/helpers/advisors-excel';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { formatCaseTotals, getAdditionalFilters, getSearchValueObject, toggleLabels } from '@deps/helpers/case-management';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
@@ -68,6 +69,8 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
     }, [setCaseManagementFilters]);
 
     const { t } = useTranslation();
+    const { featureFlags } = useOptimizely();
+    const enableAdditionalAdvisorsExcelCarriers = featureFlags?.case_advisors_excel_additional_carrier_support;
 
     useSegmentPageTracker(user, SegmentPageName.CaseManagementDashboard);
 
@@ -92,7 +95,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         };
 
         if (isAdvisorsExcel) {
-            const advisorsExcelParams = getAdvisorsExcelCaseStatsParams();
+            const advisorsExcelParams = getAdvisorsExcelCaseParams(enableAdditionalAdvisorsExcelCarriers);
 
             caseStatsRequest = {
                 ...caseStatsRequest,
@@ -128,7 +131,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
 
             // DEPU-2835 - temporary work around for Advisor Excel
             if (isAdvisorsExcel) {
-                const advisorsExcelParams = getAdvisorsExcelCaseSearchParams();
+                const advisorsExcelParams = getAdvisorsExcelCaseParams(enableAdditionalAdvisorsExcelCarriers);
 
                 additionalFilters = {
                     ...additionalFilters,
