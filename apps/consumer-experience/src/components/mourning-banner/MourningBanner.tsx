@@ -1,5 +1,8 @@
 import { BannerAlert, BannerVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
+
+dayjs.extend(isBetween);
 
 const MourningBannerText = () => {
   return (
@@ -20,8 +23,7 @@ const MourningBannerText = () => {
 
 export const MourningBanner = () => {
   const showPresidentialMourningBanner = () => {
-    const today = dayjs();
-    return today.isBetween('2025-01-08', '2025-01-10', 'day', '[]');
+    return dayjs().isBetween('2025-01-07', '2025-01-10', 'day', '[]');
   };
 
   if (showPresidentialMourningBanner()) {
