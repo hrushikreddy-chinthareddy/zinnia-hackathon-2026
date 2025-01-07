@@ -1,4 +1,7 @@
 import { Session, getSession, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { BannerAlert, BannerVariant } from '@zinnia/bloom/components';
+import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
 import { GetServerSidePropsContext } from 'next';
 import dynamic from 'next/dynamic';
 import { useTranslation } from 'next-i18next';
@@ -355,11 +358,32 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         sideSheet.handleOpen(true);
     };
 
+    dayjs.extend(isBetween);
+    const showPresidentialMourningBanner = () => {
+        const today = dayjs();
+        return today.isBetween('2025-01-08', '2025-01-10', 'day', '[]');
+    };
+
     // JSX
     return (
         <CaseManagementFiltersContext.Provider value={[caseManagementFilters, setCaseManagementFilters]}>
             <PageHead titleKey="caseManagement" />
             <NoNavLayout fullHeight={true}>
+                {showPresidentialMourningBanner() && (
+                    <BannerAlert
+                        bodyText={
+                            <>
+                                In recognition of the National Day of Mourning following the death of former{' '}
+                                <strong>President Jimmy Carter</strong>, the stock market will be closed on <strong>January 9, 2025</strong>
+                                . As a result, contract values are as of close of business <strong>January 8, 2025</strong>. Any trades or
+                                other financial transactions submitted on <strong>January 9, 2025</strong> will be processed when the stock
+                                market reopens on <strong>January 10, 2025</strong>.
+                            </>
+                        }
+                        variant={BannerVariant.Warning}
+                        className="mb-8"
+                    />
+                )}
                 <Typography variant={TypographyVariant.H1} className="md:mb-8 mb-4">
                     {t('caseManagementDashboard.h1')}
                 </Typography>
