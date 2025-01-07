@@ -83,7 +83,6 @@ export default async function Page({
         {policyReferenceData?.map(p => {
           return <CoverageCard key={p.policyNumber} policy={p} />;
         })}
-        {/* <CoverageCard policy={policyReferenceData[0]} /> */}
       </div>
     </div>
   );

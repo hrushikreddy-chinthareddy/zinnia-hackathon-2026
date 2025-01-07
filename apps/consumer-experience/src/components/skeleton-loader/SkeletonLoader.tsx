@@ -16,6 +16,6 @@ export const SkeletonLoader = ({
     <div
       style={{ width, height }}
       className={clsx(styles.skeletonBox, className)}
-    ></div>
+    />
   );
 };
