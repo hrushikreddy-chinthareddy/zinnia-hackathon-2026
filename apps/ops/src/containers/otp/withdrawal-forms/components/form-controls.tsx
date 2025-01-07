@@ -80,7 +80,6 @@ export function FormControls({ t, isLoading, setIsLoading, setTaskApiError, docu
             formTpaAuthorization,
             formSurrenderingCompany,
             formAdditionalWaivers,
-            formComment,
         } = formState;
         const errors = formValidator({
             formData,
@@ -100,7 +99,6 @@ export function FormControls({ t, isLoading, setIsLoading, setTaskApiError, docu
             formTpaAuthorization,
             formSurrenderingCompany,
             formAdditionalWaivers,
-            formComment,
         });
 
         setFormErrors({ ...errors });
@@ -117,11 +115,7 @@ export function FormControls({ t, isLoading, setIsLoading, setTaskApiError, docu
             successfulCaseUpdate = await updateTask(
                 formState.initialForm.caseId,
                 formState.initialForm?.taskId,
-                buildFormV2(
-                    formState.currentFormState === TaskStatus.InProgress ? TaskStatus.InProgress : TaskStatus.New,
-                    document,
-                    formState
-                ),
+                buildFormV2(formState.currentFormState === TaskStatus.InProgress ? TaskStatus.InProgress : TaskStatus.New, document, formState),
                 timer
             );
         } else {

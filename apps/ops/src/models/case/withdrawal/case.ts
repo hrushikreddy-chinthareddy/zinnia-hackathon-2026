@@ -113,7 +113,6 @@ export interface FormParts {
     ownerAcknowledgement?: OwnerAcknowledgement;
     formNigos?: FormNigos | null;
     formReindexingData?: FormReIndexingData | null;
-    formComment?: FormComment;
     irsFormType?: IrsFormType;
 }
 
@@ -728,10 +727,6 @@ export interface UpsAccount {
         text: string;
     };
 }
-
-export type FormComment = {
-    comment: string;
-};
 
 // ENUMS for various parts of the form
 export enum AccountCloseReason {
