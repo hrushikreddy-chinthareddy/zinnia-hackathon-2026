@@ -859,6 +859,7 @@ export enum ProgramType {
     PartialDollar = 'Partial Dollar',
     PartialPercent = 'Partial Percent',
     PenaltyFreeAmount = 'Penalty Free Amount',
+    MaximumFreeAmount = 'Maximum Free Amount',
     OFT = 'OFT',
     SSW = 'SSW',
 }
@@ -1020,6 +1021,7 @@ export enum Carrier {
     RSLN = 'RSLN',
     WELB = 'WELB',
     GLCO = 'GLCO',
+    ULPC = 'ULPC',
 }
 export const ParticipantCompanies = [
     { companyName: 'AIG ANNUITIES-VAR & IDX/VAR.ANN.LIFE', code: '3179' },
