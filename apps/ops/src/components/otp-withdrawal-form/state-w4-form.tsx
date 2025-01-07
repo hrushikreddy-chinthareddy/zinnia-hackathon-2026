@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { useState, useContext, useEffect, useMemo } from 'react';
 
-import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import Field, { FieldSize, FieldType, FieldVariant, FieldFormat } from '@deps/components/fields/field';
 import SignatureValidation, {
   SignatureValidationField,
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation';
@@ -38,7 +38,7 @@ export default function StateW4Form({ isFormStateReadOnly, w4pSignaturesConfig }
   ), [formIrsData]);
 
 
-
+  const numberFormat = { type: 'number' as FieldFormat, decimalPlaces: 0, format: '' };
   const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.irsData' });
 
   const [isW4pChecked, setW4pChecked] = useState(IrsW4pData?.irsApplicable || false);
@@ -175,6 +175,7 @@ export default function StateW4Form({ isFormStateReadOnly, w4pSignaturesConfig }
 
           <div className="col-span-1 row-span-1 mt-4">
             <Field
+              formatOptions={numberFormat}
               label={t(`numberofAllowance`) as string}
               onChange={e => setNumberOfAllowances(e.target.value)}
               size={FieldSize.Small}
