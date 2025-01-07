@@ -40,12 +40,8 @@ const CorrespondenceCard = ({
     const selectedCommunicationType = correspondenceData?.type;
     const recipients = correspondenceData?.recipients || [];
 
-    var emailId = getPrimaryEmail(policy);
+    let emailId = getPrimaryEmail(policy);
 
-    if (validateEmail(emailId)) {
-        emailId = '';
-    }
-    
     const [communicationType, setCommunicationType] = useState(selectedCommunicationType || '');
     const [emails, setEmails] = useState(
         selectedCommunicationType === CommunicationTypes.Email ? (recipients.length ? recipients : emailId ? [emailId] : []) : []

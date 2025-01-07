@@ -1,6 +1,6 @@
 import { ChipX, Label, Tooltip, TooltipPlacement, AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import xss from 'xss';
 
 import Field, { FieldSize, FieldType } from '@deps/components/fields/field';
@@ -28,7 +28,7 @@ const AdditionalRecipient = ({ classNames, emails, setEmails, setError, policy }
     const { t: addressChangeT } = useTranslation(undefined, { keyPrefix: 'addressChange' });
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
 
-    const [email, setEmail] = useState('');
+    const [email, setEmail] = useState<string>(''); 
     const [selectedEmailIndex, setSelectedEmailIndex] = useState<number>(-1);
 
     const extractedParties = useMemo(() => policy?.parties || [], [policy]);
@@ -90,6 +90,14 @@ const AdditionalRecipient = ({ classNames, emails, setEmails, setError, policy }
         setError(error => ({ ...error, submit: '' }));
         setEmails(emails.filter(email => email !== val));
     };
+
+    useEffect(()=>{
+        if(emails.length==1 && validateEmail(emails[0])){
+            setEmail(emails[0]);
+            addEmail(emails[0]);
+            setEmails([]);
+        } 
+    },[])
 
     const emailBox = (
         <div className={classNames}>
