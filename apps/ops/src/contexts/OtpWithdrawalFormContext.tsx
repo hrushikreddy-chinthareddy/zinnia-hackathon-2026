@@ -28,7 +28,6 @@ import {
     OwnerAcknowledgement,
     FormNigos,
     FormReIndexingData,
-    FormComment,
 } from '@deps/models/case/withdrawal/case';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
@@ -66,7 +65,6 @@ export interface OtpWithdrawalFormState {
     formSpecialInstruction: FormSpecialInstruction;
     featureFlagDecisions?: FeatureFlags;
     ownerAcknowledgement?: OwnerAcknowledgement;
-    formComment?: FormComment;
     setCurrentFormState: React.Dispatch<React.SetStateAction<WithdrawalTaskStatus>>;
     setFormSubtype?: React.Dispatch<React.SetStateAction<FormSubtype>>;
     setFormData: React.Dispatch<React.SetStateAction<FormData>>;
@@ -94,7 +92,6 @@ export interface OtpWithdrawalFormState {
     setOwnerAcknowledgement: React.Dispatch<React.SetStateAction<OwnerAcknowledgement | undefined>>;
     setFormNigos: React.Dispatch<React.SetStateAction<FormNigos | null>>;
     setFormReindexingData: React.Dispatch<React.SetStateAction<FormReIndexingData | null>>;
-    setFormComment: React.Dispatch<React.SetStateAction<FormComment>>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -121,7 +118,6 @@ export const defaultFormDataContext = {
     formSpecialInstruction: {} as FormSpecialInstruction,
     formNigos: {} as FormNigos,
     formReindexingData: {} as FormReIndexingData,
-    formComment: {} as FormComment,
     formValidator: () => {
         return {} as FormValidationErrors;
     },
@@ -158,8 +154,7 @@ export const defaultFormDataContext = {
     setFormSpecialInstruction: noop,
     setOwnerAcknowledgement: noop,
     setFormNigos: noop,
-    setFormReindexingData: noop,
-    setFormComment: noop,
+    setFormReindexingData: noop
 };
 
 export const FormDataContext = createContext<OtpWithdrawalFormState>(defaultFormDataContext as OtpWithdrawalFormState);

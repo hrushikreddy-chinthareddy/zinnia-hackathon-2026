@@ -28,8 +28,7 @@ const getFormDataPayload = (currentFormState: OtpWithdrawalFormState, document: 
         formSpecialInstruction,
         ownerAcknowledgement,
         formNigos,
-        formReindexingData,
-        formComment,
+        formReindexingData
     } = currentFormState;
 
     return {
@@ -60,8 +59,7 @@ const getFormDataPayload = (currentFormState: OtpWithdrawalFormState, document: 
             formSpecialInstruction,
             ownerAcknowledgement,
             formNigos,
-            formReindexingData,
-            formComment,
+            formReindexingData
         },
     };
 };

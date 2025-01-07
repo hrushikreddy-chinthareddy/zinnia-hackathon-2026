@@ -9,7 +9,6 @@ import React, { useEffect, useState, useMemo } from 'react';
 
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
 import OtpLayout from '@deps/components/otp-layout';
-import NoteSection from '@deps/components/otp-withdrawal-form/note-section';
 import WithdrawalDrawer, { SidebarContent } from '@deps/components/otp-withdrawal-form/withdrawal-drawer';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
@@ -211,7 +210,6 @@ export default function WithdrawalCase({ document, form, isNigoCase, featureFlag
                                                 </div>
                                             )}
                                             {formParts}
-                                            <NoteSection />
                                             <FormErrors t={t} taskApiError={taskApiError}></FormErrors>
                                             <FormControls
                                                 document={document}
