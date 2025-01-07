@@ -1,0 +1,11 @@
+{
+    "ui:submitButtonOptions": {
+        "norender": true
+    },
+    "options": {
+        "ui:label": false
+    },
+    "comment": {
+        "ui:label": false
+    }
+}
