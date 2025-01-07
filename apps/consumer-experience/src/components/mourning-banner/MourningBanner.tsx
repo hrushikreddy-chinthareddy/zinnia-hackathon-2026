@@ -23,7 +23,7 @@ const MourningBannerText = () => {
 
 export const MourningBanner = () => {
   const showPresidentialMourningBanner = () => {
-    return dayjs().isBetween('2025-01-07', '2025-01-10', 'day', '[]');
+    return dayjs().isBetween('2025-01-08', '2025-01-10', 'day', '[]');
   };
 
   if (showPresidentialMourningBanner()) {
