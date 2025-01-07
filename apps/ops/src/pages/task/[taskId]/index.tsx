@@ -104,15 +104,13 @@ export const getServerSideProps = withPageAuthRequired({
                 data: {
                     details: {
                         amount: '2000 $',
-                        documentMatcher: [
-                            {
-                                title: 'Financial Objective',
-                                subTitle: 'FinancialObjective = Other',
-                                name: 'FinancialObjective',
-                                dob: 'Date of birth',
-                                type: 'payment',
-                            },
-                        ],
+                        documentMatcher: {
+                            title: 'Financial Objective',
+                            subTitle: 'FinancialObjective = Other',
+                            name: 'FinancialObjective',
+                            dob: 'Date of birth',
+                            type: 'payment',
+                        },
                         documents: [
                             {
                                 documentId: '231hf324ffffsfds3444',
@@ -213,28 +211,24 @@ export const getServerSideProps = withPageAuthRequired({
                                     title: 'Amount Received',
                                 },
                                 documentMatcher: {
-                                    type: 'array',
+                                    type: 'object',
                                     title: 'Supporting information',
-                                    items: {
-                                        type: 'object',
-                                        title: '',
-                                        properties: {
-                                            title: {
-                                                type: 'string',
-                                                title: 'Title',
-                                            },
-                                            subtitle: {
-                                                type: 'string',
-                                                title: 'Subtitle',
-                                            },
-                                            name: {
-                                                type: 'string',
-                                                title: 'Title',
-                                            },
-                                            dob: {
-                                                type: 'string',
-                                                title: 'Subtitle',
-                                            },
+                                    properties: {
+                                        title: {
+                                            type: 'string',
+                                            title: 'Title',
+                                        },
+                                        subtitle: {
+                                            type: 'string',
+                                            title: 'Subtitle',
+                                        },
+                                        name: {
+                                            type: 'string',
+                                            title: 'Title',
+                                        },
+                                        dob: {
+                                            type: 'string',
+                                            title: 'Subtitle',
                                         },
                                     },
                                 },
@@ -290,25 +284,16 @@ export const getServerSideProps = withPageAuthRequired({
                         'ui:options': {
                             label: true,
                         },
-
                         amount: {
                             'ui:options': {
                                 disabled: true,
                             },
                         },
                         documentMatcher: {
-                            title: true,
-                            props: {
-                                type: 'Party',
-                            },
                             'ui:options': {
-                                label: false,
-                                ArrayFieldTemplate: 'PartyCardTemplate',
-                            },
-                            items: {
-                                'ui:options': {
-                                    canAdd: false,
-                                },
+                                label: true,
+                                ObjectFieldTemplate: 'PartyCardTemplate',
+                                canAdd: false,
                             },
                         },
                         documents: {
@@ -317,11 +302,12 @@ export const getServerSideProps = withPageAuthRequired({
                             },
                             'ui:options': {
                                 label: false,
-                                ArrayFieldTemplate: 'PartyCardTemplate',
+                                canAdd: false,
                             },
                             items: {
                                 'ui:options': {
-                                    canAdd: false,
+                                    label: false,
+                                    ObjectFieldTemplate: 'DocumentCardTemplate',
                                 },
                             },
                         },

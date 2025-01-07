@@ -3,10 +3,11 @@ import ArrayFieldTableTemplate from './array-field-template/array-field-table-te
 import ArrayFieldTemplate from './array-field-template/array-field-template';
 import AddButton from './button-templates/add-button/add-button';
 import RemoveButton from './button-templates/remove-button/remove-button';
+import { DocumentCardTemplate } from './card-templates/document-card-template';
+import { PartyCardTemplate } from './card-templates/party-card-template';
 import FieldErrorTemplate from './field-error-template/field-error-template';
 import { FieldTemplate } from './field-template/field-template';
 import { ObjectFieldTemplate } from './object-field-template/object-field-template';
-import { PartyCardTemplate } from './party-card-template/party-card-template';
 import { TitleFieldTemplate } from './title-field-template/title-field-template';
 
 export function generateTemplates() {
@@ -19,6 +20,7 @@ export function generateTemplates() {
         FieldErrorTemplate,
         ArrayFieldTableTemplate,
         PartyCardTemplate,
+        DocumentCardTemplate,
         ButtonTemplates: { AddButton, RemoveButton },
     };
 }

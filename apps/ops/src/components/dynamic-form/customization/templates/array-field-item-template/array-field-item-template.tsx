@@ -29,7 +29,8 @@ export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSche
     };
     return (
         <div>
-            <div className="flex rounded border-2 border-dashed border-gray-100 bg-gray-50 mb-2 pt-2 px-3">
+            {/* // todo:vijaya: handle this dyanamic flex rounded border-2 border-dashed border-gray-100 bg-gray-50 mb-2 pt-2 px-3 */}
+            <div className="">
                 <div className="flex w-full">{children}</div>
                 <div className="ml-auto my-3">
                     {hasToolbar && (

@@ -13,7 +13,7 @@ enum CardTypes {
     Document = 'Document',
     Party = 'Party',
 }
-export function PartyCardTemplate(props: ArrayFieldTemplateProps) {
+function PartyCardTemplate1(props: ArrayFieldTemplateProps) {
     const { schema, formData, uiSchema } = props;
 
     const sideSheet = useSideSheetContext();
@@ -68,7 +68,7 @@ export function PartyCardTemplate(props: ArrayFieldTemplateProps) {
     );
 }
 
-export default PartyCardTemplate;
+export default PartyCardTemplate1;
 
 const DetailsCard = ({ title, details }: any) => {
     return (
