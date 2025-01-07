@@ -3,11 +3,13 @@ import { render, screen } from '@testing-library/react';
 import { MourningBanner } from './MourningBanner';
 
 jest.mock('dayjs', () =>
-  jest.fn((...args) =>
-    jest.requireActual('dayjs')(
+  jest.fn((...args) => {
+    const dayjsInstance = jest.requireActual('dayjs')(
       args.filter(arg => arg).length > 0 ? args : '2025-01-09'
-    )
-  )
+    );
+    dayjsInstance.isBetween = jest.fn(() => true);
+    return dayjsInstance;
+  })
 );
 
 describe('MourningBanner component', () => {
@@ -20,11 +22,13 @@ describe('MourningBanner component', () => {
 
   it('does not render the banner when the date is not between 2025-01-08 and 2025-01-10', () => {
     jest.mock('dayjs', () =>
-      jest.fn((...args) =>
-        jest.requireActual('dayjs')(
-          args.filter(arg => arg).length > 0 ? args : '2025-01-01'
-        )
-      )
+      jest.fn((...args) => {
+        const dayjsInstance = jest.requireActual('dayjs')(
+          args.filter(arg => arg).length > 0 ? args : '2025-01-09'
+        );
+        dayjsInstance.isBetween = jest.fn(() => true);
+        return dayjsInstance;
+      })
     );
     render(<MourningBanner />);
     expect(
