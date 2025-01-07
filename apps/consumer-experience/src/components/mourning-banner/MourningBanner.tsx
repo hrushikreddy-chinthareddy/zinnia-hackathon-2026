@@ -24,12 +24,12 @@ export const MourningBanner = () => {
     return today.isBetween('2025-01-08', '2025-01-10', 'day', '[]');
   };
 
-  if (!showPresidentialMourningBanner()) {
+  if (showPresidentialMourningBanner()) {
     return (
       <BannerAlert
         className="mb-lg"
         bodyText={<MourningBannerText />}
-        variant={BannerVariant.Information}
+        variant={BannerVariant.Warning}
       />
     );
   }
