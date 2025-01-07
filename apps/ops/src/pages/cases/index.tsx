@@ -371,7 +371,15 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
             <NoNavLayout fullHeight={true}>
                 {showPresidentialMourningBanner() && (
                     <BannerAlert
-                        bodyText={`In recognition of the National Day of Mourning following the death of former President Jimmy Carter, the stock market will be closed on January 9, 2025.  As a result, contract values are as of close of business January 8, 2025.  Any trades or other financial transactions submitted on January 9, 2025 will be processed when the stock market reopens on January 10, 2025.`}
+                        bodyText={
+                            <>
+                                In recognition of the National Day of Mourning following the death of former{' '}
+                                <strong>President Jimmy Carter</strong>, the stock market will be closed on <strong>January 9, 2025</strong>
+                                . As a result, contract values are as of close of business <strong>January 8, 2025</strong>. Any trades or
+                                other financial transactions submitted on <strong>January 9, 2025</strong> will be processed when the stock
+                                market reopens on <strong>January 10, 2025</strong>.
+                            </>
+                        }
                         variant={BannerVariant.Warning}
                         className="mb-8"
                     />
