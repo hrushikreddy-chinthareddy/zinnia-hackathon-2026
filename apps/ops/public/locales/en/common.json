@@ -841,6 +841,7 @@
         "pageSize": "Rows per page",
         "results": "Results",
         "refineResults": "Refine results",
+        "addFilters": "Add filters",
         "refineResultsOptions": {
             "carrier": "Carriers",
             "caseType": "Case type",

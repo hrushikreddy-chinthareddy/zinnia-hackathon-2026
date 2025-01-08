@@ -833,6 +833,7 @@
         "pageSize": "Lignes par page",
         "results": "Résultats",
         "refineResults": "Affiner les résultats",
+        "addFilters": "Ajouter des filtres",
         "refineResultsOptions": {
             "carriers": "Assureur",
             "caseType": "Type de dossier",
