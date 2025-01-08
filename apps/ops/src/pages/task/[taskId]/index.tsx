@@ -293,19 +293,25 @@ export const getServerSideProps = withPageAuthRequired({
                             'ui:options': {
                                 label: true,
                                 ObjectFieldTemplate: 'PartyCardTemplate',
-                                canAdd: false,
                             },
                         },
                         documents: {
+                            canAdd: false,
                             props: {
                                 type: 'Document',
+                                canAdd: false,
                             },
                             'ui:options': {
                                 label: false,
+                                ArrayFieldTemplate: 'ArrayFieldTemplate',
                                 canAdd: false,
                             },
                             items: {
+                                props: {
+                                    readonly: true,
+                                },
                                 'ui:options': {
+                                    canAdd: false,
                                     label: false,
                                     ObjectFieldTemplate: 'DocumentCardTemplate',
                                 },

@@ -9,7 +9,6 @@ import { useDocumentDownload } from '@deps/helpers/documents.helper';
 import loadingImage from '@deps/styles/images/loader.png';
 export function DocumentCardTemplate(props: ObjectFieldTemplateProps) {
     const { formData } = props;
-    console.log('🚀 ~ DocumentCardTemplate ~ props:', props);
 
     const { t } = useTranslation();
     const [loading, download] = useDocumentDownload(

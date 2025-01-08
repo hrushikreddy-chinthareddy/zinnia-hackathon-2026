@@ -7,7 +7,6 @@ import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 
 export function PartyCardTemplate(props: ObjectFieldTemplateProps) {
     const { formData } = props;
-    console.log('🚀 ~ PartyCardTemplate ~ formData:', formData);
 
     const sideSheet = useSideSheetContext();
 

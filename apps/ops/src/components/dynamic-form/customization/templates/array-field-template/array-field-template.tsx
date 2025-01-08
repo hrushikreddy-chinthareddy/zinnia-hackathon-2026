@@ -14,7 +14,7 @@ import style from './array-field.module.css';
 function ArrayFieldTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
     props: ArrayFieldTemplateProps<T, S, F>
 ) {
-    const { canAdd, disabled, idSchema, uiSchema, items, onAddClick, readonly, registry, required, schema, title } = props;
+    const { disabled, idSchema, uiSchema, items, onAddClick, readonly, registry, required, schema, title } = props;
 
     const uiOptions = getUiOptions<T, S, F>(uiSchema);
     const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
@@ -49,7 +49,7 @@ function ArrayFieldTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
                     items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
                         <ArrayFieldItemTemplate key={key} {...itemProps} />
                     ))}
-                {canAdd && !readonly && (
+                {uiOptions?.canAdd && !readonly && (
                     <div className="flex">
                         <AddButton
                             className="array-item-add"
