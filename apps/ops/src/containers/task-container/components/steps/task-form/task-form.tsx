@@ -33,6 +33,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                 ...task,
                 data: event.formData,
             });
+            console.log('🚀 ~ event.formData:', event.formData);
         },
         [setTask, task]
     );

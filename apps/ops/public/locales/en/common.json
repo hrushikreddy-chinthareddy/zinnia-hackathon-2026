@@ -5072,6 +5072,15 @@
             "submitTask": "Submit suitability review details"
         }
     },
+    "nbLinkPaymentPolicy": {
+        "tabs": {
+            "documentMatch": "Match Document",
+            "confirm": "Confirm"
+        },
+        "taskForm": {
+            "title": "Match Document"
+        }
+    },
     "unauthorized": {
         "title": "Unauthorized",
         "message": "You do not have access to view this information."

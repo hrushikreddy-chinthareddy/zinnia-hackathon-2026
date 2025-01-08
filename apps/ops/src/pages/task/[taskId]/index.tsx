@@ -10,14 +10,13 @@ import { TaskProvider } from '@deps/containers/task-container/task-provider';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
-import { FormMetadata, TaskType } from '@deps/models/case/task';
+import { FormMetadata } from '@deps/models/case/task';
 import { ManagementTask } from '@deps/models/case/task-instance';
 import { UserPermission } from '@deps/models/user-profile';
 import { getCaseTaskById } from '@deps/operations/tasks/task-operations';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { getCaseDetailsSSR } from '@deps/queries/api/cases';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { logError, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
@@ -97,7 +96,7 @@ export const getServerSideProps = withPageAuthRequired({
                 templateId: '9f4f22da-c7d3-4cb3-bb8f-622df920bdf6',
                 process: 'New Business',
                 carrier: 'WELB',
-                taskType: 'SUITABILITY_REVIEW',
+                taskType: 'NB_LINK_PAYMENT_POLICY',
                 category: 'Review Task',
                 taskName: 'Suitability Review',
                 status: 'NEW',
@@ -120,7 +119,7 @@ export const getServerSideProps = withPageAuthRequired({
                             },
                         ],
                     },
-                    potentialMatches: 'Enter a case ID',
+                    potentialMatches: {},
                 },
 
                 mappedExceptions: ['EX000000003688'],
@@ -173,15 +172,16 @@ export const getServerSideProps = withPageAuthRequired({
             const correlationId = caseDetails?.correlationId; // Access the property using optional chaining
 
             // If feature flag is not enabled, redirect to error page
-            if (!isFormFeatureEnabled(taskType as TaskType, carrier, featureFlagDecisions)) {
-                logWarn('task/:id::feature flag not enabled', { carrier });
-                return {
-                    redirect: {
-                        destination: '/403',
-                        permanent: false,
-                    },
-                };
-            }
+            //    todo:enable feature flag
+            // if (!isFormFeatureEnabled(taskType as TaskType, carrier, featureFlagDecisions)) {
+            //     logWarn('task/:id::feature flag not enabled', { carrier });
+            //     return {
+            //         redirect: {
+            //             destination: '/403',
+            //             permanent: false,
+            //         },
+            //     };
+            // }
 
             //   const taskMetadata = await getTaskFormMetadata(carrier, taskType as TtaskFormaskType, process as ProcessType, accessToken);
 
@@ -194,18 +194,8 @@ export const getServerSideProps = withPageAuthRequired({
                 formSchema: {
                     $schema: 'http://json-schema.org/draft-07/schema#',
                     type: 'object',
-                    definitions: {
-                        potentialMatchesEnums: {
-                            enum: ['Document cannot be matched to a case', 'Enter a case ID'],
-                        },
-                    },
+                    definitions: {},
                     properties: {
-                        sectionHeader: {
-                            type: 'instructions',
-                            title: 'Processing Instructions',
-                            subTitle:
-                                "This customer's application was flagged for review. Accept or Decline each issue before submitting a final decision.",
-                        },
                         details: {
                             type: 'object',
                             title: 'Details',
@@ -272,34 +262,31 @@ export const getServerSideProps = withPageAuthRequired({
                         potentialMatches: {
                             type: 'string',
                             title: 'Reason for decline',
-                            $ref: '#/definitions/potentialMatchesEnums',
+                            oneOf: [
+                                { const: 'Document cannot be matched to a case', value: 'Document cannot be matched to a case' },
+                                { const: 'Enter a case ID', value: 'Enter a case ID' },
+                            ],
                         },
-                        allOf: [
-                            {
-                                if: {
-                                    properties: {
-                                        potentialMatches: {
-                                            const: 'Enter a case ID',
-                                        },
+                    },
+                    allOf: [
+                        {
+                            if: {
+                                properties: {
+                                    potentialMatches: {
+                                        const: 'Enter a case ID',
                                     },
-                                },
-                                then: {
-                                    properties: {
-                                        caseId: {
-                                            type: 'string',
-                                            title: 'Reason for decline',
-                                        },
-                                    },
-                                    required: ['caseId'],
                                 },
                             },
-                        ],
-                        // potentialMatches: {
-                        //     type: 'string',
-                        //     title: 'Reason for decline',
-                        //     $ref: '#/definitions/potentialMatchesEnums',
-                        // },
-                    },
+                            then: {
+                                properties: {
+                                    caseId: {
+                                        type: 'string',
+                                        title: 'Reason for decline',
+                                    },
+                                },
+                            },
+                        },
+                    ],
                 },
 
                 uiSchema: {
@@ -313,12 +300,7 @@ export const getServerSideProps = withPageAuthRequired({
                     'ui:submitButtonOptions': {
                         norender: true,
                     },
-                    sectionHeader: {
-                        'ui:options': {
-                            label: true,
-                        },
-                        'ui:field': 'instructions',
-                    },
+
                     details: {
                         accord: true,
                         'ui:options': {
