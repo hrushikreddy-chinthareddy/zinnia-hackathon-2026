@@ -119,6 +119,7 @@ export const getServerSideProps = withPageAuthRequired({
                                 createdDate: '2024-11-05T19:57:48.1250188',
                             },
                         ],
+                        caseOverview: '/cases',
                     },
 
                     nigos: ['EX000000003688'],
@@ -258,6 +259,10 @@ export const getServerSideProps = withPageAuthRequired({
                                         },
                                     },
                                 },
+                                caseOverview: {
+                                    type: 'string',
+                                    title: 'Open case search',
+                                },
                             },
                         },
                     },
@@ -316,6 +321,13 @@ export const getServerSideProps = withPageAuthRequired({
                                     ObjectFieldTemplate: 'DocumentCardTemplate',
                                 },
                             },
+                        },
+                        caseOverview: {
+                            'ui:options': {
+                                label: false,
+                                type: 'link',
+                            },
+                            'ui:widget': 'HyperLinkWidget',
                         },
                     },
                 },
