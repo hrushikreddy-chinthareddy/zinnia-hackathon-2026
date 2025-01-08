@@ -33,7 +33,9 @@ jobs:
       - name: Download task definition (east)
         run: |
           aws ecs describe-task-definition --task-definition ${{ vars.ECS_TASK_NAME_OPS }} --query taskDefinition > east-task-definition.json
-
+      - name: Remove property from task definition
+        run: |
+          jq 'del(.enableFaultInjection)' east-task-definition.json > east-task-definition-updated.json
       - name: Build, tag, and push image to Amazon ECR with action
         id: build_image
         uses: docker/build-push-action@v5
@@ -70,7 +72,7 @@ jobs:
         id: task-def-east
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: east-task-definition.json
+          task-definition: east-task-definition-updated.json
           container-name: ${{ vars.CONTAINER_NAME }}
           image: ${{ steps.login-ecr-east.outputs.registry }}/${{ vars.ECR_REPOSITORY_OPS }}:${{ github.sha }}
 
@@ -96,12 +98,14 @@ jobs:
       - name: Download task definition (west)
         run: |
           aws ecs describe-task-definition --task-definition ${{ vars.ECS_TASK_NAME_OPS }} --query taskDefinition > west-task-definition.json
-
+      - name: Remove property from task definition
+        run: |
+          jq 'del(.enableFaultInjection)' west-task-definition.json > west-task-definition-updated.json
       - name: Fill in the new image ID in the Amazon ECS task definition (west)
         id: task-def-west
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: west-task-definition.json
+          task-definition: west-task-definition-updated.json
           container-name: ${{ vars.CONTAINER_NAME }}
           image: ${{ steps.login-ecr-east.outputs.registry }}/${{ vars.ECR_REPOSITORY_OPS }}:${{ github.sha }}
 
