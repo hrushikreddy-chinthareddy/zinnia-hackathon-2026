@@ -38,11 +38,12 @@ type DocumentsResultsTableProps = {
 
 const DownloadItem = ({ doc, carrierCode }: { doc: DocumentWithSource; carrierCode: string }) => {
     const { t } = useTranslation();
+    // BPB - fix this!
     const [loading, download] = useDocumentDownload(
         doc.documentId || (doc.documentID as string),
-        doc.documentSource,
+        doc.documentSource || doc.documentClassification,
         carrierCode,
-        doc.displayName
+        doc.displayName || doc.sourceFileName
     );
 
     return (
@@ -70,11 +71,12 @@ const DownloadItem = ({ doc, carrierCode }: { doc: DocumentWithSource; carrierCo
 };
 
 export const createAction = (doc: DocumentWithSource, carrierCode: string, t: TFunction, label?: string) => {
+    // BPB - fix this better
     return isPreviewSupported(doc) ? (
         <DocumentPreviewer
             className="!underline-offset-2"
             carrier={carrierCode}
-            displayName={doc.displayName}
+            displayName={doc.displayName || doc.sourceFileName}
             documentId={doc.documentId ?? (doc.documentID as string)}
             activeDocType={doc.documentSource}
             variant={NavElementVariant.Secondary}

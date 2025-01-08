@@ -10,6 +10,8 @@ import { StatementStartYear, StatementTypes } from '@deps/models/case/send-state
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { getCorrespondenceDocs } from '@deps/queries/api/documents';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import SendDocumentNavigationButtons from './action-components/navigation-buttons';
 import StatementListing from './components/statement-listing';
@@ -19,8 +21,6 @@ import { DatePickerTypes, getQuarter, Quarter, quarters } from '../date-picker/d
 import { FieldSize, FieldType } from '../fields/field';
 import FieldDateSelect from '../fields/field-date-select/field-date-select';
 import WorkflowCard from '../workflows/workflow-card/workflow-card';
-import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
-import { parseErrorInformation } from '@deps/utils/server-logging';
 
 const toggleStatement = (val: StatementTypes, SetSelectedStatements: React.Dispatch<React.SetStateAction<StatementTypes[]>>) => {
     return (shouldHaveStatement: boolean) => {

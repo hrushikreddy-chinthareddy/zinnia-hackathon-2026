@@ -7,8 +7,10 @@ import { TranslationFiles } from '@deps/config/translations';
 import HtmlPreview from '@deps/containers/documents-page/html-preview';
 import ImagePreview from '@deps/containers/documents-page/image-preview';
 import PdfPreview from '@deps/containers/documents-page/pdf-preview';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { supportedExtensions, supportedImgExtensions } from '@deps/models/case/document';
-import { getDocumentPreview } from '@deps/queries/api/documents';
+import { getDocumentPreviewV2, getDocumentPreviewV3 } from '@deps/queries/api/documents';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 export interface DocumentViewerProps {
     status: number;
@@ -23,11 +25,13 @@ const DocumentViewer = (props: DocumentViewerProps) => {
     const [isLoading, setIsLoading] = useState(true);
     const [fileExtension, setFileExtension] = useState<null | string>(null);
     const [documentBinary, setDocumentBinary] = useState<null | string>(null);
+    const { featureFlags } = useOptimizely();
     const { id, documentType, carrierCode } = props;
 
     useEffect(() => {
         const getDocument = async () => {
-            const download = await getDocumentPreview(id, documentType || '', carrierCode || '');
+            const downloader = featureFlags[FEATURE_FLAGS.DOCUMENTS_V3] ? getDocumentPreviewV3 : getDocumentPreviewV2;
+            const download = await downloader(id, documentType || '', carrierCode || '');
 
             setFileExtension(download?.fileExtension?.toLowerCase() || null);
             setDocumentBinary(download?.binaryData || null);
@@ -56,7 +60,7 @@ const DocumentViewer = (props: DocumentViewerProps) => {
         return () => {
             document.removeEventListener('keydown', onKeyDown);
         };
-    }, [carrierCode, documentType, id]);
+    }, [carrierCode, documentType, id, featureFlags]);
 
     if (isLoading) {
         return <PageLoader />;

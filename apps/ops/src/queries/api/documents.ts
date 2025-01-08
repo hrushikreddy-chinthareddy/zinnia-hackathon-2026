@@ -2,6 +2,7 @@ import { dataURItoBlob } from '@rjsf/utils';
 import { AxiosResponse } from 'axios';
 import dayjs from 'dayjs';
 
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import {
     PolicyDocumentApiRequest,
@@ -20,10 +21,9 @@ import { pullFromCache, writeToCache } from '@deps/utils/cache';
 import { logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
 import { apiServerBaseUrl, baseAppUrl } from '../api-config';
+import { StatusCode } from '../api-utils/baseAPIClient';
 import { client } from '../api-utils/client';
 import { serverApi } from '../api-utils/serverApiClient';
-import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
-import { StatusCode } from '../api-utils/baseAPIClient';
 
 const ssrBaseUrl = `${apiServerBaseUrl}/document/v2/documents`;
 const documentBaseUrl = `${baseAppUrl}/api/document/v2/documents`;
@@ -75,7 +75,7 @@ export const uploadDocument = async (task: ManagementTask, document: any, correl
     }
 };
 
-export const downloadDocument = async (
+export const downloadDocumentV2 = async (
     documentNumber: string,
     docType: string,
     clientCode: string
@@ -95,7 +95,32 @@ export const downloadDocument = async (
     }
 };
 
-export const getDocumentPreview = async (documentNumber: string, docType: string, clientCode: string): Promise<DocumentDownload | null> => {
+// note: docType and clientCode are used to allow v3 to hit v2 documents for us.  We can remove if all v2 documents are migrated
+export const downloadDocumentV3 = async (
+    documentNumber: string,
+    docType: string,
+    clientCode: string
+): Promise<DocumentDownloadWithMime | null> => {
+    try {
+        const url = `${baseAppUrl}/api/document/v3/documents/${documentNumber}/download?clientCode=${clientCode.toUpperCase()}&source=${docType}`;
+        const { data } = await client.get<DocumentDownloadWithMime, AxiosResponse>(url);
+        return data;
+    } catch (error: any) {
+        logWarn('An error occurred while downloading document', {
+            ...parseErrorInformation(error),
+            file: 'queries/api/documents',
+            function: 'downloadDocumentV3',
+        });
+
+        return error.response;
+    }
+};
+
+export const getDocumentPreviewV2 = async (
+    documentNumber: string,
+    docType: string,
+    clientCode: string
+): Promise<DocumentDownload | null> => {
     try {
         const url = `${baseAppUrl}/api/documents/${documentNumber}/preview?clientCode=${clientCode.toUpperCase()}&source=${docType}`;
         const { data } = await client.get<DocumentDownload, AxiosResponse>(url);
@@ -106,6 +131,28 @@ export const getDocumentPreview = async (documentNumber: string, docType: string
             ...parseErrorInformation(error),
             file: 'queries/api/documents',
             function: 'getDocumentDownload',
+        });
+
+        return error.response;
+    }
+};
+
+// note: docType and clientCode are used to allow v3 to hit v2 documents for us.  We can remove if all v2 documents are migrated
+export const getDocumentPreviewV3 = async (
+    documentNumber: string,
+    docType: string,
+    clientCode: string
+): Promise<DocumentDownload | null> => {
+    try {
+        const url = `${baseAppUrl}/api/document/v3/documents/${documentNumber}/preview?clientCode=${clientCode.toUpperCase()}&source=${docType}`;
+        const { data } = await client.get<DocumentDownload, AxiosResponse>(url);
+
+        return data;
+    } catch (error: any) {
+        logWarn('An error occurred while getting document', {
+            ...parseErrorInformation(error),
+            file: 'queries/api/documents',
+            function: 'getDocumentPreviewV3',
         });
 
         return error.response;
@@ -146,7 +193,7 @@ export const getDocumentSSR = async (
     }
 };
 
-type DocumentApiRequestInputs = {
+export type DocumentApiRequestInputs = {
     source: DocumentTypeView;
     clientCode: string;
     contractNumber?: string;
@@ -163,15 +210,25 @@ type DocumentApiRequestInputs = {
     recipient?: 'Client' | 'Agent';
     zinniaLiveCaseId?: string;
     periods?: { PeriodYear: string; PeriodQuarters: string[] }[];
+    limit?: number;
+    offset?: number;
 };
 export const getDocuments = async ({
     periods,
+    limit,
+    offset,
     ...queryParams
 }: DocumentApiRequestInputs): Promise<PolicyDocumentApiRequest | DocumentErrorResponse> => {
     try {
-        let queryString = new URLSearchParams(queryParams);
+        const queryString = new URLSearchParams(queryParams);
         if (periods) {
             queryString.append('periods', JSON.stringify(periods));
+        }
+        if (limit) {
+            queryString.append('limit', `${limit}`);
+        }
+        if (offset) {
+            queryString.append('offset', `${offset}`);
         }
         const cachedResult = pullFromCache('getDocuments', queryString.toString());
 
@@ -212,8 +269,6 @@ export const getCaseDocuments = async ({
         const [caseDocsResponse, policyDocsResponse] = await Promise.all([caseDocRequest, policyDocRequest]);
         const docIds = new Set<string>();
         const docs: PolicyDocument[] = [];
-        let status;
-        let message = '';
 
         // if either request is unsuccessful, escape early
         if (caseDocsResponse?.status !== 200 || policyDocsResponse?.status !== 200) {

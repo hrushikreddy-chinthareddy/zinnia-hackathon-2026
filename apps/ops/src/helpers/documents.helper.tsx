@@ -2,8 +2,10 @@ import { saveAs } from 'file-saver';
 import { useCallback, useState } from 'react';
 
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyDocument, supportedExtensions, DocumentDownloadWithMime } from '@deps/models/case/document';
-import { downloadDocument } from '@deps/queries/api/documents';
+import { downloadDocumentV2, downloadDocumentV3 } from '@deps/queries/api/documents';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 export const isPreviewSupported = (document: PolicyDocument): boolean => {
     return supportedExtensions.includes(document?.fileType?.toLowerCase());
 };
@@ -42,6 +44,7 @@ export const useDocumentDownload = (
     carrierCode: string,
     documentName: string
 ): [boolean, () => void] => {
+    const { featureFlags } = useOptimizely();
     const [blob, setBlob] = useState<Blob | null>(null);
     const [document, setDocument] = useState<DocumentDownloadWithMime | null>(null);
     const [loading, setLoading] = useState(false);
@@ -55,8 +58,9 @@ export const useDocumentDownload = (
 
         try {
             setLoading(true);
+            const downloader = featureFlags[FEATURE_FLAGS.DOCUMENTS_V3] ? downloadDocumentV3 : downloadDocumentV2;
 
-            const doc = await downloadDocument(documentId, documentType, carrierCode);
+            const doc = await downloader(documentId, documentType, carrierCode);
             if (doc?.binaryData && doc?.fileExtension) {
                 const docBlob = b64ToBlob(doc.binaryData, doc.mimeType);
                 if (!docBlob) {
@@ -67,12 +71,12 @@ export const useDocumentDownload = (
                 setBlob(docBlob);
                 saveAs(docBlob, `${documentName.replace(/[^A-Z0-9]/gi, '')}.${doc.fileExtension}`);
             }
-            setLoading(false);
         } catch (e) {
             console.error('DocumentDownloader::download::error downloading document', e);
+        } finally {
             setLoading(false);
         }
-    }, [carrierCode, document, documentId, documentName, documentType, loading, setDocument, setLoading]);
+    }, [carrierCode, document, documentId, documentName, documentType, loading, setDocument, setLoading, featureFlags, blob]);
 
     return [loading, download];
 };
