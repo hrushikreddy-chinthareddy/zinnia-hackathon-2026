@@ -52,7 +52,7 @@ const AdditionalRecipient = ({ classNames, emails, setEmails, setError, policy }
         const selectedEmailId = partyCardsData[id]?.email;
 
         if (selectedEmailId) {
-            addEmail(selectedEmailId);
+            addEmail(selectedEmailId.trim());
         }
     }
 
@@ -76,7 +76,8 @@ const AdditionalRecipient = ({ classNames, emails, setEmails, setError, policy }
             return;
         }
 
-        if (emails.includes(val)) {
+        const duplicateEmail = emails.map(email => email.toLowerCase()).includes(val.toLowerCase());
+        if (duplicateEmail) {
             setError(error => ({ ...error, submit: t('errors.duplicateRecipientEmail') as string }));
             return;
         }
@@ -104,7 +105,7 @@ const AdditionalRecipient = ({ classNames, emails, setEmails, setError, policy }
             <Label labelFor={'additional-recipient'}>{t('correspondence.emailAddress')}</Label>
             <div className={`border-2 border-gray-200 px-2 pt-2 mt-1 rounded-lg`}>
                 {emails.map(email => (
-                    <ChipX label={email as string} key={email} onDelete={() => deleteEmail(email)} className="my-1" />
+                    <ChipX label={email as string} key={email} onDelete={() => deleteEmail(email)} className="my-1 break-all" />
                 ))}
                 <Field
                     onChange={e => {

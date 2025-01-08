@@ -152,7 +152,6 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
             title={t(`tabs.correspondence`)}
             footerContent={<SendDocumentNavigationButtons handleContinue={handleContinue} handleCancel={handleCancel} />}
         >
-            {loader && <Loader />}
             <CorrespondenceCard
                 setCorrespondenceData={handleCorrespondenceData}
                 communicationOptions={communicationOptions}
@@ -162,6 +161,7 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
                 showAdditionalRecipient={true}
                 setError={setError}
             />
+            {loader && <Loader />}
             {error?.submit && <AssistiveText text={error?.submit} variant={AssistiveTextVariant.Error} className="mt-2" />}
         </WorkflowCard>
     );

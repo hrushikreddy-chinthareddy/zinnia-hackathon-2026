@@ -44,7 +44,7 @@ const CorrespondenceCard = ({
 
     const [communicationType, setCommunicationType] = useState(selectedCommunicationType || '');
     const [emails, setEmails] = useState(
-        selectedCommunicationType === CommunicationTypes.Email ? (recipients.length ? recipients : emailId ? [emailId] : []) : []
+        selectedCommunicationType === CommunicationTypes.Email ? (recipients.length ? recipients : emailId ? [emailId.trim()] : []) : []
     );
     const [fax, setFax] = useState(selectedCommunicationType === CommunicationTypes.Fax ? recipients || [] : []);
     const [address, setAddress] = useState(correspondenceData?.mailDetails);

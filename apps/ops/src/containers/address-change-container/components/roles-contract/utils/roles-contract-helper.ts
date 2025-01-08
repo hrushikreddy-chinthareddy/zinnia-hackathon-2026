@@ -33,7 +33,10 @@ const isAddressAndPhoneMatch = (address: Address | undefined, homePhone: Phone |
 };
 
 const isExistingEmail = (email: string, policyParty: PolicyAllOfPartiesItem )=>{
-    return email == policyParty?.emails?.[0]?.emailAddress;
+    return (
+        typeof policyParty?.emails?.[0]?.emailAddress === 'string' &&
+        email.toLowerCase().trim() === policyParty.emails[0].emailAddress.toLowerCase().trim()
+    );
 }
 
 export const isRowAlreadySelected = (row: AssociateAddressTableRow, applyToRolesData: ApplyToRolesState) => {
