@@ -105,9 +105,9 @@ export const getServerSideProps = withPageAuthRequired({
                     details: {
                         amount: '10000 $',
                         documentMatcher: {
-                            title: 'Financial Objective',
-                            subTitle: 'FinancialObjective = Other',
-                            name: 'FinancialObjective',
+                            firstName: '',
+                            lastName: '',
+                            payorName: 'New Finance Group',
                             dob: 'Date of birth',
                             type: 'payment',
                         },
@@ -119,17 +119,10 @@ export const getServerSideProps = withPageAuthRequired({
                                 createdDate: '2024-11-05T19:57:48.1250188',
                             },
                         ],
-                        caseOverview: '/cases',
                     },
-
-                    potentialMatches: {
-                        type: 'string',
-                        title: 'Annuity fits risk tolerance',
-                        $ref: '#/definitions/potentialMatchesEnum',
-                    },
-
-                    nigos: ['EX000000003688'],
+                    potentialMatches: 'Enter a case ID',
                 },
+
                 mappedExceptions: ['EX000000003688'],
                 mappedDocuments: [],
                 queue: 'new_business_suitability_review',
@@ -202,8 +195,8 @@ export const getServerSideProps = withPageAuthRequired({
                     $schema: 'http://json-schema.org/draft-07/schema#',
                     type: 'object',
                     definitions: {
-                        potentialMatchesEnum: {
-                            enum: ['Enter a case ID', 'Document cannot be matched to a case'],
+                        potentialMatchesEnums: {
+                            enum: ['Document cannot be matched to a case', 'Enter a case ID'],
                         },
                     },
                     properties: {
@@ -272,16 +265,43 @@ export const getServerSideProps = withPageAuthRequired({
                                 caseOverview: {
                                     type: 'string',
                                     title: 'Open case search',
+                                    default: '/cases',
                                 },
                             },
                         },
                         potentialMatches: {
                             type: 'string',
-                            title: 'Can you find a matching case for this document?',
-                            $ref: '#/definitions/potentialMatchesEnum',
+                            title: 'Reason for decline',
+                            $ref: '#/definitions/potentialMatchesEnums',
                         },
+                        allOf: [
+                            {
+                                if: {
+                                    properties: {
+                                        potentialMatches: {
+                                            const: 'Enter a case ID',
+                                        },
+                                    },
+                                },
+                                then: {
+                                    properties: {
+                                        caseId: {
+                                            type: 'string',
+                                            title: 'Reason for decline',
+                                        },
+                                    },
+                                    required: ['caseId'],
+                                },
+                            },
+                        ],
+                        // potentialMatches: {
+                        //     type: 'string',
+                        //     title: 'Reason for decline',
+                        //     $ref: '#/definitions/potentialMatchesEnums',
+                        // },
                     },
                 },
+
                 uiSchema: {
                     'ui:globalOptions': {
                         duplicateKeySuffixSeparator: '_',
@@ -349,6 +369,11 @@ export const getServerSideProps = withPageAuthRequired({
                         'ui:widget': 'radio',
                         'ui:options': {
                             inline: true,
+                        },
+                    },
+                    caseId: {
+                        'ui:options': {
+                            label: true,
                         },
                     },
                 },
