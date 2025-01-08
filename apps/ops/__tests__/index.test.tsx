@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 // import DocumentViewerPage from '@deps/pages/documents/[id]';
-import { getDocumentPreview } from '@deps/queries/api/documents';
+import { getDocumentPreviewV2 } from '@deps/queries/api/documents';
 
 const DocumentViewerPage = (props: { status: number; id: string; documentType: string; carrierCode: string }) => (
     <div>Placeholder while skipping tests {props.id}</div>
@@ -57,7 +57,7 @@ describe.skip('Document Preview Page', () => {
 
             render(<DocumentViewerPage {...baseProps} />);
 
-            expect(getDocumentPreview).toHaveBeenCalled();
+            expect(getDocumentPreviewV2).toHaveBeenCalled();
             await waitFor(() => expect(screen.getByText('Failed to load PDF file.')).toBeInTheDocument());
         });
 
@@ -66,7 +66,7 @@ describe.skip('Document Preview Page', () => {
 
             const result = render(<DocumentViewerPage {...baseProps} />);
 
-            expect(getDocumentPreview).toHaveBeenCalled();
+            expect(getDocumentPreviewV2).toHaveBeenCalled();
             await waitFor(() => expect(screen.getByText('Failed to load PDF file.')).toBeInTheDocument());
             expect(screen.getByText('Failed to load PDF file.').parentElement?.parentElement?.classList.contains('print:hidden')).toBe(
                 true
@@ -82,7 +82,7 @@ describe.skip('Document Preview Page', () => {
 
             const result = render(<DocumentViewerPage {...baseProps} />);
 
-            expect(getDocumentPreview).toHaveBeenCalled();
+            expect(getDocumentPreviewV2).toHaveBeenCalled();
             await waitFor(() => expect(screen.getByText('Welcome to Zinnia Live!')).toBeInTheDocument());
             expect(screen.getByText('Welcome to Zinnia Live!').parentElement?.classList.contains('print:hidden')).toBe(true);
             expect(result).toMatchSnapshot();
@@ -110,7 +110,7 @@ describe.skip('Document Preview Page', () => {
 
             const result = render(<DocumentViewerPage {...baseProps} />);
 
-            expect(getDocumentPreview).toHaveBeenCalled();
+            expect(getDocumentPreviewV2).toHaveBeenCalled();
             await waitFor(() => expect(screen.getByAltText('document image')).toBeInTheDocument());
             expect(result).toMatchSnapshot();
         });
@@ -121,7 +121,7 @@ describe.skip('Document Preview Page', () => {
 
             const result = render(<DocumentViewerPage {...baseProps} />);
 
-            expect(getDocumentPreview).toHaveBeenCalled();
+            expect(getDocumentPreviewV2).toHaveBeenCalled();
             await waitFor(() => expect(screen.getByAltText('document image')).toBeInTheDocument());
             expect(result).toMatchSnapshot();
         });
@@ -132,7 +132,7 @@ describe.skip('Document Preview Page', () => {
 
             const result = render(<DocumentViewerPage {...baseProps} />);
 
-            expect(getDocumentPreview).toHaveBeenCalled();
+            expect(getDocumentPreviewV2).toHaveBeenCalled();
             await waitFor(() => expect(screen.getByAltText('document image')).toBeInTheDocument());
             expect(result).toMatchSnapshot();
         });
@@ -143,7 +143,7 @@ describe.skip('Document Preview Page', () => {
 
             const result = render(<DocumentViewerPage {...baseProps} />);
 
-            expect(getDocumentPreview).toHaveBeenCalled();
+            expect(getDocumentPreviewV2).toHaveBeenCalled();
             await waitFor(() => expect(screen.getByAltText('document image')).toBeInTheDocument());
             expect(result).toMatchSnapshot();
         });
@@ -155,7 +155,7 @@ describe.skip('Document Preview Page', () => {
 
             render(<DocumentViewerPage {...baseProps} />);
 
-            expect(getDocumentPreview).toHaveBeenCalled();
+            expect(getDocumentPreviewV2).toHaveBeenCalled();
             await waitFor(() => expect(screen.getByText('sideSheet.documentUnsupported')).toBeInTheDocument());
             expect(console.error).toHaveBeenCalledTimes(2);
             expect(console.error).toHaveBeenCalledWith('Error getting Policy document sampleId for sampleCarrier');
@@ -167,7 +167,7 @@ describe.skip('Document Preview Page', () => {
 
             render(<DocumentViewerPage {...baseProps} />);
 
-            expect(getDocumentPreview).toHaveBeenCalled();
+            expect(getDocumentPreviewV2).toHaveBeenCalled();
             await waitFor(() => expect(screen.getByText('sideSheet.documentUnsupported')).toBeInTheDocument());
             expect(console.error).toHaveBeenCalledTimes(1);
             expect(console.error).toHaveBeenCalledWith('Unsupported file extension txt for sampleCarrier Policy document sampleId');
