@@ -1,5 +1,4 @@
 .cardContainer {
-    padding: var(--measure-dimension-padding-4xl);
     border-radius: var(--radius-sm, 4px);
     background-color: var(--color-base-surface-surface-primary);
     box-shadow: var(--shadow-elevation-elevation-light-sm);
@@ -9,10 +8,28 @@
     display: flex;
     flex-flow: row wrap;
     align-items: baseline;
-    margin-bottom: var(--measure-dimension-padding-4xl);
+    padding: var(--measure-dimension-padding-4xl);
+}
+
+.tabs {
+    padding-left: var(--measure-dimension-padding-4xl);
+}
+.tabList {
+    margin-bottom: 0;
+}
+
+.cardSection {
+    padding-top: var(--measure-dimension-padding-4xl);
+    padding-bottom: var(--measure-dimension-padding-4xl);
+}
+
+.personalInfoSectionHeader {
+    margin-bottom: var(--measure-dimension-gap-lg);
 }
 
 .personalInfoSection {
+    display: flex;
+    gap: var(--measure-dimension-gap-2xl);
 }
 
 /* .caption {
