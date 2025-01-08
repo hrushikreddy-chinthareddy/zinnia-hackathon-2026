@@ -103,7 +103,7 @@ export const getServerSideProps = withPageAuthRequired({
                 status: 'NEW',
                 data: {
                     details: {
-                        amount: '2000 $',
+                        amount: '10000 $',
                         documentMatcher: {
                             title: 'Financial Objective',
                             subTitle: 'FinancialObjective = Other',
@@ -120,6 +120,12 @@ export const getServerSideProps = withPageAuthRequired({
                             },
                         ],
                         caseOverview: '/cases',
+                    },
+
+                    potentialMatches: {
+                        type: 'string',
+                        title: 'Annuity fits risk tolerance',
+                        $ref: '#/definitions/potentialMatchesEnum',
                     },
 
                     nigos: ['EX000000003688'],
@@ -184,7 +190,7 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
-            //  const taskMetadata = await getTaskFormMetadata(carrier, taskType as TtaskFormaskType, process as ProcessType, accessToken);
+            //   const taskMetadata = await getTaskFormMetadata(carrier, taskType as TtaskFormaskType, process as ProcessType, accessToken);
 
             const taskMetadata = {
                 formId: '004c97a1-d97c-4faa-9b7f-8ff9105b4c29',
@@ -195,7 +201,11 @@ export const getServerSideProps = withPageAuthRequired({
                 formSchema: {
                     $schema: 'http://json-schema.org/draft-07/schema#',
                     type: 'object',
-
+                    definitions: {
+                        potentialMatchesEnum: {
+                            enum: ['Enter a case ID', 'Document cannot be matched to a case'],
+                        },
+                    },
                     properties: {
                         sectionHeader: {
                             type: 'instructions',
@@ -265,6 +275,11 @@ export const getServerSideProps = withPageAuthRequired({
                                 },
                             },
                         },
+                        potentialMatches: {
+                            type: 'string',
+                            title: 'Can you find a matching case for this document?',
+                            $ref: '#/definitions/potentialMatchesEnum',
+                        },
                     },
                 },
                 uiSchema: {
@@ -330,8 +345,15 @@ export const getServerSideProps = withPageAuthRequired({
                             'ui:widget': 'HyperLinkWidget',
                         },
                     },
+                    potentialMatches: {
+                        'ui:widget': 'radio',
+                        'ui:options': {
+                            inline: true,
+                        },
+                    },
                 },
             };
+
             if (!taskMetadata?.formSchema || !taskMetadata?.uiSchema) {
                 logError('task::Form schema not found', {
                     taskId,
