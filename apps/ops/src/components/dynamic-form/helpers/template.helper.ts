@@ -5,6 +5,7 @@ import ArrayFieldTableTemplate from '../customization/templates/array-field-temp
 import ArrayFieldTemplate from '../customization/templates/array-field-template/array-field-template';
 import { DocumentCardTemplate } from '../customization/templates/card-templates/document-card-template';
 import { PartyCardTemplate } from '../customization/templates/card-templates/party-card-template';
+import InstructionsTemplate from '../customization/templates/instructions-template/instructions-template';
 
 export const UIArrayTemplateMap: Record<string, (props: ArrayFieldTemplateProps) => React.JSX.Element> = {
     ['ArrayFieldTemplate']: ArrayFieldTemplate,
@@ -15,6 +16,7 @@ export const UIObjectTemplateMap: Record<string, (props: ObjectFieldTemplateProp
     ['PartyCardTemplate']: PartyCardTemplate,
     ['DocumentCardTemplate']: DocumentCardTemplate,
     ['AccordionTemplate']: AccordionTemplate,
+    ['InstructionsTemplate']: InstructionsTemplate,
 };
 
 export const ApplyUITemplates = (uiSchema: UiSchema) => {

@@ -7,6 +7,7 @@ import { DocumentCardTemplate } from './card-templates/document-card-template';
 import { PartyCardTemplate } from './card-templates/party-card-template';
 import FieldErrorTemplate from './field-error-template/field-error-template';
 import { FieldTemplate } from './field-template/field-template';
+import InstructionsTemplate from './instructions-template/instructions-template';
 import { ObjectFieldTemplate } from './object-field-template/object-field-template';
 import { TitleFieldTemplate } from './title-field-template/title-field-template';
 
@@ -21,6 +22,7 @@ export function generateTemplates() {
         ArrayFieldTableTemplate,
         PartyCardTemplate,
         DocumentCardTemplate,
+        InstructionsTemplate,
         ButtonTemplates: { AddButton, RemoveButton },
     };
 }

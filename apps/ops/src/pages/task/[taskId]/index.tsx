@@ -196,6 +196,12 @@ export const getServerSideProps = withPageAuthRequired({
                     type: 'object',
                     definitions: {},
                     properties: {
+                        sectionHeader: {
+                            type: 'object',
+                            title: 'Processing Instructions',
+                            // description:
+                            //     "This customer's application was flagged for review. Accept or Decline each issue before submitting a final decision.",
+                        },
                         details: {
                             type: 'object',
                             title: 'Details',
@@ -300,7 +306,16 @@ export const getServerSideProps = withPageAuthRequired({
                     'ui:submitButtonOptions': {
                         norender: true,
                     },
-
+                    sectionHeader: {
+                        props: {
+                            description:
+                                "This customer's application was flagged for review. Accept or Decline each issue before submitting a final decision.",
+                        },
+                        'ui:options': {
+                            label: true,
+                            ObjectFieldTemplate: 'InstructionsTemplate',
+                        },
+                    },
                     details: {
                         accord: true,
                         'ui:options': {
