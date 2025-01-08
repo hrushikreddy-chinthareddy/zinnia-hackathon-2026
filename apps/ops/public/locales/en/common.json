@@ -1562,7 +1562,8 @@
                     "partial": "Partial",
                     "totalFreeAmt": "Total free amount",
                     "penaltyFreeAmount": "Penalty free amount",
-                    "annualFreeAmountBalance": "Annual free amount balance"
+                    "annualFreeAmountBalance": "Annual free amount balance",
+                    "maximumFreeAmount": "Maximum free amount"
                 },
                 "fullWithdrawal": {
                     "contractHasBeenLostOrDestroyed": "Contract has been lost or destroyed",
