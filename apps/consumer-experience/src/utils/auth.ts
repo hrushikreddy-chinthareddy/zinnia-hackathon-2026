@@ -24,6 +24,7 @@ import {
   APP_SESSION_COOKIE_KEY,
   CARRIER_COOKIE_KEY,
   HAD_PREVIOUS_SESSION_COOKIE_KEY,
+  LOGIN_EMAIL_COOKIE_KEY,
   MAX_COOKIE_SIZE,
   MFA_OOB_CODE_COOKIE_KEY,
   MFA_TOKEN_COOKIE_KEY,
@@ -111,6 +112,12 @@ const getChunkSize = async (
   const chunkSize = MAX_COOKIE_SIZE - emptyCookie.length;
   return chunkSize;
 };
+
+export const domain =
+  process.env.AUTH0_COOKIE_DOMAIN_MYPOLICYVIEW ||
+  process.env.AUTH0_COOKIE_DOMAIN ||
+  process.env.VERCEL_BRANCH_URL;
+
 /**
  * Sets a cookie with the provided options.
  *
@@ -126,10 +133,6 @@ export const setCookie = async (options: SetCookieOptions) => {
   // in some cases, for example in middleware, we can't use the cookies object because it will set the cookie after the response has been sent
   // so we need to set the cookie on the response object.
   const cookieResponse = res?.cookies ?? cookieStore;
-  const domain =
-    process.env.AUTH0_COOKIE_DOMAIN_MYPOLICYVIEW ||
-    process.env.AUTH0_COOKIE_DOMAIN ||
-    process.env.VERCEL_BRANCH_URL;
 
   const cookieOptions: CookieConfig = {
     secure: process.env.AUTH0_COOKIE_SECURE === 'true',
@@ -360,6 +363,7 @@ export const setLoginCookies = async (
   });
   await deleteCookie(MFA_OOB_CODE_COOKIE_KEY, res);
   await deleteCookie(MFA_TOKEN_COOKIE_KEY, res);
+  await deleteCookie(LOGIN_EMAIL_COOKIE_KEY, res);
 };
 
 export const touchSession = async (res?: NextResponse) => {

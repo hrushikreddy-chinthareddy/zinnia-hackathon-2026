@@ -1,4 +1,5 @@
 'use server';
+import { cookies } from 'next/headers';
 import { RedirectType, redirect } from 'next/navigation';
 
 import { ServerApi } from '@/services';
@@ -13,6 +14,7 @@ import {
   PasswordlessCodeMfaResponse,
 } from '@/types/auth';
 import {
+  domain,
   getMfaCookie,
   getOobMfaCookie,
   setLoginCookies,
@@ -20,7 +22,10 @@ import {
   setMfaOobCookie,
 } from '@/utils/auth';
 import { logTrace, logWarn } from '@/utils/logging/server-logging';
-import { FROM_LOGIN_QUERY_KEY } from '@/utils/serverClientUtils';
+import {
+  FROM_LOGIN_QUERY_KEY,
+  LOGIN_EMAIL_COOKIE_KEY,
+} from '@/utils/serverClientUtils';
 
 interface LoginActionErrorResponse extends Auth0ErrorResponse {
   timestamp: Date;
@@ -96,10 +101,15 @@ export async function passwordlessStart(
     return redirect(`/login/error`);
   }
 
-  return redirect(
-    `/login/passwordless-email-challenge?email=${encodeURIComponent(email)}`,
-    RedirectType.replace
-  );
+  const cookieStore = cookies();
+  cookieStore.set(LOGIN_EMAIL_COOKIE_KEY, email, {
+    secure: process.env.AUTH0_COOKIE_SECURE === 'true',
+    sameSite: 'strict',
+    path: '/',
+    domain,
+  });
+
+  return redirect(`/login/passwordless-email-challenge`, RedirectType.replace);
 }
 /**
  * Initiates the resend of the verification code by sending a new code to the provided email.
