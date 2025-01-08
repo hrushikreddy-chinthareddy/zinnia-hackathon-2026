@@ -105,7 +105,7 @@ export const SummaryForm = ({
       label: (
         <Label
           interactiveElements={[
-            <LabelPopover key="TEXT" title="Charges">
+            <LabelPopover key="TEXT" title="Fees">
               <p>
                 Premium payment fees are charged to cover costs related to sales
                 expenses and/or taxes. If your policy requires these fees, they
@@ -123,7 +123,21 @@ export const SummaryForm = ({
 
   if (uncollectedCharges && uncollectedCharges > 0) {
     paymentSummaryStepDetails.push({
-      label: <Label>Estimated charges</Label>,
+      label: (
+        <Label
+          interactiveElements={[
+            <LabelPopover key="TEXT" title="Estimated charges">
+              <p>
+                Additional charges may accrue if your policy went into pending
+                lapse. These charges are estimated here because they are
+                calculated daily.
+              </p>
+            </LabelPopover>,
+          ]}
+        >
+          Estimated charges
+        </Label>
+      ),
       value: uncollectedCharges,
     });
   }
