@@ -12,6 +12,8 @@ import { FormProvider } from '@deps/containers/otp/withdrawal-forms/components/f
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
+import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { Processes } from '@deps/models/case/case';
 import { DocumentData } from '@deps/models/case/document';
@@ -63,7 +65,7 @@ interface NigoEntryProps extends SegmentTrackedPageProps {
 }
 
 const isNigoEntryEnabled = (clientId: string, process: string, featureFlagMap: FeatureFlags) => {
-    const identifier = `NIGO_ENTRY_${clientId.toUpperCase()}_${process.toUpperCase().replaceAll(' ', '_')}` as FeatureKeyIdentifier;
+    const identifier = `NIGO_ENTRY_${clientId?.toUpperCase()}_${process?.toUpperCase().replaceAll(' ', '_')}` as FeatureKeyIdentifier;
     const featureKey = FEATURE_FLAGS[identifier];
     return featureKey && featureFlagMap[featureKey] ? featureFlagMap[featureKey] : false;
 };
@@ -95,13 +97,13 @@ const NigoEntry = ({
         nigoExceptions,
         nigoSubExceptions,
     });
-
+    const { issueState } = useAccountInfo(document.contract, clientCode as string);
     return (
         <div className="flex w-full flex-col overflow-auto px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10">
             <FormProvider
                 form={form}
                 initialForm={form}
-                issueState={''}
+                issueState={issueState}
                 isOpenNigo={isNigoCase}
                 featureFlagDecisions={featureFlagDecisions}
                 parties={parties}
@@ -449,8 +451,8 @@ export const getServerSideProps = withPageAuthRequired({
                 }
             }
 
-            const latestForm = searchCasesResponse?.data?.find(
-                item => item?.additionalData?.requestSubType.toUpperCase() === docType.toUpperCase()
+            const latestForm = !isNullEmptyOrUndefined(docType) && searchCasesResponse?.data?.find(
+                item => item?.additionalData?.requestSubType?.toUpperCase() === docType.toUpperCase()
             );
             return {
                 props: {
@@ -468,12 +470,12 @@ export const getServerSideProps = withPageAuthRequired({
                     featureFlagDecisions,
                     document,
                     taskInfoLink,
-                    prevTransactionDetails: latestForm?.additionalData || null,
+                    prevTransactionDetails: latestForm ? (latestForm?.additionalData || null) : null,
                     isNigoCase,
                 },
             };
         } catch (error) {
-            logError('getServerSidePropsNigoEntryPage', { ...parseErrorInformation(error), taskId, user: userInfoForLogging.email });
+            logError('getServerSidePropsNigoEntryPage', { ...parseErrorInformation(error), taskId, user: userInfoForLogging.email, error });
             return {
                 props: {},
             };

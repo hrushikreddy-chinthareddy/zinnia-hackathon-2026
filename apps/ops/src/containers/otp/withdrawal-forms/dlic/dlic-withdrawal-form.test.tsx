@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { TaskType } from '@deps/models/case/task';
-import { AddressTypes, CaseStatus, MaritalStatus, PartyRoles, PhoneTypes } from '@deps/models/case/withdrawal/case';
+import { AddressTypes, CaseStatus, maritalStatusType, PartyRoles, PhoneTypes } from '@deps/models/case/withdrawal/case';
 import { CaseDetails } from '@deps/models/case/withdrawal/case-data';
 
 import DlicWithdrawalForm from './dlic-withdrawal-form';
@@ -22,7 +22,7 @@ jest.mock('next/navigation', () => {
     return {
         __esModule: true,
         useSearchParams: () => ({
-            get: () => {},
+            get: () => { },
         }),
     };
 });
@@ -115,7 +115,7 @@ describe('DLIC Form Specific component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: '' as MaritalStatus, //-UI
+                            text: "" as maritalStatusType | null,
                         },
                         addresses: [
                             {

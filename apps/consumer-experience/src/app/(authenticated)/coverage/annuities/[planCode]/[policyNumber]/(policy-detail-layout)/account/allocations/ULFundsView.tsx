@@ -25,7 +25,10 @@ export const ULFundsView = ({
   const { data: funds, isLoading } = useQuery({
     queryKey: [QueryKeys.POLICY_FUNDS, planCode, policyNumber],
     queryFn: () => getPolicyFunds(planCode, policyNumber),
-    select: data => sortNonHoldingFunds(data || []),
+    select: data =>
+      sortNonHoldingFunds(data || []).filter(
+        fund => fund?.allocationPercentage && fund?.totalFundValue
+      ),
   });
 
   const { data: freelookData } = useQuery({

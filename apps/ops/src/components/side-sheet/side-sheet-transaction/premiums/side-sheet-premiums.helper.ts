@@ -9,8 +9,6 @@ import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 import { getPaymentMethod } from '../side-sheet-transaction.helper';
 import { TransactionSideSheetValues } from '../types';
 
-// TODO MG: these can be consolidated a bit
-// amount/submitted amount/transactionType seem to be the only different ones
 export const getAutopayPremiumSideSheetValues = (
     policy: Policy,
     transaction: Transaction,

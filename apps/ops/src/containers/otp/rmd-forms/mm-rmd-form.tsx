@@ -9,12 +9,14 @@ import JointLifeExpectancy from '@deps/components/otp-withdrawal-form/rmd-method
 import RMDMethod from '@deps/components/otp-withdrawal-form/rmd-method/rmd-method';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import SignatureVerificationReasons from '@deps/components/otp-withdrawal-form/signature-validation/signature-verification-reason';
+import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { USStates } from '@deps/constants/geography/us-states';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helper';
 import { QualTypes } from '@deps/models/case/withdrawal/case';
+import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import useMassMutualRmdConfig from './mm-rmd-form.helper';
 
@@ -29,6 +31,7 @@ export default function MassMutualRmdWithdrawalForm({ qualType }: MassMutualRmdW
         formPartyConfigs,
         irsSignatureConfig,
         formValidation,
+        w4pSignaturesConfig,
         fundWithdrawnMethodOptions,
         disbursementOptions,
         jointLifeExpectancyConfigs,
@@ -76,7 +79,7 @@ export default function MassMutualRmdWithdrawalForm({ qualType }: MassMutualRmdW
     const isKeogh = qualType === QualTypes.KEOGHHR10;
     const signaturesConfig = getSignaturesConfig(isKeogh);
     const isMaritalStatusAllowances = contractIssueState ? validateMaritalStatusAllowances(contractIssueState as USStates) : false;
-
+    const shouldStateW4pRender = isAllowedState(contractIssueState)
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -94,6 +97,7 @@ export default function MassMutualRmdWithdrawalForm({ qualType }: MassMutualRmdW
                 specifiedView={true}
             />
             <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} />
+            {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
 
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig}>
