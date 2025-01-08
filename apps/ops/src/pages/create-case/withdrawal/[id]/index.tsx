@@ -9,6 +9,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
 import OtpLayout from '@deps/components/otp-layout';
+import NoteSection from '@deps/components/otp-withdrawal-form/note-section';
 import WithdrawalDrawer, { SidebarContent } from '@deps/components/otp-withdrawal-form/withdrawal-drawer';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
@@ -19,6 +20,7 @@ import { FormProvider } from '@deps/containers/otp/withdrawal-forms/components/f
 import DlicWithdrawalForm from '@deps/containers/otp/withdrawal-forms/dlic/dlic-withdrawal-form';
 import FlicWithdrawalForm from '@deps/containers/otp/withdrawal-forms/flic-withdrawal-form';
 import GdmnWithdrawalForm from '@deps/containers/otp/withdrawal-forms/gdmn/gdmn-withdrawal-form';
+import GilicoWithdrawalForm from '@deps/containers/otp/withdrawal-forms/gilico/gilico-withdrawal-form';
 import MassWithdrawalForm from '@deps/containers/otp/withdrawal-forms/mass/mass-withdrawal-form';
 import NasuWithdrawalForm from '@deps/containers/otp/withdrawal-forms/nasu/nasu-withdrawal-form';
 import RslnWithdrawalForm from '@deps/containers/otp/withdrawal-forms/rsln/rsln-withdrawal-form';
@@ -81,6 +83,7 @@ const getFormComponentMap = (qualType: QualTypes | ''): Record<string, React.Rea
     [Carrier.GDMN]: <GdmnWithdrawalForm />,
     [Carrier.RSLN]: <RslnWithdrawalForm />,
     [Carrier.ULPC]: <UlicWithdrawalForm />,
+    [Carrier.GLCO]: <GilicoWithdrawalForm />,
 });
 
 export default function WithdrawalCase({ document, form, isNigoCase, featureFlagDecisions, parties, user }: WithdrawalCaseProps) {
@@ -210,6 +213,7 @@ export default function WithdrawalCase({ document, form, isNigoCase, featureFlag
                                                 </div>
                                             )}
                                             {formParts}
+                                            <NoteSection />
                                             <FormErrors t={t} taskApiError={taskApiError}></FormErrors>
                                             <FormControls
                                                 document={document}

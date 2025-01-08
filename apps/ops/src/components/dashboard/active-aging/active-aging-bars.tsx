@@ -1,6 +1,6 @@
 import * as changeCase from 'change-case';
 import Highcharts, { AxisLabelsFormatterContextObject } from 'highcharts';
-import more from 'highcharts/highcharts-more';
+import more from 'highcharts/highcharts-more'; // is this required?
 import HighchartsReact, { HighchartsReactRefObject } from 'highcharts-react-official';
 import { forwardRef, useCallback, useEffect, useState } from 'react';
 
@@ -9,7 +9,7 @@ import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
 import { CaseDashboardStatsResponse } from '@deps/models/case/case';
 
 interface Props {
-    agingRangesByProcess: CaseDashboardStatsResponse;
+    agingRangesByProcess?: CaseDashboardStatsResponse;
     classNames?: string;
     onRenderChart?: () => void;
 }
@@ -18,7 +18,7 @@ const ActiveAgingBars = forwardRef<HighchartsReactRefObject, Props>(({ agingRang
     const [chartConfig, setChartConfig] = useState<Highcharts.Options>({});
     const [seriesData, setSeriesData] = useState<ChartConfigSeriesDataSimple[]>([]);
 
-    const getSeriesData = (agingRangesByProcess: CaseDashboardStatsResponse) => {
+    const getSeriesData = (agingRangesByProcess?: CaseDashboardStatsResponse) => {
         const seriesData: ChartConfigSeriesDataSimple[] = [];
         if (!agingRangesByProcess || !agingRangesByProcess.data || agingRangesByProcess.data.length === 0) {
             return seriesData;
@@ -48,6 +48,7 @@ const ActiveAgingBars = forwardRef<HighchartsReactRefObject, Props>(({ agingRang
             });
 
             const config: Highcharts.Options = {
+                navigation: { buttonOptions: { enabled: false } },
                 chart: {
                     backgroundColor: 'transparent',
                     type: 'column',
@@ -55,9 +56,7 @@ const ActiveAgingBars = forwardRef<HighchartsReactRefObject, Props>(({ agingRang
                     spacingRight: 0,
                     events: {
                         render: () => {
-                            if (onRenderChart) {
-                                onRenderChart();
-                            }
+                            onRenderChart?.();
                         },
                     },
                 },
@@ -156,7 +155,7 @@ const ActiveAgingBars = forwardRef<HighchartsReactRefObject, Props>(({ agingRang
         const config = getChartConfig(seriesData);
         setSeriesData(seriesData);
         setChartConfig(config);
-    }, [getChartConfig, agingRangesByProcess]);
+    }, [getChartConfig, agingRangesByProcess, agingRangesByProcess?.data?.length]);
 
     return seriesData.length > 0 && <HighchartsReact ref={ref} className={classNames} highcharts={Highcharts} options={chartConfig} />;
 });

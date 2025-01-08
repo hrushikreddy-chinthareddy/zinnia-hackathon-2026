@@ -24,7 +24,7 @@ export default function OwnerAcknowledgementOfTaxInformation(props: OwnerAcknowl
     const { ownerAcknowledgement, onChange, isFormStateReadOnly } = props;
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.ownerAcknowledgementOfTaxInformation' });
 
-    const [type, setType] = useState<string>(ownerAcknowledgement?.type.text || PartyRoles.OWNER);
+    const [type, setType] = useState<string>(ownerAcknowledgement?.type?.text || PartyRoles.OWNER);
     const [signPresent, setSignPresent] = useState<SignPresent>(convertIsSignedFromValue(ownerAcknowledgement?.isSigned?.text));
     const [date, setDate] = useState<string>(
         ownerAcknowledgement?.signDate?.text

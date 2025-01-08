@@ -1,0 +1,6 @@
+.addressGroup {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: var(--measure-dimension-gap-lg);
+}

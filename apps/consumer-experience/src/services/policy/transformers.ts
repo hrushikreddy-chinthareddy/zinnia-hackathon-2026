@@ -11,6 +11,7 @@ import {
   Reason,
   Transaction_Payor,
   FeatureType,
+  LineOfBusiness,
 } from '@zinnia/api-types/types/sor';
 import { policyOwner } from '@zinnia/utils';
 import dayjs from 'dayjs';
@@ -93,7 +94,10 @@ export const transformPolicyReferenceData = (
       policyStartDate: p?.policyDates?.policyStartDate,
       // Date of last policy transaction, when policy value was last updated
       effectiveDate: p?.effectiveDate,
+      issueDate: p?.policyDates?.issueDate,
       lineOfBusiness: p?.product?.lineOfBusiness,
+      cumulativeGrossDeathBenefitAmount:
+        p?.coverage?.cumulativeGrossDeathBenefitAmount,
       ...policyDetails,
     };
   });
@@ -104,7 +108,14 @@ export const transformPolicyForAccountValue = (
 ): PolicyAccountValue => {
   return {
     // Date of last policy transaction, when policy value was last updated
-    effectiveDate: policy?.effectiveDate,
+    // the frequency of transactions is a lot higher on life products, so the
+    // effective date shows when the last transaction occurred
+    // for annuity products, we just show current date
+    // (decision documented in CUI-512)
+    effectiveDate:
+      policy?.product?.lineOfBusiness === LineOfBusiness.ANNUITY
+        ? new Date().toISOString()
+        : policy?.effectiveDate,
     endingAccountValue: policy?.accountValues?.endingAccountValue,
     policyStartDate: policy?.policyDates?.policyStartDate,
     lineOfBusiness: policy?.product?.lineOfBusiness,
@@ -292,7 +303,7 @@ export const transformPolicyForWithdrawals = (
   const withdrawalsTaken =
     policy.withdrawalValues?.yearToDateNumberOfWithdrawal;
   const withdrawalValues = policy.withdrawalValues || {};
-
+  const requiredMinimumDistribution = policy.requiredMinimumDistribution || {};
   return {
     withdrawalAllowedStartDate: withdrawalValues.withdrawalAllowedStartDate,
     maximumWithdrawalAmount: withdrawalValues.maximumWithdrawalAmount,
@@ -317,6 +328,8 @@ export const transformPolicyForWithdrawals = (
       matchVestingDate: policy.allocation?.matchSegment?.matchVestingDate,
     },
     freeWithdrawalAmount: withdrawalValues.freeWithdrawalAmount,
+    requiredMinimumDistributionAmount:
+      requiredMinimumDistribution.totalRequiredMinimumDistributionAnnualAmount,
     // Date of last policy transaction, when policy value was last updated
     effectiveDate: policy.effectiveDate,
     endingAccountValue: policy.accountValues?.endingAccountValue,
@@ -383,7 +396,7 @@ export const transformPaymentHistory = (
       : effectiveDate;
 
   const paymentHistoryObject: PaymentHistory = {
-    amount: requestedAmount,
+    amount: { requestedAmount, appliedAmount },
     date,
     frequency: null,
     type: transactionType?.toString() as keyof typeof Reason,
@@ -402,31 +415,22 @@ export const transformPaymentHistory = (
   switch (transactionType) {
     case TransactionType.PAYMENT_INITIAL_PREMIUM:
     case TransactionType.INITIAL_PREMIUM:
-      paymentHistoryObject.amount =
-        transactionType === TransactionType.PAYMENT_INITIAL_PREMIUM
-          ? requestedAmount
-          : appliedAmount;
       paymentHistoryObject.title = 'Premium payment';
       paymentHistoryObject.frequency = 'initial';
       break;
     case TransactionType.PAYMENT_ONE_TIME_PREMIUM:
     case TransactionType.ONE_TIME_PREMIUM:
-      paymentHistoryObject.amount =
-        transactionType === TransactionType.PAYMENT_ONE_TIME_PREMIUM
-          ? paymentAmount
-          : appliedAmount;
       paymentHistoryObject.title = 'Premium payment';
       paymentHistoryObject.frequency = 'one-time';
       break;
     case TransactionType.SUBSEQUENT_PAYMENT:
     case TransactionType.SUBSEQUENT_PREMIUM:
-      paymentHistoryObject.amount =
-        status === ExtendedTransactionStatus.Pending
-          ? paymentAmount
-          : transactionType === TransactionType.SUBSEQUENT_PAYMENT
-            ? requestedAmount
-            : appliedAmount;
-      paymentHistoryObject.title = 'Premium autopay';
+      {
+        if (status === ExtendedTransactionStatus.Pending) {
+          paymentHistoryObject.amount = { paymentAmount };
+        }
+        paymentHistoryObject.title = 'Premium autopay';
+      }
       break;
     case 'Activation':
       paymentHistoryObject.title = 'Policy activation';
@@ -435,7 +439,7 @@ export const transformPaymentHistory = (
       paymentHistoryObject.title = 'Policy anniversary';
       break;
     case TransactionType.INTEREST_CREDIT:
-      paymentHistoryObject.amount = appliedAmount;
+      paymentHistoryObject.amount = { appliedAmount };
       paymentHistoryObject.title = 'Interest Credit';
       break;
     default:
@@ -447,7 +451,7 @@ export const transformPaymentHistory = (
 };
 
 export const transformRiders = (policy: Policy): RidersAndBenefits => {
-  const { riders } = policy;
+  const { riders, product } = policy;
   const lapsedProtection = transformPolicyFeature(
     policy,
     FeatureType.LAPSEPROTECTION
@@ -473,7 +477,12 @@ export const transformRiders = (policy: Policy): RidersAndBenefits => {
       description: getRiderDescription(rider.riderCode || ''),
       effectiveDate: rider.effectiveDate,
       isElected: rider.riderElected?.toLowerCase() === 'elected',
-      isOwner: ownerInfo?.partyId === riderInsured?.insuredId,
+      isOwner:
+        ownerInfo?.partyId === riderInsured?.insuredId ||
+        // We are assuming that the insured is owner for annuities because
+        // annuities are not returning a partyRole with partyRole === INSURED,
+        // which is what we are looking for on life products (decision documented in CUI-512)
+        product?.lineOfBusiness === LineOfBusiness.ANNUITY,
       title: rider.riderName,
       status: rider.status,
       insured: {

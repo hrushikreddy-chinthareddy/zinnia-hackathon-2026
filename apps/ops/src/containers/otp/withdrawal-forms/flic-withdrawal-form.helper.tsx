@@ -254,6 +254,22 @@ export default function getFlicConfig(t: TFunction) {
             key: 'irs-signature-sign-date',
         },
     ];
+    const w4pSignaturesConfig = [
+
+        {
+            component: SignatureFields.SignatureType,
+            key: 'owner-type',
+        },
+        {
+            component: SignatureFields.SignaturePresent,
+            key: 'owner-sign-present',
+        },
+
+        {
+            component: SignatureFields.SignatureDate,
+            key: 'owner-date',
+        },
+    ]
 
     const cslnCheckStates = ['AZ', 'CA', 'CO', 'LA', 'NV', 'TX', 'ND', 'RI'];
     const formPartyConfigs: PartyConfig[] = [
@@ -679,6 +695,7 @@ export default function getFlicConfig(t: TFunction) {
         irsSignatureConfig,
         partialWithdrawalOptions,
         signaturesConfig,
+        w4pSignaturesConfig,
         selectOneOptions,
         fullWithdrawalOptions,
     };

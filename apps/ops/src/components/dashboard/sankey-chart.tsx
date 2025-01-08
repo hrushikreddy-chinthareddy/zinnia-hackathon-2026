@@ -1,19 +1,18 @@
+import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
 
 import { FieldSize, FieldType } from '@deps/components/fields/field';
 import SelectSimple from '@deps/components/select/select';
+import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { getStartAndEndDates } from '@deps/containers/case-redesign-sub-page/case-helpers';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
+import { getLabelSubString, dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
-import { CaseDashboardStatsResponse, DashboardStatsElementResponse, Statuses } from '@deps/models/case/case';
+import { DashboardStatsElementResponse } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
-import { getCaseDashboardStats } from '@deps/queries/api/cases';
-import { CaseDashboardStatsQuery, DashboardSearchFilter } from '@deps/queries/cases';
-import { debounce } from '@deps/utils/useDebounce';
-
-import { getLabelSubString, sankeyTitleFormat } from './dashboard.helper';
-import Typography, { TypographyVariant } from '../typography/typography';
+import { DashboardSearchFilter } from '@deps/queries/cases';
+import { getStatsFromSelectionQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 
 interface Props {
     height?: number;
@@ -60,8 +59,7 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
         maxPathStrokeWidth,
         maxItems,
     } = mergedChartOptions;
-    const { createdDateStart, createdDateEnd } = getStartAndEndDates('All');
-    const [caseGroupingState, setCaseGroupingState] = useState<CaseDashboardStatsResponse>();
+    const { createdDateStart } = getStartAndEndDates('All');
     const [totalCases, setTotalCases] = useState<number>(0);
 
     const [level1ObjectGrouping, setLevel1ObjectGrouping] = useState<DashboardStatsElementResponse[]>([]);
@@ -69,12 +67,21 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
     const [level3ObjectGrouping, setLevel3ObjectGrouping] = useState<DashboardStatsElementResponse[]>([]);
     const [l1SelectedIndex, setL1SelectedIndex] = useState<number>(-100);
 
-    const [l1SelectValue, setL1SelectValue] = useState<string>(GroupByOptions.Carrier.toString());
-    const [l2SelectValue, setL2SelectValue] = useState<string>(GroupByOptions.Process.toString());
-    const [l3SelectValue, setL3SelectValue] = useState<string>(GroupByOptions.CaseStatus.toString());
+    const [l1SelectValue, setL1SelectValue] = useState(GroupByOptions.BrokerDealerName);
+    const [l2SelectValue, setL2SelectValue] = useState(GroupByOptions.Process);
+    const [l3SelectValue, setL3SelectValue] = useState(GroupByOptions.CaseStatus);
 
-    const [parentSize, setParentSize] = useState({ width: 0, height: 0 });
+    const [parentSize, setParentSize] = useState({ width, height });
     const svgParentRef = useRef<HTMLDivElement>(null);
+
+    const { data: caseGroupingState } = useQuery({
+        queryKey: ['caseGrouping', baseDashboardQueryFilter, l1SelectValue, l2SelectValue, l3SelectValue, createdDateStart],
+        queryFn: () => {
+            setL1SelectedIndex(-100);
+            return getStatsFromSelectionQuery(baseDashboardQueryFilter, l1SelectValue, l2SelectValue, l3SelectValue, createdDateStart);
+        },
+        placeholderData: previousData => previousData,
+    });
 
     const getGroupingsFromL1 = (l1ObjectGrouping: DashboardStatsElementResponse[]) => {
         const l2Grouping: DashboardStatsElementResponse[] = [];
@@ -408,7 +415,11 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                         <tspan className="tracking-normal no-underline font-primary text-xl font-medium">
                             {wholeNumberFormatify(l1StatGrouping.count)}
                         </tspan>
-                        <tspan className="font-primary text-sm font-medium"> {getLabelSubString(l1StatGrouping.name)}</tspan>
+                        <tspan className="font-primary text-sm font-medium">
+                            {l1SelectValue === GroupByOptions.Carrier
+                                ? getLabelSubString(l1StatGrouping.name)
+                                : dashboardChartTitleFormat(l1StatGrouping.name, 15)}
+                        </tspan>
                         <title>{l1StatGrouping.name}</title>
                     </text>
                 </a>
@@ -477,8 +488,10 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                         <tspan className="tracking-normal no-underline font-primary text-xl font-medium">
                             {wholeNumberFormatify(getL2ObjectCount(l2StatGrouping))}
                         </tspan>
-                        <tspan className="font-primary text-sm font-medium">&nbsp;{sankeyTitleFormat(l2StatGrouping.name, 15)}</tspan>
-                        <title>{sankeyTitleFormat(l2StatGrouping.name, false)}</title>
+                        <tspan className="font-primary text-sm font-medium">
+                            &nbsp;{dashboardChartTitleFormat(l2StatGrouping.name, 15)}
+                        </tspan>
+                        <title>{dashboardChartTitleFormat(l2StatGrouping.name, false)}</title>
                     </text>
                 </g>
                 {/* </a> */}
@@ -520,8 +533,8 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                     <tspan className="tracking-normal no-underline font-primary text-xl font-medium">
                         {wholeNumberFormatify(getL3ObjectCount(l3StatGrouping))}
                     </tspan>
-                    <tspan className="font-primary text-sm font-medium"> {sankeyTitleFormat(l3StatGrouping.name)}</tspan>
-                    <title>{sankeyTitleFormat(l3StatGrouping.name, false)}</title>
+                    <tspan className="font-primary text-sm font-medium"> {dashboardChartTitleFormat(l3StatGrouping.name)}</tspan>
+                    <title>{dashboardChartTitleFormat(l3StatGrouping.name, false)}</title>
                 </text>
             </g>
         );
@@ -601,14 +614,14 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
     // };
 
     const handleL1SelectChange = (value: string) => {
-        setL1SelectValue(value);
+        setL1SelectValue(value as GroupByOptions);
         setL1SelectedIndex(-1); // reset whatever was selected on L1
     };
     const handleL2SelectChange = (value: string) => {
-        setL2SelectValue(value);
+        setL2SelectValue(value as GroupByOptions);
     };
     const handleL3SelectChange = (value: string) => {
-        setL3SelectValue(value);
+        setL3SelectValue(value as GroupByOptions);
     };
 
     const isL1Selected = () => l1SelectedIndex > -1;
@@ -623,12 +636,12 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
     const isMatchForL1SelectedStatGrouping = (index: number) => l1SelectedIndex === index;
 
     useEffect(() => {
-        const handleWindowResize = debounce(() => {
+        const handleWindowResize = () => {
             if (svgParentRef.current) {
                 const { width, height } = svgParentRef.current.getBoundingClientRect();
                 setParentSize({ width: Math.floor(width), height: Math.floor(height) });
             }
-        }, 200);
+        };
 
         const observer = new ResizeObserver(handleWindowResize);
         const currentSvgParentRef = svgParentRef.current;
@@ -642,33 +655,6 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
             }
         };
     }, []);
-
-    useEffect(() => {
-        if (height && width) {
-            setParentSize({ height, width });
-        }
-    }, [height, width]);
-
-    useEffect(() => {
-        const getStatsFromSelection = async () => {
-            const filter: DashboardSearchFilter = Object.assign({}, baseDashboardQueryFilter, {
-                caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
-                createdDateStart,
-            });
-
-            const query: CaseDashboardStatsQuery = {
-                filter,
-                groupBy: [l1SelectValue as GroupByOptions, l2SelectValue as GroupByOptions, l3SelectValue as GroupByOptions],
-            };
-
-            const statsResponse = await getCaseDashboardStats(query);
-            if (!statsResponse || 'status' in statsResponse) {
-                console.error('getStatsFromSelection::Failed to fetch stats');
-            }
-            setCaseGroupingState(statsResponse as CaseDashboardStatsResponse);
-        };
-        getStatsFromSelection();
-    }, [baseDashboardQueryFilter, createdDateEnd, createdDateStart, l1SelectValue, l2SelectValue, l3SelectValue]);
 
     useEffect(() => {
         if (!caseGroupingState || !caseGroupingState.data || caseGroupingState.data.length === 0) {
@@ -749,6 +735,10 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                         <SelectSimple
                             options={[
                                 {
+                                    value: GroupByOptions.BrokerDealerName.toString(),
+                                    label: 'Broker Dealer',
+                                },
+                                {
                                     value: GroupByOptions.Carrier.toString(),
                                     label: 'Carrier',
                                 },
@@ -757,16 +747,12 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                                     label: 'Case Type',
                                 },
                                 {
-                                    value: GroupByOptions.OpenStages.toString(),
-                                    label: 'Open Stages',
+                                    value: GroupByOptions.ProductName.toString(),
+                                    label: 'Product Name',
                                 },
                                 {
                                     value: GroupByOptions.ProcessSubType.toString(),
                                     label: 'Sub Case Type',
-                                },
-                                {
-                                    value: GroupByOptions.ExpectionCategory.toString(),
-                                    label: 'Exceptions Category',
                                 },
                             ]}
                             onChange={handleL1SelectChange}
@@ -779,6 +765,10 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                         <SelectSimple
                             options={[
                                 {
+                                    value: GroupByOptions.BrokerDealerName.toString(),
+                                    label: 'Broker Dealer',
+                                },
+                                {
                                     value: GroupByOptions.Carrier.toString(),
                                     label: 'Carrier',
                                 },
@@ -787,16 +777,12 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                                     label: 'Case Type',
                                 },
                                 {
-                                    value: GroupByOptions.OpenStages.toString(),
-                                    label: 'Open Stages',
+                                    value: GroupByOptions.ProductName.toString(),
+                                    label: 'Product Name',
                                 },
                                 {
                                     value: GroupByOptions.ProcessSubType.toString(),
                                     label: 'Sub Case Type',
-                                },
-                                {
-                                    value: GroupByOptions.ExpectionCategory.toString(),
-                                    label: 'Exceptions Category',
                                 },
                             ]}
                             onChange={handleL2SelectChange}
@@ -815,10 +801,6 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                                 {
                                     value: GroupByOptions.Process.toString(),
                                     label: 'Case Type',
-                                },
-                                {
-                                    value: GroupByOptions.ProductName.toString(),
-                                    label: 'Product Name',
                                 },
                             ]}
                             onChange={handleL3SelectChange}

@@ -1,3 +1,4 @@
+import router from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
@@ -10,15 +11,17 @@ import PageHeader from '@deps/components/page-header/page-header';
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import Tooltip from '@deps/components/tooltip/tooltip';
 import { TranslationFiles } from '@deps/config/translations';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { formatValidationResult } from '@deps/helpers/bpm-transaction.helper';
 import { numberFormatify, percentFormatify } from '@deps/helpers/numbers.helper';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { LoansTest } from '@deps/jest/constants/test-id-constants';
 import { Policy } from '@deps/models/policy/sor-policy';
-import { checkEligibilityNewLoan } from '@deps/queries/api/bpm';
+import { checkEligibilityNewLoan, TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { getBorrowingInterestRate, getLoanInterestRate } from '@deps/queries/api/product-rate';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 interface LoansContainerProps {
     policy: Policy;
@@ -29,6 +32,7 @@ interface LoansContainerProps {
 
 const LoansPageHeaderContainer = ({ policy, breadcrumbText, breadcrumbUrl, loanCarryingBalance }: LoansContainerProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
+    const { featureFlags } = useOptimizely();
 
     const [isEligible, setIsEligible] = useState<boolean | null>(null);
     const [ineligibilityMessage, setIneligibityMessage] = useState('');
@@ -36,6 +40,7 @@ const LoansPageHeaderContainer = ({ policy, breadcrumbText, breadcrumbUrl, loanC
     const [availableLoanInterestRate, setAvailableLoanInterestRate] = useState(t('general.loadingThing', { thing: t('general.rate') }));
     const [availableLoanCreditRate, setAvailableLoanCreditRate] = useState(t('general.loadingThing', { thing: t('general.rate') }));
     const policyDetails = new PolicyDetails(policy);
+    const newLoanEnabled = featureFlags?.[FEATURE_FLAGS.NEW_LOAN_TRANSACTION];
 
     useEffect(() => {
         const getLoanRates = async () => {
@@ -49,15 +54,18 @@ const LoansPageHeaderContainer = ({ policy, breadcrumbText, breadcrumbUrl, loanC
 
         getLoanRates();
     }, []);
+
     useEffect(() => {
         const checkEligibility = async () => {
-            const eligibilityResponse = await checkEligibilityNewLoan(policy.product?.planCode, policy.policyNumber);
-            const eligible = eligibilityResponse.status === 'success';
+            const eligibilityResponse = await checkEligibilityNewLoan(policy.product?.planCode, policy.policyNumber, policy.loanValues?.maximumLoanAmount);
+            const eligible = eligibilityResponse.status === TransactionResponseStatus.Success;
+
             setIsEligible(eligible);
+
             !eligible && setIneligibityMessage(formatValidationResult(eligibilityResponse?.validationResult));
         };
         checkEligibility();
-    }, [policy.policyNumber, policy.product?.planCode]);
+    }, [newLoanEnabled, policy.loanValues?.maximumLoanAmount, policy.policyNumber, policy.product?.planCode]);
 
     const { currency, loanValues, coverage } = policy;
     const currencyFormat: Intl.NumberFormatOptions = { style: 'currency', currency };
@@ -141,16 +149,16 @@ const LoansPageHeaderContainer = ({ policy, breadcrumbText, breadcrumbUrl, loanC
                 )}
             </div>
             <div className="mt-8 bg-gray-50 px-8 py-4">
-                {isStillInactive.loanPageHeader ? (
-                    // https://zinnia.atlassian.net/browse/DEPU-1936
+                {!newLoanEnabled ? (
                     <TempNavInactive tooltipBody={isStillInactive.loanPageHeader}>
                         {t('transactions.loans.header.startLoan')}
                     </TempNavInactive>
                 ) : isEligible ? (
                     <NavElement
-                        data-testid={LoansTest.START_LOAN_LINK}
-                        size={NavElementSize.Small}
                         className="mr-5"
+                        data-testid={LoansTest.START_LOAN_LINK}
+                        onClick={() => router.push(`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/loans/new-loan`)}
+                        size={NavElementSize.Small}
                         type={NavElementType.Button}
                     >
                         {t('transactions.loans.header.startLoan')}

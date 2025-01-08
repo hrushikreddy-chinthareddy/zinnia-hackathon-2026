@@ -1,3 +1,5 @@
+import { useQuery } from '@tanstack/react-query';
+import { toTitleCase } from '@zinnia/utils';
 import { HighchartsReactRefObject } from 'highcharts-react-official';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -6,6 +8,7 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import CardContainer from '@deps/containers/card-container/card-container';
 import { getStartAndEndDates } from '@deps/containers/case-redesign-sub-page/case-helpers';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
+import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
 import { convertToQueryString } from '@deps/helpers/routing.helper';
 import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
@@ -26,22 +29,30 @@ import ActiveAgingPies from './active-aging-pies';
 
 interface Props {
     classNames?: string;
-    createdBySubProcess: CaseDashboardStatsResponse;
-    openStagesByCreated: CaseDashboardStatsResponse;
+    createdBySubProcess?: CaseDashboardStatsResponse;
+    activeAgingPieChartByCreated?: CaseDashboardStatsResponse;
     loading?: boolean;
     selectedProcess: Processes;
     carriers: string[];
 }
 
-const ActiveAging = ({ classNames, createdBySubProcess, openStagesByCreated, loading = true, selectedProcess, carriers }: Props) => {
+const ActiveAging = ({
+    classNames,
+    createdBySubProcess,
+    activeAgingPieChartByCreated,
+    loading = true,
+    selectedProcess,
+    carriers,
+}: Props) => {
     const agingChartsRef = useRef<HighchartsReactRefObject>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
     const numColumns = 7;
     const [agingChartWidth, setAgingChartWidth] = useState(877);
-    const [aiSummary, setAiSummary] = useState<string | null>(null);
 
     const [agingRangesBySubProcess, setAgingRangesBySubProcess] = useState<CaseDashboardStatsResponse>();
-    const [openStagesByAgingRanges, setOpenStagesByAgingRanges] = useState<CaseDashboardStatsResponse>();
-    const [distinctOpenStages, setDistinctOpenStages] = useState<string[]>([]);
+    const [pieChartDataByAgingRanges, setPieChartDataByAgingRanges] = useState<CaseDashboardStatsResponse>();
+    const [distinctPieChartDataLabels, setDistinctPieChartDataLabels] = useState<string[]>([]);
+    const [productNameMap, setProductNameMap] = useState<{ [key: string]: string }>({});
 
     const [selectedAgingRange, setSelectedAgingRange] = useState<AgingTimeRangesKeysExtended>('All');
     const [agingGroupingMap, setAgingGroupingMap] = useState<{ [key in AgingTimeRangesKeysExtended]: DashboardStatsElementResponse[] }>({
@@ -53,7 +64,7 @@ const ActiveAging = ({ classNames, createdBySubProcess, openStagesByCreated, loa
         ZeroToSeven: [],
         All: [],
     });
-    const [agingStageGroupingMap, setAgingStageGroupingMap] = useState<{
+    const [agingPieChartGroupingMap, setAgingPieChartGroupingMap] = useState<{
         [key in AgingTimeRangesKeysExtended]: DashboardStatsElementResponse[];
     }>({
         EightToFourteen: [],
@@ -65,7 +76,7 @@ const ActiveAging = ({ classNames, createdBySubProcess, openStagesByCreated, loa
         All: [],
     });
     const [subProcessToColorMap, setSubProcessToColorMap] = useState<{ [key: string]: string }>({});
-    const [stageDreakdownToColorMap, setStageDreakdownToColorMap] = useState<{ [key: string]: string }>({});
+    const [activeAgingPieChartDataToColorMap, setActiveAgingPieChartDataToColorMap] = useState<{ [key: string]: string }>({});
     const [startAndEndDates, setStartAndEndDates] = useState<{
         createdDateStart: string;
         createdDateEnd: string;
@@ -106,15 +117,13 @@ const ActiveAging = ({ classNames, createdBySubProcess, openStagesByCreated, loa
     };
 
     const getAgingSubtitle = () => {
-        // Note: we use the subProcess by againg instead of openStage because openStage does multiple counting as cases are in multiple stages
-        // at the same time.
         let totalCaseCount = 0;
         if (selectedAgingRange === 'All') {
-            totalCaseCount = createdBySubProcess.data.reduce((a, b) => a + b.count, 0);
+            totalCaseCount = createdBySubProcess?.data?.reduce((a, b) => a + b.count, 0) || 0;
             return `Showing All (Total ${wholeNumberFormatify(totalCaseCount)} apps)`;
         }
 
-        agingRangesBySubProcess?.data.forEach(subProcessGrouping => {
+        agingRangesBySubProcess?.data?.forEach(subProcessGrouping => {
             subProcessGrouping.values?.forEach(agingRangeUnderSubProcessGrouping => {
                 if (agingRangeUnderSubProcessGrouping.name === selectedAgingRange) {
                     totalCaseCount += agingRangeUnderSubProcessGrouping.count;
@@ -125,40 +134,41 @@ const ActiveAging = ({ classNames, createdBySubProcess, openStagesByCreated, loa
         return `${AgingTimeRanges[selectedAgingRange]} Days (Total ${wholeNumberFormatify(totalCaseCount ?? -1000)} apps)`;
     };
 
-    const getOpenAiSummary = async (caseStats: DashboardStatsElementResponse[]) => {
-        try {
-            const summary = await getCaseInsights({
-                content: JSON.stringify(caseStats),
+    const {
+        data: aiSummaryResponse,
+        isLoading: aiLoading,
+        isError: aiError,
+    } = useQuery({
+        queryKey: [
+            'getAiSummary',
+            agingGroupingMap,
+            agingRangesBySubProcess?.data,
+            selectedAgingRange,
+            agingGroupingMap[selectedAgingRange],
+        ],
+        queryFn: () =>
+            getCaseInsights({
+                content: JSON.stringify(agingGroupingMap[selectedAgingRange]),
                 prompt: `You are an expert in all things case data. Your job is to summarize the data for business and executive users.
                           They want simple and insightful information about the data provided to you. The cases provided to you here are open cases delineated by insurance carrier. Avoid using phrases such as "the data".
-                          Your responses should be insightful and will be displayed on a UI as a summary for a module related to a pie chart. Use percentages and real data where it makes sense. Keep it conscise and to the point. Format number values to U.S.`,
-            });
-            return summary;
-        } catch (error) {
-            return '';
-        }
-    };
+                          Your responses should be insightful and will be displayed on a UI as a summary for a module related to a pie chart. Use percentages and real data where it makes sense. Keep it conscise and to the point. Format number values to U.S. Any keys you use make sure they are formatted to title case. For example "ANNUITY APPLICATION" should be formatted to "Annuity Application".`,
+            }),
+        enabled: shouldShowCaseInsights && !!agingRangesBySubProcess?.data && !loading,
+    });
 
-    const renderDummyText = () => {
-        if (!shouldShowCaseInsights) {
-            return null;
-        }
-        return (
-            <>
-                <div className="flex-1 border-r-1 xl:border-r-0 border-[#EDEDED] pr-2 xl:pr-0">
-                    <Typography className="flex gap-2 items-center mb-4" variant={TypographyVariant.BodyBold}>
-                        <LighBulb height={24} width={24} />
-                        <span>Insight</span>
-                    </Typography>
-                    <Typography variant={TypographyVariant.BodySm}>{aiSummary ?? 'Generating AI Summary...'}</Typography>
-                </div>
-            </>
-        );
-    };
+    let aiSummaryText = 'No AI Summary';
+    if (aiError) {
+        aiSummaryText = 'Error generating AI Summary';
+    } else if (aiLoading) {
+        aiSummaryText = 'Generating AI Summary...';
+    } else if (aiSummaryResponse?.length) {
+        aiSummaryText = aiSummaryResponse;
+    }
 
     const handleWindowResize = useCallback(() => {
-        if (agingChartsRef.current) {
-            const highchartsPlotBackground = agingChartsRef.current.container.current?.querySelector('.highcharts-plot-background');
+        if (containerRef.current) {
+            const highchartsPlotBackground = containerRef.current.querySelector('.highcharts-plot-background');
+
             if (highchartsPlotBackground) {
                 const { width } = highchartsPlotBackground.getBoundingClientRect();
                 setAgingChartWidth(Math.floor(width));
@@ -174,21 +184,21 @@ const ActiveAging = ({ classNames, createdBySubProcess, openStagesByCreated, loa
         const map: { [key: string]: string } = {};
         const barChartColors = caseChartHelpers.getAlternativeColors();
 
-        subProcessStatGroupings.data.forEach((statGrouping, index) => {
+        subProcessStatGroupings.data?.forEach((statGrouping, index) => {
             map[statGrouping.name] = barChartColors[index];
         });
 
         return map;
     };
 
-    const createAgingStageBreakDownToColorMap = (agingStatGroupingLabels: string[]) => {
+    const createActiveAgingPieChartDataToColorMap = (agingStatGroupingLabels: string[]) => {
         const map: { [key: string]: string } = {};
         const pieColors = caseChartHelpers.getColors();
 
         agingStatGroupingLabels
-            .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
+            .sort((a, b) => a.localeCompare(b))
             .forEach((label, index) => {
-                map[label.toLowerCase()] = pieColors[index % pieColors.length];
+                map[label] = pieColors[index % pieColors.length];
             });
         return map;
     };
@@ -230,8 +240,8 @@ const ActiveAging = ({ classNames, createdBySubProcess, openStagesByCreated, loa
 
     useEffect(() => {
         const groupedAgingRangeBySubProcess: CaseDashboardStatsResponse = { data: [], totalElements: 0 };
-        createdBySubProcess.data.forEach(subProcess => {
-            groupedAgingRangeBySubProcess.data.push({
+        createdBySubProcess?.data?.forEach(subProcess => {
+            groupedAgingRangeBySubProcess?.data?.push({
                 key: GroupByOptions.ProcessSubType,
                 name: subProcess.name,
                 count: subProcess.count,
@@ -250,7 +260,7 @@ const ActiveAging = ({ classNames, createdBySubProcess, openStagesByCreated, loa
             All: JSON.parse(JSON.stringify(groupedAgingRangeBySubProcess.data)),
         };
 
-        groupedAgingRangeBySubProcess.data.forEach(element => {
+        groupedAgingRangeBySubProcess.data?.forEach(element => {
             element.values?.forEach(agingRange => {
                 agingGroupingMap[agingRange.name as AgingTimeRangesKeys].push({
                     key: GroupByOptions.AgingRange,
@@ -266,68 +276,71 @@ const ActiveAging = ({ classNames, createdBySubProcess, openStagesByCreated, loa
             });
         });
         setAgingGroupingMap(agingGroupingMap);
-    }, [createdBySubProcess, groupIntoAgingRanges]);
+    }, [createdBySubProcess?.data, groupIntoAgingRanges]);
 
     useEffect(() => {
-        const groupedOpenStagesByAgingRanges: CaseDashboardStatsResponse = { data: [], totalElements: 0 };
-        const openStagesByAgingRangeMap: { [key: string]: DashboardStatsElementResponse[] } = {};
+        const groupedPieChartCategoryByAgingRanges: CaseDashboardStatsResponse = { data: [], totalElements: 0 };
+        const pieChartCategoryByAgingRangeMap: { [key: string]: DashboardStatsElementResponse[] } = {};
         const distinctAgingStatGroupingLabels: Record<string, boolean> = {};
 
         // first we are going to create the aging ranges in the grouping and our mapping to house the child values
         Object.keys(AgingTimeRanges).forEach(key => {
-            groupedOpenStagesByAgingRanges.data.push({
+            groupedPieChartCategoryByAgingRanges?.data?.push({
                 key: GroupByOptions.AgingRange,
                 name: key,
                 count: 0,
                 values: [],
             });
-            openStagesByAgingRangeMap[key] = [];
+            pieChartCategoryByAgingRangeMap[key] = [];
         });
 
-        // second we need to create a map of all the open stages by aging range (this gives us a lot of entries)
-        openStagesByCreated.data.forEach(createdGroupingOfOpenStages => {
-            const timeRange = getAgingTimeRangeFromDate(new Date(createdGroupingOfOpenStages.name));
-            openStagesByAgingRangeMap[timeRange] = openStagesByAgingRangeMap[timeRange].concat(createdGroupingOfOpenStages.values ?? []);
+        // second we need to create a map of all the pie chart data by aging range (this gives us a lot of entries)
+        activeAgingPieChartByCreated?.data?.forEach(createdGroupingOfExceptionCategories => {
+            const timeRange = getAgingTimeRangeFromDate(new Date(createdGroupingOfExceptionCategories.name));
+            pieChartCategoryByAgingRangeMap[timeRange] = pieChartCategoryByAgingRangeMap[timeRange].concat(
+                createdGroupingOfExceptionCategories.values ?? []
+            );
         });
-
-        // third we need to finally reduce the open stages in each range leaving us with the final grouping
+        const productNameMapLocal: { [key: string]: string } = {};
+        // third we need to finally reduce the pie chart data in each range leaving us with the final grouping
         Object.keys(AgingTimeRanges).forEach(agingTimeFrameKey => {
-            const matchingGroupItem = groupedOpenStagesByAgingRanges.data.find(item => item.name === agingTimeFrameKey);
+            const matchingGroupItem = groupedPieChartCategoryByAgingRanges.data?.find(item => item.name === agingTimeFrameKey);
             if (!matchingGroupItem) {
                 return;
             }
-            const stageCounts: { [key: string]: number } = {};
-            openStagesByAgingRangeMap[agingTimeFrameKey].forEach(openStage => {
-                const stageName = openStage.name.toLocaleLowerCase();
-                if (!stageCounts[stageName]) {
-                    stageCounts[stageName] = openStage.count;
+            const pieChartDataCounts: { [key: string]: number } = {};
+            pieChartCategoryByAgingRangeMap[agingTimeFrameKey].forEach(elementResponse => {
+                const categoryName = elementResponse.name.toLocaleLowerCase();
+                productNameMapLocal[categoryName] = elementResponse.name;
+                if (!pieChartDataCounts[categoryName]) {
+                    pieChartDataCounts[categoryName] = elementResponse.count;
                 } else {
-                    stageCounts[stageName] += openStage.count;
+                    pieChartDataCounts[categoryName] += elementResponse.count;
                 }
-                matchingGroupItem.count += openStage.count;
+                matchingGroupItem.count += elementResponse.count;
 
                 // check to see if the label is already in the list, if not, add it
-                const labelAddedToList = !!distinctAgingStatGroupingLabels[openStage.name];
+                const labelAddedToList = !!distinctAgingStatGroupingLabels[elementResponse.name.toLocaleLowerCase()];
                 if (!labelAddedToList) {
-                    distinctAgingStatGroupingLabels[openStage.name] = true;
+                    distinctAgingStatGroupingLabels[elementResponse.name.toLocaleLowerCase()] = true;
                 }
             });
-            Object.keys(stageCounts).forEach(stageKey => {
+            Object.keys(pieChartDataCounts).forEach(stageKey => {
                 matchingGroupItem?.values?.push({
                     key: GroupByOptions.AgingRange,
                     name: stageKey,
-                    count: stageCounts[stageKey],
+                    count: pieChartDataCounts[stageKey],
                 });
             });
             // make sure we sort the values alphabetically. This is important later because we will use the ordering to
             // determin the color of the elements.
             matchingGroupItem?.values?.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
         });
-        // let's set the distinct list of open stages for color and pie use later
-        const distinctOpenStagesLabels: string[] = Object.keys(distinctAgingStatGroupingLabels);
-        setDistinctOpenStages(distinctOpenStagesLabels);
+        // let's set the distinct list of pie chart data for color and pie use later
+        const distinctPieChartLabels: string[] = Object.keys(distinctAgingStatGroupingLabels);
+        setDistinctPieChartDataLabels(distinctPieChartLabels);
         // set the grouping into state so we can use it later
-        const agingStageGroupingMap: { [key in AgingTimeRangesKeysExtended]: DashboardStatsElementResponse[] } = {
+        const agingPieChartDataCategoryGroupingMap: { [key in AgingTimeRangesKeysExtended]: DashboardStatsElementResponse[] } = {
             EightToFourteen: [],
             FifteenToThirty: [],
             FortySixToFiftyNine: [],
@@ -336,55 +349,65 @@ const ActiveAging = ({ classNames, createdBySubProcess, openStagesByCreated, loa
             ZeroToSeven: [],
             All: [],
         };
-        groupedOpenStagesByAgingRanges.data.forEach(element => {
+        groupedPieChartCategoryByAgingRanges.data?.forEach(element => {
             if (element?.values) {
                 element.values.forEach(statGrouping => {
-                    const agingStage = agingStageGroupingMap[element.name as AgingTimeRangesKeysExtended].find(
+                    const agingStage = agingPieChartDataCategoryGroupingMap[element.name as AgingTimeRangesKeysExtended]?.find(
                         item => item.name === statGrouping.name
                     );
-                    const allAgingStages = agingStageGroupingMap.All.find(item => item.name === statGrouping.name);
 
                     if (agingStage) {
                         agingStage.count += statGrouping.count;
                     } else {
-                        agingStageGroupingMap[element.name as AgingTimeRangesKeysExtended].push(statGrouping);
+                        agingPieChartDataCategoryGroupingMap[element.name as AgingTimeRangesKeysExtended].push(
+                            JSON.parse(JSON.stringify(statGrouping)) as DashboardStatsElementResponse
+                        );
                     }
 
+                    const allAgingStages = agingPieChartDataCategoryGroupingMap.All.find(item => item.name === statGrouping.name);
                     if (allAgingStages) {
                         allAgingStages.count += statGrouping.count;
                     } else {
-                        agingStageGroupingMap.All.push(statGrouping);
+                        agingPieChartDataCategoryGroupingMap.All.push(
+                            JSON.parse(JSON.stringify(statGrouping)) as DashboardStatsElementResponse
+                        );
                     }
                 });
             }
         });
 
-        Object.keys(agingStageGroupingMap).forEach(key => {
-            agingStageGroupingMap[key as AgingTimeRangesKeysExtended].sort((a, b) => {
+        Object.keys(agingPieChartDataCategoryGroupingMap).forEach(key => {
+            agingPieChartDataCategoryGroupingMap[key as AgingTimeRangesKeysExtended].sort((a, b) => {
                 return b.count - a.count;
             });
         });
-        setStageDreakdownToColorMap(createAgingStageBreakDownToColorMap(distinctOpenStagesLabels));
-        setAgingStageGroupingMap(agingStageGroupingMap);
-        setOpenStagesByAgingRanges(groupedOpenStagesByAgingRanges);
-    }, [getAgingTimeRangeFromDate, openStagesByCreated]);
+        setActiveAgingPieChartDataToColorMap(createActiveAgingPieChartDataToColorMap(distinctPieChartLabels));
+
+        setAgingPieChartGroupingMap(agingPieChartDataCategoryGroupingMap);
+        setPieChartDataByAgingRanges(groupedPieChartCategoryByAgingRanges);
+        setProductNameMap(productNameMapLocal);
+    }, [getAgingTimeRangeFromDate, activeAgingPieChartByCreated?.data]);
 
     useEffect(() => {
         setStartAndEndDates(getStartAndEndDates(selectedAgingRange));
     }, [selectedAgingRange]);
 
-    useEffect(() => {
+    const renderAISummary = () => {
         if (!shouldShowCaseInsights) {
-            return;
+            return null;
         }
-        if (!loading && agingRangesBySubProcess && agingRangesBySubProcess.data && agingRangesBySubProcess.data.length > 0) {
-            getOpenAiSummary(agingGroupingMap[selectedAgingRange]).then(summary => {
-                if (summary) {
-                    setAiSummary(summary);
-                }
-            });
-        }
-    }, [agingGroupingMap, agingRangesBySubProcess, loading, selectedAgingRange, shouldShowCaseInsights]);
+        return (
+            <>
+                <div className="flex-1 grow border-r-1 xl:border-r-0 border-[#EDEDED] pr-2 xl:pr-0">
+                    <Typography className="flex gap-2 items-center mb-4" variant={TypographyVariant.BodyBold}>
+                        <LighBulb height={24} width={24} />
+                        <span>Insight</span>
+                    </Typography>
+                    <Typography variant={TypographyVariant.BodySm}>{aiSummaryText}</Typography>
+                </div>
+            </>
+        );
+    };
 
     return (
         <CardContainer fullWidth={false} containerClassNames={classNames}>
@@ -395,8 +418,8 @@ const ActiveAging = ({ classNames, createdBySubProcess, openStagesByCreated, loa
                 {getAgingSubtitle()}
             </Typography>
             <div className="flex flex-col xl:flex-row justify-between gap-4 w-full">
-                <div className="flex xl:flex-col xl:w-1/4 gap-4 mb-8 xl:mb-0">
-                    {renderDummyText()}
+                <div className="flex grow xl:flex-col xl:w-1/4 gap-4 mb-8 xl:mb-0">
+                    {renderAISummary()}
                     <div className="flex-1 border-r-1 xl:border-r-0 xl:border-t-1 border-[#EDEDED]">
                         <Typography className="mb-4 xl:mt-1" variant={TypographyVariant.BodySmBold}>
                             Top volume by type
@@ -415,6 +438,7 @@ const ActiveAging = ({ classNames, createdBySubProcess, openStagesByCreated, loa
                                                     createdDateEnd: startAndEndDates.createdDateEnd,
                                                     carrier: carriers?.length ? carriers : '',
                                                 })}`}
+                                                title={toTitleCase(stat.name)}
                                                 size={NavElementSize.Small}
                                                 type={NavElementType.Link}
                                                 className="capitalize"
@@ -437,21 +461,33 @@ const ActiveAging = ({ classNames, createdBySubProcess, openStagesByCreated, loa
                     </div>
                     <div className="flex-1 xl:border-t-1 border-[#EDEDED]">
                         <Typography className="mb-4 xl:mt-1" variant={TypographyVariant.BodySmBold}>
-                            Top stage breakdown
+                            Top 5 Products
                         </Typography>
                         <ol className="flex flex-col gap-2 pr-4">
-                            {agingStageGroupingMap[selectedAgingRange as AgingTimeRangesKeys].slice(0, 5).map(stat => (
+                            {agingPieChartGroupingMap[selectedAgingRange as AgingTimeRangesKeys].slice(0, 5).map(stat => (
                                 <li key={stat.name}>
                                     <div className="flex items-center gap-3">
-                                        <div className="h-3 w-3" style={{ backgroundColor: stageDreakdownToColorMap[stat.name] }}></div>
+                                        <div
+                                            className="h-3 w-3"
+                                            style={{ backgroundColor: activeAgingPieChartDataToColorMap[stat.name] }}
+                                        ></div>
                                         <div className="flex items-center gap-1 w-full justify-between">
-                                            <Typography
-                                                className="flex gap-1 truncate capitalize"
-                                                variant={TypographyVariant.BodySm}
-                                                data-testid="header-text"
+                                            <NavElement
+                                                href={`/cases${convertToQueryString({
+                                                    productName: productNameMap[stat.name] || stat.name,
+                                                    process: selectedProcess,
+                                                    createdDateStart: startAndEndDates.createdDateStart,
+                                                    createdDateEnd: startAndEndDates.createdDateEnd,
+                                                    carrier: carriers?.length ? carriers : '',
+                                                })}`}
+                                                title={toTitleCase(stat.name)}
+                                                size={NavElementSize.Small}
+                                                type={NavElementType.Link}
+                                                className="capitalize"
+                                                target="_blank"
                                             >
-                                                {stat.name}
-                                            </Typography>
+                                                {dashboardChartTitleFormat(stat.name)}
+                                            </NavElement>
                                             <Typography
                                                 className="flex gap-2"
                                                 variant={TypographyVariant.BodySmBold}
@@ -505,9 +541,9 @@ const ActiveAging = ({ classNames, createdBySubProcess, openStagesByCreated, loa
                             {Object.keys(AgingTimeRanges).map(option => (
                                 <button
                                     className="chip w-4/5"
-                                    key={`people-chip-${option}`}
+                                    key={`active-aging-${option}`}
                                     value={option}
-                                    aria-checked={selectedAgingRange === option}
+                                    type="button"
                                     onClick={() => onAgingTimelineChange(option as AgingTimeRangesKeysExtended)}
                                 >
                                     {AgingTimeRanges[option as AgingTimeRangesKeys]}
@@ -515,16 +551,19 @@ const ActiveAging = ({ classNames, createdBySubProcess, openStagesByCreated, loa
                             ))}
                         </div>
                     </div>
-                    <ActiveAgingBars
-                        classNames="-mb-10"
-                        onRenderChart={onRenderChart}
-                        ref={agingChartsRef}
-                        agingRangesByProcess={agingRangesBySubProcess ?? { data: [], totalElements: 0 }}
-                    />
+                    <div ref={containerRef}>
+                        <ActiveAgingBars
+                            classNames="-mb-10"
+                            onRenderChart={onRenderChart}
+                            ref={agingChartsRef}
+                            agingRangesByProcess={agingRangesBySubProcess ?? { data: [], totalElements: 0 }}
+                        />
+                    </div>
+
                     <ActiveAgingPies
-                        distinctAgingStatGroupingLabels={distinctOpenStages}
+                        distinctPieChartCategoryStatGroupingLabels={distinctPieChartDataLabels}
                         width={agingChartWidth}
-                        dashboardStatsResponse={openStagesByAgingRanges ?? { data: [], totalElements: 0 }}
+                        dashboardStatsResponse={pieChartDataByAgingRanges ?? { data: [], totalElements: 0 }}
                     />
                 </div>
             </div>

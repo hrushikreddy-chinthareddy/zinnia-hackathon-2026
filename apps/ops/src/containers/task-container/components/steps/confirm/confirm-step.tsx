@@ -1,7 +1,7 @@
 import { convertToCamelCase } from '@zinnia/utils';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
@@ -9,38 +9,29 @@ import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
+import { updateTask } from '@deps/containers/task-container/task.healpers';
 import { TaskType } from '@deps/models/case/task';
-import { updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 
 interface ConfirmStepProps {
-    caseId: string;
-    taskId: string;
     taskType: TaskType;
+    taskInfoLink: string;
 }
-const ConfirmStep = ({ caseId, taskId, taskType }: ConfirmStepProps) => {
+const ConfirmStep = ({ taskType, taskInfoLink }: ConfirmStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.confirmStep` });
     const router = useRouter();
     const formState = useContext(TaskDataContext);
 
-    const [submitFailed, setSubmitFailed] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
-    const [timer] = useState(performance.now());
-    const { task } = formState;
+    const [isLoading, setIsLoading] = useState(false);
+
+    const { task, submitFailed, setSubmitFailed, correlationId } = formState;
 
     const submit = useCallback(async () => {
-        const response = await updateTask(caseId, taskId, task, timer);
-        if (response && response.id) {
-            setSubmitFailed(false);
-        } else {
-            setSubmitFailed(false);
-        }
+        setIsLoading(true);
+        const success = await updateTask(task, correlationId);
+        setSubmitFailed(!success);
         setIsLoading(false);
-    }, [caseId, task, taskId, timer]);
-
-    useEffect(() => {
-        submit();
-    }, [submit]);
+    }, [correlationId, setSubmitFailed, task]);
 
     if (isLoading) {
         return (
@@ -53,7 +44,7 @@ const ConfirmStep = ({ caseId, taskId, taskType }: ConfirmStepProps) => {
     if (submitFailed) {
         return (
             <ApiErrorCard
-                leaveRoute={'/create-case'}
+                leaveRoute={taskInfoLink}
                 submit={{
                     action: submit,
                     text: t('submitTask'),
@@ -68,16 +59,10 @@ const ConfirmStep = ({ caseId, taskId, taskType }: ConfirmStepProps) => {
                 icon={<CircleCheckIcon className="text-semantic-success" height={50} width={50} />}
                 subtitle={t('subTitle')}
                 title={t('title')}
-                cta={{
-                    action: () => {
-                        router.push('/create-case');
-                    },
-                    text: t('cta'),
-                }}
                 secondaryCta={
                     <NavElement
                         aria-label={t('secondaryCta') as string}
-                        onClick={() => router.push('/create-case')}
+                        onClick={() => router.push(taskInfoLink)}
                         size={NavElementSize.Small}
                         type={NavElementType.Button}
                         variant={NavElementVariant.Default}

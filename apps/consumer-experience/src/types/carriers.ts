@@ -11,6 +11,6 @@ export enum Subdomains {
 }
 
 export enum CarrierNames {
-  EVERLY = 'Everly',
+  EVERLY = 'Everly Life',
   WELLABE = 'Wellabe',
 }

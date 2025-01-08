@@ -1,6 +1,5 @@
 import Page from '../page';
 import dayjs from 'dayjs';
-import localizedFormat from 'dayjs/plugin/localizedFormat';
 
 class OneTimePaymentAmountPage extends Page {
 
@@ -9,7 +8,7 @@ class OneTimePaymentAmountPage extends Page {
     }
 
     get leaveTransaction() {
-        return cy.get(`[data-testid="Cancel"]`);
+        return cy.get(`[data-testid="Leave this transaction"]`);
     }
 
     get effectiveDate() {
@@ -20,7 +19,7 @@ class OneTimePaymentAmountPage extends Page {
         return cy.get(`[data-testid="field-input-test-id"]`).eq(1);
     }
 
-//----------------------------------------------------------------------------------------------------------------------- 
+//-----------------------------------------------------------------------------------------------------------------------
 
     getContinueButton() {
         this.continueButton.click();

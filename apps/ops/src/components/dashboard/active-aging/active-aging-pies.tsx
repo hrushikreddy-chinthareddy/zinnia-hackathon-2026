@@ -8,28 +8,26 @@ interface Props {
     dashboardStatsResponse: CaseDashboardStatsResponse;
     classNames?: string;
     width?: number;
-    distinctAgingStatGroupingLabels: string[];
+    distinctPieChartCategoryStatGroupingLabels: string[];
 }
 
-const ActiveAgingPies = ({ dashboardStatsResponse, classNames, width, distinctAgingStatGroupingLabels }: Props) => {
+const ActiveAgingPies = ({ dashboardStatsResponse, classNames, width, distinctPieChartCategoryStatGroupingLabels }: Props) => {
     return (
         <div className="relative flex justify-end">
-            <Typography className="-rotate-90 absolute text-center -left-[20px] top-[35px]" variant={TypographyVariant.BodyBold}>
-                Stage
-                <br />
-                Breakdown
+            <Typography className="-rotate-90 absolute text-center -left-[20px] top-[50px]" variant={TypographyVariant.BodyBold}>
+                Product Name
             </Typography>
             <div className={`${classNames} border-b-1 border-[#ddd]`} style={{ width: `${width}px` }}>
                 <div className="grid grid-cols-6 gap-2 w-full justify-items-center">
-                    {dashboardStatsResponse.data.map(currentStatGrouping => {
+                    {dashboardStatsResponse?.data?.map(currentStatGrouping => {
                         const additionalStats: DashboardStatsElementResponse[] = [];
 
-                        distinctAgingStatGroupingLabels.forEach(currentLabel => {
+                        distinctPieChartCategoryStatGroupingLabels.forEach(currentLabel => {
                             if (!currentStatGrouping.values?.find(stat => stat.name.toLowerCase() === currentLabel.toLowerCase())) {
                                 additionalStats.push({
                                     count: 0,
                                     name: currentLabel,
-                                    key: GroupByOptions.OpenStages,
+                                    key: GroupByOptions.ExceptionCategory,
                                 });
                             }
                         });
@@ -51,7 +49,7 @@ const ActiveAgingPies = ({ dashboardStatsResponse, classNames, width, distinctAg
                                             : ({
                                                   count: 0,
                                                   name: '',
-                                                  key: GroupByOptions.OpenStages,
+                                                  key: GroupByOptions.ExceptionCategory,
                                               } as DashboardStatsElementResponse)
                                     }
                                 />

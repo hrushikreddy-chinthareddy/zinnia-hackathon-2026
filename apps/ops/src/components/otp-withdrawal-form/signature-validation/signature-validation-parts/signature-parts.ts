@@ -1,6 +1,7 @@
 import CommissionExpireDate from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/commission-expire-date';
 import NotaryStampValid from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/is-notary-stamp-valid';
 import SignatureValid from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/is-signature-valid';
+import SignatureCityProvided from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-city-provided';
 import SignatureComment from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-comment';
 import SignatureDate from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-date';
 import SignGuaranteeStamp from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-guarantee-stamp';
@@ -44,6 +45,7 @@ export enum SignatureFieldNames {
     SignatureGuaranteeStamp = 'SignatureGuaranteeStamp',
     SignatureSsn = 'SignatureSsn',
     SignaturePrintName = 'SignaturePrintName',
+    SignatureCityProvided = 'SignatureCityProvided'
 }
 
 export const SignatureFields = {
@@ -58,6 +60,7 @@ export const SignatureFields = {
     SignGuaranteeStamp,
     SignatureSsn,
     SignaturePrintName,
+    SignatureCityProvided
 };
 
 export const SignatureBonusFields = {

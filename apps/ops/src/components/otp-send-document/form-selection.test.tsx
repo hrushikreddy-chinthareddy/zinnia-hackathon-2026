@@ -58,11 +58,6 @@ describe('Form selection component', () => {
         useSendDocument: () => ({ state: {}, dispatch: mockDispatch }),
     }));
 
-    const transactionTypes = [
-        { label: 'transactionType1', value: '1' },
-        { label: 'transactionType2', value: '2' },
-    ];
-
     const setMockDispatch = jest.fn();
     it('renders an error message when no form is selected', async () => {
         const { getByText } = render(

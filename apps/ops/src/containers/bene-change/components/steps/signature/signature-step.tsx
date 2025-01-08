@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, ChangeEvent } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 import SignatureValidationContainer from '@deps/components/otp-signature-container/component/otp-signature-conatiner';

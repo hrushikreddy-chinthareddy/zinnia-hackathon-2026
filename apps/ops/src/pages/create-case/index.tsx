@@ -35,6 +35,7 @@ import createCaseFromDocumentNumber from '@deps/operations/cases/caseOperations'
 import { fetchDocument } from '@deps/operations/documents/documentOperations';
 import { ReactComponent as ProgressIcon } from '@deps/styles/elements/icons/illustrations/check-progress.svg';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
+import { browserLogInfo } from '@deps/utils/browser-logging';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
@@ -94,6 +95,7 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
     const [clientIds, setClientIds] = useState([] as string[]);
     const [documentNumber, setDocumentNumber] = useState<string>('');
     const [policyNumber, setPolicyNumber] = useState<string>('');
+    const [caseId, setCaseId] = useState<string>('');
     const [document, setDocument] = useState<DocumentData | null>(null);
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState<string | undefined>(undefined);
@@ -184,7 +186,7 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
         const docType = docTypes[caseType];
         setShowLoader(true);
 
-        if (docType === docTypes[CaseType.AddressChange] || docType ===docTypes[CaseType.ReReg]) {
+        if (docType === docTypes[CaseType.AddressChange] || docType === docTypes[CaseType.ReReg]) {
             await handleSearch();
             return;
         }
@@ -200,19 +202,36 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
                         : 'caseRenewal.caseCreate.invalidDocumentOrClientId'
                 ) as string
             );
+            setPolicyNumber('');
+            setCaseId('');
             setShowLoader(false);
-
             return;
         }
         const document = documentResult.value;
         setPolicyNumber(document.contract);
         setDocument(document);
 
-        if ((shouldShowNewExperience && caseType !== CaseType.Renewal) || caseType === CaseType.Reg60) {
+        if ((shouldShowNewExperience && caseType !== CaseType.Renewal) && document.contract) {
+            browserLogInfo('create-case::Document contract is present', {
+                caseType,
+                docType,
+                clientId,
+                documentNumber,
+                policyNumber: document.contract
+            });
             setShowLoader(false);
             setPolicyNumber(document.contract);
+            setCaseId('');
         } else {
+            browserLogInfo('create-case::Document contract is not present', {
+                caseType,
+                docType,
+                clientId,
+                documentNumber,
+                policyNumber: document.contract
+            });
             setPolicyNumber('');
+            setCaseId('');
             const caseResult = await createCaseFromDocumentNumber(
                 document.documentNumber,
                 document.caseId,
@@ -222,7 +241,7 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
             );
 
             if (!caseResult.success) {
-                console.error('createDocument:: No case id from createCase', {
+                browserLogInfo('create-case:: No case id from createCase', {
                     documentNumber: document.documentNumber,
                     caseType,
                     clientId,
@@ -232,8 +251,24 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
                 return;
             }
             const caseData = caseResult.value;
-            const route = `${caseType.toLowerCase()}/${caseData.id}`;
-            router.push(`/create-case/${route}?doc=${document.documentNumber}&clientId=${clientId}`);
+
+            browserLogInfo('create-case::Case is created', {
+                caseType,
+                docType,
+                clientId,
+                documentNumber,
+                policyNumber: document.contract,
+                caseId: caseData.id
+            });
+
+            if (caseType === CaseType.Reg60) {
+                setCaseId(caseData.id);
+                setPolicyNumber(caseData.policyNumber);
+                setShowLoader(false);
+            } else {
+                const route = `${caseType.toLowerCase()}/${caseData.id}`;
+                router.push(`/create-case/${route}?doc=${document.documentNumber}&clientId=${clientId}`);
+            }
         }
     }
 
@@ -269,7 +304,6 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
                     ) as string
                 );
                 setShowLoader(false);
-
                 return;
             }
             const document = documentResult.value;
@@ -279,7 +313,7 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
             if (caseType === CaseType.ReReg) {
                 router.push(`/re-reg?policyNumber=${document.contract}&clientId=${clientId}&doc=${documentNumber}`);
             }
-        } else if (policyNumber){
+        } else if (policyNumber) {
             if (caseType === CaseType.AddressChange) {
                 router.push(`/address-change?policyNumber=${policyNumber}&clientId=${clientId}`);
             }
@@ -326,6 +360,8 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
                         setShowLoader={setShowLoader}
                         setErrorMessage={setErrorMessage}
                         setPolicyNumber={setPolicyNumber}
+                        caseId={caseId}
+                        isInvalid={errorMessage !== ''}
                     ></CaseListContainer>
                 ) : null}
             </TabContent>

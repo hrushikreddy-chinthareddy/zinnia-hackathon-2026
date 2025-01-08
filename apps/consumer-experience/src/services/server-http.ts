@@ -1,3 +1,4 @@
+import { headers } from 'next/headers';
 import { v4 as uuid4 } from 'uuid';
 
 import {
@@ -13,6 +14,17 @@ import {
 import { AUTH0_SCOPE } from '@/utils/serverClientUtils';
 
 import { HttpRequest } from './http';
+
+function getIp() {
+  const FALLBACK_IP_ADDRESS = '0.0.0.0';
+  const forwardedFor = headers().get('x-forwarded-for');
+
+  if (forwardedFor) {
+    return forwardedFor.split(',')[0] ?? FALLBACK_IP_ADDRESS;
+  }
+
+  return headers().get('x-real-ip') ?? FALLBACK_IP_ADDRESS;
+}
 
 class ServerHttpRequest extends HttpRequest {
   request = async (
@@ -81,6 +93,7 @@ class ServerHttpRequest extends HttpRequest {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'auth0-forwarded-for': getIp(),
       },
       cache: 'no-store',
       body: JSON.stringify({

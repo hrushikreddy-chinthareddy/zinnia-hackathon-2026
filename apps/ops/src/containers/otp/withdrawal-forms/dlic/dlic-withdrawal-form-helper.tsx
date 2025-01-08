@@ -372,31 +372,31 @@ export default function useDlicConfig(t: TFunction) {
             }: DisbursementParts) => {
                 const bank = isDirectDeposit
                     ? [
-                          {
-                              ...DEFAULT_BANK_DETAILS,
-                              maskedAccountNumber: null,
-                              accountNumber,
-                              accountType: {
-                                  text: accountType,
-                              },
-                              bankName,
-                              nameOnBankAccount: accountHolder ?? '',
-                              routingNumber: bankRoutingNumber,
-                              bankFurtherCreditAccount,
-                              bankFurtherCreditName,
-                              isDirectDeposit: { text: true },
-                              isDirectDepositValid: { text: isDirectDepositValid },
-                              reEnterAccountNumber,
-                              reEnterBankRoutingNumber,
-                          },
-                      ]
+                        {
+                            ...DEFAULT_BANK_DETAILS,
+                            maskedAccountNumber: null,
+                            accountNumber,
+                            accountType: {
+                                text: accountType,
+                            },
+                            bankName,
+                            nameOnBankAccount: accountHolder ?? '',
+                            routingNumber: bankRoutingNumber,
+                            bankFurtherCreditAccount,
+                            bankFurtherCreditName,
+                            isDirectDeposit: { text: true },
+                            isDirectDepositValid: { text: isDirectDepositValid },
+                            reEnterAccountNumber,
+                            reEnterBankRoutingNumber,
+                        },
+                    ]
                     : [
-                          {
-                              ...DEFAULT_BANK_DETAILS,
-                              isDirectDeposit: { text: false },
-                              maskedAccountNumber: maskedAccountNumber ?? null,
-                          },
-                      ];
+                        {
+                            ...DEFAULT_BANK_DETAILS,
+                            isDirectDeposit: { text: false },
+                            maskedAccountNumber: maskedAccountNumber ?? null,
+                        },
+                    ];
                 return {
                     ...getDefaultFormDisbursementValues(),
                     paymentMethod: { text: PaymentMethod.EFT },
@@ -689,6 +689,21 @@ export default function useDlicConfig(t: TFunction) {
     };
 
     const cslnCheckStates = ['CA', 'CO', 'TX'];
+    const w4pSignaturesConfig = [
+        {
+            component: SignatureFields.SignatureType,
+            key: 'w4p-owner-type',
+        },
+        {
+            component: SignatureFields.SignaturePresent,
+            key: 'w4p-signature-sign-present',
+        },
+        {
+            component: SignatureFields.SignatureDate,
+            key: 'w4p-signature-sign-date',
+        },
+
+    ];
     return {
         disbursementOptions,
         formPartyConfigs,
@@ -701,5 +716,6 @@ export default function useDlicConfig(t: TFunction) {
         partialWithdrawalOptions,
         selectOneOptions,
         cslnCheckStates,
+        w4pSignaturesConfig
     };
 }

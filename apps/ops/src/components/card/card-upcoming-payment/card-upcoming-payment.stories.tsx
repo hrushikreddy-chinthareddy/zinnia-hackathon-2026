@@ -28,7 +28,7 @@ const meta: Meta<typeof UpcomingPaymentCard> = {
     args: {
         paymentDate: '3/28/2029',
         bankDetails: generateBankDetails('partyId', 'fullName'),
-        monthlyAmount: 80,
+        autopayAmount: 80,
         additionalCharges: generateAdditionalCharges(5),
         // manage bar
         footerLinks: manageBarLabels,

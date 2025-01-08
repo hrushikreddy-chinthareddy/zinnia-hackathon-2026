@@ -9,6 +9,8 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import { toSentenceCase, toTitleCase } from '@deps/helpers/string.helper';
+import UnauthorizedCard from '@deps/components/card/card-unauthorized';
+import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 export const NoSummaryCard = ({ content }: { content: string }) => (
     <div className="flex items-center gap-1 rounded-sm border border-dashed border-gray-100 bg-gray-50 p-4">
         <Icon type={IconType.PHONE} height={16} width={16} />
@@ -83,7 +85,7 @@ const CallLogCard = ({
 
 export default function CallLogsTab() {
     const { t } = useTranslation();
-    const { loadingCallLogs, callLogs } = useCaseActivityContext();
+    const { loadingCallLogs, callLogs, callLogsStatusCode } = useCaseActivityContext();
     return (
         <CardContainer>
             <div>
@@ -94,7 +96,7 @@ export default function CallLogsTab() {
                     <PageLoader variant={PageLoaderVariant.Center} />
                 </div>
             )}
-            {!loadingCallLogs && !callLogs.length && (
+            {!loadingCallLogs && !callLogs.length && callLogsStatusCode !== StatusCode.Forbidden && (
                 <div className="flex justify-center">
                     <CardInfo
                         icon={<Icon type={IconType.PHONE} width={50} height={50} className="text-gray-300" />}
@@ -119,6 +121,7 @@ export default function CallLogsTab() {
                     ))}
                 </>
             )}
+            {callLogsStatusCode === StatusCode.Forbidden && <UnauthorizedCard />}
         </CardContainer>
     );
 }

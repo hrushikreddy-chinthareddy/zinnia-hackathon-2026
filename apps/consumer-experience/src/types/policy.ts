@@ -17,6 +17,7 @@ import {
   LineOfBusiness,
   Status,
   FeatureType,
+  TransactionAmounts,
 } from '@zinnia/api-types/types/sor';
 
 import { BankDetail } from '@/components/person-data/types';
@@ -98,8 +99,13 @@ export interface CarrierPolicyDetails extends PolicyDetails {
   planCode: string;
   totalFundValue?: number | null;
   totalCoverageAmount?: number | null;
+  /**
+   * Coverage amount for annuities
+   */
+  cumulativeGrossDeathBenefitAmount?: number | null;
   policyStartDate?: string | null;
   effectiveDate?: string | null;
+  issueDate?: string | null;
   lineOfBusiness?: LineOfBusiness;
 }
 
@@ -224,7 +230,7 @@ export interface TransactionRequestErrorResponse {
 }
 
 export interface PaymentHistory {
-  amount?: number;
+  amount?: Partial<TransactionAmounts>;
   date?: string;
   frequency?: 'one-time' | 'initial' | null;
   type?: keyof typeof Reason;
@@ -295,6 +301,7 @@ export interface PolicyWithdrawals {
   vestingDetails: VestingDetails;
   effectiveDate?: string;
   endingAccountValue?: number | null;
+  requiredMinimumDistributionAmount?: number | null;
 }
 
 // export type PolicyFeatureType = keyof typeof PolicyFeature.featureType;

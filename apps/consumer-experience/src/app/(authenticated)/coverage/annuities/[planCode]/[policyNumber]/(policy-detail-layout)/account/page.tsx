@@ -71,7 +71,7 @@ export default async function AccountValuePage({
 
   //If withdrawal amount is greater than 0 and also if we're past the withdrawal start date
   const canShowWithdrawal =
-    freeWithdrawalAmount &&
+    freeWithdrawalAmount != null &&
     freeWithdrawalAmount > 0 &&
     withdrawalAllowedStartDate !== null &&
     dayjs().isAfter(dayjs(withdrawalAllowedStartDate));
@@ -143,9 +143,8 @@ export default async function AccountValuePage({
             emphasizeValue
             popoverElement={
               <LabelPopover title={'Death Benefit'}>
-                This is the amount, inclusive of any additional riders or
-                features, that will be available to your beneficiaries should
-                you pass away.
+                This is how much money your beneficiaries may receive when you
+                die.
               </LabelPopover>
             }
           />
@@ -163,6 +162,27 @@ export default async function AccountValuePage({
             }
           />
         </ClickableCardContainer>
+        {canShowWithdrawal && (
+          <ClickableCardContainer>
+            <ClickableCardContainer.LinkContent
+              linkTo={{
+                url: `/coverage/${LineOfBusinessPath.ANNUITIES}/${planCode}/${policyNumber}/account/withdrawals`,
+                label: 'go to free withdrawal page',
+              }}
+            >
+              <ValueWithPopover
+                value={freeWithdrawalAmount}
+                label="Free withdrawal"
+                emphasizeValue
+                popoverElement={
+                  <FreeWithdrawalValuePopover
+                    percentValue={accountWithdrawalPercentage}
+                  />
+                }
+              />
+            </ClickableCardContainer.LinkContent>
+          </ClickableCardContainer>
+        )}
         <AdditionalAccountValueLinks
           planCode={planCode}
           policyNumber={policyNumber}

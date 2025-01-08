@@ -142,9 +142,9 @@ TLDR
 
 ### Variables
 
-1. Variables that are used in the frontend (i.e. anything that requires `NEXT_PUBLIC` in the key) should be added to the github secrets (this is available in Github. You may not have access to this tab, so if you don't see it on your github, message `xd-engineering`)
-2. you will then need to add the variable to the Dockerfile. Add it as an `ARG` then set it as an `ENV` variable
-3. Also add them to `turbo.json` and `environment.d.ts` to get the intellisense.
+See [this chart](apps/consumer-experience/src/app/documentation/adding-a-new-enviornment-variable.md)
+
+Also add them to `turbo.json` and `environment.d.ts` to get the intellisense.
 
 _Anything in `build-args` in the `deploy-action.yml` needs to be added to the Dockerfile_
 
@@ -170,6 +170,8 @@ Feature flags are implemented using [Optimizely Javascript SDK](https://docs.dev
 
 To get access, contact a lead. You will need to get a PolicyGenius email and be added to the Optimizely account to log in.
 
-# TODO Docs
+# Docs
 
-TBD
+There is documentation throughout the project in the form of jsdoc comments or various markdown files. There is also a folder called `documentation` that contains higher level information related to multiple places.
+
+To view mermaid diagrams install [Markdown Preview Mermaid Support](https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid)

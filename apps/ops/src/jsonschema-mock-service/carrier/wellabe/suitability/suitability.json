@@ -1,0 +1,241 @@
+{
+    "id": "TA000000013545",
+    "correlationId": "e3a4a780-de9d-4fa9-b0aa-2dc936d8a94f",
+    "caseId": "CA0000372640",
+    "source": "BPM.Suitability",
+    "externalTaskId": "61f65203-def6-4b17-bb1c-febf1d481573",
+    "templateId": "g9f78538-18b6-45f1-b365-59f75a1fc198",
+    "process": "Suitability",
+    "carrier": "SBGC",
+    "taskType": "SUITABILITY",
+    "taskName": "Suitability Task",
+    "taskDetail": "The Suitability must be reviewed for given rules",
+    "status": "NEW",
+    "data": {
+        "contractNum": "7700002658",
+        "clientCode": "SBGC",
+        "documentNumber": "20241008-MAN-997616",
+        "applicationId": "ASEJ041120240000000001",
+        "requestId": "ACAP001234567",
+        "parties": [
+            {
+                "partyType": "PERSON",
+                "roleType": "OWNER",
+                "fullName": "John D Doe",
+                "person": {
+                    "firstName": "John",
+                    "middleName": "D",
+                    "lastName": "Doe",
+                    "gender": "MALE",
+                    "age": "50",
+                    "birthDate": "1985-03-21",
+                    "martialStatus": "SINGLE",
+                    "birthCountry": "AA",
+                    "birthJurisdictionState": "AA"
+                },
+                "govtIdInfo": [
+                    {
+                        "govtId": "123423455",
+                        "govtIdType": "PASSPORT",
+                        "govtIdExpDate": "2024-10-01"
+                    }
+                ],
+                "addresses": [
+                    {
+                        "addressType": "RESIDENCE",
+                        "line1": "123 Main St",
+                        "line2": "Apt 4B",
+                        "city": "Los Angeles",
+                        "state": "AA",
+                        "country": "AD",
+                        "zip": "90001"
+                    }
+                ],
+                "employment": {
+                    "employmentStatus": [
+                        "DISABLED",
+                        "RETIRED"
+                    ],
+                    "occupation": "Software Engineer",
+                    "disabilityExplanation": "I am disabled"
+                }
+            }
+        ],
+        "policyData": {
+            "lineOfBusiness": "ANNUITY",
+            "productCode": "999",
+            "productType": "SecureWellTM",
+            "qualPlanType": "NON_QUALIFIED",
+            "annualPaymentAmt": "109890"
+        },
+        "applicationInfo": {
+            "replacementInd": "YES",
+            "replacementReason": "Replacement Reason",
+            "replacedContractType": "ANNUITY",
+            "additionalInformation": {
+                "soldPoliciesToApplicant": "YES",
+                "pastReplacement": "YES",
+                "coverageExpenseConsideration": "YES"
+            }
+        },
+        "fiscalData": {
+            "annualIncome": "112890.00",
+            "netWorth": "500000.00",
+            "liquidNetWorth": "400000.00",
+            "materialChangeExp": "NO",
+            "materialChangeReason": "change reason statement",
+            "sourceOfIncome": [
+                "FIXED_ANNUITY",
+                "LIFE_INSURENCE"
+            ],
+            "sourceOfIncomeOther": "Other income of source details",
+            "surrPeriodMaterialChangeExp": "YES",
+            "surrPeriodMaterialChangeReason": "change reason statement",
+            "surrPeriodMaterialChangeDetails": [
+                {
+                    "changeType": "LIVING_EXPENSE_INCREASE",
+                    "isApplicable": "YES",
+                    "numberOfYears": "2",
+                    "amount": "32000"
+                }
+            ],
+            "totalAssets": "25000",
+            "totalDebt": "25000",
+            "annualExpenses": "25000",
+            "sourceOfFunds": [
+                "FIXED_ANNUITY"
+            ],
+            "federalTaxBand": "12",
+            "otherTaxBand": "10"
+        },
+        "financialExperience": {
+            "rateChangeAcknowledgment": "YES",
+            "totalAnnuityValue": "3000000",
+            "financialProducts": {
+                "assetsDistribution": [
+                    {
+                        "productType": "CHECKING_SAVING_ACCOUNT",
+                        "qualificationType": "QUALIFIED",
+                        "amount": "32000"
+                    }
+                ],
+                "totalAsset": [
+                    {
+                        "qualificationType": "QUALIFIED",
+                        "assetType": "LIQUID_ASSET",
+                        "amount": "32000"
+                    }
+                ]
+            }
+        },
+        "investmentRiskInfo": {
+            "riskTolerance": "CONSERVATIVE",
+            "riskToleranceDesc": "Reason to support aggressive nature",
+            "annuityFitsRiskTolerance": "YES"
+        },
+        "financialObjectives": {
+            "purchaseReason": [
+                "INCOME"
+            ],
+            "otherPurchaseReason": "Explain details in case of others",
+            "buyingReasonDetails": "Explain buying reason",
+            "annuityMeetsFinancialNeeds": "YES"
+        },
+        "liquidityOptions": {
+            "fundsAccessExplanation": "string",
+            "distributionMethods": [
+                "INCOME",
+                "TAX_DEFERRAL",
+                "GURANTEES"
+            ],
+            "firstPayoutOption": "string",
+            "surrenderChargeConsent": "string",
+            "possibleReductionInValue": "string",
+            "planToHoldAnnuity": "string",
+            "explainedOtherCharges": "string",
+            "benefitAnnuityQuestions": {
+                "understandIncomeAdjustmentFactor": "string",
+                "consideredFinancialNeedsAfter10Years": "string",
+                "planForIncomeDecreaseAfter10Years": [
+                    "string"
+                ]
+            }
+        },
+        "agentAcknowledgment": {
+            "maApplicationQuestionnaire": {
+                "soldPoliciesToApplicant": "YES",
+                "saleInLast5Years": "YES",
+                "saleDetails": "Details about the sales",
+                "productDetails": [
+                    {
+                        "productType": "ANNUITY",
+                        "companyName": "XYZ",
+                        "policyNumber": "68353",
+                        "issueDate": "2023-12-01"
+                    }
+                ]
+            },
+            "financialAcknowledgement": {
+                "evaluatedInformation": "YES",
+                "informedOfFeatures": "YES",
+                "communicatedBasis": "YES",
+                "disclosureRetention": "YES"
+            },
+            "disclosureAcknowledgement": {
+                "scopeAndTerms": "YES",
+                "typesOfProducts": "YES",
+                "authorizedInsurers": "YES",
+                "compensationDescription": "YES",
+                "rightToRequestInfo": "YES",
+                "compensationEstimate": "YES",
+                "conflictsOfInterest": "YES",
+                "productAdvantages": "YES",
+                "productCons": "NO"
+            }
+        },
+        "additionalInfo": {
+            "currentResidenceOption": "R1",
+            "assistedLivingFacilityInd": "YES",
+            "extraFundAvailable": "YES",
+            "existingPoliciesSoldByAgent": "YES",
+            "consideredOtherInsuranceNeeds": "YES",
+            "resideInNursingHomeOrAssistedLiving": "YES",
+            "noOfDependents": "2",
+            "otherDependents": "NO"
+        },
+        "californiaResidentQuestions": {
+            "applyForMeansTestedBenefits": "YES",
+            "buyingForGovernmentBenefits": "YES",
+            "reverseMortgage": "YES"
+        },
+        "signatureInfo": [
+            {
+                "signatureRoleCode": "OWNER",
+                "signatoryName": "test b",
+                "signatureDate": "2023-12-01",
+                "signatureCity": "Quincy",
+                "signatureState": "US",
+                "signatoryDesignation": "TRUSTEE"
+            }
+        ]
+    },
+    "documents": [
+        {
+            "documentId": "20156083",
+            "documentName": "Suitability review form ABC TEST - 10/8/2024",
+            "documentSource": "Working",
+            "createdDate": "2024-10-16T14:20:33.757Z",
+            "fileType": "pdf"
+        },
+        {
+            "documentId": "20027230",
+            "documentName": "Suitability additional doc ABC TEST - 10/8/2024",
+            "documentSource": "Working",
+            "createdDate": "2024-10-16T14:20:33.757Z",
+            "fileType": "pdf"
+        }
+    ],
+    "queue": null,
+    "createdAt": "2024-10-14T10:21:35Z",
+    "updatedAt": "2024-10-15T19:48:30Z"
+}

@@ -54,7 +54,16 @@ export interface OwnerAcknowledgement {
         text: string | null;
     };
 }
+export enum maritalStatusType {
+    single = 'Single',
+    marriedFilingJointly = 'Married Filing Jointly',
+    marriedFilingSeparately = 'Married Filing Separately',
+}
 
+export enum IrsFormType {
+    W4R = 'W4R',
+    W4P = 'W4P',
+}
 export interface FormParts {
     formSource: FormSource;
     formData: FormData;
@@ -99,18 +108,22 @@ export interface FormParts {
     };
     formLoan: FormLoan;
     formSpecialInstruction: FormSpecialInstruction;
-    formIrsData?: FormIrsData | null;
+    formIrsData?: FormIrsData[];
     formOL4753Data?: FormOL4753Data | null;
     ownerAcknowledgement?: OwnerAcknowledgement;
     formNigos?: FormNigos | null;
+    formReindexingData?: FormReIndexingData | null;
+    formComment?: FormComment;
+    irsFormType?: IrsFormType;
 }
 
 export interface FormIrsData {
     irsApplicable: boolean;
     irsSpecified: boolean;
     formParty: Party | null;
-    irsTaxWithholding?: TaxWithholding;
+    irsTaxWithholding?: TaxWithholding[];
     irsSignature?: SignatureWithdrawal;
+    irsFormType: IrsFormType;
 }
 
 export interface FormOL4753Data {
@@ -479,7 +492,7 @@ export interface Party {
     email?: string | null;
     employer?: string | null;
     maritalStatus: {
-        text: MaritalStatus | null;
+        text: maritalStatusType | null;
     };
     addresses: Address[];
     phones: Phone[];
@@ -540,6 +553,9 @@ export interface SignatureWithdrawal {
     ssn?: {
         text: string | null;
     };
+    isSignatureCityProvided?: {
+        text: boolean | null;
+    };
 }
 
 export interface TaxWithholding {
@@ -556,7 +572,7 @@ export interface TaxWithholding {
     amount: TaxWithholdingAmount;
     additionalAmount: TaxWithholdingAmount;
     filingStatus: {
-        text: null; //-- always null
+        text: string | null;
     };
     exemption?: {
         text: string | null;
@@ -712,6 +728,10 @@ export interface UpsAccount {
         text: string;
     };
 }
+
+export type FormComment = {
+    comment: string;
+};
 
 // ENUMS for various parts of the form
 export enum AccountCloseReason {
@@ -900,9 +920,10 @@ export enum LifeCadPartyPersonType {
 }
 
 export enum AddressTypes {
-    DEFAULT = 'DEFAULT', // Residential address
+    DEFAULT = 'DEFAULT',
     MAILING_ADDRESS = 'MAILING_ADDRESS',
     AGENT_ADDRESS = 'AGENT_ADDRESS',
+    RESIDENTIAL_ADDRESS = 'RESIDENCE',
 }
 export enum PhoneTypes {
     Owner_Phone_Day = 'Owner_Phone_Day',
@@ -998,7 +1019,8 @@ export enum Carrier {
     GDMN = 'GDMN',
     RSLN = 'RSLN',
     WELB = 'WELB',
-    ULPC = 'ULPC'
+    ULPC = 'ULPC',
+    GLCO = 'GLCO',
 }
 
 export const ParticipantCompanies = [
@@ -1081,4 +1103,11 @@ export interface FormNigos {
 export interface NigoMessages {
     exceptionId: string;
     messages: string[];
+}
+
+export interface FormReIndexingData {
+    lob: string | null;
+    docHandle: string | null;
+    docTypeToReindex?: string | null;
+    notes: string | null;
 }

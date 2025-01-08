@@ -27,6 +27,8 @@ import {
     FormSpecialInstruction,
     OwnerAcknowledgement,
     FormNigos,
+    FormReIndexingData,
+    FormComment,
 } from '@deps/models/case/withdrawal/case';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
@@ -39,7 +41,7 @@ export interface OtpWithdrawalFormState {
     formErrors: FormValidationErrors;
     formWarnings: FormValidationErrors;
     formFullSurrenderAck: FormFullSurrenderAck;
-    formIrsData: FormIrsData | null;
+    formIrsData: FormIrsData[];
     formOL4753Data: FormOL4753Data | null;
     formLoan: FormLoan;
     formParty: FormParty;
@@ -51,6 +53,7 @@ export interface OtpWithdrawalFormState {
     formTpaAuthorization: FormTpaAuthorization;
     formAdditionalWaivers: FormAdditionalWaiver[];
     formNigos: FormNigos | null;
+    formReindexingData: FormReIndexingData | null;
     formValidator: (val?: FormParts) => FormValidationErrors;
     fundWithdrawnMethod: string | null;
     initialForm: ActiveWithdrawalCase;
@@ -63,6 +66,7 @@ export interface OtpWithdrawalFormState {
     formSpecialInstruction: FormSpecialInstruction;
     featureFlagDecisions?: FeatureFlags;
     ownerAcknowledgement?: OwnerAcknowledgement;
+    formComment?: FormComment;
     setCurrentFormState: React.Dispatch<React.SetStateAction<WithdrawalTaskStatus>>;
     setFormSubtype?: React.Dispatch<React.SetStateAction<FormSubtype>>;
     setFormData: React.Dispatch<React.SetStateAction<FormData>>;
@@ -71,7 +75,7 @@ export interface OtpWithdrawalFormState {
     setFormErrors: React.Dispatch<React.SetStateAction<FormValidationErrors>>;
     setFormWarnings: React.Dispatch<React.SetStateAction<FormValidationErrors>>;
     setFormFullSurrenderAck: React.Dispatch<React.SetStateAction<FormFullSurrenderAck>>;
-    setFormIrsData: React.Dispatch<React.SetStateAction<FormIrsData | null>>;
+    setFormIrsData: React.Dispatch<React.SetStateAction<FormIrsData[]>>;
     setFormOL4753Data: React.Dispatch<React.SetStateAction<FormOL4753Data | null>>;
     setFormLoan: React.Dispatch<React.SetStateAction<FormLoan>>;
     setFormParty: React.Dispatch<React.SetStateAction<FormParty>>;
@@ -89,10 +93,12 @@ export interface OtpWithdrawalFormState {
     setFormSpecialInstruction: React.Dispatch<React.SetStateAction<FormSpecialInstruction>>;
     setOwnerAcknowledgement: React.Dispatch<React.SetStateAction<OwnerAcknowledgement | undefined>>;
     setFormNigos: React.Dispatch<React.SetStateAction<FormNigos | null>>;
+    setFormReindexingData: React.Dispatch<React.SetStateAction<FormReIndexingData | null>>;
+    setFormComment: React.Dispatch<React.SetStateAction<FormComment>>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
-const noop = (() => {}) as React.Dispatch<React.SetStateAction<any>>;
+const noop = (() => { }) as React.Dispatch<React.SetStateAction<any>>;
 
 export const defaultFormDataContext = {
     formData: {} as FormData,
@@ -100,7 +106,7 @@ export const defaultFormDataContext = {
     formDistribution: {} as FormDistribution,
     formErrors: {} as FormValidationErrors,
     formFullSurrenderAck: {} as FormFullSurrenderAck,
-    formIrsData: {} as FormIrsData,
+    formIrsData: [] as FormIrsData[],
     formOL4753Data: {} as FormOL4753Data,
     formLoan: {} as FormLoan,
     formParty: {} as FormParty,
@@ -114,6 +120,8 @@ export const defaultFormDataContext = {
     formAdditionalWaivers: [] as FormAdditionalWaiver[],
     formSpecialInstruction: {} as FormSpecialInstruction,
     formNigos: {} as FormNigos,
+    formReindexingData: {} as FormReIndexingData,
+    formComment: {} as FormComment,
     formValidator: () => {
         return {} as FormValidationErrors;
     },
@@ -150,6 +158,8 @@ export const defaultFormDataContext = {
     setFormSpecialInstruction: noop,
     setOwnerAcknowledgement: noop,
     setFormNigos: noop,
+    setFormReindexingData: noop,
+    setFormComment: noop,
 };
 
 export const FormDataContext = createContext<OtpWithdrawalFormState>(defaultFormDataContext as OtpWithdrawalFormState);

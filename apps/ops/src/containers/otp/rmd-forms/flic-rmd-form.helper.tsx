@@ -195,7 +195,8 @@ export default function getFlicRmdConfig(t: TFunction) {
                     component: DisbursementFields.BankTextField,
                     classNames: 'col-start-1',
                     maskOnBlur: true,
-                    disableCopyPaste: true,                },
+                    disableCopyPaste: true,
+                },
                 {
                     fieldName: BankingFields.ReEnterAccountNumber,
                     fieldLabel: t('distributionMethod.reEnterAccountNumber'),
@@ -545,6 +546,22 @@ export default function getFlicRmdConfig(t: TFunction) {
         { label: t('distributionInstruction.prorata'), value: FundWithdrawnMethod.Prorata },
         { label: t('distributionInstruction.specifyFunds'), value: FundWithdrawnMethod.SpecifyFunds },
     ];
+    const w4pSignaturesConfig = [
+        {
+            component: SignatureFields.SignatureType,
+            key: 'w4p-owner-type',
+        },
+        {
+            component: SignatureFields.SignaturePresent,
+            key: 'w4p-signature-sign-present',
+        },
+        {
+            component: SignatureFields.SignatureDate,
+            key: 'w4p-signature-sign-date',
+        },
+
+    ];
+
 
     return {
         signaturesConfig,
@@ -553,6 +570,7 @@ export default function getFlicRmdConfig(t: TFunction) {
         cslnCheckStates,
         irsSignatureConfig,
         fundWithdrawnMethodOptions,
+        w4pSignaturesConfig,
         disbursementOptions,
         jointLifeExpectancyConfigs,
     };

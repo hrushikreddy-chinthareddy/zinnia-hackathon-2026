@@ -1,10 +1,10 @@
-import { PayeePaymentDetails } from "../types";
+import { BaseTransactionSideSheetValues, PayeePaymentDetails } from '../types';
 
-type InterestRateValue = {
-    interestRate?: number;
-};
+// type InterestRateValue = {
+//     interestRate?: number;
+// };
 
-export type NewLoanTransactionSideSheetValues = {
+export interface NewLoanTransactionSideSheetValues extends BaseTransactionSideSheetValues {
     effectiveDate: string;
     fundDisbursementType?: string;
     getAsyncSideSheetValues?: () => Promise<Partial<NewLoanTransactionSideSheetValues>>;
@@ -16,4 +16,4 @@ export type NewLoanTransactionSideSheetValues = {
     processedAmount?: number | null;
     status?: string;
     submittedAmount?: number;
-} & InterestRateValue;
+}

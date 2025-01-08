@@ -28,6 +28,7 @@ import { getAgents, getPolicyOwners } from '@deps/helpers/parties';
 import { formatSSN, toTitleCase } from '@deps/helpers/string.helper';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
 import { Case } from '@deps/models/case/case';
+import { PartyInstance } from '@deps/models/case/party-instance';
 import { CaseDetailsTabValues, DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { SearchViewQuery } from '@deps/types/search';
 import { CaseClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
@@ -83,10 +84,19 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const router = useRouter();
     const perms = usePermissionsContext();
+    const getValidFullName = (owner: PartyInstance) => {
+        let fullName = owner?.fullName;
+
+        if (owner && !fullName) {
+            fullName = `${owner?.firstName || ''} ${owner?.middleName || ''} ${owner?.lastName || ''}`;
+        }
+
+        return fullName;
+    };
 
     const policyOwners = singleCase.parties ? getPolicyOwners(singleCase.parties) : [];
-    const entities = policyOwners.slice(1).map(owner => ({ name: toTitleCase(owner.fullName), ssn: formatSSN(owner.ssn) }));
-    const ownerName = policyOwners.length ? policyOwners?.[0]?.fullName : null;
+    const entities = policyOwners.slice(1).map(owner => ({ name: toTitleCase(getValidFullName(owner)), ssn: formatSSN(owner.ssn) }));
+    const ownerName = policyOwners.length ? getValidFullName(policyOwners?.[0]) : null;
     const ssn = policyOwners.length ? policyOwners[0].ssn : undefined;
 
     const ownerComponentProps = {
@@ -98,9 +108,9 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
 
     const agents = getAgents(singleCase?.parties || []);
     const agentSsn = agents.length ? agents[0].ssn : undefined;
-    const otherAgents = agents.slice(1).map(owner => ({ name: toTitleCase(owner.fullName), ssn: formatSSN(owner.ssn) }));
+    const otherAgents = agents.slice(1).map(owner => ({ name: toTitleCase(getValidFullName(owner)), ssn: formatSSN(owner.ssn) }));
     const agentComponentProps = {
-        text: toTitleCase(agents?.[0]?.fullName),
+        text: toTitleCase(getValidFullName(agents?.[0])),
         highlights: [searchValues?.agentFirstName, searchValues?.agentLastName].filter(Boolean) as string[],
         entities: otherAgents,
         truncate: true,
@@ -128,6 +138,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
     const loadCaseDetails = (href: string) => {
         segmentAnalyticsTrackEvent<CaseClickedEvent>(SegmentTrackedEventName.CaseClicked, {
             caseId: singleCase.id,
+            session_id: perms.getSessionId(),
             userId: perms.getUserPartyId(),
         });
 
@@ -282,7 +293,7 @@ export const CaseResultTable = ({ cases, searchValues, handleSort, sortDirection
                         <Typography variant={TypographyVariant.BodySmBold}>{t('caseManagementDashboard.case.agentSsn')}</Typography>
                     </TableHeaderCell>
                     <TableHeaderCell sortable onClick={handleSort} className={styles.tableHeader}>
-                        <Typography variant={TypographyVariant.BodySmBold} className="flex align-center gap-1">
+                        <Typography variant={TypographyVariant.BodySmBold} className="flex align-center gap-1 justify-end">
                             {t('caseManagementDashboard.case.createdAt')}
                             <Icon type={sortDirection === 'asc' ? IconType.ARROW_UP : IconType.ARROW_DOWN} color="#00628B" />
                         </Typography>

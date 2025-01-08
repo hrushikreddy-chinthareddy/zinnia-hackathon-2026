@@ -1,8 +1,23 @@
-import { formatAccountNumber, formatSSN } from '@deps/helpers/string.helper';
+import { formatAccountNumber, formatSSN, isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { Case } from '@deps/models/case/case';
+import { DocumentInstance } from '@deps/models/case/document-instance';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { PartyInstance } from '@deps/models/case/party-instance';
-import { BankAccount, Identification, IdentificationType, Party, Policy } from '@deps/models/policy/sor-policy';
+import { StepInstance } from '@deps/models/case/step-instance';
+import {
+    Address,
+    BankAccount,
+    Email,
+    Identification,
+    IdentificationType,
+    Party,
+    Phone,
+    Policy,
+    PolicyAllOfPartiesItem,
+    PolicyCoverage,
+    State,
+    TaxWithholding,
+} from '@deps/models/policy/sor-policy';
 import { GetPolicyResponse } from '@deps/queries/api/policies';
 import { CaseSearchResponse } from '@deps/types/search';
 
@@ -114,6 +129,238 @@ export const lcPartyResponseSanitizer = (partyResponse: LifeCadParty[] = []): Li
         });
     } catch (e) {
         logError('sanitizers::lcPartyResponseSanitizer::error', { ...parseErrorInformation(e) });
+        throw e;
+    }
+};
+
+const toMaskedStringOrNull = (value: string | null | undefined, length?: number): string | null => {
+    if (isNullEmptyOrUndefined(value)) {
+        return null;
+    }
+    if (length) {
+        return new Array(length).fill('*').join('');
+    }
+    return `${value}`.replace(/./g, '*');
+};
+
+const fullyMaskAddress = (address: Address | undefined): Address | undefined => {
+    if (!address) {
+        return null as unknown as undefined;
+    }
+    return {
+        ...address,
+        addressLine1: toMaskedStringOrNull(address?.addressLine1),
+        addressLine2: toMaskedStringOrNull(address?.addressLine2),
+        addressLine3: toMaskedStringOrNull(address?.addressLine3),
+        city: toMaskedStringOrNull(address?.city),
+        state: toMaskedStringOrNull(address?.state) as State | undefined,
+        zipCode: toMaskedStringOrNull(address?.zipCode),
+        zipCodeExtension: toMaskedStringOrNull(address?.zipCodeExtension),
+    } as Address;
+};
+
+const fullyMaskBankDetails = (bankDetails: BankAccount[] | undefined): BankAccount[] | undefined => {
+    return bankDetails?.map(bankDetail => {
+        return {
+            ...bankDetail,
+            accountNumber: toMaskedStringOrNull(bankDetail?.accountNumber),
+            accountType: null as unknown as undefined,
+            branchAddress: fullyMaskAddress(bankDetail?.branchAddress),
+            branchName: toMaskedStringOrNull(bankDetail?.branchName),
+            branchPhoneNumber: toMaskedStringOrNull(bankDetail?.branchPhoneNumber),
+            internationalBankAccountNumber: toMaskedStringOrNull(bankDetail?.internationalBankAccountNumber),
+            nameOnAccount: toMaskedStringOrNull(bankDetail?.nameOnAccount),
+            routingNumber: toMaskedStringOrNull(bankDetail?.routingNumber),
+        } as BankAccount;
+    });
+};
+
+const fullyMaskEmails = (emails: Email[] | undefined): Email[] | undefined => {
+    return emails?.map(email => {
+        return {
+            ...email,
+            emailAddress: toMaskedStringOrNull(email?.emailAddress),
+            emailType: null as unknown as undefined,
+        } as Email;
+    });
+};
+
+const fullyMaskIdentifications = (identifications: Identification[] | undefined): Identification[] | undefined => {
+    return identifications?.map(identification => {
+        if (identification.identificationType === IdentificationType.SSN) {
+            return {
+                ...identification,
+                identificationValue: formatSSN(identification.identificationValue?.replace(/./g, '*')),
+                issueState: null as unknown as undefined,
+                issueCountry: null as unknown as undefined,
+            };
+        }
+        return {
+            ...identification,
+            issueState: null as unknown as undefined,
+            issueCountry: null as unknown as undefined,
+            identificationValue: identification.identificationValue?.replace(/./g, '*') || (null as unknown as undefined),
+        };
+    });
+};
+
+const fullyMaskPhones = (phones: Phone[] | undefined): Phone[] | undefined => {
+    return phones?.map(({ areaCode, bestTime, countryCode, dialNumber, extension, phoneType, timezone, ...rest }) => {
+        return {
+            ...rest,
+            ...(areaCode ? { areaCode: toMaskedStringOrNull(areaCode) } : {}),
+            ...(bestTime ? { bestTime: toMaskedStringOrNull(bestTime) } : {}),
+            ...(countryCode ? { countryCode: toMaskedStringOrNull(countryCode) } : {}),
+            ...(dialNumber ? { dialNumber: toMaskedStringOrNull(dialNumber) } : {}),
+            ...(extension ? { extension: toMaskedStringOrNull(extension) } : {}),
+        } as Phone;
+    });
+};
+
+const fullyMaskTaxWithholdings = (taxWithholdings: TaxWithholding[] | undefined): TaxWithholding[] | undefined => {
+    return taxWithholdings;
+};
+
+const fullyMaskCoverage = (coverage: PolicyCoverage | undefined): PolicyCoverage | undefined => {
+    if (!coverage) {
+        return null as unknown as undefined;
+    }
+    const maskedCoverage = coverage?.coverageLayers?.map(layer => {
+        const maskedParticipants = layer?.coverageParticipants?.map(participant => {
+            return {
+                ...participant,
+                issueAge: null as unknown as undefined,
+                partyAgeAtIssue: null as unknown as undefined,
+            };
+        });
+        return { ...layer, coverageParticipants: maskedParticipants };
+    });
+    return { ...coverage, coverageLayers: maskedCoverage };
+};
+
+const fullyMaskPolicyParties = (parties: PolicyAllOfPartiesItem[] | undefined): PolicyAllOfPartiesItem[] | undefined => {
+    return parties?.map(
+        ({
+            abbreviatedName,
+            addresses,
+            attainedAge,
+            bankDetails,
+            dateOfBirth,
+            emails,
+            firstName,
+            formerName,
+            fullName,
+            gender,
+            identifications,
+            insured,
+            lastName,
+            middleName,
+            phones,
+            preferredAddressIndicator,
+            preferredCommunicationType,
+            prefix,
+            suffix,
+            taxWithholdings,
+            trustAccessCode,
+            trustDate,
+            trustTitle,
+            trustType,
+            ...rest
+        }) => {
+            return {
+                ...rest,
+                abbreviatedName: toMaskedStringOrNull(abbreviatedName, 5),
+                addresses: addresses?.map(fullyMaskAddress) as Address[] | null as unknown as undefined,
+                bankDetails: fullyMaskBankDetails(bankDetails),
+                dateOfBirth: toMaskedStringOrNull(dateOfBirth),
+                emails: fullyMaskEmails(emails),
+                firstName: toMaskedStringOrNull(firstName, 5),
+                fullName: toMaskedStringOrNull(fullName, 5),
+                gender: toMaskedStringOrNull(gender, 5),
+                identifications: fullyMaskIdentifications(identifications),
+                lastName: toMaskedStringOrNull(lastName, 5),
+                middleName: toMaskedStringOrNull(middleName, 5),
+                phones: fullyMaskPhones(phones),
+                taxWithholdings: fullyMaskTaxWithholdings(taxWithholdings),
+            } as PolicyAllOfPartiesItem;
+        }
+    );
+};
+
+export const policyMasker = (policy: Policy): Policy => {
+    const { parties, coverage, ...rest } = policy;
+    return { ...rest, parties: fullyMaskPolicyParties(parties), coverage: fullyMaskCoverage(coverage) };
+};
+
+export const fullyMaskPolicyResponse = (policyResponse: GetPolicyResponse): GetPolicyResponse => {
+    try {
+        const policy = policyMasker(policyResponse.data);
+        return { ...policyResponse, data: policy };
+    } catch (e) {
+        logError('sanitizers::fullyMaskPolicyResponse::error', { ...parseErrorInformation(e) });
+        throw e;
+    }
+};
+
+const fullyMaskSteps = (steps: StepInstance[] | undefined): StepInstance[] | undefined => {
+    return steps?.map(({ instanceInfo, ...rest }) => {
+        return {
+            ...rest,
+            ...(instanceInfo
+                ? {
+                      instanceInfo: {
+                          ...instanceInfo,
+                          label: toMaskedStringOrNull(instanceInfo?.label) as string,
+                      },
+                  }
+                : { instanceInfo: null }),
+        } as StepInstance;
+    });
+};
+
+const fullyMaskCaseParties = (parties: PartyInstance[] | undefined): PartyInstance[] | undefined => {
+    return parties?.map(({ firstName, lastName, ssn, fullName, middleName, ...rest }) => {
+        return {
+            firstName: toMaskedStringOrNull(firstName) as string,
+            fullName: toMaskedStringOrNull(fullName) as string,
+            lastName: toMaskedStringOrNull(lastName) as string,
+            middleName: toMaskedStringOrNull(middleName) as string,
+            ssn: toMaskedStringOrNull(ssn) as string,
+            ...rest,
+        };
+    });
+};
+
+const fullyMaskDocuments = (documents: DocumentInstance[] | undefined): DocumentInstance[] | undefined => {
+    return documents?.map(document => {
+        return {
+            ...document,
+            name: toMaskedStringOrNull(document?.name) as string,
+        };
+    });
+};
+
+// Fully masks PII inside of a case
+// Dev Notes: AdditionalData and Events are returned as empty instead of masking, as the schemas are not fully known and have historically been places where PII leaks can occur
+export const fullyMaskCase = (caseData: Case): Case => {
+    const { parties, documents, additionalData, stages, events, ...rest } = caseData;
+    return {
+        ...rest,
+        additionalData: {},
+        documents: fullyMaskDocuments(documents) as DocumentInstance[],
+        events: [],
+        stages: stages.map(({ steps, ...rest }) => ({ steps: fullyMaskSteps(steps), ...rest })),
+        parties: fullyMaskCaseParties(parties) as PartyInstance[],
+    };
+};
+
+// Sanitizes case search by:
+// Masking ssns in a case's party array
+export const caseSearchFullMasker = ({ data, ...rest }: CaseSearchResponse): CaseSearchResponse => {
+    try {
+        return { data: data.map(d => fullyMaskCase(d)), ...rest };
+    } catch (e) {
+        logError('Error sanitizing case search results', { ...parseErrorInformation(e) });
         throw e;
     }
 };

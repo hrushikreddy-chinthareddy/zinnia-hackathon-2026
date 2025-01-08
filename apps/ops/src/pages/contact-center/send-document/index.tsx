@@ -19,7 +19,7 @@ import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
-import { AttachmentDetails, CorrespondenceFormParts } from '@deps/models/case/correspondence';
+import { AttachmentDetails, AttachmentType, CorrespondenceFormParts } from '@deps/models/case/correspondence';
 import {
     AvailableFormsTransaction,
     CommunicationTypes,
@@ -90,7 +90,7 @@ const SendDocument = ({ policy, availableFormsTransactions, shouldShowCaseButton
                 transactionSubType:
                     formDetail?.transactionSubType?.list?.find(item => item.value === formDetail?.transactionSubType?.selected)?.label ||
                     '',
-                attachmentType: 'form',
+                attachmentType: AttachmentType.Form,
                 displayName: formDetail?.document.selected?.formShortName ?? '',
                 formId: formDetail?.document.selected?.formId.toString() ?? '',
                 formName: formDetail?.document.selected?.formShortName ?? '',
@@ -168,7 +168,7 @@ const SendDocument = ({ policy, availableFormsTransactions, shouldShowCaseButton
 export const getServerSideProps = withPageAuthRequired({
     getServerSideProps: async (context: GetServerSidePropsContext) => {
         const user = await getUserData(context);
-        const { locale = DEFAULT_LOCALE, query, req, res } = context;
+        const { locale = DEFAULT_LOCALE, query, req, res, resolvedUrl } = context;
         const planCode = (query.planCode as string) || '';
         const policyNumber = (query?.policyNumber as string) || '';
         const correlationId = (query?.correlationId as string) || '';
@@ -207,9 +207,9 @@ export const getServerSideProps = withPageAuthRequired({
         );
         try {
             const userInfoForLogging = getUserInfoFromUser(user);
-            const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging);
+            const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging, true);
             if (!policy) {
-                logInfo('contact-center/send-document/policy not found', { policyNumber, planCode, correlationId });
+                logInfo('contact-center/send-document/policy-not-found', { policyNumber, planCode, correlationId, page: resolvedUrl });
                 return {
                     redirect: {
                         destination: `/404?title=policyNotFound&planCode=${planCode}&policyNumber=${policyNumber}`,
@@ -223,7 +223,11 @@ export const getServerSideProps = withPageAuthRequired({
                 planCode: policy.product?.planCode || '',
             };
 
-            const transactionTypeSubTypes = await getSearchTransactionsSSR(transactionRequestBody, accessToken, userInfoForLogging);
+            const transactionTypeSubTypes = await getSearchTransactionsSSR(transactionRequestBody, accessToken, {
+                userInfoForLogging,
+                correlationId,
+                page: resolvedUrl,
+            });
             const hideMailOptionForSpecifiedCarrier = `SEND_DOCUMENT_HIDE_MAIL_OPTION_${policy.carrierId}` as keyof typeof FEATURE_FLAGS;
 
             const shouldShowMailOption =

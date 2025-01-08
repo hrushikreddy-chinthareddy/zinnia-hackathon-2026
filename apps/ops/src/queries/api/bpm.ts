@@ -1,3 +1,4 @@
+import { NewLoanRequest } from '@zinnia/api-types/types/sor';
 import { AxiosResponse } from 'axios';
 import dayjs from 'dayjs';
 import { v4 as uuidV4 } from 'uuid';
@@ -14,6 +15,7 @@ import {
 import { baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+
 
 const baseUrl = `${baseAppUrl}/api/bpm/v1`;
 
@@ -89,9 +91,17 @@ export enum TransactionResponseStatus {
 
 export const checkEligibilityNewLoan = async (
     planCode: string | undefined,
-    policyNumber: string | undefined
+    policyNumber: string | undefined,
+    maxLoanValue: number | undefined,
 ): Promise<TransactionResponse> => {
     try {
+        // Temporary solution while BPM adds logic
+        if (maxLoanValue === 0) {
+            return {
+                status: TransactionResponseStatus.Failure,
+            }
+        }
+
         const { data } = await client.post<TransactionResponse, AxiosResponse>(
             `${baseUrl}/policies/${planCode}/${policyNumber}/newloan/eligibilitycheck`,
             {} as AxiosResponse // BPB - TODO: fix this typing!
@@ -174,6 +184,25 @@ export const validateFullSurrenderWithdrawal = async (
         return data;
     } catch (error: any) {
         console.error('validateFullSurrenderWithdrawal::an error occurred during validation', error);
+
+        return error?.data as TransactionResponse;
+    }
+};
+
+export const validateNewLoan = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined,
+    query: NewLoanRequest
+): Promise<TransactionResponse> => {
+    try {
+        const { data } = await client.post<NewLoanRequest, AxiosResponse>(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/newloan/validation`,
+            query
+        );
+
+        return data;
+    } catch (error: any) {
+        console.error('validateNewLoan::an error occurred during validation', error);
 
         return error?.data as TransactionResponse;
     }
@@ -285,6 +314,24 @@ export const submitOneTimePremium = async (
         return { status: response.status };
     } catch (error: any) {
         console.error('submitOneTimePremium::an error occurred during submission', error);
+
+        return { status: error.response?.status };
+    }
+};
+
+export const submitNewLoan = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined,
+    query: NewLoanRequest
+): Promise<TransactionResponse> => {
+    try {
+        const response = await client.post<NewLoanRequest, AxiosResponse>(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/newloan`,
+            query
+        );
+        return { status: response.status };
+    } catch (error: any) {
+        console.error('submitNewLoan::an error occurred during submission', error);
 
         return { status: error.response?.status };
     }

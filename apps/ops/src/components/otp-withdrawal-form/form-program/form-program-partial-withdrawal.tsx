@@ -91,6 +91,13 @@ export default function FormProgramPartialWithdrawal({
 
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.amountDetails.partialWithdrawal' });
 
+    const getFieldLabel = (programType: ProgramType) => {
+        if (programType === ProgramType.PartialPercent) {
+            return t('percent') as string;
+        }
+        return t('dollar') as string;
+    };
+
     return (
         <CardContainer containerClassNames="border-b-2 border-gray-100">
             <Typography variant={TypographyVariant.H3} className="mb-2">
@@ -114,13 +121,7 @@ export default function FormProgramPartialWithdrawal({
                     <>
                         <Field
                             {...icons[selectedOption.amountFieldType]}
-                            label={
-                                [ProgramType.PartialDollar, ProgramType.GrossWithdrawal, ProgramType.NetWithdrawal].includes(
-                                    selected as ProgramType
-                                )
-                                    ? (t('dollar') as string)
-                                    : (t('percent') as string)
-                            }
+                            label={getFieldLabel(selected as ProgramType)}
                             onChange={e => setAmount(e.target.value)}
                             size={FieldSize.Small}
                             type={FieldType.BaseActive}

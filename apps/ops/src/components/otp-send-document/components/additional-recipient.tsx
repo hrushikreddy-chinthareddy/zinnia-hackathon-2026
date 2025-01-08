@@ -8,6 +8,7 @@ import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 
 import { validateEmail } from '../correspondence';
+import { browserLogWarn } from '@deps/utils/browser-logging';
 
 type AdditionalRecipientProps = {
     classNames?: string;
@@ -30,6 +31,11 @@ const AdditionalRecipient = ({ classNames, emails, setEmails, setError }: Additi
             return;
         }
         if (emailError) {
+            browserLogWarn('contactCenterCCEmailValidation', {
+                payload: val,
+                error: t(emailError) as string,
+                function: 'correspondence.cc.validateEmail',
+            });
             setError(error => ({ ...error, submit: t(emailError) as string }));
             return;
         }

@@ -77,7 +77,7 @@ const AddressDataCard = ({
     onCardClick,
     selectedId,
     addressStatus = null,
-    isAddressChange = false
+    isAddressChange = false,
 }: AddressDataCardProps) => {
     const { t } = useTranslation();
     const addressType = addressStatus || getAddressType(address?.addressType, t);

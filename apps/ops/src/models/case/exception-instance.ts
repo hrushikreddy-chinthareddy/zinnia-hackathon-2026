@@ -3,7 +3,7 @@ import { AdditionalDataInstance } from './additional-data-instance';
 export enum ExceptionStatuses {
     New = 'NEW',
     Resolved = 'RESOLVED',
-    Overridden = 'OVERRIDDEN'
+    Overridden = 'OVERRIDDEN',
 }
 
 export type ExceptionInstance = {
@@ -14,6 +14,7 @@ export type ExceptionInstance = {
     eventRef?: string[];
     id: string;
     mappedTasks?: string[];
+    exceptionRefId?: string;
     reason: string;
     status: ExceptionStatuses;
     taskIdList?: string[];

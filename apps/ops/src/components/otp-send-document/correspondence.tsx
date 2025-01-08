@@ -21,6 +21,7 @@ import AssistiveText, { AssistiveTextVariant } from '../assistive-text/assistive
 import { Loader } from '../page-loader';
 import { RadioItem } from '../radio/radio';
 import WorkflowCard from '../workflows/workflow-card/workflow-card';
+import { browserLogInfo } from '@deps/utils/browser-logging';
 
 const getDefaultCommunicationType = (communicationOptions?: RadioItem[]) => {
     if (!communicationOptions) return '';
@@ -83,6 +84,14 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
             case CommunicationTypes.Email: {
                 const emailError = validateEmail(correspondenceData.recipient);
                 if (emailError) {
+                    browserLogInfo('contactCenterEmailValidation', {
+                        contractNumber: policy?.policyNumber || '',
+                        planCode: policy?.product?.planCode || '',
+                        carrierId: policy?.carrierId || '',
+                        payload: correspondenceData?.recipient,
+                        error: t(emailError) as string,
+                        function: 'correspondence.validateEmail',
+                    });
                     setError({ ...error, submit: t(emailError) as string });
                     return false;
                 }

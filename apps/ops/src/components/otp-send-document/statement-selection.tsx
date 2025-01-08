@@ -1,4 +1,3 @@
-import { datadogLogs } from '@datadog/browser-logs';
 import dayjs, { Dayjs } from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import React, { useEffect, useState } from 'react';
@@ -20,6 +19,8 @@ import { DatePickerTypes, getQuarter, Quarter, quarters } from '../date-picker/d
 import { FieldSize, FieldType } from '../fields/field';
 import FieldDateSelect from '../fields/field-date-select/field-date-select';
 import WorkflowCard from '../workflows/workflow-card/workflow-card';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
 
 const toggleStatement = (val: StatementTypes, SetSelectedStatements: React.Dispatch<React.SetStateAction<StatementTypes[]>>) => {
     return (shouldHaveStatement: boolean) => {
@@ -113,6 +114,7 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
     const { t } = useTranslation(undefined, { keyPrefix: 'contactCenter' });
     const { goToNext } = useWorkflow();
 
+    const statementStartYear = policy.policyDates?.issueDate || StatementStartYear;
     const [selectedStatementType, setSelectedStatementType] = useState<StatementTypes[]>(applicableStatement);
     const currentYear = dayjs().year().toString();
     const currentQuarter = `${currentYear}-Q${getQuarter(dayjs())}`;
@@ -183,6 +185,19 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                             documentType: documentTypes.join(','),
                             periods: encodeURIComponent(JSON.stringify(selectedYearQuarters)),
                         };
+
+                        browserLogInfo('contactCenterGetStatements', {
+                            ...parseErrorInformation(error),
+                            payload: {
+                                contractNumber: policy?.policyNumber,
+                                planCode: policy?.product?.planCode || '',
+                                startDate,
+                                endDate,
+                                ...optionalParams,
+                            },
+                            function: 'documents.getCorrespondenceDocs',
+                        });
+
                         const response = await getCorrespondenceDocs(policy?.policyNumber || '', policy?.carrierId || '', optionalParams);
 
                         if ('err' in response.data) {
@@ -193,12 +208,11 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                         setStatements(ownerCopyStatements(statements.items));
                     }
                 } catch (error) {
-                    datadogLogs.logger.warn('contactCenterGetStatements', {
-                        payload: { policyNumber: policy?.policyNumber, startDate, endDate },
-                        error,
+                    browserLogError('contactCenterGetStatements', {
+                        ...parseErrorInformation(error),
+                        payload: { contractNumber: policy?.policyNumber, startDate, endDate, planCode: policy?.product?.planCode || '' },
                         function: 'documents.getCorrespondenceDocs',
                     });
-                    console.error('An error occurred while getting Contact Center statements', error);
                 } finally {
                     setLoader(false);
                 }
@@ -249,7 +263,7 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                     disableFormat={true}
                     showMonths={false}
                     datePickerType={datePickerType}
-                    isDateAllowed={date => handleIsDateAllowed(date, StatementStartYear)}
+                    isDateAllowed={date => handleIsDateAllowed(date, statementStartYear)}
                     readOnly={true}
                 />
 

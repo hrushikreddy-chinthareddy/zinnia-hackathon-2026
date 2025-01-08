@@ -1,7 +1,6 @@
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import React from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
 import AddressChangeContainer from '@deps/containers/address-change-container/address-change-container';
@@ -73,7 +72,7 @@ export const getServerSideProps = withPageAuthRequired({
 
         // If feature flag is not enabled, redirect to error page
         if (!isFormFeatureEnabled(ProcessType.ADDRESS_CHANGE, clientId, featureFlagDecisions)) {
-            logWarn('address-change/:id::feature flag not enabled', { documentNumber, policyNumber, clientId });
+            logWarn('address-change::Feature flag not enabled', { documentNumber, policyNumber, clientId });
             return {
                 redirect: {
                     destination: '/403',
@@ -94,7 +93,7 @@ export const getServerSideProps = withPageAuthRequired({
             const response = await searchPolicySSR(policyNumber, [clientId.toUpperCase() as Carrier], accessToken, 1, 0);
             const planCode = response ? response[0]?.planCode : null;
             if (!planCode) {
-                logInfo('address_change/:id::Plan code not found', { documentNumber, policyNumber, clientId });
+                logInfo('address-change::Plan code not found', { documentNumber, policyNumber, clientId });
                 return {
                     redirect: {
                         destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
@@ -102,7 +101,7 @@ export const getServerSideProps = withPageAuthRequired({
                     },
                 };
             } else {
-                logInfo('address_change/:id::Plan code found', { documentNumber, clientId, planCode });
+                logInfo('address-change::Plan code found', { documentNumber, policyNumber, clientId, planCode });
             }
 
             const document = documentNumber
@@ -111,14 +110,15 @@ export const getServerSideProps = withPageAuthRequired({
             const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging, true);
 
             if (!policy) {
-                logInfo('address_change/:id::Policy not found', { policyNumber, planCode, clientId });
+                logInfo('address-change::Policy not found', { documentNumber, policyNumber, planCode, clientId });
                 return {
                     redirect: {
-                        destination: '/404',
+                        destination: `/create-case/error?errorCode=${ERROR_CODES.POLICY_NOT_FOUND}`,
                         permanent: false,
                     },
                 };
             }
+            logInfo('address-change::Policy details found', { documentNumber, policyNumber, clientId, planCode });
 
             return {
                 props: {
@@ -129,7 +129,7 @@ export const getServerSideProps = withPageAuthRequired({
                 },
             };
         } catch (error) {
-            logError('getServerSidePropsAddressChangePage', { ...parseErrorInformation(error) });
+            logError('getServerSidePropsAddressChangePage', { ...parseErrorInformation(error), policyNumber, documentNumber, clientId });
             return {
                 props: {},
             };

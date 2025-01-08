@@ -1,7 +1,7 @@
-import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor';
+import { When, Then } from '@badeball/cypress-cucumber-preprocessor';
 
 import pages from '../../pages/page-factory';
-import policyDetailsPage from '../../pages/policy-details.page';
+import PolicyDetailsPage from '../../pages/policy/policy/policy-details.page';
 
 When('I click on Search button', (searchBy: string) => {
   const policyPage = pages['Policy Management page'];
@@ -17,6 +17,33 @@ When('I click on Policy on a Policy card', () => {
   policyDetailsPage['Policy link'].click();
 });
 
+When('I click on policy search dropdown and select {string} on policy search page', (searchCriteria) => {
+  PolicyDetailsPage.getClickPolicySearchDropdown();
+  cy.wait(2000);
+  PolicyDetailsPage.getPolicySearchBy(searchCriteria).click({force:true});
+  cy.wait(3000);
+});
+
+When('I enter policy search criteria text {string}', (searchText) => {
+  const policyPage = pages['Policy Management page'];
+  PolicyDetailsPage.getSearchText(searchText);
+  policyPage['Search button'].click();
+});
+
+When('I enter policy search criteria with blank field', () => {
+  const policyPage = pages['Policy Management page'];
+  cy.get(`[placeholder="Policy number"]`).clear();
+  policyPage['Search button'].click();
+  cy.wait(1500);
+});
+
+When('I enter policy search criteria firstName {string} and lastName {string}', (firstName,lastName) => {
+  const policyPage = pages['Policy Management page'];
+  PolicyDetailsPage.getSearchTextByFirstName(firstName);
+  PolicyDetailsPage.getSeachTextByLastName(lastName);
+  policyPage['Search button'].click();
+});
+
 Then('I should verify all information on Policy Details page', () => {
     //Assert policy details lane element
     cy.contains('Policy Details').should('be.visible');
@@ -24,7 +51,6 @@ Then('I should verify all information on Policy Details page', () => {
     cy.contains('Account value').should('be.visible');
     cy.contains('Net surrender value').should('be.visible');
     cy.contains('Cost basis').should('be.visible');
-  
     cy.wait(2000);
 })
 
