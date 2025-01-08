@@ -211,7 +211,7 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
         setPolicyNumber(document.contract);
         setDocument(document);
 
-        if ((shouldShowNewExperience && caseType !== CaseType.Renewal) && document.contract) {
+        if (shouldShowNewExperience && document.contract) {
             browserLogInfo('create-case::Document contract is present', {
                 caseType,
                 docType,
