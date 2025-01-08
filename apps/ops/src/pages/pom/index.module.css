@@ -18,7 +18,7 @@
     margin-bottom: 0;
 }
 
-.cardSection {
+.cardSubSection {
     padding-top: var(--measure-dimension-padding-4xl);
     padding-bottom: var(--measure-dimension-padding-4xl);
 }

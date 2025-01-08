@@ -27,7 +27,7 @@ function POM() {
     function personalInfoSection() {
         return (
             <div>
-                <div className={clsx(styles.cardSection)}>
+                <div className={clsx(styles.cardSubSection)}>
                     <Typography variant={TypographyVariant.H2} className={clsx(styles.personalInfoSectionHeader)}>
                         Identification
                     </Typography>
