@@ -1,3 +1,5 @@
+import { Address } from '@zinnia/api-types/types/sor';
+
 import { AddressFormFields } from './form-steps/add/AddEditAddress';
 
 export enum FormActionType {
@@ -7,6 +9,8 @@ export enum FormActionType {
 
 export interface AddEditAddressSidesheetProps {
   partyId: string;
+  fullAddressData?: Address;
   values?: AddressFormFields;
   actionType: FormActionType;
+  addressId?: string;
 }

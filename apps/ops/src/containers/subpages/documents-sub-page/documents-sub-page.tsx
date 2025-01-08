@@ -50,7 +50,7 @@ export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
         let optionalParams = {};
         if (yearSelection !== 'all') {
             const isFirstYearSelected = yearOptions[yearOptions.length - 1].value === yearSelection;
-            const startDate = dayjs().year(Number(yearSelection)).month(1).day(1);
+            const startDate = dayjs().year(Number(yearSelection)).month(0).date(1);
             const documentStartDate = isFirstYearSelected
                 ? startDate.add(1, 'year').subtract(1100, 'days').format(ZAHARA_API_DATE_FORMAT) // this is the maximum range allowed
                 : startDate.format(ZAHARA_API_DATE_FORMAT);

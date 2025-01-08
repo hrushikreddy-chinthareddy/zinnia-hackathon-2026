@@ -13,6 +13,8 @@ import { UserConsentManager } from '@/components/user-consent/UserConsentManager
 import { CompanyName } from '@/types/carriers';
 import { getCookie, getSession } from '@/utils/auth';
 import { THEME_COOKIE } from '@/utils/serverClientUtils';
+import { BannerAlert, BannerVariant } from '@zinnia/bloom/components';
+import dayjs from 'dayjs';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
@@ -40,6 +42,11 @@ export default async function AuthenticatedLayout({
   // Requested in CIAM channel on 09/27/24 https://se2llc-global.slack.com/archives/C04QBKBJ3H7/p1727459783747249
   // const userName = session?.user?.name.split(' ');
 
+  const showPresidentialMourningBanner = () => {
+    const today = dayjs();
+    return today.isBetween('2025-01-08', '2025-01-10', 'day', '[]');
+  };
+
   return (
     <main data-theme={themeCookie}>
       <UserProvider user={session?.user}>
@@ -64,6 +71,13 @@ export default async function AuthenticatedLayout({
 
               <div className={styles.container}>
                 <div className={styles.content}>
+                  {showPresidentialMourningBanner() && (
+                    <BannerAlert
+                      className="mb-lg"
+                      bodyText="In recognition of the National Day of Mourning following the death of former President Jimmy Carter, the stock market will be closed on January 9, 2025.  As a result, contract values are as of close of business January 8, 2025.  Any trades or other financial transactions submitted on January 9, 2025 will be processed when the stock market reopens on January 10, 2025."
+                      variant={BannerVariant.Warning}
+                    />
+                  )}
                   <UserConsentManager>{children}</UserConsentManager>
                   <Analytics />
                 </div>

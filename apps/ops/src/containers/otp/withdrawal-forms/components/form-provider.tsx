@@ -128,7 +128,7 @@ export const FormProvider = ({
 
     useEffect(() => {
         if (Array.isArray(formIrsData)) {
-            const updatedFormIrsData = formIrsData.map((data) => {
+            const updatedFormIrsData = formIrsData.map(data => {
                 if (!Array.isArray(data.irsTaxWithholding)) {
                     return {
                         ...data,
@@ -139,7 +139,7 @@ export const FormProvider = ({
             });
             setFormIrsData(updatedFormIrsData);
         }
-    }, [formIrsData]);
+    }, []);
     return (
         <FormDataContext.Provider
             value={{

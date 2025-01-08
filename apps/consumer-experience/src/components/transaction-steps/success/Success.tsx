@@ -12,6 +12,7 @@ export const Success: FC<SuccessProps> = ({
   successMessage,
   closeCallback,
 }) => {
+  const successHtml = { __html: `${successMessage}` };
   return (
     <div className={styles.wrapper}>
       <Icon
@@ -21,7 +22,10 @@ export const Success: FC<SuccessProps> = ({
         type={IconType.CIRCLE_CHECKMARK}
       />
       <h3 className="typography-desktop-headline-3-d">{successTitle}</h3>
-      <p className="typography-content-body">{successMessage}</p>
+      <p
+        className="typography-content-body"
+        dangerouslySetInnerHTML={successHtml}
+      />
       <Button onClick={closeCallback} className={styles.close}>
         Close
       </Button>

@@ -32,7 +32,6 @@ export default function FormProgramMaritalStatus({ isFormStateReadOnly, selected
       onChange={event => setSelected(event.target.value as maritalStatusType)}
       value={selected}
       variant={isFormStateReadOnly ? RadioVariant.Inactive : RadioVariant.Default}
-      disabled={isFormStateReadOnly}
       className='!m-0'
     />
   );

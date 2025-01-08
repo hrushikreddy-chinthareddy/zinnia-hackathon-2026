@@ -1,3 +1,4 @@
+import { AddressChange } from '@zinnia/api-types/types/bpm';
 import {
   AddressType,
   Address as AddressInterface,
@@ -48,24 +49,32 @@ const AddressGroup = ({
         address.addressLine2 && { addressVal: address.addressLine2 },
         address.addressLine3 && { addressVal: address.addressLine3 },
       ]
-        .filter(val => val !== undefined && val !== '')
+        .filter(val => val != undefined && val !== '')
         .map(val => val as AddressObj) || undefined;
 
     const editValues: AddressFormFields = {
-      addressType: address.addressType,
+      // There may be a better way to handle this, but there are separate types for
+      // addressType between bpm and sor types. So it gets submitted as bpm AddressChange.addressType
+      // but then visually rendered as sor AddressType.
+      addressType: address.addressType as unknown as AddressChange.addressType,
       addresses: addressValArray,
       city: address.city,
-      state: address.state,
+      state: address.state as unknown as AddressChange.state,
       zipCode: address.zipCode,
       defaultAddress: preferredAddressIndicator === address?.addressId,
     };
+
     return (
       <div className={styles.addressGroup} key={index}>
         <FieldData
           key={`key-${index}`}
           Label={
             <Label>
-              {displayAddressType[address.addressType || AddressType.RESIDENCE]}
+              {
+                displayAddressType[
+                  address.addressType || AddressChange.addressType.RESIDENCE
+                ]
+              }
             </Label>
           }
           AssistiveText={
@@ -79,6 +88,7 @@ const AddressGroup = ({
             addrCountry={address.country}
             addrLine1={address.addressLine1}
             addrLine2={address.addressLine2}
+            addrLine3={address.addressLine3}
             city={address.city}
             state={address.state}
             zipCode={address.zipCode}
@@ -90,6 +100,8 @@ const AddressGroup = ({
             actionType={FormActionType.EDIT}
             partyId={partyId}
             values={editValues}
+            addressId={address.addressId}
+            fullAddressData={address}
           />
         )}
       </div>

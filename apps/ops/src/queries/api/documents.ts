@@ -271,7 +271,7 @@ export const getCaseDocuments = async ({
         const docs: PolicyDocument[] = [];
 
         // if either request is unsuccessful, escape early
-        if (caseDocsResponse?.status !== 200 || policyDocsResponse?.status !== 200) {
+        if (caseDocsResponse?.status !== 200 || (policyDocRequest && policyDocsResponse?.status !== 200)) {
             return {
                 data: [],
                 error: {

@@ -1,6 +1,6 @@
 .addAddress {
-  margin-top: var(--measure-dimension-margin-sm);
-  /* TODO MG: update bloom so we dont need !imortant */
+  margin-top: var(--measure-dimension-gap-xl);
+  /* !important is here to override bloom styles from button */
   padding: 0 !important;
   gap: var(--measure-dimension-gap-sm, 0.25rem);
 }
