@@ -64,7 +64,7 @@ export const  getTaskActions = (params: ActionCellParams) => {
 
 const ActionCellRenderer = (params: ActionCellParams) => {
     return (
-        <Popover triggerClassName="mb-4" title={params?.actionParams?.actionMenu} body={getTaskActions(params)} placement={PopoverPlacement.BottomLeft}>
+        <Popover title={params?.actionParams?.actionMenu} body={getTaskActions(params)} placement={PopoverPlacement.BottomLeft}>
             <span className="block p-[5px]">
                 <VerticalDots height={'25px'} width={'25px'} className="text-primary" />
             </span>

@@ -8,11 +8,12 @@ import {
   TableHeaderCell,
   TableRow,
 } from '@zinnia/bloom/components';
+import clsx from 'clsx';
 import { useCallback, useMemo, useState } from 'react';
 
 import ActionCellRenderer from './action-cell-renderer';
 import { TasksTableProps } from './task-listing.types';
-
+import styles from './tasks-table.module.css';
 export default function TasksTable({
   t,
   config,
@@ -45,7 +46,7 @@ export default function TasksTable({
                         <TableHeaderCell><Label>{t('tasksListing.tableColumns.actions')}</Label></TableHeaderCell>
                     </TableRow>
                 </TableHeader>
-                <TableBody>
+                <TableBody className={clsx('typography-content-body-sm', styles.tableBody)}>
                     {paginatedTasks?.map(task => {
                         if (!task) return null;
 
