@@ -9,7 +9,7 @@ import { NoteInstance } from '@deps/models/case/note-instance';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { getCaseNotes } from '@deps/queries/api/cases';
 import { getCaseCallLogs } from '@deps/queries/api/contracts';
-import { getCaseDocuments } from '@deps/queries/api/documents';
+import { getCaseDocumentsV2 } from '@deps/queries/api/documents';
 import { findUniquePolicy } from '@deps/queries/api/policies';
 
 export interface CaseActivityContextProps {
@@ -87,13 +87,13 @@ export const CaseActivityProvider = ({ children, caseDetails }: CaseActivityProv
             }
 
             const [policy, correspondence] = await Promise.all([
-                getCaseDocuments({
+                getCaseDocumentsV2({
                     caseId: caseDetails.id,
                     clientCode: caseDetails.carrier?.toUpperCase(),
                     policyNumber: caseDetails.policyNumber,
                     source: DocumentTypeView.Policy,
                 }),
-                getCaseDocuments({
+                getCaseDocumentsV2({
                     caseId: caseDetails.id,
                     clientCode: caseDetails.carrier?.toUpperCase(),
                     policyNumber: caseDetails.policyNumber,

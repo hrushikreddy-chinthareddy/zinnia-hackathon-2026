@@ -1,7 +1,7 @@
 import { getSession } from '@auth0/nextjs-auth0';
 import { AxiosResponse } from 'axios';
 
-import { DocumentDownload } from '@deps/models/case/document';
+import { DocumentDownloadV2 } from '@deps/models/case/document';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import canUnmaskPii from '@deps/queries/server/fga/can-unmask';
@@ -12,19 +12,19 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 const baseUrl = `${apiServerBaseUrl}/document/v3`;
 
 export default withAuthAndLogging(
-    async (req: NextApiRequest, res: NextApiResponse<DocumentDownload | any | null>, loggingContext) => {
+    async (req: NextApiRequest, res: NextApiResponse<DocumentDownloadV2 | any | null>, loggingContext) => {
         const now = performance.now();
         const session = await getSession(req, res);
-        // Note: clientCode and source are *only* used to allow v3 to handle v2 documents.  Can remove once all docs are on v3
-        const { documentId, clientCode, source } = req.query;
+        // Note: parentCarrierCode(clientCode) and documentClassification(source) are *only* used to allow v3 to handle v2 documents.  Can remove once all docs are on v3
+        const { documentId, parentCarrierCode, documentClassification } = req.query;
         const accessToken = session?.accessToken;
 
         const v2DocParams = new URLSearchParams();
-        if (clientCode) {
-            v2DocParams.append('clientCode', clientCode as string);
+        if (parentCarrierCode) {
+            v2DocParams.append('parentCarrierCode', parentCarrierCode.toString().toUpperCase());
         }
-        if (source) {
-            v2DocParams.append('source', source as string);
+        if (documentClassification) {
+            v2DocParams.append('documentClassification', documentClassification.toString().toUpperCase());
         }
 
         let url = `${baseUrl}/documents/${documentId}/download`;
@@ -40,7 +40,7 @@ export default withAuthAndLogging(
         }
 
         try {
-            const { data } = await serverApi.get<DocumentDownload, AxiosResponse>(
+            const { data } = await serverApi.get<DocumentDownloadV2, AxiosResponse>(
                 url,
                 {
                     authorization: `Bearer ${accessToken}`,

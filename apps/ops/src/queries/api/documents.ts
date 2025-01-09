@@ -1,4 +1,5 @@
 import { dataURItoBlob } from '@rjsf/utils';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { AxiosResponse } from 'axios';
 import dayjs from 'dayjs';
 
@@ -8,8 +9,8 @@ import {
     PolicyDocumentApiRequest,
     DocumentData,
     DocumentErrorResponse,
-    DocumentDownload,
-    DocumentDownloadWithMime,
+    DocumentDownloadV2,
+    DocumentDownloadV2WithMime,
     EDSDocumentResponse,
     PolicyDocument,
 } from '@deps/models/case/document';
@@ -17,6 +18,7 @@ import { ManagementTask } from '@deps/models/case/task-instance';
 import { isMockPolicyDocsRequestEnabled } from '@deps/services/api-config';
 import { mockPolicyDocs } from '@deps/services/mocks/policy-docs';
 import { EDS_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
+import { DocumentDownloadV3WithMime } from '@deps/types/document-download-v3-with-mime';
 import { pullFromCache, writeToCache } from '@deps/utils/cache';
 import { logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
@@ -28,7 +30,7 @@ import { serverApi } from '../api-utils/serverApiClient';
 const ssrBaseUrl = `${apiServerBaseUrl}/document/v2/documents`;
 const documentBaseUrl = `${baseAppUrl}/api/document/v2/documents`;
 
-export const getDocument = async (documentNumber: string, docType: string, clientCode: string): Promise<DocumentData | null> => {
+export const getDocumentV2 = async (documentNumber: string, docType: string, clientCode: string): Promise<DocumentData | null> => {
     try {
         const url = `${documentBaseUrl}/${documentNumber}?docType=${docType}&clientCode=${clientCode.toUpperCase()}`;
         const { data } = await client.get<DocumentData, AxiosResponse>(url);
@@ -41,7 +43,7 @@ export const getDocument = async (documentNumber: string, docType: string, clien
     }
 };
 
-export const uploadDocument = async (task: ManagementTask, document: any, correlationId: string): Promise<EDSDocumentResponse | null> => {
+export const uploadDocumentV2 = async (task: ManagementTask, document: any, correlationId: string): Promise<EDSDocumentResponse | null> => {
     try {
         const url = `${baseAppUrl}/api/documents/upload`;
         const { blob, name } = dataURItoBlob(document);
@@ -77,12 +79,12 @@ export const uploadDocument = async (task: ManagementTask, document: any, correl
 
 export const downloadDocumentV2 = async (
     documentNumber: string,
-    docType: string,
+    docType: DocumentTypeView,
     clientCode: string
-): Promise<DocumentDownloadWithMime | null> => {
+): Promise<DocumentDownloadV2WithMime | null> => {
     try {
         const url = `${baseAppUrl}/api/documents/${documentNumber}/download?clientCode=${clientCode.toUpperCase()}&source=${docType}`;
-        const { data } = await client.get<DocumentDownloadWithMime, AxiosResponse>(url);
+        const { data } = await client.get<DocumentDownloadV2WithMime, AxiosResponse>(url);
         return data;
     } catch (error: any) {
         logWarn('An error occurred while downloading document', {
@@ -97,13 +99,13 @@ export const downloadDocumentV2 = async (
 
 // note: docType and clientCode are used to allow v3 to hit v2 documents for us.  We can remove if all v2 documents are migrated
 export const downloadDocumentV3 = async (
-    documentNumber: string,
-    docType: string,
-    clientCode: string
-): Promise<DocumentDownloadWithMime | null> => {
+    documentId: string,
+    documentClassification: SearchRequest.documentClassification,
+    parentCarrierCode: string
+): Promise<DocumentDownloadV3WithMime | null> => {
     try {
-        const url = `${baseAppUrl}/api/document/v3/documents/${documentNumber}/download?clientCode=${clientCode.toUpperCase()}&source=${docType}`;
-        const { data } = await client.get<DocumentDownloadWithMime, AxiosResponse>(url);
+        const url = `${baseAppUrl}/api/document/v3/documents/${documentId}/download?parentCarrierCode=${parentCarrierCode.toUpperCase()}&documentClassification=${documentClassification}`;
+        const { data } = await client.get<DocumentDownloadV3WithMime, AxiosResponse>(url);
         return data;
     } catch (error: any) {
         logWarn('An error occurred while downloading document', {
@@ -118,12 +120,12 @@ export const downloadDocumentV3 = async (
 
 export const getDocumentPreviewV2 = async (
     documentNumber: string,
-    docType: string,
+    docType: DocumentTypeView,
     clientCode: string
-): Promise<DocumentDownload | null> => {
+): Promise<DocumentDownloadV2 | null> => {
     try {
         const url = `${baseAppUrl}/api/documents/${documentNumber}/preview?clientCode=${clientCode.toUpperCase()}&source=${docType}`;
-        const { data } = await client.get<DocumentDownload, AxiosResponse>(url);
+        const { data } = await client.get<DocumentDownloadV2, AxiosResponse>(url);
 
         return data;
     } catch (error: any) {
@@ -139,13 +141,13 @@ export const getDocumentPreviewV2 = async (
 
 // note: docType and clientCode are used to allow v3 to hit v2 documents for us.  We can remove if all v2 documents are migrated
 export const getDocumentPreviewV3 = async (
-    documentNumber: string,
-    docType: string,
-    clientCode: string
-): Promise<DocumentDownload | null> => {
+    documentId: string,
+    documentClassification: SearchRequest.documentClassification,
+    parentCarrierCode: string
+): Promise<DocumentDownloadV3WithMime | null> => {
     try {
-        const url = `${baseAppUrl}/api/document/v3/documents/${documentNumber}/preview?clientCode=${clientCode.toUpperCase()}&source=${docType}`;
-        const { data } = await client.get<DocumentDownload, AxiosResponse>(url);
+        const url = `${baseAppUrl}/api/document/v3/documents/${documentId}/preview?parentCarrierCode=${parentCarrierCode.toUpperCase()}&documentClassification=${documentClassification}`;
+        const { data } = await client.get<DocumentDownloadV3WithMime, AxiosResponse>(url);
 
         return data;
     } catch (error: any) {
@@ -159,7 +161,7 @@ export const getDocumentPreviewV3 = async (
     }
 };
 
-export const getDocumentSSR = async (
+export const getDocumentV2SSR = async (
     documentNumber: string,
     docType: string,
     clientCode: string,
@@ -213,7 +215,7 @@ export type DocumentApiRequestInputs = {
     limit?: number;
     offset?: number;
 };
-export const getDocuments = async ({
+export const getDocumentsV2 = async ({
     periods,
     limit,
     offset,
@@ -246,7 +248,7 @@ export const getDocuments = async ({
 };
 
 // Get all documents potentially associated with a case by using caseId and policy and combining the results sets
-export const getCaseDocuments = async ({
+export const getCaseDocumentsV2 = async ({
     caseId,
     clientCode,
     policyNumber,
@@ -262,8 +264,8 @@ export const getCaseDocuments = async ({
         return { data: [], error: { status: 400, message: 'Missing caseId, clientCode, or source' } };
     }
 
-    const caseDocRequest = getDocuments({ source, clientCode, zinniaLiveCaseId: caseId });
-    const policyDocRequest = policyNumber ? getDocuments({ source, clientCode, contractNumber: policyNumber }) : null;
+    const caseDocRequest = getDocumentsV2({ source, clientCode, zinniaLiveCaseId: caseId });
+    const policyDocRequest = policyNumber ? getDocumentsV2({ source, clientCode, contractNumber: policyNumber }) : null;
 
     try {
         const [caseDocsResponse, policyDocsResponse] = await Promise.all([caseDocRequest, policyDocRequest]);
@@ -309,7 +311,7 @@ export const getCaseDocuments = async ({
     }
 };
 
-export const getPolicyDocs = async (
+export const getPolicyDocsV2 = async (
     id: string,
     clientCode: string,
     optionalParams: { documentStartDate?: string; documentEndDate?: string } = {}
@@ -346,7 +348,7 @@ export const getPolicyDocs = async (
     }
 };
 
-export const getCorrespondenceDocs = async (
+export const getCorrespondenceDocsV2 = async (
     id: string,
     clientCode: string,
     optionalParams: { documentStartDate?: string; documentEndDate?: string; documentType?: string; periods?: string } = {}
@@ -382,7 +384,7 @@ export const getCorrespondenceDocs = async (
     }
 };
 
-export const getPolicyTypeDocs = async (
+export const getPolicyTypeDocsV2 = async (
     id: string,
     clientCode: string,
     docType?: string

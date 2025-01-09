@@ -5,7 +5,7 @@ import { DocumentTypeView } from '@deps/components/side-sheet/documents/document
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyDocumentApiRequest } from '@deps/models/case/document';
 import { searchDocuments } from '@deps/queries/api/client/documents/v3/search';
-import { DocumentApiRequestInputs, getDocuments } from '@deps/queries/api/documents';
+import { DocumentApiRequestInputs, getDocumentsV2 } from '@deps/queries/api/documents';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
@@ -65,25 +65,7 @@ export const useDocumentSearch = (
         if (loading || loadedForArgs === JSON.stringify({ searchBody, limit, offset })) return;
         setLoading(true);
         try {
-            if (!featureFlags[FEATURE_FLAGS.DOCUMENTS_V3]) {
-                const v2Args = buildV2SearchArgs({ searchBody, limit, offset });
-                const docsResponse = await getDocuments(v2Args);
-                if (docsResponse?.status === StatusCode.Okay) {
-                    setDocs(
-                        (docsResponse as PolicyDocumentApiRequest)?.data?.items?.map(({ documentID, documentId, ...rest }) => {
-                            return { documentId: documentId || documentID, documentSource: v2Args.source, ...rest };
-                        })
-                    );
-                    setResponseStatus(docsResponse.status);
-                    setTotal((docsResponse as PolicyDocumentApiRequest)?.data?.count);
-                } else {
-                    console.error('useDocumentSearch::searchDocs error', docsResponse?.status ?? 500);
-                    setDocs(null);
-                    setResponseStatus(docsResponse?.status ?? 500);
-                    setTotal(0);
-                }
-                //create a v2 request, mapping it to v3 values
-            } else {
+            if (featureFlags[FEATURE_FLAGS.DOCUMENTS_V3]) {
                 const { data, error } = await searchDocuments({ limit, offset, searchBody });
                 // BPB - need to set source for v2 responses somehow
                 if (error) {
@@ -101,6 +83,23 @@ export const useDocumentSearch = (
                     setTotal(data?.totalCount ?? 0);
                 }
                 setLoading(false);
+            } else {
+                const v2Args = buildV2SearchArgs({ searchBody, limit, offset });
+                const docsResponse = await getDocumentsV2(v2Args);
+                if (docsResponse?.status === StatusCode.Okay) {
+                    setDocs(
+                        (docsResponse as PolicyDocumentApiRequest)?.data?.items?.map(({ documentID, documentId, ...rest }) => {
+                            return { documentId: documentId || documentID, documentSource: v2Args.source, ...rest };
+                        })
+                    );
+                    setResponseStatus(docsResponse.status);
+                    setTotal((docsResponse as PolicyDocumentApiRequest)?.data?.count);
+                } else {
+                    console.error('useDocumentSearch::searchDocs error', docsResponse?.status ?? 500);
+                    setDocs(null);
+                    setResponseStatus(docsResponse?.status ?? 500);
+                    setTotal(0);
+                }
             }
         } catch (e) {
             console.error('useDocumentSearch::error', (e as Error).message);

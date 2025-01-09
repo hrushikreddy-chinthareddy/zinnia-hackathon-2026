@@ -1,8 +1,9 @@
+import { AxiosResponse } from 'axios';
+
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { CheckTupleResponse } from '@deps/types/fga';
 import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
-import { AxiosResponse } from 'axios';
 
 // This is a simplified hotfix to check if a user is either operations and can see unmask pii OR they are advisors excel, who can see pii.  Other solutions are rate-limited and failing in production.
 const canUnmaskPii = async (accessToken: string | undefined, partyId: string | undefined, loggingContext?: object) => {
@@ -23,7 +24,6 @@ const canUnmaskPii = async (accessToken: string | undefined, partyId: string | u
 
         const [unmaskingCarriers, isAdvisorsExcel] = await Promise.allSettled([listCarriersRequest, advisorsExcelRequest]);
 
-        console.log('BPB - unmaskingcarriers', unmaskingCarriers?.value?.data?.carriers);
         if (unmaskingCarriers.status !== 'fulfilled' && isAdvisorsExcel.status !== 'fulfilled') {
             logWarn('fga/can-unmask::canUnmaskPii: error getting unmasking carriers', {
                 ...parseErrorInformation(unmaskingCarriers.reason),

@@ -1,3 +1,4 @@
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { useTranslation } from 'next-i18next';
 import { useState, useEffect } from 'react';
 
@@ -12,10 +13,12 @@ import { supportedExtensions, supportedImgExtensions } from '@deps/models/case/d
 import { getDocumentPreviewV2, getDocumentPreviewV3 } from '@deps/queries/api/documents';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
+import { DocumentTypeView } from '../side-sheet/documents/documents-content';
+
 export interface DocumentViewerProps {
     status: number;
     id: string;
-    documentType?: string;
+    documentType?: DocumentTypeView;
     carrierCode?: string;
 }
 
@@ -30,8 +33,22 @@ const DocumentViewer = (props: DocumentViewerProps) => {
 
     useEffect(() => {
         const getDocument = async () => {
-            const downloader = featureFlags[FEATURE_FLAGS.DOCUMENTS_V3] ? getDocumentPreviewV3 : getDocumentPreviewV2;
-            const download = await downloader(id, documentType || '', carrierCode || '');
+            let download;
+            if (featureFlags[FEATURE_FLAGS.DOCUMENTS_V3]) {
+                let docClass;
+                switch (documentType) {
+                    case DocumentTypeView.Correspondence:
+                        docClass = SearchRequest.documentClassification.OUTBOUND;
+                        break;
+                    case DocumentTypeView.Policy:
+                    default:
+                        docClass = SearchRequest.documentClassification.INBOUND;
+                        break;
+                }
+                download = await getDocumentPreviewV3(id, docClass, carrierCode || '');
+            } else {
+                download = await getDocumentPreviewV2(id, documentType || ('' as DocumentTypeView), carrierCode || '');
+            }
 
             setFileExtension(download?.fileExtension?.toLowerCase() || null);
             setDocumentBinary(download?.binaryData || null);

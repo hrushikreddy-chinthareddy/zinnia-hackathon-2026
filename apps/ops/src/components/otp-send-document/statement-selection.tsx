@@ -9,7 +9,7 @@ import { DocumentDisplayCode, PolicyDocument, PolicyDocuments } from '@deps/mode
 import { StatementStartYear, StatementTypes } from '@deps/models/case/send-statement';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
-import { getCorrespondenceDocs } from '@deps/queries/api/documents';
+import { getCorrespondenceDocsV2 } from '@deps/queries/api/documents';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
@@ -198,7 +198,7 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                             function: 'documents.getCorrespondenceDocs',
                         });
 
-                        const response = await getCorrespondenceDocs(policy?.policyNumber || '', policy?.carrierId || '', optionalParams);
+                        const response = await getCorrespondenceDocsV2(policy?.policyNumber || '', policy?.carrierId || '', optionalParams);
 
                         if ('err' in response.data) {
                             setError({ submit: response.data.err });

@@ -1,4 +1,5 @@
 import { getSession } from '@auth0/nextjs-auth0';
+import { SearchDocumentResponse } from '@zinnia/api-types/types/documents-v3';
 import { AxiosResponse } from 'axios';
 
 import { apiServerBaseUrl } from '@deps/queries/api-config';
@@ -11,7 +12,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 // Will proxy any request made to the next server directly to the gateway apis
 export default withAuthAndLogging(
-    async (req: NextApiRequest, res: NextApiResponse<AxiosResponse<any> | any | ErrorResponse>) => {
+    async (req: NextApiRequest, res: NextApiResponse<AxiosResponse<SearchDocumentResponse> | any | ErrorResponse>) => {
         const session = await getSession(req, res);
         const re = new RegExp('^.*?/api');
         const proxyUrl = req.url?.replace(re, apiServerBaseUrl as string);

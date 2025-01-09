@@ -4,7 +4,7 @@ import { useTranslation } from 'next-i18next';
 
 import DocumentDownloader from '@deps/components/document-viewer/document-downloader';
 import DocumentPreviewer from '@deps/components/document-viewer/document-previewer';
-import { isPreviewSupported } from '@deps/helpers/documents.helper';
+import { isPreviewSupported } from '@deps/hooks/useDocumentDownload';
 import { PolicyDocument } from '@deps/models/case/document';
 import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icons_outlined/document-search.svg';
 
@@ -40,12 +40,7 @@ export default function SideSheetDocumentItem({ document, carrier = '', activeDo
                     </>
                 </DocumentPreviewer>
             ) : (
-                <DocumentDownloader
-                    carrierCode={carrier}
-                    documentId={documentId ?? (documentID as string)}
-                    documentName={displayName}
-                    documentType={activeDocType}
-                />
+                <DocumentDownloader document={{ ...document, source: activeDocType }} carrierCode={carrier} />
             )}
             <p className="font-primary text-sm font-medium leading-4 text-gray-600">{`${t('sideSheet.posted')} ${timeAgo}`}</p>
         </div>

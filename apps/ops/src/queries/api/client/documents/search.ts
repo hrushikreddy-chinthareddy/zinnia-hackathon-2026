@@ -2,7 +2,7 @@ import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
 
-import { getDocuments, DocumentApiRequestInputs } from '../../documents';
+import { getDocumentsV2, DocumentApiRequestInputs } from '../../documents';
 
 type v2ResultUniqueProperties = {
     attachmentType: string;
@@ -124,7 +124,7 @@ const buildV2SearchArgs = ({
         ...(searchBody?.documentStartDate ? { contractNumber: searchBody?.documentStartDate } : {}),
         ...(searchBody?.documentEndDate ? { contractNumber: searchBody?.documentEndDate } : {}),
     };
-    getDocuments();
+    getDocumentsV2();
     return '';
 };
 
