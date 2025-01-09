@@ -1,5 +1,4 @@
 'use server';
-import { cookies } from 'next/headers';
 import { RedirectType, redirect } from 'next/navigation';
 
 import { ServerApi } from '@/services';
@@ -14,9 +13,9 @@ import {
   PasswordlessCodeMfaResponse,
 } from '@/types/auth';
 import {
-  domain,
   getMfaCookie,
   getOobMfaCookie,
+  setCookie,
   setLoginCookies,
   setMfaCookie,
   setMfaOobCookie,
@@ -101,12 +100,12 @@ export async function passwordlessStart(
     return redirect(`/login/error`);
   }
 
-  const cookieStore = cookies();
-  cookieStore.set(LOGIN_EMAIL_COOKIE_KEY, email, {
-    secure: process.env.AUTH0_COOKIE_SECURE === 'true',
-    sameSite: 'strict',
-    path: '/',
-    domain,
+  setCookie({
+    cookieName: LOGIN_EMAIL_COOKIE_KEY,
+    value: email,
+    cookieConfig: {
+      sameSite: 'strict',
+    },
   });
 
   return redirect(`/login/passwordless-email-challenge`, RedirectType.replace);
