@@ -1,4 +1,5 @@
 import { dataURItoBlob } from '@rjsf/utils';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { AxiosResponse } from 'axios';
 import dayjs from 'dayjs';
 
@@ -141,7 +142,7 @@ export const getDocumentPreviewV2 = async (
 // note: docType and clientCode are used to allow v3 to hit v2 documents for us.  We can remove if all v2 documents are migrated
 export const getDocumentPreviewV3 = async (
     documentId: string,
-    documentClassification: DocumentClassification,
+    documentClassification: SearchRequest.documentClassification,
     parentCarrierCode: string
 ): Promise<DocumentDownloadV3WithMime | null> => {
     try {

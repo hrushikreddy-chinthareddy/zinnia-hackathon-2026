@@ -1,5 +1,5 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import { SearchRequest, SearchRequest as V3SR } from '@zinnia/api-types/types/documents-v3';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useMemo, useState } from 'react';
 
@@ -45,8 +45,8 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
             parentCarrierCode: caseDetails.carrier,
             documentClassification:
                 docSource === (DocumentTypeView.Policy as string)
-                    ? SearchRequest.documentClassification.INBOUND
-                    : SearchRequest.documentClassification.OUTBOUND,
+                    ? V3SR.documentClassification.INBOUND
+                    : V3SR.documentClassification.OUTBOUND,
             ...(showAll && policy ? { policyNumber: policy.policyNumber } : { zinniaLiveCaseId: caseDetails.id }),
         };
     }, [showAll, docSource, policy, caseDetails]);

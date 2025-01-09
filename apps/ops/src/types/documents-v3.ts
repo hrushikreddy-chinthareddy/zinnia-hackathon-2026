@@ -1,4 +1,8 @@
-import { DocumentDownloadResponse, SearchRequest, SearchDocumentResponse as SearchResponse } from '@zinnia/api-types/types/documents-v3';
+import {
+    DocumentDownloadResponse,
+    SearchRequest as SearchRequestBody,
+    SearchDocumentResponse as SearchResponse,
+} from '@zinnia/api-types/types/documents-v3';
 
 export type DocumentDownloadV3WithMime = DocumentDownloadResponse & {
     mimeType: string;
@@ -9,4 +13,9 @@ export type SearchDocumentResponse = SearchResponse & {
     totalCount: number;
 };
 
-export type DocumentClassification = SearchRequest.documentClassification;
+export type DocumentClassification = SearchRequestBody.documentClassification;
+
+// Per Amit Agarwal, this should work
+export type SearchRequest = SearchRequestBody & {
+    periods?: { periodYear: string; periodQuarters: ('Q1' | 'Q2' | 'Q3' | 'Q4')[] }[];
+};

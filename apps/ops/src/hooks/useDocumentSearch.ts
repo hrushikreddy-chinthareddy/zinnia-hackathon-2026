@@ -1,4 +1,4 @@
-import { MetadataSearchResponse, SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import { MetadataSearchResponse, SearchRequest as V3SR } from '@zinnia/api-types/types/documents-v3';
 import { useCallback, useEffect, useState } from 'react';
 
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
@@ -7,6 +7,7 @@ import { PolicyDocumentApiRequest } from '@deps/models/case/document';
 import { searchDocuments } from '@deps/queries/api/client/documents/v3/search';
 import { DocumentApiRequestInputs, getDocumentsV2 } from '@deps/queries/api/documents';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
+import { SearchRequest } from '@deps/types/documents-v3';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 // BPB - toDos:
@@ -41,9 +42,9 @@ const buildV2SearchArgs = ({
 const getDocumentSourceForV2 = (doc: MetadataSearchResponse, searchBody: SearchRequest): DocumentTypeView => {
     const classification = doc.documentClassification || searchBody?.documentClassification;
     switch (classification) {
-        case SearchRequest.documentClassification.OUTBOUND:
+        case V3SR.documentClassification.OUTBOUND:
             return DocumentTypeView.Correspondence;
-        case SearchRequest.documentClassification.INBOUND:
+        case V3SR.documentClassification.INBOUND:
         default:
             return DocumentTypeView.Policy;
     }
@@ -76,7 +77,7 @@ export const useDocumentSearch = (searchBody: SearchRequest, limit = 25, offset 
                     }));
                     setDocs(docsWithSource);
                     setResponseStatus(200);
-                    setTotal(data?.totalCount ?? 0);
+                    setTotal(data?.totalCount ?? data?.count ?? 0);
                 }
                 setLoading(false);
             } else {
