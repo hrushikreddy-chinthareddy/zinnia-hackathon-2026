@@ -21,7 +21,6 @@ const TaskContainer = ({ taskInfoLink, nigoExceptions, nigoSubExceptions }: Task
     const { task, isReadyForDataEntry } = useContext(TaskDataContext);
     const { carrier, caseId, id, taskType } = task;
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: convertToCamelCase(taskType) });
-    console.log('🚀 ~ TaskContainer ~ convertToCamelCase(taskType):', convertToCamelCase(taskType));
 
     if (task.status === TaskStatus.Completed) {
         return <CompleteCard leaveRoute={taskInfoLink} />;

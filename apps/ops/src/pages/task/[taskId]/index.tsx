@@ -11,13 +11,14 @@ import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { FormMetadata } from '@deps/models/case/task';
-import { ManagementTask } from '@deps/models/case/task-instance';
+import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { UserPermission } from '@deps/models/user-profile';
 import { getCaseTaskById } from '@deps/operations/tasks/task-operations';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { getCaseDetailsSSR } from '@deps/queries/api/cases';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logError, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { TaskMetadataHelper } from '@deps/utils/tasks/task-metadata-helper';
 import nextI18nextConfig from 'next-i18next.config';
 
 type TaskPageProps = {
@@ -89,17 +90,14 @@ export const getServerSideProps = withPageAuthRequired({
                 await getCaseTaskById(taskId, accessToken),
             ]);
 
-            const task = {
+            const task: ManagementTask = {
                 id: 'TA000000016146',
                 caseId: 'CA0000383347',
-                source: 'BPM.Suitability',
-                templateId: '9f4f22da-c7d3-4cb3-bb8f-622df920bdf6',
                 process: 'New Business',
                 carrier: 'WELB',
                 taskType: 'NB_LINK_PAYMENT_POLICY',
-                category: 'Review Task',
                 taskName: 'Suitability Review',
-                status: 'NEW',
+                status: TaskStatus.New,
                 data: {
                     details: {
                         amount: '10000 $',
@@ -149,28 +147,9 @@ export const getServerSideProps = withPageAuthRequired({
                         },
                     ],
                 },
-
-                mappedExceptions: ['EX000000003688'],
-                mappedDocuments: [],
                 queue: 'new_business_suitability_review',
-                escalated: false,
-                createdBy: 'SYSTEM',
-                createdByPartyId: 'SYSTEM',
                 createdAt: '2024-12-30T07:06:39Z',
-                updatedBy: 'SYSTEM',
-                updatedByPartyId: 'SYSTEM',
                 updatedAt: '2024-12-30T07:06:39Z',
-                identifiers: [
-                    {
-                        identifier: 'applicationId',
-                        value: 'WELB04112024001_SS_037',
-                    },
-                    {
-                        identifier: 'zlCaseId',
-                        value: 'CA0000383347',
-                    },
-                ],
-                externalId: '4d4311d0-fee7-4930-9c1a-b03857cd2258',
             };
 
             // task.data['documentMatcher'].push({
@@ -312,6 +291,11 @@ export const getServerSideProps = withPageAuthRequired({
                             title: 'Can you find a matching case for this document?',
                             $ref: '#/definitions/potentialMatchesEnum',
                         },
+                        // testing: {
+                        //     type: 'string',
+                        //     title: 'Dynamic Testing',
+                        //     enums: ['yes', 'no'],
+                        // },
                     },
                     allOf: [
                         {
@@ -327,6 +311,24 @@ export const getServerSideProps = withPageAuthRequired({
                                     caseId: {
                                         type: 'string',
                                         title: 'Case Id',
+                                    },
+                                },
+                            },
+                        },
+                        {
+                            if: {
+                                properties: {
+                                    potentialMatches: {
+                                        const: 'Document cannot be matched to a case',
+                                    },
+                                },
+                            },
+                            then: {
+                                properties: {
+                                    canceled: {
+                                        type: 'string',
+                                        title: 'Case Id',
+                                        enum: ['yes', 'no'],
                                     },
                                 },
                             },
@@ -407,18 +409,24 @@ export const getServerSideProps = withPageAuthRequired({
                             label: true,
                         },
                     },
+                    // testing: {
+                    //     'ui:options': {
+                    //         label: false,
+                    //         // disabled: (task: any) =>
+                    //         //     task.data.potentialMatches !== 'Enter a case ID' ||
+                    //         //     task.data.potentialMatches != 'Document cannot be matched to a case',
+                    //     },
+                    // },
                     caseId: {
                         'ui:options': {
                             label: true,
                         },
                     },
+                    canceled: {
+                        widget: 'radio',
+                    },
                 },
             };
-
-            const options = task.data.potentialMatches.map(item => {
-                return { const: item.applicationId, title: item.applicationId };
-            });
-            taskMetadata.formSchema.definitions.potentialMatchesEnum.oneOf.unshift(...options);
 
             if (!taskMetadata?.formSchema || !taskMetadata?.uiSchema) {
                 logError('task::Form schema not found', {
@@ -442,7 +450,7 @@ export const getServerSideProps = withPageAuthRequired({
             return {
                 props: {
                     ...translations,
-                    taskMetadata,
+                    taskMetadata: TaskMetadataHelper(task, taskMetadata),
                     task,
                     correlationId,
                     taskInfoLink,
