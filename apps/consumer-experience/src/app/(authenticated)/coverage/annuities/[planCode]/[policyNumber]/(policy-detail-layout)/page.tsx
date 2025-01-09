@@ -18,7 +18,7 @@ import { LineOfBusinessPath } from '@/types';
 export const metadata: Metadata = {
   // Include the carrier name here because the template only works for the children
   // TODO: update carrier name when we solve dynamic carrier setting
-  title: 'Contract Overview - Everly',
+  title: 'Contract Overview',
 };
 
 export default async function Page({

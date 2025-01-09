@@ -6,7 +6,7 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { FC, ReactNode, useEffect, useState } from 'react';
 
 import { addBankRequest } from '@/actions/bpm/bank-actions';
-import { ActionTypes, useBpmStore } from '@/store/store';
+import { ActionTypes, PropertyKeys, useBpmStore } from '@/store/store';
 import { BankFormFields } from '@/types/bank';
 import { FormSteps } from '@/types/transactions';
 
@@ -85,7 +85,9 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
 
       updateBpmAction({
         actionType: ActionTypes.ADD,
-        bankAccountNumber: requestValues.accountNumber,
+        propertyKey: PropertyKeys.BANK_DETAILS,
+        itemKey: 'routingNumber',
+        itemValue: requestValues.routingNumber,
       });
       return;
     }

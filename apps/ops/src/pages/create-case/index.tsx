@@ -1,6 +1,8 @@
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
-import { TabGroup, TabList, TabTrigger, TabContent, Icon, IconType } from '@zinnia/bloom/components';
+import { TabGroup, TabList, TabTrigger, TabContent, Icon, IconType, BannerAlert, BannerVariant } from '@zinnia/bloom/components';
 import { getCookie, setCookie } from 'cookies-next';
+import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
 import { GetServerSidePropsContext } from 'next';
 import router from 'next/router';
 import { useTranslation } from 'next-i18next';
@@ -44,7 +46,7 @@ import nextI18nextConfig from 'next-i18next.config';
 
 interface CaseCreatePageProps extends SegmentTrackedPageProps {
     featureFlagDecisions: FeatureFlags;
-};
+}
 
 const RENEWAL_SUCCESS = 'otp-renewal-success';
 const WITHDRAWAL_SUCCESS = 'otp-withdrawal-success';
@@ -59,16 +61,16 @@ const shouldShowCaseTaskList = (featureFlagDecisions: FeatureFlags, caseType: Ca
     return (
         (featureFlagDecisions?.[FEATURE_FLAGS.REG_60] && caseType == CaseType.Reg60) ||
         (featureFlagDecisions?.[FEATURE_FLAGS.SSW_SBGC] && caseType == CaseType.SSW) ||
-        (caseType == CaseType.Withdrawal) ||
-        (caseType == CaseType.Rmd) ||
-        (caseType == CaseType.Oft)
+        caseType == CaseType.Withdrawal ||
+        caseType == CaseType.Rmd ||
+        caseType == CaseType.Oft
     );
 };
 
 export enum TabOptions {
     myTasks = 'My Tasks',
     search = 'Search',
-};
+}
 
 const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
@@ -217,7 +219,7 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
                 docType,
                 clientId,
                 documentNumber,
-                policyNumber: document.contract
+                policyNumber: document.contract,
             });
             setShowLoader(false);
             setPolicyNumber(document.contract);
@@ -228,7 +230,7 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
                 docType,
                 clientId,
                 documentNumber,
-                policyNumber: document.contract
+                policyNumber: document.contract,
             });
             setPolicyNumber('');
             setCaseId('');
@@ -258,7 +260,7 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
                 clientId,
                 documentNumber,
                 policyNumber: document.contract,
-                caseId: caseData.id
+                caseId: caseData.id,
             });
 
             if (caseType === CaseType.Reg60) {
@@ -368,9 +370,30 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
         </>
     );
 
+    dayjs.extend(isBetween);
+    const showPresidentialMourningBanner = () => {
+        const today = dayjs();
+        return today.isBetween('2025-01-08', '2025-01-10', 'day', '[]');
+    };
+
     return (
         <NoNavLayout fullHeight={true}>
             {showLoader && <Loading />}
+            {showPresidentialMourningBanner() && (
+                <BannerAlert
+                    bodyText={
+                        <>
+                            In recognition of the National Day of Mourning following the death of former{' '}
+                            <strong>President Jimmy Carter</strong>, the stock market will be closed on <strong>January 9, 2025</strong>. As
+                            a result, contract values are as of close of business <strong>January 8, 2025</strong>. Any trades or other
+                            financial transactions submitted on <strong>January 9, 2025</strong> will be processed when the stock market
+                            reopens on <strong>January 10, 2025</strong>.
+                        </>
+                    }
+                    variant={BannerVariant.Warning}
+                    className="mb-8"
+                />
+            )}
             <div className="flex flex-col">
                 {!shouldShowNewExperience ? (
                     <div className="mb-4 w-[500px] self-center rounded bg-white shadow-sm">
