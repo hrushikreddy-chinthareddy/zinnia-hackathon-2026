@@ -20,7 +20,7 @@ export interface SideSheetDocumentItemProps {
 
 export default function SideSheetDocumentItem({ document, carrier = '', activeDocType }: SideSheetDocumentItemProps) {
     const { t } = useTranslation();
-    const { displayName, documentDate, documentId, documentID } = document;
+    const { displayName, documentDate } = document;
     const timeAgo = dayjs(documentDate).fromNow(); //just as a heads up this cannot be translated bc it is an external library eag
     const canPreview = isPreviewSupported(document);
 
@@ -40,7 +40,7 @@ export default function SideSheetDocumentItem({ document, carrier = '', activeDo
                     </>
                 </DocumentPreviewer>
             ) : (
-                <DocumentDownloader document={{ ...document, source: activeDocType }} carrierCode={carrier} />
+                <DocumentDownloader document={{ ...document, documentSource: activeDocType }} carrierCode={carrier} />
             )}
             <p className="font-primary text-sm font-medium leading-4 text-gray-600">{`${t('sideSheet.posted')} ${timeAgo}`}</p>
         </div>

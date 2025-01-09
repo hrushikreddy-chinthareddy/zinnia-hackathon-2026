@@ -6,7 +6,7 @@ import { DocumentTypeView } from '@deps/components/side-sheet/documents/document
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyDocument, supportedExtensions, DocumentDownloadV2WithMime } from '@deps/models/case/document';
 import { downloadDocumentV2, downloadDocumentV3 } from '@deps/queries/api/documents';
-import { DocumentDownloadV3WithMime } from '@deps/types/document-download-v3-with-mime';
+import { DocumentDownloadV3WithMime } from '@deps/types/documents-v3';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 export const isPreviewSupported = (document: PolicyDocument): boolean => {
     return supportedExtensions.includes(document?.fileType?.toLowerCase());

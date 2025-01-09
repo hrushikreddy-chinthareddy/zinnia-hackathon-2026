@@ -49,11 +49,7 @@ const getDocumentSourceForV2 = (doc: MetadataSearchResponse, searchBody: SearchR
     }
 };
 
-export const useDocumentSearch = (
-    searchBody: SearchRequest,
-    limit = 25,
-    offset = 0
-): [any[] | null, boolean, number | null, number | null] => {
+export const useDocumentSearch = (searchBody: SearchRequest, limit = 25, offset = 0): [any[] | null, boolean, number, number | null] => {
     const { featureFlags } = useOptimizely();
     const [loading, setLoading] = useState(false);
     const [docs, setDocs] = useState<any[] | null>(null);

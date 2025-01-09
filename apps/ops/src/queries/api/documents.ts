@@ -1,5 +1,4 @@
 import { dataURItoBlob } from '@rjsf/utils';
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { AxiosResponse } from 'axios';
 import dayjs from 'dayjs';
 
@@ -18,7 +17,7 @@ import { ManagementTask } from '@deps/models/case/task-instance';
 import { isMockPolicyDocsRequestEnabled } from '@deps/services/api-config';
 import { mockPolicyDocs } from '@deps/services/mocks/policy-docs';
 import { EDS_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
-import { DocumentDownloadV3WithMime } from '@deps/types/document-download-v3-with-mime';
+import { DocumentClassification, DocumentDownloadV3WithMime } from '@deps/types/documents-v3';
 import { pullFromCache, writeToCache } from '@deps/utils/cache';
 import { logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
@@ -100,7 +99,7 @@ export const downloadDocumentV2 = async (
 // note: docType and clientCode are used to allow v3 to hit v2 documents for us.  We can remove if all v2 documents are migrated
 export const downloadDocumentV3 = async (
     documentId: string,
-    documentClassification: SearchRequest.documentClassification,
+    documentClassification: DocumentClassification,
     parentCarrierCode: string
 ): Promise<DocumentDownloadV3WithMime | null> => {
     try {
@@ -142,7 +141,7 @@ export const getDocumentPreviewV2 = async (
 // note: docType and clientCode are used to allow v3 to hit v2 documents for us.  We can remove if all v2 documents are migrated
 export const getDocumentPreviewV3 = async (
     documentId: string,
-    documentClassification: SearchRequest.documentClassification,
+    documentClassification: DocumentClassification,
     parentCarrierCode: string
 ): Promise<DocumentDownloadV3WithMime | null> => {
     try {
