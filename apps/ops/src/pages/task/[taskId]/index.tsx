@@ -119,7 +119,35 @@ export const getServerSideProps = withPageAuthRequired({
                             },
                         ],
                     },
-                    potentialMatches: {},
+                    potentialMatches: [
+                        {
+                            applicationId: 'app1',
+                            zlCaseId: '',
+                            policyNumber: '',
+                            taxId: 'ssn123456',
+                            firstName: '',
+                            lastName: '',
+                            processSubtype: '',
+                        },
+                        {
+                            applicationId: 'app2',
+                            zlCaseId: '',
+                            policyNumber: '',
+                            taxId: 'ssn123456',
+                            firstName: '',
+                            lastName: '',
+                            processSubtype: '',
+                        },
+                        {
+                            applicationId: 'app3',
+                            zlCaseId: '',
+                            policyNumber: '',
+                            taxId: 'ssn123456',
+                            firstName: '',
+                            lastName: '',
+                            processSubtype: '',
+                        },
+                    ],
                 },
 
                 mappedExceptions: ['EX000000003688'],
@@ -194,11 +222,25 @@ export const getServerSideProps = withPageAuthRequired({
                 formSchema: {
                     $schema: 'http://json-schema.org/draft-07/schema#',
                     type: 'object',
-                    definitions: {},
+                    definitions: {
+                        potentialMatchesEnum: {
+                            oneOf: [
+                                {
+                                    const: 'Enter a case ID',
+                                    title: 'Enter a case ID',
+                                },
+                                {
+                                    const: 'Document cannot be matched to a case',
+                                    title: 'Document cannot be matched to a case',
+                                },
+                            ],
+                        },
+                    },
                     properties: {
                         sectionHeader: {
                             type: 'object',
                             title: 'Processing Instructions',
+                            // todo:vijaya: fix description
                             // description:
                             //     "This customer's application was flagged for review. Accept or Decline each issue before submitting a final decision.",
                         },
@@ -267,11 +309,8 @@ export const getServerSideProps = withPageAuthRequired({
                         },
                         potentialMatches: {
                             type: 'string',
-                            title: 'Reason for decline',
-                            oneOf: [
-                                { const: 'Document cannot be matched to a case', value: 'Document cannot be matched to a case' },
-                                { const: 'Enter a case ID', value: 'Enter a case ID' },
-                            ],
+                            title: 'Can you find a matching case for this document?',
+                            $ref: '#/definitions/potentialMatchesEnum',
                         },
                     },
                     allOf: [
@@ -287,7 +326,7 @@ export const getServerSideProps = withPageAuthRequired({
                                 properties: {
                                     caseId: {
                                         type: 'string',
-                                        title: 'Reason for decline',
+                                        title: 'Case Id',
                                     },
                                 },
                             },
@@ -365,7 +404,7 @@ export const getServerSideProps = withPageAuthRequired({
                     potentialMatches: {
                         'ui:widget': 'radio',
                         'ui:options': {
-                            inline: true,
+                            label: true,
                         },
                     },
                     caseId: {
@@ -375,6 +414,11 @@ export const getServerSideProps = withPageAuthRequired({
                     },
                 },
             };
+
+            const options = task.data.potentialMatches.map(item => {
+                return { const: item.applicationId, title: item.applicationId };
+            });
+            taskMetadata.formSchema.definitions.potentialMatchesEnum.oneOf.unshift(...options);
 
             if (!taskMetadata?.formSchema || !taskMetadata?.uiSchema) {
                 logError('task::Form schema not found', {

@@ -14,6 +14,15 @@ export const getMatchDocumentPaymentReviewSteps = ({ taskType, taskInfoLink, t }
             isCompleted: true,
             screenReaderLabel: t('tabs.documentMatch'),
         },
+        // {
+        //     ariaLabel: t('tabs.documentMatch'),
+        //     isVisible: () => true,
+        //     component: <TaskFormStep taskType={taskType} taskInfoLink={taskInfoLink} isSubmit={true}></TaskFormStep>,
+        //     text: t('tabs.documentMatch'),
+        //     index: 0,
+        //     isCompleted: true,
+        //     screenReaderLabel: t('tabs.documentMatch'),
+        // },
         {
             ariaLabel: t('tabs.confirm'),
             isVisible: () => true,
