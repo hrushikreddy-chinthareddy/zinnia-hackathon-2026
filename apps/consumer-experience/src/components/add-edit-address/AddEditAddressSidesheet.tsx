@@ -32,6 +32,7 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
   partyId,
   addressId,
   fullAddressData,
+  disableEditingPreferredAddress,
 }) => {
   const updateBpmAction = useBpmStore(state => state.updateBpmAction);
   const params = useParams<{
@@ -224,6 +225,7 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
           submitCallback={handleAddEdit}
           actionType={actionType}
           removeCallback={handleRemoveClick}
+          disableEditingPreferredAddress={disableEditingPreferredAddress}
         />
       )}
       {step === FormSteps.CONFIRM && (
