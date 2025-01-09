@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { Button, Icon, IconType } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
 
@@ -44,6 +45,8 @@ const defaultChartOptions = {
     maxPathStrokeWidth: 30,
     maxItems: 10,
 };
+
+const DEFAULT_GROUPBY_FILTER_OPTIONS = [GroupByOptions.BrokerDealerName, GroupByOptions.Process, GroupByOptions.CaseStatus];
 
 const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOptions, baseDashboardQueryFilter }: Props) => {
     const { t } = useTranslation();
@@ -705,6 +708,14 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
 
     const formattedCasesNumber = wholeNumberFormatify(totalCases || 0) as never;
 
+    const resetFilters = () => {
+        [setL1SelectValue, setL2SelectValue, setL3SelectValue].forEach((setter, index) => setter(DEFAULT_GROUPBY_FILTER_OPTIONS[index]));
+    };
+
+    const resetDisabled = [l1SelectValue, l2SelectValue, l3SelectValue].every(
+        (value, index) => DEFAULT_GROUPBY_FILTER_OPTIONS[index] === value
+    );
+
     return (
         <div>
             <Typography className="flex items-center mt-7 mb-7" variant={TypographyVariant.H4} asTag="h2" data-testid="header-text">
@@ -791,7 +802,7 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                             value={l2SelectValue}
                         />
                     </div>
-                    <div className="mb-4 md:mb-0 pl-6 md:w-1/3 text-right">
+                    <div className="mb-4 md:mb-0 pl-6 md:w-1/3 text-right flex flex-row align-middle items-center gap-2">
                         <SelectSimple
                             options={[
                                 {
@@ -808,7 +819,12 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                             type={FieldType.BaseActive}
                             value={l3SelectValue}
                         />
+                        <Button onClick={resetFilters} disabled={resetDisabled} mode="link" size="small">
+                            <Icon width={16} height={16} type={IconType.REFRESH} />
+                            reset
+                        </Button>
                     </div>
+                    <div></div>
                 </div>
                 {/* DO NOT REMOVE the explicity height setting. This prevents the useEffect from firing constantly after
                 render due to the height changing */}
