@@ -1,10 +1,11 @@
-import { SearchDocumentResponse, SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { AxiosResponse } from 'axios';
 
 import { baseAppUrl } from '@deps/queries/api-config';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { client } from '@deps/queries/api-utils/client';
 import { ApiResponse } from '@deps/types/api-response';
+import { SearchDocumentResponse } from '@deps/types/documents-v3';
 
 // Search for documents using the documents v3 api
 // BPB - toDo: next route handler

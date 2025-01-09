@@ -1,3 +1,4 @@
+import { MetadataSearchResponse } from '@zinnia/api-types/types/documents-v3';
 import {
     Icon,
     IconType,
@@ -37,14 +38,14 @@ type DocumentsResultsTableProps = {
     results: DocumentWithSource[];
 };
 
-const DownloadItem = ({ doc, carrierCode }: { doc: DocumentWithSource; carrierCode: string }) => {
+const DownloadItem = ({ doc, carrierCode }: { doc: DocumentWithSource | MetadataSearchResponse; carrierCode: string }) => {
     const { t } = useTranslation();
-    // BPB - fix this!
+    const docId = doc.documentId || ((doc as DocumentWithSource).documentID as string);
     const [loading, download] = useDocumentDownload(
-        doc.documentId || (doc.documentID as string),
-        doc.documentSource || doc.documentClassification,
+        docId,
+        (doc as DocumentWithSource).documentSource || (doc as MetadataSearchResponse).documentClassification,
         carrierCode,
-        doc.displayName || doc.sourceFileName
+        doc.displayName || docId
     );
 
     return (
@@ -72,12 +73,11 @@ const DownloadItem = ({ doc, carrierCode }: { doc: DocumentWithSource; carrierCo
 };
 
 export const createAction = (doc: DocumentWithSource, carrierCode: string, t: TFunction, label?: string) => {
-    // BPB - fix this better
     return isPreviewSupported(doc) ? (
         <DocumentPreviewer
             className="!underline-offset-2"
             carrier={carrierCode}
-            displayName={doc.displayName || doc.sourceFileName}
+            displayName={(doc.displayName || doc.documentId) ?? (doc.documentID as string)}
             documentId={doc.documentId ?? (doc.documentID as string)}
             activeDocType={doc.documentSource}
             variant={NavElementVariant.Secondary}
