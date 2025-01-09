@@ -1,7 +1,6 @@
 import { TFunction } from 'next-i18next';
 
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
-import { BankDetailsInputMethod } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement-parts/autofill-account-toggle';
 import {
     BankingFields,
     DisbursementFields,
@@ -45,8 +44,7 @@ import {
     DEFAULT_DISBURSEMENT_UPDATE,
     DisbursementParts,
     PaymentMethodOption,
-    FormDisbursementSelections,
-    DisbursementToggleType,
+    FormDisbursementSelections
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../../utils/helper-utils';
@@ -334,28 +332,6 @@ export default function getNasuOftConfig(t: TFunction) {
         {
             label: t('distributionMethod.eft'),
             value: FormDisbursementSelections.EFT,
-            additionalOptions: {
-                disbursementToggleType: DisbursementToggleType.AutoFillInfoToggle,
-                toggleOptions: [
-                    {
-                        label: t('distributionMethod.forethought'),
-                        value: BankDetailsInputMethod.Auto,
-                    },
-                    {
-                        label: t('distributionMethod.other'),
-                        value: BankDetailsInputMethod.Manual,
-                    },
-                ],
-                defaultPrefillMethod: BankDetailsInputMethod.Auto,
-                prefillBankData: {
-                    ...DEFAULT_DISBURSEMENT_UPDATE,
-                    payeeName: 'FORETHOUGHT LIFE INS RECEIPT ACCOUNT',
-                    accountNumber: '4941021958',
-                    bankName: 'Wells Fargo Bank, N.A',
-                    bankRoutingNumber: '121000248',
-                    accountType: AccountType.Checking,
-                },
-            },
             fields: [
                 {
                     fieldName: BankingFields.AccountType,
@@ -533,6 +509,11 @@ export default function getNasuOftConfig(t: TFunction) {
                     fieldLabel: t('distributionMethod.contractNumber'),
                     component: DisbursementFields.BankTextField,
                     maxLength: 35,
+                    tooltip: {
+                        shouldDisplay: true,
+                        title: t('distributionMethod.contractLabelPopoverTitle') as string,
+                        body: t('distributionMethod.contractLabelPopoverMessage') as string,
+                    },
                 },
                 {
                     fieldName: BankingFields.Address,
@@ -650,60 +631,11 @@ export default function getNasuOftConfig(t: TFunction) {
                     },
                 };
             },
-        },
-        {
-            label: t('distributionMethod.dtcc'),
-            value: FormDisbursementSelections.DTCC,
-            fields: [
-                {
-                    fieldName: BankingFields.PayeeName,
-                    fieldLabel: t('distributionMethod.payeeName'),
-                    component: DisbursementFields.BankTextField,
-                    classNames: 'col-start-1',
-                    maxLength: 40,
-                },
-                {
-                    fieldName: BankingFields.ParticipantId,
-                    fieldLabel: t('distributionMethod.participantId'),
-                    component: DisbursementFields.SelectParticipantId,
-                },
-                {
-                    fieldName: BankingFields.ContractNumber,
-                    fieldLabel: t('distributionMethod.onlyContractNumber'),
-                    component: DisbursementFields.BankTextField,
-                    maxLength: 30,
-                },
-            ],
-            getDefaultPayload({ paymentMethod, payee, participantId, bank }: FormDisbursement) {
-                if (paymentMethod.text !== FormDisbursementSelections.DTCC) {
-                    return DEFAULT_DISBURSEMENT_UPDATE;
-                }
-                return {
-                    ...DEFAULT_DISBURSEMENT_UPDATE,
-                    payeeName: payee?.name.text ?? '',
-                    address: payee?.addresses?.[0] ?? DEFAULT_ADDRESS,
-                    contractNumber: bank?.[0]?.accountNumber ?? '',
-                    participantId: participantId?.text ?? '',
-                };
-            },
-            generatePayloadFromSelection: ({ payeeName, participantId, contractNumber }: DisbursementParts) => {
-                return {
-                    ...getDefaultFormDisbursementValues(),
-                    paymentMethod: { text: PaymentMethod.DTCC },
-                    participantId: { text: participantId ?? null },
-                    payee: {
-                        name: { text: payeeName ?? null },
-                        addresses: [],
-                        contractNumber: { text: null },
-                    },
-                    bank: [{ ...DEFAULT_BANK_DETAILS, accountNumber: contractNumber ?? '' }],
-                };
-            },
-        },
+        }
     ];
 
     const defaultValues = {
-        disbursementOption: FormDisbursementSelections.DTCC,
+        disbursementOption: FormDisbursementSelections.EFT,
     };
 
     return {

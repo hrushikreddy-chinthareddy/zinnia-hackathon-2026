@@ -85,6 +85,7 @@ export default function NasuOftWithdrawalForm( { qualType }: NasuOftFormProps) {
             <CedingCompanyDistribution
                 qualificationOptions={qualificationOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
+                renderLoaDate={true}
             />
             <FormDisbursement
                 options={disbursementOptions}
