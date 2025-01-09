@@ -46,7 +46,6 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carri
         threshold: 0,
     });
     const { t } = useTranslation(TranslationFiles.COMMON);
-    const [timeFrameLabel] = useState<string>('Year to Date');
 
     const [baseDashboardQueryFilter, setBaseDashboardQueryFilter] = useState<DashboardSearchFilter>({});
     const [baseInsightQueryFilter, setBaseInsightQueryFilter] = useState<DashboardSearchFilter>({});
@@ -72,7 +71,7 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carri
         setInsightOption(processType);
     };
 
-    const createBaseQuery = async (groupBy: GroupByOptions[]) => {
+    const createBaseQuery = async (baseInsightQueryFilter: DashboardSearchFilter, groupBy: GroupByOptions[]) => {
         const response = await getCaseDashboardStatsQuery(baseInsightQueryFilter, groupBy);
         if (!response?.data?.length) {
             console.error(
@@ -87,16 +86,18 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carri
     };
 
     const { data: processListOptions, isLoading: processListOptionsLoading } = useQuery({
-        queryKey: ['processListOptions', createdDateStart],
-        queryFn: () => getProcessListOptions(createdDateStart),
+        queryKey: ['processListOptions'],
+        queryFn: () => getProcessListOptions(),
     });
     const { data: insightGroupingCountByCarrierStats, isLoading: insightGroupingCountByCarrierStatsLoading } = useQuery({
         queryKey: ['countByCarrierInsights', baseInsightQueryFilter],
-        queryFn: () => createBaseQuery([GroupByOptions.Carrier]),
+        queryFn: () => createBaseQuery(baseInsightQueryFilter, [GroupByOptions.Carrier]),
+        enabled: !!Object.keys(baseInsightQueryFilter).length,
     });
     const { data: insightGroupingCountBySubProcessStats, isLoading: insightGroupingCountBySubProcessStatsLoading } = useQuery({
         queryKey: ['countBySubProcessInsights', baseInsightQueryFilter],
-        queryFn: () => createBaseQuery([GroupByOptions.ProcessSubType]),
+        queryFn: () => createBaseQuery(baseInsightQueryFilter, [GroupByOptions.ProcessSubType]),
+        enabled: Object.keys(baseInsightQueryFilter).length > 0,
     });
     const {
         data: insightCreatedBySubProcess,
@@ -104,7 +105,8 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carri
         isError: insightCreatedBySubProcessError,
     } = useQuery({
         queryKey: ['createdBySubProcessInsights', baseInsightQueryFilter],
-        queryFn: () => createBaseQuery([GroupByOptions.ProcessSubType, GroupByOptions.CreatedAt]),
+        queryFn: () => createBaseQuery(baseInsightQueryFilter, [GroupByOptions.ProcessSubType, GroupByOptions.CreatedAt]),
+        enabled: Object.keys(baseInsightQueryFilter).length > 0,
     });
     const {
         data: insightActiveAgingPiesByCreated,
@@ -112,13 +114,14 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carri
         isError: insightActiveAgingPiesByCreatedError,
     } = useQuery({
         queryKey: ['activeAgingPieChartKeys', baseInsightQueryFilter],
-        queryFn: () => createBaseQuery([GroupByOptions.CreatedAt, GroupByOptions.ProductName]),
+        queryFn: () => createBaseQuery(baseInsightQueryFilter, [GroupByOptions.CreatedAt, GroupByOptions.ProductName]),
         placeholderData: previousData => previousData,
+        enabled: Object.keys(baseInsightQueryFilter).length > 0,
     });
     const { data: insightExceptionStats, isLoading: insightExceptionStatsLoading } = useQuery({
         queryKey: ['exceptionStats', baseInsightQueryFilter],
         queryFn: async () => {
-            const response = await createBaseQuery([GroupByOptions.ExceptionCategory]);
+            const response = await createBaseQuery(baseInsightQueryFilter, [GroupByOptions.ExceptionCategory]);
             if (response?.data?.length) {
                 response.data = response?.data?.filter(item => item.name !== '');
             }
@@ -126,16 +129,15 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carri
             return response;
         },
         placeholderData: previousData => previousData,
+        enabled: Object.keys(baseInsightQueryFilter).length > 0,
     });
 
     useEffect(() => {
         const baseFilter: DashboardSearchFilter = {
             caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
-            createdDateStart,
         };
         const insightFilter: DashboardSearchFilter = {
             caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
-            createdDateStart,
         };
 
         const carriers = Object.keys(selectedCarriers);
@@ -156,7 +158,7 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carri
 
         setBaseDashboardQueryFilter(baseFilter);
         setBaseInsightQueryFilter(insightFilter);
-    }, [selectedCarriers, insightOption, selectedBrokerDealers, createdDateEnd, createdDateStart]);
+    }, [selectedCarriers, insightOption, selectedBrokerDealers]);
 
     const sankeyChartLoading =
         loading ||
@@ -239,7 +241,7 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carri
                                 <CaseStatBlock
                                     dashboardStatsResponse={insightGroupingCountByCarrierStats}
                                     blockLabel="Carrier"
-                                    timeFrameLabel={timeFrameLabel}
+                                    timeFrameLabel={`Trailing 12 months`}
                                     statMeasurementLabel="case"
                                     variant="double"
                                     loading={loading}
@@ -256,7 +258,7 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carri
                                 <CaseStatBlock
                                     dashboardStatsResponse={brokerDealerOptions}
                                     blockLabel="Broker Dealers"
-                                    timeFrameLabel={timeFrameLabel}
+                                    timeFrameLabel={`Trailing 12 months`}
                                     statMeasurementLabel="case"
                                     variant="double"
                                     loading={loading}
@@ -274,7 +276,7 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carri
                             <CaseStatBlock
                                 dashboardStatsResponse={insightGroupingCountBySubProcessStats}
                                 blockLabel="Case Type"
-                                timeFrameLabel={timeFrameLabel}
+                                timeFrameLabel={`Trailing 12 months`}
                                 statMeasurementLabel="case"
                                 variant="double"
                                 loading={loading}
