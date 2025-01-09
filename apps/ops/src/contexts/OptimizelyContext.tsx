@@ -1,7 +1,6 @@
 import { ReactNode, createContext, useContext, useEffect, useState } from 'react';
 
 import { getFeatureFlags } from '@deps/queries/api/optimizely';
-import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
 interface OptimizelyData {
@@ -30,7 +29,7 @@ export const OptimizelyProvider = ({ children }: OptimizelyProviderProps) => {
                 setLoading(false);
             }, 500);
             const flags = await getFeatureFlags();
-            setFeatureFlags({ ...flags, [FEATURE_FLAGS.DOCUMENTS_V3]: true }); // BPB - REMOVE ME!!!!!!
+            setFeatureFlags(flags);
             setLoading(false);
         };
 
