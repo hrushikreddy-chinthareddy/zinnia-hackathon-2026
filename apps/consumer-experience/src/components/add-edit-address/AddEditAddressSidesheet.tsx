@@ -203,7 +203,11 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
       closeCallback={onClose}
       trigger={
         <Button
-          className={actionType === FormActionType.ADD ? styles.addAddress : ''}
+          className={
+            actionType === FormActionType.ADD
+              ? styles.addAddress
+              : styles.editAddress
+          }
           size="small"
           mode="link"
           onClick={() => setOpen(true)}

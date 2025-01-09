@@ -246,6 +246,7 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
             render={({ field }) => (
               <div className={styles.zip}>
                 <FieldDataActive
+                  inputMode="numeric"
                   errorMessage={errors.zipCode?.message}
                   fieldStatus={
                     errors.zipCode ? FieldStatus.ERROR : FieldStatus.DEFAULT
