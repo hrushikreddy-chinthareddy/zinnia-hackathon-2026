@@ -5036,6 +5036,17 @@
             "submitTask": "Soumettre les détails de l'examen d'adéquation"
         }
     },
+    "nbLinkPaymentPolicy": {
+        "tabs": {
+            "documentMatch": "Document de match",
+            "confirm": "Confirmer"
+        },
+        "taskForm": {
+            "title": "Document de match",
+            "submitLabel": "Soumettre",
+            "cancelLabel": "Annuler"
+        }
+    },
     "unauthorized": {
         "title": "Non autorisé",
         "message": "Vous n'avez pas accès à cette information."
