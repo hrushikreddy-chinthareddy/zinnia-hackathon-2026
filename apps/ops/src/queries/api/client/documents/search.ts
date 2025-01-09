@@ -1,9 +1,3 @@
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
-
-import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
-
-import { getDocumentsV2, DocumentApiRequestInputs } from '../../documents';
-
 type v2ResultUniqueProperties = {
     attachmentType: string;
     caseId: string;
@@ -105,28 +99,28 @@ type HomogenizedRequestProperties = {
 // Figure out feature flagging
 
 // builds up args to work with documents v2 search
-const buildV2SearchArgs = ({
-    searchBody,
-    limit = 10,
-    offset = 0,
-}: {
-    searchBody: SearchRequest;
-    limit?: number;
-    offset?: number;
-}): string => {
-    const args: DocumentApiRequestInputs = {
-        source: searchBody.documentClassification?.toLowerCase() === 'inbound' ? DocumentTypeView.Policy : DocumentTypeView.Correspondence,
-        clientCode: searchBody?.parentCarrierCode || '',
-        ...(searchBody?.policyNumber ? { contractNumber: searchBody?.policyNumber } : {}),
-        ...(searchBody?.zinniaLiveCaseId ? { contractNumber: searchBody?.zinniaLiveCaseId } : {}),
-        ...(searchBody?.documentStatus ? { docStatus: searchBody?.documentStatus?.join(',') } : {}),
-        ...(searchBody?.documentDate ? { contractNumber: searchBody?.documentDate } : {}),
-        ...(searchBody?.documentStartDate ? { contractNumber: searchBody?.documentStartDate } : {}),
-        ...(searchBody?.documentEndDate ? { contractNumber: searchBody?.documentEndDate } : {}),
-    };
-    getDocumentsV2();
-    return '';
-};
+// const buildV2SearchArgs = ({
+//     searchBody,
+//     limit = 10,
+//     offset = 0,
+// }: {
+//     searchBody: SearchRequest;
+//     limit?: number;
+//     offset?: number;
+// }): string => {
+//     const args: DocumentApiRequestInputs = {
+//         source: searchBody.documentClassification?.toLowerCase() === 'inbound' ? DocumentTypeView.Policy : DocumentTypeView.Correspondence,
+//         clientCode: searchBody?.parentCarrierCode || '',
+//         ...(searchBody?.policyNumber ? { contractNumber: searchBody?.policyNumber } : {}),
+//         ...(searchBody?.zinniaLiveCaseId ? { contractNumber: searchBody?.zinniaLiveCaseId } : {}),
+//         ...(searchBody?.documentStatus ? { docStatus: searchBody?.documentStatus?.join(',') } : {}),
+//         ...(searchBody?.documentDate ? { contractNumber: searchBody?.documentDate } : {}),
+//         ...(searchBody?.documentStartDate ? { contractNumber: searchBody?.documentStartDate } : {}),
+//         ...(searchBody?.documentEndDate ? { contractNumber: searchBody?.documentEndDate } : {}),
+//     };
+//     getDocumentsV2();
+//     return '';
+// };
 
 export const searchDocuments = async () => {
     /**
