@@ -32,7 +32,8 @@ import {
     Program,
     FormDisbursement,
     AccountType,
-    FundWithdrawnMethod
+    FundWithdrawnMethod,
+    LifeCadPartyRoles
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_BANK_DETAILS,
@@ -170,7 +171,7 @@ export default function getUlpcOftConfig(t: TFunction) {
             },
         },
         {
-            label: t('amountDetails.programTypes.maximumFreeAmount'), // TODO: BE values
+            label: t('amountDetails.programTypes.maximumFreeAmount'),
             value: ProgramType.TotalFreeAmt,
             generatePayloadFromSelection: () => {
                 return {
@@ -256,33 +257,36 @@ export default function getUlpcOftConfig(t: TFunction) {
                 return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
             },
         },
-      {
-          key: `sig-val-beneficiary`,
-          fields: [
-              {
-                  component: SignatureFields.SignatureType,
-                  key: 'beneficiary-type',
-              },
-              {
-                  component: SignatureFields.SignaturePresent,
-                  key: 'beneficiary-present',
-              },
-              {
-                  component: SignatureFields.SignatureTitle,
-                  key: 'beneficiary-title',
-              },
-              {
-                  component: SignatureFields.SignatureDate,
-                  key: 'beneficiary-date',
-              },
-              {
-                  component: SignatureFields.SignGuaranteeStamp,
-                  key: 'owner-sign-guarantee-stamp',
-              },
-          ],
-          signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
-      },
-   ];
+       {
+            key: `sig-val-beneficiary`,
+            fields: [
+                {
+                    component: SignatureFields.SignatureType,
+                    key: 'beneficiary-type',
+                },
+                {
+                    component: SignatureFields.SignaturePresent,
+                    key: 'beneficiary-present',
+                },
+                {
+                    component: SignatureFields.SignatureTitle,
+                    key: 'beneficiary-title',
+                },
+                {
+                    component: SignatureFields.SignatureDate,
+                    key: 'beneficiary-date',
+                },
+                {
+                    component: SignatureFields.SignGuaranteeStamp,
+                    key: 'owner-sign-guarantee-stamp',
+                },
+            ],
+            signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
+            shouldDisplay: ({ parties }: OtpWithdrawalFormState): boolean => {
+                return !!parties?.find(party => party.Role === LifeCadPartyRoles.Beneficiary);
+            },
+        }
+    ];
 
     const identifySelectedFormProgramOption = (formProgram: FormProgram): { selectedOption: string | null; amount: string | null } => {
         const programSubType = formProgram?.programSubType?.text || '';
@@ -323,9 +327,9 @@ export default function getUlpcOftConfig(t: TFunction) {
                 {
                     fieldName: BankingFields.AccountNumber,
                     fieldLabel: t('distributionMethod.accountNumber'),
-                    classNames: 'col-start-1',
                     component: DisbursementFields.BankTextField,
                     maskOnBlur: true,
+                    classNames: 'col-start-1',
                     disableCopyPaste: true,
                 },
                 {
@@ -341,8 +345,8 @@ export default function getUlpcOftConfig(t: TFunction) {
                     fieldName: BankingFields.BankRoutingNumber,
                     fieldLabel: t('distributionMethod.bankRoutingNumber'),
                     component: DisbursementFields.BankTextField,
-                    classNames: 'col-start-1',
                     maskOnBlur: true,
+                    classNames: 'col-start-1',
                     disableCopyPaste: true,
                 },
                 {
@@ -354,10 +358,15 @@ export default function getUlpcOftConfig(t: TFunction) {
                     validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
                 },
                 {
-                    fieldName: BankingFields.BankName,
-                    fieldLabel: t('distributionMethod.bankName'),
+                    fieldName: BankingFields.AccountHolder,
+                    fieldLabel: t('distributionMethod.accountName'),
                     component: DisbursementFields.BankTextField,
                     classNames: 'col-start-1',
+                },
+                {
+                    fieldName: BankingFields.BankName,
+                    fieldLabel: t('distributionMethod.bankName'),
+                    component: DisbursementFields.BankTextField
                 },
                 {
                     fieldName: BankingFields.BankFurtherCreditName,
@@ -368,6 +377,23 @@ export default function getUlpcOftConfig(t: TFunction) {
                     fieldName: BankingFields.BankFurtherCreditAccount,
                     fieldLabel: t('distributionMethod.bankFurtherCreditAccount'),
                     component: DisbursementFields.BankTextField,
+                },
+                {
+                    fieldName: BankingFields.ContractNumber,
+                    fieldLabel: t('distributionMethod.contractNumber'),
+                    component: DisbursementFields.BankTextField,
+                    maxLength: 35,
+                    tooltip: {
+                        shouldDisplay: true,
+                        title: t('distributionMethod.contractLabelPopoverTitle') as string,
+                        body: t('distributionMethod.contractLabelPopoverMessage') as string,
+                    },
+                },
+                {
+                    fieldName: BankingFields.Address,
+                    fieldLabel: '',
+                    component: DisbursementFields.BankAddress,
+                    classNames: 'col-span-3',
                 },
             ],
             getDefaultPayload({ paymentMethod, bank, payee }: FormDisbursement) {
@@ -385,17 +411,19 @@ export default function getUlpcOftConfig(t: TFunction) {
                     bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
                     bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
                     payeeName: payee?.name?.text ?? '',
+                    contractNumber: payee?.contractNumber.text ?? '',
+                    address: payee?.addresses?.[0] ?? DEFAULT_ADDRESS,
                 };
             },
             generatePayloadFromSelection: ({
+                payeeName,
                 accountNumber,
                 accountType,
                 bankName,
-                accountHolder,
+                bankRoutingNumber,
                 bankFurtherCreditAccount,
                 bankFurtherCreditName,
-                bankRoutingNumber,
-                payeeName,
+                accountHolder,
                 reEnterAccountNumber,
                 reEnterBankRoutingNumber,
                 contractNumber,
@@ -403,7 +431,7 @@ export default function getUlpcOftConfig(t: TFunction) {
             }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
-                    paymentMethod: { text: PaymentMethod.EFT },
+                    paymentMethod: { text: PaymentMethod.Wire },
                     paymentMailType: { text: null },
                     bank: [
                         {
