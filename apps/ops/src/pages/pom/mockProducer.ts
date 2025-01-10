@@ -1,6 +1,6 @@
 import { GetProducerResponse, ProducerType, PhoneType } from './types';
 
-export function getMockAgency(): { data: GetProducerResponse } {
+export function fetchProducer(): { data: GetProducerResponse } {
     return {
         data: {
             producerType: ProducerType.Corporation,

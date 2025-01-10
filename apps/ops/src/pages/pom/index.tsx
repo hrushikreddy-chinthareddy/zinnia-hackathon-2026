@@ -4,22 +4,24 @@ import NoNavLayout from '@deps/components/no-nav-layout';
 import { PageHead } from '@deps/components/page-title';
 import usePomExperience from '@deps/hooks/usePomExperience';
 
-import styles from './index.module.css';
-import { Divider, Icon, IconType, TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
+import { default as styles } from './index.module.css';
+import { Divider, IconType, TabContent, TabGroup, TabList } from '@zinnia/bloom/components';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
-import { useState } from 'react';
-import { GetProducerResponse } from './types';
-import { getMockAgency } from './mockAgency';
-import { CardHeader, ContactInfo, Identification } from './components';
+import { CardHeader, ContactInfo, Identification, ProducerContext, TabTitle } from './components';
+import { fetchProducer } from './mockProducer';
 
 function POM() {
-    // const { t } = useTranslation(TranslationFiles.COMMON);
+    // --- feature flag check ------
+    // @TODO: this should probably be its own checkFeatureFlag(POM_EXPERIENCE_FEATURE_FLAG) hook
     const isPomExperienceFeatureFlagEnabled = usePomExperience();
-    const [agency, setAgency] = useState<GetProducerResponse>(getMockAgency().data);
 
     if (!isPomExperienceFeatureFlagEnabled) {
         return null;
     }
+    // ----------------------------
+
+    // @TODO: change this once we integrate with backend
+    const producer = fetchProducer().data;
 
     const tabs = [
         { label: 'Entity Information', icon: IconType.DOCUMENT_TEXT, value: 'personalInfo', content: <PersonalInfo /> },
@@ -29,11 +31,11 @@ function POM() {
     ];
 
     return (
-        <>
+        <ProducerContext.Provider value={producer}>
             <PageHead titleKey="pom" />
             <NoNavLayout displayTopNavBar>
                 <div className={clsx(styles.cardContainer)}>
-                    <CardHeader />
+                    <CardHeader producerType={producer.producerType} />
                     <TabGroup defaultValue={tabs[0].value} className={clsx(styles.tabs)}>
                         <TabList className={clsx(styles.tabList)}>
                             {tabs.map(({ label, icon, value }) => (
@@ -46,7 +48,7 @@ function POM() {
                     </TabGroup>
                 </div>
             </NoNavLayout>
-        </>
+        </ProducerContext.Provider>
     );
 }
 
@@ -57,15 +59,6 @@ const PersonalInfo = () => {
             <Divider direction="horizontal" />
             <ContactInfo />
         </div>
-    );
-};
-
-const TabTitle = ({ value, icon, label }: { value: string; icon: IconType; label: string }) => {
-    return (
-        <TabTrigger value={value}>
-            <Icon type={icon} />
-            {label}
-        </TabTrigger>
     );
 };
 
