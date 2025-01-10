@@ -1,7 +1,8 @@
-import { ICellRendererParams } from 'ag-grid-community';
 
 import Popover, { PopoverPlacement } from '@deps/components/popover/popover';
 import { ReactComponent as VerticalDots } from '@deps/styles/elements/icons/icons_outlined/dots-vertical.svg';
+
+import { TaskTableRow } from './task-listing.types';
 
 export interface actionLabelsParams {
     edit: string;
@@ -9,18 +10,24 @@ export interface actionLabelsParams {
     duplicateTaskContent: string;
 }
 
-export interface ActionCellRendererParams extends ICellRendererParams {
-    actionLabels?: actionLabelsParams;
+export interface ActionCellRendererParams {
+    actionLabels: actionLabelsParams;
     actionMenu: string;
     isEditable: (status: string) => boolean;
     isReadOnly: (status: string) => boolean;
 }
 
-const getBody = (params: ActionCellRendererParams) => {
-    const { status, taskInfoLink } = params.data;
+export interface ActionCellParams {
+    data: TaskTableRow;
+    actionParams: ActionCellRendererParams;
+}
+export const  getTaskActions = (params: ActionCellParams) => {
+    const { data, actionParams } = params;
+    const { status, taskInfoLink } = data || {};
     const actions = [];
-    const { isEditable, isReadOnly } = params;
-    const actionLabels = params.actionLabels || null;
+
+    const { actionLabels, isEditable, isReadOnly } = actionParams || {};
+
     if (isReadOnly(status)) {
         /*
         const duplicateAction = {
@@ -54,9 +61,10 @@ const getBody = (params: ActionCellRendererParams) => {
     ));
 };
 
-const ActionCellRenderer = (params: ActionCellRendererParams) => {
+
+const ActionCellRenderer = (params: ActionCellParams) => {
     return (
-        <Popover triggerClassName="mb-4" title={params.actionMenu} body={getBody(params)} placement={PopoverPlacement.BottomLeft}>
+        <Popover title={params?.actionParams?.actionMenu} body={getTaskActions(params)} placement={PopoverPlacement.BottomLeft}>
             <span className="block p-[5px]">
                 <VerticalDots height={'25px'} width={'25px'} className="text-primary" />
             </span>

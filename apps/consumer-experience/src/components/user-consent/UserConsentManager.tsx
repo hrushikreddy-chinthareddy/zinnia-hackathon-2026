@@ -84,6 +84,8 @@ export const UserConsentManager = ({
               <a
                 href="https://zinnia.com/terms-of-use/"
                 className="typography-content-body-bold"
+                target="_blank"
+                rel="noreferrer"
               >
                 Terms of Use
               </a>{' '}
@@ -91,6 +93,8 @@ export const UserConsentManager = ({
               <a
                 href="https://zinnia.com/privacy-policy/"
                 className="typography-content-body-bold"
+                target="_blank"
+                rel="noreferrer"
               >
                 Privacy Policy
               </a>

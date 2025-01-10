@@ -37,7 +37,6 @@ export const getCaseDashboardStatsQuery = async (baseFilter: DashboardSearchFilt
         filter: baseFilter,
         groupBy,
     });
-
     if (!statsResponse || 'status' in statsResponse) {
         throw statsResponse;
     }
@@ -55,10 +54,9 @@ export const getCaseDashboardStatsQuery = async (baseFilter: DashboardSearchFilt
  **************************
  */
 
-export const getProcessListOptions = async (createdDateStart: string) => {
+export const getProcessListOptions = async () => {
     const baseDashboardQueryFilter: DashboardSearchFilter = {
         caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
-        createdDateStart,
     };
     const query: CaseDashboardStatsQuery = {
         filter: baseDashboardQueryFilter,
@@ -89,12 +87,10 @@ export const getStatsFromSelectionQuery = async (
     baseFilter: DashboardSearchFilter | undefined,
     l1SelectValue: GroupByOptions,
     l2SelectValue: GroupByOptions,
-    l3SelectValue: GroupByOptions,
-    createdDateStart: string
+    l3SelectValue: GroupByOptions
 ) => {
     const filter: DashboardSearchFilter = Object.assign({}, baseFilter, {
         caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
-        createdDateStart,
     });
 
     const query: CaseDashboardStatsQuery = {
