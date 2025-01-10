@@ -286,7 +286,7 @@ export const getStartAndEndDates = (timeframe: AgingTimeRangesKeysExtended) => {
         case 'All':
         default:
             return {
-                createdDateStart: formatDateToApi(dateToString(new Date(new Date().getFullYear(), 0, 1)), true),
+                createdDateStart: formatDateToApi(dateToString(new Date(new Date().getFullYear())), true),
                 createdDateEnd: formatDateToApi(dateToString(new Date()), false),
             };
     }
