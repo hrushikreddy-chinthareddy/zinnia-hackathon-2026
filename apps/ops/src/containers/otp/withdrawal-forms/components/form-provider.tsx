@@ -81,6 +81,7 @@ export const FormProvider = ({
             : []
     );
     const [formOL4753Data, setFormOL4753Data] = useState(form.data.formRequest.formOL4753Data || null);
+    const [formBeneInfo, setFormBeneInfo] = useState(form.data.formRequest?.formBeneInfo || null);
     const [formLoan, setFormLoan] = useState(form.data.formRequest.formLoan);
     const [formParty, setFormParty] = useState(form.data.formRequest.formParty);
     const [formProgram, setFormProgram] = useState(form.data.formRequest.formProgram);
@@ -176,6 +177,8 @@ export const FormProvider = ({
                 formNigos,
                 formComment,
                 formReindexingData,
+                formBeneInfo,
+                setFormBeneInfo,
                 setFormSubtype,
                 setCurrentFormState,
                 setFormWarnings,

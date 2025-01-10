@@ -16,6 +16,7 @@ import {
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
+import { stringifyTrueFalseNull } from '@deps/helpers/string.helper';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
     FormValidationErrors,
@@ -426,6 +427,11 @@ export default function getGlcoRmdConfig(t: TFunction) {
         { label: t('distributionInstruction.prorata'), value: FundWithdrawnMethod.Prorata },
         { label: t('distributionInstruction.specifyFunds'), value: FundWithdrawnMethod.SpecifyFunds },
     ];
+
+    const isBeneSpouseOption = [
+        { label: t('beneficiaryInfo.isBeneficiarySpouse.yes'), value: stringifyTrueFalseNull(true) },
+        { label: t('beneficiaryInfo.isBeneficiarySpouse.no'), value: stringifyTrueFalseNull(false) },
+    ];
     const w4pSignaturesConfig = [
         {
             component: SignatureFields.SignaturePresent,
@@ -451,5 +457,6 @@ export default function getGlcoRmdConfig(t: TFunction) {
         w4pSignaturesConfig,
         disbursementOptions,
         jointLifeExpectancyConfigs,
+        isBeneSpouseOption,
     };
 }

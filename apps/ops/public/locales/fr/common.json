@@ -2080,7 +2080,17 @@
                 "OFTFormInputTask": "Bonne nouvelle! Nous avons lancé une tâche de transfert de fonds sortants pour{{documentNumber}} et {{contractNumber}}",
                 "SSWFormInputTask": "Bonne nouvelle! Nous avons lancé une tâche de retrait systématique pour {{documentNumber}} et {{contractNumber}}"
             },
-            "openNigoExists": "Un cas de base comprend un NIGO. Veuillez résoudre le problème ouvert NIGO avant de soumettre une autre demande via le portail numérique."
+            "openNigoExists": "Un cas de base comprend un NIGO. Veuillez résoudre le problème ouvert NIGO avant de soumettre une autre demande via le portail numérique.",
+            "beneficiaryInfo": {
+                "title": "Informations sur le bénéficiaire",
+                "isBeneficiarySpouse": {
+                    "title": "Votre bénéficiaire est-il votre conjoint?",
+                    "yes": "Oui",
+                    "no": "Non"
+                },
+                "dob": "Date de naissance",
+                "isYourSpouseYoungerThanYou": "Votre conjoint a-t-il 10 ans de moins que vous?"
+            }
         },
         "sidebar": {
             "contractStatusCode": "Statut de la politique",

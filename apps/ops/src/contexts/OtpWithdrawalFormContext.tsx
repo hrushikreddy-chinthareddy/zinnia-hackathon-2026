@@ -1,5 +1,6 @@
 import { createContext } from 'react';
 
+import { FormBeneInfo } from '@deps/components/beneficiary-information/beneficiary-info';
 import { FormSubtype } from '@deps/containers/otp/withdrawal-forms/flic-withdrawal-form.helper';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { TaskStatus } from '@deps/models/case/task-instance';
@@ -67,6 +68,8 @@ export interface OtpWithdrawalFormState {
     featureFlagDecisions?: FeatureFlags;
     ownerAcknowledgement?: OwnerAcknowledgement;
     formComment?: FormComment;
+    formBeneInfo: FormBeneInfo | null;
+    setFormBeneInfo: React.Dispatch<React.SetStateAction<any>>;
     setCurrentFormState: React.Dispatch<React.SetStateAction<WithdrawalTaskStatus>>;
     setFormSubtype?: React.Dispatch<React.SetStateAction<FormSubtype>>;
     setFormData: React.Dispatch<React.SetStateAction<FormData>>;
@@ -98,7 +101,7 @@ export interface OtpWithdrawalFormState {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
-const noop = (() => { }) as React.Dispatch<React.SetStateAction<any>>;
+const noop = (() => {}) as React.Dispatch<React.SetStateAction<any>>;
 
 export const defaultFormDataContext = {
     formData: {} as FormData,
@@ -132,6 +135,8 @@ export const defaultFormDataContext = {
     contractIssueState: '',
     parties: [],
     currentFormState: CaseStatus.Draft,
+    formBeneInfo: {},
+    setFormBeneInfo: noop,
     isFormStateReadOnly: false,
     setCurrentFormState: noop,
     setFormAdditionalWaivers: noop,

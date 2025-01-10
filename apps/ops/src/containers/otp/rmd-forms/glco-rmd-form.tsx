@@ -28,6 +28,7 @@ export default function GlcoRmdWithdrawalForm() {
         formValidation,
         w4pSignaturesConfig,
         disbursementOptions,
+        isBeneSpouseOption,
     } = getGlcoRmdConfig(t);
 
     const {
@@ -36,6 +37,8 @@ export default function GlcoRmdWithdrawalForm() {
         formData,
         initialForm,
         setFormValidator,
+        formBeneInfo,
+        setFormBeneInfo,
         ownerStateOfResidence,
         setOwnerStateOfResidence,
         contractIssueState,
@@ -70,7 +73,12 @@ export default function GlcoRmdWithdrawalForm() {
             {!isFormStateReadOnly && <DiaryNotesWarning />}
             <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
             <RMDMethod isFormStateReadOnly={isFormStateReadOnly} />
-            <BeneficiaryInfo />
+            <BeneficiaryInfo
+                isFormStateReadOnly={isFormStateReadOnly}
+                beneInfo={formBeneInfo}
+                onBeneChange={setFormBeneInfo}
+                isBeneSpouseOption={isBeneSpouseOption}
+            />
 
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
             <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} />
