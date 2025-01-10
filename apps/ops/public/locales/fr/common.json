@@ -574,7 +574,15 @@
                 "annuitantWithJoint": "Co-rentier",
                 "annuitant": "Rentière",
                 "payee": "Bénéficiaire",
-                "jointAnnuitant": "Co-rentier"
+                "jointAnnuitant": "Co-rentier",
+                "primaryBeneficiary": "Bénéficiaire principal",
+                "payor": "Payeur",
+                "agent": "Agent",
+                "primaryWritingAgent": "Agent d'écriture principal",
+                "primaryServicingAgent": "Agent de service principal",
+                "thirdPartyDesignee": "Représentant tiers",
+                "e-delivery": "Livraison électronique",
+                "contingentBenefeciary": "Bénéficiaire subsidiaire"
             }
         },
         "tabs": {
@@ -2131,6 +2139,10 @@
             "addAdditionalRecipient": "+ Ajouter un destinataire",
             "emailTooltip": "Veuillez entrer une adresse e-mail valide. Un seul e-mail est autorisé dans ce champ.",
             "additionalRecipientTooltip": "Vous pouvez ajouter jusqu'a 5 adresses e-mail dans le champ CC. Utilisez une virgule (,), point-virgule (;) ou Enter pour les séparer",
+            "emailMessage": "Saisissez les adresses e-mail séparées par des virgules ou des points-virgules avec un maximum de 5.",
+            "emailWarning": "Vous pouvez ajouter jusqu'à 5 destinataires supplémentaires",
+            "emailLabel": "Sélectionnez les e-mails enregistrés",
+            "noEmails": "Aucun enregistrement trouvé",
             "email": "E-mail",
             "ccEmail": "Destinataires en copie carbone",
             "fax": "Fax",
@@ -2167,8 +2179,9 @@
             "lastName": "Le nom de famille est obligatoire",
             "address": "Vérifiez et sélectionnez l'adresse pour continuer.",
             "maxEmails": "Maximum 5 e-mails autorisés",
-            "duplicateEmailInCC": "L'e-mail existe deja dans la liste",
-            "duplicateEmail": "Assurez-vous que l'adresse e-mail est unique entre les champs Destinataire et CC"
+            "duplicateRecipientEmail": "L'e-mail existe deja dans la liste",
+            "duplicateEmail": "Assurez-vous que l'adresse e-mail est unique entre les champs Destinataire et CC",
+            "emailRequired": "L'e-mail est requis"
         }
     },
     "contactCenter": {
