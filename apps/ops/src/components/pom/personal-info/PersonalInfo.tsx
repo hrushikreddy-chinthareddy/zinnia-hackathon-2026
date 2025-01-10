@@ -1,6 +1,6 @@
 import { Divider } from '@zinnia/bloom/components';
-import { ContactInfo } from '../contact-info/ContactInfo';
 import { Identification } from '../identification/Identification';
+import { ContactInfo } from '../contact-info/ContactInfo';
 
 export const PersonalInfo = () => {
     return (

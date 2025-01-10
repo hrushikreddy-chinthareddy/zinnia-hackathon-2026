@@ -2,19 +2,11 @@ import { clsx } from 'clsx';
 import { Icon, IconType } from '@zinnia/bloom/components';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { default as styles } from './CardHeader.module.css';
-import { ProducerType } from '../../types';
 
-export interface CardHeaderProps {
-    producerType: ProducerType;
-}
-
-export const CardHeader = ({ producerType }: CardHeaderProps) => {
-    // @TODO: change corporation icon to building office
-    const iconType = producerType === ProducerType.Individual ? IconType.USER : IconType.DOCUMENT_TEXT;
-
+export const CardHeader = () => {
     return (
         <div className={clsx(styles.cardHeader)}>
-            <Icon type={iconType} className={clsx(styles.icon)} />
+            <Icon type={IconType.DOCUMENT_TEXT} className={clsx(styles.icon)} />
             <div>
                 <Typography variant={TypographyVariant.H1} className={clsx(styles.header)}>
                     Acme Corporation

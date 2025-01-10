@@ -7,8 +7,8 @@ import usePomExperience from '@deps/hooks/usePomExperience';
 import { default as styles } from './index.module.css';
 import { Divider, IconType, TabContent, TabGroup, TabList } from '@zinnia/bloom/components';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
-import { CardHeader, ContactInfo, Identification, ProducerContext, TabTitle } from './components';
-import { fetchProducer } from './mockProducer';
+import { CardHeader, ContactInfo, Identification, ProducerContext, TabTitle } from '@deps/components/pom';
+import { fetchProducer } from '@deps/types/pom/mockProducer';
 
 function POM() {
     // --- feature flag check ------
@@ -35,7 +35,7 @@ function POM() {
             <PageHead titleKey="pom" />
             <NoNavLayout displayTopNavBar>
                 <div className={clsx(styles.cardContainer)}>
-                    <CardHeader producerType={producer.producerType} />
+                    <CardHeader />
                     <TabGroup defaultValue={tabs[0].value} className={clsx(styles.tabs)}>
                         <TabList className={clsx(styles.tabList)}>
                             {tabs.map(({ label, icon, value }) => (
