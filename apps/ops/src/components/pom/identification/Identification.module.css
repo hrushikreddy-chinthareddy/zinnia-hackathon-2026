@@ -1,10 +1,8 @@
 .cardSubSection {
-    padding-top: var(--measure-dimension-padding-4xl);
-    padding-bottom: var(--measure-dimension-padding-4xl);
-}
-
-.cardSubSectionHeader {
-    margin-bottom: var(--measure-dimension-gap-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--measure-dimension-gap-lg);
+    padding: var(--measure-dimension-padding-4xl);
 }
 
 .cardSubSectionContent {

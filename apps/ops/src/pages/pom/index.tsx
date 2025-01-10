@@ -32,7 +32,7 @@ function POM() {
             <NoNavLayout displayTopNavBar>
                 <div className={clsx(styles.cardContainer)}>
                     <CardHeader />
-                    <TabGroup defaultValue={tabs[0].value} className={clsx(styles.tabs)}>
+                    <TabGroup defaultValue={tabs[0].value}>
                         <TabList className={clsx(styles.tabList)}>
                             {tabs.map(({ label, icon, value }) => (
                                 <TabTitle value={value} icon={icon} label={label} />
