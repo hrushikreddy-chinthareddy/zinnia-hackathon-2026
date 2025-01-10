@@ -7,8 +7,7 @@ import usePomExperience from '@deps/hooks/usePomExperience';
 import { default as styles } from './index.module.css';
 import { Divider, IconType, TabContent, TabGroup, TabList } from '@zinnia/bloom/components';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
-import { CardHeader, ContactInfo, Identification, ProducerContext, TabTitle } from '@deps/components/pom';
-import { fetchProducer } from '@deps/types/pom/mockProducer';
+import { CardHeader, ContactInfo, Identification, TabTitle } from '@deps/components/pom';
 
 function POM() {
     // --- feature flag check ------
@@ -20,9 +19,6 @@ function POM() {
     }
     // ----------------------------
 
-    // @TODO: change this once we integrate with backend
-    const producer = fetchProducer().data;
-
     const tabs = [
         { label: 'Entity Information', icon: IconType.DOCUMENT_TEXT, value: 'personalInfo', content: <PersonalInfo /> },
         { label: 'Licenses and Appointments', icon: IconType.DOCUMENT_TEXT, value: 'licenses', content: <div>Section 2</div> },
@@ -31,7 +27,7 @@ function POM() {
     ];
 
     return (
-        <ProducerContext.Provider value={producer}>
+        <>
             <PageHead titleKey="pom" />
             <NoNavLayout displayTopNavBar>
                 <div className={clsx(styles.cardContainer)}>
@@ -48,7 +44,7 @@ function POM() {
                     </TabGroup>
                 </div>
             </NoNavLayout>
-        </ProducerContext.Provider>
+        </>
     );
 }
 
