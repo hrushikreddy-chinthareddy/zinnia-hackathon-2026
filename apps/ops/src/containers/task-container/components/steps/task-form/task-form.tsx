@@ -17,7 +17,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     forwardedRef: ForwardedRef<Form>
 ) {
     const formState = useContext(TaskDataContext);
-    const { task, setTask, taskMetadata, setSubmitFailed, correlationId } = formState;
+    const { task, setTask, taskMetadata, setSubmitFailed, correlationId, setTaskMetadata } = formState;
 
     const handleSubmit = useCallback(async () => {
         if (isSubmit) {
@@ -29,12 +29,32 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
 
     const handleChange = useCallback(
         (event: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
+            const updatedTaskMetaData = { ...taskMetadata };
+
+            if (
+                event.formData?.potentialMatches != 'Enter a case ID' &&
+                event.formData?.potentialMatches != 'Document cannot be matched to a case'
+            ) {
+                if (updatedTaskMetaData.formSchema.properties) {
+                    updatedTaskMetaData.formSchema.properties['isDuplicate'] = {
+                        type: 'string',
+                        title: 'Is this document a duplicate?',
+                        enum: ['Yes', 'No'],
+                    };
+                }
+            } else {
+                if (updatedTaskMetaData.formSchema.properties) {
+                    delete updatedTaskMetaData.formSchema.properties.isDuplicate;
+                }
+            }
+            setTaskMetadata(updatedTaskMetaData);
+
             setTask({
                 ...task,
                 data: event.formData,
             });
-            console.log('🚀 ~ event.formData:', event.formData);
         },
+
         [setTask, task]
     );
 

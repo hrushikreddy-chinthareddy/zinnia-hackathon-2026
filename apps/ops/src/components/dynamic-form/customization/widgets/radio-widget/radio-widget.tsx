@@ -53,6 +53,7 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
               label: option.label,
               ariaLabel: option.label,
               value: option.value,
+              subElement: '<span>Hello</span>',
           }))
         : [];
 

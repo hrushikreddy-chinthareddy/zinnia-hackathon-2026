@@ -24,6 +24,7 @@ export type TaskState = {
     setTransactionSubType: React.Dispatch<React.SetStateAction<CallCenterElement<string, SimpleOption>>>;
     setFormErrors: React.Dispatch<React.SetStateAction<FormValidationErrors>>;
     setSubmitFailed: React.Dispatch<React.SetStateAction<boolean>>;
+    setTaskMetadata: React.Dispatch<React.SetStateAction<FormMetadata>>;
 };
 
 const noop = (() => {}) as React.Dispatch<React.SetStateAction<any>>;
@@ -46,6 +47,7 @@ export const taskDefaultValues = {
     setTransactionSubType: noop,
     setFormErrors: noop,
     setSubmitFailed: noop,
+    setTaskMetadata: noop,
 };
 
 export const TaskDataContext = createContext<TaskState>(taskDefaultValues);

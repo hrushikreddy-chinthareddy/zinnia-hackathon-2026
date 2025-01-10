@@ -28,11 +28,12 @@ export const TaskProvider = ({ children, initialTask, taskMetadata, correlationI
     );
     const [formErrors, setFormErrors] = useState<FormValidationErrors>({});
     const [submitFailed, setSubmitFailed] = useState(false);
+    const [metaData, setMetaData] = useState(taskMetadata);
 
     return (
         <TaskDataContext.Provider
             value={{
-                taskMetadata,
+                taskMetadata: metaData,
                 task,
                 correlationId,
                 isReadyForDataEntry,
@@ -50,6 +51,7 @@ export const TaskProvider = ({ children, initialTask, taskMetadata, correlationI
                 setTransactionSubType,
                 setFormErrors,
                 setSubmitFailed,
+                setTaskMetadata: setMetaData,
             }}
         >
             {children}

@@ -105,7 +105,7 @@ export const getServerSideProps = withPageAuthRequired({
                             firstName: '',
                             lastName: '',
                             payorName: 'New Finance Group',
-                            dob: 'Date of birth',
+                            taxId: 'ssn123456',
                             type: 'payment',
                         },
                         documents: [
@@ -221,7 +221,7 @@ export const getServerSideProps = withPageAuthRequired({
                             title: 'Processing Instructions',
                             // todo:vijaya: fix description
                             // description:
-                            //     "This customer's application was flagged for review. Accept or Decline each issue before submitting a final decision.",
+                            //    "This customer's application was flagged for review. Accept or Decline each issue before submitting a final decision.",
                         },
                         details: {
                             type: 'object',
@@ -291,11 +291,11 @@ export const getServerSideProps = withPageAuthRequired({
                             title: 'Can you find a matching case for this document?',
                             $ref: '#/definitions/potentialMatchesEnum',
                         },
-                        // testing: {
-                        //     type: 'string',
-                        //     title: 'Dynamic Testing',
-                        //     enums: ['yes', 'no'],
-                        // },
+                        isDuplicate: {
+                            type: 'null',
+                            title: 'Is this document a duplicate?',
+                            enum: ['Yes', 'No'],
+                        },
                     },
                     allOf: [
                         {
@@ -412,9 +412,9 @@ export const getServerSideProps = withPageAuthRequired({
                     // testing: {
                     //     'ui:options': {
                     //         label: false,
-                    //         // disabled: (task: any) =>
-                    //         //     task.data.potentialMatches !== 'Enter a case ID' ||
-                    //         //     task.data.potentialMatches != 'Document cannot be matched to a case',
+                    // disabled: (task: any) =>
+                    //     task.data.potentialMatches !== 'Enter a case ID' ||
+                    //     task.data.potentialMatches != 'Document cannot be matched to a case',
                     //     },
                     // },
                     caseId: {
@@ -424,6 +424,9 @@ export const getServerSideProps = withPageAuthRequired({
                     },
                     canceled: {
                         widget: 'radio',
+                    },
+                    isDuplicate: {
+                        'ui:widget': 'radio',
                     },
                 },
             };

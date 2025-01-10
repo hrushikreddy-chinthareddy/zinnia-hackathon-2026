@@ -12,7 +12,7 @@ export function PartyCardTemplate(props: ObjectFieldTemplateProps) {
 
     const handleDocumentClick = (element: any) => {
         const content = <DetailsCard details={element} />;
-        sideSheet.changeSideSheetContent(element.title, content);
+        sideSheet.changeSideSheetContent(element.payorName, content);
         sideSheet.handleOpen(true);
     };
 
@@ -24,10 +24,10 @@ export function PartyCardTemplate(props: ObjectFieldTemplateProps) {
                 </div>
                 <div className="grow">
                     <div className="text-sm font-bold">
-                        <PiiWrapper>{formData.title}</PiiWrapper>
+                        <PiiWrapper>{formData.payorName}</PiiWrapper>
                     </div>
                     <div className="flex items-center text-sm font-normal text-gray-300">
-                        <PiiWrapper>{formData.subTitle}</PiiWrapper>
+                        <PiiWrapper>{formData.taxId}</PiiWrapper>
                     </div>
                 </div>
                 <div>
