@@ -10,53 +10,21 @@ import {
   putUpdateAddress,
   putEndDateAddress,
 } from '@/actions/bpm/address-actions';
+import { ActionTypes, PropertyKeys, useBpmStore } from '@/store/store';
 import { FormSteps } from '@/types/transactions';
+import { zipCodeInParts } from '@/utils/address';
 
 import styles from './AddEditAddressSidesheet.module.css';
+import { formatAddressLines, generateChanges } from './utils';
 import { Error } from '../transaction-steps/error/Error';
 import { Loading } from '../transaction-steps/loading/Loading';
 import { Success } from '../transaction-steps/success/Success';
 import {
   AddEditAddress,
   AddressFormFields,
-  AddressObj,
 } from './form-steps/add/AddEditAddress';
 import { AddEditAddressSidesheetProps, FormActionType } from './types';
 import { Confirm } from '../transaction-steps/confirm/Confirm';
-
-const zipCodeInParts = (postalCode?: string) => {
-  if (!postalCode) {
-    return {};
-  }
-
-  // This is extra extra precaution. The input field should prevent spaces.
-  const trimmedPostalCode = postalCode.trim();
-
-  return {
-    zipCode: trimmedPostalCode.split('-')[0],
-    extension: trimmedPostalCode.split('-')[1],
-  };
-};
-
-const formatAddressLines = (
-  addressLines?: AddressObj[]
-): Record<string, string> => {
-  if (!addressLines) {
-    return {};
-  }
-
-  const formattedAddressLines: Record<string, string> = {};
-
-  addressLines.forEach((line, index) => {
-    if (!line?.addressVal) {
-      return;
-    }
-
-    formattedAddressLines[`addressLine${index + 1}`] = line.addressVal;
-  });
-
-  return formattedAddressLines;
-};
 
 export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
   values,
@@ -65,8 +33,7 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
   addressId,
   fullAddressData,
 }) => {
-  //TODO: decide if we want to do this still
-  // const updateBpmAction = useBpmStore(state => state.updateBpmAction);
+  const updateBpmAction = useBpmStore(state => state.updateBpmAction);
   const params = useParams<{
     planCode: string;
     policyNumber: string;
@@ -116,34 +83,37 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
       setSuccessMessage(data.messages.message);
       setStep(FormSteps.SUCCESS);
 
-      //TODO: decide if we want to do this still
-      // updateBpmAction({
-      //   actionType: ActionTypes.REMOVE,
-      //   bankAccountNumber: values?.accountNumber,
-      // });
+      updateBpmAction({
+        actionType: ActionTypes.REMOVE,
+        propertyKey: PropertyKeys.ADDRESSES,
+        itemKey: 'addressId',
+        itemValue: addressId,
+      });
       return;
     }
   };
 
-  const handleAddEdit = async (requestValues: AddressFormFields) => {
+  const handleAddEdit = async (
+    requestValues: AddressFormFields,
+    dirtyFields: AddressFormFields
+  ) => {
     setStep(FormSteps.LOADING);
 
     const formattedAddressLines = formatAddressLines(requestValues.addresses);
-
+    const zipCodeParts = zipCodeInParts(requestValues?.zipCode);
     const addressChangeRequest = {
       preferredAddressIndicator: requestValues.defaultAddress
         ? AddressChange.preferredAddressIndicator.YES
         : AddressChange.preferredAddressIndicator.NO,
       address: {
         ...formattedAddressLines,
-        ...zipCodeInParts,
+        ...zipCodeParts,
         // TODO: i think these are for seasonal address setting which isn't available
         // yet so leaving null
         // startDate: '4186-48-30',
         // endDate: '0669-10-40',
         addressType: requestValues.addressType,
         city: requestValues.city,
-        // TODO: should we make the dropdown use the addressChange state values?
         state: requestValues.state,
         country: AddressChange.country.US,
       },
@@ -185,17 +155,29 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
       setSuccessMessage(data.messages.message);
       setStep(FormSteps.SUCCESS);
 
-      // I'm a little confused by this. Is this only really used for polling?
-      // shouldn't this already be set previously? or is this just actionType
-      // relavant to polling and not to the sidesheet display? if that's the case
-      // i think we should rename this to activeAction or something? or maybe
-      // present participle like "ADDING"? If we want polling with addresses,
-      // will also need to update to make the accountNumber generic somehow. like "item id"?
-      // updateBpmAction({
-      //   actionType: ActionTypes.ADD,
-      // });
-      return;
+      if (actionType === FormActionType.EDIT) {
+        const changes = generateChanges(dirtyFields);
+
+        updateBpmAction({
+          actionType: ActionTypes.EDIT,
+          propertyKey: PropertyKeys.ADDRESSES,
+          itemKey: changes[0]?.fieldName || '',
+          itemValue: changes[0]?.value || '',
+          changes,
+        });
+      } else {
+        updateBpmAction({
+          actionType: ActionTypes.ADD,
+          propertyKey: PropertyKeys.ADDRESSES,
+          itemKey: 'addressLine1',
+          itemValue: values?.addresses?.[0]?.addressVal || '',
+        });
+      }
     }
+  };
+
+  const errorCloseCallback = () => {
+    setStep(undefined);
   };
 
   const onClose = () => {
@@ -258,7 +240,7 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
           errorTitle={errorTitle}
           isServerError={isServerError}
           errorMessage={errorMessage}
-          closeCallback={onClose}
+          closeCallback={errorCloseCallback}
         />
       )}
       {step === FormSteps.SUCCESS && (

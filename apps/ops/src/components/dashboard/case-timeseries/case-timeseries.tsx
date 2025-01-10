@@ -197,13 +197,20 @@ export const CaseTimeseries = ({
                                 caseTimeseriesDataLoading || !caseTimeseriesData || !processedData,
                         })}
                     >
-                        {caseTimeseriesDataLoading || !processedData ? (
+                        {caseTimeseriesDataLoading ? (
                             <>
                                 <div className="grid gap-4 h-full mb-4 w-full min-w-full place-content-center bg-[--color-base-surface-surface-tertiary]">
                                     <PageLoader />
                                 </div>
                                 <Typography variant={TypographyVariant.BodyBold}>Loading...</Typography>
                             </>
+                        ) : !processedData ? (
+                            <div className="flex flex-col gap-2 items-center">
+                                <ChartBarsIcon height={'24px'} width={'24px'} />
+                                <Typography variant={TypographyVariant.BodyBold}>
+                                    No matching cases for {title} in the {timeframe}
+                                </Typography>
+                            </div>
                         ) : (
                             <>
                                 {caseTimeseriesData ? (

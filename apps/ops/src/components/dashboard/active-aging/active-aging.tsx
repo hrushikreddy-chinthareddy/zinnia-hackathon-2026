@@ -6,7 +6,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { getStartAndEndDates } from '@deps/containers/case-redesign-sub-page/case-helpers';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
@@ -77,10 +76,7 @@ const ActiveAging = ({
     });
     const [subProcessToColorMap, setSubProcessToColorMap] = useState<{ [key: string]: string }>({});
     const [activeAgingPieChartDataToColorMap, setActiveAgingPieChartDataToColorMap] = useState<{ [key: string]: string }>({});
-    const [startAndEndDates, setStartAndEndDates] = useState<{
-        createdDateStart: string;
-        createdDateEnd: string;
-    }>(getStartAndEndDates('All'));
+
     const shouldShowCaseInsights = useCaseInsightsPermission();
 
     const getAgingTimeRangeFromDate = useCallback((createdDate: Date) => {
@@ -388,10 +384,6 @@ const ActiveAging = ({
         setProductNameMap(productNameMapLocal);
     }, [getAgingTimeRangeFromDate, activeAgingPieChartByCreated?.data]);
 
-    useEffect(() => {
-        setStartAndEndDates(getStartAndEndDates(selectedAgingRange));
-    }, [selectedAgingRange]);
-
     const renderAISummary = () => {
         if (!shouldShowCaseInsights) {
             return null;
@@ -434,8 +426,7 @@ const ActiveAging = ({
                                                 href={`/cases${convertToQueryString({
                                                     requestSubType: stat.name,
                                                     process: selectedProcess,
-                                                    createdDateStart: startAndEndDates.createdDateStart,
-                                                    createdDateEnd: startAndEndDates.createdDateEnd,
+
                                                     carrier: carriers?.length ? carriers : '',
                                                 })}`}
                                                 title={toTitleCase(stat.name)}
@@ -476,8 +467,7 @@ const ActiveAging = ({
                                                 href={`/cases${convertToQueryString({
                                                     productName: productNameMap[stat.name] || stat.name,
                                                     process: selectedProcess,
-                                                    createdDateStart: startAndEndDates.createdDateStart,
-                                                    createdDateEnd: startAndEndDates.createdDateEnd,
+
                                                     carrier: carriers?.length ? carriers : '',
                                                 })}`}
                                                 title={toTitleCase(stat.name)}

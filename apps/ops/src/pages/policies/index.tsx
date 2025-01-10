@@ -1,4 +1,7 @@
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { BannerAlert, BannerVariant } from '@zinnia/bloom/components';
+import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
 import { GetServerSidePropsContext } from 'next';
 import router from 'next/router';
 import { TFunction, useTranslation } from 'next-i18next';
@@ -223,11 +226,33 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
         }
     }, [loadSearchResults, policySearchFilters.searchValue, fetchPolicies]);
 
+    dayjs.extend(isBetween);
+    const showPresidentialMourningBanner = () => {
+        const today = dayjs();
+        return today.isBetween('2025-01-08', '2025-01-10', 'day', '[]');
+    };
+
     return (
         <DashboardContext.Provider value={{ searchValue: policySearchFilters.searchValue }}>
             <PageHead titleKey="policySearch" />
             <NoNavLayout displayTopNavBar={false}>
                 <div className="flex flex-col items-center xl:items-start">
+                    {showPresidentialMourningBanner() && (
+                        <BannerAlert
+                            bodyText={
+                                <>
+                                    In recognition of the National Day of Mourning following the death of former{' '}
+                                    <strong>President Jimmy Carter</strong>, the stock market will be closed on{' '}
+                                    <strong>January 9, 2025</strong>. As a result, contract values are as of close of business{' '}
+                                    <strong>January 8, 2025</strong>. Any trades or other financial transactions submitted on{' '}
+                                    <strong>January 9, 2025</strong> will be processed when the stock market reopens on{' '}
+                                    <strong>January 10, 2025</strong>.
+                                </>
+                            }
+                            variant={BannerVariant.Warning}
+                            className="mb-8"
+                        />
+                    )}
                     <Typography variant={TypographyVariant.H1} className="md:mb-8 mb-4">
                         {t('dashboard.h1')}
                     </Typography>

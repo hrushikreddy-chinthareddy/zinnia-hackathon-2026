@@ -17,6 +17,7 @@ import {
   useForm,
 } from 'react-hook-form';
 
+import { getDirtyValues } from '@/utils/forms';
 import { isNumberOrHyphen } from '@/utils/regex';
 import { states } from '@/utils/states';
 
@@ -41,10 +42,12 @@ export interface AddEditAddressProps {
   values?: AddressFormFields;
   actionType?: FormActionType;
   cancelCallback?: () => void;
-  submitCallback?: (val: AddressFormFields) => void;
+  submitCallback?: (
+    val: AddressFormFields,
+    dirtyFields: AddressFormFields
+  ) => void;
   removeCallback?: () => void;
 }
-
 export const AddEditAddress: FC<AddEditAddressProps> = ({
   values,
   cancelCallback,
@@ -56,7 +59,8 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
     control,
     handleSubmit,
     reset,
-    formState: { errors, defaultValues },
+    getValues,
+    formState: { errors, defaultValues, dirtyFields },
   } = useForm<AddressFormFields>({
     defaultValues: {
       addressType: values?.addressType || AddressChange.addressType.RESIDENCE,
@@ -79,7 +83,9 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
   };
 
   const onSubmit: SubmitHandler<AddressFormFields> = data => {
-    submitCallback?.(data);
+    const values = getValues();
+    const dirtyValues = getDirtyValues(dirtyFields, values);
+    submitCallback?.(data, dirtyValues);
   };
 
   const buttonText =
@@ -263,7 +269,7 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
             <div className={styles.defaultAddress}>
               <Checkbox
                 id="checkbox-default-address"
-                onChange={field.onChange}
+                onClick={field.onChange}
                 isCheckedByDefault={field.value}
               >
                 {' '}
