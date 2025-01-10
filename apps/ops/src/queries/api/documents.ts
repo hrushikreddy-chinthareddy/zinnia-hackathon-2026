@@ -2,6 +2,7 @@ import { dataURItoBlob } from '@rjsf/utils';
 import { AxiosResponse } from 'axios';
 import dayjs from 'dayjs';
 
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import {
     PolicyDocumentApiRequest,
@@ -20,10 +21,9 @@ import { pullFromCache, writeToCache } from '@deps/utils/cache';
 import { logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
 import { apiServerBaseUrl, baseAppUrl } from '../api-config';
+import { StatusCode } from '../api-utils/baseAPIClient';
 import { client } from '../api-utils/client';
 import { serverApi } from '../api-utils/serverApiClient';
-import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
-import { StatusCode } from '../api-utils/baseAPIClient';
 
 const ssrBaseUrl = `${apiServerBaseUrl}/document/v2/documents`;
 const documentBaseUrl = `${baseAppUrl}/api/document/v2/documents`;
@@ -169,7 +169,7 @@ export const getDocuments = async ({
     ...queryParams
 }: DocumentApiRequestInputs): Promise<PolicyDocumentApiRequest | DocumentErrorResponse> => {
     try {
-        let queryString = new URLSearchParams(queryParams);
+        const queryString = new URLSearchParams(queryParams);
         if (periods) {
             queryString.append('periods', JSON.stringify(periods));
         }
@@ -212,11 +212,9 @@ export const getCaseDocuments = async ({
         const [caseDocsResponse, policyDocsResponse] = await Promise.all([caseDocRequest, policyDocRequest]);
         const docIds = new Set<string>();
         const docs: PolicyDocument[] = [];
-        let status;
-        let message = '';
 
         // if either request is unsuccessful, escape early
-        if (caseDocsResponse?.status !== 200 || policyDocsResponse?.status !== 200) {
+        if (caseDocsResponse?.status !== 200 || (policyDocRequest && policyDocsResponse?.status !== 200)) {
             return {
                 data: [],
                 error: {
