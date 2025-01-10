@@ -1493,7 +1493,8 @@
                 "defaultTitle": "Annuity Contract Withdrawal Request",
                 "nasu": "Demande de retrait de contrat de rente",
                 "gdmn": "Demande de retrait du Commonwealth",
-                "rsln": "Lincoln Benefit Life Withdrawal Request"
+                "rsln": "Lincoln Benefit Life Withdrawal Request",
+                "ulpc": "Unified Life Withdrawal Request"
             },
             "personalDetails": {
                 "title": "Détails personnels",
@@ -1553,7 +1554,8 @@
                     "partial": "Partielle",
                     "totalFreeAmt": "Montant total gratuit",
                     "penaltyFreeAmount": "Montant sans pénalité",
-                    "annualFreeAmountBalance": "Solde annuel du montant gratuit"
+                    "annualFreeAmountBalance": "Solde annuel du montant gratuit",
+                    "10PercentAccumulatedValue": "10% accumulated value"
                 },
                 "fullWithdrawal": {
                     "contractHasBeenLostOrDestroyed": "Le contrat a été perdu ou détruit",

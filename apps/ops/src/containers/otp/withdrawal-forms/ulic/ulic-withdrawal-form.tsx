@@ -17,9 +17,9 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helper';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 
-import getUlicConfig, { FormSubtype } from './ulic-withdrawal-form.helper';
+import getUlpcConfig, { FormSubtype } from './ulic-withdrawal-form.helper';
 
-export default function UlicWithdrawalForm() {
+export default function UlpcWithdrawalForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const {
         cslnCheckStates,
@@ -36,7 +36,7 @@ export default function UlicWithdrawalForm() {
         fullWithdrawalOptions,
         maritalStatusAllowanceConfig,
         validateMaritalStatusAllowances
-    } = getUlicConfig(t);
+    } = getUlpcConfig(t);
 
     const {
         formSubtype,
@@ -60,9 +60,9 @@ export default function UlicWithdrawalForm() {
     useEffect(() => {
         setFormData({
             ...formData,
-            formExtName: `${initialForm?.carrier || Carrier.ULIC}_WD_REDEMPTION_${formSubtype?.toUpperCase()}_DIGITAL_FORM`,
+            formExtName: `${initialForm?.carrier || Carrier.ULPC}_WD_REDEMPTION_${formSubtype?.toUpperCase()}_DIGITAL_FORM`,
             metaData: {
-                formType: `${initialForm?.carrier || Carrier.ULIC}_WD_REDEMPTION_${formSubtype?.toUpperCase()}_DIGITAL_FORM`,
+                formType: `${initialForm?.carrier || Carrier.ULPC}_WD_REDEMPTION_${formSubtype?.toUpperCase()}_DIGITAL_FORM`,
                 formId: null,
                 formNumber: '',
             },
@@ -89,20 +89,18 @@ export default function UlicWithdrawalForm() {
                     isFormStateReadOnly={isFormStateReadOnly}
                 />
             ) : (
-                <>
-                    <FormProgramPartialWithdrawal
-                        isFormStateReadOnly={isFormStateReadOnly}
-                        options={partialWithdrawalOptions}
-                        selectionIdentifier={identifySelectedFormProgramOption}
-                        selectOneOptions={selectOneOptions}
-                    />
-                    <FormDistribution
-                        isFormStateReadOnly={isFormStateReadOnly}
-                        fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
-                        title={t('distributionInstruction.investmentSelectionForDistribution') as string}
-                    />
-                </>
+                <FormProgramPartialWithdrawal
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    options={partialWithdrawalOptions}
+                    selectionIdentifier={identifySelectedFormProgramOption}
+                    selectOneOptions={selectOneOptions}
+                />
             )}
+            <FormDistribution
+                isFormStateReadOnly={isFormStateReadOnly}
+                fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
+                title={t('distributionInstruction.investmentSelectionForDistribution') as string}
+            />
             <TaxWithholdings
                 isFormStateReadOnly={isFormStateReadOnly}
                 ownerStateOfResidence={ownerStateOfResidence}

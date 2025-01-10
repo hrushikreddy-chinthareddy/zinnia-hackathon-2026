@@ -33,7 +33,8 @@ import {
     PartyRoles, ProcessRequestType,
     AccountCloseReason,
     AccountType,
-    FormDisbursement
+    FormDisbursement, ProgramSubType,
+    LifeCadPartyRoles
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -69,7 +70,7 @@ export const spousalSignatureStateCodes = [
     statesAndTerritories.WISCONSIN,
 ];
 
-export default function getUlicConfig(t: TFunction) {
+export default function getUlpcConfig(t: TFunction) {
     const identifySelectedFormProgramOption = (formProgram: FormProgram): { selectedOption: string | null; amount: string | null } => {
         const programTypeText = formProgram?.programType?.text || '';
         if (programTypeText === ProgramType.TotalFreeAmt) {
@@ -116,10 +117,34 @@ export default function getUlicConfig(t: TFunction) {
                     partialGrossAmount: { text: val, amountType: AmountType.Dollar },
                 };
             },
-        }
-        // 10%accumulated value, interest only, maximum penalty free amount a
+        },
+        {
+            label: `${t('amountDetails.partialWithdrawal.10PercentAccumulatedValue')}`,
+            value: ProgramType.PartialPercent,
+            amountFieldType: AmountType.Percent,
+            generatePayloadFromSelection: (val = null) => {
+                return {
+                    ...getDefaultFormProgramValues(),
+                    withdrawType: { text: WithdrawalType.Gross },
+                    programType: { text: ProgramType.WITHDRAWAL },
+                    programSubType: { text: ProgramSubType.PercentageofAV },
+                    partialPercent: { text: val, amountType: AmountType.Percent },
+                };
+            },
+        },
+        {
+            label: t('amountDetails.programTypes.penaltyFreeAmount'),
+            value: ProgramType.PenaltyFreeAmount,
+            generatePayloadFromSelection: () => {
+                return {
+                    ...getDefaultFormProgramValues(),
+                    withdrawType: { text: WithdrawalType.Gross },
+                    programType: { text: ProgramType.TotalFreeAmt },
+                    programSubType: { text: ProgramSubType.TotalFreeWithdrawal },
+                };
+            },
+        },
     ];
-
 
     const formSubtypeOptions = [
         {
@@ -183,6 +208,31 @@ export default function getUlicConfig(t: TFunction) {
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
             shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
                 return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
+            },
+        },
+        {
+            key: `sig-val-beneficiary`,
+            fields: [
+                {
+                    component: SignatureFields.SignatureType,
+                    key: 'beneficiary-type',
+                },
+                {
+                    component: SignatureFields.SignaturePresent,
+                    key: 'beneficiary-present',
+                },
+                {
+                    component: SignatureFields.SignatureTitle,
+                    key: 'beneficiary-title',
+                },
+                {
+                    component: SignatureFields.SignatureDate,
+                    key: 'beneficiary-date',
+                },
+            ],
+            signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
+            shouldDisplay: ({ parties }: OtpWithdrawalFormState): boolean => {
+                return !!parties?.find(party => party.Role === LifeCadPartyRoles.Beneficiary);
             },
         },
         {
@@ -357,11 +407,6 @@ export default function getUlicConfig(t: TFunction) {
                     classNames: 'col-start-1',
                     isBankingField: true,
                 },
-                {
-                    fieldName: BankingFields.AccountHolder,
-                    fieldLabel: t('distributionMethod.accountHolder'),
-                    component: DisbursementFields.BankTextField,
-                },
             ],
             getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.EFT) {
@@ -373,10 +418,11 @@ export default function getUlicConfig(t: TFunction) {
                     doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
                     isVoidCheckAttached: voidCheck,
                     accountNumber: selectedBank?.accountNumber ?? '',
-                    accountHolder: selectedBank?.nameOnBankAccount ?? '',
                     accountType: selectedBank?.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank?.bankName ?? '',
                     bankRoutingNumber: selectedBank?.routingNumber ?? '',
+                    bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
+                    bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
                 };
             },
             generatePayloadFromSelection: ({
@@ -384,6 +430,8 @@ export default function getUlicConfig(t: TFunction) {
                 accountType,
                 bankName,
                 accountHolder,
+                bankFurtherCreditAccount,
+                bankFurtherCreditName,
                 bankRoutingNumber,
                 isVoidCheckAttached,
                 doesCheckMeetSecurityRequirements,
@@ -402,10 +450,12 @@ export default function getUlicConfig(t: TFunction) {
                                 text: accountType,
                             },
                             bankName,
+                            nameOnBankAccount: accountHolder ?? '',
                             routingNumber: bankRoutingNumber,
+                            bankFurtherCreditAccount,
+                            bankFurtherCreditName,
                             reEnterAccountNumber,
                             reEnterBankRoutingNumber,
-                            nameOnBankAccount: accountHolder ?? '',
                         },
                     ],
                     voidCheck: isVoidCheckAttached ?? null,
@@ -472,11 +522,6 @@ export default function getUlicConfig(t: TFunction) {
                     component: DisbursementFields.BankTextField,
                     classNames: 'col-start-1',
                 },
-                {
-                    fieldName: BankingFields.AccountHolder,
-                    fieldLabel: t('distributionMethod.accountHolder'),
-                    component: DisbursementFields.BankTextField,
-                },
             ],
             getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.Wire) {
@@ -488,10 +533,11 @@ export default function getUlicConfig(t: TFunction) {
                     doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
                     isVoidCheckAttached: voidCheck,
                     accountNumber: selectedBank?.accountNumber ?? '',
-                    accountHolder: selectedBank?.nameOnBankAccount ?? '',
                     accountType: selectedBank?.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank?.bankName ?? '',
                     bankRoutingNumber: selectedBank?.routingNumber ?? '',
+                    bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
+                    bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
                 };
             },
             generatePayloadFromSelection: ({
@@ -499,6 +545,8 @@ export default function getUlicConfig(t: TFunction) {
                 accountType,
                 bankName,
                 accountHolder,
+                bankFurtherCreditAccount,
+                bankFurtherCreditName,
                 bankRoutingNumber,
                 isVoidCheckAttached,
                 doesCheckMeetSecurityRequirements,
@@ -519,6 +567,8 @@ export default function getUlicConfig(t: TFunction) {
                             bankName,
                             nameOnBankAccount: accountHolder ?? '',
                             routingNumber: bankRoutingNumber,
+                            bankFurtherCreditAccount,
+                            bankFurtherCreditName,
                             reEnterAccountNumber,
                             reEnterBankRoutingNumber,
                         },
@@ -531,48 +581,15 @@ export default function getUlicConfig(t: TFunction) {
         {
             label: t('distributionMethod.sendCheck'),
             value: FormDisbursementSelections.Check,
-            fields: [
-                {
-                    fieldName: BankingFields.SelectIfPayeeIsDifferent,
-                    fieldLabel: t('distributionMethod.selectIfDifferentPayee'),
-                    component: DisbursementFields.BankCheckboxField,
-                    classNames: 'col-start-1 col-span-3',
-                },
-                {
-                    fieldName: BankingFields.PayeeName,
-                    fieldLabel: t('distributionMethod.payeeName'),
-                    classNames: 'col-start-1 col-span-2 max-w-lg',
-                    component: DisbursementFields.BankTextField,
-                },
-                {
-                    fieldName: BankingFields.Address,
-                    fieldLabel: '',
-                    classNames: 'col-span-3',
-                    component: DisbursementFields.BankAddress,
-                },
-            ],
-            getDefaultPayload: ({ paymentMethod, paymentMailType, isDifferentPayeeOrAddress, payee }: FormDisbursement) => {
-                if (paymentMethod.text === PaymentMailType.Check && paymentMailType.text === null) {
-                    return {
-                        ...DEFAULT_DISBURSEMENT_UPDATE,
-                        selectIfPayeeIsDifferent: isDifferentPayeeOrAddress.text ?? '',
-                        address: payee?.addresses?.[0] || DEFAULT_ADDRESS,
-                        payeeName: payee?.name?.text ?? '',
-                    };
-                }
+            fields: null,
+            getDefaultPayload() {
                 return DEFAULT_DISBURSEMENT_UPDATE;
             },
-            generatePayloadFromSelection: ({ payeeName, address, selectIfPayeeIsDifferent }: DisbursementParts) => {
+            generatePayloadFromSelection: () => {
                 return {
                     ...getDefaultFormDisbursementValues(),
                     paymentMethod: { text: PaymentMailType.Check },
                     paymentMailType: { text: null },
-                    isDifferentPayeeOrAddress: { text: selectIfPayeeIsDifferent || false },
-                    payee: {
-                        name: { text: payeeName || null },
-                        addresses: [address || DEFAULT_ADDRESS],
-                        contractNumber: { text: null },
-                    },
                 };
             },
         },
@@ -581,45 +598,48 @@ export default function getUlicConfig(t: TFunction) {
             value: FormDisbursementSelections.ExpressCheck,
             fields: [
                 {
-                    fieldName: BankingFields.SelectIfPayeeIsDifferent,
-                    fieldLabel: t('distributionMethod.selectIfDifferentPayee'),
-                    component: DisbursementFields.BankCheckboxField,
-                    classNames: 'col-start-1 col-span-3',
-                },
-                {
-                    fieldName: BankingFields.PayeeName,
-                    fieldLabel: t('distributionMethod.payeeName'),
-                    classNames: 'col-start-1 col-span-2 max-w-lg',
+                    fieldName: BankingFields.AccountNumber,
+                    fieldLabel: t('distributionMethod.upsAccountNumber'),
                     component: DisbursementFields.BankTextField,
                 },
                 {
-                    fieldName: BankingFields.Address,
-                    fieldLabel: '',
-                    classNames: 'col-span-3',
-                    component: DisbursementFields.BankAddress,
+                    fieldName: BankingFields.AccountName,
+                    fieldLabel: t('distributionMethod.upsAccountName'),
+                    component: DisbursementFields.BankTextField,
                 },
             ],
-            getDefaultPayload: ({ paymentMethod, paymentMailType, isDifferentPayeeOrAddress, payee }: FormDisbursement) => {
-                if (paymentMethod.text === PaymentMailType.Check && paymentMailType.text === null) {
+            getDefaultPayload({ paymentMethod, paymentMailType, upsAccount }: FormDisbursement) {
+                if (paymentMethod.text === FormDisbursementSelections.Check && paymentMailType.text === PaymentMailType.ExpressCheck) {
                     return {
                         ...DEFAULT_DISBURSEMENT_UPDATE,
-                        selectIfPayeeIsDifferent: isDifferentPayeeOrAddress.text ?? '',
-                        address: payee?.addresses?.[0] || DEFAULT_ADDRESS,
-                        payeeName: payee?.name?.text ?? '',
+                        accountNumber: upsAccount?.accountNumber?.text ?? '',
+                        accountName: upsAccount?.accountName?.text ?? '',
                     };
                 }
                 return DEFAULT_DISBURSEMENT_UPDATE;
             },
-            generatePayloadFromSelection: ({ payeeName, address, selectIfPayeeIsDifferent }: DisbursementParts) => {
+            generatePayloadFromSelection: ({
+                payeeName,
+                fboDetails,
+                contractNumber,
+                address,
+                accountName,
+                accountNumber,
+            }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
                     paymentMethod: { text: PaymentMailType.Check },
                     paymentMailType: { text: PaymentMailType.ExpressCheck },
-                    isDifferentPayeeOrAddress: { text: selectIfPayeeIsDifferent || false },
+                    upsAccount: {
+                        accountName: { text: accountName ?? '' },
+                        accountNumber: { text: accountNumber ?? '' },
+                        zip: { text: '' },
+                    },
                     payee: {
-                        name: { text: payeeName || null },
+                        name: { text: payeeName ?? null },
                         addresses: [address || DEFAULT_ADDRESS],
-                        contractNumber: { text: null },
+                        contractNumber: { text: contractNumber ?? null },
+                        fboDetails: { text: fboDetails ?? null },
                     },
                 };
             },
@@ -640,10 +660,14 @@ export default function getUlicConfig(t: TFunction) {
             label: t('amountDetails.fullWithdrawal.withdrawTheEntireContractValue'),
             value: AccountCloseReason.Surrender,
         },
+        {
+            label: t('amountDetails.fullWithdrawal.contractHasBeenLostOrDestroyed'),
+            value: AccountCloseReason.ContractLost,
+        },
     ];
 
     const maritalStatusAllowanceConfig = {
-        label: 'maritalStatusAllowancesLabel',
+        label: 'maritalStatusAllowancesMN',
         maritalStatusAllowancesOptions: [
             { label: 'maritalStatusAllowanceItems.single', value: MaritalStatusAllowances.Single },
             { label: 'maritalStatusAllowanceItems.married', value: MaritalStatusAllowances.Married },

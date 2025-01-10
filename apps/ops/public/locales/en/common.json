@@ -1501,7 +1501,8 @@
                 "nasu": "Annuity Contract Withdrawal Request ",
                 "gdmn": "Commonwealth Withdrawal Request",
                 "rsln": "Lincoln Benefit Life Withdrawal Request",
-                "glco": "Annuity Contract Withdrawal Request"
+                "glco": "Annuity Contract Withdrawal Request",
+                "ulpc": "Unified Life Withdrawal Request"
             },
             "personalDetails": {
                 "title": "Personal Details",
@@ -1562,7 +1563,8 @@
                     "partial": "Partial",
                     "totalFreeAmt": "Total free amount",
                     "penaltyFreeAmount": "Penalty free amount",
-                    "annualFreeAmountBalance": "Annual free amount balance"
+                    "annualFreeAmountBalance": "Annual free amount balance",
+                    "10PercentAccumulatedValue": "10% accumulated value"
                 },
                 "fullWithdrawal": {
                     "contractHasBeenLostOrDestroyed": "Contract has been lost or destroyed",
