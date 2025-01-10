@@ -1,4 +1,5 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
+import { Skeleton } from '@radix-ui/themes';
 import { useQuery } from '@tanstack/react-query';
 import { toTitleCase } from '@zinnia/utils';
 import clsx from 'clsx';
@@ -93,9 +94,7 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
             if (data && !selectedSubprocess && data?.length > 0) {
                 setSelectedSubprocess(data?.[0]?.name || '');
             }
-            return {
-                exceptionData: data?.slice(0, 5) || [],
-            };
+            return data?.slice(0, 5) || [];
         },
     });
 
@@ -120,105 +119,105 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
 
     return (
         <CardContainer
-            classNames="relative !p-0 flex flex-col flex-1 !border-none"
+            classNames="relative !p-0 flex flex-col flex-1 !border-none gap-16 mb-16"
             containerClassNames="mt-none !p-0  border-t-2 border-[--color-base-border-border-light]"
         >
-            <div className=" bg-white p-8 mb-8 flex flex-col gap-4 rounded">
+            <div className=" bg-white flex flex-col gap-8 pt-8 rounded">
                 <div className="w-52">
                     <Select options={timeframeOptions} value={timeframe} onChange={handleTimeFrameChange} />
                 </div>
-                <Typography className="py-4" variant={TypographyVariant.H2}>
-                    Top Processes by Volume
-                </Typography>
+                <Typography variant={TypographyVariant.H2}>Top Processes by Volume</Typography>
                 <RadioGroup.Root asChild onValueChange={handleSelectedSubprocess} value={selectedSubprocess}>
-                    <div className=" grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 !items-stretch !border-b-0 !after:content-none [& .indicator]">
-                        {caseDashboardStatsData?.exceptionData.map((element, index) => {
-                            return (
-                                <RadioGroup.Item
-                                    defaultChecked={index === 0}
-                                    value={element.name}
-                                    key={index}
-                                    className={clsx(
-                                        'p-4',
-                                        'flex',
-                                        'flex-col',
-                                        'rounded',
-                                        'gap-4',
-                                        'border-2',
-                                        '!after:content-none',
-                                        '!mb-0',
-                                        'border-[--color-base-border-border-subtle]',
-                                        'data-[state=checked]:border-[--color-base-border-border-primary-color]',
-                                        'data-[state=checked]:[& .indicator]:height-0',
-                                        'hover:border-[--color-base-border-border-secondary-color]',
-                                        'items-start justify-between'
-                                    )}
-                                >
-                                    {isLoading ? (
-                                        <>
-                                            <PageLoader />
-                                            <Typography variant={TypographyVariant.BodyBold}>Loading...</Typography>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <div className="flex flex-row justify-between items-center align-middle self-stretch text-ellipsis overflow-hidden">
-                                                <div className="text-ellipsis text-left">
-                                                    <Label
-                                                        variant={LabelVariant.LabelLg}
-                                                        label={dashboardChartTitleFormat(element.name, false)}
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div className="flex flex-row flex-wrap gap-4">
-                                                <FieldData variant={FieldDataVariant.Large} label="cases">
-                                                    {element.count.toLocaleString('en-US')}
-                                                </FieldData>
-                                            </div>
-                                        </>
-                                    )}
-                                </RadioGroup.Item>
-                            );
-                        })}
+                    <div className=" grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 px-8  lg:px-12 xl:px-16 !items-stretch !border-b-0 !after:content-none [& .indicator]">
+                        {isLoading
+                            ? Array.from({ length: 5 }).map((_, index) => (
+                                  <Skeleton key={index} className="h-40 w-full border-2 border-[--color-base-border-border-subtle]" />
+                              ))
+                            : caseDashboardStatsData?.map((element, index) => {
+                                  return (
+                                      <RadioGroup.Item
+                                          defaultChecked={index === 0}
+                                          value={element.name}
+                                          key={index}
+                                          className={clsx(
+                                              'p-4',
+                                              'flex',
+                                              'flex-col',
+                                              'rounded',
+                                              'gap-4',
+                                              'border-2',
+                                              '!after:content-none',
+                                              '!mb-0',
+                                              'border-[--color-base-border-border-subtle]',
+                                              'data-[state=checked]:border-[--color-base-border-border-primary-color]',
+                                              'data-[state=checked]:[& .indicator]:height-0',
+                                              'hover:border-[--color-base-border-border-secondary-color]',
+                                              'items-start justify-between'
+                                          )}
+                                      >
+                                          {isLoading ? (
+                                              <>
+                                                  <PageLoader />
+                                                  <Typography variant={TypographyVariant.BodyBold}>Loading...</Typography>
+                                              </>
+                                          ) : (
+                                              <>
+                                                  <div className="flex flex-row justify-between items-center align-middle self-stretch text-ellipsis overflow-hidden">
+                                                      <div className="text-ellipsis text-left">
+                                                          <Label
+                                                              variant={LabelVariant.LabelLg}
+                                                              label={dashboardChartTitleFormat(element.name, false)}
+                                                          />
+                                                      </div>
+                                                  </div>
+                                                  <div className="flex flex-row flex-wrap gap-4">
+                                                      <FieldData variant={FieldDataVariant.Large} label="cases">
+                                                          {element.count.toLocaleString('en-US')}
+                                                      </FieldData>
+                                                  </div>
+                                              </>
+                                          )}
+                                      </RadioGroup.Item>
+                                  );
+                              })}
                     </div>
                 </RadioGroup.Root>
             </div>
-            <div className="mb-10 lg:px-8">
-                {selectedSubprocess && (
-                    <CaseTimeseries
-                        timeframe={timeframe}
-                        selectedSubprocess={selectedSubprocess}
-                        legendLabel={splitAndSentenceCase(carrierOrBrokerDealer)}
-                        groupByOptions={[carrierOrBrokerDealer, GroupByOptions.UpdatedAt]}
-                        filters={caseVolumeTimeseriesFilters}
-                        title={`Top 5 ${carrierOrBrokerDealer === GroupByOptions.BrokerDealerName ? 'Brokers' : 'Carriers'} ${toTitleCase(
-                            selectedSubprocess
-                        )} `}
-                        selectedProcess={selectedProcessType}
-                        linkQueryFormat={`/cases${convertToQueryString({
-                            ...caseVolumeTimeseriesFilters,
-                            [carrierOrBrokerDealer]: 'replaceme',
-                        } as any)}`}
-                    />
-                )}
-            </div>
-            <div className="mb-10 lg:px-8">
-                {selectedSubprocess && (
-                    <CaseTimeseries
-                        timeframe={timeframe}
-                        selectedSubprocess={selectedSubprocess}
-                        legendLabel={splitAndSentenceCase(GroupByOptions.ProductName)}
-                        groupByOptions={[GroupByOptions.ProductName, GroupByOptions.UpdatedAt]}
-                        filters={caseVolumeTimeseriesFilters}
-                        title={`Top 5 Products ${toTitleCase(selectedSubprocess)}`}
-                        selectedProcess={selectedProcessType}
-                        linkQueryFormat={`/cases${convertToQueryString({
-                            ...caseVolumeTimeseriesFilters,
-                            productName: 'replaceme',
-                        } as any)}`}
-                    />
-                )}
-            </div>
-            <div className="mb-10 lg:px-8">
+            {selectedSubprocess && (
+                <>
+                    <div className="lg:px-8">
+                        <CaseTimeseries
+                            timeframe={timeframe}
+                            selectedSubprocess={selectedSubprocess}
+                            legendLabel={splitAndSentenceCase(carrierOrBrokerDealer)}
+                            groupByOptions={[carrierOrBrokerDealer, GroupByOptions.UpdatedAt]}
+                            filters={caseVolumeTimeseriesFilters}
+                            title={`Top 5 ${carrierOrBrokerDealer === GroupByOptions.BrokerDealerName ? 'Brokers' : 'Carriers'}`}
+                            selectedProcess={selectedProcessType}
+                            linkQueryFormat={`/cases${convertToQueryString({
+                                ...caseVolumeTimeseriesFilters,
+                                [carrierOrBrokerDealer]: 'replaceme',
+                            } as any)}`}
+                        />
+                    </div>
+                    <div className="lg:px-8">
+                        <CaseTimeseries
+                            timeframe={timeframe}
+                            selectedSubprocess={selectedSubprocess}
+                            legendLabel={splitAndSentenceCase(GroupByOptions.ProductName)}
+                            groupByOptions={[GroupByOptions.ProductName, GroupByOptions.UpdatedAt]}
+                            filters={caseVolumeTimeseriesFilters}
+                            title={`Top 5 Products`}
+                            selectedProcess={selectedProcessType}
+                            linkQueryFormat={`/cases${convertToQueryString({
+                                ...caseVolumeTimeseriesFilters,
+                                productName: 'replaceme',
+                            })}`}
+                        />
+                    </div>
+                </>
+            )}
+            <div className="lg:px-8">
                 {isLoading ? (
                     <>
                         <div className="min-h-[600px] grid gap-4 h-full mb-4 w-full place-content-center bg-[--color-base-surface-surface-tertiary]">
@@ -228,7 +227,7 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
                 ) : (
                     <ExceptionInsights
                         timeframe={timeframe}
-                        completedCasesByProcessSubType={caseDashboardStatsData?.exceptionData}
+                        completedCasesByProcessSubType={caseDashboardStatsData}
                         selectedSubprocess={selectedSubprocess}
                         selectedException={selectedException}
                         carrierOrBrokerDealer={undefined}
