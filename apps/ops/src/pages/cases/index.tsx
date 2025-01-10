@@ -465,7 +465,7 @@ export const getServerSideProps = withPageAuthRequired({
             UserPermission.AllowReadCaseManagement
         );
 
-        // DEPU-2835 - temporary work around for Advisor Excel
+        // DEPU-2835
         const isAdvisorsExcel = await checkTupleSsr(`${auth.accessToken}`, user.partyId, FgaRelation.Party, AE_FGA_ROLE);
 
         if (!isAdvisorsExcel && !doesUserHasPagePermissions) {
