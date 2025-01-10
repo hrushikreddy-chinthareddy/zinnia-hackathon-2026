@@ -55,6 +55,7 @@ export enum FEATURE_FLAGS {
     NIGO_ENTRY_MASS_WITHDRAWAL = 'nigo-entry_mass_withdrawal',
     NIGO_ENTRY_RSLN_WITHDRAWAL = 'nigo-entry_rsln_withdrawal',
     NIGO_ENTRY_GDMN_WITHDRAWAL = 'nigo-entry_gdmn_withdrawal',
+    NIGO_ENTRY_GLCO_WITHDRAWAL = 'nigo-entry_glco_withdrawal',
     NIGO_ENTRY_SBGC_OFT = 'nigo-entry_sbgc_oft',
     NIGO_ENTRY_FLIC_OFT = 'nigo-entry_flic_oft',
     NIGO_ENTRY_DLIC_OFT = 'nigo-entry_dlic_oft',
