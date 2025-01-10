@@ -2,23 +2,19 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
 import CedingCompanyDistribution from '@deps/components/otp-withdrawal-form/ceding-company-distribution';
+import EmployerTpaAuthorization from '@deps/components/otp-withdrawal-form/employer-tpa-authorization';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import FormProgramPartialWithdrawal from '@deps/components/otp-withdrawal-form/form-program/form-program-partial-withdrawal';
-import DistributionReason from '@deps/components/otp-withdrawal-form/form-restriction/distribution-reason';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helper';
-import { Carrier, QualTypes } from '@deps/models/case/withdrawal/case';
+import { Carrier } from '@deps/models/case/withdrawal/case';
 
 import getNasuOftConfig from './nasu-oft-form.helper';
 
-type NasuOftFormProps = {
-    qualType: QualTypes | '';
-};
-
-export default function NasuOftWithdrawalForm( { qualType }: NasuOftFormProps) {
+export default function NasuOftWithdrawalForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const {
         signaturesConfig,
@@ -30,7 +26,6 @@ export default function NasuOftWithdrawalForm( { qualType }: NasuOftFormProps) {
         selectOneOptions,
         defaultValues,
         qualificationOptions,
-        reasonOptions
     } = getNasuOftConfig(t);
 
     const {
@@ -42,6 +37,7 @@ export default function NasuOftWithdrawalForm( { qualType }: NasuOftFormProps) {
         ownerStateOfResidence,
         isFormStateReadOnly,
         setOwnerStateOfResidence,
+        formTpaAuthorization
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -67,13 +63,12 @@ export default function NasuOftWithdrawalForm( { qualType }: NasuOftFormProps) {
         }
     }, [formParty, ownerStateOfResidence]);
 
-    const is403b = [QualTypes.b403].includes(qualType as QualTypes);
+    const hasTpaAuthorization = formTpaAuthorization && !Object.values(formTpaAuthorization).every(val => val === null);
 
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
             <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
-            { is403b && <DistributionReason reasonOptions={reasonOptions} isFormStateReadOnly={isFormStateReadOnly} /> }
             <FormProgramPartialWithdrawal
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={surrenderingInstructionsOptions}
@@ -82,6 +77,7 @@ export default function NasuOftWithdrawalForm( { qualType }: NasuOftFormProps) {
                 selectOneOptions={selectOneOptions}
             />
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
+            {hasTpaAuthorization && <EmployerTpaAuthorization isFormStateReadOnly={isFormStateReadOnly} />}
             <CedingCompanyDistribution
                 qualificationOptions={qualificationOptions}
                 isFormStateReadOnly={isFormStateReadOnly}

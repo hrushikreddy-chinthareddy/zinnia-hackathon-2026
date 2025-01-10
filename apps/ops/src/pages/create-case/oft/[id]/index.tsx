@@ -73,7 +73,7 @@ const getFormComponentMap = (planCode: string | '', qualType: QualTypes | ''): R
     [Carrier.SBGC]: <SbgcOftWithdrawalForm planCode={planCode} />,
     [Carrier.DLIC]: <OftDlicForm qualType={qualType} />,
     [Carrier.RSLN]: <RSLNOftWithdrawalForm qualType={qualType} />,
-    [Carrier.NASU]: <NasuOftWithdrawalForm qualType={qualType} />,
+    [Carrier.NASU]: <NasuOftWithdrawalForm />,
 });
 
 export default function OftCase({ document, form, featureFlagDecisions, user }: OftCaseProps) {

@@ -39,6 +39,7 @@ import {
     AccountType,
     RestrictionOption,
     LifeCadPartyRoles,
+    AddressTypes,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_BANK_DETAILS,
@@ -200,6 +201,12 @@ export default function getNasuOftConfig(t: TFunction) {
                     ],
                 },
             ],
+            addressFields: [
+                {
+                    addressType: AddressTypes.DEFAULT,
+                    title: t('addressDetails.residentialAddressTitle'),
+                },
+            ]
         },
         {
             partyRoleType: PartyRoles.JOINT_OWNER,

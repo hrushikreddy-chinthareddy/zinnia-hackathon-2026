@@ -50,7 +50,7 @@ export const getOFTFormComponentMap = (planCode: string | '', qualType: QualType
     [Carrier.SBGC]: <SbgcOftWithdrawalForm planCode={planCode} />,
     [Carrier.DLIC]: <OftDlicForm qualType={qualType} />,
     [Carrier.RSLN]: <RSLNOftWithdrawalForm qualType={qualType} />,
-    [Carrier.NASU]: <NasuOftWithdrawalForm qualType={qualType} />,
+    [Carrier.NASU]: <NasuOftWithdrawalForm />,
 });
 
 export const getRMDFormComponentMap = (qualType: QualTypes | ''): Record<string, React.ReactNode> => ({
