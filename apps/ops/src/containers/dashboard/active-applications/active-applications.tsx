@@ -92,7 +92,7 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carri
     const { data: insightGroupingCountByCarrierStats, isLoading: insightGroupingCountByCarrierStatsLoading } = useQuery({
         queryKey: ['countByCarrierInsights', baseInsightQueryFilter],
         queryFn: () => createBaseQuery(baseInsightQueryFilter, [GroupByOptions.Carrier]),
-        enabled: !!Object.keys(baseInsightQueryFilter).length,
+        enabled: Object.keys(baseInsightQueryFilter).length > 0,
     });
     const { data: insightGroupingCountBySubProcessStats, isLoading: insightGroupingCountBySubProcessStatsLoading } = useQuery({
         queryKey: ['countBySubProcessInsights', baseInsightQueryFilter],
