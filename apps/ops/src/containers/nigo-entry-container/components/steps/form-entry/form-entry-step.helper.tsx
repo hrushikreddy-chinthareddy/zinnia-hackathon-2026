@@ -18,7 +18,7 @@ import MassWithdrawalForm from '@deps/containers/otp/withdrawal-forms/mass/mass-
 import NasuWithdrawalForm from '@deps/containers/otp/withdrawal-forms/nasu/nasu-withdrawal-form';
 import RslnWithdrawalForm from '@deps/containers/otp/withdrawal-forms/rsln/rsln-withdrawal-form';
 import SbgcWithdrawalForm from '@deps/containers/otp/withdrawal-forms/sbgc-withdrawal-form';
-import UlpcWithdrawalForm from '@deps/containers/otp/withdrawal-forms/ulic/ulic-withdrawal-form';
+import UlpcWithdrawalForm from '@deps/containers/otp/withdrawal-forms/ulic/ulpc-withdrawal-form';
 import { determineFormToRender } from '@deps/helpers/form-selector.helper';
 import { CaseType } from '@deps/models/case/case';
 import { DocumentType } from '@deps/models/case/document';
