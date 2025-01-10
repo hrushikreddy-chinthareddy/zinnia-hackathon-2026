@@ -74,7 +74,10 @@ export type FormDetails = {
 export enum SendDocumentFormType {
     ServiceRequestForm = 'Service Request Form',
 }
+
 export const AllowedRoleTypes: string[] = [PartyRole.JOINTOWNER, PartyRole.OWNER];
+
+export const AllowedRoleTypesEmail: string[] = Object.values(PartyRole);
 
 export type SendDocumentFormParts = {
     transactionType: CallCenterElement<string, SimpleOption>;

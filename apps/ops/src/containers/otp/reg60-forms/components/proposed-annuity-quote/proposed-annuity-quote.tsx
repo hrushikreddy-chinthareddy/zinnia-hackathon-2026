@@ -9,6 +9,7 @@ import { selectVarientByConfig } from '@deps/components/otp-withdrawal-form/form
 import Radio, { RadioVariant } from '@deps/components/radio/radio';
 import SelectSimple from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import { TranslationFiles } from '@deps/config/translations';
 import { Reg60FormContext } from '@deps/contexts/Reg60FormContext';
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
@@ -29,7 +30,7 @@ const ProposedAnnuityQuote = ({
     product,
     contractId,
 }: ProposedAnnuityQuoteProps): JSX.Element => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseReg60.request' });
+    const { t } = useTranslation(TranslationFiles.REG60DEFS, { keyPrefix: 'caseReg60.request' });
     const { fields } = formConfig;
     const { formErrors, isFormStateReadOnly } = useContext(Reg60FormContext);
     const [radioSelection, setRadioSelection] = useState(annuityQuote.typeOfPayment);
