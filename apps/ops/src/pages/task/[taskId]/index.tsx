@@ -16,7 +16,6 @@ import { UserPermission } from '@deps/models/user-profile';
 import { getCaseTaskById } from '@deps/operations/tasks/task-operations';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { getCaseDetailsSSR } from '@deps/queries/api/cases';
-import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logError, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import { TaskMetadataHelper } from '@deps/utils/tasks/task-metadata-helper';
 import nextI18nextConfig from 'next-i18next.config';
@@ -38,6 +37,7 @@ export const TaskPage: React.FC<TaskPageProps> = ({
     nigoExceptions,
     nigoSubExceptions,
 }: TaskPageProps) => {
+    console.log('🚀 ~ taskMetadata:', taskMetadata.formSchema.allOf);
     console.log('🚀 ~ taskInfoLink:', taskInfoLink);
     return (
         <div>
@@ -56,7 +56,7 @@ export const getServerSideProps = withPageAuthRequired({
         const { locale = DEFAULT_LOCALE, query, req, res } = context;
         const taskId = (query.taskId as string) || '';
 
-        const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
+        //const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
 
         let accessToken;
         try {
@@ -126,6 +126,10 @@ export const getServerSideProps = withPageAuthRequired({
                             firstName: '',
                             lastName: '',
                             processSubtype: '',
+                            label: 'app1',
+                            url: 'cases/CA0000371344',
+                            value: 'CA0000371344',
+                            type: 'link',
                         },
                         {
                             applicationId: 'app2',
@@ -135,6 +139,10 @@ export const getServerSideProps = withPageAuthRequired({
                             firstName: '',
                             lastName: '',
                             processSubtype: '',
+                            label: 'app2',
+                            url: 'cases/CA0000383413',
+                            value: 'CA0000383413',
+                            type: 'link',
                         },
                         {
                             applicationId: 'app3',
@@ -144,6 +152,10 @@ export const getServerSideProps = withPageAuthRequired({
                             firstName: '',
                             lastName: '',
                             processSubtype: '',
+                            label: 'app3',
+                            url: 'cases/CA0000367910',
+                            value: 'CA0000367910',
+                            type: 'link',
                         },
                     ],
                 },
@@ -151,14 +163,6 @@ export const getServerSideProps = withPageAuthRequired({
                 createdAt: '2024-12-30T07:06:39Z',
                 updatedAt: '2024-12-30T07:06:39Z',
             };
-
-            // task.data['documentMatcher'].push({
-            //     title: 'Dyanamic Title',
-            //     subTitle: 'Employment Status = Yes and Source of Income = [HOUSEHOLD_WAGE or ALIMONY]',
-            //     applicationValue: 'Employment Status is YES and Source of Income is [HOUSEHOLD_WAGE or ALIMONY]',
-            //     nmid: 'SU.EM.031',
-            //     externalId: '3e3c7b9f-4677-4ca2-bddc-2c26bca7f8f8',
-            // });
 
             if (!task) {
                 logError('Task::Error getting task by id', {
@@ -174,7 +178,7 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
-            const { taskType, carrier, caseId, process } = task;
+            const { taskType, carrier, caseId } = task;
             const caseDetails = await getCaseDetailsSSR(caseId, accessToken as string);
             const correlationId = caseDetails?.correlationId; // Access the property using optional chaining
 
@@ -289,12 +293,6 @@ export const getServerSideProps = withPageAuthRequired({
                         potentialMatches: {
                             type: 'string',
                             title: 'Can you find a matching case for this document?',
-                            $ref: '#/definitions/potentialMatchesEnum',
-                        },
-                        isDuplicate: {
-                            type: 'null',
-                            title: 'Is this document a duplicate?',
-                            enum: ['Yes', 'No'],
                         },
                     },
                     allOf: [
@@ -407,6 +405,16 @@ export const getServerSideProps = withPageAuthRequired({
                         'ui:widget': 'radio',
                         'ui:options': {
                             label: true,
+                            customOptions: [
+                                {
+                                    label: 'Enter a case ID',
+                                    value: 'Enter a case ID',
+                                },
+                                {
+                                    label: 'Document cannot be matched to a case',
+                                    value: 'Document cannot be matched to a case',
+                                },
+                            ],
                         },
                     },
                     // testing: {

@@ -1,5 +1,25 @@
-import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { Radio } from '@zinnia/bloom/components';
+import { FormContextType, getUiOptions, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { useMemo } from 'react';
+
+import Radio, { RadioItem } from '@deps/components/radio/radio';
+
+import { HyperLink } from '../hyper-link-widget/hyper-link-widget';
+
+const renderSubElement = (option: any) => {
+    switch (option.type) {
+        case 'link':
+            return (
+                <HyperLink
+                    title={option.label}
+                    label={option.value}
+                    value={option.url}
+                    type={option.type}
+                    disabled={option.disabled}
+                    className="border-gray-200 border-1 p-[12px] w-[436px] "
+                />
+            );
+    }
+};
 
 function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
     options,
@@ -7,57 +27,41 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
     disabled,
     onChange,
     id,
+    uiSchema,
 }: WidgetProps<T, S, F>) {
     const { enumOptions } = options;
+    const { customOptions } = getUiOptions<T, S, F>(uiSchema);
 
-    // const fetchData = async (search: { [key: string]: any }, nextPage: number) => {
-    //     try {
-    //         setLoading(true);
-    //         const response = await axios.post(api({ page: nextPage, page_size: 3 }), search);
-    //         const data: RadioOption[] = response.data.results.map((item: any) => ({
-    //             label: item[labelKey],
-    //             value: item[valueKey],
-    //         }));
-    //         setLoading(false);
+    const currentOptions = useMemo(() => {
+        return enumOptions || customOptions || [];
+    }, [enumOptions, customOptions]);
+    const newOptions = useMemo(() => {
+        return Array.isArray(currentOptions)
+            ? currentOptions.map((option: RadioItem) => ({
+                  label: option.label,
+                  value: option.value,
+                  subElement: renderSubElement(option),
+              }))
+            : [];
+    }, [currentOptions]);
 
-    //         return data;
-    //     } catch (error) {
-    //         setLoading(false);
-    //         console.error('Error fetching data:', error);
-    //         return [];
-    //     }
-    // };
+    const handleOnChange = (event: any) => {
+        onChange(event.target.value);
+    };
 
-    // useEffect(() => {
-    //     let default_data = [];
-
-    //     const fetchDetails = async () => {
-    //         if (props.formData) {
-    //             const data = await fetchData(
-    //                 {
-    //                     [searchKey]: props.formData,
-    //                 },
-    //                 1
-    //             );
-    //             default_data = data;
-    //         }
-    //         const data = await fetchData({}, 1);
-    //         setOptions([...data, ...default_data]);
-    //     };
-
-    //     fetchDetails();
-    // }, []);
-
-    const newOptions = Array.isArray(enumOptions)
-        ? enumOptions.map(option => ({
-              label: option.label,
-              ariaLabel: option.label,
-              value: option.value,
-              subElement: '<span>Hello</span>',
-          }))
-        : [];
-
-    return <Radio id={id} options={newOptions} isDisabled={disabled} defaultValue={value} onValueChange={onChange} />;
+    return (
+        <div>
+            <Radio
+                id={id}
+                items={newOptions}
+                value={value}
+                disabled={disabled}
+                defaultValue={value}
+                onChange={handleOnChange}
+                className="items-center justify-between"
+            />
+        </div>
+    );
 }
 
 export default RadioWidget;
