@@ -349,7 +349,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
     const sideSheet = useSideSheetContext();
     const openRefineResultsSidesheet = () => {
         sideSheet.changeSideSheetContent(
-            t('caseManagementDashboard.refineResults') as string,
+            t('caseManagementDashboard.addFilters') as string,
             <SideSheetRefineResults
                 authorizedCarriers={authorizedCarriers}
                 filters={caseManagementFilters.additionalFilters}
@@ -428,7 +428,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                                 }
                             }}
                         >
-                            {t('caseManagementDashboard.refineResults')}
+                            {t('caseManagementDashboard.addFilters')}
                         </NavElement>
                         <ActiveFilters
                             authorizedCarriers={authorizedCarriers}
