@@ -17,7 +17,7 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helper';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 
-import getUlpcConfig, { FormSubtype } from './ulic-withdrawal-form.helper';
+import getUlpcConfig, { FormSubtype } from './ulpc-withdrawal-form.helper';
 
 export default function UlpcWithdrawalForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
