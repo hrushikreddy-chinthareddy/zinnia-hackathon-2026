@@ -90,7 +90,7 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
         queryFn: () =>
             getCaseDashboardStatsQuery(baseDashboardQueryFilter, [GroupByOptions.ProcessSubType, GroupByOptions.ExceptionCategory]),
         select: ({ data }) => {
-            if (!selectedSubprocess) {
+            if (data && !selectedSubprocess && data?.length > 0) {
                 setSelectedSubprocess(data?.[0]?.name || '');
             }
             return {

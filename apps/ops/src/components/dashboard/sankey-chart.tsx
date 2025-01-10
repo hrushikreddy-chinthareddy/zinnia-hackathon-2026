@@ -663,6 +663,7 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
             setLevel1ObjectGrouping([]);
             setLevel2ObjectGrouping([]);
             setLevel3ObjectGrouping([]);
+            setTotalCases(0);
             return;
         }
 
