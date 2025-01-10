@@ -38,6 +38,7 @@ import {
     FormDisbursement,
     AccountType,
     RestrictionOption,
+    LifeCadPartyRoles,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_BANK_DETAILS,
@@ -100,6 +101,32 @@ export default function getNasuOftConfig(t: TFunction) {
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
             shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
                 return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
+            },
+        },
+        {
+            key: `sig-val-beneficiary`,
+            fields: [
+                {
+                    component: SignatureFields.SignatureType,
+                    key: 'beneficiary-type',
+                },
+                {
+                    component: SignatureFields.SignaturePresent,
+                    key: 'beneficiary-present',
+                },
+                {
+                    component: SignatureFields.SignatureTitle,
+                    key: 'beneficiary-title',
+                },
+                {
+                    component: SignatureFields.SignatureDate,
+                    key: 'beneficiary-date',
+                },
+            ],
+            signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
+            shouldDisplay: ({ parties }: OtpWithdrawalFormState): boolean => {
+                // Checking the beneficiary in LC parties
+                return !!parties?.find(party => party.Role === LifeCadPartyRoles.Beneficiary);
             },
         },
         {
