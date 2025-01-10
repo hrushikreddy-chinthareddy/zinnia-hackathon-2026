@@ -15,6 +15,7 @@ import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-anal
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 import { ReactComponent as PaymentIcon } from '@deps/styles/elements/icons/content/payment.svg';
 import { ReactComponent as AutopayIcon } from '@deps/styles/elements/icons/currency/autopay.svg';
+import { ReactComponent as BankIcon } from '@deps/styles/elements/icons/icons_outlined/bank.svg';
 import { ReactComponent as CashIcon } from '@deps/styles/elements/icons/icons_outlined/cash.svg';
 import { ReactComponent as MenuHorizontal } from '@deps/styles/elements/icons/icons_outlined/menu-horizontal.svg';
 import loaderImage from '@deps/styles/images/loader-contrast.png';
@@ -50,21 +51,26 @@ const IconButton = React.forwardRef<HTMLButtonElement, TranslateProps>(function 
 
 const MenuContextualContent = ({ t, planCode, policyNumber, eligibilityCheck, isLoading }: TranslateProps & QuickActionsMenuProps) => {
     const permissions = usePermissionsContext();
+    const sessionId = permissions.getSessionId();
     const userPartyId = permissions.getUserPartyId();
     const { featureFlags } = useOptimizely();
+
     const freeLookEnabled = featureFlags[FEATURE_FLAGS.POLICY_FREE_LOOK_CANCELLATION];
+    const newLoanEnabled = featureFlags[FEATURE_FLAGS.NEW_LOAN_TRANSACTION];
 
     const trackClick = (linkName: string, linkUrl: string) => {
         // Tracking
         segmentAnalyticsTrackEvent<DropdownClickedEvent>(SegmentTrackedEventName.DropdownClicked, {
             dropdownName: 'Policy Quick Actions',
             selectedItemName: linkName,
+            session_id: sessionId,
             userId: userPartyId,
         });
         segmentAnalyticsTrackEvent<PolicyClickedEvent>(SegmentTrackedEventName.PolicyClicked, {
             contractNumber: policyNumber,
             linkName,
             linkUrl,
+            session_id: sessionId,
             userId: userPartyId,
         });
     };
@@ -119,6 +125,18 @@ const MenuContextualContent = ({ t, planCode, policyNumber, eligibilityCheck, is
                             trackClick('Start a Withdrawal', `/policies/${planCode}/${policyNumber}/policy/withdrawals/new-withdrawal/`);
                         }}
                     />
+
+                    {newLoanEnabled && (
+                        <MenuContextualItem
+                            disabled={!eligibilityCheck?.eligibleNewLoan as boolean}
+                            content={t('transactions.newLoan')}
+                            href={`/policies/${planCode}/${policyNumber}/policy/loans/new-loan/`}
+                            icon={<BankIcon height={20} width={20} />}
+                            onClick={() => {
+                                trackClick('New Loan', `/policies/${planCode}/${policyNumber}/policy/loans/new-loan/`);
+                            }}
+                        />
+                    )}
                 </>
             )}
         </MenuContextualLabel>
@@ -130,6 +148,7 @@ export interface QuickActionsMenuProps {
     policyNumber?: string;
     eligibilityCheck?: {
         eligibleAutopay: boolean | null;
+        eligibleNewLoan: boolean | null;
         eligiblePremium: boolean | null;
         eligibleWithdrawal: boolean | null;
         eligibleFreeLookCancel: boolean;

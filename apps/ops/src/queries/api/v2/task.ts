@@ -9,6 +9,7 @@ import { baseAppUrl, se2ApiServerUrl, se2ApiServerUrlV2 } from '@deps/queries/ap
 import { client } from '@deps/queries/api-utils/client';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { CaseSearchErrorResponse, CaseTaskSearchResponse } from '@deps/types/search';
+import { browserLogError } from '@deps/utils/browser-logging';
 import { pullFromCache, writeToCache } from '@deps/utils/cache';
 import { logError, logInfo, parseErrorInformation } from '@deps/utils/server-logging';
 
@@ -49,8 +50,8 @@ export const getTaskInstance = async (query: any): Promise<ManagementTask | null
 
         return data;
     } catch (error: any) {
-        console.error('getTaskInstance::An error occurred while getting Task Instance', error);
-        return error.response;
+        browserLogError('getTaskInstance::An error occurred while getting Task Instance', { ...parseErrorInformation(error), query, file: 'queries/api/v2/task', function: 'getTaskInstance' });
+        return null;
     }
 };
 
@@ -120,15 +121,15 @@ export const createTask = async (
         );
         logInfo('Successfully created task using v2', { caseId, url, function: 'tasks.createTask' });
 
-        datadogLogs.logger.info('Form entry time', {
+        datadogLogs.logger.info('CreateTask::Form Entry time', {
             timeElapsedSinceLoad: timeInSeconds,
-            documentType: payload.taskType,
-            contractId: payload.data.contractNum,
-            documentNumber: payload.data.documentNumber,
+            documentType: payload?.taskType,
+            contractId: payload?.data?.contractNum,
+            documentNumber: payload?.data?.documentNumber,
             caseId,
-            carrier: payload.carrier,
+            carrier: payload?.carrier,
             url,
-            taskStatus: payload.status,
+            taskStatus: payload?.status,
             function: 'tasks.createTask',
         });
 
@@ -152,15 +153,15 @@ export const updateTask = async (
         const { data } = await client.put<CreateTaskBody<TaskStatus, TaskV2Payload>, AxiosResponse>(url, payload);
         logInfo('Successfully updated task using v2', { caseId, taskId, url, function: 'tasks.updateTask' });
 
-        datadogLogs.logger.info('Form entry time', {
+        datadogLogs.logger.info('updateTask::Successfully updated a task', {
             timeElapsedSinceLoad: timeInSeconds,
-            documentType: payload.taskType,
-            contractId: payload.data.contractNum,
-            documentNumber: payload.data.documentNumber,
+            documentType: payload?.taskType,
+            contractId: payload?.data?.contractNum,
+            documentNumber: payload?.data?.documentNumber,
             caseId,
-            carrier: payload.carrier,
+            carrier: payload?.carrier,
             url,
-            taskStatus: payload.status,
+            taskStatus: payload?.status,
             function: 'tasks.updateTask',
         });
 

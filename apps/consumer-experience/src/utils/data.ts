@@ -24,6 +24,7 @@ import { DEFAULT_ERROR_STRING, toSentenceCase } from './strings';
 
 export const EVERLY_CONTACT_PHONE_NUMBER = '1-855-290-0529';
 export const WELLABE_CONTACT_PHONE_NUMBER = '1-888-222-3003';
+export const POLICY_ACKNOWLEDGEMENT_DOC_TYPE = 'NWB';
 
 export const policyStatusDisplayText: { [key in PolicyStatus]: string } = {
   [PolicyStatus.ACTIVE]: 'active',

@@ -28,6 +28,7 @@ export interface TaxWithholdingRowProp {
     withholding: WithholdingView | undefined;
     additionalWithHoldingConfig?: AdditionalWithHoldingConfig;
     isFormStateReadOnly?: boolean;
+    selectMin?: boolean | true;
 }
 
 export const getClasses = (checked: boolean) => {
@@ -51,6 +52,7 @@ const TaxWithholdingRow: React.FC<TaxWithholdingRowProp> = ({
     withholding,
     additionalWithHoldingConfig = null,
     isFormStateReadOnly,
+    selectMin = true
 }) => {
     const { t } = useTranslation();
     const [dollarAmount, setDollarAmount] = useState<string | null>(withholding?.dollarAmount || null);
@@ -108,7 +110,7 @@ const TaxWithholdingRow: React.FC<TaxWithholdingRowProp> = ({
                     value={percentAmount || ''}
                     variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
                 />
-                <ButtonGroupItem
+                {selectMin && <ButtonGroupItem
                     checked={selectMinimum}
                     className={getClasses(selectMinimum)}
                     dataTestId={`${place}-tax-withholding-select-minimum`}
@@ -118,7 +120,7 @@ const TaxWithholdingRow: React.FC<TaxWithholdingRowProp> = ({
                     }}
                     position="single"
                     disabled={isFormStateReadOnly}
-                />
+                />}
                 {additionalWithHoldingConfig?.amountType && selectMinimum ? (
                     <Field
                         formatOptions={numberFormat}

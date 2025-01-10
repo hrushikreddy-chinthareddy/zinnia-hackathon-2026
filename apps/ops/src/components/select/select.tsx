@@ -9,7 +9,7 @@ import FieldIcon from '@deps/components/fields/field-icon';
 import FieldLabel from '@deps/components/fields/field-label';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { ReactComponent as ChevronDownIcon } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
-import style from './select.module.css';
+
 import {
     SelectProps,
     getItemClasses,
@@ -22,6 +22,7 @@ import {
     MultiselectOption,
     SimpleOption,
 } from './select.helpers';
+import style from './select.module.css';
 
 const SingleSelectOptions = ({ options, value }: Omit<SimpleSelectProps, 'onChange' | 'isMultiselect'>) => {
     return (

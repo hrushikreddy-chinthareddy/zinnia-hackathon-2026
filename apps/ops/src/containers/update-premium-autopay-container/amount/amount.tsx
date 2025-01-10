@@ -43,9 +43,10 @@ const Amount = ({ policy }: AmountProps) => {
         if (autopay.initValues === false) {
             setAutopay(() => ({
                 ...autopay,
-                paymentAmount: systematicProgramData ? String(systematicProgramData.amount) : '',
                 effectiveDate: String(dayjs(systematicProgramData?.nextProgramDate).format(NUMERIC_DATE_FORMAT)),
+                frequency: systematicProgramData?.frequency as Frequency,
                 initValues: true,
+                paymentAmount: systematicProgramData ? String(systematicProgramData.amount) : '',
             }));
         }
     }, [autopay, setAutopay, systematicProgramData?.amount, systematicProgramData]);

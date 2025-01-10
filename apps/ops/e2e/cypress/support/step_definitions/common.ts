@@ -30,6 +30,7 @@ Given('{string} logs into Zinnia Live', (role: string) => {
 
 When('I click on {string} on the Navigation bar', (navbarLink: string) => {
   pages['Navigation bar'].getNavigationBarLink(navbarLink).click();
+  cy.wait(2000);
 });
 
 When('I click logout button', () => {
@@ -38,7 +39,7 @@ When('I click logout button', () => {
 });
 
 Then('Ops users navigates to homepage', () => {
-  
+
   pages['Home page']['Continue to sign in'].should('be.visible');
-  
+
 })

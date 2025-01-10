@@ -10,6 +10,8 @@ import {
     ActiveWithdrawalCase,
     Carrier,
     CaseStatus,
+    FormComment,
+    FormIrsData,
     FormParts,
     FormValidationErrors,
     FundWithdrawnMethod,
@@ -67,11 +69,17 @@ export const FormProvider = ({
     featureFlagDecisions,
 }: FormProviderProps) => {
     const searchParams = useSearchParams();
-    const [formData, setFormData] = useState(form.data.formRequest.formData);
+    const [formData, setFormData] = useState(form?.data?.formRequest?.formData);
     const [formDisbursement, setFormDisbursement] = useState(form.data.formRequest.formDisbursement);
     const [formDistribution, setFormDistribution] = useState(form.data.formRequest.formDistribution);
     const [formFullSurrenderAck, setFormFullSurrenderAck] = useState(form.data.formRequest.formFullSurrenderAck);
-    const [formIrsData, setFormIrsData] = useState(form.data.formRequest.formIrsData || null);
+    const [formIrsData, setFormIrsData] = useState(
+        form.data.formRequest.formIrsData
+            ? Array.isArray(form.data.formRequest.formIrsData)
+                ? form.data.formRequest.formIrsData
+                : ([form.data.formRequest.formIrsData] as FormIrsData[])
+            : []
+    );
     const [formOL4753Data, setFormOL4753Data] = useState(form.data.formRequest.formOL4753Data || null);
     const [formLoan, setFormLoan] = useState(form.data.formRequest.formLoan);
     const [formParty, setFormParty] = useState(form.data.formRequest.formParty);
@@ -86,6 +94,7 @@ export const FormProvider = ({
     const [formNigos, setFormNigos] = useState(form.data.formRequest.formNigos || null);
     const [formReindexingData, setFormReindexingData] = useState(form.data.formRequest.formReindexingData || null);
     const [currentFormState, setCurrentFormState] = useState(form.status);
+    const [formComment, setFormComment] = useState(form?.data?.formRequest?.formComment || ({} as FormComment));
     const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
     const isFormStateReadOnly = shouldShowNewExperience
         ? searchParams.get('action') === 'readonly' ||
@@ -117,6 +126,20 @@ export const FormProvider = ({
         setContractIssueState(issueState);
     }, [issueState]);
 
+    useEffect(() => {
+        if (Array.isArray(formIrsData)) {
+            const updatedFormIrsData = formIrsData.map(data => {
+                if (!Array.isArray(data.irsTaxWithholding)) {
+                    return {
+                        ...data,
+                        irsTaxWithholding: data.irsTaxWithholding ? [data.irsTaxWithholding] : [],
+                    };
+                }
+                return data;
+            });
+            setFormIrsData(updatedFormIrsData);
+        }
+    }, []);
     return (
         <FormDataContext.Provider
             value={{
@@ -151,6 +174,7 @@ export const FormProvider = ({
                 formWarnings,
                 parties,
                 formNigos,
+                formComment,
                 formReindexingData,
                 setFormSubtype,
                 setCurrentFormState,
@@ -178,7 +202,8 @@ export const FormProvider = ({
                 setFormSpecialInstruction,
                 setOwnerAcknowledgement,
                 setFormNigos,
-                setFormReindexingData
+                setFormReindexingData,
+                setFormComment,
             }}
         >
             {children}

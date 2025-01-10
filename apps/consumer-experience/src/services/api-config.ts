@@ -13,7 +13,7 @@ export const baseAppUrl = process.env.NEXT_PUBLIC_BASE_URL;
 export const apiServerBaseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 export const apiServerUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${apiVersion}`;
 export const policyApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/policy/${apiVersion}/policies`;
-export const documentApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/document/v2/documents`;
+export const documentApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/document/v2`;
 export const carrierApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${apiVersion}/carriers`;
 export const integrationApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/integration/${apiVersion}`;
 export const consumerExperienceAPIBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/consumer-experience/v1`;
@@ -117,6 +117,14 @@ export const isMockRidersRequestEnabled = () => {
   }
 
   return getMockParam()?.includes('riders') || isMockAllRequestEnabled();
+};
+
+export const isMockDocumentsRequestEnabled = () => {
+  if (!isMockAllowed()) {
+    return false;
+  }
+
+  return getMockParam()?.includes('documents') || isMockAllRequestEnabled();
 };
 
 export const isTestAnnuitiesEnabled = () => {

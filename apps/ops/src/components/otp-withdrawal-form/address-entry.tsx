@@ -18,6 +18,7 @@ type AddressProps = {
     showAddressLines?: boolean;
     isOL4753?: boolean;
     combinedAddress?: string;
+    className?: string,
 };
 
 export const DEFAULT_ADDRESS = {
@@ -44,6 +45,7 @@ export default function AddressEntry({
     showAddressLines = false,
     isOL4753 = false,
     combinedAddress = '',
+    className = '',
 }: AddressProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.addressDetails' });
 
@@ -63,7 +65,7 @@ export default function AddressEntry({
     }, [addressLine1, addressLine2, addressLine3, city, state, zip, zipPlusFour]);
 
     return (
-        <>
+        <div className={className}>
             <div className="max-w-lg">
                 <Field
                     label={t(`mailingAddress`) as string}
@@ -161,6 +163,6 @@ export default function AddressEntry({
                     />
                 )}
             </div>
-        </>
+        </div>
     );
 }

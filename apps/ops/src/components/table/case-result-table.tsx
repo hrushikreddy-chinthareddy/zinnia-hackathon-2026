@@ -28,6 +28,7 @@ import { getAgents, getPolicyOwners } from '@deps/helpers/parties';
 import { formatSSN, toTitleCase } from '@deps/helpers/string.helper';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
 import { Case } from '@deps/models/case/case';
+import { PartyInstance } from '@deps/models/case/party-instance';
 import { CaseDetailsTabValues, DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { SearchViewQuery } from '@deps/types/search';
 import { CaseClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
@@ -41,7 +42,6 @@ import { PiiProps } from '../pii/pii';
 import { PiiWrapper } from '../pii/PiiWrapper';
 import PlusOthers from '../plus-others/plus-others';
 import PopoverOnTruncate from '../popover-on-truncate/popover-on-truncate';
-import { PartyInstance } from '@deps/models/case/party-instance';
 
 dayjs.extend(timezone);
 dayjs.extend(advanced);
@@ -88,7 +88,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
         let fullName = owner?.fullName;
 
         if (owner && !fullName) {
-            fullName = `${owner?.firstName || ""} ${owner?.middleName || ""} ${owner?.lastName || ""}`;
+            fullName = `${owner?.firstName || ''} ${owner?.middleName || ''} ${owner?.lastName || ''}`;
         }
 
         return fullName;
@@ -138,6 +138,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
     const loadCaseDetails = (href: string) => {
         segmentAnalyticsTrackEvent<CaseClickedEvent>(SegmentTrackedEventName.CaseClicked, {
             caseId: singleCase.id,
+            session_id: perms.getSessionId(),
             userId: perms.getUserPartyId(),
         });
 
@@ -292,7 +293,7 @@ export const CaseResultTable = ({ cases, searchValues, handleSort, sortDirection
                         <Typography variant={TypographyVariant.BodySmBold}>{t('caseManagementDashboard.case.agentSsn')}</Typography>
                     </TableHeaderCell>
                     <TableHeaderCell sortable onClick={handleSort} className={styles.tableHeader}>
-                        <Typography variant={TypographyVariant.BodySmBold} className="flex align-center gap-1">
+                        <Typography variant={TypographyVariant.BodySmBold} className="flex align-center gap-1 justify-end">
                             {t('caseManagementDashboard.case.createdAt')}
                             <Icon type={sortDirection === 'asc' ? IconType.ARROW_UP : IconType.ARROW_DOWN} color="#00628B" />
                         </Typography>

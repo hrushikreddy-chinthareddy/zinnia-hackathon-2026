@@ -2,6 +2,7 @@ import { dataURItoBlob } from '@rjsf/utils';
 import { AxiosResponse } from 'axios';
 import dayjs from 'dayjs';
 
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import {
     PolicyDocumentApiRequest,
@@ -10,6 +11,7 @@ import {
     DocumentDownload,
     DocumentDownloadWithMime,
     EDSDocumentResponse,
+    PolicyDocument,
 } from '@deps/models/case/document';
 import { ManagementTask } from '@deps/models/case/task-instance';
 import { isMockPolicyDocsRequestEnabled } from '@deps/services/api-config';
@@ -19,6 +21,7 @@ import { pullFromCache, writeToCache } from '@deps/utils/cache';
 import { logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
 import { apiServerBaseUrl, baseAppUrl } from '../api-config';
+import { StatusCode } from '../api-utils/baseAPIClient';
 import { client } from '../api-utils/client';
 import { serverApi } from '../api-utils/serverApiClient';
 
@@ -38,23 +41,24 @@ export const getDocument = async (documentNumber: string, docType: string, clien
     }
 };
 
-export const uploadDocument = async (task: ManagementTask, document: any): Promise<EDSDocumentResponse | null> => {
+export const uploadDocument = async (task: ManagementTask, document: any, correlationId: string): Promise<EDSDocumentResponse | null> => {
     try {
         const url = `${baseAppUrl}/api/documents/upload`;
         const { blob, name } = dataURItoBlob(document);
 
-        // TODO: Update metadata
         const fileData = {
             file: document,
             metadata: {
                 sourceFileName: name,
-                docAccessLevel: 'ALL_ACCESS',
-                documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT), //'2024-11-15T10:21:33.690Z',
+                docAccessLevel: 'CLIENT_COPY',
+                documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
                 docCategory: 'NEW_BUSINESS',
                 fileType: blob.type,
                 parentCarrierCode: task.carrier.toUpperCase(),
                 formType: 'NB Application',
                 docClassification: 'INBOUND',
+                zinniaLiveCaseId: task.caseId,
+                correlationId: correlationId,
             },
         };
 
@@ -142,6 +146,112 @@ export const getDocumentSSR = async (
     }
 };
 
+type DocumentApiRequestInputs = {
+    source: DocumentTypeView;
+    clientCode: string;
+    contractNumber?: string;
+    documentDate?: string;
+    documentStartDate?: string;
+    documentEndDate?: string;
+    documentType?: string;
+    importStartDate?: string;
+    importEndDate?: string;
+    masterNumber?: string;
+    docStatus?: string;
+    caseId?: string; // OnBase CaseId
+    documentNumber?: string;
+    recipient?: 'Client' | 'Agent';
+    zinniaLiveCaseId?: string;
+    periods?: { PeriodYear: string; PeriodQuarters: string[] }[];
+};
+export const getDocuments = async ({
+    periods,
+    ...queryParams
+}: DocumentApiRequestInputs): Promise<PolicyDocumentApiRequest | DocumentErrorResponse> => {
+    try {
+        const queryString = new URLSearchParams(queryParams);
+        if (periods) {
+            queryString.append('periods', JSON.stringify(periods));
+        }
+        const cachedResult = pullFromCache('getDocuments', queryString.toString());
+
+        if (cachedResult) return cachedResult;
+
+        const data = await client.get<any, AxiosResponse>(`${documentBaseUrl}?${queryString.toString()}`);
+
+        writeToCache('getDocuments', queryString.toString(), data);
+
+        return data;
+    } catch (error: any) {
+        console.error('An error occurred while getting document results', error);
+        return error.response || error;
+    }
+};
+
+// Get all documents potentially associated with a case by using caseId and policy and combining the results sets
+export const getCaseDocuments = async ({
+    caseId,
+    clientCode,
+    policyNumber,
+    source,
+}: {
+    caseId: string;
+    clientCode: string;
+    policyNumber?: string;
+    source: DocumentTypeView;
+}): Promise<{ data: PolicyDocument[]; error?: { status: number; message: string } }> => {
+    if (!caseId || !clientCode || !source) {
+        console.error('getAllCaseDocuments::Missing caseId, clientCode, or source');
+        return { data: [], error: { status: 400, message: 'Missing caseId, clientCode, or source' } };
+    }
+
+    const caseDocRequest = getDocuments({ source, clientCode, zinniaLiveCaseId: caseId });
+    const policyDocRequest = policyNumber ? getDocuments({ source, clientCode, contractNumber: policyNumber }) : null;
+
+    try {
+        const [caseDocsResponse, policyDocsResponse] = await Promise.all([caseDocRequest, policyDocRequest]);
+        const docIds = new Set<string>();
+        const docs: PolicyDocument[] = [];
+
+        // if either request is unsuccessful, escape early
+        if (caseDocsResponse?.status !== 200 || (policyDocRequest && policyDocsResponse?.status !== 200)) {
+            return {
+                data: [],
+                error: {
+                    status: Math.max(caseDocsResponse?.status || 0, policyDocsResponse?.status || 0) || StatusCode.InternalServerError,
+                    message:
+                        (caseDocsResponse as PolicyDocumentApiRequest)?.statusText ||
+                        (caseDocsResponse as DocumentErrorResponse)?.message ||
+                        (policyDocsResponse as PolicyDocumentApiRequest)?.statusText ||
+                        (policyDocsResponse as DocumentErrorResponse)?.message ||
+                        'An error occured while getting documents',
+                },
+            };
+        }
+
+        (caseDocsResponse as PolicyDocumentApiRequest)?.data?.items?.forEach((doc: PolicyDocument) => {
+            if (!docIds.has(doc.documentId || (doc.documentID as string))) {
+                docIds.add(doc.documentId || (doc.documentID as string));
+                docs.push(doc);
+            }
+        });
+
+        (policyDocsResponse as PolicyDocumentApiRequest)?.data?.items?.forEach((doc: PolicyDocument) => {
+            if (!docIds.has(doc.documentId || (doc.documentID as string))) {
+                docIds.add(doc.documentId || (doc.documentID as string));
+                docs.push(doc);
+            }
+        });
+
+        return {
+            data: docs.sort((a, b) => b.documentDate.localeCompare(a.documentDate)),
+        };
+    } catch (e) {
+        console.error('getAllCaseDocuments::An error occurred while getting case documents', e);
+        return { data: [], error: { status: 500, message: 'An unknown error occurred while getting case documents' } };
+    }
+};
+
 export const getPolicyDocs = async (
     id: string,
     clientCode: string,
@@ -175,7 +285,7 @@ export const getPolicyDocs = async (
         return data;
     } catch (error: any) {
         console.error('An error occurred while getting policy document results', error);
-        return error.response;
+        return error;
     }
 };
 
@@ -211,7 +321,7 @@ export const getCorrespondenceDocs = async (
         return data;
     } catch (error: any) {
         console.error('An error occurred while getting correspondence document results', error);
-        return error.response;
+        return error;
     }
 };
 
@@ -237,6 +347,3 @@ export const getPolicyTypeDocs = async (
         return error.response;
     }
 };
-function uuidV4(): any | import('axios').AxiosHeaderValue | undefined {
-    throw new Error('Function not implemented.');
-}

@@ -123,7 +123,7 @@ export default function WithdrawalRules({ policy }: WithdrawalRulesProps) {
                                     />
                                     <Typography variant={TypographyVariant.BodySm} className="mt-[5px]">
                                         {policyDetails.requiredMinimumDistribution.calculationOption
-                                            ? t(`withdrawals.rmd.${policyDetails.requiredMinimumDistribution.calculationOption}`)
+                                            ? `${policyDetails.requiredMinimumDistribution.calculationOption}`
                                             : DEFAULT_ERROR_STRING}
                                     </Typography>
                                 </div>

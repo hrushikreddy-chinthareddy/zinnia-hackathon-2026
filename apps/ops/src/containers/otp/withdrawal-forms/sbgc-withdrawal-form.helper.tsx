@@ -605,10 +605,28 @@ export default function getSbgcConfig(t: TFunction) {
             value: RestrictionOption.AdoptionChildBirth,
         },
     ];
+    const w4pSignaturesConfig = [
+
+        {
+            component: SignatureFields.SignatureType,
+            key: 'owner-type',
+        },
+        {
+            component: SignatureFields.SignaturePresent,
+            key: 'owner-sign-present',
+        },
+
+        {
+            component: SignatureFields.SignatureDate,
+            key: 'owner-date',
+        },
+    ]
+
 
     return {
         formPartyConfigs,
         formValidation,
+        w4pSignaturesConfig,
         signaturesConfig,
         fundWithdrawnMethodOptions,
         moneyTypeOptions,

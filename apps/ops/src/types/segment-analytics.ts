@@ -4,7 +4,7 @@ export interface SegmentTrackedPageProps {
     user: UserProfile;
 }
 
-export type SegmentProps = {
+export type SegmentPageProps = {
     [key: string]: string | string[] | number | undefined;
 };
 
@@ -24,6 +24,7 @@ export enum SegmentPageName {
     RmdCase = 'RMD Case',
     SendCorrespondence = 'Send Correspondence',
     SendDocument = 'Send Document',
+    SendTaxForms = 'Send Tax Forms',
     SswCase = 'SSW Case',
     WithdrawalCase = 'Withdrawal Case',
 }
@@ -37,6 +38,7 @@ export enum SegmentTrackedEventName {
 }
 
 export interface BaseSegmentEventProperties {
+    session_id: string;
     userId: string;
 }
 
@@ -45,6 +47,9 @@ export type SearchSubmittedEvent = BaseSegmentEventProperties & {
     ssnUsed: boolean;
     firstNameUsed: boolean;
     lastNameUsed: boolean;
+    caseID?: string;
+    agentName?: boolean;
+    firmName?: string;
 };
 
 export type DropdownClickedEvent = BaseSegmentEventProperties & {

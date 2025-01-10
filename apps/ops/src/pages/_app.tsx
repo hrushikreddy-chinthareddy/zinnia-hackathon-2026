@@ -5,6 +5,8 @@ import '@radix-ui/themes/styles.css';
 import { UserProvider, useUser } from '@auth0/nextjs-auth0/client';
 import { datadogRum } from '@datadog/browser-rum';
 import { GoogleAnalytics } from '@next/third-parties/google';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AppProps } from 'next/app';
 import { Lato, Poppins } from 'next/font/google';
 import Head from 'next/head';
@@ -17,7 +19,6 @@ import { DEFAULT_PAGE_TITLE } from '@deps/constants/page-title';
 import { ApplicationDataProvider } from '@deps/contexts/ApplicationContext';
 import { NODE_ENV_PRODUCTION } from '@deps/types/constants';
 import { initializeBrowserLogging } from '@deps/utils/browser-logs';
-import { isNonProductionEnvironment } from '@deps/utils/environment.helper';
 
 const poppins = Poppins({
     subsets: ['latin'],
@@ -71,7 +72,7 @@ const AppHead = () => {
     return (
         <Head>
             <title>{DEFAULT_PAGE_TITLE}</title>
-            <meta name="description" content="DEPS Frontend" />
+            <meta name="description" content="Creating a modern experience today" />
             <meta name="viewport" content="width=device-width, initial-scale=1" />
             <link rel="icon" href="/favicon.ico" />
             <link rel="alternate" hrefLang="x-default" href="/" />
@@ -93,22 +94,43 @@ function isClient() {
     return typeof window !== 'undefined';
 }
 
+const queryClient = new QueryClient();
+
+queryClient.setDefaultOptions({
+    queries: {
+        staleTime: 60 * 1000, // 1 minute,
+        retry: (failureCount, error) => {
+            //Allow retries for anything except for 401 or 403s up to 3 times
+            if (failureCount >= 3) return false;
+            if ('status' in error) {
+                if (error.status === 403 || error.status === 401) {
+                    return false;
+                }
+            }
+            return true;
+        },
+    },
+});
+
 const App = (props: AppProps) => {
-    if (isClient() && !isNonProductionEnvironment()) {
+    if (isClient()) {
         // initializing the browser logs to datadog
         initializeBrowserLogging();
     }
 
     return (
-        <main className={`${poppins.variable} ${lato.variable}`}>
-            <UserProvider>
-                <AppHead />
-                <AppBody {...props} />
-                {process.env.NEXT_PUBLIC_GOOGLEANALYTICS_ENV === NODE_ENV_PRODUCTION && <GoogleAnalytics gaId="G-1NY7KTG7T3" />}
-            </UserProvider>
-            <GaMouseflowTrackingScript />
-            <SegmentAnalyticsScript />
-        </main>
+        <QueryClientProvider client={queryClient}>
+            <main className={`${poppins.variable} ${lato.variable}`}>
+                <UserProvider>
+                    <AppHead />
+                    <AppBody {...props} />
+                    {process.env.NEXT_PUBLIC_GOOGLEANALYTICS_ENV === NODE_ENV_PRODUCTION && <GoogleAnalytics gaId="G-1NY7KTG7T3" />}
+                </UserProvider>
+                <GaMouseflowTrackingScript />
+                <SegmentAnalyticsScript />
+            </main>
+            <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
     );
 };
 

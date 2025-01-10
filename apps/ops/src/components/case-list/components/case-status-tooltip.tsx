@@ -6,6 +6,7 @@ import { ReactNode } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { calculateDaysAgo } from '@deps/helpers/case-management';
+import { toTitleCase } from '@deps/helpers/string.helper';
 import { Case, Statuses } from '@deps/models/case/case';
 
 interface GetStatusDetailsProps {
@@ -30,7 +31,7 @@ export const getStatusDetails = ({ singleCase, t }: GetStatusDetailsProps) => {
         case Statuses.InProgress:
             statusVariant = BadgeVariant.INFO;
             statusTooltip = `${t('caseOverview.caseStatus.inProgress.tooltip', {
-                processSubType: processSubType ? processSubType : process,
+                processSubType: processSubType ? toTitleCase(processSubType) : toTitleCase(process),
             })}${dayjs(createdAt).format('MM/DD/YYYY')}${t('caseOverview.caseStatus.inProgress.tooltip2', {
                 daysAgo: daysAgo,
             })}`;
@@ -41,11 +42,11 @@ export const getStatusDetails = ({ singleCase, t }: GetStatusDetailsProps) => {
             statusVariant = BadgeVariant.ERROR;
             if (exceptions.length !== 0) {
                 statusTooltip = `${t('caseOverview.caseStatus.exception.tooltip', {
-                    processSubType: processSubType ? processSubType : process,
+                    processSubType: processSubType ? toTitleCase(processSubType) : toTitleCase(process),
                 })}${t('caseOverview.caseStatus.exception.tooltip2', { exceptions: exceptions.length })}`;
             } else {
                 statusTooltip = t('caseOverview.caseStatus.zeroException.tooltip', {
-                    requestSubType: processSubType ? processSubType : process,
+                    requestSubType: processSubType ? toTitleCase(processSubType) : toTitleCase(process),
                 });
             }
             statusText = t('caseOverview.caseStatus.exception.badgeText');
@@ -53,18 +54,24 @@ export const getStatusDetails = ({ singleCase, t }: GetStatusDetailsProps) => {
 
         case Statuses.Canceled:
             statusVariant = BadgeVariant.INACTIVE;
-            statusTooltip = `${t('caseOverview.caseStatus.canceled.tooltip')}${dayjs(updatedAt).format('MM/DD/YYYY')}.`;
+            statusTooltip = `${t('caseOverview.caseStatus.canceled.tooltip', {
+                processSubType: processSubType ? toTitleCase(processSubType) : toTitleCase(process),
+            })}${dayjs(updatedAt).format('MM/DD/YYYY')}.`;
             statusText = t('caseOverview.caseStatus.canceled.badgeText');
             break;
 
         case Statuses.Completed:
             statusVariant = BadgeVariant.SUCCESS;
             statusTooltip = `${t('caseOverview.caseStatus.completed.tooltip', {
-                processSubType: processSubType ? processSubType : process,
+                processSubType: processSubType ? toTitleCase(processSubType) : toTitleCase(process),
             })}${dayjs(updatedAt).format('MM/DD/YYYY')}.`;
             statusText = t('caseOverview.caseStatus.completed.badgeText');
             break;
-
+        case Statuses.NotStarted:
+            statusVariant = BadgeVariant.DEFAULT;
+            statusTooltip = t('caseOverview.caseStatus.notStarted.statusTooltip');
+            statusText = t('caseOverview.caseStatus.notStarted.statusTooltip');
+            break;
         default:
             statusVariant = BadgeVariant.DEFAULT;
             statusTooltip = t('caseOverview.caseStatus.unknown.tooltip');

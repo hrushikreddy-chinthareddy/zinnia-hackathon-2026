@@ -4,9 +4,9 @@ class OneTimePaymentPayorPage extends Page {
     get continueButtonPayorPage() {
         return cy.get(`button[data-testid="Continue"]`);
     }
-    
+
     get leaveTransactionButtonPayorPage() {
-        return cy.get(`button[data-testid="Cancel"]`);
+        return cy.get(`button[data-testid="Leave this transaction"]`);
     }
 
     //-----------------------------------------------------------------------------------------------------------------------

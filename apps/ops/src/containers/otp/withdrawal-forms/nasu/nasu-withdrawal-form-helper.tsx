@@ -358,29 +358,29 @@ export default function useNasuConfig(t: TFunction) {
             }: DisbursementParts) => {
                 const bank = isDirectDeposit
                     ? [
-                          {
-                              ...DEFAULT_BANK_DETAILS,
-                              maskedAccountNumber: null,
-                              accountNumber,
-                              accountType: {
-                                  text: accountType,
-                              },
-                              bankName,
-                              nameOnBankAccount: accountHolder ?? '',
-                              routingNumber: bankRoutingNumber,
-                              bankFurtherCreditAccount,
-                              bankFurtherCreditName,
-                              isDirectDeposit: { text: true },
-                              isDirectDepositValid: { text: isDirectDepositValid },
-                          },
-                      ]
+                        {
+                            ...DEFAULT_BANK_DETAILS,
+                            maskedAccountNumber: null,
+                            accountNumber,
+                            accountType: {
+                                text: accountType,
+                            },
+                            bankName,
+                            nameOnBankAccount: accountHolder ?? '',
+                            routingNumber: bankRoutingNumber,
+                            bankFurtherCreditAccount,
+                            bankFurtherCreditName,
+                            isDirectDeposit: { text: true },
+                            isDirectDepositValid: { text: isDirectDepositValid },
+                        },
+                    ]
                     : [
-                          {
-                              ...DEFAULT_BANK_DETAILS,
-                              isDirectDeposit: { text: false },
-                              maskedAccountNumber: maskedAccountNumber ?? null,
-                          },
-                      ];
+                        {
+                            ...DEFAULT_BANK_DETAILS,
+                            isDirectDeposit: { text: false },
+                            maskedAccountNumber: maskedAccountNumber ?? null,
+                        },
+                    ];
 
                 return {
                     ...getDefaultFormDisbursementValues(),
@@ -635,7 +635,21 @@ export default function useNasuConfig(t: TFunction) {
         const personTypeIndividual = partyDetails?.PersonType === LifeCadPartyPersonType.Individual;
         return personTypeIndividual;
     };
+    const w4pSignaturesConfig = [
+        {
+            component: SignatureFields.SignatureType,
+            key: 'w4p-owner-type',
+        },
+        {
+            component: SignatureFields.SignaturePresent,
+            key: 'w4p-signature-sign-present',
+        },
+        {
+            component: SignatureFields.SignatureDate,
+            key: 'w4p-signature-sign-date',
+        },
 
+    ];
     return {
         disbursementOptions,
         formSubtypeOptions,
@@ -652,5 +666,6 @@ export default function useNasuConfig(t: TFunction) {
         reasonOptions,
         defaultValues,
         handleShouldShowDOBInOl4573,
+        w4pSignaturesConfig
     };
 }

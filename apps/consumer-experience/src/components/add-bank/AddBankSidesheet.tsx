@@ -5,15 +5,16 @@ import { SideSheet, Button, Icon, IconType } from '@zinnia/bloom/components';
 import { useParams, useSearchParams } from 'next/navigation';
 import { FC, ReactNode, useEffect, useState } from 'react';
 
-import { addBankRequest } from '@/actions/bpm-actions';
-import { ActionTypes, useBpmStore } from '@/store/store';
-import { BankFormFields, FormSteps } from '@/types/bank';
+import { addBankRequest } from '@/actions/bpm/bank-actions';
+import { ActionTypes, PropertyKeys, useBpmStore } from '@/store/store';
+import { BankFormFields } from '@/types/bank';
+import { FormSteps } from '@/types/transactions';
 
 import styles from './AddBankSidesheet.module.css';
 import { AddBank } from './form-steps/add/AddBank';
-import { Error } from './form-steps/error/Error';
-import { Loading } from './form-steps/loading/Loading';
-import { Success } from './form-steps/success/Success';
+import { Error } from '../transaction-steps/error/Error';
+import { Loading } from '../transaction-steps/loading/Loading';
+import { Success } from '../transaction-steps/success/Success';
 
 export interface AddBankSidesheet {
   partyId: string;
@@ -84,17 +85,29 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
 
       updateBpmAction({
         actionType: ActionTypes.ADD,
-        bankAccountNumber: requestValues.accountNumber,
+        propertyKey: PropertyKeys.BANK_DETAILS,
+        itemKey: 'routingNumber',
+        itemValue: requestValues.routingNumber,
       });
       return;
     }
+  };
+
+  const onClose = () => {
+    setOpen(false);
+
+    // Timeout is here to prevent the flash of the internal sidesheet component from showing
+    // as the animation happens
+    setTimeout(() => {
+      setStep(undefined);
+    }, 300);
   };
 
   return (
     <SideSheet
       header="Add New Bank Account"
       overrideOpen={open}
-      closeCallback={() => setOpen(false)}
+      closeCallback={onClose}
       trigger={
         <Button
           className={styles.addBank as string}
@@ -110,7 +123,7 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
       {!step && (
         <AddBank
           values={values}
-          cancelCallback={() => setOpen(false)}
+          cancelCallback={onClose}
           submitCallback={handleAdd}
         />
       )}
@@ -120,14 +133,14 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
           errorTitle={errorTitle}
           isServerError={isServerError}
           errorMessage={errorMessage}
-          closeCallback={() => setOpen(false)}
+          closeCallback={onClose}
         />
       )}
       {step === FormSteps.SUCCESS && (
         <Success
           successTitle={successTitle}
           successMessage={successMessage}
-          closeCallback={() => setOpen(false)}
+          closeCallback={onClose}
         />
       )}
     </SideSheet>

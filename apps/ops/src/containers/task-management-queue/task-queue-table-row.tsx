@@ -14,13 +14,15 @@ import { ProcessType } from '@deps/models/case/enums';
 import { TaskSource } from '@deps/models/case/task';
 import { AssignedTask, TaskStatus } from '@deps/models/case/task-instance';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
+import { unassignTask } from '@deps/queries/api/v1/task';
 import { getTaskInstance, updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as SparklesIcon } from '@deps/styles/elements/icons/icons_outlined/sparkles.svg';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
-import { logError, logWarn } from '@deps/utils/server-logging';
-import { unassignTask } from '@deps/queries/api/v1/task';
+import { parseErrorInformation } from '@deps/utils/server-logging';
+
 type TaskQueueTableRowProps = {
     task: AssignedTask;
     featureFlagDecisions: FeatureFlags;
@@ -41,19 +43,27 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
 
     const handleStartTask = async (taskId: string, taskStatus: TaskStatus) => {
         if (taskStatus === TaskStatus.InProgress) {
+            browserLogInfo('task-queue:handleStartTask::Task is in progress', {
+                taskId: taskId,
+                taskStatus: taskStatus,
+            });
             router.push(`/nigo-entry?taskId=${taskId}`);
             return;
         }
 
         const taskData = await getTaskInstance({ taskId: taskId });
         if (!taskData) {
+            browserLogInfo('task-queue:handleStartTask::handleStartTask::Error retrieving a task', {
+                taskId: taskId,
+                taskStatus: taskStatus,
+            });
             router.push(`/create-case/error?errorCode=${ERROR_CODES.DATA_ENTRY_START_TASK_ERROR}`);
             return;
         }
 
         const caseType = ProcessesToCaseTypeMap[taskData.process as Processes];
         if (!caseType) {
-            logError('task-queue::Error getting case type', {
+            browserLogInfo('task-queue:handleStartTask::Error getting case type', {
                 taskId: taskData.id,
                 documentNumber: taskData?.data?.documentNumber,
                 clientCode: taskData?.carrier,
@@ -63,10 +73,12 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
             return;
         }
 
-
         // If feature flag is not enabled, redirect to error page
-        if (caseType.toUpperCase() !== 'RMD' && !isFormFeatureEnabled(caseType.toUpperCase() as ProcessType, taskData?.carrier, featureFlagDecisions)) {
-            logWarn('task-queue::feature flag not enabled', {
+        if (
+            caseType.toUpperCase() !== 'RMD' &&
+            !isFormFeatureEnabled(caseType.toUpperCase() as ProcessType, taskData?.carrier, featureFlagDecisions)
+        ) {
+            browserLogInfo('task-queue:handleStartTask::Feature flag not enabled', {
                 taskId: taskData.id,
                 documentNumber: taskData?.data?.documentNumber,
                 clientCode: taskData?.carrier,
@@ -81,11 +93,21 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
             const response = await updateTask(taskData.caseId, taskData.id, body, timer);
 
             if (response) {
+                browserLogInfo('task-queue:handleStartTask::Successfully updated task in progress', {
+                    taskId: taskData.id,
+                    documentNumber: taskData?.data?.documentNumber,
+                    clientCode: taskData?.carrier,
+                    process: taskData?.process,
+                });
                 router.push(`/nigo-entry?taskId=${taskData.id}`);
                 return;
             }
         } catch (e) {
-            logError('TaskQueue::Error updating task in progress', { taskId: taskData.id, caseId: taskData.caseId });
+            browserLogError('task-queue:handleStartTask::Error updating task in progress', {
+                ...parseErrorInformation(e),
+                taskId: taskId,
+                caseId: taskData.caseId,
+            });
             router.push(`/create-case/error?errorCode=${ERROR_CODES.DATA_ENTRY_START_TASK_ERROR}`);
             return;
         }
@@ -93,26 +115,31 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
     const handleUnassignTask = async (taskId: string) => {
         const taskData = await getTaskInstance({ taskId: taskId });
         if (!taskData) {
+            browserLogInfo('task-queue:handleUnassignTask::Error retrieving a task', { taskId: taskId });
             router.push(`/create-case/error?errorCode=${ERROR_CODES.DATA_ENTRY_START_TASK_ERROR}`);
             return;
         }
 
         try {
             const response = await unassignTask(taskData.caseId, taskData.id);
-            if (response.status === "NEW") {
+            if (response.status === TaskStatus.New) {
+                browserLogInfo('task-queue:handleUnassignTask::Successfully un-assigned task', { taskId: taskId });
                 getTasks();
             } else {
-                setErrorMessage(t('unassignTaskError') + "An error occurred while unassigning the task")
+                browserLogInfo('task-queue:handleUnassignTask::An error occurred while un-assigning the task', { taskId: taskId, status: response?.status });
+                setErrorMessage(t('unassignTaskError') + 'An error occurred while un-assigning the task');
             }
-
-
         } catch (e) {
-            logError('TaskQueue::Error uassigning task', { taskId: taskData.id, caseId: taskData.caseId });
+            browserLogError('task-queue:handleUnassignTask::Error un-assigning task', {
+                ...parseErrorInformation(e),
+                taskId: taskId,
+                caseId: taskData.caseId,
+            });
             router.push(`/create-case/error?errorCode=${ERROR_CODES.DATA_ENTRY_START_TASK_ERROR}`);
             return;
         }
+    };
 
-    }
     return (
         <TableRow key={`task_queue_row_${task.id}`}>
             <TableCell>

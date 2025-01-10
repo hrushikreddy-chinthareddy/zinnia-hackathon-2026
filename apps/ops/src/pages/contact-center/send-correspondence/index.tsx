@@ -200,8 +200,9 @@ export const getServerSideProps = withPageAuthRequired({
         );
         try {
             const userInfoForLogging = getUserInfoFromUser(user);
-            const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging);
-            if (!policy || !policy.carrierId) {
+            const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging, true);
+            const carrierId = policy?.carrierId || '';
+            if (!policy || !carrierId) {
                 logInfo('contact-center/send-statement/policy-not-found', { policyNumber, planCode, correlationId, page: resolvedUrl });
                 return {
                     redirect: {
@@ -211,9 +212,9 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
             const applicableStatements = (await getApplicableStatementsSSR(planCode, accessToken, userInfoForLogging)) || [];
-            const shouldShowEmailOption = featureFlagDecisions?.[FEATURE_FLAGS[getFeatureFlagKey(policy.carrierId, 'EMAIL')]];
-            const shouldShowFaxOption = featureFlagDecisions?.[FEATURE_FLAGS[getFeatureFlagKey(policy.carrierId, 'FAX')]];
-            const shouldShowMailOption = featureFlagDecisions?.[FEATURE_FLAGS[getFeatureFlagKey(policy.carrierId, 'MAIL')]];
+            const shouldShowEmailOption = featureFlagDecisions?.[FEATURE_FLAGS[getFeatureFlagKey(carrierId, 'EMAIL')]];
+            const shouldShowFaxOption = featureFlagDecisions?.[FEATURE_FLAGS[getFeatureFlagKey(carrierId, 'FAX')]];
+            const shouldShowMailOption = featureFlagDecisions?.[FEATURE_FLAGS[getFeatureFlagKey(carrierId, 'MAIL')]];
 
             return {
                 props: {

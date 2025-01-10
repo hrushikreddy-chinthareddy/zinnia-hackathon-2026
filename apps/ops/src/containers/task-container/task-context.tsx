@@ -8,6 +8,7 @@ import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 export type TaskState = {
     taskMetadata: FormMetadata;
     task: ManagementTask;
+    correlationId: string;
     isReadyForDataEntry: boolean;
     exceptions: string[];
     messages: { [key: string]: { [key: string]: string } };
@@ -29,6 +30,7 @@ const noop = (() => {}) as React.Dispatch<React.SetStateAction<any>>;
 export const taskDefaultValues = {
     taskMetadata: {} as FormMetadata,
     task: {} as ManagementTask,
+    correlationId: '',
     isReadyForDataEntry: false,
     exceptions: [] as any,
     messages: [] as any,

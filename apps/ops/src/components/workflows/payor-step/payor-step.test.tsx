@@ -11,6 +11,10 @@ jest.mock('@deps/contexts/WorkflowContainerContext', () => ({
     }),
 }));
 
+jest.mock('react-i18next', () => ({
+    useTranslation: () => ({ t: () => {} }),
+}));
+
 const mockPolicy = {
     parties: [
         { partyId: 'Party_PO_Owner_1', firstName: 'John', lastName: 'Doe' },

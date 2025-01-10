@@ -18,9 +18,8 @@ import PolicyTestsCard from './cards/policy-tests-card/policy-tests-card';
 export const PremiumsSubPage = () => {
     const { breadcrumb } = useBreadcrumb();
     const { policy, policyDetails } = useContext(PolicyData);
-    const { t } = useTranslation(TranslationFiles.COMMON, {
-        keyPrefix: 'premium.upcoming',
-    });
+    const { t: tRoot } = useTranslation(TranslationFiles.COMMON);
+    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'premium.upcoming' });
     const [isEligibleManageAutopay, setIsEligibleManageAutopay] = useState(false);
     const [ineligibleManageAutopayReason, setIneligibleManageAutopayReason] = useState('');
 
@@ -113,9 +112,15 @@ export const PremiumsSubPage = () => {
                 additionalCharges={addCharges}
                 bankDetails={payorBankDetails}
                 footerLinks={footerContent as FooterContent[]}
-                monthlyAmount={upcomingPayment?.amount}
+                autopayAmount={upcomingPayment?.amount}
                 paymentDate={upcomingPayment?.nextProgramDate}
                 paymentDateText={(!!upcomingPayment?.nextProgramDate && t('paymentDateText')) || undefined}
+                paymentFrequencyText={
+                    t('paymentFrequencyText', {
+                        paymentMode: tRoot(`systematicProgram.frequency.${upcomingPayment?.frequency?.toLowerCase()}`),
+                        paymentType: t('paymentType.premium'),
+                    }) || undefined
+                }
             />
 
             {!isTerm && !isAnnuity && (

@@ -22,5 +22,5 @@ Feature: Ops user views cases for Policy number for document
   Scenario: Cases not found due to invalid policy found
     When I navigate to the Create Case page
       And I search by case type:'SSW', client:'Security' and document Id:'20220629-EM-695273'
-      Then I should see text:'An error occurred during the case creation process'
+      Then I should see text:'Invalid document number or client ID'
 

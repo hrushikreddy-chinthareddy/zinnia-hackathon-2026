@@ -5,7 +5,6 @@ import { getSlug, toTitleCase } from '@deps/helpers/string.helper';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { CaseStatus } from '@deps/models/case/withdrawal/case';
 
-import ActionCellRenderer from './action-cell-renderer';
 import { Task } from './task-listing.types';
 
 export const buildTaskLink = (taskId: string, caseId: string, caseType: string, documentNumber: string, clientId: string) => {
@@ -52,6 +51,7 @@ const getTaskStatusText = (t: TFunction, status: string) => {
 };
 export const toFormattedTask = (t: TFunction, task: Task, caseId: string, caseType: string, documentNumber: string, clientId: string) => {
     const statusDuration = getStatusDuration(t, task.updatedDate, task.status);
+
     return {
         status: task.status,
         taskId: task.id,
@@ -59,8 +59,7 @@ export const toFormattedTask = (t: TFunction, task: Task, caseId: string, caseTy
         taskStatus: getTaskStatusText(t, task.status),
         taskName: task.taskName || '-',
         statusDuration: statusDuration,
-        userId: task.userId || '-',
-        actions: ActionCellRenderer,
+        userId: task.userId || '-'
     };
 };
 

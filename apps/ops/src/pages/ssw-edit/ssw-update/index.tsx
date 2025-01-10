@@ -212,7 +212,7 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
-            const policy = await getPolicyDetailsSsr(contractNum, planCode, accessToken, userInfoForLogging);
+            const policy = await getPolicyDetailsSsr(contractNum, planCode, accessToken, userInfoForLogging, true);
             if (!policy) {
                 logError('ssw-edit::Policy not found', {
                     taskId,
@@ -248,7 +248,6 @@ export const getServerSideProps = withPageAuthRequired({
                     },
                 };
             }
-
 
             const specialProgramdetails = await getSpecialProgramsSSR(form.data.contractNum, form.carrier, accessToken);
             if (!specialProgramdetails) {

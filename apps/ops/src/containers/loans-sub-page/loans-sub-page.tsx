@@ -44,7 +44,7 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
             {!!loanCarryingBalance && (
                 <UpcomingPaymentCard
                     className="content-divider"
-                    monthlyAmount={upcomingPayment?.amount}
+                    autopayAmount={upcomingPayment?.amount}
                     paymentDate={upcomingPayment?.nextProgramDate}
                     bankDetails={payorBankDetails}
                     additionalCharges={addCharges}
@@ -56,7 +56,6 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
                     }
                     paymentDateText={(!!upcomingPayment?.nextProgramDate && t('paymentDateText')) || undefined}
                     footerLinks={[
-                        // https://zinnia.atlassian.net/browse/DEPU-1936
                         upcomingPayment?.nextProgramDate
                             ? {
                                   href: '#',
@@ -77,10 +76,8 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
                             tempInactive: !!isStillInactive.loanPageOTP,
                         },
                         {
-                            href: '#',
+                            href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/loans/new-loan`,
                             text: t('startNew'),
-                            tooltip: isStillInactive.loanPageStartNew,
-                            tempInactive: !!isStillInactive.loanPageStartNew,
                         },
                     ]}
                 />

@@ -19,6 +19,7 @@ import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Popover from '@deps/components/popover/popover';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
 import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
+import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { isPreviewSupported, useDocumentDownload } from '@deps/helpers/documents.helper';
 import { convertKebabedDateString } from '@deps/helpers/string.helper';
 import { ReactComponent as LinkIcon } from '@deps/styles/elements/icons/actions/link.svg';
@@ -69,7 +70,7 @@ const DownloadItem = ({ doc, carrierCode }: { doc: DocumentWithSource; carrierCo
     );
 };
 
-export const createAction = (doc: DocumentWithSource, carrierCode: string, t: TFunction, label?:string) => {
+export const createAction = (doc: DocumentWithSource, carrierCode: string, t: TFunction, label?: string) => {
     return isPreviewSupported(doc) ? (
         <DocumentPreviewer
             className="!underline-offset-2"
@@ -79,7 +80,7 @@ export const createAction = (doc: DocumentWithSource, carrierCode: string, t: TF
             activeDocType={doc.documentSource}
             variant={NavElementVariant.Secondary}
         >
-             {label ? t(label) :t('view')}
+            {label ? t(label) : t('view')}
         </DocumentPreviewer>
     ) : (
         <DownloadItem doc={doc} carrierCode={carrierCode} />
@@ -102,17 +103,18 @@ export default function DocumentsResultsTable({
                 <TableRow>
                     <TableHeaderCell>
                         <div className="flex flex-row items-center gap-1">
-                            {t('documentIdentifier')}
-                            <Popover
-                                body={t('documentIdentifierTooltip')}
-                                title={t('documentIdentifier') as string}
-                                placement={PopoverPlacement.TopRight}
-                            >
-                                <Icon type={IconType.CIRCLE_INFO} color="var(--color-primary-color-primary)" height={16} width={16} />
-                            </Popover>
+                            {t('documentId')}
+                            {documentType !== DocumentTypeView.Correspondence && (
+                                <Popover
+                                    body={t('documentIdentifierTooltip')}
+                                    title={t('documentId') as string}
+                                    placement={PopoverPlacement.TopRight}
+                                >
+                                    <Icon type={IconType.CIRCLE_INFO} color="var(--color-primary-color-primary)" height={16} width={16} />
+                                </Popover>
+                            )}
                         </div>
                     </TableHeaderCell>
-                    <TableHeaderCell>{t('document')}</TableHeaderCell>
                     <TableHeaderCell>{t(documentType === DocumentTypeView.Correspondence ? 'sentDate' : 'receivedDate')}</TableHeaderCell>
                     <TableHeaderCell>{t('fileType')}</TableHeaderCell>
                     <TableHeaderCell>
@@ -131,24 +133,26 @@ export default function DocumentsResultsTable({
                     return (
                         <TableRow className="disabled-tr" key={`document-${document.documentId || document.documentID}`}>
                             <TableCell>
-                                {linkedDocumentIdentifiers.includes(docDisplayId) ? (
-                                    <Tooltip
-                                        body={
-                                            t('linkedTo', {
-                                                type: document.documentType?.toLowerCase() || DEFAULT_ERROR_STRING,
-                                            }) as string
-                                        }
-                                        placement={PopoverPlacement.TopRight}
-                                    >
-                                        <LinkIcon className="-mt-0.5 mr-1.5 inline text-gray-600" width={16} height={16} />
-                                    </Tooltip>
-                                ) : null}
-                                {docDisplayId}
-                            </TableCell>
-                            <TableCell>
-                                <Tooltip body={document.displayName} placement={PopoverPlacement.TopRight}>
+                                <div className="flex flex-col items-start">
                                     <PiiWrapper>{document.displayName}</PiiWrapper>
-                                </Tooltip>
+                                    <div>
+                                        {linkedDocumentIdentifiers.includes(docDisplayId) ? (
+                                            <Tooltip
+                                                body={
+                                                    t('linkedTo', {
+                                                        type: document.documentType?.toLowerCase() || DEFAULT_ERROR_STRING,
+                                                    }) as string
+                                                }
+                                                placement={PopoverPlacement.TopRight}
+                                            >
+                                                <LinkIcon className="-mt-0.5 mr-1.5 inline text-gray-600" width={16} height={16} />
+                                            </Tooltip>
+                                        ) : null}
+                                        <Typography variant={TypographyVariant.BodySm} className="text-gray-600">
+                                            {docDisplayId}
+                                        </Typography>
+                                    </div>
+                                </div>
                             </TableCell>
                             <TableCell>
                                 <span>{convertKebabedDateString(document.documentDate)}</span>
@@ -162,7 +166,7 @@ export default function DocumentsResultsTable({
                 })}
                 {!results.length && (
                     <TableRow className="disabled-tr w-full">
-                        <TableCell className="!text-left md:!text-center" colSpan={5}>
+                        <TableCell className={clsx('!text-left md:!text-center', styles.noResults)} colSpan={5}>
                             {t('noResults')}
                         </TableCell>
                     </TableRow>

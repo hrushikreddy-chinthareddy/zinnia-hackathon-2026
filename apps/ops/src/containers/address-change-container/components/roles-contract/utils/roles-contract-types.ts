@@ -9,6 +9,7 @@ export interface PartyAddressCard {
     partyRoles: string[];
     roleIdentifiers: PolicyParties[];
     tags: TagKey[];
+    email?: string;
 }
 
 export interface AssociateAddressTableRow {

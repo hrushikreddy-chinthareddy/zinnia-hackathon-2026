@@ -1,12 +1,16 @@
 import { Tag } from '@zinnia/bloom/components';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 
 import ClickContainer from '@deps/components/click-container/click-container';
+import Label, { LabelVariant } from '@deps/components/label/label';
+import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { FormattedPhone } from '@deps/containers/people-data-cards/phone-card/phone-card.helpers';
 import { AddressTypeAndAddress } from '@deps/containers/small-data-card/address-data/address-data';
 
 import { PartyAddressCard } from '../utils/roles-contract-types';
+
 
 export interface IRoleAddressCardProps {
     partyCardsLits: PartyAddressCard[];
@@ -14,9 +18,21 @@ export interface IRoleAddressCardProps {
     selectedIds: number[];
     handleClick: (ids: number) => void;
     isAddressChange?: boolean;
+    isAddressCard?: boolean;
+    addEmail?: (email: string) => void;
 }
 
-export const RoleAddressCard = ({ partyCardsLits, title, selectedIds, handleClick, isAddressChange = true }: IRoleAddressCardProps) => {
+export const RoleAddressCard = ({
+    partyCardsLits,
+    title,
+    selectedIds,
+    handleClick,
+    isAddressChange = true,
+    isAddressCard = true,
+}: IRoleAddressCardProps) => {
+
+    const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
+
     return (
         <>
             <Typography variant={TypographyVariant.LabelLg}>{title}</Typography>
@@ -43,11 +59,10 @@ export const RoleAddressCard = ({ partyCardsLits, title, selectedIds, handleClic
                             </div>
                             {(card?.firstName || card?.lastName) && (
                                 <Typography variant={TypographyVariant.BodySm} className="py-2">
-                                    {`${card?.firstName} ${card?.lastName}`}
+                                    <PiiWrapper>{`${card?.firstName} ${card?.lastName}`}</PiiWrapper>
                                 </Typography>
                             )}
-
-                            {card?.address ? (
+                            {isAddressCard && card?.address ? (
                                 <AddressTypeAndAddress
                                     key={card.address.addressId}
                                     address={card.address}
@@ -55,7 +70,21 @@ export const RoleAddressCard = ({ partyCardsLits, title, selectedIds, handleClic
                                     isAddressChange={isAddressChange}
                                 />
                             ) : null}
-                            {card?.homePhone ? <FormattedPhone phone={card.homePhone}></FormattedPhone> : null}
+                            {!isAddressCard && card?.email && (
+                                <div>
+                                    <div>
+                                        <Label
+                                            className="h-6 leading-4.5"
+                                            label={t('correspondence.email')}
+                                            variant={LabelVariant.FieldLabel}
+                                        />
+                                    </div>
+                                    <Typography variant={TypographyVariant.BodySm} className="py-0 break-all">
+                                        <PiiWrapper>{`${card?.email}`}</PiiWrapper>
+                                    </Typography>
+                                </div>
+                            )}
+                            {isAddressCard && card?.homePhone ? <FormattedPhone phone={card.homePhone}></FormattedPhone> : null}
                         </div>
                     </ClickContainer>
                 ))}

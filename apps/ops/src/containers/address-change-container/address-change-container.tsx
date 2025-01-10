@@ -32,7 +32,7 @@ const AddressChangeContainer = ({ policy, document, planCode }: AddressChangeCon
     const {
         query: { doc, clientId },
     } = router;
-    const { formData, setFormData } = useAddressChange();
+    const { formData, setFormData, submitSuccess } = useAddressChange();
     const channel = doc ? getChannel(doc as string) : null;
 
     const steps = useMemo(
@@ -50,6 +50,7 @@ const AddressChangeContainer = ({ policy, document, planCode }: AddressChangeCon
                         subtitle={t('start.subtitle')}
                         processType={Processes.AddressChange}
                         isOnBaseUpdateAssistiveText={true}
+                        isContinueDisabled={submitSuccess}
                     />
                 ),
                 screenReaderLabel: t('tabs.start'),
@@ -91,7 +92,7 @@ const AddressChangeContainer = ({ policy, document, planCode }: AddressChangeCon
                 text: t('tabs.confirm'),
             },
         ],
-        [t, policy, setFormData, formData, doc, document, planCode, clientId]
+        [t, policy, setFormData, formData, submitSuccess, doc, document, planCode, clientId, channel]
     );
 
     const filteredSteps: Step[] = useMemo(

@@ -1,6 +1,9 @@
 {
   "recommendations": [
     "codeium.codeium",
-    "foxundermoon.shell-format"
+    "foxundermoon.shell-format",
+    "bierner.markdown-mermaid",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint"
   ]
 }

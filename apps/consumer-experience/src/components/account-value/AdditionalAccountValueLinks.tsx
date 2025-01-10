@@ -42,9 +42,9 @@ export const AdditionalAccountValueLinks: FC<
       : []),
     {
       url: `/coverage/${lineOfBusinessURL}/${planCode}/${policyNumber}/account/surrender`,
-      urlLabel: 'go to surrender policy page',
+      urlLabel: `go to surrender ${lineOfBusiness === LineOfBusiness.ANNUITY ? 'contract' : 'policy'} page`,
       isInternal: true,
-      linkText: 'Surrender Policy',
+      linkText: `Surrender ${lineOfBusiness === LineOfBusiness.ANNUITY ? 'contract' : 'policy'}`,
     },
   ];
 

@@ -29,7 +29,7 @@ export type UpcomingPaymentCardProps = {
     bankDetails?: BankAccount;
     // card-transactions-props
     paymentFrequencyText?: string;
-    monthlyAmount?: number;
+    autopayAmount?: number;
     additionalChargesTitle?: string;
     additionalCharges?: AdditionalCharge[];
     // manage bar props

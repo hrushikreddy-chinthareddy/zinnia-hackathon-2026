@@ -25,7 +25,7 @@ interface ConfirmProps {
 export const ConfirmStep = ({ policy, document, planCode, clientId }: ConfirmProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'addressChange.confirm' });
     const router = useRouter();
-    const { signatureData, roleIdentifier, applyToRoles, formErrors, formData, phone, address } = useAddressChange();
+    const { signatureData, roleIdentifier, applyToRoles, formErrors, formData, phone, address, setSubmitSuccess } = useAddressChange();
     const [submitFailed, setSubmitFailed] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [ownerName, setOwnerName] = useState('');
@@ -36,7 +36,6 @@ export const ConfirmStep = ({ policy, document, planCode, clientId }: ConfirmPro
 
         if (!document && formData.businessKey && formData.caseId !== '' && clientId) {
             documentResult = await fetchDocument(formData.businessKey, DocumentType.AddressChange, clientId.toUpperCase());
-        
             if (!documentResult.success) {
                 console.error('ConfirmStep:: No documentNumber from getDocument', { documentNumber: formData.businessKey, documentType: DocumentType.AddressChange, clientId });
                 setSubmitFailed(true);
@@ -56,8 +55,12 @@ export const ConfirmStep = ({ policy, document, planCode, clientId }: ConfirmPro
         });
 
         const response = await addTransaction(requestBody);
+
         if (response.status !== 'ACCEPTED') {
             setSubmitFailed(true);
+            setSubmitSuccess(false);
+        } else {
+            setSubmitSuccess(true);
         }
         const policyOwnerId = policy?.partyRoles?.find(pr => pr.partyRole === PartyRole.OWNER)?.partyId;
         const policyOwner = policy?.parties?.find(party => party.partyId === policyOwnerId);

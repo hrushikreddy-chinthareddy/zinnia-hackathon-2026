@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 
 import InputCheckBox from '@deps/components/checkbox-v2/input-checkbox';
 import Content, { ContentVariant } from '@deps/components/content/content';
@@ -21,38 +21,46 @@ export interface BeneficiaryListingItemProps {
     carrierId: string;
     index: string;
     setBeneData: Dispatch<SetStateAction<any>>;
-    policy: Policy
-    isBeneInfoOnFile?: boolean
+    policy: Policy;
+    isBeneInfoOnFile?: boolean;
     partyRoleId: any;
 }
 
-export default function BeneficiaryListingItem({ policy, index, partyRole, selectedParty, carrierId, setBeneData, isBeneInfoOnFile, partyRoleId }: BeneficiaryListingItemProps) {
+export default function BeneficiaryListingItem({
+    policy,
+    index,
+    partyRole,
+    selectedParty,
+    carrierId,
+    setBeneData,
+    isBeneInfoOnFile,
+    partyRoleId,
+}: BeneficiaryListingItemProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'beneChange.beneDetails.beneficiaryListing' });
     const [showBeneficiary, setShowBeneficiary] = useState(false);
-    const { deletedBene, setDeletedBene, beneData} = useBeneChange();
+    const { deletedBene, setDeletedBene, beneData } = useBeneChange();
 
     const relationshipToInsured = partyRoleId && policy?.partyRoles?.find(role => role?.partyRoleId === partyRoleId)?.relationshipToInsured;
     const position = beneData.map((element: any) => element.index).indexOf(index);
     const [currentBene, setCurrentBene] = useState(
         position > -1
-        ? beneData[position]
-        : getInitialBene(partyRole, index, selectedParty, relationshipToInsured, selectedParty?.partyId, true, 'NONE', partyRoleId)
+            ? beneData[position]
+            : getInitialBene(partyRole, index, selectedParty, relationshipToInsured, selectedParty?.partyId, true, 'NONE', partyRoleId)
     );
     const [isNonEditable, setIsNonEditable] = useState<boolean>(true);
 
     const isCurrentRemoved = useMemo(() => {
         return deletedBene.includes(index);
     }, [deletedBene, index]);
-    
 
-    useEffect(()=> {
+    useEffect(() => {
         setBeneData((prevState: any) => {
             const position = prevState.map((element: any) => element.index).indexOf(index);
             if (position > -1) {
                 prevState[position] = currentBene;
-                return [...prevState ]
+                return [...prevState];
             } else {
-                return [...prevState, { ...currentBene } ]
+                return [...prevState, { ...currentBene }];
             }
         });
     }, [currentBene, index, setBeneData]);
@@ -62,12 +70,12 @@ export default function BeneficiaryListingItem({ policy, index, partyRole, selec
             if (prevState.includes(id)) {
                 return prevState.filter((value: any) => value !== id);
             } else {
-                return [...prevState, id]
+                return [...prevState, id];
             }
         });
 
-        setCurrentBene((prevState: any) =>  {
-            return { ...prevState, action:  isChecked ? 'DELETE' : 'NONE' };
+        setCurrentBene((prevState: any) => {
+            return { ...prevState, action: isChecked ? 'DELETE' : 'NONE' };
         });
     };
 
@@ -85,10 +93,13 @@ export default function BeneficiaryListingItem({ policy, index, partyRole, selec
                             {getName(selectedParty)} {!isCurrentRemoved ? ` (${selectedParty?.beneficiaryPercentage}) %` : '(--)%'}
                         </span>
                     </div>
-                    { isNonEditable && (
+                    {isNonEditable && (
                         <IconButton
                             aria-describedby={`bene-listing-item-edit-${index}`}
-                            onClick={() => {setIsNonEditable(!isNonEditable); setShowBeneficiary(true)}}
+                            onClick={() => {
+                                setIsNonEditable(!isNonEditable);
+                                setShowBeneficiary(true);
+                            }}
                             disabled={isCurrentRemoved}
                         >
                             <EditIcon height={16} width={16} />
@@ -102,7 +113,6 @@ export default function BeneficiaryListingItem({ policy, index, partyRole, selec
                             <InputCheckBox
                                 isDisabled={isBeneInfoOnFile}
                                 checked={isCurrentRemoved}
-                            
                                 onChange={() => {
                                     handleChange(index, isCurrentRemoved ? false : true);
                                 }}
@@ -121,19 +131,20 @@ export default function BeneficiaryListingItem({ policy, index, partyRole, selec
                     </div>
                 </div>
             </div>
-            <div>{showBeneficiary && !isCurrentRemoved && (
-                <BeneficiaryDetails
-                    partyRole={partyRole}
-                    partyId={selectedParty?.partyId}
-                    selectedParty={selectedParty}
-                    carrierId={carrierId}
-                    setBeneData={setBeneData}
-                    index={index}
-                    policy={policy}
-                    setShowBeneficiary={setShowBeneficiary}
-                    isNonEditable={isNonEditable}
-                />)
-            }
+            <div>
+                {showBeneficiary && !isCurrentRemoved && (
+                    <BeneficiaryDetails
+                        partyRole={partyRole}
+                        partyId={selectedParty?.partyId}
+                        selectedParty={selectedParty}
+                        carrierId={carrierId}
+                        setBeneData={setBeneData}
+                        index={index}
+                        policy={policy}
+                        setShowBeneficiary={setShowBeneficiary}
+                        isNonEditable={isNonEditable}
+                    />
+                )}
             </div>
         </div>
     );

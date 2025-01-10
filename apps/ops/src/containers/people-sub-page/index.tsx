@@ -56,7 +56,7 @@ export const PeopleSubPage: React.FC = () => {
     const { policy, refreshPolicy } = useContext(PolicyData);
     const { t } = useTranslation();
     // BPB - ToDo: Use this everywhere here.
-    const policyDetails = new PolicyDetails(policy);
+    const policyDetails = useMemo(() => new PolicyDetails(policy), [policy]);
     const router = useRouter();
     const extractedParties = useMemo(() => policy?.parties || [], [policy]);
     const extractedPartyRoles = useMemo(() => policy?.partyRoles || [], [policy]);
@@ -65,6 +65,7 @@ export const PeopleSubPage: React.FC = () => {
         () => combineNameAndRoles(extractedParties, extractedPartyRoles, t),
         [extractedParties, extractedPartyRoles, t]
     );
+
     const [peopleState, setPeopleState] = useState<PeopleState>(initialPeopleState);
     const { breadcrumb } = useBreadcrumb();
     const { peopleRolesFilter, setPeopleRolesFilter, clearPeopleRolesFilter } = useContext(PeopleRolesFilterContext);
@@ -115,10 +116,8 @@ export const PeopleSubPage: React.FC = () => {
                     isBeneficiarySelected: peopleRolesFilter.filterValue === 'beneficiary',
                 },
             }));
-        } else {
-            setPeopleRolesFilter({ ...peopleRolesFilter });
         }
-    }, []);
+    }, [nameTags, peopleRolesFilter]);
 
     // Handler(s)
     const handleChipClick = (chipValue: string) => {

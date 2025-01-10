@@ -1,5 +1,6 @@
-import { useState, useCallback, Dispatch, SetStateAction } from 'react';
+import { useState, useCallback, Dispatch, SetStateAction, useEffect } from 'react';
 
+import { isEmptyObject } from '@deps/helpers/objects.helper';
 import { Case } from '@deps/models/case/case';
 import { getCases } from '@deps/queries/api/cases';
 import { CaseSearchBody } from '@deps/types/search';
@@ -21,6 +22,13 @@ export const useFetchCases = (): UseFetchCasesResult => {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
+    useEffect(() => {
+        if (isEmptyObject(filters)) {
+            setTotal(null);
+            setCases(null);
+        }
+    }, [filters]);
+
     const fetchCases = useCallback(async () => {
         setLoading(true);
         setError(null);
@@ -34,6 +42,8 @@ export const useFetchCases = (): UseFetchCasesResult => {
             }
         } catch (err) {
             setError((err as Error).message);
+            setCases(null);
+            setTotal(null);
         } finally {
             setLoading(false);
         }

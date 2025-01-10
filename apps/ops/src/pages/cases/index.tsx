@@ -1,4 +1,7 @@
 import { Session, getSession, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { BannerAlert, BannerVariant } from '@zinnia/bloom/components';
+import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
 import { GetServerSidePropsContext } from 'next';
 import dynamic from 'next/dynamic';
 import { useTranslation } from 'next-i18next';
@@ -23,8 +26,9 @@ import {
     initialFilters,
     CaseTableData,
 } from '@deps/contexts/CaseManagementFilters';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { getAdvisorsExcelCaseSearchParams, getAdvisorsExcelCaseStatsParams } from '@deps/helpers/advisors-excel';
+import { getAdvisorsExcelCaseParams } from '@deps/helpers/advisors-excel';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { formatCaseTotals, getAdditionalFilters, getSearchValueObject, toggleLabels } from '@deps/helpers/case-management';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
@@ -68,6 +72,8 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
     }, [setCaseManagementFilters]);
 
     const { t } = useTranslation();
+    const { featureFlags } = useOptimizely();
+    const enableAdditionalAdvisorsExcelCarriers = featureFlags?.case_advisors_excel_additional_carrier_support;
 
     useSegmentPageTracker(user, SegmentPageName.CaseManagementDashboard);
 
@@ -92,7 +98,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         };
 
         if (isAdvisorsExcel) {
-            const advisorsExcelParams = getAdvisorsExcelCaseStatsParams();
+            const advisorsExcelParams = getAdvisorsExcelCaseParams(enableAdditionalAdvisorsExcelCarriers);
 
             caseStatsRequest = {
                 ...caseStatsRequest,
@@ -128,7 +134,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
 
             // DEPU-2835 - temporary work around for Advisor Excel
             if (isAdvisorsExcel) {
-                const advisorsExcelParams = getAdvisorsExcelCaseSearchParams();
+                const advisorsExcelParams = getAdvisorsExcelCaseParams(enableAdditionalAdvisorsExcelCarriers);
 
                 additionalFilters = {
                     ...additionalFilters,
@@ -205,6 +211,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                     ...caseManagementFilters.additionalFilters,
                     processTypes: Array.from(caseManagementFilters.additionalFilters.processTypes),
                     products: Array.from(caseManagementFilters.additionalFilters.products),
+                    brokerDealerName: caseManagementFilters.additionalFilters.brokerDealerName,
                     requestSubType: Array.from(caseManagementFilters.additionalFilters.requestSubType),
                 },
             });
@@ -257,10 +264,14 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
     const handleSearch = useCallback(
         (value: SearchViewQuery) => {
             segmentAnalyticsTrackEvent<SearchSubmittedEvent>(SegmentTrackedEventName.SearchSubmitted, {
+                agentName: !!value?.agentFirstName || !!value?.agentLastName,
+                caseID: value?.caseId,
+                firmName: value?.firmName,
                 ssnUsed: !!value?.ssn,
-                firstNameUsed: !!value?.firstName,
-                lastNameUsed: !!value?.lastName,
+                firstNameUsed: !!value?.ownerFirstName,
+                lastNameUsed: !!value?.ownerLastName,
                 policyNumber: value?.policyNumber,
+                session_id: user.sid,
                 userId: user.partyId,
             });
             setCaseManagementFilters(prevFilters => ({ ...prevFilters, searchValue: value, offset: 0 }));
@@ -350,11 +361,32 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         sideSheet.handleOpen(true);
     };
 
+    dayjs.extend(isBetween);
+    const showPresidentialMourningBanner = () => {
+        const today = dayjs();
+        return today.isBetween('2025-01-08', '2025-01-10', 'day', '[]');
+    };
+
     // JSX
     return (
         <CaseManagementFiltersContext.Provider value={[caseManagementFilters, setCaseManagementFilters]}>
             <PageHead titleKey="caseManagement" />
             <NoNavLayout fullHeight={true}>
+                {showPresidentialMourningBanner() && (
+                    <BannerAlert
+                        bodyText={
+                            <>
+                                In recognition of the National Day of Mourning following the death of former{' '}
+                                <strong>President Jimmy Carter</strong>, the stock market will be closed on <strong>January 9, 2025</strong>
+                                . As a result, contract values are as of close of business <strong>January 8, 2025</strong>. Any trades or
+                                other financial transactions submitted on <strong>January 9, 2025</strong> will be processed when the stock
+                                market reopens on <strong>January 10, 2025</strong>.
+                            </>
+                        }
+                        variant={BannerVariant.Warning}
+                        className="mb-8"
+                    />
+                )}
                 <Typography variant={TypographyVariant.H1} className="md:mb-8 mb-4">
                     {t('caseManagementDashboard.h1')}
                 </Typography>
@@ -377,6 +409,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                                     };
                                 })
                             }
+                            sessionId={user.sid}
                             userId={user.partyId}
                             values={caseManagementFilters.additionalFilters.caseStatus}
                         />

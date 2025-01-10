@@ -20,47 +20,60 @@ import Exceptions from './exceptions';
 import { formatTimestamp, TransformedStep } from './progress-tab-helpers';
 import Tasks from './tasks';
 
-enum StepTagIds {
-    UnderwritingAccepted = 'underwritingEvalutaion.underwritingDecisionApproved',
-    UnderwritingAdverse = 'underwritingEvaluation.underwritingDecisionAdverse',
-    UnderwritingDeclined = 'underwritingEvalutaion.underwritingDecisionDeclined',
-    SuitabilityReview = 'suitabilityReview.suitabilityReview',
-    UserAccepted = 'userDecision.acceptedOffer',
-    UserRejected = 'userDecision.rejectedOffer',
-    UserExpired = 'userDecision.expireOffer',
-    UserAmended = 'userDecision.requestedOfferAmendment',
+enum StepResults {
+    Approved = 'approved',
+    Success = 'success',
+    Declined = 'declined',
+    Failure = 'failure',
+    Adverse = 'adverse',
+    RiskNotAcceptable = 'risk not acceptable',
+    Accepted = 'accepted',
+    Rejected = 'rejected',
+    AmendmentAccepted = 'amendment accepted',
+    AmendedOfferRequested = 'amended offer requested',
+    Expired = 'expired',
 }
 
 const StepResultTag = ({ step }: { step: TransformedStep }) => {
     const { t } = useTranslation();
     let text;
-    switch (step.id) {
+    switch (step?.stepResult?.toLowerCase()) {
         // Underwriting
-        case StepTagIds.UnderwritingAccepted:
-            text = t('caseOverview.tabs.accepted');
+        case StepResults.Approved:
+        case StepResults.Success:
+            text = t('caseOverview.tabs.approved');
             break;
-        case StepTagIds.UnderwritingAdverse:
+        case StepResults.Adverse:
             text = t('caseOverview.tabs.adverse');
             break;
-        case StepTagIds.UnderwritingDeclined:
+        case StepResults.Declined:
+        case StepResults.Failure:
             text = t('caseOverview.tabs.declined');
             break;
+        case StepResults.RiskNotAcceptable:
+            text = t('caseOverview.tabs.riskNotAcceptable');
+            break;
         // User Decision
-        case StepTagIds.UserAccepted:
+        case StepResults.Accepted:
             text = t('caseOverview.tabs.accepted');
             break;
-        case StepTagIds.UserRejected:
+        case StepResults.Rejected:
             text = t('caseOverview.tabs.rejected');
             break;
-        case StepTagIds.UserExpired:
+        case StepResults.Expired:
             text = t('caseOverview.tabs.expired');
             break;
-        case StepTagIds.UserAmended:
-            text = t('caseOverview.tabs.amended');
+        case StepResults.AmendmentAccepted:
+            text = t('caseOverview.tabs.amendmentAccepted');
+            break;
+        case StepResults.AmendedOfferRequested:
+            text = t('caseOverview.tabs.amendedOfferRequested');
             break;
         default:
+            text = step.stepResult;
             break;
     }
+
     if (text) {
         return <Tag text={text} variant={TagVariant.White} />;
     }

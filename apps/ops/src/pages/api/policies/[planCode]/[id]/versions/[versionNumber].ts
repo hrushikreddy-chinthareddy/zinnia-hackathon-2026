@@ -1,22 +1,33 @@
+import { getSession } from '@auth0/nextjs-auth0';
 import { AxiosResponse } from 'axios';
 
 import { Policy } from '@deps/models/policy/sor-policy';
-import { policyApiBaseUrl } from '@deps/queries/api-config';
+import { apiServerBaseUrl, policyApiBaseUrl } from '@deps/queries/api-config';
 import { requestHandler } from '@deps/queries/api-utils/server';
+import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { ErrorResponse } from '@deps/types/api';
-import { policyResponseSanitizer } from '@deps/utils/sanitizers';
+import { CheckTupleResponse } from '@deps/types/fga';
+import { fullyMaskPolicyResponse, policyResponseSanitizer } from '@deps/utils/sanitizers';
 import { withAuthAndLogging } from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default withAuthAndLogging(
-    async (req: NextApiRequest, res: NextApiResponse<AxiosResponse<Policy> | ErrorResponse>) => {
+    async (req: NextApiRequest, res: NextApiResponse<AxiosResponse<Policy> | ErrorResponse>, loggingContext: object) => {
+        const session = await getSession(req, res);
         const { id, planCode, versionNumber } = req.query;
+        const unmaskingResponse = await serverApi.post<any, AxiosResponse<CheckTupleResponse>>(
+            `${apiServerBaseUrl}/fga/v1/check`,
+            { user: `party:${session?.user?.partyId}`, relation: 'unmask_pii', object: `policy:${id}_${planCode}` },
+            { authorization: 'Bearer ' + session?.accessToken },
+            loggingContext
+        );
+        const masker = unmaskingResponse.data?.allowed ? policyResponseSanitizer : fullyMaskPolicyResponse;
         return await requestHandler<Policy>(
             `${policyApiBaseUrl}/${planCode}/${id}/versions/${versionNumber}?viewDetails=true`,
             req,
             res,
-            policyResponseSanitizer
+            masker
         );
     },
     { file: 'polices/:planCode/:id/versions/:versionNumber', function: 'routeHandler' }

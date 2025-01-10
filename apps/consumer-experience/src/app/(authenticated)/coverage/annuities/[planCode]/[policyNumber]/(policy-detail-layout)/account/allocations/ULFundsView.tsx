@@ -5,6 +5,7 @@ import { FeatureType } from '@zinnia/api-types/types/sor';
 
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { NonHoldingFunds } from '@/components/funds-table/NonHoldingFunds';
+import { sortNonHoldingFunds } from '@/components/funds-table/utils';
 import {
   getPolicyFunds,
   getPolicyStatusDetails,
@@ -24,6 +25,10 @@ export const ULFundsView = ({
   const { data: funds, isLoading } = useQuery({
     queryKey: [QueryKeys.POLICY_FUNDS, planCode, policyNumber],
     queryFn: () => getPolicyFunds(planCode, policyNumber),
+    select: data =>
+      sortNonHoldingFunds(data || []).filter(
+        fund => fund?.allocationPercentage && fund?.totalFundValue
+      ),
   });
 
   const { data: freelookData } = useQuery({
@@ -37,6 +42,7 @@ export const ULFundsView = ({
       };
     },
   });
+
   return (
     <div className="container">
       <NonHoldingFunds

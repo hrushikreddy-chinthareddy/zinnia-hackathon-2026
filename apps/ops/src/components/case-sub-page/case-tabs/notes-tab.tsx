@@ -10,6 +10,8 @@ import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import { NoteInstance } from '@deps/models/case/note-instance';
 import { ReactComponent as AnnotationsIcon } from '@deps/styles/elements/icons/communications/annotations.svg';
 import { DEFAULT_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import UnauthorizedCard from '@deps/components/card/card-unauthorized';
+import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 
 const NoteItem = ({ note }: { note: NoteInstance }) => {
     const { t } = useTranslation();
@@ -36,7 +38,7 @@ const NoteItem = ({ note }: { note: NoteInstance }) => {
 
 export default function NotesTab() {
     const { t } = useTranslation();
-    const { caseNotes, loadingNotes } = useCaseActivityContext();
+    const { caseNotes, loadingNotes, notesStatusCode } = useCaseActivityContext();
     return (
         <CardContainer>
             <div>
@@ -47,7 +49,7 @@ export default function NotesTab() {
                     <PageLoader variant={PageLoaderVariant.Center} />
                 </div>
             )}
-            {!loadingNotes && !caseNotes?.length && (
+            {!loadingNotes && !caseNotes?.length && notesStatusCode !== StatusCode.Forbidden && (
                 <div className="flex justify-center">
                     <CardInfo
                         icon={<AnnotationsIcon width={50} height={50} className="text-gray-300" />}
@@ -64,6 +66,7 @@ export default function NotesTab() {
                     ))}
                 </div>
             )}
+            {notesStatusCode === StatusCode.Forbidden && <UnauthorizedCard />}
         </CardContainer>
     );
 }

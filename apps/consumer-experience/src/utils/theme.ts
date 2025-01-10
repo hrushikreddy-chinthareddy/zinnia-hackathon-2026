@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { getCookie, setCookie } from './auth';
+import { isVercelEnvironment } from './environment';
 import { THEME_COOKIE } from './serverClientUtils';
-import { getSubdomain, isVercelEnvironment } from './url';
+import { getSubdomain } from './url';
 
 export const themes = ['everly', 'wellabe'];
 

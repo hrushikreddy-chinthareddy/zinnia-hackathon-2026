@@ -8,7 +8,7 @@ import { TaskReviewStep } from '../components/steps/task-review/task-review-step
 export const getSuitabilitySteps = ({
     carrierId,
     caseId,
-    taskId,
+    taskInfoLink,
     taskType,
     isReadyForDataEntry,
     t,
@@ -19,7 +19,7 @@ export const getSuitabilitySteps = ({
         {
             ariaLabel: t('tabs.taskReview'),
             isVisible: () => true,
-            component: <TaskReviewStep caseId={caseId} clientCode={carrierId} taskInfoLink={''} taskType={taskType} />,
+            component: <TaskReviewStep caseId={caseId} clientCode={carrierId} taskInfoLink={taskInfoLink} taskType={taskType} />,
             text: t('tabs.start'),
             index: 0,
             isCompleted: true,
@@ -28,7 +28,7 @@ export const getSuitabilitySteps = ({
         {
             ariaLabel: t('tabs.suitabilityForm'),
             isVisible: () => isReadyForDataEntry,
-            component: <TaskFormStep taskType={taskType} taskInfoLink={''} isSubmit={false}></TaskFormStep>,
+            component: <TaskFormStep taskType={taskType} taskInfoLink={taskInfoLink} isSubmit={false}></TaskFormStep>,
             text: t('tabs.suitabilityForm'),
             index: 1,
             screenReaderLabel: t('tabs.suitabilityForm'),
@@ -36,7 +36,7 @@ export const getSuitabilitySteps = ({
         {
             ariaLabel: t('tabs.summary'),
             isVisible: () => isReadyForDataEntry,
-            component: <TaskFormStep taskType={taskType} taskInfoLink={''} readonly={true} isSubmit={true}></TaskFormStep>,
+            component: <TaskFormStep taskType={taskType} taskInfoLink={taskInfoLink} readonly={true} isSubmit={true}></TaskFormStep>,
             text: t('tabs.summary'),
             index: 2,
             screenReaderLabel: t('tabs.summary'),
@@ -52,7 +52,7 @@ export const getSuitabilitySteps = ({
         {
             ariaLabel: t('tabs.confirm'),
             isVisible: () => true,
-            component: <ConfirmStep caseId={caseId} taskId={taskId} taskType={taskType}></ConfirmStep>,
+            component: <ConfirmStep taskType={taskType} taskInfoLink={taskInfoLink}></ConfirmStep>,
             text: t('tabs.confirm'),
             index: 3,
             screenReaderLabel: t('tabs.confirm'),

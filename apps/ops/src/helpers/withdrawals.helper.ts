@@ -1,6 +1,5 @@
+import { Policy } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
-
-import { Policy } from '@deps/models/policy/sor-policy';
 
 interface MapWithdrawalsSubPage {
     isEligible: boolean;
@@ -16,10 +15,12 @@ export interface WithdrawalsValues {
     allTimeWithdrawalCount?: number;
     freeWithdrawalAmount?: number;
     maximumWithdrawalAmount?: number;
+    marketValueAdjustmentIndicator?: boolean;
+    marketValueAdjustmentAmount?: number;
 }
 
 export const mapWithdrawalsSubPage = ({ isEligible, policy }: MapWithdrawalsSubPage): WithdrawalsValues => {
-    const { accountValues, allocation, withdrawalValues } = policy;
+    const { accountValues, allocation, withdrawalValues, marketValueAdjustment } = policy;
 
     let allowedAnnualWithdrawals = 0;
 
@@ -41,5 +42,7 @@ export const mapWithdrawalsSubPage = ({ isEligible, policy }: MapWithdrawalsSubP
         netSurrenderValue: accountValues?.surrenderValue,
         freeWithdrawalAmount: withdrawalValues?.freeWithdrawalAmount,
         maximumWithdrawalAmount: withdrawalValues?.maximumWithdrawalAmount,
+        marketValueAdjustmentIndicator: marketValueAdjustment?.marketValueAdjustmentIndicator,
+        marketValueAdjustmentAmount: marketValueAdjustment?.marketValueAdjustmentAmount,
     };
 };
