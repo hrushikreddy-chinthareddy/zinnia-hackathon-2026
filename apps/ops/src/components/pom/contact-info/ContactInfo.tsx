@@ -1,6 +1,6 @@
 import { clsx } from 'clsx';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { Label } from '@zinnia/bloom/components';
+import { Address, Label } from '@zinnia/bloom/components';
 import { default as styles } from './ContactInfo.module.css';
 
 export const ContactInfo = () => {
@@ -12,11 +12,11 @@ export const ContactInfo = () => {
             <div className={clsx(styles.cardSubSectionContent)}>
                 <div>
                     <Label>Business Address</Label>
-                    <Typography variant={TypographyVariant.BodySm}>Third party marketer</Typography>
+                    <Address addrCountry="US" addrLine1="5412 Tomahawk St " city="Hastings" state="NE" zipCode="68901 " />
                 </div>
                 <div>
                     <Label>Mailing address</Label>
-                    <Typography variant={TypographyVariant.BodySm}>Independent marketing organization</Typography>
+                    <Address addrCountry="US" addrLine1="5412 Tomahawk St " city="Hastings" state="NE" zipCode="68901 " />
                 </div>
                 <div>
                     <Label>Phone</Label>
