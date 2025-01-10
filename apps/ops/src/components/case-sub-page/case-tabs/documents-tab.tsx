@@ -6,8 +6,7 @@ import { useCallback, useMemo, useState } from 'react';
 import UnauthorizedCard from '@deps/components/card/card-unauthorized';
 import EventsLoader from '@deps/components/events-loader/events-loader';
 import Label, { LabelVariant } from '@deps/components/label/label';
-import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
-import Toggle from '@deps/components/toggle/toggle';
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import DocumentResultsPagination from '@deps/containers/subpages/documents-sub-page/documents-results-pagination';
@@ -34,12 +33,12 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
     const { t } = useTranslation();
     const knownCaseDocIds = getKnownCaseDocIds(caseDetails);
     const { isNewBusinessCase, policy } = useCaseActivityContext();
-    // Always show all docs for new business cases
-    const [showAll, setShowAll] = useState(isNewBusinessCase);
     const [docSource, setDocSource] = useState(DocumentTypeView.Policy as string);
     const limit = 25;
     const [offset, setOffset] = useState(0);
 
+    // If there's a policy number on a non-new-business case, we want to get all policy docs
+    // Otherwise, get all the docs associated with the case
     const documentSearchBody = useMemo<SearchRequest>(() => {
         return {
             parentCarrierCode: caseDetails.carrier,
@@ -47,9 +46,9 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
                 docSource === (DocumentTypeView.Policy as string)
                     ? V3SR.documentClassification.INBOUND
                     : V3SR.documentClassification.OUTBOUND,
-            ...(showAll && policy ? { policyNumber: policy.policyNumber } : { zinniaLiveCaseId: caseDetails.id }),
+            ...(!isNewBusinessCase && policy ? { policyNumber: policy.policyNumber } : { zinniaLiveCaseId: caseDetails.id }),
         };
-    }, [showAll, docSource, policy, caseDetails]);
+    }, [isNewBusinessCase, docSource, policy, caseDetails]);
     const [displayDocs, loadingDocuments, total, documentsStatusCode] = useDocumentSearch(documentSearchBody, limit, offset);
 
     const goToPage = useCallback(
@@ -61,10 +60,6 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
 
     const setDocSourceFilter = (val: string) => {
         setDocSource(val);
-        setOffset(0);
-    };
-    const setShowAllToggle = (val: boolean) => {
-        setShowAll(val);
         setOffset(0);
     };
 
@@ -89,15 +84,6 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
                                 </RadioGroup.Item>
                             </RadioGroup.Root>
                         </div>
-                        {!isNewBusinessCase && (
-                            <Toggle
-                                classes="md:self-end"
-                                text={t('caseOverview.tabs.showAllPolicyDocuments') as string}
-                                ariaLabel={t('caseOverview.tabs.showAllPolicyDocuments') as string}
-                                value={showAll}
-                                handleToggle={setShowAllToggle}
-                            />
-                        )}
                     </div>
                     {!loadingDocuments && (
                         <DocumentsResultsTable

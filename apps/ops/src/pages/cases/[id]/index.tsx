@@ -1,3 +1,5 @@
+// BPB - can delete if we remove old case details page
+
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';

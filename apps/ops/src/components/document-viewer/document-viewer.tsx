@@ -13,7 +13,7 @@ import { supportedExtensions, supportedImgExtensions } from '@deps/models/case/d
 import { getDocumentPreviewV2, getDocumentPreviewV3 } from '@deps/queries/api/documents';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
-import { DocumentTypeView } from '../side-sheet/documents/documents-content';
+import { DocumentTypeView } from '../side-sheet/documents/DocumentTypeView';
 
 export interface DocumentViewerProps {
     status: number;

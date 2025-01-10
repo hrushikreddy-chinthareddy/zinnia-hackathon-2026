@@ -8,7 +8,7 @@ import { isPreviewSupported } from '@deps/hooks/useDocumentDownload';
 import { PolicyDocument } from '@deps/models/case/document';
 import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icons_outlined/document-search.svg';
 
-import { DocumentTypeView } from '../documents-content';
+import { DocumentTypeView } from '../DocumentTypeView';
 
 dayjs.extend(relativeTime);
 

@@ -1,3 +1,4 @@
+// BPB - can delete if we remove the old case details page
 import { useTranslation } from 'next-i18next';
 import { useState, useCallback, useEffect } from 'react';
 
@@ -10,14 +11,10 @@ import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import { Case } from '@deps/models/case/case';
 import { ReactComponent as PaperClipIcon } from '@deps/styles/elements/icons/communications/paper-clip.svg';
 
+import { DocumentTypeView } from './DocumentTypeView';
+
 interface DocumentsContentCaseProps {
     caseDetails?: Case;
-}
-
-export enum DocumentTypeView {
-    Policy = 'Policy',
-    Correspondence = 'Correspondence',
-    Case = 'Case',
 }
 
 export const DocumentsContent: React.FC<DocumentsContentCaseProps> = ({ caseDetails }) => {

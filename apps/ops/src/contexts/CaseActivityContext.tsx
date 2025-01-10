@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
-import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { CallLog } from '@deps/models/case/call-log';

@@ -10,7 +10,7 @@ import FieldLabel from '@deps/components/fields/field-label';
 import PageHeader from '@deps/components/page-header/page-header';
 import SelectSimple from '@deps/components/select/select';
 import { SimpleOption } from '@deps/components/select/select.helpers';
-import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { determineRange } from '@deps/helpers/numbers.helper';
 import useBreadcrumb from '@deps/hooks/useBreadcrumbs';

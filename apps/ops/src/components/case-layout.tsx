@@ -1,3 +1,4 @@
+// BPB - can delete if we remove old case details page.
 import { PropsWithChildren } from 'react';
 
 import { Case } from '@deps/models/case/case';
@@ -7,7 +8,6 @@ interface PageLayoutProps extends PropsWithChildren {
     caseDetails?: Case;
     children: React.ReactNode;
 }
-
 const CaseLayout = ({ children, caseDetails }: PageLayoutProps) => (
     <>
         <NavBarCase caseDetails={caseDetails} />

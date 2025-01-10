@@ -18,7 +18,7 @@ import DocumentPreviewer from '@deps/components/document-viewer/document-preview
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Popover from '@deps/components/popover/popover';
-import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { convertKebabedDateString } from '@deps/helpers/string.helper';

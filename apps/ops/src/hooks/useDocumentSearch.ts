@@ -1,7 +1,7 @@
 import { MetadataSearchResponse, SearchRequest as V3SR } from '@zinnia/api-types/types/documents-v3';
 import { useCallback, useEffect, useState } from 'react';
 
-import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyDocumentApiRequest } from '@deps/models/case/document';
 import { searchDocuments } from '@deps/queries/api/client/documents/v3/search';

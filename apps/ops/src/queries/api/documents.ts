@@ -3,7 +3,7 @@ import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { AxiosResponse } from 'axios';
 import dayjs from 'dayjs';
 
-import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import {
     PolicyDocumentApiRequest,

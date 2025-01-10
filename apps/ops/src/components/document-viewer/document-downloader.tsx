@@ -7,7 +7,7 @@ import { useDocumentDownload } from '@deps/hooks/useDocumentDownload';
 import { ReactComponent as DownloadIcon } from '@deps/styles/elements/icons/icons_outlined/download.svg';
 import loadingImage from '@deps/styles/images/loader.png';
 
-import { DocumentTypeView } from '../side-sheet/documents/documents-content';
+import { DocumentTypeView } from '../side-sheet/documents/DocumentTypeView';
 
 type DocumentDownloaderProps = {
     document: DocumentWithSource; // BPB - fix this!

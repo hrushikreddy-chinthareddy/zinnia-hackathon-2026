@@ -2,7 +2,7 @@ import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { saveAs } from 'file-saver';
 import { useCallback, useState } from 'react';
 
-import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyDocument, supportedExtensions, DocumentDownloadV2WithMime } from '@deps/models/case/document';
 import { downloadDocumentV2, downloadDocumentV3 } from '@deps/queries/api/documents';
