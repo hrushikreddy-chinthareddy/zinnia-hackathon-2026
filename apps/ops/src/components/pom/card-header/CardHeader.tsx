@@ -6,14 +6,10 @@ import { default as styles } from './CardHeader.module.css';
 export const CardHeader = () => {
     return (
         <div className={clsx(styles.cardHeader)}>
-            <Icon type={IconType.DOCUMENT_TEXT} className={clsx(styles.icon)} />
+            <Icon type={IconType.DOCUMENT_TEXT} />
             <div>
-                <Typography variant={TypographyVariant.H1} className={clsx(styles.header)}>
-                    Acme Corporation
-                </Typography>
-                <Typography variant={TypographyVariant.Caption} className={clsx(styles.caption)}>
-                    Tax identification number: 669-45-6789
-                </Typography>
+                <Typography variant={TypographyVariant.H1}>Acme Corporation</Typography>
+                <Typography variant={TypographyVariant.Caption}>Tax identification number: 669-45-6789</Typography>
             </div>
         </div>
     );

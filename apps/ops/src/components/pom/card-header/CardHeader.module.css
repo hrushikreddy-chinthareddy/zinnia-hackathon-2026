@@ -10,28 +10,3 @@
     align-items: baseline;
     padding: var(--measure-dimension-padding-4xl);
 }
-
-.tabs {
-    padding-left: var(--measure-dimension-padding-4xl);
-}
-.tabList {
-    margin-bottom: 0;
-}
-
-.cardSubSection {
-    padding-top: var(--measure-dimension-padding-4xl);
-    padding-bottom: var(--measure-dimension-padding-4xl);
-}
-
-.cardSubSectionHeader {
-    margin-bottom: var(--measure-dimension-gap-lg);
-}
-
-.cardSubSectionContent {
-    display: flex;
-    gap: var(--measure-dimension-gap-2xl);
-}
-
-/* .caption {
-  flex: 1 100%;
-} */
