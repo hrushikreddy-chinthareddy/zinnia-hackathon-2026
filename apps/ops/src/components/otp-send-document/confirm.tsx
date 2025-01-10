@@ -16,7 +16,7 @@ type ConfirmProps = {
 const Confirm = ({ shouldShowCaseButton, formNames }: ConfirmProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
     const { state } = useCorrespondence();
-    const source = state?.correspondence?.recipient;
+    const recipients = state?.correspondence?.recipients || [];
     const ccList = state?.correspondence?.ccList || [];
     const communicationType = state?.correspondence?.type;
 
@@ -40,16 +40,18 @@ const Confirm = ({ shouldShowCaseButton, formNames }: ConfirmProps) => {
                     <>
                         {t('confirm.subtitle.0')}
                         <span className="font-bold"> {formNames?.map(formName => (formName ? formName : '')).join(', ')} </span>
-                        {[CommunicationTypes.Email, CommunicationTypes.Fax].includes(communicationType as CommunicationTypes) && (
-                            <PiiWrapper>
-                                <span>{t(`confirm.channel.${communicationType.toLowerCase()}`)}</span>
-                                <span className="font-bold"> {source}</span>
-                            </PiiWrapper>
-                        )}
-
+                        {[CommunicationTypes.Email, CommunicationTypes.Fax].includes(communicationType as CommunicationTypes) &&
+                            recipients?.length > 0 && (
+                                <PiiWrapper>
+                                    <span>{t(`confirm.channel.${communicationType.toLowerCase()}`)}</span>
+                                    <span className="font-bold">
+                                        {' '}
+                                        {recipients?.map(recipient => (recipient ? recipient : '')).join(', ')}
+                                    </span>
+                                </PiiWrapper>
+                            )}
                         {communicationType === CommunicationTypes.Email && ccList?.length > 0 && (
                             <PiiWrapper>
-                                <span> {t('confirm.subtitle.1')} </span>
                                 <span className="font-bold"> {ccList?.map(cc => (cc ? cc : '')).join(', ')}</span>
                             </PiiWrapper>
                         )}
