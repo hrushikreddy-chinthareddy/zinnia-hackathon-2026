@@ -12,7 +12,7 @@ These are consumer-facing end products that are deployable or deliverable in som
 
 ### Packages
 
-These consist of shared libraries, components, utilities, or any common code that is used by multiple apps within the monorepo. Packages are not meant to be deployed independently; instead, they are included as dependencies in apps or other packages. They can, however, optionally be published to our [NPM respository](https://github.com/orgs/zinnia/packages).
+These consist of shared libraries, components, utilities, or any common code that is used by multiple apps within the monorepo. Packages are not meant to be deployed independently; instead, they are included as dependencies in apps or other packages.
 
 - [API Types](packages/utils/README.md)
 - [ESlint Config](packages/eslint-config/README.md)
@@ -78,7 +78,7 @@ To simplify the development process, we have created two helper scripts to run e
 
 #### Setting up env variables
 
-Mae sure to copy `.env` to `.env.development.local` into each project and fill in the values
+Copy `.env` to `.env.development.local` for each project and request values from developer
 
 #### Running Ops
 
