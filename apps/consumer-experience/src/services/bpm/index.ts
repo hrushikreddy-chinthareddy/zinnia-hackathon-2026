@@ -322,7 +322,6 @@ export const getPremiumValidation = async (
   }
 };
 
-// TODO: BPM needs to deploy a change to this API to prod before we deploy to prod.
 export const checkResetDeliveryDateEligibility = async (
   policyInputs: PolicyRequestInputs
 ) => {

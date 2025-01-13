@@ -14,6 +14,7 @@ import PaginationControls from '@deps/components/pagination/pagination';
 import SearchBar, { SearchBarInitialValues } from '@deps/components/search/search-bar';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
+import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
 import { PolicyQuickView } from '@deps/containers/policy-summary-card/policy-summary-card';
 import SearchResults from '@deps/containers/search-results/search-results';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
@@ -26,9 +27,11 @@ import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
+import { checkTupleSsr } from '@deps/queries/api/fga';
 import { searchPolicy } from '@deps/queries/api/policies';
 import { isResetQueryParam } from '@deps/types/constants';
 import { LabelValue } from '@deps/types/data';
+import { FgaRelation } from '@deps/types/fga';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 import { SearchSubmittedEvent, SegmentPageName, SegmentTrackedEventName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
@@ -313,8 +316,9 @@ export const getServerSideProps = withPageAuthRequired({
         }
         // If they can't read Policy Admin there's no point in continuing. Redirect to 403 Forbidden.
         const doesUserHasPagePermissions = await doesUserHavePagePermissions(accessToken, user, UserPermission.AllowReadPolicyAdmin);
+        const isAdvisorsExcel = await checkTupleSsr(accessToken as string, user.partyId, FgaRelation.Party, AE_FGA_ROLE);
 
-        if (!doesUserHasPagePermissions) {
+        if (!isAdvisorsExcel && !doesUserHasPagePermissions) {
             return {
                 redirect: {
                     destination: '/403',

@@ -1,7 +1,14 @@
 import { ColumnType } from '@deps/components/table-v2/table.types';
 import { PartyRole } from '@deps/models/policy/sor-policy';
 
-export const AllowedRoleTypes: string[] = [PartyRole.JOINTOWNER, PartyRole.OWNER, PartyRole.PAYEE, PartyRole.INSURED, PartyRole.JOINTAANUITANT];
+export const AllowedRoleTypes: string[] = [
+    PartyRole.JOINTOWNER,
+    PartyRole.OWNER,
+    PartyRole.PAYEE,
+    PartyRole.INSURED,
+    PartyRole.JOINTAANUITANT,
+    PartyRole.ANNUITANT
+];
 
 export const AddressFieldsToMatchForRoleGroup = [
     'areaCode',

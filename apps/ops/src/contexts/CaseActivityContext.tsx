@@ -78,7 +78,8 @@ export const CaseActivityProvider = ({ children, caseDetails }: CaseActivityProv
 
     useEffect(() => {
         const getDocs = async () => {
-            if (!caseDetails?.policyNumber || !caseDetails?.carrier) {
+            // Do not attempt to get case documents if there is no case id
+            if (!caseDetails?.id || !caseDetails?.carrier) {
                 setPolicyDocs([]);
                 setCorrespondenceDocs([]);
                 setLoadingDocuments(false);

@@ -40,7 +40,7 @@ export const initialAdditionalFilters: CaseSearchAdditionalFilters = {
     processTypes: new Set([]),
     requestSubType: new Set([]),
     carriers: {},
-    caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.New, Statuses.NotStarted],
+    caseStatus: [],
     products: new Set([]),
     brokerDealerName: '',
 };

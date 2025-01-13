@@ -19,8 +19,25 @@ export const getRoleToLabelKeyMap = (partyRole: string) => {
         case PartyRole.PAYEE:
             return 'common.partyRole.payee';
         case PartyRole.INSURED:
+        case PartyRole.ANNUITANT:
             //return isRoleWithJointOption(partyRoleId) ? 'common.partyRole.annuitantWithJoint' : 'common.partyRole.annuitant';
             return 'common.partyRole.annuitant';
+        case PartyRole.PRIMARYBENEFICIARY:
+            return 'common.partyRole.primaryBeneficiary';
+        case PartyRole.PAYOR:
+            return 'common.partyRole.payor';
+        case PartyRole.AGENT:
+            return 'common.partyRole.agent';
+        case PartyRole.PRIMARYWRITINGAGENT:
+            return 'common.partyRole.primaryWritingAgent';
+        case PartyRole.PRIMARYSERVICINGAGENT:
+            return 'common.partyRole.primaryServicingAgent';
+        case PartyRole.THIRDPARTYDESIGNEE:
+            return 'common.partyRole.thirdPartyDesignee';
+        case PartyRole.EDELIVERY:
+            return 'common.partyRole.e-delivery';
+        case PartyRole.CONTINGENTBENEFICIARY:
+            return 'common.partyRole.contingentBenefeciary';
         default:
             return '';
     }
