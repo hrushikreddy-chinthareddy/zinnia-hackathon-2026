@@ -1,14 +1,12 @@
-import { clsx } from 'clsx';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { Address, Label } from '@zinnia/bloom/components';
+import { clsx } from 'clsx';
+
 import { default as styles } from './ContactInfo.module.css';
 
 export const ContactInfo = () => {
     return (
         <div className={clsx(styles.cardSubSection)}>
-            <Typography variant={TypographyVariant.H2} className={clsx(styles.cardSubSectionHeader)}>
-                Contact Info
-            </Typography>
+            <h2 className={clsx(styles.cardSubSectionHeader, styles.h2)}>Contact Info</h2>
             <div className={clsx(styles.cardSubSectionContent)}>
                 <div>
                     <Label>Business Address</Label>
@@ -20,15 +18,15 @@ export const ContactInfo = () => {
                 </div>
                 <div>
                     <Label>Phone</Label>
-                    <Typography variant={TypographyVariant.BodySm}>+1 (234) 234-4545</Typography>
+                    <span className={clsx(styles.span)}>+1 (234) 234-4545</span>
                 </div>
                 <div>
                     <Label>Fax</Label>
-                    <Typography variant={TypographyVariant.BodySm}>+1 (234) 234-4545</Typography>
+                    <span className={clsx(styles.span)}>+1 (234) 234-4545</span>
                 </div>
                 <div>
                     <Label>Email</Label>
-                    <Typography variant={TypographyVariant.BodySm}>econners@advisor.net</Typography>
+                    <span className={clsx(styles.span)}>econners@advisor.net</span>
                 </div>
             </div>
         </div>

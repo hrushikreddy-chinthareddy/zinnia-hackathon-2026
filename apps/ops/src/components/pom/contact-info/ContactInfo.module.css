@@ -9,3 +9,16 @@
     display: flex;
     gap: var(--measure-dimension-gap-2xl);
 }
+
+/* @TODO: not sure where to put these typography styles */
+.h2 {
+    font-family: var(--font-family-primary);
+    font-size: 26px;
+    font-weight: 500;
+}
+
+.span {
+    font-family: var(--font-family-secondary);
+    font-size: 14px;
+    font-weight: 400;
+}
