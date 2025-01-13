@@ -188,12 +188,18 @@ export default function getUlpcOftConfig(t: TFunction) {
     ];
 
     const selectOneOptions: SelectOneOption[] = [
-      { label: t('amountDetails.processTimeframe.immediately'), value: ProcessRequestType.Immediately },
-      {
-          label: t('amountDetails.processTimeframe.whenTheContractIsNoLongerSubjectToWithdrawalCharges'),
-          value: ProcessRequestType.NoLongerSubject,
-      },
-      { label: t('amountDetails.processTimeframe.asOfThisDate'), value: ProcessRequestType.AsOfDate, subElement: <AsOfDateComponent /> },
+       {
+            label: t('amountDetails.processTimeframe.immediately'),
+            value: ProcessRequestType.Immediately
+       },
+       {
+            label: t('amountDetails.processTimeframe.whenTheContractIsNoLongerSubjectToWithdrawalCharges'),
+            value: ProcessRequestType.NoLongerSubject,
+       },
+       {
+            label: t('amountDetails.processTimeframe.asOfThisDate'),
+            value: ProcessRequestType.AsOfDate, subElement: <AsOfDateComponent />
+        },
     ];
 
     const fundWithdrawnMethodOptions = [
