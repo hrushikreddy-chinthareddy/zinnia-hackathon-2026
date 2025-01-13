@@ -5,6 +5,7 @@ import React, { ForwardedRef, useCallback, useContext } from 'react';
 import DynamicForm from '@deps/components/dynamic-form/dynamic-form';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
 import { updateTask } from '@deps/containers/task-container/task.healpers';
+import { buildTaskPayload } from '@deps/utils/tasks/task-payload-helper';
 
 type TaskFormProps = {
     readonly: boolean;
@@ -21,7 +22,11 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
 
     const handleSubmit = useCallback(async () => {
         if (isSubmit) {
-            const success = await updateTask(task, correlationId);
+            //todo:vijaya: payload customization
+
+            const taskPayload = buildTaskPayload(task);
+
+            const success = await updateTask(taskPayload, correlationId);
             setSubmitFailed(!success);
         }
         onSubmit();
@@ -33,7 +38,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                 ...task,
                 data: event.formData,
             });
-            // console.log('🚀 ~ event.formData:', event.formData);
+            //  console.log('🚀 ~ event.formData:', event.formData);
         },
 
         [setTask, task]
