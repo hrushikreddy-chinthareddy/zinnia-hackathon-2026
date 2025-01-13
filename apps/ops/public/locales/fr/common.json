@@ -3352,6 +3352,9 @@
         },
         "history": {
             "headerText": "Histoire"
+        },
+        "activity": {
+            "headerText": "Activité"
         }
     },
     "piiBreadcrumb": "Retour à",
