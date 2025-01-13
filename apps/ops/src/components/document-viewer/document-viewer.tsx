@@ -10,7 +10,8 @@ import ImagePreview from '@deps/containers/documents-page/image-preview';
 import PdfPreview from '@deps/containers/documents-page/pdf-preview';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { supportedExtensions, supportedImgExtensions } from '@deps/models/case/document';
-import { getDocumentPreviewV2, getDocumentPreviewV3 } from '@deps/queries/api/documents';
+import { getDocumentPreviewV2 } from '@deps/queries/api/client/documents/v2/preview';
+import { getDocumentPreviewV3 } from '@deps/queries/api/client/documents/v3/preview';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { DocumentTypeView } from '../side-sheet/documents/DocumentTypeView';
