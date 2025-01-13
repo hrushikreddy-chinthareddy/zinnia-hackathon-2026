@@ -1,6 +1,6 @@
-import { clsx } from 'clsx';
 import { Icon, IconType } from '@zinnia/bloom/components';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import { clsx } from 'clsx';
+
 import { default as styles } from './CardHeader.module.css';
 
 export const CardHeader = () => {
@@ -8,8 +8,10 @@ export const CardHeader = () => {
         <div className={clsx(styles.cardHeader)}>
             <Icon type={IconType.DOCUMENT_TEXT} />
             <div>
-                <Typography variant={TypographyVariant.H1}>Acme Corporation</Typography>
-                <Typography variant={TypographyVariant.Caption}>Tax identification number: 669-45-6789</Typography>
+                <h1 className={styles.h1}>Acme Corporation</h1>
+                <span aria-label="Company tax identification number" className={styles.caption}>
+                    Tax identification number: 669-45-6789
+                </span>
             </div>
         </div>
     );
