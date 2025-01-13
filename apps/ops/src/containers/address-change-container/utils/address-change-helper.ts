@@ -19,6 +19,7 @@ export const getRoleToLabelKeyMap = (partyRole: string) => {
         case PartyRole.PAYEE:
             return 'common.partyRole.payee';
         case PartyRole.INSURED:
+        case PartyRole.ANNUITANT:
             //return isRoleWithJointOption(partyRoleId) ? 'common.partyRole.annuitantWithJoint' : 'common.partyRole.annuitant';
             return 'common.partyRole.annuitant';
         case PartyRole.PRIMARYBENEFICIARY:
