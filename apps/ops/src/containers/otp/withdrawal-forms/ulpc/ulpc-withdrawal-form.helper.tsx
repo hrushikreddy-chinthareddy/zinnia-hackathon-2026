@@ -71,23 +71,29 @@ export const spousalSignatureStateCodes = [
 ];
 
 export default function getUlpcConfig(t: TFunction) {
-    const identifySelectedFormProgramOption = (formProgram: FormProgram): { selectedOption: string | null; amount: string | null } => {
-        const programTypeText = formProgram?.programType?.text || '';
-        if (programTypeText === ProgramType.TotalFreeAmt) {
-            return { selectedOption: WithdrawalSelectionValues.TotalFreeWithdrawal, amount: '' };
-        }
-        if (programTypeText === ProgramType.WITHDRAWAL) {
+     const identifySelectedFormProgramOption = (
+            formProgram: FormProgram
+        ): { selectedOption: string | null; amount: string | null; maturityGuaranteePeriod?: string | null } => {
+            const programTypeText = formProgram?.programType?.text || '';
             const amount = formProgram?.partialAmount?.text || '';
-            return {
-                selectedOption:
-                    formProgram?.withdrawType?.text === WithdrawalType.Gross
-                        ? WithdrawalSelectionValues.GrossWithdrawal
-                        : WithdrawalSelectionValues.NetWithdrawal,
-                amount,
-            };
-        }
-        return { selectedOption: null, amount: '' };
-    };
+            const programSubType = formProgram?.programSubType?.text || '';
+
+            if (programTypeText === ProgramType.NetWithdrawal) {
+                return { selectedOption: ProgramType.NetWithdrawal, amount };
+            }
+            if (programTypeText === ProgramType.GrossWithdrawal) {
+                return { selectedOption: ProgramType.GrossWithdrawal, amount };
+            }
+
+            if (programSubType === ProgramSubType.PercentageofAV) {
+                return { selectedOption: ProgramType.PartialPercent, amount: formProgram?.partialPercent?.text || '' };
+            }
+
+            if (programSubType === ProgramSubType.TotalFreeWithdrawal) {
+                return { selectedOption: ProgramType.PenaltyFreeAmount, amount: '' };
+            }
+            return { selectedOption: null, amount: '' };
+        };
 
     const partialWithdrawalOptions: PartialWithdrawalOption[] = [
         {
@@ -119,16 +125,16 @@ export default function getUlpcConfig(t: TFunction) {
             },
         },
         {
-            label: `${t('amountDetails.partialWithdrawal.10PercentAccumulatedValue')}`,
+            label:  '10 ' + t('amountDetails.partialWithdrawal.percentageOfAccumulatedValue'),
             value: ProgramType.PartialPercent,
             amountFieldType: AmountType.Percent,
-            generatePayloadFromSelection: (val = null) => {
+            generatePayloadFromSelection: () => {
                 return {
                     ...getDefaultFormProgramValues(),
                     withdrawType: { text: WithdrawalType.Gross },
                     programType: { text: ProgramType.WITHDRAWAL },
                     programSubType: { text: ProgramSubType.PercentageofAV },
-                    partialPercent: { text: val, amountType: AmountType.Percent },
+                    partialPercent: { text: '10', amountType: AmountType.Percent },
                 };
             },
         },
@@ -620,7 +626,6 @@ export default function getUlpcConfig(t: TFunction) {
             },
             generatePayloadFromSelection: ({
                 payeeName,
-                fboDetails,
                 contractNumber,
                 address,
                 accountName,
@@ -639,7 +644,6 @@ export default function getUlpcConfig(t: TFunction) {
                         name: { text: payeeName ?? null },
                         addresses: [address || DEFAULT_ADDRESS],
                         contractNumber: { text: contractNumber ?? null },
-                        fboDetails: { text: fboDetails ?? null },
                     },
                 };
             },

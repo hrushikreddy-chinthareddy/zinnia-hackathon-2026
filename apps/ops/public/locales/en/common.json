@@ -1563,8 +1563,7 @@
                     "partial": "Partial",
                     "totalFreeAmt": "Total free amount",
                     "penaltyFreeAmount": "Penalty free amount",
-                    "annualFreeAmountBalance": "Annual free amount balance",
-                    "10PercentAccumulatedValue": "10% accumulated value"
+                    "annualFreeAmountBalance": "Annual free amount balance"
                 },
                 "fullWithdrawal": {
                     "contractHasBeenLostOrDestroyed": "Contract has been lost or destroyed",
@@ -1592,7 +1591,8 @@
                     "grossDoller": "Gross $",
                     "percetageOfAccountValue": "% of Account value",
                     "maximum": "Maximum amount",
-                    "maturingGuranteePeriod": "Maturing guarantee period"
+                    "maturingGuranteePeriod": "Maturing guarantee period",
+                    "percentageOfAccumulatedValue": "% of accumulated value"
                 },
                 "processTimeframe": {
                     "selectOne": "Select one",
