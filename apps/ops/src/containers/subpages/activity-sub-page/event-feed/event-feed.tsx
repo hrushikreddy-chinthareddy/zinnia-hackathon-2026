@@ -6,7 +6,7 @@ import HistoryEventCard from '@deps/components/history-event-card/history-event-
 import { LabelVariant, labelMapping } from '@deps/components/label/label';
 import DividerLabel from '@deps/components/tailwind-components/divider-label';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { getTransactions } from '@deps/containers/subpages/history-sub-page/event-feed/event-feed.helpers';
+import { getTransactions } from '@deps/containers/subpages/activity-sub-page/event-feed/event-feed.helpers';
 import { useHistoryFiltersContext } from '@deps/contexts/HistoryFiltersContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { Transaction } from '@deps/models/policy/sor-policy';

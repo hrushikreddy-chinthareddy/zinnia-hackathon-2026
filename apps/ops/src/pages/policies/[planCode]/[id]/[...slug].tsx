@@ -19,9 +19,9 @@ import PolicyDetailsContainer from '@deps/containers/policy-details/policy-detai
 import PolicyDetailsSubPage from '@deps/containers/policy-details-sub-page';
 import PolicyExtrasSubPage from '@deps/containers/policy-extras-sub-page/policy-extras-sub-page';
 import PremiumsSubPage from '@deps/containers/premiums-sub-page';
+import ActivitySubPage from '@deps/containers/subpages/activity-sub-page/activity-sub-page';
 import DocumentsSubPage from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
 import FundsSubPage from '@deps/containers/subpages/funds-sub-page';
-import HistorySubPage from '@deps/containers/subpages/history-sub-page/history-sub-page';
 import WithdrawalsSubPage from '@deps/containers/withdrawals-sub-page/withdrawals-sub-page';
 import { PeopleRolesFilterProvider } from '@deps/contexts/PeopleRolesFilter';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
@@ -254,7 +254,7 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({ user }) => {
                 }
                 break;
             case 'history':
-                subPageContent = <HistorySubPage />;
+                subPageContent = <ActivitySubPage />;
                 subPageTitleKey = 'history';
                 break;
             case 'documents':
