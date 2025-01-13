@@ -451,9 +451,9 @@ export const getServerSideProps = withPageAuthRequired({
                 }
             }
 
-            const latestForm = !isNullEmptyOrUndefined(docType) && searchCasesResponse?.data?.find(
-                item => item?.additionalData?.requestSubType?.toUpperCase() === docType.toUpperCase()
-            );
+            const latestForm =
+                !isNullEmptyOrUndefined(docType) &&
+                searchCasesResponse?.data?.find(item => item?.additionalData?.requestSubType?.toUpperCase() === docType.toUpperCase());
             return {
                 props: {
                     ...translations,
@@ -470,7 +470,7 @@ export const getServerSideProps = withPageAuthRequired({
                     featureFlagDecisions,
                     document,
                     taskInfoLink,
-                    prevTransactionDetails: latestForm ? (latestForm?.additionalData || null) : null,
+                    prevTransactionDetails: latestForm ? latestForm?.additionalData || null : null,
                     isNigoCase,
                 },
             };

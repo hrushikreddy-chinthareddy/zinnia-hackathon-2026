@@ -17,6 +17,7 @@ export enum QueryKeys {
     limit = 'limit',
     notInCaseStatus = 'notInCaseStatus',
     offset = 'offset',
+    policyNumber = 'policyNumber',
     process = 'process',
     productName = 'productName',
     requestSubType = 'requestSubType',
@@ -171,6 +172,14 @@ const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters =>
         }
     }
 
+    if (query[QueryKeys.policyNumber]) {
+        if (Array.isArray(query[QueryKeys.policyNumber])) {
+            caseFilters.searchValue.policyNumber = query[QueryKeys.policyNumber][0] as string;
+        } else if (typeof query[QueryKeys.policyNumber] === 'string') {
+            caseFilters.searchValue.policyNumber = query[QueryKeys.policyNumber];
+        }
+    }
+
     return { ...caseFilters, additionalFilters };
 };
 
@@ -178,7 +187,7 @@ const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters =>
 // Dev Note: This is hopefully a short-term solution until we update the UI to be more closely integrated with the API filter values.
 const convertFilterToQuery = (filters: CaseSearchFilters): ParsedUrlQueryInput => {
     const query: ParsedUrlQueryInput = {};
-    const { offset, sortBy, sortDirection, additionalFilters } = filters;
+    const { offset, sortBy, sortDirection, additionalFilters, searchValue } = filters;
     const {
         carriers,
         caseStatus,
@@ -192,6 +201,7 @@ const convertFilterToQuery = (filters: CaseSearchFilters): ParsedUrlQueryInput =
         updatedDateStart,
         brokerDealerName,
     } = additionalFilters;
+    const { policyNumber } = searchValue;
 
     if (carriers) {
         query[QueryKeys.carrier] = Object.keys(carriers).join(',').split(',');
@@ -249,12 +259,16 @@ const convertFilterToQuery = (filters: CaseSearchFilters): ParsedUrlQueryInput =
         query[QueryKeys.updatedDateStart] = dayjs(updatedDateStart, DATE_PICKER_FORMAT).format();
     }
 
+    if (policyNumber) {
+        query[QueryKeys.policyNumber] = policyNumber;
+    }
+
     return query;
 };
 
 // A drop-in replacement for a useState for the CaseManagementFilters with support for query params for filters
 // Returns the current filters and search values as well as a function to update them.
-// Search Values will not be added to query params as they are potentially PII
+// Search Values, except for policy number, will not be added to query params as they are potentially PII
 export const useCaseFilterQueryStore = () => {
     const [queryStoreFilter, setQueryStoreFilter] = useQueryFilters(Object.values(QueryKeys));
     const [caseManagementFilters, setCaseManagementFilters] = useState<CaseSearchFilters>(convertQueryToFilters(queryStoreFilter));

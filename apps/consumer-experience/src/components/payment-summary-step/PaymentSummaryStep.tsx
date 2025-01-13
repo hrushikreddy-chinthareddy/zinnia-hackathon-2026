@@ -27,19 +27,21 @@ export const PaymentSummaryStep = ({
 }: PaymentSummaryStepProps) => {
   return (
     <div className={clsx(styles.paymentSummaryStepContainer, className)}>
-      {transactionSummary.map(({ label, value }, index) => (
-        <div key={index} className={styles.paymentSummarySection}>
-          <div className={styles.paymentSummaryLabel}>{label}</div>
-          <p
-            className={clsx(
-              styles.paymentSummaryValue,
-              'typography-content-body-sm'
-            )}
-          >
-            {formatUSDollarsAccounting(value, true)}
-          </p>
-        </div>
-      ))}
+      <div className={styles.paymentSummaryValues}>
+        {transactionSummary.map(({ label, value }, index) => (
+          <div key={index} className={styles.paymentSummarySection}>
+            <div className={styles.paymentSummaryLabel}>{label}</div>
+            <p
+              className={clsx(
+                styles.paymentSummaryValue,
+                'typography-content-body-sm'
+              )}
+            >
+              {formatUSDollarsAccounting(value, true)}
+            </p>
+          </div>
+        ))}
+      </div>
 
       {/* TODO: Add className to Label component and remove wrapping div */}
       <div className={styles.paymentSummarySection}>

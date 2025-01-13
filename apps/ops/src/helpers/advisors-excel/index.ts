@@ -1,21 +1,20 @@
 import { AE_BROKER_DEALER_NAME_PROD, AE_BROKER_DEALER_NAME_QA, AE_CARRIER_GLCO, AE_CARRIER_SBGC } from '@deps/constants/advisors-excel';
-import { CaseStatsQuery } from '@deps/queries/cases';
 import { isProd } from '@deps/utils/environment.helper';
 
 const getAdvisorsExcelBrokerDealerName = () => {
     return isProd() ? AE_BROKER_DEALER_NAME_PROD : AE_BROKER_DEALER_NAME_QA;
 };
 
-export const getAdvisorsExcelCaseSearchParams = () => {
-    return {
-        brokerDealerName: getAdvisorsExcelBrokerDealerName(),
-        carriers: [AE_CARRIER_SBGC, AE_CARRIER_GLCO],
-    };
-};
+export const getAdvisorsExcelCaseParams = (enableAdditionalCarriers: boolean) => {
+    // using carrier name to match the API. Carrier is an array it is just named as singular instead of plural in the spec
+    const carrier: string[] = [AE_CARRIER_SBGC];
 
-export const getAdvisorsExcelCaseStatsParams = (): Partial<CaseStatsQuery> => {
+    if (enableAdditionalCarriers) {
+        carrier.push(AE_CARRIER_GLCO);
+    }
+
     return {
         brokerDealerName: getAdvisorsExcelBrokerDealerName(),
-        carrier: [AE_CARRIER_SBGC, AE_CARRIER_GLCO],
+        carrier,
     };
 };

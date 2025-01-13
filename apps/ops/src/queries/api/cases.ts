@@ -141,7 +141,10 @@ export const getCaseDashboardStats = async (
         return { data: [], totalElements: 0 };
     } catch (error: any) {
         console.error('getCaseDashboardStats::An error occurred while getting case dashboard stats results', error);
-        return error.response;
+        if ('response' in error) {
+            return error.response;
+        }
+        return error;
     }
 };
 
