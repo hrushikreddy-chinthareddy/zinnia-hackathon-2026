@@ -292,7 +292,7 @@ export default function getGlcoOftConfig(t: TFunction) {
         },
         {
             label: t('amountDetails.programTypes.maximumFreeAmount'),
-            value: ProgramType.MaximumFreeAmount,
+            value: ProgramType.TotalFreeAmt,
             generatePayloadFromSelection: () => {
                 return {
                     ...getDefaultFormProgramValues(),
@@ -300,8 +300,8 @@ export default function getGlcoOftConfig(t: TFunction) {
                     program: {
                         text: Program.OFT,
                     },
-                    programType: { text: ProgramType.MaximumFreeAmount },
-                    programSubType: { text: ProgramSubType.Dollar },
+                    programType: { text: ProgramType.TotalFreeAmt },
+                    programSubType: { text: ProgramSubType.TotalFreeWithdrawal },
                 };
             },
         },

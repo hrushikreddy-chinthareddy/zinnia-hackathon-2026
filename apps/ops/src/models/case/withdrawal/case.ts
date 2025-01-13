@@ -854,7 +854,6 @@ export enum ProgramType {
     PartialDollar = 'Partial Dollar',
     PartialPercent = 'Partial Percent',
     PenaltyFreeAmount = 'Penalty Free Amount',
-    MaximumFreeAmount = 'Maximum Free Amount',
     OFT = 'OFT',
     SSW = 'SSW',
 }
