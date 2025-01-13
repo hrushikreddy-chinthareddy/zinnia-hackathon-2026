@@ -1,13 +1,13 @@
+import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
+import { Divider, IconType, TabContent, TabGroup, TabList } from '@zinnia/bloom/components';
 import { clsx } from 'clsx';
 
 import NoNavLayout from '@deps/components/no-nav-layout';
 import { PageHead } from '@deps/components/page-title';
+import { CardHeader, ContactInfo, Identification, TabTitle } from '@deps/components/pom';
 import usePomExperience from '@deps/hooks/usePomExperience';
 
 import { default as styles } from './index.module.css';
-import { Divider, IconType, TabContent, TabGroup, TabList } from '@zinnia/bloom/components';
-import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
-import { CardHeader, ContactInfo, Identification, TabTitle } from '@deps/components/pom';
 
 function POM() {
     // --- feature flag check ------
@@ -35,11 +35,13 @@ function POM() {
                     <TabGroup defaultValue={tabs[0].value}>
                         <TabList className={clsx(styles.tabList)}>
                             {tabs.map(({ label, icon, value }) => (
-                                <TabTitle value={value} icon={icon} label={label} />
+                                <TabTitle key={value} value={value} icon={icon} label={label} />
                             ))}
                         </TabList>
                         {tabs.map(({ value, content }: { value: string; content: any }) => (
-                            <TabContent value={value}>{content}</TabContent>
+                            <TabContent key={value} value={value}>
+                                {content}
+                            </TabContent>
                         ))}
                     </TabGroup>
                 </div>
