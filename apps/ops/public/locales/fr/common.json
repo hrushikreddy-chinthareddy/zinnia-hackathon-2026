@@ -574,7 +574,15 @@
                 "annuitantWithJoint": "Co-rentier",
                 "annuitant": "Rentière",
                 "payee": "Bénéficiaire",
-                "jointAnnuitant": "Co-rentier"
+                "jointAnnuitant": "Co-rentier",
+                "primaryBeneficiary": "Bénéficiaire principal",
+                "payor": "Payeur",
+                "agent": "Agent",
+                "primaryWritingAgent": "Agent d'écriture principal",
+                "primaryServicingAgent": "Agent de service principal",
+                "thirdPartyDesignee": "Représentant tiers",
+                "e-delivery": "Livraison électronique",
+                "contingentBenefeciary": "Bénéficiaire subsidiaire"
             }
         },
         "tabs": {
@@ -748,7 +756,10 @@
                     "lapseBannerText": "Ce contrat est agréé moyennant une prime de réintégration. Y aller maintenant ?",
                     "lapseBannerLink": "Effectuer un paiement de prime",
                     "freeLookCancelBannerText": "Cette police est encore dans sa période d'examen gratuit et peut être annulée sans pénalité jusqu'à cette date.",
-                    "freeLookCancelBannerLink": "Annuler la police"
+                    "freeLookCancelBannerLink": "Annuler la police",
+                    "caseBannerLink": "Voir les cas",
+                    "caseBannerText_one": "Cette politique a {{count}} cas ouvert",
+                    "caseBannerText_other": "Cette politique a {{count}} cas ouverts"
                 }
             },
             "empty": {
@@ -833,6 +844,7 @@
         "pageSize": "Lignes par page",
         "results": "Résultats",
         "refineResults": "Affiner les résultats",
+        "addFilters": "Ajouter des filtres",
         "refineResultsOptions": {
             "carriers": "Assureur",
             "caseType": "Type de dossier",
@@ -2133,6 +2145,10 @@
             "addAdditionalRecipient": "+ Ajouter un destinataire",
             "emailTooltip": "Veuillez entrer une adresse e-mail valide. Un seul e-mail est autorisé dans ce champ.",
             "additionalRecipientTooltip": "Vous pouvez ajouter jusqu'a 5 adresses e-mail dans le champ CC. Utilisez une virgule (,), point-virgule (;) ou Enter pour les séparer",
+            "emailMessage": "Saisissez les adresses e-mail séparées par des virgules ou des points-virgules avec un maximum de 5.",
+            "emailWarning": "Vous pouvez ajouter jusqu'à 5 destinataires supplémentaires",
+            "emailLabel": "Sélectionnez les e-mails enregistrés",
+            "noEmails": "Aucun enregistrement trouvé",
             "email": "E-mail",
             "ccEmail": "Destinataires en copie carbone",
             "fax": "Fax",
@@ -2169,8 +2185,9 @@
             "lastName": "Le nom de famille est obligatoire",
             "address": "Vérifiez et sélectionnez l'adresse pour continuer.",
             "maxEmails": "Maximum 5 e-mails autorisés",
-            "duplicateEmailInCC": "L'e-mail existe deja dans la liste",
-            "duplicateEmail": "Assurez-vous que l'adresse e-mail est unique entre les champs Destinataire et CC"
+            "duplicateRecipientEmail": "L'e-mail existe deja dans la liste",
+            "duplicateEmail": "Assurez-vous que l'adresse e-mail est unique entre les champs Destinataire et CC",
+            "emailRequired": "L'e-mail est requis"
         }
     },
     "contactCenter": {
@@ -4555,224 +4572,6 @@
             "popover": "Il s'agit du seul payeur qualifié pour cette transaction.",
             "subLabel": "Sélectionner un payeur",
             "title": "Payeur"
-        }
-    },
-    "caseReg60": {
-        "request": {
-            "pageHeader": "Coordonnées",
-            "channel": {
-                "cas": "CAS",
-                "broker": "Courtier"
-            },
-            "ownerInformation": {
-                "header": "Informations sur le propriétaire",
-                "titleTooltip": "Les informations sur le propriétaire sont pré-remplies à partir de mots-clés OnBase."
-            },
-            "agentInformation": {
-                "header": "Informations sur les agents",
-                "titleTooltip": "Les informations sur l'agent sont pré-remplies à partir de mots-clés OnBase."
-            },
-            "partyDetails": {
-                "firstName": "Prénom",
-                "middleName": "deuxième prénom",
-                "lastName": "Nom de famille",
-                "ownerPhoneNumber": "Numéro de téléphone du propriétaire",
-                "agentPhoneNumber": "Numéro de téléphone de l'agent/courtier",
-                "ownerSSN": "SSN du propriétaire",
-                "channel": "Canal",
-                "channelOption": {
-                    "cas": "CAS",
-                    "broker": "Courtier"
-                },
-                "agentCompany": "Société d'agent/courtier",
-                "extension": "Extension",
-                "home": "Maison",
-                "work": "Travail",
-                "mobile": "Mobile",
-                "addressDetails": {
-                    "streetAddress": "Adresse postale du propriétaire",
-                    "agentStreetAddress": "Adresse postale de l'agent/courtier",
-                    "streetAddress2": "Adresse postale 2",
-                    "streetAddress3": "Adresse postale 3",
-                    "city": "Ville",
-                    "state": "État",
-                    "zip": "Fermeture éclair",
-                    "zipPlusFour": "Code postal+4"
-                }
-            },
-            "contractComparison": {
-                "createDisclosureHeader": "Créer une divulgation",
-                "comparisonContract": "Contrat de comparaison",
-                "addNewComparison": "Ajouter une nouvelle comparaison",
-                "removeComparison": "Supprimer la comparaison",
-                "back": "Dos",
-                "info": "Info",
-                "goodFaithEstimateInfo": "Si cette case est cochée, les valeurs de la valeur de rachat et des prestations de décès ne sont pas requises.",
-                "comparisonWarning": "Si plus de 3 demandes de transfert sont reçues, la comparaison doit être générée manuellement.",
-                "isRequired": "est requis",
-                "greaterThanZero": "doit être supérieur à 0",
-                "comparisonType": "Type de comparaison",
-                "partialRequest": "Demande partielle",
-                "goodFaithEstimateRequired": "Estimation de bonne foi requise",
-                "companyName": "Nom de l'entreprise",
-                "consentorFullName": "Nom et prénom",
-                "companyPhoneNumber": "Numéro de téléphone de l'entreprise",
-                "contractNumber": "Numéro de contrat",
-                "issueDate": "Date d'émission",
-                "accountValue": "Valeur du compte",
-                "surrenderChargeApplies": "Des frais de rachat s'appliquent",
-                "surrenderChargeAmount": "Montant des frais de rachat",
-                "mvaApplies": "MVA s'applique",
-                "mvaAmount": "Montant de l'AVM",
-                "surrenderValue": "Valeur de rachat",
-                "annuitizationValueReceived": "Valeurs de rente reçues",
-                "table": {
-                    "surrenderValueTable": {
-                        "title": "Valeur de rachat",
-                        "fixedCol": {
-                            "years": "Années",
-                            "guaranteedRate": "Tarif garanti",
-                            "currentRate": "Taux actuel"
-                        },
-                        "variableCol": {
-                            "year": "Année",
-                            "zeroPercent": "0%",
-                            "sixPercent": "6%",
-                            "twelvePercent": "12%"
-                        },
-                        "rowPeriods": {
-                            "fiveYears": "5 années",
-                            "tenYears": "10 années"
-                        }
-                    },
-                    "deathBenefitsTable": {
-                        "title": "Prestations de décès",
-                        "fixedCol": {
-                            "years": "Années",
-                            "guaranteedRate": "Tarif garanti",
-                            "currentRate": "Taux actuel"
-                        },
-                        "variableCol": {
-                            "year": "Année",
-                            "zeroPercent": "0%",
-                            "sixPercent": "6%",
-                            "twelvePercent": "12%"
-                        },
-                        "rowPeriods": {
-                            "fiveYears": "5 années",
-                            "tenYears": "10 années"
-                        }
-                    }
-                }
-            },
-            "comparisonTypes": {
-                "veriableToFixed": "Variable à fixe",
-                "VeriableToImmediate": "Verifiable à immédiat",
-                "fixedToFixed": "Fixé à fixe",
-                "fixedToImmediate": "Fixé à immédiat",
-                "lifeToFixed": "Vie à réparer",
-                "lifeToImmediate": "La vie à l'immédiat"
-            },
-            "proposedAnnuityQuote": {
-                "proposedAnnuityQuoteTitle": "Devis de rente proposé",
-                "annuitizationQuoteTitle": "Devis de rente",
-                "annuityPaymentAmount": "Montant du paiement de la rente",
-                "firstPaymentDate": "Date du premier paiement",
-                "paymentFrequencyLabel": "Fréquence de paiement",
-                "incomeOptionLabel": "Option de revenu",
-                "periodCertainYears": "Période certaines années",
-                "typeOfPayment": "Type de paiement",
-                "typeOfPaymentOptions": {
-                    "fixed": "Fixée",
-                    "variable": "Variable"
-                },
-                "paymentFrequency": {
-                    "monthly": "Mensuelle",
-                    "annually": "Annuellement",
-                    "semiAnnually": "Semestriellement",
-                    "quarterly": "Trimestrielle"
-                },
-                "incomeOption": {
-                    "singleLifeNoDeathBft": "Vie Célibataire Pas De Mort Bft",
-                    "singleLifeCashRefund": "Remboursement en espèces sur une seule tête",
-                    "singleLifeInstallRef": "Réf. d'installation à vie unique",
-                    "singleLifePC": "PC à vie unique",
-                    "singleLifeNoRefund": "Vie individuelle sans remboursement",
-                    "jtAndSurvLifeCashRef": "Jt & Surv Life Cash Réf.",
-                    "jtAndSurvInstallRef": "Réf d'installation Jt & Surv",
-                    "jtAndSurvLifePC": "Jt & Surv Life PC",
-                    "jtAndSurvLifeHalfReduct": "Jt&Surv Life 1/2 Réduit",
-                    "jtAndSurvLifeTwoThirdsReduct": "Jt&Surv Life 2/3 Réduit",
-                    "jtAndSurvLifeThreeFourthsReduct": "Jt&Surv Life 3/4 Réduit",
-                    "jtAndSurvLifeNoRefund": "Jt & Surv Life Aucun remboursement",
-                    "jtAndSurvLifeNoDeathBenefit": "Jt & Surv Life No Death Bft",
-                    "jtAndSurvConvNoRef": "Jt&Surv Conv No Réf",
-                    "jtAndSurvConvPC": "Jt&Surv Conv PC",
-                    "periodCertain": "Période Certaine",
-                    "jtAndSurvConvCashRef": "Jt&Surv Conv Cash Réf.",
-                    "jtAndSurvConvInstallRef": "Réf. d'installation de conversion Jt&Surv"
-                }
-            },
-            "comparisonTable": {
-                "surrenderValue": "Valeur de rachat",
-                "deathBenefits": "Prestations de décès"
-            },
-            "disclosureAuthorization": {
-                "title": "Autorisation de divulgation d'informations",
-                "signatureDate": "Date de la signature",
-                "expectedAcctValue": "Valeur attendue du compte",
-                "product": "Produit",
-                "cdscPeriod": "Période CDSC",
-                "products": {
-                    "stableVoyage": "Stable Voyage",
-                    "retireEase": "Facilité de prendre sa retraite",
-                    "retireEaseChoice": "Choix de retraite facile"
-                },
-                "cdscPeriods": {
-                    "na": "N/A",
-                    "oneYearGuarantee": "Garantie 1 an",
-                    "threeYearGuarantee": "Garantie 3 ans",
-                    "fourYearGuarantee": "Garantie 4 ans",
-                    "fiveYearGuarantee": "Garantie 5 ans",
-                    "sevenYearGuarantee": "Garantie 7 ans",
-                    "nineYearGuarantee": "Garantie 9 ans"
-                }
-            },
-            "formControls": {
-                "cancel": "Annuler",
-                "cancelConfirm": "Voulez-vous annuler cette demande? Toutes les données seront perdues.",
-                "cancelError": "Une erreur s'est produite lors de l'annulation de cette tâche. Veuillez réessayer.",
-                "saveAsDraft": "Enregistrer en tant que projet",
-                "saveAsDraftError": "Une erreur s'est produite lors de l'enregistrement d'un brouillon de cette tâche. Veuillez réessayer.",
-                "continue": "Continuer",
-                "calculateComparison": "Calculer la comparaison",
-                "submitError": "Une erreur s'est produite lors de la soumission de cette tâche. Veuillez réessayer.",
-                "createTaskSuccess": "Demande de comparaison soumise avec succès pour {{documentNumber}} et {{contractNumber}}"
-            },
-            "formErrors": {
-                "formValidation": {
-                    "formValidationError": "L'envoi du formulaire a été empêché en raison d'erreurs de validation. Corrigez les erreurs ci-dessus et réessayez.",
-                    "firstNameIsRequired": "Le prénom est requis",
-                    "lastNameIsRequired": "Le nom de famille est obligatoire",
-                    "ownerSSNisRequired": "Le SSN du propriétaire est requis",
-                    "companyNameIsRequired": "Le nom de l'entreprise est requis",
-                    "ownerStreetAddressIsRequired": "L'adresse postale du propriétaire est requise",
-                    "cityIsRequired": "La ville est obligatoire",
-                    "stateIsRequired": "L'état est requis",
-                    "zipIsRequired": "Le zip est requis",
-                    "channelIsRequired": "La chaîne est requise",
-                    "signatureDateIsRequired": "La date de signature est requise",
-                    "signatureDateIsInvalid": "Ne peut pas être une date antérieure à 120 jours à compter de la date système actuelle et ne peut pas être supérieure à la date système actuelle.",
-                    "expectedAcctValueIsRequired": "La valeur attendue du compte est requise",
-                    "productIsRequired": "Le produit est requis",
-                    "cdscPeriodIsRequired": "Une période CDSC est requise",
-                    "annuityPaymentAmountIsRequired": "Le montant du paiement de la rente est requis",
-                    "firstPaymentDateIsRequired": "First payment date is required",
-                    "paymentFrequencyIsRequired": "La première date de paiement est requise",
-                    "incomeOptionIsRequired": "L'option de revenu est requise",
-                    "periodCertainYearsIsRequired": "Une période certaines années est requise"
-                }
-            }
         }
     },
     "tasksListing": {

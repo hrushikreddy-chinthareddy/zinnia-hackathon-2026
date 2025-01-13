@@ -54,7 +54,7 @@ export type PaperMail = {
 
 export type Correspondence = {
     type: string;
-    recipient: string;
+    recipients: string[];
     ccList?: string[];
     mailDetails?: PaperMail;
 };

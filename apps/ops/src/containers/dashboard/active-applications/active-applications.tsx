@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
-import { FC, CSSProperties, useState, useEffect, RefObject, SetStateAction, Dispatch, useMemo } from 'react';
+import { FC, CSSProperties, useState, useEffect, RefObject, SetStateAction, Dispatch } from 'react';
 
 import ActiveAging from '@deps/components/dashboard/active-aging/active-aging';
 import SankeyChart from '@deps/components/dashboard/sankey-chart';
@@ -53,27 +53,13 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carri
 
     const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
 
-    const brokerDealerOptions = useMemo(() => {
-        if (selectedBrokerDealers) {
-            const brokerDealers: DashboardResponseData[] = [];
-            Object.values(selectedBrokerDealers).forEach(key => {
-                const dealer = brokerDealersSSR.find(broker => broker.name.toLowerCase() === key.toLowerCase());
-                if (dealer) {
-                    brokerDealers.push(dealer);
-                }
-            });
-            return { data: brokerDealers, totalElements: brokerDealers.length };
-        }
-        return { data: brokerDealersSSR, totalElements: brokerDealersSSR.length };
-    }, [brokerDealersSSR, selectedBrokerDealers]);
-
     const handleInsightChange = (processType: Processes) => {
         setInsightOption(processType);
     };
 
     const createBaseQuery = async (baseInsightQueryFilter: DashboardSearchFilter, groupBy: GroupByOptions[]) => {
         const response = await getCaseDashboardStatsQuery(baseInsightQueryFilter, groupBy);
-        if (!response?.data?.length) {
+        if (!response?.data) {
             console.error(
                 'createBaseQuery::An error occurred while getting case dashboard stats results',
                 response?.data?.length,
@@ -92,7 +78,12 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carri
     const { data: insightGroupingCountByCarrierStats, isLoading: insightGroupingCountByCarrierStatsLoading } = useQuery({
         queryKey: ['countByCarrierInsights', baseInsightQueryFilter],
         queryFn: () => createBaseQuery(baseInsightQueryFilter, [GroupByOptions.Carrier]),
-        enabled: !!Object.keys(baseInsightQueryFilter).length,
+        enabled: Object.keys(baseInsightQueryFilter).length > 0,
+    });
+    const { data: insightGroupingCountByBrokerStats, isLoading: insightGroupingCountByBrokerStatsLoading } = useQuery({
+        queryKey: ['countByBrokerInsights', baseInsightQueryFilter],
+        queryFn: () => createBaseQuery(baseInsightQueryFilter, [GroupByOptions.BrokerDealerName]),
+        enabled: Object.keys(baseInsightQueryFilter).length > 0,
     });
     const { data: insightGroupingCountBySubProcessStats, isLoading: insightGroupingCountBySubProcessStatsLoading } = useQuery({
         queryKey: ['countBySubProcessInsights', baseInsightQueryFilter],
@@ -167,7 +158,8 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carri
         insightCreatedBySubProcessLoading ||
         insightActiveAgingPiesByCreatedLoading ||
         insightExceptionStatsLoading ||
-        insightGroupingCountByCarrierStatsLoading;
+        insightGroupingCountByCarrierStatsLoading ||
+        insightGroupingCountByBrokerStatsLoading;
 
     return (
         <>
@@ -241,8 +233,8 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carri
                                 <CaseStatBlock
                                     dashboardStatsResponse={insightGroupingCountByCarrierStats}
                                     blockLabel="Carrier"
-                                    timeFrameLabel={`Trailing 12 months`}
-                                    statMeasurementLabel="case"
+                                    timeFrameLabel={`All time`}
+                                    statMeasurementLabel="active case"
                                     variant="double"
                                     loading={loading}
                                     showViewMore={true}
@@ -256,10 +248,10 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carri
                             )}
                             {authorizedCarriers.length === 1 && (
                                 <CaseStatBlock
-                                    dashboardStatsResponse={brokerDealerOptions}
+                                    dashboardStatsResponse={insightGroupingCountByBrokerStats}
                                     blockLabel="Broker Dealers"
-                                    timeFrameLabel={`Trailing 12 months`}
-                                    statMeasurementLabel="case"
+                                    timeFrameLabel={`All time`}
+                                    statMeasurementLabel="active case"
                                     variant="double"
                                     loading={loading}
                                     showViewMore={true}
@@ -276,8 +268,8 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carri
                             <CaseStatBlock
                                 dashboardStatsResponse={insightGroupingCountBySubProcessStats}
                                 blockLabel="Case Type"
-                                timeFrameLabel={`Trailing 12 months`}
-                                statMeasurementLabel="case"
+                                timeFrameLabel={`All time`}
+                                statMeasurementLabel="active case"
                                 variant="double"
                                 loading={loading}
                             />
