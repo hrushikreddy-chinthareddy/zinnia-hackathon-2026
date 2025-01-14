@@ -1,9 +1,15 @@
 import { FormContextType, getUiOptions, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { useMemo } from 'react';
+import { AxiosResponse } from 'axios';
+import { useContext, useMemo } from 'react';
 
 import Radio, { RadioItem } from '@deps/components/radio/radio';
+import { TaskDataContext } from '@deps/containers/task-container/task-context';
+import { ApiProps } from '@deps/models/case/task';
+import { baseAppUrl } from '@deps/queries/api-config';
+import { client } from '@deps/queries/api-utils/client';
 
 import { HyperLink } from '../hyper-link-widget/hyper-link-widget';
+const baseUrl = baseAppUrl + '/api/';
 
 const renderSubElement = (option: any) => {
     switch (option.type) {
@@ -21,20 +27,21 @@ const renderSubElement = (option: any) => {
     }
 };
 
-function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-    options,
-    value,
-    disabled,
-    onChange,
-    id,
-    uiSchema,
-}: WidgetProps<T, S, F>) {
+function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(props1: WidgetProps<T, S, F>) {
+    const { options, value, disabled, onChange, id, uiSchema, formData } = props1;
+
+    const formState = useContext(TaskDataContext);
+    const { task, setTask } = formState;
+
     const { enumOptions } = options;
-    const { customOptions } = getUiOptions<T, S, F>(uiSchema);
+    const { customOptions, props } = getUiOptions<T, S, F>(uiSchema);
+
+    const apiProps = typeof props === 'object' ? (props as ApiProps) : ({} as ApiProps);
 
     const currentOptions = useMemo(() => {
         return enumOptions || customOptions || [];
     }, [enumOptions, customOptions]);
+
     const newOptions = useMemo(() => {
         return Array.isArray(currentOptions)
             ? currentOptions.map((option: RadioItem) => ({
@@ -45,8 +52,20 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
             : [];
     }, [currentOptions]);
 
+    async function fetchDetails(apiUrl: string) {
+        const response = await client.get<any, AxiosResponse<any>>(`${baseUrl}${apiUrl}`);
+
+        setTask({
+            ...task,
+            data: { ...task.data, [apiProps?.responseKey]: response?.data },
+        });
+    }
+
     const handleOnChange = (event: any) => {
         onChange(event.target.value);
+        if (apiProps?.apiUrl) {
+            fetchDetails(apiProps.apiUrl);
+        }
     };
 
     return (

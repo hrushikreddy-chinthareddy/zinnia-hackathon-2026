@@ -112,3 +112,13 @@ export enum CardTypes {
     Download,
     Preview,
 }
+
+export type ApiProps = {
+    apiUrl: string;
+    apiMethod: string;
+    apiBody: any;
+    apiHeaders: any;
+    apiResponse: any;
+    apiError: any;
+    responseKey: string;
+};

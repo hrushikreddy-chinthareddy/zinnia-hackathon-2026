@@ -158,6 +158,7 @@ export const getServerSideProps = withPageAuthRequired({
                             type: 'link',
                         },
                     ],
+                    payments: [],
                 },
                 queue: 'new_business_suitability_review',
                 createdAt: '2024-12-30T07:06:39Z',
@@ -417,6 +418,12 @@ export const getServerSideProps = withPageAuthRequired({
                                     value: 'Document cannot be matched to a case',
                                 },
                             ],
+                        },
+                        'ui:props': {
+                            apiUrl: 'case/v2/tasks/TA000000016435',
+                            apiMethod: 'GET',
+                            apiPayload: null,
+                            responseKey: 'payments',
                         },
                     },
                     // testing: {
