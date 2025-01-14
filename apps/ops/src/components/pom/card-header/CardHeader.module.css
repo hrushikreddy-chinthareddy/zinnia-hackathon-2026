@@ -1,16 +1,9 @@
 .h1 {
-    font-family: var(--font-family-primary);
-    font-size: 36px;
-    font-weight: 500;
-    line-height: 44px;
+    composes: h1 from '../globalStyles.module.css';
 }
 
 .caption {
-    font-family: var(font-family-primary);
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 16px;
+    composes: caption from '../globalStyles.module.css';
 }
 
 .cardHeader {
