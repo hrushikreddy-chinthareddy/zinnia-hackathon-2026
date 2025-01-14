@@ -555,6 +555,12 @@ export default function getGlcoOftConfig(t: TFunction) {
                     maxLength: 40,
                 },
                 {
+                    fieldName: BankingFields.FboDetails,
+                    fieldLabel: t('distributionMethod.fboDetails'),
+                    component: DisbursementFields.BankTextField,
+                    maxLength: 35,
+                },
+                {
                     fieldName: BankingFields.ContractNumber,
                     fieldLabel: t('distributionMethod.contractNumber'),
                     component: DisbursementFields.BankTextField,
@@ -607,6 +613,12 @@ export default function getGlcoOftConfig(t: TFunction) {
                     component: DisbursementFields.BankTextField,
                     classNames: 'col-start-1',
                     maxLength: 40,
+                },
+                {
+                    fieldName: BankingFields.FboDetails,
+                    fieldLabel: t('distributionMethod.fboDetails'),
+                    component: DisbursementFields.BankTextField,
+                    maxLength: 35,
                 },
                 {
                     fieldName: BankingFields.ContractNumber,
