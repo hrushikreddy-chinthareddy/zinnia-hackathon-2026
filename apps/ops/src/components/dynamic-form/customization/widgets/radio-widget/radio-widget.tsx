@@ -1,6 +1,6 @@
 import { FormContextType, getUiOptions, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { AxiosResponse } from 'axios';
-import { useContext, useMemo } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 
 import Radio, { RadioItem } from '@deps/components/radio/radio';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
@@ -28,14 +28,13 @@ const renderSubElement = (option: any) => {
 };
 
 function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(props1: WidgetProps<T, S, F>) {
-    const { options, value, disabled, onChange, id, uiSchema, formData } = props1;
+    const { options, value, disabled, onChange, id, uiSchema, schema, formData } = props1;
 
     const formState = useContext(TaskDataContext);
     const { task, setTask } = formState;
-
+    const [selected, setSelected] = useState(value);
     const { enumOptions } = options;
     const { customOptions, props } = getUiOptions<T, S, F>(uiSchema);
-
     const apiProps = typeof props === 'object' ? (props as ApiProps) : ({} as ApiProps);
 
     const currentOptions = useMemo(() => {
@@ -61,11 +60,16 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
         });
     }
 
+    useEffect(() => {
+        onChange(selected);
+    }, [selected]);
+
     const handleOnChange = (event: any) => {
-        onChange(event.target.value);
         if (apiProps?.apiUrl) {
             fetchDetails(apiProps.apiUrl);
         }
+        setSelected(event.target.value);
+        console.log(value);
     };
 
     return (
@@ -73,9 +77,9 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
             <Radio
                 id={id}
                 items={newOptions}
-                value={value}
+                value={selected}
                 disabled={disabled}
-                defaultValue={value}
+                defaultValue={selected}
                 onChange={handleOnChange}
                 className="items-center justify-between"
             />
