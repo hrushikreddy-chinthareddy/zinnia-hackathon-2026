@@ -59,6 +59,14 @@ export default function getGlcoOftConfig(t: TFunction) {
                     key: 'owner-type',
                 },
                 {
+                    component: SignatureFields.SignatureCityProvided,
+                    key: 'owner-city-state',
+                },
+                {
+                    component: SignatureFields.SignatureSsn,
+                    key: 'owner-ssn',
+                },
+                {
                     component: SignatureFields.SignaturePresent,
                     key: 'owner-sign-present',
                 },
@@ -72,6 +80,7 @@ export default function getGlcoOftConfig(t: TFunction) {
                 },
             ],
             signatureType: SignatureValidationTypeWithdrawal.Owner,
+            partyRole: PartyRoles.OWNER,
         },
         {
             key: `sig-val-joint`,
@@ -79,6 +88,14 @@ export default function getGlcoOftConfig(t: TFunction) {
                 {
                     component: SignatureFields.SignatureType,
                     key: 'joint-type',
+                },
+                {
+                    component: SignatureFields.SignatureCityProvided,
+                    key: 'joint-city-state',
+                },
+                {
+                    component: SignatureFields.SignatureSsn,
+                    key: 'joint-ssn',
                 },
                 {
                     component: SignatureFields.SignaturePresent,
@@ -94,6 +111,7 @@ export default function getGlcoOftConfig(t: TFunction) {
                 },
             ],
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
+            partyRole: PartyRoles.JOINT_OWNER,
             shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
                 return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
             },
