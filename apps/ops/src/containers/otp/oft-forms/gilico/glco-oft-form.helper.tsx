@@ -44,6 +44,7 @@ import {
     FormDisbursementSelections,
 } from '@deps/models/case/withdrawal/disbursement-types';
 
+import { createValidator } from '../../utils/helper-utils';
 import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helper';
 import { commonOftFormValidation, getQualTypeOptions } from '../oft-form-helper';
 
@@ -438,7 +439,14 @@ export default function getGlcoOftConfig(t: TFunction) {
                     fieldName: BankingFields.AccountType,
                     fieldLabel: t('distributionMethod.accountType'),
                     component: DisbursementFields.AccountTypes,
-                    classNames: 'col-span-1 ',
+                    classNames: 'col-span-2 w-full',
+                },
+                {
+                    fieldName: BankingFields.PayeeName,
+                    fieldLabel: t('distributionMethod.payeeName'),
+                    component: DisbursementFields.BankTextField,
+                    classNames: 'col-start-1',
+                    maxLength: 40,
                 },
                 {
                     fieldName: BankingFields.AccountNumber,
@@ -449,9 +457,13 @@ export default function getGlcoOftConfig(t: TFunction) {
                     disableCopyPaste: true,
                 },
                 {
-                    fieldName: BankingFields.BankName,
-                    fieldLabel: t('distributionMethod.bankName'),
+                    fieldName: BankingFields.ReEnterAccountNumber,
+                    fieldLabel: t('distributionMethod.reEnterAccountNumber'),
                     component: DisbursementFields.BankTextField,
+                    classNames: 'col-start-2',
+                    isBankingField: true,
+                    disableCopyPaste: true,
+                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
                 },
                 {
                     fieldName: BankingFields.BankRoutingNumber,
@@ -460,6 +472,25 @@ export default function getGlcoOftConfig(t: TFunction) {
                     maskOnBlur: true,
                     classNames: 'col-start-1',
                     disableCopyPaste: true,
+                },
+                {
+                    fieldName: BankingFields.ReEnterBankRoutingNumber,
+                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    component: DisbursementFields.BankTextField,
+                    isBankingField: true,
+                    disableCopyPaste: true,
+                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                },
+                {
+                    fieldName: BankingFields.AccountHolder,
+                    fieldLabel: t('distributionMethod.accountName'),
+                    component: DisbursementFields.BankTextField,
+                    classNames: 'col-start-1',
+                },
+                {
+                    fieldName: BankingFields.BankName,
+                    fieldLabel: t('distributionMethod.bankName'),
+                    component: DisbursementFields.BankTextField,
                 },
                 {
                     fieldName: BankingFields.BankFurtherCreditName,
@@ -476,7 +507,23 @@ export default function getGlcoOftConfig(t: TFunction) {
                     fieldLabel: t('distributionMethod.fboDetails'),
                     component: DisbursementFields.BankTextField,
                     maxLength: 35,
-                    classNames: 'col-start-1',
+                },
+                {
+                    fieldName: BankingFields.ContractNumber,
+                    fieldLabel: t('distributionMethod.contractNumber'),
+                    component: DisbursementFields.BankTextField,
+                    maxLength: 35,
+                    tooltip: {
+                        shouldDisplay: true,
+                        title: t('distributionMethod.contractLabelPopoverTitle') as string,
+                        body: t('distributionMethod.contractLabelPopoverMessage') as string,
+                    },
+                },
+                {
+                    fieldName: BankingFields.Address,
+                    fieldLabel: '',
+                    component: DisbursementFields.BankAddress,
+                    classNames: 'col-span-3',
                 },
             ],
             getDefaultPayload({ paymentMethod, bank, payee }: FormDisbursement) {
