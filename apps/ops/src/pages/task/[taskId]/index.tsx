@@ -367,8 +367,10 @@ export const getServerSideProps = withPageAuthRequired({
                         },
                         documentMatcher: {
                             'ui:options': {
+                                cardType: 'Detailed',
+                                icon: 'CIRCLE_USER',
                                 label: true,
-                                ObjectFieldTemplate: 'PartyCardTemplate',
+                                ObjectFieldTemplate: 'CardTemplate',
                             },
                         },
                         documents: {

@@ -105,3 +105,10 @@ export type FormMetadata = {
     formSchema: RJSFSchema;
     uiSchema: UiSchema;
 };
+
+export enum CardTypes {
+    Detailed,
+    Hyperlink,
+    Download,
+    Preview,
+}
