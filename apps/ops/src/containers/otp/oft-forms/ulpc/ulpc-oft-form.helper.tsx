@@ -12,15 +12,14 @@ import AsOfDateComponent from '@deps/components/otp-withdrawal-form/form-program
 import { PartialWithdrawalOption } from '@deps/components/otp-withdrawal-form/form-program/form-program-partial-withdrawal';
 import { SelectOneOption } from '@deps/components/otp-withdrawal-form/form-program/form-program-process-date';
 import { getDefaultFormProgramValues } from '@deps/components/otp-withdrawal-form/form-program/form-program.helper';
-import {
-    SignatureFields
-} from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
+import { SignatureFields } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
     FormValidationErrors,
-    PartyRoles, FormParts,
+    PartyRoles,
+    FormParts,
     AmountType,
     WithdrawalType,
     ProgramType,
@@ -33,14 +32,14 @@ import {
     FormDisbursement,
     AccountType,
     FundWithdrawnMethod,
-    LifeCadPartyRoles
+    LifeCadPartyRoles,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_BANK_DETAILS,
     DEFAULT_DISBURSEMENT_UPDATE,
     DisbursementParts,
     PaymentMethodOption,
-    FormDisbursementSelections
+    FormDisbursementSelections,
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../../utils/helper-utils';
@@ -50,72 +49,81 @@ export default function getUlpcOftConfig(t: TFunction) {
     const formValidation = (values: Partial<FormParts> = {}) => commonOftFormValidation(t, values);
 
     const formPartyConfigs: PartyConfig[] = [
-      {
-          partyRoleType: PartyRoles.OWNER,
-          title: t('personalDetails.title'),
-          fields: [
-              {
-                  fieldName: PartyFields.FirstName,
-                  fieldLabel: t('personalDetails.firstName'),
-              },
-              {
-                  fieldName: PartyFields.MiddleName,
-                  fieldLabel: t('personalDetails.middleName'),
-              },
-              {
-                  fieldName: PartyFields.LastName,
-                  fieldLabel: t('personalDetails.lastName'),
-              },
-              {
-                  fieldName: PartyFields.TaxId,
-                  fieldLabel: t('personalDetails.ssn'),
-              },
-          ]
-      },
-      {
-          partyRoleType: PartyRoles.JOINT_OWNER,
-          title: t('jointOwner.title'),
-          fields: [
-              {
-                  fieldName: PartyFields.FirstName,
-                  fieldLabel: t('personalDetails.firstName'),
-              },
-              {
-                  fieldName: PartyFields.MiddleName,
-                  fieldLabel: t('personalDetails.middleName'),
-              },
-              {
-                  fieldName: PartyFields.LastName,
-                  fieldLabel: t('personalDetails.lastName'),
-              },
-              {
-                  fieldName: PartyFields.TaxId,
-                  fieldLabel: t('personalDetails.ssn'),
-              },
-          ],
-      },
-      {
-          partyRoleType: PartyRoles.ANNUITANT,
-          title: t('Annuitant.title'),
-          fields: [
-              {
-                  fieldName: PartyFields.FirstName,
-                  fieldLabel: t('personalDetails.firstName'),
-              },
-              {
-                  fieldName: PartyFields.MiddleName,
-                  fieldLabel: t('personalDetails.middleName'),
-              },
-              {
-                  fieldName: PartyFields.LastName,
-                  fieldLabel: t('personalDetails.lastName'),
-              },
-          ],
-      },
+        {
+            partyRoleType: PartyRoles.OWNER,
+            title: t('personalDetails.title'),
+            fields: [
+                {
+                    fieldName: PartyFields.FirstName,
+                    fieldLabel: t('personalDetails.firstName'),
+                },
+                {
+                    fieldName: PartyFields.MiddleName,
+                    fieldLabel: t('personalDetails.middleName'),
+                },
+                {
+                    fieldName: PartyFields.LastName,
+                    fieldLabel: t('personalDetails.lastName'),
+                },
+                {
+                    fieldName: PartyFields.TaxId,
+                    fieldLabel: t('personalDetails.ssn'),
+                },
+            ],
+        },
+        {
+            partyRoleType: PartyRoles.JOINT_OWNER,
+            title: t('jointOwner.title'),
+            fields: [
+                {
+                    fieldName: PartyFields.FirstName,
+                    fieldLabel: t('personalDetails.firstName'),
+                },
+                {
+                    fieldName: PartyFields.MiddleName,
+                    fieldLabel: t('personalDetails.middleName'),
+                },
+                {
+                    fieldName: PartyFields.LastName,
+                    fieldLabel: t('personalDetails.lastName'),
+                },
+                {
+                    fieldName: PartyFields.TaxId,
+                    fieldLabel: t('personalDetails.ssn'),
+                },
+            ],
+        },
+        {
+            partyRoleType: PartyRoles.ANNUITANT,
+            title: t('Annuitant.title'),
+            fields: [
+                {
+                    fieldName: PartyFields.FirstName,
+                    fieldLabel: t('personalDetails.firstName'),
+                },
+                {
+                    fieldName: PartyFields.MiddleName,
+                    fieldLabel: t('personalDetails.middleName'),
+                },
+                {
+                    fieldName: PartyFields.LastName,
+                    fieldLabel: t('personalDetails.lastName'),
+                },
+            ],
+        },
     ];
 
     const oftFormValidation = ({ formParty, formSignature, formDisbursement }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = formValidation({ formParty, formSignature, formDisbursement });
+
+        // fbo details required
+        if (
+            ![PaymentMethod.DTCC].includes(formDisbursement?.paymentMethod.text as PaymentMethod) &&
+            formDisbursement?.paymentMethod.text &&
+            !formDisbursement?.payee?.fboDetails?.text
+        ) {
+            errors['fboDetails'] = t('formValidation.fboDetails');
+        }
         return errors;
     };
 
@@ -188,17 +196,18 @@ export default function getUlpcOftConfig(t: TFunction) {
     ];
 
     const selectOneOptions: SelectOneOption[] = [
-       {
+        {
             label: t('amountDetails.processTimeframe.immediately'),
-            value: ProcessRequestType.Immediately
-       },
-       {
+            value: ProcessRequestType.Immediately,
+        },
+        {
             label: t('amountDetails.processTimeframe.whenTheContractIsNoLongerSubjectToWithdrawalCharges'),
             value: ProcessRequestType.NoLongerSubject,
-       },
-       {
+        },
+        {
             label: t('amountDetails.processTimeframe.asOfThisDate'),
-            value: ProcessRequestType.AsOfDate, subElement: <AsOfDateComponent />
+            value: ProcessRequestType.AsOfDate,
+            subElement: <AsOfDateComponent />,
         },
     ];
 
@@ -208,33 +217,33 @@ export default function getUlpcOftConfig(t: TFunction) {
     ];
 
     const signaturesConfig: SignatureValidationConfig[] = [
-       {
-          key: `sig-val-owner`,
-          fields: [
-              {
-                  component: SignatureFields.SignatureType,
-                  key: 'owner-type',
-              },
-              {
-                  component: SignatureFields.SignaturePresent,
-                  key: 'owner-sign-present',
-              },
-              {
-                  component: SignatureFields.SignatureTitle,
-                  key: 'owner-title',
-              },
-              {
-                  component: SignatureFields.SignatureDate,
-                  key: 'owner-date',
-              },
-              {
-                component: SignatureFields.SignGuaranteeStamp,
-                key: 'owner-sign-guarantee-stamp',
-              },
-          ],
-          signatureType: SignatureValidationTypeWithdrawal.Owner,
-       },
-      {
+        {
+            key: `sig-val-owner`,
+            fields: [
+                {
+                    component: SignatureFields.SignatureType,
+                    key: 'owner-type',
+                },
+                {
+                    component: SignatureFields.SignaturePresent,
+                    key: 'owner-sign-present',
+                },
+                {
+                    component: SignatureFields.SignatureTitle,
+                    key: 'owner-title',
+                },
+                {
+                    component: SignatureFields.SignatureDate,
+                    key: 'owner-date',
+                },
+                {
+                    component: SignatureFields.SignGuaranteeStamp,
+                    key: 'owner-sign-guarantee-stamp',
+                },
+            ],
+            signatureType: SignatureValidationTypeWithdrawal.Owner,
+        },
+        {
             key: `sig-val-joint`,
             fields: [
                 {
@@ -263,7 +272,7 @@ export default function getUlpcOftConfig(t: TFunction) {
                 return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
             },
         },
-       {
+        {
             key: `sig-val-beneficiary`,
             fields: [
                 {
@@ -291,7 +300,7 @@ export default function getUlpcOftConfig(t: TFunction) {
             shouldDisplay: ({ parties }: OtpWithdrawalFormState): boolean => {
                 return !!parties?.find(party => party.Role === LifeCadPartyRoles.Beneficiary);
             },
-        }
+        },
     ];
 
     const identifySelectedFormProgramOption = (formProgram: FormProgram): { selectedOption: string | null; amount: string | null } => {
@@ -372,7 +381,7 @@ export default function getUlpcOftConfig(t: TFunction) {
                 {
                     fieldName: BankingFields.BankName,
                     fieldLabel: t('distributionMethod.bankName'),
-                    component: DisbursementFields.BankTextField
+                    component: DisbursementFields.BankTextField,
                 },
                 {
                     fieldName: BankingFields.BankFurtherCreditName,
@@ -383,6 +392,12 @@ export default function getUlpcOftConfig(t: TFunction) {
                     fieldName: BankingFields.BankFurtherCreditAccount,
                     fieldLabel: t('distributionMethod.bankFurtherCreditAccount'),
                     component: DisbursementFields.BankTextField,
+                },
+                {
+                    fieldName: BankingFields.FboDetails,
+                    fieldLabel: t('distributionMethod.fboDetails'),
+                    component: DisbursementFields.BankTextField,
+                    maxLength: 35,
                 },
                 {
                     fieldName: BankingFields.ContractNumber,
@@ -417,6 +432,7 @@ export default function getUlpcOftConfig(t: TFunction) {
                     bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
                     bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
                     payeeName: payee?.name?.text ?? '',
+                    fboDetails: payee?.fboDetails?.text || '',
                     contractNumber: payee?.contractNumber.text ?? '',
                     address: payee?.addresses?.[0] ?? DEFAULT_ADDRESS,
                 };
@@ -434,6 +450,7 @@ export default function getUlpcOftConfig(t: TFunction) {
                 reEnterBankRoutingNumber,
                 contractNumber,
                 address,
+                fboDetails,
             }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
@@ -458,6 +475,7 @@ export default function getUlpcOftConfig(t: TFunction) {
                     payee: {
                         name: { text: payeeName ?? null },
                         addresses: [address || DEFAULT_ADDRESS],
+                        fboDetails: { text: fboDetails ?? null },
                         contractNumber: { text: contractNumber ?? null },
                     },
                 };
@@ -475,15 +493,21 @@ export default function getUlpcOftConfig(t: TFunction) {
                     maxLength: 40,
                 },
                 {
+                    fieldName: BankingFields.FboDetails,
+                    fieldLabel: t('distributionMethod.fboDetails'),
+                    component: DisbursementFields.BankTextField,
+                    maxLength: 35,
+                },
+                {
                     fieldName: BankingFields.ContractNumber,
                     fieldLabel: t('distributionMethod.contractNumber'),
                     component: DisbursementFields.BankTextField,
                     maxLength: 35,
                     tooltip: {
-                      shouldDisplay: true,
-                      title: t('distributionMethod.contractLabelPopoverTitle') as string,
-                      body: t('distributionMethod.contractLabelPopoverMessage') as string,
-                  },
+                        shouldDisplay: true,
+                        title: t('distributionMethod.contractLabelPopoverTitle') as string,
+                        body: t('distributionMethod.contractLabelPopoverMessage') as string,
+                    },
                 },
                 {
                     fieldName: BankingFields.Address,
@@ -496,13 +520,14 @@ export default function getUlpcOftConfig(t: TFunction) {
                     return {
                         ...DEFAULT_DISBURSEMENT_UPDATE,
                         payeeName: payee?.name.text ?? '',
+                        fboDetails: payee?.fboDetails?.text || '',
                         address: payee?.addresses?.[0] ?? DEFAULT_ADDRESS,
                         contractNumber: payee?.contractNumber.text ?? '',
                     };
                 }
                 return DEFAULT_DISBURSEMENT_UPDATE;
             },
-            generatePayloadFromSelection: ({ payeeName, address, contractNumber }: DisbursementParts) => {
+            generatePayloadFromSelection: ({ payeeName, address, contractNumber, fboDetails }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
                     paymentMethod: { text: PaymentMailType.Check },
@@ -510,6 +535,7 @@ export default function getUlpcOftConfig(t: TFunction) {
                     payee: {
                         name: { text: payeeName || null },
                         addresses: [address || DEFAULT_ADDRESS],
+                        fboDetails: { text: fboDetails || null },
                         contractNumber: { text: contractNumber || null },
                     },
                 };
@@ -525,6 +551,12 @@ export default function getUlpcOftConfig(t: TFunction) {
                     component: DisbursementFields.BankTextField,
                     classNames: 'col-start-1',
                     maxLength: 40,
+                },
+                {
+                    fieldName: BankingFields.FboDetails,
+                    fieldLabel: t('distributionMethod.fboDetails'),
+                    component: DisbursementFields.BankTextField,
+                    maxLength: 35,
                 },
                 {
                     fieldName: BankingFields.ContractNumber,
@@ -563,6 +595,7 @@ export default function getUlpcOftConfig(t: TFunction) {
                         contractNumber: payee?.contractNumber.text ?? '',
                         accountNumber: upsAccount?.accountNumber?.text ?? '',
                         accountName: upsAccount?.accountName?.text ?? '',
+                        fboDetails: payee?.fboDetails?.text || '',
                     };
                 }
                 return DEFAULT_DISBURSEMENT_UPDATE;
@@ -573,6 +606,7 @@ export default function getUlpcOftConfig(t: TFunction) {
                 address,
                 accountName,
                 accountNumber,
+                fboDetails,
             }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
@@ -582,6 +616,7 @@ export default function getUlpcOftConfig(t: TFunction) {
                         name: { text: payeeName ?? null },
                         addresses: [address || DEFAULT_ADDRESS],
                         contractNumber: { text: contractNumber ?? null },
+                        fboDetails: { text: fboDetails ?? null },
                     },
                     upsAccount: {
                         accountName: { text: accountName ?? '' },
@@ -592,7 +627,6 @@ export default function getUlpcOftConfig(t: TFunction) {
             },
         },
     ];
-
 
     const defaultValues = {
         disbursementOption: FormDisbursementSelections.Wire,
