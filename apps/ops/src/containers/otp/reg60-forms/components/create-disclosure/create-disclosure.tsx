@@ -3,6 +3,7 @@ import { useContext } from 'react';
 
 import Button, { ButtonSize, ButtonType, ButtonVariant } from '@deps/components/button/button';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import { TranslationFiles } from '@deps/config/translations';
 import { Breadcrumb } from '@deps/containers/policy-details/breadcrumb';
 import { Reg60FormContext } from '@deps/contexts/Reg60FormContext';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
@@ -19,7 +20,7 @@ import ProposedAnnuityQuote from '../proposed-annuity-quote/proposed-annuity-quo
 import { AnnuityQuote } from '../proposed-annuity-quote/proposed-annuity-quote.types';
 
 const CreateDisclosure = ({ disclosure, onDisclosureChange, formConfig }: CreateDisclosureProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseReg60.request' });
+    const { t } = useTranslation(TranslationFiles.REG60DEFS, { keyPrefix: 'caseReg60.request' });
     const { isFormStateReadOnly, setCurrentPage, formErrors, disclosureAuthorization } = useContext(Reg60FormContext);
     const { proposedAnnuityQuoteConfig } = getMassMutualReg60Config(t);
 

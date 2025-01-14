@@ -22,11 +22,13 @@ export const PaymentSummary = ({
   planCode,
   policyNumber,
   lineOfBusiness,
+  uncollectedCharges,
 }: {
   moveToNextStep?: () => void;
   planCode: string;
   policyNumber: string;
   lineOfBusiness: LineOfBusiness;
+  uncollectedCharges: number;
 }) => {
   const router = useRouter();
   const { state } = useOttp();
@@ -88,6 +90,7 @@ export const PaymentSummary = ({
           planCode={planCode}
           policyNumber={policyNumber}
           lineOfBusiness={lineOfBusiness}
+          uncollectedCharges={uncollectedCharges}
         />
       </form>
     </FormStepWrapper>

@@ -113,6 +113,7 @@ export interface FormParts {
     ownerAcknowledgement?: OwnerAcknowledgement;
     formNigos?: FormNigos | null;
     formReindexingData?: FormReIndexingData | null;
+    formComment?: FormComment;
     irsFormType?: IrsFormType;
 }
 
@@ -571,7 +572,7 @@ export interface TaxWithholding {
     amount: TaxWithholdingAmount;
     additionalAmount: TaxWithholdingAmount;
     filingStatus: {
-        text: null; //-- always null
+        text: string | null;
     };
     exemption?: {
         text: string | null;
@@ -727,6 +728,10 @@ export interface UpsAccount {
         text: string;
     };
 }
+
+export type FormComment = {
+    comment: string;
+};
 
 // ENUMS for various parts of the form
 export enum AccountCloseReason {

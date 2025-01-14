@@ -5,9 +5,9 @@ import { SideSheet, Button, Icon, IconType } from '@zinnia/bloom/components';
 import { useParams } from 'next/navigation';
 import { FC, ReactNode, useState } from 'react';
 
-import { putEndDateBankAccount } from '@/actions/bpm-actions';
+import { putEndDateBankAccount } from '@/actions/bpm/bank-actions';
 import { useUser } from '@/hooks/use-user';
-import { ActionTypes, useBpmStore } from '@/store/store';
+import { ActionTypes, PropertyKeys, useBpmStore } from '@/store/store';
 import { BankFormFields } from '@/types/bank';
 import { FormSteps } from '@/types/transactions';
 import { EVERLY_CONTACT_PHONE_NUMBER } from '@/utils/data';
@@ -79,7 +79,9 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
       setStep(FormSteps.SUCCESS);
       updateBpmAction({
         actionType: ActionTypes.REMOVE,
-        bankAccountNumber: values?.accountNumber,
+        propertyKey: PropertyKeys.BANK_DETAILS,
+        itemKey: 'routingNumber',
+        itemValue: values?.routingNumber,
       });
       return;
     }

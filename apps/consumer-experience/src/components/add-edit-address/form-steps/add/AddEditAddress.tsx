@@ -1,5 +1,5 @@
 'use client';
-import { AddressType } from '@zinnia/api-types/types/sor';
+import { AddressChange } from '@zinnia/api-types/types/bpm';
 import {
   Radio,
   Label,
@@ -17,6 +17,7 @@ import {
   useForm,
 } from 'react-hook-form';
 
+import { getDirtyValues } from '@/utils/forms';
 import { isNumberOrHyphen } from '@/utils/regex';
 import { states } from '@/utils/states';
 
@@ -29,10 +30,10 @@ export interface AddressObj {
   addressVal: string;
 }
 export interface AddressFormFields {
-  addressType?: AddressType;
+  addressType?: AddressChange.addressType;
   addresses?: AddressObj[];
   city?: string;
-  state?: string;
+  state?: AddressChange.state;
   zipCode?: string;
   defaultAddress?: boolean;
 }
@@ -41,10 +42,12 @@ export interface AddEditAddressProps {
   values?: AddressFormFields;
   actionType?: FormActionType;
   cancelCallback?: () => void;
-  submitCallback?: (val: AddressFormFields) => void;
+  submitCallback?: (
+    val: AddressFormFields,
+    dirtyFields: AddressFormFields
+  ) => void;
   removeCallback?: () => void;
 }
-
 export const AddEditAddress: FC<AddEditAddressProps> = ({
   values,
   cancelCallback,
@@ -56,13 +59,14 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
     control,
     handleSubmit,
     reset,
-    formState: { errors, defaultValues },
+    getValues,
+    formState: { errors, defaultValues, dirtyFields },
   } = useForm<AddressFormFields>({
     defaultValues: {
-      addressType: values?.addressType || AddressType.RESIDENCE,
+      addressType: values?.addressType || AddressChange.addressType.RESIDENCE,
       addresses: values?.addresses || [{ addressVal: '' }],
       city: values?.city || '',
-      state: values?.state || '',
+      state: values?.state || undefined,
       zipCode: values?.zipCode || '',
       defaultAddress: values?.defaultAddress || false,
     },
@@ -79,7 +83,9 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
   };
 
   const onSubmit: SubmitHandler<AddressFormFields> = data => {
-    submitCallback?.(data);
+    const values = getValues();
+    const dirtyValues = getDirtyValues(dirtyFields, values);
+    submitCallback?.(data, dirtyValues);
   };
 
   const buttonText =
@@ -103,17 +109,17 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
                   {
                     label: 'Residential',
                     ariaLabel: 'Residential',
-                    value: AddressType.RESIDENCE,
+                    value: AddressChange.addressType.RESIDENCE,
                   },
                   {
                     label: 'Business',
                     ariaLabel: 'Business',
-                    value: AddressType.BUSINESS,
+                    value: AddressChange.addressType.BUSINESS,
                   },
                   {
                     label: 'PO Box',
                     ariaLabel: 'PO Box',
-                    value: AddressType.POBOX,
+                    value: AddressChange.addressType.POBOX,
                   },
                 ]}
               />
@@ -164,6 +170,7 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
             mode="link"
             className={styles.addAddressButton}
             onClick={() => append({ addressVal: '' })}
+            size="small"
           >
             <Icon type={IconType.ADD} /> Add address line (e.g. unit, floor,
             suite, etc)
@@ -262,7 +269,7 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
             <div className={styles.defaultAddress}>
               <Checkbox
                 id="checkbox-default-address"
-                onChange={field.onChange}
+                onClick={field.onChange}
                 isCheckedByDefault={field.value}
               >
                 {' '}

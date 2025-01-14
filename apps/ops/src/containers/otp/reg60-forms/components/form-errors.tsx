@@ -2,6 +2,7 @@ import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
 
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
+import { TranslationFiles } from '@deps/config/translations';
 import { Reg60FormContext } from '@deps/contexts/Reg60FormContext';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
@@ -12,7 +13,7 @@ export type FormErrorsProps = {
 };
 
 export const FormErrors = ({ taskApiError }: FormErrorsProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseReg60.request' });
+    const { t } = useTranslation(TranslationFiles.REG60DEFS, { keyPrefix: 'caseReg60.request' });
     const { formErrors } = useContext(Reg60FormContext);
 
     const validateForm = (errors: FormValidationErrors) => {

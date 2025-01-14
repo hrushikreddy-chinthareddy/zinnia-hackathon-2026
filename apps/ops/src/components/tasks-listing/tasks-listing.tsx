@@ -1,13 +1,12 @@
-import { FirstDataRenderedEvent, GridSizeChangedEvent } from 'ag-grid-community';
 import router from 'next/router';
 
 import NavElement, { NavElementType, NavElementSize, NavElementVariant } from '@deps/components/nav-element/nav-element';
-import DepTable from '@deps/components/table/table';
 import { getSlug } from '@deps/helpers/string.helper';
 
 import NoTasksFound from './no-tasks-found';
 import { toFormattedTask } from './task-listing.helpers';
 import { TaskTableRow, TasksListingProps } from './task-listing.types';
+import TasksTable from './tasks-table';
 
 export default function TasksListing({
     t,
@@ -23,14 +22,6 @@ export default function TasksListing({
     const taskTableRows: TaskTableRow[] =
         (tasks && tasks?.map(task => toFormattedTask(t, task, caseId, caseType, documentNumber, clientId))) || [];
     const route = getSlug(caseType) + '/' + caseId;
-
-    const onFirstDataRendered = (params: FirstDataRenderedEvent) => {
-        params.api.sizeColumnsToFit();
-    };
-
-    const onGridSizeChanged = (params: GridSizeChangedEvent) => {
-        params.api.sizeColumnsToFit();
-    };
 
     const handleCreateNewTask = () => {
         router.push(`/create-case/${route}?doc=${documentNumber}&clientId=${clientId}&action=new`);
@@ -59,19 +50,7 @@ export default function TasksListing({
                 </div>
             </div>
             {tasks && tasks?.length > 0 ? (
-                <div data-testid="task-list-container">
-                    <DepTable
-                        rowData={taskTableRows}
-                        cols={config.taskTableColConfig}
-                        automaticHeight={true}
-                        suppressAutoSize={true}
-                        defaultColDef={{ resizable: false }}
-                        onFirstDataRendered={onFirstDataRendered}
-                        onGridSizeChanged={onGridSizeChanged}
-                        paginationPageSize={5}
-                        pagination={true}
-                    />
-                </div>
+                <TasksTable tasks={taskTableRows} t={t} config={config} />
             ) : (
                 tasks && <NoTasksFound labels={config.noTaskFound} handleCreateNewTask={handleCreateNewTask} />
             )}

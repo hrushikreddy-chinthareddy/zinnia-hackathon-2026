@@ -1,6 +1,7 @@
 import { TFunction, useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
+import { ExceptionStatuses } from '@deps/models/case/exception-instance';
 import { TaskType } from '@deps/models/case/task';
 
 import { formatTimestamp } from './progress-tab-helpers';
@@ -17,7 +18,7 @@ const renderException = (exception: ExceptionView, isSingleTask: boolean, t: TFu
             {exception.tasks.every(task => task.description !== TaskType.SuitabilityReview) && (
                 <div className="flex w-full flex-col justify-between lg:flex-row">
                     <Content
-                        className="text-semantic-error"
+                        className={exception.status === ExceptionStatuses.Resolved ? 'text-semantic-success' : 'text-semantic-error'}
                         contentClassName="mt-1"
                         variant={ContentVariant.BodySm}
                         details={

@@ -62,6 +62,7 @@ export interface PolicyAccountValue {
   fundId?: string;
   interestGuaranteedPeriod?: number | null;
   renewalDate?: string | null;
+  uncollectedCharges?: number | null;
 }
 
 export interface PolicyCoverage {

@@ -2,6 +2,7 @@ import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import { TranslationFiles } from '@deps/config/translations';
 
 import { DisclosureAuthorization } from './disclosure-authorization';
 import { DisclosureAuthorizationFormProps, DisclosureAuthorizationInformation } from './disclosure-authorization.types';
@@ -22,7 +23,7 @@ export default function DisclosureAuthorizationForm({
     formDisclosureAuthorization,
     setFormDisclosureAuthorization,
 }: DisclosureAuthorizationFormProps) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseReg60.request.disclosureAuthorization' });
+    const { t } = useTranslation(TranslationFiles.REG60DEFS, { keyPrefix: 'caseReg60.request.disclosureAuthorization' });
 
     const [disclosureAuthorizationInfo] = useState(formDisclosureAuthorization);
 

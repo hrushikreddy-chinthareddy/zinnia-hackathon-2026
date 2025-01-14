@@ -2601,6 +2601,7 @@ export const PartyRole = {
     // TODO MG: this was manually added - we need to ensure it will be added to the API spec
     EDELIVERY: 'E-DELIVERY',
     JOINTAANUITANT: 'ANNUITANT / INSURED',
+    ANNUITANT: 'ANNUITANT',
 } as const;
 
 export type PartyNameChangeRequestPartyNameAllOf = {

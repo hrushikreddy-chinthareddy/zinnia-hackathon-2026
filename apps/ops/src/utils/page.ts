@@ -3,12 +3,15 @@ import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import { TranslationFiles } from '@deps/config/translations';
+import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getSelectedPolicyParty } from '@deps/helpers/party-info-helper';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { UserPermission } from '@deps/models/user-profile';
+import { checkTupleSsr } from '@deps/queries/api/fga';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
+import { FgaRelation } from '@deps/types/fga';
 import { logWarn, logError, getUserInfoFromUser, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
@@ -35,8 +38,10 @@ export const getServerSidePropsPolicyDetailsPage = async (context: GetServerSide
 
     // We can use the enum to access the permissions object.
     permissions[UserPermission.AllowReadPolicyAdmin] = await doesUserHavePagePermissions(accessToken, user, UserPermission.AllowReadPolicyAdmin);
+    const isAdvisorsExcel = await checkTupleSsr(accessToken as string, user.partyId, FgaRelation.Party, AE_FGA_ROLE);
+
     // If they can't read Policy Admin there's no point in continuing. Redirect to 403 Forbidden.
-    if (!permissions[UserPermission.AllowReadPolicyAdmin]) {
+    if (!isAdvisorsExcel && !permissions[UserPermission.AllowReadPolicyAdmin]) {
         return {
             redirect: {
                 destination: '/403',

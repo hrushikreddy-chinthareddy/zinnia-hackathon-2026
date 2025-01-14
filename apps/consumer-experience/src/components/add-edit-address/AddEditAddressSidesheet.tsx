@@ -1,13 +1,21 @@
 'use client';
 
+import { AddressChange } from '@zinnia/api-types/types/bpm';
 import { SideSheet, Button, Icon, IconType } from '@zinnia/bloom/components';
 import { useParams } from 'next/navigation';
 import { FC, ReactNode, useState } from 'react';
 
-import { useBpmStore } from '@/store/store';
+import {
+  postAddAddress,
+  putUpdateAddress,
+  putEndDateAddress,
+} from '@/actions/bpm/address-actions';
+import { ActionTypes, PropertyKeys, useBpmStore } from '@/store/store';
 import { FormSteps } from '@/types/transactions';
+import { zipCodeInParts } from '@/utils/address';
 
 import styles from './AddEditAddressSidesheet.module.css';
+import { formatAddressLines, generateChanges } from './utils';
 import { Error } from '../transaction-steps/error/Error';
 import { Loading } from '../transaction-steps/loading/Loading';
 import { Success } from '../transaction-steps/success/Success';
@@ -16,11 +24,14 @@ import {
   AddressFormFields,
 } from './form-steps/add/AddEditAddress';
 import { AddEditAddressSidesheetProps, FormActionType } from './types';
+import { Confirm } from '../transaction-steps/confirm/Confirm';
 
 export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
   values,
   actionType = FormActionType.ADD,
   partyId,
+  addressId,
+  fullAddressData,
 }) => {
   const updateBpmAction = useBpmStore(state => state.updateBpmAction);
   const params = useParams<{
@@ -39,62 +50,134 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
     'Some generic messaging that will get updated based on the api response'
   );
 
-  const removeCallback = async () => {
-    console.log('remove test');
-    setStep(FormSteps.LOADING);
+  const handleRemoveClick = () => setStep(FormSteps.CONFIRM);
 
-    setTimeout(() => {
+  const removeCallback = async () => {
+    setStep(FormSteps.LOADING);
+    const { data, error } = await putEndDateAddress({
+      planCode: params.planCode,
+      policyNumber: params.policyNumber,
+      partyId,
+      addressId: fullAddressData?.addressId,
+      addressChangeRequest: {
+        address: {
+          ...fullAddressData,
+          //ridiculous casting because BPM and SOR types are slightly off
+          state: fullAddressData?.state as unknown as AddressChange.state,
+          addressType:
+            fullAddressData?.addressType as unknown as AddressChange.addressType,
+          country: fullAddressData?.country as unknown as AddressChange.country,
+        },
+      },
+    });
+
+    if (error) {
+      setIsServerError(error.status >= 500);
+      setErrorTitle(error.name);
+      setErrorMessage(error.message);
+      setStep(FormSteps.ERROR);
+      return;
+    }
+    if (data) {
+      setSuccessTitle(data.messages.title);
+      setSuccessMessage(data.messages.message);
       setStep(FormSteps.SUCCESS);
-    }, 2000);
+
+      updateBpmAction({
+        actionType: ActionTypes.REMOVE,
+        propertyKey: PropertyKeys.ADDRESSES,
+        itemKey: 'addressId',
+        itemValue: addressId,
+      });
+      return;
+    }
   };
 
-  const handleAddEdit = async (requestValues: AddressFormFields) => {
+  const handleAddEdit = async (
+    requestValues: AddressFormFields,
+    dirtyFields: AddressFormFields
+  ) => {
     setStep(FormSteps.LOADING);
 
-    //TODO: Remove this
-    console.log('adding', requestValues);
+    const formattedAddressLines = formatAddressLines(requestValues.addresses);
+    const zipCodeParts = zipCodeInParts(requestValues?.zipCode);
+    const addressChangeRequest = {
+      preferredAddressIndicator: requestValues.defaultAddress
+        ? AddressChange.preferredAddressIndicator.YES
+        : AddressChange.preferredAddressIndicator.NO,
+      address: {
+        ...formattedAddressLines,
+        ...zipCodeParts,
+        // TODO: i think these are for seasonal address setting which isn't available
+        // yet so leaving null
+        // startDate: '4186-48-30',
+        // endDate: '0669-10-40',
+        addressType: requestValues.addressType,
+        city: requestValues.city,
+        state: requestValues.state,
+        country: AddressChange.country.US,
+      },
+    };
 
-    setTimeout(() => {
-      setStep(FormSteps.SUCCESS);
-    }, 2000);
+    const request =
+      actionType === FormActionType.EDIT
+        ? putUpdateAddress({
+            planCode: params.planCode,
+            policyNumber: params.policyNumber,
+            partyId,
+            addressId,
+            addressChangeRequest,
+          })
+        : postAddAddress({
+            planCode: params.planCode,
+            policyNumber: params.policyNumber,
+            partyId,
+            addressChangeRequest,
+          });
 
-    //TODO: We will add this stuff back when we wire up the backend methods
     // TODO: Create a generic request method. It still takes in the same things, with the addition of a type.
-    // TODO: If edit type, its a put. If add type, its a post
+    // I'm not sure how much we can genericize these actions since they call different endpoints,
+    // will have different message language and different checks before submitting i.e. bank checks for duplicates
+    // but i don't know if addresses have that same restriction...
+    // maybe we can madlib it in some way that's like `type` and `action`
+    const { data, error } = await request;
 
-    //TODO: the addresses array will need to be converted to key/value pairs like
-    // { addressLine1: address[0].addressVal}
-    // const { data, error } = await addBankRequest({
-    //   planCode: params.planCode,
-    //   policyNumber: params.policyNumber,
-    //   partyId,
-    //   bankId,
-    //   bankAccountChangeRequest: {
-    //     bankAccount: {
-    //       ...requestValues,
-    //       accountStatus: AccountStatus.ACTIVEBANKACCOUNT,
-    //       nameOnAccount: policyOwner,
-    //     },
-    //   },
-    // });
-    // if (error) {
-    //   setIsServerError(error.status >= 500);
-    //   setErrorTitle(error.name);
-    //   setErrorMessage(error.message);
-    //   setStep(FormSteps.ERROR);
-    //   return;
-    // }
-    // if (data) {
-    //   setSuccessTitle(data.messages.title);
-    //   setSuccessMessage(data.messages.message);
-    //   setStep(FormSteps.SUCCESS);
+    if (error) {
+      setIsServerError(error.status >= 500);
+      setErrorTitle(error.name);
+      setErrorMessage(error.message);
+      setStep(FormSteps.ERROR);
+      return;
+    }
 
-    //   updateBpmAction({
-    //     actionType: ActionTypes.ADD,
-    //     bankAccountNumber: requestValues.accountNumber,
-    //   });
-    //   return;
-    // }
+    if (data) {
+      setSuccessTitle(data.messages.title);
+      setSuccessMessage(data.messages.message);
+      setStep(FormSteps.SUCCESS);
+
+      if (actionType === FormActionType.EDIT) {
+        const changes = generateChanges(dirtyFields);
+
+        updateBpmAction({
+          actionType: ActionTypes.EDIT,
+          propertyKey: PropertyKeys.ADDRESSES,
+          itemKey: changes[0]?.fieldName || '',
+          itemValue: changes[0]?.value || '',
+          changes,
+        });
+      } else {
+        updateBpmAction({
+          actionType: ActionTypes.ADD,
+          propertyKey: PropertyKeys.ADDRESSES,
+          itemKey: 'addressLine1',
+          itemValue: values?.addresses?.[0]?.addressVal || '',
+        });
+      }
+    }
+  };
+
+  const errorCloseCallback = () => {
+    setStep(undefined);
   };
 
   const onClose = () => {
@@ -119,10 +202,15 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
       closeCallback={onClose}
       trigger={
         <Button
-          className={styles.addAddress}
+          className={actionType === FormActionType.ADD ? styles.addAddress : ''}
           size="small"
           mode="link"
           onClick={() => setOpen(true)}
+          // Just added this to be extra clear that this is how a user would delete the address
+          // as well as edit
+          aria-label={
+            actionType === FormActionType.EDIT ? 'Edit or remove address' : ''
+          }
         >
           <Icon small={actionType === FormActionType.ADD} type={triggerIcon} />
           {triggerText}
@@ -135,7 +223,15 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
           cancelCallback={onClose}
           submitCallback={handleAddEdit}
           actionType={actionType}
-          removeCallback={removeCallback}
+          removeCallback={handleRemoveClick}
+        />
+      )}
+      {step === FormSteps.CONFIRM && (
+        <Confirm
+          confirmTitle="Remove address?"
+          confirmButtonText="Remove Address"
+          confirmCallback={removeCallback}
+          denyCallback={() => setStep(undefined)}
         />
       )}
       {step === FormSteps.LOADING && <Loading />}
@@ -144,7 +240,7 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
           errorTitle={errorTitle}
           isServerError={isServerError}
           errorMessage={errorMessage}
-          closeCallback={onClose}
+          closeCallback={errorCloseCallback}
         />
       )}
       {step === FormSteps.SUCCESS && (

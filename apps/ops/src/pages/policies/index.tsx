@@ -1,4 +1,7 @@
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { BannerAlert, BannerVariant } from '@zinnia/bloom/components';
+import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
 import { GetServerSidePropsContext } from 'next';
 import router from 'next/router';
 import { TFunction, useTranslation } from 'next-i18next';
@@ -11,6 +14,7 @@ import PaginationControls from '@deps/components/pagination/pagination';
 import SearchBar, { SearchBarInitialValues } from '@deps/components/search/search-bar';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
+import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
 import { PolicyQuickView } from '@deps/containers/policy-summary-card/policy-summary-card';
 import SearchResults from '@deps/containers/search-results/search-results';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
@@ -23,9 +27,11 @@ import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
+import { checkTupleSsr } from '@deps/queries/api/fga';
 import { searchPolicy } from '@deps/queries/api/policies';
 import { isResetQueryParam } from '@deps/types/constants';
 import { LabelValue } from '@deps/types/data';
+import { FgaRelation } from '@deps/types/fga';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 import { SearchSubmittedEvent, SegmentPageName, SegmentTrackedEventName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
@@ -223,11 +229,33 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
         }
     }, [loadSearchResults, policySearchFilters.searchValue, fetchPolicies]);
 
+    dayjs.extend(isBetween);
+    const showPresidentialMourningBanner = () => {
+        const today = dayjs();
+        return today.isBetween('2025-01-08', '2025-01-10', 'day', '[]');
+    };
+
     return (
         <DashboardContext.Provider value={{ searchValue: policySearchFilters.searchValue }}>
             <PageHead titleKey="policySearch" />
             <NoNavLayout displayTopNavBar={false}>
                 <div className="flex flex-col items-center xl:items-start">
+                    {showPresidentialMourningBanner() && (
+                        <BannerAlert
+                            bodyText={
+                                <>
+                                    In recognition of the National Day of Mourning following the death of former{' '}
+                                    <strong>President Jimmy Carter</strong>, the stock market will be closed on{' '}
+                                    <strong>January 9, 2025</strong>. As a result, contract values are as of close of business{' '}
+                                    <strong>January 8, 2025</strong>. Any trades or other financial transactions submitted on{' '}
+                                    <strong>January 9, 2025</strong> will be processed when the stock market reopens on{' '}
+                                    <strong>January 10, 2025</strong>.
+                                </>
+                            }
+                            variant={BannerVariant.Warning}
+                            className="mb-8"
+                        />
+                    )}
                     <Typography variant={TypographyVariant.H1} className="md:mb-8 mb-4">
                         {t('dashboard.h1')}
                     </Typography>
@@ -288,8 +316,9 @@ export const getServerSideProps = withPageAuthRequired({
         }
         // If they can't read Policy Admin there's no point in continuing. Redirect to 403 Forbidden.
         const doesUserHasPagePermissions = await doesUserHavePagePermissions(accessToken, user, UserPermission.AllowReadPolicyAdmin);
+        const isAdvisorsExcel = await checkTupleSsr(accessToken as string, user.partyId, FgaRelation.Party, AE_FGA_ROLE);
 
-        if (!doesUserHasPagePermissions) {
+        if (!isAdvisorsExcel && !doesUserHasPagePermissions) {
             return {
                 redirect: {
                     destination: '/403',
