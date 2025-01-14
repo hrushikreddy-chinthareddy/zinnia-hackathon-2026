@@ -26,15 +26,18 @@ import {
     FormProgram,
     FundWithdrawnMethod,
     ProgramType,
-    WithdrawalType, FormParts,
+    WithdrawalType,
+    FormParts,
     AmountType,
     PaymentMethod,
     PaymentMailType,
-    PartyRoles, ProcessRequestType,
+    PartyRoles,
+    ProcessRequestType,
     AccountCloseReason,
     AccountType,
-    FormDisbursement, ProgramSubType,
-    LifeCadPartyRoles
+    FormDisbursement,
+    ProgramSubType,
+    LifeCadPartyRoles,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -71,29 +74,29 @@ export const spousalSignatureStateCodes = [
 ];
 
 export default function getUlpcConfig(t: TFunction) {
-     const identifySelectedFormProgramOption = (
-            formProgram: FormProgram
-        ): { selectedOption: string | null; amount: string | null; maturityGuaranteePeriod?: string | null } => {
-            const programTypeText = formProgram?.programType?.text || '';
-            const amount = formProgram?.partialAmount?.text || '';
-            const programSubType = formProgram?.programSubType?.text || '';
+    const identifySelectedFormProgramOption = (
+        formProgram: FormProgram
+    ): { selectedOption: string | null; amount: string | null; maturityGuaranteePeriod?: string | null } => {
+        const programTypeText = formProgram?.programType?.text || '';
+        const amount = formProgram?.partialAmount?.text || '';
+        const programSubType = formProgram?.programSubType?.text || '';
 
-            if (programTypeText === ProgramType.NetWithdrawal) {
-                return { selectedOption: ProgramType.NetWithdrawal, amount };
-            }
-            if (programTypeText === ProgramType.GrossWithdrawal) {
-                return { selectedOption: ProgramType.GrossWithdrawal, amount };
-            }
+        if (programTypeText === ProgramType.NetWithdrawal) {
+            return { selectedOption: ProgramType.NetWithdrawal, amount };
+        }
+        if (programTypeText === ProgramType.GrossWithdrawal) {
+            return { selectedOption: ProgramType.GrossWithdrawal, amount };
+        }
 
-            if (programSubType === ProgramSubType.PercentageofAV) {
-                return { selectedOption: ProgramType.PartialPercent, amount: formProgram?.partialPercent?.text || '' };
-            }
+        if (programSubType === ProgramSubType.PercentageofAV) {
+            return { selectedOption: ProgramType.PartialPercent, amount: formProgram?.partialPercent?.text || '' };
+        }
 
-            if (programSubType === ProgramSubType.TotalFreeWithdrawal) {
-                return { selectedOption: ProgramType.PenaltyFreeAmount, amount: '' };
-            }
-            return { selectedOption: null, amount: '' };
-        };
+        if (programSubType === ProgramSubType.TotalFreeWithdrawal) {
+            return { selectedOption: ProgramType.PenaltyFreeAmount, amount: '' };
+        }
+        return { selectedOption: null, amount: '' };
+    };
 
     const partialWithdrawalOptions: PartialWithdrawalOption[] = [
         {
@@ -125,7 +128,7 @@ export default function getUlpcConfig(t: TFunction) {
             },
         },
         {
-            label:  '10 ' + t('amountDetails.partialWithdrawal.percentageOfAccumulatedValue'),
+            label: '10 ' + t('amountDetails.partialWithdrawal.percentageOfAccumulatedValue'),
             value: ProgramType.PartialPercent,
             amountFieldType: AmountType.Percent,
             generatePayloadFromSelection: () => {
@@ -177,6 +180,14 @@ export default function getUlpcConfig(t: TFunction) {
                     key: 'owner-type',
                 },
                 {
+                    component: SignatureFields.SignatureCityProvided,
+                    key: 'owner-city-state',
+                },
+                {
+                    component: SignatureFields.SignatureSsn,
+                    key: 'owner-ssn',
+                },
+                {
                     component: SignatureFields.SignaturePresent,
                     key: 'owner-sign-present',
                 },
@@ -190,6 +201,7 @@ export default function getUlpcConfig(t: TFunction) {
                 },
             ],
             signatureType: SignatureValidationTypeWithdrawal.Owner,
+            partyRole: PartyRoles.OWNER,
         },
         {
             key: `sig-val-joint`,
@@ -197,6 +209,14 @@ export default function getUlpcConfig(t: TFunction) {
                 {
                     component: SignatureFields.SignatureType,
                     key: 'joint-type',
+                },
+                {
+                    component: SignatureFields.SignatureCityProvided,
+                    key: 'joint-city-state',
+                },
+                {
+                    component: SignatureFields.SignatureSsn,
+                    key: 'joint-ssn',
                 },
                 {
                     component: SignatureFields.SignaturePresent,
@@ -212,6 +232,7 @@ export default function getUlpcConfig(t: TFunction) {
                 },
             ],
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
+            partyRole: PartyRoles.JOINT_OWNER,
             shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
                 return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
             },
@@ -298,7 +319,7 @@ export default function getUlpcConfig(t: TFunction) {
                 {
                     fieldName: PartyFields.TaxId,
                     fieldLabel: t('personalDetails.ssn'),
-                }
+                },
             ],
         },
         {
@@ -320,7 +341,7 @@ export default function getUlpcConfig(t: TFunction) {
                 {
                     fieldName: PartyFields.TaxId,
                     fieldLabel: t('personalDetails.ssn'),
-                }
+                },
             ],
         },
         {
@@ -338,7 +359,7 @@ export default function getUlpcConfig(t: TFunction) {
                 {
                     fieldName: PartyFields.LastName,
                     fieldLabel: t('personalDetails.lastName'),
-                }
+                },
             ],
         },
     ];
@@ -624,13 +645,7 @@ export default function getUlpcConfig(t: TFunction) {
                 }
                 return DEFAULT_DISBURSEMENT_UPDATE;
             },
-            generatePayloadFromSelection: ({
-                payeeName,
-                contractNumber,
-                address,
-                accountName,
-                accountNumber,
-            }: DisbursementParts) => {
+            generatePayloadFromSelection: ({ payeeName, contractNumber, address, accountName, accountNumber }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
                     paymentMethod: { text: PaymentMailType.Check },
@@ -683,7 +698,6 @@ export default function getUlpcConfig(t: TFunction) {
         return [USStates.MICHIGAN, USStates.MINNESOTA].includes(issueState);
     };
 
-
     return {
         cslnCheckStates,
         disbursementOptions,
@@ -698,6 +712,6 @@ export default function getUlpcConfig(t: TFunction) {
         selectOneOptions,
         fullWithdrawalOptions,
         maritalStatusAllowanceConfig,
-        validateMaritalStatusAllowances
+        validateMaritalStatusAllowances,
     };
 }
