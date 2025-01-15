@@ -33,7 +33,6 @@ export interface IrsWithholdingProps {
 }
 
 export default function StateW4Form({ isFormStateReadOnly, w4pSignaturesConfig }: IrsWithholdingProps) {
-  //const amountFormat = { format: '###' };
   const { formIrsData, setFormIrsData, formParty, formErrors } = useContext(FormDataContext);
 
   const owner = formParty.parties.find(party => party.partyRoleType === 'OWNER') as Party;
