@@ -349,7 +349,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
     const sideSheet = useSideSheetContext();
     const openRefineResultsSidesheet = () => {
         sideSheet.changeSideSheetContent(
-            t('caseManagementDashboard.refineResults') as string,
+            t('caseManagementDashboard.addFilters') as string,
             <SideSheetRefineResults
                 authorizedCarriers={authorizedCarriers}
                 filters={caseManagementFilters.additionalFilters}
@@ -428,7 +428,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                                 }
                             }}
                         >
-                            {t('caseManagementDashboard.refineResults')}
+                            {t('caseManagementDashboard.addFilters')}
                         </NavElement>
                         <ActiveFilters
                             authorizedCarriers={authorizedCarriers}
@@ -465,7 +465,7 @@ export const getServerSideProps = withPageAuthRequired({
             UserPermission.AllowReadCaseManagement
         );
 
-        // DEPU-2835 - temporary work around for Advisor Excel
+        // DEPU-2835
         const isAdvisorsExcel = await checkTupleSsr(`${auth.accessToken}`, user.partyId, FgaRelation.Party, AE_FGA_ROLE);
 
         if (!isAdvisorsExcel && !doesUserHasPagePermissions) {

@@ -12,7 +12,7 @@ export default function StatusFilter({
     onChange,
     sessionId,
     userId,
-    values = [Statuses.Exception, Statuses.InProgress, Statuses.NotStarted],
+    values = [],
 }: {
     caseTotals?: { [key: string]: number };
     values?: Statuses[];

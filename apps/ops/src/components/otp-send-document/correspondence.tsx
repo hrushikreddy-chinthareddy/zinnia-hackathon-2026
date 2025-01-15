@@ -14,6 +14,7 @@ import {
 import { CommunicationTypes, Confirm } from '@deps/models/case/send-document';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
+import { browserLogWarn } from '@deps/utils/browser-logging';
 import { isNonProductionEnvironment } from '@deps/utils/environment.helper';
 
 import SendDocumentNavigationButtons from './action-components/navigation-buttons';
@@ -40,12 +41,13 @@ export const validateEmail = (email: string) => {
     return;
 };
 
-const validateNoEmailOverlap = (recipient: string, ccList: string[]) => {
-    if (ccList?.includes(recipient)) {
-        return 'errors.duplicateEmail';
+const validateEmailExist = (recipients: string[]) => {
+    if (!recipients.length) {
+        return 'errors.emailRequired';
     }
     return false;
 };
+
 type CorrespondenceProps = {
     communicationOptions?: RadioItem[];
     policy: Policy;
@@ -61,7 +63,7 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
         () => ({
             ...state?.correspondence,
             type: state?.correspondence?.type || defaultCommunicationType,
-            recipient: state?.correspondence?.recipient,
+            recipients: state?.correspondence?.recipients,
         }),
         [defaultCommunicationType, state?.correspondence]
     );
@@ -82,26 +84,19 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
         setError({});
         switch (correspondenceData.type) {
             case CommunicationTypes.Email: {
-                const emailError = validateEmail(correspondenceData.recipient);
+                const emailError = validateEmailExist(correspondenceData?.recipients || []);
                 if (emailError) {
-                    browserLogInfo('contactCenterEmailValidation', {
+                    browserLogWarn('contactCenterEmailValidation', {
                         contractNumber: policy?.policyNumber || '',
                         planCode: policy?.product?.planCode || '',
                         carrierId: policy?.carrierId || '',
-                        payload: correspondenceData?.recipient,
+                        payload: correspondenceData?.recipients || [],
                         error: t(emailError) as string,
                         function: 'correspondence.validateEmail',
                     });
                     setError({ ...error, submit: t(emailError) as string });
                     return false;
                 }
-
-                const duplicateEmail = validateNoEmailOverlap(correspondenceData.recipient, correspondenceData?.ccList || []);
-                if (duplicateEmail) {
-                    setError({ ...error, submit: t(duplicateEmail) as string });
-                    return false;
-                }
-
                 break;
             }
             case CommunicationTypes.Mail:
@@ -112,7 +107,7 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
 
                 break;
             default:
-                if (!state.correspondence.recipient) {
+                if (!state.correspondence.recipients.length) {
                     setError({ ...error, submit: t('errors.recipient') as string });
                     return false;
                 }
@@ -157,7 +152,6 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
             title={t(`tabs.correspondence`)}
             footerContent={<SendDocumentNavigationButtons handleContinue={handleContinue} handleCancel={handleCancel} />}
         >
-            {loader && <Loader />}
             <CorrespondenceCard
                 setCorrespondenceData={handleCorrespondenceData}
                 communicationOptions={communicationOptions}
@@ -167,6 +161,7 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
                 showAdditionalRecipient={true}
                 setError={setError}
             />
+            {loader && <Loader />}
             {error?.submit && <AssistiveText text={error?.submit} variant={AssistiveTextVariant.Error} className="mt-2" />}
         </WorkflowCard>
     );

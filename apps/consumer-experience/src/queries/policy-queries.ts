@@ -41,3 +41,23 @@ export const getPolicyStatusDetails = async (
   }
   return response.data;
 };
+
+export const checkIfPolicyRequiresAcknowledgement = async (
+  planCode: string,
+  policyNumber: string
+) => {
+  const response: ApiResponse<{
+    isEligible: boolean;
+    policyNumber: string;
+    planCode: string;
+  }> = await (
+    await ClientApi.get(
+      `/api/policies/${planCode}/${policyNumber}/requires-acknowledgement`
+    )
+  ).json();
+
+  if (response.error || !response) {
+    throw response.error;
+  }
+  return response.data;
+};

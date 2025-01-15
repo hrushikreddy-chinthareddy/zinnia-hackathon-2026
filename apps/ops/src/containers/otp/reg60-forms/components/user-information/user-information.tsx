@@ -7,6 +7,7 @@ import { selectVarientByConfig } from '@deps/components/otp-withdrawal-form/form
 import Popover, { PopoverPlacement } from '@deps/components/popover/popover';
 import SelectSimple from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import { TranslationFiles } from '@deps/config/translations';
 import { Reg60FormContext } from '@deps/contexts/Reg60FormContext';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 
@@ -16,7 +17,7 @@ import AddressDetails from '../address-details/address-details';
 import UserPhoneNumber from '../phone-number/phone-number';
 
 const UserInformation = ({ userInfo, setUserInfo, formErrors, formConfig }: UserInformationProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseReg60.request.partyDetails' });
+    const { t } = useTranslation(TranslationFiles.REG60DEFS, { keyPrefix: 'caseReg60.request.partyDetails' });
 
     const { isFormStateReadOnly } = useContext(Reg60FormContext);
     return (
