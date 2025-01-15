@@ -228,6 +228,7 @@ export const getServerSideProps = withPageAuthRequired({
                             // description:
                             //    "This customer's application was flagged for review. Accept or Decline each issue before submitting a final decision.",
                         },
+
                         details: {
                             type: 'object',
                             title: 'Details',
@@ -356,6 +357,7 @@ export const getServerSideProps = withPageAuthRequired({
                             ObjectFieldTemplate: 'InstructionsTemplate',
                         },
                     },
+
                     details: {
                         accord: true,
                         'ui:options': {
@@ -420,6 +422,7 @@ export const getServerSideProps = withPageAuthRequired({
                             ],
                         },
                         'ui:props': {
+                            // pass the dynamic key for parameters
                             apiUrl: 'case/v2/tasks/TA000000016435',
                             apiMethod: 'GET',
                             apiPayload: null,

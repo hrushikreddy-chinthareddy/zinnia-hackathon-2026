@@ -36,18 +36,26 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
         (event: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
             setTask({
                 ...task,
+
                 data: event.formData,
             });
-            //  console.log('🚀 ~ event.formData:', event.formData);
         },
 
         [setTask, task]
     );
 
+    const handleFormDataChange = (data: any) => {
+        setTask({
+            ...task,
+            data: data,
+        });
+    };
+
     return (
         <DynamicForm
             ref={forwardedRef}
             formData={task.data}
+            setFormData={handleFormDataChange}
             taskMetadata={taskMetadata}
             onChange={handleChange}
             onSubmit={handleSubmit}

@@ -1,9 +1,8 @@
 import { FormContextType, getUiOptions, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { AxiosResponse } from 'axios';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 import Radio, { RadioItem } from '@deps/components/radio/radio';
-import { TaskDataContext } from '@deps/containers/task-container/task-context';
 import { ApiProps } from '@deps/models/case/task';
 import { baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
@@ -27,14 +26,16 @@ const renderSubElement = (option: any) => {
     }
 };
 
-function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(props1: WidgetProps<T, S, F>) {
-    const { options, value, disabled, onChange, id, uiSchema, schema, formData } = props1;
+export type RadioWidgetProps<T, S extends StrictRJSFSchema, F extends FormContextType> = WidgetProps<T, S, F> & {
+    formData: any;
+    setFormData: (data: any) => void;
+};
+function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(props1: RadioWidgetProps<T, S, F>) {
+    const { options, value, disabled, onChange, id, uiSchema, formData, setFormData } = props1;
 
-    const formState = useContext(TaskDataContext);
-    const { task, setTask } = formState;
-    const [selected, setSelected] = useState(value);
     const { enumOptions } = options;
     const { customOptions, props } = getUiOptions<T, S, F>(uiSchema);
+
     const apiProps = typeof props === 'object' ? (props as ApiProps) : ({} as ApiProps);
 
     const currentOptions = useMemo(() => {
@@ -51,25 +52,25 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
             : [];
     }, [currentOptions]);
 
-    async function fetchDetails(apiUrl: string) {
+    async function fetchDetails(apiUrl: string, value: string) {
         const response = await client.get<any, AxiosResponse<any>>(`${baseUrl}${apiUrl}`);
 
-        setTask({
-            ...task,
-            data: { ...task.data, [apiProps?.responseKey]: response?.data },
-        });
+        const data = {
+            ...formData,
+            [props1.name]: value,
+            [apiProps?.responseKey]: response?.data,
+        };
+
+        setFormData(data);
     }
 
-    useEffect(() => {
-        onChange(selected);
-    }, [selected]);
+    // useEffect(() => {
+    //     onChange(selected);
+    // }, [selected]);
 
     const handleOnChange = (event: any) => {
-        if (apiProps?.apiUrl) {
-            fetchDetails(apiProps.apiUrl);
-        }
-        setSelected(event.target.value);
-        console.log(value);
+        onChange(event.target.value);
+        fetchDetails(apiProps.apiUrl, event.target.value);
     };
 
     return (
@@ -77,9 +78,9 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
             <Radio
                 id={id}
                 items={newOptions}
-                value={selected}
+                value={value}
                 disabled={disabled}
-                defaultValue={selected}
+                defaultValue={value}
                 onChange={handleOnChange}
                 className="items-center justify-between"
             />
