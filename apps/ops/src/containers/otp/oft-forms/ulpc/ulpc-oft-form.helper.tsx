@@ -225,6 +225,14 @@ export default function getUlpcOftConfig(t: TFunction) {
                     key: 'owner-type',
                 },
                 {
+                    component: SignatureFields.SignatureCityProvided,
+                    key: 'owner-city-state',
+                },
+                {
+                    component: SignatureFields.SignatureSsn,
+                    key: 'owner-ssn',
+                },
+                {
                     component: SignatureFields.SignaturePresent,
                     key: 'owner-sign-present',
                 },
@@ -235,10 +243,6 @@ export default function getUlpcOftConfig(t: TFunction) {
                 {
                     component: SignatureFields.SignatureDate,
                     key: 'owner-date',
-                },
-                {
-                    component: SignatureFields.SignGuaranteeStamp,
-                    key: 'owner-sign-guarantee-stamp',
                 },
             ],
             signatureType: SignatureValidationTypeWithdrawal.Owner,
@@ -251,6 +255,14 @@ export default function getUlpcOftConfig(t: TFunction) {
                     key: 'joint-type',
                 },
                 {
+                    component: SignatureFields.SignatureCityProvided,
+                    key: 'joint-city-state',
+                },
+                {
+                    component: SignatureFields.SignatureSsn,
+                    key: 'joint-ssn',
+                },
+                {
                     component: SignatureFields.SignaturePresent,
                     key: 'joint-sign-present',
                 },
@@ -261,10 +273,6 @@ export default function getUlpcOftConfig(t: TFunction) {
                 {
                     component: SignatureFields.SignatureDate,
                     key: 'joint-date',
-                },
-                {
-                    component: SignatureFields.SignGuaranteeStamp,
-                    key: 'owner-sign-guarantee-stamp',
                 },
             ],
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
@@ -290,10 +298,6 @@ export default function getUlpcOftConfig(t: TFunction) {
                 {
                     component: SignatureFields.SignatureDate,
                     key: 'beneficiary-date',
-                },
-                {
-                    component: SignatureFields.SignGuaranteeStamp,
-                    key: 'owner-sign-guarantee-stamp',
                 },
             ],
             signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
