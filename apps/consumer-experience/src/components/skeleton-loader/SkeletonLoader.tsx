@@ -1,11 +1,21 @@
+import clsx from 'clsx';
+
 import styles from './SkeletonLoader.module.css';
+
+interface SkeletonLoaderProps extends React.HTMLAttributes<HTMLDivElement> {
+  width: string;
+  height: string;
+}
 
 export const SkeletonLoader = ({
   width,
   height,
-}: {
-  width: string;
-  height: string;
-}) => {
-  return <div style={{ width, height }} className={styles.skeletonBox}></div>;
+  className,
+}: SkeletonLoaderProps) => {
+  return (
+    <div
+      style={{ width, height }}
+      className={clsx(styles.skeletonBox, className)}
+    />
+  );
 };

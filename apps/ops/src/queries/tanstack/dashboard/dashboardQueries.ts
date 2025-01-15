@@ -1,5 +1,4 @@
-import { SimpleOption } from '@deps/components/select/select.helpers';
-import { Statuses, CaseDashboardStatsResponse, DashboardStatsElementResponse } from '@deps/models/case/case';
+import { Statuses, CaseDashboardStatsResponse, DashboardStatsElementResponse, Processes } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 
 import { getCaseDashboardStats } from '../../api/cases';
@@ -37,7 +36,6 @@ export const getCaseDashboardStatsQuery = async (baseFilter: DashboardSearchFilt
         filter: baseFilter,
         groupBy,
     });
-
     if (!statsResponse || 'status' in statsResponse) {
         throw statsResponse;
     }
@@ -55,10 +53,9 @@ export const getCaseDashboardStatsQuery = async (baseFilter: DashboardSearchFilt
  **************************
  */
 
-export const getProcessListOptions = async (createdDateStart: string) => {
+export const getProcessListOptions = async () => {
     const baseDashboardQueryFilter: DashboardSearchFilter = {
         caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
-        createdDateStart,
     };
     const query: CaseDashboardStatsQuery = {
         filter: baseDashboardQueryFilter,
@@ -68,16 +65,33 @@ export const getProcessListOptions = async (createdDateStart: string) => {
     if (!statsResponse || 'status' in statsResponse) {
         throw statsResponse;
     }
-    const listOptions = statsResponse?.data
-        ?.reduce<SimpleOption[]>((prev, curr) => {
-            if (curr.name && !prev.some(item => item.value === curr.name)) {
-                prev.push({ value: curr.name, label: curr.name });
-            }
-            return prev;
-        }, [])
-        .sort((item1, item2) => item1.label.localeCompare(item2.label));
 
-    return listOptions;
+    return statsResponse?.data;
+};
+
+export const getSubprocessListOptions = async (createdDateStart: string, selectedProcess: Processes[] = []) => {
+    const baseDashboardQueryFilter: DashboardSearchFilter = {
+        caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
+        createdDateStart,
+    };
+
+    if (selectedProcess.length > 0) {
+        baseDashboardQueryFilter.process = selectedProcess;
+    }
+
+    const query: CaseDashboardStatsQuery = {
+        filter: baseDashboardQueryFilter,
+        groupBy: [GroupByOptions.ProcessSubType, GroupByOptions.Process],
+    };
+
+    const statsResponse = await getCaseDashboardStats(query);
+
+    if (!statsResponse || 'status' in statsResponse) {
+        throw statsResponse;
+    }
+
+
+    return statsResponse?.data;
 };
 
 /**************************
@@ -89,12 +103,10 @@ export const getStatsFromSelectionQuery = async (
     baseFilter: DashboardSearchFilter | undefined,
     l1SelectValue: GroupByOptions,
     l2SelectValue: GroupByOptions,
-    l3SelectValue: GroupByOptions,
-    createdDateStart: string
+    l3SelectValue: GroupByOptions
 ) => {
     const filter: DashboardSearchFilter = Object.assign({}, baseFilter, {
         caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
-        createdDateStart,
     });
 
     const query: CaseDashboardStatsQuery = {

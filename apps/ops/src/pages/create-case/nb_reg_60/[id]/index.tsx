@@ -189,7 +189,7 @@ export const getServerSideProps = withPageAuthRequired({
         const taskId = (query.taskId as string) || '';
 
         const [translations, document] = await Promise.all([
-            serverSideTranslations(locale, [TranslationFiles.COMMON]),
+            serverSideTranslations(locale, [TranslationFiles.COMMON, TranslationFiles.REG60DEFS]),
             getDocumentV2SSR(documentNumber, DocumentType.Reg60, clientId.toUpperCase(), accessToken),
         ]);
 

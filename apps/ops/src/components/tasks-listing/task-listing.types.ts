@@ -1,8 +1,6 @@
 import { ColDef } from 'ag-grid-community';
 import { TFunction } from 'next-i18next';
 
-import { ActionCellRendererParams } from './action-cell-renderer';
-
 export interface Task {
     id: string;
     taskName: string;
@@ -20,7 +18,6 @@ export interface TaskTableRow {
     taskName: string;
     statusDuration: string;
     userId: string;
-    actions: (params: ActionCellRendererParams) => JSX.Element;
 }
 
 export interface NoTaskFoundLabels {
@@ -45,5 +42,12 @@ export interface TasksListingProps {
     caseType: string;
     documentNumber: string;
     clientId: string;
+    config: any;
+}
+
+
+export interface TasksTableProps {
+    t: TFunction;
+    tasks: TaskTableRow[] | undefined;
     config: any;
 }

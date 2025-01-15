@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
+import { Button, Icon, IconType } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
 
 import { FieldSize, FieldType } from '@deps/components/fields/field';
 import SelectSimple from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { getStartAndEndDates } from '@deps/containers/case-redesign-sub-page/case-helpers';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 import { getLabelSubString, dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
@@ -45,6 +45,12 @@ const defaultChartOptions = {
     maxItems: 10,
 };
 
+const DEFAULT_GROUPBY_FILTER_OPTIONS = {
+    L1SelectValue: GroupByOptions.BrokerDealerName,
+    L2SelectValue: GroupByOptions.ProcessSubType,
+    L3SelectValue: GroupByOptions.CaseStatus,
+};
+
 const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOptions, baseDashboardQueryFilter }: Props) => {
     const { t } = useTranslation();
     const mergedChartOptions = { ...defaultChartOptions, ...chartOptions };
@@ -59,7 +65,6 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
         maxPathStrokeWidth,
         maxItems,
     } = mergedChartOptions;
-    const { createdDateStart } = getStartAndEndDates('All');
     const [totalCases, setTotalCases] = useState<number>(0);
 
     const [level1ObjectGrouping, setLevel1ObjectGrouping] = useState<DashboardStatsElementResponse[]>([]);
@@ -67,20 +72,21 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
     const [level3ObjectGrouping, setLevel3ObjectGrouping] = useState<DashboardStatsElementResponse[]>([]);
     const [l1SelectedIndex, setL1SelectedIndex] = useState<number>(-100);
 
-    const [l1SelectValue, setL1SelectValue] = useState(GroupByOptions.BrokerDealerName);
-    const [l2SelectValue, setL2SelectValue] = useState(GroupByOptions.Process);
-    const [l3SelectValue, setL3SelectValue] = useState(GroupByOptions.CaseStatus);
+    const [l1SelectValue, setL1SelectValue] = useState(DEFAULT_GROUPBY_FILTER_OPTIONS.L1SelectValue);
+    const [l2SelectValue, setL2SelectValue] = useState(DEFAULT_GROUPBY_FILTER_OPTIONS.L2SelectValue);
+    const [l3SelectValue, setL3SelectValue] = useState(DEFAULT_GROUPBY_FILTER_OPTIONS.L3SelectValue);
 
     const [parentSize, setParentSize] = useState({ width, height });
     const svgParentRef = useRef<HTMLDivElement>(null);
 
     const { data: caseGroupingState } = useQuery({
-        queryKey: ['caseGrouping', baseDashboardQueryFilter, l1SelectValue, l2SelectValue, l3SelectValue, createdDateStart],
+        queryKey: ['caseGrouping', baseDashboardQueryFilter, l1SelectValue, l2SelectValue, l3SelectValue],
         queryFn: () => {
             setL1SelectedIndex(-100);
-            return getStatsFromSelectionQuery(baseDashboardQueryFilter, l1SelectValue, l2SelectValue, l3SelectValue, createdDateStart);
+            return getStatsFromSelectionQuery(baseDashboardQueryFilter, l1SelectValue, l2SelectValue, l3SelectValue);
         },
         placeholderData: previousData => previousData,
+        enabled: Object.keys(baseDashboardQueryFilter || {}).length > 0,
     });
 
     const getGroupingsFromL1 = (l1ObjectGrouping: DashboardStatsElementResponse[]) => {
@@ -661,6 +667,7 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
             setLevel1ObjectGrouping([]);
             setLevel2ObjectGrouping([]);
             setLevel3ObjectGrouping([]);
+            setTotalCases(0);
             return;
         }
 
@@ -704,6 +711,17 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
     }, [caseGroupingState, maxItems]);
 
     const formattedCasesNumber = wholeNumberFormatify(totalCases || 0) as never;
+
+    const resetFilters = () => {
+        [setL1SelectValue, setL2SelectValue, setL3SelectValue].forEach((setterFn, index) =>
+            setterFn(Object.values(DEFAULT_GROUPBY_FILTER_OPTIONS)[index])
+        );
+    };
+
+    const resetDisabled =
+        l1SelectValue === DEFAULT_GROUPBY_FILTER_OPTIONS.L1SelectValue &&
+        l2SelectValue === DEFAULT_GROUPBY_FILTER_OPTIONS.L2SelectValue &&
+        l3SelectValue === DEFAULT_GROUPBY_FILTER_OPTIONS.L3SelectValue;
 
     return (
         <div>
@@ -791,7 +809,7 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                             value={l2SelectValue}
                         />
                     </div>
-                    <div className="mb-4 md:mb-0 pl-6 md:w-1/3 text-right">
+                    <div className="mb-4 md:mb-0 pl-6 md:w-1/3 text-right flex flex-row align-middle items-center gap-2">
                         <SelectSimple
                             options={[
                                 {
@@ -808,7 +826,12 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                             type={FieldType.BaseActive}
                             value={l3SelectValue}
                         />
+                        <Button onClick={resetFilters} disabled={resetDisabled} mode="link" size="small">
+                            <Icon width={16} height={16} type={IconType.REFRESH} />
+                            reset
+                        </Button>
                     </div>
+                    <div></div>
                 </div>
                 {/* DO NOT REMOVE the explicity height setting. This prevents the useEffect from firing constantly after
                 render due to the height changing */}
