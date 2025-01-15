@@ -7,12 +7,13 @@ import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disburse
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import FormProgramPartialWithdrawal from '@deps/components/otp-withdrawal-form/form-program/form-program-partial-withdrawal';
 import DistributionReason from '@deps/components/otp-withdrawal-form/form-restriction/distribution-reason';
+import LoanAcknowledgement from '@deps/components/otp-withdrawal-form/loan-acknowledgement';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helper';
 import { ProcessType } from '@deps/models/case/enums';
-import { Carrier, QualTypes } from '@deps/models/case/withdrawal/case';
+import { Carrier, ProgramType, QualTypes } from '@deps/models/case/withdrawal/case';
 
 import useGdmnOftConfig from './gdmn-oft-form.helper';
 
@@ -43,6 +44,7 @@ export default function GdmnOftWithdrawalForm({ qualType }: GdmnOftWithdrawalFor
         ownerStateOfResidence,
         isFormStateReadOnly,
         setOwnerStateOfResidence,
+        formProgram
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -69,6 +71,8 @@ export default function GdmnOftWithdrawalForm({ qualType }: GdmnOftWithdrawalFor
     }, [formParty, ownerStateOfResidence]);
 
     const is403b = [QualTypes.b403].includes(qualType as QualTypes);
+    const { selectedOption } = identifySelectedFormProgramOption(formProgram);
+
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -81,8 +85,10 @@ export default function GdmnOftWithdrawalForm({ qualType }: GdmnOftWithdrawalFor
                 selectionIdentifier={identifySelectedFormProgramOption}
                 selectOneOptions={selectOneOptions}
             />
-             {is403b && <EmployerTpaAuthorization isFormStateReadOnly={isFormStateReadOnly} />}
+            {selectedOption === ProgramType.FullSurrender && <LoanAcknowledgement isFormStateReadOnly={isFormStateReadOnly} isLoanRepayment={true}/> }
+            {is403b && <EmployerTpaAuthorization isFormStateReadOnly={isFormStateReadOnly} />}
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
+
             <CedingCompanyDistribution
                 qualificationOptions={qualificationOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
