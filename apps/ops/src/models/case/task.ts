@@ -14,7 +14,7 @@ export enum TaskType {
     REG60 = 'NBReg60Comparision',
     SuitabilityDataEntry = 'SUITABILITY_DATA_ENTRY',
     SuitabilityReview = 'SUITABILITY_REVIEW',
-    NB_LINK_PAYMENT_POLICY = 'NB_LINK_PAYMENT_POLICY',
+    PURCHASE_DOCUMENT_MATCHING = 'PURCHASE_DOCUMENT_MATCHING',
 }
 
 export enum TaskSource {
@@ -104,6 +104,11 @@ export interface renewalsFormParts {
 export type FormMetadata = {
     formSchema: RJSFSchema;
     uiSchema: UiSchema;
+    formId: string;
+    process: string;
+    carrier: string;
+    taskType?: TaskType;
+    title: string;
 };
 
 export enum CardTypes {

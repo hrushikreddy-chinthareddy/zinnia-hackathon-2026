@@ -4784,16 +4784,16 @@
             },
             "view": "Voir",
             "documentId": "ID du document",
-            "submitLabel": "Soumettre",
+            "submit": "Soumettre",
             "continueLabel": "Continuer",
-            "cancelLabel": "Annuler"
+            "cancel": "Annuler"
         },
         "taskForm": {
             "title": "Données d’adéquation des entrées",
             "subTitle": "Saisissez manuellement toutes les données d'adéquation. Notez que l'annulation à tout moment effacera toutes les données saisies.",
-            "submitLabel": "Soumettre",
+            "submit": "Soumettre",
             "continueLabel": "Continuer",
-            "cancelLabel": "Annuler"
+            "cancel": "Annuler"
         },
         "confirmStep": {
             "title": "Soumise!",
@@ -4824,8 +4824,8 @@
         "taskForm": {
             "title": "Évaluation de la pertinence",
             "subTitle": "La candidature de ce client a été marquée pour examen. Acceptez ou refusez chaque problème avant de soumettre une décision finale.",
-            "submitLabel": "Soumettre la décision",
-            "cancelLabel": "Annuler"
+            "submit": "Soumettre la décision",
+            "cancel": "Annuler"
         },
         "confirmStep": {
             "title": "Soumise!",
@@ -4835,15 +4835,12 @@
             "submitTask": "Soumettre les détails de l'examen d'adéquation"
         }
     },
-    "nbLinkPaymentPolicy": {
-        "tabs": {
-            "documentMatch": "Document de match",
-            "confirm": "Confirmer"
-        },
+    "taskManagement": {
         "taskForm": {
-            "title": "Document de match",
-            "submitLabel": "Soumettre",
-            "cancelLabel": "Annuler"
+            "title": "Gestion des tâches",
+            "submit": "Soumettre",
+            "cancel": "Annuler",
+            "confirm": "Confirmer"
         }
     },
     "unauthorized": {

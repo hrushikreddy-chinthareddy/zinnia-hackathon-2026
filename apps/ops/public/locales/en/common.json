@@ -4829,16 +4829,16 @@
             },
             "view": "View",
             "documentId": "Document ID",
-            "submitLabel": "Submit",
-            "continueLabel": "Continue",
-            "cancelLabel": "Cancel"
+            "submit": "Submit",
+            "continue": "Continue",
+            "cancel": "Cancel"
         },
         "taskForm": {
             "title": "Input Suitability Data",
             "subTitle": "Manually enter all suitability data. Note that canceling at any point will erase all the entered data.",
-            "submitLabel": "Submit",
-            "continueLabel": "Continue",
-            "cancelLabel": "Cancel"
+            "submit": "Submit",
+            "continue": "Continue",
+            "cancel": "Cancel"
         },
         "confirmStep": {
             "title": "Submitted!",
@@ -4856,8 +4856,8 @@
         "taskForm": {
             "title": "Review Suitability",
             "subTitle": "This customer's application was flagged for review. Accept or Decline each issue before submitting a final decision.",
-            "submitLabel": "Submit decision",
-            "cancelLabel": "Cancel"
+            "submit": "Submit decision",
+            "cancel": "Cancel"
         },
         "confirmStep": {
             "title": "Submitted!",
@@ -4867,15 +4867,12 @@
             "submitTask": "Submit suitability review details"
         }
     },
-    "nbLinkPaymentPolicy": {
-        "tabs": {
-            "documentMatch": "Match Document",
-            "confirm": "Confirm"
-        },
+    "taskManagement": {
         "taskForm": {
-            "title": "Match Document",
-            "submitLabel": "Continue",
-            "cancelLabel": "Cancel"
+            "title": "Task Management",
+            "submit": "Continue",
+            "cancel": "Cancel",
+            "confirm": "Confirm"
         }
     },
     "unauthorized": {

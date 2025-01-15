@@ -1,7 +1,7 @@
 import { TFunction } from 'next-i18next';
 
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
-import { TaskType } from '@deps/models/case/task';
+import { FormMetadata, TaskType } from '@deps/models/case/task';
 
 export type GetStepsProps = {
     carrierId: string;
@@ -13,6 +13,7 @@ export type GetStepsProps = {
     t: TFunction;
     nigoExceptions: any;
     nigoSubExceptions: any;
+    taskMetadata: FormMetadata[];
 };
 
 export interface GetSteps {

@@ -3,7 +3,7 @@ import { ManagementTask } from '@deps/models/case/task-instance';
 
 export const buildTaskPayload = (task: ManagementTask) => {
     switch (task.taskType) {
-        case TaskType.NB_LINK_PAYMENT_POLICY: {
+        case TaskType.PURCHASE_DOCUMENT_MATCHING: {
             //todo: modify the payload for potentialMatches
             return task;
         }

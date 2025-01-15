@@ -10,7 +10,7 @@ import { TaskProvider } from '@deps/containers/task-container/task-provider';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
-import { FormMetadata } from '@deps/models/case/task';
+import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { UserPermission } from '@deps/models/user-profile';
 import { getCaseTaskById } from '@deps/operations/tasks/task-operations';
@@ -22,7 +22,7 @@ import nextI18nextConfig from 'next-i18next.config';
 
 type TaskPageProps = {
     task: ManagementTask;
-    taskMetadata: FormMetadata;
+    taskMetadata: FormMetadata[];
     correlationId: string;
     taskInfoLink: string;
     nigoExceptions: any;
@@ -31,19 +31,22 @@ type TaskPageProps = {
 
 export const TaskPage: React.FC<TaskPageProps> = ({
     task,
-    taskMetadata,
     taskInfoLink,
     correlationId,
     nigoExceptions,
     nigoSubExceptions,
+    taskMetadata,
 }: TaskPageProps) => {
-    console.log('🚀 ~ taskMetadata:', taskMetadata.formSchema.allOf);
-    console.log('🚀 ~ taskInfoLink:', taskInfoLink);
     return (
         <div>
             <NoNavLayout fullHeight={true}>
-                <TaskProvider taskMetadata={taskMetadata} initialTask={task} correlationId={correlationId}>
-                    <TaskContainer taskInfoLink={taskInfoLink} nigoExceptions={nigoExceptions} nigoSubExceptions={nigoSubExceptions} />
+                <TaskProvider initialTask={task} correlationId={correlationId}>
+                    <TaskContainer
+                        taskInfoLink={taskInfoLink}
+                        nigoExceptions={nigoExceptions}
+                        nigoSubExceptions={nigoSubExceptions}
+                        taskMetadata={taskMetadata}
+                    />
                 </TaskProvider>
             </NoNavLayout>
         </div>
@@ -95,7 +98,7 @@ export const getServerSideProps = withPageAuthRequired({
                 caseId: 'CA0000383347',
                 process: 'New Business',
                 carrier: 'WELB',
-                taskType: 'NB_LINK_PAYMENT_POLICY',
+                taskType: 'PURCHASE_DOCUMENT_MATCHING',
                 taskName: 'Suitability Review',
                 status: TaskStatus.New,
                 data: {
@@ -197,74 +200,50 @@ export const getServerSideProps = withPageAuthRequired({
 
             //   const taskMetadata = await getTaskFormMetadata(carrier, taskType as TtaskFormaskType, process as ProcessType, accessToken);
 
-            const taskMetadata = {
-                formId: '004c97a1-d97c-4faa-9b7f-8ff9105b4c29',
-                process: 'New Business',
-                carrier: 'WELB',
-                taskType: 'SUITABILITY_REVIEW',
-                title: 'Match Document',
-                formSchema: {
-                    $schema: 'http://json-schema.org/draft-07/schema#',
-                    type: 'object',
-                    definitions: {
-                        potentialMatchesEnum: {
-                            oneOf: [
-                                {
-                                    const: 'Enter a case ID',
-                                    title: 'Enter a case ID',
-                                },
-                                {
-                                    const: 'Document cannot be matched to a case',
-                                    title: 'Document cannot be matched to a case',
-                                },
-                            ],
-                        },
-                    },
-                    properties: {
-                        sectionHeader: {
-                            type: 'object',
-                            title: 'Processing Instructions',
-                            // todo:vijaya: fix description
-                            // description:
-                            //    "This customer's application was flagged for review. Accept or Decline each issue before submitting a final decision.",
-                        },
-
-                        details: {
-                            type: 'object',
-                            title: 'Details',
-                            properties: {
-                                amount: {
-                                    type: 'string',
-                                    title: 'Amount Received',
-                                },
-                                documentMatcher: {
-                                    type: 'object',
-                                    title: 'Supporting information',
-                                    properties: {
-                                        title: {
-                                            type: 'string',
-                                            title: 'Title',
-                                        },
-                                        subtitle: {
-                                            type: 'string',
-                                            title: 'Subtitle',
-                                        },
-                                        name: {
-                                            type: 'string',
-                                            title: 'Title',
-                                        },
-                                        dob: {
-                                            type: 'string',
-                                            title: 'Subtitle',
-                                        },
+            const taskMetadata: FormMetadata[] = [
+                {
+                    formId: '004c97a1-d97c-4faa-9b7f-8ff9105b4c29',
+                    process: 'IndexationOrkestr',
+                    carrier: 'WELB',
+                    taskType: 'PURCHASE_DOCUMENT_MATCHING' as TaskType,
+                    title: 'Match Document',
+                    formSchema: {
+                        $schema: 'http://json-schema.org/draft-07/schema#',
+                        type: 'object',
+                        definitions: {
+                            potentialMatchesEnum: {
+                                oneOf: [
+                                    {
+                                        const: 'Enter a case ID',
+                                        title: 'Enter a case ID',
                                     },
-                                },
-                                documents: {
-                                    type: 'array',
-                                    title: '',
-                                    items: {
+                                    {
+                                        const: 'Document cannot be matched to a case',
+                                        title: 'Document cannot be matched to a case',
+                                    },
+                                ],
+                            },
+                        },
+                        properties: {
+                            sectionHeader: {
+                                type: 'object',
+                                title: 'Processing Instructions',
+                                // todo:vijaya: fix description
+                                // description:
+                                //    "This customer's application was flagged for review. Accept or Decline each issue before submitting a final decision.",
+                            },
+
+                            details: {
+                                type: 'object',
+                                title: 'Details',
+                                properties: {
+                                    amount: {
+                                        type: 'string',
+                                        title: 'Amount Received',
+                                    },
+                                    documentMatcher: {
                                         type: 'object',
-                                        title: '',
+                                        title: 'Supporting information',
                                         properties: {
                                             title: {
                                                 type: 'string',
@@ -284,181 +263,394 @@ export const getServerSideProps = withPageAuthRequired({
                                             },
                                         },
                                     },
+                                    documents: {
+                                        type: 'array',
+                                        title: '',
+                                        items: {
+                                            type: 'object',
+                                            title: '',
+                                            properties: {
+                                                title: {
+                                                    type: 'string',
+                                                    title: 'Title',
+                                                },
+                                                subtitle: {
+                                                    type: 'string',
+                                                    title: 'Subtitle',
+                                                },
+                                                name: {
+                                                    type: 'string',
+                                                    title: 'Title',
+                                                },
+                                                dob: {
+                                                    type: 'string',
+                                                    title: 'Subtitle',
+                                                },
+                                            },
+                                        },
+                                    },
+                                    caseOverview: {
+                                        type: 'string',
+                                        title: 'Open case search',
+                                        default: '/cases',
+                                    },
                                 },
-                                caseOverview: {
-                                    type: 'string',
-                                    title: 'Open case search',
-                                    default: '/cases',
+                            },
+                            potentialMatches: {
+                                type: 'string',
+                                title: 'Can you find a matching case for this document?',
+                            },
+                        },
+                        allOf: [
+                            {
+                                if: {
+                                    properties: {
+                                        potentialMatches: {
+                                            const: 'Enter a case ID',
+                                        },
+                                    },
                                 },
+                                then: {
+                                    properties: {
+                                        caseId: {
+                                            type: 'string',
+                                            title: 'Case Id',
+                                        },
+                                    },
+                                },
+                            },
+                            {
+                                if: {
+                                    properties: {
+                                        potentialMatches: {
+                                            const: 'Document cannot be matched to a case',
+                                        },
+                                    },
+                                },
+                                then: {
+                                    properties: {
+                                        cases: {
+                                            type: 'string',
+                                            title: 'Cases',
+                                            enum: ['New Business', 'Purchase'], //TBD
+                                        },
+                                        caseTypes: {
+                                            type: 'string',
+                                            title: 'Cases',
+                                            enum: ['select', 'no'], //TBD
+                                        },
+                                    },
+                                },
+                            },
+                        ],
+                    },
+
+                    uiSchema: {
+                        'ui:globalOptions': {
+                            duplicateKeySuffixSeparator: '_',
+                            orderable: false,
+                            copyable: false,
+                        },
+                        $schema: 'http: //json-schema.org/draft-07/schema#',
+
+                        'ui:submitButtonOptions': {
+                            norender: true,
+                        },
+                        sectionHeader: {
+                            props: {
+                                description:
+                                    "This customer's application was flagged for review. Accept or Decline each issue before submitting a final decision.",
+                            },
+                            'ui:options': {
+                                label: true,
+                                ObjectFieldTemplate: 'InstructionsTemplate',
+                            },
+                        },
+
+                        details: {
+                            accord: true,
+                            'ui:options': {
+                                label: true,
+                            },
+                            amount: {
+                                'ui:options': {
+                                    disabled: true,
+                                },
+                            },
+                            documentMatcher: {
+                                'ui:options': {
+                                    cardType: 'Detailed',
+                                    icon: 'CIRCLE_USER',
+                                    label: true,
+                                    ObjectFieldTemplate: 'CardTemplate',
+                                },
+                            },
+                            documents: {
+                                canAdd: false,
+                                props: {
+                                    type: 'Document',
+                                    canAdd: false,
+                                },
+                                'ui:options': {
+                                    label: false,
+                                    ArrayFieldTemplate: 'ArrayFieldTemplate',
+                                    canAdd: false,
+                                },
+                                items: {
+                                    props: {
+                                        readonly: true,
+                                    },
+                                    'ui:options': {
+                                        canAdd: false,
+                                        label: false,
+                                        ObjectFieldTemplate: 'DocumentCardTemplate',
+                                    },
+                                },
+                            },
+                            caseOverview: {
+                                'ui:options': {
+                                    label: false,
+                                    type: 'link',
+                                },
+                                'ui:widget': 'HyperLinkWidget',
                             },
                         },
                         potentialMatches: {
-                            type: 'string',
-                            title: 'Can you find a matching case for this document?',
-                        },
-                    },
-                    allOf: [
-                        {
-                            if: {
-                                properties: {
-                                    potentialMatches: {
-                                        const: 'Enter a case ID',
-                                    },
-                                },
-                            },
-                            then: {
-                                properties: {
-                                    caseId: {
-                                        type: 'string',
-                                        title: 'Case Id',
-                                    },
-                                },
-                            },
-                        },
-                        {
-                            if: {
-                                properties: {
-                                    potentialMatches: {
-                                        const: 'Document cannot be matched to a case',
-                                    },
-                                },
-                            },
-                            then: {
-                                properties: {
-                                    canceled: {
-                                        type: 'string',
-                                        title: 'Case Id',
-                                        enum: ['yes', 'no'],
-                                    },
-                                },
-                            },
-                        },
-                    ],
-                },
-
-                uiSchema: {
-                    'ui:globalOptions': {
-                        duplicateKeySuffixSeparator: '_',
-                        orderable: false,
-                        copyable: false,
-                    },
-                    $schema: 'http: //json-schema.org/draft-07/schema#',
-
-                    'ui:submitButtonOptions': {
-                        norender: true,
-                    },
-                    sectionHeader: {
-                        props: {
-                            description:
-                                "This customer's application was flagged for review. Accept or Decline each issue before submitting a final decision.",
-                        },
-                        'ui:options': {
-                            label: true,
-                            ObjectFieldTemplate: 'InstructionsTemplate',
-                        },
-                    },
-
-                    details: {
-                        accord: true,
-                        'ui:options': {
-                            label: true,
-                        },
-                        amount: {
+                            'ui:widget': 'radio',
                             'ui:options': {
-                                disabled: true,
+                                label: true,
+                                customOptions: [
+                                    {
+                                        label: 'Enter a case ID',
+                                        value: 'Enter a case ID',
+                                    },
+                                    {
+                                        label: 'Document cannot be matched to a case',
+                                        value: 'Document cannot be matched to a case',
+                                    },
+                                ],
+                            },
+                            // 'ui:props': {
+                            //     // pass the dynamic key for parameters
+                            //     apiUrl: 'case/v2/tasks/TA000000016435',
+                            //     apiMethod: 'GET',
+                            //     apiPayload: null,
+                            //     responseKey: 'payments',
+                            // },
+                        },
+                        caseId: {
+                            'ui:options': {
+                                label: true,
                             },
                         },
-                        documentMatcher: {
+
+                        isDuplicate: {
+                            'ui:widget': 'radio',
+                        },
+                    },
+                },
+                {
+                    formId: '004c97a1-d97c-4faa-9b7f-8ff9105b4c29',
+                    process: 'IndexationOrkestr',
+                    carrier: 'WELB',
+                    taskType: 'PURCHASE_DOCUMENT_MATCHING' as TaskType,
+                    title: 'Match Payment',
+                    formSchema: {
+                        $schema: 'http://json-schema.org/draft-07/schema#',
+                        type: 'object',
+                        definitions: {
+                            potentialMatchesEnum: {
+                                oneOf: [
+                                    {
+                                        const: 'Enter a case ID',
+                                        title: 'Enter a case ID',
+                                    },
+                                    {
+                                        const: 'Document cannot be matched to a case',
+                                        title: 'Document cannot be matched to a case',
+                                    },
+                                ],
+                            },
+                        },
+                        properties: {
+                            sectionHeader: {
+                                type: 'object',
+                                title: 'Processing Instructions',
+                                // todo:vijaya: fix description
+                                // description:
+                                //    "This customer's application was flagged for review. Accept or Decline each issue before submitting a final decision.",
+                            },
+
+                            details: {
+                                type: 'object',
+                                title: 'Details',
+                                properties: {
+                                    amount: {
+                                        type: 'string',
+                                        title: 'Amount Received',
+                                    },
+                                    documentMatcher: {
+                                        type: 'object',
+                                        title: 'Supporting information',
+                                        properties: {
+                                            title: {
+                                                type: 'string',
+                                                title: 'Title',
+                                            },
+                                            subtitle: {
+                                                type: 'string',
+                                                title: 'Subtitle',
+                                            },
+                                            name: {
+                                                type: 'string',
+                                                title: 'Title',
+                                            },
+                                            dob: {
+                                                type: 'string',
+                                                title: 'Subtitle',
+                                            },
+                                        },
+                                    },
+                                    documents: {
+                                        type: 'array',
+                                        title: '',
+                                        items: {
+                                            type: 'object',
+                                            title: '',
+                                            properties: {
+                                                title: {
+                                                    type: 'string',
+                                                    title: 'Title',
+                                                },
+                                                subtitle: {
+                                                    type: 'string',
+                                                    title: 'Subtitle',
+                                                },
+                                                name: {
+                                                    type: 'string',
+                                                    title: 'Title',
+                                                },
+                                                dob: {
+                                                    type: 'string',
+                                                    title: 'Subtitle',
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        allOf: [
+                            {
+                                if: {
+                                    properties: {
+                                        potentialMatches: {
+                                            const: 'Enter a case ID',
+                                        },
+                                    },
+                                },
+                                then: {
+                                    properties: {
+                                        caseId: {
+                                            type: 'string',
+                                            title: 'Case Id',
+                                        },
+                                    },
+                                },
+                            },
+                            {
+                                if: {
+                                    properties: {
+                                        potentialMatches: {
+                                            const: 'Document cannot be matched to a case',
+                                        },
+                                    },
+                                },
+                                then: {
+                                    properties: {
+                                        canceled: {
+                                            type: 'string',
+                                            title: 'Case Id',
+                                            enum: ['yes', 'no'],
+                                        },
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                    uiSchema: {
+                        'ui:globalOptions': {
+                            duplicateKeySuffixSeparator: '_',
+                            orderable: false,
+                            copyable: false,
+                        },
+                        $schema: 'http: //json-schema.org/draft-07/schema#',
+
+                        'ui:submitButtonOptions': {
+                            norender: true,
+                        },
+                        sectionHeader: {
+                            props: {
+                                description: 'Match the received payment to the appropriate exchange record information.',
+                            },
+                            'ui:options': {
+                                label: true,
+                                ObjectFieldTemplate: 'InstructionsTemplate',
+                            },
+                        },
+
+                        details: {
+                            accord: true,
+                            'ui:options': {
+                                label: true,
+                            },
+                            amount: {
+                                'ui:options': {
+                                    disabled: true,
+                                },
+                            },
+                            documentMatcher: {
+                                'ui:options': {
+                                    cardType: 'Detailed',
+                                    icon: 'CIRCLE_USER',
+                                    label: true,
+                                    ObjectFieldTemplate: 'CardTemplate',
+                                },
+                            },
+                            documents: {
+                                canAdd: false,
+                                props: {
+                                    type: 'Document',
+                                    canAdd: false,
+                                },
+                                'ui:options': {
+                                    label: false,
+                                    ArrayFieldTemplate: 'ArrayFieldTemplate',
+                                    canAdd: false,
+                                },
+                                items: {
+                                    props: {
+                                        readonly: true,
+                                    },
+                                    'ui:options': {
+                                        canAdd: false,
+                                        label: false,
+                                        ObjectFieldTemplate: 'DocumentCardTemplate',
+                                    },
+                                },
+                            },
+                        },
+                        payments: {
                             'ui:options': {
                                 cardType: 'Detailed',
-                                icon: 'CIRCLE_USER',
+                                icon: 'CIRCLE_USEROFFICEBUILDING',
                                 label: true,
                                 ObjectFieldTemplate: 'CardTemplate',
                             },
                         },
-                        documents: {
-                            canAdd: false,
-                            props: {
-                                type: 'Document',
-                                canAdd: false,
-                            },
-                            'ui:options': {
-                                label: false,
-                                ArrayFieldTemplate: 'ArrayFieldTemplate',
-                                canAdd: false,
-                            },
-                            items: {
-                                props: {
-                                    readonly: true,
-                                },
-                                'ui:options': {
-                                    canAdd: false,
-                                    label: false,
-                                    ObjectFieldTemplate: 'DocumentCardTemplate',
-                                },
-                            },
-                        },
-                        caseOverview: {
-                            'ui:options': {
-                                label: false,
-                                type: 'link',
-                            },
-                            'ui:widget': 'HyperLinkWidget',
-                        },
-                    },
-                    potentialMatches: {
-                        'ui:widget': 'radio',
-                        'ui:options': {
-                            label: true,
-                            customOptions: [
-                                {
-                                    label: 'Enter a case ID',
-                                    value: 'Enter a case ID',
-                                },
-                                {
-                                    label: 'Document cannot be matched to a case',
-                                    value: 'Document cannot be matched to a case',
-                                },
-                            ],
-                        },
-                        'ui:props': {
-                            // pass the dynamic key for parameters
-                            apiUrl: 'case/v2/tasks/TA000000016435',
-                            apiMethod: 'GET',
-                            apiPayload: null,
-                            responseKey: 'payments',
-                        },
-                    },
-                    // testing: {
-                    //     'ui:options': {
-                    //         label: false,
-                    // disabled: (task: any) =>
-                    //     task.data.potentialMatches !== 'Enter a case ID' ||
-                    //     task.data.potentialMatches != 'Document cannot be matched to a case',
-                    //     },
-                    // },
-                    caseId: {
-                        'ui:options': {
-                            label: true,
-                        },
-                    },
-                    canceled: {
-                        widget: 'radio',
-                    },
-                    isDuplicate: {
-                        'ui:widget': 'radio',
                     },
                 },
-            };
-
-            if (!taskMetadata?.formSchema || !taskMetadata?.uiSchema) {
-                logError('task::Form schema not found', {
-                    taskId,
-                    carrier,
-                    file: `pages/task/${taskId}/${taskType}`,
-                    function: 'getServerSideProps',
-                });
-            }
+            ];
 
             const nigoFilters = {
                 categoryIds: ['Form', 'Signature', 'Account Information'],

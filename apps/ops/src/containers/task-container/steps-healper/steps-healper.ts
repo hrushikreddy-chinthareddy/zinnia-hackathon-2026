@@ -16,7 +16,7 @@ export const getFormSteps = (taskType: TaskType, props: GetStepsProps): Step[] =
             steps = getSuitabilityReviewSteps(props);
             break;
 
-        case TaskType.NB_LINK_PAYMENT_POLICY:
+        case TaskType.PURCHASE_DOCUMENT_MATCHING:
             steps = getMatchDocumentPaymentReviewSteps(props);
             break;
         default:

@@ -3,34 +3,28 @@ import { Step } from '../../progress-bar-steps/progress-bar-steps-item/progress-
 import ConfirmStep from '../components/steps/confirm/confirm-step';
 import { MemoizedTaskFormStep as TaskFormStep } from '../components/steps/task-form/task-form-step';
 
-export const getMatchDocumentPaymentReviewSteps = ({ taskType, taskInfoLink, t }: GetStepsProps) => {
-    const steps: Step[] = [
-        {
-            ariaLabel: t('tabs.documentMatch'),
+export const getMatchDocumentPaymentReviewSteps = ({ taskType, taskInfoLink, t, taskMetadata }: GetStepsProps) => {
+    const dynamicSteps = taskMetadata.map((item: any, index: number) => {
+        return {
+            ariaLabel: item.title,
             isVisible: () => true,
-            component: <TaskFormStep taskType={taskType} taskInfoLink={taskInfoLink} isSubmit={true}></TaskFormStep>,
-            text: t('tabs.documentMatch'),
-            index: 0,
+            component: <TaskFormStep taskInfoLink={taskInfoLink} isSubmit={true} taskMetadata={item}></TaskFormStep>,
+            text: item.title,
+            index,
             isCompleted: true,
-            screenReaderLabel: t('tabs.documentMatch'),
-        },
-        // {
-        //     ariaLabel: t('tabs.documentMatch'),
-        //     isVisible: () => true,
-        //     component: <TaskFormStep taskType={taskType} taskInfoLink={taskInfoLink} isSubmit={true}></TaskFormStep>,
-        //     text: t('tabs.documentMatch'),
-        //     index: 0,
-        //     isCompleted: true,
-        //     screenReaderLabel: t('tabs.documentMatch'),
-        // },
+            screenReaderLabel: item.title,
+        };
+    });
+    const staticSteps: Step[] = [
         {
             ariaLabel: t('tabs.confirm'),
             isVisible: () => true,
             component: <ConfirmStep taskType={taskType} taskInfoLink={taskInfoLink}></ConfirmStep>,
             text: t('tabs.confirm'),
-            index: 1,
+            index: dynamicSteps.length,
             screenReaderLabel: t('tabs.confirm'),
         },
     ];
-    return steps;
+
+    return [...dynamicSteps, ...staticSteps];
 };

@@ -2,7 +2,6 @@ import { useContext, useState } from 'react';
 
 import { SimpleOption } from '@deps/components/autocomplete/autocomplete.types';
 import { CallCenterElement } from '@deps/models/case/send-document';
-import { FormMetadata } from '@deps/models/case/task';
 import { ManagementTask } from '@deps/models/case/task-instance';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
@@ -10,12 +9,13 @@ import { TaskDataContext } from './task-context';
 
 type TaskProviderProps = {
     children: React.ReactNode;
-    taskMetadata: FormMetadata;
+    // can I remove it from here
+    // taskMetadata: FormMetadata;
     initialTask: ManagementTask;
     correlationId: string;
 };
 
-export const TaskProvider = ({ children, initialTask, taskMetadata, correlationId }: TaskProviderProps) => {
+export const TaskProvider = ({ children, initialTask, correlationId }: TaskProviderProps) => {
     const [task, setTask] = useState<ManagementTask>(initialTask);
     const [isReadyForDataEntry, setIsReadyForDataEntry] = useState<boolean>(false);
     const [messages, setMessages] = useState<any>([]);
@@ -28,12 +28,12 @@ export const TaskProvider = ({ children, initialTask, taskMetadata, correlationI
     );
     const [formErrors, setFormErrors] = useState<FormValidationErrors>({});
     const [submitFailed, setSubmitFailed] = useState(false);
-    const [metaData, setMetaData] = useState(taskMetadata);
+    // const [metaData, setMetaData] = useState(taskMetadata);
 
     return (
         <TaskDataContext.Provider
             value={{
-                taskMetadata: metaData,
+                // taskMetadata: metaData,
                 task,
                 correlationId,
                 isReadyForDataEntry,
@@ -51,7 +51,7 @@ export const TaskProvider = ({ children, initialTask, taskMetadata, correlationI
                 setTransactionSubType,
                 setFormErrors,
                 setSubmitFailed,
-                setTaskMetadata: setMetaData,
+                // setTaskMetadata: setMetaData,
             }}
         >
             {children}

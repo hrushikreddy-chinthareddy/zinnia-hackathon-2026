@@ -1,5 +1,4 @@
 import Form from '@rjsf/core';
-import { convertToCamelCase } from '@zinnia/utils';
 import { useTranslation } from 'next-i18next';
 import { createRef, memo, useCallback } from 'react';
 
@@ -7,7 +6,7 @@ import TransactionNavigationButtons, { ParentPage } from '@deps/components/trans
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { TaskType } from '@deps/models/case/task';
+import { FormMetadata } from '@deps/models/case/task';
 
 import { TaskForm } from './task-form';
 
@@ -15,12 +14,12 @@ type TaskFormStepProps = {
     readonly?: boolean;
     formRef?: any;
     taskInfoLink?: string;
-    taskType: TaskType;
     isSubmit?: boolean;
+    taskMetadata: FormMetadata;
 };
 
-const TaskFormStep = ({ taskType, readonly = false, taskInfoLink, isSubmit }: TaskFormStepProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.taskForm` });
+const TaskFormStep = ({ readonly = false, taskInfoLink, isSubmit, taskMetadata }: TaskFormStepProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `taskManagement.taskForm` });
     const { goToNext } = useWorkflow();
     const formRef = createRef<Form>();
 
@@ -32,18 +31,19 @@ const TaskFormStep = ({ taskType, readonly = false, taskInfoLink, isSubmit }: Ta
     }, [formRef]);
 
     const handleSubmit = useCallback(() => {
+        // todo:vijaya: payload customization
+
         goToNext();
     }, [goToNext]);
 
     return (
         <WorkflowCard
             className="!gap-0"
-            title={t('title')}
-            //   subtitle={t('subTitle') as string}
+            title={(taskMetadata?.title as string) ?? (t('title') as string)}
             footerContent={
                 <TransactionNavigationButtons
-                    submitLabel={isSubmit ? (t('submitLabel') as string) : (t('continueLabel') as string)}
-                    cancelLabel={t('cancelLabel') as string}
+                    submitLabel={isSubmit ? (t('submit') as string) : (t('continue') as string)}
+                    cancelLabel={t('cancel') as string}
                     isSubmit={true}
                     handleContinue={handleStepContinue}
                     parentPage={ParentPage.CreateCase}
@@ -53,7 +53,7 @@ const TaskFormStep = ({ taskType, readonly = false, taskInfoLink, isSubmit }: Ta
         >
             <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1">
-                    <TaskForm readonly={readonly} ref={formRef} onSubmit={handleSubmit} isSubmit={isSubmit} />
+                    <TaskForm readonly={readonly} ref={formRef} onSubmit={handleSubmit} isSubmit={isSubmit} taskMetadata={taskMetadata} />
                 </div>
             </div>
         </WorkflowCard>

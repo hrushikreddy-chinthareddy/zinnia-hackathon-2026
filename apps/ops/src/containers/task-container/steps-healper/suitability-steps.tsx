@@ -14,6 +14,7 @@ export const getSuitabilitySteps = ({
     t,
     nigoExceptions,
     nigoSubExceptions,
+    taskMetadata,
 }: GetStepsProps) => {
     const steps: Step[] = [
         {
@@ -28,7 +29,7 @@ export const getSuitabilitySteps = ({
         {
             ariaLabel: t('tabs.suitabilityForm'),
             isVisible: () => isReadyForDataEntry,
-            component: <TaskFormStep taskType={taskType} taskInfoLink={taskInfoLink} isSubmit={false}></TaskFormStep>,
+            component: <TaskFormStep taskInfoLink={taskInfoLink} isSubmit={false} taskMetadata={taskMetadata[0]}></TaskFormStep>,
             text: t('tabs.suitabilityForm'),
             index: 1,
             screenReaderLabel: t('tabs.suitabilityForm'),
@@ -36,7 +37,9 @@ export const getSuitabilitySteps = ({
         {
             ariaLabel: t('tabs.summary'),
             isVisible: () => isReadyForDataEntry,
-            component: <TaskFormStep taskType={taskType} taskInfoLink={taskInfoLink} readonly={true} isSubmit={true}></TaskFormStep>,
+            component: (
+                <TaskFormStep taskInfoLink={taskInfoLink} readonly={true} isSubmit={true} taskMetadata={taskMetadata[0]}></TaskFormStep>
+            ),
             text: t('tabs.summary'),
             index: 2,
             screenReaderLabel: t('tabs.summary'),
