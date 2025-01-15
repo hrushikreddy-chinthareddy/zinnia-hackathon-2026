@@ -1991,6 +1991,10 @@
                 "acknowledgement": "Loan acknowledgement",
                 "title": "Loan Acknowledgement"
             },
+            "loanRepayment": {
+                "acknowledgement": "I understand in order to process the full surrender request all loans on the contract must be paid in full by me or throgh load surrender.",
+                "title": "Loan Repayment"
+            },
             "cslnCheck": {
                 "title": "Validate Child Support Lien Network (CSLN)",
                 "label": "Child Support Lien Network (CSLN) status",

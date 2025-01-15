@@ -1973,6 +1973,10 @@
                 "acknowledgement": "Reconnaissance de prêt",
                 "title": "Reconnaissance de prêt"
             },
+            "loanRepayment": {
+                "acknowledgement": "Je comprends que pour traiter la demande de rachat complet, tous les prêts du contrat doivent être entièrement payés par moi ou par rachat de charge.",
+                "title": "Remboursement du prêt"
+            },
             "cslnCheck": {
                 "title": "Valider le Child Support Lien Network (CSLN)",
                 "status": "État du Child Support Lien Network (CSLN)",
