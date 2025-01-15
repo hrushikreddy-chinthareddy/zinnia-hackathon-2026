@@ -68,7 +68,8 @@
             "formData": "Form Data",
             "annuitization": "Annuitization",
             "dashboard": "Case Stats",
-            "newLoan": "New Loan"
+            "newLoan": "New Loan",
+            "activity": "Activity"
         },
         "navLinks": {
             "accessManagement": {

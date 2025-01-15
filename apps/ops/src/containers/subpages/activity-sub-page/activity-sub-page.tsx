@@ -1,15 +1,45 @@
 import { TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
+import { useContext, useEffect, useState } from 'react';
 
 import CallLogsTab from '@deps/components/case-sub-page/case-tabs/call-logs-tab';
 import NotesTab from '@deps/components/case-sub-page/case-tabs/notes-tab';
 import { TranslationFiles } from '@deps/config/translations';
+import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
+import { PolicyData } from '@deps/contexts/PolicyDataContext';
+import { CallLog } from '@deps/models/case/call-log';
+import { getCaseCallLogs } from '@deps/queries/api/contracts';
 import { PolicyActivityTabValues } from '@deps/types/constants';
 
 import TransactionsTab from './transactions-tab';
 
 const ActivitySubPage = () => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'policy.history.filter' });
+
+    // to do - swap these over from case context to policy
+    const { caseNotes, loadingNotes, notesStatusCode } = useCaseActivityContext();
+    const { policy } = useContext(PolicyData);
+
+    const [loadingCallLogs, setLoadingCallLogs] = useState(true);
+    const [callLogs, setCallLogs] = useState<CallLog[]>([]);
+    const [callLogsStatusCode, setCallLogsStatusCode] = useState<number | null>(null);
+    const limit = 10;
+
+    useEffect(() => {
+        const getCallLogs = async () => {
+            if (policy.policyNumber) {
+                const results = await getCaseCallLogs({ contract: policy.policyNumber, offset: 0, limit });
+
+                setCallLogs(results?.data?.items || []);
+                setCallLogsStatusCode(results?.status);
+            } else {
+                console.error('No contract number associated');
+            }
+            setLoadingCallLogs(false);
+        };
+
+        getCallLogs();
+    }, [policy.policyNumber]);
 
     return (
         <TabGroup defaultValue={PolicyActivityTabValues.transactions}>
@@ -22,12 +52,10 @@ const ActivitySubPage = () => {
                 <TransactionsTab />
             </TabContent>
             <TabContent value={PolicyActivityTabValues.notes}>
-                {/* to do - pass caseActivityContext as props */}
-                <NotesTab />
+                <NotesTab caseNotes={caseNotes} loadingNotes={loadingNotes} notesStatusCode={notesStatusCode} />
             </TabContent>
             <TabContent value={PolicyActivityTabValues.callLogs}>
-                {/* to do - pass caseActivityContext as props */}
-                <CallLogsTab />
+                <CallLogsTab loadingCallLogs={loadingCallLogs} callLogs={callLogs} callLogsStatusCode={callLogsStatusCode} />
             </TabContent>
         </TabGroup>
     );

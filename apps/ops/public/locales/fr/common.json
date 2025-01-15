@@ -67,7 +67,8 @@
             "newWithdrawal": "Nouveau Retrait",
             "formData": "Données du formulaire",
             "annuitization": "Annuitisation",
-            "dashboard": "Statistiques du dossier"
+            "dashboard": "Statistiques du dossier",
+            "activity": "Activité"
         },
         "navLinks": {
             "accessManagement": {
