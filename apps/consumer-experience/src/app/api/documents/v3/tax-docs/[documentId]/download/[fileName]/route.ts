@@ -2,7 +2,7 @@ import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { b64ToBlob } from '@/app/api/documents/utils';
-import { getTaxDocumentDownloadV2 } from '@/services/document/v2';
+import { getTaxDocumentDownloadV3 } from '@/services/document/v3';
 import { getSession } from '@/utils/auth';
 import {
   getUserInfoFromSession,
@@ -30,7 +30,7 @@ export const GET = async (
   const loggingContext = {
     clientCode,
     documentNumber: params.documentId,
-    file: 'api/documents/tax-docs/[documentId]/download/[fileName]/route.ts',
+    file: 'api/documents/v3/tax-docs/[documentId]/download/[fileName]/route.ts',
     function: 'GET',
     planCode,
     contractNumber,
@@ -44,7 +44,7 @@ export const GET = async (
     ...loggingContext,
   });
 
-  const download = await getTaxDocumentDownloadV2({
+  const download = await getTaxDocumentDownloadV3({
     contractNumber,
     carrierId: clientCode as string,
     taxYear,

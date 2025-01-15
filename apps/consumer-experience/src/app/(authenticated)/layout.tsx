@@ -13,6 +13,7 @@ import { UserConsentManager } from '@/components/user-consent/UserConsentManager
 import { CompanyName } from '@/types/carriers';
 import { getCookie, getSession } from '@/utils/auth';
 import { THEME_COOKIE } from '@/utils/serverClientUtils';
+
 import { BannerAlert, BannerVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 
@@ -44,7 +45,8 @@ export default async function AuthenticatedLayout({
 
   const showPresidentialMourningBanner = () => {
     const today = dayjs();
-    return today.isBetween('2025-01-08', '2025-01-10', 'day', '[]');
+    return false;
+    // return today.isBetween('2025-01-08', '2025-01-10', 'day', '[]');
   };
 
   return (

@@ -1,11 +1,10 @@
-import { MetadataSearchResponse, SearchRequest as V3SR } from '@zinnia/api-types/types/documents-v3';
 import { useCallback, useEffect, useState } from 'react';
 
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyDocumentApiRequest } from '@deps/models/case/document';
 import { getDocumentsV2 } from '@deps/queries/api/client/documents/v2/search';
-import { searchDocuments } from '@deps/queries/api/client/documents/v3/search';
+import { searchDocumentsV3 } from '@deps/queries/api/client/documents/v3/search';
 import { DocumentApiRequestInputs } from '@deps/queries/api/documents';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { SearchRequest } from '@deps/types/documents-v3';
@@ -14,7 +13,6 @@ import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 // BPB - toDos:
 // see if we can get away with omitting the unmatched, unmapped values of v2
 //  - documentNumber - TBD (Rahul)
-//  - periods - Works (verify)
 //  - recipient - TBD
 const buildV2SearchArgs = ({
     searchBody,
@@ -34,21 +32,10 @@ const buildV2SearchArgs = ({
         ...(searchBody?.documentDate ? { contractNumber: searchBody?.documentDate } : {}),
         ...(searchBody?.documentStartDate ? { contractNumber: searchBody?.documentStartDate } : {}),
         ...(searchBody?.documentEndDate ? { contractNumber: searchBody?.documentEndDate } : {}),
+        ...(searchBody?.periods ? { periods: searchBody?.periods } : {}),
         limit,
         offset,
     };
-};
-
-// Note: this is a hack to allow v2-routed results to work when being routed through v3
-const getDocumentSourceForV2 = (doc: MetadataSearchResponse, searchBody: SearchRequest): DocumentTypeView => {
-    const classification = doc.documentClassification || searchBody?.documentClassification;
-    switch (classification) {
-        case V3SR.documentClassification.OUTBOUND:
-            return DocumentTypeView.Correspondence;
-        case V3SR.documentClassification.INBOUND:
-        default:
-            return DocumentTypeView.Policy;
-    }
 };
 
 export const useDocumentSearch = (searchBody: SearchRequest, limit = 25, offset = 0): [any[] | null, boolean, number, number | null] => {
@@ -64,19 +51,14 @@ export const useDocumentSearch = (searchBody: SearchRequest, limit = 25, offset 
         setLoading(true);
         try {
             if (featureFlags[FEATURE_FLAGS.DOCUMENTS_V3]) {
-                const { data, error } = await searchDocuments({ limit, offset, searchBody });
-                // BPB - need to set source for v2 responses somehow
+                const { data, error } = await searchDocumentsV3({ limit, offset, searchBody });
+
                 if (error) {
                     setDocs(null);
                     setResponseStatus(error.status);
                     setTotal(0);
                 } else {
-                    // Note: this is a hack to allow v2-routed results to work when being routed through v3
-                    const docsWithSource = (data?.documents ?? []).map(doc => ({
-                        ...doc,
-                        documentSource: getDocumentSourceForV2(doc, searchBody),
-                    }));
-                    setDocs(docsWithSource);
+                    setDocs(data?.documents ?? []);
                     setResponseStatus(200);
                     setTotal(data?.totalCount ?? data?.count ?? 0);
                 }

@@ -3,9 +3,13 @@ import { Metadata } from 'next';
 
 import PdfPreviewer from '@/components/pdf-previewer/PdfPreviewer';
 import { RouteKey, getPageTitle } from '@/route-map';
-import { getDocuments } from '@/services/document';
+import { getDocumentsV2 } from '@/services/document/v2';
+import { searchDocumentsV3 } from '@/services/document/v3';
+import { getFeatureFlags } from '@/services/feature-flags';
+import { DocumentV3SearchItem, ExtendedDocumentMeta } from '@/types/document';
 import { PolicyRequestInputs } from '@/types/policy';
 import { logInfo } from '@/utils/logging/server-logging';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import previewStyles from '../[documentId]/Preview.module.css';
 
@@ -30,18 +34,27 @@ export default async function PolicyAcknowledgementDocumentPreview({
     clientCode: string;
   };
 }) {
-  const policyDocuments = await getDocuments({
-    clientCode: searchParams.clientCode,
-    contractNumber: params.policyNumber,
-    recipient: 'Client',
-    // This code is different than the one we use to set preferences and
-    // check delivery date. This code is specifically for viewing the policy
-    // acknowledgement document
-    documentType: 'POLPG',
-  });
+  const flags = await getFeatureFlags();
+  const shouldUseV3 = flags?.[FEATURE_FLAGS.DOCUMENTS_V3];
+  const policyDocuments = shouldUseV3
+    ? await searchDocumentsV3({
+        documentType: 'POLPG',
+        recipient: 'Client',
+        parentCarrierCode: searchParams.clientCode,
+        policyNumber: params.policyNumber,
+      })
+    : await getDocumentsV2({
+        clientCode: searchParams.clientCode,
+        contractNumber: params.policyNumber,
+        recipient: 'Client',
+        // This code is different than the one we use to set preferences and
+        // check delivery date. This code is specifically for viewing the policy
+        // acknowledgement document
+        documentType: 'POLPG',
+      });
   const { lineOfBusiness, policyNumber, planCode } = params;
   const { clientCode } = searchParams;
-  const document = policyDocuments?.data?.items?.[0];
+  const document = policyDocuments?.data?.documents?.[0];
 
   logInfo(
     'PolicyAcknowledgementDocumentPreview: view policy acknowledgement document',
@@ -50,11 +63,20 @@ export default async function PolicyAcknowledgementDocumentPreview({
       planCode,
       policyNumber,
       lineOfBusiness,
-      documentId: document?.documentID || document?.documentId,
+      documentId: document?.documentId,
     }
   );
 
-  const docDownloadUrl = `/api/documents/${document?.documentID || document?.documentId}/download/${document?.fileName}.pdf?clientCode=${clientCode}&policyNumber=${policyNumber}&planCode=${planCode}`;
+  // BPB - is this ok?
+  const fileName =
+    (document as ExtendedDocumentMeta)?.fileName ||
+    (document as DocumentV3SearchItem)?.sourceFileName ||
+    '';
+
+  // BPB - silly just to add a v3, but want to check that it works the same before I break stuff here
+  const docDownloadUrl = shouldUseV3
+    ? `/api/documents/v3/${document?.documentId}/download?parentCarrierCode=${clientCode}&policyNumber=${policyNumber}&planCode=${planCode}`
+    : `/api/documents/${document?.documentId}/download/${fileName}.pdf?clientCode=${clientCode}&policyNumber=${policyNumber}&planCode=${planCode}`;
 
   return (
     <div style={{ height: '100svh' }}>
@@ -62,7 +84,7 @@ export default async function PolicyAcknowledgementDocumentPreview({
         <PdfPreviewer
           defaultRedirectUrl={`/coverage/${lineOfBusiness}/${planCode}/${policyNumber}/documents/error`}
           documentDownloadUrl={docDownloadUrl}
-          fileName={document?.fileName || ''}
+          fileName={fileName}
         />
       </div>
     </div>

@@ -2,7 +2,7 @@ import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { b64ToBlob } from '@/app/api/documents/utils';
-import { getTaxDocumentDownloadV2 } from '@/services/document/v2';
+import { getDocumentDownloadV3 } from '@/services/document/v3';
 import { getSession } from '@/utils/auth';
 import {
   getUserInfoFromSession,
@@ -20,23 +20,21 @@ export const GET = async (
   }
 
   const searchParams = request.nextUrl.searchParams;
-  const clientCode = searchParams.get('clientCode') as string;
-  const taxYear = searchParams.get('taxYear') as string;
-  const formId = searchParams.get('formId') as string;
-  const fChar = searchParams.get('fChar') as string;
+  const parentCarrierCode = searchParams.get('parentCarrierCode') as string;
+  const documentClassification = searchParams.get(
+    'documentClassification'
+  ) as string;
+  const policyNumber = searchParams.get('policyNumber') as string;
   const planCode = searchParams.get('planCode') as string;
-  const contractNumber = searchParams.get('policyNumber') as string;
 
   const loggingContext = {
-    clientCode,
+    parentCarrierCode,
     documentNumber: params.documentId,
-    file: 'api/documents/tax-docs/[documentId]/download/[fileName]/route.ts',
+    file: 'api/documents/v3/[documentId]/download/[fileName]/route.ts',
     function: 'GET',
     planCode,
-    contractNumber,
-    taxYear,
-    formId,
-    fChar,
+    policyNumber,
+    documentClassification,
     ...getUserInfoFromSession(session),
   };
 
@@ -44,13 +42,11 @@ export const GET = async (
     ...loggingContext,
   });
 
-  const download = await getTaxDocumentDownloadV2({
-    contractNumber,
-    carrierId: clientCode as string,
-    taxYear,
-    fChar,
-    formId: params.documentId,
-  });
+  const download = await getDocumentDownloadV3(
+    params.documentId,
+    documentClassification as string,
+    parentCarrierCode as string
+  );
 
   if (!download?.data?.binaryData) {
     logWarn('Could not download document', {
@@ -60,7 +56,7 @@ export const GET = async (
 
     return NextResponse.redirect(
       new URL(
-        `/coverage/${params.lineOfBusiness}/${planCode}/${contractNumber}/documents/error`,
+        `/coverage/${params.lineOfBusiness}/${planCode}/${policyNumber}/documents/error`,
         request.url
       )
     );

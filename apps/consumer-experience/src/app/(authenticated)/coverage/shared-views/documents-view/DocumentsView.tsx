@@ -2,6 +2,7 @@
 // between policies and annuities. If this changes, don't think too much about it just separate them
 // and return this to the page view rather than having it as a separate view.
 
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { IconType } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
@@ -9,10 +10,15 @@ import { Metadata } from 'next';
 import DocumentsWithPagination from '@/components/documents-list/DocumentsWithPagination';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { RouteKey, getPageTitle } from '@/route-map';
-import { getDocuments, getTaxDocuments } from '@/services/document';
+import { getDocumentsV2, getTaxDocumentsV2 } from '@/services/document/v2';
+import { searchDocumentsV3, getTaxDocumentsV3 } from '@/services/document/v3';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { getPolicyDetails } from '@/services/policy';
-import { DocumentCategory, ExtendedDocumentMeta } from '@/types/document';
+import {
+  DocumentCategory,
+  DocumentV3SearchItem,
+  ExtendedDocumentMeta,
+} from '@/types/document';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import { DocumentsTabs } from './DocumentsTabs';
@@ -48,19 +54,34 @@ export const DocumentsView = async ({
     policyNumber,
   });
   const showTaxDocuments = flags?.[FEATURE_FLAGS.VIEW_TAX_DOCUMENTS];
+  const shouldUseV3 = flags?.[FEATURE_FLAGS.DOCUMENTS_V3];
   const [correspondenceDocsRes, taxDocsRes] = await Promise.allSettled([
-    getDocuments({
-      clientCode: policyData?.carrierId,
-      source: 'Correspondence',
-      contractNumber: policyNumber,
-      recipient: 'Client',
-    }),
-    getTaxDocuments({
-      clientCode: policyData?.carrierId,
-      contractNumber: policyNumber,
-      taxYear: new Date().getFullYear().toString(),
-      numYears: maxTaxYears,
-    }),
+    shouldUseV3
+      ? searchDocumentsV3({
+          documentClassification: SearchRequest.documentClassification.OUTBOUND,
+          parentCarrierCode: policyData?.carrierId,
+          policyNumber: policyNumber,
+          recipient: 'Client',
+        })
+      : getDocumentsV2({
+          clientCode: policyData?.carrierId,
+          contractNumber: policyNumber,
+          recipient: 'Client',
+          source: 'Correspondence',
+        }),
+    shouldUseV3
+      ? getTaxDocumentsV3({
+          clientCode: policyData?.carrierId,
+          contractNumber: policyNumber,
+          numYears: maxTaxYears,
+          taxYear: new Date().getFullYear().toString(),
+        })
+      : getTaxDocumentsV2({
+          clientCode: policyData?.carrierId,
+          contractNumber: policyNumber,
+          numYears: maxTaxYears,
+          taxYear: new Date().getFullYear().toString(),
+        }),
   ]);
 
   const correspondenceDocs =
@@ -75,18 +96,19 @@ export const DocumentsView = async ({
    * @param doc the document to check
    * @returns true if the document type is a statement type, false otherwise
    */
-  const statementsFilter = (doc: ExtendedDocumentMeta) =>
+  const statementsFilter = (doc: ExtendedDocumentMeta | DocumentV3SearchItem) =>
     StatementDocumentTypes.includes(doc.documentType as string);
 
   const activeTab = currentView || DocumentCategory.DOCUMENTS;
   const currentViewDocs = () => {
     switch (activeTab) {
       case DocumentCategory.DOCUMENTS:
-        return (
-          correspondenceDocs?.items?.filter(doc => !statementsFilter(doc)) ?? []
-        );
+        return (correspondenceDocs?.documents?.filter(
+          doc => !statementsFilter(doc)
+        ) ?? []) as ExtendedDocumentMeta[] | DocumentV3SearchItem[];
       case DocumentCategory.STATEMENTS:
-        return correspondenceDocs?.items?.filter(statementsFilter) ?? [];
+        return (correspondenceDocs?.documents?.filter(statementsFilter) ??
+          []) as ExtendedDocumentMeta[] | DocumentV3SearchItem[];
       case DocumentCategory.TAX:
         return taxDocs?.items ?? [];
       default:

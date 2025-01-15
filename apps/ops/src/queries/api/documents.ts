@@ -114,7 +114,7 @@ export type DocumentApiRequestInputs = {
     documentNumber?: string;
     recipient?: 'Client' | 'Agent';
     zinniaLiveCaseId?: string;
-    periods?: { PeriodYear: string; PeriodQuarters: string[] }[];
+    periods?: { periodYear: string; periodQuarters: string[] }[];
     limit?: number;
     offset?: number;
 };
