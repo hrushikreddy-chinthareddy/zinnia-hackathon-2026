@@ -58,7 +58,17 @@ export const useDocumentSearch = (searchBody: SearchRequest, limit = 25, offset 
                     setResponseStatus(error.status);
                     setTotal(0);
                 } else {
-                    setDocs(data?.documents ?? []);
+                    setDocs(
+                        (data?.documents ?? []).map(doc => {
+                            return {
+                                ...doc,
+                                documentSource:
+                                    searchBody.documentClassification?.toLowerCase() === 'inbound'
+                                        ? DocumentTypeView.Policy
+                                        : DocumentTypeView.Correspondence,
+                            };
+                        })
+                    );
                     setResponseStatus(200);
                     setTotal(data?.totalCount ?? data?.count ?? 0);
                 }

@@ -48,7 +48,7 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
                 docSource === (DocumentTypeView.Policy as string)
                     ? SearchRequest.documentClassification.INBOUND
                     : SearchRequest.documentClassification.OUTBOUND,
-            ...(!showAll && policy ? { policyNumber: policy.policyNumber } : { zinniaLiveCaseId: caseDetails.id }),
+            ...(showAll && policy ? { policyNumber: policy.policyNumber } : { zinniaLiveCaseId: caseDetails.id }),
         };
     }, [showAll, docSource, policy, caseDetails]);
     const [displayDocs, loadingDocuments, total, documentsStatusCode] = useDocumentSearch(documentSearchBody, limit, offset);
