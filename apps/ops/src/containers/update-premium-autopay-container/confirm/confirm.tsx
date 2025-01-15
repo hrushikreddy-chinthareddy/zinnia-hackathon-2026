@@ -127,7 +127,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
                     <CardInfo
                         cta={{
                             action: () => {
-                                router.push(`/policies/${policy.product?.planCode}/${policy.policyNumber}/history`);
+                                router.push(`/policies/${policy.product?.planCode}/${policy.policyNumber}/activity/transactions`);
                             },
                             text: t('autopay.confirm.cta'),
                         }}

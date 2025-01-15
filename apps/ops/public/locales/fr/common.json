@@ -225,11 +225,15 @@
             },
             "history": {
                 "text": "Histoire",
-                "link": "/policies/{{planCode}}/{{id}}/history"
+                "link": "/policies/{{planCode}}/{{id}}/activity"
             },
             "dashboard": {
                 "text": "Statistiques du dossier",
                 "link": "/dashboard"
+            },
+            "activity": {
+                "text": "Activité",
+                "link": "/policies/{{planCode}}/{{id}}/activity"
             }
         },
         "loader": "Chargement..."

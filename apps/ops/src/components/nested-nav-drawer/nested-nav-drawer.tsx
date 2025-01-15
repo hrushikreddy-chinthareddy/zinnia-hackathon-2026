@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
-import React, { useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 
 import NestedNavParentContainer from '@deps/components/nested-nav-drawer/nested-nav-parent/nested-nav-parent-container';
 import { NestedSubLink } from '@deps/config/nav.config';

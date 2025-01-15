@@ -8,7 +8,7 @@ import { ReactComponent as UserCircleIcon } from '@deps/styles/elements/icons/ic
 
 export enum ParentKeys {
     Documents = 'documents',
-    History = 'history',
+    Activity = 'activity',
     People = 'people',
     Policy = 'policy',
     Transactions = 'transactions',
@@ -79,10 +79,10 @@ export const getNavLinks = (policy: PolicyDetails, t: TFunction): NestedSubLink[
             parentKey: ParentKeys.People,
         },
         {
-            text: t('site.navLinks.history.text'),
-            href: t('site.navLinks.history.link', { id: policyNumber, planCode }) || '',
+            text: t('site.navLinks.activity.text'),
+            href: t('site.navLinks.activity.link', { id: policyNumber, planCode }) || '',
             startIcon: <CalendarIcon key="history-icon" />,
-            parentKey: ParentKeys.History,
+            parentKey: ParentKeys.Activity,
         },
         {
             text: t('site.navLinks.documents.text'),

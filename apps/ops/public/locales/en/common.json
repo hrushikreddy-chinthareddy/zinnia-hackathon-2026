@@ -231,11 +231,15 @@
             },
             "history": {
                 "text": "History",
-                "link": "/policies/{{planCode}}/{{id}}/history"
+                "link": "/policies/{{planCode}}/{{id}}/activity"
             },
             "dashboard": {
                 "text": "Case Stats",
                 "link": "/dashboard"
+            },
+            "activity": {
+                "text": "Activity",
+                "link": "/policies/{{planCode}}/{{id}}/activity"
             }
         },
         "loader": "Loading..."
@@ -3906,7 +3910,8 @@
             "documents": "Documents",
             "caseDetails": "Case Details",
             "deliveryMethod": "Delivery method",
-            "correspondence": "Correspondence"
+            "correspondence": "Correspondence",
+            "activity": "Activity"
         }
     },
     "bannerAlert": {

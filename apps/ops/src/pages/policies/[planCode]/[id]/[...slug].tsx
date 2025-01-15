@@ -253,9 +253,9 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({ user }) => {
                     subPageTitleKey = 'annuitization';
                 }
                 break;
-            case 'history':
+            case 'activity':
                 subPageContent = <ActivitySubPage />;
-                subPageTitleKey = 'history';
+                subPageTitleKey = 'activity';
                 break;
             case 'documents':
                 subPageContent = <DocumentsSubPage policy={policy} />;
