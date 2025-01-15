@@ -117,7 +117,7 @@ export const getDocumentDownloadV3 = async (
 
 export const searchDocumentsV3 = async (
   searchBody: SearchRequestV3,
-  limit: number = 10,
+  limit: number = 500, // 500 docs means we can still do front-end pagination for now
   offset: number = 0
 ): Promise<ApiResponse<DocumentV3SearchResult>> => {
   const { parentCarrierCode, documentClassification } = searchBody;

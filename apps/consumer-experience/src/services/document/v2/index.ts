@@ -9,7 +9,6 @@ import {
   DocumentV2DownloadApiRequestInputs,
   DocumentV2SearchResult,
   ExtendedDocumentMeta,
-  SearchRequestV3,
   TaxDocument,
   TaxDocumentApiRequestInputs,
 } from '@/types/document';
@@ -29,49 +28,6 @@ import {
   mockDocumentsResponse,
   mockTaxDocumentsResponse,
 } from '../../mocks/documents';
-
-// BPB - ToDos:
-// see if we can get away with omitting the unmatched, unmapped values of v2
-//  - documentNumber - TBD (Rahul)
-//  - recipient - TBD
-const buildV2SearchArgs = ({
-  searchBody,
-  limit = 25,
-  offset = 0,
-}: {
-  searchBody: SearchRequestV3;
-  limit?: number;
-  offset?: number;
-}): Partial<DocumentApiRequestInputs> => {
-  return {
-    source:
-      searchBody.documentClassification?.toLowerCase() === 'inbound'
-        ? 'Policy'
-        : 'Correspondence',
-    clientCode: searchBody?.parentCarrierCode || '',
-    ...(searchBody?.policyNumber
-      ? { contractNumber: searchBody?.policyNumber }
-      : {}),
-    ...(searchBody?.zinniaLiveCaseId
-      ? { contractNumber: searchBody?.zinniaLiveCaseId }
-      : {}),
-    ...(searchBody?.documentStatus
-      ? { docStatus: searchBody?.documentStatus?.join(',') }
-      : {}),
-    ...(searchBody?.documentDate
-      ? { contractNumber: searchBody?.documentDate }
-      : {}),
-    ...(searchBody?.documentStartDate
-      ? { contractNumber: searchBody?.documentStartDate }
-      : {}),
-    ...(searchBody?.documentEndDate
-      ? { contractNumber: searchBody?.documentEndDate }
-      : {}),
-    ...(searchBody?.periods ? { periods: searchBody?.periods } : {}),
-    limit,
-    offset,
-  };
-};
 
 const getDocumentsRawV2 = async (documentUrl: string) => {
   const rawResponse = await ServerApi.get(documentUrl);
