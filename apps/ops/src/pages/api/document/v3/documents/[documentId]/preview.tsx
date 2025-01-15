@@ -60,7 +60,7 @@ export default withAuthAndLogging(
             res.status((error as Response)?.status ?? 500).json(null);
         }
     },
-    { file: 'documents/:documentId/preview', function: 'routeHandler' }
+    { file: 'document/v3/documents/:documentId/preview', function: 'routeHandler' }
 );
 
 // Addresses NextJS error: API response for this route exceeds 4MB. API Routes are meant to respond quickly.

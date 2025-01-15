@@ -37,7 +37,7 @@ export default withAuthAndLogging(
         const loggingContext = {
             parentCarrierCode,
             documentId,
-            file: '/documents/:documentId/download',
+            file: 'document/v3/documents/:documentId/download',
             function: 'routeHandler',
             documentClassification,
             ...userInfo,
@@ -62,14 +62,14 @@ export default withAuthAndLogging(
             res.json({ ...data, mimeType });
         } catch (error) {
             logError('documents/download:: error', {
-                file: 'documents/:documentNumber/download',
+                file: 'document/v3/documents/:documentNumber/download',
                 function: 'routeHandler',
                 ...parseErrorInformation(error),
             });
             res.status(500).json(null);
         }
     },
-    { file: 'documents/:documentNumber/download', function: 'routeHandler' }
+    { file: 'document/v3/documents/:documentId/download', function: 'routeHandler' }
 );
 
 // Addresses NextJS error: API response for this route exceeds 4MB. API Routes are meant to respond quickly.
