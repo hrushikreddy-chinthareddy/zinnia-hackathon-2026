@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 // import DocumentViewerPage from '@deps/pages/documents/[id]';
-import { getDocumentPreviewV2 } from '@deps/queries/api/documents';
+import { getDocumentPreviewV2 } from '@deps/queries/api/client/documents/v2/preview';
 
 const DocumentViewerPage = (props: { status: number; id: string; documentType: string; carrierCode: string }) => (
     <div>Placeholder while skipping tests {props.id}</div>

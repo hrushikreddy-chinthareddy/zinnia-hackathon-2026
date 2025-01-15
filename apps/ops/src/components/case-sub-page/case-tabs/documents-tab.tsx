@@ -1,5 +1,5 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
-import { SearchRequest, SearchRequest as V3SR } from '@zinnia/api-types/types/documents-v3';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useMemo, useState } from 'react';
 
@@ -7,6 +7,7 @@ import UnauthorizedCard from '@deps/components/card/card-unauthorized';
 import EventsLoader from '@deps/components/events-loader/events-loader';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
+import Toggle from '@deps/components/toggle/toggle';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import DocumentResultsPagination from '@deps/containers/subpages/documents-sub-page/documents-results-pagination';
@@ -33,6 +34,7 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
     const { t } = useTranslation();
     const knownCaseDocIds = getKnownCaseDocIds(caseDetails);
     const { isNewBusinessCase, policy } = useCaseActivityContext();
+    const [showAll, setShowAll] = useState(isNewBusinessCase);
     const [docSource, setDocSource] = useState(DocumentTypeView.Policy as string);
     const limit = 25;
     const [offset, setOffset] = useState(0);
@@ -44,11 +46,11 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
             parentCarrierCode: caseDetails.carrier,
             documentClassification:
                 docSource === (DocumentTypeView.Policy as string)
-                    ? V3SR.documentClassification.INBOUND
-                    : V3SR.documentClassification.OUTBOUND,
-            ...(!isNewBusinessCase && policy ? { policyNumber: policy.policyNumber } : { zinniaLiveCaseId: caseDetails.id }),
+                    ? SearchRequest.documentClassification.INBOUND
+                    : SearchRequest.documentClassification.OUTBOUND,
+            ...(!showAll && policy ? { policyNumber: policy.policyNumber } : { zinniaLiveCaseId: caseDetails.id }),
         };
-    }, [isNewBusinessCase, docSource, policy, caseDetails]);
+    }, [showAll, docSource, policy, caseDetails]);
     const [displayDocs, loadingDocuments, total, documentsStatusCode] = useDocumentSearch(documentSearchBody, limit, offset);
 
     const goToPage = useCallback(
@@ -57,6 +59,10 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
         },
         [limit, setOffset]
     );
+    const setShowAllToggle = (val: boolean) => {
+        setShowAll(val);
+        setOffset(0);
+    };
 
     const setDocSourceFilter = (val: string) => {
         setDocSource(val);
@@ -84,6 +90,15 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
                                 </RadioGroup.Item>
                             </RadioGroup.Root>
                         </div>
+                        {!isNewBusinessCase && (
+                            <Toggle
+                                classes="md:self-end"
+                                text={t('caseOverview.tabs.showAllPolicyDocuments') as string}
+                                ariaLabel={t('caseOverview.tabs.showAllPolicyDocuments') as string}
+                                value={showAll}
+                                handleToggle={setShowAllToggle}
+                            />
+                        )}
                     </div>
                     {!loadingDocuments && (
                         <DocumentsResultsTable
