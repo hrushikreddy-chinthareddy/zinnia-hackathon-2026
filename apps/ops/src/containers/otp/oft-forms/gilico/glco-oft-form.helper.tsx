@@ -35,6 +35,7 @@ import {
     FormDisbursement,
     AccountType,
     FundWithdrawnMethod,
+    LifeCadPartyRoles,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_BANK_DETAILS,
@@ -60,6 +61,14 @@ export default function getGlcoOftConfig(t: TFunction) {
                     key: 'owner-type',
                 },
                 {
+                    component: SignatureFields.SignatureCityProvided,
+                    key: 'owner-city-state',
+                },
+                {
+                    component: SignatureFields.SignatureSsn,
+                    key: 'owner-ssn',
+                },
+                {
                     component: SignatureFields.SignaturePresent,
                     key: 'owner-sign-present',
                 },
@@ -80,6 +89,14 @@ export default function getGlcoOftConfig(t: TFunction) {
                 {
                     component: SignatureFields.SignatureType,
                     key: 'joint-type',
+                },
+                {
+                    component: SignatureFields.SignatureCityProvided,
+                    key: 'joint-city-state',
+                },
+                {
+                    component: SignatureFields.SignatureSsn,
+                    key: 'joint-ssn',
                 },
                 {
                     component: SignatureFields.SignaturePresent,
@@ -121,6 +138,9 @@ export default function getGlcoOftConfig(t: TFunction) {
                 },
             ],
             signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
+            shouldDisplay: ({ parties }: OtpWithdrawalFormState): boolean => {
+                return !!parties?.find(party => party.Role === LifeCadPartyRoles.Beneficiary);
+            },
         },
         {
             key: `sig-val-spouse`,
