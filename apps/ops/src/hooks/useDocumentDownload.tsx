@@ -1,4 +1,4 @@
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import { MetadataSearchResponse, SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { saveAs } from 'file-saver';
 import { useCallback, useState } from 'react';
 
@@ -9,8 +9,8 @@ import { downloadDocumentV2 } from '@deps/queries/api/client/documents/v2/downlo
 import { downloadDocumentV3 } from '@deps/queries/api/client/documents/v3/download';
 import { DocumentDownloadV3WithMime } from '@deps/types/documents-v3';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-export const isPreviewSupported = (document: PolicyDocument): boolean => {
-    return supportedExtensions.includes(document?.fileType?.toLowerCase());
+export const isPreviewSupported = (document: PolicyDocument | MetadataSearchResponse): boolean => {
+    return supportedExtensions.includes(document?.fileType?.toLowerCase() || '');
 };
 
 // Converts the Base 64 encoded binaryData string into a blob on the client to allow for downloading.

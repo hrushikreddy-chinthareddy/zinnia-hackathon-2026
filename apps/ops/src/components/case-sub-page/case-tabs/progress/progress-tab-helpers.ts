@@ -382,7 +382,7 @@ export class TransformedCase {
         }
         return {
             createdAt: foundTask.createdAt,
-            description: foundTask.label || foundTask.taskType, // BPB - taskType is where we get the info, but label is on the type?
+            description: foundTask.label || foundTask.taskType,
             id: foundTask.id,
             hasParentException: isFromException,
             parentExceptionStatus: status,

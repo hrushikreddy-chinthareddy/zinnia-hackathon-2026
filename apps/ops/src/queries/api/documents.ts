@@ -119,7 +119,6 @@ export type DocumentApiRequestInputs = {
     offset?: number;
 };
 
-// BPB - DEPU-2827: this is just a helper method to get OUTBOUND docs.
 export const getCorrespondenceDocsV2 = async (
     id: string,
     clientCode: string,
@@ -156,7 +155,6 @@ export const getCorrespondenceDocsV2 = async (
     }
 };
 
-// BPB - DEPU-2827: This is being used to grab documents by document number.  Will need documentNumber as a potential search param
 export const getPolicyTypeDocsV2 = async (
     id: string,
     clientCode: string,

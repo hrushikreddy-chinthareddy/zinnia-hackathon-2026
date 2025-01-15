@@ -1,19 +1,16 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
+import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyDocumentApiRequest } from '@deps/models/case/document';
 import { getDocumentsV2 } from '@deps/queries/api/client/documents/v2/search';
 import { searchDocumentsV3 } from '@deps/queries/api/client/documents/v3/search';
 import { DocumentApiRequestInputs } from '@deps/queries/api/documents';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
-import { SearchRequest } from '@deps/types/documents-v3';
+import { SearchRequest, V3DocumentWithSource } from '@deps/types/documents-v3';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
-// BPB - toDos:
-// see if we can get away with omitting the unmatched, unmapped values of v2
-//  - documentNumber - TBD (Rahul)
-//  - recipient - TBD
 const buildV2SearchArgs = ({
     searchBody,
     limit = 25,
@@ -38,10 +35,14 @@ const buildV2SearchArgs = ({
     };
 };
 
-export const useDocumentSearch = (searchBody: SearchRequest, limit = 25, offset = 0): [any[] | null, boolean, number, number | null] => {
+export const useDocumentSearch = (
+    searchBody: SearchRequest,
+    limit = 25,
+    offset = 0
+): [DocumentWithSource[] | V3DocumentWithSource[] | null, boolean, number, number | null] => {
     const { featureFlags } = useOptimizely();
     const [loading, setLoading] = useState(false);
-    const [docs, setDocs] = useState<any[] | null>(null);
+    const [docs, setDocs] = useState<DocumentWithSource[] | V3DocumentWithSource[] | null>(null);
     const [total, setTotal] = useState<number>(0);
     const [responseStatus, setResponseStatus] = useState<number | null>(null);
     const [loadedForArgs, setLoadedForArgs] = useState('');

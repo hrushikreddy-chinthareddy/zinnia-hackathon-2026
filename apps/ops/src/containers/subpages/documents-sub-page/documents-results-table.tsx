@@ -26,6 +26,7 @@ import { isPreviewSupported, useDocumentDownload } from '@deps/hooks/useDocument
 import { ReactComponent as LinkIcon } from '@deps/styles/elements/icons/actions/link.svg';
 import loadingImage from '@deps/styles/images/loader.png';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { V3DocumentWithSource } from '@deps/types/documents-v3';
 
 import styles from './documents-results-table.module.css';
 import { DocumentWithSource } from './documents-sub-page';
@@ -35,7 +36,7 @@ type DocumentsResultsTableProps = {
     documentType: DocumentTypeView;
     linkedDocumentIdentifiers?: string[];
     policyNumber: string;
-    results: DocumentWithSource[];
+    results: DocumentWithSource[] | V3DocumentWithSource[];
 };
 
 const DownloadItem = ({ doc, carrierCode }: { doc: DocumentWithSource | MetadataSearchResponse; carrierCode: string }) => {
@@ -72,13 +73,13 @@ const DownloadItem = ({ doc, carrierCode }: { doc: DocumentWithSource | Metadata
     );
 };
 
-export const createAction = (doc: DocumentWithSource, carrierCode: string, t: TFunction, label?: string) => {
+export const createAction = (doc: DocumentWithSource | V3DocumentWithSource, carrierCode: string, t: TFunction, label?: string) => {
     return isPreviewSupported(doc) ? (
         <DocumentPreviewer
             className="!underline-offset-2"
             carrier={carrierCode}
-            displayName={(doc.displayName || doc.documentId) ?? (doc.documentID as string)}
-            documentId={doc.documentId ?? (doc.documentID as string)}
+            displayName={(doc.displayName || doc.documentId) ?? ((doc as DocumentWithSource).documentID as string)}
+            documentId={doc.documentId ?? ((doc as DocumentWithSource).documentID as string)}
             activeDocType={doc.documentSource}
             variant={NavElementVariant.Secondary}
         >
@@ -131,9 +132,15 @@ export default function DocumentsResultsTable({
             </TableHeader>
             <TableBody className={clsx('typography-content-body-sm', styles.tableBody)}>
                 {results.map(document => {
-                    const docDisplayId = document.documentNumber || document.documentId || (document.documentID as string);
+                    const docDisplayId =
+                        (document as DocumentWithSource).documentNumber ||
+                        document.documentId ||
+                        ((document as DocumentWithSource).documentID as string);
                     return (
-                        <TableRow className="disabled-tr" key={`document-${document.documentId || document.documentID}`}>
+                        <TableRow
+                            className="disabled-tr"
+                            key={`document-${document.documentId || (document as DocumentWithSource).documentID}`}
+                        >
                             <TableCell>
                                 <div className="flex flex-col items-start">
                                     <PiiWrapper>{document.displayName}</PiiWrapper>

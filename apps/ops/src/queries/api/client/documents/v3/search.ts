@@ -8,7 +8,6 @@ import { ApiResponse } from '@deps/types/api-response';
 import { SearchDocumentResponse } from '@deps/types/documents-v3';
 
 // Search for documents using the documents v3 api
-// BPB - toDo: next route handler
 export const searchDocumentsV3 = async ({
     limit = 10,
     offset = 0,

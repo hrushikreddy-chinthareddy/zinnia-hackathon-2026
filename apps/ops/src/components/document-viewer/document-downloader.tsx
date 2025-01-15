@@ -6,22 +6,23 @@ import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page
 import { useDocumentDownload } from '@deps/hooks/useDocumentDownload';
 import { ReactComponent as DownloadIcon } from '@deps/styles/elements/icons/icons_outlined/download.svg';
 import loadingImage from '@deps/styles/images/loader.png';
+import { V3DocumentWithSource } from '@deps/types/documents-v3';
 
 import { DocumentTypeView } from '../side-sheet/documents/DocumentTypeView';
 
 type DocumentDownloaderProps = {
-    document: DocumentWithSource; // BPB - fix this!
+    document: DocumentWithSource | V3DocumentWithSource;
     downloadedFileName?: string; // What you want the fileName to be.  Defaults to a version of the displayName of the document.
     carrierCode: string;
 };
 
 export default function DocumentDownloader({ carrierCode, document, downloadedFileName }: DocumentDownloaderProps) {
     const { t } = useTranslation();
-    const { documentId, documentID, documentType, displayName } = document;
-    const documentName = downloadedFileName ?? displayName;
+    const { documentId, documentType, displayName } = document;
+    const documentName = downloadedFileName ?? displayName ?? documentId ?? ((document as DocumentWithSource).documentID as string);
 
     const [loading, download] = useDocumentDownload(
-        documentId ?? (documentID as string),
+        documentId ?? ((document as DocumentWithSource).documentID as string),
         documentType as DocumentTypeView,
         carrierCode,
         documentName

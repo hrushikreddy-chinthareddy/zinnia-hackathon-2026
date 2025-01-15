@@ -1,8 +1,11 @@
 import {
     DocumentDownloadResponse,
+    MetadataSearchResponse,
     SearchRequest as SearchRequestBody,
     SearchDocumentResponse as SearchResponse,
 } from '@zinnia/api-types/types/documents-v3';
+
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 
 export type DocumentDownloadV3WithMime = DocumentDownloadResponse & {
     mimeType: string;
@@ -10,7 +13,11 @@ export type DocumentDownloadV3WithMime = DocumentDownloadResponse & {
 
 // BPB - putting this in to get ahead of spec changes that the api has already implemented.
 export type SearchDocumentResponse = SearchResponse & {
-    totalCount: number;
+    totalCount: number | null;
+};
+
+export type V3DocumentWithSource = MetadataSearchResponse & {
+    documentSource: DocumentTypeView;
 };
 
 export type DocumentClassification = SearchRequestBody.documentClassification;
