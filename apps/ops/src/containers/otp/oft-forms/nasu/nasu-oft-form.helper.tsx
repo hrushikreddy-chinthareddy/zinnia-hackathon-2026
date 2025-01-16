@@ -522,6 +522,160 @@ export default function getNasuOftConfig(t: TFunction) {
             },
         },
         {
+            label: t('distributionMethod.wire'),
+            value: FormDisbursementSelections.Wire,
+            fields: [
+                {
+                    fieldName: BankingFields.AccountType,
+                    fieldLabel: t('distributionMethod.accountType'),
+                    component: DisbursementFields.AccountTypes,
+                    classNames: 'col-span-2 w-full',
+                },
+                {
+                    fieldName: BankingFields.PayeeName,
+                    fieldLabel: t('distributionMethod.payeeName'),
+                    component: DisbursementFields.BankTextField,
+                    classNames: 'col-start-1',
+                    maxLength: 40,
+                },
+                {
+                    fieldName: BankingFields.AccountNumber,
+                    fieldLabel: t('distributionMethod.accountNumber'),
+                    classNames: 'col-start-1',
+                    component: DisbursementFields.BankTextField,
+                    maskOnBlur: true,
+                    disableCopyPaste: true,
+                },
+                {
+                    fieldName: BankingFields.ReEnterAccountNumber,
+                    fieldLabel: t('distributionMethod.reEnterAccountNumber'),
+                    component: DisbursementFields.BankTextField,
+                    classNames: 'col-start-2',
+                    isBankingField: true,
+                    disableCopyPaste: true,
+                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                },
+                {
+                    fieldName: BankingFields.BankRoutingNumber,
+                    fieldLabel: t('distributionMethod.bankRoutingNumber'),
+                    component: DisbursementFields.BankTextField,
+                    classNames: 'col-start-1',
+                    maskOnBlur: true,
+                    disableCopyPaste: true,
+                },
+                {
+                    fieldName: BankingFields.ReEnterBankRoutingNumber,
+                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    component: DisbursementFields.BankTextField,
+                    isBankingField: true,
+                    disableCopyPaste: true,
+                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                },
+                {
+                    fieldName: BankingFields.BankName,
+                    fieldLabel: t('distributionMethod.bankName'),
+                    component: DisbursementFields.BankTextField,
+                    classNames: 'col-start-1',
+                },
+                {
+                    fieldName: BankingFields.BankFurtherCreditName,
+                    fieldLabel: t('distributionMethod.bankFurtherCreditName'),
+                    component: DisbursementFields.BankTextField,
+                },
+                {
+                    fieldName: BankingFields.BankFurtherCreditAccount,
+                    fieldLabel: t('distributionMethod.bankFurtherCreditAccount'),
+                    component: DisbursementFields.BankTextField,
+                },
+                {
+                    fieldName: BankingFields.FboDetails,
+                    fieldLabel: t('distributionMethod.fboDetails'),
+                    component: DisbursementFields.BankTextField,
+                    maxLength: 35,
+                },
+                {
+                    fieldName: BankingFields.ContractNumber,
+                    fieldLabel: t('distributionMethod.contractNumber'),
+                    component: DisbursementFields.BankTextField,
+                    maxLength: 35,
+                    tooltip: {
+                        shouldDisplay: true,
+                        title: t('distributionMethod.contractLabelPopoverTitle') as string,
+                        body: t('distributionMethod.contractLabelPopoverMessage') as string,
+                    },
+                },
+                {
+                    fieldName: BankingFields.Address,
+                    fieldLabel: '',
+                    component: DisbursementFields.BankAddress,
+                    classNames: 'col-span-3',
+                },
+            ],
+            getDefaultPayload({ paymentMethod, bank, payee }: FormDisbursement) {
+                if (paymentMethod.text !== PaymentMethod.Wire) {
+                    return DEFAULT_DISBURSEMENT_UPDATE;
+                }
+                const selectedBank = bank[0];
+                return {
+                    ...DEFAULT_DISBURSEMENT_UPDATE,
+                    accountHolder: selectedBank.nameOnBankAccount ?? '',
+                    accountNumber: selectedBank.accountNumber ?? '',
+                    accountType: selectedBank.accountType?.text ?? AccountType.Checking,
+                    bankName: selectedBank.bankName ?? '',
+                    bankRoutingNumber: selectedBank.routingNumber ?? '',
+                    bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
+                    bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
+                    payeeName: payee?.name?.text ?? '',
+                    fboDetails: payee?.fboDetails?.text || '',
+                    contractNumber: payee?.contractNumber.text ?? '',
+                    address: payee?.addresses?.[0] ?? DEFAULT_ADDRESS,
+                };
+            },
+            generatePayloadFromSelection: ({
+                payeeName,
+                accountNumber,
+                accountType,
+                bankName,
+                bankRoutingNumber,
+                bankFurtherCreditAccount,
+                bankFurtherCreditName,
+                accountHolder,
+                reEnterAccountNumber,
+                reEnterBankRoutingNumber,
+                fboDetails,
+                contractNumber,
+                address,
+            }: DisbursementParts) => {
+                return {
+                    ...getDefaultFormDisbursementValues(),
+                    paymentMethod: { text: PaymentMethod.Wire },
+                    paymentMailType: { text: null },
+                    bank: [
+                        {
+                            ...DEFAULT_BANK_DETAILS,
+                            accountNumber,
+                            accountType: {
+                                text: accountType,
+                            },
+                            bankName,
+                            nameOnBankAccount: accountHolder ?? '',
+                            routingNumber: bankRoutingNumber,
+                            bankFurtherCreditAccount,
+                            bankFurtherCreditName,
+                            reEnterAccountNumber,
+                            reEnterBankRoutingNumber
+                        },
+                    ],
+                    payee: {
+                        name: { text: payeeName ?? null },
+                        fboDetails: { text: fboDetails ?? null },
+                        addresses: [address || DEFAULT_ADDRESS],
+                        contractNumber: { text: contractNumber ?? null },
+                    },
+                };
+            },
+        },
+        {
             label: t('distributionMethod.sendCheck'),
             value: FormDisbursementSelections.Check,
             fields: [
