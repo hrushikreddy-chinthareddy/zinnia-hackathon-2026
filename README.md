@@ -78,7 +78,9 @@ To simplify the development process, we have created two helper scripts to run e
 
 #### Setting up env variables
 
-Copy `.env` to `.env.development.local` for each project and request values from developer
+Options:
+If you have vercel secrets permissions, use `vercel env pull [file]` to retrieve the secrets from vercel. More details [here](https://vercel.com/docs/cli/env)
+Otherwise, copy `.env` to `.env.development.local` for each project and request values from developer
 
 #### Running Ops
 
