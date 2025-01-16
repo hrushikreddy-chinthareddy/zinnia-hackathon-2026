@@ -128,16 +128,16 @@ export default function getUlpcConfig(t: TFunction) {
             },
         },
         {
-            label: '10 ' + t('amountDetails.partialWithdrawal.percentageOfAccumulatedValue'),
+            label: '10' + t('amountDetails.partialWithdrawal.percentageOfAccumulatedValue'),
             value: ProgramType.PartialPercent,
             amountFieldType: AmountType.Percent,
-            generatePayloadFromSelection: () => {
+            generatePayloadFromSelection: (val = '10') => {
                 return {
                     ...getDefaultFormProgramValues(),
                     withdrawType: { text: WithdrawalType.Gross },
                     programType: { text: ProgramType.WITHDRAWAL },
                     programSubType: { text: ProgramSubType.PercentageofAV },
-                    partialPercent: { text: '10', amountType: AmountType.Percent },
+                    partialPercent: { text: val, amountType: AmountType.Percent },
                 };
             },
         },

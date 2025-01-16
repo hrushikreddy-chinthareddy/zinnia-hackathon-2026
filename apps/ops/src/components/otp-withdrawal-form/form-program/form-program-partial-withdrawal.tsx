@@ -52,8 +52,10 @@ export default function FormProgramPartialWithdrawal({
     const [amount, setAmount] = useState('');
     const [maturityGuaranteePeriod, setMaturityGuaranteePeriod] = useState('');
     const [selected, setSelected] = useState('');
+    const [isReadOnly, setIsReadOnly] = useState(false);
     const selectedOption = options.find(val => val.value === selected);
     const { formProgram, setFormProgram } = useContext(FormDataContext);
+
     useEffect(() => {
         if (selectionIdentifier) {
             const { selectedOption, amount: savedAmount, maturityGuaranteePeriod } = selectionIdentifier(formProgram);
@@ -71,6 +73,7 @@ export default function FormProgramPartialWithdrawal({
 
     useEffect(() => {
         const selectedOption = options.find(val => val.value === selected);
+
         if (selectedOption?.generatePayloadFromSelection) {
             if (selectedOption.dateFieldType === DateFieldType.MaturityDate) {
                 setFormProgram(oldVal => {
@@ -82,6 +85,12 @@ export default function FormProgramPartialWithdrawal({
                     };
                 });
             } else {
+                if (selectedOption?.value === ProgramType.PartialPercent && selectedOption?.label?.startsWith('10%')) {
+                    setAmount('10');
+                    setIsReadOnly(true);
+                } else {
+                    setIsReadOnly(false);
+                }
                 setFormProgram(oldVal => {
                     return { ...oldVal, ...selectedOption.generatePayloadFromSelection(amount) };
                 });
@@ -132,7 +141,7 @@ export default function FormProgramPartialWithdrawal({
                                 type: 'number',
                                 decimalPlaces: 2,
                             }}
-                            variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                            variant={isFormStateReadOnly || isReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
                         />
                     </>
                 )}
