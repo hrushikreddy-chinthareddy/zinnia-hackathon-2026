@@ -74,13 +74,11 @@ export const DocumentsView = async ({
           clientCode: policyData?.carrierId,
           contractNumber: policyNumber,
           numYears: maxTaxYears,
-          taxYear: new Date().getFullYear().toString(),
         })
       : getTaxDocumentsV2({
           clientCode: policyData?.carrierId,
           contractNumber: policyNumber,
           numYears: maxTaxYears,
-          taxYear: new Date().getFullYear().toString(),
         }),
   ]);
 

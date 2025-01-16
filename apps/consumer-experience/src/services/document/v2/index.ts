@@ -197,14 +197,14 @@ export const getTaxDocumentsV2 = async (
       error: null,
     };
   } catch (error) {
-    logWarn('getTaxDocuments error', { error });
+    logWarn('getTaxDocumentsV2 error', { error });
 
     return {
       data: null,
       error: {
         message: 'Something went wrong',
         status: 500,
-        name: 'getTaxDocuments Error',
+        name: 'getTaxDocumentsV2 Error',
       },
     };
   }
