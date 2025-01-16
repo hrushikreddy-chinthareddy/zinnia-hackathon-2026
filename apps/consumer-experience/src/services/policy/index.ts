@@ -783,6 +783,7 @@ export const getPaymentHistory = async ({
     policyNumber,
   });
 
+  const currentYear = new Date().getFullYear().toString();
   const completedTransactionTypes = Object.values(
     CompletedPremiumTransactionType
   ).map(String);
@@ -817,12 +818,14 @@ export const getPaymentHistory = async ({
           policyNumber,
           limit: 30,
           status: 'Completed',
+          year: currentYear,
         }),
         getPolicyTransactions({
           transactionTypes: pendingTransactionTypes,
           planCode,
           policyNumber,
           status: 'Pending',
+          year: currentYear,
         }),
       ]);
 
