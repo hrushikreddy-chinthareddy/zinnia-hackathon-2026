@@ -280,23 +280,6 @@ export default function getGlcoOftConfig(t: TFunction) {
             },
         },
         {
-            label: `${t('amountDetails.programTypes.partial')} %`,
-            value: ProgramType.PartialPercent,
-            amountFieldType: AmountType.Percent,
-            generatePayloadFromSelection: (val = null) => {
-                return {
-                    ...getDefaultFormProgramValues(),
-                    withdrawType: { text: WithdrawalType.Gross },
-                    program: {
-                        text: Program.OFT,
-                    },
-                    programType: { text: ProgramType.WITHDRAWAL },
-                    programSubType: { text: ProgramSubType.PercentageofAV },
-                    partialPercent: { text: val, amountType: AmountType.Percent },
-                };
-            },
-        },
-        {
             label: t('amountDetails.programTypes.maximumFreeAmount'),
             value: ProgramType.TotalFreeAmt,
             generatePayloadFromSelection: () => {
