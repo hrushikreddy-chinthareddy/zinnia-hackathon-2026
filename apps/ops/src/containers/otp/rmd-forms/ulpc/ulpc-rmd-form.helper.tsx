@@ -14,6 +14,7 @@ import {
     SignatureFields
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
+import { stringifyTrueFalseNull } from '@deps/helpers/string.helper';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
     FormValidationErrors,
@@ -21,7 +22,8 @@ import {
     AddressTypes, FormParts, PaymentMethod,
     PaymentMailType,
     AccountType,
-    FormDisbursement
+    FormDisbursement,
+    FundWithdrawnMethod
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -206,7 +208,7 @@ export default function getUlpcRmdConfig(t: TFunction) {
                     paymentMailType: { text: null },
                 };
             },
-        }
+        },
     ];
 
     const signaturesConfig: SignatureValidationConfig[] = [
@@ -291,8 +293,6 @@ export default function getUlpcRmdConfig(t: TFunction) {
         return errors;
     };
 
-
-
     const jointLifeExpectancyConfigs: JointLifeExpectancyConfig = {
         checkboxLabel: t('rmdMethod.jointLifeExpectancy.label.flic'),
         fields: [
@@ -331,16 +331,27 @@ export default function getUlpcRmdConfig(t: TFunction) {
 
     ];
 
+    const isBeneSpouseOption = [
+        { label: t('beneficiaryInfo.isBeneficiarySpouse.yes'), value: stringifyTrueFalseNull(true) },
+        { label: t('beneficiaryInfo.isBeneficiarySpouse.no'), value: stringifyTrueFalseNull(false) },
+    ];
+
+    const fundWithdrawnMethodOptions = [
+        { label: t('distributionInstruction.prorata'), value: FundWithdrawnMethod.Prorata },
+        { label: t('distributionInstruction.specifyFunds'), value: FundWithdrawnMethod.SpecifyFunds },
+    ];
 
     return {
-        signaturesConfig,
         formPartyConfigs,
+        signaturesConfig,
+        fundWithdrawnMethodOptions,
         formValidation: rmdformValidation,
         cslnCheckStates,
         irsSignatureConfig,
         w4pSignaturesConfig,
         disbursementOptions,
         jointLifeExpectancyConfigs,
+        isBeneSpouseOption
     };
 }
 

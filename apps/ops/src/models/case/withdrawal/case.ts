@@ -1,3 +1,4 @@
+import { FormBeneInfo } from '@deps/components/otp-withdrawal-form/beneficiary-information/beneficiary-info';
 import { MaritalStatusAllowances } from '@deps/components/otp-withdrawal-form/maritial-status-allowance-withholdings';
 import { RelationshipToCoveredPerson } from '@deps/containers/otp/ssw-forms/sbgc/joint-covered-person.helper';
 import { WithdrawalTaskStatus } from '@deps/contexts/OtpWithdrawalFormContext';
@@ -115,6 +116,7 @@ export interface FormParts {
     formReindexingData?: FormReIndexingData | null;
     formComment?: FormComment;
     irsFormType?: IrsFormType;
+    formBeneInfo?: FormBeneInfo | null;
 }
 
 export interface FormIrsData {

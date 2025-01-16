@@ -2112,7 +2112,17 @@
                 "OFTFormInputTask": "Great news! We've initiated a Outgoing Funds Transfer task for {{documentNumber}} and {{contractNumber}}",
                 "SSWFormInputTask": "Great news! We've initiated a Systematic Withdrawal task for {{documentNumber}} and {{contractNumber}}"
             },
-            "openNigoExists": "An onbase case includes a NIGO. Please resolve the open NIGO issue before submitting another request through the Digital Portal."
+            "openNigoExists": "An onbase case includes a NIGO. Please resolve the open NIGO issue before submitting another request through the Digital Portal.",
+            "beneficiaryInfo": {
+                "title": "Beneficiary Information",
+                "isBeneficiarySpouse": {
+                    "title": "Is your beneficiary your spouse?",
+                    "yes": "Yes",
+                    "no": "No"
+                },
+                "dob": "Date of birth",
+                "isYourSpouseYoungerThanYou": "Is your spouse 10 years younger than you?"
+            }
         },
         "sidebar": {
             "contractStatusCode": "Policy Status",
