@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { PotentialMatches } from '@deps/models/case/task/doc-matching-payment';
 import { ManagementTask } from '@deps/models/case/task-instance';
-export const TaskMetadataHelper = (task: ManagementTask, tasksMetadata: FormMetadata[]) => {
+export const TaskMetadataHelper = (task: ManagementTask, tasksMetadata: any[]) => {
     return tasksMetadata.map((taskMetadata: FormMetadata) => {
         switch (task.taskType) {
             case TaskType.PURCHASE_DOCUMENT_MATCHING: {
@@ -11,7 +11,7 @@ export const TaskMetadataHelper = (task: ManagementTask, tasksMetadata: FormMeta
                     return {
                         if: {
                             properties: {
-                                potentialMatches: { const: item.value },
+                                potentialMatches: { const: item.correlationId },
                             },
                         },
                         then: {
@@ -34,7 +34,15 @@ export const TaskMetadataHelper = (task: ManagementTask, tasksMetadata: FormMeta
                     const potentialMatchesOptions =
                         task.data.potentialMatches.map((item: PotentialMatches) => {
                             const id = uuidv4();
-                            return { ...item, id };
+                            const subElement = {
+                                label: item.entityType,
+                                value: item.correlationId,
+                                title: item.entityType,
+                                type: 'link',
+                                url: `/cases/${item.zlCaseId}`,
+                                disabled: false,
+                            };
+                            return { label: item.entityType, value: item.correlationId, id, subElement };
                         }) || [];
 
                     taskMetadata.uiSchema.potentialMatches?.['ui:options'].customOptions.unshift(...potentialMatchesOptions);

@@ -17,12 +17,12 @@ export const getMatchDocumentPaymentReviewSteps = ({ taskType, taskInfoLink, t, 
     });
     const staticSteps: Step[] = [
         {
-            ariaLabel: t('tabs.confirm'),
+            ariaLabel: t('confirm'),
             isVisible: () => true,
             component: <ConfirmStep taskType={taskType} taskInfoLink={taskInfoLink}></ConfirmStep>,
-            text: t('tabs.confirm'),
+            text: t('confirm'),
             index: dynamicSteps.length,
-            screenReaderLabel: t('tabs.confirm'),
+            screenReaderLabel: t('confirm'),
         },
     ];
 

@@ -104,14 +104,14 @@ export const getServerSideProps = withPageAuthRequired({
                 data: {
                     details: {
                         amount: '10000 $',
-                        documentMatcher: {
+                        payerDetails: {
                             firstName: '',
                             lastName: '',
                             payorName: 'New Finance Group',
                             taxId: 'ssn123456',
                             type: 'payment',
                         },
-                        documents: [
+                        purchaseDocument: [
                             {
                                 documentId: '231hf324ffffsfds3444',
                                 documentName: 'Cheque.Pdf',
@@ -122,43 +122,34 @@ export const getServerSideProps = withPageAuthRequired({
                     },
                     potentialMatches: [
                         {
-                            applicationId: 'app1',
-                            zlCaseId: '',
-                            policyNumber: '',
+                            entityType: 'NB_APPLICATION_DATA',
+                            recordId: '545435345435532',
+                            zlCaseId: '1111111',
+                            policyNumber: '22222222',
                             taxId: 'ssn123456',
-                            firstName: '',
-                            lastName: '',
-                            processSubtype: '',
-                            label: 'app1',
-                            url: '/cases/CA0000371344',
-                            value: 'CA0000371344',
-                            type: 'link',
+                            firstName: 'AA',
+                            lastName: 'BB',
+                            correlationId: '53543465461',
                         },
                         {
-                            applicationId: 'app2',
-                            zlCaseId: '',
-                            policyNumber: '',
-                            taxId: 'ssn123456',
-                            firstName: '',
-                            lastName: '',
-                            processSubtype: '',
-                            label: 'app2',
-                            url: '/cases/CA0000383413',
-                            value: 'CA0000383413',
-                            type: 'link',
+                            entityType: 'RMD_APP_DATA',
+                            recordId: '456545654',
+                            zlCaseId: '86878787',
+                            policyNumber: '685878876',
+                            taxId: 'ssn8888456',
+                            firstName: 'uuuu',
+                            lastName: 'ggggg',
+                            correlationId: '53543465462',
                         },
                         {
-                            applicationId: 'app3',
-                            zlCaseId: '',
-                            policyNumber: '',
-                            taxId: 'ssn123456',
-                            firstName: '',
-                            lastName: '',
-                            processSubtype: '',
-                            label: 'app3',
-                            url: '/cases/CA0000367910',
-                            value: 'CA0000367910',
-                            type: 'link',
+                            entityType: 'NB_APPLICATION_DATA',
+                            recordId: '2312313213132',
+                            zlCaseId: '4444444',
+                            policyNumber: '555555',
+                            taxId: 'ssn34234',
+                            firstName: 'CC',
+                            lastName: 'DD',
+                            correlationId: '53543465463',
                         },
                     ],
                     payments: [],
@@ -200,7 +191,7 @@ export const getServerSideProps = withPageAuthRequired({
 
             //   const taskMetadata = await getTaskFormMetadata(carrier, taskType as TtaskFormaskType, process as ProcessType, accessToken);
 
-            const taskMetadata: FormMetadata[] = [
+            const taskMetadata = [
                 {
                     formId: '004c97a1-d97c-4faa-9b7f-8ff9105b4c29',
                     process: 'IndexationOrkestr',
@@ -210,20 +201,7 @@ export const getServerSideProps = withPageAuthRequired({
                     formSchema: {
                         $schema: 'http://json-schema.org/draft-07/schema#',
                         type: 'object',
-                        definitions: {
-                            potentialMatchesEnum: {
-                                oneOf: [
-                                    {
-                                        const: 'Enter a case ID',
-                                        title: 'Enter a case ID',
-                                    },
-                                    {
-                                        const: 'Document cannot be matched to a case',
-                                        title: 'Document cannot be matched to a case',
-                                    },
-                                ],
-                            },
-                        },
+
                         properties: {
                             sectionHeader: {
                                 type: 'object',
@@ -241,50 +219,39 @@ export const getServerSideProps = withPageAuthRequired({
                                         type: 'string',
                                         title: 'Amount Received',
                                     },
-                                    documentMatcher: {
+                                    payerDetails: {
                                         type: 'object',
                                         title: 'Supporting information',
                                         properties: {
-                                            title: {
+                                            payorName: {
                                                 type: 'string',
                                                 title: 'Title',
                                             },
-                                            subtitle: {
+                                            taxId: {
                                                 type: 'string',
-                                                title: 'Subtitle',
-                                            },
-                                            name: {
-                                                type: 'string',
-                                                title: 'Title',
-                                            },
-                                            dob: {
-                                                type: 'string',
-                                                title: 'Subtitle',
+                                                title: 'SSN',
                                             },
                                         },
+                                        additionalProperties: true,
                                     },
-                                    documents: {
+                                    purchaseDocument: {
                                         type: 'array',
                                         title: '',
                                         items: {
                                             type: 'object',
                                             title: '',
                                             properties: {
-                                                title: {
+                                                documentName: {
                                                     type: 'string',
-                                                    title: 'Title',
                                                 },
-                                                subtitle: {
+                                                documentId: {
                                                     type: 'string',
-                                                    title: 'Subtitle',
                                                 },
-                                                name: {
+                                                documentSource: {
                                                     type: 'string',
-                                                    title: 'Title',
                                                 },
-                                                dob: {
+                                                createdDate: {
                                                     type: 'string',
-                                                    title: 'Subtitle',
                                                 },
                                             },
                                         },
@@ -306,7 +273,7 @@ export const getServerSideProps = withPageAuthRequired({
                                 if: {
                                     properties: {
                                         potentialMatches: {
-                                            const: 'Enter a case ID',
+                                            const: 'enterCaseId',
                                         },
                                     },
                                 },
@@ -323,20 +290,20 @@ export const getServerSideProps = withPageAuthRequired({
                                 if: {
                                     properties: {
                                         potentialMatches: {
-                                            const: 'Document cannot be matched to a case',
+                                            const: 'notMatched',
                                         },
                                     },
                                 },
                                 then: {
                                     properties: {
-                                        cases: {
+                                        caseType: {
                                             type: 'string',
                                             title: 'Cases',
                                             enum: ['New Business', 'Purchase'], //TBD
                                         },
-                                        caseTypes: {
+                                        caseSubType: {
                                             type: 'string',
-                                            title: 'Cases',
+                                            title: 'Case',
                                             enum: ['select', 'no'], //TBD
                                         },
                                     },
@@ -377,7 +344,7 @@ export const getServerSideProps = withPageAuthRequired({
                                     disabled: true,
                                 },
                             },
-                            documentMatcher: {
+                            payerDetails: {
                                 'ui:options': {
                                     cardType: 'Detailed',
                                     icon: 'CIRCLE_USER',
@@ -385,7 +352,7 @@ export const getServerSideProps = withPageAuthRequired({
                                     ObjectFieldTemplate: 'CardTemplate',
                                 },
                             },
-                            documents: {
+                            purchaseDocument: {
                                 canAdd: false,
                                 props: {
                                     type: 'Document',
@@ -393,8 +360,6 @@ export const getServerSideProps = withPageAuthRequired({
                                 },
                                 'ui:options': {
                                     label: false,
-                                    ArrayFieldTemplate: 'ArrayFieldTemplate',
-                                    canAdd: false,
                                 },
                                 items: {
                                     props: {
@@ -403,7 +368,9 @@ export const getServerSideProps = withPageAuthRequired({
                                     'ui:options': {
                                         canAdd: false,
                                         label: false,
-                                        ObjectFieldTemplate: 'DocumentCardTemplate',
+                                        cardType: 'Document',
+                                        icon: 'DOCUMENT_TEXT',
+                                        ObjectFieldTemplate: 'CardTemplate',
                                     },
                                 },
                             },
@@ -422,21 +389,14 @@ export const getServerSideProps = withPageAuthRequired({
                                 customOptions: [
                                     {
                                         label: 'Enter a case ID',
-                                        value: 'Enter a case ID',
+                                        value: 'enterCaseId',
                                     },
                                     {
                                         label: 'Document cannot be matched to a case',
-                                        value: 'Document cannot be matched to a case',
+                                        value: 'notMatched',
                                     },
                                 ],
                             },
-                            // 'ui:props': {
-                            //     // pass the dynamic key for parameters
-                            //     apiUrl: 'case/v2/tasks/TA000000016435',
-                            //     apiMethod: 'GET',
-                            //     apiPayload: null,
-                            //     responseKey: 'payments',
-                            // },
                         },
                         caseId: {
                             'ui:options': {
@@ -458,20 +418,7 @@ export const getServerSideProps = withPageAuthRequired({
                     formSchema: {
                         $schema: 'http://json-schema.org/draft-07/schema#',
                         type: 'object',
-                        definitions: {
-                            potentialMatchesEnum: {
-                                oneOf: [
-                                    {
-                                        const: 'Enter a case ID',
-                                        title: 'Enter a case ID',
-                                    },
-                                    {
-                                        const: 'Document cannot be matched to a case',
-                                        title: 'Document cannot be matched to a case',
-                                    },
-                                ],
-                            },
-                        },
+
                         properties: {
                             sectionHeader: {
                                 type: 'object',
@@ -540,43 +487,6 @@ export const getServerSideProps = withPageAuthRequired({
                                 },
                             },
                         },
-                        allOf: [
-                            {
-                                if: {
-                                    properties: {
-                                        potentialMatches: {
-                                            const: 'Enter a case ID',
-                                        },
-                                    },
-                                },
-                                then: {
-                                    properties: {
-                                        caseId: {
-                                            type: 'string',
-                                            title: 'Case Id',
-                                        },
-                                    },
-                                },
-                            },
-                            {
-                                if: {
-                                    properties: {
-                                        potentialMatches: {
-                                            const: 'Document cannot be matched to a case',
-                                        },
-                                    },
-                                },
-                                then: {
-                                    properties: {
-                                        canceled: {
-                                            type: 'string',
-                                            title: 'Case Id',
-                                            enum: ['yes', 'no'],
-                                        },
-                                    },
-                                },
-                            },
-                        ],
                     },
                     uiSchema: {
                         'ui:globalOptions': {
@@ -611,7 +521,7 @@ export const getServerSideProps = withPageAuthRequired({
                             },
                             documentMatcher: {
                                 'ui:options': {
-                                    cardType: 'Detailed',
+                                    cardType: 'Detail',
                                     icon: 'CIRCLE_USER',
                                     label: true,
                                     ObjectFieldTemplate: 'CardTemplate',

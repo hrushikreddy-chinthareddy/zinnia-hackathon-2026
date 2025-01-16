@@ -11,6 +11,7 @@ import { HyperLink } from '../hyper-link-widget/hyper-link-widget';
 const baseUrl = baseAppUrl + '/api/';
 
 const renderSubElement = (option: any) => {
+    console.log('🚀 ~ renderSubElement ~ option:', option);
     switch (option.type) {
         case 'link':
             return (
@@ -41,13 +42,14 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
     const currentOptions = useMemo(() => {
         return enumOptions || customOptions || [];
     }, [enumOptions, customOptions]);
+    console.log('🚀 ~ currentOptions ~ currentOptions:', currentOptions);
 
     const newOptions = useMemo(() => {
         return Array.isArray(currentOptions)
             ? currentOptions.map((option: RadioItem) => ({
                   label: option.label,
                   value: option.value,
-                  subElement: renderSubElement(option),
+                  subElement: option.subElement && renderSubElement(option.subElement),
               }))
             : [];
     }, [currentOptions]);
@@ -70,7 +72,9 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
 
     const handleOnChange = (event: any) => {
         onChange(event.target.value);
-        fetchDetails(apiProps.apiUrl, event.target.value);
+        if (apiProps.apiUrl) {
+            fetchDetails(apiProps.apiUrl, event.target.value);
+        }
     };
 
     return (
