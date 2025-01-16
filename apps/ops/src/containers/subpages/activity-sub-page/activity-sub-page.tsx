@@ -7,7 +7,9 @@ import NotesTab from '@deps/components/case-sub-page/case-tabs/notes-tab';
 import { TranslationFiles } from '@deps/config/translations';
 import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
+import { useDiaryNotes } from '@deps/hooks/useDiaryNotes';
 import { CallLog } from '@deps/models/case/call-log';
+import { NoteInstance } from '@deps/models/case/note-instance';
 import { getCaseCallLogs } from '@deps/queries/api/contracts';
 import { PolicyActivityTabValues } from '@deps/types/constants';
 
@@ -17,13 +19,19 @@ const ActivitySubPage = () => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'policy.history.filter' });
 
     // to do - swap these over from case context to policy
-    const { caseNotes, loadingNotes, notesStatusCode } = useCaseActivityContext();
+    const { notesStatusCode } = useCaseActivityContext();
     const { policy } = useContext(PolicyData);
 
     const [loadingCallLogs, setLoadingCallLogs] = useState(true);
     const [callLogs, setCallLogs] = useState<CallLog[]>([]);
     const [callLogsStatusCode, setCallLogsStatusCode] = useState<number | null>(null);
     const limit = 10;
+
+    const diaryNotesData = useDiaryNotes(policy.policyNumber as string, policy.carrierId as string, 0, 10);
+    // to do - this is obviously not the correct type - just casting it so I can push
+    const caseNotes = diaryNotesData.diaryNotes as unknown as NoteInstance[];
+    const loadingNotes = diaryNotesData.isLoading;
+    // const notestatusCode = diaryNotesData.notesStatusCode;
 
     useEffect(() => {
         const getCallLogs = async () => {
