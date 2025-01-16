@@ -1,4 +1,4 @@
-import { Statuses, CaseDashboardStatsResponse, DashboardStatsElementResponse, Processes } from '@deps/models/case/case';
+import { Statuses, CaseDashboardStatsResponse, DashboardStatsElementResponse } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 
 import { getCaseDashboardStats } from '../../api/cases';
@@ -46,52 +46,6 @@ export const getCaseDashboardStatsQuery = async (baseFilter: DashboardSearchFilt
     statsResponse.data = filteredData.sort((a, b) => b.count - a.count);
 
     return statsResponse;
-};
-
-/*************************
- **** Active Applications Query****
- **************************
- */
-
-export const getProcessListOptions = async () => {
-    const baseDashboardQueryFilter: DashboardSearchFilter = {
-        caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
-    };
-    const query: CaseDashboardStatsQuery = {
-        filter: baseDashboardQueryFilter,
-        groupBy: [GroupByOptions.Process],
-    };
-    const statsResponse = await getCaseDashboardStats(query);
-    if (!statsResponse || 'status' in statsResponse) {
-        throw statsResponse;
-    }
-
-    return statsResponse?.data;
-};
-
-export const getSubprocessListOptions = async (createdDateStart: string, selectedProcess: Processes[] = []) => {
-    const baseDashboardQueryFilter: DashboardSearchFilter = {
-        caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
-        createdDateStart,
-    };
-
-    if (selectedProcess.length > 0) {
-        baseDashboardQueryFilter.process = selectedProcess;
-    }
-
-    const query: CaseDashboardStatsQuery = {
-        filter: baseDashboardQueryFilter,
-        groupBy: [GroupByOptions.ProcessSubType, GroupByOptions.Process],
-    };
-
-    const statsResponse = await getCaseDashboardStats(query);
-
-    if (!statsResponse || 'status' in statsResponse) {
-        throw statsResponse;
-    }
-
-
-    return statsResponse?.data;
 };
 
 /**************************
