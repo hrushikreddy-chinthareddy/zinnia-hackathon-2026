@@ -45,7 +45,11 @@ const defaultChartOptions = {
     maxItems: 10,
 };
 
-const DEFAULT_GROUPBY_FILTER_OPTIONS = [GroupByOptions.BrokerDealerName, GroupByOptions.Process, GroupByOptions.CaseStatus];
+const DEFAULT_GROUPBY_FILTER_OPTIONS = {
+    L1SelectValue: GroupByOptions.BrokerDealerName,
+    L2SelectValue: GroupByOptions.ProcessSubType,
+    L3SelectValue: GroupByOptions.CaseStatus,
+};
 
 const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOptions, baseDashboardQueryFilter }: Props) => {
     const { t } = useTranslation();
@@ -68,9 +72,9 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
     const [level3ObjectGrouping, setLevel3ObjectGrouping] = useState<DashboardStatsElementResponse[]>([]);
     const [l1SelectedIndex, setL1SelectedIndex] = useState<number>(-100);
 
-    const [l1SelectValue, setL1SelectValue] = useState(GroupByOptions.BrokerDealerName);
-    const [l2SelectValue, setL2SelectValue] = useState(GroupByOptions.ProcessSubType);
-    const [l3SelectValue, setL3SelectValue] = useState(GroupByOptions.CaseStatus);
+    const [l1SelectValue, setL1SelectValue] = useState(DEFAULT_GROUPBY_FILTER_OPTIONS.L1SelectValue);
+    const [l2SelectValue, setL2SelectValue] = useState(DEFAULT_GROUPBY_FILTER_OPTIONS.L2SelectValue);
+    const [l3SelectValue, setL3SelectValue] = useState(DEFAULT_GROUPBY_FILTER_OPTIONS.L3SelectValue);
 
     const [parentSize, setParentSize] = useState({ width, height });
     const svgParentRef = useRef<HTMLDivElement>(null);
@@ -709,12 +713,15 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
     const formattedCasesNumber = wholeNumberFormatify(totalCases || 0) as never;
 
     const resetFilters = () => {
-        [setL1SelectValue, setL2SelectValue, setL3SelectValue].forEach((setter, index) => setter(DEFAULT_GROUPBY_FILTER_OPTIONS[index]));
+        [setL1SelectValue, setL2SelectValue, setL3SelectValue].forEach((setterFn, index) =>
+            setterFn(Object.values(DEFAULT_GROUPBY_FILTER_OPTIONS)[index])
+        );
     };
 
-    const resetDisabled = [l1SelectValue, l2SelectValue, l3SelectValue].every(
-        (value, index) => DEFAULT_GROUPBY_FILTER_OPTIONS[index] === value
-    );
+    const resetDisabled =
+        l1SelectValue === DEFAULT_GROUPBY_FILTER_OPTIONS.L1SelectValue &&
+        l2SelectValue === DEFAULT_GROUPBY_FILTER_OPTIONS.L2SelectValue &&
+        l3SelectValue === DEFAULT_GROUPBY_FILTER_OPTIONS.L3SelectValue;
 
     return (
         <div>
