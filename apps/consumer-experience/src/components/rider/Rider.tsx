@@ -31,7 +31,7 @@ export const Rider = ({
       <h3 className="typography-titles-subtitle">{toSentenceCase(title)}</h3>
       <p>{description}</p>
       {status === Status.ACTIVE && (
-        <Tag variant={TagVariant.Information} text="Active" className="mt-lg" />
+        <Tag variant={TagVariant.Default} text="Active" className="mt-lg" />
       )}
       <div className={styles.riderDetails}>
         {isElected && (
