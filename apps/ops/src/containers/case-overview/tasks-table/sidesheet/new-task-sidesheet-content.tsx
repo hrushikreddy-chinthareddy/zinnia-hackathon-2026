@@ -9,13 +9,17 @@ import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { parseAndFormatDate, toSentenceCase } from '@deps/helpers/string.helper';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
+import { TaskType } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
+import { getFeatureFlags } from '@deps/queries/api/optimizely';
 import { getTaskInstance } from '@deps/queries/api/v2/task';
 import { ReactComponent as NotStartedIcon } from '@deps/styles/elements/icons/alert/not-started.svg';
 import { ReactComponent as CircleCheckedIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as CompletedIcon } from '@deps/styles/elements/icons/icons_outlined/check-circle.svg';
 import { ReactComponent as UserCircleIcon } from '@deps/styles/elements/icons/icons_outlined/user-circle.svg';
 import { DEFAULT_DATE_FORMAT, DEFAULT_DATETIME_DISPLAY_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
+import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
 
 const TaskTypeMap: Record<string, string> = {
     ['SUITABILITY_REVIEW']: 'suitability review',
@@ -32,16 +36,31 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
     const [loading, setLoading] = useState(true);
     const [task, setTask] = useState<ManagementTask | null>(null);
     const [activeTab, setActiveTab] = useState(TabOptions.Details);
+    const [featureFlags, setFeatureFlags] = useState<FeatureFlags | null>(null);
 
     const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
 
     useEffect(() => {
         const getTaskData = async () => {
-            const data = await getTaskInstance({ taskId });
-            setTask(data);
+            const taskData = await getTaskInstance({ taskId });
+            return new Promise<ManagementTask | null>(resolve => resolve(taskData));
+        };
+
+        const getFeatureFlagDescisions = async () => {
+            const featureFlagDecisions = await getFeatureFlags();
+            return new Promise<FeatureFlags | null>(resolve => {
+                resolve(featureFlagDecisions);
+            });
+        };
+
+        const getData = async () => {
+            setLoading(true);
+            const [taskData, featureFlagsData] = await Promise.all([getTaskData(), getFeatureFlagDescisions()]);
+            setTask(taskData);
+            setFeatureFlags(featureFlagsData);
             setLoading(false);
         };
-        getTaskData();
+        getData();
     }, [taskId]);
 
     if (loading) return <PageLoader variant={PageLoaderVariant.Center} />;
@@ -50,7 +69,7 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
 
     const { unit: createdUnit, count: createdCount } = getTimeAgoUnitValue(task.createdAt) || {};
     const formattedCreated = parseAndFormatDate(NUMERIC_DATE_FORMAT, DEFAULT_DATE_FORMAT, task.createdAt);
-
+    const taskType = task.taskType.toUpperCase();
     const renderDetails = (
         <div className="flex flex-col w-full">
             <label className="font-primary text-lg mt-10">{t('sideSheet.task.tabs.details')}</label>
@@ -113,11 +132,12 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
                         </Typography>
                     </div>
                 </div>
-                {(task.status === TaskStatus.New || task.status === TaskStatus.InProgress) && (
-                    <div className="flex flex-row items-center gap-1 pt-8">
-                        <Link href={`/task/${task.id}`} text="Start task" variant="button" size="small"></Link>
-                    </div>
-                )}
+                {isFormFeatureEnabled(taskType as TaskType, task?.carrier, featureFlags as FeatureFlags) &&
+                    (task.status === TaskStatus.New || task.status === TaskStatus.InProgress) && (
+                        <div className="flex flex-row items-center gap-1 pt-8">
+                            <Link href={`/task/${task.id}`} text="Start task" variant="button" size="small"></Link>
+                        </div>
+                    )}
             </div>
         </div>
     );

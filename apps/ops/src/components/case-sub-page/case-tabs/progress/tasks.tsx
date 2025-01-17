@@ -12,7 +12,7 @@ import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow
 
 import { TaskView } from './progress-tab-types';
 
-const SupportedTaskMap = [TaskType.SuitabilityReview, TaskType.SuitabilityDataEntry];
+const SupportedTaskMap = [TaskType.SuitabilityReview, TaskType.SuitabilityDataEntry, TaskType.PURCHASE_DOCUMENT_MATCHING];
 
 export function Task({ task }: { task: TaskView }) {
     const { t } = useTranslation();
@@ -20,6 +20,7 @@ export function Task({ task }: { task: TaskView }) {
 
     const TaskTitle: Record<string, string> = {
         [TaskType.SuitabilityReview]: t('caseOverview.tabs.suitabilityReviewIssues'),
+        [TaskType.PURCHASE_DOCUMENT_MATCHING]: t('caseOverview.tabs.purchaseDocumentMatchingIssues'),
     };
 
     const TaskTypeMap: Record<string, string> = {

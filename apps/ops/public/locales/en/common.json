@@ -1368,7 +1368,8 @@
             "reviewIssues": "Review {{taskType}}",
             "suitabilityReview": "suitability",
             "commonTaskIssues": "Issue: One or more {{taskType}} issues found.",
-            "suitabilityReviewIssues": "Review Suitability"
+            "suitabilityReviewIssues": "Review Suitability",
+            "purchaseDocumentMatchingIssues": "Match Document"
         },
         "processDate": {
             "canceled": "Canceled on",

@@ -1361,7 +1361,8 @@
             "suitabilityReview": "suitability",
             "noDataAvailable": "Aucune donnée disponible.",
             "commonTaskIssues": "Problème: Une ou plusieurs problèmes {{taskType}} trouvées.",
-            "suitabilityReviewIssues": "Revoir Suitability Problèmes"
+            "suitabilityReviewIssues": "Revoir Suitability Problèmes",
+            "purchaseDocumentMatchingIssues": "Document de correspondance"
         },
         "processDate": {
             "cancled": "Annulé le",
