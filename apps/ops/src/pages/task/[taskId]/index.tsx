@@ -189,8 +189,6 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
-            //   const taskMetadata = await getTaskFormMetadata(carrier, taskType as TtaskFormaskType, process as ProcessType, accessToken);
-
             const taskMetadata = [
                 {
                     formId: '004c97a1-d97c-4faa-9b7f-8ff9105b4c29',
@@ -201,7 +199,9 @@ export const getServerSideProps = withPageAuthRequired({
                     formSchema: {
                         $schema: 'http://json-schema.org/draft-07/schema#',
                         type: 'object',
-
+                        definitions: {
+                            caseTypeEnum: {},
+                        },
                         properties: {
                             sectionHeader: {
                                 type: 'object',
@@ -263,6 +263,10 @@ export const getServerSideProps = withPageAuthRequired({
                             potentialMatches: {
                                 type: 'string',
                                 title: 'Can you find a matching case for this document?',
+                            },
+                            caseType: {
+                                type: 'string',
+                                $ref: '#/definitions/caseTypeEnum',
                             },
                         },
                         allOf: [
@@ -598,7 +602,12 @@ export const getServerSideProps = withPageAuthRequired({
 
                 const caseTypeOptions = await getReferenceDataSSR(nigoFilters, accessToken);
                 console.log('🚀 ~ getServerSideProps: ~ caseTypeOptions:', caseTypeOptions?.referenceData.processList);
-                task.data['caseType'] = caseTypeOptions?.referenceData.processList || [];
+
+                if (taskMetadata[0].formSchema.definitions) {
+                    taskMetadata[0].formSchema.definitions.caseTypeEnum = {
+                        enum: caseTypeOptions?.referenceData.processList || ['Case Type Not Found'],
+                    };
+                }
             }
 
             return {
