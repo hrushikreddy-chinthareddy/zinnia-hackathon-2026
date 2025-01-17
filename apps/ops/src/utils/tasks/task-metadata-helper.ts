@@ -39,7 +39,7 @@ export const TaskMetadataHelper = (task: ManagementTask, tasksMetadata: any[]) =
                                 label: MatchingCaseTypes[
                                     (item.entityType as keyof typeof MatchingCaseTypes) ?? MatchingCaseTypes.NB_APPLICATION_DATA
                                 ],
-                                value: item.correlationId,
+                                value: item.zlCaseId,
                                 title: item.entityType,
                                 type: 'link',
                                 url: `/cases/${item.zlCaseId}`,
