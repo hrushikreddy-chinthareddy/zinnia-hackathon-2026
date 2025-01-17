@@ -105,7 +105,7 @@ export const getServerSideProps = withPageAuthRequired({
                 status: TaskStatus.New,
                 data: {
                     details: {
-                        amount: '10000 $',
+                        amount: '10000',
                         payerDetails: {
                             firstName: '',
                             lastName: '',

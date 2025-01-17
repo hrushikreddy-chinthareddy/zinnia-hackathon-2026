@@ -2,6 +2,7 @@ import { getUiOptions, UiSchema, WidgetProps } from '@rjsf/utils';
 import router from 'next/router';
 
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import { ReactComponent as TrashDocumentIcon } from '@deps/styles/elements/icons/actions/external-link.svg';
 
 const HyperLinkWidget = (props: WidgetProps) => {
     const { value, disabled, label, uiSchema } = props;
@@ -41,7 +42,10 @@ export const HyperLink = ({ title, label, value, type, disabled, className }: Hy
                     target="_blank"
                     disabled={disabled}
                 >
-                    {label}
+                    <div className="flex gap-2">
+                        {label}
+                        <TrashDocumentIcon width={20} height={20} />
+                    </div>
                 </NavElement>
             ) : (
                 <div className="">

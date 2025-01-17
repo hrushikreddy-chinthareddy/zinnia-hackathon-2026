@@ -11,6 +11,11 @@ export type PotentialMatches = {
     correlationId: string;
 };
 
+export enum MatchingCaseTypes {
+    NB_APPLICATION_DATA = 'Incoming Transfer',
+    RMD_APP_DATA = 'RMD Application',
+}
+
 export type TransactionData = [
     {
         recordId: string;
