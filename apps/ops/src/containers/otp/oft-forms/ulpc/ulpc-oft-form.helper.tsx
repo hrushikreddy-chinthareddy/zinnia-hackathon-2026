@@ -229,6 +229,7 @@ export default function getUlpcOftConfig(t: TFunction) {
                 },
             ],
             signatureType: SignatureValidationTypeWithdrawal.Owner,
+            partyRole: PartyRoles.OWNER,
         },
         {
             key: `sig-val-joint`,
@@ -259,6 +260,7 @@ export default function getUlpcOftConfig(t: TFunction) {
                 },
             ],
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
+            partyRole: PartyRoles.JOINT_OWNER,
             shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
                 return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
             },
