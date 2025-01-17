@@ -32,8 +32,6 @@ export function Task({ task }: { task: TaskView }) {
             `Task: ${TaskTitle[task.description]}`,
             SupportedTaskMap.includes(task.description as TaskType) ? (
                 <GlobalTaskSideSheet taskId={task.id} />
-                // <TaskSideSheet taskId={task.id} />
-
             ) : (
                 <TaskSideSheet taskId={task.id} />
             )

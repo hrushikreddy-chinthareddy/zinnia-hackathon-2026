@@ -3149,6 +3149,7 @@
                 "closed": "fermée"
             },
             "createdLabel": "Date de création",
+            "newCreatedLabel": "Créée",
             "assigneeLabel": "Cessionnaire",
             "stepLabel": "Étape",
             "issueLabel": "Problème",

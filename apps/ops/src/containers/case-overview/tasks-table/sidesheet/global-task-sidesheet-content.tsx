@@ -4,39 +4,30 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
-import Label, { LabelVariant } from '@deps/components/label/label';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { parseAndFormatDate, toSentenceCase } from '@deps/helpers/string.helper';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { getTaskInstance } from '@deps/queries/api/v2/task';
-import { ReactComponent as NotStartedIcon } from '@deps/styles/elements/icons/alert/not-started.svg';
-import { ReactComponent as CircleCheckedIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
-import { ReactComponent as CompletedIcon } from '@deps/styles/elements/icons/icons_outlined/check-circle.svg';
-import { ReactComponent as UserCircleIcon } from '@deps/styles/elements/icons/icons_outlined/user-circle.svg';
 import { DEFAULT_DATE_FORMAT, DEFAULT_DATETIME_DISPLAY_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import DocumentPreviewer from '@deps/components/document-viewer/document-previewer';
-import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icons_outlined/document-search.svg';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as BanIcon } from '@deps/styles/elements/icons/content/ban.svg';
 import { ReactComponent as ClipboardIcon } from '@deps/styles/elements/icons/content/clipboard-1.svg';
 import { ReactComponent as ClipboardListIcon } from '@deps/styles/elements/icons/content/clipboard-list.svg';
 import { ReactComponent as CirclePauseIcon } from '@deps/styles/elements/icons/circles/circle-pause.svg';
-import {ReactComponent as ChevronDownIcon} from '@deps/styles/elements/icons/arrow/chevron-down.svg';
+import { ReactComponent as ChevronDownIcon } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 
 import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helper';
-import { Task } from '@deps/components/case-sub-page/case-tabs/progress/tasks';
 import { claimTask } from '@deps/queries/api/v1/task';
 
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
-import DocumentItem from '@deps/containers/nigo-entry-container/components/side-panel/document-portal-item';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
-
 
 const TaskTypeMap: Record<string, string> = {
     ['SUITABILITY_REVIEW']: 'suitability review',
@@ -46,17 +37,6 @@ export enum TabOptions {
     Details = 'Details',
     Documents = 'Documents',
 }
-
-export enum StatusOptions {
-    NEW = 'To do',
-    NotStarted = 'Not Started',
-    InProgress = 'In progress',
-    COMPLETED = 'Completed on',
-    CANCELED = 'Canceled on',
-    IMPEDED = 'Pending until',
-}
-
-// Only the assignee can start this task
 
 export default function GlobalTaskSideSheet({ taskId }: { taskId: string }) {
     const { t } = useTranslation();
@@ -73,25 +53,28 @@ export default function GlobalTaskSideSheet({ taskId }: { taskId: string }) {
     const handleClaimTask = async () => {
         setClaimTaskLoader(true);
         if (task) {
-        try {
-            const response = await  await claimTask(task.caseId, task.id);
-            if (response.id == task.id && user?.email) {
-                setTask({
-                    ...task,
-                    assignee: user.email,
-                })
-                browserLogInfo('task-queue:handleClaimTask::Successfully claimed task', { taskId: taskId });
-            } else {
-                browserLogInfo('task-queue:handleClaimTask::An error occurred while claiming the task', { taskId: taskId, status: response?.status });
+            try {
+                const response = await claimTask(task.caseId, task.id);
+                if (response.id == task.id && user?.email) {
+                    setTask({
+                        ...task,
+                        assignee: user.email,
+                    });
+                    browserLogInfo('task-queue:handleClaimTask::Successfully claimed task', { taskId: taskId });
+                } else {
+                    browserLogInfo('task-queue:handleClaimTask::An error occurred while claiming the task', {
+                        taskId: taskId,
+                        status: response?.status,
+                    });
+                }
+            } catch (e) {
+                browserLogError('task-queue:handleClaimTask::Error claiming task', {
+                    ...parseErrorInformation(e),
+                    taskId: task.id,
+                    caseId: task.caseId,
+                });
+                return;
             }
-        } catch (e) {
-            browserLogError('task-queue:handleClaimTask::Error claiming task', {
-                ...parseErrorInformation(e),
-                taskId: task.id,
-                caseId: task.caseId,
-            });
-            return;
-        }
         }
         setClaimTaskLoader(false);
     };
@@ -103,7 +86,7 @@ export default function GlobalTaskSideSheet({ taskId }: { taskId: string }) {
             setLoading(false);
         };
         getTaskData();
-    }, []);
+    }, [taskId]);
 
     if (loading) return <PageLoader variant={PageLoaderVariant.Center} />;
 
@@ -112,12 +95,15 @@ export default function GlobalTaskSideSheet({ taskId }: { taskId: string }) {
     const { unit: createdUnit, count: createdCount } = getTimeAgoUnitValue(task.createdAt) || {};
     const formattedCreated = parseAndFormatDate(NUMERIC_DATE_FORMAT, DEFAULT_DATE_FORMAT, task.createdAt);
     const formattedUpdated = parseAndFormatDate(NUMERIC_DATE_FORMAT, DEFAULT_DATE_FORMAT, task.updatedAt);
-    let userExists = user?.email == task.assignee || task.prefferedAssignee;
+    let userExists =
+        user?.email?.toLowerCase() !== '' &&
+        (user?.email?.toLowerCase() === task.assignee?.toLowerCase() ||
+            task.prefferedAssignee?.toLowerCase() === user?.email?.toLowerCase());
 
-    let documentsList =  task.mappedDocuments || []
+    let documentsList = task.mappedDocuments || [];
     let additionalDocumentsList = task.additionalDocuments || [];
 
-    let showStartButton = (task.status === TaskStatus.New || task.status === TaskStatus.InProgress || task.status === TaskStatus.Pending)
+    let showStartButton = task.status === TaskStatus.New || task.status === TaskStatus.InProgress || task.status === TaskStatus.Pending;
 
     let badgeIcon, badgeVariant, badgeLabel;
 
@@ -149,16 +135,57 @@ export default function GlobalTaskSideSheet({ taskId }: { taskId: string }) {
             break;
     }
 
-
     const NoAssigneeComp = (
-        <div className="flex items-center gap-2 text-gray-600">
+        <div className="flex gap-2 text-gray-600">
             <span>No assignee</span>
-           { task.status === TaskStatus.New && <button className="text-blue-600 hover:text-blue-700 hover:underline focus:outline-none" onClick={handleClaimTask}>
-                Claim task
-            </button>
-         }
+            {task.status === TaskStatus.New && (
+                <button className="text-blue-600 hover:text-blue-700 hover:underline focus:outline-none" onClick={handleClaimTask}>
+                    Claim task
+                </button>
+            )}
         </div>
     );
+
+    const EmptyState = ({ content }: { content: string }) => {
+        return (
+            <div className="w-full rounded border-2 border-gray-100 bg-gray-50 p-8">
+                <AssistiveText
+                    text={content}
+                    variant={AssistiveTextVariant.Default}
+                    iconOverride={<Icon width={16} height={16} type={IconType.DOCUMENT_TEXT} />}
+                />
+            </div>
+        );
+    };
+
+    const DocumentItem = ({ document, taskCarrier, docType }: { document: any; taskCarrier: string; docType: DocumentTypeView }) => {
+        return (
+            <div className="my-3 flex w-[436px] justify-between rounded border border-gray-100 p-[12px]" key={document.documentId}>
+                <div>
+                    <Icon width={20} height={20} type={IconType.DOCUMENT_TEXT} />
+                </div>
+                <div>
+                    <div className="text-sm font-bold">
+                        <PiiWrapper>{document.documentName ?? ''}</PiiWrapper>
+                    </div>
+                    <div className="flex items-center text-sm font-normal text-gray-300">
+                        <PiiWrapper>{t('nigoEntry.documentPanel.documentId') + ': ' + document.documentId}</PiiWrapper>
+                    </div>
+                </div>
+                <div className="flex items-center">
+                    <DocumentPreviewer
+                        className="flex gap-1"
+                        activeDocType={docType}
+                        carrier={taskCarrier}
+                        documentId={document.documentId}
+                        displayName={document.documentName}
+                    >
+                        <>{t('general.view')}</>
+                    </DocumentPreviewer>
+                </div>
+            </div>
+        );
+    };
 
     const renderDetails = (
         <div className="flex flex-col w-full">
@@ -166,7 +193,7 @@ export default function GlobalTaskSideSheet({ taskId }: { taskId: string }) {
             <div className="grid grid-cols-3 gap-2 text-md">
                 <div className="col-span-1 mt-4 text-[--color-base-text-text-secondary]"> {t('sideSheet.task.status.label')} </div>
                 <div className="col-span-2">
-                    <Typography variant={TypographyVariant.BodySm} className="py-2 pr-6 px-2">
+                    <Typography variant={TypographyVariant.BodySm} className="py-2 pr-6 ">
                         <Badge
                             icon={badgeIcon}
                             variant={badgeVariant}
@@ -207,7 +234,7 @@ export default function GlobalTaskSideSheet({ taskId }: { taskId: string }) {
 
                 <div className="col-span-1 text-[--color-base-text-text-secondary]"> {t('sideSheet.task.assigneeLabel')} </div>
                 <div className="col-span-2">
-                    <Typography variant={TypographyVariant.BodySm} className="py-2 px-2">
+                    <Typography variant={TypographyVariant.BodySm}>
                         {task.assignee ? task.assignee : task.prefferedAssignee ? task.prefferedAssignee : NoAssigneeComp}
                     </Typography>
                 </div>
@@ -220,47 +247,33 @@ export default function GlobalTaskSideSheet({ taskId }: { taskId: string }) {
                         {`(${t('temporal.timeago', { formattedDate: '', count: createdCount, unit: createdUnit }).trim()})`}
                     </span>
                 </Typography>
+            </div>
+
+            {!userExists && showStartButton && (
+                <div className="bg-black text-white text-sm font-normal rounded-lg shadow-lg p-2 top-[-40px] left-1/2 transform -translate-x-1/2 whitespace-nowrap z-10  mt-6 max-w-[240px]">
+                    Only the assignee can start this task
                 </div>
+            )}
 
-                {!userExists && showStartButton && (
-                    <div className="bg-black text-white text-sm font-normal rounded-lg shadow-lg p-2 top-[-40px] left-1/2 transform -translate-x-1/2 whitespace-nowrap z-10  mt-6 max-w-[240px]">
-                        Only the assignee can start this task
-                    </div>
-                )}
-
-                {showStartButton && (
-                    <div className="flex flex-row items-center gap-1 pt-2">
-                        {userExists ? (
-                            <Link href={`/task/${task.id}`} text="Start task" variant="button" size="small"></Link>
-                        ) : (
-                            <Button
-                                disabled
-                                size="small"
-                                className="rounded-full border border-[#B3B3B3] bg-[#EDEDED] text-gray-400 cursor-not-allowed"
-                                aria-label="click me"
-                                mode="primary"
-                            >
-                                Start task
-                            </Button>
-                        )}
-                    </div>
-                )}
-
+            {showStartButton && (
+                <div className={!userExists ? 'flex flex-row items-center gap-1 pt-2' : 'flex flex-row items-center gap-1 pt-6'}>
+                    {userExists ? (
+                        <Link href={`/task/${task.id}`} text="Start task" variant="button" size="small"></Link>
+                    ) : (
+                        <Button
+                            disabled
+                            size="small"
+                            className="rounded-full border border-[#B3B3B3] bg-[#EDEDED] text-gray-400 cursor-not-allowed"
+                            aria-label="click me"
+                            mode="primary"
+                        >
+                            Start task
+                        </Button>
+                    )}
+                </div>
+            )}
         </div>
     );
-
-    const EmptyState = ({ content }: { content: string }) => {
-        return (
-          <div className="w-full rounded border-2 border-gray-100 bg-gray-50 p-8">
-            <AssistiveText
-              text={content}
-              variant={AssistiveTextVariant.Default}
-              iconOverride={<Icon width={16} height={16} type={IconType.DOCUMENT_TEXT} />}
-            />
-          </div>
-        );
-      };
-
 
     const renderDocuments = (
         <div className="flex flex-col w-full">
@@ -271,36 +284,13 @@ export default function GlobalTaskSideSheet({ taskId }: { taskId: string }) {
                 ) : (
                     documentsList.map(
                         (document, index) =>
-                            document.documentId && ( // Ensure documentId exists
-                                <div
-                                    className="my-3 flex w-[436px] justify-between rounded border border-gray-100 p-[12px]"
+                            document.documentId && (
+                                <DocumentItem
+                                    document={document}
+                                    taskCarrier={task.carrier}
                                     key={document.documentId}
-                                >
-                                    <div>
-                                        <Icon width={20} height={20} type={IconType.DOCUMENT_TEXT} />{' '}
-                                    </div>
-                                    <div>
-                                        <div className="text-sm font-bold">
-                                            <PiiWrapper>{document?.documentName ?? ''}</PiiWrapper>
-                                        </div>
-                                        <div className="flex items-center text-sm font-normal text-gray-300">
-                                            <PiiWrapper>
-                                                {t('documentId') + ': ' + document.documentId ? document.documentId : ''}
-                                            </PiiWrapper>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center">
-                                        <DocumentPreviewer
-                                            className="flex gap-1"
-                                            activeDocType={DocumentTypeView.Policy}
-                                            carrier={task.carrier}
-                                            documentId={document.documentId}
-                                            displayName={document.documentName}
-                                        >
-                                            <>{t('view')}</>
-                                        </DocumentPreviewer>
-                                    </div>
-                                </div>
+                                    docType={DocumentTypeView.Policy}
+                                />
                             )
                     )
                 )}
@@ -323,36 +313,12 @@ export default function GlobalTaskSideSheet({ taskId }: { taskId: string }) {
                         additionalDocumentsList.map(
                             (document, index) =>
                                 document.documentId && ( // Ensure documentId exists
-                                    <div
-                                    className="my-3 flex w-[436px] justify-between rounded border border-gray-100 p-[12px]"
-                                    key={document.documentId}
-                                >
-                                    <div>
-                                        <Icon width={20} height={20} type={IconType.DOCUMENT_TEXT} />{' '}
-                                    </div>
-                                    <div>
-                                        <div className="text-sm font-bold">
-                                            <PiiWrapper>{document?.documentName ?? ''}</PiiWrapper>
-                                        </div>
-                                        <div className="flex items-center text-sm font-normal text-gray-300">
-                                            <PiiWrapper>
-                                                {t('documentId') + ': ' + document.documentId ? document.documentId : ''}
-                                            </PiiWrapper>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center">
-                                        <DocumentPreviewer
-                                            className="flex gap-1"
-                                            activeDocType={DocumentTypeView.Policy}
-                                            carrier={task.carrier}
-                                            documentId={document.documentId}
-                                            displayName={document.documentName}
-                                        >
-                                            <>{t('view')}</>
-                                        </DocumentPreviewer>
-                                    </div>
-                                </div>
-
+                                    <DocumentItem
+                                        document={document}
+                                        taskCarrier={task.carrier}
+                                        key={document.documentId}
+                                        docType={DocumentTypeView.Policy}
+                                    />
                                 )
                         )
                     )
@@ -379,7 +345,7 @@ export default function GlobalTaskSideSheet({ taskId }: { taskId: string }) {
                     <TabTrigger value={TabOptions.Details}>{t('sideSheet.task.tabs.details') ?? ''}</TabTrigger>
                     <TabTrigger value={TabOptions.Documents}>{t('sideSheet.task.tabs.documents') ?? ''}</TabTrigger>
                 </TabList>
-                {!loading ? (
+                {loading ? (
                     <div className="my-5 flex flex-col items-center justify-center">
                         <Loader />
                     </div>
