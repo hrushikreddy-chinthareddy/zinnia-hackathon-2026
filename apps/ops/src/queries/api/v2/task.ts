@@ -19,7 +19,6 @@ const ssrCasesUrlV2 = `${se2ApiServerUrlV2}`;
 
 export const getCaseTaskByIdSSR = async (taskId: string, accessToken: string | undefined): Promise<ManagementTask<TaskStatus> | null> => {
     try {
-        console.log(`🚀 ~ getCaseTaskByIdSSR ~ ${ssrCasesUrlV2}/tasks/${taskId}:`, `${ssrCasesUrlV2}/tasks/${taskId}`);
         const { data } = await serverApi.get<any>(`${ssrCasesUrlV2}/tasks/${taskId}`, {
             authorization: `Bearer ${accessToken}`,
             headers: {

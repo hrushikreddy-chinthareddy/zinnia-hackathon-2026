@@ -1,12 +1,16 @@
 import Form from '@rjsf/core';
 import { useTranslation } from 'next-i18next';
-import { createRef, memo, useCallback } from 'react';
+import { createRef, memo, useCallback, useContext } from 'react';
 
 import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
+import { TaskDataContext } from '@deps/containers/task-container/task-context';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { FormMetadata } from '@deps/models/case/task';
+import { Case } from '@deps/models/case/case';
+import { FormMetadata, TaskType } from '@deps/models/case/task';
+import { getCases } from '@deps/queries/api/cases';
+import { getTransactionsByCorrelationId } from '@deps/queries/api/transactions';
 
 import { TaskForm } from './task-form';
 
@@ -22,17 +26,68 @@ const TaskFormStep = ({ readonly = false, taskInfoLink, isSubmit, taskMetadata }
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `taskManagement.taskForm` });
     const { goToNext } = useWorkflow();
     const formRef = createRef<Form>();
+    const { task, setTask } = useContext(TaskDataContext);
+    const handleStepContinue = useCallback(async () => {
+        const correlationId = task.data.potentialMatches;
 
-    const handleStepContinue = useCallback(() => {
+        const validForm = async () => {
+            if (task.taskType === TaskType.PURCHASE_DOCUMENT_MATCHING) {
+                if (correlationId === 'enterCaseId' && task.data.caseId) {
+                    try {
+                        const caseRequestBody = {
+                            caseIds: [task.data.caseId],
+                            notInCaseStatus: [],
+                            limit: 25,
+                            offset: 0,
+                            sortDirection: 'desc',
+                            sortBy: 'createdAt',
+                        };
+                        const response = await getCases(caseRequestBody);
+                        if ((response.data as Case[]).length > 0) {
+                            setTask({
+                                ...task,
+                                data: {
+                                    ...task.data,
+                                    caseId: (response.data as Case[])[0].id,
+                                },
+                            });
+                        }
+                    } catch (e) {
+                        console.log(e);
+                    }
+                }
+                if (!['enterCaseId', 'notMatched'].includes(correlationId)) {
+                    const response = await getTransactionsByCorrelationId(correlationId, {
+                        entityType: 'NB_PAYMENT_RECORD',
+                    });
+
+                    const paymentCards = response?.map((transaction: any) => {
+                        return {
+                            correlationId: transaction.correlationId,
+                            recordId: transaction.recordId,
+                        };
+                    });
+
+                    setTask({
+                        ...task,
+                        data: {
+                            ...task.data,
+                            transactions: paymentCards,
+                        },
+                    });
+                }
+            }
+        };
+
+        await validForm();
+
         const isValid = formRef.current?.validateForm();
         if (isValid) {
             formRef.current?.submit();
         }
     }, [formRef]);
 
-    const handleSubmit = useCallback(() => {
-        // todo:vijaya: payload customization
-
+    const handleSubmit = useCallback(async () => {
         goToNext();
     }, [goToNext]);
 

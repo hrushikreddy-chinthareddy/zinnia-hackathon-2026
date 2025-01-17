@@ -8,7 +8,7 @@ export const getMatchDocumentPaymentReviewSteps = ({ taskType, taskInfoLink, t, 
         return {
             ariaLabel: item.title,
             isVisible: () => true,
-            component: <TaskFormStep taskInfoLink={taskInfoLink} isSubmit={true} taskMetadata={item}></TaskFormStep>,
+            component: <TaskFormStep taskInfoLink={taskInfoLink} isSubmit={false} taskMetadata={item}></TaskFormStep>,
             text: item.title,
             index,
             isCompleted: true,

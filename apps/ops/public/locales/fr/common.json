@@ -4841,7 +4841,8 @@
             "title": "Gestion des tâches",
             "submit": "Soumettre",
             "cancel": "Annuler",
-            "confirm": "Confirmer"
+            "confirm": "Confirmer",
+            "continue": "Continue"
         }
     },
     "unauthorized": {

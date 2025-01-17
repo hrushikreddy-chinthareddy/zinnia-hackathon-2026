@@ -56,7 +56,6 @@ export function CardTemplate(props: ObjectFieldTemplateProps) {
     const subtitle = schema?.properties ? Object.keys(schema?.properties)[1] : 'subtitle';
 
     const displayProperties = schema?.properties ? Object.values(schema.properties).filter((prop: any) => !prop.__additional_property) : [];
-    schema?.properties && console.log(Object.keys(schema?.properties).length, schema?.properties);
 
     return (
         <>

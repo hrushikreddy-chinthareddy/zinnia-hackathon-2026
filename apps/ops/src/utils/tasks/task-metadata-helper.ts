@@ -7,28 +7,29 @@ export const TaskMetadataHelper = (task: ManagementTask, tasksMetadata: any[]) =
     return tasksMetadata.map((taskMetadata: FormMetadata) => {
         switch (task.taskType) {
             case TaskType.PURCHASE_DOCUMENT_MATCHING: {
-                const conditions = task.data.potentialMatches.map((item: any) => {
-                    return {
-                        if: {
-                            properties: {
-                                potentialMatches: { const: item.correlationId },
-                            },
-                        },
-                        then: {
-                            properties: {
-                                isDuplicate: {
-                                    type: 'string',
-                                    title: 'Is this document a duplicate?',
-                                    enum: ['Yes', 'No'],
-                                },
-                            },
-                        },
-                    };
-                });
+                // const conditions = task.data.potentialMatches.map((item: any) => {
+                //     return {
+                //         if: {
+                //             properties: {
+                //                 potentialMatches: { const: item.correlationId },
 
-                if (taskMetadata.formSchema) {
-                    taskMetadata.formSchema.allOf = [...(taskMetadata.formSchema.allOf || []), ...conditions];
-                }
+                //             },
+                //         },
+                //         then: {
+                //             properties: {
+                //                 isDuplicate: {
+                //                     type: 'string',
+                //                     title: 'Is this document a duplicate?',
+                //                     enum: ['Yes', 'No'],
+                //                 },
+                //             },
+                //         },
+                //     };
+                // });
+
+                // if (taskMetadata.formSchema) {
+                //     taskMetadata.formSchema.allOf = [...(taskMetadata.formSchema.allOf || []), ...conditions];
+                // }
 
                 if (taskMetadata.uiSchema) {
                     const potentialMatchesOptions =

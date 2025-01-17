@@ -4873,7 +4873,8 @@
             "title": "Task Management",
             "submit": "Continue",
             "cancel": "Cancel",
-            "confirm": "Confirm"
+            "confirm": "Confirm",
+            "continue": "Continue"
         }
     },
     "unauthorized": {
