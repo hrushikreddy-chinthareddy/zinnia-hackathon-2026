@@ -106,6 +106,7 @@ export enum FEATURE_FLAGS {
     SUITABILITY_REVIEW_SBGC = 'task-queue_feature_sbgc_suitability_review',
     SUITABILITY_DATA_ENTRY_WELB = 'task-queue_feature_welb_suitability',
     SUITABILITY_REVIEW_WELB = 'task-queue_feature_welb_suitability_review',
+    PURCHASE_DOCUMENT_MATCHING_WELB = 'task-queue_feature_welb_purchase_document_matching',
     NEW_LOAN_TRANSACTION = 'new_loan_transaction',
     CASE_ADVISORS_EXCEL_ADDITIONAL_CARRIER_SUPPORT = 'case_advisors_excel_additional_carrier_support',
 }
