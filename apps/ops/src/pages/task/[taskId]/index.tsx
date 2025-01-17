@@ -15,7 +15,7 @@ import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { UserPermission } from '@deps/models/user-profile';
 import { getCaseTaskById } from '@deps/operations/tasks/task-operations';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
-import { getCaseDetailsSSR } from '@deps/queries/api/cases';
+import { getCaseDetailsSSR, getReferenceDataSSR } from '@deps/queries/api/cases';
 import { logError, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import { TaskMetadataHelper } from '@deps/utils/tasks/task-metadata-helper';
 import nextI18nextConfig from 'next-i18next.config';
@@ -571,6 +571,15 @@ export const getServerSideProps = withPageAuthRequired({
             const nigoExceptionResponse = await getNigoExceptions(nigoFilters, accessToken);
             const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
             const taskInfoLink = buildCaseLink(caseId);
+            if (task.taskType === TaskType.PURCHASE_DOCUMENT_MATCHING) {
+                const nigoFilters = {
+                    carrier: [task.carrier],
+                    keys: ['processList'] as ('processList' | 'requestSubType' | 'productName')[],
+                };
+
+                const caseTypeOptions = await getReferenceDataSSR(nigoFilters, accessToken);
+                task.data['caseType'] = caseTypeOptions?.referenceData.processList || [];
+            }
 
             return {
                 props: {
