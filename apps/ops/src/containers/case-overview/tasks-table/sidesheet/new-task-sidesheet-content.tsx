@@ -1,5 +1,6 @@
-import { Icon, IconType, Link, Loader, TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
+import { Button, Icon, IconType, Loader, TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
@@ -9,8 +10,9 @@ import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { parseAndFormatDate, toSentenceCase } from '@deps/helpers/string.helper';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
+import { TaskSource } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
-import { getTaskInstance } from '@deps/queries/api/v2/task';
+import { getTaskInstance, updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as NotStartedIcon } from '@deps/styles/elements/icons/alert/not-started.svg';
 import { ReactComponent as CircleCheckedIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as CompletedIcon } from '@deps/styles/elements/icons/icons_outlined/check-circle.svg';
@@ -32,8 +34,9 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
     const [loading, setLoading] = useState(true);
     const [task, setTask] = useState<ManagementTask | null>(null);
     const [activeTab, setActiveTab] = useState(TabOptions.Details);
-
+    const router = useRouter();
     const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
+    const [timer] = useState(performance.now());
 
     useEffect(() => {
         const getTaskData = async () => {
@@ -43,6 +46,22 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
         };
         getTaskData();
     }, [taskId]);
+
+    const handleStart = async (taskId: string, taskStatus: TaskStatus) => {
+        if (taskStatus === TaskStatus.InProgress) {
+            router.push(`/task/${taskId}`);
+        } else {
+            const taskData = await getTaskInstance({ taskId: taskId });
+            if (taskData) {
+                const body = { ...taskData, status: TaskStatus.InProgress, source: TaskSource.ZinniaTaskManagement };
+                const response = await updateTask(taskData?.caseId, taskData.id, body, timer);
+                if (response) {
+                    router.push(`/task/${taskId}`);
+                    return;
+                }
+            }
+        }
+    };
 
     if (loading) return <PageLoader variant={PageLoaderVariant.Center} />;
 
@@ -80,7 +99,7 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
                         </div>
 
                         <Typography variant={TypographyVariant.BodySm} className="py-2 px-2">
-                            {task.assignedTo}
+                            {`${task.assigneeFirstName} ${task.assigneeLastName}`}
                         </Typography>
                     </div>
                 </div>
@@ -115,7 +134,16 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
                 </div>
                 {(task.status === TaskStatus.New || task.status === TaskStatus.InProgress) && (
                     <div className="flex flex-row items-center gap-1 pt-8">
-                        <Link href={`/task/${task.id}`} text="Start task" variant="button" size="small"></Link>
+                        <Button
+                            mode="primary"
+                            onClick={() => handleStart(task.id, task.status)}
+                            data-testid="start-task-btm"
+                            aria-label={t('ariaLabel.startTask') as string}
+                            type="submit"
+                            size="small"
+                        >
+                            Start task
+                        </Button>
                     </div>
                 )}
             </div>
