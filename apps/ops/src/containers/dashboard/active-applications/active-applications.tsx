@@ -9,6 +9,7 @@ import { ButtonSize } from '@deps/components/button/button';
 import ActiveAging from '@deps/components/dashboard/active-aging/active-aging';
 import SankeyChart from '@deps/components/dashboard/sankey-chart';
 import CaseStatBlock from '@deps/components/dashboard/stat-blocks/case-stat-block';
+import { SubmissionType } from '@deps/components/dashboard/submission-type/submission-type';
 import { TreeMapInsights } from '@deps/components/dashboard/tree-map-insights';
 import { FieldSize } from '@deps/components/fields/field';
 import PageLoader from '@deps/components/page-loader/page-loader';
@@ -198,7 +199,6 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carri
         }
     };
 
-    // set base filter
     useEffect(() => {
         const baseFilter: DashboardSearchFilter = {
             caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
@@ -384,6 +384,11 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carri
                         </div>
                     </div>
                 </div>
+            </div>
+
+            {/* Submission type chart */}
+            <div className="relative border-t-2 border-[--color-base-border-border-light]">
+                <SubmissionType selectedCarriers={selectedCarriers} selectedBrokerDealers={selectedBrokerDealers} />
             </div>
         </>
     );
