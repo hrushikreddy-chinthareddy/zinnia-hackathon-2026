@@ -214,6 +214,7 @@ export default function getGlcoRmdConfig(t: TFunction) {
                 },
             ],
             signatureType: SignatureValidationTypeWithdrawal.Owner,
+            partyRole: PartyRoles.OWNER,
         },
         {
             key: `sig-val-beneficiary`,
