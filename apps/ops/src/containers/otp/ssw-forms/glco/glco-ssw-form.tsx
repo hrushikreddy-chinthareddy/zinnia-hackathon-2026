@@ -8,7 +8,6 @@ import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disburse
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import SystematicWithdrawalProgram from '@deps/components/otp-withdrawal-form/ssw-program/ssw-program';
-import SystematicWithdrawalRider from '@deps/components/otp-withdrawal-form/ssw-program/ssw-rider';
 import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
@@ -67,7 +66,6 @@ export function GlcoSSWForm() {
             <AmountDetails isFormStateReadOnly={isFormStateReadOnly} isOnlyWithdrawalTypeControls={true} />
 
             <SystematicWithdrawalProgram isReadOnly={isFormStateReadOnly} options={systematicWithdrawalOptions} />
-            <SystematicWithdrawalRider />
             <FormDistribution
                 isDerivedMethodFromFunds={true}
                 isFormStateReadOnly={isFormStateReadOnly}

@@ -8,10 +8,7 @@ import {
 } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helper';
 import { PartyConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helper';
-import {
-    SignatureBonusFields,
-    SignatureFields,
-} from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
+import { SignatureFields } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import { getDefaultSSWFormProgramValues } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-form-program.helper';
 import { SSWProgram } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-row';
@@ -134,32 +131,6 @@ export default function getGlcoConfig(t: TFunction) {
                 },
             ],
             signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
-        },
-        {
-            key: `sig-val-spouse`,
-            bonusField: SignatureBonusFields.SpousalConsent,
-            fields: [
-                {
-                    component: SignatureFields.SignatureType,
-                    key: 'spouse-type',
-                },
-                {
-                    component: SignatureFields.SignaturePresent,
-                    key: 'spouse-present',
-                },
-                {
-                    component: SignatureFields.SignatureDate,
-                    key: 'spouse-date',
-                },
-            ],
-            shouldDisplay: ({ ownerStateOfResidence }: OtpWithdrawalFormState): boolean => {
-                return (
-                    !!ownerStateOfResidence &&
-                    formSubtype === FormSubtype.FullWithdrawal &&
-                    spousalSignatureStateCodes.includes(ownerStateOfResidence?.toUpperCase())
-                );
-            },
-            signatureType: SignatureValidationTypeWithdrawal.Spouse,
         },
     ];
 
