@@ -542,7 +542,7 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                         {wholeNumberFormatify(getL3ObjectCount(l3StatGrouping))}
                     </tspan>
                     <tspan className="font-primary text-sm font-medium"> {dashboardChartTitleFormat(l3StatGrouping.name)}</tspan>
-                    <title>{dashboardChartTitleFormat(l3StatGrouping.name, false)}</title>
+                    <title>{dashboardChartTitleFormat(l3StatGrouping.name + 'test', false)}</title>
                 </text>
             </g>
         );

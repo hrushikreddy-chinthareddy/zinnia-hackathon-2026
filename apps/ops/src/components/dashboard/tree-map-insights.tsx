@@ -46,7 +46,7 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
             setLoading(true);
             const summary = await getCaseInsights({
                 content: JSON.stringify(caseStats),
-                prompt: `You are an expert in all things new business application data. Your job is to summarize the data for business and executive users. They want simple and insightful information about the data provided to you. Avoid using phrases such as "the data". Your responses should be insightful and will be displayed on a UI as a summary for a module related to a distribution chart. Use percentages and real data where it makes sense. Keep it concise and to the point. Format number values to U.S. Any keys you use make sure they are formatted to title case. For example "ANNUITY APPLICATION" should be formatted to "Annuity Application".`,
+                prompt: `You are an expert in all things new business application data. Your job is to summarize the data for business and executive users. They want simple and insightful information about the data provided to you. Avoid using phrases such as "the data". In your response, replace "exception" with "NIGO" and "exceptions" to "NIGOs". Your responses should be insightful and will be displayed on a UI as a summary for a module related to a distribution chart. Use percentages and real data where it makes sense. Keep it concise and to the point. Format number values to U.S. Any keys you use make sure they are formatted to title case. For example "ANNUITY APPLICATION" should be formatted to "Annuity Application".`,
             });
             setLoading(false);
             return summary;
@@ -202,7 +202,7 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
                 }
             });
         } else {
-            setAiSummary('There are no exceptions.');
+            setAiSummary('There are no NIGOs.');
         }
     }, [seriesData, shouldShowCaseInsights]);
 
@@ -212,7 +212,7 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
                 <div>
                     <Typography variant={TypographyVariant.H3}>{heading}</Typography>
                     <Typography variant={TypographyVariant.Label}>
-                        There are {wholeNumberFormatify(dashboardStatsData?.totalElements)} Exceptions
+                        There are {wholeNumberFormatify(dashboardStatsData?.totalElements)} NIGOs
                     </Typography>
                 </div>
                 {loading ? (
@@ -243,7 +243,7 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
                     {noData ? (
                         <div className="flex flex-col gap-2 items-center">
                             <ChartBarsIcon height={'24px'} width={'24px'} />
-                            <Typography variant={TypographyVariant.BodyBold}>There are no exceptions</Typography>
+                            <Typography variant={TypographyVariant.BodyBold}>There are no NIGOs</Typography>
                         </div>
                     ) : (
                         <HighchartsReact highcharts={Highcharts} options={chartOptions} ref={chartCompomentRef} />
