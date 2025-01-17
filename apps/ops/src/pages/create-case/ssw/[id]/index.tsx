@@ -12,7 +12,6 @@ import WithdrawalDrawer, { SidebarContent } from '@deps/components/otp-withdrawa
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { SbgcSSWForm } from '@deps/containers/otp/ssw-forms/sbgc/sbgc-ssw-form';
 import { FormControls } from '@deps/containers/otp/withdrawal-forms/components/form-controls';
 import { FormErrors } from '@deps/containers/otp/withdrawal-forms/components/form-errors';
 import { FormProvider } from '@deps/containers/otp/withdrawal-forms/components/form-provider';
@@ -51,6 +50,8 @@ import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-an
 
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import NoteSection from '@deps/components/otp-withdrawal-form/note-section';
+import { UlpcSSWForm } from '@deps/containers/otp/ssw-forms/ulpc/ulpc-ssw-form';
+import { SbgcSSWForm } from '@deps/containers/otp/ssw-forms/sbgc/sbgc-ssw-form';
 
 interface SSWCaseProps extends SegmentTrackedPageProps {
     document: DocumentData;
@@ -84,6 +85,7 @@ const getFormComponentMap = (qualType: QualTypes | ''): Record<string, React.Rea
     [Carrier.MASS]: <MassMutualSSWForm qualType={qualType} />,
     [Carrier.NASU]: <NassauSSWForm />,
     [Carrier.FLIC]: <FlicSSWForm qualType={qualType} />,
+    [Carrier.ULPC]: <UlpcSSWForm />,
 });
 
 export default function SSWCase({ document, form, parties, transactionsHistory, featureFlagDecisions, user }: SSWCaseProps) {
