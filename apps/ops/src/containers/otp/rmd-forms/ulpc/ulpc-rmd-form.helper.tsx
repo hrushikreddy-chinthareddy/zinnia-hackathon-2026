@@ -241,6 +241,7 @@ export default function getUlpcRmdConfig(t: TFunction) {
                 },
             ],
             signatureType: SignatureValidationTypeWithdrawal.Owner,
+            partyRole: PartyRoles.OWNER,
         },
     ];
 
