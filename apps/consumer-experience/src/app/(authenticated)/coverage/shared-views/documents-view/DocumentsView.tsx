@@ -61,7 +61,7 @@ export const DocumentsView = async ({
           documentClassification: SearchRequest.documentClassification.OUTBOUND,
           parentCarrierCode: policyData?.carrierId,
           policyNumber: policyNumber,
-          recipient: 'Client',
+          recipient: 'CLIENT',
         })
       : getDocumentsV2({
           clientCode: policyData?.carrierId,

@@ -39,7 +39,7 @@ export default async function PolicyAcknowledgementDocumentPreview({
   const policyDocuments = shouldUseV3
     ? await searchDocumentsV3({
         documentType: 'POLPG',
-        recipient: 'Client',
+        recipient: 'CLIENT',
         parentCarrierCode: searchParams.clientCode,
         policyNumber: params.policyNumber,
       })

@@ -80,7 +80,7 @@ export interface DocumentV2DownloadApiRequestInputs {
 
 export interface SearchRequestV3 extends V3SearchRequestBody {
   periods?: string; // JSON string of { periodYear: string; periodQuarters: ('Q1' | 'Q2' | 'Q3' | 'Q4')[] }[];
-  recipient?: 'Client' | 'Agent';
+  recipient?: 'CLIENT' | 'AGENT';
 }
 
 // Note: These inputs are required solely to allow v3 to support v2 documents
