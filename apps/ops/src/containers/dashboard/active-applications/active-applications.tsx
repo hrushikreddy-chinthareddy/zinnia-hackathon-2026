@@ -268,7 +268,7 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carri
                 }
             >
                 <Typography className="flex items-center" variant={TypographyVariant.H2} data-testid="header-text">
-                    {'Active Transactions'}
+                    {'Open Transactions'}
                 </Typography>
                 <div className={`${styles.insightsHeaderDropdownContainer}`}>
                     <div className="w-52">
@@ -332,7 +332,7 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carri
                     <div className="mt-1">
                         {/* this is the Exception Distribution by Category tree map chart */}
                         <CardContainer fullWidth={false}>
-                            <TreeMapInsights dashboardStatsData={insightExceptionStats} heading="Exception Distribution by Category" />
+                            <TreeMapInsights dashboardStatsData={insightExceptionStats} heading="NIGO Distribution by Category" />
                         </CardContainer>
                     </div>
                     <div className="flex flex-col gap-1 mt-1">
