@@ -7,48 +7,11 @@ export const TaskMetadataHelper = (task: ManagementTask, tasksMetadata: any[]) =
     return tasksMetadata.map((taskMetadata: FormMetadata) => {
         switch (task.taskType) {
             case TaskType.PURCHASE_DOCUMENT_MATCHING: {
-                // const conditions = task.data.potentialMatches.map((item: any) => {
-                //     return {
-                //         if: {
-                //             properties: {
-                //                 potentialMatches: { const: item.correlationId },
-
-                //             },
-                //         },
-                //         then: {
-                //             properties: {
-                //                 isDuplicate: {
-                //                     type: 'string',
-                //                     title: 'Is this document a duplicate?',
-                //                     enum: ['Yes', 'No'],
-                //                 },
-                //             },
-                //         },
-                //     };
-                // });
-
-                // if (taskMetadata.formSchema) {
-                //     taskMetadata.formSchema.allOf = [...(taskMetadata.formSchema.allOf || []), ...conditions];
-                // }
-
                 if (taskMetadata.uiSchema) {
-                    const potentialMatchesOptions =
-                        task.data.potentialMatches.map((item: PotentialMatches) => {
-                            const id = uuidv4();
-                            const subElement = {
-                                label: MatchingCaseTypes[
-                                    (item.entityType as keyof typeof MatchingCaseTypes) ?? MatchingCaseTypes.NB_APPLICATION_DATA
-                                ],
-                                value: item.zlCaseId,
-                                title: item.entityType,
-                                type: 'link',
-                                url: `/cases/${item.zlCaseId}`,
-                                disabled: false,
-                            };
-                            return { label: item.entityType, value: item.correlationId, id, subElement };
-                        }) || [];
-
-                    taskMetadata.uiSchema.potentialMatches?.['ui:options'].customOptions.unshift(...potentialMatchesOptions);
+                    if (taskMetadata.uiSchema) {
+                        const potentialMatchesOptions = generatePotentialMatchesOptions(task.data.potentialMatches);
+                        taskMetadata.uiSchema.potentialMatches?.['ui:options'].customOptions.unshift(...potentialMatchesOptions);
+                    }
                 }
 
                 return taskMetadata;
@@ -57,5 +20,20 @@ export const TaskMetadataHelper = (task: ManagementTask, tasksMetadata: any[]) =
             default:
                 return taskMetadata;
         }
+    });
+};
+
+const generatePotentialMatchesOptions = (potentialMatches: PotentialMatches[]): any[] => {
+    return potentialMatches.map((item: PotentialMatches) => {
+        const id = uuidv4();
+        const subElement = {
+            label: MatchingCaseTypes[item.entityType as keyof typeof MatchingCaseTypes] ?? MatchingCaseTypes.NB_APPLICATION_DATA,
+            value: item.zlCaseId,
+            title: item.entityType,
+            type: 'link',
+            url: `/cases/${item.zlCaseId}`,
+            disabled: false,
+        };
+        return { label: item.entityType, value: item.correlationId, id, subElement };
     });
 };

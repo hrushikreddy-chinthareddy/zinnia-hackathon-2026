@@ -201,6 +201,7 @@ export const getServerSideProps = withPageAuthRequired({
                         type: 'object',
                         definitions: {
                             caseTypeEnum: {},
+                            caeSubTypeEnums: {},
                         },
                         properties: {
                             sectionHeader: {
@@ -264,10 +265,6 @@ export const getServerSideProps = withPageAuthRequired({
                                 type: 'string',
                                 title: 'Can you find a matching case for this document?',
                             },
-                            caseType: {
-                                type: 'string',
-                                $ref: '#/definitions/caseTypeEnum',
-                            },
                         },
                         allOf: [
                             {
@@ -286,25 +283,35 @@ export const getServerSideProps = withPageAuthRequired({
                                         },
                                     },
                                 },
-                            },
-                            {
-                                if: {
-                                    properties: {
-                                        potentialMatches: {
-                                            const: 'notMatched',
+                                else: {
+                                    if: {
+                                        properties: {
+                                            potentialMatches: {
+                                                const: 'notMatched',
+                                            },
                                         },
                                     },
-                                },
-                                then: {
-                                    properties: {
-                                        caseType: {
-                                            type: 'string',
-                                            title: 'Cases',
+                                    then: {
+                                        properties: {
+                                            caseType: {
+                                                type: 'string',
+                                                title: 'Cases',
+                                                $ref: '#/definitions/caseTypeEnum',
+                                            },
+                                            caseSubType: {
+                                                type: 'string',
+                                                title: 'Case',
+                                                enum: ['select', 'no'],
+                                            },
                                         },
-                                        caseSubType: {
-                                            type: 'string',
-                                            title: 'Case',
-                                            enum: ['select', 'no'], //TBD
+                                    },
+                                    else: {
+                                        properties: {
+                                            isDuplicate: {
+                                                type: 'string',
+                                                title: 'Is this document a duplicate?',
+                                                enum: ['Yes', 'No'],
+                                            },
                                         },
                                     },
                                 },
@@ -407,6 +414,13 @@ export const getServerSideProps = withPageAuthRequired({
                             'ui:widget': 'select',
                             'ui-options': {
                                 label: true,
+                            },
+                        },
+                        caseSubType: {
+                            'ui:widget': 'select',
+                            'ui-options': {
+                                label: true,
+                                $ref: '#/definitions/testingEnums',
                             },
                         },
 
