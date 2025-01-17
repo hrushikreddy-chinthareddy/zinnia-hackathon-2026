@@ -6,12 +6,11 @@ import EmployerTpaAuthorization from '@deps/components/otp-withdrawal-form/emplo
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import FormProgramPartialWithdrawal from '@deps/components/otp-withdrawal-form/form-program/form-program-partial-withdrawal';
-import LoanAcknowledgement from '@deps/components/otp-withdrawal-form/loan-acknowledgement';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helper';
-import { Carrier, ProgramType } from '@deps/models/case/withdrawal/case';
+import { Carrier } from '@deps/models/case/withdrawal/case';
 
 import getNasuOftConfig from './nasu-oft-form.helper';
 
@@ -66,7 +65,6 @@ export default function NasuOftWithdrawalForm() {
     }, [formParty, ownerStateOfResidence]);
 
     const hasTpaAuthorization = formTpaAuthorization && !Object.values(formTpaAuthorization).every(val => val === null);
-    const { selectedOption } = identifySelectedFormProgramOption(formProgram);
 
     return (
         <>
@@ -79,7 +77,6 @@ export default function NasuOftWithdrawalForm() {
                 selectionIdentifier={identifySelectedFormProgramOption}
                 selectOneOptions={selectOneOptions}
             />
-            {selectedOption === ProgramType.FullSurrender && <LoanAcknowledgement isFormStateReadOnly={isFormStateReadOnly} isLoanRepayment={true}/> }
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
             {hasTpaAuthorization && <EmployerTpaAuthorization isFormStateReadOnly={isFormStateReadOnly} />}
             <CedingCompanyDistribution
