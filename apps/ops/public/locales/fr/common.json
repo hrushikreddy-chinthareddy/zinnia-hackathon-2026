@@ -3154,7 +3154,12 @@
             "issueLabel": "Problème",
             "detailsLabel": "Détails",
             "commonTaskIssues": "Un ou plusieurs {{taskType}} problèmes trouvés.",
-            "taskDetails": "Un ou plusieurs problèmes ont été détectés lors de Zinnia {{taskType}}. Ces problèmes doivent être examinés par le transporteur et ignorés pour émettre le contrat.."
+            "taskDetails": "Un ou plusieurs problèmes ont été détectés lors de Zinnia {{taskType}}. Ces problèmes doivent être examinés par le transporteur et ignorés pour émettre le contrat..",
+            "reasonLabel": "Raison du statut",
+            "pendinglabel":"En attente jusqu'au",
+            "canceledLabel":"Annulé le",
+            "completedLabel":"Terminé le",
+            "additionalDocuments": "Documents supplémentaires"
         },
         "suitability": {
             "header": "Examen complet de l’adéquation",

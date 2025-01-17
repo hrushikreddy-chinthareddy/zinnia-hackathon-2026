@@ -3175,13 +3175,20 @@
                 "closed": "Closed"
             },
             "createdLabel": "Date Created",
+            "newCreatedLabel": "Created",
             "assigneeLabel": "Assignee",
             "stepLabel": "Step",
             "issueLabel": "Issue",
             "detailsLabel": "Details",
             "noDataAvailable": "No data available.",
             "commonTaskIssues": "One or more {{taskType}} issues found.",
-            "taskDetails": "One or more issues were found during Zinnia {{taskType}}. These issues must be reviewed by Carrier and overridden to issue the contract."
+            "taskDetails": "One or more issues were found during Zinnia {{taskType}}. These issues must be reviewed by Carrier and overridden to issue the contract.",
+            "reasonLabel": "Status reason",
+            "pendinglabel":"Pending until",
+            "canceledLabel":"Canceled on",
+            "completedLabel":"Completed on",
+            "additionalDocuments": "Additional Documents"
+
         },
         "suitability": {
             "header": "Complete Suitability Review",

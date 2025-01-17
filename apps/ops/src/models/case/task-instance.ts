@@ -13,6 +13,9 @@ export enum TaskStatus {
     'Completed' = 'COMPLETED',
     'New' = 'NEW',
     'InProgress' = 'INPROGRESS',
+    'Pending' = 'IMPEDED',
+    'Canceled' = 'CANCELED',
+
 }
 
 export type TaskInstance = {
@@ -43,6 +46,14 @@ export type ManagementTask<T = TaskStatus> = {
     updatedAt: string;
     data: any;
     documents?: TaskDocument[];
+    statusReason?: string ;
+    impededTillDate?: string;
+    prefferedAssignee?: string;
+    mappedDocuments?: TaskDocument[];
+    additionalDocuments?: TaskDocument[];
+    assignee?: string;
+    impededReason?: string;
+    cancellationReason?: string;
 };
 
 export type TaskDocument = {
