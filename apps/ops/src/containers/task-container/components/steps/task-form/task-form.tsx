@@ -1,6 +1,6 @@
 import Form, { IChangeEvent } from '@rjsf/core';
 import { GenericObjectType, RJSFSchema } from '@rjsf/utils';
-import React, { ForwardedRef, useCallback, useContext } from 'react';
+import React, { ForwardedRef, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import DynamicForm from '@deps/components/dynamic-form/dynamic-form';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
@@ -20,7 +20,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
 ) {
     const formState = useContext(TaskDataContext);
     const { task, setTask, setSubmitFailed, correlationId } = formState;
-
+    const [formSchema, setFormSchema] = useState(taskMetadata);
     const handleSubmit = useCallback(async () => {
         if (!isSubmit) {
             onSubmit();
@@ -55,15 +55,33 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             ...task,
             data: data,
         });
-        console.log('🚀 ~ event.formData:', data);
     };
+
+    useEffect(() => {
+        if (task?.data?.caseSubTypes) {
+            setFormSchema(prevSchema => ({
+                ...prevSchema,
+                formSchema: {
+                    ...prevSchema.formSchema,
+                    definitions: {
+                        ...prevSchema.formSchema.definitions,
+                        caseSubTypeEnum: {
+                            enum: task?.data?.caseSubTypes?.split(',').filter((item: string) => item.trim() !== ''),
+                        },
+                    },
+                },
+            }));
+        }
+    }, [task?.data?.caseSubTypes]);
+
+    const memoizedSchema = useMemo(() => formSchema, [formSchema]);
 
     return (
         <DynamicForm
             ref={forwardedRef}
             formData={task.data}
             setFormData={handleFormDataChange}
-            taskMetadata={taskMetadata}
+            taskMetadata={memoizedSchema}
             onChange={handleChange}
             onSubmit={handleSubmit}
             readonly={readonly}

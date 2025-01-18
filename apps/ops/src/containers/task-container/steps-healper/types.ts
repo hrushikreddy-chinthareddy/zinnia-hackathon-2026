@@ -14,6 +14,7 @@ export type GetStepsProps = {
     nigoExceptions: any;
     nigoSubExceptions: any;
     taskMetadata: FormMetadata[];
+    task?: any;
 };
 
 export interface GetSteps {

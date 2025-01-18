@@ -48,7 +48,9 @@ const ProgressBarStepsItem = ({
         'h-1.5': isActive,
     });
 
-    const contentContainerClasses = clsx('flex flex-row items-center justify-center sm:focus-visible:outline sm:focus-visible:outline-2 sm:focus-visible:outline-offset-4 sm:focus-visible:outline-semantic-focus sm:focus-visible:rounded');
+    const contentContainerClasses = clsx(
+        'flex flex-row items-center justify-center sm:focus-visible:outline sm:focus-visible:outline-2 sm:focus-visible:outline-offset-4 sm:focus-visible:outline-semantic-focus sm:focus-visible:rounded'
+    );
 
     const contentClasses = clsx('text-center', {
         'text-gray-600': isDisabled,

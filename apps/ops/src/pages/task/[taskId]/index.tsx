@@ -112,6 +112,7 @@ export const getServerSideProps = withPageAuthRequired({
                             payorName: 'New Finance Group',
                             taxId: 'ssn123456',
                             type: 'payment',
+                            roles: 'Annuitant, Insured',
                         },
                         purchaseDocument: [
                             {
@@ -229,6 +230,10 @@ export const getServerSideProps = withPageAuthRequired({
                                                 type: 'string',
                                                 title: 'SSN',
                                             },
+                                            roles: {
+                                                type: 'string',
+                                                title: 'Role(s)',
+                                            },
                                         },
                                         additionalProperties: true,
                                     },
@@ -300,7 +305,7 @@ export const getServerSideProps = withPageAuthRequired({
                                             },
                                             caseSubType: {
                                                 type: 'string',
-                                                title: 'Case',
+                                                title: 'Case Types',
                                                 $ref: '#/definitions/caseSubTypeEnum',
                                             },
                                         },
@@ -357,6 +362,7 @@ export const getServerSideProps = withPageAuthRequired({
                                     icon: 'CIRCLE_USER',
                                     label: true,
                                     ObjectFieldTemplate: 'CardTemplate',
+                                    sectionTitle: 'Details',
                                 },
                             },
                             purchaseDocument: {
@@ -556,6 +562,7 @@ export const getServerSideProps = withPageAuthRequired({
                                     icon: 'CIRCLE_USER',
                                     label: true,
                                     ObjectFieldTemplate: 'CardTemplate',
+                                    sectionTitle: 'Details',
                                 },
                             },
                             purchaseDocument: {

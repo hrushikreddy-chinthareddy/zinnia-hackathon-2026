@@ -17,7 +17,7 @@ import { client } from '@deps/queries/api-utils/client';
 
 const baseUrl = baseAppUrl + '/api/';
 
-function replacePlaceholders(template: any, data: Record<string, any>): any {
+const replacePlaceholders = (template: any, data: Record<string, any>): any => {
     if (typeof template === 'string') {
         return template.replace(/{{(.*?)}}/g, (match, p1) => {
             const keys = p1.split('.');
@@ -36,7 +36,7 @@ function replacePlaceholders(template: any, data: Record<string, any>): any {
     } else {
         return template;
     }
-}
+};
 function getValue(
     isSelected: boolean,
     value: string,
@@ -65,6 +65,7 @@ function getValue(
 function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
     schema,
     id,
+    name,
     options,
     value,
     required,
@@ -97,19 +98,20 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     const _onChangeSingle = async (value: string) => {
         const newValue = getValue(false, value, enumOptions, selectedIndexes, multiple);
 
-        await fetchDetails(apiProps.apiUrl, value);
-        onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
+        if (!apiProps.apiUrl) return onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
+        await fetchDetails(apiProps.apiUrl, value, newValue);
     };
 
-    async function fetchDetails(apiUrl: string, value: string) {
+    async function fetchDetails(apiUrl: string, value: string, newValue?: any) {
         const payload = replacePlaceholders(apiProps.apiPayload, { ...formData, value });
 
         const response = await client[apiProps?.apiMethod ?? 'get']<any, AxiosResponse<any>>(`${baseUrl}${apiUrl}`, payload ?? undefined);
 
         const data1 = replacePlaceholders(apiProps.responseData, response);
-        console.log('🚀 ~ fetchDetails ~ data1:', data1);
+
         const data = {
             ...formData,
+            [name]: enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal),
             [apiProps?.responseKey]: data1,
         };
 

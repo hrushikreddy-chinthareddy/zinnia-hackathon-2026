@@ -37,6 +37,7 @@ const TaskContainer = ({ taskInfoLink, nigoExceptions, nigoSubExceptions, taskMe
         nigoExceptions,
         nigoSubExceptions,
         taskMetadata,
+        task,
     });
 
     return (

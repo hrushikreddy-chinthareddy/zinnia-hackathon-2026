@@ -41,10 +41,7 @@ export const TaskWorkflowContent = ({ steps, caseId, carrierId }: TaskPageProps)
     };
 
     const filteredSteps: Step[] = useMemo(
-        () =>
-            steps
-                .filter((item: any, index: number) => item.isVisible?.(task, index))
-                .map((item: any, index: number) => ({ ...item, index })),
+        () => steps.filter((item: any) => item.isVisible?.()).map((item: any, index: number) => ({ ...item, index })),
         [steps]
     );
 
