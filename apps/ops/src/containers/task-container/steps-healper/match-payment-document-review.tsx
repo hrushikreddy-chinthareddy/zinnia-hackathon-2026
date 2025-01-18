@@ -10,7 +10,7 @@ export const getMatchDocumentPaymentReviewSteps = ({ taskType, taskInfoLink, t, 
             isVisible: (task: any, index: number) => {
                 return !(task.data.potentialMatches === 'notMatched' && index > 0);
             }, // should be false for Reindexing case
-            component: <TaskFormStep taskInfoLink={taskInfoLink} isSubmit={false} taskMetadata={item}></TaskFormStep>,
+            component: <TaskFormStep taskInfoLink={taskInfoLink} isSubmit={true} taskMetadata={item}></TaskFormStep>,
             text: item.title,
             index,
             isCompleted: true,

@@ -201,7 +201,7 @@ export const getServerSideProps = withPageAuthRequired({
                         type: 'object',
                         definitions: {
                             caseTypeEnum: {},
-                            caeSubTypeEnums: {},
+                            caseSubTypeEnum: {},
                         },
                         properties: {
                             sectionHeader: {
@@ -301,7 +301,7 @@ export const getServerSideProps = withPageAuthRequired({
                                             caseSubType: {
                                                 type: 'string',
                                                 title: 'Case',
-                                                enum: ['select', 'no'],
+                                                $ref: '#/definitions/caseSubTypeEnum',
                                             },
                                         },
                                     },
@@ -411,16 +411,26 @@ export const getServerSideProps = withPageAuthRequired({
                             },
                         },
                         caseType: {
-                            'ui:widget': 'select',
+                            'ui:widget': 'SelectWidget',
                             'ui-options': {
                                 label: true,
                             },
+                            'ui:props': {
+                                apiUrl: 'case/v1/refdata',
+                                apiPayload: {
+                                    carrier: ['WELB'],
+                                    keys: ['requestSubType'],
+                                    process: ['{{value}}'],
+                                },
+                                apiMethod: 'post',
+                                responseKey: 'caseSubTypes',
+                                responseData: '{{data.referenceData.requestSubType}}',
+                            },
                         },
                         caseSubType: {
-                            'ui:widget': 'select',
+                            'ui:widget': 'SelectWidget',
                             'ui-options': {
                                 label: true,
-                                $ref: '#/definitions/testingEnums',
                             },
                         },
 
@@ -609,12 +619,12 @@ export const getServerSideProps = withPageAuthRequired({
             const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
             const taskInfoLink = buildCaseLink(caseId);
             if (task.taskType === TaskType.PURCHASE_DOCUMENT_MATCHING) {
-                const nigoFilters = {
+                const filters = {
                     carrier: [task.carrier],
                     keys: ['processList'] as ('processList' | 'requestSubType' | 'productName')[],
                 };
 
-                const caseTypeOptions = await getReferenceDataSSR(nigoFilters, accessToken);
+                const caseTypeOptions = await getReferenceDataSSR(filters, accessToken);
                 console.log('🚀 ~ getServerSideProps: ~ caseTypeOptions:', caseTypeOptions?.referenceData.processList);
 
                 if (taskMetadata[0].formSchema.definitions) {

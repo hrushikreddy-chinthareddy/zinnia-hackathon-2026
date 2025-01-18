@@ -4,7 +4,6 @@ import React, { ForwardedRef, useCallback, useContext } from 'react';
 
 import DynamicForm from '@deps/components/dynamic-form/dynamic-form';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
-import { updateTask } from '@deps/containers/task-container/task.healpers';
 import { FormMetadata } from '@deps/models/case/task';
 import { buildTaskPayload } from '@deps/utils/tasks/task-payload-helper';
 
@@ -23,14 +22,19 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     const { task, setTask, setSubmitFailed, correlationId } = formState;
 
     const handleSubmit = useCallback(async () => {
-        if (isSubmit) {
-            //todo:vijaya: payload customization
-
-            const taskPayload = buildTaskPayload(task);
-
-            const success = await updateTask(taskPayload, correlationId);
-            setSubmitFailed(!success);
+        if (!isSubmit) {
+            onSubmit();
+            return;
         }
+
+        //todo:vijaya: payload customization
+
+        const taskPayload = buildTaskPayload(task);
+        console.log('🚀 ~ handleSubmit ~ taskPayload:Submitted', taskPayload);
+
+        // const success = await updateTask(taskPayload, correlationId);
+        // setSubmitFailed(!success);
+
         onSubmit();
     }, [correlationId, isSubmit, onSubmit, setSubmitFailed, task]);
 
@@ -51,6 +55,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             ...task,
             data: data,
         });
+        console.log('🚀 ~ event.formData:', data);
     };
 
     return (

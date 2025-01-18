@@ -43,12 +43,14 @@ const TaskFormStep = ({ readonly = false, taskInfoLink, isSubmit, taskMetadata }
                             sortBy: 'createdAt',
                         };
                         const response = await getCases(caseRequestBody);
-                        if ((response.data as Case[]).length > 0) {
+                        const cases = response.data as Case[];
+
+                        if (cases.length > 0) {
                             setTask({
                                 ...task,
                                 data: {
                                     ...task.data,
-                                    caseId: (response.data as Case[])[0].id,
+                                    caseId: cases[0].id,
                                 },
                             });
                         }
@@ -57,24 +59,29 @@ const TaskFormStep = ({ readonly = false, taskInfoLink, isSubmit, taskMetadata }
                     }
                 }
                 if (!['enterCaseId', 'notMatched'].includes(correlationId)) {
-                    const response = await getTransactionsByCorrelationId(correlationId, {
-                        entityType: 'NB_PAYMENT_RECORD',
-                    });
+                    try {
+                        const response = await getTransactionsByCorrelationId(correlationId, {
+                            entityType: 'NB_PAYMENT_RECORD',
+                        });
 
-                    const paymentCards = response?.map((transaction: any) => {
-                        return {
+                        const paymentCards = response?.map((transaction: any) => ({
                             correlationId: transaction.correlationId,
                             recordId: transaction.recordId,
-                        };
-                    });
+                        }));
 
-                    setTask({
-                        ...task,
-                        data: {
-                            ...task.data,
-                            transactions: paymentCards,
-                        },
-                    });
+                        await new Promise<void>(resolve => {
+                            setTask({
+                                ...task,
+                                data: {
+                                    ...task.data,
+                                    transactions: paymentCards,
+                                },
+                            });
+                            resolve();
+                        });
+                    } catch (e) {
+                        console.log(e);
+                    }
                 }
             }
         };
