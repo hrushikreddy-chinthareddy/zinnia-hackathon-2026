@@ -451,6 +451,7 @@ export const getServerSideProps = withPageAuthRequired({
                     carrier: 'WELB',
                     taskType: 'PURCHASE_DOCUMENT_MATCHING',
                     title: 'Match Payment',
+
                     formSchema: {
                         $schema: 'http://json-schema.org/draft-07/schema#',
                         type: 'object',
@@ -508,20 +509,8 @@ export const getServerSideProps = withPageAuthRequired({
                                 },
                             },
                             transactions: {
-                                type: 'array',
+                                type: 'string',
                                 title: 'Select exchange record',
-                                items: {
-                                    type: 'object',
-                                    title: '',
-                                    properties: {
-                                        correlationId: {
-                                            type: 'string',
-                                        },
-                                        recordId: {
-                                            type: 'string',
-                                        },
-                                    },
-                                },
                             },
                         },
                     },
@@ -589,27 +578,19 @@ export const getServerSideProps = withPageAuthRequired({
                             },
                         },
                         transactions: {
-                            props: {
-                                type: 'Document',
-                                canAdd: false,
-                            },
-                            items: {
-                                props: {
-                                    readonly: true,
-                                },
-                                'ui:options': {
-                                    canAdd: false,
-                                    label: true,
-                                    cardType: 'Document',
-                                    icon: 'DOCUMENT_TEXT',
-                                    ObjectFieldTemplate: 'CardTemplate',
-                                },
-                            },
+                            'ui:widget': 'radio',
                             'ui:options': {
                                 label: false,
-                                cardType: 'Detailed',
-                                icon: 'OFFICEBUILDING',
-                                ObjectFieldTemplate: 'CardTemplate',
+                                customOptions: [
+                                    {
+                                        label: 'Enter a case ID',
+                                        value: 'enterCaseId',
+                                    },
+                                    {
+                                        label: 'Document cannot be matched to a case',
+                                        value: 'notMatched',
+                                    },
+                                ],
                             },
                         },
                     },

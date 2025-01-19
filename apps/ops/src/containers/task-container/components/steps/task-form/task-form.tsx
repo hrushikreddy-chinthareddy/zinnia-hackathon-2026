@@ -24,7 +24,6 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     const formState = useContext(TaskDataContext);
     const { task, setTask, setSubmitFailed, correlationId } = formState;
     const [formSchema, setFormSchema] = useState(taskMetadata);
-
     const fetchData = async () => {
         const correlationId = task.data.potentialMatches;
         if (task.taskType === TaskType.PURCHASE_DOCUMENT_MATCHING) {
@@ -61,8 +60,8 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                     });
 
                     const paymentCards = response?.map((transaction: any) => ({
-                        correlationId: transaction.correlationId,
-                        recordId: transaction.recordId,
+                        label: transaction.correlationId,
+                        value: transaction.recordId,
                     }));
 
                     setTask(previousTask => {
@@ -134,6 +133,24 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             }));
         }
     }, [task?.data?.caseSubTypes]);
+
+    useEffect(() => {
+        if (task?.data?.transactions) {
+            setFormSchema(prevSchema => ({
+                ...prevSchema,
+                uiSchema: {
+                    ...prevSchema.uiSchema,
+                    transactions: {
+                        'ui:widget': 'radio',
+                        'ui:options': {
+                            label: false,
+                            customOptions: task?.data?.transactions,
+                        },
+                    },
+                },
+            }));
+        }
+    }, [task?.data?.transactions]);
 
     const memoizedSchema = useMemo(() => formSchema, [formSchema]);
 
