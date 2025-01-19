@@ -4,7 +4,10 @@ import React, { ForwardedRef, useCallback, useContext, useEffect, useMemo, useSt
 
 import DynamicForm from '@deps/components/dynamic-form/dynamic-form';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
-import { FormMetadata } from '@deps/models/case/task';
+import { Case } from '@deps/models/case/case';
+import { FormMetadata, TaskType } from '@deps/models/case/task';
+import { getCases } from '@deps/queries/api/cases';
+import { getTransactionsByCorrelationId } from '@deps/queries/api/transactions';
 import { buildTaskPayload } from '@deps/utils/tasks/task-payload-helper';
 
 type TaskFormProps = {
@@ -21,8 +24,66 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     const formState = useContext(TaskDataContext);
     const { task, setTask, setSubmitFailed, correlationId } = formState;
     const [formSchema, setFormSchema] = useState(taskMetadata);
+
+    const fetchData = async () => {
+        const correlationId = task.data.potentialMatches;
+        if (task.taskType === TaskType.PURCHASE_DOCUMENT_MATCHING) {
+            if (correlationId === 'enterCaseId' && task.data.caseId) {
+                try {
+                    const caseRequestBody = {
+                        caseIds: [task.data.caseId],
+                        notInCaseStatus: [],
+                        limit: 25,
+                        offset: 0,
+                        sortDirection: 'desc',
+                        sortBy: 'createdAt',
+                    };
+                    const response = await getCases(caseRequestBody);
+                    const cases = response.data as Case[];
+
+                    if (cases.length > 0) {
+                        setTask({
+                            ...task,
+                            data: {
+                                ...task.data,
+                                caseId: cases[0].id,
+                            },
+                        });
+                    }
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+            if (!['enterCaseId', 'notMatched'].includes(correlationId)) {
+                try {
+                    const response = await getTransactionsByCorrelationId(correlationId, {
+                        entityType: 'NB_PAYMENT_RECORD',
+                    });
+
+                    const paymentCards = response?.map((transaction: any) => ({
+                        correlationId: transaction.correlationId,
+                        recordId: transaction.recordId,
+                    }));
+
+                    setTask(previousTask => {
+                        return {
+                            ...previousTask,
+                            data: {
+                                ...previousTask.data,
+                                transactions: paymentCards,
+                            },
+                        };
+                    });
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+        }
+    };
+
     const handleSubmit = useCallback(async () => {
         if (!isSubmit) {
+            await fetchData();
             onSubmit();
             return;
         }
