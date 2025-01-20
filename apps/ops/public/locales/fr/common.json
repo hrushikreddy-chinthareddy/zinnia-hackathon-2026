@@ -1654,6 +1654,13 @@
                         "spouse": "Conjoint",
                         "na": "N/A"
                     }
+                },
+                "payout": {
+                    "title": "Paiement",
+                    "payoutOptions": {
+                        "level": "Niveau",
+                        "increasing": "Croissant"
+                    }
                 }
             },
             "rmdMethod": {

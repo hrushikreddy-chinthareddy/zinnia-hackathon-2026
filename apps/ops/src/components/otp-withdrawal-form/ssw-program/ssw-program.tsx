@@ -19,6 +19,7 @@ type SystematicWithdrawalProgramProps = {
     title?: string;
     options: SSWProgramOptions[];
     isReadOnly?: boolean;
+    planCode?: string;
     onSswProgramFrequencyChange?: (val: Frequency) => void;
 };
 
@@ -26,7 +27,13 @@ export interface SSWProgramOptions extends Omit<RadioItem, 'subelement'> {
     generateSSWPayloadFromSelection: (sswData: SSWProgram) => SSWFormProgramFields; // Defines what the formProgram "editable fields" should look like when the option is selected.  There is significant variance between carriers and selections on what parts of formProgram should change.
 }
 
-const SystematicWithdrawalProgram = ({ options, title, isReadOnly, onSswProgramFrequencyChange }: SystematicWithdrawalProgramProps) => {
+const SystematicWithdrawalProgram = ({
+    options,
+    title,
+    isReadOnly,
+    onSswProgramFrequencyChange,
+    planCode,
+}: SystematicWithdrawalProgramProps) => {
     const { formErrors, formProgram, setFormProgram } = useContext(FormDataContext);
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.sswProgram' });
     const today = dayjs().format(ZAHARA_API_DATE_FORMAT);
@@ -69,7 +76,7 @@ const SystematicWithdrawalProgram = ({ options, title, isReadOnly, onSswProgramF
             </div>
 
             {sswData.programSubType.text === SSWType.JointLifetimeIncomeOption && (
-                <JointCoveredPersonDetails isReadOnly={isReadOnly || false} />
+                <JointCoveredPersonDetails isReadOnly={isReadOnly || false} planCode={planCode} />
             )}
 
             {formErrors && (

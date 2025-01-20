@@ -33,7 +33,7 @@ import { ActiveWithdrawalCase, Carrier, QualTypes, Transaction, TransactionStatu
 import { UserPermission } from '@deps/models/user-profile';
 import { initializeOTPTaskSSR } from '@deps/operations/tasks/v2/initialize';
 import { getDocumentSSR } from '@deps/queries/api/documents';
-import { getPolicyPartiesSSR } from '@deps/queries/api/policies';
+import { getPolicyPartiesSSR, searchPolicySSR } from '@deps/queries/api/policies';
 import { SCREEN_BREAKPOINTS } from '@deps/types/constants';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
@@ -51,6 +51,7 @@ import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-an
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import NoteSection from '@deps/components/otp-withdrawal-form/note-section';
 import { GlcoSSWForm } from '@deps/containers/otp/ssw-forms/glco/glco-ssw-form';
+import { SbgcSSWForm } from '@deps/containers/otp/ssw-forms/sbgc/sbgc-ssw-form';
 
 interface SSWCaseProps extends SegmentTrackedPageProps {
     document: DocumentData;
@@ -61,6 +62,7 @@ interface SSWCaseProps extends SegmentTrackedPageProps {
     parties: LifeCadParty[];
     // TODO MG: put this in an interface for FeatureFlags that each page needing it can just extend
     featureFlagDecisions: FeatureFlags;
+    planCode: string;
 }
 
 // Return the first 5 transactions that are either done or pending
@@ -79,17 +81,16 @@ const DefaultSidebarContent = {
     transactions: [],
 };
 
-const getFormComponentMap = (qualType: QualTypes | ''): Record<string, React.ReactNode> => ({
-    [Carrier.SBGC]: <GlcoSSWForm />,
-    [Carrier.GLCO]: <GlcoSSWForm />,
+const getFormComponentMap = (qualType: QualTypes | '', planCode?: string): Record<string, React.ReactNode> => ({
+    [Carrier.SBGC]: <SbgcSSWForm />,
+    [Carrier.GLCO]: <GlcoSSWForm planCode={planCode} />,
     [Carrier.MASS]: <MassMutualSSWForm qualType={qualType} />,
     [Carrier.NASU]: <NassauSSWForm />,
     [Carrier.FLIC]: <FlicSSWForm qualType={qualType} />,
 });
 
-export default function SSWCase({ document, form, parties, transactionsHistory, featureFlagDecisions, user }: SSWCaseProps) {
+export default function SSWCase({ document, form, parties, transactionsHistory, featureFlagDecisions, user, planCode }: SSWCaseProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseSSW.request' });
-
     // TODO: Need to map this from common portion whenever we will restructure i18 files
     const { t: withdrawalTx } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const router = useRouter();
@@ -111,7 +112,7 @@ export default function SSWCase({ document, form, parties, transactionsHistory, 
     const [taskApiError, setTaskApiError] = useState('');
     const [loading, setLoading] = useState(false);
     const initialForm = form;
-    const formParts = determineFormToRender(clientForFormDetermination as string, getFormComponentMap(qualType));
+    const formParts = determineFormToRender(clientForFormDetermination as string, getFormComponentMap(qualType, planCode));
 
     if (!formParts) {
         console.error('SSWCase::No form parts', {
@@ -295,6 +296,22 @@ export const getServerSideProps = withPageAuthRequired({
         } else {
             logInfo('create-case/ssw/:id:Skipping NIGO check', { taskId, action, documentNumber, id, clientId });
         }
+
+        const policyNumber = document?.contract ?? '';
+        const response = await searchPolicySSR(policyNumber, [clientId.toUpperCase() as Carrier], accessToken, 1, 0);
+        const planCode = response ? response[0]?.planCode : null;
+        if (!planCode) {
+            logInfo('address-change::Plan code not found', { documentNumber, policyNumber, clientId });
+            return {
+                redirect: {
+                    destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
+                    permanent: false,
+                },
+            };
+        } else {
+            logInfo('address-change::Plan code found', { documentNumber, policyNumber, clientId, planCode });
+        }
+
         const form = await initializeOTPTaskSSR({
             accessToken,
             caseId: id,
@@ -333,6 +350,7 @@ export const getServerSideProps = withPageAuthRequired({
                 parties: Array.isArray(parties) ? parties : [],
                 featureFlagDecisions,
                 user,
+                planCode,
             },
         };
     },

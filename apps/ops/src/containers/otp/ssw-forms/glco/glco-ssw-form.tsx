@@ -18,9 +18,12 @@ import { isAllowedState } from '@deps/utils/renderStateW4';
 import SswEditSelection from '../ssw-edit-selection';
 import getGlcoConfig from './glco-ssw-form-helper';
 
-export function GlcoSSWForm() {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+interface GlcoSSWFormProps {
+    planCode?: string;
+}
 
+export function GlcoSSWForm({ planCode }: GlcoSSWFormProps) {
+    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const {
         formValidation,
         signaturesConfig,
@@ -62,10 +65,9 @@ export function GlcoSSWForm() {
             {!isFormStateReadOnly && <DiaryNotesWarning />}
             <SswEditSelection />
             <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
-            {/* <DistributionReason isFormStateReadOnly={isFormStateReadOnly} reasonOptions={reasonOptions} /> */}
             <AmountDetails isFormStateReadOnly={isFormStateReadOnly} isOnlyWithdrawalTypeControls={true} />
 
-            <SystematicWithdrawalProgram isReadOnly={isFormStateReadOnly} options={systematicWithdrawalOptions} />
+            <SystematicWithdrawalProgram isReadOnly={isFormStateReadOnly} options={systematicWithdrawalOptions} planCode={planCode} />
             <FormDistribution
                 isDerivedMethodFromFunds={true}
                 isFormStateReadOnly={isFormStateReadOnly}
