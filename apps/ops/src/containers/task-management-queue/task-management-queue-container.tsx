@@ -1,4 +1,4 @@
-import { AssistiveText, AssistiveTextVariant, Popover } from '@zinnia/bloom/components';
+import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
@@ -67,23 +67,19 @@ const TaskManagementQueue = ({ featureFlagDecisions }: TaskManagementQueueProps)
             <div className="flex flex-col mb-4">
                 <div className="my-3 flex justify-end">
                     <div className="self-center xl:mt-5 xl:self-baseline">
-                    {/* <Popover
-                            //  placement="bottomRight"
-                            title={"popover title"}
-                            trigger={undefined}
-                        > */}
+
                         <Button
                             type={ButtonType.Primary}
                             onClick={handleClaimTask}
                             data-testid="claim-task"
                             aria-label={t('claimTask') as string}
                             size={ButtonSize.Small}
-                            // disabled={taskDetails.length > 0}
-                            variant={ ButtonVariant.Default}
+                            disabled={taskDetails.length > 0}
+                            variant={ButtonVariant.Default}
                         >
                             {t('claimTask')}
                         </Button>
-                    {/* </Popover> */}
+
                     </div>
                 </div>
 
