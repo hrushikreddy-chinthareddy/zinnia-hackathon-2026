@@ -3,6 +3,7 @@ import FlicOftWithdrawalForm from '@deps/containers/otp/oft-forms/flic/flic-oft-
 import MassOftWithdrawalForm from '@deps/containers/otp/oft-forms/mass/mass-oft-form';
 import RSLNOftWithdrawalForm from '@deps/containers/otp/oft-forms/rsln/rsln-oft-form';
 import SbgcOftWithdrawalForm from '@deps/containers/otp/oft-forms/sbgc/sbgc-oft-form';
+import UssaOftWithdrawalForm from '@deps/containers/otp/oft-forms/ussa/ussa-oft-form';
 import FlicRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/flic-rmd-form';
 import MassMutualRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/mm-rmd-form';
 import SbgcRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/sbgc-rmd-form';
@@ -49,6 +50,7 @@ export const getOFTFormComponentMap = (planCode: string | '', qualType: QualType
     [Carrier.SBGC]: <SbgcOftWithdrawalForm planCode={planCode} />,
     [Carrier.DLIC]: <OftDlicForm qualType={qualType} />,
     [Carrier.RSLN]: <RSLNOftWithdrawalForm qualType={qualType} />,
+    [Carrier.USSA]: <UssaOftWithdrawalForm />,
 });
 
 export const getRMDFormComponentMap = (qualType: QualTypes | ''): Record<string, React.ReactNode> => ({
