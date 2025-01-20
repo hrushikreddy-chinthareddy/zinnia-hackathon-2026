@@ -38,6 +38,7 @@ import {
     FormDisbursement,
     ProgramSubType,
     LifeCadPartyRoles,
+    AddressTypes,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -305,6 +306,16 @@ export default function getUlpcConfig(t: TFunction) {
                 {
                     fieldName: PartyFields.TaxId,
                     fieldLabel: t('personalDetails.ssn'),
+                },
+            ],
+            addressFields: [
+                {
+                    addressType: AddressTypes.DEFAULT,
+                    title: t('addressDetails.residentialAddressTitle'),
+                },
+                {
+                    addressType: AddressTypes.MAILING_ADDRESS,
+                    title: t('addressDetails.mailingAddressTitle'),
                 },
             ],
         },
