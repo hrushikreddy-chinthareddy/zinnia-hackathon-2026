@@ -42,7 +42,6 @@ export default function FormProgramProcessDate({ options, isFormStateReadOnly }:
                 onChange={event => setSelected(event.target.value as ProcessRequestType)}
                 value={selected}
                 variant={isFormStateReadOnly ? RadioVariant.Inactive : RadioVariant.Default}
-                disabled={isFormStateReadOnly}
             />
         </div>
     );

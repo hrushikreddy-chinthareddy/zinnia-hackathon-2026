@@ -16,7 +16,7 @@ import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-not
 import { USStates } from '@deps/constants/geography/us-states';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helper';
-import { Carrier } from '@deps/models/case/withdrawal/case';
+import { Carrier, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import getUlpcConfig, { FormSubtype } from './ulpc-withdrawal-form.helper';
@@ -105,6 +105,8 @@ export default function UlpcWithdrawalForm() {
                 isFormStateReadOnly={isFormStateReadOnly}
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
                 title={t('distributionInstruction.investmentSelectionForDistribution') as string}
+                isDerivedMethodFromFunds={true}
+                defaultMethod={FundWithdrawnMethod.Default}
             />
             <TaxWithholdings
                 isFormStateReadOnly={isFormStateReadOnly}
