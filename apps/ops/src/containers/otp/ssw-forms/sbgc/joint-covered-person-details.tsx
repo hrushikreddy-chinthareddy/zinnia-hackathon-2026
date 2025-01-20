@@ -6,16 +6,22 @@ import AddressEntry from '@deps/components/otp-withdrawal-form/address-entry';
 import { SingleParty } from '@deps/components/otp-withdrawal-form/form-party/party-helper';
 import SelectSimple from '@deps/components/select/select';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { Address, PartyRoles } from '@deps/models/case/withdrawal/case';
+import { Address, PartyRoles, PayoutOptions } from '@deps/models/case/withdrawal/case';
 
-import { DEFAULT_JOINT_PERSON_DATA, relationshipToCoveredPerson, RelationshipToCoveredPerson } from './joint-covered-person.helper';
+import {
+    DEFAULT_JOINT_PERSON_DATA,
+    payoutOptions,
+    relationshipToCoveredPerson,
+    RelationshipToCoveredPerson,
+} from './joint-covered-person.helper';
 import useSbgcConfig from './sbgc-ssw-form-helper';
 
 type JointCoveredPersonDetailsProps = {
     isReadOnly: boolean;
+    planCode?: string;
 };
 
-const JointCoveredPersonDetails = ({ isReadOnly }: JointCoveredPersonDetailsProps) => {
+const JointCoveredPersonDetails = ({ isReadOnly, planCode }: JointCoveredPersonDetailsProps) => {
     const { formParty, setFormParty } = useContext(FormDataContext);
     const party = formParty?.parties?.find(item => item.partyRoleType === PartyRoles.JOINTCOVEREDPERSON);
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
@@ -23,6 +29,8 @@ const JointCoveredPersonDetails = ({ isReadOnly }: JointCoveredPersonDetailsProp
     const [relationToCoveredPerson, setRelationToCoveredPerson] = useState(
         party?.relationshipToOwnerAnnutant || RelationshipToCoveredPerson.NA
     );
+
+    const [payoutOption, setPayoutOption] = useState(PayoutOptions.level);
 
     const { coveredPartyConfigs } = useSbgcConfig(t);
 
@@ -47,6 +55,7 @@ const JointCoveredPersonDetails = ({ isReadOnly }: JointCoveredPersonDetailsProp
     const handleAddressUpdate = (addr: Address) => {
         setPartyInfo(party => ({ ...party, addresses: [addr] as Address | any }));
     };
+
     return (
         <>
             <div className="my-3">
@@ -60,7 +69,7 @@ const JointCoveredPersonDetails = ({ isReadOnly }: JointCoveredPersonDetailsProp
                 onDataChange={val => setPartyInfo(val)}
             />
             <div className="my-6 mt-3 border-b-2 border-gray-100"></div>
-            <div className="my-4 grid w-full grid-cols-3 gap-4">
+            <div className="my-4 grid grid-cols-3 gap-2">
                 <SelectSimple
                     disabled={isReadOnly}
                     className="max-w-lg"
@@ -74,6 +83,21 @@ const JointCoveredPersonDetails = ({ isReadOnly }: JointCoveredPersonDetailsProp
                     value={relationToCoveredPerson}
                     name="relationToCoveredPerson"
                 />
+                {(planCode === '772' || planCode === '728') && (
+                    <SelectSimple
+                        disabled={isReadOnly}
+                        className="max-w-lg"
+                        label={t('sswProgram.payout.title') as string}
+                        options={payoutOptions(t)}
+                        onChange={val => {
+                            setPayoutOption(val as PayoutOptions);
+                            setPartyInfo(party => ({ ...party, withdrawalPayoutOption: val as PayoutOptions }));
+                        }}
+                        size={FieldSize.Small}
+                        value={payoutOption}
+                        name="payoutOptions"
+                    />
+                )}
             </div>
             <div className="my-6 mt-3 border-b-2 border-gray-100"></div>
 

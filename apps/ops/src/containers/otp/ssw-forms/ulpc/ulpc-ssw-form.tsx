@@ -18,7 +18,11 @@ import { isAllowedState } from '@deps/utils/renderStateW4';
 import SswEditSelection from '../ssw-edit-selection';
 import getUlpcConfig from './ulpc-ssw-form-helper';
 
-export function UlpcSSWForm() {
+interface UlpcSSWFormProps {
+    planCode?: string;
+}
+
+export function UlpcSSWForm({ planCode }: UlpcSSWFormProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
 
     const {
@@ -64,7 +68,7 @@ export function UlpcSSWForm() {
             <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
             <AmountDetails isFormStateReadOnly={isFormStateReadOnly} isOnlyWithdrawalTypeControls={true} />
 
-            <SystematicWithdrawalProgram isReadOnly={isFormStateReadOnly} options={systematicWithdrawalOptions} />
+            <SystematicWithdrawalProgram isReadOnly={isFormStateReadOnly} options={systematicWithdrawalOptions} planCode={planCode} />
 
             <FormDistribution
                 isDerivedMethodFromFunds={true}

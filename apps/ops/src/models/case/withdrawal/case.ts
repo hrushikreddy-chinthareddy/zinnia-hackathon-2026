@@ -882,6 +882,11 @@ export enum RestrictionOption {
     Hardship = 'hardship',
 }
 
+export enum PayoutOptions {
+    level = 'LEVEL_PAYOUT_GLWB',
+    increasing = 'INCREASING_PAYOUT_GLWB',
+}
+
 export enum TaxWithholdingPlace {
     Federal = 'Federal',
     State = 'State',
