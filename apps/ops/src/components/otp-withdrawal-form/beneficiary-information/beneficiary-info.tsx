@@ -51,13 +51,17 @@ const BeneficiaryInfo: React.FC<BeneficiaryInfoProps> = ({ isFormStateReadOnly, 
                             isBeneInfoProvided: !beneInfo?.isBeneInfoProvided,
                         })
                     }
+                    isDisabled={isFormStateReadOnly}
                 />
                 <Label label={t('beneficiaryInfo.title')} variant={LabelVariant.FieldLabel} className="mx-3" />
             </div>
             {beneInfo?.isBeneInfoProvided && (
                 <>
                     <div className="my-3">
-                        <Label label={t('beneficiaryInfo.isBeneficiarySpouse.title')} variant={LabelVariant.FieldLabel} />
+                        <Label
+                            label={t('beneficiaryInfo.isBeneficiarySpouse.title')}
+                            variant={LabelVariant.FieldLabel}
+                        />
                         <ButtonGroup
                             activeValue={stringifyTrueFalseNull(beneInfo?.isBeneSpouse) || stringifyTrueFalseNull(false)}
                             toggle={() =>
@@ -67,9 +71,10 @@ const BeneficiaryInfo: React.FC<BeneficiaryInfoProps> = ({ isFormStateReadOnly, 
                                 })
                             }
                             labels={isBeneSpouseOption}
-                            disabled={false}
+                            disabled={isFormStateReadOnly}
+                            variant={'primary'}
                             className="my-3"
-                            size="lg"
+                            size={'xxs'}
                         />
                     </div>
                     { beneInfo?.isBeneSpouse &&
