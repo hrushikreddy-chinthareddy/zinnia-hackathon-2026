@@ -8,14 +8,9 @@ import {
 } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helper';
 import { PartyConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helper';
-import { JointLifeExpectancyConfig } from '@deps/components/otp-withdrawal-form/rmd-method/joint-life-expectancy';
 import { frequencyToValue } from '@deps/components/otp-withdrawal-form/rmd-method/rmd-method';
-import {
-    SignatureBonusFields,
-    SignatureFields,
-} from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
+import { SignatureFields } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
-import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { stringifyTrueFalseNull } from '@deps/helpers/string.helper';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
@@ -23,7 +18,6 @@ import {
     PartyRoles,
     AddressTypes,
     FormParts,
-    FundWithdrawnMethod,
     PaymentMethod,
     PaymentMailType,
     AccountType,
@@ -39,7 +33,7 @@ import {
 import { DEFAULT_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { createValidator } from '../utils/helper-utils';
-import getGlcoConfig, { spousalSignatureStateCodes } from '../withdrawal-forms/flic-withdrawal-form.helper';
+import getGlcoConfig from '../withdrawal-forms/flic-withdrawal-form.helper';
 
 export default function getGlcoRmdConfig(t: TFunction) {
     // importing base configuration from GLCO form helper.
@@ -216,58 +210,6 @@ export default function getGlcoRmdConfig(t: TFunction) {
             signatureType: SignatureValidationTypeWithdrawal.Owner,
             partyRole: PartyRoles.OWNER,
         },
-        {
-            key: `sig-val-beneficiary`,
-            fields: [
-                {
-                    component: SignatureFields.SignatureType,
-                    key: 'beneficiary-type',
-                },
-                {
-                    component: SignatureFields.SignatureCityProvided,
-                    key: 'owner-city-state',
-                },
-                {
-                    component: SignatureFields.SignatureSsn,
-                    key: 'owner-ssn',
-                },
-                {
-                    component: SignatureFields.SignaturePresent,
-                    key: 'beneficiary-present',
-                },
-                {
-                    component: SignatureFields.SignatureTitle,
-                    key: 'beneficiary-title',
-                },
-                {
-                    component: SignatureFields.SignatureDate,
-                    key: 'beneficiary-date',
-                },
-            ],
-            signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
-        },
-        {
-            key: `sig-val-spouse`,
-            bonusField: SignatureBonusFields.SpousalConsent,
-            fields: [
-                {
-                    component: SignatureFields.SignatureType,
-                    key: 'spouse-type',
-                },
-                {
-                    component: SignatureFields.SignaturePresent,
-                    key: 'spouse-present',
-                },
-                {
-                    component: SignatureFields.SignatureDate,
-                    key: 'spouse-date',
-                },
-            ],
-            shouldDisplay: ({ ownerStateOfResidence }: OtpWithdrawalFormState): boolean => {
-                return !!ownerStateOfResidence && spousalSignatureStateCodes.includes(ownerStateOfResidence?.toUpperCase());
-            },
-            signatureType: SignatureValidationTypeWithdrawal.Spouse,
-        },
     ];
 
     const rmdformValidation = ({
@@ -342,36 +284,18 @@ export default function getGlcoRmdConfig(t: TFunction) {
                     fieldName: PartyFields.LastName,
                     fieldLabel: t('personalDetails.lastName'),
                 },
-                // {
-                //     fieldName: PartyFields.Dob,
-                //     fieldLabel: t('personalDetails.dob'),
-                // },
+
                 {
                     fieldName: PartyFields.TaxId,
                     fieldLabel: t('personalDetails.ssn'),
                 },
             ],
-            // phones: [
-            //     {
-            //         phoneType: PhoneTypes.Owner_Phone_Day,
-            //         fields: [
-            //             {
-            //                 fieldName: PhoneFields.phoneNumber,
-            //                 fieldLabel: t('phoneDetails.telephoneNumber'),
-            //             },
-            //         ],
-            //     },
-            // ],
 
             addressFields: [
                 {
                     addressType: AddressTypes.DEFAULT,
                     title: t('addressDetails.residentialAddressTitle'),
                 },
-                // {
-                //     addressType: AddressTypes.MAILING_ADDRESS,
-                //     title: t('addressDetails.mailingAddressTitle'),
-                // },
             ],
         },
         {
@@ -402,33 +326,6 @@ export default function getGlcoRmdConfig(t: TFunction) {
         },
     ];
 
-    const jointLifeExpectancyConfigs: JointLifeExpectancyConfig = {
-        checkboxLabel: t('rmdMethod.jointLifeExpectancy.label.glco'),
-        fields: [
-            {
-                fieldName: PartyFields.FirstName,
-                fieldLabel: t('rmdMethod.jointLifeExpectancy.firstName'),
-            },
-            {
-                fieldName: PartyFields.MiddleName,
-                fieldLabel: t('rmdMethod.jointLifeExpectancy.middleName'),
-            },
-            {
-                fieldName: PartyFields.LastName,
-                fieldLabel: t('rmdMethod.jointLifeExpectancy.lastName'),
-            },
-            {
-                fieldName: PartyFields.Dob,
-                fieldLabel: t('rmdMethod.jointLifeExpectancy.dob.glco'),
-            },
-        ],
-    };
-
-    const fundWithdrawnMethodOptions = [
-        { label: t('distributionInstruction.prorata'), value: FundWithdrawnMethod.Prorata },
-        { label: t('distributionInstruction.specifyFunds'), value: FundWithdrawnMethod.SpecifyFunds },
-    ];
-
     const isBeneSpouseOption = [
         { label: t('beneficiaryInfo.isBeneficiarySpouse.yes'), value: stringifyTrueFalseNull(true) },
         { label: t('beneficiaryInfo.isBeneficiarySpouse.no'), value: stringifyTrueFalseNull(false) },
@@ -454,10 +351,8 @@ export default function getGlcoRmdConfig(t: TFunction) {
         formValidation: rmdformValidation,
         cslnCheckStates,
         irsSignatureConfig,
-        fundWithdrawnMethodOptions,
         w4pSignaturesConfig,
         disbursementOptions,
-        jointLifeExpectancyConfigs,
         isBeneSpouseOption,
     };
 }

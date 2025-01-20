@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 
-import { FormBeneInfo } from '@deps/components/beneficiary-information/beneficiary-info';
+import { FormBeneInfo } from '@deps/components/otp-withdrawal-form/beneficiary-information/beneficiary-info';
 import { FormSubtype } from '@deps/containers/otp/withdrawal-forms/flic-withdrawal-form.helper';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { TaskStatus } from '@deps/models/case/task-instance';

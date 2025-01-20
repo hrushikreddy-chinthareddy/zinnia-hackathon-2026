@@ -2,15 +2,14 @@ import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
+import ButtonGroup from '@deps/components/button-group/button-group';
+import InputCheckBox from '@deps/components/checkbox-v2/input-checkbox';
+import { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import FieldDateSelect, { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/field-date-select';
+import Label, { LabelVariant } from '@deps/components/label/label';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { stringifyTrueFalseNull } from '@deps/helpers/string.helper';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
-
-import ButtonGrp from '../button-group/button-group';
-import InputCheckBox from '../checkbox-v2/input-checkbox';
-import { FieldSize, FieldType, FieldVariant } from '../fields/field';
-import FieldDateSelect, { DATE_PICKER_FORMAT } from '../fields/field-date-select/field-date-select';
-import Label, { LabelVariant } from '../label/label';
 
 export type FormBeneInfo = {
     spouseDOB?: string;
@@ -53,13 +52,13 @@ const BeneficiaryInfo: React.FC<BeneficiaryInfoProps> = ({ isFormStateReadOnly, 
                         })
                     }
                 />
-                <Label label={t('beneficiaryInfo.title')} variant={LabelVariant.LabelLg} className="mx-3" />
+                <Label label={t('beneficiaryInfo.title')} variant={LabelVariant.FieldLabel} className="mx-3" />
             </div>
             {beneInfo?.isBeneInfoProvided && (
                 <>
                     <div className="my-3">
-                        <Label label={t('beneficiaryInfo.isBeneficiarySpouse.title')} variant={LabelVariant.LabelSm} />
-                        <ButtonGrp
+                        <Label label={t('beneficiaryInfo.isBeneficiarySpouse.title')} variant={LabelVariant.FieldLabel} />
+                        <ButtonGroup
                             activeValue={stringifyTrueFalseNull(beneInfo?.isBeneSpouse) || stringifyTrueFalseNull(false)}
                             toggle={() =>
                                 onBeneChange({
@@ -73,27 +72,25 @@ const BeneficiaryInfo: React.FC<BeneficiaryInfoProps> = ({ isFormStateReadOnly, 
                             size="lg"
                         />
                     </div>
-                    <div className="my-3">
-                        <Label
-                            label={'Is your spouse 10 year younger than you ?'}
-                            variant={LabelVariant.LabelSm}
-                            className="mb-3 font-bold font-primary"
-                        />
-                        <div className="grid grid-cols-6">
-                            <FieldDateSelect
-                                isFutureDateDisabled={false}
-                                label={t('beneficiaryInfo.dob') as string}
-                                onChange={e => {
-                                    setBornDate(e.target.value);
-                                }}
-                                size={FieldSize.Small}
-                                type={FieldType.BaseActive}
-                                value={bornDate}
-                                disabled={isFormStateReadOnly}
-                                variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
-                            />
+                    {beneInfo?.isBeneSpouse && (
+                        <div className="my-3">
+                            <Label label={t('beneficiaryInfo.isYourSpouseYoungerThanYou')} variant={LabelVariant.FieldLabel} />
+                            <div className="grid grid-cols-6 mt-2">
+                                <FieldDateSelect
+                                    isFutureDateDisabled={false}
+                                    label={t('beneficiaryInfo.dob') as string}
+                                    onChange={e => {
+                                        setBornDate(e.target.value);
+                                    }}
+                                    size={FieldSize.Small}
+                                    type={FieldType.BaseActive}
+                                    value={bornDate}
+                                    disabled={isFormStateReadOnly}
+                                    variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                                />
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </>
             )}
         </CardContainer>

@@ -4,6 +4,7 @@ import MassOftWithdrawalForm from '@deps/containers/otp/oft-forms/mass/mass-oft-
 import RSLNOftWithdrawalForm from '@deps/containers/otp/oft-forms/rsln/rsln-oft-form';
 import SbgcOftWithdrawalForm from '@deps/containers/otp/oft-forms/sbgc/sbgc-oft-form';
 import FlicRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/flic-rmd-form';
+import GlcoRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/glco-rmd-form';
 import MassMutualRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/mm-rmd-form';
 import SbgcRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/sbgc-rmd-form';
 import { FlicSSWForm } from '@deps/containers/otp/ssw-forms/flic/flic-ssw-form';
@@ -32,7 +33,6 @@ export const getCaseType = (docTypeQuery: string): CaseType => {
     return loweredKeyedObj[docTypeQuery?.toLowerCase()];
 };
 
-
 export const getWithdrawalFormComponentMap = (qualType: QualTypes | ''): Record<string, React.ReactNode> => ({
     [Carrier.FLIC]: <FlicWithdrawalForm />,
     [Carrier.SBGC]: <SbgcWithdrawalForm />,
@@ -55,6 +55,7 @@ export const getRMDFormComponentMap = (qualType: QualTypes | ''): Record<string,
     [Carrier.FLIC]: <FlicRmdWithdrawalForm />,
     [Carrier.MASS]: <MassMutualRmdWithdrawalForm qualType={qualType} />,
     [Carrier.SBGC]: <SbgcRmdWithdrawalForm />,
+    [Carrier.GLCO]: <GlcoRmdWithdrawalForm />,
 });
 
 const getSSWFormComponentMap = (qualType: QualTypes | ''): Record<string, React.ReactNode> => ({
@@ -64,20 +65,20 @@ const getSSWFormComponentMap = (qualType: QualTypes | ''): Record<string, React.
     [Carrier.FLIC]: <FlicSSWForm qualType={qualType} />,
 });
 
-export const getFormParts = (caseType: CaseType, clientCode: string,qualType: QualTypes | '', planCode: string = '') => {
+export const getFormParts = (caseType: CaseType, clientCode: string, qualType: QualTypes | '', planCode: string = '') => {
     let formParts;
     switch (caseType) {
         case CaseType.Withdrawal:
-            formParts = determineFormToRender(clientCode , getWithdrawalFormComponentMap(qualType));
+            formParts = determineFormToRender(clientCode, getWithdrawalFormComponentMap(qualType));
             break;
         case CaseType.Oft:
             formParts = determineFormToRender(clientCode, getOFTFormComponentMap(planCode, qualType));
             break;
         case CaseType.SSW:
-            formParts = determineFormToRender(clientCode , getSSWFormComponentMap(qualType));
+            formParts = determineFormToRender(clientCode, getSSWFormComponentMap(qualType));
             break;
         case CaseType.Rmd:
-            formParts = determineFormToRender(clientCode , getRMDFormComponentMap(qualType));
+            formParts = determineFormToRender(clientCode, getRMDFormComponentMap(qualType));
             break;
     }
     return formParts;
