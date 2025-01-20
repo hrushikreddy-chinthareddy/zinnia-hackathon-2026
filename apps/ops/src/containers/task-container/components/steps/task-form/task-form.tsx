@@ -62,6 +62,10 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                     const paymentCards = response?.map((transaction: any) => ({
                         label: transaction.correlationId,
                         value: transaction.recordId,
+                        subElement: {
+                            ...transaction,
+                            title: transaction?.entity?.payment?.companyName,
+                        },
                     }));
 
                     setTask(previousTask => {
@@ -69,7 +73,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                             ...previousTask,
                             data: {
                                 ...previousTask.data,
-                                transactions: paymentCards,
+                                transactionOptions: paymentCards,
                             },
                         };
                     });
@@ -127,7 +131,6 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                     ...prevSchema.formSchema,
                     definitions: {
                         ...prevSchema.formSchema.definitions,
-
                         caseSubTypeEnum: {
                             enum: caseSubTypes?.split(',').filter((item: string) => item.trim() !== ''),
                         },
@@ -138,22 +141,25 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     }, [task?.data?.caseSubTypeOptions]);
 
     useEffect(() => {
-        if (task?.data?.transactions) {
+        const transactionOptions = task?.data?.transactionOptions;
+        if (transactionOptions) {
             setFormSchema(prevSchema => ({
                 ...prevSchema,
                 uiSchema: {
                     ...prevSchema.uiSchema,
                     transactions: {
+                        ...prevSchema.uiSchema.transactions,
                         'ui:widget': 'radio',
                         'ui:options': {
+                            ...((prevSchema.uiSchema.transactions && prevSchema.uiSchema.transactions['ui:options']) || {}),
                             label: false,
-                            customOptions: task?.data?.transactions,
+                            customOptions: transactionOptions,
                         },
                     },
                 },
             }));
         }
-    }, [task?.data?.transactions]);
+    }, [task?.data?.transactionOptions]);
 
     const memoizedSchema = useMemo(() => formSchema, [formSchema]);
 

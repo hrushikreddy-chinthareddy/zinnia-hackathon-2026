@@ -302,6 +302,7 @@ export const getServerSideProps = withPageAuthRequired({
                         'ui:widget': 'radio',
                         'ui:options': {
                             label: true,
+                            cardType: 'Link',
                             customOptions: [
                                 {
                                     label: 'Enter a case ID',
@@ -509,6 +510,7 @@ export const getServerSideProps = withPageAuthRequired({
                                 potentialMatches: {
                                     'ui:widget': 'radio',
                                     'ui:options': {
+                                        cardType: 'Link',
                                         label: true,
                                         customOptions: [
                                             {
@@ -589,24 +591,20 @@ export const getServerSideProps = withPageAuthRequired({
                                                 },
                                             },
                                             purchaseDocument: {
-                                                type: 'array',
+                                                type: 'object',
                                                 title: '',
-                                                items: {
-                                                    type: 'object',
-                                                    title: '',
-                                                    properties: {
-                                                        documentName: {
-                                                            type: 'string',
-                                                        },
-                                                        documentId: {
-                                                            type: 'string',
-                                                        },
-                                                        documentSource: {
-                                                            type: 'string',
-                                                        },
-                                                        createdDate: {
-                                                            type: 'string',
-                                                        },
+                                                properties: {
+                                                    documentName: {
+                                                        type: 'string',
+                                                    },
+                                                    documentId: {
+                                                        type: 'string',
+                                                    },
+                                                    documentSource: {
+                                                        type: 'string',
+                                                    },
+                                                    createdDate: {
+                                                        type: 'string',
                                                     },
                                                 },
                                             },
@@ -657,42 +655,37 @@ export const getServerSideProps = withPageAuthRequired({
                                         },
                                     },
                                     purchaseDocument: {
-                                        canAdd: false,
                                         props: {
-                                            type: 'Document',
-                                            canAdd: false,
+                                            readonly: true,
                                         },
                                         'ui:options': {
+                                            canAdd: false,
                                             label: false,
-                                        },
-                                        items: {
-                                            props: {
-                                                readonly: true,
-                                            },
-                                            'ui:options': {
-                                                canAdd: false,
-                                                label: false,
-                                                cardType: 'Document',
-                                                icon: 'DOCUMENT_TEXT',
-                                                ObjectFieldTemplate: 'CardTemplate',
-                                            },
+                                            cardType: 'Document',
+                                            icon: 'DOCUMENT_TEXT',
+                                            ObjectFieldTemplate: 'CardTemplate',
                                         },
                                     },
                                 },
                                 transactions: {
                                     "ui:widget'": 'radio',
                                     'ui:options': {
+                                        cardType: 'Detailed',
+                                        icon: 'BANK',
                                         label: false,
-                                        customOptions: [
-                                            {
-                                                label: 'Enter a case ID',
-                                                value: 'enterCaseId',
+                                        sectionTitle: 'Details',
+                                        properties: {
+                                            paymentRecordId: {
+                                                type: 'string',
+                                                title: 'Payment Record Id',
+                                                default: '{{entity.paymentRecordId}}',
                                             },
-                                            {
-                                                label: 'Document cannot be matched to a case',
-                                                value: 'notMatched',
+                                            transferAmount: {
+                                                type: 'string',
+                                                title: 'Expected transfer amount',
+                                                default: '{{entity.payment.exchangeReplace.amountRequested}}',
                                             },
-                                        ],
+                                        },
                                     },
                                 },
                             },

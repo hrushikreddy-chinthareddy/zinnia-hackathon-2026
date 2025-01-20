@@ -9,89 +9,93 @@ import { DocumentTypeView } from '@deps/components/side-sheet/documents/document
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { useDocumentDownload } from '@deps/helpers/documents.helper';
+import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
 
 export function CardTemplate(props: ObjectFieldTemplateProps) {
     const { formData, uiSchema, schema } = props;
 
     const { cardType, icon, sectionTitle } = getUiOptions(uiSchema);
 
-    const sideSheet = useSideSheetContext();
+    return (
+        <>
+            <SingleCard
+                cardType={cardType as string}
+                icon={icon as IconType}
+                data={formData}
+                properties={schema?.properties}
+                sectionTitle={(sectionTitle as string) ?? ''}
+            />
+        </>
+    );
+}
 
+export type SingleCardProps = {
+    cardType: string;
+    icon: IconType;
+    data: any;
+    properties: any;
+    sectionTitle?: string;
+    className?: string;
+};
+export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, className }: SingleCardProps) => {
     const { t } = useTranslation();
-    const [loading, download] = useDocumentDownload(
-        formData.documentId || (formData.documentID as string),
-        formData.documentSource,
-        'WELB',
-        formData.displayName
-    );
 
-    const [viewLoading, view] = useDocumentDownload(
-        formData.documentId || (formData.documentID as string),
-        formData.documentSource,
-        'WELB',
-        formData.displayName
-    );
+    const sideSheet = useSideSheetContext();
+    const title = properties ? Object.keys(properties)[0] : 'title';
+    const subtitle = properties ? Object.keys(properties)[1] : 'subtitle';
 
-    const title = schema?.properties ? Object.keys(schema?.properties)[0] : 'title';
-    const subtitle = schema?.properties ? Object.keys(schema?.properties)[1] : 'subtitle';
-    const displayProperties = schema?.properties
-        ? Object.entries(schema.properties)
+    const displayProperties = properties
+        ? Object.entries(properties)
               .filter(([key, prop]: [string, any]) => !prop.__additional_property)
               .map(([key, prop]: [string, any]) => ({ key, ...prop }))
         : [];
 
     const handleCardClick = () => {
-        console.log('🚀 ~ DetailsCard ~ displayProperties:', displayProperties);
-        const content = <DetailsCard details={formData} sectionTitle={sectionTitle} properties={displayProperties} />;
-        sideSheet.changeSideSheetContent(formData[title], content);
+        const content = <DetailsCard details={data} sectionTitle={sectionTitle} properties={displayProperties} />;
+        sideSheet.changeSideSheetContent(data[title], content);
         sideSheet.handleOpen(true);
     };
 
     return (
         <>
-            <div className=" flex w-[436px] rounded border border-gray-100 p-[12px]">
+            <div className={`flex w-[436px] rounded border border-gray-100 p-[12px] ${className}`}>
                 <div className="px-2">
-                    <Icon width={25} height={25} type={IconType[icon as keyof typeof IconType]} />
+                    <Icon width={25} height={25} type={IconType[icon as string as keyof typeof IconType] || IconType.CIRCLE_USER} />{' '}
                 </div>
                 <div className="grow">
                     <div className="text-sm font-bold">
-                        <PiiWrapper>{formData[title]}</PiiWrapper>
+                        <PiiWrapper>{data[title] ?? replacePlaceholders(properties[title], data)?.default ?? ''}</PiiWrapper>
                     </div>
                     <div className="flex items-center text-sm font-normal text-gray-300">
                         <PiiWrapper>
-                            {schema?.properties?.[subtitle] &&
-                            typeof schema.properties[subtitle] !== 'boolean' &&
-                            'title' in schema.properties[subtitle]
-                                ? schema.properties[subtitle].title
-                                : ''}
-                            {formData[subtitle]}
+                            {properties?.[subtitle] && typeof properties[subtitle] !== 'boolean' && 'title' in properties[subtitle]
+                                ? properties[subtitle].title
+                                : ''}{' '}
+                            {data[subtitle] ?? replacePlaceholders(properties[subtitle], data)?.default ?? ''}
                         </PiiWrapper>
                     </div>
                 </div>
-                {cardType === 'Detailed' && displayProperties.length > 2 && (
-                    <DetailAction handleCardClick={handleCardClick} formData={formData} />
-                )}
-                {cardType === 'Document' && (
-                    <DocumentActions cardType={cardType} document={formData} download={download} loading={loading} t={t} />
-                )}
+                {cardType === 'Detailed' && <DetailAction handleCardClick={handleCardClick} formData={data} />}
+                {cardType === 'Document' && <DocumentActions cardType={cardType} document={data} t={t} />}
             </div>
         </>
     );
-}
+};
 
-const DetailsCard = ({ details, sectionTitle, properties }: any) => {
+export const DetailsCard = ({ details, sectionTitle, properties }: any) => {
     return (
         <CardContainer classNames={'w-full'} containerClassNames="w-full content-divider">
             <div className="flex flex-col w-full">
                 <Typography variant={TypographyVariant.H3} className="mb-3">
                     {sectionTitle}
                 </Typography>
-                {properties?.map((schema: any) => (
-                    <Typography variant={TypographyVariant.BodySm} key={schema.key} className="p-1">
-                        {schema?.title}: {details[schema.key] ?? '--'}
-                    </Typography>
-                ))}
+                {properties?.map((schema: any) => {
+                    return (
+                        <Typography variant={TypographyVariant.BodySm} key={schema.key} className="p-1">
+                            {schema?.title}: {details[schema.key] ?? replacePlaceholders(schema, details)?.default ?? '--'}
+                        </Typography>
+                    );
+                })}
             </div>
         </CardContainer>
     );

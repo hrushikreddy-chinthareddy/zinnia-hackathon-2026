@@ -4845,6 +4845,14 @@
             "continue": "Continue"
         }
     },
+    "purchaseDocumentMatching": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche: Appariement de Document a été soumise.",
+            "cta": "Aller à la Qualification",
+            "secondaryCta": "Retour à l'accueil"
+        }
+    },
     "unauthorized": {
         "title": "Non autorisé",
         "message": "Vous n'avez pas accès à cette information."

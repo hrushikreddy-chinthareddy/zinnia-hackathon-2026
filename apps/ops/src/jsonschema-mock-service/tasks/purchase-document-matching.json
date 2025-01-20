@@ -34,13 +34,11 @@
                     "properties": {
                         "caseType": {
                             "type": "string",
-                            "title": "Cases",
-                            "enum": ["New Business", "Purchase"]
+                            "title": "Cases"
                         },
                         "caseSubType": {
                             "type": "string",
-                            "title": "Case",
-                            "enum": ["select", "no"]
+                            "title": "Case"
                         }
                     }
                 }
@@ -172,6 +170,7 @@
             "ui:widget": "radio",
             "ui:options": {
                 "label": true,
+                "cardType": "Link",
                 "customOptions": [
                     {
                         "label": "Enter a case ID",
@@ -204,7 +203,6 @@
                             "type": "object",
                             "title": "Processing Instructions"
                         },
-
                         "details": {
                             "type": "object",
                             "title": "Details",
@@ -314,7 +312,6 @@
                         }
                     ]
                 },
-
                 "uiSchema": {
                     "ui:globalOptions": {
                         "duplicateKeySuffixSeparator": "_",
@@ -322,7 +319,6 @@
                         "copyable": false
                     },
                     "$schema": "http://json-schema.org/draft-07/schema#",
-
                     "ui:submitButtonOptions": {
                         "norender": true
                     },
@@ -335,7 +331,6 @@
                             "ObjectFieldTemplate": "InstructionsTemplate"
                         }
                     },
-
                     "details": {
                         "accord": true,
                         "ui:options": {
@@ -378,6 +373,7 @@
                     "potentialMatches": {
                         "ui:widget": "radio",
                         "ui:options": {
+                            "cardType": "Link",
                             "label": true,
                             "customOptions": [
                                 {
@@ -419,7 +415,6 @@
                             "label": true
                         }
                     },
-
                     "isDuplicate": {
                         "ui:widget": "radio"
                     }
@@ -537,17 +532,22 @@
                     "transactions": {
                         "ui:widget'": "radio",
                         "ui:options": {
+                            "cardType": "Detailed",
+                            "icon": "BANK",
                             "label": false,
-                            "customOptions": [
-                                {
-                                    "label": "Enter a case ID",
-                                    "value": "enterCaseId"
+                            "sectionTitle": "Details",
+                            "properties": {
+                                "paymentRecordId": {
+                                    "type": "string",
+                                    "title": "Payment Record Id",
+                                    "default": "{{entity.paymentRecordId}}"
                                 },
-                                {
-                                    "label": "Document cannot be matched to a case",
-                                    "value": "notMatched"
+                                "transferAmount": {
+                                    "type": "string",
+                                    "title": "Expected transfer amount",
+                                    "default": "{{entity.payment.exchangeReplace.amountRequested}}"
                                 }
-                            ]
+                            }
                         }
                     }
                 }

@@ -4877,6 +4877,14 @@
             "continue": "Continue"
         }
     },
+    "purchaseDocumentMatching": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Match Document was submitted.",
+            "cta": "Go to Qualification ",
+            "secondaryCta": "Back to home"
+        }
+    },
     "unauthorized": {
         "title": "Unauthorized",
         "message": "You do not have access to view this information."

@@ -39,7 +39,6 @@ const generatePotentialMatchesOptions = (potentialMatches: PotentialMatches[]): 
                 label: MatchingCaseTypes[item.entityType as keyof typeof MatchingCaseTypes] ?? MatchingCaseTypes.NB_APPLICATION_DATA,
                 value: item?.zlCaseId ?? '',
                 title: item?.entityType ?? '',
-                type: 'link',
                 url: `/cases/${item.zlCaseId}`,
                 disabled: false,
             };
