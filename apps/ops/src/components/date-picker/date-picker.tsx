@@ -45,6 +45,7 @@ export type DatePickerProps = {
     isDateAllowed?: (dayjsDate: Dayjs) => boolean;
     datePickerType?: DatePickerTypes;
     showMonths?: boolean;
+    isPastDateDisabled?: boolean;
 };
 
 interface YearsProps {
@@ -459,6 +460,7 @@ export default function DatePicker({
     handleDateSelect,
     isFutureDateDisabled = true,
     isDateAllowed = () => true,
+    isPastDateDisabled = false,
     datePickerType,
     handleCustomSelection,
     showMonths = true,
@@ -540,7 +542,10 @@ export default function DatePicker({
         if (isFutureDateDisabled && dayjsDate.isAfter(dayjs(), 'day')) {
             return disabledClasses;
         }
-
+        // Disables past dates
+        if (isPastDateDisabled && (dayjsDate.isBefore(dayjs().startOf('day')) || dayjsDate.month() !== month)) {
+            return disabledClasses;
+        }
         return '';
     };
 
@@ -635,9 +640,9 @@ export default function DatePicker({
                 />
             )}
             {!isRange &&
-            handleCustomSelection &&
-            datePickerType &&
-            [DatePickerTypes.Annually, DatePickerTypes.Quarterly].includes(datePickerType) ? (
+                handleCustomSelection &&
+                datePickerType &&
+                [DatePickerTypes.Annually, DatePickerTypes.Quarterly].includes(datePickerType) ? (
                 <Quarters
                     quartersOpen={daysOpen}
                     getDisabledQuarterClasses={getDisabledQuarterClasses}

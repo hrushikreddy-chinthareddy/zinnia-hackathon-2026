@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { parseAndFormatDate, toSentenceCase } from '@deps/helpers/string.helper';
+import { parseAndFormatDate } from '@deps/helpers/string.helper';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { getTaskInstance } from '@deps/queries/api/v2/task';
@@ -15,11 +15,10 @@ import DocumentPreviewer from '@deps/components/document-viewer/document-preview
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as BanIcon } from '@deps/styles/elements/icons/content/ban.svg';
 import { ReactComponent as ClipboardIcon } from '@deps/styles/elements/icons/content/clipboard-1.svg';
-import { ReactComponent as ClipboardListIcon } from '@deps/styles/elements/icons/content/clipboard-list.svg';
 import { ReactComponent as CirclePauseIcon } from '@deps/styles/elements/icons/circles/circle-pause.svg';
 import { ReactComponent as ChevronDownIcon } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
-
-import Badge from '@deps/components/badge/badge';
+import { ReactComponent as Pause } from '@deps/styles/elements/icons/icons_outlined/pause.svg';
+import { ReactComponent as Progress } from '@deps/styles/elements/icons/icons_outlined/clipboard-list.svg';
 import { BadgeVariant } from '@deps/components/badge/badge.helper';
 import { claimTask } from '@deps/queries/api/v1/task';
 
@@ -28,6 +27,10 @@ import { DocumentTypeView } from '@deps/components/side-sheet/documents/document
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
+import Dropdown from '@deps/components/dropdown/Dropdown';
+import TaskQueueDrawer from '@deps/containers/task-management-queue/task-queue-drawer';
+import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import Badge from '@deps/components/badge/badge';
 
 const TaskTypeMap: Record<string, string> = {
     ['SUITABILITY_REVIEW']: 'suitability review',
@@ -118,11 +121,6 @@ export default function GlobalTaskSideSheet({ taskId }: { taskId: string }) {
             badgeVariant = BadgeVariant.Inactive;
             badgeLabel = 'Canceled';
             break;
-        case TaskStatus.InProgress:
-            badgeIcon = <ClipboardListIcon height={20} width={20} />;
-            badgeVariant = BadgeVariant.Info;
-            badgeLabel = 'In progress';
-            break;
         case TaskStatus.Pending:
             badgeIcon = <CirclePauseIcon height={24} width={24} />;
             badgeVariant = BadgeVariant.Error;
@@ -186,14 +184,28 @@ export default function GlobalTaskSideSheet({ taskId }: { taskId: string }) {
             </div>
         );
     };
-
+    const sideSheet = useSideSheetContext();
+    const openSideSheet = () => {
+        const content = <TaskQueueDrawer onClose={sideSheet.onClose} taskId={task.id} taskStatus={task.status} />;
+        sideSheet.changeSideSheetContent(t('taskManagementQueue.updateTaskStatusDrawer.updateTaskStatus'), content);
+        sideSheet.handleOpen(true);
+    };
+    const statuses = [
+        {
+            label: 'Pending',
+            icon: <Pause width={16} height={16} />,
+            onSelect: () => {
+                openSideSheet()
+            },
+        },
+    ];
     const renderDetails = (
         <div className="flex flex-col w-full">
             <label className="font-primary text-lg  mt-10">{t('sideSheet.task.tabs.details')}</label>
             <div className="grid grid-cols-3 gap-2 text-md">
                 <div className="col-span-1 mt-4 text-[--color-base-text-text-secondary]"> {t('sideSheet.task.status.label')} </div>
                 <div className="col-span-2">
-                    <Typography variant={TypographyVariant.BodySm} className="py-2 pr-6 ">
+                    {task?.status !== TaskStatus.InProgress && <Typography variant={TypographyVariant.BodySm} className="py-2 pr-6 ">
                         <Badge
                             icon={badgeIcon}
                             variant={badgeVariant}
@@ -201,18 +213,25 @@ export default function GlobalTaskSideSheet({ taskId }: { taskId: string }) {
                             rounded={true}
                             className="flex gap-1 items-center"
                         />
-                    </Typography>
+                    </Typography>}
+                    {task?.status === TaskStatus.InProgress && <Dropdown
+                        triggerIcon={<div className='pb-1'><Progress width={16} height={16} /></div>}
+                        triggerLabel="In Progress"
+                        options={statuses}
+                    />}
+
+
                 </div>
 
                 {((task.status === TaskStatus.Pending && task.impededReason) ||
                     (task.status === TaskStatus.Canceled && task.cancellationReason)) && (
-                    <>
-                        <div className="col-span-1 text-[--color-base-text-text-secondary]"> {t('sideSheet.task.reasonLabel')} </div>
-                        <Typography variant={TypographyVariant.BodySm} className="col-span-2">
-                            {task.status === TaskStatus.Pending ? task.impededReason : task.cancellationReason}
-                        </Typography>
-                    </>
-                )}
+                        <>
+                            <div className="col-span-1 text-[--color-base-text-text-secondary]"> {t('sideSheet.task.reasonLabel')} </div>
+                            <Typography variant={TypographyVariant.BodySm} className="col-span-2">
+                                {task.status === TaskStatus.Pending ? task.impededReason : task.cancellationReason}
+                            </Typography>
+                        </>
+                    )}
 
                 {(task.status === TaskStatus.Pending || task.status === TaskStatus.Canceled || task.status === TaskStatus.Completed) && (
                     <>
@@ -220,8 +239,8 @@ export default function GlobalTaskSideSheet({ taskId }: { taskId: string }) {
                             {task.status === TaskStatus.Pending
                                 ? t('sideSheet.task.pendinglabel')
                                 : task.status === TaskStatus.Canceled
-                                ? t('sideSheet.task.canceledLabel')
-                                : t('sideSheet.task.completedLabel')}
+                                    ? t('sideSheet.task.canceledLabel')
+                                    : t('sideSheet.task.completedLabel')}
                         </div>
 
                         <Typography variant={TypographyVariant.BodySm} className="col-span-2">
@@ -324,6 +343,7 @@ export default function GlobalTaskSideSheet({ taskId }: { taskId: string }) {
                     )
                 ) : null}
             </div>
+
         </div>
     );
 

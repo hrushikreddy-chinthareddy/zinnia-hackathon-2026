@@ -260,6 +260,11 @@
         "unassignTaskError": "Erreur de désattribution de tâche :",
         "startTask": "Démarrer la tâche",
         "transaction": "Transaction: {{transactionType}}",
+        "updateTaskStatusDrawer": {
+            "updateTaskStatus": "Mettre à jour l'état de la tâche",
+            "setTaskAsPending": "Mettre la tâche en attente",
+            "followUpDate": "Date de suivi"
+        },
         "tasksListing": {
             "taskSubmittedAgo": "Soumise {{updatedCount}} {{updatedUnit}} il y a",
             "taskCompletedAgo": "Complété {{updatedCount}} {{updatedUnit}} il y a",
@@ -269,7 +274,11 @@
                 "closed": "Fermée",
                 "new": "Nouvelle",
                 "completed": "Complété",
-                "inProgress": "En cours"
+                "inProgress": "En cours",
+                "reason": "Raison",
+                "selectReason": "Sélectionner la raison",
+                "cancel": "Annuler",
+                "updateStatus": "Mettre à jour l'état"
             }
         },
         "caseId": "Numéro du cas: ",
