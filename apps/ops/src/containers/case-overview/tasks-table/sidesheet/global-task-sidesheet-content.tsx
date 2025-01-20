@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { parseAndFormatDate, toSentenceCase } from '@deps/helpers/string.helper';
+import { parseAndFormatDate } from '@deps/helpers/string.helper';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { getTaskInstance } from '@deps/queries/api/v2/task';
@@ -28,6 +28,9 @@ import { DocumentTypeView } from '@deps/components/side-sheet/documents/document
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
+import { writeToCache } from '@deps/utils/cache';
+import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
+import { TranslationFiles } from '@deps/config/translations';
 
 const TaskTypeMap: Record<string, string> = {
     ['SUITABILITY_REVIEW']: 'suitability review',
@@ -38,8 +41,10 @@ export enum TabOptions {
     Documents = 'Documents',
 }
 
-export default function GlobalTaskSideSheet({ taskId }: { taskId: string }) {
+export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId: string; type?: string }) {
     const { t } = useTranslation();
+    const { t: documentPanel } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'task.documentPanel' });
+
     const [loading, setLoading] = useState(true);
     const [task, setTask] = useState<ManagementTask | null>(null);
     const [activeTab, setActiveTab] = useState(TabOptions.Details);
@@ -51,8 +56,8 @@ export default function GlobalTaskSideSheet({ taskId }: { taskId: string }) {
     const { user } = useUser();
 
     const handleClaimTask = async () => {
-        setClaimTaskLoader(true);
         if (task) {
+            setClaimTaskLoader(true);
             try {
                 const response = await claimTask(task.caseId, task.id);
                 if (response.id == task.id && user?.email) {
@@ -60,6 +65,14 @@ export default function GlobalTaskSideSheet({ taskId }: { taskId: string }) {
                         ...task,
                         assignee: user.email,
                     });
+                    writeToCache(
+                        'getTaskInstance',
+                        { taskId },
+                        {
+                            ...task,
+                            assignee: user.email,
+                        }
+                    );
                     browserLogInfo('task-queue:handleClaimTask::Successfully claimed task', { taskId: taskId });
                 } else {
                     browserLogInfo('task-queue:handleClaimTask::An error occurred while claiming the task', {
@@ -74,9 +87,10 @@ export default function GlobalTaskSideSheet({ taskId }: { taskId: string }) {
                     caseId: task.caseId,
                 });
                 return;
+            } finally {
+                setClaimTaskLoader(false); // Ensure this always runs
             }
         }
-        setClaimTaskLoader(false);
     };
 
     useEffect(() => {
@@ -100,7 +114,7 @@ export default function GlobalTaskSideSheet({ taskId }: { taskId: string }) {
         (user?.email?.toLowerCase() === task.assignee?.toLowerCase() ||
             task.prefferedAssignee?.toLowerCase() === user?.email?.toLowerCase());
 
-    let documentsList = task.mappedDocuments || [];
+    let documentsList = type == 'task' ? task.documents || [] : task.mappedDocuments || [];
     let additionalDocumentsList = task.additionalDocuments || [];
 
     let showStartButton = task.status === TaskStatus.New || task.status === TaskStatus.InProgress || task.status === TaskStatus.Pending;
@@ -138,11 +152,22 @@ export default function GlobalTaskSideSheet({ taskId }: { taskId: string }) {
     const NoAssigneeComp = (
         <div className="flex gap-2 text-gray-600">
             <span>No assignee</span>
-            {task.status === TaskStatus.New && (
-                <button className="text-blue-600 hover:text-blue-700 hover:underline focus:outline-none" onClick={handleClaimTask}>
-                    Claim task
-                </button>
-            )}
+            {task.status === TaskStatus.New &&
+                (!claimTaskLoader ? (
+                    <button className="text-blue-600 hover:text-blue-700 hover:underline focus:outline-none" onClick={handleClaimTask}>
+                        Claim task
+                    </button>
+                ) : (
+                    <div
+                        style={
+                            {
+                                '--loader-size': '20px',
+                            } as React.CSSProperties
+                        }
+                    >
+                        <Loader />
+                    </div>
+                ))}
         </div>
     );
 
@@ -173,15 +198,19 @@ export default function GlobalTaskSideSheet({ taskId }: { taskId: string }) {
                     </div>
                 </div>
                 <div className="flex items-center">
-                    <DocumentPreviewer
-                        className="flex gap-1"
-                        activeDocType={docType}
-                        carrier={taskCarrier}
-                        documentId={document.documentId}
-                        displayName={document.documentName}
-                    >
-                        <>{t('general.view')}</>
-                    </DocumentPreviewer>
+                    {type == 'case' ? (
+                        <DocumentPreviewer
+                            className="flex gap-1"
+                            activeDocType={docType}
+                            carrier={taskCarrier.toUpperCase()}
+                            documentId={document.documentId}
+                            displayName={document.documentName}
+                        >
+                            <>{t('general.view')}</>
+                        </DocumentPreviewer>
+                    ) : (
+                        createAction(document, taskCarrier.toUpperCase(), documentPanel)
+                    )}
                 </div>
             </div>
         );
@@ -249,13 +278,13 @@ export default function GlobalTaskSideSheet({ taskId }: { taskId: string }) {
                 </Typography>
             </div>
 
-            {!userExists && showStartButton && (
+            {type == 'case' && !userExists && showStartButton && (
                 <div className="bg-black text-white text-sm font-normal rounded-lg shadow-lg p-2 top-[-40px] left-1/2 transform -translate-x-1/2 whitespace-nowrap z-10  mt-6 max-w-[240px]">
                     Only the assignee can start this task
                 </div>
             )}
 
-            {showStartButton && (
+            {type == 'case' && showStartButton && (
                 <div className={!userExists ? 'flex flex-row items-center gap-1 pt-2' : 'flex flex-row items-center gap-1 pt-6'}>
                     {userExists ? (
                         <Link href={`/task/${task.id}`} text="Start task" variant="button" size="small"></Link>
