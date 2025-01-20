@@ -409,7 +409,7 @@
                                 "process": ["{{value}}"]
                             },
                             "apiMethod": "post",
-                            "responseKey": "caseSubTypes",
+                            "responseKey": "caseSubTypeOptions",
                             "responseData": "{{data.referenceData.requestSubType}}"
                         }
                     },

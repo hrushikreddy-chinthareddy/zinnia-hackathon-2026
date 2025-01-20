@@ -41,13 +41,13 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                     const cases = response.data as Case[];
 
                     if (cases.length > 0) {
-                        setTask({
+                        setTask(task => ({
                             ...task,
                             data: {
                                 ...task.data,
                                 caseId: cases[0].id,
                             },
-                        });
+                        }));
                     }
                 } catch (e) {
                     console.log(e);
@@ -111,28 +111,31 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     );
 
     const handleFormDataChange = (data: any) => {
-        setTask({
+        setTask((task: any) => ({
             ...task,
             data: data,
-        });
+        }));
     };
 
     useEffect(() => {
-        if (task?.data?.caseSubTypes) {
+        const caseSubTypes = task?.data?.caseSubTypeOptions;
+
+        if (caseSubTypes) {
             setFormSchema(prevSchema => ({
                 ...prevSchema,
                 formSchema: {
                     ...prevSchema.formSchema,
                     definitions: {
                         ...prevSchema.formSchema.definitions,
+
                         caseSubTypeEnum: {
-                            enum: task?.data?.caseSubTypes?.split(',').filter((item: string) => item.trim() !== ''),
+                            enum: caseSubTypes?.split(',').filter((item: string) => item.trim() !== ''),
                         },
                     },
                 },
             }));
         }
-    }, [task?.data?.caseSubTypes]);
+    }, [task?.data?.caseSubTypeOptions]);
 
     useEffect(() => {
         if (task?.data?.transactions) {

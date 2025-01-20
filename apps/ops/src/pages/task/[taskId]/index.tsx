@@ -10,10 +10,11 @@ import { TaskProvider } from '@deps/containers/task-container/task-provider';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { ProcessType } from '@deps/models/case/enums';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
-import { ManagementTask } from '@deps/models/case/task-instance';
+import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { UserPermission } from '@deps/models/user-profile';
-import { getCaseTaskById } from '@deps/operations/tasks/task-operations';
+import { getCaseTaskById, getTaskFormMetadata } from '@deps/operations/tasks/task-operations';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { getCaseDetailsSSR, getReferenceDataSSR } from '@deps/queries/api/cases';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
@@ -90,79 +91,73 @@ export const getServerSideProps = withPageAuthRequired({
         }
 
         try {
-            const [translations, task] = await Promise.all([
+            const [translations] = await Promise.all([
                 await serverSideTranslations(locale, [TranslationFiles.COMMON, TranslationFiles.COLDEFS], nextI18nextConfig, ALL_LOCALES),
                 await getCaseTaskById(taskId, accessToken),
             ]);
 
-            console.log('🚀 ~ getServerSideProps: ~ task:', task);
+            //   console.log('🚀 ~ getServerSideProps: ~ task:', task);
 
-            // const task: ManagementTask = {
-            //     id: 'TA000000016146',
-            //     caseId: 'CA0000383347',
-            //     process: 'New Business',
-            //     carrier: 'WELB',
-            //     taskType: 'PURCHASE_DOCUMENT_MATCHING',
-            //     taskName: 'Suitability Review',
-            //     status: TaskStatus.New,
-            //     data: {
-            //         details: {
-            //             amount: '10000',
-            //             payerDetails: {
-            //                 firstName: '',
-            //                 lastName: '',
-            //                 payorName: 'New Finance Group',
-            //                 taxId: 'ssn123456',
-            //                 type: 'payment',
-            //                 roles: 'Annuitant, Insured',
-            //             },
-            //             purchaseDocument: [
-            //                 {
-            //                     documentId: '231hf324ffffsfds3444',
-            //                     documentName: 'Cheque.Pdf',
-            //                     documentSource: 'EDS',
-            //                     createdDate: '2024-11-05T19:57:48.1250188',
-            //                 },
-            //             ],
-            //         },
-            //         potentialMatches: [
-            //             {
-            //                 entityType: 'NB_APPLICATION_DATA',
-            //                 recordId: '545435345435532',
-            //                 zlCaseId: '1111111',
-            //                 policyNumber: '22222222',
-            //                 taxId: 'ssn123456',
-            //                 firstName: 'AA',
-            //                 lastName: 'BB',
-            //                 correlationId: '06de7ad7-7071-4f1f-bd90-dd0ee2ca0c29',
-            //             },
-            //             {
-            //                 entityType: 'RMD_APP_DATA',
-            //                 recordId: '456545654',
-            //                 zlCaseId: '86878787',
-            //                 policyNumber: '685878876',
-            //                 taxId: 'ssn8888456',
-            //                 firstName: 'uuuu',
-            //                 lastName: 'ggggg',
-            //                 correlationId: '06de7ad7-7071-4f1f-bd90-dd0ee2ca0c28',
-            //             },
-            //             {
-            //                 entityType: 'NB_APPLICATION_DATA',
-            //                 recordId: '2312313213132',
-            //                 zlCaseId: '4444444',
-            //                 policyNumber: '555555',
-            //                 taxId: 'ssn34234',
-            //                 firstName: 'CC',
-            //                 lastName: 'DD',
-            //                 correlationId: '06de7ad7-7071-4f1f-bd90-dd0ee2ca0c30',
-            //             },
-            //         ],
-            //         payments: [],
-            //     },
-            //     queue: 'new_business_suitability_review',
-            //     createdAt: '2024-12-30T07:06:39Z',
-            //     updatedAt: '2024-12-30T07:06:39Z',
-            // };
+            const task: ManagementTask = {
+                id: 'TA000000016741',
+                caseId: 'CA0000385723',
+                process: 'Qualification',
+                carrier: 'WELB',
+                taskType: 'PURCHASE_DOCUMENT_MATCHING',
+                taskName: 'Match Document',
+                status: TaskStatus.New,
+                createdAt: '2021-06-10T15:30:00.000Z',
+                updatedAt: '2021-06-10T15:30:00.000Z',
+                data: {
+                    details: {
+                        amount: '10000',
+                        payerDetails: {
+                            firstName: '',
+                            lastName: '',
+                            payorName: 'NewFinanceGroup',
+                            taxId: 'ssn123456',
+                            type: 'payment',
+                        },
+                        purchaseDocument: {
+                            documentId: '',
+                            documentName: '',
+                            documentSource: '',
+                            createdDate: '',
+                        },
+                    },
+                    potentialMatches: [
+                        {
+                            entityType: 'NB_APPLICATION_DATA',
+                            recordId: '545435345435532',
+                            zlCaseId: '1111111',
+                            policyNumber: '22222222',
+                            taxId: 'ssn123456',
+                            firstName: 'AA',
+                            lastName: 'BB',
+                        },
+                        {
+                            entityType: 'RMD_APP_DATA',
+                            recordId: '456545654',
+                            zlCaseId: '86878787',
+                            policyNumber: '685878876',
+                            taxId: 'ssn8888456',
+                            firstName: 'uuuu',
+                            lastName: 'ggggg',
+                        },
+                        {
+                            entityType: 'NB_APPLICATION_DATA',
+                            recordId: '2312313213132',
+                            zlCaseId: '4444444',
+                            policyNumber: '555555',
+                            taxId: 'ssn34234',
+                            firstName: 'CC',
+                            lastName: 'DD',
+                        },
+                    ],
+                    caseType: '',
+                    caseSubType: '',
+                },
+            };
 
             if (!task) {
                 logError('Task::Error getting task by id', {
@@ -196,583 +191,581 @@ export const getServerSideProps = withPageAuthRequired({
                     },
                 };
             }
-            //   const taskMetadata = await getTaskFormMetadata(carrier, taskType as TaskType, process as ProcessType, accessToken);
+            const taskMetadata = await getTaskFormMetadata(carrier, taskType as TaskType, process as ProcessType, accessToken);
 
-            const taskMetadata = {
-                formId: 'c0c1c9b9-741b-4272-8cf4-48cd0d7cb0f2',
-                process: 'Qualification',
-                carrier: 'WELB',
-                taskType: 'PURCHASE_DOCUMENT_MATCHING',
-                formSchema: {
-                    allOf: [
-                        {
-                            if: {
-                                properties: {
-                                    potentialMatches: {
-                                        const: 'enterCaseId',
-                                    },
-                                },
-                            },
-                            then: {
-                                properties: {
-                                    caseId: {
-                                        type: 'string',
-                                        title: 'Case Id',
-                                    },
-                                },
-                            },
-                        },
-                        {
-                            if: {
-                                properties: {
-                                    potentialMatches: {
-                                        const: 'notMatched',
-                                    },
-                                },
-                            },
-                            then: {
-                                properties: {
-                                    caseType: {
-                                        type: 'string',
-                                        title: 'Cases',
-                                        enum: ['New Business', 'Purchase'],
-                                    },
-                                    caseSubType: {
-                                        type: 'string',
-                                        title: 'Case',
-                                        enum: ['select', 'no'],
-                                    },
-                                },
-                            },
-                        },
-                    ],
-                    $schema: 'http://json-schema.org/draft-07/schema#',
-                    type: 'object',
-                    properties: {
-                        sectionHeader: {
-                            type: 'object',
-                            title: 'Processing Instruction',
-                        },
-                        details: {
-                            type: 'object',
-                            title: 'Details',
-                            properties: {
-                                amount: {
-                                    type: 'string',
-                                    title: 'Amount Received',
-                                },
-                                payerDetails: {
-                                    type: 'object',
-                                    title: 'Supporting information',
-                                    properties: {
-                                        payorName: {
-                                            type: 'string',
-                                            title: 'Title',
-                                        },
-                                        taxId: {
-                                            type: 'string',
-                                            title: 'SSN',
-                                        },
-                                    },
-                                    additionalProperties: true,
-                                },
-                                purchaseDocument: {
-                                    type: 'object',
-                                    title: '',
-                                    properties: {
-                                        documentName: {
-                                            type: 'string',
-                                        },
-                                        documentId: {
-                                            type: 'string',
-                                        },
-                                        documentSource: {
-                                            type: 'string',
-                                        },
-                                        createdDate: {
-                                            type: 'string',
-                                        },
-                                    },
-                                },
-                                caseOverview: {
-                                    type: 'string',
-                                    title: 'Open case search',
-                                    default: '/cases',
-                                },
-                            },
-                        },
-                        potentialMatches: {
-                            type: 'string',
-                            title: 'Can you find a matching case for this document?',
-                        },
-                    },
-                },
-                uiSchema: {
-                    'ui:globalOptions': {
-                        duplicateKeySuffixSeparator: '_',
-                        orderable: false,
-                        copyable: false,
-                    },
-                    'ui:submitButtonOptions': {
-                        norender: true,
-                    },
-                    sectionHeader: {
-                        props: {
-                            description:
-                                "This customer's application was flagged for review. Accept or Decline each issue before submitting a final decision.",
-                        },
-                        'ui:options': {
-                            label: true,
-                            ObjectFieldTemplate: 'InstructionsTemplate',
-                        },
-                    },
-                    caseId: {
-                        'ui:options': {
-                            label: true,
-                        },
-                    },
-                    details: {
-                        accord: true,
-                        'ui:options': {
-                            label: true,
-                        },
-                        amount: {
-                            'ui:options': {
-                                disabled: true,
-                            },
-                        },
-                        payerDetails: {
-                            'ui:options': {
-                                cardType: 'Detailed',
-                                icon: 'CIRCLE_USER',
-                                label: true,
-                                ObjectFieldTemplate: 'CardTemplate',
-                            },
-                        },
-                        purchaseDocument: {
-                            props: {
-                                readonly: true,
-                            },
-                            'ui:options': {
-                                canAdd: false,
-                                label: false,
-                                cardType: 'Document',
-                                icon: 'DOCUMENT_TEXT',
-                                ObjectFieldTemplate: 'CardTemplate',
-                            },
-                        },
-                        caseOverview: {
-                            'ui:options': {
-                                label: false,
-                                type: 'link',
-                            },
-                            'ui:widget': 'HyperLinkWidget',
-                        },
-                    },
-                    potentialMatches: {
-                        'ui:widget': 'radio',
-                        'ui:options': {
-                            label: true,
-                            customOptions: [
-                                {
-                                    label: 'Enter a case ID',
-                                    value: 'enterCaseId',
-                                },
-                                {
-                                    label: 'Document cannot be matched to a case',
-                                    value: 'notMatched',
-                                },
-                            ],
-                        },
-                    },
-                    isDuplicate: {
-                        'ui:widget': 'radio',
-                    },
-                },
-                schemaContent: {
-                    tabSchemas: [
-                        {
-                            title: 'Match Document',
-                            formSchema: {
-                                $schema: 'http://json-schema.org/draft-07/schema#',
-                                type: 'object',
-                                definitions: {
-                                    caseTypeEnum: {},
-                                    caseSubTypeEnum: {},
-                                },
-                                properties: {
-                                    sectionHeader: {
-                                        type: 'object',
-                                        title: 'Processing Instructions',
-                                    },
+            // const taskMetadata = {
+            //     formId: 'c0c1c9b9-741b-4272-8cf4-48cd0d7cb0f2',
+            //     process: 'Qualification',
+            //     carrier: 'WELB',
+            //     taskType: 'PURCHASE_DOCUMENT_MATCHING',
+            //     formSchema: {
+            //         allOf: [
+            //             {
+            //                 if: {
+            //                     properties: {
+            //                         potentialMatches: {
+            //                             const: 'enterCaseId',
+            //                         },
+            //                     },
+            //                 },
+            //                 then: {
+            //                     properties: {
+            //                         caseId: {
+            //                             type: 'string',
+            //                             title: 'Case Id',
+            //                         },
+            //                     },
+            //                 },
+            //             },
+            //             {
+            //                 if: {
+            //                     properties: {
+            //                         potentialMatches: {
+            //                             const: 'notMatched',
+            //                         },
+            //                     },
+            //                 },
+            //                 then: {
+            //                     properties: {
+            //                         caseType: {
+            //                             type: 'string',
+            //                             title: 'Cases',
+            //                         },
+            //                         caseSubType: {
+            //                             type: 'string',
+            //                             title: 'Case',
+            //                         },
+            //                     },
+            //                 },
+            //             },
+            //         ],
+            //         $schema: 'http://json-schema.org/draft-07/schema#',
+            //         type: 'object',
+            //         properties: {
+            //             sectionHeader: {
+            //                 type: 'object',
+            //                 title: 'Processing Instruction',
+            //             },
+            //             details: {
+            //                 type: 'object',
+            //                 title: 'Details',
+            //                 properties: {
+            //                     amount: {
+            //                         type: 'string',
+            //                         title: 'Amount Received',
+            //                     },
+            //                     payerDetails: {
+            //                         type: 'object',
+            //                         title: 'Supporting information',
+            //                         properties: {
+            //                             payorName: {
+            //                                 type: 'string',
+            //                                 title: 'Title',
+            //                             },
+            //                             taxId: {
+            //                                 type: 'string',
+            //                                 title: 'SSN',
+            //                             },
+            //                         },
+            //                         additionalProperties: true,
+            //                     },
+            //                     purchaseDocument: {
+            //                         type: 'object',
+            //                         title: '',
+            //                         properties: {
+            //                             documentName: {
+            //                                 type: 'string',
+            //                             },
+            //                             documentId: {
+            //                                 type: 'string',
+            //                             },
+            //                             documentSource: {
+            //                                 type: 'string',
+            //                             },
+            //                             createdDate: {
+            //                                 type: 'string',
+            //                             },
+            //                         },
+            //                     },
+            //                     caseOverview: {
+            //                         type: 'string',
+            //                         title: 'Open case search',
+            //                         default: '/cases',
+            //                     },
+            //                 },
+            //             },
+            //             potentialMatches: {
+            //                 type: 'string',
+            //                 title: 'Can you find a matching case for this document?',
+            //             },
+            //         },
+            //     },
+            //     uiSchema: {
+            //         'ui:globalOptions': {
+            //             duplicateKeySuffixSeparator: '_',
+            //             orderable: false,
+            //             copyable: false,
+            //         },
+            //         'ui:submitButtonOptions': {
+            //             norender: true,
+            //         },
+            //         sectionHeader: {
+            //             props: {
+            //                 description:
+            //                     "This customer's application was flagged for review. Accept or Decline each issue before submitting a final decision.",
+            //             },
+            //             'ui:options': {
+            //                 label: true,
+            //                 ObjectFieldTemplate: 'InstructionsTemplate',
+            //             },
+            //         },
+            //         caseId: {
+            //             'ui:options': {
+            //                 label: true,
+            //             },
+            //         },
+            //         details: {
+            //             accord: true,
+            //             'ui:options': {
+            //                 label: true,
+            //             },
+            //             amount: {
+            //                 'ui:options': {
+            //                     disabled: true,
+            //                 },
+            //             },
+            //             payerDetails: {
+            //                 'ui:options': {
+            //                     cardType: 'Detailed',
+            //                     icon: 'CIRCLE_USER',
+            //                     label: true,
+            //                     ObjectFieldTemplate: 'CardTemplate',
+            //                 },
+            //             },
+            //             purchaseDocument: {
+            //                 props: {
+            //                     readonly: true,
+            //                 },
+            //                 'ui:options': {
+            //                     canAdd: false,
+            //                     label: false,
+            //                     cardType: 'Document',
+            //                     icon: 'DOCUMENT_TEXT',
+            //                     ObjectFieldTemplate: 'CardTemplate',
+            //                 },
+            //             },
+            //             caseOverview: {
+            //                 'ui:options': {
+            //                     label: false,
+            //                     type: 'link',
+            //                 },
+            //                 'ui:widget': 'HyperLinkWidget',
+            //             },
+            //         },
+            //         potentialMatches: {
+            //             'ui:widget': 'radio',
+            //             'ui:options': {
+            //                 label: true,
+            //                 customOptions: [
+            //                     {
+            //                         label: 'Enter a case ID',
+            //                         value: 'enterCaseId',
+            //                     },
+            //                     {
+            //                         label: 'Document cannot be matched to a case',
+            //                         value: 'notMatched',
+            //                     },
+            //                 ],
+            //             },
+            //         },
+            //         isDuplicate: {
+            //             'ui:widget': 'radio',
+            //         },
+            //     },
+            //     schemaContent: {
+            //         tabSchemas: [
+            //             {
+            //                 title: 'Match Document',
+            //                 formSchema: {
+            //                     $schema: 'http://json-schema.org/draft-07/schema#',
+            //                     type: 'object',
+            //                     definitions: {
+            //                         caseTypeEnum: {},
+            //                         caseSubTypeEnum: {},
+            //                     },
+            //                     properties: {
+            //                         sectionHeader: {
+            //                             type: 'object',
+            //                             title: 'Processing Instructions',
+            //                         },
 
-                                    details: {
-                                        type: 'object',
-                                        title: 'Details',
-                                        properties: {
-                                            amount: {
-                                                type: 'string',
-                                                title: 'Amount Received',
-                                            },
-                                            payerDetails: {
-                                                type: 'object',
-                                                title: 'Supporting information',
-                                                properties: {
-                                                    payorName: {
-                                                        type: 'string',
-                                                        title: 'Title',
-                                                    },
-                                                    taxId: {
-                                                        type: 'string',
-                                                        title: 'SSN',
-                                                    },
-                                                    roles: {
-                                                        type: 'string',
-                                                        title: 'Role(s)',
-                                                    },
-                                                },
-                                                additionalProperties: true,
-                                            },
-                                            purchaseDocument: {
-                                                type: 'object',
-                                                title: '',
-                                                properties: {
-                                                    documentName: {
-                                                        type: 'string',
-                                                    },
-                                                    documentId: {
-                                                        type: 'string',
-                                                    },
-                                                    documentSource: {
-                                                        type: 'string',
-                                                    },
-                                                    createdDate: {
-                                                        type: 'string',
-                                                    },
-                                                },
-                                            },
-                                            caseOverview: {
-                                                type: 'string',
-                                                title: 'Open case search',
-                                                default: '/cases',
-                                            },
-                                        },
-                                    },
-                                    potentialMatches: {
-                                        type: 'string',
-                                        title: 'Can you find a matching case for this document?',
-                                    },
-                                },
-                                allOf: [
-                                    {
-                                        if: {
-                                            properties: {
-                                                potentialMatches: {
-                                                    const: 'enterCaseId',
-                                                },
-                                            },
-                                        },
-                                        then: {
-                                            properties: {
-                                                caseId: {
-                                                    type: 'string',
-                                                    title: 'Case Id',
-                                                },
-                                            },
-                                        },
-                                        else: {
-                                            if: {
-                                                properties: {
-                                                    potentialMatches: {
-                                                        const: 'notMatched',
-                                                    },
-                                                },
-                                            },
-                                            then: {
-                                                properties: {
-                                                    caseType: {
-                                                        type: 'string',
-                                                        title: 'Cases',
-                                                        $ref: '#/definitions/caseTypeEnum',
-                                                    },
-                                                    caseSubType: {
-                                                        type: 'string',
-                                                        title: 'Case Types',
-                                                        $ref: '#/definitions/caseSubTypeEnum',
-                                                    },
-                                                },
-                                            },
-                                            else: {
-                                                properties: {
-                                                    isDuplicate: {
-                                                        type: 'string',
-                                                        title: 'Is this document a duplicate?',
-                                                        enum: ['Yes', 'No'],
-                                                    },
-                                                },
-                                            },
-                                        },
-                                    },
-                                ],
-                            },
+            //                         details: {
+            //                             type: 'object',
+            //                             title: 'Details',
+            //                             properties: {
+            //                                 amount: {
+            //                                     type: 'string',
+            //                                     title: 'Amount Received',
+            //                                 },
+            //                                 payerDetails: {
+            //                                     type: 'object',
+            //                                     title: 'Supporting information',
+            //                                     properties: {
+            //                                         payorName: {
+            //                                             type: 'string',
+            //                                             title: 'Title',
+            //                                         },
+            //                                         taxId: {
+            //                                             type: 'string',
+            //                                             title: 'SSN',
+            //                                         },
+            //                                         roles: {
+            //                                             type: 'string',
+            //                                             title: 'Role(s)',
+            //                                         },
+            //                                     },
+            //                                     additionalProperties: true,
+            //                                 },
+            //                                 purchaseDocument: {
+            //                                     type: 'object',
+            //                                     title: '',
+            //                                     properties: {
+            //                                         documentName: {
+            //                                             type: 'string',
+            //                                         },
+            //                                         documentId: {
+            //                                             type: 'string',
+            //                                         },
+            //                                         documentSource: {
+            //                                             type: 'string',
+            //                                         },
+            //                                         createdDate: {
+            //                                             type: 'string',
+            //                                         },
+            //                                     },
+            //                                 },
+            //                                 caseOverview: {
+            //                                     type: 'string',
+            //                                     title: 'Open case search',
+            //                                     default: '/cases',
+            //                                 },
+            //                             },
+            //                         },
+            //                         potentialMatches: {
+            //                             type: 'string',
+            //                             title: 'Can you find a matching case for this document?',
+            //                         },
+            //                     },
+            //                     allOf: [
+            //                         {
+            //                             if: {
+            //                                 properties: {
+            //                                     potentialMatches: {
+            //                                         const: 'enterCaseId',
+            //                                     },
+            //                                 },
+            //                             },
+            //                             then: {
+            //                                 properties: {
+            //                                     caseId: {
+            //                                         type: 'string',
+            //                                         title: 'Case Id',
+            //                                     },
+            //                                 },
+            //                             },
+            //                             else: {
+            //                                 if: {
+            //                                     properties: {
+            //                                         potentialMatches: {
+            //                                             const: 'notMatched',
+            //                                         },
+            //                                     },
+            //                                 },
+            //                                 then: {
+            //                                     properties: {
+            //                                         caseType: {
+            //                                             type: 'string',
+            //                                             title: 'Cases',
+            //                                             $ref: '#/definitions/caseTypeEnum',
+            //                                         },
+            //                                         caseSubType: {
+            //                                             type: 'string',
+            //                                             title: 'Case Types',
+            //                                             $ref: '#/definitions/caseSubTypeEnum',
+            //                                         },
+            //                                     },
+            //                                 },
+            //                                 else: {
+            //                                     properties: {
+            //                                         isDuplicate: {
+            //                                             type: 'string',
+            //                                             title: 'Is this document a duplicate?',
+            //                                             enum: ['Yes', 'No'],
+            //                                         },
+            //                                     },
+            //                                 },
+            //                             },
+            //                         },
+            //                     ],
+            //                 },
 
-                            uiSchema: {
-                                'ui:globalOptions': {
-                                    duplicateKeySuffixSeparator: '_',
-                                    orderable: false,
-                                    copyable: false,
-                                },
-                                $schema: 'http://json-schema.org/draft-07/schema#',
+            //                 uiSchema: {
+            //                     'ui:globalOptions': {
+            //                         duplicateKeySuffixSeparator: '_',
+            //                         orderable: false,
+            //                         copyable: false,
+            //                     },
+            //                     $schema: 'http://json-schema.org/draft-07/schema#',
 
-                                'ui:submitButtonOptions': {
-                                    norender: true,
-                                },
-                                sectionHeader: {
-                                    props: {
-                                        description:
-                                            "This customer's application was flagged for review. Accept or Decline each issue before submitting a final decision.",
-                                    },
-                                    'ui:options': {
-                                        label: true,
-                                        ObjectFieldTemplate: 'InstructionsTemplate',
-                                    },
-                                },
+            //                     'ui:submitButtonOptions': {
+            //                         norender: true,
+            //                     },
+            //                     sectionHeader: {
+            //                         props: {
+            //                             description:
+            //                                 "This customer's application was flagged for review. Accept or Decline each issue before submitting a final decision.",
+            //                         },
+            //                         'ui:options': {
+            //                             label: true,
+            //                             ObjectFieldTemplate: 'InstructionsTemplate',
+            //                         },
+            //                     },
 
-                                details: {
-                                    accord: true,
-                                    'ui:options': {
-                                        label: true,
-                                    },
-                                    amount: {
-                                        'ui:options': {
-                                            disabled: true,
-                                        },
-                                    },
-                                    payerDetails: {
-                                        'ui:options': {
-                                            cardType: 'Detailed',
-                                            icon: 'CIRCLE_USER',
-                                            label: true,
-                                            ObjectFieldTemplate: 'CardTemplate',
-                                            sectionTitle: 'Details',
-                                        },
-                                    },
-                                    purchaseDocument: {
-                                        props: {
-                                            readonly: true,
-                                        },
-                                        'ui:options': {
-                                            canAdd: false,
-                                            label: false,
-                                            cardType: 'Document',
-                                            icon: 'DOCUMENT_TEXT',
-                                            ObjectFieldTemplate: 'CardTemplate',
-                                        },
-                                    },
-                                    caseOverview: {
-                                        'ui:options': {
-                                            label: false,
-                                            type: 'link',
-                                        },
-                                        'ui:widget': 'HyperLinkWidget',
-                                    },
-                                },
-                                potentialMatches: {
-                                    'ui:widget': 'radio',
-                                    'ui:options': {
-                                        label: true,
-                                        customOptions: [
-                                            {
-                                                label: 'Enter a case ID',
-                                                value: 'enterCaseId',
-                                            },
-                                            {
-                                                label: 'Document cannot be matched to a case',
-                                                value: 'notMatched',
-                                            },
-                                        ],
-                                    },
-                                },
-                                caseId: {
-                                    'ui:options': {
-                                        label: true,
-                                    },
-                                },
-                                caseType: {
-                                    'ui:widget': 'SelectWidget',
-                                    'ui-options': {
-                                        label: true,
-                                    },
-                                    'ui:props': {
-                                        apiUrl: 'case/v1/refdata',
-                                        apiPayload: {
-                                            carrier: ['WELB'],
-                                            keys: ['requestSubType'],
-                                            process: ['{{value}}'],
-                                        },
-                                        apiMethod: 'post',
-                                        responseKey: 'caseSubTypes',
-                                        responseData: '{{data.referenceData.requestSubType}}',
-                                    },
-                                },
-                                caseSubType: {
-                                    'ui:widget': 'SelectWidget',
-                                    'ui-options': {
-                                        label: true,
-                                    },
-                                },
+            //                     details: {
+            //                         accord: true,
+            //                         'ui:options': {
+            //                             label: true,
+            //                         },
+            //                         amount: {
+            //                             'ui:options': {
+            //                                 disabled: true,
+            //                             },
+            //                         },
+            //                         payerDetails: {
+            //                             'ui:options': {
+            //                                 cardType: 'Detailed',
+            //                                 icon: 'CIRCLE_USER',
+            //                                 label: true,
+            //                                 ObjectFieldTemplate: 'CardTemplate',
+            //                                 sectionTitle: 'Details',
+            //                             },
+            //                         },
+            //                         purchaseDocument: {
+            //                             props: {
+            //                                 readonly: true,
+            //                             },
+            //                             'ui:options': {
+            //                                 canAdd: false,
+            //                                 label: false,
+            //                                 cardType: 'Document',
+            //                                 icon: 'DOCUMENT_TEXT',
+            //                                 ObjectFieldTemplate: 'CardTemplate',
+            //                             },
+            //                         },
+            //                         caseOverview: {
+            //                             'ui:options': {
+            //                                 label: false,
+            //                                 type: 'link',
+            //                             },
+            //                             'ui:widget': 'HyperLinkWidget',
+            //                         },
+            //                     },
+            //                     potentialMatches: {
+            //                         'ui:widget': 'radio',
+            //                         'ui:options': {
+            //                             label: true,
+            //                             customOptions: [
+            //                                 {
+            //                                     label: 'Enter a case ID',
+            //                                     value: 'enterCaseId',
+            //                                 },
+            //                                 {
+            //                                     label: 'Document cannot be matched to a case',
+            //                                     value: 'notMatched',
+            //                                 },
+            //                             ],
+            //                         },
+            //                     },
+            //                     caseId: {
+            //                         'ui:options': {
+            //                             label: true,
+            //                         },
+            //                     },
+            //                     caseType: {
+            //                         'ui:widget': 'SelectWidget',
+            //                         'ui-options': {
+            //                             label: true,
+            //                         },
+            //                         'ui:props': {
+            //                             apiUrl: 'case/v1/refdata',
+            //                             apiPayload: {
+            //                                 carrier: ['WELB'],
+            //                                 keys: ['requestSubType'],
+            //                                 process: ['{{value}}'],
+            //                             },
+            //                             apiMethod: 'post',
+            //                             responseKey: 'caseSubTypeOptions',
+            //                             responseData: '{{data.referenceData.requestSubType}}',
+            //                         },
+            //                     },
+            //                     caseSubType: {
+            //                         'ui:widget': 'SelectWidget',
+            //                         'ui-options': {
+            //                             label: true,
+            //                         },
+            //                     },
 
-                                isDuplicate: {
-                                    'ui:widget': 'radio',
-                                },
-                            },
-                        },
-                        {
-                            title: 'Match Payment',
-                            formSchema: {
-                                $schema: 'http://json-schema.org/draft-07/schema#',
-                                type: 'object',
-                                properties: {
-                                    sectionHeader: {
-                                        type: 'object',
-                                        title: 'Processing Instructions',
-                                    },
-                                    details: {
-                                        type: 'object',
-                                        title: 'Details',
-                                        properties: {
-                                            amount: {
-                                                type: 'string',
-                                                title: 'Amount Received',
-                                            },
-                                            payerDetails: {
-                                                type: 'object',
-                                                title: 'Supporting information',
-                                                properties: {
-                                                    payorName: {
-                                                        type: 'string',
-                                                        title: 'Title',
-                                                    },
-                                                    taxId: {
-                                                        type: 'string',
-                                                        title: 'SSN',
-                                                    },
-                                                },
-                                            },
-                                            purchaseDocument: {
-                                                type: 'array',
-                                                title: '',
-                                                items: {
-                                                    type: 'object',
-                                                    title: '',
-                                                    properties: {
-                                                        documentName: {
-                                                            type: 'string',
-                                                        },
-                                                        documentId: {
-                                                            type: 'string',
-                                                        },
-                                                        documentSource: {
-                                                            type: 'string',
-                                                        },
-                                                        createdDate: {
-                                                            type: 'string',
-                                                        },
-                                                    },
-                                                },
-                                            },
-                                        },
-                                    },
-                                    transactions: {
-                                        type: 'string',
-                                        title: 'Select exchange record',
-                                    },
-                                },
-                            },
-                            uiSchema: {
-                                'ui:globalOptions': {
-                                    duplicateKeySuffixSeparator: '_',
-                                    orderable: false,
-                                    copyable: false,
-                                },
-                                $schema: 'http: //json-schema.org/draft-07/schema#',
-                                'ui:submitButtonOptions': {
-                                    norender: true,
-                                },
-                                sectionHeader: {
-                                    props: {
-                                        description: 'Match the received payment to the appropriate exchange record information.',
-                                    },
-                                    'ui:options': {
-                                        label: true,
-                                        ObjectFieldTemplate: 'InstructionsTemplate',
-                                    },
-                                },
-                                details: {
-                                    accord: true,
-                                    'ui:options': {
-                                        label: true,
-                                    },
-                                    amount: {
-                                        'ui:options': {
-                                            disabled: true,
-                                        },
-                                    },
-                                    payerDetails: {
-                                        'ui:options': {
-                                            cardType: 'Detailed',
-                                            icon: 'CIRCLE_USER',
-                                            label: true,
-                                            ObjectFieldTemplate: 'CardTemplate',
-                                            sectionTitle: 'Details',
-                                        },
-                                    },
-                                    purchaseDocument: {
-                                        canAdd: false,
-                                        props: {
-                                            type: 'Document',
-                                            canAdd: false,
-                                        },
-                                        'ui:options': {
-                                            label: false,
-                                        },
-                                        items: {
-                                            props: {
-                                                readonly: true,
-                                            },
-                                            'ui:options': {
-                                                canAdd: false,
-                                                label: false,
-                                                cardType: 'Document',
-                                                icon: 'DOCUMENT_TEXT',
-                                                ObjectFieldTemplate: 'CardTemplate',
-                                            },
-                                        },
-                                    },
-                                },
-                                transactions: {
-                                    "ui:widget'": 'radio',
-                                    'ui:options': {
-                                        label: false,
-                                        customOptions: [
-                                            {
-                                                label: 'Enter a case ID',
-                                                value: 'enterCaseId',
-                                            },
-                                            {
-                                                label: 'Document cannot be matched to a case',
-                                                value: 'notMatched',
-                                            },
-                                        ],
-                                    },
-                                },
-                            },
-                        },
-                    ],
-                },
-            };
+            //                     isDuplicate: {
+            //                         'ui:widget': 'radio',
+            //                     },
+            //                 },
+            //             },
+            //             {
+            //                 title: 'Match Payment',
+            //                 formSchema: {
+            //                     $schema: 'http://json-schema.org/draft-07/schema#',
+            //                     type: 'object',
+            //                     properties: {
+            //                         sectionHeader: {
+            //                             type: 'object',
+            //                             title: 'Processing Instructions',
+            //                         },
+            //                         details: {
+            //                             type: 'object',
+            //                             title: 'Details',
+            //                             properties: {
+            //                                 amount: {
+            //                                     type: 'string',
+            //                                     title: 'Amount Received',
+            //                                 },
+            //                                 payerDetails: {
+            //                                     type: 'object',
+            //                                     title: 'Supporting information',
+            //                                     properties: {
+            //                                         payorName: {
+            //                                             type: 'string',
+            //                                             title: 'Title',
+            //                                         },
+            //                                         taxId: {
+            //                                             type: 'string',
+            //                                             title: 'SSN',
+            //                                         },
+            //                                     },
+            //                                 },
+            //                                 purchaseDocument: {
+            //                                     type: 'array',
+            //                                     title: '',
+            //                                     items: {
+            //                                         type: 'object',
+            //                                         title: '',
+            //                                         properties: {
+            //                                             documentName: {
+            //                                                 type: 'string',
+            //                                             },
+            //                                             documentId: {
+            //                                                 type: 'string',
+            //                                             },
+            //                                             documentSource: {
+            //                                                 type: 'string',
+            //                                             },
+            //                                             createdDate: {
+            //                                                 type: 'string',
+            //                                             },
+            //                                         },
+            //                                     },
+            //                                 },
+            //                             },
+            //                         },
+            //                         transactions: {
+            //                             type: 'string',
+            //                             title: 'Select exchange record',
+            //                         },
+            //                     },
+            //                 },
+            //                 uiSchema: {
+            //                     'ui:globalOptions': {
+            //                         duplicateKeySuffixSeparator: '_',
+            //                         orderable: false,
+            //                         copyable: false,
+            //                     },
+            //                     $schema: 'http: //json-schema.org/draft-07/schema#',
+            //                     'ui:submitButtonOptions': {
+            //                         norender: true,
+            //                     },
+            //                     sectionHeader: {
+            //                         props: {
+            //                             description: 'Match the received payment to the appropriate exchange record information.',
+            //                         },
+            //                         'ui:options': {
+            //                             label: true,
+            //                             ObjectFieldTemplate: 'InstructionsTemplate',
+            //                         },
+            //                     },
+            //                     details: {
+            //                         accord: true,
+            //                         'ui:options': {
+            //                             label: true,
+            //                         },
+            //                         amount: {
+            //                             'ui:options': {
+            //                                 disabled: true,
+            //                             },
+            //                         },
+            //                         payerDetails: {
+            //                             'ui:options': {
+            //                                 cardType: 'Detailed',
+            //                                 icon: 'CIRCLE_USER',
+            //                                 label: true,
+            //                                 ObjectFieldTemplate: 'CardTemplate',
+            //                                 sectionTitle: 'Details',
+            //                             },
+            //                         },
+            //                         purchaseDocument: {
+            //                             canAdd: false,
+            //                             props: {
+            //                                 type: 'Document',
+            //                                 canAdd: false,
+            //                             },
+            //                             'ui:options': {
+            //                                 label: false,
+            //                             },
+            //                             items: {
+            //                                 props: {
+            //                                     readonly: true,
+            //                                 },
+            //                                 'ui:options': {
+            //                                     canAdd: false,
+            //                                     label: false,
+            //                                     cardType: 'Document',
+            //                                     icon: 'DOCUMENT_TEXT',
+            //                                     ObjectFieldTemplate: 'CardTemplate',
+            //                                 },
+            //                             },
+            //                         },
+            //                     },
+            //                     transactions: {
+            //                         "ui:widget'": 'radio',
+            //                         'ui:options': {
+            //                             label: false,
+            //                             customOptions: [
+            //                                 {
+            //                                     label: 'Enter a case ID',
+            //                                     value: 'enterCaseId',
+            //                                 },
+            //                                 {
+            //                                     label: 'Document cannot be matched to a case',
+            //                                     value: 'notMatched',
+            //                                 },
+            //                             ],
+            //                         },
+            //                     },
+            //                 },
+            //             },
+            //         ],
+            //     },
+            // };
 
-            const currentTaskMetadata = taskMetadata?.schemaContent?.tabSchemas;
+            const currentTaskMetadata = taskMetadata?.schemaContent?.tabSchemas || [];
 
             const nigoFilters = {
                 categoryIds: ['Form', 'Signature', 'Account Information'],
