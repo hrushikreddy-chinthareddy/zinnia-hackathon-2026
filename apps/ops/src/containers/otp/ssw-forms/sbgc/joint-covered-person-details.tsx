@@ -83,7 +83,8 @@ const JointCoveredPersonDetails = ({ isReadOnly, planCode }: JointCoveredPersonD
                     value={relationToCoveredPerson}
                     name="relationToCoveredPerson"
                 />
-                {(planCode === '772' || planCode === '728') && (
+                {/* TODO- Get proper requirement of Plan Code and update */}
+                {(planCode === '772' || planCode === '728' || planCode === '775') && (
                     <SelectSimple
                         disabled={isReadOnly}
                         className="max-w-lg"
