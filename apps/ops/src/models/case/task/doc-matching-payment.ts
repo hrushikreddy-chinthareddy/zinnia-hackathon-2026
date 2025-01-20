@@ -8,7 +8,7 @@ export type PotentialMatches = {
     firstName: string;
     lastName: string;
     processSubtype: string;
-    correlationId: string;
+    correlationid: string;
 };
 
 export enum MatchingCaseTypes {
