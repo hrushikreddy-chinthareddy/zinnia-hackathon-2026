@@ -7,11 +7,18 @@ export const TaskMetadataHelper = (task: ManagementTask, tasksMetadata: any[]) =
     return tasksMetadata.map((taskMetadata: FormMetadata) => {
         switch (task.taskType) {
             case TaskType.PURCHASE_DOCUMENT_MATCHING: {
-                if (taskMetadata.uiSchema) {
-                    if (taskMetadata.uiSchema) {
-                        const potentialMatchesOptions = generatePotentialMatchesOptions(task.data.potentialMatches);
-                        taskMetadata.uiSchema.potentialMatches?.['ui:options'].customOptions.unshift(...potentialMatchesOptions);
-                    }
+                const uiSchema = taskMetadata.uiSchema || {};
+                if (uiSchema.potentialMatches?.['ui:options']?.customOptions) {
+                    const existingOptions = uiSchema.potentialMatches['ui:options'].customOptions.map((option: any) => {
+                        if (option.value === undefined) {
+                            return { ...option, value: null };
+                        }
+                        return option;
+                    });
+
+                    const potentialMatchesOptions = generatePotentialMatchesOptions(task.data.potentialMatches);
+
+                    uiSchema.potentialMatches['ui:options'].customOptions = [...potentialMatchesOptions, ...existingOptions];
                 }
 
                 return taskMetadata;
@@ -28,12 +35,12 @@ const generatePotentialMatchesOptions = (potentialMatches: PotentialMatches[]): 
         const id = uuidv4();
         const subElement = {
             label: MatchingCaseTypes[item.entityType as keyof typeof MatchingCaseTypes] ?? MatchingCaseTypes.NB_APPLICATION_DATA,
-            value: item.zlCaseId,
-            title: item.entityType,
+            value: item?.zlCaseId ?? '',
+            title: item?.entityType ?? '',
             type: 'link',
             url: `/cases/${item.zlCaseId}`,
             disabled: false,
         };
-        return { label: item.entityType, value: item.correlationId, id, subElement };
+        return { label: item.entityType, value: item.correlationId ?? null, id, subElement };
     });
 };

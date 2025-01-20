@@ -113,11 +113,15 @@ export interface renewalsFormParts {
 export type FormMetadata = {
     formSchema: RJSFSchema;
     uiSchema: UiSchema;
-    formId: string;
-    process: string;
-    carrier: string;
-    taskType?: TaskType;
-    title: string;
+    schemaContent?: {
+        tabSchemas: [
+            {
+                title: string;
+                formSchema: RJSFSchema;
+                uiSchema: UiSchema;
+            }
+        ];
+    };
 };
 
 export enum CardTypes {
