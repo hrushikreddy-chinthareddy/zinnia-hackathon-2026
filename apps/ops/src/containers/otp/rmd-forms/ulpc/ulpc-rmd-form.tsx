@@ -15,7 +15,7 @@ import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdin
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helper';
-import { Carrier } from '@deps/models/case/withdrawal/case';
+import { Carrier, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import getUlpcRmdConfig from './ulpc-rmd-form.helper';
@@ -90,6 +90,8 @@ export default function UlpcRmdWithdrawalForm() {
                 isFormStateReadOnly={isFormStateReadOnly}
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
                 title={t('distributionInstruction.distributionInstruction') as string}
+                isDerivedMethodFromFunds={true}
+                defaultMethod={FundWithdrawnMethod.Prorata}
             />
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
             <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} />
