@@ -18,10 +18,11 @@ type DynamicFormProps = {
     taskMetadata: FormMetadata;
     readonly?: boolean;
     formButtons?: any;
+    formContext?: { [key: string]: any };
 };
 
 const DynamicForm = React.forwardRef(function DynamicFormComponent(
-    { formData, taskMetadata, readonly = false, onChange, onSubmit, formButtons, setFormData }: DynamicFormProps,
+    { formData, taskMetadata, readonly = false, onChange, onSubmit, formButtons, setFormData, formContext }: DynamicFormProps,
 
     forwardedRef: ForwardedRef<Form>
 ) {
@@ -42,6 +43,7 @@ const DynamicForm = React.forwardRef(function DynamicFormComponent(
                 templates={templates}
                 readonly={readonly}
                 showErrorList={false}
+                formContext={formContext}
             >
                 {formButtons}
             </Form>

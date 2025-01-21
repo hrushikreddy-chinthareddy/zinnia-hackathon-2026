@@ -27,6 +27,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     const formState = useContext(TaskDataContext);
     const { task, setTask, setSubmitFailed, correlationId, initialTask } = formState;
     const [formSchema, setFormSchema] = useState(taskMetadata);
+    const formContext = { carrier: task.carrier, caseId: task.caseId, taskType: task.taskType };
     const fetchData = async () => {
         const correlationId = task.data.potentialMatches;
         if (task.taskType === TaskType.PURCHASE_DOCUMENT_MATCHING) {
@@ -196,6 +197,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             onChange={handleChange}
             onSubmit={handleSubmit}
             readonly={readonly}
+            formContext={formContext}
         ></DynamicForm>
     );
 });

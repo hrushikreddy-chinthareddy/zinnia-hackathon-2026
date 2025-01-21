@@ -60,7 +60,9 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     uiSchema,
     formData,
     setFormData,
+    formContext,
 }: WidgetProps<T, S, F>) {
+    const dataContext = { ...formData, ...formContext };
     const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
 
     const { props } = getUiOptions<T, S, F>(uiSchema);
@@ -84,7 +86,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     };
 
     async function fetchDetails(apiUrl: string, value: string, newValue?: any) {
-        const payload = replacePlaceholders(apiProps.apiPayload, { ...formData, value });
+        const payload = replacePlaceholders(apiProps.apiPayload, { ...dataContext, value });
 
         const response = await client[apiProps?.apiMethod ?? 'get']<any, AxiosResponse<any>>(`${baseUrl}${apiUrl}`, payload ?? undefined);
 

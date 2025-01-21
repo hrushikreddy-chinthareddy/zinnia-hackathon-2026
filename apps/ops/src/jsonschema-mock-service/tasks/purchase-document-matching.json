@@ -404,7 +404,7 @@
                         "ui:props": {
                             "apiUrl": "case/v1/refdata",
                             "apiPayload": {
-                                "carrier": ["WELB"],
+                                "carrier": ["{{carrier}}"],
                                 "keys": ["requestSubType"],
                                 "process": ["{{value}}"]
                             },
