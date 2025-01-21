@@ -31,10 +31,6 @@ const NoteSection = React.forwardRef(function NoteSectionComponent() {
             <DynamicForm
                 formData={formData}
                 taskMetadata={{
-                    formId: '',
-                    process: '',
-                    carrier: '',
-                    title: '',
                     formSchema: FormSchema as RJSFSchema,
                     uiSchema: UiSchema,
                 }}
