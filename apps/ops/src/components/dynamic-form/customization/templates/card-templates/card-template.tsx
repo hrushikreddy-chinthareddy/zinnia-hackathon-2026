@@ -53,7 +53,7 @@ export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, cla
 
     const handleCardClick = () => {
         const content = <DetailsCard details={data} sectionTitle={sectionTitle} properties={displayProperties} />;
-        sideSheet.changeSideSheetContent(data[title], content);
+        sideSheet.changeSideSheetContent(data?.title || '', content);
         sideSheet.handleOpen(true);
     };
 
@@ -65,7 +65,7 @@ export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, cla
                 </div>
                 <div className="grow">
                     <div className="text-sm font-bold">
-                        <PiiWrapper>{data[title] ?? replacePlaceholders(properties[title], data)?.default ?? ''}</PiiWrapper>
+                        <PiiWrapper>{data?.title ?? replacePlaceholders(properties?.title, data)?.default ?? ''}</PiiWrapper>
                     </div>
                     <div className="flex items-center text-sm font-normal text-gray-300">
                         <PiiWrapper>
@@ -73,8 +73,8 @@ export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, cla
                                 ? properties[subtitle].title
                                 : ''}{' '}
                             {properties[subtitle].dataType === 'ssn'
-                                ? formatSSN(data[subtitle] ?? replacePlaceholders(properties[subtitle], data)?.default ?? '')
-                                : data[subtitle] ?? replacePlaceholders(properties[subtitle], data)?.default ?? ''}
+                                ? formatSSN(data?.subtitle ?? replacePlaceholders(properties[subtitle], data)?.default ?? '')
+                                : data?.subtitle ?? replacePlaceholders(properties[subtitle], data)?.default ?? ''}
                         </PiiWrapper>
                     </div>
                 </div>
@@ -124,8 +124,8 @@ const DocumentActions = ({ cardType, document, t }: any) => {
                         className="flex max-w-[234px] gap-1"
                         activeDocType={DocumentTypeView.Case}
                         carrier={'WELB'} //todo: vijaya carrier mapping
-                        displayName={document.displayName}
-                        documentId={document.documentId ?? (document.documentID as string)}
+                        displayName={document?.displayName || ''}
+                        documentId={document?.documentId ?? (document?.documentID as string)}
                     >
                         {t('general.view')}
                     </DocumentPreviewer>
@@ -133,8 +133,8 @@ const DocumentActions = ({ cardType, document, t }: any) => {
                 <div className="px-4">
                     <DocumentDownloader
                         carrierCode={'WELB'} //todo: vijaya carrier mapping
-                        documentId={document.documentId}
-                        documentName={document.documentName}
+                        documentId={document?.documentId}
+                        documentName={document?.documentName}
                         documentType={DocumentTypeView.Case}
                     />
                 </div>

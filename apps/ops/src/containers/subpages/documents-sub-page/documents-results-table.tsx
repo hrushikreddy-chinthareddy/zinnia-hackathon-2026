@@ -134,7 +134,7 @@ export default function DocumentsResultsTable({
                         <TableRow className="disabled-tr" key={`document-${document.documentId || document.documentID}`}>
                             <TableCell>
                                 <div className="flex flex-col items-start">
-                                    <PiiWrapper>{document.displayName}</PiiWrapper>
+                                    <PiiWrapper>{document?.displayName || ''}</PiiWrapper>
                                     <div>
                                         {linkedDocumentIdentifiers.includes(docDisplayId) ? (
                                             <Tooltip
