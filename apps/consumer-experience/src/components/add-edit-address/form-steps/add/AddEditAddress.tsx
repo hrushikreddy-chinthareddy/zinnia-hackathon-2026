@@ -177,8 +177,8 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
             onClick={() => append({ addressVal: '' })}
             size="small"
           >
-            <Icon type={IconType.ADD} /> Add address line (e.g. unit, floor,
-            suite, etc)
+            <Icon type={IconType.ADD} />
+            Add address line (e.g.&nbsp;apt,&nbsp;, suite,&nbsp;etc)
           </Button>
         )}
 
