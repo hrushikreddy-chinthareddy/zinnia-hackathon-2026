@@ -12,9 +12,9 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helper';
 import { Carrier, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case';
 
-import getUssaOftConfig from './ussa-oft-form-helper';
+import getUsaaOftConfig from './usaa-oft-form-helper';
 
-export default function UssaOftWithdrawalForm() {
+export default function UsaaOftWithdrawalForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const {
         signaturesConfig,
@@ -27,7 +27,7 @@ export default function UssaOftWithdrawalForm() {
         defaultValues,
         qualificationOptions,
         fundWithdrawnMethodOptions
-    } = getUssaOftConfig(t);
+    } = getUsaaOftConfig(t);
 
     const {
         formParty,
@@ -47,9 +47,9 @@ export default function UssaOftWithdrawalForm() {
     useEffect(() => {
         setFormData({
             ...formData,
-            formExtName: `${initialForm?.carrier || Carrier.FLIC}_OFT_DIGITAL_FORM`,
+            formExtName: `${initialForm?.carrier || Carrier.USAA}_OFT_DIGITAL_FORM`,
             metaData: {
-                formType: `${initialForm?.carrier || Carrier.FLIC}_OFT_DIGITAL_FORM`,
+                formType: `${initialForm?.carrier || Carrier.USAA}_OFT_DIGITAL_FORM`,
                 formId: null,
                 formNumber: '',
             },

@@ -3,9 +3,9 @@ import { TFunction } from 'next-i18next';
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
 import { BankDetailsInputMethod } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement-parts/autofill-account-toggle';
 import {
-  BankingFields,
-  DisbursementFields,
-  getDefaultFormDisbursementValues,
+    BankingFields,
+    DisbursementFields,
+    getDefaultFormDisbursementValues,
 } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helper';
 import { PartyConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helper';
@@ -15,45 +15,45 @@ import { PartialWithdrawalOption } from '@deps/components/otp-withdrawal-form/fo
 import { SelectOneOption } from '@deps/components/otp-withdrawal-form/form-program/form-program-process-date';
 import { getDefaultFormProgramValues } from '@deps/components/otp-withdrawal-form/form-program/form-program.helper';
 import {
-  SignatureBonusFields,
-  SignatureFields,
+    SignatureBonusFields,
+    SignatureFields,
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
-  FormValidationErrors,
-  PartyRoles,
-  PhoneTypes,
-  FormParts,
-  AmountType,
-  WithdrawalType,
-  ProgramType,
-  ProgramSubType,
-  FormProgram,
-  PaymentMethod,
-  PaymentMailType,
-  ProcessRequestType,
-  Program,
-  FormDisbursement,
-  AccountType,
-  AddressTypes,
-  FundWithdrawnMethod,
+    FormValidationErrors,
+    PartyRoles,
+    PhoneTypes,
+    FormParts,
+    AmountType,
+    WithdrawalType,
+    ProgramType,
+    ProgramSubType,
+    FormProgram,
+    PaymentMethod,
+    PaymentMailType,
+    ProcessRequestType,
+    Program,
+    FormDisbursement,
+    AccountType,
+    AddressTypes,
+    FundWithdrawnMethod,
 } from '@deps/models/case/withdrawal/case';
 import {
-  DEFAULT_BANK_DETAILS,
-  DEFAULT_DISBURSEMENT_UPDATE,
-  DisbursementParts,
-  PaymentMethodOption,
-  FormDisbursementSelections,
-  DisbursementToggleType,
+    DEFAULT_BANK_DETAILS,
+    DEFAULT_DISBURSEMENT_UPDATE,
+    DisbursementParts,
+    PaymentMethodOption,
+    FormDisbursementSelections,
+    DisbursementToggleType,
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../../utils/helper-utils';
 import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helper';
 import { commonOftFormValidation, getQualTypeOptions } from '../oft-form-helper';
 
-export default function getFlicOftConfig(t: TFunction) {
+export default function getUsaaOftConfig(t: TFunction) {
     // importing base configuration from FLIC form helper.
     const formValidation = (values: Partial<FormParts> = {}) => commonOftFormValidation(t, values);
 
