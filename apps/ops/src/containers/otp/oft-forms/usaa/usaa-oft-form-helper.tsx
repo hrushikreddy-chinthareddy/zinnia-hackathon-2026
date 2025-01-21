@@ -1,7 +1,6 @@
 import { TFunction } from 'next-i18next';
 
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
-import { BankDetailsInputMethod } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement-parts/autofill-account-toggle';
 import {
     BankingFields,
     DisbursementFields,
@@ -45,8 +44,7 @@ import {
     DEFAULT_DISBURSEMENT_UPDATE,
     DisbursementParts,
     PaymentMethodOption,
-    FormDisbursementSelections,
-    DisbursementToggleType,
+    FormDisbursementSelections
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../../utils/helper-utils';
@@ -299,6 +297,23 @@ export default function getUsaaOftConfig(t: TFunction) {
             },
         },
         {
+            label: `${t('amountDetails.programTypes.partial')} %`,
+            value: ProgramType.PartialPercent,
+            amountFieldType: AmountType.Percent,
+            generatePayloadFromSelection: (val = null) => {
+                return {
+                    ...getDefaultFormProgramValues(),
+                    withdrawType: { text: WithdrawalType.Gross },
+                    program: {
+                        text: Program.OFT,
+                    },
+                    programType: { text: ProgramType.WITHDRAWAL },
+                    programSubType: { text: ProgramSubType.PercentageofAV },
+                    partialPercent: { text: val, amountType: AmountType.Percent },
+                };
+            },
+        },
+        {
             label: t('amountDetails.programTypes.penaltyFreeAmount'),
             value: ProgramType.PenaltyFreeAmount,
             generatePayloadFromSelection: () => {
@@ -337,16 +352,6 @@ export default function getUsaaOftConfig(t: TFunction) {
         {
             label: t('distributionMethod.eft'),
             value: FormDisbursementSelections.EFT,
-            additionalOptions: {
-                disbursementToggleType: DisbursementToggleType.AutoFillInfoToggle,
-                toggleOptions: [
-                    {
-                        label: t('distributionMethod.ussa'),
-                        value: BankDetailsInputMethod.Auto,
-                    },
-                ],
-                defaultPrefillMethod: BankDetailsInputMethod.Auto,
-            },
             fields: [
                 {
                     fieldName: BankingFields.AccountType,
@@ -405,16 +410,6 @@ export default function getUsaaOftConfig(t: TFunction) {
                     component: DisbursementFields.BankTextField,
                     classNames: 'col-start-1',
                 },
-                /*{
-                    fieldName: BankingFields.BankFurtherCreditName,
-                    fieldLabel: t('distributionMethod.bankFurtherCreditName'),
-                    component: DisbursementFields.BankTextField,
-                },
-                {
-                    fieldName: BankingFields.BankFurtherCreditAccount,
-                    fieldLabel: t('distributionMethod.bankFurtherCreditAccount'),
-                    component: DisbursementFields.BankTextField,
-                },*/
                 {
                     fieldName: BankingFields.FboDetails,
                     fieldLabel: t('distributionMethod.fboDetails'),
@@ -450,8 +445,6 @@ export default function getUsaaOftConfig(t: TFunction) {
                     accountType: selectedBank?.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank?.bankName ?? '',
                     bankRoutingNumber: selectedBank?.routingNumber ?? '',
-                    //bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
-                    //bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
                     payeeName: payee?.name?.text ?? '',
                     fboDetails: payee?.fboDetails?.text || '',
                     contractNumber: payee?.contractNumber.text ?? '',
@@ -463,8 +456,6 @@ export default function getUsaaOftConfig(t: TFunction) {
                 accountType,
                 bankName,
                 accountHolder,
-                //bankFurtherCreditAccount,
-                //bankFurtherCreditName,
                 bankRoutingNumber,
                 payeeName,
                 reEnterAccountNumber,
@@ -487,8 +478,6 @@ export default function getUsaaOftConfig(t: TFunction) {
                             bankName,
                             nameOnBankAccount: accountHolder ?? '',
                             routingNumber: bankRoutingNumber,
-                            //bankFurtherCreditAccount,
-                            //bankFurtherCreditName,
                             reEnterAccountNumber,
                             reEnterBankRoutingNumber,
                         },
@@ -798,55 +787,6 @@ export default function getUsaaOftConfig(t: TFunction) {
                         accountNumber: { text: accountNumber ?? '' },
                         zip: { text: '' },
                     },
-                };
-            },
-        },
-        {
-            label: t('distributionMethod.dtcc'),
-            value: FormDisbursementSelections.DTCC,
-            fields: [
-                {
-                    fieldName: BankingFields.PayeeName,
-                    fieldLabel: t('distributionMethod.payeeName'),
-                    component: DisbursementFields.BankTextField,
-                    classNames: 'col-start-1',
-                    maxLength: 40,
-                },
-                {
-                    fieldName: BankingFields.ParticipantId,
-                    fieldLabel: t('distributionMethod.participantId'),
-                    component: DisbursementFields.SelectParticipantId,
-                },
-                {
-                    fieldName: BankingFields.ContractNumber,
-                    fieldLabel: t('distributionMethod.onlyContractNumber'),
-                    component: DisbursementFields.BankTextField,
-                    maxLength: 30,
-                },
-            ],
-            getDefaultPayload({ paymentMethod, payee, participantId, bank }: FormDisbursement) {
-                if (paymentMethod.text !== FormDisbursementSelections.DTCC) {
-                    return DEFAULT_DISBURSEMENT_UPDATE;
-                }
-                return {
-                    ...DEFAULT_DISBURSEMENT_UPDATE,
-                    payeeName: payee?.name.text ?? '',
-                    address: payee?.addresses?.[0] ?? DEFAULT_ADDRESS,
-                    contractNumber: bank?.[0]?.accountNumber ?? '',
-                    participantId: participantId?.text ?? '',
-                };
-            },
-            generatePayloadFromSelection: ({ payeeName, participantId, contractNumber }: DisbursementParts) => {
-                return {
-                    ...getDefaultFormDisbursementValues(),
-                    paymentMethod: { text: PaymentMethod.DTCC },
-                    participantId: { text: participantId ?? null },
-                    payee: {
-                        name: { text: payeeName ?? null },
-                        addresses: [],
-                        contractNumber: { text: null },
-                    },
-                    bank: [{ ...DEFAULT_BANK_DETAILS, accountNumber: contractNumber ?? '' }],
                 };
             },
         },

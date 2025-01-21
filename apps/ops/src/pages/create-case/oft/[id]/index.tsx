@@ -38,7 +38,6 @@ import { ActiveWithdrawalCase, Carrier, PartyRoles, QualTypes } from '@deps/mode
 import { UserPermission } from '@deps/models/user-profile';
 import { initializeOTPTaskSSR } from '@deps/operations/tasks/v2/initialize';
 import { getDocumentSSR } from '@deps/queries/api/documents';
-import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import { SCREEN_BREAKPOINTS } from '@deps/types/constants';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
@@ -47,6 +46,7 @@ import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { logError, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 
 import { ERROR_CODES } from '../../error';
 
