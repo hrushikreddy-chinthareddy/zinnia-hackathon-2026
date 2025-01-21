@@ -63,7 +63,6 @@ export const useDocumentDownload = (
             setLoading(true);
             let doc;
             if (featureFlags[FEATURE_FLAGS.DOCUMENTS_V3]) {
-                // BPB fix this logic (invert upstream);
                 let docClass;
                 switch (documentType) {
                     case DocumentTypeView.Correspondence:

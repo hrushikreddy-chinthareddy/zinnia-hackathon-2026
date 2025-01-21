@@ -67,13 +67,11 @@ export default async function PolicyAcknowledgementDocumentPreview({
     }
   );
 
-  // BPB - is this ok?
   const fileName =
     (document as ExtendedDocumentMeta)?.fileName ||
     (document as DocumentV3SearchItem)?.sourceFileName ||
     '';
 
-  // BPB - silly just to add a v3, but want to check that it works the same before I break stuff here
   const docDownloadUrl = shouldUseV3
     ? `/api/documents/v3/${document?.documentId}/download?parentCarrierCode=${clientCode}&policyNumber=${policyNumber}&planCode=${planCode}`
     : `/api/documents/${document?.documentId}/download/${fileName}.pdf?clientCode=${clientCode}&policyNumber=${policyNumber}&planCode=${planCode}`;
