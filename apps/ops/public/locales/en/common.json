@@ -4384,6 +4384,12 @@
             "label": "People",
             "manageBeneficiaries": "Manage beneficiaries"
         },
+        "documents": {
+            "label": "Send Documents",
+            "sendForms": "Send forms",
+            "sendStatements": "Send statements",
+            "sendTaxForms": "Send tax forms"
+        },
         "transactions": {
             "label": "Transactions",
             "managePremiumAutopay": "Manage premium autopay",
