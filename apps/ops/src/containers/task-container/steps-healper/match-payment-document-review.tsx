@@ -27,7 +27,7 @@ export const getMatchDocumentPaymentReviewSteps = ({ taskType, taskInfoLink, t, 
 
     const dynamicSteps = [
         {
-            ariaLabel: taskMetadata[0].title,
+            ariaLabel: taskMetadata[0].title || '',
             isVisible: () => true,
             component: (
                 <TaskFormStep
@@ -37,13 +37,13 @@ export const getMatchDocumentPaymentReviewSteps = ({ taskType, taskInfoLink, t, 
                     key={docMatchKey}
                 ></TaskFormStep>
             ),
-            text: taskMetadata[0].title,
+            text: taskMetadata[0].title || '',
             index: 0,
             isCompleted: true,
-            screenReaderLabel: taskMetadata[0].title,
+            screenReaderLabel: taskMetadata[0].title || '',
         },
         {
-            ariaLabel: taskMetadata[1].title,
+            ariaLabel: taskMetadata[1].title || '',
             isVisible: () => true,
             component: (
                 <TaskFormStep
@@ -53,10 +53,10 @@ export const getMatchDocumentPaymentReviewSteps = ({ taskType, taskInfoLink, t, 
                     key={paymentMatchKey}
                 ></TaskFormStep>
             ),
-            text: taskMetadata[1].title,
+            text: taskMetadata[1].title || '',
             index: 1,
             isCompleted: true,
-            screenReaderLabel: taskMetadata[1].title,
+            screenReaderLabel: taskMetadata[1].title || '',
         },
     ];
 
