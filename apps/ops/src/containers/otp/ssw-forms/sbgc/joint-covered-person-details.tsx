@@ -30,7 +30,7 @@ const JointCoveredPersonDetails = ({ isReadOnly, planCode }: JointCoveredPersonD
         party?.relationshipToOwnerAnnutant || RelationshipToCoveredPerson.NA
     );
 
-    const [payoutOption, setPayoutOption] = useState('' as PayoutOptions);
+    const [payoutOption, setPayoutOption] = useState(party?.withdrawalPayoutOption || '' as PayoutOptions);
 
     const { coveredPartyConfigs } = useSbgcConfig(t);
 
@@ -56,6 +56,16 @@ const JointCoveredPersonDetails = ({ isReadOnly, planCode }: JointCoveredPersonD
         setPartyInfo(party => ({ ...party, addresses: [addr] as Address | any }));
     };
 
+    const handlePayoutUpdate = (val: PayoutOptions) => {
+        setPayoutOption(val);
+        setPartyInfo(party => ({ ...party, withdrawalPayoutOption: val }));
+    };
+
+    const handleRelationshipUpdate = (val: RelationshipToCoveredPerson) => {
+        setRelationToCoveredPerson(val);
+        setPartyInfo(party => ({ ...party, relationshipToOwnerAnnutant: val }));
+    };
+
     return (
         <>
             <div className="my-3">
@@ -75,10 +85,7 @@ const JointCoveredPersonDetails = ({ isReadOnly, planCode }: JointCoveredPersonD
                     className="max-w-lg"
                     label={t('sswProgram.relationshipToCoveredPerson.label') as string}
                     options={relationshipToCoveredPerson(t)}
-                    onChange={val => {
-                        setRelationToCoveredPerson(val as RelationshipToCoveredPerson);
-                        setPartyInfo(party => ({ ...party, relationshipToOwnerAnnutant: val as RelationshipToCoveredPerson }));
-                    }}
+                    onChange={val => handleRelationshipUpdate(val as RelationshipToCoveredPerson)}
                     size={FieldSize.Small}
                     value={relationToCoveredPerson}
                     name="relationToCoveredPerson"
@@ -90,10 +97,7 @@ const JointCoveredPersonDetails = ({ isReadOnly, planCode }: JointCoveredPersonD
                         className="max-w-lg"
                         label={t('sswProgram.payout.title') as string}
                         options={payoutOptions(t)}
-                        onChange={val => {
-                            setPayoutOption(val as PayoutOptions);
-                            setPartyInfo(party => ({ ...party, withdrawalPayoutOption: val as PayoutOptions }));
-                        }}
+                        onChange={val => handlePayoutUpdate(val as PayoutOptions)}
                         size={FieldSize.Small}
                         value={payoutOption}
                         name="payoutOptions"

@@ -484,6 +484,7 @@ export interface Party {
     fullName: string;
     suffix?: string | null;
     relationshipToOwnerAnnutant?: RelationshipToCoveredPerson;
+    withdrawalPayoutOption?: PayoutOptions;
     dob?: {
         text: string | null;
     };
