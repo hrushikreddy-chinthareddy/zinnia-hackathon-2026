@@ -39,19 +39,18 @@ import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { logError, logInfo, logWarn } from '@deps/utils/server-logging';
-
-import { ERROR_CODES } from '../../error';
+import NoteSection from '@deps/components/otp-withdrawal-form/note-section';
+import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import { MassMutualSSWForm } from '@deps/containers/otp/ssw-forms/mass/mass-ssw-form';
 import { NassauSSWForm } from '@deps/containers/otp/ssw-forms/nasu/nasu-ssw-form';
-import { CarrierToCarrierTitleMap } from '@deps/constants/page-title';
 import { FlicSSWForm } from '@deps/containers/otp/ssw-forms/flic/flic-ssw-form';
+import { GlcoSSWForm } from '@deps/containers/otp/ssw-forms/glco/glco-ssw-form';
+import { SbgcSSWForm } from '@deps/containers/otp/ssw-forms/sbgc/sbgc-ssw-form';
+import { CarrierToCarrierTitleMap } from '@deps/constants/page-title';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 
-import { checkNigoExistsSSR } from '@deps/queries/api/integration';
-import NoteSection from '@deps/components/otp-withdrawal-form/note-section';
-import { GlcoSSWForm } from '@deps/containers/otp/ssw-forms/glco/glco-ssw-form';
-import { SbgcSSWForm } from '@deps/containers/otp/ssw-forms/sbgc/sbgc-ssw-form';
+import { ERROR_CODES } from '../../error';
 
 interface SSWCaseProps extends SegmentTrackedPageProps {
     document: DocumentData;
@@ -301,7 +300,7 @@ export const getServerSideProps = withPageAuthRequired({
         const response = await searchPolicySSR(policyNumber, [clientId.toUpperCase() as Carrier], accessToken, 1, 0);
         const planCode = response ? response[0]?.planCode : null;
         if (!planCode) {
-            logInfo('address-change::Plan code not found', { documentNumber, policyNumber, clientId });
+            logInfo('create-case/ssw/:id::Plan code not found', { documentNumber, policyNumber, clientId });
             return {
                 redirect: {
                     destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
@@ -309,7 +308,7 @@ export const getServerSideProps = withPageAuthRequired({
                 },
             };
         } else {
-            logInfo('address-change::Plan code found', { documentNumber, policyNumber, clientId, planCode });
+            logInfo('create-case/ssw/:id::Plan code found', { documentNumber, policyNumber, clientId, planCode });
         }
 
         const form = await initializeOTPTaskSSR({
@@ -325,7 +324,7 @@ export const getServerSideProps = withPageAuthRequired({
             action: action,
         });
         if (!form) {
-            logError('create-case/SSW/:id::Error initializing task ssw form', {
+            logError('create-case/ssw/:id::Error initializing task ssw form', {
                 documentNumber,
                 clientId,
                 contract: document?.contract,

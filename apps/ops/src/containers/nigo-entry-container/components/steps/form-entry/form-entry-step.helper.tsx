@@ -57,7 +57,7 @@ export const getRMDFormComponentMap = (qualType: QualTypes | ''): Record<string,
     [Carrier.SBGC]: <SbgcRmdWithdrawalForm />,
 });
 
-const getSSWFormComponentMap = (planCode: string, qualType: QualTypes | ''): Record<string, React.ReactNode> => ({
+const getSSWFormComponentMap = (qualType: QualTypes | '', planCode?: string): Record<string, React.ReactNode> => ({
     [Carrier.SBGC]: <SbgcSSWForm />,
     [Carrier.MASS]: <MassMutualSSWForm qualType={qualType} />,
     [Carrier.NASU]: <NassauSSWForm />,
@@ -75,7 +75,7 @@ export const getFormParts = (caseType: CaseType, clientCode: string, qualType: Q
             formParts = determineFormToRender(clientCode, getOFTFormComponentMap(planCode, qualType));
             break;
         case CaseType.SSW:
-            formParts = determineFormToRender(clientCode, getSSWFormComponentMap(planCode, qualType));
+            formParts = determineFormToRender(clientCode, getSSWFormComponentMap(qualType, planCode));
             break;
         case CaseType.Rmd:
             formParts = determineFormToRender(clientCode, getRMDFormComponentMap(qualType));
