@@ -33,7 +33,7 @@ export interface DocumentV3SearchItem extends MetadataSearchResponse {
 
 export interface DocumentV3SearchResult extends v3SearchResponse {
   documents: DocumentV3SearchItem[];
-  totalCount: number | null; // in the response, but not in the spec (yet) for v3...  BPB - v2 seems busted
+  totalCount: number | null; // in the response, but not in the spec (yet) for v3...
 }
 
 export interface TaxDocumentApiRequestInputs {
