@@ -72,26 +72,15 @@ AUTH0_COOKIE_DOMAIN_MYPOLICYVIEW='mypolicyview.local'
 
 Now you can run the project and open `http://everly.zinniatech.local:3000/` to view the subdomain locally.
 
-## Setting up a new user:
-
-1. You'll need a zinnia email adress to get extended permissions
-1. Create a policy using [this guide](docs/make-a-new-policy.md)
-   > creating a policy will create your Auth0 user as well. This will allow access to Consumer
-1. If this a user for a developer, contact [CIAM channel](https://se2.enterprise.slack.com/archives/C04QBKBJ3H7) to update permissions. Most users will have permissions that match what an actual consumer will experience (i.e. they will only be able to view policies they own), however for development it's easier to debug if you have access to more policies (similar to ops).
-
 # Local development
 
-> You can make new policies following [this guide](docs/make-a-new-policy.md).
+Go [here](./docs/onboarding-to-the-project.md) for more info.
 
 ## Dev Menu
 
 There is a dev menu availble for several different mocking purporses. To turn it on, add `..show_dev_menu..=true` as a query string.
 
 If you click `Show test policies` but still aren't able to see more than your account's policies, your account may not have ops level permissions, and you will only be able to view the policies assigned to your user. Contact CIAM for added permissions.
-
-## Styling
-
-We use [Bloom components](https://zinnia-design-system.supernova-docs.io/latest) wherever possible. For everything else, there's a mix of global, css modules and utility classes in the project. We decided to add utility classes for things like [spacing](src/app/styles/spacing.css) and [borders](src/app/styles/borders.css) so that devs wouldn't have to make an additional style file for simple components.
 
 # Branching Strategy & Environments
 
@@ -111,6 +100,8 @@ TLDR
 - prefer to do QA on the ephemeral environment (you will need to update access on that environment to allow for anyone with link to view)
 
 ## Environment Variables
+
+TODO: add this to it's own doc and include in developer onboarding
 
 See [this chart](apps/consumer-experience/src/app/documentation/adding-a-new-enviornment-variable.md)
 
