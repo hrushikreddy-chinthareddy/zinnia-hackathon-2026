@@ -40,7 +40,7 @@ import { createValidator } from '../../utils/helper-utils';
 
 export default function getGlcoConfig(t: TFunction) {
     const fundWithdrawnMethodOptions = [
-        { label: t('distributionInstruction.prorata'), value: FundWithdrawnMethod.Default },
+        { label: t('distributionInstruction.prorata'), value: FundWithdrawnMethod.Prorata },
         { label: t('distributionInstruction.specifyFunds'), value: FundWithdrawnMethod.SpecifyFunds },
     ];
 
