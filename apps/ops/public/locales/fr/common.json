@@ -3160,7 +3160,10 @@
             "pendinglabel": "En attente jusqu'au",
             "canceledLabel": "Annulé le",
             "completedLabel": "Terminé le",
-            "additionalDocuments": "Documents supplémentaires"
+            "additionalDocuments": "Documents supplémentaires",
+            "noAssignee": "Seul le responsable peut démarrer cette tâche",
+            "startTask": "Démarrer la tâche",
+            "ClaimTask": "Revendiquer la tâche"
         },
         "suitability": {
             "header": "Examen complet de l’adéquation",

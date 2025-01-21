@@ -31,6 +31,9 @@ import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { writeToCache } from '@deps/utils/cache';
 import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
 import { TranslationFiles } from '@deps/config/translations';
+import { TaskLabel } from '@deps/models/case/task-instance';
+import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
+import Content, { ContentVariant } from '@deps/components/content/content';
 
 const TaskTypeMap: Record<string, string> = {
     ['SUITABILITY_REVIEW']: 'suitability review',
@@ -39,6 +42,17 @@ const TaskTypeMap: Record<string, string> = {
 export enum TabOptions {
     Details = 'Details',
     Documents = 'Documents',
+}
+
+export interface DocumentItem {
+    document:
+        | {
+              documentId: string;
+              documentName: string;
+          }
+        | DocumentWithSource;
+    taskCarrier: string;
+    docType: DocumentTypeView;
 }
 
 export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId: string; type?: string }) {
@@ -88,7 +102,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
                 });
                 return;
             } finally {
-                setClaimTaskLoader(false); // Ensure this always runs
+                setClaimTaskLoader(false);
             }
         }
     };
@@ -109,6 +123,8 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
     const { unit: createdUnit, count: createdCount } = getTimeAgoUnitValue(task.createdAt) || {};
     const formattedCreated = parseAndFormatDate(NUMERIC_DATE_FORMAT, DEFAULT_DATE_FORMAT, task.createdAt);
     const formattedUpdated = parseAndFormatDate(NUMERIC_DATE_FORMAT, DEFAULT_DATE_FORMAT, task.updatedAt);
+    const formattedPending = parseAndFormatDate(NUMERIC_DATE_FORMAT, DEFAULT_DATE_FORMAT, task.impededTillDate);
+
     let userExists =
         user?.email?.toLowerCase() !== '' &&
         (user?.email?.toLowerCase() === task.assignee?.toLowerCase() ||
@@ -118,6 +134,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
     let additionalDocumentsList = task.additionalDocuments || [];
 
     let showStartButton = task.status === TaskStatus.New || task.status === TaskStatus.InProgress || task.status === TaskStatus.Pending;
+    let statusReason = task.status === TaskStatus.Pending ? task.impededReason : task.cancellationReason;
 
     let badgeIcon, badgeVariant, badgeLabel;
 
@@ -125,27 +142,27 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
         case TaskStatus.Completed:
             badgeIcon = <CircleCheckIcon height={20} width={20} />;
             badgeVariant = BadgeVariant.Success;
-            badgeLabel = 'Completed';
+            badgeLabel = TaskLabel.Completed;
             break;
         case TaskStatus.Canceled:
             badgeIcon = <BanIcon height={20} width={20} />;
             badgeVariant = BadgeVariant.Inactive;
-            badgeLabel = 'Canceled';
+            badgeLabel = TaskLabel.Canceled;
             break;
         case TaskStatus.InProgress:
             badgeIcon = <ClipboardListIcon height={20} width={20} />;
             badgeVariant = BadgeVariant.Info;
-            badgeLabel = 'In progress';
+            badgeLabel = TaskLabel.InProgress;
             break;
         case TaskStatus.Pending:
             badgeIcon = <CirclePauseIcon height={24} width={24} />;
             badgeVariant = BadgeVariant.Error;
-            badgeLabel = 'Pending';
+            badgeLabel = TaskLabel.Pending;
             break;
         default:
             badgeIcon = <ClipboardIcon height={20} width={20} />;
             badgeVariant = BadgeVariant.Info;
-            badgeLabel = 'To do';
+            badgeLabel = TaskLabel.New;
             break;
     }
 
@@ -183,7 +200,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
         );
     };
 
-    const DocumentItem = ({ document, taskCarrier, docType }: { document: any; taskCarrier: string; docType: DocumentTypeView }) => {
+    const DocumentItem = ({ document, taskCarrier, docType }: DocumentItem) => {
         return (
             <div className="my-3 flex w-[436px] justify-between rounded border border-gray-100 p-[12px]" key={document.documentId}>
                 <div>
@@ -203,13 +220,13 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
                             className="flex gap-1"
                             activeDocType={docType}
                             carrier={taskCarrier.toUpperCase()}
-                            documentId={document.documentId}
-                            displayName={document.documentName}
+                            documentId={document?.documentId || ''}
+                            displayName={document?.documentName || ''}
                         >
                             <>{t('general.view')}</>
                         </DocumentPreviewer>
                     ) : (
-                        createAction(document, taskCarrier.toUpperCase(), documentPanel)
+                        createAction(document as DocumentWithSource, taskCarrier.toUpperCase(), documentPanel)
                     )}
                 </div>
             </div>
@@ -238,11 +255,18 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
                     <>
                         <div className="col-span-1 text-[--color-base-text-text-secondary]"> {t('sideSheet.task.reasonLabel')} </div>
                         <Typography variant={TypographyVariant.BodySm} className="col-span-2">
+                            <Content
+                                truncate
+                                details={statusReason}
+                                variant={ContentVariant.BodySm}
+                                popoverBody={statusReason}
+                                popoverClassName="background-white w-full "
+                                pii={true}
+                            />
                             {task.status === TaskStatus.Pending ? task.impededReason : task.cancellationReason}
                         </Typography>
                     </>
                 )}
-
                 {(task.status === TaskStatus.Pending || task.status === TaskStatus.Canceled || task.status === TaskStatus.Completed) && (
                     <>
                         <div className="col-span-1 text-[--color-base-text-text-secondary]">
@@ -252,11 +276,14 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
                                 ? t('sideSheet.task.canceledLabel')
                                 : t('sideSheet.task.completedLabel')}
                         </div>
-
                         <Typography variant={TypographyVariant.BodySm} className="col-span-2">
-                            {task.status == TaskStatus.Pending
-                                ? formattedUpdated
-                                : dayjs(formattedUpdated).format(DEFAULT_DATETIME_DISPLAY_FORMAT)}
+                            {task.status === TaskStatus.Pending
+                                ? formattedPending
+                                    ? dayjs(formattedPending).format(DEFAULT_DATETIME_DISPLAY_FORMAT)
+                                    : 'N/A'
+                                : formattedUpdated
+                                ? dayjs(formattedUpdated).format(DEFAULT_DATETIME_DISPLAY_FORMAT)
+                                : 'N/A'}
                         </Typography>
                     </>
                 )}
@@ -280,7 +307,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
 
             {type == 'case' && !userExists && showStartButton && (
                 <div className="bg-black text-white text-sm font-normal rounded-lg shadow-lg p-2 top-[-40px] left-1/2 transform -translate-x-1/2 whitespace-nowrap z-10  mt-6 max-w-[240px]">
-                    Only the assignee can start this task
+                    {t('sideSheet.task.noAssignee')}
                 </div>
             )}
 
@@ -296,7 +323,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
                             aria-label="click me"
                             mode="primary"
                         >
-                            Start task
+                            {t('sideSheet.task.startTask')}
                         </Button>
                     )}
                 </div>

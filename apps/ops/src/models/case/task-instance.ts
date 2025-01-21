@@ -18,6 +18,14 @@ export enum TaskStatus {
 
 }
 
+export enum TaskLabel {
+    'New' = 'To do',
+    'Completed' = 'Completed',
+    'Pending' = 'Pending',
+    'Canceled' = 'Canceled',
+    'InProgress' = 'In Progress',
+}
+
 export type TaskInstance = {
     additionalData: AdditionalDataInstance;
     assignee: string;
