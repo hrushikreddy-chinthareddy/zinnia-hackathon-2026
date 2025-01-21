@@ -7,6 +7,7 @@ import Content, { ContentVariant } from '@deps/components/content/content';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
+import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import { NoteInstance } from '@deps/models/case/note-instance';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { ReactComponent as AnnotationsIcon } from '@deps/styles/elements/icons/communications/annotations.svg';
@@ -35,14 +36,9 @@ const NoteItem = ({ note }: { note: NoteInstance }) => {
     );
 };
 
-interface NotesTabProps {
-    caseNotes: NoteInstance[];
-    loadingNotes: boolean;
-    notesStatusCode: number | null;
-}
-
-export default function NotesTab({ caseNotes, loadingNotes, notesStatusCode }: NotesTabProps) {
+export default function NotesTab() {
     const { t } = useTranslation();
+    const { caseNotes, loadingNotes, notesStatusCode } = useCaseActivityContext();
 
     return (
         <CardContainer>

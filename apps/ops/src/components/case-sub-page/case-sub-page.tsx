@@ -24,7 +24,7 @@ export default function CaseSubPage({
     handleTabChange: (val: string) => void;
 }) {
     const { t } = useTranslation();
-    const { loadingCallLogs, callLogs, callLogsStatusCode, caseNotes, loadingNotes, notesStatusCode } = useCaseActivityContext();
+    const { loadingCallLogs, callLogs, callLogsStatusCode } = useCaseActivityContext();
 
     return (
         <div className="w-full rounded bg-white shadow-elevation-light-04 lg:w-2/3">
@@ -54,7 +54,7 @@ export default function CaseSubPage({
                     <DocumentsTab caseDetails={caseDetails} />
                 </TabContent>
                 <TabContent className="w-full" value={CaseDetailsTabValues.notes}>
-                    <NotesTab caseNotes={caseNotes} loadingNotes={loadingNotes} notesStatusCode={notesStatusCode} />
+                    <NotesTab />
                 </TabContent>
                 <TabContent className="w-full" value={CaseDetailsTabValues['call-logs']}>
                     <CallLogsTab loadingCallLogs={loadingCallLogs} callLogs={callLogs} callLogsStatusCode={callLogsStatusCode} />
