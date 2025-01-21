@@ -883,8 +883,8 @@ export enum RestrictionOption {
 }
 
 export enum PayoutOptions {
-    level = 'LEVEL_PAYOUT_GLWB',
-    increasing = 'INCREASING_PAYOUT_GLWB',
+    level = 'LEVEL',
+    increasing = 'INCREASING',
 }
 
 export enum TaxWithholdingPlace {

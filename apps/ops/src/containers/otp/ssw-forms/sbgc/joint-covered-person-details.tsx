@@ -30,7 +30,7 @@ const JointCoveredPersonDetails = ({ isReadOnly, planCode }: JointCoveredPersonD
         party?.relationshipToOwnerAnnutant || RelationshipToCoveredPerson.NA
     );
 
-    const [payoutOption, setPayoutOption] = useState(PayoutOptions.level);
+    const [payoutOption, setPayoutOption] = useState('' as PayoutOptions);
 
     const { coveredPartyConfigs } = useSbgcConfig(t);
 
