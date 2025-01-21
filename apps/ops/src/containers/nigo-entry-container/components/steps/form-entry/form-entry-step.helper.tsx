@@ -3,7 +3,7 @@ import FlicOftWithdrawalForm from '@deps/containers/otp/oft-forms/flic/flic-oft-
 import MassOftWithdrawalForm from '@deps/containers/otp/oft-forms/mass/mass-oft-form';
 import RSLNOftWithdrawalForm from '@deps/containers/otp/oft-forms/rsln/rsln-oft-form';
 import SbgcOftWithdrawalForm from '@deps/containers/otp/oft-forms/sbgc/sbgc-oft-form';
-import UsaaOftWithdrawalForm from '@deps/containers/otp/oft-forms/ussa/usaa-oft-form';
+import UsaaOftWithdrawalForm from '@deps/containers/otp/oft-forms/usaa/usaa-oft-form';
 import FlicRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/flic-rmd-form';
 import MassMutualRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/mm-rmd-form';
 import SbgcRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/sbgc-rmd-form';
