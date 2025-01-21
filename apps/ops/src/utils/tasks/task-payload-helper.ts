@@ -24,7 +24,7 @@ export const buildTaskPayload = (task: ManagementTask, initialTask: ManagementTa
                 );
 
                 const { entityType, recordId, zlCaseId, policyNumber, taskId, firstName, lastName } = potentialMatch;
-                const transactionRecordId = task?.data?.transactions ?? null;
+                const paymentRecordId = task?.data?.transactions ?? null;
 
                 updateTask;
                 updateTask = {
@@ -41,7 +41,7 @@ export const buildTaskPayload = (task: ManagementTask, initialTask: ManagementTa
                             firstName,
                             lastName,
                             linkedData: {
-                                recordId: transactionRecordId,
+                                paymentRecordId: paymentRecordId,
                             },
                         },
                     },

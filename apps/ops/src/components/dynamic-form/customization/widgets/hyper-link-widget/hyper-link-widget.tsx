@@ -27,9 +27,18 @@ export const HyperLink = ({ title, label, value, type, disabled, className }: Hy
         e.preventDefault();
         router.push(value);
     };
+
+    // if (!type) {
+    //     return (
+    //         <div className={`flex flex-col ${className}`}>
+    //             <div>{title}</div>
+    //         </div>
+    //     );
+    // }
     return (
         <div className={`flex flex-col ${className}`}>
             {title && <div>{title}</div>}
+
             {type === 'link' ? (
                 <NavElement
                     className="text-left underline underline-offset-2"

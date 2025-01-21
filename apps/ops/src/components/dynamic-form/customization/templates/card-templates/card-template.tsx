@@ -9,6 +9,7 @@ import { DocumentTypeView } from '@deps/components/side-sheet/documents/document
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { formatSSN } from '@deps/helpers/string.helper';
 import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
 
 export function CardTemplate(props: ObjectFieldTemplateProps) {
@@ -71,7 +72,9 @@ export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, cla
                             {properties?.[subtitle] && typeof properties[subtitle] !== 'boolean' && 'title' in properties[subtitle]
                                 ? properties[subtitle].title
                                 : ''}{' '}
-                            {data[subtitle] ?? replacePlaceholders(properties[subtitle], data)?.default ?? ''}
+                            {properties[subtitle].dataType === 'ssn'
+                                ? formatSSN(data[subtitle] ?? replacePlaceholders(properties[subtitle], data)?.default ?? '')
+                                : data[subtitle] ?? replacePlaceholders(properties[subtitle], data)?.default ?? ''}
                         </PiiWrapper>
                     </div>
                 </div>
@@ -92,7 +95,10 @@ export const DetailsCard = ({ details, sectionTitle, properties }: any) => {
                 {properties?.map((schema: any) => {
                     return (
                         <Typography variant={TypographyVariant.BodySm} key={schema.key} className="p-1">
-                            {schema?.title}: {details[schema.key] ?? replacePlaceholders(schema, details)?.default ?? '--'}
+                            {schema?.title}:{' '}
+                            {schema?.dataType === 'ssn'
+                                ? formatSSN(details[schema.key] ?? replacePlaceholders(schema, details)?.default ?? '--')
+                                : details[schema.key] ?? replacePlaceholders(schema, details)?.default ?? '--'}
                         </Typography>
                     );
                 })}

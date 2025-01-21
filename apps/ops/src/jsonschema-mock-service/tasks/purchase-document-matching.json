@@ -222,7 +222,8 @@
                                         },
                                         "taxId": {
                                             "type": "string",
-                                            "title": "SSN"
+                                            "title": "SSN",
+                                            "dataType": "ssn"
                                         },
                                         "roles": {
                                             "type": "string",
@@ -337,8 +338,11 @@
                             "label": true
                         },
                         "amount": {
+                            "ui-widget": "ValueWidget",
                             "ui:options": {
-                                "disabled": true
+                                "label": false,
+                                "inline": true,
+                                "prefix": "$"
                             }
                         },
                         "payerDetails": {
@@ -460,7 +464,8 @@
                                         },
                                         "taxId": {
                                             "type": "string",
-                                            "title": "SSN"
+                                            "title": "SSN",
+                                            "dataType": "ssn"
                                         }
                                     }
                                 },
@@ -515,8 +520,11 @@
                             "label": true
                         },
                         "amount": {
+                            "ui-widget": "ValueWidget",
                             "ui:options": {
-                                "disabled": true
+                                "label": false,
+                                "inline": true,
+                                "prefix": "$"
                             }
                         },
                         "payerDetails": {
@@ -549,15 +557,20 @@
                             "label": false,
                             "sectionTitle": "Details",
                             "properties": {
-                                "paymentRecordId": {
+                                "companyName": {
                                     "type": "string",
-                                    "title": "Payment Record Id",
-                                    "default": "{{entity.paymentRecordId}}"
+                                    "title": "Company name",
+                                    "default": "{{entity.payment.exchangeReplace.companyName}}"
                                 },
                                 "transferAmount": {
                                     "type": "string",
                                     "title": "Expected transfer amount",
                                     "default": "{{entity.payment.exchangeReplace.amountRequested}}"
+                                },
+                                "paymentRecordId": {
+                                    "type": "string",
+                                    "title": "Payment Record Id",
+                                    "default": "{{entity.paymentRecordId}}"
                                 }
                             }
                         }

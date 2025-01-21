@@ -54,7 +54,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
 
                     const paymentCards = transactionResponse?.map((transaction: any) => ({
                         label: transaction.correlationId,
-                        value: transaction.recordId,
+                        value: transaction.entity.paymentRecordId,
                         subElement: {
                             ...transaction,
                             title: transaction?.entity?.payment?.companyName,
@@ -85,7 +85,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
 
                     const paymentCards = response?.map((transaction: any) => ({
                         label: transaction.correlationId,
-                        value: transaction.recordId,
+                        value: transaction.entity.paymentRecordId,
                         subElement: {
                             ...transaction,
                             title: transaction?.entity?.payment?.companyName,
