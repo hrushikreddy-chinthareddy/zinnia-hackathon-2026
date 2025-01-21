@@ -8,7 +8,6 @@ import {
 } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helper';
 import { PartyConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helper';
-import { JointLifeExpectancyConfig } from '@deps/components/otp-withdrawal-form/rmd-method/joint-life-expectancy';
 import { frequencyToValue } from '@deps/components/otp-withdrawal-form/rmd-method/rmd-method';
 import {
     SignatureFields
@@ -294,28 +293,6 @@ export default function getUlpcRmdConfig(t: TFunction) {
         return errors;
     };
 
-    const jointLifeExpectancyConfigs: JointLifeExpectancyConfig = {
-        checkboxLabel: t('rmdMethod.jointLifeExpectancy.label.flic'),
-        fields: [
-            {
-                fieldName: PartyFields.FirstName,
-                fieldLabel: t('rmdMethod.jointLifeExpectancy.firstName'),
-            },
-            {
-                fieldName: PartyFields.MiddleName,
-                fieldLabel: t('rmdMethod.jointLifeExpectancy.middleName'),
-            },
-            {
-                fieldName: PartyFields.LastName,
-                fieldLabel: t('rmdMethod.jointLifeExpectancy.lastName'),
-            },
-            {
-                fieldName: PartyFields.Dob,
-                fieldLabel: t('rmdMethod.jointLifeExpectancy.dob.flic'),
-            },
-        ],
-    };
-
     const w4pSignaturesConfig = [
         {
             component: SignatureFields.SignatureType,
@@ -351,7 +328,6 @@ export default function getUlpcRmdConfig(t: TFunction) {
         irsSignatureConfig,
         w4pSignaturesConfig,
         disbursementOptions,
-        jointLifeExpectancyConfigs,
         isBeneSpouseOption
     };
 }

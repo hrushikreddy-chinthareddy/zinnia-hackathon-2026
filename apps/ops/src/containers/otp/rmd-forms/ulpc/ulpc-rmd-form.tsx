@@ -7,7 +7,6 @@ import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import IrsWithholding from '@deps/components/otp-withdrawal-form/irs-withholdings';
-import JointLifeExpectancy from '@deps/components/otp-withdrawal-form/rmd-method/joint-life-expectancy';
 import RMDMethod from '@deps/components/otp-withdrawal-form/rmd-method/rmd-method';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
@@ -30,7 +29,6 @@ export default function UlpcRmdWithdrawalForm() {
         formValidation,
         w4pSignaturesConfig,
         disbursementOptions,
-        jointLifeExpectancyConfigs,
         isBeneSpouseOption,
         fundWithdrawnMethodOptions
     } = getUlpcRmdConfig(t);
@@ -85,7 +83,6 @@ export default function UlpcRmdWithdrawalForm() {
                 onBeneChange={setFormBeneInfo}
                 isBeneSpouseOption={isBeneSpouseOption}
             />
-            <JointLifeExpectancy isFormStateReadOnly={isFormStateReadOnly} configs={jointLifeExpectancyConfigs} />
             <FormDistribution
                 isFormStateReadOnly={isFormStateReadOnly}
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
